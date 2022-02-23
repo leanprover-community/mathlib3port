@@ -53,7 +53,7 @@ noncomputable section
 
 open_locale Classical BigOperators TopologicalSpace
 
-open filter (Tendsto)
+open Filter (Tendsto)
 
 open Metric
 

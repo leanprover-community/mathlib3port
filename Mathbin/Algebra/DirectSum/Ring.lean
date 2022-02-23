@@ -122,7 +122,7 @@ section Mul
 
 variable [Add ι] [∀ i, AddCommMonoidₓ (A i)] [GnonUnitalNonAssocSemiring A]
 
-open add_monoid_hom (flip_apply coe_comp comp_hom_apply_apply)
+open AddMonoidHom (flip_apply coe_comp comp_hom_apply_apply)
 
 /-- The piecewise multiplication from the `has_mul` instance, as a bundled homomorphism. -/
 @[simps]
@@ -167,7 +167,7 @@ section Semiringₓ
 
 variable [∀ i, AddCommMonoidₓ (A i)] [AddMonoidₓ ι] [Gsemiring A]
 
-open add_monoid_hom (flipHom coe_comp comp_hom_apply_apply flip_apply flip_hom_apply)
+open AddMonoidHom (flipHom coe_comp comp_hom_apply_apply flip_apply flip_hom_apply)
 
 private theorem one_mul (x : ⨁ i, A i) : 1 * x = x := by
   suffices mulHom A 1 = AddMonoidHom.id (⨁ i, A i) from AddMonoidHom.congr_fun this x

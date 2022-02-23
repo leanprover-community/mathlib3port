@@ -123,7 +123,7 @@ variable {f g : ℂ → ℂ} {s : Set ℂ} {f' g' x c : ℂ}
 /-- A private lemma that rewrites the output of lemmas like `has_fderiv_at.cpow` to the form
 expected by lemmas like `has_deriv_at.cpow`. -/
 private theorem aux :
-    ((g x * f x ^ (g x - 1)) • (1 : ℂ →L[ℂ] ℂ).smulRight f' + (f x ^ g x * log (f x)) • (1 : ℂ →L[ℂ] ℂ).smulRight g')
+    ((g x * f x ^ (g x - 1)) • (1 : ℂ →L[ℂ] ℂ).smul_right f' + (f x ^ g x * log (f x)) • (1 : ℂ →L[ℂ] ℂ).smul_right g')
         1 =
       g x * f x ^ (g x - 1) * f' + f x ^ g x * log (f x) * g' :=
   by
@@ -211,17 +211,17 @@ theorem has_strict_fderiv_at_rpow_of_neg (p : ℝ × ℝ) (hp : p.1 < 0) :
   congr 2 <;> ring
 
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
-theorem times_cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop ℕ} :
-    TimesContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p := by
+theorem cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop ℕ} :
+    ContDiffAt ℝ n (fun p : ℝ × ℝ => p.1 ^ p.2) p := by
   cases' hp.lt_or_lt with hneg hpos
-  exacts[(((times_cont_diff_at_fst.log hneg.ne).mul times_cont_diff_at_snd).exp.mul
-          (times_cont_diff_at_snd.mul times_cont_diff_at_const).cos).congr_of_eventually_eq
+  exacts[(((cont_diff_at_fst.log hneg.ne).mul cont_diff_at_snd).exp.mul
+          (cont_diff_at_snd.mul cont_diff_at_const).cos).congr_of_eventually_eq
       ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono fun p hp => rpow_def_of_neg hp _),
-    ((times_cont_diff_at_fst.log hpos.ne').mul times_cont_diff_at_snd).exp.congr_of_eventually_eq
+    ((cont_diff_at_fst.log hpos.ne').mul cont_diff_at_snd).exp.congr_of_eventually_eq
       ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono fun p hp => rpow_def_of_pos hp _)]
 
 theorem differentiable_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : DifferentiableAt ℝ (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
-  (times_cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rfl
+  (cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rfl
 
 theorem _root_.has_strict_deriv_at.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : HasStrictDerivAt f f' x)
     (hg : HasStrictDerivAt g g' x) (h : 0 < f x) :
@@ -278,13 +278,12 @@ theorem deriv_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : deriv (fun x : 
 theorem deriv_rpow_const' {p : ℝ} (h : 1 ≤ p) : (deriv fun x : ℝ => x ^ p) = fun x => p * x ^ (p - 1) :=
   funext fun x => deriv_rpow_const (Or.inr h)
 
-theorem times_cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x ≠ 0) :
-    TimesContDiffAt ℝ n (fun x => x ^ p) x :=
-  (times_cont_diff_at_rpow_of_ne (x, p) h).comp x (times_cont_diff_at_id.Prod times_cont_diff_at_const)
+theorem cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x ≠ 0) : ContDiffAt ℝ n (fun x => x ^ p) x :=
+  (cont_diff_at_rpow_of_ne (x, p) h).comp x (cont_diff_at_id.Prod cont_diff_at_const)
 
-theorem times_cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : TimesContDiff ℝ n fun x : ℝ => x ^ p := by
+theorem cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiff ℝ n fun x : ℝ => x ^ p := by
   induction' n with n ihn generalizing p
-  · exact times_cont_diff_zero.2 (continuous_id.rpow_const fun x => Or.inr h)
+  · exact cont_diff_zero.2 (continuous_id.rpow_const fun x => Or.inr h)
     
   · have h1 : 1 ≤ p :=
       le_transₓ
@@ -292,22 +291,19 @@ theorem times_cont_diff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) : 
           simp )
         h
     rw [Nat.cast_succₓ, ← le_sub_iff_add_le] at h
-    simpa [times_cont_diff_succ_iff_deriv, differentiable_rpow_const, h1, deriv_rpow_const'] using
-      times_cont_diff_const.mul (ihn h)
+    simpa [cont_diff_succ_iff_deriv, differentiable_rpow_const, h1, deriv_rpow_const'] using cont_diff_const.mul (ihn h)
     
 
-theorem times_cont_diff_at_rpow_const_of_le {x p : ℝ} {n : ℕ} (h : ↑n ≤ p) :
-    TimesContDiffAt ℝ n (fun x : ℝ => x ^ p) x :=
-  (times_cont_diff_rpow_const_of_le h).TimesContDiffAt
+theorem cont_diff_at_rpow_const_of_le {x p : ℝ} {n : ℕ} (h : ↑n ≤ p) : ContDiffAt ℝ n (fun x : ℝ => x ^ p) x :=
+  (cont_diff_rpow_const_of_le h).ContDiffAt
 
-theorem times_cont_diff_at_rpow_const {x p : ℝ} {n : ℕ} (h : x ≠ 0 ∨ ↑n ≤ p) :
-    TimesContDiffAt ℝ n (fun x : ℝ => x ^ p) x :=
-  h.elim times_cont_diff_at_rpow_const_of_ne times_cont_diff_at_rpow_const_of_le
+theorem cont_diff_at_rpow_const {x p : ℝ} {n : ℕ} (h : x ≠ 0 ∨ ↑n ≤ p) : ContDiffAt ℝ n (fun x : ℝ => x ^ p) x :=
+  h.elim cont_diff_at_rpow_const_of_ne cont_diff_at_rpow_const_of_le
 
 theorem has_strict_deriv_at_rpow_const {x p : ℝ} (hx : x ≠ 0 ∨ 1 ≤ p) :
     HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x :=
-  TimesContDiffAt.has_strict_deriv_at'
-    (times_cont_diff_at_rpow_const
+  ContDiffAt.has_strict_deriv_at'
+    (cont_diff_at_rpow_const
       (by
         rwa [Nat.cast_oneₓ]))
     (has_deriv_at_rpow_const hx) le_rfl
@@ -388,53 +384,49 @@ theorem HasStrictFderivAt.const_rpow (hf : HasStrictFderivAt f f' x) (hc : 0 < c
     HasStrictFderivAt (fun x => c ^ f x) ((c ^ f x * log c) • f') x :=
   (has_strict_deriv_at_const_rpow hc (f x)).comp_has_strict_fderiv_at x hf
 
-theorem TimesContDiffWithinAt.rpow (hf : TimesContDiffWithinAt ℝ n f s x) (hg : TimesContDiffWithinAt ℝ n g s x)
-    (h : f x ≠ 0) : TimesContDiffWithinAt ℝ n (fun x => f x ^ g x) s x :=
-  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp_times_cont_diff_within_at x (hf.Prod hg)
+theorem ContDiffWithinAt.rpow (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x) (h : f x ≠ 0) :
+    ContDiffWithinAt ℝ n (fun x => f x ^ g x) s x :=
+  (cont_diff_at_rpow_of_ne (f x, g x) h).comp_cont_diff_within_at x (hf.Prod hg)
 
-theorem TimesContDiffAt.rpow (hf : TimesContDiffAt ℝ n f x) (hg : TimesContDiffAt ℝ n g x) (h : f x ≠ 0) :
-    TimesContDiffAt ℝ n (fun x => f x ^ g x) x :=
-  (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
+theorem ContDiffAt.rpow (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) (h : f x ≠ 0) :
+    ContDiffAt ℝ n (fun x => f x ^ g x) x :=
+  (cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.Prod hg)
 
-theorem TimesContDiffOn.rpow (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
-    (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) : TimesContDiffOn ℝ n (fun x => f x ^ g x) s := fun x hx =>
-  (hf x hx).rpow (hg x hx) (h x hx)
+theorem ContDiffOn.rpow (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+    ContDiffOn ℝ n (fun x => f x ^ g x) s := fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
 
-theorem TimesContDiff.rpow (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
-    TimesContDiff ℝ n fun x => f x ^ g x :=
-  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.TimesContDiffAt.rpow hg.TimesContDiffAt (h x)
+theorem ContDiff.rpow (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
+    ContDiff ℝ n fun x => f x ^ g x :=
+  cont_diff_iff_cont_diff_at.mpr fun x => hf.ContDiffAt.rpow hg.ContDiffAt (h x)
 
-theorem TimesContDiffWithinAt.rpow_const_of_ne (hf : TimesContDiffWithinAt ℝ n f s x) (h : f x ≠ 0) :
-    TimesContDiffWithinAt ℝ n (fun x => f x ^ p) s x :=
-  hf.rpow times_cont_diff_within_at_const h
+theorem ContDiffWithinAt.rpow_const_of_ne (hf : ContDiffWithinAt ℝ n f s x) (h : f x ≠ 0) :
+    ContDiffWithinAt ℝ n (fun x => f x ^ p) s x :=
+  hf.rpow cont_diff_within_at_const h
 
-theorem TimesContDiffAt.rpow_const_of_ne (hf : TimesContDiffAt ℝ n f x) (h : f x ≠ 0) :
-    TimesContDiffAt ℝ n (fun x => f x ^ p) x :=
-  hf.rpow times_cont_diff_at_const h
+theorem ContDiffAt.rpow_const_of_ne (hf : ContDiffAt ℝ n f x) (h : f x ≠ 0) : ContDiffAt ℝ n (fun x => f x ^ p) x :=
+  hf.rpow cont_diff_at_const h
 
-theorem TimesContDiffOn.rpow_const_of_ne (hf : TimesContDiffOn ℝ n f s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
-    TimesContDiffOn ℝ n (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_ne (h x hx)
+theorem ContDiffOn.rpow_const_of_ne (hf : ContDiffOn ℝ n f s) (h : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+    ContDiffOn ℝ n (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_ne (h x hx)
 
-theorem TimesContDiff.rpow_const_of_ne (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) :
-    TimesContDiff ℝ n fun x => f x ^ p :=
-  hf.rpow times_cont_diff_const h
+theorem ContDiff.rpow_const_of_ne (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun x => f x ^ p :=
+  hf.rpow cont_diff_const h
 
 variable {m : ℕ}
 
-theorem TimesContDiffWithinAt.rpow_const_of_le (hf : TimesContDiffWithinAt ℝ m f s x) (h : ↑m ≤ p) :
-    TimesContDiffWithinAt ℝ m (fun x => f x ^ p) s x :=
-  (times_cont_diff_at_rpow_const_of_le h).comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.rpow_const_of_le (hf : ContDiffWithinAt ℝ m f s x) (h : ↑m ≤ p) :
+    ContDiffWithinAt ℝ m (fun x => f x ^ p) s x :=
+  (cont_diff_at_rpow_const_of_le h).comp_cont_diff_within_at x hf
 
-theorem TimesContDiffAt.rpow_const_of_le (hf : TimesContDiffAt ℝ m f x) (h : ↑m ≤ p) :
-    TimesContDiffAt ℝ m (fun x => f x ^ p) x := by
-  rw [← times_cont_diff_within_at_univ] at *
+theorem ContDiffAt.rpow_const_of_le (hf : ContDiffAt ℝ m f x) (h : ↑m ≤ p) : ContDiffAt ℝ m (fun x => f x ^ p) x := by
+  rw [← cont_diff_within_at_univ] at *
   exact hf.rpow_const_of_le h
 
-theorem TimesContDiffOn.rpow_const_of_le (hf : TimesContDiffOn ℝ m f s) (h : ↑m ≤ p) :
-    TimesContDiffOn ℝ m (fun x => f x ^ p) s := fun x hx => (hf x hx).rpow_const_of_le h
+theorem ContDiffOn.rpow_const_of_le (hf : ContDiffOn ℝ m f s) (h : ↑m ≤ p) : ContDiffOn ℝ m (fun x => f x ^ p) s :=
+  fun x hx => (hf x hx).rpow_const_of_le h
 
-theorem TimesContDiff.rpow_const_of_le (hf : TimesContDiff ℝ m f) (h : ↑m ≤ p) : TimesContDiff ℝ m fun x => f x ^ p :=
-  times_cont_diff_iff_times_cont_diff_at.mpr fun x => hf.TimesContDiffAt.rpow_const_of_le h
+theorem ContDiff.rpow_const_of_le (hf : ContDiff ℝ m f) (h : ↑m ≤ p) : ContDiff ℝ m fun x => f x ^ p :=
+  cont_diff_iff_cont_diff_at.mpr fun x => hf.ContDiffAt.rpow_const_of_le h
 
 end fderiv
 

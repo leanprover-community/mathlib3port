@@ -52,7 +52,7 @@ theorem omega_left_wins : LeftWins omega :=
     rw [lt_def_le]
     exact
       Or.inl
-        ⟨Ulift.up 0, by
+        ⟨ULift.up 0, by
           tidy⟩,
     by
     rw [le_def] <;> tidy⟩

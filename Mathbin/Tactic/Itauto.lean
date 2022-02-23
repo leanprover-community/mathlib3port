@@ -774,7 +774,6 @@ unsafe def itauto (classical : parse («expr ?» (tk "!"))) :
   | some none => tactic.itauto True classical.isSome []
   | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.isSome
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 add_hint_tactic itauto
 
 add_tactic_doc

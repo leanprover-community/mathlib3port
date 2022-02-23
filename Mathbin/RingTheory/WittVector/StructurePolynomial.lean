@@ -89,9 +89,9 @@ open MvPolynomial
 
 open Set
 
-open finset (range)
+open Finset (range)
 
-open finsupp (single)
+open Finsupp (single)
 
 -- This lemma reduces a bundled morphism to a "mere" function,
 -- and consequently the simplifier cannot use a lot of powerful simp-lemmas.

@@ -65,7 +65,6 @@ variable {R}
 
 open PrincipalIdealRing
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- An element of a DVR is irreducible iff it is a uniformizer, that is, generates the
   maximal ideal of R -/
 theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R = Ideal.span {ϖ} :=
@@ -74,7 +73,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : Irreducible ϖ ↔ maximalIdeal R
     have h2 : ¬IsUnit ϖ := show ϖ ∈ maximal_ideal R from h.symm ▸ Submodule.mem_span_singleton_self ϖ
     refine' ⟨h2, _⟩
     intro a b hab
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h
     obtain ⟨ha : a ∈ maximal_ideal R, hb : b ∈ maximal_ideal R⟩ := h
     rw [h, mem_span_singleton'] at ha hb
     rcases ha with ⟨a, rfl⟩

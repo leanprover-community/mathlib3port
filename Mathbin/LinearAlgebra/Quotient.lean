@@ -428,7 +428,7 @@ theorem span_preimage_eq [RingHomSurjective τ₁₂] {f : M →ₛₗ[τ₁₂]
     exact Set.Subset.trans subset_span (span_mono (Set.preimage_mono hy))
   rw [← left_eq_sup] at hk
   rw [f.range_coe] at h₁
-  rw [hk, ← map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]
+  rw [hk, ← LinearMap.map_le_map_iff, map_span, map_comap_eq, Set.image_preimage_eq_of_subset h₁]
   exact inf_le_right
 
 end Submodule

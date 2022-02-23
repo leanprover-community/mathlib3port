@@ -313,11 +313,17 @@ are defined by an action of `R` on `S` (formally, we have two scalar towers), th
 map from `M` to `M₂` is `R`-linear.
 
 See also `linear_map.map_smul_of_tower`. -/
-@[simps]
 def restrictScalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂ where
   toFun := fₗ
   map_add' := fₗ.map_add
   map_smul' := fₗ.map_smul_of_tower
+
+@[simp]
+theorem coe_restrict_scalars (fₗ : M →ₗ[S] M₂) : ⇑(restrictScalars R fₗ) = fₗ :=
+  rfl
+
+theorem restrict_scalars_apply (fₗ : M →ₗ[S] M₂) x : restrictScalars R fₗ x = fₗ x :=
+  rfl
 
 theorem restrict_scalars_injective : Function.Injective (restrictScalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) :=
   fun fₗ gₗ h => ext (LinearMap.congr_fun h : _)

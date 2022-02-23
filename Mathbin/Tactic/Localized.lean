@@ -118,10 +118,10 @@ unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   let cmds ← get_localized ns
   cmds trace
 
--- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
+localized [-- you can run `open_locale classical` to get the decidability of all propositions, and downgrade
 -- the priority of decidability instances that make Lean run through all the algebraic hierarchy
 -- whenever it wants to solve a decidability question
-localized [Classical] attribute [instance] Classical.propDecidable
+Classical] attribute [instance] Classical.propDecidable
 
 localized [Classical] attribute [instance] Eq.decidable decidableEqOfDecidableLe
 

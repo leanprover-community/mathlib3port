@@ -93,7 +93,7 @@ variable {n : ℕ} {F : Typevec.{u} n → Type _} [Mvfunctor F] [q : Mvqpf F]
 
 include q
 
-open mvfunctor (Liftp Liftr)
+open Mvfunctor (Liftp Liftr)
 
 /-!
 ### Show that every mvqpf is a lawful mvfunctor.

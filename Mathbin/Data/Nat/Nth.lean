@@ -157,20 +157,18 @@ theorem nth_mono_of_finite {a b : ℕ} (hp : (SetOf p).Finite) (hb : b < hp.toFi
   · exact (nth_strict_mono_of_finite p hp hb h).le
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem le_nth_of_lt_nth_succ_finite {k a : ℕ} (hp : (SetOf p).Finite) (hlt : k.succ < hp.toFinset.card)
     (h : a < nth p k.succ) (ha : p a) : a ≤ nth p k := by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hak
   refine' h.not_le _
   rw [nth]
   apply Nat.Inf_le
   refine' ⟨ha, fun n hn => lt_of_le_of_ltₓ _ hak⟩
   exact nth_mono_of_finite p hp (k.le_succ.trans_lt hlt) (le_of_lt_succ hn)
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem le_nth_of_lt_nth_succ_infinite {k a : ℕ} (hp : (SetOf p).Infinite) (h : a < nth p k.succ) (ha : p a) :
     a ≤ nth p k := by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hak
   refine' h.not_le _
   rw [nth]
   apply Nat.Inf_le
@@ -345,7 +343,6 @@ theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nt
     exact ⟨hx.1, fun k hk => hx.2 k <| hk.trans_le hab⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- When `p` is true infinitely often, `nth` agrees with `nat.subtype.order_iso_of_nat`. -/
 theorem nth_eq_order_iso_of_nat [DecidablePred p] (i : Infinite (SetOf p)) (n : ℕ) :
     nth p n = Nat.Subtype.orderIsoOfNat (SetOf p) n := by
@@ -387,7 +384,7 @@ theorem nth_eq_order_iso_of_nat [DecidablePred p] (i : Infinite (SetOf p)) (n : 
       
     simp only [exists_prop, not_and, not_ltₓ, Set.mem_set_of_eq, not_forall]
     refine' fun hpn => ⟨k, lt_add_one k, _⟩
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' hlt
     replace hn : n - nth p k - 1 < t
     · rw [tsub_lt_iff_left]
       · rw [tsub_lt_iff_left hlt.le]

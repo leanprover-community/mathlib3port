@@ -49,7 +49,7 @@ universe u v w
 /-- A monad to generate random objects using the generator type `g` -/
 @[reducible]
 def RandG (g : Type) (α : Type u) : Type u :=
-  State (Ulift.{u} g) α
+  State (ULift.{u} g) α
 
 /-- A monad to generate random objects using the generator type `std_gen` -/
 @[reducible]
@@ -59,7 +59,7 @@ def Rand :=
 instance (g : Type) : Uliftable (RandG.{u} g) (RandG.{v} g) :=
   @StateTₓ.uliftable' _ _ _ _ _ (Equivₓ.ulift.trans Equivₓ.ulift.symm)
 
-open Ulift hiding Inhabited
+open ULift hiding Inhabited
 
 /-- Generate one more `ℕ` -/
 def RandG.next {g : Type} [RandomGen g] : RandG g ℕ :=
@@ -223,7 +223,7 @@ end Random
 
 end Tactic
 
-open nat (succ one_add mod_eq_of_lt zero_lt_succ add_one succ_le_succ)
+open Nat (succ one_add mod_eq_of_lt zero_lt_succ add_one succ_le_succ)
 
 variable {g : Type} [RandomGen g]
 

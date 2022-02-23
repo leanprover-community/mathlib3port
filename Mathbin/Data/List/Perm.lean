@@ -3,7 +3,7 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 -/
-import Mathbin.Data.List.EraseDup
+import Mathbin.Data.List.Dedup
 import Mathbin.Data.List.Lattice
 import Mathbin.Data.List.Permutation
 import Mathbin.Data.List.Zip
@@ -37,7 +37,7 @@ inductive Perm : List α → List α → Prop
   | swap : ∀ x y : α l : List α, perm (y :: x :: l) (x :: y :: l)
   | trans : ∀ {l₁ l₂ l₃ : List α}, perm l₁ l₂ → perm l₂ l₃ → perm l₁ l₃
 
-open perm (swap)
+open Perm (swap)
 
 -- mathport name: «expr ~ »
 infixl:50 " ~ " => Perm
@@ -868,10 +868,10 @@ instance decidablePerm : ∀ l₁ l₂ : List α, Decidable (l₁ ~ l₂)
     decidableOfIff' _ cons_perm_iff_perm_erase
 
 -- @[congr]
-theorem Perm.erase_dup {l₁ l₂ : List α} (p : l₁ ~ l₂) : eraseDupₓ l₁ ~ eraseDupₓ l₂ :=
+theorem Perm.dedup {l₁ l₂ : List α} (p : l₁ ~ l₂) : dedup l₁ ~ dedup l₂ :=
   perm_iff_count.2 fun a =>
     if h : a ∈ l₁ then by
-      simp [nodup_erase_dup, h, p.subset h]
+      simp [nodup_dedup, h, p.subset h]
     else by
       simp [h, mt p.mem_iff.2 h]
 

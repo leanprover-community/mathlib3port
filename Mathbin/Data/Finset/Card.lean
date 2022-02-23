@@ -155,16 +155,16 @@ section ToListMultiset
 
 variable [DecidableEq α] (m : Multiset α) (l : List α)
 
-theorem Multiset.card_to_finset : m.toFinset.card = m.eraseDup.card :=
+theorem Multiset.card_to_finset : m.toFinset.card = m.dedup.card :=
   rfl
 
 theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
-  card_le_of_le <| erase_dup_le _
+  card_le_of_le <| dedup_le _
 
 theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
-  congr_argₓ card <| Multiset.erase_dup_eq_self.mpr h
+  congr_argₓ card <| Multiset.dedup_eq_self.mpr h
 
-theorem List.card_to_finset : l.toFinset.card = l.eraseDup.length :=
+theorem List.card_to_finset : l.toFinset.card = l.dedup.length :=
   rfl
 
 theorem List.to_finset_card_le : l.toFinset.card ≤ l.length :=
@@ -191,12 +191,12 @@ theorem card_image_of_inj_on [DecidableEq β] (H : Set.InjOn f s) : (s.Image f).
   simp only [card, image_val_of_inj_on H, card_map]
 
 theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card) : Set.InjOn f s := by
-  change (s.1.map f).eraseDup.card = s.1.card at H
-  have : (s.1.map f).eraseDup = s.1.map f := by
-    refine' Multiset.eq_of_le_of_card_le (Multiset.erase_dup_le _) _
+  change (s.1.map f).dedup.card = s.1.card at H
+  have : (s.1.map f).dedup = s.1.map f := by
+    refine' Multiset.eq_of_le_of_card_le (Multiset.dedup_le _) _
     rw [H]
     simp only [Multiset.card_map]
-  rw [Multiset.erase_dup_eq_self] at this
+  rw [Multiset.dedup_eq_self] at this
   exact inj_on_of_nodup_map this
 
 theorem card_image_eq_iff_inj_on [DecidableEq β] : (s.Image f).card = s.card ↔ Set.InjOn f s :=
@@ -272,13 +272,12 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a 
     calc s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm _ ≤ t.card :=
         card_le_of_subset <| image_subset_iff.2 hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
     (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) : ∃ x ∈ s, ∃ y ∈ s, x ≠ y ∧ f x = f y := by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hz
   refine' hc.not_le (card_le_card_of_inj_on f hf _)
   intro x hx y hy
   contrapose

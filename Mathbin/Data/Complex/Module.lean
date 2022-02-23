@@ -140,15 +140,11 @@ end
 
 open Submodule FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- `ℂ` has a basis over `ℝ` given by `1` and `I`. -/
 noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
   Basis.ofEquivFun
-    { toFun := fun z =>
-        «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
-      invFun := fun c => c 0 + c 1 • I,
+    { toFun := fun z => ![z.re, z.im], invFun := fun c => c 0 + c 1 • I,
       left_inv := fun z => by
         simp ,
       right_inv := fun c => by
@@ -159,21 +155,14 @@ noncomputable def basisOneI : Basis (Finₓ 2) ℝ ℂ :=
       map_smul' := fun c z => by
         simp [Matrix.smul_cons c z.re, Matrix.smul_cons c z.im] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
-theorem coe_basis_one_I_repr (z : ℂ) :
-    ⇑(basisOneI.repr z) =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
+theorem coe_basis_one_I_repr (z : ℂ) : ⇑(basisOneI.repr z) = ![z.re, z.im] :=
   rfl
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
-theorem coe_basis_one_I :
-    ⇑basis_one_I = «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
+theorem coe_basis_one_I : ⇑basis_one_I = ![1, i] :=
   funext fun i =>
     Basis.apply_eq_iff.mpr <|
       Finsupp.ext fun j => by
@@ -229,7 +218,7 @@ theorem finrank_real_of_complex (E : Type _) [AddCommGroupₓ E] [Module ℂ E] 
     FiniteDimensional.finrank ℝ E = 2 * FiniteDimensional.finrank ℂ E := by
   rw [← FiniteDimensional.finrank_mul_finrank ℝ ℂ E, Complex.finrank_real_complex]
 
-instance (priority := 900) StarModule.complexToReal {E : Type _} [AddCommGroupₓ E] [HasStar E] [Module ℂ E]
+instance (priority := 900) StarModule.complex_to_real {E : Type _} [AddCommGroupₓ E] [HasStar E] [Module ℂ E]
     [StarModule ℂ E] : StarModule ℝ E :=
   ⟨fun r a => by
     rw [star_trivial r, restrict_scalars_smul_def, restrict_scalars_smul_def, star_smul, Complex.coe_algebra_map,
@@ -279,14 +268,9 @@ theorem conj_ae_coe : ⇑conj_ae = conj :=
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
-theorem to_matrix_conj_ae :
-    LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
-  by
+theorem to_matrix_conj_ae : LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap = ![![1, 0], ![0, -1]] := by
   ext i j
   simp [LinearMap.to_matrix_apply]
   fin_cases i <;> fin_cases j <;> simp

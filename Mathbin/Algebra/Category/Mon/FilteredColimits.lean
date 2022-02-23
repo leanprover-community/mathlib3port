@@ -255,7 +255,7 @@ end Mon.FilteredColimits
 
 namespace CommMon.FilteredColimits
 
-open Mon.filtered_colimits (colimit_mul_mk_eq)
+open Mon.FilteredColimits (colimit_mul_mk_eq)
 
 section
 

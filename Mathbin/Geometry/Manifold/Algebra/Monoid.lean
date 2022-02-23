@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 -/
-import Mathbin.Geometry.Manifold.TimesContMdiffMap
+import Mathbin.Geometry.Manifold.ContMdiffMap
 
 /-!
 # Smooth monoid
@@ -134,13 +134,13 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 theorem L_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by
   ext
-  simp only [TimesContMdiffMap.comp_apply, L_apply, mul_assoc]
+  simp only [ContMdiffMap.comp_apply, L_apply, mul_assoc]
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G] (g h : G) :
     𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by
   ext
-  simp only [TimesContMdiffMap.comp_apply, R_apply, mul_assoc]
+  simp only [ContMdiffMap.comp_apply, R_apply, mul_assoc]
 
 section
 

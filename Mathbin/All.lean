@@ -321,6 +321,7 @@ import Mathbin.Analysis.BoxIntegral.Partition.Tagged
 import Mathbin.Analysis.Calculus.AffineMap
 import Mathbin.Analysis.Calculus.Conformal.InnerProduct
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
+import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Analysis.Calculus.Darboux
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.Analysis.Calculus.Dslope
@@ -341,7 +342,6 @@ import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.Analysis.Calculus.ParametricIntervalIntegral
 import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.TangentCone
-import Mathbin.Analysis.Calculus.TimesContDiff
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.Complex.CauchyIntegral
 import Mathbin.Analysis.Complex.Circle
@@ -947,10 +947,10 @@ import Mathbin.Data.List.BigOperators
 import Mathbin.Data.List.Chain
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Cycle
+import Mathbin.Data.List.Dedup
 import Mathbin.Data.List.Default
 import Mathbin.Data.List.Defs
 import Mathbin.Data.List.Duplicate
-import Mathbin.Data.List.EraseDup
 import Mathbin.Data.List.Forall2
 import Mathbin.Data.List.Func
 import Mathbin.Data.List.Indexes
@@ -993,8 +993,8 @@ import Mathbin.Data.Mllist
 import Mathbin.Data.Multiset.Antidiagonal
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Data.Multiset.Bind
+import Mathbin.Data.Multiset.Dedup
 import Mathbin.Data.Multiset.Default
-import Mathbin.Data.Multiset.EraseDup
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Data.Multiset.Fold
 import Mathbin.Data.Multiset.Functor
@@ -1287,6 +1287,8 @@ import Mathbin.Geometry.Manifold.BasicSmoothBundle
 import Mathbin.Geometry.Manifold.BumpFunction
 import Mathbin.Geometry.Manifold.ChartedSpace
 import Mathbin.Geometry.Manifold.ConformalGroupoid
+import Mathbin.Geometry.Manifold.ContMdiff
+import Mathbin.Geometry.Manifold.ContMdiffMap
 import Mathbin.Geometry.Manifold.DerivationBundle
 import Mathbin.Geometry.Manifold.Diffeomorph
 import Mathbin.Geometry.Manifold.Instances.Real
@@ -1296,8 +1298,6 @@ import Mathbin.Geometry.Manifold.LocalInvariantProperties
 import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Geometry.Manifold.PartitionOfUnity
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
-import Mathbin.Geometry.Manifold.TimesContMdiff
-import Mathbin.Geometry.Manifold.TimesContMdiffMap
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Archimedean
@@ -1579,6 +1579,7 @@ import Mathbin.NumberTheory.ClassNumber.Finite
 import Mathbin.NumberTheory.ClassNumber.FunctionField
 import Mathbin.NumberTheory.ClassNumber.NumberField
 import Mathbin.NumberTheory.Cyclotomic.Basic
+import Mathbin.NumberTheory.Cyclotomic.Discriminant
 import Mathbin.NumberTheory.Cyclotomic.Gal
 import Mathbin.NumberTheory.Cyclotomic.PrimitiveRoots
 import Mathbin.NumberTheory.Dioph
@@ -1724,7 +1725,10 @@ import Mathbin.RingTheory.Artinian
 import Mathbin.RingTheory.ClassGroup
 import Mathbin.RingTheory.Coprime.Basic
 import Mathbin.RingTheory.Coprime.Lemmas
-import Mathbin.RingTheory.DedekindDomain
+import Mathbin.RingTheory.DedekindDomain.Basic
+import Mathbin.RingTheory.DedekindDomain.Dvr
+import Mathbin.RingTheory.DedekindDomain.Ideal
+import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.Derivation
 import Mathbin.RingTheory.DiscreteValuationRing
 import Mathbin.RingTheory.Discriminant
@@ -1753,7 +1757,17 @@ import Mathbin.RingTheory.Jacobson
 import Mathbin.RingTheory.JacobsonIdeal
 import Mathbin.RingTheory.LaurentSeries
 import Mathbin.RingTheory.LocalProperties
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.AtPrime
+import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Basic
+import Mathbin.RingTheory.Localization.FractionRing
+import Mathbin.RingTheory.Localization.Ideal
+import Mathbin.RingTheory.Localization.Integer
+import Mathbin.RingTheory.Localization.Integral
+import Mathbin.RingTheory.Localization.InvSubmonoid
+import Mathbin.RingTheory.Localization.LocalizationLocalization
+import Mathbin.RingTheory.Localization.NumDenom
+import Mathbin.RingTheory.Localization.Submodule
 import Mathbin.RingTheory.MatrixAlgebra
 import Mathbin.RingTheory.Multiplicity
 import Mathbin.RingTheory.MvPolynomial.Basic
@@ -2151,6 +2165,7 @@ import Mathbin.Topology.ShrinkingLemma
 import Mathbin.Topology.Sober
 import Mathbin.Topology.StoneCech
 import Mathbin.Topology.SubsetProperties
+import Mathbin.Topology.Support
 import Mathbin.Topology.Tactic
 import Mathbin.Topology.TietzeExtension
 import Mathbin.Topology.UniformSpace.AbsoluteValue

@@ -203,15 +203,15 @@ The constructors are:
      is the number of times that the counter-example was shrunk.
 -/
 inductive TestResult (p : Prop)
-  | success : Psum Unit p → test_result
+  | success : PSum Unit p → test_result
   | gave_up {} : ℕ → test_result
   | failure : ¬p → List Stringₓ → ℕ → test_result
   deriving Inhabited
 
 /-- format a `test_result` as a string. -/
 protected def TestResult.toString {p} : TestResult p → Stringₓ
-  | test_result.success (Psum.inl ()) => "success (without proof)"
-  | test_result.success (Psum.inr h) => "success (with proof)"
+  | test_result.success (PSum.inl ()) => "success (without proof)"
+  | test_result.success (PSum.inr h) => "success (with proof)"
   | test_result.gave_up n => s! "gave up {n} times"
   | test_result.failure a vs _ => s! "failed {vs}"
 
@@ -258,15 +258,15 @@ open _Root_.List
 open TestResult
 
 /-- applicative combinator proof carrying test results -/
-def combine {p q : Prop} : Psum Unit (p → q) → Psum Unit p → Psum Unit q
-  | Psum.inr f, Psum.inr x => Psum.inr (f x)
-  | _, _ => Psum.inl ()
+def combine {p q : Prop} : PSum Unit (p → q) → PSum Unit p → PSum Unit q
+  | PSum.inr f, PSum.inr x => PSum.inr (f x)
+  | _, _ => PSum.inl ()
 
 /-- Combine the test result for properties `p` and `q` to create a test for their conjunction. -/
 def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult (p ∧ q)
   | failure Hce xs n, _ => failure (fun h => Hce h.1) xs n
   | _, failure Hce xs n => failure (fun h => Hce h.2) xs n
-  | success xs, success ys => success <| combine (combine (Psum.inr And.intro) xs) ys
+  | success xs, success ys => success <| combine (combine (PSum.inr And.intro) xs) ys
   | gave_up n, gave_up m => gave_up <| n + m
   | gave_up n, _ => gave_up n
   | _, gave_up n => gave_up n
@@ -274,8 +274,8 @@ def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResul
 /-- Combine the test result for properties `p` and `q` to create a test for their disjunction -/
 def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult (p ∨ q)
   | failure Hce xs n, failure Hce' ys n' => failure (fun h => or_iff_not_and_not.1 h ⟨Hce, Hce'⟩) (xs ++ ys) (n + n')
-  | success xs, _ => success <| combine (Psum.inr Or.inl) xs
-  | _, success ys => success <| combine (Psum.inr Or.inr) ys
+  | success xs, _ => success <| combine (PSum.inr Or.inl) xs
+  | _, success ys => success <| combine (PSum.inr Or.inr) ys
   | gave_up n, gave_up m => gave_up <| n + m
   | gave_up n, _ => gave_up n
   | _, gave_up n => gave_up n
@@ -283,26 +283,26 @@ def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult
 /-- If `q → p`, then `¬ p → ¬ q` which means that testing `p` can allow us
 to find counter-examples to `q`. -/
 def convertCounterExample {p q : Prop} (h : q → p) :
-    TestResult p → optParam (Psum Unit (p → q)) (Psum.inl ()) → TestResult q
+    TestResult p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResult q
   | failure Hce xs n, _ => failure (mt h Hce) xs n
   | success Hp, Hpq => success (combine Hpq Hp)
   | gave_up n, _ => gave_up n
 
 /-- Test `q` by testing `p` and proving the equivalence between the two. -/
 def convertCounterExample' {p q : Prop} (h : p ↔ q) (r : TestResult p) : TestResult q :=
-  convertCounterExample h.2 r (Psum.inr h.1)
+  convertCounterExample h.2 r (PSum.inr h.1)
 
 /-- When we assign a value to a universally quantified variable,
 we record that value using this function so that our counter-examples
 can be informative. -/
 def addToCounterExample (x : Stringₓ) {p q : Prop} (h : q → p) :
-    TestResult p → optParam (Psum Unit (p → q)) (Psum.inl ()) → TestResult q
+    TestResult p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResult q
   | failure Hce xs n, _ => failure (mt h Hce) (x :: xs) n
   | r, hpq => convertCounterExample h r hpq
 
 /-- Add some formatting to the information recorded by `add_to_counter_example`. -/
 def addVarToCounterExample {γ : Type v} [HasRepr γ] (var : Stringₓ) (x : γ) {p q : Prop} (h : q → p) :
-    TestResult p → optParam (Psum Unit (p → q)) (Psum.inl ()) → TestResult q :=
+    TestResult p → optParam (PSum Unit (p → q)) (PSum.inl ()) → TestResult q :=
   @addToCounterExample (var ++ " := " ++ reprₓ x) _ _ h
 
 /-- Gadget used to introspect the name of bound variables.
@@ -338,8 +338,8 @@ instance orTestable (p q : Prop) [Testable p] [Testable q] : Testable (p ∨ q) 
   ⟨fun cfg min => do
     let xp ← Testable.run p cfg min
     match xp with
-      | success (Psum.inl h) => pure <| success (Psum.inl h)
-      | success (Psum.inr h) => pure <| success (Psum.inr <| Or.inl h)
+      | success (PSum.inl h) => pure <| success (PSum.inl h)
+      | success (PSum.inr h) => pure <| success (PSum.inr <| Or.inl h)
       | _ => do
         let xq ← testable.run q cfg min
         pure <| or_counter_example xp xq⟩
@@ -360,9 +360,9 @@ instance (priority := 1000) decGuardTestable (p : Prop) [PrintableProp p] [Decid
   ⟨fun cfg min => do
     if h : p then
         match print_prop p with
-        | none => (fun r => convert_counter_example (· <| h) r (Psum.inr fun q _ => q)) <$> testable.run (β h) cfg min
+        | none => (fun r => convert_counter_example (· <| h) r (PSum.inr fun q _ => q)) <$> testable.run (β h) cfg min
         | some str =>
-          (fun r => add_to_counter_example (s! "guard: {str}") (· <| h) r (Psum.inr fun q _ => q)) <$>
+          (fun r => add_to_counter_example (s! "guard: {str}") (· <| h) r (PSum.inr fun q _ => q)) <$>
             testable.run (β h) cfg min
       else
         if cfg ∨ cfg then
@@ -402,7 +402,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [HasRepr �
     ⟨fun tracing min =>
       return <|
         success <|
-          Psum.inr
+          PSum.inr
             (by
               introv x h
               cases h)⟩
@@ -431,7 +431,7 @@ instance (priority := 5000) testForallInList [∀ x, Testable (β x)] [HasRepr �
                     apply h')
                   rs
                   (combine
-                    (Psum.inr <| by
+                    (PSum.inr <| by
                       intro j h
                       simp only [ball_cons, named_binder]
                       constructor <;> assumption)
@@ -508,7 +508,7 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
       (SampleableExt.shrink x).mfirst fun ⟨a, h⟩ => do
           let ⟨r⟩ ←
             monadLift
-                (Uliftable.up <| Testable.run (β (interp α a)) cfg true : Gen (Ulift <| test_result <| β <| interp α a))
+                (Uliftable.up <| Testable.run (β (interp α a)) cfg true : Gen (ULift <| test_result <| β <| interp α a))
           if is_failure r then pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × Plift (sizeof_lt a x))
             else failure
     if cfg then return <| trace ((s! "{var } := {reprₓ y}") ++ format_failure' "Shrink counter-example:" r) ()
@@ -551,7 +551,7 @@ instance propVarTestable (β : Prop → Prop) [I : ∀ b : Bool, Testable (β b)
 instance (priority := 3000) unusedVarTestable β [Inhabited α] [Testable β] : Testable (NamedBinder var <| ∀ x : α, β) :=
   ⟨fun cfg min => do
     let r ← Testable.run β cfg min
-    pure <| convert_counter_example (· <| default) r (Psum.inr fun x _ => x)⟩
+    pure <| convert_counter_example (· <| default) r (PSum.inr fun x _ => x)⟩
 
 instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, PrintableProp (p x)] [∀ x, Testable (β x)]
     [I : SampleableExt (Subtype p)] : Testable (NamedBinder var <| ∀ x : α, NamedBinder var' <| p x → β x) :=
@@ -561,14 +561,14 @@ instance (priority := 2000) subtypeVarTestable {p : α → Prop} [∀ x, Printab
         let r ← Testable.run (β x.val) cfg min
         match print_prop (p x) with
           | none => pure r
-          | some str => pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (Psum.inr id)⟩
+          | some str => pure <| add_to_counter_example (s! "guard: {str} (by construction)") id r (PSum.inr id)⟩
     let r ← @Testable.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min
     pure <| convert_counter_example' ⟨fun x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
 
 instance (priority := 100) decidableTestable (p : Prop) [PrintableProp p] [Decidable p] : Testable p :=
   ⟨fun cfg min =>
     return <|
-      if h : p then success (Psum.inr h)
+      if h : p then success (PSum.inr h)
       else
         match printProp p with
         | none => failure h [] 0
@@ -646,8 +646,8 @@ def retry (cmd : Rand (TestResult p)) : ℕ → Rand (TestResult p)
 
 /-- Count the number of times the test procedure gave up. -/
 def giveUp (x : ℕ) : TestResult p → TestResult p
-  | success (Psum.inl ()) => gave_up x
-  | success (Psum.inr p) => success (Psum.inr p)
+  | success (PSum.inl ()) => gave_up x
+  | success (PSum.inr p) => success (PSum.inr p)
   | gave_up n => gave_up (n + x)
   | failure Hce xs n => failure Hce xs n
 
@@ -663,14 +663,14 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
     when cfg <| return <| trace s!"[slim_check: sample]" ()
     let x ← retry ((Testable.run p cfg true).run ⟨size⟩) 10
     match x with
-      | success (Psum.inl ()) => testable.run_suite_aux r n
-      | success (Psum.inr Hp) => return <| success (Psum.inr Hp)
+      | success (PSum.inl ()) => testable.run_suite_aux r n
+      | success (PSum.inr Hp) => return <| success (PSum.inr Hp)
       | failure Hce xs n => return (failure Hce xs n)
       | gave_up g => testable.run_suite_aux (give_up g r) n
 
 /-- Try to find a counter-example of `p`. -/
 def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Rand (TestResult p) :=
-  Testable.runSuiteAux p cfg (success <| Psum.inl ()) cfg.numInst
+  Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
 
 /-- Run a test suite for `p` in `io`. -/
 def Testable.check' (cfg : SlimCheckCfg := {  }) : Io (TestResult p) :=

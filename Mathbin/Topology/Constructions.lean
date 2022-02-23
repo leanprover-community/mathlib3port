@@ -65,8 +65,8 @@ instance {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : Topologi
 instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (∀ a, β a) :=
   ⨅ a, induced (fun f => f a) (t₂ a)
 
-instance Ulift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (Ulift.{v, u} α) :=
-  t.induced Ulift.down
+instance ULift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (ULift.{v, u} α) :=
+  t.induced ULift.down
 
 theorem Quotientₓ.preimage_mem_nhds [TopologicalSpace α] [s : Setoidₓ α] {V : Set <| Quotientₓ s} {a : α}
     (hs : V ∈ 𝓝 (Quotientₓ.mk a)) : Quotientₓ.mk ⁻¹' V ∈ 𝓝 a :=
@@ -643,11 +643,25 @@ theorem is_open_range_inr : IsOpen (Range (inr : β → Sum α β)) :=
   is_open_sum_iff.2 <| by
     simp
 
+theorem is_closed_range_inl : IsClosed (Range (inl : α → Sum α β)) := by
+  rw [← is_open_compl_iff, compl_range_inl]
+  exact is_open_range_inr
+
+theorem is_closed_range_inr : IsClosed (Range (inr : β → Sum α β)) := by
+  rw [← is_open_compl_iff, compl_range_inr]
+  exact is_open_range_inl
+
 theorem open_embedding_inl : OpenEmbedding (inl : α → Sum α β) :=
   { embedding_inl with open_range := is_open_range_inl }
 
 theorem open_embedding_inr : OpenEmbedding (inr : β → Sum α β) :=
   { embedding_inr with open_range := is_open_range_inr }
+
+theorem closed_embedding_inl : ClosedEmbedding (inl : α → Sum α β) :=
+  { embedding_inl with closed_range := is_closed_range_inl }
+
+theorem closed_embedding_inr : ClosedEmbedding (inr : β → Sum α β) :=
+  { embedding_inr with closed_range := is_closed_range_inr }
 
 end Sum
 
@@ -1111,17 +1125,17 @@ theorem embedding_sigma_map {τ : ι → Type _} [∀ i, TopologicalSpace (τ i)
 
 end Sigma
 
-section Ulift
+section ULift
 
 @[continuity]
-theorem continuous_ulift_down [TopologicalSpace α] : Continuous (Ulift.down : Ulift.{v, u} α → α) :=
+theorem continuous_ulift_down [TopologicalSpace α] : Continuous (ULift.down : ULift.{v, u} α → α) :=
   continuous_induced_dom
 
 @[continuity]
-theorem continuous_ulift_up [TopologicalSpace α] : Continuous (Ulift.up : α → Ulift.{v, u} α) :=
+theorem continuous_ulift_up [TopologicalSpace α] : Continuous (ULift.up : α → ULift.{v, u} α) :=
   continuous_induced_rng continuous_id
 
-end Ulift
+end ULift
 
 theorem mem_closure_of_continuous [TopologicalSpace α] [TopologicalSpace β] {f : α → β} {a : α} {s : Set α} {t : Set β}
     (hf : Continuous f) (ha : a ∈ Closure s) (h : MapsTo f s (Closure t)) : f a ∈ Closure t :=

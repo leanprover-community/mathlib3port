@@ -63,7 +63,7 @@ We give them some help by expressing the lemmas first non-categorically, then us
 `convert _aux using 1` to have the elaborator work as little as possible. -/
 
 
-open tensor_product (assoc map)
+open TensorProduct (assoc map)
 
 private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMonoidₓ X₁] [AddCommMonoidₓ X₂]
     [AddCommMonoidₓ X₃] [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _} [AddCommMonoidₓ Y₁]

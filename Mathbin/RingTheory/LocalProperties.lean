@@ -3,9 +3,13 @@ Copyright (c) 2021 Andrew Yang. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
-import Mathbin.RingTheory.Localization
 import Mathbin.Data.Equiv.TransferInstance
 import Mathbin.GroupTheory.Submonoid.Pointwise
+import Mathbin.RingTheory.Finiteness
+import Mathbin.RingTheory.Localization.AtPrime
+import Mathbin.RingTheory.Localization.Away
+import Mathbin.RingTheory.Localization.Integer
+import Mathbin.RingTheory.Localization.Submodule
 import Mathbin.RingTheory.Nilpotent
 
 /-!

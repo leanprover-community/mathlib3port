@@ -32,7 +32,7 @@ functions `f i : C^∞⟮I, M; 𝓘(ℝ), ℝ⟯`, `i : ι`, such that
 * for each `x`, the sum `∑ᶠ i, f i x` is less than or equal to one.
 
 We say that `f : smooth_bump_covering ι I M s` is *subordinate* to a map `U : M → set M` if for each
-index `i`, we have `closure (support (f i)) ⊆ U (f i).c`. This notion is a bit more general than
+index `i`, we have `tsupport (f i) ⊆ U (f i).c`. This notion is a bit more general than
 being subordinate to an open covering of `M`, because we make no assumption about the way `U x`
 depends on `x`.
 
@@ -156,7 +156,7 @@ theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
 /-- A smooth partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same
 type if for each `i` the closure of the support of `f i` is a subset of `U i`. -/
 def IsSubordinate (f : SmoothPartitionOfUnity ι I M s) (U : ι → Set M) :=
-  ∀ i, Closure (Support (f i)) ⊆ U i
+  ∀ i, Tsupport (f i) ⊆ U i
 
 @[simp]
 theorem is_subordinate_to_partition_of_unity {f : SmoothPartitionOfUnity ι I M s} {U : ι → Set M} :
@@ -220,12 +220,12 @@ theorem coe_mk (c : ι → M) (to_fun : ∀ i, SmoothBumpFunction I (c i)) h₁ 
   rfl
 
 /-- We say that `f : smooth_bump_covering ι I M s` is *subordinate* to a map `U : M → set M` if for each
-index `i`, we have `closure (support (f i)) ⊆ U (f i).c`. This notion is a bit more general than
+index `i`, we have `tsupport (f i) ⊆ U (f i).c`. This notion is a bit more general than
 being subordinate to an open covering of `M`, because we make no assumption about the way `U x`
 depends on `x`.
 -/
 def IsSubordinate {s : Set M} (f : SmoothBumpCovering ι I M s) (U : M → Set M) :=
-  ∀ i, Closure (support <| f i) ⊆ U (f.c i)
+  ∀ i, Tsupport (f i) ⊆ U (f.c i)
 
 theorem IsSubordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M → Set M} (h : fs.IsSubordinate U)
     (i : ι) : Support (fs i) ⊆ U (fs.c i) :=
@@ -257,7 +257,7 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
   · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
     exact ((f i).updateR _ _).eventually_eq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
     
-  · simpa only [coe_mk, SmoothBumpFunction.support_update_r] using hfU i
+  · simpa only [coe_mk, SmoothBumpFunction.support_update_r, Tsupport] using hfU i
     
 
 variable {I M}
@@ -365,7 +365,7 @@ theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t 
   set g := f.to_smooth_partition_of_unity
   refine' ⟨⟨_, g.smooth_sum⟩, fun x hx => _, fun x => g.sum_eq_one, fun x => ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩
   suffices ∀ i, g i x = 0 by
-    simp only [this, TimesContMdiffMap.coe_fn_mk, finsum_zero, Pi.zero_apply]
+    simp only [this, ContMdiffMap.coe_fn_mk, finsum_zero, Pi.zero_apply]
   refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _
   exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
 

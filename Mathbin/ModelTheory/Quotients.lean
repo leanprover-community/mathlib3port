@@ -56,12 +56,13 @@ theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) :
   change Quotientₓ.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotientₓ.finChoice _) = _
   rw [Quotientₓ.fin_choice_eq, Quotientₓ.lift_mk]
 
-theorem realize_term_quotient_mk {β : Type _} (x : β → M) (t : L.Term β) :
-    realizeTermₓ (fun i => ⟦x i⟧) t = ⟦@realizeTermₓ _ _ ps.toStructure _ x t⟧ := by
-  induction' t with a1 a2 a3 a4 ih a6 a7 a8 a9 a0
+theorem Term.realize_quotient_mk {β : Type _} (t : L.Term β) (x : β → M) :
+    (t.realize fun i => ⟦x i⟧) = ⟦@Term.realizeₓ _ _ ps.toStructure _ x t⟧ := by
+  induction' t with _ _ _ _ ih
   · rfl
     
-  simp only [ih, fun_map_quotient_mk, realize_term]
+  · simp only [ih, fun_map_quotient_mk, term.realize]
+    
 
 end Language
 

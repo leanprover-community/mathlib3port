@@ -1961,7 +1961,7 @@ end
 
 variable [Module R M₂] [TopologicalAddGroup M]
 
-open _root_.continuous_linear_map (id fst snd subtypeVal mem_ker)
+open _Root_.ContinuousLinearMap (id fst snd subtypeVal mem_ker)
 
 /-- A pair of continuous linear maps such that `f₁ ∘ f₂ = id` generates a continuous
 linear equivalence `e` between `M` and `M₂ × f₁.ker` such that `(e x).2 = x` for `x ∈ f₁.ker`,

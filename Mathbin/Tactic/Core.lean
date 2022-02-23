@@ -240,7 +240,7 @@ unsafe def add_local_consts_as_local_hyps (vars : List expr) : tactic (List (exp
   /- The `list.reverse` below is a performance optimisation since the list of available variables
        reported by the system is often mostly the reverse of the order in which they are dependent. -/
     add_local_consts_as_local_hyps_aux
-    [] vars.reverse.eraseDup
+    [] vars.reverse.dedup
 
 private unsafe def get_expl_pi_arity_aux : expr → tactic Nat
   | expr.pi n bi d b => do

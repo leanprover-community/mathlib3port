@@ -5,7 +5,7 @@ Authors: Anne Baanen, Ashvni Narayanan
 -/
 import Mathbin.FieldTheory.Ratfunc
 import Mathbin.RingTheory.Algebraic
-import Mathbin.RingTheory.DedekindDomain
+import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.IntegrallyClosed
 
 /-!

@@ -41,17 +41,21 @@ open TopologicalSpace Set Filter Metric
 open_locale Ennreal Pointwise TopologicalSpace
 
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
-def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ :=
-  ⟨Icc 0 1, is_compact_Icc, by
-    simp_rw [interior_Icc, nonempty_Ioo, zero_lt_one]⟩
+noncomputable def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ where
+  Carrier := Icc 0 1
+  compact' := is_compact_Icc
+  interior_nonempty' := by
+    simp_rw [interior_Icc, nonempty_Ioo, zero_lt_one]
 
 universe u
 
 /-- The set `[0,1]^ι` as a compact set with non-empty interior. -/
-def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ) :=
-  ⟨Set.Pi Set.Univ fun i => Icc 0 1, is_compact_univ_pi fun i => is_compact_Icc, by
+noncomputable def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ) where
+  Carrier := pi Univ fun i => Icc 0 1
+  compact' := is_compact_univ_pi fun i => is_compact_Icc
+  interior_nonempty' := by
     simp only [interior_pi_set, finite.of_fintype, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo, implies_true_iff,
-      zero_lt_one]⟩
+      zero_lt_one]
 
 namespace MeasureTheory
 
@@ -79,8 +83,8 @@ instance is_add_left_invariant_real_volume_pi (ι : Type _) [Fintype ι] :
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
 theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] : addHaarMeasure (piIcc01 ι) = volume := by
   convert (add_haar_measure_unique volume (pi_Icc01 ι)).symm
-  simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, Finset.prod_const_one, Ennreal.of_real_one, Real.volume_Icc,
-    one_smul, sub_zero]
+  simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk, compacts.coe_mk,
+    Finset.prod_const_one, Ennreal.of_real_one, Real.volume_Icc, one_smul, sub_zero]
 
 instance is_add_haar_measure_volume_pi (ι : Type _) [Fintype ι] : IsAddHaarMeasure (volume : Measure (ι → ℝ)) := by
   rw [← add_haar_measure_eq_volume_pi]

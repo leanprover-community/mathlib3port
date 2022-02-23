@@ -165,7 +165,7 @@ local notation "𝕎" => WittVector p
 -- type as `\bbW`
 open MvPolynomial
 
-open function (uncurry)
+open Function (uncurry)
 
 include hp
 
@@ -244,7 +244,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (Ulift ℤ) ((mk p) fun i => ⟨x i⟩) k
+  specialize h (ULift ℤ) ((mk p) fun i => ⟨x i⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]
@@ -270,8 +270,6 @@ theorem comp {g f} (hg : IsPoly p g) (hf : IsPoly p f) : IsPoly p fun R _Rcr => 
 
 end IsPoly
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- A binary function `f : Π R, 𝕎 R → 𝕎 R → 𝕎 R` on Witt vectors
 is said to be *polynomial* if there is a family of polynomials `φₙ` over `ℤ` such that the `n`th
 coefficient of `f x y` is given by evaluating `φₙ` at the coefficients of `x` and `y`.
@@ -286,15 +284,10 @@ For the most part, users are not expected to treat `is_poly₂` as a class.
 class IsPoly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 𝕎 R) : Prop where mk' ::
   poly :
     ∃ φ : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ,
-      ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R,
-        (f x y).coeff = fun n =>
-          peval (φ n)
-            («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
+      ∀ ⦃R⦄ [CommRingₓ R] x y : 𝕎 R, (f x y).coeff = fun n => peval (φ n) ![x.coeff, y.coeff]
 
 variable {p}
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The composition of polynomial functions is polynomial. -/
 theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
@@ -304,9 +297,7 @@ theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPo
   obtain ⟨χ, hh⟩ := hh
   refine'
     ⟨⟨fun n =>
-        bind₁
-          (uncurry <|
-            «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
+        bind₁ (uncurry <| ![fun k => rename (Prod.mk (0 : Finₓ 2)) (φ k), fun k => rename (Prod.mk (1 : Finₓ 2)) (ψ k)])
           (χ n),
         _⟩⟩
   intros
@@ -326,18 +317,11 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ 
   intros
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
   obtain ⟨φ, hf⟩ := hf
-  refine'
-    ⟨⟨fun n =>
-        bind₁
-          (uncurry («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"))
-          (φ n),
-        _⟩⟩
+  refine' ⟨⟨fun n => bind₁ (uncurry ![X, X]) (φ n), _⟩⟩
   intros
   funext n
   simp only [hf, peval, uncurry, aeval_bind₁]
@@ -582,7 +566,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
   apply MvPolynomial.funext
   intro x
   simp only [hom_bind₁]
-  specialize h (Ulift ℤ) ((mk p) fun i => ⟨x (0, i)⟩) ((mk p) fun i => ⟨x (1, i)⟩) k
+  specialize h (ULift ℤ) ((mk p) fun i => ⟨x (0, i)⟩) ((mk p) fun i => ⟨x (1, i)⟩) k
   simp only [ghost_component_apply, aeval_eq_eval₂_hom] at h
   apply (ulift.ring_equiv.symm : ℤ ≃+* _).Injective
   simp only [← RingEquiv.coe_to_ring_hom, map_eval₂_hom]

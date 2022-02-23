@@ -30,7 +30,7 @@ unsafe def find_tac : expr → Option auto_cases_tac
   | quote.1 False => tac_cases
   | quote.1 Unit => tac_cases
   | quote.1 PUnit => tac_cases
-  | quote.1 (Ulift _) => tac_cases
+  | quote.1 (ULift _) => tac_cases
   | quote.1 (Plift _) => tac_cases
   | quote.1 (Prod _ _) => tac_cases
   | quote.1 (And _ _) => tac_cases

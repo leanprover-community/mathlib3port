@@ -48,7 +48,7 @@ the error term indeed gets smaller. As a corollary, we will be able to show that
 
 namespace GeneralizedContinuedFraction
 
-open generalized_continued_fraction (of)
+open GeneralizedContinuedFraction (of)
 
 open Int
 

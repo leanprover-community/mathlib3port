@@ -1067,6 +1067,40 @@ instance [MulOneClassₓ M] [MulOneClassₓ N] : Inhabited (M →* N) :=
 instance [MulZeroOneClassₓ M] : Inhabited (M →*₀ M) :=
   ⟨MonoidWithZeroHom.id M⟩
 
+namespace MulHom
+
+/-- Given two mul morphisms `f`, `g` to a commutative semigroup, `f * g` is the mul morphism
+sending `x` to `f x * g x`. -/
+@[to_additive]
+instance [Mul M] [CommSemigroupₓ N] : Mul (MulHom M N) :=
+  ⟨fun f g =>
+    { toFun := fun m => f m * g m,
+      map_mul' := by
+        intros
+        show f (x * y) * g (x * y) = f x * g x * (f y * g y)
+        rw [f.map_mul, g.map_mul, ← mul_assoc, ← mul_assoc, mul_right_commₓ (f x)] }⟩
+
+/-- Given two additive morphisms `f`, `g` to an additive commutative semigroup, `f + g` is the
+additive morphism sending `x` to `f x + g x`. -/
+add_decl_doc AddHom.hasAdd
+
+@[simp, to_additive]
+theorem mul_apply {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : MulHom M N) (x : M) : (f * g) x = f x * g x :=
+  rfl
+
+@[to_additive]
+theorem mul_comp [Mul M] [CommSemigroupₓ N] [CommSemigroupₓ P] (g₁ g₂ : MulHom N P) (f : MulHom M N) :
+    (g₁ * g₂).comp f = g₁.comp f * g₂.comp f :=
+  rfl
+
+@[to_additive]
+theorem comp_mul [Mul M] [CommSemigroupₓ N] [CommSemigroupₓ P] (g : MulHom N P) (f₁ f₂ : MulHom M N) :
+    g.comp (f₁ * f₂) = g.comp f₁ * g.comp f₂ := by
+  ext
+  simp only [mul_apply, Function.comp_app, map_mul, coe_comp]
+
+end MulHom
+
 namespace MonoidHom
 
 variable [mM : MulOneClassₓ M] [mN : MulOneClassₓ N] [mP : MulOneClassₓ P]

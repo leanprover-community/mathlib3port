@@ -67,6 +67,10 @@ theorem mem_bot {x : M} : x ∈ (⊥ : Submodule R M) ↔ x = 0 :=
 
 end
 
+@[simp]
+theorem restrict_scalars_eq_bot_iff {p : Submodule R M} : restrictScalars S p = ⊥ ↔ p = ⊥ := by
+  simp [SetLike.ext_iff]
+
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
   ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
 
@@ -146,6 +150,10 @@ theorem restrict_scalars_top : restrictScalars S (⊤ : Submodule R M) = ⊤ :=
   rfl
 
 end
+
+@[simp]
+theorem restrict_scalars_eq_top_iff {p : Submodule R M} : restrictScalars S p = ⊤ ↔ p = ⊤ := by
+  simp [SetLike.ext_iff]
 
 instance : OrderTop (Submodule R M) where
   top := ⊤

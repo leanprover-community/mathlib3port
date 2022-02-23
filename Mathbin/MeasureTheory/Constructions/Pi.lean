@@ -633,20 +633,9 @@ theorem volume_preserving_pi_fin_two (α : Finₓ 2 → Type u) [∀ i, MeasureS
     [∀ i, SigmaFinite (volume : Measure (α i))] : MeasurePreserving (MeasurableEquiv.piFinTwo α) volume volume :=
   measure_preserving_pi_fin_two _
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace α} (μ ν : Measure α) [SigmaFinite μ]
-    [SigmaFinite ν] :
-    MeasurePreserving MeasurableEquiv.finTwoArrow
-      (Measure.pi («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"))
-      (μ.Prod ν) :=
-  have :
-    ∀ i,
-      sigma_finite
-        ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") i) :=
-    Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
+    [SigmaFinite ν] : MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) :=
+  have : ∀ i, sigma_finite (![μ, ν] i) := Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
   measure_preserving_pi_fin_two _
 
 theorem measure_preserving_fin_two_arrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α) [SigmaFinite μ] :

@@ -64,13 +64,13 @@ theorem cycle_type_eq {σ : Perm α} (l : List (Perm α)) (h0 : l.Prod = σ) (h1
     (h2 : l.Pairwise Disjoint) : σ.cycleType = l.map (Finset.card ∘ support) := by
   have hl : l.nodup := nodup_of_pairwise_disjoint_cycles h1 h2
   rw [cycle_type_eq' l.to_finset]
-  · simp [list.erase_dup_eq_self.mpr hl]
+  · simp [list.dedup_eq_self.mpr hl]
     
   · simpa using h1
     
   · simpa [hl] using h0
     
-  · simpa [list.erase_dup_eq_self.mpr hl] using List.forall_of_pairwise disjoint.symmetric h2
+  · simpa [list.dedup_eq_self.mpr hl] using List.forall_of_pairwise disjoint.symmetric h2
     
 
 theorem cycle_type_one : (1 : Perm α).cycleType = 0 :=
@@ -149,7 +149,7 @@ theorem sum_cycle_type (σ : Perm α) : σ.cycleType.Sum = σ.support.card :=
     fun σ τ hστ hc hσ hτ => by
     rw [hστ.cycle_type, sum_add, hσ, hτ, hστ.card_support_mul]
 
-theorem sign_of_cycle_type (σ : Perm α) : sign σ = (σ.cycleType.map fun n => -((-1 : ℤˣ) ^ n)).Prod :=
+theorem sign_of_cycle_type' (σ : Perm α) : sign σ = (σ.cycleType.map fun n => -((-1 : ℤˣ) ^ n)).Prod :=
   cycle_induction_on (fun τ : Perm α => sign τ = (τ.cycleType.map fun n => -((-1 : ℤˣ) ^ n)).Prod) σ
     (by
       rw [sign_one, cycle_type_one, Multiset.map_zero, prod_zero])
@@ -157,6 +157,20 @@ theorem sign_of_cycle_type (σ : Perm α) : sign σ = (σ.cycleType.map fun n =>
       rw [hσ.sign, hσ.cycle_type, coe_map, coe_prod, List.map_singleton, List.prod_singleton])
     fun σ τ hστ hc hσ hτ => by
     rw [sign_mul, hσ, hτ, hστ.cycle_type, Multiset.map_add, prod_add]
+
+theorem sign_of_cycle_type (f : Perm α) : sign f = (-1 : ℤˣ) ^ (f.cycleType.Sum + f.cycleType.card) :=
+  cycle_induction_on (fun f : Perm α => sign f = (-1 : ℤˣ) ^ (f.cycleType.Sum + f.cycleType.card)) f
+    (-- base_one
+    by
+      rw [Equivₓ.Perm.cycle_type_one, sign_one, Multiset.sum_zero, Multiset.card_zero, pow_zeroₓ])
+    (-- base_cycles
+    fun f hf => by
+      rw [Equivₓ.Perm.IsCycle.cycle_type hf, hf.sign, coe_sum, List.sum_cons, sum_nil, add_zeroₓ, coe_card,
+        length_singleton, pow_addₓ, pow_oneₓ, mul_comm, neg_mul, one_mulₓ])-- induction_disjoint
+  fun f g hfg hf Pf Pg => by
+    rw [Equivₓ.Perm.Disjoint.cycle_type hfg, Multiset.sum_add, Multiset.card_add, ← add_assocₓ,
+      add_commₓ f.cycle_type.sum g.cycle_type.sum, add_assocₓ g.cycle_type.sum _ _, add_commₓ g.cycle_type.sum _,
+      add_assocₓ, pow_addₓ, ← Pf, ← Pg, Equivₓ.Perm.sign_mul]
 
 theorem lcm_cycle_type (σ : Perm α) : σ.cycleType.lcm = orderOf σ :=
   cycle_induction_on (fun τ : Perm α => τ.cycleType.lcm = orderOf τ) σ
@@ -571,7 +585,7 @@ theorem is_cycle (h : IsThreeCycle σ) : IsCycle σ := by
   rw [← card_cycle_type_eq_one, h.cycle_type, card_singleton]
 
 theorem sign (h : IsThreeCycle σ) : sign σ = 1 := by
-  rw [sign_of_cycle_type, h.cycle_type]
+  rw [Equivₓ.Perm.sign_of_cycle_type, h.cycle_type]
   rfl
 
 theorem inv {f : Perm α} (h : IsThreeCycle f) : IsThreeCycle f⁻¹ := by

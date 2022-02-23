@@ -173,7 +173,6 @@ section LinearOrderedField
 
 variable {𝕜} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
@@ -183,7 +182,7 @@ theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
   · rintro ⟨hxA, hAx⟩
     use hxA
     rintro x₁ hx₁ x₂ hx₂ hx
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h
     exact h.1 (hAx _ hx₁ _ hx₂ (mem_open_segment_of_ne_left_right 𝕜 h.1 h.2 hx)).1
     
   rintro ⟨hxA, hAx⟩
@@ -194,14 +193,13 @@ theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
     
   exact ⟨right_mem_open_segment_iff.1 hx, rfl⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by
   use fun hx => ⟨hx.1, (mem_extreme_points_iff_extreme_singleton.1 hx).convex_diff hA⟩
   rintro ⟨hxA, hAx⟩
   refine' mem_extreme_points_iff_forall_segment.2 ⟨hxA, fun x₁ hx₁ x₂ hx₂ hx => _⟩
   rw [convex_iff_segment_subset] at hAx
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   exact (hAx ⟨hx₁, fun hx₁ => h.1 (mem_singleton_iff.2 hx₁)⟩ ⟨hx₂, fun hx₂ => h.2 (mem_singleton_iff.2 hx₂)⟩ hx).2 rfl
 
 theorem Convex.mem_extreme_points_iff_mem_diff_convex_hull_diff (hA : Convex 𝕜 A) :

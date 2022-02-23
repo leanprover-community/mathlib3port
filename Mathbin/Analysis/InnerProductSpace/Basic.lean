@@ -1159,6 +1159,17 @@ theorem inner_map_polarization (T : V →ₗ[ℂ] V) (x y : V) :
     sub_neg_eq_add, one_mulₓ, neg_one_mul, mul_sub, sub_sub]
   ring
 
+theorem inner_map_polarization' (T : V →ₗ[ℂ] V) (x y : V) :
+    ⟪T x, y⟫_ℂ =
+      (⟪T (x + y), x + y⟫_ℂ - ⟪T (x - y), x - y⟫_ℂ - Complex.i * ⟪T (x + Complex.i • y), x + Complex.i • y⟫_ℂ +
+          Complex.i * ⟪T (x - Complex.i • y), x - Complex.i • y⟫_ℂ) /
+        4 :=
+  by
+  simp only [map_add, map_sub, inner_add_left, inner_add_right, LinearMap.map_smul, inner_smul_left, inner_smul_right,
+    Complex.conj_I, ← pow_two, Complex.I_sq, inner_sub_left, inner_sub_right, mul_addₓ, ← mul_assoc, mul_neg, neg_negₓ,
+    sub_neg_eq_add, one_mulₓ, neg_one_mul, mul_sub, sub_sub]
+  ring
+
 /-- If `⟪T x, x⟫_ℂ = 0` for all x, then T = 0.
 -/
 theorem inner_map_self_eq_zero (T : V →ₗ[ℂ] V) : (∀ x : V, ⟪T x, x⟫_ℂ = 0) ↔ T = 0 := by
@@ -2331,6 +2342,32 @@ theorem IsSelfAdjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : I
 self-adjoint. -/
 theorem IsSelfAdjoint.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) {V : Submodule 𝕜 E}
     (hV : ∀, ∀ v ∈ V, ∀, T v ∈ V) : IsSelfAdjoint (T.restrict hV) := fun v w => hT v w
+
+section Complex
+
+variable {V : Type _} [InnerProductSpace ℂ V]
+
+/-- A linear operator on a complex inner product space is self-adjoint precisely when
+`⟪T v, v⟫_ℂ` is real for all v.-/
+theorem is_self_adjoint_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
+    IsSelfAdjoint T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ := by
+  constructor
+  · intro hT v
+    apply is_self_adjoint.conj_inner_sym hT
+    
+  · intro h x y
+    nth_rw 1[← inner_conj_sym]
+    nth_rw 1[inner_map_polarization]
+    simp only [star_ring_end_apply, star_div', star_sub, star_add, star_mul]
+    simp only [← star_ring_end_apply]
+    rw [h (x + y), h (x - y), h (x + Complex.i • y), h (x - Complex.i • y)]
+    simp only [Complex.conj_I]
+    rw [inner_map_polarization']
+    norm_num
+    ring
+    
+
+end Complex
 
 end InnerProductSpace
 

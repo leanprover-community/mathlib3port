@@ -227,32 +227,17 @@ theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : 
   mt (is_solvable_def _).mp
     (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (HasMem.Mem g) h).mp (h2 n))))
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
   let x : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
+    ⟨![1, 2, 0, 3, 4], ![2, 0, 1, 3, 4], by
       decide, by
       decide⟩
   let y : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
+    ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by
       decide, by
       decide⟩
   let z : Equivₓ.Perm (Finₓ 5) :=
-    ⟨«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»",
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»", by
+    ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by
       decide, by
       decide⟩
   have x_ne_one : x ≠ 1 := by

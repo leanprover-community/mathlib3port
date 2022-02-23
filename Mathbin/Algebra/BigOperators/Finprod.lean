@@ -462,12 +462,11 @@ theorem finprod_mem_of_eq_on_one (hf : EqOn f 1 s) : (∏ᶠ i ∈ s, f i) = 1 :
   rw [← finprod_mem_one s]
   exact finprod_mem_congr rfl hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If the product of `f i` over `i ∈ s` is not equal to one, then there is some `x ∈ s`
 such that `f x ≠ 1`. -/
 @[to_additive]
 theorem exists_ne_one_of_finprod_mem_ne_one (h : (∏ᶠ i ∈ s, f i) ≠ 1) : ∃ x ∈ s, f x ≠ 1 := by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h'
   exact h (finprod_mem_of_eq_on_one h')
 
 /-- Given a finite set `s`, the product of `f i * g i` over `i ∈ s` equals the product of `f i`

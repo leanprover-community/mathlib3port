@@ -93,7 +93,7 @@ namespace Interactive
 
 setup_tactic_parser
 
-open tactic.interactive (rw_rules)
+open Tactic.Interactive (rw_rules)
 
 /-- The `conv` tactic provides a `conv` within a `conv`. It allows the user to return to a
 previous state of the outer conv block to continue editing an expression without having to

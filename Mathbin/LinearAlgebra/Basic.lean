@@ -1939,17 +1939,17 @@ theorem _root_.submodule.comap_map_eq_self {f : M →ₛₗ[τ₁₂] M₂} {p :
     comap f (map f p) = p := by
   rw [Submodule.comap_map_eq, sup_of_le_left h]
 
-theorem map_le_map_iff (f : M →ₛₗ[τ₁₂] M₂) {p p'} : map f p ≤ map f p' ↔ p ≤ p'⊔ker f := by
+protected theorem map_le_map_iff (f : M →ₛₗ[τ₁₂] M₂) {p p'} : map f p ≤ map f p' ↔ p ≤ p'⊔ker f := by
   rw [map_le_iff_le_comap, Submodule.comap_map_eq]
 
 theorem map_le_map_iff' {f : M →ₛₗ[τ₁₂] M₂} (hf : ker f = ⊥) {p p'} : map f p ≤ map f p' ↔ p ≤ p' := by
-  rw [map_le_map_iff, hf, sup_bot_eq]
+  rw [LinearMap.map_le_map_iff, hf, sup_bot_eq]
 
 theorem map_injective {f : M →ₛₗ[τ₁₂] M₂} (hf : ker f = ⊥) : Injective (map f) := fun p p' h =>
   le_antisymmₓ ((map_le_map_iff' hf).1 (le_of_eqₓ h)) ((map_le_map_iff' hf).1 (ge_of_eq h))
 
 theorem map_eq_top_iff {f : M →ₛₗ[τ₁₂] M₂} (hf : range f = ⊤) {p : Submodule R M} : p.map f = ⊤ ↔ p⊔f.ker = ⊤ := by
-  simp_rw [← top_le_iff, ← hf, range_eq_map, map_le_map_iff]
+  simp_rw [← top_le_iff, ← hf, range_eq_map, LinearMap.map_le_map_iff]
 
 end AddCommGroupₓ
 
@@ -2710,11 +2710,7 @@ open _Root_.LinearMap
 
 /-- Multiplying by a unit `a` of the ring `R` is a linear equivalence. -/
 def smulOfUnit (a : Rˣ) : M ≃ₗ[R] M :=
-  ofLinear ((a : R) • 1 : M →ₗ[R] M) (((a⁻¹ : Rˣ) : R) • 1 : M →ₗ[R] M)
-    (by
-      rw [smul_comp, comp_smul, smul_smul, Units.mul_inv, one_smul] <;> rfl)
-    (by
-      rw [smul_comp, comp_smul, smul_smul, Units.inv_mul, one_smul] <;> rfl)
+  DistribMulAction.toLinearEquiv R M a
 
 /-- A linear isomorphism between the domains and codomains of two spaces of linear maps gives a
 linear isomorphism between the two function spaces. -/

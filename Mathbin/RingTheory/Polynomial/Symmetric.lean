@@ -41,7 +41,7 @@ As in other polynomial files, we typically use the notation:
 -/
 
 
-open equiv (Perm)
+open Equivₓ (Perm)
 
 open_locale BigOperators
 

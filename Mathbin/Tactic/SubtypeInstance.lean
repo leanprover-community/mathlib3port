@@ -14,7 +14,7 @@ namespace Tactic
 
 setup_tactic_parser
 
-open tactic.interactive (get_current_field refine_struct)
+open Tactic.Interactive (get_current_field refine_struct)
 
 /-- makes the substructure axiom name from field name, by postfacing with `_mem`-/
 def mkMemName (sub : Name) : Name → Name

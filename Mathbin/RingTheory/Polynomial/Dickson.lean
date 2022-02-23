@@ -3,10 +3,11 @@ Copyright (c) 2021 Julian Kuelshammer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
-import Mathbin.RingTheory.Polynomial.Chebyshev
-import Mathbin.RingTheory.Localization
-import Mathbin.Data.Zmod.Basic
 import Mathbin.Algebra.CharP.Invertible
+import Mathbin.Data.Zmod.Basic
+import Mathbin.FieldTheory.Finite.Basic
+import Mathbin.RingTheory.Localization.FractionRing
+import Mathbin.RingTheory.Polynomial.Chebyshev
 
 /-!
 # Dickson polynomials

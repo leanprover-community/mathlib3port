@@ -3,7 +3,7 @@ Copyright © 2020 Nicolò Cavalleri. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Yury Kudryashov
 -/
-import Mathbin.Geometry.Manifold.TimesContMdiffMap
+import Mathbin.Geometry.Manifold.ContMdiffMap
 
 /-!
 # Diffeomorphisms
@@ -63,8 +63,8 @@ variable (I I' M M' n)
 -/
 @[protect_proj, nolint has_inhabited_instance]
 structure Diffeomorph extends M ≃ M' where
-  times_cont_mdiff_to_fun : TimesContMdiff I I' n to_equiv
-  times_cont_mdiff_inv_fun : TimesContMdiff I' I n to_equiv.symm
+  cont_mdiff_to_fun : ContMdiff I I' n to_equiv
+  cont_mdiff_inv_fun : ContMdiff I' I n to_equiv.symm
 
 end Defs
 
@@ -88,29 +88,29 @@ instance : CoeFun (M ≃ₘ^n⟮I,I'⟯ M') fun _ => M → M' :=
   ⟨fun e => e.toEquiv⟩
 
 instance : Coe (M ≃ₘ^n⟮I,I'⟯ M') C^n⟮I, M; I', M'⟯ :=
-  ⟨fun Φ => ⟨Φ, Φ.times_cont_mdiff_to_fun⟩⟩
+  ⟨fun Φ => ⟨Φ, Φ.cont_mdiff_to_fun⟩⟩
 
 @[continuity]
 protected theorem continuous (h : M ≃ₘ^n⟮I,I'⟯ M') : Continuous h :=
-  h.times_cont_mdiff_to_fun.Continuous
+  h.cont_mdiff_to_fun.Continuous
 
-protected theorem times_cont_mdiff (h : M ≃ₘ^n⟮I,I'⟯ M') : TimesContMdiff I I' n h :=
-  h.times_cont_mdiff_to_fun
+protected theorem cont_mdiff (h : M ≃ₘ^n⟮I,I'⟯ M') : ContMdiff I I' n h :=
+  h.cont_mdiff_to_fun
 
-protected theorem times_cont_mdiff_at (h : M ≃ₘ^n⟮I,I'⟯ M') {x} : TimesContMdiffAt I I' n h x :=
-  h.TimesContMdiff.TimesContMdiffAt
+protected theorem cont_mdiff_at (h : M ≃ₘ^n⟮I,I'⟯ M') {x} : ContMdiffAt I I' n h x :=
+  h.ContMdiff.ContMdiffAt
 
-protected theorem times_cont_mdiff_within_at (h : M ≃ₘ^n⟮I,I'⟯ M') {s x} : TimesContMdiffWithinAt I I' n h s x :=
-  h.TimesContMdiffAt.TimesContMdiffWithinAt
+protected theorem cont_mdiff_within_at (h : M ≃ₘ^n⟮I,I'⟯ M') {s x} : ContMdiffWithinAt I I' n h s x :=
+  h.ContMdiffAt.ContMdiffWithinAt
 
-protected theorem times_cont_diff (h : E ≃ₘ^n[𝕜] E') : TimesContDiff 𝕜 n h :=
-  h.TimesContMdiff.TimesContDiff
+protected theorem cont_diff (h : E ≃ₘ^n[𝕜] E') : ContDiff 𝕜 n h :=
+  h.ContMdiff.ContDiff
 
 protected theorem smooth (h : M ≃ₘ⟮I,I'⟯ M') : Smooth I I' h :=
-  h.times_cont_mdiff_to_fun
+  h.cont_mdiff_to_fun
 
 protected theorem mdifferentiable (h : M ≃ₘ^n⟮I,I'⟯ M') (hn : 1 ≤ n) : Mdifferentiable I I' h :=
-  h.TimesContMdiff.Mdifferentiable hn
+  h.ContMdiff.Mdifferentiable hn
 
 protected theorem mdifferentiable_on (h : M ≃ₘ^n⟮I,I'⟯ M') (s : Set M) (hn : 1 ≤ n) : MdifferentiableOn I I' h s :=
   (h.Mdifferentiable hn).MdifferentiableOn
@@ -144,8 +144,8 @@ variable (M I n)
 
 /-- Identity map as a diffeomorphism. -/
 protected def refl : M ≃ₘ^n⟮I,I⟯ M where
-  times_cont_mdiff_to_fun := times_cont_mdiff_id
-  times_cont_mdiff_inv_fun := times_cont_mdiff_id
+  cont_mdiff_to_fun := cont_mdiff_id
+  cont_mdiff_inv_fun := cont_mdiff_id
   toEquiv := Equivₓ.refl M
 
 @[simp]
@@ -160,8 +160,8 @@ end
 
 /-- Composition of two diffeomorphisms. -/
 protected def trans (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯ N) : M ≃ₘ^n⟮I,J⟯ N where
-  times_cont_mdiff_to_fun := h₂.times_cont_mdiff_to_fun.comp h₁.times_cont_mdiff_to_fun
-  times_cont_mdiff_inv_fun := h₁.times_cont_mdiff_inv_fun.comp h₂.times_cont_mdiff_inv_fun
+  cont_mdiff_to_fun := h₂.cont_mdiff_to_fun.comp h₁.cont_mdiff_to_fun
+  cont_mdiff_inv_fun := h₁.cont_mdiff_inv_fun.comp h₂.cont_mdiff_inv_fun
   toEquiv := h₁.toEquiv.trans h₂.toEquiv
 
 @[simp]
@@ -178,8 +178,8 @@ theorem coe_trans (h₁ : M ≃ₘ^n⟮I,I'⟯ M') (h₂ : M' ≃ₘ^n⟮I',J⟯
 
 /-- Inverse of a diffeomorphism. -/
 protected def symm (h : M ≃ₘ^n⟮I,J⟯ N) : N ≃ₘ^n⟮J,I⟯ M where
-  times_cont_mdiff_to_fun := h.times_cont_mdiff_inv_fun
-  times_cont_mdiff_inv_fun := h.times_cont_mdiff_to_fun
+  cont_mdiff_to_fun := h.cont_mdiff_inv_fun
+  cont_mdiff_inv_fun := h.cont_mdiff_to_fun
   toEquiv := h.toEquiv.symm
 
 @[simp]
@@ -253,56 +253,55 @@ theorem coe_to_homeomorph_symm (h : M ≃ₘ^n⟮I,J⟯ N) : ⇑h.toHomeomorph.s
   rfl
 
 @[simp]
-theorem times_cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s x} (hm : m ≤ n) :
-    TimesContMdiffWithinAt I I' m (f ∘ h) s x ↔ TimesContMdiffWithinAt J I' m f (h.symm ⁻¹' s) (h x) := by
+theorem cont_mdiff_within_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s x} (hm : m ≤ n) :
+    ContMdiffWithinAt I I' m (f ∘ h) s x ↔ ContMdiffWithinAt J I' m f (h.symm ⁻¹' s) (h x) := by
   constructor
   · intro Hfh
     rw [← h.symm_apply_apply x] at Hfh
     simpa only [(· ∘ ·), h.apply_symm_apply] using
-      Hfh.comp (h x) (h.symm.times_cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
+      Hfh.comp (h x) (h.symm.cont_mdiff_within_at.of_le hm) (maps_to_preimage _ _)
     
   · rw [← h.image_eq_preimage]
-    exact fun hf => hf.comp x (h.times_cont_mdiff_within_at.of_le hm) (maps_to_image _ _)
+    exact fun hf => hf.comp x (h.cont_mdiff_within_at.of_le hm) (maps_to_image _ _)
     
 
 @[simp]
-theorem times_cont_mdiff_on_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :
-    TimesContMdiffOn I I' m (f ∘ h) s ↔ TimesContMdiffOn J I' m f (h.symm ⁻¹' s) :=
+theorem cont_mdiff_on_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :
+    ContMdiffOn I I' m (f ∘ h) s ↔ ContMdiffOn J I' m f (h.symm ⁻¹' s) :=
   h.toEquiv.forall_congr fun x => by
-    simp only [hm, coe_to_equiv, symm_apply_apply, times_cont_mdiff_within_at_comp_diffeomorph_iff, mem_preimage]
+    simp only [hm, coe_to_equiv, symm_apply_apply, cont_mdiff_within_at_comp_diffeomorph_iff, mem_preimage]
 
 @[simp]
-theorem times_cont_mdiff_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {x} (hm : m ≤ n) :
-    TimesContMdiffAt I I' m (f ∘ h) x ↔ TimesContMdiffAt J I' m f (h x) :=
-  h.times_cont_mdiff_within_at_comp_diffeomorph_iff hm
+theorem cont_mdiff_at_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} {x} (hm : m ≤ n) :
+    ContMdiffAt I I' m (f ∘ h) x ↔ ContMdiffAt J I' m f (h x) :=
+  h.cont_mdiff_within_at_comp_diffeomorph_iff hm
 
 @[simp]
-theorem times_cont_mdiff_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} (hm : m ≤ n) :
-    TimesContMdiff I I' m (f ∘ h) ↔ TimesContMdiff J I' m f :=
-  h.toEquiv.forall_congr fun x => h.times_cont_mdiff_at_comp_diffeomorph_iff hm
+theorem cont_mdiff_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : N → M'} (hm : m ≤ n) :
+    ContMdiff I I' m (f ∘ h) ↔ ContMdiff J I' m f :=
+  h.toEquiv.forall_congr fun x => h.cont_mdiff_at_comp_diffeomorph_iff hm
 
 @[simp]
-theorem times_cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s x} :
-    TimesContMdiffWithinAt I' J m (h ∘ f) s x ↔ TimesContMdiffWithinAt I' I m f s x :=
+theorem cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s x} :
+    ContMdiffWithinAt I' J m (h ∘ f) s x ↔ ContMdiffWithinAt I' I m f s x :=
   ⟨fun Hhf => by
-    simpa only [(· ∘ ·), h.symm_apply_apply] using
-      (h.symm.times_cont_mdiff_at.of_le hm).comp_times_cont_mdiff_within_at _ Hhf,
-    fun Hf => (h.TimesContMdiffAt.of_le hm).comp_times_cont_mdiff_within_at _ Hf⟩
+    simpa only [(· ∘ ·), h.symm_apply_apply] using (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
+    fun Hf => (h.ContMdiffAt.of_le hm).comp_cont_mdiff_within_at _ Hf⟩
 
 @[simp]
-theorem times_cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {x} :
-    TimesContMdiffAt I' J m (h ∘ f) x ↔ TimesContMdiffAt I' I m f x :=
-  h.times_cont_mdiff_within_at_diffeomorph_comp_iff hm
+theorem cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {x} :
+    ContMdiffAt I' J m (h ∘ f) x ↔ ContMdiffAt I' I m f x :=
+  h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 
 @[simp]
-theorem times_cont_mdiff_on_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s} :
-    TimesContMdiffOn I' J m (h ∘ f) s ↔ TimesContMdiffOn I' I m f s :=
-  forall₂_congrₓ fun x hx => h.times_cont_mdiff_within_at_diffeomorph_comp_iff hm
+theorem cont_mdiff_on_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {s} :
+    ContMdiffOn I' J m (h ∘ f) s ↔ ContMdiffOn I' I m f s :=
+  forall₂_congrₓ fun x hx => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 
 @[simp]
-theorem times_cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) :
-    TimesContMdiff I' J m (h ∘ f) ↔ TimesContMdiff I' I m f :=
-  forall_congrₓ fun x => h.times_cont_mdiff_within_at_diffeomorph_comp_iff hm
+theorem cont_mdiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) :
+    ContMdiff I' J m (h ∘ f) ↔ ContMdiff I' I m f :=
+  forall_congrₓ fun x => h.cont_mdiff_within_at_diffeomorph_comp_iff hm
 
 theorem to_local_homeomorph_mdifferentiable (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 ≤ n) :
     h.toHomeomorph.toLocalHomeomorph.Mdifferentiable I J :=
@@ -343,8 +342,8 @@ variable (e : E ≃L[𝕜] E')
 
 /-- A continuous linear equivalence between normed spaces is a diffeomorphism. -/
 def toDiffeomorph : E ≃ₘ[𝕜] E' where
-  times_cont_mdiff_to_fun := e.TimesContDiff.TimesContMdiff
-  times_cont_mdiff_inv_fun := e.symm.TimesContDiff.TimesContMdiff
+  cont_mdiff_to_fun := e.ContDiff.ContMdiff
+  cont_mdiff_inv_fun := e.symm.ContDiff.ContMdiff
   toEquiv := e.toLinearEquiv.toEquiv
 
 @[simp]
@@ -405,10 +404,9 @@ variable (e : E ≃ₘ[𝕜] F)
 
 instance smooth_manifold_with_corners_trans_diffeomorph [SmoothManifoldWithCorners I M] :
     SmoothManifoldWithCorners (I.transDiffeomorph e) M := by
-  refine' smooth_manifold_with_corners_of_times_cont_diff_on _ _ fun e₁ e₂ h₁ h₂ => _
+  refine' smooth_manifold_with_corners_of_cont_diff_on _ _ fun e₁ e₂ h₁ h₂ => _
   refine'
-    e.times_cont_diff.comp_times_cont_diff_on
-      (((timesContDiffGroupoid ⊤ I).compatible h₁ h₂).1.comp e.symm.times_cont_diff.times_cont_diff_on _)
+    e.cont_diff.comp_cont_diff_on (((contDiffGroupoid ⊤ I).compatible h₁ h₂).1.comp e.symm.cont_diff.cont_diff_on _)
   mfld_set_tac
 
 variable (I M)
@@ -417,17 +415,17 @@ variable (I M)
 with model `I.trans_diffeomorph e`. -/
 def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph e⟯ M where
   toEquiv := Equivₓ.refl M
-  times_cont_mdiff_to_fun := fun x => by
-    refine' times_cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
-    refine' e.times_cont_diff.times_cont_diff_within_at.congr' (fun y hy => _) _
+  cont_mdiff_to_fun := fun x => by
+    refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
+    refine' e.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
     · simp only [Equivₓ.coe_refl, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph, (extChartAt I x).right_inv hy.1]
       
     exact
       ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivialₓ, by
         simp' only with mfld_simps⟩
-  times_cont_mdiff_inv_fun := fun x => by
-    refine' times_cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
-    refine' e.symm.times_cont_diff.times_cont_diff_within_at.congr' (fun y hy => _) _
+  cont_mdiff_inv_fun := fun x => by
+    refine' cont_mdiff_within_at_iff.2 ⟨continuous_within_at_id, _⟩
+    refine' e.symm.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _
     · simp only [mem_inter_eq, I.ext_chart_at_trans_diffeomorph_target] at hy
       simp only [Equivₓ.coe_refl, Equivₓ.refl_symm, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph_symm,
         (extChartAt I x).right_inv hy.1]
@@ -439,52 +437,51 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.transDiffeomorph 
 variable {I M}
 
 @[simp]
-theorem times_cont_mdiff_within_at_trans_diffeomorph_right {f : M' → M} {x s} :
-    TimesContMdiffWithinAt I' (I.transDiffeomorph e) n f s x ↔ TimesContMdiffWithinAt I' I n f s x :=
-  (toTransDiffeomorph I M e).times_cont_mdiff_within_at_diffeomorph_comp_iff le_top
+theorem cont_mdiff_within_at_trans_diffeomorph_right {f : M' → M} {x s} :
+    ContMdiffWithinAt I' (I.transDiffeomorph e) n f s x ↔ ContMdiffWithinAt I' I n f s x :=
+  (toTransDiffeomorph I M e).cont_mdiff_within_at_diffeomorph_comp_iff le_top
 
 @[simp]
-theorem times_cont_mdiff_at_trans_diffeomorph_right {f : M' → M} {x} :
-    TimesContMdiffAt I' (I.transDiffeomorph e) n f x ↔ TimesContMdiffAt I' I n f x :=
-  (toTransDiffeomorph I M e).times_cont_mdiff_at_diffeomorph_comp_iff le_top
+theorem cont_mdiff_at_trans_diffeomorph_right {f : M' → M} {x} :
+    ContMdiffAt I' (I.transDiffeomorph e) n f x ↔ ContMdiffAt I' I n f x :=
+  (toTransDiffeomorph I M e).cont_mdiff_at_diffeomorph_comp_iff le_top
 
 @[simp]
-theorem times_cont_mdiff_on_trans_diffeomorph_right {f : M' → M} {s} :
-    TimesContMdiffOn I' (I.transDiffeomorph e) n f s ↔ TimesContMdiffOn I' I n f s :=
-  (toTransDiffeomorph I M e).times_cont_mdiff_on_diffeomorph_comp_iff le_top
+theorem cont_mdiff_on_trans_diffeomorph_right {f : M' → M} {s} :
+    ContMdiffOn I' (I.transDiffeomorph e) n f s ↔ ContMdiffOn I' I n f s :=
+  (toTransDiffeomorph I M e).cont_mdiff_on_diffeomorph_comp_iff le_top
 
 @[simp]
-theorem times_cont_mdiff_trans_diffeomorph_right {f : M' → M} :
-    TimesContMdiff I' (I.transDiffeomorph e) n f ↔ TimesContMdiff I' I n f :=
-  (toTransDiffeomorph I M e).times_cont_mdiff_diffeomorph_comp_iff le_top
+theorem cont_mdiff_trans_diffeomorph_right {f : M' → M} :
+    ContMdiff I' (I.transDiffeomorph e) n f ↔ ContMdiff I' I n f :=
+  (toTransDiffeomorph I M e).cont_mdiff_diffeomorph_comp_iff le_top
 
 @[simp]
 theorem smooth_trans_diffeomorph_right {f : M' → M} : Smooth I' (I.transDiffeomorph e) f ↔ Smooth I' I f :=
-  times_cont_mdiff_trans_diffeomorph_right e
+  cont_mdiff_trans_diffeomorph_right e
 
 @[simp]
-theorem times_cont_mdiff_within_at_trans_diffeomorph_left {f : M → M'} {x s} :
-    TimesContMdiffWithinAt (I.transDiffeomorph e) I' n f s x ↔ TimesContMdiffWithinAt I I' n f s x :=
-  ((toTransDiffeomorph I M e).times_cont_mdiff_within_at_comp_diffeomorph_iff le_top).symm
+theorem cont_mdiff_within_at_trans_diffeomorph_left {f : M → M'} {x s} :
+    ContMdiffWithinAt (I.transDiffeomorph e) I' n f s x ↔ ContMdiffWithinAt I I' n f s x :=
+  ((toTransDiffeomorph I M e).cont_mdiff_within_at_comp_diffeomorph_iff le_top).symm
 
 @[simp]
-theorem times_cont_mdiff_at_trans_diffeomorph_left {f : M → M'} {x} :
-    TimesContMdiffAt (I.transDiffeomorph e) I' n f x ↔ TimesContMdiffAt I I' n f x :=
-  ((toTransDiffeomorph I M e).times_cont_mdiff_at_comp_diffeomorph_iff le_top).symm
+theorem cont_mdiff_at_trans_diffeomorph_left {f : M → M'} {x} :
+    ContMdiffAt (I.transDiffeomorph e) I' n f x ↔ ContMdiffAt I I' n f x :=
+  ((toTransDiffeomorph I M e).cont_mdiff_at_comp_diffeomorph_iff le_top).symm
 
 @[simp]
-theorem times_cont_mdiff_on_trans_diffeomorph_left {f : M → M'} {s} :
-    TimesContMdiffOn (I.transDiffeomorph e) I' n f s ↔ TimesContMdiffOn I I' n f s :=
-  ((toTransDiffeomorph I M e).times_cont_mdiff_on_comp_diffeomorph_iff le_top).symm
+theorem cont_mdiff_on_trans_diffeomorph_left {f : M → M'} {s} :
+    ContMdiffOn (I.transDiffeomorph e) I' n f s ↔ ContMdiffOn I I' n f s :=
+  ((toTransDiffeomorph I M e).cont_mdiff_on_comp_diffeomorph_iff le_top).symm
 
 @[simp]
-theorem times_cont_mdiff_trans_diffeomorph_left {f : M → M'} :
-    TimesContMdiff (I.transDiffeomorph e) I' n f ↔ TimesContMdiff I I' n f :=
-  ((toTransDiffeomorph I M e).times_cont_mdiff_comp_diffeomorph_iff le_top).symm
+theorem cont_mdiff_trans_diffeomorph_left {f : M → M'} : ContMdiff (I.transDiffeomorph e) I' n f ↔ ContMdiff I I' n f :=
+  ((toTransDiffeomorph I M e).cont_mdiff_comp_diffeomorph_iff le_top).symm
 
 @[simp]
 theorem smooth_trans_diffeomorph_left {f : M → M'} : Smooth (I.transDiffeomorph e) I' f ↔ Smooth I I' f :=
-  e.times_cont_mdiff_trans_diffeomorph_left
+  e.cont_mdiff_trans_diffeomorph_left
 
 end Diffeomorph
 

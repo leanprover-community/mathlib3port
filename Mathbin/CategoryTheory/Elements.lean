@@ -165,7 +165,7 @@ given by `category_theory.yoneda_sections`.
 -/
 @[simps]
 def toCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : F.Elementsᵒᵖ ⥤ CostructuredArrow yoneda F where
-  obj := fun X => CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (Ulift.up (unop X).2))
+  obj := fun X => CostructuredArrow.mk ((yonedaSections (unop (unop X).fst) F).inv (ULift.up (unop X).2))
   map := fun X Y f => by
     fapply costructured_arrow.hom_mk
     exact f.unop.val.unop

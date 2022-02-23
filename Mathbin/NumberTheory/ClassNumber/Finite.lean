@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.Analysis.SpecialFunctions.Pow
-import Mathbin.RingTheory.ClassGroup
-import Mathbin.RingTheory.Norm
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.Matrix.AbsoluteValue
 import Mathbin.NumberTheory.ClassNumber.AdmissibleAbsoluteValue
+import Mathbin.RingTheory.ClassGroup
+import Mathbin.RingTheory.DedekindDomain.IntegralClosure
+import Mathbin.RingTheory.Norm
 
 /-!
 # Class numbers of global fields
@@ -62,10 +63,9 @@ noncomputable def normBound : ℤ :=
       ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem norm_bound_pos : 0 < normBound abv bS := by
   obtain ⟨i, j, k, hijk⟩ : ∃ i j k, Algebra.leftMulMatrix bS (bS i) j k ≠ 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
     apply (Algebra.leftMulMatrix bS).injective_iff.mp (Algebra.left_mul_matrix_injective bS)

@@ -72,11 +72,10 @@ theorem not_second_countable_topology_alexandroff : ¬SecondCountableTopology �
   intro
   exact not_first_countable_topology_alexandroff inferInstance
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 instance : TotallyDisconnectedSpace ℚ := by
   refine' ⟨fun s hsu hs x hx y hy => _⟩
   clear hsu
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' H : x ≠ y
   wlog hlt : x < y := H.lt_or_lt using x y, y x
   rcases exists_irrational_btwn (Rat.cast_lt.2 hlt) with ⟨z, hz, hxz, hzy⟩
   have := hs.image coe continuous_coe_real.continuous_on

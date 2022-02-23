@@ -1117,32 +1117,20 @@ theorem exists_open_superset_and_is_compact_closure [LocallyCompactSpace α] [T2
   rcases exists_compact_superset hK with ⟨K', hK', hKK'⟩
   refine' ⟨Interior K', is_open_interior, hKK', compact_closure_of_subset_compact hK' interior_subset⟩
 
-theorem is_preirreducible_iff_subsingleton [T2Space α] (S : Set α) : IsPreirreducible S ↔ Subsingleton S := by
+theorem is_preirreducible_iff_subsingleton [T2Space α] (S : Set α) : IsPreirreducible S ↔ Set.Subsingleton S := by
   constructor
-  · intro h
-    constructor
-    intro x y
-    ext
+  · intro h x hx y hy
     by_contra e
     obtain ⟨U, V, hU, hV, hxU, hyV, h'⟩ := t2_separation e
-    have := h U V hU hV ⟨x, x.prop, hxU⟩ ⟨y, y.prop, hyV⟩
+    have := h U V hU hV ⟨x, hx, hxU⟩ ⟨y, hy, hyV⟩
     rw [h', inter_empty] at this
     exact this.some_spec
     
-  · exact @is_preirreducible_of_subsingleton _ _
+  · exact Set.Subsingleton.is_preirreducible
     
 
 theorem is_irreducible_iff_singleton [T2Space α] (S : Set α) : IsIrreducible S ↔ ∃ x, S = {x} := by
-  constructor
-  · intro h
-    rw [exists_eq_singleton_iff_nonempty_subsingleton]
-    use h.1
-    intro a ha b hb
-    injection @Subsingleton.elimₓ ((is_preirreducible_iff_subsingleton _).mp h.2) ⟨_, ha⟩ ⟨_, hb⟩
-    
-  · rintro ⟨x, rfl⟩
-    exact is_irreducible_singleton
-    
+  rw [IsIrreducible, is_preirreducible_iff_subsingleton, exists_eq_singleton_iff_nonempty_subsingleton]
 
 end Separation
 

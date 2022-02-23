@@ -304,9 +304,9 @@ private theorem exists_mono_in_high_dimension' :
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
 theorem exists_mono_in_high_dimension (α : Type u) [Fintype α] (κ : Type v) [Fintype κ] :
     ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : Line α ι, l.IsMono C :=
-  let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (Ulift κ)
+  let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (ULift κ)
   ⟨ι, ιfin, fun C =>
-    let ⟨l, c, hc⟩ := hι (Ulift.up ∘ C)
+    let ⟨l, c, hc⟩ := hι (ULift.up ∘ C)
     ⟨l, c.down, fun x => by
       rw [← hc]⟩⟩
 

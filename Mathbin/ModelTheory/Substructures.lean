@@ -121,7 +121,7 @@ theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
 theorem copy_eq {s : Set M} (hs : s = S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
-theorem const_mem {c : L.const} : ↑c ∈ S :=
+theorem constants_mem {c : L.Constants} : ↑c ∈ S :=
   mem_carrier.2 (S.fun_mem c _ Finₓ.elim0)
 
 /-- The substructure `M` of the structure `M`. -/

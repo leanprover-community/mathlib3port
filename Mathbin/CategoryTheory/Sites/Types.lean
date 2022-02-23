@@ -159,17 +159,17 @@ theorem subcanonical_types_grothendieck_topology : Sheaf.Subcanonical typesGroth
 theorem types_grothendieck_topology_eq_canonical : types_grothendieck_topology.{u} = Sheaf.canonicalTopology (Type u) :=
   le_antisymmₓ subcanonical_types_grothendieck_topology <|
     Inf_le
-      ⟨yoneda.obj (Ulift Bool), ⟨_, rfl⟩,
+      ⟨yoneda.obj (ULift Bool), ⟨_, rfl⟩,
         grothendieck_topology.ext <|
           funext fun α =>
             Set.ext fun S =>
               ⟨fun hs x =>
                 Classical.by_contradiction fun hsx =>
                   have :
-                    (fun _ => Ulift.up true : (yoneda.obj (Ulift Bool)).obj (op PUnit)) = fun _ => Ulift.up false :=
+                    (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ => ULift.up false :=
                     (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
                       funext fun y => hsx.elim <| (S.2 hf) fun _ => y
-                  Bool.noConfusion <| Ulift.up.inj <| (congr_funₓ this PUnit.unit : _),
+                  Bool.noConfusion <| ULift.up.inj <| (congr_funₓ this PUnit.unit : _),
                 fun hs β f => (is_sheaf_yoneda' _) fun y => hs _⟩⟩
 
 end CategoryTheory

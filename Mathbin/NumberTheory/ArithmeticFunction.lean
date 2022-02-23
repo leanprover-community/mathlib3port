@@ -763,7 +763,7 @@ theorem card_factors_multiset_prod {s : Multiset ℕ} (h0 : s.Prod ≠ 0) : Ω s
 
 /-- `ω n` is the number of distinct prime factors of `n`. -/
 def cardDistinctFactors : ArithmeticFunction ℕ :=
-  ⟨fun n => n.factors.eraseDup.length, by
+  ⟨fun n => n.factors.dedup.length, by
     simp ⟩
 
 -- mathport name: «exprω»
@@ -772,16 +772,16 @@ localized [ArithmeticFunction] notation "ω" => Nat.ArithmeticFunction.cardDisti
 theorem card_distinct_factors_zero : ω 0 = 0 := by
   simp
 
-theorem card_distinct_factors_apply {n : ℕ} : ω n = n.factors.eraseDup.length :=
+theorem card_distinct_factors_apply {n : ℕ} : ω n = n.factors.dedup.length :=
   rfl
 
 theorem card_distinct_factors_eq_card_factors_iff_squarefree {n : ℕ} (h0 : n ≠ 0) : ω n = Ω n ↔ Squarefree n := by
   rw [squarefree_iff_nodup_factors h0, card_distinct_factors_apply]
   constructor <;> intro h
-  · rw [← List.eq_of_sublist_of_length_eq n.factors.erase_dup_sublist h]
-    apply List.nodup_erase_dup
+  · rw [← List.eq_of_sublist_of_length_eq n.factors.dedup_sublist h]
+    apply List.nodup_dedup
     
-  · rw [h.erase_dup]
+  · rw [h.dedup]
     rfl
     
 
@@ -856,7 +856,7 @@ theorem coe_moebius_mul_coe_zeta [CommRingₓ R] : (μ * ζ : ArithmeticFunction
     have h : UniqueFactorizationMonoid.normalizedFactors y.val.prod = y.val := by
       apply factors_multiset_prod_of_irreducible
       intro z hz
-      apply irreducible_of_normalized_factor _ (Multiset.subset_of_le (le_transₓ hy (Multiset.erase_dup_le _)) hz)
+      apply irreducible_of_normalized_factor _ (Multiset.subset_of_le (le_transₓ hy (Multiset.dedup_le _)) hz)
     rw [if_pos]
     · rw [card_factors_apply, ← Multiset.coe_card, ← factors_eq, h, Finset.card]
       

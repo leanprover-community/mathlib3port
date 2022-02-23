@@ -51,18 +51,18 @@ theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
   | n + 1 => by
     rw [iterate_succ_apply, deriv_exp, iter_deriv_exp n]
 
-theorem times_cont_diff_exp : ∀ {n}, TimesContDiff ℂ n exp := by
-  refine' times_cont_diff_all_iff_nat.2 fun n => _
+theorem cont_diff_exp : ∀ {n}, ContDiff ℂ n exp := by
+  refine' cont_diff_all_iff_nat.2 fun n => _
   induction' n with n ihn
-  · exact times_cont_diff_zero.2 continuous_exp
+  · exact cont_diff_zero.2 continuous_exp
     
-  · rw [times_cont_diff_succ_iff_deriv]
+  · rw [cont_diff_succ_iff_deriv]
     use differentiable_exp
     rwa [deriv_exp]
     
 
 theorem has_strict_deriv_at_exp (x : ℂ) : HasStrictDerivAt exp (exp x) x :=
-  times_cont_diff_exp.TimesContDiffAt.has_strict_deriv_at' (has_deriv_at_exp x) le_rfl
+  cont_diff_exp.ContDiffAt.has_strict_deriv_at' (has_deriv_at_exp x) le_rfl
 
 theorem has_strict_fderiv_at_exp_real (x : ℂ) : HasStrictFderivAt exp (exp x • (1 : ℂ →L[ℝ] ℂ)) x :=
   (has_strict_deriv_at_exp x).complex_to_real_fderiv
@@ -148,18 +148,18 @@ theorem DifferentiableOn.cexp (hc : DifferentiableOn ℂ f s) : DifferentiableOn
 theorem Differentiable.cexp (hc : Differentiable ℂ f) : Differentiable ℂ fun x => Complex.exp (f x) := fun x =>
   (hc x).cexp
 
-theorem TimesContDiff.cexp {n} (h : TimesContDiff ℂ n f) : TimesContDiff ℂ n fun x => Complex.exp (f x) :=
-  Complex.times_cont_diff_exp.comp h
+theorem ContDiff.cexp {n} (h : ContDiff ℂ n f) : ContDiff ℂ n fun x => Complex.exp (f x) :=
+  Complex.cont_diff_exp.comp h
 
-theorem TimesContDiffAt.cexp {n} (hf : TimesContDiffAt ℂ n f x) : TimesContDiffAt ℂ n (fun x => Complex.exp (f x)) x :=
-  Complex.times_cont_diff_exp.TimesContDiffAt.comp x hf
+theorem ContDiffAt.cexp {n} (hf : ContDiffAt ℂ n f x) : ContDiffAt ℂ n (fun x => Complex.exp (f x)) x :=
+  Complex.cont_diff_exp.ContDiffAt.comp x hf
 
-theorem TimesContDiffOn.cexp {n} (hf : TimesContDiffOn ℂ n f s) : TimesContDiffOn ℂ n (fun x => Complex.exp (f x)) s :=
-  Complex.times_cont_diff_exp.comp_times_cont_diff_on hf
+theorem ContDiffOn.cexp {n} (hf : ContDiffOn ℂ n f s) : ContDiffOn ℂ n (fun x => Complex.exp (f x)) s :=
+  Complex.cont_diff_exp.comp_cont_diff_on hf
 
-theorem TimesContDiffWithinAt.cexp {n} (hf : TimesContDiffWithinAt ℂ n f s x) :
-    TimesContDiffWithinAt ℂ n (fun x => Complex.exp (f x)) s x :=
-  Complex.times_cont_diff_exp.TimesContDiffAt.comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.cexp {n} (hf : ContDiffWithinAt ℂ n f s x) :
+    ContDiffWithinAt ℂ n (fun x => Complex.exp (f x)) s x :=
+  Complex.cont_diff_exp.ContDiffAt.comp_cont_diff_within_at x hf
 
 end
 
@@ -173,8 +173,8 @@ theorem has_strict_deriv_at_exp (x : ℝ) : HasStrictDerivAt exp (exp x) x :=
 theorem has_deriv_at_exp (x : ℝ) : HasDerivAt exp (exp x) x :=
   (Complex.has_deriv_at_exp x).real_of_complex
 
-theorem times_cont_diff_exp {n} : TimesContDiff ℝ n exp :=
-  Complex.times_cont_diff_exp.real_of_complex
+theorem cont_diff_exp {n} : ContDiff ℝ n exp :=
+  Complex.cont_diff_exp.real_of_complex
 
 theorem differentiable_exp : Differentiable ℝ exp := fun x => (has_deriv_at_exp x).DifferentiableAt
 
@@ -230,18 +230,18 @@ function, for standalone use and use with `simp`. -/
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
 
-theorem TimesContDiff.exp {n} (hf : TimesContDiff ℝ n f) : TimesContDiff ℝ n fun x => Real.exp (f x) :=
-  Real.times_cont_diff_exp.comp hf
+theorem ContDiff.exp {n} (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.exp (f x) :=
+  Real.cont_diff_exp.comp hf
 
-theorem TimesContDiffAt.exp {n} (hf : TimesContDiffAt ℝ n f x) : TimesContDiffAt ℝ n (fun x => Real.exp (f x)) x :=
-  Real.times_cont_diff_exp.TimesContDiffAt.comp x hf
+theorem ContDiffAt.exp {n} (hf : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun x => Real.exp (f x)) x :=
+  Real.cont_diff_exp.ContDiffAt.comp x hf
 
-theorem TimesContDiffOn.exp {n} (hf : TimesContDiffOn ℝ n f s) : TimesContDiffOn ℝ n (fun x => Real.exp (f x)) s :=
-  Real.times_cont_diff_exp.comp_times_cont_diff_on hf
+theorem ContDiffOn.exp {n} (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => Real.exp (f x)) s :=
+  Real.cont_diff_exp.comp_cont_diff_on hf
 
-theorem TimesContDiffWithinAt.exp {n} (hf : TimesContDiffWithinAt ℝ n f s x) :
-    TimesContDiffWithinAt ℝ n (fun x => Real.exp (f x)) s x :=
-  Real.times_cont_diff_exp.TimesContDiffAt.comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.exp {n} (hf : ContDiffWithinAt ℝ n f s x) :
+    ContDiffWithinAt ℝ n (fun x => Real.exp (f x)) s x :=
+  Real.cont_diff_exp.ContDiffAt.comp_cont_diff_within_at x hf
 
 theorem HasFderivWithinAt.exp (hf : HasFderivWithinAt f f' s x) :
     HasFderivWithinAt (fun x => Real.exp (f x)) (Real.exp (f x) • f') s x :=

@@ -32,7 +32,7 @@ namespace Set
 
 open Set
 
-open order_dual (toDual ofDual)
+open OrderDual (toDual ofDual)
 
 section Preorderₓ
 

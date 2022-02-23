@@ -374,10 +374,9 @@ def MeasureOfNegatives (s : SignedMeasure α) : Set ℝ :=
 theorem zero_mem_measure_of_negatives : (0 : ℝ) ∈ s.MeasureOfNegatives :=
   ⟨∅, ⟨MeasurableSet.empty, le_restrict_empty _ _⟩, s.Empty⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem bdd_below_measure_of_negatives : BddBelow s.MeasureOfNegatives := by
   simp_rw [BddBelow, Set.Nonempty, mem_lower_bounds]
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   have h' : ∀ n : ℕ, ∃ y : ℝ, y ∈ s.measure_of_negatives ∧ y < -n := fun n => h (-n)
   choose f hf using h'
   have hf' : ∀ n : ℕ, ∃ B, MeasurableSet B ∧ s ≤[B] 0 ∧ s B < -n := by
@@ -402,7 +401,6 @@ theorem bdd_below_measure_of_negatives : BddBelow s.MeasureOfNegatives := by
   rcases exists_nat_gt (-s A) with ⟨n, hn⟩
   exact lt_irreflₓ _ ((neg_lt.1 hn).trans_le (hfalse n))
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- Alternative formulation of `measure_theory.signed_measure.exists_is_compl_positive_negative`
 (the Hahn decomposition theorem) using set complements. -/
 theorem exists_compl_positive_negative (s : SignedMeasure α) : ∃ i : Set α, MeasurableSet i ∧ 0 ≤[i] s ∧ s ≤[iᶜ] 0 := by
@@ -437,7 +435,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) : ∃ i : Set α, 
   refine' ⟨Aᶜ, hA₁.compl, _, (compl_compl A).symm ▸ hA₂⟩
   rw [restrict_le_restrict_iff _ _ hA₁.compl]
   intro C hC hC₁
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hC₂
   rcases exists_subset_restrict_nonpos hC₂ with ⟨D, hD₁, hD, hD₂, hD₃⟩
   have : s (A ∪ D) < Inf s.measure_of_negatives := by
     rw [← hA₃, of_union (Set.disjoint_of_subset_right (Set.Subset.trans hD hC₁) disjoint_compl_right) hA₁ hD₁]

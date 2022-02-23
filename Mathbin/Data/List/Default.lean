@@ -7,7 +7,7 @@ import Mathbin.Data.List.Alist
 import Mathbin.Data.List.Basic
 import Mathbin.Data.List.Chain
 import Mathbin.Data.List.Defs
-import Mathbin.Data.List.EraseDup
+import Mathbin.Data.List.Dedup
 import Mathbin.Data.List.Forall2
 import Mathbin.Data.List.Func
 import Mathbin.Data.List.Intervals

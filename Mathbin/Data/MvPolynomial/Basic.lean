@@ -298,6 +298,10 @@ theorem monomial_finsupp_sum_index {α β : Type _} [Zero β] (f : α →₀ β)
     monomial (f.Sum g) a = c a * f.Prod fun a b => monomial (g a b) 1 :=
   monomial_sum_index _ _ _
 
+theorem monomial_eq_monomial_iff {α : Type _} (a₁ a₂ : α →₀ ℕ) (b₁ b₂ : R) :
+    monomial a₁ b₁ = monomial a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ b₁ = 0 ∧ b₂ = 0 :=
+  Finsupp.single_eq_single_iff _ _ _ _
+
 theorem monomial_eq : monomial s a = c a * (s.Prod fun n e => x n ^ e : MvPolynomial σ R) := by
   simp only [X_pow_eq_monomial, ← monomial_finsupp_sum_index, Finsupp.sum_single]
 

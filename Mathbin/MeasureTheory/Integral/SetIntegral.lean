@@ -799,7 +799,7 @@ theorem integral_pair {f : α → E} {g : α → F} (hf : Integrable f μ) (hg :
 theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (f : α → 𝕜) (c : E) :
     (∫ x, f x • c ∂μ) = (∫ x, f x ∂μ) • c := by
   by_cases' hf : integrable f μ
-  · exact ((1 : 𝕜 →L[𝕜] 𝕜).smulRight c).integral_comp_comm hf
+  · exact ((1 : 𝕜 →L[𝕜] 𝕜).smul_right c).integral_comp_comm hf
     
   · by_cases' hc : c = 0
     · simp only [hc, integral_zero, smul_zero]

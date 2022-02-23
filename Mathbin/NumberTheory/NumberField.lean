@@ -6,7 +6,7 @@ Authors: Ashvni Narayanan, Anne Baanen
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Data.Rat.Basic
 import Mathbin.RingTheory.Algebraic
-import Mathbin.RingTheory.DedekindDomain
+import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.IntegralClosure
 import Mathbin.RingTheory.Polynomial.RationalRoot
 

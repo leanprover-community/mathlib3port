@@ -102,9 +102,9 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   toFun := fun x => p ⟨reflTransSymmAux x, refl_trans_symm_aux_mem_I x⟩
   continuous_to_fun := by
     continuity
-  to_fun_zero := by
+  map_zero_left' := by
     norm_num [refl_trans_symm_aux]
-  to_fun_one := fun x => by
+  map_one_left' := fun x => by
     dsimp only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs

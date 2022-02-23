@@ -87,19 +87,19 @@ theorem _root_.finset.range_eq_Ico : range = ico 0 :=
 
 @[simp]
 theorem card_Icc : (icc a b).card = b + 1 - a := by
-  rw [Icc_eq_range', List.card_to_finset, (List.nodup_range' _ _).eraseDup, List.length_range']
+  rw [Icc_eq_range', List.card_to_finset, (List.nodup_range' _ _).dedup, List.length_range']
 
 @[simp]
 theorem card_Ico : (ico a b).card = b - a := by
-  rw [Ico_eq_range', List.card_to_finset, (List.nodup_range' _ _).eraseDup, List.length_range']
+  rw [Ico_eq_range', List.card_to_finset, (List.nodup_range' _ _).dedup, List.length_range']
 
 @[simp]
 theorem card_Ioc : (ioc a b).card = b - a := by
-  rw [Ioc_eq_range', List.card_to_finset, (List.nodup_range' _ _).eraseDup, List.length_range']
+  rw [Ioc_eq_range', List.card_to_finset, (List.nodup_range' _ _).dedup, List.length_range']
 
 @[simp]
 theorem card_Ioo : (ioo a b).card = b - a - 1 := by
-  rw [Ioo_eq_range', List.card_to_finset, (List.nodup_range' _ _).eraseDup, List.length_range']
+  rw [Ioo_eq_range', List.card_to_finset, (List.nodup_range' _ _).dedup, List.length_range']
 
 @[simp]
 theorem card_Iic : (iic b).card = b + 1 := by
@@ -285,7 +285,7 @@ open Multiset
 
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.ico n (n + a)).map (· % a) = range a := by
   convert congr_argₓ Finset.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).eraseDup.symm
+  refine' ((nodup_map_iff_inj_on (Finset.ico _ _).Nodup).2 <| _).dedup.symm
   exact mod_inj_on_Ico _ _
 
 end Multiset

@@ -141,11 +141,11 @@ unsafe def push_neg_at_goal : tactic Unit := do
 
 end PushNeg
 
-open interactive (parse loc.ns loc.wildcard)
+open Interactive (parse loc.ns loc.wildcard)
 
-open interactive.types (location texpr)
+open Interactive.Types (location texpr)
 
-open lean.parser (tk ident many)
+open Lean.Parser (tk ident many)
 
 open Interactive.Loc
 

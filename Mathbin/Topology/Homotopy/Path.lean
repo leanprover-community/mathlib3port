@@ -157,9 +157,9 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
         _
     intro x hx
     norm_num [hx]
-  to_fun_zero := fun x => by
+  map_zero_left' := fun x => by
     norm_num [Path.trans]
-  to_fun_one := fun x => by
+  map_one_left' := fun x => by
     norm_num [Path.trans]
   prop' := by
     rintro x t ht
@@ -206,9 +206,9 @@ def reparam (p : Path x₀ x₁) (f : I → I) (hf : Continuous f) (hf₀ : f 0 
               unit_interval)
             (by
               simp )⟩
-  to_fun_zero := fun x => by
+  map_zero_left' := fun x => by
     norm_num
-  to_fun_one := fun x => by
+  map_one_left' := fun x => by
     norm_num
   prop' := fun t x hx => by
     cases hx
@@ -226,9 +226,9 @@ argument.
 @[simps]
 def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm where
   toFun := fun x => F ⟨x.1, σ x.2⟩
-  to_fun_zero := by
+  map_zero_left' := by
     simp [Path.symm]
-  to_fun_one := by
+  map_one_left' := by
     simp [Path.symm]
   prop' := fun t x hx => by
     cases hx
@@ -246,9 +246,9 @@ def symm₂ {p q : Path x₀ x₁} (F : p.Homotopy q) : p.symm.Homotopy q.symm w
 @[simps]
 def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) : Homotopy (p.map f.Continuous) (q.map f.Continuous) where
   toFun := f ∘ F
-  to_fun_zero := by
+  map_zero_left' := by
     simp
-  to_fun_one := by
+  map_one_left' := by
     simp
   prop' := fun t x hx => by
     cases hx

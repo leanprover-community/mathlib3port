@@ -42,29 +42,29 @@ theorem exists {p : Plift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Plift.u
 
 end Plift
 
-namespace Ulift
+namespace ULift
 
 variable {α : Type u} {β : Type v}
 
-instance [Subsingleton α] : Subsingleton (Ulift α) :=
+instance [Subsingleton α] : Subsingleton (ULift α) :=
   Equivₓ.ulift.Subsingleton
 
-instance [Unique α] : Unique (Ulift α) :=
+instance [Unique α] : Unique (ULift α) :=
   Equivₓ.ulift.unique
 
-instance [DecidableEq α] : DecidableEq (Ulift α) :=
+instance [DecidableEq α] : DecidableEq (ULift α) :=
   Equivₓ.ulift.DecidableEq
 
-instance [IsEmpty α] : IsEmpty (Ulift α) :=
+instance [IsEmpty α] : IsEmpty (ULift α) :=
   Equivₓ.ulift.isEmpty
 
 @[simp]
-theorem forall {p : Ulift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Ulift.up x) :=
+theorem forall {p : ULift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (ULift.up x) :=
   Equivₓ.ulift.forall_congr_left'
 
 @[simp]
-theorem exists {p : Ulift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (Ulift.up x) :=
+theorem exists {p : ULift α → Prop} : (∃ x, p x) ↔ ∃ x : α, p (ULift.up x) :=
   Equivₓ.ulift.exists_congr_left
 
-end Ulift
+end ULift
 

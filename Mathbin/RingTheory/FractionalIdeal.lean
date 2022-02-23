@@ -3,7 +3,10 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 -/
-import Mathbin.RingTheory.Localization
+import Mathbin.Algebra.BigOperators.Finprod
+import Mathbin.RingTheory.IntegralClosure
+import Mathbin.RingTheory.Localization.Integer
+import Mathbin.RingTheory.Localization.Submodule
 import Mathbin.RingTheory.Noetherian
 import Mathbin.RingTheory.PrincipalIdealDomain
 import Mathbin.Tactic.FieldSimp

@@ -1064,5 +1064,18 @@ theorem tendsto_norm_sub_self_punctured_nhds (a : E) : Tendsto (fun x => ∥x - 
 theorem tendsto_norm_nhds_within_zero : Tendsto (norm : E → ℝ) (𝓝[≠] 0) (𝓝[>] 0) :=
   tendsto_norm_zero.inf <| tendsto_principal_principal.2 fun x => norm_pos_iff.2
 
+/-! Some relations with `has_compact_support` -/
+
+
+theorem has_compact_support_norm_iff [TopologicalSpace α] {f : α → E} :
+    (HasCompactSupport fun x => ∥f x∥) ↔ HasCompactSupport f :=
+  has_compact_support_comp_left fun x => norm_eq_zero
+
+alias has_compact_support_norm_iff ↔ _ HasCompactSupport.norm
+
+theorem Continuous.bounded_above_of_compact_support [TopologicalSpace α] {f : α → E} (hf : Continuous f)
+    (hsupp : HasCompactSupport f) : ∃ C, ∀ x, ∥f x∥ ≤ C := by
+  simpa [bdd_above_def] using hf.norm.bdd_above_range_of_has_compact_support hsupp.norm
+
 end NormedGroup
 

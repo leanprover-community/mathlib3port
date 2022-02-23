@@ -146,9 +146,9 @@ def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) : F ≅ paralle
 `walking_parallel_family`.  -/
 @[simps]
 def walkingParallelFamilyEquivWalkingParallelPair :
-    WalkingParallelFamily.{v} (Ulift Bool) ≌ walking_parallel_pair.{v} where
+    WalkingParallelFamily.{v} (ULift Bool) ≌ walking_parallel_pair.{v} where
   Functor := parallelFamily fun p => cond p.down WalkingParallelPairHom.left WalkingParallelPairHom.right
-  inverse := parallelPair (line (Ulift.up true)) (line (Ulift.up false))
+  inverse := parallelPair (line (ULift.up true)) (line (ULift.up false))
   unitIso :=
     NatIso.ofComponents
       (fun X =>

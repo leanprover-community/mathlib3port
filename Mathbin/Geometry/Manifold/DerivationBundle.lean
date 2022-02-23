@@ -46,7 +46,7 @@ variable {𝕜 M}
 namespace PointedSmoothMap
 
 instance {x : M} : CoeFun C^∞⟮I,M;𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
-  TimesContMdiffMap.hasCoeToFun
+  ContMdiffMap.hasCoeToFun
 
 instance {x : M} : CommRingₓ C^∞⟮I,M;𝕜⟯⟨x⟩ :=
   SmoothMap.commRing
@@ -129,7 +129,7 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
           simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
       simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk, PointedSmoothMap.smul_def,
-        TimesContMdiffMap.comp_apply, h]
+        ContMdiffMap.comp_apply, h]
   map_smul' := fun k v => rfl
   map_add' := fun v w => rfl
 

@@ -10,7 +10,6 @@ import Mathbin.CategoryTheory.Monad.Limits
 import Mathbin.Topology.UrysohnsLemma
 
 /-!
-
 # The category of Compact Hausdorff Spaces
 
 We construct the category of compact Hausdorff spaces.
@@ -135,7 +134,7 @@ noncomputable def stoneCechEquivalence (X : Top.{u}) (Y : CompHaus.{u}) :
   right_inv := by
     rintro ⟨f : (X : Type _) ⟶ Y, hf : Continuous f⟩
     ext
-    exact congr_funₓ (stone_cech_extend_extends hf) x
+    exact congr_funₓ (stone_cech_extend_extends hf) _
 
 /-- The Stone-Cech compactification functor from topological spaces to compact Hausdorff spaces,
 left adjoint to the inclusion functor.
@@ -219,9 +218,9 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       exact hy y' hy'
     have : NormalSpace ↥Y.to_Top := normal_of_compact_t2
     obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_closed hC hD hCD
-    have : CompactSpace (Ulift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
-    have : T2Space (Ulift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
-    let Z := of (Ulift.{u} <| Set.Icc (0 : ℝ) 1)
+    have : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.compact_space
+    have : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := homeomorph.ulift.symm.t2_space
+    let Z := of (ULift.{u} <| Set.Icc (0 : ℝ) 1)
     let g : Y ⟶ Z :=
       ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩, continuous_ulift_up.comp (continuous_subtype_mk (fun y' => hφ01 y') φ.continuous)⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩

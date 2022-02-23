@@ -347,11 +347,11 @@ theorem ext {S S' : Set (α → ℕ)} (d : Dioph S) (H : ∀ v, S v ↔ S' v) : 
   Eq.ndrec d <| show S = S' from Set.ext H
 
 theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v : α → ℕ, S v ↔ p v = 0) : Dioph S :=
-  ⟨Ulift Empty, p.remap inl, fun v =>
+  ⟨ULift Empty, p.remap inl, fun v =>
     (h v).trans
       ⟨fun h =>
         ⟨fun t => Empty.rec _ t.down, by
-          simp <;> rw [show (v ⊗ fun t : Ulift Empty => Empty.rec _ t.down) ∘ inl = v from rfl, h]⟩,
+          simp <;> rw [show (v ⊗ fun t : ULift Empty => Empty.rec _ t.down) ∘ inl = v from rfl, h]⟩,
         fun ⟨t, ht⟩ => by
         simp at ht <;> rwa [show (v ⊗ t) ∘ inl = v from rfl] at ht⟩⟩
 
@@ -402,7 +402,7 @@ theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S :
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
   exact
-    ⟨Ulift Empty, [], fun v => by
+    ⟨ULift Empty, [], fun v => by
       simp <;> exact ⟨fun ⟨t⟩ => Empty.rec _ t, trivialₓ⟩⟩
   simp at d
   exact

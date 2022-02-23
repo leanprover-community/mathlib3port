@@ -43,7 +43,7 @@ See https://stacks.math.columbia.edu/tag/00D3.
 -/
 -- see Note [lower instance priority]
 instance (priority := 100) smallCategory (α : Type u) [Preorderₓ α] : SmallCategory α where
-  Hom := fun U V => Ulift (Plift (U ≤ V))
+  Hom := fun U V => ULift (Plift (U ≤ V))
   id := fun X => ⟨⟨le_refl X⟩⟩
   comp := fun X Y Z f g => ⟨⟨le_trans _ _ _ f.down.down g.down.down⟩⟩
 
@@ -58,7 +58,7 @@ variable {X : Type u} [Preorderₓ X]
 /-- Express an inequality as a morphism in the corresponding preorder category.
 -/
 def homOfLe {x y : X} (h : x ≤ y) : x ⟶ y :=
-  Ulift.up (Plift.up h)
+  ULift.up (Plift.up h)
 
 alias hom_of_le ← LE.le.hom
 

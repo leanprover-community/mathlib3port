@@ -203,7 +203,6 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
 
 variable (E)
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
 at most `multiplicity E`. -/
 theorem exists_good_δ :
@@ -218,7 +217,7 @@ theorem exists_good_δ :
     `N = multiplicity E + 1`. To formalize this, we work with functions `fin N → E`.
      -/
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   set N := multiplicity E + 1 with hN
   have : ∀ δ : ℝ, 0 < δ → ∃ f : Finₓ N → E, (∀ i : Finₓ N, ∥f i∥ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ∥f i - f j∥ := by
     intro δ hδ

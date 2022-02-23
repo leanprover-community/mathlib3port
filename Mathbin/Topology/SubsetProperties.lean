@@ -438,7 +438,6 @@ theorem IsCompact.union (hs : IsCompact s) (ht : IsCompact t) : IsCompact (s ∪
 theorem IsCompact.insert (hs : IsCompact s) a : IsCompact (insert a s) :=
   is_compact_singleton.union hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `V : ι → set α` is a decreasing family of closed compact sets then any neighborhood of
 `⋂ i, V i` contains some `V i`. We assume each `V i` is compact *and* closed because `α` is
 not assumed to be Hausdorff. See `exists_subset_nhd_of_compact` for version assuming this. -/
@@ -449,7 +448,7 @@ theorem exists_subset_nhd_of_compact' {ι : Type _} [Nonempty ι] {V : ι → Se
   suffices ∃ i, V i ⊆ W by
     rcases this with ⟨i, hi⟩
     refine' ⟨i, Set.Subset.trans hi hWU⟩
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' H
   replace H : ∀ i, (V i ∩ Wᶜ).Nonempty := fun i => set.inter_compl_nonempty_iff.mpr (H i)
   have : (⋂ i, V i ∩ Wᶜ).Nonempty := by
     refine'
@@ -1379,9 +1378,11 @@ theorem IsIrreducible.is_preirreducible {s : Set α} (h : IsIrreducible s) : IsP
 
 theorem is_preirreducible_empty : IsPreirreducible (∅ : Set α) := fun _ _ _ _ _ ⟨x, h1, h2⟩ => h1.elim
 
+theorem Set.Subsingleton.is_preirreducible {s : Set α} (hs : s.Subsingleton) : IsPreirreducible s :=
+  fun u v hu hv ⟨x, hxs, hxu⟩ ⟨y, hys, hyv⟩ => ⟨y, hys, hs hxs hys ▸ hxu, hyv⟩
+
 theorem is_irreducible_singleton {x} : IsIrreducible ({x} : Set α) :=
-  ⟨singleton_nonempty x, fun u v _ _ ⟨y, h1, h2⟩ ⟨z, h3, h4⟩ => by
-    rw [mem_singleton_iff] at h1 h3 <;> substs y z <;> exact ⟨x, rfl, h2, h4⟩⟩
+  ⟨singleton_nonempty x, subsingleton_singleton.IsPreirreducible⟩
 
 theorem IsPreirreducible.closure {s : Set α} (H : IsPreirreducible s) : IsPreirreducible (Closure s) :=
   fun u v hu hv ⟨y, hycs, hyu⟩ ⟨z, hzcs, hzv⟩ =>
@@ -1392,17 +1393,6 @@ theorem IsPreirreducible.closure {s : Set α} (H : IsPreirreducible s) : IsPreir
 
 theorem IsIrreducible.closure {s : Set α} (h : IsIrreducible s) : IsIrreducible (Closure s) :=
   ⟨h.Nonempty.closure, h.IsPreirreducible.closure⟩
-
-theorem is_preirreducible_of_subsingleton (s : Set α) [hs : Subsingleton s] : IsPreirreducible s := by
-  cases s.eq_empty_or_nonempty
-  · exact h.symm ▸ is_preirreducible_empty
-    
-  · obtain ⟨x, e⟩ :=
-      exists_eq_singleton_iff_nonempty_subsingleton.mpr
-        ⟨h, fun _ ha _ hb => by
-          injection @Subsingleton.elimₓ hs ⟨_, ha⟩ ⟨_, hb⟩⟩
-    exact e.symm ▸ is_irreducible_singleton.2
-    
 
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=

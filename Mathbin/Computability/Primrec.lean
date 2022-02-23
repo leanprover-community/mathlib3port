@@ -1256,11 +1256,11 @@ namespace Nat.Primrec'
 
 open Vector Primrec
 
-open nat (Primrec')
+open Nat (Primrec')
 
 open Nat.Primrec'
 
--- ././Mathport/Syntax/Translate/Basic.lean:1532:6: unsupported: hide command
+-- ././Mathport/Syntax/Translate/Basic.lean:1547:6: unsupported: hide command
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f := by
   induction pf
   case nat.primrec'.zero =>

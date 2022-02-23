@@ -153,7 +153,7 @@ instance pnat : Denumerable ℕ+ :=
   Denumerable.mk' Equivₓ.pnatEquivNat
 
 /-- The lift of a denumerable type is denumerable. -/
-instance ulift : Denumerable (Ulift α) :=
+instance ulift : Denumerable (ULift α) :=
   ofEquiv _ Equivₓ.ulift
 
 /-- The lift of a denumerable type is denumerable. -/

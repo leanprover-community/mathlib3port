@@ -175,7 +175,7 @@ theorem is_extr_on_const {b : β} : IsExtrOn (fun _ => b) s a :=
 /-! ### Order dual -/
 
 
-open order_dual (toDual)
+open OrderDual (toDual)
 
 theorem is_min_filter_dual_iff : IsMinFilter (to_dual ∘ f) l a ↔ IsMaxFilter f l a :=
   Iff.rfl

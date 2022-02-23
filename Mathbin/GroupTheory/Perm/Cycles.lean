@@ -800,6 +800,19 @@ theorem pow_mod_card_support_cycle_of_self_apply [Fintype α] (f : Perm α) (n :
       pow_eq_mod_order_of]
     
 
+/-- x is in the support of f iff cycle_of f x is a cycle.-/
+theorem is_cycle_cycle_of_iff [Fintype α] (f : Perm α) {x : α} : IsCycle (cycleOf f x) ↔ f x ≠ x := by
+  constructor
+  · intro hx
+    rw [Ne.def]
+    rw [← cycle_of_eq_one_iff f]
+    exact Equivₓ.Perm.IsCycle.ne_one hx
+    
+  · intro hx
+    apply Equivₓ.Perm.is_cycle_cycle_of
+    exact hx
+    
+
 /-!
 ### `cycle_factors`
 -/
@@ -1090,6 +1103,22 @@ theorem disjoint_mul_inv_of_mem_cycle_factors_finset {f g : Perm α} (h : f ∈ 
     rw [mul_apply, ← h.right, apply_inv_self]
     rwa [← support_inv, apply_mem_support, support_inv, mem_support]
     
+
+/-- If c is a cycle, a ∈ c.support and c is a cycle of f, then `c = f.cycle_of a` -/
+theorem cycle_is_cycle_of {f c : Equivₓ.Perm α} {a : α} (ha : a ∈ c.support) (hc : c ∈ f.cycleFactorsFinset) :
+    c = f.cycleOf a := by
+  suffices f.cycle_of a = c.cycle_of a by
+    rw [this]
+    apply symm
+    exact
+      Equivₓ.Perm.IsCycle.cycle_of_eq (equiv.perm.mem_cycle_factors_finset_iff.mp hc).left
+        (equiv.perm.mem_support.mp ha)
+  let hfc := (Equivₓ.Perm.disjoint_mul_inv_of_mem_cycle_factors_finset hc).symm
+  let hfc2 := perm.disjoint.commute hfc
+  rw [← Equivₓ.Perm.cycle_of_mul_of_apply_right_eq_self hfc2]
+  simp only [hfc2.eq, inv_mul_cancel_right]
+  -- a est dans le support de c, donc pas dans celui de g c⁻¹
+  exact equiv.perm.not_mem_support.mp (finset.disjoint_left.mp (Equivₓ.Perm.Disjoint.disjoint_support hfc) ha)
 
 end CycleFactorsFinset
 

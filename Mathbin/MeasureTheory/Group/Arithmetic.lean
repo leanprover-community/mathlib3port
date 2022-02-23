@@ -581,6 +581,23 @@ instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeas
 instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ Mᵐᵒᵖ :=
   ⟨measurable_mul_op.comp ((measurable_mul_unop.comp measurable_snd).mul (measurable_mul_unop.comp measurable_fst))⟩
 
+/-- If a scalar is central, then its right action is measurable when its left action is. -/
+instance HasMeasurableSmul.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasScalar M α] [HasScalar Mᵐᵒᵖ α]
+    [IsCentralScalar M α] [HasMeasurableSmul M α] : HasMeasurableSmul Mᵐᵒᵖ α :=
+  ⟨MulOpposite.rec fun c =>
+      show Measurable fun x => op c • x by
+        simpa only [op_smul_eq_smul] using measurable_const_smul c,
+    fun x =>
+    show Measurable fun c => op (unop c) • x by
+      simpa only [op_smul_eq_smul] using (measurable_smul_const x).comp measurable_mul_unop⟩
+
+/-- If a scalar is central, then its right action is measurable when its left action is. -/
+instance HasMeasurableSmul₂.op {M α} [MeasurableSpace M] [MeasurableSpace α] [HasScalar M α] [HasScalar Mᵐᵒᵖ α]
+    [IsCentralScalar M α] [HasMeasurableSmul₂ M α] : HasMeasurableSmul₂ Mᵐᵒᵖ α :=
+  ⟨show Measurable fun x : Mᵐᵒᵖ × α => op (unop x.1) • x.2 by
+      simp_rw [op_smul_eq_smul]
+      refine' (measurable_mul_unop.comp measurable_fst).smul measurable_snd⟩
+
 @[to_additive]
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
     HasMeasurableSmul Mᵐᵒᵖ M :=

@@ -281,8 +281,10 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Finₓ 5)} (ha : g �
     le_of_mul_le_mul_right (le_transₓ h h56)
       (by
         decide)
-  rw [mem_alternating_group, sign_of_cycle_type, h2, Multiset.map_repeat, Multiset.prod_repeat, Int.units_pow_two,
-    Units.ext_iff, Units.coe_one, Units.coe_pow, Units.coe_neg_one, Nat.neg_one_pow_eq_one_iff_even _] at ha
+  rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
+  norm_num  at ha
+  rw [pow_addₓ, pow_mulₓ, Int.units_pow_two, one_mulₓ, Units.ext_iff, Units.coe_one, Units.coe_pow, Units.coe_neg_one,
+    Nat.neg_one_pow_eq_one_iff_even _] at ha
   swap
   · decide
     
@@ -360,8 +362,7 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
         cycle_type_of_card_le_mem_cycle_type_add_two
           (by
             decide)
-          ng,
-        Multiset.map_singleton, Multiset.prod_singleton]
+          ng]
       decide
       
     · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `fin_rotate 5`.

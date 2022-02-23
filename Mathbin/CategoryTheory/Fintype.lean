@@ -73,27 +73,27 @@ nonempty if and only if `n = m`. Specifying universes, `skeleton : Type u` is a 
 skeletal category equivalent to `Fintype.{u}`.
 -/
 def Skeleton : Type u :=
-  Ulift ℕ
+  ULift ℕ
 
 namespace Skeleton
 
 /-- Given any natural number `n`, this creates the associated object of `Fintype.skeleton`. -/
 def mk : ℕ → Skeleton :=
-  Ulift.up
+  ULift.up
 
 instance : Inhabited Skeleton :=
   ⟨mk 0⟩
 
 /-- Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
 def len : Skeleton → ℕ :=
-  Ulift.down
+  ULift.down
 
 @[ext]
 theorem ext (X Y : Skeleton) : X.len = Y.len → X = Y :=
-  Ulift.ext _ _
+  ULift.ext _ _
 
 instance : SmallCategory Skeleton.{u} where
-  Hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len)
+  Hom := fun X Y => ULift.{u} (Finₓ X.len) → ULift.{u} (Finₓ Y.len)
   id := fun _ => id
   comp := fun _ _ _ f g => g ∘ f
 
@@ -104,20 +104,20 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
         { toFun := fun x => (h.Hom ⟨x⟩).down, invFun := fun x => (h.inv ⟨x⟩).down,
           left_inv := by
             intro a
-            change Ulift.down _ = _
-            rw [Ulift.up_down]
+            change ULift.down _ = _
+            rw [ULift.up_down]
             change ((h.hom ≫ h.inv) _).down = _
             simpa,
           right_inv := by
             intro a
-            change Ulift.down _ = _
-            rw [Ulift.up_down]
+            change ULift.down _ = _
+            rw [ULift.up_down]
             change ((h.inv ≫ h.hom) _).down = _
             simpa }
 
 /-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
 def incl : skeleton.{u} ⥤ Fintypeₓ.{u} where
-  obj := fun X => Fintypeₓ.of (Ulift (Finₓ X.len))
+  obj := fun X => Fintypeₓ.of (ULift (Finₓ X.len))
   map := fun _ _ f => f
 
 instance : Full incl where
@@ -129,7 +129,7 @@ instance : Faithful incl :=
 instance : EssSurj incl :=
   ess_surj.mk fun X =>
     let F := Fintype.equivFin X
-    ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
+    ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ ULift.down, inv := ULift.up ∘ F }⟩
 
 noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _

@@ -182,8 +182,6 @@ def Matrix.ToLieAlgebra :=
 
 namespace CartanMatrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₆. See [bourbaki1968] plate V, page 277.
 
 The corresponding Dynkin diagram is:
@@ -194,10 +192,9 @@ o --- o --- o --- o --- o
 ```
 -/
 def e₆ : Matrix (Finₓ 6) (Finₓ 6) ℤ :=
-  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
+  ![![2, 0, -1, 0, 0, 0], ![0, 2, 0, -1, 0, 0], ![-1, 0, 2, -1, 0, 0], ![0, -1, -1, 2, -1, 0], ![0, 0, 0, -1, 2, -1],
+    ![0, 0, 0, 0, -1, 2]]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
@@ -208,10 +205,9 @@ o --- o --- o --- o --- o --- o
 ```
 -/
 def e₇ : Matrix (Finₓ 7) (Finₓ 7) ℤ :=
-  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
+  ![![2, 0, -1, 0, 0, 0, 0], ![0, 2, 0, -1, 0, 0, 0], ![-1, 0, 2, -1, 0, 0, 0], ![0, -1, -1, 2, -1, 0, 0],
+    ![0, 0, 0, -1, 2, -1, 0], ![0, 0, 0, 0, -1, 2, -1], ![0, 0, 0, 0, 0, -1, 2]]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
@@ -222,10 +218,9 @@ o --- o --- o --- o --- o --- o --- o
 ```
 -/
 def e₈ : Matrix (Finₓ 8) (Finₓ 8) ℤ :=
-  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
+  ![![2, 0, -1, 0, 0, 0, 0, 0], ![0, 2, 0, -1, 0, 0, 0, 0], ![-1, 0, 2, -1, 0, 0, 0, 0], ![0, -1, -1, 2, -1, 0, 0, 0],
+    ![0, 0, 0, -1, 2, -1, 0, 0], ![0, 0, 0, 0, -1, 2, -1, 0], ![0, 0, 0, 0, 0, -1, 2, -1], ![0, 0, 0, 0, 0, 0, -1, 2]]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
 The corresponding Dynkin diagram is:
@@ -234,10 +229,8 @@ o --- o =>= o --- o
 ```
 -/
 def f₄ : Matrix (Finₓ 4) (Finₓ 4) ℤ :=
-  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
+  ![![2, -1, 0, 0], ![-1, 2, -2, 0], ![0, -1, 2, -1], ![0, 0, -1, 2]]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
 The corresponding Dynkin diagram is:
@@ -247,7 +240,7 @@ o ≡>≡ o
 Actually we are using the transpose of Bourbaki's matrix. This is to make this matrix consistent
 with `cartan_matrix.F₄`, in the sense that all non-zero values below the diagonal are -1. -/
 def g₂ : Matrix (Finₓ 2) (Finₓ 2) ℤ :=
-  «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»"
+  ![![2, -3], ![-1, 2]]
 
 end CartanMatrix
 

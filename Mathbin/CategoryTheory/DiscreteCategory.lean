@@ -50,8 +50,8 @@ somewhat annoyingly we have to define `X ⟶ Y` as `ulift (plift (X = Y))`.
 See https://stacks.math.columbia.edu/tag/001A
 -/
 instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α) where
-  Hom := fun X Y => Ulift (Plift (X = Y))
-  id := fun X => Ulift.up (Plift.up rfl)
+  Hom := fun X Y => ULift (Plift (X = Y))
+  id := fun X => ULift.up (Plift.up rfl)
   comp := fun X Y Z g f => by
     rcases f with ⟨⟨rfl⟩⟩
     exact g
@@ -73,7 +73,7 @@ theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X = Y :=
   i.down.down
 
 @[simp]
-theorem id_def (X : Discrete α) : Ulift.up (Plift.up (Eq.refl X)) = 𝟙 X :=
+theorem id_def (X : Discrete α) : ULift.up (Plift.up (Eq.refl X)) = 𝟙 X :=
   rfl
 
 variable {C : Type u₂} [Category.{v₂} C]

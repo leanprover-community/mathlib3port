@@ -607,7 +607,7 @@ namespace Conv.Interactive
 
 open Conv
 
-open norm_cast (derive)
+open NormCast (derive)
 
 /-- the converter version of `norm_cast' -/
 unsafe def norm_cast : conv Unit :=

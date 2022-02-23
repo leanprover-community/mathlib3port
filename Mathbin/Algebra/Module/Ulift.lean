@@ -18,7 +18,7 @@ We also provide `ulift.module_equiv : ulift M ≃ₗ[R] M`.
 -/
 
 
-namespace Ulift
+namespace ULift
 
 universe u v w
 
@@ -28,35 +28,35 @@ variable {M : Type v}
 
 variable {N : Type w}
 
-instance hasScalarLeft [HasScalar R M] : HasScalar (Ulift R) M :=
+instance hasScalarLeft [HasScalar R M] : HasScalar (ULift R) M :=
   ⟨fun s x => s.down • x⟩
 
 @[simp]
-theorem smul_down [HasScalar R M] (s : Ulift R) (x : M) : s • x = s.down • x :=
+theorem smul_down [HasScalar R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl
 
 @[simp]
-theorem smul_down' [HasScalar R M] (s : R) (x : Ulift M) : (s • x).down = s • x.down :=
+theorem smul_down' [HasScalar R M] (s : R) (x : ULift M) : (s • x).down = s • x.down :=
   rfl
 
 instance is_scalar_tower [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
-    IsScalarTower (Ulift R) M N :=
+    IsScalarTower (ULift R) M N :=
   ⟨fun x y z => show (x.down • y) • z = x.down • y • z from smul_assoc _ _ _⟩
 
 instance is_scalar_tower' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
-    IsScalarTower R (Ulift M) N :=
+    IsScalarTower R (ULift M) N :=
   ⟨fun x y z => show (x • y.down) • z = x • y.down • z from smul_assoc _ _ _⟩
 
 instance is_scalar_tower'' [HasScalar R M] [HasScalar M N] [HasScalar R N] [IsScalarTower R M N] :
-    IsScalarTower R M (Ulift N) :=
+    IsScalarTower R M (ULift N) :=
   ⟨fun x y z =>
     show up ((x • y) • z.down) = ⟨x • y • z.down⟩ by
       rw [smul_assoc]⟩
 
-instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (Ulift M) :=
+instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCentralScalar R (ULift M) :=
   ⟨fun r m => congr_argₓ up <| op_smul_eq_smul r m.down⟩
 
-instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
+instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (ULift R) M where
   smul := (· • ·)
   mul_smul := fun r s f => by
     cases r
@@ -65,7 +65,7 @@ instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (Ulift R) M where
   one_smul := fun f => by
     simp [one_smul]
 
-instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
+instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) where
   smul := (· • ·)
   mul_smul := fun r s f => by
     cases f
@@ -75,8 +75,8 @@ instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (Ulift M) where
     ext
     simp [one_smul]
 
-instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (Ulift R) M :=
-  { Ulift.mulAction with
+instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (ULift R) M :=
+  { ULift.mulAction with
     smul_zero := fun c => by
       cases c
       simp [smul_zero],
@@ -84,8 +84,8 @@ instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] 
       cases c
       simp [smul_add] }
 
-instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (Ulift M) :=
-  { Ulift.mulAction' with
+instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (ULift M) :=
+  { ULift.mulAction' with
     smul_zero := fun c => by
       ext
       simp [smul_zero],
@@ -93,8 +93,8 @@ instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
       ext
       simp [smul_add] }
 
-instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (Ulift R) M :=
-  { Ulift.mulAction with
+instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M :=
+  { ULift.mulAction with
     smul_one := fun c => by
       cases c
       simp [smul_one],
@@ -102,8 +102,8 @@ instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R 
       cases c
       simp [smul_mul'] }
 
-instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (Ulift M) :=
-  { Ulift.mulAction' with
+instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (ULift M) :=
+  { ULift.mulAction' with
     smul_one := fun c => by
       ext
       simp [smul_one],
@@ -111,15 +111,15 @@ instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R
       ext
       simp [smul_mul'] }
 
-instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (Ulift R) M :=
-  { Ulift.distribMulAction with
+instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (ULift R) M :=
+  { ULift.distribMulAction with
     add_smul := fun c f g => by
       cases c
       simp [add_smul],
     zero_smul := fun f => by
       simp [zero_smul] }
 
-instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (Ulift M) where
+instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (ULift M) where
   add_smul := by
     intros
     ext1
@@ -131,9 +131,9 @@ instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (U
 
 /-- The `R`-linear equivalence between `ulift M` and `M`.
 -/
-def moduleEquiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃ₗ[R] M where
-  toFun := Ulift.down
-  invFun := Ulift.up
+def moduleEquiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : ULift M ≃ₗ[R] M where
+  toFun := ULift.down
+  invFun := ULift.up
   map_smul' := fun r x => rfl
   map_add' := fun x y => rfl
   left_inv := by
@@ -141,5 +141,5 @@ def moduleEquiv [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Ulift M ≃�
   right_inv := by
     tidy
 
-end Ulift
+end ULift
 

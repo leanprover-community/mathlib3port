@@ -414,14 +414,13 @@ theorem measurable_set_lt [SecondCountableTopology α] {f g : δ → α} (hf : M
     MeasurableSet { a | f a < g a } :=
   hf.prod_mk hg measurable_set_lt'
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem Set.OrdConnected.measurable_set (h : OrdConnected s) : MeasurableSet s := by
   let u := ⋃ (x ∈ s) (y ∈ s), Ioo x y
   have huopen : IsOpen u := is_open_bUnion fun x hx => is_open_bUnion fun y hy => is_open_Ioo
   have humeas : MeasurableSet u := huopen.measurable_set
   have hfinite : (s \ u).Finite := by
     refine' Set.finite_of_forall_between_eq_endpoints (s \ u) fun x hx y hy z hz hxy hyz => _
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h
     exact hy.2 (mem_Union₂.mpr ⟨x, hx.1, mem_Union₂.mpr ⟨z, hz.1, lt_of_le_of_neₓ hxy h.1, lt_of_le_of_neₓ hyz h.2⟩⟩)
   have : u ⊆ s := Union₂_subset fun x hx => Union₂_subset fun y hy => Ioo_subset_Icc_self.trans (h.out hx hy)
   rw [← union_diff_cancel this]
@@ -1527,7 +1526,7 @@ def ennrealEquivSum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0 Unit :=
   { Equivₓ.optionEquivSumPunit ℝ≥0 with measurable_to_fun := measurable_of_measurable_nnreal measurable_inl,
     measurable_inv_fun := measurable_sum measurable_coe_nnreal_ennreal (@measurable_const ℝ≥0∞ Unit _ _ ∞) }
 
-open function (uncurry)
+open Function (uncurry)
 
 theorem measurable_of_measurable_nnreal_prod [MeasurableSpace β] [MeasurableSpace γ] {f : ℝ≥0∞ × β → γ}
     (H₁ : Measurable fun p : ℝ≥0 × β => f (p.1, p.2)) (H₂ : Measurable fun x => f (∞, x)) : Measurable f :=

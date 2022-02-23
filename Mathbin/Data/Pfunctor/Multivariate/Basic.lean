@@ -28,7 +28,7 @@ structure Mvpfunctor (n : ℕ) where
 
 namespace Mvpfunctor
 
-open mvfunctor (Liftp Liftr)
+open Mvfunctor (Liftp Liftr)
 
 variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 

@@ -35,8 +35,7 @@ variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
   realizations of formulas. -/
 structure ElementaryEmbedding where
   toFun : M → N
-  map_formula' :
-    ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, RealizeFormula N φ (to_fun ∘ x) ↔ RealizeFormula M φ x := by
+  map_formula' : ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, φ.realize (to_fun ∘ x) ↔ φ.realize x := by
     run_tac
       obviously
 
@@ -52,10 +51,10 @@ instance hasCoeToFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
 
 @[simp]
 theorem map_formula (f : M ↪ₑ[L] N) {α : Type} [Fintype α] (φ : L.Formula α) (x : α → M) :
-    RealizeFormula N φ (f ∘ x) ↔ RealizeFormula M φ x := by
+    φ.realize (f ∘ x) ↔ φ.realize x := by
   have g := Fintype.equivFin α
   have h := f.map_formula' (φ.relabel g) (x ∘ g.symm)
-  rw [realize_formula_relabel, realize_formula_relabel, Function.comp.assoc x g.symm g, g.symm_comp_self,
+  rw [formula.realize_relabel, formula.realize_relabel, Function.comp.assoc x g.symm g, g.symm_comp_self,
     Function.comp.right_id] at h
   rw [← h, iff_eq_eq]
   congr
@@ -64,25 +63,25 @@ theorem map_formula (f : M ↪ₑ[L] N) {α : Type} [Fintype α] (φ : L.Formula
 
 @[simp]
 theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) := by
-  have h := φ.map_formula (formula.graph f) (Finₓ.snoc x (fun_map f x))
-  rw [realize_graph, Finₓ.comp_snoc, realize_graph] at h
+  have h := φ.map_formula (formula.graph f) (Finₓ.cons (fun_map f x) x)
+  rw [formula.realize_graph, Finₓ.comp_cons, formula.realize_graph] at h
   rw [eq_comm, h]
 
 @[simp]
-theorem map_const (φ : M ↪ₑ[L] N) (c : L.const) : φ c = c :=
-  (φ.map_fun c Finₓ.elim0).trans (congr rfl (funext Finₓ.elim0))
+theorem map_constants (φ : M ↪ₑ[L] N) (c : L.Constants) : φ c = c :=
+  (φ.map_fun c default).trans fun_map_eq_coe_constants
 
 @[simp]
 theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
-  have h := φ.map_formula (bd_rel r (var ∘ Sum.inl)) x
+  have h := φ.map_formula (r.formula var) x
   h
 
 @[simp]
 theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   intro x y
-  have h := φ.map_formula (formula.equal (var 0) (var 1) : L.formula (Finₓ 2)) fun i => if i = 0 then x else y
-  rw [realize_equal, realize_equal] at h
-  simp only [Nat.one_ne_zero, realize_term, Finₓ.one_eq_zero_iff, if_true, eq_self_iff_true, Function.comp_app,
+  have h := φ.map_formula ((var 0).equal (var 1) : L.formula (Finₓ 2)) fun i => if i = 0 then x else y
+  rw [formula.realize_equal, formula.realize_equal] at h
+  simp only [Nat.one_ne_zero, term.realize, Finₓ.one_eq_zero_iff, if_true, eq_self_iff_true, Function.comp_app,
     if_false] at h
   exact h.1
 
@@ -170,23 +169,28 @@ theorem coe_to_elementary_embedding (f : M ≃[L] N) : (f.toElementaryEmbedding 
 end Equivₓ
 
 @[simp]
-theorem realize_term_substructure {α : Type} {S : L.Substructure M} (v : α → S) (t : L.Term α) :
-    realizeTermₓ (coe ∘ v) t = (↑(realizeTermₓ v t) : M) :=
-  S.Subtype.realizeTerm v t
-
-@[simp]
-theorem realize_bounded_formula_top {α : Type} {n : ℕ} (v : α → (⊤ : L.Substructure M))
-    (xs : Finₓ n → (⊤ : L.Substructure M)) (φ : L.BoundedFormula α n) :
-    RealizeBoundedFormulaₓ (⊤ : L.Substructure M) φ v xs ↔ RealizeBoundedFormulaₓ M φ (coe ∘ v) (coe ∘ xs) := by
-  rw [← substructure.top_equiv.realize_bounded_formula v xs φ]
-  simp
+theorem realize_term_substructure {α : Type _} {S : L.Substructure M} (v : α → S) (t : L.Term α) :
+    t.realize (coe ∘ v) = (↑(t.realize v) : M) :=
+  S.Subtype.realize_term t
 
 namespace Substructure
+
+@[simp]
+theorem realize_bounded_formula_top {α : Type _} {n : ℕ} {φ : L.BoundedFormula α n} {v : α → (⊤ : L.Substructure M)}
+    {xs : Finₓ n → (⊤ : L.Substructure M)} : φ.realize v xs ↔ φ.realize ((coe : _ → M) ∘ v) (coe ∘ xs) := by
+  rw [← substructure.top_equiv.realize_bounded_formula φ]
+  simp
+
+@[simp]
+theorem realize_formula_top {α : Type _} {φ : L.Formula α} {v : α → (⊤ : L.Substructure M)} :
+    φ.realize v ↔ φ.realize ((coe : (⊤ : L.Substructure M) → M) ∘ v) := by
+  rw [← substructure.top_equiv.realize_formula φ]
+  simp
 
 /-- A substructure is elementary when every formula applied to a tuple in the subtructure
   agrees with its value in the overall structure. -/
 def IsElementary (S : L.Substructure M) : Prop :=
-  ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → S, RealizeFormula M φ (coe ∘ x) ↔ RealizeFormula S φ x
+  ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → S, φ.realize ((coe : _ → M) ∘ x) ↔ φ.realize x
 
 end Substructure
 
@@ -225,10 +229,7 @@ theorem coe_subtype {S : L.ElementarySubstructure M} : ⇑S.Subtype = coe :=
 
 /-- The substructure `M` of the structure `M` is elementary. -/
 instance : HasTop (L.ElementarySubstructure M) :=
-  ⟨⟨⊤, fun n φ x => by
-      rw [formula] at φ
-      rw [realize_formula, realize_formula, realize_bounded_formula_top, iff_eq_eq]
-      exact congr rfl (funext finZeroElim)⟩⟩
+  ⟨⟨⊤, fun n φ x => Substructure.realize_formula_top.symm⟩⟩
 
 instance : Inhabited (L.ElementarySubstructure M) :=
   ⟨⊤⟩

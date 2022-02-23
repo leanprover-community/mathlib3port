@@ -60,7 +60,7 @@ theorem attach_bound_apply_coe (f : C(X, ℝ)) (x : X) : ((attachBound f) x : �
 theorem polynomial_comp_attach_bound (A : Subalgebra ℝ C(X, ℝ)) (f : A) (g : Polynomial ℝ) :
     (g.toContinuousMapOn (Set.Icc (-∥f∥) ∥f∥)).comp (f : C(X, ℝ)).attachBound = Polynomial.aeval f g := by
   ext
-  simp only [ContinuousMap.comp_coe, Function.comp_app, ContinuousMap.attach_bound_apply_coe,
+  simp only [ContinuousMap.coe_comp, Function.comp_app, ContinuousMap.attach_bound_apply_coe,
     Polynomial.to_continuous_map_on_to_fun, Polynomial.aeval_subalgebra_coe, Polynomial.aeval_continuous_map_apply,
     Polynomial.to_continuous_map_to_fun]
 
@@ -338,7 +338,7 @@ theorem Subalgebra.SeparatesPoints.complex_to_real {A : Subalgebra ℂ C(X, ℂ)
   intro x₁ x₂ hx
   -- Let `f` in the subalgebra `A` separate the points `x₁`, `x₂`
   obtain ⟨_, ⟨f, hfA, rfl⟩, hf⟩ := hA hx
-  let F : C(X, ℂ) := f - const (f x₂)
+  let F : C(X, ℂ) := f - const _ (f x₂)
   -- Subtract the constant `f x₂` from `f`; this is still an element of the subalgebra
   have hFA : F ∈ A := by
     refine' A.sub_mem hfA _

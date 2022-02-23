@@ -40,7 +40,7 @@ open CategoryTheory
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`
 -/
 irreducible_def SimplexCategory :=
-  Ulift.{u} ℕ
+  ULift.{u} ℕ
 
 namespace SimplexCategory
 
@@ -51,7 +51,7 @@ attribute [local semireducible] SimplexCategory
 /-- Interpet a natural number as an object of the simplex category. -/
 -- TODO: Make `mk` irreducible.
 def mk (n : ℕ) : SimplexCategory.{u} :=
-  Ulift.up n
+  ULift.up n
 
 -- mathport name: «expr[ ]»
 localized [Simplicial] notation "[" n "]" => SimplexCategory.mk n
@@ -63,7 +63,7 @@ def len (n : SimplexCategory.{u}) : ℕ :=
 
 @[ext]
 theorem ext (a b : SimplexCategory.{u}) : a.len = b.len → a = b :=
-  Ulift.ext a b
+  ULift.ext a b
 
 @[simp]
 theorem len_mk (n : ℕ) : [n].len = n :=
@@ -77,7 +77,7 @@ theorem mk_len (n : SimplexCategory.{u}) : [n.len] = n := by
 /-- Morphisms in the simplex_category. -/
 @[nolint has_inhabited_instance]
 protected irreducible_def Hom (a b : SimplexCategory.{u}) : Type u :=
-  Ulift (Finₓ (a.len + 1) →o Finₓ (b.len + 1))
+  ULift (Finₓ (a.len + 1) →o Finₓ (b.len + 1))
 
 namespace Hom
 
@@ -85,15 +85,15 @@ attribute [local semireducible] SimplexCategory.Hom
 
 /-- Make a moprhism in `simplex_category` from a monotone map of fin's. -/
 def mk {a b : SimplexCategory.{u}} (f : Finₓ (a.len + 1) →o Finₓ (b.len + 1)) : SimplexCategory.Hom a b :=
-  Ulift.up f
+  ULift.up f
 
 /-- Recover the monotone map from a morphism in the simplex category. -/
 def toOrderHom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : Finₓ (a.len + 1) →o Finₓ (b.len + 1) :=
-  Ulift.down f
+  ULift.down f
 
 @[ext]
 theorem ext {a b : SimplexCategory.{u}} (f g : SimplexCategory.Hom a b) : f.toOrderHom = g.toOrderHom → f = g :=
-  Ulift.ext _ _
+  ULift.ext _ _
 
 @[simp]
 theorem mk_to_order_hom {a b : SimplexCategory.{u}} (f : SimplexCategory.Hom a b) : mk f.toOrderHom = f := by
@@ -353,8 +353,8 @@ section Skeleton
 of `NonemptyFinLinOrd` -/
 @[simps obj map]
 def skeletalFunctor : SimplexCategory.{u} ⥤ NonemptyFinLinOrdₓ.{v} where
-  obj := fun a => NonemptyFinLinOrdₓ.of <| Ulift (Finₓ (a.len + 1))
-  map := fun a b f => ⟨fun i => Ulift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
+  obj := fun a => NonemptyFinLinOrdₓ.of <| ULift (Finₓ (a.len + 1))
+  map := fun a b f => ⟨fun i => ULift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
   map_id' := fun a => by
     ext
     simp
@@ -374,7 +374,7 @@ theorem skeletal : Skeletal SimplexCategory.{u} := fun X Y ⟨I⟩ => by
 namespace SkeletalFunctor
 
 instance : Full skeletalFunctor.{u, v} where
-  Preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (Ulift.up i)).down, fun i j h => f.Monotone h⟩
+  Preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (ULift.up i)).down, fun i j h => f.Monotone h⟩
   witness' := by
     intro m n f
     dsimp  at *
@@ -389,7 +389,7 @@ instance : Faithful skeletalFunctor.{u, v} where
     ext1
     ext1
     ext1 i
-    apply Ulift.up.inj
+    apply ULift.up.inj
     change (skeletal_functor.map f) ⟨i⟩ = (skeletal_functor.map g) ⟨i⟩
     rw [h]
 
@@ -483,7 +483,6 @@ theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Mono f �
   · exact concrete_category.mono_of_injective f
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
@@ -493,7 +492,7 @@ theorem mono_iff_injective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Mono f �
 theorem epi_iff_surjective {n m : SimplexCategory.{u}} {f : n ⟶ m} : Epi f ↔ Function.Surjective f.toOrderHom := by
   constructor
   · intros hyp_f_epi x
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h_ab
     -- The proof is by contradiction: assume f is not surjective,
     -- then introduce two non-equal auxiliary functions equalizing f, and get a contradiction.
     -- First we define the two auxiliary functions.

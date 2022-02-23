@@ -100,10 +100,10 @@ end Euclidean
 
 variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F] {f g : F → E} {n : WithTop ℕ}
 
-theorem TimesContDiff.euclidean_dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
-    TimesContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
+theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
+    ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) := by
   simp only [Euclidean.dist]
-  apply @TimesContDiff.dist ℝ
-  exacts[(@toEuclidean E _ _ _).TimesContDiff.comp hf, (@toEuclidean E _ _ _).TimesContDiff.comp hg, fun x =>
+  apply @ContDiff.dist ℝ
+  exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
     to_euclidean.injective.ne (h x)]
 

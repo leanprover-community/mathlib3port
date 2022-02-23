@@ -38,15 +38,15 @@ namespace CategoryTheory.Arrow
 
 variable (f : Arrow C)
 
-variable [∀ n : ℕ, HasWidePullback f.right (fun i : Ulift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
+variable [∀ n : ℕ, HasWidePullback f.right (fun i : ULift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
 
 /-- The Čech nerve associated to an arrow. -/
 @[simps]
 def cechNerve : SimplicialObject C where
-  obj := fun n => widePullback f.right (fun i : Ulift (Finₓ (n.unop.len + 1)) => f.left) fun i => f.Hom
+  obj := fun n => widePullback f.right (fun i : ULift (Finₓ (n.unop.len + 1)) => f.left) fun i => f.Hom
   map := fun m n g =>
     (widePullback.lift (widePullback.base _) fun i =>
-        (widePullback.π fun i => f.Hom) <| Ulift.up <| g.unop.toOrderHom i.down)
+        (widePullback.π fun i => f.Hom) <| ULift.up <| g.unop.toOrderHom i.down)
       fun j => by
       simp
   map_id' := fun x => by
@@ -65,8 +65,8 @@ def cechNerve : SimplicialObject C where
 /-- The morphism between Čech nerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechNerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePullback f.right (fun i : Ulift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePullback g.right (fun i : Ulift (Finₓ (n + 1)) => g.left) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePullback f.right (fun i : ULift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
+    [∀ n : ℕ, HasWidePullback g.right (fun i : ULift (Finₓ (n + 1)) => g.left) fun i => g.Hom] (F : f ⟶ g) :
     f.cechNerve ⟶ g.cechNerve where
   app := fun n =>
     (widePullback.lift (widePullback.base _ ≫ F.right) fun i => widePullback.π _ i ≫ F.left) fun j => by
@@ -92,8 +92,8 @@ def augmentedCechNerve : SimplicialObject.Augmented C where
 /-- The morphism between augmented Čech nerve associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechNerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePullback f.right (fun i : Ulift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePullback g.right (fun i : Ulift (Finₓ (n + 1)) => g.left) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePullback f.right (fun i : ULift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
+    [∀ n : ℕ, HasWidePullback g.right (fun i : ULift (Finₓ (n + 1)) => g.left) fun i => g.Hom] (F : f ⟶ g) :
     f.augmentedCechNerve ⟶ g.augmentedCechNerve where
   left := mapCechNerve F
   right := F.right
@@ -107,7 +107,7 @@ namespace CategoryTheory
 
 namespace SimplicialObject
 
-variable [∀ n : ℕ f : Arrow C, HasWidePullback f.right (fun i : Ulift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
+variable [∀ n : ℕ f : Arrow C, HasWidePullback f.right (fun i : ULift (Finₓ (n + 1)) => f.left) fun i => f.Hom]
 
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -258,14 +258,14 @@ namespace CategoryTheory.Arrow
 
 variable (f : Arrow C)
 
-variable [∀ n : ℕ, HasWidePushout f.left (fun i : Ulift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
+variable [∀ n : ℕ, HasWidePushout f.left (fun i : ULift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
 
 /-- The Čech conerve associated to an arrow. -/
 @[simps]
 def cechConerve : CosimplicialObject C where
-  obj := fun n => widePushout f.left (fun i : Ulift (Finₓ (n.len + 1)) => f.right) fun i => f.Hom
+  obj := fun n => widePushout f.left (fun i : ULift (Finₓ (n.len + 1)) => f.right) fun i => f.Hom
   map := fun m n g =>
-    (widePushout.desc (widePushout.head _) fun i => (widePushout.ι fun i => f.Hom) <| Ulift.up <| g.toOrderHom i.down)
+    (widePushout.desc (widePushout.head _) fun i => (widePushout.ι fun i => f.Hom) <| ULift.up <| g.toOrderHom i.down)
       fun i => by
       rw [wide_pushout.arrow_ι fun i => f.hom]
   map_id' := fun x => by
@@ -284,8 +284,8 @@ def cechConerve : CosimplicialObject C where
 /-- The morphism between Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechConerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePushout f.left (fun i : Ulift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePushout g.left (fun i : Ulift (Finₓ (n + 1)) => g.right) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePushout f.left (fun i : ULift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
+    [∀ n : ℕ, HasWidePushout g.left (fun i : ULift (Finₓ (n + 1)) => g.right) fun i => g.Hom] (F : f ⟶ g) :
     f.cechConerve ⟶ g.cechConerve where
   app := fun n =>
     (widePushout.desc (F.left ≫ widePushout.head _) fun i => F.right ≫ widePushout.ι _ i) fun i => by
@@ -311,8 +311,8 @@ def augmentedCechConerve : CosimplicialObject.Augmented C where
 /-- The morphism between augmented Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechConerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePushout f.left (fun i : Ulift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePushout g.left (fun i : Ulift (Finₓ (n + 1)) => g.right) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePushout f.left (fun i : ULift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
+    [∀ n : ℕ, HasWidePushout g.left (fun i : ULift (Finₓ (n + 1)) => g.right) fun i => g.Hom] (F : f ⟶ g) :
     f.augmentedCechConerve ⟶ g.augmentedCechConerve where
   left := F.left
   right := mapCechConerve F
@@ -326,7 +326,7 @@ namespace CategoryTheory
 
 namespace CosimplicialObject
 
-variable [∀ n : ℕ f : Arrow C, HasWidePushout f.left (fun i : Ulift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
+variable [∀ n : ℕ f : Arrow C, HasWidePushout f.left (fun i : ULift (Finₓ (n + 1)) => f.right) fun i => f.Hom]
 
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -377,7 +377,7 @@ def augmentedCechConerve : Arrow C ⥤ CosimplicialObject.Augmented C where
 def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C) (G : F.augmentedCechConerve ⟶ X) :
     F ⟶ Augmented.toArrow.obj X where
   left := G.left
-  right := (widePushout.ι (fun i => F.Hom) (Ulift.up 0) ≫ G.right.app (SimplexCategory.mk 0) : _)
+  right := (widePushout.ι (fun i => F.Hom) (ULift.up 0) ≫ G.right.app (SimplexCategory.mk 0) : _)
   w' := by
     have := G.w
     apply_fun fun e => e.app (SimplexCategory.mk 0)  at this

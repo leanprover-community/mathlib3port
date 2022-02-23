@@ -173,14 +173,14 @@ theorem im_clm_norm : ∥im_clm∥ = 1 :=
       
 
 theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpace ℂ E] (x : E) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] E) =
-      reClm.smulRight x + I • imClm.smulRight x :=
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
+      reClm.smul_right x + I • imClm.smul_right x :=
   by
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
 
 theorem restrict_scalars_one_smul_right (x : ℂ) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] ℂ) = x • 1 := by
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
   ext1 z
   dsimp
   apply mul_comm

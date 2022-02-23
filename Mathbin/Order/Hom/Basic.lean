@@ -70,6 +70,8 @@ monotone map, bundled morphism
 
 open OrderDual
 
+variable {F α β γ δ : Type _}
+
 /-- Bundled monotone (aka, increasing) function -/
 structure OrderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] where
   toFun : α → β
@@ -77,10 +79,6 @@ structure OrderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] where
 
 -- mathport name: «expr →o »
 infixr:25 " →o " => OrderHom
-
-/-- `order_hom_class F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/
-abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [Preorderₓ α] [Preorderₓ β] :=
-  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop)
 
 /-- An order embedding is an embedding `f : α ↪ β` such that `a ≤ b ↔ (f a) ≤ (f b)`.
 This definition is an abbreviation of `rel_embedding (≤) (≤)`. -/
@@ -98,11 +96,31 @@ abbrev OrderIso (α β : Type _) [LE α] [LE β] :=
 -- mathport name: «expr ≃o »
 infixl:25 " ≃o " => OrderIso
 
-variable {α β γ δ : Type _}
+/-- `order_hom_class F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/
+abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [Preorderₓ α] [Preorderₓ β] :=
+  RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop)
+
+/-- `order_iso_class F α β` states that `F` is a type of order isomorphisms.
+
+You should extend this class when you extend `order_iso`. -/
+class OrderIsoClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] extends EquivLike F α β where
+  map_le_map_iff (f : F) {a b : α} : f a ≤ f b ↔ a ≤ b
+
+export OrderIsoClass (map_le_map_iff)
+
+attribute [simp] map_le_map_iff
+
+instance [LE α] [LE β] [OrderIsoClass F α β] : CoeTₓ F (α ≃o β) :=
+  ⟨fun f => ⟨f, fun _ _ => map_le_map_iff f⟩⟩
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderIsoClass.toOrderHomClass [Preorderₓ α] [Preorderₓ β] [OrderIsoClass F α β] :
+    OrderHomClass F α β :=
+  { EquivLike.toEmbeddingLike with map_rel := fun f a b => (map_le_map_iff f).2 }
 
 namespace OrderHomClass
 
-variable {F : Type _} [Preorderₓ α] [Preorderₓ β] [OrderHomClass F α β]
+variable [Preorderₓ α] [Preorderₓ β] [OrderHomClass F α β]
 
 protected theorem monotone (f : F) : Monotone (f : α → β) := fun _ _ => map_rel f
 
@@ -509,6 +527,26 @@ namespace OrderIso
 section LE
 
 variable [LE α] [LE β] [LE γ]
+
+instance : OrderIsoClass (α ≃o β) α β where
+  coe := fun f => f.toFun
+  inv := fun f => f.invFun
+  left_inv := fun f => f.left_inv
+  right_inv := fun f => f.right_inv
+  coe_injective' := fun f g h₁ h₂ => by
+    obtain ⟨⟨_, _⟩, _⟩ := f
+    obtain ⟨⟨_, _⟩, _⟩ := g
+    congr
+  map_le_map_iff := fun f => f.map_rel_iff'
+
+@[simp]
+theorem to_fun_eq_coe {f : α ≃o β} : f.toFun = f :=
+  rfl
+
+-- See library note [partially-applied ext lemmas]
+@[ext]
+theorem ext {f g : α ≃o β} (h : (f : α → β) = g) : f = g :=
+  FunLike.coe_injective h
 
 /-- Reinterpret an order isomorphism as an order embedding. -/
 def toOrderEmbedding (e : α ≃o β) : α ↪o β :=

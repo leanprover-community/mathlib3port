@@ -53,8 +53,8 @@ variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ where
   toFun := fun x i => (f i x • extChartAt I (f.c i) x, f i x)
-  times_cont_mdiff_to_fun :=
-    times_cont_mdiff_pi_space.2 fun i => ((f i).smooth_smul times_cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
+  cont_mdiff_to_fun :=
+    cont_mdiff_pi_space.2 fun i => ((f i).smooth_smul cont_mdiff_on_ext_chart_at).prod_mk_space (f i).Smooth
 
 @[local simp]
 theorem embedding_pi_tangent_coe : ⇑f.embeddingPiTangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=

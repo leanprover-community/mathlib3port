@@ -46,7 +46,6 @@ theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semirin
     [Fact p.Prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   have := NeZero.of_gt hn
@@ -57,7 +56,7 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   simp only [Int.cast_one, Int.cast_neg]
   have h0 := cyclotomic_coeff_zero ℝ hn.le
   rw [coeff_zero_eq_eval_zero] at h0
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hx
   have := intermediate_value_univ (-1) 0 (cyclotomic n ℝ).Continuous
   obtain ⟨y, hy : is_root _ y⟩ :=
     this

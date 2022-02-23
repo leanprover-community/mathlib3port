@@ -9,7 +9,7 @@ import Mathbin.Algebra.CharP.Subring
 import Mathbin.Algebra.Ring.Pi
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.FieldTheory.PerfectClosure
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.RingTheory.Valuation.Integers
 

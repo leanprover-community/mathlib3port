@@ -356,7 +356,7 @@ end
 
 open_locale Interval
 
-open continuous_linear_map (smulRight)
+open ContinuousLinearMap (smul_right)
 
 -- mathport name: «exprℝ¹»
 local notation "ℝ¹" => Finₓ 1 → ℝ
@@ -434,14 +434,6 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- **Divergence theorem** for functions on the plane along rectangles. It is formulated in terms of
 two functions `f g : ℝ × ℝ → E` and an integral over `Icc a b = [a.1, b.1] × [a.2, b.2]`, where
 `a b : ℝ × ℝ`, `a ≤ b`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -465,18 +457,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
   calc
     (∫ x in icc a b, f' x (1, 0) + g' x (0, 1)) =
         ∑ i : Finₓ 2,
-          (∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove),
-              («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") i
-                (e.symm <| i.insertNth (e b i) x)) -
-            ∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove),
-              («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") i
-                (e.symm <| i.insertNth (e a i) x) :=
+          (∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove), ![f, g] i (e.symm <| i.insertNth (e b i) x)) -
+            ∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove), ![f, g] i (e.symm <| i.insertNth (e a i) x) :=
       by
       refine'
-        integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _
-          («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»")
-          («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") s hs a b
-          hle _ (fun x hx => _) _ _ Hi
+        integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _ ![f, g] ![f', g'] s hs a b hle _
+          (fun x hx => _) _ _ Hi
       · exact fun x y => (OrderIso.finTwoArrowIso ℝ).symm.le_iff_le
         
       · exact (volume_preserving_fin_two_arrow ℝ).symm

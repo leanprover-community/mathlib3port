@@ -63,7 +63,7 @@ variable {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
 
-open _root_.sum (inl inr)
+open _Root_.Sum (inl inr)
 
 /-- Define a predistance on `X ⊕ Y`, for which `Φ p` and `Ψ p` are at distance `ε` -/
 def glueDist (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : Sum X Y → Sum X Y → ℝ
@@ -265,7 +265,7 @@ variable {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [MetricSpace X] [MetricSpace Y]
 
-open sum (inl inr)
+open Sum (inl inr)
 
 /-- Distance on a disjoint union. There are many (noncanonical) ways to put a distance compatible
 with each factor.
@@ -595,7 +595,7 @@ variable {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
 
-open _root_.sum (inl inr)
+open _Root_.Sum (inl inr)
 
 attribute [local instance] PseudoMetric.distSetoid
 

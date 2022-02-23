@@ -9,7 +9,7 @@ namespace Tactic
 
 open Expr
 
-open tactic.interactive (casesm constructor_matching)
+open Tactic.Interactive (casesm constructor_matching)
 
 /-- find all assumptions of the shape `¬ (p ∧ q)` or `¬ (p ∨ q)` and
   replace them using de Morgan's law.

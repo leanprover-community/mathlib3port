@@ -44,7 +44,7 @@ In `extend_fan_is_limit` we show that if the two given fans are limits, then thi
 limit.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def extendFan {n : ℕ} {f : Ulift (Finₓ (n + 1)) → C} (c₁ : Fan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩)
+def extendFan {n : ℕ} {f : ULift (Finₓ (n + 1)) → C} (c₁ : Fan fun i : ULift (Finₓ n) => f ⟨i.down.succ⟩)
     (c₂ : BinaryFan (f ⟨0⟩) c₁.x) : Fan f :=
   Fan.mk c₂.x
     (by
@@ -54,13 +54,13 @@ def extendFan {n : ℕ} {f : Ulift (Finₓ (n + 1)) → C} (c₁ : Fan fun i : U
       · apply c₂.fst
         
       · intro i
-        apply c₂.snd ≫ c₁.π.app (Ulift.up i)
+        apply c₂.snd ≫ c₁.π.app (ULift.up i)
         )
 
 /-- Show that if the two given fans in `extend_fan` are limits, then the constructed fan is also a
 limit.
 -/
-def extendFanIsLimit {n : ℕ} (f : Ulift (Finₓ (n + 1)) → C) {c₁ : Fan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩}
+def extendFanIsLimit {n : ℕ} (f : ULift (Finₓ (n + 1)) → C) {c₁ : Fan fun i : ULift (Finₓ n) => f ⟨i.down.succ⟩}
     {c₂ : BinaryFan (f ⟨0⟩) c₁.x} (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) : IsLimit (extendFan c₁ c₂) where
   lift := fun s => by
     apply (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1
@@ -99,9 +99,9 @@ variable [HasBinaryProducts.{v} C] [HasTerminal C]
 This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_product_ulift_fin : ∀ n : ℕ f : Ulift.{v} (Finₓ n) → C, HasProduct f
+private theorem has_product_ulift_fin : ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, HasProduct f
   | 0 => fun f => by
-    let this' : has_limits_of_shape (discrete (Ulift.{v} (Finₓ 0))) C :=
+    let this' : has_limits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
       has_limits_of_shape_of_equivalence (Discrete.equivalence.{v} (equiv.ulift.trans finZeroEquiv').symm)
     infer_instance
   | n + 1 => fun f => by
@@ -113,7 +113,7 @@ private theorem has_product_ulift_fin : ∀ n : ℕ f : Ulift.{v} (Finₓ n) →
 This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_limits_of_shape_ulift_fin (n : ℕ) : HasLimitsOfShape (Discrete (Ulift.{v} (Finₓ n))) C :=
+private theorem has_limits_of_shape_ulift_fin (n : ℕ) : HasLimitsOfShape (Discrete (ULift.{v} (Finₓ n))) C :=
   { HasLimit := fun K => by
       let this' := has_product_ulift_fin n K.obj
       let this : discrete.functor K.obj ≅ K := discrete.nat_iso fun i => iso.refl _
@@ -143,9 +143,9 @@ variable [HasFiniteProducts.{v} C]
 `ulift (fin n)` for any `n`.
 -/
 noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
-    ∀ n : ℕ f : Ulift.{v} (Finₓ n) → C, PreservesLimit (Discrete.functor f) F
+    ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, PreservesLimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this' : preserves_limits_of_shape (discrete (Ulift (Finₓ 0))) F :=
+    let this' : preserves_limits_of_shape (discrete (ULift (Finₓ 0))) F :=
       preservesLimitsOfShapeOfEquiv.{v, v} (discrete.equivalence (equiv.ulift.trans finZeroEquiv').symm) _
     infer_instance
   | n + 1 => by
@@ -174,7 +174,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
 /-- If `F` preserves the terminal object and binary products, then it preserves limits of shape
 `discrete (ulift (fin n))`.
 -/
-def preservesUliftFinOfPreservesBinaryAndTerminal (n : ℕ) : PreservesLimitsOfShape (Discrete (Ulift (Finₓ n))) F where
+def preservesUliftFinOfPreservesBinaryAndTerminal (n : ℕ) : PreservesLimitsOfShape (Discrete (ULift (Finₓ n))) F where
   PreservesLimit := fun K => by
     let this : discrete.functor K.obj ≅ K := discrete.nat_iso fun i => iso.refl _
     have := preserves_fin_of_preserves_binary_and_terminal F n K.obj
@@ -197,7 +197,7 @@ In `extend_cofan_is_colimit` we show that if the two given cofans are colimits,
 then this cofan is also a colimit.
 -/
 @[simps (config := { rhsMd := semireducible })]
-def extendCofan {n : ℕ} {f : Ulift (Finₓ (n + 1)) → C} (c₁ : Cofan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩)
+def extendCofan {n : ℕ} {f : ULift (Finₓ (n + 1)) → C} (c₁ : Cofan fun i : ULift (Finₓ n) => f ⟨i.down.succ⟩)
     (c₂ : BinaryCofan (f ⟨0⟩) c₁.x) : Cofan f :=
   Cofan.mk c₂.x
     (by
@@ -207,13 +207,13 @@ def extendCofan {n : ℕ} {f : Ulift (Finₓ (n + 1)) → C} (c₁ : Cofan fun i
       · apply c₂.inl
         
       · intro i
-        apply c₁.ι.app (Ulift.up i) ≫ c₂.inr
+        apply c₁.ι.app (ULift.up i) ≫ c₂.inr
         )
 
 /-- Show that if the two given cofans in `extend_cofan` are colimits,
 then the constructed cofan is also a colimit.
 -/
-def extendCofanIsColimit {n : ℕ} (f : Ulift (Finₓ (n + 1)) → C) {c₁ : Cofan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩}
+def extendCofanIsColimit {n : ℕ} (f : ULift (Finₓ (n + 1)) → C) {c₁ : Cofan fun i : ULift (Finₓ n) => f ⟨i.down.succ⟩}
     {c₂ : BinaryCofan (f ⟨0⟩) c₁.x} (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) : IsColimit (extendCofan c₁ c₂) where
   desc := fun s => by
     apply (binary_cofan.is_colimit.desc' t₂ (s.ι.app ⟨0⟩) _).1
@@ -251,9 +251,9 @@ variable [HasBinaryCoproducts.{v} C] [HasInitial C]
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_coproduct_ulift_fin : ∀ n : ℕ f : Ulift.{v} (Finₓ n) → C, HasCoproduct f
+private theorem has_coproduct_ulift_fin : ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, HasCoproduct f
   | 0 => fun f => by
-    let this' : has_colimits_of_shape (discrete (Ulift.{v} (Finₓ 0))) C :=
+    let this' : has_colimits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
       has_colimits_of_shape_of_equivalence (Discrete.equivalence.{v} (equiv.ulift.trans finZeroEquiv').symm)
     infer_instance
   | n + 1 => fun f => by
@@ -265,7 +265,7 @@ private theorem has_coproduct_ulift_fin : ∀ n : ℕ f : Ulift.{v} (Finₓ n) �
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
 -/
-private theorem has_colimits_of_shape_ulift_fin (n : ℕ) : HasColimitsOfShape (Discrete (Ulift.{v} (Finₓ n))) C :=
+private theorem has_colimits_of_shape_ulift_fin (n : ℕ) : HasColimitsOfShape (Discrete (ULift.{v} (Finₓ n))) C :=
   { HasColimit := fun K => by
       let this' := has_coproduct_ulift_fin n K.obj
       let this : K ≅ discrete.functor K.obj := discrete.nat_iso fun i => iso.refl _
@@ -295,9 +295,9 @@ variable [HasFiniteCoproducts.{v} C]
 `ulift (fin n)` for any `n`.
 -/
 noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
-    ∀ n : ℕ f : Ulift.{v} (Finₓ n) → C, PreservesColimit (Discrete.functor f) F
+    ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, PreservesColimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this' : preserves_colimits_of_shape (discrete (Ulift (Finₓ 0))) F :=
+    let this' : preserves_colimits_of_shape (discrete (ULift (Finₓ 0))) F :=
       preservesColimitsOfShapeOfEquiv.{v, v} (discrete.equivalence (equiv.ulift.trans finZeroEquiv').symm) _
     infer_instance
   | n + 1 => by
@@ -327,7 +327,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
 /-- If `F` preserves the initial object and binary coproducts, then it preserves colimits of shape
 `discrete (ulift (fin n))`.
 -/
-def preservesUliftFinOfPreservesBinaryAndInitial (n : ℕ) : PreservesColimitsOfShape (Discrete (Ulift (Finₓ n))) F where
+def preservesUliftFinOfPreservesBinaryAndInitial (n : ℕ) : PreservesColimitsOfShape (Discrete (ULift (Finₓ n))) F where
   PreservesColimit := fun K => by
     let this : discrete.functor K.obj ≅ K := discrete.nat_iso fun i => iso.refl _
     have := preserves_fin_of_preserves_binary_and_initial F n K.obj

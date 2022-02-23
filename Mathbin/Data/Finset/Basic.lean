@@ -152,8 +152,8 @@ theorem val_inj {s t : Finset α} : s.1 = t.1 ↔ s = t :=
   ⟨eq_of_veq, congr_argₓ _⟩
 
 @[simp]
-theorem erase_dup_eq_self [DecidableEq α] (s : Finset α) : eraseDup s.1 = s.1 :=
-  s.2.eraseDup
+theorem dedup_eq_self [DecidableEq α] (s : Finset α) : dedup s.1 = s.1 :=
+  s.2.dedup
 
 instance hasDecidableEq [DecidableEq α] : DecidableEq (Finset α)
   | s₁, s₂ => decidableOfIff _ val_inj
@@ -690,8 +690,8 @@ theorem insert_def (a : α) (s : Finset α) : insert a s = ⟨_, nodup_ndinsert 
 theorem insert_val (a : α) (s : Finset α) : (insert a s).1 = ndinsert a s.1 :=
   rfl
 
-theorem insert_val' (a : α) (s : Finset α) : (insert a s).1 = eraseDup (a ::ₘ s.1) := by
-  rw [erase_dup_cons, erase_dup_eq_self] <;> rfl
+theorem insert_val' (a : α) (s : Finset α) : (insert a s).1 = dedup (a ::ₘ s.1) := by
+  rw [dedup_cons, dedup_eq_self] <;> rfl
 
 theorem insert_val_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : (insert a s).1 = a ::ₘ s.1 := by
   rw [insert_val, ndinsert_of_not_mem h]
@@ -2057,7 +2057,7 @@ theorem coe_not_mem_range_equiv_symm (k : ℕ) :
         simp ⟩ :=
   rfl
 
-/-! ### erase_dup on list and multiset -/
+/-! ### dedup on list and multiset -/
 
 
 namespace Multiset
@@ -2066,14 +2066,14 @@ variable [DecidableEq α]
 
 /-- `to_finset s` removes duplicates from the multiset `s` to produce a finset. -/
 def toFinset (s : Multiset α) : Finset α :=
-  ⟨_, nodup_erase_dup s⟩
+  ⟨_, nodup_dedup s⟩
 
 @[simp]
-theorem to_finset_val (s : Multiset α) : s.toFinset.1 = s.eraseDup :=
+theorem to_finset_val (s : Multiset α) : s.toFinset.1 = s.dedup :=
   rfl
 
 theorem to_finset_eq {s : Multiset α} (n : Nodup s) : Finset.mk s n = s.toFinset :=
-  Finset.val_inj.1 n.eraseDup.symm
+  Finset.val_inj.1 n.dedup.symm
 
 theorem Nodup.to_finset_inj {l l' : Multiset α} (hl : Nodup l) (hl' : Nodup l') (h : l.toFinset = l'.toFinset) :
     l = l' := by
@@ -2081,7 +2081,7 @@ theorem Nodup.to_finset_inj {l l' : Multiset α} (hl : Nodup l) (hl' : Nodup l')
 
 @[simp]
 theorem mem_to_finset {a : α} {s : Multiset α} : a ∈ s.toFinset ↔ a ∈ s :=
-  mem_erase_dup
+  mem_dedup
 
 @[simp]
 theorem to_finset_zero : toFinset (0 : Multiset α) = ∅ :=
@@ -2089,7 +2089,7 @@ theorem to_finset_zero : toFinset (0 : Multiset α) = ∅ :=
 
 @[simp]
 theorem to_finset_cons (a : α) (s : Multiset α) : toFinset (a ::ₘ s) = insert a (toFinset s) :=
-  Finset.eq_of_veq erase_dup_cons
+  Finset.eq_of_veq dedup_cons
 
 @[simp]
 theorem to_finset_singleton (a : α) : toFinset ({a} : Multiset α) = {a} := by
@@ -2121,7 +2121,7 @@ theorem to_finset_union (s t : Multiset α) : (s ∪ t).toFinset = s.toFinset �
   ext <;> simp
 
 theorem to_finset_eq_empty {m : Multiset α} : m.toFinset = ∅ ↔ m = 0 :=
-  Finset.val_inj.symm.trans Multiset.erase_dup_eq_zero
+  Finset.val_inj.symm.trans Multiset.dedup_eq_zero
 
 @[simp]
 theorem to_finset_subset (s t : Multiset α) : s.toFinset ⊆ t.toFinset ↔ s ⊆ t := by
@@ -2150,7 +2150,7 @@ def toFinset (l : List α) : Finset α :=
   Multiset.toFinset l
 
 @[simp]
-theorem to_finset_val (l : List α) : l.toFinset.1 = (l.eraseDup : Multiset α) :=
+theorem to_finset_val (l : List α) : l.toFinset.1 = (l.dedup : Multiset α) :=
   rfl
 
 theorem to_finset_eq (n : Nodupₓ l) : @Finset.mk α l n = l.toFinset :=
@@ -2158,7 +2158,7 @@ theorem to_finset_eq (n : Nodupₓ l) : @Finset.mk α l n = l.toFinset :=
 
 @[simp]
 theorem mem_to_finset : a ∈ l.toFinset ↔ a ∈ l :=
-  mem_erase_dup
+  mem_dedup
 
 @[simp]
 theorem to_finset_nil : toFinset (@nil α) = ∅ :=
@@ -2167,7 +2167,7 @@ theorem to_finset_nil : toFinset (@nil α) = ∅ :=
 @[simp]
 theorem to_finset_cons : toFinset (a :: l) = insert a (toFinset l) :=
   Finset.eq_of_veq <| by
-    by_cases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.erase_dup_cons, h]
+    by_cases' h : a ∈ l <;> simp [Finset.insert_val', Multiset.dedup_cons, h]
 
 theorem to_finset_surj_on : Set.SurjOn toFinset { l : List α | l.Nodup } Set.Univ := by
   rintro ⟨⟨l⟩, hl⟩ _
@@ -2177,8 +2177,8 @@ theorem to_finset_surjective : Surjective (toFinset : List α → Finset α) := 
   let ⟨l, _, hls⟩ := to_finset_surj_on (Set.mem_univ s)
   ⟨l, hls⟩
 
-theorem to_finset_eq_iff_perm_erase_dup : l.toFinset = l'.toFinset ↔ l.eraseDup ~ l'.eraseDup := by
-  simp [Finset.ext_iff, perm_ext (nodup_erase_dup _) (nodup_erase_dup _)]
+theorem to_finset_eq_iff_perm_dedup : l.toFinset = l'.toFinset ↔ l.dedup ~ l'.dedup := by
+  simp [Finset.ext_iff, perm_ext (nodup_dedup _) (nodup_dedup _)]
 
 theorem toFinset.ext_iff {a b : List α} : a.toFinset = b.toFinset ↔ ∀ x, x ∈ a ↔ x ∈ b := by
   simp only [Finset.ext_iff, mem_to_finset]
@@ -2187,7 +2187,7 @@ theorem toFinset.ext : (∀ x, x ∈ l ↔ x ∈ l') → l.toFinset = l'.toFinse
   toFinset.ext_iff.mpr
 
 theorem to_finset_eq_of_perm (l l' : List α) (h : l ~ l') : l.toFinset = l'.toFinset :=
-  to_finset_eq_iff_perm_erase_dup.mpr h.eraseDup
+  to_finset_eq_iff_perm_dedup.mpr h.dedup
 
 theorem perm_of_nodup_nodup_to_finset_eq (hl : Nodupₓ l) (hl' : Nodupₓ l') (h : l.toFinset = l'.toFinset) : l ~ l' := by
   rw [← Multiset.coe_eq_coe]
@@ -2388,7 +2388,7 @@ def image (f : α → β) (s : Finset α) : Finset β :=
   (s.1.map f).toFinset
 
 @[simp]
-theorem image_val (f : α → β) (s : Finset α) : (image f s).1 = (s.1.map f).eraseDup :=
+theorem image_val (f : α → β) (s : Finset α) : (image f s).1 = (s.1.map f).dedup :=
   rfl
 
 @[simp]
@@ -2399,7 +2399,7 @@ variable {f g : α → β} {s : Finset α} {t : Finset β} {a : α} {b c : β}
 
 @[simp]
 theorem mem_image : b ∈ s.Image f ↔ ∃ a ∈ s, f a = b := by
-  simp only [mem_def, image_val, mem_erase_dup, Multiset.mem_map, exists_prop]
+  simp only [mem_def, image_val, mem_dedup, Multiset.mem_map, exists_prop]
 
 theorem mem_image_of_mem (f : α → β) {a} (h : a ∈ s) : f a ∈ s.Image f :=
   mem_image.2 ⟨_, h, rfl⟩
@@ -2466,7 +2466,7 @@ theorem image_to_finset [DecidableEq α] {s : Multiset α} : s.toFinset.Image f 
     simp only [mem_image, Multiset.mem_to_finset, exists_prop, Multiset.mem_map]
 
 theorem image_val_of_inj_on (H : Set.InjOn f s) : (image f s).1 = s.1.map f :=
-  (nodup_map_on H s.2).eraseDup
+  (nodup_map_on H s.2).dedup
 
 @[simp]
 theorem image_id [DecidableEq α] : s.Image id = s :=
@@ -2479,10 +2479,10 @@ theorem image_id' [DecidableEq α] : (s.Image fun x => x) = s :=
 
 theorem image_image [DecidableEq γ] {g : β → γ} : (s.Image f).Image g = s.Image (g ∘ f) :=
   eq_of_veq <| by
-    simp only [image_val, erase_dup_map_erase_dup_eq, Multiset.map_map]
+    simp only [image_val, dedup_map_dedup_eq, Multiset.map_map]
 
 theorem image_subset_image {s₁ s₂ : Finset α} (h : s₁ ⊆ s₂) : s₁.Image f ⊆ s₂.Image f := by
-  simp only [subset_def, image_val, subset_erase_dup', erase_dup_subset', Multiset.map_subset_map h]
+  simp only [subset_def, image_val, subset_dedup', dedup_subset', Multiset.map_subset_map h]
 
 theorem image_subset_iff : s.Image f ⊆ t ↔ ∀, ∀ x ∈ s, ∀, f x ∈ t :=
   calc
@@ -2580,7 +2580,7 @@ theorem range_add (a b : ℕ) : range (a + b) = range a ∪ (range b).map (addLe
 @[simp]
 theorem attach_image_val [DecidableEq α] {s : Finset α} : s.attach.Image Subtype.val = s :=
   eq_of_veq <| by
-    rw [image_val, attach_val, Multiset.attach_map_val, erase_dup_eq_self]
+    rw [image_val, attach_val, Multiset.attach_map_val, dedup_eq_self]
 
 @[simp]
 theorem attach_image_coe [DecidableEq α] {s : Finset α} : s.attach.Image coe = s :=
@@ -2597,7 +2597,7 @@ theorem attach_insert [DecidableEq α] {a : α} {s : Finset α} :
       fun _ => Finset.mem_attach _ _⟩
 
 theorem map_eq_image (f : α ↪ β) (s : Finset α) : s.map f = s.Image f :=
-  eq_of_veq (s.map f).2.eraseDup.symm
+  eq_of_veq (s.map f).2.dedup.symm
 
 theorem image_const {s : Finset α} (h : s.Nonempty) (b : β) : (s.Image fun a => b) = singleton b :=
   ext fun b' => by
@@ -2690,7 +2690,7 @@ end Image
 
 theorem _root_.multiset.to_finset_map [DecidableEq α] [DecidableEq β] (f : α → β) (m : Multiset α) :
     (m.map f).toFinset = m.toFinset.Image f :=
-  Finset.val_inj.1 (Multiset.erase_dup_map_erase_dup_eq _ _).symm
+  Finset.val_inj.1 (Multiset.dedup_map_dedup_eq _ _).symm
 
 section ToList
 
@@ -2756,7 +2756,7 @@ protected def bUnion (s : Finset α) (t : α → Finset β) : Finset β :=
   (s.1.bind fun a => (t a).1).toFinset
 
 @[simp]
-theorem bUnion_val (s : Finset α) (t : α → Finset β) : (s.bUnion t).1 = (s.1.bind fun a => (t a).1).eraseDup :=
+theorem bUnion_val (s : Finset α) (t : α → Finset β) : (s.bUnion t).1 = (s.1.bind fun a => (t a).1).dedup :=
   rfl
 
 @[simp]
@@ -2765,7 +2765,7 @@ theorem bUnion_empty : Finset.bUnion ∅ t = ∅ :=
 
 @[simp]
 theorem mem_bUnion {b : β} : b ∈ s.bUnion t ↔ ∃ a ∈ s, b ∈ t a := by
-  simp only [mem_def, bUnion_val, mem_erase_dup, mem_bind, exists_prop]
+  simp only [mem_def, bUnion_val, mem_dedup, mem_bind, exists_prop]
 
 @[simp]
 theorem coe_bUnion : (s.bUnion t : Set β) = ⋃ x ∈ (s : Set α), t x := by

@@ -142,7 +142,7 @@ theorem has_deriv_at_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) : HasDerivAt (cir
   simpa only [mul_assoc, one_mulₓ, of_real_clm_apply, circleMap, of_real_one, zero_addₓ] using
     ((of_real_clm.has_deriv_at.mul_const I).cexp_real.const_mul (R : ℂ)).const_add c
 
-/- TODO: prove `times_cont_diff ℝ (circle_map c R)`. This needs a version of `times_cont_diff.mul`
+/- TODO: prove `cont_diff ℝ (circle_map c R)`. This needs a version of `cont_diff.mul`
 for multiplication in a normed algebra over the base field. -/
 theorem differentiable_circle_map (c : ℂ) (R : ℝ) : Differentiable ℝ (circleMap c R) := fun θ =>
   (has_deriv_at_circle_map c R θ).DifferentiableAt

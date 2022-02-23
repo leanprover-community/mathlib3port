@@ -50,7 +50,7 @@ structure Alist (β : α → Type v) : Type max u v where
 entries with duplicate keys. -/
 def List.toAlist [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) : Alist β where
   entries := _
-  Nodupkeys := nodupkeys_erase_dupkeys l
+  Nodupkeys := nodupkeys_dedupkeys l
 
 namespace Alist
 
@@ -248,7 +248,7 @@ theorem lookup_insert_ne {a a'} {b' : β a'} {s : Alist β} (h : a ≠ a') : loo
 
 @[simp]
 theorem lookup_to_alist {a} (s : List (Sigma β)) : lookup a s.toAlist = s.lookup a := by
-  rw [List.toAlist, lookup, lookup_erase_dupkeys]
+  rw [List.toAlist, lookup, lookup_dedupkeys]
 
 @[simp]
 theorem insert_insert {a} {b b' : β a} (s : Alist β) : (s.insert a b).insert a b' = s.insert a b' := by
@@ -266,7 +266,7 @@ theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b')
       eq_self_iff_true]
 
 @[simp]
-theorem entries_to_alist (xs : List (Sigma β)) : (List.toAlist xs).entries = eraseDupkeys xs :=
+theorem entries_to_alist (xs : List (Sigma β)) : (List.toAlist xs).entries = dedupkeys xs :=
   rfl
 
 theorem to_alist_cons (a : α) (b : β a) (xs : List (Sigma β)) : List.toAlist (⟨a, b⟩ :: xs) = insert a b xs.toAlist :=

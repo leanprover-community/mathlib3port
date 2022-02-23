@@ -47,10 +47,9 @@ theorem log_of_lt {b n : ℕ} (hnb : n < b) : log b n = 0 := by
 theorem log_of_left_le_one {b n : ℕ} (hb : b ≤ 1) : log b n = 0 := by
   rw [log, if_neg fun h : b ≤ n ∧ 1 < b => h.2.not_le hb]
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem log_eq_zero_iff {b n : ℕ} : log b n = 0 ↔ n < b ∨ b ≤ 1 := by
   refine' ⟨fun h_log => _, log_eq_zero⟩
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   have := log_of_one_lt_of_le h.2 h.1
   rw [h_log] at this
   exact succ_ne_zero _ this.symm

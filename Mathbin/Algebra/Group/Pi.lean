@@ -149,6 +149,14 @@ instance commMonoidWithZero [∀ i, CommMonoidWithZero <| f i] : CommMonoidWithZ
 
 end Pi
 
+namespace MulHom
+
+@[to_additive]
+theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : MulHom M N) : (f * g : M → N) = fun x => f x * g x :=
+  rfl
+
+end MulHom
+
 section MonoidHom
 
 variable (f) [∀ i, MulOneClassₓ (f i)]

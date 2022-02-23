@@ -914,7 +914,7 @@ theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V + Module.rank K V
   let b := Basis.ofVectorSpace K V
   let c := Basis.ofVectorSpace K V₁
   rw [← Cardinal.lift_inj, ← (Basis.prod b c).mk_eq_dim, Cardinal.lift_add, ← Cardinal.mk_ulift, ← b.mk_eq_dim, ←
-    c.mk_eq_dim, ← Cardinal.mk_ulift, ← Cardinal.mk_ulift, Cardinal.add_def (Ulift _)]
+    c.mk_eq_dim, ← Cardinal.mk_ulift, ← Cardinal.mk_ulift, Cardinal.add_def (ULift _)]
   exact Cardinal.lift_inj.1 (Cardinal.lift_mk_eq.2 ⟨equiv.ulift.trans (Equivₓ.sumCongr Equivₓ.ulift Equivₓ.ulift).symm⟩)
 
 section Fintype

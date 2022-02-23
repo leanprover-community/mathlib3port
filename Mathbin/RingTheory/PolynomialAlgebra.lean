@@ -36,7 +36,7 @@ open Polynomial
 
 open TensorProduct
 
-open algebra.tensor_product (algHomOfLinearMapTensorProduct includeLeft)
+open Algebra.TensorProduct (algHomOfLinearMapTensorProduct includeLeft)
 
 noncomputable section
 

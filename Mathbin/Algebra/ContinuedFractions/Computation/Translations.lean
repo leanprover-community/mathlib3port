@@ -40,7 +40,7 @@ of three sections:
 
 namespace GeneralizedContinuedFraction
 
-open generalized_continued_fraction (of)
+open GeneralizedContinuedFraction (of)
 
 -- Fix a discrete linear ordered floor field and a value `v`.
 variable {K : Type _} [LinearOrderedField K] [FloorRing K] {v : K}

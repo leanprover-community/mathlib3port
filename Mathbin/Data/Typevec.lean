@@ -343,7 +343,7 @@ protected def constₓ {β} (x : β) : ∀ {n} α : Typevec n, α ⟹ Repeat _ �
   | succ n, α, Fin2.fs i => const (Drop α) _
   | succ n, α, Fin2.fz => fun _ => x
 
-open function (uncurry)
+open Function (uncurry)
 
 /-- vector of equality on a product of vectors -/
 def repeatEq : ∀ {n} α : Typevec n, α ⊗ α ⟹ Repeat _ Prop

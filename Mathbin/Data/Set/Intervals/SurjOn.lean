@@ -19,7 +19,7 @@ variable {α : Type _} {β : Type _} [LinearOrderₓ α] [PartialOrderₓ β] {f
 
 open Set Function
 
-open order_dual (toDual)
+open OrderDual (toDual)
 
 theorem surj_on_Ioo_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f) (a b : α) :
     SurjOn f (Ioo a b) (Ioo (f a) (f b)) := by

@@ -59,7 +59,7 @@ variable {R A M N P : Type _}
 
 open LinearMap
 
-open algebra (lsmul)
+open Algebra (lsmul)
 
 namespace AlgebraTensorModule
 

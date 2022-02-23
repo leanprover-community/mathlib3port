@@ -1485,7 +1485,6 @@ theorem ite_subset_union (t s s' : Set α) : t.ite s s' ⊆ s ∪ s' :=
 theorem inter_subset_ite (t s s' : Set α) : s ∩ s' ⊆ t.ite s s' :=
   ite_same t (s ∩ s') ▸ ite_mono _ (inter_subset_left _ _) (inter_subset_right _ _)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem ite_inter_inter (t s₁ s₂ s₁' s₂' : Set α) : t.ite (s₁ ∩ s₂) (s₁' ∩ s₂') = t.ite s₁ s₁' ∩ t.ite s₂ s₂' := by
   ext x
   simp only [Set.Ite, Set.mem_inter_eq, Set.mem_diff, Set.mem_union_eq]

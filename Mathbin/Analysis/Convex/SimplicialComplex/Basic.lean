@@ -87,7 +87,6 @@ theorem convex_hull_inter_convex_hull (hs : s ∈ K.Faces) (ht : t ∈ K.Faces) 
   (K.inter_subset_convex_hull hs ht).antisymm <|
     subset_inter (convex_hull_mono <| Set.inter_subset_left _ _) <| convex_hull_mono <| Set.inter_subset_right _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
@@ -96,7 +95,7 @@ theorem disjoint_or_exists_inter_eq_convex_hull (hs : s ∈ K.Faces) (ht : t ∈
       ∃ u ∈ K.Faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   refine'
     h.2 (s ∩ t)
       ((K.down_closed hs (inter_subset_left _ _)) fun hst => h.1 <| (K.inter_subset_convex_hull hs ht).trans _) _

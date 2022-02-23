@@ -180,7 +180,7 @@ def noncommProd (s : Finset α) (f : α → β) (comm : ∀, ∀ x ∈ s, ∀, �
 theorem noncomm_prod_to_finset [DecidableEq α] (l : List α) (f : α → β)
     (comm : ∀, ∀ x ∈ l.toFinset, ∀, ∀ y ∈ l.toFinset, ∀, Commute (f x) (f y)) (hl : l.Nodup) :
     noncommProd l.toFinset f comm = (l.map f).Prod := by
-  rw [← List.erase_dup_eq_self] at hl
+  rw [← List.dedup_eq_self] at hl
   simp [noncomm_prod, hl]
 
 @[simp, to_additive]

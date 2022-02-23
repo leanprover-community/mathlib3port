@@ -72,7 +72,7 @@ noncomputable section
 
 open Set Metric Asymptotics Filter ContinuousLinearMap
 
-open topological_space (SecondCountableTopology)
+open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory
 

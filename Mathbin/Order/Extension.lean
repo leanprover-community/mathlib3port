@@ -21,7 +21,6 @@ open Set Classical
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
@@ -57,7 +56,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
   skip
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   let s' := fun x' y' => s x' y' ∨ s x' x ∧ s y y'
   rw [← hs₂ s' _ fun _ _ => Or.inl] at h
   · apply h.1 (Or.inr ⟨refl _, refl _⟩)

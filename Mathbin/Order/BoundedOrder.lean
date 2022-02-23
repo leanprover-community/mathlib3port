@@ -550,6 +550,37 @@ theorem subsingleton_iff_bot_eq_top : (⊥ : α) = (⊤ : α) ↔ Subsingleton �
 
 end Subsingleton
 
+section lift
+
+/-- Pullback an `order_top`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def OrderTop.lift [LE α] [HasTop α] [LE β] [OrderTop β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
+    (map_top : f ⊤ = ⊤) : OrderTop α :=
+  ⟨⊤, fun a =>
+    map_le _ _ <| by
+      rw [map_top]
+      exact le_top⟩
+
+/-- Pullback an `order_bot`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def OrderBot.lift [LE α] [HasBot α] [LE β] [OrderBot β] (f : α → β) (map_le : ∀ a b, f a ≤ f b → a ≤ b)
+    (map_bot : f ⊥ = ⊥) : OrderBot α :=
+  ⟨⊥, fun a =>
+    map_le _ _ <| by
+      rw [map_bot]
+      exact bot_le⟩
+
+/-- Pullback a `bounded_order`. -/
+-- See note [reducible non-instances]
+@[reducible]
+def BoundedOrder.lift [LE α] [HasTop α] [HasBot α] [LE β] [BoundedOrder β] (f : α → β)
+    (map_le : ∀ a b, f a ≤ f b → a ≤ b) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : BoundedOrder α :=
+  { OrderTop.lift f map_le map_top, OrderBot.lift f map_le map_bot with }
+
+end lift
+
 /-! ### `with_bot`, `with_top` -/
 
 
@@ -1434,7 +1465,7 @@ theorem inf_eq_bot (h : IsCompl x y) : x⊓y = ⊥ :=
 theorem sup_eq_top (h : IsCompl x y) : x⊔y = ⊤ :=
   top_unique h.top_le_sup
 
-open order_dual (toDual)
+open OrderDual (toDual)
 
 theorem to_order_dual (h : IsCompl x y) : IsCompl (toDual x) (toDual y) :=
   ⟨h.2, h.1⟩

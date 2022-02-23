@@ -84,21 +84,21 @@ theorem pi_empty {t : ∀ a : α, Finset (δ a)} : pi (∅ : Finset α) t = sing
 theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, Finset (δ a)} {a : α} (ha : a ∉ s) :
     pi (insert a s) t = (t a).bUnion fun b => (pi s t).Image (pi.cons s a b) := by
   apply eq_of_veq
-  rw [← (pi (insert a s) t).2.eraseDup]
+  rw [← (pi (insert a s) t).2.dedup]
   refine'
     (fun h : s' = a ::ₘ s.1 =>
         (_ :
-          erase_dup (Multiset.pi s' fun a => (t a).1) =
-            erase_dup
+          dedup (Multiset.pi s' fun a => (t a).1) =
+            dedup
               ((t a).1.bind fun b =>
-                erase_dup <|
+                dedup <|
                   (Multiset.pi s.1 fun a : α => (t a).val).map fun f a' h' => Multiset.Pi.cons s.1 a b f a' (h ▸ h'))))
       _ (insert_val_of_not_mem ha)
   subst s'
   rw [pi_cons]
   congr
   funext b
-  rw [Multiset.Nodup.erase_dup]
+  rw [Multiset.Nodup.dedup]
   exact Multiset.nodup_map (Multiset.pi_cons_injective ha) (pi s t).2
 
 theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} :=

@@ -46,14 +46,14 @@ def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' :
         rw [List.index_of_lt_length] <;> apply h⟩,
       fun ⟨i, h⟩ => xs.nthLe _ h, fun x => by
       simp [of_nodup_list._match_1], fun ⟨i, h⟩ => by
-      simp [of_nodup_list._match_1, *] <;> rw [List.nth_le_index_of] <;> apply List.nodup_erase_dup⟩
+      simp [of_nodup_list._match_1, *] <;> rw [List.nth_le_index_of] <;> apply List.nodup_dedup⟩
 
 /-- create a `fin_enum` instance from an exhaustive list; duplicates are removed -/
 def ofList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) : FinEnum α :=
-  ofNodupList xs.eraseDup
+  ofNodupList xs.dedup
     (by
       simp [*])
-    (List.nodup_erase_dup _)
+    (List.nodup_dedup _)
 
 /-- create an exhaustive list of the values of a given type -/
 def toList α [FinEnum α] : List α :=

@@ -354,7 +354,7 @@ run_cmd
   add_ext_lemma (Name.mk_numeral 0 Name.anonymous) `` _root_.funext true
 
 -- We create some extensionality lemmas for existing structures.
-attribute [ext] Ulift
+attribute [ext] ULift
 
 namespace Plift
 

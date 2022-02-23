@@ -1098,7 +1098,6 @@ theorem mul_nonneg_iff : 0 ≤ a * b ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b �
   ⟨nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nnonneg, fun h =>
     h.elim (and_imp.2 Decidable.mul_nonneg) (and_imp.2 Decidable.mul_nonneg_of_nonpos_of_nonpos)⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- Out of three elements of a `linear_ordered_ring`, two must have the same sign. -/
 theorem mul_nonneg_of_three (a b c : α) : 0 ≤ a * b ∨ 0 ≤ b * c ∨ 0 ≤ c * a := by
   iterate 3 

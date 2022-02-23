@@ -51,8 +51,7 @@ instance hasMul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
   ⟨fun f g => ⟨f * g, continuous_mul.comp (f.Continuous.prod_mk g.Continuous : _)⟩⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) :
-    ((f * g : C(α, β)) : α → β) = (f : α → β) * (g : α → β) :=
+theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ⇑(f * g) = f * g :=
   rfl
 
 @[simp, to_additive]
@@ -62,10 +61,10 @@ theorem mul_comp [Mul γ] [HasContinuousMul γ] (f₁ f₂ : C(β, γ)) (g : C(�
 
 @[to_additive]
 instance [One β] : One C(α, β) :=
-  ⟨const (1 : β)⟩
+  ⟨const α 1⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_one [One β] : ((1 : C(α, β)) : α → β) = (1 : α → β) :=
+theorem coe_one [One β] : ⇑(1 : C(α, β)) = 1 :=
   rfl
 
 @[simp, to_additive]

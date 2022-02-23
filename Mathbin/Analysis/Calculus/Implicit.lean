@@ -50,9 +50,9 @@ open_locale TopologicalSpace
 
 open Filter
 
-open continuous_linear_map (fst snd subtype_val smulRight ker_prod)
+open ContinuousLinearMap (fst snd subtype_val smulRight ker_prod)
 
-open continuous_linear_equiv (ofBijective)
+open ContinuousLinearEquiv (ofBijective)
 
 /-!
 ### General version

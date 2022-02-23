@@ -216,7 +216,7 @@ instance : Coe PSet (Set PSet) :=
 
 /-- The empty pre-set -/
 protected def empty : PSet :=
-  ⟨Ulift Empty, fun e => nomatch e⟩
+  ⟨ULift Empty, fun e => nomatch e⟩
 
 instance : HasEmptyc PSet :=
   ⟨PSet.empty⟩
@@ -246,7 +246,7 @@ def ofNat : ℕ → PSet
 
 /-- The von Neumann ordinal ω -/
 def omega : PSet :=
-  ⟨Ulift ℕ, fun n => ofNat n.down⟩
+  ⟨ULift ℕ, fun n => ofNat n.down⟩
 
 /-- The pre-set separation operation `{x ∈ a | p x}` -/
 protected def sep (p : Set PSet) : PSet → PSet
@@ -296,13 +296,13 @@ theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equi
 
 /-- Universe lift operation -/
 protected def lift : PSet.{u} → PSet.{max u v}
-  | ⟨α, A⟩ => ⟨Ulift α, fun ⟨x⟩ => lift (A x)⟩
+  | ⟨α, A⟩ => ⟨ULift α, fun ⟨x⟩ => lift (A x)⟩
 
 /-- Embedding of one universe in another -/
 -- intended to be used with explicit universe parameters
 @[nolint check_univs]
 def embed : PSet.{max (u + 1) v} :=
-  ⟨Ulift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩
+  ⟨ULift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩
 
 theorem lift_mem_embed : ∀ x : PSet.{u}, PSet.lift.{u, max (u + 1) v} x ∈ embed.{u, v} := fun x => ⟨⟨x⟩, Equiv.rfl⟩
 

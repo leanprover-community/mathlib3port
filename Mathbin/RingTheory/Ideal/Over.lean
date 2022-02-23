@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.RingTheory.Algebraic
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.AtPrime
+import Mathbin.RingTheory.Localization.Integral
 
 /-!
 # Ideals over/under ideals
@@ -157,6 +158,12 @@ theorem Quotient.mk_smul_mk_quotient_map_quotient (x : R) (y : S) :
 instance Quotient.tower_quotient_map_quotient [Algebra R S] : IsScalarTower R (R ⧸ p) (S ⧸ map (algebraMap R S) p) :=
   IsScalarTower.of_algebra_map_eq fun x => by
     rw [quotient.algebra_map_eq, quotient.algebra_map_quotient_map_quotient, quotient.mk_algebra_map]
+
+instance QuotientMapQuotient.is_noetherian [Algebra R S] [IsNoetherian R S] (I : Ideal R) :
+    IsNoetherian (R ⧸ I) (S ⧸ Ideal.map (algebraMap R S) I) :=
+  is_noetherian_of_tower R <|
+    is_noetherian_of_surjective S (Ideal.Quotient.mkₐ R _).toLinearMap <|
+      LinearMap.range_eq_top.mpr Ideal.Quotient.mk_surjective
 
 end CommRingₓ
 

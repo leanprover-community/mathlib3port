@@ -126,10 +126,10 @@ The converse is given in `is_connected.of_induct`.
 -/
 theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ ∈ p)
     (h1 : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p := by
-  injection constant_of_preserves_morphisms (fun k => Ulift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
+  injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
   dsimp
-  exact congr_argₓ Ulift.up (propext (h1 f))
+  exact congr_argₓ ULift.up (propext (h1 f))
 
 /-- If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
 

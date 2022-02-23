@@ -451,7 +451,7 @@ notions of metric space ball when `V = {p | dist p.1 p.2 < r }`.  -/
 def UniformSpace.Ball (x : β) (V : Set (β × β)) : Set β :=
   Prod.mk x ⁻¹' V
 
-open uniform_space (ball)
+open UniformSpace (ball)
 
 theorem UniformSpace.mem_ball_self (x : α) {V : Set (α × α)} (hV : V ∈ 𝓤 α) : x ∈ Ball x V :=
   refl_mem_uniformity hV

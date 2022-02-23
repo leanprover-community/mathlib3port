@@ -38,7 +38,7 @@ open_locale Cardinal
 /-- A type used to prove theorems about the cardinality of `mv_polynomial σ R`. The
 `W_type (arity σ R)` has a constant for every element of `R` and `σ` and two binary functions. -/
 private def mv_polynomial_fun (σ R : Type u) : Type u :=
-  Sum R (Sum σ (Ulift.{u} Bool))
+  Sum R (Sum σ (ULift.{u} Bool))
 
 variable (σ R : Type u)
 
@@ -48,8 +48,8 @@ variable (σ R : Type u)
 private def arity : MvPolynomialFun σ R → Type u
   | Sum.inl _ => Pempty
   | Sum.inr (Sum.inl _) => Pempty
-  | Sum.inr (Sum.inr ⟨ff⟩) => Ulift Bool
-  | Sum.inr (Sum.inr ⟨tt⟩) => Ulift Bool
+  | Sum.inr (Sum.inr ⟨ff⟩) => ULift Bool
+  | Sum.inr (Sum.inr ⟨tt⟩) => ULift Bool
 
 private def arity_fintype (x : MvPolynomialFun σ R) : Fintype (Arity σ R x) := by
   rcases x with (x | x | ⟨_ | _⟩) <;> dsimp [arity] <;> infer_instance
@@ -64,8 +64,8 @@ variable [CommSemiringₓ R]
 private noncomputable def to_mv_polynomial : WType (Arity σ R) → MvPolynomial σ R
   | ⟨Sum.inl r, _⟩ => MvPolynomial.c r
   | ⟨Sum.inr (Sum.inl i), _⟩ => MvPolynomial.x i
-  | ⟨Sum.inr (Sum.inr ⟨ff⟩), f⟩ => to_mv_polynomial (f (Ulift.up true)) * to_mv_polynomial (f (Ulift.up false))
-  | ⟨Sum.inr (Sum.inr ⟨tt⟩), f⟩ => to_mv_polynomial (f (Ulift.up true)) + to_mv_polynomial (f (Ulift.up false))
+  | ⟨Sum.inr (Sum.inr ⟨ff⟩), f⟩ => to_mv_polynomial (f (ULift.up true)) * to_mv_polynomial (f (ULift.up false))
+  | ⟨Sum.inr (Sum.inr ⟨tt⟩), f⟩ => to_mv_polynomial (f (ULift.up true)) + to_mv_polynomial (f (ULift.up false))
 
 private theorem to_mv_polynomial_surjective : Function.Surjective (@toMvPolynomial σ R _) := by
   intro p
@@ -86,12 +86,12 @@ private theorem to_mv_polynomial_surjective : Function.Surjective (@toMvPolynomi
 
 private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max (max (# R) (# σ)) ω :=
   calc
-    # (MvPolynomialFun σ R) = # R + # σ + # (Ulift Bool) := by
+    # (MvPolynomialFun σ R) = # R + # σ + # (ULift Bool) := by
       dsimp [mv_polynomial_fun] <;> simp only [← add_def, add_assocₓ, Cardinal.mk_ulift]
-    _ ≤ max (max (# R + # σ) (# (Ulift Bool))) ω := add_le_max _ _
-    _ ≤ max (max (max (max (# R) (# σ)) ω) (# (Ulift Bool))) ω := max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
+    _ ≤ max (max (# R + # σ) (# (ULift Bool))) ω := add_le_max _ _
+    _ ≤ max (max (max (max (# R) (# σ)) ω) (# (ULift Bool))) ω := max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by
-      have : # (Ulift.{u} Bool) ≤ ω := le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)
+      have : # (ULift.{u} Bool) ≤ ω := le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)
       simp only [max_commₓ omega.{u}, max_assocₓ, max_left_commₓ omega.{u}, max_selfₓ, max_eq_leftₓ this]
     
 

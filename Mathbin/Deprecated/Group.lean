@@ -204,7 +204,7 @@ namespace IsGroupHom
 
 variable [Groupₓ α] [Groupₓ β] {f : α → β} (hf : IsGroupHom f)
 
-open is_mul_hom (map_mul)
+open IsMulHom (map_mul)
 
 theorem map_mul : ∀ x y, f (x * y) = f x * f y :=
   hf.to_is_mul_hom.map_mul

@@ -444,12 +444,8 @@ def LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃ where
   map_add' := fun x y => Subsingleton.elimₓ _ _
   map_smul' := fun r x => Subsingleton.elimₓ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 @[simp]
-theorem LinearMap.vec_empty_apply (m : M) :
-    (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m =
-      «expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»" :=
+theorem LinearMap.vec_empty_apply (m : M) : (LinearMap.vecEmpty : M →ₗ[R] Finₓ 0 → M₃) m = ![] :=
   rfl
 
 /-- A linear map into `fin n.succ → M₃` can be built out of a map into `M₃` and a map into

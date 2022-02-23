@@ -57,7 +57,7 @@ but the author cannot think of instances of `foldable` that are not also
 
 universe u v
 
-open Ulift CategoryTheory MulOpposite
+open ULift CategoryTheory MulOpposite
 
 namespace Monoidₓ
 
@@ -306,7 +306,7 @@ section Equalities
 
 open IsLawfulTraversable
 
-open list (cons)
+open List (cons)
 
 variable {α β γ : Type u}
 

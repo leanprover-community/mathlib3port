@@ -271,10 +271,10 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
 /-- The manifold structure on `[x, y]` is smooth.
 -/
 instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) := by
-  have M : TimesContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Finₓ 1) => -z + fun i => y - x) univ := by
-    rw [times_cont_diff_on_univ]
-    exact times_cont_diff_id.neg.add times_cont_diff_const
-  apply smooth_manifold_with_corners_of_times_cont_diff_on
+  have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Finₓ 1) => -z + fun i => y - x) univ := by
+    rw [cont_diff_on_univ]
+    exact cont_diff_id.neg.add cont_diff_const
+  apply smooth_manifold_with_corners_of_cont_diff_on
   intro e e' he he'
   simp only [atlas, mem_singleton_iff, mem_insert_iff] at he he'
   /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
@@ -283,7 +283,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
     rcases he with (rfl | rfl) <;>
     rcases he' with (rfl | rfl)
   · -- `e = left chart`, `e' = left chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
     
   · -- `e = left chart`, `e' = right chart`
     apply M.congr_mono _ (subset_univ _)
@@ -310,7 +310,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] : SmoothManifoldWithCorn
     abel
     
   · -- `e = right chart`, `e' = right chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_times_cont_diff_groupoid _ _ _)).1
+    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_cont_diff_groupoid _ _ _)).1
     
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/

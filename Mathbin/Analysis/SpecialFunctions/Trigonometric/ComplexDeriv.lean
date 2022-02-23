@@ -60,9 +60,8 @@ theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
   else (has_deriv_at_tan h).deriv
 
 @[simp]
-theorem times_cont_diff_at_tan {x : ℂ} {n : WithTop ℕ} : TimesContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuous_at_tan.1 h.ContinuousAt,
-    times_cont_diff_sin.TimesContDiffAt.div times_cont_diff_cos.TimesContDiffAt⟩
+theorem cont_diff_at_tan {x : ℂ} {n : WithTop ℕ} : ContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
+  ⟨fun h => continuous_at_tan.1 h.ContinuousAt, cont_diff_sin.ContDiffAt.div cont_diff_cos.ContDiffAt⟩
 
 end Complex
 

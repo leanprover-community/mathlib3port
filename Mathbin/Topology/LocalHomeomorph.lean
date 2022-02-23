@@ -45,7 +45,7 @@ then it should use `e.source ∩ s` or `e.target ∩ t`, not `s ∩ e.source` or
 
 open Function Set Filter
 
-open topological_space (SecondCountableTopology)
+open TopologicalSpace (SecondCountableTopology)
 
 open_locale TopologicalSpace
 

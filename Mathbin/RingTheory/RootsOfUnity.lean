@@ -227,7 +227,7 @@ theorem card_roots_of_unity : Fintype.card (rootsOfUnity k R) ≤ k :=
   calc
     Fintype.card (rootsOfUnity k R) = Fintype.card { x // x ∈ nthRoots k (1 : R) } :=
       Fintype.card_congr (rootsOfUnityEquivNthRoots R k)
-    _ ≤ (nthRoots k (1 : R)).attach.card := Multiset.card_le_of_le (Multiset.erase_dup_le _)
+    _ ≤ (nthRoots k (1 : R)).attach.card := Multiset.card_le_of_le (Multiset.dedup_le _)
     _ = (nthRoots k (1 : R)).card := Multiset.card_attach
     _ ≤ k := card_nth_roots k 1
     
@@ -778,7 +778,7 @@ theorem card_nth_roots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoots
   use card_nth_roots n 1
   · rw [not_ltₓ]
     have hcard : Fintype.card { x // x ∈ nth_roots n (1 : R) } ≤ (nth_roots n (1 : R)).attach.card :=
-      Multiset.card_le_of_le (Multiset.erase_dup_le _)
+      Multiset.card_le_of_le (Multiset.dedup_le _)
     rw [Multiset.card_attach] at hcard
     rw [← Pnat.to_pnat'_coe hpos] at hcard h⊢
     set m := Nat.toPnat' n
@@ -792,19 +792,19 @@ theorem nth_roots_nodup {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (nthRoot
   cases' Nat.eq_zero_or_posₓ n with hzero hpos
   · simp only [hzero, Multiset.nodup_zero, nth_roots_zero]
     
-  apply (@Multiset.erase_dup_eq_self R _ _).1
+  apply (@Multiset.dedup_eq_self R _ _).1
   rw [eq_iff_le_not_lt]
   constructor
-  · exact Multiset.erase_dup_le (nth_roots n (1 : R))
+  · exact Multiset.dedup_le (nth_roots n (1 : R))
     
   · by_contra ha
     replace ha := Multiset.card_lt_of_lt ha
     rw [card_nth_roots h] at ha
-    have hrw : (nth_roots n (1 : R)).eraseDup.card = Fintype.card { x // x ∈ nth_roots n (1 : R) } := by
-      set fs := (⟨(nth_roots n (1 : R)).eraseDup, Multiset.nodup_erase_dup _⟩ : Finset R)
+    have hrw : (nth_roots n (1 : R)).dedup.card = Fintype.card { x // x ∈ nth_roots n (1 : R) } := by
+      set fs := (⟨(nth_roots n (1 : R)).dedup, Multiset.nodup_dedup _⟩ : Finset R)
       rw [← Finset.card_mk, ← Fintype.card_of_subtype fs _]
       intro x
-      simp only [Multiset.mem_erase_dup, Finset.mem_mk]
+      simp only [Multiset.mem_dedup, Finset.mem_mk]
     rw [← Pnat.to_pnat'_coe hpos] at h hrw ha
     set m := Nat.toPnat' n
     rw [hrw, ← Fintype.card_congr (rootsOfUnityEquivNthRoots R m), card_roots_of_unity h] at ha

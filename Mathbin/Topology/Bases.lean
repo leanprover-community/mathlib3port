@@ -131,6 +131,10 @@ theorem IsTopologicalBasis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α)}
     exact ⟨i, h2, h1⟩
     
 
+theorem IsTopologicalBasis.is_open_iff {s : Set α} {b : Set (Set α)} (hb : IsTopologicalBasis b) :
+    IsOpen s ↔ ∀, ∀ a ∈ s, ∀, ∃ t ∈ b, a ∈ t ∧ t ⊆ s := by
+  simp [is_open_iff_mem_nhds, hb.mem_nhds_iff]
+
 theorem IsTopologicalBasis.nhds_has_basis {b : Set (Set α)} (hb : IsTopologicalBasis b) {a : α} :
     (𝓝 a).HasBasis (fun t : Set α => t ∈ b ∧ a ∈ t) fun t => t :=
   ⟨fun s =>
@@ -365,6 +369,11 @@ theorem is_topological_basis_infi {β : Type _} {ι : Type _} {X : ι → Type _
     rw [Set.preimage_Inter]
     rfl
     
+
+theorem is_topological_basis_singletons (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
+    IsTopologicalBasis { s | ∃ x : α, (s : Set α) = {x} } :=
+  (is_topological_basis_of_open_of_nhds fun u hu => is_open_discrete _) fun x u hx u_open =>
+    ⟨{x}, ⟨x, rfl⟩, mem_singleton x, singleton_subset_iff.2 hx⟩
 
 /-- If `α` is a separable space and `f : α → β` is a continuous map with dense range, then `β` is
 a separable space as well. E.g., the completion of a separable uniform space is separable. -/
@@ -612,6 +621,82 @@ theorem countable_cover_nhds_within [SecondCountableTopology α] {f : α → Set
   refine' ⟨coe '' t, Subtype.coe_image_subset _ _, htc.image _, fun x hx => _⟩
   simp only [bUnion_image, eq_univ_iff_forall, ← preimage_Union, mem_preimage] at htU⊢
   exact htU ⟨x, hx⟩
+
+section Sigma
+
+variable {ι : Type _} {E : ι → Type _} [∀ i, TopologicalSpace (E i)]
+
+omit t
+
+/-- In a disjoint union space `Σ i, E i`, one can form a topological basis by taking the union of
+topological bases on each of the parts of the space. -/
+theorem IsTopologicalBasis.sigma {s : ∀ i : ι, Set (Set (E i))} (hs : ∀ i, IsTopologicalBasis (s i)) :
+    IsTopologicalBasis (⋃ i : ι, (fun u => (Sigma.mk i '' u : Set (Σi, E i))) '' s i) := by
+  apply is_topological_basis_of_open_of_nhds
+  · intro u hu
+    obtain ⟨i, t, ts, rfl⟩ : ∃ (i : ι)(t : Set (E i)), t ∈ s i ∧ Sigma.mk i '' t = u := by
+      simpa only [mem_Union, mem_image] using hu
+    exact is_open_map_sigma_mk _ ((hs i).IsOpen ts)
+    
+  · rintro ⟨i, x⟩ u hxu u_open
+    have hx : x ∈ Sigma.mk i ⁻¹' u := hxu
+    obtain ⟨v, vs, xv, hv⟩ : ∃ (v : Set (E i))(H : v ∈ s i), x ∈ v ∧ v ⊆ Sigma.mk i ⁻¹' u :=
+      (hs i).exists_subset_of_mem_open hx (is_open_sigma_iff.1 u_open i)
+    exact ⟨Sigma.mk i '' v, mem_Union.2 ⟨i, mem_image_of_mem _ vs⟩, mem_image_of_mem _ xv, image_subset_iff.2 hv⟩
+    
+
+/-- A countable disjoint union of second countable spaces is second countable. -/
+instance [Encodable ι] [∀ i, SecondCountableTopology (E i)] : SecondCountableTopology (Σi, E i) := by
+  let b := ⋃ i : ι, (fun u => (Sigma.mk i '' u : Set (Σi, E i))) '' countable_basis (E i)
+  have A : is_topological_basis b := is_topological_basis.sigma fun i => is_basis_countable_basis _
+  have B : countable b := countable_Union fun i => countable.image (countable_countable_basis _) _
+  exact A.second_countable_topology B
+
+end Sigma
+
+section Sum
+
+omit t
+
+variable {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
+
+/-- In a sum space `α ⊕ β`, one can form a topological basis by taking the union of
+topological bases on each of the two components. -/
+theorem IsTopologicalBasis.sum {s : Set (Set α)} (hs : IsTopologicalBasis s) {t : Set (Set β)}
+    (ht : IsTopologicalBasis t) : IsTopologicalBasis ((fun u => Sum.inl '' u) '' s ∪ (fun u => Sum.inr '' u) '' t) := by
+  apply is_topological_basis_of_open_of_nhds
+  · intro u hu
+    cases hu
+    · rcases hu with ⟨w, hw, rfl⟩
+      exact open_embedding_inl.is_open_map w (hs.is_open hw)
+      
+    · rcases hu with ⟨w, hw, rfl⟩
+      exact open_embedding_inr.is_open_map w (ht.is_open hw)
+      
+    
+  · rintro x u hxu u_open
+    cases x
+    · have h'x : x ∈ Sum.inl ⁻¹' u := hxu
+      obtain ⟨v, vs, xv, vu⟩ : ∃ (v : Set α)(H : v ∈ s), x ∈ v ∧ v ⊆ Sum.inl ⁻¹' u :=
+        hs.exists_subset_of_mem_open h'x (is_open_sum_iff.1 u_open).1
+      exact ⟨Sum.inl '' v, mem_union_left _ (mem_image_of_mem _ vs), mem_image_of_mem _ xv, image_subset_iff.2 vu⟩
+      
+    · have h'x : x ∈ Sum.inr ⁻¹' u := hxu
+      obtain ⟨v, vs, xv, vu⟩ : ∃ (v : Set β)(H : v ∈ t), x ∈ v ∧ v ⊆ Sum.inr ⁻¹' u :=
+        ht.exists_subset_of_mem_open h'x (is_open_sum_iff.1 u_open).2
+      exact ⟨Sum.inr '' v, mem_union_right _ (mem_image_of_mem _ vs), mem_image_of_mem _ xv, image_subset_iff.2 vu⟩
+      
+    
+
+/-- A sum type of two second countable spaces is second countable. -/
+instance [SecondCountableTopology α] [SecondCountableTopology β] : SecondCountableTopology (Sum α β) := by
+  let b := (fun u => Sum.inl '' u) '' countable_basis α ∪ (fun u => Sum.inr '' u) '' countable_basis β
+  have A : is_topological_basis b := (is_basis_countable_basis α).Sum (is_basis_countable_basis β)
+  have B : countable b :=
+    (countable.image (countable_countable_basis _) _).union (countable.image (countable_countable_basis _) _)
+  exact A.second_countable_topology B
+
+end Sum
 
 end TopologicalSpace
 

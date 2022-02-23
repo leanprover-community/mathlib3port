@@ -284,13 +284,12 @@ def index (j : Finₓ n) : Finₓ c.length :=
 theorem lt_size_up_to_index_succ (j : Finₓ n) : (j : ℕ) < c.sizeUpTo (c.index j).succ :=
   (Nat.find_specₓ (c.index_exists j.2)).1
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem size_up_to_index_le (j : Finₓ n) : c.sizeUpTo (c.index j) ≤ j := by
   by_contra H
   set i := c.index j with hi
   push_neg  at H
   have i_pos : (0 : ℕ) < i := by
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' i_pos
     revert H
     simp [nonpos_iff_eq_zero.1 i_pos, c.size_up_to_zero]
   let i₁ := (i : ℕ).pred

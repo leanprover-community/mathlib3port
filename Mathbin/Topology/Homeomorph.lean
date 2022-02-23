@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 -/
 import Mathbin.Topology.DenseEmbedding
+import Mathbin.Topology.Support
 import Mathbin.Data.Equiv.Fin
 
 /-!
@@ -271,6 +272,11 @@ theorem image_interior (h : α ≃ₜ β) (s : Set α) : h '' Interior s = Inter
 theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Frontier s = Frontier (h ⁻¹' s) :=
   h.IsOpenMap.preimage_frontier_eq_frontier_preimage h.Continuous _
 
+@[to_additive]
+theorem _root_.has_compact_mul_support.comp_homeomorph {M} [One M] {f : β → M} (hf : HasCompactMulSupport f)
+    (φ : α ≃ₜ β) : HasCompactMulSupport (f ∘ φ) :=
+  hf.comp_closed_embedding φ.ClosedEmbedding
+
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=
   h.Embedding.map_nhds_of_mem _
@@ -411,7 +417,7 @@ theorem coe_punit_prod : ⇑(punitProd α) = Prod.snd :=
 end
 
 /-- `ulift α` is homeomorphic to `α`. -/
-def ulift.{u, v} {α : Type u} [TopologicalSpace α] : Ulift.{v, u} α ≃ₜ α where
+def ulift.{u, v} {α : Type u} [TopologicalSpace α] : ULift.{v, u} α ≃ₜ α where
   continuous_to_fun := continuous_ulift_down
   continuous_inv_fun := continuous_ulift_up
   toEquiv := Equivₓ.ulift
@@ -476,6 +482,14 @@ def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s :=
       continuity! }
 
 end Homeomorph
+
+/-- An inducing equiv between topological spaces is a homeomorphism. -/
+@[simps]
+def Equivₓ.toHomeomorphOfInducing [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ β) (hf : Inducing f) : α ≃ₜ β :=
+  { f with continuous_to_fun := hf.Continuous,
+    continuous_inv_fun :=
+      hf.continuous_iff.2 <| by
+        simpa using continuous_id }
 
 namespace Continuous
 

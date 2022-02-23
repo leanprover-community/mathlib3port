@@ -1577,7 +1577,7 @@ theorem exists_smul_of_dvd_count (s : Multiset α) {k : ℕ} (h : ∀ a : α, a 
 theorem to_finset_prod_dvd_prod [CommMonoidₓ α] (S : Multiset α) : S.toFinset.Prod id ∣ S.Prod := by
   rw [Finset.prod_eq_multiset_prod]
   refine' Multiset.prod_dvd_prod_of_le _
-  simp [Multiset.erase_dup_le S]
+  simp [Multiset.dedup_le S]
 
 @[to_additive]
 theorem prod_sum {α : Type _} {ι : Type _} [CommMonoidₓ α] (f : ι → Multiset α) (s : Finset ι) :

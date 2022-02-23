@@ -58,9 +58,9 @@ value, if the hypothesis is a local definition).
 
 open Native
 
-open expr_set (local_set_to_name_set)
+open ExprSet (local_set_to_name_set)
 
-open name_set (local_list_to_name_set)
+open NameSet (local_list_to_name_set)
 
 namespace Tactic
 

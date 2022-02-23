@@ -50,7 +50,7 @@ deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.T
   SmtPreConfig, EmatchConfig, CcConfig, SmtConfig, Rsimp.Config, Tactic.DunfoldConfig, Tactic.DsimpConfig,
   Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig, Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg,
   Interactive.Loc, Tactic.UnfoldConfig, ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos,
-  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, Ulift, Plift, StringImp, Stringₓ.IteratorImp,
+  Environment.ProjectionInfo, ReducibilityHints, CongrArgKind, ULift, Plift, StringImp, Stringₓ.IteratorImp,
   Rbnode.Color, Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=

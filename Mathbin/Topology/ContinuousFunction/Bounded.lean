@@ -3,11 +3,11 @@ Copyright (c) 2018 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 -/
+import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.Star.Basic
-import Mathbin.Topology.ContinuousFunction.Algebra
 import Mathbin.Data.Real.Sqrt
-import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
+import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # Bounded continuous functions
@@ -26,15 +26,30 @@ open Set Filter Metric Function
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {γ : Type w}
+variable {F : Type _} {α : Type u} {β : Type v} {γ : Type w}
 
-/-- The type of bounded continuous functions from a topological space to a metric space -/
+/-- `α →ᵇ β` is the type of bounded continuous functions `α → β` from a topological space to a
+metric space.
+
+When possible, instead of parametrizing results over `(f : α →ᵇ β)`,
+you should parametrize over `(F : Type*) [bounded_continuous_map_class F α β] (f : F)`.
+
+When you extend this structure, make sure to extend `bounded_continuous_map_class`. -/
 structure BoundedContinuousFunction (α : Type u) (β : Type v) [TopologicalSpace α] [MetricSpace β] extends
   ContinuousMap α β : Type max u v where
-  bounded' : ∃ C, ∀ x y : α, dist (to_fun x) (to_fun y) ≤ C
+  map_bounded' : ∃ C, ∀ x y, dist (to_fun x) (to_fun y) ≤ C
 
 -- mathport name: «expr →ᵇ »
 localized [BoundedContinuousFunction] infixr:25 " →ᵇ " => BoundedContinuousFunction
+
+/-- `bounded_continuous_map_class F α β` states that `F` is a type of bounded continuous maps.
+
+You should also extend this typeclass when you extend `bounded_continuous_function`. -/
+class BoundedContinuousMapClass (F α β : Type _) [TopologicalSpace α] [MetricSpace β] extends
+  ContinuousMapClass F α β where
+  map_bounded (f : F) : ∃ C, ∀ x y, dist (f x) (f y) ≤ C
+
+export BoundedContinuousMapClass (map_bounded)
 
 namespace BoundedContinuousFunction
 
@@ -44,8 +59,22 @@ variable [TopologicalSpace α] [MetricSpace β] [MetricSpace γ]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
+instance : BoundedContinuousMapClass (α →ᵇ β) α β where
+  coe := fun f => f.toFun
+  coe_injective' := fun f g h => by
+    obtain ⟨⟨_, _⟩, _⟩ := f
+    obtain ⟨⟨_, _⟩, _⟩ := g
+    congr
+  map_continuous := fun f => f.continuous_to_fun
+  map_bounded := fun f => f.map_bounded'
+
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (α →ᵇ β) fun _ => α → β :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
+
+instance [BoundedContinuousMapClass F α β] : CoeTₓ F (α →ᵇ β) :=
+  ⟨fun f => { toFun := f, continuous_to_fun := map_continuous f, map_bounded' := map_bounded f }⟩
 
 @[simp]
 theorem coe_to_continuous_fun (f : α →ᵇ β) : (f.toContinuousMap : α → β) = f :=
@@ -59,24 +88,14 @@ def Simps.apply (h : α →ᵇ β) : α → β :=
 initialize_simps_projections BoundedContinuousFunction (to_continuous_map_to_fun → apply)
 
 protected theorem bounded (f : α →ᵇ β) : ∃ C, ∀ x y : α, dist (f x) (f y) ≤ C :=
-  f.bounded'
+  f.map_bounded'
 
-@[continuity]
 protected theorem continuous (f : α →ᵇ β) : Continuous f :=
   f.toContinuousMap.Continuous
 
 @[ext]
-theorem ext (H : ∀ x, f x = g x) : f = g := by
-  cases f
-  cases g
-  congr
-  ext
-  exact H x
-
-theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun h => fun x => h ▸ rfl, ext⟩
-
-theorem coe_injective : @Injective (α →ᵇ β) (α → β) coeFn := fun f g h => ext <| congr_funₓ h
+theorem ext (h : ∀ x, f x = g x) : f = g :=
+  FunLike.ext _ _ h
 
 theorem bounded_range (f : α →ᵇ β) : Bounded (Range f) :=
   bounded_range_iff.2 f.Bounded
@@ -197,8 +216,8 @@ variable (α) {β}
 /-- Constant as a continuous bounded function. -/
 @[simps (config := { fullyApplied := false })]
 def const (b : β) : α →ᵇ β :=
-  ⟨ContinuousMap.const b, 0, by
-    simp [le_reflₓ]⟩
+  ⟨ContinuousMap.const α b, 0, by
+    simp [le_rfl]⟩
 
 variable {α}
 
@@ -268,7 +287,7 @@ instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
 @[simps (config := { fullyApplied := false })]
 def compContinuous {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) : δ →ᵇ β where
   toContinuousMap := f.1.comp g
-  bounded' := f.bounded'.imp fun C hC x y => hC _ _
+  map_bounded' := f.map_bounded'.imp fun C hC x y => hC _ _
 
 theorem lipschitz_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
     LipschitzWith 1 fun f : α →ᵇ β => f.comp_continuous g :=
@@ -281,7 +300,7 @@ theorem continuous_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ
 /-- Restrict a bounded continuous function to a set. -/
 @[simps (config := { fullyApplied := false }) apply]
 def restrict (f : α →ᵇ β) (s : Set α) : s →ᵇ β :=
-  f.comp_continuous (ContinuousMap.id.restrict s)
+  f.comp_continuous <| (ContinuousMap.id _).restrict s
 
 /-- Composition (in the target) of a bounded continuous function with a Lipschitz map again
 gives a bounded continuous function -/
@@ -327,7 +346,7 @@ discrete topology, so we only need to verify boundedness. -/
 def extend (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : δ →ᵇ β where
   toFun := extendₓ f g h
   continuous_to_fun := continuous_of_discrete_topology
-  bounded' := by
+  map_bounded' := by
     rw [← bounded_range_iff, range_extend f.injective, Metric.bounded_union]
     exact ⟨g.bounded_range, h.bounded_image _⟩
 
@@ -343,7 +362,7 @@ theorem extend_apply' {f : α ↪ δ} {x : δ} (hx : x ∉ Range f) (g : α →�
   extend_apply' _ _ _ hx
 
 theorem extend_of_empty [IsEmpty α] (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : extend f g h = h :=
-  coe_injective <| Function.extend_of_empty f g h
+  FunLike.coe_injective <| Function.extend_of_empty f g h
 
 @[simp]
 theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂ : δ →ᵇ β) :
@@ -542,7 +561,7 @@ theorem mk_of_compact_one [CompactSpace α] : mkOfCompact (1 : C(α, β)) = 1 :=
 
 @[to_additive]
 theorem forall_coe_one_iff_one (f : α →ᵇ β) : (∀ x, f x = 1) ↔ f = 1 :=
-  (@ext_iff _ _ _ _ f 1).symm
+  (@FunLike.ext_iff _ _ _ _ f 1).symm
 
 @[simp, to_additive]
 theorem one_comp_continuous [TopologicalSpace γ] (f : C(γ, α)) : (1 : α →ᵇ β).comp_continuous f = 1 :=
@@ -598,7 +617,7 @@ theorem add_comp_continuous [TopologicalSpace γ] (h : C(γ, α)) :
   rfl
 
 instance : AddMonoidₓ (α →ᵇ β) :=
-  coe_injective.AddMonoid _ coe_zero coe_add
+  FunLike.coe_injective.AddMonoid _ coe_zero coe_add
 
 instance : HasLipschitzAdd (α →ᵇ β) where
   lipschitz_add :=
@@ -829,7 +848,7 @@ theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) : mkOfCompact (f -
   rfl
 
 instance : AddCommGroupₓ (α →ᵇ β) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
+  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
 
 instance : NormedGroup (α →ᵇ β) where
   dist_eq := fun f g => by
@@ -869,7 +888,7 @@ variable [Zero 𝕜] [Zero β] [HasScalar 𝕜 β] [HasBoundedSmul 𝕜 β]
 instance : HasScalar 𝕜 (α →ᵇ β) where
   smul := fun c f =>
     { toContinuousMap := c • f.toContinuousMap,
-      bounded' :=
+      map_bounded' :=
         let ⟨b, hb⟩ := f.Bounded
         ⟨dist c 0 * b, fun x y => by
           refine' (dist_smul_pair c (f x) (f y)).trans _
@@ -903,7 +922,7 @@ section MulAction
 variable [MonoidWithZeroₓ 𝕜] [Zero β] [MulAction 𝕜 β] [HasBoundedSmul 𝕜 β]
 
 instance : MulAction 𝕜 (α →ᵇ β) :=
-  Function.Injective.mulAction _ coe_injective coe_smul
+  FunLike.coe_injective.MulAction _ coe_smul
 
 end MulAction
 
@@ -914,7 +933,7 @@ variable [MonoidWithZeroₓ 𝕜] [AddMonoidₓ β] [DistribMulAction 𝕜 β] [
 variable [HasLipschitzAdd β]
 
 instance : DistribMulAction 𝕜 (α →ᵇ β) :=
-  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ coe_injective coe_smul
+  Function.Injective.distribMulAction ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
 
 end DistribMulAction
 
@@ -927,7 +946,7 @@ variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 variable [HasLipschitzAdd β]
 
 instance : Module 𝕜 (α →ᵇ β) :=
-  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ coe_injective coe_smul
+  Function.Injective.module _ ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
 
 variable (𝕜)
 
@@ -1030,7 +1049,7 @@ theorem mul_apply (f g : α →ᵇ R) (x : α) : (f * g) x = f x * g x :=
   rfl
 
 instance : Ringₓ (α →ᵇ R) :=
-  coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub
+  FunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub
 
 instance : NormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.normedGroup with
@@ -1188,7 +1207,11 @@ theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
   []
   (Command.declSig
    []
-   (Term.typeSpec ":" (Term.app `NormedStarMonoid [(Topology.ContinuousFunction.Bounded.«term_→ᵇ_» `α " →ᵇ " `β)])))
+   (Term.typeSpec
+    ":"
+    (Term.app
+     `NormedStarMonoid
+     [(BoundedContinuousFunction.Topology.ContinuousFunction.Bounded.«term_→ᵇ_» `α " →ᵇ " `β)])))
   (Command.whereStructInst
    "where"
    [(group
@@ -1463,9 +1486,9 @@ instance : SemilatticeInf (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     inf := fun f g =>
       { toFun := fun t => f t⊓g t, continuous_to_fun := f.Continuous.inf g.Continuous,
-        bounded' := by
-          cases' f.bounded' with C₁ hf
-          cases' g.bounded' with C₂ hg
+        map_bounded' := by
+          obtain ⟨C₁, hf⟩ := f.bounded
+          obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
           simp_rw [NormedGroup.dist_eq]  at hf hg⊢
           exact (norm_inf_sub_inf_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },
@@ -1478,9 +1501,9 @@ instance : SemilatticeSup (α →ᵇ β) :=
   { BoundedContinuousFunction.partialOrder with
     sup := fun f g =>
       { toFun := fun t => f t⊔g t, continuous_to_fun := f.Continuous.sup g.Continuous,
-        bounded' := by
-          cases' f.bounded' with C₁ hf
-          cases' g.bounded' with C₂ hg
+        map_bounded' := by
+          obtain ⟨C₁, hf⟩ := f.bounded
+          obtain ⟨C₂, hg⟩ := g.bounded
           refine' ⟨C₁ + C₂, fun x y => _⟩
           simp_rw [NormedGroup.dist_eq]  at hf hg⊢
           exact (norm_sup_sub_sup_le_add_norm _ _ _ _).trans (add_le_add (hf _ _) (hg _ _)) },

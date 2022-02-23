@@ -54,8 +54,8 @@ instance Prod.is_empty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
 instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
   Function.is_empty Prod.snd
 
-instance [IsEmpty α] [IsEmpty β] : IsEmpty (Psum α β) :=
-  ⟨fun x => Psum.rec IsEmpty.false IsEmpty.false x⟩
+instance [IsEmpty α] [IsEmpty β] : IsEmpty (PSum α β) :=
+  ⟨fun x => PSum.rec IsEmpty.false IsEmpty.false x⟩
 
 instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
   ⟨fun x => Sum.rec IsEmpty.false IsEmpty.false x⟩
@@ -139,8 +139,8 @@ theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β
   simp only [← not_nonempty_iff, nonempty_sum, not_or_distrib]
 
 @[simp]
-theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty β := by
-  simp only [← not_nonempty_iff, nonempty_psumₓ, not_or_distrib]
+theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
+  simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
 
 variable (α)
 

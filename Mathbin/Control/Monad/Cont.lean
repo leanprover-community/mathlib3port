@@ -105,7 +105,7 @@ instance ε [MonadExcept ε m] : MonadExcept ε (ContT r m) where
   throw := fun x e f => throw e
   catch := fun α act h f => catch (act f) fun e => h e f
 
-instance : MonadRun (fun α => (α → m r) → Ulift.{u, v} (m r)) (ContT.{u, v, u} r m) where
+instance : MonadRun (fun α => (α → m r) → ULift.{u, v} (m r)) (ContT.{u, v, u} r m) where
   run := fun α f x => ⟨f x⟩
 
 end ContT

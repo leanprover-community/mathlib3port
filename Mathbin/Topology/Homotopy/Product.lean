@@ -70,19 +70,17 @@ open ContinuousMap
 
 section Pi
 
-variable {I : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] {A : Type _} [TopologicalSpace A]
-  {f g : ∀ i, C(A, X i)} {S : Set A}
+variable {I A : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] [TopologicalSpace A] {f g : ∀ i, C(A, X i)}
+  {S : Set A}
 
 /-- The product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
 def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g) where
   toFun := fun t i => homotopies i t
-  to_fun_zero := by
-    intro t
+  map_zero_left' := fun t => by
     ext i
     simp only [pi_eval, homotopy.apply_zero]
-  to_fun_one := by
-    intro t
+  map_one_left' := fun t => by
     ext i
     simp only [pi_eval, homotopy.apply_one]
 
@@ -109,11 +107,9 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {A : Type 
 @[simps]
 def Homotopy.prod (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) : Homotopy (prodMk f₀ g₀) (prodMk f₁ g₁) where
   toFun := fun t => (F t, G t)
-  to_fun_zero := by
-    intro
+  map_zero_left' := fun x => by
     simp only [prod_eval, homotopy.apply_zero]
-  to_fun_one := by
-    intro
+  map_one_left' := fun x => by
     simp only [prod_eval, homotopy.apply_one]
 
 /-- The relative product of homotopies `F` and `G`,

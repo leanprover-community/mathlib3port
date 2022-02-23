@@ -124,6 +124,6 @@ end ProdLieGroup
 
 instance normed_space_lie_add_group {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
     [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
-  { model_space_smooth with smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => times_cont_diff_add.TimesContDiffOn⟩,
-    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => times_cont_diff_neg.TimesContDiffOn⟩ }
+  { model_space_smooth with smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => cont_diff_add.ContDiffOn⟩,
+    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => cont_diff_neg.ContDiffOn⟩ }
 

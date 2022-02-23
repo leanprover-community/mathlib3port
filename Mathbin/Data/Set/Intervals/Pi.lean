@@ -72,7 +72,7 @@ end Nonempty
 
 variable [DecidableEq ι]
 
-open function (update)
+open Function (update)
 
 theorem pi_univ_Ioc_update_left {x y : ∀ i, α i} {i₀ : ι} {m : α i₀} (hm : x i₀ ≤ m) :
     (Pi Univ fun i => Ioc (update x i₀ m i) (y i)) = { z | m < z i₀ } ∩ Pi Univ fun i => Ioc (x i) (y i) := by
@@ -100,7 +100,7 @@ end PiPreorder
 
 variable [DecidableEq ι] [∀ i, LinearOrderₓ (α i)]
 
-open function (update)
+open Function (update)
 
 theorem pi_univ_Ioc_update_union (x y : ∀ i, α i) (i₀ : ι) (m : α i₀) (hm : m ∈ Icc (x i₀) (y i₀)) :
     ((Pi Univ fun i => Ioc (x i) (update y i₀ m i)) ∪ Pi Univ fun i => Ioc (update x i₀ m i) (y i)) =

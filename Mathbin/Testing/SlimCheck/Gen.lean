@@ -41,7 +41,7 @@ It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/
 @[reducible]
 def Gen (α : Type u) :=
-  ReaderTₓ (Ulift ℕ) Rand α deriving Monadₓ, IsLawfulMonad
+  ReaderTₓ (ULift ℕ) Rand α deriving Monadₓ, IsLawfulMonad
 
 variable (α : Type u)
 
@@ -122,7 +122,7 @@ def listOf (cmd : Gen α) : Gen (List α) :=
       let v ← vector_of n cmd
       return v
 
-open Ulift
+open ULift
 
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do

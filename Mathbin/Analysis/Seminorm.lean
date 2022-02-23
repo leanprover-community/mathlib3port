@@ -78,7 +78,7 @@ open NormedField Set
 
 open_locale Pointwise TopologicalSpace Nnreal BigOperators
 
-variable {R 𝕜 𝕝 E F G ι ι' : Type _}
+variable {R R' 𝕜 𝕝 E F G ι ι' : Type _}
 
 section SemiNormedRing
 
@@ -400,6 +400,10 @@ instance [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] 
         simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
         exact (mul_le_mul_of_nonneg_left (p.triangle _ _) (Nnreal.coe_nonneg _)).trans_eq (mul_addₓ _ _ _) }
 
+instance [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] [HasScalar R' ℝ] [HasScalar R' ℝ≥0 ]
+    [IsScalarTower R' ℝ≥0 ℝ] [HasScalar R R'] [IsScalarTower R R' ℝ] : IsScalarTower R R' (Seminorm 𝕜 E) where
+  smul_assoc := fun r a p => ext fun x => smul_assoc r a (p x)
+
 theorem coe_smul [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p : Seminorm 𝕜 E) :
     ⇑(r • p) = r • p :=
   rfl
@@ -601,6 +605,19 @@ theorem nonneg : 0 ≤ p x :=
 theorem sub_rev : p (x - y) = p (y - x) := by
   rw [← neg_sub, p.neg]
 
+/-- The direct path from 0 to y is shorter than the path with x "inserted" in between. -/
+theorem le_insert : p y ≤ p x + p (x - y) :=
+  calc
+    p y = p (x - (x - y)) := by
+      rw [sub_sub_cancel]
+    _ ≤ p x + p (x - y) := p.sub_le _ _
+    
+
+/-- The direct path from 0 to x is shorter than the path with y "inserted" in between. -/
+theorem le_insert' : p x ≤ p y + p (x - y) := by
+  rw [sub_rev]
+  exact le_insert _ _ _
+
 instance : OrderBot (Seminorm 𝕜 E) :=
   ⟨0, nonneg⟩
 
@@ -651,6 +668,63 @@ theorem comp_smul_apply (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (c : 𝕜) 
   p.smul _ _
 
 end SemiNormedCommRing
+
+section NormedField
+
+variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+
+private theorem bdd_below_range_add (x : E) (p q : Seminorm 𝕜 E) : BddBelow (Range fun u : E => p u + q (x - u)) := by
+  use 0
+  rintro _ ⟨x, rfl⟩
+  exact add_nonneg (p.nonneg _) (q.nonneg _)
+
+noncomputable instance : HasInf (Seminorm 𝕜 E) where
+  inf := fun p q =>
+    { toFun := fun x => ⨅ u : E, p u + q (x - u),
+      triangle' := fun x y => by
+        refine' le_cinfi_add_cinfi fun u v => _
+        apply cinfi_le_of_le (bdd_below_range_add _ _ _) (v + u)
+        dsimp only
+        convert add_le_add (p.triangle v u) (q.triangle (y - v) (x - u)) using 1
+        · rw
+            [show x + y - (v + u) = y - v + (x - u) by
+              abel]
+          
+        · abel
+          ,
+      smul' := fun a x => by
+        obtain rfl | ha := eq_or_ne a 0
+        · simp_rw [norm_zero, zero_mul, zero_smul, zero_sub, Seminorm.neg]
+          refine'
+            cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => add_nonneg (p.nonneg _) (q.nonneg _)) fun x hx =>
+              ⟨0, by
+                rwa [p.zero, q.zero, add_zeroₓ]⟩
+          
+        simp_rw [Real.mul_infi_of_nonneg (norm_nonneg a), mul_addₓ, ← p.smul, ← q.smul, smul_sub]
+        refine' infi_congr ((· • ·) a⁻¹ : E → E) (fun u => ⟨a • u, inv_smul_smul₀ ha u⟩) fun u => _
+        rw [smul_inv_smul₀ ha] }
+
+@[simp]
+theorem inf_apply (p q : Seminorm 𝕜 E) (x : E) : (p⊓q) x = ⨅ u : E, p u + q (x - u) :=
+  rfl
+
+noncomputable instance : Lattice (Seminorm 𝕜 E) :=
+  { Seminorm.semilatticeSup with inf := (·⊓·),
+    inf_le_left := fun p q x => by
+      apply cinfi_le_of_le (bdd_below_range_add _ _ _) x
+      simp only [sub_self, Seminorm.zero, add_zeroₓ],
+    inf_le_right := fun p q x => by
+      apply cinfi_le_of_le (bdd_below_range_add _ _ _) (0 : E)
+      simp only [sub_self, Seminorm.zero, zero_addₓ, sub_zero],
+    le_inf := fun a b c hab hac x => le_cinfi fun u => le_transₓ (a.le_insert' _ _) (add_le_add (hab _) (hac _)) }
+
+theorem smul_inf [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
+    r • (p⊓q) = r • p⊓r • q := by
+  ext
+  simp_rw [smul_apply, inf_apply, smul_apply, ← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul,
+    Real.mul_infi_of_nonneg (Subtype.prop _), mul_addₓ]
+
+end NormedField
 
 /-! ### Seminorm ball -/
 

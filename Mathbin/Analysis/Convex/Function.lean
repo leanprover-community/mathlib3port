@@ -73,7 +73,7 @@ def StrictConcaveOn : Prop :=
 
 variable {𝕜 s f}
 
-open order_dual (toDual ofDual)
+open OrderDual (toDual ofDual)
 
 theorem ConvexOn.dual (hf : ConvexOn 𝕜 s f) : ConcaveOn 𝕜 s (to_dual ∘ f) :=
   hf

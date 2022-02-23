@@ -47,7 +47,7 @@ instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
 instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
   Small.mk' Equivₓ.ulift.{w}.symm
 
-instance small_ulift (α : Type v) : Small.{v} (Ulift.{w} α) :=
+instance small_ulift (α : Type v) : Small.{v} (ULift.{w} α) :=
   Small.mk' Equivₓ.ulift
 
 theorem small_type : Small.{max (u + 1) v} (Type u) :=

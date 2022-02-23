@@ -76,7 +76,7 @@ instance : BorelSpace circle :=
 
 /-- Haar measure on the circle, normalized to have total measure 1. -/
 def haarCircle : Measureₓ circle :=
-  haarMeasure positiveCompactsUniv deriving IsHaarMeasure
+  haarMeasure ⊤deriving IsHaarMeasure
 
 instance : IsProbabilityMeasure haarCircle :=
   ⟨haar_measure_self⟩

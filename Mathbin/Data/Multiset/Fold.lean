@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Multiset.EraseDup
+import Mathbin.Data.Multiset.Dedup
 import Mathbin.Data.List.MinMax
 
 /-!
@@ -94,8 +94,8 @@ theorem fold_union_inter [DecidableEq α] (s₁ s₂ : Multiset α) (b₁ b₂ :
   rw [← fold_add op, union_add_inter, fold_add op]
 
 @[simp]
-theorem fold_erase_dup_idem [DecidableEq α] [hi : IsIdempotent α op] (s : Multiset α) (b : α) :
-    (eraseDup s).fold op b = s.fold op b :=
+theorem fold_dedup_idem [DecidableEq α] [hi : IsIdempotent α op] (s : Multiset α) (b : α) :
+    (dedup s).fold op b = s.fold op b :=
   (Multiset.induction_on s
       (by
         simp ))
@@ -120,12 +120,12 @@ end Order
 
 open Nat
 
-theorem le_smul_erase_dup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • eraseDup s :=
+theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • dedup s :=
   ⟨(s.map fun a => count a s).fold max 0,
     le_iff_count.2 fun a => by
       rw [count_nsmul]
       by_cases' a ∈ s
-      · refine' le_transₓ _ (Nat.mul_le_mul_leftₓ _ <| count_pos.2 <| mem_erase_dup.2 h)
+      · refine' le_transₓ _ (Nat.mul_le_mul_leftₓ _ <| count_pos.2 <| mem_dedup.2 h)
         have : count a s ≤ fold max 0 (map (fun a => count a s) (a ::ₘ erase s a)) <;> [simp [le_max_leftₓ],
           simpa [cons_erase h]]
         

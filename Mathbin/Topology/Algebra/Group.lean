@@ -217,6 +217,11 @@ theorem continuous_at_inv {x : G} : ContinuousAt Inv.inv x :=
 theorem tendsto_inv (a : G) : Tendsto Inv.inv (𝓝 a) (𝓝 a⁻¹) :=
   continuous_at_inv
 
+/-- Conjugation in a topological group is continuous.-/
+@[to_additive "Conjugation in a topological additive group is continuous."]
+theorem TopologicalGroup.continuous_conj (g : G) : Continuous fun h : G => g * h * g⁻¹ :=
+  (continuous_mul_right g⁻¹).comp (continuous_mul_left g)
+
 /-- If a function converges to a value in a multiplicative topological group, then its inverse
 converges to the inverse of this value. For the version in normed fields assuming additionally
 that the limit is nonzero, use `tendsto.inv'`. -/
@@ -436,6 +441,43 @@ theorem DenseRange.topological_closure_map_subgroup [Groupₓ H] [TopologicalSpa
   rw [SetLike.ext'_iff] at hs⊢
   simp only [Subgroup.topological_closure_coe, Subgroup.coe_top, ← dense_iff_closure_eq] at hs⊢
   exact hf'.dense_image hf hs
+
+/-- The topological closure of a normal subgroup is normal.-/
+@[to_additive "The topological closure of a normal additive subgroup is normal."]
+theorem Subgroup.is_normal_topological_closure {G : Type _} [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G]
+    (N : Subgroup G) [N.Normal] : (Subgroup.topologicalClosure N).Normal :=
+  { conj_mem := fun n hn g => by
+      apply mem_closure_of_continuous (TopologicalGroup.continuous_conj g) hn
+      intro m hm
+      exact subset_closure (Subgroup.Normal.conj_mem inferInstance m hm g) }
+
+@[to_additive]
+theorem mul_mem_connected_component_one {G : Type _} [TopologicalSpace G] [MulOneClassₓ G] [HasContinuousMul G]
+    {g h : G} (hg : g ∈ ConnectedComponent (1 : G)) (hh : h ∈ ConnectedComponent (1 : G)) :
+    g * h ∈ ConnectedComponent (1 : G) := by
+  rw [connected_component_eq hg]
+  have hmul : g ∈ ConnectedComponent (g * h) := by
+    apply Continuous.image_connected_component_subset (continuous_mul_left g)
+    rw [← connected_component_eq hh]
+    exact
+      ⟨(1 : G), mem_connected_component, by
+        simp only [mul_oneₓ]⟩
+  simpa [← connected_component_eq hmul] using mem_connected_component
+
+@[to_additive]
+theorem inv_mem_connected_component_one {G : Type _} [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] {g : G}
+    (hg : g ∈ ConnectedComponent (1 : G)) : g⁻¹ ∈ ConnectedComponent (1 : G) := by
+  rw [← one_inv]
+  exact Continuous.image_connected_component_subset continuous_inv _ ((Set.mem_image _ _ _).mp ⟨g, hg, rfl⟩)
+
+/-- The connected component of 1 is a subgroup of `G`. -/
+@[to_additive "The connected component of 0 is a subgroup of `G`."]
+def Subgroup.connectedComponentOfOne (G : Type _) [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] :
+    Subgroup G where
+  Carrier := ConnectedComponent (1 : G)
+  one_mem' := mem_connected_component
+  mul_mem' := fun g h hg hh => mul_mem_connected_component_one hg hh
+  inv_mem' := fun g hg => inv_mem_connected_component_one hg
 
 /-- If a subgroup of a topological group is commutative, then so is its topological closure. -/
 @[to_additive "If a subgroup of an additive topological group is commutative, then so is its\ntopological closure."]
@@ -796,10 +838,10 @@ is locally compact. -/
 theorem TopologicalSpace.PositiveCompacts.locally_compact_space_of_group [T2Space G] (K : PositiveCompacts G) :
     LocallyCompactSpace G := by
   refine' locally_compact_of_compact_nhds fun x => _
-  obtain ⟨y, hy⟩ : ∃ y, y ∈ Interior K.1 := K.2.2
+  obtain ⟨y, hy⟩ := K.interior_nonempty
   let F := Homeomorph.mulLeft (x * y⁻¹)
-  refine' ⟨F '' K.1, _, IsCompact.image K.2.1 F.continuous⟩
-  suffices F.symm ⁻¹' K.1 ∈ 𝓝 x by
+  refine' ⟨F '' K, _, K.compact.image F.continuous⟩
+  suffices F.symm ⁻¹' K ∈ 𝓝 x by
     convert this
     apply Equivₓ.image_eq_preimage
   apply ContinuousAt.preimage_mem_nhds F.symm.continuous.continuous_at
@@ -892,7 +934,7 @@ end Quotientₓ
 
 namespace Units
 
-open mul_opposite (continuous_op continuous_unop)
+open MulOpposite (continuous_op continuous_unop)
 
 variable [Monoidₓ α] [TopologicalSpace α] [HasContinuousMul α] [Monoidₓ β] [TopologicalSpace β] [HasContinuousMul β]
 

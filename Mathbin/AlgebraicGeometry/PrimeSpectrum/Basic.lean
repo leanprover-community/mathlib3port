@@ -3,12 +3,13 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Topology.Opens
+import Mathbin.Algebra.PunitInstances
+import Mathbin.LinearAlgebra.Finsupp
+import Mathbin.RingTheory.Nilpotent
+import Mathbin.RingTheory.Localization.Away
 import Mathbin.RingTheory.Ideal.Prod
 import Mathbin.RingTheory.Ideal.Over
-import Mathbin.LinearAlgebra.Finsupp
-import Mathbin.Algebra.PunitInstances
-import Mathbin.RingTheory.Nilpotent
+import Mathbin.Topology.Opens
 import Mathbin.Topology.Sober
 
 /-!
@@ -512,7 +513,7 @@ theorem comap_as_ideal (y : PrimeSpectrum S) : (comap f y).asIdeal = Ideal.comap
   rfl
 
 @[simp]
-theorem comap_id : comap (RingHom.id R) = ContinuousMap.id := by
+theorem comap_id : comap (RingHom.id R) = ContinuousMap.id _ := by
   ext
   rfl
 

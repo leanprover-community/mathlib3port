@@ -383,7 +383,6 @@ theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq 
   apply Dvd.intro _
   rw [prim_part_mul hq, hp.prim_part_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
   classical
@@ -395,7 +394,7 @@ theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (
   · apply hs s.nat_degree s rfl
     
   clear s
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' con
   rcases Nat.find_specₓ Con with ⟨s, sdeg, ⟨ps, qs⟩, rs⟩
   have s0 : s ≠ 0 := by
     contrapose! rs

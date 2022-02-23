@@ -114,10 +114,10 @@ variable [DecidableEq α]
 protected def shrink : ShrinkFn (TotalFunction α β)
   | ⟨m, x⟩ =>
     (Sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
-      ⟨⟨List.eraseDupkeys m', x'⟩,
+      ⟨⟨List.dedupkeys m', x'⟩,
         lt_of_le_of_ltₓ
           (by
-            unfold_wf <;> refine' @List.sizeof_erase_dupkeys _ _ _ (@sampleable.wf _ _) _)
+            unfold_wf <;> refine' @List.sizeof_dedupkeys _ _ _ (@sampleable.wf _ _) _)
           h⟩
 
 variable [HasRepr α] [HasRepr β]
@@ -127,7 +127,7 @@ instance Pi.sampleableExt : SampleableExt (α → β) where
   interp := TotalFunction.apply
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (Ulift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -147,7 +147,7 @@ variable [DecidableEq α] [DecidableEq β]
 /-- The support of a zero default `total_function`. -/
 @[simp]
 def zeroDefaultSupp : TotalFunction α β → Finset α
-  | with_default A y => List.toFinset <| (A.eraseDupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
+  | with_default A y => List.toFinset <| (A.dedupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
 
 /-- Create a finitely supported function from a total function by taking the default value to
 zero. -/
@@ -161,18 +161,18 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
       exists_eq_right, Sigma.exists, Ne.def, zero_default]
     constructor
     · rintro ⟨od, hval, hod⟩
-      have := List.mem_lookup (List.nodupkeys_erase_dupkeys A) hval
+      have := List.mem_lookup (List.nodupkeys_dedupkeys A) hval
       rw [(_ : List.lookupₓ a A = od)]
       · simpa
         
-      · simpa [List.lookup_erase_dupkeys, WithTop.some_eq_coe]
+      · simpa [List.lookup_dedupkeys, WithTop.some_eq_coe]
         
       
     · intro h
       use (A.lookup a).getOrElse (0 : β)
-      rw [← List.lookup_erase_dupkeys] at h⊢
-      simp only [h, ← List.mem_lookup_iff A.nodupkeys_erase_dupkeys, and_trueₓ, not_false_iff, Option.mem_def]
-      cases List.lookupₓ a A.erase_dupkeys
+      rw [← List.lookup_dedupkeys] at h⊢
+      simp only [h, ← List.mem_lookup_iff A.nodupkeys_dedupkeys, and_trueₓ, not_false_iff, Option.mem_def]
+      cases List.lookupₓ a A.dedupkeys
       · simpa using h
         
       · simp
@@ -186,7 +186,7 @@ instance Finsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExt (α →
   interp := TotalFunction.applyFinsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (Ulift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -196,7 +196,7 @@ instance Dfinsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExt (Π₀
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (Ulift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -269,7 +269,7 @@ theorem List.apply_id_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) 
 
 open Function _Root_.List
 
-open _root_.prod (toSigma)
+open _Root_.Prod (toSigma)
 
 open _Root_.Nat
 
@@ -390,7 +390,7 @@ theorem apply_id_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup
   · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
     
 
-open total_function (list.to_finmap')
+open TotalFunction (list.to_finmap')
 
 open Sampleable
 

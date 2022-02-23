@@ -204,7 +204,7 @@ def mfind {α} {m : Type u → Type v} [Monadₓ m] [Alternativeₓ m] (tac : α
 /-- `mbfind' p l` returns the first element `a` of `l` for which `p a` returns
 true. `mbfind'` short-circuits, so `p` is not necessarily run on every `a` in
 `l`. This is a monadic version of `list.find`. -/
-def mbfind' {m : Type u → Type v} [Monadₓ m] {α : Type u} (p : α → m (Ulift Bool)) : List α → m (Option α)
+def mbfind' {m : Type u → Type v} [Monadₓ m] {α : Type u} (p : α → m (ULift Bool)) : List α → m (Option α)
   | [] => pure none
   | x :: xs => do
     let ⟨px⟩ ← p x
@@ -216,7 +216,7 @@ variable {m : Type → Type v} [Monadₓ m]
 
 /-- A variant of `mbfind'` with more restrictive universe levels. -/
 def mbfind {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
-  xs.mbfind' (Functor.map Ulift.up ∘ p)
+  xs.mbfind' (Functor.map ULift.up ∘ p)
 
 /-- `many p as` returns true iff `p` returns true for any element of `l`.
 `many` short-circuits, so if `p` returns true for any element of `l`, later
@@ -624,7 +624,7 @@ instance decidablePairwiseₓ [DecidableRel R] (l : List α) : Decidable (Pairwi
 end Pairwise
 
 /-- `pw_filter R l` is a maximal sublist of `l` which is `pairwise R`.
-  `pw_filter (≠)` is the erase duplicates function (cf. `erase_dup`), and `pw_filter (<)` finds
+  `pw_filter (≠)` is the erase duplicates function (cf. `dedup`), and `pw_filter (<)` finds
   a maximal increasing subsequence in `l`. For example,
 
      pw_filter (<) [0, 1, 5, 2, 6, 3, 4] = [0, 1, 2, 3, 4] -/
@@ -677,11 +677,11 @@ def Nodupₓ : List α → Prop :=
 instance nodupDecidableₓ [DecidableEq α] : ∀ l : List α, Decidable (Nodupₓ l) :=
   List.decidablePairwiseₓ
 
-/-- `erase_dup l` removes duplicates from `l` (taking only the first occurrence).
+/-- `dedup l` removes duplicates from `l` (taking only the first occurrence).
   Defined as `pw_filter (≠)`.
 
-     erase_dup [1, 0, 2, 2, 1] = [0, 2, 1] -/
-def eraseDupₓ [DecidableEq α] : List α → List α :=
+     dedup [1, 0, 2, 2, 1] = [0, 2, 1] -/
+def dedup [DecidableEq α] : List α → List α :=
   pwFilterₓ (· ≠ ·)
 
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.

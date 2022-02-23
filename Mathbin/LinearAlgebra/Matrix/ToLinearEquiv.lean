@@ -6,7 +6,8 @@ Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate
 import Mathbin.LinearAlgebra.Matrix.NonsingularInverse
 import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.FractionRing
+import Mathbin.RingTheory.Localization.Integer
 
 /-!
 # Matrices and linear equivalences

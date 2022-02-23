@@ -1028,9 +1028,9 @@ theorem mdifferentiable_at_atlas (h : e ∈ Atlas H M) {x : M} (hx : x ∈ e.Sou
   refine' ⟨(e.continuous_on x hx).ContinuousAt (IsOpen.mem_nhds e.open_source hx), _⟩
   have mem : I ((chart_at H x : M → H) x) ∈ I.symm ⁻¹' ((chart_at H x).symm ≫ₕ e).Source ∩ range I := by
     simp' only [hx] with mfld_simps
-  have : (chart_at H x).symm.trans e ∈ timesContDiffGroupoid ∞ I := HasGroupoid.compatible _ (chart_mem_atlas H x) h
+  have : (chart_at H x).symm.trans e ∈ contDiffGroupoid ∞ I := HasGroupoid.compatible _ (chart_mem_atlas H x) h
   have A :
-    TimesContDiffOn 𝕜 ∞ (I ∘ (chart_at H x).symm.trans e ∘ I.symm)
+    ContDiffOn 𝕜 ∞ (I ∘ (chart_at H x).symm.trans e ∘ I.symm)
       (I.symm ⁻¹' ((chart_at H x).symm.trans e).Source ∩ range I) :=
     this.1
   have B := A.differentiable_on le_top (I ((chart_at H x : M → H) x)) mem
@@ -1049,10 +1049,9 @@ theorem mdifferentiable_at_atlas_symm (h : e ∈ Atlas H M) {x : H} (hx : x ∈ 
   refine' ⟨(e.continuous_on_symm x hx).ContinuousAt (IsOpen.mem_nhds e.open_target hx), _⟩
   have mem : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chart_at H (e.symm x)).Source ∩ range I := by
     simp' only [hx] with mfld_simps
-  have : e.symm.trans (chart_at H (e.symm x)) ∈ timesContDiffGroupoid ∞ I :=
-    HasGroupoid.compatible _ h (chart_mem_atlas H _)
+  have : e.symm.trans (chart_at H (e.symm x)) ∈ contDiffGroupoid ∞ I := HasGroupoid.compatible _ h (chart_mem_atlas H _)
   have A :
-    TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans (chart_at H (e.symm x)) ∘ I.symm)
+    ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans (chart_at H (e.symm x)) ∘ I.symm)
       (I.symm ⁻¹' (e.symm.trans (chart_at H (e.symm x))).Source ∩ range I) :=
     this.1
   have B := A.differentiable_on le_top (I x) mem

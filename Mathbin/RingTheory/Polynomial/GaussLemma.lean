@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Mathbin.RingTheory.Int.Basic
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.Integral
 
 /-!
 # Gauss's Lemma

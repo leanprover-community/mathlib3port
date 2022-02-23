@@ -24,7 +24,7 @@ Turing machine for evaluating these functions. This amounts to a constructive pr
 -/
 
 
-open function (update)
+open Function (update)
 
 open Relation
 

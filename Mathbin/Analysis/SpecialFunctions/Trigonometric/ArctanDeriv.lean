@@ -60,9 +60,9 @@ theorem deriv_tan (x : ℝ) : deriv tan x = 1 / cos x ^ 2 :=
   else (has_deriv_at_tan h).deriv
 
 @[simp]
-theorem times_cont_diff_at_tan {n x} : TimesContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
+theorem cont_diff_at_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
   ⟨fun h => continuous_at_tan.1 h.ContinuousAt, fun h =>
-    (Complex.times_cont_diff_at_tan.2 <| by
+    (Complex.cont_diff_at_tan.2 <| by
         exact_mod_cast h).real_of_complex⟩
 
 theorem has_deriv_at_tan_of_mem_Ioo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) : HasDerivAt tan (1 / cos x ^ 2) x :=
@@ -92,13 +92,13 @@ theorem differentiable_arctan : Differentiable ℝ arctan :=
 theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
   funext fun x => (has_deriv_at_arctan x).deriv
 
-theorem times_cont_diff_arctan {n : WithTop ℕ} : TimesContDiff ℝ n arctan :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x =>
+theorem cont_diff_arctan {n : WithTop ℕ} : ContDiff ℝ n arctan :=
+  cont_diff_iff_cont_diff_at.2 fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
-    tanLocalHomeomorph.times_cont_diff_at_symm_deriv
+    tanLocalHomeomorph.cont_diff_at_symm_deriv
       (by
         simpa)
-      trivialₓ (has_deriv_at_tan this) (times_cont_diff_at_tan.2 this)
+      trivialₓ (has_deriv_at_tan this) (cont_diff_at_tan.2 this)
 
 end Real
 
@@ -178,18 +178,17 @@ theorem DifferentiableOn.arctan (hc : DifferentiableOn ℝ f s) : Differentiable
 theorem Differentiable.arctan (hc : Differentiable ℝ f) : Differentiable ℝ fun x => arctan (f x) := fun x =>
   (hc x).arctan
 
-theorem TimesContDiffAt.arctan (h : TimesContDiffAt ℝ n f x) : TimesContDiffAt ℝ n (fun x => arctan (f x)) x :=
-  times_cont_diff_arctan.TimesContDiffAt.comp x h
+theorem ContDiffAt.arctan (h : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun x => arctan (f x)) x :=
+  cont_diff_arctan.ContDiffAt.comp x h
 
-theorem TimesContDiff.arctan (h : TimesContDiff ℝ n f) : TimesContDiff ℝ n fun x => arctan (f x) :=
-  times_cont_diff_arctan.comp h
+theorem ContDiff.arctan (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arctan (f x) :=
+  cont_diff_arctan.comp h
 
-theorem TimesContDiffWithinAt.arctan (h : TimesContDiffWithinAt ℝ n f s x) :
-    TimesContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
-  times_cont_diff_arctan.comp_times_cont_diff_within_at h
+theorem ContDiffWithinAt.arctan (h : ContDiffWithinAt ℝ n f s x) : ContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
+  cont_diff_arctan.comp_cont_diff_within_at h
 
-theorem TimesContDiffOn.arctan (h : TimesContDiffOn ℝ n f s) : TimesContDiffOn ℝ n (fun x => arctan (f x)) s :=
-  times_cont_diff_arctan.comp_times_cont_diff_on h
+theorem ContDiffOn.arctan (h : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => arctan (f x)) s :=
+  cont_diff_arctan.comp_cont_diff_on h
 
 end fderiv
 

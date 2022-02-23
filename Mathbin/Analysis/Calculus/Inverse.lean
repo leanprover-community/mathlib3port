@@ -3,7 +3,7 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.TimesContDiff
+import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Tactic.RingExp
 import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.Topology.LocalHomeomorph
@@ -34,13 +34,13 @@ and prove two versions of the inverse function theorem:
 In the one-dimensional case we reformulate these theorems in terms of `has_strict_deriv_at` and
 `f'⁻¹`.
 
-We also reformulate the theorems in terms of `times_cont_diff`, to give that `C^k` (respectively,
+We also reformulate the theorems in terms of `cont_diff`, to give that `C^k` (respectively,
 smooth) inputs give `C^k` (smooth) inverses.  These versions require that continuous
 differentiability implies strict differentiability; this is false over a general field, true over
 `ℝ` or `ℂ` and implemented here assuming `is_R_or_C 𝕂`.
 
 Some related theorems, providing the derivative and higher regularity assuming that we already know
-the inverse function, are formulated in `fderiv.lean`, `deriv.lean`, and `times_cont_diff.lean`.
+the inverse function, are formulated in `fderiv.lean`, `deriv.lean`, and `cont_diff.lean`.
 
 ## Notations
 
@@ -77,7 +77,7 @@ variable {ε : ℝ}
 
 open Asymptotics Filter Metric Set
 
-open continuous_linear_map (id)
+open ContinuousLinearMap (id)
 
 /-!
 ### Non-linear maps close to affine maps
@@ -716,7 +716,7 @@ theorem open_map_of_strict_deriv [CompleteSpace 𝕜] {f f' : 𝕜 → 𝕜} (hf
 -/
 
 
-namespace TimesContDiffAt
+namespace ContDiffAt
 
 variable {𝕂 : Type _} [IsROrC 𝕂]
 
@@ -726,48 +726,48 @@ variable {F' : Type _} [NormedGroup F'] [NormedSpace 𝕂 F']
 
 variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 
-/-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible
+/-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible
 derivative at `a`, returns a `local_homeomorph` with `to_fun = f` and `a ∈ source`. -/
-def toLocalHomeomorph {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+def toLocalHomeomorph {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : LocalHomeomorph E' F' :=
   (hf.has_strict_fderiv_at' hf' hn).toLocalHomeomorph f
 
 variable {f}
 
 @[simp]
-theorem to_local_homeomorph_coe {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a)
-    (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : (hf.toLocalHomeomorph f hf' hn : E' → F') = f :=
+theorem to_local_homeomorph_coe {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+    (hn : 1 ≤ n) : (hf.toLocalHomeomorph f hf' hn : E' → F') = f :=
   rfl
 
-theorem mem_to_local_homeomorph_source {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a)
+theorem mem_to_local_homeomorph_source {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : a ∈ (hf.toLocalHomeomorph f hf' hn).Source :=
   (hf.has_strict_fderiv_at' hf' hn).mem_to_local_homeomorph_source
 
-theorem image_mem_to_local_homeomorph_target {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a)
+theorem image_mem_to_local_homeomorph_target {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : f a ∈ (hf.toLocalHomeomorph f hf' hn).Target :=
   (hf.has_strict_fderiv_at' hf' hn).image_mem_to_local_homeomorph_target
 
-/-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
+/-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, returns a function that is locally inverse to `f`. -/
-def localInverse {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
-    (hn : 1 ≤ n) : F' → E' :=
+def localInverse {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
+    F' → E' :=
   (hf.has_strict_fderiv_at' hf' hn).localInverse f f' a
 
-theorem local_inverse_apply_image {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a)
-    (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : hf.localInverse hf' hn (f a) = a :=
+theorem local_inverse_apply_image {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+    (hn : 1 ≤ n) : hf.localInverse hf' hn (f a) = a :=
   (hf.has_strict_fderiv_at' hf' hn).local_inverse_apply_image
 
-/-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
-at `a`, the inverse function (produced by `times_cont_diff.to_local_homeomorph`) is
-also `times_cont_diff`. -/
-theorem to_local_inverse {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
-    (hn : 1 ≤ n) : TimesContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) := by
+/-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
+at `a`, the inverse function (produced by `cont_diff.to_local_homeomorph`) is
+also `cont_diff`. -/
+theorem to_local_inverse {n : WithTop ℕ} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFderivAt f (f' : E' →L[𝕂] F') a)
+    (hn : 1 ≤ n) : ContDiffAt 𝕂 n (hf.localInverse hf' hn) (f a) := by
   have := hf.local_inverse_apply_image hf' hn
-  apply (hf.to_local_homeomorph f hf' hn).times_cont_diff_at_symm (image_mem_to_local_homeomorph_target hf hf' hn)
+  apply (hf.to_local_homeomorph f hf' hn).cont_diff_at_symm (image_mem_to_local_homeomorph_target hf hf' hn)
   · convert hf'
     
   · convert hf
     
 
-end TimesContDiffAt
+end ContDiffAt
 

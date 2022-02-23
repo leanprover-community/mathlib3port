@@ -39,11 +39,11 @@ def fderivInnerClm (p : E × E) : E × E →L[ℝ] 𝕜 :=
 theorem fderiv_inner_clm_apply (p x : E × E) : fderivInnerClm p x = ⟪p.1, x.2⟫ + ⟪x.1, p.2⟫ :=
   rfl
 
-theorem times_cont_diff_inner {n} : TimesContDiff ℝ n fun p : E × E => ⟪p.1, p.2⟫ :=
-  is_bounded_bilinear_map_inner.TimesContDiff
+theorem cont_diff_inner {n} : ContDiff ℝ n fun p : E × E => ⟪p.1, p.2⟫ :=
+  is_bounded_bilinear_map_inner.ContDiff
 
-theorem times_cont_diff_at_inner {p : E × E} {n} : TimesContDiffAt ℝ n (fun p : E × E => ⟪p.1, p.2⟫) p :=
-  times_cont_diff_inner.TimesContDiffAt
+theorem cont_diff_at_inner {p : E × E} {n} : ContDiffAt ℝ n (fun p : E × E => ⟪p.1, p.2⟫) p :=
+  cont_diff_inner.ContDiffAt
 
 theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   is_bounded_bilinear_map_inner.DifferentiableAt
@@ -53,20 +53,18 @@ variable {G : Type _} [NormedGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g'
 
 include 𝕜
 
-theorem TimesContDiffWithinAt.inner (hf : TimesContDiffWithinAt ℝ n f s x) (hg : TimesContDiffWithinAt ℝ n g s x) :
-    TimesContDiffWithinAt ℝ n (fun x => ⟪f x, g x⟫) s x :=
-  times_cont_diff_at_inner.comp_times_cont_diff_within_at x (hf.Prod hg)
+theorem ContDiffWithinAt.inner (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x) :
+    ContDiffWithinAt ℝ n (fun x => ⟪f x, g x⟫) s x :=
+  cont_diff_at_inner.comp_cont_diff_within_at x (hf.Prod hg)
 
-theorem TimesContDiffAt.inner (hf : TimesContDiffAt ℝ n f x) (hg : TimesContDiffAt ℝ n g x) :
-    TimesContDiffAt ℝ n (fun x => ⟪f x, g x⟫) x :=
+theorem ContDiffAt.inner (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) : ContDiffAt ℝ n (fun x => ⟪f x, g x⟫) x :=
   hf.inner hg
 
-theorem TimesContDiffOn.inner (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s) :
-    TimesContDiffOn ℝ n (fun x => ⟪f x, g x⟫) s := fun x hx => (hf x hx).inner (hg x hx)
+theorem ContDiffOn.inner (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) : ContDiffOn ℝ n (fun x => ⟪f x, g x⟫) s :=
+  fun x hx => (hf x hx).inner (hg x hx)
 
-theorem TimesContDiff.inner (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) :
-    TimesContDiff ℝ n fun x => ⟪f x, g x⟫ :=
-  times_cont_diff_inner.comp (hf.Prod hg)
+theorem ContDiff.inner (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) : ContDiff ℝ n fun x => ⟪f x, g x⟫ :=
+  cont_diff_inner.comp (hf.Prod hg)
 
 theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.Prod g') s x :=
@@ -112,57 +110,55 @@ theorem deriv_inner_apply {f g : ℝ → E} {x : ℝ} (hf : DifferentiableAt ℝ
     deriv (fun t => ⟪f t, g t⟫) x = ⟪f x, deriv g x⟫ + ⟪deriv f x, g x⟫ :=
   (hf.HasDerivAt.inner hg.HasDerivAt).deriv
 
-theorem times_cont_diff_norm_sq : TimesContDiff ℝ n fun x : E => ∥x∥ ^ 2 := by
+theorem cont_diff_norm_sq : ContDiff ℝ n fun x : E => ∥x∥ ^ 2 := by
   simp only [sq, ← inner_self_eq_norm_mul_norm]
-  exact (re_clm : 𝕜 →L[ℝ] ℝ).TimesContDiff.comp (times_cont_diff_id.inner times_cont_diff_id)
+  exact (re_clm : 𝕜 →L[ℝ] ℝ).ContDiff.comp (cont_diff_id.inner cont_diff_id)
 
-theorem TimesContDiff.norm_sq (hf : TimesContDiff ℝ n f) : TimesContDiff ℝ n fun x => ∥f x∥ ^ 2 :=
-  times_cont_diff_norm_sq.comp hf
+theorem ContDiff.norm_sq (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => ∥f x∥ ^ 2 :=
+  cont_diff_norm_sq.comp hf
 
-theorem TimesContDiffWithinAt.norm_sq (hf : TimesContDiffWithinAt ℝ n f s x) :
-    TimesContDiffWithinAt ℝ n (fun y => ∥f y∥ ^ 2) s x :=
-  times_cont_diff_norm_sq.TimesContDiffAt.comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.norm_sq (hf : ContDiffWithinAt ℝ n f s x) : ContDiffWithinAt ℝ n (fun y => ∥f y∥ ^ 2) s x :=
+  cont_diff_norm_sq.ContDiffAt.comp_cont_diff_within_at x hf
 
-theorem TimesContDiffAt.norm_sq (hf : TimesContDiffAt ℝ n f x) : TimesContDiffAt ℝ n (fun y => ∥f y∥ ^ 2) x :=
+theorem ContDiffAt.norm_sq (hf : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun y => ∥f y∥ ^ 2) x :=
   hf.normSq
 
-theorem times_cont_diff_at_norm {x : E} (hx : x ≠ 0) : TimesContDiffAt ℝ n norm x := by
+theorem cont_diff_at_norm {x : E} (hx : x ≠ 0) : ContDiffAt ℝ n norm x := by
   have : ∥id x∥ ^ 2 ≠ 0 := pow_ne_zero _ (norm_pos_iff.2 hx).ne'
-  simpa only [id, sqrt_sq, norm_nonneg] using times_cont_diff_at_id.norm_sq.sqrt this
+  simpa only [id, sqrt_sq, norm_nonneg] using cont_diff_at_id.norm_sq.sqrt this
 
-theorem TimesContDiffAt.norm (hf : TimesContDiffAt ℝ n f x) (h0 : f x ≠ 0) : TimesContDiffAt ℝ n (fun y => ∥f y∥) x :=
-  (times_cont_diff_at_norm h0).comp x hf
+theorem ContDiffAt.norm (hf : ContDiffAt ℝ n f x) (h0 : f x ≠ 0) : ContDiffAt ℝ n (fun y => ∥f y∥) x :=
+  (cont_diff_at_norm h0).comp x hf
 
-theorem TimesContDiffAt.dist (hf : TimesContDiffAt ℝ n f x) (hg : TimesContDiffAt ℝ n g x) (hne : f x ≠ g x) :
-    TimesContDiffAt ℝ n (fun y => dist (f y) (g y)) x := by
+theorem ContDiffAt.dist (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) (hne : f x ≠ g x) :
+    ContDiffAt ℝ n (fun y => dist (f y) (g y)) x := by
   simp only [dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
-theorem TimesContDiffWithinAt.norm (hf : TimesContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 0) :
-    TimesContDiffWithinAt ℝ n (fun y => ∥f y∥) s x :=
-  (times_cont_diff_at_norm h0).comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.norm (hf : ContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 0) :
+    ContDiffWithinAt ℝ n (fun y => ∥f y∥) s x :=
+  (cont_diff_at_norm h0).comp_cont_diff_within_at x hf
 
-theorem TimesContDiffWithinAt.dist (hf : TimesContDiffWithinAt ℝ n f s x) (hg : TimesContDiffWithinAt ℝ n g s x)
-    (hne : f x ≠ g x) : TimesContDiffWithinAt ℝ n (fun y => dist (f y) (g y)) s x := by
+theorem ContDiffWithinAt.dist (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x) (hne : f x ≠ g x) :
+    ContDiffWithinAt ℝ n (fun y => dist (f y) (g y)) s x := by
   simp only [dist_eq_norm]
   exact (hf.sub hg).norm (sub_ne_zero.2 hne)
 
-theorem TimesContDiffOn.norm_sq (hf : TimesContDiffOn ℝ n f s) : TimesContDiffOn ℝ n (fun y => ∥f y∥ ^ 2) s :=
-  fun x hx => (hf x hx).normSq
+theorem ContDiffOn.norm_sq (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun y => ∥f y∥ ^ 2) s := fun x hx =>
+  (hf x hx).normSq
 
-theorem TimesContDiffOn.norm (hf : TimesContDiffOn ℝ n f s) (h0 : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
-    TimesContDiffOn ℝ n (fun y => ∥f y∥) s := fun x hx => (hf x hx).norm (h0 x hx)
+theorem ContDiffOn.norm (hf : ContDiffOn ℝ n f s) (h0 : ∀, ∀ x ∈ s, ∀, f x ≠ 0) : ContDiffOn ℝ n (fun y => ∥f y∥) s :=
+  fun x hx => (hf x hx).norm (h0 x hx)
 
-theorem TimesContDiffOn.dist (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
-    (hne : ∀, ∀ x ∈ s, ∀, f x ≠ g x) : TimesContDiffOn ℝ n (fun y => dist (f y) (g y)) s := fun x hx =>
-  (hf x hx).dist (hg x hx) (hne x hx)
+theorem ContDiffOn.dist (hf : ContDiffOn ℝ n f s) (hg : ContDiffOn ℝ n g s) (hne : ∀, ∀ x ∈ s, ∀, f x ≠ g x) :
+    ContDiffOn ℝ n (fun y => dist (f y) (g y)) s := fun x hx => (hf x hx).dist (hg x hx) (hne x hx)
 
-theorem TimesContDiff.norm (hf : TimesContDiff ℝ n f) (h0 : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => ∥f y∥ :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.norm (h0 x)
+theorem ContDiff.norm (hf : ContDiff ℝ n f) (h0 : ∀ x, f x ≠ 0) : ContDiff ℝ n fun y => ∥f y∥ :=
+  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.norm (h0 x)
 
-theorem TimesContDiff.dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (hne : ∀ x, f x ≠ g x) :
-    TimesContDiff ℝ n fun y => dist (f y) (g y) :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.dist hg.TimesContDiffAt (hne x)
+theorem ContDiff.dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) (hne : ∀ x, f x ≠ g x) :
+    ContDiff ℝ n fun y => dist (f y) (g y) :=
+  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.dist hg.ContDiffAt (hne x)
 
 omit 𝕜
 
@@ -175,10 +171,10 @@ theorem has_strict_fderiv_at_norm_sq (x : F) : HasStrictFderivAt (fun x => ∥x�
 include 𝕜
 
 theorem DifferentiableAt.norm_sq (hf : DifferentiableAt ℝ f x) : DifferentiableAt ℝ (fun y => ∥f y∥ ^ 2) x :=
-  (times_cont_diff_at_id.normSq.DifferentiableAt le_rfl).comp x hf
+  (cont_diff_at_id.normSq.DifferentiableAt le_rfl).comp x hf
 
 theorem DifferentiableAt.norm (hf : DifferentiableAt ℝ f x) (h0 : f x ≠ 0) : DifferentiableAt ℝ (fun y => ∥f y∥) x :=
-  ((times_cont_diff_at_norm h0).DifferentiableAt le_rfl).comp x hf
+  ((cont_diff_at_norm h0).DifferentiableAt le_rfl).comp x hf
 
 theorem DifferentiableAt.dist (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (hne : f x ≠ g x) :
     DifferentiableAt ℝ (fun y => dist (f y) (g y)) x := by
@@ -195,11 +191,11 @@ theorem Differentiable.dist (hf : Differentiable ℝ f) (hg : Differentiable ℝ
 
 theorem DifferentiableWithinAt.norm_sq (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun y => ∥f y∥ ^ 2) s x :=
-  (times_cont_diff_at_id.normSq.DifferentiableAt le_rfl).comp_differentiable_within_at x hf
+  (cont_diff_at_id.normSq.DifferentiableAt le_rfl).comp_differentiable_within_at x hf
 
 theorem DifferentiableWithinAt.norm (hf : DifferentiableWithinAt ℝ f s x) (h0 : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun y => ∥f y∥) s x :=
-  ((times_cont_diff_at_id.norm h0).DifferentiableAt le_rfl).comp_differentiable_within_at x hf
+  ((cont_diff_at_id.norm h0).DifferentiableAt le_rfl).comp_differentiable_within_at x hf
 
 theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x) (hg : DifferentiableWithinAt ℝ g s x)
     (hne : f x ≠ g x) : DifferentiableWithinAt ℝ (fun y => dist (f y) (g y)) s x := by

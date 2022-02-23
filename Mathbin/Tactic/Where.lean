@@ -55,7 +55,7 @@ private unsafe def collect_by_aux {α β γ : Type} (p : α → β × γ) [Decid
 /-- Returns the elements of `l` under the image of `p`, collecting together elements with the same
 `β` component, deleting duplicates. -/
 unsafe def collect_by {α β γ : Type} (l : List α) (p : α → β × γ) [DecidableEq β] : List (β × List γ) :=
-  collect_by_aux p (l.map <| Prod.fst ∘ p).eraseDup l
+  collect_by_aux p (l.map <| Prod.fst ∘ p).dedup l
 
 /-- Sort the variables by their priority as defined by `where.binder_priority`. -/
 unsafe def sort_variable_list (l : List (Name × BinderInfo × expr)) : List (expr × BinderInfo × List Name) :=
@@ -93,7 +93,7 @@ private unsafe def strip_namespace (ns n : Name) : Name :=
 /-- `get_open_namespaces ns` returns a list of the open namespaces, given that we are currently in
 the namespace `ns` (which we do not include). -/
 unsafe def get_open_namespaces (ns : Name) : tactic (List Name) := do
-  let opens ← List.eraseDupₓ <$> tactic.open_namespaces
+  let opens ← List.dedup <$> tactic.open_namespaces
   return <| (opens ns).map <| strip_namespace ns
 
 /-- Give a slightly friendlier name for `name.anonymous` in the context of your current namespace.

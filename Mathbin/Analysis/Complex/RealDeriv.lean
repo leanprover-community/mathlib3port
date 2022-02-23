@@ -3,7 +3,7 @@ Copyright (c) Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yourong Zang
 -/
-import Mathbin.Analysis.Calculus.TimesContDiff
+import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Analysis.Complex.Conformal
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 
@@ -61,16 +61,15 @@ theorem HasDerivAt.real_of_complex (h : HasDerivAt e e' z) : HasDerivAt (fun x :
   have C : HasFderivAt re re_clm (e (of_real_clm z)) := re_clm.has_fderiv_at
   simpa using (C.comp z (B.comp z A)).HasDerivAt
 
-theorem TimesContDiffAt.real_of_complex {n : WithTop ℕ} (h : TimesContDiffAt ℂ n e z) :
-    TimesContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
-  have A : TimesContDiffAt ℝ n (coe : ℝ → ℂ) z := of_real_clm.times_cont_diff.times_cont_diff_at
-  have B : TimesContDiffAt ℝ n e z := h.restrict_scalars ℝ
-  have C : TimesContDiffAt ℝ n re (e z) := re_clm.times_cont_diff.times_cont_diff_at
+theorem ContDiffAt.real_of_complex {n : WithTop ℕ} (h : ContDiffAt ℂ n e z) :
+    ContDiffAt ℝ n (fun x : ℝ => (e x).re) z := by
+  have A : ContDiffAt ℝ n (coe : ℝ → ℂ) z := of_real_clm.cont_diff.cont_diff_at
+  have B : ContDiffAt ℝ n e z := h.restrict_scalars ℝ
+  have C : ContDiffAt ℝ n re (e z) := re_clm.cont_diff.cont_diff_at
   exact C.comp z (B.comp z A)
 
-theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
-    TimesContDiff ℝ n fun x : ℝ => (e x).re :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => h.TimesContDiffAt.real_of_complex
+theorem ContDiff.real_of_complex {n : WithTop ℕ} (h : ContDiff ℂ n e) : ContDiff ℝ n fun x : ℝ => (e x).re :=
+  cont_diff_iff_cont_diff_at.2 fun x => h.ContDiffAt.real_of_complex
 
 variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 

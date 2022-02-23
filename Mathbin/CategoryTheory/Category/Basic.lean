@@ -272,13 +272,13 @@ variable [Category.{v} C]
 
 universe u'
 
-instance uliftCategory : Category.{v} (Ulift.{u'} C) where
+instance uliftCategory : Category.{v} (ULift.{u'} C) where
   Hom := fun X Y => X.down ⟶ Y.down
   id := fun X => 𝟙 X.down
   comp := fun _ _ _ f g => f ≫ g
 
 -- We verify that this previous instance can lift small categories to large categories.
-example (D : Type u) [SmallCategory D] : LargeCategory (Ulift.{u + 1} D) := by
+example (D : Type u) [SmallCategory D] : LargeCategory (ULift.{u + 1} D) := by
   infer_instance
 
 end

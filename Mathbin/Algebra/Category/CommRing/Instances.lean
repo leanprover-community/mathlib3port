@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.Algebra.Category.CommRing.Basic
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.Away
 
 /-!
 # Ring-theoretic results in terms of categorical languages

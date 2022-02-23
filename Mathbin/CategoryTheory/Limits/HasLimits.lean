@@ -241,11 +241,11 @@ theorem limit.lift_cone {F : J ⥤ C} [HasLimit F] : limit.lift F (Limit.cone F)
 morphisms from a specified object `W` to the limit object,
 and cones with cone point `W`.
 -/
-def limit.homIso (F : J ⥤ C) [HasLimit F] (W : C) : Ulift.{u₁} (W ⟶ limit F : Type v) ≅ F.cones.obj (op W) :=
+def limit.homIso (F : J ⥤ C) [HasLimit F] (W : C) : ULift.{u₁} (W ⟶ limit F : Type v) ≅ F.cones.obj (op W) :=
   (limit.isLimit F).homIso W
 
 @[simp]
-theorem limit.hom_iso_hom (F : J ⥤ C) [HasLimit F] {W : C} (f : Ulift (W ⟶ limit F)) :
+theorem limit.hom_iso_hom (F : J ⥤ C) [HasLimit F] {W : C} (f : ULift (W ⟶ limit F)) :
     (limit.homIso F W).Hom f = (const J).map f.down ≫ (Limit.cone F).π :=
   (limit.isLimit F).hom_iso_hom f
 
@@ -254,7 +254,7 @@ morphisms from a specified object `W` to the limit object,
 and an explicit componentwise description of cones with cone point `W`.
 -/
 def limit.homIso' (F : J ⥤ C) [HasLimit F] (W : C) :
-    Ulift.{u₁} (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+    ULift.{u₁} (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} f : j ⟶ j', p j ≫ F.map f = p j' } :=
   (limit.isLimit F).homIso' W
 
 theorem limit.lift_extend {F : J ⥤ C} [HasLimit F] (c : Cone F) {X : C} (f : X ⟶ c.x) :
@@ -695,11 +695,11 @@ theorem colimit.desc_cocone {F : J ⥤ C} [HasColimit F] : colimit.desc F (Colim
 morphisms from the colimit object to a specified object `W`,
 and cocones with cone point `W`.
 -/
-def colimit.homIso (F : J ⥤ C) [HasColimit F] (W : C) : Ulift.{u₁} (colimit F ⟶ W : Type v) ≅ F.cocones.obj W :=
+def colimit.homIso (F : J ⥤ C) [HasColimit F] (W : C) : ULift.{u₁} (colimit F ⟶ W : Type v) ≅ F.cocones.obj W :=
   (colimit.isColimit F).homIso W
 
 @[simp]
-theorem colimit.hom_iso_hom (F : J ⥤ C) [HasColimit F] {W : C} (f : Ulift (colimit F ⟶ W)) :
+theorem colimit.hom_iso_hom (F : J ⥤ C) [HasColimit F] {W : C} (f : ULift (colimit F ⟶ W)) :
     (colimit.homIso F W).Hom f = (Colimit.cocone F).ι ≫ (const J).map f.down :=
   (colimit.isColimit F).hom_iso_hom f
 
@@ -708,7 +708,7 @@ morphisms from the colimit object to a specified object `W`,
 and an explicit componentwise description of cocones with cone point `W`.
 -/
 def colimit.homIso' (F : J ⥤ C) [HasColimit F] (W : C) :
-    Ulift.{u₁} (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+    ULift.{u₁} (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} f : j ⟶ j', F.map f ≫ p j' = p j } :=
   (colimit.isColimit F).homIso' W
 
 theorem colimit.desc_extend (F : J ⥤ C) [HasColimit F] (c : Cocone F) {X : C} (f : c.x ⟶ X) :

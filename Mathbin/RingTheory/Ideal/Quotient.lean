@@ -113,6 +113,13 @@ theorem zero_ne_one_iff {I : Ideal R} : (0 : R ⧸ I) ≠ 1 ↔ I ≠ ⊤ :=
 protected theorem nontrivial {I : Ideal R} (hI : I ≠ ⊤) : Nontrivial (R ⧸ I) :=
   ⟨⟨0, 1, zero_ne_one_iff.2 hI⟩⟩
 
+theorem subsingleton_iff {I : Ideal R} : Subsingleton (R ⧸ I) ↔ I = ⊤ := by
+  rw [eq_top_iff_one, ← subsingleton_iff_zero_eq_one, eq_comm, ← I, quotient.eq_zero_iff_mem]
+
+instance : Unique (R ⧸ (⊤ : Ideal R)) :=
+  ⟨⟨0⟩, by
+    rintro ⟨x⟩ <;> exact quotient.eq_zero_iff_mem.mpr Submodule.mem_top⟩
+
 theorem mk_surjective : Function.Surjective (mk I) := fun y => Quotientₓ.induction_on' y fun x => Exists.introₓ x rfl
 
 /-- If `I` is an ideal of a commutative ring `R`, if `q : R → R/I` is the quotient map, and if

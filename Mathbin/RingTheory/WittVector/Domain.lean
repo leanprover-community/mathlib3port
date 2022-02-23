@@ -89,11 +89,10 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀, ∀ i < n, ∀,
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) : ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' :=
   by
   have hex : ∃ k : ℕ, x.coeff k ≠ 0 := by
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' hall
     apply hx
     ext i
     simp only [hall, zero_coeff]

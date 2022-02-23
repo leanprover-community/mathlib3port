@@ -25,7 +25,7 @@ In this file we define several notions of finiteness that are common in commutat
 -/
 
 
-open function (Surjective)
+open Function (Surjective)
 
 open_locale BigOperators Polynomial
 
@@ -341,7 +341,7 @@ theorem iff_quotient_mv_polynomial' :
   · rintro ⟨n, f, hfs, hfk⟩
     set ulift_var := MvPolynomial.renameEquiv R Equivₓ.ulift
     refine'
-      ⟨Ulift (Finₓ n), inferInstance, f.comp ulift_var.to_alg_hom, hfs.comp ulift_var.surjective,
+      ⟨ULift (Finₓ n), inferInstance, f.comp ulift_var.to_alg_hom, hfs.comp ulift_var.surjective,
         Ideal.fg_ker_comp _ _ _ hfk ulift_var.surjective⟩
     convert Submodule.fg_bot
     exact RingHom.ker_coe_equiv ulift_var.to_ring_equiv

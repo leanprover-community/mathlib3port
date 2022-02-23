@@ -57,7 +57,7 @@ noncomputable section
 
 universe u v w
 
-variable {X : Type u} {Y : Type v} {Z : Type w}
+variable {F : Type _} {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
 
@@ -65,11 +65,26 @@ open_locale UnitInterval
 
 namespace ContinuousMap
 
-/-- The type of homotopies between two functions.
--/
+/-- `continuous_map.homotopy f₀ f₁` is the type of homotopies from `f₀` to `f₁`.
+
+When possible, instead of parametrizing results over `(f : homotopy f₀ f₁)`,
+you should parametrize over `{F : Type*} [homotopy_like F f₀ f₁] (f : F)`.
+
+When you extend this structure, make sure to extend `continuous_map.homotopy_like`. -/
 structure Homotopy (f₀ f₁ : C(X, Y)) extends C(I × X, Y) where
-  to_fun_zero : ∀ x, to_fun (0, x) = f₀ x
-  to_fun_one : ∀ x, to_fun (1, x) = f₁ x
+  map_zero_left' : ∀ x, to_fun (0, x) = f₀ x
+  map_one_left' : ∀ x, to_fun (1, x) = f₁ x
+
+/-- `continuous_map.homotopy_like F f₀ f₁` states that `F` is a type of homotopies between `f₀` and
+`f₁`.
+
+You should extend this class when you extend `continuous_map.homotopy`. -/
+class HomotopyLike (F : Type _) (f₀ f₁ : outParam <| C(X, Y)) extends ContinuousMapClass F (I × X) Y where
+  map_zero_left (f : F) : ∀ x, f (0, x) = f₀ x
+  map_one_left (f : F) : ∀ x, f (1, x) = f₁ x
+
+-- `f₀` and `f₁` are `out_param` so this is not dangerous
+attribute [nolint dangerous_instance] homotopy_like.to_continuous_map_class
 
 namespace Homotopy
 
@@ -77,16 +92,24 @@ section
 
 variable {f₀ f₁ : C(X, Y)}
 
-instance : CoeFun (Homotopy f₀ f₁) fun _ => I × X → Y :=
-  ⟨fun F => F.toFun⟩
+instance : HomotopyLike (Homotopy f₀ f₁) f₀ f₁ where
+  coe := fun f => f.toFun
+  coe_injective' := fun f g h => by
+    obtain ⟨⟨_, _⟩, _⟩ := f
+    obtain ⟨⟨_, _⟩, _⟩ := g
+    congr
+  map_continuous := fun f => f.continuous_to_fun
+  map_zero_left := fun f => f.map_zero_left'
+  map_one_left := fun f => f.map_one_left'
 
-theorem coe_fn_injective : @Function.Injective (Homotopy f₀ f₁) (I × X → Y) coeFn := by
-  rintro ⟨⟨F, _⟩, _⟩ ⟨⟨G, _⟩, _⟩ h
-  congr 2
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
+instance : CoeFun (Homotopy f₀ f₁) fun _ => I × X → Y :=
+  FunLike.hasCoeToFun
 
 @[ext]
 theorem ext {F G : Homotopy f₀ f₁} (h : ∀ x, F x = G x) : F = G :=
-  coe_fn_injective <| funext h
+  FunLike.ext _ _ h
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
 because it is a composition of multiple projections. -/
@@ -95,17 +118,17 @@ def Simps.apply (F : Homotopy f₀ f₁) : I × X → Y :=
 
 initialize_simps_projections Homotopy (to_continuous_map_to_fun → apply, -toContinuousMap)
 
-@[continuity]
+/-- Deprecated. Use `map_continuous` instead. -/
 protected theorem continuous (F : Homotopy f₀ f₁) : Continuous F :=
   F.continuous_to_fun
 
 @[simp]
 theorem apply_zero (F : Homotopy f₀ f₁) (x : X) : F (0, x) = f₀ x :=
-  F.to_fun_zero x
+  F.map_zero_left' x
 
 @[simp]
 theorem apply_one (F : Homotopy f₀ f₁) (x : X) : F (1, x) = f₁ x :=
-  F.to_fun_one x
+  F.map_one_left' x
 
 @[simp]
 theorem coe_to_continuous_map (F : Homotopy f₀ f₁) : ⇑F.toContinuousMap = F :=
@@ -154,20 +177,20 @@ end
 @[simps]
 def refl (f : C(X, Y)) : Homotopy f f where
   toFun := fun x => f x.2
-  to_fun_zero := fun _ => rfl
-  to_fun_one := fun _ => rfl
+  map_zero_left' := fun _ => rfl
+  map_one_left' := fun _ => rfl
 
-instance : Inhabited (Homotopy (ContinuousMap.id : C(X, X)) ContinuousMap.id) :=
-  ⟨Homotopy.refl ContinuousMap.id⟩
+instance : Inhabited (Homotopy (ContinuousMap.id X) (ContinuousMap.id X)) :=
+  ⟨Homotopy.refl _⟩
 
 /-- Given a `homotopy f₀ f₁`, we can define a `homotopy f₁ f₀` by reversing the homotopy.
 -/
 @[simps]
 def symm {f₀ f₁ : C(X, Y)} (F : Homotopy f₀ f₁) : Homotopy f₁ f₀ where
   toFun := fun x => F (σ x.1, x.2)
-  to_fun_zero := by
+  map_zero_left' := by
     norm_num
-  to_fun_one := by
+  map_one_left' := by
     norm_num
 
 @[simp]
@@ -192,9 +215,9 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁
         _
     rintro x hx
     norm_num [hx]
-  to_fun_zero := fun x => by
+  map_zero_left' := fun x => by
     norm_num
-  to_fun_one := fun x => by
+  map_one_left' := fun x => by
     norm_num
 
 theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁ f₂) (x : I × X) :
@@ -239,9 +262,9 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) : Homotopy g₀ g₁ where
   toFun := F
-  to_fun_zero := by
+  map_zero_left' := by
     simp [← h₀]
-  to_fun_one := by
+  map_one_left' := by
     simp [← h₁]
 
 /-- If we have a `homotopy f₀ f₁` and a `homotopy g₀ g₁`, then we can compose them and get a
@@ -251,9 +274,9 @@ def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : Homotopy f₀ f₁) (h₀ : f₀ =
 def hcomp {f₀ f₁ : C(X, Y)} {g₀ g₁ : C(Y, Z)} (F : Homotopy f₀ f₁) (G : Homotopy g₀ g₁) :
     Homotopy (g₀.comp f₀) (g₁.comp f₁) where
   toFun := fun x => G (x.1, F x)
-  to_fun_zero := by
+  map_zero_left' := by
     simp
-  to_fun_one := by
+  map_one_left' := by
     simp
 
 end Homotopy
@@ -323,11 +346,11 @@ protected theorem continuous (F : HomotopyWith f₀ f₁ P) : Continuous F :=
 
 @[simp]
 theorem apply_zero (F : HomotopyWith f₀ f₁ P) (x : X) : F (0, x) = f₀ x :=
-  F.to_fun_zero x
+  F.map_zero_left' x
 
 @[simp]
 theorem apply_one (F : HomotopyWith f₀ f₁ P) (x : X) : F (1, x) = f₁ x :=
-  F.to_fun_one x
+  F.map_one_left' x
 
 @[simp]
 theorem coe_to_continuous_map (F : HomotopyWith f₀ f₁ P) : ⇑F.toContinuousMap = F :=
@@ -372,7 +395,7 @@ def refl (f : C(X, Y)) (hf : P f) : HomotopyWith f f P :=
       cases f
       rfl }
 
-instance : Inhabited (HomotopyWith (ContinuousMap.id : C(X, X)) ContinuousMap.id fun f => True) :=
+instance : Inhabited (HomotopyWith (ContinuousMap.id X) (ContinuousMap.id X) fun f => True) :=
   ⟨HomotopyWith.refl _ trivialₓ⟩
 
 /-- Given a `homotopy_with f₀ f₁ P`, we can define a `homotopy_with f₁ f₀ P` by reversing the homotopy.

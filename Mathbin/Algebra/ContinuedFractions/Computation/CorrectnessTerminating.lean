@@ -47,7 +47,7 @@ information about the computation process, refer to `algebra.continued_fraction.
 
 namespace GeneralizedContinuedFraction
 
-open generalized_continued_fraction (of)
+open GeneralizedContinuedFraction (of)
 
 variable {K : Type _} [LinearOrderedField K] {v : K} {n : ℕ}
 
@@ -78,7 +78,7 @@ protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K
   rw [Int.fract]
   ring
 
-open generalized_continued_fraction (compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
+open GeneralizedContinuedFraction (compExactValue comp_exact_value_correctness_of_stream_eq_some_aux_comp)
 
 /-- Shows the correctness of `comp_exact_value` in case the continued fraction
 `generalized_continued_fraction.of v` did not terminate at position `n`. That is, we obtain the
@@ -188,7 +188,7 @@ theorem comp_exact_value_correctness_of_stream_eq_some :
       
     
 
-open generalized_continued_fraction (of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
+open GeneralizedContinuedFraction (of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
 
 /-- The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
 `int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/

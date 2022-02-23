@@ -654,19 +654,18 @@ theorem kextract_eq_lookup_kerase (a : α) : ∀ l : List (Sigma β), kextract a
     · simp [kextract, Ne.symm h, kextract_eq_lookup_kerase l, kerase]
       
 
-/-! ### `erase_dupkeys` -/
+/-! ### `dedupkeys` -/
 
 
 /-- Remove entries with duplicate keys from `l : list (sigma β)`. -/
-def eraseDupkeys : List (Sigma β) → List (Sigma β) :=
+def dedupkeys : List (Sigma β) → List (Sigma β) :=
   List.foldr (fun x => kinsert x.1 x.2) []
 
-theorem erase_dupkeys_cons {x : Sigma β} (l : List (Sigma β)) :
-    eraseDupkeys (x :: l) = kinsert x.1 x.2 (eraseDupkeys l) :=
+theorem dedupkeys_cons {x : Sigma β} (l : List (Sigma β)) : dedupkeys (x :: l) = kinsert x.1 x.2 (dedupkeys l) :=
   rfl
 
-theorem nodupkeys_erase_dupkeys (l : List (Sigma β)) : Nodupkeys (eraseDupkeys l) := by
-  dsimp [erase_dupkeys]
+theorem nodupkeys_dedupkeys (l : List (Sigma β)) : Nodupkeys (dedupkeys l) := by
+  dsimp [dedupkeys]
   generalize hl : nil = l'
   have : nodupkeys l' := by
     rw [← hl]
@@ -676,7 +675,7 @@ theorem nodupkeys_erase_dupkeys (l : List (Sigma β)) : Nodupkeys (eraseDupkeys 
   · apply this
     
   · cases x
-    simp [erase_dupkeys]
+    simp [dedupkeys]
     constructor
     · simp [keys_kerase]
       apply mem_erase_of_nodup l_ih
@@ -684,25 +683,25 @@ theorem nodupkeys_erase_dupkeys (l : List (Sigma β)) : Nodupkeys (eraseDupkeys 
     apply kerase_nodupkeys _ l_ih
     
 
-theorem lookup_erase_dupkeys (a : α) (l : List (Sigma β)) : lookupₓ a (eraseDupkeys l) = lookupₓ a l := by
+theorem lookup_dedupkeys (a : α) (l : List (Sigma β)) : lookupₓ a (dedupkeys l) = lookupₓ a l := by
   induction l
   rfl
   cases' l_hd with a' b
   by_cases' a = a'
   · subst a'
-    rw [erase_dupkeys_cons, lookup_kinsert, lookup_cons_eq]
+    rw [dedupkeys_cons, lookup_kinsert, lookup_cons_eq]
     
-  · rw [erase_dupkeys_cons, lookup_kinsert_ne h, l_ih, lookup_cons_ne]
+  · rw [dedupkeys_cons, lookup_kinsert_ne h, l_ih, lookup_cons_ne]
     exact h
     
 
-theorem sizeof_erase_dupkeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (xs : List (Sigma β)) :
-    sizeof (List.eraseDupkeys xs) ≤ sizeof xs := by
+theorem sizeof_dedupkeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (xs : List (Sigma β)) :
+    sizeof (List.dedupkeys xs) ≤ sizeof xs := by
   unfold_wf
   induction' xs with x xs
-  · simp [List.eraseDupkeys]
+  · simp [List.dedupkeys]
     
-  · simp only [erase_dupkeys_cons, List.sizeof, kinsert_def, add_le_add_iff_left, Sigma.eta]
+  · simp only [dedupkeys_cons, List.sizeof, kinsert_def, add_le_add_iff_left, Sigma.eta]
     trans
     apply sizeof_kerase
     assumption

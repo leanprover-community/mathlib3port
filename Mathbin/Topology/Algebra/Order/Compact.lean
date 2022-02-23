@@ -199,25 +199,90 @@ theorem IsCompact.exists_forall_ge :
     ∀ {s : Set β}, IsCompact s → s.Nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, ∀, ∀ y ∈ s, ∀, f y ≤ f x :=
   @IsCompact.exists_forall_le (OrderDual α) _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » K)
+/-- The **extreme value theorem**: if a continuous function `f` is larger than a value in its range
+away from compact sets, then it has a global minimum. -/
+theorem _root_.continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
+    (h : ∀ᶠ x in cocompact β, f x₀ ≤ f x) : ∃ x : β, ∀ y : β, f x ≤ f y := by
+  obtain ⟨K : Set β, hK : IsCompact K, hKf : ∀ x _ : x ∉ K, f x₀ ≤ f x⟩ := has_basis_cocompact.eventually_iff.mp h
+  obtain ⟨x, -, hx⟩ : ∃ x ∈ insert x₀ K, ∀, ∀ y ∈ insert x₀ K, ∀, f x ≤ f y :=
+    (hK.insert x₀).exists_forall_le (nonempty_insert _ _) hf.continuous_on
+  refine' ⟨x, fun y => _⟩
+  by_cases' hy : y ∈ K
+  exacts[hx y (Or.inr hy), (hx _ (Or.inl rfl)).trans (hKf y hy)]
+
+/-- The **extreme value theorem**: if a continuous function `f` is smaller than a value in its range
+away from compact sets, then it has a global maximum. -/
+theorem _root_.continuous.exists_forall_ge' {f : β → α} (hf : Continuous f) (x₀ : β)
+    (h : ∀ᶠ x in cocompact β, f x ≤ f x₀) : ∃ x : β, ∀ y : β, f y ≤ f x :=
+  @Continuous.exists_forall_le' (OrderDual α) _ _ _ _ _ _ hf x₀ h
+
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
 sets, then it has a global minimum. -/
-theorem Continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuous f)
+theorem _root_.continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y := by
   inhabit β
-  obtain ⟨s : Set β, hsc : IsCompact s, hsf : ∀ x _ : x ∉ s, f default ≤ f x⟩ :=
-    (has_basis_cocompact.tendsto_iff at_top_basis).1 hlim (f default) trivialₓ
-  obtain ⟨x, -, hx⟩ : ∃ x ∈ insert default s, ∀, ∀ y ∈ insert default s, ∀, f x ≤ f y :=
-    (hsc.insert default).exists_forall_le (nonempty_insert _ _) hf.continuous_on
-  refine' ⟨x, fun y => _⟩
-  by_cases' hy : y ∈ s
-  exacts[hx y (Or.inr hy), (hx _ (Or.inl rfl)).trans (hsf y hy)]
+  exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_at_top _)
 
 /-- The **extreme value theorem**: if a continuous function `f` tends to negative infinity away from
 compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atBot) : ∃ x, ∀ y, f y ≤ f x :=
   @Continuous.exists_forall_le (OrderDual α) _ _ _ _ _ _ _ hf hlim
+
+/-- A continuous function with compact support has a global minimum. -/
+@[to_additive]
+theorem _root_.continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α}
+    (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y := by
+  -- Proof sketch: we use `continuous.exists_forall_le'` with as `x₀` any element outside the
+  -- support of `f`, if such an element exists (and otherwise an arbitrary element).
+  refine'
+    hf.exists_forall_le' (Classical.epsilon fun x => f x = 1) ((eventually_of_mem h.compl_mem_cocompact) fun x hx => _)
+  have : f x = 1 := nmem_mul_support.mp (mt (fun h2x => subset_closure h2x) hx)
+  exact ((Classical.epsilon_spec ⟨x, this⟩).trans this.symm).le
+
+/-- A continuous function with compact support has a global maximum. -/
+@[to_additive]
+theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
+  @Continuous.exists_forall_le_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ _ hf h
+
+/-- A continuous function with compact support is bounded below. -/
+@[to_additive]
+theorem Continuous.bdd_below_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : BddBelow (Range f) := by
+  cases' is_empty_or_nonempty β with hβ hβ
+  · rw [range_eq_empty_iff.mpr]
+    exact bdd_below_empty
+    exact hβ
+    
+  obtain ⟨x, hx⟩ := hf.exists_forall_le_of_has_compact_mul_support h
+  refine' ⟨f x, _⟩
+  rintro _ ⟨x', rfl⟩
+  exact hx x'
+
+/-- A continuous function with compact support is bounded above. -/
+@[to_additive]
+theorem Continuous.bdd_above_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : BddAbove (Range f) :=
+  @Continuous.bdd_below_range_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ hf h
+
+/-- A continuous function is bounded below on a compact set. -/
+theorem IsCompact.bdd_below_image {f : β → α} {K : Set β} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddBelow (f '' K) := by
+  rcases eq_empty_or_nonempty K with (rfl | h)
+  · rw [image_empty]
+    exact bdd_below_empty
+    
+  obtain ⟨c, -, hc⟩ := hK.exists_forall_le h hf
+  refine' ⟨f c, _⟩
+  rintro _ ⟨x, hx, rfl⟩
+  exact hc x hx
+
+/-- A continuous function is bounded above on a compact set. -/
+theorem IsCompact.bdd_above_image {f : β → α} {K : Set β} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddAbove (f '' K) :=
+  @IsCompact.bdd_below_image (OrderDual α) _ _ _ _ _ _ _ hK hf
 
 /-!
 ### Image of a closed interval

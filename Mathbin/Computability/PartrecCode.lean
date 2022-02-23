@@ -43,7 +43,7 @@ open Encodable Denumerable
 
 namespace Nat.Partrec
 
-open nat (mkpair)
+open Nat (mkpair)
 
 theorem rfind' {f} (hf : Nat.Partrec f) :
     Nat.Partrec (Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> f (mkpair a (n + m))).map (· + m)) :=
@@ -79,9 +79,9 @@ end Nat.Partrec
 
 namespace Nat.Partrec.Code
 
-open nat (mkpair unpair)
+open Nat (mkpair unpair)
 
-open nat.partrec (code)
+open Nat.Partrec (code)
 
 instance : Inhabited Code :=
   ⟨zero⟩

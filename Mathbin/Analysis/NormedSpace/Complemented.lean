@@ -73,7 +73,7 @@ namespace Subspace
 
 variable [CompleteSpace E] (p q : Subspace 𝕜 E)
 
-open continuous_linear_map (subtype_val)
+open ContinuousLinearMap (subtype_val)
 
 /-- If `q` is a closed complement of a closed subspace `p`, then `p × q` is continuously
 isomorphic to `E`. -/

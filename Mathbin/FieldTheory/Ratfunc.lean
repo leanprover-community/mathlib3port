@@ -5,7 +5,8 @@ Authors: Anne Baanen
 -/
 import Mathbin.RingTheory.EuclideanDomain
 import Mathbin.RingTheory.LaurentSeries
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.FractionRing
+import Mathbin.RingTheory.Polynomial.Content
 
 /-!
 # The field of rational functions

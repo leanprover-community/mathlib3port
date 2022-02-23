@@ -46,19 +46,19 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 /-- The functorial version of `ulift.up`. -/
 @[simps]
-def Ulift.upFunctor : C ⥤ Ulift.{u₂} C where
-  obj := Ulift.up
+def Ulift.upFunctor : C ⥤ ULift.{u₂} C where
+  obj := ULift.up
   map := fun X Y f => f
 
 /-- The functorial version of `ulift.down`. -/
 @[simps]
-def Ulift.downFunctor : Ulift.{u₂} C ⥤ C where
-  obj := Ulift.down
+def Ulift.downFunctor : ULift.{u₂} C ⥤ C where
+  obj := ULift.down
   map := fun X Y f => f
 
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
-def Ulift.equivalence : C ≌ Ulift.{u₂} C where
+def Ulift.equivalence : C ≌ ULift.{u₂} C where
   Functor := Ulift.upFunctor
   inverse := Ulift.downFunctor
   unitIso := { Hom := 𝟙 _, inv := 𝟙 _ }
@@ -85,10 +85,10 @@ def Ulift.equivalence : C ≌ Ulift.{u₂} C where
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 
-instance [IsFiltered C] : IsFiltered (Ulift.{u₂} C) :=
+instance [IsFiltered C] : IsFiltered (ULift.{u₂} C) :=
   IsFiltered.of_equivalence Ulift.equivalence
 
-instance [IsCofiltered C] : IsCofiltered (Ulift.{u₂} C) :=
+instance [IsCofiltered C] : IsCofiltered (ULift.{u₂} C) :=
   IsCofiltered.of_equivalence Ulift.equivalence
 
 section UliftHom
@@ -119,7 +119,7 @@ theorem obj_up_obj_down {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
   rfl
 
 instance : Category.{max v₂ v₁} (UliftHom.{v₂} C) where
-  Hom := fun A B => Ulift.{v₂} <| A.objDown ⟶ B.objDown
+  Hom := fun A B => ULift.{v₂} <| A.objDown ⟶ B.objDown
   id := fun A => ⟨𝟙 _⟩
   comp := fun A B C f g => ⟨f.down ≫ g.down⟩
 
@@ -168,10 +168,10 @@ end UliftHom
 -/
 @[nolint unused_arguments]
 def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
-  Ulift.{max w v} C
+  ULift.{max w v} C
 
 instance : SmallCategory (AsSmall.{w₁} C) where
-  Hom := fun X Y => Ulift.{max w₁ u₁} <| X.down ⟶ Y.down
+  Hom := fun X Y => ULift.{max w₁ u₁} <| X.down ⟶ Y.down
   id := fun X => ⟨𝟙 _⟩
   comp := fun X Y Z f g => ⟨f.down ≫ g.down⟩
 
@@ -215,7 +215,7 @@ instance [IsCofiltered C] : IsCofiltered (AsSmall C) :=
   IsCofiltered.of_equivalence AsSmall.equiv
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
-def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (Ulift.{u'} C) :=
+def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=
   Ulift.equivalence.trans UliftHom.equiv
 
 end CategoryTheory

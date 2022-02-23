@@ -222,13 +222,12 @@ theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α �
     (hs : IsAntichain r s) : s.PartiallyWellOrderedOn r ↔ s.Finite :=
   ⟨hs.finite_of_partially_well_ordered_on, Finite.partially_well_ordered_on⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ t _ : t ⊆ s, IsAntichain r t → t.Finite := by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
   rintro hs f hf
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' H
   refine' Set.infinite_range_of_injective (fun m n hmn => _) (hs _ hf _)
   · obtain h | h | h := lt_trichotomyₓ m n
     · refine' (H _ _ h _).elim

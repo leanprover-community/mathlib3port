@@ -947,7 +947,7 @@ theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [Category.{w
   -- Step 3: interpret the results
   use fun j => (u ⟨j⟩).down
   intro j j' f
-  have h := @hu (⟨j⟩ : J') (⟨j'⟩ : J') (Ulift.up f)
+  have h := @hu (⟨j⟩ : J') (⟨j'⟩ : J') (ULift.up f)
   simp only [as_small.down, functor.comp_map, ulift_functor_map, functor.op_map] at h
   simp_rw [← h]
   rfl

@@ -698,32 +698,8 @@ theorem cauchy_series_of_le_geometric {C : ℝ} {u : ℕ → α} {r : ℝ} (hr :
       simp [h])
 
 theorem NormedGroup.cauchy_series_of_le_geometric' {C : ℝ} {u : ℕ → α} {r : ℝ} (hr : r < 1)
-    (h : ∀ n, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
-  by_cases' hC : C = 0
-  · subst hC
-    simp at h
-    exact
-      cauchy_seq_of_le_geometric 0 0 zero_lt_one
-        (by
-          simp [h])
-    
-  have : 0 ≤ C := by
-    simpa using (norm_nonneg _).trans (h 0)
-  replace hC : 0 < C
-  exact (Ne.symm hC).le_iff_lt.mp this
-  have : 0 ≤ r := by
-    have := (norm_nonneg _).trans (h 1)
-    rw [pow_oneₓ] at this
-    exact (zero_le_mul_left hC).mp this
-  simp_rw [Finset.sum_range_succ_comm]
-  have : CauchySeq u := by
-    apply tendsto.cauchy_seq
-    apply squeeze_zero_norm h
-    rw
-      [show 0 = C * 0 by
-        simp ]
-    exact tendsto_const_nhds.mul (tendsto_pow_at_top_nhds_0_of_lt_1 this hr)
-  exact this.add (cauchy_series_of_le_geometric hr h)
+    (h : ∀ n, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k :=
+  (cauchy_series_of_le_geometric hr h).comp_tendsto <| tendsto_add_at_top_nat 1
 
 theorem NormedGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {N : ℕ} {r : ℝ} (hr₀ : 0 < r) (hr₁ : r < 1)
     (h : ∀, ∀ n ≥ N, ∀, ∥u n∥ ≤ C * r ^ n) : CauchySeq fun n => ∑ k in range (n + 1), u k := by
@@ -797,7 +773,6 @@ end NormedRingGeometric
 /-! ### Summability tests based on comparison with geometric series -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] [CompleteSpace α] {f : ℕ → α} {r : ℝ}
     (hr₁ : r < 1) (h : ∀ᶠ n in at_top, ∥f (n + 1)∥ ≤ r * ∥f n∥) : Summable f := by
   by_cases' hr₀ : 0 ≤ r
@@ -816,7 +791,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SemiNormedGroup α] 
     refine' summable_of_norm_bounded_eventually 0 summable_zero _
     rw [Nat.cofinite_eq_at_top]
     filter_upwards [h] with _ hn
-    "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    by_contra' h
     exact not_lt.mpr (norm_nonneg _) (lt_of_le_of_ltₓ hn <| mul_neg_of_neg_of_pos hr₀ h)
     
 

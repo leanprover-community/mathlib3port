@@ -20,19 +20,23 @@ finitely many vertices.
 
 * `simple_graph` is a structure for symmetric, irreflexive relations
 
-* `neighbor_set` is the `set` of vertices adjacent to a given vertex
+* `simple_graph.neighbor_set` is the `set` of vertices adjacent to a given vertex
 
-* `common_neighbors` is the intersection of the neighbor sets of two given vertices
+* `simple_graph.common_neighbors` is the intersection of the neighbor sets of two given vertices
 
-* `neighbor_finset` is the `finset` of vertices adjacent to a given vertex,
+* `simple_graph.neighbor_finset` is the `finset` of vertices adjacent to a given vertex,
    if `neighbor_set` is finite
 
-* `incidence_set` is the `set` of edges containing a given vertex
+* `simple_graph.incidence_set` is the `set` of edges containing a given vertex
 
-* `incidence_finset` is the `finset` of edges containing a given vertex,
+* `simple_graph.incidence_finset` is the `finset` of edges containing a given vertex,
    if `incidence_set` is finite
 
-* `homo`, `embedding`, and `iso` for graph homomorphisms, graph embeddings, and
+* `simple_graph.dart` is an ordered pair of adjacent vertices, thought of as being an
+  orientated edge.
+
+* `simple_graph.homo`, `simple_graph.embedding`, and `simple_graph.iso` for graph
+  homomorphisms, graph embeddings, and
   graph isomorphisms. Note that a graph embedding is a stronger notion than an
   injective graph homomorphism, since its image is an induced subgraph.
 
@@ -146,6 +150,9 @@ theorem adj_comm (u v : V) : G.Adj u v ↔ G.Adj v u :=
 
 @[symm]
 theorem adj_symm (h : G.Adj u v) : G.Adj v u :=
+  G.symm h
+
+theorem Adj.symm {G : SimpleGraph V} {u v : V} (h : G.Adj u v) : G.Adj v u :=
   G.symm h
 
 theorem ne_of_adj (h : G.Adj a b) : a ≠ b := by
@@ -354,6 +361,85 @@ instance decidableMemEdgeSet [DecidableRel G.Adj] : DecidablePred (· ∈ G.Edge
 
 instance edgesFintype [DecidableEq V] [Fintype V] [DecidableRel G.Adj] : Fintype G.EdgeSet :=
   Subtype.fintype _
+
+/-! ## Darts -/
+
+
+/-- A `dart` is an oriented edge, implemented as an ordered pair of adjacent vertices. -/
+@[ext]
+structure Dart extends V × V where
+  is_adj : G.Adj fst snd
+  deriving DecidableEq
+
+section Darts
+
+variable {G}
+
+instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
+  Fintype.ofEquiv (Σv, G.NeighborSet v)
+    { toFun := fun s => ⟨(s.fst, s.snd), s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
+      left_inv := fun s => by
+        ext <;> simp ,
+      right_inv := fun d => by
+        ext <;> simp }
+
+/-- The edge associated to the dart. -/
+def Dart.edge (d : G.Dart) : Sym2 V :=
+  ⟦d.toProd⟧
+
+@[simp]
+theorem Dart.edge_mk {p : V × V} (h : G.Adj p.1 p.2) : (Dart.mk p h).edge = ⟦p⟧ :=
+  rfl
+
+@[simp]
+theorem Dart.edge_mem (d : G.Dart) : d.edge ∈ G.EdgeSet :=
+  d.is_adj
+
+/-- The dart with reversed orientation from a given dart. -/
+@[simps]
+def Dart.symm (d : G.Dart) : G.Dart :=
+  ⟨d.toProd.swap, G.symm d.is_adj⟩
+
+@[simp]
+theorem Dart.symm_mk {p : V × V} (h : G.Adj p.1 p.2) : (Dart.mk p h).symm = Dart.mk p.swap h.symm :=
+  rfl
+
+@[simp]
+theorem Dart.edge_symm (d : G.Dart) : d.symm.edge = d.edge :=
+  Sym2.mk_prod_swap_eq
+
+@[simp]
+theorem Dart.symm_symm (d : G.Dart) : d.symm.symm = d :=
+  Dart.ext _ _ <| Prod.swap_swap _
+
+@[simp]
+theorem Dart.symm_involutive : Function.Involutive (Dart.symm : G.Dart → G.Dart) :=
+  dart.symm_symm
+
+theorem Dart.symm_ne (d : G.Dart) : d.symm ≠ d :=
+  ne_of_apply_ne (Prod.snd ∘ dart.to_prod) d.is_adj.Ne
+
+theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm := by
+  rintro ⟨p, hp⟩ ⟨q, hq⟩
+  simp [Sym2.mk_eq_mk_iff]
+
+variable (G)
+
+/-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
+to the darts `d` with `d.fst = v`. --/
+@[simps]
+def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
+  ⟨(v, w), w.property⟩
+
+theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h =>
+  Subtype.ext <| by
+    injection h with h'
+    convert congr_argₓ Prod.snd h'
+
+instance Dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
+  ⟨G.dartOfNeighborSet default default⟩
+
+end Darts
 
 /-! ### Incidence set -/
 

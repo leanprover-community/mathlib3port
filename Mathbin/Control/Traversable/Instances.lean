@@ -64,7 +64,7 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 open Applicativeₓ Functor
 
-open list (cons)
+open List (cons)
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse {α} (xs : List α) : List.traverseₓₓ id.mk xs = xs := by
@@ -145,7 +145,7 @@ variable [Applicativeₓ F] [Applicativeₓ G]
 
 open Applicativeₓ Functor
 
-open list (cons)
+open List (cons)
 
 protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G γ) (x : Sum σ α) :
     Sum.traverseₓ f (g <$> x) = Sum.traverseₓ (f ∘ g) x := by

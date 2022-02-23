@@ -41,8 +41,8 @@ are both homotopic to `id`.
 structure HomotopyEquiv (X : Type u) (Y : Type v) [TopologicalSpace X] [TopologicalSpace Y] where
   toFun : C(X, Y)
   invFun : C(Y, X)
-  left_inv : (inv_fun.comp to_fun).Homotopic id
-  right_inv : (to_fun.comp inv_fun).Homotopic id
+  left_inv : (inv_fun.comp to_fun).Homotopic (ContinuousMap.id X)
+  right_inv : (to_fun.comp inv_fun).Homotopic (ContinuousMap.id Y)
 
 -- mathport name: «expr ≃ₕ »
 localized [ContinuousMap] infixl:25 " ≃ₕ " => ContinuousMap.HomotopyEquiv

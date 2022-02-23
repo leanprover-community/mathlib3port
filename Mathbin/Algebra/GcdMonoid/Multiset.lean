@@ -88,7 +88,7 @@ theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : �
 variable [DecidableEq α]
 
 @[simp]
-theorem lcm_erase_dup (s : Multiset α) : (eraseDup s).lcm = s.lcm :=
+theorem lcm_dedup (s : Multiset α) : (dedup s).lcm = s.lcm :=
   (Multiset.induction_on s
       (by
         simp ))
@@ -100,17 +100,17 @@ theorem lcm_erase_dup (s : Multiset α) : (eraseDup s).lcm = s.lcm :=
 
 @[simp]
 theorem lcm_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
-  rw [← lcm_erase_dup, erase_dup_ext.2, lcm_erase_dup, lcm_add]
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 
 @[simp]
 theorem lcm_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).lcm = GcdMonoid.lcm s₁.lcm s₂.lcm := by
-  rw [← lcm_erase_dup, erase_dup_ext.2, lcm_erase_dup, lcm_add]
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_add]
   simp
 
 @[simp]
 theorem lcm_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).lcm = GcdMonoid.lcm a s.lcm := by
-  rw [← lcm_erase_dup, erase_dup_ext.2, lcm_erase_dup, lcm_cons]
+  rw [← lcm_dedup, dedup_ext.2, lcm_dedup, lcm_cons]
   simp
 
 end Lcm
@@ -181,7 +181,7 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
 variable [DecidableEq α]
 
 @[simp]
-theorem gcd_erase_dup (s : Multiset α) : (eraseDup s).gcd = s.gcd :=
+theorem gcd_dedup (s : Multiset α) : (dedup s).gcd = s.gcd :=
   (Multiset.induction_on s
       (by
         simp ))
@@ -193,17 +193,17 @@ theorem gcd_erase_dup (s : Multiset α) : (eraseDup s).gcd = s.gcd :=
 
 @[simp]
 theorem gcd_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
-  rw [← gcd_erase_dup, erase_dup_ext.2, gcd_erase_dup, gcd_add]
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 
 @[simp]
 theorem gcd_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).gcd = GcdMonoid.gcd s₁.gcd s₂.gcd := by
-  rw [← gcd_erase_dup, erase_dup_ext.2, gcd_erase_dup, gcd_add]
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_add]
   simp
 
 @[simp]
 theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GcdMonoid.gcd a s.gcd := by
-  rw [← gcd_erase_dup, erase_dup_ext.2, gcd_erase_dup, gcd_cons]
+  rw [← gcd_dedup, dedup_ext.2, gcd_dedup, gcd_cons]
   simp
 
 end Gcd

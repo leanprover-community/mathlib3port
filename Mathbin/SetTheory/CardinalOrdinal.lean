@@ -743,7 +743,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     
 
 theorem mk_bounded_set_le (α : Type u) (c : Cardinal) : # { t : Set α // # t ≤ c } ≤ max (# α) ω ^ c := by
-  trans # { t : Set (Sum (Ulift.{u} ℕ) α) // # t ≤ c }
+  trans # { t : Set (Sum (ULift.{u} ℕ) α) // # t ≤ c }
   · refine' ⟨embedding.subtype_map _ _⟩
     apply embedding.image
     use Sum.inr
@@ -751,7 +751,7 @@ theorem mk_bounded_set_le (α : Type u) (c : Cardinal) : # { t : Set α // # t �
     intro s hs
     exact le_transₓ mk_image_le hs
     
-  refine' le_transₓ (mk_bounded_set_le_of_infinite (Sum (Ulift.{u} ℕ) α) c) _
+  refine' le_transₓ (mk_bounded_set_le_of_infinite (Sum (ULift.{u} ℕ) α) c) _
   rw [max_commₓ, ← add_eq_max] <;> rfl
 
 theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :

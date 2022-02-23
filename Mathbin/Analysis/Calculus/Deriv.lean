@@ -90,7 +90,7 @@ open_locale Classical TopologicalSpace BigOperators Filter Ennreal Polynomial
 
 open Filter Asymptotics Set
 
-open continuous_linear_map (smulRight smul_right_one_eq_iff)
+open ContinuousLinearMap (smulRight smul_right_one_eq_iff)
 
 variable {𝕜 : Type u} [NondiscreteNormedField 𝕜]
 

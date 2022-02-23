@@ -164,7 +164,7 @@ integral, fundamental theorem of calculus, FTC-1, FTC-2, change of variables in 
 
 noncomputable section
 
-open topological_space (SecondCountableTopology)
+open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory Set Classical Filter Function
 
@@ -1599,7 +1599,7 @@ theorem integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left (hab : Interval
   simpa only [integral_const, smul_eq_mul, mul_oneₓ] using
     measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left hab hmeas hf hu hv
 
-open continuous_linear_map (fst snd smulRight sub_apply smul_right_apply coe_fst' coe_snd' map_sub)
+open ContinuousLinearMap (fst snd smulRight sub_apply smul_right_apply coe_fst' coe_snd' map_sub)
 
 /-!
 #### Strict differentiability

@@ -19,47 +19,47 @@ We also provide `ulift.ring_equiv : ulift R ≃+* R`.
 
 universe u v
 
-variable {α : Type u} {x y : Ulift.{v} α}
+variable {α : Type u} {x y : ULift.{v} α}
 
-namespace Ulift
+namespace ULift
 
-instance mulZeroClass [MulZeroClassₓ α] : MulZeroClassₓ (Ulift α) := by
-  refine_struct { zero := (0 : Ulift α), mul := (· * ·), .. } <;>
+instance mulZeroClass [MulZeroClassₓ α] : MulZeroClassₓ (ULift α) := by
+  refine_struct { zero := (0 : ULift α), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance distrib [Distribₓ α] : Distribₓ (Ulift α) := by
+instance distrib [Distribₓ α] : Distribₓ (ULift α) := by
   refine_struct { add := (· + ·), mul := (· * ·), .. } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (Ulift α) := by
-  refine_struct { zero := (0 : Ulift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (ULift α) := by
+  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance nonAssocSemiring [NonAssocSemiringₓ α] : NonAssocSemiringₓ (Ulift α) := by
-  refine_struct { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+instance nonAssocSemiring [NonAssocSemiringₓ α] : NonAssocSemiringₓ (ULift α) := by
+  refine_struct { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance nonUnitalSemiring [NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (Ulift α) := by
-  refine_struct { zero := (0 : Ulift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+instance nonUnitalSemiring [NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (ULift α) := by
+  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance semiring [Semiringₓ α] : Semiringₓ (Ulift α) := by
+instance semiring [Semiringₓ α] : Semiringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
 /-- The ring equivalence between `ulift α` and `α`.
 -/
-def ringEquiv [NonUnitalNonAssocSemiringₓ α] : Ulift α ≃+* α where
-  toFun := Ulift.down
-  invFun := Ulift.up
+def ringEquiv [NonUnitalNonAssocSemiringₓ α] : ULift α ≃+* α where
+  toFun := ULift.down
+  invFun := ULift.up
   map_mul' := fun x y => rfl
   map_add' := fun x y => rfl
   left_inv := by
@@ -67,44 +67,44 @@ def ringEquiv [NonUnitalNonAssocSemiringₓ α] : Ulift α ≃+* α where
   right_inv := by
     tidy
 
-instance commSemiring [CommSemiringₓ α] : CommSemiringₓ (Ulift α) := by
+instance commSemiring [CommSemiringₓ α] : CommSemiringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
+      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
         npow := Monoidₓ.npow } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance nonUnitalNonAssocRing [NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (Ulift α) := by
+instance nonUnitalNonAssocRing [NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
         nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance ring [Ringₓ α] : Ringₓ (Ulift α) := by
+instance ring [Ringₓ α] : Ringₓ (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
         nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance commRing [CommRingₓ α] : CommRingₓ (Ulift α) := by
+instance commRing [CommRingₓ α] : CommRingₓ (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
         nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 
-instance field [Field α] : Field (Ulift α) := by
+instance field [Field α] : Field (ULift α) := by
   refine_struct
-      { zero := (0 : Ulift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+      { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
         nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul, inv := Inv.inv, div := Div.div,
-        zpow := fun n a => Ulift.up (a.down ^ n), exists_pair_ne := Ulift.nontrivial.1 } <;>
+        zpow := fun n a => ULift.up (a.down ^ n), exists_pair_ne := ULift.nontrivial.1 } <;>
     run_tac
       tactic.pi_instance_derive_field
   -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.
   cases a
   tauto
 
-end Ulift
+end ULift
 

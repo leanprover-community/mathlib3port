@@ -34,7 +34,7 @@ open CategoryTheory.Limits
 open CategoryTheory.IsFiltered renaming max → max'
 
 -- avoid name collision with `_root_.max`.
-open AddMon.filtered_colimits (colimit_zero_eq colimit_add_mk_eq)
+open AddMon.FilteredColimits (colimit_zero_eq colimit_add_mk_eq)
 
 namespace ModuleCat.FilteredColimits
 

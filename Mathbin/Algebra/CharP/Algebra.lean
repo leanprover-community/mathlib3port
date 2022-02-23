@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster, Eric Wieser
 -/
 import Mathbin.Algebra.CharP.Basic
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.FractionRing
 import Mathbin.Algebra.FreeAlgebra
 
 /-!

@@ -951,11 +951,11 @@ def Fintype.prodRight {α β} [DecidableEq β] [Fintype (α × β)] [Nonempty α
     let ⟨a⟩ := ‹Nonempty α›
     simp <;> exact ⟨a, Fintype.complete _⟩⟩
 
-instance (α : Type _) [Fintype α] : Fintype (Ulift α) :=
+instance (α : Type _) [Fintype α] : Fintype (ULift α) :=
   Fintype.ofEquiv _ Equivₓ.ulift.symm
 
 @[simp]
-theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (Ulift α) = Fintype.card α :=
+theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (ULift α) = Fintype.card α :=
   Fintype.of_equiv_card _
 
 instance (α : Type _) [Fintype α] : Fintype (Plift α) :=
@@ -988,8 +988,8 @@ theorem univ_sum_type {α β : Type _} [Fintype α] [Fintype β] [Fintype (Sum �
 
 instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β) :=
   @Fintype.ofEquiv _ _
-    (@Sigma.fintype _ (fun b => cond b (Ulift α) (Ulift.{max u v, v} β)) _ fun b => by
-      cases b <;> apply Ulift.fintype)
+    (@Sigma.fintype _ (fun b => cond b (ULift α) (ULift.{max u v, v} β)) _ fun b => by
+      cases b <;> apply ULift.fintype)
     ((Equivₓ.sumEquivSigmaBool _ _).symm.trans (Equivₓ.sumCongr Equivₓ.ulift Equivₓ.ulift))
 
 /-- Given that `α ⊕ β` is a fintype, `α` is also a fintype. This is non-computable as it uses
@@ -1889,8 +1889,8 @@ open_locale Classical
 
 One can obtain the relevant typeclasses via `cases fintype_or_infinite α; resetI`.
 -/
-noncomputable def fintypeOrInfinite (α : Type _) : Psum (Fintype α) (Infinite α) :=
-  if h : Infinite α then Psum.inr h else Psum.inl (fintypeOfNotInfinite h)
+noncomputable def fintypeOrInfinite (α : Type _) : PSum (Fintype α) (Infinite α) :=
+  if h : Infinite α then PSum.inr h else PSum.inl (fintypeOfNotInfinite h)
 
 end
 
@@ -2030,7 +2030,6 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
 theorem not_injective_infinite_fintype [Infinite α] [Fintype β] (f : α → β) : ¬Injective f := fun hf =>
   (Fintype.ofInjective f hf).False
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
 infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
 same pigeonhole.
@@ -2039,7 +2038,7 @@ See also: `fintype.exists_ne_map_eq_of_card_lt`, `fintype.exists_infinite_fiber`
 -/
 theorem Fintype.exists_ne_map_eq_of_infinite [Infinite α] [Fintype β] (f : α → β) : ∃ x y : α, x ≠ y ∧ f x = f y := by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hf
   apply not_injective_infinite_fintype f
   intro x y
   contrapose
@@ -2064,7 +2063,6 @@ noncomputable instance (priority := 100) Function.Embedding.fintype' {α β : Ty
     infer_instance
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
 finitely many pigeonholes, then there is a pigeonhole with infinitely
@@ -2075,7 +2073,7 @@ See also: `fintype.exists_ne_map_eq_of_infinite`
 -- the `classical` generates `decidable_eq α/β` instances, and resets instance cache
 theorem Fintype.exists_infinite_fiber [Infinite α] [Fintype β] (f : α → β) : ∃ y : β, Infinite (f ⁻¹' {y}) := by
   classical
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hf
   have := fun y => fintypeOfNotInfinite <| hf y
   let key : Fintype α :=
     { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset,
@@ -2138,7 +2136,7 @@ that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ β → P α → P β) (h_empty : P Pempty)
     (h_option : ∀ {α} [Fintype α] [DecidableEq α], P α → P (Option α)) (α : Type u) [Fintype α] [DecidableEq α] :
     Trunc (P α) := by
-  suffices ∀ n : ℕ, Trunc (P (Ulift <| Finₓ n)) by
+  suffices ∀ n : ℕ, Trunc (P (ULift <| Finₓ n)) by
     apply Trunc.bind (this (Fintype.card α))
     intro h
     apply Trunc.map _ (Fintype.truncEquivFin α)
@@ -2146,14 +2144,14 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
     exact of_equiv (equiv.ulift.trans e.symm) h
   intro n
   induction' n with n ih
-  · have : card Pempty = card (Ulift (Finₓ 0)) := by
+  · have : card Pempty = card (ULift (Finₓ 0)) := by
       simp only [card_fin, card_pempty, card_ulift]
     apply Trunc.bind (trunc_equiv_of_card_eq this)
     intro e
     apply Trunc.mk
     refine' of_equiv e h_empty
     
-  · have : card (Option (Ulift (Finₓ n))) = card (Ulift (Finₓ n.succ)) := by
+  · have : card (Option (ULift (Finₓ n))) = card (ULift (Finₓ n.succ)) := by
       simp only [card_fin, card_option, card_ulift]
     apply Trunc.bind (trunc_equiv_of_card_eq this)
     intro e

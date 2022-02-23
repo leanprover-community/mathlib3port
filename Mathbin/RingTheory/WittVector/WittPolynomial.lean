@@ -60,7 +60,7 @@ open MvPolynomial
 
 open Finset hiding map
 
-open finsupp (single)
+open Finsupp (single)
 
 open_locale BigOperators
 

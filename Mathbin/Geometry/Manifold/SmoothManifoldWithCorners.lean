@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Calculus.TimesContDiff
+import Mathbin.Analysis.Calculus.ContDiff
 import Mathbin.Geometry.Manifold.ChartedSpace
 
 /-!
@@ -27,13 +27,13 @@ specific type class for `C^∞` manifolds as these are the most commonly used.
   define a smooth manifold with model space `H`, and model vector space `E`.
 * `model_with_corners_self 𝕜 E` :
   trivial model with corners structure on the space `E` embedded in itself by the identity.
-* `times_cont_diff_groupoid n I` :
+* `cont_diff_groupoid n I` :
   when `I` is a model with corners on `(𝕜, E, H)`, this is the groupoid of local homeos of `H`
   which are of class `C^n` over the normed field `𝕜`, when read in `E`.
 * `smooth_manifold_with_corners I M` :
   a type class saying that the charted space `M`, modelled on the space `H`, has `C^∞` changes of
   coordinates with respect to the model with corners `I` on `(𝕜, E, H)`. This type class is just
-  a shortcut for `has_groupoid M (times_cont_diff_groupoid ∞ I)`.
+  a shortcut for `has_groupoid M (cont_diff_groupoid ∞ I)`.
 * `ext_chart_at I x`:
   in a smooth manifold with corners with the model `I` on `(E, H)`, the charts take values in `H`,
   but often we may want to use their `E`-valued version, obtained by composing the charts with `I`.
@@ -96,7 +96,7 @@ later on it is a pain to carry all over the smoothness parameter, especially whe
 with `C^k` functions as there would be additional conditions `k ≤ n` everywhere. Since one deals
 almost all the time with `C^∞` (or analytic) manifolds, this seems to be a reasonable choice that
 one could revisit later if needed. `C^k` manifolds are still available, but they should be called
-using `has_groupoid M (times_cont_diff_groupoid k I)` where `I` is the model with corners.
+using `has_groupoid M (cont_diff_groupoid k I)` where `I` is the model with corners.
 
 I have considered using the model with corners `I` as a typeclass argument, possibly `out_param`, to
 get lighter notations later on, but it did not turn out right, as on `E × F` there are two natural
@@ -395,7 +395,7 @@ instance ModelWithCorners.range_eq_univ_prod {𝕜 : Type u} [NondiscreteNormedF
 
 end Boundaryless
 
-section timesContDiffGroupoid
+section contDiffGroupoid
 
 /-! ### Smooth functions on models with corners -/
 
@@ -407,15 +407,15 @@ variable (n)
 
 /-- Given a model with corners `(E, H)`, we define the groupoid of `C^n` transformations of `H` as
 the maps that are `C^n` when read in `E` through `I`. -/
-def timesContDiffGroupoid : StructureGroupoid H :=
+def contDiffGroupoid : StructureGroupoid H :=
   Pregroupoid.groupoid
-    { property := fun f s => TimesContDiffOn 𝕜 n (I ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I),
+    { property := fun f s => ContDiffOn 𝕜 n (I ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ Range I),
       comp := fun f g u v hf hg hu hv huv => by
         have : I ∘ (g ∘ f) ∘ I.symm = (I ∘ g ∘ I.symm) ∘ I ∘ f ∘ I.symm := by
           ext x
           simp
         rw [this]
-        apply TimesContDiffOn.comp hg _
+        apply ContDiffOn.comp hg _
         · rintro x ⟨hx1, hx2⟩
           simp' only with mfld_simps  at hx1⊢
           exact hx1.2
@@ -425,13 +425,13 @@ def timesContDiffGroupoid : StructureGroupoid H :=
           exact ⟨hx1.1, hx2⟩
           ,
       id_mem := by
-        apply TimesContDiffOn.congr times_cont_diff_id.times_cont_diff_on
+        apply ContDiffOn.congr cont_diff_id.cont_diff_on
         rintro x ⟨hx1, hx2⟩
         rcases mem_range.1 hx2 with ⟨y, hy⟩
         rw [← hy]
         simp' only with mfld_simps,
       locality := fun f u hu H => by
-        apply times_cont_diff_on_of_locally_times_cont_diff_on
+        apply cont_diff_on_of_locally_cont_diff_on
         rintro y ⟨hy1, hy2⟩
         rcases mem_range.1 hy2 with ⟨x, hx⟩
         rw [← hx] at hy1⊢
@@ -457,22 +457,22 @@ variable {n}
 
 /-- Inclusion of the groupoid of `C^n` local diffeos in the groupoid of `C^m` local diffeos when
 `m ≤ n` -/
-theorem times_cont_diff_groupoid_le (h : m ≤ n) : timesContDiffGroupoid n I ≤ timesContDiffGroupoid m I := by
-  rw [timesContDiffGroupoid, timesContDiffGroupoid]
+theorem cont_diff_groupoid_le (h : m ≤ n) : contDiffGroupoid n I ≤ contDiffGroupoid m I := by
+  rw [contDiffGroupoid, contDiffGroupoid]
   apply groupoid_of_pregroupoid_le
   intro f s hfs
-  exact TimesContDiffOn.of_le hfs h
+  exact ContDiffOn.of_le hfs h
 
 /-- The groupoid of `0`-times continuously differentiable maps is just the groupoid of all
 local homeomorphisms -/
-theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuousGroupoid H := by
+theorem cont_diff_groupoid_zero_eq : contDiffGroupoid 0 I = continuousGroupoid H := by
   apply le_antisymmₓ le_top
   intro u hu
-  -- we have to check that every local homeomorphism belongs to `times_cont_diff_groupoid 0 I`,
+  -- we have to check that every local homeomorphism belongs to `cont_diff_groupoid 0 I`,
   -- by unfolding its definition
-  change u ∈ timesContDiffGroupoid 0 I
-  rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
-  simp only [times_cont_diff_on_zero]
+  change u ∈ contDiffGroupoid 0 I
+  rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
+  simp only [cont_diff_on_zero]
   constructor
   · apply ContinuousOn.comp (@Continuous.continuous_on _ _ _ _ _ univ I.continuous) _ (subset_univ _)
     apply ContinuousOn.comp u.continuous_to_fun I.continuous_symm.continuous_on (inter_subset_left _ _)
@@ -484,13 +484,13 @@ theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuou
 variable (n)
 
 /-- An identity local homeomorphism belongs to the `C^n` groupoid. -/
-theorem of_set_mem_times_cont_diff_groupoid {s : Set H} (hs : IsOpen s) :
-    LocalHomeomorph.ofSet s hs ∈ timesContDiffGroupoid n I := by
-  rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
-  suffices h : TimesContDiffOn 𝕜 n (I ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
+theorem of_set_mem_cont_diff_groupoid {s : Set H} (hs : IsOpen s) : LocalHomeomorph.ofSet s hs ∈ contDiffGroupoid n I :=
+  by
+  rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
+  suffices h : ContDiffOn 𝕜 n (I ∘ I.symm) (I.symm ⁻¹' s ∩ range I)
   · simp [h]
     
-  have : TimesContDiffOn 𝕜 n id (univ : Set E) := times_cont_diff_id.times_cont_diff_on
+  have : ContDiffOn 𝕜 n id (univ : Set E) := cont_diff_id.cont_diff_on
   exact
     this.congr_mono
       (fun x hx => by
@@ -499,42 +499,41 @@ theorem of_set_mem_times_cont_diff_groupoid {s : Set H} (hs : IsOpen s) :
 
 /-- The composition of a local homeomorphism from `H` to `M` and its inverse belongs to
 the `C^n` groupoid. -/
-theorem symm_trans_mem_times_cont_diff_groupoid (e : LocalHomeomorph M H) :
-    e.symm.trans e ∈ timesContDiffGroupoid n I :=
+theorem symm_trans_mem_cont_diff_groupoid (e : LocalHomeomorph M H) : e.symm.trans e ∈ contDiffGroupoid n I :=
   have : e.symm.trans e ≈ LocalHomeomorph.ofSet e.target e.open_target := LocalHomeomorph.trans_symm_self _
-  StructureGroupoid.eq_on_source _ (of_set_mem_times_cont_diff_groupoid n I e.open_target) this
+  StructureGroupoid.eq_on_source _ (of_set_mem_cont_diff_groupoid n I e.open_target) this
 
 variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
 
 /-- The product of two smooth local homeomorphisms is smooth. -/
-theorem times_cont_diff_groupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'}
-    {e : LocalHomeomorph H H} {e' : LocalHomeomorph H' H'} (he : e ∈ timesContDiffGroupoid ⊤ I)
-    (he' : e' ∈ timesContDiffGroupoid ⊤ I') : e.Prod e' ∈ timesContDiffGroupoid ⊤ (I.Prod I') := by
+theorem cont_diff_groupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCorners 𝕜 E' H'} {e : LocalHomeomorph H H}
+    {e' : LocalHomeomorph H' H'} (he : e ∈ contDiffGroupoid ⊤ I) (he' : e' ∈ contDiffGroupoid ⊤ I') :
+    e.Prod e' ∈ contDiffGroupoid ⊤ (I.Prod I') := by
   cases' he with he he_symm
   cases' he' with he' he'_symm
   simp only at he he_symm he' he'_symm
   constructor <;> simp only [LocalEquiv.prod_source, LocalHomeomorph.prod_to_local_equiv]
-  · have h3 := TimesContDiffOn.prod_map he he'
+  · have h3 := ContDiffOn.prod_map he he'
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
     
-  · have h3 := TimesContDiffOn.prod_map he_symm he'_symm
+  · have h3 := ContDiffOn.prod_map he_symm he'_symm
     rw [← I.image_eq, ← I'.image_eq, Set.prod_image_image_eq] at h3
     rw [← (I.prod I').image_eq]
     exact h3
     
 
 /-- The `C^n` groupoid is closed under restriction. -/
-instance : ClosedUnderRestriction (timesContDiffGroupoid n I) :=
+instance : ClosedUnderRestriction (contDiffGroupoid n I) :=
   (closed_under_restriction_iff_id_le _).mpr
     (by
       apply structure_groupoid.le_iff.mpr
       rintro e ⟨s, hs, hes⟩
-      apply (timesContDiffGroupoid n I).eq_on_source' _ _ _ hes
-      exact of_set_mem_times_cont_diff_groupoid n I hs)
+      apply (contDiffGroupoid n I).eq_on_source' _ _ _ hes
+      exact of_set_mem_cont_diff_groupoid n I hs)
 
-end timesContDiffGroupoid
+end contDiffGroupoid
 
 end ModelWithCorners
 
@@ -548,24 +547,23 @@ field `𝕜` and with infinite smoothness to simplify typeclass search and state
 @[ancestor HasGroupoid]
 class SmoothManifoldWithCorners {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
   {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
-  [ChartedSpace H M] extends HasGroupoid M (timesContDiffGroupoid ∞ I) : Prop
+  [ChartedSpace H M] extends HasGroupoid M (contDiffGroupoid ∞ I) : Prop
 
 theorem SmoothManifoldWithCorners.mk' {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
     [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
-    [ChartedSpace H M] [gr : HasGroupoid M (timesContDiffGroupoid ∞ I)] : SmoothManifoldWithCorners I M :=
+    [ChartedSpace H M] [gr : HasGroupoid M (contDiffGroupoid ∞ I)] : SmoothManifoldWithCorners I M :=
   { gr with }
 
-theorem smooth_manifold_with_corners_of_times_cont_diff_on {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _}
+theorem smooth_manifold_with_corners_of_cont_diff_on {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _}
     [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _)
     [TopologicalSpace M] [ChartedSpace H M]
     (h :
       ∀ e e' : LocalHomeomorph M H,
         e ∈ Atlas H M →
-          e' ∈ Atlas H M →
-            TimesContDiffOn 𝕜 ⊤ (I ∘ e.symm ≫ₕ e' ∘ I.symm) (I.symm ⁻¹' (e.symm ≫ₕ e').Source ∩ Range I)) :
+          e' ∈ Atlas H M → ContDiffOn 𝕜 ⊤ (I ∘ e.symm ≫ₕ e' ∘ I.symm) (I.symm ⁻¹' (e.symm ≫ₕ e').Source ∩ Range I)) :
     SmoothManifoldWithCorners I M :=
   { compatible := by
-      have : HasGroupoid M (timesContDiffGroupoid ∞ I) := has_groupoid_of_pregroupoid _ h
+      have : HasGroupoid M (contDiffGroupoid ∞ I) := has_groupoid_of_pregroupoid _ h
       apply StructureGroupoid.compatible }
 
 /-- For any model with corners, the model space is a smooth manifold -/
@@ -579,14 +577,14 @@ namespace SmoothManifoldWithCorners
 
 /- We restate in the namespace `smooth_manifolds_with_corners` some lemmas that hold for general
 charted space with a structure groupoid, avoiding the need to specify the groupoid
-`times_cont_diff_groupoid ∞ I` explicitly. -/
+`cont_diff_groupoid ∞ I` explicitly. -/
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
 
 /-- The maximal atlas of `M` for the smooth manifold with corners structure corresponding to the
 model with corners `I`. -/
 def MaximalAtlas :=
-  (timesContDiffGroupoid ∞ I).MaximalAtlas M
+  (contDiffGroupoid ∞ I).MaximalAtlas M
 
 variable {M}
 
@@ -600,7 +598,7 @@ theorem chart_mem_maximal_atlas [SmoothManifoldWithCorners I M] (x : M) : chartA
 variable {I}
 
 theorem compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈ MaximalAtlas I M)
-    (he' : e' ∈ MaximalAtlas I M) : e.symm.trans e' ∈ timesContDiffGroupoid ∞ I :=
+    (he' : e' ∈ MaximalAtlas I M) : e.symm.trans e' ∈ contDiffGroupoid ∞ I :=
   StructureGroupoid.compatible_of_mem_maximal_atlas he he'
 
 /-- The product of two smooth manifolds with corners is naturally a smooth manifold with corners. -/
@@ -612,9 +610,9 @@ instance prod {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [Normed
   compatible := by
     rintro f g ⟨f1, f2, hf1, hf2, rfl⟩ ⟨g1, g2, hg1, hg2, rfl⟩
     rw [LocalHomeomorph.prod_symm, LocalHomeomorph.prod_trans]
-    have h1 := HasGroupoid.compatible (timesContDiffGroupoid ⊤ I) hf1 hg1
-    have h2 := HasGroupoid.compatible (timesContDiffGroupoid ⊤ I') hf2 hg2
-    exact times_cont_diff_groupoid_prod h1 h2
+    have h1 := HasGroupoid.compatible (contDiffGroupoid ⊤ I) hf1 hg1
+    have h2 := HasGroupoid.compatible (contDiffGroupoid ⊤ I') hf2 hg2
+    exact cont_diff_groupoid_prod h1 h2
 
 end SmoothManifoldWithCorners
 
@@ -622,7 +620,7 @@ theorem LocalHomeomorph.singleton_smooth_manifold_with_corners {𝕜 : Type _} [
     [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
     [TopologicalSpace M] (e : LocalHomeomorph M H) (h : e.Source = Set.Univ) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singletonChartedSpace h) :=
-  @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <| e.singleton_has_groupoid h (timesContDiffGroupoid ∞ I)
+  @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <| e.singleton_has_groupoid h (contDiffGroupoid ∞ I)
 
 theorem OpenEmbedding.singleton_smooth_manifold_with_corners {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _}
     [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _}
@@ -641,7 +639,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
   [SmoothManifoldWithCorners I M] (s : Opens M)
 
 instance : SmoothManifoldWithCorners I s :=
-  { s.HasGroupoid (timesContDiffGroupoid ∞ I) with }
+  { s.HasGroupoid (contDiffGroupoid ∞ I) with }
 
 end TopologicalSpace.Opens
 

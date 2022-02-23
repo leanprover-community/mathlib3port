@@ -528,23 +528,10 @@ theorem exists_affine_independent (s : Set P) :
 
 variable (k) {V P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ , ]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»
 /-- Two different points are affinely independent. -/
-theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
-    AffineIndependent k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") :=
-  by
-  rw
-    [affine_independent_iff_linear_independent_vsub k
-      («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") 0]
+theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) : AffineIndependent k ![p₁, p₂] := by
+  rw [affine_independent_iff_linear_independent_vsub k ![p₁, p₂] 0]
   let i₁ : { x // x ≠ (0 : Finₓ 2) } :=
     ⟨1, by
       norm_num⟩
@@ -555,12 +542,7 @@ theorem affine_independent_of_ne {p₁ p₂ : P} (h : p₁ ≠ p₂) :
     · simpa using hi
       
   have : Unique { x // x ≠ (0 : Finₓ 2) } := ⟨⟨i₁⟩, he'⟩
-  have hz :
-    ((«expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") ↑default -ᵥ
-        («expr![ , ]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ , ]»") 0 :
-        V) ≠
-      0 :=
-    by
+  have hz : (![p₁, p₂] ↑default -ᵥ ![p₁, p₂] 0 : V) ≠ 0 := by
     rw [he' default]
     simpa using h.symm
   exact linear_independent_unique _ hz

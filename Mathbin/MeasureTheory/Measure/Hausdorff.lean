@@ -575,10 +575,9 @@ theorem hausdorff_measure_le_liminf_sum {β : Type _} {ι : β → Type _} [hι 
     μH[d] s ≤ liminfₓ l fun n => ∑ i, diam (t n i) ^ d :=
   mk_metric_le_liminf_sum s r hr t ht hst _
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 /-- If `d₁ < d₂`, then for any set `s` we have either `μH[d₂] s = 0`, or `μH[d₁] s = ∞`. -/
 theorem hausdorff_measure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Set X) : μH[d₂] s = 0 ∨ μH[d₁] s = ∞ := by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' H
   suffices ∀ c : ℝ≥0 , c ≠ 0 → μH[d₂] s ≤ c * μH[d₁] s by
     rcases Ennreal.exists_nnreal_pos_mul_lt H.2 H.1 with ⟨c, hc0, hc⟩
     exact hc.not_le (this c (pos_iff_ne_zero.1 hc0))

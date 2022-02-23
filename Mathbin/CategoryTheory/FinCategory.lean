@@ -28,7 +28,7 @@ instance discreteFintype {α : Type _} [Fintype α] : Fintype (Discrete α) := b
   infer_instance
 
 instance discreteHomFintype {α : Type _} [DecidableEq α] (X Y : Discrete α) : Fintype (X ⟶ Y) := by
-  apply Ulift.fintype
+  apply ULift.fintype
 
 /-- A category with a `fintype` of objects, and a `fintype` for each morphism space. -/
 class FinCategory (J : Type v) [SmallCategory J] where

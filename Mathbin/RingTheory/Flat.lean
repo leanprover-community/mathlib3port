@@ -48,9 +48,9 @@ universe u v
 
 namespace Module
 
-open function (Injective)
+open Function (Injective)
 
-open linear_map (lsmul)
+open LinearMap (lsmul)
 
 open_locale TensorProduct
 

@@ -41,7 +41,7 @@ open Set hiding restrict restrict_apply
 
 open Filter Ennreal
 
-open function (support)
+open Function (support)
 
 open_locale Classical TopologicalSpace BigOperators Nnreal Ennreal MeasureTheory
 
@@ -200,7 +200,6 @@ theorem support_indicator [Zero β] {s : Set α} (hs : MeasurableSet s) (f : α 
     Function.Support (f.piecewise s hs (SimpleFunc.const α 0)) = s ∩ Function.Support f :=
   Set.support_indicator
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Nonempty) (hs_ne_univ : s ≠ univ)
     (x y : β) : (piecewise s hs (const α x) (const α y)).range = {x, y} := by
   ext1 z
@@ -226,7 +225,7 @@ theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Non
           simpa [has] using h.symm⟩
       
     · obtain ⟨a, has⟩ : ∃ a, a ∉ s := by
-        "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+        by_contra' h
         refine' hs_ne_univ _
         ext1 a
         simp [h a]

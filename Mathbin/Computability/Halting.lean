@@ -73,7 +73,7 @@ variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 open Computable Part
 
-open nat.partrec (code)
+open Nat.Partrec (code)
 
 open Nat.Partrec.Code
 
@@ -170,7 +170,7 @@ variable {α : Type _} {σ : Type _}
 
 variable [Primcodable α] [Primcodable σ]
 
-open nat.partrec (code)
+open Nat.Partrec (code)
 
 open Nat.Partrec.Code Computable
 
@@ -284,7 +284,7 @@ namespace Nat.Partrec'
 
 open Vector Partrec Computable
 
-open nat (Partrec')
+open Nat (Partrec')
 
 open Nat.Partrec'
 

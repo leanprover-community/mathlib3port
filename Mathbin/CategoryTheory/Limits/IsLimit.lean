@@ -345,14 +345,14 @@ end Equivalenceₓ
 
 /-- The universal property of a limit cone: a map `W ⟶ X` is the same as
   a cone on `F` with vertex `W`. -/
-def homIso (h : IsLimit t) (W : C) : Ulift.{u₁} (W ⟶ t.x : Type v₃) ≅ (const J).obj W ⟶ F where
+def homIso (h : IsLimit t) (W : C) : ULift.{u₁} (W ⟶ t.x : Type v₃) ≅ (const J).obj W ⟶ F where
   Hom := fun f => (t.extend f.down).π
   inv := fun π => ⟨h.lift { x := W, π }⟩
   hom_inv_id' := by
     ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
 
 @[simp]
-theorem hom_iso_hom (h : IsLimit t) {W : C} (f : Ulift.{u₁} (W ⟶ t.x)) :
+theorem hom_iso_hom (h : IsLimit t) {W : C} (f : ULift.{u₁} (W ⟶ t.x)) :
     (IsLimit.homIso h W).Hom f = (t.extend f.down).π :=
   rfl
 
@@ -367,7 +367,7 @@ def natIso (h : IsLimit t) : yoneda.obj t.x ⋙ ulift_functor.{u₁} ≅ F.cones
 See also `hom_iso`.
 -/
 def homIso' (h : IsLimit t) (W : C) :
-    Ulift.{u₁} (W ⟶ t.x : Type v₃) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+    ULift.{u₁} (W ⟶ t.x : Type v₃) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
   h.homIso W ≪≫
     { Hom := fun π =>
         ⟨fun j => π.app j, fun j j' f => by
@@ -431,11 +431,11 @@ theorem cone_of_hom_of_cone (s : Cone F) : coneOfHom h (homOfCone h s) = s := by
   congr
   dsimp
   convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) (op s_X)) s_π
-  exact Ulift.up_down _
+  exact ULift.up_down _
 
 @[simp]
 theorem hom_of_cone_of_hom {Y : C} (f : Y ⟶ X) : homOfCone h (coneOfHom h f) = f :=
-  congr_argₓ Ulift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) (op Y)) ⟨f⟩ : _)
+  congr_argₓ ULift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) (op Y)) ⟨f⟩ : _)
 
 /-- If `F.cones` is represented by `X`, the cone corresponding to the identity morphism on `X`
 will be a limit cone. -/
@@ -801,14 +801,14 @@ end Equivalenceₓ
 
 /-- The universal property of a colimit cocone: a map `X ⟶ W` is the same as
   a cocone on `F` with vertex `W`. -/
-def homIso (h : IsColimit t) (W : C) : Ulift.{u₁} (t.x ⟶ W : Type v₃) ≅ F ⟶ (const J).obj W where
+def homIso (h : IsColimit t) (W : C) : ULift.{u₁} (t.x ⟶ W : Type v₃) ≅ F ⟶ (const J).obj W where
   Hom := fun f => (t.extend f.down).ι
   inv := fun ι => ⟨h.desc { x := W, ι }⟩
   hom_inv_id' := by
     ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
 
 @[simp]
-theorem hom_iso_hom (h : IsColimit t) {W : C} (f : Ulift (t.x ⟶ W)) :
+theorem hom_iso_hom (h : IsColimit t) {W : C} (f : ULift (t.x ⟶ W)) :
     (IsColimit.homIso h W).Hom f = (t.extend f.down).ι :=
   rfl
 
@@ -823,7 +823,7 @@ def natIso (h : IsColimit t) : coyoneda.obj (op t.x) ⋙ ulift_functor.{u₁} �
 See also `hom_iso`.
 -/
 def homIso' (h : IsColimit t) (W : C) :
-    Ulift.{u₁} (t.x ⟶ W : Type v₃) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+    ULift.{u₁} (t.x ⟶ W : Type v₃) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
   h.homIso W ≪≫
     { Hom := fun ι =>
         ⟨fun j => ι.app j, fun j j' f => by
@@ -887,11 +887,11 @@ theorem cocone_of_hom_of_cocone (s : Cocone F) : coconeOfHom h (homOfCocone h s)
   congr
   dsimp
   convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) s_X) s_ι
-  exact Ulift.up_down _
+  exact ULift.up_down _
 
 @[simp]
 theorem hom_of_cocone_of_hom {Y : C} (f : X ⟶ Y) : homOfCocone h (coconeOfHom h f) = f :=
-  congr_argₓ Ulift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) Y) ⟨f⟩ : _)
+  congr_argₓ ULift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) Y) ⟨f⟩ : _)
 
 /-- If `F.cocones` is corepresented by `X`, the cocone corresponding to the identity morphism on `X`
 will be a colimit cocone. -/

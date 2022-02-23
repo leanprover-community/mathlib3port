@@ -377,8 +377,8 @@ def Prod.shrink {α β} [SizeOf α] [SizeOf β] (shr_a : ShrinkFn α) (shr_b : S
 instance Prod.sampleable : SampleableBifunctor.{u, v} Prod where
   wf := _
   sample := fun α β sama samb => do
-    let ⟨x⟩ ← (Uliftable.up <| sama : Gen (Ulift.{max u v} α))
-    let ⟨y⟩ ← (Uliftable.up <| samb : Gen (Ulift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sama : Gen (ULift.{max u v} α))
+    let ⟨y⟩ ← (Uliftable.up <| samb : Gen (ULift.{max u v} β))
     pure (x, y)
   shrink := @Prod.shrink
   pRepr := @Prod.hasRepr
@@ -708,11 +708,11 @@ instance Large.sampleableFunctor : SampleableFunctor Large where
   shrink := fun α _ => id
   pRepr := fun α => id
 
-instance Ulift.sampleableFunctor : SampleableFunctor Ulift.{u, v} where
+instance Ulift.sampleableFunctor : SampleableFunctor ULift.{u, v} where
   wf := fun α h => ⟨fun ⟨x⟩ => @sizeof α h x⟩
-  sample := fun α samp => Uliftable.upMap Ulift.up <| samp
-  shrink := fun α _ shr ⟨x⟩ => (shr x).map (Subtype.map Ulift.up fun a h => h)
-  pRepr := fun α h => ⟨@reprₓ α h ∘ Ulift.down⟩
+  sample := fun α samp => Uliftable.upMap ULift.up <| samp
+  shrink := fun α _ shr ⟨x⟩ => (shr x).map (Subtype.map ULift.up fun a h => h)
+  pRepr := fun α h => ⟨@reprₓ α h ∘ ULift.down⟩
 
 /-!
 ## Subtype instances
@@ -843,7 +843,7 @@ def printSamples {t : Type u} [HasRepr t] (g : Gen t) : Io Unit := do
   let xs ←
     Io.runRand <|
         Uliftable.down <| do
-          let xs ← (List.range 10).mmap <| g.run ∘ Ulift.up
+          let xs ← (List.range 10).mmap <| g.run ∘ ULift.up
           pure ⟨xs reprₓ⟩
   xs Io.putStrLn
 

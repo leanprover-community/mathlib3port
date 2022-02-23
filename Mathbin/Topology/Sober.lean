@@ -308,7 +308,7 @@ instance (priority := 100) T2Space.quasi_sober [T2Space α] : QuasiSober α := b
   constructor
   rintro S h -
   obtain ⟨x, rfl⟩ := (is_irreducible_iff_singleton S).mp h
-  exact ⟨x, (T1Space.t1 x).closure_eq⟩
+  exact ⟨x, closure_singleton⟩
 
 end Sober
 

@@ -77,10 +77,10 @@ instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α 
 attribute [instance] nonempty_of_inhabited
 
 /-- An inhabited type is either nontrivial, or has a unique element. -/
-noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : Psum (Nontrivial α) (Unique α) :=
-  if h : Nontrivial α then Psum.inl h
+noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : PSum (Nontrivial α) (Unique α) :=
+  if h : Nontrivial α then PSum.inl h
   else
-    Psum.inr
+    PSum.inr
       { default := default,
         uniq := fun x : α => by
           change x = default

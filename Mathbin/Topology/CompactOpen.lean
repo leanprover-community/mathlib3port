@@ -294,7 +294,7 @@ theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(�
   have hf : (Function.uncurry fun x y => f x y) = ev β γ ∘ Prod.map f id := by
     ext
     rfl
-  hf ▸ Continuous.comp continuous_ev <| Continuous.prod_map f.2 id.2
+  hf ▸ Continuous.comp continuous_ev <| Continuous.prod_map f.2 continuous_id
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two
@@ -307,17 +307,17 @@ theorem continuous_uncurry [LocallyCompactSpace α] [LocallyCompactSpace β] :
     Continuous (uncurry : C(α, C(β, γ)) → C(α × β, γ)) := by
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _)]
-  apply Continuous.comp continuous_ev (Continuous.prod_map continuous_ev id.2) <;> infer_instance
+  apply Continuous.comp continuous_ev (Continuous.prod_map continuous_ev continuous_id) <;> infer_instance
 
 /-- The family of constant maps: `β → C(α, β)` as a continuous map. -/
 def const' : C(β, C(α, β)) :=
   curry ⟨Prod.fst, continuous_fst⟩
 
 @[simp]
-theorem coe_const' : (const' : β → C(α, β)) = const :=
+theorem coe_const' : (const' : β → C(α, β)) = const α :=
   rfl
 
-theorem continuous_const' : Continuous (const : β → C(α, β)) :=
+theorem continuous_const' : Continuous (const α : β → C(α, β)) :=
   const'.Continuous
 
 end Curry
@@ -348,7 +348,7 @@ def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β) where
   left_inv := fun a => rfl
   right_inv := fun f => by
     ext
-    rw [Unique.eq_default x]
+    rw [Unique.eq_default a]
     rfl
   continuous_to_fun := Continuous.comp (continuous_comp _) continuous_coev
   continuous_inv_fun := Continuous.comp continuous_ev (Continuous.prod_mk continuous_id continuous_const)

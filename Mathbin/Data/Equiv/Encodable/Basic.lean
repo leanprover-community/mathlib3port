@@ -357,7 +357,7 @@ instance pnat : Encodable ℕ+ :=
   ofEquiv _ Equivₓ.pnatEquivNat
 
 /-- The lift of an encodable type is encodable. -/
-instance ulift [Encodable α] : Encodable (Ulift α) :=
+instance ulift [Encodable α] : Encodable (ULift α) :=
   ofEquiv _ Equivₓ.ulift
 
 /-- The lift of an encodable type is encodable. -/

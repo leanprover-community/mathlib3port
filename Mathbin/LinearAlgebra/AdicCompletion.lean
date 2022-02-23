@@ -252,11 +252,8 @@ instance : IsHausdorff I (adicCompletion I M) :=
         (fun r hr x _ =>
           ((eval I M n).map_smul r x).symm ▸
             Quotientₓ.induction_on' (eval I M n x) fun x => Smodeq.zero.2 <| smul_mem_smul hr mem_top)
-        rfl
-        (fun _ _ ih1 ih2 => by
-          rw [LinearMap.map_add, ih1, ih2, LinearMap.map_zero, add_zeroₓ])
-        fun c _ ih => by
-        rw [LinearMap.map_smul, ih, LinearMap.map_zero, smul_zero]⟩
+        fun _ _ ih1 ih2 => by
+        rw [LinearMap.map_add, ih1, ih2, LinearMap.map_zero, add_zeroₓ]⟩
 
 end adicCompletion
 

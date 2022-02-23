@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Analysis.Calculus.TimesContDiff
+import Mathbin.Analysis.Calculus.ContDiff
 
 /-!
 # Smoothness of `real.sqrt`
@@ -39,14 +39,14 @@ noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ where
   continuous_to_fun := (continuous_pow 2).ContinuousOn
   continuous_inv_fun := continuous_on_id.sqrt
 
-theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
-    HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x ∧ ∀ n, TimesContDiffAt ℝ n sqrt x := by
+theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x ∧ ∀ n, ContDiffAt ℝ n sqrt x :=
+  by
   cases' hx.lt_or_lt with hx hx
   · rw [sqrt_eq_zero_of_nonpos hx.le, mul_zero, div_zero]
     have : sqrt =ᶠ[𝓝 x] fun _ => 0 := (gt_mem_nhds hx).mono fun x hx => sqrt_eq_zero_of_nonpos hx.le
     exact
       ⟨(has_strict_deriv_at_const x (0 : ℝ)).congr_of_eventually_eq this.symm, fun n =>
-        times_cont_diff_at_const.congr_of_eventually_eq this⟩
+        cont_diff_at_const.congr_of_eventually_eq this⟩
     
   · have : ↑2 * sqrt x ^ (2 - 1) ≠ 0 := by
       simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
@@ -54,15 +54,14 @@ theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
     · simpa using sq_local_homeomorph.has_strict_deriv_at_symm hx this (has_strict_deriv_at_pow 2 _)
       
     · exact fun n =>
-        sq_local_homeomorph.times_cont_diff_at_symm_deriv this hx (has_deriv_at_pow 2 (sqrt x))
-          (times_cont_diff_at_id.pow 2)
+        sq_local_homeomorph.cont_diff_at_symm_deriv this hx (has_deriv_at_pow 2 (sqrt x)) (cont_diff_at_id.pow 2)
       
     
 
 theorem has_strict_deriv_at_sqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x :=
   (deriv_sqrt_aux hx).1
 
-theorem times_cont_diff_at_sqrt {x : ℝ} {n : WithTop ℕ} (hx : x ≠ 0) : TimesContDiffAt ℝ n sqrt x :=
+theorem cont_diff_at_sqrt {x : ℝ} {n : WithTop ℕ} (hx : x ≠ 0) : ContDiffAt ℝ n sqrt x :=
   (deriv_sqrt_aux hx).2 n
 
 theorem has_deriv_at_sqrt {x : ℝ} (hx : x ≠ 0) : HasDerivAt sqrt (1 / (2 * sqrt x)) x :=
@@ -138,19 +137,18 @@ theorem fderiv_sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     fderiv ℝ (fun x => sqrt (f x)) x = (1 / (2 * sqrt (f x))) • fderiv ℝ f x :=
   (hf.HasFderivAt.sqrt hx).fderiv
 
-theorem TimesContDiffAt.sqrt (hf : TimesContDiffAt ℝ n f x) (hx : f x ≠ 0) :
-    TimesContDiffAt ℝ n (fun y => sqrt (f y)) x :=
-  (times_cont_diff_at_sqrt hx).comp x hf
+theorem ContDiffAt.sqrt (hf : ContDiffAt ℝ n f x) (hx : f x ≠ 0) : ContDiffAt ℝ n (fun y => sqrt (f y)) x :=
+  (cont_diff_at_sqrt hx).comp x hf
 
-theorem TimesContDiffWithinAt.sqrt (hf : TimesContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
-    TimesContDiffWithinAt ℝ n (fun y => sqrt (f y)) s x :=
-  (times_cont_diff_at_sqrt hx).comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.sqrt (hf : ContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
+    ContDiffWithinAt ℝ n (fun y => sqrt (f y)) s x :=
+  (cont_diff_at_sqrt hx).comp_cont_diff_within_at x hf
 
-theorem TimesContDiffOn.sqrt (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
-    TimesContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
+theorem ContDiffOn.sqrt (hf : ContDiffOn ℝ n f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+    ContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 
-theorem TimesContDiff.sqrt (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => sqrt (f y) :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.sqrt (h x)
+theorem ContDiff.sqrt (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun y => sqrt (f y) :=
+  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.sqrt (h x)
 
 end fderiv
 

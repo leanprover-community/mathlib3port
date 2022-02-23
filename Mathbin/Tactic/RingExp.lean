@@ -1539,9 +1539,9 @@ open Conv Interactive
 
 open Tactic
 
-open tactic.interactive (ring_exp_eq)
+open Tactic.Interactive (ring_exp_eq)
 
-open tactic.ring_exp (normalize)
+open Tactic.RingExp (normalize)
 
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ

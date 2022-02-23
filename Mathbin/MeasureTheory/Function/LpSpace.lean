@@ -1642,11 +1642,10 @@ theorem snorm_ess_sup_indicator_const_le (s : Set α) (c : G) : snormEssSup (s.i
   · exact (snorm_ess_sup_indicator_le s fun x => c).trans (snorm_ess_sup_const c hμ0).le
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem snorm_ess_sup_indicator_const_eq (s : Set α) (c : G) (hμs : μ s ≠ 0) :
     snormEssSup (s.indicator fun x : α => c) μ = ∥c∥₊ := by
   refine' le_antisymmₓ (snorm_ess_sup_indicator_const_le s c) _
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   have h' := ae_iff.mp (ae_lt_of_ess_sup_lt h)
   push_neg  at h'
   refine' hμs (measure_mono_null (fun x hx_mem => _) h')

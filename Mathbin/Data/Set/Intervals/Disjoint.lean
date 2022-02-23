@@ -20,7 +20,7 @@ variable {ι : Sort u} {α : Type v} {β : Type w}
 
 open Set
 
-open order_dual (toDual)
+open OrderDual (toDual)
 
 namespace Set
 

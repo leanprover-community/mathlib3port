@@ -564,7 +564,7 @@ variable [Applicativeₓ F] [Applicativeₓ G]
 
 open Applicativeₓ Functor
 
-open list (cons)
+open List (cons)
 
 open Nat
 

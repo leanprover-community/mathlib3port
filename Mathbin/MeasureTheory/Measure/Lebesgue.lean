@@ -29,7 +29,7 @@ noncomputable section
 
 open Classical Set Filter MeasureTheory MeasureTheory.Measure
 
-open ennreal (ofReal)
+open Ennreal (ofReal)
 
 open_locale BigOperators Ennreal Nnreal TopologicalSpace
 

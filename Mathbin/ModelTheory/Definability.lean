@@ -41,7 +41,7 @@ variable (L) {α : Type} [Fintype α]
 /-- A subset of a finite Cartesian product of a structure is definable when membership in
   the set is given by a first-order formula. -/
 structure IsDefinable (s : Set (α → M)) : Prop where
-  exists_formula : ∃ φ : L.Formula α, s = SetOf (RealizeFormula M φ)
+  exists_formula : ∃ φ : L.Formula α, s = SetOf φ.realize
 
 variable {L}
 
@@ -73,15 +73,13 @@ theorem IsDefinable.union {f g : Set (α → M)} (hf : L.IsDefinable f) (hg : L.
     rcases hg.exists_formula with ⟨θ, hθ⟩
     refine' ⟨φ⊔θ, _⟩
     ext
-    simp only [hφ, hθ, Set.sup_eq_union, realize_not, realize_bounded_formula, bounded_formula.has_sup_sup,
-      Set.mem_union_eq, Set.mem_set_of_eq]
-    tauto⟩
+    rw [hφ, hθ, Set.mem_set_of_eq, formula.realize_sup, Set.mem_union_eq, Set.mem_set_of_eq, Set.mem_set_of_eq]⟩
 
 @[simp]
 theorem IsDefinable.compl {s : Set (α → M)} (hf : L.IsDefinable s) : L.IsDefinable (sᶜ) :=
   ⟨by
     rcases hf.exists_formula with ⟨φ, hφ⟩
-    refine' ⟨bd_not φ, _⟩
+    refine' ⟨φ.not, _⟩
     rw [hφ]
     rfl⟩
 

@@ -74,7 +74,7 @@ theorem star_injective [HasInvolutiveStar R] : Function.Injective (star : R → 
 
 /-- Typeclass for a trivial star operation. This is mostly meant for `ℝ`.
 -/
-class HasTrivialStar (R : Type u) [HasStar R] where
+class HasTrivialStar (R : Type u) [HasStar R] : Prop where
   star_trivial : ∀ r : R, star r = r
 
 export HasTrivialStar (star_trivial)
@@ -335,7 +335,7 @@ the statement only requires `[has_star R] [has_star A] [has_scalar R A]`.
 If used as `[comm_ring R] [star_ring R] [semiring A] [star_ring A] [algebra R A]`, this represents a
 star algebra.
 -/
-class StarModule (R : Type u) (A : Type v) [HasStar R] [HasStar A] [HasScalar R A] where
+class StarModule (R : Type u) (A : Type v) [HasStar R] [HasStar A] [HasScalar R A] : Prop where
   star_smul : ∀ r : R a : A, star (r • a) = star r • star a
 
 export StarModule (star_smul)
@@ -343,7 +343,7 @@ export StarModule (star_smul)
 attribute [simp] star_smul
 
 /-- A commutative star monoid is a star module over itself via `monoid.to_mul_action`. -/
-instance StarMonoid.toStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule R R :=
+instance StarMonoid.to_star_module [CommMonoidₓ R] [StarMonoid R] : StarModule R R :=
   ⟨star_mul'⟩
 
 namespace RingHomInvPair
@@ -439,6 +439,6 @@ end MulOpposite
 
 /-- A commutative star monoid is a star module over its opposite via
 `monoid.to_opposite_mul_action`. -/
-instance StarMonoid.toOppositeStarModule [CommMonoidₓ R] [StarMonoid R] : StarModule Rᵐᵒᵖ R :=
+instance StarMonoid.to_opposite_star_module [CommMonoidₓ R] [StarMonoid R] : StarModule Rᵐᵒᵖ R :=
   ⟨fun r s => star_mul' s r.unop⟩
 

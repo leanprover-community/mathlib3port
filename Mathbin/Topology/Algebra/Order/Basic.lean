@@ -80,7 +80,7 @@ open Classical Set Filter TopologicalSpace
 
 open Function
 
-open order_dual (toDual ofDual)
+open OrderDual (toDual ofDual)
 
 open_locale TopologicalSpace Classical Filter
 

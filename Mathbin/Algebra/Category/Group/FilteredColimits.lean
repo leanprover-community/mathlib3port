@@ -38,7 +38,7 @@ namespace Groupₓₓ.FilteredColimits
 
 section
 
-open Mon.filtered_colimits (colimit_one_eq colimit_mul_mk_eq)
+open Mon.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
 
 -- We use parameters here, mainly so we can have the abbreviations `G` and `G.mk` below, without
 -- passing around `F` all the time.

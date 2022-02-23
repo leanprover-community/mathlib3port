@@ -27,7 +27,7 @@ noncomputable section
 
 open Classical Set Filter
 
-open ennreal (ofReal)
+open Ennreal (ofReal)
 
 open_locale BigOperators Ennreal Nnreal TopologicalSpace
 

@@ -47,7 +47,7 @@ namespace Mvqpf
 
 open Typevec Mvpfunctor
 
-open mvfunctor (Liftp Liftr)
+open Mvfunctor (Liftp Liftr)
 
 variable {n : ℕ} {F : Typevec.{u} (n + 1) → Type u} [Mvfunctor F] [q : Mvqpf F]
 

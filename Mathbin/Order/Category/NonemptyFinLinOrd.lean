@@ -35,8 +35,8 @@ instance PUnit.nonemptyFinLinOrd : NonemptyFinLinOrd PUnit :=
 instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n + 1)) :=
   { Finₓ.fintype _, Finₓ.linearOrder with }
 
-instance Ulift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (Ulift.{v} α) :=
-  { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), Ulift.fintype _ with Nonempty := ⟨Ulift.up ⊥⟩ }
+instance ULift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (ULift.{v} α) :=
+  { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), ULift.fintype _ with Nonempty := ⟨ULift.up ⊥⟩ }
 
 instance (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (OrderDual α) :=
   { OrderDual.fintype α with }

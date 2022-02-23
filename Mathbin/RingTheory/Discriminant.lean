@@ -161,7 +161,7 @@ theorem discr_power_basis_eq_prod (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) [IsSep
   rw [← prod_pow]
 
 /-- A variation of `of_power_basis_eq_prod`. -/
-theorem of_power_basis_eq_prod' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
+theorem discr_power_basis_eq_prod' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
     algebraMap K E (discr K pb.Basis) =
       ∏ i : Finₓ pb.dim,
         ∏ j in Finset.univ.filter fun j => i < j, -((e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen)) :=
@@ -177,13 +177,13 @@ theorem of_power_basis_eq_prod' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →�
 local notation "n" => finrank K L
 
 /-- A variation of `of_power_basis_eq_prod`. -/
-theorem of_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
+theorem discr_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →ₐ[K] E)) :
     algebraMap K E (discr K pb.Basis) =
       -1 ^ (n * (n - 1) / 2) *
         ∏ i : Finₓ pb.dim,
           ∏ j in Finset.univ.filter fun j => i < j, (e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen) :=
   by
-  rw [of_power_basis_eq_prod' _ _ _ e]
+  rw [discr_power_basis_eq_prod' _ _ _ e]
   simp_rw [fun i j => neg_eq_neg_one_mul ((e j pb.gen - e i pb.gen) * (e i pb.gen - e j pb.gen)), prod_mul_distrib]
   congr
   simp only [prod_pow_eq_pow_sum, prod_const]
@@ -211,7 +211,7 @@ theorem of_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L →
   ring
 
 /-- Formula for the discriminant of a power basis using the norm of the field extension. -/
-theorem of_power_basis_eq_norm [IsSeparable K L] :
+theorem discr_power_basis_eq_norm [IsSeparable K L] :
     discr K pb.Basis = -1 ^ (n * (n - 1) / 2) * norm K (aeval pb.gen (minpoly K pb.gen).derivative) := by
   let E := AlgebraicClosure L
   let this' := fun a b : E => Classical.propDecidable (Eq a b)
@@ -227,7 +227,7 @@ theorem of_power_basis_eq_norm [IsSeparable K L] :
     repeat'
       simp [minpoly.ne_zero (IsSeparable.is_integral K pb.gen)]
   apply (algebraMap K E).Injective
-  rw [RingHom.map_mul, RingHom.map_pow, RingHom.map_neg, RingHom.map_one, of_power_basis_eq_prod'' _ _ _ e]
+  rw [RingHom.map_mul, RingHom.map_pow, RingHom.map_neg, RingHom.map_one, discr_power_basis_eq_prod'' _ _ _ e]
   congr
   rw [norm_eq_prod_embeddings, Finₓ.prod_filter_lt_mul_neg_eq_prod_off_diag]
   conv_rhs =>

@@ -114,6 +114,31 @@ theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUni
 theorem resolvent_eq {a : A} {r : R} (h : r ∈ ResolventSet R a) : resolvent a r = ↑h.Unit⁻¹ :=
   Ring.inverse_unit h.Unit
 
+theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ ResolventSet R (a : A)) :
+    (↑r⁻¹ : R) ∈ ResolventSet R (↑a⁻¹ : A) := by
+  rw [mem_resolvent_set_iff, Algebra.algebra_map_eq_smul_one, ← Units.smul_def] at h⊢
+  rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_invₓ, IsUnit.sub_iff]
+  have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • 1 - a := by
+    rw [mul_sub, mul_smul_comm, a.mul_inv, mul_oneₓ]
+  have h₂ : (r • (↑a⁻¹ : A) - 1) * a = r • 1 - a := by
+    rw [sub_mul, smul_mul_assoc, a.inv_mul, one_mulₓ]
+  have hcomm : Commute (a : A) (r • (↑a⁻¹ : A) - 1) := by
+    rwa [← h₂] at h₁
+  exact (hcomm.is_unit_mul_iff.mp (h₁.symm ▸ h)).2
+
+theorem inv_mem_iff {r : Rˣ} {a : Aˣ} : (r : R) ∈ σ (a : A) ↔ (↑r⁻¹ : R) ∈ σ (↑a⁻¹ : A) := by
+  simp only [mem_iff, not_iff_not, ← mem_resolvent_set_iff]
+  exact
+    ⟨fun h => inv_mem_resolvent_set h, fun h => by
+      simpa using inv_mem_resolvent_set h⟩
+
+theorem zero_mem_resolvent_set_of_unit (a : Aˣ) : 0 ∈ ResolventSet R (a : A) := by
+  rw [mem_resolvent_set_iff, IsUnit.sub_iff]
+  simp
+
+theorem ne_zero_of_mem_of_unit {a : Aˣ} {r : R} (hr : r ∈ σ (a : A)) : r ≠ 0 := fun hn =>
+  (hn ▸ hr) (zero_mem_resolvent_set_of_unit a)
+
 theorem add_mem_iff {a : A} {r s : R} : r ∈ σ a ↔ r + s ∈ σ (↑ₐ s + a) := by
   apply not_iff_not.mpr
   simp only [mem_resolvent_set_iff]
@@ -262,6 +287,19 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
   · rintro _ _ k ⟨k_mem, k_neq⟩
     change k with ↑(Units.mk0 k k_neq) at k_mem
     exact ⟨unit_mem_mul_iff_mem_swap_mul.mp k_mem, k_neq⟩
+    
+
+protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
+  refine' Set.eq_of_subset_of_subset (fun k hk => _) fun k hk => _
+  · rw [Set.mem_inv] at hk
+    have : k ≠ 0 := by
+      simpa only [inv_invₓ] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
+    lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr this
+    rw [← Units.coe_inv' k] at hk
+    exact inv_mem_iff.mp hk
+    
+  · lift k to 𝕜ˣ using is_unit_iff_ne_zero.mpr (ne_zero_of_mem_of_unit hk)
+    simpa only [Units.coe_inv'] using inv_mem_iff.mp hk
     
 
 open Polynomial

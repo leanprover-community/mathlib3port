@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Multiset.EraseDup
+import Mathbin.Data.Multiset.Dedup
 
 /-!
 # Preparations for defining operations on `finset`.
@@ -67,7 +67,7 @@ theorem length_ndinsert_of_mem {a : α} {s : Multiset α} (h : a ∈ s) : card (
 theorem length_ndinsert_of_not_mem {a : α} {s : Multiset α} (h : a ∉ s) : card (ndinsert a s) = card s + 1 := by
   simp [h]
 
-theorem erase_dup_cons {a : α} {s : Multiset α} : eraseDup (a ::ₘ s) = ndinsert a (eraseDup s) := by
+theorem dedup_cons {a : α} {s : Multiset α} : dedup (a ::ₘ s) = ndinsert a (dedup s) := by
   by_cases' a ∈ s <;> simp [h]
 
 theorem nodup_ndinsert (a : α) {s : Multiset α} : Nodup s → Nodup (ndinsert a s) :=
@@ -171,8 +171,8 @@ theorem nodup_ndunion (s : Multiset α) {t : Multiset α} : Nodup t → Nodup (n
 theorem ndunion_eq_union {s t : Multiset α} (d : Nodup s) : ndunion s t = s ∪ t :=
   le_antisymmₓ (ndunion_le_union _ _) <| union_le (le_ndunion_left _ d) (le_ndunion_right _ _)
 
-theorem erase_dup_add (s t : Multiset α) : eraseDup (s + t) = ndunion s (eraseDup t) :=
-  (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => congr_argₓ coe <| erase_dup_append _ _
+theorem dedup_add (s t : Multiset α) : dedup (s + t) = ndunion s (dedup t) :=
+  (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => congr_argₓ coe <| dedup_append _ _
 
 /-! ### finset inter -/
 

@@ -26,13 +26,13 @@ here are obtained by composing the local homeomorphisms `stereographic` with arb
 from `(ℝ ∙ v)ᗮ` to Euclidean space.
 
 We prove two lemmas about smooth maps:
-* `times_cont_mdiff_coe_sphere` states that the coercion map from the sphere into `E` is smooth;
+* `cont_mdiff_coe_sphere` states that the coercion map from the sphere into `E` is smooth;
   this is a useful tool for constructing smooth maps *from* the sphere.
-* `times_cont_mdiff.cod_restrict_sphere` states that a map from a manifold into the sphere is
+* `cont_mdiff.cod_restrict_sphere` states that a map from a manifold into the sphere is
   smooth if its lift to a map to `E` is smooth; this is a useful tool for constructing smooth maps
   *to* the sphere.
 
-As an application we prove `times_cont_mdiff_neg_sphere`, that the antipodal map is smooth.
+As an application we prove `cont_mdiff_neg_sphere`, that the antipodal map is smooth.
 
 Finally, we equip the `circle` (defined in `analysis.complex.circle` to be the sphere in `ℂ`
 centred at `0` of radius `1`) with the following structure:
@@ -86,11 +86,11 @@ theorem stereo_to_fun_apply [CompleteSpace E] (x : E) :
     stereoToFun v x = (2 / ((1 : ℝ) - innerSL v x)) • orthogonalProjection (ℝ∙v)ᗮ x :=
   rfl
 
-theorem times_cont_diff_on_stereo_to_fun [CompleteSpace E] :
-    TimesContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
-  refine' TimesContDiffOn.smul _ (orthogonalProjection (ℝ∙v)ᗮ).TimesContDiff.TimesContDiffOn
-  refine' times_cont_diff_const.times_cont_diff_on.div _ _
-  · exact (times_cont_diff_const.sub (innerSL v).TimesContDiff).TimesContDiffOn
+theorem cont_diff_on_stereo_to_fun [CompleteSpace E] :
+    ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } := by
+  refine' ContDiffOn.smul _ (orthogonalProjection (ℝ∙v)ᗮ).ContDiff.ContDiffOn
+  refine' cont_diff_const.cont_diff_on.div _ _
+  · exact (cont_diff_const.sub (innerSL v).ContDiff).ContDiffOn
     
   · intro x h h'
     exact h (sub_eq_zero.mp h').symm
@@ -98,7 +98,7 @@ theorem times_cont_diff_on_stereo_to_fun [CompleteSpace E] :
 
 theorem continuous_on_stereo_to_fun [CompleteSpace E] :
     ContinuousOn (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
-  times_cont_diff_on_stereo_to_fun.ContinuousOn
+  cont_diff_on_stereo_to_fun.ContinuousOn
 
 variable (v)
 
@@ -132,15 +132,15 @@ theorem stereo_inv_fun_aux_mem (hv : ∥v∥ = 1) {w : E} (hw : w ∈ (ℝ∙v)�
     mul_powₓ, Real.norm_eq_abs, hv]
   ring
 
-theorem times_cont_diff_stereo_inv_fun_aux : TimesContDiff ℝ ⊤ (stereoInvFunAux v) := by
-  have h₀ : TimesContDiff ℝ ⊤ fun w : E => ∥w∥ ^ 2 := times_cont_diff_norm_sq
-  have h₁ : TimesContDiff ℝ ⊤ fun w : E => (∥w∥ ^ 2 + 4)⁻¹ := by
-    refine' (h₀.add times_cont_diff_const).inv _
+theorem cont_diff_stereo_inv_fun_aux : ContDiff ℝ ⊤ (stereoInvFunAux v) := by
+  have h₀ : ContDiff ℝ ⊤ fun w : E => ∥w∥ ^ 2 := cont_diff_norm_sq
+  have h₁ : ContDiff ℝ ⊤ fun w : E => (∥w∥ ^ 2 + 4)⁻¹ := by
+    refine' (h₀.add cont_diff_const).inv _
     intro x
     nlinarith
-  have h₂ : TimesContDiff ℝ ⊤ fun w => (4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v := by
-    refine' (times_cont_diff_const.smul times_cont_diff_id).add _
-    refine' (h₀.sub times_cont_diff_const).smul times_cont_diff_const
+  have h₂ : ContDiff ℝ ⊤ fun w => (4 : ℝ) • w + (∥w∥ ^ 2 - 4) • v := by
+    refine' (cont_diff_const.smul cont_diff_id).add _
+    refine' (h₀.sub cont_diff_const).smul cont_diff_const
   exact h₁.smul h₂
 
 /-- Stereographic projection, reverse direction.  This is a map from the orthogonal complement of a
@@ -173,7 +173,7 @@ theorem stereo_inv_fun_ne_north_pole (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) :
     
 
 theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun hv) :=
-  continuous_induced_rng (times_cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
+  continuous_induced_rng (cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
 
 variable [CompleteSpace E]
 
@@ -349,7 +349,7 @@ section SmoothManifold
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a smooth manifold,
 modelled on the Euclidean space of dimension `n`. -/
 instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (𝓡 n) (Sphere (0 : E) 1) :=
-  smooth_manifold_with_corners_of_times_cont_diff_on (𝓡 n) (Sphere (0 : E) 1)
+  smooth_manifold_with_corners_of_cont_diff_on (𝓡 n) (Sphere (0 : E) 1)
     (by
       rintro _ _ ⟨v, rfl⟩ ⟨v', rfl⟩
       let U : (ℝ∙(v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
@@ -361,28 +361,25 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] : SmoothManifoldWithCorners (�
       have hU'v' :
         stereographic' n v' = (stereographic (norm_eq_of_mem_sphere v')).trans U'.to_homeomorph.to_local_homeomorph :=
         rfl
-      have H₁ := U'.times_cont_diff.comp_times_cont_diff_on times_cont_diff_on_stereo_to_fun
-      have H₂ :=
-        (times_cont_diff_stereo_inv_fun_aux.comp (ℝ∙(v : E))ᗮ.subtypeL.TimesContDiff).comp U.symm.times_cont_diff
-      convert H₁.comp' (H₂.times_cont_diff_on : TimesContDiffOn ℝ ⊤ _ Set.Univ) using 1
+      have H₁ := U'.cont_diff.comp_cont_diff_on cont_diff_on_stereo_to_fun
+      have H₂ := (cont_diff_stereo_inv_fun_aux.comp (ℝ∙(v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
+      convert H₁.comp' (H₂.cont_diff_on : ContDiffOn ℝ ⊤ _ Set.Univ) using 1
       have h_set : ∀ p : sphere (0 : E) 1, p = v' ↔ ⟪(p : E), v'⟫_ℝ = 1 := by
         simp [Subtype.ext_iff, inner_eq_norm_mul_iff_of_norm_one]
       ext
       simp [h_set, hUv, hU'v', stereographic, real_inner_comm, ← Submodule.coe_norm])
 
 /-- The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
-theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : Sphere (0 : E) 1 → E) := by
-  rw [times_cont_mdiff_iff]
+theorem cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    ContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : Sphere (0 : E) 1 → E) := by
+  rw [cont_mdiff_iff]
   constructor
   · exact continuous_subtype_coe
     
   · intro v _
     let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
       LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
-    exact
-      ((times_cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.TimesContDiff).comp
-          U.symm.times_cont_diff).TimesContDiffOn
+    exact ((cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff).ContDiffOn
     
 
 variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
@@ -391,19 +388,19 @@ variable {H : Type _} [TopologicalSpace H] {I : ModelWithCorners ℝ F H}
 
 variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M]
 
-/-- If a `times_cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
-sphere, then it restricts to a `times_cont_mdiff` function from `M` to the sphere. -/
-theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : WithTop ℕ} {f : M → E}
-    (hf : TimesContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ Sphere (0 : E) 1) :
-    TimesContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → Sphere (0 : E) 1) := by
-  rw [times_cont_mdiff_iff_target]
+/-- If a `cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
+sphere, then it restricts to a `cont_mdiff` function from `M` to the sphere. -/
+theorem ContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : WithTop ℕ} {f : M → E}
+    (hf : ContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ Sphere (0 : E) 1) :
+    ContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → Sphere (0 : E) 1) := by
+  rw [cont_mdiff_iff_target]
   refine' ⟨continuous_induced_rng hf.continuous, _⟩
   intro v
   let U : (ℝ∙(-v : E))ᗮ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Finₓ n) :=
     LinearIsometryEquiv.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))
-  have h : TimesContDiffOn ℝ ⊤ U Set.Univ := U.times_cont_diff.times_cont_diff_on
-  have H₁ := (h.comp' times_cont_diff_on_stereo_to_fun).TimesContMdiffOn
-  have H₂ : TimesContMdiffOn _ _ _ _ Set.Univ := hf.times_cont_mdiff_on
+  have h : ContDiffOn ℝ ⊤ U Set.Univ := U.cont_diff.cont_diff_on
+  have H₁ := (h.comp' cont_diff_on_stereo_to_fun).ContMdiffOn
+  have H₂ : ContMdiffOn _ _ _ _ Set.Univ := hf.cont_mdiff_on
   convert (H₁.of_le le_top).comp' H₂ using 1
   ext x
   have hfxv : f x = -↑v ↔ ⟪f x, -↑v⟫_ℝ = 1 := by
@@ -415,12 +412,12 @@ theorem TimesContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 
   simp [not_iff_not, Subtype.ext_iff, hfxv, real_inner_comm]
 
 /-- The antipodal map is smooth. -/
-theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : Sphere (0 : E) 1 => -x := by
+theorem cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    ContMdiff (𝓡 n) (𝓡 n) ∞ fun x : Sphere (0 : E) 1 => -x := by
   -- this doesn't elaborate well in term mode
-  apply TimesContMdiff.cod_restrict_sphere
-  apply times_cont_diff_neg.times_cont_mdiff.comp _
-  exact times_cont_mdiff_coe_sphere
+  apply ContMdiff.cod_restrict_sphere
+  apply cont_diff_neg.cont_mdiff.comp _
+  exact cont_mdiff_coe_sphere
 
 end SmoothManifold
 
@@ -441,26 +438,24 @@ instance : SmoothManifoldWithCorners (𝓡 1) circle :=
 /-- The unit circle in `ℂ` is a Lie group. -/
 instance : LieGroup (𝓡 1) circle where
   smooth_mul := by
-    apply TimesContMdiff.cod_restrict_sphere
+    apply ContMdiff.cod_restrict_sphere
     let c : circle → ℂ := coe
-    have h₂ : TimesContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
-      rw [times_cont_mdiff_iff]
-      exact ⟨continuous_mul, fun x y => (times_cont_diff_mul.restrict_scalars ℝ).TimesContDiffOn⟩
-    suffices h₁ : TimesContMdiff _ _ _ (Prod.map c c)
+    have h₂ : ContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd := by
+      rw [cont_mdiff_iff]
+      exact ⟨continuous_mul, fun x y => (cont_diff_mul.restrict_scalars ℝ).ContDiffOn⟩
+    suffices h₁ : ContMdiff _ _ _ (Prod.map c c)
     · apply h₂.comp h₁
       
     -- this elaborates much faster with `apply`
-      apply TimesContMdiff.prod_map <;>
-      exact times_cont_mdiff_coe_sphere
+      apply ContMdiff.prod_map <;>
+      exact cont_mdiff_coe_sphere
   smooth_inv := by
-    apply TimesContMdiff.cod_restrict_sphere
-    exact complex.conj_cle.times_cont_diff.times_cont_mdiff.comp times_cont_mdiff_coe_sphere
+    apply ContMdiff.cod_restrict_sphere
+    exact complex.conj_cle.cont_diff.cont_mdiff.comp cont_mdiff_coe_sphere
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
-theorem times_cont_mdiff_exp_map_circle : TimesContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
-  ((times_cont_diff_exp.restrictScalars ℝ).comp
-          (times_cont_diff_id.smul times_cont_diff_const)).TimesContMdiff.cod_restrict_sphere
-    _
+theorem cont_mdiff_exp_map_circle : ContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
+  ((cont_diff_exp.restrictScalars ℝ).comp (cont_diff_id.smul cont_diff_const)).ContMdiff.cod_restrict_sphere _
 
 end circle
 

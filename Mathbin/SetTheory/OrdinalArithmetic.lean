@@ -1174,10 +1174,9 @@ theorem lt_sup {ι} {f : ι → Ordinal} {a} : a < sup f ↔ ∃ i, a < f i := b
 theorem lt_sup_of_ne_sup {ι} {f : ι → Ordinal} : (∀ i, f i ≠ sup f) ↔ ∀ i, f i < sup f :=
   ⟨fun hf _ => lt_of_le_of_neₓ (le_sup _ _) (hf _), fun hf _ => ne_of_ltₓ (hf _)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem sup_not_succ_of_ne_sup {ι} {f : ι → Ordinal} (hf : ∀ i, f i ≠ sup f) {a} (hao : a < sup f) : succ a < sup f :=
   by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hoa
   exact hao.not_le (sup_le.2 fun i => lt_succ.1 ((lt_of_le_of_neₓ (le_sup _ _) (hf i)).trans_le hoa))
 
 @[simp]
@@ -1344,10 +1343,9 @@ theorem sup_eq_lsub_or_sup_succ_eq_lsub {ι} (f : ι → Ordinal) : sup f = lsub
   · exact Or.inr ((succ_le.2 h).antisymm (lsub_le_sup_succ f))
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem sup_succ_le_lsub {ι} (f : ι → Ordinal) : (sup f).succ ≤ lsub f ↔ ∃ i, f i = sup f := by
   refine' ⟨fun h => _, _⟩
-  · "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  · by_contra' hf
     exact ne_of_ltₓ (succ_le.1 h) (le_antisymmₓ (sup_le_lsub f) (lsub_le.2 (lt_sup_of_ne_sup.1 hf)))
     
   rintro ⟨_, hf⟩
@@ -1357,13 +1355,12 @@ theorem sup_succ_le_lsub {ι} (f : ι → Ordinal) : (sup f).succ ≤ lsub f ↔
 theorem sup_succ_eq_lsub {ι} (f : ι → Ordinal) : (sup f).succ = lsub f ↔ ∃ i, f i = sup f :=
   (lsub_le_sup_succ f).le_iff_eq.symm.trans (sup_succ_le_lsub f)
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem sup_eq_lsub_iff_succ {ι} (f : ι → Ordinal) : sup f = lsub f ↔ ∀, ∀ a < lsub f, ∀, succ a < lsub f := by
   refine' ⟨fun h => _, fun hf => le_antisymmₓ (sup_le_lsub f) (lsub_le.2 fun i => _)⟩
   · rw [← h]
     exact fun a => sup_not_succ_of_ne_sup fun i => ne_of_ltₓ (lsub_le.1 (le_of_eqₓ h.symm) i)
     
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hle
   have heq := (sup_succ_eq_lsub f).2 ⟨i, le_antisymmₓ (le_sup _ _) hle⟩
   have :=
     hf (sup f)
@@ -1453,11 +1450,10 @@ theorem bsup_eq_blsub_or_succ_bsup_eq_blsub {o} (f : ∀, ∀ a < o, ∀, Ordina
   rw [bsup_eq_sup, blsub_eq_lsub]
   exact sup_eq_lsub_or_sup_succ_eq_lsub _
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem bsup_succ_le_blsub {o} (f : ∀, ∀ a < o, ∀, Ordinal) : (bsup o f).succ ≤ blsub o f ↔ ∃ i hi, f i hi = bsup o f :=
   by
   refine' ⟨fun h => _, _⟩
-  · "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  · by_contra' hf
     exact ne_of_ltₓ (succ_le.1 h) (le_antisymmₓ (bsup_le_blsub f) (blsub_le.2 (lt_bsup_of_ne_bsup.1 hf)))
     
   rintro ⟨_, _, hf⟩
@@ -1499,13 +1495,12 @@ theorem blsub_type (r : α → α → Prop) [IsWellOrder α r] f :
 theorem blsub_const {o : Ordinal} (ho : o ≠ 0) (a : Ordinal) : (blsub.{u, v} o fun _ _ => a) = a + 1 :=
   bsup_const.{u, v} ho a.succ
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem blsub_id o : (blsub.{u, u} o fun x _ => x) = o := by
   apply le_antisymmₓ
   · rw [blsub_le]
     exact fun _ => id
     
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h
   exact (lt_blsub.{u, u} (fun x _ => x) _ h).False
 
 theorem blsub_le_of_brange_subset {o o'} {f : ∀, ∀ a < o, ∀, Ordinal} {g : ∀, ∀ a < o', ∀, Ordinal}
@@ -1619,7 +1614,6 @@ theorem enum_ord_succ_le {a b} (hS : Unbounded (· < ·) S) (ha : a ∈ S) (hb :
   rw [enum_ord_def]
   exact cInf_le' ⟨ha, fun c hc => ((enum_ord.strict_mono hS).Monotone (lt_succ.1 hc)).trans_lt hb⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem enumOrd.surjective (hS : Unbounded (· < ·) S) : ∀, ∀ s ∈ S, ∀, ∃ a, enumOrd S a = s := fun s hs =>
   ⟨sup { a | enumOrd S a ≤ s }, by
     apply le_antisymmₓ
@@ -1630,7 +1624,7 @@ theorem enumOrd.surjective (hS : Unbounded (· < ·) S) : ∀, ∀ s ∈ S, ∀,
       rcases exists_lt_of_lt_cSup ⟨0, enum_ord_zero_le hs⟩ ha with ⟨b, hb, hab⟩
       exact (enum_ord.strict_mono hS hab).trans_le hb
       
-    · "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+    · by_contra' h
       exact
         (le_cSup ⟨s, fun a => (WellFounded.self_le_of_strict_mono wf (enum_ord.strict_mono hS) a).trans⟩
               (enum_ord_succ_le hS hs h)).not_lt
@@ -1975,11 +1969,10 @@ theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < (b
   convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le.2 hvb) _)
   exact opow_succ b u
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem log_opow_mul_add {b u v w : Ordinal} (hb : 1 < b) (hv : 0 < v) (hvb : v < b) (hw : w < (b^u)) :
     log b ((b^u) * v + w) = u := by
   have hpos := opow_mul_add_pos (zero_lt_one.trans hb) u hv w
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' hne
   cases' lt_or_gt_of_neₓ hne with h h
   · rw [log_lt hb hpos] at h
     exact not_le_of_lt h ((le_mul_left _ hv).trans (le_add_right _ _))

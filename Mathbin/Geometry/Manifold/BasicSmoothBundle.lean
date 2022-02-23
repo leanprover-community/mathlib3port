@@ -105,7 +105,7 @@ structure BasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E
           ∀, ∀ v, (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
   coord_change_smooth :
     ∀ i j : Atlas H M,
-      TimesContDiffOn 𝕜 ∞ (fun p : E × F => coord_change i j (I.symm p.1) p.2)
+      ContDiffOn 𝕜 ∞ (fun p : E × F => coord_change i j (I.symm p.1) p.2)
         (I '' (i.1.symm.trans j.1).Source ×ˢ (Univ : Set F))
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
@@ -116,7 +116,7 @@ def trivialBasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {
   coordChange := fun i j x v => v
   coord_change_self := fun i x hx v => rfl
   coord_change_comp := fun i j k x hx v => rfl
-  coord_change_smooth := fun i j => times_cont_diff_snd.TimesContDiffOn
+  coord_change_smooth := fun i j => cont_diff_snd.ContDiffOn
 
 namespace BasicSmoothBundleCore
 
@@ -232,7 +232,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
   let J := ModelWithCorners.toLocalEquiv (I.prod 𝓘(𝕜, F))
   have A :
     ∀ e e' : LocalHomeomorph M H he : e ∈ atlas H M he' : e' ∈ atlas H M,
-      TimesContDiffOn 𝕜 ∞ (J ∘ (Z.chart he).symm.trans (Z.chart he') ∘ J.symm)
+      ContDiffOn 𝕜 ∞ (J ∘ (Z.chart he).symm.trans (Z.chart he') ∘ J.symm)
         (J.symm ⁻¹' ((Z.chart he).symm.trans (Z.chart he')).Source ∩ range J) :=
     by
     intro e e' he he'
@@ -244,22 +244,21 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
       mfld_set_tac
     rw [this]
     -- check separately that the two components of the coordinate change are smooth
-    apply TimesContDiffOn.prod
+    apply ContDiffOn.prod
     show
-      TimesContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
+      ContDiffOn 𝕜 ∞ (fun p : E × F => (I ∘ e' ∘ e.symm ∘ I.symm) p.1)
         ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F))
     · -- the coordinate change on the base is just a coordinate change for `M`, smooth since
       -- `M` is smooth
-      have A : TimesContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
-        (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) he he').1
+      have A : ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans e' ∘ I.symm) (I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) :=
+        (HasGroupoid.compatible (contDiffGroupoid ∞ I) he he').1
       have B :
-        TimesContDiffOn 𝕜 ∞ (fun p : E × F => p.1)
-          ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F)) :=
-        times_cont_diff_fst.times_cont_diff_on
-      exact TimesContDiffOn.comp A B (prod_subset_preimage_fst _ _)
+        ContDiffOn 𝕜 ∞ (fun p : E × F => p.1) ((I.symm ⁻¹' (e.symm.trans e').Source ∩ range I) ×ˢ (univ : Set F)) :=
+        cont_diff_fst.cont_diff_on
+      exact ContDiffOn.comp A B (prod_subset_preimage_fst _ _)
       
     show
-      TimesContDiffOn 𝕜 ∞
+      ContDiffOn 𝕜 ∞
         (fun p : E × F =>
           Z.coord_change ⟨chart_at H (e.symm (I.symm p.1)), _⟩ ⟨e', he'⟩
             ((chart_at H (e.symm (I.symm p.1)) : M → H) (e.symm (I.symm p.1)))
@@ -271,7 +270,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
             cocycle as given in the definition of basic smooth bundles. -/
       have := Z.coord_change_smooth ⟨e, he⟩ ⟨e', he'⟩
       rw [I.image_eq] at this
-      apply TimesContDiffOn.congr this
+      apply ContDiffOn.congr this
       rintro ⟨x, v⟩ hx
       simp' only with mfld_simps  at hx
       let f := chart_at H (e.symm (I.symm x))
@@ -285,7 +284,7 @@ instance to_smooth_manifold : SmoothManifoldWithCorners (I.Prod 𝓘(𝕜, F)) Z
   intro e₀ e₀' he₀ he₀'
   rcases(Z.mem_atlas_iff _).1 he₀ with ⟨e, he, rfl⟩
   rcases(Z.mem_atlas_iff _).1 he₀' with ⟨e', he', rfl⟩
-  rw [timesContDiffGroupoid, mem_groupoid_of_pregroupoid]
+  rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   exact ⟨A e e' he he', A e' e he' he⟩
 
 end BasicSmoothBundleCore
@@ -305,16 +304,16 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
     /- To check that the coordinate change of the bundle is smooth, one should just use the
         smoothness of the charts, and thus the smoothness of their derivatives. -/
     rw [I.image_eq]
-    have A : TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
-      (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) i.2 j.2).1
+    have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
+      (HasGroupoid.compatible (contDiffGroupoid ∞ I) i.2 j.2).1
     have B : UniqueDiffOn 𝕜 (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) := I.unique_diff_preimage_source
     have C :
-      TimesContDiffOn 𝕜 ∞
+      ContDiffOn 𝕜 ∞
         (fun p : E × E =>
           (fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) p.1 : E → E)
             p.2)
         ((I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) ×ˢ (univ : Set E)) :=
-      times_cont_diff_on_fderiv_within_apply A B le_top
+      cont_diff_on_fderiv_within_apply A B le_top
     have D :
       ∀,
         ∀ x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I,
@@ -328,7 +327,7 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
       symm
       rw [inter_comm]
       exact fderiv_within_inter N (I.unique_diff _ hx.2)
-    apply TimesContDiffOn.congr C
+    apply ContDiffOn.congr C
     rintro ⟨x, v⟩ hx
     have E : x ∈ I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I := by
       simpa only [prod_mk_mem_set_prod_eq, and_trueₓ, mem_univ] using hx
@@ -383,9 +382,8 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
       show
         DifferentiableWithinAt 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
           (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) (I x)
-      · have A :
-          TimesContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
-          (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) i.2 j.2).1
+      · have A : ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm) (I.symm ⁻¹' (i.1.symm.trans j.1).Source ∩ range I) :=
+          (HasGroupoid.compatible (contDiffGroupoid ∞ I) i.2 j.2).1
         have B :
           DifferentiableOn 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm)
             (I.symm ⁻¹' ((i.1.symm.trans j.1).trans (j.1.symm.trans u.1)).Source ∩ range I) :=
@@ -400,9 +398,8 @@ def tangentBundleCore : BasicSmoothBundleCore I M E where
       show
         DifferentiableWithinAt 𝕜 (I ∘ u.1 ∘ j.1.symm ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I)
           ((I ∘ j.1 ∘ i.1.symm ∘ I.symm) (I x))
-      · have A :
-          TimesContDiffOn 𝕜 ∞ (I ∘ j.1.symm.trans u.1 ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I) :=
-          (HasGroupoid.compatible (timesContDiffGroupoid ∞ I) j.2 u.2).1
+      · have A : ContDiffOn 𝕜 ∞ (I ∘ j.1.symm.trans u.1 ∘ I.symm) (I.symm ⁻¹' (j.1.symm.trans u.1).Source ∩ range I) :=
+          (HasGroupoid.compatible (contDiffGroupoid ∞ I) j.2 u.2).1
         apply A.differentiable_on le_top
         rw [LocalHomeomorph.trans_source] at hx
         simp' only with mfld_simps

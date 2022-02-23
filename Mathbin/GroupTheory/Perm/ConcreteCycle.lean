@@ -107,7 +107,7 @@ theorem cycle_type_form_perm (hl : Nodupₓ l) (hn : 2 ≤ l.length) : cycleType
   rw [← nodup_attach] at hl
   rw [cycle_type_eq [l.attach.form_perm]]
   · simp only [map, Function.comp_app]
-    rw [support_form_perm_of_nodup _ hl, card_to_finset, erase_dup_eq_self.mpr hl]
+    rw [support_form_perm_of_nodup _ hl, card_to_finset, dedup_eq_self.mpr hl]
     · simpa
       
     · intro x h
@@ -339,7 +339,7 @@ theorem to_list_form_perm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : N
     refine' support_form_perm_of_nodup _ hn _
     rintro _ rfl
     simpa [Nat.succ_le_succ_iff] using hl
-  rw [to_list, hc.cycle_of_eq (mem_support.mp _), hs, card_to_finset, erase_dup_eq_self.mpr hn]
+  rw [to_list, hc.cycle_of_eq (mem_support.mp _), hs, card_to_finset, dedup_eq_self.mpr hn]
   · refine'
       List.ext_le
         (by
@@ -499,9 +499,8 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
     ext ⟨s', hs', ht'⟩
     simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff, ht]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1387:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
--- mathport name: «exprc[ ,]»
-notation3 "c["  =>
+-- mathport name: «exprc[ , ]»
+notation3 "c[" (l,* => foldr (h t => List.cons h t) List.nil) "]" =>
   Cycle.formPerm (↑l)
     (Cycle.nodup_coe_iff.mpr
       (by

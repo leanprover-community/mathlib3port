@@ -152,10 +152,10 @@ def map₂ (f : Type u → Type v → Type w) (hf : ∀ α β γ δ, α ≃ β �
 /-- The universe lift operation on cardinals. You can specify the universes explicitly with
   `lift.{u v} : cardinal.{v} → cardinal.{max v u}` -/
 def lift (c : Cardinal.{v}) : Cardinal.{max v u} :=
-  map Ulift (fun α β e => Equivₓ.ulift.trans <| e.trans Equivₓ.ulift.symm) c
+  map ULift (fun α β e => Equivₓ.ulift.trans <| e.trans Equivₓ.ulift.symm) c
 
 @[simp]
-theorem mk_ulift α : # (Ulift.{v, u} α) = lift.{v} (# α) :=
+theorem mk_ulift α : # (ULift.{v, u} α) = lift.{v} (# α) :=
   rfl
 
 theorem lift_umax : lift.{max u v, u} = lift.{v, u} :=
@@ -322,7 +322,7 @@ theorem mk_option {α : Type u} : # (Option α) = # α + 1 :=
   (Equivₓ.optionEquivSumPunit α).cardinal_eq
 
 @[simp]
-theorem mk_psum (α : Type u) (β : Type v) : # (Psum α β) = lift.{v} (# α) + lift.{u} (# β) :=
+theorem mk_psum (α : Type u) (β : Type v) : # (PSum α β) = lift.{v} (# α) + lift.{u} (# β) :=
   (mk_congr (Equivₓ.psumEquivSum α β)).trans (mk_sum α β)
 
 @[simp]
@@ -672,7 +672,7 @@ theorem sum_const (ι : Type u) (a : Cardinal.{v}) : (sum fun i : ι => a) = lif
     mk_congr <|
       calc
         (Σi : ι, Quotientₓ.out (# α)) ≃ ι × Quotientₓ.out (# α) := Equivₓ.sigmaEquivProd _ _
-        _ ≃ Ulift ι × Ulift α := Equivₓ.ulift.symm.prodCongr (outMkEquiv.trans Equivₓ.ulift.symm)
+        _ ≃ ULift ι × ULift α := Equivₓ.ulift.symm.prodCongr (outMkEquiv.trans Equivₓ.ulift.symm)
         
 
 theorem sum_const' (ι : Type u) (a : Cardinal.{u}) : (sum fun _ : ι => a) = # ι * a := by

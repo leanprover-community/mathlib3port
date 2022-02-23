@@ -158,26 +158,26 @@ end FunctorToTypes
 /-- The isomorphism between a `Type` which has been `ulift`ed to the same universe,
 and the original type.
 -/
-def uliftTrivial (V : Type u) : Ulift.{u} V ≅ V := by
+def uliftTrivial (V : Type u) : ULift.{u} V ≅ V := by
   tidy
 
 /-- The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
 -/
 def uliftFunctor : Type u ⥤ Type max u v where
-  obj := fun X => Ulift.{v} X
-  map := fun X Y f => fun x : Ulift.{v} X => Ulift.up (f x.down)
+  obj := fun X => ULift.{v} X
+  map := fun X Y f => fun x : ULift.{v} X => ULift.up (f x.down)
 
 @[simp]
-theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : Ulift.{v} X) : uliftFunctor.map f x = Ulift.up (f x.down) :=
+theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) : uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
 
 instance uliftFunctorFull : Full.{u} uliftFunctor where
-  Preimage := fun X Y f x => (f (Ulift.up x)).down
+  Preimage := fun X Y f x => (f (ULift.up x)).down
 
 instance ulift_functor_faithful : Faithful uliftFunctor where
   map_injective' := fun X Y f g p =>
-    funext fun x => congr_argₓ Ulift.down (congr_funₓ p (Ulift.up x) : Ulift.up (f x) = Ulift.up (g x))
+    funext fun x => congr_argₓ ULift.down (congr_funₓ p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
@@ -222,7 +222,7 @@ theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Sur
     refine' Function.surjective_of_right_cancellable_Prop fun g₁ g₂ hg => _
     rw [← equiv.ulift.symm.injective.comp_left.eq_iff]
     apply H
-    change Ulift.up ∘ g₁ ∘ f = Ulift.up ∘ g₂ ∘ f
+    change ULift.up ∘ g₁ ∘ f = ULift.up ∘ g₂ ∘ f
     rw [hg]
     
   · exact fun H => ⟨fun Z => H.injective_comp_right⟩

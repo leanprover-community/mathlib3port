@@ -287,7 +287,7 @@ See https://stacks.math.columbia.edu/tag/001P.
 -/
 def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C where
   Hom :=
-    { app := fun F x => Ulift.up ((x.app F.1) (𝟙 (unop F.1))),
+    { app := fun F x => ULift.up ((x.app F.1) (𝟙 (unop F.1))),
       naturality' := by
         intro X Y f
         ext
@@ -325,7 +325,7 @@ variable {C}
 given by the Yoneda lemma.
 -/
 @[simps]
-def yonedaSections (X : C) (F : Cᵒᵖ ⥤ Type v₁) : (yoneda.obj X ⟶ F) ≅ Ulift.{u₁} (F.obj (op X)) :=
+def yonedaSections (X : C) (F : Cᵒᵖ ⥤ Type v₁) : (yoneda.obj X ⟶ F) ≅ ULift.{u₁} (F.obj (op X)) :=
   (yonedaLemma C).app (op X, F)
 
 /-- We have a type-level equivalence between natural transformations from the yoneda embedding

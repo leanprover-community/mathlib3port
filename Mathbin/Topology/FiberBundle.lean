@@ -432,7 +432,7 @@ theorem is_topological_fiber_bundle_snd : IsTopologicalFiberBundle F (Prod.snd :
 theorem IsTopologicalFiberBundle.comp_homeomorph {Z' : Type _} [TopologicalSpace Z']
     (e : IsTopologicalFiberBundle F proj) (h : Z' ≃ₜ Z) : IsTopologicalFiberBundle F (proj ∘ h) := fun x =>
   let ⟨e, he⟩ := e x
-  ⟨e.compHomeomorph h, by
+  ⟨e.comp_homeomorph h, by
     simpa [TopologicalFiberBundle.Trivialization.compHomeomorph] using he⟩
 
 namespace TopologicalFiberBundle.Trivialization

@@ -65,11 +65,11 @@ instance Sort.inhabited : Inhabited (Sort _) :=
 instance Sort.inhabited' : Inhabited default :=
   ⟨PUnit.unit⟩
 
-instance Psum.inhabitedLeft {α β} [Inhabited α] : Inhabited (Psum α β) :=
-  ⟨Psum.inl default⟩
+instance PSum.inhabitedLeft {α β} [Inhabited α] : Inhabited (PSum α β) :=
+  ⟨PSum.inl default⟩
 
-instance Psum.inhabitedRight {α β} [Inhabited β] : Inhabited (Psum α β) :=
-  ⟨Psum.inr default⟩
+instance PSum.inhabitedRight {α β} [Inhabited β] : Inhabited (PSum α β) :=
+  ⟨PSum.inr default⟩
 
 instance (priority := 10) decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
   | a, b => isTrue (Subsingleton.elimₓ a b)

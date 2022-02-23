@@ -28,7 +28,7 @@ The design and implementation of these tactics is described in a
 
 open Expr Native
 
-open tactic.interactive (case_tag.from_tag_hyps)
+open Tactic.Interactive (case_tag.from_tag_hyps)
 
 namespace Tactic
 
@@ -454,7 +454,7 @@ unsafe inductive with_pattern
 
 namespace WithPattern
 
-open lean (Parser)
+open Lean (Parser)
 
 open Lean.Parser
 

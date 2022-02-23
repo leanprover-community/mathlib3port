@@ -1157,7 +1157,7 @@ theorem zero_lt_star : 0 < star := by
 
 /-- The pre-game `ω`. (In fact all ordinals have game and surreal representatives.) -/
 def omega : Pgame :=
-  ⟨Ulift ℕ, Pempty, fun n => ↑n.1, Pempty.elimₓ⟩
+  ⟨ULift ℕ, Pempty, fun n => ↑n.1, Pempty.elimₓ⟩
 
 theorem zero_lt_one : (0 : Pgame) < 1 := by
   rw [lt_def]

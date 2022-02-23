@@ -1055,7 +1055,7 @@ def PowerSeries (R : Type _) :=
 
 namespace PowerSeries
 
-open finsupp (single)
+open Finsupp (single)
 
 variable {R : Type _}
 

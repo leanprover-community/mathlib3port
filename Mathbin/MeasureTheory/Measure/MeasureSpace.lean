@@ -95,7 +95,7 @@ open Filter hiding map
 
 open Function MeasurableSpace
 
-open topological_space (SecondCountableTopology)
+open TopologicalSpace (SecondCountableTopology)
 
 open_locale Classical TopologicalSpace BigOperators Filter Ennreal Nnreal
 

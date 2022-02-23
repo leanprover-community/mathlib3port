@@ -643,6 +643,10 @@ theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRingₓ R] {p n : ℕ
   rw [this] at n_ih
   rw [mul_comm _ (geomSum _ _), n_ih, geom_sum_mul, sub_left_inj, ← pow_mulₓ, pow_addₓ, pow_oneₓ]
 
+theorem cyclotomic_prime_pow_mul_X_pow_sub_one (R : Type _) [CommRingₓ R] (p k : ℕ) [hn : Fact (Nat.Prime p)] :
+    cyclotomic (p ^ (k + 1)) R * (X ^ p ^ k - 1) = X ^ p ^ (k + 1) - 1 := by
+  rw [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_mul, ← pow_mulₓ, pow_succₓ, mul_comm]
+
 /-- The constant term of `cyclotomic n R` is `1` if `2 ≤ n`. -/
 theorem cyclotomic_coeff_zero (R : Type _) [CommRingₓ R] {n : ℕ} (hn : 2 ≤ n) : (cyclotomic n R).coeff 0 = 1 := by
   induction' n using Nat.strong_induction_onₓ with n hi

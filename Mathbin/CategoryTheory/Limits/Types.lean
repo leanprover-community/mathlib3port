@@ -56,7 +56,7 @@ theorem is_limit_equiv_sections_apply {F : J ⥤ Type u} {c : Cone F} (t : IsLim
 @[simp]
 theorem is_limit_equiv_sections_symm_apply {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) (x : F.sections) (j : J) :
     c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j := by
-  equiv_rw (is_limit_equiv_sections t).symm  at x
+  equiv_rw(is_limit_equiv_sections t).symm  at x
   simp
 
 /-- The equivalence between the abstract limit of `F` in `Type u`
@@ -202,9 +202,9 @@ theorem colimit_eq {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (
   simpa using congr_argₓ (colimit_equiv_quot F) w
 
 theorem jointly_surjective (F : J ⥤ Type u) {t : Cocone F} (h : IsColimit t) (x : t.x) : ∃ j y, t.ι.app j y = x := by
-  suffices (fun x : t.X => Ulift.up (∃ j y, t.ι.app j y = x)) = fun _ => Ulift.up True by
+  suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
     have := congr_funₓ this x
-    have H := congr_argₓ Ulift.down this
+    have H := congr_argₓ ULift.down this
     dsimp  at H
     rwa [eq_trueₓ] at H
   refine' h.hom_ext _

@@ -55,7 +55,7 @@ namespace Mvqpf
 
 open Typevec
 
-open mvfunctor (Liftp Liftr)
+open Mvfunctor (Liftp Liftr)
 
 open_locale Mvfunctor
 

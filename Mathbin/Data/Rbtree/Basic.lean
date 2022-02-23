@@ -37,7 +37,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 
-open rbnode (Mem)
+open Rbnode (Mem)
 
 open IsSearchable
 

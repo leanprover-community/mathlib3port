@@ -115,8 +115,8 @@ def hasSup : HasSup α :=
 def hasInf : HasInf α :=
   ⟨(· * ·)⟩
 
--- Note [lower instance priority]
-localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
+localized [-- Note [lower instance priority]
+BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 

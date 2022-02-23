@@ -7,7 +7,7 @@ import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 import Mathbin.Algebra.Category.CommRing.Colimits
 import Mathbin.Algebra.Category.CommRing.Limits
 import Mathbin.Topology.Sheaves.LocalPredicate
-import Mathbin.RingTheory.Localization
+import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Subring.Basic
 
 /-!

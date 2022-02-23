@@ -189,7 +189,7 @@ theorem sub_one_norm_eq_eval_cyclotomic [IsCyclotomicExtension {n} K L] (h : 2 <
 
 /-- If `is_prime_pow (n : ℕ)`, `n ≠ 2` and `irreducible (cyclotomic n K)` (in particular for
 `K = ℚ`), then the norm of `ζ - 1` is `(n : ℕ).min_fac`. -/
-theorem SubOneNorm.is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
+theorem sub_one_norm_is_prime_pow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic (n : ℕ) K)) (h : n ≠ 2) : norm K (ζ - 1) = (n : ℕ).minFac := by
   have :=
     (coe_lt_coe 2 _).1
@@ -207,7 +207,7 @@ omit hζ
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is an odd
 prime, then the norm of `ζ - 1` is `p`. -/
-theorem PrimeNeTwoPow.sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
+theorem prime_ne_two_pow_sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] {k : ℕ} (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
     [hpri : Fact (p : ℕ).Prime] [IsCyclotomicExtension {p ^ (k + 1)} K L]
     (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (h : p ≠ 2) : norm K (ζ - 1) = p := by
   have : NeZero ((↑(p ^ (k + 1)) : ℕ) : K) := by
@@ -225,7 +225,7 @@ theorem PrimeNeTwoPow.sub_one_norm {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ)
 
 /-- If `irreducible (cyclotomic p K)` (in particular for `K = ℚ`) and `p` is an odd prime,
 then the norm of `ζ - 1` is `p`. -/
-theorem SubOneNorm.prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
+theorem sub_one_norm_prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
     [hcyc : IsCyclotomicExtension {p} K L] (hζ : IsPrimitiveRoot ζ p) (hirr : Irreducible (cyclotomic p K))
     (h : p ≠ 2) : norm K (ζ - 1) = p := by
   replace hirr : Irreducible (cyclotomic (↑(p ^ (0 + 1)) : ℕ) K) := by
@@ -237,12 +237,12 @@ theorem SubOneNorm.prime {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : �
       simp [NeZero.ne ((p : ℕ) : K)]⟩
   have : IsCyclotomicExtension {p ^ (0 + 1)} K L := by
     simp [hcyc]
-  simpa using prime_ne_two_pow.sub_one_norm 0 hζ hirr h
+  simpa using prime_ne_two_pow_sub_one_norm hζ hirr h
 
 /-- If `irreducible (cyclotomic (2 ^ k) K)` (in particular for `K = ℚ`) and `k` is at least `2`,
 then the norm of `ζ - 1` is `2`. -/
-theorem SubOneNorm.pow_two [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
-    (hζ : IsPrimitiveRoot ζ (2 ^ k)) (hirr : Irreducible (cyclotomic (2 ^ k) K)) : norm K (ζ - 1) = 2 := by
+theorem sub_one_norm_pow_two [NeZero (2 : K)] {k : ℕ} (hζ : IsPrimitiveRoot ζ (2 ^ k)) (hk : 2 ≤ k)
+    [IsCyclotomicExtension {2 ^ k} K L] (hirr : Irreducible (cyclotomic (2 ^ k) K)) : norm K (ζ - 1) = 2 := by
   have : NeZero (((2 ^ k : ℕ+) : ℕ) : K) := by
     refine' ⟨fun hzero => _⟩
     rw [pow_coe, Pnat.coe_bit0, one_coe, cast_pow, cast_bit0, cast_one,
@@ -277,14 +277,14 @@ variable {K} (L) [Field K] [Field L] [Algebra K L] [NeZero ((n : ℕ) : K)]
 
 /-- If `is_prime_pow (n : ℕ)`, `n ≠ 2` and `irreducible (cyclotomic n K)` (in particular for
 `K = ℚ`), then the norm of `zeta n K L - 1` is `(n : ℕ).min_fac`. -/
-theorem IsPrimePow.norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
+theorem is_prime_pow_norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic (n : ℕ) K)) (h : n ≠ 2) : norm K (zeta n K L - 1) = (n : ℕ).minFac :=
   have := NeZero.of_no_zero_smul_divisors K L n
-  sub_one_norm.is_prime_pow (zeta_primitive_root n K L) hn hirr h
+  sub_one_norm_is_prime_pow (zeta_primitive_root n K L) hn hirr h
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is an odd
 prime, then the norm of `zeta (p ^ (k + 1)) K L - 1` is `p`. -/
-theorem PrimeNeTwoPow.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) [hpri : Fact (p : ℕ).Prime]
+theorem prime_ne_two_pow_norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (k : ℕ) [hpri : Fact (p : ℕ).Prime]
     [IsCyclotomicExtension {p ^ (k + 1)} K L] (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (h : p ≠ 2) :
     norm K (zeta (p ^ (k + 1)) K L - 1) = p := by
   have := NeZero.of_no_zero_smul_divisors K L p
@@ -292,19 +292,19 @@ theorem PrimeNeTwoPow.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] (k :
     refine' ⟨fun hzero => _⟩
     rw [pow_coe] at hzero
     simpa [NeZero.ne ((p : ℕ) : L)] using hzero
-  refine' prime_ne_two_pow.sub_one_norm k (zeta_primitive_root _ K L) hirr h
+  exact prime_ne_two_pow_sub_one_norm (zeta_primitive_root _ K L) hirr h
 
 /-- If `irreducible (cyclotomic p K)` (in particular for `K = ℚ`) and `p` is an odd prime,
 then the norm of `zeta p K L - 1` is `p`. -/
-theorem PrimeNeTwo.norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
+theorem prime_ne_two_norm_zeta_sub_one {p : ℕ+} [NeZero ((p : ℕ) : K)] [hpri : Fact (p : ℕ).Prime]
     [hcyc : IsCyclotomicExtension {p} K L] (hirr : Irreducible (cyclotomic p K)) (h : p ≠ 2) :
     norm K (zeta p K L - 1) = p :=
   have := NeZero.of_no_zero_smul_divisors K L p
-  sub_one_norm.prime (zeta_primitive_root _ K L) hirr h
+  sub_one_norm_prime (zeta_primitive_root _ K L) hirr h
 
 /-- If `irreducible (cyclotomic (2 ^ k) K)` (in particular for `K = ℚ`) and `k` is at least `2`,
 then the norm of `zeta (2 ^ k) K L - 1` is `2`. -/
-theorem TwoPow.norm_zeta_sub_one [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
+theorem two_pow_norm_zeta_sub_one [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCyclotomicExtension {2 ^ k} K L]
     (hirr : Irreducible (cyclotomic (2 ^ k) K)) : norm K (zeta (2 ^ k) K L - 1) = 2 := by
   have : NeZero (((2 ^ k : ℕ+) : ℕ) : L) := by
     refine' ⟨fun hzero => _⟩
@@ -317,7 +317,7 @@ theorem TwoPow.norm_zeta_sub_one [NeZero (2 : K)] {k : ℕ} (hk : 2 ≤ k) [IsCy
       hzero
     exact (NeZero.ne (2 : K)) ((algebraMap K L).Injective hzero)
     infer_instance
-  refine' sub_one_norm.pow_two hk _ hirr
+  refine' sub_one_norm_pow_two _ hk hirr
   simpa using zeta_primitive_root (2 ^ k) K L
 
 end IsCyclotomicExtension

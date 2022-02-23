@@ -17,8 +17,6 @@ a corollary, is that the number of odd-degree vertices is even.
 
 ## Main definitions
 
-- A `dart` is a directed edge, consisting of an ordered pair of adjacent vertices,
-  thought of as being a directed edge.
 - `simple_graph.sum_degrees_eq_twice_card_edges` is the degree-sum formula.
 - `simple_graph.even_card_odd_degree_vertices` is the handshaking lemma.
 - `simple_graph.odd_card_odd_degree_vertices_ne` is that the number of odd-degree
@@ -48,73 +46,6 @@ universe u
 
 variable {V : Type u} (G : SimpleGraph V)
 
-/-- A dart is a directed edge, consisting of an ordered pair of adjacent vertices. -/
-@[ext]
-structure Dart where
-  (fst snd : V)
-  is_adj : G.Adj fst snd
-  deriving DecidableEq
-
-instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
-  Fintype.ofEquiv (Σv, G.NeighborSet v)
-    { toFun := fun s => ⟨s.fst, s.snd, s.snd.property⟩, invFun := fun d => ⟨d.fst, d.snd, d.is_adj⟩,
-      left_inv := fun s => by
-        ext <;> simp ,
-      right_inv := fun d => by
-        ext <;> simp }
-
-variable {G}
-
-/-- The edge associated to the dart. -/
-def Dart.edge (d : G.Dart) : Sym2 V :=
-  ⟦(d.fst, d.snd)⟧
-
-@[simp]
-theorem Dart.edge_mem (d : G.Dart) : d.edge ∈ G.EdgeSet :=
-  d.is_adj
-
-/-- The dart with reversed orientation from a given dart. -/
-def Dart.rev (d : G.Dart) : G.Dart :=
-  ⟨d.snd, d.fst, G.symm d.is_adj⟩
-
-@[simp]
-theorem Dart.rev_edge (d : G.Dart) : d.rev.edge = d.edge :=
-  Sym2.eq_swap
-
-@[simp]
-theorem Dart.rev_rev (d : G.Dart) : d.rev.rev = d :=
-  Dart.ext _ _ rfl rfl
-
-@[simp]
-theorem Dart.rev_involutive : Function.Involutive (Dart.rev : G.Dart → G.Dart) :=
-  dart.rev_rev
-
-theorem Dart.rev_ne (d : G.Dart) : d.rev ≠ d := by
-  cases' d with f s h
-  simp only [dart.rev, not_and, Ne.def]
-  rintro rfl
-  exact False.elim (G.loopless _ h)
-
-theorem dart_edge_eq_iff (d₁ d₂ : G.Dart) : d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.rev := by
-  cases' d₁ with s₁ t₁ h₁
-  cases' d₂ with s₂ t₂ h₂
-  simp only [dart.edge, dart.rev_edge, dart.rev]
-  rw [Sym2.eq_iff]
-
-variable (G)
-
-/-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
-to the darts `d` with `d.fst = v`. --/
-def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
-  ⟨v, w, w.property⟩
-
-theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h => by
-  injection h with h₁ h₂
-  exact Subtype.ext h₂
-
-instance Dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
-  ⟨G.dartOfNeighborSet default default⟩
-
 section DegreeSum
 
 variable [Fintype V] [DecidableRel G.Adj]
@@ -125,7 +56,9 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
   simp only [mem_image, true_andₓ, mem_filter, SetCoe.exists, mem_univ, exists_prop_of_true]
   constructor
   · rintro rfl
-    exact ⟨_, d.is_adj, dart.ext _ _ rfl rfl⟩
+    exact
+      ⟨_, d.is_adj, by
+        ext <;> rfl⟩
     
   · rintro ⟨e, he, rfl⟩
     rfl
@@ -133,14 +66,11 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
 
 theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
     (univ.filter fun d : G.Dart => d.fst = v).card = G.degree v := by
-  have hh := card_image_of_injective univ (G.dart_of_neighbor_set_injective v)
-  rw [Finset.card_univ, card_neighbor_set_eq_degree] at hh
-  rwa [dart_fst_fiber]
+  simpa only [dart_fst_fiber, Finset.card_univ, card_neighbor_set_eq_degree] using
+    card_image_of_injective univ (G.dart_of_neighbor_set_injective v)
 
 theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
-  have h : DecidableEq V := by
-    classical
-    infer_instance
+  have := Classical.decEq V
   simp only [← card_univ, ← dart_fst_fiber_card_eq_degree]
   exact
     card_eq_sum_card_fiberwise
@@ -149,7 +79,7 @@ theorem dart_card_eq_sum_degrees : Fintype.card G.Dart = ∑ v, G.degree v := by
 
 variable {G} [DecidableEq V]
 
-theorem Dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.rev} :=
+theorem Dart.edge_fiber (d : G.Dart) : (univ.filter fun d' : G.Dart => d'.edge = d.edge) = {d, d.symm} :=
   Finset.ext fun d' => by
     simpa using dart_edge_eq_iff d' d
 
@@ -157,13 +87,12 @@ variable (G)
 
 theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.EdgeSet) : (univ.filter fun d : G.Dart => d.edge = e).card = 2 :=
   by
-  refine' Quotientₓ.ind (fun p h => _) e h
-  cases' p with v w
-  let d : G.dart := ⟨v, w, h⟩
+  refine' Sym2.ind (fun v w h => _) e h
+  let d : G.dart := ⟨(v, w), h⟩
   convert congr_argₓ card d.edge_fiber
   rw [card_insert_of_not_mem, card_singleton]
   rw [mem_singleton]
-  exact d.rev_ne.symm
+  exact d.symm_ne.symm
 
 theorem dart_card_eq_twice_card_edges : Fintype.card G.Dart = 2 * G.edgeFinset.card := by
   rw [← card_univ]
@@ -229,9 +158,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
 
 theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V) (h : Odd (G.degree v)) :
     ∃ w : V, w ≠ v ∧ Odd (G.degree w) := by
-  have : DecidableEq V := by
-    classical
-    infer_instance
+  have := Classical.decEq V
   rcases G.odd_card_odd_degree_vertices_ne v h with ⟨k, hg⟩
   have hg' : (filter (fun w : V => w ≠ v ∧ Odd (G.degree w)) univ).card > 0 := by
     rw [hg]

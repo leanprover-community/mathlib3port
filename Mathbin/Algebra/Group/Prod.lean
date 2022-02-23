@@ -197,6 +197,111 @@ instance [CommGroupₓ G] [CommGroupₓ H] : CommGroupₓ (G × H) :=
 
 end Prod
 
+namespace MulHom
+
+section Prod
+
+variable (M N) [Mul M] [Mul N] [Mul P]
+
+/-- Given magmas `M`, `N`, the natural projection homomorphism from `M × N` to `M`.-/
+@[to_additive "Given additive magmas `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `A`"]
+def fst : MulHom (M × N) M :=
+  ⟨Prod.fst, fun _ _ => rfl⟩
+
+/-- Given magmas `M`, `N`, the natural projection homomorphism from `M × N` to `N`.-/
+@[to_additive "Given additive magmas `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `B`"]
+def snd : MulHom (M × N) N :=
+  ⟨Prod.snd, fun _ _ => rfl⟩
+
+variable {M N}
+
+@[simp, to_additive]
+theorem coe_fst : ⇑(fst M N) = Prod.fst :=
+  rfl
+
+@[simp, to_additive]
+theorem coe_snd : ⇑(snd M N) = Prod.snd :=
+  rfl
+
+/-- Combine two `monoid_hom`s `f : mul_hom M N`, `g : mul_hom M P` into
+`f.prod g : mul_hom M (N × P)` given by `(f.prod g) x = (f x, g x)`. -/
+@[to_additive Prod
+      "Combine two `add_monoid_hom`s `f : add_hom M N`, `g : add_hom M P` into\n`f.prod g : add_hom M (N × P)` given by `(f.prod g) x = (f x, g x)`"]
+protected def prod (f : MulHom M N) (g : MulHom M P) : MulHom M (N × P) where
+  toFun := Pi.prod f g
+  map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y)
+
+@[to_additive coe_prod]
+theorem coe_prod (f : MulHom M N) (g : MulHom M P) : ⇑(f.Prod g) = Pi.prod f g :=
+  rfl
+
+@[simp, to_additive prod_apply]
+theorem prod_apply (f : MulHom M N) (g : MulHom M P) x : f.Prod g x = (f x, g x) :=
+  rfl
+
+@[simp, to_additive fst_comp_prod]
+theorem fst_comp_prod (f : MulHom M N) (g : MulHom M P) : (fst N P).comp (f.Prod g) = f :=
+  ext fun x => rfl
+
+@[simp, to_additive snd_comp_prod]
+theorem snd_comp_prod (f : MulHom M N) (g : MulHom M P) : (snd N P).comp (f.Prod g) = g :=
+  ext fun x => rfl
+
+@[simp, to_additive prod_unique]
+theorem prod_unique (f : MulHom M (N × P)) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
+  ext fun x => by
+    simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
+
+end Prod
+
+section prod_mapₓ
+
+variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (f : MulHom M M') (g : MulHom N N')
+
+/-- `prod.map` as a `monoid_hom`. -/
+@[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
+def prodMap : MulHom (M × N) (M' × N') :=
+  (f.comp (fst M N)).Prod (g.comp (snd M N))
+
+@[to_additive prod_map_def]
+theorem prod_map_def : prodMap f g = (f.comp (fst M N)).Prod (g.comp (snd M N)) :=
+  rfl
+
+@[simp, to_additive coe_prod_map]
+theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
+  rfl
+
+@[to_additive prod_comp_prod_map]
+theorem prod_comp_prod_map (f : MulHom P M) (g : MulHom P N) (f' : MulHom M M') (g' : MulHom N N') :
+    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+  rfl
+
+end prod_mapₓ
+
+section Coprod
+
+variable [Mul M] [Mul N] [CommSemigroupₓ P] (f : MulHom M P) (g : MulHom N P)
+
+/-- Coproduct of two `mul_hom`s with the same codomain:
+`f.coprod g (p : M × N) = f p.1 * g p.2`. -/
+@[to_additive "Coproduct of two `add_hom`s with the same codomain:\n`f.coprod g (p : M × N) = f p.1 + g p.2`."]
+def coprod : MulHom (M × N) P :=
+  f.comp (fst M N) * g.comp (snd M N)
+
+@[simp, to_additive]
+theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
+  rfl
+
+@[to_additive]
+theorem comp_coprod {Q : Type _} [CommSemigroupₓ Q] (h : MulHom P Q) (f : MulHom M P) (g : MulHom N P) :
+    h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
+  ext fun x => by
+    simp
+
+end Coprod
+
+end MulHom
+
 namespace MonoidHom
 
 variable (M N) [MulOneClassₓ M] [MulOneClassₓ N]
@@ -348,6 +453,7 @@ theorem coprod_unique (f : M × N →* P) : (f.comp (inl M N)).coprod (f.comp (i
 theorem coprod_inl_inr {M N : Type _} [CommMonoidₓ M] [CommMonoidₓ N] : (inl M N).coprod (inr M N) = id (M × N) :=
   coprod_unique (id <| M × N)
 
+@[to_additive]
 theorem comp_coprod {Q : Type _} [CommMonoidₓ Q] (h : P →* Q) (f : M →* P) (g : N →* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
   ext fun x => by

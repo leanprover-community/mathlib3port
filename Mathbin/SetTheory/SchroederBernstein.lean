@@ -144,7 +144,7 @@ end Wo
 /-- The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
 instance. -/
 theorem total {α : Type u} {β : Type v} : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
-  match @min_injective Bool (fun b => cond b (Ulift α) (Ulift.{max u v, v} β)) ⟨true⟩ with
+  match @min_injective Bool (fun b => cond b (ULift α) (ULift.{max u v, v} β)) ⟨true⟩ with
   | ⟨tt, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h false
     Or.inl ⟨Embedding.congr Equivₓ.ulift Equivₓ.ulift ⟨f, hf⟩⟩

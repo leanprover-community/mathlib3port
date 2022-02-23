@@ -700,6 +700,11 @@ theorem continuous_bot {t : tspace β} : cont ⊥ t f :=
 theorem continuous_top {t : tspace α} : cont t ⊤ f :=
   continuous_iff_coinduced_le.2 <| le_top
 
+theorem continuous_id_of_le {t t' : tspace α} (h : t ≤ t') : cont t t' id := by
+  rw [continuous_def]
+  intro u hu
+  exact h u hu
+
 -- 𝓝 in the induced topology
 theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s : Set β) :
     s ∈ @nhds β (TopologicalSpace.induced f T) a ↔ ∃ u ∈ 𝓝 (f a), f ⁻¹' u ⊆ s := by

@@ -40,7 +40,7 @@ open Classical Set Function TopologicalSpace Filter Metric Quotientₓ
 
 open BoundedContinuousFunction
 
-open sum (inl inr)
+open Sum (inl inr)
 
 attribute [local instance] metric_space_sum
 

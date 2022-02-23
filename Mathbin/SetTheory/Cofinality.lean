@@ -183,7 +183,7 @@ theorem lift_cof o : (cof o).lift = cof o.lift :=
     rw [e]
     apply le_antisymmₓ
     · refine' le_cof_type.2 fun S H => _
-      have : (# (Ulift.up ⁻¹' S)).lift ≤ # S :=
+      have : (# (ULift.up ⁻¹' S)).lift ≤ # S :=
         ⟨⟨fun ⟨⟨x, h⟩⟩ => ⟨⟨x⟩, h⟩, fun e => by
             simp at e <;> congr <;> injection e⟩⟩
       refine' le_transₓ (Cardinal.lift_le.2 <| cof_type_le _ _) this
@@ -192,7 +192,7 @@ theorem lift_cof o : (cof o).lift = cof o.lift :=
         ⟨b, bs, br⟩
       
     · rcases cof_eq r with ⟨S, H, e'⟩
-      have : # (Ulift.down ⁻¹' S) ≤ (# S).lift :=
+      have : # (ULift.down ⁻¹' S) ≤ (# S).lift :=
         ⟨⟨fun ⟨⟨x⟩, h⟩ => ⟨⟨x, h⟩⟩, fun e => by
             simp at e <;> congr <;> injections⟩⟩
       rw [e'] at this

@@ -34,9 +34,9 @@ of a continuous function `f : C([0,1], ℝ)`, and shows that these converge unif
 
 noncomputable section
 
-open nat (choose)
+open Nat (choose)
 
-open polynomial (x)
+open Polynomial (x)
 
 open_locale BigOperators Polynomial
 

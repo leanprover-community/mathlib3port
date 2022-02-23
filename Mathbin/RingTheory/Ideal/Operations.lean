@@ -96,9 +96,13 @@ theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀, ∀ r ∈ I, ∀, �
     supr_le fun r => map_le_iff_le_comap.2 fun n hn => H r.1 r.2 n hn⟩
 
 @[elab_as_eliminator]
-theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, p (r • n)) (H0 : p 0)
-    (H1 : ∀ x y, p x → p y → p (x + y)) (H2 : ∀ c : R n, p n → p (c • n)) : p x :=
-  (@smul_le _ _ _ _ _ _ _ ⟨p, H0, H1, H2⟩).2 Hb H
+theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, p (r • n))
+    (H1 : ∀ x y, p x → p y → p (x + y)) : p x := by
+  have H0 : p 0 := by
+    simpa only [zero_smul] using Hb 0 I.zero_mem 0 N.zero_mem
+  refine' Submodule.supr_induction _ H _ H0 H1
+  rintro ⟨i, hi⟩ m ⟨j, hj, rfl : i • _ = m⟩
+  exact Hb _ hi _ hj
 
 theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} : x ∈ I • span R ({m} : Set M) ↔ ∃ y ∈ I, y • m = x :=
   ⟨fun hx =>
@@ -106,14 +110,9 @@ theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} : x ∈ I • span
       (fun r hri n hnm =>
         let ⟨s, hs⟩ := mem_span_singleton.1 hnm
         ⟨r * s, I.mul_mem_right _ hri, hs ▸ mul_smul r s m⟩)
-      ⟨0, I.zero_mem, by
-        rw [zero_smul]⟩
-      (fun m1 m2 ⟨y1, hyi1, hy1⟩ ⟨y2, hyi2, hy2⟩ =>
-        ⟨y1 + y2, I.add_mem hyi1 hyi2, by
-          rw [add_smul, hy1, hy2]⟩)
-      fun c r ⟨y, hyi, hy⟩ =>
-      ⟨c * y, I.mul_mem_left _ hyi, by
-        rw [mul_smul, hy]⟩,
+      fun m1 m2 ⟨y1, hyi1, hy1⟩ ⟨y2, hyi2, hy2⟩ =>
+      ⟨y1 + y2, I.add_mem hyi1 hyi2, by
+        rw [add_smul, hy1, hy2]⟩,
     fun ⟨y, hyi, hy⟩ => hy ▸ smul_mem_smul hyi (subset_span <| Set.mem_singleton m)⟩
 
 theorem smul_le_right : I • N ≤ N :=
@@ -175,8 +174,7 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
     (smul_le.2 fun rs hrsij t htn =>
       smul_induction_on hrsij
         (fun r hr s hs => (@smul_eq_mul R _ r s).symm ▸ smul_smul r s t ▸ smul_mem_smul hr (smul_mem_smul hs htn))
-        ((zero_smul R t).symm ▸ Submodule.zero_mem _) (fun x y => (add_smul x y t).symm ▸ Submodule.add_mem _)
-        fun r s h => (@smul_eq_mul R _ r s).symm ▸ smul_smul r s t ▸ Submodule.smul_mem _ _ h)
+        fun x y => (add_smul x y t).symm ▸ Submodule.add_mem _)
     (smul_le.2 fun r hr sn hsn =>
       suffices J • N ≤ Submodule.comap (r • LinearMap.id) ((I • J) • N) from this hsn
       smul_le.2 fun s hs n hn =>

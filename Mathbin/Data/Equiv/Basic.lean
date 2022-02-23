@@ -81,6 +81,10 @@ structure Equivₓ (α : Sort _) (β : Sort _) where
 -- mathport name: «expr ≃ »
 infixl:25 " ≃ " => Equivₓ
 
+instance {F} [EquivLike F α β] : CoeTₓ F (α ≃ β) :=
+  ⟨fun f =>
+    { toFun := f, invFun := EquivLike.inv f, left_inv := EquivLike.left_inv f, right_inv := EquivLike.right_inv f }⟩
+
 /-- Convert an involutive function `f` to an equivalence with `to_fun = inv_fun = f`. -/
 def Function.Involutive.toEquiv (f : α → α) (h : Involutive f) : α ≃ α :=
   ⟨f, f, h.LeftInverse, h.RightInverse⟩
@@ -492,8 +496,8 @@ def trueEquivPunit : True ≃ PUnit :=
 
 /-- `ulift α` is equivalent to `α`. -/
 @[simps (config := { fullyApplied := false }) apply symmApply]
-protected def ulift {α : Type v} : Ulift.{u} α ≃ α :=
-  ⟨Ulift.down, Ulift.up, Ulift.up_down, fun a => rfl⟩
+protected def ulift {α : Type v} : ULift.{u} α ≃ α :=
+  ⟨ULift.down, ULift.up, ULift.up_down, fun a => rfl⟩
 
 /-- `plift α` is equivalent to `α`. -/
 @[simps (config := { fullyApplied := false }) apply symmApply]
@@ -755,8 +759,8 @@ section
 open Sum
 
 /-- `psum` is equivalent to `sum`. -/
-def psumEquivSum (α β : Type _) : Psum α β ≃ Sum α β :=
-  ⟨fun s => Psum.casesOn s inl inr, fun s => Sum.casesOn s Psum.inl Psum.inr, fun s => by
+def psumEquivSum (α β : Type _) : PSum α β ≃ Sum α β :=
+  ⟨fun s => PSum.casesOn s inl inr, fun s => Sum.casesOn s PSum.inl PSum.inr, fun s => by
     cases s <;> rfl, fun s => by
     cases s <;> rfl⟩
 
@@ -1206,7 +1210,7 @@ def sigmaPliftEquivSubtype {α : Type v} (P : α → Prop) : (Σi, Plift (P i)) 
 /-- A `sigma` with `λ i, ulift (plift (P i))` fibers is equivalent to `{ x // P x }`.
 Variant of `sigma_plift_equiv_subtype`.
 -/
-def sigmaUliftPliftEquivSubtype {α : Type v} (P : α → Prop) : (Σi, Ulift (Plift (P i))) ≃ Subtype P :=
+def sigmaUliftPliftEquivSubtype {α : Type v} (P : α → Prop) : (Σi, ULift (Plift (P i))) ≃ Subtype P :=
   (sigmaCongrRight fun a => Equivₓ.ulift).trans (sigmaPliftEquivSubtype P)
 
 namespace Perm

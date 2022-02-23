@@ -108,6 +108,11 @@ theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ := by
   rw [Quotientₓ.eq]
   apply rel.swap
 
+@[simp]
+theorem mk_prod_swap_eq {p : α × α} : ⟦p.swap⟧ = ⟦p⟧ := by
+  cases p
+  exact eq_swap
+
 theorem congr_right {a b c : α} : ⟦(a, b)⟧ = ⟦(a, c)⟧ ↔ b = c := by
   constructor <;> intro h
   · rw [Quotientₓ.eq] at h
@@ -130,6 +135,11 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
   · cases h <;> rw [h.1, h.2]
     rw [eq_swap]
     
+
+theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
+  cases p
+  cases q
+  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mkₓ]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use

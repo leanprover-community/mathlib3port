@@ -32,7 +32,7 @@ rational, continued fraction, termination
 
 namespace GeneralizedContinuedFraction
 
-open generalized_continued_fraction (of)
+open GeneralizedContinuedFraction (of)
 
 variable {K : Type _} [LinearOrderedField K] [FloorRing K]
 

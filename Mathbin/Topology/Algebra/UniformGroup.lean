@@ -152,6 +152,20 @@ theorem MonoidHom.uniform_continuous_of_continuous_at_one [UniformSpace β] [Gro
     (by
       simpa using hf.tendsto)
 
+/-- A homomorphism from a uniform group to a discrete uniform group is continuous if and only if
+its kernel is open. -/
+@[to_additive
+      "A homomorphism from a uniform additive group to a discrete uniform additive group is\ncontinuous if and only if its kernel is open."]
+theorem UniformGroup.uniform_continuous_iff_open_ker [UniformSpace β] [DiscreteTopology β] [Groupₓ β] [UniformGroup β]
+    {f : α →* β} : UniformContinuous f ↔ IsOpen (f.ker : Set α) := by
+  refine' ⟨fun hf => _, fun hf => _⟩
+  · apply (is_open_discrete ({1} : Set β)).Preimage (UniformContinuous.continuous hf)
+    
+  · apply MonoidHom.uniform_continuous_of_continuous_at_one
+    rw [ContinuousAt, nhds_discrete β, map_one, tendsto_pure]
+    exact hf.mem_nhds (map_one f)
+    
+
 @[to_additive]
 theorem uniform_continuous_monoid_hom_of_continuous [UniformSpace β] [Groupₓ β] [UniformGroup β] {f : α →* β}
     (h : Continuous f) : UniformContinuous f :=

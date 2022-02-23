@@ -155,9 +155,8 @@ theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : 
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
     congr_argₓ _⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'
 theorem self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n := by
-  "././Mathport/Syntax/Translate/Basic.lean:537:16: unsupported tactic `by_contra'"
+  by_contra' h₁
   have h₂ := h.min_mem _ h₁
   exact h.not_lt_min _ h₁ (hφ h₂) h₂
 

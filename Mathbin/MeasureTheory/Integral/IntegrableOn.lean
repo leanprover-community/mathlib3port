@@ -396,9 +396,9 @@ theorem Continuous.integrable_on_interval_oc [BorelSpace E] [ConditionallyComple
   hf.integrable_on_Ioc
 
 /-- A continuous function with compact closure of the support is integrable on the whole space. -/
-theorem Continuous.integrable_of_compact_closure_support [TopologicalSpace α] [OpensMeasurableSpace α] [T2Space α]
+theorem Continuous.integrable_of_has_compact_support [TopologicalSpace α] [OpensMeasurableSpace α] [T2Space α]
     [BorelSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {f : α → E} (hf : Continuous f)
-    (hfc : IsCompact (Closure <| Support f)) : Integrable f μ := by
+    (hfc : HasCompactSupport f) : Integrable f μ := by
   rw [← indicator_eq_self.2 (@subset_closure _ _ (support f)),
     integrable_indicator_iff is_closed_closure.measurable_set]
   · exact hf.integrable_on_compact hfc

@@ -79,7 +79,7 @@ def interior (s : Set α) : Opens α :=
 theorem gc : GaloisConnection (coe : Opens α → Set α) interior := fun U s =>
   ⟨fun h => interior_maximal h U.property, fun h => le_transₓ h interior_subset⟩
 
-open order_dual (ofDual toDual)
+open OrderDual (ofDual toDual)
 
 /-- The galois insertion between sets and opens, but ordered by reverse inclusion. -/
 def gi : GaloisInsertion (to_dual ∘ @interior α _ ∘ of_dual) (to_dual ∘ Subtype.val ∘ of_dual) where
@@ -249,7 +249,7 @@ def comap (f : C(α, β)) : Opens β →o Opens α where
   monotone' := fun V₁ V₂ hle => monotone_preimage hle
 
 @[simp]
-theorem comap_id : comap (ContinuousMap.id : C(α, α)) = OrderHom.id := by
+theorem comap_id : comap (ContinuousMap.id α) = OrderHom.id := by
   ext
   rfl
 

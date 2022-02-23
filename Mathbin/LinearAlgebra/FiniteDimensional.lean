@@ -574,7 +574,7 @@ theorem basis_singleton_apply (ι : Type _) [Unique ι] (h : finrank K V = 1) (v
     basisSingleton ι h v hv i = v :=
   calc
     basisSingleton ι h v hv i = ((basisUnique ι h).repr v) default • (basisUnique ι h) default := by
-      simp [Subsingleton.elimₓ i default, basis_singleton, LinearEquiv.smulOfUnit]
+      simp [Subsingleton.elimₓ i default, basis_singleton, LinearEquiv.smulOfUnit, Units.smul_def]
     _ = v := by
       rw [← Finsupp.total_unique K (Basis.repr _ v), Basis.total_repr]
     

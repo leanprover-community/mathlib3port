@@ -297,7 +297,7 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
     rw [eq_univ_iff_forall]
     intro x
     rw [Multiset.mem_to_finset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X, sub_eq_zero, pow_card]
-  rw [← this, Multiset.to_finset_val, eq_comm, Multiset.erase_dup_eq_self]
+  rw [← this, Multiset.to_finset_val, eq_comm, Multiset.dedup_eq_self]
   apply nodup_roots
   rw [separable_def]
   convert is_coprime_one_right.neg_right

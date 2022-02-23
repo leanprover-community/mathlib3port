@@ -67,15 +67,15 @@ theorem deriv_log (x : ℝ) : deriv log x = x⁻¹ :=
 theorem deriv_log' : deriv log = Inv.inv :=
   funext deriv_log
 
-theorem times_cont_diff_on_log {n : WithTop ℕ} : TimesContDiffOn ℝ n log ({0}ᶜ) := by
-  suffices : TimesContDiffOn ℝ ⊤ log ({0}ᶜ)
+theorem cont_diff_on_log {n : WithTop ℕ} : ContDiffOn ℝ n log ({0}ᶜ) := by
+  suffices : ContDiffOn ℝ ⊤ log ({0}ᶜ)
   exact this.of_le le_top
-  refine' (times_cont_diff_on_top_iff_deriv_of_open is_open_compl_singleton).2 _
-  simp [differentiable_on_log, times_cont_diff_on_inv]
+  refine' (cont_diff_on_top_iff_deriv_of_open is_open_compl_singleton).2 _
+  simp [differentiable_on_log, cont_diff_on_inv]
 
-theorem times_cont_diff_at_log {n : WithTop ℕ} : TimesContDiffAt ℝ n log x ↔ x ≠ 0 :=
+theorem cont_diff_at_log {n : WithTop ℕ} : ContDiffAt ℝ n log x ↔ x ≠ 0 :=
   ⟨fun h => continuous_at_log_iff.1 h.ContinuousAt, fun hx =>
-    (times_cont_diff_on_log x hx).TimesContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
+    (cont_diff_on_log x hx).ContDiffAt <| IsOpen.mem_nhds is_open_compl_singleton hx⟩
 
 end Real
 
@@ -134,19 +134,18 @@ theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx :
 theorem DifferentiableAt.log (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) : DifferentiableAt ℝ (fun x => log (f x)) x :=
   (hf.HasFderivAt.log hx).DifferentiableAt
 
-theorem TimesContDiffAt.log {n} (hf : TimesContDiffAt ℝ n f x) (hx : f x ≠ 0) :
-    TimesContDiffAt ℝ n (fun x => log (f x)) x :=
-  (times_cont_diff_at_log.2 hx).comp x hf
+theorem ContDiffAt.log {n} (hf : ContDiffAt ℝ n f x) (hx : f x ≠ 0) : ContDiffAt ℝ n (fun x => log (f x)) x :=
+  (cont_diff_at_log.2 hx).comp x hf
 
-theorem TimesContDiffWithinAt.log {n} (hf : TimesContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
-    TimesContDiffWithinAt ℝ n (fun x => log (f x)) s x :=
-  (times_cont_diff_at_log.2 hx).comp_times_cont_diff_within_at x hf
+theorem ContDiffWithinAt.log {n} (hf : ContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
+    ContDiffWithinAt ℝ n (fun x => log (f x)) s x :=
+  (cont_diff_at_log.2 hx).comp_cont_diff_within_at x hf
 
-theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
-    TimesContDiffOn ℝ n (fun x => log (f x)) s := fun x hx => (hf x hx).log (hs x hx)
+theorem ContDiffOn.log {n} (hf : ContDiffOn ℝ n f s) (hs : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
+    ContDiffOn ℝ n (fun x => log (f x)) s := fun x hx => (hf x hx).log (hs x hx)
 
-theorem TimesContDiff.log {n} (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun x => log (f x) :=
-  times_cont_diff_iff_times_cont_diff_at.2 fun x => hf.TimesContDiffAt.log (h x)
+theorem ContDiff.log {n} (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun x => log (f x) :=
+  cont_diff_iff_cont_diff_at.2 fun x => hf.ContDiffAt.log (h x)
 
 theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     DifferentiableOn ℝ (fun x => log (f x)) s := fun x h => (hf x h).log (hx x h)

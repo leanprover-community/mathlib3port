@@ -1710,7 +1710,7 @@ namespace Conv.Interactive
 
 open Conv Interactive Tactic.Interactive
 
-open norm_num (derive)
+open NormNum (derive)
 
 /-- Basic version of `norm_num` that does not call `simp`. -/
 unsafe def norm_num1 : conv Unit :=

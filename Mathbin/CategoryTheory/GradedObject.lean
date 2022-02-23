@@ -211,7 +211,7 @@ variable [HasCoproducts C]
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
 noncomputable def total : GradedObject β C ⥤ C where
-  obj := fun X => ∐ fun i : Ulift.{v} β => X i.down
+  obj := fun X => ∐ fun i : ULift.{v} β => X i.down
   map := fun X Y f => Limits.Sigma.map fun i => f i.down
 
 variable [HasZeroMorphisms C]
@@ -224,7 +224,7 @@ instance : Faithful (total β C) where
   map_injective' := fun X Y f g w => by
     classical
     ext i
-    replace w := sigma.ι (fun i : Ulift.{v} β => X i.down) ⟨i⟩ ≫= w
+    replace w := sigma.ι (fun i : ULift.{v} β => X i.down) ⟨i⟩ ≫= w
     erw [colimit.ι_map, colimit.ι_map] at w
     exact mono.right_cancellation _ _ w
 

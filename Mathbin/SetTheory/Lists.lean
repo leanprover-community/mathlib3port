@@ -339,10 +339,10 @@ section Decidable
 
 @[simp]
 def Equiv.decidableMeas :
-    (Psum (Σ'l₁ : Lists α, Lists α) <| Psum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
-  | Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
-  | Psum.inr <| Psum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
-  | Psum.inr <| Psum.inr ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
+    (PSum (Σ'l₁ : Lists α, Lists α) <| PSum (Σ'l₁ : Lists' α true, Lists' α true) (Σ'a : Lists α, Lists' α true)) → ℕ
+  | PSum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
+  | PSum.inr <| PSum.inl ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
+  | PSum.inr <| PSum.inr ⟨l₁, l₂⟩ => sizeof l₁ + sizeof l₂
 
 open WellFoundedTactics
 

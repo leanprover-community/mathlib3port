@@ -36,7 +36,7 @@ open_locale TopologicalSpace
 local postfix:max "⋆" => star
 
 /-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
-class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] where
+class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] : Prop where
   norm_star : ∀ {x : E}, ∥x⋆∥ = ∥x∥
 
 export NormedStarMonoid (norm_star)
@@ -45,10 +45,10 @@ attribute [simp] norm_star
 
 /-- A C*-ring is a normed star ring that satifies the stronger condition `∥x⋆ * x∥ = ∥x∥^2`
 for every `x`. -/
-class CstarRing (E : Type _) [NormedRing E] [StarRing E] where
+class CstarRing (E : Type _) [NormedRing E] [StarRing E] : Prop where
   norm_star_mul_self : ∀ {x : E}, ∥x⋆ * x∥ = ∥x∥ * ∥x∥
 
-noncomputable instance : CstarRing ℝ where
+instance : CstarRing ℝ where
   norm_star_mul_self := fun x => by
     simp only [star, id.def, norm_mul]
 
@@ -112,7 +112,7 @@ variable [NormedRing E] [StarRing E] [CstarRing E]
 
 /-- In a C*-ring, star preserves the norm. -/
 -- see Note [lower instance priority]
-instance (priority := 100) toNormedStarMonoid : NormedStarMonoid E :=
+instance (priority := 100) to_normed_star_monoid : NormedStarMonoid E :=
   ⟨by
     intro x
     by_cases' htriv : x = 0

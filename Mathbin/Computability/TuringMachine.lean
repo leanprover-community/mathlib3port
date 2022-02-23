@@ -57,9 +57,9 @@ Given these parameters, there are a few common structures for the model that ari
 
 open Relation
 
-open nat (iterate)
+open Nat (iterate)
 
-open function (update iterate_succ iterate_succ_apply iterate_succ' iterate_succ_apply' iterate_zero_apply)
+open Function (update iterate_succ iterate_succ_apply iterate_succ' iterate_succ_apply' iterate_zero_apply)
 
 namespace Turing
 

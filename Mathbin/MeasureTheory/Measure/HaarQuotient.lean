@@ -151,7 +151,7 @@ variable [T2Space (G ⧸ Γ)] [SecondCountableTopology (G ⧸ Γ)] (K : Positive
 theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal Γ]
     [MeasureTheory.Measure.IsHaarMeasure μ] [μ.IsMulRightInvariant] (h𝓕_finite : μ 𝓕 < ⊤) :
     Measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕) =
-      μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K.val) • MeasureTheory.Measure.haarMeasure K :=
+      μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K) • MeasureTheory.Measure.haarMeasure K :=
   by
   let π : G →* G ⧸ Γ := QuotientGroup.mk' Γ
   have meas_π : Measurable π := continuous_quotient_mk.measurable
@@ -165,5 +165,5 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal
   have : (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)).IsMulLeftInvariant := h𝓕.is_mul_left_invariant_map
   rw [measure.haar_measure_unique (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)) K, measure.map_apply meas_π,
     measure.restrict_apply' 𝓕meas, inter_comm]
-  exact K.prop.1.MeasurableSet
+  exact K.compact.measurable_set
 

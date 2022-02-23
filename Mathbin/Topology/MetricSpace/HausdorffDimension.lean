@@ -53,7 +53,7 @@ properties of Hausdorff dimension.
   with nonempty interior, then the Hausdorff dimension of `s` is equal to the dimension of `E`.
 * `dense_compl_of_dimH_lt_finrank`: if `s` is a set in a finite dimensional real vector space `E`
   with Hausdorff dimension strictly less than the dimension of `E`, the `s` has a dense complement.
-* `times_cont_diff.dense_compl_range_of_finrank_lt_finrank`: the complement to the range of a `C¹`
+* `cont_diff.dense_compl_range_of_finrank_lt_finrank`: the complement to the range of a `C¹`
   smooth map is dense provided that the dimension of the domain is strictly less than the dimension
   of the codomain.
 
@@ -508,33 +508,33 @@ on a convex set `s`, then the Hausdorff dimension of `f '' s` is less than or eq
 dimension of `s`.
 
 TODO: do we actually need `convex ℝ s`? -/
-theorem TimesContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s)
-    (ht : t ⊆ s) : dimH (f '' t) ≤ dimH t :=
+theorem ContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : ContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) :
+    dimH (f '' t) ≤ dimH t :=
   dimH_image_le_of_locally_lipschitz_on fun x hx =>
     let ⟨C, u, hu, hf⟩ := (hf x (ht hx)).exists_lipschitz_on_with hc
     ⟨C, u, nhds_within_mono _ ht hu, hf⟩
 
 /-- The Hausdorff dimension of the range of a `C¹`-smooth function defined on a finite dimensional
 real normed space is at most the dimension of its domain as a vector space over `ℝ`. -/
-theorem TimesContDiff.dimH_range_le {f : E → F} (h : TimesContDiff ℝ 1 f) : dimH (Range f) ≤ finrank ℝ E :=
+theorem ContDiff.dimH_range_le {f : E → F} (h : ContDiff ℝ 1 f) : dimH (Range f) ≤ finrank ℝ E :=
   calc
     dimH (Range f) = dimH (f '' univ) := by
       rw [image_univ]
-    _ ≤ dimH (Univ : Set E) := h.TimesContDiffOn.dimH_image_le convex_univ Subset.rfl
+    _ ≤ dimH (Univ : Set E) := h.ContDiffOn.dimH_image_le convex_univ Subset.rfl
     _ = finrank ℝ E := Real.dimH_univ_eq_finrank E
     
 
 /-- A particular case of Sard's Theorem. Let `f : E → F` be a map between finite dimensional real
 vector spaces. Suppose that `f` is `C¹` smooth on a convex set `s` of Hausdorff dimension strictly
 less than the dimension of `F`. Then the complement of the image `f '' s` is dense in `F`. -/
-theorem TimesContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F] {f : E → F} {s t : Set E}
-    (h : TimesContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) (htF : dimH t < finrank ℝ F) : Dense ((f '' t)ᶜ) :=
+theorem ContDiffOn.dense_compl_image_of_dimH_lt_finrank [FiniteDimensional ℝ F] {f : E → F} {s t : Set E}
+    (h : ContDiffOn ℝ 1 f s) (hc : Convex ℝ s) (ht : t ⊆ s) (htF : dimH t < finrank ℝ F) : Dense ((f '' t)ᶜ) :=
   dense_compl_of_dimH_lt_finrank <| (h.dimH_image_le hc ht).trans_lt htF
 
 /-- A particular case of Sard's Theorem. If `f` is a `C¹` smooth map from a real vector space to a
 real vector space `F` of strictly larger dimension, then the complement of the range of `f` is dense
 in `F`. -/
-theorem TimesContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
-    (h : TimesContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (Range fᶜ) :=
+theorem ContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F} (h : ContDiff ℝ 1 f)
+    (hEF : finrank ℝ E < finrank ℝ F) : Dense (Range fᶜ) :=
   dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Ennreal.coe_nat_lt_coe_nat.2 hEF
 

@@ -106,7 +106,7 @@ end
 
 open Bifunctor Traversable IsLawfulTraversable IsLawfulBitraversable
 
-open function (bicompl bicompr)
+open Function (bicompl bicompr)
 
 section Bicompl
 

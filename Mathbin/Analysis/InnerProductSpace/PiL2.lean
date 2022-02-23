@@ -389,3 +389,25 @@ def LinearIsometryEquiv.fromOrthogonalSpanSingleton (n : ℕ) [Fact (finrank �
     (𝕜∙v)ᗮ ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 (Finₓ n) :=
   LinearIsometryEquiv.ofInnerProductSpace (finrank_orthogonal_span_singleton hv)
 
+section Matrix
+
+open_locale Matrix
+
+variable {n m : ℕ}
+
+-- mathport name: «expr⟪ , ⟫ₘ»
+local notation "⟪" x ", " y "⟫ₘ" => @inner 𝕜 (EuclideanSpace 𝕜 (Finₓ m)) _ x y
+
+-- mathport name: «expr⟪ , ⟫ₙ»
+local notation "⟪" x ", " y "⟫ₙ" => @inner 𝕜 (EuclideanSpace 𝕜 (Finₓ n)) _ x y
+
+/-- The inner product of a row of A and a row of B is an entry of B ⬝ Aᴴ. -/
+theorem inner_matrix_row_row (A B : Matrix (Finₓ n) (Finₓ m) 𝕜) (i j : Finₓ n) : ⟪A i, B j⟫ₘ = (B ⬝ Aᴴ) j i := by
+  simp only [inner, Matrix.mul_apply, star_ring_end_apply, Matrix.conj_transpose_apply, mul_comm]
+
+/-- The inner product of a column of A and a column of B is an entry of Aᴴ ⬝ B -/
+theorem inner_matrix_col_col (A B : Matrix (Finₓ n) (Finₓ m) 𝕜) (i j : Finₓ m) : ⟪Aᵀ i, Bᵀ j⟫ₙ = (Aᴴ ⬝ B) i j :=
+  rfl
+
+end Matrix
+

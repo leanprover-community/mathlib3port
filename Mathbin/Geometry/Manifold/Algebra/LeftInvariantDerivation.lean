@@ -214,7 +214,7 @@ theorem eval_at_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
 
 theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
   ext h <;>
-    rw [TimesContMdiffMap.comp_apply, L_apply, ← eval_at_apply, eval_at_mul, apply_hfdifferential, apply_fdifferential,
+    rw [ContMdiffMap.comp_apply, L_apply, ← eval_at_apply, eval_at_mul, apply_hfdifferential, apply_fdifferential,
       eval_at_apply]
 
 instance : HasBracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G) where

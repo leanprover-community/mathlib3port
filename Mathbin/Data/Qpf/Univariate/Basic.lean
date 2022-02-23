@@ -58,7 +58,7 @@ variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
-open functor (Liftp Liftr)
+open Functor (Liftp Liftr)
 
 /-
 Show that every qpf is a lawful functor.
@@ -339,7 +339,7 @@ variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
-open functor (Liftp Liftr)
+open Functor (Liftp Liftr)
 
 /-- does recursion on `q.P.M` using `g : α → F α` rather than `g : α → P α` -/
 def corecF {α : Type _} (g : α → F α) : α → q.p.M :=
@@ -576,7 +576,7 @@ variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
-open functor (Liftp Liftr Supp)
+open Functor (Liftp Liftr Supp)
 
 open Set
 

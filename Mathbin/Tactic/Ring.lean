@@ -672,9 +672,9 @@ open Conv Interactive
 
 open Tactic
 
-open tactic.interactive (ring.mode ring1)
+open Tactic.Interactive (ring.mode ring1)
 
-open tactic.ring (normalize normalize_mode.horner)
+open Tactic.Ring (normalize normalize_mode.horner)
 
 -- mathport name: «expr ?»
 local postfix:1024 "?" => optionalₓ

@@ -67,8 +67,8 @@ unsafe def uncons {α : Type u} : mllist m α → m (Option (α × mllist m α))
     return (x, xs)
 
 /-- Compute, inside the monad, whether an `mllist` is empty. -/
-unsafe def empty {α : Type u} (xs : mllist m α) : m (Ulift Bool) :=
-  (Ulift.up ∘ Option.isSome) <$> uncons xs
+unsafe def empty {α : Type u} (xs : mllist m α) : m (ULift Bool) :=
+  (ULift.up ∘ Option.isSome) <$> uncons xs
 
 /-- Convert a `list` to an `mllist`. -/
 unsafe def of_list {α : Type u} : List α → mllist m α

@@ -423,7 +423,7 @@ theorem LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent
 -- covering a Lie algebra morphism of (possibly different) Lie algebras.
 variable {R L L'}
 
-open lie_module (lowerCentralSeries)
+open LieModule (lowerCentralSeries)
 
 /-- Given an ideal `I` of a Lie algebra `L`, the lower central series of `L ⧸ I` is the same
 whether we regard `L ⧸ I` as an `L` module or an `L ⧸ I` module.

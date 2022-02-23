@@ -1,6 +1,6 @@
 import Mathbin.Data.Multiset.Antidiagonal
 import Mathbin.Data.Multiset.Basic
-import Mathbin.Data.Multiset.EraseDup
+import Mathbin.Data.Multiset.Dedup
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Data.Multiset.Fold
 import Mathbin.Data.Multiset.Functor

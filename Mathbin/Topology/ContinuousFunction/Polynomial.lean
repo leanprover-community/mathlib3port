@@ -166,7 +166,7 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
   ext f
   fconstructor
   · rintro ⟨p, ⟨-, w⟩⟩
-    rw [ContinuousMap.ext_iff] at w
+    rw [FunLike.ext_iff] at w
     dsimp  at w
     let q := p.comp ((b - a)⁻¹ • Polynomial.x + Polynomial.c (-a * (b - a)⁻¹))
     refine' ⟨q, ⟨_, _⟩⟩

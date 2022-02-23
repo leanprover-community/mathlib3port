@@ -30,7 +30,7 @@ differential equation
 
 open Filter Function Set Metric TopologicalSpace intervalIntegral MeasureTheory
 
-open measure_theory.measure_space (volume)
+open MeasureTheory.MeasureSpace (volume)
 
 open_locale Filter TopologicalSpace Nnreal Ennreal Nat Interval
 

@@ -6,6 +6,7 @@ Authors: Scott Morrison, Justus Springer
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.StructureSheaf
 import Mathbin.Data.Equiv.TransferInstance
+import Mathbin.RingTheory.Localization.LocalizationLocalization
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.Topology.Sheaves.Functors
 

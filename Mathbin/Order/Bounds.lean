@@ -26,7 +26,7 @@ formulas for `∅`, `univ`, and intervals.
 
 open Set
 
-open order_dual (toDual ofDual)
+open OrderDual (toDual ofDual)
 
 universe u v w x
 

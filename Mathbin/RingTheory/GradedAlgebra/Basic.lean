@@ -44,7 +44,7 @@ section GradedAlgebra
 
 variable {ι R A : Type _}
 
-variable [DecidableEq ι] [AddCommMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+variable [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 variable (𝒜 : ι → Submodule R A)
 

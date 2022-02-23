@@ -819,7 +819,7 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
   let e ← get_env
   let d ← e.get nm
   let lhs : expr := const d.to_name d.univ_levels
-  let todo := todo.eraseDup.map fun proj => "_" ++ proj
+  let todo := todo.dedup.map fun proj => "_" ++ proj
   let cfg := { cfg with trace := cfg.trace || is_trace_enabled_for `simps.verbose || trc }
   let b ← has_attribute' `to_additive nm
   let cfg ←

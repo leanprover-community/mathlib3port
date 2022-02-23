@@ -172,7 +172,7 @@ topological space, then it can be extended to a bounded continuous function of t
 on the whole space. -/
 theorem exists_norm_eq_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) :
     ∃ g : Y →ᵇ ℝ, ∥g∥ = ∥f∥ ∧ g.restrict s = f :=
-  exists_extension_norm_eq_of_closed_embedding' f (ContinuousMap.id.restrict s) (closed_embedding_subtype_coe hs)
+  exists_extension_norm_eq_of_closed_embedding' f ((ContinuousMap.id _).restrict s) (closed_embedding_subtype_coe hs)
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version for a closed
 embedding and a bounded continuous function that takes values in a non-trivial closed interval.
@@ -347,7 +347,7 @@ that `f x ∈ t` for all `x : s`. Then there exists a bounded continuous real-va
 theorem exists_forall_mem_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) {t : Set ℝ} [OrdConnected t]
     (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g.restrict s = f := by
   rcases exists_extension_forall_mem_of_closed_embedding f hf hne (closed_embedding_subtype_coe hs) with ⟨g, hg, hgf⟩
-  exact ⟨g, hg, coe_injective hgf⟩
+  exact ⟨g, hg, FunLike.coe_injective hgf⟩
 
 end BoundedContinuousFunction
 
@@ -364,7 +364,7 @@ theorem exists_extension_forall_mem_of_closed_embedding (f : C(X, ℝ)) {t : Set
   have h : ℝ ≃o Ioo (-1 : ℝ) 1 := orderIsoIooNegOneOne ℝ
   set F : X →ᵇ ℝ :=
     { toFun := coe ∘ h ∘ f, continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous),
-      bounded' := bounded_range_iff.1 ((bounded_Ioo (-1 : ℝ) 1).mono <| forall_range_iff.2 fun x => (h (f x)).2) }
+      map_bounded' := bounded_range_iff.1 ((bounded_Ioo (-1 : ℝ) 1).mono <| forall_range_iff.2 fun x => (h (f x)).2) }
   set t' : Set ℝ := coe ∘ h '' t
   have ht_sub : t' ⊆ Ioo (-1 : ℝ) 1 := image_subset_iff.2 fun x hx => (h x).2
   have : ord_connected t' := by

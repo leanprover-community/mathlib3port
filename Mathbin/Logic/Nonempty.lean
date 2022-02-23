@@ -67,16 +67,16 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
     | Or.inr ⟨b⟩ => ⟨Sum.inr b⟩
 
 @[simp]
-theorem nonempty_psumₓ {α β} : Nonempty (Psum α β) ↔ Nonempty α ∨ Nonempty β :=
+theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
-      | Psum.inl a => Or.inl ⟨a⟩
-      | Psum.inr b => Or.inr ⟨b⟩)
+      | PSum.inl a => Or.inl ⟨a⟩
+      | PSum.inr b => Or.inr ⟨b⟩)
     fun h =>
     match h with
-    | Or.inl ⟨a⟩ => ⟨Psum.inl a⟩
-    | Or.inr ⟨b⟩ => ⟨Psum.inr b⟩
+    | Or.inl ⟨a⟩ => ⟨PSum.inl a⟩
+    | Or.inr ⟨b⟩ => ⟨PSum.inr b⟩
 
 @[simp]
 theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
@@ -86,7 +86,7 @@ theorem nonempty_psigmaₓ {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ 
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 
 @[simp]
-theorem nonempty_uliftₓ : Nonempty (Ulift α) ↔ Nonempty α :=
+theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
 @[simp]

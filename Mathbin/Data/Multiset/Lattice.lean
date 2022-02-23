@@ -62,20 +62,20 @@ theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s�
 variable [DecidableEq α]
 
 @[simp]
-theorem sup_erase_dup (s : Multiset α) : (eraseDup s).sup = s.sup :=
-  fold_erase_dup_idem _ _ _
+theorem sup_dedup (s : Multiset α) : (dedup s).sup = s.sup :=
+  fold_dedup_idem _ _ _
 
 @[simp]
 theorem sup_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).sup = s₁.sup⊔s₂.sup := by
-  rw [← sup_erase_dup, erase_dup_ext.2, sup_erase_dup, sup_add] <;> simp
+  rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_add] <;> simp
 
 @[simp]
 theorem sup_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).sup = s₁.sup⊔s₂.sup := by
-  rw [← sup_erase_dup, erase_dup_ext.2, sup_erase_dup, sup_add] <;> simp
+  rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_add] <;> simp
 
 @[simp]
 theorem sup_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).sup = a⊔s.sup := by
-  rw [← sup_erase_dup, erase_dup_ext.2, sup_erase_dup, sup_cons] <;> simp
+  rw [← sup_dedup, dedup_ext.2, sup_dedup, sup_cons] <;> simp
 
 theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)} :
     m.sup.Nodup ↔ ∀ a : Multiset α, a ∈ m → a.Nodup := by
@@ -135,20 +135,20 @@ theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s�
 variable [DecidableEq α]
 
 @[simp]
-theorem inf_erase_dup (s : Multiset α) : (eraseDup s).inf = s.inf :=
-  fold_erase_dup_idem _ _ _
+theorem inf_dedup (s : Multiset α) : (dedup s).inf = s.inf :=
+  fold_dedup_idem _ _ _
 
 @[simp]
 theorem inf_ndunion (s₁ s₂ : Multiset α) : (ndunion s₁ s₂).inf = s₁.inf⊓s₂.inf := by
-  rw [← inf_erase_dup, erase_dup_ext.2, inf_erase_dup, inf_add] <;> simp
+  rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_add] <;> simp
 
 @[simp]
 theorem inf_union (s₁ s₂ : Multiset α) : (s₁ ∪ s₂).inf = s₁.inf⊓s₂.inf := by
-  rw [← inf_erase_dup, erase_dup_ext.2, inf_erase_dup, inf_add] <;> simp
+  rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_add] <;> simp
 
 @[simp]
 theorem inf_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).inf = a⊓s.inf := by
-  rw [← inf_erase_dup, erase_dup_ext.2, inf_erase_dup, inf_cons] <;> simp
+  rw [← inf_dedup, dedup_ext.2, inf_dedup, inf_cons] <;> simp
 
 end Inf
 
