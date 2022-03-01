@@ -1298,34 +1298,48 @@ theorem sum_sub [Zero M] [AddCommGroupₓ G] {f : α →₀ M} {h₁ h₂ : α �
     (f.Sum fun a b => h₁ a b - h₂ a b) = f.Sum h₁ - f.Sum h₂ :=
   Finset.sum_sub_distrib
 
-@[to_additive]
-theorem prod_add_index [AddCommMonoidₓ M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N} (h_zero : ∀ a, h a 0 = 1)
-    (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) : (f + g).Prod h = f.Prod h * g.Prod h := by
-  have hf : f.Prod h = ∏ a in f.Support ∪ g.Support, h a (f a) :=
-    (f.prod_of_support_subset (subset_union_left _ _) _) fun a ha => h_zero a
-  have hg : g.Prod h = ∏ a in f.Support ∪ g.Support, h a (g a) :=
-    (g.prod_of_support_subset (subset_union_right _ _) _) fun a ha => h_zero a
-  have hfg : (f + g).Prod h = ∏ a in f.Support ∪ g.Support, h a ((f + g) a) :=
-    ((f + g).prod_of_support_subset support_add _) fun a ha => h_zero a
-  simp only [*, add_apply, prod_mul_distrib]
+/-- Taking the product under `h` is an additive-to-multiplicative homomorphism of finsupps,
+if `h` is an additive-to-multiplicative homomorphism on the support.
+This is a more general version of `finsupp.prod_add_index'`; the latter has simpler hypotheses. -/
+@[to_additive
+      "Taking the product under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism on the support.\nThis is a more general version of `finsupp.sum_add_index'`; the latter has simpler hypotheses."]
+theorem prod_add_index [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N}
+    (h_zero : ∀, ∀ a ∈ f.Support ∪ g.Support, ∀, h a 0 = 1)
+    (h_add : ∀, ∀ a ∈ f.Support ∪ g.Support, ∀ b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
+    (f + g).Prod h = f.Prod h * g.Prod h := by
+  rw [Finsupp.prod_of_support_subset f (subset_union_left _ g.support) h h_zero,
+    Finsupp.prod_of_support_subset g (subset_union_right f.support _) h h_zero, ← Finset.prod_mul_distrib,
+    Finsupp.prod_of_support_subset (f + g) Finsupp.support_add h h_zero]
+  exact
+    Finset.prod_congr rfl fun x hx => by
+      apply h_add x hx
+
+/-- Taking the product under `h` is an additive-to-multiplicative homomorphism of finsupps,
+if `h` is an additive-to-multiplicative homomorphism.
+This is a more specialized version of `finsupp.prod_add_index` with simpler hypotheses. -/
+@[to_additive
+      "Taking the product under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism.\nThis is a more specific version of `finsupp.sum_add_index` with simpler hypotheses."]
+theorem prod_add_index' [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N} (h_zero : ∀ a, h a 0 = 1)
+    (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) : (f + g).Prod h = f.Prod h * g.Prod h :=
+  prod_add_index (fun a ha => h_zero a) fun a ha => h_add a
 
 @[simp]
-theorem sum_add_index' [AddCommMonoidₓ M] [AddCommMonoidₓ N] {f g : α →₀ M} (h : α → M →+ N) :
+theorem sum_hom_add_index [AddZeroClass M] [AddCommMonoidₓ N] {f g : α →₀ M} (h : α → M →+ N) :
     ((f + g).Sum fun x => h x) = (f.Sum fun x => h x) + g.Sum fun x => h x :=
-  sum_add_index (fun a => (h a).map_zero) fun a => (h a).map_add
+  sum_add_index' (fun a => (h a).map_zero) fun a => (h a).map_add
 
 @[simp]
-theorem prod_add_index' [AddCommMonoidₓ M] [CommMonoidₓ N] {f g : α →₀ M} (h : α → Multiplicative M →* N) :
+theorem prod_hom_add_index [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} (h : α → Multiplicative M →* N) :
     ((f + g).Prod fun a b => h a (Multiplicative.ofAdd b)) =
       (f.Prod fun a b => h a (Multiplicative.ofAdd b)) * g.Prod fun a b => h a (Multiplicative.ofAdd b) :=
-  prod_add_index (fun a => (h a).map_one) fun a => (h a).map_mul
+  prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_mul
 
 /-- The canonical isomorphism between families of additive monoid homomorphisms `α → (M →+ N)`
 and monoid homomorphisms `(α →₀ M) →+ N`. -/
-def liftAddHom [AddCommMonoidₓ M] [AddCommMonoidₓ N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N) where
+def liftAddHom [AddZeroClass M] [AddCommMonoidₓ N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N) where
   toFun := fun F =>
     { toFun := fun f => f.Sum fun x => F x, map_zero' := Finset.sum_empty,
-      map_add' := fun _ _ => sum_add_index (fun x => (F x).map_zero) fun x => (F x).map_add }
+      map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
   invFun := fun F x => F.comp <| singleAddHom x
   left_inv := fun F => by
     ext
@@ -1391,7 +1405,7 @@ theorem prod_finset_sum_index [AddCommMonoidₓ M] [CommMonoidₓ N] {s : Finset
     (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
     (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h :=
   (Finset.induction_on s rfl) fun a s has ih => by
-    rw [prod_insert has, ih, sum_insert has, prod_add_index h_zero h_add]
+    rw [prod_insert has, ih, sum_insert has, prod_add_index' h_zero h_add]
 
 @[to_additive]
 theorem prod_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] [CommMonoidₓ P] {f : α →₀ M} {g : α → M → β →₀ N}
@@ -1403,7 +1417,7 @@ theorem multiset_sum_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] (f : Mu
     (h₀ : ∀ a, h a 0 = 0) (h₁ : ∀ a : α b₁ b₂ : M, h a (b₁ + b₂) = h a b₁ + h a b₂) :
     f.Sum.Sum h = (f.map fun g : α →₀ M => g.Sum h).Sum :=
   (Multiset.induction_on f rfl) fun a s ih => by
-    rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index h₀ h₁, ih]
+    rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index' h₀ h₁, ih]
 
 theorem support_sum_eq_bUnion {α : Type _} {ι : Type _} {M : Type _} [AddCommMonoidₓ M] {g : ι → α →₀ M} (s : Finset ι)
     (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).Support (g i₂).Support) :
@@ -1641,7 +1655,7 @@ theorem map_domain_congr {f g : α → β} (h : ∀, ∀ x ∈ v.Support, ∀, f
     simp only [h _ H]
 
 theorem map_domain_add {f : α → β} : mapDomain f (v₁ + v₂) = mapDomain f v₁ + mapDomain f v₂ :=
-  sum_add_index (fun _ => single_zero) fun _ _ _ => single_add
+  sum_add_index' (fun _ => single_zero) fun _ _ _ => single_add
 
 @[simp]
 theorem map_domain_equiv_apply {f : α ≃ β} (x : α →₀ M) (a : β) : mapDomain f x a = x (f.symm a) := by
@@ -1777,9 +1791,9 @@ theorem map_domain_map_range [AddCommMonoidₓ N] (f : α → β) (v : α →₀
 theorem sum_update_add [AddCommMonoidₓ α] [AddCommMonoidₓ β] (f : ι →₀ α) (i : ι) (a : α) (g : ι → α → β)
     (hg : ∀ i, g i 0 = 0) (hgg : ∀ j : ι a₁ a₂ : α, g j (a₁ + a₂) = g j a₁ + g j a₂) :
     (f.update i a).Sum g + g i (f i) = f.Sum g + g i a := by
-  rw [update_eq_erase_add_single, sum_add_index hg hgg]
+  rw [update_eq_erase_add_single, sum_add_index' hg hgg]
   conv_rhs => rw [← Finsupp.update_self f i]
-  rw [update_eq_erase_add_single, sum_add_index hg hgg, add_assocₓ, add_assocₓ]
+  rw [update_eq_erase_add_single, sum_add_index' hg hgg, add_assocₓ, add_assocₓ]
   congr 1
   rw [add_commₓ, sum_single_index (hg _), sum_single_index (hg _)]
 
@@ -2239,7 +2253,8 @@ theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg�
   rw [Finsupp.curry]
   trans
   · exact
-      sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ => sum_add_index (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
+      sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ =>
+        sum_add_index' (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
     
   congr
   funext p c

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-!
 # Half braidings and the Drinfeld center of a monoidal category

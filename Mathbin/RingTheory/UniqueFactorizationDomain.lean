@@ -1280,6 +1280,11 @@ theorem coprime_iff_inf_one [Nontrivial α] {a b : α} (ha0 : a ≠ 0) (hb0 : b 
 
 omit dec_irr
 
+theorem factors_self [Nontrivial α] {p : Associates α} (hp : Irreducible p) : p.factors = some {⟨p, hp⟩} :=
+  eq_of_prod_eq_prod
+    (by
+      rw [factors_prod, factor_set.prod, map_singleton, prod_singleton, Subtype.coe_mk])
+
 theorem factors_prime_pow [Nontrivial α] {p : Associates α} (hp : Irreducible p) (k : ℕ) :
     factors (p ^ k) = some (Multiset.repeat ⟨p, hp⟩ k) :=
   eq_of_prod_eq_prod
@@ -1314,6 +1319,9 @@ theorem count_ne_zero_iff_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
       Associates.prime_pow_dvd_iff_le (associates.mk_ne_zero.mpr ha0) ((Associates.irreducible_mk p).mpr hp)] at h
     exact (zero_lt_one.trans_le h).ne'
     
+
+theorem count_self [Nontrivial α] {p : Associates α} (hp : Irreducible p) : p.count p.factors = 1 := by
+  simp [factors_self hp, Associates.count_some hp]
 
 theorem count_mul [Nontrivial α] {a : Associates α} (ha : a ≠ 0) {b : Associates α} (hb : b ≠ 0) {p : Associates α}
     (hp : Irreducible p) : count p (factors (a * b)) = count p a.factors + count p b.factors := by

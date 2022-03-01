@@ -49,7 +49,7 @@ theorem derived_series_normal (n : ℕ) : (derivedSeries G n).Normal := by
   induction' n with n ih
   · exact (⊤ : Subgroup G).normal_of_characteristic
     
-  · exact general_commutator_normal (derivedSeries G n) (derivedSeries G n)
+  · exact Subgroup.commutator_normal (derivedSeries G n) (derivedSeries G n)
     
 
 @[simp]
@@ -60,24 +60,10 @@ end derivedSeries
 
 section CommutatorMap
 
-theorem map_commutator_eq_commutator_map (H₁ H₂ : Subgroup G) : ⁅H₁,H₂⁆.map f = ⁅H₁.map f,H₂.map f⁆ := by
-  rw [generalCommutator, generalCommutator, MonoidHom.map_closure]
-  apply le_antisymmₓ <;> apply closure_mono
-  · rintro _ ⟨x, ⟨p, hp, q, hq, rfl⟩, rfl⟩
-    refine'
-      ⟨f p, mem_map.mpr ⟨p, hp, rfl⟩, f q, mem_map.mpr ⟨q, hq, rfl⟩, by
-        simp [*]⟩
-    
-  · rintro x ⟨_, ⟨p, hp, rfl⟩, _, ⟨q, hq, rfl⟩, rfl⟩
-    refine'
-      ⟨p * q * p⁻¹ * q⁻¹, ⟨p, hp, q, hq, rfl⟩, by
-        simp [*]⟩
-    
-
 theorem commutator_le_map_commutator {H₁ H₂ : Subgroup G} {K₁ K₂ : Subgroup G'} (h₁ : K₁ ≤ H₁.map f)
     (h₂ : K₂ ≤ H₂.map f) : ⁅K₁,K₂⁆ ≤ ⁅H₁,H₂⁆.map f := by
-  rw [map_commutator_eq_commutator_map]
-  exact general_commutator_mono h₁ h₂
+  rw [map_commutator]
+  exact commutator_mono h₁ h₂
 
 section DerivedSeriesMap
 
@@ -87,7 +73,7 @@ theorem map_derived_series_le_derived_series (n : ℕ) : (derivedSeries G n).map
   induction' n with n ih
   · simp only [derived_series_zero, le_top]
     
-  · simp only [derived_series_succ, map_commutator_eq_commutator_map, general_commutator_mono, *]
+  · simp only [derived_series_succ, map_commutator, commutator_mono, ih]
     
 
 variable {f}
@@ -198,9 +184,9 @@ theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = c
     
   rw [derived_series_succ, ih]
   cases' (commutator.normal G).eq_bot_or_eq_top with h h
-  · rw [h, general_commutator_bot]
+  · rw [h, commutator_bot]
     
-  · rwa [h, ← commutator_def]
+  · rwa [h]
     
 
 theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
@@ -227,17 +213,32 @@ theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : 
   mt (is_solvable_def _).mp
     (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (HasMem.Mem g) h).mp (h2 n))))
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5)) := by
   let x : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![1, 2, 0, 3, 4], ![2, 0, 1, 3, 4], by
+    ⟨«expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»",
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»", by
       decide, by
       decide⟩
   let y : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![3, 4, 2, 0, 1], ![3, 4, 2, 0, 1], by
+    ⟨«expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»",
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»", by
       decide, by
       decide⟩
   let z : Equivₓ.Perm (Finₓ 5) :=
-    ⟨![0, 3, 2, 1, 4], ![0, 3, 2, 1, 4], by
+    ⟨«expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»",
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»", by
       decide, by
       decide⟩
   have x_ne_one : x ≠ 1 := by
@@ -253,7 +254,7 @@ theorem Equivₓ.Perm.fin_5_not_solvable : ¬IsSolvable (Equivₓ.Perm (Finₓ 5
   · rw [key]
     exact
       (derived_series_normal _ _).conj_mem _
-        (general_commutator_containment _ _ ih ((derived_series_normal _ _).conj_mem _ ih _)) _
+        (commutator_containment _ _ ih ((derived_series_normal _ _).conj_mem _ ih _)) _
     
 
 theorem Equivₓ.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) : ¬IsSolvable (Equivₓ.Perm X) := by

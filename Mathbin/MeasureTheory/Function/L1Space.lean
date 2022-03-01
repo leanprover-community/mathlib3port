@@ -259,7 +259,7 @@ theorem tendsto_lintegral_norm_of_dominated_convergence [MeasurableSpace β] [Bo
     (bound_has_finite_integral : HasFiniteIntegral bound μ) (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥F n a∥ ≤ bound a)
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => ∫⁻ a, Ennreal.ofReal ∥F n a - f a∥ ∂μ) atTop (𝓝 0) := by
-  have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae F_measurable h_lim
+  have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae' F_measurable h_lim
   let b := fun a => 2 * Ennreal.ofReal (bound a)
   /- `∥F n a∥ ≤ bound a` and `F n a --> f a` implies `∥f a∥ ≤ bound a`, and thus by the
     triangle inequality, have `∥F n a - f a∥ ≤ 2 * (bound a). -/
@@ -445,10 +445,22 @@ theorem Integrable.smul_measure {f : α → β} (h : Integrable f μ) {c : ℝ�
   rw [← mem_ℒp_one_iff_integrable] at h⊢
   exact h.smul_measure hc
 
+theorem Integrable.to_average {f : α → β} (h : Integrable f μ) : Integrable f ((μ Univ)⁻¹ • μ) := by
+  rcases eq_or_ne μ 0 with (rfl | hne)
+  · rwa [smul_zero]
+    
+  · apply h.smul_measure
+    simpa
+    
+
 theorem integrable_map_measure [OpensMeasurableSpace β] {f : α → δ} {g : δ → β} (hg : AeMeasurable g (Measure.map f μ))
     (hf : Measurable f) : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by
   simp_rw [← mem_ℒp_one_iff_integrable]
   exact mem_ℒp_map_measure_iff hg hf
+
+theorem Integrable.comp_measurable [OpensMeasurableSpace β] {f : α → δ} {g : δ → β}
+    (hg : Integrable g (Measure.map f μ)) (hf : Measurable f) : Integrable (g ∘ f) μ :=
+  (integrable_map_measure hg.AeMeasurable hf).mp hg
 
 theorem _root_.measurable_embedding.integrable_map_iff {f : α → δ} (hf : MeasurableEmbedding f) {g : δ → β} :
     Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by

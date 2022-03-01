@@ -31,7 +31,7 @@ variable (C : Type _) [Category C]
 def inverse : Karoubi (Karoubi C) ⥤ Karoubi C where
   obj := fun P =>
     ⟨P.x.x, P.p.f, by
-      simpa only [hom_ext] using P.idempotence⟩
+      simpa only [hom_ext] using P.idem⟩
   map := fun P Q f =>
     ⟨f.f.f, by
       simpa only [hom_ext] using f.comm⟩
@@ -68,11 +68,11 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
         { f :=
             { f := P.p.1,
               comm := by
-                have h := P.idempotence
+                have h := P.idem
                 simp only [hom_ext, comp] at h
                 erw [← assoc, h, comp_p] },
           comm := by
-            have h := P.idempotence
+            have h := P.idem
             simp only [hom_ext, comp] at h⊢
             erw [h, h] },
       naturality' := fun P Q f => by
@@ -82,21 +82,21 @@ def counitIso : inverse C ⋙ toKaroubi (Karoubi C) ≅ 𝟭 (Karoubi (Karoubi C
         { f :=
             { f := P.p.1,
               comm := by
-                have h := P.idempotence
+                have h := P.idem
                 simp only [hom_ext, comp] at h
                 erw [h, p_comp] },
           comm := by
-            have h := P.idempotence
+            have h := P.idem
             simp only [hom_ext, comp] at h⊢
             erw [h, h] },
       naturality' := fun P Q f => by
         simpa [hom_ext] using (p_comm f).symm }
   hom_inv_id' := by
     ext P
-    simpa only [hom_ext, id_eq] using P.idempotence
+    simpa only [hom_ext, id_eq] using P.idem
   inv_hom_id' := by
     ext P
-    simpa only [hom_ext, id_eq] using P.idempotence
+    simpa only [hom_ext, id_eq] using P.idem
 
 /-- The equivalence `karoubi C ≌ karoubi (karoubi C)` -/
 @[simps]
@@ -109,7 +109,7 @@ def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
     ext
     simp only [eq_to_hom_f, eq_to_hom_refl, comp_id, counit_iso_hom_app_f_f, to_karoubi_obj_p, id_eq, assoc, comp,
       unit_iso_hom, eq_to_hom_app, eq_to_hom_map]
-    erw [P.idempotence, P.idempotence]
+    erw [P.idem, P.idem]
 
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor := by
   dsimp

@@ -26,7 +26,7 @@ universe v₁ v₂ u₁ u₂
 -- morphism levels before object levels. See note [category_theory universes].
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
-namespace Adjunction
+namespace CategoryTheory.Adjunction
 
 /-- If `G.op` is adjoint to `F.op` then `F` is adjoint to `G`. -/
 @[simps]
@@ -249,5 +249,5 @@ adjoints.
 def natIsoOfRightAdjointNatIso {F F' : C ⥤ D} {G G' : D ⥤ C} (adj1 : F ⊣ G) (adj2 : F' ⊣ G') (r : G ≅ G') : F ≅ F' :=
   leftAdjointUniq adj1 (adj2.ofNatIsoRight r.symm)
 
-end Adjunction
+end CategoryTheory.Adjunction
 

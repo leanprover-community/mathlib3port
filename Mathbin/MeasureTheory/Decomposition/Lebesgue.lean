@@ -669,7 +669,7 @@ theorem have_lebesgue_decomposition_of_finite_measure [IsFiniteMeasure μ] [IsFi
         have := subset_le_of_restrict_le_restrict _ _ hE₁ hE₃ (inter_subset_right A E)
         rwa [zero_apply, to_signed_measure_sub_apply (hA.inter hE₁), measure.sub_apply (hA.inter hE₁) hle,
           Ennreal.to_real_sub_of_le _ (ne_of_ltₓ (measure_lt_top _ _)), sub_nonneg, le_sub_iff_add_le, ←
-          Ennreal.to_real_add, Ennreal.to_real_le_to_real, measure.coe_nnreal_smul, Pi.smul_apply,
+          Ennreal.to_real_add, Ennreal.to_real_le_to_real, measure.coe_smul, Pi.smul_apply,
           with_density_apply _ (hA.inter hE₁),
           show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by
             rfl,
@@ -997,6 +997,8 @@ theorem integrable_rn_deriv (s : SignedMeasure α) (μ : Measure α) : Integrabl
       exact has_finite_integral_to_real_of_lintegral_ne_top (lintegral_rn_deriv_lt_top _ μ).Ne
       
 
+variable (s μ)
+
 /-- **The Lebesgue Decomposition theorem between a signed measure and a measure**:
 Given a signed measure `s` and a σ-finite measure `μ`, there exist a signed measure `t` and a
 measurable and integrable function `f`, such that `t` is mutually singular with respect to `μ`
@@ -1022,6 +1024,8 @@ theorem singular_part_add_with_density_rn_deriv_eq [s.HaveLebesgueDecomposition 
     first |
       exact (lintegral_rn_deriv_lt_top _ _).Ne|
       measurability
+
+variable {s μ}
 
 theorem jordan_decomposition_add_with_density_mutually_singular {f : α → ℝ} (hf : Measurable f)
     (htμ : t ⊥ᵥ μ.toEnnrealVectorMeasure) :
@@ -1267,27 +1271,21 @@ theorem integrable_rn_deriv (c : ComplexMeasure α) (μ : Measure α) : Integrab
 theorem singular_part_add_with_density_rn_deriv_eq [c.HaveLebesgueDecomposition μ] :
     c.singularPart μ + μ.withDensityᵥ (c.rnDeriv μ) = c := by
   conv_rhs => rw [← c.to_complex_measure_to_signed_measure]
-  ext i hi
-  · rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply, Complex.add_re, re_apply,
-      with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← set_integral_re_add_im (c.integrable_rn_deriv μ).IntegrableOn]
-    suffices ((c.singular_part μ i).re + ∫ x in i, (c.rn_deriv μ x).re ∂μ) = (c i).re by
-      simpa
-    rw [← with_densityᵥ_apply _ hi]
+  ext i hi : 1
+  rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply]
+  ext
+  · rw [Complex.add_re, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.re_eq_complex_re, ←
+      integral_re (c.integrable_rn_deriv μ).IntegrableOn, IsROrC.re_eq_complex_re, ← with_densityᵥ_apply _ hi]
     · change (c.re.singular_part μ + μ.with_densityᵥ (c.re.rn_deriv μ)) i = _
-      rw [@signed_measure.singular_part_add_with_density_rn_deriv_eq _ _ μ c.re _]
-      rfl
+      rw [c.re.singular_part_add_with_density_rn_deriv_eq μ]
       
     · exact signed_measure.integrable_rn_deriv _ _
       
     
-  · rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply, Complex.add_im, im_apply,
-      with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← set_integral_re_add_im (c.integrable_rn_deriv μ).IntegrableOn]
-    suffices ((c.singular_part μ i).im + ∫ x in i, (c.rn_deriv μ x).im ∂μ) = (c i).im by
-      simpa
-    rw [← with_densityᵥ_apply _ hi]
+  · rw [Complex.add_im, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.im_eq_complex_im, ←
+      integral_im (c.integrable_rn_deriv μ).IntegrableOn, IsROrC.im_eq_complex_im, ← with_densityᵥ_apply _ hi]
     · change (c.im.singular_part μ + μ.with_densityᵥ (c.im.rn_deriv μ)) i = _
-      rw [@signed_measure.singular_part_add_with_density_rn_deriv_eq _ _ μ c.im _]
-      rfl
+      rw [c.im.singular_part_add_with_density_rn_deriv_eq μ]
       
     · exact signed_measure.integrable_rn_deriv _ _
       

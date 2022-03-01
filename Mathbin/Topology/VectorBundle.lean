@@ -59,10 +59,25 @@ noncomputable section
 open Bundle Set
 
 variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _) [Semiringₓ R] [∀ x, AddCommMonoidₓ (E x)]
-  [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F] [Module R F] [TopologicalSpace (TotalSpace E)]
-  [TopologicalSpace B]
+  [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F] [Module R F] [TopologicalSpace B]
 
 section
+
+-- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
+/-- Local pretrivialization for vector prebundles. -/
+@[nolint has_inhabited_instance]
+structure TopologicalVectorBundle.Pretrivialization extends
+  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure" where
+  linear : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun y).2
+
+instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
+  ⟨fun e => e.toFun⟩
+
+instance :
+    Coe (TopologicalVectorBundle.Pretrivialization R F E) (TopologicalFiberBundle.Pretrivialization F (proj E)) :=
+  ⟨TopologicalVectorBundle.Pretrivialization.toFiberBundlePretrivialization⟩
+
+variable [TopologicalSpace (TotalSpace E)]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
 /-- Local trivialization for vector bundles. -/
@@ -83,6 +98,10 @@ namespace TopologicalVectorBundle
 
 variable {R F E}
 
+/-- Natural identification as `topological_vector_bundle.pretrivialization`. -/
+def Trivialization.toPretrivialization (e : Trivialization R F E) : TopologicalVectorBundle.Pretrivialization R F E :=
+  { e with }
+
 theorem Trivialization.mem_source (e : Trivialization R F E) {x : TotalSpace E} : x ∈ e.Source ↔ proj E x ∈ e.BaseSet :=
   TopologicalFiberBundle.Trivialization.mem_source e
 
@@ -97,8 +116,6 @@ theorem Trivialization.coe_fst (e : Trivialization R F E) {x : TotalSpace E} (ex
 
 end TopologicalVectorBundle
 
-end
-
 variable [∀ x, TopologicalSpace (E x)]
 
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
@@ -106,7 +123,7 @@ space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
 class TopologicalVectorBundle : Prop where
-  Inducing {} : ∀ b : B, Inducing fun x : E b => (id ⟨b, x⟩ : TotalSpace E)
+  total_space_mk_inducing {} : ∀ b : B, Inducing (totalSpaceMk E b)
   locally_trivial {} : ∀ b : B, ∃ e : TopologicalVectorBundle.Trivialization R F E, b ∈ e.BaseSet
 
 variable [TopologicalVectorBundle R F E]
@@ -177,11 +194,11 @@ def continuousLinearEquivAt (e : Trivialization R F E) (b : B) (hb : b ∈ e.Bas
     refine' continuous_snd.comp _
     apply
       ContinuousOn.comp_continuous e.to_local_homeomorph.continuous_on
-        (TopologicalVectorBundle.inducing R F E b).Continuous fun x => _
+        (TopologicalVectorBundle.total_space_mk_inducing R F E b).Continuous fun x => _
     rw [TopologicalFiberBundle.Trivialization.mem_source]
     exact hb
   continuous_inv_fun := by
-    rw [(TopologicalVectorBundle.inducing R F E b).continuous_iff]
+    rw [(TopologicalVectorBundle.total_space_mk_inducing R F E b).continuous_iff]
     dsimp
     have : Continuous fun z : F => e.to_fiber_bundle_trivialization.to_local_homeomorph.symm (b, z) := by
       apply
@@ -255,7 +272,7 @@ def TrivialTopologicalVectorBundle.trivialization : Trivialization R F (Bundle.T
 
 instance TrivialBundle.topological_vector_bundle : TopologicalVectorBundle R F (Bundle.Trivial B F) where
   locally_trivial := fun x => ⟨TrivialTopologicalVectorBundle.trivialization R B F, mem_univ x⟩
-  Inducing := fun b =>
+  total_space_mk_inducing := fun b =>
     ⟨by
       have : (fun x : trivialₓ B F b => x) = @id F := by
         ext x
@@ -406,7 +423,7 @@ theorem local_triv_at_apply : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
   TopologicalFiberBundleCore.local_triv_at_apply Z b a
 
 instance : TopologicalVectorBundle R F Z.Fiber where
-  Inducing := fun b =>
+  total_space_mk_inducing := fun b =>
     ⟨by
       refine' le_antisymmₓ _ fun s h => _
       · rw [← continuous_iff_le_induced]
@@ -419,7 +436,7 @@ instance : TopologicalVectorBundle R F Z.Fiber where
                 ((Z.local_triv_at b).open_base_set.Prod h),
               _⟩
         rw [preimage_inter, ← preimage_comp, Function.comp]
-        simp only [id.def]
+        simp only [total_space_mk]
         refine' ext_iff.mpr fun a => ⟨fun ha => _, fun ha => ⟨Z.mem_base_set_at b, _⟩⟩
         · simp only [mem_prod, mem_preimage, mem_inter_eq, local_triv_at_apply] at ha
           exact ha.2.2
@@ -440,4 +457,88 @@ theorem is_open_map_proj : IsOpenMap Z.proj :=
   TopologicalFiberBundleCore.is_open_map_proj Z
 
 end TopologicalVectorBundleCore
+
+end
+
+section
+
+/-! ### Topological vector prebundle -/
+
+
+variable [∀ x, TopologicalSpace (E x)]
+
+open TopologicalSpace
+
+/-- This structure permits to define a vector bundle when trivializations are given as local
+equivalences but there is not yet a topology on the total space. The total space is hence given a
+topology in such a way that there is a fiber bundle structure for which the local equivalences
+are also local homeomorphism and hence vector bundle trivializations. -/
+@[nolint has_inhabited_instance]
+structure TopologicalVectorPrebundle where
+  pretrivializationAt : B → TopologicalVectorBundle.Pretrivialization R F E
+  mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet
+  continuous_triv_change :
+    ∀ x y : B,
+      ContinuousOn (pretrivialization_at x ∘ (pretrivialization_at y).toLocalEquiv.symm)
+        ((pretrivialization_at y).Target ∩
+          (pretrivialization_at y).toLocalEquiv.symm ⁻¹' (pretrivialization_at x).Source)
+  total_space_mk_inducing : ∀ b : B, Inducing (pretrivialization_at b ∘ totalSpaceMk E b)
+
+namespace TopologicalVectorPrebundle
+
+variable {R E F}
+
+/-- Natural identification of `topological_vector_prebundle` as a `topological_fiber_prebundle`. -/
+def toTopologicalFiberPrebundle (a : TopologicalVectorPrebundle R F E) : TopologicalFiberPrebundle F (proj E) :=
+  { a with pretrivializationAt := fun x => a.pretrivializationAt x }
+
+/-- Topology on the total space that will make the prebundle into a bundle. -/
+def totalSpaceTopology (a : TopologicalVectorPrebundle R F E) : TopologicalSpace (TotalSpace E) :=
+  a.toTopologicalFiberPrebundle.totalSpaceTopology
+
+/-- Promotion from a `topologial_vector_prebundle.trivialization` to a
+  `topological_vector_bundle.trivialization`. -/
+def trivializationAt (a : TopologicalVectorPrebundle R F E) (x : B) :
+    @TopologicalVectorBundle.Trivialization R _ F E _ _ _ _ _ _ _ a.totalSpaceTopology := by
+  let this' := a.total_space_topology
+  exact { a.to_topological_fiber_prebundle.trivialization_at x with linear := (a.pretrivialization_at x).linear }
+
+variable (a : TopologicalVectorPrebundle R F E)
+
+theorem mem_trivialization_at_source (b : B) (x : E b) : totalSpaceMk E b x ∈ (a.pretrivializationAt b).Source := by
+  simp only [(a.pretrivialization_at b).source_eq, mem_preimage, proj]
+  exact a.mem_base_pretrivialization_at b
+
+@[simp]
+theorem total_space_mk_preimage_source (b : B) : totalSpaceMk E b ⁻¹' (a.pretrivializationAt b).Source = univ := by
+  apply eq_univ_of_univ_subset
+  rw [(a.pretrivialization_at b).source_eq, ← preimage_comp, Function.comp]
+  simp only [proj]
+  rw [preimage_const_of_mem _]
+  exact a.mem_base_pretrivialization_at b
+
+@[continuity]
+theorem continuous_total_space_mk (b : B) : @Continuous _ _ _ a.totalSpaceTopology (totalSpaceMk E b) := by
+  let this' := a.total_space_topology
+  rw
+    [(a.trivialization_at b).toLocalHomeomorph.continuous_iff_continuous_comp_left (a.total_space_mk_preimage_source b)]
+  exact continuous_iff_le_induced.mpr (le_antisymm_iff.mp (a.total_space_mk_inducing b).induced).1
+
+theorem inducing_total_space_mk_of_inducing_comp (b : B) (h : Inducing (a.trivializationAt b ∘ totalSpaceMk E b)) :
+    @Inducing _ _ _ a.totalSpaceTopology (totalSpaceMk E b) := by
+  let this' := a.total_space_topology
+  rw [← restrict_comp_cod_restrict (a.mem_trivialization_at_source b)] at h
+  apply Inducing.of_cod_restrict (a.mem_trivialization_at_source b)
+  refine'
+    inducing_of_inducing_compose _ (continuous_on_iff_continuous_restrict.mp (a.trivialization_at b).continuous_to_fun)
+      h
+  exact (a.continuous_total_space_mk b).codRestrict (a.mem_trivialization_at_source b)
+
+theorem to_topological_vector_bundle : @TopologicalVectorBundle R _ F E _ _ _ _ _ _ _ a.totalSpaceTopology _ :=
+  { total_space_mk_inducing := fun b => a.inducing_total_space_mk_of_inducing_comp b (a.total_space_mk_inducing b),
+    locally_trivial := fun b => ⟨a.trivializationAt b, a.mem_base_pretrivialization_at b⟩ }
+
+end TopologicalVectorPrebundle
+
+end
 

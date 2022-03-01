@@ -77,7 +77,8 @@ corresponding results for Euclidean affine spaces.
 variable {V : Type _} [InnerProductSpace ℝ V]
 
 /-- The undirected angle between two vectors. If either vector is 0,
-this is π/2. -/
+this is π/2. See `orientation.oangle` for the corresponding oriented angle
+definition. -/
 def angle (x y : V) : ℝ :=
   Real.arccos (inner x y / (∥x∥ * ∥y∥))
 
@@ -578,6 +579,8 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
@@ -594,7 +597,7 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hp₂c₁.symm) (hp₁c₂.trans hp₂c₂.symm)
   have hop : ⟪c₂ -ᵥ c₁, p -ᵥ p₁⟫ = 0 :=
     inner_vsub_vsub_of_dist_eq_of_dist_eq (hp₁c₁.trans hpc₁.symm) (hp₁c₂.trans hpc₂.symm)
-  let b : Finₓ 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
+  let b : Finₓ 2 → V := «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
   have hb : LinearIndependent ℝ b := by
     refine' linear_independent_of_ne_zero_of_inner_eq_zero _ _
     · intro i

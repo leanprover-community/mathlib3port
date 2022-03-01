@@ -3,10 +3,10 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.Const
+import Mathbin.CategoryTheory.Functor.Const
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Yoneda
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 -- morphism levels before object levels. See note [category_theory universes].
 -- morphism levels before object levels. See note [category_theory universes].
@@ -793,37 +793,25 @@ variable {F : J ⥤ C}
 @[simps]
 def Cocone.op (c : Cocone F) : Cone F.op where
   x := op c.x
-  π :=
-    { app := fun j => (c.ι.app (unop j)).op,
-      naturality' := fun j j' f =>
-        Quiver.Hom.unop_inj
-          (by
-            tidy) }
+  π := NatTrans.op c.ι
 
 /-- Change a `cone F` into a `cocone F.op`. -/
 @[simps]
 def Cone.op (c : Cone F) : Cocone F.op where
   x := op c.x
-  ι :=
-    { app := fun j => (c.π.app (unop j)).op,
-      naturality' := fun j j' f =>
-        Quiver.Hom.unop_inj
-          (by
-            tidy) }
+  ι := NatTrans.op c.π
 
 /-- Change a `cocone F.op` into a `cone F`. -/
 @[simps]
 def Cocone.unop (c : Cocone F.op) : Cone F where
   x := unop c.x
-  π :=
-    { app := fun j => (c.ι.app (op j)).unop, naturality' := fun j j' f => Quiver.Hom.op_inj (c.ι.naturality f.op).symm }
+  π := NatTrans.removeOp c.ι
 
 /-- Change a `cone F.op` into a `cocone F`. -/
 @[simps]
 def Cone.unop (c : Cone F.op) : Cocone F where
   x := unop c.x
-  ι :=
-    { app := fun j => (c.π.app (op j)).unop, naturality' := fun j j' f => Quiver.Hom.op_inj (c.π.naturality f.op).symm }
+  ι := NatTrans.removeOp c.π
 
 variable (F)
 
@@ -868,20 +856,12 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
           cones.ext (iso.refl _)
             (by
               tidy))
-      (by
-        intros
-        have hX : X = op (unop X) := rfl
-        revert hX
-        generalize unop X = X'
-        rintro rfl
-        have hY : Y = op (unop Y) := rfl
-        revert hY
-        generalize unop Y = Y'
-        rintro rfl
-        apply Quiver.Hom.unop_inj
-        apply cone_morphism.ext
-        dsimp
-        simp )
+      fun X Y f =>
+      Quiver.Hom.unop_inj
+        (ConeMorphism.ext _ _
+          (by
+            dsimp
+            simp ))
   functor_unit_iso_comp' := fun c => by
     apply Quiver.Hom.unop_inj
     ext
@@ -900,7 +880,7 @@ variable {F : J ⥤ Cᵒᵖ}
 @[simps (config := { rhsMd := semireducible, simpRhs := true })]
 def coneOfCoconeLeftOp (c : Cocone F.leftOp) : Cone F where
   x := op c.x
-  π := NatTrans.removeLeftOp (c.ι ≫ (const.opObjUnop (op c.x)).Hom)
+  π := NatTrans.removeLeftOp c.ι
 
 /-- Change a cone on `F : J ⥤ Cᵒᵖ` to a cocone on `F.left_op : Jᵒᵖ ⥤ C`. -/
 @[simps (config := { rhsMd := semireducible, simpRhs := true })]
@@ -915,11 +895,11 @@ def coconeLeftOpOfCone (c : Cone F) : Cocone F.leftOp where
 @[simps x]
 def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
   x := op c.x
-  ι := NatTrans.removeLeftOp ((const.opObjUnop (op c.x)).Hom ≫ c.π)
+  ι := NatTrans.removeLeftOp c.π
 
 @[simp]
 theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) j : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op := by
-  dsimp [cocone_of_cone_left_op]
+  dsimp only [cocone_of_cone_left_op]
   simp
 
 /-- Change a cocone on `F : J ⥤ Cᵒᵖ` to a cone on `F.left_op : Jᵒᵖ ⥤ C`. -/
@@ -927,6 +907,66 @@ theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) j : (coconeOfConeLeftO
 def coneLeftOpOfCocone (c : Cocone F) : Cone F.leftOp where
   x := unop c.x
   π := NatTrans.leftOp c.ι
+
+end
+
+section
+
+variable {F : Jᵒᵖ ⥤ C}
+
+/-- Change a cocone on `F.right_op : J ⥤ Cᵒᵖ` to a cone on `F : Jᵒᵖ ⥤ C`. -/
+@[simps]
+def coneOfCoconeRightOp (c : Cocone F.rightOp) : Cone F where
+  x := unop c.x
+  π := NatTrans.removeRightOp c.ι
+
+/-- Change a cone on `F : Jᵒᵖ ⥤ C` to a cocone on `F.right_op : Jᵒᵖ ⥤ C`. -/
+@[simps]
+def coconeRightOpOfCone (c : Cone F) : Cocone F.rightOp where
+  x := op c.x
+  ι := NatTrans.rightOp c.π
+
+/-- Change a cone on `F.right_op : J ⥤ Cᵒᵖ` to a cocone on `F : Jᵒᵖ ⥤ C`. -/
+@[simps]
+def coconeOfConeRightOp (c : Cone F.rightOp) : Cocone F where
+  x := unop c.x
+  ι := NatTrans.removeRightOp c.π
+
+/-- Change a cocone on `F : Jᵒᵖ ⥤ C` to a cone on `F.right_op : J ⥤ Cᵒᵖ`. -/
+@[simps]
+def coneRightOpOfCocone (c : Cocone F) : Cone F.rightOp where
+  x := op c.x
+  π := NatTrans.rightOp c.ι
+
+end
+
+section
+
+variable {F : Jᵒᵖ ⥤ Cᵒᵖ}
+
+/-- Change a cocone on `F.unop : J ⥤ C` into a cone on `F : Jᵒᵖ ⥤ Cᵒᵖ`. -/
+@[simps]
+def coneOfCoconeUnop (c : Cocone F.unop) : Cone F where
+  x := op c.x
+  π := NatTrans.removeUnop c.ι
+
+/-- Change a cone on `F : Jᵒᵖ ⥤ Cᵒᵖ` into a cocone on `F.unop : J ⥤ C`. -/
+@[simps]
+def coconeUnopOfCone (c : Cone F) : Cocone F.unop where
+  x := unop c.x
+  ι := NatTrans.unop c.π
+
+/-- Change a cone on `F.unop : J ⥤ C` into a cocone on `F : Jᵒᵖ ⥤ Cᵒᵖ`. -/
+@[simps]
+def coconeOfConeUnop (c : Cone F.unop) : Cocone F where
+  x := op c.x
+  ι := NatTrans.removeUnop c.π
+
+/-- Change a cocone on `F : Jᵒᵖ ⥤ Cᵒᵖ` into a cone on `F.unop : J ⥤ C`. -/
+@[simps]
+def coneUnopOfCocone (c : Cocone F) : Cone F.unop where
+  x := unop c.x
+  π := NatTrans.unop c.ι
 
 end
 

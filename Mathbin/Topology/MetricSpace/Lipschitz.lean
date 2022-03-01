@@ -90,17 +90,31 @@ namespace LipschitzWith
 
 section Emetric
 
+open Emetric
+
 variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-variable {K : ℝ≥0 } {f : α → β}
+variable {K : ℝ≥0 } {f : α → β} {x y : α} {r : ℝ≥0∞}
 
 protected theorem lipschitz_on_with (h : LipschitzWith K f) (s : Set α) : LipschitzOnWith K f s := fun x _ y _ => h x y
 
 theorem edist_le_mul (h : LipschitzWith K f) (x y : α) : edist (f x) (f y) ≤ K * edist x y :=
   h x y
 
+theorem edist_le_mul_of_le (h : LipschitzWith K f) (hr : edist x y ≤ r) : edist (f x) (f y) ≤ K * r :=
+  (h x y).trans <| Ennreal.mul_left_mono hr
+
+theorem edist_lt_mul_of_lt (h : LipschitzWith K f) (hK : K ≠ 0) (hr : edist x y < r) : edist (f x) (f y) < K * r :=
+  (h x y).trans_lt <| (Ennreal.mul_lt_mul_left (Ennreal.coe_ne_zero.2 hK) Ennreal.coe_ne_top).2 hr
+
+theorem maps_to_emetric_closed_ball (h : LipschitzWith K f) (x : α) (r : ℝ≥0∞) :
+    MapsTo f (ClosedBall x r) (ClosedBall (f x) (K * r)) := fun y hy => h.edist_le_mul_of_le hy
+
+theorem maps_to_emetric_ball (h : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ≥0∞) :
+    MapsTo f (Ball x r) (Ball (f x) (K * r)) := fun y hy => h.edist_lt_mul_of_lt hK hy
+
 theorem edist_lt_top (hf : LipschitzWith K f) {x y : α} (h : edist x y ≠ ⊤) : edist (f x) (f y) < ⊤ :=
-  lt_of_le_of_ltₓ (hf x y) <| Ennreal.mul_lt_top Ennreal.coe_ne_top h
+  (hf x y).trans_lt <| Ennreal.mul_lt_top Ennreal.coe_ne_top h
 
 theorem mul_edist_le (h : LipschitzWith K f) (x y : α) : (K⁻¹ : ℝ≥0∞) * edist (f x) (f y) ≤ edist x y := by
   rw [mul_comm, ← div_eq_mul_inv]
@@ -115,8 +129,7 @@ protected theorem weaken (hf : LipschitzWith K f) {K' : ℝ≥0 } (h : K ≤ K')
 theorem ediam_image_le (hf : LipschitzWith K f) (s : Set α) : Emetric.diam (f '' s) ≤ K * Emetric.diam s := by
   apply Emetric.diam_le
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-  calc edist (f x) (f y) ≤ ↑K * edist x y := hf.edist_le_mul x y _ ≤ ↑K * Emetric.diam s :=
-      Ennreal.mul_left_mono (Emetric.edist_le_diam_of_mem hx hy)
+  exact hf.edist_le_mul_of_le (Emetric.edist_le_diam_of_mem hx hy)
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzWith K f) {x y : α} {d : ℝ≥0∞} (h : edist x y < d / K) :
     edist (f x) (f y) < d :=
@@ -233,13 +246,13 @@ end Emetric
 
 section Metric
 
-variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ] {K : ℝ≥0 }
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ] {K : ℝ≥0 } {f : α → β} {x y : α} {r : ℝ}
 
-protected theorem of_dist_le' {f : α → β} {K : ℝ} (h : ∀ x y, dist (f x) (f y) ≤ K * dist x y) :
+protected theorem of_dist_le' {K : ℝ} (h : ∀ x y, dist (f x) (f y) ≤ K * dist x y) :
     LipschitzWith (Real.toNnreal K) f :=
   of_dist_le_mul fun x y => le_transₓ (h x y) <| mul_le_mul_of_nonneg_right (Real.le_coe_to_nnreal K) dist_nonneg
 
-protected theorem mk_one {f : α → β} (h : ∀ x y, dist (f x) (f y) ≤ dist x y) : LipschitzWith 1 f :=
+protected theorem mk_one (h : ∀ x y, dist (f x) (f y) ≤ dist x y) : LipschitzWith 1 f :=
   of_dist_le_mul <| by
     simpa only [Nnreal.coe_one, one_mulₓ] using h
 
@@ -265,20 +278,30 @@ protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0 } (h : LipschitzWith 
 protected theorem iff_le_add_mul {f : α → ℝ} {K : ℝ≥0 } : LipschitzWith K f ↔ ∀ x y, f x ≤ f y + K * dist x y :=
   ⟨LipschitzWith.le_add_mul, LipschitzWith.of_le_add_mul K⟩
 
-theorem nndist_le {f : α → β} (hf : LipschitzWith K f) (x y : α) : nndist (f x) (f y) ≤ K * nndist x y :=
+theorem nndist_le (hf : LipschitzWith K f) (x y : α) : nndist (f x) (f y) ≤ K * nndist x y :=
   hf.dist_le_mul x y
 
-theorem bounded_image {f : α → β} (hf : LipschitzWith K f) {s : Set α} (hs : Metric.Bounded s) :
-    Metric.Bounded (f '' s) :=
+theorem dist_le_mul_of_le (hf : LipschitzWith K f) (hr : dist x y ≤ r) : dist (f x) (f y) ≤ K * r :=
+  (hf.dist_le_mul x y).trans <| mul_le_mul_of_nonneg_left hr K.coe_nonneg
+
+theorem maps_to_closed_ball (hf : LipschitzWith K f) (x : α) (r : ℝ) :
+    MapsTo f (Metric.ClosedBall x r) (Metric.ClosedBall (f x) (K * r)) := fun y hy => hf.dist_le_mul_of_le hy
+
+theorem dist_lt_mul_of_lt (hf : LipschitzWith K f) (hK : K ≠ 0) (hr : dist x y < r) : dist (f x) (f y) < K * r :=
+  (hf.dist_le_mul x y).trans_lt <| (mul_lt_mul_left <| Nnreal.coe_pos.2 hK.bot_lt).2 hr
+
+theorem maps_to_ball (hf : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ) :
+    MapsTo f (Metric.Ball x r) (Metric.Ball (f x) (K * r)) := fun y hy => hf.dist_lt_mul_of_lt hK hy
+
+theorem bounded_image (hf : LipschitzWith K f) {s : Set α} (hs : Metric.Bounded s) : Metric.Bounded (f '' s) :=
   Metric.bounded_iff_ediam_ne_top.2 <|
     ne_top_of_le_ne_top (Ennreal.mul_ne_top Ennreal.coe_ne_top hs.ediam_ne_top) (hf.ediam_image_le s)
 
-theorem diam_image_le {f : α → β} (hf : LipschitzWith K f) (s : Set α) (hs : Metric.Bounded s) :
-    Metric.diam (f '' s) ≤ K * Metric.diam s := by
-  simpa only [Ennreal.to_real_mul, Ennreal.coe_to_real] using
-    (Ennreal.to_real_le_to_real (hf.bounded_image hs).ediam_ne_top
-          (Ennreal.mul_ne_top Ennreal.coe_ne_top hs.ediam_ne_top)).2
-      (hf.ediam_image_le s)
+theorem diam_image_le (hf : LipschitzWith K f) (s : Set α) (hs : Metric.Bounded s) :
+    Metric.diam (f '' s) ≤ K * Metric.diam s :=
+  Metric.diam_le_of_forall_dist_le (mul_nonneg K.coe_nonneg Metric.diam_nonneg) <|
+    ball_image_iff.2 fun x hx =>
+      ball_image_iff.2 fun y hy => hf.dist_le_mul_of_le <| Metric.dist_le_diam_of_mem hs hx hy
 
 protected theorem dist_left (y : α) : LipschitzWith 1 fun x => dist x y :=
   LipschitzWith.of_le_add fun x z => by

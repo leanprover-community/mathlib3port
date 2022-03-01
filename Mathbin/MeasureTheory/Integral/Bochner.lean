@@ -970,14 +970,18 @@ theorem integral_eq_lintegral_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ] f
     rfl
     
 
-theorem of_real_integral_norm_eq_lintegral_nnnorm {G} [NormedGroup G] [MeasurableSpace G] [OpensMeasurableSpace G]
-    {f : α → G} (hf : Integrable f μ) : Ennreal.ofReal (∫ x, ∥f x∥ ∂μ) = ∫⁻ x, ∥f x∥₊ ∂μ := by
-  rw [integral_eq_lintegral_of_nonneg_ae _ hf.1.norm]
-  · simp_rw [of_real_norm_eq_coe_nnnorm, Ennreal.of_real_to_real (lt_top_iff_ne_top.mp hf.2)]
+theorem integral_norm_eq_lintegral_nnnorm {G} [NormedGroup G] [MeasurableSpace G] [OpensMeasurableSpace G] {f : α → G}
+    (hf : AeMeasurable f μ) : (∫ x, ∥f x∥ ∂μ) = Ennreal.toReal (∫⁻ x, ∥f x∥₊ ∂μ) := by
+  rw [integral_eq_lintegral_of_nonneg_ae _ hf.norm]
+  · simp_rw [of_real_norm_eq_coe_nnnorm]
     
   · refine' ae_of_all _ _
-    simp
+    simp_rw [Pi.zero_apply, norm_nonneg, imp_true_iff]
     
+
+theorem of_real_integral_norm_eq_lintegral_nnnorm {G} [NormedGroup G] [MeasurableSpace G] [OpensMeasurableSpace G]
+    {f : α → G} (hf : Integrable f μ) : Ennreal.ofReal (∫ x, ∥f x∥ ∂μ) = ∫⁻ x, ∥f x∥₊ ∂μ := by
+  rw [integral_norm_eq_lintegral_nnnorm hf.ae_measurable, Ennreal.of_real_to_real (lt_top_iff_ne_top.mp hf.2)]
 
 theorem integral_eq_integral_pos_part_sub_integral_neg_part {f : α → ℝ} (hf : Integrable f μ) :
     (∫ a, f a ∂μ) = (∫ a, Real.toNnreal (f a) ∂μ) - ∫ a, Real.toNnreal (-f a) ∂μ := by
@@ -1164,12 +1168,19 @@ theorem norm_integral_le_of_norm_le_const [IsFiniteMeasure μ] {f : α → E} {C
       rw [integral_const, smul_eq_mul, mul_comm]
     
 
+theorem tendsto_integral_approx_on_of_measurable {f : α → E} {s : Set E} (hfi : Integrable f μ) (hfm : Measurable f)
+    (hs : ∀ᵐ x ∂μ, f x ∈ Closure s) {y₀ : E} (h₀ : y₀ ∈ s) (h₀i : Integrable (fun x => y₀) μ) :
+    Tendsto (fun n => (SimpleFunc.approxOn f hfm s y₀ h₀ n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) := by
+  have hfi' := simple_func.integrable_approx_on hfm hfi h₀ h₀i
+  simp only [simple_func.integral_eq_integral _ (hfi' _)]
+  exact
+    tendsto_integral_of_L1 _ hfi (eventually_of_forall hfi')
+      (simple_func.tendsto_approx_on_L1_nnnorm hfm _ hs (hfi.sub h₀i).2)
+
 theorem tendsto_integral_approx_on_univ_of_measurable {f : α → E} (fmeas : Measurable f) (hf : Integrable f μ) :
-    Tendsto (fun n => (SimpleFunc.approxOn f fmeas Univ 0 trivialₓ n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) := by
-  have : tendsto (fun n => ∫ x, simple_func.approx_on f fmeas univ 0 trivialₓ n x ∂μ) at_top (𝓝 <| ∫ x, f x ∂μ) :=
-    tendsto_integral_of_L1 _ hf (eventually_of_forall <| simple_func.integrable_approx_on_univ fmeas hf)
-      (simple_func.tendsto_approx_on_univ_L1_nnnorm fmeas hf)
-  simpa only [simple_func.integral_eq_integral, simple_func.integrable_approx_on_univ fmeas hf]
+    Tendsto (fun n => (SimpleFunc.approxOn f fmeas Univ 0 trivialₓ n).integral μ) atTop (𝓝 <| ∫ x, f x ∂μ) :=
+  tendsto_integral_approx_on_of_measurable hf fmeas (eventually_of_forall fun x => subset_closure trivialₓ) _
+    (integrable_zero _ _ _)
 
 variable {ν : Measure α}
 

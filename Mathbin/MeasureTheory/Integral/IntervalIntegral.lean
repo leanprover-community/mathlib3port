@@ -7,6 +7,7 @@ import Mathbin.Analysis.NormedSpace.Dual
 import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.MeasureTheory.Measure.HaarLebesgue
 import Mathbin.Analysis.Calculus.ExtendDeriv
+import Mathbin.MeasureTheory.Function.LocallyIntegrable
 import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.MeasureTheory.Integral.VitaliCaratheodory
 
@@ -2261,8 +2262,8 @@ theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E}
     · rw [← hf.image_interval]
       exact mem_image_of_mem f left_mem_interval
       
-    · rw [← image_subset_iff]
-      exact hf.image_interval.subset
+    · rw [← hf.image_interval]
+      exact maps_to_image _ _
       
   have h_der :
     ∀,

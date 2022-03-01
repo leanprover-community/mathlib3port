@@ -697,6 +697,10 @@ theorem lt_succ_iff_lt_or_eq {n i : ℕ} : n < i.succ ↔ n < i ∨ n = i :=
 theorem mul_self_inj {n m : ℕ} : n * n = m * m ↔ n = m :=
   le_antisymm_iffₓ.trans (le_antisymm_iffₓ.trans (and_congr mul_self_le_mul_self_iff mul_self_le_mul_self_iff)).symm
 
+theorem le_add_pred_of_pos (n : ℕ) {i : ℕ} (hi : i ≠ 0) : n ≤ i + (n - 1) := by
+  refine' le_transₓ _ add_tsub_le_assoc
+  simp [add_commₓ, Nat.add_sub_assocₓ, one_le_iff_ne_zero.2 hi]
+
 /-!
 ### Recursion and induction principles
 
@@ -1330,7 +1334,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
   | m, n + 1, _ => lt_succ_iffₓ
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
   by_cases' n0 : n = 0
   · rw [n0, Nat.div_zeroₓ, Nat.div_zeroₓ]

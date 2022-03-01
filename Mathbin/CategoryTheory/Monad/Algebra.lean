@@ -5,7 +5,6 @@ Authors: Scott Morrison, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Adjunction.Basic
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
 
 /-!
 # Eilenberg-Moore (co)algebras for a (co)monad

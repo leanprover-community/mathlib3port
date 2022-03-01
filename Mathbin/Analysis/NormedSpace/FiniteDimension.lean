@@ -596,9 +596,9 @@ theorem exists_seq_norm_le_one_le_norm_sub (h : ¬FiniteDimensional 𝕜 E) :
 
 variable (𝕜)
 
-/-- Riesz's theorem: if the unit ball is compact in a vector space, then the space is
-finite-dimensional. -/
-theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r)
+/-- **Riesz's theorem**: if a closed ball with center zero of positive radius is compact in a vector
+space, then the space is finite-dimensional. -/
+theorem finite_dimensional_of_is_compact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     (h : IsCompact (Metric.ClosedBall (0 : E) r)) : FiniteDimensional 𝕜 E := by
   by_contra hfin
   obtain ⟨R, f, Rgt, fle, lef⟩ : ∃ (R : ℝ)(f : ℕ → E), 1 < R ∧ (∀ n, ∥f n∥ ≤ R) ∧ ∀ m n, m ≠ n → 1 ≤ ∥f m - f n∥ :=
@@ -622,6 +622,14 @@ theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r)
       simp only [g, dist_eq_norm, ← smul_sub, norm_smul, -mul_oneₓ]
       apply mul_le_mul_of_nonneg_left (lef _ _ (ne_of_gtₓ _)) (norm_nonneg _)
       exact φmono (Nat.lt_succ_selfₓ N)_ < ∥c∥ := hN (N + 1) (Nat.le_succₓ N)
+
+/-- **Riesz's theorem**: if a closed ball of positive radius is compact in a vector space, then the
+space is finite-dimensional. -/
+theorem finite_dimensional_of_is_compact_closed_ball {r : ℝ} (rpos : 0 < r) {c : E}
+    (h : IsCompact (Metric.ClosedBall c r)) : FiniteDimensional 𝕜 E := by
+  apply finite_dimensional_of_is_compact_closed_ball₀ 𝕜 rpos
+  have : Continuous fun x => -c + x := continuous_const.add continuous_id
+  simpa using h.image this
 
 end Riesz
 
@@ -675,7 +683,8 @@ instance (priority := 900) FiniteDimensional.proper_real (E : Type u) [NormedGro
 
 /-- If `E` is a finite dimensional normed real vector space, `x : E`, and `s` is a neighborhood of
 `x` that is not equal to the whole space, then there exists a point `y ∈ frontier s` at distance
-`metric.inf_dist x sᶜ` from `x`. -/
+`metric.inf_dist x sᶜ` from `x`. See also
+`is_compact.exists_mem_frontier_inf_dist_compl_eq_dist`. -/
 theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {x : E} {s : Set E} (hx : x ∈ s) (hs : s ≠ univ) :
     ∃ y ∈ Frontier s, Metric.infDist x (sᶜ) = dist x y := by
@@ -684,6 +693,26 @@ theorem exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedGroup E] 
   refine'
     ⟨y, ⟨Metric.closed_ball_inf_dist_compl_subset_closure hx hs <| Metric.mem_closed_ball.2 <| ge_of_eq _, hys⟩, hyd⟩
   rwa [dist_comm]
+
+/-- If `K` is a compact set in a nontrivial real normed space and `x ∈ K`, then there exists a point
+`y` of the boundary of `K` at distance `metric.inf_dist x Kᶜ` from `x`. See also
+`exists_mem_frontier_inf_dist_compl_eq_dist`. -/
+theorem IsCompact.exists_mem_frontier_inf_dist_compl_eq_dist {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
+    [Nontrivial E] {x : E} {K : Set E} (hK : IsCompact K) (hx : x ∈ K) :
+    ∃ y ∈ Frontier K, Metric.infDist x (Kᶜ) = dist x y := by
+  obtain hx' | hx' : x ∈ Interior K ∪ Frontier K := by
+    rw [← closure_eq_interior_union_frontier]
+    exact subset_closure hx
+  · rw [mem_interior_iff_mem_nhds, metric.nhds_basis_closed_ball.mem_iff] at hx'
+    rcases hx' with ⟨r, hr₀, hrK⟩
+    have : FiniteDimensional ℝ E :=
+      finite_dimensional_of_is_compact_closed_ball ℝ hr₀ (compact_of_is_closed_subset hK Metric.is_closed_ball hrK)
+    exact exists_mem_frontier_inf_dist_compl_eq_dist hx hK.ne_univ
+    
+  · refine' ⟨x, hx', _⟩
+    rw [frontier_eq_closure_inter_closure] at hx'
+    rw [Metric.inf_dist_zero_of_mem_closure hx'.2, dist_self]
+    
 
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ∥f x∥` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in

@@ -72,7 +72,7 @@ namespace OuterMeasure
 
 section Basic
 
-variable {α : Type _} {β : Type _} {ms : Set (OuterMeasure α)} {m : OuterMeasure α}
+variable {α β R R' : Type _} {ms : Set (OuterMeasure α)} {m : OuterMeasure α}
 
 instance : CoeFun (OuterMeasure α) fun _ => Set α → ℝ≥0∞ :=
   ⟨fun m => m.measureOf⟩
@@ -241,31 +241,61 @@ theorem coe_add (m₁ m₂ : OuterMeasure α) : ⇑(m₁ + m₂) = m₁ + m₂ :
 theorem add_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁ + m₂) s = m₁ s + m₂ s :=
   rfl
 
-instance addCommMonoid : AddCommMonoidₓ (OuterMeasure α) :=
-  { Injective.addCommMonoid (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl fun _ _ => rfl with
-    zero := 0, add := (· + ·) }
+section HasScalar
 
-instance : HasScalar ℝ≥0∞ (OuterMeasure α) :=
+variable [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+
+variable [HasScalar R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
+
+instance : HasScalar R (OuterMeasure α) :=
   ⟨fun c m =>
-    { measureOf := fun s => c * m s,
+    { measureOf := fun s => c • m s,
       Empty := by
-        simp ,
-      mono := fun s t h => Ennreal.mul_left_mono <| m.mono h,
+        rw [← smul_one_mul c (_ : ℝ≥0∞), empty', mul_zero],
+      mono := fun s t h => by
+        rw [← smul_one_mul c (m s), ← smul_one_mul c (m t)]
+        exact Ennreal.mul_left_mono (m.mono h),
       Union_nat := fun s => by
-        rw [Ennreal.tsum_mul_left]
+        simp_rw [← smul_one_mul c (m _), Ennreal.tsum_mul_left]
         exact Ennreal.mul_left_mono (m.Union _) }⟩
 
 @[simp]
-theorem coe_smul (c : ℝ≥0∞) (m : OuterMeasure α) : ⇑(c • m) = c • m :=
+theorem coe_smul (c : R) (m : OuterMeasure α) : ⇑(c • m) = c • m :=
   rfl
 
-theorem smul_apply (c : ℝ≥0∞) (m : OuterMeasure α) (s : Set α) : (c • m) s = c * m s :=
+theorem smul_apply (c : R) (m : OuterMeasure α) (s : Set α) : (c • m) s = c • m s :=
   rfl
 
-instance : Module ℝ≥0∞ (OuterMeasure α) :=
-  { Injective.module ℝ≥0∞ ⟨show OuterMeasure α → Set α → ℝ≥0∞ from coeFn, coe_zero, coe_add⟩ coe_fn_injective
-      coe_smul with
-    smul := (· • ·) }
+instance [SmulCommClass R R' ℝ≥0∞] : SmulCommClass R R' (OuterMeasure α) :=
+  ⟨fun _ _ _ => ext fun _ => smul_comm _ _ _⟩
+
+instance [HasScalar R R'] [IsScalarTower R R' ℝ≥0∞] : IsScalarTower R R' (OuterMeasure α) :=
+  ⟨fun _ _ _ => ext fun _ => smul_assoc _ _ _⟩
+
+instance [HasScalar Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] : IsCentralScalar R (OuterMeasure α) :=
+  ⟨fun _ _ => ext fun _ => op_smul_eq_smul _ _⟩
+
+end HasScalar
+
+instance [Monoidₓ R] [MulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] : MulAction R (OuterMeasure α) :=
+  Injective.mulAction _ coe_fn_injective coe_smul
+
+-- there is no `function.injective.add_comm_monoid_smul` so we do this in two steps
+instance addCommMonoid : AddCommMonoidₓ (OuterMeasure α) :=
+  { Injective.addMonoidSmul (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl (fun _ _ => rfl)
+      fun _ _ => rfl,
+    Injective.addCommSemigroup (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective fun _ _ => rfl with }
+
+/-- `coe_fn` as an `add_monoid_hom`. -/
+@[simps]
+def coeFnAddMonoidHom : OuterMeasure α →+ Set α → ℝ≥0∞ :=
+  ⟨coeFn, coe_zero, coe_add⟩
+
+instance [Monoidₓ R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] : DistribMulAction R (OuterMeasure α) :=
+  Injective.distribMulAction coeFnAddMonoidHom coe_fn_injective coe_smul
+
+instance [Semiringₓ R] [Module R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] : Module R (OuterMeasure α) :=
+  Injective.module R coeFnAddMonoidHom coe_fn_injective coe_smul
 
 instance : HasBot (OuterMeasure α) :=
   ⟨0⟩
@@ -324,9 +354,10 @@ theorem coe_supr {ι} (f : ι → OuterMeasure α) : ⇑(⨆ i, f i) = ⨆ i, f 
 theorem sup_apply (m₁ m₂ : OuterMeasure α) (s : Set α) : (m₁⊔m₂) s = m₁ s⊔m₂ s := by
   have := supr_apply (fun b => cond b m₁ m₂) s <;> rwa [supr_bool_eq, supr_bool_eq] at this
 
-theorem smul_supr {ι} (f : ι → OuterMeasure α) (c : ℝ≥0∞) : (c • ⨆ i, f i) = ⨆ i, c • f i :=
+theorem smul_supr [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] {ι} (f : ι → OuterMeasure α) (c : R) :
+    (c • ⨆ i, f i) = ⨆ i, c • f i :=
   ext fun s => by
-    simp only [smul_apply, supr_apply, Ennreal.mul_supr]
+    simp only [smul_apply, supr_apply, ← smul_one_mul c (f _ _), ← smul_one_mul c (supr _), Ennreal.mul_supr]
 
 end Supremum
 
@@ -410,7 +441,7 @@ theorem sum_apply {ι} (f : ι → OuterMeasure α) (s : Set α) : sum f s = ∑
   rfl
 
 theorem smul_dirac_apply (a : ℝ≥0∞) (b : α) (s : Set α) : (a • dirac b) s = indicator s (fun _ => a) b := by
-  simp only [smul_apply, dirac_apply, ← indicator_mul_right _ fun _ => a, mul_oneₓ]
+  simp only [smul_apply, smul_eq_mul, dirac_apply, ← indicator_mul_right _ fun _ => a, mul_oneₓ]
 
 /-- Pullback of an `outer_measure`: `comap f μ s = μ (f '' s)`. -/
 def comap {β} (f : α → β) : OuterMeasure β →ₗ[ℝ≥0∞] OuterMeasure α where
@@ -1466,11 +1497,15 @@ theorem exists_measurable_superset_forall_eq_trim {ι} [Encodable ι] (μ : ι �
   refine' ⟨⋂ i, t i, hst, ht, fun i => le_antisymmₓ _ _⟩
   exacts[hμt i ▸ (μ i).mono (Inter_subset _ _), (mono' _ hst).trans_eq ((μ i).trim_eq ht)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- If `m₁ s = op (m₂ s) (m₃ s)` for all `s`, then the same is true for `m₁.trim`, `m₂.trim`,
 and `m₃ s`. -/
 theorem trim_binop {m₁ m₂ m₃ : OuterMeasure α} {op : ℝ≥0∞ → ℝ≥0∞ → ℝ≥0∞} (h : ∀ s, m₁ s = op (m₂ s) (m₃ s))
     (s : Set α) : m₁.trim s = op (m₂.trim s) (m₃.trim s) := by
-  rcases exists_measurable_superset_forall_eq_trim ![m₁, m₂, m₃] s with ⟨t, hst, ht, htm⟩
+  rcases exists_measurable_superset_forall_eq_trim
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") s with
+    ⟨t, hst, ht, htm⟩
   simp only [Finₓ.forall_fin_succ, Matrix.cons_val_zero, Matrix.cons_val_succ] at htm
   rw [← htm.1, ← htm.2.1, ← htm.2.2.1, h]
 
@@ -1484,7 +1519,8 @@ theorem trim_add (m₁ m₂ : OuterMeasure α) : (m₁ + m₂).trim = m₁.trim 
   ext <| trim_binop (add_apply m₁ m₂)
 
 /-- `trim` respects scalar multiplication. -/
-theorem trim_smul (c : ℝ≥0∞) (m : OuterMeasure α) : (c • m).trim = c • m.trim :=
+theorem trim_smul {R : Type _} [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (c : R) (m : OuterMeasure α) :
+    (c • m).trim = c • m.trim :=
   ext <| trim_op (smul_apply c m)
 
 /-- `trim` sends the supremum of two outer measures to the supremum of the trimmed measures. -/

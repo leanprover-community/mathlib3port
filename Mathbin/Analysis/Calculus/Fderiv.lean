@@ -827,12 +827,21 @@ theorem differentiable_const (c : F) : Differentiable 𝕜 fun x : E => c := fun
 theorem differentiable_on_const (c : F) : DifferentiableOn 𝕜 (fun x => c) s :=
   (differentiable_const _).DifferentiableOn
 
-theorem has_fderiv_at_of_subsingleton {R X Y : Type _} [NondiscreteNormedField R] [NormedGroup X] [NormedGroup Y]
-    [NormedSpace R X] [NormedSpace R Y] [h : Subsingleton X] (f : X → Y) (x : X) : HasFderivAt f (0 : X →L[R] Y) x := by
-  rw [subsingleton_iff] at h
-  have key : Function.const X (f 0) = f := by
-    ext x' <;> rw [h x' 0]
-  exact key ▸ has_fderiv_at_const (f 0) _
+theorem has_fderiv_within_at_singleton (f : E → F) (x : E) : HasFderivWithinAt f (0 : E →L[𝕜] F) {x} x := by
+  simp only [HasFderivWithinAt, nhds_within_singleton, HasFderivAtFilter, is_o_pure, ContinuousLinearMap.zero_apply,
+    sub_self]
+
+theorem has_fderiv_at_of_subsingleton [h : Subsingleton E] (f : E → F) (x : E) : HasFderivAt f (0 : E →L[𝕜] F) x := by
+  rw [← has_fderiv_within_at_univ, subsingleton_univ.eq_singleton_of_mem (mem_univ x)]
+  exact has_fderiv_within_at_singleton f x
+
+theorem differentiable_on_empty : DifferentiableOn 𝕜 f ∅ := fun x => False.elim
+
+theorem differentiable_on_singleton : DifferentiableOn 𝕜 f {x} :=
+  forall_eq.2 (has_fderiv_within_at_singleton f x).DifferentiableWithinAt
+
+theorem Set.Subsingleton.differentiable_on (hs : s.Subsingleton) : DifferentiableOn 𝕜 f s :=
+  hs.induction_on differentiable_on_empty fun x => differentiable_on_singleton
 
 end Const
 
@@ -990,7 +999,7 @@ theorem fderiv.comp_fderiv_within {g : F → G} (hg : DifferentiableAt 𝕜 g (f
   (hg.HasFderivAt.comp_has_fderiv_within_at x hf.HasFderivWithinAt).fderivWithin hxs
 
 theorem DifferentiableOn.comp {g : F → G} {t : Set F} (hg : DifferentiableOn 𝕜 g t) (hf : DifferentiableOn 𝕜 f s)
-    (st : s ⊆ f ⁻¹' t) : DifferentiableOn 𝕜 (g ∘ f) s := fun x hx =>
+    (st : MapsTo f s t) : DifferentiableOn 𝕜 (g ∘ f) s := fun x hx =>
   DifferentiableWithinAt.comp x (hg (f x) (st hx)) (hf x hx) st
 
 theorem Differentiable.comp {g : F → G} (hg : Differentiable 𝕜 g) (hf : Differentiable 𝕜 f) :
@@ -998,9 +1007,7 @@ theorem Differentiable.comp {g : F → G} (hg : Differentiable 𝕜 g) (hf : Dif
 
 theorem Differentiable.comp_differentiable_on {g : F → G} (hg : Differentiable 𝕜 g) (hf : DifferentiableOn 𝕜 f s) :
     DifferentiableOn 𝕜 (g ∘ f) s :=
-  (differentiable_on_univ.2 hg).comp hf
-    (by
-      simp )
+  hg.DifferentiableOn.comp hf (maps_to_univ _ _)
 
 /-- The chain rule for derivatives in the sense of strict differentiability. -/
 protected theorem HasStrictFderivAt.comp {g : F → G} {g' : F →L[𝕜] G} (hg : HasStrictFderivAt g g' (f x))

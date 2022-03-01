@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.HomFunctor
-import Mathbin.CategoryTheory.Currying
+import Mathbin.CategoryTheory.Functor.Hom
+import Mathbin.CategoryTheory.Functor.Currying
 import Mathbin.CategoryTheory.Products.Basic
 
 /-!

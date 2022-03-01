@@ -188,6 +188,10 @@ protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective 
 
 end Function
 
+theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f := by
+  rw [Function.bijective_iff_has_inverse]
+  refine' ⟨fun x => default, _, _⟩ <;> intro x <;> simp
+
 namespace Option
 
 /-- `option α` is a `subsingleton` if and only if `α` is empty. -/

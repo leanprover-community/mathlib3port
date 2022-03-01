@@ -273,6 +273,14 @@ protected theorem eq {a₁ b₁} {a₂ b₂ : M} : mk' S a₁ a₂ = mk' S b₁ 
 theorem mk'_eq_zero_iff (x : R) (s : M) : mk' S x s = 0 ↔ ∃ m : M, x * m = 0 := by
   rw [← (map_units S s).mul_left_inj, mk'_spec, zero_mul, map_eq_zero_iff M]
 
+@[simp]
+theorem mk'_zero (s : M) : IsLocalization.mk' S 0 s = 0 := by
+  rw [eq_comm, IsLocalization.eq_mk'_iff_mul_eq, zero_mul, map_zero]
+
+theorem ne_zero_of_mk'_ne_zero {x : R} {y : M} (hxy : IsLocalization.mk' S x y ≠ 0) : x ≠ 0 := by
+  rintro rfl
+  exact hxy (IsLocalization.mk'_zero _)
+
 section Ext
 
 variable [Algebra R P] [IsLocalization M P]
@@ -654,10 +662,11 @@ variable {M}
 
 section
 
-instance [Subsingleton R] : Subsingleton (Localization M) :=
-  ⟨fun a b => by
+instance [Subsingleton R] : Unique (Localization M) :=
+  ⟨⟨1⟩, by
+    intro a
     induction a
-    induction b
+    induction default
     congr
     rfl
     rfl⟩
@@ -881,6 +890,12 @@ variable (M S)
 noncomputable def algEquiv : Localization M ≃ₐ[R] S :=
   IsLocalization.algEquiv M _ _
 
+/-- The localization of a singleton is a singleton. Cannot be an instance due to metavariables. -/
+noncomputable def _root_.is_localization.unique R Rₘ [CommRingₓ R] [CommRingₓ Rₘ] (M : Submonoid R) [Subsingleton R]
+    [Algebra R Rₘ] [IsLocalization M Rₘ] : Unique Rₘ :=
+  have : Inhabited Rₘ := ⟨1⟩
+  (AlgEquiv M Rₘ).symm.Injective.unique
+
 end
 
 @[simp]
@@ -972,12 +987,14 @@ end IsLocalization
 open IsLocalization
 
 /-- If `R` is a field, then localizing at a submonoid not containing `0` adds no new elements. -/
-theorem localization_map_bijective_of_field {R Rₘ : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ Rₘ] {M : Submonoid R}
+theorem localization_map_bijective_of_field {R Rₘ : Type _} [CommRingₓ R] [CommRingₓ Rₘ] {M : Submonoid R}
     (hM : (0 : R) ∉ M) (hR : IsField R) [Algebra R Rₘ] [IsLocalization M Rₘ] : Function.Bijective (algebraMap R Rₘ) :=
   by
-  refine' ⟨IsLocalization.injective _ (le_non_zero_divisors_of_no_zero_divisors hM), fun x => _⟩
+  let this' := hR.to_field R
+  replace hM := le_non_zero_divisors_of_no_zero_divisors hM
+  refine' ⟨IsLocalization.injective _ hM, fun x => _⟩
   obtain ⟨r, ⟨m, hm⟩, rfl⟩ := mk'_surjective M x
-  obtain ⟨n, hn⟩ := hR.mul_inv_cancel (fun hm0 => hM (hm0 ▸ hm) : m ≠ 0)
+  obtain ⟨n, hn⟩ := hR.mul_inv_cancel (nonZeroDivisors.ne_zero <| hM hm)
   exact
     ⟨r * n, by
       erw [eq_mk'_iff_mul_eq, ← RingHom.map_mul, mul_assoc, mul_comm n, hn, mul_oneₓ]⟩

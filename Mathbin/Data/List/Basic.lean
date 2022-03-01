@@ -906,6 +906,14 @@ theorem last'_append_of_ne_nil (l₁ : List α) : ∀ {l₂ : List α} hl₂ : l
     contradiction
   | b :: l₂, _ => last'_append_cons l₁ b l₂
 
+theorem last'_append {l₁ l₂ : List α} {x : α} (h : x ∈ l₂.last') : x ∈ (l₁ ++ l₂).last' := by
+  cases l₂
+  · contradiction
+    
+  · rw [List.last'_append_cons]
+    exact h
+    
+
 /-! ### head(') and tail -/
 
 
@@ -940,6 +948,11 @@ theorem head'_append {s t : List α} {x : α} (h : x ∈ s.head') : x ∈ (s ++ 
   cases s
   contradiction
   exact h
+
+theorem head'_append_of_ne_nil : ∀ l₁ : List α {l₂ : List α} hl₁ : l₁ ≠ [], head' (l₁ ++ l₂) = head' l₁
+  | [], _, hl₁ => by
+    contradiction
+  | x :: l₁, _, _ => rfl
 
 theorem tail_append_singleton_of_ne_nil {a : α} {l : List α} (h : l ≠ nil) : tail (l ++ [a]) = tail l ++ [a] := by
   induction l

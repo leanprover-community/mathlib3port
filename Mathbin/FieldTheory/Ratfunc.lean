@@ -579,8 +579,8 @@ def mapRingHom [RingHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S[X]⁰.co
   { map φ hφ with
     map_zero' := by
       simp_rw [MonoidHom.to_fun_eq_coe, ← of_fraction_ring_zero, ← Localization.mk_zero (1 : R[X]⁰), ←
-        Localization.mk_zero (1 : S[X]⁰), map_apply_of_fraction_ring_mk]
-      simpa,
+        Localization.mk_zero (1 : S[X]⁰), map_apply_of_fraction_ring_mk, map_zero, Localization.mk_eq_mk',
+        IsLocalization.mk'_zero],
     map_add' := by
       rintro ⟨x⟩ ⟨y⟩
       induction x

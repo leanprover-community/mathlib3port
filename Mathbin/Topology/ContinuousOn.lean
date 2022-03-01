@@ -472,6 +472,13 @@ theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : 
 
 theorem continuous_on_empty (f : α → β) : ContinuousOn f ∅ := fun x => False.elim
 
+theorem continuous_on_singleton (f : α → β) (a : α) : ContinuousOn f {a} :=
+  forall_eq.2 <| by
+    simpa only [ContinuousWithinAt, nhds_within_singleton, tendsto_pure_left] using fun s => mem_of_mem_nhds
+
+theorem Set.Subsingleton.continuous_on {s : Set α} (hs : s.Subsingleton) (f : α → β) : ContinuousOn f s :=
+  hs.induction_on (continuous_on_empty f) (continuous_on_singleton f)
+
 theorem nhds_within_le_comap {x : α} {s : Set α} {f : α → β} (ctsf : ContinuousWithinAt f s x) :
     𝓝[s] x ≤ comap f (𝓝[f '' s] f x) :=
   map_le_iff_le_comap.1 ctsf.tendsto_nhds_within_image
@@ -513,7 +520,7 @@ theorem ContinuousWithinAt.mem_closure_image {f : α → β} {s : Set α} {x : �
   mem_closure_of_tendsto h <| mem_of_superset self_mem_nhds_within (subset_preimage_image f s)
 
 theorem ContinuousWithinAt.mem_closure {f : α → β} {s : Set α} {x : α} {A : Set β} (h : ContinuousWithinAt f s x)
-    (hx : x ∈ Closure s) (hA : s ⊆ f ⁻¹' A) : f x ∈ Closure A :=
+    (hx : x ∈ Closure s) (hA : MapsTo f s A) : f x ∈ Closure A :=
   closure_mono (image_subset_iff.2 hA) (h.mem_closure_image hx)
 
 theorem ContinuousWithinAt.image_closure {f : α → β} {s : Set α}
@@ -616,7 +623,7 @@ theorem ContinuousAt.continuous_on {f : α → β} {s : Set α} (hcont : ∀, �
     ContinuousOn f s := fun x hx => (hcont x hx).ContinuousWithinAt
 
 theorem ContinuousWithinAt.comp {g : β → γ} {f : α → β} {s : Set α} {t : Set β} {x : α}
-    (hg : ContinuousWithinAt g t (f x)) (hf : ContinuousWithinAt f s x) (h : s ⊆ f ⁻¹' t) :
+    (hg : ContinuousWithinAt g t (f x)) (hf : ContinuousWithinAt f s x) (h : MapsTo f s t) :
     ContinuousWithinAt (g ∘ f) s x :=
   hg.Tendsto.comp (hf.tendsto_nhds_within h)
 
@@ -626,10 +633,10 @@ theorem ContinuousWithinAt.comp' {g : β → γ} {f : α → β} {s : Set α} {t
 
 theorem ContinuousAt.comp_continuous_within_at {g : β → γ} {f : α → β} {s : Set α} {x : α} (hg : ContinuousAt g (f x))
     (hf : ContinuousWithinAt f s x) : ContinuousWithinAt (g ∘ f) s x :=
-  hg.ContinuousWithinAt.comp hf subset_preimage_univ
+  hg.ContinuousWithinAt.comp hf (maps_to_univ _ _)
 
 theorem ContinuousOn.comp {g : β → γ} {f : α → β} {s : Set α} {t : Set β} (hg : ContinuousOn g t)
-    (hf : ContinuousOn f s) (h : s ⊆ f ⁻¹' t) : ContinuousOn (g ∘ f) s := fun x hx =>
+    (hf : ContinuousOn f s) (h : MapsTo f s t) : ContinuousOn (g ∘ f) s := fun x hx =>
   ContinuousWithinAt.comp (hg _ (h hx)) (hf x hx) h
 
 theorem ContinuousOn.mono {f : α → β} {s t : Set α} (hf : ContinuousOn f s) (h : t ⊆ s) : ContinuousOn f t :=
@@ -650,7 +657,7 @@ theorem Continuous.continuous_within_at {f : α → β} {s : Set α} {x : α} (h
 
 theorem Continuous.comp_continuous_on {g : β → γ} {f : α → β} {s : Set α} (hg : Continuous g) (hf : ContinuousOn f s) :
     ContinuousOn (g ∘ f) s :=
-  hg.ContinuousOn.comp hf subset_preimage_univ
+  hg.ContinuousOn.comp hf (maps_to_univ _ _)
 
 theorem ContinuousOn.comp_continuous {g : β → γ} {f : α → β} {s : Set β} (hg : ContinuousOn g s) (hf : Continuous f)
     (hs : ∀ x, f x ∈ s) : Continuous (g ∘ f) := by

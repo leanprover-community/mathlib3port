@@ -112,12 +112,22 @@ end ColRow
 
 section Transpose
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem transpose_empty_rows (A : Matrix m' (Finₓ 0) α) : Aᵀ = ![] :=
+theorem transpose_empty_rows (A : Matrix m' (Finₓ 0) α) :
+    Aᵀ = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem transpose_empty_cols : (![] : Matrix (Finₓ 0) m' α)ᵀ = fun i => ![] :=
+theorem transpose_empty_cols :
+    («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :
+          Matrix (Finₓ 0) m' α)ᵀ =
+      fun i => «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   funext fun i => empty_eq _
 
 @[simp]
@@ -140,16 +150,22 @@ section Mul
 
 variable [Semiringₓ α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_mul [Fintype n'] (A : Matrix (Finₓ 0) n' α) (B : Matrix n' o' α) : A ⬝ B = ![] :=
+theorem empty_mul [Fintype n'] (A : Matrix (Finₓ 0) n' α) (B : Matrix n' o' α) :
+    A ⬝ B = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
 theorem empty_mul_empty (A : Matrix m' (Finₓ 0) α) (B : Matrix (Finₓ 0) o' α) : A ⬝ B = 0 :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Finₓ 0) α) : A ⬝ B = fun _ => ![] :=
+theorem mul_empty [Fintype n'] (A : Matrix m' n' α) (B : Matrix n' (Finₓ 0) α) :
+    A ⬝ B = fun _ => «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   funext fun _ => empty_eq _
 
 theorem mul_val_succ [Fintype n'] (A : Matrix (Finₓ m.succ) n' α) (B : Matrix n' o' α) (i : Finₓ m) (j : o') :
@@ -175,8 +191,11 @@ variable [Semiringₓ α]
 theorem empty_vec_mul (v : Finₓ 0 → α) (B : Matrix (Finₓ 0) o' α) : vecMulₓ v B = 0 :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α) : vecMulₓ v B = ![] :=
+theorem vec_mul_empty [Fintype n'] (v : n' → α) (B : Matrix n' (Finₓ 0) α) :
+    vecMulₓ v B = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -197,8 +216,11 @@ section MulVec
 
 variable [Semiringₓ α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_mul_vec [Fintype n'] (A : Matrix (Finₓ 0) n' α) (v : n' → α) : mulVecₓ A v = ![] :=
+theorem empty_mul_vec [Fintype n'] (A : Matrix (Finₓ 0) n' α) (v : n' → α) :
+    mulVecₓ A v = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -223,12 +245,19 @@ section VecMulVec
 
 variable [Semiringₓ α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_vec_mul_vec (v : Finₓ 0 → α) (w : n' → α) : vecMulVecₓ v w = ![] :=
+theorem empty_vec_mul_vec (v : Finₓ 0 → α) (w : n' → α) :
+    vecMulVecₓ v w = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem vec_mul_vec_empty (v : m' → α) (w : Finₓ 0 → α) : vecMulVecₓ v w = fun _ => ![] :=
+theorem vec_mul_vec_empty (v : m' → α) (w : Finₓ 0 → α) :
+    vecMulVecₓ v w = fun _ =>
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   funext fun i => empty_eq _
 
 @[simp]
@@ -249,8 +278,11 @@ section Smul
 
 variable [Semiringₓ α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem smul_mat_empty {m' : Type _} (x : α) (A : Finₓ 0 → m' → α) : x • A = ![] :=
+theorem smul_mat_empty {m' : Type _} (x : α) (A : Finₓ 0 → m' → α) :
+    x • A = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -262,8 +294,12 @@ end Smul
 
 section Minor
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem minor_empty (A : Matrix m' n' α) (row : Finₓ 0 → m') (col : o' → n') : minor A row col = ![] :=
+theorem minor_empty (A : Matrix m' n' α) (row : Finₓ 0 → m') (col : o' → n') :
+    minor A row col =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -282,13 +318,23 @@ variable [Zero α] [One α]
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
-theorem one_fin_two : (1 : Matrix (Finₓ 2) (Finₓ 2) α) = ![![1, 0], ![0, 1]] := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem one_fin_two :
+    (1 : Matrix (Finₓ 2) (Finₓ 2) α) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
-theorem one_fin_three : (1 : Matrix (Finₓ 3) (Finₓ 3) α) = ![![1, 0, 0], ![0, 1, 0], ![0, 0, 1]] := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem one_fin_three :
+    (1 : Matrix (Finₓ 3) (Finₓ 3) α) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   ext i j
   fin_cases i <;> fin_cases j <;> rfl
 
@@ -296,55 +342,129 @@ end One
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem mul_fin_two [AddCommMonoidₓ α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
-    ![![a₁₁, a₁₂], ![a₂₁, a₂₂]] ⬝ ![![b₁₁, b₁₂], ![b₂₁, b₂₂]] =
-      ![![a₁₁ * b₁₁ + a₁₂ * b₂₁, a₁₁ * b₁₂ + a₁₂ * b₂₂], ![a₂₁ * b₁₁ + a₂₂ * b₂₁, a₂₁ * b₁₂ + a₂₂ * b₂₂]] :=
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" ⬝
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ]
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem mul_fin_three [AddCommMonoidₓ α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
-    ![![a₁₁, a₁₂, a₁₃], ![a₂₁, a₂₂, a₂₃], ![a₃₁, a₃₂, a₃₃]] ⬝ ![![b₁₁, b₁₂, b₁₃], ![b₂₁, b₂₂, b₂₃], ![b₃₁, b₃₂, b₃₃]] =
-      ![![a₁₁ * b₁₁ + a₁₂ * b₂₁ + a₁₃ * b₃₁, a₁₁ * b₁₂ + a₁₂ * b₂₂ + a₁₃ * b₃₂, a₁₁ * b₁₃ + a₁₂ * b₂₃ + a₁₃ * b₃₃],
-        ![a₂₁ * b₁₁ + a₂₂ * b₂₁ + a₂₃ * b₃₁, a₂₁ * b₁₂ + a₂₂ * b₂₂ + a₂₃ * b₃₂, a₂₁ * b₁₃ + a₂₂ * b₂₃ + a₂₃ * b₃₃],
-        ![a₃₁ * b₁₁ + a₃₂ * b₂₁ + a₃₃ * b₃₁, a₃₁ * b₁₂ + a₃₂ * b₂₂ + a₃₃ * b₃₂, a₃₁ * b₁₃ + a₃₂ * b₂₃ + a₃₃ * b₃₃]] :=
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" ⬝
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Finₓ.sum_univ_succ, ← add_assocₓ]
 
-theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by
-  subst_vars
-
-theorem vec3_eq {a₀ a₁ a₂ b₀ b₁ b₂ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) (h₂ : a₂ = b₂) : ![a₀, a₁, a₂] = ![b₀, b₁, b₂] :=
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   by
   subst_vars
 
-theorem vec2_add [Add α] (a₀ a₁ b₀ b₁ : α) : ![a₀, a₁] + ![b₀, b₁] = ![a₀ + b₀, a₁ + b₁] := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec3_eq {a₀ a₁ a₂ b₀ b₁ b₂ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) (h₂ : a₂ = b₂) :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
+  subst_vars
+
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec2_add [Add α] (a₀ a₁ b₀ b₁ : α) :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" +
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   rw [cons_add_cons, cons_add_cons, empty_add_empty]
 
-theorem vec3_add [Add α] (a₀ a₁ a₂ b₀ b₁ b₂ : α) : ![a₀, a₁, a₂] + ![b₀, b₁, b₂] = ![a₀ + b₀, a₁ + b₁, a₂ + b₂] := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec3_add [Add α] (a₀ a₁ a₂ b₀ b₁ b₂ : α) :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" +
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   rw [cons_add_cons, cons_add_cons, cons_add_cons, empty_add_empty]
 
-theorem smul_vec2 {R : Type _} [HasScalar R α] (x : R) (a₀ a₁ : α) : x • ![a₀, a₁] = ![x • a₀, x • a₁] := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem smul_vec2 {R : Type _} [HasScalar R α] (x : R) (a₀ a₁ : α) :
+    x • «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   rw [smul_cons, smul_cons, smul_empty]
 
-theorem smul_vec3 {R : Type _} [HasScalar R α] (x : R) (a₀ a₁ a₂ : α) : x • ![a₀, a₁, a₂] = ![x • a₀, x • a₁, x • a₂] :=
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem smul_vec3 {R : Type _} [HasScalar R α] (x : R) (a₀ a₁ a₂ : α) :
+    x • «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   by
   rw [smul_cons, smul_cons, smul_cons, smul_empty]
 
 variable [AddCommMonoidₓ α] [Mul α]
 
-theorem vec2_dot_product' {a₀ a₁ b₀ b₁ : α} : ![a₀, a₁] ⬝ᵥ ![b₀, b₁] = a₀ * b₀ + a₁ * b₁ := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec2_dot_product' {a₀ a₁ b₀ b₁ : α} :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" ⬝ᵥ
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      a₀ * b₀ + a₁ * b₁ :=
+  by
   rw [cons_dot_product_cons, cons_dot_product_cons, dot_product_empty, add_zeroₓ]
 
 @[simp]
 theorem vec2_dot_product (v w : Finₓ 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 1 :=
   vec2_dot_product'
 
-theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} : ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" ⬝ᵥ
+        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" =
+      a₀ * b₀ + a₁ * b₁ + a₂ * b₂ :=
+  by
   rw [cons_dot_product_cons, cons_dot_product_cons, cons_dot_product_cons, dot_product_empty, add_zeroₓ, add_assocₓ]
 
 @[simp]

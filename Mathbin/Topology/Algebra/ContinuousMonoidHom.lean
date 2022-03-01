@@ -18,6 +18,8 @@ This file defines the space of continuous homomorphisms between two topological 
 -/
 
 
+open_locale Pointwise
+
 open Function
 
 variable {F α β : Type _} (A B C D E : Type _) [Monoidₓ A] [Monoidₓ B] [Monoidₓ C] [Monoidₓ D] [CommGroupₓ E]
@@ -213,9 +215,54 @@ theorem is_inducing : Inducing (toContinuousMap : ContinuousMonoidHom A B → C(
 theorem is_embedding : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_inducing A B, to_continuous_map_injective⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (U V W)
+theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
+    ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
+  ⟨is_embedding A B,
+    ⟨by
+      suffices
+        Set.Range (to_continuous_map : ContinuousMonoidHom A B → C(A, B)) =
+          ({ f | f '' {1} ⊆ {1}ᶜ } ∪
+              ⋃ (x) (y) (U) (V) (W) (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W) (h : Disjoint (U * V) W),
+                { f | f '' {x} ⊆ U } ∩ { f | f '' {y} ⊆ V } ∩ { f | f '' {x * y} ⊆ W })ᶜ
+        by
+        rw [this, compl_compl]
+        refine' (ContinuousMap.is_open_gen is_compact_singleton is_open_compl_singleton).union _
+        repeat'
+          apply is_open_Union
+          intro
+        repeat'
+          apply IsOpen.inter
+        all_goals
+          apply ContinuousMap.is_open_gen is_compact_singleton
+          assumption
+      simp_rw [Set.compl_union, Set.compl_Union, Set.image_singleton, Set.singleton_subset_iff, Set.ext_iff,
+        Set.mem_inter_iff, Set.mem_Inter, Set.mem_compl_iff]
+      refine' fun f => ⟨_, _⟩
+      · rintro ⟨f, rfl⟩
+        exact
+          ⟨fun h => h (map_one f), fun x y U V W hU hV hW h ⟨⟨hfU, hfV⟩, hfW⟩ =>
+            h ⟨Set.mul_mem_mul hfU hfV, (congr_argₓ (· ∈ W) (map_mul f x y)).mp hfW⟩⟩
+        
+      · rintro ⟨hf1, hf2⟩
+        suffices ∀ x y, f (x * y) = f x * f y by
+          refine'
+            ⟨({ f with map_one' := of_not_not hf1, map_mul' := this } : ContinuousMonoidHom A B),
+              ContinuousMap.ext fun _ => rfl⟩
+        intro x y
+        contrapose! hf2
+        obtain ⟨UV, W, hUV, hW, hfUV, hfW, h⟩ := t2_separation hf2.symm
+        have hB := @continuous_mul B _ _ _
+        obtain ⟨U, V, hU, hV, hfU, hfV, h'⟩ := is_open_prod_iff.mp (hUV.preimage hB) (f x) (f y) hfUV
+        refine' ⟨x, y, U, V, W, hU, hV, hW, (disjoint_iff.mpr h).mono_left _, ⟨hfU, hfV⟩, hfW⟩
+        rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
+        exact h' ⟨hx, hy⟩
+        ⟩⟩
+
 variable {A B C D E}
 
-instance [LocallyCompactSpace A] [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
+instance [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
   (is_embedding A B).T2Space
 
 instance : TopologicalGroup (ContinuousMonoidHom A E) :=

@@ -38,7 +38,7 @@ def toMultiset : (α →₀ ℕ) ≃+ Multiset α where
       exact Eq.symm
   right_inv := fun s => by
     simp only [Sum, coe_mk, Multiset.to_finset_sum_count_nsmul_eq]
-  map_add' := fun f g => sum_add_index (fun a => zero_nsmul _) fun a => add_nsmul _
+  map_add' := fun f g => sum_add_index' (fun a => zero_nsmul _) fun a => add_nsmul _
 
 theorem to_multiset_zero : (0 : α →₀ ℕ).toMultiset = 0 :=
   rfl
@@ -83,13 +83,9 @@ theorem prod_to_multiset [CommMonoidₓ α] (f : α →₀ ℕ) : f.toMultiset.P
   · rw [to_multiset_zero, Multiset.prod_zero, Finsupp.prod_zero_index]
     
   · intro a n f _ _ ih
-    rw [to_multiset_add, Multiset.prod_add, ih, to_multiset_single, Finsupp.prod_add_index, Finsupp.prod_single_index,
-      Multiset.prod_nsmul, Multiset.prod_singleton]
+    rw [to_multiset_add, Multiset.prod_add, ih, to_multiset_single, Multiset.prod_nsmul,
+      Finsupp.prod_add_index' pow_zeroₓ pow_addₓ, Finsupp.prod_single_index, Multiset.prod_singleton]
     · exact pow_zeroₓ a
-      
-    · exact pow_zeroₓ
-      
-    · exact pow_addₓ
       
     
 

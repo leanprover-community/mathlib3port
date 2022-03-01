@@ -3,9 +3,9 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 -/
-import Mathbin.CategoryTheory.FunctorCategory
-import Mathbin.CategoryTheory.FullyFaithful
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.Category
+import Mathbin.CategoryTheory.Functor.FullyFaithful
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 namespace CategoryTheory
 

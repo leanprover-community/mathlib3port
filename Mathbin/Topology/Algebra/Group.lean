@@ -114,14 +114,6 @@ theorem IsClosed.right_coset {U : Set G} (h : IsClosed U) (x : G) : IsClosed (Ri
   is_closed_map_mul_right x _ h
 
 @[to_additive]
-theorem is_open_map_div_right (a : G) : IsOpenMap fun x => x / a := by
-  simpa only [div_eq_mul_inv] using is_open_map_mul_right a⁻¹
-
-@[to_additive]
-theorem is_closed_map_div_right (a : G) : IsClosedMap fun x => x / a := by
-  simpa only [div_eq_mul_inv] using is_closed_map_mul_right a⁻¹
-
-@[to_additive]
 theorem discrete_topology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : DiscreteTopology G := by
   rw [← singletons_open_iff_discrete]
   intro g
@@ -702,6 +694,34 @@ theorem ContinuousOn.div' (hf : ContinuousOn f s) (hg : ContinuousOn g s) : Cont
   fun x hx => (hf x hx).div' (hg x hx)
 
 end HasContinuousDiv
+
+section DivInTopologicalGroup
+
+variable [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
+
+/-- A version of `homeomorph.mul_left a b⁻¹` that is defeq to `a / b`. -/
+@[to_additive " A version of `homeomorph.add_left a (-b)` that is defeq to `a - b`. ",
+  simps (config := { simpRhs := true })]
+def Homeomorph.divLeft (x : G) : G ≃ₜ G :=
+  { Equivₓ.divLeft x with continuous_to_fun := continuous_const.div' continuous_id,
+    continuous_inv_fun := continuous_inv.mul continuous_const }
+
+/-- A version of `homeomorph.mul_right a⁻¹ b` that is defeq to `b / a`. -/
+@[to_additive " A version of `homeomorph.add_right (-a) b` that is defeq to `b - a`. ",
+  simps (config := { simpRhs := true })]
+def Homeomorph.divRight (x : G) : G ≃ₜ G :=
+  { Equivₓ.divRight x with continuous_to_fun := continuous_id.div' continuous_const,
+    continuous_inv_fun := continuous_id.mul continuous_const }
+
+@[to_additive]
+theorem is_open_map_div_right (a : G) : IsOpenMap fun x => x / a :=
+  (Homeomorph.divRight a).IsOpenMap
+
+@[to_additive]
+theorem is_closed_map_div_right (a : G) : IsClosedMap fun x => x / a :=
+  (Homeomorph.divRight a).IsClosedMap
+
+end DivInTopologicalGroup
 
 @[to_additive]
 theorem nhds_translation_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] (x : G) :

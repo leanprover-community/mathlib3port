@@ -38,13 +38,9 @@ theorem Monic.as_sum {p : R[X]} (hp : p.Monic) :
     rw [this, one_mulₓ]
   exact congr_argₓ C hp
 
-theorem ne_zero_of_monic_of_zero_ne_one (hp : Monic p) (h : (0 : R) ≠ 1) : p ≠ 0 :=
-  mt (congr_argₓ leadingCoeff) <| by
-    rw [monic.def.1 hp, leading_coeff_zero] <;> cc
-
 theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : Monic q) : q ≠ 0 := by
-  intro h
-  rw [h, monic.def, leading_coeff_zero] at hq
+  rintro rfl
+  rw [monic.def, leading_coeff_zero] at hq
   rw [← mul_oneₓ p, ← C_1, ← hq, C_0, mul_zero] at hp
   exact hp rfl
 
@@ -294,6 +290,26 @@ theorem monic_sub_of_right {p q : R[X]} (hq : q.leadingCoeff = -1) (hpq : degree
   rw [sub_eq_add_neg]
   apply monic_add_of_right this
   rwa [degree_neg]
+
+@[simp]
+theorem nat_degree_map_of_monic [Semiringₓ S] [Nontrivial S] {P : Polynomial R} (hmo : P.Monic) (f : R →+* S) :
+    (P.map f).natDegree = P.natDegree := by
+  refine' le_antisymmₓ (nat_degree_map_le _ _) (le_nat_degree_of_ne_zero _)
+  rw [coeff_map, monic.coeff_nat_degree hmo, RingHom.map_one]
+  exact one_ne_zero
+
+@[simp]
+theorem degree_map_of_monic [Semiringₓ S] [Nontrivial S] {P : Polynomial R} (hmo : P.Monic) (f : R →+* S) :
+    (P.map f).degree = P.degree := by
+  by_cases' hP : P = 0
+  · simp [hP]
+    
+  · refine' le_antisymmₓ (degree_map_le _ _) _
+    rw [degree_eq_nat_degree hP]
+    refine' le_degree_of_ne_zero _
+    rw [coeff_map, monic.coeff_nat_degree hmo, RingHom.map_one]
+    exact one_ne_zero
+    
 
 section Injective
 

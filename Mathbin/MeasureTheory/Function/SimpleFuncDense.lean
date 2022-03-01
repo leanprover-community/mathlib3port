@@ -929,7 +929,7 @@ theorem dense_range_coe_simple_func_nonneg_to_Lp_nonneg [hp : Fact (1 ≤ p)] (h
       mem_range_self _, _⟩
   suffices tendsto (fun n : ℕ => ↑(to_Lp (x n) (hx_mem_ℒp n))) at_top (𝓝 (g : Lp G p μ)) by
     rw [tendsto_iff_dist_tendsto_zero] at this⊢
-    simp_rw [Subtype.pseudo_dist_eq]
+    simp_rw [Subtype.dist_eq]
     convert this
   rw [Lp.tendsto_Lp_iff_tendsto_ℒp']
   convert hx_tendsto

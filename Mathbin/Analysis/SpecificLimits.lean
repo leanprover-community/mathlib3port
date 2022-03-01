@@ -388,6 +388,21 @@ theorem sum_geometric_two_le (n : ℕ) : (∑ i : ℕ in range n, (1 / (2 : ℝ)
   convert sum_le_tsum (range n) (fun i _ => this i) summable_geometric_two
   exact tsum_geometric_two.symm
 
+theorem tsum_geometric_inv_two : (∑' n : ℕ, (2 : ℝ)⁻¹ ^ n) = 2 :=
+  (inv_eq_one_div (2 : ℝ)).symm ▸ tsum_geometric_two
+
+/-- The sum of `2⁻¹ ^ i` for `n ≤ i` equals `2 * 2⁻¹ ^ n`. -/
+theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)⁻¹ ^ i) 0) = 2 * 2⁻¹ ^ n := by
+  have A : Summable fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0 := by
+    apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
+      · intro i
+        by_cases' hi : n ≤ i <;> simp [hi]
+        
+  have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
+    Finset.sum_eq_zero fun i hi => ite_eq_right_iff.2 fun h => (lt_irreflₓ _ ((Finset.mem_range.1 hi).trans_le h)).elim
+  simp only [← sum_add_tsum_nat_add n A, B, if_true, zero_addₓ, zero_le', le_add_iff_nonneg_left, pow_addₓ,
+    tsum_mul_right, tsum_geometric_inv_two]
+
 theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a := by
   convert HasSum.mul_left (a / 2) (has_sum_geometric_of_lt_1 (le_of_ltₓ one_half_pos) one_half_lt_one)
   · funext n

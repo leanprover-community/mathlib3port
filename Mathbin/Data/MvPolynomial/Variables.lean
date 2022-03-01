@@ -582,7 +582,7 @@ theorem total_degree_mul (a b : MvPolynomial σ R) : (a * b).totalDegree ≤ a.t
     have := AddMonoidAlgebra.support_mul a b hn
     simp only [Finset.mem_bUnion, Finset.mem_singleton] at this
     rcases this with ⟨a₁, h₁, a₂, h₂, rfl⟩
-    rw [Finsupp.sum_add_index]
+    rw [Finsupp.sum_add_index']
     · exact add_le_add (Finset.le_sup h₁) (Finset.le_sup h₂)
       
     · intro a

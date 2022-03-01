@@ -51,6 +51,22 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 def CompactOpen.Gen (s : Set α) (u : Set β) : Set C(α, β) :=
   { f | f '' s ⊆ u }
 
+@[simp]
+theorem gen_empty (u : Set β) : CompactOpen.Gen (∅ : Set α) u = Set.Univ :=
+  Set.ext fun f => iff_true_intro ((congr_argₓ (· ⊆ u) (image_empty f)).mpr u.empty_subset)
+
+@[simp]
+theorem gen_univ (s : Set α) : CompactOpen.Gen s (Set.Univ : Set β) = Set.Univ :=
+  Set.ext fun f => iff_true_intro (f '' s).subset_univ
+
+@[simp]
+theorem gen_inter (s : Set α) (u v : Set β) : CompactOpen.Gen s (u ∩ v) = CompactOpen.Gen s u ∩ CompactOpen.Gen s v :=
+  Set.ext fun f => subset_inter_iff
+
+@[simp]
+theorem gen_union (s t : Set α) (u : Set β) : CompactOpen.Gen (s ∪ t) u = CompactOpen.Gen s u ∩ CompactOpen.Gen t u :=
+  Set.ext fun f => (iff_of_eq (congr_argₓ (· ⊆ u) (image_union f s t))).trans union_subset_iff
+
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
@@ -115,11 +131,23 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
 theorem continuous_ev₁ [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
   continuous_ev.comp (continuous_id.prod_mk continuous_const)
 
-instance [T2Space β] [LocallyCompactSpace α] : T2Space C(α, β) :=
+instance [T2Space β] : T2Space C(α, β) :=
   ⟨by
     intro f₁ f₂ h
-    obtain ⟨p, hp⟩ := not_forall.mp (mt ContinuousMap.ext h)
-    exact separated_by_continuous (continuous_ev₁ p) hp⟩
+    obtain ⟨x, hx⟩ := not_forall.mp (mt (FunLike.ext f₁ f₂) h)
+    obtain ⟨u, v, hu, hv, hxu, hxv, huv⟩ := t2_separation hx
+    refine'
+      ⟨compact_open.gen {x} u, compact_open.gen {x} v, ContinuousMap.is_open_gen is_compact_singleton hu,
+        ContinuousMap.is_open_gen is_compact_singleton hv, _, _, _⟩
+    · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
+      
+    · rwa [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
+      
+    · rw [← ContinuousMap.gen_inter, huv]
+      refine' subset_empty_iff.mp fun f => _
+      rw [compact_open.gen, mem_set_of_eq, image_singleton, singleton_subset_iff]
+      exact id
+      ⟩
 
 end Ev
 

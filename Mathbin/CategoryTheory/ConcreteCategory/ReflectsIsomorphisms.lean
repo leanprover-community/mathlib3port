@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-!
 A `forget₂ C D` forgetful functor between concrete categories `C` and `D`

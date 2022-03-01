@@ -98,7 +98,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
         Filter.map_mono (uniform_continuous_id.mul uniform_continuous_const)
       )
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 @[to_additive]
 theorem uniform_embedding_translate_mul (a : α) : UniformEmbedding fun x : α => x * a :=
   { comap_uniformity := by

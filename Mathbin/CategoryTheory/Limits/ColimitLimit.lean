@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.Types
-import Mathbin.CategoryTheory.Currying
+import Mathbin.CategoryTheory.Functor.Currying
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 
 /-!

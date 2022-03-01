@@ -137,6 +137,45 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ) (hw : ∀, ∀ i ∈
       
     
 
+theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀, ∀ i ∈ s, ∀, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
+    (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) (hx : ∀, ∀ i ∈ s, ∀, w i ≠ 0 → z i = x) : (∏ i in s, z i ^ w i) = x :=
+  calc
+    (∏ i in s, z i ^ w i) = ∏ i in s, x ^ w i := by
+      refine' prod_congr rfl fun i hi => _
+      cases' eq_or_ne (w i) 0 with h₀ h₀
+      · rw [h₀, rpow_zero, rpow_zero]
+        
+      · rw [hx i hi h₀]
+        
+    _ = x := by
+      rw [← rpow_sum_of_nonneg _ hw, hw', rpow_one]
+      have : (∑ i in s, w i) ≠ 0 := by
+        rw [hw']
+        exact one_ne_zero
+      obtain ⟨i, his, hi⟩ := exists_ne_zero_of_sum_ne_zero this
+      rw [← hx i his hi]
+      exact hz i his
+    
+
+theorem arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw' : (∑ i in s, w i) = 1)
+    (hx : ∀, ∀ i ∈ s, ∀, w i ≠ 0 → z i = x) : (∑ i in s, w i * z i) = x :=
+  calc
+    (∑ i in s, w i * z i) = ∑ i in s, w i * x := by
+      refine' sum_congr rfl fun i hi => _
+      cases' eq_or_ne (w i) 0 with hwi hwi
+      · rw [hwi, zero_mul, zero_mul]
+        
+      · rw [hx i hi hwi]
+        
+    _ = x := by
+      rw [← sum_mul, hw', one_mulₓ]
+    
+
+theorem geom_mean_eq_arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀, ∀ i ∈ s, ∀, 0 ≤ w i)
+    (hw' : (∑ i in s, w i) = 1) (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) (hx : ∀, ∀ i ∈ s, ∀, w i ≠ 0 → z i = x) :
+    (∏ i in s, z i ^ w i) = ∑ i in s, w i * z i := by
+  rw [geom_mean_weighted_of_constant, arith_mean_weighted_of_constant] <;> assumption
+
 end Real
 
 namespace Nnreal
@@ -151,26 +190,45 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0 ) (hw' : (∑ i i
         assumption_mod_cast)
       fun i _ => (z i).coe_nonneg
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for two `nnreal` numbers. -/
 theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
     w₁ + w₂ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using geom_mean_le_arith_mean_weighted univ ![w₁, w₂] ![p₁, p₂]
+    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using
+    geom_mean_le_arith_mean_weighted univ
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ : ℝ≥0 ) :
     w₁ + w₂ + w₃ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃] ![p₁, p₂, p₃]
+    geom_mean_le_arith_mean_weighted univ
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ : ℝ≥0 ) :
     w₁ + w₂ + w₃ + w₄ = 1 →
       p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) * p₄ ^ (w₄ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
   by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃, w₄] ![p₁, p₂, p₃, p₄]
+    geom_mean_le_arith_mean_weighted univ
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
 
 end Nnreal
 

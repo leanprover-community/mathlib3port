@@ -583,15 +583,13 @@ section SmulInjective
 
 variable (M)
 
-theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective fun x : M => c • x :=
-  fun x y h =>
-  sub_eq_zero.mp
-    ((smul_eq_zero.mp
-          (calc
-            c • (x - y) = c • x - c • y := smul_sub c x y
-            _ = 0 := sub_eq_zero.mpr h
-            )).resolve_left
-      hc)
+theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective ((· • ·) c : M → M) :=
+  (smulAddHom R M c).injective_iff.2 fun a ha => (smul_eq_zero.mp ha).resolve_left hc
+
+variable {M}
+
+theorem smul_right_inj [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) {x y : M} : c • x = c • y ↔ x = y :=
+  (smul_right_injective M hc).eq_iff
 
 end SmulInjective
 

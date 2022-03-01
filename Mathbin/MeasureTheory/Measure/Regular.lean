@@ -179,7 +179,7 @@ theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} 
 
 theorem smul (H : InnerRegular μ p q) (c : ℝ≥0∞) : InnerRegular (c • μ) p q := by
   intro U hU r hr
-  rw [smul_apply, H.measure_eq_supr hU] at hr
+  rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr
   simpa only [Ennreal.mul_supr, lt_supr_iff, exists_prop] using hr
 
 theorem trans {q' : Set α → Prop} (H : InnerRegular μ p q) (H' : InnerRegular μ q q') : InnerRegular μ p q' := by
@@ -288,7 +288,7 @@ protected theorem smul (μ : Measure α) [OuterRegular μ] {x : ℝ≥0∞} (hx 
     exact outer_regular.zero
     
   · refine' ⟨fun A hA r hr => _⟩
-    rw [smul_apply, A.measure_eq_infi_is_open] at hr
+    rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr
     simpa only [Ennreal.mul_infi_of_ne h0 hx, gt_iff_lt, infi_lt_iff, exists_prop] using hr
     
 

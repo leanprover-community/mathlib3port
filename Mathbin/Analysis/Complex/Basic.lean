@@ -295,6 +295,12 @@ noncomputable instance : IsROrC ℂ where
       Complex.norm_eq_abs]
   div_I_ax := Complex.div_I
 
+theorem _root_.is_R_or_C.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Complex.re :=
+  rfl
+
+theorem _root_.is_R_or_C.im_eq_complex_im : ⇑(IsROrC.im : ℂ →+ ℝ) = Complex.im :=
+  rfl
+
 section
 
 variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCommMonoidₓ γ] [TopologicalSpace γ]

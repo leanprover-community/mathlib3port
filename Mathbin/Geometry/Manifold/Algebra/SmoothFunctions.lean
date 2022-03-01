@@ -182,16 +182,7 @@ theorem smul_comp {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] (r : 𝕜) (
   rfl
 
 instance module {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V] : Module 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
-  Module.ofCore <|
-    { smul := (· • ·),
-      smul_add := fun c f g => by
-        ext x <;> exact smul_add c (f x) (g x),
-      add_smul := fun c₁ c₂ f => by
-        ext x <;> exact add_smul c₁ c₂ (f x),
-      mul_smul := fun c₁ c₂ f => by
-        ext x <;> exact mul_smul c₁ c₂ (f x),
-      one_smul := fun f => by
-        ext x <;> exact one_smul 𝕜 (f x) }
+  Function.Injective.module 𝕜 coeFnAddMonoidHom ContMdiffMap.coe_inj coe_smul
 
 /-- Coercion to a function as a `linear_map`. -/
 @[simps]

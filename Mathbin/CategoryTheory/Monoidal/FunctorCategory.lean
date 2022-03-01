@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
-import Mathbin.CategoryTheory.FunctorCategory
-import Mathbin.CategoryTheory.Const
+import Mathbin.CategoryTheory.Functor.Category
+import Mathbin.CategoryTheory.Functor.Const
 
 /-!
 # Monoidal structure on `C ⥤ D` when `D` is monoidal.

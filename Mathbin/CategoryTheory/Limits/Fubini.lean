@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.HasLimits
 import Mathbin.CategoryTheory.Products.Basic
-import Mathbin.CategoryTheory.Currying
+import Mathbin.CategoryTheory.Functor.Currying
 
 /-!
 # A Fubini theorem for categorical limits

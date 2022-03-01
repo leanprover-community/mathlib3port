@@ -955,8 +955,8 @@ theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ
     f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id := by
   ext x y
   dsimp [splitting_of_fun_on_fintype_surjective]
-  rw [linear_equiv_fun_on_fintype_symm_single, Finsupp.sum_single_index, one_smul, LinearMap.id_coe, id_def,
-    (s (Finsupp.single x 1)).some_spec, Finsupp.single_eq_pi_single]
+  rw [linear_equiv_fun_on_fintype_symm_single, Finsupp.sum_single_index, one_smul, (s (Finsupp.single x 1)).some_spec,
+    Finsupp.single_eq_pi_single]
   rw [zero_smul]
 
 theorem left_inverse_splitting_of_fun_on_fintype_surjective [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) :

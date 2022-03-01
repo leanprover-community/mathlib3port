@@ -223,7 +223,7 @@ section Classical
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2, 3]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2, 3]) }
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
     (univ.filter fun a : α => a ^ n = 1).card ≤ n :=

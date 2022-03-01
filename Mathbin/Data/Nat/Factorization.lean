@@ -6,6 +6,7 @@ Authors: Stuart Presnell
 import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Algebra.BigOperators.Finsupp
+import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Prime factorizations
@@ -229,7 +230,7 @@ theorem factorization_le_iff_dvd {d n : ℕ} (hd : d ≠ 0) (hn : n ≠ 0) : d.f
     set K := n.factorization - d.factorization with hK
     use K.prod pow
     rw [← factorization_prod_pow_eq_self hn, ← factorization_prod_pow_eq_self hd, ←
-      Finsupp.prod_add_index pow_zeroₓ pow_addₓ, hK, add_tsub_cancel_of_le hdn]
+      Finsupp.prod_add_index' pow_zeroₓ pow_addₓ, hK, add_tsub_cancel_of_le hdn]
     
   · rintro ⟨c, rfl⟩
     rw [factorization_mul hd (right_ne_zero_of_mul hn)]

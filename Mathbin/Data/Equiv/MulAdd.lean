@@ -32,7 +32,7 @@ equiv, mul_equiv, add_equiv
 -/
 
 
-variable {A : Type _} {B : Type _} {M : Type _} {N : Type _} {P : Type _} {Q : Type _} {G : Type _} {H : Type _}
+variable {α β A B M N P Q G H : Type _}
 
 /-- Makes a multiplicative inverse from a bijection which preserves multiplication. -/
 @[to_additive "Makes an additive inverse from a bijection which preserves addition."]
@@ -115,6 +115,19 @@ instance (priority := 100) [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass 
         _ = e (inv e (1 : N)) := by
           rw [← map_mul, one_mulₓ]
         _ = 1 := right_inv e 1
+         }
+
+-- See note [lower instance priority]
+instance (priority := 100) toMonoidWithZeroHomClass {α β : Type _} [MulZeroOneClassₓ α] [MulZeroOneClassₓ β]
+    [MulEquivClass F α β] : MonoidWithZeroHomClass F α β :=
+  { MulEquivClass.monoidHomClass _ with
+    map_zero := fun e =>
+      calc
+        e 0 = e 0 * e (EquivLike.inv e 0) := by
+          rw [← map_mul, zero_mul]
+        _ = 0 := by
+          convert mul_zero _
+          exact EquivLike.right_inv e _
          }
 
 variable {F}

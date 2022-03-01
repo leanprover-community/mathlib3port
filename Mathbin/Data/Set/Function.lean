@@ -124,6 +124,11 @@ def codRestrict (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) : α → s :
 theorem coe_cod_restrict_apply (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) (x : α) : (codRestrict f s h x : β) = f x :=
   rfl
 
+@[simp]
+theorem restrict_comp_cod_restrict {f : α → β} {g : β → γ} {b : Set β} (h : ∀ x, f x ∈ b) :
+    b.restrict g ∘ b.codRestrict f h = g ∘ f :=
+  rfl
+
 variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g g₁ g₂ : β → γ} {f' f₁' f₂' : β → α}
   {g' : γ → β}
 
@@ -268,7 +273,11 @@ theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) 
   · simp [Nat.iterate, ihn]
     
 
-theorem MapsTo.mono (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) (hf : MapsTo f s₁ t₁) : MapsTo f s₂ t₂ := fun x hx => ht (hf <| hs hx)
+theorem MapsTo.mono (hf : MapsTo f s₁ t₁) (hs : s₂ ⊆ s₁) (ht : t₁ ⊆ t₂) : MapsTo f s₂ t₂ := fun x hx => ht (hf <| hs hx)
+
+theorem MapsTo.mono_left (hf : MapsTo f s₁ t) (hs : s₂ ⊆ s₁) : MapsTo f s₂ t := fun x hx => hf (hs hx)
+
+theorem MapsTo.mono_right (hf : MapsTo f s t₁) (ht : t₁ ⊆ t₂) : MapsTo f s t₂ := fun x hx => ht (hf hx)
 
 theorem MapsTo.union_union (h₁ : MapsTo f s₁ t₁) (h₂ : MapsTo f s₂ t₂) : MapsTo f (s₁ ∪ s₂) (t₁ ∪ t₂) := fun x hx =>
   hx.elim (fun hx => Or.inl <| h₁ hx) fun hx => Or.inr <| h₂ hx

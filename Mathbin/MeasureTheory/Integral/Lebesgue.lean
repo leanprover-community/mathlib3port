@@ -403,6 +403,14 @@ theorem coe_div [Div β] (f g : α →ₛ β) : ⇑(f / g) = f / g :=
 theorem coe_le [Preorderₓ β] {f g : α →ₛ β} : (f : α → β) ≤ g ↔ f ≤ g :=
   Iff.rfl
 
+@[simp, norm_cast]
+theorem coe_sup [HasSup β] (f g : α →ₛ β) : ⇑(f⊔g) = f⊔g :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_inf [HasInf β] (f g : α →ₛ β) : ⇑(f⊓g) = f⊓g :=
+  rfl
+
 @[to_additive]
 theorem mul_apply [Mul β] (f g : α →ₛ β) (a : α) : (f * g) a = f a * g a :=
   rfl
@@ -1234,7 +1242,7 @@ theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : Mea
   rw [eventually_eq]
   rwa [ae_restrict_iff' hs]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([1]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 /-- Monotone convergence theorem -- sometimes called Beppo-Levi convergence.
 
 See `lintegral_supr_directed` for a more general form. -/

@@ -546,5 +546,26 @@ theorem out_eq' (q : Quotientₓ s₁) : Quotientₓ.mk' q.out' = q :=
 theorem mk_out' (a : α) : @Setoidₓ.R α s₁ (Quotientₓ.mk' a : Quotientₓ s₁).out' a :=
   Quotientₓ.exact (Quotientₓ.out_eq _)
 
+section
+
+variable [Setoidₓ α]
+
+protected theorem mk'_eq_mk (x : α) : Quotientₓ.mk' x = ⟦x⟧ :=
+  rfl
+
+@[simp]
+protected theorem lift_on'_mk (x : α) (f : α → β) h : ⟦x⟧.liftOn' f h = f x :=
+  rfl
+
+@[simp]
+protected theorem lift_on₂'_mk [Setoidₓ β] (f : α → β → γ) h (a : α) (b : β) : Quotientₓ.liftOn₂' ⟦a⟧ ⟦b⟧ f h = f a b :=
+  Quotientₓ.lift_on₂'_mk' _ _ _ _
+
+@[simp]
+theorem map'_mk [Setoidₓ β] (f : α → β) h (x : α) : ⟦x⟧.map' f h = ⟦f x⟧ :=
+  rfl
+
+end
+
 end Quotientₓ
 

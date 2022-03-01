@@ -7,6 +7,8 @@ import Mathbin.GroupTheory.GeneralCommutator
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Solvable
 import Mathbin.GroupTheory.PGroup
+import Mathbin.GroupTheory.Sylow
+import Mathbin.Data.Nat.Factorization
 
 /-!
 
@@ -76,6 +78,8 @@ are not central series if `G` is not nilpotent is a standard abuse of notation.
 
 
 open Subgroup
+
+section WithGroup
 
 variable {G : Type _} [Groupₓ G] (H : Subgroup G) [Normal H]
 
@@ -286,7 +290,7 @@ instance (n : ℕ) : Normal (lowerCentralSeries G n) := by
   induction' n with d hd
   · exact (⊤ : Subgroup G).normal_of_characteristic
     
-  · exact general_commutator_normal (lowerCentralSeries G d) ⊤
+  · exact Subgroup.commutator_normal (lowerCentralSeries G d) ⊤
     
 
 theorem lower_central_series_antitone : Antitone (lowerCentralSeries G) := by
@@ -303,7 +307,7 @@ theorem lower_central_series_is_descending_central_series : IsDescendingCentralS
   constructor
   rfl
   intro x n hxn g
-  exact general_commutator_containment _ _ hxn (Subgroup.mem_top g)
+  exact commutator_containment _ _ hxn (mem_top g)
 
 /-- Any descending central series for a group is bounded below by the lower central series. -/
 theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDescendingCentralSeries H) :
@@ -311,7 +315,7 @@ theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDesc
   | 0 => hH.1.symm ▸ le_reflₓ ⊤
   | n + 1 => by
     specialize descending_central_series_ge_lower n
-    apply (general_commutator_le _ _ _).2
+    apply (commutator_le _ _ _).2
     intro x hx q _
     exact hH.2 x n (descending_central_series_ge_lower hx) q
 
@@ -520,7 +524,7 @@ theorem nilpotency_class_le_of_ker_le_center {H : Type _} [Groupₓ H] (f : G �
   apply le_transₓ (lowerCentralSeries.map f _)
   simp only [lower_central_series_nilpotency_class, le_bot_iff]
 
-/-- The range of a surejctive homomorphism from a nilpotent group is nilpotent -/
+/-- The range of a surjective homomorphism from a nilpotent group is nilpotent -/
 theorem nilpotent_of_surjective {G' : Type _} [Groupₓ G'] [h : IsNilpotent G] (f : G →* G')
     (hf : Function.Surjective f) : IsNilpotent G' := by
   rcases h with ⟨n, hn⟩
@@ -540,6 +544,10 @@ theorem nilpotency_class_le_of_surjective {G' : Type _} [Groupₓ G'] (f : G →
   calc ⊤ = f.range := symm (f.range_top_of_surjective hf)_ = Subgroup.map f ⊤ :=
       MonoidHom.range_eq_map _ _ = Subgroup.map f (upperCentralSeries G n) := by
       rw [hn]_ ≤ upperCentralSeries G' n := upperCentralSeries.map hf n
+
+/-- Nilpotency respects isomorphisms -/
+theorem nilpotent_of_mul_equiv {G' : Type _} [Groupₓ G'] [h : IsNilpotent G] (f : G ≃* G') : IsNilpotent G' :=
+  nilpotent_of_surjective f.toMonoidHom (MulEquiv.surjective f)
 
 /-- A quotient of a nilpotent group is nilpotent -/
 instance nilpotent_quotient_of_nilpotent (H : Subgroup G) [H.Normal] [h : IsNilpotent G] : IsNilpotent (G ⧸ H) :=
@@ -643,7 +651,7 @@ theorem derived_le_lower_central (n : ℕ) : derivedSeries G n ≤ lowerCentralS
   induction' n with i ih
   · simp
     
-  · apply general_commutator_mono ih
+  · apply commutator_mono ih
     simp
     
 
@@ -678,8 +686,7 @@ theorem lower_central_series_prod (n : ℕ) :
         rfl _ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n),⊤⁆ := by
         rw [ih]_ = ⁅(lowerCentralSeries G₁ n).Prod (lowerCentralSeries G₂ n),(⊤ : Subgroup G₁).Prod ⊤⁆ := by
         simp _ = ⁅lowerCentralSeries G₁ n,(⊤ : Subgroup G₁)⁆.Prod ⁅lowerCentralSeries G₂ n,⊤⁆ :=
-        general_commutator_prod_prod _ _ _ _ _ = (lowerCentralSeries G₁ n.succ).Prod (lowerCentralSeries G₂ n.succ) :=
-        rfl
+        commutator_prod_prod _ _ _ _ _ = (lowerCentralSeries G₁ n.succ).Prod (lowerCentralSeries G₂ n.succ) := rfl
     
 
 /-- Products of nilpotent groups are nilpotent -/
@@ -711,9 +718,9 @@ theorem lower_central_series_pi_le (n : ℕ) :
     
   · calc lowerCentralSeries (∀ i, Gs i) n.succ = ⁅lowerCentralSeries (∀ i, Gs i) n,⊤⁆ :=
         rfl _ ≤ ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ :=
-        general_commutator_mono ih (le_reflₓ _)_ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
+        commutator_mono ih (le_reflₓ _)_ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
         simp [pi, pi_top]_ ≤ pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ :=
-        general_commutator_pi_pi_le _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
+        commutator_pi_pi_le _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
     
 
 /-- products of nilpotent groups are nilpotent if their nipotency class is bounded -/
@@ -744,7 +751,7 @@ theorem lower_central_series_pi_of_fintype (n : ℕ) :
         rfl _ = ⁅pi fun i => lowerCentralSeries (Gs i) n,⊤⁆ := by
         rw [ih]_ = ⁅pi fun i => lowerCentralSeries (Gs i) n,pi fun i => ⊤⁆ := by
         simp [pi, pi_top]_ = pi fun i => ⁅lowerCentralSeries (Gs i) n,⊤⁆ :=
-        general_commutator_pi_pi_of_fintype _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
+        commutator_pi_pi_of_fintype _ _ _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
     
 
 /-- n-ary products of nilpotent groups are nilpotent -/
@@ -773,32 +780,6 @@ instance (priority := 100) IsNilpotent.to_is_solvable [h : IsNilpotent G] : IsSo
   rw [eq_bot_iff, ← hn]
   exact derived_le_lower_central n
 
-section Classical
-
-open_locale Classical
-
-/-- A p-group is nilpotent -/
--- to get the fintype instance for quotient groups
-theorem IsPGroup.is_nilpotent {G : Type _} [hG : Groupₓ G] [hf : Fintype G] {p : ℕ} (hp : Fact (Nat.Prime p))
-    (h : IsPGroup p G) : IsNilpotent G := by
-  revert hG
-  induction' hf using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
-  · infer_instance
-    
-  · intro
-    intro h
-    have hc : center G > ⊥ := gt_iff_lt.mp h.bot_lt_center
-    have hcq : Fintype.card (G ⧸ center G) < Fintype.card G := by
-      rw [card_eq_card_quotient_mul_card_subgroup (center G)]
-      apply lt_mul_of_one_lt_right
-      exact fintype.card_pos_iff.mpr One.nonempty
-      exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gtₓ hc)
-    have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
-    exact of_quotient_center_nilpotent hnq
-    
-
-end Classical
-
 theorem normalizer_condition_of_is_nilpotent [h : IsNilpotent G] : NormalizerCondition G := by
   -- roughly based on https://groupprops.subwiki.org/wiki/Nilpotent_implies_normalizer_condition
   rw [normalizer_condition_iff_only_full_group_self_normalizing]
@@ -819,4 +800,45 @@ theorem normalizer_condition_of_is_nilpotent [h : IsNilpotent G] : NormalizerCon
     apply map_injective_of_ker_le (mk' (center G)) hkh le_top
     exact (ih H' hH').trans (symm (map_top_of_surjective _ hsur))
     
+
+end WithGroup
+
+section WithFiniteGroup
+
+open Groupₓ
+
+variable {G : Type _} [hG : Groupₓ G] [hf : Fintype G]
+
+include hG hf
+
+/-- A p-group is nilpotent -/
+theorem IsPGroup.is_nilpotent {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup p G) : IsNilpotent G := by
+  classical
+  revert hG
+  induction' hf using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
+  · infer_instance
+    
+  · intro
+    intro h
+    have hcq : Fintype.card (G ⧸ center G) < Fintype.card G := by
+      rw [card_eq_card_quotient_mul_card_subgroup (center G)]
+      apply lt_mul_of_one_lt_right
+      exact fintype.card_pos_iff.mpr One.nonempty
+      exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gtₓ h.bot_lt_center)
+    have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
+    exact of_quotient_center_nilpotent hnq
+    
+
+/-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
+theorem is_nilpotent_of_product_of_sylow_group
+    (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by
+  classical
+  let ps := (Fintype.card G).factorization.support
+  have : ∀ p : ps P : Sylow p G, IsNilpotent (↑P : Subgroup G) := by
+    intro p P
+    have : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
+    exact P.is_p_group'.is_nilpotent
+  exact nilpotent_of_mul_equiv e
+
+end WithFiniteGroup
 

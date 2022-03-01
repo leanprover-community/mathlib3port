@@ -226,6 +226,11 @@ theorem integrable_indicator_const_Lp {E} [NormedGroup E] [MeasurableSpace E] [B
   right
   simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 
+theorem integrable_on_iff_integable_of_support_subset {f : α → E} {s : Set α} (h1s : Support f ⊆ s)
+    (h2s : MeasurableSet s) : IntegrableOn f s μ ↔ Integrable f μ := by
+  refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
+  rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
+
 theorem integrable_on_Lp_of_measure_ne_top {E} [NormedGroup E] [MeasurableSpace E] [BorelSpace E]
     [SecondCountableTopology E] {p : ℝ≥0∞} {s : Set α} (f : lp E p μ) (hp : 1 ≤ p) (hμs : μ s ≠ ∞) :
     IntegrableOn f s μ := by
@@ -319,12 +324,6 @@ open MeasureTheory
 
 variable [MeasurableSpace E] [NormedGroup E]
 
-/-- If a function is integrable at `𝓝[s] x` for each point `x` of a compact set `s`, then it is
-integrable on `s`. -/
-theorem IsCompact.integrable_on_of_nhds_within [TopologicalSpace α] {μ : Measureₓ α} {s : Set α} (hs : IsCompact s)
-    {f : α → E} (hf : ∀, ∀ x ∈ s, ∀, IntegrableAtFilter f (𝓝[s] x) μ) : IntegrableOn f s μ :=
-  IsCompact.induction_on hs integrable_on_empty (fun s t hst ht => ht.mono_set hst) (fun s t hs ht => hs.union ht) hf
-
 /-- A function which is continuous on a set `s` is almost everywhere measurable with respect to
 `μ.restrict s`. -/
 theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
@@ -345,126 +344,4 @@ theorem ContinuousOn.integrable_at_nhds_within [TopologicalSpace α] [OpensMeasu
     (ht : MeasurableSet t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   have : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhds_within, hft.ae_measurable ht⟩ (μ.finite_at_nhds_within _ _)
-
-/-- A function `f` continuous on a compact set `s` is integrable on this set with respect to any
-locally finite measure. -/
-theorem ContinuousOn.integrable_on_compact [TopologicalSpace α] [OpensMeasurableSpace α] [BorelSpace E] [T2Space α]
-    {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {s : Set α} (hs : IsCompact s) {f : α → E} (hf : ContinuousOn f s) :
-    IntegrableOn f s μ :=
-  hs.integrable_on_of_nhds_within fun x hx => hf.integrable_at_nhds_within hs.MeasurableSet hx
-
-theorem ContinuousOn.integrable_on_Icc [BorelSpace E] [Preorderₓ β] [TopologicalSpace β] [T2Space β] [CompactIccSpace β]
-    [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β} {f : β → E}
-    (hf : ContinuousOn f (Icc a b)) : IntegrableOn f (Icc a b) μ :=
-  hf.integrable_on_compact is_compact_Icc
-
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
-theorem ContinuousOn.integrable_on_interval [BorelSpace E] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β]
-    [OrderTopology β] [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β}
-    {f : β → E} (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :
-    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" μ :=
-  hf.integrable_on_compact is_compact_interval
-
-/-- A continuous function `f` is integrable on any compact set with respect to any locally finite
-measure. -/
-theorem Continuous.integrable_on_compact [TopologicalSpace α] [OpensMeasurableSpace α] [T2Space α] [BorelSpace E]
-    {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {s : Set α} (hs : IsCompact s) {f : α → E} (hf : Continuous f) :
-    IntegrableOn f s μ :=
-  hf.ContinuousOn.integrable_on_compact hs
-
-theorem Continuous.integrable_on_Icc [BorelSpace E] [Preorderₓ β] [TopologicalSpace β] [T2Space β] [CompactIccSpace β]
-    [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β} {f : β → E}
-    (hf : Continuous f) : IntegrableOn f (Icc a b) μ :=
-  hf.integrable_on_compact is_compact_Icc
-
-theorem Continuous.integrable_on_Ioc [BorelSpace E] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β]
-    [OrderTopology β] [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β}
-    {f : β → E} (hf : Continuous f) : IntegrableOn f (Ioc a b) μ :=
-  hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
-
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
-theorem Continuous.integrable_on_interval [BorelSpace E] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β]
-    [OrderTopology β] [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β}
-    {f : β → E} (hf : Continuous f) :
-    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" μ :=
-  hf.integrable_on_compact is_compact_interval
-
-theorem Continuous.integrable_on_interval_oc [BorelSpace E] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β]
-    [OrderTopology β] [MeasurableSpace β] [OpensMeasurableSpace β] {μ : Measureₓ β} [IsLocallyFiniteMeasure μ] {a b : β}
-    {f : β → E} (hf : Continuous f) : IntegrableOn f (Ι a b) μ :=
-  hf.integrable_on_Ioc
-
-/-- A continuous function with compact closure of the support is integrable on the whole space. -/
-theorem Continuous.integrable_of_has_compact_support [TopologicalSpace α] [OpensMeasurableSpace α] [T2Space α]
-    [BorelSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {f : α → E} (hf : Continuous f)
-    (hfc : HasCompactSupport f) : Integrable f μ := by
-  rw [← indicator_eq_self.2 (@subset_closure _ _ (support f)),
-    integrable_indicator_iff is_closed_closure.measurable_set]
-  · exact hf.integrable_on_compact hfc
-    
-  · infer_instance
-    
-
-section
-
-variable [TopologicalSpace α] [OpensMeasurableSpace α] {μ : Measureₓ α} {s t : Set α} {f g : α → ℝ}
-
-theorem MeasureTheory.IntegrableOn.mul_continuous_on_of_subset (hf : IntegrableOn f s μ) (hg : ContinuousOn g t)
-    (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : IntegrableOn (fun x => f x * g x) s μ := by
-  rcases IsCompact.exists_bound_of_continuous_on ht hg with ⟨C, hC⟩
-  rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hf⊢
-  have : ∀ᵐ x ∂μ.restrict s, ∥f x * g x∥ ≤ C * ∥f x∥ := by
-    filter_upwards [ae_restrict_mem hs] with x hx
-    rw [Real.norm_eq_abs, abs_mul, mul_comm, Real.norm_eq_abs]
-    apply mul_le_mul_of_nonneg_right (hC x (hst hx)) (abs_nonneg _)
-  exact mem_ℒp.of_le_mul hf (hf.ae_measurable.mul ((hg.mono hst).AeMeasurable hs)) this
-
-theorem MeasureTheory.IntegrableOn.mul_continuous_on [T2Space α] (hf : IntegrableOn f s μ) (hg : ContinuousOn g s)
-    (hs : IsCompact s) : IntegrableOn (fun x => f x * g x) s μ :=
-  hf.mul_continuous_on_of_subset hg hs.MeasurableSet hs (Subset.refl _)
-
-theorem MeasureTheory.IntegrableOn.continuous_on_mul_of_subset (hf : IntegrableOn f s μ) (hg : ContinuousOn g t)
-    (hs : MeasurableSet s) (ht : IsCompact t) (hst : s ⊆ t) : IntegrableOn (fun x => g x * f x) s μ := by
-  simpa [mul_comm] using hf.mul_continuous_on_of_subset hg hs ht hst
-
-theorem MeasureTheory.IntegrableOn.continuous_on_mul [T2Space α] (hf : IntegrableOn f s μ) (hg : ContinuousOn g s)
-    (hs : IsCompact s) : IntegrableOn (fun x => g x * f x) s μ :=
-  hf.continuous_on_mul_of_subset hg hs.MeasurableSet hs (Subset.refl _)
-
-end
-
-section Monotone
-
-variable [TopologicalSpace α] [BorelSpace α] [BorelSpace E] [ConditionallyCompleteLinearOrder α]
-  [ConditionallyCompleteLinearOrder E] [OrderTopology α] [OrderTopology E] [SecondCountableTopology E] {μ : Measureₓ α}
-  [IsLocallyFiniteMeasure μ] {s : Set α} (hs : IsCompact s) {f : α → E}
-
-include hs
-
-theorem MonotoneOn.integrable_on_compact (hmono : MonotoneOn f s) : IntegrableOn f s μ := by
-  obtain rfl | h := s.eq_empty_or_nonempty
-  · exact integrable_on_empty
-    
-  have hbelow : BddBelow (f '' s) :=
-    ⟨f (Inf s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono (hs.Inf_mem h) hy (cInf_le hs.bdd_below hy)⟩
-  have habove : BddAbove (f '' s) :=
-    ⟨f (Sup s), fun x ⟨y, hy, hyx⟩ => hyx ▸ hmono hy (hs.Sup_mem h) (le_cSup hs.bdd_above hy)⟩
-  have : Metric.Bounded (f '' s) := Metric.bounded_of_bdd_above_of_bdd_below habove hbelow
-  rcases bounded_iff_forall_norm_le.mp this with ⟨C, hC⟩
-  exact
-    integrable.mono' (continuous_const.integrable_on_compact hs)
-      (ae_measurable_restrict_of_monotone_on hs.measurable_set hmono)
-      ((ae_restrict_iff' hs.measurable_set).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
-
-theorem AntitoneOn.integrable_on_compact (hanti : AntitoneOn f s) : IntegrableOn f s μ :=
-  @MonotoneOn.integrable_on_compact α (OrderDual E) _ _ ‹_› _ _ ‹_› _ _ _ _ ‹_› _ _ _ hs _ hanti
-
-theorem Monotone.integrable_on_compact (hmono : Monotone f) : IntegrableOn f s μ :=
-  MonotoneOn.integrable_on_compact hs fun x y _ _ hxy => hmono hxy
-
-theorem Antitone.integrable_on_compact (hanti : Antitone f) : IntegrableOn f s μ :=
-  @Monotone.integrable_on_compact α (OrderDual E) _ _ ‹_› _ _ ‹_› _ _ _ _ ‹_› _ _ _ hs _ hanti
-
-end Monotone
 

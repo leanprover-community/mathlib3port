@@ -8,6 +8,7 @@ import Mathbin.Algebra.IterateHom
 import Mathbin.Algebra.Pointwise
 import Mathbin.Dynamics.PeriodicPts
 import Mathbin.GroupTheory.Coset
+import Mathbin.GroupTheory.QuotientGroup
 
 /-!
 # Order of an element
@@ -70,6 +71,23 @@ theorem is_of_fin_order_of_add_iff : IsOfFinOrder (Multiplicative.ofAdd a) ↔ I
 theorem is_of_fin_order_iff_pow_eq_one (x : G) : IsOfFinOrder x ↔ ∃ n, 0 < n ∧ x ^ n = 1 := by
   convert Iff.rfl
   simp [is_periodic_pt_mul_iff_pow_eq_one]
+
+/-- Elements of finite order are of finite order in subgroups.-/
+@[to_additive is_of_fin_add_order_iff_coe]
+theorem is_of_fin_order_iff_coe {G : Type u} [Groupₓ G] (H : Subgroup G) (x : H) :
+    IsOfFinOrder x ↔ IsOfFinOrder (x : G) := by
+  rw [is_of_fin_order_iff_pow_eq_one, is_of_fin_order_iff_pow_eq_one]
+  norm_cast
+
+variable ()
+
+/-- Elements of finite order are of finite order in quotient groups.-/
+@[to_additive is_of_fin_add_order_iff_quotient]
+theorem IsOfFinOrder.quotient {G : Type u} [Groupₓ G] (N : Subgroup G) [N.Normal] (x : G) :
+    IsOfFinOrder x → IsOfFinOrder (x : G ⧸ N) := by
+  rw [is_of_fin_order_iff_pow_eq_one, is_of_fin_order_iff_pow_eq_one]
+  rintro ⟨n, ⟨npos, hn⟩⟩
+  exact ⟨n, ⟨npos, (QuotientGroup.con N).Eq.mpr <| hn ▸ (QuotientGroup.con N).Eq.mp rfl⟩⟩
 
 end IsOfFinOrder
 

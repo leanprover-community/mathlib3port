@@ -99,7 +99,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open_locale Classical TopologicalSpace BigOperators Filter Ennreal Nnreal
 
-variable {α β γ δ ι : Type _}
+variable {α β γ δ ι R R' : Type _}
 
 namespace MeasureTheory
 
@@ -591,8 +591,56 @@ theorem coe_add {m : MeasurableSpace α} (μ₁ μ₂ : Measure α) : ⇑(μ₁ 
 theorem add_apply {m : MeasurableSpace α} (μ₁ μ₂ : Measure α) (s : Set α) : (μ₁ + μ₂) s = μ₁ s + μ₂ s :=
   rfl
 
+section HasScalar
+
+variable [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+
+variable [HasScalar R' ℝ≥0∞] [IsScalarTower R' ℝ≥0∞ ℝ≥0∞]
+
+instance [MeasurableSpace α] : HasScalar R (Measure α) :=
+  ⟨fun c μ =>
+    { toOuterMeasure := c • μ.toOuterMeasure,
+      m_Union := fun s hs hd => by
+        rw [← smul_one_smul ℝ≥0∞ c (_ : outer_measure α)]
+        dsimp
+        simp_rw [measure_Union hd hs, Ennreal.tsum_mul_left],
+      trimmed := by
+        rw [outer_measure.trim_smul, μ.trimmed] }⟩
+
+@[simp]
+theorem smul_to_outer_measure {m : MeasurableSpace α} (c : R) (μ : Measure α) :
+    (c • μ).toOuterMeasure = c • μ.toOuterMeasure :=
+  rfl
+
+@[simp, norm_cast]
+theorem coe_smul {m : MeasurableSpace α} (c : R) (μ : Measure α) : ⇑(c • μ) = c • μ :=
+  rfl
+
+@[simp]
+theorem smul_apply {m : MeasurableSpace α} (c : R) (μ : Measure α) (s : Set α) : (c • μ) s = c • μ s :=
+  rfl
+
+instance [SmulCommClass R R' ℝ≥0∞] [MeasurableSpace α] : SmulCommClass R R' (Measure α) :=
+  ⟨fun _ _ _ => ext fun _ _ => smul_comm _ _ _⟩
+
+instance [HasScalar R R'] [IsScalarTower R R' ℝ≥0∞] [MeasurableSpace α] : IsScalarTower R R' (Measure α) :=
+  ⟨fun _ _ _ => ext fun _ _ => smul_assoc _ _ _⟩
+
+instance [HasScalar Rᵐᵒᵖ ℝ≥0∞] [IsCentralScalar R ℝ≥0∞] [MeasurableSpace α] : IsCentralScalar R (Measure α) :=
+  ⟨fun _ _ => ext fun _ _ => op_smul_eq_smul _ _⟩
+
+end HasScalar
+
+instance [Monoidₓ R] [MulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [MeasurableSpace α] : MulAction R (Measure α) :=
+  Injective.mulAction _ to_outer_measure_injective smul_to_outer_measure
+
+-- there is no `function.injective.add_comm_monoid_smul` so we do this in two steps
 instance addCommMonoid [MeasurableSpace α] : AddCommMonoidₓ (Measure α) :=
-  to_outer_measure_injective.AddCommMonoid toOuterMeasure zero_to_outer_measure add_to_outer_measure
+  { (to_outer_measure_injective.addMonoidSmul toOuterMeasure zero_to_outer_measure add_to_outer_measure fun _ _ =>
+      smul_to_outer_measure _ _ :
+      AddMonoidₓ (Measure α)),
+    (to_outer_measure_injective.AddCommSemigroup toOuterMeasure add_to_outer_measure :
+      AddCommSemigroupₓ (Measure α)) with }
 
 /-- Coercion to function as an additive monoid homomorphism. -/
 def coeAddHom {m : MeasurableSpace α} : Measure α →+ Set α → ℝ≥0∞ :=
@@ -606,34 +654,14 @@ theorem finset_sum_apply {m : MeasurableSpace α} (I : Finset ι) (μ : ι → M
     (∑ i in I, μ i) s = ∑ i in I, μ i s := by
   rw [coe_finset_sum, Finset.sum_apply]
 
-instance [MeasurableSpace α] : HasScalar ℝ≥0∞ (Measure α) :=
-  ⟨fun c μ =>
-    { toOuterMeasure := c • μ.toOuterMeasure,
-      m_Union := fun s hs hd => by
-        simp [measure_Union, *, Ennreal.tsum_mul_left],
-      trimmed := by
-        rw [outer_measure.trim_smul, μ.trimmed] }⟩
-
-@[simp]
-theorem smul_to_outer_measure {m : MeasurableSpace α} (c : ℝ≥0∞) (μ : Measure α) :
-    (c • μ).toOuterMeasure = c • μ.toOuterMeasure :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_smul {m : MeasurableSpace α} (c : ℝ≥0∞) (μ : Measure α) : ⇑(c • μ) = c • μ :=
-  rfl
-
-@[simp]
-theorem smul_apply {m : MeasurableSpace α} (c : ℝ≥0∞) (μ : Measure α) (s : Set α) : (c • μ) s = c * μ s :=
-  rfl
-
-instance [MeasurableSpace α] : Module ℝ≥0∞ (Measure α) :=
-  Injective.module ℝ≥0∞ ⟨toOuterMeasure, zero_to_outer_measure, add_to_outer_measure⟩ to_outer_measure_injective
+instance [Monoidₓ R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [MeasurableSpace α] :
+    DistribMulAction R (Measure α) :=
+  Injective.distribMulAction ⟨toOuterMeasure, zero_to_outer_measure, add_to_outer_measure⟩ to_outer_measure_injective
     smul_to_outer_measure
 
-@[simp, norm_cast]
-theorem coe_nnreal_smul {m : MeasurableSpace α} (c : ℝ≥0 ) (μ : Measure α) : ⇑(c • μ) = c • μ :=
-  rfl
+instance [Semiringₓ R] [Module R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [MeasurableSpace α] : Module R (Measure α) :=
+  Injective.module R ⟨toOuterMeasure, zero_to_outer_measure, add_to_outer_measure⟩ to_outer_measure_injective
+    smul_to_outer_measure
 
 @[simp]
 theorem coe_nnreal_smul_apply {m : MeasurableSpace α} (c : ℝ≥0 ) (μ : Measure α) (s : Set α) : (c • μ) s = c * μ s :=
@@ -759,7 +787,7 @@ instance [MeasurableSpace α] : CompleteLattice (Measure α) :=
   { /- Adding an explicit `top` makes `leanchecker` fail, see lean#364, disable for now
       
         top := (⊤ : outer_measure α).to_measure (by rw [outer_measure.top_caratheodory]; exact le_top),
-        le_top := assume a s hs,
+        le_top := λ a s hs,
           by cases s.eq_empty_or_nonempty with h  h;
             simp [h, to_measure_apply ⊤ _ hs, outer_measure.top_apply],
       -/
@@ -827,6 +855,10 @@ theorem map_of_not_measurable {f : α → β} (hf : ¬Measurable f) : map f μ =
 @[simp]
 theorem map_id : map id μ = μ :=
   ext fun s => map_apply measurable_id
+
+@[simp]
+theorem map_id' : map (fun x => x) μ = μ :=
+  map_id
 
 theorem map_map {g : β → γ} {f : α → β} (hg : Measurable g) (hf : Measurable f) : map g (map f μ) = map (g ∘ f) μ :=
   ext fun s hs => by
@@ -1527,12 +1559,9 @@ protected theorem map (h : μ ≪ ν) (f : α → β) : map f μ ≪ map f ν :=
   else by
     simp only [map_of_not_measurable hf]
 
-protected theorem smul (h : μ ≪ ν) (c : ℝ≥0∞) : c • μ ≪ ν :=
-  mk fun s hs hνs => by
-    simp only [h hνs, Algebra.id.smul_eq_mul, coe_smul, Pi.smul_apply, mul_zero]
-
-protected theorem coe_nnreal_smul (h : μ ≪ ν) (c : ℝ≥0 ) : c • μ ≪ ν :=
-  h.smul c
+protected theorem smul [Monoidₓ R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (h : μ ≪ ν) (c : R) :
+    c • μ ≪ ν := fun s hνs => by
+  simp only [h hνs, smul_eq_mul, smul_apply, smul_zero]
 
 end AbsolutelyContinuous
 
@@ -1735,9 +1764,10 @@ theorem mem_map_restrict_ae_iff {β} {s : Set α} {t : Set β} {f : α → β} (
     t ∈ Filter.map f (μ.restrict s).ae ↔ μ ((f ⁻¹' t)ᶜ ∩ s) = 0 := by
   rw [mem_map, mem_ae_iff, measure.restrict_apply' hs]
 
-theorem ae_smul_measure {p : α → Prop} (h : ∀ᵐ x ∂μ, p x) (c : ℝ≥0∞) : ∀ᵐ x ∂c • μ, p x :=
+theorem ae_smul_measure {p : α → Prop} [Monoidₓ R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞]
+    (h : ∀ᵐ x ∂μ, p x) (c : R) : ∀ᵐ x ∂c • μ, p x :=
   ae_iff.2 <| by
-    rw [smul_apply, ae_iff.1 h, mul_zero]
+    rw [smul_apply, ae_iff.1 h, smul_zero]
 
 theorem ae_smul_measure_iff {p : α → Prop} {c : ℝ≥0∞} (hc : c ≠ 0) : (∀ᵐ x ∂c • μ, p x) ↔ ∀ᵐ x ∂μ, p x := by
   simp [ae_iff, hc]
@@ -1917,6 +1947,11 @@ instance is_finite_measure_add [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFin
 instance is_finite_measure_smul_nnreal [IsFiniteMeasure μ] {r : ℝ≥0 } : IsFiniteMeasure (r • μ) where
   measure_univ_lt_top := Ennreal.mul_lt_top Ennreal.coe_ne_top (measure_ne_top _ _)
 
+instance is_finite_measure_smul_of_nnreal_tower {R} [HasScalar R ℝ≥0 ] [HasScalar R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0∞]
+    [IsScalarTower R ℝ≥0∞ ℝ≥0∞] [IsFiniteMeasure μ] {r : R} : IsFiniteMeasure (r • μ) := by
+  rw [← smul_one_smul ℝ≥0 r μ]
+  infer_instance
+
 theorem is_finite_measure_of_le (μ : Measure α) [IsFiniteMeasure μ] (h : ν ≤ μ) : IsFiniteMeasure ν :=
   { measure_univ_lt_top := lt_of_le_of_ltₓ (h Set.Univ MeasurableSet.univ) (measure_lt_top _ _) }
 
@@ -1973,6 +2008,9 @@ theorem IsProbabilityMeasure.ne_zero (μ : Measure α) [IsProbabilityMeasure μ]
   mt measure_univ_eq_zero.2 <| by
     simp [measure_univ]
 
+instance (priority := 200) IsProbabilityMeasure.ae_ne_bot [IsProbabilityMeasure μ] : NeBot μ.ae :=
+  ae_ne_bot.2 (IsProbabilityMeasure.ne_zero μ)
+
 omit m0
 
 instance Measure.dirac.is_probability_measure [MeasurableSpace α] {x : α} : IsProbabilityMeasure (dirac x) :=
@@ -1983,6 +2021,14 @@ theorem prob_add_prob_compl [IsProbabilityMeasure μ] (h : MeasurableSet s) : μ
 
 theorem prob_le_one [IsProbabilityMeasure μ] : μ s ≤ 1 :=
   (measure_mono <| Set.subset_univ _).trans_eq measure_univ
+
+theorem is_probability_measure_smul [IsFiniteMeasure μ] (h : μ ≠ 0) : IsProbabilityMeasure ((μ Univ)⁻¹ • μ) := by
+  constructor
+  rw [smul_apply, smul_eq_mul, Ennreal.inv_mul_cancel]
+  · rwa [Ne, measure_univ_eq_zero]
+    
+  · exact measure_ne_top _ _
+    
 
 end IsProbabilityMeasure
 
@@ -2189,14 +2235,6 @@ theorem mem_spanning_sets_of_index_le (μ : Measure α) [SigmaFinite μ] (x : α
 theorem eventually_mem_spanning_sets (μ : Measure α) [SigmaFinite μ] (x : α) : ∀ᶠ n in at_top, x ∈ SpanningSets μ n :=
   eventually_at_top.2 ⟨spanningSetsIndex μ x, fun b => mem_spanning_sets_of_index_le μ x⟩
 
-theorem ae_of_forall_measure_lt_top_ae_restrict {μ : Measure α} [SigmaFinite μ] (P : α → Prop)
-    (h : ∀ s, MeasurableSet s → μ s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x := by
-  have : ∀ n, ∀ᵐ x ∂μ, x ∈ spanning_sets μ n → P x := by
-    intro n
-    have := h (spanning_sets μ n) (measurable_spanning_sets _ _) (measure_spanning_sets_lt_top _ _)
-    rwa [ae_restrict_iff' (measurable_spanning_sets _ _)] at this
-  filter_upwards [ae_all_iff.2 this] with _ hx using hx _ (mem_spanning_sets_index _ _)
-
 omit m0
 
 namespace Measureₓ
@@ -2210,7 +2248,7 @@ theorem supr_restrict_spanning_sets [SigmaFinite μ] (hs : MeasurableSet s) :
       rw [Union_spanning_sets, restrict_univ]
     
 
-/-- In a sigma-finite space, any measurable set of measure `> r` contains a measurable subset of
+/-- In a σ-finite space, any measurable set of measure `> r` contains a measurable subset of
 finite measure `> r`. -/
 theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : MeasurableSet s) (h's : r < μ s) :
     ∃ t, MeasurableSet t ∧ t ⊆ s ∧ r < μ t ∧ μ t < ∞ := by
@@ -2223,7 +2261,7 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
 -- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t' «expr ⊇ » t)
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
-This only holds when `μ` is sigma-finite. For a version without this assumption (but requiring
+This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
 that `t` has finite measure), see `measure_to_measurable_inter`. -/
 theorem measure_to_measurable_inter_of_sigma_finite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s) (t : Set α) :
     μ (ToMeasurable μ t ∩ s) = μ (t ∩ s) := by
@@ -2372,6 +2410,29 @@ theorem SigmaFinite.of_map (μ : Measure α) {f : α → β} (hf : Measurable f)
         simp only [← map_apply hf, measurable_spanning_sets, measure_spanning_sets_lt_top], by
         rw [← preimage_Union, Union_spanning_sets, preimage_univ]⟩⟩⟩
 
+theorem _root_.measurable_equiv.sigma_finite_map {μ : Measure α} (f : α ≃ᵐ β) (h : SigmaFinite μ) :
+    SigmaFinite (map f μ) := by
+  refine' sigma_finite.of_map _ f.symm.measurable _
+  rwa [map_map f.symm.measurable f.measurable, f.symm_comp_self, measure.map_id]
+
+/-- Similar to `ae_of_forall_measure_lt_top_ae_restrict`, but where you additionally get the
+  hypothesis that another σ-finite measure has finite values on `s`. -/
+theorem ae_of_forall_measure_lt_top_ae_restrict' {μ : Measure α} (ν : Measure α) [SigmaFinite μ] [SigmaFinite ν]
+    (P : α → Prop) (h : ∀ s, MeasurableSet s → μ s < ∞ → ν s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x := by
+  have : ∀ n, ∀ᵐ x ∂μ, x ∈ spanning_sets (μ + ν) n → P x := by
+    intro n
+    have := h (spanning_sets (μ + ν) n) (measurable_spanning_sets _ _) _ _
+    exacts[(ae_restrict_iff' (measurable_spanning_sets _ _)).mp this,
+      (self_le_add_right _ _).trans_lt (measure_spanning_sets_lt_top (μ + ν) _),
+      (self_le_add_left _ _).trans_lt (measure_spanning_sets_lt_top (μ + ν) _)]
+  filter_upwards [ae_all_iff.2 this] with _ hx using hx _ (mem_spanning_sets_index _ _)
+
+/-- To prove something for almost all `x` w.r.t. a σ-finite measure, it is sufficient to show that
+  this holds almost everywhere in sets where the measure has finite value. -/
+theorem ae_of_forall_measure_lt_top_ae_restrict {μ : Measure α} [SigmaFinite μ] (P : α → Prop)
+    (h : ∀ s, MeasurableSet s → μ s < ∞ → ∀ᵐ x ∂μ.restrict s, P x) : ∀ᵐ x ∂μ, P x :=
+  (ae_of_forall_measure_lt_top_ae_restrict' μ P) fun s hs h2s _ => h s hs h2s
+
 /-- A measure is called locally finite if it is finite in some neighborhood of each point. -/
 class IsLocallyFiniteMeasure [TopologicalSpace α] (μ : Measure α) : Prop where
   finite_at_nhds : ∀ x, μ.FiniteAtFilter (𝓝 x)
@@ -2399,7 +2460,8 @@ instance is_locally_finite_measure_smul_nnreal [TopologicalSpace α] (μ : Measu
   rcases μ.exists_is_open_measure_lt_top x with ⟨o, xo, o_open, μo⟩
   refine' ⟨o, o_open.mem_nhds xo, _⟩
   apply Ennreal.mul_lt_top _ μo.ne
-  simp only [Ennreal.coe_ne_top, Ennreal.coe_of_nnreal_hom, Ne.def, not_false_iff]
+  simp only [RingHom.to_monoid_hom_eq_coe, RingHom.coe_monoid_hom, Ennreal.coe_ne_top, Ennreal.coe_of_nnreal_hom,
+    Ne.def, not_false_iff]
 
 /-- A measure `μ` is finite on compacts if any compact set `K` satisfies `μ K < ∞`. -/
 @[protect_proj]
@@ -3036,7 +3098,8 @@ theorem _root_.ae_measurable_Union_iff [Encodable ι] {s : ι → Set α} :
   ⟨fun h i => h.mono_measure <| restrict_mono (subset_Union _ _) le_rfl, AeMeasurable.Union⟩
 
 @[measurability]
-theorem smul_measure (h : AeMeasurable f μ) (c : ℝ≥0∞) : AeMeasurable f (c • μ) :=
+theorem smul_measure [Monoidₓ R] [DistribMulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] (h : AeMeasurable f μ) (c : R) :
+    AeMeasurable f (c • μ) :=
   ⟨h.mk f, h.measurable_mk, ae_smul_measure h.ae_eq_mk c⟩
 
 theorem comp_measurable [MeasurableSpace δ] {f : α → δ} {g : δ → β} (hg : AeMeasurable g (map f μ))

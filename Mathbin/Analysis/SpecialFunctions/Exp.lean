@@ -177,10 +177,14 @@ theorem tendsto_pow_mul_exp_neg_at_top_nhds_0 (n : ℕ) : Tendsto (fun x => x ^ 
   (tendsto_inv_at_top_zero.comp (tendsto_exp_div_pow_at_top n)).congr fun x => by
     rw [comp_app, inv_eq_one_div, div_div_eq_mul_div, one_mulₓ, div_eq_mul_inv, exp_neg]
 
-/-- The function `(b * exp x + c) / (x ^ n)` tends to `+∞` at `+∞`, for any positive natural number
+/-- The function `(b * exp x + c) / (x ^ n)` tends to `+∞` at `+∞`, for any natural number
 `n` and any real numbers `b` and `c` such that `b` is positive. -/
-theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) (hn : 1 ≤ n) :
+theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
     Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp only [pow_zeroₓ, div_one]
+    exact (tendsto_exp_at_top.const_mul_at_top hb).at_top_add tendsto_const_nhds
+    
   refine'
     tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top 0) _)
       (((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
@@ -189,13 +193,13 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) (h
   simp only [zpow_neg₀ x n]
   ring
 
-/-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any positive natural number
+/-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any natural number
 `n` and any real numbers `b` and `c` such that `b` is nonzero. -/
-theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) (hn : 1 ≤ n) :
+theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
     Tendsto (fun x => x ^ n / (b * exp x + c)) atTop (𝓝 0) := by
   have H : ∀ d e, 0 < d → tendsto (fun x : ℝ => x ^ n / (d * exp x + e)) at_top (𝓝 0) := by
     intro b' c' h
-    convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h hn).inv_tendsto_at_top
+    convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_at_top
     ext x
     simpa only [Pi.inv_apply] using inv_div.symm
   cases lt_or_gt_of_neₓ hb
@@ -258,6 +262,10 @@ theorem comap_exp_nhds_within_Ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
 theorem tendsto_comp_exp_at_bot {α : Type _} {l : Filter α} {f : ℝ → α} :
     Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
   rw [← map_exp_at_bot, tendsto_map'_iff]
+
+theorem is_o_pow_exp_at_top {n : ℕ} : IsOₓ (fun x => x ^ n) Real.exp atTop := by
+  simpa [is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
+    tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
 
 end Real
 

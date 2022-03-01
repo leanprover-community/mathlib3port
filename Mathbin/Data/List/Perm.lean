@@ -1256,7 +1256,7 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (ts' «expr ~ » «expr[ , ]»([]))
+-- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by

@@ -7,6 +7,7 @@ import Mathbin.Algebra.Group.WithOne
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Order.MonoidLemmas
+import Mathbin.Data.Equiv.MulAdd
 import Mathbin.Order.BoundedOrder
 import Mathbin.Order.MinMax
 import Mathbin.Order.Hom.Basic
@@ -272,7 +273,8 @@ Note 2 : there is no multiplicative analogue because it does not seem necessary.
 Mathematicians might be more likely to use the order-dual version, where all
 elements are ≤ 1 and then 1 is the top element.
 -/
-def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) : OrderedAddCommMonoid (WithZero α) := by
+protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) :
+    OrderedAddCommMonoid (WithZero α) := by
   suffices
   refine' { WithZero.partialOrder, WithZero.addCommMonoid with add_le_add_left := this, .. }
   · intro a b h c ca h₂
@@ -395,22 +397,25 @@ instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
               intro <;>
         simp [← WithTop.coe_add, add_commₓ] }
 
-instance [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
-  { WithTop.hasZero, WithTop.addSemigroup with
+instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
+  { WithTop.hasZero, WithTop.hasAdd with
     zero_add := by
       refine' WithTop.recTopCoe _ _
-      · simpa
+      · simp
         
       · intro
         rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_addₓ]
         ,
     add_zero := by
       refine' WithTop.recTopCoe _ _
-      · simpa
+      · simp
         
       · intro
         rw [← WithTop.coe_zero, ← WithTop.coe_add, add_zeroₓ]
          }
+
+instance [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
+  { WithTop.addZeroClass, WithTop.hasZero, WithTop.addSemigroup with }
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithTop α) :=
   { WithTop.addMonoid, WithTop.addCommSemigroup with }
@@ -458,11 +463,17 @@ instance [Zero α] : Zero (WithBot α) :=
 instance [One α] : One (WithBot α) :=
   WithTop.hasOne
 
+instance [Add α] : Add (WithBot α) :=
+  WithTop.hasAdd
+
 instance [AddSemigroupₓ α] : AddSemigroupₓ (WithBot α) :=
   WithTop.addSemigroup
 
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithBot α) :=
   WithTop.addCommSemigroup
+
+instance [AddZeroClass α] : AddZeroClass (WithBot α) :=
+  WithTop.addZeroClass
 
 instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
   WithTop.addMonoid
@@ -525,6 +536,35 @@ theorem add_eq_bot [AddSemigroupₓ α] {m n : WithBot α} : m + n = ⊥ ↔ m =
   WithTop.add_eq_top
 
 end WithBot
+
+namespace WithZero
+
+attribute [local semireducible] WithZero
+
+variable [Add α]
+
+/-- Making an additive monoid multiplicative then adding a zero is the same as adding a bottom
+element then making it multiplicative. -/
+def toMulBot : WithZero (Multiplicative α) ≃* Multiplicative (WithBot α) :=
+  MulEquiv.refl _
+
+@[simp]
+theorem to_mul_bot_zero : toMulBot (0 : WithZero (Multiplicative α)) = Multiplicative.ofAdd ⊥ :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_coe (x : Multiplicative α) : toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_symm_bot : toMulBot.symm (Multiplicative.ofAdd (⊥ : WithBot α)) = 0 :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
+  rfl
+
+end WithZero
 
 /-- A canonically ordered additive monoid is an ordered commutative additive monoid
   in which the ordering coincides with the subtractibility relation,
@@ -1114,6 +1154,18 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicati
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedAddCommMonoid (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommMonoid with }
+
+theorem WithZero.to_mul_bot_strict_mono [Add α] [Preorderₓ α] : StrictMono (@WithZero.toMulBot α _) := fun x y => id
+
+@[simp]
+theorem WithZero.to_mul_bot_le [Add α] [Preorderₓ α] (a b : WithZero (Multiplicative α)) :
+    WithZero.toMulBot a ≤ WithZero.toMulBot b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem WithZero.to_mul_bot_lt [Add α] [Preorderₓ α] (a b : WithZero (Multiplicative α)) :
+    WithZero.toMulBot a < WithZero.toMulBot b ↔ a < b :=
+  Iff.rfl
 
 namespace Additive
 

@@ -64,7 +64,8 @@ instance : AddMonoidHomClass (Derivation R A M) A M where
   map_add := fun D => D.toLinearMap.map_add'
   map_zero := fun D => D.toLinearMap.map_zero
 
-/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly. -/
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly. -/
 instance : CoeFun (Derivation R A M) fun _ => A → M :=
   ⟨fun D => D.toLinearMap.toFun⟩
 

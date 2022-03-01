@@ -211,7 +211,7 @@ theorem orthonormal_fourier : Orthonormal ℂ (fourierLp 2) := by
   have hij : -i + j ≠ 0 := by
     rw [add_commₓ]
     exact sub_ne_zero.mpr (Ne.symm h)
-  exact integral_zero_of_mul_left_eq_neg (fourier_add_half_inv_index hij)
+  exact integral_eq_zero_of_mul_left_eq_neg (fourier_add_half_inv_index hij)
 
 end Monomials
 

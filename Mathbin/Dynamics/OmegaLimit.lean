@@ -323,9 +323,10 @@ variable {τ : Type _} [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd
 
 open_locale OmegaLimit
 
-theorem is_invariant_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) := fun t =>
-  MapsTo.mono (Subset.refl _) (omega_limit_subset_of_tendsto ϕ s (hf t)) <|
-    maps_to_omega_limit _ (maps_to_id _) (fun t' x => (ϕ.map_add _ _ _).symm) (continuous_const.Flow ϕ continuous_id)
+theorem is_invariant_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) := by
+  refine' fun t => maps_to.mono_right _ (omega_limit_subset_of_tendsto ϕ s (hf t))
+  exact
+    maps_to_omega_limit _ (maps_to_id _) (fun t' x => (ϕ.map_add _ _ _).symm) (continuous_const.flow ϕ continuous_id)
 
 theorem omega_limit_image_subset (t : τ) (ht : Tendsto (· + t) f f) : ω f ϕ (ϕ t '' s) ⊆ ω f ϕ s := by
   simp only [omega_limit_image_eq, ← map_add]

@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Tactic.Elementwise
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.Algebra.PunitInstances
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-!
 # Category instances for monoid, add_monoid, comm_monoid, and add_comm_monoid.

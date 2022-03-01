@@ -363,12 +363,49 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset
     (s.eq_circumcenter_of_dist_eq (centroid_mem_affine_span_of_card_eq_add_one ℝ _ (Finset.card_fin 2)) fun i =>
         hr i (Set.mem_univ _)).symm
 
+/-- The orthogonal projection of a point `p` onto the hyperplane spanned by the simplex's points. -/
+def orthogonalProjectionSpan {n : ℕ} (s : Simplex ℝ P n) : P →ᵃ[ℝ] affineSpan ℝ (Set.Range s.points) :=
+  orthogonalProjection (affineSpan ℝ (Set.Range s.points))
+
+/-- Adding a vector to a point in the given subspace, then taking the
+orthogonal projection, produces the original point if the vector is a
+multiple of the result of subtracting a point's orthogonal projection
+from that point. -/
+theorem orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} (s : Simplex ℝ P n) {p1 : P} (p2 : P) (r : ℝ)
+    (hp : p1 ∈ affineSpan ℝ (Set.Range s.points)) :
+    s.orthogonalProjectionSpan (r • (p2 -ᵥ s.orthogonalProjectionSpan p2 : V) +ᵥ p1) = ⟨p1, hp⟩ :=
+  orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _
+
+theorem coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} {r₁ : ℝ} (s : Simplex ℝ P n) {p p₁o : P}
+    (hp₁o : p₁o ∈ affineSpan ℝ (Set.Range s.points)) :
+    ↑(s.orthogonalProjectionSpan (r₁ • (p -ᵥ ↑(s.orthogonalProjectionSpan p)) +ᵥ p₁o)) = p₁o :=
+  congr_argₓ coe (orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _ hp₁o)
+
+theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq {n : ℕ} (s : Simplex ℝ P n) {p1 : P}
+    (p2 : P) (hp1 : p1 ∈ affineSpan ℝ (Set.Range s.points)) :
+    dist p1 p2 * dist p1 p2 =
+      dist p1 (s.orthogonalProjectionSpan p2) * dist p1 (s.orthogonalProjectionSpan p2) +
+        dist p2 (s.orthogonalProjectionSpan p2) * dist p2 (s.orthogonalProjectionSpan p2) :=
+  by
+  rw [PseudoMetricSpace.dist_comm p2 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V p1 _, dist_eq_norm_vsub V _ p2, ←
+    vsub_add_vsub_cancel p1 (s.orthogonal_projection_span p2) p2,
+    norm_add_sq_eq_norm_sq_add_norm_sq_iff_real_inner_eq_zero]
+  exact
+    Submodule.inner_right_of_mem_orthogonal (vsub_orthogonal_projection_mem_direction p2 hp1)
+      (orthogonal_projection_vsub_mem_direction_orthogonal _ p2)
+
+theorem dist_circumcenter_sq_eq_sq_sub_circumradius {n : ℕ} {r : ℝ} (s : Simplex ℝ P n) {p₁ : P}
+    (h₁ : ∀ i : Finₓ (n + 1), dist (s.points i) p₁ = r) (h₁' : ↑(s.orthogonalProjectionSpan p₁) = s.circumcenter)
+    (h : s.points 0 ∈ affineSpan ℝ (Set.Range s.points)) :
+    dist p₁ s.circumcenter * dist p₁ s.circumcenter = r * r - s.circumradius * s.circumradius := by
+  rw [dist_comm, ← h₁ 0, s.dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq p₁ h]
+  simp only [h₁', dist_comm p₁, add_sub_cancel', simplex.dist_circumcenter_eq_circumradius]
+
 /-- If there exists a distance that a point has from all vertices of a
 simplex, the orthogonal projection of that point onto the subspace
 spanned by that simplex is its circumcenter.  -/
 theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P}
-    (hr : ∃ r, ∀ i, dist (s.points i) p = r) :
-    ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter := by
+    (hr : ∃ r, ∀ i, dist (s.points i) p = r) : ↑(s.orthogonalProjectionSpan p) = s.circumcenter := by
   change ∃ r : ℝ, ∀ i, (fun x => dist x p = r) (s.points i) at hr
   conv at hr => congr ext rw [← Set.forall_range_iff]
   rw [exists_dist_eq_iff_exists_dist_orthogonal_projection_eq (subset_affine_span ℝ _) p] at hr
@@ -379,15 +416,13 @@ theorem orthogonal_projection_eq_circumcenter_of_exists_dist_eq {n : ℕ} (s : S
 the orthogonal projection of that point onto the subspace spanned by
 that simplex is its circumcenter.  -/
 theorem orthogonal_projection_eq_circumcenter_of_dist_eq {n : ℕ} (s : Simplex ℝ P n) {p : P} {r : ℝ}
-    (hr : ∀ i, dist (s.points i) p = r) :
-    ↑(orthogonalProjection (affineSpan ℝ (Set.Range s.points)) p) = s.circumcenter :=
+    (hr : ∀ i, dist (s.points i) p = r) : ↑(s.orthogonalProjectionSpan p) = s.circumcenter :=
   s.orthogonal_projection_eq_circumcenter_of_exists_dist_eq ⟨r, hr⟩
 
 /-- The orthogonal projection of the circumcenter onto a face is the
 circumcenter of that face. -/
 theorem orthogonal_projection_circumcenter {n : ℕ} (s : Simplex ℝ P n) {fs : Finset (Finₓ (n + 1))} {m : ℕ}
-    (h : fs.card = m + 1) :
-    ↑(orthogonalProjection (affineSpan ℝ (Set.Range (s.face h).points)) s.circumcenter) = (s.face h).circumcenter :=
+    (h : fs.card = m + 1) : ↑((s.face h).orthogonalProjectionSpan s.circumcenter) = (s.face h).circumcenter :=
   have hr : ∃ r, ∀ i, dist ((s.face h).points i) s.circumcenter = r := by
     use s.circumradius
     simp [face_points]
@@ -606,10 +641,9 @@ theorem reflection_circumcenter_eq_affine_combination_of_points_with_circumcente
   by
   have hc : card ({i₁, i₂} : Finset (Finₓ (n + 1))) = 2 := by
     simp [h]
-  have h_faces :
-    ↑(orthogonalProjection (affineSpan ℝ (s.points '' {i₁, i₂})) s.circumcenter) =
-      ↑(orthogonalProjection (affineSpan ℝ (Set.Range (s.face hc).points)) s.circumcenter) :=
-    by
+  -- Making the next line a separate definition helps the elaborator:
+  set W : AffineSubspace ℝ P := affineSpan ℝ (s.points '' {i₁, i₂}) with W_def
+  have h_faces : ↑(orthogonalProjection W s.circumcenter) = ↑((s.face hc).orthogonalProjectionSpan s.circumcenter) := by
     apply eq_orthogonal_projection_of_eq_subspace
     simp
   rw [EuclideanGeometry.reflection_apply, h_faces, s.orthogonal_projection_circumcenter hc, circumcenter_eq_centroid,
@@ -756,30 +790,25 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
   rw [← affine_span_insert_affine_span, mem_affine_span_insert_iff (orthogonal_projection_mem p)] at hp₁ hp₂
   obtain ⟨r₁, p₁o, hp₁o, hp₁⟩ := hp₁
   obtain ⟨r₂, p₂o, hp₂o, hp₂⟩ := hp₂
-  obtain rfl : ↑(orthogonalProjection span_s p₁) = p₁o := by
-    have := orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hp₁o
-    rw [← hp₁] at this
-    rw [this]
-    rfl
+  obtain rfl : ↑(s.orthogonal_projection_span p₁) = p₁o := by
+    subst hp₁
+    exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₁o
   rw [h₁'] at hp₁
-  obtain rfl : ↑(orthogonalProjection span_s p₂) = p₂o := by
-    have := orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ hp₂o
-    rw [← hp₂] at this
-    rw [this]
-    rfl
+  obtain rfl : ↑(s.orthogonal_projection_span p₂) = p₂o := by
+    subst hp₂
+    exact s.coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection hp₂o
   rw [h₂'] at hp₂
   have h : s.points 0 ∈ span_s := mem_affine_span ℝ (Set.mem_range_self _)
-  have hd₁ : dist p₁ s.circumcenter * dist p₁ s.circumcenter = r * r - s.circumradius * s.circumradius := by
-    rw [dist_comm, ← h₁ 0, dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq p₁ h]
-    simp only [h₁', dist_comm p₁, add_sub_cancel', simplex.dist_circumcenter_eq_circumradius]
-  have hd₂ : dist p₂ s.circumcenter * dist p₂ s.circumcenter = r * r - s.circumradius * s.circumradius := by
-    rw [dist_comm, ← h₂ 0, dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq p₂ h]
-    simp only [h₂', dist_comm p₂, add_sub_cancel', simplex.dist_circumcenter_eq_circumradius]
+  have hd₁ : dist p₁ s.circumcenter * dist p₁ s.circumcenter = r * r - s.circumradius * s.circumradius :=
+    s.dist_circumcenter_sq_eq_sq_sub_circumradius h₁ h₁' h
+  have hd₂ : dist p₂ s.circumcenter * dist p₂ s.circumcenter = r * r - s.circumradius * s.circumradius :=
+    s.dist_circumcenter_sq_eq_sq_sub_circumradius h₂ h₂' h
   rw [← hd₂, hp₁, hp₂, dist_eq_norm_vsub V _ s.circumcenter, dist_eq_norm_vsub V _ s.circumcenter, vadd_vsub, vadd_vsub,
     ← real_inner_self_eq_norm_mul_norm, ← real_inner_self_eq_norm_mul_norm, real_inner_smul_left, real_inner_smul_left,
     real_inner_smul_right, real_inner_smul_right, ← mul_assoc, ← mul_assoc] at hd₁
-  by_cases' hp : p = orthogonalProjection span_s p
-  · rw [hp₁, hp₂, ← hp]
+  by_cases' hp : p = s.orthogonal_projection_span p
+  · rw [simplex.orthogonal_projection_span] at hp
+    rw [hp₁, hp₂, ← hp]
     simp only [true_orₓ, eq_self_iff_true, smul_zero, vsub_self]
     
   · have hz : ⟪p -ᵥ orthogonalProjection span_s p, p -ᵥ orthogonalProjection span_s p⟫ ≠ 0 := by

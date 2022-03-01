@@ -13,47 +13,34 @@ import Mathbin.Data.Equiv.Option
 
 open Equivₓ
 
-theorem EquivFunctor.map_equiv_option_injective {α β : Type _} :
-    Function.Injective (EquivFunctor.mapEquiv Option : α ≃ β → Option α ≃ Option β) :=
-  EquivFunctor.mapEquiv.injective Option Option.some_injective
+@[simp]
+theorem Equivₓ.option_congr_one {α : Type _} : (1 : Perm α).optionCongr = 1 :=
+  Equivₓ.option_congr_refl
 
 @[simp]
-theorem EquivFunctor.Option.map_none {α β : Type _} (e : α ≃ β) : EquivFunctor.map e none = none := by
-  simp [EquivFunctor.map]
-
-@[simp]
-theorem map_equiv_option_one {α : Type _} : EquivFunctor.mapEquiv Option (1 : Perm α) = 1 := by
-  ext
-  simp [EquivFunctor.mapEquiv, EquivFunctor.map]
-
-@[simp]
-theorem map_equiv_option_refl {α : Type _} : EquivFunctor.mapEquiv Option (Equivₓ.refl α) = 1 :=
-  map_equiv_option_one
-
-@[simp]
-theorem map_equiv_option_swap {α : Type _} [DecidableEq α] (x y : α) :
-    EquivFunctor.mapEquiv Option (swap x y) = swap (some x) (some y) := by
+theorem Equivₓ.option_congr_swap {α : Type _} [DecidableEq α] (x y : α) :
+    optionCongr (swap x y) = swap (some x) (some y) := by
   ext (_ | i)
   · simp [swap_apply_of_ne_of_ne]
     
   · by_cases' hx : i = x
-    simp [hx, swap_apply_of_ne_of_ne, EquivFunctor.map]
-    by_cases' hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne, EquivFunctor.map]
+    simp [hx, swap_apply_of_ne_of_ne]
+    by_cases' hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
     
 
 @[simp]
-theorem EquivFunctor.Option.sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
-    Perm.sign (EquivFunctor.mapEquiv Option e) = Perm.sign e := by
+theorem Equivₓ.option_congr_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
+    Perm.sign e.optionCongr = Perm.sign e := by
   apply perm.swap_induction_on e
   · simp [perm.one_def]
     
   · intro f x y hne h
-    simp [h, hne, perm.mul_def, ← EquivFunctor.map_equiv_trans]
+    simp [h, hne, perm.mul_def, ← Equivₓ.option_congr_trans]
     
 
 @[simp]
 theorem map_equiv_remove_none {α : Type _} [DecidableEq α] (σ : Perm (Option α)) :
-    EquivFunctor.mapEquiv Option (removeNone σ) = swap none (σ none) * σ := by
+    (removeNone σ).optionCongr = swap none (σ none) * σ := by
   ext1 x
   have : Option.map (⇑(remove_none σ)) x = (swap none (σ none)) (σ x) := by
     cases x
@@ -79,19 +66,19 @@ The fixed `option α` is swapped with `none`. -/
 @[simps]
 def Equivₓ.Perm.decomposeOption {α : Type _} [DecidableEq α] : Perm (Option α) ≃ Option α × Perm α where
   toFun := fun σ => (σ none, removeNone σ)
-  invFun := fun i => swap none i.1 * EquivFunctor.mapEquiv Option i.2
+  invFun := fun i => swap none i.1 * i.2.optionCongr
   left_inv := fun σ => by
     simp
   right_inv := fun ⟨x, σ⟩ => by
-    have : remove_none (swap none x * EquivFunctor.mapEquiv Option σ) = σ :=
-      EquivFunctor.map_equiv_option_injective
+    have : remove_none (swap none x * σ.option_congr) = σ :=
+      Equivₓ.option_congr_injective
         (by
-          simp [← mul_assoc, EquivFunctor.map])
-    simp [← perm.eq_inv_iff_eq, EquivFunctor.map, this]
+          simp [← mul_assoc])
+    simp [← perm.eq_inv_iff_eq, this]
 
 theorem Equivₓ.Perm.decompose_option_symm_of_none_apply {α : Type _} [DecidableEq α] (e : Perm α) (i : Option α) :
     Equivₓ.Perm.decomposeOption.symm (none, e) i = i.map e := by
-  simp [EquivFunctor.map]
+  simp
 
 theorem Equivₓ.Perm.decompose_option_symm_sign {α : Type _} [DecidableEq α] [Fintype α] (e : Perm α) :
     Perm.sign (Equivₓ.Perm.decomposeOption.symm (none, e)) = Perm.sign e := by

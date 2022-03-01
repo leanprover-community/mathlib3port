@@ -414,7 +414,7 @@ theorem prod_finset_product_right' (r : Finset (α × γ)) (s : Finset γ) (t : 
     (∏ p in r, f p.1 p.2) = ∏ c in s, ∏ a in t c, f a c :=
   prod_finset_product_right r s t h
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ , ]»([2]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 @[to_additive]
 theorem prod_fiberwise_of_maps_to [DecidableEq γ] {s : Finset α} {t : Finset γ} {g : α → γ} (h : ∀, ∀ x ∈ s, ∀, g x ∈ t)
     (f : α → β) : (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) = ∏ x in s, f x := by
@@ -1372,6 +1372,17 @@ theorem card_eq_sum_card_image [DecidableEq β] (f : α → β) (s : Finset α) 
 @[simp]
 theorem sum_sub_distrib [AddCommGroupₓ β] : (∑ x in s, f x - g x) = (∑ x in s, f x) - ∑ x in s, g x := by
   simpa only [sub_eq_add_neg] using sum_add_distrib.trans (congr_argₓ _ sum_neg_distrib)
+
+theorem mem_sum {f : α → Multiset β} (s : Finset α) (b : β) : (b ∈ ∑ x in s, f x) ↔ ∃ a ∈ s, b ∈ f a := by
+  classical
+  refine'
+    s.induction_on
+      (by
+        simp )
+      _
+  · intro a t hi ih
+    simp [sum_insert hi, ih, or_and_distrib_right, exists_or_distrib]
+    
 
 section ProdEqZero
 

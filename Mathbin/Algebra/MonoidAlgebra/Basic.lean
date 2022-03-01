@@ -362,6 +362,17 @@ end
 theorem of_injective [MulOneClassₓ G] [Nontrivial k] : Function.Injective (of k G) := fun a b h => by
   simpa using (single_eq_single_iff _ _ _ _).mp h
 
+/-- `finsupp.single` as a `monoid_hom` from the product type into the monoid algebra.
+
+Note the order of the elements of the product are reversed compared to the arguments of
+`finsupp.single`.
+-/
+@[simps]
+def singleHom [MulOneClassₓ G] : k × G →* MonoidAlgebra k G where
+  toFun := fun a => single a.2 a.1
+  map_one' := rfl
+  map_mul' := fun a b => single_mul_single.symm
+
 theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G} (H : ∀ a, a * x = z ↔ a = y) :
     (f * single x r) z = f y * r :=
   have A : ∀ a₁ b₁, ((single x r).Sum fun a₂ b₂ => ite (a₁ * a₂ = z) (b₁ * b₂) 0) = ite (a₁ * x = z) (b₁ * r) 0 :=
@@ -1111,6 +1122,17 @@ theorem of'_eq_of [AddZeroClass G] (a : G) : of' k G a = of k G a :=
 
 theorem of_injective [Nontrivial k] [AddZeroClass G] : Function.Injective (of k G) := fun a b h => by
   simpa using (single_eq_single_iff _ _ _ _).mp h
+
+/-- `finsupp.single` as a `monoid_hom` from the product type into the additive monoid algebra.
+
+Note the order of the elements of the product are reversed compared to the arguments of
+`finsupp.single`.
+-/
+@[simps]
+def singleHom [AddZeroClass G] : k × Multiplicative G →* AddMonoidAlgebra k G where
+  toFun := fun a => single a.2.toAdd a.1
+  map_one' := rfl
+  map_mul' := fun a b => single_mul_single.symm
 
 theorem mul_single_apply_aux [Add G] (f : AddMonoidAlgebra k G) (r : k) (x y z : G) (H : ∀ a, a + x = z ↔ a = y) :
     (f * single x r) z = f y * r :=

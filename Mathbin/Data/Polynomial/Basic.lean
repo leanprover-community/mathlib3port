@@ -629,7 +629,7 @@ theorem sum_add_index {S : Type _} [AddCommMonoidₓ S] (p q : R[X]) (f : ℕ �
   rcases p with ⟨⟩
   rcases q with ⟨⟩
   simp only [add_to_finsupp, Sum, support, coeff, Pi.add_apply, coe_add]
-  exact Finsupp.sum_add_index hf h_add
+  exact Finsupp.sum_add_index' hf h_add
 
 theorem sum_add' {S : Type _} [AddCommMonoidₓ S] (p : R[X]) (f g : ℕ → R → S) : p.Sum (f + g) = p.Sum f + p.Sum g := by
   simp [sum_def, Finset.sum_add_distrib]

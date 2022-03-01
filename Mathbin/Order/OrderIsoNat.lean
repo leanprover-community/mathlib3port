@@ -148,6 +148,8 @@ theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α 
         Or.intro_left _ fun n => (Nat.find_specₓ (h (g' n))).2⟩
     
 
+/-- This is the infinitary Erdős–Szekeres theorem, and an important lemma in the usual proof of
+    Bolzano-Weierstrass for `ℝ`. -/
 theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f

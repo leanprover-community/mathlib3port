@@ -669,6 +669,13 @@ section Subtype
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {p : α → Prop}
 
+theorem inducing_coe {b : Set β} : Inducing (coe : b → β) :=
+  ⟨rfl⟩
+
+theorem Inducing.of_cod_restrict {f : α → β} {b : Set β} (hb : ∀ a, f a ∈ b) (h : Inducing (b.codRestrict f hb)) :
+    Inducing f :=
+  inducing_coe.comp h
+
 theorem embedding_subtype_coe : Embedding (coe : Subtype p → α) :=
   ⟨⟨rfl⟩, Subtype.coe_injective⟩
 
@@ -756,6 +763,11 @@ theorem continuous_subtype_is_closed_cover {ι : Sort _} {f : α → β} (c : ι
 theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
     x ∈ Closure s ↔ (x : α) ∈ Closure ((coe : _ → α) '' s) :=
   closure_induced
+
+@[continuity]
+theorem Continuous.cod_restrict {f : α → β} {s : Set β} (hf : Continuous f) (hs : ∀ a, f a ∈ s) :
+    Continuous (s.codRestrict f hs) :=
+  continuous_subtype_mk hs hf
 
 end Subtype
 

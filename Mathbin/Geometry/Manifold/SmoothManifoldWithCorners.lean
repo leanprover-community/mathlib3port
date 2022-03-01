@@ -211,6 +211,9 @@ theorem continuous_at_symm {x} : ContinuousAt I.symm x :=
 theorem continuous_within_at_symm {s x} : ContinuousWithinAt I.symm s x :=
   I.continuous_symm.ContinuousWithinAt
 
+theorem continuous_on_symm {s} : ContinuousOn I.symm s :=
+  I.continuous_symm.ContinuousOn
+
 @[simp, mfld_simps]
 theorem target_eq : I.Target = Range (I : H → E) := by
   rw [← image_univ, ← I.source_eq]
@@ -474,11 +477,11 @@ theorem cont_diff_groupoid_zero_eq : contDiffGroupoid 0 I = continuousGroupoid H
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid]
   simp only [cont_diff_on_zero]
   constructor
-  · apply ContinuousOn.comp (@Continuous.continuous_on _ _ _ _ _ univ I.continuous) _ (subset_univ _)
-    apply ContinuousOn.comp u.continuous_to_fun I.continuous_symm.continuous_on (inter_subset_left _ _)
+  · refine' I.continuous.comp_continuous_on (u.continuous_on.comp I.continuous_on_symm _)
+    exact (maps_to_preimage _ _).mono_left (inter_subset_left _ _)
     
-  · apply ContinuousOn.comp (@Continuous.continuous_on _ _ _ _ _ univ I.continuous) _ (subset_univ _)
-    apply ContinuousOn.comp u.continuous_inv_fun I.continuous_inv_fun.continuous_on (inter_subset_left _ _)
+  · refine' I.continuous.comp_continuous_on (u.symm.continuous_on.comp I.continuous_on_symm _)
+    exact (maps_to_preimage _ _).mono_left (inter_subset_left _ _)
     
 
 variable (n)
@@ -710,9 +713,9 @@ theorem ext_chart_at_continuous_at' {x' : M} (h : x' ∈ (extChartAt I x).Source
 theorem ext_chart_at_continuous_at : ContinuousAt (extChartAt I x) x :=
   ext_chart_at_continuous_at' _ _ (mem_ext_chart_source I x)
 
-theorem ext_chart_at_continuous_on_symm : ContinuousOn (extChartAt I x).symm (extChartAt I x).Target := by
-  apply ContinuousOn.comp (chart_at H x).continuous_on_symm I.continuous_symm.continuous_on
-  simp [extChartAt, LocalEquiv.trans_target]
+theorem ext_chart_at_continuous_on_symm : ContinuousOn (extChartAt I x).symm (extChartAt I x).Target :=
+  (chartAt H x).continuous_on_symm.comp I.continuous_on_symm <|
+    (maps_to_preimage _ _).mono_left (inter_subset_right _ _)
 
 theorem ext_chart_at_map_nhds' {x y : M} (hy : y ∈ (extChartAt I x).Source) :
     map (extChartAt I x) (𝓝 y) = 𝓝[Range I] extChartAt I x y := by

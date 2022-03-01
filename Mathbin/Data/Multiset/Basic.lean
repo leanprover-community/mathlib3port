@@ -1822,6 +1822,7 @@ theorem count_le_count_cons (a b : α) (s : Multiset α) : count a s ≤ count a
 theorem count_cons (a b : α) (s : Multiset α) : count a (b ::ₘ s) = count a s + if a = b then 1 else 0 := by
   by_cases' h : a = b <;> simp [h]
 
+@[simp]
 theorem count_singleton_self (a : α) : count a ({a} : Multiset α) = 1 := by
   simp only [count_cons_self, singleton_eq_cons, eq_self_iff_true, count_zero]
 

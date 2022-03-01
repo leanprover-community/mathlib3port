@@ -133,9 +133,9 @@ theorem IsEquivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : Tendsto u 
 
 theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (𝓝 c)) : Tendsto v l (𝓝 c) := by
   by_cases' h : c = 0
-  · rw [h, ← is_o_one_iff ℝ] at *
-    convert (huv.symm.is_o.trans hu).add hu
-    simp
+  · subst c
+    rw [← is_o_one_iff ℝ] at hu⊢
+    simpa using (huv.symm.is_o.trans hu).add hu
     
   · rw [← is_equivalent_const_iff_tendsto h] at hu⊢
     exact huv.symm.trans hu

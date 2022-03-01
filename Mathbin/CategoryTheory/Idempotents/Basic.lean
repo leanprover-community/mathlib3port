@@ -15,7 +15,7 @@ preadditive categories).
 ## Main definitions
 
 - `is_idempotent_complete C` expresses that `C` is idempotent complete, i.e.
-all idempotents in `C` split. Other caracterisations of idempotent completeness are given
+all idempotents in `C` split. Other characterisations of idempotent completeness are given
 by `is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent` and
 `is_idempotent_complete_iff_idempotents_have_kernels`.
 - `is_idempotent_complete_of_abelian` expresses that abelian categories are
@@ -45,14 +45,14 @@ namespace CategoryTheory
 
 variable (C : Type _) [Category C]
 
-/-- A category is idempotent complete iff all idempotents endomorphisms `p`
+/-- A category is idempotent complete iff all idempotent endomorphisms `p`
 split as a composition `p = e ≫ i` with `i ≫ e = 𝟙 _` -/
 class IsIdempotentComplete : Prop where
   idempotents_split : ∀ X : C p : X ⟶ X, p ≫ p = p → ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p
 
 namespace Idempotents
 
-/-- A category is idempotent complete iff for all idempotents endomorphisms,
+/-- A category is idempotent complete iff for all idempotent endomorphisms,
 the equalizer of the identity and this idempotent exists. -/
 theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
     IsIdempotentComplete C ↔ ∀ X : C p : X ⟶ X, p ≫ p = p → HasEqualizer (𝟙 X) p := by
@@ -103,8 +103,7 @@ variable {C}
 
 /-- In a preadditive category, when `p : X ⟶ X` is idempotent,
 then `𝟙 X - p` is also idempotent. -/
-theorem idempotence_of_id_sub_idempotent [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p = p) :
-    (𝟙 _ - p) ≫ (𝟙 _ - p) = 𝟙 _ - p := by
+theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p = p) : (𝟙 _ - p) ≫ (𝟙 _ - p) = 𝟙 _ - p := by
   simp only [comp_sub, sub_comp, id_comp, comp_id, hp, sub_self, sub_zero]
 
 variable (C)
@@ -115,12 +114,12 @@ theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
   rw [is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent]
   constructor
   · intro h X p hp
-    have := h X (𝟙 _ - p) (idempotence_of_id_sub_idempotent p hp)
+    have := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     convert has_kernel_of_has_equalizer (𝟙 X) (𝟙 X - p)
     rw [sub_sub_cancel]
     
   · intro h X p hp
-    have : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idempotence_of_id_sub_idempotent p hp)
+    have : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
     apply preadditive.has_limit_parallel_pair
     
 

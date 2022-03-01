@@ -9,6 +9,7 @@ import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Instances.Ennreal
+import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.Sequences
 
 /-!
@@ -643,6 +644,10 @@ theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ∥s • x∥₊ = �
 theorem nndist_smul [NormedSpace α β] (s : α) (x y : β) : nndist (s • x) (s • y) = ∥s∥₊ * nndist x y :=
   Nnreal.eq <| dist_smul s x y
 
+theorem lipschitz_with_smul [NormedSpace α β] (s : α) : LipschitzWith ∥s∥₊ ((· • ·) s : β → β) :=
+  lipschitz_with_iff_dist_le_mul.2 fun x y => by
+    rw [dist_smul, coe_nnnorm]
+
 theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ∥t • x∥ = t * ∥x∥ := by
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ht]
 
@@ -667,8 +672,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Closur
   · simp [closure_Ico (@zero_ne_one ℝ _ _), zero_le_one]
     
   · rintro c ⟨hc0, hc1⟩
-    rw [Set.mem_preimage, mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
-      mul_comm, ← mul_oneₓ r]
+    rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0, mul_comm, ← mul_oneₓ r]
     rw [mem_closed_ball, dist_eq_norm] at hy
     apply mul_lt_mul' <;> assumption
     
@@ -678,10 +682,13 @@ theorem frontier_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Front
   ext x
   exact (@eq_iff_le_not_lt ℝ _ _ _).symm
 
-theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Interior (ClosedBall x r) = Ball x r := by
+theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Interior (ClosedBall x r) = Ball x r := by
+  cases' hr.lt_or_lt with hr hr
+  · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
+    
   refine' Set.Subset.antisymm _ ball_subset_interior_closed_ball
   intro y hy
-  rcases le_iff_lt_or_eqₓ.1 (mem_closed_ball.1 <| interior_subset hy) with (hr | rfl)
+  rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
     
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
@@ -697,7 +704,7 @@ theorem interior_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) 
   rw [Set.mem_Icc, ← abs_le, ← Real.norm_eq_abs, ← mul_le_mul_right hr]
   simpa [f, dist_eq_norm, norm_smul] using hc
 
-theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : 0 < r) : Frontier (ClosedBall x r) = Sphere x r :=
+theorem frontier_closed_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) : Frontier (ClosedBall x r) = Sphere x r :=
   by
   rw [Frontier, closure_closed_ball, interior_closed_ball x hr, closed_ball_diff_ball]
 
@@ -831,9 +838,7 @@ instance (priority := 100) NormedSpace.toModule' : Module α F :=
 
 theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) : Interior (ClosedBall x r) = Ball x r :=
   by
-  rcases lt_trichotomyₓ r 0 with (hr | rfl | hr)
-  · simp [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le]
-    
+  rcases eq_or_ne r 0 with (rfl | hr)
   · rw [closed_ball_zero, ball_zero, interior_singleton]
     
   · exact interior_closed_ball x hr

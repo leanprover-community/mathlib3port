@@ -10,6 +10,7 @@ import Mathbin.RingTheory.Subring.Basic
 import Mathbin.GroupTheory.Archimedean
 import Mathbin.Algebra.Periodic
 import Mathbin.Order.Filter.Archimedean
+import Mathbin.Topology.Instances.Int
 
 /-!
 # Topological properties of ℝ
@@ -26,185 +27,6 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-instance : MetricSpace ℚ :=
-  MetricSpace.induced coe Rat.cast_injective Real.metricSpace
-
-namespace Rat
-
-theorem dist_eq (x y : ℚ) : dist x y = abs (x - y) :=
-  rfl
-
-@[norm_cast, simp]
-theorem dist_cast (x y : ℚ) : dist (x : ℝ) y = dist x y :=
-  rfl
-
-theorem uniform_continuous_coe_real : UniformContinuous (coe : ℚ → ℝ) :=
-  uniform_continuous_comap
-
-theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
-  uniform_embedding_comap Rat.cast_injective
-
-theorem dense_embedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
-  uniform_embedding_coe_real.DenseEmbedding fun x =>
-    mem_closure_iff_nhds.2 fun t ht =>
-      let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
-      let ⟨q, h⟩ := exists_rat_near x ε0
-      ⟨_, hε (mem_ball'.2 h), q, rfl⟩
-
-theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
-  dense_embedding_coe_real.toEmbedding
-
-theorem continuous_coe_real : Continuous (coe : ℚ → ℝ) :=
-  uniform_continuous_coe_real.Continuous
-
-end Rat
-
-namespace Int
-
-instance : HasDist ℤ :=
-  ⟨fun x y => dist (x : ℝ) y⟩
-
-theorem dist_eq (x y : ℤ) : dist x y = abs (x - y) :=
-  rfl
-
-@[norm_cast, simp]
-theorem dist_cast_real (x y : ℤ) : dist (x : ℝ) y = dist x y :=
-  rfl
-
-@[norm_cast, simp]
-theorem dist_cast_rat (x y : ℤ) : dist (x : ℚ) y = dist x y := by
-  rw [← Int.dist_cast_real, ← Rat.dist_cast] <;> congr 1 <;> norm_cast
-
-theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n := by
-  intro m n hne
-  rw [dist_eq]
-  norm_cast
-  rwa [← zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
-
-theorem uniform_embedding_coe_rat : UniformEmbedding (coe : ℤ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by
-    simpa using pairwise_one_le_dist
-
-theorem closed_embedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by
-    simpa using pairwise_one_le_dist
-
-theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℤ → ℝ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-
-theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℤ → ℝ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-
-instance : MetricSpace ℤ :=
-  Int.uniform_embedding_coe_real.comapMetricSpace _
-
-theorem preimage_ball (x : ℤ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
-  rfl
-
-theorem preimage_closed_ball (x : ℤ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
-  rfl
-
-theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : Ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
-  rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
-
-theorem closed_ball_eq_Icc (x : ℤ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
-  rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
-
-instance : ProperSpace ℤ :=
-  ⟨by
-    intro x r
-    rw [closed_ball_eq_Icc]
-    exact (Set.finite_Icc _ _).IsCompact⟩
-
-@[simp]
-theorem cocompact_eq : cocompact ℤ = at_bot⊔at_top := by
-  simp only [← comap_dist_right_at_top_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ← cast_abs, ←
-    @comap_comap _ _ _ _ abs, Int.comap_coe_at_top, comap_abs_at_top]
-
-@[simp]
-theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot⊔at_top := by
-  rw [← cocompact_eq_cofinite, cocompact_eq]
-
-end Int
-
-namespace Nat
-
-instance : HasDist ℕ :=
-  ⟨fun x y => dist (x : ℝ) y⟩
-
-theorem dist_eq (x y : ℕ) : dist x y = abs (x - y) :=
-  rfl
-
-theorem dist_coe_int (x y : ℕ) : dist (x : ℤ) (y : ℤ) = dist x y :=
-  rfl
-
-@[norm_cast, simp]
-theorem dist_cast_real (x y : ℕ) : dist (x : ℝ) y = dist x y :=
-  rfl
-
-@[norm_cast, simp]
-theorem dist_cast_rat (x y : ℕ) : dist (x : ℚ) y = dist x y := by
-  rw [← Nat.dist_cast_real, ← Rat.dist_cast] <;> congr 1 <;> norm_cast
-
-theorem pairwise_one_le_dist : Pairwise fun m n : ℕ => 1 ≤ dist m n := by
-  intro m n hne
-  rw [← dist_coe_int]
-  apply Int.pairwise_one_le_dist
-  exact_mod_cast hne
-
-theorem uniform_embedding_coe_rat : UniformEmbedding (coe : ℕ → ℚ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one <| by
-    simpa using pairwise_one_le_dist
-
-theorem closed_embedding_coe_rat : ClosedEmbedding (coe : ℕ → ℚ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one <| by
-    simpa using pairwise_one_le_dist
-
-theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℕ → ℝ) :=
-  uniform_embedding_bot_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-
-theorem closed_embedding_coe_real : ClosedEmbedding (coe : ℕ → ℝ) :=
-  closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
-
-instance : MetricSpace ℕ :=
-  Nat.uniform_embedding_coe_real.comapMetricSpace _
-
-theorem preimage_ball (x : ℕ) (r : ℝ) : coe ⁻¹' Ball (x : ℝ) r = Ball x r :=
-  rfl
-
-theorem preimage_closed_ball (x : ℕ) (r : ℝ) : coe ⁻¹' ClosedBall (x : ℝ) r = ClosedBall x r :=
-  rfl
-
-theorem closed_ball_eq_Icc (x : ℕ) (r : ℝ) : ClosedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ := by
-  rcases le_or_ltₓ 0 r with (hr | hr)
-  · rw [← preimage_closed_ball, Real.closed_ball_eq_Icc, preimage_Icc]
-    exact add_nonneg (cast_nonneg x) hr
-    
-  · rw [closed_ball_eq_empty.2 hr]
-    apply (Icc_eq_empty _).symm
-    rw [not_leₓ]
-    calc ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by
-        apply floor_mono
-        linarith _ < ⌈↑x - r⌉₊ := by
-        rw [floor_coe, Nat.lt_ceil]
-        linarith
-    
-
-instance : ProperSpace ℕ :=
-  ⟨by
-    intro x r
-    rw [closed_ball_eq_Icc]
-    exact (Set.finite_Icc _ _).IsCompact⟩
-
-instance : NoncompactSpace ℕ :=
-  noncompact_space_of_ne_bot <| by
-    simp [at_top_ne_bot]
-
-end Nat
-
-instance : NoncompactSpace ℚ :=
-  Int.closed_embedding_coe_rat.NoncompactSpace
-
 instance : NoncompactSpace ℝ :=
   Int.closed_embedding_coe_real.NoncompactSpace
 
@@ -215,37 +37,17 @@ theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.
       let ⟨h₁, h₂⟩ := max_lt_iff.1 h
       Hδ h₁ h₂⟩
 
--- TODO(Mario): Find a way to use rat_add_continuous_lemma
-theorem Rat.uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
-  Rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
-    simp only [(· ∘ ·), Rat.cast_add] <;>
-      exact real.uniform_continuous_add.comp (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
-
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by
       rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 
-theorem Rat.uniform_continuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨_, ε0, fun a b h => by
-      rw [dist_comm] at h <;> simpa [Rat.dist_eq] using h⟩
-
 instance : UniformAddGroup ℝ :=
   UniformAddGroup.mk' Real.uniform_continuous_add Real.uniform_continuous_neg
-
-instance : UniformAddGroup ℚ :=
-  UniformAddGroup.mk' Rat.uniform_continuous_add Rat.uniform_continuous_neg
 
 -- short-circuit type class inference
 instance : TopologicalAddGroup ℝ := by
   infer_instance
-
-instance : TopologicalAddGroup ℚ := by
-  infer_instance
-
-instance : OrderTopology ℚ :=
-  induced_order_topology _ (fun x y => Rat.cast_lt) (@exists_rat_btwn _ _ _)
 
 instance : ProperSpace ℝ where
   is_compact_closed_ball := fun x r => by
@@ -291,14 +93,6 @@ theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : �
 theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_ltₓ (abs_abs_sub_abs_le_abs_sub _ _)⟩
 
-theorem Rat.uniform_continuous_abs : UniformContinuous (abs : ℚ → ℚ) :=
-  Metric.uniform_continuous_iff.2 fun ε ε0 =>
-    ⟨ε, ε0, fun a b h =>
-      lt_of_le_of_ltₓ
-        (by
-          simpa [Rat.dist_eq] using abs_abs_sub_abs_le_abs_sub _ _)
-        h⟩
-
 theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (𝓝 r) (𝓝 r⁻¹) := by
   rw [← abs_pos] at r0 <;>
     exact
@@ -342,13 +136,6 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
 instance : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
 
-theorem Rat.continuous_mul : Continuous fun p : ℚ × ℚ => p.1 * p.2 :=
-  Rat.embedding_coe_real.continuous_iff.2 <| by
-    simp [(· ∘ ·)] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
-
-instance : TopologicalRing ℚ :=
-  { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
-
 instance : CompleteSpace ℝ := by
   apply complete_of_cauchy_seq_tendsto
   intro u hu
@@ -361,11 +148,6 @@ instance : CompleteSpace ℝ := by
 
 theorem Real.totally_bounded_ball (x ε : ℝ) : TotallyBounded (Ball x ε) := by
   rw [Real.ball_eq_Ioo] <;> apply totally_bounded_Ioo
-
-theorem Rat.totally_bounded_Icc (a b : ℚ) : TotallyBounded (Icc a b) := by
-  have := totally_bounded_preimage Rat.uniform_embedding_coe_real (totally_bounded_Icc a b)
-  rwa [(Set.ext fun q => _ : Icc _ _ = _)]
-  simp
 
 section
 

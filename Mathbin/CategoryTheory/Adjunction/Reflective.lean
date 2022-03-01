@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.EpiMono
 
 /-!

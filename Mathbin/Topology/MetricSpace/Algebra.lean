@@ -76,6 +76,13 @@ instance Submonoid.has_lipschitz_mul (s : Submonoid β) : HasLipschitzMul s wher
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitz_with_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 
+@[to_additive]
+instance MulOpposite.has_lipschitz_mul : HasLipschitzMul βᵐᵒᵖ where
+  lipschitz_mul :=
+    ⟨HasLipschitzMul.c β, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
+      (lipschitz_with_lipschitz_const_mul_edist ⟨x₂.unop, x₁.unop⟩ ⟨y₂.unop, y₁.unop⟩).trans_eq
+        (congr_argₓ _ <| max_commₓ _ _)⟩
+
 -- this instance could be deduced from `normed_group.has_lipschitz_add`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
 instance Real.has_lipschitz_add : HasLipschitzAdd ℝ where
@@ -171,6 +178,16 @@ instance Nnreal.has_bounded_smul : HasBoundedSmul ℝ≥0 ℝ≥0 where
     convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' := fun x₁ x₂ y => by
     convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
+
+/-- If a scalar is central, then its right action is bounded when its left action is. -/
+instance HasBoundedSmul.op [HasScalar αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β where
+  dist_smul_pair' :=
+    MulOpposite.rec fun x y₁ y₂ => by
+      simpa only [op_smul_eq_smul] using dist_smul_pair x y₁ y₂
+  dist_pair_smul' :=
+    MulOpposite.rec fun x₁ =>
+      MulOpposite.rec fun x₂ y => by
+        simpa only [op_smul_eq_smul] using dist_pair_smul x₁ x₂ y
 
 end HasBoundedSmul
 

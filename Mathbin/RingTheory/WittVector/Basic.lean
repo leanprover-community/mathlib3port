@@ -161,23 +161,38 @@ theorem matrix_vec_empty_coeff {R} i j : @coeff p R (Matrix.vecEmpty i) j = (Mat
 
 include hp
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by
-  ghost_fun_tac 0, ![]
+  ghost_fun_tac 0, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by
-  ghost_fun_tac 1, ![]
+  ghost_fun_tac 1, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
-  ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 + X 1,
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
-  ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 - X 1,
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
-  ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 * X 1,
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by
-  ghost_fun_tac -X 0, ![x.coeff]
+  ghost_fun_tac -X 0, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
 
 end GhostFun
 

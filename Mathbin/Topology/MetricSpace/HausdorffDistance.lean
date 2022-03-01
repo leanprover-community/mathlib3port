@@ -487,6 +487,12 @@ variable {s}
 theorem inf_dist_eq_closure : infDist x (Closure s) = infDist x s := by
   simp [inf_dist, inf_edist_closure]
 
+/-- If a point belongs to the closure of `s`, then its infimum distance to `s` equals zero.
+The converse is true provided that `s` is nonempty, see `mem_closure_iff_inf_dist_zero`. -/
+theorem inf_dist_zero_of_mem_closure (hx : x ∈ Closure s) : infDist x s = 0 := by
+  rw [← inf_dist_eq_closure]
+  exact inf_dist_zero_of_mem hx
+
 /-- A point belongs to the closure of `s` iff its infimum distance to this set vanishes -/
 theorem mem_closure_iff_inf_dist_zero (h : s.Nonempty) : x ∈ Closure s ↔ infDist x s = 0 := by
   simp [mem_closure_iff_inf_edist_zero, inf_dist, Ennreal.to_real_eq_zero_iff, inf_edist_ne_top h]

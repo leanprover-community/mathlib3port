@@ -273,7 +273,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (
     · filter_upwards [self_mem_nhds_within] with _ hpos
       field_simp [LT.lt.ne' hpos, HasScalar.smul]
       
-  simpa only [sub_eq_zero] using (is_o_const_const_iff (@one_ne_zero ℝ _ _)).1 B
+  simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
 
 omit s_conv xs hx hf
 

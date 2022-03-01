@@ -462,8 +462,8 @@ theorem to_signed_measure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFinit
 theorem to_signed_measure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0 ) :
     (r • μ).toSignedMeasure = r • μ.toSignedMeasure := by
   ext i hi
-  rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply, to_signed_measure_apply_measurable hi,
-    coe_nnreal_smul, Pi.smul_apply, Ennreal.to_real_smul]
+  rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply, to_signed_measure_apply_measurable hi, coe_smul,
+    Pi.smul_apply, Ennreal.to_real_smul]
 
 /-- A measure is a vector measure over `ℝ≥0∞`. -/
 @[simps]

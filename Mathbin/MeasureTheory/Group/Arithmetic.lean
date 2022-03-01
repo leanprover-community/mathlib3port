@@ -131,14 +131,19 @@ theorem AeMeasurable.mul [HasMeasurableMul₂ M] (hf : AeMeasurable f μ) (hg : 
 omit m
 
 @[to_additive]
-instance Pi.has_measurable_mul {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
-    [∀ i, HasMeasurableMul (α i)] : HasMeasurableMul (∀ i, α i) :=
-  ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_const_mul (g i)).comp <| measurable_pi_apply i, fun g =>
-    measurable_pi_iff.mpr fun i => (measurable_mul_const (g i)).comp <| measurable_pi_apply i⟩
-
-@[to_additive]
 instance (priority := 100) HasMeasurableMul₂.to_has_measurable_mul [HasMeasurableMul₂ M] : HasMeasurableMul M :=
   ⟨fun c => measurable_const.mul measurable_id, fun c => measurable_id.mul measurable_const⟩
+
+@[to_additive]
+instance Pi.has_measurable_mul {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableMul (α i)] : HasMeasurableMul (∀ i, α i) :=
+  ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_mul _, fun g =>
+    measurable_pi_iff.mpr fun i => (measurable_pi_apply i).mul_const _⟩
+
+@[to_additive Pi.has_measurable_add₂]
+instance Pi.has_measurable_mul₂ {ι : Type _} {α : ι → Type _} [∀ i, Mul (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableMul₂ (α i)] : HasMeasurableMul₂ (∀ i, α i) :=
+  ⟨measurable_pi_iff.mpr fun i => measurable_fst.eval.mul measurable_snd.eval⟩
 
 attribute [measurability]
   Measurable.add' Measurable.add AeMeasurable.add AeMeasurable.add' Measurable.const_add AeMeasurable.const_add Measurable.add_const AeMeasurable.add_const
@@ -277,6 +282,17 @@ omit m
 instance (priority := 100) HasMeasurableDiv₂.to_has_measurable_div [HasMeasurableDiv₂ G] : HasMeasurableDiv G :=
   ⟨fun c => measurable_const.div measurable_id, fun c => measurable_id.div measurable_const⟩
 
+@[to_additive]
+instance Pi.has_measurable_div {ι : Type _} {α : ι → Type _} [∀ i, Div (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableDiv (α i)] : HasMeasurableDiv (∀ i, α i) :=
+  ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_div _, fun g =>
+    measurable_pi_iff.mpr fun i => (measurable_pi_apply i).div_const _⟩
+
+@[to_additive Pi.has_measurable_sub₂]
+instance Pi.has_measurable_div₂ {ι : Type _} {α : ι → Type _} [∀ i, Div (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableDiv₂ (α i)] : HasMeasurableDiv₂ (∀ i, α i) :=
+  ⟨measurable_pi_iff.mpr fun i => measurable_fst.eval.div measurable_snd.eval⟩
+
 @[measurability]
 theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [AddGroupₓ E] [MeasurableSingletonClass E]
     [HasMeasurableSub₂ E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
@@ -362,6 +378,11 @@ theorem ae_measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [Measur
     simpa only [inv_invₓ] using h.inv, fun h => h.inv⟩
 
 omit m
+
+@[to_additive]
+instance Pi.has_measurable_inv {ι : Type _} {α : ι → Type _} [∀ i, Inv (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableInv (α i)] : HasMeasurableInv (∀ i, α i) :=
+  ⟨measurable_pi_iff.mpr fun i => (measurable_pi_apply i).inv⟩
 
 @[to_additive]
 theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet s⁻¹ :=
@@ -502,6 +523,12 @@ theorem AeMeasurable.const_smul (hf : AeMeasurable g μ) (c : M) : AeMeasurable 
   hf.const_smul' c
 
 omit m
+
+@[to_additive]
+instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, HasScalar M (α i)] [∀ i, MeasurableSpace (α i)]
+    [∀ i, HasMeasurableSmul M (α i)] : HasMeasurableSmul M (∀ i, α i) :=
+  ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_smul _, fun g =>
+    measurable_pi_iff.mpr fun i => measurable_smul_const _⟩
 
 end Smul
 

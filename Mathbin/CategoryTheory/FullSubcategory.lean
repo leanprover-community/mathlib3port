@@ -3,7 +3,7 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Reid Barton
 -/
-import Mathbin.CategoryTheory.FullyFaithful
+import Mathbin.CategoryTheory.Functor.FullyFaithful
 
 /-!
 # Induced categories and full subcategories

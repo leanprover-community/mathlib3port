@@ -1120,6 +1120,7 @@ theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.localTrivAt b).BaseSet := 
 open Bundle
 
 /-- The inclusion of a fiber into the total space is a continuous map. -/
+@[continuity]
 theorem continuous_total_space_mk (b : B) : Continuous fun a => totalSpaceMk Z.Fiber b a := by
   rw [continuous_iff_le_induced, TopologicalFiberBundleCore.toTopologicalSpace]
   apply le_induced_generate_from
@@ -1141,14 +1142,10 @@ theorem continuous_total_space_mk (b : B) : Continuous fun a => totalSpaceMk Z.F
   · simp only [Function.comp, local_triv_apply]
     rw [preimage_inter, preimage_comp]
     by_cases' b ∈ Z.base_set i
-    · have hc : Continuous fun x : Z.fiber b => (Z.coord_change (Z.index_at b) i b) x := by
-        rw [continuous_iff_continuous_on_univ]
-        refine'
-          ((Z.coord_change_continuous (Z.index_at b) i).comp (continuous_const.prod_mk continuous_id).ContinuousOn)
-            (by
-              convert subset_univ univ
-              exact mk_preimage_prod_right (mem_inter (Z.mem_base_set_at b) h))
-      exact hc.is_open_preimage _ ((Continuous.Prod.mk b).is_open_preimage _ ((Z.local_triv i).open_target.inter ht))
+    · have hc : Continuous fun x : Z.fiber b => (Z.coord_change (Z.index_at b) i b) x :=
+        (Z.coord_change_continuous (Z.index_at b) i).comp_continuous (continuous_const.prod_mk continuous_id) fun x =>
+          ⟨⟨Z.mem_base_set_at b, h⟩, mem_univ x⟩
+      exact (((Z.local_triv i).open_target.inter ht).Preimage (Continuous.Prod.mk b)).Preimage hc
       
     · rw [(Z.local_triv i).target_eq, ← base_set_at, mk_preimage_prod_right_eq_empty h, preimage_empty, empty_inter]
       exact is_open_empty

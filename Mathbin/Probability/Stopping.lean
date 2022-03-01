@@ -5,6 +5,7 @@ Authors: Kexing Ying
 -/
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.MeasureTheory.Function.L1Space
+import Mathbin.Topology.Instances.Discrete
 
 /-!
 # Filtration and stopping time
@@ -32,11 +33,14 @@ filtration, stopping time, stochastic process
 -/
 
 
-open TopologicalSpace
+open TopologicalSpace Filter
 
 open_locale Classical MeasureTheory Nnreal Ennreal TopologicalSpace BigOperators
 
 namespace MeasureTheory
+
+/-! ### Filtrations -/
+
 
 /-- A `filtration` on measurable space `α` with σ-algebra `m` is a monotone
 sequence of sub-σ-algebras of `m`. -/
@@ -67,21 +71,29 @@ protected theorem ext {f g : Filtration ι m} (h : (f : ι → MeasurableSpace �
   simp only
   exact h
 
+variable (ι)
+
 /-- The constant filtration which is equal to `m` for all `i : ι`. -/
 def const (m' : MeasurableSpace α) (hm' : m' ≤ m) : Filtration ι m :=
   ⟨fun _ => m', monotone_const, fun _ => hm'⟩
 
+variable {ι}
+
+@[simp]
+theorem const_apply {m' : MeasurableSpace α} {hm' : m' ≤ m} (i : ι) : const ι m' hm' i = m' :=
+  rfl
+
 instance : Inhabited (Filtration ι m) :=
-  ⟨const m le_rfl⟩
+  ⟨const ι m le_rfl⟩
 
 instance : LE (Filtration ι m) :=
   ⟨fun f g => ∀ i, f i ≤ g i⟩
 
 instance : HasBot (Filtration ι m) :=
-  ⟨const ⊥ bot_le⟩
+  ⟨const ι ⊥ bot_le⟩
 
 instance : HasTop (Filtration ι m) :=
-  ⟨const m le_rfl⟩
+  ⟨const ι m le_rfl⟩
 
 instance : HasSup (Filtration ι m) :=
   ⟨fun f g =>
@@ -190,25 +202,23 @@ noncomputable instance : CompleteLattice (Filtration ι m) where
 
 end Filtration
 
-section Preorderₓ
-
-variable [Preorderₓ ι]
-
-theorem measurable_set_of_filtration {f : Filtration ι m} {s : Set α} {i : ι} (hs : measurable_set[f i] s) :
-    measurable_set[m] s :=
+theorem measurable_set_of_filtration [Preorderₓ ι] {f : Filtration ι m} {s : Set α} {i : ι}
+    (hs : measurable_set[f i] s) : measurable_set[m] s :=
   f.le i s hs
 
 /-- A measure is σ-finite with respect to filtration if it is σ-finite with respect
 to all the sub-σ-algebra of the filtration. -/
-class SigmaFiniteFiltration (μ : Measure α) (f : Filtration ι m) : Prop where
+class SigmaFiniteFiltration [Preorderₓ ι] (μ : Measure α) (f : Filtration ι m) : Prop where
   SigmaFinite : ∀ i : ι, SigmaFinite (μ.trim (f.le i))
 
-instance sigma_finite_of_sigma_finite_filtration (μ : Measure α) (f : Filtration ι m) [hf : SigmaFiniteFiltration μ f]
-    (i : ι) : SigmaFinite (μ.trim (f.le i)) := by
+instance sigma_finite_of_sigma_finite_filtration [Preorderₓ ι] (μ : Measure α) (f : Filtration ι m)
+    [hf : SigmaFiniteFiltration μ f] (i : ι) : SigmaFinite (μ.trim (f.le i)) := by
   apply hf.sigma_finite
 
 -- can't exact here
-variable [MeasurableSpace β]
+section Adapted
+
+variable [MeasurableSpace β] [Preorderₓ ι]
 
 /-- A sequence of functions `u` is adapted to a filtration `f` if for all `i`,
 `u i` is `f i`-measurable. -/
@@ -233,9 +243,13 @@ variable (β)
 theorem adapted_zero [Zero β] (f : Filtration ι m) : Adapted f (0 : ι → α → β) := fun i =>
   @measurable_zero β α (f i) _ _
 
-variable {β}
+end Adapted
 
 namespace Filtration
+
+variable {mβ : MeasurableSpace β} [Preorderₓ ι]
+
+include mβ
 
 /-- Given a sequence of functions, the natural filtration is the smallest sequence
 of σ-algebras such that that sequence of functions is measurable with respect to
@@ -253,68 +267,138 @@ theorem adapted_natural {u : ι → α → β} (hum : ∀ i, measurable[m] (u i)
 
 end Filtration
 
+/-! ### Stopping times -/
+
+
 /-- A stopping time with respect to some filtration `f` is a function
 `τ` such that for all `i`, the preimage of `{j | j ≤ i}` along `τ` is measurable
 with respect to `f i`.
 
 Intuitively, the stopping time `τ` describes some stopping rule such that at time
 `i`, we may determine it with the information we have at time `i`. -/
-def IsStoppingTime (f : Filtration ι m) (τ : α → ι) :=
+def IsStoppingTime [Preorderₓ ι] (f : Filtration ι m) (τ : α → ι) :=
   ∀ i : ι, measurable_set[f i] <| { x | τ x ≤ i }
 
-variable {f : Filtration ℕ m} {τ : α → ℕ}
+theorem is_stopping_time_const [Preorderₓ ι] {f : Filtration ι m} (i : ι) : IsStoppingTime f fun x => i := fun j => by
+  simp only [MeasurableSet.const]
 
-theorem IsStoppingTime.measurable_set_le (hτ : IsStoppingTime f τ) (i : ℕ) : measurable_set[f i] { x | τ x ≤ i } :=
+section MeasurableSet
+
+section Preorderₓ
+
+variable [Preorderₓ ι] {f : Filtration ι m} {τ : α → ι}
+
+theorem IsStoppingTime.measurable_set_le (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { x | τ x ≤ i } :=
   hτ i
 
-theorem IsStoppingTime.measurable_set_eq (hτ : IsStoppingTime f τ) (i : ℕ) : measurable_set[f i] { x | τ x = i } := by
-  cases i
-  · convert hτ 0
-    simp only [Set.set_of_eq_eq_singleton, le_zero_iff]
+theorem IsStoppingTime.measurable_set_lt_of_pred [PredOrder ι] (hτ : IsStoppingTime f τ) (i : ι) :
+    measurable_set[f i] { x | τ x < i } := by
+  by_cases' hi_min : IsMin i
+  · suffices { x : α | τ x < i } = ∅ by
+      rw [this]
+      exact @MeasurableSet.empty _ (f i)
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_empty_eq, iff_falseₓ]
+    rw [is_min_iff_forall_not_lt] at hi_min
+    exact hi_min (τ x)
     
-  · rw [(_ : { x | τ x = i + 1 } = { x | τ x ≤ i + 1 } \ { x | τ x ≤ i })]
-    · exact (hτ (i + 1)).diff (f.mono (Nat.le_succₓ _) _ (hτ i))
-      
-    · ext
-      simp only [Set.mem_diff, not_leₓ, Set.mem_set_of_eq]
-      constructor
-      · intro h
-        simp [h]
-        
-      · rintro ⟨h₁, h₂⟩
-        linarith
-        
-      
-    
-
-theorem IsStoppingTime.measurable_set_ge (hτ : IsStoppingTime f τ) (i : ℕ) : measurable_set[f i] { x | i ≤ τ x } := by
-  have : { a : α | i ≤ τ a } = Set.Univ \ { a | τ a ≤ i } ∪ { a | τ a = i } := by
-    ext1 a
-    simp only [true_andₓ, Set.mem_univ, Set.mem_diff, not_leₓ, Set.mem_union_eq, Set.mem_set_of_eq]
-    rw [le_iff_lt_or_eqₓ]
-    by_cases' h : τ a = i
-    · simp [h]
-      
-    · simp only [h, Ne.symm h, or_falseₓ, or_iff_left_iff_imp]
-      
+  have : { x : α | τ x < i } = τ ⁻¹' Set.Iio i := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_preimage, Set.mem_Iio]
+  rw [this, PredOrder.Iio_eq_Iic_pred' hi_min]
+  have : τ ⁻¹' Set.Iic (PredOrder.pred i) = { x : α | τ x ≤ PredOrder.pred i } := by
+    ext1 x
+    simp only [Set.mem_preimage, Set.mem_Iic, Set.mem_set_of_eq]
   rw [this]
-  exact (measurable_set.univ.diff (hτ i)).union (hτ.measurable_set_eq i)
+  exact f.mono (PredOrder.pred_le i) _ (hτ.measurable_set_le (PredOrder.pred i))
 
-theorem IsStoppingTime.measurable_set_eq_le {f : Filtration ℕ m} {τ : α → ℕ} (hτ : IsStoppingTime f τ) {i j : ℕ}
-    (hle : i ≤ j) : measurable_set[f j] { x | τ x = i } :=
+end Preorderₓ
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ ι] {f : Filtration ι m} {τ : α → ι}
+
+theorem IsStoppingTime.measurable_set_gt (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { x | i < τ x } := by
+  have : { x | i < τ x } = { x | τ x ≤ i }ᶜ := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_compl_eq, not_leₓ]
+  rw [this]
+  exact (hτ.measurable_set_le i).Compl
+
+variable [TopologicalSpace ι] [OrderTopology ι] [FirstCountableTopology ι]
+
+/-- Auxiliary lemma for `is_stopping_time.measurable_set_lt`. -/
+theorem IsStoppingTime.measurable_set_lt_of_is_lub (hτ : IsStoppingTime f τ) (i : ι) (h_lub : IsLub (Set.Iio i) i) :
+    measurable_set[f i] { x | τ x < i } := by
+  by_cases' hi_min : IsMin i
+  · suffices { x : α | τ x < i } = ∅ by
+      rw [this]
+      exact @MeasurableSet.empty _ (f i)
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_empty_eq, iff_falseₓ]
+    exact is_min_iff_forall_not_lt.mp hi_min (τ x)
+    
+  obtain ⟨seq, -, -, h_tendsto, h_bound⟩ :
+    ∃ seq : ℕ → ι, Monotone seq ∧ (∀ j, seq j ≤ i) ∧ tendsto seq at_top (𝓝 i) ∧ ∀ j, seq j < i
+  exact h_lub.exists_seq_monotone_tendsto (not_is_min_iff.mp hi_min)
+  have h_Ioi_eq_Union : Set.Iio i = ⋃ j, { k | k ≤ seq j } := by
+    ext1 k
+    simp only [Set.mem_Iio, Set.mem_Union, Set.mem_set_of_eq]
+    refine' ⟨fun hk_lt_i => _, fun h_exists_k_le_seq => _⟩
+    · rw [tendsto_at_top'] at h_tendsto
+      have h_nhds : Set.Ici k ∈ 𝓝 i := mem_nhds_iff.mpr ⟨Set.Ioi k, Set.Ioi_subset_Ici le_rfl, is_open_Ioi, hk_lt_i⟩
+      obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, b ≥ a → k ≤ seq b := h_tendsto (Set.Ici k) h_nhds
+      exact ⟨a, ha a le_rfl⟩
+      
+    · obtain ⟨j, hk_seq_j⟩ := h_exists_k_le_seq
+      exact hk_seq_j.trans_lt (h_bound j)
+      
+  have h_lt_eq_preimage : { x : α | τ x < i } = τ ⁻¹' Set.Iio i := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_preimage, Set.mem_Iio]
+  rw [h_lt_eq_preimage, h_Ioi_eq_Union]
+  simp only [Set.preimage_Union, Set.preimage_set_of_eq]
+  exact MeasurableSet.Union fun n => f.mono (h_bound n).le _ (hτ.measurable_set_le (seq n))
+
+theorem IsStoppingTime.measurable_set_lt (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { x | τ x < i } := by
+  obtain ⟨i', hi'_lub⟩ : ∃ i', IsLub (Set.Iio i) i'
+  exact exists_lub_Iio i
+  cases' lub_Iio_eq_self_or_Iio_eq_Iic i hi'_lub with hi'_eq_i h_Iio_eq_Iic
+  · rw [← hi'_eq_i] at hi'_lub⊢
+    exact hτ.measurable_set_lt_of_is_lub i' hi'_lub
+    
+  · have h_lt_eq_preimage : { x : α | τ x < i } = τ ⁻¹' Set.Iio i := rfl
+    rw [h_lt_eq_preimage, h_Iio_eq_Iic]
+    exact f.mono (lub_Iio_le i hi'_lub) _ (hτ.measurable_set_le i')
+    
+
+theorem IsStoppingTime.measurable_set_ge (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { x | i ≤ τ x } := by
+  have : { x | i ≤ τ x } = { x | τ x < i }ᶜ := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_compl_eq, not_ltₓ]
+  rw [this]
+  exact (hτ.measurable_set_lt i).Compl
+
+theorem IsStoppingTime.measurable_set_eq (hτ : IsStoppingTime f τ) (i : ι) : measurable_set[f i] { x | τ x = i } := by
+  have : { x | τ x = i } = { x | τ x ≤ i } ∩ { x | τ x ≥ i } := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, ge_iff_le, Set.mem_inter_eq, le_antisymm_iffₓ]
+  rw [this]
+  exact (hτ.measurable_set_le i).inter (hτ.measurable_set_ge i)
+
+theorem IsStoppingTime.measurable_set_eq_le (hτ : IsStoppingTime f τ) {i j : ι} (hle : i ≤ j) :
+    measurable_set[f j] { x | τ x = i } :=
   f.mono hle _ <| hτ.measurable_set_eq i
 
-theorem IsStoppingTime.measurable_set_lt (hτ : IsStoppingTime f τ) (i : ℕ) : measurable_set[f i] { x | τ x < i } := by
-  convert (hτ i).diff (hτ.measurable_set_eq i)
-  ext
-  change τ x < i ↔ τ x ≤ i ∧ τ x ≠ i
-  rw [lt_iff_le_and_ne]
-
-theorem IsStoppingTime.measurable_set_lt_le (hτ : IsStoppingTime f τ) {i j : ℕ} (hle : i ≤ j) :
+theorem IsStoppingTime.measurable_set_lt_le (hτ : IsStoppingTime f τ) {i j : ι} (hle : i ≤ j) :
     measurable_set[f j] { x | τ x < i } :=
   f.mono hle _ <| hτ.measurable_set_lt i
 
-theorem is_stopping_time_of_measurable_set_eq {f : Filtration ℕ m} {τ : α → ℕ}
+end LinearOrderₓ
+
+section Encodable
+
+theorem is_stopping_time_of_measurable_set_eq [Preorderₓ ι] [Encodable ι] {f : Filtration ι m} {τ : α → ι}
     (hτ : ∀ i, measurable_set[f i] { x | τ x = i }) : IsStoppingTime f τ := by
   intro i
   rw
@@ -324,10 +408,9 @@ theorem is_stopping_time_of_measurable_set_eq {f : Filtration ℕ m} {τ : α �
   refine' MeasurableSet.bUnion (Set.countable_encodable _) fun k hk => _
   exact f.mono hk _ (hτ k)
 
-theorem is_stopping_time_const {f : Filtration ι m} (i : ι) : IsStoppingTime f fun x => i := fun j => by
-  simp
+end Encodable
 
-end Preorderₓ
+end MeasurableSet
 
 namespace IsStoppingTime
 
@@ -458,6 +541,9 @@ end LinearOrderₓ
 end IsStoppingTime
 
 section LinearOrderₓ
+
+/-! ## Stopped value and stopped process -/
+
 
 /-- Given a map `u : ι → α → E`, its stopped value with respect to the stopping
 time `τ` is the map `x ↦ u (τ x) x`. -/

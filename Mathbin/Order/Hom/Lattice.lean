@@ -170,6 +170,11 @@ instance (priority := 100) OrderIso.infHomClass [SemilatticeInf α] [Semilattice
 instance (priority := 100) OrderIso.latticeHomClass [Lattice α] [Lattice β] : LatticeHomClass (α ≃o β) α β :=
   { OrderIso.supHomClass, OrderIso.infHomClass with }
 
+-- See note [lower instance priority]
+instance (priority := 100) OrderIso.boundedLatticeHomClass [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] :
+    BoundedLatticeHomClass (α ≃o β) α β :=
+  { OrderIso.latticeHomClass, OrderIso.boundedOrderHomClass with }
+
 @[simp]
 theorem map_finset_sup [SemilatticeSup α] [OrderBot α] [SemilatticeSup β] [OrderBot β] [SupBotHomClass F α β] (f : F)
     (s : Finset ι) (g : ι → α) : f (s.sup g) = s.sup (f ∘ g) :=
@@ -1046,10 +1051,23 @@ theorem cancel_right {g₁ g₂ : BoundedLatticeHom β γ} {f : BoundedLatticeHo
 theorem cancel_left {g : BoundedLatticeHom β γ} {f₁ f₂ : BoundedLatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
-    BoundedLatticeHom.ext fun a =>
+    ext fun a =>
       hg <| by
-        rw [← BoundedLatticeHom.comp_apply, h, BoundedLatticeHom.comp_apply],
+        rw [← comp_apply, h, comp_apply],
     congr_argₓ _⟩
+
+/-- Reinterpret a bounded lattice homomorphism as a bounded lattice homomorphism between the dual
+bounded lattices. -/
+@[simps]
+protected def dual : BoundedLatticeHom α β ≃ BoundedLatticeHom (OrderDual α) (OrderDual β) where
+  toFun := fun f =>
+    { toLatticeHom := f.toLatticeHom.dual, map_top' := congr_argₓ toDual f.map_bot',
+      map_bot' := congr_argₓ toDual f.map_top' }
+  invFun := fun f =>
+    { toLatticeHom := LatticeHom.dual.symm f.toLatticeHom, map_top' := congr_argₓ ofDual f.map_bot',
+      map_bot' := congr_argₓ ofDual f.map_top' }
+  left_inv := fun f => ext fun a => rfl
+  right_inv := fun f => ext fun a => rfl
 
 end BoundedLatticeHom
 

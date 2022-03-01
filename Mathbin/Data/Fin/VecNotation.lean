@@ -84,7 +84,10 @@ end MatrixNotation
 
 variable {m n o : ℕ} {m' n' o' : Type _}
 
-theorem empty_eq (v : Finₓ 0 → α) : v = ![] :=
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem empty_eq (v : Finₓ 0 → α) :
+    v = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   Subsingleton.elimₓ _ _
 
 section Val
@@ -118,8 +121,17 @@ theorem tail_cons (x : α) (u : Finₓ m → α) : vecTail (vecCons x u) = u := 
   ext
   simp [vec_tail]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_val' {n' : Type _} (j : n') : (fun i => (![] : Finₓ 0 → n' → α) i j) = ![] :=
+theorem empty_val' {n' : Type _} (j : n') :
+    (fun i =>
+        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :
+            Finₓ 0 → n' → α)
+          i j) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -139,7 +151,10 @@ theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
 theorem vec_cons_const (a : α) : (vecCons a fun k : Finₓ n => a) = fun _ => a :=
   funext <| Finₓ.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
 
-theorem vec_single_eq_const (a : α) : ![a] = fun _ => a :=
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+theorem vec_single_eq_const (a : α) :
+    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" = fun _ => a :=
   funext <| Unique.forall_iff.2 rfl
 
 /-- `![a, b, ...] 1` is equal to `b`.
@@ -170,8 +185,14 @@ addition on `fin n`).
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_append (v : Finₓ n → α) : Finₓ.append (zero_addₓ _).symm ![] v = v := by
+theorem empty_append (v : Finₓ n → α) :
+    Finₓ.append (zero_addₓ _).symm
+        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") v =
+      v :=
+  by
   ext
   simp [Finₓ.append]
 
@@ -285,10 +306,19 @@ theorem cons_vec_alt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
   · simp [vec_alt0, Nat.add_succ, Nat.succ_add]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 -- Although proved by simp, extracting element 8 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt0 α {h} : vecAlt0 h (![] : Finₓ 0 → α) = ![] := by
+theorem empty_vec_alt0 α {h} :
+    vecAlt0 h
+        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :
+          Finₓ 0 → α) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   simp
 
 @[simp]
@@ -309,10 +339,19 @@ theorem cons_vec_alt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Finₓ m
   · simp [vec_alt1, Nat.add_succ, Nat.succ_add]
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 -- Although proved by simp, extracting element 9 of a five-element
 -- vector does not work by simp unless this lemma is present.
 @[simp]
-theorem empty_vec_alt1 α {h} : vecAlt1 h (![] : Finₓ 0 → α) = ![] := by
+theorem empty_vec_alt1 α {h} :
+    vecAlt1 h
+        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :
+          Finₓ 0 → α) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+  by
   simp
 
 end Val
@@ -321,8 +360,11 @@ section Smul
 
 variable {M : Type _} [HasScalar M α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem smul_empty (x : M) (v : Finₓ 0 → α) : x • v = ![] :=
+theorem smul_empty (x : M) (v : Finₓ 0 → α) :
+    x • v = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -336,8 +378,11 @@ section Add
 
 variable [Add α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_add_empty (v w : Finₓ 0 → α) : v + w = ![] :=
+theorem empty_add_empty (v w : Finₓ 0 → α) :
+    v + w = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -371,8 +416,11 @@ section Sub
 
 variable [Sub α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem empty_sub_empty (v w : Finₓ 0 → α) : v - w = ![] :=
+theorem empty_sub_empty (v w : Finₓ 0 → α) :
+    v - w = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -406,8 +454,12 @@ section Zero
 
 variable [Zero α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem zero_empty : (0 : Finₓ 0 → α) = ![] :=
+theorem zero_empty :
+    (0 : Finₓ 0 → α) =
+      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]
@@ -446,8 +498,11 @@ section Neg
 
 variable [Neg α]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem neg_empty (v : Finₓ 0 → α) : -v = ![] :=
+theorem neg_empty (v : Finₓ 0 → α) :
+    -v = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
   empty_eq _
 
 @[simp]

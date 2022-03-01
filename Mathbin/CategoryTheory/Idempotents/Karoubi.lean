@@ -40,7 +40,7 @@ namespace Idempotents
 
 /-- In a preadditive category `C`, when an object `X` decomposes as `X ≅ P ⨿ Q`, one may
 consider `P` as a direct factor of `X` and up to unique isomorphism, it is determined by the
-obvious idempotent `X ⟶ P ⟶ X` which is the projector on `P` with kernel `Q`. More generally,
+obvious idempotent `X ⟶ P ⟶ X` which is the projection onto `P` with kernel `Q`. More generally,
 one may define a formal direct factor of an object `X : C` : it consists of an idempotent
 `p : X ⟶ X` which is thought as the "formal image" of `p`. The type `karoubi C` shall be the
 type of the objects of the karoubi enveloppe of `C`. It makes sense for any category `C`. -/
@@ -48,7 +48,7 @@ type of the objects of the karoubi enveloppe of `C`. It makes sense for any cate
 structure Karoubi where
   x : C
   p : X ⟶ X
-  idempotence : p ≫ p = p
+  idem : p ≫ p = p
 
 namespace Karoubi
 
@@ -86,11 +86,11 @@ theorem hom_ext {P Q : Karoubi C} {f g : Hom P Q} : f = g ↔ f.f = g.f := by
 
 @[simp, reassoc]
 theorem p_comp {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f := by
-  rw [f.comm, ← assoc, P.idempotence]
+  rw [f.comm, ← assoc, P.idem]
 
 @[simp, reassoc]
 theorem comp_p {P Q : Karoubi C} (f : Hom P Q) : f.f ≫ Q.p = f.f := by
-  rw [f.comm, assoc, assoc, Q.idempotence]
+  rw [f.comm, assoc, assoc, Q.idem]
 
 theorem p_comm {P Q : Karoubi C} (f : Hom P Q) : P.p ≫ f.f = f.f ≫ Q.p := by
   rw [p_comp, comp_p]
@@ -104,17 +104,8 @@ instance : Category (Karoubi C) where
   id := fun P =>
     ⟨P.p, by
       repeat'
-        rw [P.idempotence]⟩
+        rw [P.idem]⟩
   comp := fun P Q R f g => ⟨f.f ≫ g.f, Karoubi.comp_proof g f⟩
-  id_comp' := fun P Q f => by
-    ext
-    simp only [karoubi.p_comp]
-  comp_id' := fun P Q f => by
-    ext
-    simp only [karoubi.comp_p]
-  assoc' := fun P Q R S f g h => by
-    ext
-    simp only [category.assoc]
 
 @[simp]
 theorem comp {P Q R : Karoubi C} (f : P ⟶ Q) (g : Q ⟶ R) : f ≫ g = ⟨f.f ≫ g.f, comp_proof g f⟩ := by
@@ -125,7 +116,7 @@ theorem id_eq {P : Karoubi C} :
     𝟙 P =
       ⟨P.p, by
         repeat'
-          rw [P.idempotence]⟩ :=
+          rw [P.idem]⟩ :=
   by
   rfl
 
@@ -165,9 +156,6 @@ def toKaroubi : C ⥤ Karoubi C where
 
 instance : Full (toKaroubi C) where
   Preimage := fun X Y f => f.f
-  witness' := fun X Y f => by
-    ext
-    simp only [to_karoubi_map_f]
 
 instance : Faithful (toKaroubi C) :=
   {  }
@@ -256,7 +244,7 @@ instance : IsIdempotentComplete (Karoubi C) := by
 instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
   ⟨fun P => by
     have h : is_idempotent_complete C := inferInstance
-    rcases is_idempotent_complete.idempotents_split P.X P.p P.idempotence with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
+    rcases is_idempotent_complete.idempotents_split P.X P.p P.idem with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
     use Y
     exact
       Nonempty.intro
@@ -265,13 +253,7 @@ instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
               erw [id_comp, ← h₂, ← assoc, h₁, id_comp]⟩,
           inv :=
             ⟨e, by
-              erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩,
-          hom_inv_id' := by
-            ext
-            simpa only [comp, h₁],
-          inv_hom_id' := by
-            ext
-            simp only [comp, ← h₂, id_eq] }⟩
+              erw [comp_id, ← h₂, assoc, h₁, comp_id]⟩ }⟩
 
 /-- If `C` is idempotent complete, the functor `to_karoubi : C ⥤ karoubi C` is an equivalence. -/
 def toKaroubiIsEquivalence [IsIdempotentComplete C] : IsEquivalence (toKaroubi C) :=
@@ -285,23 +267,23 @@ variable {C}
 @[simps]
 def decompIdI (P : Karoubi C) : P ⟶ P.x :=
   ⟨P.p, by
-    erw [coe_p, comp_id, P.idempotence]⟩
+    erw [coe_p, comp_id, P.idem]⟩
 
 /-- The split epi which appears in the factorisation `decomp_id P`. -/
 @[simps]
 def decompIdP (P : Karoubi C) : (P.x : Karoubi C) ⟶ P :=
   ⟨P.p, by
-    erw [coe_p, id_comp, P.idempotence]⟩
+    erw [coe_p, id_comp, P.idem]⟩
 
 /-- The formal direct factor of `P.X` given by the idempotent `P.p` in the category `C`
 is actually a direct factor in the category `karoubi C`. -/
 theorem decomp_id (P : Karoubi C) : 𝟙 P = decompIdI P ≫ decompIdP P := by
   ext
-  simp only [comp, id_eq, P.idempotence, decomp_id_i, decomp_id_p]
+  simp only [comp, id_eq, P.idem, decomp_id_i, decomp_id_p]
 
 theorem decomp_p (P : Karoubi C) : (toKaroubi C).map P.p = decompIdP P ≫ decompIdI P := by
   ext
-  simp only [comp, decomp_id_p_f, decomp_id_i_f, P.idempotence, to_karoubi_map_f]
+  simp only [comp, decomp_id_p_f, decomp_id_i_f, P.idem, to_karoubi_map_f]
 
 theorem decomp_id_i_to_karoubi (X : C) : decompIdI ((toKaroubi C).obj X) = 𝟙 _ := by
   ext

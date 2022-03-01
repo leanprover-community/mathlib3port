@@ -30,7 +30,7 @@ be satisfied by itself and all stricter types.
 -/
 
 
-open Function
+open Function OrderDual
 
 variable {F α β γ δ : Type _} {ι : Sort _} {κ : ι → Sort _}
 
@@ -145,6 +145,12 @@ instance (priority := 100) CompleteLatticeHomClass.toFrameHomClass [CompleteLatt
 instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
   { SupHomClassₓ.toBotHomClass, InfHomClassₓ.toTopHomClass with }
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderIso.completeLatticeHomClass [CompleteLattice α] [CompleteLattice β] :
+    CompleteLatticeHomClass (α ≃o β) α β :=
+  { RelIso.relHomClass with map_Sup := fun f s => (f.map_Sup s).trans Sup_image.symm,
+    map_Inf := fun f s => (f.map_Inf s).trans Inf_image.symm }
 
 instance [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] : CoeTₓ F (SupHomₓ α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
@@ -398,6 +404,22 @@ theorem top_apply (a : α) : (⊤ : InfHomₓ α β) a = ⊤ :=
 
 end InfHomₓ
 
+/-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
+@[simps]
+protected def SupHomₓ.dual [HasSupₓ α] [HasSupₓ β] : SupHomₓ α β ≃ InfHomₓ (OrderDual α) (OrderDual β) where
+  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Inf' := fun _ => congr_argₓ toDual (map_Sup f _) }
+  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Sup' := fun _ => congr_argₓ ofDual (map_Inf f _) }
+  left_inv := fun f => SupHomₓ.ext fun a => rfl
+  right_inv := fun f => InfHomₓ.ext fun a => rfl
+
+/-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
+@[simps]
+protected def InfHomₓ.dual [HasInfₓ α] [HasInfₓ β] : InfHomₓ α β ≃ SupHomₓ (OrderDual α) (OrderDual β) where
+  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_argₓ toDual (map_Inf f _) }
+  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
+  left_inv := fun f => InfHomₓ.ext fun a => rfl
+  right_inv := fun f => SupHomₓ.ext fun a => rfl
+
 /-! ### Frame homomorphisms -/
 
 
@@ -526,6 +548,10 @@ instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β where
   map_Sup := fun f => f.map_Sup'
   map_Inf := fun f => f.map_Inf'
 
+/-- Reinterpret a `complete_lattice_hom` as a `bounded_lattice_hom`. -/
+def toBoundedLatticeHom (f : CompleteLatticeHom α β) : BoundedLatticeHom α β :=
+  f
+
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (CompleteLatticeHom α β) fun _ => α → β :=
@@ -599,6 +625,14 @@ theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeH
       hg <| by
         rw [← comp_apply, h, comp_apply],
     congr_argₓ _⟩
+
+/-- Reinterpret a lattice homomorphism as a lattice homomorphism between the dual lattices. -/
+@[simps]
+protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom (OrderDual α) (OrderDual β) where
+  toFun := fun f => { toSupHom := f.toInfHom.dual, map_Inf' := fun _ => congr_argₓ toDual (map_Sup f _) }
+  invFun := fun f => { toSupHom := f.toInfHom.dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
+  left_inv := fun f => ext fun a => rfl
+  right_inv := fun f => ext fun a => rfl
 
 end CompleteLatticeHom
 

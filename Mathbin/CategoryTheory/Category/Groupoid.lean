@@ -43,14 +43,21 @@ instance : Inhabited Groupoidₓ :=
 instance str (C : Groupoidₓ.{v, u}) : Groupoid.{v, u} C.α :=
   C.str
 
+instance : CoeSort Groupoidₓ (Type _) :=
+  bundled.has_coe_to_sort
+
 /-- Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
 def of (C : Type u) [Groupoid.{v} C] : Groupoidₓ.{v, u} :=
   Bundled.of C
 
+@[simp]
+theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
+  rfl
+
 /-- Category structure on `Groupoid` -/
 instance category : LargeCategory.{max v u} Groupoidₓ.{v, u} where
-  Hom := fun C D => C.α ⥤ D.α
-  id := fun C => 𝟭 C.α
+  Hom := fun C D => C ⥤ D
+  id := fun C => 𝟭 C
   comp := fun C D E F G => F ⋙ G
   id_comp' := fun C D F => by
     cases F <;> rfl
@@ -67,7 +74,7 @@ def objects : Groupoid.{v, u} ⥤ Type u where
 
 /-- Forgetting functor to `Cat` -/
 def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
-  obj := fun C => Cat.of C.α
+  obj := fun C => Cat.of C
   map := fun C D => id
 
 instance forgetToCatFull : Full forgetToCat where
@@ -86,7 +93,7 @@ section Products
 /-- The cone for the product of a family of groupoids indexed by J is a limit cone -/
 @[simps]
 def piLimitCone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.LimitCone F where
-  Cone := { x := @of (∀ j : J, (F.obj j).α) _, π := { app := fun j : J => CategoryTheory.pi.eval _ j } }
+  Cone := { x := @of (∀ j : J, F.obj j) _, π := { app := fun j : J => CategoryTheory.pi.eval _ j } }
   IsLimit :=
     { lift := fun s => Functor.pi' s.π.app,
       fac' := by
@@ -108,7 +115,7 @@ instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} := fun J =>
 
 /-- The product of a family of groupoids is isomorphic
 to the product object in the category of Groupoids -/
-noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, (f j).α) _ ≅ ∏ f :=
+noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, f j) _ ≅ ∏ f :=
   Limits.IsLimit.conePointUniqueUpToIso (piLimitCone (Discrete.functor f)).IsLimit
     (Limits.limit.isLimit (Discrete.functor f))
 

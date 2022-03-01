@@ -75,11 +75,6 @@ instance : IsAddHaarMeasure (volume : Measure ℝ) := by
   rw [← add_haar_measure_eq_volume]
   infer_instance
 
-instance is_add_left_invariant_real_volume_pi (ι : Type _) [Fintype ι] :
-    IsAddLeftInvariant (volume : Measure (ι → ℝ)) :=
-  ⟨by
-    simp [map_add_left_eq_self]⟩
-
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
 theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] : addHaarMeasure (piIcc01 ι) = volume := by
   convert (add_haar_measure_unique volume (pi_Icc01 ι)).symm

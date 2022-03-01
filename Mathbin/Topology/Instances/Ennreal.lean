@@ -280,6 +280,11 @@ protected theorem tendsto_nhds {f : Filter α} {u : α → ℝ≥0∞} {a : ℝ�
     Tendsto u f (𝓝 a) ↔ ∀, ∀ ε > 0, ∀, ∀ᶠ x in f, u x ∈ Icc (a - ε) (a + ε) := by
   simp only [nhds_of_ne_top ha, tendsto_infi, tendsto_principal, mem_Icc]
 
+protected theorem tendsto_nhds_zero {f : Filter α} {u : α → ℝ≥0∞} :
+    Tendsto u f (𝓝 0) ↔ ∀, ∀ ε > 0, ∀, ∀ᶠ x in f, u x ≤ ε := by
+  rw [Ennreal.tendsto_nhds zero_ne_top]
+  simp only [true_andₓ, zero_tsub, zero_le, zero_addₓ, Set.mem_Icc]
+
 protected theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {f : β → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
     Tendsto f atTop (𝓝 a) ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ n ≥ N, ∀, f n ∈ Icc (a - ε) (a + ε) := by
   simp only [Ennreal.tendsto_nhds ha, mem_at_top_sets, mem_set_of_eq, Filter.Eventually]

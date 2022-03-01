@@ -368,19 +368,19 @@ localized [FundamentalGroupoid] notation "πₘ" => FundamentalGroupoid.fundamen
 /-- Help the typechecker by converting a point in a groupoid back to a point in
 the underlying topological space. -/
 @[reducible]
-def toTop {X : Top} (x : (πₓ X).α) : X :=
+def toTop {X : Top} (x : πₓ X) : X :=
   x
 
 /-- Help the typechecker by converting a point in a topological space to a
 point in the fundamental groupoid of that space -/
 @[reducible]
-def fromTop {X : Top} (x : X) : (πₓ X).α :=
+def fromTop {X : Top} (x : X) : πₓ X :=
   x
 
 /-- Help the typechecker by converting an arrow in the fundamental groupoid of
 a topological space back to a path in that space (i.e., `path.homotopic.quotient`). -/
 @[reducible]
-def toPath {X : Top} {x₀ x₁ : (πₓ X).α} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
+def toPath {X : Top} {x₀ x₁ : πₓ X} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
   p
 
 /-- Help the typechecker by convering a path in a topological space to an arrow in the

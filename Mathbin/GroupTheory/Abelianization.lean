@@ -38,10 +38,10 @@ theorem commutator_def : commutator G = ⁅(⊤ : Subgroup G),⊤⁆ :=
   rfl
 
 theorem commutator_eq_closure : commutator G = Subgroup.closure { x | ∃ p q, p * q * p⁻¹ * q⁻¹ = x } := by
-  simp_rw [commutator, general_commutator_def, Subgroup.mem_top, exists_true_left]
+  simp_rw [commutator, Subgroup.commutator_def, Subgroup.mem_top, exists_true_left]
 
 theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure { x | ∃ p q, p * q * p⁻¹ * q⁻¹ = x } := by
-  simp_rw [commutator, general_commutator_def', Subgroup.mem_top, exists_true_left]
+  simp_rw [commutator, Subgroup.commutator_def', Subgroup.mem_top, exists_true_left]
 
 /-- The abelianization of G is the quotient of G by its commutator subgroup. -/
 def Abelianization : Type u :=

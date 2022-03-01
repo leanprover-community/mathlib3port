@@ -6,6 +6,7 @@ Authors: Frédéric Dupuis
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.NormedSpace.LinearIsometry
+import Mathbin.Algebra.Star.SelfAdjoint
 import Mathbin.Algebra.Star.Unitary
 
 /-!
@@ -35,7 +36,8 @@ open_locale TopologicalSpace
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star
 
-/-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
+/-- A normed star monoid is an additive monoid with a star,
+endowed with a norm such that `star` is isometric. -/
 class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] : Prop where
   norm_star : ∀ {x : E}, ∥x⋆∥ = ∥x∥
 
@@ -141,6 +143,11 @@ theorem norm_self_mul_star {x : E} : ∥x * x⋆∥ = ∥x∥ * ∥x∥ := by
 theorem norm_star_mul_self' {x : E} : ∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥ := by
   rw [norm_star_mul_self, norm_star]
 
+theorem nnnorm_star_mul_self {x : E} : ∥x⋆ * x∥₊ = ∥x∥₊ * ∥x∥₊ := by
+  have : (∥x⋆ * x∥₊ : ℝ) = ∥x∥₊ * ∥x∥₊ := by
+    simpa only [← coe_nnnorm] using @norm_star_mul_self _ _ _ _ x
+  exact_mod_cast this
+
 @[simp]
 theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
   have : 0 < ∥(1 : E)∥ := norm_pos_iff.mpr one_ne_zero
@@ -194,6 +201,20 @@ theorem norm_mul_mem_unitary (A : E) {U : E} (hU : U ∈ unitary E) : ∥A * U�
   norm_mul_coe_unitary A ⟨U, hU⟩
 
 end CstarRing
+
+theorem nnnorm_pow_two_pow_of_self_adjoint [NormedRing E] [StarRing E] [CstarRing E] {x : E} (hx : x ∈ selfAdjoint E)
+    (n : ℕ) : ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n := by
+  induction' n with k hk
+  · simp only [pow_zeroₓ, pow_oneₓ]
+    
+  · rw [pow_succₓ, pow_mul', sq]
+    nth_rw 0[← self_adjoint.mem_iff.mp hx]
+    rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
+    
+
+theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E) (n : ℕ) :
+    ∥x ^ 2 ^ n∥₊ = ∥x∥₊ ^ 2 ^ n :=
+  nnnorm_pow_two_pow_of_self_adjoint x.property _
 
 section starₗᵢ
 

@@ -72,6 +72,19 @@ theorem star_star [HasInvolutiveStar R] (r : R) : star (star r) = r :=
 theorem star_injective [HasInvolutiveStar R] : Function.Injective (star : R → R) :=
   star_involutive.Injective
 
+/-- `star` as an equivalence when it is involutive. -/
+protected def Equivₓ.star [HasInvolutiveStar R] : Equivₓ.Perm R :=
+  star_involutive.toEquiv _
+
+theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
+  simp [h]
+
+theorem eq_star_iff_eq_star [HasInvolutiveStar R] {r s : R} : r = star s ↔ s = star r :=
+  ⟨eq_star_of_eq_star, eq_star_of_eq_star⟩
+
+theorem star_eq_iff_star_eq [HasInvolutiveStar R] {r s : R} : star r = s ↔ star s = r :=
+  eq_comm.trans <| eq_star_iff_eq_star.trans eq_comm
+
 /-- Typeclass for a trivial star operation. This is mostly meant for `ℝ`.
 -/
 class HasTrivialStar (R : Type u) [HasStar R] : Prop where

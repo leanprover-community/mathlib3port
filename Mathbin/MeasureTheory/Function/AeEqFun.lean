@@ -392,6 +392,48 @@ theorem coe_fn_one [One β] : ⇑(1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=
 theorem one_to_germ [One β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
   rfl
 
+-- Note we set up the scalar actions before the `monoid` structures in case we want to
+-- try to override the `nsmul` or `zsmul` fields in future.
+section HasScalar
+
+variable {𝕜 𝕜' : Type _}
+
+variable [MeasurableSpace 𝕜] [MeasurableSpace 𝕜']
+
+variable [HasScalar 𝕜 γ] [HasMeasurableSmul 𝕜 γ]
+
+variable [HasScalar 𝕜' γ] [HasMeasurableSmul 𝕜' γ]
+
+instance : HasScalar 𝕜 (α →ₘ[μ] γ) :=
+  ⟨fun c f => comp ((· • ·) c) (measurable_id.const_smul c) f⟩
+
+@[simp]
+theorem smul_mk (c : 𝕜) (f : α → γ) hf : c • (mk f hf : α →ₘ[μ] γ) = mk (c • f) (hf.const_smul _) :=
+  rfl
+
+theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : ⇑(c • f) =ᵐ[μ] c • f :=
+  coe_fn_comp _ _ _
+
+theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.toGerm :=
+  comp_to_germ _ _ _
+
+instance [SmulCommClass 𝕜 𝕜' γ] : SmulCommClass 𝕜 𝕜' (α →ₘ[μ] γ) :=
+  ⟨fun a b f =>
+    (induction_on f) fun f hf => by
+      simp_rw [smul_mk, smul_comm]⟩
+
+instance [HasScalar 𝕜 𝕜'] [IsScalarTower 𝕜 𝕜' γ] : IsScalarTower 𝕜 𝕜' (α →ₘ[μ] γ) :=
+  ⟨fun a b f =>
+    (induction_on f) fun f hf => by
+      simp_rw [smul_mk, smul_assoc]⟩
+
+instance [HasScalar 𝕜ᵐᵒᵖ γ] [IsCentralScalar 𝕜 γ] : IsCentralScalar 𝕜 (α →ₘ[μ] γ) :=
+  ⟨fun a f =>
+    (induction_on f) fun f hf => by
+      simp_rw [smul_mk, op_smul_eq_smul]⟩
+
+end HasScalar
+
 section Monoidₓ
 
 variable [Monoidₓ γ] [HasMeasurableMul₂ γ]
@@ -415,6 +457,13 @@ theorem mul_to_germ (f g : α →ₘ[μ] γ) : (f * g).toGerm = f.toGerm * g.toG
 @[to_additive]
 instance : Monoidₓ (α →ₘ[μ] γ) :=
   to_germ_injective.Monoid toGerm one_to_germ mul_to_germ
+
+/-- `ae_eq_fun.to_germ` as a `monoid_hom`. -/
+@[to_additive "`ae_eq_fun.to_germ` as an `add_monoid_hom`.", simps]
+def toGermMonoidHom : (α →ₘ[μ] γ) →* μ.ae.Germ γ where
+  toFun := toGerm
+  map_one' := one_to_germ
+  map_mul' := mul_to_germ
 
 end Monoidₓ
 
@@ -482,27 +531,18 @@ instance [CommGroupₓ γ] [HasMeasurableMul₂ γ] [HasMeasurableDiv₂ γ] [Ha
 
 section Module
 
-variable {𝕜 : Type _} [Semiringₓ 𝕜] [MeasurableSpace 𝕜]
+variable {𝕜 : Type _}
 
-variable [AddCommMonoidₓ γ] [Module 𝕜 γ] [HasMeasurableSmul 𝕜 γ]
+instance [MeasurableSpace 𝕜] [Monoidₓ 𝕜] [MulAction 𝕜 γ] [HasMeasurableSmul 𝕜 γ] : MulAction 𝕜 (α →ₘ[μ] γ) :=
+  to_germ_injective.MulAction toGerm smul_to_germ
 
-instance : HasScalar 𝕜 (α →ₘ[μ] γ) :=
-  ⟨fun c f => comp ((· • ·) c) (measurable_id.const_smul c) f⟩
+instance [MeasurableSpace 𝕜] [Monoidₓ 𝕜] [AddMonoidₓ γ] [HasMeasurableAdd₂ γ] [DistribMulAction 𝕜 γ]
+    [HasMeasurableSmul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
+  to_germ_injective.DistribMulAction (toGermAddMonoidHom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 => smul_to_germ c
 
-@[simp]
-theorem smul_mk (c : 𝕜) (f : α → γ) hf : c • (mk f hf : α →ₘ[μ] γ) = mk (c • f) (hf.const_smul _) :=
-  rfl
-
-theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : ⇑(c • f) =ᵐ[μ] c • f :=
-  coe_fn_comp _ _ _
-
-theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.toGerm :=
-  comp_to_germ _ _ _
-
-variable [HasMeasurableAdd₂ γ]
-
-instance : Module 𝕜 (α →ₘ[μ] γ) :=
-  to_germ_injective.Module 𝕜 ⟨@toGerm α γ _ μ _, zero_to_germ, add_to_germ⟩ smul_to_germ
+instance [MeasurableSpace 𝕜] [Semiringₓ 𝕜] [AddCommMonoidₓ γ] [HasMeasurableAdd₂ γ] [Module 𝕜 γ]
+    [HasMeasurableSmul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
+  to_germ_injective.Module 𝕜 (toGermAddMonoidHom : (α →ₘ[μ] γ) →+ _) smul_to_germ
 
 end Module
 

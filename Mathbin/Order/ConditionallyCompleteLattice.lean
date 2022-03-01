@@ -467,6 +467,9 @@ theorem csupr_le_csupr {f g : ι → α} (B : BddAbove (Range g)) (H : ∀ x, f 
   · exact csupr_le fun x => le_csupr_of_le B x (H x)
     
 
+theorem le_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) {c : β} (hc : c ∈ s) : f c ≤ ⨆ i : s, f i :=
+  (le_cSup H <| mem_image_of_mem f hc).trans_eq Sup_image'
+
 /-- The indexed infimum of two functions are comparable if the functions are pointwise comparable-/
 theorem cinfi_le_cinfi {f g : ι → α} (B : BddBelow (Range f)) (H : ∀ x, f x ≤ g x) : infi f ≤ infi g :=
   @csupr_le_csupr (OrderDual α) _ _ _ _ B H
@@ -481,6 +484,9 @@ theorem cinfi_le {f : ι → α} (H : BddBelow (Range f)) (c : ι) : infi f ≤ 
 
 theorem cinfi_le_of_le {f : ι → α} (H : BddBelow (Range f)) (c : ι) (h : f c ≤ a) : infi f ≤ a :=
   @le_csupr_of_le (OrderDual α) _ _ _ _ H c h
+
+theorem cinfi_set_le {f : β → α} {s : Set β} (H : BddBelow (f '' s)) {c : β} (hc : c ∈ s) : (⨅ i : s, f i) ≤ f c :=
+  @le_csupr_set (OrderDual α) _ _ _ _ H _ hc
 
 @[simp]
 theorem csupr_const [hι : Nonempty ι] {a : α} : (⨆ b : ι, a) = a := by

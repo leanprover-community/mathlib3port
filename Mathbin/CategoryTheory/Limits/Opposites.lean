@@ -45,18 +45,8 @@ theorem has_limit_of_has_colimit_left_op [HasColimit F.leftOp] : HasLimit F :=
               Quiver.Hom.op_unop]
             rfl,
           uniq' := fun s m w => by
-            -- It's a pity we can't do this automatically.
-            -- Usually something like this would work by limit.hom_ext,
-            -- but the opposites get in the way of this firing.
-            have u := (colimit.is_colimit F.left_op).uniq (cocone_left_op_of_cone s) m.unop
-            convert congr_argₓ (fun f : _ ⟶ _ => f.op) (u _)
-            clear u
-            intro j
-            rw [cocone_left_op_of_cone_ι_app, colimit.cocone_ι]
-            convert congr_argₓ (fun f : _ ⟶ _ => f.unop) (w (unop j))
-            clear w
-            rw [cone_of_cocone_left_op_π_app, colimit.cocone_ι, Quiver.Hom.unop_op]
-            rfl } }
+            refine' Quiver.Hom.unop_inj (colimit.hom_ext fun j => Quiver.Hom.op_inj _)
+            simpa only [Quiver.Hom.unop_op, colimit.ι_desc] using w (unop j) } }
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
@@ -82,15 +72,8 @@ theorem has_colimit_of_has_limit_left_op [HasLimit F.leftOp] : HasColimit F :=
               Quiver.Hom.op_unop]
             rfl,
           uniq' := fun s m w => by
-            have u := (limit.is_limit F.left_op).uniq (cone_left_op_of_cocone s) m.unop
-            convert congr_argₓ (fun f : _ ⟶ _ => f.op) (u _)
-            clear u
-            intro j
-            rw [cone_left_op_of_cocone_π_app, limit.cone_π]
-            convert congr_argₓ (fun f : _ ⟶ _ => f.unop) (w (unop j))
-            clear w
-            rw [cocone_of_cone_left_op_ι_app, limit.cone_π, Quiver.Hom.unop_op]
-            rfl } }
+            refine' Quiver.Hom.unop_inj (limit.hom_ext fun j => Quiver.Hom.op_inj _)
+            simpa only [Quiver.Hom.unop_op, limit.lift_π] using w (unop j) } }
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/

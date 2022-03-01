@@ -363,6 +363,14 @@ theorem card_sdiff (h : s ⊆ t) : card (t \ s) = t.card - s.card := by
     rwa [sdiff_union_of_subset h] at this
   rw [card_disjoint_union sdiff_disjoint, add_tsub_cancel_right]
 
+theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
+  calc
+    card t - card s ≤ card t - card (s ∩ t) := tsub_le_tsub_left (card_le_of_subset (inter_subset_left s t)) _
+    _ = card (t \ (s ∩ t)) := (card_sdiff (inter_subset_right s t)).symm
+    _ ≤ card (t \ s) := by
+      rw [sdiff_inter_self_right t s]
+    
+
 theorem card_sdiff_add_card : (s \ t).card + t.card = (s ∪ t).card := by
   rw [← card_disjoint_union sdiff_disjoint, sdiff_union_self_eq_union]
 

@@ -42,8 +42,33 @@ theorem dist_homothety_center (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ 
   rw [dist_comm, dist_center_homothety]
 
 @[simp]
+theorem dist_line_map_line_map (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
+    dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ := by
+  rw [dist_comm p₁ p₂]
+  simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul, vsub_eq_sub]
+
+theorem lipschitz_with_line_map (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂) (lineMap p₁ p₂ : 𝕜 → P) :=
+  LipschitzWith.of_dist_le_mul fun c₁ c₂ => ((dist_line_map_line_map p₁ p₂ c₁ c₂).trans (mul_comm _ _)).le
+
+@[simp]
+theorem dist_line_map_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ∥c∥ * dist p₁ p₂ := by
+  simpa only [line_map_apply_zero, dist_zero_right] using dist_line_map_line_map p₁ p₂ c 0
+
+@[simp]
+theorem dist_left_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p₂ c) = ∥c∥ * dist p₁ p₂ :=
+  (dist_comm _ _).trans (dist_line_map_left _ _ _)
+
+@[simp]
+theorem dist_line_map_right (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
+  simpa only [line_map_apply_one, dist_eq_norm'] using dist_line_map_line_map p₁ p₂ c 1
+
+@[simp]
+theorem dist_right_line_map (p₁ p₂ : P) (c : 𝕜) : dist p₂ (lineMap p₁ p₂ c) = ∥1 - c∥ * dist p₁ p₂ :=
+  (dist_comm _ _).trans (dist_line_map_right _ _ _)
+
+@[simp]
 theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c p₂) p₂ = ∥1 - c∥ * dist p₁ p₂ := by
-  rw [homothety_eq_line_map, ← line_map_apply_one_sub, ← homothety_eq_line_map, dist_homothety_center, dist_comm]
+  rw [homothety_eq_line_map, dist_line_map_right]
 
 @[simp]
 theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p₁ c p₂) = ∥1 - c∥ * dist p₁ p₂ := by
@@ -53,7 +78,7 @@ variable [Invertible (2 : 𝕜)]
 
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by
-  rw [midpoint, ← homothety_eq_line_map, dist_center_homothety, inv_of_eq_inv, ← norm_inv]
+  rw [midpoint, dist_comm, dist_line_map_left, inv_of_eq_inv, ← norm_inv]
 
 @[simp]
 theorem dist_midpoint_left (p₁ p₂ : P) : dist (midpoint 𝕜 p₁ p₂) p₁ = ∥(2 : 𝕜)∥⁻¹ * dist p₁ p₂ := by

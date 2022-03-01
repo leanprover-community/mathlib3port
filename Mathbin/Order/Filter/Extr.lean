@@ -326,6 +326,18 @@ theorem IsMaxOn.on_preimage (g : δ → α) {b : δ} (hf : IsMaxOn f s (g b)) : 
 theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) : IsExtrOn (f ∘ g) (g ⁻¹' s) b :=
   hf.elim (fun hf => (hf.on_preimage g).is_extr) fun hf => (hf.on_preimage g).is_extr
 
+theorem IsMinOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
+    IsMinOn (f ∘ g) t b := fun y hy => by
+  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
+
+theorem IsMaxOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
+    IsMaxOn (f ∘ g) t b :=
+  hf.dual.comp_maps_to hg ha
+
+theorem IsExtrOn.comp_maps_to {t : Set δ} {g : δ → α} {b : δ} (hf : IsExtrOn f s a) (hg : MapsTo g t s) (ha : g b = a) :
+    IsExtrOn (f ∘ g) t b :=
+  hf.elim (fun h => Or.inl <| h.comp_maps_to hg ha) fun h => Or.inr <| h.comp_maps_to hg ha
+
 end Preorderₓ
 
 /-! ### Pointwise addition -/

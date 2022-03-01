@@ -1186,6 +1186,26 @@ theorem UniformContinuousOn.continuous_on [UniformSpace α] [UniformSpace β] {f
   rw [continuous_on_iff_continuous_restrict]
   exact h.continuous
 
+@[to_additive]
+instance [UniformSpace α] : UniformSpace αᵐᵒᵖ :=
+  UniformSpace.comap MulOpposite.unop ‹_›
+
+@[to_additive]
+theorem uniformity_mul_opposite [UniformSpace α] : 𝓤 αᵐᵒᵖ = comap (fun q : αᵐᵒᵖ × αᵐᵒᵖ => (q.1.unop, q.2.unop)) (𝓤 α) :=
+  rfl
+
+namespace MulOpposite
+
+@[to_additive]
+theorem uniform_continuous_unop [UniformSpace α] : UniformContinuous (unop : αᵐᵒᵖ → α) :=
+  uniform_continuous_comap
+
+@[to_additive]
+theorem uniform_continuous_op [UniformSpace α] : UniformContinuous (op : α → αᵐᵒᵖ) :=
+  uniform_continuous_comap' uniform_continuous_id
+
+end MulOpposite
+
 section Prod
 
 /- a similar product space is possible on the function space (uniformity of pointwise convergence),

@@ -1593,6 +1593,43 @@ theorem const_alg_hom_eq_algebra_of_id : constAlgHom R A R = Algebra.ofId R (A �
 
 end Pi
 
+namespace AlgEquiv
+
+/-- A family of algebra equivalences `Π j, (A₁ j ≃ₐ A₂ j)` generates a
+multiplicative equivalence between `Π j, A₁ j` and `Π j, A₂ j`.
+
+This is the `alg_equiv` version of `equiv.Pi_congr_right`, and the dependent version of
+`alg_equiv.arrow_congr`.
+-/
+@[simps apply]
+def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiringₓ R] [∀ i, Semiringₓ (A₁ i)] [∀ i, Semiringₓ (A₂ i)]
+    [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)] (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (∀ i, A₁ i) ≃ₐ[R] ∀ i, A₂ i :=
+  { @RingEquiv.piCongrRight ι A₁ A₂ _ _ fun i => (e i).toRingEquiv with toFun := fun x j => e j (x j),
+    invFun := fun x j => (e j).symm (x j),
+    commutes' := fun r => by
+      ext i
+      simp }
+
+@[simp]
+theorem Pi_congr_right_refl {R ι : Type _} {A : ι → Type _} [CommSemiringₓ R] [∀ i, Semiringₓ (A i)]
+    [∀ i, Algebra R (A i)] : (piCongrRight fun i => (AlgEquiv.refl : A i ≃ₐ[R] A i)) = AlgEquiv.refl :=
+  rfl
+
+@[simp]
+theorem Pi_congr_right_symm {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiringₓ R] [∀ i, Semiringₓ (A₁ i)]
+    [∀ i, Semiringₓ (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)] (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) :
+    (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+  rfl
+
+@[simp]
+theorem Pi_congr_right_trans {R ι : Type _} {A₁ A₂ A₃ : ι → Type _} [CommSemiringₓ R] [∀ i, Semiringₓ (A₁ i)]
+    [∀ i, Semiringₓ (A₂ i)] [∀ i, Semiringₓ (A₃ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
+    [∀ i, Algebra R (A₃ i)] (e₁ : ∀ i, A₁ i ≃ₐ[R] A₂ i) (e₂ : ∀ i, A₂ i ≃ₐ[R] A₃ i) :
+    (piCongrRight e₁).trans (piCongrRight e₂) = Pi_congr_right fun i => (e₁ i).trans (e₂ i) :=
+  rfl
+
+end AlgEquiv
+
 section IsScalarTower
 
 variable {R : Type _} [CommSemiringₓ R]

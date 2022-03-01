@@ -5,7 +5,7 @@ Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.PemptyInstances
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-!
 # Category instances for has_mul, has_add, semigroup and add_semigroup

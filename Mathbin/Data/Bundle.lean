@@ -33,7 +33,7 @@ instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace E) :=
   ⟨⟨default, default⟩⟩
 
 /-- `bundle.proj E` is the canonical projection `total_space E → B` on the base space. -/
-@[simp]
+@[simp, reducible]
 def proj : TotalSpace E → B :=
   Sigma.fst
 

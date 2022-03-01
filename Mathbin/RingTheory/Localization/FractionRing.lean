@@ -151,6 +151,26 @@ theorem div_surjective (z : K) : ∃ (x y : A)(hy : y ∈ nonZeroDivisors A), al
 theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) : IsUnit (g y) :=
   IsUnit.mk0 (g y) <| show g.toMonoidWithZeroHom y ≠ 0 from map_ne_zero_of_mem_non_zero_divisors g hg y.2
 
+@[simp]
+theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : nonZeroDivisors R} :
+    mk' K x y = 0 ↔ x = 0 := by
+  refine'
+    ⟨fun hxy => _, fun h => by
+      rw [h, mk'_zero]⟩
+  · simp_rw [mk'_eq_zero_iff, mul_right_coe_non_zero_divisors_eq_zero_iff]  at hxy
+    exact (exists_const _).mp hxy
+    
+
+theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y := by
+  refine'
+    ⟨_, fun hxy => by
+      rw [hxy, mk'_self']⟩
+  · intro hxy
+    have hy : (algebraMap A K) ↑y ≠ (0 : K) := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors y.property
+    rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy
+    exact IsFractionRing.injective A K hxy
+    
+
 open Function
 
 /-- Given an integral domain `A` with field of fractions `K`,
@@ -241,8 +261,8 @@ def FractionRing :=
 
 namespace FractionRing
 
-instance [Subsingleton R] : Subsingleton (FractionRing R) :=
-  Localization.subsingleton
+instance unique [Subsingleton R] : Unique (FractionRing R) :=
+  Localization.unique
 
 instance [Nontrivial R] : Nontrivial (FractionRing R) :=
   ⟨⟨(algebraMap R _) 0, (algebraMap _ _) 1, fun H => zero_ne_one (IsLocalization.injective _ le_rfl H)⟩⟩

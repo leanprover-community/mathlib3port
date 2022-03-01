@@ -233,6 +233,23 @@ theorem cantor_injective {α : Type _} (f : Set α → α) : ¬Function.Injectiv
     (cantor_surjective fun a b => ∀ U, a = f U → U b) <|
       RightInverse.surjective fun U => funext fun a => propext ⟨fun h => h U rfl, fun h' U' e => i e ▸ h'⟩
 
+/-- There is no surjection from `α : Type u` into `Type u`. This theorem
+  demonstrates why `Type : Type` would be inconsistent in Lean. -/
+theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjective f := by
+  intro hf
+  let T : Type max u v := Sigma f
+  cases' hf (Set T) with U hU
+  let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
+  have hg : injective g := by
+    intro s t h
+    suffices cast hU (g s).2 = cast hU (g t).2 by
+      simp only [cast_cast, cast_eq] at this
+      assumption
+    · congr
+      assumption
+      
+  exact cantor_injective g hg
+
 /-- `g` is a partial inverse to `f` (an injective but not necessarily
   surjective function) if `g y = some x` implies `f x = y`, and `g y = none`
   implies that `y` is not in the range of `f`. -/

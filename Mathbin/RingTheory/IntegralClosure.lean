@@ -356,6 +356,11 @@ theorem RingHom.is_integral_mul {x y : S} (hx : f.IsIntegralElem x) (hy : f.IsIn
 theorem is_integral_mul {x y : A} (hx : IsIntegral R x) (hy : IsIntegral R y) : IsIntegral R (x * y) :=
   (algebraMap R A).is_integral_mul hx hy
 
+theorem is_integral_smul [Algebra S A] [Algebra R S] [IsScalarTower R S A] {x : A} (r : R) (hx : IsIntegral S x) :
+    IsIntegral S (r • x) := by
+  rw [Algebra.smul_def, IsScalarTower.algebra_map_apply R S A]
+  exact is_integral_mul is_integral_algebra_map hx
+
 variable (R A)
 
 /-- The integral closure of R in an R-algebra A. -/

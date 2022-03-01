@@ -1918,6 +1918,9 @@ theorem subsingleton_empty : (∅ : Set α).Subsingleton := fun x => False.elim
 theorem subsingleton_singleton {a} : ({a} : Set α).Subsingleton := fun x hx y hy =>
   (eq_of_mem_singleton hx).symm ▸ (eq_of_mem_singleton hy).symm ▸ rfl
 
+theorem subsingleton_of_subset_singleton (h : s ⊆ {a}) : s.Subsingleton :=
+  subsingleton_singleton.mono h
+
 theorem subsingleton_of_forall_eq (a : α) (h : ∀, ∀ b ∈ s, ∀, b = a) : s.Subsingleton := fun b hb c hc =>
   (h _ hb).trans (h _ hc).symm
 

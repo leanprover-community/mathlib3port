@@ -20,10 +20,30 @@ open Measureₓ TopologicalSpace
 
 open_locale Ennreal
 
-variable {𝕜 G E : Type _} [MeasurableSpace G] {μ : Measure G}
+variable {𝕜 G E F : Type _} [MeasurableSpace G]
 
-variable [NormedGroup E] [SecondCountableTopology E] [NormedSpace ℝ E] [CompleteSpace E] [MeasurableSpace E]
-  [BorelSpace E]
+variable [NormedGroup E] [SecondCountableTopology E] [NormedSpace ℝ E] [CompleteSpace E]
+
+variable [MeasurableSpace E] [BorelSpace E]
+
+variable [NormedGroup F] [MeasurableSpace F] [OpensMeasurableSpace F]
+
+variable {μ : Measure G} {f : G → E} {g : G}
+
+section MeasurableInv
+
+variable [Groupₓ G] [HasMeasurableInv G]
+
+@[to_additive]
+theorem Integrable.comp_inv [IsInvInvariant μ] {f : G → F} (hf : Integrable f μ) : Integrable (fun t => f t⁻¹) μ :=
+  (hf.mono_measure (map_inv_eq_self μ).le).comp_measurable measurable_inv
+
+@[to_additive]
+theorem integral_inv_eq_self (f : G → E) (μ : Measure G) [IsInvInvariant μ] : (∫ x, f x⁻¹ ∂μ) = ∫ x, f x ∂μ := by
+  have h : MeasurableEmbedding fun x : G => x⁻¹ := (MeasurableEquiv.inv G).MeasurableEmbedding
+  rw [← h.integral_map, map_inv_eq_self]
+
+end MeasurableInv
 
 section MeasurableMul
 
@@ -62,16 +82,53 @@ theorem integral_mul_right_eq_self [IsMulRightInvariant μ] (f : G → E) (g : G
 /-- If some left-translate of a function negates it, then the integral of the function with respect
 to a left-invariant measure is 0. -/
 @[to_additive]
-theorem integral_zero_of_mul_left_eq_neg [IsMulLeftInvariant μ] {f : G → E} {g : G} (hf' : ∀ x, f (g * x) = -f x) :
-    (∫ x, f x ∂μ) = 0 := by
+theorem integral_eq_zero_of_mul_left_eq_neg [IsMulLeftInvariant μ] (hf' : ∀ x, f (g * x) = -f x) : (∫ x, f x ∂μ) = 0 :=
+  by
   simp_rw [← self_eq_neg ℝ E, ← integral_neg, ← hf', integral_mul_left_eq_self]
 
 /-- If some right-translate of a function negates it, then the integral of the function with respect
 to a right-invariant measure is 0. -/
 @[to_additive]
-theorem integral_zero_of_mul_right_eq_neg [IsMulRightInvariant μ] {f : G → E} {g : G} (hf' : ∀ x, f (x * g) = -f x) :
+theorem integral_eq_zero_of_mul_right_eq_neg [IsMulRightInvariant μ] (hf' : ∀ x, f (x * g) = -f x) :
     (∫ x, f x ∂μ) = 0 := by
   simp_rw [← self_eq_neg ℝ E, ← integral_neg, ← hf', integral_mul_right_eq_self]
+
+@[to_additive]
+theorem Integrable.comp_mul_left {f : G → F} [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
+    Integrable (fun t => f (g * t)) μ :=
+  (hf.mono_measure (map_mul_left_eq_self μ g).le).comp_measurable <| measurable_const_mul g
+
+@[to_additive]
+theorem Integrable.comp_mul_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
+    Integrable (fun t => f (t * g)) μ :=
+  (hf.mono_measure (map_mul_right_eq_self μ g).le).comp_measurable <| measurable_mul_const g
+
+@[to_additive]
+theorem Integrable.comp_div_right {f : G → F} [IsMulRightInvariant μ] (hf : Integrable f μ) (g : G) :
+    Integrable (fun t => f (t / g)) μ := by
+  simp_rw [div_eq_mul_inv]
+  exact hf.comp_mul_right g⁻¹
+
+variable [HasMeasurableInv G]
+
+@[to_additive]
+theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInvariant μ] (hf : Integrable f μ) (g : G) :
+    Integrable (fun t => f (g / t)) μ := by
+  rw [← map_mul_right_inv_eq_self μ g⁻¹, integrable_map_measure, Function.comp]
+  · simp_rw [div_inv_eq_mul, mul_inv_cancel_left]
+    exact hf
+    
+  · refine' AeMeasurable.comp_measurable _ (measurable_id.const_div g)
+    simp_rw [map_map (measurable_id'.const_div g) (measurable_id'.const_mul g⁻¹).inv, Function.comp, div_inv_eq_mul,
+      mul_inv_cancel_left, map_id']
+    exact hf.ae_measurable
+    
+  exact (measurable_id'.const_mul g⁻¹).inv
+
+@[to_additive]
+theorem integral_div_left_eq_self (f : G → E) (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ] (x' : G) :
+    (∫ x, f (x' / x) ∂μ) = ∫ x, f x ∂μ := by
+  simp_rw [div_eq_mul_inv, integral_inv_eq_self (fun x => f (x' * x)) μ, integral_mul_left_eq_self f x']
 
 end MeasurableMul
 

@@ -618,6 +618,9 @@ theorem mem_cons_self (a : α) (s : Finset α) {h} : a ∈ cons a s h :=
 theorem cons_val (h : a ∉ s) : (cons a s h).1 = a ::ₘ s.1 :=
   rfl
 
+theorem forall_mem_cons (h : a ∉ s) (p : α → Prop) : (∀ x, x ∈ cons a s h → p x) ↔ p a ∧ ∀ x, x ∈ s → p x := by
+  simp only [mem_cons, or_imp_distrib, forall_and_distrib, forall_eq]
+
 @[simp]
 theorem mk_cons {s : Multiset α} (h : (a ::ₘ s).Nodup) :
     (⟨a ::ₘ s, h⟩ : Finset α) = cons a ⟨s, (nodup_cons.1 h).2⟩ (nodup_cons.1 h).1 :=
@@ -1730,6 +1733,9 @@ variable {p}
 theorem mem_filter {s : Finset α} {a : α} : a ∈ s.filter p ↔ a ∈ s ∧ p a :=
   mem_filter
 
+theorem mem_of_mem_filter {s : Finset α} (x : α) (h : x ∈ s.filter p) : x ∈ s :=
+  mem_of_mem_filter h
+
 theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ x ∈ s, ¬p x :=
   ⟨fun h =>
     let ⟨x, hs, hp⟩ := Set.exists_of_ssubset h
@@ -1768,6 +1774,9 @@ theorem filter_eq_empty_iff (s : Finset α) (p : α → Prop) [DecidablePred p] 
   intro hs
   injection hs with hs'
   rwa [filter_eq_nil] at hs'
+
+theorem filter_nonempty_iff {s : Finset α} : (s.filter p).Nonempty ↔ ∃ a ∈ s, p a := by
+  simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, not_not, not_forall]
 
 theorem filter_congr {s : Finset α} (H : ∀, ∀ x ∈ s, ∀, p x ↔ q x) : filter p s = filter q s :=
   eq_of_veq <| filter_congr H

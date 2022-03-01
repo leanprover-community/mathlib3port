@@ -9,6 +9,7 @@ import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.GroupActionHom
 import Mathbin.Algebra.Ring.CompTypeclasses
+import Mathbin.Algebra.Star.Basic
 
 /-!
 # (Semi)linear maps
@@ -132,7 +133,8 @@ instance : AddMonoidHomClass (M →ₛₗ[σ] M₃) M M₃ where
 def toDistribMulActionHom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ :=
   { f with map_zero' := show f 0 = 0 from map_zero f }
 
-/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly.
 -/
 instance : CoeFun (M →ₛₗ[σ] M₃) fun _ => M → M₃ :=
   ⟨LinearMap.toFun⟩
@@ -166,8 +168,7 @@ theorem id_apply (x : M) : @id R M _ _ _ x = x :=
   rfl
 
 @[simp, norm_cast]
-theorem id_coe : ((LinearMap.id : M →ₗ[R] M) : M → M) = _root_.id := by
-  ext x
+theorem id_coe : ((LinearMap.id : M →ₗ[R] M) : M → M) = _root_.id :=
   rfl
 
 end

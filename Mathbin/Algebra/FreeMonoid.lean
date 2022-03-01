@@ -3,7 +3,7 @@ Copyright (c) 2019 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yury Kudryashov
 -/
-import Mathbin.Algebra.Star.Basic
+import Mathbin.Data.List.BigOperators
 
 /-!
 # Free monoid over a given alphabet
@@ -133,20 +133,6 @@ theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :
 @[to_additive]
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
   hom_eq fun x => rfl
-
-instance : StarMonoid (FreeMonoid α) where
-  star := List.reverse
-  star_involutive := List.reverse_reverse
-  star_mul := List.reverse_append
-
-@[simp]
-theorem star_of (x : α) : star (of x) = of x :=
-  rfl
-
-/-- Note that `star_one` is already a global simp lemma, but this one works with dsimp too -/
-@[simp]
-theorem star_one : star (1 : FreeMonoid α) = 1 :=
-  rfl
 
 end FreeMonoid
 

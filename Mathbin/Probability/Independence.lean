@@ -295,7 +295,7 @@ private theorem indep_sets.indep_aux {α} {m2 : MeasurableSpace α} {m : Measura
   let μ_inter := μ.restrict t1
   let ν := μ t1 • μ
   have h_univ : μ_inter Set.Univ = ν Set.Univ := by
-    rw [measure.restrict_apply_univ, measure.smul_apply, measure_univ, mul_oneₓ]
+    rw [measure.restrict_apply_univ, measure.smul_apply, smul_eq_mul, measure_univ, mul_oneₓ]
   have : is_finite_measure μ_inter := @restrict.is_finite_measure α _ t1 μ ⟨measure_lt_top μ t1⟩
   rw [Set.inter_comm, ← @measure.restrict_apply α _ μ t1 t2 (h2 t2 ht2m)]
   refine' ext_on_measurable_space_of_generate_finite m p2 (fun t ht => _) h2 hpm2 hp2 h_univ ht2m
@@ -314,7 +314,7 @@ theorem IndepSetsₓ.indep {α} {m1 m2 : MeasurableSpace α} {m : MeasurableSpac
   let μ_inter := μ.restrict t2
   let ν := μ t2 • μ
   have h_univ : μ_inter Set.Univ = ν Set.Univ := by
-    rw [measure.restrict_apply_univ, measure.smul_apply, measure_univ, mul_oneₓ]
+    rw [measure.restrict_apply_univ, measure.smul_apply, smul_eq_mul, measure_univ, mul_oneₓ]
   have : is_finite_measure μ_inter := @restrict.is_finite_measure α _ t2 μ ⟨measure_lt_top μ t2⟩
   rw [mul_comm, ← @measure.restrict_apply α _ μ t2 t1 (h1 t1 ht1)]
   refine' ext_on_measurable_space_of_generate_finite m p1 (fun t ht => _) h1 hpm1 hp1 h_univ ht1
@@ -322,7 +322,7 @@ theorem IndepSetsₓ.indep {α} {m1 m2 : MeasurableSpace α} {m : MeasurableSpac
     refine' h1 _ _
     rw [hpm1]
     exact measurable_set_generate_from ht
-  rw [measure.restrict_apply ht1, measure.smul_apply, mul_comm]
+  rw [measure.restrict_apply ht1, measure.smul_apply, smul_eq_mul, mul_comm]
   exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
 
 end FromPiSystemsToMeasurableSpaces

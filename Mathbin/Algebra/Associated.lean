@@ -146,6 +146,24 @@ theorem Prime.pow_dvd_of_dvd_mul_right [CancelCommMonoidWithZero α] {p a b : α
   rw [mul_comm] at h'
   exact hp.pow_dvd_of_dvd_mul_left n h h'
 
+theorem Prime.dvd_of_pow_dvd_pow_mul_pow_of_square_not_dvd [CancelCommMonoidWithZero α] {p a b : α} {n : ℕ}
+    (hp : Prime p) (hpow : p ^ n.succ ∣ a ^ n.succ * b ^ n) (hb : ¬p ^ 2 ∣ b) : p ∣ a := by
+  -- Suppose `p ∣ b`, write `b = p * x` and `hy : a ^ n.succ * b ^ n = p ^ n.succ * y`.
+  cases' hp.dvd_or_dvd ((dvd_pow_self p (Nat.succ_ne_zero n)).trans hpow) with H hbdiv
+  · exact hp.dvd_of_dvd_pow H
+    
+  obtain ⟨x, rfl⟩ := hp.dvd_of_dvd_pow hbdiv
+  obtain ⟨y, hy⟩ := hpow
+  -- Then we can divide out a common factor of `p ^ n` from the equation `hy`.
+  have : a ^ n.succ * x ^ n = p * y := by
+    refine' mul_left_cancel₀ (pow_ne_zero n hp.ne_zero) _
+    rw [← mul_assoc _ p, ← pow_succ'ₓ, ← hy, mul_powₓ, ← mul_assoc (a ^ n.succ), mul_comm _ (p ^ n), mul_assoc]
+  -- So `p ∣ a` (and we're done) or `p ∣ x`, which can't be the case since it implies `p^2 ∣ b`.
+  refine' hp.dvd_of_dvd_pow ((hp.dvd_or_dvd ⟨_, this⟩).resolve_right fun hdvdx => hb _)
+  obtain ⟨z, rfl⟩ := hp.dvd_of_dvd_pow hdvdx
+  rw [pow_two, ← mul_assoc]
+  exact dvd_mul_right _ _
+
 /-- `irreducible p` states that `p` is non-unit and only factors into units.
 
 We explicitly avoid stating that `p` is non-zero, this would require a semiring. Assuming only a
@@ -365,6 +383,9 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
 
 theorem dvd_dvd_iff_associated [CancelMonoidWithZero α] {a b : α} : a ∣ b ∧ b ∣ a ↔ a ~ᵤ b :=
   ⟨fun ⟨h1, h2⟩ => associated_of_dvd_dvd h1 h2, Associated.dvd_dvd⟩
+
+instance [CancelMonoidWithZero α] [DecidableRel ((· ∣ ·) : α → α → Prop)] : DecidableRel ((· ~ᵤ ·) : α → α → Prop) :=
+  fun a b => decidableOfIff _ dvd_dvd_iff_associated
 
 theorem Associated.dvd_iff_dvd_left [Monoidₓ α] {a b c : α} (h : a ~ᵤ b) : a ∣ c ↔ b ∣ c :=
   let ⟨u, hu⟩ := h
@@ -730,6 +751,9 @@ theorem mk_le_mk_iff_dvd_iff {a b : α} : Associates.mk a ≤ Associates.mk b �
 
 theorem mk_dvd_mk {a b : α} : Associates.mk a ∣ Associates.mk b ↔ a ∣ b :=
   Iff.intro dvd_of_mk_le_mk mk_le_mk_of_dvd
+
+instance [DecidableRel ((· ∣ ·) : α → α → Prop)] : DecidableRel ((· ∣ ·) : Associates α → Associates α → Prop) :=
+  fun a b => Quotientₓ.recOnSubsingleton₂ a b fun a b => decidableOfIff' _ mk_dvd_mk
 
 theorem Prime.le_or_le {p : Associates α} (hp : Prime p) {a b : Associates α} (h : p ≤ a * b) : p ≤ a ∨ p ≤ b :=
   hp.2.2 a b h

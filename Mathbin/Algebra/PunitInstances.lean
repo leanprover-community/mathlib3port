@@ -5,6 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.GcdMonoid.Basic
+import Mathbin.Algebra.GroupRingAction
 import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!
@@ -162,10 +163,9 @@ instance [Monoidₓ R] : DistribMulAction R PUnit := by
 instance [Monoidₓ R] : MulDistribMulAction R PUnit := by
   refine' { PUnit.mulAction with .. } <;> intros <;> exact Subsingleton.elimₓ _ _
 
-/-! TODO: provide `mul_semiring_action R punit` -/
+instance [Semiringₓ R] : MulSemiringAction R PUnit :=
+  { PUnit.distribMulAction, PUnit.mulDistribMulAction with }
 
-
--- importing it here currently causes timeouts elsewhere due to the import order changing
 instance [MonoidWithZeroₓ R] : MulActionWithZero R PUnit :=
   { PUnit.mulAction, PUnit.smulWithZero with }
 

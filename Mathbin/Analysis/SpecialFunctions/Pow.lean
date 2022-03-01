@@ -21,9 +21,9 @@ We also prove basic properties of these functions.
 
 noncomputable section
 
-open_locale Classical Real TopologicalSpace Nnreal Ennreal Filter
+open_locale Classical Real TopologicalSpace Nnreal Ennreal Filter BigOperators
 
-open Filter
+open Filter Finset Set
 
 namespace Complex
 
@@ -132,7 +132,7 @@ theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
         cpow_nat_cast]
 
 theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : 0 < n) : (x ^ (n⁻¹ : ℂ)) ^ n = x := by
-  suffices im (log x * n⁻¹) ∈ Set.Ioc (-π) π by
+  suffices im (log x * n⁻¹) ∈ Ioc (-π) π by
     rw [← cpow_nat_cast, ← cpow_mul _ this.1 this.2, inv_mul_cancel, cpow_one]
     exact_mod_cast hn.ne'
   rw [mul_comm, ← of_real_nat_cast, ← of_real_inv, of_real_mul_im, ← div_eq_inv_mul]
@@ -427,10 +427,10 @@ namespace Real
 
 variable {x y z : ℝ}
 
-theorem rpow_add {x : ℝ} (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by
+theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by
   simp only [rpow_def_of_pos hx, mul_addₓ, exp_add]
 
-theorem rpow_add' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y + z ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
+theorem rpow_add' (hx : 0 ≤ x) (h : y + z ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
   rcases hx.eq_or_lt with (rfl | pos)
   · rw [zero_rpow h, zero_eq_mul]
     have : y ≠ 0 ∨ z ≠ 0 := not_and_distrib.1 fun ⟨hy, hz⟩ => h <| hy.symm ▸ hz.symm ▸ zero_addₓ 0
@@ -438,6 +438,12 @@ theorem rpow_add' {x : ℝ} (hx : 0 ≤ x) {y z : ℝ} (h : y + z ≠ 0) : x ^ (
     
   · exact rpow_add Pos _ _
     
+
+theorem rpow_add_of_nonneg (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 ≤ z) : x ^ (y + z) = x ^ y * x ^ z := by
+  rcases hy.eq_or_lt with (rfl | hy)
+  · rw [zero_addₓ, rpow_zero, one_mulₓ]
+    
+  exact rpow_add' hx (ne_of_gtₓ <| add_pos_of_pos_of_nonneg hy hz)
 
 /-- For `0 ≤ x`, the only problematic case in the equality `x ^ y * x ^ z = x ^ (y + z)` is for
 `x = 0` and `y + z = 0`, where the right hand side is `1` while the left hand side can vanish.
@@ -454,6 +460,19 @@ theorem le_rpow_add {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ y * x ^ z ≤ x ^
       
     
   · simp [rpow_add Pos]
+    
+
+theorem rpow_sum_of_pos {ι : Type _} {a : ℝ} (ha : 0 < a) (f : ι → ℝ) (s : Finset ι) :
+    (a ^ ∑ x in s, f x) = ∏ x in s, a ^ f x :=
+  @AddMonoidHom.map_sum ℝ ι (Additive ℝ) _ _ ⟨fun x : ℝ => (a ^ x : ℝ), rpow_zero a, rpow_add ha⟩ f s
+
+theorem rpow_sum_of_nonneg {ι : Type _} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι} {f : ι → ℝ} (h : ∀, ∀ x ∈ s, ∀, 0 ≤ f x) :
+    (a ^ ∑ x in s, f x) = ∏ x in s, a ^ f x := by
+  induction' s using Finset.cons_induction with i s hi ihs
+  · rw [sum_empty, Finset.prod_empty, rpow_zero]
+    
+  · rw [forall_mem_cons] at h
+    rw [sum_cons, prod_cons, ← ihs h.2, rpow_add_of_nonneg ha h.1 (sum_nonneg h.2)]
     
 
 theorem rpow_mul {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z := by
@@ -675,7 +694,7 @@ theorem rpow_le_rpow_of_exponent_ge' (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hz : 0 ≤
   · exact rpow_le_rpow_of_exponent_ge hx0' hx1 hyz
     
 
-theorem rpow_left_inj_on {x : ℝ} (hx : x ≠ 0) : Set.InjOn (fun y : ℝ => y ^ x) { y : ℝ | 0 ≤ y } := by
+theorem rpow_left_inj_on {x : ℝ} (hx : x ≠ 0) : InjOn (fun y : ℝ => y ^ x) { y : ℝ | 0 ≤ y } := by
   rintro y hy z hz (hyz : y ^ x = z ^ x)
   rw [← rpow_one y, ← rpow_one z, ← _root_.mul_inv_cancel hx, rpow_mul hy, rpow_mul hz, hyz]
 
@@ -778,7 +797,7 @@ theorem continuous_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.2) : ContinuousAt
   have C : tendsto (fun p : ℝ × ℝ => p.1 ^ p.2) (𝓝[{0}] 0 ×ᶠ 𝓝 y) (pure 0) := by
     rw [nhds_within_singleton, tendsto_pure, pure_prod, eventually_map]
     exact (lt_mem_nhds hp).mono fun y hy => zero_rpow hy.ne'
-  simpa only [← sup_prod, ← nhds_within_union, Set.compl_union_self, nhds_within_univ, nhds_prod_eq, ContinuousAt,
+  simpa only [← sup_prod, ← nhds_within_union, compl_union_self, nhds_within_univ, nhds_prod_eq, ContinuousAt,
     zero_rpow hp.ne'] using B.sup (C.mono_right (pure_le_nhds _))
 
 theorem continuous_at_rpow (p : ℝ × ℝ) (h : p.1 ≠ 0 ∨ 0 < p.2) : ContinuousAt (fun p : ℝ × ℝ => p.1 ^ p.2) p :=
@@ -883,10 +902,7 @@ theorem tendsto_rpow_div_mul_add (a b c : ℝ) (hb : 0 ≠ b) : Tendsto (fun x =
       ((tendsto_exp_nhds_0_nhds_1.comp
             (by
               simpa only [mul_zero, pow_oneₓ] using
-                (@tendsto_const_nhds _ _ _ a _).mul
-                  (tendsto_div_pow_mul_exp_add_at_top b c 1 hb
-                    (by
-                      norm_num)))).comp
+                (@tendsto_const_nhds _ _ _ a _).mul (tendsto_div_pow_mul_exp_add_at_top b c 1 hb))).comp
         tendsto_log_at_top)
   apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
   intro x hx

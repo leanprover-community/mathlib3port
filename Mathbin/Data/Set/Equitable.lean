@@ -78,7 +78,9 @@ open Set
 
 namespace Finset
 
-theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
+variable {s : Finset α} {f : α → ℕ} {a : α}
+
+theorem equitable_on_iff_le_le_add_one :
     EquitableOn (s : Set α) f ↔ ∀, ∀ a ∈ s, ∀, (∑ i in s, f i) / s.card ≤ f a ∧ f a ≤ (∑ i in s, f i) / s.card + 1 := by
   rw [Set.equitable_on_iff_exists_le_le_add_one]
   refine' ⟨_, fun h => ⟨_, h⟩⟩
@@ -105,7 +107,13 @@ theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
   rw [mul_comm, sum_const_nat]
   exact fun _ _ => rfl
 
-theorem equitable_on_iff {s : Finset α} {f : α → ℕ} :
+theorem EquitableOn.le (h : EquitableOn (s : Set α) f) (ha : a ∈ s) : (∑ i in s, f i) / s.card ≤ f a :=
+  (equitable_on_iff_le_le_add_one.1 h a ha).1
+
+theorem EquitableOn.le_add_one (h : EquitableOn (s : Set α) f) (ha : a ∈ s) : f a ≤ (∑ i in s, f i) / s.card + 1 :=
+  (equitable_on_iff_le_le_add_one.1 h a ha).2
+
+theorem equitable_on_iff :
     EquitableOn (s : Set α) f ↔ ∀, ∀ a ∈ s, ∀, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 := by
   simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 

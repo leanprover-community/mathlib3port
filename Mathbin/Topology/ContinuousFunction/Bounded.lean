@@ -902,6 +902,9 @@ theorem coe_smul (c : 𝕜) (f : α →ᵇ β) : ⇑(c • f) = fun x => c • f
 theorem smul_apply (c : 𝕜) (f : α →ᵇ β) (x : α) : (c • f) x = c • f x :=
   rfl
 
+instance [HasScalar 𝕜ᵐᵒᵖ β] [IsCentralScalar 𝕜 β] : IsCentralScalar 𝕜 (α →ᵇ β) where
+  op_smul_eq_smul := fun _ _ => ext fun _ => op_smul_eq_smul _ _
+
 instance : HasBoundedSmul 𝕜 (α →ᵇ β) where
   dist_smul_pair' := fun c f₁ f₂ => by
     rw [dist_le (mul_nonneg dist_nonneg dist_nonneg)]

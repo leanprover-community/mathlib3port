@@ -5,7 +5,7 @@ Authors: Johan Commelin, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Punit
-import Mathbin.CategoryTheory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.EpiMono
 
 /-!

@@ -424,9 +424,46 @@ theorem bdd_above_Iio : BddAbove (Iio a) :=
 theorem bdd_below_Ioi : BddBelow (Ioi a) :=
   ⟨a, fun x hx => le_of_ltₓ hx⟩
 
+theorem lub_Iio_le (a : α) (hb : IsLub (Set.Iio a) b) : b ≤ a :=
+  (is_lub_le_iff hb).mpr fun k hk => le_of_ltₓ hk
+
+theorem le_glb_Ioi (a : α) (hb : IsGlb (Set.Ioi a) b) : a ≤ b :=
+  @lub_Iio_le (OrderDual α) _ _ a hb
+
+theorem lub_Iio_eq_self_or_Iio_eq_Iic [PartialOrderₓ γ] {j : γ} (i : γ) (hj : IsLub (Set.Iio i) j) :
+    j = i ∨ Set.Iio i = Set.Iic j := by
+  cases' eq_or_lt_of_le (lub_Iio_le i hj) with hj_eq_i hj_lt_i
+  · exact Or.inl hj_eq_i
+    
+  · right
+    exact Set.ext fun k => ⟨fun hk_lt => hj.1 hk_lt, fun hk_le_j => lt_of_le_of_ltₓ hk_le_j hj_lt_i⟩
+    
+
+theorem glb_Ioi_eq_self_or_Ioi_eq_Ici [PartialOrderₓ γ] {j : γ} (i : γ) (hj : IsGlb (Set.Ioi i) j) :
+    j = i ∨ Set.Ioi i = Set.Ici j :=
+  @lub_Iio_eq_self_or_Iio_eq_Iic (OrderDual γ) _ j i hj
+
 section
 
-variable [LinearOrderₓ γ] [DenselyOrdered γ]
+variable [LinearOrderₓ γ]
+
+theorem exists_lub_Iio (i : γ) : ∃ j, IsLub (Set.Iio i) j := by
+  by_cases' h_exists_lt : ∃ j, j ∈ UpperBounds (Set.Iio i) ∧ j < i
+  · obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
+    exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
+    
+  · refine' ⟨i, fun j hj => le_of_ltₓ hj, _⟩
+    rw [mem_lower_bounds]
+    by_contra
+    refine' h_exists_lt _
+    push_neg  at h
+    exact h
+    
+
+theorem exists_glb_Ioi (i : γ) : ∃ j, IsGlb (Set.Ioi i) j :=
+  @exists_lub_Iio (OrderDual γ) _ i
+
+variable [DenselyOrdered γ]
 
 theorem is_lub_Iio {a : γ} : IsLub (Iio a) a :=
   ⟨fun x hx => le_of_ltₓ hx, fun y hy => le_of_forall_ge_of_dense hy⟩

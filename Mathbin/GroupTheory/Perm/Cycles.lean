@@ -317,7 +317,7 @@ theorem IsCycle.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] 
   obtain ⟨a, ha, ha'⟩ := h
   refine' ⟨f a, _, fun b hb => _⟩
   · rw [extend_domain_apply_image]
-    exact fun con => ha (f.injective (Subtype.coe_injective con))
+    exact fun con => ha (f.injective (Subtype.coe_injective Con))
     
   by_cases' pb : p b
   · obtain ⟨i, hi⟩ := ha' (f.symm ⟨b, pb⟩) fun con => hb _
@@ -336,7 +336,7 @@ theorem IsCycle.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p] 
         rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_eq_iff_eq, hnat, apply_inv_self]
       rw [hint, hi, apply_symm_apply, Subtype.coe_mk]
       
-    · rw [extend_domain_apply_subtype _ _ pb, con, apply_symm_apply, Subtype.coe_mk]
+    · rw [extend_domain_apply_subtype _ _ pb, Con, apply_symm_apply, Subtype.coe_mk]
       
     
   · exact (hb (extend_domain_apply_not_subtype _ _ pb)).elim

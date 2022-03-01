@@ -383,6 +383,10 @@ theorem is_o_bot : IsOₓ f g ⊥ :=
 
 end Bot
 
+@[simp]
+theorem is_O_with_pure {x} : IsOWith c f g (pure x) ↔ ∥f x∥ ≤ c * ∥g x∥ :=
+  is_O_with_iff
+
 theorem IsOWith.join (h : IsOWith c f g l) (h' : IsOWith c f g l') : IsOWith c f g (l⊔l') :=
   is_O_with.of_bound <| mem_sup.2 ⟨h.bound, h'.bound⟩
 
@@ -764,6 +768,22 @@ theorem is_O_with_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α)
 theorem is_O_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α) : IsO (fun x : α => c) (fun x => c') l :=
   (is_O_with_const_const c hc' l).IsO
 
+@[simp]
+theorem is_O_const_const_iff {c : E'} {c' : F'} (l : Filter α) [l.ne_bot] :
+    IsO (fun x : α => c) (fun x => c') l ↔ c' = 0 → c = 0 := by
+  rcases eq_or_ne c' 0 with (rfl | hc')
+  · simp
+    
+  · simp [hc', is_O_const_const _ hc']
+    
+
+@[simp]
+theorem is_O_pure {x} : IsO f' g' (pure x) ↔ g' x = 0 → f' x = 0 :=
+  calc
+    IsO f' g' (pure x) ↔ IsO (fun y : α => f' x) (fun _ => g' x) (pure x) := is_O_congr rfl rfl
+    _ ↔ g' x = 0 → f' x = 0 := is_O_const_const_iff _
+    
+
 end ZeroConst
 
 @[simp]
@@ -817,12 +837,6 @@ theorem is_o_const_iff {c : F'} (hc : c ≠ 0) : IsOₓ f' (fun x => c) l ↔ Te
       clear hc c
       simp only [is_o, is_O_with, norm_one, mul_oneₓ, metric.nhds_basis_closed_ball.tendsto_right_iff,
         Metric.mem_closed_ball, dist_zero_right])
-
-theorem is_o_const_const_iff [NeBot l] {d : E'} {c : F'} (hc : c ≠ 0) : IsOₓ (fun x => d) (fun x => c) l ↔ d = 0 := by
-  rw [is_o_const_iff hc]
-  refine' ⟨fun h => tendsto_nhds_unique tendsto_const_nhds h, _⟩
-  rintro rfl
-  exact tendsto_const_nhds
 
 theorem is_o_id_const {c : F'} (hc : c ≠ 0) : IsOₓ (fun x : E' => x) (fun x => c) (𝓝 0) :=
   (is_o_const_iff hc).mpr (continuous_id.Tendsto 0)
@@ -1197,6 +1211,18 @@ theorem is_o_const_left {c : E'} : IsOₓ (fun x => c) g' l ↔ c = 0 ∨ Tendst
   · simp only [is_o_zero, eq_self_iff_true, true_orₓ]
     
   · simp only [hc, false_orₓ, is_o_const_left_of_ne hc]
+    
+
+@[simp]
+theorem is_o_const_const_iff [NeBot l] {d : E'} {c : F'} : IsOₓ (fun x => d) (fun x => c) l ↔ d = 0 := by
+  have : ¬Tendsto (Function.const α ∥c∥) l atTop := not_tendsto_at_top_of_tendsto_nhds tendsto_const_nhds
+  simp [Function.const, this]
+
+@[simp]
+theorem is_o_pure {x} : IsOₓ f' g' (pure x) ↔ f' x = 0 :=
+  calc
+    IsOₓ f' g' (pure x) ↔ IsOₓ (fun y : α => f' x) (fun _ => g' x) (pure x) := is_o_congr rfl rfl
+    _ ↔ f' x = 0 := is_o_const_const_iff
     
 
 /-!

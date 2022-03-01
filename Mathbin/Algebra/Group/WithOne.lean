@@ -5,6 +5,8 @@ Authors: Mario Carneiro, Johan Commelin
 -/
 import Mathbin.Algebra.Ring.Basic
 import Mathbin.Data.Equiv.Basic
+import Mathbin.Data.Equiv.MulAdd
+import Mathbin.Data.Equiv.Option
 
 /-!
 # Adjoining a zero/one to semigroups and related algebraic structures
@@ -21,7 +23,7 @@ information about these structures (which are not that standard in informal math
 
 universe u v w
 
-variable {α : Type u}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- Add an extra element `1` to a type -/
 @[to_additive "Add an extra element `0` to a type"]
@@ -123,7 +125,7 @@ end
 
 section lift
 
-variable [Mul α] {β : Type v} [MulOneClassₓ β]
+variable [Mul α] [MulOneClassₓ β]
 
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
@@ -163,7 +165,7 @@ end lift
 
 section Map
 
-variable {β : Type v} [Mul α] [Mul β]
+variable [Mul α] [Mul β] [Mul γ]
 
 /-- Given a multiplicative map from `α → β` returns a monoid homomorphism
   from `with_one α` to `with_one β` -/
@@ -173,14 +175,49 @@ def map (f : MulHom α β) : WithOne α →* WithOne β :=
   lift (coeMulHom.comp f)
 
 @[simp, to_additive]
-theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by
-  ext
-  cases x <;> rfl
+theorem map_coe (f : MulHom α β) (a : α) : map f (a : WithOne α) = f a :=
+  lift_coe _ _
 
 @[simp, to_additive]
-theorem map_comp {γ : Type w} [Mul γ] (f : MulHom α β) (g : MulHom β γ) : map (g.comp f) = (map g).comp (map f) := by
+theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by
   ext
-  cases x <;> rfl
+  induction x using WithOne.cases_on <;> rfl
+
+@[to_additive]
+theorem map_map (f : MulHom α β) (g : MulHom β γ) x : map g (map f x) = map (g.comp f) x := by
+  induction x using WithOne.cases_on <;> rfl
+
+@[simp, to_additive]
+theorem map_comp (f : MulHom α β) (g : MulHom β γ) : map (g.comp f) = (map g).comp (map f) :=
+  MonoidHom.ext fun x => (map_map f g x).symm
+
+/-- A version of `equiv.option_congr` for `with_one`. -/
+@[to_additive "A version of `equiv.option_congr` for `with_zero`.", simps apply]
+def _root_.mul_equiv.with_one_congr (e : α ≃* β) : WithOne α ≃* WithOne β :=
+  { map e.toMulHom with toFun := map e.toMulHom, invFun := map e.symm.toMulHom,
+    left_inv := fun x =>
+      (map_map _ _ _).trans <| by
+        induction x using WithOne.cases_on <;>
+          · simp
+            ,
+    right_inv := fun x =>
+      (map_map _ _ _).trans <| by
+        induction x using WithOne.cases_on <;>
+          · simp
+             }
+
+@[simp]
+theorem _root_.mul_equiv.with_one_congr_refl : (MulEquiv.refl α).withOneCongr = MulEquiv.refl _ :=
+  MulEquiv.to_monoid_hom_injective map_id
+
+@[simp]
+theorem _root_.mul_equiv.with_one_congr_symm (e : α ≃* β) : e.withOneCongr.symm = e.symm.withOneCongr :=
+  rfl
+
+@[simp]
+theorem _root_.mul_equiv.with_one_congr_trans (e₁ : α ≃* β) (e₂ : β ≃* γ) :
+    e₁.withOneCongr.trans e₂.withOneCongr = (e₁.trans e₂).withOneCongr :=
+  MulEquiv.to_monoid_hom_injective (map_comp _ _).symm
 
 end Map
 

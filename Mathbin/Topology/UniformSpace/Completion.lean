@@ -438,6 +438,10 @@ theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α �
     (hg : Continuous g) (h : ∀ a : α, f a = g a) : f = g :=
   cpkg.funext hf hg h
 
+theorem ext' {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y} (hf : Continuous f)
+    (hg : Continuous g) (h : ∀ a : α, f a = g a) (a : Completion α) : f a = g a :=
+  congr_funₓ (ext hf hg h) a
+
 section Extension
 
 variable {f : α → β}

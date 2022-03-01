@@ -199,6 +199,9 @@ theorem has_eigenvector_eigenvector_basis (i : Finₓ n) :
     exact hT.conj_eigenvalue_eq_self (has_eigenvalue_of_has_eigenvector key)
   simpa [re_μ] using key
 
+theorem has_eigenvalue_eigenvalues (i : Finₓ n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
+  Module.End.has_eigenvalue_of_has_eigenvector (hT.has_eigenvector_eigenvector_basis hn i)
+
 @[simp]
 theorem apply_eigenvector_basis (i : Finₓ n) :
     T (hT.eigenvectorBasis hn i) = (hT.Eigenvalues hn i : 𝕜) • hT.eigenvectorBasis hn i :=

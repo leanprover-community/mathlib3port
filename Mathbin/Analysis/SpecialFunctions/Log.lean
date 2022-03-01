@@ -278,6 +278,19 @@ theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x
   simp only [Finset.mem_insert, forall_eq_or_imp] at hf
   simp [ha, ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 
+theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
+    Tendsto (fun x => log x ^ n / (a * x + b)) atTop (𝓝 0) :=
+  ((tendsto_div_pow_mul_exp_add_at_top a b n ha.symm).comp tendsto_log_at_top).congr'
+    (by
+      filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using by
+        simp [exp_log hx])
+
+theorem is_o_pow_log_id_at_top {n : ℕ} : Asymptotics.IsOₓ (fun x => log x ^ n) id atTop := by
+  rw [Asymptotics.is_o_iff_tendsto']
+  · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
+    
+  filter_upwards [eventually_ne_at_top (0 : ℝ)] with x h₁ h₂ using(h₁ h₂).elim
+
 end Real
 
 section Continuity

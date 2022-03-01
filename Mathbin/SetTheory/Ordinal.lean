@@ -804,7 +804,7 @@ theorem typein.principal_seg_coe (r : α → α → Prop) [IsWellOrder α r] :
 /-- The cardinal of an ordinal is the cardinal of any
   set with that order type. -/
 def card (o : Ordinal) : Cardinal :=
-  (Quot.liftOn o fun ⟨α, r, _⟩ => # α) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨e⟩ => Quotientₓ.sound ⟨e.toEquiv⟩
+  (Quot.liftOn o fun a => # a.α) fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨e⟩ => Quotientₓ.sound ⟨e.toEquiv⟩
 
 @[simp]
 theorem card_type (r : α → α → Prop) [IsWellOrder α r] : card (type r) = # α :=

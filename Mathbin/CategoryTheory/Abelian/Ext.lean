@@ -5,7 +5,7 @@ Authors: Scott Morrison, Adam Topaz
 -/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.Algebra.Category.Module.Abelian
-import Mathbin.CategoryTheory.Derived
+import Mathbin.CategoryTheory.Functor.Derived
 import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Abelian.Opposite
 import Mathbin.CategoryTheory.Abelian.Projective

@@ -66,7 +66,7 @@ noncomputable def exponent :=
 variable {G}
 
 @[to_additive]
-theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
+theorem exponent_exists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 := by
   rw [exponent]
   split_ifs
   · simp [h, @not_lt_zero' ℕ]
@@ -74,6 +74,10 @@ theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
   --if this isn't done this way, `to_additive` freaks
   · tauto
     
+
+@[to_additive]
+theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
+  simp only [exponent_exists_iff_ne_zero, not_not]
 
 @[to_additive]
 theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G = 0 :=

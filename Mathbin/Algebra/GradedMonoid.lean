@@ -536,6 +536,10 @@ variable {R S : Type _} [SetLike S R]
 def SetLike.IsHomogeneous (A : ι → S) (a : R) : Prop :=
   ∃ i, a ∈ A i
 
+@[simp]
+theorem SetLike.is_homogeneous_coe {A : ι → S} {i} (x : A i) : SetLike.IsHomogeneous A (x : R) :=
+  ⟨i, x.Prop⟩
+
 theorem SetLike.is_homogeneous_one [Zero ι] [One R] (A : ι → S) [SetLike.HasGradedOne A] :
     SetLike.IsHomogeneous A (1 : R) :=
   ⟨0, SetLike.HasGradedOne.one_mem⟩

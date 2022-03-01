@@ -220,6 +220,18 @@ theorem support_mul [MulZeroClassₓ R] [NoZeroDivisors R] (f g : α → R) :
   Set.ext fun x => by
     simp only [mem_support, mul_ne_zero_iff, mem_inter_eq, not_or_distrib]
 
+@[simp]
+theorem support_mul_subset_left [MulZeroClassₓ R] (f g : α → R) : (Support fun x => f x * g x) ⊆ Support f :=
+  fun x hfg hf =>
+  hfg <| by
+    simp only [hf, zero_mul]
+
+@[simp]
+theorem support_mul_subset_right [MulZeroClassₓ R] (f g : α → R) : (Support fun x => f x * g x) ⊆ Support g :=
+  fun x hfg hg =>
+  hfg <| by
+    simp only [hg, mul_zero]
+
 theorem support_smul_subset_right [AddMonoidₓ A] [Monoidₓ B] [DistribMulAction B A] (b : B) (f : α → A) :
     Support (b • f) ⊆ Support f := fun x hbf hf =>
   hbf <| by
@@ -233,6 +245,11 @@ theorem support_smul_subset_left [Semiringₓ R] [AddCommMonoidₓ M] [Module R 
 theorem support_smul [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [NoZeroSmulDivisors R M] (f : α → R) (g : α → M) :
     Support (f • g) = Support f ∩ Support g :=
   ext fun x => smul_ne_zero
+
+theorem support_const_smul_of_ne_zero [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [NoZeroSmulDivisors R M] (c : R)
+    (g : α → M) (hc : c ≠ 0) : Support (c • g) = Support g :=
+  ext fun x => by
+    simp only [hc, mem_support, Pi.smul_apply, Ne.def, smul_eq_zero, false_orₓ]
 
 @[simp]
 theorem support_inv [GroupWithZeroₓ G₀] (f : α → G₀) : (Support fun x => (f x)⁻¹) = Support f :=

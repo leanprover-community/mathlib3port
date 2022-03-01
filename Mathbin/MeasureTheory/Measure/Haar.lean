@@ -680,61 +680,65 @@ instance is_haar_measure_haar_measure (K₀ : PositiveCompacts G) : IsHaarMeasur
 def haar [LocallyCompactSpace G] : Measure G :=
   haar_measure <| Classical.arbitrary _
 
-section Unique
+section SecondCountable
 
 variable [SecondCountableTopology G]
 
 /-- The Haar measure is unique up to scaling. More precisely: every σ-finite left invariant measure
-  is a scalar multiple of the Haar measure. -/
+  is a scalar multiple of the Haar measure.
+  This is slightly weaker than assuming that `μ` is a Haar measure (in particular we don't require
+  `μ ≠ 0`). -/
 @[to_additive]
 theorem haar_measure_unique (μ : Measure G) [SigmaFinite μ] [IsMulLeftInvariant μ] (K₀ : PositiveCompacts G) :
     μ = μ K₀ • haarMeasure K₀ := by
-  ext1 s hs
-  have := measure_mul_measure_eq μ (haar_measure K₀) K₀.compact hs
-  rw [haar_measure_self, one_mulₓ] at this
-  rw [←
-    this
-      (by
-        norm_num),
-    smul_apply]
+  refine'
+    (measure_eq_div_smul μ (haar_measure K₀) K₀.compact.measurable_set
+          (measure_pos_of_nonempty_interior _ K₀.interior_nonempty).ne' K₀.compact.measure_lt_top.ne).trans
+      _
+  rw [haar_measure_self, Ennreal.div_one]
 
+example [LocallyCompactSpace G] (μ : Measure G) [IsHaarMeasure μ] (K₀ : PositiveCompacts G) :
+    μ = μ K₀.1 • haarMeasure K₀ :=
+  haar_measure_unique μ K₀
+
+/-- To show that an invariant σ-finite measure is regular it is sufficient to show that it is finite
+  on some compact set with non-empty interior. -/
 @[to_additive]
 theorem regular_of_is_mul_left_invariant {μ : Measure G} [SigmaFinite μ] [IsMulLeftInvariant μ] {K : Set G}
     (hK : IsCompact K) (h2K : (Interior K).Nonempty) (hμK : μ K ≠ ∞) : Regular μ := by
   rw [haar_measure_unique μ ⟨⟨K, hK⟩, h2K⟩]
   exact regular.smul hμK
 
-end Unique
-
 @[to_additive is_add_haar_measure_eq_smul_is_add_haar_measure]
-theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] [SecondCountableTopology G] (μ ν : Measure G)
-    [IsHaarMeasure μ] [IsHaarMeasure ν] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • ν := by
+theorem is_haar_measure_eq_smul_is_haar_measure [LocallyCompactSpace G] (μ ν : Measure G) [IsHaarMeasure μ]
+    [IsHaarMeasure ν] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • ν := by
   have K : positive_compacts G := Classical.arbitrary _
   have νpos : 0 < ν K := measure_pos_of_nonempty_interior _ K.interior_nonempty
-  have νlt : ν K < ∞ := K.compact.measure_lt_top
+  have νne : ν K ≠ ∞ := K.compact.measure_lt_top.ne
   refine' ⟨μ K / ν K, _, _, _⟩
-  · simp only [νlt.ne, (μ.measure_pos_of_nonempty_interior K.interior_nonempty).ne', Ne.def, Ennreal.div_zero_iff,
+  · simp only [νne, (μ.measure_pos_of_nonempty_interior K.interior_nonempty).ne', Ne.def, Ennreal.div_zero_iff,
       not_false_iff, or_selfₓ]
     
-  · simp only [div_eq_mul_inv, νpos.ne', K.compact.measure_lt_top.ne, or_selfₓ, Ennreal.inv_eq_top,
+  · simp only [div_eq_mul_inv, νpos.ne', K.compact.measure_lt_top.Ne, or_selfₓ, Ennreal.inv_eq_top,
       WithTop.mul_eq_top_iff, Ne.def, not_false_iff, and_falseₓ, false_andₓ]
     
   · calc μ = μ K • haar_measure K := haar_measure_unique μ K _ = (μ K / ν K) • ν K • haar_measure K := by
-        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νlt.ne,
-          mul_oneₓ]_ = (μ K / ν K) • ν :=
+        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νne, mul_oneₓ]_ = (μ K / ν K) • ν :=
         by
         rw [← haar_measure_unique ν K]
     
 
--- see Note [lower instance priority]]
+-- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] [SecondCountableTopology G] (μ : Measure G)
-    [IsHaarMeasure μ] : Regular μ := by
+instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] (μ : Measure G) [IsHaarMeasure μ] :
+    Regular μ := by
   have K : positive_compacts G := Classical.arbitrary _
   obtain ⟨c, c0, ctop, hμ⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • haar_measure K :=
     is_haar_measure_eq_smul_is_haar_measure μ _
   rw [hμ]
   exact regular.smul ctop
+
+end SecondCountable
 
 /-- Any Haar measure is invariant under inversion in a commutative group. -/
 @[to_additive]

@@ -496,6 +496,12 @@ theorem pow_le_pow {m n : ℕ} (h : m ≤ n) : I ^ n ≤ I ^ m := by
   rw [hk, pow_addₓ]
   exact le_transₓ mul_le_inf inf_le_left
 
+theorem pow_le_self {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ I :=
+  calc
+    I ^ n ≤ I ^ 1 := pow_le_pow (Nat.pos_of_ne_zeroₓ hn)
+    _ = I := pow_oneₓ _
+    
+
 theorem mul_eq_bot {R : Type _} [CommRingₓ R] [IsDomain R] {I J : Ideal R} : I * J = ⊥ ↔ I = ⊥ ∨ J = ⊥ :=
   ⟨fun hij =>
     or_iff_not_imp_left.mpr fun I_ne_bot =>

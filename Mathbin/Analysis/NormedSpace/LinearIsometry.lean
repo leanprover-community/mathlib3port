@@ -67,7 +67,8 @@ instance : AddMonoidHomClass (E →ₛₗᵢ[σ₁₂] E₂) E E₂ where
   map_add := fun f => map_add f.toLinearMap
   map_zero := fun f => map_zero f.toLinearMap
 
-/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly.
 -/
 instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.toFun⟩
@@ -344,7 +345,8 @@ instance : AddMonoidHomClass (E ≃ₛₗᵢ[σ₁₂] E₂) E E₂ where
   map_add := fun f => map_add f.toLinearEquiv
   map_zero := fun f => map_zero f.toLinearEquiv
 
-/-- Helper instance for when there's too many metavariables to apply `to_fun.to_coe_fn` directly.
+/-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
+directly.
 -/
 instance : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.toFun⟩

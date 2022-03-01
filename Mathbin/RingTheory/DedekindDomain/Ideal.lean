@@ -19,6 +19,7 @@ Then we prove some results on the unique factorization monoid structure of the i
    every nonzero fractional ideal is invertible.
  - `is_dedekind_domain_inv_iff` shows that this does note depend on the choice of field of
    fractions.
+ - `height_one_spectrum` defines the type of nonzero prime ideals of `R`.
 
 ## Main results:
  - `is_dedekind_domain_iff_is_dedekind_domain_inv`
@@ -655,6 +656,17 @@ are exactly the prime ideals. -/
 theorem Ideal.prime_iff_is_prime {P : Ideal A} (hP : P ≠ ⊥) : Prime P ↔ IsPrime P :=
   ⟨Ideal.is_prime_of_prime, Ideal.prime_of_is_prime hP⟩
 
+theorem Ideal.strict_anti_pow (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) : StrictAnti ((· ^ ·) I : ℕ → Ideal A) :=
+  strict_anti_nat_of_succ_lt fun e =>
+    Ideal.dvd_not_unit_iff_lt.mp ⟨pow_ne_zero _ hI0, I, mt is_unit_iff.mp hI1, pow_succ'ₓ I e⟩
+
+theorem Ideal.pow_lt_self (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e : ℕ) (he : 2 ≤ e) : I ^ e < I := by
+  convert I.strict_anti_pow hI0 hI1 he <;> rw [pow_oneₓ]
+
+theorem Ideal.exists_mem_pow_not_mem_pow_succ (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e : ℕ) :
+    ∃ x ∈ I ^ e, x ∉ I ^ (e + 1) :=
+  SetLike.exists_of_lt (I.strict_anti_pow hI0 hI1 e.lt_succ_self)
+
 end IsDedekindDomain
 
 section IsDedekindDomain
@@ -715,4 +727,43 @@ theorem sup_eq_prod_inf_factors (hI : I ≠ ⊥) (hJ : J ≠ ⊥) : I⊔J = (nor
     
 
 end IsDedekindDomain
+
+section HeightOneSpectrum
+
+/-!
+### Height one spectrum of a Dedekind domain
+If `R` is a Dedekind domain of Krull dimension 1, the maximal ideals of `R` are exactly its nonzero
+prime ideals.
+We define `height_one_spectrum` and provide lemmas to recover the facts that prime ideals of height
+one are prime and irreducible. -/
+
+
+namespace IsDedekindDomain
+
+variable [IsDomain R] [IsDedekindDomain R]
+
+/-- The height one prime spectrum of a Dedekind domain `R` is the type of nonzero prime ideals of
+`R`. Note that this equals the maximal spectrum if `R` has Krull dimension 1. -/
+@[nolint has_inhabited_instance unused_arguments]
+structure HeightOneSpectrum where
+  asIdeal : Ideal R
+  IsPrime : as_ideal.IsPrime
+  ne_bot : as_ideal ≠ ⊥
+
+variable (v : HeightOneSpectrum R) {R}
+
+theorem HeightOneSpectrum.prime (v : HeightOneSpectrum R) : Prime v.asIdeal :=
+  Ideal.prime_of_is_prime v.ne_bot v.IsPrime
+
+theorem HeightOneSpectrum.irreducible (v : HeightOneSpectrum R) : Irreducible v.asIdeal := by
+  rw [UniqueFactorizationMonoid.irreducible_iff_prime]
+  apply v.prime
+
+theorem HeightOneSpectrum.Associates.irreducible (v : HeightOneSpectrum R) : Irreducible (Associates.mk v.asIdeal) := by
+  rw [Associates.irreducible_mk _]
+  apply v.irreducible
+
+end IsDedekindDomain
+
+end HeightOneSpectrum
 

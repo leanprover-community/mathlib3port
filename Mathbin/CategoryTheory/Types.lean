@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 -/
 import Mathbin.CategoryTheory.EpiMono
-import Mathbin.CategoryTheory.FullyFaithful
+import Mathbin.CategoryTheory.Functor.FullyFaithful
 import Mathbin.Data.Equiv.Basic
 
 /-!

@@ -197,6 +197,11 @@ theorem mul_indicator_comp_right {s : Set α} (f : β → α) {g : α → M} {x 
   split_ifs <;> rfl
 
 @[to_additive]
+theorem mul_indicator_image {s : Set α} {f : β → M} {g : α → β} (hg : Injective g) {x : α} :
+    mulIndicator (g '' s) f (g x) = mulIndicator s (f ∘ g) x := by
+  rw [← mul_indicator_comp_right, preimage_image_eq _ hg]
+
+@[to_additive]
 theorem mul_indicator_comp_of_one {g : M → N} (hg : g 1 = 1) : mulIndicator s (g ∘ f) = g ∘ mulIndicator s f := by
   funext
   simp only [mul_indicator]

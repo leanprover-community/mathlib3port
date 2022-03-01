@@ -334,6 +334,35 @@ theorem coe_of_bijective (f : R →+* S) (hf : Function.Bijective f) : (ofBiject
 theorem of_bijective_apply (f : R →+* S) (hf : Function.Bijective f) (x : R) : ofBijective f hf x = f x :=
   rfl
 
+/-- A family of ring isomorphisms `Π j, (R j ≃+* S j)` generates a
+ring isomorphisms between `Π j, R j` and `Π j, S j`.
+
+This is the `ring_equiv` version of `equiv.Pi_congr_right`, and the dependent version of
+`ring_equiv.arrow_congr`.
+-/
+@[simps apply]
+def piCongrRight {ι : Type _} {R S : ι → Type _} [∀ i, Semiringₓ (R i)] [∀ i, Semiringₓ (S i)] (e : ∀ i, R i ≃+* S i) :
+    (∀ i, R i) ≃+* ∀ i, S i :=
+  { @MulEquiv.piCongrRight ι R S _ _ fun i => (e i).toMulEquiv,
+    @AddEquiv.piCongrRight ι R S _ _ fun i => (e i).toAddEquiv with toFun := fun x j => e j (x j),
+    invFun := fun x j => (e j).symm (x j) }
+
+@[simp]
+theorem Pi_congr_right_refl {ι : Type _} {R : ι → Type _} [∀ i, Semiringₓ (R i)] :
+    (piCongrRight fun i => RingEquiv.refl (R i)) = RingEquiv.refl _ :=
+  rfl
+
+@[simp]
+theorem Pi_congr_right_symm {ι : Type _} {R S : ι → Type _} [∀ i, Semiringₓ (R i)] [∀ i, Semiringₓ (S i)]
+    (e : ∀ i, R i ≃+* S i) : (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+  rfl
+
+@[simp]
+theorem Pi_congr_right_trans {ι : Type _} {R S T : ι → Type _} [∀ i, Semiringₓ (R i)] [∀ i, Semiringₓ (S i)]
+    [∀ i, Semiringₓ (T i)] (e : ∀ i, R i ≃+* S i) (f : ∀ i, S i ≃+* T i) :
+    (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
+  rfl
+
 end Semiringₓ
 
 section

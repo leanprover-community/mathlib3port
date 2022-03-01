@@ -5,6 +5,7 @@ Authors: Patrick Massot
 -/
 import Mathbin.Topology.UniformSpace.AbsoluteValue
 import Mathbin.Topology.Instances.Real
+import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.UniformSpace.Completion
 
 /-!

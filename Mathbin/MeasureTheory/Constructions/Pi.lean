@@ -560,11 +560,21 @@ theorem map_pi_equiv_pi_subtype_prod (p : ι → Prop) [DecidablePred p] :
 instance pi.is_mul_left_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurableMul (α i)] [∀ i, IsMulLeftInvariant (μ i)] :
     IsMulLeftInvariant (Measure.pi μ) := by
   refine' ⟨fun x => (measure.pi_eq fun s hs => _).symm⟩
-  have A : (Mul.mul x ⁻¹' Set.Pi univ fun i : ι => s i) = Set.Pi univ fun i : ι => (· * ·) (x i) ⁻¹' s i := by
+  have h : Mul.mul x ⁻¹' pi univ s = Set.Pi univ fun i => (fun y => x i * y) ⁻¹' s i := by
     ext
     simp
-  rw [measure.map_apply (measurable_const_mul x) (MeasurableSet.univ_pi_fintype hs), A, pi_pi]
-  simp only [measure_preimage_mul]
+  simp_rw [measure.map_apply (measurable_const_mul x) (MeasurableSet.univ_pi_fintype hs), h, pi_pi,
+    measure_preimage_mul]
+
+@[to_additive]
+instance pi.is_inv_invariant [∀ i, Groupₓ (α i)] [∀ i, HasMeasurableInv (α i)] [∀ i, IsInvInvariant (μ i)] :
+    IsInvInvariant (Measure.pi μ) := by
+  refine' ⟨(measure.pi_eq fun s hs => _).symm⟩
+  have A : Inv.inv ⁻¹' pi univ s = Set.Pi univ fun i => Inv.inv ⁻¹' s i := by
+    ext
+    simp
+  simp_rw [measure.inv, measure.map_apply measurable_inv (MeasurableSet.univ_pi_fintype hs), A, pi_pi,
+    measure_preimage_inv]
 
 end Measureₓ
 
@@ -589,11 +599,19 @@ theorem volume_pi_closed_ball [∀ i, MeasureSpace (α i)] [∀ i, SigmaFinite (
 
 open Measureₓ
 
+/-- We intentionally restrict this only to the nondependent function space, since type-class
+inference cannot find an instance for `ι → ℝ` when this is stated for dependent function spaces. -/
 @[to_additive]
-instance Pi.is_mul_left_invariant_volume [∀ i, Groupₓ (α i)] [∀ i, MeasureSpace (α i)]
-    [∀ i, SigmaFinite (volume : Measure (α i))] [∀ i, HasMeasurableMul (α i)]
-    [∀ i, IsMulLeftInvariant (volume : Measure (α i))] : IsMulLeftInvariant (volume : Measure (∀ i, α i)) :=
+instance Pi.is_mul_left_invariant_volume {α} [Groupₓ α] [MeasureSpace α] [SigmaFinite (volume : Measure α)]
+    [HasMeasurableMul α] [IsMulLeftInvariant (volume : Measure α)] : IsMulLeftInvariant (volume : Measure (ι → α)) :=
   pi.is_mul_left_invariant _
+
+/-- We intentionally restrict this only to the nondependent function space, since type-class
+inference cannot find an instance for `ι → ℝ` when this is stated for dependent function spaces. -/
+@[to_additive]
+instance Pi.is_inv_invariant_volume {α} [Groupₓ α] [MeasureSpace α] [SigmaFinite (volume : Measure α)]
+    [HasMeasurableInv α] [IsInvInvariant (volume : Measure α)] : IsInvInvariant (volume : Measure (ι → α)) :=
+  pi.is_inv_invariant _
 
 /-!
 ### Measure preserving equivalences
@@ -633,9 +651,20 @@ theorem volume_preserving_pi_fin_two (α : Finₓ 2 → Type u) [∀ i, MeasureS
     [∀ i, SigmaFinite (volume : Measure (α i))] : MeasurePreserving (MeasurableEquiv.piFinTwo α) volume volume :=
   measure_preserving_pi_fin_two _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
+-- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem measure_preserving_fin_two_arrow_vec {α : Type u} {m : MeasurableSpace α} (μ ν : Measure α) [SigmaFinite μ]
-    [SigmaFinite ν] : MeasurePreserving MeasurableEquiv.finTwoArrow (Measure.pi ![μ, ν]) (μ.Prod ν) :=
-  have : ∀ i, sigma_finite (![μ, ν] i) := Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
+    [SigmaFinite ν] :
+    MeasurePreserving MeasurableEquiv.finTwoArrow
+      (Measure.pi («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"))
+      (μ.Prod ν) :=
+  have :
+    ∀ i,
+      sigma_finite
+        ((«expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") i) :=
+    Finₓ.forall_fin_two.2 ⟨‹_›, ‹_›⟩
   measure_preserving_pi_fin_two _
 
 theorem measure_preserving_fin_two_arrow {α : Type u} {m : MeasurableSpace α} (μ : Measure α) [SigmaFinite μ] :

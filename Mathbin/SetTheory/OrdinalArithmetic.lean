@@ -1319,6 +1319,19 @@ theorem bsup_id_succ o : (bsup.{u, u} (succ o) fun x _ => x) = o :=
 theorem IsNormal.bsup_eq {f} (H : IsNormal f) {o : Ordinal} (h : IsLimit o) : (bsup.{u} o fun x _ => f x) = f o := by
   rw [← IsNormal.bsup.{u, u} H (fun x _ => x) h.1, bsup_id_limit h.2]
 
+theorem IsNormal.eq_iff_zero_and_succ {f : Ordinal.{u} → Ordinal.{u}} (hf : IsNormal f) {g} (hg : IsNormal g) :
+    f = g ↔ f 0 = g 0 ∧ ∀ a : Ordinal, f a = g a → f a.succ = g a.succ :=
+  ⟨fun h => by
+    simp [h], fun ⟨h₁, h₂⟩ =>
+    funext fun a => by
+      apply a.limit_rec_on
+      assumption'
+      intro o ho H
+      rw [← IsNormal.bsup_eq.{u, u} hf ho, ← IsNormal.bsup_eq.{u, u} hg ho]
+      congr
+      ext b hb
+      exact H b hb⟩
+
 /-- The least strict upper bound of a family of ordinals. -/
 def lsub {ι} (f : ι → Ordinal) : Ordinal :=
   sup (Ordinal.succ ∘ f)
@@ -1329,6 +1342,9 @@ theorem lsub_le {ι} {f : ι → Ordinal} {a} : lsub f ≤ a ↔ ∀ i, f i < a 
 
 theorem lt_lsub {ι} (f : ι → Ordinal) i : f i < lsub f :=
   succ_le.1 (le_sup _ i)
+
+theorem lt_lsub_iff {ι} {f : ι → Ordinal} {a} : a < lsub f ↔ ∃ i, a ≤ f i := by
+  simpa only [not_forall, not_ltₓ, not_leₓ] using not_congr (@lsub_le _ f a)
 
 theorem sup_le_lsub {ι} (f : ι → Ordinal) : sup f ≤ lsub f :=
   sup_le.2 fun i => le_of_ltₓ (lt_lsub f i)
@@ -1393,14 +1409,14 @@ theorem lsub_const {ι} [hι : Nonempty ι] (o : Ordinal) : (lsub fun _ : ι => 
   sup_const o.succ
 
 theorem lsub_le_of_range_subset {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (h : Set.Range f ⊆ Set.Range g) :
-    lsub f ≤ lsub g :=
+    lsub.{u, max v w} f ≤ lsub.{v, max u w} g :=
   sup_le_of_range_subset
     (by
       convert Set.image_subset _ h <;> apply Set.range_comp)
 
 theorem lsub_eq_of_range_eq {ι ι'} {f : ι → Ordinal} {g : ι' → Ordinal} (h : Set.Range f = Set.Range g) :
-    lsub f = lsub g :=
-  (lsub_le_of_range_subset h.le).antisymm (lsub_le_of_range_subset h.Ge)
+    lsub.{u, max v w} f = lsub.{v, max u w} g :=
+  (lsub_le_of_range_subset h.le).antisymm (lsub_le_of_range_subset.{v, u, w} h.Ge)
 
 theorem lsub_nmem_range {ι} (f : ι → Ordinal) : lsub f ∉ Set.Range f := fun ⟨i, h⟩ => h.not_lt (lt_lsub f i)
 
@@ -1438,6 +1454,9 @@ theorem blsub_le {o f a} : blsub o f ≤ a ↔ ∀ i h, f i h < a := by
 
 theorem lt_blsub {o} (f : ∀, ∀ a < o, ∀, Ordinal) i h : f i h < blsub o f :=
   blsub_le.1 le_rfl _ _
+
+theorem lt_blsub_iff {o f a} : a < blsub o f ↔ ∃ i hi, a ≤ f i hi := by
+  simpa only [not_forall, not_ltₓ, not_leₓ] using not_congr (@blsub_le _ f a)
 
 theorem bsup_le_blsub {o} (f : ∀, ∀ a < o, ∀, Ordinal) : bsup o f ≤ blsub o f :=
   bsup_le.2 fun i h => le_of_ltₓ (lt_blsub f i h)

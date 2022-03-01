@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Order.LocallyFinite
 import Mathbin.Order.Atoms
+import Mathbin.Order.LocallyFinite
 import Mathbin.Order.SupIndep
 
 /-!
@@ -13,6 +13,9 @@ import Mathbin.Order.SupIndep
 
 In this file, we define finite partitions. A finpartition of `a : α` is a finite set of pairwise
 disjoint parts `parts : finset α` which does not contain `⊥` and whose supremum is `a`.
+
+Finpartitions of a finset are at the heart of Szemerédi's regularity lemma. They are also studied
+purely order theoretically in Sperner theory.
 
 ## Constructions
 
@@ -214,6 +217,19 @@ instance [Decidable (a = ⊥)] : OrderTop (Finpartition a) where
       
     · exact fun b hb => ⟨a, mem_singleton_self _, P.le hb⟩
       
+
+theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a).parts ⊆ {a} := by
+  intro b hb
+  change b ∈ Finpartition.parts (dite _ _ _) at hb
+  split_ifs  at hb
+  · simp only [copy_parts, empty_parts, not_mem_empty] at hb
+    exact hb.elim
+    
+  · exact hb
+    
+
+theorem parts_top_subsingleton (a : α) [Decidable (a = ⊥)] : ((⊤ : Finpartition a).parts : Set α).Subsingleton :=
+  Set.subsingleton_of_subset_singleton fun b hb => mem_singleton.1 <| parts_top_subset _ hb
 
 end Order
 

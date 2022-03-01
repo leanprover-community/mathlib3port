@@ -256,11 +256,11 @@ theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
   cases' lt_or_gt_of_neₓ h with h h
   · simp only [Real.volume_Ioo, measure.smul_apply, ← Ennreal.of_real_mul (le_of_ltₓ <| neg_pos.2 h),
       measure.map_apply (measurable_const_mul a) measurable_set_Ioo, neg_sub_neg, neg_mul,
-      preimage_const_mul_Ioo_of_neg _ _ h, abs_of_neg h, mul_sub, mul_div_cancel' _ (ne_of_ltₓ h)]
+      preimage_const_mul_Ioo_of_neg _ _ h, abs_of_neg h, mul_sub, smul_eq_mul, mul_div_cancel' _ (ne_of_ltₓ h)]
     
   · simp only [Real.volume_Ioo, measure.smul_apply, ← Ennreal.of_real_mul (le_of_ltₓ h),
       measure.map_apply (measurable_const_mul a) measurable_set_Ioo, preimage_const_mul_Ioo _ _ h, abs_of_pos h,
-      mul_sub, mul_div_cancel' _ (ne_of_gtₓ h)]
+      mul_sub, mul_div_cancel' _ (ne_of_gtₓ h), smul_eq_mul]
     
 
 theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) : Measure.map ((· * ·) a) volume = Ennreal.ofReal (abs a⁻¹) • volume :=
@@ -298,22 +298,15 @@ theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
       rfl
     
 
-@[simp]
-theorem map_volume_neg : Measure.map Neg.neg (volume : Measureₓ ℝ) = volume :=
-  Eq.symm <|
-    Real.measure_ext_Ioo_rat fun p q => by
-      simp
-        [show measure.map Neg.neg volume (Ioo (p : ℝ) q) = _ from measure.map_apply measurable_neg measurable_set_Ioo]
+instance : IsNegInvariant (volume : Measureₓ ℝ) :=
+  ⟨Eq.symm <|
+      Real.measure_ext_Ioo_rat fun p q => by
+        simp [show volume.neg (Ioo (p : ℝ) q) = _ from measure.map_apply measurable_neg measurable_set_Ioo]⟩
 
 /-!
 ### Images of the Lebesgue measure under translation/linear maps in ℝⁿ
 -/
 
-
--- for some reason `apply_instance` doesn't find this
-instance is_add_left_invariant_real_volume_pi (ι : Type _) [Fintype ι] :
-    IsAddLeftInvariant (volume : Measureₓ (ι → ℝ)) :=
-  pi.is_add_left_invariant_volume
 
 open Matrix
 

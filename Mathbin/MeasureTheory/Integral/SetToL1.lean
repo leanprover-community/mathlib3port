@@ -119,13 +119,13 @@ theorem of_eq_top_imp_eq_top {μ' : Measure α} (h : ∀ s, MeasurableSet s → 
 
 theorem of_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : FinMeasAdditive (c • μ) T) : FinMeasAdditive μ T := by
   refine' of_eq_top_imp_eq_top (fun s hs hμs => _) hT
-  rw [measure.smul_apply, WithTop.mul_eq_top_iff] at hμs
+  rw [measure.smul_apply, smul_eq_mul, WithTop.mul_eq_top_iff] at hμs
   simp only [hc_ne_top, or_falseₓ, Ne.def, false_andₓ] at hμs
   exact hμs.2
 
 theorem smul_measure (c : ℝ≥0∞) (hc_ne_zero : c ≠ 0) (hT : FinMeasAdditive μ T) : FinMeasAdditive (c • μ) T := by
   refine' of_eq_top_imp_eq_top (fun s hs hμs => _) hT
-  rw [measure.smul_apply, WithTop.mul_eq_top_iff]
+  rw [measure.smul_apply, smul_eq_mul, WithTop.mul_eq_top_iff]
   simp only [hc_ne_zero, true_andₓ, Ne.def, not_false_iff]
   exact Or.inl hμs
 
@@ -251,7 +251,7 @@ theorem of_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : Dominated
   refine' ⟨hT.1.of_eq_top_imp_eq_top h, fun s hs hμs => _⟩
   have hcμs : c • μ s ≠ ∞ := mt (h s hs) hμs.ne
   rw [smul_eq_mul] at hcμs
-  simp_rw [dominated_fin_meas_additive, measure.smul_apply, to_real_mul]  at hT
+  simp_rw [dominated_fin_meas_additive, measure.smul_apply, smul_eq_mul, to_real_mul]  at hT
   refine' (hT.2 s hs hcμs.lt_top).trans (le_of_eqₓ _)
   ring
 
@@ -1506,7 +1506,7 @@ theorem set_to_fun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0�
   · intro c s hs hμs
     have hμ's : μ' s ≠ ∞ := by
       refine' ((hμ'_le s hs).trans_lt _).Ne
-      rw [measure.smul_apply]
+      rw [measure.smul_apply, smul_eq_mul]
       exact Ennreal.mul_lt_top hc' hμs.ne
     rw [set_to_fun_indicator_const hT hs hμs.ne, set_to_fun_indicator_const hT' hs hμ's]
     
@@ -1560,8 +1560,8 @@ theorem set_to_fun_top_smul_measure (hT : DominatedFinMeasAdditive (∞ • μ) 
   refine' set_to_fun_measure_zero' hT fun s hs hμs => _
   rw [lt_top_iff_ne_top] at hμs
   simp only [true_andₓ, measure.smul_apply, WithTop.mul_eq_top_iff, eq_self_iff_true, top_ne_zero, Ne.def,
-    not_false_iff, not_or_distrib, not_not] at hμs
-  simp only [hμs.right, measure.smul_apply, mul_zero]
+    not_false_iff, not_or_distrib, not_not, smul_eq_mul] at hμs
+  simp only [hμs.right, measure.smul_apply, mul_zero, smul_eq_mul]
 
 theorem set_to_fun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞) (hT : DominatedFinMeasAdditive μ T C)
     (hT_smul : DominatedFinMeasAdditive (c • μ) T C') (f : α → E) : setToFun μ T hT f = setToFun (c • μ) T hT_smul f :=
@@ -1609,7 +1609,7 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditi
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) atTop (𝓝 <| setToFun μ T hT f) := by
   -- `f` is a.e.-measurable, since it is the a.e.-pointwise limit of a.e.-measurable functions.
-  have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae fs_measurable h_lim
+  have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae' fs_measurable h_lim
   -- all functions we consider are integrable
   have fs_int : ∀ n, integrable (fs n) μ := fun n => bound_integrable.mono' (fs_measurable n) (h_bound _)
   have f_int : integrable f μ :=

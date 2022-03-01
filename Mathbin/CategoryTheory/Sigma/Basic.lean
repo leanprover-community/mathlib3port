@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Whiskering
-import Mathbin.CategoryTheory.FullyFaithful
+import Mathbin.CategoryTheory.Functor.FullyFaithful
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.Data.Sigma.Basic
 

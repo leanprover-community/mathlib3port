@@ -394,13 +394,30 @@ def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace �
       
 
 /-- Pseudoemetric space instance on subsets of pseudoemetric spaces -/
-instance {α : Type _} {p : α → Prop} [t : PseudoEmetricSpace α] : PseudoEmetricSpace (Subtype p) :=
-  t.induced coe
+instance {α : Type _} {p : α → Prop} [PseudoEmetricSpace α] : PseudoEmetricSpace (Subtype p) :=
+  PseudoEmetricSpace.induced coe ‹_›
 
 /-- The extended psuedodistance on a subset of a pseudoemetric space is the restriction of
 the original pseudodistance, by definition -/
 theorem Subtype.edist_eq {p : α → Prop} (x y : Subtype p) : edist x y = edist (x : α) y :=
   rfl
+
+namespace MulOpposite
+
+/-- Pseudoemetric space instance on multiplicative opposites of pseudoemetric spaces -/
+@[to_additive]
+instance {α : Type _} [PseudoEmetricSpace α] : PseudoEmetricSpace αᵐᵒᵖ :=
+  PseudoEmetricSpace.induced unop ‹_›
+
+@[to_additive]
+theorem edist_unop (x y : αᵐᵒᵖ) : edist (unop x) (unop y) = edist x y :=
+  rfl
+
+@[to_additive]
+theorem edist_op (x y : α) : edist (op x) (op y) = edist x y :=
+  rfl
+
+end MulOpposite
 
 /-- The product of two pseudoemetric spaces, with the max distance, is an extended
 pseudometric spaces. We make sure that the uniform structure thus constructed is the one
@@ -949,8 +966,13 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
       
 
 /-- Emetric space instance on subsets of emetric spaces -/
-instance {α : Type _} {p : α → Prop} [t : EmetricSpace α] : EmetricSpace (Subtype p) :=
-  t.induced coe fun x y => Subtype.ext_iff_val.2
+instance {α : Type _} {p : α → Prop} [EmetricSpace α] : EmetricSpace (Subtype p) :=
+  EmetricSpace.induced coe Subtype.coe_injective ‹_›
+
+/-- Emetric space instance on multiplicative opposites of emetric spaces -/
+@[to_additive]
+instance {α : Type _} [EmetricSpace α] : EmetricSpace αᵐᵒᵖ :=
+  EmetricSpace.induced MulOpposite.unop MulOpposite.unop_injective ‹_›
 
 /-- The product of two emetric spaces, with the max distance, is an extended
 metric spaces. We make sure that the uniform structure thus constructed is the one

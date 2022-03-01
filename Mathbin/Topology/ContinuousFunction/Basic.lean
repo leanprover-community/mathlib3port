@@ -88,8 +88,8 @@ theorem to_fun_eq_coe {f : C(α, β)} : f.toFun = (f : α → β) :=
 theorem ext {f g : C(α, β)} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext _ _ h
 
-/-- Copy of a `continuous_map` with a new `continuous_map` equal to the old one. Useful to fix
-definitional equalities. -/
+/-- Copy of a `continuous_map` with a new `to_fun` equal to the old one. Useful to fix definitional
+equalities. -/
 protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) : C(α, β) where
   toFun := f'
   continuous_to_fun := h.symm ▸ f.continuous_to_fun

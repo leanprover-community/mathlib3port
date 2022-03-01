@@ -362,7 +362,7 @@ theorem exists_measurable_supersets_lim_ratio {p q : ℝ≥0 } (hpq : p < q) :
         rw [inter_comm, measure_to_measurable_add_inter_right (measurable_set_to_measurable _ _) J]
       _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ w n) := by
         rw [← coe_nnreal_smul_apply]
-        refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.coe_nnreal_smul _) _ _
+        refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.smul _) _ _
         intro x hx
         have L : tendsto (fun a : Set α => ρ a / μ a) (v.filter_at x) (𝓝 (v.lim_ratio ρ x)) := tendsto_nhds_lim hx.2.1.1
         have I : ∀ᶠ b : Set α in v.filter_at x, (q : ℝ≥0∞) < ρ b / μ b := (tendsto_order.1 L).1 _ hx.2.1.2
@@ -453,7 +453,7 @@ theorem mul_measure_le_of_subset_lt_lim_ratio_meas {q : ℝ≥0 } {s : Set α}
         rw [A, mul_zero, add_zeroₓ]
         exact measure_mono (inter_subset_left _ _)
       
-  refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.coe_nnreal_smul _) _ _
+  refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.smul _) _ _
   intro x hx
   have I : ∀ᶠ a in v.filter_at x, (q : ℝ≥0∞) < ρ a / μ a := (tendsto_order.1 hx.2).1 _ (h hx.1)
   apply I.frequently.mono fun a ha => _

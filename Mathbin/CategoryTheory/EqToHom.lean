@@ -25,7 +25,7 @@ result in the various `eq_to_hom` morphisms to drop out at the appropriate momen
 -/
 
 
-universe v₁ v₂ u₁ u₂
+universe v₁ v₂ v₃ u₁ u₂ u₃
 
 -- morphism levels before object levels. See note [category_theory universes].
 namespace CategoryTheory
@@ -139,17 +139,17 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
   funext X Y f
   simpa using h_map X Y f
 
+/-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. --/
+theorem conj_eq_to_hom_iff_heq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
+    f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g := by
+  cases h
+  cases h'
+  simp
+
 /-- Proving equality between functors using heterogeneous equality. -/
 theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X) (h_map : ∀ X Y f : X ⟶ Y, HEq (F.map f) (G.map f)) :
-    F = G := by
-  cases' F with F_obj _ _ _
-  cases' G with G_obj _ _ _
-  have : F_obj = G_obj := by
-    ext X <;> apply h_obj
-  subst this
-  congr
-  funext X Y f
-  exact eq_of_heq (h_map X Y f)
+    F = G :=
+  Functor.ext h_obj fun _ _ f => (conj_eq_to_hom_iff_heq _ _ (h_obj _) (h_obj _)).2 <| h_map _ _ f
 
 -- Using equalities between functors.
 theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X := by
@@ -158,6 +158,38 @@ theorem congr_obj {F G : C ⥤ D} (h : F = G) X : F.obj X = G.obj X := by
 theorem congr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) :
     F.map f = eqToHom (congr_obj h X) ≫ G.map f ≫ eqToHom (congr_obj h Y).symm := by
   subst h <;> simp
+
+section HEq
+
+-- Composition of functors and maps w.r.t. heq
+variable {E : Type u₃} [Category.{v₃} E] {F G : C ⥤ D} {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z}
+
+theorem map_comp_heq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.obj Z = G.obj Z)
+    (hf : HEq (F.map f) (G.map f)) (hg : HEq (F.map g) (G.map g)) : HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by
+  rw [F.map_comp, G.map_comp]
+  congr
+
+theorem map_comp_heq' (hobj : ∀ X : C, F.obj X = G.obj X) (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) :
+    HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by
+  rw [functor.hext hobj fun _ _ => hmap]
+
+theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) {X Y : E} (f : X ⟶ Y) :
+    HEq ((H ⋙ F).map f) ((H ⋙ G).map f) :=
+  hmap _
+
+theorem postcomp_map_heq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
+    (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
+  dsimp
+  congr
+
+theorem postcomp_map_heq' (H : D ⥤ E) (hobj : ∀ X : C, F.obj X = G.obj X)
+    (hmap : ∀ {X Y} f : X ⟶ Y, HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by
+  rw [functor.hext hobj fun _ _ => hmap]
+
+theorem hcongr_hom {F G : C ⥤ D} (h : F = G) {X Y} (f : X ⟶ Y) : HEq (F.map f) (G.map f) := by
+  subst h
+
+end HEq
 
 end Functor
 

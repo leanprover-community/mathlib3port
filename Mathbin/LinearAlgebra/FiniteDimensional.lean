@@ -755,21 +755,17 @@ open FiniteDimensional
 protected theorem finite_dimensional (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] : FiniteDimensional K V₂ :=
   Module.Finite.equiv f
 
+variable {R M M₂ : Type _} [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂]
+
+variable [Module R M] [Module R M₂]
+
 /-- The dimension of a finite dimensional space is preserved under linear equivalence. -/
-theorem finrank_eq (f : V ≃ₗ[K] V₂) : finrank K V = finrank K V₂ := by
-  by_cases' h : FiniteDimensional K V
-  · skip
-    have : FiniteDimensional K V₂ := f.finite_dimensional
-    simpa [← finrank_eq_dim] using f.lift_dim_eq
-    
-  · rw [finrank_of_infinite_dimensional h, finrank_of_infinite_dimensional]
-    contrapose! h
-    skip
-    exact f.symm.finite_dimensional
-    
+theorem finrank_eq (f : M ≃ₗ[R] M₂) : finrank R M = finrank R M₂ := by
+  unfold finrank
+  rw [← Cardinal.to_nat_lift, f.lift_dim_eq, Cardinal.to_nat_lift]
 
 /-- Pushforwards of finite-dimensional submodules along a `linear_equiv` have the same finrank. -/
-theorem finrank_map_eq (f : V ≃ₗ[K] V₂) (p : Submodule K V) : finrank K (p.map (f : V →ₗ[K] V₂)) = finrank K p :=
+theorem finrank_map_eq (f : M ≃ₗ[R] M₂) (p : Submodule R M) : finrank R (p.map (f : M →ₗ[R] M₂)) = finrank R p :=
   (f.submoduleMap p).finrank_eq.symm
 
 end LinearEquiv

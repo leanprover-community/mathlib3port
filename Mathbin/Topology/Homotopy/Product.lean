@@ -284,12 +284,12 @@ variable {I : Type u} (X : I → Top.{u})
 
 /-- The projection map Π i, X i → X i induces a map π(Π i, X i) ⟶ π(X i).
 -/
-def proj (i : I) : (πₓ (Top.of (∀ i, X i))).α ⥤ (πₓ (X i)).α :=
+def proj (i : I) : πₓ (Top.of (∀ i, X i)) ⥤ πₓ (X i) :=
   πₘ ⟨_, continuous_apply i⟩
 
 /-- The projection map is precisely path.homotopic.proj interpreted as a functor -/
 @[simp]
-theorem proj_map (i : I) (x₀ x₁ : (πₓ (Top.of (∀ i, X i))).α) (p : x₀ ⟶ x₁) :
+theorem proj_map (i : I) (x₀ x₁ : πₓ (Top.of (∀ i, X i))) (p : x₀ ⟶ x₁) :
     (proj X i).map p = @Path.Homotopic.proj _ _ _ _ _ i p :=
   rfl
 
@@ -297,7 +297,7 @@ theorem proj_map (i : I) (x₀ x₁ : (πₓ (Top.of (∀ i, X i))).α) (p : x�
 groupoid of the pi product. This is actually an isomorphism (see `pi_iso`)
 -/
 @[simps]
-def piToPiTop : (∀ i, (πₓ (X i)).α) ⥤ (πₓ (Top.of (∀ i, X i))).α where
+def piToPiTop : (∀ i, πₓ (X i)) ⥤ πₓ (Top.of (∀ i, X i)) where
   obj := fun g => g
   map := fun v₁ v₂ p => Path.Homotopic.pi p
   map_id' := by
@@ -311,7 +311,7 @@ def piToPiTop : (∀ i, (πₓ (X i)).α) ⥤ (πₓ (Top.of (∀ i, X i))).α w
 of the induced projections. This shows that `fundamental_groupoid_functor` preserves products.
 -/
 @[simps]
-def piIso : CategoryTheory.Groupoidₓ.of (∀ i : I, (πₓ (X i)).α) ≅ πₓ (Top.of (∀ i, X i)) where
+def piIso : CategoryTheory.Groupoidₓ.of (∀ i : I, πₓ (X i)) ≅ πₓ (Top.of (∀ i, X i)) where
   hom := piToPiTop X
   inv := CategoryTheory.Functor.pi' (proj X)
   hom_inv_id' := by
@@ -370,20 +370,19 @@ section Prod
 variable (A B : Top.{u})
 
 /-- The induced map of the left projection map X × Y → X -/
-def projLeft : (πₓ (Top.of (A × B))).α ⥤ (πₓ A).α :=
+def projLeft : πₓ (Top.of (A × B)) ⥤ πₓ A :=
   πₘ ⟨_, continuous_fst⟩
 
 /-- The induced map of the right projection map X × Y → Y -/
-def projRight : (πₓ (Top.of (A × B))).α ⥤ (πₓ B).α :=
+def projRight : πₓ (Top.of (A × B)) ⥤ πₓ B :=
   πₘ ⟨_, continuous_snd⟩
 
 @[simp]
-theorem proj_left_map (x₀ x₁ : (πₓ (Top.of (A × B))).α) (p : x₀ ⟶ x₁) :
-    (projLeft A B).map p = Path.Homotopic.projLeft p :=
+theorem proj_left_map (x₀ x₁ : πₓ (Top.of (A × B))) (p : x₀ ⟶ x₁) : (projLeft A B).map p = Path.Homotopic.projLeft p :=
   rfl
 
 @[simp]
-theorem proj_right_map (x₀ x₁ : (πₓ (Top.of (A × B))).α) (p : x₀ ⟶ x₁) :
+theorem proj_right_map (x₀ x₁ : πₓ (Top.of (A × B))) (p : x₀ ⟶ x₁) :
     (projRight A B).map p = Path.Homotopic.projRight p :=
   rfl
 
@@ -391,7 +390,7 @@ theorem proj_right_map (x₀ x₁ : (πₓ (Top.of (A × B))).α) (p : x₀ ⟶ 
 of the two topological spaces. This is in fact an isomorphism (see `prod_iso`).
 -/
 @[simps]
-def prodToProdTop : (πₓ A).α × (πₓ B).α ⥤ (πₓ (Top.of (A × B))).α where
+def prodToProdTop : πₓ A × πₓ B ⥤ πₓ (Top.of (A × B)) where
   obj := fun g => g
   map := fun x y p =>
     match x, y, p with
@@ -410,7 +409,7 @@ def prodToProdTop : (πₓ A).α × (πₓ B).α ⥤ (πₓ (Top.of (A × B))).�
 of the induced left and right projections.
 -/
 @[simps]
-def prodIso : CategoryTheory.Groupoidₓ.of ((πₓ A).α × (πₓ B).α) ≅ πₓ (Top.of (A × B)) where
+def prodIso : CategoryTheory.Groupoidₓ.of (πₓ A × πₓ B) ≅ πₓ (Top.of (A × B)) where
   hom := prodToProdTop A B
   inv := (projLeft A B).prod' (projRight A B)
   hom_inv_id' := by

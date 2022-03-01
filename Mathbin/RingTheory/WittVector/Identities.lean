@@ -74,11 +74,25 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
 
 variable (p R)
 
+theorem coeff_p [CharP R p] (i : ℕ) : (p : 𝕎 R).coeff i = if i = 1 then 1 else 0 := by
+  split_ifs with hi
+  · simpa only [hi, pow_oneₓ] using coeff_p_pow 1
+    
+  · simpa only [pow_oneₓ] using coeff_p_pow_eq_zero hi
+    
+
+@[simp]
+theorem coeff_p_zero [CharP R p] : (p : 𝕎 R).coeff 0 = 0 := by
+  rw [coeff_p, if_neg]
+  exact zero_ne_one
+
+@[simp]
+theorem coeff_p_one [CharP R p] : (p : 𝕎 R).coeff 1 = 1 := by
+  rw [coeff_p, if_pos rfl]
+
 theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 := by
-  have : (p : 𝕎 R).coeff 1 = 1 := by
-    simpa using coeff_p_pow 1
   intro h
-  simpa [h] using this
+  simpa only [h, zero_coeff, zero_ne_one] using coeff_p_one p R
 
 theorem FractionRing.p_nonzero [Nontrivial R] [CharP R p] : (p : FractionRing (𝕎 R)) ≠ 0 := by
   simpa using (IsFractionRing.injective (𝕎 R) (FractionRing (𝕎 R))).Ne (p_nonzero _ _)

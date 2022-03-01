@@ -3,7 +3,7 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 -/
-import Mathbin.CategoryTheory.FunctorCategory
+import Mathbin.CategoryTheory.Functor.Category
 import Mathbin.CategoryTheory.Isomorphism
 
 /-!
