@@ -351,7 +351,7 @@ theorem lift'_infi_powerset {f : ι → Filter α} : (infi f).lift' Powerset = �
 theorem lift'_inf_powerset (f g : Filter α) : (f⊓g).lift' Powerset = f.lift' Powerset⊓g.lift' Powerset :=
   (lift'_inf f g) fun _ _ => (powerset_inter _ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_lift'_powerset {f : Filter α} {p : Set α → Prop} :
     (∀ᶠ s in f.lift' Powerset, p s) ↔ ∃ s ∈ f, ∀ t _ : t ⊆ s, p t :=
   eventually_lift'_iff monotone_powerset

@@ -66,7 +66,7 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=

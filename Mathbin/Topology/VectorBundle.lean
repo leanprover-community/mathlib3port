@@ -63,11 +63,11 @@ variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _) [Semiringₓ 
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure
 /-- Local pretrivialization for vector prebundles. -/
 @[nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Pretrivialization extends
-  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure" where
   linear : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun y).2
 
 instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
@@ -79,11 +79,11 @@ instance :
 
 variable [TopologicalSpace (TotalSpace E)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure
 /-- Local trivialization for vector bundles. -/
 @[nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Trivialization extends
-  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure" where
   linear : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun y).2
 
 open TopologicalVectorBundle

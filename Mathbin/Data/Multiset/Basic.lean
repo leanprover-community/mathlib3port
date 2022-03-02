@@ -1977,7 +1977,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
     count b (map f s) = (s.filter fun a => b = f a).card :=
   countp_map _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∈ » s)
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α) (hf : Set.InjOn f { x : α | x ∈ s }) x

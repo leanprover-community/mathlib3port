@@ -268,7 +268,7 @@ theorem algebraic_independent_subtype {s : Set A} :
   by
   apply @algebraic_independent_comp_subtype _ _ _ id
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem algebraic_independent_of_finite (s : Set A)
     (H : ∀ t _ : t ⊆ s, Finite t → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=

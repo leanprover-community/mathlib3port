@@ -451,9 +451,9 @@ theorem arg_coe_angle_eq_iff {x y : ℂ} : (arg x : Real.Angle) = arg y ↔ arg 
       linarith only [neg_pi_lt_arg x, arg_le_pi y]
     have hb : arg x - arg y < 2 * π := by
       linarith only [arg_le_pi x, neg_pi_lt_arg y]
-    rw [hk, neg_lt, neg_mul_eq_mul_neg, mul_lt_iff_lt_one_right Real.two_pi_pos, neg_lt, ← Int.cast_one, ← Int.cast_neg,
-      Int.cast_lt] at ha
-    rw [hk, mul_lt_iff_lt_one_right Real.two_pi_pos, ← Int.cast_one, Int.cast_lt] at hb
+    rw [hk, neg_lt, neg_mul_eq_mul_neg, mul_lt_iff_lt_one_right Real.two_pi_pos, neg_lt, ← Int.cast_oneₓ, ←
+      Int.cast_neg, Int.cast_lt] at ha
+    rw [hk, mul_lt_iff_lt_one_right Real.two_pi_pos, ← Int.cast_oneₓ, Int.cast_lt] at hb
     have hk' : k = 0 := by
       linarith only [ha, hb]
     rw [hk'] at hk

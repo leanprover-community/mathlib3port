@@ -203,7 +203,7 @@ open Tactic
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- `filter_upwards [h₁, ⋯, hₙ]` replaces a goal of the form `s ∈ f` and terms
 `h₁ : t₁ ∈ f, ⋯, hₙ : tₙ ∈ f` with `∀ x, x ∈ t₁ → ⋯ → x ∈ tₙ → x ∈ s`.
 The list is an optional parameter, `[]` being its default value.
@@ -309,7 +309,7 @@ theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.gene
   Iff.intro (fun h u hu => h <| generate_sets.basic <| hu) fun h u hu =>
     hu.recOn h univ_mem (fun x y _ hxy hx => mem_of_superset hx hxy) fun x y _ _ hx hy => inter_mem hx hy
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} : U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), Finite t ∧ ⋂₀ t ⊆ U :=
   by
   constructor <;> intro h
@@ -561,7 +561,7 @@ theorem mem_infi {ι} {s : ι → Filter α} {U : Set α} :
     exact mem_infi_of_Inter Ifin V_in subset.rfl
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem mem_infi' {ι} {s : ι → Filter α} {U : Set α} :
     (U ∈ ⨅ i, s i) ↔
       ∃ I : Set ι,

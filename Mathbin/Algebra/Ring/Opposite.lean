@@ -55,6 +55,12 @@ instance [CommSemiringₓ α] : CommSemiringₓ αᵐᵒᵖ :=
 instance [NonUnitalNonAssocRing α] : NonUnitalNonAssocRing αᵐᵒᵖ :=
   { MulOpposite.addCommGroup α, MulOpposite.mulZeroClass α, MulOpposite.distrib α with }
 
+instance [NonUnitalRing α] : NonUnitalRing αᵐᵒᵖ :=
+  { MulOpposite.addCommGroup α, MulOpposite.semigroupWithZero α, MulOpposite.distrib α with }
+
+instance [NonAssocRing α] : NonAssocRing αᵐᵒᵖ :=
+  { MulOpposite.addCommGroup α, MulOpposite.mulZeroOneClass α, MulOpposite.distrib α with }
+
 instance [Ringₓ α] : Ringₓ αᵐᵒᵖ :=
   { MulOpposite.addCommGroup α, MulOpposite.monoid α, MulOpposite.semiring α with }
 

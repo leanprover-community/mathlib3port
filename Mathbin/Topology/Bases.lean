@@ -163,7 +163,7 @@ theorem IsTopologicalBasis.open_eq_sUnion' {B : Set (Set α)} (hB : IsTopologica
       ⟨b, ⟨hb, bu⟩, ab⟩,
       fun ⟨b, ⟨hb, bu⟩, ab⟩ => bu ab⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (S «expr ⊆ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (S «expr ⊆ » B)
 theorem IsTopologicalBasis.open_eq_sUnion {B : Set (Set α)} (hB : IsTopologicalBasis B) {u : Set α} (ou : IsOpen u) :
     ∃ (S : _)(_ : S ⊆ B), u = ⋃₀S :=
   ⟨{ s ∈ B | s ⊆ u }, fun s h => h.1, hB.open_eq_sUnion' ou⟩
@@ -382,14 +382,14 @@ protected theorem DenseRange.separable_space {α β : Type _} [TopologicalSpace 
   let ⟨s, s_cnt, s_dense⟩ := exists_countable_dense α
   ⟨⟨f '' s, Countable.image s_cnt f, h.dense_image h' s_dense⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem Dense.exists_countable_dense_subset {α : Type _} [TopologicalSpace α] {s : Set α} [SeparableSpace s]
     (hs : Dense s) : ∃ (t : _)(_ : t ⊆ s), Countable t ∧ Dense t :=
   let ⟨t, htc, htd⟩ := exists_countable_dense s
   ⟨coe '' t, image_subset_iff.2 fun x _ => mem_preimage.2 <| Subtype.coe_prop _, htc.Image coe,
     hs.dense_range_coe.dense_image continuous_subtype_val htd⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Let `s` be a dense set in a topological space `α` with partial order structure. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` contains bottom/top element of `α` when they exist and belong
@@ -613,7 +613,7 @@ theorem countable_cover_nhds [SecondCountableTopology α] {f : α → Set α} (h
   simp only [hsU, eq_univ_iff_forall, mem_Union]
   exact fun x => ⟨x, mem_interior_iff_mem_nhds.2 (hf x)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem countable_cover_nhds_within [SecondCountableTopology α] {f : α → Set α} {s : Set α}
     (hf : ∀, ∀ x ∈ s, ∀, f x ∈ 𝓝[s] x) : ∃ (t : _)(_ : t ⊆ s), Countable t ∧ s ⊆ ⋃ x ∈ t, f x := by
   have : ∀ x : s, coe ⁻¹' f x ∈ 𝓝 x := fun x => preimage_coe_mem_nhds_subtype.2 (hf x x.2)

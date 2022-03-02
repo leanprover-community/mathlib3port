@@ -939,7 +939,7 @@ protected def FinMeasSupp {m : MeasurableSpace α} (f : α →ₛ β) (μ : Meas
 theorem fin_meas_supp_iff_support : f.FinMeasSupp μ ↔ μ (Support f) < ∞ :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem fin_meas_supp_iff : f.FinMeasSupp μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ := by
   constructor
   · refine' fun h y hy => lt_of_le_of_ltₓ (measure_mono _) h

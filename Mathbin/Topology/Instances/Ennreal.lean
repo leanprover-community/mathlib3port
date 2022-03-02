@@ -170,7 +170,7 @@ def ltTopHomeomorphNnreal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
   refine' (Homeomorph.setCongr <| Set.ext fun x => _).trans ne_top_homeomorph_nnreal <;>
     simp only [mem_set_of_eq, lt_top_iff_ne_top]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem nhds_top : 𝓝 ∞ = ⨅ (a) (_ : a ≠ ∞), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by
     simp [lt_top_iff_ne_top, Ioi]
@@ -205,7 +205,7 @@ theorem tendsto_coe_nhds_top {f : α → ℝ≥0 } {l : Filter α} :
     Tendsto (fun x => (f x : ℝ≥0∞)) l (𝓝 ∞) ↔ Tendsto f l atTop := by
   rw [tendsto_nhds_top_iff_nnreal, at_top_basis_Ioi.tendsto_right_iff] <;> [simp , infer_instance, infer_instance]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot, Iio]
@@ -692,11 +692,11 @@ protected theorem tsum_eq_supr_sum' {ι : Type _} (s : ι → Finset α) (hs : �
   change (⨆ i : ι, (fun t : Finset α => ∑ a in t, f a) (s i)) = ⨆ s : Finset α, ∑ a in s, f a
   exact (Finset.sum_mono_set f).supr_comp_eq hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) : (∑' p : Σa, β a, f p.1 p.2) = ∑' (a) (b), f a b :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 protected theorem tsum_sigma' {β : α → Type _} (f : (Σa, β a) → ℝ≥0∞) : (∑' p : Σa, β a, f p) = ∑' (a) (b), f ⟨a, b⟩ :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
 

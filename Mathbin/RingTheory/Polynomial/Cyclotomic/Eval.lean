@@ -49,11 +49,11 @@ theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semirin
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) := by
   have := NeZero.of_gt hn
-  rw [← map_cyclotomic_int, ← Int.cast_one, ← Int.cast_neg, eval_int_cast_map, Int.coe_cast_ring_hom, Int.cast_pos]
+  rw [← map_cyclotomic_int, ← Int.cast_oneₓ, ← Int.cast_neg, eval_int_cast_map, Int.coe_cast_ring_hom, Int.cast_pos]
   suffices 0 < eval (↑(-1 : ℤ)) (cyclotomic n ℝ) by
     rw [← map_cyclotomic_int n ℝ, eval_int_cast_map, Int.coe_cast_ring_hom] at this
     exact_mod_cast this
-  simp only [Int.cast_one, Int.cast_neg]
+  simp only [Int.cast_oneₓ, Int.cast_neg]
   have h0 := cyclotomic_coeff_zero ℝ hn.le
   rw [coeff_zero_eq_eval_zero] at h0
   by_contra' hx
@@ -141,7 +141,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
   suffices eval 1 (cyclotomic n ℤ) = 1 ∨ eval 1 (cyclotomic n ℤ) = -1 by
     cases' this with h h
     · have := eval_int_cast_map (Int.castRingHom R) (cyclotomic n ℤ) 1
-      simpa only [map_cyclotomic, Int.cast_one, h, RingHom.eq_int_cast] using this
+      simpa only [map_cyclotomic, Int.cast_oneₓ, h, RingHom.eq_int_cast] using this
       
     · exfalso
       linarith [cyclotomic_pos hn (1 : ℤ)]

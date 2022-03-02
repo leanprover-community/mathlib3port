@@ -49,6 +49,10 @@ theorem snd_mul [Mul M] [Mul N] (p q : M × N) : (p * q).2 = p.2 * q.2 :=
 theorem mk_mul_mk [Mul M] [Mul N] (a₁ a₂ : M) (b₁ b₂ : N) : (a₁, b₁) * (a₂, b₂) = (a₁ * a₂, b₁ * b₂) :=
   rfl
 
+@[simp, to_additive]
+theorem swap_mul [Mul M] [Mul N] (p q : M × N) : (p * q).swap = p.swap * q.swap :=
+  rfl
+
 @[to_additive]
 theorem mul_def [Mul M] [Mul N] (p q : M × N) : p * q = (p.1 * q.1, p.2 * q.2) :=
   rfl
@@ -73,6 +77,10 @@ theorem one_eq_mk [One M] [One N] : (1 : M × N) = (1, 1) :=
 theorem mk_eq_one [One M] [One N] {x : M} {y : N} : (x, y) = 1 ↔ x = 1 ∧ y = 1 :=
   mk.inj_iff
 
+@[simp, to_additive]
+theorem swap_one [One M] [One N] : (1 : M × N).swap = 1 :=
+  rfl
+
 @[to_additive]
 theorem fst_mul_snd [MulOneClassₓ M] [MulOneClassₓ N] (p : M × N) : (p.fst, 1) * (1, p.snd) = p :=
   extₓ (mul_oneₓ p.1) (one_mulₓ p.2)
@@ -93,20 +101,28 @@ theorem snd_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.2 = p.2⁻¹ :=
 theorem inv_mk [Inv G] [Inv H] (a : G) (b : H) : (a, b)⁻¹ = (a⁻¹, b⁻¹) :=
   rfl
 
+@[simp, to_additive]
+theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.swap = p.swap⁻¹ :=
+  rfl
+
 @[to_additive]
 instance [Div M] [Div N] : Div (M × N) :=
   ⟨fun p q => ⟨p.1 / q.1, p.2 / q.2⟩⟩
 
-@[simp]
-theorem fst_sub [AddGroupₓ A] [AddGroupₓ B] (a b : A × B) : (a - b).1 = a.1 - b.1 :=
+@[simp, to_additive]
+theorem fst_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).1 = a.1 / b.1 :=
   rfl
 
-@[simp]
-theorem snd_sub [AddGroupₓ A] [AddGroupₓ B] (a b : A × B) : (a - b).2 = a.2 - b.2 :=
+@[simp, to_additive]
+theorem snd_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).2 = a.2 / b.2 :=
   rfl
 
-@[simp]
-theorem mk_sub_mk [AddGroupₓ A] [AddGroupₓ B] (x₁ x₂ : A) (y₁ y₂ : B) : (x₁, y₁) - (x₂, y₂) = (x₁ - x₂, y₁ - y₂) :=
+@[simp, to_additive]
+theorem mk_div_mk [Groupₓ G] [Groupₓ H] (x₁ x₂ : G) (y₁ y₂ : H) : (x₁, y₁) / (x₂, y₂) = (x₁ / x₂, y₁ / y₂) :=
+  rfl
+
+@[simp, to_additive]
+theorem swap_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).swap = a.swap / b.swap :=
   rfl
 
 instance [MulZeroClassₓ M] [MulZeroClassₓ N] : MulZeroClassₓ (M × N) :=

@@ -174,7 +174,7 @@ theorem neg {f : ∀ i, E i} (hf : Memℓp f p) : Memℓp (-f) p := by
 theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
   ⟨fun h => neg_negₓ f ▸ h.neg, Memℓp.neg⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset)
 theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p := by
   rcases Ennreal.trichotomy₂ hpq with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
@@ -226,8 +226,6 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (f + g) p := by
   rcases p.trichotomy with (rfl | rfl | hp)
   · apply mem_ℓp_zero
@@ -254,8 +252,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
     split_ifs with h h
     · simpa using Nnreal.coe_le_coe.2 (Nnreal.rpow_add_le_add_rpow ∥f i∥₊ ∥g i∥₊ hp h.le)
       
-    · let F : Finₓ 2 → ℝ≥0 :=
-        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+    · let F : Finₓ 2 → ℝ≥0 := ![∥f i∥₊, ∥g i∥₊]
       have : ∀ i, (0 : ℝ) ≤ F i := fun i => (F i).coe_nonneg
       simp only [not_ltₓ] at h
       simpa [F, Finₓ.sum_univ_succ] using
@@ -716,7 +713,7 @@ protected theorem single_smul p (i : α) (a : E i) (c : 𝕜) : lp.single p i (c
   · simp [lp.single_apply_ne p i _ hi]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sum_single (hp : 0 < p.toReal) (f : ∀ i, E i) (s : Finset α) :
     ∥∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' (has_sum_norm hp (∑ i in s, lp.single p i (f i))).unique _
@@ -733,7 +730,7 @@ protected theorem norm_single (hp : 0 < p.toReal) (f : ∀ i, E i) (i : α) : �
   refine' Real.rpow_left_inj_on hp.ne' (norm_nonneg' _) (norm_nonneg _) _
   simpa using lp.norm_sum_single hp f {i}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 protected theorem norm_sub_norm_compl_sub_single (hp : 0 < p.toReal) (f : lp E p) (s : Finset α) :
     ∥f∥ ^ p.toReal - ∥f - ∑ i in s, lp.single p i (f i)∥ ^ p.toReal = ∑ i in s, ∥f i∥ ^ p.toReal := by
   refine' ((has_sum_norm hp f).sub (has_sum_norm hp (f - ∑ i in s, lp.single p i (f i)))).unique _

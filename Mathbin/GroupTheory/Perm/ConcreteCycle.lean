@@ -499,7 +499,7 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
     ext ⟨s', hs', ht'⟩
     simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff, ht]
 
--- mathport name: «exprc[ , ]»
+-- mathport name: «exprc[ ,]»
 notation3 "c[" (l,* => foldr (h t => List.cons h t) List.nil) "]" =>
   Cycle.formPerm (↑l)
     (Cycle.nodup_coe_iff.mpr

@@ -88,7 +88,7 @@ variable (𝕜 : Type _) [TopologicalSpace 𝕜] [Semiringₓ 𝕜]
 
 variable (E : Type _) [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler λ α, has_coe_to_fun α (λ _, E → 𝕜)
 /-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
 continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym with the usual dual
 (when the latter is defined), but will be equipped with a different topology. -/

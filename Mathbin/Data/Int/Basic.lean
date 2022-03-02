@@ -1255,12 +1255,20 @@ theorem nat_abs_le_of_dvd_ne_zero {s t : ℤ} (hst : s ∣ t) (ht : t ≠ 0) : n
 theorem nat_abs_eq_of_dvd_dvd {s t : ℤ} (hst : s ∣ t) (hts : t ∣ s) : natAbs s = natAbs t :=
   Nat.dvd_antisymm (nat_abs_dvd_iff_dvd.mpr hst) (nat_abs_dvd_iff_dvd.mpr hts)
 
-theorem div_dvd_of_ne_zero_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
-  by_cases' hs : s = 0
-  · simp_all
+theorem div_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t := by
+  rcases eq_or_ne s 0 with (rfl | hs)
+  · simpa using hst
     
   rcases hst with ⟨c, hc⟩
   simp [hc, Int.mul_div_cancel_left _ hs]
+
+theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a := by
+  rcases eq_or_ne a 0 with (rfl | ha)
+  · simp only [Int.div_zero, dvd_zero]
+    
+  rcases h with ⟨d, rfl⟩
+  refine' ⟨d, _⟩
+  rw [mul_assoc, Int.mul_div_cancel_left _ ha]
 
 /-! ### to_nat -/
 
@@ -1564,7 +1572,7 @@ theorem test_bit_succ m b : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | -[1+ n] => by
     rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.test_bit_succ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 

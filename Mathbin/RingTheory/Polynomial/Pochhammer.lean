@@ -70,7 +70,7 @@ end
 
 @[simp, norm_cast]
 theorem pochhammer_eval_cast (n k : ℕ) : ((pochhammer ℕ n).eval k : S) = (pochhammer S n).eval k := by
-  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← eq_nat_cast (algebraMap ℕ S), eval₂_at_nat_cast, Nat.cast_id,
+  rw [← pochhammer_map (algebraMap ℕ S), eval_map, ← eq_nat_cast (algebraMap ℕ S), eval₂_at_nat_cast, Nat.cast_idₓ,
     eq_nat_cast]
 
 theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then 1 else 0 := by
@@ -167,11 +167,11 @@ variable (S : Type _) [Semiringₓ S] (r n : ℕ)
 
 @[simp]
 theorem pochhammer_eval_one (S : Type _) [Semiringₓ S] (n : ℕ) : (pochhammer S n).eval (1 : S) = (n ! : S) := by
-  rw_mod_cast [pochhammer_nat_eq_asc_factorial, Nat.zero_asc_factorial]
+  rw_mod_cast[pochhammer_nat_eq_asc_factorial, Nat.zero_asc_factorial]
 
 theorem factorial_mul_pochhammer (S : Type _) [Semiringₓ S] (r n : ℕ) :
     (r ! : S) * (pochhammer S n).eval (r + 1) = (r + n)! := by
-  rw_mod_cast [pochhammer_nat_eq_asc_factorial, Nat.factorial_mul_asc_factorial]
+  rw_mod_cast[pochhammer_nat_eq_asc_factorial, Nat.factorial_mul_asc_factorial]
 
 theorem pochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (pochhammer ℕ r).eval (n + 1) = (n + r) * (pochhammer ℕ r).eval n

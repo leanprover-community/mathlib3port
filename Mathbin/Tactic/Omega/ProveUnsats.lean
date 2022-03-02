@@ -21,7 +21,7 @@ unsafe def prove_neg : Int → tactic expr
   | -[1+ m] => return (quote.1 (Int.neg_succ_lt_zeroₓ (%%ₓquote.1 m)))
 
 theorem forall_mem_repeat_zero_eq_zero (m : Nat) : ∀, ∀ x ∈ List.repeat (0 : Int) m, ∀, x = (0 : Int) := fun x =>
-  List.eq_of_mem_repeatₓ
+  List.eq_of_mem_repeat
 
 /-- Return expr of proof that elements of (repeat 0 is.length) are all 0 -/
 unsafe def prove_forall_mem_eq_zero (is : List Int) : tactic expr :=

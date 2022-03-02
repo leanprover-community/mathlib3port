@@ -499,7 +499,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by

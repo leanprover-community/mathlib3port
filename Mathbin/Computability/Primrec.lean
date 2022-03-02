@@ -1260,7 +1260,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
--- ././Mathport/Syntax/Translate/Basic.lean:1547:6: unsupported: hide command
+-- ././Mathport/Syntax/Translate/Basic.lean:1546:6: unsupported: hide command
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f := by
   induction pf
   case nat.primrec'.zero =>

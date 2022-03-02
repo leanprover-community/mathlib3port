@@ -761,7 +761,7 @@ end Order
 the localization of `x`. -/
 def localizationMapOfSpecializes {x y : PrimeSpectrum R} (h : x ⤳ y) :
     Localization.AtPrime y.asIdeal →+* Localization.AtPrime x.asIdeal :=
-  @IsLocalization.lift _ _ _ _ _ _ _ _ Localization.is_localization (algebraMap R _)
+  @IsLocalization.lift _ _ _ _ _ _ _ _ Localization.is_localization (algebraMap R (Localization.AtPrime x.asIdeal))
     (by
       rintro ⟨a, ha⟩
       rw [← PrimeSpectrum.le_iff_specializes, ← as_ideal_le_as_ideal, ← SetLike.coe_subset_coe, ←

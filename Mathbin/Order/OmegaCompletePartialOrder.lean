@@ -154,7 +154,7 @@ open OmegaCompletePartialOrder
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
 set_option extends_priority 50
 
 /-- An omega-complete partial order is a partial order with a supremum

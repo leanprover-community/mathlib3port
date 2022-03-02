@@ -85,7 +85,7 @@ instance : Groupₓ (QuaternionGroup n) where
   mul := mul
   mul_assoc := by
     rintro (i | i) (j | j) (k | k) <;> simp only [mul] <;> abel
-    simp only [neg_mul, one_mulₓ, Int.cast_one, zsmul_eq_mul, Int.cast_neg, add_right_injₓ]
+    simp only [neg_mul, one_mulₓ, Int.cast_oneₓ, zsmul_eq_mul, Int.cast_neg, add_right_injₓ]
     calc -(n : Zmod (2 * n)) = 0 - n := by
         rw [zero_sub]_ = 2 * n - n := by
         norm_cast

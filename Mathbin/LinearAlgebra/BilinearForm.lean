@@ -147,15 +147,11 @@ instance : AddCommMonoidₓ (BilinForm R M) where
   add := fun B D =>
     { bilin := fun x y => B x y + D x y,
       bilin_add_left := fun x y z => by
-        rw [add_left]
-        rw [add_left]
-        ac_rfl,
+        rw [add_left, add_left, add_add_add_commₓ],
       bilin_smul_left := fun a x y => by
         rw [smul_left, smul_left, mul_addₓ],
       bilin_add_right := fun x y z => by
-        rw [add_right]
-        rw [add_right]
-        ac_rfl,
+        rw [add_right, add_right, add_add_add_commₓ],
       bilin_smul_right := fun a x y => by
         rw [smul_right, smul_right, mul_addₓ] }
   add_assoc := by
@@ -752,7 +748,7 @@ open BilinForm Finset LinearMap Matrix
 
 open_locale Matrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
@@ -838,7 +834,7 @@ def Matrix.toBilin' : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ (n → R₃) :
 theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₃) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem Matrix.to_bilin'_apply (M : Matrix n n R₃) (x y : n → R₃) :
     Matrix.toBilin' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
@@ -968,7 +964,7 @@ theorem BilinForm.to_matrix_apply (B : BilinForm R₃ M₃) (i j : n) : BilinFor
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 @[simp]
 theorem Matrix.to_bilin_apply (M : Matrix n n R₃) (x y : M₃) :
     Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by

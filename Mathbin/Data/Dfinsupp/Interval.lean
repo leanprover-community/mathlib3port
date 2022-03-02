@@ -142,7 +142,7 @@ theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i)
   rw [pi, card_dfinsupp]
   exact
     Finset.prod_congr rfl fun i _ => by
-      simp only [Pi.nat_apply, Nat.cast_id]
+      simp only [Pi.nat_apply, Nat.cast_idₓ]
 
 end Pi
 

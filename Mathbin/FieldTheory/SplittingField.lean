@@ -407,7 +407,7 @@ private theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field {p : K[
     simp only [prod_multiset_root_eq_finset_root, monic_prod_of_monic, monic_X_sub_C, monic_pow, forall_true_iff]
   have hdegree : (Multiset.map (fun a : K => X - C a) p.roots).Prod.natDegree = p.nat_degree := by
     rw [← hroots, nat_degree_multiset_prod _ (zero_nmem_multiset_map_X_sub_C _ fun a : K => a)]
-    simp only [eq_self_iff_true, mul_oneₓ, Nat.cast_id, nsmul_eq_mul, Multiset.sum_repeat, Multiset.map_const,
+    simp only [eq_self_iff_true, mul_oneₓ, Nat.cast_idₓ, nsmul_eq_mul, Multiset.sum_repeat, Multiset.map_const,
       nat_degree_X_sub_C, Function.comp, Multiset.map_map]
   obtain ⟨q, hq⟩ := prod_multiset_X_sub_C_dvd p
   have qzero : q ≠ 0 := by
@@ -493,15 +493,12 @@ theorem C_leading_coeff_mul_prod_multiset_X_sub_C {K : Type _} [CommRingₓ K] [
     simp only [← hroots, Multiset.card_map]
   rw [← C_leading_coeff_mul_prod_multiset_X_sub_C_of_field this]
   simp only [map_C, Function.comp_app, map_X, map_sub]
-  congr 2
-  · rw [leading_coeff_map_of_leading_coeff_ne_zero]
+  have w : (algebraMap K (FractionRing K)) p.leading_coeff ≠ 0 := by
     intro hn
     apply hcoeff
     apply IsFractionRing.injective K (FractionRing K)
     simp [hn]
-    
-  rw [← h]
-  simp
+  rw [← h, leading_coeff_map_of_leading_coeff_ne_zero _ w, Multiset.map_map]
 
 /-- A polynomial splits if and only if it has as many roots as its degree. -/
 theorem splits_iff_card_roots {p : K[X]} : Splits (RingHom.id K) p ↔ p.roots.card = p.natDegree := by

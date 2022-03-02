@@ -266,6 +266,38 @@ theorem kernel_iso_of_eq_refl {h : f = f} : kernelIsoOfEq h = Iso.refl (kernel f
   ext
   simp [kernel_iso_of_eq]
 
+@[simp, reassoc]
+theorem kernel_iso_of_eq_hom_comp_ι {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) :
+    (kernelIsoOfEq h).Hom ≫ kernel.ι _ = kernel.ι _ := by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem kernel_iso_of_eq_inv_comp_ι {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) :
+    (kernelIsoOfEq h).inv ≫ kernel.ι _ = kernel.ι _ := by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem lift_comp_kernel_iso_of_eq_hom {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) he :
+    kernel.lift _ e he ≫ (kernelIsoOfEq h).Hom =
+      kernel.lift _ e
+        (by
+          simp [← h, he]) :=
+  by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem lift_comp_kernel_iso_of_eq_inv {Z} {f g : X ⟶ Y} [HasKernel f] [HasKernel g] (h : f = g) (e : Z ⟶ X) he :
+    kernel.lift _ e he ≫ (kernelIsoOfEq h).inv =
+      kernel.lift _ e
+        (by
+          simp [h, he]) :=
+  by
+  induction h
+  simp
+
 @[simp]
 theorem kernel_iso_of_eq_trans {f g h : X ⟶ Y} [HasKernel f] [HasKernel g] [HasKernel h] (w₁ : f = g) (w₂ : g = h) :
     kernelIsoOfEq w₁ ≪≫ kernelIsoOfEq w₂ = kernelIsoOfEq (w₁.trans w₂) := by
@@ -624,6 +656,38 @@ def cokernelIsoOfEq {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) 
 theorem cokernel_iso_of_eq_refl {h : f = f} : cokernelIsoOfEq h = Iso.refl (cokernel f) := by
   ext
   simp [cokernel_iso_of_eq]
+
+@[simp, reassoc]
+theorem π_comp_cokernel_iso_of_eq_hom {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) :
+    cokernel.π _ ≫ (cokernelIsoOfEq h).Hom = cokernel.π _ := by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem π_comp_cokernel_iso_of_eq_inv {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) :
+    cokernel.π _ ≫ (cokernelIsoOfEq h).inv = cokernel.π _ := by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem cokernel_iso_of_eq_hom_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z) he :
+    (cokernelIsoOfEq h).Hom ≫ cokernel.desc _ e he =
+      cokernel.desc _ e
+        (by
+          simp [h, he]) :=
+  by
+  induction h
+  simp
+
+@[simp, reassoc]
+theorem cokernel_iso_of_eq_inv_comp_desc {Z} {f g : X ⟶ Y} [HasCokernel f] [HasCokernel g] (h : f = g) (e : Y ⟶ Z) he :
+    (cokernelIsoOfEq h).inv ≫ cokernel.desc _ e he =
+      cokernel.desc _ e
+        (by
+          simp [← h, he]) :=
+  by
+  induction h
+  simp
 
 @[simp]
 theorem cokernel_iso_of_eq_trans {f g h : X ⟶ Y} [HasCokernel f] [HasCokernel g] [HasCokernel h] (w₁ : f = g)

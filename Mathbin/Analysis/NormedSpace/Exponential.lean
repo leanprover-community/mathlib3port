@@ -94,7 +94,7 @@ theorem exp_eq_tsum : exp 𝕂 𝔸 = fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : �
 theorem exp_eq_tsum_field : exp 𝕂 𝕂 = fun x : 𝕂 => ∑' n : ℕ, x ^ n / n ! :=
   funext exp_series_sum_eq_field
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 theorem exp_zero : exp 𝕂 𝔸 0 = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (1 / n ! : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by
     have key : ∀ n _ : n ∉ ({0} : Finset ℕ), (if n = 0 then (1 : 𝔸) else 0) = 0 := fun n hn =>

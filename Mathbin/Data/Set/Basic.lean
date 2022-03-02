@@ -840,7 +840,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
   exacts[(ha hx).elim, hxt]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   simp only [insert_subset, exists_and_distrib_right, ssubset_def, not_subset]
   simp only [exists_prop, and_comm]

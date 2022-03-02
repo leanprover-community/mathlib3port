@@ -161,12 +161,10 @@ section Fibrec
 
 variable {α : Type _} [CommSemiringₓ α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- The recurrence relation satisfied by the Fibonacci sequence. -/
 def fibRec : LinearRecurrence α where
   order := 2
-  coeffs := «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  coeffs := ![1, 1]
 
 section Poly
 

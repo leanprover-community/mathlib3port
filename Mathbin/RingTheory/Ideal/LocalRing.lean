@@ -108,7 +108,7 @@ end LocalRing
 
 variable {R : Type u} {S : Type v} {T : Type w}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » nonunits R)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » nonunits R)
 theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
     (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, x + y ∈ Nonunits R) : LocalRing R :=
   { exists_pair_ne := ⟨0, 1, hnze⟩,

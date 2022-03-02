@@ -58,7 +58,7 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ MulSupport f ↔ f x ≠
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
   forall_congrₓ fun x => not_imp_comm

@@ -86,7 +86,7 @@ include V
 
 open AffineMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » s)
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)

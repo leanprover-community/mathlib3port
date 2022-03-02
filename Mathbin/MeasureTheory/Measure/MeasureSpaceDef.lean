@@ -436,8 +436,8 @@ alias measure_congr ← Filter.EventuallyEq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -496,7 +496,7 @@ notation3 "∀ᵐ " (...) ", " r:(scoped P =>
 notation3 "∃ᵐ " (...) ", " r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

@@ -101,17 +101,10 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0 ) (hw' : (∑ i
         exact_mod_cast hw')
       (fun i _ => (z i).coe_nonneg) hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0` and real exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0 ) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
-  have h :=
-    rpow_arith_mean_le_arith_mean_rpow univ
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") _ hp
+  have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
   · simpa [Finₓ.sum_univ_succ] using h
     
   · simp [hw', Finₓ.sum_univ_succ]
@@ -236,18 +229,11 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     rwa [← coe_eq_coe, ← h_sum_nnreal]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- Weighted generalized mean inequality, version for two elements of `ℝ≥0∞` and real
 exponents. -/
 theorem rpow_arith_mean_le_arith_mean2_rpow (w₁ w₂ z₁ z₂ : ℝ≥0∞) (hw' : w₁ + w₂ = 1) {p : ℝ} (hp : 1 ≤ p) :
     (w₁ * z₁ + w₂ * z₂) ^ p ≤ w₁ * z₁ ^ p + w₂ * z₂ ^ p := by
-  have h :=
-    rpow_arith_mean_le_arith_mean_rpow univ
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") _ hp
+  have h := rpow_arith_mean_le_arith_mean_rpow univ ![w₁, w₂] ![z₁, z₂] _ hp
   · simpa [Finₓ.sum_univ_succ] using h
     
   · simp [hw', Finₓ.sum_univ_succ]

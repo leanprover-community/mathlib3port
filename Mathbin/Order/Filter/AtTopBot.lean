@@ -1259,7 +1259,7 @@ theorem tendsto_at_bot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
 
 end OrderIso
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.

@@ -49,7 +49,7 @@ variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler normed_space 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup, [anonymous]

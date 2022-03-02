@@ -205,7 +205,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -224,7 +224,7 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,

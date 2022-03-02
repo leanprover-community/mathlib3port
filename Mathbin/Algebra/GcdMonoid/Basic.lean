@@ -589,10 +589,10 @@ theorem lcm_dvd_iff [GcdMonoid α] {a b c : α} : lcm a b ∣ c ↔ a ∣ c ∧ 
     
 
 theorem dvd_lcm_left [GcdMonoid α] (a b : α) : a ∣ lcm a b :=
-  (lcm_dvd_iff.1 dvd_rfl).1
+  (lcm_dvd_iff.1 (dvd_refl (lcm a b))).1
 
 theorem dvd_lcm_right [GcdMonoid α] (a b : α) : b ∣ lcm a b :=
-  (lcm_dvd_iff.1 dvd_rfl).2
+  (lcm_dvd_iff.1 (dvd_refl (lcm a b))).2
 
 theorem lcm_dvd [GcdMonoid α] {a b c : α} (hab : a ∣ b) (hcb : c ∣ b) : lcm a c ∣ b :=
   lcm_dvd_iff.2 ⟨hab, hcb⟩

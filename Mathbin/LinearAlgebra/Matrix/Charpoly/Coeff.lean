@@ -62,7 +62,7 @@ variable (M)
 theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏ i : n, X - c (M i i)).degree < ↑(Fintype.card n - 1) := by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equivₓ.refl n)), sum_insert (not_mem_erase (Equivₓ.refl n) univ),
     add_commₓ]
-  simp only [charmatrix_apply_eq, one_mulₓ, Equivₓ.Perm.sign_refl, id.def, Int.cast_one, Units.coe_one, add_sub_cancel,
+  simp only [charmatrix_apply_eq, one_mulₓ, Equivₓ.Perm.sign_refl, id.def, Int.cast_oneₓ, Units.coe_one, add_sub_cancel,
     Equivₓ.coe_refl]
   rw [← mem_degree_lt]
   apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))

@@ -227,11 +227,11 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | some r => h₁ _
     | none => h₂⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔ ∀ r : ℝ≥0 , p r :=
   Option.ball_ne_none
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0 , p r :=
   Option.bex_ne_none
 
@@ -388,14 +388,14 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
 theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0 , f x :=
   Eq.symm <| (infi_congr _ neTopEquivNnreal.symm.Surjective) fun x => rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0 , f x := by
   rw [infi_subtype', cinfi_ne_top]
 
 theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x : ℝ≥0 , f x :=
   @cinfi_ne_top (OrderDual α) _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0 , f x :=
   @infi_ne_top (OrderDual α) _ _
 
@@ -2095,7 +2095,7 @@ theorem Inf_add {s : Set ℝ≥0∞} : inf s + a = ⨅ b ∈ s, b + a := by
 theorem add_infi {a : ℝ≥0∞} : a + infi f = ⨅ b, a + f b := by
   rw [add_commₓ, infi_add] <;> simp [add_commₓ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a a')
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a a')
 theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + infi g = ⨅ a, f a + g a :=
   suffices (⨅ a, f a + g a) ≤ infi f + infi g from
     le_antisymmₓ (le_infi fun a => add_le_add (infi_le _ _) (infi_le _ _)) this

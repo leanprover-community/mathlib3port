@@ -937,7 +937,7 @@ theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 := by
   apply
     minpoly.gcd_domain_dvd ℚ (IsIntegral h (Nat.pos_of_ne_zeroₓ hpos))
       (Polynomial.Monic.is_primitive (monic_X_pow_sub_C 1 (ne_of_ltₓ (Nat.pos_of_ne_zeroₓ hpos)).symm))
-  simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, RingHom.eq_int_cast, Int.cast_one, aeval_one,
+  simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, RingHom.eq_int_cast, Int.cast_oneₓ, aeval_one,
     AlgHom.map_sub, sub_self]
 
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
@@ -1046,7 +1046,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) : mi
     rw [degree_map_eq_of_leading_coeff_ne_zero (Int.castRingHom (Zmod p)) _] at hunit
     · exact (minpoly.degree_pos (IsIntegral h hpos)).ne' hunit
       
-    simp only [Pmonic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff, one_ne_zero]
+    simp only [Pmonic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_oneₓ, Ne.def, not_false_iff, one_ne_zero]
     
 
 /-- If `m : ℕ` is coprime with `n`,

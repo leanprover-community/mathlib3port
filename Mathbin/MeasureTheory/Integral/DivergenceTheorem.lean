@@ -413,7 +413,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
       have : ∀ c : ℝ, const (Finₓ 0) c = isEmptyElim := fun c => Subsingleton.elimₓ _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Finₓ 0 => volume]
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -421,7 +421,7 @@ See also `measure_theory.interval_integral.integral_eq_sub_of_has_deriv_right` f
 only assumes right differentiability of `f`.
 -/
 theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ} (hs : Countable s)
-    (Hc : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)")
+    (Hc : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)")
     (Hd : ∀, ∀ x ∈ ioo (min a b) (max a b) \ s, ∀, HasDerivAt f (f' x) x) (Hi : IntervalIntegrable f' volume a b) :
     (∫ x in a..b, f' x) = f b - f a := by
   cases' le_totalₓ a b with hab hab
@@ -433,14 +433,6 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- **Divergence theorem** for functions on the plane along rectangles. It is formulated in terms of
 two functions `f g : ℝ × ℝ → E` and an integral over `Icc a b = [a.1, b.1] × [a.2, b.2]`, where
 `a b : ℝ × ℝ`, `a ≤ b`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -464,18 +456,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
   calc
     (∫ x in icc a b, f' x (1, 0) + g' x (0, 1)) =
         ∑ i : Finₓ 2,
-          (∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove),
-              («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") i
-                (e.symm <| i.insertNth (e b i) x)) -
-            ∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove),
-              («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") i
-                (e.symm <| i.insertNth (e a i) x) :=
+          (∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove), ![f, g] i (e.symm <| i.insertNth (e b i) x)) -
+            ∫ x in icc (e a ∘ i.succAbove) (e b ∘ i.succAbove), ![f, g] i (e.symm <| i.insertNth (e a i) x) :=
       by
       refine'
-        integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _
-          («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-          («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") s hs a b
-          hle _ (fun x hx => _) _ _ Hi
+        integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv e _ _ ![f, g] ![f', g'] s hs a b hle _
+          (fun x hx => _) _ _ Hi
       · exact fun x y => (OrderIso.finTwoArrowIso ℝ).symm.le_iff_le
         
       · exact (volume_preserving_fin_two_arrow ℝ).symm
@@ -510,12 +496,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       abel
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 /-- **Divergence theorem** for functions on the plane. It is formulated in terms of two functions
 `f g : ℝ × ℝ → E` and iterated integral `∫ x in a₁..b₁, ∫ y in a₂..b₂, _`, where
 `a₁ a₂ b₁ b₂ : ℝ`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -529,18 +515,18 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : Countable s)
     (Hcf :
       ContinuousOn f
-        ("././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"))
     (Hcg :
       ContinuousOn g
-        ("././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"))
     (Hdf : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt f (f' x) x)
     (Hdg : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt g (g' x) x)
     (Hi :
       IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1))
-        ("././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)")) :
+        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)")) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) - ∫ y in a₂..b₂, f (a₁, y) :=
   by

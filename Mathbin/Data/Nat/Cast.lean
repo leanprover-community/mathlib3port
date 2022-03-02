@@ -368,7 +368,7 @@ theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
 end RingHomClass
 
 @[simp, norm_cast]
-theorem Nat.cast_id (n : ℕ) : ↑n = n :=
+theorem Nat.cast_idₓ (n : ℕ) : ↑n = n :=
   (eq_nat_cast (RingHom.id ℕ) n).symm
 
 @[simp]

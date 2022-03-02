@@ -192,7 +192,7 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
           rw [← Nat.succ_le_iff] at h''
           rw [← tsub_add_eq_tsub_tsub, add_commₓ, tsub_add_cancel_of_le h'']
         rw [this, pochhammer_eval_succ]
-        rw_mod_cast [tsub_add_cancel_of_le (h'.trans n.pred_le)]
+        rw_mod_cast[tsub_add_cancel_of_le (h'.trans n.pred_le)]
         
       
     

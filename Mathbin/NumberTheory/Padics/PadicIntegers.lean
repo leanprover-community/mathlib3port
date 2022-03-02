@@ -181,7 +181,7 @@ def Coe.ringHom : ℤ_[p] →+* ℚ_[p] where
 
 @[simp, norm_cast]
 theorem coe_pow (x : ℤ_[p]) (n : ℕ) : (↑(x ^ n) : ℚ_[p]) = (↑x : ℚ_[p]) ^ n :=
-  Coe.ringHom.map_pow x n
+  (Coe.ringHom : ℤ_[p] →+* ℚ_[p]).map_pow x n
 
 @[simp]
 theorem mk_coe : ∀ k : ℤ_[p], (⟨k, k.2⟩ : ℤ_[p]) = k

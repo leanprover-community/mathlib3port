@@ -110,7 +110,7 @@ theorem nat_degree_cyclotomic' {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     (cyclotomic' n R).natDegree = Nat.totient n := by
   rw [cyclotomic']
   rw [nat_degree_prod (primitiveRoots n R) fun z : R => X - C z]
-  simp only [IsPrimitiveRoot.card_primitive_roots h, mul_oneₓ, nat_degree_X_sub_C, Nat.cast_id, Finset.sum_const,
+  simp only [IsPrimitiveRoot.card_primitive_roots h, mul_oneₓ, nat_degree_X_sub_C, Nat.cast_idₓ, Finset.sum_const,
     nsmul_eq_mul]
   intro z hz
   exact X_sub_C_ne_zero z
@@ -252,7 +252,7 @@ theorem int_cyclotomic_rw {n : ℕ} (h : n ≠ 0) :
     cyclotomic n ℤ = (int_coeff_of_cyclotomic' (Complex.is_primitive_root_exp n h)).some := by
   simp only [cyclotomic, h, dif_neg, not_false_iff]
   ext i
-  simp only [coeff_map, Int.cast_id, RingHom.eq_int_cast]
+  simp only [coeff_map, Int.cast_idₓ, RingHom.eq_int_cast]
 
 /-- `cyclotomic n R` comes from `cyclotomic n ℤ`. -/
 theorem map_cyclotomic_int (n : ℕ) (R : Type _) [Ringₓ R] : map (Int.castRingHom R) (cyclotomic n ℤ) = cyclotomic n R :=
@@ -333,7 +333,7 @@ theorem degree_cyclotomic (n : ℕ) (R : Type _) [Ringₓ R] [Nontrivial R] : (c
     rw [← degree_cyclotomic' (Complex.is_primitive_root_exp k.succ (Nat.succ_ne_zero k))]
     exact (int_cyclotomic_spec k.succ).2.1
     
-  simp only [(int_cyclotomic_spec n).right.right, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def,
+  simp only [(int_cyclotomic_spec n).right.right, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_oneₓ, Ne.def,
     not_false_iff, one_ne_zero]
 
 /-- The natural degree of `cyclotomic n` is `totient n`. -/
@@ -355,7 +355,7 @@ theorem prod_cyclotomic_eq_X_pow_sub_one {n : ℕ} (hpos : 0 < n) (R : Type _) [
   have integer : (∏ i in Nat.divisors n, cyclotomic i ℤ) = X ^ n - 1 := by
     apply map_injective (Int.castRingHom ℂ) Int.cast_injective
     rw [map_prod (Int.castRingHom ℂ) fun i => cyclotomic i ℤ]
-    simp only [int_cyclotomic_spec, Polynomial.map_pow, Nat.cast_id, map_X, map_one, map_sub]
+    simp only [int_cyclotomic_spec, Polynomial.map_pow, Nat.cast_idₓ, map_X, map_one, map_sub]
     exact prod_cyclotomic'_eq_X_pow_sub_one hpos (Complex.is_primitive_root_exp n (ne_of_ltₓ hpos).symm)
   have coerc : X ^ n - 1 = map (Int.castRingHom R) (X ^ n - 1) := by
     simp only [Polynomial.map_pow, Polynomial.map_X, Polynomial.map_one, Polynomial.map_sub]

@@ -196,7 +196,7 @@ theorem T_derivative_eq_U : ∀ n : ℕ, derivative (t R (n + 1)) = (n + 1) * u 
         simp only [T_add_two _ (n + 1), derivative_sub, derivative_mul, derivative_X, derivative_bit0, derivative_one,
           bit0_zero, zero_mul, zero_addₓ, mul_oneₓ]
       _ = 2 * (u R (n + 1 + 1) - X * u R (n + 1)) + 2 * X * ((n + 1 + 1) * u R (n + 1)) - (n + 1) * u R n := by
-        rw_mod_cast [T_derivative_eq_U, T_derivative_eq_U, T_eq_U_sub_X_mul_U]
+        rw_mod_cast[T_derivative_eq_U, T_derivative_eq_U, T_eq_U_sub_X_mul_U]
       _ = (n + 1) * (2 * X * u R (n + 1) - u R n) + 2 * u R (n + 2) := by
         ring
       _ = (n + 1) * u R (n + 2) + 2 * u R (n + 2) := by

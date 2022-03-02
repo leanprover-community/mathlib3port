@@ -495,7 +495,7 @@ theorem is_maximal_comap_C_of_is_maximal [Nontrivial R] (hP' : ∀ x : R, c x �
     apply is_integral_is_localization_polynomial_quotient P _ (Submodule.coe_mem m)
   rw [(map_bot.symm : (⊥ : Ideal (Localization M')) = map (algebraMap (R[X] ⧸ P) (Localization M')) ⊥)]
   let bot_maximal := (bot_quotient_is_maximal_iff _).mpr hP
-  refine' map.is_maximal (algebraMap _ _) (localization_map_bijective_of_field hM' _) bot_maximal
+  refine' map.is_maximal (algebraMap _ _) (IsField.localization_map_bijective hM' _) bot_maximal
   rwa [← quotient.maximal_ideal_iff_is_field_quotient, ← bot_quotient_is_maximal_iff]
 
 /-- Used to bootstrap the more general `quotient_mk_comp_C_is_integral_of_jacobson` -/
@@ -522,7 +522,7 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
     refine' RingHom.is_integral_trans (algebraMap (R ⧸ P') (Localization M)) (IsLocalization.map _ _ M.le_comap_map) _ _
     · exact
         (algebraMap (R ⧸ P') (Localization M)).is_integral_of_surjective
-          (localization_map_bijective_of_field hM
+          (IsField.localization_map_bijective hM
               ((quotient.maximal_ideal_iff_is_field_quotient _).mp (is_maximal_comap_C_of_is_maximal P hP'))).2
       
     · -- `convert` here is faster than `exact`, and this proof is near the time limit.

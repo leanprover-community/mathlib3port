@@ -99,7 +99,7 @@ instance : Inhabited StieltjesFunction :=
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=

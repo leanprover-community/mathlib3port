@@ -215,11 +215,8 @@ theorem poly_of_interest_vars_eq (n : ℕ) :
 theorem poly_of_interest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ.product (range (n + 1)) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
-    peval (polyOfInterest p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") =
+    peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
       ((x * y).coeff (n + 1) + p ^ (n + 1) * x.coeff (n + 1) * y.coeff (n + 1) -
           y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i)) -
         x.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * y.coeff i ^ p ^ (n + 1 - i) :=
@@ -243,12 +240,9 @@ theorem peval_poly_of_interest (n : ℕ) (x y : 𝕎 k) :
 
 variable [CharP k p]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- The characteristic `p` version of `peval_poly_of_interest` -/
 theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
-    peval (polyOfInterest p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") =
+    peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
       (x * y).coeff (n + 1) - y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) - x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) :=
   by
   rw [peval_poly_of_interest]
@@ -269,8 +263,6 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
 
 variable (k)
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem nth_mul_coeff' (n : ℕ) :
     ∃ f : TruncatedWittVector p (n + 1) k → TruncatedWittVector p (n + 1) k → k,
@@ -285,9 +277,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     intro x y
     apply f₀
     rintro ⟨a, ha⟩
-    apply
-      Function.uncurry
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+    apply Function.uncurry ![x, y]
     simp only [true_andₓ, Multiset.mem_cons, range_coe, product_val, Multiset.mem_range, Multiset.mem_product,
       Multiset.range_succ, mem_univ_val] at ha
     refine' ⟨a.fst, ⟨a.snd, _⟩⟩

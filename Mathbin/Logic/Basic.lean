@@ -944,7 +944,7 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem ball_mem_comm {α β} [HasMem α β] {s : β} {p : α → α → Prop} :
     (∀ a b _ : a ∈ s _ : b ∈ s, p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
@@ -1214,7 +1214,7 @@ theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
 theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by
   simp [@eq_comm _ a']
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem and_forall_ne (a : α) : (p a ∧ ∀ b _ : b ≠ a, p b) ↔ ∀ b, p b := by
   simp only [← @forall_eq _ p a, ← forall_and_distrib, ← or_imp_distrib, Classical.em, forall_const]
 

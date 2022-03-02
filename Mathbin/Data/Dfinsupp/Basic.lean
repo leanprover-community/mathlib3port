@@ -1050,7 +1050,7 @@ theorem support_eq_empty {f : Π₀ i, β i} : f.support = ∅ ↔ f = 0 :=
 instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
   decidableOfIff _ <| support_eq_empty.trans eq_comm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} : ↑f.support ⊆ s ↔ ∀ i _ : i ∉ s, f i = 0 := by
   simp [Set.subset_def] <;> exact forall_congrₓ fun i => not_imp_comm
 

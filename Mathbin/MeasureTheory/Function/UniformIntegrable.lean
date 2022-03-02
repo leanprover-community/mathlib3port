@@ -187,7 +187,7 @@ end Egorov
 variable [SemilatticeSup ι] [Nonempty ι] [Encodable ι] [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β]
   {f : ι → α → β} {g : α → β} {s : Set α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of measurable functions that converges
 to `g : α → β` almost everywhere on a measurable set `s` of finite measure, then for all `ε > 0`,
 there exists a subset `t ⊆ s` such that `μ t ≤ ε` and `f` converges to `g` uniformly on `s \ t`.

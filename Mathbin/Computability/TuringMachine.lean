@@ -2512,7 +2512,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (n «expr ≤ » S.length)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (n «expr ≤ » S.length)
 theorem tr_respects_aux₁ {k} o q v {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) n (_ : n ≤ S.length) :
     Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩

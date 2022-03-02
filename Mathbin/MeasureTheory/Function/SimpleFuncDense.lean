@@ -417,7 +417,7 @@ theorem measure_preimage_lt_top_of_mem_ℒp (hp_pos : p ≠ 0) (hp_ne_top : p �
   · simp [hf_snorm]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) :
     Memℒp f p μ := by
   by_cases' hp0 : p = 0
@@ -442,11 +442,11 @@ theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (
     exact (Ennreal.rpow_lt_top_of_nonneg Ennreal.to_real_nonneg Ennreal.coe_ne_top).Ne
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) : Memℒp f p μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
   ⟨fun h => measure_preimage_lt_top_of_mem_ℒp hp_pos hp_ne_top f h, fun h => mem_ℒp_of_finite_measure_preimage p h⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
   mem_ℒp_one_iff_integrable.symm.trans <| mem_ℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
 
@@ -477,7 +477,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : Integrable
     μ (f ⁻¹' {x}) < ∞ :=
   integrable_iff.mp hf x hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » 0)
 theorem measure_support_lt_top [Zero β] (f : α →ₛ β) (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) : μ (Support f) < ∞ := by
   rw [support_eq]
   refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)

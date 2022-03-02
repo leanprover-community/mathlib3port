@@ -349,7 +349,7 @@ theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
       simp [zpow_add, zpow_mul, pow_order_of_eq_one]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option pp.all
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option pp.all
 set_option pp.all true
 
 @[to_additive nsmul_inj_iff_of_add_order_of_eq_zero]

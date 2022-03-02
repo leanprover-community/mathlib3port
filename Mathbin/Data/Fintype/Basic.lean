@@ -203,6 +203,10 @@ theorem compl_ne_univ_iff_nonempty (s : Finset α) : sᶜ ≠ univ ↔ s.Nonempt
 theorem compl_singleton (a : α) : ({a} : Finset α)ᶜ = univ.erase a := by
   rw [compl_eq_univ_sdiff, sdiff_singleton_eq_erase]
 
+theorem insert_inj_on' (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ : Finset α) := by
+  rw [coe_compl]
+  exact s.insert_inj_on
+
 end BooleanAlgebra
 
 @[simp]
@@ -1444,7 +1448,7 @@ instance Quotientₓ.fintype [Fintype α] (s : Setoidₓ α) [DecidableRel ((· 
 instance Finset.fintype [Fintype α] : Fintype (Finset α) :=
   ⟨univ.Powerset, fun x => Finset.mem_powerset.2 (Finset.subset_univ _)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
 -- irreducible due to this conversation on Zulip:
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/
 -- topic/.60simp.60.20ignoring.20lemmas.3F/near/241824115
@@ -1695,7 +1699,8 @@ theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : Perm α}, f ∈ permsO
         else
           mem_cons_of_memₓ _ <|
             mem_of_mem_perms_of_list hg₁ <| by
-              rw [eq_inv_mul_iff_mul_eq.2 hg₂, mul_apply, swap_inv, swap_apply_def] <;> split_ifs <;> cc
+              rw [eq_inv_mul_iff_mul_eq.2 hg₂, mul_apply, swap_inv, swap_apply_def] <;>
+                split_ifs <;> [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
 
 theorem mem_perms_of_list_iff {l : List α} {f : Perm α} : f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
   ⟨mem_of_mem_perms_of_list, mem_perms_of_list_of_mem⟩
@@ -2044,7 +2049,7 @@ theorem Fintype.exists_ne_map_eq_of_infinite [Infinite α] [Fintype β] (f : α 
   contrapose
   apply hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
 -- irreducible due to this conversation on Zulip:
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/
 -- topic/.60simp.60.20ignoring.20lemmas.3F/near/241824115

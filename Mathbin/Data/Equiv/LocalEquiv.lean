@@ -81,8 +81,8 @@ def mfldCfg : SimpsCfg where
 
 namespace Tactic.Interactive
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- A very basic tactic to show that sets showing up in manifolds coincide or are included in
 one another. -/
 unsafe def mfld_set_tac : tactic Unit := do

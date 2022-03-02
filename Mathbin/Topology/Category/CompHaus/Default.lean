@@ -161,7 +161,7 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.Cone F where

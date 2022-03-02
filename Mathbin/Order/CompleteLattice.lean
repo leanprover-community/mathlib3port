@@ -294,10 +294,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -481,11 +481,11 @@ theorem IsGlb.infi_eq (h : IsGlb (Range s) a) : (⨅ j, s j) = a :=
 theorem le_supr_of_le (i : ι) (h : a ≤ s i) : a ≤ supr s :=
   le_transₓ h (le_supr _ i)
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem le_bsupr {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) : f i hi ≤ ⨆ (i) (hi), f i hi :=
   le_supr_of_le i <| le_supr (f i) hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem le_bsupr_of_le {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) (h : a ≤ f i hi) :
     a ≤ ⨆ (i) (hi), f i hi :=
   le_transₓ h (le_bsupr i hi)
@@ -505,8 +505,8 @@ theorem supr_le_supr (h : ∀ i, s i ≤ t i) : supr s ≤ supr t :=
 theorem supr_le_supr2 {t : ι₂ → α} (h : ∀ i, ∃ j, s i ≤ t j) : supr s ≤ supr t :=
   supr_le fun j => Exists.elim (h j) le_supr_of_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem bsupr_le_bsupr {p : ι → Prop} {f g : ∀ i hi : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
     (⨆ (i) (hi), f i hi) ≤ ⨆ (i) (hi), g i hi :=
   bsupr_le fun i hi => le_transₓ (h i hi) (le_bsupr i hi)
@@ -545,7 +545,7 @@ theorem Sup_sUnion {s : Set (Set α)} : sup (⋃₀s) = ⨆ t ∈ s, sup t := by
 theorem Monotone.le_map_supr [CompleteLattice β] {f : α → β} (hf : Monotone f) : (⨆ i, f (s i)) ≤ f (supr s) :=
   supr_le fun i => hf <| le_supr _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i h)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i h)
 theorem Monotone.le_map_supr2 [CompleteLattice β] {f : α → β} (hf : Monotone f) {ι' : ι → Sort _} (s : ∀ i, ι' i → α) :
     (⨆ (i) (h : ι' i), f (s i h)) ≤ f (⨆ (i) (h : ι' i), s i h) :=
   calc
@@ -600,11 +600,11 @@ theorem infi_le' (s : ι → α) (i : ι) : infi s ≤ s i :=
 theorem infi_le_of_le (i : ι) (h : s i ≤ a) : infi s ≤ a :=
   le_transₓ (infi_le _ i) h
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem binfi_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) : (⨅ (i) (hi), f i hi) ≤ f i hi :=
   infi_le_of_le i <| infi_le (f i) hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) (h : f i hi ≤ a) :
     (⨅ (i) (hi), f i hi) ≤ a :=
   le_transₓ (binfi_le i hi) h
@@ -612,7 +612,7 @@ theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi :
 theorem le_infi (h : ∀ i, a ≤ s i) : a ≤ infi s :=
   le_Inf fun b ⟨i, Eq⟩ => Eq ▸ h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem le_binfi {p : ι → Prop} {f : ∀ i h : p i, α} (h : ∀ i hi, a ≤ f i hi) : a ≤ ⨅ (i) (hi), f i hi :=
   le_infi fun i => le_infi <| h i
 
@@ -625,8 +625,8 @@ theorem infi_le_infi (h : ∀ i, s i ≤ t i) : infi s ≤ infi t :=
 theorem infi_le_infi2 {t : ι₂ → α} (h : ∀ j, ∃ i, s i ≤ t j) : infi s ≤ infi t :=
   le_infi fun j => Exists.elim (h j) infi_le_of_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem binfi_le_binfi {p : ι → Prop} {f g : ∀ i h : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
     (⨅ (i) (hi), f i hi) ≤ ⨅ (i) (hi), g i hi :=
   le_binfi fun i hi => le_transₓ (binfi_le i hi) (h i hi)
@@ -875,7 +875,7 @@ theorem infi_exists {p : ι → Prop} {f : Exists p → α} : (⨅ x, f x) = ⨅
 theorem supr_exists {p : ι → Prop} {f : Exists p → α} : (⨆ x, f x) = ⨆ i, ⨆ h : p i, f ⟨i, h⟩ :=
   @infi_exists (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (h₁ h₂)
 theorem infi_and {p q : Prop} {s : p ∧ q → α} : infi s = ⨅ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => infi_le _ _) (le_infi fun ⟨i, h⟩ => infi_le_of_le i <| infi_le _ _)
 
@@ -884,7 +884,7 @@ theorem infi_and' {p q : Prop} {s : p → q → α} : (⨅ (h₁ : p) (h₂ : q)
   symm
   exact infi_and
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (h₁ h₂)
 theorem supr_and {p q : Prop} {s : p ∧ q → α} : supr s = ⨆ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   @infi_and (OrderDual α) _ _ _ _
 
@@ -1073,12 +1073,12 @@ theorem infi_sigma {p : β → Type _} {f : Sigma p → α} : (⨅ x, f x) = ⨅
 theorem supr_sigma {p : β → Type _} {f : Sigma p → α} : (⨆ x, f x) = ⨆ (i) (h : p i), f ⟨i, h⟩ :=
   @infi_sigma (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem infi_prod {γ : Type _} {f : β × γ → α} : (⨅ x, f x) = ⨅ (i) (j), f (i, j) :=
   eq_of_forall_le_iff fun c => by
     simp only [le_infi_iff, Prod.forall]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem supr_prod {γ : Type _} {f : β × γ → α} : (⨆ x, f x) = ⨆ (i) (j), f (i, j) :=
   @infi_prod (OrderDual α) _ _ _ _
 
@@ -1360,7 +1360,7 @@ theorem SetIndependent.disjoint_Sup {x : α} {y : Set α} (hx : x ∈ s) (hy : y
 
 omit hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
 
@@ -1383,7 +1383,7 @@ theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable {t : ι → α} (ht : Independent t)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 
@@ -1391,7 +1391,7 @@ theorem independent_def' {ι : Type _} {t : ι → α} : Independent t ↔ ∀ i
   simp_rw [Sup_image]
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem independent_def'' {ι : Type _} {t : ι → α} :
     Independent t ↔ ∀ i, Disjoint (t i) (sup { a | ∃ (j : _)(_ : j ≠ i), t j = a }) := by
   rw [independent_def']

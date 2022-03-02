@@ -43,7 +43,7 @@ theorem mul_left_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : Bijective fun 
   Fintype.injective_iff_bijective.1 <| mul_left_injective₀ ha
 
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
-def groupWithZeroOfFintype (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
+def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [DecidableEq M] [Fintype M] [Nontrivial M] :
     GroupWithZeroₓ M :=
   { ‹Nontrivial M›, ‹CancelMonoidWithZero M› with
     inv := fun a => if h : a = 0 then 0 else Fintype.bijInv (mul_right_bijective_of_fintype₀ h) 1,
@@ -65,8 +65,18 @@ variable [Ringₓ R] [IsDomain R] [Fintype R]
 
 TODO: Prove Wedderburn's little theorem,
 which shows a finite domain is in fact commutative, hence a field. -/
-def divisionRingOfIsDomain (R : Type _) [Ringₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : DivisionRing R :=
-  { show GroupWithZeroₓ R from groupWithZeroOfFintype R, ‹Ringₓ R› with }
+def Fintype.divisionRingOfIsDomain (R : Type _) [Ringₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : DivisionRing R :=
+  { show GroupWithZeroₓ R from Fintype.groupWithZeroOfCancel R, ‹Ringₓ R› with }
+
+/-- Every finite commutative domain is a field.
+
+TODO: Prove Wedderburn's little theorem, which shows a finite domain is automatically commutative,
+dropping one assumption from this theorem. -/
+def Fintype.fieldOfDomain R [CommRingₓ R] [IsDomain R] [DecidableEq R] [Fintype R] : Field R :=
+  { Fintype.groupWithZeroOfCancel R, ‹CommRingₓ R› with }
+
+theorem Fintype.is_field_of_domain R [CommRingₓ R] [IsDomain R] [Fintype R] : IsField R :=
+  @Field.to_is_field R <| @Fintype.fieldOfDomain R _ _ (Classical.decEq R) _
 
 end Ringₓ
 
@@ -102,7 +112,7 @@ instance [Fintype Rˣ] : IsCyclic Rˣ :=
 
 /-- Every finite integral domain is a field. -/
 def fieldOfIsDomain [DecidableEq R] [Fintype R] : Field R :=
-  { divisionRingOfIsDomain R, ‹CommRingₓ R› with }
+  { Fintype.divisionRingOfIsDomain R, ‹CommRingₓ R› with }
 
 section
 

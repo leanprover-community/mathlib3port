@@ -34,7 +34,7 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
@@ -48,7 +48,7 @@ structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G 
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AeDisjoint : ∀ g _ : g ≠ (0 : G), AeDisjoint μ (g +ᵥ s) s
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/

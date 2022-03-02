@@ -221,7 +221,7 @@ theorem cycle_type_prime_order {σ : Perm α} (hσ : (orderOf σ).Prime) :
 theorem is_cycle_of_prime_order {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : σ.support.card < 2 * orderOf σ) :
     σ.IsCycle := by
   obtain ⟨n, hn⟩ := cycle_type_prime_order h1
-  rw [← σ.sum_cycle_type, hn, Multiset.sum_repeat, nsmul_eq_mul, Nat.cast_id, mul_lt_mul_right (order_of_pos σ),
+  rw [← σ.sum_cycle_type, hn, Multiset.sum_repeat, nsmul_eq_mul, Nat.cast_idₓ, mul_lt_mul_right (order_of_pos σ),
     Nat.succ_lt_succ_iff, Nat.lt_succ_iffₓ, Nat.le_zero_iffₓ] at h2
   rw [← card_cycle_type_eq_one, hn, card_repeat, h2]
 
@@ -524,7 +524,7 @@ def partition (σ : Perm α) : (Fintype.card α).partition where
     · exact lt_of_lt_of_leₓ zero_lt_one (ge_of_eq (Multiset.eq_of_mem_repeat hn))
       
   parts_sum := by
-    rw [sum_add, sum_cycle_type, Multiset.sum_repeat, nsmul_eq_mul, Nat.cast_id, mul_oneₓ,
+    rw [sum_add, sum_cycle_type, Multiset.sum_repeat, nsmul_eq_mul, Nat.cast_idₓ, mul_oneₓ,
       add_tsub_cancel_of_le σ.support.card_le_univ]
 
 theorem parts_partition {σ : Perm α} : σ.partition.parts = σ.cycleType + repeat 1 (Fintype.card α - σ.support.card) :=

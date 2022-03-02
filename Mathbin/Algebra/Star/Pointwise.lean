@@ -107,7 +107,7 @@ theorem star_singleton {β : Type _} [HasInvolutiveStar β] (x : β) : ({x} : Se
   ext1 y
   rw [mem_star, mem_singleton_iff, mem_singleton_iff, star_eq_iff_star_eq, eq_comm]
 
-protected theorem star_mul [Monoidₓ α] [StarMonoid α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
+protected theorem star_mul [Monoidₓ α] [StarSemigroup α] (s t : Set α) : (s * t)⋆ = t⋆ * s⋆ := by
   simp_rw [← image_star, ← image2_mul, image_image2, image2_image_left, image2_image_right, star_mul, image2_swap _ s t]
 
 protected theorem star_add [AddMonoidₓ α] [StarAddMonoid α] (s t : Set α) : (s + t)⋆ = s⋆ + t⋆ := by
@@ -120,7 +120,7 @@ instance [HasStar α] [HasTrivialStar α] : HasTrivialStar (Set α) where
     ext1
     simp [star_trivial]
 
-protected theorem star_inv [Groupₓ α] [StarMonoid α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
+protected theorem star_inv [Groupₓ α] [StarSemigroup α] (s : Set α) : s⁻¹⋆ = s⋆⁻¹ := by
   ext
   simp only [mem_star, mem_inv, star_inv]
 

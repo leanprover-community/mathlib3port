@@ -523,7 +523,7 @@ theorem coeff_comp_degree_mul_degree (hqd0 : natDegree q ≠ 0) :
               rwa [mem_support_iff] at hbs
             refine' coeff_eq_zero_of_degree_lt _
             erw [degree_mul, degree_C this, degree_pow, zero_addₓ, degree_eq_nat_degree hq0, ← WithBot.coe_nsmul,
-              nsmul_eq_mul, WithBot.coe_lt_coe, Nat.cast_id, mul_lt_mul_right (pos_iff_ne_zero.mpr hqd0)]
+              nsmul_eq_mul, WithBot.coe_lt_coe, Nat.cast_idₓ, mul_lt_mul_right (pos_iff_ne_zero.mpr hqd0)]
             exact lt_of_le_of_neₓ (le_nat_degree_of_ne_zero this) hbp)
           (by
             intro h

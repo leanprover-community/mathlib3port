@@ -31,6 +31,12 @@ all intermediate fields `E` with `E/K` finite dimensional.
 - `krull_topology K L`. Given a field extension `L/K`, this is the topology on `L ≃ₐ[K] L`, induced
   by the group filter basis `gal_group_basis K L`.
 
+## Main Results
+
+- `krull_topology_t2 K L h_int`. For an integral field extension `L/K` (one that satisfies
+  `h_int : algebra.is_integral K L`), the Krull topology on `L ≃ₐ[K] L`, `krull_topology K L`,
+  is Hausdorff.
+
 ## Notations
 
 - In docstrings, we will write `Gal(L/E)` to denote the fixing subgroup of an intermediate field
@@ -172,4 +178,72 @@ instance krullTopology (K L : Type _) [Field K] [Field L] [Algebra K L] : Topolo
 /-- For a field extension `L/K`, the Krull topology on `L ≃ₐ[K] L` makes it a topological group. -/
 instance (K L : Type _) [Field K] [Field L] [Algebra K L] : TopologicalGroup (L ≃ₐ[K] L) :=
   GroupFilterBasis.is_topological_group (galGroupBasis K L)
+
+section KrullT2
+
+open_locale TopologicalSpace Filter
+
+/-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
+theorem Subgroup.is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
+    {H : Subgroup G} (h_1_int : (1 : G) ∈ Interior (H : Set G)) : IsOpen (H : Set G) := by
+  have h : 𝓝 1 ≤ 𝓟 (H : Set G) := nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
+  rw [is_open_iff_nhds]
+  intro g hg
+  rw
+    [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by
+      simp ]
+  convert Filter.map_mono h
+  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
+  ext
+  simp [H.mul_mem_cancel_left (H.inv_mem hg)]
+
+/-- Let `L/E/K` be a tower of fields with `E/K` finite. Then `Gal(L/E)` is an open subgroup of
+  `L ≃ₐ[K] L`. -/
+theorem IntermediateField.fixing_subgroup_is_open {K L : Type _} [Field K] [Field L] [Algebra K L]
+    (E : IntermediateField K L) [FiniteDimensional K E] : IsOpen (E.fixingSubgroup : Set (L ≃ₐ[K] L)) := by
+  have h_basis : E.fixing_subgroup.carrier ∈ galGroupBasis K L := ⟨E.fixing_subgroup, ⟨E, _inst_4, rfl⟩, rfl⟩
+  have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
+  rw [mem_nhds_iff] at h_nhd
+  rcases h_nhd with ⟨U, hU_le, hU_open, h1U⟩
+  exact Subgroup.is_open_of_one_mem_interior ⟨U, ⟨hU_open, hU_le⟩, h1U⟩
+
+/-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/
+theorem krull_topology_t2 (K L : Type _) [Field K] [Field L] [Algebra K L] (h_int : Algebra.IsIntegral K L) :
+    T2Space (L ≃ₐ[K] L) :=
+  { t2 := fun f g hfg => by
+      let φ := f⁻¹ * g
+      cases' FunLike.exists_ne hfg with x hx
+      have hφx : φ x ≠ x := by
+        apply ne_of_apply_ne f
+        change f (f.symm (g x)) ≠ f x
+        rw [AlgEquiv.apply_symm_apply f (g x), ne_comm]
+        exact hx
+      let E : IntermediateField K L := IntermediateField.adjoin K {x}
+      let h_findim : FiniteDimensional K E := IntermediateField.adjoin.finite_dimensional (h_int x)
+      let H := E.fixing_subgroup
+      have h_basis : (H : Set (L ≃ₐ[K] L)) ∈ galGroupBasis K L := ⟨H, ⟨E, ⟨h_findim, rfl⟩⟩, rfl⟩
+      have h_nhd := GroupFilterBasis.mem_nhds_one (galGroupBasis K L) h_basis
+      rw [mem_nhds_iff] at h_nhd
+      rcases h_nhd with ⟨W, hWH, hW_open, hW_1⟩
+      refine'
+        ⟨LeftCoset f W, LeftCoset g W,
+          ⟨hW_open.left_coset f, hW_open.left_coset g, ⟨1, hW_1, mul_oneₓ _⟩, ⟨1, hW_1, mul_oneₓ _⟩, _⟩⟩
+      by_contra h_nonempty
+      change LeftCoset f W ∩ LeftCoset g W ≠ ∅ at h_nonempty
+      rw [Set.ne_empty_iff_nonempty] at h_nonempty
+      rcases h_nonempty with ⟨σ, ⟨⟨w1, hw1, hfw1⟩, ⟨w2, hw2, hgw2⟩⟩⟩
+      rw [← hgw2] at hfw1
+      rename' hfw1 => h
+      rw [eq_inv_mul_iff_mul_eq.symm, ← mul_assoc, mul_inv_eq_iff_eq_mul.symm] at h
+      have h_in_H : w1 * w2⁻¹ ∈ H := H.mul_mem (hWH hw1) (H.inv_mem (hWH hw2))
+      rw [h] at h_in_H
+      change φ ∈ E.fixing_subgroup at h_in_H
+      rw [mem_fixing_subgroup_iff] at h_in_H
+      specialize h_in_H x
+      have hxE : x ∈ E := by
+        apply IntermediateField.subset_adjoin
+        apply Set.mem_singleton
+      exact hφx (h_in_H hxE) }
+
+end KrullT2
 

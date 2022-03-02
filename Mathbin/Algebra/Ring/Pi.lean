@@ -68,6 +68,20 @@ instance nonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing <| f i] : NonUnital
     run_tac
       tactic.pi_instance_derive_field
 
+instance nonUnitalRing [∀ i, NonUnitalRing <| f i] : NonUnitalRing (∀ i : I, f i) := by
+  refine_struct
+      { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+        zsmul := SubNegMonoidₓ.zsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
+instance nonAssocRing [∀ i, NonAssocRing <| f i] : NonAssocRing (∀ i : I, f i) := by
+  refine_struct
+      { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+        zsmul := SubNegMonoidₓ.zsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
 instance ring [∀ i, Ringₓ <| f i] : Ringₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,

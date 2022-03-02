@@ -426,35 +426,35 @@ section NonUnitalNonAssocSemiringDecidable
 
 variable [DecidableEq m] [NonUnitalNonAssocSemiringₓ α] (u v w : m → α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem diagonal_dot_product (i : m) : diagonalₓ v i ⬝ᵥ w = v i * w i := by
   have : ∀ j _ : j ≠ i, diagonalₓ v i j * w j = 0 := fun j hij => by
     simp [diagonal_apply_ne' hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal (i : m) : v ⬝ᵥ diagonalₓ w i = v i * w i := by
   have : ∀ j _ : j ≠ i, v j * diagonalₓ w i j = 0 := fun j hij => by
     simp [diagonal_apply_ne' hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_diagonal' (i : m) : (v ⬝ᵥ fun j => diagonalₓ w j i) = v i * w i := by
   have : ∀ j _ : j ≠ i, v j * diagonalₓ w j i = 0 := fun j hij => by
     simp [diagonal_apply_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem single_dot_product (x : α) (i : m) : Pi.single i x ⬝ᵥ v = x * v i := by
   have : ∀ j _ : j ≠ i, Pi.single i x j * v j = 0 := fun j hij => by
     simp [Pi.single_eq_of_ne hij]
   convert Finset.sum_eq_single i (fun j _ => this j) _ using 1 <;> simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
 @[simp]
 theorem dot_product_single (x : α) (i : m) : v ⬝ᵥ Pi.single i x = v i * x := by
   have : ∀ j _ : j ≠ i, v j * Pi.single i x j = 0 := fun j hij => by
@@ -1385,7 +1385,7 @@ theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n
   ext i j <;> simp
 
 @[simp]
-theorem conj_transpose_smul [CommMonoidₓ α] [StarMonoid α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ := by
+theorem conj_transpose_smul [CommMonoidₓ α] [StarSemigroup α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ := by
   ext i j <;> simp [mul_comm]
 
 @[simp]
@@ -1458,7 +1458,7 @@ instance [AddMonoidₓ α] [StarAddMonoid α] : StarAddMonoid (Matrix n n α) wh
   star_add := conj_transpose_add
 
 /-- When `α` is a `*`-(semi)ring, `matrix.has_star` is also a `*`-(semi)ring. -/
-instance [Fintype n] [DecidableEq n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) where
+instance [Fintype n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) where
   star_add := conj_transpose_add
   star_mul := conj_transpose_mul
 

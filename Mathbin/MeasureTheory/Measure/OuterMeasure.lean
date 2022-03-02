@@ -91,6 +91,9 @@ theorem mono' (m : OuterMeasure α) {s₁ s₂} (h : s₁ ⊆ s₂) : m s₁ ≤
 theorem mono_null (m : OuterMeasure α) {s t} (h : s ⊆ t) (ht : m t = 0) : m s = 0 :=
   nonpos_iff_eq_zero.mp <| ht ▸ m.mono' h
 
+theorem pos_of_subset_ne_zero (m : OuterMeasure α) {a b : Set α} (hs : a ⊆ b) (hnz : m a ≠ 0) : 0 < m b :=
+  lt_of_lt_of_leₓ (pos_iff_ne_zero.mpr hnz) (m.mono hs)
+
 protected theorem Union (m : OuterMeasure α) {β} [Encodable β] (s : β → Set α) : m (⋃ i, s i) ≤ ∑' i, m (s i) :=
   rel_supr_tsum m m.Empty (· ≤ ·) m.Union_nat s
 
@@ -117,7 +120,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -556,7 +559,7 @@ end Basic
 
 section OfFunction
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -634,7 +637,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -1497,15 +1500,11 @@ theorem exists_measurable_superset_forall_eq_trim {ι} [Encodable ι] (μ : ι �
   refine' ⟨⋂ i, t i, hst, ht, fun i => le_antisymmₓ _ _⟩
   exacts[hμt i ▸ (μ i).mono (Inter_subset _ _), (mono' _ hst).trans_eq ((μ i).trim_eq ht)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- If `m₁ s = op (m₂ s) (m₃ s)` for all `s`, then the same is true for `m₁.trim`, `m₂.trim`,
 and `m₃ s`. -/
 theorem trim_binop {m₁ m₂ m₃ : OuterMeasure α} {op : ℝ≥0∞ → ℝ≥0∞ → ℝ≥0∞} (h : ∀ s, m₁ s = op (m₂ s) (m₃ s))
     (s : Set α) : m₁.trim s = op (m₂.trim s) (m₃.trim s) := by
-  rcases exists_measurable_superset_forall_eq_trim
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") s with
-    ⟨t, hst, ht, htm⟩
+  rcases exists_measurable_superset_forall_eq_trim ![m₁, m₂, m₃] s with ⟨t, hst, ht, htm⟩
   simp only [Finₓ.forall_fin_succ, Matrix.cons_val_zero, Matrix.cons_val_succ] at htm
   rw [← htm.1, ← htm.2.1, ← htm.2.2.1, h]
 

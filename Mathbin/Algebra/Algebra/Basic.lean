@@ -103,7 +103,7 @@ open_locale BigOperators
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 

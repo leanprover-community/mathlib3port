@@ -76,6 +76,9 @@ instance [NonUnitalSemiringₓ β] : NonUnitalSemiringₓ (α →₀ β) :=
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
   { (inferInstance : NonUnitalNonAssocSemiringₓ (α →₀ β)), (inferInstance : AddCommGroupₓ (α →₀ β)) with }
 
+instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
+  { (inferInstance : NonUnitalSemiringₓ (α →₀ β)), (inferInstance : AddCommGroupₓ (α →₀ β)) with }
+
 -- TODO can this be generalized in the direction of `pi.has_scalar'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition

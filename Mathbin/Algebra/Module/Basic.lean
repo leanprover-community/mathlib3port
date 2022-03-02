@@ -333,7 +333,7 @@ end
 mathlib all `add_comm_monoid`s should normally have exactly one `ℕ`-module structure by design.
 -/
 theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @HasScalar.smul ℕ M h.toHasScalar n x = n • x := by
-  rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
+  rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_idₓ]
 
 /-- All `ℕ`-module structures are equal. Not an instance since in mathlib all `add_comm_monoid`
 should normally have exactly one `ℕ`-module structure by design. -/
@@ -384,7 +384,7 @@ end
 /-- Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_group`s should normally have exactly one `ℤ`-module structure by design. -/
 theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @HasScalar.smul ℤ M h.toHasScalar n x = n • x := by
-  rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
+  rw [zsmul_eq_smul_cast ℤ n x, Int.cast_idₓ]
 
 /-- All `ℤ`-module structures are equal. Not an instance since in mathlib all `add_comm_group`
 should normally have exactly one `ℤ`-module structure by design. -/

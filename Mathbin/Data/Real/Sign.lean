@@ -79,11 +79,11 @@ theorem sign_eq_zero_iff {r : ℝ} : sign r = 0 ↔ r = 0 := by
 
 theorem sign_int_cast (z : ℤ) : sign (z : ℝ) = ↑(Int.sign z) := by
   obtain hn | rfl | hp := lt_trichotomyₓ z (0 : ℤ)
-  · rw [sign_of_neg (int.cast_lt_zero.mpr hn), Int.sign_eq_neg_one_of_negₓ hn, Int.cast_neg, Int.cast_one]
+  · rw [sign_of_neg (int.cast_lt_zero.mpr hn), Int.sign_eq_neg_one_of_negₓ hn, Int.cast_neg, Int.cast_oneₓ]
     
-  · rw [Int.cast_zero, sign_zero, Int.sign_zero, Int.cast_zero]
+  · rw [Int.cast_zeroₓ, sign_zero, Int.sign_zero, Int.cast_zeroₓ]
     
-  · rw [sign_of_pos (int.cast_pos.mpr hp), Int.sign_eq_one_of_posₓ hp, Int.cast_one]
+  · rw [sign_of_pos (int.cast_pos.mpr hp), Int.sign_eq_one_of_posₓ hp, Int.cast_oneₓ]
     
 
 theorem sign_neg {r : ℝ} : sign (-r) = -sign r := by

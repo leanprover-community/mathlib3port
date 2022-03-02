@@ -197,7 +197,7 @@ theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x := by
   have b0 : (0 : ℝ) < b :=
     zero_lt_one.trans
       (by
-        rw [← Int.cast_one]
+        rw [← Int.cast_oneₓ]
         exact int.cast_lt.mpr b1)
   -- Prove that `b ^ f.nat_degree * abs (x - a / b)` is strictly smaller than itself
   -- recall, this is a proof by contradiction!

@@ -788,12 +788,16 @@ theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
 
 theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) := fun a h b _ => (insert_inj h).1
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
 
 theorem ssubset_insert (h : a ∉ s) : s ⊂ insert a s :=
   ssubset_iff.mpr ⟨a, h, Subset.rfl⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+theorem ssubset_iff_exists_insert_subset {s t : Finset α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
+  simp_rw [ssubset_iff_exists_cons_subset, cons_eq_insert]
 
 @[elab_as_eliminator]
 theorem cons_induction {α : Type _} {p : Finset α → Prop} (h₁ : p ∅)
@@ -1329,6 +1333,11 @@ theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.erase a ⊂ s :
     _ = _ := insert_erase h
     
 
+theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a ∈ t, s ⊆ t.erase a := by
+  refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_subset_of_ssubset h <| erase_ssubset ha⟩
+  obtain ⟨a, ht, hs⟩ := (not_subset _ _).1 h.2
+  exact ⟨a, ht, subset_erase.2 ⟨h.1, hs⟩⟩
+
 @[simp]
 theorem erase_eq_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : erase s a = s :=
   eq_of_veq <| erase_of_not_mem h
@@ -1596,7 +1605,7 @@ theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i := by
   simp [piecewise, hi]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀, ∀ i ∈ s, ∀, f i = f' i) (hg : ∀ i _ : i ∉ s, g i = g' i) :
     s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -1666,7 +1675,7 @@ theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g h : ∀ i, δ i} (Hf : h ≤ f) (Hg : h ≤ g) :
     h ≤ s.piecewise f g := fun x => piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀, ∀ x ∈ s, ∀, f x ≤ f' x) (Hg : ∀ x _ : x ∉ s, g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' := fun x =>
   by
@@ -2216,7 +2225,7 @@ theorem to_finset_reverse {l : List α} : toFinset l.reverse = l.toFinset :=
 
 theorem to_finset_repeat_of_ne_zero {n : ℕ} (hn : n ≠ 0) : (List.repeat a n).toFinset = {a} := by
   ext x
-  simp [hn, List.mem_repeatₓ]
+  simp [hn, List.mem_repeat]
 
 @[simp]
 theorem to_finset_union (l l' : List α) : (l ∪ l').toFinset = l.toFinset ∪ l'.toFinset := by

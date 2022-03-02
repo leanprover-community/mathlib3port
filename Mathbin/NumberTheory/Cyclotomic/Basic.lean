@@ -361,7 +361,7 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler algebra K
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra K
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/

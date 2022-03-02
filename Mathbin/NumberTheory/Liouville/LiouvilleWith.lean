@@ -54,7 +54,7 @@ theorem liouville_with_one (x : ℝ) : LiouvilleWith 1 x := by
   have hn' : (0 : ℝ) < n := by
     simpa
   have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n := by
-    rw [lt_div_iff hn', Int.cast_add, Int.cast_one]
+    rw [lt_div_iff hn', Int.cast_add, Int.cast_oneₓ]
     exact Int.lt_floor_add_one _
   refine' ⟨⌊x * n⌋ + 1, this.ne, _⟩
   rw [abs_sub_comm, abs_of_pos (sub_pos.2 this), rpow_one, sub_lt_iff_lt_add', add_div_eq_mul_add_div _ _ hn'.ne',
@@ -285,7 +285,7 @@ protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x
   rintro ⟨r, rfl⟩
   rcases eq_or_ne r 0 with (rfl | h0)
   · refine' h.ne_cast_int hp 0 _
-    rw [Rat.cast_zero, Int.cast_zero]
+    rw [Rat.cast_zero, Int.cast_zeroₓ]
     
   · refine' (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 _
     simp [Rat.cast_ne_zero.2 h0]
@@ -320,7 +320,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
   lift b to ℕ using zero_le_one.trans hb.le
   norm_cast  at hb
-  push_cast  at hne hlt
+  push_cast at hne hlt
   cases le_or_ltₓ N b
   · refine' (hN b h a hne).not_lt (hlt.trans_le _)
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb

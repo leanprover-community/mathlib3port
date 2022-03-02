@@ -54,7 +54,7 @@ open MeasurableSpace Set
 
 open_locale Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (s t «expr ∈ » C)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s t «expr ∈ » C)
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/

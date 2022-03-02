@@ -121,7 +121,7 @@ protected theorem tendsto_approx {m : MeasurableSpace α} (hf : StronglyMeasurab
 
 end BasicPropertiesInAnyTopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » t)
 theorem fin_strongly_measurable_of_set_sigma_finite [TopologicalSpace β] [Zero β] {m : MeasurableSpace α}
     {μ : Measure α} (hf_meas : StronglyMeasurable f) {t : Set α} (ht : MeasurableSet t)
     (hft_zero : ∀, ∀ x ∈ tᶜ, ∀, f x = 0) (htμ : SigmaFinite (μ.restrict t)) : FinStronglyMeasurable f μ := by

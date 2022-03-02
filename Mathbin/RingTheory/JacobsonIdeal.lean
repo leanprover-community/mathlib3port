@@ -160,7 +160,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by

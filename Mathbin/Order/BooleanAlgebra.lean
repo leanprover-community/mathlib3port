@@ -761,7 +761,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (Compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:462:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:461:9: unsupported: advanced prec syntax «expr + »(max, 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 

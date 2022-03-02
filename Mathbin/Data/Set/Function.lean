@@ -61,13 +61,13 @@ theorem range_restrict (f : α → β) (s : Set α) : Set.Range (restrict f s) =
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
   rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
     restrict (fun a => if h : a ∈ s then f a h else g a h) (sᶜ) = fun a => g a a.2 :=
@@ -774,7 +774,7 @@ theorem SurjOn.bij_on_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunO
   rintro _ ⟨y, hy, rfl⟩
   rwa [h.right_inv_on_inv_fun_on hy]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (s' «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s' «expr ⊆ » s)
 theorem surj_on_iff_exists_bij_on_subset : SurjOn f s t ↔ ∃ (s' : _)(_ : s' ⊆ s), BijOn f s' t := by
   constructor
   · rcases eq_empty_or_nonempty t with (rfl | ht)
@@ -886,7 +886,7 @@ theorem piecewise_eq_on (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ 
 
 theorem piecewise_eq_on_compl (f g : α → β) : EqOn (s.piecewise f g) g (sᶜ) := fun _ => piecewise_eq_of_not_mem _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g := fun i =>
   if h : i ∈ s then by
@@ -894,12 +894,12 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
   else by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => OrderDual (δ i)) _ s _ _ _ _ h₁ h₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
     {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀, ∀ i ∈ s, ∀, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
     s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ := by
@@ -980,7 +980,7 @@ theorem range_piecewise (f g : α → β) : Range (s.piecewise f g) = f '' s ∪
   · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » s)
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔ InjOn f s ∧ InjOn g (sᶜ) ∧ ∀, ∀ x ∈ s, ∀ y _ : y ∉ s, f x ≠ g y := by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),

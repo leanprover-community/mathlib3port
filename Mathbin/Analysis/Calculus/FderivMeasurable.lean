@@ -99,7 +99,7 @@ variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » ball x r')
 /-- The set `A f L r ε` is the set of points `x` around which the function `f` is well approximated
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/

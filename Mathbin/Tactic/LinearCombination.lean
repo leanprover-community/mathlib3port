@@ -58,7 +58,7 @@ theorem replace_eq_expr {α} [h : Zero α] {x y : α} (h1 : x = 0) (h2 : y = x) 
 /-! ### Configuration -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.

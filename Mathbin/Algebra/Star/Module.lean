@@ -33,7 +33,7 @@ def starLinearEquiv (R : Type _) {A : Type _} [CommRingₓ R] [StarRing R] [Semi
     [StarModule R A] : A ≃ₗ⋆[R] A :=
   { starAddEquiv with toFun := star, map_smul' := star_smul }
 
-variable (R : Type _) (A : Type _) [Semiringₓ R] [StarMonoid R] [HasTrivialStar R] [AddCommGroupₓ A] [Module R A]
+variable (R : Type _) (A : Type _) [Semiringₓ R] [StarSemigroup R] [HasTrivialStar R] [AddCommGroupₓ A] [Module R A]
   [StarAddMonoid A] [StarModule R A]
 
 /-- The self-adjoint elements of a star module, as a submodule. -/

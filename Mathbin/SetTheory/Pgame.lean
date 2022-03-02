@@ -193,7 +193,7 @@ theorem Subsequent.right_move {xl xr} {xL : xl → Pgame} {xR : xr → Pgame} {j
     Subsequent (xR j) (mk xl xr xL xR) :=
   Subsequent.right (mk xl xr xL xR) j
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry

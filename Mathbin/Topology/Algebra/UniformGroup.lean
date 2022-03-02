@@ -428,7 +428,7 @@ variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x x' «expr ∈ » U₂)
 private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
     ∃ U₂ ∈ comap e (𝓝 x₀), ∀ x x' _ : x ∈ U₂ _ : x' ∈ U₂, Φ (x' - x, y₁) ∈ W' := by
   let Nx := 𝓝 x₀
@@ -446,10 +446,10 @@ private theorem extend_Z_bilin_aux (x₀ : α) (y₁ : δ) :
   simp_rw [ball_mem_comm]
   exact limₓ W' W'_nhd
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x x' «expr ∈ » U)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y y' «expr ∈ » V)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x x' «expr ∈ » U₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y y' «expr ∈ » V₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x x' «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y y' «expr ∈ » V)
 private theorem extend_Z_bilin_key (x₀ : α) (y₀ : γ) :
     ∃ U ∈ comap e (𝓝 x₀),
       ∃ V ∈ comap f (𝓝 y₀), ∀ x x' _ : x ∈ U _ : x' ∈ U, ∀ y y' _ : y ∈ V _ : y' ∈ V, Φ (x', y') - Φ (x, y) ∈ W' :=

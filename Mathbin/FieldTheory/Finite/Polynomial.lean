@@ -95,7 +95,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrictD
   intro n
   refine' le_transₓ (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eqₓ _)
   simp_rw [← Multiset.coe_count_add_monoid_hom, (Multiset.countAddMonoidHom n).map_sum, AddMonoidHom.map_nsmul,
-    Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_id]
+    Multiset.coe_count_add_monoid_hom, nsmul_eq_mul, Nat.cast_idₓ]
   trans
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
@@ -159,7 +159,7 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype σ] [Field K] [Fintype K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler module K
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler module K
 def R : Type u :=
   restrictDegree σ K (Fintype.card K - 1)deriving AddCommGroupₓ, [anonymous], Inhabited
 

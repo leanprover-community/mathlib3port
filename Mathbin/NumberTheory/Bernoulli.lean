@@ -129,7 +129,7 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
     ((n + 1 : ℚ) * ∑ k in range n, ↑(n.choose k) / (n - k + 1) * bernoulli' k) =
       ∑ x in range n, ↑(n.succ.choose x) * bernoulli' x
     by
-    rw_mod_cast [sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]
+    rw_mod_cast[sum_range_succ, bernoulli'_def, ← this, choose_succ_self_right]
     ring
   simp_rw [mul_sum, ← mul_assoc]
   refine' sum_congr rfl fun k hk => _
@@ -137,7 +137,7 @@ theorem sum_bernoulli' (n : ℕ) : (∑ k in range n, (n.choose k : ℚ) * berno
   have : ((n - k : ℕ) : ℚ) + 1 ≠ 0 := by
     apply_mod_cast succ_ne_zero
   field_simp [← cast_sub (mem_range.1 hk).le, mul_comm]
-  rw_mod_cast [tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
+  rw_mod_cast[tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
 def bernoulli'PowerSeries :=
@@ -164,7 +164,7 @@ theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp
     simpa [factorial_ne_zero]
   have := factorial_mul_factorial_dvd_factorial_add i j
   field_simp [mul_comm _ (bernoulli' i), mul_assoc, add_choose]
-  rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
+  rw_mod_cast[mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_dvd_char_zero, cast_mul]
   assumption'
 
@@ -293,7 +293,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
   have hj : (j.succ : ℚ) ≠ 0 := by
     exact_mod_cast succ_ne_zero j
   field_simp [← h, mul_ne_zero hj (hfact j), hfact i, mul_comm _ (bernoulli i), mul_assoc]
-  rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
+  rw_mod_cast[mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
   rw [cast_mul, cast_mul, mul_div_mul_right _ _ hj, add_choose, cast_dvd_char_zero]
   apply factorial_mul_factorial_dvd_factorial_add
 

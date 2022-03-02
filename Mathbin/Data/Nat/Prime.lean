@@ -82,7 +82,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rintro rfl
   rw [hn, mul_oneₓ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m «expr ∣ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m «expr ∣ » p)
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m _ : m ∣ p, m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1

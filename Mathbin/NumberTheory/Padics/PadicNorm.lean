@@ -231,7 +231,7 @@ protected theorem defn {q : ℚ} {n d : ℤ} (hqz : q ≠ 0) (qdf : q = n /. d) 
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) : padicValRat p (q * r) = padicValRat p q + padicValRat p r :=
   by
   have : q * r = q.num * r.num /. (↑q.denom * ↑r.denom) := by
-    rw_mod_cast [Rat.mul_num_denom]
+    rw_mod_cast[Rat.mul_num_denom]
   have hq' : q.num /. q.denom ≠ 0 := by
     rw [Rat.num_denom] <;> exact hq
   have hr' : r.num /. r.denom ≠ 0 := by

@@ -68,10 +68,10 @@ instance : FloorSemiring ℕ where
   ceil := id
   floor_of_neg := fun a ha => (a.not_lt_zero ha).elim
   gc_floor := fun n a ha => by
-    rw [Nat.cast_id]
+    rw [Nat.cast_idₓ]
     rfl
   gc_ceil := fun n a => by
-    rw [Nat.cast_id]
+    rw [Nat.cast_idₓ]
     rfl
 
 namespace Nat
@@ -423,10 +423,10 @@ instance : FloorRing ℤ where
   floor := id
   ceil := id
   gc_coe_floor := fun a b => by
-    rw [Int.cast_id]
+    rw [Int.cast_idₓ]
     rfl
   gc_ceil_coe := fun a b => by
-    rw [Int.cast_id]
+    rw [Int.cast_idₓ]
     rfl
 
 /-- A `floor_ring` constructor from the `floor` function alone. -/
@@ -500,7 +500,7 @@ theorem lt_succ_floor (a : α) : a < ⌊a⌋.succ :=
   floor_lt.1 <| Int.lt_succ_self _
 
 theorem lt_floor_add_one (a : α) : a < ⌊a⌋ + 1 := by
-  simpa only [Int.succ, Int.cast_add, Int.cast_one] using lt_succ_floor a
+  simpa only [Int.succ, Int.cast_add, Int.cast_oneₓ] using lt_succ_floor a
 
 theorem sub_one_lt_floor (a : α) : a - 1 < ⌊a⌋ :=
   sub_lt_iff_lt_add.2 (lt_floor_add_one a)
@@ -516,7 +516,7 @@ theorem floor_zero : ⌊(0 : α)⌋ = 0 :=
 
 @[simp]
 theorem floor_one : ⌊(1 : α)⌋ = 1 := by
-  rw [← Int.cast_one, floor_coe]
+  rw [← Int.cast_oneₓ, floor_coe]
 
 @[mono]
 theorem floor_mono : Monotone (floor : α → ℤ) :=
@@ -572,7 +572,7 @@ theorem abs_sub_lt_one_of_floor_eq_floor {α : Type _} [LinearOrderedCommRing α
         linarith⟩
 
 theorem floor_eq_iff : ⌊a⌋ = z ↔ ↑z ≤ a ∧ a < z + 1 := by
-  rw [le_antisymm_iffₓ, le_floor, ← Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_one, And.comm]
+  rw [le_antisymm_iffₓ, le_floor, ← Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_oneₓ, And.comm]
 
 theorem floor_eq_on_Ico (n : ℤ) : ∀, ∀ a ∈ Set.Ico (n : α) (n + 1), ∀, ⌊a⌋ = n := fun a ⟨h₀, h₁⟩ =>
   floor_eq_iff.mpr ⟨h₀, h₁⟩
@@ -645,7 +645,7 @@ theorem fract_floor (a : α) : fract (⌊a⌋ : α) = 0 :=
 theorem floor_fract (a : α) : ⌊fract a⌋ = 0 :=
   floor_eq_iff.2
     ⟨fract_nonneg _, by
-      rw [Int.cast_zero, zero_addₓ]
+      rw [Int.cast_zeroₓ, zero_addₓ]
       exact fract_lt_one a⟩
 
 theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : ℤ, a - b = z :=
@@ -739,7 +739,7 @@ theorem lt_ceil : z < ⌈a⌉ ↔ (z : α) < a :=
   lt_iff_lt_of_le_iff_le ceil_le
 
 theorem ceil_le_floor_add_one (a : α) : ⌈a⌉ ≤ ⌊a⌋ + 1 := by
-  rw [ceil_le, Int.cast_add, Int.cast_one]
+  rw [ceil_le, Int.cast_add, Int.cast_oneₓ]
   exact (lt_floor_add_one a).le
 
 theorem le_ceil (a : α) : a ≤ ⌈a⌉ :=
@@ -774,7 +774,7 @@ theorem ceil_sub_one (a : α) : ⌈a - 1⌉ = ⌈a⌉ - 1 := by
   rw [eq_sub_iff_add_eq, ← ceil_add_one, sub_add_cancel]
 
 theorem ceil_lt_add_one (a : α) : (⌈a⌉ : α) < a + 1 := by
-  rw [← lt_ceil, ← Int.cast_one, ceil_add_int]
+  rw [← lt_ceil, ← Int.cast_oneₓ, ceil_add_int]
   apply lt_add_one
 
 theorem ceil_pos : 0 < ⌈a⌉ ↔ 0 < a :=
@@ -788,7 +788,7 @@ theorem ceil_nonneg (ha : 0 ≤ a) : 0 ≤ ⌈a⌉ := by
   exact_mod_cast ha.trans (le_ceil a)
 
 theorem ceil_eq_iff : ⌈a⌉ = z ↔ ↑z - 1 < a ∧ a ≤ z := by
-  rw [← ceil_le, ← Int.cast_one, ← Int.cast_sub, ← lt_ceil, Int.sub_one_lt_iff, le_antisymm_iffₓ, And.comm]
+  rw [← ceil_le, ← Int.cast_oneₓ, ← Int.cast_sub, ← lt_ceil, Int.sub_one_lt_iff, le_antisymm_iffₓ, And.comm]
 
 theorem ceil_eq_on_Ioc (z : ℤ) : ∀, ∀ a ∈ Set.Ioc (z - 1 : α) z, ∀, ⌈a⌉ = z := fun a ⟨h₀, h₁⟩ =>
   ceil_eq_iff.mpr ⟨h₀, h₁⟩

@@ -118,7 +118,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
       exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
     simp only at mod_eq
-    rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
+    rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zeroₓ]
     
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
   rw [not_leₓ] at le_b
@@ -128,7 +128,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
   by_cases' h : A i₁ % b = A i₀ % b
-  · rwa [h, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
+  · rwa [h, sub_self, AbsoluteValue.map_zero, Int.cast_zeroₓ]
     
   have h' : A i₁ % b - A i₀ % b ≠ 0 := mt sub_eq_zero.mp h
   -- If the remainders are not equal, we'll show their difference is of small degree.

@@ -188,7 +188,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by

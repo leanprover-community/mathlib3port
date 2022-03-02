@@ -390,7 +390,7 @@ theorem HasFpowerSeriesAt.sub (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSer
 theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : AnalyticAt 𝕜 (f - g) x := by
   simpa only [sub_eq_add_neg] using hf.add hg.neg
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ≠ » 0)
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by
@@ -538,7 +538,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
   simp_rw [L, mul_right_commₓ _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/

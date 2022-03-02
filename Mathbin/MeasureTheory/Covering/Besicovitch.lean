@@ -961,8 +961,8 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (v «expr ⊇ » s')
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (v «expr ⊇ » s')
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/

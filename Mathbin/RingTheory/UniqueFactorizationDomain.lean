@@ -156,7 +156,7 @@ theorem WfDvdMonoid.iff_well_founded_associates [CancelCommMonoidWithZero α] :
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 /-- unique factorization monoids.
@@ -719,7 +719,7 @@ theorem dvd_of_dvd_mul_right_of_no_prime_factors {a b c : R} (ha : a ≠ 0)
     (no_factors : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) : a ∣ b * c → a ∣ c := by
   simpa [mul_comm b c] using dvd_of_dvd_mul_left_of_no_prime_factors ha @no_factors
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » (0 : R))
 /-- If `a ≠ 0, b` are elements of a unique factorization domain, then dividing
 out their common factor `c'` gives `a'` and `b'` with no factors in common. -/
 theorem exists_reduced_factors :

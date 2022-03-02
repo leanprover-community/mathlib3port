@@ -53,6 +53,12 @@ instance [CommSemiringₓ R] [CommSemiringₓ S] : CommSemiringₓ (R × S) :=
 instance [NonUnitalNonAssocRing R] [NonUnitalNonAssocRing S] : NonUnitalNonAssocRing (R × S) :=
   { Prod.addCommGroup, Prod.nonUnitalNonAssocSemiring with }
 
+instance [NonUnitalRing R] [NonUnitalRing S] : NonUnitalRing (R × S) :=
+  { Prod.addCommGroup, Prod.nonUnitalSemiring with }
+
+instance [NonAssocRing R] [NonAssocRing S] : NonAssocRing (R × S) :=
+  { Prod.addCommGroup, Prod.nonAssocSemiring with }
+
 /-- Product of two rings is a ring. -/
 instance [Ringₓ R] [Ringₓ S] : Ringₓ (R × S) :=
   { Prod.addCommGroup, Prod.semiring with }

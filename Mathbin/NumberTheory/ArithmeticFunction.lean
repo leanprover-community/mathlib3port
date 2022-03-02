@@ -122,7 +122,7 @@ instance natCoe [Zero R] [One R] [Add R] : Coe (ArithmeticFunction ℕ) (Arithme
 
 @[simp]
 theorem nat_coe_nat (f : ArithmeticFunction ℕ) : (↑f : ArithmeticFunction ℕ) = f :=
-  ext fun _ => cast_id _
+  ext fun _ => cast_idₓ _
 
 @[simp]
 theorem nat_coe_apply [Zero R] [One R] [Add R] {f : ArithmeticFunction ℕ} {x : ℕ} :
@@ -138,7 +138,7 @@ instance intCoe [Zero R] [One R] [Add R] [Neg R] : Coe (ArithmeticFunction ℤ) 
 
 @[simp]
 theorem int_coe_int (f : ArithmeticFunction ℤ) : (↑f : ArithmeticFunction ℤ) = f :=
-  ext fun _ => Int.cast_id _
+  ext fun _ => Int.cast_idₓ _
 
 @[simp]
 theorem int_coe_apply [Zero R] [One R] [Add R] [Neg R] {f : ArithmeticFunction ℤ} {x : ℕ} :
@@ -829,13 +829,13 @@ theorem coe_moebius_mul_coe_zeta [CommRingₓ R] : (μ * ζ : ArithmeticFunction
   · simp only [divisors_zero, sum_empty, Ne.def, not_false_iff, coe_mul_zeta_apply, zero_ne_one, one_apply_ne]
     
   cases x
-  · simp only [moebius_apply_of_squarefree, card_factors_one, squarefree_one, divisors_one, Int.cast_one, sum_singleton,
-      coe_mul_zeta_apply, one_one, int_coe_apply, pow_zeroₓ]
+  · simp only [moebius_apply_of_squarefree, card_factors_one, squarefree_one, divisors_one, Int.cast_oneₓ,
+      sum_singleton, coe_mul_zeta_apply, one_one, int_coe_apply, pow_zeroₓ]
     
   rw [coe_mul_zeta_apply, one_apply_ne (ne_of_gtₓ (succ_lt_succ (Nat.succ_posₓ _)))]
   simp_rw [int_coe_apply]
   rw [← Int.cast_sum, ← sum_filter_ne_zero]
-  convert Int.cast_zero
+  convert Int.cast_zeroₓ
   simp only [moebius_ne_zero_iff_squarefree]
   suffices
     (∑ y : Finset ℕ in (UniqueFactorizationMonoid.normalizedFactors x.succ.succ).toFinset.Powerset,

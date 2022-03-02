@@ -153,7 +153,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

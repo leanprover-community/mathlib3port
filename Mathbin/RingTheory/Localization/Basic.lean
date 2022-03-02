@@ -744,7 +744,7 @@ theorem mk_zero b : (mk 0 b : Localization M) = 0 :=
 theorem lift_on_zero {p : Type _} (f : ∀ a : R b : M, p) H : liftOn 0 f H = f 0 1 := by
   rw [← mk_zero 1, lift_on_mk]
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 private unsafe def tac :=
   sorry
 
@@ -987,7 +987,7 @@ end IsLocalization
 open IsLocalization
 
 /-- If `R` is a field, then localizing at a submonoid not containing `0` adds no new elements. -/
-theorem localization_map_bijective_of_field {R Rₘ : Type _} [CommRingₓ R] [CommRingₓ Rₘ] {M : Submonoid R}
+theorem IsField.localization_map_bijective {R Rₘ : Type _} [CommRingₓ R] [CommRingₓ Rₘ] {M : Submonoid R}
     (hM : (0 : R) ∉ M) (hR : IsField R) [Algebra R Rₘ] [IsLocalization M Rₘ] : Function.Bijective (algebraMap R Rₘ) :=
   by
   let this' := hR.to_field R
@@ -997,8 +997,15 @@ theorem localization_map_bijective_of_field {R Rₘ : Type _} [CommRingₓ R] [C
   obtain ⟨n, hn⟩ := hR.mul_inv_cancel (nonZeroDivisors.ne_zero <| hM hm)
   exact
     ⟨r * n, by
-      erw [eq_mk'_iff_mul_eq, ← RingHom.map_mul, mul_assoc, mul_comm n, hn, mul_oneₓ]⟩
+      erw [eq_mk'_iff_mul_eq, ← map_mul, mul_assoc, mul_comm n, hn, mul_oneₓ]⟩
 
+/-- If `R` is a field, then localizing at a submonoid not containing `0` adds no new elements. -/
+theorem Field.localization_map_bijective {K Kₘ : Type _} [Field K] [CommRingₓ Kₘ] {M : Submonoid K} (hM : (0 : K) ∉ M)
+    [Algebra K Kₘ] [IsLocalization M Kₘ] : Function.Bijective (algebraMap K Kₘ) :=
+  (Field.to_is_field K).localization_map_bijective hM
+
+-- this looks weird due to the `letI` inside the above lemma, but trying to do it the other
+-- way round causes issues with defeq of instances, so this is actually easier.
 section Algebra
 
 variable {R S} {Rₘ Sₘ : Type _} [CommRingₓ Rₘ] [CommRingₓ Sₘ]

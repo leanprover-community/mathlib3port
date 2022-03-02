@@ -244,8 +244,7 @@ def coprodEquiv [Module S M₃] [SmulCommClass R S M₃] : ((M →ₗ[R] M₃) �
     simp only [← comp_coprod, comp_id, coprod_inl_inr]
   map_add' := fun a b => by
     ext
-    simp only [Prod.snd_add, add_apply, coprod_apply, Prod.fst_add]
-    ac_rfl
+    simp only [Prod.snd_add, add_apply, coprod_apply, Prod.fst_add, add_add_add_commₓ]
   map_smul' := fun r a => by
     dsimp
     ext

@@ -483,7 +483,7 @@ theorem cos_eq_one_iff (x : ℝ) : cos x = 1 ↔ ∃ n : ℤ, (n : ℝ) * (2 * �
           rwa [← mul_assoc, ← @Int.cast_two ℝ, ← Int.cast_mul,
             Int.div_mul_cancel ((Int.dvd_iff_mod_eq_zero _ _).2 hn0)])
         fun hn1 => by
-        rw [← Int.mod_add_div n 2, hn1, Int.cast_add, Int.cast_one, add_mulₓ, one_mulₓ, add_commₓ, mul_comm (2 : ℤ),
+        rw [← Int.mod_add_div n 2, hn1, Int.cast_add, Int.cast_oneₓ, add_mulₓ, one_mulₓ, add_commₓ, mul_comm (2 : ℤ),
             Int.cast_mul, mul_assoc, Int.cast_two] at hn <;>
           rw [← hn, cos_int_mul_two_pi_add_pi] at h <;>
             exact

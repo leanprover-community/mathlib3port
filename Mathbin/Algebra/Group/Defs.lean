@@ -349,7 +349,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -648,7 +648,7 @@ theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
 -- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 

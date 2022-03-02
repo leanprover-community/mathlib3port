@@ -1052,8 +1052,8 @@ theorem lift_injective [CharZero R] {d : ℤ} (r : { r : R // r * r = ↑d }) (h
   (lift r).injective_iff.mpr fun a ha => by
     have h_inj : Function.Injective (coe : ℤ → R) := Int.cast_injective
     suffices lift r a.norm = 0 by
-      simp only [coe_int_re, add_zeroₓ, lift_apply_apply, coe_int_im, Int.cast_zero, zero_mul] at this
-      rwa [← Int.cast_zero, h_inj.eq_iff, norm_eq_zero hd] at this
+      simp only [coe_int_re, add_zeroₓ, lift_apply_apply, coe_int_im, Int.cast_zeroₓ, zero_mul] at this
+      rwa [← Int.cast_zeroₓ, h_inj.eq_iff, norm_eq_zero hd] at this
     rw [norm_eq_mul_conj, RingHom.map_mul, ha, zero_mul]
 
 end Zsqrtd

@@ -25,7 +25,7 @@ theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.
     simp only [(· ∘ ·), abs_cast]
     exact nat.strict_mono_cast.monotone.tendsto_at_top_at_top exists_nat_ge
   have hcff : Int.castRingHom ℚ (cyclotomic k ℤ).leadingCoeff ≠ 0 := by
-    simp only [cyclotomic.monic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff,
+    simp only [cyclotomic.monic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_oneₓ, Ne.def, not_false_iff,
       one_ne_zero]
   obtain ⟨a, ha⟩ :=
     tendsto_at_top_at_top.1

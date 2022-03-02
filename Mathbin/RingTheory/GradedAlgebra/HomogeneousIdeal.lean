@@ -219,7 +219,7 @@ theorem sup {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ : J.IsHomogeneous �
   rw [Set.image_union]
   exact (Submodule.span_union _ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (I hI)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (I hI)
 theorem Sup {ℐ : Set (Ideal A)} (Hℐ : ∀, ∀ I ∈ ℐ, ∀, Ideal.IsHomogeneous 𝒜 I) : (sup ℐ).IsHomogeneous 𝒜 := by
   simp_rw [iff_exists]  at Hℐ⊢
   choose 𝓈 h𝓈 using Hℐ

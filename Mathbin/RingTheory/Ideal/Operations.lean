@@ -271,7 +271,7 @@ theorem mem_colon' {r} : r ∈ N.colon P ↔ P ≤ comap (r • LinearMap.id) N 
 theorem colon_mono (hn : N₁ ≤ N₂) (hp : P₁ ≤ P₂) : N₁.colon P₂ ≤ N₂.colon P₁ := fun r hrnp =>
   mem_colon.2 fun p₁ hp₁ => hn <| mem_colon.1 hrnp p₁ <| hp hp₁
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem infi_colon_supr (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : Sort x) (g : ι₂ → Submodule R M) :
     (⨅ i, f i).colon (⨆ j, g j) = ⨅ (i) (j), (f i).colon (g j) :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => colon_mono (infi_le _ _) (le_supr _ _)) fun r H =>
@@ -590,7 +590,7 @@ variable {I J}
 theorem IsPrime.radical_le_iff (hj : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_transₓ le_radical, fun hij r ⟨n, hrni⟩ => hj.mem_of_pow_mem n <| hij hrni⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » m)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » m)
 theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   (le_antisymmₓ (le_Inf fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
     Classical.by_contradiction fun hri =>

@@ -29,8 +29,8 @@ open MeasureTheory Metric Set Finset Filter BoxIntegral
 
 namespace BoxIntegral
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
 theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = ff) {s : Set (ι → ℝ)}
@@ -89,7 +89,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
     simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (box.coe_subset_Icc hxJ)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
 theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E} {μ : Measureₓ (ι → ℝ)}

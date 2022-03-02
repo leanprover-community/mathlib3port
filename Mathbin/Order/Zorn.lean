@@ -317,7 +317,7 @@ theorem zorn_nonempty_partial_order {α : Type u} [PartialOrderₓ α] [Nonempty
   let ⟨m, hm⟩ := @exists_maximal_of_nonempty_chains_bounded α (· ≤ ·) _ h fun a b c => le_transₓ
   ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
     (ih : ∀ c _ : c ⊆ s, Chain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) : ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
   let ⟨⟨m, hms⟩, h⟩ :=
@@ -329,7 +329,7 @@ theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
       ⟨⟨ub, hubs⟩, fun hc => hub _ ⟨_, hc, rfl⟩⟩
   ⟨m, hms, fun z hzs hmz => congr_argₓ Subtype.val (h ⟨z, hzs⟩ hmz)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
     (ih : ∀ c _ : c ⊆ s, Chain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
     ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
@@ -350,23 +350,23 @@ theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : S
         ⟨⟨ub, hubs, le_transₓ m.2.2 <| hub m.1 <| mem_image_of_mem _ hmc⟩, fun a hac => hub a.1 ⟨a, hac, rfl⟩⟩
   ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val <| h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset {α : Type u} (S : Set (Set α))
     (h : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) : ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_partial_order₀ S h
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_subset_nonempty {α : Type u} (S : Set (Set α))
     (H : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀, ∀ s ∈ c, ∀, s ⊆ ub) x (hx : x ∈ S) :
     ∃ m ∈ S, x ⊆ m ∧ ∀, ∀ a ∈ S, ∀, m ⊆ a → a = m :=
   zorn_nonempty_partial_order₀ _ (fun c cS hc y yc => H _ cS hc ⟨y, yc⟩) _ hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset {α : Type u} (S : Set (Set α))
     (h : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) : ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
   (@zorn_partial_order₀ (OrderDual (Set α)) _ S) fun c cS hc => h c cS hc.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (c «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset_nonempty {α : Type u} (S : Set (Set α))
     (H : ∀ c _ : c ⊆ S, Chain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) x (hx : x ∈ S) :
     ∃ m ∈ S, m ⊆ x ∧ ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=

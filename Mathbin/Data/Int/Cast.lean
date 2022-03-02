@@ -47,16 +47,16 @@ section
 variable [Zero α] [One α] [Add α] [Neg α]
 
 /-- Canonical homomorphism from the integers to any ring(-like) structure `α` -/
-protected def cast : ℤ → α
+protected def castₓ : ℤ → α
   | (n : ℕ) => n
   | -[1+ n] => -(n + 1)
 
 -- see Note [coercion into rings]
 instance (priority := 900) castCoe : CoeTₓ ℤ α :=
-  ⟨Int.cast⟩
+  ⟨Int.castₓ⟩
 
 @[simp, norm_cast]
-theorem cast_zero : ((0 : ℤ) : α) = 0 :=
+theorem cast_zeroₓ : ((0 : ℤ) : α) = 0 :=
   rfl
 
 theorem cast_of_nat (n : ℕ) : (ofNat n : α) = n :=
@@ -76,7 +76,7 @@ theorem cast_neg_succ_of_nat (n : ℕ) : (-[1+ n] : α) = -(n + 1) :=
 end
 
 @[simp, norm_cast]
-theorem cast_one [AddMonoidₓ α] [One α] [Neg α] : ((1 : ℤ) : α) = 1 :=
+theorem cast_oneₓ [AddMonoidₓ α] [One α] [Neg α] : ((1 : ℤ) : α) = 1 :=
   Nat.cast_oneₓ
 
 @[simp]
@@ -136,7 +136,7 @@ theorem cast_mul [Ringₓ α] : ∀ m n, ((m * n : ℤ) : α) = m * n
 
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
-  ⟨coe, cast_zero, cast_add⟩
+  ⟨coe, cast_zeroₓ, cast_add⟩
 
 @[simp]
 theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑(castAddHom α) = coe :=
@@ -144,7 +144,7 @@ theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑(castAddHom α) = coe :=
 
 /-- `coe : ℤ → α` as a `ring_hom`. -/
 def castRingHom (α : Type _) [Ringₓ α] : ℤ →+* α :=
-  ⟨coe, cast_one, cast_mul, cast_zero, cast_add⟩
+  ⟨coe, cast_oneₓ, cast_mul, cast_zeroₓ, cast_add⟩
 
 @[simp]
 theorem coe_cast_ring_hom [Ringₓ α] : ⇑(castRingHom α) = coe :=
@@ -351,7 +351,7 @@ instance Int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (
 end RingHom
 
 @[simp, norm_cast]
-theorem Int.cast_id (n : ℤ) : ↑n = n :=
+theorem Int.cast_idₓ (n : ℤ) : ↑n = n :=
   ((RingHom.id ℤ).eq_int_cast n).symm
 
 namespace Pi

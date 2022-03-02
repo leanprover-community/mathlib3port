@@ -729,7 +729,7 @@ section Complete
 
 open PadicSeq Padic
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -868,7 +868,7 @@ theorem complete' : ∃ q : ℚ_[p], ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ i ≥
         · apply hN2
           exact le_of_max_le_right hi
           
-        · rw_mod_cast [padicNormE.sub_rev]
+        · rw_mod_cast[padicNormE.sub_rev]
           apply hN
           exact le_of_max_le_left hi
           
@@ -1021,7 +1021,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])�
         simp [multiplicity_eq_zero_of_not_dvd, hq]
       simp only
       norm_cast
-      rw_mod_cast [h, sub_zero]
+      rw_mod_cast[h, sub_zero]
       apply zpow_le_one_of_nonpos
       · exact_mod_cast le_of_ltₓ hp.1.one_lt
         
@@ -1110,7 +1110,7 @@ variable {p : ℕ} [hp_prime : Fact p.Prime]
 
 include hp_prime
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by
@@ -1134,7 +1134,7 @@ instance complete : CauSeq.IsComplete ℚ_[p] norm := by
   intro i hi
   let h := hN i hi
   unfold norm
-  rw_mod_cast [CauSeq.sub_apply, padicNormE.sub_rev]
+  rw_mod_cast[CauSeq.sub_apply, padicNormE.sub_rev]
   refine' lt_transₓ _ hε'.2
   exact_mod_cast hN i hi
 

@@ -340,7 +340,7 @@ theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity
   · apply Enat.le_of_lt_add_one
     cases' enat.ne_top_iff.mp (Enat.ne_top_of_lt h) with k hk
     rw [hk]
-    rw_mod_cast [multiplicity_lt_iff_neg_dvd]
+    rw_mod_cast[multiplicity_lt_iff_neg_dvd]
     intro h_dvd
     rw [← dvd_add_iff_right] at h_dvd
     apply multiplicity.is_greatest _ h_dvd

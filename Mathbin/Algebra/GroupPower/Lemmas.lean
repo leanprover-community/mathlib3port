@@ -424,7 +424,7 @@ theorem zsmul_int_one (n : ℤ) : n • 1 = n := by
 @[simp, norm_cast]
 theorem Int.cast_pow [Ringₓ R] (n : ℤ) (m : ℕ) : (↑(n ^ m) : R) = ↑n ^ m := by
   induction' m with m ih
-  · rw [pow_zeroₓ, pow_zeroₓ, Int.cast_one]
+  · rw [pow_zeroₓ, pow_zeroₓ, Int.cast_oneₓ]
     
   · rw [pow_succₓ, pow_succₓ, Int.cast_mul, ih]
     

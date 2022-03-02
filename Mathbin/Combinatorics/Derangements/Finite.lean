@@ -59,7 +59,7 @@ theorem card_derangements_fin_add_two (n : ℕ) :
         _),-- push the cardinality through the Σ and ⊕ so that we can use `card_n`
     card_sigma,
     card_sum, card_derangements_invariant (h1 _), Finset.sum_const, nsmul_eq_mul, Finset.card_fin, mul_addₓ,
-    Nat.cast_id]
+    Nat.cast_idₓ]
 
 /-- The number of derangements of an `n`-element set. -/
 def numDerangements : ℕ → ℕ

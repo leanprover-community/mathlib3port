@@ -152,42 +152,26 @@ def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ
 
 variable (R) [Fact p.Prime]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : Zero (𝕎 R) :=
-  ⟨eval (wittZero p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨eval (wittZero p) ![]⟩
 
 instance : Inhabited (𝕎 R) :=
   ⟨0⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : One (𝕎 R) :=
-  ⟨eval (wittOne p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨eval (wittOne p) ![]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : Add (𝕎 R) :=
-  ⟨fun x y =>
-    eval (wittAdd p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨fun x y => eval (wittAdd p) ![x, y]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : Sub (𝕎 R) :=
-  ⟨fun x y =>
-    eval (wittSub p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨fun x y => eval (wittSub p) ![x, y]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : Mul (𝕎 R) :=
-  ⟨fun x y =>
-    eval (wittMul p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨fun x y => eval (wittMul p) ![x, y]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 instance : Neg (𝕎 R) :=
-  ⟨fun x =>
-    eval (wittNeg p) («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")⟩
+  ⟨fun x => eval (wittNeg p) ![x]⟩
 
 end RingOperations
 
@@ -299,53 +283,22 @@ variable {p R}
 omit hp
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) :
-    ((«expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") i).coeff =
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") i :=
-  by
+theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp
 
 include hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
-theorem add_coeff (x y : 𝕎 R) (n : ℕ) :
-    (x + y).coeff n =
-      peval (wittAdd p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") :=
-  by
+theorem add_coeff (x y : 𝕎 R) (n : ℕ) : (x + y).coeff n = peval (wittAdd p n) ![x.coeff, y.coeff] := by
   simp [(· + ·), eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
-theorem sub_coeff (x y : 𝕎 R) (n : ℕ) :
-    (x - y).coeff n =
-      peval (wittSub p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") :=
-  by
+theorem sub_coeff (x y : 𝕎 R) (n : ℕ) : (x - y).coeff n = peval (wittSub p n) ![x.coeff, y.coeff] := by
   simp [Sub.sub, eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
-theorem mul_coeff (x y : 𝕎 R) (n : ℕ) :
-    (x * y).coeff n =
-      peval (wittMul p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") :=
-  by
+theorem mul_coeff (x y : 𝕎 R) (n : ℕ) : (x * y).coeff n = peval (wittMul p n) ![x.coeff, y.coeff] := by
   simp [(· * ·), eval]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
-theorem neg_coeff (x : 𝕎 R) (n : ℕ) :
-    (-x).coeff n =
-      peval (wittNeg p n)
-        («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") :=
-  by
+theorem neg_coeff (x : 𝕎 R) (n : ℕ) : (-x).coeff n = peval (wittNeg p n) ![x.coeff] := by
   simp [Neg.neg, eval, Matrix.cons_fin_one]
 
 theorem add_coeff_zero (x y : 𝕎 R) : (x + y).coeff 0 = x.coeff 0 + y.coeff 0 := by

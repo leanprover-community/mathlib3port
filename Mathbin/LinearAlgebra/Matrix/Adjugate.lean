@@ -322,10 +322,7 @@ theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
-theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
-    adjugate A = «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" := by
+theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) : adjugate A = ![![A 1 1, -A 0 1], ![-A 1 0, A 0 0]] := by
   ext i j
   rw [adjugate_apply, det_fin_two]
   fin_cases i with [0, 1] <;>
@@ -334,14 +331,8 @@ theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) :
         sub_zero, Pi.single_eq_of_ne, Ne.def, not_false_iff, update_row_self, update_row_ne, cons_val_zero, mul_zero,
         mul_oneₓ, zero_sub, cons_val_one, head_cons]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 @[simp]
-theorem adjugate_fin_two' (a b c d : α) :
-    adjugate («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»") =
-      «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»" :=
+theorem adjugate_fin_two' (a b c d : α) : adjugate ![![a, b], ![c, d]] = ![![d, -b], ![-c, a]] :=
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ = adjugate Aᴴ := by

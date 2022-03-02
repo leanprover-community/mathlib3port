@@ -118,7 +118,7 @@ theorem tan_add {x y : ℂ}
       div_self (cos_ne_zero_iff.mpr h2)]
     
   · obtain ⟨t, hx, hy, hxy⟩ := tan_int_mul_pi_div_two, t (2 * k + 1), t (2 * l + 1), t (2 * k + 1 + (2 * l + 1))
-    simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy
+    simp only [Int.cast_add, Int.cast_bit0, Int.cast_mul, Int.cast_oneₓ, hx, hy] at hx hy hxy
     rw [hx, hy, add_zeroₓ, zero_div, mul_div_assoc, mul_div_assoc, ← add_mulₓ (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ←
       mul_div_assoc, hxy]
     
@@ -164,7 +164,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w
   refine' Eq.congr _ rfl
   ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (w «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by

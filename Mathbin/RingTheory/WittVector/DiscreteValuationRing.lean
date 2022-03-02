@@ -95,7 +95,8 @@ variable (p)
 theorem irreducible : Irreducible (p : 𝕎 k) := by
   have hp : ¬IsUnit (p : 𝕎 k) := by
     intro hp
-    simpa only [constant_coeff_apply, coeff_p_zero, not_is_unit_zero] using constant_coeff.is_unit_map hp
+    simpa only [constant_coeff_apply, coeff_p_zero, not_is_unit_zero] using
+      (constant_coeff : WittVector p k →+* _).is_unit_map hp
   refine' ⟨hp, fun a b hab => _⟩
   obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by
     rw [← mul_ne_zero_iff]

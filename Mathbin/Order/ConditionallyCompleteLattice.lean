@@ -80,7 +80,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -91,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1287:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily

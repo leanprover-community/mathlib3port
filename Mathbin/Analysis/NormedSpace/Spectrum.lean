@@ -5,7 +5,7 @@ Authors: Jireh Loreaux
 -/
 import Mathbin.Algebra.Algebra.Spectrum
 import Mathbin.Analysis.SpecialFunctions.Pow
-import Mathbin.Analysis.Complex.CauchyIntegral
+import Mathbin.Analysis.Complex.Liouville
 import Mathbin.Analysis.Analytic.RadiusLiminf
 
 /-!
@@ -28,6 +28,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 * `spectrum.has_deriv_at_resolvent`: the resolvent function is differentiable on the resolvent set.
 * `spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius`: Gelfand's formula for the
   spectral radius in Banach algebras over `ℂ`.
+* `spectrum.nonempty`: the spectrum of any element in a complex Banach algebra is nonempty.
 
 
 ## TODO
@@ -126,7 +127,9 @@ theorem spectral_radius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
 
 end SpectrumCompact
 
-section ResolventDeriv
+section resolvent
+
+open Filter Asymptotics
 
 variable [NondiscreteNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A]
 
@@ -142,7 +145,36 @@ theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) : HasDerivAt
     simpa using (Algebra.linearMap 𝕜 A).HasDerivAt.sub_const a
   simpa [resolvent, sq, hk.unit_spec, ← Ring.inverse_unit hk.unit] using H₁.comp_has_deriv_at k H₂
 
-end ResolventDeriv
+/- TODO: Once there is sufficient API for bornology, we should get a nice filter / asymptotics
+version of this, for example: `tendsto (resolvent a) (cobounded 𝕜) (𝓝 0)` or more specifically
+`is_O (resolvent a) (λ z, z⁻¹) (cobounded 𝕜)`. -/
+theorem norm_resolvent_le_forall (a : A) : ∀, ∀ ε > 0, ∀, ∃ R > 0, ∀ z : 𝕜, R ≤ ∥z∥ → ∥resolvent a z∥ ≤ ε := by
+  obtain ⟨c, c_pos, hc⟩ := (@NormedRing.inverse_one_sub_norm A _ _).exists_pos
+  rw [is_O_with_iff, eventually_iff, Metric.mem_nhds_iff] at hc
+  rcases hc with ⟨δ, δ_pos, hδ⟩
+  simp only [CstarRing.norm_one, mul_oneₓ] at hδ
+  intro ε hε
+  have ha₁ : 0 < ∥a∥ + 1 := lt_of_le_of_ltₓ (norm_nonneg a) (lt_add_one _)
+  have min_pos : 0 < min (δ * (∥a∥ + 1)⁻¹) (ε * c⁻¹) :=
+    lt_minₓ (mul_pos δ_pos (inv_pos.mpr ha₁)) (mul_pos hε (inv_pos.mpr c_pos))
+  refine' ⟨(min (δ * (∥a∥ + 1)⁻¹) (ε * c⁻¹))⁻¹, inv_pos.mpr min_pos, fun z hz => _⟩
+  have hnz : z ≠ 0 := norm_pos_iff.mp (lt_of_lt_of_leₓ (inv_pos.mpr min_pos) hz)
+  replace hz := inv_le_of_inv_le min_pos hz
+  rcases(⟨Units.mk0 z hnz, Units.coe_mk0 hnz⟩ : IsUnit z) with ⟨z, rfl⟩
+  have lt_δ : ∥z⁻¹ • a∥ < δ := by
+    rw [Units.smul_def, norm_smul, Units.coe_inv', norm_inv]
+    calc ∥(z : 𝕜)∥⁻¹ * ∥a∥ ≤ δ * (∥a∥ + 1)⁻¹ * ∥a∥ :=
+        mul_le_mul_of_nonneg_right (hz.trans (min_le_leftₓ _ _)) (norm_nonneg _)_ < δ := by
+        conv => rw [mul_assoc]rhs rw [(mul_oneₓ δ).symm]
+        exact mul_lt_mul_of_pos_left ((inv_mul_lt_iff ha₁).mpr ((mul_oneₓ (∥a∥ + 1)).symm ▸ lt_add_one _)) δ_pos
+  rw [← inv_smul_smul z (resolvent a (z : 𝕜)), units_smul_resolvent_self, resolvent, Algebra.algebra_map_eq_smul_one,
+    one_smul, Units.smul_def, norm_smul, Units.coe_inv', norm_inv]
+  calc _ ≤ ε * c⁻¹ * c :=
+      mul_le_mul (hz.trans (min_le_rightₓ _ _)) (hδ (mem_ball_zero_iff.mpr lt_δ)) (norm_nonneg _)
+        (mul_pos hε (inv_pos.mpr c_pos)).le _ = _ :=
+      inv_mul_cancel_right₀ c_pos.ne.symm ε
+
+end resolvent
 
 section OneSubSmul
 
@@ -285,6 +317,45 @@ theorem pow_norm_pow_one_div_tendsto_nhds_spectral_radius (a : A) :
         exact_mod_cast zero_le _)
 
 end GelfandFormula
+
+/-- In a (nontrivial) complex Banach algebra, every element has nonempty spectrum. -/
+theorem nonempty {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [Nontrivial A]
+    [TopologicalSpace.SecondCountableTopology A] (a : A) : (Spectrum ℂ a).Nonempty := by
+  /- Suppose `σ a = ∅`, then resolvent set is `ℂ`, any `(z • 1 - a)` is a unit, and `resolvent`
+    is differentiable on `ℂ`. -/
+  rw [← Set.ne_empty_iff_nonempty]
+  by_contra h
+  have H₀ : ResolventSet ℂ a = Set.Univ := by
+    rwa [Spectrum, Set.compl_empty_iff] at h
+  have H₁ : Differentiable ℂ fun z : ℂ => resolvent a z := fun z =>
+    (has_deriv_at_resolvent (H₀.symm ▸ Set.mem_univ z : z ∈ ResolventSet ℂ a)).DifferentiableAt
+  /- The norm of the resolvent is small for all sufficently large `z`, and by compactness and
+    continuity it is bounded on the complement of a large ball, thus uniformly bounded on `ℂ`.
+    By Liouville's theorem `λ z, resolvent a z` is constant -/
+  have H₂ := norm_resolvent_le_forall a
+  have H₃ : ∀ z : ℂ, resolvent a z = resolvent a (0 : ℂ) := by
+    refine' fun z => H₁.apply_eq_apply_of_bounded (bounded_iff_exists_norm_le.mpr _) z 0
+    rcases H₂ 1 zero_lt_one with ⟨R, R_pos, hR⟩
+    rcases(ProperSpace.is_compact_closed_ball (0 : ℂ) R).exists_bound_of_continuous_on H₁.continuous.continuous_on with
+      ⟨C, hC⟩
+    use max C 1
+    rintro _ ⟨w, rfl⟩
+    refine' Or.elim (em (∥w∥ ≤ R)) (fun hw => _) fun hw => _
+    · exact (hC w (mem_closed_ball_zero_iff.mpr hw)).trans (le_max_leftₓ _ _)
+      
+    · exact (hR w (not_le.mp hw).le).trans (le_max_rightₓ _ _)
+      
+  -- `resolvent a 0 = 0`, which is a contradition because it isn't a unit.
+  have H₅ : resolvent a (0 : ℂ) = 0 := by
+    refine' norm_eq_zero.mp (le_antisymmₓ (le_of_forall_pos_le_add fun ε hε => _) (norm_nonneg _))
+    rcases H₂ ε hε with ⟨R, R_pos, hR⟩
+    simpa only [H₃ R] using
+      (zero_addₓ ε).symm.subst
+        (hR R
+          (by
+            exact_mod_cast (Real.norm_of_nonneg R_pos.lt.le).symm.le))
+  -- `not_is_unit_zero` is where we need `nontrivial A`, it is unavoidable.
+  exact not_is_unit_zero (H₅.subst (is_unit_resolvent.mp (mem_resolvent_set_iff.mp (H₀.symm ▸ Set.mem_univ 0))))
 
 end Spectrum
 

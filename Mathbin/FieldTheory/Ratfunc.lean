@@ -234,7 +234,7 @@ theorem lift_on'_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ 
   rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
   exact lift_on_condition_of_lift_on'_condition @H
 
--- ././Mathport/Syntax/Translate/Basic.lean:1202:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 
@@ -430,12 +430,12 @@ def toFractionRingRingEquiv : Ratfunc K ≃+* FractionRing K[X] where
 
 omit hring
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry

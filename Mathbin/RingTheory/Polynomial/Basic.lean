@@ -231,7 +231,8 @@ theorem restriction_one : restriction (1 : R[X]) = 1 :=
 
 variable {S : Type v} [Ringₓ S] {f : R →+* S} {x : S}
 
-theorem eval₂_restriction {p : R[X]} : eval₂ f x p = eval₂ (f.comp (Subring.subtype _)) x p.restriction := by
+theorem eval₂_restriction {p : R[X]} :
+    eval₂ f x p = eval₂ (f.comp (Subring.subtype (Subring.closure (p.frange : Set R)))) x p.restriction := by
   simp only [eval₂_eq_sum, Sum, support_restriction, ← @coeff_restriction _ _ p]
   rfl
 

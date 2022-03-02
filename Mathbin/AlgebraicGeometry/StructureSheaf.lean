@@ -637,7 +637,7 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R)) (s : (structu
   apply const_ext
   rw [mul_assoc f c g, hc]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens

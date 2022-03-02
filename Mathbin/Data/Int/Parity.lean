@@ -218,7 +218,7 @@ theorem even_mul_succ_self (n : ℤ) : Even (n * (n + 1)) := by
 
 @[simp, norm_cast]
 theorem even_coe_nat (n : ℕ) : Even (n : ℤ) ↔ Even n := by
-  rw_mod_cast [even_iff, Nat.even_iff]
+  rw_mod_cast[even_iff, Nat.even_iff]
 
 @[simp, norm_cast]
 theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by

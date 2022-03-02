@@ -190,45 +190,26 @@ theorem geom_mean_le_arith_mean_weighted (w z : ι → ℝ≥0 ) (hw' : (∑ i i
         assumption_mod_cast)
       fun i _ => (z i).coe_nonneg
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- The geometric mean is less than or equal to the arithmetic mean, weighted version
 for two `nnreal` numbers. -/
 theorem geom_mean_le_arith_mean2_weighted (w₁ w₂ p₁ p₂ : ℝ≥0 ) :
     w₁ + w₂ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
-    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using
-    geom_mean_le_arith_mean_weighted univ
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+    Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ] using geom_mean_le_arith_mean_weighted univ ![w₁, w₂] ![p₁, p₂]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem geom_mean_le_arith_mean3_weighted (w₁ w₂ w₃ p₁ p₂ p₃ : ℝ≥0 ) :
     w₁ + w₂ + w₃ = 1 → p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ := by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃] ![p₁, p₂, p₃]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 theorem geom_mean_le_arith_mean4_weighted (w₁ w₂ w₃ w₄ p₁ p₂ p₃ p₄ : ℝ≥0 ) :
     w₁ + w₂ + w₃ + w₄ = 1 →
       p₁ ^ (w₁ : ℝ) * p₂ ^ (w₂ : ℝ) * p₃ ^ (w₃ : ℝ) * p₄ ^ (w₄ : ℝ) ≤ w₁ * p₁ + w₂ * p₂ + w₃ * p₃ + w₄ * p₄ :=
   by
   simpa only [Finₓ.prod_univ_succ, Finₓ.sum_univ_succ, Finset.prod_empty, Finset.sum_empty, Fintype.univ_of_is_empty,
     Finₓ.cons_succ, Finₓ.cons_zero, add_zeroₓ, mul_oneₓ, ← add_assocₓ, mul_assoc] using
-    geom_mean_le_arith_mean_weighted univ
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      («expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
+    geom_mean_le_arith_mean_weighted univ ![w₁, w₂, w₃, w₄] ![p₁, p₂, p₃, p₄]
 
 end Nnreal
 
@@ -574,7 +555,7 @@ theorem inner_le_Lp_mul_Lq (hpq : IsConjugateExponent p q) :
   have :=
     Nnreal.coe_le_coe.2
       (Nnreal.inner_le_Lp_mul_Lq s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hpq)
-  push_cast  at this
+  push_cast at this
   refine' le_transₓ (sum_le_sum fun i hi => _) this
   simp only [← abs_mul, le_abs_self]
 
@@ -583,7 +564,7 @@ sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ`
 theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
     (∑ i in s, abs (f i)) ^ p ≤ card s ^ (p - 1) * ∑ i in s, abs (f i) ^ p := by
   have := Nnreal.coe_le_coe.2 (Nnreal.rpow_sum_le_const_mul_sum_rpow s (fun i => ⟨_, abs_nonneg (f i)⟩) hp)
-  push_cast  at this
+  push_cast at this
   exact this
 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
@@ -594,7 +575,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
       (∑ i in s, abs (f i) ^ p) ^ (1 / p) + (∑ i in s, abs (g i) ^ p) ^ (1 / p) :=
   by
   have := Nnreal.coe_le_coe.2 (Nnreal.Lp_add_le s (fun i => ⟨_, abs_nonneg (f i)⟩) (fun i => ⟨_, abs_nonneg (g i)⟩) hp)
-  push_cast  at this
+  push_cast at this
   refine' le_transₓ (rpow_le_rpow _ (sum_le_sum fun i hi => _) _) this <;>
     simp [sum_nonneg, rpow_nonneg_of_nonneg, abs_nonneg, le_transₓ zero_le_one hp, abs_add, rpow_le_rpow]
 
@@ -775,7 +756,7 @@ theorem Lp_add_le (hp : 1 ≤ p) :
   have :=
     Ennreal.coe_le_coe.2
       (@Nnreal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _ hp)
-  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_ltₓ Pos, le_of_ltₓ (one_div_pos.2 Pos)]  at this
+  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_ltₓ Pos, le_of_ltₓ (one_div_pos.2 Pos)] at this
   convert this using 2 <;> [skip, congr 1, congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi]

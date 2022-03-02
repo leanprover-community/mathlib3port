@@ -183,7 +183,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance : CompleteSpace (Cauchyₓ α) :=

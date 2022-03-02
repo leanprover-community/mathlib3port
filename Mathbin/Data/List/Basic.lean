@@ -526,14 +526,14 @@ theorem map_eq_append_split {f : α → β} {l : List α} {s₁ s₂ : List β} 
 theorem repeat_succ (a : α) n : repeat a (n + 1) = a :: repeat a n :=
   rfl
 
-theorem mem_repeatₓ {a b : α} : ∀ {n}, b ∈ repeat a n ↔ n ≠ 0 ∧ b = a
+theorem mem_repeat {a b : α} : ∀ {n}, b ∈ repeat a n ↔ n ≠ 0 ∧ b = a
   | 0 => by
     simp
   | n + 1 => by
     simp [mem_repeat]
 
-theorem eq_of_mem_repeatₓ {a b : α} {n} (h : b ∈ repeat a n) : b = a :=
-  (mem_repeatₓ.1 h).2
+theorem eq_of_mem_repeat {a b : α} {n} (h : b ∈ repeat a n) : b = a :=
+  (mem_repeat.1 h).2
 
 theorem eq_repeat_of_mem {a : α} : ∀ {l : List α}, (∀, ∀ b ∈ l, ∀, b = a) → l = repeat a l.length
   | [], H => rfl
@@ -541,15 +541,15 @@ theorem eq_repeat_of_mem {a : α} : ∀ {l : List α}, (∀, ∀ b ∈ l, ∀, b
     cases' forall_mem_cons.1 H with H₁ H₂ <;> unfold length repeat <;> congr <;> [exact H₁, exact eq_repeat_of_mem H₂]
 
 theorem eq_repeat' {a : α} {l : List α} : l = repeat a l.length ↔ ∀, ∀ b ∈ l, ∀, b = a :=
-  ⟨fun h => h.symm ▸ fun b => eq_of_mem_repeatₓ, eq_repeat_of_mem⟩
+  ⟨fun h => h.symm ▸ fun b => eq_of_mem_repeat, eq_repeat_of_mem⟩
 
 theorem eq_repeat {a : α} {n} {l : List α} : l = repeat a n ↔ length l = n ∧ ∀, ∀ b ∈ l, ∀, b = a :=
-  ⟨fun h => h.symm ▸ ⟨length_repeat _ _, fun b => eq_of_mem_repeatₓ⟩, fun ⟨e, al⟩ => e ▸ eq_repeat_of_mem al⟩
+  ⟨fun h => h.symm ▸ ⟨length_repeat _ _, fun b => eq_of_mem_repeat⟩, fun ⟨e, al⟩ => e ▸ eq_repeat_of_mem al⟩
 
 theorem repeat_add (a : α) m n : repeat a (m + n) = repeat a m ++ repeat a n := by
   induction m <;> simp only [*, zero_addₓ, succ_add, repeat] <;> constructor <;> rfl
 
-theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] := fun b h => mem_singleton.2 (eq_of_mem_repeatₓ h)
+theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] := fun b h => mem_singleton.2 (eq_of_mem_repeat h)
 
 @[simp]
 theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length := by
@@ -571,7 +571,7 @@ theorem join_repeat_nil (n : ℕ) : join (repeat [] n) = @nil α := by
   induction n <;> [rfl, simp only [*, repeat, join, append_nil]]
 
 theorem repeat_left_injective {n : ℕ} (hn : n ≠ 0) : Function.Injective fun a : α => repeat a n := fun a b h =>
-  (eq_repeat.1 h).2 _ <| mem_repeatₓ.2 ⟨hn, rfl⟩
+  (eq_repeat.1 h).2 _ <| mem_repeat.2 ⟨hn, rfl⟩
 
 theorem repeat_left_inj {a b : α} {n : ℕ} (hn : n ≠ 0) : repeat a n = repeat b n ↔ a = b :=
   (repeat_left_injective hn).eq_iff
@@ -740,7 +740,7 @@ theorem mem_reverseₓ {a : α} {l : List α} : a ∈ reverse l ↔ a ∈ l := b
 theorem reverse_repeat (a : α) n : reverse (repeat a n) = repeat a n :=
   eq_repeat.2
     ⟨by
-      simp only [length_reverse, length_repeat], fun b h => eq_of_mem_repeatₓ (mem_reverseₓ.1 h)⟩
+      simp only [length_reverse, length_repeat], fun b h => eq_of_mem_repeat (mem_reverseₓ.1 h)⟩
 
 /-! ### empty -/
 
@@ -1418,7 +1418,7 @@ theorem nth_le_append_right :
 
 @[simp]
 theorem nth_le_repeat (a : α) {n m : ℕ} (h : m < (List.repeat a n).length) : (List.repeat a n).nthLe m h = a :=
-  eq_of_mem_repeatₓ (nth_le_mem _ _ _)
+  eq_of_mem_repeat (nth_le_mem _ _ _)
 
 theorem nth_append {l₁ l₂ : List α} {n : ℕ} (hn : n < l₁.length) : (l₁ ++ l₂).nth n = l₁.nth n := by
   have hn' : n < (l₁ ++ l₂).length :=

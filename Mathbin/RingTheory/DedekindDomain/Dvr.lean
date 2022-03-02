@@ -42,7 +42,7 @@ variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [IsDomain A] [Field K]
 
 open_locale nonZeroDivisors Polynomial
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal A))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal A))
 /-- A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
 

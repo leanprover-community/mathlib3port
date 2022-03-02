@@ -93,7 +93,7 @@ theorem one_le_succ_nth_stream_b {ifp_succ_n : IntFractPair K}
     ∃ ifp_n, int_fract_pair.stream v n = some ifp_n ∧ ifp_n.fr ≠ 0 ∧ int_fract_pair.of ifp_n.fr⁻¹ = ifp_succ_n
   exact succ_nth_stream_eq_some_iff.elim_left succ_nth_stream_eq
   suffices 1 ≤ ifp_n.fr⁻¹ by
-    rw_mod_cast [le_floor]
+    rw_mod_cast[le_floor]
     assumption
   suffices ifp_n.fr ≤ 1 by
     have h : 0 < ifp_n.fr := lt_of_le_of_neₓ (nth_stream_fr_nonneg nth_stream_eq) stream_nth_fr_ne_zero.symm

@@ -255,6 +255,25 @@ protected def nonUnitalNonAssocRing [NonUnitalNonAssocRing β] : NonUnitalNonAss
   let sub := e.HasSub
   skip <;> apply e.injective.non_unital_non_assoc_ring _ <;> intros <;> exact e.apply_symm_apply _
 
+/-- Transfer `non_unital_ring` across an `equiv` -/
+protected def nonUnitalRing [NonUnitalRing β] : NonUnitalRing α := by
+  let zero := e.HasZero
+  let add := e.HasAdd
+  let mul := e.HasMul
+  let neg := e.HasNeg
+  let sub := e.HasSub
+  skip <;> apply e.injective.non_unital_ring _ <;> intros <;> exact e.apply_symm_apply _
+
+/-- Transfer `non_assoc_ring` across an `equiv` -/
+protected def nonAssocRing [NonAssocRing β] : NonAssocRing α := by
+  let zero := e.HasZero
+  let add := e.HasAdd
+  let one := e.HasOne
+  let mul := e.HasMul
+  let neg := e.HasNeg
+  let sub := e.HasSub
+  skip <;> apply e.injective.non_assoc_ring _ <;> intros <;> exact e.apply_symm_apply _
+
 /-- Transfer `ring` across an `equiv` -/
 protected def ring [Ringₓ β] : Ringₓ α := by
   let zero := e.HasZero

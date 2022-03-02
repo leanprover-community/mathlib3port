@@ -199,7 +199,7 @@ theorem IsCompact.exists_forall_ge :
     ∀ {s : Set β}, IsCompact s → s.Nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, ∀, ∀ y ∈ s, ∀, f y ≤ f x :=
   @IsCompact.exists_forall_le (OrderDual α) _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ∉ » K)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » K)
 /-- The **extreme value theorem**: if a continuous function `f` is larger than a value in its range
 away from compact sets, then it has a global minimum. -/
 theorem _root_.continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
@@ -298,15 +298,15 @@ theorem ContinuousOn.image_Icc (hab : a ≤ b) (h : ContinuousOn f <| Icc a b) :
   eq_Icc_of_connected_compact ⟨(nonempty_Icc.2 hab).Image f, is_preconnected_Icc.Image f h⟩
     (is_compact_Icc.image_of_continuous_on h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 theorem ContinuousOn.image_interval_eq_Icc
-    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :
-    f '' "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" =
-      Icc (inf (f '' "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"))
-        (sup (f '' "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)")) :=
+    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)") :
+    f '' "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" =
+      Icc (inf (f '' "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"))
+        (sup (f '' "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)")) :=
   by
   cases' le_totalₓ a b with h2 h2
   · simp_rw [interval_of_le h2]  at h⊢
@@ -316,13 +316,13 @@ theorem ContinuousOn.image_interval_eq_Icc
     exact h.image_Icc h2
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 theorem ContinuousOn.image_interval
-    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :
-    f '' "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" =
-      "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" :=
+    (h : ContinuousOn f <| "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)") :
+    f '' "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" =
+      "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" :=
   by
   refine' h.image_interval_eq_Icc.trans (interval_of_le _).symm
   refine' cInf_le_cSup _ _ (nonempty_interval.image _) <;> rw [h.image_interval_eq_Icc]

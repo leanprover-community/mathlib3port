@@ -188,10 +188,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         simp only [coeffs.val_except, mul_addₓ]
         repeat'
           rw [← coeffs.val_between_map_mul]
-        have h4 : ∀ {a b c d : Int}, a + b + (c + d) = a + c + (b + d) := by
-          intros
-          ring
-        rw [h4]
+        rw [add_add_add_commₓ]
         have h5 :
           add as (List.map (Mul.mul a_n) (List.map (fun x : ℤ => symmod x (get n as + 1)) as)) =
             List.map (fun a_i : ℤ => a_i + a_n * symmod a_i m) as :=

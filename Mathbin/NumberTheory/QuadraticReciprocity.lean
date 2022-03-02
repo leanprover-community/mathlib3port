@@ -425,7 +425,7 @@ def legendreSym (a : ℤ) (p : ℕ) : ℤ :=
 theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.Prime] : (legendreSym a p : Zmod p) = a ^ (p / 2) := by
   rw [legendre_sym]
   by_cases' ha : (a : Zmod p) = 0
-  · simp only [Int.cast_coe_nat, if_pos, ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), Int.cast_zero]
+  · simp only [Int.cast_coe_nat, if_pos, ha, zero_pow (Nat.div_pos hp.1.two_le (succ_pos 1)), Int.cast_zeroₓ]
     
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p
@@ -437,9 +437,9 @@ theorem legendre_sym_eq_pow (a p : ℕ) [hp : Fact p.Prime] : (legendreSym a p :
     rw [Int.cast_coe_nat, if_neg ha]
     have : (-1 : Zmod p) ≠ 1 := (ne_neg_self p one_ne_zero).symm
     cases' pow_div_two_eq_neg_one_or_one p ha with h h
-    · rw [if_pos h, h, Int.cast_one]
+    · rw [if_pos h, h, Int.cast_oneₓ]
       
-    · rw [h, if_neg this, Int.cast_neg, Int.cast_one]
+    · rw [h, if_neg this, Int.cast_neg, Int.cast_oneₓ]
       
     
 

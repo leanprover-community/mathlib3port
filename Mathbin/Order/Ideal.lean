@@ -295,7 +295,7 @@ section SemilatticeSup
 
 variable [SemilatticeSup P] {x y : P} {I : Ideal P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » I)
 /-- A specific witness of `I.directed` when `P` has joins. -/
 theorem sup_mem x y (_ : x ∈ I) (_ : y ∈ I) : x⊔y ∈ I :=
   let ⟨z, h_mem, hx, hy⟩ := I.Directed x ‹_› y ‹_›
@@ -343,8 +343,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       mem_of_le := fun x y _ ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, le_transₓ ‹x ≤ y› ‹_›⟩ }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i «expr ∈ » I)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (·⊔·),
     le_sup_left := fun i _ : i ∈ I => by

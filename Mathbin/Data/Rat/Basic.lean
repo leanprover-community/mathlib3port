@@ -904,7 +904,7 @@ theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
 
 theorem denom_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).denom = 1 ↔ n ∣ m := by
   replace hn : (n : ℚ) ≠ 0
-  · rwa [Ne.def, ← Int.cast_zero, coe_int_inj]
+  · rwa [Ne.def, ← Int.cast_zeroₓ, coe_int_inj]
     
   constructor
   · intro h
@@ -940,11 +940,11 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.Coprim
 theorem coe_int_div_self (n : ℤ) : ((n / n : ℤ) : ℚ) = n / n := by
   by_cases' hn : n = 0
   · subst hn
-    simp only [Int.cast_zero, EuclideanDomain.zero_div]
+    simp only [Int.cast_zeroₓ, EuclideanDomain.zero_div]
     
   · have : (n : ℚ) ≠ 0 := by
       rwa [← coe_int_inj] at hn
-    simp only [Int.div_self hn, Int.cast_one, Ne.def, not_false_iff, div_self this]
+    simp only [Int.div_self hn, Int.cast_oneₓ, Ne.def, not_false_iff, div_self this]
     
 
 @[norm_cast]
@@ -960,7 +960,7 @@ theorem coe_nat_div (a b : ℕ) (h : b ∣ a) : ((a / b : ℕ) : ℚ) = a / b :=
   simp only [mul_comm b, Nat.mul_div_assocₓ c (dvd_refl b), Nat.cast_mulₓ, mul_div_assoc, coe_nat_div_self]
 
 theorem inv_coe_int_num {a : ℤ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 := by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_oneₓ, ← Int.cast_one]
+  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_oneₓ, ← Int.cast_oneₓ]
   apply num_div_eq_of_coprime ha0
   rw [Int.nat_abs_one]
   exact Nat.coprime_one_leftₓ _
@@ -971,7 +971,7 @@ theorem inv_coe_nat_num {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 :=
       exact_mod_cast ha0 : 0 < (a : ℤ))
 
 theorem inv_coe_int_denom {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.denom : ℤ) = a := by
-  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_oneₓ, ← Int.cast_one]
+  rw [Rat.inv_def', Rat.coe_int_num, Rat.coe_int_denom, Nat.cast_oneₓ, ← Int.cast_oneₓ]
   apply denom_div_eq_of_coprime ha0
   rw [Int.nat_abs_one]
   exact Nat.coprime_one_leftₓ _

@@ -430,7 +430,7 @@ theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n
 /-- The composition made of blocks all of size `1`. -/
 def ones (n : ℕ) : Composition n :=
   ⟨repeat (1 : ℕ) n, fun i hi => by
-    simp [List.eq_of_mem_repeatₓ hi], by
+    simp [List.eq_of_mem_repeat hi], by
     simp ⟩
 
 instance {n : ℕ} : Inhabited (Composition n) :=

@@ -1715,7 +1715,7 @@ include σ₂₁
 
 theorem LinearEquiv.uniform_embedding (e : E ≃ₛₗ[σ₁₂] F) (h₁ : Continuous e) (h₂ : Continuous e.symm) :
     UniformEmbedding e :=
-  ContinuousLinearEquiv.uniform_embedding { e with continuous_to_fun := h₁, continuous_inv_fun := h₂ }
+  ContinuousLinearEquiv.uniform_embedding ({ e with continuous_to_fun := h₁, continuous_inv_fun := h₂ } : E ≃SL[σ₁₂] F)
 
 omit σ₂₁
 

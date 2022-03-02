@@ -362,7 +362,7 @@ theorem measure_bUnion_eq_supr {s : ι → Set α} {t : Set ι} (ht : Countable 
   have := ht.to_encodable
   rw [bUnion_eq_Union, measure_Union_eq_supr hd.directed_coe, ← supr_subtype'']
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s k)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s k)
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
 theorem measure_Inter_eq_infi [Encodable ι] {s : ι → Set α} (h : ∀ i, MeasurableSet (s i)) (hd : Directed (· ⊇ ·) s)
@@ -1145,7 +1145,7 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
     _ = μ := restrict_univ
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem restrict_congr_meas (hs : MeasurableSet s) :
     μ.restrict s = ν.restrict s ↔ ∀ t _ : t ⊆ s, MeasurableSet t → μ t = ν t :=
   ⟨fun H t hts ht => by
@@ -2258,7 +2258,7 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
   refine' ⟨s ∩ spanning_sets μ n, hs.inter (measurable_spanning_sets _ _), inter_subset_left _ _, hn, _⟩
   exact (measure_mono (inter_subset_right _ _)).trans_lt (measure_spanning_sets_lt_top _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t' «expr ⊇ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t' «expr ⊇ » t)
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
@@ -3179,7 +3179,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measureₓ α} {s : Set α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x ∈ s, ∀, μ.FiniteAtFilter (𝓝 x)) :
@@ -3201,7 +3201,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x
     exact ⟨U, nhds_within_le_nhds (hUo.mem_nhds hx), U, subset.rfl, hUo, hU⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] :

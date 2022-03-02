@@ -30,7 +30,7 @@ Add instances for `prod`, `filter`
 
 ## References
 
-* [Wikipedia, *Complete Heyting algebra*][https://en.wikipedia.org/wiki/Complete_Heyting_algebra]
+* [Wikipedia, *Complete Heyting algebra*](https://en.wikipedia.org/wiki/Complete_Heyting_algebra)
 * [Francis Borceux, *Handbook of Categorical Algebra III*][borceux-vol3]
 -/
 
@@ -80,13 +80,13 @@ theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a
 theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i := by
   simpa only [inf_comm] using supr_inf_eq f a
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j)⊓a = ⨆ (i) (j), f i j⊓a := by
   simp only [supr_inf_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j) = ⨆ (i) (j), a⊓f i j := by
   simp only [inf_supr_eq]
 
@@ -133,13 +133,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq (OrderDual α) _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
   @bsupr_inf_eq (OrderDual α) _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
   @inf_bsupr_eq (OrderDual α) _ _ _ _ _
 

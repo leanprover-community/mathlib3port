@@ -949,8 +949,8 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
         (by
           simpa using h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (w «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊇ » w)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (w «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » w)
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :

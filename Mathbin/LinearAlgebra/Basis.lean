@@ -714,7 +714,7 @@ theorem singleton_apply (ι R : Type _) [Unique ι] [Semiringₓ R] i : Basis.si
 theorem singleton_repr (ι R : Type _) [Unique ι] [Semiringₓ R] x i : (Basis.singleton ι R).repr x i = x := by
   simp [Basis.singleton, Unique.eq_default i]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem basis_singleton_iff {R M : Type _} [Ringₓ R] [Nontrivial R] [AddCommGroupₓ M] [Module R M]
     [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
     Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
@@ -1295,7 +1295,7 @@ theorem LinearMap.exists_extend {p : Submodule K V} (f : p →ₗ[K] V') : ∃ g
 
 open Submodule LinearMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K)))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K)))
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :

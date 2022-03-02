@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 -/
-import Mathbin.SetTheory.OrdinalArithmetic
-import Mathbin.Tactic.Linarith.Default
 import Mathbin.Order.Bounded
+import Mathbin.SetTheory.Principal
+import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Cardinals and ordinals
@@ -595,6 +595,13 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
 protected theorem eq_of_add_eq_add_right {a b c : Cardinal} (h : a + b = c + b) (hb : b < ω) : a = c := by
   rw [add_commₓ a b, add_commₓ c b] at h
   exact Cardinal.eq_of_add_eq_add_left h hb
+
+theorem ord_is_principal_add {c : Cardinal} (hc : ω ≤ c) : Ordinal.Principal (· + ·) c.ord := fun a b ha hb => by
+  rw [lt_ord, Ordinal.card_add] at *
+  exact add_lt_of_lt hc ha hb
+
+theorem aleph_is_principal_add (o : Ordinal) : Ordinal.Principal (· + ·) (aleph o).ord :=
+  ord_is_principal_add <| omega_le_aleph o
 
 /-! ### Properties about power -/
 

@@ -48,6 +48,8 @@ Some properties of the operations are also used to discuss general tools on ordi
   `Type u`, as an ordinal in `Type u`.
 * `bsup`, `blsub`: the supremum / least strict upper bound of a set of ordinals indexed by ordinals
   less than a given ordinal `o`.
+
+Various other basic arithmetic results are given in `principal.lean` instead.
 -/
 
 
@@ -2112,7 +2114,7 @@ theorem CNF_pairwise (b := omega) o : (cNF b o).Pairwise fun p q => Prod.fst q <
 theorem CNF_fst_le_log (b := omega) o : ∀, ∀ p ∈ cNF b o, ∀, Prod.fst p ≤ log b o :=
   (CNF_pairwise_aux _ _).1
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (p «expr ∈ » CNF b o)
 theorem CNF_fst_le (b := omega) o p (_ : p ∈ cNF b o) : Prod.fst p ≤ o :=
   le_transₓ (CNF_fst_le_log _ _ p H) (log_le_self _ _)
 
@@ -2294,20 +2296,6 @@ theorem nat_lt_limit {o} (h : IsLimit o) : ∀ n : ℕ, (n : Ordinal) < o
 theorem omega_le_of_is_limit {o} (h : IsLimit o) : omega ≤ o :=
   omega_le.2 fun n => le_of_ltₓ <| nat_lt_limit h n
 
-theorem add_omega {a : Ordinal} (h : a < omega) : a + omega = omega := by
-  rcases lt_omega.1 h with ⟨n, rfl⟩
-  clear h
-  induction' n with n IH
-  · rw [Nat.cast_zeroₓ, zero_addₓ]
-    
-  · rw [Nat.cast_succₓ, add_assocₓ, one_add_of_omega_le le_rfl, IH]
-    
-
-theorem add_lt_omega {a b : Ordinal} (ha : a < omega) (hb : b < omega) : a + b < omega :=
-  match a, b, lt_omega.1 ha, lt_omega.1 hb with
-  | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
-    rw [← Nat.cast_addₓ] <;> apply nat_lt_omega
-
 theorem mul_lt_omega {a b : Ordinal} (ha : a < omega) (hb : b < omega) : a * b < omega :=
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
@@ -2334,57 +2322,6 @@ theorem opow_lt_omega {a b : Ordinal} (ha : a < omega) (hb : b < omega) : (a^b) 
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
   | _, _, ⟨m, rfl⟩, ⟨n, rfl⟩ => by
     rw [← nat_cast_opow] <;> apply nat_lt_omega
-
-theorem add_omega_opow {a b : Ordinal} (h : a < (omega^b)) : a + (omega^b) = (omega^b) := by
-  refine' le_antisymmₓ _ (le_add_left _ _)
-  revert h
-  apply limit_rec_on b
-  · intro h
-    rw [opow_zero, ← succ_zero, lt_succ, Ordinal.le_zero] at h
-    rw [h, zero_addₓ]
-    
-  · intro b _ h
-    rw [opow_succ] at h
-    rcases(lt_mul_of_limit omega_is_limit).1 h with ⟨x, xo, ax⟩
-    refine' le_transₓ (add_le_add_right (le_of_ltₓ ax) _) _
-    rw [opow_succ, ← mul_addₓ, add_omega xo]
-    
-  · intro b l IH h
-    rcases(lt_opow_of_limit omega_ne_zero l).1 h with ⟨x, xb, ax⟩
-    refine' (((add_is_normal a).trans (opow_is_normal one_lt_omega)).limit_le l).2 fun y yb => _
-    let z := max x y
-    have := IH z (max_ltₓ xb yb) (lt_of_lt_of_leₓ ax <| opow_le_opow_right omega_pos (le_max_leftₓ _ _))
-    exact
-      le_transₓ (add_le_add_left (opow_le_opow_right omega_pos (le_max_rightₓ _ _)) _)
-        (le_transₓ this (opow_le_opow_right omega_pos <| le_of_ltₓ <| max_ltₓ xb yb))
-    
-
-theorem add_lt_omega_opow {a b c : Ordinal} (h₁ : a < (omega^c)) (h₂ : b < (omega^c)) : a + b < (omega^c) := by
-  rwa [← add_omega_opow h₁, add_lt_add_iff_left]
-
-theorem add_absorp {a b c : Ordinal} (h₁ : a < (omega^b)) (h₂ : (omega^b) ≤ c) : a + c = c := by
-  rw [← Ordinal.add_sub_cancel_of_le h₂, ← add_assocₓ, add_omega_opow h₁]
-
-theorem add_absorp_iff {o : Ordinal} (o0 : 0 < o) : (∀, ∀ a < o, ∀, a + o = o) ↔ ∃ a, o = (omega^a) :=
-  ⟨fun H =>
-    ⟨log omega o, by
-      refine' ((lt_or_eq_of_leₓ (opow_log_le _ o0)).resolve_left fun h => _).symm
-      have := H _ h
-      have := lt_opow_succ_log one_lt_omega o
-      rw [opow_succ, lt_mul_of_limit omega_is_limit] at this
-      rcases this with ⟨a, ao, h'⟩
-      rcases lt_omega.1 ao with ⟨n, rfl⟩
-      clear ao
-      revert h'
-      apply not_lt_of_le
-      suffices e : (omega^log omega o) * ↑n + o = o
-      · simpa only [e] using le_add_right ((omega^log omega o) * ↑n) o
-        
-      induction' n with n IH
-      · simp only [Nat.cast_zeroₓ, mul_zero, zero_addₓ]
-        
-      simp only [Nat.cast_succₓ, mul_add_one, add_assocₓ, this, IH]⟩,
-    fun ⟨b, e⟩ => e.symm ▸ fun a => add_omega_opow⟩
 
 theorem add_mul_limit_aux {a b c : Ordinal} (ba : b + a = a) (l : IsLimit c)
     (IH : ∀, ∀ c' < c, ∀, (a + b) * succ c' = a * succ c' + b) : (a + b) * c = a * c :=
@@ -2443,20 +2380,20 @@ theorem mul_omega_dvd {a : Ordinal} (a0 : 0 < a) (ha : a < omega) : ∀ {b}, ome
   | _, ⟨b, rfl⟩ => by
     rw [← mul_assoc, mul_omega a0 ha]
 
-theorem mul_omega_opow_opow {a b : Ordinal} (a0 : 0 < a) (h : a < (omega^omega^b)) :
-    a * (omega^omega^b) = (omega^omega^b) := by
-  by_cases' b0 : b = 0
-  · rw [b0, opow_zero, opow_one] at h⊢
-    exact mul_omega a0 h
-    
-  refine'
-    le_antisymmₓ _
-      (by
-        simpa only [one_mulₓ] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega^omega^b))
-  rcases(lt_opow_of_limit omega_ne_zero (opow_is_limit_left omega_is_limit b0)).1 h with ⟨x, xb, ax⟩
-  apply (mul_le_mul_right' (le_of_ltₓ ax) _).trans
-  rw [← opow_add, add_omega_opow xb]
+/- This will be part of a future PR on multiplicative principal ordinals.
 
+theorem mul_omega_opow_opow {a b : ordinal} (a0 : 0 < a) (h : a < omega ^ omega ^ b) :
+  a * omega ^ omega ^ b = omega ^ omega ^ b :=
+begin
+  by_cases b0 : b = 0, {rw [b0, opow_zero, opow_one] at h ⊢, exact mul_omega a0 h},
+  refine le_antisymm _
+    (by simpa only [one_mul] using mul_le_mul_right' (one_le_iff_pos.2 a0) (omega ^ omega ^ b)),
+  rcases (lt_opow_of_limit omega_ne_zero (opow_is_limit_left omega_is_limit b0)).1 h
+    with ⟨x, xb, ax⟩,
+  apply (mul_le_mul_right' (le_of_lt ax) _).trans,
+  rw [← opow_add, add_omega_opow xb]
+end
+--/
 theorem opow_omega {a : Ordinal} (a1 : 1 < a) (h : a < omega) : (a^omega) = omega :=
   le_antisymmₓ
     ((opow_le_of_limit (one_le_iff_ne_zero.1 <| le_of_ltₓ a1) omega_is_limit).2 fun b hb =>

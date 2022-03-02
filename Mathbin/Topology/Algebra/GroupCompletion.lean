@@ -82,11 +82,11 @@ instance : AddMonoidₓ (Completion α) :=
     zero_add := fun a =>
       Completion.induction_on a (is_closed_eq (continuous_map₂ continuous_const continuous_id) continuous_id) fun a =>
         show 0 + (a : Completion α) = a by
-          rw_mod_cast [zero_addₓ],
+          rw_mod_cast[zero_addₓ],
     add_zero := fun a =>
       Completion.induction_on a (is_closed_eq (continuous_map₂ continuous_id continuous_const) continuous_id) fun a =>
         show (a : Completion α) + 0 = a by
-          rw_mod_cast [add_zeroₓ],
+          rw_mod_cast[add_zeroₓ],
     add_assoc := fun a b c =>
       Completion.induction_on₃ a b c
         (is_closed_eq
@@ -97,7 +97,7 @@ instance : AddMonoidₓ (Completion α) :=
         fun a b c =>
         show (a : Completion α) + b + c = a + (b + c) by
           repeat'
-            rw_mod_cast [add_assocₓ] }
+            rw_mod_cast[add_assocₓ] }
 
 instance : SubNegMonoidₓ (Completion α) :=
   { Completion.addMonoid, Completion.hasNeg, Completion.hasSub with
@@ -114,7 +114,7 @@ instance : AddGroupₓ (Completion α) :=
       Completion.induction_on a
         (is_closed_eq (continuous_map₂ Completion.continuous_map continuous_id) continuous_const) fun a =>
         show -(a : Completion α) + a = 0 by
-          rw_mod_cast [add_left_negₓ]
+          rw_mod_cast[add_left_negₓ]
           rfl }
 
 instance : UniformAddGroup (Completion α) :=
@@ -163,7 +163,7 @@ def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ �
         (is_closed_eq (continuous_extension.comp continuous_add)
           ((continuous_extension.comp continuous_fst).add (continuous_extension.comp continuous_snd)))
         fun a b => by
-        rw_mod_cast [extension_coe hf, extension_coe hf, extension_coe hf, f.map_add] }
+        rw_mod_cast[extension_coe hf, extension_coe hf, extension_coe hf, f.map_add] }
 
 theorem AddMonoidHom.extension_coe [CompleteSpace β] [SeparatedSpace β] (f : α →+ β) (hf : Continuous f) (a : α) :
     f.extension hf a = f a :=

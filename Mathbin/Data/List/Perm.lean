@@ -227,7 +227,7 @@ theorem Perm.pmap {p : α → Prop} (f : ∀ a, p a → β) {l₁ l₂ : List α
 theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) : filterₓ p l₁ ~ filterₓ p l₂ := by
   rw [← filter_map_eq_filter] <;> apply s.filter_map _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -334,7 +334,7 @@ end Rel
 
 section Subperm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (l «expr ~ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (l «expr ~ » l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -1256,13 +1256,13 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by
   simpa [permutations, perm_nil] using H
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (is' «expr ~ » is)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (is' «expr ~ » is)
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine'

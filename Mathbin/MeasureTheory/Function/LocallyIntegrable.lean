@@ -126,16 +126,16 @@ theorem Continuous.integrable_on_Ioc [Preorderₓ X] [CompactIccSpace X] (hf : C
     IntegrableOn f (Ioc a b) μ :=
   hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 theorem ContinuousOn.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X]
-    (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)") :
-    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" μ :=
+    (hf : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)") :
+    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 theorem Continuous.integrable_on_interval [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :
-    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)" μ :=
+    IntegrableOn f "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" μ :=
   hf.integrable_on_Icc
 
 theorem Continuous.integrable_on_interval_oc [LinearOrderₓ X] [CompactIccSpace X] (hf : Continuous f) :

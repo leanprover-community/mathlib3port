@@ -115,7 +115,7 @@ open Set Filter Classical
 
 open_locale Classical TopologicalSpace Filter
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 universe u
@@ -664,7 +664,7 @@ theorem nhds_eq_uniformity_prod {a b : α} :
     exact monotone_prod monotone_preimage monotone_const
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » cl_d)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » cl_d)
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α), IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
   let cl_d := { p : α × α | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d }
@@ -926,7 +926,7 @@ theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Pro
   (ha.tendsto_iff hb).trans <| by
     simp only [Prod.forall]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » S)
 theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
     (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
     UniformContinuousOn f S ↔

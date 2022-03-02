@@ -84,7 +84,7 @@ namespace IsCauSeq
 
 variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε := by
@@ -137,7 +137,7 @@ def ofEq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq β
 
 variable [IsAbsoluteValue abv]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (j k «expr ≥ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j k «expr ≥ » i)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=

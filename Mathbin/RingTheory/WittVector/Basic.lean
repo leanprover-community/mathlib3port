@@ -80,7 +80,7 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -122,9 +122,9 @@ setup_tactic_parser
 
 open Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
   let fn ← to_expr (ppquote.1 (%%ₓfn : Finₓ _ → ℕ → R))
@@ -161,38 +161,23 @@ theorem matrix_vec_empty_coeff {R} i j : @coeff p R (Matrix.vecEmpty i) j = (Mat
 
 include hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by
-  ghost_fun_tac 0, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac 0, ![]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by
-  ghost_fun_tac 1, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac 1, ![]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
-  ghost_fun_tac X 0 + X 1,
-    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
-  ghost_fun_tac X 0 - X 1,
-    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
-  ghost_fun_tac X 0 * X 1,
-    «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by
-  ghost_fun_tac -X 0, «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»"
+  ghost_fun_tac -X 0, ![x.coeff]
 
 end GhostFun
 

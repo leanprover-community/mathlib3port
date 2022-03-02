@@ -58,7 +58,7 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
     rw [← Nat.gcd_eq_rightₓ hdivn, C.gcd_eq_one]
   subst D
   refine' hv ⟨N, _⟩
-  rw [num_denom', Int.coe_nat_one, mk_eq_div, Int.cast_one, div_one, cast_coe_int]
+  rw [num_denom', Int.coe_nat_one, mk_eq_div, Int.cast_oneₓ, div_one, cast_coe_int]
 
 /-- If `x^n = m` is an integer and `n` does not divide the `multiplicity p m`, then `x`
 is irrational. -/
@@ -66,7 +66,7 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
     (hxr : x ^ n = m) (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) : Irrational x :=
   by
   rcases Nat.eq_zero_or_posₓ n with (rfl | hnpos)
-  · rw [eq_comm, pow_zeroₓ, ← Int.cast_one, Int.cast_inj] at hxr
+  · rw [eq_comm, pow_zeroₓ, ← Int.cast_oneₓ, Int.cast_inj] at hxr
     simpa [hxr, multiplicity.one_right (mt is_unit_iff_dvd_one.1 (mt Int.coe_nat_dvd.1 hp.1.not_dvd_one)),
       Nat.zero_modₓ] using hv
     

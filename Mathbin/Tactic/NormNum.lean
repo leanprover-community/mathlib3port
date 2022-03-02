@@ -675,10 +675,10 @@ theorem nat_cast_bit1 {α} [Semiringₓ α] (a : ℕ) (a' : α) (h : ↑a = a') 
   h ▸ Nat.cast_bit1 _
 
 theorem int_cast_zero {α} [Ringₓ α] : ↑(0 : ℤ) = (0 : α) :=
-  Int.cast_zero
+  Int.cast_zeroₓ
 
 theorem int_cast_one {α} [Ringₓ α] : ↑(1 : ℤ) = (1 : α) :=
-  Int.cast_one
+  Int.cast_oneₓ
 
 theorem int_cast_bit0 {α} [Ringₓ α] (a : ℤ) (a' : α) (h : ↑a = a') : ↑(bit0 a) = bit0 a' :=
   h ▸ Int.cast_bit0 _

@@ -216,7 +216,7 @@ theorem pow_factorization_dvd (n p : ℕ) : p ^ n.factorization p ∣ n := by
   apply dvd_of_factors_subperm (pow_ne_zero _ hp.ne_zero)
   rw [hp.factors_pow, List.subperm_ext_iff]
   intro q hq
-  simp [List.eq_of_mem_repeatₓ hq]
+  simp [List.eq_of_mem_repeat hq]
 
 theorem pow_succ_factorization_not_dvd {n p : ℕ} (hn : n ≠ 0) (hp : p.Prime) : ¬p ^ (n.factorization p + 1) ∣ n := by
   intro h

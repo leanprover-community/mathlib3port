@@ -69,10 +69,7 @@ theorem add_to_nat : ∀ m n, ((m + n : PosNum) : ℕ) = m + n
     rw [one_add b, succ_to_nat, add_commₓ] <;> rfl
   | a, 1 => by
     rw [add_one a, succ_to_nat] <;> rfl
-  | bit0 a, bit0 b =>
-    (congr_argₓ bit0 (add_to_nat a b)).trans <|
-      show (a + b + (a + b) : ℕ) = a + a + (b + b) by
-        simp [add_left_commₓ]
+  | bit0 a, bit0 b => (congr_argₓ bit0 (add_to_nat a b)).trans <| add_add_add_commₓ _ _ _ _
   | bit0 a, bit1 b =>
     (congr_argₓ bit1 (add_to_nat a b)).trans <|
       show (a + b + (a + b) + 1 : ℕ) = a + a + (b + b + 1) by
@@ -374,7 +371,7 @@ theorem of_to_nat : ∀ n : Num, ((n : ℕ) : Num) = n
 theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat h, congr_argₓ _⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
@@ -387,7 +384,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
 ```lean
@@ -545,7 +542,7 @@ theorem nat_size_to_nat n : natSize n = Nat.size n := by
 theorem nat_size_pos n : 0 < natSize n := by
   cases n <;> apply Nat.succ_posₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
@@ -558,7 +555,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
 ```lean
@@ -1465,7 +1462,7 @@ theorem cast_le [LinearOrderedRing α] {m n : Znum} : (m : α) ≤ n ↔ m ≤ n
 theorem cast_inj [LinearOrderedRing α] {m n : Znum} : (m : α) = n ↔ m = n := by
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -1478,7 +1475,7 @@ end
 unsafe def transfer_rw : tactic Unit :=
   sorry
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.
 ```lean

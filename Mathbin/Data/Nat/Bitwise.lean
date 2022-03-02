@@ -210,7 +210,7 @@ theorem zero_lor (n : ℕ) : lorₓ 0 n = n := by
 theorem lor_zero (n : ℕ) : lorₓ n 0 = n := by
   simp [lor]
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=

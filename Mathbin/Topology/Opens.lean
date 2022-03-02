@@ -225,7 +225,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U

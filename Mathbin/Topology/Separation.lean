@@ -708,7 +708,7 @@ theorem is_closed_diagonal [T2Space α] : IsClosed (Diagonal α) := by
   have : x ∈ t₁ ∩ t₂ := ⟨x_in, y_in⟩
   rwa [h'] at this
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
 theorem t2_iff_is_closed_diagonal : T2Space α ↔ IsClosed (Diagonal α) := by
   constructor
   · intro h
@@ -1226,8 +1226,8 @@ instance (priority := 100) RegularSpace.t2_5_space [RegularSpace α] : T25Space 
 
 variable {α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
 theorem disjoint_nested_nhds [RegularSpace α] {x y : α} (h : x ≠ y) :

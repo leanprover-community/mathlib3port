@@ -317,7 +317,7 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
     · induction' n with n ih
       · rfl
         
-      · simp only [ih, add_commₓ 1, of_digits_one_cons, Nat.cast_id, digits_one_succ]
+      · simp only [ih, add_commₓ 1, of_digits_one_cons, Nat.cast_idₓ, digits_one_succ]
         
       
     · apply Nat.strong_induction_onₓ n _
@@ -330,7 +330,7 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
       · simp only [Nat.succ_eq_add_one, digits_add_two_add_one]
         dsimp [of_digits]
         rw [h _ (Nat.div_lt_self' n b)]
-        rw [Nat.cast_id, Nat.mod_add_divₓ]
+        rw [Nat.cast_idₓ, Nat.mod_add_divₓ]
         
       
     

@@ -462,23 +462,23 @@ theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') :
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ x _ : x ≠ a, p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [not_and_distrib]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 

@@ -418,7 +418,7 @@ instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
 noncomputable instance Prop.linearOrder : LinearOrderₓ Prop := by
   classical <;> exact Lattice.toLinearOrder Prop
 
--- ././Mathport/Syntax/Translate/Basic.lean:592:4: warning: unsupported binary notation `«->»
+-- ././Mathport/Syntax/Translate/Basic.lean:591:4: warning: unsupported binary notation `«->»
 @[simp]
 theorem le_Prop_eq : ((· ≤ ·) : Prop → Prop → Prop) = («->» · ·) :=
   rfl

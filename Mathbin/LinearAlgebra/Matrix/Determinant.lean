@@ -612,10 +612,7 @@ theorem upper_two_block_triangular_det (A : Matrix m m R) (B : Matrix m n R) (D 
     intro σ₁ σ₂
     rw [Fintype.prod_sum_type]
     simp_rw [Equivₓ.sum_congr_apply, Sum.map_inr, Sum.map_inl, from_blocks_apply₁₁, from_blocks_apply₂₂]
-    have hr : ∀ a b c d : R, a * b * (c * d) = a * c * (b * d) := by
-      intros
-      ac_rfl
-    rw [hr]
+    rw [mul_mul_mul_commₓ]
     congr
     rw [sign_sum_congr, Units.coe_mul, Int.cast_mul]
     

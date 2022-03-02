@@ -1811,7 +1811,7 @@ theorem has_strict_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) 
     congr
     abel
     
-  · simp only [hm, zpow_zero, Int.cast_zero, zero_mul, has_strict_deriv_at_const]
+  · simp only [hm, zpow_zero, Int.cast_zeroₓ, zero_mul, has_strict_deriv_at_const]
     
   · exact this m hm
     
@@ -1883,7 +1883,7 @@ theorem iter_deriv_pow' (n k : ℕ) :
 
 theorem iter_deriv_inv (k : ℕ) (x : 𝕜) : (deriv^[k]) Inv.inv x = (∏ i in Finset.range k, -1 - i) * x ^ (-1 - k : ℤ) :=
   by
-  simpa only [zpow_neg_one, Int.cast_neg, Int.cast_one] using iter_deriv_zpow (-1) x k
+  simpa only [zpow_neg_one, Int.cast_neg, Int.cast_oneₓ] using iter_deriv_zpow (-1) x k
 
 @[simp]
 theorem iter_deriv_inv' (k : ℕ) :

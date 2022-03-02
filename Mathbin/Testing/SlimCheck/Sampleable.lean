@@ -177,7 +177,7 @@ section Prio
 
 open SampleableExt
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 50
 
 instance SampleableExt.ofSampleable {α} [Sampleable α] [HasRepr α] : SampleableExt α where
@@ -196,7 +196,7 @@ instance Sampleable.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] 
   sample := SampleableBifunctor.sample F (Sampleable.sample α) (Sampleable.sample β)
   shrink := SampleableBifunctor.shrink α β Sampleable.shrink Sampleable.shrink
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance SampleableExt.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExt α] : SampleableExt (F α) where

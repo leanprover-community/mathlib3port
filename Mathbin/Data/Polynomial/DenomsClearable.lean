@@ -92,9 +92,9 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
   obtain Fa := congr_argₓ abs hF
   rw [eq_one_div_of_mul_eq_one_left bu, eq_int_cast, eq_int_cast, abs_mul] at Fa
   rw [abs_of_pos (pow_pos (int.cast_pos.mpr b0) _ : 0 < (b : K) ^ _), one_div, eq_int_cast] at Fa
-  rw [div_eq_mul_inv, ← Fa, ← Int.cast_abs, ← Int.cast_one, Int.cast_le]
+  rw [div_eq_mul_inv, ← Fa, ← Int.cast_abs, ← Int.cast_oneₓ, Int.cast_le]
   refine' Int.le_of_lt_add_oneₓ ((lt_add_iff_pos_left 1).mpr (abs_pos.mpr fun F0 => fab _))
-  rw [eq_one_div_of_mul_eq_one_left bu, F0, one_div, eq_int_cast, Int.cast_zero, zero_eq_mul] at hF
+  rw [eq_one_div_of_mul_eq_one_left bu, F0, one_div, eq_int_cast, Int.cast_zeroₓ, zero_eq_mul] at hF
   cases' hF with hF hF
   · exact (not_le.mpr b0 (le_of_eqₓ (int.cast_eq_zero.mp (pow_eq_zero hF)))).elim
     

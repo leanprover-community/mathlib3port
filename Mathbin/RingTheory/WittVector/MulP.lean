@@ -40,17 +40,11 @@ include hp
 
 variable (p)
 
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr![ ,]»
--- ././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
 noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
   | 0 => 0
-  | n + 1 => fun k =>
-    bind₁
-      (Function.uncurry <|
-        «expr![ ,]» "././Mathport/Syntax/Translate/Basic.lean:827:71: unsupported notation `«expr![ ,]»")
-      (wittAdd p k)
+  | n + 1 => fun k => bind₁ (Function.uncurry <| ![witt_mul_n n, x]) (wittAdd p k)
 
 variable {p}
 

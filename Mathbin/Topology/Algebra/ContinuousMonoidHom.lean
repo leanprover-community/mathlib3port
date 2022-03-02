@@ -215,8 +215,8 @@ theorem is_inducing : Inducing (toContinuousMap : ContinuousMonoidHom A B → C(
 theorem is_embedding : Embedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_inducing A B, to_continuous_map_injective⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (U V W)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (U V W)
 theorem is_closed_embedding [HasContinuousMul B] [T2Space B] :
     ClosedEmbedding (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) :=
   ⟨is_embedding A B,

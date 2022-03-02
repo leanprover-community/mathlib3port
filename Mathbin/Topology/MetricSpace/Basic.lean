@@ -116,7 +116,7 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       
   nonneg_of_mul_nonneg_left this zero_lt_two
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -669,12 +669,12 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x y _ : x ∈ s _ : y ∈ s, dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x y _ : x ∈ s _ : y ∈ s, dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
   Metric.uniformity_basis_dist_le.uniform_continuous_on_iff Metric.uniformity_basis_dist_le
@@ -733,7 +733,7 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
   simp only [Set.mem_Union, Set.mem_range]
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
     ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε := by
   intro ε ε_pos
@@ -772,7 +772,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
   rw [← tendsto_uniformly_on_univ, tendsto_uniformly_on_iff]
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀, ∀ ε > 0, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1205,7 +1205,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m n «expr ≥ » N)
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
 -- see Note [nolint_ge]
@@ -1648,7 +1648,7 @@ end Pi
 
 section Compact
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α} (hs : IsCompact s) {e : ℝ}
@@ -1733,7 +1733,7 @@ instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α 
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 => is_compact_closed_ball _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
 /-- A proper space is complete -/
 -- see Note [lower instance priority]
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -1829,7 +1829,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=

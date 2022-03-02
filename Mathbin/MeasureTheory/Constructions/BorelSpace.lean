@@ -400,9 +400,9 @@ instance nhds_within_Ioi_is_measurably_generated : (𝓝[Ioi b] a).IsMeasurablyG
 instance nhds_within_Iio_is_measurably_generated : (𝓝[Iio b] a).IsMeasurablyGenerated :=
   measurable_set_Iio.nhds_within_is_measurably_generated _
 
--- ././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 instance nhds_within_interval_is_measurably_generated :
-    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:815:47: unsupported (impossible)"] x) :=
+    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"] x) :=
   nhds_within_Icc_is_measurably_generated
 
 @[measurability]
@@ -1401,17 +1401,17 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 theorem borel_eq_generate_from_Ioo_rat : borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_Ioo_rat.borel_eq_generate_from
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 theorem is_pi_system_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) := by
   convert is_pi_system_Ioo (coe : ℚ → ℝ) (coe : ℚ → ℝ)
   ext x
   simp [eq_comm]
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/
 def finiteSpanningSetsInIooRat (μ : Measureₓ ℝ) [IsLocallyFiniteMeasure μ] :

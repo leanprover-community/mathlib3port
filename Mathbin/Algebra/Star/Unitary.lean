@@ -21,10 +21,10 @@ unitary
 -/
 
 
-/-- In a `star_monoid R`, `unitary R` is the submonoid consisting of all the elements `U` of
+/-- In a *-monoid, `unitary R` is the submonoid consisting of all the elements `U` of
 `R` such that `star U * U = 1` and `U * star U = 1`.
 -/
-def unitary (R : Type _) [Monoidₓ R] [StarMonoid R] : Submonoid R where
+def unitary (R : Type _) [Monoidₓ R] [StarSemigroup R] : Submonoid R where
   Carrier := { U | star U * U = 1 ∧ U * star U = 1 }
   one_mem' := by
     simp only [mul_oneₓ, and_selfₓ, Set.mem_set_of_eq, star_one]
@@ -47,7 +47,7 @@ namespace unitary
 
 section Monoidₓ
 
-variable [Monoidₓ R] [StarMonoid R]
+variable [Monoidₓ R] [StarSemigroup R]
 
 theorem mem_iff {U : R} : U ∈ unitary R ↔ star U * U = 1 ∧ U * star U = 1 :=
   Iff.rfl
@@ -98,7 +98,7 @@ instance : HasInvolutiveStar (unitary R) :=
     ext
     simp only [coe_star, star_star]⟩
 
-instance : StarMonoid (unitary R) :=
+instance : StarSemigroup (unitary R) :=
   ⟨fun _ _ => by
     ext
     simp only [coe_star, Submonoid.coe_mul, star_mul]⟩
@@ -126,7 +126,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable [CommMonoidₓ R] [StarMonoid R]
+variable [CommMonoidₓ R] [StarSemigroup R]
 
 instance : CommGroupₓ (unitary R) :=
   { unitary.group, Submonoid.toCommMonoid _ with }
@@ -141,7 +141,7 @@ end CommMonoidₓ
 
 section GroupWithZeroₓ
 
-variable [GroupWithZeroₓ R] [StarMonoid R]
+variable [GroupWithZeroₓ R] [StarSemigroup R]
 
 @[norm_cast]
 theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=

@@ -60,11 +60,11 @@ theorem cast_coe_nat (n : ℕ) : ((n : ℚ) : α) = n :=
 
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℚ) : α) = 0 :=
-  (cast_of_int _).trans Int.cast_zero
+  (cast_of_int _).trans Int.cast_zeroₓ
 
 @[simp, norm_cast]
 theorem cast_one : ((1 : ℚ) : α) = 1 :=
-  (cast_of_int _).trans Int.cast_one
+  (cast_of_int _).trans Int.cast_oneₓ
 
 theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a :=
   (r.1.cast_commute a).div_left (r.2.cast_commute a)

@@ -175,6 +175,9 @@ theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
 protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
   congr_funₓ (congr_argₓ _ h₁) x
 
+theorem exists_ne {f g : F} (h : f ≠ g) : ∃ x, f x ≠ g x :=
+  not_forall.mp <| mt (FunLike.ext _ _) h
+
 end FunLike
 
 end Dependent

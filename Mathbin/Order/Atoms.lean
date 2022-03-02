@@ -560,7 +560,7 @@ namespace IsSimpleOrder
 
 variable [CompleteLattice α] [IsSimpleOrder α]
 
--- ././Mathport/Syntax/Translate/Basic.lean:211:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 instance : IsAtomistic α :=

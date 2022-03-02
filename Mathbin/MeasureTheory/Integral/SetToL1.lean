@@ -140,7 +140,7 @@ theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : Fi
   nth_rw 0[← add_zeroₓ (T ∅)]  at hT
   exact (add_left_cancelₓ hT).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (i j «expr ∈ » sι)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i j «expr ∈ » sι)
 theorem map_Union_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 0) (h_add : FinMeasAdditive μ T) {ι}
     (S : ι → Set α) (sι : Finset ι) (hS_meas : ∀ i, MeasurableSet (S i)) (hSp : ∀, ∀ i ∈ sι, ∀, μ (S i) ≠ ∞)
     (h_disj : ∀ i j _ : i ∈ sι _ : j ∈ sι, i ≠ j → Disjoint (S i) (S j)) : T (⋃ i ∈ sι, S i) = ∑ i in sι, T (S i) := by

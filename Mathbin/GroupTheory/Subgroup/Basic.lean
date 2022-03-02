@@ -329,7 +329,7 @@ theorem zpow_mem {x : G} (hx : x ∈ K) : ∀ n : ℤ, x ^ n ∈ K
     rw [zpow_neg_succ_of_nat]
     exact K.inv_mem (K.pow_mem hx n.succ)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Construct a subgroup from a nonempty set that is closed under division. -/
 @[to_additive "Construct a subgroup from a nonempty set that is closed under subtraction"]
 def ofDiv (s : Set G) (hsn : s.Nonempty) (hs : ∀ x y _ : x ∈ s _ : y ∈ s, x * y⁻¹ ∈ s) : Subgroup G :=

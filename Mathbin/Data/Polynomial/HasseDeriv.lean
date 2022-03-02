@@ -159,7 +159,7 @@ theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) =
   ext i : 2
   simp only [LinearMap.smul_apply, comp_app, LinearMap.coe_comp, smul_monomial, hasse_deriv_apply, mul_oneₓ,
     monomial_eq_zero_iff, sum_monomial_index, mul_zero, ← tsub_add_eq_tsub_tsub, add_commₓ l k]
-  rw_mod_cast [nsmul_eq_mul]
+  rw_mod_cast[nsmul_eq_mul]
   congr 2
   by_cases' hikl : i < k + l
   · rw [choose_eq_zero_of_lt hikl, mul_zero]
@@ -258,7 +258,7 @@ theorem hasse_deriv_mul (f g : R[X]) :
     rw [tsub_add_eq_add_tsub hm, ← add_tsub_assoc_of_le hn, ← tsub_add_eq_tsub_tsub, add_commₓ x.2 x.1, mul_assoc, ←
       mul_assoc r, ← (Nat.cast_commute _ r).Eq, mul_assoc, mul_assoc]
   conv_rhs => apply_congr skip rw [aux _ H]
-  rw_mod_cast [← LinearMap.map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
+  rw_mod_cast[← LinearMap.map_sum, ← Finset.sum_mul, ← Nat.add_choose_eq]
 
 end
 

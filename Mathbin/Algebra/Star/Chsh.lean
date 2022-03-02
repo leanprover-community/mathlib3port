@@ -73,14 +73,14 @@ There is a CHSH tuple in 4-by-4 matrices such that
 
 universe u
 
-/-- A CHSH tuple in a `star_monoid R` consists of 4 self-adjoint involutions `A₀ A₁ B₀ B₁` such that
+/-- A CHSH tuple in a *-monoid consists of 4 self-adjoint involutions `A₀ A₁ B₀ B₁` such that
 the `Aᵢ` commute with the `Bⱼ`.
 
 The physical interpretation is that `A₀` and `A₁` are a pair of boolean observables which
 are spacelike separated from another pair `B₀` and `B₁` of boolean observables.
 -/
 @[nolint has_inhabited_instance]
-structure IsCHSHTuple {R} [Monoidₓ R] [StarMonoid R] (A₀ A₁ B₀ B₁ : R) where
+structure IsCHSHTuple {R} [Monoidₓ R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R) where
   A₀_inv : A₀ ^ 2 = 1
   A₁_inv : A₁ ^ 2 = 1
   B₀_inv : B₀ ^ 2 = 1
@@ -132,7 +132,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
       norm_num
       simp only [mul_comm _ (2 : R), mul_comm _ (4 : R), mul_left_commₓ _ (2 : R), mul_left_commₓ _ (4 : R)]
       abel
-      simp only [neg_mul, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_one, zsmul_eq_mul, Int.cast_neg]
+      simp only [neg_mul, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_oneₓ, zsmul_eq_mul, Int.cast_neg]
       simp only [← mul_assoc, ← add_assocₓ]
       norm_num
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
@@ -226,7 +226,7 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     abel
     -- all terms coincide, but the last one. Simplify all other terms
     simp only [M]
-    simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_one, one_smul, Int.cast_neg,
+    simp only [neg_mul, Int.cast_bit0, one_mulₓ, mul_inv_cancel_of_invertible, Int.cast_oneₓ, one_smul, Int.cast_neg,
       add_right_injₓ, neg_smul, ← add_smul]
     -- just look at the coefficients now:
     congr

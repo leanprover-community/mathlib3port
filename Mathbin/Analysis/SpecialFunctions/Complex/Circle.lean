@@ -81,7 +81,7 @@ theorem exp_map_circle_eq_exp_map_circle {x y : ℝ} : expMapCircle x = expMapCi
 theorem periodic_exp_map_circle : Periodic expMapCircle (2 * π) := fun z =>
   exp_map_circle_eq_exp_map_circle.2
     ⟨1, by
-      rw [Int.cast_one, one_mulₓ]⟩
+      rw [Int.cast_oneₓ, one_mulₓ]⟩
 
 @[simp]
 theorem exp_map_circle_two_pi : expMapCircle (2 * π) = 1 :=

@@ -1173,7 +1173,7 @@ def subalgebraOfSubring (S : Subring R) : Subalgebra ℤ R :=
     algebra_map_mem' := fun i =>
       Int.induction_on i S.zero_mem (fun i ih => S.add_mem ih S.one_mem) fun i ih =>
         show ((-i - 1 : ℤ) : R) ∈ S by
-          rw [Int.cast_sub, Int.cast_one]
+          rw [Int.cast_sub, Int.cast_oneₓ]
           exact S.sub_mem ih S.one_mem }
 
 variable {S : Type _} [Semiringₓ S]

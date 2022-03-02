@@ -585,8 +585,8 @@ end LebesgueDecomposition
 
 open LebesgueDecomposition
 
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (n k)
--- ././Mathport/Syntax/Translate/Basic.lean:746:6: warning: expanding binder group (n k)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (n k)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (n k)
 /-- Any pair of finite measures `μ` and `ν`, `have_lebesgue_decomposition`. That is to say,
 there exist a measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular
 with respect to `ν` and `μ = ξ + ν.with_density f`.

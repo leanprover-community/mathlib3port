@@ -812,6 +812,62 @@ protected def Function.Surjective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul 
 
 end NonUnitalNonAssocRing
 
+/-- An associative but not-necessarily unital ring. -/
+@[protect_proj, ancestor NonUnitalNonAssocRing NonUnitalSemiringₓ]
+class NonUnitalRing (α : Type _) extends NonUnitalNonAssocRing α, NonUnitalSemiringₓ α
+
+section NonUnitalRing
+
+variable [NonUnitalRing α]
+
+/-- Pullback a `non_unital_ring` instance along an injective function.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α) (hf : Injective f)
+    (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : NonUnitalRing β :=
+  { hf.AddCommGroup f zero add neg sub, hf.MulZeroClass f zero mul, hf.Distrib f add mul, hf.Semigroup f mul with }
+
+/-- Pushforward a `non_unital_ring` instance along a surjective function.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Surjective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β) (hf : Surjective f)
+    (zero : f 0 = 0) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) : NonUnitalRing β :=
+  { hf.AddCommGroup f zero add neg sub, hf.MulZeroClass f zero mul, hf.Distrib f add mul, hf.Semigroup f mul with }
+
+end NonUnitalRing
+
+/-- A unital but not-necessarily-associative ring. -/
+@[protect_proj, ancestor NonUnitalNonAssocRing NonAssocSemiringₓ]
+class NonAssocRing (α : Type _) extends NonUnitalNonAssocRing α, NonAssocSemiringₓ α
+
+section NonAssocRing
+
+variable [NonAssocRing α]
+
+/-- Pullback a `non_assoc_ring` instance along an injective function.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
+    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
+    NonAssocRing β :=
+  { hf.AddCommGroup f zero add neg sub, hf.MulZeroClass f zero mul, hf.Distrib f add mul,
+    hf.MulOneClass f one mul with }
+
+/-- Pushforward a `non_unital_ring` instance along a surjective function.
+See note [reducible non-instances]. -/
+@[reducible]
+protected def Function.Surjective.nonAssocRing [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : α → β)
+    (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
+    NonAssocRing β :=
+  { hf.AddCommGroup f zero add neg sub, hf.MulZeroClass f zero mul, hf.Distrib f add mul,
+    hf.MulOneClass f one mul with }
+
+end NonAssocRing
+
 /-- A ring is a type with the following structures: additive commutative group (`add_comm_group`),
 multiplicative monoid (`monoid`), and distributive laws (`distrib`).  Equivalently, a ring is a
 `semiring` with a negation operation making it an additive group.  -/
@@ -822,9 +878,22 @@ section Ringₓ
 
 variable [Ringₓ α] {a b c d e : α}
 
--- A (unital, associative) ring is a not-necessarily-unital, not-necessarily-associative ring 
+-- A (unital, associative) ring is a not-necessarily-unital ring 
 -- see Note [lower instance priority]
-instance (priority := 100) Ringₓ.toNonUnitalNonAssocRing : NonUnitalNonAssocRing α :=
+instance (priority := 100) Ringₓ.toNonUnitalRing : NonUnitalRing α :=
+  { ‹Ringₓ α› with
+    zero_mul := fun a =>
+      add_left_cancelₓ <|
+        show 0 * a + 0 * a = 0 * a + 0 by
+          rw [← add_mulₓ, zero_addₓ, add_zeroₓ],
+    mul_zero := fun a =>
+      add_left_cancelₓ <|
+        show a * 0 + a * 0 = a * 0 + 0 by
+          rw [← mul_addₓ, add_zeroₓ, add_zeroₓ] }
+
+-- A (unital, associative) ring is a not-necessarily-associative ring 
+-- see Note [lower instance priority]
+instance (priority := 100) Ringₓ.toNonAssocRing : NonAssocRing α :=
   { ‹Ringₓ α› with
     zero_mul := fun a =>
       add_left_cancelₓ <|
@@ -840,7 +909,7 @@ definitions are given in terms of semirings, but many applications use rings or 
 a little bit its priority above 100 to try it quickly, but remaining below the default 1000 so that
 more specific instances are tried first. -/
 instance (priority := 200) Ringₓ.toSemiring : Semiringₓ α :=
-  { ‹Ringₓ α›, Ringₓ.toNonUnitalNonAssocRing with }
+  { ‹Ringₓ α›, Ringₓ.toNonUnitalRing with }
 
 /-- Pullback a `ring` instance along an injective function.
 See note [reducible non-instances]. -/

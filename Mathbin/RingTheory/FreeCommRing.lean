@@ -179,9 +179,9 @@ theorem is_supported_one : IsSupported 1 s :=
 theorem is_supported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
   Int.induction_on i is_supported_zero
     (fun i hi => by
-      rw [Int.cast_add, Int.cast_one] <;> exact is_supported_add hi is_supported_one)
+      rw [Int.cast_add, Int.cast_oneₓ] <;> exact is_supported_add hi is_supported_one)
     fun i hi => by
-    rw [Int.cast_sub, Int.cast_one] <;> exact is_supported_sub hi is_supported_one
+    rw [Int.cast_sub, Int.cast_oneₓ] <;> exact is_supported_sub hi is_supported_one
 
 end IsSupported
 

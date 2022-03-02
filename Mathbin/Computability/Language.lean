@@ -20,9 +20,9 @@ universe u v
 
 variable {α : Type u}
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_mem (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_singleton (list α)
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler has_insert (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler has_mem (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler has_singleton (list α)
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler has_insert (list α)
 /-- A language is a set of strings over an alphabet. -/
 def Language α :=
   Set (List α)deriving [anonymous], [anonymous], [anonymous], CompleteBooleanAlgebra

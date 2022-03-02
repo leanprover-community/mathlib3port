@@ -1974,7 +1974,7 @@ open Submodule
 theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
   rw [mem_ker, map_sub, sub_eq_zero]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » p)
 theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x ∈ p _ : y ∈ p, f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x hx y hy h =>
@@ -1987,7 +1987,7 @@ theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x
         (by
           simpa using h₂)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
     ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 

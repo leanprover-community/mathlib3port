@@ -40,13 +40,13 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1273:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:826:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:1272:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,

@@ -46,12 +46,15 @@ variable (R : Type u) {A : Type v}
 
 variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
+-- mathport name: «expr↑ₐ»
+local notation "↑ₐ" => algebraMap R A
+
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
 algebra `A`.  -/
 -- definition and basic properties
 def ResolventSet (a : A) : Set R :=
-  { r : R | IsUnit (algebraMap R A r - a) }
+  { r : R | IsUnit (↑ₐ r - a) }
 
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *spectrum* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is not a unit of the
@@ -67,17 +70,23 @@ variable {R}
     a map `R → A` which sends `r : R` to `(algebra_map R A r - a)⁻¹` when
     `r ∈ resolvent R A` and `0` when `r ∈ spectrum R A`. -/
 noncomputable def resolvent (a : A) (r : R) : A :=
-  Ring.inverse (algebraMap R A r - a)
+  Ring.inverse (↑ₐ r - a)
 
-end Defs
+/-- The unit `1 - r⁻¹ • a` constructed from `r • 1 - a` when the latter is a unit. -/
+@[simps]
+noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ where
+  val := ↑ₐ s - r⁻¹ • a
+  inv := r • ↑h.Unit⁻¹
+  val_inv := by
+    rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
+  inv_val := by
+    rw [smul_mul_assoc, ← mul_smul_comm, smul_sub, smul_inv_smul, h.coe_inv_mul]
 
 -- products of scalar units and algebra units
-theorem IsUnit.smul_sub_iff_sub_inv_smul {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] {r : Rˣ}
-    {a : A} : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
-  have a_eq : a = r • r⁻¹ • a := by
-    simp
-  nth_rw 0[a_eq]
-  rw [← smul_sub, is_unit_smul_iff]
+theorem IsUnit.smul_sub_iff_sub_inv_smul {r : Rˣ} {a : A} : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
+  rw [← @is_unit_smul_iff _ _ _ _ _ _ _ r (1 - r⁻¹ • a), smul_sub, smul_inv_smul]
+
+end Defs
 
 namespace Spectrum
 
@@ -113,6 +122,33 @@ theorem mem_resolvent_set_iff {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUni
 
 theorem resolvent_eq {a : A} {r : R} (h : r ∈ ResolventSet R a) : resolvent a r = ↑h.Unit⁻¹ :=
   Ring.inverse_unit h.Unit
+
+theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} : r • resolvent a (s : R) = resolvent (r⁻¹ • a) (r⁻¹ • s : R) :=
+  by
+  by_cases' h : s ∈ Spectrum R a
+  · rw [mem_iff] at h
+    simp only [resolvent, Algebra.algebra_map_eq_smul_one] at *
+    rw [smul_assoc, ← smul_sub]
+    have h' : ¬IsUnit (r⁻¹ • (s • 1 - a)) := fun hu =>
+      h
+        (by
+          simpa only [smul_inv_smul] using IsUnit.smul r hu)
+    simp only [Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ h', smul_zero]
+    
+  · simp only [resolvent]
+    have h' : IsUnit (r • algebraMap R A (r⁻¹ • s) - a) := by
+      simpa [Algebra.algebra_map_eq_smul_one, smul_assoc] using not_mem_iff.mp h
+    rw [← h'.coe_sub_inv_smul, ← (not_mem_iff.mp h).unit_spec, Ring.inverse_unit, Ring.inverse_unit,
+      h'.coe_inv_sub_inv_smul]
+    simp only [Algebra.algebra_map_eq_smul_one, smul_assoc, smul_inv_smul]
+    
+
+theorem units_smul_resolvent_self {r : Rˣ} {a : A} : r • resolvent a (r : R) = resolvent (r⁻¹ • a) (1 : R) := by
+  simpa only [Units.smul_def, Algebra.id.smul_eq_mul, Units.inv_mul] using @units_smul_resolvent _ _ _ _ _ r r a
+
+/-- The resolvent is a unit when the argument is in the resolvent set. -/
+theorem is_unit_resolvent {r : R} {a : A} : r ∈ ResolventSet R a ↔ IsUnit (resolvent a r) :=
+  is_unit_ring_inverse.symm
 
 theorem inv_mem_resolvent_set {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ ResolventSet R (a : A)) :
     (↑r⁻¹ : R) ∈ ResolventSet R (↑a⁻¹ : A) := by

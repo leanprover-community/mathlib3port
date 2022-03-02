@@ -773,7 +773,7 @@ variable [Algebra R K] [IsFractionRing R K] [Algebra R K'] [IsFractionRing R K']
 
 variable {I J : FractionalIdeal R⁰ K} (h : K →ₐ[R] K')
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 /-- Nonzero fractional ideals contain a nonzero integer. -/
 theorem exists_ne_zero_mem_is_integer [Nontrivial R] (hI : I ≠ 0) : ∃ (x : _)(_ : x ≠ (0 : R)), algebraMap R K x ∈ I :=
   by

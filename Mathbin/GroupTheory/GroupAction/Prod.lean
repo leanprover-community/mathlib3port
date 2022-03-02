@@ -47,6 +47,10 @@ theorem smul_mk (a : M) (b : α) (c : β) : a • (b, c) = (a • b, a • c) :=
 theorem smul_def (a : M) (x : α × β) : a • x = (a • x.1, a • x.2) :=
   rfl
 
+@[simp, to_additive]
+theorem smul_swap : (a • x).swap = a • x.swap :=
+  rfl
+
 instance [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (α × β) :=
   ⟨fun x y z => mk.inj_iffₓ.mpr ⟨smul_assoc _ _ _, smul_assoc _ _ _⟩⟩
 

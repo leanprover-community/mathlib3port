@@ -3,7 +3,7 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.SetTheory.OrdinalArithmetic
+import Mathbin.SetTheory.Principal
 
 /-!
 # Ordinal notation
@@ -752,7 +752,7 @@ theorem split_add_lt {o e n a m} [NF o] (h : split o = (oadd e n a, m)) : repr a
   cases' h₁.of_dvd_omega (split_dvd h) with e0 d
   have := h₁.fst
   have := h₁.snd
-  refine' add_lt_omega_opow h₁.snd'.repr_lt (lt_of_lt_of_leₓ (nat_lt_omega _) _)
+  apply principal_add_omega_opow _ h₁.snd'.repr_lt (lt_of_lt_of_leₓ (nat_lt_omega _) _)
   simpa using opow_le_opow_right omega_pos (one_le_iff_ne_zero.2 e0)
 
 @[simp]
@@ -868,7 +868,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
   · rw [RR, ← opow_mul _ _ (succ k.succ)]
     have e0 := Ordinal.pos_iff_ne_zero.2 e0
     have rr0 := lt_of_lt_of_leₓ e0 (le_add_left _ _)
-    apply add_lt_omega_opow
+    apply principal_add_omega_opow
     · simp [opow_mul, ω0, opow_add, mul_assoc]
       rw [mul_lt_mul_iff_left ω00, ← Ordinal.opow_add]
       have := (No.below_of_lt _).repr_lt
@@ -898,7 +898,7 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
       add_mul_limit _ (is_limit_iff_omega_dvd.2 ⟨ne_of_gtₓ α0, αd⟩), mul_assoc,
       @mul_omega_dvd n (nat_cast_pos.2 n.pos) (nat_lt_omega _) _ αd]
     apply @add_absorp _ (reprₓ a0 * succ k)
-    · refine' add_lt_omega_opow _ Rl
+    · refine' principal_add_omega_opow _ _ Rl
       rw [opow_mul, opow_succ, mul_lt_mul_iff_left ω00]
       exact No.snd'.repr_lt
       

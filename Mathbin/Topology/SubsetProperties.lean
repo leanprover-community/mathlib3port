@@ -262,7 +262,7 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have hZc : ∀ i, IsCompact (Z i) := fun i => compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (b' «expr ⊆ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ⊆ » b)
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀, ∀ i ∈ b, ∀, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -1151,7 +1151,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
     (hne : ∀ i, (f i).Nonempty) : Encodable ι :=
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equivₓ.Set.univ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/

@@ -36,7 +36,7 @@ theorem CharP.int_cast_eq_zero_iff [AddGroupₓ R] [One R] (p : ℕ) [CharP R p]
     lift -a to ℕ using neg_nonneg.mpr (le_of_ltₓ h) with b
     rw [Int.cast_coe_nat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
     
-  · simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
+  · simp only [Int.cast_zeroₓ, eq_self_iff_true, dvd_zero]
     
   · lift a to ℕ using le_of_ltₓ h with b
     rw [Int.cast_coe_nat, CharP.cast_eq_zero_iff R p, Int.coe_nat_dvd]
@@ -364,7 +364,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun hdvd : ∃ e, p = d * e =>

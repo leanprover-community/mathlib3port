@@ -244,7 +244,7 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
     exact ⟨le_transₓ hay hyz, le_transₓ hsx_sup hxz⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι)
@@ -418,7 +418,7 @@ theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁, p a₁ → 
     (hs : ∀, ∀ b ∈ s, ∀, p (f b)) : p (s.inf f) :=
   @sup_induction (OrderDual α) _ _ _ _ _ _ ht hp hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf p ∈ s :=
   @inf_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
@@ -598,7 +598,7 @@ theorem exists_mem_eq_sup' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.sup' 
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
@@ -684,7 +684,7 @@ theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
 theorem exists_mem_eq_inf' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.inf' H f = f b :=
   @exists_mem_eq_sup' (OrderDual α) _ _ _ H f _
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inf'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf' H p ∈ s :=
   inf'_induction H p w h
@@ -703,7 +703,7 @@ variable [SemilatticeSup α] [OrderBot α]
 theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H f = s.sup f :=
   le_antisymmₓ (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
@@ -725,7 +725,7 @@ variable [SemilatticeInf α] [OrderTop α]
 theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H f = s.inf f :=
   @sup'_eq_sup (OrderDual α) _ _ _ _ H f
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed (OrderDual α) _ _ _ t htne h_subset h

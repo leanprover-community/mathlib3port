@@ -90,7 +90,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
   rw [← not_ltₓ, val_eq_coe, coe_coe]
   intro norm_denom_lt
   have hr : ∥(r * r.denom : ℚ_[p])∥ = ∥(r.num : ℚ_[p])∥ := by
-    rw_mod_cast [@Rat.mul_denom_eq_num r]
+    rw_mod_cast[@Rat.mul_denom_eq_num r]
     rfl
   rw [padicNormE.mul] at hr
   have key : ∥(r.num : ℚ_[p])∥ < 1 := by
@@ -128,7 +128,7 @@ theorem norm_sub_mod_part (h : ∥(r : ℚ_[p])∥ ≤ 1) : ∥(⟨r, h⟩ - mod
     simp only [sub_mul, Int.cast_coe_nat, RingHom.eq_int_cast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_coe]
-    rw_mod_cast [@Rat.mul_denom_eq_num r]
+    rw_mod_cast[@Rat.mul_denom_eq_num r]
     rfl
   exact norm_sub_mod_part_aux r h
 
@@ -383,7 +383,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   · rw [zero_pow hc0]
     simp only [sub_zero, Zmod.cast_zero, mul_zero]
     rw [unit_coeff_spec hc']
-    exact (dvd_pow_self _ hc0.ne').mul_left _
+    exact (dvd_pow_self (p : ℤ_[p]) hc0.ne').mul_left _
     
 
 /-- A ring hom from `ℤ_[p]` to `zmod (p^n)`, with underlying function `padic_int.appr n`. -/
@@ -456,7 +456,7 @@ theorem dense_range_nat_cast : DenseRange (Nat.castₓ : ℕ → ℤ_[p]) := by
   rw [norm_le_pow_iff_mem_span_pow]
   apply appr_spec
 
-theorem dense_range_int_cast : DenseRange (Int.cast : ℤ → ℤ_[p]) := by
+theorem dense_range_int_cast : DenseRange (Int.castₓ : ℤ → ℤ_[p]) := by
   intro x
   apply dense_range_nat_cast.induction_on x
   · exact is_closed_closure

@@ -102,7 +102,7 @@ theorem image_preimage_of_bij [DecidableEq β] (f : α → β) (s : Finset β) (
 theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s ⊆ t.map f) :
     s.Preimage f (f.Injective.InjOn _) ⊆ t := fun x hx => (mem_map' f).1 (hs (mem_preimage.1 hx))
 
--- ././Mathport/Syntax/Translate/Basic.lean:599:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical
   refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩

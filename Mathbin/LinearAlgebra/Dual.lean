@@ -45,7 +45,7 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:981:9: unsupported derive handler module R
+-- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]

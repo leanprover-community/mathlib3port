@@ -185,7 +185,7 @@ theorem sub_one_norm_eq_eval_cyclotomic [IsCyclotomicExtension {n} K L] (h : 2 <
     simp
   have : NeZero ((n : ℕ) : E) := NeZero.of_no_zero_smul_divisors K _ (n : ℕ)
   rw [this, cyclotomic', ← cyclotomic_eq_prod_X_sub_primitive_roots (is_root_cyclotomic_iff.1 hz), ← map_cyclotomic_int,
-    (algebraMap K E).map_int_cast, ← Int.cast_one, eval_int_cast_map, RingHom.eq_int_cast, Int.cast_id]
+    (algebraMap K E).map_int_cast, ← Int.cast_oneₓ, eval_int_cast_map, RingHom.eq_int_cast, Int.cast_idₓ]
 
 /-- If `is_prime_pow (n : ℕ)`, `n ≠ 2` and `irreducible (cyclotomic n K)` (in particular for
 `K = ℚ`), then the norm of `ζ - 1` is `(n : ℕ).min_fac`. -/

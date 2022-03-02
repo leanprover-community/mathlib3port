@@ -435,7 +435,7 @@ section TendstoMono
 variable {μ : Measure α} [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [CompleteSpace E] [NormedSpace ℝ E]
   [SecondCountableTopology E] {s : ℕ → Set α} {f : α → E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:224:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) : Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
   let bound : α → ℝ := indicator (s 0) fun a => ∥f a∥
@@ -455,7 +455,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
     refine' fun n => eventually_of_forall fun x => _
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
     
-  · "././Mathport/Syntax/Translate/Basic.lean:536:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:224:22: unsupported: parse error"
+  · "././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error"
     
 
 end TendstoMono

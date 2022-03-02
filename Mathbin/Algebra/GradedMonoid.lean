@@ -138,7 +138,7 @@ def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -149,7 +149,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:916:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=

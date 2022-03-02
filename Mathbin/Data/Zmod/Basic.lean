@@ -187,7 +187,7 @@ variable [Zero R] [One R] [Add R] [Neg R]
 This function is a morphism if the characteristic of `R` divides `n`.
 See `zmod.cast_hom` for a bundled version. -/
 def cast : ∀ {n : ℕ}, Zmod n → R
-  | 0 => Int.cast
+  | 0 => Int.castₓ
   | n + 1 => fun i => i.val
 
 -- see Note [coercion into rings]
@@ -230,7 +230,7 @@ theorem nat_cast_zmod_surjective [Fact (0 < n)] : Function.Surjective (coe : ℕ
 ring, see `zmod.int_cast_cast`. -/
 theorem int_cast_zmod_cast (a : Zmod n) : ((a : ℤ) : Zmod n) = a := by
   cases n
-  · rw [Int.cast_id a, Int.cast_id a]
+  · rw [Int.cast_idₓ a, Int.cast_idₓ a]
     
   · rw [coe_coe, Int.nat_cast_eq_coe_nat, Int.cast_coe_nat, Finₓ.coe_coe_eq_self]
     
@@ -243,7 +243,7 @@ theorem int_cast_surjective : Function.Surjective (coe : ℤ → Zmod n) :=
 
 @[norm_cast]
 theorem cast_id : ∀ n i : Zmod n, ↑i = i
-  | 0, i => Int.cast_id i
+  | 0, i => Int.cast_idₓ i
   | n + 1, i => nat_cast_zmod_val i
 
 @[simp]
@@ -265,7 +265,7 @@ theorem nat_cast_comp_val [Fact (0 < n)] : (coe : ℕ → R) ∘ (val : Zmod n �
 @[simp]
 theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : Zmod n → ℤ) = coe := by
   cases n
-  · exact congr_argₓ ((· ∘ ·) Int.cast) Zmod.cast_id'
+  · exact congr_argₓ ((· ∘ ·) Int.castₓ) Zmod.cast_id'
     
   · ext
     simp
@@ -303,7 +303,7 @@ variable {n} {m : ℕ} [CharP R m]
 @[simp]
 theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 := by
   cases' n
-  · exact Int.cast_one
+  · exact Int.cast_oneₓ
     
   show ((1 % (n + 1) : ℕ) : R) = 1
   cases n
@@ -768,7 +768,7 @@ theorem val_min_abs_def_pos {n : ℕ} [Fact (0 < n)] (x : Zmod n) :
 
 @[simp]
 theorem coe_val_min_abs : ∀ {n : ℕ} x : Zmod n, (x.valMinAbs : Zmod n) = x
-  | 0, x => Int.cast_id x
+  | 0, x => Int.cast_idₓ x
   | k@(n + 1), x => by
     rw [val_min_abs_def_pos]
     split_ifs
@@ -955,7 +955,7 @@ theorem ring_hom_surjective [Ringₓ R] (f : R →+* Zmod n) : Function.Surjecti
 theorem ring_hom_eq_of_ker_eq [CommRingₓ R] (f g : R →+* Zmod n) (h : f.ker = g.ker) : f = g := by
   have := f.lift_of_right_inverse_comp _ (Zmod.ring_hom_right_inverse f) ⟨g, le_of_eqₓ h⟩
   rw [Subtype.coe_mk] at this
-  rw [← this, RingHom.ext_zmod (f.lift_of_right_inverse _ _ _) (RingHom.id _), RingHom.id_comp]
+  rw [← this, RingHom.ext_zmod (f.lift_of_right_inverse _ _ ⟨g, _⟩) _, RingHom.id_comp]
 
 section lift
 
