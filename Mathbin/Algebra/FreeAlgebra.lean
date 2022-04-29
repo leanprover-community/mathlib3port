@@ -3,7 +3,7 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 -/
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Basic
 
 /-!
@@ -386,7 +386,7 @@ instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
 
 section
 
-open_locale Classical
+open Classical
 
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=

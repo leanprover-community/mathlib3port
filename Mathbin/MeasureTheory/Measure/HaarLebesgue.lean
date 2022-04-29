@@ -38,10 +38,10 @@ small `r`, see `eventually_nonempty_inter_smul_of_density_one`.
 
 open TopologicalSpace Set Filter Metric
 
-open_locale Ennreal Pointwise TopologicalSpace
+open Ennreal Pointwise TopologicalSpace
 
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
-noncomputable def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ where
+def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ where
   Carrier := Icc 0 1
   compact' := is_compact_Icc
   interior_nonempty' := by
@@ -50,7 +50,7 @@ noncomputable def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ
 universe u
 
 /-- The set `[0,1]^ι` as a compact set with non-empty interior. -/
-noncomputable def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ) where
+def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ) where
   Carrier := pi Univ fun i => Icc 0 1
   compact' := is_compact_univ_pi fun i => is_compact_Icc
   interior_nonempty' := by
@@ -155,6 +155,17 @@ theorem add_haar_submodule {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Mea
     rw [smul_smul, inv_mul_cancel H, one_smul]
   exact hx this
 
+/-- A strict affine subspace has measure zero. -/
+theorem add_haar_affine_subspace {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
+    [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] (s : AffineSubspace ℝ E) (hs : s ≠ ⊤) : μ s = 0 := by
+  rcases s.eq_bot_or_nonempty with (rfl | hne)
+  · rw [AffineSubspace.bot_coe, measure_empty]
+    
+  rw [Ne.def, ← AffineSubspace.direction_eq_top_iff_of_nonempty hne] at hs
+  rcases hne with ⟨x, hx : x ∈ s⟩
+  simpa only [AffineSubspace.coe_direction_eq_vsub_set_right hx, vsub_eq_sub, sub_eq_add_neg, image_add_right, neg_negₓ,
+    measure_preimage_add_right] using add_haar_submodule μ s.direction hs
+
 /-!
 ### Applying a linear map rescales Haar measure by the determinant
 
@@ -170,8 +181,7 @@ theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {
   /- We have already proved the result for the Lebesgue product measure, using matrices.
     We deduce it for any Haar measure by uniqueness (up to scalar multiplication). -/
   have := add_haar_measure_unique μ (pi_Icc01 ι)
-  rw [this]
-  simp [add_haar_measure_eq_volume_pi, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_smul, mul_comm]
+  rw [this, add_haar_measure_eq_volume_pi, map_smul, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_comm]
 
 theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
@@ -202,8 +212,8 @@ theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [N
   have ecomp : e.symm ∘ e = id := by
     ext x
     simp only [id.def, Function.comp_app, LinearEquiv.symm_apply_apply]
-  rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), LinearMap.map_smul,
-    map_map Cesymm.measurable Ce.measurable, ecomp, measure.map_id]
+  rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), map_smul, map_map Cesymm.measurable Ce.measurable,
+    ecomp, measure.map_id]
 
 /-- The preimage of a set `s` under a linear map `f` with nonzero determinant has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
@@ -328,6 +338,17 @@ theorem add_haar_smul (r : ℝ) (s : Set E) : μ (r • s) = Ennreal.ofReal (abs
     
   · have : Nontrivial E := nontrivial_of_finrank_pos (bot_lt_iff_ne_bot.2 h)
     simp only [h, zero_mul, Ennreal.of_real_zero, abs_zero, Ne.def, not_false_iff, zero_pow', measure_singleton]
+    
+
+@[simp]
+theorem add_haar_image_homothety (x : E) (r : ℝ) (s : Set E) :
+    μ (AffineMap.homothety x r '' s) = Ennreal.ofReal (abs (r ^ finrank ℝ E)) * μ s :=
+  calc
+    μ (AffineMap.homothety x r '' s) = μ ((fun y => y + x) '' (r • (fun y => y + -x) '' s)) := by
+      simp only [← image_smul, image_image, ← sub_eq_add_neg]
+      rfl
+    _ = Ennreal.ofReal (abs (r ^ finrank ℝ E)) * μ s := by
+      simp only [image_add_right, measure_preimage_add_right, add_haar_smul]
     
 
 /-! We don't need to state `map_add_haar_neg` here, because it has already been proved for

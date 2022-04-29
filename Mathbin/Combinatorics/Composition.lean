@@ -3,9 +3,9 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Finset.Sort
 import Mathbin.Algebra.BigOperators.Order
+import Mathbin.Algebra.BigOperators.Fin
 
 /-!
 # Compositions
@@ -89,7 +89,7 @@ Composition, partition
 
 open List
 
-open_locale BigOperators
+open BigOperators
 
 variable {n : ℕ}
 

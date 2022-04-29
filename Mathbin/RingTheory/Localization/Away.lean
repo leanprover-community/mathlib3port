@@ -56,7 +56,7 @@ noncomputable def lift (hg : IsUnit (g x)) : S →+* P :=
     show IsUnit (g y.1) by
       obtain ⟨n, hn⟩ := y.2
       rw [← hn, g.map_pow]
-      exact IsUnit.map (powMonoidHom n) hg
+      exact IsUnit.map (powMonoidHom n : P →* P) hg
 
 @[simp]
 theorem AwayMap.lift_eq (hg : IsUnit (g x)) (a : R) : lift x hg ((algebraMap R S) a) = g a :=

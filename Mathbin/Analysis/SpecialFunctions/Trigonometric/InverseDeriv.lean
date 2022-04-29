@@ -15,11 +15,11 @@ Derivatives of `arcsin` and `arccos`.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 open Set Filter
 
-open_locale Real
+open Real
 
 namespace Real
 

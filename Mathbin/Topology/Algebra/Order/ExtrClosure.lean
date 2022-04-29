@@ -17,7 +17,7 @@ not) maximum (or minimum) on a set `s` at a point `a` and is continuous on the c
 
 open Filter Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] [Preorderₓ Y] [OrderClosedTopology Y] {f g : X → Y}
   {s : Set X} {a : X}

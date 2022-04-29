@@ -45,7 +45,7 @@ variable {R : Type _} [CommRingₓ R]
 
 open Set TopologicalAddGroup Submodule Filter
 
-open_locale TopologicalSpace Pointwise
+open TopologicalSpace Pointwise
 
 namespace Ideal
 
@@ -104,7 +104,7 @@ theorem has_basis_nhds_zero_adic (I : Ideal R) :
 
 theorem has_basis_nhds_adic (I : Ideal R) (x : R) :
     HasBasis (@nhds R I.adicTopology x) (fun n : ℕ => True) fun n => (fun y => x + y) '' (I ^ n : Ideal R) := by
-  let this' := I.adic_topology
+  let this := I.adic_topology
   have := I.has_basis_nhds_zero_adic.map fun y => x + y
   rwa [map_add_left_nhds_zero x] at this
 
@@ -132,7 +132,7 @@ on a `R`-module `M`, seen as open additive subgroups of `M`. -/
 def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
     is_open' := by
-      let this' := I.adic_topology
+      let this := I.adic_topology
       convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
       simp }
 
@@ -155,7 +155,7 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
   · intro H
     change _ = _ at H
     rw [H]
-    let this' := J.adic_topology
+    let this := J.adic_topology
     constructor
     · intro n
       exact (J.open_add_subgroup n).is_open'
@@ -171,7 +171,7 @@ theorem is_adic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R}
     · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.is_topological_add_group
       
     · ext s
-      let this' := Ideal.adic_basis J
+      let this := Ideal.adic_basis J
       rw [J.has_basis_nhds_zero_adic.mem_iff]
       constructor <;> intro H
       · rcases H₂ s H with ⟨n, h⟩

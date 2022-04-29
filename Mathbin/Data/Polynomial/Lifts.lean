@@ -39,7 +39,7 @@ that lift is a subalgebra. (By `lift_iff` this is true if `R` is commutative.)
 -/
 
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 noncomputable section
 
@@ -120,7 +120,7 @@ theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s �
     ∃ q : R[X], map f q = monomial n s ∧ q.degree = (monomial n s).degree := by
   by_cases' hzero : s = 0
   · use 0
-    simp only [hzero, degree_zero, eq_self_iff_true, and_selfₓ, monomial_zero_right, map_zero]
+    simp only [hzero, degree_zero, eq_self_iff_true, and_selfₓ, monomial_zero_right, Polynomial.map_zero]
     
   rw [lifts_iff_set_range] at hl
   obtain ⟨q, hq⟩ := hl
@@ -169,7 +169,7 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) : ∃ q : R[
     hn p.erase_lead.nat_degree deg_erase (erase_mem_lifts p.nat_degree hlifts) (refl p.erase_lead.nat_degree)
   use erase + lead
   constructor
-  · simp only [hlead, herase, map_add]
+  · simp only [hlead, herase, Polynomial.map_add]
     nth_rw 0[erase_lead_add_monomial_nat_degree_leading_coeff p]
     
   rw [← hdeg, erase_lead] at deg_erase
@@ -183,44 +183,30 @@ section Monic
 
 /-- A monic polynomial lifts if and only if it can be lifted to a monic polynomial
 of the same degree. -/
-theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ lifts f) (hmonic : p.Monic) :
+theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ lifts f) (hp : p.Monic) :
     ∃ q : R[X], map f q = p ∧ q.degree = p.degree ∧ q.Monic := by
-  by_cases' Rtrivial : Nontrivial R
-  swap
-  · rw [not_nontrivial_iff_subsingleton] at Rtrivial
-    obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq hlifts
-    use q
-    exact ⟨hq.1, hq.2, @monic_of_subsingleton _ _ Rtrivial q⟩
+  cases' subsingleton_or_nontrivial R with hR hR
+  · obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq hlifts
+    exact ⟨q, hq.1, hq.2, monic_of_subsingleton _⟩
     
-  by_cases' er_zero : p.erase_lead = 0
-  · rw [← erase_lead_add_C_mul_X_pow p, er_zero, zero_addₓ, monic.def.1 hmonic, C_1, one_mulₓ]
-    use X ^ p.nat_degree
-    repeat'
-      constructor
-    · simp only [Polynomial.map_pow, map_X]
+  have H : erase p.nat_degree p + X ^ p.nat_degree = p := by
+    simpa only [hp.leading_coeff, C_1, one_mulₓ, erase_lead] using erase_lead_add_C_mul_X_pow p
+  by_cases' h0 : erase p.nat_degree p = 0
+  · rw [← H, h0, zero_addₓ]
+    refine' ⟨X ^ p.nat_degree, _, _, monic_X_pow p.nat_degree⟩
+    · rw [Polynomial.map_pow, map_X]
       
-    · rw [@degree_X_pow R _ Rtrivial, degree_X_pow]
-      
-    · exact monic_pow monic_X p.nat_degree
+    · rw [degree_X_pow, degree_X_pow]
       
     
   obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq (erase_mem_lifts p.nat_degree hlifts)
-  have deg_er : p.erase_lead.nat_degree < p.nat_degree :=
-    Or.resolve_right (erase_lead_nat_degree_lt_or_erase_lead_eq_zero p) er_zero
-  replace deg_er := WithBot.coe_lt_coe.2 deg_er
-  rw [← degree_eq_nat_degree er_zero, erase_lead, ← hq.2, ← @degree_X_pow R _ Rtrivial p.nat_degree] at deg_er
-  use q + X ^ p.nat_degree
-  repeat'
-    constructor
-  · simp only [hq, map_add, Polynomial.map_pow, map_X]
-    nth_rw 3[← erase_lead_add_C_mul_X_pow p]
-    rw [erase_lead, monic.leading_coeff hmonic, C_1, one_mulₓ]
+  have hdeg : q.degree < (X ^ p.nat_degree).degree := by
+    rw [@degree_X_pow R, hq.2, degree_eq_nat_degree h0, WithBot.coe_lt_coe]
+    exact Or.resolve_right (erase_lead_nat_degree_lt_or_erase_lead_eq_zero p) h0
+  refine' ⟨q + X ^ p.nat_degree, _, _, (monic_X_pow _).add_of_right hdeg⟩
+  · rw [Polynomial.map_add, hq.1, Polynomial.map_pow, map_X, H]
     
-  · rw [degree_add_eq_right_of_degree_lt deg_er, @degree_X_pow R _ Rtrivial p.nat_degree,
-      degree_eq_nat_degree (monic.ne_zero hmonic)]
-    
-  · rw [monic.def, leading_coeff_add_of_degree_lt deg_er]
-    exact monic_pow monic_X p.nat_degree
+  · rw [degree_add_eq_right_of_degree_lt hdeg, degree_X_pow, degree_eq_nat_degree hp.ne_zero]
     
 
 end Monic

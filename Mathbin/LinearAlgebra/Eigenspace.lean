@@ -48,7 +48,7 @@ namespace End
 
 open Module PrincipalIdealRing Polynomial FiniteDimensional
 
-open_locale Polynomial
+open Polynomial
 
 variable {K R : Type v} {V M : Type w} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Field K] [AddCommGroupₓ V]
   [Module K V]
@@ -150,7 +150,8 @@ theorem aeval_apply_of_has_eigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     
   · intro n a hna
     rw [mul_comm, pow_succₓ, mul_assoc, AlgHom.map_mul, LinearMap.mul_apply, mul_comm, hna]
-    simp [algebra_map_End_apply, mem_eigenspace_iff.1 h.1, smul_smul, mul_comm]
+    simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X, LinearMap.map_smulₛₗ,
+      RingHom.id_apply, mul_comm]
     
 
 section minpoly
@@ -244,12 +245,9 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
   · let l' := Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
     -- The support of `l'` is the support of `l` without `μ₀`.
     have h_l_support' : l'.support = l_support' := by
-      have : l_support' = Finset.erase l.support μ₀ := by
-        rw [h_l_support, Finset.erase_insert hμ₀]
-      rw [this]
+      rw [← Finset.erase_insert hμ₀, ← h_l_support]
       ext a
-      have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := by
-        tauto
+      have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or_distrib
       simp only [l', Dfinsupp.mapRange.linear_map_apply, Dfinsupp.map_range_apply, Dfinsupp.mem_support_iff,
         Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply, Ne.def, smul_eq_zero, sub_eq_zero, this]
     -- The entries of `l'` add up to `0`.
@@ -260,7 +258,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
           _ _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _ _ = Dfinsupp.lsum ℕ (fun μ => g) a :=
           _ _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _ _ = g (S l) := _ _ = 0 := by
           rw [hl, g.map_zero]
-      · rw [Dfinsupp.sum_map_range_index.linear_map]
+      · exact Dfinsupp.sum_map_range_index.linear_map
         
       · congr
         ext μ v
@@ -297,24 +295,21 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
       rw [← Finset.sum_const_zero]
       apply Finset.sum_congr rfl
       intro μ hμ
-      norm_cast
-      rw [h_lμ_eq_0]
-      intro h
-      rw [h] at hμ
-      contradiction
+      rw [Submodule.coe_eq_zero, h_lμ_eq_0]
+      rintro rfl
+      exact hμ₀ hμ
     -- The only potentially nonzero eigenspace-representative in `l` is the one corresponding to
     -- `μ₀`. But since the overall sum is `0` by assumption, this representative must also be `0`.
     have : l μ₀ = 0 := by
       simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sum_add_hom_apply, LinearMap.to_add_monoid_hom_coe,
         Dfinsupp.sum, h_l_support, Submodule.subtype_apply, Submodule.coe_eq_zero, Finset.sum_insert hμ₀,
         h_sum_l_support'_eq_0, add_zeroₓ] at hl
-      exact_mod_cast hl
+      exact hl
     -- Thus, all coefficients in `l` are `0`.
     show l = 0
     · ext μ
       by_cases' h_cases : μ = μ₀
-      · rw [h_cases]
-        exact_mod_cast this
+      · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
         
       exact congr_argₓ (coe : _ → V) (h_lμ_eq_0 μ h_cases)
       
@@ -561,8 +556,7 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     -- It follows that `ER` is contained in the span of all generalized eigenvectors.
     have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k := by
       rw [← ih_ER']
-      apply supr_le_supr _
-      exact fun μ => supr_le_supr fun k => hff' μ k
+      exact supr₂_mono hff'
     -- `ES` is contained in this span by definition.
     have hES : ES ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k :=
       le_transₓ (le_supr (fun k => f.generalized_eigenspace μ₀ k) (finrank K V))

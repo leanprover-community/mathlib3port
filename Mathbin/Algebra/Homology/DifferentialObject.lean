@@ -21,7 +21,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -62,7 +62,7 @@ theorem d_eq_to_hom (X : HomologicalComplex V (ComplexShape.up' b)) {x y z : β}
   simp
 
 @[simp, reassoc]
-theorem eq_to_hom_f {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β} (h : x = y) :
+theorem eq_to_hom_f' {X Y : DifferentialObject (GradedObjectWithShift b V)} (f : X ⟶ Y) {x y : β} (h : x = y) :
     X.xEqToHom h ≫ f.f y = f.f x ≫ Y.xEqToHom h := by
   cases h
   simp
@@ -101,7 +101,7 @@ def dgoToHomologicalComplex :
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_funₓ f.comm i).symm
         reassoc! this
-        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc, eq_to_hom_f] }
+        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc, eq_to_hom_f'] }
 
 /-- The functor from homological complexes to differential graded objects.
 -/

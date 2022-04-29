@@ -181,6 +181,12 @@ theorem cast_bit1 [Ringₓ α] (n : ℤ) : ((bit1 n : ℤ) : α) = bit1 n := by
 theorem cast_two [Ringₓ α] : ((2 : ℤ) : α) = 2 := by
   simp
 
+theorem cast_three [Ringₓ α] : ((3 : ℤ) : α) = 3 := by
+  simp
+
+theorem cast_four [Ringₓ α] : ((4 : ℤ) : α) = 4 := by
+  simp
+
 theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
   intro m n h
   rw [← sub_nonneg] at h
@@ -223,23 +229,58 @@ theorem cast_pos [OrderedRing α] [Nontrivial α] {n : ℤ} : (0 : α) < n ↔ 0
 theorem cast_lt_zero [OrderedRing α] [Nontrivial α] {n : ℤ} : (n : α) < 0 ↔ n < 0 := by
   rw [← cast_zero, cast_lt]
 
+section LinearOrderedRing
+
+variable [LinearOrderedRing α] {a b : ℤ} (n : ℤ)
+
 @[simp, norm_cast]
-theorem cast_min [LinearOrderedRing α] {a b : ℤ} : (↑(min a b) : α) = min a b :=
+theorem cast_min : (↑(min a b) : α) = min a b :=
   Monotone.map_min cast_mono
 
 @[simp, norm_cast]
-theorem cast_max [LinearOrderedRing α] {a b : ℤ} : (↑(max a b) : α) = max a b :=
+theorem cast_max : (↑(max a b) : α) = max a b :=
   Monotone.map_max cast_mono
 
 @[simp, norm_cast]
-theorem cast_abs [LinearOrderedRing α] {q : ℤ} : ((abs q : ℤ) : α) = abs q := by
+theorem cast_abs : ((abs a : ℤ) : α) = abs a := by
   simp [abs_eq_max_neg]
 
-theorem cast_nat_abs {R : Type _} [LinearOrderedRing R] : ∀ n : ℤ, (n.natAbs : R) = abs n
-  | (n : ℕ) => by
-    simp only [Int.nat_abs_of_nat, Int.cast_coe_nat, Nat.abs_cast]
-  | -[1+ n] => by
-    simp only [Int.natAbs, Int.cast_neg_succ_of_nat, abs_neg, ← Nat.cast_succₓ, Nat.abs_cast]
+theorem cast_one_le_of_pos (h : 0 < a) : (1 : α) ≤ a := by
+  exact_mod_cast Int.add_one_le_of_ltₓ h
+
+theorem cast_le_neg_one_of_neg (h : a < 0) : (a : α) ≤ -1 := by
+  exact_mod_cast Int.le_sub_one_of_ltₓ h
+
+theorem nneg_mul_add_sq_of_abs_le_one {x : α} (hx : abs x ≤ 1) : (0 : α) ≤ n * x + n * n := by
+  have hnx : 0 < n → 0 ≤ x + n := fun hn => by
+    convert add_le_add (neg_le_of_abs_le hx) (cast_one_le_of_pos hn)
+    rw [add_left_negₓ]
+  have hnx' : n < 0 → x + n ≤ 0 := fun hn => by
+    convert add_le_add (le_of_abs_le hx) (cast_le_neg_one_of_neg hn)
+    rw [add_right_negₓ]
+  rw [← mul_addₓ, mul_nonneg_iff]
+  rcases lt_trichotomyₓ n 0 with (h | rfl | h)
+  · exact
+      Or.inr
+        ⟨by
+          exact_mod_cast h.le, hnx' h⟩
+    
+  · simp [le_totalₓ 0 x]
+    
+  · exact
+      Or.inl
+        ⟨by
+          exact_mod_cast h.le, hnx h⟩
+    
+
+theorem cast_nat_abs : (n.natAbs : α) = abs n := by
+  cases n
+  · simp
+    
+  · simp only [Int.natAbs, Int.cast_neg_succ_of_nat, abs_neg, ← Nat.cast_succₓ, Nat.abs_cast]
+    
+
+end LinearOrderedRing
 
 theorem coe_int_dvd [CommRingₓ α] (m n : ℤ) (h : m ∣ n) : (m : α) ∣ (n : α) :=
   RingHom.map_dvd (Int.castRingHom α) h
@@ -286,6 +327,10 @@ theorem eq_int_cast (f : ℤ →+ A) (h1 : f 1 = 1) : ∀ n : ℤ, f n = n :=
   ext_iff.1 (f.eq_int_cast_hom h1)
 
 end AddMonoidHom
+
+@[simp]
+theorem Int.cast_add_hom_int : Int.castAddHom ℤ = AddMonoidHom.id ℤ :=
+  ((AddMonoidHom.id ℤ).eq_int_cast_hom rfl).symm
 
 namespace MonoidHom
 
@@ -354,6 +399,10 @@ end RingHom
 theorem Int.cast_idₓ (n : ℤ) : ↑n = n :=
   ((RingHom.id ℤ).eq_int_cast n).symm
 
+@[simp]
+theorem Int.cast_ring_hom_int : Int.castRingHom ℤ = RingHom.id ℤ :=
+  (RingHom.id ℤ).eq_int_cast'.symm
+
 namespace Pi
 
 variable {α β : Type _}
@@ -369,4 +418,20 @@ theorem coe_int [Zero β] [One β] [Add β] [Neg β] (n : ℤ) : (n : α → β)
   rw [Pi.int_apply]
 
 end Pi
+
+namespace MulOpposite
+
+variable {α : Type _} [Zero α] [One α] [Add α] [Neg α]
+
+@[simp, norm_cast]
+theorem op_int_cast : ∀ z : ℤ, op (z : α) = z
+  | (n : ℕ) => op_nat_cast n
+  | -[1+ n] => (congr_argₓ fun a : αᵐᵒᵖ => -(a + 1)) <| op_nat_cast n
+
+@[simp, norm_cast]
+theorem unop_int_cast : ∀ n : ℤ, unop (n : αᵐᵒᵖ) = n
+  | (n : ℕ) => unop_nat_cast n
+  | -[1+ n] => (congr_argₓ fun a : α => -(a + 1)) <| unop_nat_cast n
+
+end MulOpposite
 

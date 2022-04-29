@@ -13,7 +13,7 @@ import Mathbin.Topology.UniformSpace.Separation
 
 noncomputable section
 
-open_locale uniformity TopologicalSpace
+open uniformity TopologicalSpace
 
 section
 

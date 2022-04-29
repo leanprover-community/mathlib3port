@@ -31,7 +31,7 @@ noncomputable section
 
 open Polynomial
 
-open_locale Classical nonZeroDivisors Polynomial
+open Classical nonZeroDivisors Polynomial
 
 variable {R : Type u} [CommRingₓ R] [hdomain : IsDomain R] (r s : R) (p q : R[X]) (f : Ratfunc R)
 
@@ -40,7 +40,6 @@ theorem taylor_mem_non_zero_divisors (hp : p ∈ R[X]⁰) : taylor r p ∈ R[X]�
   intro x hx
   have : x = taylor (r - r) x := by
     simp
-  have ht := Polynomial.taylor_injective r
   rwa [this, sub_eq_add_neg, ← taylor_taylor, ← taylor_mul, LinearMap.map_eq_zero_iff _ (taylor_injective _),
     mul_right_mem_non_zero_divisors_eq_zero_iff hp, LinearMap.map_eq_zero_iff _ (taylor_injective _)] at hx
 

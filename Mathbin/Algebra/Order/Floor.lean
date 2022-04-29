@@ -15,7 +15,7 @@ We define the natural- and integer-valued floor and ceil functions on linearly o
 
 ## Main Definitions
 
-* `floor_semiring`: A linearly ordered semiring with natural-valued floor and ceil.
+* `floor_semiring`: An ordered semiring with natural-valued floor and ceil.
 * `nat.floor a`: Greatest natural `n` such that `n ≤ a`. Equal to `0` if `a < 0`.
 * `nat.ceil a`: Least natural `n` such that `a ≤ n`.
 
@@ -54,8 +54,9 @@ variable {α : Type _}
 /-! ### Floor semiring -/
 
 
-/-- A `floor_semiring` is a linear ordered semiring over `α` with a function
-`floor : α → ℕ` satisfying `∀ (n : ℕ) (x : α), n ≤ ⌊x⌋ ↔ (n : α) ≤ x)`. -/
+/-- A `floor_semiring` is an ordered semiring over `α` with a function
+`floor : α → ℕ` satisfying `∀ (n : ℕ) (x : α), n ≤ ⌊x⌋ ↔ (n : α) ≤ x)`.
+Note that many lemmas require a `linear_order`. Please see the above `TODO`. -/
 class FloorSemiring (α) [OrderedSemiring α] where
   floor : α → ℕ
   ceil : α → ℕ
@@ -76,9 +77,9 @@ instance : FloorSemiring ℕ where
 
 namespace Nat
 
-section LinearOrderedSemiring
+section OrderedSemiring
 
-variable [LinearOrderedSemiring α] [FloorSemiring α] {a : α} {n : ℕ}
+variable [OrderedSemiring α] [FloorSemiring α] {a : α} {n : ℕ}
 
 /-- `⌊a⌋₊` is the greatest natural `n` such that `n ≤ a`. If `a` is negative, then `⌊a⌋₊ = 0`. -/
 def floor : α → ℕ :=
@@ -94,6 +95,12 @@ notation "⌊" a "⌋₊" => Nat.floor a
 -- mathport name: «expr⌈ ⌉₊»
 notation "⌈" a "⌉₊" => Nat.ceil a
 
+end OrderedSemiring
+
+section LinearOrderedSemiring
+
+variable [LinearOrderedSemiring α] [FloorSemiring α] {a : α} {n : ℕ}
+
 theorem le_floor_iff (ha : 0 ≤ a) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a :=
   FloorSemiring.gc_floor ha
 
@@ -104,7 +111,7 @@ theorem floor_lt (ha : 0 ≤ a) : ⌊a⌋₊ < n ↔ a < n :=
   lt_iff_lt_of_le_iff_le <| le_floor_iff ha
 
 theorem lt_of_floor_lt (h : ⌊a⌋₊ < n) : a < n :=
-  lt_of_not_ge' fun h' => (le_floor h').not_lt h
+  lt_of_not_le fun h' => (le_floor h').not_lt h
 
 theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ a :=
   (le_floor_iff ha).1 le_rfl
@@ -658,7 +665,7 @@ theorem fract_eq_iff {a b : α} : fract a = b ↔ 0 ≤ b ∧ b < 1 ∧ ∃ z : 
     rw [eq_sub_iff_add_eq, add_commₓ, ← eq_sub_iff_add_eq]
     rw [hz, Int.cast_inj, floor_eq_iff, ← hz]
     clear hz
-    constructor <;> simpa [sub_eq_add_neg, add_assocₓ]⟩
+    constructor <;> simpa [sub_eq_add_neg, add_assocₓ] ⟩
 
 theorem fract_eq_fract {a b : α} : fract a = fract b ↔ ∃ z : ℤ, a - b = z :=
   ⟨fun h =>
@@ -717,6 +724,18 @@ theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) ''
     exact floor_eq_iff.2 ⟨sub_nonneg.1 h0, sub_lt_iff_lt_add'.1 h1⟩
     exact ⟨y, hys, rfl⟩
     
+
+section LinearOrderedField
+
+variable {k : Type _} [LinearOrderedField k] [FloorRing k]
+
+theorem fract_div_mul_self_mem_Ico (a b : k) (ha : 0 < a) : fract (b / a) * a ∈ Ico 0 a :=
+  ⟨(zero_le_mul_right ha).2 (fract_nonneg (b / a)), (mul_lt_iff_lt_one_left ha).2 (fract_lt_one (b / a))⟩
+
+theorem fract_div_mul_self_add_zsmul_eq (a b : k) (ha : a ≠ 0) : fract (b / a) * a + ⌊b / a⌋ • a = b := by
+  rw [zsmul_eq_mul, ← add_mulₓ, fract_add_floor, div_mul_cancel b ha]
+
+end LinearOrderedField
 
 /-! #### Ceil -/
 

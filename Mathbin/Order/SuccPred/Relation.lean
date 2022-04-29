@@ -13,7 +13,7 @@ and their closure operations (like the transitive closure).
 -/
 
 
-open Set Relation SuccOrder PredOrder Function
+open Function Order Relation Set
 
 section PartialSucc
 

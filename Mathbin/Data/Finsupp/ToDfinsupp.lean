@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
+import Mathbin.Algebra.Module.Equiv
 import Mathbin.Data.Dfinsupp.Basic
-import Mathbin.Data.Equiv.Module
 import Mathbin.Data.Finsupp.Basic
 
 /-!
@@ -203,8 +203,7 @@ def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] :
-    (ι →₀ M) ≃+ Π₀ i : ι, M :=
+def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃+ Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_add' := Finsupp.to_dfinsupp_add }
 
@@ -213,8 +212,8 @@ variable (R)
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ m : M, Decidable (m ≠ 0)]
-    [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀ i : ι, M :=
+def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ m : M, Decidable (m ≠ 0)] [Module R M] :
+    (ι →₀ M) ≃ₗ[R] Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_smul' := Finsupp.to_dfinsupp_smul, map_add' := Finsupp.to_dfinsupp_add }
 
@@ -223,7 +222,7 @@ section Sigma
 /-! ### Stronger versions of `finsupp.split` -/
 noncomputable section
 
-open_locale Classical
+open Classical
 
 variable {η : ι → Type _} {N : Type _} [Semiringₓ R]
 

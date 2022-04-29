@@ -69,9 +69,9 @@ fractional ideal, fractional ideals, invertible ideal
 
 open IsLocalization
 
-open_locale Pointwise
+open Pointwise
 
-open_locale nonZeroDivisors
+open nonZeroDivisors
 
 section Defs
 
@@ -398,6 +398,23 @@ theorem coe_add (I J : FractionalIdeal S P) : (↑(I + J) : Submodule R P) = I +
 theorem coe_ideal_sup (I J : Ideal R) : ↑(I⊔J) = (I + J : FractionalIdeal S P) :=
   coe_to_submodule_injective <| coe_submodule_sup _ _ _
 
+theorem _root_.is_fractional.nsmul {I : Submodule R P} :
+    ∀ n : ℕ, IsFractional S I → IsFractional S (n • I : Submodule R P)
+  | 0, _ => by
+    rw [zero_smul]
+    convert ((0 : Ideal R) : FractionalIdeal S P).IsFractional
+    simp
+  | n + 1, h => by
+    rw [succ_nsmul]
+    exact h.sup (_root_.is_fractional.nsmul n h)
+
+instance : HasScalar ℕ (FractionalIdeal S P) where
+  smul := fun n I => ⟨n • I, I.IsFractional.nsmul n⟩
+
+@[norm_cast]
+theorem coe_nsmul (n : ℕ) (I : FractionalIdeal S P) : (↑(n • I) : Submodule R P) = n • I :=
+  rfl
+
 theorem _root_.is_fractional.mul {I J : Submodule R P} :
     IsFractional S I → IsFractional S J → IsFractional S (I * J : Submodule R P)
   | ⟨aI, haI, hI⟩, ⟨aJ, haJ, hJ⟩ =>
@@ -471,13 +488,9 @@ protected theorem mul_induction_on {I J : FractionalIdeal S P} {C : P → Prop} 
     (hm : ∀, ∀ i ∈ I, ∀, ∀ j ∈ J, ∀, C (i * j)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   Submodule.mul_induction_on hr hm ha
 
--- There is no `function.injective.comm_semiring_pow` so we need to do this in three parts to keep
--- our custom power operator.
 instance : CommSemiringₓ (FractionalIdeal S P) :=
-  { (Function.Injective.monoidPow _ Subtype.coe_injective coe_one coe_mul coe_pow : Monoidₓ (FractionalIdeal S P)),
-    (Function.Injective.commSemigroup _ Subtype.coe_injective coe_mul : CommSemigroupₓ (FractionalIdeal S P)),
-    (Function.Injective.nonUnitalNonAssocSemiring _ Subtype.coe_injective coe_zero coe_add coe_mul :
-      NonUnitalNonAssocSemiringₓ (FractionalIdeal S P)) with }
+  Function.Injective.commSemiring _ Subtype.coe_injective coe_zero coe_one coe_add coe_mul (fun _ _ => coe_nsmul _ _)
+    coe_pow
 
 section Order
 
@@ -504,12 +517,12 @@ theorem le_one_iff_exists_coe_ideal {J : FractionalIdeal S P} : J ≤ (1 : Fract
   constructor
   · intro hJ
     refine' ⟨⟨{ x : R | algebraMap R P x ∈ J }, _, _, _⟩, _⟩
-    · rw [mem_set_of_eq, RingHom.map_zero]
-      exact J.val.zero_mem
-      
     · intro a b ha hb
       rw [mem_set_of_eq, RingHom.map_add]
       exact J.val.add_mem ha hb
+      
+    · rw [mem_set_of_eq, RingHom.map_zero]
+      exact J.val.zero_mem
       
     · intro c x hx
       rw [smul_eq_mul, mem_set_of_eq, RingHom.map_mul, ← Algebra.smul_def]
@@ -547,7 +560,7 @@ def coeIdealHom : Ideal R →+* FractionalIdeal S P where
 theorem coe_ideal_pow (I : Ideal R) (n : ℕ) : (↑(I ^ n) : FractionalIdeal S P) = I ^ n :=
   (FractionalIdeal.coeIdealHom S P).map_pow _ n
 
-open_locale BigOperators
+open BigOperators
 
 theorem coe_ideal_finprod [IsLocalization S P] {α : Sort _} {f : α → Ideal R} (hS : S ≤ nonZeroDivisors R) :
     ((∏ᶠ a : α, f a : Ideal R) : FractionalIdeal S P) = ∏ᶠ a : α, (f a : FractionalIdeal S P) :=
@@ -806,15 +819,18 @@ theorem coe_ideal_injective : Function.Injective (coe : Ideal R → FractionalId
   injective_of_le_imp_le _ fun _ _ => (coe_ideal_le_coe_ideal _).mp
 
 @[simp]
-theorem coe_ideal_eq_zero_iff {I : Ideal R} : (I : FractionalIdeal R⁰ K) = 0 ↔ I = ⊥ := by
-  rw [← coe_to_fractional_ideal_bot]
-  exact coe_ideal_injective.eq_iff
+theorem coe_ideal_eq_zero_iff {I : Ideal R} : (I : FractionalIdeal R⁰ K) = 0 ↔ I = ⊥ :=
+  coe_ideal_injective.eq_iff
 
 theorem coe_ideal_ne_zero_iff {I : Ideal R} : (I : FractionalIdeal R⁰ K) ≠ 0 ↔ I ≠ ⊥ :=
   not_iff_not.mpr coe_ideal_eq_zero_iff
 
 theorem coe_ideal_ne_zero {I : Ideal R} (hI : I ≠ ⊥) : (I : FractionalIdeal R⁰ K) ≠ 0 :=
   coe_ideal_ne_zero_iff.mpr hI
+
+@[simp]
+theorem coe_ideal_eq_one_iff {I : Ideal R} : (I : FractionalIdeal R⁰ K) = 1 ↔ I = 1 := by
+  simpa only [Ideal.one_eq_top] using coe_ideal_injective.eq_iff
 
 end IsFractionRing
 
@@ -832,7 +848,7 @@ is a field because `R` is a domain.
 -/
 
 
-open_locale Classical
+open Classical
 
 variable {R₁ : Type _} [CommRingₓ R₁] {K : Type _} [Field K]
 
@@ -871,7 +887,7 @@ theorem _root_.is_fractional.div_of_nonzero {I J : Submodule R₁ K} :
         rw [← Algebra.smul_def, ← hy', y'_eq_zero, RingHom.map_zero]
       have y_zero :=
         (mul_eq_zero.mp this).resolve_left
-          (mt ((algebraMap R₁ K).injective_iff.1 (IsFractionRing.injective _ _) _)
+          (mt ((injective_iff_map_eq_zero (algebraMap R₁ K)).1 (IsFractionRing.injective _ _) _)
             (mem_non_zero_divisors_iff_ne_zero.mp haJ))
       apply not_mem_zero
       simpa only using (mem_zero_iff R₁⁰).mpr y_zero
@@ -1011,7 +1027,7 @@ theorem eq_zero_or_one (I : FractionalIdeal K⁰ L) : I = 0 ∨ I = 1 := by
     
 
 theorem eq_zero_or_one_of_is_field (hF : IsField R₁) (I : FractionalIdeal R₁⁰ K) : I = 0 ∨ I = 1 := by
-  let this' : Field R₁ := hF.to_field R₁
+  let this : Field R₁ := hF.to_field
   -- TODO can this be less ugly?
   exact
     @eq_zero_or_one R₁ K _ _ _
@@ -1028,7 +1044,41 @@ variable {R₁ : Type _} [CommRingₓ R₁] {K : Type _} [Field K]
 
 variable [Algebra R₁ K] [IsFractionRing R₁ K]
 
-open_locale Classical
+open Classical
+
+variable (R₁)
+
+/-- `fractional_ideal.span_finset R₁ s f` is the fractional ideal of `R₁` generated by `f '' s`. -/
+@[simps]
+def spanFinset {ι : Type _} (s : Finset ι) (f : ι → K) : FractionalIdeal R₁⁰ K :=
+  ⟨Submodule.span R₁ (f '' s), by
+    obtain ⟨a', ha'⟩ := IsLocalization.exist_integer_multiples R₁⁰ s f
+    refine' ⟨a', a'.2, fun x hx => Submodule.span_induction hx _ _ _ _⟩
+    · rintro _ ⟨i, hi, rfl⟩
+      exact ha' i hi
+      
+    · rw [smul_zero]
+      exact IsLocalization.is_integer_zero
+      
+    · intro x y hx hy
+      rw [smul_add]
+      exact IsLocalization.is_integer_add hx hy
+      
+    · intro c x hx
+      rw [smul_comm]
+      exact IsLocalization.is_integer_smul hx
+      ⟩
+
+variable {R₁}
+
+@[simp]
+theorem span_finset_eq_zero {ι : Type _} {s : Finset ι} {f : ι → K} : spanFinset R₁ s f = 0 ↔ ∀, ∀ j ∈ s, ∀, f j = 0 :=
+  by
+  simp only [← coe_to_submodule_injective.eq_iff, span_finset_coe, coe_zero, Submodule.span_eq_bot, Set.mem_image,
+    Finset.mem_coe, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
+
+theorem span_finset_ne_zero {ι : Type _} {s : Finset ι} {f : ι → K} : spanFinset R₁ s f ≠ 0 ↔ ∃ j ∈ s, f j ≠ 0 := by
+  simp
 
 open Submodule.IsPrincipal
 
@@ -1058,6 +1108,11 @@ theorem mem_span_singleton_self (x : P) : x ∈ spanSingleton S x :=
   (mem_span_singleton S).mpr ⟨1, one_smul _ _⟩
 
 variable {S}
+
+theorem span_singleton_eq_span_singleton [NoZeroSmulDivisors R P] {x y : P} :
+    spanSingleton S x = spanSingleton S y ↔ ∃ z : Rˣ, z • x = y := by
+  rw [← Submodule.span_singleton_eq_span_singleton]
+  exact Subtype.mk_eq_mk
 
 theorem eq_span_singleton_of_principal (I : FractionalIdeal S P) [IsPrincipal (I : Submodule R P)] :
     I = spanSingleton S (generator (I : Submodule R P)) :=
@@ -1096,6 +1151,14 @@ theorem span_singleton_mul_span_singleton (x y : P) : spanSingleton S x * spanSi
   by
   apply coe_to_submodule_injective
   simp only [coe_mul, coe_span_singleton, span_mul_span, singleton_mul_singleton]
+
+@[simp]
+theorem span_singleton_pow (x : P) (n : ℕ) : spanSingleton S x ^ n = spanSingleton S (x ^ n) := by
+  induction' n with n hn
+  · rw [pow_zeroₓ, pow_zeroₓ, span_singleton_one]
+    
+  · rw [pow_succₓ, hn, span_singleton_mul_span_singleton, pow_succₓ]
+    
 
 @[simp]
 theorem coe_ideal_span_singleton (x : R) :
@@ -1303,7 +1366,8 @@ theorem is_noetherian_span_singleton_inv_to_map_mul (x : R₁) {I : FractionalId
   · rw [hx, RingHom.map_zero, _root_.inv_zero, span_singleton_zero, zero_mul]
     exact is_noetherian_zero
     
-  have h_gx : algebraMap R₁ K x ≠ 0 := mt ((algebraMap R₁ K).injective_iff.mp (IsFractionRing.injective _ _) x) hx
+  have h_gx : algebraMap R₁ K x ≠ 0 :=
+    mt ((injective_iff_map_eq_zero (algebraMap R₁ K)).mp (IsFractionRing.injective _ _) x) hx
   have h_spanx : span_singleton R₁⁰ (algebraMap R₁ K x) ≠ 0 := span_singleton_ne_zero_iff.mpr h_gx
   rw [is_noetherian_iff] at hI⊢
   intro J hJ

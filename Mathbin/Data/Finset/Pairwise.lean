@@ -16,6 +16,9 @@ open Finset
 
 variable {α ι ι' : Type _}
 
+instance [DecidableEq α] {r : α → α → Prop} [DecidableRel r] {s : Finset α} : Decidable ((s : Set α).Pairwise r) :=
+  decidableOfIff' (∀, ∀ a ∈ s, ∀, ∀, ∀ b ∈ s, ∀, a ≠ b → r a b) Iff.rfl
+
 theorem Finset.pairwise_disjoint_range_singleton [DecidableEq α] :
     (Set.Range (singleton : α → Finset α)).PairwiseDisjoint id := by
   rintro _ ⟨a, rfl⟩ _ ⟨b, rfl⟩ h

@@ -3,7 +3,7 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Normed
 
 /-!
 # The group of units of a complete normed ring
@@ -30,7 +30,7 @@ a unit and 0 if not.  The other major results of this file (notably `inverse_add
 
 noncomputable section
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
@@ -90,7 +90,7 @@ end Units
 
 namespace NormedRing
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Asymptotics Filter Metric Finset Ringₓ
 
@@ -250,7 +250,7 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
 /-- The function `inverse` is continuous at each unit of `R`. -/
 theorem inverse_continuous_at (x : Rˣ) : ContinuousAt inverse (x : R) := by
   have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹) (fun _ => 1 : R → ℝ) (𝓝 0) :=
-    (inverse_add_norm_diff_first_order x).trans_is_o (is_o_id_const (@one_ne_zero ℝ _ _)).norm_left
+    (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left <| is_o_id_const one_ne_zero)
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) := by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _
     exact tendsto_iff_norm_tendsto_zero.mp tendsto_id

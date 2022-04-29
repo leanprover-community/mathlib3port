@@ -14,7 +14,7 @@ We define `integral_normalization`, which relate arbitrary polynomials to monic 
 -/
 
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 namespace Polynomial
 
@@ -95,7 +95,7 @@ section IsDomain
 
 variable [CommRingₓ R] [IsDomain R]
 
-variable [CommRingₓ S]
+variable [CommSemiringₓ S]
 
 theorem integral_normalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
     (inj : ∀ x : R, f x = 0 → x = 0) : eval₂ f (z * f p.leadingCoeff) (integralNormalization p) = 0 :=

@@ -36,7 +36,7 @@ def Commensurable (H K : Subgroup G) : Prop :=
 
 namespace Commensurable
 
-open_locale Pointwise
+open Pointwise
 
 @[refl]
 protected theorem refl (H : Subgroup G) : Commensurable H H := by
@@ -60,7 +60,7 @@ theorem equivalence : Equivalenceₓ (@Commensurable G _) :=
 def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) : K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
   Quotientₓ.congr (K.equivSmul g).toEquiv fun a b => by
     rw [← Quotientₓ.eq', ← Quotientₓ.eq', QuotientGroup.eq', QuotientGroup.eq', Subgroup.mem_subgroup_of,
-      Subgroup.mem_subgroup_of, MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
+      Subgroup.mem_subgroup_of, MulEquiv.to_equiv_eq_coe, MulEquiv.coe_to_equiv, ← MulEquiv.map_inv, ← MulEquiv.map_mul,
       Subgroup.equiv_smul_apply_coe, Subgroup.smul_mem_pointwise_smul_iff]
 
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) : Commensurable H K ↔ Commensurable (g • H) (g • K) :=

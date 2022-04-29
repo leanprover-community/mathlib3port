@@ -67,8 +67,8 @@ unsafe def allowed_head_symbols : expr → List Name
       --   and vice-versa.
       quote.1
       (_ ≠ _) =>
-    [`false]
-  | quote.1 ¬_ = _ => [`ne]
+    [`false, `ne]
+  | quote.1 ¬_ = _ => [`ne, `false]
   |-- And then the generic cases:
       expr.pi
       _ _ _ t =>

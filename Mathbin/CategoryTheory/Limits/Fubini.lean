@@ -183,16 +183,56 @@ noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit 
   have Q'' := limit.is_limit (F ⋙ lim)
   exact is_limit.cone_point_unique_up_to_iso Q' Q''
 
-@[simp]
+@[simp, reassoc]
 theorem limit_uncurry_iso_limit_comp_lim_hom_π_π {j} {k} :
     (limitUncurryIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ (j, k) := by
   dsimp [limit_uncurry_iso_limit_comp_lim, is_limit.cone_point_unique_up_to_iso, is_limit.unique_up_to_iso]
   simp
 
-@[simp]
+@[simp, reassoc]
 theorem limit_uncurry_iso_limit_comp_lim_inv_π {j} {k} :
     (limitUncurryIsoLimitCompLim F).inv ≫ limit.π _ (j, k) = limit.π _ j ≫ limit.π _ k := by
   rw [← cancel_epi (limit_uncurry_iso_limit_comp_lim F).Hom]
+  simp
+
+end
+
+section
+
+variable (F) [HasLimitsOfShape J C] [HasLimitsOfShape K C]
+
+-- With only moderate effort these could be derived if needed:
+variable [HasLimitsOfShape (J × K) C] [HasLimitsOfShape (K × J) C]
+
+/-- The limit of `F.flip ⋙ lim` is isomorphic to the limit of `F ⋙ lim`. -/
+noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ limit (F ⋙ lim) :=
+  (limitUncurryIsoLimitCompLim _).symm ≪≫
+    HasLimit.isoOfNatIso (uncurryObjFlip _) ≪≫
+      HasLimit.isoOfEquivalence (prod.braiding _ _)
+          (NatIso.ofComponents
+            (fun _ => by
+              rfl)
+            (by
+              tidy)) ≪≫
+        limitUncurryIsoLimitCompLim _
+
+@[simp, reassoc]
+theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π j k :
+    (limitFlipCompLimIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ k ≫ limit.π _ j := by
+  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
+  simp
+  dsimp
+  simp
+
+-- See note [dsimp, simp]
+@[simp, reassoc]
+theorem limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π k j :
+    (limitFlipCompLimIsoLimitCompLim F).inv ≫ limit.π _ k ≫ limit.π _ j = limit.π _ j ≫ limit.π _ k := by
+  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
+  simp
+  dsimp
+  simp
+  dsimp
   simp
 
 end

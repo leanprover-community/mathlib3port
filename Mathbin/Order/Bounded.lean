@@ -112,6 +112,23 @@ theorem bounded_ge_iff_bounded_gt [Preorderₓ α] [NoMinOrder α] : Bounded (·
 theorem unbounded_gt_iff_unbounded_ge [Preorderₓ α] [NoMinOrder α] : Unbounded (· > ·) s ↔ Unbounded (· ≥ ·) s :=
   @unbounded_lt_iff_unbounded_le (OrderDual α) _ _ _
 
+/-! ### The universal set -/
+
+
+theorem unbounded_le_univ [LE α] [NoTopOrder α] : Unbounded (· ≤ ·) (@Set.Univ α) := fun a =>
+  let ⟨b, hb⟩ := exists_not_le a
+  ⟨b, ⟨⟩, hb⟩
+
+theorem unbounded_lt_univ [Preorderₓ α] [NoTopOrder α] : Unbounded (· < ·) (@Set.Univ α) :=
+  unbounded_lt_of_unbounded_le unbounded_le_univ
+
+theorem unbounded_ge_univ [LE α] [NoBotOrder α] : Unbounded (· ≥ ·) (@Set.Univ α) := fun a =>
+  let ⟨b, hb⟩ := exists_not_ge a
+  ⟨b, ⟨⟩, hb⟩
+
+theorem unbounded_gt_univ [Preorderₓ α] [NoBotOrder α] : Unbounded (· > ·) (@Set.Univ α) :=
+  unbounded_gt_of_unbounded_ge unbounded_ge_univ
+
 /-! ### Bounded and unbounded intervals -/
 
 
@@ -244,7 +261,7 @@ theorem unbounded_le_inter_lt [LinearOrderₓ α] (a : α) : Unbounded (· ≤ �
   by
   convert unbounded_le_inter_not_le a
   ext
-  exact lt_iff_not_ge'
+  exact lt_iff_not_le
 
 theorem bounded_le_inter_le [LinearOrderₓ α] (a : α) : Bounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· ≤ ·) s := by
   refine' ⟨_, bounded.mono (Set.inter_subset_left s _)⟩

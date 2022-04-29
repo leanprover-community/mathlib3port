@@ -62,7 +62,7 @@ open Finset hiding map
 
 open Finsupp (single)
 
-open_locale BigOperators
+open BigOperators
 
 attribute [-simp] coe_eval₂_hom
 
@@ -97,7 +97,7 @@ localized [Witt] notation "W_" => wittPolynomial p
 -- Notation with ring of coefficients implicit
 localized [Witt] notation "W" => wittPolynomial p _
 
-open_locale Witt
+open Witt
 
 open MvPolynomial
 
@@ -239,12 +239,12 @@ theorem X_in_terms_of_W_vars_aux (n : ℕ) : n ∈ (xInTermsOfW p ℚ n).vars �
   pick_goal 3
   · apply nonzero_of_invertible
     
-  on_goal 0 =>
+  on_goal 1 =>
     simp only [true_andₓ, true_orₓ, eq_self_iff_true, mem_union, mem_singleton]
     intro i
     rw [mem_union, mem_union]
     apply Or.imp id
-  on_goal 1 =>
+  on_goal 2 =>
     rw [vars_X, disjoint_singleton_left]
   all_goals
     intro H

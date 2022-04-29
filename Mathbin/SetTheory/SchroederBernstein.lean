@@ -27,7 +27,7 @@ Cardinals are defined and further developed in the file `set_theory.cardinal`.
 
 open Set Function
 
-open_locale Classical
+open Classical
 
 universe u v
 
@@ -105,7 +105,7 @@ lattice instance. -/
 theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
   let ⟨s, hs, ms⟩ :=
     show ∃ s ∈ sets, ∀, ∀ a ∈ sets, ∀, s ⊆ a → a = s from
-      Zorn.zorn_subset sets fun c hc hcc =>
+      zorn_subset sets fun c hc hcc =>
         ⟨⋃₀c, fun i hi =>
           (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h => hc hpc x hxp y (h hyq) i hi, fun _ =>
           subset_sUnion_of_mem⟩

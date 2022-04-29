@@ -49,13 +49,13 @@ generalization, the Monge point of a simplex.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Classical
+open Classical
 
-open_locale Real
+open Real
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 namespace Affine
 
@@ -222,7 +222,7 @@ theorem inner_monge_point_vsub_face_centroid_vsub {n : ℕ} (s : Simplex ℝ P (
     sum_points_with_circumcenter, points_with_circumcenter_eq_circumcenter]
   simp only [monge_point_vsub_face_centroid_weights_with_circumcenter, points_with_circumcenter_point]
   let fs : Finset (Finₓ (n + 3)) := {i₁, i₂}
-  have hfs : ∀ i : Finₓ (n + 3), (i ∉ fs) → i ≠ i₁ ∧ i ≠ i₂ := by
+  have hfs : ∀ i : Finₓ (n + 3), i ∉ fs → i ≠ i₁ ∧ i ≠ i₂ := by
     intro i hi
     constructor <;>
       · intro hj
@@ -619,7 +619,7 @@ include V
 /-- Four points form an orthocentric system if they consist of the
 vertices of a triangle and its orthocenter. -/
 def OrthocentricSystem (s : Set P) : Prop :=
-  ∃ t : Triangle ℝ P, (t.orthocenter ∉ Set.Range t.points) ∧ s = insert t.orthocenter (Set.Range t.points)
+  ∃ t : Triangle ℝ P, t.orthocenter ∉ Set.Range t.points ∧ s = insert t.orthocenter (Set.Range t.points)
 
 /-- This is an auxiliary lemma giving information about the relation
 of two triangles in an orthocentric system; it abstracts some

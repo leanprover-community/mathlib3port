@@ -73,7 +73,7 @@ variable {X : Type _} [TopologicalSpace X]
 
 open Set Filter TopologicalSpace
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 namespace Urysohns
 

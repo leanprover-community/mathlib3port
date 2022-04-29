@@ -97,7 +97,7 @@ theorem is_subterminal_of_is_iso_diag [HasBinaryProduct A A] [IsIso (diag A)] : 
 /-- If `A` is subterminal, it is isomorphic to `A ⨯ A`. -/
 @[simps]
 def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A := by
-  let this' := is_subterminal.is_iso_diag hA
+  let this := is_subterminal.is_iso_diag hA
   apply (as_iso (diag A)).symm
 
 variable (C)

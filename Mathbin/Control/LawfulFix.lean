@@ -22,7 +22,7 @@ omega complete partial orders (ωCPO). Proofs of the lawfulness of all `has_fix`
 
 universe u v
 
-open_locale Classical
+open Classical
 
 variable {α : Type _} {β : α → Type _}
 
@@ -103,8 +103,7 @@ theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := 
     exists i
     intro b' h'
     have hb' := approx_le_fix f i _ _ hb
-    have hh := Part.mem_unique h' hb'
-    subst hh
+    obtain rfl := Part.mem_unique h' hb'
     exact hb
     
   · simp only [not_exists] at hh
@@ -121,11 +120,9 @@ include f
 def approxChain : Chain (∀ a, Part <| β a) :=
   ⟨approx f, approx_mono f⟩
 
-theorem le_f_of_mem_approx {x} (hx : x ∈ approxChain f) : x ≤ f x := by
-  revert hx
-  simp [(· ∈ ·)]
-  intro i hx
-  subst x
+theorem le_f_of_mem_approx {x} : x ∈ approxChain f → x ≤ f x := by
+  simp only [(· ∈ ·), forall_exists_index]
+  rintro i rfl
   apply approx_mono'
 
 theorem approx_mem_approx_chain {i} : approx f i ∈ approxChain f :=
@@ -215,7 +212,7 @@ theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous
     erw [hc, chain.map_comp]
     rfl
 
-noncomputable instance : LawfulFix (Part α) :=
+instance : LawfulFix (Part α) :=
   ⟨fun f hc =>
     show Part.fix (toUnitMono f) () = _ by
       rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
@@ -226,7 +223,7 @@ open Sigma
 
 namespace Pi
 
-noncomputable instance {β} : LawfulFix (α → Part β) :=
+instance {β} : LawfulFix (α → Part β) :=
   ⟨fun f => Part.fix_eq⟩
 
 variable {γ : ∀ a : α, β a → Type _}

@@ -5,7 +5,7 @@ Authors: Scott Morrison, Adam Topaz
 -/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.Algebra.Category.Module.Abelian
-import Mathbin.CategoryTheory.Functor.Derived
+import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Abelian.Opposite
 import Mathbin.CategoryTheory.Abelian.Projective
@@ -36,7 +36,7 @@ open CategoryTheory
 
 variable (R : Type _) [Ringₓ R] (C : Type _) [Category C] [Abelian C] [Linear R C] [EnoughProjectives C]
 
-/-- `Ext R C n` is defined by deriving in the frst argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
+/-- `Ext R C n` is defined by deriving in the first argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`
 (which is the second argument of `linear_yoneda`).
 -/
 @[simps]
@@ -56,7 +56,7 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
         rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
         rfl }
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- If `X : C` is projective and `n : ℕ`, then `Ext^(n + 1) X Y ≅ 0` for any `Y`. -/
 def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).obj (Opposite.op X)).obj Y ≅ 0 :=

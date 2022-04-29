@@ -32,7 +32,7 @@ open Filter Function Set Metric TopologicalSpace intervalIntegral MeasureTheory
 
 open MeasureTheory.MeasureSpace (volume)
 
-open_locale Filter TopologicalSpace Nnreal Ennreal Nat Interval
+open Filter TopologicalSpace Nnreal Ennreal Nat Interval
 
 noncomputable section
 
@@ -202,16 +202,14 @@ theorem dist_le_of_forall {f₁ f₂ : FunSpace v} {d : ℝ} (h : ∀ t, dist (f
 instance [CompleteSpace E] : CompleteSpace v.FunSpace := by
   refine' (complete_space_iff_is_complete_range uniform_inducing_to_continuous_map).2 (IsClosed.is_complete _)
   rw [range_to_continuous_map, set_of_and]
-  refine' (is_closed_eq (ContinuousMap.continuous_evalx _) continuous_const).inter _
+  refine' (is_closed_eq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
   have : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } := is_closed_set_of_lipschitz_with v.C
   exact this.preimage ContinuousMap.continuous_coe
-
-variable [MeasurableSpace E] [BorelSpace E]
 
 theorem interval_integrable_v_comp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
   f.continuous_v_comp.IntervalIntegrable _ _
 
-variable [SecondCountableTopology E] [CompleteSpace E]
+variable [CompleteSpace E]
 
 /-- The Picard-Lindelöf operator. This is a contracting map on `picard_lindelof.fun_space v` such
 that the fixed point of this map is the solution of the corresponding ODE.
@@ -236,8 +234,8 @@ theorem has_deriv_within_at_next (t : Icc v.tMin v.tMax) :
   simp only [(· ∘ ·), next_apply]
   refine' HasDerivWithinAt.const_add _ _
   have : HasDerivWithinAt (fun t : ℝ => ∫ τ in v.t₀..t, f.v_comp τ) (f.v_comp t) (Icc v.t_min v.t_max) t :=
-    integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _) (f.continuous_v_comp.measurable_at_filter _ _)
-      f.continuous_v_comp.continuous_within_at
+    integral_has_deriv_within_at_right (f.interval_integrable_v_comp _ _)
+      (f.continuous_v_comp.strongly_measurable_at_filter _ _) f.continuous_v_comp.continuous_within_at
   rw [v_comp_apply_coe] at this
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
   filter_upwards [self_mem_nhds_within] with _ ht'
@@ -287,11 +285,9 @@ theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
 
 end FunSpace
 
-variable [SecondCountableTopology E] [CompleteSpace E]
+variable [CompleteSpace E]
 
 section
-
-variable [MeasurableSpace E] [BorelSpace E]
 
 theorem exists_contracting_iterate :
     ∃ (N : ℕ)(K : _), ContractingWith K ((FunSpace.next : v.FunSpace → v.FunSpace)^[N]) := by
@@ -311,8 +307,6 @@ end
 theorem exists_solution :
     ∃ f : ℝ → E, f v.t₀ = v.x₀ ∧ ∀, ∀ t ∈ Icc v.tMin v.tMax, ∀, HasDerivWithinAt f (v t (f t)) (Icc v.tMin v.tMax) t :=
   by
-  let this' : MeasurableSpace E := borel E
-  have : BorelSpace E := ⟨rfl⟩
   rcases v.exists_fixed with ⟨f, hf⟩
   refine' ⟨f ∘ v.proj, _, fun t ht => _⟩
   · simp only [(· ∘ ·), proj_coe, f.map_t₀]
@@ -325,8 +319,8 @@ theorem exists_solution :
 end PicardLindelof
 
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
-theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] [SecondCountableTopology E]
-    {v : ℝ → E → E} {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0 }
+theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] {v : ℝ → E → E}
+    {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L : ℝ≥0 }
     (Hlip : ∀, ∀ t ∈ Icc t_min t_max, ∀, LipschitzOnWith L (v t) (ClosedBall x₀ R))
     (Hcont : ∀, ∀ x ∈ ClosedBall x₀ R, ∀, ContinuousOn (fun t => v t x) (Icc t_min t_max))
     (Hnorm : ∀, ∀ t ∈ Icc t_min t_max, ∀, ∀ x ∈ ClosedBall x₀ R, ∀, ∥v t x∥ ≤ C)

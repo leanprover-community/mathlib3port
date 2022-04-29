@@ -42,7 +42,7 @@ discrete valuation ring
 -/
 
 
-open_locale Classical
+open Classical
 
 universe u
 
@@ -132,7 +132,7 @@ theorem iff_pid_with_one_nonzero_prime (R : Type u) [CommRingₓ R] [IsDomain R]
       
     
   · rintro ⟨RPID, Punique⟩
-    have : LocalRing R := local_of_unique_nonzero_prime R Punique
+    have : LocalRing R := LocalRing.of_unique_nonzero_prime Punique
     refine' { not_a_field' := _ }
     rcases Punique with ⟨P, ⟨hP1, hP2⟩, hP3⟩
     have hPM : P ≤ maximal_ideal R := le_maximal_ideal hP2.1
@@ -314,7 +314,7 @@ is a discrete valuation ring.
 -/
 theorem of_has_unit_mul_pow_irreducible_factorization {R : Type u} [CommRingₓ R] [IsDomain R]
     (hR : HasUnitMulPowIrreducibleFactorization R) : DiscreteValuationRing R := by
-  let this' : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
+  let this : UniqueFactorizationMonoid R := hR.to_unique_factorization_monoid
   apply of_ufd_of_unique_irreducible _ hR.unique_irreducible
   obtain ⟨p, hp, H⟩ := hR
   exact ⟨p, hp⟩
@@ -374,8 +374,7 @@ theorem unit_mul_pow_congr_pow {p q : R} (hp : Irreducible p) (hq : Irreducible 
     
   all_goals
     intro x hx
-    replace hx := Multiset.eq_of_mem_repeat hx
-    subst hx
+    obtain rfl := Multiset.eq_of_mem_repeat hx
     assumption
 
 theorem unit_mul_pow_congr_unit {ϖ : R} (hirr : Irreducible ϖ) (u v : Rˣ) (m n : ℕ) (h : ↑u * ϖ ^ m = v * ϖ ^ n) :

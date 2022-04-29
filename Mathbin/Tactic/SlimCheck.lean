@@ -242,7 +242,7 @@ unsafe def slim_check (cfg : SlimCheckCfg := {  }) : tactic Unit := do
             [testable instance]{← format.indent inst 2}"
   let code ← eval_expr (Io PUnit) e
   unsafe_run_io code
-  admit
+  tactic.admit
 
 end Tactic.Interactive
 

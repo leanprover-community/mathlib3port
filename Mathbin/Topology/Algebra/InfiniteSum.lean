@@ -5,7 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Mathbin.Algebra.BigOperators.Intervals
 import Mathbin.Algebra.BigOperators.NatAntidiagonal
-import Mathbin.Data.Equiv.Encodable.Lattice
+import Mathbin.Logic.Encodable.Lattice
 import Mathbin.Topology.Algebra.MulAction
 import Mathbin.Topology.Algebra.Order.MonotoneConvergence
 import Mathbin.Topology.Instances.Real
@@ -31,7 +31,7 @@ noncomputable section
 
 open Finset Filter Function Classical
 
-open_locale TopologicalSpace Classical BigOperators Nnreal
+open TopologicalSpace Classical BigOperators Nnreal
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -201,13 +201,13 @@ theorem Equivₓ.summable_iff_of_support {g : γ → α} (e : Support f ≃ Supp
     Summable f ↔ Summable g :=
   exists_congr fun _ => e.has_sum_iff_of_support he
 
-protected theorem HasSum.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : HasSum f a) (g : α →+ γ)
-    (hg : Continuous g) : HasSum (g ∘ f) (g a) :=
-  have : (g ∘ fun s : Finset β => ∑ b in s, f b) = fun s : Finset β => ∑ b in s, g (f b) := funext <| g.map_sum _
+protected theorem HasSum.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : HasSum f a) {G} [AddMonoidHomClass G α γ]
+    (g : G) (hg : Continuous g) : HasSum (g ∘ f) (g a) :=
+  have : (g ∘ fun s : Finset β => ∑ b in s, f b) = fun s : Finset β => ∑ b in s, g (f b) := funext <| map_sum g _
   show Tendsto (fun s : Finset β => ∑ b in s, g (f b)) atTop (𝓝 (g a)) from this ▸ (hg.Tendsto a).comp hf
 
-protected theorem Summable.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : Summable f) (g : α →+ γ)
-    (hg : Continuous g) : Summable (g ∘ f) :=
+protected theorem Summable.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : Summable f) {G} [AddMonoidHomClass G α γ]
+    (g : G) (hg : Continuous g) : Summable (g ∘ f) :=
   (hf.HasSum.map g hg).Summable
 
 /-- If `f : ℕ → α` has sum `a`, then the partial sums `∑_{i=0}^{n-1} f i` converge to `a`. -/
@@ -223,13 +223,10 @@ theorem Summable.has_sum_iff_tendsto_nat [T2Space α] {f : ℕ → α} {a : α} 
   rw [tendsto_nhds_unique h hf.has_sum.tendsto_sum_nat]
   exact hf.has_sum
 
-theorem Equivₓ.summable_iff_of_has_sum_iff {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α'] (e : α' ≃ α)
-    {f : β → α} {g : γ → α'} (he : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : Summable f ↔ Summable g :=
-  ⟨fun ⟨a, ha⟩ =>
-    ⟨e.symm a,
-      he.1 <| by
-        rwa [e.apply_symm_apply]⟩,
-    fun ⟨a, ha⟩ => ⟨e a, he.2 ha⟩⟩
+theorem Function.Surjective.summable_iff_of_has_sum_iff {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α']
+    {e : α' → α} (hes : Function.Surjective e) {f : β → α} {g : γ → α'} (he : ∀ {a}, HasSum f (e a) ↔ HasSum g a) :
+    Summable f ↔ Summable g :=
+  hes.exists.trans <| exists_congr <| @he
 
 variable [HasContinuousAdd α]
 
@@ -383,15 +380,16 @@ theorem tsum_dite_left (P : Prop) [Decidable P] (x : β → P → α) :
     (∑' b : β, if h : P then x b h else 0) = if h : P then ∑' b : β, x b h else 0 := by
   by_cases' hP : P <;> simp [hP]
 
-theorem Equivₓ.tsum_eq_tsum_of_has_sum_iff_has_sum {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α'] (e : α' ≃ α)
-    (h0 : e 0 = 0) {f : β → α} {g : γ → α'} (h : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : (∑' b, f b) = e (∑' c, g c) :=
+theorem Function.Surjective.tsum_eq_tsum_of_has_sum_iff_has_sum {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α']
+    {e : α' → α} (hes : Function.Surjective e) (h0 : e 0 = 0) {f : β → α} {g : γ → α'}
+    (h : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : (∑' b, f b) = e (∑' c, g c) :=
   by_cases (fun this : Summable g => (h.mpr this.HasSum).tsum_eq) fun hg : ¬Summable g => by
-    have hf : ¬Summable f := mt (e.summable_iff_of_has_sum_iff @h).1 hg
+    have hf : ¬Summable f := mt (hes.summable_iff_of_has_sum_iff @h).1 hg
     simp [tsum, hf, hg, h0]
 
 theorem tsum_eq_tsum_of_has_sum_iff_has_sum {f : β → α} {g : γ → α} (h : ∀ {a}, HasSum f a ↔ HasSum g a) :
     (∑' b, f b) = ∑' c, g c :=
-  (Equivₓ.refl α).tsum_eq_tsum_of_has_sum_iff_has_sum rfl @h
+  surjective_id.tsum_eq_tsum_of_has_sum_iff_has_sum rfl @h
 
 theorem Equivₓ.tsum_eq (j : γ ≃ β) (f : β → α) : (∑' c, f (j c)) = ∑' b, f b :=
   tsum_eq_tsum_of_has_sum_iff_has_sum fun a => j.has_sum_iff
@@ -693,7 +691,8 @@ theorem has_sum_nat_add_iff {f : ℕ → α} (k : ℕ) {a : α} :
   rfl
 
 theorem summable_nat_add_iff {f : ℕ → α} (k : ℕ) : (Summable fun n => f (n + k)) ↔ Summable f :=
-  Iff.symm <| (Equivₓ.addRight (∑ i in range k, f i)).summable_iff_of_has_sum_iff fun a => (has_sum_nat_add_iff k).symm
+  Iff.symm <|
+    (Equivₓ.addRight (∑ i in range k, f i)).Surjective.summable_iff_of_has_sum_iff fun a => (has_sum_nat_add_iff k).symm
 
 theorem has_sum_nat_add_iff' {f : ℕ → α} (k : ℕ) {a : α} :
     HasSum (fun n => f (n + k)) (a - ∑ i in range k, f i) ↔ HasSum f a := by
@@ -729,9 +728,9 @@ end Subtype
 
 end TopologicalGroup
 
-section TopologicalRing
+section TopologicalSemiring
 
-variable [Semiringₓ α] [TopologicalSpace α] [TopologicalRing α]
+variable [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α]
 
 variable {f g : β → α} {a a₁ a₂ : α}
 
@@ -759,7 +758,7 @@ theorem Summable.tsum_mul_right a (hf : Summable f) : (∑' b, f b * a) = (∑' 
 
 end tsum
 
-end TopologicalRing
+end TopologicalSemiring
 
 section ConstSmul
 
@@ -1173,8 +1172,8 @@ variable {G : Type _} [TopologicalSpace G] [AddCommGroupₓ G] [TopologicalAddGr
 
 theorem Summable.vanishing (hf : Summable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (0 : G)) :
     ∃ s : Finset α, ∀ t, Disjoint t s → (∑ k in t, f k) ∈ e := by
-  let this' : UniformSpace G := TopologicalAddGroup.toUniformSpace G
-  let this' : UniformAddGroup G := topological_add_group_is_uniform
+  let this : UniformSpace G := TopologicalAddGroup.toUniformSpace G
+  let this : UniformAddGroup G := topological_add_group_is_uniform
   rcases hf with ⟨y, hy⟩
   exact cauchy_seq_finset_iff_vanishing.1 hy.cauchy_seq e he
 
@@ -1341,7 +1340,8 @@ We first establish results about arbitrary index types, `β` and `γ`, and then 
 
 section tsum_mul_tsum
 
-variable [TopologicalSpace α] [RegularSpace α] [Semiringₓ α] [TopologicalRing α] {f : β → α} {g : γ → α} {s t u : α}
+variable [TopologicalSpace α] [RegularSpace α] [NonUnitalNonAssocSemiringₓ α] [TopologicalSemiring α] {f : β → α}
+  {g : γ → α} {s t u : α}
 
 theorem HasSum.mul_eq (hf : HasSum f s) (hg : HasSum g t) (hfg : HasSum (fun x : β × γ => f x.1 * g x.2) u) :
     s * t = u :=
@@ -1379,7 +1379,7 @@ variable {f : ℕ → α} {g : ℕ → α}
 
 open Finset
 
-variable [TopologicalSpace α] [Semiringₓ α]
+variable [TopologicalSpace α] [NonUnitalNonAssocSemiringₓ α]
 
 /- The family `(k, l) : ℕ × ℕ ↦ f k * g l` is summable if and only if the family
 `(n, k, l) : Σ (n : ℕ), nat.antidiagonal n ↦ f k * g l` is summable. -/
@@ -1388,7 +1388,7 @@ theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α}
       Summable fun x : Σn : ℕ, Nat.antidiagonal n => f (x.2 : ℕ × ℕ).1 * g (x.2 : ℕ × ℕ).2 :=
   Nat.sigmaAntidiagonalEquivProd.summable_iff.symm
 
-variable [RegularSpace α] [TopologicalRing α]
+variable [RegularSpace α] [TopologicalSemiring α]
 
 theorem summable_sum_mul_antidiagonal_of_summable_mul {f g : ℕ → α} (h : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
     Summable fun n => ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 := by

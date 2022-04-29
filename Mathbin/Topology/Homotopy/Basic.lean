@@ -61,7 +61,7 @@ variable {F : Type _} {X : Type u} {Y : Type v} {Z : Type w}
 
 variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
 
-open_locale UnitInterval
+open UnitInterval
 
 namespace ContinuousMap
 

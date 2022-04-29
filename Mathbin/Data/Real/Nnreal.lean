@@ -48,13 +48,13 @@ This file defines `ℝ≥0` as a localized notation for `nnreal`.
 -/
 
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 /-- Nonnegative real numbers. -/
 -- to ensure these instance are computable
 def Nnreal :=
-  { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, SemilatticeInf, DenselyOrdered, OrderBot,
-  CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,
+  { r : ℝ // 0 ≤ r }deriving OrderedSemiring, CommMonoidWithZero, FloorSemiring, SemilatticeInf, DenselyOrdered,
+  OrderBot, CanonicallyLinearOrderedAddMonoid, LinearOrderedCommGroupWithZero, Archimedean, LinearOrderedSemiring,
   OrderedCommSemiring, CanonicallyOrderedCommSemiring, Sub, HasOrderedSub, Div, Inhabited
 
 -- mathport name: «exprℝ≥0»
@@ -393,6 +393,10 @@ example : DenselyOrdered ℝ≥0 := by
 example : NoMaxOrder ℝ≥0 := by
   infer_instance
 
+-- note we need the `@` to make the `has_mem.mem` have a sensible type
+theorem coe_image {s : Set ℝ≥0 } : coe '' s = { x : ℝ | ∃ h : 0 ≤ x, @HasMem.Mem ℝ≥0 _ _ ⟨x, h⟩ s } :=
+  Subtype.coe_image
+
 theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coe : ℝ≥0 → ℝ) '' s) ↔ BddAbove s :=
   Iff.intro
     (fun ⟨b, hb⟩ =>
@@ -405,11 +409,21 @@ theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coe : ℝ≥0 → ℝ) '' 
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
+@[norm_cast]
 theorem coe_Sup (s : Set ℝ≥0 ) : (↑(sup s) : ℝ) = sup ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <| @subset_Sup_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s <| (Real.Sup_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
+@[norm_cast]
+theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0 ) : (↑(⨆ i, s i) : ℝ) = ⨆ i, s i := by
+  rw [supr, supr, coe_Sup, Set.range_comp]
+
+@[norm_cast]
 theorem coe_Inf (s : Set ℝ≥0 ) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <| @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+
+@[norm_cast]
+theorem coe_infi {ι : Sort _} (s : ι → ℝ≥0 ) : (↑(⨅ i, s i) : ℝ) = ⨅ i, s i := by
+  rw [infi, infi, coe_Inf, Set.range_comp]
 
 example : Archimedean ℝ≥0 := by
   infer_instance
@@ -450,20 +464,17 @@ theorem lt_iff_exists_rat_btwn (a b : ℝ≥0 ) : a < b ↔ ∃ q : ℚ, 0 ≤ q
 theorem bot_eq_zero : (⊥ : ℝ≥0 ) = 0 :=
   rfl
 
-theorem mul_sup (a b c : ℝ≥0 ) : a * (b⊔c) = a * b⊔a * c := by
-  cases' le_totalₓ b c with h h
-  · simp [sup_eq_max, max_eq_rightₓ h, max_eq_rightₓ (mul_le_mul_of_nonneg_left h (zero_le a))]
-    
-  · simp [sup_eq_max, max_eq_leftₓ h, max_eq_leftₓ (mul_le_mul_of_nonneg_left h (zero_le a))]
-    
+theorem mul_sup (a b c : ℝ≥0 ) : a * (b⊔c) = a * b⊔a * c :=
+  mul_max_of_nonneg _ _ <| zero_le a
 
-theorem mul_finset_sup {α} {f : α → ℝ≥0 } {s : Finset α} (r : ℝ≥0 ) : r * s.sup f = s.sup fun a => r * f a := by
-  refine' s.induction_on _ _
-  · simp [bot_eq_zero]
-    
-  · intro a s has ih
-    simp [has, ih, mul_sup]
-    
+theorem sup_mul (a b c : ℝ≥0 ) : (a⊔b) * c = a * c⊔b * c :=
+  max_mul_of_nonneg _ _ <| zero_le c
+
+theorem mul_finset_sup {α} (r : ℝ≥0 ) (s : Finset α) (f : α → ℝ≥0 ) : r * s.sup f = s.sup fun a => r * f a :=
+  Finset.comp_sup_eq_sup_comp _ (Nnreal.mul_sup r) (mul_zero r)
+
+theorem finset_sup_mul {α} (s : Finset α) (f : α → ℝ≥0 ) (r : ℝ≥0 ) : s.sup f * r = s.sup fun a => f a * r :=
+  Finset.comp_sup_eq_sup_comp (· * r) (fun x y => Nnreal.sup_mul x y r) (zero_mul r)
 
 theorem finset_sup_div {α} {f : α → ℝ≥0 } {s : Finset α} (r : ℝ≥0 ) : s.sup f / r = s.sup fun a => f a / r := by
   simp only [div_eq_inv_mul, mul_finset_sup]
@@ -817,7 +828,7 @@ theorem inv_lt_one {x : ℝ≥0 } (hx : 1 < x) : x⁻¹ < 1 :=
 
 theorem zpow_pos {x : ℝ≥0 } (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n := by
   cases n
-  · exact pow_pos hx.bot_lt _
+  · simp [pow_pos hx.bot_lt _]
     
   · simp [pow_pos hx.bot_lt _]
     

@@ -6,7 +6,7 @@ Authors: Chris Hughes
 import Mathbin.NumberTheory.Zsqrtd.Basic
 import Mathbin.Data.Complex.Basic
 import Mathbin.RingTheory.PrincipalIdealDomain
-import Mathbin.NumberTheory.QuadraticReciprocity
+import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 /-!
 # Gaussian integers
@@ -39,6 +39,7 @@ and definitions about `zsqrtd` can easily be used.
 
 open Zsqrtd Complex
 
+/-- The Gaussian integers, defined as `ℤ√(-1)`. -/
 @[reducible]
 def GaussianInt : Type :=
   Zsqrtd (-1)
@@ -161,13 +162,11 @@ theorem nat_abs_norm_eq (x : ℤ[i]) : x.norm.natAbs = x.re.natAbs * x.re.natAbs
     simp
     simp [norm]
 
-protected def div (x y : ℤ[i]) : ℤ[i] :=
-  let n := (Rat.ofInt (norm y))⁻¹
-  let c := y.conj
-  ⟨round (Rat.ofInt (x * c).re * n : ℚ), round (Rat.ofInt (x * c).im * n : ℚ)⟩
-
 instance : Div ℤ[i] :=
-  ⟨GaussianInt.div⟩
+  ⟨fun x y =>
+    let n := (Rat.ofInt (norm y))⁻¹
+    let c := y.conj
+    ⟨round (Rat.ofInt (x * c).re * n : ℚ), round (Rat.ofInt (x * c).im * n : ℚ)⟩⟩
 
 theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x * conj y).re / norm y : ℚ), round ((x * conj y).im / norm y : ℚ)⟩ :=
   show Zsqrtd.mk _ _ = _ by
@@ -207,11 +206,8 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
       simp [norm_sq] <;> norm_num
     
 
-protected def mod (x y : ℤ[i]) : ℤ[i] :=
-  x - y * (x / y)
-
 instance : Mod ℤ[i] :=
-  ⟨GaussianInt.mod⟩
+  ⟨fun x y => x - y * (x / y)⟩
 
 theorem mod_def (x y : ℤ[i]) : x % y = x - y * (x / y) :=
   rfl
@@ -282,7 +278,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
         generalize p % 4 = m
         decide!
       let ⟨k, hk⟩ :=
-        (Zmod.exists_sq_eq_neg_one_iff_mod_four_ne_three p).2 <| by
+        (Zmod.exists_sq_eq_neg_one_iff p).2 <| by
           rw [hp41] <;>
             exact by
               decide

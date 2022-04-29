@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Data.Equiv.Fin
 import Mathbin.Data.Tprod
 import Mathbin.GroupTheory.Coset
+import Mathbin.Logic.Equiv.Fin
 import Mathbin.MeasureTheory.MeasurableSpaceDef
 import Mathbin.MeasureTheory.Tactic
 import Mathbin.Order.Filter.Lift
@@ -61,7 +61,7 @@ measurable space, σ-algebra, measurable function, measurable equivalence, dynki
 
 open Set Encodable Function Equivₓ
 
-open_locale Filter MeasureTheory
+open Filter MeasureTheory
 
 variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
@@ -198,11 +198,11 @@ theorem measurable_generate_from [MeasurableSpace α] {s : Set (Set β)} {f : α
     (h : ∀, ∀ t ∈ s, ∀, MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generateFrom s) f :=
   Measurable.of_le_map <| generate_from_le h
 
-variable [MeasurableSpace β] [MeasurableSpace γ] {f g : α → β}
+variable {f g : α → β}
 
 section TypeclassMeasurableSpace
 
-variable [MeasurableSpace α]
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 @[nontriviality, measurability]
 theorem Subsingleton.measurable [Subsingleton α] : Measurable f := fun s hs => @Subsingleton.measurable_set α _ _ _
@@ -225,7 +225,7 @@ theorem measurable_of_empty_codomain [IsEmpty β] (f : α → β) : Measurable f
 /-- A version of `measurable_const` that assumes `f x = f y` for all `x, y`. This version works
 for functions between empty types. -/
 theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable f := by
-  cases' is_empty_or_nonempty β
+  cases is_empty_or_nonempty β
   · exact measurable_of_empty f
     
   · convert measurable_const
@@ -242,13 +242,17 @@ variable {m : MeasurableSpace α}
 include m
 
 @[measurability]
-theorem measurable_set_preimage {t : Set β} (hf : Measurable f) (ht : MeasurableSet t) : MeasurableSet (f ⁻¹' t) :=
-  hf ht
-
-@[measurability]
 theorem Measurable.iterate {f : α → α} (hf : Measurable f) : ∀ n, Measurable (f^[n])
   | 0 => measurable_id
   | n + 1 => (Measurable.iterate n).comp hf
+
+variable {mβ : MeasurableSpace β}
+
+include mβ
+
+@[measurability]
+theorem measurable_set_preimage {t : Set β} (hf : Measurable f) (ht : MeasurableSet t) : MeasurableSet (f ⁻¹' t) :=
+  hf ht
 
 @[measurability]
 theorem Measurable.piecewise {_ : DecidablePred (· ∈ s)} (hs : MeasurableSet s) (hf : Measurable f)
@@ -293,8 +297,6 @@ end MeasurableFunctions
 
 section Constructions
 
-variable [MeasurableSpace β] [MeasurableSpace γ]
-
 instance : MeasurableSpace Empty :=
   ⊤
 
@@ -332,8 +334,8 @@ instance : MeasurableSingletonClass ℤ :=
 instance : MeasurableSingletonClass ℚ :=
   ⟨fun _ => trivialₓ⟩
 
-theorem measurable_to_encodable [MeasurableSpace α] [Encodable α] {f : β → α} (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) :
-    Measurable f := by
+theorem measurable_to_encodable [MeasurableSpace α] [Encodable α] [MeasurableSpace β] {f : β → α}
+    (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) : Measurable f := by
   intro s hs
   rw [← bUnion_preimage_singleton]
   refine' MeasurableSet.Union fun y => MeasurableSet.Union_Prop fun hy => _
@@ -364,6 +366,7 @@ theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePre
     Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat fun x => hN _ N.find_greatest_le
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem measurable_find_greatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀, ∀ k ≤ N, ∀, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N := by
   refine' measurable_find_greatest' fun k hk => _
@@ -384,7 +387,7 @@ end Nat
 
 section Quotientₓ
 
-variable [MeasurableSpace α]
+variable [MeasurableSpace α] [MeasurableSpace β]
 
 instance {α} {r : α → α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Quot r) :=
   m.map (Quot.mk r)
@@ -450,9 +453,17 @@ instance {p : α → Prop} [MeasurableSingletonClass α] : MeasurableSingletonCl
 
 end
 
-variable {m : MeasurableSpace α}
+variable {m : MeasurableSpace α} {mβ : MeasurableSpace β}
 
 include m
+
+theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet s) :
+    MeasurableSet t → MeasurableSet ((coe : s → α) '' t)
+  | ⟨u, (hu : MeasurableSet u), (Eq : coe ⁻¹' u = t)⟩ => by
+    rw [← Eq, Subtype.image_preimage_coe]
+    exact hu.inter hs
+
+include mβ
 
 @[measurability]
 theorem Measurable.subtype_coe {p : β → Prop} {f : α → Subtype p} (hf : Measurable f) :
@@ -465,12 +476,6 @@ theorem Measurable.subtype_mk {p : β → Prop} {f : α → β} (hf : Measurable
   hs.2 ▸ by
     simp only [← preimage_comp, (· ∘ ·), Subtype.coe_mk, hf hs.1]
 
-theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet s) :
-    MeasurableSet t → MeasurableSet ((coe : s → α) '' t)
-  | ⟨u, (hu : MeasurableSet u), (Eq : coe ⁻¹' u = t)⟩ => by
-    rw [← Eq, Subtype.image_preimage_coe]
-    exact hu.inter hs
-
 theorem measurable_of_measurable_union_cover {f : α → β} (s t : Set α) (hs : MeasurableSet s) (ht : MeasurableSet t)
     (h : univ ⊆ s ∪ t) (hc : Measurable fun a : s => f a) (hd : Measurable fun a : t => f a) : Measurable f := by
   intro u hu
@@ -480,7 +485,7 @@ theorem measurable_of_measurable_union_cover {f : α → β} (s t : Set α) (hs 
     inter_distrib_left, univ_subset_iff.1 h, inter_univ]
 
 theorem measurable_of_restrict_of_restrict_compl {f : α → β} {s : Set α} (hs : MeasurableSet s)
-    (h₁ : Measurable (restrict f s)) (h₂ : Measurable (restrict f (sᶜ))) : Measurable f :=
+    (h₁ : Measurable (s.restrict f)) (h₂ : Measurable (sᶜ.restrict f)) : Measurable f :=
   measurable_of_measurable_union_cover s (sᶜ) hs hs.Compl (union_compl_self s).Ge h₁ h₂
 
 theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measurable f) {g : sᶜ → β} (hg : Measurable g)
@@ -492,32 +497,36 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
       simpa)
 
 theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : Finite s)
-    (hf : Measurable (Set.restrict f (sᶜ))) : Measurable f := by
-  let this' : Fintype s := finite.fintype hs
+    (hf : Measurable (sᶜ.restrict f)) : Measurable f := by
+  let this : Fintype s := finite.fintype hs
   exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf
 
 theorem measurable_of_measurable_on_compl_singleton [MeasurableSingletonClass α] {f : α → β} (a : α)
-    (hf : Measurable (Set.restrict f { x | x ≠ a })) : Measurable f :=
+    (hf : Measurable ({ x | x ≠ a }.restrict f)) : Measurable f :=
   measurable_of_measurable_on_compl_finite {a} (finite_singleton a) hf
 
 end Subtype
 
 section Prod
 
-instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
+/-- A `measurable_space` structure on the product of two measurable spaces. -/
+def MeasurableSpace.prod {α β} (m₁ : MeasurableSpace α) (m₂ : MeasurableSpace β) : MeasurableSpace (α × β) :=
   m₁.comap Prod.fst⊔m₂.comap Prod.snd
 
+instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
+  m₁.Prod m₂
+
 @[measurability]
-theorem measurable_fst [MeasurableSpace α] : Measurable (Prod.fst : α × β → α) :=
+theorem measurable_fst [MeasurableSpace α] [MeasurableSpace β] : Measurable (Prod.fst : α × β → α) :=
   Measurable.of_comap_le le_sup_left
 
 @[measurability]
-theorem measurable_snd [MeasurableSpace α] : Measurable (Prod.snd : α × β → β) :=
+theorem measurable_snd [MeasurableSpace α] [MeasurableSpace β] : Measurable (Prod.snd : α × β → β) :=
   Measurable.of_comap_le le_sup_right
 
-variable {m : MeasurableSpace α}
+variable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
 
-include m
+include m mβ mγ
 
 theorem Measurable.fst {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).1 :=
   measurable_fst.comp hf
@@ -537,9 +546,15 @@ theorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a)
         rw [MeasurableSpace.comap_le_iff_le_map, MeasurableSpace.map_comp]
         exact hf₂)
 
-theorem Measurable.prod_mk {f : α → β} {g : α → γ} (hf : Measurable f) (hg : Measurable g) :
-    Measurable fun a : α => (f a, g a) :=
+theorem Measurable.prod_mk {β γ} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {f : α → β} {g : α → γ}
+    (hf : Measurable f) (hg : Measurable g) : Measurable fun a : α => (f a, g a) :=
   Measurable.prod hf hg
+
+theorem Measurable.prod_map [MeasurableSpace δ] {f : α → β} {g : γ → δ} (hf : Measurable f) (hg : Measurable g) :
+    Measurable (Prod.map f g) :=
+  (hf.comp measurable_fst).prod_mk (hg.comp measurable_snd)
+
+omit mγ
 
 theorem measurable_prod_mk_left {x : α} : Measurable (@Prod.mk _ β x) :=
   measurable_const.prod_mk measurable_id
@@ -547,9 +562,7 @@ theorem measurable_prod_mk_left {x : α} : Measurable (@Prod.mk _ β x) :=
 theorem measurable_prod_mk_right {y : β} : Measurable fun x : α => (x, y) :=
   measurable_id.prod_mk measurable_const
 
-theorem Measurable.prod_map [MeasurableSpace δ] {f : α → β} {g : γ → δ} (hf : Measurable f) (hg : Measurable g) :
-    Measurable (Prod.map f g) :=
-  (hf.comp measurable_fst).prod_mk (hg.comp measurable_snd)
+include mγ
 
 theorem Measurable.of_uncurry_left {f : α → β → γ} (hf : Measurable (uncurry f)) {x : α} : Measurable (f x) :=
   hf.comp measurable_prod_mk_left
@@ -557,23 +570,20 @@ theorem Measurable.of_uncurry_left {f : α → β → γ} (hf : Measurable (uncu
 theorem Measurable.of_uncurry_right {f : α → β → γ} (hf : Measurable (uncurry f)) {y : β} : Measurable fun x => f x y :=
   hf.comp measurable_prod_mk_right
 
-omit m
-
-theorem measurable_prod [MeasurableSpace α] {f : α → β × γ} :
-    Measurable f ↔ (Measurable fun a => (f a).1) ∧ Measurable fun a => (f a).2 :=
+theorem measurable_prod {f : α → β × γ} : Measurable f ↔ (Measurable fun a => (f a).1) ∧ Measurable fun a => (f a).2 :=
   ⟨fun hf => ⟨measurable_fst.comp hf, measurable_snd.comp hf⟩, fun h => Measurable.prod h.1 h.2⟩
 
+omit mγ
+
 @[measurability]
-theorem measurable_swap [MeasurableSpace α] : Measurable (Prod.swap : α × β → β × α) :=
+theorem measurable_swap : Measurable (Prod.swap : α × β → β × α) :=
   Measurable.prod measurable_snd measurable_fst
 
-theorem measurable_swap_iff [MeasurableSpace α] {f : α × β → γ} : Measurable (f ∘ Prod.swap) ↔ Measurable f :=
+theorem measurable_swap_iff {mγ : MeasurableSpace γ} {f : α × β → γ} : Measurable (f ∘ Prod.swap) ↔ Measurable f :=
   ⟨fun hf => by
     convert hf.comp measurable_swap
     ext ⟨x, y⟩
     rfl, fun hf => hf.comp measurable_swap⟩
-
-include m
 
 @[measurability]
 theorem MeasurableSet.prod {s : Set α} {t : Set β} (hs : MeasurableSet s) (ht : MeasurableSet t) :
@@ -584,8 +594,8 @@ theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t := by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
   refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
-  have : MeasurableSet ((fun x => (x, y)) ⁻¹' (s ×ˢ t)) := measurable_id.prod_mk measurable_const hst
-  have : MeasurableSet (Prod.mk x ⁻¹' (s ×ˢ t)) := measurable_const.prod_mk measurable_id hst
+  have : MeasurableSet ((fun x => (x, y)) ⁻¹' s ×ˢ t) := measurable_id.prod_mk measurable_const hst
+  have : MeasurableSet (Prod.mk x ⁻¹' s ×ˢ t) := measurable_const.prod_mk measurable_id hst
   simp_all
 
 theorem measurable_set_prod {s : Set α} {t : Set β} :
@@ -602,12 +612,10 @@ theorem measurable_set_swap_iff {s : Set (α × β)} : MeasurableSet (Prod.swap 
     ext ⟨x, y⟩
     rfl, fun hs => measurable_swap hs⟩
 
-omit m
-
-theorem measurable_from_prod_encodable [MeasurableSpace α] [Encodable β] [MeasurableSingletonClass β] {f : α × β → γ}
-    (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f := by
+theorem measurable_from_prod_encodable [Encodable β] [MeasurableSingletonClass β] {mγ : MeasurableSpace γ}
+    {f : α × β → γ} (hf : ∀ y, Measurable fun x => f (x, y)) : Measurable f := by
   intro s hs
-  have : f ⁻¹' s = ⋃ y, (fun x => f (x, y)) ⁻¹' s ×ˢ ({y} : Set β) := by
+  have : f ⁻¹' s = ⋃ y, ((fun x => f (x, y)) ⁻¹' s) ×ˢ ({y} : Set β) := by
     ext1 ⟨x, y⟩
     simp [and_assoc, And.left_comm]
   rw [this]
@@ -758,7 +766,7 @@ end
 
 section Fintype
 
-attribute [local instance] Fintype.encodable
+attribute [local instance] Fintype.toEncodable
 
 theorem MeasurableSet.pi_fintype [Fintype δ] {s : Set δ} {t : ∀ i, Set (π i)}
     (ht : ∀, ∀ i ∈ s, ∀, MeasurableSet (t i)) : MeasurableSet (Pi s t) :=
@@ -819,24 +827,24 @@ instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : Measu
 section Sum
 
 @[measurability]
-theorem measurable_inl [MeasurableSpace α] : Measurable (@Sum.inl α β) :=
+theorem measurable_inl [MeasurableSpace α] [MeasurableSpace β] : Measurable (@Sum.inl α β) :=
   Measurable.of_le_map inf_le_left
 
 @[measurability]
-theorem measurable_inr [MeasurableSpace α] : Measurable (@Sum.inr α β) :=
+theorem measurable_inr [MeasurableSpace α] [MeasurableSpace β] : Measurable (@Sum.inr α β) :=
   Measurable.of_le_map inf_le_right
 
-variable {m : MeasurableSpace α}
+variable {m : MeasurableSpace α} {mβ : MeasurableSpace β}
 
-include m
+include m mβ
 
-theorem measurable_sum {f : Sum α β → γ} (hl : Measurable (f ∘ Sum.inl)) (hr : Measurable (f ∘ Sum.inr)) :
-    Measurable f :=
+theorem measurable_sum {mγ : MeasurableSpace γ} {f : Sum α β → γ} (hl : Measurable (f ∘ Sum.inl))
+    (hr : Measurable (f ∘ Sum.inr)) : Measurable f :=
   Measurable.of_comap_le <|
     le_inf (MeasurableSpace.comap_le_iff_le_map.2 <| hl) (MeasurableSpace.comap_le_iff_le_map.2 <| hr)
 
 @[measurability]
-theorem Measurable.sum_elim {f : α → γ} {g : β → γ} (hf : Measurable f) (hg : Measurable g) :
+theorem Measurable.sum_elim {mγ : MeasurableSpace γ} {f : α → γ} {g : β → γ} (hf : Measurable f) (hg : Measurable g) :
     Measurable (Sum.elim f g) :=
   measurable_sum hf hg
 
@@ -1316,6 +1324,27 @@ def piFinTwo (α : Finₓ 2 → Type _) [∀ i, MeasurableSpace (α i)] : (∀ i
 def finTwoArrow : (Finₓ 2 → α) ≃ᵐ α × α :=
   piFinTwo fun _ => α
 
+/-- Measurable equivalence between `Π j : fin (n + 1), α j` and
+`α i × Π j : fin n, α (fin.succ_above i j)`. -/
+@[simps (config := { fullyApplied := false })]
+def piFinSuccAboveEquiv {n : ℕ} (α : Finₓ (n + 1) → Type _) [∀ i, MeasurableSpace (α i)] (i : Finₓ (n + 1)) :
+    (∀ j, α j) ≃ᵐ α i × ∀ j, α (i.succAbove j) where
+  toEquiv := piFinSuccAboveEquiv α i
+  measurable_to_fun := (measurable_pi_apply i).prod_mk <| measurable_pi_iff.2 fun j => measurable_pi_apply _
+  measurable_inv_fun := by
+    simp [measurable_pi_iff, i.forall_iff_succ_above, measurable_fst, (measurable_pi_apply _).comp measurable_snd]
+
+variable (π)
+
+/-- Measurable equivalence between (dependent) functions on a type and pairs of functions on
+`{i // p i}` and `{i // ¬p i}`. See also `equiv.pi_equiv_pi_subtype_prod`. -/
+@[simps (config := { fullyApplied := false })]
+def piEquivPiSubtypeProd (p : δ' → Prop) [DecidablePred p] :
+    (∀ i, π i) ≃ᵐ (∀ i : Subtype p, π i) × ∀ i : { i // ¬p i }, π i where
+  toEquiv := piEquivPiSubtypeProd p π
+  measurable_to_fun := measurable_pi_equiv_pi_subtype_prod π p
+  measurable_inv_fun := measurable_pi_equiv_pi_subtype_prod_symm π p
+
 end MeasurableEquiv
 
 namespace MeasurableEmbedding
@@ -1361,9 +1390,9 @@ theorem Eventually.exists_measurable_mem {f : Filter α} [IsMeasurablyGenerated 
     ∃ s ∈ f, MeasurableSet s ∧ ∀, ∀ x ∈ s, ∀, p x :=
   IsMeasurablyGenerated.exists_measurable_subset h
 
-theorem Eventually.exists_measurable_mem_of_lift' {f : Filter α} [IsMeasurablyGenerated f] {p : Set α → Prop}
-    (h : ∀ᶠ s in f.lift' Powerset, p s) : ∃ s ∈ f, MeasurableSet s ∧ p s :=
-  let ⟨s, hsf, hs⟩ := eventually_lift'_powerset.1 h
+theorem Eventually.exists_measurable_mem_of_small_sets {f : Filter α} [IsMeasurablyGenerated f] {p : Set α → Prop}
+    (h : ∀ᶠ s in f.smallSets, p s) : ∃ s ∈ f, MeasurableSet s ∧ p s :=
+  let ⟨s, hsf, hs⟩ := eventually_small_sets.1 h
   let ⟨t, htf, htm, hts⟩ := IsMeasurablyGenerated.exists_measurable_subset hsf
   ⟨t, htf, htm, hs t hts⟩
 

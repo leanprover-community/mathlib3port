@@ -18,7 +18,7 @@ universe u
 
 namespace Mvqpf
 
-open_locale Mvfunctor
+open Mvfunctor
 
 variable {n m : ℕ} (F : Typevec.{u} n → Type _) [fF : Mvfunctor F] [q : Mvqpf F] (G : Fin2 n → Typevec.{u} m → Type u)
   [fG : ∀ i, Mvfunctor <| G i] [q' : ∀ i, Mvqpf <| G i]

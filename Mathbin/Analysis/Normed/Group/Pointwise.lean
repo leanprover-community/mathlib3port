@@ -16,7 +16,7 @@ Notably, we show that the sum of bounded sets remain bounded.
 
 open Metric Set
 
-open_locale Pointwise TopologicalSpace
+open Pointwise TopologicalSpace
 
 section SemiNormedGroup
 

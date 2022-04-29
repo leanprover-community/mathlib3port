@@ -24,7 +24,7 @@ variable {α β n m R : Type _}
 
 namespace Matrix
 
-open_locale Matrix
+open Matrix
 
 /-- A matrix `A : matrix n n α` is "symmetric" if `Aᵀ = A`. -/
 def IsSymm (A : Matrix n n α) : Prop :=

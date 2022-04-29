@@ -23,16 +23,17 @@ of the ring of integers of a function field is finite.
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 open AbsoluteValue Real
 
-variable {Fq : Type _} [Field Fq] [Fintype Fq]
+variable {Fq : Type _} [Fintype Fq]
 
-/-- If `A` is a family of enough low-degree polynomials over a finite field, there is a
+/-- If `A` is a family of enough low-degree polynomials over a finite semiring, there is a
 pair of equal elements in `A`. -/
-theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X]) (hb : natDegree b ≤ d)
-    (A : Finₓ m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) : ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
+theorem exists_eq_polynomial [Semiringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
+    (hb : natDegree b ≤ d) (A : Finₓ m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
+    ∃ i₀ i₁, i₀ ≠ i₁ ∧ A i₁ = A i₀ := by
   -- Since there are > q^d elements of A, and only q^d choices for the highest `d` coefficients,
   -- there must be two elements of A with the same coefficients at
   -- `0`, ... `degree b - 1` ≤ `d - 1`.
@@ -54,10 +55,10 @@ theorem exists_eq_polynomial {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m
   apply congr_funₓ i_eq.symm ⟨j, _⟩
   exact lt_of_lt_of_leₓ (coe_lt_degree.mp hbj) hb
 
-/-- If `A` is a family of enough low-degree polynomials over a finite field,
+/-- If `A` is a family of enough low-degree polynomials over a finite ring,
 there is a pair of elements in `A` (with different indices but not necessarily
 distinct), such that their difference has small degree. -/
-theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
+theorem exists_approx_polynomial_aux [Ringₓ Fq] {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^ d ≤ m) (b : Fq[X])
     (A : Finₓ m.succ → Fq[X]) (hA : ∀ i, degree (A i) < degree b) :
     ∃ i₀ i₁, i₀ ≠ i₁ ∧ degree (A i₁ - A i₀) < ↑(natDegree b - d) := by
   have hb : b ≠ 0 := by
@@ -95,6 +96,8 @@ theorem exists_approx_polynomial_aux {d : ℕ} {m : ℕ} (hm : Fintype.card Fq ^
   have : j = b.nat_degree - (nat_degree b - j.succ).succ := by
     rw [← Nat.succ_subₓ hbj, Nat.succ_sub_succ, tsub_tsub_cancel_of_le hbj.le]
   convert congr_funₓ i_eq.symm ⟨nat_degree b - j.succ, hj⟩
+
+variable [Field Fq]
 
 /-- If `A` is a family of enough low-degree polynomials over a finite field,
 there is a pair of elements in `A` (with different indices but not necessarily

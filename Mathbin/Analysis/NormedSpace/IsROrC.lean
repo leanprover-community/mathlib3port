@@ -32,7 +32,7 @@ open Metric
 @[simp, is_R_or_C_simps]
 theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] {z : E} : ∥(∥z∥ : 𝕜)∥ = ∥z∥ := by
   unfold_coes
-  simp only [norm_algebra_map_eq, RingHom.to_fun_eq_coe, norm_norm]
+  simp only [norm_algebra_map', RingHom.to_fun_eq_coe, norm_norm]
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
@@ -96,6 +96,6 @@ variable (𝕜)
 include 𝕜
 
 theorem NormedSpace.sphere_nonempty_is_R_or_C [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) : Nonempty (Sphere (0 : E) r) := by
-  let this' : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
+  let this : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   exact (sphere (0 : E) r).nonempty_coe_sort.mpr (normed_space.sphere_nonempty.mpr hr)
 

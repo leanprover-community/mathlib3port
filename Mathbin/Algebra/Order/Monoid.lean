@@ -4,11 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Group.WithOne
-import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Algebra.Order.MonoidLemmas
-import Mathbin.Data.Equiv.MulAdd
-import Mathbin.Order.BoundedOrder
 import Mathbin.Order.MinMax
 import Mathbin.Order.Hom.Basic
 
@@ -65,7 +63,7 @@ instance OrderedCommMonoid.to_covariant_class_right (M : Type _) [OrderedCommMon
 `left_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (*) (≤)`
 implies `covariant_class M M (*) (<)` . -/
 @[to_additive]
-theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· < ·)] :
+theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [PartialOrderₓ M] [CovariantClass M M (· * ·) (· < ·)] :
     CovariantClass M M (· * ·) (· ≤ ·) :=
   { elim := fun a b c bc => by
       rcases eq_or_lt_of_le bc with (rfl | bc)
@@ -78,8 +76,8 @@ theorem Mul.to_covariant_class_left (M : Type _) [Mul M] [LinearOrderₓ M] [Cov
 `right_cancel_semigroup` with a `partial_order`, assuming `covariant_class M M (swap (*)) (<)`
 implies `covariant_class M M (swap (*)) (≤)` . -/
 @[to_additive]
-theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [LinearOrderₓ M] [CovariantClass M M (swap (· * ·)) (· < ·)] :
-    CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
+theorem Mul.to_covariant_class_right (M : Type _) [Mul M] [PartialOrderₓ M]
+    [CovariantClass M M (swap (· * ·)) (· < ·)] : CovariantClass M M (swap (· * ·)) (· ≤ ·) :=
   { elim := fun a b c bc => by
       rcases eq_or_lt_of_le bc with (rfl | bc)
       · exact rfl.le
@@ -149,9 +147,10 @@ end LinearOrderedAddCommMonoidWithTop
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedAddCommMonoid "Pullback an `ordered_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCommMonoid β :=
-  { PartialOrderₓ.lift f hf, hf.CommMonoid f one mul with
+def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [One β] [Mul β] [Pow β ℕ] (f : β → α)
+    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCommMonoid β :=
+  { PartialOrderₓ.lift f hf, hf.CommMonoid f one mul npow with
     mul_le_mul_left := fun a b ab c =>
       show f (c * a) ≤ f (c * b) by
         rw [mul, mul]
@@ -163,9 +162,10 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedAddCommMonoid
       "Pullback an `ordered_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [One β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : LinearOrderedCommMonoid β :=
-  { hf.OrderedCommMonoid f one mul, LinearOrderₓ.lift f hf with }
+def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β : Type _} [One β] [Mul β] [Pow β ℕ]
+    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedCommMonoid β :=
+  { hf.OrderedCommMonoid f one mul npow, LinearOrderₓ.lift f hf with }
 
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
   add_pos h h
@@ -212,7 +212,7 @@ instance [Preorderₓ α] : Preorderₓ (WithZero α) :=
 instance [PartialOrderₓ α] : PartialOrderₓ (WithZero α) :=
   WithBot.partialOrder
 
-instance [PartialOrderₓ α] : OrderBot (WithZero α) :=
+instance [Preorderₓ α] : OrderBot (WithZero α) :=
   WithBot.orderBot
 
 theorem zero_le [PartialOrderₓ α] (a : WithZero α) : 0 ≤ a :=
@@ -222,11 +222,11 @@ theorem zero_lt_coe [Preorderₓ α] (a : α) : (0 : WithZero α) < a :=
   WithBot.bot_lt_coe a
 
 @[simp, norm_cast]
-theorem coe_lt_coe [PartialOrderₓ α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
+theorem coe_lt_coe [Preorderₓ α] {a b : α} : (a : WithZero α) < b ↔ a < b :=
   WithBot.coe_lt_coe
 
 @[simp, norm_cast]
-theorem coe_le_coe [PartialOrderₓ α] {a b : α} : (a : WithZero α) ≤ b ↔ a ≤ b :=
+theorem coe_le_coe [Preorderₓ α] {a b : α} : (a : WithZero α) ≤ b ↔ a ≤ b :=
   WithBot.coe_le_coe
 
 instance [Lattice α] : Lattice (WithZero α) :=
@@ -261,10 +261,19 @@ theorem lt_of_mul_lt_mul_left {α : Type u} [Mul α] [PartialOrderₓ α] [Contr
     apply lt_of_mul_lt_mul_left' h
     
 
+@[simp]
+theorem le_max_iff [LinearOrderₓ α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
+  simp only [WithZero.coe_le_coe, le_max_iff]
+
+@[simp]
+theorem min_le_iff [LinearOrderₓ α] {a b c : α} : min (a : WithZero α) b ≤ c ↔ min a b ≤ c := by
+  simp only [WithZero.coe_le_coe, min_le_iff]
+
 instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
   { WithZero.commMonoidWithZero, WithZero.partialOrder with mul_le_mul_left := WithZero.mul_le_mul_left }
 
 /-- If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
+See note [reducible non-instances].
 -/
 /-
 Note 1 : the below is not an instance because it requires `zero_le`. It seems
@@ -273,6 +282,7 @@ Note 2 : there is no multiplicative analogue because it does not seem necessary.
 Mathematicians might be more likely to use the order-dual version, where all
 elements are ≤ 1 and then 1 is the top element.
 -/
+@[reducible]
 protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) :
     OrderedAddCommMonoid (WithZero α) := by
   suffices
@@ -298,271 +308,6 @@ protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : 
         
       
     
-
-end WithZero
-
-namespace WithTop
-
-section One
-
-variable [One α]
-
-@[to_additive]
-instance : One (WithTop α) :=
-  ⟨(1 : α)⟩
-
-@[simp, norm_cast, to_additive]
-theorem coe_one : ((1 : α) : WithTop α) = 1 :=
-  rfl
-
-@[simp, norm_cast, to_additive]
-theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
-  coe_eq_coe
-
-@[simp, norm_cast, to_additive]
-theorem one_eq_coe {a : α} : 1 = (a : WithTop α) ↔ a = 1 :=
-  trans eq_comm coe_eq_one
-
-@[simp, to_additive]
-theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
-  fun.
-
-@[simp, to_additive]
-theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
-  fun.
-
-end One
-
-instance [Add α] : Add (WithTop α) :=
-  ⟨fun o₁ o₂ => o₁.bind fun a => o₂.map fun b => a + b⟩
-
-@[norm_cast]
-theorem coe_add [Add α] {a b : α} : ((a + b : α) : WithTop α) = a + b :=
-  rfl
-
-@[norm_cast]
-theorem coe_bit0 [Add α] {a : α} : ((bit0 a : α) : WithTop α) = bit0 a :=
-  rfl
-
-@[norm_cast]
-theorem coe_bit1 [Add α] [One α] {a : α} : ((bit1 a : α) : WithTop α) = bit1 a :=
-  rfl
-
-@[simp]
-theorem add_top [Add α] : ∀ {a : WithTop α}, a + ⊤ = ⊤
-  | none => rfl
-  | some a => rfl
-
-@[simp]
-theorem top_add [Add α] {a : WithTop α} : ⊤ + a = ⊤ :=
-  rfl
-
-theorem add_eq_top [Add α] {a b : WithTop α} : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
-  cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add, ← WithZero.coe_add]
-
-theorem add_lt_top [Add α] [PartialOrderₓ α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
-  simp [lt_top_iff_ne_top, add_eq_top, not_or_distrib]
-
-theorem add_eq_coe [Add α] : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
-  | none, b, c => by
-    simp [none_eq_top]
-  | some a, none, c => by
-    simp [none_eq_top]
-  | some a, some b, c => by
-    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_left, exists_eq_left]
-
-@[simp]
-theorem add_coe_eq_top_iff [Add α] {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
-  induction x using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
-
-@[simp]
-theorem coe_add_eq_top_iff [Add α] {x : α} {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
-  induction y using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
-
-instance [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
-  { WithTop.hasAdd with
-    add_assoc := by
-      repeat'
-          refine' WithTop.recTopCoe _ _ <;>
-            try
-              intro <;>
-        simp [← WithTop.coe_add, add_assocₓ] }
-
-instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
-  { WithTop.addSemigroup with
-    add_comm := by
-      repeat'
-          refine' WithTop.recTopCoe _ _ <;>
-            try
-              intro <;>
-        simp [← WithTop.coe_add, add_commₓ] }
-
-instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
-  { WithTop.hasZero, WithTop.hasAdd with
-    zero_add := by
-      refine' WithTop.recTopCoe _ _
-      · simp
-        
-      · intro
-        rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_addₓ]
-        ,
-    add_zero := by
-      refine' WithTop.recTopCoe _ _
-      · simp
-        
-      · intro
-        rw [← WithTop.coe_zero, ← WithTop.coe_add, add_zeroₓ]
-         }
-
-instance [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
-  { WithTop.addZeroClass, WithTop.hasZero, WithTop.addSemigroup with }
-
-instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithTop α) :=
-  { WithTop.addMonoid, WithTop.addCommSemigroup with }
-
-instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
-  { WithTop.partialOrder, WithTop.addCommMonoid with
-    add_le_add_left := by
-      rintro a b h (_ | c)
-      · simp [none_eq_top]
-        
-      rcases b with (_ | b)
-      · simp [none_eq_top]
-        
-      rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
-      simp only [some_eq_coe, ← coe_add, coe_le_coe] at h⊢
-      exact add_le_add_left h c }
-
-instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (WithTop α) :=
-  { WithTop.orderTop, WithTop.linearOrder, WithTop.orderedAddCommMonoid, Option.nontrivial with
-    top_add' := fun x => WithTop.top_add }
-
-/-- Coercion from `α` to `with_top α` as an `add_monoid_hom`. -/
-def coeAddHom [AddMonoidₓ α] : α →+ WithTop α :=
-  ⟨coe, rfl, fun _ _ => rfl⟩
-
-@[simp]
-theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coeAddHom : α →+ WithTop α) = coe :=
-  rfl
-
-@[simp]
-theorem zero_lt_top [OrderedAddCommMonoid α] : (0 : WithTop α) < ⊤ :=
-  coe_lt_top 0
-
-@[simp, norm_cast]
-theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a ↔ 0 < a :=
-  coe_lt_coe
-
-end WithTop
-
-namespace WithBot
-
-instance [Zero α] : Zero (WithBot α) :=
-  WithTop.hasZero
-
-instance [One α] : One (WithBot α) :=
-  WithTop.hasOne
-
-instance [Add α] : Add (WithBot α) :=
-  WithTop.hasAdd
-
-instance [AddSemigroupₓ α] : AddSemigroupₓ (WithBot α) :=
-  WithTop.addSemigroup
-
-instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithBot α) :=
-  WithTop.addCommSemigroup
-
-instance [AddZeroClass α] : AddZeroClass (WithBot α) :=
-  WithTop.addZeroClass
-
-instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
-  WithTop.addMonoid
-
-instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithBot α) :=
-  WithTop.addCommMonoid
-
-instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) := by
-  suffices
-  refine' { WithBot.partialOrder, WithBot.addCommMonoid with add_le_add_left := this, .. }
-  · intro a b h c ca h₂
-    cases' c with c
-    · cases h₂
-      
-    cases' a with a <;> cases h₂
-    cases' b with b
-    · cases le_antisymmₓ h bot_le
-      
-    simp at h
-    exact ⟨_, rfl, add_le_add_left h _⟩
-    
-
-instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
-  { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_zero [Zero α] : ((0 : α) : WithBot α) = 0 :=
-  rfl
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
-  rfl
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_eq_zero {α : Type _} [AddMonoidₓ α] {a : α} : (a : WithBot α) = 0 ↔ a = 0 := by
-  norm_cast
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_add [AddSemigroupₓ α] (a b : α) : ((a + b : α) : WithBot α) = a + b := by
-  norm_cast
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_bit0 [AddSemigroupₓ α] {a : α} : ((bit0 a : α) : WithBot α) = bit0 a := by
-  norm_cast
-
--- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
-theorem coe_bit1 [AddSemigroupₓ α] [One α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a := by
-  norm_cast
-
-@[simp]
-theorem bot_add [AddSemigroupₓ α] (a : WithBot α) : ⊥ + a = ⊥ :=
-  rfl
-
-@[simp]
-theorem add_bot [AddSemigroupₓ α] (a : WithBot α) : a + ⊥ = ⊥ := by
-  cases a <;> rfl
-
-@[simp]
-theorem add_eq_bot [AddSemigroupₓ α] {m n : WithBot α} : m + n = ⊥ ↔ m = ⊥ ∨ n = ⊥ :=
-  WithTop.add_eq_top
-
-end WithBot
-
-namespace WithZero
-
-attribute [local semireducible] WithZero
-
-variable [Add α]
-
-/-- Making an additive monoid multiplicative then adding a zero is the same as adding a bottom
-element then making it multiplicative. -/
-def toMulBot : WithZero (Multiplicative α) ≃* Multiplicative (WithBot α) :=
-  MulEquiv.refl _
-
-@[simp]
-theorem to_mul_bot_zero : toMulBot (0 : WithZero (Multiplicative α)) = Multiplicative.ofAdd ⊥ :=
-  rfl
-
-@[simp]
-theorem to_mul_bot_coe (x : Multiplicative α) : toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
-  rfl
-
-@[simp]
-theorem to_mul_bot_symm_bot : toMulBot.symm (Multiplicative.ofAdd (⊥ : WithBot α)) = 0 :=
-  rfl
-
-@[simp]
-theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
-  rfl
 
 end WithZero
 
@@ -637,6 +382,10 @@ theorem le_one_iff_eq_one : a ≤ 1 ↔ a = 1 :=
 @[to_additive]
 theorem one_lt_iff_ne_one : 1 < a ↔ a ≠ 1 :=
   (Iff.intro ne_of_gtₓ) fun hne => lt_of_le_of_neₓ (one_le _) hne.symm
+
+@[to_additive]
+theorem eq_one_or_one_lt : a = 1 ∨ 1 < a :=
+  (one_le a).eq_or_lt.imp_left Eq.symm
 
 @[to_additive]
 theorem exists_pos_mul_of_lt (h : a < b) : ∃ c > 1, a * c = b := by
@@ -720,30 +469,6 @@ instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedA
           
          }
 
-instance WithTop.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
-    CanonicallyOrderedAddMonoid (WithTop α) :=
-  { WithTop.orderBot, WithTop.orderedAddCommMonoid with
-    le_iff_exists_add := fun a b =>
-      match a, b with
-      | a, none =>
-        show a ≤ ⊤ ↔ ∃ c, ⊤ = a + c by
-          simp <;> refine' ⟨⊤, _⟩ <;> cases a <;> rfl
-      | some a, some b =>
-        show (a : WithTop α) ≤ ↑b ↔ ∃ c : WithTop α, ↑b = ↑a + c by
-          simp [CanonicallyOrderedAddMonoid.le_iff_exists_add, -add_commₓ]
-          constructor
-          · rintro ⟨c, rfl⟩
-            refine' ⟨c, _⟩
-            norm_cast
-            
-          · exact fun h =>
-              match b, h with
-              | _, ⟨some c, rfl⟩ => ⟨_, rfl⟩
-            
-      | none, some b =>
-        show (⊤ : WithTop α) ≤ b ↔ ∃ c : WithTop α, ↑b = ⊤ + c by
-          simp }
-
 @[to_additive]
 instance (priority := 100) CanonicallyOrderedMonoid.has_exists_mul_of_le (α : Type u) [CanonicallyOrderedMonoid α] :
     HasExistsMulOfLe α where
@@ -773,9 +498,9 @@ variable [CanonicallyLinearOrderedMonoid α]
 instance (priority := 100) CanonicallyLinearOrderedMonoid.semilatticeSup : SemilatticeSup α :=
   { LinearOrderₓ.toLattice with }
 
-instance WithTop.canonicallyLinearOrderedAddMonoid (α : Type _) [CanonicallyLinearOrderedAddMonoid α] :
-    CanonicallyLinearOrderedAddMonoid (WithTop α) :=
-  { (inferInstance : CanonicallyOrderedAddMonoid (WithTop α)), (inferInstance : LinearOrderₓ (WithTop α)) with }
+instance WithZero.canonicallyLinearOrderedAddMonoid (α : Type _) [CanonicallyLinearOrderedAddMonoid α] :
+    CanonicallyLinearOrderedAddMonoid (WithZero α) :=
+  { WithZero.canonicallyOrderedAddMonoid, WithZero.linearOrder with }
 
 @[to_additive]
 theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
@@ -852,9 +577,10 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedCancelAddCommMonoid
       "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α) (hf : Function.Injective f)
-    (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCancelCommMonoid β :=
-  { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul with
+def Function.Injective.orderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] (f : β → α)
+    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCancelCommMonoid β :=
+  { hf.LeftCancelSemigroup f mul, hf.OrderedCommMonoid f one mul npow with
     le_of_mul_le_mul_left := fun bc : f (a * b) ≤ f (a * c) =>
       (mul_le_mul_iff_left (f a)).mp
         (by
@@ -907,6 +633,23 @@ theorem min_mul_mul_left (a b c : α) : min (a * b) (a * c) = a * min b c :=
 theorem max_mul_mul_left (a b c : α) : max (a * b) (a * c) = a * max b c :=
   (monotone_id.const_mul' a).map_max.symm
 
+@[to_additive]
+theorem lt_or_lt_of_mul_lt_mul [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b m n : α} (h : m * n < a * b) :
+    m < a ∨ n < b := by
+  contrapose! h
+  exact mul_le_mul' h.1 h.2
+
+@[to_additive]
+theorem mul_lt_mul_iff_of_le_of_le [CovariantClass α α (Function.swap (· * ·)) (· < ·)]
+    [CovariantClass α α (· * ·) (· < ·)] [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b c d : α} (ac : a ≤ c)
+    (bd : b ≤ d) : a * b < c * d ↔ a < c ∨ b < d := by
+  refine' ⟨lt_or_lt_of_mul_lt_mul, fun h => _⟩
+  cases' h with ha hb
+  · exact mul_lt_mul_of_lt_of_le ha bd
+    
+  · exact mul_lt_mul_of_le_of_lt ac hb
+    
+
 end Left
 
 section Right
@@ -925,7 +668,7 @@ end Right
 
 end Mul
 
-variable [Monoidₓ α]
+variable [MulOneClassₓ α]
 
 @[to_additive]
 theorem min_le_mul_of_one_le_right [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} (hb : 1 ≤ b) : min a b ≤ a * b :=
@@ -952,12 +695,15 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedCancelAddCommMonoid
       "Pullback a `linear_ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
-    LinearOrderedCancelCommMonoid β :=
-  { hf.LinearOrderedCommMonoid f one mul, hf.OrderedCancelCommMonoid f one mul with }
+def Function.Injective.linearOrderedCancelCommMonoid {β : Type _} [One β] [Mul β] [Pow β ℕ] (f : β → α)
+    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedCancelCommMonoid β :=
+  { hf.LinearOrderedCommMonoid f one mul npow, hf.OrderedCancelCommMonoid f one mul npow with }
 
 end LinearOrderedCancelCommMonoid
+
+/-! ### Order dual -/
+
 
 namespace OrderDual
 
@@ -970,6 +716,18 @@ instance [h : One α] : One (OrderDual α) :=
   h
 
 @[to_additive]
+instance [h : Semigroupₓ α] : Semigroupₓ (OrderDual α) :=
+  h
+
+@[to_additive]
+instance [h : CommSemigroupₓ α] : CommSemigroupₓ (OrderDual α) :=
+  h
+
+@[to_additive]
+instance [h : MulOneClassₓ α] : MulOneClassₓ (OrderDual α) :=
+  h
+
+@[to_additive]
 instance [h : Monoidₓ α] : Monoidₓ (OrderDual α) :=
   h
 
@@ -978,7 +736,34 @@ instance [h : CommMonoidₓ α] : CommMonoidₓ (OrderDual α) :=
   h
 
 @[to_additive]
+instance [h : LeftCancelMonoid α] : LeftCancelMonoid (OrderDual α) :=
+  h
+
+@[to_additive]
+instance [h : RightCancelMonoid α] : RightCancelMonoid (OrderDual α) :=
+  h
+
+@[to_additive]
+instance [h : CancelMonoid α] : CancelMonoid (OrderDual α) :=
+  h
+
+@[to_additive]
 instance [h : CancelCommMonoid α] : CancelCommMonoid (OrderDual α) :=
+  h
+
+instance [h : MulZeroClassₓ α] : MulZeroClassₓ (OrderDual α) :=
+  h
+
+instance [h : MulZeroOneClassₓ α] : MulZeroOneClassₓ (OrderDual α) :=
+  h
+
+instance [h : MonoidWithZeroₓ α] : MonoidWithZeroₓ (OrderDual α) :=
+  h
+
+instance [h : CommMonoidWithZero α] : CommMonoidWithZero (OrderDual α) :=
+  h
+
+instance [h : CancelCommMonoidWithZero α] : CancelCommMonoidWithZero (OrderDual α) :=
   h
 
 @[to_additive]
@@ -1045,63 +830,6 @@ instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoid (OrderDual α) :
 
 end OrderDual
 
-section LinearOrderedCancelAddCommMonoid
-
-variable [LinearOrderedCancelAddCommMonoid α]
-
-theorem lt_or_lt_of_add_lt_add {a b m n : α} (h : m + n < a + b) : m < a ∨ n < b := by
-  contrapose! h
-  exact add_le_add h.1 h.2
-
-end LinearOrderedCancelAddCommMonoid
-
-section OrderedCancelAddCommMonoid
-
-variable [OrderedCancelAddCommMonoid α]
-
-namespace WithTop
-
-theorem add_lt_add_iff_left {a b c : WithTop α} (ha : a ≠ ⊤) : a + b < a + c ↔ b < c := by
-  lift a to α using ha
-  cases b <;> cases c
-  · simp [none_eq_top]
-    
-  · simp [some_eq_coe, none_eq_top, coe_lt_top]
-    
-  · simp [some_eq_coe, none_eq_top, ← coe_add, coe_lt_top]
-    
-  · simp [some_eq_coe, ← coe_add, coe_lt_coe]
-    
-
-theorem add_lt_add_iff_right {a b c : WithTop α} (ha : a ≠ ⊤) : c + a < b + a ↔ c < b := by
-  simp only [← add_commₓ a, add_lt_add_iff_left ha]
-
-instance contravariant_class_add_lt : ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) := by
-  refine' ⟨fun a b c h => _⟩
-  cases a
-  · rw [none_eq_top, top_add, top_add] at h
-    exact (lt_irreflₓ ⊤ h).elim
-    
-  · exact (add_lt_add_iff_left coe_ne_top).1 h
-    
-
-end WithTop
-
-namespace WithBot
-
-theorem add_lt_add_iff_left {a b c : WithBot α} (ha : a ≠ ⊥) : a + b < a + c ↔ b < c :=
-  @WithTop.add_lt_add_iff_left (OrderDual α) _ a c b ha
-
-theorem add_lt_add_iff_right {a b c : WithBot α} (ha : a ≠ ⊥) : b + a < c + a ↔ b < c :=
-  @WithTop.add_lt_add_iff_right (OrderDual α) _ _ _ _ ha
-
-instance contravariant_class_add_lt : ContravariantClass (WithBot α) (WithBot α) (· + ·) (· < ·) :=
-  @OrderDual.contravariant_class_add_lt (WithTop <| OrderDual α) _ _ _
-
-end WithBot
-
-end OrderedCancelAddCommMonoid
-
 namespace Prod
 
 variable {M N : Type _}
@@ -1113,6 +841,488 @@ instance [OrderedCancelCommMonoid M] [OrderedCancelCommMonoid N] : OrderedCancel
     le_of_mul_le_mul_left := fun a b c h => ⟨le_of_mul_le_mul_left' h.1, le_of_mul_le_mul_left' h.2⟩ }
 
 end Prod
+
+/-! ### `with_bot`/`with_top`-/
+
+
+namespace WithTop
+
+section One
+
+variable [One α]
+
+@[to_additive]
+instance : One (WithTop α) :=
+  ⟨(1 : α)⟩
+
+@[simp, norm_cast, to_additive]
+theorem coe_one : ((1 : α) : WithTop α) = 1 :=
+  rfl
+
+@[simp, norm_cast, to_additive]
+theorem coe_eq_one {a : α} : (a : WithTop α) = 1 ↔ a = 1 :=
+  coe_eq_coe
+
+@[simp, to_additive]
+protected theorem map_one {β} (f : α → β) : (1 : WithTop α).map f = (f 1 : WithTop β) :=
+  rfl
+
+@[simp, norm_cast, to_additive]
+theorem one_eq_coe {a : α} : 1 = (a : WithTop α) ↔ a = 1 :=
+  trans eq_comm coe_eq_one
+
+@[simp, to_additive]
+theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
+  fun.
+
+@[simp, to_additive]
+theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
+  fun.
+
+end One
+
+section Add
+
+variable [Add α] {a b c d : WithTop α} {x y : α}
+
+instance : Add (WithTop α) :=
+  ⟨fun o₁ o₂ => o₁.bind fun a => o₂.map <| (· + ·) a⟩
+
+@[norm_cast]
+theorem coe_add : ((x + y : α) : WithTop α) = x + y :=
+  rfl
+
+@[norm_cast]
+theorem coe_bit0 : ((bit0 x : α) : WithTop α) = bit0 x :=
+  rfl
+
+@[norm_cast]
+theorem coe_bit1 [One α] {a : α} : ((bit1 a : α) : WithTop α) = bit1 a :=
+  rfl
+
+@[simp]
+theorem top_add (a : WithTop α) : ⊤ + a = ⊤ :=
+  rfl
+
+@[simp]
+theorem add_top (a : WithTop α) : a + ⊤ = ⊤ := by
+  cases a <;> rfl
+
+@[simp]
+theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
+  cases a <;> cases b <;> simp [none_eq_top, some_eq_coe, ← WithTop.coe_add, ← WithZero.coe_add]
+
+theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
+  add_eq_top.Not.trans not_or_distrib
+
+theorem add_lt_top [PartialOrderₓ α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
+  simp_rw [lt_top_iff_ne_top, add_ne_top]
+
+theorem add_eq_coe : ∀ {a b : WithTop α} {c : α}, a + b = c ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = c
+  | none, b, c => by
+    simp [none_eq_top]
+  | some a, none, c => by
+    simp [none_eq_top]
+  | some a, some b, c => by
+    simp only [some_eq_coe, ← coe_add, coe_eq_coe, exists_and_distrib_left, exists_eq_left]
+
+@[simp]
+theorem add_coe_eq_top_iff {x : WithTop α} {y : α} : x + y = ⊤ ↔ x = ⊤ := by
+  induction x using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+
+@[simp]
+theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
+  induction y using WithTop.recTopCoe <;> simp [← coe_add, -WithZero.coe_add]
+
+variable [Preorderₓ α]
+
+instance covariant_class_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
+    CovariantClass (WithTop α) (WithTop α) (· + ·) (· ≤ ·) :=
+  ⟨fun a b c h => by
+    cases a <;>
+      cases c <;>
+        try
+          exact le_top
+    cases b
+    · exact (not_top_le_coe _ h).elim
+      
+    · exact some_le_some.2 (add_le_add_left (some_le_some.1 h) _)
+      ⟩
+
+instance covariant_class_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+    CovariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· ≤ ·) :=
+  ⟨fun a b c h => by
+    cases a <;>
+      cases c <;>
+        try
+          exact le_top
+    cases b
+    · exact (not_top_le_coe _ h).elim
+      
+    · exact some_le_some.2 (add_le_add_right (some_le_some.1 h) _)
+      ⟩
+
+instance contravariant_class_add_lt [ContravariantClass α α (· + ·) (· < ·)] :
+    ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) :=
+  ⟨fun a b c h => by
+    cases a <;>
+      cases b <;>
+        try
+          exact (not_top_lt h).elim
+    cases c
+    · exact coe_lt_top _
+      
+    · exact some_lt_some.2 (lt_of_add_lt_add_left <| some_lt_some.1 h)
+      ⟩
+
+instance contravariant_class_swap_add_lt [ContravariantClass α α (swap (· + ·)) (· < ·)] :
+    ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
+  ⟨fun a b c h => by
+    cases a <;>
+      cases b <;>
+        try
+          exact (not_top_lt h).elim
+    cases c
+    · exact coe_lt_top _
+      
+    · exact some_lt_some.2 (lt_of_add_lt_add_right <| some_lt_some.1 h)
+      ⟩
+
+protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤) (h : a + b ≤ a + c) :
+    b ≤ c := by
+  lift a to α using ha
+  cases c <;>
+    try
+      exact le_top
+  cases b
+  exact (not_top_le_coe _ h).elim
+  simp only [some_eq_coe, ← coe_add, coe_le_coe] at h
+  rw [some_le_some]
+  exact le_of_add_le_add_left h
+
+protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤)
+    (h : b + a ≤ c + a) : b ≤ c := by
+  lift a to α using ha
+  cases c
+  · exact le_top
+    
+  cases b
+  · exact (not_top_le_coe _ h).elim
+    
+  · exact some_le_some.2 (le_of_add_le_add_right <| some_le_some.1 h)
+    
+
+protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) (h : b < c) : a + b < a + c := by
+  lift a to α using ha
+  lift b to α using (h.trans_le le_top).Ne
+  cases c
+  · exact coe_lt_top _
+    
+  · exact some_lt_some.2 (add_lt_add_left (some_lt_some.1 h) _)
+    
+
+protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) (h : b < c) :
+    b + a < c + a := by
+  lift a to α using ha
+  lift b to α using (h.trans_le le_top).Ne
+  cases c
+  · exact coe_lt_top _
+    
+  · exact some_lt_some.2 (add_lt_add_right (some_lt_some.1 h) _)
+    
+
+protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
+    (ha : a ≠ ⊤) : a + b ≤ a + c ↔ b ≤ c :=
+  ⟨WithTop.le_of_add_le_add_left ha, fun h => add_le_add_left h a⟩
+
+protected theorem add_le_add_iff_right [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
+    [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) : b + a ≤ c + a ↔ b ≤ c :=
+  ⟨WithTop.le_of_add_le_add_right ha, fun h => add_le_add_right h a⟩
+
+protected theorem add_lt_add_iff_left [CovariantClass α α (· + ·) (· < ·)] [ContravariantClass α α (· + ·) (· < ·)]
+    (ha : a ≠ ⊤) : a + b < a + c ↔ b < c :=
+  ⟨lt_of_add_lt_add_left, WithTop.add_lt_add_left ha⟩
+
+protected theorem add_lt_add_iff_right [CovariantClass α α (swap (· + ·)) (· < ·)]
+    [ContravariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) : b + a < c + a ↔ b < c :=
+  ⟨lt_of_add_lt_add_right, WithTop.add_lt_add_right ha⟩
+
+protected theorem add_lt_add_of_le_of_lt [CovariantClass α α (· + ·) (· < ·)]
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
+  (WithTop.add_lt_add_left ha hcd).trans_le <| add_le_add_right hab _
+
+protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤ ·)]
+    [CovariantClass α α (swap (· + ·)) (· < ·)] (hc : c ≠ ⊤) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
+  (WithTop.add_lt_add_right hc hab).trans_le <| add_le_add_left hcd _
+
+end Add
+
+instance [AddSemigroupₓ α] : AddSemigroupₓ (WithTop α) :=
+  { WithTop.hasAdd with
+    add_assoc := by
+      repeat'
+          refine' WithTop.recTopCoe _ _ <;>
+            try
+              intro <;>
+        simp [← WithTop.coe_add, add_assocₓ] }
+
+instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
+  { WithTop.addSemigroup with
+    add_comm := by
+      repeat'
+          refine' WithTop.recTopCoe _ _ <;>
+            try
+              intro <;>
+        simp [← WithTop.coe_add, add_commₓ] }
+
+instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
+  { WithTop.hasZero, WithTop.hasAdd with
+    zero_add := by
+      refine' WithTop.recTopCoe _ _
+      · simp
+        
+      · intro
+        rw [← WithTop.coe_zero, ← WithTop.coe_add, zero_addₓ]
+        ,
+    add_zero := by
+      refine' WithTop.recTopCoe _ _
+      · simp
+        
+      · intro
+        rw [← WithTop.coe_zero, ← WithTop.coe_add, add_zeroₓ]
+         }
+
+instance [AddMonoidₓ α] : AddMonoidₓ (WithTop α) :=
+  { WithTop.addZeroClass, WithTop.hasZero, WithTop.addSemigroup with }
+
+instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithTop α) :=
+  { WithTop.addMonoid, WithTop.addCommSemigroup with }
+
+instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithTop α) :=
+  { WithTop.partialOrder, WithTop.addCommMonoid with
+    add_le_add_left := by
+      rintro a b h (_ | c)
+      · simp [none_eq_top]
+        
+      rcases b with (_ | b)
+      · simp [none_eq_top]
+        
+      rcases le_coe_iff.1 h with ⟨a, rfl, h⟩
+      simp only [some_eq_coe, ← coe_add, coe_le_coe] at h⊢
+      exact add_le_add_left h c }
+
+instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (WithTop α) :=
+  { WithTop.orderTop, WithTop.linearOrder, WithTop.orderedAddCommMonoid, Option.nontrivial with
+    top_add' := WithTop.top_add }
+
+instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedAddMonoid (WithTop α) :=
+  { WithTop.orderBot, WithTop.orderedAddCommMonoid with
+    le_iff_exists_add := fun a b =>
+      match a, b with
+      | ⊤, ⊤ => by
+        simp
+      | (a : α), ⊤ => by
+        simp only [true_iffₓ, le_top]
+        refine' ⟨⊤, _⟩
+        rfl
+      | (a : α), (b : α) => by
+        rw [WithTop.coe_le_coe, le_iff_exists_add]
+        constructor
+        · rintro ⟨c, rfl⟩
+          refine' ⟨c, _⟩
+          norm_cast
+          
+        · intro h
+          exact
+            match b, h with
+            | _, ⟨some c, rfl⟩ => ⟨_, rfl⟩
+          
+      | ⊤, (b : α) => by
+        simp }
+
+instance [CanonicallyLinearOrderedAddMonoid α] : CanonicallyLinearOrderedAddMonoid (WithTop α) :=
+  { WithTop.canonicallyOrderedAddMonoid, WithTop.linearOrder with }
+
+/-- Coercion from `α` to `with_top α` as an `add_monoid_hom`. -/
+def coeAddHom [AddMonoidₓ α] : α →+ WithTop α :=
+  ⟨coe, rfl, fun _ _ => rfl⟩
+
+@[simp]
+theorem coe_coe_add_hom [AddMonoidₓ α] : ⇑(coeAddHom : α →+ WithTop α) = coe :=
+  rfl
+
+@[simp]
+theorem zero_lt_top [OrderedAddCommMonoid α] : (0 : WithTop α) < ⊤ :=
+  coe_lt_top 0
+
+@[simp, norm_cast]
+theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a ↔ 0 < a :=
+  coe_lt_coe
+
+end WithTop
+
+namespace WithBot
+
+@[to_additive]
+instance [One α] : One (WithBot α) :=
+  WithTop.hasOne
+
+instance [Add α] : Add (WithBot α) :=
+  WithTop.hasAdd
+
+instance [AddSemigroupₓ α] : AddSemigroupₓ (WithBot α) :=
+  WithTop.addSemigroup
+
+instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithBot α) :=
+  WithTop.addCommSemigroup
+
+instance [AddZeroClass α] : AddZeroClass (WithBot α) :=
+  WithTop.addZeroClass
+
+instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
+  WithTop.addMonoid
+
+instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithBot α) :=
+  WithTop.addCommMonoid
+
+instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) := by
+  suffices
+  refine' { WithBot.partialOrder, WithBot.addCommMonoid with add_le_add_left := this, .. }
+  · intro a b h c ca h₂
+    cases' c with c
+    · cases h₂
+      
+    cases' a with a <;> cases h₂
+    cases' b with b
+    · cases le_antisymmₓ h bot_le
+      
+    simp at h
+    exact ⟨_, rfl, add_le_add_left h _⟩
+    
+
+instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
+  { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
+
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
+@[to_additive]
+theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
+  rfl
+
+-- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
+@[to_additive]
+theorem coe_eq_one [One α] {a : α} : (a : WithBot α) = 1 ↔ a = 1 :=
+  WithTop.coe_eq_one
+
+@[to_additive]
+protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f = (f 1 : WithBot β) :=
+  rfl
+
+section Add
+
+variable [Add α] {a b c d : WithBot α} {x y : α}
+
+-- `norm_cast` proves those lemmas, because `with_top`/`with_bot` are reducible
+theorem coe_add (a b : α) : ((a + b : α) : WithBot α) = a + b :=
+  rfl
+
+theorem coe_bit0 : ((bit0 x : α) : WithBot α) = bit0 x :=
+  rfl
+
+theorem coe_bit1 [One α] {a : α} : ((bit1 a : α) : WithBot α) = bit1 a :=
+  rfl
+
+@[simp]
+theorem bot_add (a : WithBot α) : ⊥ + a = ⊥ :=
+  rfl
+
+@[simp]
+theorem add_bot (a : WithBot α) : a + ⊥ = ⊥ := by
+  cases a <;> rfl
+
+@[simp]
+theorem add_eq_bot : a + b = ⊥ ↔ a = ⊥ ∨ b = ⊥ :=
+  WithTop.add_eq_top
+
+theorem add_ne_bot : a + b ≠ ⊥ ↔ a ≠ ⊥ ∧ b ≠ ⊥ :=
+  WithTop.add_ne_top
+
+theorem bot_lt_add [PartialOrderₓ α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < a ∧ ⊥ < b :=
+  @WithTop.add_lt_top (OrderDual α) _ _ _ _
+
+theorem add_eq_coe : a + b = x ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=
+  WithTop.add_eq_coe
+
+@[simp]
+theorem add_coe_eq_bot_iff : a + y = ⊥ ↔ a = ⊥ :=
+  WithTop.add_coe_eq_top_iff
+
+@[simp]
+theorem coe_add_eq_bot_iff : ↑x + b = ⊥ ↔ b = ⊥ :=
+  WithTop.coe_add_eq_top_iff
+
+variable [Preorderₓ α]
+
+instance covariant_class_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
+    CovariantClass (WithBot α) (WithBot α) (· + ·) (· ≤ ·) :=
+  @OrderDual.covariant_class_add_le (WithTop <| OrderDual α) _ _ _
+
+instance covariant_class_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+    CovariantClass (WithBot α) (WithBot α) (swap (· + ·)) (· ≤ ·) :=
+  @OrderDual.covariant_class_swap_add_le (WithTop <| OrderDual α) _ _ _
+
+instance contravariant_class_add_lt [ContravariantClass α α (· + ·) (· < ·)] :
+    ContravariantClass (WithBot α) (WithBot α) (· + ·) (· < ·) :=
+  @OrderDual.contravariant_class_add_lt (WithTop <| OrderDual α) _ _ _
+
+instance contravariant_class_swap_add_lt [ContravariantClass α α (swap (· + ·)) (· < ·)] :
+    ContravariantClass (WithBot α) (WithBot α) (swap (· + ·)) (· < ·) :=
+  @OrderDual.contravariant_class_swap_add_lt (WithTop <| OrderDual α) _ _ _
+
+protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊥) (h : a + b ≤ a + c) :
+    b ≤ c :=
+  @WithTop.le_of_add_le_add_left (OrderDual α) _ _ _ _ _ _ ha h
+
+protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊥)
+    (h : b + a ≤ c + a) : b ≤ c :=
+  @WithTop.le_of_add_le_add_right (OrderDual α) _ _ _ _ _ _ ha h
+
+protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊥) (h : b < c) : a + b < a + c :=
+  @WithTop.add_lt_add_left (OrderDual α) _ _ _ _ _ _ ha h
+
+protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊥) (h : b < c) :
+    b + a < c + a :=
+  @WithTop.add_lt_add_right (OrderDual α) _ _ _ _ _ _ ha h
+
+protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
+    (ha : a ≠ ⊥) : a + b ≤ a + c ↔ b ≤ c :=
+  ⟨WithBot.le_of_add_le_add_left ha, fun h => add_le_add_left h a⟩
+
+protected theorem add_le_add_iff_right [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
+    [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊥) : b + a ≤ c + a ↔ b ≤ c :=
+  ⟨WithBot.le_of_add_le_add_right ha, fun h => add_le_add_right h a⟩
+
+protected theorem add_lt_add_iff_left [CovariantClass α α (· + ·) (· < ·)] [ContravariantClass α α (· + ·) (· < ·)]
+    (ha : a ≠ ⊥) : a + b < a + c ↔ b < c :=
+  ⟨lt_of_add_lt_add_left, WithBot.add_lt_add_left ha⟩
+
+protected theorem add_lt_add_iff_right [CovariantClass α α (swap (· + ·)) (· < ·)]
+    [ContravariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊥) : b + a < c + a ↔ b < c :=
+  ⟨lt_of_add_lt_add_right, WithBot.add_lt_add_right ha⟩
+
+protected theorem add_lt_add_of_le_of_lt [CovariantClass α α (· + ·) (· < ·)]
+    [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (hb : b ≠ ⊥) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
+  @WithTop.add_lt_add_of_le_of_lt (OrderDual α) _ _ _ _ _ _ _ _ hb hab hcd
+
+protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤ ·)]
+    [CovariantClass α α (swap (· + ·)) (· < ·)] (hd : d ≠ ⊥) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
+  @WithTop.add_lt_add_of_lt_of_le (OrderDual α) _ _ _ _ _ _ _ _ hd hab hcd
+
+end Add
+
+end WithBot
+
+/-! ### `additive`/`multiplicative` -/
+
 
 section TypeTags
 
@@ -1154,18 +1364,6 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicati
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedAddCommMonoid (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommMonoid with }
-
-theorem WithZero.to_mul_bot_strict_mono [Add α] [Preorderₓ α] : StrictMono (@WithZero.toMulBot α _) := fun x y => id
-
-@[simp]
-theorem WithZero.to_mul_bot_le [Add α] [Preorderₓ α] (a b : WithZero (Multiplicative α)) :
-    WithZero.toMulBot a ≤ WithZero.toMulBot b ↔ a ≤ b :=
-  Iff.rfl
-
-@[simp]
-theorem WithZero.to_mul_bot_lt [Add α] [Preorderₓ α] (a b : WithZero (Multiplicative α)) :
-    WithZero.toMulBot a < WithZero.toMulBot b ↔ a < b :=
-  Iff.rfl
 
 namespace Additive
 
@@ -1212,6 +1410,47 @@ theorem to_add_lt {a b : Multiplicative α} : toAdd a < toAdd b ↔ a < b :=
 end Multiplicative
 
 end TypeTags
+
+namespace WithZero
+
+attribute [local semireducible] WithZero
+
+variable [Add α]
+
+/-- Making an additive monoid multiplicative then adding a zero is the same as adding a bottom
+element then making it multiplicative. -/
+def toMulBot : WithZero (Multiplicative α) ≃* Multiplicative (WithBot α) :=
+  MulEquiv.refl _
+
+@[simp]
+theorem to_mul_bot_zero : toMulBot (0 : WithZero (Multiplicative α)) = Multiplicative.ofAdd ⊥ :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_coe (x : Multiplicative α) : toMulBot ↑x = Multiplicative.ofAdd (x.toAdd : WithBot α) :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_symm_bot : toMulBot.symm (Multiplicative.ofAdd (⊥ : WithBot α)) = 0 :=
+  rfl
+
+@[simp]
+theorem to_mul_bot_coe_of_add (x : α) : toMulBot.symm (Multiplicative.ofAdd (x : WithBot α)) = Multiplicative.ofAdd x :=
+  rfl
+
+variable [Preorderₓ α] (a b : WithZero (Multiplicative α))
+
+theorem to_mul_bot_strict_mono : StrictMono (@toMulBot α _) := fun x y => id
+
+@[simp]
+theorem to_mul_bot_le : toMulBot a ≤ toMulBot b ↔ a ≤ b :=
+  Iff.rfl
+
+@[simp]
+theorem to_mul_bot_lt : toMulBot a < toMulBot b ↔ a < b :=
+  Iff.rfl
+
+end WithZero
 
 /-- The order embedding sending `b` to `a * b`, for some fixed `a`.
 See also `order_iso.mul_left` when working in an ordered group. -/

@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Algebra.BigOperators.Finprod
-import Mathbin.Topology.UrysohnsLemma
+import Mathbin.SetTheory.Ordinal.Basic
+import Mathbin.Topology.ContinuousFunction.Algebra
 import Mathbin.Topology.Paracompact
 import Mathbin.Topology.ShrinkingLemma
-import Mathbin.Topology.ContinuousFunction.Algebra
-import Mathbin.SetTheory.Ordinal
+import Mathbin.Topology.UrysohnsLemma
 
 /-!
 # Continuous partition of unity
@@ -77,7 +77,7 @@ universe u v
 
 open Function Set Filter
 
-open_locale BigOperators TopologicalSpace Classical
+open BigOperators TopologicalSpace Classical
 
 noncomputable section
 
@@ -152,8 +152,15 @@ theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
 
 /-- A partition of unity `f i` is subordinate to a family of sets `U i` indexed by the same type if
 for each `i` the closure of the support of `f i` is a subset of `U i`. -/
-def IsSubordinate (f : PartitionOfUnity ι X s) (U : ι → Set X) : Prop :=
+def IsSubordinate (U : ι → Set X) : Prop :=
   ∀ i, Tsupport (f i) ⊆ U i
+
+variable {f}
+
+theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordinate U) (ho : ∀ i, IsOpen (U i)) (x : X) :
+    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
+      ∀, ∀ z ∈ n, ∀, (Support fun i => f i z) ⊆ is :=
+  f.LocallyFinite.exists_finset_nhd_support_subset hso ho x
 
 end PartitionOfUnity
 
@@ -313,7 +320,7 @@ theorem sum_to_pou_fun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1
   have B : (mul_support fun i => 1 - f i x) ⊆ s := by
     rw [hs, mul_support_one_sub]
     exact fun i => id
-  let this' : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  let this : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
   rw [finsum_eq_sum_of_support_subset _ A, finprod_eq_prod_of_mul_support_subset _ B, Finset.prod_one_sub_ordered,
     sub_sub_cancel]
   refine' Finset.sum_congr rfl fun i hi => _

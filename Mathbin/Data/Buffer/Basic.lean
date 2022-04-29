@@ -52,8 +52,8 @@ instance α [DecidableEq α] : DecidableEq (Buffer α) := by
   run_tac
     tactic.mk_dec_eq_instance
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem to_list_append_list {b : Buffer α} : toList (appendList b xs) = toList b ++ xs := by
   induction xs generalizing b <;> simp [*] <;> cases b <;> simp [to_list, to_array]

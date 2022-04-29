@@ -62,14 +62,11 @@ theorem factorial_ne_zero (n : ℕ) : n ! ≠ 0 :=
   ne_of_gtₓ (factorial_pos _)
 
 theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
-  induction' n with n IH <;> simp
-  · have := Nat.eq_zero_of_le_zeroₓ h
-    subst m
-    simp
+  induction' n with n IH
+  · simp [Nat.eq_zero_of_le_zeroₓ h]
     
-  obtain he | hl := h.eq_or_lt
-  · subst m
-    simp
+  obtain rfl | hl := h.eq_or_lt
+  · simp
     
   exact (IH (le_of_lt_succ hl)).mul_left _
 
@@ -92,54 +89,38 @@ theorem factorial_mul_pow_le_factorial : ∀ {m n : ℕ}, m ! * m.succ ^ n ≤ (
 theorem monotone_factorial : Monotone factorial := fun n m => factorial_le
 
 theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
-  constructor <;> intro h
-  · rw [← not_leₓ]
-    intro hmn
-    apply not_le_of_lt h (factorial_le hmn)
-    
-  have : ∀ n, 0 < n → n ! < n.succ ! := by
+  refine' ⟨fun h => not_le.mp fun hmn => not_le_of_lt h (factorial_le hmn), fun h => _⟩
+  have : ∀ {n}, 0 < n → n ! < n.succ ! := by
     intro k hk
     rw [factorial_succ, succ_mul, lt_add_iff_pos_left]
-    apply mul_pos hk (factorial_pos k)
-  induction' h with k hnk generalizing hn
-  · exact this _ hn
+    exact mul_pos hk k.factorial_pos
+  induction' h with k hnk ih generalizing hn
+  · exact this hn
     
-  refine' lt_transₓ (h_ih hn) (this _ _)
-  exact lt_transₓ hn (lt_of_succ_le hnk)
+  · exact (ih hn).trans (this <| hn.trans <| lt_of_succ_le hnk)
+    
 
-theorem one_lt_factorial : 1 < n ! ↔ 1 < n := by
-  convert factorial_lt _
-  rfl
-  exact one_pos
+theorem one_lt_factorial : 1 < n ! ↔ 1 < n :=
+  factorial_lt one_posₓ
 
 theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
-  constructor <;> intro h
-  · rw [← not_ltₓ, ← one_lt_factorial, h]
-    apply lt_irreflₓ
-    
-  cases' h with h h
-  rfl
-  cases h
-  rfl
+  refine'
+    ⟨fun h => _, by
+      rintro (_ | ⟨_, _ | _⟩) <;> rfl⟩
+  rw [← not_ltₓ, ← one_lt_factorial, h]
+  apply lt_irreflₓ
 
 theorem factorial_inj (hn : 1 < n !) : n ! = m ! ↔ n = m := by
-  constructor <;> intro h
-  · obtain hnm | hnm | hnm := lt_trichotomyₓ n m
-    · exfalso
-      rw [← factorial_lt, h] at hnm
-      exact lt_irreflₓ _ hnm
-      rw [one_lt_factorial] at hn
-      exact lt_transₓ one_pos hn
-      
-    · exact hnm
-      
-    exfalso
-    rw [h, one_lt_factorial] at hn
-    rw [← factorial_lt (lt_transₓ one_pos hn), h] at hnm
-    exact lt_irreflₓ _ hnm
+  refine' ⟨fun h => _, congr_argₓ _⟩
+  obtain hnm | rfl | hnm := lt_trichotomyₓ n m
+  · rw [← factorial_lt <| pos_of_gt <| one_lt_factorial.mp hn, h] at hnm
+    cases lt_irreflₓ _ hnm
     
-  · rw [h]
+  · rfl
     
+  rw [h, one_lt_factorial] at hn
+  rw [← factorial_lt (lt_transₓ one_pos hn), h] at hnm
+  cases lt_irreflₓ _ hnm
 
 theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | 0 => zero_le_one
@@ -174,8 +155,7 @@ theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) : i + (n + 
   obtain i2 | (_ | ⟨_, i0⟩) := le_or_ltₓ 2 i
   · exact (n.add_factorial_succ_lt_factorial_add_succ i2).le
     
-  · change 1 + (n + 1)! ≤ (1 + n + 1) * (1 + n)!
-    rw [add_mulₓ, one_mulₓ, add_commₓ 1 n]
+  · rw [← add_assocₓ, factorial_succ (1 + n), add_mulₓ, one_mulₓ, add_commₓ 1 n]
     exact (add_le_add_iff_right _).mpr (one_le_mul (Nat.le_add_leftₓ 1 n) (n + 1).factorial_pos)
     
   rw [nat.le_zero_iff.mp (nat.succ_le_succ_iff.mp i0), zero_addₓ, zero_addₓ]
@@ -216,9 +196,9 @@ theorem asc_factorial_zero (n : ℕ) : n.ascFactorial 0 = 1 :=
 @[simp]
 theorem zero_asc_factorial (k : ℕ) : (0 : ℕ).ascFactorial k = k ! := by
   induction' k with t ht
-  rfl
-  unfold asc_factorial
-  rw [ht, zero_addₓ, Nat.factorial_succ]
+  · rfl
+    
+  rw [asc_factorial, ht, zero_addₓ, Nat.factorial_succ]
 
 theorem asc_factorial_succ {n k : ℕ} : n.ascFactorial k.succ = (n + k + 1) * n.ascFactorial k :=
   rfl
@@ -239,7 +219,7 @@ theorem factorial_mul_asc_factorial (n : ℕ) : ∀ k, n ! * n.ascFactorial k = 
 
 /-- Avoid in favor of `nat.factorial_mul_asc_factorial` if you can. ℕ-division isn't worth it. -/
 theorem asc_factorial_eq_div (n k : ℕ) : n.ascFactorial k = (n + k)! / n ! := by
-  apply mul_left_cancel₀ (factorial_ne_zero n)
+  apply mul_left_cancel₀ n.factorial_ne_zero
   rw [factorial_mul_asc_factorial]
   exact (Nat.mul_div_cancel'ₓ <| factorial_dvd_factorial <| le.intro rfl).symm
 

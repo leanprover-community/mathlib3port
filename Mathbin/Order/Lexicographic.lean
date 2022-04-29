@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 -/
-import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.Prod
+import Mathbin.Logic.Equiv.Basic
 import Mathbin.Tactic.Basic
 
 /-!

@@ -26,7 +26,7 @@ universe u v w u₁
 
 namespace DirectSum
 
-open_locale DirectSum
+open DirectSum
 
 section General
 
@@ -211,6 +211,70 @@ theorem component.of (i j : ι) (b : M j) :
     component R ι M i ((lof R ι M j) b) = if h : j = i then Eq.recOnₓ h b else 0 :=
   Dfinsupp.single_apply
 
+omit dec_ι
+
+section CongrLeft
+
+variable {κ : Type _}
+
+/-- Reindexing terms of a direct sum is linear.-/
+def lequivCongrLeft (h : ι ≃ κ) : (⨁ i, M i) ≃ₗ[R] ⨁ k, M (h.symm k) :=
+  { equivCongrLeft h with map_smul' := Dfinsupp.comap_domain'_smul _ _ }
+
+@[simp]
+theorem lequiv_congr_left_apply (h : ι ≃ κ) (f : ⨁ i, M i) (k : κ) : lequivCongrLeft R h f k = f (h.symm k) :=
+  equiv_congr_left_apply _ _ _
+
+end CongrLeft
+
+section Sigma
+
+variable {α : ι → Type u} {δ : ∀ i, α i → Type w}
+
+variable [∀ i j, AddCommMonoidₓ (δ i j)] [∀ i j, Module R (δ i j)]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+/-- `curry` as a linear map.-/
+noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
+  { sigmaCurry with
+    map_smul' := fun r => by
+      convert @Dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
+
+@[simp]
+theorem sigma_lcurry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaLcurry R f i j = f ⟨i, j⟩ :=
+  sigma_curry_apply f i j
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+/-- `uncurry` as a linear map.-/
+noncomputable def sigmaLuncurry : (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σi, _, δ i.1 i.2 :=
+  { sigmaUncurry with map_smul' := Dfinsupp.sigma_uncurry_smul }
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[simp]
+theorem sigma_luncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaLuncurry R f ⟨i, j⟩ = f i j :=
+  sigma_uncurry_apply f i j
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+/-- `curry_equiv` as a linear equiv.-/
+noncomputable def sigmaLcurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
+  { sigmaCurryEquiv, sigmaLcurry R with }
+
+end Sigma
+
+section Option
+
+variable {α : Option ι → Type w} [∀ i, AddCommMonoidₓ (α i)] [∀ i, Module R (α i)]
+
+include dec_ι
+
+/-- Linear isomorphism obtained by separating the term of index `none` of a direct sum over
+`option ι`.-/
+@[simps]
+noncomputable def lequivProdDirectSum : (⨁ i, α i) ≃ₗ[R] α none × ⨁ i, α (some i) :=
+  { addEquivProdDirectSum with map_smul' := Dfinsupp.equiv_prod_dfinsupp_smul }
+
+end Option
+
 end General
 
 section Submodule
@@ -290,6 +354,16 @@ theorem SubmoduleIsInternal.collected_basis_mem (h : SubmoduleIsInternal A) {α 
     (v : ∀ i, Basis (α i) R (A i)) (a : Σi, α i) : h.collectedBasis v a ∈ A a.1 := by
   simp
 
+/-- When indexed by only two distinct elements, `direct_sum.submodule_is_internal` implies
+the two submodules are complementary. Over a `ring R`, this is true as an iff, as
+`direct_sum.submodule_is_internal_iff_is_compl`. --/
+theorem SubmoduleIsInternal.is_compl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j) (h : (Set.Univ : Set ι) = {i, j})
+    (hi : SubmoduleIsInternal A) : IsCompl (A i) (A j) :=
+  ⟨hi.Independent.PairwiseDisjoint _ _ hij,
+    Eq.le <|
+      hi.supr_eq_top.symm.trans <| by
+        rw [← Sup_pair, supr, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩
+
 end Semiringₓ
 
 section Ringₓ
@@ -318,6 +392,16 @@ theorem submodule_is_internal_of_independent_of_supr_eq_top {A : ι → Submodul
 theorem submodule_is_internal_iff_independent_and_supr_eq_top (A : ι → Submodule R M) :
     SubmoduleIsInternal A ↔ CompleteLattice.Independent A ∧ supr A = ⊤ :=
   ⟨fun i => ⟨i.Independent, i.supr_eq_top⟩, And.ndrec submodule_is_internal_of_independent_of_supr_eq_top⟩
+
+/-- If a collection of submodules has just two indices, `i` and `j`, then
+`direct_sum.submodule_is_internal` is equivalent to `is_compl`. -/
+theorem submodule_is_internal_iff_is_compl (A : ι → Submodule R M) {i j : ι} (hij : i ≠ j)
+    (h : (Set.Univ : Set ι) = {i, j}) : SubmoduleIsInternal A ↔ IsCompl (A i) (A j) := by
+  have : ∀ k, k = i ∨ k = j := fun k => by
+    simpa using set.ext_iff.mp h k
+  rw [submodule_is_internal_iff_independent_and_supr_eq_top, supr, ← Set.image_univ, h, Set.image_insert_eq,
+    Set.image_singleton, Sup_pair, CompleteLattice.independent_pair hij this]
+  exact ⟨fun ⟨hd, ht⟩ => ⟨hd, ht.Ge⟩, fun ⟨hd, ht⟩ => ⟨hd, eq_top_iff.mpr ht⟩⟩
 
 /-! Now copy the lemmas for subgroup and submonoids. -/
 

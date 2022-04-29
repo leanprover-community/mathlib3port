@@ -156,10 +156,10 @@ See note [reducible non-instances]. -/
 The following facts are true more generally in a (linearly) ordered commutative monoid.
 -/
 @[reducible]
-def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
-    LinearOrderedCommMonoidWithZero β :=
-  { LinearOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul, hf.CommMonoidWithZero f zero one mul with
+def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [One β] [Mul β] [Pow β ℕ] (f : β → α)
+    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedCommMonoidWithZero β :=
+  { LinearOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul npow, hf.CommMonoidWithZero f zero one mul npow with
     zero_le_one :=
       show f 0 ≤ f 1 by
         simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
@@ -206,16 +206,21 @@ theorem le_mul_inv_of_mul_le (h : c ≠ 0) (hab : a * c ≤ b) : a ≤ b * c⁻�
     (by
       simpa [h] using hab)
 
-theorem mul_inv_le_of_le_mul (h : c ≠ 0) (hab : a ≤ b * c) : a * c⁻¹ ≤ b :=
-  le_of_le_mul_right h
-    (by
-      simpa [h] using hab)
+theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
+  by_cases' h : c = 0
+  · simp [h]
+    
+  · exact
+      le_of_le_mul_right h
+        (by
+          simpa [h] using hab)
+    
 
 theorem le_mul_inv_iff₀ (hc : c ≠ 0) : a ≤ b * c⁻¹ ↔ a * c ≤ b :=
-  ⟨fun h => inv_invₓ c ▸ mul_inv_le_of_le_mul (inv_ne_zero hc) h, le_mul_inv_of_mul_le hc⟩
+  ⟨fun h => inv_invₓ c ▸ mul_inv_le_of_le_mul h, le_mul_inv_of_mul_le hc⟩
 
 theorem mul_inv_le_iff₀ (hc : c ≠ 0) : a * c⁻¹ ≤ b ↔ a ≤ b * c :=
-  ⟨fun h => inv_invₓ c ▸ le_mul_inv_of_mul_le (inv_ne_zero hc) h, mul_inv_le_of_le_mul hc⟩
+  ⟨fun h => inv_invₓ c ▸ le_mul_inv_of_mul_le (inv_ne_zero hc) h, mul_inv_le_of_le_mul⟩
 
 theorem div_le_div₀ (a b c d : α) (hb : b ≠ 0) (hd : d ≠ 0) : a * b⁻¹ ≤ c * d⁻¹ ↔ a * d ≤ c * b :=
   if ha : a = 0 then by
@@ -248,9 +253,8 @@ theorem mul_lt_mul₀ (hab : a < b) (hcd : c < d) : a * c < b * d :=
   mul_lt_mul_of_lt_of_le₀ hab.le (ne_zero_of_lt hab) hcd
 
 theorem mul_inv_lt_of_lt_mul₀ (h : x < y * z) : x * z⁻¹ < y := by
-  have hz : z ≠ 0 := (mul_ne_zero_iff.1 <| ne_zero_of_lt h).2
   contrapose! h
-  simpa only [inv_invₓ] using mul_inv_le_of_le_mul (inv_ne_zero hz) h
+  simpa only [inv_invₓ] using mul_inv_le_of_le_mul h
 
 theorem inv_mul_lt_of_lt_mul₀ (h : x < y * z) : y⁻¹ * x < z := by
   rw [mul_comm] at *

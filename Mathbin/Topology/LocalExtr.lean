@@ -38,7 +38,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x} [TopologicalSpa
 
 open Set Filter
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 section Preorderₓ
 

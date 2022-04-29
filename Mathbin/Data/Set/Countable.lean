@@ -3,8 +3,8 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
-import Mathbin.Data.Equiv.List
 import Mathbin.Data.Set.Finite
+import Mathbin.Logic.Equiv.List
 
 /-!
 # Countable sets
@@ -17,7 +17,7 @@ open Function Set Encodable
 
 open Classical hiding some
 
-open_locale Classical
+open Classical
 
 universe u v w
 
@@ -89,8 +89,8 @@ theorem countable_encodable [Encodable α] (s : Set α) : Countable s :=
 /-- If `s : set α` is a nonempty countable set, then there exists a map
 `f : ℕ → α` such that `s = range f`. -/
 theorem Countable.exists_surjective {s : Set α} (hc : Countable s) (hs : s.Nonempty) : ∃ f : ℕ → α, s = Range f := by
-  let this' : Encodable s := countable.to_encodable hc
-  let this' : Nonempty s := hs.to_subtype
+  let this : Encodable s := countable.to_encodable hc
+  let this : Nonempty s := hs.to_subtype
   have : countable (univ : Set s) := countable_encodable _
   rcases countable_iff_exists_surjective.1 this with ⟨g, hg⟩
   have : range g = univ := univ_subset_iff.1 hg
@@ -191,7 +191,7 @@ theorem Countable.insert {s : Set α} (a : α) (h : Countable s) : Countable (in
   countable_insert.2 h
 
 theorem Finite.countable {s : Set α} : Finite s → Countable s
-  | ⟨h⟩ => Trunc.nonempty (trunc_encodable_of_fintype s)
+  | ⟨h⟩ => Trunc.nonempty (Fintype.truncEncodable s)
 
 theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : Countable s :=
   hs.Finite.Countable

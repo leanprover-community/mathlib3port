@@ -19,7 +19,7 @@ a tower of algebraic field extensions is algebraic.
 
 universe u v w
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Polynomial
 
@@ -35,6 +35,9 @@ def IsAlgebraic (x : A) : Prop :=
 def Transcendental (x : A) : Prop :=
   ¬IsAlgebraic R x
 
+theorem is_transcendental_of_subsingleton [Subsingleton R] (x : A) : Transcendental R x := fun ⟨p, h, _⟩ =>
+  h <| Subsingleton.elimₓ p 0
+
 variable {R}
 
 /-- A subalgebra is algebraic if all its elements are algebraic. -/
@@ -49,15 +52,11 @@ def Algebra.IsAlgebraic : Prop :=
 
 variable {R A}
 
-/-- A subalgebra is algebraic if and only if it is algebraic an algebra. -/
+/-- A subalgebra is algebraic if and only if it is algebraic as an algebra. -/
 theorem Subalgebra.is_algebraic_iff (S : Subalgebra R A) : S.IsAlgebraic ↔ @Algebra.IsAlgebraic R S _ _ S.Algebra := by
   delta' Algebra.IsAlgebraic Subalgebra.IsAlgebraic
   rw [Subtype.forall']
-  apply forall_congrₓ
-  rintro ⟨x, hx⟩
-  apply exists_congr
-  intro p
-  apply and_congr Iff.rfl
+  refine' forall_congrₓ fun x => exists_congr fun p => and_congr Iff.rfl _
   have h : Function.Injective S.val := Subtype.val_injective
   conv_rhs => rw [← h.eq_iff, AlgHom.map_zero]
   rw [← aeval_alg_hom_apply, S.val_apply]
@@ -69,7 +68,7 @@ theorem Algebra.is_algebraic_iff : Algebra.IsAlgebraic R A ↔ (⊤ : Subalgebra
 
 theorem is_algebraic_iff_not_injective {x : A} :
     IsAlgebraic R x ↔ ¬Function.Injective (Polynomial.aeval x : R[X] →ₐ[R] A) := by
-  simp only [IsAlgebraic, AlgHom.injective_iff, not_forall, And.comm, exists_prop]
+  simp only [IsAlgebraic, injective_iff_map_eq_zero, not_forall, And.comm, exists_prop]
 
 end
 
@@ -82,21 +81,40 @@ variable [CommRingₓ S] [Ringₓ A] [Algebra R A] [Algebra R S] [Algebra S A]
 variable [IsScalarTower R S A]
 
 /-- An integral element of an algebra is algebraic.-/
-theorem IsIntegral.is_algebraic [Nontrivial R] {x : A} (h : IsIntegral R x) : IsAlgebraic R x := by
-  rcases h with ⟨p, hp, hpx⟩
-  exact ⟨p, hp.ne_zero, hpx⟩
+theorem IsIntegral.is_algebraic [Nontrivial R] {x : A} : IsIntegral R x → IsAlgebraic R x := fun ⟨p, hp, hpx⟩ =>
+  ⟨p, hp.ne_zero, hpx⟩
 
 variable {R}
 
-/-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/
-theorem is_algebraic_algebra_map [Nontrivial R] (a : R) : IsAlgebraic R (algebraMap R A a) :=
-  ⟨X - c a, X_sub_C_ne_zero a, by
-    simp only [aeval_C, aeval_X, AlgHom.map_sub, sub_self]⟩
+theorem is_algebraic_zero [Nontrivial R] : IsAlgebraic R (0 : A) :=
+  ⟨_, X_ne_zero, aeval_X 0⟩
 
-theorem is_algebraic_algebra_map_of_is_algebraic {a : S} (h : IsAlgebraic R a) : IsAlgebraic R (algebraMap S A a) := by
-  obtain ⟨f, hf₁, hf₂⟩ := h
-  use f, hf₁
-  rw [← IsScalarTower.algebra_map_aeval R S A, hf₂, RingHom.map_zero]
+/-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/
+theorem is_algebraic_algebra_map [Nontrivial R] (x : R) : IsAlgebraic R (algebraMap R A x) :=
+  ⟨_, X_sub_C_ne_zero x, by
+    rw [_root_.map_sub, aeval_X, aeval_C, sub_self]⟩
+
+theorem is_algebraic_one [Nontrivial R] : IsAlgebraic R (1 : A) := by
+  rw [← _root_.map_one _]
+  exact is_algebraic_algebra_map 1
+
+theorem is_algebraic_nat [Nontrivial R] (n : ℕ) : IsAlgebraic R (n : A) := by
+  rw [← map_nat_cast _]
+  exact is_algebraic_algebra_map n
+
+theorem is_algebraic_int [Nontrivial R] (n : ℤ) : IsAlgebraic R (n : A) := by
+  rw [← RingHom.map_int_cast (algebraMap R A)]
+  exact is_algebraic_algebra_map n
+
+theorem is_algebraic_rat (R : Type u) {A : Type v} [DivisionRing A] [Field R] [CharZero R] [Algebra R A] (n : ℚ) :
+    IsAlgebraic R (n : A) := by
+  rw [← map_rat_cast (algebraMap R A)]
+  exact is_algebraic_algebra_map n
+
+theorem is_algebraic_algebra_map_of_is_algebraic {a : S} : IsAlgebraic R a → IsAlgebraic R (algebraMap S A a) :=
+  fun ⟨f, hf₁, hf₂⟩ =>
+  ⟨f, hf₁, by
+    rw [← IsScalarTower.algebra_map_aeval R S A, hf₂, RingHom.map_zero]⟩
 
 end zero_ne_one
 
@@ -190,12 +208,12 @@ theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S
     (inj : Function.Injective (algebraMap R L)) (a : S) {b : S} (hb : b ≠ 0) :
     ∃ (c : S)(d : _)(_ : d ≠ (0 : R)), d • a = b * c := by
   obtain ⟨c, d, d_ne, hx⟩ :=
-    exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b)) ((RingHom.injective_iff _).mp inj)
+    exists_integral_multiple (h (algebraMap _ L a / algebraMap _ L b)) ((injective_iff_map_eq_zero _).mp inj)
   refine' ⟨IsIntegralClosure.mk' S (c : L) c.2, d, d_ne, IsIntegralClosure.algebra_map_injective S R L _⟩
   simp only [Algebra.smul_def, RingHom.map_mul, IsIntegralClosure.algebra_map_mk', ← hx, ←
     IsScalarTower.algebra_map_apply]
   rw [← mul_assoc _ (_ / _), mul_div_cancel' (algebraMap S L a), mul_comm]
-  exact mt ((RingHom.injective_iff _).mp (IsIntegralClosure.algebra_map_injective S R L) _) hb
+  exact mt ((injective_iff_map_eq_zero _).mp (IsIntegralClosure.algebra_map_injective S R L) _) hb
 
 section Field
 

@@ -43,7 +43,7 @@ vector measure, signed measure, complex measure
 
 noncomputable section
 
-open_locale Classical BigOperators Nnreal Ennreal MeasureTheory
+open Classical BigOperators Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -233,6 +233,36 @@ theorem of_nonpos_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (
 
 end
 
+section HasScalar
+
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
+
+variable {R : Type _} [Semiringₓ R] [DistribMulAction R M] [HasContinuousConstSmul R M]
+
+include m
+
+/-- Given a real number `r` and a signed measure `s`, `smul r s` is the signed
+measure corresponding to the function `r • s`. -/
+def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M where
+  measureOf' := r • v
+  empty' := by
+    rw [Pi.smul_apply, Empty, smul_zero]
+  not_measurable' := fun _ hi => by
+    rw [Pi.smul_apply, v.not_measurable hi, smul_zero]
+  m_Union' := fun _ hf₁ hf₂ => HasSum.const_smul (v.m_Union hf₁ hf₂)
+
+instance : HasScalar R (VectorMeasure α M) :=
+  ⟨smul⟩
+
+@[simp]
+theorem coe_smul (r : R) (v : VectorMeasure α M) : ⇑(r • v) = r • v :=
+  rfl
+
+theorem smul_apply (r : R) (v : VectorMeasure α M) (i : Set α) : (r • v) i = r • v i :=
+  rfl
+
+end HasScalar
+
 section AddCommMonoidₓ
 
 variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
@@ -274,7 +304,7 @@ theorem add_apply (v w : VectorMeasure α M) (i : Set α) : (v + w) i = v i + w 
   rfl
 
 instance : AddCommMonoidₓ (VectorMeasure α M) :=
-  Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add
+  Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add fun _ _ => coe_smul _ _
 
 /-- `coe_fn` is an `add_monoid_hom`. -/
 @[simps]
@@ -330,7 +360,8 @@ theorem sub_apply (v w : VectorMeasure α M) (i : Set α) : (v - w) i = v i - w 
   rfl
 
 instance : AddCommGroupₓ (VectorMeasure α M) :=
-  Function.Injective.addCommGroup _ coe_injective coe_zero coe_add coe_neg coe_sub
+  Function.Injective.addCommGroup _ coe_injective coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
+    coe_smul _ _
 
 end AddCommGroupₓ
 
@@ -341,26 +372,6 @@ variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 variable {R : Type _} [Semiringₓ R] [DistribMulAction R M] [HasContinuousConstSmul R M]
 
 include m
-
-/-- Given a real number `r` and a signed measure `s`, `smul r s` is the signed
-measure corresponding to the function `r • s`. -/
-def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M where
-  measureOf' := r • v
-  empty' := by
-    rw [Pi.smul_apply, Empty, smul_zero]
-  not_measurable' := fun _ hi => by
-    rw [Pi.smul_apply, v.not_measurable hi, smul_zero]
-  m_Union' := fun _ hf₁ hf₂ => HasSum.const_smul (v.m_Union hf₁ hf₂)
-
-instance : HasScalar R (VectorMeasure α M) :=
-  ⟨smul⟩
-
-@[simp]
-theorem coe_smul (r : R) (v : VectorMeasure α M) : ⇑(r • v) = r • v :=
-  rfl
-
-theorem smul_apply (r : R) (v : VectorMeasure α M) (i : Set α) : (r • v) i = r • v i :=
-  rfl
 
 instance [HasContinuousAdd M] : DistribMulAction R (VectorMeasure α M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
@@ -1050,7 +1061,7 @@ def AbsolutelyContinuous (v : VectorMeasure α M) (w : VectorMeasure α N) :=
 -- mathport name: «expr ≪ᵥ »
 localized [MeasureTheory] infixl:50 " ≪ᵥ " => MeasureTheory.VectorMeasure.AbsolutelyContinuous
 
-open_locale MeasureTheory
+open MeasureTheory
 
 namespace AbsolutelyContinuous
 
@@ -1071,7 +1082,8 @@ theorem refl (v : VectorMeasure α M) : v ≪ᵥ v :=
   eq rfl
 
 @[trans]
-theorem trans {u : VectorMeasure α L} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) : u ≪ᵥ w := fun _ hs => huv <| hvw hs
+theorem trans {u : VectorMeasure α L} {v : VectorMeasure α M} {w : VectorMeasure α N} (huv : u ≪ᵥ v) (hvw : v ≪ᵥ w) :
+    u ≪ᵥ w := fun _ hs => huv <| hvw hs
 
 theorem zero (v : VectorMeasure α N) : (0 : VectorMeasure α M) ≪ᵥ v := fun s _ => VectorMeasure.zero_apply s
 
@@ -1284,7 +1296,7 @@ namespace SignedMeasure
 
 open VectorMeasure
 
-open_locale MeasureTheory
+open MeasureTheory
 
 include m
 

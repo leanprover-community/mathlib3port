@@ -19,11 +19,11 @@ TODO: similarly for `R`-linear.
 
 universe v u
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Limits HomologicalComplex
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits HomologicalComplex
 
 variable {ι : Type _}
 
@@ -47,6 +47,18 @@ instance : Neg (C ⟶ D) :=
 instance : Sub (C ⟶ D) :=
   ⟨fun f g => { f := fun i => f.f i - g.f i }⟩
 
+instance hasNatScalar : HasScalar ℕ (C ⟶ D) :=
+  ⟨fun n f =>
+    { f := fun i => n • f.f i,
+      comm' := fun i j h => by
+        simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
+
+instance hasIntScalar : HasScalar ℤ (C ⟶ D) :=
+  ⟨fun n f =>
+    { f := fun i => n • f.f i,
+      comm' := fun i j h => by
+        simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
+
 @[simp]
 theorem zero_f_apply (i : ι) : (0 : C ⟶ D).f i = 0 :=
   rfl
@@ -63,12 +75,20 @@ theorem neg_f_apply (f : C ⟶ D) (i : ι) : (-f).f i = -f.f i :=
 theorem sub_f_apply (f g : C ⟶ D) (i : ι) : (f - g).f i = f.f i - g.f i :=
   rfl
 
-/- TODO(jmc/Scott): the instance below doesn't have the correct defeq for `nsmul` and `zsmul`.
-We should generalize `function.injective.add_comm_group` and friends.
-For the `R`-linear version, it will be very convenient to have
-a good definition of `nsmul` and `zsmul` that matches `smul`. -/
+@[simp]
+theorem nsmul_f_apply (n : ℕ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f.f i :=
+  rfl
+
+@[simp]
+theorem zsmul_f_apply (n : ℤ) (f : C ⟶ D) (i : ι) : (n • f).f i = n • f.f i :=
+  rfl
+
 instance : AddCommGroupₓ (C ⟶ D) :=
   Function.Injective.addCommGroup Hom.f HomologicalComplex.hom_f_injective
+    (by
+      tidy)
+    (by
+      tidy)
     (by
       tidy)
     (by
@@ -173,6 +193,24 @@ theorem NatTrans.map_homological_complex_naturality {c : ComplexShape ι} {F G :
 
 end CategoryTheory
 
+namespace ChainComplex
+
+variable {W : Type _} [Category W] [Preadditive W]
+
+variable {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
+
+theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n)
+    (sq : ∀ n, d (n + 1) ≫ d n = 0) :
+    (F.mapHomologicalComplex _).obj (ChainComplex.of X d sq) =
+      ChainComplex.of (fun n => F.obj (X n)) (fun n => F.map (d n)) fun n => by
+        rw [← F.map_comp, sq n, functor.map_zero] :=
+  by
+  refine' HomologicalComplex.ext rfl _
+  rintro i j (rfl : j + 1 = i)
+  simp only [CategoryTheory.Functor.map_homological_complex_obj_d, of_d, eq_to_hom_refl, comp_id, id_comp]
+
+end ChainComplex
+
 variable [HasZeroObject V] {W : Type _} [Category W] [Preadditive W] [HasZeroObject W]
 
 namespace HomologicalComplex
@@ -258,7 +296,6 @@ namespace ChainComplex
 /-- Turning an object into a chain complex supported at zero then applying a functor is
 the same as applying the functor then forming the complex.
 -/
--- TODO: dualize to cochain complexes
 def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
   NatIso.ofComponents
     (fun X =>
@@ -316,4 +353,67 @@ theorem single₀_map_homological_complex_inv_app_succ (F : V ⥤ W) [F.Additive
   rfl
 
 end ChainComplex
+
+namespace CochainComplex
+
+/-- Turning an object into a cochain complex supported at zero then applying a functor is
+the same as applying the functor then forming the cochain complex.
+-/
+def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ F.mapHomologicalComplex _ ≅ F ⋙ single₀ W :=
+  NatIso.ofComponents
+    (fun X =>
+      { Hom :=
+          { f := fun i =>
+              match i with
+              | 0 => 𝟙 _
+              | i + 1 => F.mapZeroObject.Hom },
+        inv :=
+          { f := fun i =>
+              match i with
+              | 0 => 𝟙 _
+              | i + 1 => F.mapZeroObject.inv },
+        hom_inv_id' := by
+          ext (_ | i)
+          · unfold_aux
+            simp
+            
+          · unfold_aux
+            dsimp
+            simp only [comp_f, id_f, zero_comp]
+            exact (zero_of_source_iso_zero _ F.map_zero_object).symm
+            ,
+        inv_hom_id' := by
+          ext (_ | i) <;>
+            · unfold_aux
+              dsimp
+              simp
+               })
+    fun X Y f => by
+    ext (_ | i) <;>
+      · unfold_aux
+        dsimp
+        simp
+        
+
+@[simp]
+theorem single₀_map_homological_complex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
+    ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
+  rfl
+
+@[simp]
+theorem single₀_map_homological_complex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
+    ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
+  rfl
+
+@[simp]
+theorem single₀_map_homological_complex_inv_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
+    ((single₀MapHomologicalComplex F).inv.app X).f 0 = 𝟙 _ :=
+  rfl
+
+@[simp]
+theorem single₀_map_homological_complex_inv_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
+    ((single₀MapHomologicalComplex F).inv.app X).f (n + 1) = 0 :=
+  rfl
+
+end CochainComplex
 

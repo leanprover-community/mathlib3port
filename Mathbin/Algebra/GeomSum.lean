@@ -41,7 +41,7 @@ variable {α : Type u}
 
 open Finset MulOpposite
 
-open_locale BigOperators
+open BigOperators
 
 section Semiringₓ
 
@@ -156,9 +156,9 @@ theorem neg_one_geom_sum [Ringₓ α] {n : ℕ} : geomSum (-1 : α) n = if Even 
     
   · simp only [geom_sum_succ', Nat.even_succ, hk]
     split_ifs
-    · rw [Nat.neg_one_pow_of_even h, add_zeroₓ]
+    · rw [h.neg_one_pow, add_zeroₓ]
       
-    · rw [Nat.neg_one_pow_of_odd (nat.odd_iff_not_even.mpr h), neg_add_selfₓ]
+    · rw [(Nat.odd_iff_not_even.2 h).neg_one_pow, neg_add_selfₓ]
       
     
 
@@ -404,7 +404,7 @@ theorem geom_sum_alternating_of_lt_neg_one [OrderedRing α] (hx : x + 1 < 0) (hn
     if Even n then geomSum x n < 0 else 1 < geomSum x n := by
   have hx0 : x < 0 := ((le_add_iff_nonneg_right _).2 (@zero_le_one α _)).trans_lt hx
   refine' Nat.le_induction _ _ n (show 2 ≤ n from hn)
-  · simp only [geom_sum_two, hx, true_orₓ, Nat.even_bit0, if_true_left_eq_or]
+  · simp only [geom_sum_two, hx, true_orₓ, even_bit0, if_true_left_eq_or]
     
   clear hn n
   intro n hn ihn

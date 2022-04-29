@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Markus Himmel
+Authors: Markus Himmel, Johan Commelin, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
@@ -24,8 +24,8 @@ actually a consequence of the other properties, as we show in
 `non_preadditive_abelian.lean`. However, this fact is of little practical
 relevance, since essentially all interesting abelian categories come with a
 preadditive structure. In this way, by requiring preadditivity, we allow the
-user to pass in the preadditive structure the specific category they are
-working with has natively.
+user to pass in the "native" preadditive structure for the specific category they are
+working with.
 
 ## Main definitions
 
@@ -39,11 +39,13 @@ working with has natively.
 * If `f : X ⟶ Y`, then the map `factor_thru_image f : X ⟶ image f` is an epimorphism, and the map
   `factor_thru_coimage f : coimage f ⟶ Y` is a monomorphism.
 * Factoring through the image and coimage is a strong epi-mono factorisation. This means that
-  * every abelian category has images. We instantiated this in such a way that `abelian.image f` is
-    definitionally equal to `limits.image f`, and
-  * there is a canonical isomorphism `coimage_iso_image : coimage f ≅ image f` such that
-    `coimage.π f ≫ (coimage_iso_image f).hom ≫ image.ι f = f`. The lemma stating this is called
-    `full_image_factorisation`.
+  * every abelian category has images. We provide the isomorphism
+    `image_iso_image : abelian.image f ≅ limits.image f`.
+  * the canonical morphism `coimage_image_comparison : coimage f ⟶ image f`
+    is an isomorphism.
+* We provide the alternate characterisation of an abelian category as a category with
+  (co)kernels and finite products, and in which the canonical coimage-image comparison morphism
+  is always an isomorphism.
 * Every epimorphism is a cokernel of its kernel. Every monomorphism is a kernel of its cokernel.
 * The pullback of an epimorphism is an epimorphism. The pushout of a monomorphism is a monomorphism.
   (This is not to be confused with the fact that the pullback of a monomorphism is a monomorphism,
@@ -115,6 +117,137 @@ end CategoryTheory
 
 open CategoryTheory
 
+/-!
+We begin by providing an alternative constructor:
+a preadditive category with kernels, cokernels, and finite products,
+in which the coimage-image comparison morphism is always an isomorphism,
+is an abelian category.
+-/
+
+
+namespace CategoryTheory.Abelian
+
+variable {C : Type u} [Category.{v} C] [Preadditive C]
+
+variable [Limits.HasKernels C] [Limits.HasCokernels C]
+
+namespace OfCoimageImageComparisonIsIso
+
+/-- The factorisation of a morphism through its abelian image. -/
+@[simps]
+def imageMonoFactorisation {X Y : C} (f : X ⟶ Y) : MonoFactorisation f where
+  i := Abelian.image f
+  m := kernel.ι _
+  m_mono := inferInstance
+  e := kernel.lift _ f (cokernel.condition _)
+  fac' := kernel.lift_ι _ _ _
+
+theorem image_mono_factorisation_e' {X Y : C} (f : X ⟶ Y) :
+    (imageMonoFactorisation f).e = cokernel.π _ ≫ Abelian.coimageImageComparison f := by
+  ext
+  simp only [abelian.coimage_image_comparison, image_mono_factorisation_e, category.assoc, cokernel.π_desc_assoc]
+
+/-- If the coimage-image comparison morphism for a morphism `f` is an isomorphism,
+we obtain an image factorisation of `f`. -/
+def imageFactorisation {X Y : C} (f : X ⟶ Y) [IsIso (Abelian.coimageImageComparison f)] : ImageFactorisation f where
+  f := imageMonoFactorisation f
+  IsImage :=
+    { lift := fun F => inv (Abelian.coimageImageComparison f) ≫ cokernel.desc _ F.e F.kernel_ι_comp,
+      lift_fac' := fun F => by
+        simp only [image_mono_factorisation_m, is_iso.inv_comp_eq, category.assoc, abelian.coimage_image_comparison]
+        ext
+        rw [limits.coequalizer.π_desc_assoc, limits.coequalizer.π_desc_assoc, F.fac, kernel.lift_ι] }
+
+instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Mono f] [IsIso (Abelian.coimageImageComparison f)] :
+    IsIso (imageMonoFactorisation f).e := by
+  rw [image_mono_factorisation_e']
+  exact is_iso.comp_is_iso
+
+instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Epi f] : IsIso (imageMonoFactorisation f).m := by
+  dsimp
+  infer_instance
+
+variable [∀ {X Y : C} f : X ⟶ Y, IsIso (Abelian.coimageImageComparison f)]
+
+/-- A category in which coimage-image comparisons are all isomorphisms has images. -/
+theorem has_images : HasImages C :=
+  { HasImage := fun X Y f => { exists_image := ⟨imageFactorisation f⟩ } }
+
+variable [Limits.HasFiniteProducts C]
+
+attribute [local instance] limits.has_finite_biproducts.of_has_finite_products
+
+/-- A category with finite products in which coimage-image comparisons are all isomorphisms
+is a normal mono category.
+-/
+def normalMonoCategory : NormalMonoCategory C where
+  normalMonoOfMono := fun X Y f m =>
+    { z := _, g := cokernel.π f,
+      w := by
+        simp ,
+      IsLimit := by
+        have : limits.has_images C := has_images
+        have : has_equalizers C := preadditive.has_equalizers_of_has_kernels
+        have : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
+        have aux : _ := _
+        refine' is_limit_aux _ (fun A => limit.lift _ _ ≫ inv (image_mono_factorisation f).e) aux _
+        · intro A g hg
+          rw [kernel_fork.ι_of_ι] at hg
+          rw [← cancel_mono f, hg, ← aux, kernel_fork.ι_of_ι]
+          
+        · intro A
+          simp only [kernel_fork.ι_of_ι, category.assoc]
+          convert limit.lift_π _ _ using 2
+          rw [is_iso.inv_comp_eq, eq_comm]
+          exact (image_mono_factorisation f).fac
+           }
+
+/-- A category with finite products in which coimage-image comparisons are all isomorphisms
+is a normal epi category.
+-/
+def normalEpiCategory : NormalEpiCategory C where
+  normalEpiOfEpi := fun X Y f m =>
+    { w := kernel f, g := kernel.ι _, w := kernel.condition _,
+      IsColimit := by
+        have : limits.has_images C := has_images
+        have : has_equalizers C := preadditive.has_equalizers_of_has_kernels
+        have : has_zero_object C := limits.has_zero_object_of_has_finite_biproducts _
+        have aux : _ := _
+        refine'
+          is_colimit_aux _
+            (fun A => inv (image_mono_factorisation f).m ≫ inv (abelian.coimage_image_comparison f) ≫ colimit.desc _ _)
+            aux _
+        · intro A g hg
+          rw [cokernel_cofork.π_of_π] at hg
+          rw [← cancel_epi f, hg, ← aux, cokernel_cofork.π_of_π]
+          
+        · intro A
+          simp only [cokernel_cofork.π_of_π, ← category.assoc]
+          convert colimit.ι_desc _ _ using 2
+          rw [is_iso.comp_inv_eq, is_iso.comp_inv_eq, eq_comm, ← image_mono_factorisation_e']
+          exact (image_mono_factorisation f).fac
+           }
+
+end OfCoimageImageComparisonIsIso
+
+variable [∀ {X Y : C} f : X ⟶ Y, IsIso (Abelian.coimageImageComparison f)] [Limits.HasFiniteProducts C]
+
+attribute [local instance] of_coimage_image_comparison_is_iso.normal_mono_category
+
+attribute [local instance] of_coimage_image_comparison_is_iso.normal_epi_category
+
+/-- A preadditive category with kernels, cokernels, and finite products,
+in which the coimage-image comparison morphism is always an isomorphism,
+is an abelian category.
+
+The Stacks project uses this characterisation at the definition of an abelian category.
+See https://stacks.math.columbia.edu/tag/0109.
+-/
+def ofCoimageImageComparisonIsIso : Abelian C :=
+  {  }
+
+end CategoryTheory.Abelian
+
 namespace CategoryTheory.Abelian
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
@@ -126,7 +259,7 @@ instance (priority := 100) has_finite_biproducts : HasFiniteBiproducts C :=
 instance (priority := 100) has_binary_biproducts : HasBinaryBiproducts C :=
   Limits.has_binary_biproducts_of_finite_biproducts _
 
-instance (priority := 100) hasZeroObject : HasZeroObject C :=
+instance (priority := 100) has_zero_object : HasZeroObject C :=
   has_zero_object_of_has_initial_object
 
 section ToNonPreadditiveAbelian
@@ -137,6 +270,31 @@ def nonPreadditiveAbelian : NonPreadditiveAbelian C :=
 
 end ToNonPreadditiveAbelian
 
+section
+
+/-! We now promote some instances that were constructed using `non_preadditive_abelian`. -/
+
+
+attribute [local instance] non_preadditive_abelian
+
+variable {P Q : C} (f : P ⟶ Q)
+
+/-- The map `p : P ⟶ image f` is an epimorphism -/
+instance : Epi (Abelian.factorThruImage f) := by
+  infer_instance
+
+instance is_iso_factor_thru_image [Mono f] : IsIso (Abelian.factorThruImage f) := by
+  infer_instance
+
+/-- The canonical morphism `i : coimage f ⟶ Q` is a monomorphism -/
+instance : Mono (Abelian.factorThruCoimage f) := by
+  infer_instance
+
+instance is_iso_factor_thru_coimage [Epi f] : IsIso (Abelian.factorThruCoimage f) := by
+  infer_instance
+
+end
+
 section Factor
 
 attribute [local instance] non_preadditive_abelian
@@ -145,136 +303,49 @@ variable {P Q : C} (f : P ⟶ Q)
 
 section
 
-theorem mono_of_zero_kernel (R : C)
-    (l :
-      IsLimit
-        (KernelFork.ofι (0 : R ⟶ P)
-          (show 0 ≫ f = 0 by
-            simp ))) :
-    Mono f :=
-  NonPreadditiveAbelian.mono_of_zero_kernel _ _ l
-
 theorem mono_of_kernel_ι_eq_zero (h : kernel.ι f = 0) : Mono f :=
   mono_of_kernel_zero h
 
-theorem epi_of_zero_cokernel (R : C)
-    (l :
-      IsColimit
-        (CokernelCofork.ofπ (0 : Q ⟶ R)
-          (show f ≫ 0 = 0 by
-            simp ))) :
-    Epi f :=
-  NonPreadditiveAbelian.epi_of_zero_cokernel _ _ l
-
 theorem epi_of_cokernel_π_eq_zero (h : cokernel.π f = 0) : Epi f := by
-  apply epi_of_zero_cokernel _ (cokernel f)
+  apply normal_mono_category.epi_of_zero_cokernel _ (cokernel f)
   simp_rw [← h]
   exact is_colimit.of_iso_colimit (colimit.is_colimit (parallel_pair f 0)) (iso_of_π _)
 
 end
 
-namespace Images
-
-/-- The kernel of the cokernel of `f` is called the image of `f`. -/
-protected abbrev image : C :=
-  kernel (cokernel.π f)
-
-/-- The inclusion of the image into the codomain. -/
-protected abbrev image.ι : Images.image f ⟶ Q :=
-  kernel.ι (cokernel.π f)
-
-/-- There is a canonical epimorphism `p : P ⟶ image f` for every `f`. -/
-protected abbrev factorThruImage : P ⟶ Images.image f :=
-  kernel.lift (cokernel.π f) f <| cokernel.condition f
-
-/-- `f` factors through its image via the canonical morphism `p`. -/
-@[simp, reassoc]
-protected theorem image.fac : Images.factorThruImage f ≫ image.ι f = f :=
-  kernel.lift_ι _ _ _
-
-/-- The map `p : P ⟶ image f` is an epimorphism -/
-instance : Epi (Images.factorThruImage f) :=
-  show Epi (NonPreadditiveAbelian.factorThruImage f) by
-    infer_instance
-
 section
 
 variable {f}
 
-theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : Images.image.ι f ≫ g = 0 :=
-  zero_of_epi_comp (Images.factorThruImage f) <| by
+theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : Abelian.image.ι f ≫ g = 0 :=
+  zero_of_epi_comp (Abelian.factorThruImage f) <| by
+    simp [h]
+
+theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ Abelian.coimage.π g = 0 :=
+  zero_of_comp_mono (Abelian.factorThruCoimage g) <| by
     simp [h]
 
 end
-
-instance mono_factor_thru_image [Mono f] : Mono (Images.factorThruImage f) :=
-  mono_of_mono_fac <| image.fac f
-
-instance is_iso_factor_thru_image [Mono f] : IsIso (Images.factorThruImage f) :=
-  is_iso_of_mono_of_epi _
 
 /-- Factoring through the image is a strong epi-mono factorisation. -/
 @[simps]
 def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  i := Images.image f
+  i := Abelian.image f
   m := image.ι f
   m_mono := by
     infer_instance
-  e := Images.factorThruImage f
+  e := Abelian.factorThruImage f
   e_strong_epi := strong_epi_of_epi _
-
-end Images
-
-namespace Coimages
-
-/-- The cokernel of the kernel of `f` is called the coimage of `f`. -/
-protected abbrev coimage : C :=
-  cokernel (kernel.ι f)
-
-/-- The projection onto the coimage. -/
-protected abbrev coimage.π : P ⟶ Coimages.coimage f :=
-  cokernel.π (kernel.ι f)
-
-/-- There is a canonical monomorphism `i : coimage f ⟶ Q`. -/
-protected abbrev factorThruCoimage : Coimages.coimage f ⟶ Q :=
-  cokernel.desc (kernel.ι f) f <| kernel.condition f
-
-/-- `f` factors through its coimage via the canonical morphism `p`. -/
-protected theorem coimage.fac : coimage.π f ≫ Coimages.factorThruCoimage f = f :=
-  cokernel.π_desc _ _ _
-
-/-- The canonical morphism `i : coimage f ⟶ Q` is a monomorphism -/
-instance : Mono (Coimages.factorThruCoimage f) :=
-  show Mono (NonPreadditiveAbelian.factorThruCoimage f) by
-    infer_instance
-
-section
-
-variable {f}
-
-theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ Coimages.coimage.π g = 0 :=
-  zero_of_comp_mono (Coimages.factorThruCoimage g) <| by
-    simp [h]
-
-end
-
-instance epi_factor_thru_coimage [Epi f] : Epi (Coimages.factorThruCoimage f) :=
-  epi_of_epi_fac <| coimage.fac f
-
-instance is_iso_factor_thru_coimage [Epi f] : IsIso (Coimages.factorThruCoimage f) :=
-  is_iso_of_mono_of_epi _
 
 /-- Factoring through the coimage is a strong epi-mono factorisation. -/
 @[simps]
 def coimageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f where
-  i := Coimages.coimage f
-  m := Coimages.factorThruCoimage f
+  i := Abelian.coimage f
+  m := Abelian.factorThruCoimage f
   m_mono := by
     infer_instance
   e := coimage.π f
   e_strong_epi := strong_epi_of_epi _
-
-end Coimages
 
 end Factor
 
@@ -282,7 +353,7 @@ section HasStrongEpiMonoFactorisations
 
 /-- An abelian category has strong epi-mono factorisations. -/
 instance (priority := 100) : HasStrongEpiMonoFactorisations C :=
-  has_strong_epi_mono_factorisations.mk fun X Y f => Images.imageStrongEpiMonoFactorisation f
+  has_strong_epi_mono_factorisations.mk fun X Y f => imageStrongEpiMonoFactorisation f
 
 -- In particular, this means that it has well-behaved images.
 example : HasImages C := by
@@ -297,24 +368,32 @@ section Images
 
 variable {X Y : C} (f : X ⟶ Y)
 
-/-- There is a canonical isomorphism between the coimage and the image of a morphism. -/
-abbrev coimageIsoImage : Coimages.coimage f ≅ Images.image f :=
-  IsImage.isoExt (Coimages.coimageStrongEpiMonoFactorisation f).toMonoIsImage
-    (Images.imageStrongEpiMonoFactorisation f).toMonoIsImage
+/-- The coimage-image comparison morphism is always an isomorphism in an abelian category.
+See `category_theory.abelian.of_coimage_image_comparison_is_iso` for the converse.
+-/
+instance : IsIso (coimageImageComparison f) := by
+  convert
+    is_iso.of_iso
+      (is_image.iso_ext (coimage_strong_epi_mono_factorisation f).toMonoIsImage
+        (image_strong_epi_mono_factorisation f).toMonoIsImage)
+  ext
+  change _ = _ ≫ (image_strong_epi_mono_factorisation f).m
+  simp [-image_strong_epi_mono_factorisation_to_mono_factorisation_m]
 
-/-- There is a canonical isomorphism between the abelian image and the categorical image of a
+/-- There is a canonical isomorphism between the abelian coimage and the abelian image of a
     morphism. -/
-abbrev imageIsoImage : Images.image f ≅ image f :=
-  IsImage.isoExt (Images.imageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
+abbrev coimageIsoImage : Abelian.coimage f ≅ Abelian.image f :=
+  asIso (coimageImageComparison f)
 
 /-- There is a canonical isomorphism between the abelian coimage and the categorical image of a
     morphism. -/
-abbrev coimageIsoImage' : Coimages.coimage f ≅ image f :=
-  IsImage.isoExt (Coimages.coimageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
+abbrev coimageIsoImage' : Abelian.coimage f ≅ image f :=
+  IsImage.isoExt (coimageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 
-theorem full_image_factorisation : Coimages.coimage.π f ≫ (coimageIsoImage f).Hom ≫ Images.image.ι f = f := by
-  rw [limits.is_image.iso_ext_hom, ← images.image_strong_epi_mono_factorisation_to_mono_factorisation_m,
-    is_image.lift_fac, coimages.coimage_strong_epi_mono_factorisation_to_mono_factorisation_m, coimages.coimage.fac]
+/-- There is a canonical isomorphism between the abelian image and the categorical image of a
+    morphism. -/
+abbrev imageIsoImage : Abelian.image f ≅ image f :=
+  IsImage.isoExt (imageStrongEpiMonoFactorisation f).toMonoIsImage (Image.isImage f)
 
 end Images
 
@@ -337,6 +416,26 @@ def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
 def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
     IsLimit (KernelFork.ofι f (CokernelCofork.condition s)) :=
   NonPreadditiveAbelian.monoIsKernelOfCokernel s h
+
+variable (f)
+
+/-- In an abelian category, any morphism that turns to zero when precomposed with the kernel of an
+    epimorphism factors through that epimorphism. -/
+def epiDesc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) : Y ⟶ T :=
+  (epiIsCokernelOfKernel _ (limit.isLimit _)).desc (CokernelCofork.ofπ _ hg)
+
+@[simp, reassoc]
+theorem comp_epi_desc [Epi f] {T : C} (g : X ⟶ T) (hg : kernel.ι f ≫ g = 0) : f ≫ epiDesc f g hg = g :=
+  (epiIsCokernelOfKernel _ (limit.isLimit _)).fac (CokernelCofork.ofπ _ hg) WalkingParallelPair.one
+
+/-- In an abelian category, any morphism that turns to zero when postcomposed with the cokernel of a
+    monomorphism factors through that monomorphism. -/
+def monoLift [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) : T ⟶ X :=
+  (monoIsKernelOfCokernel _ (colimit.isColimit _)).lift (KernelFork.ofι _ hg)
+
+@[simp, reassoc]
+theorem mono_lift_comp [Mono f] {T : C} (g : T ⟶ Y) (hg : g ≫ cokernel.π f = 0) : monoLift f g hg ≫ f = g :=
+  (monoIsKernelOfCokernel _ (colimit.isColimit _)).fac (KernelFork.ofι _ hg) WalkingParallelPair.zero
 
 end CokernelOfKernel
 
@@ -404,7 +503,7 @@ def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
       · rw [biprod.lift_snd, pullback.lift_snd]
         )
     fun s m h => by
-    ext <;> simp [fork.ι_eq_app_zero, ← h walking_parallel_pair.zero]
+    ext <;> simp [← h]
 
 end PullbackToBiproductIsKernel
 
@@ -434,7 +533,7 @@ def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
     (fun s => by
       ext <;> simp )
     fun s m h => by
-    ext <;> simp [cofork.π_eq_app_one, ← h walking_parallel_pair.one]
+    ext <;> simp [← h]
 
 end BiproductToPushoutIsCokernel
 

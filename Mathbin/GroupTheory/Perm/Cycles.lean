@@ -3,9 +3,9 @@ Copyright (c) 2019 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Equiv.Fintype
 import Mathbin.Data.Finset.NoncommProd
 import Mathbin.GroupTheory.Perm.Sign
+import Mathbin.Logic.Equiv.Fintype
 
 /-!
 # Cyclic permutations
@@ -825,7 +825,7 @@ def cycleFactorsAux [Fintype α] :
       (∀ {x}, f x ≠ x → x ∈ l) → { l : List (Perm α) // l.Prod = f ∧ (∀, ∀ g ∈ l, ∀, IsCycle g) ∧ l.Pairwise Disjoint }
   | [], f, h =>
     ⟨[], by
-      simp only [imp_false, List.Pairwiseₓ.nil, List.not_mem_nil, forall_const, and_trueₓ, forall_prop_of_false,
+      simp only [imp_false, List.Pairwiseₓ.nil, List.not_mem_nilₓ, forall_const, and_trueₓ, forall_prop_of_false,
         not_not, not_false_iff, List.prod_nil] at *
       ext
       simp [*]⟩
@@ -974,7 +974,7 @@ theorem cycle_factors_finset_eq_finset {σ : Perm α} {s : Finset (Perm α)} :
   simp only [noncomm_prod_to_finset, hl, exists_prop, List.mem_to_finset, And.congr_left_iff, And.congr_right_iff,
     List.map_id, Ne.def]
   intros
-  exact ⟨List.forall_of_pairwise disjoint.symmetric, hl.pairwise_of_forall_ne⟩
+  exact ⟨List.Pairwiseₓ.forall disjoint.symmetric, hl.pairwise_of_forall_ne⟩
 
 theorem cycle_factors_finset_pairwise_disjoint (p : Perm α) (hp : p ∈ cycleFactorsFinset f) (q : Perm α)
     (hq : q ∈ cycleFactorsFinset f) (h : p ≠ q) : Disjoint p q := by
@@ -1138,8 +1138,7 @@ theorem cycle_induction_on [Fintype β] (P : Perm β → Prop) (σ : Perm β) (b
     rw [List.prod_cons]
     exact
       induction_disjoint σ l.prod (disjoint_prod_right _ (list.pairwise_cons.mp h2).1) (h1 _ (List.mem_cons_selfₓ _ _))
-        (base_cycles σ (h1 σ (l.mem_cons_self σ)))
-        (ih (fun τ hτ => h1 τ (List.mem_cons_of_memₓ σ hτ)) (List.pairwise_of_pairwise_cons h2))
+        (base_cycles σ (h1 σ (l.mem_cons_self σ))) (ih (fun τ hτ => h1 τ (List.mem_cons_of_memₓ σ hτ)) h2.of_cons)
     
 
 theorem cycle_factors_finset_mul_inv_mem_eq_sdiff [Fintype α] {f g : Perm α} (h : f ∈ cycleFactorsFinset g) :

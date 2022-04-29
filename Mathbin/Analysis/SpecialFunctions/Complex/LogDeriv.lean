@@ -18,7 +18,7 @@ namespace Complex
 
 open Set Filter
 
-open_locale Real TopologicalSpace
+open Real TopologicalSpace
 
 /-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
@@ -66,7 +66,7 @@ section LogDeriv
 
 open Complex Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _} [TopologicalSpace α] {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 

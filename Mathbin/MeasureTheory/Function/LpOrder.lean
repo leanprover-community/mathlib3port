@@ -25,7 +25,7 @@ import Mathbin.Analysis.NormedSpace.LatticeOrderedGroup
 
 open TopologicalSpace MeasureTheory LatticeOrderedCommGroup
 
-open_locale Ennreal
+open Ennreal
 
 variable {α E : Type _} {m : MeasurableSpace α} {μ : Measureₓ α} {p : ℝ≥0∞}
 
@@ -35,7 +35,7 @@ namespace Lp
 
 section Order
 
-variable [NormedLatticeAddCommGroup E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
+variable [NormedLatticeAddCommGroup E]
 
 theorem coe_fn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
   rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coe_fn_coe_base, ← coe_fn_coe_base]

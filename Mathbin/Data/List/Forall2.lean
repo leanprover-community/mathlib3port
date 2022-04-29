@@ -58,8 +58,7 @@ theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = 
       
     simp only [*] <;> constructor <;> rfl
     
-  · intro h
-    subst h
+  · rintro rfl
     exact forall₂_refl _
     
 

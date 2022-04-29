@@ -577,7 +577,7 @@ theorem drop_fun_rel_last {α : Typevec n} {β} (R : β → β → Prop) : dropF
 
 attribute [simp] drop_append1'
 
-open_locale Mvfunctor
+open Mvfunctor
 
 @[simp]
 theorem drop_fun_prod {α α' β β' : Typevec (n + 1)} (f : α ⟹ β) (f' : α' ⟹ β') :

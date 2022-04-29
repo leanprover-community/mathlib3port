@@ -48,7 +48,7 @@ While `convex 𝕜` is a predicate on sets, `convex_cone 𝕜 E` is a bundled co
 
 open Set LinearMap
 
-open_locale Classical Pointwise
+open Classical Pointwise
 
 variable {𝕜 E F G : Type _}
 
@@ -495,12 +495,12 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x) (dense : �
       simpa only [Set.Nonempty, UpperBounds, LowerBounds, ball_image_iff] using this
     refine' exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (Dense y)) _
     · rcases Dense (-y) with ⟨x, hx⟩
-      rw [← neg_negₓ x, coe_neg, ← sub_eq_add_neg] at hx
+      rw [← neg_negₓ x, AddSubgroupClass.coe_neg, ← sub_eq_add_neg] at hx
       exact ⟨_, hx⟩
       
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn
-    rw [add_assocₓ, add_sub_cancel'_right, ← sub_eq_add_neg, ← coe_sub] at this
+    rw [add_assocₓ, add_sub_cancel'_right, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
     replace := nonneg _ this
     rwa [f.map_sub, sub_nonneg] at this
   have hy' : y ≠ 0 := fun hy₀ => hy (hy₀.symm ▸ zero_mem _)
@@ -542,7 +542,7 @@ theorem exists_top (p : LinearPmap ℝ E ℝ) (hp_nonneg : ∀ x : p.domain, (x 
   · rw [mem_set_of_eq]
     exact hp_nonneg
     
-  obtain ⟨q, hqs, hpq, hq⟩ := Zorn.zorn_nonempty_partial_order₀ _ _ _ hp_nonneg
+  obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partial_order₀ _ _ _ hp_nonneg
   · refine' ⟨q, hpq, _, hqs⟩
     contrapose! hq
     rcases step s q hqs _ hq with ⟨r, hqr, hr⟩
@@ -636,11 +636,11 @@ section Dual
 
 variable {H : Type _} [InnerProductSpace ℝ H] (s t : Set H)
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 /-- The dual cone is the cone consisting of all points `y` such that for
 all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
-noncomputable def Set.innerDualCone (s : Set H) : ConvexCone ℝ H where
+def Set.innerDualCone (s : Set H) : ConvexCone ℝ H where
   Carrier := { y | ∀, ∀ x ∈ s, ∀, 0 ≤ ⟪x, y⟫ }
   smul_mem' := fun c hc y hy x hx => by
     rw [real_inner_smul_right]

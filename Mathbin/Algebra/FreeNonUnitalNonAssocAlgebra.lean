@@ -61,11 +61,11 @@ variable [Module R A] [IsScalarTower R A A] [SmulCommClass R A A]
 /-- The functor `X ↦ free_non_unital_non_assoc_algebra R X` from the category of types to the
 category of non-unital, non-associative algebras over `R` is adjoint to the forgetful functor in the
 other direction. -/
-def lift : (X → A) ≃ NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A :=
+def lift : (X → A) ≃ (FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) :=
   FreeMagma.lift.trans (MonoidAlgebra.liftMagma R)
 
 @[simp]
-theorem lift_symm_apply (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : (lift R).symm F = F ∘ of R :=
+theorem lift_symm_apply (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : (lift R).symm F = F ∘ of R :=
   rfl
 
 @[simp]
@@ -73,8 +73,7 @@ theorem of_comp_lift (f : X → A) : lift R f ∘ of R = f :=
   (lift R).left_inv f
 
 @[simp]
-theorem lift_unique (f : X → A) (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) :
-    F ∘ of R = f ↔ F = lift R f :=
+theorem lift_unique (f : X → A) (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : F ∘ of R = f ↔ F = lift R f :=
   (lift R).symm_apply_eq
 
 @[simp]
@@ -82,12 +81,11 @@ theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
   congr_funₓ (of_comp_lift _ f) x
 
 @[simp]
-theorem lift_comp_of (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A) : lift R (F ∘ of R) = F :=
+theorem lift_comp_of (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : lift R (F ∘ of R) = F :=
   (lift R).apply_symm_apply F
 
 @[ext]
-theorem hom_ext {F₁ F₂ : NonUnitalAlgHom R (FreeNonUnitalNonAssocAlgebra R X) A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) :
-    F₁ = F₂ :=
+theorem hom_ext {F₁ F₂ : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A} (h : ∀ x, F₁ (of R x) = F₂ (of R x)) : F₁ = F₂ :=
   (lift R).symm.Injective <| funext h
 
 end FreeNonUnitalNonAssocAlgebra

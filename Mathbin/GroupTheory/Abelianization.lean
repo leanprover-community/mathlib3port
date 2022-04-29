@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 -/
-import Mathbin.GroupTheory.GeneralCommutator
+import Mathbin.GroupTheory.Commutator
 import Mathbin.GroupTheory.QuotientGroup
 
 /-!
@@ -37,11 +37,23 @@ def commutator : Subgroup G :=
 theorem commutator_def : commutator G = ⁅(⊤ : Subgroup G),⊤⁆ :=
   rfl
 
-theorem commutator_eq_closure : commutator G = Subgroup.closure { x | ∃ p q, p * q * p⁻¹ * q⁻¹ = x } := by
+theorem commutator_eq_closure : commutator G = Subgroup.closure { g | ∃ g₁ g₂ : G, ⁅g₁,g₂⁆ = g } := by
   simp_rw [commutator, Subgroup.commutator_def, Subgroup.mem_top, exists_true_left]
 
-theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure { x | ∃ p q, p * q * p⁻¹ * q⁻¹ = x } := by
+theorem commutator_eq_normal_closure : commutator G = Subgroup.normalClosure { g | ∃ g₁ g₂ : G, ⁅g₁,g₂⁆ = g } := by
   simp_rw [commutator, Subgroup.commutator_def', Subgroup.mem_top, exists_true_left]
+
+instance commutator_characteristic : (commutator G).Characteristic :=
+  Subgroup.commutator_characteristic ⊤ ⊤
+
+theorem commutator_centralizer_commutator_le_center :
+    ⁅(commutator G).Centralizer,(commutator G).Centralizer⁆ ≤ Subgroup.center G := by
+  rw [← Subgroup.centralizer_top, ← Subgroup.commutator_eq_bot_iff_le_centralizer]
+  suffices ⁅⁅⊤,(commutator G).Centralizer⁆,(commutator G).Centralizer⁆ = ⊥ by
+    refine' Subgroup.commutator_commutator_eq_bot_of_rotate _ this
+    rwa [Subgroup.commutator_comm (commutator G).Centralizer]
+  rw [Subgroup.commutator_comm, Subgroup.commutator_eq_bot_iff_le_centralizer]
+  exact Set.centralizer_subset (Subgroup.commutator_mono le_top le_top)
 
 /-- The abelianization of G is the quotient of G by its commutator subgroup. -/
 def Abelianization : Type u :=
@@ -88,7 +100,7 @@ variable {A : Type v} [CommGroupₓ A] (f : G →* A)
 theorem commutator_subset_ker : commutator G ≤ f.ker := by
   rw [commutator_eq_closure, Subgroup.closure_le]
   rintro x ⟨p, q, rfl⟩
-  simp [MonoidHom.mem_ker, mul_right_commₓ (f p) (f q)]
+  simp [MonoidHom.mem_ker, mul_right_commₓ (f p) (f q), commutator_element_def]
 
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
   the abelianization of a `G` to `A` that factors through `f`. -/

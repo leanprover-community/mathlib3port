@@ -22,7 +22,7 @@ Features:
 
 universe u v w
 
-open_locale Mvfunctor
+open Mvfunctor
 
 /-- multivariate functors, i.e. functor between the category of type vectors
 and the category of Type -/

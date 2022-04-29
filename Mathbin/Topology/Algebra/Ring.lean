@@ -21,37 +21,84 @@ of topological (semi)rings.
 
 - `subring.topological_closure`/`subsemiring.topological_closure`: the topological closure of a
   `subring`/`subsemiring` is itself a `sub(semi)ring`.
-- `prod.topological_ring`/`prod.topological_ring`: The product of two topological (semi)rings.
-- `pi.topological_ring`/`pi.topological_ring`: The arbitrary product of topological (semi)rings.
+- `prod.topological_semiring`/`prod.topological_ring`: The product of two topological
+  (semi)rings.
+- `pi.topological_semiring`/`pi.topological_ring`: The arbitrary product of topological
+  (semi)rings.
 - `ideal.closure`: The closure of an ideal is an ideal.
-- `topological_ring_quotient`: The quotient of a topological ring by an ideal is a topological ring.
+- `topological_ring_quotient`: The quotient of a topological semiring by an ideal is a
+  topological ring.
 
 -/
 
 
 open Classical Set Filter TopologicalSpace Function
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
-section TopologicalRing
+section TopologicalSemiring
 
 variable (α : Type _)
 
-/-- A topological (semi)ring is a (semi)ring `R` where addition and multiplication are continuous.
-If `R` is a ring, then negation is automatically continuous, as it is multiplication with `-1`. -/
-class TopologicalRing [TopologicalSpace α] [Semiringₓ α] extends HasContinuousAdd α, HasContinuousMul α : Prop
+/-- a topological semiring is a semiring `R` where addition and multiplication are continuous.
+We allow for non-unital and non-associative semirings as well.
 
-instance (priority := 50) DiscreteTopology.topological_ring {α} [TopologicalSpace α] [Semiringₓ α]
+The `topological_semiring` class should *only* be instantiated in the presence of a
+`non_unital_non_assoc_semiring` instance; if there is an instance of `non_unital_non_assoc_ring`,
+then `topological_ring` should be used. Note: in the presence of `non_assoc_ring`, these classes are
+mathematically equivalent (see `topological_semiring.has_continuous_neg_of_mul` or
+`topological_semiring.to_topological_ring`).  -/
+class TopologicalSemiring [TopologicalSpace α] [NonUnitalNonAssocSemiringₓ α] extends HasContinuousAdd α,
+  HasContinuousMul α : Prop
+
+/-- A topological ring is a ring `R` where addition, multiplication and negation are continuous.
+
+If `R` is a (unital) ring, then continuity of negation can be derived from continuity of
+multiplication as it is multiplication with `-1`. (See
+`topological_semiring.has_continuous_neg_of_mul` and
+`topological_semiring.to_topological_add_group`) -/
+class TopologicalRing [TopologicalSpace α] [NonUnitalNonAssocRing α] extends TopologicalSemiring α, HasContinuousNeg α :
+  Prop
+
+variable {α}
+
+/-- If `R` is a ring with a continuous multiplication, then negation is continuous as well since it
+is just multiplication with `-1`. -/
+theorem TopologicalSemiring.has_continuous_neg_of_mul [TopologicalSpace α] [NonAssocRing α] [HasContinuousMul α] :
+    HasContinuousNeg α :=
+  { continuous_neg := by
+      simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
+
+/-- If `R` is a ring which is a topological semiring, then it is automatically a topological
+ring. This exists so that one can place a topological ring structure on `R` without explicitly
+proving `continuous_neg`. -/
+theorem TopologicalSemiring.to_topological_ring [TopologicalSpace α] [NonAssocRing α] (h : TopologicalSemiring α) :
+    TopologicalRing α :=
+  { h,
+    (have := h.to_has_continuous_mul
+    TopologicalSemiring.has_continuous_neg_of_mul :
+      HasContinuousNeg α) with }
+
+-- See note [lower instance priority]
+instance (priority := 100) TopologicalRing.to_topological_add_group [NonUnitalNonAssocRing α] [TopologicalSpace α]
+    [TopologicalRing α] : TopologicalAddGroup α :=
+  { TopologicalRing.to_topological_semiring.to_has_continuous_add, TopologicalRing.to_has_continuous_neg with }
+
+instance (priority := 50) DiscreteTopology.topological_semiring [TopologicalSpace α] [NonUnitalNonAssocSemiringₓ α]
+    [DiscreteTopology α] : TopologicalSemiring α :=
+  ⟨⟩
+
+instance (priority := 50) DiscreteTopology.topological_ring [TopologicalSpace α] [NonUnitalNonAssocRing α]
     [DiscreteTopology α] : TopologicalRing α :=
   ⟨⟩
 
 section
 
-variable {α} [TopologicalSpace α] [Semiringₓ α] [TopologicalRing α]
+variable [TopologicalSpace α] [Semiringₓ α] [TopologicalSemiring α]
 
 namespace Subsemiring
 
-instance (S : Subsemiring α) : TopologicalRing S :=
+instance (S : Subsemiring α) : TopologicalSemiring S :=
   { S.toSubmonoid.HasContinuousMul, S.toAddSubmonoid.HasContinuousAdd with }
 
 end Subsemiring
@@ -66,7 +113,8 @@ theorem Subsemiring.topological_closure_coe (s : Subsemiring α) :
     (s.topologicalClosure : Set α) = Closure (s : Set α) :=
   rfl
 
-instance Subsemiring.topological_closure_topological_ring (s : Subsemiring α) : TopologicalRing s.topologicalClosure :=
+instance Subsemiring.topological_closure_topological_semiring (s : Subsemiring α) :
+    TopologicalSemiring s.topologicalClosure :=
   { s.toAddSubmonoid.topological_closure_has_continuous_add, s.toSubmonoid.topological_closure_has_continuous_mul with }
 
 theorem Subsemiring.subring_topological_closure (s : Subsemiring α) : s ≤ s.topologicalClosure :=
@@ -85,20 +133,71 @@ def Subsemiring.commSemiringTopologicalClosure [T2Space α] (s : Subsemiring α)
     CommSemiringₓ s.topologicalClosure :=
   { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 
-/-- The product topology on the cartesian product of two topological semirings
-  makes the product into a topological semiring. -/
-instance {β : Type _} [Semiringₓ β] [TopologicalSpace β] [TopologicalRing β] : TopologicalRing (α × β) :=
-  {  }
-
-instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, Semiringₓ (C b)]
-    [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b) :=
-  {  }
-
 end
 
 section
 
-variable {R : Type _} [Ringₓ R] [TopologicalSpace R]
+variable {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
+
+/-- The product topology on the cartesian product of two topological semirings
+  makes the product into a topological semiring. -/
+instance [NonUnitalNonAssocSemiringₓ α] [NonUnitalNonAssocSemiringₓ β] [TopologicalSemiring α] [TopologicalSemiring β] :
+    TopologicalSemiring (α × β) :=
+  {  }
+
+/-- The product topology on the cartesian product of two topological rings
+  makes the product into a topological ring. -/
+instance [NonUnitalNonAssocRing α] [NonUnitalNonAssocRing β] [TopologicalRing α] [TopologicalRing β] :
+    TopologicalRing (α × β) :=
+  {  }
+
+end
+
+instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, NonUnitalNonAssocSemiringₓ (C b)]
+    [∀ b, TopologicalSemiring (C b)] : TopologicalSemiring (∀ b, C b) :=
+  {  }
+
+instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, NonUnitalNonAssocRing (C b)]
+    [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b) :=
+  {  }
+
+section MulOpposite
+
+open MulOpposite
+
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousAdd α] : HasContinuousAdd αᵐᵒᵖ where
+  continuous_add := continuous_induced_rng <| (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
+
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵐᵒᵖ :=
+  {  }
+
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] : HasContinuousNeg αᵐᵒᵖ where
+  continuous_neg := continuous_induced_rng <| (@continuous_neg α _ _ _).comp continuous_unop
+
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵐᵒᵖ :=
+  {  }
+
+end MulOpposite
+
+section AddOpposite
+
+open AddOpposite
+
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [HasContinuousMul α] : HasContinuousMul αᵃᵒᵖ where
+  continuous_mul := by
+    convert continuous_op.comp <| (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
+
+instance [NonUnitalNonAssocSemiringₓ α] [TopologicalSpace α] [TopologicalSemiring α] : TopologicalSemiring αᵃᵒᵖ :=
+  {  }
+
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [TopologicalRing α] : TopologicalRing αᵃᵒᵖ :=
+  {  }
+
+end AddOpposite
+
+section
+
+variable {R : Type _} [NonUnitalNonAssocRing R] [TopologicalSpace R]
 
 theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
@@ -140,30 +239,32 @@ theorem TopologicalRing.of_nhds_zero (hadd : Tendsto (uncurry ((· + ·) : R →
 
 end
 
-variable {α} [Ringₓ α] [TopologicalSpace α] [TopologicalRing α]
+variable {α} [TopologicalSpace α]
 
--- See note [lower instance priority]
-instance (priority := 100) TopologicalRing.to_topological_add_group : TopologicalAddGroup α where
-  continuous_add := continuous_add
-  continuous_neg := by
-    simpa only [neg_one_mul, id.def] using (@continuous_const α α _ _ (-1)).mul continuous_id
+section
 
-/-- In a topological ring, the left-multiplication `add_monoid_hom` is continuous. -/
+variable [NonUnitalNonAssocRing α] [TopologicalRing α]
+
+/-- In a topological semiring, the left-multiplication `add_monoid_hom` is continuous. -/
 theorem mul_left_continuous (x : α) : Continuous (AddMonoidHom.mulLeft x) :=
   continuous_const.mul continuous_id
 
-/-- In a topological ring, the right-multiplication `add_monoid_hom` is continuous. -/
+/-- In a topological semiring, the right-multiplication `add_monoid_hom` is continuous. -/
 theorem mul_right_continuous (x : α) : Continuous (AddMonoidHom.mulRight x) :=
   continuous_id.mul continuous_const
+
+end
+
+variable [Ringₓ α] [TopologicalRing α]
 
 namespace Subring
 
 instance (S : Subring α) : TopologicalRing S :=
-  S.toSubsemiring.TopologicalRing
+  TopologicalSemiring.to_topological_ring S.toSubsemiring.TopologicalSemiring
 
 end Subring
 
-/-- The (topological-space) closure of a subring of a topological semiring is
+/-- The (topological-space) closure of a subring of a topological ring is
 itself a subring. -/
 def Subring.topologicalClosure (S : Subring α) : Subring α :=
   { S.toSubmonoid.topologicalClosure, S.toAddSubgroup.topologicalClosure with Carrier := Closure (S : Set α) }
@@ -187,7 +288,7 @@ def Subring.commRingTopologicalClosure [T2Space α] (s : Subring α) (hs : ∀ x
     CommRingₓ s.topologicalClosure :=
   { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 
-end TopologicalRing
+end TopologicalSemiring
 
 section TopologicalCommRing
 
@@ -229,13 +330,14 @@ theorem QuotientRing.quotient_map_coe_coe : QuotientMap fun p : α × α => (mk 
     (by
       rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
 
-instance topological_ring_quotient : TopologicalRing (α ⧸ N) where
-  continuous_add :=
-    have cont : Continuous (mk N ∘ fun p : α × α => p.fst + p.snd) := continuous_quot_mk.comp continuous_add
-    (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont
-  continuous_mul :=
-    have cont : Continuous (mk N ∘ fun p : α × α => p.fst * p.snd) := continuous_quot_mk.comp continuous_mul
-    (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont
+instance topological_ring_quotient : TopologicalRing (α ⧸ N) :=
+  TopologicalSemiring.to_topological_ring
+    { continuous_add :=
+        have cont : Continuous (mk N ∘ fun p : α × α => p.fst + p.snd) := continuous_quot_mk.comp continuous_add
+        (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont,
+      continuous_mul :=
+        have cont : Continuous (mk N ∘ fun p : α × α => p.fst * p.snd) := continuous_quot_mk.comp continuous_mul
+        (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont }
 
 end TopologicalRing
 
@@ -262,7 +364,8 @@ namespace RingTopology
 variable {α : Type _} [Ringₓ α]
 
 instance inhabited {α : Type u} [Ringₓ α] : Inhabited (RingTopology α) :=
-  ⟨{ toTopologicalSpace := ⊤, continuous_add := continuous_top, continuous_mul := continuous_top }⟩
+  ⟨{ toTopologicalSpace := ⊤, continuous_add := continuous_top, continuous_mul := continuous_top,
+      continuous_neg := continuous_top }⟩
 
 @[ext]
 theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by
@@ -286,16 +389,20 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      have h_continuous_add : cont (id _) t fun p : α × α => p.fst + p.snd := continuous_add
-      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_add h_continuous_id,
+      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id,
     continuous_mul := by
       apply continuous_Inf_rng
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
       skip
       have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
       have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      have h_continuous_mul : cont (id _) t fun p : α × α => p.fst * p.snd := continuous_mul
-      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ h_continuous_mul h_continuous_id }
+      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id,
+    continuous_neg := by
+      apply continuous_Inf_rng
+      rintro _ ⟨⟨t, tr⟩, haS, rfl⟩
+      skip
+      have h := continuous_Inf_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
+      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_neg h }
 
 /-- Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.

@@ -20,7 +20,7 @@ variable {α β M E : Type _}
 
 open Set Filter Classical
 
-open_locale Filter Classical
+open Filter Classical
 
 section Zero
 
@@ -93,4 +93,18 @@ theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : 
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left
+
+theorem Filter.EventuallyEq.indicator [Zero β] {l : Filter α} {f g : α → β} {s : Set α} (hfg : f =ᶠ[l] g) :
+    s.indicator f =ᶠ[l] s.indicator g := by
+  filter_upwards [hfg] with x hx
+  by_cases' x ∈ s
+  · rwa [indicator_of_mem h, indicator_of_mem h]
+    
+  · rw [indicator_of_not_mem h, indicator_of_not_mem h]
+    
+
+theorem Filter.EventuallyEq.indicator_zero [Zero β] {l : Filter α} {f : α → β} {s : Set α} (hf : f =ᶠ[l] 0) :
+    s.indicator f =ᶠ[l] 0 := by
+  refine' hf.indicator.trans _
+  rw [indicator_zero']
 

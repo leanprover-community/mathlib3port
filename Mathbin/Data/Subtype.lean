@@ -121,21 +121,22 @@ theorem _root_.exists_subtype_mk_eq_iff {a : Subtype p} {b : α} : (∃ h : p b,
   simp only [@eq_comm _ b, exists_eq_subtype_mk_iff, @eq_comm _ _ a]
 
 /-- Restrict a (dependent) function to a subtype -/
-def restrict {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : β x.1 :=
+def restrictₓ {α} {β : α → Type _} (p : α → Prop) (f : ∀ x, β x) (x : Subtype p) : β x.1 :=
   f x
 
-theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrict f p x = f x.1 := by
+theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) : restrictₓ p f x = f x.1 :=
+  by
   rfl
 
-theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict f p = f ∘ coe := by
+theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrictₓ p f = f ∘ coe := by
   rfl
 
-theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrict f p) :=
+theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) : Injective (restrictₓ p f) :=
   h.comp coe_injective
 
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
-    Surjective fun f : ∀ x, β x => restrict f p := by
-  let this' := Classical.decPred p
+    Surjective fun f : ∀ x, β x => restrictₓ p f := by
+  let this := Classical.decPred p
   refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
   rintro ⟨x, hx⟩
   exact dif_pos hx

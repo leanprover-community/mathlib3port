@@ -46,7 +46,7 @@ namespace Filter
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-open_locale Filter
+open Filter
 
 /-! ### Relations -/
 

@@ -37,7 +37,7 @@ dual, Fréchet-Riesz
 
 noncomputable section
 
-open_locale Classical ComplexConjugate
+open Classical ComplexConjugate
 
 universe u v
 

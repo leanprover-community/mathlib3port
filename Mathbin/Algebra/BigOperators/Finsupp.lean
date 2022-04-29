@@ -15,7 +15,7 @@ This file contains theorems relevant to big operators in finitely supported func
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {α ι γ A B C : Type _} [AddCommMonoidₓ A] [AddCommMonoidₓ B] [AddCommMonoidₓ C]
 
@@ -35,7 +35,7 @@ section
 
 include h0 h1
 
-open_locale Classical
+open Classical
 
 theorem Finsupp.sum_sum_index' : (∑ x in s, f x).Sum t = ∑ x in s, (f x).Sum t :=
   (Finset.induction_on s rfl) fun a s has ih => by

@@ -302,7 +302,7 @@ theorem List.apply_id_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nod
         
       
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
 theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodupₓ xs) (h₁ : xs ~ ys) (x : α) :
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]
@@ -344,8 +344,8 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
         
     
 
-theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
-    (x ∉ xs) → List.applyId.{u} (xs.zip ys) x = x := by
+theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
+  by
   intro h
   dsimp [list.apply_id]
   rw [lookup_eq_none.2]
@@ -401,7 +401,7 @@ def Perm.slice [DecidableEq α] (n m : ℕ) : (Σ'xs ys : List α, xs ~ ys ∧ y
   | ⟨xs, ys, h, h'⟩ =>
     let xs' := List.sliceₓ n m xs
     have h₀ : xs' ~ ys.inter xs' := Perm.slice_inter _ _ h h'
-    ⟨xs', ys.inter xs', h₀, nodup_inter_of_nodup _ h'⟩
+    ⟨xs', ys.inter xs', h₀, h'.inter _⟩
 
 /-- A lazy list, in decreasing order, of sizes that should be
 sliced off a list of length `n`
@@ -505,7 +505,7 @@ instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>
           Int.coe_nat_inj (add_right_injective _ h)
         let r : injective_function ℤ :=
-          InjectiveFunction.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 <| nodup_map Hinj (nodup_range _))
+          InjectiveFunction.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 <| (nodup_range _).map Hinj)
         pure r
   shrink := @InjectiveFunction.shrink ℤ _ _
 

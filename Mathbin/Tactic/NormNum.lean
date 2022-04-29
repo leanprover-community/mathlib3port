@@ -1637,6 +1637,23 @@ unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List si
           (simp_arg_type.except `` one_div :: hs) [] l >>
         skip
 
+/-- Carry out similar operations as `tactic.norm_num` but on an `expr` rather than a location.
+Given an expression `e`, returns `(e', ⊢ e = e')`.
+The `no_dflt`, `hs`, and `attr_names` are passed on to `simp`.
+Unlike `norm_num`, this tactic does not fail. -/
+unsafe def _root_.expr.norm_num (step : expr → tactic (expr × expr)) (no_dflt : Bool := false)
+    (hs : List simp_arg_type := []) (attr_names : List Name := []) : expr → tactic (expr × expr) :=
+  let simp_step (e : expr) := do
+    let (e', p, _) ←
+      e.simp {  } (tactic.norm_num1 step (Interactive.Loc.ns [none])) no_dflt attr_names
+          (simp_arg_type.except `` one_div :: hs)
+    return (e', p)
+  or_refl_conv fun e => do
+    let (e', p') ← norm_num.derive' step e <|> simp_step e
+    let (e'', p'') ← _root_.expr.norm_num e'
+    let p ← mk_eq_trans p' p''
+    return (e'', p)
+
 namespace Tactic.Interactive
 
 open NormNum Interactive Interactive.Types
@@ -1706,6 +1723,9 @@ add_tactic_doc
 
 end Tactic.Interactive
 
+/-! ## `conv` tactic -/
+
+
 namespace Conv.Interactive
 
 open Conv Interactive Tactic.Interactive
@@ -1729,4 +1749,87 @@ unsafe def norm_num (hs : parse simp_arg_list) : conv Unit :=
         { discharger := tactic.interactive.norm_num1 (Loc.ns [none]) }
 
 end Conv.Interactive
+
+/-!
+## `#norm_num` command
+A user command to run `norm_num`. Mostly copied from the `#simp` command.
+-/
+
+
+namespace Tactic
+
+setup_tactic_parser
+
+-- With this option, turn off the messages if the result is exactly `true`
+initialize
+  registerTraceClass.1 `silence_norm_num_if_true
+
+/-- The basic usage is `#norm_num e`, where `e` is an expression,
+which will print the `norm_num` form of `e`.
+
+Syntax: `#norm_num` (`only`)? (`[` simp lemma list `]`)? (`with` simp sets)? `:`? expression
+
+This accepts the same options as the `#simp` command.
+You can specify additional simp lemmas as usual, for example using
+`#norm_num [f, g] : e`, or `#norm_num with attr : e`.
+(The colon is optional but helpful for the parser.)
+The `only` restricts `norm_num` to using only the provided lemmas, and so
+`#norm_num only : e` behaves similarly to `norm_num1`.
+
+Unlike `norm_num`, this command does not fail when no simplifications are made.
+
+`#norm_num` understands local variables, so you can use them to
+introduce parameters.
+-/
+@[user_command]
+unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
+  let no_dflt ← only_flag
+  let hs ← simp_arg_list
+  let attr_names ← with_ident_list
+  let o ← optionalₓ (tk ":")
+  let e ← texpr
+  let-- Retrieve the `pexpr`s parsed as part of the simp args, and collate them into a big list.
+  hs_es := List.join <| hs.map <| Option.toList ∘ simp_arg_type.to_pexpr
+  let/- Synthesize a `tactic_state` including local variables as hypotheses under which `expr.simp`
+         may be safely called with expected behaviour given the `variables` in the environment. -/
+    (ts, mappings)
+    ← synthesize_tactic_state_with_variables_as_hyps (e :: hs_es)
+  let result
+    ←-- Enter the `tactic` monad, *critically* using the synthesized tactic state `ts`.
+        lean.parser.of_tactic
+        fun _ =>
+        (/- Resolve the local variables added by the parser to `e` (when it was parsed) against the local
+                 hypotheses added to the `ts : tactic_state` which we are using. -/
+          do
+            let e ← to_expr e
+            let/- Replace the variables referenced in the passed `simp_arg_list` with the `expr`s corresponding
+                   to the local hypotheses we created.
+            
+                   We would prefer to just elaborate the `pexpr`s encoded in the `simp_arg_list` against the
+                   tactic state we have created (as we could with `e` above), but the simplifier expects
+                   `pexpr`s and not `expr`s. Thus, we just modify the `pexpr`s now and let `simp` do the
+                   elaboration when the time comes.
+            
+                   You might think that we could just examine each of these `pexpr`s, call `to_expr` on them,
+                   and then call `to_pexpr` afterward and save the results over the original `pexprs`. Due to
+                   how functions like `simp_lemmas.add_pexpr` are implemented in the core library, the `simp`
+                   framework is not robust enough to handle this method. When pieces of expressions like
+                   annotation macros are injected, the direct patten matches in the `simp_lemmas.*` codebase
+                   fail, and the lemmas we want don't get added.
+                   -/
+            hs := hs.map fun sat => sat.replace_subexprs mappings
+            let step
+              ←-- Try simplifying the expression.
+                norm_num.get_step
+            Prod.fst <$> e step no_dflt hs attr_names)
+          ts
+  -- Trace the result.
+      when
+      (¬is_trace_enabled_for `silence_norm_num_if_true ∨ result ≠ expr.const `true []) (trace result)
+
+add_tactic_doc
+  { Name := "#norm_num", category := DocCategory.cmd, declNames := [`tactic.norm_num_cmd],
+    tags := ["simplification", "arithmetic", "decision procedure"] }
+
+end Tactic
 

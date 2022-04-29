@@ -86,11 +86,11 @@ universe u v w
 
 noncomputable section
 
-open_locale Classical TopologicalSpace BigOperators Filter Ennreal Polynomial
+open Classical TopologicalSpace BigOperators Filter Ennreal Polynomial
 
 open Filter Asymptotics Set
 
-open ContinuousLinearMap (smulRight smul_right_one_eq_iff)
+open ContinuousLinearMap (smul_right smul_right_one_eq_iff)
 
 variable {𝕜 : Type u} [NondiscreteNormedField 𝕜]
 
@@ -374,6 +374,9 @@ theorem DifferentiableOn.has_deriv_at (h : DifferentiableOn 𝕜 f s) (hs : s �
 
 theorem HasDerivAt.deriv (h : HasDerivAt f f' x) : deriv f x = f' :=
   h.DifferentiableAt.HasDerivAt.unique h
+
+theorem deriv_eq {f' : 𝕜 → F} (h : ∀ x, HasDerivAt f (f' x) x) : deriv f = f' :=
+  funext fun x => (h x).deriv
 
 theorem HasDerivWithinAt.deriv_within (h : HasDerivWithinAt f f' s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin f s x = f' :=
@@ -676,7 +679,7 @@ section Sum
 /-! ### Derivative of a finite sum of functions -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {ι : Type _} {u : Finset ι} {A : ι → 𝕜 → F} {A' : ι → F}
 
@@ -1830,9 +1833,8 @@ theorem differentiable_within_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 �
     DifferentiableWithinAt 𝕜 (fun x => x ^ m) s x :=
   (differentiable_at_zpow.mpr h).DifferentiableWithinAt
 
-theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : ((0 : 𝕜) ∉ s) ∨ 0 ≤ m) :
-    DifferentiableOn 𝕜 (fun x => x ^ m) s := fun x hxs =>
-  differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
+theorem differentiable_on_zpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨ 0 ≤ m) : DifferentiableOn 𝕜 (fun x => x ^ m) s :=
+  fun x hxs => differentiable_within_at_zpow m x <| h.imp_left <| ne_of_mem_of_not_mem hxs
 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases' H : x ≠ 0 ∨ 0 ≤ m
@@ -1891,6 +1893,27 @@ theorem iter_deriv_inv' (k : ℕ) :
   funext (iter_deriv_inv k)
 
 end Zpow
+
+/-! ### Support of derivatives -/
+
+
+section Support
+
+open Function
+
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {f : 𝕜 → F}
+
+theorem support_deriv_subset : Support (deriv f) ⊆ Tsupport f := by
+  intro x
+  rw [← not_imp_not]
+  intro h2x
+  rw [not_mem_closure_support_iff_eventually_eq] at h2x
+  exact nmem_support.mpr (h2x.deriv_eq.trans (deriv_const x 0))
+
+theorem HasCompactSupport.deriv (hf : HasCompactSupport f) : HasCompactSupport (deriv f) :=
+  hf.mono' support_deriv_subset
+
+end Support
 
 /-! ### Upper estimates on liminf and limsup -/
 

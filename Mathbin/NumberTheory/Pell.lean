@@ -312,7 +312,7 @@ theorem eq_pell_lem : ∀ n b : ℤ√d, 1 ≤ b → is_pell b → b ≤ pell_zd
 theorem eq_pell_zd (b : ℤ√d) (b1 : 1 ≤ b) (hp : is_pell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
   eq_pell_lem n b b1 hp <|
-    Zsqrtd.le_trans h <| by
+    h.trans <| by
       rw [Zsqrtd.coe_nat_val] <;>
         exact Zsqrtd.le_of_le_le (Int.coe_nat_le_coe_nat_of_le <| le_of_ltₓ <| n_lt_xn _ _) (Int.coe_zero_le _)
 
@@ -356,16 +356,12 @@ theorem pell_zd_sub {m n} (h : n ≤ m) : pell_zd (m - n) = pell_zd m * (pell_zd
     rw [t, mul_comm (pell_zd _ n) _, mul_assoc, (is_pell_norm _).1 (is_pell_pell_zd _ _), mul_oneₓ]
 
 theorem xz_sub {m n} (h : n ≤ m) : xz (m - n) = xz m * xz n - d * yz m * yz n := by
-  injection pell_zd_sub _ h with h _ <;>
-    repeat'
-        rw [mul_neg] at h <;>
-      exact h
+  rw [sub_eq_add_neg, ← mul_neg]
+  exact congr_argₓ Zsqrtd.re (pell_zd_sub a1 h)
 
 theorem yz_sub {m n} (h : n ≤ m) : yz (m - n) = xz n * yz m - xz m * yz n := by
-  injection pell_zd_sub a1 h with _ h <;>
-    repeat'
-        rw [mul_neg] at h <;>
-      rw [add_commₓ, mul_comm] at h <;> exact h
+  rw [sub_eq_add_neg, ← mul_neg, mul_comm, add_commₓ]
+  exact congr_argₓ Zsqrtd.im (pell_zd_sub a1 h)
 
 theorem xy_coprime n : (xn n).Coprime (yn n) :=
   Nat.coprime_of_dvd' fun k kp kx ky => by

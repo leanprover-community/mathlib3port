@@ -50,7 +50,7 @@ namespace Mvpfunctor
 
 open Typevec
 
-open_locale Mvfunctor
+open Mvfunctor
 
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 

@@ -34,7 +34,7 @@ dedekind domain, dedekind ring
 
 variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
 
-open_locale nonZeroDivisors Polynomial
+open nonZeroDivisors Polynomial
 
 variable [IsDomain A]
 
@@ -49,7 +49,7 @@ of a number field is a Dedekind domain. -/
 
 open Algebra
 
-open_locale BigOperators
+open BigOperators
 
 variable {A K} [Algebra A K] [IsFractionRing A K]
 
@@ -110,7 +110,7 @@ theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)
   · rintro x s hx ⟨y, hy, hs⟩
     obtain ⟨x', y', hy', hx'⟩ :=
       exists_integral_multiple ((IsFractionRing.is_algebraic_iff A K L).mpr (is_algebraic_of_finite _ _ x))
-        ((algebraMap A L).injective_iff.mp _)
+        ((injective_iff_map_eq_zero (algebraMap A L)).mp _)
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
     · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
@@ -130,13 +130,13 @@ variable (L)
 /-- If `L` is a finite extension of `K = Frac(A)`,
 then `L` has a basis over `A` consisting of integral elements. -/
 theorem FiniteDimensional.exists_is_basis_integral : ∃ (s : Finset L)(b : Basis s K L), ∀ x, IsIntegral A (b x) := by
-  let this' := Classical.decEq L
-  let this' : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
+  let this := Classical.decEq L
+  let this : IsNoetherian K L := IsNoetherian.iff_fg.2 inferInstance
   let s' := IsNoetherian.finsetBasisIndex K L
   let bs' := IsNoetherian.finsetBasis K L
   obtain ⟨y, hy, his'⟩ := exists_integral_multiples A K (finset.univ.image bs')
   have hy' : algebraMap A L y ≠ 0 := by
-    refine' mt ((algebraMap A L).injective_iff.mp _ _) hy
+    refine' mt ((injective_iff_map_eq_zero (algebraMap A L)).mp _ _) hy
     rw [IsScalarTower.algebra_map_eq A K L]
     exact (algebraMap K L).Injective.comp (IsFractionRing.injective A K)
   refine'
@@ -169,7 +169,7 @@ theorem IsIntegralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetheria
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
   rw [is_noetherian_ring_iff]
   let b' := (trace_form K L).dualBasis (trace_form_nondegenerate K L) b
-  let this' := is_noetherian_span_of_finite A (Set.finite_range b')
+  let this := is_noetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.Range b') :=
     (Submodule.ofLe (IsIntegralClosure.range_le_span_dual_basis C b hb_int)).comp
       ((Algebra.linearMap C L).restrictScalars A).range_restrict

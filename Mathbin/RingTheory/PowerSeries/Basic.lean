@@ -69,7 +69,7 @@ Occasionally this leads to proofs that are uglier than expected.
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 /-- Multivariate formal power series, where `σ` is the index set of the variables
 and `R` is the coefficient ring.-/
@@ -410,7 +410,7 @@ theorem constant_coeff_X (s : σ) : constantCoeff σ R (x s) = 0 :=
 /-- If a multivariate formal power series is invertible,
  then so is its constant coefficient.-/
 theorem is_unit_constant_coeff (φ : MvPowerSeries σ R) (h : IsUnit φ) : IsUnit (constantCoeff σ R φ) :=
-  h.map (constantCoeff σ R).toMonoidHom
+  h.map _
 
 @[simp]
 theorem coeff_smul (f : MvPowerSeries σ R) n (a : R) : coeff _ n (a • f) = a * coeff _ n f :=
@@ -583,9 +583,8 @@ theorem trunc_one (hnn : n ≠ 0) : trunc R n 1 = 1 :=
     · symm
       rw [MvPolynomial.coeff_one]
       refine' if_neg _
-      intro H'
+      rintro rfl
       apply H
-      subst m
       exact Ne.bot_lt hnn
       
 
@@ -765,10 +764,10 @@ section CommRingₓ
 variable [CommRingₓ R]
 
 /-- Multivariate formal power series over a local ring form a local ring. -/
-instance is_local_ring [LocalRing R] : LocalRing (MvPowerSeries σ R) where
-  is_local := by
+instance [LocalRing R] : LocalRing (MvPowerSeries σ R) :=
+  LocalRing.of_is_unit_or_is_unit_one_sub_self <| by
     intro φ
-    rcases LocalRing.is_local (constant_coeff σ R φ) with (⟨u, h⟩ | ⟨u, h⟩) <;> [left, right] <;>
+    rcases LocalRing.is_unit_or_is_unit_one_sub_self (constant_coeff σ R φ) with (⟨u, h⟩ | ⟨u, h⟩) <;> [left, right] <;>
       · refine' is_unit_of_mul_eq_one _ _ (mul_inv_of_unit _ u _)
         simpa using h.symm
         
@@ -792,11 +791,6 @@ instance map.is_local_ring_hom : IsLocalRingHom (map σ f) :=
     rw [h] at this
     rcases is_unit_of_map_unit f _ this with ⟨c, hc⟩
     exact is_unit_of_mul_eq_one φ (inv_of_unit φ c) (mul_inv_of_unit φ c hc.symm)⟩
-
-variable [LocalRing R] [LocalRing S]
-
-instance : LocalRing (MvPowerSeries σ R) where
-  is_local := LocalRing.is_local
 
 end LocalRing
 
@@ -1533,9 +1527,8 @@ theorem trunc_one n : trunc (n + 1) (1 : PowerSeries R) = 1 :=
       
     · symm
       refine' if_neg _
-      intro H'
+      rintro rfl
       apply H
-      subst m
       exact Nat.zero_lt_succₓ _
       
 
@@ -1713,9 +1706,7 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero (φ ψ : PowerSeries R) (h : φ * ψ =
       exfalso
       exact ne_of_ltₓ this hij.symm
     contrapose! hne
-    have : i = m := le_antisymmₓ hne hi
-    subst i
-    clear hi hne
+    obtain rfl := le_antisymmₓ hi hne
     simpa [Ne.def, Prod.mk.inj_iffₓ] using (add_right_injₓ m).mp hij
     
   · contrapose!

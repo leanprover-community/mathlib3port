@@ -6,7 +6,7 @@ Authors: Simon Hudon
 import Mathbin.Control.Monad.Basic
 import Mathbin.Control.Monad.Cont
 import Mathbin.Control.Monad.Writer
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Logic.Equiv.Basic
 import Mathbin.Tactic.Interactive
 
 /-!

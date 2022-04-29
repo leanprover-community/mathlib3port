@@ -3,7 +3,7 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Geometry.Manifold.BasicSmoothBundle
+import Mathbin.Geometry.Manifold.TangentBundle
 
 /-!
 # The derivative of functions between smooth manifolds
@@ -94,7 +94,7 @@ Derivative, manifold
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Manifold
+open Classical TopologicalSpace Manifold
 
 open Set
 
@@ -1097,8 +1097,8 @@ theorem tangent_map_chart_symm {p : TangentBundle I M} {q : TangentBundle I H} (
   rotate_left
   · infer_instance
     
-  simp' only [chart_at, BasicSmoothBundleCore.chart, Subtype.coe_mk, tangentBundleCore, h,
-    BasicSmoothBundleCore.toTopologicalFiberBundleCore, Equivₓ.sigma_equiv_prod_apply] with mfld_simps
+  simp' only [ContinuousLinearMap.coe_coe, BasicSmoothVectorBundleCore.chart, h, tangentBundleCore,
+    BasicSmoothVectorBundleCore.toTopologicalVectorBundleCore, chart_at, Sigma.mk.inj_iff] with mfld_simps
 
 end Charts
 
@@ -1328,12 +1328,12 @@ theorem UniqueMdiffOn.unique_diff_on_inter_preimage (hs : UniqueMdiffOn I s) (x 
     exact IsOpen.mem_nhds (ext_chart_at_open_source I' y) hz.2
   this.unique_diff_on_target_inter _
 
-variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothBundleCore I M F)
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothVectorBundleCore I M F)
 
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
 theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
-    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toTopologicalFiberBundleCore.proj ⁻¹' s) := by
+    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toTopologicalVectorBundleCore.proj ⁻¹' s) := by
   /- Using a chart (and the fact that unique differentiability is invariant under charts), we
     reduce the situation to the model space, where we can use the fact that products respect
     unique differentiability. -/
@@ -1344,16 +1344,16 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
   let e₀ := chart_at H p.1
   let e := chart_at (ModelProd H F) p
   -- It suffices to prove unique differentiability in a chart
-  suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s))
+  suffices h : UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s))
   · have A :
       UniqueMdiffOn (I.prod 𝓘(𝕜, F))
-        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s))) :=
+        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s))) :=
       by
       apply h.unique_mdiff_on_preimage
       exact (mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)).symm
       infer_instance
     have :
-      p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_fiber_bundle_core.proj ⁻¹' s)) := by
+      p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (Z.to_topological_vector_bundle_core.proj ⁻¹' s)) := by
       simp' only [e, hp] with mfld_simps
     apply (A _ this).mono
     intro q hq

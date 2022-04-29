@@ -52,7 +52,7 @@ universe u
 /-! ### Closure operator -/
 
 
-variable (α : Type _)
+variable (α : Type _) {ι : Sort _} {κ : ι → Sort _}
 
 /-- A closure operator on the preorder `α` is a monotone function which is extensive (every `x`
 is less than its closure) and idempotent. -/
@@ -232,13 +232,17 @@ section CompleteLattice
 
 variable [CompleteLattice α] (c : ClosureOperator α)
 
-theorem closure_supr_closure {ι : Type u} (x : ι → α) : c (⨆ i, c (x i)) = c (⨆ i, x i) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 (supr_le fun i => c.Monotone (le_supr x i)))
-    (c.Monotone (supr_le_supr fun i => c.le_closure _))
+@[simp]
+theorem closure_supr_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
+  le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr_le fun i => c.Monotone <| le_supr f i) <|
+    c.Monotone <| supr_mono fun i => c.le_closure _
 
-theorem closure_bsupr_closure (p : α → Prop) : c (⨆ (x) (H : p x), c x) = c (⨆ (x) (H : p x), x) :=
-  le_antisymmₓ ((c.le_closure_iff _ _).1 (bsupr_le fun x hx => c.Monotone (le_bsupr_of_le x hx (le_reflₓ x))))
-    (c.Monotone (bsupr_le_bsupr fun x hx => c.le_closure x))
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[simp]
+theorem closure_supr₂_closure (f : ∀ i, κ i → α) : c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
+  le_antisymmₓ ((c.le_closure_iff _ _).1 <| supr₂_le fun i j => c.Monotone <| le_supr₂ i j) <|
+    c.Monotone <| supr₂_mono fun i j => c.le_closure _
 
 end CompleteLattice
 
@@ -392,11 +396,13 @@ section CompleteLattice
 
 variable [CompleteLattice α] [Preorderₓ β] {u : β → α} (l : LowerAdjoint u)
 
-theorem closure_supr_closure {ι : Type u} (x : ι → α) : u (l (⨆ i, u (l (x i)))) = u (l (⨆ i, x i)) :=
-  l.ClosureOperator.closure_supr_closure x
+theorem closure_supr_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
+  l.ClosureOperator.closure_supr_closure _
 
-theorem closure_bsupr_closure (p : α → Prop) : u (l (⨆ (x) (H : p x), u (l x))) = u (l (⨆ (x) (H : p x), x)) :=
-  l.ClosureOperator.closure_bsupr_closure p
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+theorem closure_supr₂_closure (f : ∀ i, κ i → α) : u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
+  l.ClosureOperator.closure_supr₂_closure _
 
 end CompleteLattice
 
@@ -436,12 +442,14 @@ theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.ClosureOperator.closure_sup_closure x y)
 
 @[simp]
-theorem closure_Union_closure {ι : Type u} (x : ι → α) : l (⋃ i, l (x i)) = l (⋃ i, x i) :=
-  SetLike.coe_injective (l.closure_supr_closure (coe ∘ x))
+theorem closure_Union_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
+  SetLike.coe_injective <| l.closure_supr_closure _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 @[simp]
-theorem closure_bUnion_closure (p : Set β → Prop) : l (⋃ (x) (H : p x), l x) = l (⋃ (x) (H : p x), x) :=
-  SetLike.coe_injective (l.closure_bsupr_closure p)
+theorem closure_Union₂_closure (f : ∀ i, κ i → α) : l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
+  SetLike.coe_injective <| l.closure_supr₂_closure _
 
 end CoeToSet
 

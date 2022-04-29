@@ -38,7 +38,7 @@ graded algebra, graded ring, graded semiring, decomposition
 -/
 
 
-open_locale DirectSum BigOperators
+open DirectSum BigOperators
 
 section GradedAlgebra
 
@@ -150,4 +150,63 @@ theorem GradedAlgebra.sum_support_decompose (r : A) :
   simp_rw [GradedAlgebra.decompose_symm_of]
 
 end GradedAlgebra
+
+section CanonicalOrder
+
+open GradedAlgebra SetLike.GradedMonoid DirectSum
+
+variable {ι R A : Type _}
+
+variable [CommSemiringₓ R] [Semiringₓ A]
+
+variable [Algebra R A] [DecidableEq ι]
+
+variable [CanonicallyOrderedAddMonoid ι]
+
+variable (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜]
+
+/-- If `A` is graded by a canonically ordered add monoid, then the projection map `x ↦ x₀` is a ring
+homomorphism.
+-/
+@[simps]
+def GradedAlgebra.projZeroRingHom : A →+* A where
+  toFun := fun a => decompose 𝒜 a 0
+  map_one' := decompose_of_mem_same 𝒜 one_mem
+  map_zero' := by
+    simp only [Subtype.ext_iff_val, map_zero, zero_apply, Submodule.coe_zero]
+  map_add' := fun _ _ => by
+    simp [Subtype.ext_iff_val, map_add, add_apply, Submodule.coe_add]
+  map_mul' := fun x y => by
+    have m : ∀ x, x ∈ supr 𝒜 := fun x => (is_internal 𝒜).supr_eq_top.symm ▸ Submodule.mem_top
+    refine' Submodule.supr_induction 𝒜 (m x) (fun i c hc => _) _ _
+    · refine' Submodule.supr_induction 𝒜 (m y) (fun j c' hc' => _) _ _
+      · by_cases' h : i + j = 0
+        · rw [decompose_of_mem_same 𝒜 (show c * c' ∈ 𝒜 0 from h ▸ mul_mem hc hc'),
+            decompose_of_mem_same 𝒜 (show c ∈ 𝒜 0 from (add_eq_zero_iff.mp h).1 ▸ hc),
+            decompose_of_mem_same 𝒜 (show c' ∈ 𝒜 0 from (add_eq_zero_iff.mp h).2 ▸ hc')]
+          
+        · rw [decompose_of_mem_ne 𝒜 (mul_mem hc hc') h]
+          cases'
+            show i ≠ 0 ∨ j ≠ 0 by
+              rwa [add_eq_zero_iff, not_and_distrib] at h with
+            h' h'
+          · simp only [decompose_of_mem_ne 𝒜 hc h', zero_mul]
+            
+          · simp only [decompose_of_mem_ne 𝒜 hc' h', mul_zero]
+            
+          
+        
+      · simp only [map_zero, zero_apply, Submodule.coe_zero, mul_zero]
+        
+      · intro _ _ hd he
+        simp only [mul_addₓ, map_add, add_apply, Submodule.coe_add, hd, he]
+        
+      
+    · simp only [map_zero, zero_apply, Submodule.coe_zero, zero_mul]
+      
+    · rintro _ _ ha hb
+      simp only [add_mulₓ, map_add, add_apply, Submodule.coe_add, ha, hb]
+      
+
+end CanonicalOrder
 

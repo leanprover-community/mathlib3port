@@ -122,6 +122,7 @@ instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
     apply Quotientₓ.liftOn₂' x y fun x' y' => mk ⁅x',y'⁆
     intro x₁ x₂ y₁ y₂ h₁ h₂
     apply (Submodule.Quotient.eq I.to_submodule).2
+    rw [Submodule.quotient_rel_r_def] at h₁ h₂
     have h : ⁅x₁,x₂⁆ - ⁅y₁,y₂⁆ = ⁅x₁,x₂ - y₂⁆ + ⁅x₁ - y₁,y₂⁆ := by
       simp [-lie_skew, sub_eq_add_neg, add_assocₓ]
     rw [h]

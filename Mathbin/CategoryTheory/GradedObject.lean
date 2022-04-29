@@ -3,9 +3,11 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Group.Basic
+import Mathbin.Data.Int.Basic
+import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.CategoryTheory.Pi.Basic
 import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # The category of graded objects
@@ -129,8 +131,6 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
 -- See note [dsimp, simp].
 end
 
-attribute [local reducible, local instance] endofunctor_monoidal_category Discrete.addMonoidal
-
 instance hasShift {β : Type _} [AddCommGroupₓ β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => (comap fun _ => C) fun b : β => b + n • s,
@@ -181,17 +181,11 @@ theorem zero_apply [HasZeroMorphisms C] (β : Type w) (X Y : GradedObject β C) 
 
 section
 
-open_locale ZeroObject
+open ZeroObject
 
-instance hasZeroObject [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
-    HasZeroObject.{max w v} (GradedObject β C) where
-  zero := fun b => (0 : C)
-  uniqueTo := fun X =>
-    ⟨⟨fun b => 0⟩, fun f => by
-      ext⟩
-  uniqueFrom := fun X =>
-    ⟨⟨fun b => 0⟩, fun f => by
-      ext⟩
+instance has_zero_object [HasZeroObject C] [HasZeroMorphisms C] (β : Type w) :
+    HasZeroObject.{max w v} (GradedObject β C) := by
+  refine' ⟨⟨fun b => 0, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨fun b => 0⟩, fun f => _⟩⟩⟩⟩ <;> ext
 
 end
 

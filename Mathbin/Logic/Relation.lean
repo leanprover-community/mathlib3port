@@ -70,6 +70,18 @@ theorem reflexive_ne_imp_iff [IsRefl α r] {x y : α} : x ≠ y → r x y ↔ r 
 protected theorem Symmetric.iff (H : Symmetric r) (x y : α) : r x y ↔ r y x :=
   ⟨fun h => H h, fun h => H h⟩
 
+theorem Symmetric.flip_eq (h : Symmetric r) : flip r = r :=
+  funext₂ fun _ _ => propext <| h.Iff _ _
+
+theorem Symmetric.swap_eq : Symmetric r → swap r = r :=
+  Symmetric.flip_eq
+
+theorem flip_eq_iff : flip r = r ↔ Symmetric r :=
+  ⟨fun h x y => (congr_fun₂ h _ _).mp, Symmetric.flip_eq⟩
+
+theorem swap_eq_iff : swap r = r ↔ Symmetric r :=
+  flip_eq_iff
+
 end NeImp
 
 section Comap
@@ -178,6 +190,9 @@ theorem mono {p : α → α → Prop} (hp : ∀ a b, r a b → p a b) : ∀ {a b
   | a, _, refl_gen.refl => by
     rfl
   | a, b, single h => single (hp a b h)
+
+instance : IsRefl α (ReflGen r) :=
+  ⟨@refl α r⟩
 
 end ReflGen
 
@@ -359,6 +374,16 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
 
 end TransGen
 
+theorem WellFounded.trans_gen {α} {r : α → α → Prop} (h : WellFounded r) : WellFounded (TransGen r) :=
+  ⟨fun a =>
+    h.induction a fun x H =>
+      Acc.intro x fun y hy => by
+        cases' hy with _ hyx z _ hyz hzx
+        · exact H y hyx
+          
+        · exact Acc.invₓ (H z hzx) hyz
+          ⟩
+
 section TransGen
 
 theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
@@ -374,6 +399,9 @@ theorem trans_gen_eq_self (trans : Transitive r) : TransGen r = r :=
           TransGen.single⟩
 
 theorem transitive_trans_gen : Transitive (TransGen r) := fun a b c => TransGen.trans
+
+instance : IsTrans α (TransGen r) :=
+  ⟨@TransGen.trans α r⟩
 
 theorem trans_gen_idem : TransGen (TransGen r) = TransGen r :=
   trans_gen_eq_self transitive_trans_gen
@@ -449,6 +477,12 @@ theorem refl_trans_gen_eq_self (refl : Reflexive r) (trans : Transitive r) : Ref
 theorem reflexive_refl_trans_gen : Reflexive (ReflTransGen r) := fun a => refl
 
 theorem transitive_refl_trans_gen : Transitive (ReflTransGen r) := fun a b c => trans
+
+instance : IsRefl α (ReflTransGen r) :=
+  ⟨@ReflTransGen.refl α r⟩
+
+instance : IsTrans α (ReflTransGen r) :=
+  ⟨@ReflTransGen.trans α r⟩
 
 theorem refl_trans_gen_idem : ReflTransGen (ReflTransGen r) = ReflTransGen r :=
   refl_trans_gen_eq_self reflexive_refl_trans_gen transitive_refl_trans_gen

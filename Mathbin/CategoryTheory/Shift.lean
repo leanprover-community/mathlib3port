@@ -24,8 +24,8 @@ would be the degree `i+n`-th term of `C`.
 
 ## Implementation Notes
 
-Most of the definitions in this file is marked as an `abbreviation` so that the simp lemmas in
-`category_theory/monoidal/End` could apply.
+Many of the definitions in this file are marked as an `abbreviation` so that the simp lemmas in
+`category_theory/monoidal/End` can apply.
 
 -/
 
@@ -39,8 +39,6 @@ universe v u
 variable (C : Type u) (A : Type _) [Category.{v} C]
 
 attribute [local instance] endofunctor_monoidal_category
-
-attribute [local reducible] endofunctor_monoidal_category Discrete.addMonoidal
 
 section EqToHom
 
@@ -133,6 +131,10 @@ structure ShiftMkCore where
     run_tac
       obviously
 
+section
+
+attribute [local reducible] endofunctor_monoidal_category Discrete.addMonoidal
+
 /-- Constructs a `has_shift C A` instance from `shift_mk_core`. -/
 @[simps]
 def hasShiftMk (h : ShiftMkCore C A) : HasShift C A :=
@@ -161,6 +163,8 @@ def hasShiftMk (h : ShiftMkCore C A) : HasShift C A :=
         dsimp
         rw [Functor.map_id, category.comp_id, ← category.assoc, h.right_unitality]
         simp }⟩
+
+end
 
 variable [HasShift C A]
 
@@ -195,18 +199,6 @@ notation X "⟦" n "⟧" =>
 notation f "⟦" n "⟧'" => (shiftFunctor _ n).map f
 
 end Defs
-
-section Examples
-
-variable [HasShift C ℤ]
-
-example {X Y : C} (f : X ⟶ Y) : X⟦(1 : ℤ)⟧ ⟶ Y⟦1⟧ :=
-  f⟦1⟧'
-
-example {X Y : C} (f : X ⟶ Y) : X⟦(-2 : ℤ)⟧ ⟶ Y⟦-2⟧ :=
-  f⟦-2⟧'
-
-end Examples
 
 section AddMonoidₓ
 
@@ -405,8 +397,14 @@ theorem shift_neg_shift' (i : A) : f⟦-i⟧'⟦i⟧' = (shiftNegShift X i).Hom 
 theorem shift_equiv_triangle (n : A) (X : C) : (shiftShiftNeg X n).inv⟦n⟧' ≫ (shiftNegShift (X⟦n⟧) n).Hom = 𝟙 (X⟦n⟧) :=
   (addNegEquiv (shiftMonoidalFunctor C A) n).functor_unit_iso_comp X
 
+section
+
+attribute [local reducible] Discrete.addMonoidal
+
 theorem shift_shift_neg_hom_shift (n : A) (X : C) : (shiftShiftNeg X n).Hom⟦n⟧' = (shiftNegShift (X⟦n⟧) n).Hom := by
   simp
+
+end
 
 theorem shift_shift_neg_inv_shift (n : A) (X : C) : (shiftShiftNeg X n).inv⟦n⟧' = (shiftNegShift (X⟦n⟧) n).inv := by
   ext
@@ -463,6 +461,96 @@ theorem shift_comm_hom_comp (i j : A) : (shiftComm X i j).Hom ≫ f⟦j⟧'⟦i�
   rw [shift_comm', ← shift_comm_symm, iso.symm_hom, iso.inv_hom_id_assoc]
 
 end AddCommMonoidₓ
+
+variable {D : Type _} [Category D] [AddMonoidₓ A] [HasShift D A]
+
+variable (F : C ⥤ D) [Full F] [Faithful F]
+
+section
+
+attribute [local reducible] Discrete.addMonoidal
+
+/-- Given a family of endomorphisms of `C` which are interwined by a fully faithful `F : C ⥤ D`
+with shift functors on `D`, we can promote that family to shift functors on `C`. -/
+def hasShiftOfFullyFaithful (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) : HasShift C A :=
+  hasShiftMk C A
+    { f := s,
+      ε :=
+        natIsoOfCompFullyFaithful F
+          (calc
+            𝟭 C ⋙ F ≅ F := Functor.leftUnitor _
+            _ ≅ F ⋙ 𝟭 D := (Functor.rightUnitor _).symm
+            _ ≅ F ⋙ shiftFunctor D (0 : A) := isoWhiskerLeft F (shiftFunctorZero D A).symm
+            _ ≅ s 0 ⋙ F := (i 0).symm
+            ),
+      μ := fun a b =>
+        natIsoOfCompFullyFaithful F
+          (calc
+            (s a ⋙ s b) ⋙ F ≅ s a ⋙ s b ⋙ F := Functor.associator _ _ _
+            _ ≅ s a ⋙ F ⋙ shiftFunctor D b := isoWhiskerLeft _ (i b)
+            _ ≅ (s a ⋙ F) ⋙ shiftFunctor D b := (Functor.associator _ _ _).symm
+            _ ≅ (F ⋙ shiftFunctor D a) ⋙ shiftFunctor D b := isoWhiskerRight (i a) _
+            _ ≅ F ⋙ shiftFunctor D a ⋙ shiftFunctor D b := Functor.associator _ _ _
+            _ ≅ F ⋙ shiftFunctor D (a + b) := isoWhiskerLeft _ (shiftFunctorAdd D a b).symm
+            _ ≅ s (a + b) ⋙ F := (i (a + b)).symm
+            ),
+      associativity := by
+        intros
+        apply F.map_injective
+        dsimp
+        simp only [category.comp_id, category.id_comp, category.assoc, CategoryTheory.Functor.map_comp,
+          functor.image_preimage, eq_to_hom_map, iso.inv_hom_id_app_assoc]
+        erw [(i m₃).Hom.naturality_assoc]
+        congr 1
+        dsimp
+        simp only [eq_to_iso.inv, eq_to_hom_app, eq_to_hom_map, obj_μ_app, μ_naturality_assoc, category.assoc,
+          CategoryTheory.Functor.map_comp, functor.image_preimage]
+        congr 3
+        dsimp
+        simp only [← (shift_functor D m₃).map_comp_assoc, iso.inv_hom_id_app]
+        erw [(shift_functor D m₃).map_id, category.id_comp]
+        erw [((shift_monoidal_functor D A).μIso (m₁ + m₂) m₃).inv_hom_id_app_assoc]
+        congr 1
+        have := dcongr_arg (fun a => (i a).inv.app X) (add_assocₓ m₁ m₂ m₃)
+        dsimp  at this
+        simp [this],
+      left_unitality := by
+        intros
+        apply F.map_injective
+        dsimp
+        simp only [category.comp_id, category.id_comp, category.assoc, CategoryTheory.Functor.map_comp, eq_to_hom_app,
+          eq_to_hom_map, functor.image_preimage]
+        erw [(i n).Hom.naturality_assoc]
+        dsimp
+        simp only [eq_to_iso.inv, eq_to_hom_app, category.assoc, CategoryTheory.Functor.map_comp, eq_to_hom_map,
+          obj_ε_app, functor.image_preimage]
+        simp only [← (shift_functor D n).map_comp_assoc, iso.inv_hom_id_app]
+        dsimp
+        simp only [category.id_comp, μ_inv_hom_app_assoc, CategoryTheory.Functor.map_id]
+        have := dcongr_arg (fun a => (i a).inv.app X) (zero_addₓ n)
+        dsimp  at this
+        simp [this],
+      right_unitality := by
+        intros
+        apply F.map_injective
+        dsimp
+        simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_app_assoc, eq_to_iso.inv,
+          eq_to_hom_app, eq_to_hom_map, CategoryTheory.Functor.map_comp, functor.image_preimage, obj_zero_map_μ_app,
+          ε_hom_inv_app_assoc]
+        have := dcongr_arg (fun a => (i a).inv.app X) (add_zeroₓ n)
+        dsimp  at this
+        simp [this] }
+
+end
+
+/-- When we construct shifts on a subcategory from shifts on the ambient category,
+the inclusion functor intertwines the shifts. -/
+-- incorrectly reports that `[full F]` and `[faithful F]` are unused.
+@[nolint unused_arguments]
+def hasShiftOfFullyFaithfulComm (s : A → C ⥤ C) (i : ∀ i, s i ⋙ F ≅ F ⋙ shiftFunctor D i) (m : A) :
+    have := has_shift_of_fully_faithful F s i
+    shift_functor C m ⋙ F ≅ F ⋙ shift_functor D m :=
+  i m
 
 end CategoryTheory
 

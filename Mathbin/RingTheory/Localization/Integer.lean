@@ -28,7 +28,7 @@ variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 namespace IsLocalization
 
@@ -124,7 +124,7 @@ noncomputable def commonDenomOfFinset (s : Finset S) : M :=
 noncomputable def finsetIntegerMultiple [DecidableEq R] (s : Finset S) : Finset R :=
   s.attach.Image fun t => integerMultiple M s id t
 
-open_locale Pointwise
+open Pointwise
 
 theorem finset_integer_multiple_image [DecidableEq R] (s : Finset S) :
     algebraMap R S '' finsetIntegerMultiple M s = commonDenomOfFinset M s • s := by

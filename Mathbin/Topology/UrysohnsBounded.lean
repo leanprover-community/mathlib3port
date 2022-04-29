@@ -19,7 +19,7 @@ Urysohn's lemma, normal topological space
 -/
 
 
-open_locale BoundedContinuousFunction
+open BoundedContinuousFunction
 
 open Set Function
 

@@ -5,6 +5,7 @@ Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Over
+import Mathbin.Algebra.Category.Module.Abelian
 
 /-!
 # Pseudoelements in abelian categories
@@ -255,7 +256,7 @@ theorem pseudo_zero_iff {P : C} (a : Over P) : (a : P) = 0 ↔ a.Hom = 0 := by
 
 end Zero
 
-open_locale Pseudoelement
+open Pseudoelement
 
 /-- Morphisms map the zero pseudoelement to the zero pseudoelement -/
 @[simp]
@@ -342,29 +343,29 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
 section
 
 /-- Two morphisms in an exact sequence are exact on pseudoelements. -/
-theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} [Exact f g] :
+theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact f g) :
     (∀ a, g (f a) = 0) ∧ ∀ b, g b = 0 → ∃ a, f a = b :=
   ⟨fun a => by
-    rw [← comp_apply, exact.w]
+    rw [← comp_apply, h.w]
     exact zero_apply _ _, fun b' =>
     (Quotientₓ.induction_on b') fun b hb => by
       have hb' : b.Hom ≫ g = 0 := (pseudo_zero_iff _).1 hb
       -- By exactness, b factors through im f = ker g via some c
-      obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g) _ hb'
+      obtain ⟨c, hc⟩ := kernel_fork.is_limit.lift' (is_limit_image f g h) _ hb'
       -- We compute the pullback of the map into the image and c.
       -- The pseudoelement induced by the first pullback map will be our preimage.
-      use (pullback.fst : pullback (images.factor_thru_image f) c ⟶ P)
+      use (pullback.fst : pullback (abelian.factor_thru_image f) c ⟶ P)
       -- It remains to show that the image of this element under f is pseudo-equal to b.
       apply Quotientₓ.sound
       -- pullback.snd is an epimorphism because the map onto the image is!
       refine'
-        ⟨pullback (images.factor_thru_image f) c, 𝟙 _, pullback.snd, by
+        ⟨pullback (abelian.factor_thru_image f) c, 𝟙 _, pullback.snd, by
           infer_instance, by
           infer_instance, _⟩
       -- Now we can verify that the diagram commutes.
-      calc 𝟙 (pullback (images.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f :=
-          category.id_comp _ _ = pullback.fst ≫ images.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
-          rw [images.image.fac]_ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
+      calc 𝟙 (pullback (abelian.factor_thru_image f) c) ≫ pullback.fst ≫ f = pullback.fst ≫ f :=
+          category.id_comp _ _ = pullback.fst ≫ abelian.factor_thru_image f ≫ kernel.ι (cokernel.π f) := by
+          rw [abelian.image.fac]_ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
           rw [← category.assoc, pullback.condition]_ = pullback.snd ≫ b.hom := by
           rw [category.assoc]
           congr⟩
@@ -394,9 +395,9 @@ theorem exact_of_pseudo_exact {P Q R : C} (f : P ⟶ Q) (g : Q ⟶ R) :
       -- The commutative diagram given by the pseudo-equality f a = b induces
       -- a cone over this pullback, so we get a factorization z.
       obtain ⟨z, hz₁, hz₂⟩ :=
-        @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _ (r ≫ a.hom ≫ images.factor_thru_image f) q
+        @pullback.lift' _ _ _ _ _ _ (kernel.ι (cokernel.π f)) (kernel.ι g) _ (r ≫ a.hom ≫ abelian.factor_thru_image f) q
           (by
-            simp only [category.assoc, images.image.fac]
+            simp only [category.assoc, abelian.image.fac]
             exact comm)
       -- Let's give a name to the second pullback morphism.
       let j : pullback (kernel.ι (cokernel.π f)) (kernel.ι g) ⟶ kernel g := pullback.snd
@@ -444,8 +445,8 @@ variable [Limits.HasPullbacks C]
 /-- If `f : P ⟶ R` and `g : Q ⟶ R` are morphisms and `p : P` and `q : Q` are pseudoelements such
     that `f p = g q`, then there is some `s : pullback f g` such that `fst s = p` and `snd s = q`.
 
-    Remark: Borceux claims that `s` is unique. I was unable to transform his proof sketch into
-    a pen-and-paper proof of this fact, so naturally I was not able to formalize the proof. -/
+    Remark: Borceux claims that `s` is unique, but this is false. See
+    `counterexamples/pseudoelement` for details. -/
 theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} :
     f p = g q → ∃ s, (pullback.fst : pullback f g ⟶ P) s = p ∧ (pullback.snd : pullback f g ⟶ Q) s = q :=
   (Quotientₓ.induction_on₂ p q) fun x y h => by
@@ -465,6 +466,29 @@ theorem pseudo_pullback {P Q R : C} {f : P ⟶ R} {g : Q ⟶ R} {p : P} {q : Q} 
             ⟨Z, 𝟙 Z, b, by
               infer_instance, eb, by
               rwa [category.id_comp]⟩⟩⟩
+
+section Module
+
+attribute [-instance] hom_to_fun
+
+/-- In the category `Module R`, if `x` and `y` are pseudoequal, then the range of the associated
+morphisms is the same. -/
+theorem Module.eq_range_of_pseudoequal {R : Type _} [CommRingₓ R] {G : ModuleCat R} {x y : Over G}
+    (h : PseudoEqual G x y) : x.Hom.range = y.Hom.range := by
+  obtain ⟨P, p, q, hp, hq, H⟩ := h
+  refine' Submodule.ext fun a => ⟨fun ha => _, fun ha => _⟩
+  · obtain ⟨a', ha'⟩ := ha
+    obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective p).1 hp a'
+    refine' ⟨q a'', _⟩
+    rw [← LinearMap.comp_apply, ← ModuleCat.comp_def, ← H, ModuleCat.comp_def, LinearMap.comp_apply, ha'', ha']
+    
+  · obtain ⟨a', ha'⟩ := ha
+    obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective q).1 hq a'
+    refine' ⟨p a'', _⟩
+    rw [← LinearMap.comp_apply, ← ModuleCat.comp_def, H, ModuleCat.comp_def, LinearMap.comp_apply, ha'', ha']
+    
+
+end Module
 
 end Pseudoelement
 

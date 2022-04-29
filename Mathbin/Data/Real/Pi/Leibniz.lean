@@ -12,7 +12,7 @@ namespace Real
 
 open Filter Set
 
-open_locale Classical BigOperators TopologicalSpace Real
+open Classical BigOperators TopologicalSpace Real
 
 -- mathport name: «expr| |»
 local notation "|" x "|" => abs x

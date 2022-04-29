@@ -31,19 +31,19 @@ theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
       ha
 
 /-- A minimal element of a nonempty set in a well-founded order -/
-noncomputable def min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : α :=
+noncomputable def min {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : α :=
   Classical.some (H.has_min p h)
 
-theorem min_mem {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : H.min p h ∈ p :=
+theorem min_mem {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) : H.min p h ∈ p :=
   let ⟨h, _⟩ := Classical.some_spec (H.has_min p h)
   h
 
-theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) {x} (xp : x ∈ p) :
+theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h : p.Nonempty) {x} (xp : x ∈ p) :
     ¬r x (H.min p h) :=
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
-theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
+theorem well_founded_iff_has_min {r : α → α → Prop} :
     WellFounded r ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, ¬r x m := by
   classical
   constructor
@@ -83,29 +83,29 @@ theorem well_founded_iff_has_min' [PartialOrderₓ α] :
 open Set
 
 /-- The supremum of a bounded, well-founded order -/
-protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
+protected noncomputable def sup {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
   wf.min { x | ∀, ∀ a ∈ s, ∀, r a x } h
 
-protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
+protected theorem lt_sup {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
     r x (wf.sup s h) :=
   min_mem wf { x | ∀, ∀ a ∈ s, ∀, r a x } h x hx
 
 section
 
-open_locale Classical
+open Classical
 
 /-- A successor of an element `x` in a well-founded order is a minimal element `y` such that
 `x < y` if one exists. Otherwise it is `x` itself. -/
-protected noncomputable def succ {α} {r : α → α → Prop} (wf : WellFounded r) (x : α) : α :=
+protected noncomputable def succ {r : α → α → Prop} (wf : WellFounded r) (x : α) : α :=
   if h : ∃ y, r x y then wf.min { y | r x y } h else x
 
-protected theorem lt_succ {α} {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) : r x (wf.succ x) := by
+protected theorem lt_succ {r : α → α → Prop} (wf : WellFounded r) {x : α} (h : ∃ y, r x y) : r x (wf.succ x) := by
   rw [WellFounded.succ, dif_pos h]
   apply min_mem
 
 end
 
-protected theorem lt_succ_iff {α} {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y) (y : α) :
+protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y) (y : α) :
     r y (wo.wf.succ x) ↔ r y x ∨ y = x := by
   constructor
   · intro h'

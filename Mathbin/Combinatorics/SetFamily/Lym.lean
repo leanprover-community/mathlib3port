@@ -45,7 +45,7 @@ shadow, lym, slice, sperner, antichain
 
 open Finset Nat
 
-open_locale BigOperators FinsetFamily
+open BigOperators FinsetFamily
 
 variable {𝕜 α : Type _} [LinearOrderedField 𝕜]
 

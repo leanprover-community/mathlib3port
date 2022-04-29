@@ -32,7 +32,7 @@ absolute value, uniform spaces
 
 open Set Function Filter UniformSpace
 
-open_locale Filter
+open Filter
 
 namespace IsAbsoluteValue
 

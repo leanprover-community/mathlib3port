@@ -3,10 +3,10 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Logic.Nontrivial
-import Mathbin.Algebra.Group.UnitsHom
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.GroupWithZero.Defs
+import Mathbin.Algebra.Hom.Units
+import Mathbin.Logic.Nontrivial
 
 /-!
 # Groups with an adjoined zero element
@@ -35,16 +35,11 @@ and require `0⁻¹ = 0`.
 -/
 
 
-open_locale Classical
+open Classical
 
 open Function
 
 variable {M₀ G₀ M₀' G₀' : Type _}
-
-mk_simp_attribute field_simps :=
-  "The simpset `field_simps` is used by the tactic `field_simp` to\nreduce an expression in a field to an expression of the form `n / d` where `n` and `d` are\ndivision-free."
-
-attribute [field_simps] mul_div_assoc'
 
 section
 
@@ -169,6 +164,12 @@ theorem mul_self_eq_zero : a * a = 0 ↔ a = 0 := by
 theorem zero_eq_mul_self : 0 = a * a ↔ a = 0 := by
   simp
 
+theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
+  not_congr mul_self_eq_zero
+
+theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
+  not_congr zero_eq_mul_self
+
 end
 
 end
@@ -284,32 +285,34 @@ section MonoidWithZeroₓ
 /-- Pullback a `monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [MonoidWithZeroₓ M₀] (f : M₀' → M₀)
-    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : MonoidWithZeroₓ M₀' :=
-  { hf.Monoid f one mul, hf.MulZeroClass f zero mul with }
+protected def Function.Injective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] [MonoidWithZeroₓ M₀]
+    (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : MonoidWithZeroₓ M₀' :=
+  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with }
 
 /-- Pushforward a `monoid_with_zero` class along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [MonoidWithZeroₓ M₀] (f : M₀ → M₀')
-    (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : MonoidWithZeroₓ M₀' :=
-  { hf.Monoid f one mul, hf.MulZeroClass f zero mul with }
+protected def Function.Surjective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] [MonoidWithZeroₓ M₀]
+    (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : MonoidWithZeroₓ M₀' :=
+  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with }
 
 /-- Pullback a `monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [CommMonoidWithZero M₀]
-    (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
-    CommMonoidWithZero M₀' :=
-  { hf.CommMonoid f one mul, hf.MulZeroClass f zero mul with }
+protected def Function.Injective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] [CommMonoidWithZero M₀]
+    (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CommMonoidWithZero M₀' :=
+  { hf.CommMonoid f one mul npow, hf.MulZeroClass f zero mul with }
 
 /-- Pushforward a `monoid_with_zero` class along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [CommMonoidWithZero M₀]
-    (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
-    CommMonoidWithZero M₀' :=
-  { hf.CommMonoid f one mul, hf.MulZeroClass f zero mul with }
+protected def Function.Surjective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] [CommMonoidWithZero M₀]
+    (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CommMonoidWithZero M₀' :=
+  { hf.CommMonoid f one mul npow, hf.MulZeroClass f zero mul with }
 
 variable [MonoidWithZeroₓ M₀]
 
@@ -362,7 +365,7 @@ theorem not_is_unit_zero [Nontrivial M₀] : ¬IsUnit (0 : M₀) :=
 
 namespace Ring
 
-open_locale Classical
+open Classical
 
 /-- Introduce a function `inverse` on a monoid with zero `M₀`, which sends `x` to `x⁻¹` if `x` is
 invertible and to `0` otherwise.  This definition is somewhat ad hoc, but one needs a fully (rather
@@ -438,7 +441,7 @@ theorem IsUnit.ring_inverse {a : M₀} : IsUnit a → IsUnit (Ring.inverse a)
 @[simp]
 theorem is_unit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :=
   ⟨fun h => by
-    cases' subsingleton_or_nontrivial M₀
+    cases subsingleton_or_nontrivial M₀
     · convert h
       
     · contrapose h
@@ -500,9 +503,10 @@ theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
 /-- Pullback a `monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] (f : M₀' → M₀) (hf : Injective f)
-    (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) : CancelMonoidWithZero M₀' :=
-  { hf.Monoid f one mul, hf.MulZeroClass f zero mul with
+protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] (f : M₀' → M₀)
+    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CancelMonoidWithZero M₀' :=
+  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with
     mul_left_cancel_of_ne_zero := fun x y z hx H =>
       hf <|
         mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by
@@ -531,10 +535,10 @@ variable [CancelCommMonoidWithZero M₀] {a b c : M₀}
 /-- Pullback a `cancel_comm_monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.cancelCommMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] (f : M₀' → M₀)
-    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) :
-    CancelCommMonoidWithZero M₀' :=
-  { hf.CommMonoidWithZero f zero one mul, hf.CancelMonoidWithZero f zero one mul with }
+protected def Function.Injective.cancelCommMonoidWithZero [Zero M₀'] [Mul M₀'] [One M₀'] [Pow M₀' ℕ] (f : M₀' → M₀)
+    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CancelCommMonoidWithZero M₀' :=
+  { hf.CommMonoidWithZero f zero one mul npow, hf.CancelMonoidWithZero f zero one mul npow with }
 
 end CancelCommMonoidWithZero
 
@@ -547,10 +551,11 @@ alias div_eq_mul_inv ← division_def
 /-- Pullback a `group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (f : G₀' → G₀)
-    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : GroupWithZeroₓ G₀' :=
-  { hf.MonoidWithZero f zero one mul, hf.DivInvMonoid f one mul inv div, pullback_nonzero f zero one with
+protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] [Pow G₀' ℕ]
+    [Pow G₀' ℤ] (f : G₀' → G₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : GroupWithZeroₓ G₀' :=
+  { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow, pullback_nonzero f zero one with
     inv_zero :=
       hf <| by
         erw [inv, zero, inv_zero],
@@ -561,10 +566,11 @@ protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
 /-- Pushforward a `group_with_zero` class along an surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (h01 : (0 : G₀') ≠ 1)
-    (f : G₀ → G₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : GroupWithZeroₓ G₀' :=
-  { hf.MonoidWithZero f zero one mul, hf.DivInvMonoid f one mul inv div with
+protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] [Pow G₀' ℕ]
+    [Pow G₀' ℤ] (h01 : (0 : G₀') ≠ 1) (f : G₀ → G₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : GroupWithZeroₓ G₀' :=
+  { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow with
     inv_zero := by
       erw [← zero, ← inv, inv_zero],
     mul_inv_cancel :=
@@ -766,9 +772,21 @@ theorem mk0_inj {a b : G₀} (ha : a ≠ 0) (hb : b ≠ 0) : Units.mk0 a ha = Un
   ⟨fun h => by
     injection h, fun h => Units.ext h⟩
 
+/-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
+theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.ne_zero, (g.mk0_coe g.ne_zero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ => ⟨Units.mk0 g hg, pg⟩⟩
+
+/-- An alternative version of `units.exists0`. This one is useful if Lean cannot
+figure out `p` when using `units.exists0` from right to left. -/
+theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} : (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.ne_zero :=
+  Iff.trans
+    (by
+      simp_rw [coe_mk0])
+    exists0.symm
+
 @[simp]
-theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 :=
-  ⟨fun ⟨u, hu⟩ => hu ▸ u.ne_zero, fun hx => ⟨mk0 x hx, rfl⟩⟩
+theorem exists_iff_ne_zero {x : G₀} : (∃ u : G₀ˣ, ↑u = x) ↔ x ≠ 0 := by
+  simp [exists0]
 
 theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G₀ˣ, a = u := by
   by_cases' h : a = 0
@@ -1033,17 +1051,18 @@ instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCom
 /-- Pullback a `comm_group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
-protected def Function.Injective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] (f : G₀' → G₀)
-    (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : CommGroupWithZero G₀' :=
-  { hf.GroupWithZero f zero one mul inv div, hf.CommSemigroup f mul with }
+protected def Function.Injective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] [Pow G₀' ℕ]
+    [Pow G₀' ℤ] (f : G₀' → G₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : CommGroupWithZero G₀' :=
+  { hf.GroupWithZero f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
 
 /-- Pushforward a `comm_group_with_zero` class along a surjective function. -/
-protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀']
-    (h01 : (0 : G₀') ≠ 1) (f : G₀ → G₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
-    CommGroupWithZero G₀' :=
-  { hf.GroupWithZero h01 f zero one mul inv div, hf.CommSemigroup f mul with }
+protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One G₀'] [Inv G₀'] [Div G₀'] [Pow G₀' ℕ]
+    [Pow G₀' ℤ] (h01 : (0 : G₀') ≠ 1) (f : G₀ → G₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : CommGroupWithZero G₀' :=
+  { hf.GroupWithZero h01 f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
 
 theorem mul_inv₀ : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
   rw [mul_inv_rev₀, mul_comm]
@@ -1068,8 +1087,11 @@ theorem mul_div_cancel' (a : G₀) {b : G₀} (hb : b ≠ 0) : b * (a / b) = a :
 
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
-theorem div_mul_div (a b c d : G₀) : a / b * (c / d) = a * c / (b * d) := by
+theorem div_mul_div_comm₀ (a b c d : G₀) : a / b * (c / d) = a * c / (b * d) := by
   simp [div_eq_mul_inv, mul_inv₀]
+
+theorem div_div_div_comm₀ (a b c d : G₀) : a / b / (c / d) = a / c / (b / d) := by
+  simp_rw [div_eq_mul_inv, mul_inv₀, inv_invₓ, mul_mul_mul_commₓ]
 
 theorem mul_div_mul_left (a b : G₀) {c : G₀} (hc : c ≠ 0) : c * a / (c * b) = a / b := by
   rw [mul_comm c, mul_comm c, mul_div_mul_right _ _ hc]
@@ -1079,7 +1101,7 @@ theorem div_mul_eq_mul_div (a b c : G₀) : b / c * a = b * a / c := by
   simp [div_eq_mul_inv]
 
 theorem div_mul_eq_mul_div_comm (a b c : G₀) : b / c * a = b * (a / c) := by
-  rw [div_mul_eq_mul_div, ← one_mulₓ c, ← div_mul_div, div_one, one_mulₓ]
+  rw [div_mul_eq_mul_div, ← one_mulₓ c, ← div_mul_div_comm₀, div_one, one_mulₓ]
 
 theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) :
     a * d = c * b := by
@@ -1088,7 +1110,7 @@ theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb
 
 @[field_simps]
 theorem div_div_eq_div_mul (a b c : G₀) : a / b / c = a / (b * c) := by
-  rw [div_eq_mul_one_div, div_mul_div, mul_oneₓ]
+  rw [div_eq_mul_one_div, div_mul_div_comm₀, mul_oneₓ]
 
 theorem div_div_div_div_eq (a : G₀) {b c d : G₀} : a / b / (c / d) = a * d / (b * c) := by
   rw [div_div_eq_mul_div, div_mul_eq_mul_div, div_div_eq_div_mul]

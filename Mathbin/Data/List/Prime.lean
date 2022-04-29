@@ -50,9 +50,6 @@ section CancelCommMonoidWithZero
 
 variable {M : Type _} [CancelCommMonoidWithZero M] [Unique (Units M)]
 
-theorem prime_dvd_prime_iff_eq {p q : M} (pp : Prime p) (qp : Prime q) : p ∣ q ↔ p = q := by
-  rw [pp.dvd_prime_iff_associated qp, ← associated_eq_eq]
-
 theorem mem_list_primes_of_dvd_prod {p : M} (hp : Prime p) {L : List M} (hL : ∀, ∀ q ∈ L, ∀, Prime q)
     (hpL : p ∣ L.Prod) : p ∈ L := by
   obtain ⟨x, hx1, hx2⟩ := hp.dvd_prod_iff.mp hpL

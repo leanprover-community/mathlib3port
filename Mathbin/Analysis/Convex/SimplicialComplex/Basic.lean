@@ -178,7 +178,7 @@ theorem mem_facets : s ∈ K.Facets ↔ s ∈ K.Faces ∧ ∀, ∀ t ∈ K.Faces
 
 theorem facets_subset : K.Facets ⊆ K.Faces := fun s hs => hs.1
 
-theorem not_facet_iff_subface (hs : s ∈ K.Faces) : (s ∉ K.Facets) ↔ ∃ t, t ∈ K.Faces ∧ s ⊂ t := by
+theorem not_facet_iff_subface (hs : s ∈ K.Faces) : s ∉ K.Facets ↔ ∃ t, t ∈ K.Faces ∧ s ⊂ t := by
   refine' ⟨fun hs' : ¬(_ ∧ _) => _, _⟩
   · push_neg  at hs'
     obtain ⟨t, ht⟩ := hs' hs

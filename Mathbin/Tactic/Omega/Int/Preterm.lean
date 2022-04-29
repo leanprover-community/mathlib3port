@@ -66,7 +66,7 @@ def repr : Preterm → Stringₓ
 
 end Preterm
 
-open_locale List.Func
+open List.Func
 
 /-- Return a term (which is in canonical form by definition)
     that is equivalent to the input preterm -/

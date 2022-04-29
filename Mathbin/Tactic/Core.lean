@@ -70,6 +70,13 @@ protected unsafe def of_int (α : expr) : ℤ → tactic expr
     let e ← expr.of_nat α (n + 1)
     tactic.mk_app `` Neg.neg [e]
 
+/-- Convert a list of expressions to an expression denoting the list of those expressions. -/
+unsafe def of_list (α : expr) : List expr → tactic expr
+  | [] => tactic.mk_app `` List.nil [α]
+  | x :: xs => do
+    let exs ← of_list xs
+    tactic.mk_app `` List.cons [α, x, exs]
+
 /-- Generates an expression of the form `∃(args), inner`. `args` is assumed to be a list of local
 constants. When possible, `p ∧ q` is used instead of `∃(_ : p), q`. -/
 unsafe def mk_exists_lst (args : List expr) (inner : expr) : tactic expr :=
@@ -960,37 +967,27 @@ unsafe def apply_list_expr (opt : ApplyCfg) : List (tactic expr) → tactic Unit
         interactive.concat_tags (apply e opt)) <|>
       apply_list_expr t
 
-/-- Constructs a list of `tactic expr` given a list of p-expressions, as follows:
-- if the p-expression is the name of a theorem, use `i_to_expr_for_apply` on it
-- if the p-expression is a user attribute, add all the theorems with this attribute
-  to the list.
-
-We need to return a list of `tactic expr`, rather than just `expr`, because these expressions
-will be repeatedly applied against goals, and we need to ensure that metavariables don't get stuck.
+/-- Given the name of a user attribute, produces a list of `tactic expr`s, each of which is the
+application of `i_to_expr_for_apply` to a declaration with that attribute.
 -/
-unsafe def build_list_expr_for_apply : List pexpr → tactic (List (tactic expr))
-  | [] => return []
-  | h :: t => do
-    let tail ← build_list_expr_for_apply t
-    let a ← i_to_expr_for_apply h
-    (-- We reverse the list of lemmas marked with an attribute,
-        -- on the assumption that lemmas proved earlier are more often applicable
-        -- than lemmas proved later. This is a performance optimization.
-        do
-          let l ← attribute.get_instances (expr.const_name a)
-          let m ← l fun n => _root_.to_pexpr <$> mk_const n
-          build_list_expr_for_apply (m ++ t)) <|>
-        return (i_to_expr_for_apply h :: tail)
+unsafe def resolve_attribute_expr_list (attr_name : Name) : tactic (List (tactic expr)) := do
+  let l ← attribute.get_instances attr_name
+  List.map i_to_expr_for_apply <$> List.reverse <$> l resolve_name
 
-/-- `apply_rules hs n`: apply the list of rules `hs` (given as pexpr) and `assumption` on the
-first goal and the resulting subgoals, iteratively, at most `n` times.
+/-- `apply_rules args attrs n`: apply the lists of rules `args` (given as pexprs) and `attrs` (given
+as names of attributes) and `the tactic assumption` on the first goal and the resulting subgoals,
+iteratively, at most `n` times.
 
 Unlike `solve_by_elim`, `apply_rules` does not do any backtracking, and just greedily applies
 a lemma from the list until it can't.
  -/
-unsafe def apply_rules (hs : List pexpr) (n : Nat) (opt : ApplyCfg) : tactic Unit := do
-  let l ← lock_tactic_state <| build_list_expr_for_apply hs
-  iterate_at_most_on_subgoals n (assumption <|> apply_list_expr opt l)
+unsafe def apply_rules (args : List pexpr) (attrs : List Name) (n : Nat) (opt : ApplyCfg) : tactic Unit := do
+  let attr_exprs ← lock_tactic_state <| attrs.mfoldl (fun l n => List.append l <$> resolve_attribute_expr_list n) []
+  let args_exprs := args.map i_to_expr_for_apply ++ attr_exprs
+  -- `args_exprs` is a list of `tactic expr`, rather than just `expr`, because these expressions will
+      -- be repeatedly applied against goals, and we need to ensure that metavariables don't get stuck.
+      iterate_at_most_on_subgoals
+      n (assumption <|> apply_list_expr opt args_exprs)
 
 /-- `replace h p` elaborates the pexpr `p`, clears the existing hypothesis named `h` from the local
 context, and adds a new hypothesis named `h`. The type of this hypothesis is the type of `p`.

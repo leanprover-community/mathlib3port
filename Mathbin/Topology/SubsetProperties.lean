@@ -8,6 +8,7 @@ import Mathbin.Topology.Bases
 import Mathbin.Data.Finset.Order
 import Mathbin.Data.Set.Accumulate
 import Mathbin.Tactic.Tfae
+import Mathbin.Topology.Bornology.Basic
 
 /-!
 # Properties of subsets of topological spaces
@@ -49,7 +50,7 @@ https://ncatlab.org/nlab/show/too+simple+to+be+simple#relationship_to_biased_def
 
 open Set Filter Classical TopologicalSpace
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 universe u v
 
@@ -104,7 +105,7 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
 
 /-- The intersection of a compact set and a closed set is a compact set. -/
 theorem IsCompact.inter_right (hs : IsCompact s) (ht : IsClosed t) : IsCompact (s ∩ t) := by
-  intros f hnf hstf
+  intro f hnf hstf
   obtain ⟨a, hsa, ha⟩ : ∃ a ∈ s, ClusterPt a f := hs (le_transₓ hstf (le_principal_iff.2 (inter_subset_left _ _)))
   have : a ∈ t :=
     ht.mem_of_nhds_within_ne_bot <| ha.mono <| le_transₓ hstf (le_principal_iff.2 (inter_subset_right _ _))
@@ -299,7 +300,7 @@ theorem is_compact_of_finite_subfamily_closed
     let ⟨t, ht⟩ :=
       h (fun i : f.Sets => Closure i.1) (fun i => is_closed_closure)
         (by
-          simpa [eq_empty_iff_forall_not_mem, not_exists])
+          simpa [eq_empty_iff_forall_not_mem, not_exists] )
     have : (⋂ i ∈ t, Subtype.val i) ∈ f := t.Inter_mem_sets.2 fun i hi => i.2
     have : (s ∩ ⋂ i ∈ t, Subtype.val i) ∈ f := inter_mem (le_principal_iff.1 hfs) this
     have : ∅ ∈ f :=
@@ -495,7 +496,7 @@ theorem _root_.nat.cocompact_eq : cocompact ℕ = at_top :=
 
 theorem Tendsto.is_compact_insert_range_of_cocompact {f : α → β} {b} (hf : Tendsto f (cocompact α) (𝓝 b))
     (hfc : Continuous f) : IsCompact (insert b (Range f)) := by
-  intros l hne hle
+  intro l hne hle
   by_cases' hb : ClusterPt b l
   · exact ⟨b, Or.inl rfl, hb⟩
     
@@ -511,7 +512,7 @@ theorem Tendsto.is_compact_insert_range_of_cocompact {f : α → β} {b} (hf : T
 
 theorem Tendsto.is_compact_insert_range_of_cofinite {f : ι → α} {a} (hf : Tendsto f cofinite (𝓝 a)) :
     IsCompact (insert a (Range f)) := by
-  let this' : TopologicalSpace ι := ⊥
+  let this : TopologicalSpace ι := ⊥
   have : DiscreteTopology ι := ⟨rfl⟩
   rw [← cocompact_eq_cofinite] at hf
   exact hf.is_compact_insert_range_of_cocompact continuous_of_discrete_topology
@@ -540,9 +541,33 @@ theorem mem_coclosed_compact' : s ∈ coclosedCompact α ↔ ∃ t, IsClosed t �
   simp only [mem_coclosed_compact, compl_subset_comm]
 
 theorem cocompact_le_coclosed_compact : cocompact α ≤ coclosedCompact α :=
-  infi_le_infi fun s => le_infi fun _ => le_rfl
+  infi_mono fun s => le_infi fun _ => le_rfl
+
+theorem _root_.is_compact.compl_mem_coclosed_compact_of_is_closed (hs : IsCompact s) (hs' : IsClosed s) :
+    sᶜ ∈ Filter.coclosedCompact α :=
+  has_basis_coclosed_compact.mem_of_mem ⟨hs', hs⟩
 
 end Filter
+
+namespace Bornology
+
+variable (α)
+
+/-- Sets that are contained in a compact set form a bornology. Its `cobounded` filter is
+`filter.cocompact`. See also `bornology.relatively_compact` the bornology of sets with compact
+closure. -/
+def inCompact : Bornology α where
+  cobounded := Filter.cocompact α
+  le_cofinite := Filter.cocompact_le_cofinite
+
+variable {α}
+
+theorem inCompact.is_bounded_iff : @IsBounded _ (inCompact α) s ↔ ∃ t, IsCompact t ∧ s ⊆ t := by
+  change sᶜ ∈ Filter.cocompact α ↔ _
+  rw [Filter.mem_cocompact]
+  simp
+
+end Bornology
 
 section TubeLemma
 
@@ -671,6 +696,10 @@ instance [NoncompactSpace α] : NeBot (Filter.cocompact α) := by
   rw [hs]
   exact noncompact_univ α
 
+@[simp]
+theorem Filter.cocompact_eq_bot [CompactSpace α] : Filter.cocompact α = ⊥ :=
+  Filter.has_basis_cocompact.eq_bot_iff.mpr ⟨Set.Univ, compact_univ, Set.compl_univ⟩
+
 instance [NoncompactSpace α] : NeBot (Filter.coclosedCompact α) :=
   ne_bot_of_le Filter.cocompact_le_coclosed_compact
 
@@ -771,7 +800,7 @@ theorem exists_subset_nhd_of_compact_space [CompactSpace α] {ι : Type _} [None
 if the set `s` is closed. -/
 theorem Inducing.is_compact_iff {f : α → β} (hf : Inducing f) {s : Set α} : IsCompact (f '' s) ↔ IsCompact s := by
   refine' ⟨_, fun hs => hs.Image hf.continuous⟩
-  intros hs F F_ne_bot F_le
+  intro hs F F_ne_bot F_le
   obtain ⟨_, ⟨x, x_in : x ∈ s, rfl⟩, hx : ClusterPt (f x) (map f F)⟩ :=
     hs
       (calc
@@ -907,7 +936,7 @@ section Tychonoff
 
 variable [∀ i, TopologicalSpace (π i)]
 
-/-- **Tychonoff's theorem** -/
+/-- **Tychonoff's theorem**: product of compact sets is compact. -/
 theorem is_compact_pi_infinite {s : ∀ i, Set (π i)} :
     (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, π i | ∀ i, x i ∈ s i } := by
   simp only [is_compact_iff_ultrafilter_le_nhds, nhds_pi, Filter.pi, exists_prop, mem_set_of_eq, le_infi_iff,
@@ -919,7 +948,7 @@ theorem is_compact_pi_infinite {s : ∀ i, Set (π i)} :
   choose a ha
   exact ⟨a, fun i => (ha i).left, fun i => (ha i).right.le_comap⟩
 
-/-- A version of Tychonoff's theorem that uses `set.pi`. -/
+/-- **Tychonoff's theorem** formulated using `set.pi`: product of compact sets is compact. -/
 theorem is_compact_univ_pi {s : ∀ i, Set (π i)} (h : ∀ i, IsCompact (s i)) : IsCompact (pi Univ s) := by
   convert is_compact_pi_infinite h
   simp only [← mem_univ_pi, set_of_mem_eq]
@@ -929,22 +958,15 @@ instance Pi.compact_space [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π
     rw [← pi_univ univ]
     exact is_compact_univ_pi fun i => compact_univ⟩
 
-/-- Product of compact sets is compact -/
+/-- **Tychonoff's theorem** formulated in terms of filters: `filter.cocompact` on an indexed product
+type `Π d, κ d` the `filter.Coprod` of filters `filter.cocompact` on `κ d`. -/
 theorem Filter.Coprod_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
     (Filter.coprodₓ fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) := by
-  ext S
-  rcases compl_surjective S with ⟨S, rfl⟩
-  simp_rw [compl_mem_Coprod_iff, Filter.mem_cocompact, compl_subset_compl]
-  constructor
-  · rintro ⟨t, H, hSt⟩
-    choose K hKc htK using H
-    exact ⟨Set.Pi univ K, is_compact_univ_pi hKc, hSt.trans <| pi_mono fun i _ => htK i⟩
-    
-  · rintro ⟨K, hKc, hSK⟩
-    exact
-      ⟨fun i => Function.eval i '' K, fun i => ⟨_, hKc.image (continuous_apply i), subset.rfl⟩,
-        hSK.trans <| subset_pi_eval_image _ _⟩
-    
+  refine' le_antisymmₓ (supr_le fun i => Filter.comap_cocompact (continuous_apply i)) _
+  refine' compl_surjective.forall.2 fun s H => _
+  simp only [compl_mem_Coprod, Filter.mem_cocompact, compl_subset_compl, image_subset_iff] at H⊢
+  choose K hKc htK using H
+  exact ⟨Set.Pi univ K, is_compact_univ_pi hKc, fun f hf i hi => htK i hf⟩
 
 end Tychonoff
 
@@ -1046,7 +1068,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
     ∃ V : Set α, V ⊆ S ∧ V.Nonempty ∧ IsClosed V ∧ ∀ V' : Set α, V' ⊆ V → V'.Nonempty → IsClosed V' → V' = V := by
   let opens := { U : Set α | Sᶜ ⊆ U ∧ IsOpen U ∧ Uᶜ.Nonempty }
   obtain ⟨U, ⟨Uc, Uo, Ucne⟩, h⟩ :=
-    Zorn.zorn_subset opens fun c hc hz => by
+    zorn_subset opens fun c hc hz => by
       by_cases' hcne : c.nonempty
       · obtain ⟨U₀, hU₀⟩ := hcne
         have : Nonempty { U // U ∈ c } := ⟨⟨U₀, hU₀⟩⟩
@@ -1065,7 +1087,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
             
           apply IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed
           · rintro ⟨U, hU⟩ ⟨U', hU'⟩
-            obtain ⟨V, hVc, hVU, hVU'⟩ := Zorn.Chain.directed_on hz U hU U' hU'
+            obtain ⟨V, hVc, hVU, hVU'⟩ := hz.directed_on U hU U' hU'
             exact ⟨⟨V, hVc⟩, set.compl_subset_compl.mpr hVU, set.compl_subset_compl.mpr hVU'⟩
             
           · exact fun U => (hc U.2).2.2
@@ -1280,6 +1302,13 @@ protected theorem IsClopen.is_open (hs : IsClopen s) : IsOpen s :=
 protected theorem IsClopen.is_closed (hs : IsClopen s) : IsClosed s :=
   hs.2
 
+theorem is_clopen_iff_frontier_eq_empty {s : Set α} : IsClopen s ↔ Frontier s = ∅ := by
+  rw [IsClopen, ← closure_eq_iff_is_closed, ← interior_eq_iff_open, Frontier, diff_eq_empty]
+  refine' ⟨fun h => (h.2.trans h.1.symm).Subset, fun h => _⟩
+  exact ⟨interior_subset.antisymm (subset_closure.trans h), (h.trans interior_subset).antisymm subset_closure⟩
+
+alias is_clopen_iff_frontier_eq_empty ↔ IsClopen.frontier_eq _
+
 theorem IsClopen.union {s t : Set α} (hs : IsClopen s) (ht : IsClopen t) : IsClopen (s ∪ t) :=
   ⟨hs.1.union ht.1, hs.2.union ht.2⟩
 
@@ -1397,13 +1426,13 @@ theorem IsIrreducible.closure {s : Set α} (h : IsIrreducible s) : IsIrreducible
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=
   let ⟨m, hm, hsm, hmm⟩ :=
-    Zorn.zorn_subset_nonempty { t : Set α | IsPreirreducible t }
+    zorn_subset_nonempty { t : Set α | IsPreirreducible t }
       (fun c hc hcc hcn =>
         let ⟨t, htc⟩ := hcn
         ⟨⋃₀c, fun u v hu hv ⟨y, hy, hyu⟩ ⟨z, hz, hzv⟩ =>
           let ⟨p, hpc, hyp⟩ := mem_sUnion.1 hy
           let ⟨q, hqc, hzq⟩ := mem_sUnion.1 hz
-          Or.cases_on (Zorn.Chain.total hcc hpc hqc)
+          Or.cases_on (hcc.Total hpc hqc)
             (fun hpq : p ⊆ q =>
               let ⟨x, hxp, hxuv⟩ := hc hqc u v hu hv ⟨y, hpq hyp, hyu⟩ ⟨z, hzq, hzv⟩
               ⟨x, mem_sUnion_of_mem hxp hqc, hxuv⟩)

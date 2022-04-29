@@ -18,7 +18,7 @@ We prove results about big operators over intervals (mostly the `ℕ`-valued `Ic
 
 universe u v w
 
-open_locale BigOperators Nat
+open BigOperators Nat
 
 namespace Finset
 
@@ -76,9 +76,19 @@ theorem prod_Ico_eq_mul_inv {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m 
   eq_mul_inv_iff_mul_eq.2 <| by
     rw [mul_comm] <;> exact prod_range_mul_prod_Ico f h
 
-theorem sum_Ico_eq_sub {δ : Type _} [AddCommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
-    (∑ k in ico m n, f k) = (∑ k in range n, f k) - ∑ k in range m, f k := by
-  simpa only [sub_eq_add_neg] using sum_Ico_eq_add_neg f h
+@[to_additive]
+theorem prod_Ico_eq_div {δ : Type _} [CommGroupₓ δ] (f : ℕ → δ) {m n : ℕ} (h : m ≤ n) :
+    (∏ k in ico m n, f k) = (∏ k in range n, f k) / ∏ k in range m, f k := by
+  simpa only [div_eq_mul_inv] using prod_Ico_eq_mul_inv f h
+
+@[to_additive]
+theorem prod_range_sub_prod_range {α : Type _} [CommGroupₓ α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
+    ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filter fun k => n ≤ k, f k := by
+  rw [← prod_Ico_eq_div f hnm]
+  congr
+  apply Finset.ext
+  simp only [mem_Ico, mem_filter, mem_range, *]
+  tauto
 
 /-- The two ways of summing over `(i,j)` in the range `a<=i<=j<b` are equal. -/
 theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoidₓ M] (a b : ℕ) (f : ℕ → ℕ → M) :
@@ -238,10 +248,16 @@ theorem sum_Ico_by_parts (hmn : m < n) :
   simp_rw [this, sum_neg_distrib, sum_range_succ, smul_add]
   abel
 
+variable (n)
+
 /-- **Summation by parts** for ranges -/
-theorem sum_range_by_parts (hn : 0 < n) :
+theorem sum_range_by_parts :
     (∑ i in range n, f i • g i) = f (n - 1) • G n - ∑ i in range (n - 1), (f (i + 1) - f i) • G(i + 1) := by
-  rw [range_eq_Ico, sum_Ico_by_parts f g hn, sum_range_zero, smul_zero, sub_zero, range_eq_Ico]
+  by_cases' hn : n = 0
+  · simp [hn]
+    
+  · rw [range_eq_Ico, sum_Ico_by_parts f g (Nat.pos_of_ne_zeroₓ hn), sum_range_zero, smul_zero, sub_zero, range_eq_Ico]
+    
 
 end Module
 

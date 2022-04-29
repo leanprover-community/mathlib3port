@@ -26,15 +26,13 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory MeasureTheory.lp
 
-open_locale Nnreal Ennreal MeasureTheory
+open Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
 namespace L2
 
-variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [MeasurableSpace E] [InnerProductSpace 𝕜 E]
-  [BorelSpace E] [SecondCountableTopology E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
-  [SecondCountableTopology F]
+variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E] [NormedGroup F]
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
@@ -63,16 +61,16 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
     ring
   simp_rw [← IsROrC.norm_eq_abs, ← Real.rpow_nat_cast]  at h'
   refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
-  · exact (Lp.ae_measurable f).norm.pow_const _
+  · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
-  · exact (Lp.ae_measurable g).norm.pow_const _
+  · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
   simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_oneₓ]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 
 section InnerProductSpace
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 include 𝕜
 
@@ -87,11 +85,10 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   simp_rw [inner_self_eq_norm_sq_to_K]
   norm_cast
   rw [integral_eq_lintegral_of_nonneg_ae]
-  swap
+  rotate_left
   · exact Filter.eventually_of_forall fun x => sq_nonneg _
     
-  swap
-  · exact (Lp.ae_measurable f).norm.pow_const _
+  · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
     
   congr
   ext1 x
@@ -116,12 +113,15 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ∥f∥ ^ 2 = IsROrC.r
     
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
-    AeEqFun.mk (fun x => ⟪f x, g x⟫) ((lp.ae_measurable f).inner (lp.ae_measurable g)) ∈ lp 𝕜 1 μ := by
+    AeEqFun.mk (fun x => ⟪f x, g x⟫) ((lp.ae_strongly_measurable f).inner (lp.ae_strongly_measurable g)) ∈ lp 𝕜 1 μ :=
+  by
   simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
   exact snorm_inner_lt_top f g
 
 theorem integrable_inner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
-  (integrable_congr (AeEqFun.coe_fn_mk (fun x => ⟪f x, g x⟫) ((lp.ae_measurable f).inner (lp.ae_measurable g)))).mp
+  (integrable_congr
+        (AeEqFun.coe_fn_mk (fun x => ⟪f x, g x⟫)
+          ((lp.ae_strongly_measurable f).inner (lp.ae_strongly_measurable g)))).mp
     (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g := by
@@ -142,7 +142,7 @@ instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E) where
   conj_sym := fun _ _ => by
     simp_rw [inner_def, ← integral_conj, inner_conj_sym]
   add_left := add_left'
-  smulLeft := smul_left'
+  smul_left := smul_left'
 
 end InnerProductSpace
 
@@ -163,7 +163,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
     congr
     exact hx hxs
   have h_right : (∫ x in sᶜ, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = 0 := by
-    suffices h_ae_eq : ∀ᵐ x ∂μ, (x ∉ s) → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
+    suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
     · simp_rw [← Set.mem_compl_iff]  at h_ae_eq
       suffices h_int_zero : (∫ x in sᶜ, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ) = ∫ x in sᶜ, (0 : 𝕜) ∂μ
       · rw [h_int_zero]
@@ -171,7 +171,7 @@ theorem inner_indicator_const_Lp_eq_set_integral_inner (f : lp E 2 μ) (hs : Mea
         
       exact set_integral_congr_ae hs.compl h_ae_eq
       
-    have h_indicator : ∀ᵐ x : α ∂μ, (x ∉ s) → indicator_const_Lp 2 hs hμs c x = 0 := indicator_const_Lp_coe_fn_nmem
+    have h_indicator : ∀ᵐ x : α ∂μ, x ∉ s → indicator_const_Lp 2 hs hμs c x = 0 := indicator_const_Lp_coe_fn_nmem
     refine' h_indicator.mono fun x hx hxs => _
     rw [hx hxs]
     exact inner_zero_left
@@ -203,7 +203,7 @@ variable {α : Type _} [TopologicalSpace α] [MeasureSpace α] [BorelSpace α] {
 
 variable (μ : Measure α) [IsFiniteMeasure μ]
 
-open_locale BoundedContinuousFunction ComplexConjugate
+open BoundedContinuousFunction ComplexConjugate
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (α →₂[μ] 𝕜) _ x y

@@ -17,7 +17,7 @@ This structure itself is provided elsewhere as `polynomial.is_scalar_tower`
 
 universe u v w u₁
 
-open_locale Polynomial
+open Polynomial
 
 variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 

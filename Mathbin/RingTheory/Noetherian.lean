@@ -61,7 +61,7 @@ Noetherian, noetherian, Noetherian ring, Noetherian module, noetherian ring, noe
 
 open Set
 
-open_locale BigOperators Pointwise
+open BigOperators Pointwise
 
 namespace Submodule
 
@@ -168,7 +168,7 @@ theorem exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul {R : Type _} [CommR
     rcases hy with ⟨d, hdi, rfl⟩
     change _ • _ ∈ I • span R s
     rw [mul_smul, ← hyz, smul_add, smul_smul, mul_comm, mul_smul]
-    exact add_mem _ (smul_mem _ _ hci) (smul_mem _ _ hz)
+    exact add_mem (smul_mem _ _ hci) (smul_mem _ _ hz)
     
 
 theorem fg_bot : (⊥ : Submodule R M).Fg :=
@@ -187,7 +187,7 @@ theorem fg_span {s : Set M} (hs : Finite s) : Fg (span R s) :=
 theorem fg_span_singleton (x : M) : Fg (R∙x) :=
   fg_span (finite_singleton x)
 
-theorem fg_sup {N₁ N₂ : Submodule R M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) : (N₁⊔N₂).Fg :=
+theorem Fg.sup {N₁ N₂ : Submodule R M} (hN₁ : N₁.Fg) (hN₂ : N₂.Fg) : (N₁⊔N₂).Fg :=
   let ⟨t₁, ht₁⟩ := fg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := fg_def.1 hN₂
   fg_def.2
@@ -227,7 +227,7 @@ theorem fg_top (N : Submodule R M) : (⊤ : Submodule R N).Fg ↔ N.Fg :=
 theorem fg_of_linear_equiv (e : M ≃ₗ[R] P) (h : (⊤ : Submodule R P).Fg) : (⊤ : Submodule R M).Fg :=
   e.symm.range ▸ map_top (e.symm : P →ₗ[R] M) ▸ h.map _
 
-theorem fg_prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : sc.Fg) : (sb.Prod sc).Fg :=
+theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : sc.Fg) : (sb.Prod sc).Fg :=
   let ⟨tb, htb⟩ := fg_def.1 hsb
   let ⟨Tc, htc⟩ := fg_def.1 hsc
   fg_def.2
@@ -364,10 +364,10 @@ theorem fg_restrict_scalars {R S M : Type _} [CommRingₓ R] [CommRingₓ S] [Al
 
 theorem _root_.ideal.fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ A] (f : R →+* S) (g : S →+* A)
     (hf : f.ker.Fg) (hg : g.ker.Fg) (hsur : Function.Surjective f) : (g.comp f).ker.Fg := by
-  let this' : Algebra R S := RingHom.toAlgebra f
-  let this' : Algebra R A := RingHom.toAlgebra (g.comp f)
-  let this' : Algebra S A := RingHom.toAlgebra g
-  let this' : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl
+  let this : Algebra R S := RingHom.toAlgebra f
+  let this : Algebra R A := RingHom.toAlgebra (g.comp f)
+  let this : Algebra S A := RingHom.toAlgebra g
+  let this : IsScalarTower R S A := IsScalarTower.of_algebra_map_eq fun _ => rfl
   let f₁ := Algebra.linearMap R S
   let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
   exact fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur
@@ -509,7 +509,7 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
   have := Classical.decEq ι
   suffices on_finset : ∀ s : Finset ι, IsNoetherian R (∀ i : s, M i)
   · let coe_e := Equivₓ.subtypeUnivEquiv Finset.mem_univ
-    let this' : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ
+    let this : IsNoetherian R (∀ i : Finset.univ, M (coe_e i)) := on_finset Finset.univ
     exact is_noetherian_of_linear_equiv (LinearEquiv.piCongrLeft R M coe_e)
     
   intro s
@@ -653,8 +653,7 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_gt R M)).elim' _
   have f : ℕ ↪ s := @Infinite.natEmbedding s ⟨fun f => hf ⟨f⟩⟩
   have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s := by
-    rintro n x ⟨y, hy₁, hy₂⟩
-    subst hy₂
+    rintro n x ⟨y, hy₁, rfl⟩
     exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | m ≤ a }) ≤ span R (coe ∘ f '' { m | m ≤ b }) := by
     intro a b
@@ -766,7 +765,7 @@ theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoe
 -- see Note [lower instance priority]
 instance (priority := 80) Ringₓ.is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     IsNoetherian R M := by
-  let this' := Classical.dec <;>
+  let this := Classical.dec <;>
     exact
       ⟨fun s =>
         ⟨to_finset s, by
@@ -802,7 +801,7 @@ theorem is_noetherian_of_fg_of_noetherian {R M} [Ringₓ R] [AddCommGroupₓ M] 
   let ⟨s, hs⟩ := hN
   have := Classical.decEq M
   have := Classical.decEq R
-  let this' : IsNoetherian R R := by
+  let this : IsNoetherian R R := by
     infer_instance
   have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_noetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_noetherian_pi
@@ -861,19 +860,19 @@ namespace Submodule
 
 variable {R : Type _} {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable (M N : Submodule R A)
+variable {M N : Submodule R A}
 
-theorem fg_mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
+theorem Fg.mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
   let ⟨m, hfm, hm⟩ := fg_def.1 hm
   let ⟨n, hfn, hn⟩ := fg_def.1 hn
   fg_def.2 ⟨m * n, hfm.mul hfn, span_mul_span R m n ▸ hm ▸ hn ▸ rfl⟩
 
-theorem fg_pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
+theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
   Nat.recOn n
     ⟨{1}, by
       simp [one_eq_span]⟩
     fun n ih => by
-    simpa [pow_succₓ] using fg_mul _ _ h ih
+    simpa [pow_succₓ] using h.mul ih
 
 end Submodule
 

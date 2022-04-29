@@ -5,6 +5,8 @@ Authors: Scott Morrison
 -/
 import Mathbin.Topology.ContinuousFunction.Bounded
 import Mathbin.Topology.UniformSpace.CompactSeparated
+import Mathbin.Topology.CompactOpen
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 # Continuous functions on a compact space
@@ -24,7 +26,7 @@ you should restate it here. You can also use
 
 noncomputable section
 
-open_locale TopologicalSpace Classical Nnreal BoundedContinuousFunction
+open TopologicalSpace Classical Nnreal BoundedContinuousFunction BigOperators
 
 open Set Filter Metric
 
@@ -125,16 +127,19 @@ end
 instance [CompleteSpace β] : CompleteSpace C(α, β) :=
   (isometricBoundedOfCompact α β).CompleteSpace
 
+/-- See also `continuous_map.continuous_eval'` -/
 @[continuity]
 theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
   continuous_eval.comp ((isometricBoundedOfCompact α β).Continuous.prod_map continuous_id)
 
+/-- See also `continuous_map.continuous_eval_const` -/
 @[continuity]
-theorem continuous_evalx (x : α) : Continuous fun f : C(α, β) => f x :=
+theorem continuous_eval_const (x : α) : Continuous fun f : C(α, β) => f x :=
   continuous_eval.comp (continuous_id.prod_mk continuous_const)
 
+/-- See also `continuous_map.continuous_coe'` -/
 theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=
-  continuous_pi continuous_evalx
+  continuous_pi continuous_eval_const
 
 -- TODO at some point we will need lemmas characterising this norm!
 -- At the moment the only way to reason about it is to transfer `f : C(α,E)` back to `α →ᵇ E`.
@@ -258,8 +263,8 @@ section
 
 variable {𝕜 : Type _} {γ : Type _} [NormedField 𝕜] [NormedRing γ] [NormedAlgebra 𝕜 γ]
 
-instance [Nonempty α] : NormedAlgebra 𝕜 C(α, γ) where
-  norm_algebra_map_eq := fun c => (norm_algebra_map_eq (α →ᵇ γ) c : _)
+instance : NormedAlgebra 𝕜 C(α, γ) :=
+  { ContinuousMap.normedSpace with }
 
 end
 
@@ -409,6 +414,26 @@ theorem comp_right_alg_hom_continuous {X Y : Type _} (R : Type _) [TopologicalSp
   continuity
 
 end CompRight
+
+section Weierstrass
+
+open TopologicalSpace
+
+variable {X : Type _} [TopologicalSpace X] [T2Space X] [LocallyCompactSpace X]
+
+variable {E : Type _} [NormedGroup E] [CompleteSpace E]
+
+theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
+    (hF : ∀ K : Compacts X, Summable fun i => ∥(F i).restrict K∥) : Summable F := by
+  refine' (ContinuousMap.exists_tendsto_compact_open_iff_forall _).2 fun K hK => _
+  lift K to compacts X using hK
+  have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) := by
+    intro s
+    ext1 x
+    simp
+  simpa only [HasSum, A] using summable_of_summable_norm (hF K)
+
+end Weierstrass
 
 end ContinuousMap
 

@@ -31,7 +31,7 @@ noncomputable section
 
 open CategoryTheory MeasureTheory
 
-open_locale Ennreal
+open Ennreal
 
 universe u v
 
@@ -91,6 +91,7 @@ def giry : CategoryTheory.Monad Meas where
   left_unit' := fun α => Subtype.eq <| funext fun μ => @Measure.join_dirac _ _ _
   right_unit' := fun α => Subtype.eq <| funext fun μ => @Measure.join_map_dirac _ _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
 nicely under the monad operations. -/
 def integral : giry.Algebra where

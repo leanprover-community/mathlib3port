@@ -81,7 +81,7 @@ instance OrderedCommGroup.to_covariant_class_left_le (α : Type u) [OrderedCommG
   elim := fun a b c bc => OrderedCommGroup.mul_le_mul_left b c bc a
 
 /-- The units of an ordered commutative monoid form an ordered commutative group. -/
-@[to_additive]
+@[to_additive "The units of an ordered commutative additive monoid form an ordered commutative\nadditive group."]
 instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup αˣ :=
   { Units.partialOrder, Units.commGroup with
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : (c : α) * a ≤ c * b) }
@@ -104,6 +104,10 @@ instance [h : Inv α] : Inv (OrderDual α) :=
 
 @[to_additive]
 instance [h : Div α] : Div (OrderDual α) :=
+  h
+
+@[to_additive]
+instance [h : HasInvolutiveInv α] : HasInvolutiveInv (OrderDual α) :=
   h
 
 @[to_additive]
@@ -273,12 +277,12 @@ section TypeclassesRightLt
 variable [LT α] [CovariantClass α α (swap (· * ·)) (· < ·)] {a b c : α}
 
 /-- Uses `right` co(ntra)variant. -/
-@[simp, to_additive Right.neg_neg_iff]
+@[simp, to_additive Right.neg_neg_iff "Uses `right` co(ntra)variant."]
 theorem Right.inv_lt_one_iff : a⁻¹ < 1 ↔ 1 < a := by
   rw [← mul_lt_mul_iff_right a, inv_mul_selfₓ, one_mulₓ]
 
 /-- Uses `right` co(ntra)variant. -/
-@[simp, to_additive Right.neg_pos_iff]
+@[simp, to_additive Right.neg_pos_iff "Uses `right` co(ntra)variant."]
 theorem Right.one_lt_inv_iff : 1 < a⁻¹ ↔ a < 1 := by
   rw [← mul_lt_mul_iff_right a, inv_mul_selfₓ, one_mulₓ]
 
@@ -608,10 +612,11 @@ attribute [to_additive OrderedAddCommGroup.lt_of_add_lt_add_left] OrderedCommGro
 See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.orderedAddCommGroup "Pullback an `ordered_add_comm_group` under an injective map."]
-def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [Inv β] [Div β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) : OrderedCommGroup β :=
-  { PartialOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul, hf.CommGroup f one mul inv div with }
+def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ]
+    [Pow β ℤ] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
+  { PartialOrderₓ.lift f hf, hf.OrderedCommMonoid f one mul npow, hf.CommGroup f one mul inv div npow zpow with }
 
 --  Most of the lemmas that are primed in this section appear in ordered_field. 
 --  I (DT) did not try to minimise the assumptions.
@@ -996,10 +1001,11 @@ See note [reducible non-instances]. -/
 @[reducible,
   to_additive Function.Injective.linearOrderedAddCommGroup
       "Pullback a `linear_ordered_add_comm_group` under an injective map."]
-def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] (f : β → α)
-    (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
-    (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedCommGroup β :=
-  { LinearOrderₓ.lift f hf, hf.OrderedCommGroup f one mul inv div with }
+def Function.Injective.linearOrderedCommGroup {β : Type _} [One β] [Mul β] [Inv β] [Div β] [Pow β ℕ] [Pow β ℤ]
+    (f : β → α) (hf : Function.Injective f) (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : LinearOrderedCommGroup β :=
+  { LinearOrderₓ.lift f hf, hf.OrderedCommGroup f one mul inv div npow zpow with }
 
 @[to_additive LinearOrderedAddCommGroup.add_lt_add_left]
 theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) : c * a < c * b :=
@@ -1071,12 +1077,12 @@ section Neg
 
 /-- `abs a` is the absolute value of `a`. -/
 -- see Note [lower instance priority]
-@[to_additive]
-instance (priority := 100) hasInvLatticeHasAbs [Inv α] [Lattice α] : HasAbs α :=
+@[to_additive "`abs a` is the absolute value of `a`"]
+instance (priority := 100) Inv.toHasAbs [Inv α] [HasSup α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩
 
 @[to_additive]
-theorem abs_eq_sup_inv [Inv α] [Lattice α] (a : α) : abs a = a⊔a⁻¹ :=
+theorem abs_eq_sup_inv [Inv α] [HasSup α] (a : α) : abs a = a⊔a⁻¹ :=
   rfl
 
 variable [Neg α] [LinearOrderₓ α] {a b : α}
@@ -1244,6 +1250,9 @@ theorem abs_add (a b : α) : abs (a + b) ≤ abs a + abs b :=
     ⟨(neg_add (abs a) (abs b)).symm ▸ add_le_add (neg_le.2 <| neg_le_abs_self _) (neg_le.2 <| neg_le_abs_self _),
       add_le_add (le_abs_self _) (le_abs_self _)⟩
 
+theorem abs_add' (a b : α) : abs a ≤ abs b + abs (b + a) := by
+  simpa using abs_add (-b) (b + a)
+
 theorem abs_sub (a b : α) : abs (a - b) ≤ abs a + abs b := by
   rw [sub_eq_add_neg, ← abs_neg b]
   exact abs_add a _
@@ -1340,6 +1349,10 @@ instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWit
         
       · exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_selfₓ a))
          }
+
+@[simp, norm_cast]
+theorem WithTop.coe_neg (a : α) : ((-a : α) : WithTop α) = -a :=
+  rfl
 
 end LinearOrderedAddCommGroup
 

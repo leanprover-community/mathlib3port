@@ -28,9 +28,9 @@ Let `R` be a `comm_ring` and let `A` be an R-algebra.
 -/
 
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 open Polynomial Submodule
 
@@ -125,7 +125,7 @@ theorem is_integral_alg_equiv (f : A ≃ₐ[R] B) {x : A} : IsIntegral R (f x) �
 theorem is_integral_of_is_scalar_tower [Algebra A B] [IsScalarTower R A B] (x : B) (hx : IsIntegral R x) :
     IsIntegral A x :=
   let ⟨p, hp, hpx⟩ := hx
-  ⟨p.map <| algebraMap R A, monic_map _ hp, by
+  ⟨p.map <| algebraMap R A, hp.map _, by
     rw [← aeval_def, ← IsScalarTower.aeval_apply, aeval_def, hpx]⟩
 
 theorem is_integral_of_subring {x : A} (T : Subring R) (hx : IsIntegral T x) : IsIntegral R x :=
@@ -176,7 +176,7 @@ theorem fg_adjoin_singleton_of_integral (x : A) (hx : IsIntegral R x) :
   have : degree (p %ₘ f) ≤ degree f := degree_mod_by_monic_le p hfm
   generalize p %ₘ f = q  at this⊢
   rw [← sum_C_mul_X_eq q, aeval_def, eval₂_sum, sum_def]
-  refine' sum_mem _ fun k hkq => _
+  refine' sum_mem fun k hkq => _
   rw [eval₂_mul, eval₂_C, eval₂_pow, eval₂_X, ← Algebra.smul_def]
   refine' smul_mem _ _ (subset_span _)
   rw [Finset.mem_coe]
@@ -201,7 +201,7 @@ theorem fg_adjoin_of_finite {s : Set A} (hfs : s.Finite) (his : ∀, ∀ x ∈ s
     (fun a s has hs ih his => by
       rw [← Set.union_singleton, Algebra.adjoin_union_coe_submodule] <;>
         exact
-          fg_mul _ _ (ih fun i hi => his i <| Set.mem_insert_of_mem a hi)
+          fg.mul (ih fun i hi => his i <| Set.mem_insert_of_mem a hi)
             (fg_adjoin_singleton_of_integral _ <| his a <| Set.mem_insert a s))
     his
 
@@ -235,8 +235,8 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
   let S₀ : Subring R := Subring.closure ↑(lx.frange ∪ Finset.bUnion Finset.univ (Finsupp.frange ∘ ly))
   -- It suffices to prove that `x` is integral over `S₀`.
   refine' is_integral_of_subring S₀ _
-  let this' : CommRingₓ S₀ := Subring.toCommRing S₀
-  let this' : Algebra S₀ A := Algebra.ofSubring S₀
+  let this : CommRingₓ S₀ := SubringClass.toCommRing S₀
+  let this : Algebra S₀ A := Algebra.ofSubring S₀
   -- Claim: the `S₀`-module span (in `A`) of the set `y ∪ {1}` is closed under
   -- multiplication (indeed, this is the motivation for the definition of `S₀`).
   have : span S₀ (insert 1 ↑y : Set A) * span S₀ (insert 1 ↑y : Set A) ≤ span S₀ (insert 1 ↑y : Set A) := by
@@ -304,8 +304,8 @@ theorem is_integral_of_mem_of_fg (S : Subalgebra R A) (HS : S.toSubmodule.Fg) (x
 
 theorem RingHom.is_integral_of_mem_closure {x y z : S} (hx : f.IsIntegralElem x) (hy : f.IsIntegralElem y)
     (hz : z ∈ Subring.closure ({x, y} : Set S)) : f.IsIntegralElem z := by
-  let this' : Algebra R S := f.to_algebra
-  have := fg_mul _ _ (fg_adjoin_singleton_of_integral x hx) (fg_adjoin_singleton_of_integral y hy)
+  let this : Algebra R S := f.to_algebra
+  have := (fg_adjoin_singleton_of_integral x hx).mul (fg_adjoin_singleton_of_integral y hy)
   rw [← Algebra.adjoin_union_coe_submodule, Set.singleton_union] at this
   exact
     is_integral_of_mem_of_fg (Algebra.adjoin R {x, y}) this z
@@ -728,7 +728,7 @@ theorem is_integral_trans_aux (x : B) {p : A[X]} (pmonic : Monic p) (hp : aeval 
       exact Subtype.val_injective
       
     · rw [hq]
-      exact monic_map _ pmonic
+      exact pmonic.map _
       
     
   · convert hp using 1
@@ -795,7 +795,7 @@ theorem is_integral_tower_bot_of_is_integral_field {R A B : Type _} [CommRingₓ
 theorem RingHom.is_integral_elem_of_is_integral_elem_comp {x : T} (h : (g.comp f).IsIntegralElem x) :
     g.IsIntegralElem x :=
   let ⟨p, ⟨hp, hp'⟩⟩ := h
-  ⟨p.map f, monic_map f hp, by
+  ⟨p.map f, hp.map f, by
     rwa [← eval₂_map] at hp'⟩
 
 theorem RingHom.is_integral_tower_top_of_is_integral (h : (g.comp f).IsIntegral) : g.IsIntegral := fun x =>
@@ -805,7 +805,7 @@ theorem RingHom.is_integral_tower_top_of_is_integral (h : (g.comp f).IsIntegral)
 then if the entire tower is an integral extension so is `A → B`. -/
 theorem is_integral_tower_top_of_is_integral {x : B} (h : IsIntegral R x) : IsIntegral A x := by
   rcases h with ⟨p, ⟨hp, hp'⟩⟩
-  refine' ⟨p.map (algebraMap R A), ⟨monic_map (algebraMap R A) hp, _⟩⟩
+  refine' ⟨p.map (algebraMap R A), ⟨hp.map (algebraMap R A), _⟩⟩
   rw [IsScalarTower.algebra_map_eq R A B, ← eval₂_map] at hp'
   exact hp'
 
@@ -813,7 +813,7 @@ theorem RingHom.is_integral_quotient_of_is_integral {I : Ideal S} (hf : f.IsInte
     (Ideal.quotientMap I f le_rfl).IsIntegral := by
   rintro ⟨x⟩
   obtain ⟨p, ⟨p_monic, hpx⟩⟩ := hf x
-  refine' ⟨p.map (Ideal.Quotient.mk _), ⟨monic_map _ p_monic, _⟩⟩
+  refine' ⟨p.map (Ideal.Quotient.mk _), ⟨p_monic.map _, _⟩⟩
   simpa only [hom_eval₂, eval₂_map] using congr_argₓ (Ideal.Quotient.mk I) hpx
 
 theorem is_integral_quotient_of_is_integral {I : Ideal A} (hRA : IsIntegral R A) :
@@ -843,7 +843,7 @@ theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [Nont
   -- `q(a) = 0`, because multiplying everything with `a_inv^n` gives `p(a_inv) = 0`.
   -- TODO: this could be a lemma for `polynomial.reverse`.
   have hq : (∑ i : ℕ in Finset.range (p.nat_degree + 1), p.coeff i * a ^ (p.nat_degree - i)) = 0 := by
-    apply (algebraMap R S).injective_iff.mp hRS
+    apply (injective_iff_map_eq_zero (algebraMap R S)).mp hRS
     have a_inv_ne_zero : a_inv ≠ 0 := right_ne_zero_of_mul (mt ha_inv.symm.trans one_ne_zero)
     refine' (mul_eq_zero.mp _).resolve_right (pow_ne_zero p.nat_degree a_inv_ne_zero)
     rw [eval₂_eq_sum_range] at hp
@@ -866,7 +866,7 @@ theorem is_field_of_is_integral_of_is_field {R S : Type _} [CommRingₓ R] [Nont
 
 theorem is_field_of_is_integral_of_is_field' {R S : Type _} [CommRingₓ R] [CommRingₓ S] [IsDomain S] [Algebra R S]
     (H : Algebra.IsIntegral R S) (hR : IsField R) : IsField S := by
-  let this' := hR.to_field R
+  let this := hR.to_field
   refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun x hx => _⟩
   let A := Algebra.adjoin R ({x} : Set S)
   have : IsNoetherian R A := is_noetherian_of_fg_of_noetherian A.to_submodule (fg_adjoin_singleton_of_integral x (H x))

@@ -196,8 +196,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     split_ifs
     · cases h
       cases h_1
-      have : f = 𝟙 _ := Subsingleton.elimₓ _ _
-      subst this
+      obtain rfl : f = 𝟙 _ := Subsingleton.elimₓ _ _
       simpa
       
     · cases h

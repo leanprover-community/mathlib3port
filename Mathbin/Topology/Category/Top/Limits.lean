@@ -964,7 +964,7 @@ To specialize: given a locally finite connected graph, take `Jᵒᵖ` to be `ℕ
 Elements of `F.sections` can be read off as infinite rays in the graph. -/
 theorem nonempty_sections_of_fintype_inverse_system {J : Type u} [Preorderₓ J] [IsDirected J (· ≤ ·)] (F : Jᵒᵖ ⥤ Type v)
     [∀ j : Jᵒᵖ, Fintype (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] : F.sections.Nonempty := by
-  cases' is_empty_or_nonempty J
+  cases is_empty_or_nonempty J
   · have : IsEmpty Jᵒᵖ := ⟨fun j => isEmptyElim j.unop⟩
     -- TODO: this should be a global instance
     exact ⟨isEmptyElim, isEmptyElim⟩

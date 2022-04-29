@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Equiv.Set
+import Mathbin.Data.Vector.Basic
 
 /-!
 # Small types
@@ -55,7 +55,7 @@ theorem small_type : Small.{max (u + 1) v} (Type u) :=
 
 section
 
-open_locale Classical
+open Classical
 
 theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
   let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
@@ -74,6 +74,10 @@ theorem small_of_injective {α : Type v} {β : Type w} [Small.{u} β] {f : α �
 theorem small_of_surjective {α : Type v} {β : Type w} [Small.{u} α] {f : α → β} (hf : Function.Surjective f) :
     Small.{u} β :=
   small_of_injective (Function.injective_surj_inv hf)
+
+theorem small_subset {α : Type v} {s t : Set α} (hts : t ⊆ s) [Small.{u} s] : Small.{u} t :=
+  let f : t → s := fun x => ⟨x, hts x.Prop⟩
+  @small_of_injective _ _ _ f fun x y hxy => Subtype.ext (Subtype.mk.injₓ hxy)
 
 instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α := by
   rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
@@ -118,6 +122,13 @@ theorem not_small_type : ¬Small.{u} (Type max u v)
   | ⟨⟨S, ⟨e⟩⟩⟩ =>
     @Function.cantor_injective (Σα, e.symm α) (fun a => ⟨_, cast (e.3 _).symm a⟩) fun a b e =>
       (cast_inj _).1 <| eq_of_heq (Sigma.mk.inj e).2
+
+instance small_vector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector α n) :=
+  small_of_injective (Equivₓ.vectorEquivFin α n).Injective
+
+instance small_list {α : Type v} [Small.{u} α] : Small.{u} (List α) := by
+  let e : (Σn, Vector α n) ≃ List α := Equivₓ.sigmaPreimageEquiv List.length
+  exact small_of_surjective e.surjective
 
 end
 

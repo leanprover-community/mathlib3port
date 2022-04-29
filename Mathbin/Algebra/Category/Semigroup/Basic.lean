@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 -/
 import Mathbin.Algebra.PemptyInstances
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
@@ -62,11 +63,15 @@ add_decl_doc AddMagma.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Magma`. -/
 @[to_additive]
-def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : MulHom X Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_hom` as a morphism in `AddMagma`. -/
 add_decl_doc AddMagma.ofHom
+
+@[simp, to_additive]
+theorem of_hom_apply {X Y : Type u} [Mul X] [Mul Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
+  rfl
 
 @[to_additive]
 instance : Inhabited Magma :=
@@ -114,11 +119,15 @@ add_decl_doc AddSemigroupₓₓ.of
 
 /-- Typecheck a `mul_hom` as a morphism in `Semigroup`. -/
 @[to_additive]
-def ofHom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : MulHom X Y) : of X ⟶ of Y :=
+def ofHom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : X →ₙ* Y) : of X ⟶ of Y :=
   f
 
 /-- Typecheck a `add_hom` as a morphism in `AddSemigroup`. -/
 add_decl_doc AddSemigroupₓₓ.ofHom
+
+@[simp, to_additive]
+theorem of_hom_apply {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : X →ₙ* Y) (x : X) : ofHom f x = f x :=
+  rfl
 
 @[to_additive]
 instance : Inhabited Semigroupₓₓ :=

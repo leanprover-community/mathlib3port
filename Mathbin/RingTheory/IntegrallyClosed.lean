@@ -23,7 +23,7 @@ integral over `R`. A special case of integrally closed domains are the Dedekind 
 -/
 
 
-open_locale nonZeroDivisors
+open nonZeroDivisors
 
 /-- `R` is integrally closed if all integral elements of `Frac(R)` are also elements of `R`.
 
@@ -126,7 +126,7 @@ variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L
 -- Can't be an instance because you need to supply `K`.
 theorem is_integrally_closed_of_finite_extension [FiniteDimensional K L] : IsIntegrallyClosed (integralClosure R L) :=
   by
-  let this' : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
+  let this : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
   exact (integral_closure_eq_bot_iff L).mp integral_closure_idem
 
 end integralClosure

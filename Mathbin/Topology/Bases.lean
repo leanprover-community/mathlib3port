@@ -23,6 +23,7 @@ conditions are equivalent in this case).
 
 * `is_topological_basis s`: The topological space `t` has basis `s`.
 * `separable_space α`: The topological space `t` has a countable, dense subset.
+* `is_separable s`: The set `s` is contained in the closure of a countable set.
 * `first_countable_topology α`: A topology in which `𝓝 x` is countably generated for every `x`.
 * `second_countable_topology α`: A topology which has a topological basis which is countable.
 
@@ -47,7 +48,7 @@ More fine grained instances for `first_countable_topology`, `separable_space`, `
 
 open Set Filter Function
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 noncomputable section
 
@@ -110,7 +111,7 @@ theorem is_topological_basis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀, �
     refine' (@is_open_iff_nhds α (generate_from s) u).mpr fun a ha => _
     rcases h_nhds a u ha hu with ⟨v, hvs, hav, hvu⟩
     rw [nhds_generate_from]
-    exact binfi_le_of_le v ⟨hav, hvs⟩ (le_principal_iff.2 hvu)
+    exact infi₂_le_of_le v ⟨hav, hvs⟩ (le_principal_iff.2 hvu)
     
 
 /-- A set `s` is in the neighbourhood of `a` iff there is some basis set `t`, which
@@ -294,8 +295,11 @@ theorem dense_range_dense_seq [SeparableSpace α] [Nonempty α] : DenseRange (de
 
 variable {α}
 
-instance (priority := 100) Encodable.separable_space [Encodable α] : SeparableSpace α where
+instance (priority := 100) Encodable.to_separable_space [Encodable α] : SeparableSpace α where
   exists_countable_dense := ⟨Set.Univ, Set.countable_encodable Set.Univ, dense_univ⟩
+
+theorem separable_space_of_dense_range {ι : Type _} [Encodable ι] (u : ι → α) (hu : DenseRange u) : SeparableSpace α :=
+  ⟨⟨Range u, countable_range u, hu⟩⟩
 
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
 theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {ι : Type _} {s : ι → Set α} {a : Set ι}
@@ -314,6 +318,71 @@ theorem _root_.set.pairwise_disjoint.countable_of_is_open [SeparableSpace α] {�
 theorem _root_.set.pairwise_disjoint.countable_of_nonempty_interior [SeparableSpace α] {ι : Type _} {s : ι → Set α}
     {a : Set ι} (h : a.PairwiseDisjoint s) (ha : ∀, ∀ i ∈ a, ∀, (Interior (s i)).Nonempty) : Countable a :=
   (h.mono fun i => interior_subset).countable_of_is_open (fun i hi => is_open_interior) ha
+
+/-- A set `s` in a topological space is separable if it is contained in the closure of a
+countable set `c`. Beware that this definition does not require that `c` is contained in `s` (to
+express the latter, use `separable_space s` or `is_separable (univ : set s))`. In metric spaces,
+the two definitions are equivalent, see `topological_space.is_separable.separable_space`. -/
+def IsSeparable (s : Set α) :=
+  ∃ c : Set α, Countable c ∧ s ⊆ Closure c
+
+theorem IsSeparable.mono {s u : Set α} (hs : IsSeparable s) (hu : u ⊆ s) : IsSeparable u := by
+  rcases hs with ⟨c, c_count, hs⟩
+  exact ⟨c, c_count, hu.trans hs⟩
+
+theorem IsSeparable.union {s u : Set α} (hs : IsSeparable s) (hu : IsSeparable u) : IsSeparable (s ∪ u) := by
+  rcases hs with ⟨cs, cs_count, hcs⟩
+  rcases hu with ⟨cu, cu_count, hcu⟩
+  refine' ⟨cs ∪ cu, cs_count.union cu_count, _⟩
+  exact
+    union_subset (hcs.trans (closure_mono (subset_union_left _ _))) (hcu.trans (closure_mono (subset_union_right _ _)))
+
+theorem IsSeparable.closure {s : Set α} (hs : IsSeparable s) : IsSeparable (Closure s) := by
+  rcases hs with ⟨c, c_count, hs⟩
+  exact
+    ⟨c, c_count, by
+      simpa using closure_mono hs⟩
+
+theorem is_separable_Union {ι : Type _} [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsSeparable (s i)) :
+    IsSeparable (⋃ i, s i) := by
+  choose c hc h'c using hs
+  refine' ⟨⋃ i, c i, countable_Union hc, Union_subset_iff.2 fun i => _⟩
+  exact (h'c i).trans (closure_mono (subset_Union _ i))
+
+theorem _root_.set.countable.is_separable {s : Set α} (hs : Countable s) : IsSeparable s :=
+  ⟨s, hs, subset_closure⟩
+
+theorem _root_.set.finite.is_separable {s : Set α} (hs : Finite s) : IsSeparable s :=
+  hs.Countable.IsSeparable
+
+theorem is_separable_univ_iff : IsSeparable (Univ : Set α) ↔ SeparableSpace α := by
+  constructor
+  · rintro ⟨c, c_count, hc⟩
+    refine'
+      ⟨⟨c, c_count, by
+          rwa [dense_iff_closure_eq, ← univ_subset_iff]⟩⟩
+    
+  · intro h
+    rcases exists_countable_dense α with ⟨c, c_count, hc⟩
+    exact
+      ⟨c, c_count, by
+        rwa [univ_subset_iff, ← dense_iff_closure_eq]⟩
+    
+
+theorem is_separable_of_separable_space [h : SeparableSpace α] (s : Set α) : IsSeparable s :=
+  IsSeparable.mono (is_separable_univ_iff.2 h) (subset_univ _)
+
+theorem IsSeparable.image {β : Type _} [TopologicalSpace β] {s : Set α} (hs : IsSeparable s) {f : α → β}
+    (hf : Continuous f) : IsSeparable (f '' s) := by
+  rcases hs with ⟨c, c_count, hc⟩
+  refine' ⟨f '' c, c_count.image _, _⟩
+  rw [image_subset_iff]
+  exact hc.trans (closure_subset_preimage_closure_image hf)
+
+theorem is_separable_of_separable_space_subtype (s : Set α) [SeparableSpace s] : IsSeparable s := by
+  have : is_separable ((coe : s → α) '' (univ : Set s)) :=
+    (is_separable_of_separable_space _).Image continuous_subtype_coe
+  simpa only [image_univ, Subtype.range_coe_subtype]
 
 end TopologicalSpace
 
@@ -464,7 +533,7 @@ protected theorem IsTopologicalBasis.second_countable_topology {b : Set (Set α)
 variable (α)
 
 theorem exists_countable_basis [SecondCountableTopology α] :
-    ∃ b : Set (Set α), Countable b ∧ (∅ ∉ b) ∧ IsTopologicalBasis b :=
+    ∃ b : Set (Set α), Countable b ∧ ∅ ∉ b ∧ IsTopologicalBasis b :=
   let ⟨b, hb₁, hb₂⟩ := SecondCountableTopology.is_open_generated_countable α
   let b' := (fun s => ⋂₀ s) '' { s : Set (Set α) | Finite s ∧ s ⊆ b ∧ (⋂₀ s).Nonempty }
   ⟨b',
@@ -562,7 +631,7 @@ instance second_countable_topology_encodable {ι : Type _} {π : ι → Type _} 
 
 instance second_countable_topology_fintype {ι : Type _} {π : ι → Type _} [Fintype ι] [t : ∀ a, TopologicalSpace (π a)]
     [∀ a, SecondCountableTopology (π a)] : SecondCountableTopology (∀ a, π a) := by
-  let this' := Fintype.encodable ι
+  let this := Fintype.toEncodable ι
   exact TopologicalSpace.second_countable_topology_encodable
 
 -- see Note [lower instance priority]

@@ -61,9 +61,9 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [NormedS
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
 theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     ∃ g : F →L[𝕜] 𝕜, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ := by
-  let this' : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
-  let this' : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
-  let this' : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
+  let this : Module ℝ F := RestrictScalars.module ℝ 𝕜 F
+  let this : IsScalarTower ℝ 𝕜 F := RestrictScalars.is_scalar_tower _ _ _
+  let this : NormedSpace ℝ F := NormedSpace.restrictScalars _ 𝕜 _
   -- Let `fr: p →L[ℝ] ℝ` be the real part of `f`.
   let fr := re_clm.comp (f.restrict_scalars ℝ)
   have fr_apply : ∀ x, fr x = re (f x) := by
@@ -108,7 +108,7 @@ variable {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
 open ContinuousLinearEquiv Submodule
 
-open_locale Classical
+open Classical
 
 theorem coord_norm' {x : E} (h : x ≠ 0) : ∥(∥x∥ : 𝕜) • coord 𝕜 x h∥ = 1 := by
   rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]

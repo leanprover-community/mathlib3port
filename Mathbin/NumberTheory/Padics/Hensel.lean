@@ -3,11 +3,11 @@ Copyright (c) 2018 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
-import Mathbin.NumberTheory.Padics.PadicIntegers
-import Mathbin.Topology.MetricSpace.CauSeqFilter
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Data.Polynomial.Identities
+import Mathbin.NumberTheory.Padics.PadicIntegers
 import Mathbin.Topology.Algebra.Polynomial
+import Mathbin.Topology.MetricSpace.CauSeqFilter
 
 /-!
 # Hensel's lemma on ℤ_p
@@ -34,7 +34,7 @@ p-adic, p adic, padic, p-adic integer
 
 noncomputable section
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 -- We begin with some general lemmas that are used below in the computation.
 theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) (x y : ℤ_[p]) :

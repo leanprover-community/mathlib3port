@@ -7,7 +7,7 @@ import Mathbin.MeasureTheory.Covering.Differentiation
 import Mathbin.MeasureTheory.Covering.VitaliFamily
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.SetTheory.OrdinalArithmetic
+import Mathbin.SetTheory.Ordinal.Arithmetic
 import Mathbin.Topology.MetricSpace.Basic
 
 /-!
@@ -101,7 +101,7 @@ universe u
 
 open Metric Set Filter Finₓ MeasureTheory TopologicalSpace
 
-open_locale TopologicalSpace Classical BigOperators Ennreal MeasureTheory Nnreal
+open TopologicalSpace Classical BigOperators Ennreal MeasureTheory Nnreal
 
 /-!
 ### Satellite configurations
@@ -228,7 +228,7 @@ noncomputable def index : Ordinal.{u} → β
     -- return an index `b` for which the center `c b` is not in `Z`, and the radius is at
       -- least `R / τ`, if such an index exists (and garbage otherwise).
       Classical.epsilon
-      fun b : β => (p.c b ∉ Z) ∧ R ≤ p.τ * p.R b
+      fun b : β => p.c b ∉ Z ∧ R ≤ p.τ * p.R b
 
 /-- The set of points that are covered by the union of balls selected at steps `< i`. -/
 def UnionUpTo (i : Ordinal.{u}) : Set α :=
@@ -256,9 +256,9 @@ noncomputable def color : Ordinal.{u} → ℕ
 /-- `p.last_step` is the first ordinal where the construction stops making sense, i.e., `f` returns
 garbage since there is no point left to be chosen. We will only use ordinals before this step. -/
 def lastStep : Ordinal.{u} :=
-  inf { i | ¬∃ b : β, (p.c b ∉ p.UnionUpTo i) ∧ p.r i ≤ p.τ * p.R b }
+  inf { i | ¬∃ b : β, p.c b ∉ p.UnionUpTo i ∧ p.r i ≤ p.τ * p.R b }
 
-theorem last_step_nonempty : { i | ¬∃ b : β, (p.c b ∉ p.UnionUpTo i) ∧ p.r i ≤ p.τ * p.R b }.Nonempty := by
+theorem last_step_nonempty : { i | ¬∃ b : β, p.c b ∉ p.UnionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty := by
   by_contra
   suffices H : Function.Injective p.index
   exact not_injective_of_ordinal p.index H
@@ -270,7 +270,7 @@ theorem last_step_nonempty : { i | ¬∃ b : β, (p.c b ∉ p.UnionUpTo i) ∧ p
   simp only [nonempty_def, not_exists, exists_prop, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] at h
   specialize h y
   have A : p.c (p.index y) ∉ p.Union_up_to y := by
-    have : p.index y = Classical.epsilon fun b : β => (p.c b ∉ p.Union_up_to y) ∧ p.R y ≤ p.τ * p.r b := by
+    have : p.index y = Classical.epsilon fun b : β => p.c b ∉ p.Union_up_to y ∧ p.R y ≤ p.τ * p.r b := by
       rw [tau_package.index]
       rfl
     rw [this]
@@ -284,8 +284,7 @@ theorem last_step_nonempty : { i | ¬∃ b : β, (p.c b ∉ p.UnionUpTo i) ∧ p
 /-- Every point is covered by chosen balls, before `p.last_step`. -/
 theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.UnionUpTo p.lastStep := by
   have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step := by
-    have : p.last_step ∈ { i | ¬∃ b : β, (p.c b ∉ p.Union_up_to i) ∧ p.R i ≤ p.τ * p.r b } :=
-      Inf_mem p.last_step_nonempty
+    have : p.last_step ∈ { i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b } := Inf_mem p.last_step_nonempty
     simpa only [not_exists, mem_set_of_eq, not_and_distrib, not_leₓ, not_not_mem]
   by_contra
   rcases A x with (H | H)
@@ -296,7 +295,7 @@ theorem mem_Union_up_to_last_step (x : β) : p.c x ∈ p.UnionUpTo p.lastStep :=
   have B : p.τ⁻¹ * p.R p.last_step < p.R p.last_step := by
     conv_rhs => rw [← one_mulₓ (p.R p.last_step)]
     exact mul_lt_mul (inv_lt_one p.one_lt_tau) le_rfl Rpos zero_le_one
-  obtain ⟨y, hy1, hy2⟩ : ∃ y : β, (p.c y ∉ p.Union_up_to p.last_step) ∧ p.τ⁻¹ * p.R p.last_step < p.r y := by
+  obtain ⟨y, hy1, hy2⟩ : ∃ y : β, p.c y ∉ p.Union_up_to p.last_step ∧ p.τ⁻¹ * p.R p.last_step < p.r y := by
     simpa only [exists_prop, mem_range, exists_exists_and_eq_and, Subtype.exists, Subtype.coe_mk] using
       exists_lt_of_lt_cSup _ B
     rw [← image_univ, nonempty_image_iff]
@@ -375,13 +374,13 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
     · simp only [G]
       simp only [H.ne, (hg n H).left.trans hi, if_false]
       
-  have fGn : ∀ n, n ≤ N → (p.c (p.index (G n)) ∉ p.Union_up_to (G n)) ∧ p.R (G n) ≤ p.τ * p.r (p.index (G n)) := by
+  have fGn : ∀ n, n ≤ N → p.c (p.index (G n)) ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r (p.index (G n)) := by
     intro n hn
-    have : p.index (G n) = Classical.epsilon fun t => (p.c t ∉ p.Union_up_to (G n)) ∧ p.R (G n) ≤ p.τ * p.r t := by
+    have : p.index (G n) = Classical.epsilon fun t => p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
       rw [index]
       rfl
     rw [this]
-    have : ∃ t, (p.c t ∉ p.Union_up_to (G n)) ∧ p.R (G n) ≤ p.τ * p.r t := by
+    have : ∃ t, p.c t ∉ p.Union_up_to (G n) ∧ p.R (G n) ≤ p.τ * p.r t := by
       simpa only [not_exists, exists_prop, not_and, not_ltₓ, not_leₓ, mem_set_of_eq, not_forall] using
         not_mem_of_lt_cInf (G_lt_last n hn) (OrderBot.bdd_below _)
     exact Classical.epsilon_spec this
@@ -467,7 +466,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
   by
   -- first exclude the trivial case where `β` is empty (we need non-emptiness for the transfinite
   -- induction, to be able to choose garbage when there is no point left).
-  cases' is_empty_or_nonempty β
+  cases is_empty_or_nonempty β
   · refine' ⟨fun i => ∅, fun i => pairwise_disjoint_empty, _⟩
     rw [← image_univ, eq_empty_of_is_empty (univ : Set β)]
     simp
@@ -531,7 +530,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ) (hN
 -/
 
 
-open_locale Nnreal
+open Nnreal
 
 variable [SecondCountableTopology α] [MeasurableSpace α] [OpensMeasurableSpace α]
 
@@ -558,7 +557,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
     · simp only [Finset.coe_empty, pairwise_disjoint_empty]
       
     
-  cases' is_empty_or_nonempty α
+  cases is_empty_or_nonempty α
   · simp only [eq_empty_of_is_empty s, measure_empty] at hμs
     exact (lt_irreflₓ _ hμs).elim
     
@@ -593,7 +592,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measureₓ α) [IsFinite
     exact
       ⟨y,
         ⟨y.2, by
-          simpa only [Subtype.coe_eta]⟩,
+          simpa only [Subtype.coe_eta] ⟩,
         ball_subset_closed_ball h'⟩
   have S : (∑ i : Finₓ N, μ s / N) ≤ ∑ i, μ (s ∩ v i) :=
     calc

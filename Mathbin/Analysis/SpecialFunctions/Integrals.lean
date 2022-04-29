@@ -33,7 +33,7 @@ integrate, integration, integrable, integrability
 
 open Real Nat Set Finset
 
-open_locale Real BigOperators Interval
+open Real BigOperators Interval
 
 variable {a b : ℝ} (n : ℕ)
 

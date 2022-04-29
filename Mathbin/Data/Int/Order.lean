@@ -15,7 +15,7 @@ The integers form a conditionally complete linear order.
 
 open Int
 
-open_locale Classical
+open Classical
 
 noncomputable section
 

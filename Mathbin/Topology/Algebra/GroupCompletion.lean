@@ -3,9 +3,9 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
-import Mathbin.Algebra.Group.HomInstances
-import Mathbin.Topology.UniformSpace.Completion
+import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Topology.Algebra.UniformGroup
+import Mathbin.Topology.UniformSpace.Completion
 
 /-!
 # Completion of topological groups:

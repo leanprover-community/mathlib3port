@@ -39,7 +39,7 @@ intermediate value theorem, connected space, connected set
 
 open Filter OrderDual TopologicalSpace Function Set
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 universe u v w
 
@@ -95,7 +95,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsP
   rw [continuous_on_iff_continuous_restrict] at hf hg
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₁ _ _ _ _ _ _ (Subtype.preconnected_space hs) ⟨a, ha⟩ _
-      (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (eventually_comap' he)
+      (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (he.comap _)
   exact ⟨b, b.prop, h⟩
 
 theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsPreconnected s) {l₁ l₂ : Filter X} [NeBot l₁]
@@ -104,8 +104,8 @@ theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsP
   rw [continuous_on_iff_continuous_restrict] at hf hg
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₂ _ _ _ _ _ _ (Subtype.preconnected_space hs) _ _
-      (comap_coe_ne_bot_of_le_principal hl₁) (comap_coe_ne_bot_of_le_principal hl₂) _ _ hf hg (eventually_comap' he₁)
-      (eventually_comap' he₂)
+      (comap_coe_ne_bot_of_le_principal hl₁) (comap_coe_ne_bot_of_le_principal hl₂) _ _ hf hg (he₁.comap _)
+      (he₂.comap _)
   exact ⟨b, b.prop, h⟩
 
 /-- **Intermediate Value Theorem** for continuous functions on connected sets. -/
@@ -241,6 +241,7 @@ theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb 
     Iio (sup s) ⊆ s :=
   @IsPreconnected.Ioi_cInf_subset (OrderDual α) _ _ _ s hs ha hb
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
 `[Inf s, Sup s]`, `[Inf s, Sup s)`, `(Inf s, Sup s]`, `(Inf s, Sup s)`, `[Inf s, +∞)`,
 `(Inf s, +∞)`, `(-∞, Sup s]`, `(-∞, Sup s)`, `(-∞, +∞)`, or `∅`. The converse statement requires

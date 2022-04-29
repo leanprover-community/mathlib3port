@@ -77,7 +77,7 @@ of the uniform space structure on `C(α, β)` definitionally equal to the compac
 
 universe u₁ u₂ u₃
 
-open_locale Filter uniformity TopologicalSpace
+open Filter uniformity TopologicalSpace
 
 open UniformSpace Set Filter
 
@@ -266,27 +266,26 @@ def compactConvergenceUniformity : Filter (C(α, β) × C(α, β)) :=
   ⨅ KV ∈ { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β },
     𝓟 { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ KV.1 → (fg.1 x, fg.2 x) ∈ KV.2 }
 
+theorem has_basis_compact_convergence_uniformity_aux :
+    HasBasis (@compactConvergenceUniformity α β _ _) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
+      { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ p.1, ∀, (fg.1 x, fg.2 x) ∈ p.2 } :=
+  by
+  refine' Filter.has_basis_binfi_principal _ compact_conv_nhd_compact_entourage_nonempty
+  rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
+  refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
+  simp only [le_eq_subset, Prod.forall, set_of_subset_set_of, ge_iff_le, Order.Preimage, ← forall_and_distrib,
+    mem_inter_eq, mem_union_eq]
+  exact fun f g =>
+    forall_imp fun x => by
+      tauto!
+
 /-- An intermediate lemma. Usually `mem_compact_convergence_entourage_iff` is more useful. -/
 theorem mem_compact_convergence_uniformity (X : Set (C(α, β) × C(α, β))) :
     X ∈ @compactConvergenceUniformity α β _ _ ↔
       ∃ (K : Set α)(V : Set (β × β))(hK : IsCompact K)(hV : V ∈ 𝓤 β),
         { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ K, ∀, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
   by
-  rw [compact_convergence_uniformity,
-    (Filter.has_basis_binfi_principal _ compact_conv_nhd_compact_entourage_nonempty).mem_iff]
-  · simp only [exists_prop, Prod.forall, set_of_subset_set_of, mem_set_of_eq, Prod.exists]
-    exact
-      exists₂_congrₓ fun K V => by
-        tauto
-    
-  · rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
-    refine' ⟨⟨K₁ ∪ K₂, V₁ ∩ V₂⟩, ⟨hK₁.union hK₂, Filter.inter_mem hV₁ hV₂⟩, _⟩
-    simp only [le_eq_subset, Prod.forall, set_of_subset_set_of, ge_iff_le, Order.Preimage, ← forall_and_distrib,
-      mem_inter_eq, mem_union_eq]
-    exact fun f g =>
-      forall_imp fun x => by
-        tauto!
-    
+  simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_prop, Prod.exists, and_assoc]
 
 /-- Note that we ensure the induced topology is definitionally the compact-open topology. -/
 instance compactConvergenceUniformSpace : UniformSpace C(α, β) where
@@ -336,9 +335,21 @@ theorem mem_compact_convergence_entourage_iff (X : Set (C(α, β) × C(α, β)))
 theorem has_basis_compact_convergence_uniformity :
     HasBasis (𝓤 C(α, β)) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
       { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ p.1, ∀, (fg.1 x, fg.2 x) ∈ p.2 } :=
-  ⟨fun t => by
-    simp only [mem_compact_convergence_entourage_iff, Prod.exists]
-    tauto⟩
+  has_basis_compact_convergence_uniformity_aux
+
+theorem _root_.filter.has_basis.compact_convergence_uniformity {ι : Type _} {pi : ι → Prop} {s : ι → Set (β × β)}
+    (h : (𝓤 β).HasBasis pi s) :
+    HasBasis (𝓤 C(α, β)) (fun p : Set α × ι => IsCompact p.1 ∧ pi p.2) fun p =>
+      { fg : C(α, β) × C(α, β) | ∀, ∀ x ∈ p.1, ∀, (fg.1 x, fg.2 x) ∈ s p.2 } :=
+  by
+  refine' has_basis_compact_convergence_uniformity.to_has_basis _ _
+  · rintro ⟨t₁, t₂⟩ ⟨h₁, h₂⟩
+    rcases h.mem_iff.1 h₂ with ⟨i, hpi, hi⟩
+    exact ⟨(t₁, i), ⟨h₁, hpi⟩, fun fg hfg x hx => hi (hfg _ hx)⟩
+    
+  · rintro ⟨t, i⟩ ⟨ht, hi⟩
+    exact ⟨(t, s i), ⟨ht, h.mem_of_mem hi⟩, subset.rfl⟩
+    
 
 variable {ι : Type u₃} {p : Filter ι} {F : ι → C(α, β)} {f}
 

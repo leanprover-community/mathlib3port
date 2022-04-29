@@ -139,7 +139,7 @@ instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] : HasForg
   forget₂ := { obj := fun X => ⟨X, F X.2⟩, map := fun X Y f => f }
 
 instance forget₂Full (F : ∀ {α}, d α → c α) [ParentProjection @F] : Full (forget₂ (Bundled d) (Bundled c)) where
-  Preimage := fun X Y f => f
+  preimage := fun X Y f => f
 
 end BundledHom
 

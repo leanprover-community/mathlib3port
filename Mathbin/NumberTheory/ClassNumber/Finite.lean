@@ -22,15 +22,15 @@ and define `class_number` as the order of this group.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
-open_locale nonZeroDivisors
+open nonZeroDivisors
 
 namespace ClassGroup
 
 open Ringₓ
 
-open_locale BigOperators
+open BigOperators
 
 section EuclideanDomain
 
@@ -68,7 +68,7 @@ theorem norm_bound_pos : 0 < normBound abv bS := by
     by_contra' h
     obtain ⟨i⟩ := bS.index_nonempty
     apply bS.ne_zero i
-    apply (Algebra.leftMulMatrix bS).injective_iff.mp (Algebra.left_mul_matrix_injective bS)
+    apply (injective_iff_map_eq_zero (Algebra.leftMulMatrix bS)).mp (Algebra.left_mul_matrix_injective bS)
     ext j k
     simp [h, Dmatrix.zero_apply]
   simp only [norm_bound, Algebra.smul_def, eq_nat_cast, Int.nat_cast_eq_coe_nat]
@@ -95,7 +95,7 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
 
 /-- If the `R`-integral element `a : S` has coordinates `< y` with respect to some basis `b`,
 its norm is strictly less than `norm_bound abv b * y ^ dim S`. -/
-theorem norm_lt {T : Type _} [LinearOrderedCommRing T] (a : S) {y : T} (hy : ∀ k, (abv (bS.repr a k) : T) < y) :
+theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T} (hy : ∀ k, (abv (bS.repr a k) : T) < y) :
     (abv (Algebra.norm R a) : T) < normBound abv bS * y ^ Fintype.card ι := by
   obtain ⟨i⟩ := bS.index_nonempty
   have him : (finset.univ.image fun k => abv (bS.repr a k)).Nonempty :=
@@ -280,7 +280,7 @@ theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} 
 end Real
 
 theorem prod_finset_approx_ne_zero : algebraMap R S (∏ m in finsetApprox bS adm, m) ≠ 0 := by
-  refine' mt ((RingHom.injective_iff _).mp bS.algebra_map_injective _) _
+  refine' mt ((injective_iff_map_eq_zero _).mp bS.algebra_map_injective _) _
   simp only [Finset.prod_eq_zero_iff, not_exists]
   rintro x hx rfl
   exact finset_approx.zero_not_mem bS adm hx
@@ -348,7 +348,7 @@ theorem mk_M_mem_surjective [IsFractionRing S L] [IsDedekindDomain S] (h : Algeb
   obtain ⟨J, mk0_eq_mk0, J_dvd⟩ := exists_mk0_eq_mk0 L bS adm h ⟨I, hI⟩
   exact ⟨⟨J, J_dvd⟩, mk0_eq_mk0.symm⟩
 
-open_locale Classical
+open Classical
 
 /-- The main theorem: the class group of an integral closure `S` of `R` in an
 algebraic extension `L` is finite if there is an admissible absolute value.
@@ -379,9 +379,9 @@ algebraic extension of `R`, that includes some extra assumptions.
 -/
 noncomputable def fintypeOfAdmissibleOfFinite [IsDedekindDomain R] :
     Fintype (@ClassGroup S L _ _ _ (IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S)) := by
-  let this' := Classical.decEq L
-  let this' := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
-  let this' := IsIntegralClosure.is_dedekind_domain R K L S
+  let this := Classical.decEq L
+  let this := IsIntegralClosure.is_fraction_ring_of_finite_extension R K L S
+  let this := IsIntegralClosure.is_dedekind_domain R K L S
   choose s b hb_int using FiniteDimensional.exists_is_basis_integral R K L
   obtain ⟨n, b⟩ := Submodule.basisOfPidOfLeSpan _ (IsIntegralClosure.range_le_span_dual_basis S b hb_int)
   let bS := b.map ((LinearMap.quotKerEquivRange _).symm ≪≫ₗ _)

@@ -167,11 +167,16 @@ theorem frontier_set_of_le_re_and_im_le (a b : ℝ) :
 
 end Complex
 
-open Complex
+open Complex Metric
 
-theorem IsOpen.re_prod_im {s t : Set ℝ} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
+variable {s t : Set ℝ}
+
+theorem IsOpen.re_prod_im (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
 
-theorem IsClosed.re_prod_im {s t : Set ℝ} (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
+theorem IsClosed.re_prod_im (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
   (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
+
+theorem Metric.Bounded.re_prod_im (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
+  equivRealProdₗ.antilipschitz.bounded_preimage (hs.Prod ht)
 

@@ -66,7 +66,7 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
@@ -204,6 +204,11 @@ theorem ι_mul_ι_add_swap (a b : M) : ι Q a * ι Q b + ι Q b * ι Q a = algeb
     _ = algebraMap R _ (QuadraticForm.polar Q a b) := rfl
     
 
+@[simp]
+theorem ι_range_map_lift (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap _ _ (Q m)) :
+    (ι Q).range.map (lift Q ⟨f, cond⟩).toLinearMap = f.range := by
+  rw [← LinearMap.range_comp, ι_comp_lift]
+
 section Map
 
 variable {M₁ M₂ M₃ : Type _}
@@ -240,6 +245,11 @@ theorem map_comp_map (f : M₂ →ₗ[R] M₃) hf (g : M₁ →ₗ[R] M₂) hg :
   ext m
   dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
   rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
+
+@[simp]
+theorem ι_range_map_map (f : M₁ →ₗ[R] M₂) (hf : ∀ m, Q₂ (f m) = Q₁ m) :
+    (ι Q₁).range.map (map Q₁ Q₂ f hf).toLinearMap = f.range.map (ι Q₂) :=
+  (ι_range_map_lift _ _).trans (LinearMap.range_comp _ _)
 
 variable {Q₁ Q₂ Q₃}
 

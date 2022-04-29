@@ -49,7 +49,7 @@ integral
 -/
 
 
-open_locale BigOperators Classical TopologicalSpace Nnreal Filter uniformity BoxIntegral
+open BigOperators Classical TopologicalSpace Nnreal Filter uniformity BoxIntegral
 
 open Set Finset Function Filter Metric BoxIntegral.IntegrationParams
 

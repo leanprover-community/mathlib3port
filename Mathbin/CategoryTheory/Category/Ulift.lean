@@ -5,7 +5,7 @@ Authors: Adam Topaz
 -/
 import Mathbin.CategoryTheory.Category.Basic
 import Mathbin.CategoryTheory.Equivalence
-import Mathbin.CategoryTheory.Filtered
+import Mathbin.CategoryTheory.EqToHom
 
 /-!
 # Basic API for ulift
@@ -85,12 +85,6 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C where
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 
-instance [IsFiltered C] : IsFiltered (ULift.{u₂} C) :=
-  IsFiltered.of_equivalence Ulift.equivalence
-
-instance [IsCofiltered C] : IsCofiltered (ULift.{u₂} C) :=
-  IsCofiltered.of_equivalence Ulift.equivalence
-
 section UliftHom
 
 /-- `ulift_hom.{w} C` is an alias for `C`, which is endowed with a category instance
@@ -148,12 +142,6 @@ def UliftHom.equiv : C ≌ UliftHom C where
       (by
         tidy)
 
-instance [IsFiltered C] : IsFiltered (UliftHom C) :=
-  IsFiltered.of_equivalence UliftHom.equiv
-
-instance [IsCofiltered C] : IsCofiltered (UliftHom C) :=
-  IsCofiltered.of_equivalence UliftHom.equiv
-
 end UliftHom
 
 /-- `as_small C` is a small category equivalent to `C`.
@@ -207,12 +195,6 @@ def AsSmall.equiv : C ≌ AsSmall C where
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨arbitrary _⟩⟩
-
-instance [IsFiltered C] : IsFiltered (AsSmall C) :=
-  IsFiltered.of_equivalence AsSmall.equiv
-
-instance [IsCofiltered C] : IsCofiltered (AsSmall C) :=
-  IsCofiltered.of_equivalence AsSmall.equiv
 
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] : C ≌ UliftHom.{v'} (ULift.{u'} C) :=

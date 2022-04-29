@@ -9,6 +9,10 @@ import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
 import Mathbin.Data.Matrix.Dmatrix
+import Mathbin.Data.Matrix.Basic
+import Mathbin.CategoryTheory.Fintype
+import Mathbin.CategoryTheory.Preadditive.SingleObj
+import Mathbin.Algebra.Opposites
 
 /-!
 # Matrices over a category.
@@ -46,7 +50,7 @@ Ideally this would conveniently interact with both `Mat_` and `matrix`.
 
 open CategoryTheory CategoryTheory.Preadditive
 
-open_locale BigOperators
+open BigOperators
 
 noncomputable section
 
@@ -356,6 +360,8 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
   by
   -- This is disappointingly tedious.
   ext
+  simp only [additive_obj_iso_biproduct_hom, category.assoc, biproduct.lift_π, functor.map_bicone_π, biproduct.bicone_π,
+    biproduct.lift_matrix]
   dsimp [embedding]
   simp only [← F.map_comp, biproduct.lift_π, biproduct.matrix_π, category.assoc]
   simp only [← F.map_comp, ← F.map_sum, biproduct.lift_desc, biproduct.lift_π_assoc, comp_sum]
@@ -473,6 +479,110 @@ theorem equivalence_self_of_has_finite_biproducts_inverse {C : Type (u₁ + 1)} 
   rfl
 
 end Mat_
+
+universe u
+
+/-- A type synonym for `Fintype`, which we will equip with a category structure
+where the morphisms are matrices with components in `R`. -/
+@[nolint unused_arguments]
+def Mat (R : Type u) :=
+  Fintypeₓ.{u}deriving Inhabited
+
+instance (R : Type u) : CoeSort (Mat R) (Type u) :=
+  bundled.has_coe_to_sort
+
+open Classical Matrix
+
+instance (R : Type u) [Semiringₓ R] : Category (Mat R) where
+  hom := fun X Y => Matrix X Y R
+  id := fun X => 1
+  comp := fun X Y Z f g => f ⬝ g
+  assoc' := by
+    intros
+    simp [Matrix.mul_assoc]
+
+namespace Mat
+
+section
+
+variable (R : Type u) [Semiringₓ R]
+
+theorem id_def (M : Mat R) : 𝟙 M = fun i j => if h : i = j then 1 else 0 :=
+  rfl
+
+theorem id_apply (M : Mat R) (i j : M) : (𝟙 M : Matrix M M R) i j = if h : i = j then 1 else 0 :=
+  rfl
+
+@[simp]
+theorem id_apply_self (M : Mat R) (i : M) : (𝟙 M : Matrix M M R) i i = 1 := by
+  simp [id_apply]
+
+@[simp]
+theorem id_apply_of_ne (M : Mat R) (i j : M) (h : i ≠ j) : (𝟙 M : Matrix M M R) i j = 0 := by
+  simp [id_apply, h]
+
+theorem comp_def {M N K : Mat R} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i k => ∑ j : N, f i j * g j k :=
+  rfl
+
+@[simp]
+theorem comp_apply {M N K : Mat R} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑ j : N, f i j * g j k :=
+  rfl
+
+instance (M N : Mat R) : Inhabited (M ⟶ N) :=
+  ⟨fun j : N => (0 : R)⟩
+
+end
+
+variable (R : Type u) [Ringₓ R]
+
+open Opposite
+
+/-- Auxiliary definition for `category_theory.Mat.equivalence_single_obj`. -/
+@[simps]
+def equivalenceSingleObjInverse : Mat_ (SingleObj Rᵐᵒᵖ) ⥤ Mat R where
+  obj := fun X => Fintypeₓ.of X.ι
+  map := fun X Y f i j => MulOpposite.unop (f i j)
+  map_id' := fun X => by
+    ext i j
+    simp [id_def, Mat_.id_def]
+    split_ifs <;> rfl
+
+instance : Faithful (equivalenceSingleObjInverse R) where
+  map_injective' := fun X Y f g w => by
+    ext i j
+    apply_fun MulOpposite.unop using MulOpposite.unop_injective
+    exact congr_funₓ (congr_funₓ w i) j
+
+instance : Full (equivalenceSingleObjInverse R) where
+  Preimage := fun X Y f i j => MulOpposite.op (f i j)
+
+instance : EssSurj (equivalenceSingleObjInverse R) where
+  mem_ess_image := fun X =>
+    ⟨{ ι := X, x := fun _ => PUnit.unit },
+      ⟨eqToIso
+          (by
+            dsimp
+            cases X
+            congr)⟩⟩
+
+/-- The categorical equivalence between the category of matrices over a ring,
+and the category of matrices over that ring considered as a single-object category. -/
+def equivalenceSingleObj : Mat R ≌ Mat_ (SingleObj Rᵐᵒᵖ) :=
+  have := equivalence.of_fully_faithfully_ess_surj (equivalence_single_obj_inverse R)
+  (equivalence_single_obj_inverse R).asEquivalence.symm
+
+instance : Preadditive (Mat R) where
+  add_comp' := by
+    intros
+    ext
+    simp [add_mulₓ, Finset.sum_add_distrib]
+  comp_add' := by
+    intros
+    ext
+    simp [mul_addₓ, Finset.sum_add_distrib]
+
+-- TODO show `Mat R` has biproducts, and that `biprod.map` "is" forming a block diagonal matrix.
+end Mat
 
 end CategoryTheory
 

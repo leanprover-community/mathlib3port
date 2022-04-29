@@ -27,7 +27,7 @@ namespace Complex
 
 open Set Filter
 
-open_locale Real
+open Real
 
 theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 := by
   have h : (exp (θ * I) + exp (-θ * I)) / 2 = 0 ↔ exp (2 * θ * I) = -1 := by
@@ -114,7 +114,7 @@ theorem tan_add {x y : ℂ}
       div_div_div_cancel_right (sin x * cos y + cos x * sin y)
         (mul_ne_zero (cos_ne_zero_iff.mpr h1) (cos_ne_zero_iff.mpr h2)),
       add_div, sub_div]
-    simp only [← div_mul_div, ← tan, mul_oneₓ, one_mulₓ, div_self (cos_ne_zero_iff.mpr h1),
+    simp only [← div_mul_div_comm₀, ← tan, mul_oneₓ, one_mulₓ, div_self (cos_ne_zero_iff.mpr h1),
       div_self (cos_ne_zero_iff.mpr h2)]
     
   · obtain ⟨t, hx, hy, hxy⟩ := tan_int_mul_pi_div_two, t (2 * k + 1), t (2 * l + 1), t (2 * k + 1 + (2 * l + 1))
@@ -149,7 +149,7 @@ theorem tan_eq {z : ℂ}
     tan z = (tan z.re + tanh z.im * I) / (1 - tan z.re * tanh z.im * I) := by
   convert tan_add_mul_I h <;> exact (re_add_im z).symm
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
   (continuous_on_sin.div continuous_on_cos) fun x => id
@@ -194,7 +194,7 @@ end Complex
 
 namespace Real
 
-open_locale Real
+open Real
 
 theorem cos_eq_zero_iff {θ : ℝ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 := by
   exact_mod_cast @Complex.cos_eq_zero_iff θ

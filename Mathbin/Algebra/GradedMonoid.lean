@@ -5,7 +5,6 @@ Authors: Eric Wieser
 -/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Data.List.BigOperators
-import Mathbin.Data.List.ProdMonoid
 import Mathbin.Data.List.Range
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.Submonoid.Basic
@@ -228,7 +227,7 @@ end One
 
 section Mul
 
-variable [AddMonoidₓ ι] [GhasMul A]
+variable [AddZeroClass ι] [GhasMul A]
 
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
@@ -258,9 +257,20 @@ section Monoidₓ
 
 variable [AddMonoidₓ ι] [Gmonoid A]
 
+instance : Pow (A 0) ℕ where
+  pow := fun x n => (nsmul_zero n).rec (Gmonoid.gnpow n x : A (n • 0))
+
+variable {A}
+
+@[simp]
+theorem mk_zero_pow (a : A 0) (n : ℕ) : mk _ (a ^ n) = mk _ a ^ n :=
+  Sigma.ext (nsmul_zero n).symm <| eq_rec_heqₓ _ _
+
+variable (A)
+
 /-- The `monoid` structure derived from `gmonoid A`. -/
 instance GradeZero.monoid : Monoidₓ (A 0) :=
-  Function.Injective.monoid (mk 0) sigma_mk_injective rfl mk_zero_smul
+  Function.Injective.monoid (mk 0) sigma_mk_injective rfl mk_zero_smul mk_zero_pow
 
 end Monoidₓ
 
@@ -270,7 +280,7 @@ variable [AddCommMonoidₓ ι] [GcommMonoid A]
 
 /-- The `comm_monoid` structure derived from `gcomm_monoid A`. -/
 instance GradeZero.commMonoid : CommMonoidₓ (A 0) :=
-  Function.Injective.commMonoid (mk 0) sigma_mk_injective rfl mk_zero_smul
+  Function.Injective.commMonoid (mk 0) sigma_mk_injective rfl mk_zero_smul mk_zero_pow
 
 end Monoidₓ
 
@@ -287,7 +297,7 @@ def mkZeroMonoidHom : A 0 →* GradedMonoid A where
 
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
 instance GradeZero.mulAction {i} : MulAction (A 0) (A i) := by
-  let this' := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
+  let this := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
   exact Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
 
 end MulAction

@@ -32,6 +32,8 @@ period, periodic, periodicity, antiperiodic
 
 variable {α β γ : Type _} {f g : α → β} {c c₁ c₂ x : α}
 
+open BigOperators
+
 namespace Function
 
 /-! ### Periodicity -/
@@ -58,6 +60,35 @@ theorem Periodic.mul [Add α] [Mul β] (hf : Periodic f c) (hg : Periodic g c) :
 
 @[to_additive]
 theorem Periodic.div [Add α] [Div β] (hf : Periodic f c) (hg : Periodic g c) : Periodic (f / g) c := by
+  simp_all
+
+@[to_additive]
+theorem _root_.list.periodic_prod [Add α] [CommMonoidₓ β] (l : List (α → β)) (hl : ∀, ∀ f ∈ l, ∀, Periodic f c) :
+    Periodic l.Prod c := by
+  induction' l with g l ih hl
+  · simp
+    
+  · simp only [List.mem_cons_iff, forall_eq_or_imp] at hl
+    obtain ⟨hg, hl⟩ := hl
+    simp only [List.prod_cons]
+    exact hg.mul (ih hl)
+    
+
+@[to_additive]
+theorem _root_.multiset.periodic_prod [Add α] [CommMonoidₓ β] (s : Multiset (α → β))
+    (hs : ∀, ∀ f ∈ s, ∀, Periodic f c) : Periodic s.Prod c :=
+  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| (Multiset.mem_to_list f s).mp hf
+
+@[to_additive]
+theorem _root_.finset.periodic_prod [Add α] [CommMonoidₓ β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
+    (hs : ∀, ∀ i ∈ s, ∀, Periodic (f i) c) : Periodic (∏ i in s, f i) c :=
+  s.prod_to_list f ▸
+    (s.toList.map f).periodic_prod
+      (by
+        simpa [-periodic] )
+
+@[to_additive]
+theorem Periodic.smul [Add α] [HasScalar γ β] (h : Periodic f c) (a : γ) : Periodic (a • f) c := by
   simp_all
 
 theorem Periodic.const_smul [AddMonoidₓ α] [Groupₓ γ] [DistribMulAction γ α] (h : Periodic f c) (a : γ) :
@@ -271,7 +302,7 @@ theorem Antiperiodic.nat_mul_eq_of_eq_zero [CommSemiringₓ α] [AddGroupₓ β]
   rcases Nat.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
     have hk : (k : α) * (2 * c) = 2 * k * c := by
       rw [mul_left_commₓ, ← mul_assoc]
-  · simpa [hk, hi] using (h.nat_even_mul_periodic k).Eq
+  · simpa [← two_mul, hk, hi] using (h.nat_even_mul_periodic k).Eq
     
   · simpa [add_mulₓ, hk, hi] using (h.nat_odd_mul_antiperiodic k).Eq
     
@@ -281,7 +312,7 @@ theorem Antiperiodic.int_mul_eq_of_eq_zero [CommRingₓ α] [AddGroupₓ β] (h 
   rcases Int.even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;>
     have hk : (k : α) * (2 * c) = 2 * k * c := by
       rw [mul_left_commₓ, ← mul_assoc]
-  · simpa [hk, hi] using (h.int_even_mul_periodic k).Eq
+  · simpa [← two_mul, hk, hi] using (h.int_even_mul_periodic k).Eq
     
   · simpa [add_mulₓ, hk, hi] using (h.int_odd_mul_antiperiodic k).Eq
     
@@ -297,6 +328,10 @@ theorem Antiperiodic.neg [AddGroupₓ α] [AddGroupₓ β] (h : Antiperiodic f c
 
 theorem Antiperiodic.neg_eq [AddGroupₓ α] [AddGroupₓ β] (h : Antiperiodic f c) : f (-c) = -f 0 := by
   simpa only [zero_addₓ] using h.neg 0
+
+theorem Antiperiodic.smul [Add α] [Monoidₓ γ] [AddGroupₓ β] [DistribMulAction γ β] (h : Antiperiodic f c) (a : γ) :
+    Antiperiodic (a • f) c := by
+  simp_all
 
 theorem Antiperiodic.const_smul [AddMonoidₓ α] [Neg β] [Groupₓ γ] [DistribMulAction γ α] (h : Antiperiodic f c)
     (a : γ) : Antiperiodic (fun x => f (a • x)) (a⁻¹ • c) := fun x => by

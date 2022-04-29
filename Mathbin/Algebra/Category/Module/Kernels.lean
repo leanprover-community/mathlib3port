@@ -14,8 +14,6 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-open CategoryTheory.Limits.WalkingParallelPair
-
 universe u v
 
 namespace ModuleCat
@@ -42,11 +40,9 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
           rfl)
     (fun s => LinearMap.subtype_comp_cod_restrict _ _ _) fun s m h =>
     LinearMap.ext fun x =>
-      Subtype.ext_iff_val.2 <| by
-        have h₁ : (m ≫ (kernelCone f).π.app zero).toFun = (s.π.app zero).toFun := by
-          congr
-          exact h zero
-        convert @congr_funₓ _ _ _ _ h₁ x
+      Subtype.ext_iff_val.2
+        (by
+          simpa [← h] )
 
 /-- The cokernel cocone induced by the projection onto the quotient. -/
 def cokernelCocone : CokernelCofork f :=
@@ -59,7 +55,7 @@ def cokernelIsColimit : IsColimit (cokernelCocone f) :=
     (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h => by
     have : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
     apply (cancel_epi (as_hom f.range.mkq)).1
-    convert h walking_parallel_pair.one
+    convert h
     exact Submodule.liftq_mkq _ _ _
 
 end
@@ -72,7 +68,7 @@ theorem has_kernels_Module : HasKernels (ModuleCat R) :=
 theorem has_cokernels_Module : HasCokernels (ModuleCat R) :=
   ⟨fun X Y f => HasColimit.mk ⟨_, cokernelIsColimit f⟩⟩
 
-open_locale ModuleCat
+open ModuleCat
 
 attribute [local instance] has_kernels_Module
 
@@ -93,7 +89,7 @@ theorem kernel_iso_ker_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.
 
 @[simp, elementwise]
 theorem kernel_iso_ker_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.Subtype = kernel.ι f :=
-  IsLimit.cone_point_unique_up_to_iso_inv_comp _ (limit.isLimit _) zero
+  IsLimit.cone_point_unique_up_to_iso_inv_comp _ (limit.isLimit _) WalkingParallelPair.zero
 
 /-- The categorical cokernel of a morphism in `Module`
 agrees with the usual module-theoretical quotient.

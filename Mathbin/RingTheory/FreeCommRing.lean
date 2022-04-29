@@ -3,11 +3,10 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 -/
-import Mathbin.Data.Equiv.Functor
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.Data.MvPolynomial.CommRing
+import Mathbin.Logic.Equiv.Functor
 import Mathbin.RingTheory.FreeRing
-import Mathbin.Deprecated.Ring
 
 /-!
 # Free commutative rings
@@ -51,7 +50,7 @@ free commutative ring, free ring
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 universe u v
 
@@ -351,23 +350,17 @@ theorem coe_eq :
           rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]
           rfl
 
-/-- Interpret an equivalence `f : R ≃ S` as a ring equivalence `R ≃+* S`. -/
--- FIXME This was in `deprecated.ring`, but only used here.
--- It would be good to inline it into the next construction.
-def of' {R S : Type _} [Ringₓ R] [Ringₓ S] (e : R ≃ S) (he : IsRingHom e) : R ≃+* S :=
-  { e, MonoidHom.of he.to_is_semiring_hom.to_is_monoid_hom,
-    AddMonoidHom.of he.to_is_semiring_hom.to_is_add_monoid_hom with }
-
 /-- If α has size at most 1 then the natural map from the free ring on `α` to the
     free commutative ring on `α` is an isomorphism of rings. -/
 def subsingletonEquivFreeCommRing [Subsingleton α] : FreeRing α ≃+* FreeCommRing α :=
-  @of' (FreeRing α) (FreeCommRing α) _ _ (Functor.mapEquiv FreeAbelianGroup (Multiset.subsingletonEquiv α)) <| by
-    delta' Functor.mapEquiv
-    rw [congr_argₓ IsRingHom _]
-    on_goal 2 =>
-      symm
-      exact coe_eq α
-    exact (coe_ring_hom _).to_is_ring_hom
+  RingEquiv.ofBijective (coeRingHom _)
+    (by
+      have :
+        (coe_ring_hom _ : FreeRing α → FreeCommRing α) =
+          Functor.mapEquiv FreeAbelianGroup (Multiset.subsingletonEquiv α) :=
+        coe_eq α
+      rw [this]
+      apply Equivₓ.bijective)
 
 instance [Subsingleton α] : CommRingₓ (FreeRing α) :=
   { FreeRing.ring α with
@@ -381,7 +374,7 @@ end FreeRing
 /-- The free commutative ring on `α` is isomorphic to the polynomial ring over ℤ with
     variables in `α` -/
 def freeCommRingEquivMvPolynomialInt : FreeCommRing α ≃+* MvPolynomial α ℤ :=
-  RingEquiv.ofHomInv (FreeCommRing.lift fun a => MvPolynomial.x a)
+  RingEquiv.ofHomInv (FreeCommRing.lift <| (fun a => MvPolynomial.x a : α → MvPolynomial α ℤ))
     (MvPolynomial.eval₂Hom (Int.castRingHom (FreeCommRing α)) FreeCommRing.of)
     (by
       ext

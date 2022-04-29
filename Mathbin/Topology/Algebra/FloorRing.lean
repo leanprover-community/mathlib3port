@@ -26,7 +26,7 @@ This file proves statements about limits and continuity of functions involving `
 
 open Filter Function Int Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α β γ : Type _} [LinearOrderedRing α] [FloorRing α]
 

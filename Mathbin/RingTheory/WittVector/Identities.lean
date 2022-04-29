@@ -47,6 +47,8 @@ theorem frobenius_verschiebung (x : 𝕎 R) : frobenius (verschiebung x) = x * p
 theorem verschiebung_zmod (x : 𝕎 (Zmod p)) : verschiebung x = x * p := by
   rw [← frobenius_verschiebung, frobenius_zmodp]
 
+variable (p R)
+
 theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 := by
   induction' i with i h
   · simp only [one_coeff_zero, Ne.def, pow_zeroₓ]
@@ -72,13 +74,11 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
       
     
 
-variable (p R)
-
 theorem coeff_p [CharP R p] (i : ℕ) : (p : 𝕎 R).coeff i = if i = 1 then 1 else 0 := by
   split_ifs with hi
-  · simpa only [hi, pow_oneₓ] using coeff_p_pow 1
+  · simpa only [hi, pow_oneₓ] using coeff_p_pow p R 1
     
-  · simpa only [pow_oneₓ] using coeff_p_pow_eq_zero hi
+  · simpa only [pow_oneₓ] using coeff_p_pow_eq_zero p R hi
     
 
 @[simp]

@@ -24,7 +24,7 @@ logarithm, continuity
 
 open Set Filter Function
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 noncomputable section
 
@@ -316,7 +316,7 @@ theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨
   tauto
 
 -- TODO add other limits and continuous API lemmas analogous to those in log.lean
-open_locale BigOperators
+open BigOperators
 
 theorem logb_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     logb b (∏ i in s, f i) = ∑ i in s, logb b (f i) := by

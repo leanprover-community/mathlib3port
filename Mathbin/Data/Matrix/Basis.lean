@@ -20,9 +20,9 @@ variable {R α : Type _}
 
 namespace Matrix
 
-open_locale Matrix
+open Matrix
 
-open_locale BigOperators
+open BigOperators
 
 variable [DecidableEq l] [DecidableEq m] [DecidableEq n]
 
@@ -51,8 +51,8 @@ theorem std_basis_matrix_add (i : m) (j : n) (a b : α) :
   ext
   split_ifs with h <;> simp [h]
 
-theorem matrix_eq_sum_std_basis (x : Matrix n m α) [Fintype n] [Fintype m] :
-    x = ∑ (i : n) (j : m), stdBasisMatrix i j (x i j) := by
+theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
+    x = ∑ (i : m) (j : n), stdBasisMatrix i j (x i j) := by
   ext
   symm
   iterate 2 
@@ -123,8 +123,16 @@ section
 variable (i j : n) (c : α) (i' j' : n)
 
 @[simp]
-theorem diag_zero (h : j ≠ i) : diag n α α (stdBasisMatrix i j c) = 0 :=
+theorem diag_zero (h : j ≠ i) : diag (stdBasisMatrix i j c) = 0 :=
   funext fun k => if_neg fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
+
+@[simp]
+theorem diag_same : diag (stdBasisMatrix i i c) = Pi.single i c := by
+  ext j
+  by_cases' hij : i = j <;>
+    try
+        rw [hij] <;>
+      simp [hij]
 
 variable [Fintype n]
 

@@ -19,7 +19,7 @@ integral, McShane integral, Bochner integral
 -/
 
 
-open_locale Classical Nnreal Ennreal TopologicalSpace BigOperators
+open Classical Nnreal Ennreal TopologicalSpace BigOperators
 
 universe u v
 
@@ -162,6 +162,7 @@ namespace MeasureTheory
 
 namespace SimpleFunc
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
 theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] (I : Box ι)
     (l : IntegrationParams) (hl : l.bRiemann = ff) :
@@ -169,8 +170,7 @@ theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → �
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g hd hfi hgi
   · simpa [Function.const, measure.restrict_apply hs] using BoxIntegral.has_integral_indicator_const l hl hs I y μ
     
-  · let this' := borel E
-    have : BorelSpace E := ⟨rfl⟩
+  · "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
     have := Fact.mk (I.measure_coe_lt_top μ)
     rw [integral_add]
     exacts[hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _, integrable_iff.2 fun _ _ => measure_lt_top _ _]
@@ -187,30 +187,36 @@ end SimpleFunc
 
 open TopologicalSpace
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- If `f : ℝⁿ → E` is Bochner integrable w.r.t. a locally finite measure `μ` on a rectangular box
 `I`, then it is McShane integrable on `I` with the same integral.  -/
-theorem IntegrableOn.has_box_integral [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] [CompleteSpace E]
-    {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)} [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ)
-    (l : IntegrationParams) (hl : l.bRiemann = ff) :
+theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
+    [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams) (hl : l.bRiemann = ff) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) := by
-  -- First we replace an `ae_measurable` function by a measurable one.
-  rcases hf.ae_measurable with ⟨g, hg, hfg⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  -- First we replace an `ae_strongly_measurable` function by a measurable one.
+  rcases hf.ae_strongly_measurable with ⟨g, hg, hfg⟩
+  have : separable_space (range g ∪ {0} : Set E) := hg.separable_space_range_union_singleton
   rw [integral_congr_ae hfg]
   have hgi : integrable_on g I μ := (integrable_congr hfg).1 hf
   refine' BoxIntegral.HasIntegral.congr_ae _ hfg.symm hl
   clear! f
-  /- Now consider the sequence of simple functions `simple_func.approx_on g hg univ 0 trivial`
+  /- Now consider the sequence of simple functions
+    `simple_func.approx_on g hg.measurable (range g ∪ {0}) 0 (by simp)`
     approximating `g`. Recall some properties of this sequence. -/
-  set f : ℕ → simple_func (ι → ℝ) E := simple_func.approx_on g hg univ 0 trivialₓ
-  have hfi : ∀ n, integrable_on (f n) I μ := simple_func.integrable_approx_on_univ hg hgi
+  set f : ℕ → simple_func (ι → ℝ) E :=
+    simple_func.approx_on g hg.measurable (range g ∪ {0}) 0
+      (by
+        simp )
+  have hfi : ∀ n, integrable_on (f n) I μ := simple_func.integrable_approx_on_range hg.measurable hgi
   have hfi' := fun n => ((f n).has_box_integral μ I l hl).Integrable
   have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 <| ∫ x in I, g x ∂μ) :=
-    tendsto_integral_approx_on_univ_of_measurable hg hgi
+    tendsto_integral_approx_on_of_measurable_of_range_subset hg.measurable hgi _ subset.rfl
   have hfg_mono : ∀ x {m n}, m ≤ n → ∥f n x - g x∥ ≤ ∥f m x - g x∥ := by
     intro x m n hmn
     rw [← dist_eq_norm, ← dist_eq_norm, dist_nndist, dist_nndist, Nnreal.coe_le_coe, ← Ennreal.coe_le_coe, ←
       edist_nndist, ← edist_nndist]
-    exact simple_func.edist_approx_on_mono hg _ x hmn
+    exact simple_func.edist_approx_on_mono hg.measurable _ x hmn
   /- Now consider `ε > 0`. We need to find `r` such that for any tagged partition subordinate
     to `r`, the integral sum is `(μ I + 1 + 1) * ε`-close to the Bochner integral. -/
   refine' has_integral_of_mul ((μ I).toReal + 1 + 1) fun ε ε0 => _
@@ -220,13 +226,17 @@ theorem IntegrableOn.has_box_integral [SecondCountableTopology E] [MeasurableSpa
   -- Choose `N` such that the integral of `∥f N x - g x∥` is less than or equal to `ε`.
   obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ∥f N x - g x∥ ∂μ) ≤ ε := by
     have : tendsto (fun n => ∫⁻ x in I, ∥f n x - g x∥₊ ∂μ) at_top (𝓝 0) :=
-      simple_func.tendsto_approx_on_univ_L1_nnnorm hg hgi
+      simple_func.tendsto_approx_on_range_L1_nnnorm hg.measurable hgi
     refine' (this.eventually (ge_mem_nhds ε0')).exists.imp fun N hN => _
     exact integral_coe_le_of_lintegral_coe_le hN
   -- For each `x`, we choose `Nx x ≥ N₀` such that `dist (f Nx x) (g x) ≤ ε`.
   have : ∀ x, ∃ N₁, N₀ ≤ N₁ ∧ dist (f N₁ x) (g x) ≤ ε := by
     intro x
-    have : tendsto (fun n => f n x) at_top (𝓝 <| g x) := simple_func.tendsto_approx_on hg _ (subset_closure trivialₓ)
+    have : tendsto (fun n => f n x) at_top (𝓝 <| g x) :=
+      simple_func.tendsto_approx_on hg.measurable _
+        (subset_closure
+          (by
+            simp ))
     exact ((eventually_ge_at_top N₀).And <| this <| closed_ball_mem_nhds _ ε0).exists
   choose Nx hNx hNxε
   -- We also choose a convergent series with `∑' i : ℕ, δ i < ε`.
@@ -270,9 +280,8 @@ theorem IntegrableOn.has_box_integral [SecondCountableTopology E] [MeasurableSpa
     have hrn :
       ∀, ∀ J ∈ π.filter fun J => Nx (π.tag J) = n, ∀, r c (π.tag J) = (hfi' n).convergenceR (δ n) c (π.tag J) := by
       intro J hJ
-      have := hNxn J hJ
-      clear hJ
-      subst n
+      obtain rfl := hNxn J hJ
+      rfl
     have : l.mem_base_set I c ((hfi' n).convergenceR (δ n) c) (π.filter fun J => Nx (π.tag J) = n) :=
       (hπ.filter _).mono' _ le_rfl le_rfl fun J hJ => (hrn J hJ).le
     convert (hfi' n).dist_integral_sum_sum_integral_le_of_mem_base_set (δ0 _) this using 2

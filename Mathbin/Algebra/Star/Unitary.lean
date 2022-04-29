@@ -154,7 +154,7 @@ theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) :
 @[norm_cast]
 theorem coe_zpow (U : unitary R) (z : ℤ) : ↑(U ^ z) = (U ^ z : R) := by
   induction z
-  · simp [Submonoid.coe_pow]
+  · simp [SubmonoidClass.coe_pow]
     
   · simp [coe_inv]
     

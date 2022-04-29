@@ -70,7 +70,7 @@ See result `measure_theory.Lp.continuous_map_dense`, in the file
 -/
 
 
-open_locale Ennreal Nnreal
+open Ennreal Nnreal
 
 open MeasureTheory MeasureTheory.Measure
 
@@ -259,7 +259,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
           (∀ᵐ x ∂μ, g x < ⊤) ∧ Integrable (fun x => (g x).toReal) μ ∧ (∫ x, (g x).toReal ∂μ) < (∫ x, f x ∂μ) + ε :=
   by
   have fmeas : AeMeasurable f μ := by
-    convert fint.ae_measurable.real_to_nnreal
+    convert fint.ae_strongly_measurable.real_to_nnreal.ae_measurable
     ext1 x
     simp only [Real.to_nnreal_coe]
   lift ε to ℝ≥0 using εpos.le
@@ -279,7 +279,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
     filter_upwards [g_lt_top] with _ hx
     simp only [hx.ne, Ennreal.of_real_to_real, Ne.def, not_false_iff]
   refine' ⟨g, f_lt_g, gcont, g_lt_top, _, _⟩
-  · refine' ⟨gcont.measurable.ennreal_to_real.ae_measurable, _⟩
+  · refine' ⟨gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable, _⟩
     simp only [has_finite_integral_iff_norm, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
     convert gint_ne.lt_top using 1
     
@@ -296,12 +296,12 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
     · apply Filter.eventually_of_forall fun x => _
       simp
       
-    · exact fmeas.coe_nnreal_real
+    · exact fmeas.coe_nnreal_real.ae_strongly_measurable
       
     · apply Filter.eventually_of_forall fun x => _
       simp
       
-    · apply gcont.measurable.ennreal_to_real.ae_measurable
+    · apply gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable
       
     
 
@@ -414,7 +414,7 @@ theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0 ) (fint :
     apply lt_of_le_of_ltₓ (lintegral_mono fun x => _) If
     simpa using gf x
   refine' ⟨g, gf, gcont, _, _⟩
-  · refine' integrable.mono fint gcont.measurable.coe_nnreal_real.ae_measurable _
+  · refine' integrable.mono fint gcont.measurable.coe_nnreal_real.ae_measurable.ae_strongly_measurable _
     exact
       Filter.eventually_of_forall fun x => by
         simp [gf x]
@@ -433,12 +433,12 @@ theorem exists_upper_semicontinuous_le_integral_le (f : α → ℝ≥0 ) (fint :
     · apply Filter.eventually_of_forall
       simp
       
-    · exact gcont.measurable.coe_nnreal_real.ae_measurable
+    · exact gcont.measurable.coe_nnreal_real.ae_measurable.ae_strongly_measurable
       
     · apply Filter.eventually_of_forall
       simp
       
-    · exact fint.ae_measurable
+    · exact fint.ae_strongly_measurable
       
     
 

@@ -28,7 +28,7 @@ monotone convergence
 
 open Filter Set Function
 
-open_locale Filter TopologicalSpace Classical
+open Filter TopologicalSpace Classical
 
 variable {α β : Type _}
 
@@ -109,7 +109,7 @@ section Csupr
 variable [ConditionallyCompleteLattice α] [SupConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_top_csupr (h_mono : Monotone f) (hbdd : BddAbove <| Range f) : Tendsto f atTop (𝓝 (⨆ i, f i)) := by
-  cases' is_empty_or_nonempty ι
+  cases is_empty_or_nonempty ι
   exacts[tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (is_lub_csupr hbdd)]
 
 theorem tendsto_at_bot_csupr (h_anti : Antitone f) (hbdd : BddAbove <| Range f) : Tendsto f atBot (𝓝 (⨆ i, f i)) :=
@@ -265,9 +265,8 @@ theorem infi_eq_of_tendsto {α} [TopologicalSpace α] [CompleteLinearOrder α] [
 theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
   le_antisymmₓ
-    (supr_le_supr2 fun i =>
-      exists_imp_exists (fun hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
-    (supr_le_supr2 fun i => ⟨φ i, le_rfl⟩)
+    (supr_mono' fun i => exists_imp_exists (fun hj : i ≤ φ j => hf hj) (hφ.Eventually <| eventually_ge_at_top i).exists)
+    (supr_mono' fun i => ⟨φ i, le_rfl⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
     {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : Tendsto φ l atBot) : (⨅ i, f i) = ⨅ i, f (φ i) :=

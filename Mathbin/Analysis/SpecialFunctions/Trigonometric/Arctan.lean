@@ -19,7 +19,7 @@ namespace Real
 
 open Set Filter
 
-open_locale TopologicalSpace Real
+open TopologicalSpace Real
 
 theorem tan_add {x y : ℝ}
     (h :

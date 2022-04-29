@@ -47,7 +47,7 @@ open Filter Set
 
 universe u v w x
 
-open_locale uniformity Classical TopologicalSpace Filter
+open uniformity Classical TopologicalSpace Filter
 
 /-- Space of Cauchy filters
 
@@ -319,17 +319,17 @@ def Completion :=
 
 namespace Completion
 
-instance [Inhabited α] : Inhabited (Completion α) := by
-  unfold completion <;> infer_instance
+instance [Inhabited α] : Inhabited (Completion α) :=
+  Quotientₓ.inhabited (separationSetoid (Cauchyₓ α))
 
-instance (priority := 50) : UniformSpace (Completion α) := by
-  dunfold completion <;> infer_instance
+instance (priority := 50) : UniformSpace (Completion α) :=
+  separation_setoid.uniform_space
 
-instance : CompleteSpace (Completion α) := by
-  dunfold completion <;> infer_instance
+instance : CompleteSpace (Completion α) :=
+  UniformSpace.complete_space_separation (Cauchyₓ α)
 
-instance : SeparatedSpace (Completion α) := by
-  dunfold completion <;> infer_instance
+instance : SeparatedSpace (Completion α) :=
+  UniformSpace.separated_separation
 
 instance : RegularSpace (Completion α) :=
   separated_regular

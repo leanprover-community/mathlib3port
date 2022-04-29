@@ -89,6 +89,10 @@ variable {C : Type u} [Category.{v} C]
 noncomputable def Groupoid.ofIsIso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, IsIso f) : Groupoid.{v} C where
   inv := fun X Y f => inv f
 
+/-- A category with a unique morphism between any two objects is a groupoid -/
+def Groupoid.ofHomUnique (all_unique : ∀ {X Y : C}, Unique (X ⟶ Y)) : Groupoid.{v} C where
+  inv := fun X Y f => all_unique.default
+
 end
 
 instance InducedCategory.groupoid {C : Type u} (D : Type u₂) [Groupoid.{v} D] (F : C → D) :

@@ -34,7 +34,7 @@ import Mathbin.Logic.Function.Conjugate
 
 universe u v w x y
 
-variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
+variable {α : Type u} {β : Type v} {π : α → Type v} {γ : Type w} {ι : Sort x}
 
 open Function
 
@@ -45,17 +45,17 @@ namespace Set
 
 /-- Restrict domain of a function `f` to a set `s`. Same as `subtype.restrict` but this version
 takes an argument `↥s` instead of `subtype s`. -/
-def restrict (f : α → β) (s : Set α) : s → β := fun x => f x
+def restrict (s : Set α) (f : ∀ a : α, π a) : ∀ a : s, π a := fun x => f x
 
 theorem restrict_eq (f : α → β) (s : Set α) : s.restrict f = f ∘ coe :=
   rfl
 
 @[simp]
-theorem restrict_apply (f : α → β) (s : Set α) (x : s) : restrict f s x = f x :=
+theorem restrict_apply (f : α → β) (s : Set α) (x : s) : s.restrict f x = f x :=
   rfl
 
 @[simp]
-theorem range_restrict (f : α → β) (s : Set α) : Set.Range (restrict f s) = f '' s :=
+theorem range_restrict (f : α → β) (s : Set α) : Set.Range (s.restrict f) = f '' s :=
   (range_comp _ _).trans <| congr_argₓ ((· '' ·) f) Subtype.range_coe
 
 theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻¹' t) = f '' (t ∩ s) := by
@@ -64,42 +64,42 @@ theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coe ⁻
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
-    restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
+    (s.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => f a a.2 :=
   funext fun a => dif_pos a.2
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 @[simp]
 theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀, ∀ a ∈ s, ∀, β) (g : ∀ a _ : a ∉ s, β) :
-    restrict (fun a => if h : a ∈ s then f a h else g a h) (sᶜ) = fun a => g a a.2 :=
+    (sᶜ.restrict fun a => if h : a ∈ s then f a h else g a h) = fun a => g a a.2 :=
   funext fun a => dif_neg a.2
 
 @[simp]
 theorem restrict_ite (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-    restrict (fun a => if a ∈ s then f a else g a) s = restrict f s :=
+    (s.restrict fun a => if a ∈ s then f a else g a) = s.restrict f :=
   restrict_dite _ _
 
 @[simp]
 theorem restrict_ite_compl (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-    restrict (fun a => if a ∈ s then f a else g a) (sᶜ) = restrict g (sᶜ) :=
+    (sᶜ.restrict fun a => if a ∈ s then f a else g a) = sᶜ.restrict g :=
   restrict_dite_compl _ _
 
 @[simp]
 theorem restrict_piecewise (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-    restrict (piecewise s f g) s = restrict f s :=
+    s.restrict (piecewise s f g) = s.restrict f :=
   restrict_ite _ _ _
 
 @[simp]
 theorem restrict_piecewise_compl (f g : α → β) (s : Set α) [∀ x, Decidable (x ∈ s)] :
-    restrict (piecewise s f g) (sᶜ) = restrict g (sᶜ) :=
+    sᶜ.restrict (piecewise s f g) = sᶜ.restrict g :=
   restrict_ite_compl _ _ _
 
 theorem restrict_extend_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    restrict (extendₓ f g g') (Range f) = fun x => g x.coe_prop.some := by
+    (Range f).restrict (extendₓ f g g') = fun x => g x.coe_prop.some := by
   convert restrict_dite _ _
 
 @[simp]
 theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β → γ) :
-    restrict (extendₓ f g g') (Range fᶜ) = g' ∘ coe := by
+    Range fᶜ.restrict (extendₓ f g g') = g' ∘ coe := by
   convert restrict_dite_compl _ _
 
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extendₓ f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
@@ -217,7 +217,6 @@ end Order
 
 
 /-- `maps_to f a b` means that the image of `a` is contained in `b`. -/
-@[reducible]
 def MapsTo (f : α → β) (s : Set α) (t : Set β) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f x ∈ t
 
@@ -333,7 +332,6 @@ theorem MapsTo.mem_iff (h : MapsTo f s t) (hc : MapsTo f (sᶜ) (tᶜ)) {x} : f 
 
 
 /-- `f` is injective on `a` if the restriction of `f` to `a` is injective. -/
-@[reducible]
 def InjOn (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃x₁ : α⦄, x₁ ∈ s → ∀ ⦃x₂ : α⦄, x₂ ∈ s → f x₁ = f x₂ → x₁ = x₂
 
@@ -386,7 +384,7 @@ alias inj_on_of_injective ← Function.Injective.inj_on
 theorem InjOn.comp (hg : InjOn g t) (hf : InjOn f s) (h : MapsTo f s t) : InjOn (g ∘ f) s := fun x hx y hy heq =>
   hf hx hy <| hg (h hx) (h hy) HEq
 
-theorem inj_on_iff_injective : InjOn f s ↔ Injective (restrict f s) :=
+theorem inj_on_iff_injective : InjOn f s ↔ Injective (s.restrict f) :=
   ⟨fun H a b h => Subtype.eq <| H a.2 b.2 h, fun H a as b bs h => congr_argₓ Subtype.val <| @H ⟨a, as⟩ ⟨b, bs⟩ h⟩
 
 alias inj_on_iff_injective ↔ Set.InjOn.injective _
@@ -415,7 +413,6 @@ theorem InjOn.cancel_left (hg : t.InjOn g) (hf₁ : s.MapsTo f₁ t) (hf₂ : s.
 
 
 /-- `f` is surjective from `a` to `b` if `b` is contained in the image of `a`. -/
-@[reducible]
 def SurjOn (f : α → β) (s : Set α) (t : Set β) : Prop :=
   t ⊆ f '' s
 
@@ -458,8 +455,7 @@ theorem SurjOn.inter_inter (h₁ : SurjOn f s₁ t₁) (h₂ : SurjOn f s₂ t�
   intro y hy
   rcases h₁ hy.1 with ⟨x₁, hx₁, rfl⟩
   rcases h₂ hy.2 with ⟨x₂, hx₂, heq⟩
-  have : x₁ = x₂ := h (Or.inl hx₁) (Or.inr hx₂) HEq.symm
-  subst x₂
+  obtain rfl : x₁ = x₂ := h (Or.inl hx₁) (Or.inr hx₂) HEq.symm
   exact mem_image_of_mem f ⟨hx₁, hx₂⟩
 
 theorem SurjOn.inter (h₁ : SurjOn f s₁ t) (h₂ : SurjOn f s₂ t) (h : InjOn f (s₁ ∪ s₂)) : SurjOn f (s₁ ∩ s₂) t :=
@@ -471,7 +467,7 @@ theorem SurjOn.comp (hg : SurjOn g t p) (hf : SurjOn f s t) : SurjOn (g ∘ f) s
 theorem surjective_iff_surj_on_univ : Surjective f ↔ SurjOn f Univ Univ := by
   simp [surjective, surj_on, subset_def]
 
-theorem surj_on_iff_surjective : SurjOn f s Univ ↔ Surjective (restrict f s) :=
+theorem surj_on_iff_surjective : SurjOn f s Univ ↔ Surjective (s.restrict f) :=
   ⟨fun H b =>
     let ⟨a, as, e⟩ := @H b trivialₓ
     ⟨⟨a, as⟩, e⟩,
@@ -509,7 +505,6 @@ theorem eq_on_comp_right_iff : s.EqOn (g₁ ∘ f) (g₂ ∘ f) ↔ (f '' s).EqO
 
 
 /-- `f` is bijective from `s` to `t` if `f` is injective on `s` and `f '' s = t`. -/
-@[reducible]
 def BijOn (f : α → β) (s : Set α) (t : Set β) : Prop :=
   MapsTo f s t ∧ InjOn f s ∧ SurjOn f s t
 
@@ -573,7 +568,6 @@ theorem BijOn.compl (hst : BijOn f s t) (hf : Bijective f) : BijOn f (sᶜ) (t�
 
 
 /-- `g` is a left inverse to `f` on `a` means that `g (f x) = x` for all `x ∈ a`. -/
-@[reducible]
 def LeftInvOn (f' : β → α) (f : α → β) (s : Set α) : Prop :=
   ∀ ⦃x⦄, x ∈ s → f' (f x) = x
 
@@ -696,7 +690,6 @@ theorem SurjOn.left_inv_on_of_right_inv_on (hf : SurjOn f s t) (hf' : RightInvOn
 
 
 /-- `g` is an inverse to `f` viewed as a map from `a` to `b` -/
-@[reducible]
 def InvOn (g : β → α) (f : α → β) (s : Set α) (t : Set β) : Prop :=
   LeftInvOn g f s ∧ RightInvOn g f t
 

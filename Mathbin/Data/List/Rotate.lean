@@ -35,7 +35,7 @@ theorem rotate_mod (l : List α) (n : ℕ) : l.rotate (n % l.length) = l.rotate 
 
 @[simp]
 theorem rotate_nil (n : ℕ) : ([] : List α).rotate n = [] := by
-  cases n <;> simp [rotate]
+  simp [rotate]
 
 @[simp]
 theorem rotate_zero (l : List α) : l.rotate 0 = l := by
@@ -431,11 +431,10 @@ protected theorem IsRotated.forall (l : List α) (n : ℕ) : l.rotate n ~r l :=
   IsRotated.symm ⟨n, rfl⟩
 
 @[trans]
-theorem IsRotated.trans {l'' : List α} (h : l ~r l') (h' : l' ~r l'') : l ~r l'' := by
-  obtain ⟨n, rfl⟩ := h
-  obtain ⟨m, rfl⟩ := h'
-  rw [rotate_rotate]
-  use n + m
+theorem IsRotated.trans : ∀ {l l' l'' : List α}, l ~r l' → l' ~r l'' → l ~r l''
+  | _, _, _, ⟨n, rfl⟩, ⟨m, rfl⟩ =>
+    ⟨n + m, by
+      rw [rotate_rotate]⟩
 
 theorem IsRotated.eqv : Equivalenceₓ (@IsRotated α) :=
   mk_equivalence _ IsRotated.refl (fun _ _ => IsRotated.symm) fun _ _ _ => IsRotated.trans

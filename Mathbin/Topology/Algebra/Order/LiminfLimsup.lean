@@ -13,7 +13,7 @@ import Mathbin.Topology.Algebra.Order.Basic
 
 open Filter
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 universe u v
 

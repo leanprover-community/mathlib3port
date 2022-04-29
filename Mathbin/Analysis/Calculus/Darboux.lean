@@ -16,7 +16,7 @@ intermediate values. The proof is based on the
 
 open Filter Set
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 variable {a b : ℝ} {f f' : ℝ → ℝ}
 

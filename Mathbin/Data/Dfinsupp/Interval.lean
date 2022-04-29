@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Data.Finset.LocallyFinite
+import Mathbin.Data.Finset.Pointwise
+import Mathbin.Data.Fintype.Card
 import Mathbin.Data.Dfinsupp.Order
 
 /-!
@@ -16,7 +18,7 @@ finite and calculates the cardinality of its finite intervals.
 
 open Dfinsupp Finset
 
-open_locale BigOperators Pointwise
+open BigOperators Pointwise
 
 variable {ι : Type _} {α : ι → Type _}
 

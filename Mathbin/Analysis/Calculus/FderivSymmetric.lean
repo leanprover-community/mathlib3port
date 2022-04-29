@@ -50,7 +50,7 @@ rectangle are contained in `s` by convexity. The general case follows by lineari
 
 open Asymptotics Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F] {s : Set E}
   (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
@@ -59,6 +59,11 @@ variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [Nor
 
 include s_conv xs hx hf
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one can
 Taylor-expand to order two the function `f` on the segment `[x + h v, x + h (v + w)]`, giving a
@@ -97,8 +102,8 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
     rw [← smul_smul]
     apply s_conv.interior.add_smul_mem this _ ht
     rw [add_assocₓ] at hw
-    convert s_conv.add_smul_mem_interior xs hw ⟨hpos, h_lt_1.le⟩ using 1
-    simp only [add_assocₓ, smul_add]
+    rw [add_assocₓ, ← smul_add]
+    exact s_conv.add_smul_mem_interior xs hw ⟨hpos, h_lt_1.le⟩
   -- define a function `g` on `[0,1]` (identified with `[v, v + w]`) such that `g 1 - g 0` is the
   -- quantity to be estimated. We will check that its derivative is given by an explicit
   -- expression `g'`, that we can bound. Then the desired bound for `g 1 - g 0` follows from the

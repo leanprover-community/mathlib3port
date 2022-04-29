@@ -3,7 +3,7 @@ Copyright (c) 2021 Rémy Degenne. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 -/
-import Mathbin.MeasureTheory.Function.SimpleFuncDense
+import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
 
 /-!
 # Extension of a linear function from indicators to L1
@@ -65,25 +65,19 @@ also prove order-related properties:
 
 The starting object `T : set α → E →L[ℝ] F` matters only through its restriction on measurable sets
 with finite measure. Its value on other sets is ignored.
-
-The extension step from integrable simple functions to L1 relies on a `second_countable_topology`
-assumption. Without it, we could only extend to `ae_fin_strongly_measurable` functions. (TODO: this
-might be worth doing?)
-
 -/
 
 
 noncomputable section
 
-open_locale Classical TopologicalSpace BigOperators Nnreal Ennreal MeasureTheory Pointwise
+open Classical TopologicalSpace BigOperators Nnreal Ennreal MeasureTheory Pointwise
 
 open Set Filter TopologicalSpace Ennreal Emetric
 
 namespace MeasureTheory
 
-variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [NormedGroup F]
-  [NormedSpace ℝ F] [NormedGroup F'] [NormedSpace ℝ F'] [NormedGroup G] [MeasurableSpace G] {m : MeasurableSpace α}
-  {μ : Measure α}
+variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F]
+  [NormedGroup F'] [NormedSpace ℝ F'] [NormedGroup G] {m : MeasurableSpace α} {μ : Measure α}
 
 -- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
@@ -287,7 +281,7 @@ theorem set_to_simple_func_zero' {T : Set α → E →L[ℝ] F'} (h_zero : ∀ s
 @[simp]
 theorem set_to_simple_func_zero_apply {m : MeasurableSpace α} (T : Set α → F →L[ℝ] F') :
     setToSimpleFunc T (0 : α →ₛ F) = 0 := by
-  cases' is_empty_or_nonempty α <;> simp [set_to_simple_func]
+  cases is_empty_or_nonempty α <;> simp [set_to_simple_func]
 
 theorem set_to_simple_func_eq_sum_filter {m : MeasurableSpace α} (T : Set α → F →L[ℝ] F') (f : α →ₛ F) :
     setToSimpleFunc T f = ∑ x in f.range.filter fun x => x ≠ 0, (T (f ⁻¹' {x})) x := by
@@ -461,7 +455,7 @@ theorem set_to_simple_func_sub (T : Set α → E →L[ℝ] F) (h_add : FinMeasAd
   rw [integrable_iff] at hg⊢
   intro x hx_ne
   change μ (Neg.neg ∘ g ⁻¹' {x}) < ∞
-  rw [preimage_comp, neg_preimage, neg_singleton]
+  rw [preimage_comp, neg_preimage, Set.neg_singleton]
   refine' hg (-x) _
   simp [hx_ne]
 
@@ -478,8 +472,8 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : Fin
       simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
     
 
-theorem set_to_simple_func_smul {E} [MeasurableSpace E] [NormedGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E]
-    [NormedSpace ℝ E] [NormedSpace 𝕜 F] (T : Set α → E →L[ℝ] F) (h_add : FinMeasAdditive μ T)
+theorem set_to_simple_func_smul {E} [NormedGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E]
+    [NormedSpace 𝕜 F] (T : Set α → E →L[ℝ] F) (h_add : FinMeasAdditive μ T)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) {f : α →ₛ E} (hf : Integrable f μ) :
     setToSimpleFunc T (c • f) = c • setToSimpleFunc T f :=
   calc
@@ -522,7 +516,7 @@ theorem set_to_simple_func_nonneg {m : MeasurableSpace α} (T : Set α → G' �
   refine' le_transₓ _ (hf y)
   simp
 
-theorem set_to_simple_func_nonneg' [MeasurableSpace G'] (T : Set α → G' →L[ℝ] G'')
+theorem set_to_simple_func_nonneg' (T : Set α → G' →L[ℝ] G'')
     (hT_nonneg : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, 0 ≤ x → 0 ≤ T s x) (f : α →ₛ G') (hf : 0 ≤ f)
     (hfi : Integrable f μ) : 0 ≤ setToSimpleFunc T f := by
   refine' sum_nonneg fun i hi => _
@@ -535,8 +529,7 @@ theorem set_to_simple_func_nonneg' [MeasurableSpace G'] (T : Set α → G' →L[
   rw [← hy]
   convert hf y
 
-theorem set_to_simple_func_mono [MeasurableSpace G'] [BorelSpace G'] [SecondCountableTopology G']
-    {T : Set α → G' →L[ℝ] G''} (h_add : FinMeasAdditive μ T)
+theorem set_to_simple_func_mono {T : Set α → G' →L[ℝ] G''} (h_add : FinMeasAdditive μ T)
     (hT_nonneg : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, 0 ≤ x → 0 ≤ T s x) {f g : α →ₛ G'} (hfi : Integrable f μ)
     (hgi : Integrable g μ) (hfg : f ≤ g) : setToSimpleFunc T f ≤ setToSimpleFunc T g := by
   rw [← sub_nonneg, ← set_to_simple_func_sub T h_add hgi hfi]
@@ -606,7 +599,7 @@ theorem set_to_simple_func_indicator (T : Set α → F →L[ℝ] F') (hT_empty :
       set_to_simple_func_zero_apply]
     
   by_cases' hs_univ : s = univ
-  · cases' hα : is_empty_or_nonempty α
+  · cases hα : is_empty_or_nonempty α
     · refine' absurd _ hs_empty
       have : Subsingleton (Set α) := by
         unfold Set
@@ -647,7 +640,7 @@ theorem set_to_simple_func_const' [Nonempty α] (T : Set α → F →L[ℝ] F') 
 
 theorem set_to_simple_func_const (T : Set α → F →L[ℝ] F') (hT_empty : T ∅ = 0) (x : F) {m : MeasurableSpace α} :
     SimpleFunc.setToSimpleFunc T (SimpleFunc.const α x) = T univ x := by
-  cases' hα : is_empty_or_nonempty α
+  cases hα : is_empty_or_nonempty α
   · have h_univ_empty : (univ : Set α) = ∅ :=
       have : Unique (Set α) := unique_empty
       Subsingleton.elimₓ (univ : Set α) (∅ : Set α)
@@ -667,7 +660,7 @@ variable {α E μ}
 
 namespace SimpleFunc
 
-theorem norm_eq_sum_mul [SecondCountableTopology G] [BorelSpace G] (f : α →₁ₛ[μ] G) :
+theorem norm_eq_sum_mul (f : α →₁ₛ[μ] G) :
     ∥f∥ = ∑ x in (toSimpleFunc f).range, (μ (toSimpleFunc f ⁻¹' {x})).toReal * ∥x∥ := by
   rw [norm_to_simple_func, snorm_one_eq_lintegral_nnnorm]
   have h_eq := simple_func.map_apply (fun x => (nnnorm x : ℝ≥0∞)) (to_simple_func f)
@@ -691,7 +684,7 @@ theorem norm_eq_sum_mul [SecondCountableTopology G] [BorelSpace G] (f : α →�
 
 section SetToL1s
 
-variable [SecondCountableTopology E] [BorelSpace E] [NormedField 𝕜] [NormedSpace 𝕜 E]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E]
 
 attribute [local instance] Lp.simple_func.module
 
@@ -776,8 +769,7 @@ theorem set_to_L1s_smul_real (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, Mea
   refine' simple_func.set_to_simple_func_congr T h_zero h_add (simple_func.integrable _) _
   exact smul_to_simple_func c f
 
-theorem set_to_L1s_smul {E} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [NormedSpace 𝕜 E]
-    [SecondCountableTopology E] [BorelSpace E] [NormedSpace 𝕜 F] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
+theorem set_to_L1s_smul {E} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
     (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, MeasurableSet s → μ s = 0 → T s = 0) (h_add : FinMeasAdditive μ T)
     (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α →₁ₛ[μ] E) :
     setToL1s T (c • f) = c • setToL1s T f := by
@@ -819,8 +811,6 @@ theorem set_to_L1s_mono_left' {T T' : Set α → E →L[ℝ] G''} (hTT' : ∀ s,
     (f : α →₁ₛ[μ] E) : setToL1s T f ≤ setToL1s T' f :=
   SimpleFunc.set_to_simple_func_mono_left' T T' hTT' _ (SimpleFunc.integrable f)
 
-variable [MeasurableSpace G''] [BorelSpace G''] [SecondCountableTopology G'']
-
 theorem set_to_L1s_nonneg (h_zero : ∀ s, MeasurableSet s → μ s = 0 → T s = 0) (h_add : FinMeasAdditive μ T)
     (hT_nonneg : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, 0 ≤ x → 0 ≤ T s x) {f : α →₁ₛ[μ] G''} (hf : 0 ≤ f) :
     0 ≤ setToL1s T f := by
@@ -840,7 +830,7 @@ theorem set_to_L1s_mono (h_zero : ∀ s, MeasurableSet s → μ s = 0 → T s = 
 
 end Order
 
-variable [NormedSpace 𝕜 F] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
+variable [NormedSpace 𝕜 F]
 
 variable (α E μ 𝕜)
 
@@ -922,7 +912,7 @@ theorem set_to_L1s_clm_const [IsFiniteMeasure μ] {T : Set α → E →L[ℝ] F}
 section Order
 
 variable {G' G'' : Type _} [NormedLatticeAddCommGroup G''] [NormedSpace ℝ G''] [NormedLatticeAddCommGroup G']
-  [NormedSpace ℝ G'] [MeasurableSpace G'] [BorelSpace G'] [SecondCountableTopology G']
+  [NormedSpace ℝ G']
 
 theorem set_to_L1s_clm_mono_left {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ} (hT : DominatedFinMeasAdditive μ T C)
     (hT' : DominatedFinMeasAdditive μ T' C') (hTT' : ∀ s x, T s x ≤ T' s x) (f : α →₁ₛ[μ] E) :
@@ -958,8 +948,8 @@ attribute [local instance] Lp.simple_func.module
 
 attribute [local instance] Lp.simple_func.normed_space
 
-variable (𝕜) [NondiscreteNormedField 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [SecondCountableTopology E]
-  [BorelSpace E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F] {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ}
+variable (𝕜) [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F]
+  {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ}
 
 /-- Extend `set α → (E →L[ℝ] F)` to `(α →₁[μ] E) →L[𝕜] F`. -/
 def setToL1' (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) :
@@ -1101,7 +1091,7 @@ theorem set_to_L1_const [IsFiniteMeasure μ] (hT : DominatedFinMeasAdditive μ T
 section Order
 
 variable {G' G'' : Type _} [NormedLatticeAddCommGroup G''] [NormedSpace ℝ G''] [CompleteSpace G'']
-  [NormedLatticeAddCommGroup G'] [NormedSpace ℝ G'] [MeasurableSpace G'] [BorelSpace G'] [SecondCountableTopology G']
+  [NormedLatticeAddCommGroup G'] [NormedSpace ℝ G']
 
 theorem set_to_L1_mono_left' {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ} (hT : DominatedFinMeasAdditive μ T C)
     (hT' : DominatedFinMeasAdditive μ T' C') (hTT' : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, T s x ≤ T' s x)
@@ -1197,8 +1187,7 @@ end L1
 
 section Function
 
-variable [SecondCountableTopology E] [BorelSpace E] [CompleteSpace F] {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ}
-  {f g : α → E}
+variable [CompleteSpace F] {T T' T'' : Set α → E →L[ℝ] F} {C C' C'' : ℝ} {f g : α → E}
 
 variable (μ T)
 
@@ -1220,7 +1209,7 @@ theorem L1.set_to_fun_eq_set_to_L1 (hT : DominatedFinMeasAdditive μ T C) (f : �
 theorem set_to_fun_undef (hT : DominatedFinMeasAdditive μ T C) (hf : ¬Integrable f μ) : setToFun μ T hT f = 0 :=
   dif_neg hf
 
-theorem set_to_fun_non_ae_measurable (hT : DominatedFinMeasAdditive μ T C) (hf : ¬AeMeasurable f μ) :
+theorem set_to_fun_non_ae_strongly_measurable (hT : DominatedFinMeasAdditive μ T C) (hf : ¬AeStronglyMeasurable f μ) :
     setToFun μ T hT f = 0 :=
   set_to_fun_undef hT (not_and_of_not_left _ hf)
 
@@ -1343,9 +1332,9 @@ theorem set_to_fun_sub (hT : DominatedFinMeasAdditive μ T C) (hf : Integrable f
     setToFun μ T hT (f - g) = setToFun μ T hT f - setToFun μ T hT g := by
   rw [sub_eq_add_neg, sub_eq_add_neg, set_to_fun_add hT hf hg.neg, set_to_fun_neg hT g]
 
-theorem set_to_fun_smul [NondiscreteNormedField 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E]
-    [NormedSpace 𝕜 F] (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜)
-    (f : α → E) : setToFun μ T hT (c • f) = c • setToFun μ T hT f := by
+theorem set_to_fun_smul [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
+    (hT : DominatedFinMeasAdditive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α → E) :
+    setToFun μ T hT (c • f) = c • setToFun μ T hT f := by
   by_cases' hf : integrable f μ
   · rw [set_to_fun_eq hT hf, set_to_fun_eq hT, integrable.to_L1_smul', L1.set_to_L1_smul hT h_smul c _]
     
@@ -1386,7 +1375,7 @@ theorem set_to_fun_to_L1 (hT : DominatedFinMeasAdditive μ T C) (hf : Integrable
 
 theorem set_to_fun_indicator_const (hT : DominatedFinMeasAdditive μ T C) {s : Set α} (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (x : E) : setToFun μ T hT (s.indicator fun _ => x) = T s x := by
-  rw [set_to_fun_congr_ae hT (@indicator_const_Lp_coe_fn _ _ _ 1 _ _ _ _ hs hμs x _ _).symm]
+  rw [set_to_fun_congr_ae hT (@indicator_const_Lp_coe_fn _ _ _ 1 _ _ _ hs hμs x).symm]
   rw [L1.set_to_fun_eq_set_to_L1 hT]
   exact L1.set_to_L1_indicator_const_Lp hT hs hμs x
 
@@ -1399,7 +1388,7 @@ theorem set_to_fun_const [IsFiniteMeasure μ] (hT : DominatedFinMeasAdditive μ 
 section Order
 
 variable {G' G'' : Type _} [NormedLatticeAddCommGroup G''] [NormedSpace ℝ G''] [CompleteSpace G'']
-  [NormedLatticeAddCommGroup G'] [NormedSpace ℝ G'] [MeasurableSpace G'] [BorelSpace G'] [SecondCountableTopology G']
+  [NormedLatticeAddCommGroup G'] [NormedSpace ℝ G']
 
 theorem set_to_fun_mono_left' {T T' : Set α → E →L[ℝ] G''} {C C' : ℝ} (hT : DominatedFinMeasAdditive μ T C)
     (hT' : DominatedFinMeasAdditive μ T' C') (hTT' : ∀ s, MeasurableSet s → μ s < ∞ → ∀ x, T s x ≤ T' s x) (f : α → E) :
@@ -1450,8 +1439,7 @@ theorem continuous_set_to_fun (hT : DominatedFinMeasAdditive μ T C) :
 
 /-- Auxiliary lemma for `set_to_fun_congr_measure`: the function sending `f : α →₁[μ] G` to
 `f : α →₁[μ'] G` is continuous when `μ' ≤ c' • μ` for `c' ≠ ∞`. -/
-theorem continuous_L1_to_L1 [BorelSpace G] [SecondCountableTopology G] {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ ∞)
-    (hμ'_le : μ' ≤ c' • μ) :
+theorem continuous_L1_to_L1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ ∞) (hμ'_le : μ' ≤ c' • μ) :
     Continuous fun f : α →₁[μ] G => (Integrable.of_measure_le_smul c' hc' hμ'_le (L1.integrable_coe_fn f)).toL1 f := by
   by_cases' hc'0 : c' = 0
   · have hμ'0 : μ' = 0 := by
@@ -1605,11 +1593,11 @@ theorem norm_set_to_fun_le' (hT : DominatedFinMeasAdditive μ T C) (hf : Integra
   (i.e. not requiring that `bound` is measurable), but in all applications proving integrability
   is easier. -/
 theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditive μ T C) {fs : ℕ → α → E} {f : α → E}
-    (bound : α → ℝ) (fs_measurable : ∀ n, AeMeasurable (fs n) μ) (bound_integrable : Integrable bound μ)
+    (bound : α → ℝ) (fs_measurable : ∀ n, AeStronglyMeasurable (fs n) μ) (bound_integrable : Integrable bound μ)
     (h_bound : ∀ n, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) atTop (𝓝 <| setToFun μ T hT f) := by
   -- `f` is a.e.-measurable, since it is the a.e.-pointwise limit of a.e.-measurable functions.
-  have f_measurable : AeMeasurable f μ := ae_measurable_of_tendsto_metric_ae' fs_measurable h_lim
+  have f_measurable : ae_strongly_measurable f μ := ae_strongly_measurable_of_tendsto_ae _ fs_measurable h_lim
   -- all functions we consider are integrable
   have fs_int : ∀ n, integrable (fs n) μ := fun n => bound_integrable.mono' (fs_measurable n) (h_bound _)
   have f_int : integrable f μ :=
@@ -1642,15 +1630,17 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditi
 
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_set_to_fun_filter_of_dominated_convergence (hT : DominatedFinMeasAdditive μ T C) {ι} {l : Filter ι}
-    [l.IsCountablyGenerated] {fs : ι → α → E} {f : α → E} (bound : α → ℝ) (hfs_meas : ∀ᶠ n in l, AeMeasurable (fs n) μ)
-    (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) (bound_integrable : Integrable bound μ)
-    (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) l (𝓝 (f a))) :
+    [l.IsCountablyGenerated] {fs : ι → α → E} {f : α → E} (bound : α → ℝ)
+    (hfs_meas : ∀ᶠ n in l, AeStronglyMeasurable (fs n) μ) (h_bound : ∀ᶠ n in l, ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a)
+    (bound_integrable : Integrable bound μ) (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => fs n a) l (𝓝 (f a))) :
     Tendsto (fun n => setToFun μ T hT (fs n)) l (𝓝 <| setToFun μ T hT f) := by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
   have hxl : ∀, ∀ s ∈ l, ∀, ∃ a, ∀, ∀ b ≥ a, ∀, x b ∈ s := by
     rwa [tendsto_at_top'] at xl
-  have h : { x : ι | (fun n => AeMeasurable (fs n) μ) x } ∩ { x : ι | (fun n => ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) x } ∈ l :=
+  have h :
+    { x : ι | (fun n => ae_strongly_measurable (fs n) μ) x } ∩ { x : ι | (fun n => ∀ᵐ a ∂μ, ∥fs n a∥ ≤ bound a) x } ∈
+      l :=
     inter_mem hfs_meas h_bound
   obtain ⟨k, h⟩ := hxl _ h
   rw [← tendsto_add_at_top_iff_nat k]
@@ -1668,13 +1658,13 @@ theorem tendsto_set_to_fun_filter_of_dominated_convergence (hT : DominatedFinMea
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 
 theorem continuous_at_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E} {x₀ : X}
-    {bound : α → ℝ} (hfs_meas : ∀ᶠ x in 𝓝 x₀, AeMeasurable (fs x) μ)
+    {bound : α → ℝ} (hfs_meas : ∀ᶠ x in 𝓝 x₀, AeStronglyMeasurable (fs x) μ)
     (h_bound : ∀ᶠ x in 𝓝 x₀, ∀ᵐ a ∂μ, ∥fs x a∥ ≤ bound a) (bound_integrable : Integrable bound μ)
     (h_cont : ∀ᵐ a ∂μ, ContinuousAt (fun x => fs x a) x₀) : ContinuousAt (fun x => setToFun μ T hT (fs x)) x₀ :=
   tendsto_set_to_fun_filter_of_dominated_convergence hT bound ‹_› ‹_› ‹_› ‹_›
 
 theorem continuous_set_to_fun_of_dominated (hT : DominatedFinMeasAdditive μ T C) {fs : X → α → E} {bound : α → ℝ}
-    (hfs_meas : ∀ x, AeMeasurable (fs x) μ) (h_bound : ∀ x, ∀ᵐ a ∂μ, ∥fs x a∥ ≤ bound a)
+    (hfs_meas : ∀ x, AeStronglyMeasurable (fs x) μ) (h_bound : ∀ x, ∀ᵐ a ∂μ, ∥fs x a∥ ≤ bound a)
     (bound_integrable : Integrable bound μ) (h_cont : ∀ᵐ a ∂μ, Continuous fun x => fs x a) :
     Continuous fun x => setToFun μ T hT (fs x) :=
   continuous_iff_continuous_at.mpr fun x₀ =>

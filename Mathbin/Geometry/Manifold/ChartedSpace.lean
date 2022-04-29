@@ -110,7 +110,7 @@ composition of local equivs with `≫`.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 open Filter
 
@@ -457,7 +457,7 @@ groupoid. -/
 theorem closed_under_restriction_iff_id_le (G : StructureGroupoid H) : ClosedUnderRestriction G ↔ idRestrGroupoid ≤ G :=
   by
   constructor
-  · intros _i
+  · intro _i
     apply structure_groupoid.le_iff.mpr
     rintro e ⟨s, hs, hes⟩
     refine' G.eq_on_source _ hes
@@ -710,7 +710,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
     open_target := by
       convert c.open_target he,
     continuous_to_fun := by
-      let this' : TopologicalSpace M := c.to_topological_space
+      let this : TopologicalSpace M := c.to_topological_space
       rw [continuous_on_open_iff (c.open_source' he)]
       intro s s_open
       rw [inter_comm]
@@ -718,7 +718,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.Atlas) : @Local
       simp only [exists_prop, mem_Union, mem_singleton_iff]
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩,
     continuous_inv_fun := by
-      let this' : TopologicalSpace M := c.to_topological_space
+      let this : TopologicalSpace M := c.to_topological_space
       apply continuous_on_open_of_generate_from (c.open_target he)
       intro t ht
       simp only [exists_prop, mem_Union, mem_singleton_iff] at ht

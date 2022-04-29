@@ -121,6 +121,9 @@ structure EvalsTo {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) 
 
 /-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
 evaluated on `a`, remembering the number of steps it takes. -/
+-- note: this cannot currently be used in `calc`, as the last two arguments must be `a` and `b`.
+-- If this is desired, this argument order can be changed, but this spelling is I think the most
+-- natural, so there is a trade-off that needs to be made here. A notation can get around this.
 structure EvalsToInTime {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends EvalsTo f a b where
   steps_le_m : steps ≤ m
 
@@ -143,7 +146,7 @@ def EvalsToInTime.refl {σ : Type _} (f : σ → Option σ) (a : σ) : EvalsToIn
 
 /-- Transitivity of `evals_to_in_time` in the sum of the numbers of steps. -/
 @[trans]
-def EvalsToInTime.trans {σ : Type _} (f : σ → Option σ) (a : σ) (b : σ) (c : Option σ) (m₁ : ℕ) (m₂ : ℕ)
+def EvalsToInTime.trans {σ : Type _} (f : σ → Option σ) (m₁ : ℕ) (m₂ : ℕ) (a : σ) (b : σ) (c : Option σ)
     (h₁ : EvalsToInTime f a b m₁) (h₂ : EvalsToInTime f b c m₂) : EvalsToInTime f a c (m₂ + m₁) :=
   ⟨EvalsTo.trans f a b c h₁.toEvalsTo h₂.toEvalsTo, add_le_add h₂.steps_le_m h₁.steps_le_m⟩
 

@@ -10,7 +10,7 @@ import Mathbin.Data.Fintype.Basic
 -/
 
 
-open_locale Classical
+open Classical
 
 theorem card_units_lt (M₀ : Type _) [MonoidWithZeroₓ M₀] [Nontrivial M₀] [Fintype M₀] :
     Fintype.card M₀ˣ < Fintype.card M₀ :=

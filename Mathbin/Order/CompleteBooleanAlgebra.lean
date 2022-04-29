@@ -26,7 +26,7 @@ distributive lattice.
 
 ## TODO
 
-Add instances for `prod`, `filter`
+Add instances for `prod`
 
 ## References
 
@@ -96,7 +96,7 @@ theorem supr_inf_supr {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨆
 theorem bsupr_inf_bsupr {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨆ i ∈ s, f i)⊓⨆ j ∈ t, g j) = ⨆ p ∈ s ×ˢ t, f (p : ι × ι').1⊓g p.2 := by
   simp only [supr_subtype', supr_inf_supr]
-  exact supr_congr (Equivₓ.Set.prod s t).symm (Equivₓ.surjective _) fun x => rfl
+  exact (Equivₓ.surjective _).supr_congr (Equivₓ.Set.prod s t).symm fun x => rfl
 
 theorem Sup_inf_Sup : sup s⊓sup t = ⨆ p ∈ s ×ˢ t, (p : α × α).1⊓p.2 := by
   simp only [Sup_eq_supr, bsupr_inf_bsupr]
@@ -105,7 +105,13 @@ theorem supr_disjoint_iff {f : ι → α} : Disjoint (⨆ i, f i) a ↔ ∀ i, D
   simp only [disjoint_iff, supr_inf_eq, supr_eq_bot]
 
 theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆ i, f i) ↔ ∀ i, Disjoint a (f i) := by
-  simpa only [Disjoint.comm] using @supr_disjoint_iff _ _ _ a f
+  simpa only [Disjoint.comm] using supr_disjoint_iff
+
+theorem Sup_disjoint_iff {s : Set α} : Disjoint (sup s) a ↔ ∀, ∀ b ∈ s, ∀, Disjoint b a := by
+  simp only [disjoint_iff, Sup_inf_eq, supr_eq_bot]
+
+theorem disjoint_Sup_iff {s : Set α} : Disjoint a (sup s) ↔ ∀, ∀ b ∈ s, ∀, Disjoint a b := by
+  simpa only [Disjoint.comm] using Sup_disjoint_iff
 
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
@@ -214,6 +220,12 @@ theorem compl_Inf : inf sᶜ = ⨆ i ∈ s, iᶜ := by
 theorem compl_Sup : sup sᶜ = ⨅ i ∈ s, iᶜ := by
   simp only [Sup_eq_supr, compl_supr]
 
+theorem compl_Inf' : inf sᶜ = sup (compl '' s) :=
+  compl_Inf.trans Sup_image.symm
+
+theorem compl_Sup' : sup sᶜ = inf (compl '' s) :=
+  compl_Sup.trans Inf_image.symm
+
 end CompleteBooleanAlgebra
 
 section lift
@@ -223,48 +235,36 @@ section lift
 @[reducible]
 protected def Function.Injective.frame [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Frame β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
-    (map_Sup : ∀ s, f (sup s) = sup (f '' s)) (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤)
+    (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
     (map_bot : f ⊥ = ⊥) : Frame α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
     inf_Sup_le_supr_inf := fun a s => by
-      change f (a⊓Sup s) ≤ f (Sup <| range fun b => Sup _)
-      rw [map_inf, map_Sup, map_Sup, Sup_image, inf_bsupr_eq, ← range_comp]
-      refine' le_of_eqₓ _
-      congr
-      ext b
-      refine' Eq.trans _ (map_Sup _).symm
-      rw [← range_comp, supr]
-      congr
-      ext h
-      exact (map_inf _ _).symm }
+      change f (a⊓Sup s) ≤ f _
+      rw [← Sup_image, map_inf, map_Sup s, inf_bsupr_eq]
+      simp_rw [← map_inf]
+      exact ((map_Sup _).trans supr_image).Ge }
 
 /-- Pullback an `order.coframe` along an injection. -/
 -- See note [reducible non-instances]
 @[reducible]
 protected def Function.Injective.coframe [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α] [HasBot α] [Coframe β]
     (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b)
-    (map_Sup : ∀ s, f (sup s) = sup (f '' s)) (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤)
+    (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤)
     (map_bot : f ⊥ = ⊥) : Coframe α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
     infi_sup_le_sup_Inf := fun a s => by
-      change f (Inf <| range fun b => Inf _) ≤ f (a⊔Inf s)
-      rw [map_sup, map_Inf s, Inf_image, map_Inf, ← range_comp]
-      refine' ((sup_binfi_eq _).trans _).Ge
-      congr
-      ext b
-      refine' Eq.trans _ (map_Inf _).symm
-      rw [← range_comp, infi]
-      congr
-      ext h
-      exact (map_sup _ _).symm }
+      change f _ ≤ f (a⊔Inf s)
+      rw [← Inf_image, map_sup, map_Inf s, sup_binfi_eq]
+      simp_rw [← map_sup]
+      exact ((map_Inf _).trans infi_image).le }
 
 /-- Pullback a `complete_distrib_lattice` along an injection. -/
 -- See note [reducible non-instances]
 @[reducible]
 protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
     [HasBot α] [CompleteDistribLattice β] (f : α → β) (hf : Function.Injective f) (map_sup : ∀ a b, f (a⊔b) = f a⊔f b)
-    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = sup (f '' s))
-    (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteDistribLattice α :=
+    (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a)
+    (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteDistribLattice α :=
   { hf.Frame f map_sup map_inf map_Sup map_Inf map_top map_bot,
     hf.Coframe f map_sup map_inf map_Sup map_Inf map_top map_bot with }
 
@@ -273,8 +273,8 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
 @[reducible]
 protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] [HasSupₓ α] [HasInfₓ α] [HasTop α]
     [HasBot α] [HasCompl α] [HasSdiff α] [CompleteBooleanAlgebra β] (f : α → β) (hf : Function.Injective f)
-    (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = sup (f '' s))
-    (map_Inf : ∀ s, f (inf s) = inf (f '' s)) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
+    (map_sup : ∀ a b, f (a⊔b) = f a⊔f b) (map_inf : ∀ a b, f (a⊓b) = f a⊓f b) (map_Sup : ∀ s, f (sup s) = ⨆ a ∈ s, f a)
+    (map_Inf : ∀ s, f (inf s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : CompleteBooleanAlgebra α :=
   { hf.CompleteDistribLattice f map_sup map_inf map_Sup map_Inf map_top map_bot,
     hf.BooleanAlgebra f map_sup map_inf map_top map_bot map_compl map_sdiff with }

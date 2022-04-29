@@ -92,7 +92,7 @@ instance vanishing_ideal_singleton_is_maximal {x : σ → k} : (vanishingIdeal {
     RingEquiv.ofBijective (Ideal.Quotient.lift _ (eval x) fun p h => (mem_vanishing_ideal_singleton_iff x p).mp h)
       (by
         refine'
-          ⟨(RingHom.injective_iff _).mpr fun p hp => _, fun z =>
+          ⟨(injective_iff_map_eq_zero _).mpr fun p hp => _, fun z =>
             ⟨(Ideal.Quotient.mk (vanishing_ideal {x} : Ideal (MvPolynomial σ k))) (C z), by
               simp ⟩⟩
         obtain ⟨q, rfl⟩ := quotient.mk_surjective p
@@ -144,8 +144,8 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
     ⟨fun hI => _, fun h =>
       let ⟨x, hx⟩ := h
       hx.symm ▸ MvPolynomial.vanishing_ideal_singleton_is_maximal⟩
-  let this' : I.is_maximal := hI
-  let this' : Field (MvPolynomial σ k ⧸ I) := quotient.field I
+  let this : I.is_maximal := hI
+  let this : Field (MvPolynomial σ k ⧸ I) := quotient.field I
   let ϕ : k →+* MvPolynomial σ k ⧸ I := (Ideal.Quotient.mk I).comp C
   have hϕ : Function.Bijective ϕ :=
     ⟨quotient_mk_comp_C_injective _ _ I hI.ne_top,

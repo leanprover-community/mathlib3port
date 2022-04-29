@@ -7,6 +7,7 @@ import Mathbin.Algebra.Order.Invertible
 import Mathbin.Algebra.Order.Module
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
+import Mathbin.LinearAlgebra.Ray
 
 /-!
 # Convex sets and functions in vector spaces
@@ -39,7 +40,7 @@ variable {𝕜 E F β : Type _}
 
 open LinearMap Set
 
-open_locale BigOperators Classical Pointwise
+open BigOperators Classical Pointwise
 
 /-! ### Segment -/
 
@@ -64,6 +65,14 @@ def OpenSegment (x y : E) : Set E :=
 -- mathport name: «expr[ -[ ] ]»
 localized [Convex] notation "[" x " -[" 𝕜 "] " y "]" => Segment 𝕜 x y
 
+theorem segment_eq_image₂ (x y : E) :
+    [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } := by
+  simp only [Segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+
+theorem open_segment_eq_image₂ (x y : E) :
+    OpenSegment 𝕜 x y = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } := by
+  simp only [OpenSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
   Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, H⟩ => ⟨b, a, hb, ha, (add_commₓ _ _).trans hab, (add_commₓ _ _).trans H⟩,
@@ -87,7 +96,7 @@ theorem open_segment_subset_iff {x y : E} {s : Set E} :
 
 end HasScalar
 
-open_locale Convex
+open Convex
 
 section MulActionWithZero
 
@@ -104,50 +113,45 @@ end MulActionWithZero
 
 section Module
 
-variable (𝕜) [Module 𝕜 E]
+variable (𝕜) [Module 𝕜 E] {x y z : E} {s : Set E}
 
+@[simp]
 theorem segment_same (x : E) : [x -[𝕜] x] = {x} :=
   Set.ext fun z =>
     ⟨fun ⟨a, b, ha, hb, hab, hz⟩ => by
       simpa only [(add_smul _ _ _).symm, mem_singleton_iff, hab, one_smul, eq_comm] using hz, fun h =>
       mem_singleton_iff.1 h ▸ left_mem_segment 𝕜 z z⟩
 
-theorem mem_open_segment_of_ne_left_right {x y z : E} (hx : x ≠ z) (hy : y ≠ z) (hz : z ∈ [x -[𝕜] y]) :
-    z ∈ OpenSegment 𝕜 x y := by
-  obtain ⟨a, b, ha, hb, hab, hz⟩ := hz
-  by_cases' ha' : a = 0
-  · rw [ha', zero_addₓ] at hab
-    rw [ha', hab, zero_smul, one_smul, zero_addₓ] at hz
-    exact (hy hz).elim
+theorem insert_endpoints_open_segment (x y : E) : insert x (insert y (OpenSegment 𝕜 x y)) = [x -[𝕜] y] := by
+  simp only [subset_antisymm_iff, insert_subset, left_mem_segment, right_mem_segment, open_segment_subset_segment,
+    true_andₓ]
+  rintro z ⟨a, b, ha, hb, hab, rfl⟩
+  refine' hb.eq_or_gt.imp _ fun hb' => ha.eq_or_gt.imp _ _
+  · rintro rfl
+    rw [add_zeroₓ] at hab
+    rw [hab, one_smul, zero_smul, add_zeroₓ]
     
-  by_cases' hb' : b = 0
-  · rw [hb', add_zeroₓ] at hab
-    rw [hb', hab, zero_smul, one_smul, add_zeroₓ] at hz
-    exact (hx hz).elim
+  · rintro rfl
+    rw [zero_addₓ] at hab
+    rw [hab, one_smul, zero_smul, zero_addₓ]
     
-  exact ⟨a, b, ha.lt_of_ne (Ne.symm ha'), hb.lt_of_ne (Ne.symm hb'), hab, hz⟩
+  · exact fun ha' => ⟨a, b, ha', hb', hab, rfl⟩
+    
 
 variable {𝕜}
 
-theorem open_segment_subset_iff_segment_subset {x y : E} {s : Set E} (hx : x ∈ s) (hy : y ∈ s) :
-    OpenSegment 𝕜 x y ⊆ s ↔ [x -[𝕜] y] ⊆ s := by
-  refine' ⟨fun h z hz => _, (open_segment_subset_segment 𝕜 x y).trans⟩
-  obtain rfl | hxz := eq_or_ne x z
-  · exact hx
-    
-  obtain rfl | hyz := eq_or_ne y z
-  · exact hy
-    
-  exact h (mem_open_segment_of_ne_left_right 𝕜 hxz hyz hz)
+theorem mem_open_segment_of_ne_left_right (hx : x ≠ z) (hy : y ≠ z) (hz : z ∈ [x -[𝕜] y]) : z ∈ OpenSegment 𝕜 x y := by
+  rw [← insert_endpoints_open_segment] at hz
+  exact (hz.resolve_left hx.symm).resolve_left hy.symm
 
-theorem Convex.combo_self {a b : 𝕜} (h : a + b = 1) (x : E) : a • x + b • x = x := by
-  rw [← add_smul, h, one_smul]
+theorem open_segment_subset_iff_segment_subset (hx : x ∈ s) (hy : y ∈ s) : OpenSegment 𝕜 x y ⊆ s ↔ [x -[𝕜] y] ⊆ s := by
+  simp only [← insert_endpoints_open_segment, insert_subset, *, true_andₓ]
 
 end Module
 
 end OrderedSemiring
 
-open_locale Convex
+open Convex
 
 section OrderedRing
 
@@ -189,14 +193,6 @@ theorem open_segment_eq_image (x y : E) : OpenSegment 𝕜 x y = (fun θ : 𝕜 
           hz ▸ by
             simp only [add_sub_cancel]⟩,
       fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_pos.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
-
-theorem segment_eq_image₂ (x y : E) :
-    [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [Segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
-
-theorem open_segment_eq_image₂ (x y : E) :
-    OpenSegment 𝕜 x y = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } := by
-  simp only [OpenSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
 
 theorem segment_eq_image' (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => x + θ • (y - x)) '' Icc (0 : 𝕜) 1 := by
   convert segment_eq_image 𝕜 x y
@@ -259,6 +255,13 @@ end AddCommGroupₓ
 
 end OrderedRing
 
+theorem same_ray_of_mem_segment [OrderedCommRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {x y z : E} (h : x ∈ [y -[𝕜] z]) :
+    SameRay 𝕜 (x - y) (z - x) := by
+  rw [segment_eq_image'] at h
+  rcases h with ⟨θ, ⟨hθ₀, hθ₁⟩, rfl⟩
+  simpa only [add_sub_cancel', ← sub_sub, sub_smul, one_smul] using
+    (same_ray_nonneg_smul_left (z - y) hθ₀).nonneg_smul_right (sub_nonneg.2 hθ₁)
+
 section LinearOrderedRing
 
 variable [LinearOrderedRing 𝕜]
@@ -279,45 +282,9 @@ theorem mem_segment_add_sub [Invertible (2 : 𝕜)] (x y : E) : x ∈ [x + y -[�
   convert @midpoint_mem_segment 𝕜 _ _ _ _ _ _ _
   rw [midpoint_add_sub]
 
-end AddCommGroupₓ
-
-end LinearOrderedRing
-
-section LinearOrderedField
-
-variable [LinearOrderedField 𝕜]
-
-section AddCommGroupₓ
-
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
-
-theorem mem_segment_iff_div {x y z : E} :
-    x ∈ [y -[𝕜] z] ↔ ∃ a b : 𝕜, 0 ≤ a ∧ 0 ≤ b ∧ 0 < a + b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
-  constructor
-  · rintro ⟨a, b, ha, hb, hab, rfl⟩
-    use a, b, ha, hb
-    simp [*]
-    
-  · rintro ⟨a, b, ha, hb, hab, rfl⟩
-    refine' ⟨a / (a + b), b / (a + b), div_nonneg ha hab.le, div_nonneg hb hab.le, _, rfl⟩
-    rw [← add_div, div_self hab.ne']
-    
-
-theorem mem_open_segment_iff_div {x y z : E} :
-    x ∈ OpenSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
-  constructor
-  · rintro ⟨a, b, ha, hb, hab, rfl⟩
-    use a, b, ha, hb
-    rw [hab, div_one, div_one]
-    
-  · rintro ⟨a, b, ha, hb, rfl⟩
-    have hab : 0 < a + b := add_pos ha hb
-    refine' ⟨a / (a + b), b / (a + b), div_pos ha hab, div_pos hb hab, _, rfl⟩
-    rw [← add_div, div_self hab.ne']
-    
-
 @[simp]
-theorem left_mem_open_segment_iff [NoZeroSmulDivisors 𝕜 E] {x y : E} : x ∈ OpenSegment 𝕜 x y ↔ x = y := by
+theorem left_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {x y : E} :
+    x ∈ OpenSegment 𝕜 x y ↔ x = y := by
   constructor
   · rintro ⟨a, b, ha, hb, hab, hx⟩
     refine' smul_right_injective _ hb.ne' ((add_right_injₓ (a • x)).1 _)
@@ -329,8 +296,54 @@ theorem left_mem_open_segment_iff [NoZeroSmulDivisors 𝕜 E] {x y : E} : x ∈ 
     
 
 @[simp]
-theorem right_mem_open_segment_iff {x y : E} : y ∈ OpenSegment 𝕜 x y ↔ x = y := by
+theorem right_mem_open_segment_iff [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {x y : E} :
+    y ∈ OpenSegment 𝕜 x y ↔ x = y := by
   rw [open_segment_symm, left_mem_open_segment_iff, eq_comm]
+
+end AddCommGroupₓ
+
+end LinearOrderedRing
+
+section LinearOrderedField
+
+variable [LinearOrderedField 𝕜]
+
+section AddCommGroupₓ
+
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {x y z : E}
+
+theorem mem_segment_iff_same_ray : x ∈ [y -[𝕜] z] ↔ SameRay 𝕜 (x - y) (z - x) := by
+  refine' ⟨same_ray_of_mem_segment, fun h => _⟩
+  rcases h.exists_eq_smul_add with ⟨a, b, ha, hb, hab, hxy, hzx⟩
+  rw [add_commₓ, sub_add_sub_cancel] at hxy hzx
+  rw [← mem_segment_translate _ (-x), neg_add_selfₓ]
+  refine' ⟨b, a, hb, ha, add_commₓ a b ▸ hab, _⟩
+  rw [← sub_eq_neg_add, ← neg_sub, hxy, ← sub_eq_neg_add, hzx, smul_neg, smul_comm, neg_add_selfₓ]
+
+theorem mem_segment_iff_div :
+    x ∈ [y -[𝕜] z] ↔ ∃ a b : 𝕜, 0 ≤ a ∧ 0 ≤ b ∧ 0 < a + b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
+  constructor
+  · rintro ⟨a, b, ha, hb, hab, rfl⟩
+    use a, b, ha, hb
+    simp [*]
+    
+  · rintro ⟨a, b, ha, hb, hab, rfl⟩
+    refine' ⟨a / (a + b), b / (a + b), div_nonneg ha hab.le, div_nonneg hb hab.le, _, rfl⟩
+    rw [← add_div, div_self hab.ne']
+    
+
+theorem mem_open_segment_iff_div :
+    x ∈ OpenSegment 𝕜 y z ↔ ∃ a b : 𝕜, 0 < a ∧ 0 < b ∧ (a / (a + b)) • y + (b / (a + b)) • z = x := by
+  constructor
+  · rintro ⟨a, b, ha, hb, hab, rfl⟩
+    use a, b, ha, hb
+    rw [hab, div_one, div_one]
+    
+  · rintro ⟨a, b, ha, hb, rfl⟩
+    have hab : 0 < a + b := add_pos ha hb
+    refine' ⟨a / (a + b), b / (a + b), div_pos ha hab, div_pos hb hab, _, rfl⟩
+    rw [← add_div, div_self hab.ne']
+    
 
 end AddCommGroupₓ
 
@@ -420,7 +433,7 @@ theorem segment_eq_Icc {x y : 𝕜} (h : x ≤ y) : [x -[𝕜] y] = Icc x y :=
   (segment_subset_Icc h).antisymm Icc_subset_segment
 
 theorem Ioo_subset_open_segment {x y : 𝕜} : Ioo x y ⊆ OpenSegment 𝕜 x y := fun z hz =>
-  mem_open_segment_of_ne_left_right _ hz.1.Ne hz.2.ne' (Icc_subset_segment <| Ioo_subset_Icc_self hz)
+  mem_open_segment_of_ne_left_right hz.1.Ne hz.2.ne' (Icc_subset_segment <| Ioo_subset_Icc_self hz)
 
 @[simp]
 theorem open_segment_eq_Ioo {x y : 𝕜} (h : x < y) : OpenSegment 𝕜 x y = Ioo x y :=
@@ -982,9 +995,9 @@ Relates `convex` and `ord_connected`.
 section
 
 theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
-    {s : Set E} (hs : s.OrdConnected) (h : Zorn.Chain (· ≤ ·) s) : Convex 𝕜 s := by
+    {s : Set E} (hs : s.OrdConnected) (h : IsChain (· ≤ ·) s) : Convex 𝕜 s := by
   refine' convex_iff_segment_subset.mpr fun x y hx hy => _
-  obtain hxy | hyx := h.total_of_refl hx hy
+  obtain hxy | hyx := h.total hx hy
   · exact (segment_subset_Icc hxy).trans (hs.out hx hy)
     
   · rw [segment_symm]
@@ -993,7 +1006,7 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
     {s : Set E} (hs : s.OrdConnected) : Convex 𝕜 s :=
-  hs.convex_of_chain (Zorn.chain_of_trichotomous s)
+  hs.convex_of_chain <| is_chain_of_trichotomous s
 
 theorem convex_iff_ord_connected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected := by
   simp_rw [convex_iff_segment_subset, segment_eq_interval, ord_connected_iff_interval_subset]
@@ -1014,7 +1027,7 @@ theorem Submodule.convex [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [Module �
     Convex 𝕜 (↑K : Set E) := by
   repeat'
     intro
-  refine' add_mem _ (smul_mem _ _ _) (smul_mem _ _ _) <;> assumption
+  refine' add_mem (smul_mem _ _ _) (smul_mem _ _ _) <;> assumption
 
 theorem Subspace.convex [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] (K : Subspace 𝕜 E) :
     Convex 𝕜 (↑K : Set E) :=
@@ -1038,6 +1051,7 @@ theorem std_simplex_eq_inter : StdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) �
   ext f
   simp only [StdSimplex, Set.mem_inter_eq, Set.mem_Inter, Set.mem_set_of_eq]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem convex_std_simplex : Convex 𝕜 (StdSimplex 𝕜 ι) := by
   refine' fun f g hf hg a b ha hb hab => ⟨fun x => _, _⟩
   · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]

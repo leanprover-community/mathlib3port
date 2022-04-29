@@ -164,14 +164,8 @@ theorem basic_open_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj
     exact ⟨x.2, g x, hx, rfl⟩
     
   · rintro ⟨hxV, x, hx, rfl⟩
-    use ⟨x, hxV⟩
-    constructor
-    · change IsUnit _
-      rw [germ_res_apply]
-      exact hx
-      
-    · rfl
-      
+    refine' ⟨⟨x, hxV⟩, (_ : IsUnit _), rfl⟩
+    rwa [germ_res_apply]
     
 
 -- This should fire before `basic_open_res`.

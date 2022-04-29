@@ -25,7 +25,7 @@ requiring more imports).
 -/
 
 
-open_locale Nat
+open Nat
 
 namespace Nat
 

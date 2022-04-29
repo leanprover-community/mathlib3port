@@ -74,6 +74,10 @@ theorem coe_mk' : (mk' N : G → G ⧸ N) = coe :=
 theorem mk'_apply (x : G) : mk' N x = x :=
   rfl
 
+@[to_additive]
+theorem mk'_surjective : Function.Surjective <| mk' N :=
+  @mk_surjective _ _ N
+
 /-- Two `monoid_hom`s from a quotient group are equal if their compositions with
 `quotient_group.mk'` are equal.
 
@@ -323,6 +327,34 @@ def equivQuotientSubgroupOfOfEq {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A
       ext ⟨x, hx⟩
       rfl)
 
+section Zpow
+
+variable {G' H' : Type u} [CommGroupₓ G'] [CommGroupₓ H']
+
+variable (φ' : G' →* H') (ψ' : H' →* G') (χ : G' ≃* H')
+
+/-- The map of quotients by powers of an integer induced by a group homomorphism. -/
+@[to_additive "The map of quotients by multiples of an integer induced by an additive group\nhomomorphism."]
+def homQuotientZpowOfHom (n : ℤ) : G' ⧸ (zpowGroupHom n : G' →* G').range →* H' ⧸ (zpowGroupHom n : H' →* H').range :=
+  (lift _ ((mk' _).comp φ')) fun g ⟨h, (hg : h ^ n = g)⟩ =>
+    (eq_one_iff _).mpr
+      ⟨_, by
+        simpa only [← hg, map_zpow] ⟩
+
+@[to_additive, simp]
+theorem hom_quotient_zpow_of_hom_right_inverse (h : Function.RightInverse ψ' φ') (n : ℤ) :
+    (homQuotientZpowOfHom φ' n).comp (homQuotientZpowOfHom ψ' n) = MonoidHom.id _ :=
+  monoid_hom_ext _ <| MonoidHom.ext fun g => congr_argₓ coe <| h g
+
+/-- The equivalence of quotients by powers of an integer induced by a group isomorphism. -/
+@[to_additive "The equivalence of quotients by multiples of an integer induced by an additive group\nisomorphism."]
+def equivQuotientZpowOfEquiv (χ : G' ≃* H') (n : ℤ) :
+    G' ⧸ (zpowGroupHom n : G' →* G').range ≃* H' ⧸ (zpowGroupHom n : H' →* H').range :=
+  MonoidHom.toMulEquiv _ _ (hom_quotient_zpow_of_hom_right_inverse χ.symm χ χ.left_inv n)
+    (hom_quotient_zpow_of_hom_right_inverse χ χ.symm χ.right_inv n)
+
+end Zpow
+
 section SndIsomorphismThm
 
 open _Root_.Subgroup
@@ -410,7 +442,8 @@ theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) :=
   Trunc.subsingleton
 
 /-- If the quotient by a subgroup gives a singleton then the subgroup is the whole group. -/
-@[to_additive]
+@[to_additive
+      "If the quotient by an additive subgroup gives a singleton then the additive subgroup\nis the whole additive group."]
 theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G ⧸ H)) : H = ⊤ :=
   top_unique fun x _ => by
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elimₓ _ _)
@@ -418,7 +451,7 @@ theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G �
 
 end trivialₓ
 
-@[to_additive QuotientAddGrup.comap_comap_center]
+@[to_additive QuotientAddGroup.comap_comap_center]
 theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G ⧸ H₁)} [H₂.Normal] :
     ((Subgroup.center ((G ⧸ H₁) ⧸ H₂)).comap (mk' H₂)).comap (mk' H₁) =
       (Subgroup.center (G ⧸ H₂.comap (mk' H₁))).comap (mk' (H₂.comap (mk' H₁))) :=
@@ -433,4 +466,39 @@ theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G
   simp
 
 end QuotientGroup
+
+namespace Groupₓ
+
+open Classical
+
+open QuotientGroup Subgroup
+
+variable {F G H : Type u} [Groupₓ F] [Groupₓ G] [Groupₓ H] [Fintype F] [Fintype H]
+
+variable (f : F →* G) (g : G →* H)
+
+/-- If `F` and `H` are finite such that `ker(G →* H) ≤ im(F →* G)`, then `G` is finite. -/
+@[to_additive "If `F` and `H` are finite such that `ker(G →+ H) ≤ im(F →+ G)`, then `G` is finite."]
+noncomputable def fintypeOfKerLeRange (h : g.ker ≤ f.range) : Fintype G :=
+  @Fintype.ofEquiv _ _
+    (@Prod.fintype _ _ (Fintype.ofInjective _ <| ker_lift_injective g) <|
+      Fintype.ofInjective _ <| inclusion_injective h)
+    groupEquivQuotientTimesSubgroup.symm
+
+/-- If `F` and `H` are finite such that `ker(G →* H) = im(F →* G)`, then `G` is finite. -/
+@[to_additive "If `F` and `H` are finite such that `ker(G →+ H) = im(F →+ G)`, then `G` is finite."]
+noncomputable def fintypeOfKerEqRange (h : g.ker = f.range) : Fintype G :=
+  fintypeOfKerLeRange _ _ h.le
+
+/-- If `ker(G →* H)` and `H` are finite, then `G` is finite. -/
+@[to_additive "If `ker(G →+ H)` and `H` are finite, then `G` is finite."]
+noncomputable def fintypeOfKerOfCodom [Fintype g.ker] : Fintype G :=
+  (fintypeOfKerLeRange ((topEquiv : _ ≃* G).toMonoidHom.comp <| inclusion le_top) g) fun x hx => ⟨⟨x, hx⟩, rfl⟩
+
+/-- If `F` and `coker(F →* G)` are finite, then `G` is finite. -/
+@[to_additive "If `F` and `coker(F →+ G)` are finite, then `G` is finite."]
+noncomputable def fintypeOfDomOfCoker [Normal f.range] [Fintype <| G ⧸ f.range] : Fintype G :=
+  (fintypeOfKerLeRange _ (mk' f.range)) fun x => (eq_one_iff x).mp
+
+end Groupₓ
 

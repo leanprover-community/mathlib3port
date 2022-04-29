@@ -17,7 +17,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-open_locale BigOperators
+open BigOperators
 
 universe u
 

@@ -135,13 +135,9 @@ theorem r_one_pow (k : ℕ) : (r 1 : DihedralGroup n) ^ k = r k := by
 
 @[simp]
 theorem r_one_pow_n : r (1 : Zmod n) ^ n = 1 := by
-  cases n
-  · rw [pow_zeroₓ]
-    
-  · rw [r_one_pow, one_def]
-    congr 1
-    exact Zmod.nat_cast_self _
-    
+  rw [r_one_pow, one_def]
+  congr 1
+  exact Zmod.nat_cast_self _
 
 @[simp]
 theorem sr_mul_self (i : Zmod n) : sr i * sr i = 1 := by

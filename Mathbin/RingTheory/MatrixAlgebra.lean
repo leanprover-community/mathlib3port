@@ -13,9 +13,9 @@ We show `matrix n n A ≃ₐ[R] (A ⊗[R] matrix n n R)`.
 
 universe u v w
 
-open_locale TensorProduct
+open TensorProduct
 
-open_locale BigOperators
+open BigOperators
 
 open TensorProduct
 

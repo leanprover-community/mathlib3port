@@ -3,12 +3,7 @@ Copyright (c) 2020 Joseph Myers. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Group.TypeTags
-import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Pointwise
-import Mathbin.Data.Equiv.Basic
-import Mathbin.Data.Set.Finite
+import Mathbin.Data.Set.Pointwise
 
 /-!
 # Torsors of additive group actions
@@ -123,6 +118,9 @@ equal. -/
 theorem vsub_eq_zero_iff_eq {p1 p2 : P} : p1 -ᵥ p2 = (0 : G) ↔ p1 = p2 :=
   Iff.intro eq_of_vsub_eq_zero fun h => h ▸ vsub_self _
 
+theorem vsub_ne_zero {p q : P} : p -ᵥ q ≠ (0 : G) ↔ p ≠ q :=
+  not_congr vsub_eq_zero_iff_eq
+
 /-- Cancellation adding the results of two subtractions. -/
 @[simp]
 theorem vsub_add_vsub_cancel (p1 p2 p3 : P) : p1 -ᵥ p2 + (p2 -ᵥ p3) = p1 -ᵥ p3 := by
@@ -135,6 +133,9 @@ of subtracting them. -/
 theorem neg_vsub_eq_vsub_rev (p1 p2 : P) : -(p1 -ᵥ p2) = p2 -ᵥ p1 := by
   refine' neg_eq_of_add_eq_zeroₓ (vadd_right_cancel p1 _)
   rw [vsub_add_vsub_cancel, vsub_self]
+
+theorem vadd_vsub_eq_sub_vsub (g : G) (p q : P) : g +ᵥ p -ᵥ q = g - (q -ᵥ p) := by
+  rw [vadd_vsub_assoc, sub_eq_add_neg, neg_vsub_eq_vsub_rev]
 
 /-- Subtracting the result of adding a group element produces the same result
 as subtracting the points and subtracting that group element. -/
@@ -158,21 +159,11 @@ theorem vadd_eq_vadd_iff_neg_add_eq_vsub {v₁ v₂ : G} {p₁ p₂ : P} : v₁ 
 
 namespace Set
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem singleton_vsub_self (p : P) : ({p} : Set P) -ᵥ {p} = {(0 : G)} := by
   rw [Set.singleton_vsub_singleton, vsub_self]
-
-instance addAction : AddAction (Set G) (Set P) :=
-  { show HasVadd (Set G) (Set P) by
-      infer_instance with
-    zero_vadd := fun s => by
-      simp [HasVadd.vadd, ← singleton_zero, image2_singleton_left],
-    add_vadd := fun s t p => by
-      apply image2_assoc
-      intros
-      apply add_vadd }
 
 end Set
 

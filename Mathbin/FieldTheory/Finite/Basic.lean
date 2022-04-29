@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 -/
 import Mathbin.Tactic.ApplyFun
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.IntegralDomain
@@ -20,7 +20,7 @@ and `q` is notation for the cardinality of `K`.
 
 See `ring_theory.integral_domain` for the fact that the unit group of a finite field is a
 cyclic group, as well as the fact that every finite integral domain is a field
-(`field_of_is_domain`).
+(`fintype.field_of_domain`).
 
 ## Main results
 
@@ -50,7 +50,7 @@ variable {K : Type _} {R : Type _}
 -- mathport name: «exprq»
 local notation "q" => Fintype.card K
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 namespace FiniteField
 
@@ -79,7 +79,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
 theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) (hg2 : degree g = 2)
     (hR : Fintype.card R % 2 = 1) : ∃ a b, f.eval a + g.eval b = 0 := by
-  let this' := Classical.decEq R <;>
+  let this := Classical.decEq R <;>
     exact
       suffices ¬Disjoint (univ.image fun x : R => eval x f) (univ.image fun x : R => eval x (-g)) by
         simp only [disjoint_left, mem_image] at this
@@ -168,7 +168,7 @@ variable (K) [Field K] [Fintype K]
 
 theorem card (p : ℕ) [CharP K p] : ∃ n : ℕ+, Nat.Prime p ∧ q = p ^ (n : ℕ) := by
   have hp : Fact p.prime := ⟨CharP.char_is_prime K p⟩
-  let this' : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K : Zmod p →+* _).toModule with }
+  let this : Module (Zmod p) K := { (Zmod.castHom dvd_rfl K : Zmod p →+* _).toModule with }
   obtain ⟨n, h⟩ := VectorSpace.card_fintype (Zmod p) K
   rw [Zmod.card] at h
   refine' ⟨⟨n, _⟩, hp.1, h⟩
@@ -336,7 +336,7 @@ open Polynomial
 
 theorem expand_card (f : K[X]) : expand K q f = f ^ q := by
   cases' CharP.exists K with p hp
-  let this' := hp
+  let this := hp
   rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
   have : Fact p.prime := ⟨hp⟩
   dsimp  at hn
@@ -388,7 +388,7 @@ theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [Fact (0 <
 
 end CharP
 
-open_locale Nat
+open Nat
 
 open Zmod
 

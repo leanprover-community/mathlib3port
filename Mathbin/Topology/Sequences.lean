@@ -24,7 +24,7 @@ filters and the topology. In particular, we
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _} {β : Type _}
 
@@ -237,7 +237,7 @@ end SeqCompact
 
 section UniformSpaceSeqCompact
 
-open_locale uniformity
+open uniformity
 
 open UniformSpace Prod
 

@@ -34,7 +34,7 @@ noncomputable section
 
 open Complex ContinuousLinearMap
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 theorem is_conformal_map_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
   conjLie.toLinearIsometry.IsConformalMap
@@ -58,7 +58,6 @@ theorem is_conformal_map_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map �
     field_simp [minor₁]
     
   · ext1
-    rw [← LinearIsometry.coe_to_linear_map]
     simp [minor₁]
     
 
@@ -76,21 +75,24 @@ variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     (∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g) ∨ ∃ map : ℂ →L[ℂ] ℂ, map.restrictScalars ℝ = g ∘L ↑conj_cle := by
-  rcases h with ⟨c, hc, li, hg⟩
-  rcases linear_isometry_complex (li.to_linear_isometry_equiv rfl) with ⟨a, ha⟩
-  let rot := c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ
-  cases ha
-  · refine' Or.intro_left _ ⟨rot, _⟩
+  rcases h with ⟨c, hc, li, rfl⟩
+  obtain ⟨li, rfl⟩ : ∃ li' : ℂ ≃ₗᵢ[ℝ] ℂ, li'.toLinearIsometry = li
+  exact
+    ⟨li.to_linear_isometry_equiv rfl, by
+      ext1
+      rfl⟩
+  rcases linear_isometry_complex li with ⟨a, rfl | rfl⟩
+  -- let rot := c • (a : ℂ) • continuous_linear_map.id ℂ ℂ,
+  · refine' Or.inl ⟨c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ, _⟩
     ext1
-    simp only [coe_restrict_scalars', hg, ← li.coe_to_linear_isometry_equiv, ha, Pi.smul_apply,
-      ContinuousLinearMap.smul_apply, rotation_apply, ContinuousLinearMap.id_apply, smul_eq_mul]
+    simp only [coe_restrict_scalars', smul_apply, LinearIsometry.coe_to_continuous_linear_map,
+      LinearIsometryEquiv.coe_to_linear_isometry, rotation_apply, id_apply, smul_eq_mul]
     
-  · refine' Or.intro_rightₓ _ ⟨rot, _⟩
+  · refine' Or.inr ⟨c • (a : ℂ) • ContinuousLinearMap.id ℂ ℂ, _⟩
     ext1
-    rw [ContinuousLinearMap.coe_comp', hg, ← li.coe_to_linear_isometry_equiv, ha]
-    simp only [coe_restrict_scalars', Function.comp_app, Pi.smul_apply, LinearIsometryEquiv.coe_trans, conj_lie_apply,
-      rotation_apply, ContinuousLinearEquiv.coe_apply, conj_cle_apply]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, conj_conj]
+    simp only [coe_restrict_scalars', smul_apply, LinearIsometry.coe_to_continuous_linear_map,
+      LinearIsometryEquiv.coe_to_linear_isometry, rotation_apply, id_apply, smul_eq_mul, comp_apply,
+      LinearIsometryEquiv.trans_apply, ContinuousLinearEquiv.coe_coe, conj_cle_apply, conj_lie_apply, conj_conj]
     
 
 /-- A real continuous linear map on the complex plane is conformal if and only if the map or its

@@ -5,6 +5,7 @@ Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monoidal.Category
 import Mathbin.CategoryTheory.Adjunction.Basic
+import Mathbin.CategoryTheory.Products.Basic
 
 /-!
 # (Lax) monoidal functors
@@ -297,6 +298,59 @@ infixr:80 " ⊗⋙ " => comp
 
 end LaxMonoidalFunctor
 
+namespace LaxMonoidalFunctor
+
+universe v₀ u₀
+
+variable {B : Type u₀} [Category.{v₀} B] [MonoidalCategory.{v₀} B]
+
+variable (F : LaxMonoidalFunctor.{v₀, v₁} B C) (G : LaxMonoidalFunctor.{v₂, v₃} D E)
+
+attribute [local simp] μ_natural associativity left_unitality right_unitality
+
+/-- The cartesian product of two lax monoidal functors is lax monoidal. -/
+@[simps]
+def prod : LaxMonoidalFunctor (B × D) (C × E) :=
+  { F.toFunctor.Prod G.toFunctor with ε := (ε F, ε G), μ := fun X Y => (μ F X.1 Y.1, μ G X.2 Y.2) }
+
+end LaxMonoidalFunctor
+
+namespace MonoidalFunctor
+
+variable (C)
+
+/-- The diagonal functor as a monoidal functor. -/
+@[simps]
+def diag : MonoidalFunctor C (C × C) :=
+  { Functor.diag C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
+
+end MonoidalFunctor
+
+namespace LaxMonoidalFunctor
+
+variable (F : LaxMonoidalFunctor.{v₁, v₂} C D) (G : LaxMonoidalFunctor.{v₁, v₃} C E)
+
+/-- The cartesian product of two lax monoidal functors starting from the same monoidal category `C`
+    is lax monoidal. -/
+def prod' : LaxMonoidalFunctor C (D × E) :=
+  (MonoidalFunctor.diag C).toLaxMonoidalFunctor ⊗⋙ F.Prod G
+
+@[simp]
+theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor :=
+  rfl
+
+@[simp]
+theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by
+  dsimp [prod']
+  simp
+
+@[simp]
+theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by
+  dsimp [prod']
+  simp
+
+end LaxMonoidalFunctor
+
 namespace MonoidalFunctor
 
 variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₂, v₃} D E)
@@ -316,6 +370,39 @@ def comp : MonoidalFunctor.{v₁, v₃} C E :=
 infixr:80 " ⊗⋙ " => comp
 
 -- We overload notation; potentially dangerous, but it seems to work.
+end MonoidalFunctor
+
+namespace MonoidalFunctor
+
+universe v₀ u₀
+
+variable {B : Type u₀} [Category.{v₀} B] [MonoidalCategory.{v₀} B]
+
+variable (F : MonoidalFunctor.{v₀, v₁} B C) (G : MonoidalFunctor.{v₂, v₃} D E)
+
+/-- The cartesian product of two monoidal functors is monoidal. -/
+@[simps]
+def prod : MonoidalFunctor (B × D) (C × E) :=
+  { F.toLaxMonoidalFunctor.Prod G.toLaxMonoidalFunctor with
+    ε_is_iso := (is_iso_prod_iff C E).mpr ⟨ε_is_iso F, ε_is_iso G⟩,
+    μ_is_iso := fun X Y => (is_iso_prod_iff C E).mpr ⟨μ_is_iso F X.1 Y.1, μ_is_iso G X.2 Y.2⟩ }
+
+end MonoidalFunctor
+
+namespace MonoidalFunctor
+
+variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₁, v₃} C E)
+
+/-- The cartesian product of two monoidal functors starting from the same monoidal category `C`
+    is monoidal. -/
+def prod' : MonoidalFunctor C (D × E) :=
+  diag C ⊗⋙ F.Prod G
+
+@[simp]
+theorem prod'_to_lax_monoidal_functor :
+    (F.prod' G).toLaxMonoidalFunctor = F.toLaxMonoidalFunctor.prod' G.toLaxMonoidalFunctor :=
+  rfl
+
 end MonoidalFunctor
 
 /-- If we have a right adjoint functor `G` to a monoidal functor `F`, then `G` has a lax monoidal
@@ -356,6 +443,7 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
       tensor_comp_assoc, assoc, h.counit_naturality, h.left_triangle_components_assoc, id_comp]
 
 /-- If a monoidal functor `F` is an equivalence of categories then its inverse is also monoidal. -/
+@[simps]
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : MonoidalFunctor D C where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
   ε_is_iso := by
@@ -364,11 +452,6 @@ noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toF
   μ_is_iso := fun X Y => by
     dsimp [equivalence.to_adjunction]
     infer_instance
-
-@[simp]
-theorem monoidal_inverse_to_functor (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] :
-    (monoidalInverse F).toFunctor = F.toFunctor.inv :=
-  rfl
 
 end CategoryTheory
 

@@ -52,11 +52,8 @@ This isn't an instance because it's not usually how we want to construct exponen
 prove all objects are exponential uniformly.
 -/
 def binaryProductExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] {X Y : C} (hX : Exponentiable X)
-    (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) where
-  isAdj := by
-    have := hX.is_adj
-    have := hY.is_adj
-    exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
+    (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) :=
+  tensorClosed hX hY
 
 /-- The terminal object is always exponentiable.
 This isn't an instance because most of the time we'll prove cartesian closed for all objects
@@ -73,42 +70,25 @@ abbrev CartesianClosed (C : Type u) [Category.{v} C] [HasFiniteProducts C] :=
 
 variable {C : Type u} [Category.{v} C] (A B : C) {X X' Y Y' Z : C}
 
-section Exp
-
 variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- This is (-)^A. -/
-def exp : C ⥤ C :=
-  (@Closed.isAdj _ _ _ A _).right
+abbrev exp : C ⥤ C :=
+  ihom A
+
+namespace Exp
 
 /-- The adjunction between A ⨯ - and (-)^A. -/
-def exp.adjunction : prod.functor.obj A ⊣ exp A :=
-  Closed.isAdj.adj
+abbrev adjunction : prod.functor.obj A ⊣ exp A :=
+  ihom.adjunction A
 
 /-- The evaluation natural transformation. -/
-def ev : exp A ⋙ prod.functor.obj A ⟶ 𝟭 C :=
-  (exp.adjunction A).counit
+abbrev ev : exp A ⋙ prod.functor.obj A ⟶ 𝟭 C :=
+  ihom.ev A
 
 /-- The coevaluation natural transformation. -/
-def coev : 𝟭 C ⟶ prod.functor.obj A ⋙ exp A :=
-  (exp.adjunction A).Unit
-
-@[simp]
-theorem exp_adjunction_counit : (exp.adjunction A).counit = ev A :=
-  rfl
-
-@[simp]
-theorem exp_adjunction_unit : (exp.adjunction A).Unit = coev A :=
-  rfl
-
-@[simp, reassoc]
-theorem ev_naturality {X Y : C} (f : X ⟶ Y) : Limits.prod.map (𝟙 A) ((exp A).map f) ≫ (ev A).app Y = (ev A).app X ≫ f :=
-  (ev A).naturality f
-
-@[simp, reassoc]
-theorem coev_naturality {X Y : C} (f : X ⟶ Y) :
-    f ≫ (coev A).app Y = (coev A).app X ≫ (exp A).map (Limits.prod.map (𝟙 A) f) :=
-  (coev A).naturality f
+abbrev coev : 𝟭 C ⟶ prod.functor.obj A ⋙ exp A :=
+  ihom.coev A
 
 -- mathport name: «expr ⟹ »
 notation:20 A " ⟹ " B:19 => (exp A).obj B
@@ -118,23 +98,21 @@ notation:30 B " ^^ " A:30 => (exp A).obj B
 
 @[simp, reassoc]
 theorem ev_coev : Limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A ⨯ B) = 𝟙 (A ⨯ B) :=
-  Adjunction.left_triangle_components (exp.adjunction A)
+  ihom.ev_coev A B
 
 @[simp, reassoc]
 theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (A ⟹ B) :=
-  Adjunction.right_triangle_components (exp.adjunction A)
-
-instance : PreservesColimits (prod.functor.obj A) :=
-  (exp.adjunction A).leftAdjointPreservesColimits
+  ihom.coev_ev A B
 
 end Exp
+
+instance : PreservesColimits (prod.functor.obj A) :=
+  (ihom.adjunction A).leftAdjointPreservesColimits
 
 variable {A}
 
 -- Wrap these in a namespace so we don't clash with the core versions.
 namespace CartesianClosed
-
-variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- Currying in a cartesian closed category. -/
 def curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X) :=
@@ -183,16 +161,16 @@ theorem eq_curry_iff (f : A ⨯ Y ⟶ X) (g : Y ⟶ A ⟹ X) : g = curry f ↔ u
   Adjunction.eq_hom_equiv_apply _ f g
 
 -- I don't think these two should be simp.
-theorem uncurry_eq (g : Y ⟶ A ⟹ X) : uncurry g = Limits.prod.map (𝟙 A) g ≫ (ev A).app X :=
+theorem uncurry_eq (g : Y ⟶ A ⟹ X) : uncurry g = Limits.prod.map (𝟙 A) g ≫ (exp.ev A).app X :=
   Adjunction.hom_equiv_counit _
 
-theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (coev A).app Y ≫ (exp A).map g :=
+theorem curry_eq (g : A ⨯ Y ⟶ X) : curry g = (exp.coev A).app Y ≫ (exp A).map g :=
   Adjunction.hom_equiv_unit _
 
-theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (ev A).app X := by
+theorem uncurry_id_eq_ev (A X : C) [Exponentiable A] : uncurry (𝟙 (A ⟹ X)) = (exp.ev A).app X := by
   rw [uncurry_eq, prod.map_id_id, id_comp]
 
-theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (coev A).app X := by
+theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coev A).app X := by
   rw [curry_eq, (exp A).map_id (A ⨯ _)]
   apply comp_id
 
@@ -205,8 +183,6 @@ theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A
 end CartesianClosed
 
 open CartesianClosed
-
-variable [HasFiniteProducts C] [Exponentiable A]
 
 /-- Show that the exponential of the terminal object is isomorphic to itself, i.e. `X^1 ≅ X`.
 
@@ -235,15 +211,15 @@ def pre (f : B ⟶ A) [Exponentiable B] : exp A ⟶ exp B :=
   transferNatTransSelf (exp.adjunction _) (exp.adjunction _) (prod.functor.map f)
 
 theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [Exponentiable B] (X : C) :
-    Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (ev B).app X = Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (ev A).app X :=
+    Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (exp.ev B).app X = Limits.prod.map f (𝟙 (A ⟹ X)) ≫ (exp.ev A).app X :=
   transfer_nat_trans_self_counit _ _ (prod.functor.map f) X
 
 theorem uncurry_pre (f : B ⟶ A) [Exponentiable B] (X : C) :
-    CartesianClosed.uncurry ((pre f).app X) = Limits.prod.map f (𝟙 _) ≫ (ev A).app X := by
+    CartesianClosed.uncurry ((pre f).app X) = Limits.prod.map f (𝟙 _) ≫ (exp.ev A).app X := by
   rw [uncurry_eq, prod_map_pre_app_comp_ev]
 
 theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
-    (coev A).app X ≫ (pre f).app (A ⨯ X) = (coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
+    (exp.coev A).app X ≫ (pre f).app (A ⨯ X) = (exp.coev B).app X ≫ (exp B).map (Limits.prod.map f (𝟙 _)) :=
   unit_transfer_nat_trans_self _ _ (prod.functor.map f) X
 
 @[simp]
@@ -344,7 +320,7 @@ Note we didn't require any coherence between the choice of finite products here,
 along the `prod_comparison` isomorphism.
 -/
 def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClosed D where
-  closed := fun X =>
+  closed' := fun X =>
     { isAdj := by
         have q : exponentiable (e.inverse.obj X) := inferInstance
         have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj

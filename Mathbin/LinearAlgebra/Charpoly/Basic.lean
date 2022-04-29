@@ -27,7 +27,7 @@ variable {R : Type u} {M : Type v} [CommRingₓ R] [Nontrivial R]
 
 variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
 
-open_locale Classical Matrix Polynomial
+open Classical Matrix Polynomial
 
 noncomputable section
 
@@ -55,8 +55,10 @@ end Coeff
 
 section CayleyHamilton
 
-/-- The Cayley-Hamilton Theorem, that the characteristic polynomial of a linear map, applied to
-the linear map itself, is zero. -/
+/-- The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a linear map, applied
+to the linear map itself, is zero.
+
+See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 := by
   apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix _).toLinearEquiv).1
   rw [AlgEquiv.to_linear_equiv_apply, ← AlgEquiv.coe_alg_hom, ← Polynomial.aeval_alg_hom_apply _ _ _, charpoly_def]
@@ -68,6 +70,16 @@ theorem is_integral : IsIntegral R f :=
 theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroupₓ M] [Module K M] [FiniteDimensional K M]
     (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly f)
+
+/-- Any endomorphism polynomial `p` is equivalent under evaluation to `p %ₘ f.charpoly`; that is,
+`p` is equivalent to a polynomial with degree less than the dimension of the module. -/
+theorem aeval_eq_aeval_mod_charpoly (p : R[X]) : aeval f p = aeval f (p %ₘ f.charpoly) :=
+  (aeval_mod_by_monic_eq_self_of_root f.charpoly_monic f.aeval_self_charpoly).symm
+
+/-- Any endomorphism power can be computed as the sum of endomorphism powers less than the
+dimension of the module. -/
+theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (X ^ k %ₘ f.charpoly) := by
+  rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 
 variable {f}
 

@@ -27,7 +27,7 @@ sequence, cauchy, abs val, absolute value
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 open IsAbsoluteValue
 

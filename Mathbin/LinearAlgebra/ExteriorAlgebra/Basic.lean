@@ -64,7 +64,7 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end ExteriorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
 /-- The exterior algebra of an `R`-module `M`.
 -/
 def ExteriorAlgebra :=

@@ -50,7 +50,7 @@ See https://isabelle.in.tum.de/dist/library/HOL/HOL-Library/Extended_Real.html
 -/
 
 
-open_locale Ennreal Nnreal
+open Ennreal Nnreal
 
 /-- ereal : The type `[-∞, ∞]` -/
 def Ereal :=

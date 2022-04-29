@@ -3,8 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
+import Mathbin.Data.Set.Pointwise
 import Mathbin.GroupTheory.Submonoid.Operations
-import Mathbin.Algebra.Pointwise
 
 /-! # Pointwise instances on `submonoid`s and `add_submonoid`s
 
@@ -43,7 +43,7 @@ namespace Submonoid
 
 variable [Groupₓ G]
 
-open_locale Pointwise
+open Pointwise
 
 /-- The submonoid with every element inverted. -/
 @[to_additive " The additive submonoid with every element negated. "]
@@ -61,7 +61,7 @@ protected def hasInv : Inv (Submonoid G) where
 
 localized [Pointwise] attribute [instance] Submonoid.hasInv
 
-open_locale Pointwise
+open Pointwise
 
 @[simp, to_additive]
 theorem coe_inv (S : Submonoid G) : ↑S⁻¹ = (S : Set G)⁻¹ :=
@@ -142,7 +142,7 @@ protected def pointwiseMulAction : MulAction α (Submonoid M) where
 
 localized [Pointwise] attribute [instance] Submonoid.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : Submonoid M) : ↑(a • S) = a • (S : Set M) :=
@@ -164,7 +164,7 @@ section Groupₓ
 
 variable [Groupₓ α] [MulDistribMulAction α M]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : Submonoid M} {x : M} : a • x ∈ a • S ↔ x ∈ S :=
@@ -192,7 +192,7 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ α] [MulDistribMulAction α M]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Submonoid M) (x : M) : a • x ∈ a • S ↔ x ∈ S :=
@@ -216,7 +216,7 @@ theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : Submonoid M} : S
 
 end GroupWithZeroₓ
 
-open_locale Pointwise
+open Pointwise
 
 @[to_additive]
 theorem mem_closure_inv {G : Type _} [Groupₓ G] (S : Set G) (x : G) :
@@ -241,7 +241,7 @@ protected def pointwiseMulAction : MulAction α (AddSubmonoid A) where
 
 localized [Pointwise] attribute [instance] AddSubmonoid.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : AddSubmonoid A) : ↑(a • S) = a • (S : Set A) :=
@@ -260,7 +260,7 @@ section Groupₓ
 
 variable [Groupₓ α] [DistribMulAction α A]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubmonoid A} {x : A} : a • x ∈ a • S ↔ x ∈ S :=
@@ -291,7 +291,7 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ α] [DistribMulAction α A]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubmonoid A) (x : A) : a • x ∈ a • S ↔ x ∈ S :=
@@ -316,7 +316,7 @@ theorem le_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) {S T : AddSubmonoid A} 
 
 end GroupWithZeroₓ
 
-open_locale Pointwise
+open Pointwise
 
 end AddSubmonoid
 
@@ -346,11 +346,11 @@ theorem mul_le {M N P : AddSubmonoid R} : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀,
 protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : R} (hr : r ∈ M * N)
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n)) (ha : ∀ x y, C x → C y → C (x + y)) : C r :=
   (@mul_le _ _ _ _
-        ⟨C, by
-          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _), ha⟩).2
+        ⟨C, ha, by
+          simpa only [zero_mul] using hm _ (zero_mem _) _ (zero_mem _)⟩).2
     hm hr
 
-open_locale Pointwise
+open Pointwise
 
 variable (R)
 
@@ -360,20 +360,16 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
   · rw [mul_le]
     intro a ha b hb
     apply closure_induction ha
-    on_goal 0 =>
+    on_goal 1 =>
       intros
       apply closure_induction hb
-      on_goal 0 =>
+      on_goal 1 =>
         intros
         exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
       intros
       simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-      try
-        apply add_mem _ _ _
-      try
-        apply smul_mem _ _ _
-    assumption'
+      solve_by_elim [add_mem _ _, zero_mem _]
     
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩

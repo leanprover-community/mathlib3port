@@ -110,19 +110,19 @@ instance [Div M] [Div N] : Div (M × N) :=
   ⟨fun p q => ⟨p.1 / q.1, p.2 / q.2⟩⟩
 
 @[simp, to_additive]
-theorem fst_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).1 = a.1 / b.1 :=
+theorem fst_div [Div G] [Div H] (a b : G × H) : (a / b).1 = a.1 / b.1 :=
   rfl
 
 @[simp, to_additive]
-theorem snd_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).2 = a.2 / b.2 :=
+theorem snd_div [Div G] [Div H] (a b : G × H) : (a / b).2 = a.2 / b.2 :=
   rfl
 
 @[simp, to_additive]
-theorem mk_div_mk [Groupₓ G] [Groupₓ H] (x₁ x₂ : G) (y₁ y₂ : H) : (x₁, y₁) / (x₂, y₂) = (x₁ / x₂, y₁ / y₂) :=
+theorem mk_div_mk [Div G] [Div H] (x₁ x₂ : G) (y₁ y₂ : H) : (x₁, y₁) / (x₂, y₂) = (x₁ / x₂, y₁ / y₂) :=
   rfl
 
 @[simp, to_additive]
-theorem swap_div [Groupₓ G] [Groupₓ H] (a b : G × H) : (a / b).swap = a.swap / b.swap :=
+theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap :=
   rfl
 
 instance [MulZeroClassₓ M] [MulZeroClassₓ N] : MulZeroClassₓ (M × N) :=
@@ -221,12 +221,12 @@ variable (M N) [Mul M] [Mul N] [Mul P]
 
 /-- Given magmas `M`, `N`, the natural projection homomorphism from `M × N` to `M`.-/
 @[to_additive "Given additive magmas `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `A`"]
-def fst : MulHom (M × N) M :=
+def fst : M × N →ₙ* M :=
   ⟨Prod.fst, fun _ _ => rfl⟩
 
 /-- Given magmas `M`, `N`, the natural projection homomorphism from `M × N` to `N`.-/
 @[to_additive "Given additive magmas `A`, `B`, the natural projection homomorphism\nfrom `A × B` to `B`"]
-def snd : MulHom (M × N) N :=
+def snd : M × N →ₙ* N :=
   ⟨Prod.snd, fun _ _ => rfl⟩
 
 variable {M N}
@@ -239,32 +239,32 @@ theorem coe_fst : ⇑(fst M N) = Prod.fst :=
 theorem coe_snd : ⇑(snd M N) = Prod.snd :=
   rfl
 
-/-- Combine two `monoid_hom`s `f : mul_hom M N`, `g : mul_hom M P` into
-`f.prod g : mul_hom M (N × P)` given by `(f.prod g) x = (f x, g x)`. -/
+/-- Combine two `monoid_hom`s `f : M →ₙ* N`, `g : M →ₙ* P` into
+`f.prod g : M →ₙ* (N × P)` given by `(f.prod g) x = (f x, g x)`. -/
 @[to_additive Prod
       "Combine two `add_monoid_hom`s `f : add_hom M N`, `g : add_hom M P` into\n`f.prod g : add_hom M (N × P)` given by `(f.prod g) x = (f x, g x)`"]
-protected def prod (f : MulHom M N) (g : MulHom M P) : MulHom M (N × P) where
+protected def prod (f : M →ₙ* N) (g : M →ₙ* P) : M →ₙ* N × P where
   toFun := Pi.prod f g
   map_mul' := fun x y => Prod.extₓ (f.map_mul x y) (g.map_mul x y)
 
 @[to_additive coe_prod]
-theorem coe_prod (f : MulHom M N) (g : MulHom M P) : ⇑(f.Prod g) = Pi.prod f g :=
+theorem coe_prod (f : M →ₙ* N) (g : M →ₙ* P) : ⇑(f.Prod g) = Pi.prod f g :=
   rfl
 
 @[simp, to_additive prod_apply]
-theorem prod_apply (f : MulHom M N) (g : MulHom M P) x : f.Prod g x = (f x, g x) :=
+theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) x : f.Prod g x = (f x, g x) :=
   rfl
 
 @[simp, to_additive fst_comp_prod]
-theorem fst_comp_prod (f : MulHom M N) (g : MulHom M P) : (fst N P).comp (f.Prod g) = f :=
+theorem fst_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (fst N P).comp (f.Prod g) = f :=
   ext fun x => rfl
 
 @[simp, to_additive snd_comp_prod]
-theorem snd_comp_prod (f : MulHom M N) (g : MulHom M P) : (snd N P).comp (f.Prod g) = g :=
+theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Prod g) = g :=
   ext fun x => rfl
 
 @[simp, to_additive prod_unique]
-theorem prod_unique (f : MulHom M (N × P)) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
+theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
   ext fun x => by
     simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 
@@ -272,11 +272,11 @@ end Prod
 
 section prod_mapₓ
 
-variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (f : MulHom M M') (g : MulHom N N')
+variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (f : M →ₙ* M') (g : N →ₙ* N')
 
 /-- `prod.map` as a `monoid_hom`. -/
 @[to_additive prod_mapₓ "`prod.map` as an `add_monoid_hom`"]
-def prodMap : MulHom (M × N) (M' × N') :=
+def prodMap : M × N →ₙ* M' × N' :=
   (f.comp (fst M N)).Prod (g.comp (snd M N))
 
 @[to_additive prod_map_def]
@@ -288,7 +288,7 @@ theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
 
 @[to_additive prod_comp_prod_map]
-theorem prod_comp_prod_map (f : MulHom P M) (g : MulHom P N) (f' : MulHom M M') (g' : MulHom N N') :
+theorem prod_comp_prod_map (f : P →ₙ* M) (g : P →ₙ* N) (f' : M →ₙ* M') (g' : N →ₙ* N') :
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 
@@ -296,12 +296,12 @@ end prod_mapₓ
 
 section Coprod
 
-variable [Mul M] [Mul N] [CommSemigroupₓ P] (f : MulHom M P) (g : MulHom N P)
+variable [Mul M] [Mul N] [CommSemigroupₓ P] (f : M →ₙ* P) (g : N →ₙ* P)
 
 /-- Coproduct of two `mul_hom`s with the same codomain:
 `f.coprod g (p : M × N) = f p.1 * g p.2`. -/
 @[to_additive "Coproduct of two `add_hom`s with the same codomain:\n`f.coprod g (p : M × N) = f p.1 + g p.2`."]
-def coprod : MulHom (M × N) P :=
+def coprod : M × N →ₙ* P :=
   f.comp (fst M N) * g.comp (snd M N)
 
 @[simp, to_additive]
@@ -309,7 +309,7 @@ theorem coprod_apply (p : M × N) : f.coprod g p = f p.1 * g p.2 :=
   rfl
 
 @[to_additive]
-theorem comp_coprod {Q : Type _} [CommSemigroupₓ Q] (h : MulHom P Q) (f : MulHom M P) (g : MulHom N P) :
+theorem comp_coprod {Q : Type _} [CommSemigroupₓ Q] (h : P →ₙ* Q) (f : M →ₙ* P) (g : N →ₙ* P) :
     h.comp (f.coprod g) = (h.comp f).coprod (h.comp g) :=
   ext fun x => by
     simp
@@ -551,7 +551,7 @@ variable {α : Type _}
 
 /-- Multiplication as a multiplicative homomorphism. -/
 @[to_additive "Addition as an additive homomorphism.", simps]
-def mulMulHom [CommSemigroupₓ α] : MulHom (α × α) α where
+def mulMulHom [CommSemigroupₓ α] : α × α →ₙ* α where
   toFun := fun a => a.1 * a.2
   map_mul' := fun a b => mul_mul_mul_commₓ _ _ _ _
 
@@ -578,7 +578,7 @@ def divMonoidWithZeroHom [CommGroupWithZero α] : α × α →*₀ α where
   toFun := fun a => a.1 / a.2
   map_zero' := zero_div _
   map_one' := div_one _
-  map_mul' := fun a b => (div_mul_div _ _ _ _).symm
+  map_mul' := fun a b => (div_mul_div_comm₀ _ _ _ _).symm
 
 end BundledMulDiv
 

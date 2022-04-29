@@ -422,6 +422,9 @@ theorem div_le_self (ha : 0 ≤ a) (hb : 1 ≤ b) : a / b ≤ a := by
 theorem div_lt_self (ha : 0 < a) (hb : 1 < b) : a / b < a := by
   simpa only [div_one] using div_lt_div_of_lt_left ha zero_lt_one hb
 
+theorem le_div_self (ha : 0 ≤ a) (hb₀ : 0 < b) (hb₁ : b ≤ 1) : a ≤ a / b := by
+  simpa only [div_one] using div_le_div_of_le_left ha hb₀ hb₁
+
 theorem one_le_div (hb : 0 < b) : 1 ≤ a / b ↔ b ≤ a := by
   rw [le_div_iff hb, one_mulₓ]
 
@@ -649,10 +652,13 @@ theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.linearOrderedField {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [Inv β] [Div β]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
-    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : LinearOrderedField β :=
-  { hf.LinearOrderedRing f zero one add mul neg sub, hf.Field f zero one add mul neg sub inv div with }
+    [HasScalar ℕ β] [HasScalar ℤ β] [Pow β ℕ] [Pow β ℤ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0)
+    (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (nsmul : ∀ x n : ℕ, f (n • x) = n • f x) (zsmul : ∀ x n : ℤ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : LinearOrderedField β :=
+  { hf.LinearOrderedRing f zero one add mul neg sub nsmul zsmul npow,
+    hf.Field f zero one add mul neg sub inv div nsmul zsmul npow zpow with }
 
 theorem mul_sub_mul_div_mul_neg_iff (hc : c ≠ 0) (hd : d ≠ 0) : (a * d - b * c) / (c * d) < 0 ↔ a / c < b / d := by
   rw [mul_comm b c, ← div_sub_div _ _ hc hd, sub_lt_zero]

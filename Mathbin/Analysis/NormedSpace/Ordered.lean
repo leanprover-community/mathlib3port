@@ -15,7 +15,7 @@ These are mostly useful to avoid diamonds during type class inference.
 
 open Filter Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- A `normed_linear_ordered_group` is an additive group that is both a `normed_group` and
     a `linear_ordered_add_comm_group`. This class is necessary to avoid diamonds. -/

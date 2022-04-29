@@ -30,7 +30,7 @@ We will use this algebra isomorphism to prove the Cayley-Hamilton theorem.
 
 universe u v w
 
-open_locale Polynomial TensorProduct
+open Polynomial TensorProduct
 
 open Polynomial
 
@@ -199,7 +199,7 @@ theorem poly_equiv_tensor_symm_apply_tmul (a : A) (p : R[X]) :
 
 open Dmatrix Matrix
 
-open_locale BigOperators
+open BigOperators
 
 variable {R}
 

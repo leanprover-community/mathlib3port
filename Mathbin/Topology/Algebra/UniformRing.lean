@@ -30,7 +30,7 @@ the main constructions deal with continuous ring morphisms.
 
 open Classical Set Filter TopologicalSpace AddCommGroupₓ
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -167,7 +167,12 @@ variable {α : Type _}
 
 theorem ring_sep_rel α [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
-  Setoidₓ.ext fun x y => add_group_separation_rel x y
+  Setoidₓ.ext fun x y =>
+    (add_group_separation_rel x y).trans <|
+      Iff.trans
+        (by
+          rfl)
+        (Submodule.quotient_rel_r_def _).symm
 
 theorem ring_sep_quot (α : Type u) [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
@@ -178,7 +183,12 @@ continuous, get an equivalence between the separated quotient of `α` and the qu
 corresponding to the closure of zero. -/
 def sepQuotEquivRingQuot α [r : CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     Quotientₓ (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
-  Quotientₓ.congrRight fun x y => add_group_separation_rel x y
+  Quotientₓ.congrRight fun x y =>
+    (add_group_separation_rel x y).trans <|
+      Iff.trans
+        (by
+          rfl)
+        (Submodule.quotient_rel_r_def _).symm
 
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer
 instance commRing [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :

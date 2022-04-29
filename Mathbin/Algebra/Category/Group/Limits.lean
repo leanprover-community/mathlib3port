@@ -53,10 +53,10 @@ instance limitGroup (F : J ⥤ Groupₓₓ) : Groupₓ (Types.limitCone (F ⋙ f
 
 /-- We show that the forgetful functor `Group ⥤ Mon` creates limits.
 
-All we need to do is notice that the limit point has a `group` instance available,
-and then reuse the existing limit.
--/
-@[to_additive]
+All we need to do is notice that the limit point has a `group` instance available, and then reuse
+the existing limit. -/
+@[to_additive
+      "We show that the forgetful functor `AddGroup ⥤ AddMon` creates limits.\n\nAll we need to do is notice that the limit point has an `add_group` instance available, and then\nreuse the existing limit."]
 instance (F : J ⥤ Groupₓₓ) : CreatesLimit F (forget₂ Groupₓₓ Mon.{u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
@@ -84,25 +84,27 @@ def limitConeIsLimit (F : J ⥤ Groupₓₓ) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
 /-- The category of groups has all limits. -/
-@[to_additive]
+@[to_additive "The category of additive groups has all limits."]
 instance has_limits : HasLimits Groupₓₓ where
   HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Groupₓₓ Mon) }
 
 /-- The forgetful functor from groups to monoids preserves all limits.
-(That is, the underlying monoid could have been computed instead as limits in the category
-of monoids.)
+
+This means the underlying monoid of a limit can be computed as a limit in the category of monoids.
 -/
 -- TODO use the above instead?
-@[to_additive AddGroupₓₓ.forget₂AddMonPreservesLimits]
+@[to_additive AddGroupₓₓ.forget₂AddMonPreservesLimits
+      "The forgetful functor from additive groups\nto additive monoids preserves all limits.\n\nThis means the underlying additive monoid of a limit can be computed as a limit in the category of\nadditive monoids."]
 instance forget₂MonPreservesLimits : PreservesLimits (forget₂ Groupₓₓ Mon) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => by
         infer_instance }
 
-/-- The forgetful functor from groups to types preserves all limits. (That is, the underlying
-types could have been computed instead as limits in the category of types.)
--/
-@[to_additive]
+/-- The forgetful functor from groups to types preserves all limits.
+
+This means the underlying type of a limit can be computed as a limit in the category of types. -/
+@[to_additive
+      "The forgetful functor from additive groups to types preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
 instance forgetPreservesLimits : PreservesLimits (forget Groupₓₓ) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ Groupₓₓ Mon) (forget Mon) }

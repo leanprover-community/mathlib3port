@@ -3,7 +3,7 @@ Copyright (c) 2019 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 -/
-import Mathbin.Data.Equiv.List
+import Mathbin.Logic.Equiv.List
 
 /-!
 # W types
@@ -60,7 +60,7 @@ theorem to_sigma_of_sigma : ∀ s : Σa : α, β a → WType β, toSigma (ofSigm
 variable (β)
 
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
-  the polynomial `Σ a : α, β a → W_type β`.  -/
+  the polynomial functor `X ↦ Σ a : α, β a → X`. -/
 @[simps]
 def equivSigma : WType β ≃ Σa : α, β a → WType β where
   toFun := toSigma
@@ -86,7 +86,7 @@ instance [hα : IsEmpty α] : IsEmpty (WType β) :=
 
 theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he : IsEmpty (β b)] : Infinite (WType β) :=
   ⟨by
-    intros hf
+    intro hf
     have hba : b ≠ a := fun h => ha.elim (IsEmpty.elim' (show IsEmpty (β a) from h ▸ he))
     refine'
       not_injective_infinite_fintype
@@ -116,8 +116,6 @@ theorem depth_pos (t : WType β) : 0 < t.depth := by
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
   Nat.lt_succ_of_leₓ (Finset.le_sup (Finset.mem_univ i))
 
-end WType
-
 /-
 Show that W types are encodable when `α` is an encodable fintype and for every `a : α`, `β a` is
 encodable.
@@ -126,13 +124,11 @@ We define an auxiliary type `W_type' β n` of trees of depth at most `n`, and th
 induction on `n` that these are all encodable. These auxiliary constructions are not interesting in
 and of themselves, so we mark them as `private`.
 -/
-namespace Encodable
-
 @[reducible]
 private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
 
-variable {α : Type _} {β : α → Type _} [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)]
+variable [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (WType' β 0) :=
   let f : WType' β 0 → Empty := fun ⟨x, h⟩ => False.elim <| not_lt_of_geₓ h (WType.depth_pos _)
@@ -172,5 +168,5 @@ instance : Encodable (WType β) := by
   have : ∀ t, finv (f t) = t := fun t => rfl
   exact Encodable.ofLeftInverse f finv this
 
-end Encodable
+end WType
 

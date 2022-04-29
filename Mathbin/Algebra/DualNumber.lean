@@ -51,7 +51,7 @@ localized [DualNumber] notation "ε" => DualNumber.eps
 -- mathport name: «expr [ε]»
 localized [DualNumber] postfix:1024 "[ε]" => DualNumber
 
-open_locale DualNumber
+open DualNumber
 
 namespace DualNumber
 

@@ -46,11 +46,11 @@ implicit function, inverse function
 
 noncomputable section
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter
 
-open ContinuousLinearMap (fst snd subtype_val smulRight ker_prod)
+open ContinuousLinearMap (fst snd subtype_val smul_right ker_prod)
 
 open ContinuousLinearEquiv (ofBijective)
 

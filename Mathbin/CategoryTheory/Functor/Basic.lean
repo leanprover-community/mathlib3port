@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 -/
 import Mathbin.Tactic.ReassocAxiom
-import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.CategoryTheory.Category.Basic
 
 /-!
@@ -13,7 +12,7 @@ import Mathbin.CategoryTheory.Category.Basic
 Defines a functor between categories, extending a `prefunctor` between quivers.
 
 Introduces notation `C ⥤ D` for the type of all functors from `C` to `D`.
-(Unfortunately the `⇒` arrow (`\functor`) is taken by core, 
+(Unfortunately the `⇒` arrow (`\functor`) is taken by core,
 but in mathlib4 we should switch to this.)
 -/
 

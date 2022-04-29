@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
 import Mathbin.GroupTheory.Perm.Sign
-import Mathbin.Data.Equiv.Option
+import Mathbin.Logic.Equiv.Option
 
 /-!
 # Permutations of `option α`

@@ -46,7 +46,7 @@ if it is the smallest field extension of `K` such that `f` splits.
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 universe u v w
 
@@ -74,7 +74,7 @@ theorem splits_zero : Splits i (0 : K[X]) :=
 theorem splits_C (a : K) : Splits i (c a) :=
   if ha : a = 0 then ha.symm ▸ (@C_0 K _).symm ▸ splits_zero i
   else
-    have hia : i a ≠ 0 := mt (i.injective_iff.1 i.Injective _) ha
+    have hia : i a ≠ 0 := mt ((injective_iff_map_eq_zero i).1 i.Injective _) ha
     Or.inr fun g hg ⟨p, hp⟩ =>
       absurd hg.1
         (not_not.2
@@ -140,11 +140,11 @@ theorem splits_of_splits_mul {f g : K[X]} (hfg : f * g ≠ 0) (h : Splits i (f *
   ⟨Or.inr fun g hgi hg =>
       Or.resolve_left h hfg hgi
         (by
-          rw [map_mul] <;> exact hg.trans (dvd_mul_right _ _)),
+          rw [Polynomial.map_mul] <;> exact hg.trans (dvd_mul_right _ _)),
     Or.inr fun g hgi hg =>
       Or.resolve_left h hfg hgi
         (by
-          rw [map_mul] <;> exact hg.trans (dvd_mul_left _ _))⟩
+          rw [Polynomial.map_mul] <;> exact hg.trans (dvd_mul_left _ _))⟩
 
 theorem splits_of_splits_of_dvd {f g : K[X]} (hf0 : f ≠ 0) (hf : Splits i f) (hgf : g ∣ f) : Splits i g := by
   obtain ⟨f, rfl⟩ := hgf
@@ -266,7 +266,7 @@ theorem map_root_of_splits {f : K[X]} (hf : f.Splits i) hfd : f.eval₂ i (rootO
 
 theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots = f.roots.map i :=
   if hf0 : f = 0 then by
-    rw [hf0, map_zero, roots_zero, roots_zero, Multiset.map_zero]
+    rw [hf0, Polynomial.map_zero, roots_zero, roots_zero, Multiset.map_zero]
   else by
     have hmf0 : f.map i ≠ 0 := map_ne_zero hf0
     let ⟨m, hm⟩ := exists_multiset_of_splits _ hf
@@ -274,10 +274,10 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
     have h2 : (0 : L[X]) ∉ m.map fun r => X - c (i r) := zero_nmem_multiset_map_X_sub_C _ _
     rw [map_id] at hm
     rw [hm] at hf0 hmf0⊢
-    rw [map_mul] at hmf0⊢
-    rw [roots_mul hf0, roots_mul hmf0, map_C, roots_C, zero_addₓ, roots_C, zero_addₓ, map_multiset_prod,
+    rw [Polynomial.map_mul] at hmf0⊢
+    rw [roots_mul hf0, roots_mul hmf0, map_C, roots_C, zero_addₓ, roots_C, zero_addₓ, Polynomial.map_multiset_prod,
       Multiset.map_map]
-    simp_rw [(· ∘ ·), map_sub, map_X, map_C]
+    simp_rw [(· ∘ ·), Polynomial.map_sub, map_X, map_C]
     rw [roots_multiset_prod _ h2, Multiset.bind_map, roots_multiset_prod _ h1, Multiset.bind_map]
     simp_rw [roots_X_sub_C]
     rw [Multiset.bind_singleton, Multiset.bind_singleton, Multiset.map_id']
@@ -285,7 +285,7 @@ theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots =
 theorem eq_prod_roots_of_splits {p : K[X]} {i : K →+* L} (hsplit : Splits i p) :
     p.map i = c (i p.leadingCoeff) * ((p.map i).roots.map fun a => X - c a).Prod := by
   by_cases' p_eq_zero : p = 0
-  · rw [p_eq_zero, map_zero, leading_coeff_zero, i.map_zero, C.map_zero, zero_mul]
+  · rw [p_eq_zero, Polynomial.map_zero, leading_coeff_zero, i.map_zero, C.map_zero, zero_mul]
     
   obtain ⟨s, hs⟩ := exists_multiset_of_splits i hsplit
   have map_ne_zero : p.map i ≠ 0 := map_ne_zero p_eq_zero
@@ -320,7 +320,7 @@ theorem eq_X_sub_C_of_splits_of_single_root {x : K} {h : K[X]} (h_splits : Split
 theorem nat_degree_eq_card_roots {p : K[X]} {i : K →+* L} (hsplit : Splits i p) : p.natDegree = (p.map i).roots.card :=
   by
   by_cases' p_eq_zero : p = 0
-  · rw [p_eq_zero, nat_degree_zero, map_zero, roots_zero, Multiset.card_zero]
+  · rw [p_eq_zero, nat_degree_zero, Polynomial.map_zero, roots_zero, Multiset.card_zero]
     
   have map_ne_zero : p.map i ≠ 0 := map_ne_zero p_eq_zero
   rw [eq_prod_roots_of_splits hsplit] at map_ne_zero
@@ -404,7 +404,7 @@ can be written `p = ∏(X - a)`, for `a` in `p.roots`. -/
 private theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field {p : K[X]} (hmonic : p.Monic)
     (hroots : p.roots.card = p.natDegree) : (Multiset.map (fun a : K => X - c a) p.roots).Prod = p := by
   have hprodmonic : (Multiset.map (fun a : K => X - C a) p.roots).Prod.Monic := by
-    simp only [prod_multiset_root_eq_finset_root, monic_prod_of_monic, monic_X_sub_C, monic_pow, forall_true_iff]
+    simp only [prod_multiset_root_eq_finset_root, monic_prod_of_monic, monic_X_sub_C, monic.pow, forall_true_iff]
   have hdegree : (Multiset.map (fun a : K => X - C a) p.roots).Prod.natDegree = p.nat_degree := by
     rw [← hroots, nat_degree_multiset_prod _ (zero_nmem_multiset_map_X_sub_C _ fun a : K => a)]
     simp only [eq_self_iff_true, mul_oneₓ, Nat.cast_idₓ, nsmul_eq_mul, Multiset.sum_repeat, Multiset.map_const,
@@ -416,7 +416,7 @@ private theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field {p : K[
     simpa only [mul_zero] using hq
   have degp : p.nat_degree = (Multiset.map (fun a : K => X - C a) p.roots).Prod.natDegree + q.nat_degree := by
     nth_rw 0[hq]
-    simp only [nat_degree_mul (ne_zero_of_monic hprodmonic) qzero]
+    simp only [nat_degree_mul hprodmonic.ne_zero qzero]
   have degq : q.nat_degree = 0 := by
     rw [hdegree] at degp
     rw [← add_right_injₓ p.nat_degree, ← degp, add_zeroₓ]
@@ -431,12 +431,12 @@ theorem prod_multiset_X_sub_C_of_monic_of_roots_card_eq {K : Type _} [CommRing�
     (hmonic : p.Monic) (hroots : p.roots.card = p.natDegree) : (Multiset.map (fun a : K => X - c a) p.roots).Prod = p :=
   by
   apply map_injective _ (IsFractionRing.injective K (FractionRing K))
-  rw [map_multiset_prod]
-  simp only [map_C, Function.comp_app, map_X, Multiset.map_map, map_sub]
+  rw [Polynomial.map_multiset_prod]
+  simp only [map_C, Function.comp_app, map_X, Multiset.map_map, Polynomial.map_sub]
   have : p.roots.map (algebraMap K (FractionRing K)) = (map (algebraMap K (FractionRing K)) p).roots :=
     roots_map_of_injective_card_eq_total_degree (IsFractionRing.injective K (FractionRing K)) hroots
-  rw [← prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field (monic_map (algebraMap K (FractionRing K)) hmonic)]
-  · simp only [map_C, Function.comp_app, map_X, map_sub]
+  rw [← prod_multiset_X_sub_C_of_monic_of_roots_card_eq_of_field (hmonic.map (algebraMap K (FractionRing K)))]
+  · simp only [map_C, Function.comp_app, map_X, Polynomial.map_sub]
     congr 1
     rw [← this]
     simp
@@ -482,8 +482,8 @@ theorem C_leading_coeff_mul_prod_multiset_X_sub_C {K : Type _} [CommRingₓ K] [
     intro h
     exact hzero (leading_coeff_eq_zero.1 h)
   apply map_injective _ (IsFractionRing.injective K (FractionRing K))
-  rw [map_mul, map_multiset_prod]
-  simp only [map_C, Function.comp_app, map_X, Multiset.map_map, map_sub]
+  rw [Polynomial.map_mul, Polynomial.map_multiset_prod]
+  simp only [map_C, Function.comp_app, map_X, Multiset.map_map, Polynomial.map_sub]
   have h : p.roots.map (algebraMap K (FractionRing K)) = (map (algebraMap K (FractionRing K)) p).roots :=
     roots_map_of_injective_card_eq_total_degree (IsFractionRing.injective K (FractionRing K)) hroots
   have :
@@ -492,7 +492,7 @@ theorem C_leading_coeff_mul_prod_multiset_X_sub_C {K : Type _} [CommRingₓ K] [
     rw [nat_degree_map_eq_of_injective (IsFractionRing.injective K (FractionRing K)), ← h]
     simp only [← hroots, Multiset.card_map]
   rw [← C_leading_coeff_mul_prod_multiset_X_sub_C_of_field this]
-  simp only [map_C, Function.comp_app, map_X, map_sub]
+  simp only [map_C, Function.comp_app, map_X, Polynomial.map_sub]
   have w : (algebraMap K (FractionRing K)) p.leading_coeff ≠ 0 := by
     intro hn
     apply hcoeff
@@ -516,7 +516,7 @@ theorem splits_iff_card_roots {p : K[X]} : Splits (RingHom.id K) p ↔ p.roots.c
 theorem aeval_root_derivative_of_splits [Algebra K L] {P : K[X]} (hmo : P.Monic) (hP : P.Splits (algebraMap K L))
     {r : L} (hr : r ∈ (P.map (algebraMap K L)).roots) :
     aeval r P.derivative = (Multiset.map (fun a => r - a) ((P.map (algebraMap K L)).roots.erase r)).Prod := by
-  replace hmo := monic_map (algebraMap K L) hmo
+  replace hmo := hmo.map (algebraMap K L)
   replace hP := (splits_id_iff_splits (algebraMap K L)).2 hP
   rw [aeval_def, ← eval_map, ← derivative_map]
   nth_rw 0[eq_prod_roots_of_monic_of_splits_id hmo hP]
@@ -558,7 +558,7 @@ def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRingₓ R] 
         (AdjoinRoot.induction_on _ p) fun p =>
           (Algebra.adjoin_singleton_eq_range_aeval F x).symm ▸ (Polynomial.aeval _).mem_range.mpr ⟨p, rfl⟩)
       ⟨(AlgHom.injective_cod_restrict _ _ _).2 <|
-          (AlgHom.injective_iff _).2 fun p =>
+          (injective_iff_map_eq_zero _).2 fun p =>
             (AdjoinRoot.induction_on _ p) fun p hp =>
               Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 <| minpoly.dvd F x hp,
         fun y =>
@@ -587,11 +587,11 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   cases' ih H3 with f
   choose H3 H4 using H3
   rw [coe_insert, Set.insert_eq, Set.union_comm, Algebra.adjoin_union_eq_adjoin_adjoin]
-  let this' := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
+  let this := (f : Algebra.adjoin F (↑s : Set K) →+* L).toAlgebra
   have : FiniteDimensional F (Algebra.adjoin F (↑s : Set K)) :=
     ((Submodule.fg_iff_finite_dimensional _).1
         (fg_adjoin_of_finite (Set.finite_mem_finset s) H3)).of_subalgebra_to_submodule
-  let this' := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
+  let this := fieldOfFiniteDimensional F (Algebra.adjoin F (↑s : Set K))
   have H5 : IsIntegral (Algebra.adjoin F (↑s : Set K)) a := is_integral_of_is_scalar_tower a H1
   have H6 : (minpoly (Algebra.adjoin F (↑s : Set K)) a).Splits (algebraMap (Algebra.adjoin F (↑s : Set K)) L) := by
     refine'
@@ -793,8 +793,8 @@ theorem adjoin_roots (n : ℕ) :
       rw [h] at hndf
       exact hndf rfl
     have hmf0 : map (algebraMap K (splitting_field_aux n.succ f hfn)) f ≠ 0 := map_ne_zero hfn0
-    rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, map_mul] at hmf0⊢
-    rw [roots_mul hmf0, map_sub, map_X, map_C, roots_X_sub_C, Multiset.to_finset_add, Finset.coe_union,
+    rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at hmf0⊢
+    rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.to_finset_add, Finset.coe_union,
       Multiset.to_finset_singleton, Finset.coe_singleton, Algebra.adjoin_union_eq_adjoin_adjoin, ← Set.image_singleton,
       Algebra.adjoin_algebra_map K (AdjoinRoot f.factor)
         (splitting_field_aux n f.remove_factor (nat_degree_remove_factor' hfn)),
@@ -923,7 +923,7 @@ theorem mul (f g : F[X]) (hf : f ≠ 0) (hg : g ≠ 0) [IsSplittingField F K f]
       splits_mul _ (splits_comp_of_splits _ _ (splits K f))
         ((splits_map_iff _ _).1 (splits L <| g.map <| algebraMap F K)),
     by
-    rw [map_mul, roots_mul (mul_ne_zero (map_ne_zero hf : f.map (algebraMap F L) ≠ 0) (map_ne_zero hg)),
+    rw [Polynomial.map_mul, roots_mul (mul_ne_zero (map_ne_zero hf : f.map (algebraMap F L) ≠ 0) (map_ne_zero hg)),
       Multiset.to_finset_add, Finset.coe_union, Algebra.adjoin_union_eq_adjoin_adjoin,
       IsScalarTower.algebra_map_eq F K L, ← map_map,
       roots_map (algebraMap K L) ((splits_id_iff_splits <| algebraMap F K).2 <| splits K f), Multiset.to_finset_map,
@@ -957,7 +957,7 @@ theorem finite_dimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimension
       adjoin_roots L f ▸
         fg_adjoin_of_finite (Set.finite_mem_finset _) fun y hy =>
           if hf : f = 0 then by
-            rw [hf, map_zero, roots_zero] at hy
+            rw [hf, Polynomial.map_zero, roots_zero] at hy
             cases hy
           else
             is_algebraic_iff_is_integral.1

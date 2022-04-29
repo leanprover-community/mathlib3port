@@ -13,7 +13,7 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 open Submodule
 
-open_locale Polynomial
+open Polynomial
 
 variable {R : Type _} [Ringₓ R]
 

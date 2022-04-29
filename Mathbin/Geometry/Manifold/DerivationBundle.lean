@@ -23,7 +23,7 @@ of the Lie algebra for a Lie group.
 variable (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M] (n : WithTop ℕ)
 
-open_locale Manifold
+open Manifold
 
 -- the following two instances prevent poorly understood type class inference timeout problems
 instance smoothFunctionsAlgebra : Algebra 𝕜 C^∞⟮I, M; 𝕜⟯ := by
@@ -82,7 +82,7 @@ instance (x : M) : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 where
 
 end PointedSmoothMap
 
-open_locale Derivation
+open Derivation
 
 /-- The derivations at a point of a manifold. Some regard this as a possible definition of the
 tangent space -/

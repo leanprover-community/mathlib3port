@@ -31,7 +31,7 @@ variable {Fq : Type _} [Field Fq] [Fintype Fq]
 
 open AbsoluteValue
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 /-- `card_pow_degree` is the absolute value on `𝔽_q[t]` sending `f` to `q ^ degree f`.
 

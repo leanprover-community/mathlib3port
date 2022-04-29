@@ -13,7 +13,7 @@ A simple lemma about sums in `enat`.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {α : Type _}
 

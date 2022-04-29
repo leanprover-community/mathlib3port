@@ -30,7 +30,7 @@ Then we extend the valuation given on `K` to a valuation on `hat K`.
 
 open Filter Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section DivisionRing
 
@@ -79,7 +79,7 @@ open Valued
 instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] : TopologicalDivisionRing K :=
   { (by
       infer_instance : TopologicalRing K) with
-    continuous_inv := by
+    continuous_at_inv₀ := by
       intro x x_ne s s_in
       cases' valued.mem_nhds.mp s_in with γ hs
       clear s_in
@@ -235,12 +235,12 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
       rw [Valuation.map_one, mem_preimage, mem_singleton_iff, mem_set_of_eq]
     obtain ⟨V, V_in, hV⟩ : ∃ V ∈ 𝓝 (1 : hat K), ∀ x : K, (x : hat K) ∈ V → (v x : Γ₀) = 1 := by
       rwa [completion.dense_inducing_coe.nhds_eq_comap, mem_comap] at preimage_one
-    have : ∃ V' ∈ 𝓝 (1 : hat K), ((0 : hat K) ∉ V') ∧ ∀ x y _ : x ∈ V' _ : y ∈ V', x * y⁻¹ ∈ V := by
+    have : ∃ V' ∈ 𝓝 (1 : hat K), (0 : hat K) ∉ V' ∧ ∀ x y _ : x ∈ V' _ : y ∈ V', x * y⁻¹ ∈ V := by
       have : tendsto (fun p : hat K × hat K => p.1 * p.2⁻¹) ((𝓝 1).Prod (𝓝 1)) (𝓝 1) := by
         rw [← nhds_prod_eq]
         conv => congr skip skip rw [← one_mulₓ (1 : hat K)]
         refine' tendsto.mul continuous_fst.continuous_at (tendsto.comp _ continuous_snd.continuous_at)
-        convert TopologicalDivisionRing.continuous_inv (1 : hat K) zero_ne_one.symm
+        convert continuous_at_inv₀ (zero_ne_one.symm : 1 ≠ (0 : hat K))
         exact inv_one.symm
       rcases tendsto_prod_self_iff.mp this V V_in with ⟨U, U_in, hU⟩
       let hatKstar := ({0}ᶜ : Set <| hat K)

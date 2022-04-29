@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
+import Mathbin.MeasureTheory.Measure.AeMeasurable
 
 /-!
 # Measure preserving maps
@@ -57,6 +57,9 @@ namespace MeasurePreserving
 protected theorem id (μ : Measure α) : MeasurePreserving id μ μ :=
   ⟨measurable_id, map_id⟩
 
+protected theorem ae_measurable {f : α → β} (hf : MeasurePreserving f μa μb) : AeMeasurable f μa :=
+  hf.1.AeMeasurable
+
 theorem symm {e : α ≃ᵐ β} {μa : Measure α} {μb : Measure β} (h : MeasurePreserving e μa μb) :
     MeasurePreserving e.symm μb μa :=
   ⟨e.symm.Measurable, by
@@ -90,7 +93,7 @@ theorem comp {g : β → γ} {f : α → β} (hg : MeasurePreserving g μb μc) 
     rw [← map_map hg.1 hf.1, hf.2, hg.2]⟩
 
 protected theorem sigma_finite {f : α → β} (hf : MeasurePreserving f μa μb) [SigmaFinite μb] : SigmaFinite μa :=
-  SigmaFinite.of_map μa hf.1
+  SigmaFinite.of_map μa hf.AeMeasurable
     (by
       rwa [hf.map_eq])
 

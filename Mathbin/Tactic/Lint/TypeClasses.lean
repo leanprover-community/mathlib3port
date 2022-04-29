@@ -261,7 +261,7 @@ https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/odd.20repea
 -/
 @[linter]
 unsafe def linter.fails_quickly : linter where
-  test := fails_quickly 15000
+  test := fails_quickly 20000
   auto_decls := true
   no_errors_found := "No type-class searches timed out."
   errors_found :=

@@ -52,7 +52,7 @@ open Function (Injective)
 
 open LinearMap (lsmul)
 
-open_locale TensorProduct
+open TensorProduct
 
 /-- An `R`-module `M` is flat if for all finitely generated ideals `I` of `R`,
 the canonical map `I ⊗ M →ₗ M` is injective. -/

@@ -26,7 +26,7 @@ variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 namespace IsLocalization
 
@@ -68,7 +68,7 @@ theorem localization_localization_map_units [IsLocalization N T] (y : localizati
     IsUnit (algebraMap R T y) := by
   obtain ⟨y', z, eq⟩ := mem_localization_localization_submodule.mp y.prop
   rw [IsScalarTower.algebra_map_apply R S T, Eq, RingHom.map_mul, IsUnit.mul_iff]
-  exact ⟨IsLocalization.map_units T y', (IsLocalization.map_units _ z).map (algebraMap S T : S →* T)⟩
+  exact ⟨IsLocalization.map_units T y', (IsLocalization.map_units _ z).map (algebraMap S T)⟩
 
 theorem localization_localization_surj [IsLocalization N T] (x : T) :
     ∃ y : R × localizationLocalizationSubmodule M N, x * algebraMap R T y.2 = algebraMap R T y.1 := by
@@ -179,7 +179,7 @@ noncomputable def localizationAlgebraOfSubmonoidLe (M N : Submonoid R) (h : M �
 localization maps -/
 theorem localization_is_scalar_tower_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLocalization M S]
     [IsLocalization N T] : @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toHasScalar _ := by
-  let this' := localization_algebra_of_submonoid_le S T M N h
+  let this := localization_algebra_of_submonoid_le S T M N h
   exact IsScalarTower.of_algebra_map_eq' (IsLocalization.lift_comp _).symm
 
 noncomputable instance (x : Ideal R) [H : x.IsPrime] [IsDomain R] :

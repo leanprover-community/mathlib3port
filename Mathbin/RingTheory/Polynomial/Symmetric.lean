@@ -6,7 +6,7 @@ Authors: Hanting Zhang, Johan Commelin
 import Mathbin.Data.Fintype.Card
 import Mathbin.Data.MvPolynomial.Rename
 import Mathbin.Data.MvPolynomial.CommRing
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 
 /-!
 # Symmetric Polynomials and Elementary Symmetric Polynomials
@@ -43,7 +43,7 @@ As in other polynomial files, we typically use the notation:
 
 open Equivₓ (Perm)
 
-open_locale BigOperators
+open BigOperators
 
 noncomputable section
 

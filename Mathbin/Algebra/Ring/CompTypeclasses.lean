@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 -/
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # Propositional typeclasses on several ring homs

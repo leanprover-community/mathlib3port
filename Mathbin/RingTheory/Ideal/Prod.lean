@@ -143,7 +143,7 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     I.IsPrime ↔ (∃ p : Ideal R, p.IsPrime ∧ I = Ideal.prod p ⊤) ∨ ∃ p : Ideal S, p.IsPrime ∧ I = Ideal.prod ⊤ p := by
   constructor
   · rw [ideal_prod_eq I]
-    intros hI
+    intro hI
     rcases ideal_prod_prime_aux hI with (h | h)
     · right
       rw [h] at hI⊢

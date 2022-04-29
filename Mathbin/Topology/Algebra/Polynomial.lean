@@ -35,11 +35,11 @@ open IsAbsoluteValue Filter
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
-section TopologicalRing
+section TopologicalSemiring
 
-variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalRing R] (p : R[X])
+variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSemiring R] (p : R[X])
 
 @[continuity]
 protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
@@ -59,11 +59,11 @@ protected theorem continuous_within_at {s a} : ContinuousWithinAt (fun x => p.ev
 protected theorem continuous_on {s} : ContinuousOn (fun x => p.eval x) s :=
   p.Continuous.ContinuousOn
 
-end TopologicalRing
+end TopologicalSemiring
 
 section TopologicalAlgebra
 
-variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [TopologicalSpace A] [TopologicalRing A]
+variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [TopologicalSpace A] [TopologicalSemiring A]
   (p : R[X])
 
 @[continuity]

@@ -611,8 +611,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
           rwa [size, sr.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
         cases sr.2.2.2.1.size_eq_zero.1 this.1
         cases sr.2.2.2.2.size_eq_zero.1 this.2
-        have : rrs = 1 := sr.2.2.1
-        subst rrs
+        obtain rfl : rrs = 1 := sr.2.2.1
         rw [if_neg, if_pos, rotate_l, if_pos]
         · rfl
           
@@ -625,8 +624,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
           rwa [size, sr.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
         cases sr.2.1.2.1.size_eq_zero.1 this.1
         cases sr.2.1.2.2.size_eq_zero.1 this.2
-        have : rls = 1 := sr.2.1.1
-        subst rls
+        obtain rfl : rls = 1 := sr.2.1.1
         rw [if_neg, if_pos, rotate_l, if_neg]
         · rfl
           
@@ -660,8 +658,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
           rwa [size, sl.2.2.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
         cases sl.2.2.2.1.size_eq_zero.1 this.1
         cases sl.2.2.2.2.size_eq_zero.1 this.2
-        have : lrs = 1 := sl.2.2.1
-        subst lrs
+        obtain rfl : lrs = 1 := sl.2.2.1
         rw [if_neg, if_neg, if_pos, rotate_r, if_neg]
         · rfl
           
@@ -674,8 +671,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
           rwa [size, sl.2.1.1, Nat.succ_le_succ_iff, Nat.le_zero_iffₓ, add_eq_zero_iff] at this
         cases sl.2.1.2.1.size_eq_zero.1 this.1
         cases sl.2.1.2.2.size_eq_zero.1 this.2
-        have : lls = 1 := sl.2.1.1
-        subst lls
+        obtain rfl : lls = 1 := sl.2.1.1
         rw [if_neg, if_neg, if_pos, rotate_r, if_pos]
         · rfl
           
@@ -862,8 +858,7 @@ theorem balance_sz_dual {l r}
   by
   rw [size_dual, size_dual]
   exact
-    H.symm.imp (Exists.impₓ fun _ => And.imp_right balanced_sz.symm)
-      (Exists.impₓ fun _ => And.imp_right balanced_sz.symm)
+    H.symm.imp (Exists.imp fun _ => And.imp_right balanced_sz.symm) (Exists.imp fun _ => And.imp_right balanced_sz.symm)
 
 theorem size_balance_l {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Sized l) (sr : Sized r)
     (H : (∃ l', Raised l' (size l) ∧ BalancedSz l' (size r)) ∨ ∃ r', Raised (size r) r' ∧ BalancedSz (size l) r') :

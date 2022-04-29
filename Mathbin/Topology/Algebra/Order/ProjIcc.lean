@@ -16,7 +16,7 @@ to show that `Icc_extend h f` is continuous if and only if `f` is continuous.
 
 open Set Filter
 
-open_locale Filter TopologicalSpace
+open Filter TopologicalSpace
 
 variable {α β γ : Type _} [LinearOrderₓ α] [TopologicalSpace γ] {a b c : α} {h : a ≤ b}
 

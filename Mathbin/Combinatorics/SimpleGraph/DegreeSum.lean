@@ -38,7 +38,7 @@ simple graphs, sums, degree-sum formula, handshaking lemma
 
 open Finset
 
-open_locale BigOperators
+open BigOperators
 
 namespace SimpleGraph
 
@@ -141,7 +141,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
       use v
       simp only [true_andₓ, mem_filter, mem_univ]
       use h
-    rwa [← card_pos, hg, zero_lt_mul_left] at hh
+    rwa [← card_pos, hg, ← two_mul, zero_lt_mul_left] at hh
     exact zero_lt_two
   have hc : (fun w : V => w ≠ v ∧ Odd (G.degree w)) = fun w : V => Odd (G.degree w) ∧ w ≠ v := by
     ext w
@@ -149,7 +149,7 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
   simp only [hc, filter_congr_decidable]
   rw [← filter_filter, filter_ne', card_erase_of_mem]
   · refine' ⟨k - 1, tsub_eq_of_eq_add <| hg.trans _⟩
-    rw [add_assocₓ, one_add_one_eq_two, ← Nat.mul_succ]
+    rw [add_assocₓ, one_add_one_eq_two, ← Nat.mul_succ, ← two_mul]
     congr
     exact (tsub_add_cancel_of_le <| Nat.succ_le_iff.2 hk).symm
     

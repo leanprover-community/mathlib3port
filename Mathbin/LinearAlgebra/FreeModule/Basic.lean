@@ -27,7 +27,7 @@ universe u v w z
 
 variable (R : Type u) (M : Type v) (N : Type z)
 
-open_locale TensorProduct DirectSum BigOperators
+open TensorProduct DirectSum BigOperators
 
 section Basic
 
@@ -103,8 +103,8 @@ instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommG
   of_basis <| Pi.basis fun i => chooseBasis R (M i)
 
 /-- The module of finite matrices is free. -/
-instance matrix {n : Type _} [Fintype n] {m : Type _} [Fintype m] : Module.Free R (Matrix n m R) :=
-  of_basis <| Matrix.stdBasis R n m
+instance matrix {m n : Type _} [Fintype m] [Fintype n] : Module.Free R (Matrix m n R) :=
+  of_basis <| Matrix.stdBasis R m n
 
 variable {R M N}
 

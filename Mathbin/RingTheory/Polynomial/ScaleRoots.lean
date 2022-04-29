@@ -22,7 +22,7 @@ variable {M : Submonoid A}
 
 open Polynomial
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 /-- `scale_roots p s` is a polynomial with root `r * s` for each root `r` of `p`. -/
 noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
@@ -58,7 +58,7 @@ theorem support_scale_roots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R)
       intro i
       simp only [coeff_scale_roots, Polynomial.mem_support_iff]
       intro p_ne_zero ps_zero
-      have := ((nonZeroDivisors R).pow_mem hs (p.nat_degree - i)) _ ps_zero
+      have := pow_mem hs (p.nat_degree - i) _ ps_zero
       contradiction)
 
 @[simp]

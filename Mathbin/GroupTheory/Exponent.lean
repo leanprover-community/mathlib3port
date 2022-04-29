@@ -7,7 +7,7 @@ import Mathbin.GroupTheory.OrderOfElement
 import Mathbin.Algebra.PunitInstances
 import Mathbin.Algebra.GcdMonoid.Finset
 import Mathbin.Tactic.ByContra
-import Mathbin.NumberTheory.Padics.PadicNorm
+import Mathbin.NumberTheory.Padics.PadicVal
 
 /-!
 # Exponent of a group
@@ -41,7 +41,7 @@ universe u
 
 variable {G : Type u}
 
-open_locale Classical
+open Classical
 
 namespace Monoidₓ
 
@@ -92,7 +92,7 @@ theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
   · simp_rw [exponent, dif_neg h, pow_zeroₓ]
     
 
-@[to_additive nsmul_eq_mod_exponent]
+@[to_additive]
 theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
   calc
     g ^ n = g ^ (n % exponent G + exponent G * (n / exponent G)) := by
@@ -139,7 +139,7 @@ theorem order_dvd_exponent (g : G) : orderOf g ∣ exponent G :=
 
 variable (G)
 
-@[to_additive exponent_dvd_of_forall_nsmul_eq_zero]
+@[to_additive]
 theorem exponent_dvd_of_forall_pow_eq_one G [Monoidₓ G] (n : ℕ) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n := by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · exact dvd_zero _
@@ -227,18 +227,18 @@ theorem exponent_eq_zero_iff_range_order_of_infinite (h : ∀ g : G, 0 < orderOf
   have := exponent_ne_zero_iff_range_order_of_finite h
   rwa [Ne.def, not_iff_comm, Iff.comm] at this
 
-end Monoidₓ
-
-section LeftCancelMonoid
-
-variable [LeftCancelMonoid G]
-
 @[to_additive lcm_add_order_eq_exponent]
 theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G := by
   apply Nat.dvd_antisymm (lcm_order_of_dvd_exponent G)
   refine' exponent_dvd_of_forall_pow_eq_one G _ fun g => _
   obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finset.dvd_lcm (Finset.mem_univ g)
   rw [hm, pow_mulₓ, pow_order_of_eq_one, one_pow]
+
+end Monoidₓ
+
+section LeftCancelMonoid
+
+variable [LeftCancelMonoid G]
 
 @[to_additive]
 theorem exponent_ne_zero_of_fintype [Fintype G] : exponent G ≠ 0 := by
@@ -248,7 +248,7 @@ end LeftCancelMonoid
 
 section CommMonoidₓ
 
-variable [CancelCommMonoid G]
+variable [CommMonoidₓ G]
 
 @[to_additive]
 theorem exponent_eq_supr_order_of (h : ∀ g : G, 0 < orderOf g) : exponent G = ⨆ g : G, orderOf g := by
@@ -301,6 +301,12 @@ theorem exponent_eq_supr_order_of' : exponent G = if ∃ g : G, orderOf g = 0 th
     exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
     
 
+end CommMonoidₓ
+
+section CancelCommMonoid
+
+variable [CancelCommMonoid G]
+
 @[to_additive]
 theorem exponent_eq_max'_order_of [Fintype G] :
     exponent G =
@@ -311,7 +317,7 @@ theorem exponent_eq_max'_order_of [Fintype G] :
   rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supr]
   exact exponent_eq_supr_order_of order_of_pos
 
-end CommMonoidₓ
+end CancelCommMonoid
 
 end Monoidₓ
 

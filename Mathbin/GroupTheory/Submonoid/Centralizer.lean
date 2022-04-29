@@ -120,7 +120,7 @@ def centralizer : Submonoid M where
   one_mem' := S.one_mem_centralizer
   mul_mem' := fun a b => Set.mul_mem_centralizer
 
-@[to_additive]
+@[simp, norm_cast, to_additive]
 theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
   rfl
 
@@ -135,7 +135,7 @@ instance decidableMemCentralizer [DecidableEq M] [Fintype M] [DecidablePred (· 
     DecidablePred (· ∈ centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
 
 @[to_additive]
-theorem centralizer_subset (h : S ⊆ T) : centralizer T ≤ centralizer S :=
+theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
 
 variable (M)

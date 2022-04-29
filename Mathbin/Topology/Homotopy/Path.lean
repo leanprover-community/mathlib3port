@@ -34,11 +34,11 @@ universe u v
 
 variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
 
-variable {x₀ x₁ x₂ : X}
+variable {x₀ x₁ x₂ x₃ : X}
 
 noncomputable section
 
-open_locale UnitInterval
+open UnitInterval
 
 namespace Path
 
@@ -322,7 +322,30 @@ def Quotient.mapFn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) : Pa
 theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuous⟧ = Quotient.mapFn ⟦P₀⟧ f :=
   rfl
 
+theorem hpath_hext {p₁ : Path x₀ x₁} {p₂ : Path x₂ x₃} (hp : ∀ t, p₁ t = p₂ t) : HEq ⟦p₁⟧ ⟦p₂⟧ := by
+  obtain rfl : x₀ = x₂ := by
+    convert hp 0 <;> simp
+  obtain rfl : x₁ = x₃ := by
+    convert hp 1 <;> simp
+  rw [heq_iff_eq]
+  congr
+  ext t
+  exact hp t
+
 end Homotopic
 
 end Path
+
+namespace ContinuousMap.Homotopy
+
+/-- Given a homotopy H: f ∼ g, get the path traced by the point `x` as it moves from
+`f x` to `g x`
+-/
+def evalAt {X : Type _} {Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {f g : C(X, Y)}
+    (H : ContinuousMap.Homotopy f g) (x : X) : Path (f x) (g x) where
+  toFun := fun t => H (t, x)
+  source' := H.apply_zero x
+  target' := H.apply_one x
+
+end ContinuousMap.Homotopy
 

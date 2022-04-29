@@ -16,7 +16,7 @@ universe u v
 
 namespace Mvqpf
 
-open_locale Mvfunctor
+open Mvfunctor
 
 variable {n : ℕ} (i : Fin2 n)
 

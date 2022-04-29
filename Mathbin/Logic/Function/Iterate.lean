@@ -193,3 +193,21 @@ theorem iterate_commute (m n : ℕ) : Commute (fun f : α → α => f^[m]) fun f
 
 end Function
 
+namespace List
+
+open Function
+
+theorem foldl_const (f : α → α) (a : α) (l : List β) : l.foldl (fun b _ => f b) a = (f^[l.length]) a := by
+  induction' l with b l H generalizing a
+  · rfl
+    
+  · rw [length_cons, foldl, iterate_succ_apply, H]
+    
+
+theorem foldr_const (f : β → β) (b : β) : ∀ l : List α, l.foldr (fun _ => f) b = (f^[l.length]) b
+  | [] => rfl
+  | a :: l => by
+    rw [length_cons, foldr, foldr_const l, iterate_succ_apply']
+
+end List
+

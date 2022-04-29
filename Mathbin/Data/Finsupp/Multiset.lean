@@ -16,7 +16,7 @@ promoted to an order isomorphism.
 
 open Finset
 
-open_locale BigOperators Classical
+open BigOperators Classical
 
 noncomputable section
 

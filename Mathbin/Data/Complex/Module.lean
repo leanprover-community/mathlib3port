@@ -36,7 +36,7 @@ It also provides a universal property of the complex numbers `complex.lift`, whi
 
 namespace Complex
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 variable {R : Type _} {S : Type _}
 
@@ -126,7 +126,7 @@ end
 
 section
 
-open_locale ComplexOrder
+open ComplexOrder
 
 protected theorem ordered_smul : OrderedSmul ℝ ℂ :=
   OrderedSmul.mk' fun a b r hab hr =>
@@ -226,7 +226,7 @@ instance (priority := 900) StarModule.complex_to_real {E : Type _} [AddCommGroup
 
 namespace Complex
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 /-- Linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def reLm : ℂ →ₗ[ℝ] ℝ where

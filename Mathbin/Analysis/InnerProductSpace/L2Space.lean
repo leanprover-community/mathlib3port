@@ -74,7 +74,7 @@ Hilbert space, Hilbert sum, l2, Hilbert basis, unitary equivalence, isometric is
 
 open IsROrC Submodule Filter
 
-open_locale BigOperators Nnreal Ennreal Classical ComplexConjugate
+open BigOperators Nnreal Ennreal Classical ComplexConjugate
 
 noncomputable section
 
@@ -132,7 +132,7 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         
       · exact summable_inner f₂ g
         ,
-    smulLeft := fun f g c => by
+    smul_left := fun f g c => by
       calc _ = ∑' i, ⟪c • f i, g i⟫ := _ _ = ∑' i, conj c * ⟪f i, g i⟫ := by
           simp only [inner_smul_left]_ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left _ = _ := _
       · simp only [coe_fn_smul, Pi.smul_apply]
@@ -231,12 +231,12 @@ protected theorem linear_isometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι
 `E` into E, has range the closure of the span of the subspaces. -/
 protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
     hV.LinearIsometry.toLinearMap.range = (⨆ i, (V i).toLinearMap.range).topologicalClosure := by
-  classical
   refine' le_antisymmₓ _ _
   · rintro x ⟨f, rfl⟩
     refine' mem_closure_of_tendsto (hV.has_sum_linear_isometry f) (eventually_of_forall _)
     intro s
-    refine' sum_mem (supr fun i => (V i).toLinearMap.range) _
+    rw [SetLike.mem_coe]
+    refine' sum_mem _
     intro i hi
     refine' mem_supr_of_mem i _
     exact LinearMap.mem_range_self _ (f i)
@@ -245,7 +245,7 @@ protected theorem range_linear_isometry [∀ i, CompleteSpace (G i)] :
     · refine' supr_le _
       rintro i x ⟨x, rfl⟩
       use lp.single 2 i x
-      convert hV.linear_isometry_apply_single _
+      exact hV.linear_isometry_apply_single x
       
     exact hV.linear_isometry.isometry.uniform_inducing.is_complete_range.is_closed
     
@@ -379,7 +379,7 @@ protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Rang
   refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
   intro s
   simp only [SetLike.mem_coe]
-  refine' sum_mem _ _
+  refine' sum_mem _
   rintro i -
   refine' smul_mem _ _ _
   exact subset_span ⟨i, rfl⟩

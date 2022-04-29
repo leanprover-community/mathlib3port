@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Group.Ulift
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # `ulift` instances for ring
@@ -67,6 +67,11 @@ def ringEquiv [NonUnitalNonAssocSemiringₓ α] : ULift α ≃+* α where
   right_inv := by
     tidy
 
+instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemiring (ULift α) := by
+  refine_struct { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
 instance commSemiring [CommSemiringₓ α] : CommSemiringₓ (ULift α) := by
   refine_struct
       { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
@@ -99,6 +104,13 @@ instance ring [Ringₓ α] : Ringₓ (ULift α) := by
   refine_struct
       { zero := (0 : ULift α), one := 1, add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
         nsmul := AddMonoidₓ.nsmul, npow := Monoidₓ.npow, zsmul := SubNegMonoidₓ.zsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
+instance nonUnitalCommRing [NonUnitalCommRing α] : NonUnitalCommRing (ULift α) := by
+  refine_struct
+      { zero := (0 : ULift α), add := (· + ·), mul := (· * ·), sub := Sub.sub, neg := Neg.neg,
+        nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
     run_tac
       tactic.pi_instance_derive_field
 

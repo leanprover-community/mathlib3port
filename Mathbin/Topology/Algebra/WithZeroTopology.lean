@@ -34,7 +34,7 @@ All other instances will (`ordered_topology`, `regular_space`, `has_continuous_m
 -/
 
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open TopologicalSpace Filter Set
 

@@ -55,7 +55,7 @@ boilerplate lemmas to `valuation_class`.
 -/
 
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 noncomputable section
 
@@ -451,9 +451,9 @@ Note: it's just the function; the valuation is `on_quot hJ`. -/
 def onQuotVal {J : Ideal R} (hJ : J ≤ supp v) : R ⧸ J → Γ₀ := fun q =>
   (Quotientₓ.liftOn' q v) fun a b h =>
     calc
-      v a = v (b + (a - b)) := by
+      v a = v (b + -(-a + b)) := by
         simp
-      _ = v b := v.map_add_supp b (hJ h)
+      _ = v b := v.map_add_supp b ((Ideal.neg_mem_iff _).2 <| hJ h)
       
 
 /-- The extension of valuation v on R to valuation on R/J if J ⊆ supp v -/
@@ -466,10 +466,7 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : Valuation (R ⧸ J) Γ₀ where
 
 @[simp]
 theorem on_quot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) : (v.onQuot hJ).comap (Ideal.Quotient.mk J) = v :=
-  ext fun r => by
-    refine' @Quotientₓ.lift_on_mk _ _ J.quotient_rel v (fun a b h => _) _
-    calc v a = v (b + (a - b)) := by
-        simp _ = v b := v.map_add_supp b (hJ h)
+  ext fun r => rfl
 
 theorem comap_supp {S : Type _} [CommRingₓ S] (f : S →+* R) : supp (v.comap f) = Ideal.comap f v.Supp :=
   Ideal.ext fun x => by
@@ -556,6 +553,15 @@ variable {h0} {h1} {hadd} {hmul} {r : R}
 
 @[simp]
 theorem of_apply : (of f h0 h1 hadd hmul) r = f r :=
+  rfl
+
+/-- The `valuation` associated to an `add_valuation` (useful if the latter is constructed using
+`add_valuation.of`). -/
+def valuation : Valuation R (Multiplicative (OrderDual Γ₀)) :=
+  v
+
+@[simp]
+theorem valuation_apply (r : R) : v.Valuation r = Multiplicative.ofAdd (OrderDual.toDual (v r)) :=
   rfl
 
 end

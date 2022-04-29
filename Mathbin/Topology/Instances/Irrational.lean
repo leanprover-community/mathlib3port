@@ -30,7 +30,7 @@ irrational, residual
 
 open Set Filter Metric
 
-open_locale Filter TopologicalSpace
+open Filter TopologicalSpace
 
 theorem is_Gδ_irrational : IsGδ { x | Irrational x } :=
   (countable_range _).is_Gδ_compl

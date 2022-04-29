@@ -24,7 +24,7 @@ Hahn decomposition
 
 open Set Filter
 
-open_locale Classical TopologicalSpace Ennreal
+open Classical TopologicalSpace Ennreal
 
 namespace MeasureTheory
 

@@ -29,7 +29,7 @@ and `t`.
 
 open Finset Function
 
-open_locale BigOperators
+open BigOperators
 
 /-! ### Bipartite graph -/
 
@@ -75,9 +75,9 @@ number of edges while the RHS is an upper bound. -/
 theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)] (hm : ∀, ∀ a ∈ s, ∀, m ≤ (t.bipartiteAbove r a).card)
     (hn : ∀, ∀ b ∈ t, ∀, (s.bipartiteBelow r b).card ≤ n) : s.card * m ≤ t.card * n :=
   calc
-    _ ≤ ∑ a in s, (t.bipartiteAbove r a).card := s.le_sum_of_forall_le _ _ hm
+    _ ≤ ∑ a in s, (t.bipartiteAbove r a).card := s.card_nsmul_le_sum _ _ hm
     _ = ∑ b in t, (s.bipartiteBelow r b).card := sum_card_bipartite_above_eq_sum_card_bipartite_below _
-    _ ≤ _ := t.sum_le_of_forall_le _ _ hn
+    _ ≤ _ := t.sum_le_card_nsmul _ _ hn
     
 
 theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)] (hn : ∀, ∀ b ∈ t, ∀, n ≤ (s.bipartiteBelow r b).card)

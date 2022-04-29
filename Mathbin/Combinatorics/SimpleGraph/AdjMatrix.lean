@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2020 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Aaron Anderson, Jalex Stark, Lu-Ming Zhang
+Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
 -/
 import Mathbin.Combinatorics.SimpleGraph.Basic
+import Mathbin.Combinatorics.SimpleGraph.Connectivity
 import Mathbin.Data.Rel
 import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.LinearAlgebra.Matrix.Symmetric
@@ -29,10 +30,14 @@ properties to computational properties of the matrix.
 
 * `simple_graph.adj_matrix`: the adjacency matrix of a `simple_graph`.
 
+* `simple_graph.adj_matrix_pow_apply_eq_card_walk`: each entry of the `n`th power of
+  a graph's adjacency matrix counts the number of length-`n` walks between the corresponding
+  pair of vertices.
+
 -/
 
 
-open_locale BigOperators Matrix
+open BigOperators Matrix
 
 open Finset Matrix SimpleGraph
 
@@ -233,6 +238,36 @@ theorem adj_matrix_mul_vec_const_apply [Semiringₓ α] {a : α} {v : V} :
 theorem adj_matrix_mul_vec_const_apply_of_regular [Semiringₓ α] {d : ℕ} {a : α} (hd : G.IsRegularOfDegree d) {v : V} :
     (G.adjMatrix α).mulVec (Function.const _ a) v = d * a := by
   simp [hd v]
+
+-- ././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:253:2: unsupported tactic unify_equations
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : ℕ) (u v : V) :
+    (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
+  rw [card_set_walk_length_eq]
+  induction' n with n ih generalizing u v
+  · obtain rfl | h := eq_or_ne u v <;> simp [finset_walk_length, *]
+    
+  · nth_rw 0[Nat.succ_eq_one_add]
+    simp only [pow_addₓ, pow_oneₓ, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
+    rw [Finset.card_bUnion]
+    · norm_cast
+      rw [Set.sum_indicator_subset _ (subset_univ (G.neighbor_finset u))]
+      congr 2
+      ext x
+      split_ifs with hux <;> simp [hux]
+      
+    -- Disjointness for card_bUnion
+    · intro x hx y hy hxy p hp
+      split_ifs  at hp with hx hy <;>
+        simp only [inf_eq_inter, empty_inter, inter_empty, not_mem_empty, mem_inter, mem_map,
+            Function.Embedding.coe_fn_mk, exists_prop] at hp <;>
+          try
+            simpa using hp
+      obtain ⟨⟨qx, hql, hqp⟩, ⟨rx, hrl, hrp⟩⟩ := hp
+      "././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:253:2: unsupported tactic unify_equations"
+      exact absurd rfl hxy
+      
+    
 
 end SimpleGraph
 

@@ -41,7 +41,7 @@ variable {E : Type _} [InnerProductSpace 𝕜 E]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-open_locale Nnreal
+open Nnreal
 
 open Module.End Metric
 
@@ -171,7 +171,7 @@ local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ∥(x 
 theorem eq_smul_self_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E}
     (hextr : IsLocalExtrOn T.reApplyInnerSelf (Sphere (0 : E) ∥x₀∥) x₀) : T x₀ = (↑(rayleigh_quotient x₀) : 𝕜) • x₀ :=
   by
-  let this' := InnerProductSpace.isROrCToReal 𝕜 E
+  let this := InnerProductSpace.isROrCToReal 𝕜 E
   let S : E →L[ℝ] E := @ContinuousLinearMap.restrictScalars 𝕜 E E _ _ _ _ _ _ _ ℝ _ _ _ _ T
   have hSA : is_self_adjoint (S : E →ₗ[ℝ] E) := fun x y => by
     have := hT x y

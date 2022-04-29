@@ -24,7 +24,7 @@ variable {α : Type _} [TopologicalSpace α] [T2Space α] {f : α → α}
 
 open Function Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- If the iterates `f^[n] x` converge to `y` and `f` is continuous at `y`,
 then `y` is a fixed point for `f`. -/

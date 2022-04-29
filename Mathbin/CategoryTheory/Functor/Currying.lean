@@ -122,11 +122,21 @@ def currying : C ⥤ D ⥤ E ≌ C × D ⥤ E :=
 /-- `F.flip` is isomorphic to uncurrying `F`, swapping the variables, and currying. -/
 @[simps]
 def flipIsoCurrySwapUncurry (F : C ⥤ D ⥤ E) : F.flip ≅ curry.obj (prod.swap _ _ ⋙ uncurry.obj F) :=
-  (NatIso.ofComponents fun d =>
-      (NatIso.ofComponents fun c => eqToIso rfl) <| by
-        tidy) <|
-    by
-    tidy
+  NatIso.ofComponents
+    (fun d =>
+      NatIso.ofComponents (fun c => Iso.refl _)
+        (by
+          tidy))
+    (by
+      tidy)
+
+/-- The uncurrying of `F.flip` is isomorphic to
+swapping the factors followed by the uncurrying of `F`. -/
+@[simps]
+def uncurryObjFlip (F : C ⥤ D ⥤ E) : uncurry.obj F.flip ≅ prod.swap _ _ ⋙ uncurry.obj F :=
+  NatIso.ofComponents (fun p => Iso.refl _)
+    (by
+      tidy)
 
 end CategoryTheory
 

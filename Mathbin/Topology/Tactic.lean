@@ -67,7 +67,7 @@ unsafe def apply_continuous.comp : tactic Unit :=
 /-- List of tactics used by `continuity` internally. -/
 unsafe def continuity_tactics (md : Transparency := reducible) : List (tactic Stringₓ) :=
   [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.toString)),
-    apply_rules [pquote.1 continuity] 50 { md } >> pure "apply_rules continuity",
+    apply_rules [] [`` continuity] 50 { md } >> pure "apply_rules with continuity",
     apply_continuous.comp >> pure "refine continuous.comp _ _"]
 
 namespace Interactive

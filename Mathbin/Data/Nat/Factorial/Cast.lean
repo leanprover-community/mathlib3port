@@ -18,7 +18,7 @@ to `↑a - 1`, the other factor is `0` anyway.
 -/
 
 
-open_locale Nat
+open Nat
 
 variable (S : Type _)
 

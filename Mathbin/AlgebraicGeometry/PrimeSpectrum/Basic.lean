@@ -9,7 +9,7 @@ import Mathbin.RingTheory.Nilpotent
 import Mathbin.RingTheory.Localization.Away
 import Mathbin.RingTheory.Ideal.Prod
 import Mathbin.RingTheory.Ideal.Over
-import Mathbin.Topology.Opens
+import Mathbin.Topology.Sets.Opens
 import Mathbin.Topology.Sober
 
 /-!
@@ -47,7 +47,7 @@ and Chris Hughes (on an earlier repository).
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 universe u v
 
@@ -422,7 +422,7 @@ theorem t1_space_iff_is_field [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsFie
     
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases' hx : x.as_ideal = ⊥
-    · exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _ <| IsField.toField R h)
+    · exact hx.symm ▸ @Ideal.bot_is_maximal R (@Field.toDivisionRing _ h.to_field)
       
     · exact absurd h (Ringₓ.not_is_field_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
       
@@ -729,8 +729,6 @@ section Order
 
 We endow `prime_spectrum R` with a partial order,
 where `x ≤ y` if and only if `y ∈ closure {x}`.
-
-TODO: maybe define sober topological spaces, and generalise this instance to those
 -/
 
 

@@ -44,7 +44,7 @@ since it is not a monad in `Type` but in `CommRing` (or rather `CommSemiRing`).
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 noncomputable section
 

@@ -231,7 +231,7 @@ theorem LieHom.is_solvable_range (f : L' →ₗ⁅R⁆ L) [h : LieAlgebra.IsSolv
 namespace LieAlgebra
 
 theorem solvable_iff_equiv_solvable (e : L' ≃ₗ⁅R⁆ L) : IsSolvable R L' ↔ IsSolvable R L := by
-  constructor <;> intros h
+  constructor <;> intro h
   · exact e.symm.injective.lie_algebra_is_solvable
     
   · exact e.injective.lie_algebra_is_solvable
@@ -244,7 +244,7 @@ variable (R L)
 
 instance (priority := 100) of_abelian_is_solvable [IsLieAbelian L] : IsSolvable R L := by
   use 1
-  rw [← abelian_iff_derived_one_eq_bot, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquivSelf]
+  rw [← abelian_iff_derived_one_eq_bot, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv]
   infer_instance
 
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/

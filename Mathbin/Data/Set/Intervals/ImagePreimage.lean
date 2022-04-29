@@ -3,9 +3,7 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 -/
-import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Equiv.MulAdd
-import Mathbin.Algebra.Pointwise
+import Mathbin.Data.Set.Pointwise
 
 /-!
 # (Pre)images of intervals
@@ -19,7 +17,7 @@ lemmas about preimages and images of all intervals. We also prove a few lemmas a
 
 universe u
 
-open_locale Pointwise
+open Pointwise
 
 namespace Set
 
@@ -640,12 +638,15 @@ theorem image_mul_right_Ioo (a b : k) {c : k} (h : 0 < c) : (fun x => x * c) '' 
 theorem image_mul_left_Ioo {a : k} (h : 0 < a) (b c : k) : (· * ·) a '' Ioo b c = Ioo (a * b) (a * c) := by
   convert image_mul_right_Ioo b c h using 1 <;> simp only [mul_comm _ a]
 
-/-- The image under `inv` of `Ioo 0 a` is `Ioi a⁻¹`. -/
-theorem image_inv_Ioo_0_left {a : k} (ha : 0 < a) : Inv.inv '' Ioo 0 a = Ioi a⁻¹ := by
+/-- The (pre)image under `inv` of `Ioo 0 a` is `Ioi a⁻¹`. -/
+theorem inv_Ioo_0_left {a : k} (ha : 0 < a) : (Ioo 0 a)⁻¹ = Ioi a⁻¹ := by
   ext x
   exact
-    ⟨fun ⟨y, ⟨hy0, hya⟩, hyx⟩ => hyx ▸ (inv_lt_inv ha hy0).2 hya, fun h =>
-      ⟨x⁻¹, ⟨inv_pos.2 (lt_transₓ (inv_pos.2 ha) h), (inv_lt ha (lt_transₓ (inv_pos.2 ha) h)).1 h⟩, inv_invₓ x⟩⟩
+    ⟨fun h => inv_invₓ x ▸ (inv_lt_inv ha h.1).2 h.2, fun h =>
+      ⟨inv_pos.2 <| (inv_pos.2 ha).trans h, inv_invₓ a ▸ (inv_lt_inv ((inv_pos.2 ha).trans h) (inv_pos.2 ha)).2 h⟩⟩
+
+theorem inv_Ioi {a : k} (ha : 0 < a) : (Ioi a)⁻¹ = Ioo 0 a⁻¹ := by
+  rw [inv_eq_iff_inv_eq, inv_Ioo_0_left (inv_pos.2 ha), inv_invₓ]
 
 /-!
 ### Images under `x ↦ a * x + b`

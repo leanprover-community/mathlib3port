@@ -229,7 +229,7 @@ protected def rightOp (F : Cᵒᵖ ⥤ D) : C ⥤ Dᵒᵖ where
   map := fun X Y f => (F.map f.op).op
 
 instance {F : C ⥤ D} [Full F] : Full F.op where
-  Preimage := fun X Y f => (F.Preimage f.unop).op
+  preimage := fun X Y f => (F.preimage f.unop).op
 
 instance {F : C ⥤ D} [Faithful F] : Faithful F.op where
   map_injective' := fun X Y f g h =>

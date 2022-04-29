@@ -27,7 +27,7 @@ base rings to be a field, so we also generalize the lemma to rings in this file.
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 universe u v w u₁
 
@@ -118,7 +118,7 @@ end Algebra
 
 section
 
-open_locale Classical
+open Classical
 
 theorem Algebra.fg_trans' {R S A : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A] [Algebra R S]
     [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg) (hSA : (⊤ : Subalgebra S A).Fg) :
@@ -159,7 +159,7 @@ section Semiringₓ
 
 open Finsupp
 
-open_locale BigOperators Classical
+open BigOperators Classical
 
 universe v₁ w₁
 
@@ -245,7 +245,7 @@ variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
 open Finset Submodule
 
-open_locale Classical
+open Classical
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
@@ -264,7 +264,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
   have hxy : ∀, ∀ xi ∈ x, ∀, xi ∈ span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) :=
     fun xi hxi =>
     hf xi ▸
-      sum_mem _ fun yj hyj =>
+      sum_mem fun yj hyj =>
         smul_mem (span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C))
           ⟨f xi yj, Algebra.subset_adjoin <| hsx xi hxi yj hyj⟩ (subset_span <| mem_insert_of_mem hyj)
   have hyy :
@@ -286,7 +286,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
     · rw [← hf (yi * yj)]
       exact
         SetLike.mem_coe.2
-          ((sum_mem _) fun yk hyk =>
+          (sum_mem fun yk hyk =>
             smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
               ⟨f (yi * yj) yk, Algebra.subset_adjoin <| hsy yi hyi yj hyj yk hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
@@ -352,10 +352,9 @@ def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ 
     rfl
   right_inv := by
     rintro ⟨⟨f, _, _, _, _, _⟩, g, _, _, _, _, hg⟩
-    have : f = fun x => g (algebraMap B C x) := by
+    obtain rfl : f = fun x => g (algebraMap B C x) := by
       ext
       exact (hg x).symm
-    subst this
     rfl
 
 end AlgHomTower

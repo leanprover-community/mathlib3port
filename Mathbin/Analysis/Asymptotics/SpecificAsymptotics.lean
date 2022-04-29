@@ -16,7 +16,7 @@ theory developped in `analysis.asymptotics.asymptotics`.
 
 open Filter Asymptotics
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section NormedField
 

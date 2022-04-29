@@ -44,7 +44,7 @@ finer, coarser, induced topology, coinduced topology
 
 open Set Filter Classical
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 universe u v w
 
@@ -73,7 +73,7 @@ theorem nhds_generate_from {g : Set (Set α)} {a : α} : @nhds α (generateFrom 
   by
   rw [nhds_def] <;>
     exact
-      le_antisymmₓ (infi_le_infi fun s => infi_le_infi_const fun ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩)
+      le_antisymmₓ (binfi_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩)
         (le_infi fun s =>
           le_infi fun ⟨as, hs⟩ => by
             revert as
@@ -112,7 +112,7 @@ protected def mkOfNhds (n : α → Filter α) : TopologicalSpace α where
 theorem nhds_mk_of_nhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
     (h₁ : ∀ {a s}, s ∈ n a → ∃ t ∈ n a, t ⊆ s ∧ ∀, ∀ a' ∈ t, ∀, s ∈ n a') :
     @nhds α (TopologicalSpace.mkOfNhds n) a = n a := by
-  let this' := TopologicalSpace.mkOfNhds n
+  let this := TopologicalSpace.mkOfNhds n
   refine' le_antisymmₓ (fun s hs => _) fun s hs => _
   · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
     have h₁ : { b | s ∈ n b } ∈ 𝓝 a := by
@@ -232,7 +232,7 @@ instance : CompleteLattice (TopologicalSpace α) :=
   @OrderDual.completeLattice _ tmpCompleteLattice
 
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
-  @GaloisInsertion.u_le_u_iff _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) a b
+  Iff.rfl
 
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
@@ -262,6 +262,9 @@ theorem nhds_bot (α : Type _) : @nhds α ⊥ = pure := by
 
 theorem nhds_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] : @nhds α _ = pure :=
   (DiscreteTopology.eq_bot α).symm ▸ nhds_bot α
+
+theorem mem_nhds_discrete [TopologicalSpace α] [DiscreteTopology α] {x : α} {s : Set α} : s ∈ 𝓝 x ↔ x ∈ s := by
+  rw [nhds_discrete, mem_pure]
 
 theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x ≤ @nhds α t₂ x) : t₁ ≤ t₂ := fun s =>
   show @IsOpen α t₂ s → @IsOpen α t₁ s by
@@ -350,7 +353,7 @@ theorem is_open_coinduced {t : TopologicalSpace α} {s : Set β} {f : α → β}
 
 theorem preimage_nhds_coinduced [TopologicalSpace α] {π : α → β} {s : Set β} {a : α}
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced π ‹_›) (π a)) : π ⁻¹' s ∈ 𝓝 a := by
-  let this' := TopologicalSpace.coinduced π ‹_›
+  let this := TopologicalSpace.coinduced π ‹_›
   rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
   exact mem_nhds_iff.mpr ⟨π ⁻¹' V, Set.preimage_mono hVs, V_op, mem_V⟩
 
@@ -419,6 +422,23 @@ theorem coinduced_id [t : TopologicalSpace α] : t.coinduced id = t :=
 theorem coinduced_compose [tα : TopologicalSpace α] {f : α → β} {g : β → γ} :
     (tα.coinduced f).coinduced g = tα.coinduced (g ∘ f) :=
   topological_space_eq rfl
+
+theorem Equivₓ.induced_symm {α β : Type _} (e : α ≃ β) :
+    TopologicalSpace.induced e.symm = TopologicalSpace.coinduced e := by
+  ext t U
+  constructor
+  · rintro ⟨V, hV, rfl⟩
+    change t.is_open (e ⁻¹' _)
+    rwa [← preimage_comp, ← Equivₓ.coe_trans, Equivₓ.self_trans_symm]
+    
+  · intro hU
+    refine' ⟨e ⁻¹' U, hU, _⟩
+    rw [← preimage_comp, ← Equivₓ.coe_trans, Equivₓ.symm_trans_self, Equivₓ.coe_refl, preimage_id]
+    
+
+theorem Equivₓ.coinduced_symm {α β : Type _} (e : α ≃ β) :
+    TopologicalSpace.coinduced e.symm = TopologicalSpace.induced e := by
+  rw [← e.symm.induced_symm, e.symm_symm]
 
 end GaloisConnection
 

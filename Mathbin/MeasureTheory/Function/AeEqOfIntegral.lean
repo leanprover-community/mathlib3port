@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 -/
 import Mathbin.Analysis.NormedSpace.Dual
-import Mathbin.MeasureTheory.Function.StronglyMeasurable
+import Mathbin.MeasureTheory.Function.StronglyMeasurableLp
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-! # From equality of integrals to equality of functions
@@ -43,7 +43,7 @@ Generally useful lemmas which are not related to integrals:
 
 open MeasureTheory TopologicalSpace NormedSpace Filter
 
-open_locale Ennreal Nnreal MeasureTheory
+open Ennreal Nnreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -67,45 +67,53 @@ local notation "⟪" x ", " y "⟫" => y x
 
 variable (𝕜)
 
-theorem ae_eq_zero_of_forall_dual [NormedGroup E] [NormedSpace 𝕜 E] [SecondCountableTopology E] {f : α → E}
-    (hf : ∀ c : Dual 𝕜 E, (fun x => ⟪f x, c⟫) =ᵐ[μ] 0) : f =ᵐ[μ] 0 := by
-  let u := dense_seq E
-  have hu : DenseRange u := dense_range_dense_seq _
-  have : ∀ n, ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g (u n) = ∥u n∥ := fun n => exists_dual_vector'' 𝕜 (u n)
+theorem ae_eq_zero_of_forall_dual_of_is_separable [NormedGroup E] [NormedSpace 𝕜 E] {t : Set E}
+    (ht : TopologicalSpace.IsSeparable t) {f : α → E} (hf : ∀ c : Dual 𝕜 E, (fun x => ⟪f x, c⟫) =ᵐ[μ] 0)
+    (h't : ∀ᵐ x ∂μ, f x ∈ t) : f =ᵐ[μ] 0 := by
+  rcases ht with ⟨d, d_count, hd⟩
+  have : Encodable d := d_count.to_encodable
+  have : ∀ x : d, ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g x = ∥(x : E)∥ := fun x => exists_dual_vector'' 𝕜 x
   choose s hs using this
-  have A : ∀ a : E, (∀ n, ⟪a, s n⟫ = (0 : 𝕜)) → a = 0 := by
-    intro a ha
+  have A : ∀ a : E, a ∈ t → (∀ x, ⟪a, s x⟫ = (0 : 𝕜)) → a = 0 := by
+    intro a hat ha
     contrapose! ha
     have a_pos : 0 < ∥a∥ := by
       simp only [ha, norm_pos_iff, Ne.def, not_false_iff]
-    have a_mem : a ∈ Closure (Set.Range u) := by
-      simp [hu.closure_range]
-    obtain ⟨n, hn⟩ : ∃ n : ℕ, dist a (u n) < ∥a∥ / 2 := Metric.mem_closure_range_iff.1 a_mem (∥a∥ / 2) (half_pos a_pos)
-    use n
-    have I : ∥a∥ / 2 < ∥u n∥ := by
-      have : ∥a∥ ≤ ∥u n∥ + ∥a - u n∥ := norm_le_insert' _ _
-      have : ∥a - u n∥ < ∥a∥ / 2 := by
-        rwa [dist_eq_norm] at hn
+    have a_mem : a ∈ Closure d := hd hat
+    obtain ⟨x, hx⟩ : ∃ x : d, dist a x < ∥a∥ / 2 := by
+      rcases Metric.mem_closure_iff.1 a_mem (∥a∥ / 2) (half_pos a_pos) with ⟨x, h'x, hx⟩
+      exact ⟨⟨x, h'x⟩, hx⟩
+    use x
+    have I : ∥a∥ / 2 < ∥(x : E)∥ := by
+      have : ∥a∥ ≤ ∥(x : E)∥ + ∥a - x∥ := norm_le_insert' _ _
+      have : ∥a - x∥ < ∥a∥ / 2 := by
+        rwa [dist_eq_norm] at hx
       linarith
     intro h
-    apply lt_irreflₓ ∥s n (u n)∥
-    calc ∥s n (u n)∥ = ∥s n (u n - a)∥ := by
-        simp only [h, sub_zero, ContinuousLinearMap.map_sub]_ ≤ 1 * ∥u n - a∥ :=
-        ContinuousLinearMap.le_of_op_norm_le _ (hs n).1 _ _ < ∥a∥ / 2 := by
+    apply lt_irreflₓ ∥s x x∥
+    calc ∥s x x∥ = ∥s x (x - a)∥ := by
+        simp only [h, sub_zero, ContinuousLinearMap.map_sub]_ ≤ 1 * ∥(x : E) - a∥ :=
+        ContinuousLinearMap.le_of_op_norm_le _ (hs x).1 _ _ < ∥a∥ / 2 := by
         rw [one_mulₓ]
-        rwa [dist_eq_norm'] at hn _ < ∥u n∥ := I _ = ∥s n (u n)∥ := by
-        rw [(hs n).2, IsROrC.norm_coe_norm]
-  have hfs : ∀ n : ℕ, ∀ᵐ x ∂μ, ⟪f x, s n⟫ = (0 : 𝕜) := fun n => hf (s n)
-  have hf' : ∀ᵐ x ∂μ, ∀ n : ℕ, ⟪f x, s n⟫ = (0 : 𝕜) := by
+        rwa [dist_eq_norm'] at hx _ < ∥(x : E)∥ := I _ = ∥s x x∥ := by
+        rw [(hs x).2, IsROrC.norm_coe_norm]
+  have hfs : ∀ y : d, ∀ᵐ x ∂μ, ⟪f x, s y⟫ = (0 : 𝕜) := fun y => hf (s y)
+  have hf' : ∀ᵐ x ∂μ, ∀ y : d, ⟪f x, s y⟫ = (0 : 𝕜) := by
     rwa [ae_all_iff]
-  exact hf'.mono fun x hx => A (f x) hx
+  filter_upwards [hf', h't] with x hx h'x
+  exact A (f x) h'x hx
+
+theorem ae_eq_zero_of_forall_dual [NormedGroup E] [NormedSpace 𝕜 E] [SecondCountableTopology E] {f : α → E}
+    (hf : ∀ c : Dual 𝕜 E, (fun x => ⟪f x, c⟫) =ᵐ[μ] 0) : f =ᵐ[μ] 0 :=
+  ae_eq_zero_of_forall_dual_of_is_separable 𝕜 (is_separable_of_separable_space (Set.Univ : Set E)) hf
+    (eventually_of_forall fun x => Set.mem_univ _)
 
 variable {𝕜}
 
 end AeEqOfForall
 
 variable {α E : Type _} {m m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α} [NormedGroup E] [NormedSpace ℝ E]
-  [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E] [CompleteSpace E] {p : ℝ≥0∞}
+  [CompleteSpace E] {p : ℝ≥0∞}
 
 section AeEqOfForallSetIntegralEq
 
@@ -150,7 +158,7 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrderₓ β] [Topolog
 
 section Ennreal
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite [SigmaFinite μ] {f g : α → ℝ≥0∞} (hf : Measurable f)
     (hg : Measurable g) (h : ∀ s, MeasurableSet s → μ s < ∞ → (∫⁻ x in s, f x ∂μ) ≤ ∫⁻ x in s, g x ∂μ) : f ≤ᵐ[μ] g := by
@@ -220,13 +228,13 @@ section RealFiniteMeasure
 variable [IsFiniteMeasure μ] {f : α → ℝ}
 
 /-- Don't use this lemma. Use `ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure`. -/
-theorem ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_measurable (hfm : Measurable f)
+theorem ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_strongly_measurable (hfm : StronglyMeasurable f)
     (hf : Integrable f μ) (hf_zero : ∀ s, MeasurableSet s → 0 ≤ ∫ x in s, f x ∂μ) : 0 ≤ᵐ[μ] f := by
   simp_rw [eventually_le, Pi.zero_apply]
   rw [ae_const_le_iff_forall_lt_measure_zero]
   intro b hb_neg
   let s := { x | f x ≤ b }
-  have hs : MeasurableSet s := measurable_set_le hfm measurable_const
+  have hs : MeasurableSet s := hfm.measurable_set_le strongly_measurable_const
   have h_int_gt : (∫ x in s, f x ∂μ) ≤ b * (μ s).toReal := by
     have h_const_le : (∫ x in s, f x ∂μ) ≤ ∫ x in s, b ∂μ := by
       refine' set_integral_mono_ae_restrict hf.integrable_on (integrable_on_const.mpr (Or.inr (measure_lt_top μ s))) _
@@ -256,7 +264,8 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure (hf : Integrab
     rw [set_integral_congr_ae hs (hf_ae.mono fun x hx hxs => hx.symm)]
     exact hf_zero s hs
   exact
-    (ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_measurable hf'_meas hf'_integrable hf'_zero).trans
+    (ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure_of_strongly_measurable hf'_meas hf'_integrable
+          hf'_zero).trans
       hf_ae.symm.le
 
 end RealFiniteMeasure
@@ -337,7 +346,8 @@ theorem ae_eq_zero_restrict_of_forall_set_integral_eq_zero {f : α → E}
     (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → IntegrableOn f s μ)
     (hf_zero : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫ x in s, f x ∂μ) = 0) {t : Set α} (ht : MeasurableSet t)
     (hμt : μ t ≠ ∞) : f =ᵐ[μ.restrict t] 0 := by
-  refine' ae_eq_zero_of_forall_dual ℝ fun c => _
+  rcases(hf_int_finite t ht hμt.lt_top).AeStronglyMeasurable.is_separable_ae_range with ⟨u, u_sep, hu⟩
+  refine' ae_eq_zero_of_forall_dual_of_is_separable ℝ u_sep (fun c => _) hu
   refine' ae_eq_zero_restrict_of_forall_set_integral_eq_zero_real _ _ ht hμt
   · intro s hs hμs
     exact ContinuousLinearMap.integrable_comp c (hf_int_finite s hs hμs)
@@ -443,7 +453,7 @@ theorem ae_eq_zero_of_forall_set_integral_eq_of_fin_strongly_measurable_trim (hm
   have htf_zero : f =ᵐ[μ.restrict (tᶜ)] 0 := by
     rw [eventually_eq, ae_restrict_iff' (MeasurableSet.compl (hm _ ht_meas))]
     exact eventually_of_forall htf_zero
-  have hf_meas_m : measurable[m] f := hf.measurable
+  have hf_meas_m : strongly_measurable[m] f := hf.strongly_measurable
   suffices : f =ᵐ[μ.restrict t] 0
   exact ae_of_ae_restrict_of_ae_restrict_compl _ this htf_zero
   refine' measure_eq_zero_of_trim_eq_zero hm _
@@ -508,8 +518,8 @@ theorem AeMeasurable.ae_eq_of_forall_set_lintegral_eq {f g : α → ℝ≥0∞} 
       
     
   -- putting the proofs where they are used is extremely slow
-  exacts[ae_of_all _ fun x => Ennreal.to_real_nonneg, hg.ennreal_to_real.restrict,
-    ae_of_all _ fun x => Ennreal.to_real_nonneg, hf.ennreal_to_real.restrict]
+  exacts[ae_of_all _ fun x => Ennreal.to_real_nonneg, hg.ennreal_to_real.restrict.ae_strongly_measurable,
+    ae_of_all _ fun x => Ennreal.to_real_nonneg, hf.ennreal_to_real.restrict.ae_strongly_measurable]
 
 end Lintegral
 

@@ -19,7 +19,7 @@ open CategoryTheory
 
 open CategoryTheory.Subobject
 
-open_locale ModuleCat
+open ModuleCat
 
 universe v u
 

@@ -3,10 +3,11 @@ Copyright (c) 2018 Simon Hudon. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
+import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Data.Pi
 import Mathbin.Data.Set.Function
+import Mathbin.Data.Set.Pairwise
 import Mathbin.Tactic.PiInstances
-import Mathbin.Algebra.Group.HomInstances
 
 /-!
 # Pi instances for groups and monoids
@@ -57,7 +58,7 @@ instance monoid [∀ i, Monoidₓ <| f i] : Monoidₓ (∀ i : I, f i) := by
       tactic.pi_instance_derive_field
 
 -- the attributes are intentionally out of order. `smul_apply` proves `nsmul_apply`.
-@[to_additive nsmul_apply, simp]
+@[to_additive, simp]
 theorem pow_apply [∀ i, Monoidₓ <| f i] (n : ℕ) : (x ^ n) i = x i ^ n :=
   rfl
 
@@ -152,7 +153,7 @@ end Pi
 namespace MulHom
 
 @[to_additive]
-theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : MulHom M N) : (f * g : M → N) = fun x => f x * g x :=
+theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : M →ₙ* N) : (f * g : M → N) = fun x => f x * g x :=
   rfl
 
 end MulHom
@@ -218,28 +219,34 @@ into a dependent family of values, as functions supported at a point.
 
 This is the `one_hom` version of `pi.mul_single`. -/
 @[to_additive ZeroHom.single
-      "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`.",
-  simps]
+      "The zero-preserving homomorphism including a single value\ninto a dependent family of values, as functions supported at a point.\n\nThis is the `zero_hom` version of `pi.single`."]
 def OneHom.single [∀ i, One <| f i] (i : I) : OneHom (f i) (∀ i, f i) where
   toFun := mulSingle i
   map_one' := mul_single_one i
+
+@[simp, to_additive]
+theorem OneHom.single_apply [∀ i, One <| f i] (i : I) (x : f i) : OneHom.single f i x = mulSingle i x :=
+  rfl
 
 /-- The monoid homomorphism including a single monoid into a dependent family of additive monoids,
 as functions supported at a point.
 
 This is the `monoid_hom` version of `pi.mul_single`. -/
 @[to_additive
-      "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`.",
-  simps]
+      "The additive monoid homomorphism including a single additive\nmonoid into a dependent family of additive monoids, as functions supported at a point.\n\nThis is the `add_monoid_hom` version of `pi.single`."]
 def MonoidHom.single [∀ i, MulOneClassₓ <| f i] (i : I) : f i →* ∀ i, f i :=
   { OneHom.single f i with map_mul' := mul_single_op₂ (fun _ => (· * ·)) (fun _ => one_mulₓ _) _ }
+
+@[simp, to_additive]
+theorem MonoidHom.single_apply [∀ i, MulOneClassₓ <| f i] (i : I) (x : f i) : MonoidHom.single f i x = mulSingle i x :=
+  rfl
 
 /-- The multiplicative homomorphism including a single `mul_zero_class`
 into a dependent family of `mul_zero_class`es, as functions supported at a point.
 
 This is the `mul_hom` version of `pi.single`. -/
 @[simps]
-def MulHom.single [∀ i, MulZeroClassₓ <| f i] (i : I) : MulHom (f i) (∀ i, f i) where
+def MulHom.single [∀ i, MulZeroClassₓ <| f i] (i : I) : f i →ₙ* ∀ i, f i where
   toFun := single i
   map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => zero_mul _) _
 
@@ -260,6 +267,35 @@ theorem Pi.single_div [∀ i, Groupₓ <| f i] (i : I) (x y : f i) : mulSingle i
 
 theorem Pi.single_mul [∀ i, MulZeroClassₓ <| f i] (i : I) (x y : f i) : single i (x * y) = single i x * single i y :=
   (MulHom.single f i).map_mul x y
+
+/-- The injection into a pi group at different indices commutes.
+
+For injections of commuting elements at the same index, see `commute.map` -/
+@[to_additive
+      "The injection into an additive pi group at different indices commutes.\n\nFor injections of commuting elements at the same index, see `add_commute.map`"]
+theorem Pi.mul_single_commute [∀ i, MulOneClassₓ <| f i] :
+    Pairwise fun i j => ∀ x : f i y : f j, Commute (mulSingle i x) (mulSingle j y) := by
+  intro i j hij x y
+  ext k
+  by_cases' h1 : i = k
+  · subst h1
+    simp [hij]
+    
+  by_cases' h2 : j = k
+  · subst h2
+    simp [hij]
+    
+  simp [h1, h2]
+
+/-- The injection into a pi group with the same values commutes. -/
+@[to_additive "The injection into an additive pi group with the same values commutes."]
+theorem Pi.mul_single_apply_commute [∀ i, MulOneClassₓ <| f i] (x : ∀ i, f i) (i j : I) :
+    Commute (mulSingle i (x i)) (mulSingle j (x j)) := by
+  obtain rfl | hij := Decidable.eq_or_ne i j
+  · rfl
+    
+  · exact Pi.mul_single_commute _ _ hij _ _
+    
 
 @[to_additive update_eq_sub_add_single]
 theorem Pi.update_eq_div_mul_single [∀ i, Groupₓ <| f i] (g : ∀ i : I, f i) (x : f i) :

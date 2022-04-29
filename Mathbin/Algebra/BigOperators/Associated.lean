@@ -22,7 +22,7 @@ variable {α β γ δ : Type _}
 -- the same local notation used in `algebra.associated`
 local infixl:50 " ~ᵤ " => Associated
 
-open_locale BigOperators
+open BigOperators
 
 namespace Prime
 
@@ -68,6 +68,43 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
     · rcases ih (fun r hr => hs _ (Multiset.mem_cons.2 (Or.inr hr))) h with ⟨q, hq₁, hq₂⟩
       exact ⟨q, Multiset.mem_cons.2 (Or.inr hq₁), hq₂⟩
       
+
+theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α] [∀ a : α, DecidablePred (Associated a)] {s : Multiset α}
+    (n : α) (h : ∀, ∀ a ∈ s, ∀, Prime a) (div : ∀, ∀ a ∈ s, ∀, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) :
+    s.Prod ∣ n := by
+  induction' s using Multiset.induction_on with a s induct n primes divs generalizing n
+  · simp only [Multiset.prod_zero, one_dvd]
+    
+  · rw [Multiset.prod_cons]
+    obtain ⟨k, rfl⟩ : a ∣ n := div a (Multiset.mem_cons_self a s)
+    apply mul_dvd_mul_left a
+    refine'
+      induct (fun a ha => h a (Multiset.mem_cons_of_mem ha))
+        (fun a => (Multiset.countp_le_of_le _ (Multiset.le_cons_self _ _)).trans (uniq a)) k fun b b_in_s => _
+    · have b_div_n := div b (Multiset.mem_cons_of_mem b_in_s)
+      have a_prime := h a (Multiset.mem_cons_self a s)
+      have b_prime := h b (Multiset.mem_cons_of_mem b_in_s)
+      refine' (b_prime.dvd_or_dvd b_div_n).resolve_left fun b_div_a => _
+      have assoc := b_prime.associated_of_dvd a_prime b_div_a
+      have := uniq a
+      rw [Multiset.countp_cons_of_pos _ (Associated.refl _), Nat.succ_le_succ_iff, ← not_ltₓ, Multiset.countp_pos] at
+        this
+      exact this ⟨b, b_in_s, assoc.symm⟩
+      
+    
+
+theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
+    (h : ∀, ∀ a ∈ s, ∀, Prime a) (div : ∀, ∀ a ∈ s, ∀, a ∣ n) : (∏ p in s, p) ∣ n := by
+  classical
+  exact
+    Multiset.prod_primes_dvd n
+      (by
+        simpa only [Multiset.map_id', Finset.mem_def] using h)
+      (by
+        simpa only [Multiset.map_id', Finset.mem_def] using div)
+      (by
+        simp only [Multiset.map_id', associated_eq_eq, Multiset.countp_eq_card_filter, ←
+          Multiset.count_eq_card_filter_eq, ← Multiset.nodup_iff_count_le_one, s.nodup])
 
 namespace Associates
 

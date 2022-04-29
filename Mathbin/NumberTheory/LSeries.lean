@@ -29,7 +29,7 @@ Given an arithmetic function, we define the corresponding L-series.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
 namespace Nat
 
@@ -98,7 +98,7 @@ theorem l_series_summable_of_bounded_of_one_lt_re {f : ArithmeticFunction ℂ} {
   apply l_series_summable_of_bounded_of_one_lt_real h
   exact hz
 
-open_locale ArithmeticFunction
+open ArithmeticFunction
 
 theorem zeta_l_series_summable_iff_one_lt_re {z : ℂ} : LSeriesSummable ζ z ↔ 1 < z.re := by
   rw [← l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re), l_series_summable, ← summable_norm_iff, ←

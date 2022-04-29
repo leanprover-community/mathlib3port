@@ -39,7 +39,7 @@ which removes some boilerplate code.
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open Nat LocalRing Padic
 
@@ -476,7 +476,7 @@ section lift
 
 open CauSeq PadicSeq
 
-variable {R : Type _} [CommRingₓ R] (f : ∀ k : ℕ, R →+* Zmod (p ^ k))
+variable {R : Type _} [NonAssocSemiringₓ R] (f : ∀ k : ℕ, R →+* Zmod (p ^ k))
   (f_compat : ∀ k1 k2 hk : k1 ≤ k2, (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
 
 omit hp_prime
@@ -673,7 +673,7 @@ theorem ext_of_to_zmod_pow {x y : ℤ_[p]} : (∀ n, toZmodPow n x = toZmodPow n
     rfl
     
 
-theorem to_zmod_pow_eq_iff_ext {R : Type _} [CommRingₓ R] {g g' : R →+* ℤ_[p]} :
+theorem to_zmod_pow_eq_iff_ext {R : Type _} [NonAssocSemiringₓ R] {g g' : R →+* ℤ_[p]} :
     (∀ n, (toZmodPow n).comp g = (toZmodPow n).comp g') ↔ g = g' := by
   constructor
   · intro hg

@@ -25,7 +25,7 @@ rectangular box, box partition
 
 noncomputable section
 
-open_locale Classical Ennreal Nnreal
+open Classical Ennreal Nnreal
 
 open Set Function
 

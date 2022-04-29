@@ -21,13 +21,13 @@ The notation `~` is used for permutation equivalence.
 -/
 
 
-open_locale Nat
+open Nat
 
 universe uu vv
 
 namespace List
 
-variable {α : Type uu} {β : Type vv}
+variable {α : Type uu} {β : Type vv} {l₁ l₂ : List α}
 
 /-- `perm l₁ l₂` or `l₁ ~ l₂` asserts that `l₁` and `l₂` are permutations
   of each other. This is defined by induction using pairwise swaps. -/
@@ -475,7 +475,7 @@ depend on the order of elements-/
 theorem Perm.prod_eq' [Monoidₓ α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc : l₁.Pairwise fun x y => x * y = y * x) :
     l₁.Prod = l₂.Prod :=
   h.foldl_eq'
-    ((forall_of_forall_of_pairwise (fun x y h z => (h z).symm) fun x hx z => rfl) <|
+    ((Pairwiseₓ.forall_of_forall (fun x y h z => (h z).symm) fun x hx z => rfl) <|
       hc.imp fun x y h z => by
         simp only [mul_assoc, h])
     _
@@ -595,6 +595,10 @@ theorem subperm_cons (a : α) {l₁ l₂ : List α} : a :: l₁ <+~ a :: l₂ �
       ,
     fun ⟨l, p, s⟩ => ⟨a :: l, p.cons a, s.cons2 _ _ _⟩⟩
 
+alias subperm_cons ↔ List.Subperm.of_cons List.Subperm.cons
+
+attribute [protected] subperm.cons
+
 theorem cons_subperm_of_mem {a : α} {l₁ l₂ : List α} (d₁ : Nodupₓ l₁) (h₁ : a ∉ l₁) (h₂ : a ∈ l₂) (s : l₁ <+~ l₂) :
     a :: l₁ <+~ l₂ := by
   rcases s with ⟨l, p, s⟩
@@ -616,8 +620,7 @@ theorem cons_subperm_of_mem {a : α} {l₁ l₂ : List α} (d₁ : Nodupₓ l₁
     rcases mem_split bm with ⟨t₁, t₂, rfl⟩
     have st : t₁ ++ t₂ <+ t₁ ++ b :: t₂ := by
       simp
-    rcases ih am (nodup_of_sublist st d₁) (mt (fun x => st.subset x) h₁) (perm.cons_inv <| p.trans perm_middle) with
-      ⟨t, p', s'⟩
+    rcases ih am (d₁.sublist st) (mt (fun x => st.subset x) h₁) (perm.cons_inv <| p.trans perm_middle) with ⟨t, p', s'⟩
     exact ⟨b :: t, (p'.cons b).trans <| (swap _ _ _).trans (perm_middle.symm.cons a), s'.cons2 _ _ _⟩
 
 theorem subperm_append_left {l₁ l₂ : List α} : ∀ l, l ++ l₁ <+~ l ++ l₂ ↔ l₁ <+~ l₂
@@ -645,7 +648,7 @@ theorem Subperm.exists_of_length_lt {l₁ l₂ : List α} : l₁ <+~ l₂ → le
     · exact (IH <| Nat.lt_of_succ_lt_succₓ h).imp fun a s => (swap _ _ _).subperm_right.1 <| (subperm_cons _).2 s
       
 
-theorem subperm_of_subset_nodup {l₁ l₂ : List α} (d : Nodupₓ l₁) (H : l₁ ⊆ l₂) : l₁ <+~ l₂ := by
+protected theorem Nodupₓ.subperm (d : Nodupₓ l₁) (H : l₁ ⊆ l₂) : l₁ <+~ l₂ := by
   induction' d with a l₁' h d IH
   · exact ⟨nil, perm.nil, nil_sublist _⟩
     
@@ -655,8 +658,7 @@ theorem subperm_of_subset_nodup {l₁ l₂ : List α} (d : Nodupₓ l₁) (H : l
     
 
 theorem perm_ext {l₁ l₂ : List α} (d₁ : Nodupₓ l₁) (d₂ : Nodupₓ l₂) : l₁ ~ l₂ ↔ ∀ a, a ∈ l₁ ↔ a ∈ l₂ :=
-  ⟨fun p a => p.mem_iff, fun H =>
-    Subperm.antisymm (subperm_of_subset_nodup d₁ fun a => (H a).1) (subperm_of_subset_nodup d₂ fun a => (H a).2)⟩
+  ⟨fun p a => p.mem_iff, fun H => (d₁.Subperm fun a => (H a).1).antisymm <| d₂.Subperm fun a => (H a).2⟩
 
 theorem Nodupₓ.sublist_ext {l₁ l₂ l : List α} (d : Nodupₓ l) (s₁ : l₁ <+ l) (s₂ : l₂ <+ l) : l₁ ~ l₂ ↔ l₁ = l₂ :=
   ⟨fun h => by
@@ -1207,8 +1209,7 @@ theorem Perm.slice_inter {α} [DecidableEq α] {xs ys : List α} (n m : ℕ) (h 
   have : n ≤ n + m := Nat.le_add_rightₓ _ _
   have := h.nodup_iff.2 h'
   apply perm.trans _ (perm.inter_append _).symm <;>
-    solve_by_elim(config := { max_depth := 7 }) [perm.append, perm.drop_inter, perm.take_inter, disjoint_take_drop, h,
-      h']
+    solve_by_elim [perm.append, perm.drop_inter, perm.take_inter, disjoint_take_drop, h, h']
 
 -- enumerating permutations
 section Permutations

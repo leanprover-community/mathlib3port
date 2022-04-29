@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2021 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Sébastien Gouëzel
+Authors: Sébastien Gouëzel, Yaël Dillies
 -/
 import Mathbin.Analysis.Normed.Group.Pointwise
+import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Topology.MetricSpace.HausdorffDistance
 
@@ -18,11 +19,13 @@ multiplication of bounded sets remain bounded.
 
 open Metric Set
 
-open_locale Pointwise TopologicalSpace
+open Pointwise TopologicalSpace
 
-section NormedSpace
+variable {𝕜 E : Type _} [NormedField 𝕜]
 
-variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
+section SemiNormedGroup
+
+variable [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r = Ball (c • x) (∥c∥ * r) := by
   ext y
@@ -30,31 +33,14 @@ theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Ball x r =
   conv_lhs => rw [← inv_smul_smul₀ hc x]
   simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
 
+theorem smul_unit_ball {c : 𝕜} (hc : c ≠ 0) : c • Ball (0 : E) (1 : ℝ) = Ball (0 : E) ∥c∥ := by
+  rw [smul_ball hc, smul_zero, mul_oneₓ]
+
 theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) := by
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
   simp only [mem_sphere, dist_smul, norm_inv, ← div_eq_inv_mul, div_eq_iff (norm_pos_iff.2 hc).ne', mul_comm r]
-
-/-- In a nontrivial real normed space, a sphere is nonempty if and only if its radius is
-nonnegative. -/
-@[simp]
-theorem NormedSpace.sphere_nonempty {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] {x : E} {r : ℝ} :
-    (Sphere x r).Nonempty ↔ 0 ≤ r := by
-  refine' ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr => _⟩
-  rcases exists_ne x with ⟨y, hy⟩
-  have : ∥y - x∥ ≠ 0 := by
-    simpa [sub_eq_zero]
-  use r • ∥y - x∥⁻¹ • (y - x) + x
-  simp [norm_smul, this, Real.norm_of_nonneg hr]
-
-theorem smul_sphere {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [Nontrivial E] (c : 𝕜) (x : E)
-    {r : ℝ} (hr : 0 ≤ r) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) := by
-  rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [zero_smul_set, Set.singleton_zero, hr]
-    
-  · exact smul_sphere' hc x r
-    
 
 theorem smul_closed_ball' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   simp only [← ball_union_sphere, Set.smul_set_union, smul_ball hc, smul_sphere' hc]
@@ -92,28 +78,186 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
   apply hε
   simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
 
-theorem set_smul_mem_nhds_zero {s : Set E} (hs : s ∈ 𝓝 (0 : E)) {c : 𝕜} (hc : c ≠ 0) : c • s ∈ 𝓝 (0 : E) := by
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : 0 < ε), ball 0 ε ⊆ s := Metric.mem_nhds_iff.1 hs
-  have : c • ball (0 : E) ε ∈ 𝓝 (0 : E) := by
-    rw [smul_ball hc, smul_zero]
-    exact
-      ball_mem_nhds _
-        (mul_pos
-          (by
-            simpa using hc)
-          εpos)
-  exact Filter.mem_of_superset this ((set_smul_subset_set_smul_iff₀ hc).2 hε)
+/-- Any ball is the image of a ball centered at the origin under a shift. -/
+theorem vadd_ball_zero (x : E) (r : ℝ) : x +ᵥ Ball 0 r = Ball x r := by
+  rw [vadd_ball, vadd_eq_add, add_zeroₓ]
 
-theorem set_smul_mem_nhds_zero_iff (s : Set E) {c : 𝕜} (hc : c ≠ 0) : c • s ∈ 𝓝 (0 : E) ↔ s ∈ 𝓝 (0 : E) := by
-  refine' ⟨fun h => _, fun h => set_smul_mem_nhds_zero h hc⟩
-  convert set_smul_mem_nhds_zero h (inv_ne_zero hc)
-  rw [smul_smul, inv_mul_cancel hc, one_smul]
+/-- Any closed ball is the image of a closed ball centered at the origin under a shift. -/
+theorem vadd_closed_ball_zero (x : E) (r : ℝ) : x +ᵥ ClosedBall 0 r = ClosedBall x r := by
+  rw [vadd_closed_ball, vadd_eq_add, add_zeroₓ]
 
-end NormedSpace
+variable [NormedSpace ℝ E] {x y z : E} {δ ε : ℝ}
 
-section NormedSpace
+/-- In a real normed space, the image of the unit ball under scalar multiplication by a positive
+constant `r` is the ball of radius `r`. -/
+theorem smul_unit_ball_of_pos {r : ℝ} (hr : 0 < r) : r • Ball 0 1 = Ball (0 : E) r := by
+  rw [smul_unit_ball hr.ne', Real.norm_of_nonneg hr.le]
 
-variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+-- This is also true for `ℚ`-normed spaces
+theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
+    ∃ y, dist x y = b * dist x z ∧ dist y z = a * dist x z := by
+  use a • x + b • z
+  nth_rw 0[← one_smul ℝ x]
+  nth_rw 3[← one_smul ℝ z]
+  simp [dist_eq_norm, ← hab, add_smul, ← smul_sub, norm_smul_of_nonneg, ha, hb]
+
+theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
+  obtain rfl | hε' := hε.eq_or_lt
+  · exact
+      ⟨z, by
+        rwa [zero_addₓ] at h, (dist_self _).le⟩
+    
+  have hεδ := add_pos_of_pos_of_nonneg hε' hδ
+  refine'
+    (exists_dist_eq x z (div_nonneg hε <| add_nonneg hε hδ) (div_nonneg hδ <| add_nonneg hε hδ) <| by
+          rw [← add_div, div_self hεδ.ne']).imp
+      fun y hy => _
+  rw [hy.1, hy.2, div_mul_comm', div_mul_comm' ε]
+  rw [← div_le_one hεδ] at h
+  exact ⟨mul_le_of_le_one_left hδ h, mul_le_of_le_one_left hε h⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem exists_dist_le_lt (hδ : 0 ≤ δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y ≤ δ ∧ dist y z < ε := by
+  refine'
+    (exists_dist_eq x z (div_nonneg hε.le <| add_nonneg hε.le hδ) (div_nonneg hδ <| add_nonneg hε.le hδ) <| by
+          rw [← add_div, div_self (add_pos_of_pos_of_nonneg hε hδ).ne']).imp
+      fun y hy => _
+  rw [hy.1, hy.2, div_mul_comm', div_mul_comm' ε]
+  rw [← div_lt_one (add_pos_of_pos_of_nonneg hε hδ)] at h
+  exact ⟨mul_le_of_le_one_left hδ h.le, mul_lt_of_lt_one_left hε h⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem exists_dist_lt_le (hδ : 0 < δ) (hε : 0 ≤ ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z ≤ ε := by
+  obtain ⟨y, yz, xy⟩ :=
+    exists_dist_le_lt hε hδ
+      (show dist z x < δ + ε by
+        simpa only [dist_comm, add_commₓ] using h)
+  exact
+    ⟨y, by
+      simp [dist_comm x y, dist_comm y z, *]⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem exists_dist_lt_lt (hδ : 0 < δ) (hε : 0 < ε) (h : dist x z < ε + δ) : ∃ y, dist x y < δ ∧ dist y z < ε := by
+  refine'
+    (exists_dist_eq x z (div_nonneg hε.le <| add_nonneg hε.le hδ.le) (div_nonneg hδ.le <| add_nonneg hε.le hδ.le) <| by
+          rw [← add_div, div_self (add_pos hε hδ).ne']).imp
+      fun y hy => _
+  rw [hy.1, hy.2, div_mul_comm', div_mul_comm' ε]
+  rw [← div_lt_one (add_pos hε hδ)] at h
+  exact ⟨mul_lt_of_lt_one_left hδ h, mul_lt_of_lt_one_left hε h⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) : Disjoint (Ball x δ) (Ball y ε) ↔ δ + ε ≤ dist x y := by
+  refine' ⟨fun h => le_of_not_ltₓ fun hxy => _, ball_disjoint_ball⟩
+  rw [add_commₓ] at hxy
+  obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_lt hδ hε hxy
+  rw [dist_comm] at hxz
+  exact h ⟨hxz, hzy⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem disjoint_ball_closed_ball_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
+    Disjoint (Ball x δ) (ClosedBall y ε) ↔ δ + ε ≤ dist x y := by
+  refine' ⟨fun h => le_of_not_ltₓ fun hxy => _, ball_disjoint_closed_ball⟩
+  rw [add_commₓ] at hxy
+  obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_le hδ hε hxy
+  rw [dist_comm] at hxz
+  exact h ⟨hxz, hzy⟩
+
+-- This is also true for `ℚ`-normed spaces
+theorem disjoint_closed_ball_ball_iff (hδ : 0 ≤ δ) (hε : 0 < ε) :
+    Disjoint (ClosedBall x δ) (Ball y ε) ↔ δ + ε ≤ dist x y := by
+  rw [Disjoint.comm, disjoint_ball_closed_ball_iff hε hδ, add_commₓ, dist_comm] <;> infer_instance
+
+theorem disjoint_closed_ball_closed_ball_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
+    Disjoint (ClosedBall x δ) (ClosedBall y ε) ↔ δ + ε < dist x y := by
+  refine' ⟨fun h => lt_of_not_geₓ fun hxy => _, closed_ball_disjoint_closed_ball⟩
+  rw [add_commₓ] at hxy
+  obtain ⟨z, hxz, hzy⟩ := exists_dist_le_le hδ hε hxy
+  rw [dist_comm] at hxz
+  exact h ⟨hxz, hzy⟩
+
+open Emetric Ennreal
+
+@[simp]
+theorem inf_edist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
+    infEdist x (Thickening δ s) = infEdist x s - Ennreal.ofReal δ := by
+  obtain hs | hs := lt_or_leₓ (inf_edist x s) (Ennreal.ofReal δ)
+  · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
+    exact hs
+    
+  refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
+  refine' le_sub_of_add_le_right of_real_ne_top _
+  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
+  cases r
+  · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, of_real_lt_top⟩
+    
+  have hr : 0 < ↑r - δ := by
+    refine' sub_pos_of_lt _
+    have := hs.trans_lt ((inf_edist_le_edist_of_mem hz).trans_lt h)
+    rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this
+    exact_mod_cast this
+  rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
+  obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
+  refine'
+    (Ennreal.add_lt_add_right of_real_ne_top <|
+          inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_of_real.2 hxy⟩).trans_le
+      _
+  rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
+  exact le_rfl
+
+@[simp]
+theorem thickening_thickening (hε : 0 < ε) (hδ : 0 < δ) (s : Set E) :
+    Thickening ε (Thickening δ s) = Thickening (ε + δ) s :=
+  (thickening_thickening_subset _ _ _).antisymm fun x => by
+    simp_rw [mem_thickening_iff]
+    rintro ⟨z, hz, hxz⟩
+    rw [add_commₓ] at hxz
+    obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hε hδ hxz
+    exact ⟨y, ⟨_, hz, hyz⟩, hxy⟩
+
+@[simp]
+theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
+    Cthickening ε (Thickening δ s) = Cthickening (ε + δ) s :=
+  (cthickening_thickening_subset hε _ _).antisymm fun x => by
+    simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ.le, inf_edist_thickening hδ]
+    exact tsub_le_iff_right.2
+
+-- Note: `interior (cthickening δ s) ≠ thickening δ s` in general
+@[simp]
+theorem closure_thickening (hδ : 0 < δ) (s : Set E) : Closure (Thickening δ s) = Cthickening δ s := by
+  rw [← cthickening_zero, cthickening_thickening le_rfl hδ, zero_addₓ]
+  infer_instance
+
+@[simp]
+theorem inf_edist_cthickening (δ : ℝ) (s : Set E) (x : E) :
+    infEdist x (Cthickening δ s) = infEdist x s - Ennreal.ofReal δ := by
+  obtain hδ | hδ := le_or_ltₓ δ 0
+  · rw [cthickening_of_nonpos hδ, inf_edist_closure, of_real_of_nonpos hδ, tsub_zero]
+    
+  · rw [← closure_thickening hδ, inf_edist_closure, inf_edist_thickening hδ] <;> infer_instance
+    
+
+@[simp]
+theorem thickening_cthickening (hε : 0 < ε) (hδ : 0 ≤ δ) (s : Set E) :
+    Thickening ε (Cthickening δ s) = Thickening (ε + δ) s := by
+  obtain rfl | hδ := hδ.eq_or_lt
+  · rw [cthickening_zero, thickening_closure, add_zeroₓ]
+    
+  · rw [← closure_thickening hδ, thickening_closure, thickening_thickening hε hδ] <;> infer_instance
+    
+
+@[simp]
+theorem cthickening_cthickening (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Set E) :
+    Cthickening ε (Cthickening δ s) = Cthickening (ε + δ) s :=
+  (cthickening_cthickening_subset hε hδ _).antisymm fun x => by
+    simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ, inf_edist_cthickening]
+    exact tsub_le_iff_right.2
+
+end SemiNormedGroup
+
+section NormedGroup
+
+variable [NormedGroup E] [NormedSpace 𝕜 E]
 
 theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • ClosedBall x r = ClosedBall (c • x) (∥c∥ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
@@ -122,5 +266,43 @@ theorem smul_closed_ball (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • Clo
   · exact smul_closed_ball' hc x r
     
 
-end NormedSpace
+theorem smul_closed_unit_ball (c : 𝕜) : c • ClosedBall (0 : E) (1 : ℝ) = ClosedBall (0 : E) ∥c∥ := by
+  rw [smul_closed_ball _ _ zero_le_one, smul_zero, mul_oneₓ]
+
+variable [NormedSpace ℝ E]
+
+/-- In a real normed space, the image of the unit closed ball under multiplication by a nonnegative
+number `r` is the closed ball of radius `r` with center at the origin. -/
+theorem smul_closed_unit_ball_of_nonneg {r : ℝ} (hr : 0 ≤ r) : r • ClosedBall 0 1 = ClosedBall (0 : E) r := by
+  rw [smul_closed_unit_ball, Real.norm_of_nonneg hr]
+
+/-- In a nontrivial real normed space, a sphere is nonempty if and only if its radius is
+nonnegative. -/
+@[simp]
+theorem NormedSpace.sphere_nonempty [Nontrivial E] {x : E} {r : ℝ} : (Sphere x r).Nonempty ↔ 0 ≤ r := by
+  obtain ⟨y, hy⟩ := exists_ne x
+  refine'
+    ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr => ⟨r • ∥y - x∥⁻¹ • (y - x) + x, _⟩⟩
+  have : ∥y - x∥ ≠ 0 := by
+    simpa [sub_eq_zero]
+  simp [norm_smul, this, Real.norm_of_nonneg hr]
+
+theorem smul_sphere [Nontrivial E] (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) : c • Sphere x r = Sphere (c • x) (∥c∥ * r) :=
+  by
+  rcases eq_or_ne c 0 with (rfl | hc)
+  · simp [zero_smul_set, Set.singleton_zero, hr]
+    
+  · exact smul_sphere' hc x r
+    
+
+/-- Any ball `metric.ball x r`, `0 < r` is the image of the unit ball under `λ y, x + r • y`. -/
+theorem affinity_unit_ball {r : ℝ} (hr : 0 < r) (x : E) : x +ᵥ r • Ball 0 1 = Ball x r := by
+  rw [smul_unit_ball_of_pos hr, vadd_ball_zero]
+
+/-- Any closed ball `metric.closed_ball x r`, `0 ≤ r` is the image of the unit closed ball under
+`λ y, x + r • y`. -/
+theorem affinity_unit_closed_ball {r : ℝ} (hr : 0 ≤ r) (x : E) : x +ᵥ r • ClosedBall 0 1 = ClosedBall x r := by
+  rw [smul_closed_unit_ball, Real.norm_of_nonneg hr, vadd_closed_ball_zero]
+
+end NormedGroup
 

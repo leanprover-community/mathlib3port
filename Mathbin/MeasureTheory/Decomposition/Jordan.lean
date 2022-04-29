@@ -42,7 +42,7 @@ Jordan decomposition theorem
 
 noncomputable section
 
-open_locale Classical MeasureTheory Ennreal Nnreal
+open Classical MeasureTheory Ennreal Nnreal
 
 variable {α β : Type _} [MeasurableSpace α]
 
@@ -260,7 +260,7 @@ theorem subset_negative_null_set (hu : MeasurableSet u) (hv : MeasurableSet v) (
 /-- If the symmetric difference of two positive sets is a null-set, then so are the differences
 between the two sets. -/
 theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hsu : 0 ≤[u] s)
-    (hsv : 0 ≤[v] s) (hs : s (u Δ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 := by
+    (hsv : 0 ≤[v] s) (hs : s (u ∆ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 := by
   rw [restrict_le_restrict_iff] at hsu hsv
   have a := hsu (hu.diff hv) (u.diff_subset v)
   have b := hsv (hv.diff hu) (v.diff_subset u)
@@ -276,7 +276,7 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv
 /-- If the symmetric difference of two negative sets is a null-set, then so are the differences
 between the two sets. -/
 theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v) (hsu : s ≤[u] 0)
-    (hsv : s ≤[v] 0) (hs : s (u Δ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 := by
+    (hsv : s ≤[v] 0) (hs : s (u ∆ v) = 0) : s (u \ v) = 0 ∧ s (v \ u) = 0 := by
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_diff_eq_zero_of_symm_diff_eq_zero_positive hu hv hsu hsv
@@ -284,8 +284,8 @@ theorem of_diff_eq_zero_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv
   exact this hs
 
 theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
-    (hsu : 0 ≤[u] s) (hsv : 0 ≤[v] s) (hs : s (u Δ v) = 0) : s (w ∩ u) = s (w ∩ v) := by
-  have hwuv : s ((w ∩ u) Δ (w ∩ v)) = 0 := by
+    (hsu : 0 ≤[u] s) (hsv : 0 ≤[v] s) (hs : s (u ∆ v) = 0) : s (w ∩ u) = s (w ∩ v) := by
+  have hwuv : s ((w ∩ u) ∆ (w ∩ v)) = 0 := by
     refine'
       subset_positive_null_set (hu.union hv) ((hw.inter hu).symmDiff (hw.inter hv)) (hu.symm_diff hv)
         (restrict_le_restrict_union _ _ hu hsu hv hsv) hs _ _
@@ -304,7 +304,7 @@ theorem of_inter_eq_of_symm_diff_eq_zero_positive (hu : MeasurableSet u) (hv : M
   rw [← of_diff_of_diff_eq_zero (hw.inter hu) (hw.inter hv) hvu, huv, zero_addₓ]
 
 theorem of_inter_eq_of_symm_diff_eq_zero_negative (hu : MeasurableSet u) (hv : MeasurableSet v) (hw : MeasurableSet w)
-    (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u Δ v) = 0) : s (w ∩ u) = s (w ∩ v) := by
+    (hsu : s ≤[u] 0) (hsv : s ≤[v] 0) (hs : s (u ∆ v) = 0) : s (w ∩ u) = s (w ∩ v) := by
   rw [← s.neg_le_neg_iff _ hu, neg_zero] at hsu
   rw [← s.neg_le_neg_iff _ hv, neg_zero] at hsv
   have := of_inter_eq_of_symm_diff_eq_zero_positive hu hv hw hsu hsv

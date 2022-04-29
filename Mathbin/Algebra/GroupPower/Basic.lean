@@ -42,6 +42,20 @@ First we prove some facts about `semiconj_by` and `commute`. They do not require
 -/
 
 
+section Pow
+
+variable [Pow M ℕ]
+
+@[simp]
+theorem pow_ite (P : Prop) [Decidable P] (a : M) (b c : ℕ) : (a ^ if P then b else c) = if P then a ^ b else a ^ c := by
+  split_ifs <;> rfl
+
+@[simp]
+theorem ite_pow (P : Prop) [Decidable P] (a b : M) (c : ℕ) : (if P then a else b) ^ c = if P then a ^ c else b ^ c := by
+  split_ifs <;> rfl
+
+end Pow
+
 section Monoidₓ
 
 variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
@@ -51,13 +65,13 @@ theorem pow_oneₓ (a : M) : a ^ 1 = a := by
   rw [pow_succₓ, pow_zeroₓ, mul_oneₓ]
 
 /-- Note that most of the lemmas about powers of two refer to it as `sq`. -/
-@[to_additive two_nsmul]
+@[to_additive two_nsmul, nolint to_additive_doc]
 theorem pow_two (a : M) : a ^ 2 = a * a := by
   rw [pow_succₓ, pow_oneₓ]
 
 alias pow_two ← sq
 
-@[to_additive nsmul_add_comm']
+@[to_additive]
 theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
   Commute.pow_self a n
 
@@ -65,14 +79,6 @@ theorem pow_mul_comm' (a : M) (n : ℕ) : a ^ n * a = a * a ^ n :=
 theorem pow_addₓ (a : M) (m n : ℕ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n with n ih <;> [rw [Nat.add_zero, pow_zeroₓ, mul_oneₓ],
     rw [pow_succ'ₓ, ← mul_assoc, ← ih, ← pow_succ'ₓ, Nat.add_assoc]]
-
-@[simp]
-theorem pow_ite (P : Prop) [Decidable P] (a : M) (b c : ℕ) : (a ^ if P then b else c) = if P then a ^ b else a ^ c := by
-  split_ifs <;> rfl
-
-@[simp]
-theorem ite_pow (P : Prop) [Decidable P] (a b : M) (c : ℕ) : (if P then a else b) ^ c = if P then a ^ c else b ^ c := by
-  split_ifs <;> rfl
 
 @[simp]
 theorem pow_boole (P : Prop) [Decidable P] (a : M) : (a ^ if P then 1 else 0) = if P then a else 1 := by
@@ -115,7 +121,7 @@ theorem pow_bit0 (a : M) (n : ℕ) : a ^ bit0 n = a ^ n * a ^ n :=
 theorem pow_bit1 (a : M) (n : ℕ) : a ^ bit1 n = a ^ n * a ^ n * a := by
   rw [bit1, pow_succ'ₓ, pow_bit0]
 
-@[to_additive nsmul_add_comm]
+@[to_additive]
 theorem pow_mul_commₓ (a : M) (m n : ℕ) : a ^ m * a ^ n = a ^ n * a ^ m :=
   Commute.pow_pow_self a m n
 
@@ -135,6 +141,17 @@ theorem pow_bit0' (a : M) (n : ℕ) : a ^ bit0 n = (a * a) ^ n := by
 theorem pow_bit1' (a : M) (n : ℕ) : a ^ bit1 n = (a * a) ^ n * a := by
   rw [bit1, pow_succ'ₓ, pow_bit0']
 
+theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y ^ n
+  | 0, hn => (hn rfl).elim
+  | n + 1, hn => by
+    rw [pow_succₓ]
+    exact hxy.mul_right _
+
+alias dvd_pow ← Dvd.Dvd.pow
+
+theorem dvd_pow_self (a : M) {n : ℕ} (hn : n ≠ 0) : a ∣ a ^ n :=
+  dvd_rfl.pow hn
+
 end Monoidₓ
 
 /-!
@@ -152,7 +169,7 @@ theorem mul_powₓ (a b : M) (n : ℕ) : (a * b) ^ n = a ^ n * b ^ n :=
 
 /-- The `n`th power map on a commutative monoid for a natural `n`, considered as a morphism of
 monoids. -/
-@[to_additive nsmulAddMonoidHom
+@[to_additive
       "Multiplication by a natural `n` on a commutative additive\nmonoid, considered as a morphism of additive monoids.",
   simps]
 def powMonoidHom (n : ℕ) : M →* M where
@@ -162,17 +179,6 @@ def powMonoidHom (n : ℕ) : M →* M where
 
 -- the below line causes the linter to complain :-/
 -- attribute [simps] pow_monoid_hom nsmul_add_monoid_hom
-theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y ^ n
-  | 0, hn => (hn rfl).elim
-  | n + 1, hn => by
-    rw [pow_succₓ]
-    exact hxy.mul_right _
-
-alias dvd_pow ← Dvd.Dvd.pow
-
-theorem dvd_pow_self (a : M) {n : ℕ} (hn : n ≠ 0) : a ∣ a ^ n :=
-  dvd_rfl.pow hn
-
 end CommMonoidₓ
 
 section DivInvMonoidₓ
@@ -209,7 +215,7 @@ open Int
 
 section Nat
 
-@[simp, to_additive neg_nsmul]
+@[simp, to_additive]
 theorem inv_pow (a : G) (n : ℕ) : a⁻¹ ^ n = (a ^ n)⁻¹ := by
   induction' n with n ih
   · rw [pow_zeroₓ, pow_zeroₓ, one_inv]
@@ -218,14 +224,14 @@ theorem inv_pow (a : G) (n : ℕ) : a⁻¹ ^ n = (a ^ n)⁻¹ := by
     
 
 -- rename to sub_nsmul?
-@[to_additive nsmul_sub]
+@[to_additive]
 theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
   have h1 : m - n + n = m := tsub_add_cancel_of_le h
   have h2 : a ^ (m - n) * a ^ n = a ^ m := by
     rw [← pow_addₓ, h1]
   eq_mul_inv_of_mul_eq h2
 
-@[to_additive nsmul_neg_comm]
+@[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
   (Commute.refl a).inv_left.pow_pow m n
 
@@ -235,7 +241,8 @@ theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ 
 
 end Nat
 
-@[simp, to_additive zsmul_zero]
+-- the attributes are intentionally out of order. `smul_zero` proves `zsmul_zero`.
+@[to_additive zsmul_zero, simp]
 theorem one_zpow : ∀ n : ℤ, (1 : G) ^ n = 1
   | (n : ℕ) => by
     rw [zpow_coe_nat, one_pow]
@@ -345,12 +352,31 @@ theorem pow_eq_zero_iff [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} {n : �
   rintro rfl
   exact zero_pow hn
 
-theorem pow_ne_zero_iff [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} {n : ℕ} (hn : 0 < n) : a ^ n ≠ 0 ↔ a ≠ 0 := by
-  rwa [not_iff_not, pow_eq_zero_iff]
+theorem pow_ne_zero_iff [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} {n : ℕ} (hn : 0 < n) : a ^ n ≠ 0 ↔ a ≠ 0 :=
+  (pow_eq_zero_iff hn).Not
 
 @[field_simps]
 theorem pow_ne_zero [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} (n : ℕ) (h : a ≠ 0) : a ^ n ≠ 0 :=
   mt pow_eq_zero h
+
+theorem sq_eq_zero_iff [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} : a ^ 2 = 0 ↔ a = 0 :=
+  pow_eq_zero_iff two_pos
+
+theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x ≠ 0) (h1 : ¬IsUnit x) :
+    x ^ n ∣ x ^ m ↔ n ≤ m := by
+  constructor
+  · intro h
+    rw [← not_ltₓ]
+    intro hmn
+    apply h1
+    have : x ^ m * x ∣ x ^ m * 1 := by
+      rw [← pow_succ'ₓ, mul_oneₓ]
+      exact (pow_dvd_pow _ (Nat.succ_le_of_ltₓ hmn)).trans h
+    rwa [mul_dvd_mul_iff_left, ← is_unit_iff_dvd_one] at this
+    apply pow_ne_zero m h0
+    
+  · apply pow_dvd_pow
+    
 
 section Semiringₓ
 
@@ -406,7 +432,13 @@ theorem neg_pow_bit1 (a : R) (n : ℕ) : -a ^ bit1 n = -(a ^ bit1 n) := by
 theorem neg_sq (a : R) : -a ^ 2 = a ^ 2 := by
   simp [sq]
 
+@[simp]
+theorem neg_one_sq : (-1 : R) ^ 2 = 1 := by
+  rw [neg_sq, one_pow]
+
 alias neg_sq ← neg_pow_two
+
+alias neg_one_sq ← neg_one_pow_two
 
 end HasDistribNeg
 
@@ -433,7 +465,7 @@ theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
 
 alias sq_sub_sq ← pow_two_sub_pow_two
 
-theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : R) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
+theorem eq_or_eq_neg_of_sq_eq_sq [NoZeroDivisors R] (a b : R) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
   rwa [← add_eq_zero_iff_eq_neg, ← sub_eq_zero, or_comm, ← mul_eq_zero, ← sq_sub_sq a b, sub_eq_zero]
 
 theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
@@ -444,7 +476,7 @@ alias sub_sq ← sub_pow_two
 -- Copies of the above comm_ring lemmas for `units R`.
 namespace Units
 
-theorem eq_or_eq_neg_of_sq_eq_sq [IsDomain R] (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
+theorem eq_or_eq_neg_of_sq_eq_sq [NoZeroDivisors R] (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
   refine' (eq_or_eq_neg_of_sq_eq_sq _ _ _).imp (fun h => Units.ext h) fun h => Units.ext h
   replace h := congr_argₓ (coe : Rˣ → R) h
   rwa [Units.coe_pow, Units.coe_pow] at h
@@ -456,16 +488,16 @@ end CommRingₓ
 theorem of_add_nsmul [AddMonoidₓ A] (x : A) (n : ℕ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
 
-theorem of_add_zsmul [AddGroupₓ A] (x : A) (n : ℤ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
+theorem of_add_zsmul [SubNegMonoidₓ A] (x : A) (n : ℤ) : Multiplicative.ofAdd (n • x) = Multiplicative.ofAdd x ^ n :=
   rfl
 
 theorem of_mul_pow [Monoidₓ A] (x : A) (n : ℕ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
   rfl
 
-theorem of_mul_zpow [Groupₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
+theorem of_mul_zpow [DivInvMonoidₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n • Additive.ofMul x :=
   rfl
 
-@[simp]
+@[simp, to_additive]
 theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
   | (n : ℕ) => by
     simp [zpow_coe_nat, h.pow_right n]
@@ -476,28 +508,29 @@ namespace Commute
 
 variable [Groupₓ G] {a b : G}
 
-@[simp]
+@[simp, to_additive]
 theorem zpow_right (h : Commute a b) (m : ℤ) : Commute a (b ^ m) :=
   h.zpow_right m
 
-@[simp]
+@[simp, to_additive]
 theorem zpow_left (h : Commute a b) (m : ℤ) : Commute (a ^ m) b :=
   (h.symm.zpow_right m).symm
 
+@[to_additive]
 theorem zpow_zpow (h : Commute a b) (m n : ℤ) : Commute (a ^ m) (b ^ n) :=
   (h.zpow_left m).zpow_right n
 
 variable (a) (m n : ℤ)
 
-@[simp]
+@[simp, to_additive]
 theorem self_zpow : Commute a (a ^ n) :=
   (Commute.refl a).zpow_right n
 
-@[simp]
+@[simp, to_additive]
 theorem zpow_self : Commute (a ^ n) a :=
   (Commute.refl a).zpow_left n
 
-@[simp]
+@[simp, to_additive]
 theorem zpow_zpow_self : Commute (a ^ m) (a ^ n) :=
   (Commute.refl a).zpow_zpow m n
 

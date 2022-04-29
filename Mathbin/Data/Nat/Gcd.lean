@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 -/
 import Mathbin.Algebra.GroupPower.Order
+import Mathbin.Algebra.BigOperators.Basic
 
 /-!
 # Definitions and properties of `gcd`, `lcm`, and `coprime`
@@ -480,11 +481,13 @@ theorem Coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : Coprime k m) : Coprime k (
 theorem Coprime.pow {k l : ℕ} (m n : ℕ) (H1 : Coprime k l) : Coprime (k ^ m) (l ^ n) :=
   (H1.pow_left _).pow_right _
 
+@[simp]
 theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) : Nat.Coprime (a ^ n) b ↔ Nat.Coprime a b := by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
   rw [pow_succₓ, Nat.coprime_mul_iff_leftₓ]
   exact ⟨And.left, fun hab => ⟨hab, hab.pow_left _⟩⟩
 
+@[simp]
 theorem coprime_pow_right_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) : Nat.Coprime a (b ^ n) ↔ Nat.Coprime a b := by
   rw [Nat.coprime_commₓ, coprime_pow_left_iff hn, Nat.coprime_commₓ]
 
@@ -514,6 +517,32 @@ theorem coprime_one_right_iffₓ (n : ℕ) : Coprime n 1 ↔ True := by
 theorem coprime_selfₓ (n : ℕ) : Coprime n n ↔ n = 1 := by
   simp [coprime]
 
+theorem gcd_mul_of_coprime_of_dvd {a b c : ℕ} (hac : Coprime a c) (b_dvd_c : b ∣ c) : gcdₓ (a * b) c = b := by
+  rcases exists_eq_mul_left_of_dvd b_dvd_c with ⟨d, rfl⟩
+  rw [gcd_mul_right]
+  convert one_mulₓ b
+  exact coprime.coprime_mul_right_right hac
+
+section BigOperators
+
+open BigOperators
+
+/-- See `is_coprime.prod_left` for the corresponding lemma about `is_coprime` -/
+theorem coprime_prod_left {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finset ι} :
+    (∀ i : ι, i ∈ t → Coprime (s i) x) → Coprime (∏ i : ι in t, s i) x :=
+  Finset.prod_induction s (fun y => y.Coprime x) (fun a b => Coprime.mul)
+    (by
+      simp )
+
+/-- See `is_coprime.prod_right` for the corresponding lemma about `is_coprime` -/
+theorem coprime_prod_right {ι : Type _} {x : ℕ} {s : ι → ℕ} {t : Finset ι} :
+    (∀ i : ι, i ∈ t → Coprime x (s i)) → Coprime x (∏ i : ι in t, s i) :=
+  Finset.prod_induction s (fun y => x.Coprime y) (fun a b => Coprime.mul_right)
+    (by
+      simp )
+
+end BigOperators
+
 theorem Coprime.eq_of_mul_eq_zero {m n : ℕ} (h : m.Coprime n) (hmn : m * n = 0) : m = 0 ∧ n = 1 ∨ m = 1 ∧ n = 0 :=
   (Nat.eq_zero_of_mul_eq_zero hmn).imp (fun hm => ⟨hm, n.coprime_zero_left.mp <| hm ▸ h⟩) fun hn =>
     ⟨m.coprime_zero_left.mp <| hn ▸ h.symm, hn⟩
@@ -523,10 +552,8 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) : { d : { m' // m' �
   by
   cases h0 : gcd k m
   case nat.zero =>
-    have : k = 0 := eq_zero_of_gcd_eq_zero_left h0
-    subst this
-    have : m = 0 := eq_zero_of_gcd_eq_zero_right h0
-    subst this
+    obtain rfl : k = 0 := eq_zero_of_gcd_eq_zero_left h0
+    obtain rfl : m = 0 := eq_zero_of_gcd_eq_zero_right h0
     exact ⟨⟨⟨0, dvd_refl 0⟩, ⟨n, dvd_refl n⟩⟩, (zero_mul n).symm⟩
   case nat.succ tmp =>
     have hpos : 0 < gcd k m := h0.symm ▸ Nat.zero_lt_succₓ _ <;> clear h0 tmp
@@ -584,6 +611,19 @@ theorem eq_one_of_dvd_coprimes {a b k : ℕ} (h_ab_coprime : Coprime a b) (hka :
   have h1 := dvd_gcd hka hkb
   rw [h_ab_coprime] at h1
   exact nat.dvd_one.mp h1
+
+theorem Coprime.mul_add_mul_ne_mul {m n a b : ℕ} (cop : Coprime m n) (ha : a ≠ 0) (hb : b ≠ 0) :
+    a * m + b * n ≠ m * n := by
+  intro h
+  obtain ⟨x, rfl⟩ : n ∣ a :=
+    cop.symm.dvd_of_dvd_mul_right
+      ((Nat.dvd_add_iff_left (dvd_mul_left n b)).mpr ((congr_argₓ _ h).mpr (dvd_mul_left n m)))
+  obtain ⟨y, rfl⟩ : m ∣ b :=
+    cop.dvd_of_dvd_mul_right
+      ((Nat.dvd_add_iff_right (dvd_mul_left m (n * x))).mpr ((congr_argₓ _ h).mpr (dvd_mul_right m n)))
+  rw [mul_comm, mul_ne_zero_iff, ← one_le_iff_ne_zero] at ha hb
+  refine' mul_ne_zero hb.2 ha.2 (eq_zero_of_mul_eq_self_left (ne_of_gtₓ (add_le_add ha.1 hb.1)) _)
+  rw [← mul_assoc, ← h, add_mulₓ, add_mulₓ, mul_comm _ n, ← mul_assoc, mul_comm y]
 
 end Nat
 

@@ -239,7 +239,7 @@ def createsLimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone := c, validLift := i.trans (IsLimit.uniqueUpToIso (limit.isLimit _) t),
       makesLimit :=
-        IsLimit.ofFaithful F (IsLimit.ofIsoLimit (limit.isLimit _) i.symm) (fun s => F.Preimage _) fun s =>
+        IsLimit.ofFaithful F (IsLimit.ofIsoLimit (limit.isLimit _) i.symm) (fun s => F.preimage _) fun s =>
           F.image_preimage _ }
 
 /-- When `F` is fully faithful, and `has_limit (K ⋙ F)`, to show that `F` creates the limit for `K`
@@ -253,7 +253,7 @@ def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faith
   createsLimitOfFullyFaithfulOfLift
     ({ x,
       π :=
-        { app := fun j => F.Preimage (i.Hom ≫ limit.π (K ⋙ F) j),
+        { app := fun j => F.preimage (i.Hom ≫ limit.π (K ⋙ F) j),
           naturality' := fun Y Z f =>
             F.map_injective
               (by
@@ -318,7 +318,7 @@ def createsColimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
   createsColimitOfReflectsIso fun c' t =>
     { liftedCocone := c, validLift := i.trans (IsColimit.uniqueUpToIso (colimit.isColimit _) t),
       makesColimit :=
-        IsColimit.ofFaithful F (IsColimit.ofIsoColimit (colimit.isColimit _) i.symm) (fun s => F.Preimage _) fun s =>
+        IsColimit.ofFaithful F (IsColimit.ofIsoColimit (colimit.isColimit _) i.symm) (fun s => F.preimage _) fun s =>
           F.image_preimage _ }
 
 /-- When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
@@ -332,7 +332,7 @@ def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
   createsColimitOfFullyFaithfulOfLift
     ({ x,
       ι :=
-        { app := fun j => F.Preimage (colimit.ι (K ⋙ F) j ≫ i.inv : _),
+        { app := fun j => F.preimage (colimit.ι (K ⋙ F) j ≫ i.inv : _),
           naturality' := fun Y Z f =>
             F.map_injective
               (by

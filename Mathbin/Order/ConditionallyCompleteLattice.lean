@@ -40,7 +40,7 @@ Extension of Sup and Inf from a preorder `α` to `with_top α` and `with_bot α`
 -/
 
 
-open_locale Classical
+open Classical
 
 noncomputable instance {α : Type _} [Preorderₓ α] [HasSupₓ α] : HasSupₓ (WithTop α) :=
   ⟨fun S => if ⊤ ∈ S then ⊤ else if BddAbove (coe ⁻¹' S : Set α) then ↑(sup (coe ⁻¹' S : Set α)) else ⊤⟩
@@ -80,7 +80,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -91,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1286:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -133,7 +133,7 @@ instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrde
 
 section
 
-open_locale Classical
+open Classical
 
 /-- A well founded linear order is conditionally complete, with a bottom element. -/
 @[reducible]
@@ -211,6 +211,12 @@ theorem cSup_le_cSup (_ : BddAbove t) (_ : s.Nonempty) (h : s ⊆ t) : sup s ≤
 
 theorem cInf_le_cInf (_ : BddBelow t) (_ : s.Nonempty) (h : s ⊆ t) : inf t ≤ inf s :=
   le_cInf ‹_› fun ha : a ∈ s => cInf_le ‹BddBelow t› (h ha)
+
+theorem le_cSup_iff (h : BddAbove s) (hs : s.Nonempty) : a ≤ sup s ↔ ∀ b, b ∈ UpperBounds s → a ≤ b :=
+  ⟨fun h b hb => le_transₓ h (cSup_le hs hb), fun hb => hb _ fun x => le_cSup h⟩
+
+theorem cInf_le_iff (h : BddBelow s) (hs : s.Nonempty) : inf s ≤ a ↔ ∀, ∀ b ∈ LowerBounds s, ∀, b ≤ a :=
+  ⟨fun h b hb => le_transₓ (le_cInf hs hb) h, fun hb => hb _ fun x => cInf_le h⟩
 
 theorem is_lub_cSup (ne : s.Nonempty) (H : BddAbove s) : IsLub s (sup s) :=
   ⟨fun x => le_cSup H, fun x => cSup_le Ne⟩
@@ -460,8 +466,8 @@ theorem le_csupr_of_le {f : ι → α} (H : BddAbove (Range f)) (c : ι) (h : a 
   le_transₓ h (le_csupr H c)
 
 /-- The indexed supremum of two functions are comparable if the functions are pointwise comparable-/
-theorem csupr_le_csupr {f g : ι → α} (B : BddAbove (Range g)) (H : ∀ x, f x ≤ g x) : supr f ≤ supr g := by
-  cases' is_empty_or_nonempty ι
+theorem csupr_mono {f g : ι → α} (B : BddAbove (Range g)) (H : ∀ x, f x ≤ g x) : supr f ≤ supr g := by
+  cases is_empty_or_nonempty ι
   · rw [supr_of_empty', supr_of_empty']
     
   · exact csupr_le fun x => le_csupr_of_le B x (H x)
@@ -471,8 +477,8 @@ theorem le_csupr_set {f : β → α} {s : Set β} (H : BddAbove (f '' s)) {c : �
   (le_cSup H <| mem_image_of_mem f hc).trans_eq Sup_image'
 
 /-- The indexed infimum of two functions are comparable if the functions are pointwise comparable-/
-theorem cinfi_le_cinfi {f g : ι → α} (B : BddBelow (Range f)) (H : ∀ x, f x ≤ g x) : infi f ≤ infi g :=
-  @csupr_le_csupr (OrderDual α) _ _ _ _ B H
+theorem cinfi_mono {f g : ι → α} (B : BddBelow (Range f)) (H : ∀ x, f x ≤ g x) : infi f ≤ infi g :=
+  @csupr_mono (OrderDual α) _ _ _ _ B H
 
 /-- The indexed minimum of a function is bounded below by a uniform lower bound-/
 theorem le_cinfi [Nonempty ι] {f : ι → α} {c : α} (H : ∀ x, c ≤ f x) : c ≤ infi f :=
@@ -569,6 +575,14 @@ theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f 
 theorem Finset.Nonempty.sup'_id_eq_cSup {s : Finset α} (hs : s.Nonempty) : s.sup' hs id = sup s := by
   rw [hs.sup'_eq_cSup_image, image_id]
 
+/-- Introduction rule to prove that b is the supremum of s: it suffices to check that
+1) b is an upper bound
+2) every other upper bound b' satisfies b ≤ b'.-/
+theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (_ : s.Nonempty) (h_is_ub : ∀, ∀ a ∈ s, ∀, a ≤ b)
+    (h_b_le_ub : ∀ ub, (∀, ∀ a ∈ s, ∀, a ≤ ub) → b ≤ ub) : sup s = b :=
+  le_antisymmₓ (show sup s ≤ b from cSup_le ‹s.Nonempty› h_is_ub)
+    (show b ≤ sup s from (h_b_le_ub _) fun a => le_cSup ⟨b, h_is_ub⟩)
+
 end ConditionallyCompleteLattice
 
 instance Pi.conditionallyCompleteLattice {ι : Type _} {α : ∀ i : ι, Type _} [∀ i, ConditionallyCompleteLattice (α i)] :
@@ -642,14 +656,6 @@ When `infi f < a`, there is an element `i` such that `f i < a`.
 theorem exists_lt_of_cinfi_lt [Nonempty ι] {f : ι → α} (h : infi f < a) : ∃ i, f i < a :=
   @exists_lt_of_lt_csupr (OrderDual α) _ _ _ _ _ h
 
-/-- Introduction rule to prove that b is the supremum of s: it suffices to check that
-1) b is an upper bound
-2) every other upper bound b' satisfies b ≤ b'.-/
-theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (_ : s.Nonempty) (h_is_ub : ∀, ∀ a ∈ s, ∀, a ≤ b)
-    (h_b_le_ub : ∀ ub, (∀, ∀ a ∈ s, ∀, a ≤ ub) → b ≤ ub) : sup s = b :=
-  le_antisymmₓ (show sup s ≤ b from cSup_le ‹s.Nonempty› h_is_ub)
-    (show b ≤ sup s from (h_b_le_ub _) fun a => le_cSup ⟨b, h_is_ub⟩)
-
 open Function
 
 variable [IsWellOrder α (· < ·)]
@@ -680,9 +686,11 @@ section ConditionallyCompleteLinearOrderBot
 
 variable [ConditionallyCompleteLinearOrderBot α]
 
+@[simp]
 theorem cSup_empty : (sup ∅ : α) = ⊥ :=
   ConditionallyCompleteLinearOrderBot.cSup_empty
 
+@[simp]
 theorem csupr_of_empty [IsEmpty ι] (f : ι → α) : (⨆ i, f i) = ⊥ := by
   rw [supr_of_empty', cSup_empty]
 
@@ -702,6 +710,9 @@ theorem cSup_le_iff' {s : Set α} (hs : BddAbove s) {a : α} : sup s ≤ a ↔ �
 
 theorem cSup_le' {s : Set α} {a : α} (h : a ∈ UpperBounds s) : sup s ≤ a :=
   (cSup_le_iff' ⟨a, h⟩).2 h
+
+theorem le_cSup_iff' {s : Set α} {a : α} (h : BddAbove s) : a ≤ sup s ↔ ∀ b, b ∈ UpperBounds s → a ≤ b :=
+  ⟨fun h b hb => le_transₓ h (cSup_le' hb), fun hb => hb _ fun x => le_cSup h⟩
 
 theorem le_cInf_iff'' {s : Set α} {a : α} (ne : s.Nonempty) : a ≤ inf s ↔ ∀ b : α, b ∈ s → a ≤ b :=
   le_cInf_iff ⟨⊥, fun a _ => bot_le⟩ Ne
@@ -727,7 +738,7 @@ end ConditionallyCompleteLinearOrderBot
 
 namespace WithTop
 
-open_locale Classical
+open Classical
 
 variable [ConditionallyCompleteLinearOrderBot α]
 
@@ -1042,7 +1053,7 @@ This result can be used to show that the extended reals [-∞, ∞] are a comple
 -/
 
 
-open_locale Classical
+open Classical
 
 /-- Adding a top element to a conditionally complete lattice
 gives a conditionally complete lattice -/

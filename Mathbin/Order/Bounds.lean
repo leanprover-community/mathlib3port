@@ -923,6 +923,93 @@ end LinearOrderedAddCommGroup
 -/
 
 
+namespace MonotoneOn
+
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : MonotoneOn f t) {a : α} (Hst : s ⊆ t)
+
+include Hf Hst
+
+theorem mem_upper_bounds_image (Has : a ∈ UpperBounds s) (Hat : a ∈ t) : f a ∈ UpperBounds (f '' s) :=
+  ball_image_of_ball fun x H => Hf (Hst H) Hat (Has H)
+
+theorem mem_lower_bounds_image (Has : a ∈ LowerBounds s) (Hat : a ∈ t) : f a ∈ LowerBounds (f '' s) :=
+  ball_image_of_ball fun x H => Hf Hat (Hst H) (Has H)
+
+theorem image_upper_bounds_subset_upper_bounds_image : f '' (UpperBounds s ∩ t) ⊆ UpperBounds (f '' s) := by
+  rintro _ ⟨a, ha, rfl⟩
+  exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
+
+theorem image_lower_bounds_subset_lower_bounds_image : f '' (LowerBounds s ∩ t) ⊆ LowerBounds (f '' s) :=
+  Hf.dual.image_upper_bounds_subset_upper_bounds_image Hst
+
+/-- The image under a monotone function on a set `t` of a subset which has an upper bound in `t`
+  is bounded above. -/
+theorem map_bdd_above : (UpperBounds s ∩ t).Nonempty → BddAbove (f '' s) := fun ⟨C, hs, ht⟩ =>
+  ⟨f C, Hf.mem_upper_bounds_image Hst hs ht⟩
+
+/-- The image under a monotone function on a set `t` of a subset which has a lower bound in `t`
+  is bounded below. -/
+theorem map_bdd_below : (LowerBounds s ∩ t).Nonempty → BddBelow (f '' s) := fun ⟨C, hs, ht⟩ =>
+  ⟨f C, Hf.mem_lower_bounds_image Hst hs ht⟩
+
+/-- A monotone map sends a least element of a set to a least element of its image. -/
+theorem map_is_least (Ha : IsLeast s a) : IsLeast (f '' s) (f a) :=
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_lower_bounds_image Hst Ha.2 (Hst Ha.1)⟩
+
+/-- A monotone map sends a greatest element of a set to a greatest element of its image. -/
+theorem map_is_greatest (Ha : IsGreatest s a) : IsGreatest (f '' s) (f a) :=
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image Hst Ha.2 (Hst Ha.1)⟩
+
+theorem is_lub_image_le (Ha : IsLub s a) (Hat : a ∈ t) {b : β} (Hb : IsLub (f '' s) b) : b ≤ f a :=
+  Hb.2 (Hf.mem_upper_bounds_image Hst Ha.1 Hat)
+
+theorem le_is_glb_image (Ha : IsGlb s a) (Hat : a ∈ t) {b : β} (Hb : IsGlb (f '' s) b) : f a ≤ b :=
+  Hb.2 (Hf.mem_lower_bounds_image Hst Ha.1 Hat)
+
+end MonotoneOn
+
+namespace AntitoneOn
+
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s t : Set α} (Hf : AntitoneOn f t) {a : α} (Hst : s ⊆ t)
+
+include Hf Hst
+
+theorem mem_upper_bounds_image (Has : a ∈ LowerBounds s) (Hat : a ∈ t) : f a ∈ UpperBounds (f '' s) :=
+  Hf.dual_right.mem_lower_bounds_image Hst Has Hat
+
+theorem mem_lower_bounds_image (Has : a ∈ UpperBounds s) (Hat : a ∈ t) : f a ∈ LowerBounds (f '' s) :=
+  Hf.dual_right.mem_upper_bounds_image Hst Has Hat
+
+theorem image_lower_bounds_subset_upper_bounds_image : f '' (LowerBounds s ∩ t) ⊆ UpperBounds (f '' s) :=
+  Hf.dual_right.image_lower_bounds_subset_lower_bounds_image Hst
+
+theorem image_upper_bounds_subset_lower_bounds_image : f '' (UpperBounds s ∩ t) ⊆ LowerBounds (f '' s) :=
+  Hf.dual_right.image_upper_bounds_subset_upper_bounds_image Hst
+
+/-- The image under an antitone function of a set which is bounded above is bounded below. -/
+theorem map_bdd_above : (UpperBounds s ∩ t).Nonempty → BddBelow (f '' s) :=
+  Hf.dual_right.map_bdd_above Hst
+
+/-- The image under an antitone function of a set which is bounded below is bounded above. -/
+theorem map_bdd_below : (LowerBounds s ∩ t).Nonempty → BddAbove (f '' s) :=
+  Hf.dual_right.map_bdd_below Hst
+
+/-- An antitone map sends a greatest element of a set to a least element of its image. -/
+theorem map_is_greatest (Ha : IsGreatest s a) : IsLeast (f '' s) (f a) :=
+  Hf.dual_right.map_is_greatest Hst Ha
+
+/-- An antitone map sends a least element of a set to a greatest element of its image. -/
+theorem map_is_least (Ha : IsLeast s a) : IsGreatest (f '' s) (f a) :=
+  Hf.dual_right.map_is_least Hst Ha
+
+theorem is_lub_image_le (Ha : IsGlb s a) (Hat : a ∈ t) {b : β} (Hb : IsLub (f '' s) b) : b ≤ f a :=
+  Hf.dual_left.is_lub_image_le Hst Ha Hat Hb
+
+theorem le_is_glb_image (Ha : IsLub s a) (Hat : a ∈ t) {b : β} (Hb : IsGlb (f '' s) b) : f a ≤ b :=
+  Hf.dual_left.le_is_glb_image Hst Ha Hat Hb
+
+end AntitoneOn
+
 namespace Monotone
 
 variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (Hf : Monotone f) {a : α} {s : Set α}

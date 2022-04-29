@@ -60,7 +60,7 @@ universe uι uE uH uM
 
 open Function Filter FiniteDimensional Set
 
-open_locale TopologicalSpace Manifold Classical Filter BigOperators
+open TopologicalSpace Manifold Classical Filter BigOperators
 
 noncomputable section
 

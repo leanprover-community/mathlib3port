@@ -635,7 +635,7 @@ variable {p : Prop}
 
 /-- Execute `cmd` and repeat every time the result is `gave_up` (at most
 `n` times). -/
-def retry (cmd : Rand (TestResult p)) : ℕ → Rand (TestResult p)
+def retry (cmd : Randₓ (TestResult p)) : ℕ → Randₓ (TestResult p)
   | 0 => return <| gave_up 1
   | succ n => do
     let r ← cmd
@@ -656,7 +656,7 @@ variable (p)
 variable [Testable p]
 
 /-- Try `n` times to find a counter-example for `p`. -/
-def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (TestResult p)
+def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Randₓ (TestResult p)
   | r, 0 => return r
   | r, succ n => do
     let size := (cfg.numInst - n - 1) * cfg.maxSize / cfg.numInst
@@ -669,7 +669,7 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
       | gave_up g => testable.run_suite_aux (give_up g r) n
 
 /-- Try to find a counter-example of `p`. -/
-def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Rand (TestResult p) :=
+def Testable.runSuite (cfg : SlimCheckCfg := {  }) : Randₓ (TestResult p) :=
   Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
 
 /-- Run a test suite for `p` in `io`. -/

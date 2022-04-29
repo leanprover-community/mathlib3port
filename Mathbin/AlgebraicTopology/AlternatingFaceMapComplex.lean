@@ -3,13 +3,9 @@ Copyright (c) 2021 Joël Riou. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou, Adam Topaz, Johan Commelin
 -/
-import Mathbin.Algebra.Homology.HomologicalComplex
-import Mathbin.AlgebraicTopology.SimplicialObject
+import Mathbin.Algebra.Homology.Additive
 import Mathbin.AlgebraicTopology.MooreComplex
-import Mathbin.CategoryTheory.Abelian.Basic
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Tactic.RingExp
-import Mathbin.Data.Fintype.Card
+import Mathbin.Algebra.BigOperators.Fin
 
 /-!
 
@@ -34,13 +30,13 @@ when `A` is an abelian category.
 
 open CategoryTheory CategoryTheory.Limits CategoryTheory.Subobject
 
-open CategoryTheory.Preadditive
+open CategoryTheory.Preadditive CategoryTheory.Category
 
 open Opposite
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Simplicial
+open Simplicial
 
 noncomputable section
 
@@ -164,6 +160,29 @@ variable (C : Type _) [Category C] [Preadditive C]
 def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   obj := AlternatingFaceMapComplex.obj
   map := fun X Y f => AlternatingFaceMapComplex.map f
+
+variable {C}
+
+theorem map_alternating_face_map_complex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D) [F.Additive] :
+    alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
+      (SimplicialObject.whiskering C D).obj F ⋙ alternatingFaceMapComplex D :=
+  by
+  apply CategoryTheory.Functor.ext
+  · intro X Y f
+    ext n
+    simp only [functor.comp_map, alternating_face_map_complex.map, alternating_face_map_complex_map,
+      functor.map_homological_complex_map_f, ChainComplex.of_hom_f, simplicial_object.whiskering_obj_map_app,
+      HomologicalComplex.comp_f, HomologicalComplex.eq_to_hom_f, eq_to_hom_refl, comp_id, id_comp]
+    
+  · intro X
+    erw [ChainComplex.map_chain_complex_of]
+    congr
+    ext n
+    simp only [alternating_face_map_complex.obj_d, functor.map_sum]
+    congr
+    ext
+    apply functor.map_zsmul
+    
 
 /-!
 ## Construction of the natural inclusion of the normalized Moore complex

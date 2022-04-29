@@ -33,7 +33,7 @@ inductive mv_polynomial_term (σ R : Type u) : Type u
 -/
 open Cardinal
 
-open_locale Cardinal
+open Cardinal
 
 /-- A type used to prove theorems about the cardinality of `mv_polynomial σ R`. The
 `W_type (arity σ R)` has a constant for every element of `R` and `σ` and two binary functions. -/
@@ -91,8 +91,8 @@ private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max
     _ ≤ max (max (# R + # σ) (# (ULift Bool))) ω := add_le_max _ _
     _ ≤ max (max (max (max (# R) (# σ)) ω) (# (ULift Bool))) ω := max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by
-      have : # (ULift.{u} Bool) ≤ ω := le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)
-      simp only [max_commₓ omega.{u}, max_assocₓ, max_left_commₓ omega.{u}, max_selfₓ, max_eq_leftₓ this]
+      simp only [max_commₓ omega.{u}, max_assocₓ, max_left_commₓ omega.{u}, max_selfₓ,
+        max_eq_leftₓ (lt_omega_of_fintype (ULift.{u} Bool)).le]
     
 
 namespace MvPolynomial

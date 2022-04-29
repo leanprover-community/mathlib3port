@@ -6,6 +6,7 @@ Authors: Oliver Nash
 import Mathbin.Tactic.Tfae
 import Mathbin.Order.Atoms
 import Mathbin.Order.OrderIsoNat
+import Mathbin.Order.SupIndep
 import Mathbin.Order.Zorn
 import Mathbin.Data.Finset.Order
 
@@ -297,7 +298,7 @@ theorem inf_Sup_eq_of_directed_on (h : DirectedOn (· ≤ ·) s) : a⊓sup s = �
         rw [le_inf_iff] at hcinf
         rw [CompleteLattice.is_compact_element_iff_le_of_directed_Sup_le] at hc
         rcases hc s hs h hcinf.2 with ⟨d, ds, cd⟩
-        exact (le_inf hcinf.1 cd).trans (le_bsupr d ds)
+        exact (le_inf hcinf.1 cd).trans (le_supr₂ d ds)
         
       · rw [Set.not_nonempty_iff_eq_empty] at hs
         simp [hs]
@@ -312,7 +313,7 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a⊓sup s = ⨆ (t : Finset α) (H : �
       intro c hc hcinf
       rw [le_inf_iff] at hcinf
       rcases hc s hcinf.2 with ⟨t, ht1, ht2⟩
-      exact (le_inf hcinf.1 ht2).trans (le_bsupr t ht1))
+      exact (le_inf hcinf.1 ht2).trans (le_supr₂ t ht1))
     (supr_le fun t => supr_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
 
 theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
@@ -363,7 +364,7 @@ theorem compactly_generated_of_well_founded (h : WellFounded ((· > ·) : α →
   -- x is the join of the set of compact elements {x}
   exact ⟨fun x => ⟨{x}, ⟨fun x _ => h x, Sup_singleton⟩⟩⟩
 
-/-- A compact element `k` has the property that any `b < `k lies below a "maximal element below
+/-- A compact element `k` has the property that any `b < k` lies below a "maximal element below
 `k`", which is to say `[⊥, k]` is coatomic. -/
 theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCoatomic (Set.Iic k) :=
   ⟨fun ⟨b, hbk⟩ => by
@@ -373,7 +374,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
       simp only [htriv, Set.Iic.coe_top, Subtype.coe_mk]
       
     right
-    rcases Zorn.zorn_nonempty_partial_order₀ (Set.Iio k) _ b (lt_of_le_of_neₓ hbk htriv) with ⟨a, a₀, ba, h⟩
+    obtain ⟨a, a₀, ba, h⟩ := zorn_nonempty_partial_order₀ (Set.Iio k) _ b (lt_of_le_of_neₓ hbk htriv)
     · refine' ⟨⟨a, le_of_ltₓ a₀⟩, ⟨ne_of_ltₓ a₀, fun c hck => by_contradiction fun c₀ => _⟩, ba⟩
       cases h c.1 (lt_of_le_of_neₓ c.2 fun con => c₀ (Subtype.ext con)) hck.le
       exact lt_irreflₓ _ hck
@@ -442,7 +443,7 @@ instance (priority := 100) is_atomistic_of_is_complemented [IsComplemented α] :
 theorem is_complemented_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤) : IsComplemented α :=
   ⟨fun b => by
     obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ :=
-      Zorn.zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀, ∀ a ∈ s, ∀, IsAtom a } _
+      zorn_subset { s : Set α | CompleteLattice.SetIndependent s ∧ b⊓Sup s = ⊥ ∧ ∀, ∀ a ∈ s, ∀, IsAtom a } _
     · refine' ⟨Sup s, le_of_eqₓ b_inf_Sup_s, _⟩
       rw [← h, Sup_le_iff]
       intro a ha

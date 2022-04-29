@@ -222,11 +222,11 @@ theorem is_iso_of_bijective (bij : Function.Bijective f) : IsIso f :=
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y := by
-  let this' := Profinite.is_iso_of_bijective f bij <;> exact as_iso f
+  let this := Profinite.is_iso_of_bijective f bij <;> exact as_iso f
 
 instance forget_reflects_isomorphisms : ReflectsIsomorphisms (forget Profinite) :=
   ⟨by
-    intros A B f hf <;> exact Profinite.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+    intro A B f hf <;> exact Profinite.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
@@ -282,7 +282,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have hUy : U ∈ nhds y := hU.mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-    let this' : TopologicalSpace (ULift.{u} <| Finₓ 2) := ⊥
+    let this : TopologicalSpace (ULift.{u} <| Finₓ 2) := ⊥
     let Z := of (ULift.{u} <| Finₓ 2)
     let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
     let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩

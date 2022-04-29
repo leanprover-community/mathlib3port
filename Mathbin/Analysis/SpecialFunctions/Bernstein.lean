@@ -44,13 +44,13 @@ although we defer an abstract statement of this until later.
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators
+open BigOperators
 
-open_locale BoundedContinuousFunction
+open BoundedContinuousFunction
 
-open_locale UnitInterval
+open UnitInterval
 
 /-- The Bernstein polynomials, as continuous functions on `[0,1]`.
 -/
@@ -203,7 +203,7 @@ open BoundedContinuousFunction
 
 open Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- The Bernstein approximations
 ```

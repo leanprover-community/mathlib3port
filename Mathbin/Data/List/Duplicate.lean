@@ -33,7 +33,7 @@ local infixl:50 " ∈+ " => List.Duplicate
 
 variable {l : List α} {x : α}
 
-theorem Mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
+theorem Memₓ.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
   Duplicate.cons_mem h
 
 theorem Duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
@@ -55,9 +55,9 @@ theorem Duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
 
 @[simp]
 theorem duplicate_cons_self_iff : x ∈+ x :: l ↔ x ∈ l :=
-  ⟨Duplicate.mem_cons_self, Mem.duplicate_cons_self⟩
+  ⟨Duplicate.mem_cons_self, Memₓ.duplicate_cons_self⟩
 
-theorem Duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iff x).mp (H ▸ h.Mem)
+theorem Duplicate.ne_nil (h : x ∈+ l) : l ≠ [] := fun H => (mem_nil_iffₓ x).mp (H ▸ h.Mem)
 
 @[simp]
 theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl

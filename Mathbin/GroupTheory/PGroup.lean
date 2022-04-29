@@ -18,7 +18,7 @@ It also contains proofs of some corollaries of this lemma about existence of fix
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 open Fintype MulAction
 

@@ -23,7 +23,7 @@ The proof used is close to Lagrange's original proof.
 
 open Finset Polynomial FiniteField Equivₓ
 
-open_locale BigOperators
+open BigOperators
 
 namespace Int
 
@@ -42,6 +42,7 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
       2 * 2 * m = (x - y) ^ 2 + (x + y) ^ 2 := by
         rw [mul_assoc, h] <;> ring
       _ = (2 * ((x - y) / 2)) ^ 2 + (2 * ((x + y) / 2)) ^ 2 := by
+        rw [even_iff_two_dvd] at hxsuby hxaddy
         rw [Int.mul_div_cancel' hxsuby, Int.mul_div_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_addₓ, pow_succₓ, mul_comm, mul_assoc, mul_left_commₓ]
@@ -99,7 +100,7 @@ namespace Nat
 
 open Int
 
-open_locale Classical
+open Classical
 
 private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     (h : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 2 * m) : ∃ w x y z : ℤ, w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 = m :=
@@ -134,7 +135,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
       conv_rhs => rw [← Equivₓ.sum_comp σ]
     have fin4univ : (univ : Finset (Finₓ 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by
       decide
-    simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ]⟩
+    simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assocₓ] ⟩
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = p :=
   have hm : ∃ m < p, 0 < m ∧ ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p :=

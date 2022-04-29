@@ -20,9 +20,9 @@ We provide basic instances, as well as a custom tactic for discharging
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
-open Set
+open Set Int
 
 /-! ### The unit interval -/
 
@@ -36,13 +36,27 @@ localized [UnitInterval] notation "I" => UnitInterval
 
 namespace UnitInterval
 
+theorem zero_mem : (0 : ℝ) ∈ I :=
+  ⟨le_rfl, zero_le_one⟩
+
+theorem one_mem : (1 : ℝ) ∈ I :=
+  ⟨zero_le_one, le_rfl⟩
+
+theorem mul_mem {x y : ℝ} (hx : x ∈ I) (hy : y ∈ I) : x * y ∈ I :=
+  ⟨mul_nonneg hx.1 hy.1, (mul_le_mul hx.2 hy.2 hy.1 zero_le_one).trans_eq <| one_mulₓ 1⟩
+
+theorem div_mem {x y : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hxy : x ≤ y) : x / y ∈ I :=
+  ⟨div_nonneg hx hy, div_le_one_of_le hxy hy⟩
+
+theorem fract_mem (x : ℝ) : fract x ∈ I :=
+  ⟨fract_nonneg _, (fract_lt_one _).le⟩
+
 theorem mem_iff_one_sub_mem {t : ℝ} : t ∈ I ↔ 1 - t ∈ I := by
   rw [mem_Icc, mem_Icc]
   constructor <;> intro <;> constructor <;> linarith
 
 instance hasZero : Zero I :=
-  ⟨⟨0, by
-      constructor <;> norm_num⟩⟩
+  ⟨⟨0, zero_mem⟩⟩
 
 @[simp, norm_cast]
 theorem coe_zero : ((0 : I) : ℝ) = 0 :=
@@ -83,11 +97,8 @@ theorem coe_ne_one {x : I} : (x : ℝ) ≠ 1 ↔ x ≠ 1 :=
 instance : Nonempty I :=
   ⟨0⟩
 
-theorem mul_mem (x y : I) : (x : ℝ) * y ∈ I :=
-  ⟨mul_nonneg x.2.1 y.2.1, (mul_le_mul x.2.2 y.2.2 y.2.1 zero_le_one).trans_eq <| one_mulₓ 1⟩
-
 instance : Mul I :=
-  ⟨fun x y => ⟨x * y, mul_mem x y⟩⟩
+  ⟨fun x y => ⟨x * y, mul_mem x.2 y.2⟩⟩
 
 @[simp, norm_cast]
 theorem coe_mul {x y : I} : ((x * y : I) : ℝ) = x * y :=
@@ -101,7 +112,7 @@ theorem mul_le_right {x y : I} : x * y ≤ y :=
   Subtype.coe_le_coe.mp <| (mul_le_mul_of_nonneg_right x.2.2 y.2.1).trans_eq <| one_mulₓ y
 
 /-- Unit interval central symmetry. -/
-def symm : I → I := fun t => ⟨1 - t.val, mem_iff_one_sub_mem.mp t.property⟩
+def symm : I → I := fun t => ⟨1 - t, mem_iff_one_sub_mem.mp t.Prop⟩
 
 -- mathport name: «exprσ»
 localized [UnitInterval] notation "σ" => UnitInterval.symm

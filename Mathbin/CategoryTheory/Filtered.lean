@@ -7,6 +7,7 @@ import Mathbin.CategoryTheory.FinCategory
 import Mathbin.CategoryTheory.Limits.Cones
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Category.Preorder
+import Mathbin.CategoryTheory.Category.Ulift
 import Mathbin.Order.BoundedOrder
 
 /-!
@@ -51,7 +52,7 @@ commute with finite limits.
 
 open Function
 
-universe v v₁ u u₁
+universe v v₁ u u₁ u₂
 
 -- declare the `v`'s first; see `category_theory.category` for an explanation
 namespace CategoryTheory
@@ -710,6 +711,28 @@ instance is_filtered_op_of_is_cofiltered [IsCofiltered C] : IsFiltered Cᵒᵖ w
   Nonempty := ⟨op IsCofiltered.nonempty.some⟩
 
 end Opposite
+
+section ULift
+
+instance [IsFiltered C] : IsFiltered (ULift.{u₂} C) :=
+  IsFiltered.of_equivalence Ulift.equivalence
+
+instance [IsCofiltered C] : IsCofiltered (ULift.{u₂} C) :=
+  IsCofiltered.of_equivalence Ulift.equivalence
+
+instance [IsFiltered C] : IsFiltered (UliftHom C) :=
+  IsFiltered.of_equivalence UliftHom.equiv
+
+instance [IsCofiltered C] : IsCofiltered (UliftHom C) :=
+  IsCofiltered.of_equivalence UliftHom.equiv
+
+instance [IsFiltered C] : IsFiltered (AsSmall C) :=
+  IsFiltered.of_equivalence AsSmall.equiv
+
+instance [IsCofiltered C] : IsCofiltered (AsSmall C) :=
+  IsCofiltered.of_equivalence AsSmall.equiv
+
+end ULift
 
 end CategoryTheory
 

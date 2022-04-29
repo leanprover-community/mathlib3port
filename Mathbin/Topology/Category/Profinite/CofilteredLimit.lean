@@ -23,7 +23,7 @@ This file contains some theorems about cofiltered limits of profinite sets.
 
 namespace Profinite
 
-open_locale Classical
+open Classical
 
 open CategoryTheory
 
@@ -52,7 +52,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     apply is_topological_basis_clopen
     
   · rintro i j f V (hV : IsClopen _)
-    refine' ⟨hV.1.Preimage _, hV.2.Preimage _⟩ <;> continuity
+    refine' ⟨hV.1.preimage _, hV.2.preimage _⟩ <;> continuity
     
   -- Using this, since `U` is open, we can write `U` as a union of clopen sets all of which
   -- are preimages of clopens from the factors in the limit.
@@ -66,7 +66,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   have := hU.2.IsCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _
   rotate_left
   · intro s
-    refine' (hV s).1.1.Preimage _
+    refine' (hV s).1.1.preimage _
     continuity
     
   · dsimp only
@@ -91,7 +91,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     intro s hs
     dsimp only [W]
     rw [dif_pos hs]
-    refine' ⟨(hV s).1.1.Preimage _, (hV s).1.2.Preimage _⟩ <;> continuity
+    refine' ⟨(hV s).1.1.preimage _, (hV s).1.2.preimage _⟩ <;> continuity
     
   · ext x
     constructor
@@ -202,7 +202,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) := by
   let S := f.discrete_quotient
   let ff : S → α := f.lift
-  cases' is_empty_or_nonempty S
+  cases is_empty_or_nonempty S
   · suffices ∃ j, IsEmpty (F.obj j) by
       refine' this.imp fun j hj => _
       refine' ⟨⟨hj.elim, fun A => _⟩, _⟩

@@ -18,6 +18,7 @@ and that `ℚ_p` is Cauchy complete.
 
 * `padic` : the type of p-adic numbers
 * `padic_norm_e` : the rational valued p-adic norm on `ℚ_p`
+* `padic.add_valuation` : the additive `p`-adic valuation on `ℚ_p`, with values in `with_top ℤ`.
 
 ## Notation
 
@@ -60,7 +61,7 @@ p-adic, p adic, padic, norm, valuation, cauchy, completion, p-adic completion
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open Nat multiplicity padicNorm CauSeq CauSeq.Completion Metric
 
@@ -628,25 +629,21 @@ variable {p : ℕ} [Fact p.Prime]
 theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀, ∀ i ≥ N, ∀, padicNormE (⟦f⟧ - f i) < ε := by
   simp only [Padic.cast_eq_of_rat]
   change ∃ N, ∀, ∀ i ≥ N, ∀, (f - const _ (f i)).norm < ε
-  by_contra h
+  by_contra' h
   cases' cauchy₂ f hε with N hN
-  have : ∀ N, ∃ i ≥ N, ε ≤ (f - const _ (f i)).norm := by
-    simpa only [not_forall, not_exists, not_ltₓ] using h
-  rcases this N with ⟨i, hi, hge⟩
+  rcases h N with ⟨i, hi, hge⟩
   have hne : ¬f - const (padicNorm p) (f i) ≈ 0 := by
     intro h
     unfold PadicSeq.norm  at hge <;> split_ifs  at hge
     exact not_lt_of_geₓ hge hε
   unfold PadicSeq.norm  at hge <;> split_ifs  at hge
   apply not_le_of_gtₓ _ hge
-  cases' Decidable.em (N ≤ stationary_point hne) with hgen hngen
-  · apply hN <;> assumption
+  cases' em (N ≤ stationary_point hne) with hgen hngen
+  · apply hN _ hgen _ hi
     
   · have := stationary_point_spec hne le_rfl (le_of_not_leₓ hngen)
     rw [← this]
-    apply hN
-    exact le_rfl
-    assumption
+    exact hN _ le_rfl _ hi
     
 
 protected theorem nonneg (q : ℚ_[p]) : 0 ≤ padicNormE q :=
@@ -748,11 +745,7 @@ theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < 
           simp only [const_apply, sub_apply, padicNorm.zero, sub_self] at this
           simpa only [this]
           
-        · apply hN
-          apply le_of_ltₓ
-          apply lt_of_not_geₓ
-          apply hle
-          exact le_rfl
+        · exact hN _ (lt_of_not_geₓ hle).le _ le_rfl
           
         ⟩
 
@@ -822,9 +815,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
             apply_mod_cast hN
             exact le_of_max_le_left hj
             
-          · apply hN2
-            exact le_of_max_le_right hj
-            apply le_max_rightₓ
+          · exact hN2 _ (le_of_max_le_right hj) _ (le_max_rightₓ _ _)
             
           
         
@@ -967,7 +958,7 @@ theorem eq_padic_norm (q : ℚ) : ∥(↑q : ℚ_[p])∥ = padicNorm p q := by
 theorem norm_p : ∥(p : ℚ_[p])∥ = p⁻¹ := by
   have p₀ : p ≠ 0 := hp.1.ne_zero
   have p₁ : p ≠ 1 := hp.1.ne_one
-  simp [p₀, p₁, norm, padicNorm, padicValRat, zpow_neg, Padic.cast_eq_of_rat_of_nat]
+  simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, Padic.cast_eq_of_rat_of_nat]
 
 theorem norm_p_lt_one : ∥(p : ℚ_[p])∥ < 1 := by
   rw [norm_p]
@@ -1016,18 +1007,13 @@ theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])�
       have hnz' : { num := n, denom := d, Pos := hn, cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padic_norm]
       norm_cast
-      rw [padicNorm.eq_zpow_of_nonzero p hnz', padic_val_rat_def p hnz']
-      have h : (multiplicity p d).get _ = 0 := by
-        simp [multiplicity_eq_zero_of_not_dvd, hq]
-      simp only
+      rw [padicNorm.eq_zpow_of_nonzero p hnz', padicValRat, neg_sub, padicValNat.eq_zero_of_not_dvd hq]
       norm_cast
-      rw_mod_cast[h, sub_zero]
-      apply zpow_le_one_of_nonpos
-      · exact_mod_cast le_of_ltₓ hp.1.one_lt
-        
-      · apply neg_nonpos_of_nonneg
-        norm_cast
-        simp
+      rw [zero_sub, zpow_neg₀, zpow_coe_nat]
+      apply inv_le_one
+      · norm_cast
+        apply one_le_pow
+        exact hp.1.Pos
         
 
 theorem norm_int_le_one (z : ℤ) : ∥(z : ℚ_[p])∥ ≤ 1 :=
@@ -1054,11 +1040,9 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℚ_[p])∥ < 1 ↔ ↑p ∣
       
     · norm_cast  at H⊢
       convert zpow_zero _
-      simp only [neg_eq_zero]
-      rw [padicValRat.padic_val_rat_of_int _ hp.1.ne_one H]
+      rw [neg_eq_zero, padicValRat.of_int]
       norm_cast
-      rw [← Enat.coe_inj, Enat.coe_get, Nat.cast_zeroₓ]
-      apply multiplicity.multiplicity_eq_zero_of_not_dvd h
+      apply padicValInt.eq_zero_of_not_dvd h
       
     
   · rintro ⟨x, rfl⟩
@@ -1147,6 +1131,18 @@ theorem padic_norm_e_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf
     _ ≤ a := max_leₓ (le_of_ltₓ (hN _ le_rfl)) (hf _)
     
 
+open Filter Set
+
+instance : CompleteSpace ℚ_[p] := by
+  apply complete_of_cauchy_seq_tendsto
+  intro u hu
+  let c : CauSeq ℚ_[p] norm := ⟨u, metric.cauchy_seq_iff'.mp hu⟩
+  refine' ⟨c.lim, fun s h => _⟩
+  rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
+  have := c.equiv_lim ε ε0
+  simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
+  exact this.imp fun N hN n hn => hε (hN n hn)
+
 /-!
 ### Valuation on `ℚ_[p]`
 -/
@@ -1208,6 +1204,87 @@ theorem valuation_p : valuation (p : ℚ_[p]) = 1 := by
     
   · exact_mod_cast (Fact.out p.prime).ne_zero
     
+
+theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) : min (valuation x) (valuation y) ≤ valuation (x + y) := by
+  by_cases' hx : x = 0
+  · rw [hx, zero_addₓ]
+    exact min_le_rightₓ _ _
+    
+  · by_cases' hy : y = 0
+    · rw [hy, add_zeroₓ]
+      exact min_le_leftₓ _ _
+      
+    · have h_norm : ∥x + y∥ ≤ max ∥x∥ ∥y∥ := padicNormE.nonarchimedean x y
+      have hp_one : (1 : ℝ) < p := by
+        rw [← Nat.cast_oneₓ, Nat.cast_lt]
+        exact Nat.Prime.one_lt hp_prime.elim
+      rw [norm_eq_pow_val hx, norm_eq_pow_val hy, norm_eq_pow_val hxy] at h_norm
+      exact min_le_of_zpow_le_max hp_one h_norm
+      
+    
+
+@[simp]
+theorem valuation_map_mul {x y : ℚ_[p]} (hx : x ≠ 0) (hy : y ≠ 0) : valuation (x * y) = valuation x + valuation y := by
+  have h_norm : ∥x * y∥ = ∥x∥ * ∥y∥ := norm_mul x y
+  have hp_ne_one : (p : ℝ) ≠ 1 := by
+    rw [← Nat.cast_oneₓ, Ne.def, Nat.cast_inj]
+    exact Nat.Prime.ne_one hp_prime.elim
+  have hp_pos : (0 : ℝ) < p := by
+    rw [← Nat.cast_zeroₓ, Nat.cast_lt]
+    exact Nat.Prime.pos hp_prime.elim
+  rw [norm_eq_pow_val hx, norm_eq_pow_val hy, norm_eq_pow_val (mul_ne_zero hx hy), ← zpow_add₀ (ne_of_gtₓ hp_pos),
+    zpow_inj hp_pos hp_ne_one, ← neg_add, neg_inj] at h_norm
+  exact h_norm
+
+/-- The additive p-adic valuation on `ℚ_p`, with values in `with_top ℤ`. -/
+def addValuationDef : ℚ_[p] → WithTop ℤ := fun x => if x = 0 then ⊤ else x.Valuation
+
+@[simp]
+theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
+  simp only [add_valuation_def, if_pos (Eq.refl _)]
+
+@[simp]
+theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
+  simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
+
+theorem AddValuation.map_mul (x y : ℚ_[p]) : addValuationDef (x * y) = addValuationDef x + addValuationDef y := by
+  simp only [add_valuation_def]
+  by_cases' hx : x = 0
+  · rw [hx, if_pos (Eq.refl _), zero_mul, if_pos (Eq.refl _), WithTop.top_add]
+    
+  · by_cases' hy : y = 0
+    · rw [hy, if_pos (Eq.refl _), mul_zero, if_pos (Eq.refl _), WithTop.add_top]
+      
+    · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithTop.coe_add, WithTop.coe_eq_coe,
+        valuation_map_mul hx hy]
+      
+    
+
+theorem AddValuation.map_add (x y : ℚ_[p]) : min (addValuationDef x) (addValuationDef y) ≤ addValuationDef (x + y) := by
+  simp only [add_valuation_def]
+  by_cases' hxy : x + y = 0
+  · rw [hxy, if_pos (Eq.refl _)]
+    exact le_top
+    
+  · by_cases' hx : x = 0
+    · simp only [hx, if_pos (Eq.refl _), min_eq_rightₓ, le_top, zero_addₓ, le_reflₓ]
+      
+    · by_cases' hy : y = 0
+      · simp only [hy, if_pos (Eq.refl _), min_eq_leftₓ, le_top, add_zeroₓ, le_reflₓ]
+        
+      · rw [if_neg hx, if_neg hy, if_neg hxy, ← WithTop.coe_min, WithTop.coe_le_coe]
+        exact valuation_map_add hxy
+        
+      
+    
+
+/-- The additive `p`-adic valuation on `ℚ_p`, as an `add_valuation`. -/
+def addValuation : AddValuation ℚ_[p] (WithTop ℤ) :=
+  AddValuation.of addValuationDef AddValuation.map_zero AddValuation.map_one AddValuation.map_add AddValuation.map_mul
+
+@[simp]
+theorem addValuation.apply {x : ℚ_[p]} (hx : x ≠ 0) : x.AddValuation = x.Valuation := by
+  simp only [AddValuation, AddValuation.of_apply, add_valuation_def, if_neg hx]
 
 section NormLeIff
 

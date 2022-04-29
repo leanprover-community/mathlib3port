@@ -96,6 +96,20 @@ structure IsCHSHTuple {R} [Monoidₓ R] [StarSemigroup R] (A₀ A₁ B₀ B₁ :
 
 variable {R : Type u}
 
+theorem CHSH_id [CommRingₓ R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1) (A₁_inv : A₁ ^ 2 = 1) (B₀_inv : B₀ ^ 2 = 1)
+    (B₁_inv : B₁ ^ 2 = 1) :
+    (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) * (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) =
+      4 * (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) :=
+  by
+  -- If we had a Gröbner basis algorithm, this would be trivial.
+  -- Without one, it is somewhat tedious!
+  rw [← sub_eq_zero]
+  repeat'
+    ring_nf
+    simp only [A₁_inv, B₁_inv, sub_eq_add_neg, add_mulₓ, mul_addₓ, sub_mul, mul_sub, add_assocₓ, neg_add, neg_sub,
+      sub_add, sub_sub, neg_mul, ← sq, A₀_inv, B₀_inv, ← sq, ← mul_assoc, one_mulₓ, mul_oneₓ, add_right_negₓ, add_zeroₓ,
+      sub_eq_add_neg, A₀_inv, mul_oneₓ, add_right_negₓ, zero_mul]
+
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
 
@@ -105,36 +119,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
     (A₀ A₁ B₀ B₁ : R) (T : IsCHSHTuple A₀ A₁ B₀ B₁) : A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2 := by
   let P := 2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁
   have i₁ : 0 ≤ P := by
-    have idem : P * P = 4 * P := by
-      -- If we had a Gröbner basis algorithm, this would be trivial.
-      -- Without one, it is somewhat tedious!
-      dsimp [P]
-      simp only [add_mulₓ, mul_addₓ, sub_mul, mul_sub, mul_comm, mul_assoc, add_assocₓ]
-      repeat'
-        conv in B₀ * (A₀ * B₀) => rw [T.A₀B₀_commutes, ← mul_assoc B₀ B₀ A₀, ← sq, T.B₀_inv, one_mulₓ]
-      repeat'
-        conv in B₀ * (A₁ * B₀) => rw [T.A₁B₀_commutes, ← mul_assoc B₀ B₀ A₁, ← sq, T.B₀_inv, one_mulₓ]
-      repeat'
-        conv in B₁ * (A₀ * B₁) => rw [T.A₀B₁_commutes, ← mul_assoc B₁ B₁ A₀, ← sq, T.B₁_inv, one_mulₓ]
-      repeat'
-        conv in B₁ * (A₁ * B₁) => rw [T.A₁B₁_commutes, ← mul_assoc B₁ B₁ A₁, ← sq, T.B₁_inv, one_mulₓ]
-      conv in A₀ * (B₀ * (A₀ * B₁)) =>
-        rw [← mul_assoc, T.A₀B₀_commutes, mul_assoc, ← mul_assoc A₀, ← sq, T.A₀_inv, one_mulₓ]
-      conv in A₀ * (B₁ * (A₀ * B₀)) =>
-        rw [← mul_assoc, T.A₀B₁_commutes, mul_assoc, ← mul_assoc A₀, ← sq, T.A₀_inv, one_mulₓ]
-      conv in A₁ * (B₀ * (A₁ * B₁)) =>
-        rw [← mul_assoc, T.A₁B₀_commutes, mul_assoc, ← mul_assoc A₁, ← sq, T.A₁_inv, one_mulₓ]
-      conv in A₁ * (B₁ * (A₁ * B₀)) =>
-        rw [← mul_assoc, T.A₁B₁_commutes, mul_assoc, ← mul_assoc A₁, ← sq, T.A₁_inv, one_mulₓ]
-      simp only [← sq, T.A₀_inv, T.A₁_inv]
-      simp only [mul_comm A₁ A₀, mul_comm B₁ B₀, mul_left_commₓ A₁ A₀, mul_left_commₓ B₁ B₀, mul_left_commₓ B₀ A₀,
-        mul_left_commₓ B₀ A₁, mul_left_commₓ B₁ A₀, mul_left_commₓ B₁ A₁]
-      norm_num
-      simp only [mul_comm _ (2 : R), mul_comm _ (4 : R), mul_left_commₓ _ (2 : R), mul_left_commₓ _ (4 : R)]
-      abel
-      simp only [neg_mul, mul_oneₓ, Int.cast_bit0, one_mulₓ, Int.cast_oneₓ, zsmul_eq_mul, Int.cast_neg]
-      simp only [← mul_assoc, ← add_assocₓ]
-      norm_num
+    have idem : P * P = 4 * P := CHSH_id T.A₀_inv T.A₁_inv T.B₀_inv T.B₁_inv
     have idem' : P = (1 / 4 : ℝ) • (P * P) := by
       have h : 4 * P = (4 : ℝ) • P := by
         simp [Algebra.smul_def]

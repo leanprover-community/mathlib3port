@@ -219,7 +219,7 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) : ∃ 
   rcases(colimit.iso_colimit_cocone (types.coproduct_colimit_cocone _)).Hom x' with ⟨i, y⟩
   exact
     ⟨i, y, by
-      simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π]⟩
+      simpa [← multicoequalizer.ι_sigma_π, -multicoequalizer.ι_sigma_π] ⟩
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 

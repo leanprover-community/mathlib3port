@@ -31,7 +31,7 @@ matrix, diagonal, det, block triangular
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 universe v
 
@@ -72,8 +72,7 @@ theorem two_block_triangular_det (M : Matrix m m R) (p : m → Prop) [DecidableP
     M.det = (toSquareBlockProp M p).det * (toSquareBlockProp M fun i => ¬p i).det := by
   rw [det_to_block M p]
   convert
-    upper_two_block_triangular_det (to_block M p p) (to_block M p fun j => ¬p j)
-      (to_block M (fun j => ¬p j) fun j => ¬p j)
+    det_from_blocks_zero₂₁ (to_block M p p) (to_block M p fun j => ¬p j) (to_block M (fun j => ¬p j) fun j => ¬p j)
   ext
   exact h (↑i) i.2 (↑j) j.2
 

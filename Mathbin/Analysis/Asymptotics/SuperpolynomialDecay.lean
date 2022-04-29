@@ -47,7 +47,7 @@ https://ncatlab.org/nlab/show/rapidly+decreasing+function
 
 namespace Asymptotics
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter
 

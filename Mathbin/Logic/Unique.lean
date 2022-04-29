@@ -78,6 +78,10 @@ instance PUnit.unique : Unique PUnit.{u} where
   default := PUnit.unit
   uniq := fun x => punit_eq x _
 
+@[simp]
+theorem PUnit.default_eq_star : (default : PUnit) = PUnit.unit :=
+  rfl
+
 /-- Every provable proposition is unique, as all proofs are equal. -/
 def uniqueProp {p : Prop} (h : p) : Unique p where
   default := h
@@ -185,6 +189,11 @@ protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : 
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
 protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
   @Unique.mk' _ _ hf.Subsingleton
+
+/-- If a constant function is surjective, then the codomain is a singleton. -/
+def Surjective.uniqueOfSurjectiveConst (α : Type _) {β : Type _} (b : β)
+    (h : Function.Surjective (Function.const α b)) : Unique β :=
+  @uniqueOfSubsingleton _ (subsingleton_of_forall_eq b <| h.forall.mpr fun _ => rfl) b
 
 end Function
 

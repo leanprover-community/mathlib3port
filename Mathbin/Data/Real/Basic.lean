@@ -19,7 +19,7 @@ lifting everything to `ℚ`.
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 /-- The type `ℝ` of real numbers constructed as equivalence classes of Cauchy sequences of rational
 numbers. -/
@@ -79,25 +79,48 @@ instance : Neg ℝ :=
 instance : Mul ℝ :=
   ⟨mul⟩
 
-theorem zero_cauchy : (⟨0⟩ : ℝ) = 0 :=
+theorem of_cauchy_zero : (⟨0⟩ : ℝ) = 0 :=
   show _ = zero by
     rw [zero]
 
-theorem one_cauchy : (⟨1⟩ : ℝ) = 1 :=
+theorem of_cauchy_one : (⟨1⟩ : ℝ) = 1 :=
   show _ = one by
     rw [one]
 
-theorem add_cauchy {a b} : (⟨a⟩ + ⟨b⟩ : ℝ) = ⟨a + b⟩ :=
-  show add _ _ = _ by
+theorem of_cauchy_add a b : (⟨a + b⟩ : ℝ) = ⟨a⟩ + ⟨b⟩ :=
+  show _ = add _ _ by
     rw [add]
 
-theorem neg_cauchy {a} : (-⟨a⟩ : ℝ) = ⟨-a⟩ :=
-  show neg _ = _ by
+theorem of_cauchy_neg a : (⟨-a⟩ : ℝ) = -⟨a⟩ :=
+  show _ = neg _ by
     rw [neg]
 
-theorem mul_cauchy {a b} : (⟨a⟩ * ⟨b⟩ : ℝ) = ⟨a * b⟩ :=
-  show mul _ _ = _ by
+theorem of_cauchy_mul a b : (⟨a * b⟩ : ℝ) = ⟨a⟩ * ⟨b⟩ :=
+  show _ = mul _ _ by
     rw [mul]
+
+theorem cauchy_zero : (0 : ℝ).cauchy = 0 :=
+  show zero.cauchy = 0 by
+    rw [zero]
+
+theorem cauchy_one : (1 : ℝ).cauchy = 1 :=
+  show one.cauchy = 1 by
+    rw [one]
+
+theorem cauchy_add : ∀ a b, (a + b : ℝ).cauchy = a.cauchy + b.cauchy
+  | ⟨a⟩, ⟨b⟩ =>
+    show (add _ _).cauchy = _ by
+      rw [add]
+
+theorem cauchy_neg : ∀ a, (-a : ℝ).cauchy = -a.cauchy
+  | ⟨a⟩ =>
+    show (neg _).cauchy = _ by
+      rw [neg]
+
+theorem cauchy_mul : ∀ a b, (a * b : ℝ).cauchy = a.cauchy * b.cauchy
+  | ⟨a⟩, ⟨b⟩ =>
+    show (mul _ _).cauchy = _ by
+      rw [mul]
 
 instance : CommRingₓ ℝ := by
   refine_struct
@@ -108,7 +131,7 @@ instance : CommRingₓ ℝ := by
         rintro ⟨_⟩ <;>
       try
           rfl <;>
-        simp [← zero_cauchy, ← one_cauchy, add_cauchy, neg_cauchy, mul_cauchy] <;>
+        simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul] <;>
           first |
             apply add_assocₓ|
             apply add_commₓ|
@@ -197,7 +220,8 @@ instance : HasTrivialStar ℝ :=
 is `cau_seq.completion.of_rat`, not `rat.cast`. -/
 def ofRat : ℚ →+* ℝ := by
   refine_struct { toFun := of_cauchy ∘ of_rat } <;>
-    simp [of_rat_one, of_rat_zero, of_rat_mul, of_rat_add, one_cauchy, zero_cauchy, ← mul_cauchy, ← add_cauchy]
+    simp [of_rat_one, of_rat_zero, of_rat_mul, of_rat_add, of_cauchy_one, of_cauchy_zero, ← of_cauchy_mul, ←
+      of_cauchy_add]
 
 theorem of_rat_apply (x : ℚ) : ofRat x = of_cauchy (CauSeq.Completion.ofRat x) :=
   rfl
@@ -228,19 +252,19 @@ theorem mk_lt {f g : CauSeq ℚ abs} : mk f < mk g ↔ f < g :=
   lt_cauchy
 
 theorem mk_zero : mk 0 = 0 := by
-  rw [← zero_cauchy] <;> rfl
+  rw [← of_cauchy_zero] <;> rfl
 
 theorem mk_one : mk 1 = 1 := by
-  rw [← one_cauchy] <;> rfl
+  rw [← of_cauchy_one] <;> rfl
 
 theorem mk_add {f g : CauSeq ℚ abs} : mk (f + g) = mk f + mk g := by
-  simp [mk, add_cauchy]
+  simp [mk, ← of_cauchy_add]
 
 theorem mk_mul {f g : CauSeq ℚ abs} : mk (f * g) = mk f * mk g := by
-  simp [mk, mul_cauchy]
+  simp [mk, ← of_cauchy_mul]
 
 theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by
-  simp [mk, neg_cauchy]
+  simp [mk, ← of_cauchy_neg]
 
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
@@ -302,7 +326,7 @@ instance : PartialOrderₓ ℝ where
 instance : Preorderₓ ℝ := by
   infer_instance
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem of_rat_lt {x y : ℚ} : ofRat x < ofRat y ↔ x < y := by
   rw [mk_lt]
   exact const_lt
@@ -344,7 +368,7 @@ instance : OrderedAddCommMonoid ℝ := by
 instance : Nontrivial ℝ :=
   ⟨⟨0, 1, ne_of_ltₓ Real.zero_lt_one⟩⟩
 
-open_locale Classical
+open Classical
 
 noncomputable instance : LinearOrderₓ ℝ :=
   { Real.partialOrder with
@@ -375,19 +399,24 @@ private noncomputable irreducible_def inv' : ℝ → ℝ
 noncomputable instance : Inv ℝ :=
   ⟨inv'⟩
 
-theorem inv_cauchy {f} : (⟨f⟩ : ℝ)⁻¹ = ⟨f⁻¹⟩ :=
-  show inv' _ = _ by
+theorem of_cauchy_inv {f} : (⟨f⁻¹⟩ : ℝ) = ⟨f⟩⁻¹ :=
+  show _ = inv' _ by
     rw [inv']
+
+theorem cauchy_inv : ∀ f, (f⁻¹ : ℝ).cauchy = f.cauchy⁻¹
+  | ⟨f⟩ =>
+    show (inv' _).cauchy = _ by
+      rw [inv']
 
 noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with inv := Inv.inv,
     mul_inv_cancel := by
       rintro ⟨a⟩ h
       rw [mul_comm]
-      simp only [inv_cauchy, mul_cauchy, ← one_cauchy, ← zero_cauchy, Ne.def] at *
+      simp only [← of_cauchy_inv, ← of_cauchy_mul, ← of_cauchy_one, ← of_cauchy_zero, Ne.def] at *
       exact CauSeq.Completion.inv_mul_cancel h,
     inv_zero := by
-      simp [← zero_cauchy, inv_cauchy] }
+      simp [← of_cauchy_zero, ← of_cauchy_inv] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by
@@ -432,7 +461,7 @@ open Rat
 theorem of_rat_eq_cast : ∀ x : ℚ, ofRat x = x :=
   ofRat.eq_rat_cast
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { md := tactic.transparency.semireducible }
 theorem le_mk_of_forall_le {f : CauSeq ℚ abs} : (∃ i, ∀, ∀ j ≥ i, ∀, x ≤ f j) → x ≤ mk f := by
   intro h
   induction' x using Real.ind_mk with x
@@ -619,7 +648,7 @@ theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) =
 
 @[simp]
 theorem csupr_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 := by
-  cases' is_empty_or_nonempty α
+  cases is_empty_or_nonempty α
   · exact Real.csupr_empty _
     
   · exact csupr_const
@@ -643,7 +672,7 @@ theorem cinfi_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) =
 
 @[simp]
 theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 := by
-  cases' is_empty_or_nonempty α
+  cases is_empty_or_nonempty α
   · exact Real.cinfi_empty _
     
   · exact cinfi_const
@@ -713,7 +742,7 @@ theorem cau_seq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
     exact ih _ ij
     
 
-noncomputable instance : CauSeq.IsComplete ℝ abs :=
+instance : CauSeq.IsComplete ℝ abs :=
   ⟨cau_seq_converges⟩
 
 end Real

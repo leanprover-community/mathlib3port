@@ -30,7 +30,7 @@ noncomputable section
 
 open Complex
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 -- mathport name: «expr| |»
 local notation "|" x "|" => Complex.abs x

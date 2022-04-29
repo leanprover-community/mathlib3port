@@ -24,9 +24,9 @@ universe u v
 
 variable {α : Type u} {β : Type v}
 
-open Set Zorn Filter Function
+open Set Filter Function
 
-open_locale Classical Filter
+open Classical Filter
 
 /-- An ultrafilter is a minimal (maximal in the set order) proper filter. -/
 @[protect_proj]
@@ -85,7 +85,7 @@ theorem le_of_inf_ne_bot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g⊓
     rwa [inf_comm]
 
 @[simp]
-theorem compl_not_mem_iff : (sᶜ ∉ f) ↔ s ∈ f :=
+theorem compl_not_mem_iff : sᶜ ∉ f ↔ s ∈ f :=
   ⟨fun hsc =>
     le_principal_iff.1 <|
       f.le_of_inf_ne_bot
@@ -109,7 +109,7 @@ theorem diff_mem_iff (f : Ultrafilter α) : s \ t ∈ f ↔ s ∈ f ∧ t ∉ f 
 
 /-- If `sᶜ ∉ f ↔ s ∈ f`, then `f` is an ultrafilter. The other implication is given by
 `ultrafilter.compl_not_mem_iff`.  -/
-def ofComplNotMemIff (f : Filter α) (h : ∀ s, (sᶜ ∉ f) ↔ s ∈ f) : Ultrafilter α where
+def ofComplNotMemIff (f : Filter α) (h : ∀ s, sᶜ ∉ f ↔ s ∈ f) : Ultrafilter α where
   toFilter := f
   ne_bot' :=
     ⟨fun hf => by
@@ -246,11 +246,11 @@ theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u �
   let r : τ → τ → Prop := fun t₁ t₂ => t₂.val ≤ t₁.val
   have := nonempty_of_ne_bot f
   let top : τ := ⟨f, h, le_reflₓ f⟩
-  let sup : ∀ c : Set τ, chain r c → τ := fun c hc =>
+  let sup : ∀ c : Set τ, IsChain r c → τ := fun c hc =>
     ⟨⨅ a : { a : τ // a ∈ insert top c }, a.1,
-      infi_ne_bot_of_directed (directed_of_chain <| (chain_insert hc) fun _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
+      infi_ne_bot_of_directed (IsChain.directed <| hc.insert fun _ _ => Or.inl hb) fun ⟨⟨a, ha, _⟩, _⟩ => ha,
       infi_le_of_le ⟨top, mem_insert _ _⟩ le_rfl⟩
-  have : ∀ c hc : chain r c a ha : a ∈ c, r a (sup c hc) := fun c hc a ha =>
+  have : ∀ c hc : IsChain r c a ha : a ∈ c, r a (sup c hc) := fun c hc a ha =>
     infi_le_of_le ⟨a, mem_insert_of_mem _ ha⟩ le_rfl
   have : ∃ u : τ, ∀ a : τ, r u a → r a u :=
     exists_maximal_of_chains_bounded (fun c hc => ⟨sup c hc, this c hc⟩) fun f₁ f₂ f₃ h₁ h₂ => le_transₓ h₂ h₁
@@ -305,7 +305,7 @@ theorem mem_iff_ultrafilter {s : Set α} {f : Filter α} : s ∈ f ↔ ∀ g : U
   have : ne_bot g :=
     comap_ne_bot_iff_compl_range.2
       (by
-        simpa [compl_set_of])
+        simpa [compl_set_of] )
   simpa using H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))
 
 theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : Ultrafilter α, ↑g ≤ f₁ → ↑g ≤ f₂ :=
@@ -327,7 +327,7 @@ theorem exists_ultrafilter_iff {f : Filter α} : (∃ u : Ultrafilter α, ↑u �
 theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
     (∀ f : Filter α, NeBot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, ↑f ≤ g → p f := by
   refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
-  intros H f hf hfg
+  intro H f hf hfg
   exact hp (of_le f) (H _ ((of_le f).trans hfg))
 
 section Hyperfilter

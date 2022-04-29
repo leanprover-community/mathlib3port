@@ -5,6 +5,7 @@ Authors: Kenny Lau, Ken Lee, Chris Hughes
 -/
 import Mathbin.Tactic.Ring
 import Mathbin.Algebra.Ring.Basic
+import Mathbin.GroupTheory.GroupAction.Units
 
 /-!
 # Coprime elements of a ring
@@ -19,7 +20,7 @@ See also `ring_theory.coprime.lemmas` for further development of coprime element
 -/
 
 
-open_locale Classical
+open Classical
 
 universe u v
 
@@ -195,6 +196,53 @@ theorem IsCoprime.of_mul_add_right_right (h : IsCoprime x (z * x + y)) : IsCopri
   exact h.of_add_mul_right_right
 
 end CommSemiringₓ
+
+section ScalarTower
+
+variable {R G : Type _} [CommSemiringₓ R] [Groupₓ G] [MulAction G R] [SmulCommClass G R R] [IsScalarTower G R R] (x : G)
+  (y z : R)
+
+theorem is_coprime_group_smul_left : IsCoprime (x • y) z ↔ IsCoprime y z :=
+  ⟨fun ⟨a, b, h⟩ =>
+    ⟨x • a, b, by
+      rwa [smul_mul_assoc, ← mul_smul_comm]⟩,
+    fun ⟨a, b, h⟩ =>
+    ⟨x⁻¹ • a, b, by
+      rwa [smul_mul_smul, inv_mul_selfₓ, one_smul]⟩⟩
+
+theorem is_coprime_group_smul_right : IsCoprime y (x • z) ↔ IsCoprime y z :=
+  is_coprime_comm.trans <| (is_coprime_group_smul_left x z y).trans is_coprime_comm
+
+theorem is_coprime_group_smul : IsCoprime (x • y) (x • z) ↔ IsCoprime y z :=
+  (is_coprime_group_smul_left x y (x • z)).trans (is_coprime_group_smul_right x y z)
+
+end ScalarTower
+
+section CommSemiringUnit
+
+variable {R : Type _} [CommSemiringₓ R] {x : R} (hu : IsUnit x) (y z : R)
+
+theorem is_coprime_mul_unit_left_left : IsCoprime (x * y) z ↔ IsCoprime y z :=
+  let ⟨u, hu⟩ := hu
+  hu ▸ is_coprime_group_smul_left u y z
+
+theorem is_coprime_mul_unit_left_right : IsCoprime y (x * z) ↔ IsCoprime y z :=
+  let ⟨u, hu⟩ := hu
+  hu ▸ is_coprime_group_smul_right u y z
+
+theorem is_coprime_mul_unit_left : IsCoprime (x * y) (x * z) ↔ IsCoprime y z :=
+  (is_coprime_mul_unit_left_left hu y (x * z)).trans (is_coprime_mul_unit_left_right hu y z)
+
+theorem is_coprime_mul_unit_right_left : IsCoprime (y * x) z ↔ IsCoprime y z :=
+  mul_comm x y ▸ is_coprime_mul_unit_left_left hu y z
+
+theorem is_coprime_mul_unit_right_right : IsCoprime y (z * x) ↔ IsCoprime y z :=
+  mul_comm x z ▸ is_coprime_mul_unit_left_right hu y z
+
+theorem is_coprime_mul_unit_right : IsCoprime (y * x) (z * x) ↔ IsCoprime y z :=
+  (is_coprime_mul_unit_right_left hu y (z * x)).trans (is_coprime_mul_unit_right_right hu y z)
+
+end CommSemiringUnit
 
 namespace IsCoprime
 

@@ -3,6 +3,7 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Prime
 import Mathbin.Dynamics.FixedPoints.Basic
 import Mathbin.Data.Pnat.Basic
@@ -186,6 +187,15 @@ theorem mk_mem_periodic_pts (hn : 0 < n) (hx : IsPeriodicPt f n x) : x ∈ Perio
 theorem mem_periodic_pts : x ∈ PeriodicPts f ↔ ∃ n > 0, IsPeriodicPt f n x :=
   Iff.rfl
 
+theorem is_periodic_pt_of_mem_periodic_pts_of_is_periodic_pt_iterate (hx : x ∈ PeriodicPts f)
+    (hm : IsPeriodicPt f m ((f^[n]) x)) : IsPeriodicPt f m x := by
+  rcases hx with ⟨r, hr, hr'⟩
+  convert (hm.apply_iterate ((n / r + 1) * r - n)).Eq
+  suffices n ≤ (n / r + 1) * r by
+    rw [← iterate_add_apply, Nat.sub_add_cancelₓ this, iterate_mul, (hr'.iterate _).Eq]
+  rw [add_mulₓ, one_mulₓ]
+  exact (Nat.lt_div_mul_add hr).le
+
 variable (f)
 
 theorem bUnion_pts_of_period : (⋃ n > 0, PtsOfPeriod f n) = PeriodicPts f :=
@@ -204,7 +214,7 @@ variable {f}
 theorem Semiconj.maps_to_periodic_pts {g : α → β} (h : Semiconj g fa fb) : MapsTo g (PeriodicPts fa) (PeriodicPts fb) :=
   fun x ⟨n, hn, hx⟩ => ⟨n, hn, hx.map h⟩
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -220,6 +230,9 @@ theorem is_periodic_pt_minimal_period (f : α → α) (x : α) : IsPeriodicPt f 
     
   · exact is_periodic_pt_zero f x
     
+
+theorem iterate_minimal_period (f : α → α) (x : α) : (f^[minimalPeriod f x]) x = x :=
+  is_periodic_pt_minimal_period f x
 
 theorem iterate_eq_mod_minimal_period : (f^[n]) x = (f^[n % minimalPeriod f x]) x :=
   ((is_periodic_pt_minimal_period f x).iterate_mod_apply n).symm
@@ -238,6 +251,14 @@ theorem minimal_period_pos_iff_mem_periodic_pts : 0 < minimalPeriod f x ↔ x �
 theorem IsPeriodicPt.minimal_period_le (hn : 0 < n) (hx : IsPeriodicPt f n x) : minimalPeriod f x ≤ n := by
   rw [minimal_period, dif_pos (mk_mem_periodic_pts hn hx)]
   exact Nat.find_min'ₓ (mk_mem_periodic_pts hn hx) ⟨hn, hx⟩
+
+theorem iterate_injective_of_lt_minimal_period (hm : m < minimalPeriod f x) (hn : n < minimalPeriod f x)
+    (hf : (f^[m]) x = (f^[n]) x) : m = n := by
+  wlog h_le : n ≤ m
+  rw [← h_le.le_iff_eq, ← tsub_le_tsub_iff_left hm.le, tsub_le_iff_right]
+  apply is_periodic_pt.minimal_period_le (Nat.add_pos_left (tsub_pos_of_lt hm) n)
+  rw [is_periodic_pt, is_fixed_pt, iterate_add_apply, ← hf, ← iterate_add_apply, Nat.sub_add_cancelₓ hm.le,
+    iterate_minimal_period]
 
 theorem minimal_period_id : minimalPeriod id x = 1 :=
   ((is_periodic_id _ _).minimal_period_le Nat.one_posₓ).antisymm
@@ -337,4 +358,26 @@ theorem minimal_period_iterate_eq_div_gcd' (h : x ∈ PeriodicPts f) :
   minimal_period_iterate_eq_div_gcd_aux <| gcd_pos_of_pos_leftₓ n (minimal_period_pos_iff_mem_periodic_pts.mpr h)
 
 end Function
+
+namespace MulAction
+
+open Function
+
+variable {α β : Type _} [Groupₓ α] [MulAction α β] {a : α} {b : β}
+
+@[to_additive]
+theorem pow_smul_eq_iff_minimal_period_dvd {n : ℕ} : a ^ n • b = b ↔ Function.minimalPeriod ((· • ·) a) b ∣ n := by
+  rw [← is_periodic_pt_iff_minimal_period_dvd, is_periodic_pt, is_fixed_pt, smul_iterate]
+
+@[to_additive]
+theorem zpow_smul_eq_iff_minimal_period_dvd {n : ℤ} : a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n :=
+  by
+  cases n
+  · rw [Int.of_nat_eq_coe, zpow_coe_nat, Int.coe_nat_dvd, pow_smul_eq_iff_minimal_period_dvd]
+    
+  · rw [Int.neg_succ_of_nat_coe, zpow_neg, zpow_coe_nat, inv_smul_eq_iff, eq_comm, dvd_neg, Int.coe_nat_dvd,
+      pow_smul_eq_iff_minimal_period_dvd]
+    
+
+end MulAction
 

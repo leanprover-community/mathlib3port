@@ -31,7 +31,7 @@ variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
 variable {c : ComplexShape ι} (C : HomologicalComplex V c)
 
-open_locale Classical ZeroObject
+open Classical ZeroObject
 
 noncomputable section
 

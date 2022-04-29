@@ -3,7 +3,9 @@ Copyright (c) 2021 Yaël Dillies, Bhavik Mehta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 -/
+import Mathbin.Algebra.Hom.Freiman
 import Mathbin.Analysis.Asymptotics.Asymptotics
+import Mathbin.Analysis.Convex.StrictConvexSpace
 
 /-!
 # Salem-Spencer sets and Roth numbers
@@ -28,7 +30,8 @@ the size of the biggest Salem-Spencer subset of `{0, ..., n - 1}`.
 
 ## TODO
 
-Can `add_salem_spencer_iff_eq_right` be made more general?
+* Can `add_salem_spencer_iff_eq_right` be made more general?
+* Generalize `mul_salem_spencer.image` to Freiman homs
 
 ## Tags
 
@@ -36,11 +39,15 @@ Salem-Spencer, Roth, arithmetic progression, average, three-free
 -/
 
 
-open Finset Nat
+open Finset Function Metric Nat
 
-variable {α β : Type _}
+open Pointwise
+
+variable {F α β 𝕜 E : Type _}
 
 section SalemSpencer
+
+open Set
 
 section Monoidₓ
 
@@ -73,18 +80,41 @@ theorem Set.Subsingleton.mul_salem_spencer (hs : s.Subsingleton) : MulSalemSpenc
 
 @[simp, to_additive]
 theorem mul_salem_spencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
-  Set.subsingleton_singleton.MulSalemSpencer
+  subsingleton_singleton.MulSalemSpencer
 
-@[to_additive]
+@[to_additive AddSalemSpencer.prod]
 theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) : MulSalemSpencer (s ×ˢ t) :=
   fun a b c ha hb hc h => Prod.extₓ (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
 
 @[to_additive]
 theorem mul_salem_spencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoidₓ (α i)] {s : ∀ i, Set (α i)}
-    (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((Set.Univ : Set ι).pi s) := fun a b c ha hb hc h =>
+    (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((Univ : Set ι).pi s) := fun a b c ha hb hc h =>
   funext fun i => hs i (ha i trivialₓ) (hb i trivialₓ) (hc i trivialₓ) <| congr_funₓ h i
 
 end Monoidₓ
+
+section CommMonoidₓ
+
+variable [CommMonoidₓ α] [CommMonoidₓ β] {s : Set α} {a : α}
+
+@[to_additive]
+theorem MulSalemSpencer.of_image [FunLike F α fun _ => β] [FreimanHomClass F s β 2] (f : F) (hf : s.InjOn f)
+    (h : MulSalemSpencer (f '' s)) : MulSalemSpencer s := fun a b c ha hb hc habc =>
+  hf ha hb <|
+    h (mem_image_of_mem _ ha) (mem_image_of_mem _ hb) (mem_image_of_mem _ hc) <|
+      map_mul_map_eq_map_mul_map f ha hb hc hc habc
+
+-- TODO: Generalize to Freiman homs
+@[to_additive]
+theorem MulSalemSpencer.image [MulHomClass F α β] (f : F) (hf : (s * s).InjOn f) (h : MulSalemSpencer s) :
+    MulSalemSpencer (f '' s) := by
+  rintro _ _ _ ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩ habc
+  rw
+    [h ha hb hc
+      (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) <| by
+        rwa [map_mul, map_mul])]
+
+end CommMonoidₓ
 
 section CancelCommMonoid
 
@@ -98,11 +128,11 @@ theorem mul_salem_spencer_insert :
   by
   refine'
     ⟨fun hs =>
-      ⟨hs.mono (Set.subset_insert _ _), fun b c hb hc => hs (Or.inl rfl) (Or.inr hb) (Or.inr hc), fun b c hb hc =>
+      ⟨hs.mono (subset_insert _ _), fun b c hb hc => hs (Or.inl rfl) (Or.inr hb) (Or.inr hc), fun b c hb hc =>
         hs (Or.inr hb) (Or.inr hc) (Or.inl rfl)⟩,
       _⟩
   rintro ⟨hs, ha, ha'⟩ b c d hb hc hd h
-  rw [Set.mem_insert_iff] at hb hc hd
+  rw [mem_insert_iff] at hb hc hd
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
   · rfl
     
@@ -148,7 +178,7 @@ theorem MulSalemSpencer.mul_right (hs : MulSalemSpencer s) : MulSalemSpencer ((�
 theorem mul_salem_spencer_mul_left_iff : MulSalemSpencer ((· * ·) a '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
     mul_left_cancelₓ
-      (hs (Set.mem_image_of_mem _ hb) (Set.mem_image_of_mem _ hc) (Set.mem_image_of_mem _ hd) <| by
+      (hs (mem_image_of_mem _ hb) (mem_image_of_mem _ hc) (mem_image_of_mem _ hd) <| by
         rw [mul_mul_mul_commₓ, h, mul_mul_mul_commₓ]),
     MulSalemSpencer.mul_left⟩
 
@@ -220,7 +250,33 @@ theorem add_salem_spencer_iff_eq_right {s : Set ℕ} :
 
 end Nat
 
+/-- The frontier of a closed strictly convex set only contains trivial arithmetic progressions.
+The idea is that an arithmetic progression is contained on a line and the frontier of a strictly
+convex set does not contain lines. -/
+theorem add_salem_spencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
+    {s : Set E} (hs₀ : IsClosed s) (hs₁ : StrictConvex 𝕜 s) : AddSalemSpencer (Frontier s) := by
+  intro a b c ha hb hc habc
+  obtain rfl : (1 / 2 : 𝕜) • a + (1 / 2 : 𝕜) • b = c := by
+    rwa [← smul_add, one_div,
+      inv_smul_eq_iff₀
+        (show (2 : 𝕜) ≠ 0 by
+          norm_num),
+      two_smul]
+  exact hs₁.eq (hs₀.frontier_subset ha) (hs₀.frontier_subset hb) one_half_pos one_half_pos (add_halves _) hc.2
+
+theorem add_salem_spencer_sphere [NormedGroup E] [NormedSpace ℝ E] [StrictConvexSpace ℝ E] (x : E) (r : ℝ) :
+    AddSalemSpencer (Sphere x r) := by
+  obtain rfl | hr := eq_or_ne r 0
+  · rw [sphere_zero]
+    exact add_salem_spencer_singleton _
+    
+  · convert add_salem_spencer_frontier is_closed_ball (strict_convex_closed_ball ℝ x r)
+    exact (frontier_closed_ball _ hr).symm
+    
+
 end SalemSpencer
+
+open Finset
 
 section RothNumber
 
@@ -234,7 +290,7 @@ variable [Monoidₓ α] [DecidableEq β] [Monoidₓ β] (s t : Finset α)
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
-      "The additive Roth number of a finset is the cardinality of its biggest additive\nSalem-Spencer subset. The usual Roth number corresponds to `roth_number (finset.range n)`, see\n`roth_number_nat`. "]
+      "The additive Roth number of a finset is the cardinality of its biggest additive\nSalem-Spencer subset. The usual Roth number corresponds to `add_roth_number (finset.range n)`, see\n`roth_number_nat`. "]
 def mulRothNumber : Finset α →o ℕ :=
   ⟨fun s => Nat.findGreatest (fun m => ∃ (t : _)(_ : t ⊆ s), t.card = m ∧ MulSalemSpencer (t : Set α)) s.card, by
     rintro t u htu
@@ -343,11 +399,11 @@ variable {s : Finset ℕ} {k n : ℕ}
 
 /-- The Roth number of a natural `N` is the largest integer `m` for which there is a subset of
 `range N` of size `m` with no arithmetic progression of length 3.
-Trivially, `roth_number N ≤ N`, but Roth's theorem (proved in 1953) shows that
-`roth_number N = o(N)` and the construction by Behrend gives a lower bound of the form
-`N * exp(-C sqrt(log(N))) ≤ roth_number N`.
+Trivially, `roth_number_nat N ≤ N`, but Roth's theorem (proved in 1953) shows that
+`roth_number_nat N = o(N)` and the construction by Behrend gives a lower bound of the form
+`N * exp(-C sqrt(log(N))) ≤ roth_number_nat N`.
 A significant refinement of Roth's theorem by Bloom and Sisask announced in 2020 gives
-`roth_number N = O(N / (log N)^(1+c))` for an absolute constant `c`. -/
+`roth_number_nat N = O(N / (log N)^(1+c))` for an absolute constant `c`. -/
 def rothNumberNat : ℕ →o ℕ :=
   ⟨fun n => addRothNumber (range n), addRothNumber.mono.comp range_mono⟩
 
@@ -369,7 +425,7 @@ theorem AddSalemSpencer.le_roth_number_nat (s : Finset ℕ) (hs : AddSalemSpence
   hsk.Ge.trans <| hs.le_add_roth_number fun x hx => mem_range.2 <| hsn x hx
 
 /-- The Roth number is a subadditive function. Note that by Fekete's lemma this shows that
-the limit `roth_number N / N` exists, but Roth's theorem gives the stronger result that this
+the limit `roth_number_nat N / N` exists, but Roth's theorem gives the stronger result that this
 limit is actually `0`. -/
 theorem roth_number_nat_add_le (M N : ℕ) : rothNumberNat (M + N) ≤ rothNumberNat M + rothNumberNat N := by
   simp_rw [roth_number_nat_def]
@@ -395,7 +451,7 @@ theorem roth_number_nat_is_O_with_id : IsOWith 1 (fun N => (rothNumberNat N : �
   is_O_with.of_bound <| by
     simpa only [one_mulₓ, Real.norm_coe_nat, Nat.cast_le] using eventually_of_forall roth_number_nat_le
 
-/-- The Roth number has the trivial bound `roth_number N = O(N)`. -/
+/-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
 theorem roth_number_nat_is_O_id : IsO (fun N => (rothNumberNat N : ℝ)) (fun N => (N : ℝ)) atTop :=
   roth_number_nat_is_O_with_id.IsO
 

@@ -30,11 +30,10 @@ integral, center mass, average value
 
 open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Function
 
-open_locale TopologicalSpace BigOperators Ennreal Convex
+open TopologicalSpace BigOperators Ennreal Convex
 
-variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
-  [SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] [NormedGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  [SecondCountableTopology F] [MeasurableSpace F] [BorelSpace F] {μ : Measureₓ α} {s : Set E}
+variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F]
+  [NormedSpace ℝ F] [CompleteSpace F] {μ : Measureₓ α} {s : Set E}
 
 /-!
 ### Average value of a function w.r.t. a measure

@@ -29,7 +29,7 @@ coefficients of a polynomial. It is also a coefficient of `p * p.mirror`.
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable {R : Type _} [Semiringₓ R] (p : R[X])
 
@@ -62,15 +62,10 @@ theorem mirror_nat_degree : p.mirror.natDegree = p.natDegree := by
   by_cases' hp : p = 0
   · rw [hp, mirror_zero]
     
-  by_cases' hR : Nontrivial R
-  · have := hR
-    rw [mirror, nat_degree_mul', reverse_nat_degree, nat_degree_X_pow,
-      tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree]
-    rwa [leading_coeff_X_pow, mul_oneₓ, reverse_leading_coeff, Ne, trailing_coeff_eq_zero]
-    
-  · have := not_nontrivial_iff_subsingleton.mp hR
-    exact congr_argₓ nat_degree (Subsingleton.elimₓ p.mirror p)
-    
+  nontriviality R
+  rw [mirror, nat_degree_mul', reverse_nat_degree, nat_degree_X_pow,
+    tsub_add_cancel_of_le p.nat_trailing_degree_le_nat_degree]
+  rwa [leading_coeff_X_pow, mul_oneₓ, reverse_leading_coeff, Ne, trailing_coeff_eq_zero]
 
 theorem mirror_nat_trailing_degree : p.mirror.natTrailingDegree = p.natTrailingDegree := by
   by_cases' hp : p = 0
@@ -107,7 +102,7 @@ theorem coeff_mirror (n : ℕ) : p.mirror.coeff n = p.coeff (revAt (p.natDegree 
 
 --TODO: Extract `finset.sum_range_rev_at` lemma.
 theorem mirror_eval_one : p.mirror.eval 1 = p.eval 1 := by
-  simp_rw [eval_eq_finset_sum, one_pow, mul_oneₓ, mirror_nat_degree]
+  simp_rw [eval_eq_sum_range, one_pow, mul_oneₓ, mirror_nat_degree]
   refine' Finset.sum_bij_ne_zero _ _ _ _ _
   · exact fun n hn hp => rev_at (p.nat_degree + p.nat_trailing_degree) n
     

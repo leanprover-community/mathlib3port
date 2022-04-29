@@ -81,15 +81,15 @@ the same as the chosen object `kernel f`. -/
 def kernelSubobjectIso : (kernelSubobject f : C) ≅ kernel f :=
   Subobject.underlyingIso (kernel.ι f)
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem kernel_subobject_arrow : (kernelSubobjectIso f).Hom ≫ kernel.ι f = (kernelSubobject f).arrow := by
   simp [kernel_subobject_iso]
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem kernel_subobject_arrow' : (kernelSubobjectIso f).inv ≫ (kernelSubobject f).arrow = kernel.ι f := by
   simp [kernel_subobject_iso]
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem kernel_subobject_arrow_comp : (kernelSubobject f).arrow ≫ f = 0 := by
   rw [← kernel_subobject_arrow]
   simp only [category.assoc, kernel.condition, comp_zero]
@@ -130,7 +130,7 @@ def kernelSubobjectMap (sq : Arrow.mk f ⟶ Arrow.mk f') : (kernelSubobject f : 
       (by
         simp [sq.w]))
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem kernel_subobject_map_arrow (sq : Arrow.mk f ⟶ Arrow.mk f') :
     kernelSubobjectMap sq ≫ (kernelSubobject f').arrow = (kernelSubobject f).arrow ≫ sq.left := by
   simp [kernel_subobject_map]
@@ -240,7 +240,7 @@ instance [HasEqualizers C] : Epi (factorThruImageSubobject f) := by
   dsimp [factor_thru_image_subobject]
   apply epi_comp
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem image_subobject_arrow_comp : factorThruImageSubobject f ≫ (imageSubobject f).arrow = f := by
   simp [factor_thru_image_subobject, image_subobject_arrow]
 
@@ -274,7 +274,7 @@ theorem image_subobject_comp_le {X' : C} (h : X' ⟶ X) (f : X ⟶ Y) [HasImage 
 
 section
 
-open_locale ZeroObject
+open ZeroObject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 

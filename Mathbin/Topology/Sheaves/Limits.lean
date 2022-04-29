@@ -25,13 +25,11 @@ variable {C : Type u} [Category.{v} C] {J : Type v} [SmallCategory J]
 
 namespace Top
 
-instance [HasLimits C] (X : Top) : HasLimits (Presheaf C X) := by
-  dsimp [presheaf]
-  infer_instance
+instance [HasLimits C] (X : Top) : HasLimits (Presheaf C X) :=
+  limits.functor_category_has_limits_of_size
 
-instance [HasColimits C] (X : Top) : HasColimits (Presheaf C X) := by
-  dsimp [presheaf]
-  infer_instance
+instance [HasColimits C] (X : Top) : HasColimits (Presheaf C X) :=
+  limits.functor_category_has_colimits_of_size
 
 instance [HasLimits C] (X : Top) : CreatesLimits (Sheaf.forget C X) :=
   (@createsLimitsOfNatIso _ _ (Presheaf.sheafSpacesEquivSheafSitesInverseForget C X))

@@ -41,7 +41,7 @@ and so on.
 
 open Real
 
-open_locale EuclideanGeometry RealInnerProductSpace Real
+open EuclideanGeometry RealInnerProductSpace Real
 
 variable {V : Type _} [InnerProductSpace ℝ V]
 

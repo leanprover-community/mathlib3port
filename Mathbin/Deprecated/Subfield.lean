@@ -95,7 +95,7 @@ theorem Closure.is_submonoid : IsSubmonoid (Closure S) :=
       rintro _ _ ⟨p, hp, q, hq, hq0, rfl⟩ ⟨r, hr, s, hs, hs0, rfl⟩ <;>
         exact
           ⟨p * r, IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hp hr, q * s,
-            IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div _ _ _ _).symm⟩,
+            IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div_comm₀ _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
 theorem Closure.is_subfield : IsSubfield (Closure S) :=

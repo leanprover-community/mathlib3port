@@ -47,8 +47,12 @@ private unsafe def collect_proofs_in : expr → List expr → List Name × List 
       let t ← infer_type e
       collect_proofs_in t ctx (ns, hs)
     | expr.mvar _ _ _ => do
-      let t ← infer_type e
-      collect_proofs_in t ctx (ns, hs)
+      let e ← instantiate_mvars e
+      match e with
+        | expr.mvar _ _ _ => do
+          let t ← infer_type e
+          collect_proofs_in t ctx (ns, hs)
+        | _ => collect_proofs_in e ctx (ns, hs)
     | expr.app f x => go fun nh => collect_proofs_in f ctx nh >>= collect_proofs_in x ctx
     | expr.lam n b d e =>
       go fun nh => do

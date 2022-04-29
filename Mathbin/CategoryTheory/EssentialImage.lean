@@ -5,6 +5,7 @@ Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.NaturalIsomorphism
 import Mathbin.CategoryTheory.FullSubcategory
+import Mathbin.Data.Set.Basic
 
 /-!
 # Essential image of a functor
@@ -78,7 +79,7 @@ image of `F`.
 @[simps]
 def toEssImage (F : C ⥤ D) : C ⥤ F.EssImage where
   obj := fun X => ⟨_, obj_mem_ess_image _ X⟩
-  map := fun X Y f => (essImageInclusion F).Preimage (F.map f)
+  map := fun X Y f => (essImageInclusion F).preimage (F.map f)
 
 /-- The functor `F` factorises through its essential image, where the first functor is essentially
 surjective and the second is fully faithful.

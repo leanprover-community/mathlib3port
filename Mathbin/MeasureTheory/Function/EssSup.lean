@@ -29,7 +29,7 @@ sense). We do not define that quantity here, which is simply the supremum of a m
 
 open MeasureTheory Filter TopologicalSpace
 
-open_locale Ennreal MeasureTheory
+open Ennreal MeasureTheory
 
 variable {α β : Type _} {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
@@ -54,6 +54,19 @@ theorem ess_inf_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essInf f μ = 
   @ess_sup_congr_ae α (OrderDual β) _ _ _ _ _ hfg
 
 end ConditionallyCompleteLattice
+
+section ConditionallyCompleteLinearOrder
+
+variable [ConditionallyCompleteLinearOrder β]
+
+theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → β) :
+    essSup f μ = inf { a | μ { x | a < f x } = 0 } := by
+  dsimp [essSup, limsup, Limsup]
+  congr
+  ext a
+  simp [eventually_map, ae_iff]
+
+end ConditionallyCompleteLinearOrder
 
 section CompleteLattice
 
@@ -118,6 +131,10 @@ theorem ess_sup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν �
     run_tac
       is_bounded_default
 
+theorem ess_sup_mono_measure' {α : Type _} {β : Type _} {m : MeasurableSpace α} {μ ν : MeasureTheory.Measure α}
+    [CompleteLattice β] {f : α → β} (hμν : ν ≤ μ) : essSup f ν ≤ essSup f μ :=
+  ess_sup_mono_measure (Measure.absolutely_continuous_of_le hμν)
+
 theorem ess_inf_antitone_measure {f : α → β} (hμν : μ ≪ ν) : essInf f ν ≤ essInf f μ := by
   refine' liminf_le_liminf_of_le (measure.ae_le_iff_absolutely_continuous.mpr hμν) _ _
   all_goals
@@ -139,7 +156,8 @@ variable {γ : Type _} {mγ : MeasurableSpace γ} {f : α → γ} {g : γ → β
 
 include mγ
 
-theorem ess_sup_comp_le_ess_sup_map_measure (hf : Measurable f) : essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) := by
+theorem ess_sup_comp_le_ess_sup_map_measure (hf : AeMeasurable f μ) : essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) :=
+  by
   refine'
     Limsup_le_Limsup_of_le (fun t => _)
       (by
@@ -157,7 +175,7 @@ theorem ess_sup_comp_le_ess_sup_map_measure (hf : Measurable f) : essSup (g ∘ 
 
 theorem _root_.measurable_embedding.ess_sup_map_measure (hf : MeasurableEmbedding f) :
     essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
-  refine' le_antisymmₓ _ (ess_sup_comp_le_ess_sup_map_measure hf.measurable)
+  refine' le_antisymmₓ _ (ess_sup_comp_le_ess_sup_map_measure hf.measurable.ae_measurable)
   refine'
     Limsup_le_Limsup
       (by
@@ -173,7 +191,7 @@ theorem _root_.measurable_embedding.ess_sup_map_measure (hf : MeasurableEmbeddin
 variable [MeasurableSpace β] [TopologicalSpace β] [SecondCountableTopology β] [OrderClosedTopology β]
   [OpensMeasurableSpace β]
 
-theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : Measurable f) :
+theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable f μ) :
     essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
   refine' le_antisymmₓ _ (ess_sup_comp_le_ess_sup_map_measure hf)
   refine'
@@ -189,7 +207,7 @@ theorem ess_sup_map_measure_of_measurable (hg : Measurable g) (hf : Measurable f
   rw [ae_map_iff hf (measurable_set_le hg measurable_const)]
   exact h_le
 
-theorem ess_sup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : Measurable f) :
+theorem ess_sup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : AeMeasurable f μ) :
     essSup g (Measure.map f μ) = essSup (g ∘ f) μ := by
   rw [ess_sup_congr_ae hg.ae_eq_mk, ess_sup_map_measure_of_measurable hg.measurable_mk hf]
   refine' ess_sup_congr_ae _

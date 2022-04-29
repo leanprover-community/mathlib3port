@@ -28,7 +28,7 @@ namespace Matrix
 
 open Equivₓ
 
-open_locale Matrix
+open Matrix
 
 variable {l m n o : Type _} {l' m' n' o' : Type _} {m'' n'' : Type _}
 

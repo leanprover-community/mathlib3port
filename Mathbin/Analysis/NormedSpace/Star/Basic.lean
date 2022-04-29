@@ -12,10 +12,9 @@ import Mathbin.Algebra.Star.Unitary
 /-!
 # Normed star rings and algebras
 
-A normed star monoid is a `star_add_monoid` endowed with a norm such that the star operation is
-isometric.
+A normed star group is a normed group with a compatible `star` which is isometric.
 
-A C⋆-ring is a normed star monoid that is also a ring and that verifies the stronger
+A C⋆-ring is a normed star group that is also a ring and that verifies the stronger
 condition `∥x⋆ * x∥ = ∥x∥^2` for all `x`.  If a C⋆-ring is also a star algebra, then it is a
 C⋆-algebra.
 
@@ -31,42 +30,36 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 -/
 
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star
 
-/-- A normed star monoid is an additive monoid with a star,
-endowed with a norm such that `star` is isometric. -/
-class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] : Prop where
-  norm_star : ∀ {x : E}, ∥x⋆∥ = ∥x∥
+/-- A normed star group is a normed group with a compatible `star` which is isometric. -/
+class NormedStarGroup (E : Type _) [SemiNormedGroup E] [StarAddMonoid E] : Prop where
+  norm_star : ∀ x : E, ∥x⋆∥ = ∥x∥
 
-export NormedStarMonoid (norm_star)
+export NormedStarGroup (norm_star)
 
 attribute [simp] norm_star
 
-/-- A C*-ring is a normed star ring that satifies the stronger condition `∥x⋆ * x∥ = ∥x∥^2`
-for every `x`. -/
-class CstarRing (E : Type _) [NormedRing E] [StarRing E] : Prop where
-  norm_star_mul_self : ∀ {x : E}, ∥x⋆ * x∥ = ∥x∥ * ∥x∥
-
-instance : CstarRing ℝ where
-  norm_star_mul_self := fun x => by
-    simp only [star, id.def, norm_mul]
-
 variable {𝕜 E α : Type _}
 
-section NormedStarMonoid
+section NormedStarGroup
 
-variable [NormedGroup E] [StarAddMonoid E] [NormedStarMonoid E]
+variable [SemiNormedGroup E] [StarAddMonoid E] [NormedStarGroup E]
+
+@[simp]
+theorem nnnorm_star (x : E) : ∥star x∥₊ = ∥x∥₊ :=
+  Subtype.ext <| norm_star _
 
 /-- The `star` map in a normed star group is a normed group homomorphism. -/
 def starNormedGroupHom : NormedGroupHom E E :=
-  { starAddEquiv with bound' := ⟨1, fun v => le_transₓ norm_star.le (one_mulₓ _).symm.le⟩ }
+  { starAddEquiv with bound' := ⟨1, fun v => le_transₓ (norm_star _).le (one_mulₓ _).symm.le⟩ }
 
 /-- The `star` map in a normed star group is an isometry -/
 theorem star_isometry : Isometry (star : E → E) :=
-  starAddEquiv.toAddMonoidHom.isometry_of_norm fun _ => norm_star
+  starAddEquiv.toAddMonoidHom.isometry_of_norm norm_star
 
 theorem continuous_star : Continuous (star : E → E) :=
   star_isometry.Continuous
@@ -102,19 +95,30 @@ theorem ContinuousWithinAt.star {f : α → E} {s : Set α} {x : α} (hf : Conti
     ContinuousWithinAt (fun x => (f x)⋆) s x :=
   hf.star
 
-end NormedStarMonoid
+end NormedStarGroup
 
-instance RingHomIsometric.star_ring_end [NormedCommRing E] [StarRing E] [NormedStarMonoid E] :
+instance RingHomIsometric.star_ring_end [NormedCommRing E] [StarRing E] [NormedStarGroup E] :
     RingHomIsometric (starRingEnd E) :=
-  ⟨fun _ => norm_star⟩
+  ⟨norm_star⟩
+
+/-- A C*-ring is a normed star ring that satifies the stronger condition `∥x⋆ * x∥ = ∥x∥^2`
+for every `x`. -/
+class CstarRing (E : Type _) [NonUnitalNormedRing E] [StarRing E] : Prop where
+  norm_star_mul_self : ∀ {x : E}, ∥x⋆ * x∥ = ∥x∥ * ∥x∥
+
+instance : CstarRing ℝ where
+  norm_star_mul_self := fun x => by
+    simp only [star, id.def, norm_mul]
 
 namespace CstarRing
 
-variable [NormedRing E] [StarRing E] [CstarRing E]
+section NonUnital
+
+variable [NonUnitalNormedRing E] [StarRing E] [CstarRing E]
 
 /-- In a C*-ring, star preserves the norm. -/
 -- see Note [lower instance priority]
-instance (priority := 100) to_normed_star_monoid : NormedStarMonoid E :=
+instance (priority := 100) to_normed_star_group : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases' htriv : x = 0
@@ -143,10 +147,14 @@ theorem norm_self_mul_star {x : E} : ∥x * x⋆∥ = ∥x∥ * ∥x∥ := by
 theorem norm_star_mul_self' {x : E} : ∥x⋆ * x∥ = ∥x⋆∥ * ∥x∥ := by
   rw [norm_star_mul_self, norm_star]
 
-theorem nnnorm_star_mul_self {x : E} : ∥x⋆ * x∥₊ = ∥x∥₊ * ∥x∥₊ := by
-  have : (∥x⋆ * x∥₊ : ℝ) = ∥x∥₊ * ∥x∥₊ := by
-    simpa only [← coe_nnnorm] using @norm_star_mul_self _ _ _ _ x
-  exact_mod_cast this
+theorem nnnorm_star_mul_self {x : E} : ∥x⋆ * x∥₊ = ∥x∥₊ * ∥x∥₊ :=
+  Subtype.ext norm_star_mul_self
+
+end NonUnital
+
+section Unital
+
+variable [NormedRing E] [StarRing E] [CstarRing E]
 
 @[simp]
 theorem norm_one [Nontrivial E] : ∥(1 : E)∥ = 1 := by
@@ -194,11 +202,13 @@ theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ∥A * U∥ = ∥A∥ :=
     _ = ∥(U : E)⋆ * A⋆∥ := by
       rw [norm_star]
     _ = ∥A⋆∥ := norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop)
-    _ = ∥A∥ := norm_star
+    _ = ∥A∥ := norm_star _
     
 
 theorem norm_mul_mem_unitary (A : E) {U : E} (hU : U ∈ unitary E) : ∥A * U∥ = ∥A∥ :=
   norm_mul_coe_unitary A ⟨U, hU⟩
+
+end Unital
 
 end CstarRing
 
@@ -218,7 +228,7 @@ theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E]
 
 section starₗᵢ
 
-variable [CommSemiringₓ 𝕜] [StarRing 𝕜] [NormedRing E] [StarRing E] [NormedStarMonoid E]
+variable [CommSemiringₓ 𝕜] [StarRing 𝕜] [NormedRing E] [StarRing E] [NormedStarGroup E]
 
 variable [Module 𝕜 E] [StarModule 𝕜 E]
 
@@ -226,7 +236,7 @@ variable (𝕜)
 
 /-- `star` bundled as a linear isometric equivalence -/
 def starₗᵢ : E ≃ₗᵢ⋆[𝕜] E :=
-  { starAddEquiv with map_smul' := star_smul, norm_map' := fun x => norm_star }
+  { starAddEquiv with map_smul' := star_smul, norm_map' := norm_star }
 
 variable {𝕜}
 

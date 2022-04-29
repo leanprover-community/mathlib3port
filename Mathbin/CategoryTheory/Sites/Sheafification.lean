@@ -501,7 +501,7 @@ theorem is_iso_to_sheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsI
 
 /-- If `P` is a sheaf, then `P` is isomorphic to `J.sheafify P`. -/
 def isoSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ J.sheafify P := by
-  let this' := is_iso_to_sheafify J hP <;> exact as_iso (J.to_sheafify P)
+  let this := is_iso_to_sheafify J hP <;> exact as_iso (J.to_sheafify P)
 
 @[simp]
 theorem iso_sheafify_hom {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : (J.isoSheafify hP).Hom = J.toSheafify P :=

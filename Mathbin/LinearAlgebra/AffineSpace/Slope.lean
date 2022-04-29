@@ -72,6 +72,14 @@ theorem slope_sub_smul (f : k → E) {a b : k} (h : a ≠ b) : slope (fun x => (
 theorem eq_of_slope_eq_zero {f : k → PE} {a b : k} (h : slope f a b = (0 : E)) : f a = f b := by
   rw [← sub_smul_slope_vadd f a b, h, smul_zero, zero_vadd]
 
+theorem AffineMap.slope_comp {F PF : Type _} [AddCommGroupₓ F] [Module k F] [AddTorsor F PF] (f : PE →ᵃ[k] PF)
+    (g : k → PE) (a b : k) : slope (f ∘ g) a b = f.linear (slope g a b) := by
+  simp only [slope, (· ∘ ·), f.linear.map_smul, f.linear_map_vsub]
+
+theorem LinearMap.slope_comp {F : Type _} [AddCommGroupₓ F] [Module k F] (f : E →ₗ[k] F) (g : k → E) (a b : k) :
+    slope (f ∘ g) a b = f (slope g a b) :=
+  f.toAffineMap.slope_comp g a b
+
 theorem slope_comm (f : k → PE) (a b : k) : slope f a b = slope f b a := by
   rw [slope, slope, ← neg_vsub_eq_vsub_rev, smul_neg, ← neg_smul, neg_inv, neg_sub]
 

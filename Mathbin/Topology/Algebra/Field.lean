@@ -19,11 +19,11 @@ namespace TopologicalRing
 
 open TopologicalSpace Function
 
-variable (R : Type _) [Ringₓ R]
+variable (R : Type _) [Semiringₓ R]
 
 variable [TopologicalSpace R]
 
-/-- The induced topology on units of a topological ring.
+/-- The induced topology on units of a topological semiring.
 This is not a global instance since other topologies could be relevant. Instead there is a class
 `induced_units` asserting that something equivalent to this construction holds. -/
 def topologicalSpaceUnits : TopologicalSpace Rˣ :=
@@ -49,7 +49,7 @@ theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : Rˣ →
 theorem units_embedding [InducedUnits R] : Embedding (coe : Rˣ → R) :=
   { induced := units_topology_eq R, inj := fun x y h => Units.ext h }
 
-instance top_monoid_units [TopologicalRing R] [InducedUnits R] : HasContinuousMul Rˣ :=
+instance top_monoid_units [TopologicalSemiring R] [InducedUnits R] : HasContinuousMul Rˣ :=
   ⟨by
     let mulR := fun p : R × R => p.1 * p.2
     let mulRx := fun p : Rˣ × Rˣ => p.1 * p.2
@@ -65,8 +65,7 @@ variable (K : Type _) [DivisionRing K] [TopologicalSpace K]
 
 /-- A topological division ring is a division ring with a topology where all operations are
     continuous, including inversion. -/
-class TopologicalDivisionRing extends TopologicalRing K : Prop where
-  continuous_inv : ∀ x : K, x ≠ 0 → ContinuousAt (fun x : K => x⁻¹ : K → K) x
+class TopologicalDivisionRing extends TopologicalRing K, HasContinuousInv₀ K : Prop
 
 namespace TopologicalDivisionRing
 
@@ -79,7 +78,7 @@ one could want another topology on units. To turn on this feature, use:
 
 ```lean
 local attribute [instance]
-topological_ring.topological_space_units topological_division_ring.units_top_group
+topological_semiring.topological_space_units topological_division_ring.units_top_group
 ```
 -/
 
@@ -101,12 +100,12 @@ theorem units_top_group : TopologicalGroup Kˣ :=
       rw [ContinuousAt, nhds_induced, nhds_induced, tendsto_iff_comap, comap_comm this]
       apply comap_mono
       rw [← tendsto_iff_comap, Units.coe_inv']
-      exact TopologicalDivisionRing.continuous_inv (x : K) x.ne_zero }
+      exact continuous_at_inv₀ x.ne_zero }
 
 attribute [local instance] units_top_group
 
 theorem continuous_units_inv : Continuous fun x : Kˣ => (↑x⁻¹ : K) :=
-  (TopologicalRing.InducedUnits.continuous_coe K).comp TopologicalGroup.continuous_inv
+  (TopologicalRing.InducedUnits.continuous_coe K).comp continuous_inv
 
 end TopologicalDivisionRing
 

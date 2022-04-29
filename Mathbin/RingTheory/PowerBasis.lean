@@ -42,7 +42,7 @@ power basis, powerbasis
 
 open Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable {R S T : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
@@ -136,7 +136,7 @@ theorem alg_hom_ext {S' : Type _} [Semiringₓ S'] [Algebra R S'] (pb : PowerBas
 
 section minpoly
 
-open_locale BigOperators
+open BigOperators
 
 variable [Algebra A S]
 
@@ -196,7 +196,7 @@ theorem nat_degree_minpoly_gen (pb : PowerBasis A S) : natDegree (minpolyGen pb)
   nat_degree_eq_of_degree_eq_some pb.degree_minpoly_gen
 
 theorem minpoly_gen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) := by
-  apply monic_sub_of_left (monic_pow monic_X _)
+  apply monic_sub_of_left (monic_X_pow _) _
   rw [degree_X_pow]
   exact degree_sum_fin_lt _
 
@@ -317,7 +317,7 @@ noncomputable def liftEquiv' (pb : PowerBasis A S) :
 /-- There are finitely many algebra homomorphisms `S →ₐ[A] B` if `S` is of the form `A[x]`
 and `B` is an integral domain. -/
 noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B) := by
-  let this' := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
+  let this := Classical.decEq B <;> exact Fintype.ofEquiv _ pb.lift_equiv'.symm
 
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.
@@ -483,6 +483,24 @@ theorem equiv_of_minpoly_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h : min
   pb.equiv_of_root_map _ _ _
 
 end Map
+
+section Adjoin
+
+open Algebra
+
+theorem adjoin_gen_eq_top (B : PowerBasis R S) : adjoin R ({B.gen} : Set S) = ⊤ := by
+  rw [← to_submodule_eq_top, _root_.eq_top_iff, ← B.basis.span_eq, Submodule.span_le]
+  rintro x ⟨i, rfl⟩
+  rw [B.basis_eq_pow i]
+  exact Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
+
+theorem adjoin_eq_top_of_gen_mem_adjoin {B : PowerBasis R S} {x : S} (hx : B.gen ∈ adjoin R ({x} : Set S)) :
+    adjoin R ({x} : Set S) = ⊤ := by
+  rw [_root_.eq_top_iff, ← B.adjoin_gen_eq_top]
+  refine' adjoin_le _
+  simp [hx]
+
+end Adjoin
 
 end PowerBasis
 

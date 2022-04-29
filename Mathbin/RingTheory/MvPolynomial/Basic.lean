@@ -34,11 +34,11 @@ Generalise to noncommutative (semi)rings
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open Set LinearMap Submodule
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 universe u v
 
@@ -116,11 +116,11 @@ namespace Polynomial
 
 /-- The monomials form a basis on `polynomial R`. -/
 noncomputable def basisMonomials : Basis ℕ R R[X] :=
-  Finsupp.basisSingleOne.map (toFinsuppIsoAlg R).toLinearEquiv.symm
+  Basis.of_repr (toFinsuppIsoAlg R).toLinearEquiv
 
 @[simp]
 theorem coe_basis_monomials : (basisMonomials R : ℕ → R[X]) = fun s => monomial s 1 :=
-  _root_.funext fun n => to_finsupp_iso_symm_single
+  _root_.funext fun n => of_finsupp_single _ _
 
 end Polynomial
 

@@ -5,6 +5,7 @@ Authors: Pim Spelier, Daan van Gent
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.Data.Num.Lemmas
+import Mathbin.SetTheory.Cardinal.Ordinal
 import Mathbin.Tactic.DeriveFintype
 
 /-!
@@ -23,18 +24,29 @@ It also contains several examples:
 -/
 
 
+universe u v
+
+open Cardinal
+
 namespace Computability
 
 /-- An encoding of a type in a certain alphabet, together with a decoding. -/
-structure Encoding (α : Type) where
-  Γ : Type
+structure Encoding (α : Type u) where
+  Γ : Type v
   encode : α → List Γ
   decode : List Γ → Option α
   decode_encode : ∀ x, decode (encode x) = some x
 
+theorem Encoding.encode_injective {α : Type u} (e : Encoding α) : Function.Injective e.encode := by
+  refine' fun _ _ h => Option.some_injective _ _
+  rw [← e.decode_encode, ← e.decode_encode, h]
+
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
-structure FinEncoding (α : Type) extends Encoding α where
+structure FinEncoding (α : Type u) extends Encoding.{u, 0} α where
   ΓFin : Fintype Γ
+
+instance {α : Type u} (e : FinEncoding α) : Fintype e.toEncoding.Γ :=
+  e.ΓFin
 
 /-- A standard Turing machine alphabet, consisting of blank,bit0,bit1,bra,ket,comma. -/
 inductive Γ'
@@ -186,6 +198,23 @@ instance inhabitedFinEncoding : Inhabited (FinEncoding Bool) :=
 
 instance inhabitedEncoding : Inhabited (Encoding Bool) :=
   ⟨finEncodingBoolBool.toEncoding⟩
+
+theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
+    Cardinal.lift.{v} (# α) ≤ Cardinal.lift.{u} (# (List e.Γ)) :=
+  Cardinal.lift_mk_le'.2 ⟨⟨e.encode, e.encode_injective⟩⟩
+
+theorem Encoding.card_le_omega {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : # α ≤ ω := by
+  refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
+  simp only [Cardinal.lift_omega, Cardinal.lift_le_omega]
+  cases' is_empty_or_nonempty e.Γ with h h
+  · simp only [Cardinal.mk_le_omega]
+    
+  · rw [Cardinal.mk_list_eq_omega]
+    
+
+theorem FinEncoding.card_le_omega {α : Type u} (e : FinEncoding α) : # α ≤ ω :=
+  have : Encodable e.Γ := Fintype.toEncodable _
+  e.to_encoding.card_le_omega
 
 end Computability
 

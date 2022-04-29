@@ -81,6 +81,10 @@ theorem get_or_else_coe (x y : α) : Option.getOrElse (↑x) y = x :=
 theorem get_or_else_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getOrElse y) = x := by
   cases x <;> [contradiction, rw [get_or_else_some]]
 
+@[simp]
+theorem coe_get {o : Option α} (h : o.isSome) : ((Option.getₓ h : α) : Option α) = o :=
+  Option.some_getₓ h
+
 theorem mem_unique {o : Option α} {a b : α} (ha : a ∈ o) (hb : b ∈ o) : a = b :=
   Option.some.injₓ <| ha.symm.trans hb
 
@@ -187,12 +191,19 @@ theorem map_none {α β} {f : α → β} : f <$> none = none :=
 theorem map_some {α β} {a : α} {f : α → β} : f <$> some a = some (f a) :=
   rfl
 
+theorem map_coe {α β} {a : α} {f : α → β} : f <$> (a : Option α) = ↑(f a) :=
+  rfl
+
 @[simp]
 theorem map_none'ₓ {f : α → β} : Option.map f none = none :=
   rfl
 
 @[simp]
 theorem map_some'ₓ {a : α} {f : α → β} : Option.map f (some a) = some (f a) :=
+  rfl
+
+@[simp]
+theorem map_coe' {a : α} {f : α → β} : Option.map f (a : Option α) = ↑(f a) :=
   rfl
 
 theorem map_eq_some {α β} {x : Option α} {f : α → β} {b : β} : f <$> x = some b ↔ ∃ a, x = some a ∧ f a = b := by
@@ -523,7 +534,7 @@ theorem orelse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧
 
 section
 
-open_locale Classical
+open Classical
 
 /-- An arbitrary `some a` with `a : α` if `α` is nonempty, and otherwise `none`. -/
 noncomputable def choice (α : Type _) : Option α :=
@@ -557,6 +568,15 @@ theorem to_list_some (a : α) : (a : Option α).toList = [a] :=
 @[simp]
 theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
+
+/-- Functions from `option` can be combined similarly to `vector.cons`. -/
+--TODO: Swap arguments to `option.elim` so that it is exactly `option.cons`
+def cons (a : β) (f : α → β) : Option α → β := fun o => o.elim a f
+
+@[simp]
+theorem cons_none_some (f : Option α → β) : cons (f none) (f ∘ some) = f :=
+  funext fun o => by
+    cases o <;> rfl
 
 end Option
 

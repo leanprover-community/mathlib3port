@@ -26,7 +26,7 @@ variable {ι : Type _}
 
 variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -50,7 +50,7 @@ theorem subobject_of_le_as_image_to_kernel (w : f ≫ g = 0) h :
     Subobject.ofLe (imageSubobject f) (kernelSubobject g) h = imageToKernel f g w :=
   rfl
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem image_to_kernel_arrow (w : f ≫ g = 0) :
     imageToKernel f g w ≫ (kernelSubobject g).arrow = (imageSubobject f).arrow := by
   simp [imageToKernel]
@@ -138,7 +138,7 @@ theorem image_to_kernel_comp_hom_inv_comp [HasEqualizers V] [HasImages V] {Z : V
   ext
   simp
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- `image_to_kernel` for `A --0--> B --g--> C`, where `g` is a mono is itself an epi
 (i.e. the sequence is exact at `B`).
@@ -195,7 +195,7 @@ which vanishes on boundaries.
 def homology.desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel f g w ≫ k = 0) : homology f g w ⟶ D :=
   cokernel.desc _ k p
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem homology.π_desc {D : V} (k : (kernelSubobject g : V) ⟶ D) (p : imageToKernel f g w ≫ k = 0) :
     homology.π f g w ≫ homology.desc f g w k p = k := by
   simp [homology.π, homology.desc]
@@ -266,12 +266,12 @@ def homology.map (p : α.right = β.left) : homology f g w ⟶ homology f' g' w'
       rw [image_subobject_map_comp_image_to_kernel_assoc w w' α β p]
       simp only [cokernel.condition, comp_zero])
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem homology.π_map (p : α.right = β.left) :
     homology.π f g w ≫ homology.map w w' α β p = kernelSubobjectMap β ≫ homology.π f' g' w' := by
   simp only [homology.π, homology.map, cokernel.π_desc]
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem homology.map_desc (p : α.right = β.left) {D : V} (k : (kernelSubobject g' : V) ⟶ D)
     (z : imageToKernel f' g' w' ≫ k = 0) :
     homology.map w w' α β p ≫ homology.desc f' g' w' k z =

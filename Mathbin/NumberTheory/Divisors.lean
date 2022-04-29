@@ -29,9 +29,9 @@ divisors, perfect numbers
 -/
 
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators
+open BigOperators
 
 open Finset
 
@@ -255,7 +255,7 @@ theorem Prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} := by
 
 theorem Prime.proper_divisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} := by
   rw [← erase_insert proper_divisors.not_self_mem, ← divisors_eq_proper_divisors_insert_self_of_pos pp.pos, pp.divisors,
-    insert_singleton_comm, erase_insert fun con => pp.ne_one (mem_singleton.1 con)]
+    insert_singleton_comm, erase_insert fun con => pp.ne_one (mem_singleton.1 Con)]
 
 theorem divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) :
     divisors (p ^ k) = (Finset.range (k + 1)).map ⟨pow p, pow_right_injective pp.two_le⟩ := by
@@ -362,7 +362,7 @@ theorem prod_proper_divisors_prime_pow {α : Type _} [CommMonoidₓ α] {k p : �
     (∏ x in (p ^ k).properDivisors, f x) = ∏ x in range k, f (p ^ x) := by
   simp [h, proper_divisors_prime_pow]
 
-@[simp, to_additive]
+@[simp, to_additive sum_divisors_prime_pow]
 theorem prod_divisors_prime_pow {α : Type _} [CommMonoidₓ α] {k p : ℕ} {f : ℕ → α} (h : p.Prime) :
     (∏ x in (p ^ k).divisors, f x) = ∏ x in range (k + 1), f (p ^ x) := by
   simp [h, divisors_prime_pow]

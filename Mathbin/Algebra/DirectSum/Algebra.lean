@@ -33,7 +33,7 @@ variable {ι : Type uι}
 
 namespace DirectSum
 
-open_locale DirectSum
+open DirectSum
 
 variable (R : Type uR) (A : ι → Type uA) {B : Type uB} [DecidableEq ι]
 

@@ -126,11 +126,12 @@ instance : PartialOrderₓ (Antisymmetrization α (· ≤ ·)) where
   lt_iff_le_not_le := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => lt_iff_le_not_leₓ
   le_antisymm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b hab hba => Quotientₓ.sound' ⟨hab, hba⟩
 
--- TODO@Yaël: Make computable by adding the missing decidability instances for `quotient.lift` and
--- `quotient.lift₂`
-noncomputable instance [IsTotal α (· ≤ ·)] : LinearOrderₓ (Antisymmetrization α (· ≤ ·)) :=
+instance [@DecidableRel α (· ≤ ·)] [@DecidableRel α (· < ·)] [IsTotal α (· ≤ ·)] :
+    LinearOrderₓ (Antisymmetrization α (· ≤ ·)) :=
   { Antisymmetrization.partialOrder with le_total := fun a b => Quotientₓ.induction_on₂' a b <| total_of (· ≤ ·),
-    DecidableEq := Classical.decRel _, decidableLe := Classical.decRel _, decidableLt := Classical.decRel _ }
+    DecidableEq := @Quotientₓ.decidableEq _ (AntisymmRel.setoid _ (· ≤ ·)) AntisymmRel.decidableRel,
+    decidableLe := fun _ _ => Quotientₓ.liftOn₂'.decidable _ _ _ _,
+    decidableLt := fun _ _ => Quotientₓ.liftOn₂'.decidable _ _ _ _ }
 
 @[simp]
 theorem to_antisymmetrization_le_to_antisymmetrization_iff :
@@ -219,10 +220,4 @@ theorem OrderIso.dual_antisymmetrization_symm_apply (a : α) :
   rfl
 
 end Preorderₓ
-
-section PartialOrderₓ
-
-variable ()
-
-end PartialOrderₓ
 

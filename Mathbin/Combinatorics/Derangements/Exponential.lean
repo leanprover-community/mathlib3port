@@ -17,9 +17,9 @@ The specific lemma is `num_derangements_tendsto_inv_e`.
 
 open Filter
 
-open_locale BigOperators
+open BigOperators
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem num_derangements_tendsto_inv_e :
     Tendsto (fun n => (numDerangements n : ℝ) / n.factorial) atTop (𝓝 (Real.exp (-1))) := by

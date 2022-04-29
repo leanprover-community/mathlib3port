@@ -60,7 +60,8 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
     μ_natural' := fun X Y X' Y' f g => by
       ext Z
       dsimp
-      simp [associator_naturality],
+      simp only [← id_tensor_comp_tensor_id g f, id_tensor_comp, ← tensor_id, category.assoc, associator_naturality,
+        associator_naturality_assoc],
     associativity' := fun X Y Z => by
       ext W
       dsimp

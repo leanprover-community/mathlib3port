@@ -32,7 +32,7 @@ noncomputable section
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 section Map
 
@@ -407,16 +407,14 @@ theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (
 theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h) a = 0 := by
   rw [filter_apply, set.indicator_apply_eq_zero.mpr fun ha' => absurd ha' ha, zero_mul]
 
+theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).Support ↔ a ∈ s ∧ a ∈ p.Support :=
+  (mem_support_normalize_iff _ _).trans Set.indicator_apply_ne_zero
+
 @[simp]
-theorem support_filter : (p.filter s h).Support = s ∩ p.Support := by
-  refine' Set.ext fun a => _
-  rw [mem_support_iff, filter_apply, mul_ne_zero_iff, Set.indicator_eq_zero_iff]
-  exact ⟨fun ha => ha.1, fun ha => ⟨ha, inv_ne_zero (Nnreal.tsum_indicator_ne_zero p.2.Summable h)⟩⟩
+theorem support_filter : (p.filter s h).Support = s ∩ p.Support :=
+  Set.ext fun x => mem_support_filter_iff _
 
-theorem mem_support_filter_iff (a : α) : a ∈ (p.filter s h).Support ↔ a ∈ s ∧ a ∈ p.Support := by
-  simp
-
-theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ (a ∉ s) ∨ a ∉ p.Support := by
+theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.Support := by
   erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_distrib]
 
 theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.Support := by

@@ -63,7 +63,7 @@ category.
 -/
 @[simps]
 def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X) where
-  obj := fun f => { A := f.left, a := prod.lift f.Hom (𝟙 _) }
+  obj := fun f => { a := f.left, a := prod.lift f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.left }
 
 /-- The equivalence from coalgebras for the product comonad to the over category. -/
@@ -122,7 +122,7 @@ category.
 -/
 @[simps]
 def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X) where
-  obj := fun f => { A := f.right, a := coprod.desc f.Hom (𝟙 _) }
+  obj := fun f => { a := f.right, a := coprod.desc f.Hom (𝟙 _) }
   map := fun f₁ f₂ g => { f := g.right }
 
 /-- The equivalence from algebras for the coproduct monad to the under category.

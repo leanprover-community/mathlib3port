@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.Analysis.Convex.Basic
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.NormedSpace.Basic
+import Mathbin.Analysis.SpecificLimits.Basic
 
 /-!
 # Tangent cone
@@ -34,7 +35,7 @@ variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
 open Filter Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section TangentCone
 

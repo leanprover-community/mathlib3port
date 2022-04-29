@@ -63,7 +63,7 @@ class BotHomClass (F : Type _) (α β : outParam <| Type _) [HasBot α] [HasBot 
 /-- `bounded_order_hom_class F α β` states that `F` is a type of bounded order morphisms.
 
 You should extend this class when you extend `bounded_order_hom`. -/
-class BoundedOrderHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
+class BoundedOrderHomClass (F : Type _) (α β : outParam <| Type _) [LE α] [LE β] [BoundedOrder α]
   [BoundedOrder β] extends RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop) where
   map_top (f : F) : f ⊤ = ⊤
   map_bot (f : F) : f ⊥ = ⊥
@@ -75,29 +75,39 @@ export BotHomClass (map_bot)
 attribute [simp] map_top map_bot
 
 -- See note [lower instance priority]
-instance (priority := 100) BoundedOrderHomClass.toTopHomClass [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
-    [BoundedOrder β] [BoundedOrderHomClass F α β] : TopHomClass F α β :=
+instance (priority := 100) BoundedOrderHomClass.toTopHomClass [LE α] [LE β] [BoundedOrder α] [BoundedOrder β]
+    [BoundedOrderHomClass F α β] : TopHomClass F α β :=
   { ‹BoundedOrderHomClass F α β› with }
 
 -- See note [lower instance priority]
-instance (priority := 100) BoundedOrderHomClass.toBotHomClass [Preorderₓ α] [Preorderₓ β] [BoundedOrder α]
-    [BoundedOrder β] [BoundedOrderHomClass F α β] : BotHomClass F α β :=
+instance (priority := 100) BoundedOrderHomClass.toBotHomClass [LE α] [LE β] [BoundedOrder α] [BoundedOrder β]
+    [BoundedOrderHomClass F α β] : BotHomClass F α β :=
   { ‹BoundedOrderHomClass F α β› with }
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIso.topHomClass [PartialOrderₓ α] [PartialOrderₓ β] [OrderTop α] [OrderTop β] :
-    TopHomClass (α ≃o β) α β :=
-  { RelIso.relHomClass with map_top := fun f => f.map_top }
+instance (priority := 100) OrderIsoClass.toTopHomClass [LE α] [OrderTop α] [PartialOrderₓ β] [OrderTop β]
+    [OrderIsoClass F α β] : TopHomClass F α β :=
+  ⟨fun f => top_le_iff.1 <| (map_inv_le_iff f).1 le_top⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIso.botHomClass [PartialOrderₓ α] [PartialOrderₓ β] [OrderBot α] [OrderBot β] :
-    BotHomClass (α ≃o β) α β :=
-  { RelIso.relHomClass with map_bot := fun f => f.map_bot }
+instance (priority := 100) OrderIsoClass.toBotHomClass [LE α] [OrderBot α] [PartialOrderₓ β] [OrderBot β]
+    [OrderIsoClass F α β] : BotHomClass F α β :=
+  ⟨fun f => le_bot_iff.1 <| (le_map_inv_iff f).1 bot_le⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIso.boundedOrderHomClass [PartialOrderₓ α] [PartialOrderₓ β] [BoundedOrder α]
-    [BoundedOrder β] : BoundedOrderHomClass (α ≃o β) α β :=
-  { OrderIso.topHomClass, OrderIso.botHomClass with }
+instance (priority := 100) OrderIsoClass.toBoundedOrderHomClass [LE α] [BoundedOrder α] [PartialOrderₓ β]
+    [BoundedOrder β] [OrderIsoClass F α β] : BoundedOrderHomClass F α β :=
+  { OrderIsoClass.toTopHomClass, OrderIsoClass.toBotHomClass with }
+
+@[simp]
+theorem map_eq_top_iff [LE α] [OrderTop α] [PartialOrderₓ β] [OrderTop β] [OrderIsoClass F α β] (f : F) {a : α} :
+    f a = ⊤ ↔ a = ⊤ := by
+  rw [← map_top f, (EquivLike.injective f).eq_iff]
+
+@[simp]
+theorem map_eq_bot_iff [LE α] [OrderBot α] [PartialOrderₓ β] [OrderBot β] [OrderIsoClass F α β] (f : F) {a : α} :
+    f a = ⊥ ↔ a = ⊥ := by
+  rw [← map_bot f, (EquivLike.injective f).eq_iff]
 
 instance [HasTop α] [HasTop β] [TopHomClass F α β] : CoeTₓ F (TopHom α β) :=
   ⟨fun f => ⟨f, map_top f⟩⟩
@@ -558,16 +568,103 @@ theorem cancel_left {g : BoundedOrderHom β γ} {f₁ f₂ : BoundedOrderHom α 
         rw [← BoundedOrderHom.comp_apply, h, BoundedOrderHom.comp_apply],
     congr_argₓ _⟩
 
+end BoundedOrderHom
+
+/-! ### Dual homs -/
+
+
+namespace TopHom
+
+variable [LE α] [OrderTop α] [LE β] [OrderTop β] [LE γ] [OrderTop γ]
+
+/-- Reinterpret a top homomorphism as a bot homomorphism between the dual lattices. -/
+@[simps]
+protected def dual : TopHom α β ≃ BotHom (OrderDual α) (OrderDual β) where
+  toFun := fun f => ⟨f, f.map_top'⟩
+  invFun := fun f => ⟨f, f.map_bot'⟩
+  left_inv := fun f => TopHom.ext fun _ => rfl
+  right_inv := fun f => BotHom.ext fun _ => rfl
+
+@[simp]
+theorem dual_id : (TopHom.id α).dual = BotHom.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : TopHom β γ) (f : TopHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : TopHom.dual.symm (BotHom.id _) = TopHom.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : BotHom (OrderDual β) (OrderDual γ)) (f : BotHom (OrderDual α) (OrderDual β)) :
+    TopHom.dual.symm (g.comp f) = (TopHom.dual.symm g).comp (TopHom.dual.symm f) :=
+  rfl
+
+end TopHom
+
+namespace BotHom
+
+variable [LE α] [OrderBot α] [LE β] [OrderBot β] [LE γ] [OrderBot γ]
+
+/-- Reinterpret a bot homomorphism as a top homomorphism between the dual lattices. -/
+@[simps]
+protected def dual : BotHom α β ≃ TopHom (OrderDual α) (OrderDual β) where
+  toFun := fun f => ⟨f, f.map_bot'⟩
+  invFun := fun f => ⟨f, f.map_top'⟩
+  left_inv := fun f => BotHom.ext fun _ => rfl
+  right_inv := fun f => TopHom.ext fun _ => rfl
+
+@[simp]
+theorem dual_id : (BotHom.id α).dual = TopHom.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : BotHom β γ) (f : BotHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : BotHom.dual.symm (TopHom.id _) = BotHom.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : TopHom (OrderDual β) (OrderDual γ)) (f : TopHom (OrderDual α) (OrderDual β)) :
+    BotHom.dual.symm (g.comp f) = (BotHom.dual.symm g).comp (BotHom.dual.symm f) :=
+  rfl
+
+end BotHom
+
+namespace BoundedOrderHom
+
+variable [Preorderₓ α] [BoundedOrder α] [Preorderₓ β] [BoundedOrder β] [Preorderₓ γ] [BoundedOrder γ]
+
 /-- Reinterpret a bounded order homomorphism as a bounded order homomorphism between the dual
 orders. -/
 @[simps]
 protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom (OrderDual α) (OrderDual β) where
-  toFun := fun f =>
-    { toOrderHom := f.toOrderHom.dual, map_top' := congr_argₓ toDual (map_bot f),
-      map_bot' := congr_argₓ toDual (map_top f) }
-  invFun := fun f => { toOrderHom := OrderHom.dual.symm f.toOrderHom, map_top' := map_bot f, map_bot' := map_top f }
+  toFun := fun f => ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
+  invFun := fun f => ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
   left_inv := fun f => ext fun a => rfl
   right_inv := fun f => ext fun a => rfl
+
+@[simp]
+theorem dual_id : (BoundedOrderHom.id α).dual = BoundedOrderHom.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : BoundedOrderHom β γ) (f : BoundedOrderHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : BoundedOrderHom.dual.symm (BoundedOrderHom.id _) = BoundedOrderHom.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : BoundedOrderHom (OrderDual β) (OrderDual γ))
+    (f : BoundedOrderHom (OrderDual α) (OrderDual β)) :
+    BoundedOrderHom.dual.symm (g.comp f) = (BoundedOrderHom.dual.symm g).comp (BoundedOrderHom.dual.symm f) :=
+  rfl
 
 end BoundedOrderHom
 

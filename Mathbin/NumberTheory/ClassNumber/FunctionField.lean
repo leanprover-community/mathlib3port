@@ -22,7 +22,7 @@ cardinality of the class group of its ring of integers
 
 namespace FunctionField
 
-open_locale Polynomial
+open Polynomial
 
 variable (Fq F : Type) [Field Fq] [Fintype Fq] [Field F]
 
@@ -32,7 +32,7 @@ variable [IsScalarTower Fq[X] (Ratfunc Fq) F]
 
 variable [FunctionField Fq F] [IsSeparable (Ratfunc Fq) F]
 
-open_locale Classical
+open Classical
 
 namespace RingOfIntegers
 

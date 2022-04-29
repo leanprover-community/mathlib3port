@@ -37,7 +37,7 @@ rectangular box, partition
 
 open Set Finset Function
 
-open_locale Classical Nnreal BigOperators
+open Classical Nnreal BigOperators
 
 noncomputable section
 
@@ -384,7 +384,7 @@ theorem of_with_bot_le {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀, ∀
     {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint}
     (H : ∀, ∀ J ∈ boxes, ∀, J ≠ ⊥ → ∃ J' ∈ π, J ≤ ↑J') : ofWithBot boxes le_of_mem pairwise_disjoint ≤ π := by
   have : ∀ J : Box ι, ↑J ∈ boxes → ∃ J' ∈ π, J ≤ J' := fun J hJ => by
-    simpa only [WithBot.coe_le_coe] using H J hJ (WithBot.coe_ne_bot J)
+    simpa only [WithBot.coe_le_coe] using H J hJ WithBot.coe_ne_bot
   simpa [of_with_bot, le_def]
 
 theorem le_of_with_bot {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀, ∀ J ∈ boxes, ∀, (J : WithBot (Box ι)) ≤ I}
@@ -392,7 +392,7 @@ theorem le_of_with_bot {boxes : Finset (WithBot (Box ι))} {le_of_mem : ∀, ∀
     (H : ∀, ∀ J ∈ π, ∀, ∃ J' ∈ boxes, ↑J ≤ J') : π ≤ ofWithBot boxes le_of_mem pairwise_disjoint := by
   intro J hJ
   rcases H J hJ with ⟨J', J'mem, hle⟩
-  lift J' to box ι using ne_bot_of_le_ne_bot (WithBot.coe_ne_bot _) hle
+  lift J' to box ι using ne_bot_of_le_ne_bot WithBot.coe_ne_bot hle
   exact ⟨J', mem_of_with_bot.2 J'mem, WithBot.coe_le_coe.1 hle⟩
 
 theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))}
@@ -402,7 +402,7 @@ theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))}
     {pairwise_disjoint₂ : Set.Pairwise (boxes₂ : Set (WithBot (Box ι))) Disjoint}
     (H : ∀, ∀ J ∈ boxes₁, ∀, J ≠ ⊥ → ∃ J' ∈ boxes₂, J ≤ J') :
     ofWithBot boxes₁ le_of_mem₁ pairwise_disjoint₁ ≤ ofWithBot boxes₂ le_of_mem₂ pairwise_disjoint₂ :=
-  (le_of_with_bot _) fun J hJ => H J (mem_of_with_bot.1 hJ) (WithBot.coe_ne_bot _)
+  (le_of_with_bot _) fun J hJ => H J (mem_of_with_bot.1 hJ) WithBot.coe_ne_bot
 
 theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithBot (Box ι)))
     (le_of_mem : ∀, ∀ J ∈ boxes, ∀, (J : WithBot (Box ι)) ≤ I)

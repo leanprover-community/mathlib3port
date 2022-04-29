@@ -3,8 +3,8 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
+import Mathbin.Algebra.Module.Equiv
 import Mathbin.GroupTheory.GroupAction.Opposite
-import Mathbin.Data.Equiv.Module
 
 /-!
 # Module operations on `Mᵐᵒᵖ`

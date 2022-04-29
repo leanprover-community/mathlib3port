@@ -23,7 +23,7 @@ noncomputable section
 
 open Function Polynomial Finsupp Finset
 
-open_locale BigOperators Classical Polynomial
+open BigOperators Classical Polynomial
 
 namespace Polynomial
 

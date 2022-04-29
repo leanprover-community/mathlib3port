@@ -5,7 +5,7 @@ Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Ro
 -/
 import Mathbin.Data.List.Basic
 import Mathbin.Data.Nat.Prime
-import Mathbin.SetTheory.Fincard
+import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
 # Counting on ℕ

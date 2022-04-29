@@ -37,7 +37,7 @@ variable {X Y Z : Type _}
 
 open Filter Set
 
-open_locale Nnreal Ennreal TopologicalSpace
+open Nnreal Ennreal TopologicalSpace
 
 section Emetric
 

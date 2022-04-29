@@ -80,9 +80,7 @@ theorem disj_sum_strict_mono_right (s : Multiset α) : StrictMono (s.disjSum : M
   fun s₁ s₂ => disj_sum_lt_disj_sum_of_le_of_lt le_rfl
 
 protected theorem Nodup.disj_sum (hs : s.Nodup) (ht : t.Nodup) : (s.disjSum t).Nodup := by
-  refine'
-    (Multiset.nodup_add_of_nodup (Multiset.nodup_map inl_injective hs) <| Multiset.nodup_map inr_injective ht).2
-      fun x hs ht => _
+  refine' ((hs.map inl_injective).add_iff <| ht.map inr_injective).2 fun x hs ht => _
   rw [Multiset.mem_map] at hs ht
   obtain ⟨a, _, rfl⟩ := hs
   obtain ⟨b, _, h⟩ := ht

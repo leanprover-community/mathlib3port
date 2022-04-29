@@ -33,12 +33,12 @@ discrete categories.
 
 namespace CategoryTheory
 
-universe v₁ v₂ u₁ u₂
+-- morphism levels before object levels. See note [category_theory universes].
+universe v₁ v₂ v₃ u₁ u₂ u₃
 
 /-- A type synonym for promoting any type to a category,
 with the only morphisms being equalities.
 -/
--- morphism levels before object levels. See note [category_theory universes].
 def Discrete (α : Type u₁) :=
   α
 
@@ -140,11 +140,13 @@ theorem nat_iso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discre
 
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
+@[simp]
 def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor F.obj :=
   nat_iso fun i => Iso.refl _
 
 /-- Composing `discrete.functor F` with another functor `G` amounts to composing `F` with `G.obj` -/
-def compNatIsoDiscrete {I : Type u₁} {D : Type u₂} [Category.{v₂} D] (F : I → C) (G : C ⥤ D) :
+@[simp]
+def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : I → C) (G : C ⥤ D) :
     Discrete.functor F ⋙ G ≅ Discrete.functor (G.obj ∘ F) :=
   nat_iso fun i => Iso.refl _
 

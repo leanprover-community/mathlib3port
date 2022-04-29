@@ -55,7 +55,7 @@ def sgm (v : Nat → Int) (b : Int) (as : List Int) (n : Nat) :=
   let m : Int := a_n + 1
   (symmod b m + Coeffs.val v (as.map fun x => symmod x m)) / m
 
-open_locale List.Func
+open List.Func
 
 def rhs : Nat → Int → List Int → Term
   | n, b, as =>
@@ -82,10 +82,10 @@ theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
       exists d
       rw [add_assocₓ]
       exact hk
-      simp only [hk, List.length_map]
+      simp only [hk, List.length_mapₓ]
       
 
-open_locale Omega
+open Omega
 
 theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     0 < get n as → 0 = Term.val v (b, as) → v n = Term.val (v ⟨n ↦ sgm v b as n⟩) (rhs n b as) := by
@@ -102,7 +102,7 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
     have h4 :
       ∃ c, m * c + (symmod b (get n as + 1) + coeffs.val v (as.map fun x : ℤ => symmod x m)) = term.val v (b, as) := by
       have h5 : ∃ d, m * d + coeffs.val v (as.map fun x => symmod x m) = coeffs.val v as := by
-        simp only [coeffs.val, List.length_map]
+        simp only [coeffs.val, List.length_mapₓ]
         apply rhs_correct_aux
       cases' h5 with d h5
       rw [symmod_eq]
@@ -206,7 +206,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
             intro x
             simp only [m]
             
-        simp only [List.length_map]
+        simp only [List.length_mapₓ]
         repeat'
           rw [← coeffs.val_between_add, h5]
       _ = -(m * a_n * sgm v b as n) + m * sym_sym m b + coeffs.val_except n v (as.map fun a_i => m * sym_sym m a_i) :=
@@ -238,7 +238,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         apply fun_mono_2
         · rw [mul_comm _ m, ← coeffs.val_between_map_mul, List.map_mapₓ]
           
-        simp only [List.length_map, mul_comm _ m]
+        simp only [List.length_mapₓ, mul_comm _ m]
         rw [← coeffs.val_between_map_mul, List.map_mapₓ]
       _ = (sym_sym m b + (coeffs.val_except n v (as.map (sym_sym m)) + -a_n * sgm v b as n)) * m := by
         ring
@@ -324,7 +324,7 @@ theorem sat_empty : Clause.Sat ([], []) :=
       decide, by
       decide⟩⟩
 
-theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.sat → (eqElim es c).sat
+theorem sat_eq_elim : ∀ {es : List Ee} {c : Clause}, c.Sat → (eqElim es c).Sat
   | [], ([], les), h => h
   | e :: _, ([], les), h => by
     cases e <;> simp only [eq_elim] <;> apply sat_empty

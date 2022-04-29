@@ -18,7 +18,7 @@ distance. This way we hide the usage of `to_euclidean` behind an API.
 -/
 
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Set
 
@@ -73,7 +73,7 @@ theorem is_compact_closed_ball {x : E} {r : ℝ} : IsCompact (ClosedBall x r) :=
 theorem is_closed_closed_ball {x : E} {r : ℝ} : IsClosed (ClosedBall x r) :=
   is_compact_closed_ball.IsClosed
 
-theorem closure_ball (x : E) {r : ℝ} (h : 0 < r) : Closure (Ball x r) = ClosedBall x r := by
+theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : Closure (Ball x r) = ClosedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h, closed_ball_eq_preimage]
 
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s) (h : s ⊆ Ball x R) :

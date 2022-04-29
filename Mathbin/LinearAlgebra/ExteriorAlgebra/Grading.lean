@@ -22,7 +22,7 @@ variable {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable (R M)
 
-open_locale DirectSum
+open DirectSum
 
 /-- A version of `exterior_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `exterior_algebra.graded_algebra`. -/
@@ -56,7 +56,7 @@ instance gradedAlgebra :
     fun i x => by
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-    apply Submodule.pow_induction_on' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+    refine' Submodule.pow_induction_on' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
       

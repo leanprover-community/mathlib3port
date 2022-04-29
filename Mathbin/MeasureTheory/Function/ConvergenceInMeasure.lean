@@ -3,7 +3,7 @@ Copyright (c) 2022 Rémy Degenne, Kexing Ying. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 -/
-import Mathbin.MeasureTheory.Function.UniformIntegrable
+import Mathbin.MeasureTheory.Function.Egorov
 
 /-!
 # Convergence in measure
@@ -37,7 +37,7 @@ convergence in measure and other notions of convergence.
 
 open TopologicalSpace Filter
 
-open_locale Nnreal Ennreal MeasureTheory TopologicalSpace
+open Nnreal Ennreal MeasureTheory TopologicalSpace
 
 namespace MeasureTheory
 
@@ -90,9 +90,9 @@ variable [MetricSpace E]
 variable {f : ℕ → α → E} {g : α → E}
 
 /-- Auxiliary lemma for `tendsto_in_measure_of_tendsto_ae`. -/
-theorem tendsto_in_measure_of_tendsto_ae_of_measurable [MeasurableSpace E] [SecondCountableTopology E] [BorelSpace E]
-    [IsFiniteMeasure μ] (hf : ∀ n, Measurable (f n)) (hg : Measurable g)
-    (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g := by
+theorem tendsto_in_measure_of_tendsto_ae_of_strongly_measurable [IsFiniteMeasure μ] (hf : ∀ n, StronglyMeasurable (f n))
+    (hg : StronglyMeasurable g) (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
+    TendstoInMeasure μ f atTop g := by
   refine' fun ε hε => ennreal.tendsto_at_top_zero.mpr fun δ hδ => _
   by_cases' hδi : δ = ∞
   · simp only [hδi, implies_true_iff, le_top, exists_const]
@@ -112,12 +112,13 @@ theorem tendsto_in_measure_of_tendsto_ae_of_measurable [MeasurableSpace E] [Seco
   exact hN n hn x hx
 
 /-- Convergence a.e. implies convergence in measure in a finite measure space. -/
-theorem tendsto_in_measure_of_tendsto_ae [MeasurableSpace E] [SecondCountableTopology E] [BorelSpace E]
-    [IsFiniteMeasure μ] (hf : ∀ n, AeMeasurable (f n) μ) (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
-    TendstoInMeasure μ f atTop g := by
-  have hg : AeMeasurable g μ := ae_measurable_of_tendsto_metric_ae' hf hfg
+theorem tendsto_in_measure_of_tendsto_ae [IsFiniteMeasure μ] (hf : ∀ n, AeStronglyMeasurable (f n) μ)
+    (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g := by
+  have hg : ae_strongly_measurable g μ := ae_strongly_measurable_of_tendsto_ae _ hf hfg
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
-  refine' tendsto_in_measure_of_tendsto_ae_of_measurable (fun i => (hf i).measurable_mk) hg.measurable_mk _
+  refine'
+    tendsto_in_measure_of_tendsto_ae_of_strongly_measurable (fun i => (hf i).strongly_measurable_mk)
+      hg.strongly_measurable_mk _
   have hf_eq_ae : ∀ᵐ x ∂μ, ∀ n, (hf n).mk (f n) x = f n x := ae_all_iff.mpr fun n => (hf n).ae_eq_mk.symm
   filter_upwards [hf_eq_ae, hg.ae_eq_mk, hfg] with x hxf hxg hxfg
   rw [← hxg, funext fun n => hxf n]
@@ -173,10 +174,8 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     ∃ ns : ℕ → ℕ, StrictMono ns ∧ ∀ᵐ x ∂μ, Tendsto (fun i => f (ns i) x) atTop (𝓝 (g x)) := by
   /- Since `f` tends to `g` in measure, it has a subsequence `k ↦ f (ns k)` such that
     `μ {|f (ns k) - g| ≥ 2⁻ᵏ} ≤ 2⁻ᵏ` for all `k`. Defining
-    `s := ⋂ k, ⋃ i ≥ k, {|f (ns k) - g| ≥ 2⁻ᵏ}`, we see that `μ s = 0` by observing
-    `μ s ≤ 2 * 2⁻ᵏ` for all `k`. Indeed, as `s ⊆ ⋃ i ≥ k, {|f (ns k) - g| ≥ 2⁻ᵏ}`,
-    `μ s ≤ μ (⋃ i ≥ k, {|f (ns k) - g| ≥ 2⁻ᵏ}) ≤ ∑ i ≥ k, μ {|f (ns k) - g| ≥ 2⁻ᵏ} ≤ ∑ i ≥ k, 2⁻ᵏ`
-    which by geometric series equals to `2 * 2⁻ᵏ` as required.
+    `s := ⋂ k, ⋃ i ≥ k, {|f (ns k) - g| ≥ 2⁻ᵏ}`, we see that `μ s = 0` by the
+    first Borel-Cantelli lemma.
   
     On the other hand, as `s` is precisely the set for which `f (ns k)`
     doesn't converge to `g`, `f (ns k)` converges almost everywhere to `g` as required. -/
@@ -193,53 +192,16 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   use ns
   let S := fun k => { x | 2⁻¹ ^ k ≤ dist (f (ns k) x) (g x) }
   have hμS_le : ∀ k, μ (S k) ≤ 2⁻¹ ^ k := fun k => exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec hfg k (ns k) le_rfl
-  let s := ⋂ k, ⋃ (i) (hik : k ≤ i), S i
+  set s := filter.at_top.limsup S with hs
   have hμs : μ s = 0 := by
-    suffices hμs_le : ∀ k : ℕ, μ s ≤ Ennreal.ofReal (2 * 2⁻¹ ^ k)
-    · refine' le_antisymmₓ (Ennreal.le_of_forall_pos_le_add fun ε hε _ => _) (zero_le _)
-      rw [zero_addₓ]
-      obtain ⟨k, hk_lt_ε⟩ := h_lt_ε_real ε hε
-      exact ((hμs_le k).trans (Ennreal.of_real_le_of_real hk_lt_ε.le)).trans Ennreal.of_real_coe_nnreal.le
-      
-    have : ∀ k, s ⊆ ⋃ (i) (hik : k ≤ i), S i := fun k => infi_le (fun k => ⋃ (i) (hik : k ≤ i), S i) k
-    refine' fun k => (measure_mono (this k)).trans ((measure_Union_le _).trans _)
-    have hμ_if_eq : ∀ i, μ (⋃ hik : k ≤ i, S i) = if k ≤ i then μ (S i) else 0 := by
-      intro i
-      split_ifs <;> simp only [h, measure_empty, Set.Union_true, Set.Union_false]
-    rw [tsum_congr hμ_if_eq]
-    have tsum_le_tsum : (∑' i, ite (k ≤ i) (μ (S i)) 0) ≤ ∑' i, ite (k ≤ i) (2⁻¹ ^ i) 0 := by
-      refine' tsum_le_tsum (fun i => _) Ennreal.summable Ennreal.summable
-      split_ifs <;> simp only [hμS_le i, nonpos_iff_eq_zero]
-    refine' tsum_le_tsum.trans _
-    suffices tsum_eq_of_real_tsum :
-      (∑' i, ite (k ≤ i) ((2 : ℝ≥0∞)⁻¹ ^ i) 0) = Ennreal.ofReal (∑' i, ite (k ≤ i) (2⁻¹ ^ i) 0)
-    · rw [tsum_eq_of_real_tsum]
-      exact Ennreal.of_real_le_of_real (tsum_geometric_inv_two_ge k).le
-      
-    rw [Ennreal.of_real_tsum_of_nonneg]
-    · refine' tsum_congr fun i => _
-      split_ifs
-      · rw [Ennreal.of_real_pow (inv_nonneg.mpr zero_le_two) i, ← Ennreal.of_real_inv_of_pos zero_lt_two,
-          Ennreal.of_real_bit0 zero_le_one, Ennreal.of_real_one]
-        
-      · exact ennreal.of_real_zero.symm
-        
-      
-    · intro n
-      split_ifs
-      · refine' pow_nonneg _ _
-        norm_num
-        
-      · exact le_rfl
-        
-      
-    · refine' Summable.summable_of_eq_zero_or_self summable_geometric_two fun i => _
-      simp only [one_div, inv_eq_zero, not_leₓ, inv_pow₀, zero_eq_inv]
-      exact (ite_eq_or_eq _ _ _).symm
-      
+    refine' measure_limsup_eq_zero (ne_of_ltₓ <| lt_of_le_of_ltₓ (Ennreal.tsum_le_tsum hμS_le) _)
+    simp only [Ennreal.tsum_geometric, Ennreal.one_sub_inv_two, inv_invₓ]
+    decide
   have h_tendsto : ∀, ∀ x ∈ sᶜ, ∀, tendsto (fun i => f (ns i) x) at_top (𝓝 (g x)) := by
     refine' fun x hx => metric.tendsto_at_top.mpr fun ε hε => _
-    simp_rw [s, Set.compl_Inter, Set.compl_Union, Set.mem_Union, Set.mem_Inter]  at hx
+    rw [hs, limsup_eq_infi_supr_of_nat] at hx
+    simp only [Set.supr_eq_Union, Set.infi_eq_Inter, Set.compl_Inter, Set.compl_Union, Set.mem_Union, Set.mem_Inter,
+      Set.mem_compl_eq, Set.mem_set_of_eq, not_leₓ] at hx
     obtain ⟨N, hNx⟩ := hx
     obtain ⟨k, hk_lt_ε⟩ := h_lt_ε_real ε hε
     refine' ⟨max N (k - 1), fun n hn_ge => lt_of_le_of_ltₓ _ hk_lt_ε⟩
@@ -251,9 +213,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
       exact
         pow_le_pow_of_le_one (one_div (2 : ℝ) ▸ one_half_pos.le) (inv_le_one one_le_two)
           ((le_tsub_add.trans (add_le_add_right (le_max_rightₓ _ _) 1)).trans (add_le_add_right hn_ge 1))
-    refine' le_transₓ _ h_inv_n_le_k
-    rw [Set.mem_compl_iff, Set.nmem_set_of_eq, not_leₓ] at hNx
-    exact hNx.le
+    exact le_transₓ hNx.le h_inv_n_le_k
   rw [ae_iff]
   refine' ⟨exists_seq_tendsto_ae.seq_tendsto_ae_seq_strict_mono hfg, measure_mono_null (fun x => _) hμs⟩
   rw [Set.mem_set_of_eq, ← @not_not (x ∈ s), not_imp_not]
@@ -287,14 +247,14 @@ end AeMeasurableOf
 
 section TendstoInMeasureOf
 
-variable [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [HasMeasurableSub₂ E] {p : ℝ≥0∞}
+variable [NormedGroup E] {p : ℝ≥0∞}
 
 variable {f : ι → α → E} {g : α → E}
 
 /-- This lemma is superceded by `measure_theory.tendsto_in_measure_of_tendsto_snorm` where we
-allow `p = ∞` and only require `ae_measurable`. -/
-theorem tendsto_in_measure_of_tendsto_snorm_of_measurable (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
-    (hf : ∀ n, Measurable (f n)) (hg : Measurable g) {l : Filter ι}
+allow `p = ∞` and only require `ae_strongly_measurable`. -/
+theorem tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
+    (hf : ∀ n, StronglyMeasurable (f n)) (hg : StronglyMeasurable g) {l : Filter ι}
     (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g := by
   intro ε hε
   replace hfg :=
@@ -307,11 +267,12 @@ theorem tendsto_in_measure_of_tendsto_snorm_of_measurable (hp_ne_zero : p ≠ 0)
   refine' le_transₓ _ hn
   rw [Ennreal.of_real_div_of_pos (Real.rpow_pos_of_pos hε _), Ennreal.of_real_one, mul_comm, mul_one_div,
     Ennreal.le_div_iff_mul_le _ (Or.inl Ennreal.of_real_ne_top), mul_comm]
-  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg) (Ennreal.ofReal ε)
+  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable (Ennreal.ofReal ε)
     · exact (Ennreal.of_real_rpow_of_pos hε).symm
       
     · ext x
       rw [dist_eq_norm, ← Ennreal.of_real_le_of_real_iff (norm_nonneg _), of_real_norm_eq_coe_nnnorm]
+      exact Iff.rfl
       
     
   · rw [Ne, Ennreal.of_real_eq_zero, not_leₓ]
@@ -321,13 +282,13 @@ theorem tendsto_in_measure_of_tendsto_snorm_of_measurable (hp_ne_zero : p ≠ 0)
 /-- This lemma is superceded by `measure_theory.tendsto_in_measure_of_tendsto_snorm` where we
 allow `p = ∞`. -/
 theorem tendsto_in_measure_of_tendsto_snorm_of_ne_top (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
-    (hf : ∀ n, AeMeasurable (f n) μ) (hg : AeMeasurable g μ) {l : Filter ι}
+    (hf : ∀ n, AeStronglyMeasurable (f n) μ) (hg : AeStronglyMeasurable g μ) {l : Filter ι}
     (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g := by
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
   refine'
-    tendsto_in_measure_of_tendsto_snorm_of_measurable hp_ne_zero hp_ne_top (fun i => (hf i).measurable_mk)
-      hg.measurable_mk _
-  have : (fun n => snorm ((hf n).mk (f n) - AeMeasurable.mk g hg) p μ) = fun n => snorm (f n - g) p μ := by
+    tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable hp_ne_zero hp_ne_top
+      (fun i => (hf i).strongly_measurable_mk) hg.strongly_measurable_mk _
+  have : (fun n => snorm ((hf n).mk (f n) - hg.mk g) p μ) = fun n => snorm (f n - g) p μ := by
     ext1 n
     refine' snorm_congr_ae (eventually_eq.sub (hf n).ae_eq_mk.symm hg.ae_eq_mk.symm)
   rw [this]
@@ -354,9 +315,9 @@ theorem tendsto_in_measure_of_tendsto_snorm_top {E} [NormedGroup E] {f : ι → 
   rfl
 
 /-- Convergence in Lp implies convergence in measure. -/
-theorem tendsto_in_measure_of_tendsto_snorm (hp_ne_zero : p ≠ 0) (hf : ∀ n, AeMeasurable (f n) μ)
-    (hg : AeMeasurable g μ) {l : Filter ι} (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) :
-    TendstoInMeasure μ f l g := by
+theorem tendsto_in_measure_of_tendsto_snorm {l : Filter ι} (hp_ne_zero : p ≠ 0) (hf : ∀ n, AeStronglyMeasurable (f n) μ)
+    (hg : AeStronglyMeasurable g μ) (hfg : Tendsto (fun n => snorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g :=
+  by
   by_cases' hp_ne_top : p = ∞
   · subst hp_ne_top
     exact tendsto_in_measure_of_tendsto_snorm_top hfg
@@ -365,10 +326,10 @@ theorem tendsto_in_measure_of_tendsto_snorm (hp_ne_zero : p ≠ 0) (hf : ∀ n, 
     
 
 /-- Convergence in Lp implies convergence in measure. -/
-theorem tendsto_in_measure_of_tendsto_Lp [SecondCountableTopology E] [hp : Fact (1 ≤ p)] {f : ι → lp E p μ}
-    {g : lp E p μ} {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
-  tendsto_in_measure_of_tendsto_snorm (Ennreal.zero_lt_one.trans_le hp.elim).Ne.symm (fun n => lp.ae_measurable _)
-    (lp.ae_measurable _) ((lp.tendsto_Lp_iff_tendsto_ℒp' _ _).mp hfg)
+theorem tendsto_in_measure_of_tendsto_Lp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ} {g : lp E p μ} {l : Filter ι}
+    (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
+  tendsto_in_measure_of_tendsto_snorm (Ennreal.zero_lt_one.trans_le hp.elim).Ne.symm
+    (fun n => lp.ae_strongly_measurable _) (lp.ae_strongly_measurable _) ((lp.tendsto_Lp_iff_tendsto_ℒp' _ _).mp hfg)
 
 end TendstoInMeasureOf
 

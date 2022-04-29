@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 -/
 import Mathbin.MeasureTheory.Measure.Complex
+import Mathbin.MeasureTheory.Measure.Sub
 import Mathbin.MeasureTheory.Decomposition.Jordan
 import Mathbin.MeasureTheory.Measure.WithDensityVectorMeasure
 import Mathbin.MeasureTheory.Function.AeEqOfIntegral
@@ -60,7 +61,7 @@ Lebesgue decomposition theorem
 
 noncomputable section
 
-open_locale Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory Nnreal Ennreal
 
 open Set
 
@@ -509,28 +510,19 @@ theorem supr_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α)
   all_goals
     set c := ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a with hc
     set d := f m.succ a⊔⨆ (k : ℕ) (hk : k ≤ m), f k a with hd
-    suffices c ≤ d ∧ d ≤ c by
-      change c = d
-      -- removing this line breaks
-      exact le_antisymmₓ this.1 this.2
-    rw [hc, hd]
+    rw [@le_antisymm_iffₓ ℝ≥0∞, hc, hd]
+    -- Specifying the type is weirdly necessary
     refine' ⟨_, _⟩
-    · refine' bsupr_le fun n hn => _
+    · refine' supr₂_le fun n hn => _
       rcases Nat.of_le_succ hn with (h | h)
-      · exact le_sup_of_le_right (le_bsupr n h)
+      · exact le_sup_of_le_right (le_supr₂ n h)
         
       · exact h ▸ le_sup_left
         
       
-    · refine' sup_le _ _
-      · convert @le_bsupr _ _ _ (fun i => i ≤ m + 1) _ m.succ le_rfl
-        rfl
-        
-      · refine' bsupr_le fun n hn => _
-        have := le_transₓ hn (Nat.le_succₓ m)
-        -- replacing `this` below with the proof breaks
-        exact le_bsupr n this
-        
+    · refine' sup_le _ (bsupr_mono fun n hn => hn.trans m.le_succ)
+      convert @le_supr₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
+      rfl
       
 
 theorem supr_mem_measurable_le (f : ℕ → α → ℝ≥0∞) (hf : ∀ n, f n ∈ MeasurableLe μ ν) (n : ℕ) :
@@ -561,19 +553,14 @@ section SuprLemmas
 --TODO: these statements should be moved elsewhere
 omit m
 
-theorem supr_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) : Monotone fun n x => ⨆ (k) (hk : k ≤ n), f k x := by
-  intro n m hnm x
-  simp only
-  refine' bsupr_le fun k hk => _
-  have : k ≤ m := le_transₓ hk hnm
-  -- replacing `this` below with the proof breaks
-  exact le_bsupr k this
+theorem supr_monotone {α : Type _} (f : ℕ → α → ℝ≥0∞) : Monotone fun n x => ⨆ (k) (hk : k ≤ n), f k x :=
+  fun n m hnm x => bsupr_mono fun i => ge_transₓ hnm
 
 theorem supr_monotone' {α : Type _} (f : ℕ → α → ℝ≥0∞) (x : α) : Monotone fun n => ⨆ (k) (hk : k ≤ n), f k x :=
   fun n m hnm => supr_monotone f hnm x
 
 theorem supr_le_le {α : Type _} (f : ℕ → α → ℝ≥0∞) (n k : ℕ) (hk : k ≤ n) : f k ≤ fun x => ⨆ (k) (hk : k ≤ n), f k x :=
-  fun x => le_bsupr k hk
+  fun x => le_supr₂ k hk
 
 end SuprLemmas
 
@@ -993,7 +980,9 @@ theorem measurable_rn_deriv (s : SignedMeasure α) (μ : Measure α) : Measurabl
 theorem integrable_rn_deriv (s : SignedMeasure α) (μ : Measure α) : Integrable (rnDeriv s μ) μ := by
   refine' integrable.sub _ _ <;>
     · constructor
-      measurability
+      · apply Measurable.ae_strongly_measurable
+        measurability
+        
       exact has_finite_integral_to_real_of_lintegral_ne_top (lintegral_rn_deriv_lt_top _ μ).Ne
       
 

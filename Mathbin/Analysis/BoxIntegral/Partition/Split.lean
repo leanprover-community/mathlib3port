@@ -38,7 +38,7 @@ rectangular box, partition, hyperplane
 
 noncomputable section
 
-open_locale Classical BigOperators Filter
+open Classical BigOperators Filter
 
 open Function Set Filter
 
@@ -131,7 +131,7 @@ theorem disjoint_split_lower_split_upper (I : Box ι) (i : ι) (x : ℝ) : Disjo
 theorem split_lower_ne_split_upper (I : Box ι) (i : ι) (x : ℝ) : I.splitLower i x ≠ I.splitUpper i x := by
   cases le_or_ltₓ x (I.lower i)
   · rw [split_upper_eq_self.2 h, split_lower_eq_bot.2 h]
-    exact WithBot.bot_ne_coe _
+    exact WithBot.bot_ne_coe
     
   · refine' (disjoint_split_lower_split_upper I i x).Ne _
     rwa [Ne.def, split_lower_eq_bot, not_leₓ]

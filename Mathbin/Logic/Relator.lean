@@ -95,15 +95,7 @@ theorem rel_or : ((· ↔ ·)⇒(· ↔ ·)⇒(· ↔ ·)) (· ∨ ·) (· ∨ �
 theorem rel_iff : ((· ↔ ·)⇒(· ↔ ·)⇒(· ↔ ·)) (· ↔ ·) (· ↔ ·) := fun a b h₁ c d h₂ => iff_congr h₁ h₂
 
 theorem rel_eq {r : α → β → Prop} (hr : BiUnique r) : (r⇒r⇒(· ↔ ·)) (· = ·) (· = ·) := fun a b h₁ c d h₂ =>
-  Iff.intro
-    (by
-      intro h
-      subst h
-      exact hr.right h₁ h₂)
-    (by
-      intro h
-      subst h
-      exact hr.left h₁ h₂)
+  ⟨fun h => hr.right h₁ <| h.symm ▸ h₂, fun h => hr.left h₁ <| h.symm ▸ h₂⟩
 
 end Relator
 

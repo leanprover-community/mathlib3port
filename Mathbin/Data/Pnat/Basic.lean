@@ -154,6 +154,11 @@ instance : AddLeftCancelSemigroup ℕ+ :=
 instance : AddRightCancelSemigroup ℕ+ :=
   coe_injective.AddRightCancelSemigroup coe fun _ _ => rfl
 
+instance (priority := 10) : CovariantClass ℕ+ ℕ+ (· + ·) (· ≤ ·) :=
+  ⟨by
+    rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
+    simp [← Pnat.coe_le_coe]⟩
+
 @[simp]
 theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
   n.2.ne'
@@ -171,8 +176,11 @@ instance : Mul ℕ+ :=
 instance : One ℕ+ :=
   ⟨succPnat 0⟩
 
+instance : Pow ℕ+ ℕ :=
+  ⟨fun x n => ⟨x ^ n, pow_pos x.2 n⟩⟩
+
 instance : CommMonoidₓ ℕ+ :=
-  coe_injective.CommMonoid coe rfl fun _ _ => rfl
+  coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 theorem lt_add_one_iff : ∀ {a b : ℕ+}, a < b + 1 ↔ a ≤ b := fun a b => Nat.lt_add_one_iff
 
@@ -181,6 +189,10 @@ theorem add_one_le_iff : ∀ {a b : ℕ+}, a + 1 ≤ b ↔ a < b := fun a b => N
 @[simp]
 theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
   n.2
+
+@[simp]
+theorem not_lt_one (n : ℕ+) : ¬n < 1 :=
+  not_lt_of_le n.one_le
 
 instance : OrderBot ℕ+ where
   bot := 1
@@ -256,6 +268,24 @@ theorem coe_eq_one_iff {m : ℕ+} : (m : ℕ) = 1 ↔ m = 1 := by
         rw [h] <;> simp
 
 @[simp]
+theorem le_one_iff {n : ℕ+} : n ≤ 1 ↔ n = 1 := by
+  rcases n with ⟨_ | n, hn⟩
+  · exact absurd hn (lt_irreflₓ _)
+    
+  · simp [← Pnat.coe_le_coe, Subtype.ext_iff, Nat.succ_le_succ_iff, Nat.succ_inj']
+    
+
+theorem lt_add_left (n m : ℕ+) : n < m + n := by
+  rcases m with ⟨_ | m, hm⟩
+  · exact absurd hm (lt_irreflₓ _)
+    
+  · simp [← Pnat.coe_lt_coe]
+    
+
+theorem lt_add_right (n m : ℕ+) : n < n + m :=
+  (lt_add_left n m).trans_le (add_commₓ _ _).le
+
+@[simp]
 theorem coe_bit0 (a : ℕ+) : ((bit0 a : ℕ+) : ℕ) = bit0 (a : ℕ) :=
   rfl
 
@@ -264,8 +294,8 @@ theorem coe_bit1 (a : ℕ+) : ((bit1 a : ℕ+) : ℕ) = bit1 (a : ℕ) :=
   rfl
 
 @[simp]
-theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n := by
-  induction' n with n ih <;> [rfl, rw [pow_succ'ₓ, pow_succₓ, mul_coe, mul_comm, ih]]
+theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n :=
+  rfl
 
 instance : OrderedCancelCommMonoid ℕ+ :=
   { Pnat.commMonoid, Pnat.linearOrder with
@@ -290,11 +320,11 @@ instance : Sub ℕ+ :=
   ⟨fun a b => toPnat' (a - b : ℕ)⟩
 
 theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ) 1 := by
-  change (to_pnat' ((a : ℕ) - (b : ℕ)) : ℕ) = ite ((a : ℕ) > (b : ℕ)) ((a : ℕ) - (b : ℕ)) 1
+  change (to_pnat' _ : ℕ) = ite _ _ _
   split_ifs with h
   · exact to_pnat'_coe (tsub_pos_of_lt h)
     
-  · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gtₓ h)]
+  · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gtₓ h : (a : ℕ) ≤ b)]
     rfl
     
 

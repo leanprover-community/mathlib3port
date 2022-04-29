@@ -28,7 +28,7 @@ universe u v w
 
 open Subsemiring Ringₓ Submodule
 
-open_locale Pointwise
+open Pointwise
 
 namespace Algebra
 
@@ -62,7 +62,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     rcases hr with ⟨l, hlq, rfl⟩
     have := @Finsupp.total_apply A A (adjoin R s)
     rw [this, Finsupp.sum]
-    refine' sum_mem _ _
+    refine' sum_mem _
     intro z hz
     change (l z).1 * _ ∈ _
     have : (l z).1 ∈ (adjoin R s).toSubmodule := (l z).2
@@ -71,7 +71,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     have := @Finsupp.total_apply A A R
     rw [this] at hl
     rw [← hl, Finsupp.sum_mul]
-    refine' sum_mem _ _
+    refine' sum_mem _
     intro t ht
     change _ * _ ∈ _
     rw [smul_mul_assoc]
@@ -122,7 +122,7 @@ theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R 
       rw [Algebra.top_to_submodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 
-theorem fg_prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg := by
+theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg := by
   obtain ⟨s, hs⟩ := fg_def.1 hS
   obtain ⟨t, ht⟩ := fg_def.1 hT
   rw [← hs.2, ← ht.2]
@@ -135,9 +135,9 @@ theorem fg_prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg
 
 section
 
-open_locale Classical
+open Classical
 
-theorem fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).Fg :=
+theorem Fg.map {S : Subalgebra R A} (f : A →ₐ[R] B) (hs : S.Fg) : (S.map f).Fg :=
   let ⟨s, hs⟩ := hs
   ⟨s.Image f, by
     rw [Finset.coe_image, Algebra.adjoin_image, hs]⟩
@@ -155,7 +155,7 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
-    exact fg_map _ _ h, fun h =>
+    exact fg.map _ h, fun h =>
     fg_of_fg_map _ S.val Subtype.val_injective <| by
       rw [Algebra.map_top, range_val]
       exact h⟩

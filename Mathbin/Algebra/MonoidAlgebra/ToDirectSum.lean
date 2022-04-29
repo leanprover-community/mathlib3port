@@ -57,7 +57,7 @@ still involve this definition.
 
 variable {ι : Type _} {R : Type _} {M : Type _} {A : Type _}
 
-open_locale DirectSum
+open DirectSum
 
 /-! ### Basic definitions and lemmas -/
 
@@ -175,7 +175,7 @@ def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiringₓ M] [∀ m : M, 
 /-- The additive version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
+def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
     AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M :=
   { addMonoidAlgebraEquivDirectSum with toFun := AddMonoidAlgebra.toDirectSum, invFun := DirectSum.toAddMonoidAlgebra,
     map_add' := AddMonoidAlgebra.to_direct_sum_add }
@@ -183,16 +183,16 @@ noncomputable def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiring�
 /-- The ring version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M]
-    [∀ m : M, Decidable (m ≠ 0)] : AddMonoidAlgebra M ι ≃+* ⨁ i : ι, M :=
+def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :
+    AddMonoidAlgebra M ι ≃+* ⨁ i : ι, M :=
   { (addMonoidAlgebraAddEquivDirectSum : AddMonoidAlgebra M ι ≃+ ⨁ i : ι, M) with toFun := AddMonoidAlgebra.toDirectSum,
     invFun := DirectSum.toAddMonoidAlgebra, map_mul' := AddMonoidAlgebra.to_direct_sum_mul }
 
 /-- The algebra version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-noncomputable def addMonoidAlgebraAlgEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A]
-    [Algebra R A] [∀ m : A, Decidable (m ≠ 0)] : AddMonoidAlgebra A ι ≃ₐ[R] ⨁ i : ι, A :=
+def addMonoidAlgebraAlgEquivDirectSum [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
+    [∀ m : A, Decidable (m ≠ 0)] : AddMonoidAlgebra A ι ≃ₐ[R] ⨁ i : ι, A :=
   { (addMonoidAlgebraRingEquivDirectSum : AddMonoidAlgebra A ι ≃+* ⨁ i : ι, A) with
     toFun := AddMonoidAlgebra.toDirectSum, invFun := DirectSum.toAddMonoidAlgebra,
     commutes' := fun r => AddMonoidAlgebra.to_direct_sum_single _ _ }

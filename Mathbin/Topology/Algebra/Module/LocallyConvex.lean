@@ -32,7 +32,7 @@ In a module, this is equivalent to `0` satisfying such properties.
 
 open TopologicalSpace Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section Semimodule
 

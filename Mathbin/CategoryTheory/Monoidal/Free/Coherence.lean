@@ -231,8 +231,9 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         simp only [category.comp_id]
         
       · dsimp
-        simp only [← (iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), iso.hom_inv_id_assoc,
-          right_unitor_conjugation, discrete.functor_map_id, category.assoc]
+        simp only [← (iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), right_unitor_conjugation,
+          discrete.functor_map_id, category.assoc, iso.hom_inv_id, iso.hom_inv_id_assoc, iso.inv_hom_id,
+          iso.inv_hom_id_assoc]
         dsimp
         simp only [category.comp_id]
         

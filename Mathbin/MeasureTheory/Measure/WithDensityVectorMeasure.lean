@@ -24,7 +24,7 @@ the Radon-Nikodym theorem for signed measures.
 
 noncomputable section
 
-open_locale Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory Nnreal Ennreal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 
@@ -34,8 +34,7 @@ open TopologicalSpace
 
 variable {μ ν : Measure α}
 
-variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [SecondCountableTopology E] [NormedSpace ℝ E]
-  [CompleteSpace E] [BorelSpace E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
 /-- Given a measure `μ` and an integrable function `f`, `μ.with_densityᵥ f` is
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
@@ -112,9 +111,8 @@ theorem with_densityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
   with_densityᵥ_sub hf hg
 
 @[simp]
-theorem with_densityᵥ_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E]
-    [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] (f : α → E) (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f :=
-  by
+theorem with_densityᵥ_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
+    (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
   by_cases' hf : integrable f μ
   · ext1 i hi
     rw [with_densityᵥ_apply (hf.smul r) hi, vector_measure.smul_apply, with_densityᵥ_apply hf hi, ← integral_smul r f]
@@ -128,9 +126,8 @@ theorem with_densityᵥ_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [Norm
       
     
 
-theorem with_densityᵥ_smul' {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E]
-    [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] (f : α → E) (r : 𝕜) :
-    (μ.withDensityᵥ fun x => r • f x) = r • μ.withDensityᵥ f :=
+theorem with_densityᵥ_smul' {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] (f : α → E)
+    (r : 𝕜) : (μ.withDensityᵥ fun x => r • f x) = r • μ.withDensityᵥ f :=
   with_densityᵥ_smul f r
 
 theorem Measure.with_densityᵥ_absolutely_continuous (μ : Measure α) (f : α → ℝ) :

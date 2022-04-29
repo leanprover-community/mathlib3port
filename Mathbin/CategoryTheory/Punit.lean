@@ -20,9 +20,9 @@ universe v u
 -- morphism levels before object levels. See note [category_theory universes].
 namespace CategoryTheory
 
-namespace Functor
-
 variable (C : Type u) [Category.{v} C]
+
+namespace Functor
 
 /-- The constant functor sending everything to `punit.star`. -/
 @[simps]
@@ -78,6 +78,42 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
 
 -- See note [dsimp, simp].
 end Functor
+
+/-- A category being equivalent to `punit` is equivalent to it having a unique morphism between
+  any two objects. (In fact, such a category is also a groupoid; see `groupoid.of_hom_unique`) -/
+theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C ∧ ∀ x y : C, Nonempty <| Unique (x ⟶ y) :=
+  by
+  constructor
+  · rintro ⟨h⟩
+    refine' ⟨⟨h.inverse.obj PUnit.unit⟩, fun x y => Nonempty.intro _⟩
+    apply uniqueOfSubsingleton _
+    swap
+    · have hx : x ⟶ h.inverse.obj PUnit.unit := by
+        convert h.unit.app x
+      have hy : h.inverse.obj PUnit.unit ⟶ y := by
+        convert h.unit_inv.app y
+      exact hx ≫ hy
+      
+    have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by
+      intro z
+      simpa using congr_argₓ (· ≫ h.unit_inv.app y) (h.unit.naturality z)
+    apply Subsingleton.intro
+    intro a b
+    rw [this a, this b]
+    simp only [functor.comp_map]
+    congr
+    
+  · rintro ⟨⟨p⟩, h⟩
+    have := fun x y => (h x y).some
+    refine'
+      Nonempty.intro
+        (CategoryTheory.Equivalence.mk ((Functor.Const _).obj PUnit.unit) ((Functor.Const _).obj p) _
+          (by
+            apply functor.punit_ext))
+    exact
+      nat_iso.of_components (fun _ => { Hom := default, inv := default }) fun _ _ _ => by
+        tidy
+    
 
 end CategoryTheory
 

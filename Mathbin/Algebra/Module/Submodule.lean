@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.Module.LinearMap
-import Mathbin.Data.Equiv.Module
+import Mathbin.Algebra.Module.Equiv
 import Mathbin.GroupTheory.GroupAction.SubMulAction
 
 /-!
@@ -26,7 +26,7 @@ submodule, subspace, linear map
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 universe u'' u' u v w
 
@@ -48,9 +48,14 @@ namespace Submodule
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-instance : SetLike (Submodule R M) M :=
-  ⟨Submodule.Carrier, fun p q h => by
-    cases p <;> cases q <;> congr⟩
+instance : SetLike (Submodule R M) M where
+  coe := Submodule.Carrier
+  coe_injective' := fun p q h => by
+    cases p <;> cases q <;> congr
+
+instance : AddSubmonoidClass (Submodule R M) M where
+  zero_mem := zero_mem'
+  add_mem := add_mem'
 
 @[simp]
 theorem mem_to_add_submonoid (p : Submodule R M) (x : M) : x ∈ p.toAddSubmonoid ↔ x ∈ p :=
@@ -152,11 +157,11 @@ theorem mem_carrier : x ∈ p.Carrier ↔ x ∈ (p : Set M) :=
   Iff.rfl
 
 @[simp]
-theorem zero_mem : (0 : M) ∈ p :=
-  p.zero_mem'
+protected theorem zero_mem : (0 : M) ∈ p :=
+  zero_mem _
 
-theorem add_mem (h₁ : x ∈ p) (h₂ : y ∈ p) : x + y ∈ p :=
-  p.add_mem' h₁ h₂
+protected theorem add_mem (h₁ : x ∈ p) (h₂ : y ∈ p) : x + y ∈ p :=
+  add_mem h₁ h₂
 
 theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
@@ -164,19 +169,19 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
 theorem smul_of_tower_mem [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.toSubMulAction.smul_of_tower_mem r h
 
-theorem sum_mem {t : Finset ι} {f : ι → M} : (∀, ∀ c ∈ t, ∀, f c ∈ p) → (∑ i in t, f i) ∈ p :=
-  p.toAddSubmonoid.sum_mem
+protected theorem sum_mem {t : Finset ι} {f : ι → M} : (∀, ∀ c ∈ t, ∀, f c ∈ p) → (∑ i in t, f i) ∈ p :=
+  sum_mem
 
 theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀, ∀ c ∈ t, ∀, f c ∈ p) :
     (∑ i in t, r i • f i) ∈ p :=
-  Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ (hyp i hi)
+  sum_mem fun i hi => smul_mem _ _ (hyp i hi)
 
 @[simp]
 theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasScalar G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
   p.toSubMulAction.smul_mem_iff' g
 
 instance : Add p :=
-  ⟨fun x y => ⟨x.1 + y.1, add_mem _ x.2 y.2⟩⟩
+  ⟨fun x y => ⟨x.1 + y.1, add_mem x.2 y.2⟩⟩
 
 instance : Zero p :=
   ⟨⟨0, zero_mem _⟩⟩
@@ -342,8 +347,11 @@ variable (p p' : Submodule R M)
 
 variable {r : R} {x y : M}
 
-theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
-  p.toSubMulAction.neg_mem hx
+instance [Module R M] : AddSubgroupClass (Submodule R M) M :=
+  { Submodule.addSubmonoidClass with neg_mem := fun p x => p.toSubMulAction.neg_mem }
+
+protected theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
+  neg_mem hx
 
 /-- Reinterpret a submodule as an additive subgroup. -/
 def toAddSubgroup : AddSubgroup M :=
@@ -378,32 +386,32 @@ theorem to_add_subgroup_mono : Monotone (toAddSubgroup : Submodule R M → AddSu
 
 omit module_M
 
-theorem sub_mem : x ∈ p → y ∈ p → x - y ∈ p :=
-  p.toAddSubgroup.sub_mem
+protected theorem sub_mem : x ∈ p → y ∈ p → x - y ∈ p :=
+  sub_mem
 
-@[simp]
-theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
-  p.toAddSubgroup.neg_mem_iff
+protected theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
+  neg_mem_iff
 
-theorem add_mem_iff_left : y ∈ p → (x + y ∈ p ↔ x ∈ p) :=
-  p.toAddSubgroup.add_mem_cancel_right
+protected theorem add_mem_iff_left : y ∈ p → (x + y ∈ p ↔ x ∈ p) :=
+  add_mem_cancel_right
 
-theorem add_mem_iff_right : x ∈ p → (x + y ∈ p ↔ y ∈ p) :=
-  p.toAddSubgroup.add_mem_cancel_left
+protected theorem add_mem_iff_right : x ∈ p → (x + y ∈ p ↔ y ∈ p) :=
+  add_mem_cancel_left
 
-instance : Neg p :=
-  ⟨fun x => ⟨-x.1, neg_mem _ x.2⟩⟩
+protected theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
+  AddSubgroupClass.coe_neg _
 
-@[simp, norm_cast]
-theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
-  rfl
+protected theorem coe_sub (x y : p) : (↑(x - y) : M) = ↑x - ↑y :=
+  AddSubgroupClass.coe_sub _ _
+
+theorem sub_mem_iff_left (hy : y ∈ p) : x - y ∈ p ↔ x ∈ p := by
+  rw [sub_eq_add_neg, p.add_mem_iff_left (p.neg_mem hy)]
+
+theorem sub_mem_iff_right (hx : x ∈ p) : x - y ∈ p ↔ y ∈ p := by
+  rw [sub_eq_add_neg, p.add_mem_iff_right hx, p.neg_mem_iff]
 
 instance : AddCommGroupₓ p :=
   { p.toAddSubgroup.toAddCommGroup with add := (· + ·), zero := 0, neg := Neg.neg }
-
-@[simp, norm_cast]
-theorem coe_sub (x y : p) : (↑(x - y) : M) = ↑x - ↑y :=
-  rfl
 
 end AddCommGroupₓ
 
@@ -431,23 +439,23 @@ variable [Semiringₓ R]
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
 instance toOrderedAddCommMonoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedAddCommMonoid S :=
-  Subtype.coe_injective.OrderedAddCommMonoid coe rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_monoid` is a `linear_ordered_add_comm_monoid`. -/
 instance toLinearOrderedAddCommMonoid {M} [LinearOrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A submodule of an `ordered_cancel_add_comm_monoid` is an `ordered_cancel_add_comm_monoid`. -/
 instance toOrderedCancelAddCommMonoid {M} [OrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
+  Subtype.coe_injective.OrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_cancel_add_comm_monoid` is a
 `linear_ordered_cancel_add_comm_monoid`. -/
 instance toLinearOrderedCancelAddCommMonoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M] (S : Submodule R M) :
     LinearOrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 
 end OrderedMonoid
 
@@ -457,13 +465,15 @@ variable [Ringₓ R]
 
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
 instance toOrderedAddCommGroup {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) : OrderedAddCommGroup S :=
-  Subtype.coe_injective.OrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.OrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 /-- A submodule of a `linear_ordered_add_comm_group` is a
 `linear_ordered_add_comm_group`. -/
 instance toLinearOrderedAddCommGroup {M} [LinearOrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     LinearOrderedAddCommGroup S :=
-  Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 
 end OrderedGroup
 

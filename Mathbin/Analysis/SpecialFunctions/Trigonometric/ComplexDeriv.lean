@@ -19,7 +19,7 @@ namespace Complex
 
 open Set Filter
 
-open_locale Real
+open Real
 
 theorem has_strict_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
   convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
@@ -29,7 +29,7 @@ theorem has_strict_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt t
 theorem has_deriv_at_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
   (has_strict_deriv_at_tan h).HasDerivAt
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) : Tendsto (fun x => abs (tan x)) (𝓝[≠] x) atTop := by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]

@@ -36,7 +36,7 @@ variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] [NormalSpace Y
 
 open Metric Set Filter
 
-open_locale BoundedContinuousFunction TopologicalSpace
+open BoundedContinuousFunction TopologicalSpace
 
 noncomputable section
 
@@ -329,7 +329,7 @@ a bounded continuous real-valued function `g : Y →ᵇ ℝ` such that `g y ∈ 
 `g ∘ e = f`. -/
 theorem exists_extension_forall_mem_of_closed_embedding (f : X →ᵇ ℝ) {t : Set ℝ} {e : X → Y} [hs : OrdConnected t]
     (hf : ∀ x, f x ∈ t) (hne : t.Nonempty) (he : ClosedEmbedding e) : ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g ∘ e = f := by
-  cases' is_empty_or_nonempty X
+  cases is_empty_or_nonempty X
   · rcases hne with ⟨c, hc⟩
     refine' ⟨const Y c, fun y => hc, funext fun x => isEmptyElim x⟩
     

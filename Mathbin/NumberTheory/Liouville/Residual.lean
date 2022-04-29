@@ -15,7 +15,7 @@ similar statement about irrational numbers.
 -/
 
 
-open_locale Filter
+open Filter
 
 open Filter Set Metric
 

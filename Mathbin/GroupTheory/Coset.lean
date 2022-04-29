@@ -5,6 +5,7 @@ Authors: Mitchell Rowett, Scott Morrison
 -/
 import Mathbin.Algebra.Quotient
 import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.Tactic.Group
 
 /-!
 # Cosets
@@ -141,13 +142,13 @@ variable [Monoidₓ α] (s : Submonoid α)
 theorem mem_own_left_coset (a : α) : a ∈ a *l s :=
   suffices a * 1 ∈ a *l s by
     simpa
-  mem_left_coset a (one_mem s)
+  mem_left_coset a (one_mem s : 1 ∈ s)
 
 @[to_additive mem_own_right_add_coset]
 theorem mem_own_right_coset (a : α) : a ∈ (s : Set α) *r a :=
   suffices 1 * a ∈ (s : Set α) *r a by
     simpa
-  mem_right_coset a (one_mem s)
+  mem_right_coset a (one_mem s : 1 ∈ s)
 
 @[to_additive mem_left_add_coset_left_add_coset]
 theorem mem_left_coset_left_coset {a : α} (ha : a *l s = s) : a ∈ s := by
@@ -192,12 +193,12 @@ variable [Groupₓ α] (s : Subgroup α)
 @[to_additive left_add_coset_mem_left_add_coset]
 theorem left_coset_mem_left_coset {a : α} (ha : a ∈ s) : a *l s = s :=
   Set.ext <| by
-    simp [mem_left_coset_iff, mul_mem_cancel_left s (s.inv_mem ha)]
+    simp [mem_left_coset_iff, mul_mem_cancel_left (s.inv_mem ha)]
 
 @[to_additive right_add_coset_mem_right_add_coset]
 theorem right_coset_mem_right_coset {a : α} (ha : a ∈ s) : (s : Set α) *r a = s :=
   Set.ext fun b => by
-    simp [mem_right_coset_iff, mul_mem_cancel_right s (s.inv_mem ha)]
+    simp [mem_right_coset_iff, mul_mem_cancel_right (s.inv_mem ha)]
 
 @[to_additive eq_add_cosets_of_normal]
 theorem eq_cosets_of_normal (N : s.Normal) (g : α) : g *l s = s *r g :=
@@ -292,6 +293,43 @@ theorem right_rel_r_eq_right_coset_equivalence : @Setoidₓ.R _ (QuotientGroup.r
 @[to_additive]
 instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y => ‹DecidablePred (· ∈ s)› _
 
+/-- Right cosets are in bijection with left cosets. -/
+@[to_additive "Right cosets are in bijection with left cosets."]
+def quotientRightRelEquivQuotientLeftRel : Quotientₓ (QuotientGroup.rightRel s) ≃ α ⧸ s where
+  toFun :=
+    Quotientₓ.map' (fun g => g⁻¹) fun a b h =>
+      (congr_argₓ (· ∈ s)
+            (by
+              group)).mp
+        (s.inv_mem h)
+  invFun :=
+    Quotientₓ.map' (fun g => g⁻¹) fun a b h =>
+      (congr_argₓ (· ∈ s)
+            (by
+              group)).mp
+        (s.inv_mem h)
+  left_inv := fun g =>
+    Quotientₓ.induction_on' g fun g =>
+      Quotientₓ.sound'
+        (by
+          simp only [inv_invₓ]
+          exact Quotientₓ.exact' rfl)
+  right_inv := fun g =>
+    Quotientₓ.induction_on' g fun g =>
+      Quotientₓ.sound'
+        (by
+          simp only [inv_invₓ]
+          exact Quotientₓ.exact' rfl)
+
+@[to_additive]
+instance fintypeQuotientRightRel [Fintype (α ⧸ s)] : Fintype (Quotientₓ (QuotientGroup.rightRel s)) :=
+  Fintype.ofEquiv (α ⧸ s) (QuotientGroup.quotientRightRelEquivQuotientLeftRel s).symm
+
+@[to_additive]
+theorem card_quotient_right_rel [Fintype (α ⧸ s)] :
+    Fintype.card (Quotientₓ (QuotientGroup.rightRel s)) = Fintype.card (α ⧸ s) :=
+  Fintype.of_equiv_card (QuotientGroup.quotientRightRelEquivQuotientLeftRel s).symm
+
 end QuotientGroup
 
 namespace QuotientGroup
@@ -306,6 +344,10 @@ instance fintype [Fintype α] (s : Subgroup α) [DecidableRel (leftRel s).R] : F
 @[to_additive "The canonical map from an `add_group` `α` to the quotient `α ⧸ s`."]
 abbrev mk (a : α) : α ⧸ s :=
   Quotientₓ.mk' a
+
+@[to_additive]
+theorem mk_surjective : Function.Surjective <| @mk _ _ s :=
+  Quotientₓ.surjective_quotient_mk'
 
 @[elab_as_eliminator, to_additive]
 theorem induction_on {C : α ⧸ s → Prop} (x : α ⧸ s) (H : ∀ z, C (QuotientGroup.mk z)) : C x :=
@@ -352,7 +394,7 @@ variable (s)
 @[to_additive QuotientAddGroup.mk_out'_eq_mul]
 theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : α ⧸ s).out' = g * h :=
   ⟨⟨g⁻¹ * (mk g).out', eq'.mp (mk g).out_eq'.symm⟩, by
-    rw [s.coe_mk, mul_inv_cancel_left]⟩
+    rw [SetLike.coe_mk, mul_inv_cancel_left]⟩
 
 variable {s}
 
@@ -370,7 +412,7 @@ theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
     coe ⁻¹' ((coe : α → α ⧸ N) '' s) = ⋃ x : N, (fun y : α => y * x) ⁻¹' s := by
   ext x
   simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
-    Subgroup.coe_mk, ← eq_inv_mul_iff_mul_eq]
+    SetLike.coe_mk, ← eq_inv_mul_iff_mul_eq]
   exact
     ⟨fun ⟨y, hs, hN⟩ =>
       ⟨_, N.inv_mem hN, by
@@ -444,7 +486,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_leftₓ]
   left_inv := by
     refine' Quotientₓ.ind' fun a => _
-    simp_rw [Quotientₓ.map'_mk', id.def, t.coe_mk, mul_inv_cancel_left]
+    simp_rw [Quotientₓ.map'_mk', id.def, SetLike.coe_mk, mul_inv_cancel_left]
   right_inv := by
     refine' Prod.rec _
     refine' Quotientₓ.ind' fun a => _
@@ -462,6 +504,7 @@ noncomputable def quotientEquivProdOfLe (h_le : s ≤ t) : α ⧸ s ≃ (α ⧸ 
   quotientEquivProdOfLe' h_le Quotientₓ.out' Quotientₓ.out_eq'
 
 /-- If `K ≤ L`, then there is an embedding `K ⧸ (H.subgroup_of K) ↪ L ⧸ (H.subgroup_of L)`. -/
+@[to_additive "If `K ≤ L`, then there is an embedding\n  `K ⧸ (H.add_subgroup_of K) ↪ L ⧸ (H.add_subgroup_of L)`."]
 def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) {K L : Subgroup α} (h : K ≤ L) :
     K ⧸ H.subgroupOf K ↪ L ⧸ H.subgroupOf L where
   toFun := Quotientₓ.map' (Set.inclusion h) fun a b => id

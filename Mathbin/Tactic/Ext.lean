@@ -559,10 +559,10 @@ Try this: apply funext, rintro ⟨a, b⟩
 A maximum depth can be provided with `ext x y z : 3`.
 -/
 unsafe def interactive.ext :
-    (parse <| (tk "?")?) → parse rcases_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
+    (parse <| (tk "?")?) → parse rintro_patt_parse_hi* → parse (tk ":" *> small_nat)? → tactic Unit
   | trace, [], some n => iterate_range 1 n (ext1 [] {  } trace.isSome $> ())
   | trace, [], none => repeat1 (ext1 [] {  } trace.isSome $> ())
-  | trace, xs, n => ext xs n {  } trace.isSome $> ()
+  | trace, xs, n => ext xs.join n {  } trace.isSome $> ()
 
 /-- * `ext1 id` selects and apply one extensionality lemma (with
   attribute `ext`), using `id`, if provided, to name a

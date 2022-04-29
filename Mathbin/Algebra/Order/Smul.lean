@@ -88,13 +88,13 @@ theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
   OrderedSmul.smul_lt_smul_of_pos
 
 theorem smul_le_smul_of_nonneg (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c • a ≤ c • b := by
-  by_cases' H₁ : c = 0
-  · simp [H₁, zero_smul]
+  rcases h₁.eq_or_lt with (rfl | hab)
+  · rfl
     
-  · by_cases' H₂ : a = b
-    · rw [H₂]
+  · rcases h₂.eq_or_lt with (rfl | hc)
+    · rw [zero_smul, zero_smul]
       
-    · exact le_of_ltₓ (smul_lt_smul_of_pos (lt_of_le_of_neₓ h₁ H₂) (lt_of_le_of_neₓ h₂ (Ne.symm H₁)))
+    · exact (smul_lt_smul_of_pos hab hc).le
       
     
 

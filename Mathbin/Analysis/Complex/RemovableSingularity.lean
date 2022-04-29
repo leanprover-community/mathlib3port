@@ -19,12 +19,11 @@ function `function.update f c (lim (𝓝[≠] c) f)` is complex differentiable i
 
 open TopologicalSpace Metric Set Filter Asymptotics Function
 
-open_locale TopologicalSpace Filter Nnreal
+open TopologicalSpace Filter Nnreal
 
 universe u
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
-  [CompleteSpace E]
+variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
 namespace Complex
 

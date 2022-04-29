@@ -40,9 +40,9 @@ The main definitions are in the `adjoin_root` namespace.
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 universe u v w
 
@@ -257,27 +257,27 @@ theorem is_integral_root' (hg : g.Monic) : IsIntegral R (root g) :=
 /-- `adjoin_root.mod_by_monic_hom` sends the equivalence class of `f` mod `g` to `f %ₘ g`.
 
 This is a well-defined right inverse to `adjoin_root.mk`, see `adjoin_root.mk_left_inverse`. -/
-def modByMonicHom [Nontrivial R] (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
-  (Submodule.liftq _ (Polynomial.modByMonicHom hg) fun hf : f ∈ (Ideal.span {g}).restrictScalars R =>
+def modByMonicHom (hg : g.Monic) : AdjoinRoot g →ₗ[R] R[X] :=
+  (Submodule.liftq _ (Polynomial.modByMonicHom g) fun hf : f ∈ (Ideal.span {g}).restrictScalars R =>
         (mem_ker_mod_by_monic hg).mpr (Ideal.mem_span_singleton.mp hf)).comp <|
     (Submodule.Quotient.restrictScalarsEquiv R (Ideal.span {g} : Ideal R[X])).symm.toLinearMap
 
 @[simp]
-theorem mod_by_monic_hom_mk [Nontrivial R] (hg : g.Monic) (f : R[X]) : modByMonicHom hg (mk g f) = f %ₘ g :=
+theorem mod_by_monic_hom_mk (hg : g.Monic) (f : R[X]) : modByMonicHom hg (mk g f) = f %ₘ g :=
   rfl
 
-theorem mk_left_inverse [Nontrivial R] (hg : g.Monic) : Function.LeftInverse (mk g) (modByMonicHom hg) := fun f =>
+theorem mk_left_inverse (hg : g.Monic) : Function.LeftInverse (mk g) (modByMonicHom hg) := fun f =>
   (induction_on g f) fun f => by
     rw [mod_by_monic_hom_mk hg, mk_eq_mk, mod_by_monic_eq_sub_mul_div _ hg, sub_sub_cancel_left, dvd_neg]
     apply dvd_mul_right
 
-theorem mk_surjective [Nontrivial R] (hg : g.Monic) : Function.Surjective (mk g) :=
+theorem mk_surjective (hg : g.Monic) : Function.Surjective (mk g) :=
   (mk_left_inverse hg).Surjective
 
 /-- The elements `1, root g, ..., root g ^ (d - 1)` form a basis for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
 @[simps]
-def powerBasisAux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) :=
+def powerBasisAux' (hg : g.Monic) : Basis (Finₓ g.natDegree) R (AdjoinRoot g) :=
   Basis.ofEquivFun
     { toFun := fun f i => (modByMonicHom hg f).coeff i,
       invFun := fun c => mk g <| ∑ i : Finₓ g.natDegree, monomial i (c i),
@@ -296,6 +296,7 @@ def powerBasisAux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) R 
               exact dvd_mul_right _ _,
       right_inv := fun x =>
         funext fun i => by
+          nontriviality R
           simp only [mod_by_monic_hom_mk]
           rw [(mod_by_monic_eq_self_iff hg).mpr, finset_sum_coeff, Finset.sum_eq_single i] <;>
             try
@@ -319,7 +320,7 @@ def powerBasisAux' [Nontrivial R] (hg : g.Monic) : Basis (Finₓ g.natDegree) R 
 /-- The power basis `1, root g, ..., root g ^ (d - 1)` for `adjoin_root g`,
 where `g` is a monic polynomial of degree `d`. -/
 @[simps]
-def powerBasis' [Nontrivial R] (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
+def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
   gen := root g
   dim := g.natDegree
   Basis := powerBasisAux' hg
@@ -465,6 +466,81 @@ def equiv (f : F[X]) (hf : f ≠ 0) : (AdjoinRoot f →ₐ[F] L) ≃ { x // x �
 end Field
 
 end Equivₓ
+
+section
+
+open Ideal DoubleQuot Polynomial
+
+variable [CommRingₓ R] (I : Ideal R) (f : Polynomial R)
+
+/-- The natural isomorphism `R[α]/(I[α]) ≅ R[α]/((I[x] ⊔ (f)) / (f))` for `α` a root of
+`f : polynomial R` and `I : ideal R`.
+
+See `adjoin_root.quot_map_of_equiv` for the isomorphism with `(R/I)[X] / (f mod I)`. -/
+def quotMapOfEquivQuotMapCMapSpanMk : AdjoinRoot f ⧸ I.map (of f) ≃+* AdjoinRoot f ⧸ (I.map c).map (span {f}) :=
+  Ideal.quotEquivOfEq
+    (by
+      rw [of, AdjoinRoot.mk, Ideal.map_map])
+
+@[simp]
+theorem quot_map_of_equiv_quot_map_C_map_span_mk_mk (x : AdjoinRoot f) :
+    quotMapOfEquivQuotMapCMapSpanMk I f (Ideal.Quotient.mk (I.map (of f)) x) = Ideal.Quotient.mk _ x :=
+  rfl
+
+/-- The natural isomorphism `R[α]/((I[x] ⊔ (f)) / (f)) ≅ (R[x]/I[x])/((f) ⊔ I[x] / I[x])`
+  for `α` a root of `f : polynomial R` and `I : ideal R`-/
+def quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk :
+    AdjoinRoot f ⧸ (I.map (c : R →+* R[X])).map (span {f}) ≃+* (R[X] ⧸ map c I) ⧸ (span {f}).map (I.map c) :=
+  quotQuotEquivComm (span ({f} : Set (Polynomial R))) (I.map (c : R →+* Polynomial R))
+
+@[simp]
+theorem quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk (p : R[X]) :
+    quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f (Ideal.Quotient.mk _ (mk f p)) =
+      quotQuotMk (I.map c) (span {f}) p :=
+  rfl
+
+/-- The natural isomorphism `(R/I)[x]/(f mod I) ≅ (R[x]/I*R[x])/(f mod I[x])` where
+  `f : polynomial R` and `I : ideal R`-/
+def Polynomial.quotQuotEquivComm :
+    (R ⧸ I)[X] ⧸ span ({f.map I} : Set (Polynomial (R ⧸ I))) ≃+*
+      (R[X] ⧸ map c I) ⧸ span ({(Ideal.Quotient.mk (I C)) f} : Set (R[X] ⧸ map c I)) :=
+  quotientEquiv (span ({f.map I} : Set (Polynomial (R ⧸ I)))) (span {Ideal.Quotient.mk (I.map Polynomial.c) f})
+    (polynomialQuotientEquivQuotientPolynomial I)
+    (by
+      rw [map_span, Set.image_singleton, RingEquiv.coe_to_ring_hom,
+        polynomial_quotient_equiv_quotient_polynomial_map_mk I f])
+
+@[simp]
+theorem Polynomial.quot_quot_equiv_comm_mk_mk (p : R[X]) :
+    (Polynomial.quotQuotEquivComm I f).symm (Ideal.Quotient.mk _ (Ideal.Quotient.mk _ p)) =
+      Ideal.Quotient.mk _ (p.map I) :=
+  by
+  simp only [polynomial.quot_quot_equiv_comm, quotient_equiv_symm_mk,
+    polynomial_quotient_equiv_quotient_polynomial_symm_mk]
+
+/-- The natural isomorphism `R[α]/I[α] ≅ (R/I)[X]/(f mod I)` for `α` a root of `f : polynomial R`
+  and `I : ideal R`-/
+def quotMapOfEquiv : AdjoinRoot f ⧸ I.map (of f) ≃+* Polynomial (R ⧸ I) ⧸ span ({f.map I} : Set (Polynomial (R ⧸ I))) :=
+  (quotMapOfEquivQuotMapCMapSpanMk I f).trans
+    ((quotMapCMapSpanMkEquivQuotMapCQuotMapSpanMk I f).trans
+      ((Ideal.quotEquivOfEq
+            (show
+              (span ({f} : Set (Polynomial R))).map (I.map (c : R →+* Polynomial R)) =
+                span ({(Ideal.Quotient.mk (I Polynomial.c)) f} : Set (Polynomial R ⧸ map c I))
+              by
+              rw [map_span, Set.image_singleton])).trans
+        (Polynomial.quotQuotEquivComm I f).symm))
+
+@[simp]
+theorem quot_adjoin_root_equiv_quot_polynomial_quot_mk_of (p : R[X]) :
+    quotMapOfEquiv I f (Ideal.Quotient.mk (I.map (of f)) (mk f p)) =
+      Ideal.Quotient.mk (span ({f.map I} : Set (Polynomial (R ⧸ I)))) (p.map I) :=
+  by
+  rw [quot_map_of_equiv, RingEquiv.trans_apply, RingEquiv.trans_apply, RingEquiv.trans_apply,
+    quot_map_of_equiv_quot_map_C_map_span_mk_mk, quot_map_C_map_span_mk_equiv_quot_map_C_quot_map_span_mk_mk,
+    quot_quot_mk, RingHom.comp_apply, quot_equiv_of_eq_mk, polynomial.quot_quot_equiv_comm_mk_mk]
+
+end
 
 end AdjoinRoot
 

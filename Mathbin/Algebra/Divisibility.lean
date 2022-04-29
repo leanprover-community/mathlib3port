@@ -56,12 +56,8 @@ theorem Dvd.elim {P : Prop} {a b : α} (H₁ : a ∣ b) (H₂ : ∀ c, b = a * c
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
 @[trans]
-theorem dvd_trans (h₁ : a ∣ b) (h₂ : b ∣ c) : a ∣ c :=
-  match h₁, h₂ with
-  | ⟨d, (h₃ : b = a * d)⟩, ⟨e, (h₄ : c = b * e)⟩ =>
-    ⟨d * e,
-      show c = a * (d * e) by
-        simp [h₃, h₄]⟩
+theorem dvd_trans : a ∣ b → b ∣ c → a ∣ c
+  | ⟨d, h₁⟩, ⟨e, h₂⟩ => ⟨d * e, h₁ ▸ h₂.trans <| mul_assoc a d e⟩
 
 alias dvd_trans ← Dvd.Dvd.trans
 
@@ -77,17 +73,20 @@ alias dvd_mul_of_dvd_left ← Dvd.Dvd.mul_right
 theorem dvd_of_mul_right_dvd (h : a * b ∣ c) : a ∣ c :=
   (dvd_mul_right a b).trans h
 
-section MapDvd
+section map_dvd
 
-variable {M N : Type _}
+variable {M N : Type _} [Monoidₓ M] [Monoidₓ N]
 
-theorem MulHom.map_dvd [Monoidₓ M] [Monoidₓ N] (f : MulHom M N) {a b} : a ∣ b → f a ∣ f b
-  | ⟨c, h⟩ => ⟨f c, h.symm ▸ f.map_mul a c⟩
+theorem map_dvd {F : Type _} [MulHomClass F M N] (f : F) {a b} : a ∣ b → f a ∣ f b
+  | ⟨c, h⟩ => ⟨f c, h.symm ▸ map_mul f a c⟩
 
-theorem MonoidHom.map_dvd [Monoidₓ M] [Monoidₓ N] (f : M →* N) {a b} : a ∣ b → f a ∣ f b :=
-  f.toMulHom.map_dvd
+theorem MulHom.map_dvd (f : M →ₙ* N) {a b} : a ∣ b → f a ∣ f b :=
+  map_dvd f
 
-end MapDvd
+theorem MonoidHom.map_dvd (f : M →* N) {a b} : a ∣ b → f a ∣ f b :=
+  map_dvd f
+
+end map_dvd
 
 end Semigroupₓ
 
@@ -311,6 +310,32 @@ end CommMonoidₓ
 
 end IsUnit
 
+section CommMonoidₓ
+
+variable [CommMonoidₓ α]
+
+theorem is_unit_iff_dvd_one {x : α} : IsUnit x ↔ x ∣ 1 :=
+  ⟨by
+    rintro ⟨u, rfl⟩ <;> exact ⟨_, u.mul_inv.symm⟩, fun ⟨y, h⟩ =>
+    ⟨⟨x, y, h.symm, by
+        rw [h, mul_comm]⟩,
+      rfl⟩⟩
+
+theorem is_unit_iff_forall_dvd {x : α} : IsUnit x ↔ ∀ y, x ∣ y :=
+  is_unit_iff_dvd_one.trans ⟨fun h y => h.trans (one_dvd _), fun h => h _⟩
+
+theorem is_unit_of_dvd_unit {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
+  is_unit_iff_dvd_one.2 <| xy.trans <| is_unit_iff_dvd_one.1 hu
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∣ » 1)
+theorem is_unit_of_dvd_one : ∀ a _ : a ∣ 1, IsUnit (a : α)
+  | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
+
+theorem not_is_unit_of_not_is_unit_dvd {a b : α} (ha : ¬IsUnit a) (hb : a ∣ b) : ¬IsUnit b :=
+  mt (is_unit_of_dvd_unit hb) ha
+
+end CommMonoidₓ
+
 section CommMonoidWithZero
 
 variable [CommMonoidWithZero α]
@@ -332,6 +357,24 @@ theorem dvd_not_unit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ 
     
 
 end CommMonoidWithZero
+
+theorem dvd_and_not_dvd_iff [CancelCommMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
+  ⟨fun ⟨⟨d, hd⟩, hyx⟩ =>
+    ⟨fun hx0 => by
+      simpa [hx0] using hyx,
+      ⟨d,
+        mt is_unit_iff_dvd_one.1 fun ⟨e, he⟩ =>
+          hyx
+            ⟨e, by
+              rw [hd, mul_assoc, ← he, mul_oneₓ]⟩,
+        hd⟩⟩,
+    fun ⟨hx0, d, hdu, hdx⟩ =>
+    ⟨⟨d, hdx⟩, fun ⟨e, he⟩ =>
+      hdu
+        (is_unit_of_dvd_one _
+          ⟨e,
+            mul_left_cancel₀ hx0 <| by
+              conv => lhs rw [he, hdx] <;> simp [mul_assoc]⟩)⟩⟩
 
 section MonoidWithZeroₓ
 

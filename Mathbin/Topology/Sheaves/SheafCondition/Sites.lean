@@ -102,7 +102,7 @@ def firstObjIsoPiOpens : Presheaf.firstObj R F ≅ piOpens F (coveringOfPresieve
 product.
 -/
 theorem first_obj_iso_pi_opens_π (f : ΣV, { f : V ⟶ U // R f }) :
-    (firstObjIsoPiOpens F U R).hom ≫ Pi.π _ f = Pi.π _ f :=
+    (firstObjIsoPiOpens F U R).Hom ≫ Pi.π _ f = Pi.π _ f :=
   Category.id_comp _
 
 /-- The second object in the sites diagram is isomorphic to the second object in the spaces diagram.
@@ -115,7 +115,7 @@ product. Here, we have to insert an `eq_to_hom` arrow to pass from
 `F.obj (op (pullback f.2.1 g.2.1))` to `F.obj (op (f.1 ⊓ g.1))`.
 -/
 theorem second_obj_iso_pi_inters_π (f g : ΣV, { f : V ⟶ U // R f }) :
-    (secondObjIsoPiInters F U R).hom ≫ Pi.π _ (f, g) =
+    (secondObjIsoPiInters F U R).Hom ≫ Pi.π _ (f, g) =
       Pi.π _ (f, g) ≫ F.map (eqToHom (CompleteLattice.pullback_eq_inf f.2.1 g.2.1).symm).op :=
   by
   dunfold second_obj_iso_pi_inters
@@ -126,7 +126,7 @@ theorem second_obj_iso_pi_inters_π (f g : ΣV, { f : V ⟶ U // R f }) :
 same as the fork map of the spaces diagram (modulo an `eq_to_hom` arrow).
 -/
 theorem fork_map_comp_first_obj_iso_pi_opens_eq (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
-    Presheaf.forkMap R F ≫ (firstObjIsoPiOpens F U R).hom =
+    Presheaf.forkMap R F ≫ (firstObjIsoPiOpens F U R).Hom =
       F.map (eqToHom (supr_eq_of_mem_grothendieck U R hR)).op ≫ res F (coveringOfPresieve U R) :=
   by
   ext f
@@ -140,8 +140,8 @@ theorem fork_map_comp_first_obj_iso_pi_opens_eq (hR : Sieve.generate R ∈ Opens
 `second_obj_iso_pi_inters`, the map `presheaf.first_map` corresponds to `left_res`.
 -/
 theorem first_obj_iso_comp_left_res_eq :
-    Presheaf.firstMap R F ≫ (secondObjIsoPiInters F U R).hom =
-      (firstObjIsoPiOpens F U R).hom ≫ leftRes F (coveringOfPresieve U R) :=
+    Presheaf.firstMap R F ≫ (secondObjIsoPiInters F U R).Hom =
+      (firstObjIsoPiOpens F U R).Hom ≫ leftRes F (coveringOfPresieve U R) :=
   by
   ext ⟨f, g⟩
   rw [category.assoc, category.assoc, second_obj_iso_pi_inters_π]
@@ -154,8 +154,8 @@ theorem first_obj_iso_comp_left_res_eq :
 `second_obj_iso_pi_inters`, the map `presheaf.second_map` corresponds to `right_res`.
 -/
 theorem first_obj_iso_comp_right_res_eq :
-    Presheaf.secondMap R F ≫ (secondObjIsoPiInters F U R).hom =
-      (firstObjIsoPiOpens F U R).hom ≫ rightRes F (coveringOfPresieve U R) :=
+    Presheaf.secondMap R F ≫ (secondObjIsoPiInters F U R).Hom =
+      (firstObjIsoPiOpens F U R).Hom ≫ rightRes F (coveringOfPresieve U R) :=
   by
   ext ⟨f, g⟩
   dunfold right_res presheaf.second_map
@@ -197,12 +197,12 @@ given fork of the _spaces_ diagram. This is shown to be an isomorphism below.
 -/
 @[simps]
 def postcomposeDiagramForkHom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
-    (Cones.postcompose (diagramNatIso F U R).hom).obj (Fork.ofι _ (Presheaf.w R F)) ⟶ fork F (coveringOfPresieve U R) :=
+    (Cones.postcompose (diagramNatIso F U R).Hom).obj (Fork.ofι _ (Presheaf.w R F)) ⟶ fork F (coveringOfPresieve U R) :=
   Fork.mkHom (F.map (eqToHom (supr_eq_of_mem_grothendieck U R hR)).op)
     (fork_map_comp_first_obj_iso_pi_opens_eq F U R hR).symm
 
 instance is_iso_postcompose_diagram_fork_hom_hom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
-    IsIso (postcomposeDiagramForkHom F U R hR).hom := by
+    IsIso (postcomposeDiagramForkHom F U R hR).Hom := by
   rw [postcompose_diagram_fork_hom_hom]
   apply eq_to_hom.is_iso
 
@@ -212,7 +212,7 @@ instance is_iso_postcompose_diagram_fork_hom (hR : Sieve.generate R ∈ Opens.gr
 
 /-- See `postcompose_diagram_fork_hom`. -/
 def postcomposeDiagramForkIso (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
-    (Cones.postcompose (diagramNatIso F U R).hom).obj (Fork.ofι _ (Presheaf.w R F)) ≅ fork F (coveringOfPresieve U R) :=
+    (Cones.postcompose (diagramNatIso F U R).Hom).obj (Fork.ofι _ (Presheaf.w R F)) ≅ fork F (coveringOfPresieve U R) :=
   asIso (postcomposeDiagramForkHom F U R hR)
 
 end CoveringOfPresieve

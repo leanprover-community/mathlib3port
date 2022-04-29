@@ -63,7 +63,7 @@ protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
 protected def mapRight {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
   Quot.map id h
 
-/-- weaken the relation of a quotient -/
+/-- Weaken the relation of a quotient. This is the same as `quot.map id`. -/
 def factor {α : Type _} (r s : α → α → Prop) (h : ∀ x y, r x y → s x y) : Quot r → Quot s :=
   Quot.lift (Quot.mk s) fun x y rxy => Quot.sound (h x y rxy)
 
@@ -119,6 +119,13 @@ theorem map₂_mk (f : α → β → γ) (hr : ∀ a b₁ b₂, s b₁ b₂ → 
     Quot.map₂ f hr hs (Quot.mk r a) (Quot.mk s b) = Quot.mk t (f a b) :=
   rfl
 
+/-- A binary version of `quot.rec_on_subsingleton`. -/
+@[reducible, elab_as_eliminator]
+protected def recOnSubsingleton₂ {φ : Quot r → Quot s → Sort _} [h : ∀ a b, Subsingleton (φ ⟦a⟧ ⟦b⟧)] (q₁ : Quot r)
+    (q₂ : Quot s) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧) : φ q₁ q₂ :=
+  (@Quot.recOnSubsingleton _ r (fun q => φ q q₂) (fun a => Quot.ind (h a) q₂) q₁) fun a =>
+    (Quot.recOnSubsingleton q₂) fun b => f a b
+
 @[elab_as_eliminator]
 protected theorem induction_on₂ {δ : Quot r → Quot s → Prop} (q₁ : Quot r) (q₂ : Quot s)
     (h : ∀ a b, δ (Quot.mk r a) (Quot.mk s b)) : δ q₁ q₂ :=
@@ -128,6 +135,23 @@ protected theorem induction_on₂ {δ : Quot r → Quot s → Prop} (q₁ : Quot
 protected theorem induction_on₃ {δ : Quot r → Quot s → Quot t → Prop} (q₁ : Quot r) (q₂ : Quot s) (q₃ : Quot t)
     (h : ∀ a b c, δ (Quot.mk r a) (Quot.mk s b) (Quot.mk t c)) : δ q₁ q₂ q₃ :=
   Quot.ind (fun a₁ => Quot.ind (fun a₂ => Quot.ind (fun a₃ => h a₁ a₂ a₃) q₃) q₂) q₁
+
+instance (r : α → α → Prop) (f : α → Prop) (h : ∀ a b, r a b → f a = f b) [hf : DecidablePred f] :
+    DecidablePred (Quot.lift f h) := fun q => Quot.recOnSubsingleton q hf
+
+/-- Note that this provides `decidable_rel (quot.lift₂ f ha hb)` when `α = β`. -/
+instance (r : α → α → Prop) (s : β → β → Prop) (f : α → β → Prop) (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂)
+    (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) [hf : ∀ a, DecidablePred (f a)] (q₁ : Quot r) :
+    DecidablePred (Quot.lift₂ f ha hb q₁) := fun q₂ => Quot.recOnSubsingleton₂ q₁ q₂ hf
+
+instance (r : α → α → Prop) (q : Quot r) (f : α → Prop) (h : ∀ a b, r a b → f a = f b) [DecidablePred f] :
+    Decidable (Quot.liftOn q f h) :=
+  Quot.lift.decidablePred _ _ _ _
+
+instance (r : α → α → Prop) (s : β → β → Prop) (q₁ : Quot r) (q₂ : Quot s) (f : α → β → Prop)
+    (ha : ∀ a b₁ b₂, s b₁ b₂ → f a b₁ = f a b₂) (hb : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) [∀ a, DecidablePred (f a)] :
+    Decidable (Quot.liftOn₂ q₁ q₂ f ha hb) :=
+  Quot.lift₂.decidablePred _ _ _ _ _ _ _
 
 end Quot
 
@@ -170,6 +194,28 @@ protected def map₂ (f : α → β → γ) (h : ((· ≈ ·)⇒(· ≈ ·)⇒(�
 theorem map₂_mk (f : α → β → γ) (h : ((· ≈ ·)⇒(· ≈ ·)⇒(· ≈ ·)) f f) (x : α) (y : β) :
     Quotientₓ.map₂ f h (⟦x⟧ : Quotientₓ sa) (⟦y⟧ : Quotientₓ sb) = (⟦f x y⟧ : Quotientₓ sc) :=
   rfl
+
+include sa
+
+instance (f : α → Prop) (h : ∀ a b, a ≈ b → f a = f b) [DecidablePred f] : DecidablePred (Quotientₓ.lift f h) :=
+  Quot.lift.decidablePred _ _ _
+
+include sb
+
+/-- Note that this provides `decidable_rel (quotient.lift₂ f h)` when `α = β`. -/
+instance (f : α → β → Prop) (h : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ = f a₂ b₂) [hf : ∀ a, DecidablePred (f a)]
+    (q₁ : Quotientₓ sa) : DecidablePred (Quotientₓ.lift₂ f h q₁) := fun q₂ => Quotientₓ.recOnSubsingleton₂ q₁ q₂ hf
+
+omit sb
+
+instance (q : Quotientₓ sa) (f : α → Prop) (h : ∀ a b, a ≈ b → f a = f b) [DecidablePred f] :
+    Decidable (Quotientₓ.liftOn q f h) :=
+  Quotientₓ.lift.decidablePred _ _ _
+
+instance (q₁ : Quotientₓ sa) (q₂ : Quotientₓ sb) (f : α → β → Prop)
+    (h : ∀ a₁ b₁ a₂ b₂, a₁ ≈ a₂ → b₁ ≈ b₂ → f a₁ b₁ = f a₂ b₂) [∀ a, DecidablePred (f a)] :
+    Decidable (Quotientₓ.liftOn₂ q₁ q₂ f h) :=
+  Quotientₓ.lift₂.decidablePred _ _ _ _
 
 end Quotientₓ
 
@@ -257,9 +303,12 @@ theorem Quotientₓ.eq_mk_iff_out [s : Setoidₓ α] {x : Quotientₓ s} {y : α
 theorem Quotientₓ.out_equiv_out {s : Setoidₓ α} {x y : Quotientₓ s} : x.out ≈ y.out ↔ x = y := by
   rw [← Quotientₓ.eq_mk_iff_out, Quotientₓ.out_eq]
 
+theorem Quotientₓ.out_injective {s : Setoidₓ α} : Function.Injective (@Quotientₓ.out α s) := fun a b h =>
+  Quotientₓ.out_equiv_out.1 <| h ▸ Setoidₓ.refl _
+
 @[simp]
 theorem Quotientₓ.out_inj {s : Setoidₓ α} {x y : Quotientₓ s} : x.out = y.out ↔ x = y :=
-  ⟨fun h => Quotientₓ.out_equiv_out.1 <| h ▸ Setoidₓ.refl _, fun h => h ▸ rfl⟩
+  ⟨fun h => Quotientₓ.out_injective h, fun h => h ▸ rfl⟩
 
 section Pi
 
@@ -291,6 +340,9 @@ end Pi
 
 theorem nonempty_quotient_iff (s : Setoidₓ α) : Nonempty (Quotientₓ s) ↔ Nonempty α :=
   ⟨fun ⟨a⟩ => Quotientₓ.induction_on a Nonempty.intro, fun ⟨a⟩ => ⟨⟦a⟧⟩⟩
+
+/-! ### Truncation -/
+
 
 /-- `trunc α` is the quotient of `α` by the always-true relation. This
   is related to the propositional truncation in HoTT, and is similar
@@ -393,6 +445,9 @@ protected theorem nonempty (q : Trunc α) : Nonempty α :=
   nonempty_of_exists q.exists_rep
 
 end Trunc
+
+/-! ### `quotient` with implicit `setoid` -/
+
 
 namespace Quotientₓ
 
@@ -566,6 +621,15 @@ theorem map'_mk [Setoidₓ β] (f : α → β) h (x : α) : ⟦x⟧.map' f h = �
   rfl
 
 end
+
+instance (q : Quotientₓ s₁) (f : α → Prop) (h : ∀ a b, @Setoidₓ.R α s₁ a b → f a = f b) [DecidablePred f] :
+    Decidable (Quotientₓ.liftOn' q f h) :=
+  Quotientₓ.lift.decidablePred _ _ q
+
+instance (q₁ : Quotientₓ s₁) (q₂ : Quotientₓ s₂) (f : α → β → Prop)
+    (h : ∀ a₁ b₁ a₂ b₂, @Setoidₓ.R α s₁ a₁ a₂ → @Setoidₓ.R β s₂ b₁ b₂ → f a₁ b₁ = f a₂ b₂) [∀ a, DecidablePred (f a)] :
+    Decidable (Quotientₓ.liftOn₂' q₁ q₂ f h) :=
+  Quotientₓ.lift₂.decidablePred _ _ _ _
 
 end Quotientₓ
 

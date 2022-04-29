@@ -43,7 +43,7 @@ variable {k l m n : Type _}
 
 variable {α : Type v}
 
-open_locale Matrix
+open Matrix
 
 /-- `to_matrix` returns a matrix containing ones and zeros. `f.to_matrix i j` is `1` if
   `f i = some j` and `0` otherwise -/

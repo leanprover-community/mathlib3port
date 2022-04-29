@@ -18,7 +18,7 @@ builds a derivation from its values on `X i`s and a linear equivalence
 
 namespace MvPolynomial
 
-open_locale BigOperators
+open BigOperators
 
 noncomputable section
 

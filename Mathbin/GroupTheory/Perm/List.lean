@@ -111,7 +111,7 @@ theorem form_perm_apply_nth_le_length (x : α) (xs : List α) :
   rw [nth_le_cons_length, form_perm_apply_last]
 
 theorem form_perm_apply_head (x y : α) (xs : List α) (h : Nodupₓ (x :: y :: xs)) : formPerm (x :: y :: xs) x = y := by
-  simp [form_perm_apply_of_not_mem _ _ (not_mem_of_nodup_cons h)]
+  simp [form_perm_apply_of_not_mem _ _ h.not_mem]
 
 theorem form_perm_apply_nth_le_zero (l : List α) (h : Nodupₓ l) (hl : 1 < l.length) :
     formPerm l (l.nthLe 0 (zero_lt_one.trans hl)) = l.nthLe 1 hl := by
@@ -183,7 +183,7 @@ theorem form_perm_apply_lt (xs : List α) (h : Nodupₓ xs) (n : ℕ) (hn : n + 
       
     · simp
       
-    · specialize IH (y :: l) (nodup_of_nodup_cons h) _
+    · specialize IH (y :: l) h.of_cons _
       · simpa [Nat.succ_lt_succ_iff] using hn
         
       simp only [swap_apply_eq_iff, coe_mul, form_perm_cons_cons, nth_le]

@@ -36,7 +36,7 @@ Liouville number, irrational, irrationality exponent
 
 open Filter Metric Real Set
 
-open_locale Filter TopologicalSpace
+open Filter TopologicalSpace
 
 /-- We say that a real number `x` is a Liouville number with exponent `p : ℝ` if there exists a real
 number `C` such that for infinitely many denominators `n` there exists a numerator `m` such that
@@ -105,7 +105,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   refine' ⟨r.denom ^ p * (abs r * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
-    simp [← div_mul_div, ← r.cast_def, mul_comm]
+    simp [← div_mul_div_comm₀, ← r.cast_def, mul_comm]
   refine' ⟨r.num * m, _, _⟩
   · rw [A]
     simp [hne, hr]

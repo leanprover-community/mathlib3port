@@ -90,7 +90,7 @@ theorem IsMatching.even_card {M : Subgraph G} [Fintype M.Verts] (h : M.IsMatchin
   classical
   rw [is_matching_iff_forall_degree] at h
   use M.coe.edge_finset.card
-  rw [← M.coe.sum_degrees_eq_twice_card_edges]
+  rw [← two_mul, ← M.coe.sum_degrees_eq_twice_card_edges]
   simp [h, Finset.card_univ]
 
 theorem is_perfect_matching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by

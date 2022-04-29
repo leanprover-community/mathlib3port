@@ -454,7 +454,7 @@ unsafe inductive with_pattern
 
 namespace WithPattern
 
-open Lean (Parser)
+open Lean (parser)
 
 open Lean.Parser
 

@@ -18,7 +18,7 @@ differentiability.
 -/
 
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 open Function Set Filter
 
@@ -37,6 +37,15 @@ variable {f : 𝕜 → E} {a b : 𝕜} {s : Set 𝕜}
 
 theorem dslope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a b = slope f a b :=
   update_noteq h _ _
+
+theorem ContinuousLinearMap.dslope_comp {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F) (g : 𝕜 → E)
+    (a b : 𝕜) (H : a = b → DifferentiableAt 𝕜 g a) : dslope (f ∘ g) a b = f (dslope g a b) := by
+  rcases eq_or_ne b a with (rfl | hne)
+  · simp only [dslope_same]
+    exact (f.has_fderiv_at.comp_has_deriv_at b (H rfl).HasDerivAt).deriv
+    
+  · simpa only [dslope_of_ne _ hne] using f.to_linear_map.slope_comp g a b
+    
 
 theorem eq_on_dslope_slope (f : 𝕜 → E) (a : 𝕜) : EqOn (dslope f a) (slope f a) ({a}ᶜ) := fun b => dslope_of_ne f
 

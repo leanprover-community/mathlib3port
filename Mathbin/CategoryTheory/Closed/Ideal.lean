@@ -122,7 +122,7 @@ instance (priority := 10) exponential_ideal_of_preserves_binary_products
   intro B A
   let q : i.obj (L.obj (A ⟹ i.obj B)) ⟶ A ⟹ i.obj B
   apply cartesian_closed.curry (ir.hom_equiv _ _ _)
-  apply _ ≫ (ir.hom_equiv _ _).symm ((ev A).app (i.obj B))
+  apply _ ≫ (ir.hom_equiv _ _).symm ((exp.ev A).app (i.obj B))
   refine' prod_comparison L A _ ≫ limits.prod.map (𝟙 _) (ε.app _) ≫ inv (prod_comparison _ _ _)
   have : η.app (A ⟹ i.obj B) ≫ q = 𝟙 (A ⟹ i.obj B) := by
     dsimp
@@ -139,7 +139,7 @@ variable [ExponentialIdeal i]
 itself cartesian closed.
 -/
 def cartesianClosedOfReflective : CartesianClosed D where
-  closed := fun B =>
+  closed' := fun B =>
     { isAdj :=
         { right := i ⋙ exp (i.obj B) ⋙ leftAdjoint i,
           adj := by
@@ -243,8 +243,8 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
 -/
 noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type _) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) (leftAdjoint i) := by
-  let this' := preserves_binary_products_of_exponential_ideal i
-  let this' := leftAdjointPreservesTerminalOfReflective.{v₁} i
+  let this := preserves_binary_products_of_exponential_ideal i
+  let this := leftAdjointPreservesTerminalOfReflective.{v₁} i
   apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
 
 end

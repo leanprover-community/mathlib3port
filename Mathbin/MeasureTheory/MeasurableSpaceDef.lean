@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Order.SymmDiff
-import Mathbin.Order.Disjointed
-import Mathbin.Order.ConditionallyCompleteLattice
-import Mathbin.Data.Equiv.Encodable.Lattice
 import Mathbin.Data.Set.Countable
+import Mathbin.Logic.Encodable.Lattice
+import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.Disjointed
+import Mathbin.Order.SymmDiff
 
 /-!
 # Measurable spaces and measurable functions
@@ -43,7 +43,7 @@ measurable space, σ-algebra, measurable function
 
 open Set Encodable Function Equivₓ
 
-open_locale Classical
+open Classical
 
 variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
@@ -143,7 +143,7 @@ theorem MeasurableSet.Inter [Encodable β] {f : β → Set α} (h : ∀ b, Measu
 
 section Fintype
 
-attribute [local instance] Fintype.encodable
+attribute [local instance] Fintype.toEncodable
 
 theorem MeasurableSet.Union_fintype [Fintype β] {f : β → Set α} (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋃ b, f b) :=
@@ -200,7 +200,7 @@ theorem MeasurableSet.diff {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h�
 
 @[simp]
 theorem MeasurableSet.symm_diff {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
-    MeasurableSet (s₁ Δ s₂) :=
+    MeasurableSet (s₁ ∆ s₂) :=
   (h₁.diff h₂).union (h₂.diff h₁)
 
 @[simp]
@@ -313,7 +313,7 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α where
   measurable_set_compl := GenerateMeasurable.compl
   measurable_set_Union := GenerateMeasurable.union
 
-theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : (generateFrom s).MeasurableSet' t :=
+theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : @MeasurableSet _ (generateFrom s) t :=
   GenerateMeasurable.basic t ht
 
 theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, m.MeasurableSet' t) :

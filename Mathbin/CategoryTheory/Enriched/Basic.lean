@@ -40,7 +40,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1272:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »

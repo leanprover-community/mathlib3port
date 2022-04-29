@@ -40,7 +40,7 @@ protected def pointwiseMulAction : MulAction M (Subring R) where
 
 localized [Pointwise] attribute [instance] Subring.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 theorem pointwise_smul_def {a : M} (S : Subring R) : a • S = S.map (MulSemiringAction.toRingHom _ _ a) :=
   rfl
@@ -72,7 +72,7 @@ section Groupₓ
 
 variable [Groupₓ M] [Ringₓ R] [MulSemiringAction M R]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : M} {S : Subring R} {x : R} : a • x ∈ a • S ↔ x ∈ S :=
@@ -103,7 +103,7 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ M] [Ringₓ R] [MulSemiringAction M R]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subring R) (x : R) : a • x ∈ a • S ↔ x ∈ S :=

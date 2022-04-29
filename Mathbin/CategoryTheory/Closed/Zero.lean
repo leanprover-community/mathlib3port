@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Closed.Cartesian
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Conj
 
@@ -44,7 +44,7 @@ def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y
       _ ≃ (⊥_ C ⟶ Y ^^ X) := (exp.adjunction _).homEquiv _ _
       
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) := by

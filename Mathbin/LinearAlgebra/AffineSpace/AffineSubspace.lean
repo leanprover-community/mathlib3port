@@ -54,7 +54,7 @@ Those depending on analysis or topology are defined elsewhere; see
 
 noncomputable section
 
-open_locale BigOperators Classical Affine
+open BigOperators Classical Affine
 
 open Set
 
@@ -711,6 +711,22 @@ theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ := by
   rw [direction_eq_vector_span, bot_coe, vector_span_def, vsub_empty, Submodule.span_empty]
 
 variable {k V P}
+
+@[simp]
+theorem coe_eq_bot_iff (Q : AffineSubspace k P) : (Q : Set P) = ∅ ↔ Q = ⊥ :=
+  coe_injective.eq_iff' (bot_coe _ _ _)
+
+@[simp]
+theorem coe_eq_univ_iff (Q : AffineSubspace k P) : (Q : Set P) = univ ↔ Q = ⊤ :=
+  coe_injective.eq_iff' (top_coe _ _ _)
+
+theorem nonempty_iff_ne_bot (Q : AffineSubspace k P) : (Q : Set P).Nonempty ↔ Q ≠ ⊥ := by
+  rw [← ne_empty_iff_nonempty]
+  exact not_congr Q.coe_eq_bot_iff
+
+theorem eq_bot_or_nonempty (Q : AffineSubspace k P) : Q = ⊥ ∨ (Q : Set P).Nonempty := by
+  rw [nonempty_iff_ne_bot]
+  apply eq_or_ne
 
 theorem subsingleton_of_subsingleton_span_eq_top {s : Set P} (h₁ : s.Subsingleton) (h₂ : affineSpan k s = ⊤) :
     Subsingleton P := by

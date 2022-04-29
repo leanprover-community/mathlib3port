@@ -16,7 +16,7 @@ This file compiles filter-related results about `ℝ≥0∞` (see data/real/ennr
 
 open Filter
 
-open_locale Filter Ennreal
+open Filter Ennreal
 
 namespace Ennreal
 
@@ -32,7 +32,7 @@ theorem eventually_le_limsup [CountableInterFilter f] (u : α → ℝ≥0∞) : 
     refine' fun n => eventually_lt_of_limsup_lt _
     nth_rw 0[← add_zeroₓ (f.limsup u)]
     exact
-      (add_lt_add_iff_left hx_top).mpr
+      (Ennreal.add_lt_add_iff_left hx_top).mpr
         (by
           simp )
   refine' h_forall_le.mono fun y hy => le_of_forall_pos_le_add fun r hr_pos hx_top => _
@@ -73,9 +73,8 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
   let g_iso := StrictMono.orderIsoOfSurjective g hg_mono hg_bij.2
   refine' (OrderIso.limsup_apply g_iso _ _ _ _).symm
   all_goals
-    · run_tac
-        is_bounded_default
-      
+    run_tac
+      is_bounded_default
 
 theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : ℝ≥0∞} :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by

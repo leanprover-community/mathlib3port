@@ -48,7 +48,7 @@ then `trace A B = 0` by definition, so `discr A b = 0` for any `b`.
 
 universe u v w z
 
-open_locale Matrix BigOperators
+open Matrix BigOperators
 
 open Matrix FiniteDimensional Fintype Polynomial Finset IntermediateField
 
@@ -131,7 +131,7 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
     rw [← trace_matrix_def, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
     exact trace_form_nondegenerate _ _
     
-  let this' := not_nonempty_iff.1 h
+  let this := not_nonempty_iff.1 h
   simp [discr]
 
 /-- Over a field, if `b` is a basis, then `algebra.discr K b` is a unit. -/
@@ -214,7 +214,7 @@ theorem discr_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L 
 theorem discr_power_basis_eq_norm [IsSeparable K L] :
     discr K pb.Basis = -1 ^ (n * (n - 1) / 2) * norm K (aeval pb.gen (minpoly K pb.gen).derivative) := by
   let E := AlgebraicClosure L
-  let this' := fun a b : E => Classical.propDecidable (Eq a b)
+  let this := fun a b : E => Classical.propDecidable (Eq a b)
   have e : Finₓ pb.dim ≃ (L →ₐ[K] E) := by
     refine' equiv_of_card_eq _
     rw [Fintype.card_fin, AlgHom.card]
@@ -235,7 +235,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
       rw [← aeval_alg_hom_apply,
       aeval_root_derivative_of_splits (minpoly.monic (IsSeparable.is_integral K pb.gen)) (IsAlgClosed.splits_codomain _)
         (hroots σ),
-      ← Finset.prod_mk _ (Multiset.nodup_erase_of_nodup _ hnodup)]
+      ← Finset.prod_mk _ (hnodup.erase _)]
   rw [prod_sigma', prod_sigma']
   refine'
     prod_bij (fun i hi => ⟨e i.2, e i.1 pb.gen⟩) (fun i hi => _)
@@ -272,7 +272,7 @@ theorem discr_power_basis_eq_norm [IsSeparable K L] :
     · replace h := AlgHom.congr_fun (Equivₓ.injective _ h) pb.gen
       rw [PowerBasis.lift_gen] at h
       rw [← h] at hσ
-      refine' Multiset.mem_erase_of_nodup hnodup hσ
+      exact hnodup.not_mem_erase hσ
       
     all_goals
       simp

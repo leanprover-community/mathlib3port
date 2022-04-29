@@ -43,7 +43,7 @@ iterated Fréchet derivative.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace BigOperators
+open Classical TopologicalSpace BigOperators
 
 open Filter Asymptotics Set
 

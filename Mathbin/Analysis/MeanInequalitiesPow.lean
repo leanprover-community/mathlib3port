@@ -42,7 +42,7 @@ universe u v
 
 open Finset
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 noncomputable section
 
@@ -66,6 +66,8 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀, ∀ i �
     (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ^ p ≤ ∑ i in s, w i * z i ^ p :=
   (convex_on_rpow hp).map_sum_le hw hw' hz
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀, ∀ i ∈ s, ∀, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀, ∀ i ∈ s, ∀, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) :=
   by

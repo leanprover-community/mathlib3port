@@ -77,12 +77,16 @@ See also `monoid.to_opposite_mul_action` and `monoid_with_zero.to_opposite_mul_a
 instance Mul.toHasOppositeScalar [Mul α] : HasScalar αᵐᵒᵖ α where
   smul := fun c x => x * c.unop
 
-@[simp, to_additive]
+@[to_additive]
 theorem op_smul_eq_mul [Mul α] {a a' : α} : op a • a' = a' * a :=
   rfl
 
+@[simp, to_additive]
+theorem MulOpposite.smul_eq_mul_unop [Mul α] {a : αᵐᵒᵖ} {a' : α} : a • a' = a' * a.unop :=
+  rfl
+
 /-- The right regular action of a group on itself is transitive. -/
-@[to_additive]
+@[to_additive "The right regular action of an additive group on itself is transitive."]
 instance MulAction.OppositeRegular.is_pretransitive {G : Type _} [Groupₓ G] : MulAction.IsPretransitive Gᵐᵒᵖ G :=
   ⟨fun x y => ⟨op (x⁻¹ * y), mul_inv_cancel_left _ _⟩⟩
 
@@ -104,10 +108,10 @@ instance Monoidₓ.toOppositeMulAction [Monoidₓ α] : MulAction αᵐᵒᵖ α
   one_smul := mul_oneₓ
   mul_smul := fun x y r => (mul_assoc _ _ _).symm
 
-instance IsScalarTower.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] : IsScalarTower M Nᵐᵒᵖ N :=
+instance IsScalarTower.opposite_mid {M N} [Mul N] [HasScalar M N] [SmulCommClass M N N] : IsScalarTower M Nᵐᵒᵖ N :=
   ⟨fun x y z => mul_smul_comm _ _ _⟩
 
-instance SmulCommClass.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [IsScalarTower M N N] : SmulCommClass M Nᵐᵒᵖ N :=
+instance SmulCommClass.opposite_mid {M N} [Mul N] [HasScalar M N] [IsScalarTower M N N] : SmulCommClass M Nᵐᵒᵖ N :=
   ⟨fun x y z => by
     induction y using MulOpposite.rec
     simp [smul_mul_assoc]⟩

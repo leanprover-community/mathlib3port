@@ -434,6 +434,14 @@ attribute [simp] forall₂.nil
 
 end Forall₂
 
+/-- `l.all₂ p` is equivalent to `∀ a ∈ l, p a`, but unfolds directly to a conjunction, i.e.
+`list.all₂ p [0, 1, 2] = p 0 ∧ p 1 ∧ p 2`. -/
+@[simp]
+def All₂ (p : α → Prop) : List α → Prop
+  | [] => True
+  | x :: [] => p x
+  | x :: l => p x ∧ all₂ l
+
 /-- Auxiliary definition used to define `transpose`.
   `transpose_aux l L` takes each element of `l` and appends it to the start of
   each element of `L`.
@@ -684,6 +692,20 @@ instance nodupDecidableₓ [DecidableEq α] : ∀ l : List α, Decidable (Nodup�
 def dedup [DecidableEq α] : List α → List α :=
   pwFilterₓ (· ≠ ·)
 
+/-- Greedily create a sublist of `a :: l` such that, for every two adjacent elements `a, b`,
+`R a b` holds. Mostly used with ≠; for example, `destutter' (≠) 1 [2, 2, 1, 1] = [1, 2, 1]`,
+`destutter' (≠) 1, [2, 3, 3] = [1, 2, 3]`, `destutter' (<) 1 [2, 5, 2, 3, 4, 9] = [1, 2, 5, 9]`. -/
+def destutter' (R : α → α → Prop) [DecidableRel R] : α → List α → List α
+  | a, [] => [a]
+  | a, h :: l => if R a h then a :: destutter' h l else destutter' a l
+
+/-- Greedily create a sublist of `l` such that, for every two adjacent elements `a, b ∈ l`,
+`R a b` holds. Mostly used with ≠; for example, `destutter (≠) [1, 2, 2, 1, 1] = [1, 2, 1]`,
+`destutter (≠) [1, 2, 3, 3] = [1, 2, 3]`, `destutter (<) [1, 2, 5, 2, 3, 4, 9] = [1, 2, 5, 9]`. -/
+def destutter (R : α → α → Prop) [DecidableRel R] : List α → List α
+  | h :: l => destutter' R h l
+  | [] => []
+
 /-- `range' s n` is the list of numbers `[s, s+1, ..., s+n-1]`.
   It is intended mainly for proving properties of `range` and `iota`. -/
 @[simp]
@@ -731,7 +753,7 @@ variable (p : α → Prop) [DecidablePred p] (l : List α)
 choose the first element with this property. This version returns both `a` and proofs
 of `a ∈ l` and `p a`. -/
 def chooseX : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a }
-  | [], hp => False.elim (Exists.elim hp fun a h => not_mem_nil a h.left)
+  | [], hp => False.elim (Exists.elim hp fun a h => not_mem_nilₓ a h.left)
   | l :: ls, hp =>
     if pl : p l then ⟨l, ⟨Or.inl rfl, pl⟩⟩
     else

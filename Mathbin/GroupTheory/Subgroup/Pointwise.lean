@@ -42,7 +42,7 @@ protected def pointwiseMulAction : MulAction α (Subgroup G) where
 
 localized [Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 theorem pointwise_smul_def {a : α} (S : Subgroup G) : a • S = S.map (MulDistribMulAction.toMonoidEnd _ _ a) :=
   rfl
@@ -70,7 +70,7 @@ section Groupₓ
 
 variable [Groupₓ α] [MulDistribMulAction α G]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : Subgroup G} {x : G} : a • x ∈ a • S ↔ x ∈ S :=
@@ -97,13 +97,23 @@ theorem subset_pointwise_smul_iff {a : α} {S T : Subgroup G} : S ≤ a • T �
 def equivSmul (a : α) (H : Subgroup G) : H ≃* (a • H : Subgroup G) :=
   (MulDistribMulAction.toMulEquiv G a).subgroupMap H
 
+theorem subgroup_mul_singleton {H : Subgroup G} {h : G} (hh : h ∈ H) : (H : Set G) * {h} = H := by
+  refine' le_antisymmₓ _ fun h' hh' => ⟨h' * h⁻¹, h, H.mul_mem hh' (H.inv_mem hh), rfl, inv_mul_cancel_right h' h⟩
+  rintro _ ⟨h', h, hh', rfl : _ = _, rfl⟩
+  exact H.mul_mem hh' hh
+
+theorem singleton_mul_subgroup {H : Subgroup G} {h : G} (hh : h ∈ H) : {h} * (H : Set G) = H := by
+  refine' le_antisymmₓ _ fun h' hh' => ⟨h, h⁻¹ * h', rfl, H.mul_mem (H.inv_mem hh) hh', mul_inv_cancel_left h h'⟩
+  rintro _ ⟨h, h', rfl : _ = _, hh', rfl⟩
+  exact H.mul_mem hh hh'
+
 end Groupₓ
 
 section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ α] [MulDistribMulAction α G]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : Subgroup G) (x : G) : a • x ∈ a • S ↔ x ∈ S :=
@@ -145,7 +155,7 @@ protected def pointwiseMulAction : MulAction α (AddSubgroup A) where
 
 localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem coe_pointwise_smul (a : α) (S : AddSubgroup A) : ↑(a • S) = a • (S : Set A) :=
@@ -170,7 +180,7 @@ section Groupₓ
 
 variable [Groupₓ α] [DistribMulAction α A]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : α} {S : AddSubgroup A} {x : A} : a • x ∈ a • S ↔ x ∈ S :=
@@ -198,7 +208,7 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ α] [DistribMulAction α A]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : α} (ha : a ≠ 0) (S : AddSubgroup A) (x : A) : a • x ∈ a • S ↔ x ∈ S :=

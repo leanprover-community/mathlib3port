@@ -3,9 +3,8 @@ Copyright (c) 2021 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Preadditive.Default
-import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
-import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
+import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Biproducts
+import Mathbin.CategoryTheory.Preadditive.FunctorCategory
 
 /-!
 # Additive Functors
@@ -15,18 +14,16 @@ provided that the induced map on hom types is a morphism of abelian
 groups.
 
 An additive functor between preadditive categories creates and preserves biproducts.
+Conversely, if `F : C ⥤ D` is a functor between preadditive categories, where `C` has binary
+biproducts, and if `F` preserves binary biproducts, then `F` is additive.
+
+We also define the category of bundled additive functors.
 
 # Implementation details
 
-`functor.additive` is a `Prop`-valued class, defined by saying that
-for every two objects `X` and `Y`, the map
-`F.map : (X ⟶ Y) → (F.obj X ⟶ F.obj Y)` is a morphism of abelian
-groups.
+`functor.additive` is a `Prop`-valued class, defined by saying that for every two objects `X` and
+`Y`, the map `F.map : (X ⟶ Y) → (F.obj X ⟶ F.obj Y)` is a morphism of abelian groups.
 
-# Project:
-
-- Prove that a functor is additive if it preserves finite biproducts
-  (See https://stacks.math.columbia.edu/tag/010M.)
 -/
 
 
@@ -79,7 +76,7 @@ theorem map_sub {X Y : C} {f g : X ⟶ Y} : F.map (f - g) = F.map f - F.map g :=
 theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.map f :=
   F.mapAddHom.map_zsmul _ _
 
-open_locale BigOperators
+open BigOperators
 
 @[simp]
 theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
@@ -105,42 +102,28 @@ noncomputable section
 universe v u₁ u₂
 
 variable {C : Type u₁} {D : Type u₂} [Category.{v} C] [Category.{v} D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
-  [Functor.Additive F]
 
 open CategoryTheory.Limits
 
-/-- An additive functor between preadditive categories creates finite biproducts.
--/
-instance map_has_biproduct {J : Type v} [Fintype J] [DecidableEq J] (f : J → C) [HasBiproduct f] :
-    HasBiproduct fun j => F.obj (f j) :=
-  has_biproduct_of_total
-    { x := F.obj (⨁ f), π := fun j => F.map (biproduct.π f j), ι := fun j => F.map (biproduct.ι f j),
-      ι_π := fun j j' => by
-        simp only [← F.map_comp]
-        split_ifs
-        · subst h
-          simp
-          
-        · simp [h]
-           }
-    (by
-      simp_rw [← F.map_comp, ← F.map_sum, biproduct.total, Functor.map_id])
+open CategoryTheory.Preadditive
 
-/-- An additive functor between preadditive categories preserves finite biproducts.
--/
--- This essentially repeats the work of the previous instance,
--- but gives good definitional reduction to `biproduct.lift` and `biproduct.desc`.
-@[simps]
-def mapBiproduct {J : Type v} [Fintype J] [DecidableEq J] (f : J → C) [HasBiproduct f] :
-    F.obj (⨁ f) ≅ ⨁ fun j => F.obj (f j) where
-  Hom := biproduct.lift fun j => F.map (biproduct.π f j)
-  inv := biproduct.desc fun j => F.map (biproduct.ι f j)
-  hom_inv_id' := by
-    simp only [biproduct.lift_desc, ← F.map_comp, ← F.map_sum, biproduct.total, F.map_id]
-  inv_hom_id' := by
-    ext j j'
-    simp only [category.comp_id, category.assoc, biproduct.lift_π, biproduct.ι_desc_assoc, ← F.map_comp, biproduct.ι_π,
-      F.map_dite, dif_ctx_congr, eq_to_hom_map, F.map_zero]
+instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] : PreservesFiniteBiproducts F where
+  preserves := fun J _ _ =>
+    { preserves := fun f =>
+        { preserves := fun b hb =>
+            is_bilimit_of_total _
+              (by
+                simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
+                dsimp only [map_bicone_X]
+                simp_rw [← F.map_id]
+                refine' congr_argₓ _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
+                simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }
+
+theorem additive_of_preserves_binary_biproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
+    [PreservesBinaryBiproducts F] : Additive F :=
+  { map_add' := fun X Y f g => by
+      rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod, ← biprod.map_biprod_hom_desc,
+        category.assoc, iso.inv_hom_id_assoc, F.map_id, biprod.add_eq_lift_id_desc] }
 
 end
 
@@ -156,6 +139,55 @@ instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additiv
     simp
 
 end Equivalenceₓ
+
+section
+
+variable (C D : Type _) [Category C] [Category D] [Preadditive C] [Preadditive D]
+
+/-- Bundled additive functors. -/
+@[nolint has_inhabited_instance]
+def AdditiveFunctor :=
+  { F : C ⥤ D // Functor.Additive F }deriving Category
+
+-- mathport name: «expr ⥤+ »
+infixr:26 " ⥤+ " => AdditiveFunctor
+
+instance : Preadditive (C ⥤+ D) :=
+  Preadditive.InducedCategory.category _
+
+/-- An additive functor is in particular a functor. -/
+def AdditiveFunctor.forget : (C ⥤+ D) ⥤ C ⥤ D :=
+  fullSubcategoryInclusion _ deriving Full, Faithful
+
+variable {C D}
+
+/-- Turn an additive functor into an object of the category `AdditiveFunctor C D`. -/
+def AdditiveFunctor.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
+  ⟨F, inferInstance⟩
+
+@[simp]
+theorem AdditiveFunctor.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctor.of F).1 = F :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.forget_obj (F : C ⥤+ D) : (AdditiveFunctor.forget C D).obj F = F.1 :=
+  rfl
+
+theorem AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.Additive] :
+    (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
+  rfl
+
+@[simp]
+theorem AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) : (AdditiveFunctor.forget C D).map α = α :=
+  rfl
+
+instance : Functor.Additive (AdditiveFunctor.forget C D) where
+  map_add' := fun F G α β => rfl
+
+instance (F : C ⥤+ D) : Functor.Additive F.1 :=
+  F.2
+
+end
 
 end Preadditive
 

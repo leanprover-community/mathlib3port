@@ -21,7 +21,7 @@ universe u
 
 namespace Mvqpf
 
-open_locale Mvfunctor
+open Mvfunctor
 
 variable (n : ℕ)
 

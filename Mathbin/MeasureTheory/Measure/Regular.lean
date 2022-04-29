@@ -131,7 +131,7 @@ proofs or statements do not apply directly.
 
 open Set Filter
 
-open_locale Ennreal TopologicalSpace Nnreal BigOperators
+open Ennreal TopologicalSpace Nnreal BigOperators
 
 namespace MeasureTheory
 
@@ -153,7 +153,7 @@ variable {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {p q : Set α 
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (K «expr ⊆ » U)
 theorem measure_eq_supr (H : InnerRegular μ p q) (hU : q U) : μ U = ⨆ (K) (_ : K ⊆ U) (hK : p K), μ K := by
-  refine' le_antisymmₓ (le_of_forall_lt fun r hr => _) (bsupr_le fun K hK => supr_le fun _ => μ.mono hK)
+  refine' le_antisymmₓ (le_of_forall_lt fun r hr => _) (supr₂_le fun K hK => supr_le fun _ => μ.mono hK)
   simpa only [lt_supr_iff, exists_prop] using H hU r hr
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (K «expr ⊆ » U)
@@ -164,18 +164,18 @@ theorem exists_subset_lt_add (H : InnerRegular μ p q) (h0 : p ∅) (hU : q U) (
     rwa [measure_empty, h₀, zero_addₓ, pos_iff_ne_zero]
     
   · rcases H hU _ (Ennreal.sub_lt_self hμU h₀ hε) with ⟨K, hKU, hKc, hrK⟩
-    exact ⟨K, hKU, hKc, Ennreal.lt_add_of_sub_lt (Or.inl hμU) hrK⟩
+    exact ⟨K, hKU, hKc, Ennreal.lt_add_of_sub_lt_right (Or.inl hμU) hrK⟩
     
 
 theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} {pa qa : Set α → Prop}
-    (H : InnerRegular μ pa qa) (f : α ≃ β) (hf : Measurable f) {pb qb : Set β → Prop} (hAB : ∀ U, qb U → qa (f ⁻¹' U))
-    (hAB' : ∀ K, pa K → pb (f '' K)) (hB₁ : ∀ K, pb K → MeasurableSet K) (hB₂ : ∀ U, qb U → MeasurableSet U) :
-    InnerRegular (map f μ) pb qb := by
+    (H : InnerRegular μ pa qa) (f : α ≃ β) (hf : AeMeasurable f μ) {pb qb : Set β → Prop}
+    (hAB : ∀ U, qb U → qa (f ⁻¹' U)) (hAB' : ∀ K, pa K → pb (f '' K)) (hB₁ : ∀ K, pb K → MeasurableSet K)
+    (hB₂ : ∀ U, qb U → MeasurableSet U) : InnerRegular (map f μ) pb qb := by
   intro U hU r hr
-  rw [map_apply hf (hB₂ _ hU)] at hr
+  rw [map_apply_of_ae_measurable hf (hB₂ _ hU)] at hr
   rcases H (hAB U hU) r hr with ⟨K, hKU, hKc, hK⟩
   refine' ⟨f '' K, image_subset_iff.2 hKU, hAB' _ hKc, _⟩
-  rwa [map_apply hf (hB₁ _ <| hAB' _ hKc), f.preimage_image]
+  rwa [map_apply_of_ae_measurable hf (hB₁ _ <| hAB' _ hKc), f.preimage_image]
 
 theorem smul (H : InnerRegular μ p q) (c : ℝ≥0∞) : InnerRegular (c • μ) p q := by
   intro U hU r hr
@@ -245,7 +245,7 @@ theorem _root_.set.exists_is_open_lt_of_lt [OuterRegular μ] (A : Set α) (r : �
 containing it. -/
 theorem _root_.set.measure_eq_infi_is_open (A : Set α) (μ : Measure α) [OuterRegular μ] :
     μ A = ⨅ (U : Set α) (h : A ⊆ U) (h2 : IsOpen U), μ U := by
-  refine' le_antisymmₓ (le_binfi fun s hs => le_infi fun h2s => μ.mono hs) _
+  refine' le_antisymmₓ (le_infi₂ fun s hs => le_infi fun h2s => μ.mono hs) _
   refine' le_of_forall_lt' fun r hr => _
   simpa only [infi_lt_iff, exists_prop] using A.exists_is_open_lt_of_lt r hr
 
@@ -508,7 +508,7 @@ protected theorem map [OpensMeasurableSpace α] [MeasurableSpace β] [Topologica
   have := outer_regular.map f μ
   have := IsFiniteMeasureOnCompacts.map μ f
   exact
-    ⟨regular.inner_regular.map f.to_equiv f.measurable (fun U hU => hU.Preimage f.continuous)
+    ⟨regular.inner_regular.map f.to_equiv f.measurable.ae_measurable (fun U hU => hU.Preimage f.continuous)
         (fun K hK => hK.Image f.continuous) (fun K hK => hK.MeasurableSet) fun U hU => hU.MeasurableSet⟩
 
 protected theorem smul [Regular μ] {x : ℝ≥0∞} (hx : x ≠ ∞) : (x • μ).regular := by

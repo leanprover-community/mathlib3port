@@ -143,7 +143,7 @@ open CategoryTheory.Limits
 /-- The identity structured arrow is initial. -/
 def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   desc := fun c =>
-    homMk (T.Preimage c.x.Hom)
+    homMk (T.preimage c.x.Hom)
       (by
         dsimp
         simp )
@@ -279,7 +279,7 @@ open CategoryTheory.Limits
 /-- The identity costructured arrow is terminal. -/
 def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
   lift := fun c =>
-    homMk (S.Preimage c.x.Hom)
+    homMk (S.preimage c.x.Hom)
       (by
         dsimp
         simp )

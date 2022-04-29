@@ -47,7 +47,7 @@ namespace MvPolynomial
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 variable {R : Type u} {σ : Type v} {a a' a₁ a₂ : R} {s : σ →₀ ℕ}
 

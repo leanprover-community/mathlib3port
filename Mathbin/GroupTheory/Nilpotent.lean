@@ -3,12 +3,12 @@ Copyright (c) 2021 Kevin Buzzard. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
 -/
-import Mathbin.GroupTheory.GeneralCommutator
 import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Solvable
 import Mathbin.GroupTheory.PGroup
 import Mathbin.GroupTheory.Sylow
 import Mathbin.Data.Nat.Factorization
+import Mathbin.Tactic.Tfae
 
 /-!
 
@@ -194,8 +194,7 @@ theorem upper_central_series_mono : Monotone (upperCentralSeries G) := by
   refine' monotone_nat_of_le_succ _
   intro n x hx y
   rw [mul_assoc, mul_assoc, ← mul_assoc y x⁻¹ y⁻¹]
-  exact
-    mul_mem (upperCentralSeries G n) hx (normal.conj_mem (upperCentralSeries.Subgroup.normal G n) x⁻¹ (inv_mem _ hx) y)
+  exact mul_mem hx (normal.conj_mem (upperCentralSeries.Subgroup.normal G n) x⁻¹ (inv_mem hx) y)
 
 /-- A group `G` is nilpotent iff there exists an ascending central series which reaches `G` in
   finitely many steps. -/
@@ -299,25 +298,20 @@ theorem lower_central_series_antitone : Antitone (lowerCentralSeries G) := by
   refine' closure_induction hx _ (Subgroup.one_mem _) (@Subgroup.mul_mem _ _ _) (@Subgroup.inv_mem _ _ _)
   rintro y ⟨z, hz, a, ha⟩
   rw [← ha, mul_assoc, mul_assoc, ← mul_assoc a z⁻¹ a⁻¹]
-  exact
-    mul_mem (lowerCentralSeries G n) hz (normal.conj_mem (lowerCentralSeries.Subgroup.normal n) z⁻¹ (inv_mem _ hz) a)
+  exact mul_mem hz (normal.conj_mem (lowerCentralSeries.Subgroup.normal n) z⁻¹ (inv_mem hz) a)
 
 /-- The lower central series of a group is a descending central series. -/
 theorem lower_central_series_is_descending_central_series : IsDescendingCentralSeries (lowerCentralSeries G) := by
   constructor
   rfl
   intro x n hxn g
-  exact commutator_containment _ _ hxn (mem_top g)
+  exact commutator_mem_commutator hxn (mem_top g)
 
 /-- Any descending central series for a group is bounded below by the lower central series. -/
 theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDescendingCentralSeries H) :
     ∀ n : ℕ, lowerCentralSeries G n ≤ H n
   | 0 => hH.1.symm ▸ le_reflₓ ⊤
-  | n + 1 => by
-    specialize descending_central_series_ge_lower n
-    apply (commutator_le _ _ _).2
-    intro x hx q _
-    exact hH.2 x n (descending_central_series_ge_lower hx) q
+  | n + 1 => commutator_le.mpr fun x hx q _ => hH.2 x n (descending_central_series_ge_lower n hx) q
 
 /-- A group is nilpotent if and only if its lower central series eventually reaches
   the trivial subgroup. -/
@@ -335,7 +329,7 @@ theorem nilpotent_iff_lower_central_series : IsNilpotent G ↔ ∃ n, lowerCentr
 
 section Classical
 
-open_locale Classical
+open Classical
 
 variable [hG : IsNilpotent G]
 
@@ -494,7 +488,7 @@ theorem lowerCentralSeries.map {H : Type _} [Groupₓ H] (f : G →* H) (n : ℕ
     exact fun K hK =>
       hK
         ⟨f y, hd (mem_map_of_mem f hy), by
-          simp ⟩
+          simp [commutator_element_def]⟩
     
 
 theorem lower_central_series_succ_eq_bot {n : ℕ} (h : lowerCentralSeries G n ≤ center G) :
@@ -805,7 +799,7 @@ end WithGroup
 
 section WithFiniteGroup
 
-open Groupₓ
+open Groupₓ Fintype
 
 variable {G : Type _} [hG : Groupₓ G] [hf : Fintype G]
 
@@ -839,6 +833,34 @@ theorem is_nilpotent_of_product_of_sylow_group
     have : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
     exact P.is_p_group'.is_nilpotent
   exact nilpotent_of_mul_equiv e
+
+/-- A finite group is nilpotent iff the normalizer condition holds, and iff all maximal groups are
+normal and iff all sylow groups are normal and iff the group is the direct product of its sylow
+groups. -/
+theorem is_nilpotent_of_finite_tfae :
+    Tfae
+      [IsNilpotent G, NormalizerCondition G, ∀ H : Subgroup G, IsCoatom H → H.Normal,
+        ∀ p : ℕ hp : Fact p.Prime P : Sylow p G, (↑P : Subgroup G).Normal,
+        Nonempty ((∀ p : (card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G)] :=
+  by
+  tfae_have 1 → 2
+  · exact @normalizer_condition_of_is_nilpotent _ _
+    
+  tfae_have 2 → 3
+  · exact fun h H => normalizer_condition.normal_of_coatom H h
+    
+  tfae_have 3 → 4
+  · intro h p _ P
+    exact Sylow.normal_of_all_max_subgroups_normal h _
+    
+  tfae_have 4 → 5
+  · exact fun h => Nonempty.intro (Sylow.directProductOfNormal h)
+    
+  tfae_have 5 → 1
+  · rintro ⟨e⟩
+    exact is_nilpotent_of_product_of_sylow_group e
+    
+  tfae_finish
 
 end WithFiniteGroup
 

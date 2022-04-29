@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Analysis.BoxIntegral.Box.Basic
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 
 /-!
 # Induction on subboxes
@@ -29,7 +29,7 @@ rectangular box, induction
 
 open Set Finset Function Filter Metric
 
-open_locale Classical TopologicalSpace Filter Ennreal
+open Classical TopologicalSpace Filter Ennreal
 
 noncomputable section
 

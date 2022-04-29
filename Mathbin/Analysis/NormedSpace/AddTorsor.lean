@@ -6,6 +6,7 @@ Authors: Joseph Myers, Yury Kudryashov
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.LinearAlgebra.AffineSpace.Midpoint
+import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
 import Mathbin.Topology.Instances.RealVectorSpace
 
 /-!
@@ -17,7 +18,7 @@ This file contains lemmas about normed additive torsors over normed spaces.
 
 noncomputable section
 
-open_locale Nnreal TopologicalSpace
+open Nnreal TopologicalSpace
 
 open Filter
 
@@ -25,13 +26,21 @@ variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [NormedAddT
 
 variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-include V
-
 section NormedSpace
 
-variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 V]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W]
 
 open AffineMap
+
+theorem AffineSubspace.is_closed_direction_iff (s : AffineSubspace 𝕜 Q) :
+    IsClosed (s.direction : Set W) ↔ IsClosed (s : Set Q) := by
+  rcases s.eq_bot_or_nonempty with (rfl | ⟨x, hx⟩)
+  · simp [is_closed_singleton]
+    
+  rw [← (Isometric.vaddConst x).toHomeomorph.symm.is_closed_image, AffineSubspace.coe_direction_eq_vsub_set_right hx]
+  rfl
+
+include V
 
 @[simp]
 theorem dist_center_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₁ (homothety p₁ c p₂) = ∥c∥ * dist p₁ p₂ := by
@@ -74,6 +83,8 @@ theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) : dist (homothety p₁ c 
 theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p₁ c p₂) = ∥1 - c∥ * dist p₁ p₂ := by
   rw [dist_comm, dist_homothety_self]
 
+section invertibleTwo
+
 variable [Invertible (2 : 𝕜)]
 
 @[simp]
@@ -100,6 +111,41 @@ theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
   rw [midpoint_eq_smul_add, norm_smul, inv_of_eq_inv, norm_inv, ← div_eq_inv_mul]
   exact div_le_div_of_le_of_nonneg (norm_add_le _ _) (norm_nonneg _)
 
+end invertibleTwo
+
+omit V
+
+include W
+
+theorem antilipschitz_with_line_map {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
+    AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
+  AntilipschitzWith.of_le_mul_dist fun c₁ c₂ => by
+    rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_commₓ, inv_mul_cancel (dist_ne_zero.2 h),
+      mul_oneₓ]
+
+theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ Interior s) :
+    ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
+  rw [(NormedGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
+  cases' eq_or_ne y x with h h
+  · use 1
+    simp [h.symm, interior_subset hy]
+    
+  have hxy : 0 < ∥y -ᵥ x∥ := by
+    rwa [norm_pos_iff, vsub_ne_zero]
+  obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy
+  obtain ⟨ε, hε, hyε⟩ := metric.is_open_iff.mp hu₂ y hu₃
+  refine' ⟨ε / ∥y -ᵥ x∥, div_pos hε hxy, fun hδ : ∥δ - 1∥ < ε / ∥y -ᵥ x∥ => hu₁ (hyε _)⟩
+  rw [lt_div_iff hxy, ← norm_smul, sub_smul, one_smul] at hδ
+  rwa [homothety_apply, Metric.mem_ball, dist_eq_norm_vsub W, vadd_vsub_eq_sub_vsub]
+
+theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s : Set Q} {t : Set Q} (ht : t.Finite)
+    (h : t ⊆ Interior s) : ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ '' t ⊆ s := by
+  suffices ∀, ∀ y ∈ t, ∀, ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s by
+    simp_rw [Set.image_subset_iff]
+    exact (Filter.eventually_all_finite ht).mpr this
+  intro y hy
+  exact eventually_homothety_mem_of_mem_interior x (h hy)
+
 end NormedSpace
 
 variable [NormedSpace ℝ V] [NormedSpace ℝ W]
@@ -108,8 +154,9 @@ theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
     dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃ + dist p₂ p₄) / 2 := by
   simpa using dist_midpoint_midpoint_le' p₁ p₂ p₃ p₄
 
-include W
+include V W
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- A continuous map between two normed affine spaces is an affine map provided that
 it sends midpoints to midpoints. -/
 def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = midpoint ℝ (f x) (f y)) (hfc : Continuous f) :

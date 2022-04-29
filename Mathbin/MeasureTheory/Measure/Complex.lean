@@ -33,7 +33,7 @@ Complex measure
 
 noncomputable section
 
-open_locale Classical MeasureTheory Ennreal Nnreal
+open Classical MeasureTheory Ennreal Nnreal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 

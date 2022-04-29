@@ -143,11 +143,9 @@ theorem inv_zpow₀ (a : G₀) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
 theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by
     simp [← Int.coe_nat_succ, pow_succ'ₓ]
-  | -[1+ 0] => by
-    simp [Int.neg_succ_of_nat_eq, ha]
-  | -[1+ n + 1] => by
+  | -[1+ n] => by
     rw [Int.neg_succ_of_nat_eq, zpow_neg₀, neg_add, neg_add_cancel_right, zpow_neg₀, ← Int.coe_nat_succ, zpow_coe_nat,
-      zpow_coe_nat, pow_succₓ _ (n + 1), mul_inv_rev₀, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
+      zpow_coe_nat, pow_succₓ _ n, mul_inv_rev₀, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
   calc
@@ -275,6 +273,11 @@ theorem zpow_bit1' (a : G₀) (n : ℤ) : a ^ bit1 n = (a * a) ^ n * a := by
 
 theorem zpow_eq_zero {x : G₀} {n : ℤ} (h : x ^ n = 0) : x = 0 :=
   Classical.by_contradiction fun hx => zpow_ne_zero_of_ne_zero hx n h
+
+theorem zpow_eq_zero_iff {a : G₀} {n : ℤ} (hn : 0 < n) : a ^ n = 0 ↔ a = 0 := by
+  refine' ⟨zpow_eq_zero, _⟩
+  rintro rfl
+  exact zero_zpow _ hn.ne'
 
 theorem zpow_ne_zero {x : G₀} (n : ℤ) : x ≠ 0 → x ^ n ≠ 0 :=
   mt zpow_eq_zero

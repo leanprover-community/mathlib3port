@@ -24,7 +24,7 @@ measure, mutually singular
 
 open Set
 
-open_locale MeasureTheory Nnreal Ennreal
+open MeasureTheory Nnreal Ennreal
 
 namespace MeasureTheory
 

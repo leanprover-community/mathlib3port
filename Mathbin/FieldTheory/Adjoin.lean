@@ -28,7 +28,7 @@ For example, `algebra.adjoin K {x}` might not include `x⁻¹`.
 
 open FiniteDimensional Polynomial
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 namespace IntermediateField
 
@@ -185,10 +185,12 @@ instance is_scalar_tower_over_bot : IsScalarTower (⊥ : IntermediateField F E) 
       rw [AlgEquiv.apply_symm_apply ψ ⟨x, _⟩]
       rfl)
 
-/-- The top intermediate_field is isomorphic to the field. -/
+/-- The top intermediate_field is isomorphic to the field.
+
+This is the intermediate field version of `subalgebra.top_equiv`. -/
 @[simps apply]
 def topEquiv : (⊤ : IntermediateField F E) ≃ₐ[F] E :=
-  (Subalgebra.equivOfEq _ _ top_to_subalgebra).trans Algebra.topEquiv
+  (Subalgebra.equivOfEq _ _ top_to_subalgebra).trans Subalgebra.topEquiv
 
 @[simp]
 theorem top_equiv_symm_apply_coe (a : E) : ↑(topEquiv.symm a : (⊤ : IntermediateField F E)) = a :=
@@ -1342,7 +1344,8 @@ theorem
        (group
         (Tactic.tacticLet_
          "let"
-         (Term.letDecl (Term.letIdDecl `ϕ [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
+         (Term.letDecl
+          (Term.letIdDecl `ϕ [] [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
         [])
        (group
         (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `minpoly.irreducible [`hα]))))
@@ -1491,7 +1494,8 @@ theorem
       (group
        (Tactic.tacticLet_
         "let"
-        (Term.letDecl (Term.letIdDecl `ϕ [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
+        (Term.letDecl
+         (Term.letIdDecl `ϕ [] [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
        [])
       (group
        (Tactic.tacticHave_ "have" (Term.haveDecl (Term.haveIdDecl [] [] ":=" (Term.app `minpoly.irreducible [`hα]))))
@@ -2288,7 +2292,7 @@ theorem
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.tacticLet_
    "let"
-   (Term.letDecl (Term.letIdDecl `ϕ [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
+   (Term.letDecl (Term.letIdDecl `ϕ [] [] ":=" (Term.app `AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly [`F `α]))))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticLet_', expected 'antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
@@ -8520,7 +8524,7 @@ end PowerBasis
    [(Term.explicitBinder "(" [`h] [":" (Term.app `IsIntegral [`F `α])] [] ")")]
    [(Term.typeSpec
      ":"
-     (Data.Equiv.Basic.«term_≃_»
+     (Logic.Equiv.Basic.«term_≃_»
       (Algebra.Algebra.Basic.«term_→ₐ[_]_»
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `F
@@ -8849,7 +8853,7 @@ end PowerBasis
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
-  (Data.Equiv.Basic.«term_≃_»
+  (Logic.Equiv.Basic.«term_≃_»
    (Algebra.Algebra.Basic.«term_→ₐ[_]_»
     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
@@ -8874,7 +8878,7 @@ end PowerBasis
       "."
       `roots))
     "}"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Data.Equiv.Basic.«term_≃_»', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Logic.Equiv.Basic.«term_≃_»', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   («term{__:_//_}»
    "{"
@@ -10619,8 +10623,8 @@ theorem
         (Tactic.tacticLet_
          "let"
          (Term.letDecl
-          (Term.letIdDecl
-           `this'
+          (Term.letPatDecl
+           (Lean.termThis "this")
            []
            [(Term.typeSpec ":" (Term.app `IsNoetherian [`F `E]))]
            ":="
@@ -10647,8 +10651,8 @@ theorem
        (Tactic.tacticLet_
         "let"
         (Term.letDecl
-         (Term.letIdDecl
-          `this'
+         (Term.letPatDecl
+          (Lean.termThis "this")
           []
           [(Term.typeSpec ":" (Term.app `IsNoetherian [`F `E]))]
           ":="
@@ -10730,15 +10734,17 @@ theorem
   (Tactic.tacticLet_
    "let"
    (Term.letDecl
-    (Term.letIdDecl
-     `this'
+    (Term.letPatDecl
+     (Lean.termThis "this")
      []
      [(Term.typeSpec ":" (Term.app `IsNoetherian [`F `E]))]
      ":="
      (Term.app (Term.proj `IsNoetherian.iff_fg "." (fieldIdx "2")) [`inferInstance]))))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticLet_', expected 'antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letPatDecl.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app (Term.proj `IsNoetherian.iff_fg "." (fieldIdx "2")) [`inferInstance])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
@@ -10793,7 +10799,10 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Lean.termThis "this")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.termThis', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declSig', expected 'Lean.Parser.Command.declSig.antiquot'
@@ -10947,7 +10956,7 @@ theorem
     : P K
   :=
     by
-      let this' : IsNoetherian F E := IsNoetherian.iff_fg . 2 inferInstance
+      let this : IsNoetherian F E := IsNoetherian.iff_fg . 2 inferInstance
         exact induction_on_adjoin_fg P base ih K K.fg_of_noetherian
 
 end Induction
@@ -10969,8 +10978,7 @@ instance : PartialOrderₓ (Lifts F E K) where
     ⟨le_transₓ hxy.1 hyz.1, fun s u hsu => Eq.trans (hxy.2 s ⟨s, hxy.1 s.Mem⟩ rfl) (hyz.2 ⟨s, hxy.1 s.Mem⟩ u hsu)⟩
   le_antisymm := by
     rintro ⟨x1, x2⟩ ⟨y1, y2⟩ ⟨hxy1, hxy2⟩ ⟨hyx1, hyx2⟩
-    have : x1 = y1 := le_antisymmₓ hxy1 hyx1
-    subst this
+    obtain rfl : x1 = y1 := le_antisymmₓ hxy1 hyx1
     congr
     exact AlgHom.ext fun s => hxy2 s s rfl
 
@@ -10988,15 +10996,15 @@ noncomputable instance : Inhabited (Lifts F E K) :=
 theorem Lifts.eq_of_le {x y : Lifts F E K} (hxy : x ≤ y) (s : x.1) : x.2 s = y.2 ⟨s, hxy.1 s.Mem⟩ :=
   hxy.2 s ⟨s, hxy.1 s.Mem⟩ rfl
 
-theorem Lifts.exists_max_two {c : Set (Lifts F E K)} {x y : Lifts F E K} (hc : Zorn.Chain (· ≤ ·) c)
+theorem Lifts.exists_max_two {c : Set (Lifts F E K)} {x y : Lifts F E K} (hc : IsChain (· ≤ ·) c)
     (hx : x ∈ Set.Insert ⊥ c) (hy : y ∈ Set.Insert ⊥ c) : ∃ z : Lifts F E K, z ∈ Set.Insert ⊥ c ∧ x ≤ z ∧ y ≤ z := by
-  cases' (Zorn.chain_insert hc fun _ _ _ => Or.inl bot_le).total_of_refl hx hy with hxy hyx
+  cases' (hc.insert fun _ _ _ => Or.inl bot_le).Total hx hy with hxy hyx
   · exact ⟨y, hy, hxy, le_reflₓ y⟩
     
   · exact ⟨x, hx, le_reflₓ x, hyx⟩
     
 
-theorem Lifts.exists_max_three {c : Set (Lifts F E K)} {x y z : Lifts F E K} (hc : Zorn.Chain (· ≤ ·) c)
+theorem Lifts.exists_max_three {c : Set (Lifts F E K)} {x y z : Lifts F E K} (hc : IsChain (· ≤ ·) c)
     (hx : x ∈ Set.Insert ⊥ c) (hy : y ∈ Set.Insert ⊥ c) (hz : z ∈ Set.Insert ⊥ c) :
     ∃ w : Lifts F E K, w ∈ Set.Insert ⊥ c ∧ x ≤ w ∧ y ≤ w ∧ z ≤ w := by
   obtain ⟨v, hv, hxv, hyv⟩ := lifts.exists_max_two hc hx hy
@@ -11004,7 +11012,7 @@ theorem Lifts.exists_max_three {c : Set (Lifts F E K)} {x y z : Lifts F E K} (hc
   exact ⟨w, hw, le_transₓ hxv hvw, le_transₓ hyv hvw, hzw⟩
 
 /-- An upper bound on a chain of lifts -/
-def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : Zorn.Chain (· ≤ ·) c) : IntermediateField F E where
+def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) : IntermediateField F E where
   Carrier := fun s => ∃ x : Lifts F E K, x ∈ Set.Insert ⊥ c ∧ (s ∈ x.1 : Prop)
   zero_mem' := ⟨⊥, Set.mem_insert ⊥ c, zero_mem ⊥⟩
   one_mem' := ⟨⊥, Set.mem_insert ⊥ c, one_mem ⊥⟩
@@ -11025,7 +11033,7 @@ def Lifts.upperBoundIntermediateField {c : Set (Lifts F E K)} (hc : Zorn.Chain (
   algebra_map_mem' := fun s => ⟨⊥, Set.mem_insert ⊥ c, algebra_map_mem ⊥ s⟩
 
 /-- The lift on the upper bound on a chain of lifts -/
-noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : Zorn.Chain (· ≤ ·) c) :
+noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) :
     Lifts.upperBoundIntermediateField hc →ₐ[F] K where
   toFun := fun s => (Classical.some s.Mem).2 ⟨s, (Classical.some_spec s.Mem).2⟩
   map_zero' := AlgHom.map_zero _
@@ -11045,10 +11053,10 @@ noncomputable def Lifts.upperBoundAlgHom {c : Set (Lifts F E K)} (hc : Zorn.Chai
   commutes' := fun _ => AlgHom.commutes _ _
 
 /-- An upper bound on a chain of lifts -/
-noncomputable def Lifts.upperBound {c : Set (Lifts F E K)} (hc : Zorn.Chain (· ≤ ·) c) : Lifts F E K :=
+noncomputable def Lifts.upperBound {c : Set (Lifts F E K)} (hc : IsChain (· ≤ ·) c) : Lifts F E K :=
   ⟨Lifts.upperBoundIntermediateField hc, Lifts.upperBoundAlgHom hc⟩
 
-theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· ≤ ·) c) : ∃ ub, ∀, ∀ a ∈ c, ∀, a ≤ ub :=
+theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : IsChain (· ≤ ·) c) : ∃ ub, ∀, ∀ a ∈ c, ∀, a ≤ ub :=
   ⟨Lifts.upperBound hc, by
     intro x hx
     constructor
@@ -12689,8 +12697,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
               (Tactic.tacticLet_
                "let"
                (Term.letDecl
-                (Term.letIdDecl
-                 `this'
+                (Term.letPatDecl
+                 (Lean.termThis "this")
                  []
                  [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
                  ":="
@@ -12767,8 +12775,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
              (Tactic.tacticLet_
               "let"
               (Term.letDecl
-               (Term.letIdDecl
-                `this'
+               (Term.letPatDecl
+                (Lean.termThis "this")
                 []
                 [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
                 ":="
@@ -12821,8 +12829,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
            (Tactic.tacticLet_
             "let"
             (Term.letDecl
-             (Term.letIdDecl
-              `this'
+             (Term.letPatDecl
+              (Lean.termThis "this")
               []
               [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
               ":="
@@ -12869,8 +12877,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
          (Tactic.tacticLet_
           "let"
           (Term.letDecl
-           (Term.letIdDecl
-            `this'
+           (Term.letPatDecl
+            (Lean.termThis "this")
             []
             [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
             ":="
@@ -12918,8 +12926,8 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
        (Tactic.tacticLet_
         "let"
         (Term.letDecl
-         (Term.letIdDecl
-          `this'
+         (Term.letPatDecl
+          (Lean.termThis "this")
           []
           [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
           ":="
@@ -12971,15 +12979,17 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
   (Tactic.tacticLet_
    "let"
    (Term.letDecl
-    (Term.letIdDecl
-     `this'
+    (Term.letPatDecl
+     (Lean.termThis "this")
      []
      [(Term.typeSpec ":" (Term.app `Algebra [(Term.proj `x "." (fieldIdx "1")) `K]))]
      ":="
      (Term.proj (Term.proj (Term.proj `x "." (fieldIdx "2")) "." `toRingHom) "." `toAlgebra))))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticLet_', expected 'antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letIdDecl'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letPatDecl', expected 'Lean.Parser.Term.letPatDecl.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.proj (Term.proj (Term.proj `x "." (fieldIdx "2")) "." `toRingHom) "." `toAlgebra)
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
@@ -13032,7 +13042,10 @@ theorem Lifts.exists_upper_bound (c : Set (Lifts F E K)) (hc : Zorn.Chain (· �
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, [anonymous]))
+  (Lean.termThis "this")
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.termThis', expected 'antiquot'
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1023, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
@@ -13185,7 +13198,7 @@ theorem
                             u
                           from Subtype.ext htu
                       ]
-                  let this' : Algebra x . 1 K := x . 2 . toRingHom . toAlgebra
+                  let this : Algebra x . 1 K := x . 2 . toRingHom . toAlgebra
                   exact AlgHom.commutes _ t
       ⟩
 
@@ -13199,7 +13212,7 @@ theorem Lifts.exists_lift_of_splits (x : Lifts F E K) {s : E} (h1 : IsIntegral F
 
 theorem alg_hom_mk_adjoin_splits (hK : ∀, ∀ s ∈ S, ∀, IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
     Nonempty (adjoin F S →ₐ[F] K) := by
-  obtain ⟨x : lifts F E K, hx⟩ := Zorn.zorn_partial_order lifts.exists_upper_bound
+  obtain ⟨x : lifts F E K, hx⟩ := zorn_partial_order lifts.exists_upper_bound
   refine'
     ⟨AlgHom.mk (fun s => x.2 ⟨s, adjoin_le_iff.mpr (fun s hs => _) s.Mem⟩) x.2.map_one
         (fun s t => x.2.map_mul ⟨s, _⟩ ⟨t, _⟩) x.2.map_zero (fun s t => x.2.map_add ⟨s, _⟩ ⟨t, _⟩) x.2.commutes⟩

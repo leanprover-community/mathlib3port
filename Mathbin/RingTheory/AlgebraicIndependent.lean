@@ -41,7 +41,7 @@ noncomputable section
 
 open Function Set Subalgebra MvPolynomial Algebra
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 universe x u v w
 
@@ -71,7 +71,7 @@ theorem algebraic_independent_iff_ker_eq_bot :
 
 theorem algebraic_independent_iff :
     AlgebraicIndependent R x ↔ ∀ p : MvPolynomial ι R, MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
-  RingHom.injective_iff _
+  injective_iff_map_eq_zero _
 
 theorem AlgebraicIndependent.eq_zero_of_aeval_eq_zero (h : AlgebraicIndependent R x) :
     ∀ p : MvPolynomial ι R, MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
@@ -258,7 +258,7 @@ theorem algebraic_independent_comp_subtype {s : Set ι} :
   have : (aeval (x ∘ coe : s → A) : _ →ₐ[R] _) = (aeval x).comp (rename coe) := by
     ext <;> simp
   have : ∀ p : MvPolynomial s R, rename (coe : s → ι) p = 0 ↔ p = 0 :=
-    (RingHom.injective_iff' (rename (coe : s → ι) : MvPolynomial s R →ₐ[R] _).toRingHom).1
+    (injective_iff_map_eq_zero' (rename (coe : s → ι) : MvPolynomial s R →ₐ[R] _).toRingHom).1
       (rename_injective _ Subtype.val_injective)
   simp [algebraic_independent_iff, supported_eq_range_rename, *]
 
@@ -298,7 +298,7 @@ theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s :
 theorem algebraic_independent_sUnion_of_directed {s : Set (Set A)} (hsn : s.Nonempty) (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀, ∀ a ∈ s, ∀, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
     AlgebraicIndependent R (fun x => x : ⋃₀s → A) := by
-  let this' : Nonempty s := nonempty.to_subtype hsn <;>
+  let this : Nonempty s := nonempty.to_subtype hsn <;>
     rw [sUnion_eq_Union] <;>
       exact
         algebraic_independent_Union_of_directed hs.directed_coe
@@ -310,7 +310,7 @@ theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t) (hs :
       AlgebraicIndependent R (coe : u → A) ∧
         s ⊆ u ∧ u ⊆ t ∧ ∀ x : Set A, AlgebraicIndependent R (coe : x → A) → u ⊆ x → x ⊆ t → x = u :=
   by
-  rcases Zorn.zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t }
+  rcases zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t }
       (fun c hc chainc hcn =>
         ⟨⋃₀c, by
           refine' ⟨⟨algebraic_independent_sUnion_of_directed hcn chainc.directed_on fun a ha => (hc ha).1, _, _⟩, _⟩

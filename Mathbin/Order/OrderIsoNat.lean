@@ -3,8 +3,8 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Equiv.Denumerable
 import Mathbin.Data.Nat.Lattice
+import Mathbin.Logic.Denumerable
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Order.Hom.Basic
 
@@ -46,8 +46,7 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty (((· > �
       suffices ∀ a, Acc r a → ∀ n, a ≠ f n from this (f 0) (h _) 0 rfl
       fun a ac => by
       induction' ac with a _ IH
-      intro n h
-      subst a
+      rintro n rfl
       exact IH (f (n + 1)) (o.2 (Nat.lt_succ_selfₓ _)) _ rfl⟩,
     fun E =>
     ⟨fun a =>
@@ -106,7 +105,7 @@ theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ 
   have : Infinite (e ⁻¹' s) ∨ Infinite (e ⁻¹' t) := by
     simp only [Set.infinite_coe_iff, ← Set.infinite_union, ← Set.preimage_union,
       Set.eq_univ_of_forall fun n => Set.mem_preimage.2 (he n), Set.infinite_univ]
-  cases' this
+  cases this
   exacts[⟨Nat.orderEmbeddingOfSet (e ⁻¹' s), Or.inl fun n => (Nat.Subtype.ofNat (e ⁻¹' s) _).2⟩,
     ⟨Nat.orderEmbeddingOfSet (e ⁻¹' t), Or.inr fun n => (Nat.Subtype.ofNat (e ⁻¹' t) _).2⟩]
 
@@ -191,12 +190,12 @@ theorem WellFounded.monotone_chain_condition (α : Type _) [PartialOrderₓ α] 
 type, `monotonic_sequence_limit_index a` is the least natural number `n` for which `aₙ` reaches the
 constant value. For sequences that are not eventually constant, `monotonic_sequence_limit_index a`
 is defined, but is a junk value. -/
-noncomputable def monotonicSequenceLimitIndex {α : Type _} [PartialOrderₓ α] (a : ℕ →o α) : ℕ :=
+noncomputable def monotonicSequenceLimitIndex {α : Type _} [Preorderₓ α] (a : ℕ →o α) : ℕ :=
   inf { n | ∀ m, n ≤ m → a n = a m }
 
 /-- The constant value of an eventually-constant monotone sequence `a₀ ≤ a₁ ≤ a₂ ≤ ...` in a
 partially-ordered type. -/
-noncomputable def monotonicSequenceLimit {α : Type _} [PartialOrderₓ α] (a : ℕ →o α) :=
+noncomputable def monotonicSequenceLimit {α : Type _} [Preorderₓ α] (a : ℕ →o α) :=
   a (monotonicSequenceLimitIndex a)
 
 theorem WellFounded.supr_eq_monotonic_sequence_limit {α : Type _} [CompleteLattice α]

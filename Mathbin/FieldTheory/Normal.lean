@@ -23,9 +23,9 @@ is the same as being a splitting field (`normal.of_is_splitting_field` and
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Polynomial IsScalarTower
 
@@ -93,7 +93,7 @@ theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
 
 theorem AlgHom.normal_bijective [h : Normal F E] (ϕ : E →ₐ[F] K) : Function.Bijective ϕ :=
   ⟨ϕ.toRingHom.Injective, fun x => by
-    let this' : Algebra E K := ϕ.to_ring_hom.to_algebra
+    let this : Algebra E K := ϕ.to_ring_hom.to_algebra
     obtain ⟨h1, h2⟩ := h.out (algebraMap K E x)
     cases'
       minpoly.mem_range_of_degree_eq_one E x
@@ -148,7 +148,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   let pbED := AdjoinRoot.powerBasis q_irred.ne_zero
   have : FiniteDimensional E D := PowerBasis.finite_dimensional pbED
   have finrankED : FiniteDimensional.finrank E D = q.nat_degree := PowerBasis.finrank pbED
-  let this' : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
+  let this : Algebra F D := RingHom.toAlgebra ((algebraMap E D).comp (algebraMap F E))
   have : IsScalarTower F E D := of_algebra_map_eq fun _ => rfl
   have : FiniteDimensional F D := FiniteDimensional.trans F E D
   suffices Nonempty (D →ₐ[F] E) by
@@ -164,13 +164,13 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
         FiniteDimensional.finrank_pos
   let C := AdjoinRoot (minpoly F x)
   have Hx_irred := minpoly.irreducible Hx
-  let this' : Algebra C D :=
+  let this : Algebra C D :=
     RingHom.toAlgebra
       (AdjoinRoot.lift (algebraMap F D) (AdjoinRoot.root q)
         (by
           rw [algebra_map_eq F E D, ← eval₂_map, hr, AdjoinRoot.algebra_map_eq, eval₂_mul, AdjoinRoot.eval₂_root,
             zero_mul]))
-  let this' : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
+  let this : Algebra C E := RingHom.toAlgebra (AdjoinRoot.lift (algebraMap F E) x (minpoly.aeval F x))
   have : IsScalarTower F C D := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   have : IsScalarTower F C E := of_algebra_map_eq fun x => (AdjoinRoot.lift_of _).symm
   suffices Nonempty (D →ₐ[C] E) by

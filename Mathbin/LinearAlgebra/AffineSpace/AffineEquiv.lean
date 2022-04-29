@@ -34,7 +34,7 @@ affine space, affine equivalence
 
 open Function Set
 
-open_locale Affine
+open Affine
 
 /-- An affine equivalence is an equivalence between affine spaces such that both forward
 and inverse maps are affine.
@@ -79,6 +79,7 @@ def refl : P₁ ≃ᵃ[k] P₁ where
 theorem coe_refl : ⇑(refl k P₁) = id :=
   rfl
 
+@[simp]
 theorem refl_apply (x : P₁) : refl k P₁ x = x :=
   rfl
 
@@ -254,6 +255,7 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
 theorem coe_trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : ⇑(e.trans e') = e' ∘ e :=
   rfl
 
+@[simp]
 theorem trans_apply (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) (p : P₁) : e.trans e' p = e' (e p) :=
   rfl
 

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 -/
 import Mathbin.Data.Polynomial.Derivative
+import Mathbin.Tactic.LinearCombination
 import Mathbin.Tactic.RingExp
 
 /-!
@@ -17,7 +18,7 @@ noncomputable section
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 universe u v w x y z
 
@@ -88,6 +89,7 @@ def binomExpansion (f : R[X]) (x y : R) :
   · exact finset.sum_mul.symm
     
 
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
@@ -100,10 +102,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
   | k + 2 => by
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
-    calc x ^ (k + 2) - y ^ (k + 2) = x * (x ^ (k + 1) - y ^ (k + 1)) + (x * y ^ (k + 1) - y ^ (k + 2)) := by
-        ring_exp _ = x * (z * (x - y)) + (x * y ^ (k + 1) - y ^ (k + 2)) := by
-        rw [hz]_ = (z * x + y ^ (k + 1)) * (x - y) := by
-        ring_exp
+    linear_combination(config := { normalization_tactic := sorry })hz * x
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.

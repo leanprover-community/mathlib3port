@@ -17,7 +17,7 @@ namespace Omega
 
 namespace Nat
 
-open_locale Omega.Nat
+open Omega.Nat
 
 run_cmd
   mk_simp_attr `sugar_nat

@@ -183,10 +183,9 @@ noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint 
     [HasReflexiveCoequalizers A] [IsRightAdjoint (R ⋙ U)] : IsRightAdjoint R := by
   let R' : A ⥤ _ := R ⋙ monad.comparison (adjunction.of_right_adjoint U)
   suffices is_right_adjoint R' by
-    let : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv)
-    · skip
+    let this : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) := by
+      skip
       infer_instance
-      
     · let this : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
         (iso_whisker_left R (monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor
       exact adjunction.right_adjoint_of_nat_iso this
@@ -194,11 +193,10 @@ noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint 
   let this : is_right_adjoint (R' ⋙ monad.forget (adjunction.of_right_adjoint U).toMonad) :=
     adjunction.right_adjoint_of_nat_iso
       (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)
-  let : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X)
-  · intro X
+  let this : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X) := by
+    intro X
     simp only [monad.adj_counit]
     exact ⟨_, _, _, _, monad.beck_algebra_coequalizer X⟩
-    
   exact adjoint_triangle_lift R' (monad.adj _)
 
 variable {D : Type u₄}

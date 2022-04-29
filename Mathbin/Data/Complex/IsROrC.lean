@@ -37,14 +37,14 @@ their counterparts in `complex.lean` (which causes linter errors).
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 section
 
 -- mathport name: «expr𝓚»
 local notation "𝓚" => algebraMap ℝ _
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 /-- This typeclass captures properties shared by ℝ and ℂ, with an API that closely matches that of ℂ.
 -/
@@ -76,7 +76,7 @@ variable {K : Type _} [IsROrC K]
 
 namespace IsROrC
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 /- The priority must be set at 900 to ensure that coercions are tried in the right order.
 See Note [coercion into rings], or `data/nat/cast.lean` for more details. -/
@@ -554,7 +554,7 @@ theorem int_cast_im (n : ℤ) : im (n : K) = 0 := by
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem of_real_rat_cast (n : ℚ) : ((n : ℝ) : K) = n :=
-  (@IsROrC.ofRealHom K _).map_rat_cast n
+  map_rat_cast (@IsROrC.ofRealHom K _) n
 
 @[simp, is_R_or_C_simps, norm_cast]
 theorem rat_cast_re (q : ℚ) : re (q : K) = q := by
@@ -822,9 +822,18 @@ theorem of_real_finsupp_prod {α M : Type _} [Zero M] (f : α →₀ M) (g : α 
 
 end IsROrC
 
+namespace Polynomial
+
+open Polynomial
+
+theorem of_real_eval (p : ℝ[X]) (x : ℝ) : (p.eval x : K) = aeval (↑x) p :=
+  (@aeval_algebra_map_apply ℝ K _ _ _ x p).symm
+
+end Polynomial
+
 namespace FiniteDimensional
 
-open_locale Classical
+open Classical
 
 open IsROrC
 
@@ -853,14 +862,14 @@ variable (K) (E : Type _) [NormedGroup E] [NormedSpace K E]
 This is not an instance because it would cause a search for `finite_dimensional ?x E` before
 `is_R_or_C ?x`. -/
 theorem proper_is_R_or_C [FiniteDimensional K E] : ProperSpace E := by
-  let this' : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
-  let this' : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
+  let this : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ K E
+  let this : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
   infer_instance
 
 variable {E}
 
-instance IsROrC.proper_space_span_singleton (x : E) : ProperSpace (K∙x) :=
-  proper_is_R_or_C K (K∙x)
+instance IsROrC.proper_space_submodule (S : Submodule K E) [FiniteDimensional K ↥S] : ProperSpace S :=
+  proper_is_R_or_C K S
 
 end FiniteDimensional
 
@@ -903,7 +912,7 @@ end Instances
 
 namespace IsROrC
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 section CleanupLemmas
 
@@ -955,7 +964,7 @@ end CleanupLemmas
 section LinearMaps
 
 /-- The real part in a `is_R_or_C` field, as a linear map. -/
-noncomputable def reLm : K →ₗ[ℝ] ℝ :=
+def reLm : K →ₗ[ℝ] ℝ :=
   { re with map_smul' := smul_re }
 
 @[simp, is_R_or_C_simps]
@@ -990,7 +999,7 @@ theorem continuous_re : Continuous (re : K → ℝ) :=
   reClm.Continuous
 
 /-- The imaginary part in a `is_R_or_C` field, as a linear map. -/
-noncomputable def imLm : K →ₗ[ℝ] ℝ :=
+def imLm : K →ₗ[ℝ] ℝ :=
   { im with map_smul' := smul_im }
 
 @[simp, is_R_or_C_simps]
@@ -1016,7 +1025,7 @@ theorem continuous_im : Continuous (im : K → ℝ) :=
   imClm.Continuous
 
 /-- Conjugate as an `ℝ`-algebra equivalence -/
-noncomputable def conjAe : K ≃ₐ[ℝ] K :=
+def conjAe : K ≃ₐ[ℝ] K :=
   { conj with invFun := conj, left_inv := conj_conj, right_inv := conj_conj, commutes' := conj_of_real }
 
 @[simp, is_R_or_C_simps]

@@ -18,7 +18,7 @@ We also define `root_multiplicity`.
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 open Finset
 
@@ -46,9 +46,9 @@ variable [CommSemiringₓ R] {p q : R[X]}
 
 theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < degree p) (hmp : Monic p) (hq : q ≠ 0) :
     multiplicity.Finite p q :=
-  have zn0 : (0 : R) ≠ 1 := fun h =>
-    have := subsingleton_of_zero_eq_one h
-    hq (Subsingleton.elimₓ _ _)
+  have zn0 : (0 : R) ≠ 1 :=
+    have := nontrivial.of_polynomial_ne hq
+    zero_ne_one
   ⟨natDegree q, fun ⟨r, hr⟩ => by
     have hp0 : p ≠ 0 := fun hp0 => by
       simp [hp0] at hp <;> contradiction
@@ -263,11 +263,7 @@ theorem degree_div_by_monic_lt (p : R[X]) {q : R[X]} (hq : Monic q) (hp0 : p ≠
 
 theorem nat_degree_div_by_monic {R : Type u} [CommRingₓ R] (f : R[X]) {g : R[X]} (hg : g.Monic) :
     natDegree (f /ₘ g) = natDegree f - natDegree g := by
-  by_cases' h01 : (0 : R) = 1
-  · have := subsingleton_of_zero_eq_one h01
-    rw [Subsingleton.elimₓ (f /ₘ g) 0, Subsingleton.elimₓ f 0, Subsingleton.elimₓ g 0, nat_degree_zero]
-    
-  have : Nontrivial R := ⟨⟨0, 1, h01⟩⟩
+  nontriviality R
   by_cases' hfg : f /ₘ g = 0
   · rw [hfg, nat_degree_zero]
     rw [div_by_monic_eq_zero_iff hg] at hfg
@@ -321,9 +317,9 @@ theorem map_mod_div_by_monic [CommRingₓ S] (f : R →+* S) (hq : Monic q) :
   nontriviality S
   have : Nontrivial R := f.domain_nontrivial
   have : map f p /ₘ map f q = map f (p /ₘ q) ∧ map f p %ₘ map f q = map f (p %ₘ q) :=
-    div_mod_by_monic_unique ((p /ₘ q).map f) _ (monic_map f hq)
+    div_mod_by_monic_unique ((p /ₘ q).map f) _ (hq.map f)
       ⟨Eq.symm <| by
-          rw [← map_mul, ← map_add, mod_by_monic_add_div _ hq],
+          rw [← Polynomial.map_mul, ← Polynomial.map_add, mod_by_monic_add_div _ hq],
         calc
           _ ≤ degree (p %ₘ q) := degree_map_le _ _
           _ < degree q := degree_mod_by_monic_lt _ hq
@@ -363,13 +359,13 @@ theorem dvd_iff_mod_by_monic_eq_zero (hq : Monic q) : p %ₘ q = 0 ↔ q ∣ p :
 
 theorem map_dvd_map [CommRingₓ S] (f : R →+* S) (hf : Function.Injective f) {x y : R[X]} (hx : x.Monic) :
     x.map f ∣ y.map f ↔ x ∣ y := by
-  rw [← dvd_iff_mod_by_monic_eq_zero hx, ← dvd_iff_mod_by_monic_eq_zero (monic_map f hx), ← map_mod_by_monic f hx]
+  rw [← dvd_iff_mod_by_monic_eq_zero hx, ← dvd_iff_mod_by_monic_eq_zero (hx.map f), ← map_mod_by_monic f hx]
   exact
     ⟨fun H =>
       map_injective f hf <| by
-        rw [H, map_zero],
+        rw [H, Polynomial.map_zero],
       fun H => by
-      rw [H, map_zero]⟩
+      rw [H, Polynomial.map_zero]⟩
 
 @[simp]
 theorem mod_by_monic_one (p : R[X]) : p %ₘ 1 = 0 :=
@@ -417,28 +413,37 @@ theorem eval₂_mod_by_monic_eq_self_of_root [CommRingₓ S] {f : R →+* S} {p 
     (hx : q.eval₂ f x = 0) : (p %ₘ q).eval₂ f x = p.eval₂ f x := by
   rw [mod_by_monic_eq_sub_mul_div p hq, eval₂_sub, eval₂_mul, hx, zero_mul, sub_zero]
 
-theorem sum_fin [AddCommMonoidₓ S] (f : ℕ → R → S) (hf : ∀ i, f i 0 = 0) {n : ℕ} (hn : p.degree < n) :
-    (∑ i : Finₓ n, f i (p.coeff i)) = p.Sum f := by
-  by_cases' hp : p = 0
-  · rw [hp, sum_zero_index, Finset.sum_eq_zero]
-    intro i _
-    exact hf i
-    
-  rw [degree_eq_nat_degree hp, WithBot.coe_lt_coe] at hn
-  calc (∑ i : Finₓ n, f i (p.coeff i)) = ∑ i in Finset.range n, f i (p.coeff i) :=
-      Finₓ.sum_univ_eq_sum_range (fun i => f i (p.coeff i)) _ _ = ∑ i in p.support, f i (p.coeff i) :=
-      (Finset.sum_subset (supp_subset_range_nat_degree_succ.trans (finset.range_subset.mpr hn)) fun i _ hi =>
-          show f i (p.coeff i) = 0 by
-            rw [not_mem_support_iff.mp hi, hf]).symm _ = p.sum f :=
-      p.sum_def _
+theorem sum_mod_by_monic_coeff (hq : q.Monic) {n : ℕ} (hn : q.degree ≤ n) :
+    (∑ i : Finₓ n, monomial i ((p %ₘ q).coeff i)) = p %ₘ q := by
+  nontriviality R
+  exact
+    (sum_fin (fun i c => monomial i c)
+          (by
+            simp )
+          ((degree_mod_by_monic_lt _ hq).trans_le hn)).trans
+      (sum_monomial_eq _)
 
-theorem sum_mod_by_monic_coeff [Nontrivial R] (hq : q.Monic) {n : ℕ} (hn : q.degree ≤ n) :
-    (∑ i : Finₓ n, monomial i ((p %ₘ q).coeff i)) = p %ₘ q :=
-  (sum_fin (fun i c => monomial i c)
-        (by
-          simp )
-        ((degree_mod_by_monic_lt _ hq).trans_le hn)).trans
-    (sum_monomial_eq _)
+theorem sub_dvd_eval_sub (a b : R) (p : R[X]) : a - b ∣ p.eval a - p.eval b := by
+  suffices X - C b ∣ p - C (p.eval b) by
+    simpa only [coe_eval_ring_hom, eval_sub, eval_X, eval_C] using (eval_ring_hom a).map_dvd this
+  simp [dvd_iff_is_root]
+
+variable (R)
+
+theorem not_is_field : ¬IsField R[X] := by
+  nontriviality R
+  rw [Ringₓ.not_is_field_iff_exists_ideal_bot_lt_and_lt_top]
+  use Ideal.span {Polynomial.x}
+  constructor
+  · rw [bot_lt_iff_ne_bot, Ne.def, Ideal.span_singleton_eq_bot]
+    exact Polynomial.X_ne_zero
+    
+  · rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, Ideal.mem_span_singleton, Polynomial.X_dvd_iff,
+      Polynomial.coeff_one_zero]
+    exact one_ne_zero
+    
+
+variable {R}
 
 section multiplicity
 
@@ -449,19 +454,13 @@ See `polynomial.mod_by_monic` for the algorithm that computes `%ₘ`.
 def decidableDvdMonic (p : R[X]) (hq : Monic q) : Decidable (q ∣ p) :=
   decidableOfIff (p %ₘ q = 0) (dvd_iff_mod_by_monic_eq_zero hq)
 
-open_locale Classical
+open Classical
 
-theorem multiplicity_X_sub_C_finite (a : R) (h0 : p ≠ 0) : multiplicity.Finite (X - c a) p :=
-  multiplicity_finite_of_degree_pos_of_monic
-    (by
-      have : (0 : R) ≠ 1 := fun h =>
-        have := subsingleton_of_zero_eq_one h
-        h0 (Subsingleton.elimₓ _ _)
-      have : Nontrivial R := ⟨⟨0, 1, this⟩⟩ <;>
-        rw [degree_X_sub_C] <;>
-          exact by
-            decide)
-    (monic_X_sub_C _) h0
+theorem multiplicity_X_sub_C_finite (a : R) (h0 : p ≠ 0) : multiplicity.Finite (X - c a) p := by
+  have := nontrivial.of_polynomial_ne h0
+  refine' multiplicity_finite_of_degree_pos_of_monic _ (monic_X_sub_C _) h0
+  rw [degree_X_sub_C]
+  decide
 
 /-- The largest power of `X - C a` which divides `p`.
 This is computable via the divisibility algorithm `decidable_dvd_monic`. -/
@@ -469,7 +468,7 @@ def rootMultiplicity (a : R) (p : R[X]) : ℕ :=
   if h0 : p = 0 then 0
   else
     let I : DecidablePred fun n : ℕ => ¬(X - c a) ^ (n + 1) ∣ p := fun n =>
-      @Not.decidable _ (decidableDvdMonic p (monic_pow (monic_X_sub_C a) (n + 1)))
+      @Not.decidable _ (decidableDvdMonic p ((monic_X_sub_C a).pow (n + 1)))
     Nat.findₓ (multiplicity_X_sub_C_finite a h0)
 
 theorem root_multiplicity_eq_multiplicity (p : R[X]) (a : R) :
@@ -511,7 +510,7 @@ theorem pow_root_multiplicity_dvd (p : R[X]) (a : R) : (X - c a) ^ rootMultiplic
 
 theorem div_by_monic_mul_pow_root_multiplicity_eq (p : R[X]) (a : R) :
     p /ₘ (X - c a) ^ rootMultiplicity a p * (X - c a) ^ rootMultiplicity a p = p := by
-  have : Monic ((X - c a) ^ rootMultiplicity a p) := monic_pow (monic_X_sub_C _) _
+  have : Monic ((X - c a) ^ rootMultiplicity a p) := (monic_X_sub_C _).pow _
   conv_rhs =>
       rw [← mod_by_monic_add_div p this, (dvd_iff_mod_by_monic_eq_zero this).2 (pow_root_multiplicity_dvd _ _)] <;>
     simp [mul_comm]

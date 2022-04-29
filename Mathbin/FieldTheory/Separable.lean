@@ -27,7 +27,7 @@ properties about separable polynomials here.
 
 universe u v w
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 open Finset
 
@@ -109,7 +109,7 @@ theorem Separable.of_pow {f : R[X]} (hf : ¬IsUnit f) {n : ℕ} (hn : n ≠ 0) (
 theorem Separable.map {p : R[X]} (h : p.Separable) {f : R →+* S} : (p.map f).Separable :=
   let ⟨a, b, H⟩ := h
   ⟨a.map f, b.map f, by
-    rw [derivative_map, ← map_mul, ← map_mul, ← map_add, H, map_one]⟩
+    rw [derivative_map, ← Polynomial.map_mul, ← Polynomial.map_mul, ← Polynomial.map_add, H, Polynomial.map_one]⟩
 
 variable (R) (p q : ℕ)
 
@@ -329,7 +329,7 @@ include hp
 
 theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := by
   refine' f.induction_on' (fun a b ha hb => _) fun n a => _
-  · rw [AlgHom.map_add, map_add, ha, hb, add_pow_char]
+  · rw [AlgHom.map_add, Polynomial.map_add, ha, hb, add_pow_char]
     
   · rw [expand_monomial, map_monomial, monomial_eq_C_mul_X, monomial_eq_C_mul_X, mul_powₓ, ← C.map_pow, frobenius_def]
     ring_exp
@@ -482,7 +482,7 @@ theorem separable_iff_derivative_ne_zero {f : F[X]} (hf : Irreducible f) : f.Sep
       have : f ∣ f.derivative := by
         conv_lhs => rw [hg3, ← hu]
         rwa [Units.mul_right_dvd]
-      not_lt_of_le (nat_degree_le_of_dvd this h) <| nat_degree_derivative_lt h⟩
+      not_lt_of_le (nat_degree_le_of_dvd this h) <| nat_degree_derivative_lt <| mt derivative_of_nat_degree_zero h⟩
 
 theorem separable_map (f : F →+* K) {p : F[X]} : (p.map f).Separable ↔ p.Separable := by
   simp_rw [separable_def, derivative_map, is_coprime_map]
@@ -740,7 +740,7 @@ variable {E}
 
 theorem IsSeparable.of_alg_hom (E' : Type _) [Field E'] [Algebra F E'] (f : E →ₐ[F] E') [IsSeparable F E'] :
     IsSeparable F E := by
-  let this' : Algebra E E' := RingHom.toAlgebra f.to_ring_hom
+  let this : Algebra E E' := RingHom.toAlgebra f.to_ring_hom
   have : IsScalarTower F E E' := IsScalarTower.of_algebra_map_eq fun x => (f.commutes x).symm
   exact is_separable_tower_bot_of_is_separable F E E'
 

@@ -126,7 +126,11 @@ theorem log_mul_base (b n : ℕ) (hb : 1 < b) (hn : 0 < n) : log b (n * b) = log
       Nat.succ_le_succ_iff]
     simp [hn, this]
 
-theorem lt_pow_succ_log_self {b : ℕ} (hb : 1 < b) {x : ℕ} (hx : 0 < x) : x < b ^ (log b x).succ := by
+theorem lt_pow_succ_log_self {b : ℕ} (hb : 1 < b) (x : ℕ) : x < b ^ (log b x).succ := by
+  cases' x.eq_zero_or_pos with hx hx
+  · simp only [hx, log_zero_right, pow_oneₓ]
+    exact pos_of_gt hb
+    
   rw [← not_leₓ, pow_le_iff_le_log hb hx, not_leₓ]
   exact lt_succ_self _
 
@@ -307,11 +311,8 @@ theorem clog_le_clog_of_le (b : ℕ) {n m : ℕ} (h : n ≤ m) : clog b n ≤ cl
     
 
 theorem clog_le_clog_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ clog c n := by
-  cases n
-  · simp
-    
   rw [← le_pow_iff_clog_le (lt_of_lt_of_leₓ hc hb)]
-  calc n.succ ≤ c ^ clog c n.succ := le_pow_clog hc _ _ ≤ b ^ clog c n.succ :=
+  calc n ≤ c ^ clog c n := le_pow_clog hc _ _ ≤ b ^ clog c n :=
       pow_le_pow_of_le_left (le_of_ltₓ <| zero_lt_one.trans hc) hb _
 
 theorem clog_monotone (b : ℕ) : Monotone (clog b) := fun x y => clog_le_clog_of_le _

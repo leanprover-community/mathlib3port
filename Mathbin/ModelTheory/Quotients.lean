@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
 import Mathbin.Data.Fintype.Basic
-import Mathbin.ModelTheory.TermsAndFormulas
+import Mathbin.ModelTheory.Semantics
 
 /-!
 # Quotients of First-Order Structures
@@ -25,7 +25,7 @@ namespace Language
 
 variable (L : Language) {M : Type _}
 
-open_locale FirstOrder
+open FirstOrder
 
 open Structure
 
@@ -52,8 +52,8 @@ theorem fun_map_quotient_mk {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) :
   rw [Quotientₓ.fin_choice_eq, Quotientₓ.map_mk]
 
 theorem rel_map_quotient_mk {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) :
-    (RelMap r fun i => ⟦x i⟧) = @RelMap _ _ ps.toStructure _ r x := by
-  change Quotientₓ.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotientₓ.finChoice _) = _
+    (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x := by
+  change Quotientₓ.lift (@rel_map L M ps.to_structure n r) prestructure.rel_equiv (Quotientₓ.finChoice _) ↔ _
   rw [Quotientₓ.fin_choice_eq, Quotientₓ.lift_mk]
 
 theorem Term.realize_quotient_mk {β : Type _} (t : L.Term β) (x : β → M) :

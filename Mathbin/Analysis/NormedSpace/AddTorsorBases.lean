@@ -163,3 +163,7 @@ theorem interior_convex_hull_nonempty_iff_aff_span_eq_top [FiniteDimensional ℝ
       Finset.centroid_weights_apply, Nat.cast_pos, inv_pos, finset.card_pos.mpr htne]
     
 
+theorem Convex.interior_nonempty_iff_affine_span_eq_top [FiniteDimensional ℝ V] {s : Set V} (hs : Convex ℝ s) :
+    (Interior s).Nonempty ↔ affineSpan ℝ s = ⊤ := by
+  rw [← interior_convex_hull_nonempty_iff_aff_span_eq_top, hs.convex_hull_eq]
+

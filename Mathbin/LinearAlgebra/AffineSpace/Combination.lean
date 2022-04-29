@@ -42,7 +42,7 @@ These definitions are for sums over a `finset`; versions for a
 
 noncomputable section
 
-open_locale BigOperators Classical Affine
+open BigOperators Classical Affine
 
 namespace Finset
 
@@ -68,7 +68,7 @@ is independent of the choice of base point, and where the sum of the
 weights is 1, in which case the sum added to the base point is
 independent of the choice of base point. -/
 def weightedVsubOfPoint (p : ι → P) (b : P) : (ι → k) →ₗ[k] V :=
-  ∑ i in s, (LinearMap.proj i : (ι → k) →ₗ[k] k).smulRight (p i -ᵥ b)
+  ∑ i in s, (LinearMap.proj i : (ι → k) →ₗ[k] k).smul_right (p i -ᵥ b)
 
 @[simp]
 theorem weighted_vsub_of_point_apply (w : ι → k) (p : ι → P) (b : P) :
@@ -510,7 +510,6 @@ theorem centroid_insert_singleton [Invertible (2 : k)] (p : ι → P) (i₁ i₂
       affine_combination_eq_weighted_vsub_of_point_vadd_of_sum_eq_one _ _ _
         (sum_centroid_weights_eq_one_of_cast_card_ne_zero _ hc) (p i₁)]
     simp [h]
-    norm_num
     
 
 /-- The centroid of two points indexed by `fin 2`, expressed directly

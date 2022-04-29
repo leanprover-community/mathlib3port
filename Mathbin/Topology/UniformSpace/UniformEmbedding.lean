@@ -16,7 +16,7 @@ Extension of uniform continuous functions.
 
 open Filter TopologicalSpace Set Classical
 
-open_locale Classical uniformity TopologicalSpace Filter
+open Classical uniformity TopologicalSpace Filter
 
 section
 
@@ -93,6 +93,19 @@ theorem uniform_embedding_def' {f : α → β} :
       ⟨fun ⟨I, H⟩ => ⟨I, fun s su => (H _).2 ⟨s, su, fun x y => id⟩, fun s => (H s).1⟩, fun ⟨I, H₁, H₂⟩ =>
         ⟨I, fun s => ⟨H₂ s, fun ⟨t, tu, h⟩ => mem_of_superset (H₁ t tu) fun ⟨a, b⟩ => h a b⟩⟩⟩
 
+theorem Equivₓ.uniform_embedding {α β : Type _} [UniformSpace α] [UniformSpace β] (f : α ≃ β) (h₁ : UniformContinuous f)
+    (h₂ : UniformContinuous f.symm) : UniformEmbedding f :=
+  { comap_uniformity := by
+      refine' le_antisymmₓ _ _
+      · change comap (f.prod_congr f) _ ≤ _
+        rw [← map_equiv_symm (f.prod_congr f)]
+        exact h₂
+        
+      · rw [← map_le_iff_le_comap]
+        exact h₁
+        ,
+    inj := f.Injective }
+
 theorem uniform_embedding_inl : UniformEmbedding (Sum.inl : α → Sum α β) := by
   apply uniform_embedding_def.2 ⟨Sum.inl_injective, fun s => ⟨_, _⟩⟩
   · intro hs
@@ -151,7 +164,7 @@ theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)}
 `s ∈ 𝓤 β`, then `f` is a uniform embedding with respect to the discrete uniformity on `α`. -/
 theorem uniform_embedding_of_spaced_out {α} {f : α → β} {s : Set (β × β)} (hs : s ∈ 𝓤 β)
     (hf : Pairwise fun x y => (f x, f y) ∉ s) : @UniformEmbedding α β ⊥ ‹_› f := by
-  let this' : UniformSpace α := ⊥
+  let this : UniformSpace α := ⊥
   have : SeparatedSpace α := separated_iff_t2.2 inferInstance
   exact UniformInducing.uniform_embedding ⟨comap_uniformity_of_spaced_out hs hf⟩
 
@@ -188,7 +201,7 @@ theorem UniformEmbedding.dense_embedding {f : α → β} (h : UniformEmbedding f
 theorem closed_embedding_of_spaced_out {α} [TopologicalSpace α] [DiscreteTopology α] [SeparatedSpace β] {f : α → β}
     {s : Set (β × β)} (hs : s ∈ 𝓤 β) (hf : Pairwise fun x y => (f x, f y) ∉ s) : ClosedEmbedding f := by
   rcases DiscreteTopology.eq_bot α with rfl
-  let this' : UniformSpace α := ⊥
+  let this : UniformSpace α := ⊥
   exact { (uniform_embedding_of_spaced_out hs hf).Embedding with closed_range := is_closed_range_of_spaced_out hs hf }
 
 theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β) (he₁ : UniformInducing e)
@@ -432,15 +445,15 @@ theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCo
       let ⟨m₁, hm₁, m₂, hm₂, (hm : m₁ ×ˢ m₂ ⊆ Interior t)⟩ := mem_prod_iff.mp this
       let ⟨a, ha₁, _, ha₂⟩ := h_pnt hm₁
       let ⟨b, hb₁, hb₂, _⟩ := h_pnt hm₂
-      have : e ⁻¹' m₁ ×ˢ e ⁻¹' m₂ ⊆ (fun p : β × β => (f p.1, f p.2)) ⁻¹' s :=
+      have : (e ⁻¹' m₁) ×ˢ (e ⁻¹' m₂) ⊆ (fun p : β × β => (f p.1, f p.2)) ⁻¹' s :=
         calc
           _ ⊆ Preimage (fun p : β × β => (e p.1, e p.2)) (Interior t) := preimage_mono hm
           _ ⊆ Preimage (fun p : β × β => (e p.1, e p.2)) t := preimage_mono interior_subset
           _ ⊆ Preimage (fun p : β × β => (f p.1, f p.2)) s := ts
           
-      have : f '' (e ⁻¹' m₁) ×ˢ f '' (e ⁻¹' m₂) ⊆ s :=
+      have : (f '' (e ⁻¹' m₁)) ×ˢ (f '' (e ⁻¹' m₂)) ⊆ s :=
         calc
-          f '' (e ⁻¹' m₁) ×ˢ f '' (e ⁻¹' m₂) = (fun p : β × β => (f p.1, f p.2)) '' (e ⁻¹' m₁ ×ˢ e ⁻¹' m₂) :=
+          (f '' (e ⁻¹' m₁)) ×ˢ (f '' (e ⁻¹' m₂)) = (fun p : β × β => (f p.1, f p.2)) '' (e ⁻¹' m₁) ×ˢ (e ⁻¹' m₂) :=
             prod_image_image_eq
           _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' ((fun p : β × β => (f p.1, f p.2)) ⁻¹' s) := monotone_image this
           _ ⊆ s := image_preimage_subset _ _

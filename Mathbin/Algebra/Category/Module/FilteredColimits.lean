@@ -25,7 +25,7 @@ universe u v
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open CategoryTheory
 

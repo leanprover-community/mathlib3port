@@ -59,10 +59,6 @@ instance MulZeroClassₓ.toOppositeSmulWithZero [MulZeroClassₓ R] : SmulWithZe
   smul_zero := fun r => zero_mul _
   zero_smul := mul_zero
 
-instance AddMonoidₓ.toSmulWithZero [AddMonoidₓ M] : SmulWithZero ℕ M where
-  smul_zero := nsmul_zero
-  zero_smul := zero_nsmul
-
 variable (R) {M} [Zero R] [Zero M] [SmulWithZero R M]
 
 @[simp]
@@ -114,6 +110,14 @@ def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M where
     simp
 
 end Zero
+
+instance AddMonoidₓ.natSmulWithZero [AddMonoidₓ M] : SmulWithZero ℕ M where
+  smul_zero := nsmul_zero
+  zero_smul := zero_nsmul
+
+instance AddGroupₓ.intSmulWithZero [AddGroupₓ M] : SmulWithZero ℤ M where
+  smul_zero := zsmul_zero
+  zero_smul := zero_zsmul
 
 section MonoidWithZeroₓ
 

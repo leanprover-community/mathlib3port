@@ -5,8 +5,7 @@ Authors: Floris van Doorn
 -/
 import Mathbin.MeasureTheory.Measure.MeasureSpace
 import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.Topology.Opens
-import Mathbin.Topology.Compacts
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 # Contents
@@ -55,7 +54,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open_locale Nnreal Ennreal
+open Nnreal Ennreal
 
 namespace MeasureTheory
 
@@ -119,16 +118,16 @@ theorem le_inner_content (K : Compacts G) (U : Opens G) (h2 : (K : Set G) ⊆ U)
   le_supr_of_le K <| le_supr _ h2
 
 theorem inner_content_le (U : Opens G) (K : Compacts G) (h2 : (U : Set G) ⊆ K) : μ.innerContent U ≤ μ K :=
-  bsupr_le fun K' hK' => μ.mono _ _ (Subset.trans hK' h2)
+  supr₂_le fun K' hK' => μ.mono _ _ (Subset.trans hK' h2)
 
 theorem inner_content_of_is_compact {K : Set G} (h1K : IsCompact K) (h2K : IsOpen K) :
     μ.innerContent ⟨K, h2K⟩ = μ ⟨K, h1K⟩ :=
-  le_antisymmₓ (bsupr_le fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_inner_content _ _ Subset.rfl)
+  le_antisymmₓ (supr₂_le fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_inner_content _ _ Subset.rfl)
 
 theorem inner_content_empty : μ.innerContent ∅ = 0 := by
   refine' le_antisymmₓ _ (zero_le _)
   rw [← μ.empty]
-  refine' bsupr_le fun K hK => _
+  refine' supr₂_le fun K hK => _
   have : K = ⊥ := by
     ext1
     rw [subset_empty_iff.mp hK, compacts.coe_bot]
@@ -138,7 +137,7 @@ theorem inner_content_empty : μ.innerContent ∅ = 0 := by
 /-- This is "unbundled", because that it required for the API of `induced_outer_measure`. -/
 theorem inner_content_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
-  supr_le_supr fun K => supr_le_supr_const fun hK => Subset.trans hK h2
+  bsupr_mono fun K hK => hK.trans h2
 
 theorem inner_content_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ ∞) {ε : ℝ≥0 } (hε : ε ≠ 0) :
     ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.innerContent U ≤ μ K + ε := by
@@ -167,7 +166,7 @@ theorem inner_content_Sup_nat [T2Space G] (U : ℕ → Opens G) :
       rw [Finset.sup_insert, Finset.sum_insert hn]
       exact le_transₓ (μ.sup_le _ _) (add_le_add_left ih _)
       
-  refine' bsupr_le fun K hK => _
+  refine' supr₂_le fun K hK => _
   obtain ⟨t, ht⟩ := K.compact.elim_finite_subcover _ (fun i => (U i).Prop) _
   swap
   · convert hK
@@ -199,9 +198,7 @@ theorem inner_content_Union_nat [T2Space G] ⦃U : ℕ → Set G⦄ (hU : ∀ i 
 
 theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K.map f f.Continuous) = μ K) (U : Opens G) :
     μ.innerContent (Opens.comap f.toContinuousMap U) = μ.innerContent U := by
-  refine' supr_congr _ (compacts.equiv f).Surjective _
-  intro K
-  refine' supr_congr_Prop image_subset_iff _
+  refine' (compacts.equiv f).Surjective.supr_congr _ fun K => supr_congr_Prop image_subset_iff _
   intro hK
   simp only [Equivₓ.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
   apply h
@@ -229,7 +226,7 @@ theorem inner_content_pos_of_is_mul_left_invariant [T2Space G] [Groupₓ G] [Top
 
 theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
     μ.innerContent ⟨U, hU⟩ ≤ μ.innerContent ⟨V, hV⟩ :=
-  supr_le_supr fun K => supr_le_supr_const fun hK => Subset.trans hK h2
+  bsupr_mono fun K hK => hK.trans h2
 
 /-- Extending a content on compact sets to an outer measure on all sets. -/
 protected def outerMeasure : OuterMeasure G :=

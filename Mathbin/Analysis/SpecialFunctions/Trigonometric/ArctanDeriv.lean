@@ -7,10 +7,9 @@ import Mathbin.Analysis.SpecialFunctions.Trigonometric.Arctan
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ComplexDeriv
 
 /-!
-# The `arctan` function.
+# Derivatives of the `tan` and `arctan` functions.
 
-Inequalities, derivatives,
-and `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line.
+Continuity and derivatives of the tangent and arctangent functions.
 -/
 
 
@@ -20,7 +19,7 @@ namespace Real
 
 open Set Filter
 
-open_locale TopologicalSpace Real
+open TopologicalSpace Real
 
 theorem has_strict_deriv_at_tan {x : ℝ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x := by
   exact_mod_cast

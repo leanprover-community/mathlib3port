@@ -3,7 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.Data.Int.Basic
 import Mathbin.CategoryTheory.Shift
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # Differential objects in a category.
@@ -206,16 +208,10 @@ variable (C : Type u) [Category.{v} C]
 
 variable [HasZeroObject C] [HasZeroMorphisms C] [HasShift C ℤ]
 
-open_locale ZeroObject
+open ZeroObject
 
-instance hasZeroObject : HasZeroObject (DifferentialObject C) where
-  zero := { x := (0 : C), d := 0 }
-  uniqueTo := fun X =>
-    ⟨⟨{ f := 0 }⟩, fun f => by
-      ext⟩
-  uniqueFrom := fun X =>
-    ⟨⟨{ f := 0 }⟩, fun f => by
-      ext⟩
+instance has_zero_object : HasZeroObject (DifferentialObject C) := by
+  refine' ⟨⟨⟨0, 0⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨⟨0⟩⟩, fun f => _⟩⟩⟩⟩ <;> ext
 
 end DifferentialObject
 
@@ -266,17 +262,16 @@ def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
     dsimp
     rw [functor.map_comp]
 
-attribute [local instance] endofunctor_monoidal_category Discrete.addMonoidal
-
-attribute [local reducible] endofunctor_monoidal_category Discrete.addMonoidal shift_comm
+attribute [local reducible] Discrete.addMonoidal shift_comm
 
 /-- The shift functor on `differential_object C` is additive. -/
 @[simps]
 def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m ⋙ shiftFunctor C n := by
   refine' nat_iso.of_components (fun X => mk_iso (shift_add X.x _ _) _) _
   · dsimp
-    simp only [obj_μ_app, μ_naturality_assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc, category.assoc, obj_μ_inv_app,
-      functor.map_comp, μ_inv_naturalityᵣ_assoc]
+    simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app, category.assoc,
+      μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc,
+      μ_inv_naturalityᵣ_assoc]
     simp [opaque_eq_to_iso]
     
   · intro X Y f
@@ -284,6 +279,12 @@ def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m �
     dsimp
     exact nat_trans.naturality _ _
     
+
+attribute [local reducible] endofunctor_monoidal_category
+
+section
+
+attribute [local instance] endofunctor_monoidal_category
 
 /-- The shift by zero is naturally isomorphic to the identity. -/
 @[simps]
@@ -299,6 +300,8 @@ def shiftε : 𝟭 (DifferentialObject C) ≅ shiftFunctor C 0 := by
     dsimp
     simp
     
+
+end
 
 instance : HasShift (DifferentialObject C) ℤ :=
   hasShiftMk _ _ { f := shiftFunctor C, ε := shiftε C, μ := fun m n => (shiftFunctorAdd C m n).symm }

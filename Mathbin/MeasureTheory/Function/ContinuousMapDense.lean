@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
 import Mathbin.MeasureTheory.Measure.Regular
-import Mathbin.MeasureTheory.Function.SimpleFuncDense
+import Mathbin.MeasureTheory.Function.SimpleFuncDenseLp
 import Mathbin.Topology.UrysohnsLemma
+import Mathbin.MeasureTheory.Function.L1Space
 
 /-!
 # Approximation in Lᵖ by continuous functions
@@ -41,13 +42,13 @@ Vitali-Carathéodory theorem, in the file `measure_theory.vitali_caratheodory`.
 -/
 
 
-open_locale Ennreal Nnreal TopologicalSpace BoundedContinuousFunction
+open Ennreal Nnreal TopologicalSpace BoundedContinuousFunction
 
 open MeasureTheory TopologicalSpace ContinuousMap
 
 variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [NormalSpace α] [BorelSpace α]
 
-variable (E : Type _) [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [SecondCountableTopology E]
+variable (E : Type _) [NormedGroup E] [SecondCountableTopologyEither α E]
 
 variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measureₓ α)
 
@@ -158,7 +159,8 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
   have gc_cont : Continuous fun x => g x • c := g.continuous.smul continuous_const
   have gc_mem_ℒp : mem_ℒp (fun x => g x • c) p μ := by
     have : mem_ℒp ((fun x => g x • c) - s.indicator fun x => c) p μ :=
-      ⟨(gc_cont.ae_measurable μ).sub (measurable_const.indicator hs).AeMeasurable, gc_snorm.trans_lt Ennreal.coe_lt_top⟩
+      ⟨gc_cont.ae_strongly_measurable.sub (strongly_measurable_const.indicator hs).AeStronglyMeasurable,
+        gc_snorm.trans_lt Ennreal.coe_lt_top⟩
     simpa using this.add (mem_ℒp_indicator_const p hs c (Or.inr hsμ.ne))
   refine' ⟨gc_mem_ℒp.to_Lp _, _, _⟩
   · rw [mem_closed_ball_iff_norm]
@@ -176,7 +178,7 @@ theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
 
 end MeasureTheory.lp
 
-variable (𝕜 : Type _) [MeasurableSpace 𝕜] [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedAlgebra ℝ 𝕜] [NormedSpace 𝕜 E]
+variable (𝕜 : Type _) [NormedField 𝕜] [NormedAlgebra ℝ 𝕜] [NormedSpace 𝕜 E]
 
 namespace BoundedContinuousFunction
 

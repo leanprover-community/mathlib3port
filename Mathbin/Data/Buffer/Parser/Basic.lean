@@ -6,6 +6,7 @@ Authors: Yakov Pechersky
 import Mathbin.Data.String.Basic
 import Mathbin.Data.Buffer.Basic
 import Mathbin.Data.Nat.Digits
+import Leanbin.Data.Buffer.Parser
 
 /-!
 # Parsers
@@ -1592,11 +1593,9 @@ instance foldr_core_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.St
     have := hr
     intro cb n
     obtain ⟨np, a, h⟩ := p.exists_done cb n
-    have : n = np := static.of_done h
-    subst this
+    obtain rfl : n = np := static.of_done h
     obtain ⟨np, b', hf⟩ := exists_done (foldr_core f p b (reps + 1)) cb n
-    have : n = np := static.of_done hf
-    subst this
+    obtain rfl : n = np := static.of_done hf
     refine' ⟨n, f a b', _⟩
     rw [foldr_core_eq_done]
     simp [h, hf, And.comm, And.left_comm, And.assoc]
@@ -2017,8 +2016,7 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
       rfl
       simp only [many1_eq_done, many, foldr] at hm
       obtain ⟨np, hp', hf⟩ := hm
-      have : np = n + 1 + 1 := step.of_done hp'
-      subst this
+      obtain rfl : np = n + 1 + 1 := step.of_done hp'
       simpa [Nat.sub_succ, many_eq_done, hp, hk, foldr_core_eq_done, hp'] using hf
       
     
@@ -2044,8 +2042,7 @@ theorem many1_eq_done_iff_many_eq_done [p.step] [p.Bounded] {x : α} {xs : List 
         
       simp only at hm
       obtain ⟨rfl, rfl⟩ := hm
-      have : np = n + 1 + 1 := step.of_done hp'
-      subst this
+      obtain rfl : np = n + 1 + 1 := step.of_done hp'
       simp [Nat.sub_succ, many, many1_eq_done, hp, hk, foldr_core_eq_done, hp', ← hf, foldr]
       
     
@@ -2281,8 +2278,7 @@ theorem many1_length_of_done [p.mono] [p.step] [p.Bounded] {l : List α} (h : ma
     subst hk
     simp only [many1_eq_done] at h
     obtain ⟨_, hp, h⟩ := h
-    have := step.of_done hp
-    subst this
+    obtain rfl := step.of_done hp
     cases tl
     · simp only [many_eq_done_nil, add_left_injₓ, exists_and_distrib_right, self_eq_add_rightₓ] at h
       rcases h with ⟨rfl, -⟩
@@ -2299,8 +2295,7 @@ theorem many1_bounded_of_done [p.step] [p.Bounded] {l : List α} (h : many1 p cb
     
   · simp only [many1_eq_done] at h
     obtain ⟨np, hp, h⟩ := h
-    have := step.of_done hp
-    subst this
+    obtain rfl := step.of_done hp
     cases tl
     · simp only [many_eq_done_nil, exists_and_distrib_right] at h
       simpa [← h.left] using bounded.of_done hp
@@ -2399,8 +2394,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- In fact, we know that this new position is `n + 1`, by the `step` property of
     -- `parser.digit`.
     obtain ⟨_, hp, -⟩ := hp
-    have := step.of_done hp
-    subst this
+    obtain rfl := step.of_done hp
     -- We now unfold what it means for `parser.digit` to succeed, which means that the character
     -- parsed in was "numeric" (for some definition of that property), and, more importantly,
     -- that the `n`th character of `cb`, let's say `c`, when converted to a `ℕ` via
@@ -2447,8 +2441,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
     -- This means we must have failed parsing with `parser.digit` at some other position,
     -- which we prove must be `n + 1` via the `step` property.
     obtain ⟨_, hp, rfl, hp'⟩ := hp
-    have := step.of_done hp
-    subst this
+    obtain rfl := step.of_done hp
     -- Now we rely on the simplifier, which simplfies the LHS, which is a fold over a singleton
     -- list. On the RHS, `list.take (n + 1 - n)` also produces a singleton list, which, when
     -- reversed, is the same list. `nat.of_digits` of a singleton list is precisely the value in
@@ -2657,7 +2650,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     exact hl h
     
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)
 starting from the parsing position `n` and ending at position `n'`, where `n < n'`. The number
@@ -2856,8 +2849,7 @@ theorem nat_eq_done {val : ℕ} :
       simp [this, hpow, Nat.of_digits_append, mul_comm, ← pow_succₓ 10, hml, ltll]
       
     · -- Consider the case that `n' ≤ n + 1`. But then since `n < n' ≤ n + 1`, `n' = n + 1`.
-      have : n' = n + 1 := le_antisymmₓ hn'' (Nat.succ_le_of_ltₓ hn)
-      subst this
+      obtain rfl : n' = n + 1 := le_antisymmₓ hn'' (Nat.succ_le_of_ltₓ hn)
       -- This means we have only parsed in a single character, so the resulting parsed in list
       -- is explicitly formed from an expression we can construct from `hd`.
       use [hd.to_nat - '0'.toNat]

@@ -3,7 +3,7 @@ Copyright (c) 2021 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Functor.Derived
+import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Monoidal.Preadditive
 
 /-!
@@ -56,7 +56,7 @@ def tor' (n : ℕ) : C ⥤ C ⥤ C :=
       map_comp' := fun X Y Z f g => by
         rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- The higher `Tor` groups for `X` and `Y` are zero if `Y` is projective. -/
 def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).obj X).obj Y ≅ 0 :=

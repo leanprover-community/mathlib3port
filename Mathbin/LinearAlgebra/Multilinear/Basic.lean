@@ -56,7 +56,7 @@ advantage of avoiding subtype inclusion issues. This is the definition we use, b
 
 open Function Finₓ Set
 
-open_locale BigOperators
+open BigOperators
 
 universe u v v' v₁ v₂ v₃ w u'
 
@@ -167,27 +167,28 @@ instance : Inhabited (MultilinearMap R M₁ M₂) :=
 theorem zero_apply (m : ∀ i, M₁ i) : (0 : MultilinearMap R M₁ M₂) m = 0 :=
   rfl
 
-instance : AddCommMonoidₓ (MultilinearMap R M₁ M₂) where
-  zero := (0 : MultilinearMap R M₁ M₂)
-  add := (· + ·)
-  add_assoc := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  zero_add := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  add_zero := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  add_comm := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  nsmul := fun n f =>
-    ⟨fun m => n • f m, fun m i x y => by
+section HasScalar
+
+variable {R' A : Type _} [Monoidₓ R'] [Semiringₓ A] [∀ i, Module A (M₁ i)] [DistribMulAction R' M₂] [Module A M₂]
+  [SmulCommClass A R' M₂]
+
+instance : HasScalar R' (MultilinearMap A M₁ M₂) :=
+  ⟨fun c f =>
+    ⟨fun m => c • f m, fun m i x y => by
       simp [smul_add], fun l i x d => by
-      simp [← smul_comm x n]⟩
-  nsmul_zero' := fun f => by
-    ext
-    simp
-  nsmul_succ' := fun n f => by
-    ext
-    simp [add_smul, Nat.succ_eq_one_add]
+      simp [← smul_comm x c]⟩⟩
+
+@[simp]
+theorem smul_apply (f : MultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
+  rfl
+
+theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c • f :=
+  rfl
+
+end HasScalar
+
+instance : AddCommMonoidₓ (MultilinearMap R M₁ M₂) :=
+  coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
@@ -417,7 +418,7 @@ section ApplySum
 
 variable {α : ι → Type _} (g : ∀ i, α i → M₁ i) (A : ∀ i, Finset (α i))
 
-open_locale Classical
+open Classical
 
 open Fintype Finset
 
@@ -763,19 +764,6 @@ section DistribMulAction
 variable {R' A : Type _} [Monoidₓ R'] [Semiringₓ A] [∀ i, Module A (M₁ i)] [DistribMulAction R' M₂] [Module A M₂]
   [SmulCommClass A R' M₂]
 
-instance : HasScalar R' (MultilinearMap A M₁ M₂) :=
-  ⟨fun c f =>
-    ⟨fun m => c • f m, fun m i x y => by
-      simp [smul_add], fun l i x d => by
-      simp [← smul_comm x c]⟩⟩
-
-@[simp]
-theorem smul_apply (f : MultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
-  rfl
-
-theorem coe_smul (c : R') (f : MultilinearMap A M₁ M₂) : ⇑(c • f) = c • f :=
-  rfl
-
 instance : DistribMulAction R' (MultilinearMap A M₁ M₂) where
   one_smul := fun f => ext fun x => one_smul _ _
   mul_smul := fun c₁ c₂ f => ext fun x => mul_smul _ _ _
@@ -925,7 +913,7 @@ def smulRight (f : MultilinearMap R M₁ R) (z : M₂) : MultilinearMap R M₁ M
   (LinearMap.smulRight LinearMap.id z).compMultilinearMap f
 
 @[simp]
-theorem smul_right_apply (f : MultilinearMap R M₁ R) (z : M₂) (m : ∀ i, M₁ i) : f.smulRight z m = f m • z :=
+theorem smul_right_apply (f : MultilinearMap R M₁ R) (z : M₂) (m : ∀ i, M₁ i) : f.smul_right z m = f m • z :=
   rfl
 
 variable (R ι)
@@ -934,7 +922,7 @@ variable (R ι)
 all the `m i` (multiplied by a fixed reference element `z` in the target module). See also
 `mk_pi_algebra` for a more general version. -/
 protected def mkPiRing [Fintype ι] (z : M₂) : MultilinearMap R (fun i : ι => R) M₂ :=
-  (MultilinearMap.mkPiAlgebra R ι R).smulRight z
+  (MultilinearMap.mkPiAlgebra R ι R).smul_right z
 
 variable {R ι}
 

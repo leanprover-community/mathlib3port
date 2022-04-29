@@ -23,7 +23,7 @@ open Nat
 
 namespace List
 
-variable {α : Type u} {β : Type v} {R : α → α → Prop}
+variable {α : Type u} {β : Type v} {R r : α → α → Prop} {l l₁ l₂ : List α} {a b : α}
 
 mk_iff_of_inductive_prop List.Chain List.chain_iff
 
@@ -57,6 +57,11 @@ theorem chain_split {a b : α} {l₁ l₂ : List α} : Chain R a (l₁ ++ b :: l
   induction' l₁ with x l₁ IH generalizing a <;>
     simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_trueₓ, and_assoc]
 
+@[simp]
+theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
+    Chain R a (l₁ ++ b :: c :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ R b c ∧ Chain R c l₂ := by
+  rw [chain_split, chain_cons]
+
 theorem chain_map (f : β → α) {b : β} {l : List β} :
     Chain R (f b) (map f l) ↔ Chain (fun a b : β => R (f a) (f b)) b l := by
   induction l generalizing b <;> simp only [map, chain.nil, chain_cons, *]
@@ -87,7 +92,7 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
   · simp [H _ _ _ _ (rel_of_chain_cons hl₂), l_ih _ _ (chain_of_chain_cons hl₂)]
     
 
-theorem chain_of_pairwise {a : α} {l : List α} (p : Pairwiseₓ R (a :: l)) : Chain R a l := by
+protected theorem Pairwiseₓ.chain (p : Pairwiseₓ R (a :: l)) : Chain R a l := by
   cases' pairwise_cons.1 p with r p'
   clear p
   induction' p' with b l r' p IH generalizing a
@@ -96,15 +101,24 @@ theorem chain_of_pairwise {a : α} {l : List α} (p : Pairwiseₓ R (a :: l)) : 
   simp only [chain_cons, forall_mem_cons] at r
   exact chain_cons.2 ⟨r.1, IH r'⟩
 
+protected theorem Chain.pairwise (tr : Transitive R) : ∀ {a : α} {l : List α}, Chain R a l → Pairwiseₓ R (a :: l)
+  | a, [], chain.nil => pairwise_singleton _ _
+  | a, _, @chain.cons _ _ _ b l h hb =>
+    hb.Pairwise.cons
+      (by
+        simp only [mem_cons_iff, forall_eq_or_imp, h, true_andₓ]
+        exact fun c hc => tr h (rel_of_pairwise_cons hb.pairwise hc))
+
 theorem chain_iff_pairwise (tr : Transitive R) {a : α} {l : List α} : Chain R a l ↔ Pairwiseₓ R (a :: l) :=
-  ⟨fun c => by
-    induction' c with b b c l r p IH
-    · exact pairwise_singleton _ _
-      
-    apply IH.cons _
-    simp only [mem_cons_iff, forall_eq_or_imp, r, true_andₓ]
-    show ∀, ∀ x ∈ l, ∀, R b x
-    exact fun x m => tr r (rel_of_pairwise_cons IH m), chain_of_pairwise⟩
+  ⟨Chain.pairwise tr, Pairwiseₓ.chain⟩
+
+protected theorem Chain.sublist [IsTrans α R] (hl : l₂.Chain R a) (h : l₁ <+ l₂) : l₁.Chain R a := by
+  rw [chain_iff_pairwise (transitive_of_trans R)] at hl⊢
+  exact hl.sublist (h.cons_cons a)
+
+protected theorem Chain.rel [IsTrans α R] (hl : l.Chain R a) (hb : b ∈ l) : R a b := by
+  rw [chain_iff_pairwise (transitive_of_trans R)] at hl
+  exact rel_of_pairwise_cons hl hb
 
 theorem chain_iff_nth_le {R} :
     ∀ {a : α} {l : List α},
@@ -160,9 +174,18 @@ theorem chain'_nil : Chain' R [] :=
 theorem chain'_singleton (a : α) : Chain' R [a] :=
   chain.nil
 
+@[simp]
+theorem chain'_cons {x y l} : Chain' R (x :: y :: l) ↔ R x y ∧ Chain' R (y :: l) :=
+  chain_cons
+
 theorem chain'_split {a : α} : ∀ {l₁ l₂ : List α}, Chain' R (l₁ ++ a :: l₂) ↔ Chain' R (l₁ ++ [a]) ∧ Chain' R (a :: l₂)
   | [], l₂ => (and_iff_right (chain'_singleton a)).symm
   | b :: l₁, l₂ => chain_split
+
+@[simp]
+theorem chain'_append_cons_cons {b c : α} {l₁ l₂ : List α} :
+    Chain' R (l₁ ++ b :: c :: l₂) ↔ Chain' R (l₁ ++ [b]) ∧ R b c ∧ Chain' R (c :: l₂) := by
+  rw [chain'_split, chain'_cons]
 
 theorem chain'_map (f : β → α) {l : List β} : Chain' R (map f l) ↔ Chain' (fun a b : β => R (f a) (f b)) l := by
   cases l <;> [rfl, exact chain_map _]
@@ -177,15 +200,15 @@ theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ a
 
 theorem Pairwiseₓ.chain' : ∀ {l : List α}, Pairwiseₓ R l → Chain' R l
   | [], _ => trivialₓ
-  | a :: l, h => chain_of_pairwise h
+  | a :: l, h => Pairwiseₓ.chain h
 
 theorem chain'_iff_pairwise (tr : Transitive R) : ∀ {l : List α}, Chain' R l ↔ Pairwiseₓ R l
   | [] => (iff_true_intro Pairwiseₓ.nil).symm
   | a :: l => chain_iff_pairwise tr
 
-@[simp]
-theorem chain'_cons {x y l} : Chain' R (x :: y :: l) ↔ R x y ∧ Chain' R (y :: l) :=
-  chain_cons
+protected theorem Chain'.sublist [IsTrans α R] (hl : l₂.Chain' R) (h : l₁ <+ l₂) : l₁.Chain' R := by
+  rw [chain'_iff_pairwise (transitive_of_trans R)] at hl⊢
+  exact hl.sublist h
 
 theorem Chain'.cons {x y l} (h₁ : R x y) (h₂ : Chain' R (y :: l)) : Chain' R (x :: y :: l) :=
   chain'_cons.2 ⟨h₁, h₂⟩
@@ -288,8 +311,6 @@ theorem Chain'.append_overlap :
     simp only [cons_append, chain'_cons] at h₁ h₂⊢
     simp only [← cons_append] at h₁ h₂⊢
     exact ⟨h₁.1, chain'.append_overlap h₁.2 h₂ (cons_ne_nil _ _)⟩
-
-variable {r : α → α → Prop} {a b : α}
 
 /-- If `a` and `b` are related by the reflexive transitive closure of `r`, then there is a `r`-chain
 starting from `a` and ending on `b`.

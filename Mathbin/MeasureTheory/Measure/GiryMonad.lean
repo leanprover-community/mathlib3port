@@ -30,7 +30,7 @@ giry monad
 
 noncomputable section
 
-open_locale Classical BigOperators Ennreal
+open Classical BigOperators Ennreal
 
 open Classical Set Filter
 
@@ -52,7 +52,7 @@ theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ :
 theorem measurable_of_measurable_coe (f : β → Measure α)
     (h : ∀ s : Set α hs : MeasurableSet s, Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map <|
-    bsupr_le fun s hs =>
+    supr₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by
         rw [MeasurableSpace.map_comp] <;> exact h s hs
 

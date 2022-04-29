@@ -3,7 +3,7 @@ Copyright (c) 2021 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.MeasureTheory.Measure.MeasureSpace
+import Mathbin.MeasureTheory.Measure.AeMeasurable
 
 /-!
 # Typeclasses for measurability of operations
@@ -45,7 +45,7 @@ measurable function, arithmetic operator
 
 universe u v
 
-open_locale BigOperators Pointwise
+open BigOperators Pointwise MeasureTheory
 
 open MeasureTheory
 
@@ -156,17 +156,16 @@ class HasMeasurablePow (β γ : Type _) [MeasurableSpace β] [MeasurableSpace γ
 
 export HasMeasurablePow (measurable_pow)
 
-instance HasMeasurableMul.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
+/-- `monoid.has_pow` is measurable. -/
+instance Monoidₓ.hasMeasurablePow (M : Type _) [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] :
     HasMeasurablePow M ℕ :=
-  ⟨by
-    have : MeasurableSingletonClass ℕ := ⟨fun _ => trivialₓ⟩
-    refine' measurable_from_prod_encodable fun n => _
-    induction' n with n ih
-    · simp [pow_zeroₓ, measurable_one]
-      
-    · simp only [pow_succₓ]
-      exact measurable_id.mul ih
-      ⟩
+  ⟨measurable_from_prod_encodable fun n => by
+      induction' n with n ih
+      · simp only [pow_zeroₓ, ← Pi.one_def, measurable_one]
+        
+      · simp only [pow_succₓ]
+        exact measurable_id.mul ih
+        ⟩
 
 section Pow
 
@@ -304,8 +303,8 @@ theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [
   simp_rw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
 
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [MeasurableSpace E] [AddGroupₓ E]
-    [MeasurableSingletonClass E] [HasMeasurableSub₂ E] (hm : m ≤ m0) {f g : α → E} (hf : @Measurable _ _ m _ f)
-    (hg : @Measurable _ _ m _ g) (hfg : f =ᵐ[μ] g) : f =ᶠ[@Measure.ae α m (μ.trim hm)] g := by
+    [MeasurableSingletonClass E] [HasMeasurableSub₂ E] (hm : m ≤ m0) {f g : α → E} (hf : measurable[m] f)
+    (hg : measurable[m] g) (hfg : f =ᵐ[μ] g) : f =ᶠ[@Measure.ae α m (μ.trim hm)] g := by
   rwa [Filter.EventuallyEq, ae_iff, trim_measurable_set_eq hm _]
   exact @MeasurableSet.compl α _ m (@measurable_set_eq_fun α m E _ _ _ _ _ _ hf hg)
 
@@ -390,25 +389,17 @@ theorem MeasurableSet.inv {s : Set G} (hs : MeasurableSet s) : MeasurableSet s�
 
 end Inv
 
-/- There is something extremely strange here: copy-pasting the proof of this lemma in the proof
-of `has_measurable_zpow` fails, while `pp.all` does not show any difference in the goal.
-Keep it as a separate lemmas as a workaround. -/
-private theorem has_measurable_zpow_aux (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
-    [HasMeasurableInv G] (k : ℕ) : Measurable fun x : G => x ^ -[1+ k] := by
-  simp_rw [zpow_neg_succ_of_nat]
-  exact (measurable_id.pow_const (k + 1)).inv
-
-instance hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
-    [HasMeasurableInv G] : HasMeasurablePow G ℤ := by
-  let this' : MeasurableSingletonClass ℤ := ⟨fun _ => trivialₓ⟩
-  constructor
-  refine' measurable_from_prod_encodable fun n => _
-  dsimp
-  apply Int.casesOn n
-  · simpa using measurable_id.pow_const
-    
-  · exact has_measurable_zpow_aux G
-    
+/-- `div_inv_monoid.has_pow` is measurable. -/
+instance DivInvMonoidₓ.hasMeasurableZpow (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
+    [HasMeasurableInv G] : HasMeasurablePow G ℤ :=
+  ⟨measurable_from_prod_encodable fun n => by
+      cases' n with n n
+      · simp_rw [zpow_of_nat]
+        exact measurable_id.pow_const _
+        
+      · simp_rw [zpow_neg_succ_of_nat]
+        exact (measurable_id.pow_const (n + 1)).inv
+        ⟩
 
 @[to_additive]
 instance (priority := 100) has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
@@ -529,6 +520,35 @@ instance Pi.has_measurable_smul {ι : Type _} {α : ι → Type _} [∀ i, HasSc
     [∀ i, HasMeasurableSmul M (α i)] : HasMeasurableSmul M (∀ i, α i) :=
   ⟨fun g => measurable_pi_iff.mpr fun i => (measurable_pi_apply i).const_smul _, fun g =>
     measurable_pi_iff.mpr fun i => measurable_smul_const _⟩
+
+/-- `add_monoid.has_scalar_nat` is measurable. -/
+instance AddMonoidₓ.has_measurable_smul_nat₂ (M : Type _) [AddMonoidₓ M] [MeasurableSpace M] [HasMeasurableAdd₂ M] :
+    HasMeasurableSmul₂ ℕ M :=
+  ⟨by
+    suffices Measurable fun p : M × ℕ => p.2 • p.1 by
+      apply this.comp measurable_swap
+    refine' measurable_from_prod_encodable fun n => _
+    induction' n with n ih
+    · simp only [zero_smul, ← Pi.zero_def, measurable_zero]
+      
+    · simp only [succ_nsmul]
+      exact measurable_id.add ih
+      ⟩
+
+/-- `sub_neg_monoid.has_scalar_int` is measurable. -/
+instance SubNegMonoidₓ.has_measurable_smul_int₂ (M : Type _) [SubNegMonoidₓ M] [MeasurableSpace M] [HasMeasurableAdd₂ M]
+    [HasMeasurableNeg M] : HasMeasurableSmul₂ ℤ M :=
+  ⟨by
+    suffices Measurable fun p : M × ℤ => p.2 • p.1 by
+      apply this.comp measurable_swap
+    refine' measurable_from_prod_encodable fun n => _
+    induction' n with n n ih
+    · simp only [of_nat_zsmul]
+      exact measurable_const_smul _
+      
+    · simp only [zsmul_neg_succ_of_nat]
+      exact (measurable_const_smul _).neg
+      ⟩
 
 end Smul
 

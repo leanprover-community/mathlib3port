@@ -31,7 +31,7 @@ end Nat.Primes
 
 namespace Pnat
 
-open Nat
+open _Root_.Nat
 
 /-- The greatest common divisor (gcd) of two positive natural numbers,
   viewed as positive natural number. -/

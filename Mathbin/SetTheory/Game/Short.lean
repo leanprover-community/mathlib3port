@@ -3,8 +3,8 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.SetTheory.Game
 import Mathbin.Data.Fintype.Basic
+import Mathbin.SetTheory.Game.Basic
 
 /-!
 # Short games
@@ -61,7 +61,7 @@ def fintypeLeft {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} [
 attribute [local instance] fintype_left
 
 instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
-  cases' x
+  cases x
   dsimp
   infer_instance
 
@@ -75,7 +75,7 @@ def fintypeRight {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} 
 attribute [local instance] fintype_right
 
 instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintype x.RightMoves := by
-  cases' x
+  cases x
   dsimp
   infer_instance
 

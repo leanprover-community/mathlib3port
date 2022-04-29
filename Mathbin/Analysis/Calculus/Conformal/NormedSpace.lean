@@ -60,24 +60,23 @@ theorem conformal_at_id (x : X) : ConformalAt id x :=
 theorem conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (fun x' : X => c • x') x :=
   ⟨c • ContinuousLinearMap.id ℝ X, (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
 
+@[nontriviality]
+theorem Subsingleton.conformal_at [Subsingleton X] (f : X → Y) (x : X) : ConformalAt f x :=
+  ⟨0, has_fderiv_at_of_subsingleton _ _, is_conformal_map_of_subsingleton _⟩
+
 /-- A function is a conformal map if and only if its differential is a conformal linear map-/
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
     ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) := by
   constructor
-  · rintro ⟨c, hf, hf'⟩
-    rw [hf.fderiv]
-    exact hf'
+  · rintro ⟨f', hf, hf'⟩
+    rwa [hf.fderiv]
     
   · intro H
     by_cases' h : DifferentiableAt ℝ f x
     · exact ⟨fderiv ℝ f x, h.has_fderiv_at, H⟩
       
-    · cases' subsingleton_or_nontrivial X with w w <;> skip
-      · exact ⟨(0 : X →L[ℝ] Y), has_fderiv_at_of_subsingleton f x, is_conformal_map_of_subsingleton 0⟩
-        
-      · exfalso
-        exact H.ne_zero (fderiv_zero_of_not_differentiable_at h)
-        
+    · nontriviality X
+      exact absurd (fderiv_zero_of_not_differentiable_at h) H.ne_zero
       
     
 

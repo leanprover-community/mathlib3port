@@ -55,10 +55,19 @@ instance : Inhabited (LieSubalgebra R L) :=
 instance : Coe (LieSubalgebra R L) (Submodule R L) :=
   ⟨LieSubalgebra.toSubmodule⟩
 
-instance : HasMem L (LieSubalgebra R L) :=
-  ⟨fun x L' => x ∈ (L' : Set L)⟩
-
 namespace LieSubalgebra
+
+instance : SetLike (LieSubalgebra R L) L where
+  coe := fun L' => L'
+  coe_injective' := fun L' L'' h => by
+    rcases L' with ⟨⟨⟩⟩
+    rcases L'' with ⟨⟨⟩⟩
+    congr
+
+instance : AddSubgroupClass (LieSubalgebra R L) L where
+  add_mem := fun L' => L'.add_mem'
+  zero_mem := fun L' => L'.zero_mem'
+  neg_mem := fun L' x hx => show -x ∈ (L' : Submodule R L) from neg_mem hx
 
 /-- A Lie subalgebra forms a new Lie ring. -/
 instance (L' : LieSubalgebra R L) : LieRing L' where
@@ -107,21 +116,17 @@ instance (L' : LieSubalgebra R L) : LieAlgebra R L' where
 variable {R L} (L' : LieSubalgebra R L)
 
 @[simp]
-theorem zero_mem : (0 : L) ∈ L' :=
-  (L' : Submodule R L).zero_mem
+protected theorem zero_mem : (0 : L) ∈ L' :=
+  zero_mem L'
+
+protected theorem add_mem {x y : L} : x ∈ L' → y ∈ L' → (x + y : L) ∈ L' :=
+  add_mem
+
+protected theorem sub_mem {x y : L} : x ∈ L' → y ∈ L' → (x - y : L) ∈ L' :=
+  sub_mem
 
 theorem smul_mem (t : R) {x : L} (h : x ∈ L') : t • x ∈ L' :=
   (L' : Submodule R L).smul_mem t h
-
-theorem add_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x + y : L) ∈ L' :=
-  (L' : Submodule R L).add_mem hx hy
-
-theorem sub_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (x - y : L) ∈ L' :=
-  (L' : Submodule R L).sub_mem hx hy
-
-@[simp]
-theorem neg_mem_iff {x : L} : -x ∈ L' ↔ x ∈ L' :=
-  L'.toSubmodule.neg_mem_iff
 
 theorem lie_mem {x y : L} (hx : x ∈ L') (hy : y ∈ L') : (⁅x,y⁆ : L) ∈ L' :=
   L'.lie_mem' hx hy
@@ -152,16 +157,11 @@ theorem coe_zero_iff_zero (x : L') : (x : L) = 0 ↔ x = 0 :=
   (ext_iff L' x 0).symm
 
 @[ext]
-theorem ext (L₁' L₂' : LieSubalgebra R L) (h : ∀ x, x ∈ L₁' ↔ x ∈ L₂') : L₁' = L₂' := by
-  cases L₁'
-  cases L₂'
-  simp only
-  ext x
-  exact h x
+theorem ext (L₁' L₂' : LieSubalgebra R L) (h : ∀ x, x ∈ L₁' ↔ x ∈ L₂') : L₁' = L₂' :=
+  SetLike.ext h
 
 theorem ext_iff' (L₁' L₂' : LieSubalgebra R L) : L₁' = L₂' ↔ ∀ x, x ∈ L₁' ↔ x ∈ L₂' :=
-  ⟨fun h x => by
-    rw [h], ext L₁' L₂'⟩
+  SetLike.ext_iff
 
 @[simp]
 theorem mk_coe (S : Set L) h₁ h₂ h₃ h₄ : ((⟨⟨S, h₁, h₂, h₃⟩, h₄⟩ : LieSubalgebra R L) : Set L) = S :=
@@ -173,16 +173,12 @@ theorem coe_to_submodule_mk (p : Submodule R L) h :
   cases p
   rfl
 
-theorem coe_injective : Function.Injective (coe : LieSubalgebra R L → Set L) := by
-  rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h
-  congr
-
-instance : SetLike (LieSubalgebra R L) L :=
-  ⟨coe, coe_injective⟩
+theorem coe_injective : Function.Injective (coe : LieSubalgebra R L → Set L) :=
+  SetLike.coe_injective
 
 @[norm_cast]
 theorem coe_set_eq (L₁' L₂' : LieSubalgebra R L) : (L₁' : Set L) = L₂' ↔ L₁' = L₂' :=
-  coe_injective.eq_iff
+  SetLike.coe_set_eq
 
 theorem to_submodule_injective : Function.Injective (coe : LieSubalgebra R L → Submodule R L) := fun L₁' L₂' h => by
   rw [SetLike.ext'_iff] at h
@@ -683,7 +679,7 @@ variable [CommRingₓ R] [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieA
 
 /-- An injective Lie algebra morphism is an equivalence onto its range. -/
 noncomputable def ofInjective (f : L₁ →ₗ⁅R⁆ L₂) (h : Function.Injective f) : L₁ ≃ₗ⁅R⁆ f.range :=
-  { LinearEquiv.ofInjective ↑f <| by
+  { LinearEquiv.ofInjective (f : L₁ →ₗ[R] L₂) <| by
       rwa [LieHom.coe_to_linear_map] with
     map_lie' := fun x y => by
       apply SetCoe.ext

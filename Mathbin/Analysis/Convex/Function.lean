@@ -31,7 +31,7 @@ a convex set.
 
 open Finset LinearMap Set
 
-open_locale BigOperators Classical Convex Pointwise
+open BigOperators Classical Convex Pointwise
 
 variable {𝕜 E F β ι : Type _}
 

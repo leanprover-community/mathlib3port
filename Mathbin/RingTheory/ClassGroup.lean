@@ -33,7 +33,7 @@ variable [Algebra K L] [FiniteDimensional K L]
 
 variable [Algebra R L] [IsScalarTower R K L]
 
-open_locale nonZeroDivisors
+open nonZeroDivisors
 
 open IsLocalization IsFractionRing FractionalIdeal Units
 
@@ -166,11 +166,11 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
   have a_ne_zero := mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero'
   have fa_ne_zero : (algebraMap R K) a ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors a_ne_zero'
   refine' ⟨⟨{ Carrier := { x | (algebraMap R K a)⁻¹ * algebraMap R K x ∈ I.1 }, .. }, _⟩, _⟩
-  · simp only [RingHom.map_zero, Set.mem_set_of_eq, mul_zero, RingHom.map_mul]
-    exact Submodule.zero_mem I
-    
   · simp only [RingHom.map_add, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ]
     exact fun _ _ ha hb => Submodule.add_mem I ha hb
+    
+  · simp only [RingHom.map_zero, Set.mem_set_of_eq, mul_zero, RingHom.map_mul]
+    exact Submodule.zero_mem I
     
   · intro c _ hb
     simp only [smul_eq_mul, Set.mem_set_of_eq, mul_zero, RingHom.map_mul, mul_addₓ,

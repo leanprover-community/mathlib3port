@@ -27,7 +27,7 @@ variable {α : Type _}
 
 open Nat Part
 
-open_locale BigOperators
+open BigOperators
 
 /-- `multiplicity a b` returns the largest natural number `n` such that
   `a ^ n ∣ b`, as an `enat` or natural with infinity. If `∀ n, a ^ n ∣ b`,
@@ -221,7 +221,7 @@ theorem exists_eq_pow_mul_and_not_dvd {a b : α} (hfin : Finite a b) :
             simp )).2
       h₁
 
-open_locale Classical
+open Classical
 
 theorem multiplicity_le_multiplicity_iff {a b c d : α} :
     multiplicity a b ≤ multiplicity c d ↔ ∀ n : ℕ, a ^ n ∣ b → c ^ n ∣ d :=
@@ -275,6 +275,8 @@ theorem finite_nat_iff {a b : ℕ} : Finite a b ↔ a ≠ 1 ∧ 0 < b := by
       fun h => by
       cases h <;> simp [*]⟩
 
+alias dvd_iff_multiplicity_pos ↔ _ Dvd.Dvd.multiplicity_pos
+
 end CommMonoidₓ
 
 section CommMonoidWithZero
@@ -318,7 +320,7 @@ section CommRingₓ
 
 variable [CommRingₓ α] [DecidableRel ((· ∣ ·) : α → α → Prop)]
 
-open_locale Classical
+open Classical
 
 @[simp]
 protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
@@ -333,6 +335,13 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
             Eq.symm
               (Unique ((dvd_neg _ _).2 (pow_multiplicity_dvd _))
                 (mt (dvd_neg _ _).1 (is_greatest' _ (lt_succ_self _)))))
+
+theorem Int.nat_abs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b := by
+  cases' Int.nat_abs_eq b with h h <;> conv_rhs => rw [h]
+  · rw [int.coe_nat_multiplicity]
+    
+  · rw [multiplicity.neg, int.coe_nat_multiplicity]
+    
 
 theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
     multiplicity p (a + b) = multiplicity p b := by
@@ -493,7 +502,7 @@ protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a * b))
       (_root_.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul hp hdiva hdivb h)
   rw [← Enat.coe_inj, Enat.coe_get, eq_coe_iff] <;> exact ⟨hdiv, hsucc⟩
 
-open_locale Classical
+open Classical
 
 protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a * b) = multiplicity p a + multiplicity p b :=
   if h : Finite p a ∧ Finite p b then by

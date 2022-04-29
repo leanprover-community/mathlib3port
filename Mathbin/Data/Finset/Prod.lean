@@ -36,7 +36,7 @@ variable {s s' : Finset α} {t t' : Finset β} {a : α} {b : β}
 
 /-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
-  ⟨_, nodup_product s.2 t.2⟩
+  ⟨_, s.Nodup.product t.Nodup⟩
 
 @[simp]
 theorem product_val : (s.product t).1 = s.1.product t.1 :=

@@ -6,7 +6,7 @@ Authors: Thomas Browning
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Combinatorics.Hall.Basic
 import Mathbin.Data.Fintype.Card
-import Mathbin.SetTheory.Fincard
+import Mathbin.SetTheory.Cardinal.Finite
 
 /-!
 # Configurations of Points and lines
@@ -33,7 +33,7 @@ Together, these four statements say that any two of the following properties imp
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace Configuration
 
@@ -331,8 +331,7 @@ class ProjectivePlane extends Nondegenerate P L : Type u where
   mkLine : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, L
   mk_line_ax : ∀ {p₁ p₂ : P} h : p₁ ≠ p₂, p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
   exists_config :
-    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L),
-      (p₁ ∉ l₂) ∧ (p₁ ∉ l₃) ∧ (p₂ ∉ l₁) ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ (p₃ ∉ l₁) ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
+    ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L), p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
 
 namespace ProjectivePlane
 
@@ -434,7 +433,7 @@ theorem two_lt_point_count [ProjectivePlane P L] (l : L) : 2 < pointCount P l :=
 variable (P) (L)
 
 theorem card_points [ProjectivePlane P L] : Fintype.card P = order P L ^ 2 + order P L + 1 := by
-  let p : P := Classical.some (@exists_config P L _ _)
+  obtain ⟨p, -⟩ := @exists_config P L _ _
   let ϕ : { q // q ≠ p } ≃ Σl : { l : L // p ∈ l }, { q // q ∈ l.1 ∧ q ≠ p } :=
     { toFun := fun q => ⟨⟨mk_line q.2, (mk_line_ax q.2).2⟩, q, (mk_line_ax q.2).1, q.2⟩,
       invFun := fun lq => ⟨lq.2, lq.2.2.2⟩, left_inv := fun q => Subtype.ext rfl,

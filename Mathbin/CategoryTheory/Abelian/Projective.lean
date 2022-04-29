@@ -65,7 +65,7 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
     fun ⟨X, Y, f⟩ => ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
 
 /-- In any abelian category with enough projectives,
-`ProjectiveResolution.of Z` constructs a projection resolution of the object `Z`.
+`ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
 -/
 irreducible_def of (Z : C) : ProjectiveResolution Z :=
   { complex := ofComplex Z,

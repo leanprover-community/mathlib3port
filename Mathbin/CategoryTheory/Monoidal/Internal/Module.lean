@@ -23,7 +23,7 @@ open CategoryTheory
 
 open LinearMap
 
-open_locale TensorProduct
+open TensorProduct
 
 attribute [local ext] TensorProduct.ext
 

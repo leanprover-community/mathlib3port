@@ -23,7 +23,7 @@ polynomials.
 
 open Filter Finset Asymptotics
 
-open_locale Asymptotics Polynomial TopologicalSpace
+open Asymptotics Polynomial TopologicalSpace
 
 namespace Polynomial
 
@@ -42,7 +42,7 @@ theorem is_equivalent_at_top_lead : (fun x => eval x P) ~[at_top] fun x => P.lea
   by_cases' h : P = 0
   · simp [h]
     
-  · conv_lhs => ext rw [Polynomial.eval_eq_finset_sum, sum_range_succ]
+  · conv_rhs => ext rw [Polynomial.eval_eq_sum_range, sum_range_succ]
     exact
       is_equivalent.refl.add_is_o
         (is_o.sum fun i hi =>
@@ -143,7 +143,7 @@ theorem is_equivalent_at_top_div :
   refine'
     (P.is_equivalent_at_top_lead.symm.div Q.is_equivalent_at_top_lead.symm).symm.trans
       (eventually_eq.is_equivalent ((eventually_gt_at_top 0).mono fun x hx => _))
-  simp [← div_mul_div, hP, hQ, zpow_sub₀ hx.ne.symm]
+  simp [← div_mul_div_comm₀, hP, hQ, zpow_sub₀ hx.ne.symm]
 
 theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
     Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 0) := by

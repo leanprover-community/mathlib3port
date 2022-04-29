@@ -30,7 +30,7 @@ rectangular box, additive function
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Function Set
 
@@ -97,8 +97,13 @@ instance : Add (ι →ᵇᵃ[I₀] M) :=
     ⟨f + g, fun I hI π hπ => by
       simp only [Pi.add_apply, sum_add_distrib, sum_partition_boxes _ hI hπ]⟩⟩
 
+instance {R} [Monoidₓ R] [DistribMulAction R M] : HasScalar R (ι →ᵇᵃ[I₀] M) :=
+  ⟨fun r f =>
+    ⟨r • f, fun I hI π hπ => by
+      simp only [Pi.smul_apply, ← smul_sum, sum_partition_boxes _ hI hπ]⟩⟩
+
 instance : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
-  Function.Injective.addCommMonoid _ coe_injective rfl fun _ _ => rfl
+  Function.Injective.addCommMonoid _ coe_injective rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[simp]
 theorem map_split_add (f : ι →ᵇᵃ[I₀] M) (hI : ↑I ≤ I₀) (i : ι) (x : ℝ) :
@@ -208,7 +213,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 
           ← (fb _).map_split_add this j x]
         have hx' : x ∈ Ioo ((J.face i).lower j) ((J.face i).upper j) := hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, box.split_lower_def hx', box.split_upper_def hx', ←
-          WithBot.some_eq_coe, Option.elim, box.face_mk, update_noteq (Finₓ.succ_above_ne _ _).symm, sub_add_comm,
+          WithBot.some_eq_coe, Option.elim, box.face_mk, update_noteq (Finₓ.succ_above_ne _ _).symm, sub_add_sub_comm,
           update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
         simp only [box.face]
         )

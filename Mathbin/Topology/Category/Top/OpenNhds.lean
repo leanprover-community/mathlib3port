@@ -133,7 +133,7 @@ def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ in
       tidy)
 
 @[simp]
-theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).hom = 𝟙 _ :=
+theorem inclusion_map_iso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
   rfl
 
 @[simp]

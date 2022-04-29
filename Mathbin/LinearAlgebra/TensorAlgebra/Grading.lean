@@ -18,7 +18,7 @@ namespace TensorAlgebra
 
 variable {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-open_locale DirectSum
+open DirectSum
 
 variable (R M)
 
@@ -48,7 +48,7 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
     fun i x => by
     cases' x with x hx
     dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
-    apply Submodule.pow_induction_on' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
+    refine' Submodule.pow_induction_on' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl
       

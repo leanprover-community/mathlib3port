@@ -3,8 +3,9 @@ Copyright (c) 2019 Johan Commelin All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Topology.Opens
 import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.FilterBasis
+import Mathbin.Topology.Sets.Opens
 
 /-!
 # Open subgroups of a topological groups
@@ -32,7 +33,7 @@ Note that this notion is especially relevant in a non-archimedean context, for i
 
 open TopologicalSpace
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- The type of open subgroups of a topological additive group. -/
 @[ancestor AddSubgroup]
@@ -230,6 +231,22 @@ theorem is_open_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : 
 @[to_additive]
 theorem is_open_of_open_subgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (H : Set G) :=
   H.is_open_of_mem_nhds (Filter.mem_of_superset U.mem_nhds_one h)
+
+/-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
+@[to_additive "If a subgroup of an additive topological group has `0` in its interior, then it is\nopen."]
+theorem is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G] {H : Subgroup G}
+    (h_1_int : (1 : G) ∈ Interior (H : Set G)) : IsOpen (H : Set G) := by
+  have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
+    nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
+  rw [is_open_iff_nhds]
+  intro g hg
+  rw
+    [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by
+      simp ]
+  convert Filter.map_mono h
+  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
+  ext
+  simp [H.mul_mem_cancel_left (H.inv_mem hg)]
 
 @[to_additive]
 theorem is_open_mono {H₁ H₂ : Subgroup G} (h : H₁ ≤ H₂) (h₁ : IsOpen (H₁ : Set G)) : IsOpen (H₂ : Set G) :=

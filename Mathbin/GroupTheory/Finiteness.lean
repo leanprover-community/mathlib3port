@@ -5,6 +5,7 @@ Authors: Riccardo Brasca
 -/
 import Mathbin.Data.Set.Finite
 import Mathbin.Data.Finset.Default
+import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Submonoid.Operations
 import Mathbin.GroupTheory.Subgroup.Basic
 
@@ -29,7 +30,7 @@ group.
 /-! ### Monoids and submonoids -/
 
 
-open_locale Pointwise
+open Pointwise
 
 variable {M N : Type _} [Monoidₓ M] [AddMonoidₓ N]
 
@@ -144,11 +145,15 @@ theorem Monoidₓ.fg_of_surjective {M' : Type _} [Monoidₓ M'] [Monoidₓ.Fg M]
   rwa [Finset.coe_image, ← MonoidHom.map_mclosure, hs, ← MonoidHom.mrange_eq_map, MonoidHom.mrange_top_iff_surjective]
 
 @[to_additive]
+instance Monoidₓ.fg_range {M' : Type _} [Monoidₓ M'] [Monoidₓ.Fg M] (f : M →* M') : Monoidₓ.Fg f.mrange :=
+  Monoidₓ.fg_of_surjective f.mrangeRestrict f.mrange_restrict_surjective
+
+@[to_additive AddSubmonoid.multiples_fg]
 theorem Submonoid.powers_fg (r : M) : (Submonoid.powers r).Fg :=
   ⟨{r}, (Finset.coe_singleton r).symm ▸ (Submonoid.powers_eq_closure r).symm⟩
 
-@[to_additive]
-instance (r : M) : Monoidₓ.Fg (Submonoid.powers r) :=
+@[to_additive AddMonoidₓ.multiples_fg]
+instance Monoidₓ.powers_fg (r : M) : Monoidₓ.Fg (Submonoid.powers r) :=
   (Monoidₓ.fg_iff_submonoid_fg _).mpr (Submonoid.powers_fg r)
 
 /-! ### Groups and subgroups -/
@@ -232,6 +237,10 @@ theorem AddGroupₓ.fg_def : AddGroupₓ.Fg H ↔ (⊤ : AddSubgroup H).Fg :=
 theorem Groupₓ.fg_iff : Groupₓ.Fg G ↔ ∃ S : Set G, Subgroup.closure S = (⊤ : Subgroup G) ∧ S.Finite :=
   ⟨fun h => (Subgroup.fg_iff ⊤).1 h.out, fun h => ⟨(Subgroup.fg_iff ⊤).2 h⟩⟩
 
+@[to_additive]
+theorem Groupₓ.fg_iff' : Groupₓ.Fg G ↔ ∃ (n : _)(S : Finset G), S.card = n ∧ Subgroup.closure (S : Set G) = ⊤ :=
+  Groupₓ.fg_def.trans ⟨fun ⟨S, hS⟩ => ⟨S.card, S, rfl, hS⟩, fun ⟨n, S, hn, hS⟩ => ⟨S, hS⟩⟩
+
 /-- A group is finitely generated if and only if it is finitely generated as a monoid. -/
 @[to_additive AddGroupₓ.FgIffAddMonoid.fg
       "An additive group is finitely generated if and only\nif it is finitely generated as an additive monoid."]
@@ -251,5 +260,42 @@ instance AddGroupₓ.fg_of_group_fg [Groupₓ.Fg G] : AddGroupₓ.Fg (Additive G
 instance Groupₓ.fg_of_mul_group_fg [AddGroupₓ.Fg H] : Groupₓ.Fg (Multiplicative H) :=
   AddGroupₓ.fg_iff_mul_fg.1 ‹_›
 
+@[to_additive]
+theorem Groupₓ.fg_of_surjective {G' : Type _} [Groupₓ G'] [hG : Groupₓ.Fg G] {f : G →* G'}
+    (hf : Function.Surjective f) : Groupₓ.Fg G' :=
+  Groupₓ.FgIffMonoid.fg.mpr <| @Monoidₓ.fg_of_surjective G _ G' _ (Groupₓ.FgIffMonoid.fg.mp hG) f hf
+
+@[to_additive]
+instance Groupₓ.fg_range {G' : Type _} [Groupₓ G'] [Groupₓ.Fg G] (f : G →* G') : Groupₓ.Fg f.range :=
+  Groupₓ.fg_of_surjective f.range_restrict_surjective
+
+variable (G)
+
+/-- The minimum number of generators of a group. -/
+@[to_additive "The minimum number of generators of an additive group"]
+def Groupₓ.rank [h : Groupₓ.Fg G]
+    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] :=
+  Nat.findₓ (Groupₓ.fg_iff'.mp h)
+
+@[to_additive]
+theorem Groupₓ.rank_spec [h : Groupₓ.Fg G]
+    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] :
+    ∃ S : Finset G, S.card = Groupₓ.rank G ∧ Subgroup.closure (S : Set G) = ⊤ :=
+  Nat.find_specₓ (Groupₓ.fg_iff'.mp h)
+
+@[to_additive]
+theorem Groupₓ.rank_le [Groupₓ.Fg G]
+    [DecidablePred fun n => ∃ S : Finset G, S.card = n ∧ Subgroup.closure (S : Set G) = ⊤] {S : Finset G}
+    (hS : Subgroup.closure (S : Set G) = ⊤) : Groupₓ.rank G ≤ S.card :=
+  Nat.find_le ⟨S, rfl, hS⟩
+
 end Groupₓ
+
+section QuotientGroup
+
+@[to_additive]
+instance QuotientGroup.fg [Groupₓ.Fg G] (N : Subgroup G) [Subgroup.Normal N] : Groupₓ.Fg <| G ⧸ N :=
+  Groupₓ.fg_of_surjective <| QuotientGroup.mk'_surjective N
+
+end QuotientGroup
 

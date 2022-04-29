@@ -5,6 +5,7 @@ Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 -/
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Nnreal
+import Mathbin.Tactic.NormCast
 
 /-!
 # Square root of a real number
@@ -35,7 +36,7 @@ square root
 
 open Set Filter
 
-open_locale Filter Nnreal TopologicalSpace
+open Filter Nnreal TopologicalSpace
 
 namespace Nnreal
 
@@ -161,7 +162,7 @@ theorem coe_sqrt {x : ℝ≥0 } : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
 
 @[continuity]
 theorem continuous_sqrt : Continuous sqrt :=
-  Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp Nnreal.continuous_of_real
+  Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_to_nnreal
 
 theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by
   simp [sqrt, Real.to_nnreal_eq_zero.2 h]
@@ -257,15 +258,19 @@ theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 := by
   rw [← and_iff_right_of_imp fun h => (sqrt_nonneg x).trans h, And.congr_right_iff]
   exact sqrt_le_left
 
+theorem sqrt_lt (hx : 0 ≤ x) (hy : 0 ≤ y) : sqrt x < y ↔ x < y ^ 2 := by
+  rw [← sqrt_lt_sqrt_iff hx, sqrt_sq hy]
+
+theorem sqrt_lt' (hy : 0 < y) : sqrt x < y ↔ x < y ^ 2 := by
+  rw [← sqrt_lt_sqrt_iff_of_pos (pow_pos hy _), sqrt_sq hy.le]
+
 /- note: if you want to conclude `x ≤ sqrt y`, then use `le_sqrt_of_sq_le`.
    if you have `x > 0`, consider using `le_sqrt'` -/
-theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y := by
-  rw [mul_self_le_mul_self_iff hx (sqrt_nonneg _), sq, mul_self_sqrt hy]
+theorem le_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
+  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt hy hx
 
-theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y := by
-  rw [sqrt, ← Nnreal.coe_mk x hx.le, Nnreal.coe_le_coe, Nnreal.le_sqrt_iff, Real.le_to_nnreal_iff_coe_le', sq,
-    Nnreal.coe_mul]
-  exact mul_pos hx hx
+theorem le_sqrt' (hx : 0 < x) : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
+  le_iff_le_iff_lt_iff_lt.2 <| sqrt_lt' hx
 
 theorem abs_le_sqrt (h : x ^ 2 ≤ y) : abs x ≤ sqrt y := by
   rw [← sqrt_sq_eq_abs] <;> exact sqrt_le_sqrt h
@@ -339,22 +344,34 @@ theorem sqrt_div_self' : sqrt x / x = 1 / sqrt x := by
 theorem sqrt_div_self : sqrt x / x = (sqrt x)⁻¹ := by
   rw [sqrt_div_self', one_div]
 
-theorem lt_sqrt (hx : 0 ≤ x) (hy : 0 ≤ y) : x < sqrt y ↔ x ^ 2 < y := by
-  rw [mul_self_lt_mul_self_iff hx (sqrt_nonneg y), sq, mul_self_sqrt hy]
+theorem lt_sqrt (hx : 0 ≤ x) : x < sqrt y ↔ x ^ 2 < y := by
+  rw [← sqrt_lt_sqrt_iff (sq_nonneg _), sqrt_sq hx]
 
 theorem sq_lt : x ^ 2 < y ↔ -sqrt y < x ∧ x < sqrt y := by
-  constructor
-  · simpa only [← sqrt_lt_sqrt_iff (sq_nonneg x), sqrt_sq_eq_abs] using abs_lt.mp
-    
-  · rw [← abs_lt, ← sq_abs]
-    exact fun h => (lt_sqrt (abs_nonneg x) (sqrt_pos.mp (lt_of_le_of_ltₓ (abs_nonneg x) h)).le).mp h
-    
+  rw [← abs_lt, ← sq_abs, lt_sqrt (abs_nonneg _)]
 
 theorem neg_sqrt_lt_of_sq_lt (h : x ^ 2 < y) : -sqrt y < x :=
   (sq_lt.mp h).1
 
 theorem lt_sqrt_of_sq_lt (h : x ^ 2 < y) : x < sqrt y :=
   (sq_lt.mp h).2
+
+/-- The natural square root is at most the real square root -/
+theorem nat_sqrt_le_real_sqrt {a : ℕ} : ↑(Nat.sqrt a) ≤ Real.sqrt ↑a := by
+  rw [Real.le_sqrt (Nat.cast_nonneg _) (Nat.cast_nonneg _)]
+  norm_cast
+  exact Nat.sqrt_le' a
+
+/-- The real square root is at most the natural square root plus one -/
+theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1 := by
+  rw [Real.sqrt_le_iff]
+  constructor
+  · norm_cast
+    simp
+    
+  · norm_cast
+    exact le_of_ltₓ (Nat.lt_succ_sqrt' a)
+    
 
 instance : StarOrderedRing ℝ :=
   { Real.orderedAddCommGroup with

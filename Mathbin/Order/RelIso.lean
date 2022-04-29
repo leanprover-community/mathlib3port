@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
 import Mathbin.Algebra.Group.Defs
-import Mathbin.Data.Equiv.Set
 import Mathbin.Data.FunLike.Basic
 import Mathbin.Logic.Embedding
+import Mathbin.Logic.Equiv.Set
 import Mathbin.Order.RelClasses
 
 /-!
@@ -601,6 +601,18 @@ theorem rel_embedding_apply (r : α → α → Prop) p a : Subrel.relEmbedding r
 
 instance (r : α → α → Prop) [IsWellOrder α r] (p : Set α) : IsWellOrder p (Subrel r p) :=
   RelEmbedding.is_well_order (Subrel.relEmbedding r p)
+
+instance (r : α → α → Prop) [IsRefl α r] (p : Set α) : IsRefl p (Subrel r p) :=
+  ⟨fun x => @IsRefl.refl α r _ x⟩
+
+instance (r : α → α → Prop) [IsSymm α r] (p : Set α) : IsSymm p (Subrel r p) :=
+  ⟨fun x y => @IsSymm.symm α r _ x y⟩
+
+instance (r : α → α → Prop) [IsTrans α r] (p : Set α) : IsTrans p (Subrel r p) :=
+  ⟨fun x y z => @IsTrans.trans α r _ x y z⟩
+
+instance (r : α → α → Prop) [IsIrrefl α r] (p : Set α) : IsIrrefl p (Subrel r p) :=
+  ⟨fun x => @IsIrrefl.irrefl α r _ x⟩
 
 end Subrel
 

@@ -435,7 +435,7 @@ theorem cons_eq_zero_iff {v : Finₓ n → α} {x : α} : vecCons x v = 0 ↔ x 
     fun ⟨hx, hv⟩ => by
     simp [hx, hv]⟩
 
-open_locale Classical
+open Classical
 
 theorem cons_nonzero_iff {v : Finₓ n → α} {x : α} : vecCons x v ≠ 0 ↔ x ≠ 0 ∨ v ≠ 0 :=
   ⟨fun h => not_and_distrib.mp (h ∘ cons_eq_zero_iff.mpr), fun h => mt cons_eq_zero_iff.mp (not_and_distrib.mpr h)⟩

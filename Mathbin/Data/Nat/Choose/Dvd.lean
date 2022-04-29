@@ -13,7 +13,7 @@ import Mathbin.Data.Nat.Prime
 
 namespace Nat
 
-open_locale Nat
+open Nat
 
 namespace Prime
 

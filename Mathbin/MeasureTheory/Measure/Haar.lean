@@ -61,7 +61,7 @@ noncomputable section
 
 open Set Inv Function TopologicalSpace MeasurableSpace
 
-open_locale Nnreal Classical Ennreal Pointwise TopologicalSpace
+open Nnreal Classical Ennreal Pointwise TopologicalSpace
 
 variable {G : Type _} [Groupₓ G]
 
@@ -505,8 +505,12 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
     chaar K₀ (K₁⊔K₂) = chaar K₀ K₁ + chaar K₀ K₂ := by
   rcases compact_compact_separated K₁.2 K₂.2 (disjoint_iff.mp h) with ⟨U₁, U₂, h1U₁, h1U₂, h2U₁, h2U₂, hU⟩
   rw [← disjoint_iff_inter_eq_empty] at hU
-  rcases compact_open_separated_mul K₁.2 h1U₁ h2U₁ with ⟨V₁, h1V₁, h2V₁, h3V₁⟩
-  rcases compact_open_separated_mul K₂.2 h1U₂ h2U₂ with ⟨V₂, h1V₂, h2V₂, h3V₂⟩
+  rcases compact_open_separated_mul_right K₁.2 h1U₁ h2U₁ with ⟨L₁, h1L₁, h2L₁⟩
+  rcases mem_nhds_iff.mp h1L₁ with ⟨V₁, h1V₁, h2V₁, h3V₁⟩
+  replace h2L₁ := subset.trans (mul_subset_mul_left h1V₁) h2L₁
+  rcases compact_open_separated_mul_right K₂.2 h1U₂ h2U₂ with ⟨L₂, h1L₂, h2L₂⟩
+  rcases mem_nhds_iff.mp h1L₂ with ⟨V₂, h1V₂, h2V₂, h3V₂⟩
+  replace h2L₂ := subset.trans (mul_subset_mul_left h1V₂) h2L₂
   let eval : (compacts G → ℝ) → ℝ := fun f => f K₁ + f K₂ - f (K₁⊔K₂)
   have : Continuous eval :=
     ((@continuous_add ℝ _ _ _).comp ((continuous_apply K₁).prod_mk (continuous_apply K₂))).sub
@@ -517,8 +521,8 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
   apply
     mem_of_subset_of_mem _
       (chaar_mem_cl_prehaar K₀
-        ⟨V⁻¹, (IsOpen.inter h1V₁ h1V₂).Preimage continuous_inv, by
-          simp only [mem_inv, one_inv, h2V₁, h2V₂, V, mem_inter_eq, true_andₓ]⟩)
+        ⟨V⁻¹, (IsOpen.inter h2V₁ h2V₂).Preimage continuous_inv, by
+          simp only [mem_inv, one_inv, h3V₁, h3V₂, V, mem_inter_eq, true_andₓ]⟩)
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
@@ -529,10 +533,10 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
       exact ⟨1, h3U⟩
       
     · refine' disjoint_of_subset _ _ hU
-      · refine' subset.trans (mul_subset_mul subset.rfl _) h3V₁
+      · refine' subset.trans (mul_subset_mul subset.rfl _) h2L₁
         exact subset.trans (inv_subset.mpr h1U) (inter_subset_left _ _)
         
-      · refine' subset.trans (mul_subset_mul subset.rfl _) h3V₂
+      · refine' subset.trans (mul_subset_mul subset.rfl _) h2L₂
         exact subset.trans (inv_subset.mpr h1U) (inter_subset_right _ _)
         
       
@@ -599,12 +603,8 @@ theorem is_left_invariant_haar_content {K₀ : PositiveCompacts G} (g : G) (K : 
 theorem haar_content_outer_measure_self_pos {K₀ : PositiveCompacts G} : 0 < (haarContent K₀).OuterMeasure K₀ := by
   apply ennreal.zero_lt_one.trans_le
   rw [content.outer_measure_eq_infi]
-  refine' le_binfi _
-  intro U hU
-  refine' le_infi _
-  intro h2U
-  refine' le_transₓ (le_of_eqₓ _) (le_bsupr K₀.to_compacts h2U)
-  exact haar_content_self.symm
+  refine' le_infi₂ fun U hU => le_infi fun hK₀ => le_transₓ _ <| le_supr₂ K₀.to_compacts hK₀
+  exact haar_content_self.ge
 
 end Haar
 
@@ -738,6 +738,57 @@ instance (priority := 90) regular_of_is_haar_measure [LocallyCompactSpace G] (μ
   rw [hμ]
   exact regular.smul ctop
 
+/-- **Steinhaus Theorem** In any locally compact group `G` with a haar measure `μ`, for any
+  measurable set `E` of positive measure, the set `E / E` is a neighbourhood of `1`. -/
+@[to_additive
+      "**Steinhaus Theorem** In any locally compact group `G` with a haar measure `μ`,\n  for any measurable set `E` of positive measure, the set `E - E` is a neighbourhood of `0`."]
+theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [LocallyCompactSpace G] (E : Set G)
+    (hE : MeasurableSet E) (hEpos : 0 < μ E) : E / E ∈ 𝓝 (1 : G) := by
+  /- For any regular measure `μ` and set `E` of positive measure, we can find a compact set `K` of
+       positive measure inside `E`. Further, for any outer regular measure `μ` there exists an open
+       set `U` containing `K` with measure arbitrarily close to `K` (here `μ U < 2 * μ K` suffices).
+       Then, we can pick an open neighborhood of `1`, say `V` such that such that `V * K` is contained
+       in `U`. Now note that for any `v` in `V`, the sets `K` and `{v} * K` can not be disjoint
+       because they are both of measure `μ K` (since `μ` is left regular) and also contained in `U`,
+       yet we have that `μ U < 2 * μ K`. This show that `K / K` contains the neighborhood `V` of `1`,
+       and therefore that it is itself such a neighborhood. -/
+  obtain ⟨L, hL, hLE, hLpos, hLtop⟩ : ∃ L : Set G, MeasurableSet L ∧ L ⊆ E ∧ 0 < μ L ∧ μ L < ∞
+  exact exists_subset_measure_lt_top hE hEpos
+  obtain ⟨K, hKL, hK, hKpos⟩ : ∃ (K : Set G)(H : K ⊆ L), IsCompact K ∧ 0 < μ K
+  exact MeasurableSet.exists_lt_is_compact_of_ne_top hL (ne_of_ltₓ hLtop) hLpos
+  have hKtop : μ K ≠ ∞ := by
+    apply ne_top_of_le_ne_top (ne_of_ltₓ hLtop)
+    apply measure_mono hKL
+  obtain ⟨U, hUK, hU, hμUK⟩ : ∃ (U : Set G)(H : U ⊇ K), IsOpen U ∧ μ U < μ K + μ K
+  exact Set.exists_is_open_lt_add K hKtop hKpos.ne'
+  obtain ⟨V, hV1, hVKU⟩ : ∃ V ∈ 𝓝 (1 : G), V * K ⊆ U
+  exact compact_open_separated_mul_left hK hU hUK
+  have hv : ∀ v : G, v ∈ V → ¬Disjoint ({v} * K) K := by
+    intro v hv hKv
+    have hKvsub : {v} * K ∪ K ⊆ U := by
+      apply Set.union_subset _ hUK
+      apply subset_trans _ hVKU
+      apply Set.mul_subset_mul _ (Set.Subset.refl K)
+      simp only [Set.singleton_subset_iff, hv]
+    replace hKvsub := @measure_mono _ _ μ _ _ hKvsub
+    have hcontr := lt_of_le_of_ltₓ hKvsub hμUK
+    rw [measure_union hKv (IsCompact.measurable_set hK)] at hcontr
+    have hKtranslate : μ ({v} * K) = μ K := by
+      simp only [singleton_mul, image_mul_left, measure_preimage_mul]
+    rw [hKtranslate, lt_self_iff_false] at hcontr
+    assumption
+  suffices : V ⊆ E / E
+  exact Filter.mem_of_superset hV1 this
+  intro v hvV
+  obtain ⟨x, hxK, hxvK⟩ : ∃ x : G, x ∈ {v} * K ∧ x ∈ K
+  exact Set.not_disjoint_iff.1 (hv v hvV)
+  refine' ⟨x, v⁻¹ * x, hLE (hKL hxvK), _, _⟩
+  · apply hKL.trans hLE
+    simpa only [singleton_mul, image_mul_left, mem_preimage] using hxK
+    
+  · simp only [div_eq_iff_eq_mul, ← mul_assoc, mul_right_invₓ, one_mulₓ]
+    
+
 end SecondCountable
 
 /-- Any Haar measure is invariant under inversion in a commutative group. -/
@@ -752,7 +803,7 @@ theorem map_haar_inv {G : Type _} [CommGroupₓ G] [TopologicalSpace G] [Topolog
   obtain ⟨c, cpos, clt, hc⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ measure.map Inv.inv μ = c • μ :=
     is_haar_measure_eq_smul_is_haar_measure _ _
   have : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by
-    simp only [hc, smul_smul, pow_two, LinearMap.map_smul]
+    simp only [hc, smul_smul, pow_two, map_smul]
   have μeq : μ = c ^ 2 • μ := by
     rw [map_map continuous_inv.measurable continuous_inv.measurable] at this
     · simpa only [inv_involutive, involutive.comp_self, map_id]

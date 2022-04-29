@@ -40,7 +40,7 @@ noncomputable section
 
 open Classical Set Filter MeasureTheory Finset Function TopologicalSpace
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 variable {ι : Type _} {α : Type _} [MeasurableSpace α] {f : α → α} {s : Set α} {μ : Measureₓ α}
 

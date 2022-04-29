@@ -17,6 +17,11 @@ This file defines pairwise relations and pairwise disjoint indexed sets.
 * `set.pairwise`: `s.pairwise r` states that `r i j` for all `i ≠ j` with `i, j ∈ s`.
 * `set.pairwise_disjoint`: `s.pairwise_disjoint f` states that images under `f` of distinct elements
   of `s` are either equal or `disjoint`.
+
+## Notes
+
+The spelling `s.pairwise_disjoint id` is preferred over `s.pairwise disjoint` to permit dot notation
+on `set.pairwise_disjoint`, even though the latter unfolds to something nicer.
 -/
 
 
@@ -99,6 +104,14 @@ theorem pairwise_empty (r : α → α → Prop) : (∅ : Set α).Pairwise r :=
 theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} r :=
   subsingleton_singleton.Pairwise r
 
+theorem pairwise_iff_of_refl [IsRefl α r] : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
+  forall₄_congrₓ fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp of_eq
+
+alias pairwise_iff_of_refl ↔ Set.Pairwise.of_refl _
+
+theorem _root_.reflexive.set_pairwise_iff (hr : Reflexive r) : s.Pairwise r ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → r a b :=
+  forall₄_congrₓ fun a _ b _ => or_iff_not_imp_left.symm.trans <| or_iff_right_of_imp <| Eq.ndrec <| hr a
+
 theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.Nonempty) :
     s.Pairwise (r on f) ↔ ∃ z, ∀, ∀ x ∈ s, ∀, r (f x) z := by
   fconstructor
@@ -153,9 +166,16 @@ theorem pairwise_union_of_symmetric (hr : Symmetric r) :
 theorem pairwise_insert : (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀, ∀ b ∈ s, ∀, a ≠ b → r a b ∧ r b a := by
   simp only [insert_eq, pairwise_union, pairwise_singleton, true_andₓ, mem_singleton_iff, forall_eq]
 
+theorem Pairwise.insert (hs : s.Pairwise r) (h : ∀, ∀ b ∈ s, ∀, a ≠ b → r a b ∧ r b a) : (insert a s).Pairwise r :=
+  pairwise_insert.2 ⟨hs, h⟩
+
 theorem pairwise_insert_of_symmetric (hr : Symmetric r) :
     (insert a s).Pairwise r ↔ s.Pairwise r ∧ ∀, ∀ b ∈ s, ∀, a ≠ b → r a b := by
   simp only [pairwise_insert, hr.iff a, and_selfₓ]
+
+theorem Pairwise.insert_of_symmetric (hs : s.Pairwise r) (hr : Symmetric r) (h : ∀, ∀ b ∈ s, ∀, a ≠ b → r a b) :
+    (insert a s).Pairwise r :=
+  (pairwise_insert_of_symmetric hr).2 ⟨hs, h⟩
 
 theorem pairwise_pair : Set.Pairwise {a, b} r ↔ a ≠ b → r a b ∧ r b a := by
   simp [pairwise_insert]
@@ -165,6 +185,12 @@ theorem pairwise_pair_of_symmetric (hr : Symmetric r) : Set.Pairwise {a, b} r �
 
 theorem pairwise_univ : (Univ : Set α).Pairwise r ↔ Pairwise r := by
   simp only [Set.Pairwise, Pairwise, mem_univ, forall_const]
+
+@[simp]
+theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α).Subsingleton :=
+  ⟨fun h a ha b hb => h.Eq ha hb id, fun h => h.Pairwise _⟩
+
+alias pairwise_bot_iff ↔ Set.Pairwise.subsingleton _
 
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
     Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
@@ -202,7 +228,7 @@ theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α →
     exact
       h ⟨x, hx⟩ ⟨y, hy⟩
         (by
-          simpa only [Subtype.mk_eq_mk, Ne.def])
+          simpa only [Subtype.mk_eq_mk, Ne.def] )
     
   · rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy
     simp only [Subtype.mk_eq_mk, Ne.def] at hxy
@@ -218,7 +244,11 @@ section SemilatticeInfBot
 variable [SemilatticeInf α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 
 /-- A set is `pairwise_disjoint` under `f`, if the images of any distinct two elements under `f`
-are disjoint. -/
+are disjoint.
+
+`s.pairwise disjoint` is (definitionally) the same as `s.pairwise_disjoint id`. We prefer the latter
+in order to allow dot notation on `set.pairwise_disjoint`, even though the former unfolds more
+nicely. -/
 def PairwiseDisjoint (s : Set ι) (f : ι → α) : Prop :=
   s.Pairwise (Disjoint on f)
 
@@ -310,7 +340,7 @@ theorem PairwiseDisjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → �
   obtain hcd | hcd := eq_or_ne (g c) (g d)
   · exact hg d hd (hcd.subst ha) hb hab
     
-  · exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (le_bsupr a ha) (le_bsupr b hb)
+  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_supr₂ a ha) (le_supr₂ b hb)
     
 
 end CompleteLattice

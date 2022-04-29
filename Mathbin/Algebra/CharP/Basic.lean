@@ -3,11 +3,11 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 -/
+import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Int.Modeq
-import Mathbin.Algebra.IterateHom
+import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.Data.Nat.Choose.Sum
 import Mathbin.GroupTheory.OrderOfElement
-import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.RingTheory.Nilpotent
 
 /-!
@@ -19,7 +19,16 @@ universe u v
 
 variable (R : Type u)
 
-/-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R -/
+/-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
+
+*Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
+* `char_p R 0` asks that only `0 : ℕ` maps to `0 : R` under the map `ℕ → R`;
+* `char_zero R` requires an injection `ℕ ↪ R`.
+
+For instance, endowing `{0, 1}` with addition given by `max` (i.e. `1` is absorbing), shows that
+`char_zero {0, 1}` does not hold and yet `char_p {0, 1} 0` does.
+This example is formalized in `counterexamples/char_p_zero_ne_char_zero`.
+ -/
 class CharP [AddMonoidₓ R] [One R] (p : ℕ) : Prop where
   cast_eq_zero_iff {} : ∀ x : ℕ, (x : R) = 0 ↔ p ∣ x
 
@@ -55,7 +64,7 @@ instance CharP.of_char_zero [AddMonoidₓ R] [One R] [CharZero R] : CharP R 0 :=
     rw [zero_dvd_iff, ← Nat.cast_zeroₓ, Nat.cast_inj]⟩
 
 theorem CharP.exists [NonAssocSemiringₓ R] : ∃ p, CharP R p := by
-  let this' := Classical.decEq R <;>
+  let this := Classical.decEq R <;>
     exact
       Classical.by_cases
         (fun H : ∀ p : ℕ, (p : R) = 0 → p = 0 =>
@@ -99,7 +108,7 @@ namespace ringChar
 variable [NonAssocSemiringₓ R]
 
 theorem spec : ∀ x : ℕ, (x : R) = 0 ↔ ringChar R ∣ x := by
-  let this' := (Classical.some_spec (CharP.exists_unique R)).1 <;>
+  let this := (Classical.some_spec (CharP.exists_unique R)).1 <;>
     unfold ringChar <;> exact CharP.cast_eq_zero_iff R (ringChar R)
 
 theorem eq (p : ℕ) [C : CharP R p] : ringChar R = p :=
@@ -290,7 +299,7 @@ theorem frobenius_add : frobenius R p (x + y) = frobenius R p x + frobenius R p 
 theorem frobenius_nat_cast (n : ℕ) : frobenius R p n = n :=
   map_nat_cast (frobenius R p) n
 
-open_locale BigOperators
+open BigOperators
 
 variable {R}
 
@@ -332,7 +341,7 @@ section
 
 variable [Ringₓ R]
 
-theorem char_p_to_char_zero [CharP R 0] : CharZero R :=
+theorem char_p_to_char_zero (R : Type _) [AddLeftCancelMonoid R] [One R] [CharP R 0] : CharZero R :=
   char_zero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
 
 theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
@@ -344,7 +353,7 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
     
 
 theorem char_ne_zero_of_fintype (p : ℕ) [hc : CharP R p] [Fintype R] : p ≠ 0 := fun h : p = 0 =>
-  have : CharZero R := @char_p_to_char_zero R _ (h ▸ hc)
+  have : CharZero R := @char_p_to_char_zero R _ _ (h ▸ hc)
   absurd (@Nat.cast_injective R _ _ this) (not_injective_infinite_fintype coe)
 
 end

@@ -68,7 +68,7 @@ universe u
 
 open Function Set Submodule
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 variable {ι : Type _} {ι' : Type _} {R : Type _} {K : Type _}
 
@@ -322,7 +322,7 @@ See also `basis.algebra_map_coeffs` for the case where `f` is equal to `algebra_
 -/
 @[simps (config := { simpRhs := true })]
 def mapCoeffs : Basis ι R' M := by
-  let this' : Module R' R := Module.compHom R (↑f.symm : R' →+* R)
+  let this : Module R' R := Module.compHom R (↑f.symm : R' →+* R)
   have : IsScalarTower R' R M :=
     { smul_assoc := fun x y z => by
         dsimp [(· • ·)]
@@ -385,9 +385,9 @@ theorem range_reindex : Set.Range (b.reindex e) = Set.Range b := by
 /-- `b.reindex_range` is a basis indexed by `range b`, the basis vectors themselves. -/
 def reindexRange : Basis (Range b) R M :=
   if h : Nontrivial R then by
-    let this' := h <;> exact b.reindex (Equivₓ.ofInjective b (Basis.injective b))
+    let this := h <;> exact b.reindex (Equivₓ.ofInjective b (Basis.injective b))
   else by
-    let this' : Subsingleton R := not_nontrivial_iff_subsingleton.mp h <;>
+    let this : Subsingleton R := not_nontrivial_iff_subsingleton.mp h <;>
       exact Basis.of_repr (Module.subsingletonEquiv R M (range b))
 
 theorem Finsupp.single_apply_left {α β γ : Type _} [Zero γ] {f : α → β} (hf : Function.Injective f) (x z : α) (y : γ) :
@@ -396,11 +396,11 @@ theorem Finsupp.single_apply_left {α β γ : Type _} [Zero γ] {f : α → β} 
 
 theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange ⟨b i, h⟩ = b i := by
   by_cases' htr : Nontrivial R
-  · let this' := htr
+  · let this := htr
     simp [htr, reindex_range, reindex_apply, Equivₓ.apply_of_injective_symm b.injective, Subtype.coe_mk]
     
-  · let this' : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
-    let this' := Module.subsingleton R M
+  · let this : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
+    let this := Module.subsingleton R M
     simp [reindex_range]
     
 

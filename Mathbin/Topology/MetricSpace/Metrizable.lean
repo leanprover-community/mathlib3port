@@ -9,8 +9,10 @@ import Mathbin.Topology.ContinuousFunction.Bounded
 /-!
 # Metrizability of a normal topological space with second countable topology
 
-In this file we show that a normal topological space with second countable topology `X` is
-metrizable: there exists a metric space structure that generates the same topology.
+In this file we define metrizable topological spaces, i.e., topological spaces for which there
+exists a metric space structure that generates the same topology.
+
+We also show that a normal topological space with second countable topology `X` is metrizable.
 
 First we prove that `X` can be embedded into `l^∞`, then use this embedding to pull back the metric
 space structure.
@@ -19,9 +21,46 @@ space structure.
 
 open Set Filter Metric
 
-open_locale BoundedContinuousFunction Filter TopologicalSpace
+open BoundedContinuousFunction Filter TopologicalSpace
 
 namespace TopologicalSpace
+
+/-- A topological space is metrizable if there exists a metric space structure compatible with the
+topology. To endow such a space with a compatible distance, use
+`letI : metric_space α := metrizable_space_metric α` -/
+class MetrizableSpace (α : Type _) [t : TopologicalSpace α] : Prop where
+  exists_metric : ∃ m : MetricSpace α, m.toUniformSpace.toTopologicalSpace = t
+
+instance (priority := 100) _root_.metric_space.to_metrizable_space {α : Type _} [m : MetricSpace α] :
+    MetrizableSpace α :=
+  ⟨⟨m, rfl⟩⟩
+
+/-- Construct on a metrizable space a metric compatible with the topology. -/
+noncomputable def metrizableSpaceMetric (α : Type _) [TopologicalSpace α] [h : MetrizableSpace α] : MetricSpace α :=
+  h.exists_metric.some.replaceTopology h.exists_metric.some_spec.symm
+
+instance (priority := 100) t2_space_of_metrizable_space (α : Type _) [TopologicalSpace α] [MetrizableSpace α] :
+    T2Space α := by
+  let this : MetricSpace α := metrizable_space_metric α
+  infer_instance
+
+instance metrizable_space_prod (α : Type _) [TopologicalSpace α] [MetrizableSpace α] (β : Type _) [TopologicalSpace β]
+    [MetrizableSpace β] : MetrizableSpace (α × β) := by
+  let this : MetricSpace α := metrizable_space_metric α
+  let this : MetricSpace β := metrizable_space_metric β
+  infer_instance
+
+instance MetrizableSpace.subtype {α : Type _} [TopologicalSpace α] [MetrizableSpace α] (s : Set α) :
+    MetrizableSpace s := by
+  let this := metrizable_space_metric α
+  infer_instance
+
+/-- Given an embedding of a topological space into a metrizable space, the source space is also
+metrizable. -/
+theorem _root_.embedding.metrizable_space {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] [MetrizableSpace β]
+    {f : α → β} (hf : Embedding f) : MetrizableSpace α := by
+  let this : MetricSpace β := metrizable_space_metric β
+  exact ⟨⟨hf.comap_metric_space f, rfl⟩⟩
 
 variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [SecondCountableTopology X]
 
@@ -36,7 +75,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
   have : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
   -- with the discrete topology and deal with `s →ᵇ ℝ` instead.
-  let this' : TopologicalSpace s := ⊥
+  let this : TopologicalSpace s := ⊥
   have : DiscreteTopology s := ⟨rfl⟩
   suffices ∃ f : X → s →ᵇ ℝ, Embedding f by
     rcases this with ⟨f, hf⟩
@@ -115,15 +154,13 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f := 
     
 
 /-- A normal topological space with second countable topology `X` is metrizable: there exists a
-metric space structure that generates the same topology. This definition provides a `metric_space`
-instance such that the corresponding `topological_space X` instance is definitionally equal
-to the original one. -/
-@[reducible]
-noncomputable def toMetricSpace : MetricSpace X :=
-  @MetricSpace.replaceUniformity X
-    ((UniformSpace.comap (exists_embedding_l_infty X).some inferInstance).replaceTopology
-      (exists_embedding_l_infty X).some_spec.induced)
-    (MetricSpace.induced (exists_embedding_l_infty X).some (exists_embedding_l_infty X).some_spec.inj inferInstance) rfl
+metric space structure that generates the same topology. -/
+theorem metrizable_space_of_normal_second_countable : MetrizableSpace X :=
+  let ⟨f, hf⟩ := exists_embedding_l_infty X
+  hf.MetrizableSpace
+
+instance : MetrizableSpace Ennreal :=
+  metrizable_space_of_normal_second_countable Ennreal
 
 end TopologicalSpace
 

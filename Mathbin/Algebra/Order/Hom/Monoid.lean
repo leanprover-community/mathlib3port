@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Group.Hom
+import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Order.WithZero
 import Mathbin.Order.Hom.Basic
 
@@ -181,7 +181,7 @@ instance : OrderMonoidHomClass (α →*o β) α β where
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
-@[to_additive]
+@[to_additive "Helper instance for when there's too many metavariables to apply\n`fun_like.has_coe_to_fun` directly."]
 instance : CoeFun (α →*o β) fun _ => α → β :=
   FunLike.hasCoeToFun
 

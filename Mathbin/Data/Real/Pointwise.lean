@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Eric Wieser
 -/
 import Mathbin.Algebra.Order.Module
-import Mathbin.Algebra.Pointwise
 import Mathbin.Data.Real.Basic
 
 /-!
@@ -24,7 +23,7 @@ don't have those yet.
 
 open Set
 
-open_locale Pointwise
+open Pointwise
 
 variable {ι : Sort _} {α : Type _} [LinearOrderedField α]
 

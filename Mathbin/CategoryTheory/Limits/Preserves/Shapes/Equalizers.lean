@@ -12,8 +12,8 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 Constructions to relate the notions of preserving (co)equalizers and reflecting (co)equalizers
 to concrete (co)forks.
 
-In particular, we show that `equalizer_comparison G f` is an isomorphism iff `G` preserves
-the limit of `f` as well as the dual.
+In particular, we show that `equalizer_comparison f g G` is an isomorphism iff `G` preserves
+the limit of the parallel pair `f,g`, as well as the dual result.
 -/
 
 
@@ -49,7 +49,7 @@ def isLimitMapConeForkEquiv :
     (IsLimit.equivIsoLimit
       (Fork.ext (Iso.refl _)
         (by
-          simp )))
+          simp [fork.ι])))
 
 /-- The property of preserving equalizers expressed in terms of forks. -/
 def isLimitForkMapOfIsLimit [PreservesLimit (parallelPair f g) G] (l : IsLimit (Fork.ofι h w)) :
@@ -127,12 +127,12 @@ def isColimitMapCoconeCoforkEquiv :
           (by
             simp only [← G.map_comp, w]) :
           Cofork (G.map f) (G.map g)) :=
-  (IsColimit.precomposeInvEquiv (diagramIsoParallelPair.{v} _) _).symm.trans
-    (IsColimit.equivIsoColimit
-      (Cofork.ext (Iso.refl _)
-        (by
-          dsimp
-          simp )))
+  (IsColimit.precomposeInvEquiv (diagramIsoParallelPair.{v} _) _).symm.trans <|
+    is_colimit.equiv_iso_colimit <|
+      Cofork.ext (Iso.refl _) <| by
+        dsimp only [cofork.π, cofork.of_π_ι_app]
+        dsimp
+        rw [category.comp_id, category.id_comp]
 
 /-- The property of preserving coequalizers expressed in terms of coforks. -/
 def isColimitCoforkMapOfIsColimit [PreservesColimit (parallelPair f g) G] (l : IsColimit (Cofork.ofπ h w)) :

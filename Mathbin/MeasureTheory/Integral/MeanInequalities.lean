@@ -46,7 +46,7 @@ only to prove the more general results:
 
 noncomputable section
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 open MeasureTheory
 
@@ -261,7 +261,7 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
       have hpq2 : p * q2 = r := by
         rw [← inv_invₓ r, ← one_div, ← one_div, h_one_div_r]
         field_simp [q2, Real.conjugateExponent, p2, hp0_ne, hq0_ne]
-      simp_rw [div_mul_div, mul_oneₓ, mul_comm p2, mul_comm q2, hpp2, hpq2]
+      simp_rw [div_mul_div_comm₀, mul_oneₓ, mul_comm p2, mul_comm q2, hpp2, hpq2]
 
 theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow {p q : ℝ} (hpq : p.IsConjugateExponent q)
     {f g : α → ℝ≥0∞} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) (hf_top : (∫⁻ a, f a ^ p ∂μ) ≠ ⊤) :

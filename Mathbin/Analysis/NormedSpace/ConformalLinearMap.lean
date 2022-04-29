@@ -41,67 +41,56 @@ The definition of conformality in this file does NOT require the maps to be orie
 
 noncomputable section
 
-open LinearIsometry ContinuousLinearMap
+open Function LinearIsometry ContinuousLinearMap
 
 /-- A continuous linear map `f'` is said to be conformal if it's
     a nonzero multiple of a linear isometry. -/
 def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SemiNormedGroup X] [SemiNormedGroup Y] [NormedSpace R X]
     [NormedSpace R Y] (f' : X →L[R] Y) :=
-  ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), (f' : X → Y) = c • li
+  ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), f' = c • li.toContinuousLinearMap
 
 variable {R M N G M' : Type _} [NormedField R] [SemiNormedGroup M] [SemiNormedGroup N] [SemiNormedGroup G]
-  [NormedSpace R M] [NormedSpace R N] [NormedSpace R G] [NormedGroup M'] [NormedSpace R M']
+  [NormedSpace R M] [NormedSpace R N] [NormedSpace R G] [NormedGroup M'] [NormedSpace R M'] {f : M →L[R] N}
+  {g : N →L[R] G} {c : R}
 
 theorem is_conformal_map_id : IsConformalMap (id R M) :=
   ⟨1, one_ne_zero, id, by
-    ext
     simp ⟩
 
-theorem is_conformal_map_const_smul {c : R} (hc : c ≠ 0) : IsConformalMap (c • id R M) :=
-  ⟨c, hc, id, by
-    ext
-    simp ⟩
+theorem IsConformalMap.smul (hf : IsConformalMap f) {c : R} (hc : c ≠ 0) : IsConformalMap (c • f) := by
+  rcases hf with ⟨c', hc', li, rfl⟩
+  exact ⟨c * c', mul_ne_zero hc hc', li, smul_smul _ _ _⟩
 
-theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap f'.toContinuousLinearMap :=
-  ⟨1, one_ne_zero, f', by
-    ext
-    simp ⟩
+theorem is_conformal_map_const_smul (hc : c ≠ 0) : IsConformalMap (c • id R M) :=
+  is_conformal_map_id.smul hc
 
-theorem is_conformal_map_of_subsingleton [h : Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' := by
-  rw [subsingleton_iff] at h
-  have minor : (f' : M → N) = Function.const M 0 := by
-    ext x' <;> rw [h x' 0] <;> exact f'.map_zero
-  have key : ∀ x' : M, ∥(0 : M →ₗ[R] N) x'∥ = ∥x'∥ := fun x' => by
-    rw [LinearMap.zero_apply, h x' 0]
-    repeat'
-      rw [norm_zero]
-  exact
-    ⟨(1 : R), one_ne_zero, ⟨0, key⟩, by
-      rw [Pi.smul_def]
-      ext p
-      rw [one_smul, minor]
-      rfl⟩
+protected theorem LinearIsometry.is_conformal_map (f' : M →ₗᵢ[R] N) : IsConformalMap f'.toContinuousLinearMap :=
+  ⟨1, one_ne_zero, f', (one_smul _ _).symm⟩
+
+@[nontriviality]
+theorem is_conformal_map_of_subsingleton [Subsingleton M] (f' : M →L[R] N) : IsConformalMap f' :=
+  ⟨1, one_ne_zero,
+    ⟨0, fun x => by
+      simp [Subsingleton.elimₓ x 0]⟩,
+    Subsingleton.elimₓ _ _⟩
 
 namespace IsConformalMap
 
-theorem comp {f' : M →L[R] N} {g' : N →L[R] G} (hg' : IsConformalMap g') (hf' : IsConformalMap f') :
-    IsConformalMap (g'.comp f') := by
-  rcases hf' with ⟨cf, hcf, lif, hlif⟩
-  rcases hg' with ⟨cg, hcg, lig, hlig⟩
-  refine' ⟨cg * cf, mul_ne_zero hcg hcf, lig.comp lif, funext fun x => _⟩
-  simp only [coe_comp', LinearIsometry.coe_comp, hlif, hlig, Pi.smul_apply, Function.comp_app, LinearIsometry.map_smul,
-    smul_smul]
+theorem comp (hg : IsConformalMap g) (hf : IsConformalMap f) : IsConformalMap (g.comp f) := by
+  rcases hf with ⟨cf, hcf, lif, rfl⟩
+  rcases hg with ⟨cg, hcg, lig, rfl⟩
+  refine' ⟨cg * cf, mul_ne_zero hcg hcf, lig.comp lif, _⟩
+  rw [smul_comp, comp_smul, mul_smul]
+  rfl
 
-theorem injective {f' : M' →L[R] N} (h : IsConformalMap f') : Function.Injective f' := by
-  let ⟨c, hc, li, hf'⟩ := h
-  simp only [hf', Pi.smul_def] <;> exact (smul_right_injective _ hc).comp li.injective
+protected theorem injective {f : M' →L[R] N} (h : IsConformalMap f) : Function.Injective f := by
+  rcases h with ⟨c, hc, li, rfl⟩
+  exact (smul_right_injective _ hc).comp li.injective
 
 theorem ne_zero [Nontrivial M'] {f' : M' →L[R] N} (hf' : IsConformalMap f') : f' ≠ 0 := by
-  intro w
+  rintro rfl
   rcases exists_ne (0 : M') with ⟨a, ha⟩
-  have : f' a = f' 0 := by
-    simp_rw [w, ContinuousLinearMap.zero_apply]
-  exact ha (hf'.injective this)
+  exact ha (hf'.injective rfl)
 
 end IsConformalMap
 

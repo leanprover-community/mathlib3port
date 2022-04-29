@@ -179,7 +179,7 @@ theorem snd_inv_app_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k
   replace eq := concrete_category.congr_arg (𝖣.t i k).base Eq
   change ((π₂ i,j,k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq
   rw [𝖣.t_inv, id_base, Top.id_app] at eq
-  subst eq
+  subst Eq
   use (inv (D.t' k i j)).base y
   change (inv (D.t' k i j) ≫ π₁ k,i,j).base y = _
   congr 2

@@ -30,7 +30,7 @@ Finally, we prove a version of the
 for set integral, see `filter.tendsto.integral_sub_linear_is_o_ae` and its corollaries.
 Namely, consider a measurably generated filter `l`, a measure `μ` finite at this filter, and
 a function `f` that has a finite limit `c` at `l ⊓ μ.ae`. Then `∫ x in s, f x ∂μ = μ s • c + o(μ s)`
-as `s` tends to `l.lift' powerset`, i.e. for any `ε>0` there exists `t ∈ l` such that
+as `s` tends to `l.small_sets`, i.e. for any `ε>0` there exists `t ∈ l` such that
 `∥∫ x in s, f x ∂μ - μ s • c∥ ≤ ε * μ s` whenever `s ⊆ t`. We also formulate a version of this
 theorem for a locally finite measure `μ` and a function `f` continuous at a point `a`.
 
@@ -50,7 +50,7 @@ noncomputable section
 
 open Set Filter TopologicalSpace MeasureTheory Function
 
-open_locale Classical TopologicalSpace Interval BigOperators Filter Ennreal Nnreal MeasureTheory
+open Classical TopologicalSpace Interval BigOperators Filter Ennreal Nnreal MeasureTheory
 
 variable {α β E F : Type _} [MeasurableSpace α]
 
@@ -58,8 +58,7 @@ namespace MeasureTheory
 
 section NormedGroup
 
-variable [NormedGroup E] [MeasurableSpace E] {f g : α → E} {s t : Set α} {μ ν : Measure α} {l l' : Filter α}
-  [BorelSpace E] [SecondCountableTopology E]
+variable [NormedGroup E] {f g : α → E} {s t : Set α} {μ ν : Measure α} {l l' : Filter α}
 
 variable [CompleteSpace E] [NormedSpace ℝ E]
 
@@ -179,32 +178,33 @@ theorem integral_Union_ae {ι : Type _} [Encodable ι] {s : ι → Set α} {f : 
     (∫ a in ⋃ n, s n, f a ∂μ) = ∑' n, ∫ a in s n, f a ∂μ :=
   (HasSum.tsum_eq (has_sum_integral_Union_ae hm hd hfi)).symm
 
-theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : Measurable f) (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) :
-    (∫ x in t, f x ∂μ) = 0 := by
+theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : StronglyMeasurable f)
+    (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) : (∫ x in t, f x ∂μ) = 0 := by
   refine' integral_eq_zero_of_ae _
-  rw [eventually_eq, ae_restrict_iff (measurable_set_eq_fun hf measurable_zero)]
+  rw [eventually_eq, ae_restrict_iff (hf.measurable_set_eq_fun strongly_measurable_zero)]
   refine' eventually_of_forall fun x hx => _
   rw [Pi.zero_apply]
   exact ht_eq x hx
 
-theorem set_integral_union_eq_left {f : α → E} (hf : Measurable f) (hfi : Integrable f μ) (hs : MeasurableSet s)
+theorem set_integral_union_eq_left {f : α → E} (hf : StronglyMeasurable f) (hfi : Integrable f μ) (hs : MeasurableSet s)
     (ht_eq : ∀, ∀ x ∈ t, ∀, f x = 0) : (∫ x in s ∪ t, f x ∂μ) = ∫ x in s, f x ∂μ := by
   rw [← Set.union_diff_self, union_comm, integral_union,
     set_integral_eq_zero_of_forall_eq_zero _ fun x hx => ht_eq x (diff_subset _ _ hx), zero_addₓ]
   exacts[hf, disjoint_diff.symm, hs, hfi.integrable_on, hfi.integrable_on]
 
-theorem set_integral_neg_eq_set_integral_nonpos [LinearOrderₓ E] [OrderClosedTopology E] {f : α → E} (hf : Measurable f)
-    (hfi : Integrable f μ) : (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
+theorem set_integral_neg_eq_set_integral_nonpos [LinearOrderₓ E] [OrderClosedTopology E] {f : α → E}
+    (hf : StronglyMeasurable f) (hfi : Integrable f μ) :
+    (∫ x in { x | f x < 0 }, f x ∂μ) = ∫ x in { x | f x ≤ 0 }, f x ∂μ := by
   have h_union : { x | f x ≤ 0 } = { x | f x < 0 } ∪ { x | f x = 0 } := by
     ext
     simp_rw [Set.mem_union_eq, Set.mem_set_of_eq]
     exact le_iff_lt_or_eqₓ
   rw [h_union]
-  exact (set_integral_union_eq_left hf hfi (measurable_set_lt hf measurable_const) fun x hx => hx).symm
+  exact (set_integral_union_eq_left hf hfi (hf.measurable_set_lt strongly_measurable_const) fun x hx => hx).symm
 
-theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : Measurable f) (hfi : Integrable f μ) :
+theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : StronglyMeasurable f) (hfi : Integrable f μ) :
     (∫ x, ∥f x∥ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
-  have h_meas : MeasurableSet { x | 0 ≤ f x } := measurable_set_le measurable_const hf
+  have h_meas : MeasurableSet { x | 0 ≤ f x } := strongly_measurable_const.measurable_set_le hf
   calc
     (∫ x, ∥f x∥ ∂μ) = (∫ x in { x | 0 ≤ f x }, ∥f x∥ ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ∥f x∥ ∂μ := by
       rw [← integral_add_compl h_meas hfi.norm]
@@ -237,6 +237,10 @@ theorem integral_indicator_const (e : E) ⦃s : Set α⦄ (s_meas : MeasurableSe
     (∫ a : α, s.indicator (fun x : α => e) a ∂μ) = (μ s).toReal • e := by
   rw [integral_indicator s_meas, ← set_integral_const]
 
+@[simp]
+theorem integral_indicator_one ⦃s : Set α⦄ (hs : MeasurableSet s) : (∫ a, s.indicator 1 a ∂μ) = (μ s).toReal :=
+  (integral_indicator_const 1 hs).trans ((smul_eq_mul _).trans (mul_oneₓ _))
+
 theorem set_integral_indicator_const_Lp {p : ℝ≥0∞} (hs : MeasurableSet s) (ht : MeasurableSet t) (hμt : μ t ≠ ∞)
     (x : E) : (∫ a in s, indicatorConstLp p ht hμt x a ∂μ) = (μ (t ∩ s)).toReal • x :=
   calc
@@ -257,10 +261,11 @@ theorem integral_indicator_const_Lp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμ
     
 
 theorem set_integral_map {β} [MeasurableSpace β] {g : α → β} {f : β → E} {s : Set β} (hs : MeasurableSet s)
-    (hf : AeMeasurable f (Measure.map g μ)) (hg : Measurable g) :
+    (hf : AeStronglyMeasurable f (Measure.map g μ)) (hg : AeMeasurable g μ) :
     (∫ y in s, f y ∂Measure.map g μ) = ∫ x in g ⁻¹' s, f (g x) ∂μ := by
-  rw [measure.restrict_map hg hs, integral_map hg (hf.mono_measure _)]
-  exact measure.map_mono g measure.restrict_le_self
+  rw [measure.restrict_map_of_ae_measurable hg hs,
+    integral_map (hg.mono_measure measure.restrict_le_self) (hf.mono_measure _)]
+  exact measure.map_mono_of_ae_measurable measure.restrict_le_self hg
 
 theorem _root_.measurable_embedding.set_integral_map {β} {_ : MeasurableSpace β} {f : α → β}
     (hf : MeasurableEmbedding f) (g : β → E) (s : Set β) :
@@ -293,13 +298,13 @@ theorem norm_set_integral_le_of_norm_le_const_ae {C : ℝ} (hs : μ s < ∞) (hC
   exact norm_integral_le_of_norm_le_const hC
 
 theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞) (hC : ∀ᵐ x ∂μ, x ∈ s → ∥f x∥ ≤ C)
-    (hfm : AeMeasurable f (μ.restrict s)) : ∥∫ x in s, f x ∂μ∥ ≤ C * (μ s).toReal := by
+    (hfm : AeStronglyMeasurable f (μ.restrict s)) : ∥∫ x in s, f x ∂μ∥ ≤ C * (μ s).toReal := by
   apply norm_set_integral_le_of_norm_le_const_ae hs
-  have A : ∀ᵐ x : α ∂μ, x ∈ s → ∥AeMeasurable.mk f hfm x∥ ≤ C := by
+  have A : ∀ᵐ x : α ∂μ, x ∈ s → ∥ae_strongly_measurable.mk f hfm x∥ ≤ C := by
     filter_upwards [hC, hfm.ae_mem_imp_eq_mk] with _ h1 h2 h3
     rw [← h2 h3]
     exact h1 h3
-  have B : MeasurableSet { x | ∥(hfm.mk f) x∥ ≤ C } := hfm.measurable_mk.norm measurable_set_Iic
+  have B : MeasurableSet { x | ∥(hfm.mk f) x∥ ≤ C } := hfm.strongly_measurable_mk.norm.measurable measurable_set_Iic
   filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A] with _ h1 _
   rwa [h1]
 
@@ -309,7 +314,7 @@ theorem norm_set_integral_le_of_norm_le_const_ae'' {C : ℝ} (hs : μ s < ∞) (
     rwa [ae_restrict_eq hsm, eventually_inf_principal]
 
 theorem norm_set_integral_le_of_norm_le_const {C : ℝ} (hs : μ s < ∞) (hC : ∀, ∀ x ∈ s, ∀, ∥f x∥ ≤ C)
-    (hfm : AeMeasurable f (μ.restrict s)) : ∥∫ x in s, f x ∂μ∥ ≤ C * (μ s).toReal :=
+    (hfm : AeStronglyMeasurable f (μ.restrict s)) : ∥∫ x in s, f x ∂μ∥ ≤ C * (μ s).toReal :=
   norm_set_integral_le_of_norm_le_const_ae' hs (eventually_of_forall hC) hfm
 
 theorem norm_set_integral_le_of_norm_le_const' {C : ℝ} (hs : μ s < ∞) (hsm : MeasurableSet s)
@@ -324,10 +329,10 @@ theorem set_integral_pos_iff_support_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤�
     (0 < ∫ x in s, f x ∂μ) ↔ 0 < μ (Support f ∩ s) := by
   rw [integral_pos_iff_support_of_nonneg_ae hf hfi, measure.restrict_apply₀]
   rw [support_eq_preimage]
-  exact hfi.ae_measurable.null_measurable (measurable_set_singleton 0).Compl
+  exact hfi.ae_strongly_measurable.ae_measurable.null_measurable (measurable_set_singleton 0).Compl
 
 theorem set_integral_trim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm : m ≤ m0) {f : α → E}
-    (hf_meas : @Measurable _ _ m _ f) {s : Set α} (hs : measurable_set[m] s) :
+    (hf_meas : strongly_measurable[m] f) {s : Set α} (hs : measurable_set[m] s) :
     (∫ x in s, f x ∂μ) = ∫ x in s, f x ∂μ.trim hm := by
   rwa [integral_trim hm hf_meas, restrict_trim hm μ]
 
@@ -401,11 +406,11 @@ theorem set_integral_nonneg_ae (hs : MeasurableSet s) (hf : ∀ᵐ a ∂μ, a �
   set_integral_nonneg_of_ae_restrict <| by
     rwa [eventually_le, ae_restrict_iff' hs]
 
-theorem set_integral_le_nonneg {s : Set α} (hs : MeasurableSet s) (hf : Measurable f) (hfi : Integrable f μ) :
+theorem set_integral_le_nonneg {s : Set α} (hs : MeasurableSet s) (hf : StronglyMeasurable f) (hfi : Integrable f μ) :
     (∫ x in s, f x ∂μ) ≤ ∫ x in { y | 0 ≤ f y }, f x ∂μ := by
-  rw [← integral_indicator hs, ← integral_indicator (measurable_set_le measurable_const hf)]
+  rw [← integral_indicator hs, ← integral_indicator (strongly_measurable_const.measurable_set_le hf)]
   exact
-    integral_mono (hfi.indicator hs) (hfi.indicator (measurable_set_le measurable_const hf))
+    integral_mono (hfi.indicator hs) (hfi.indicator (strongly_measurable_const.measurable_set_le hf))
       (indicator_le_indicator_nonneg s f)
 
 theorem set_integral_nonpos_of_ae_restrict (hf : f ≤ᵐ[μ.restrict s] 0) : (∫ a in s, f a ∂μ) ≤ 0 :=
@@ -421,19 +426,18 @@ theorem set_integral_nonpos_ae (hs : MeasurableSet s) (hf : ∀ᵐ a ∂μ, a �
   set_integral_nonpos_of_ae_restrict <| by
     rwa [eventually_le, ae_restrict_iff' hs]
 
-theorem set_integral_nonpos_le {s : Set α} (hs : MeasurableSet s) {f : α → ℝ} (hf : Measurable f)
-    (hfi : Integrable f μ) : (∫ x in { y | f y ≤ 0 }, f x ∂μ) ≤ ∫ x in s, f x ∂μ := by
-  rw [← integral_indicator hs, ← integral_indicator (measurable_set_le hf measurable_const)]
+theorem set_integral_nonpos_le {s : Set α} (hs : MeasurableSet s) (hf : StronglyMeasurable f) (hfi : Integrable f μ) :
+    (∫ x in { y | f y ≤ 0 }, f x ∂μ) ≤ ∫ x in s, f x ∂μ := by
+  rw [← integral_indicator hs, ← integral_indicator (hf.measurable_set_le strongly_measurable_const)]
   exact
-    integral_mono (hfi.indicator (measurable_set_le hf measurable_const)) (hfi.indicator hs)
+    integral_mono (hfi.indicator (hf.measurable_set_le strongly_measurable_const)) (hfi.indicator hs)
       (indicator_nonpos_le_indicator s f)
 
 end Nonneg
 
 section TendstoMono
 
-variable {μ : Measure α} [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [CompleteSpace E] [NormedSpace ℝ E]
-  [SecondCountableTopology E] {s : ℕ → Set α} {f : α → E}
+variable {μ : Measure α} [NormedGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α} {f : α → E}
 
 -- ././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
@@ -445,7 +449,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
   rw [← integral_indicator (MeasurableSet.Inter hsm)]
   refine' tendsto_integral_of_dominated_convergence bound _ _ _ _
   · intro n
-    rw [ae_measurable_indicator_iff (hsm n)]
+    rw [ae_strongly_measurable_indicator_iff (hsm n)]
     exact (integrable_on.mono_set hfi (h_anti (zero_le n))).1
     
   · rw [integrable_indicator_iff (hsm 0)]
@@ -467,9 +471,7 @@ We prove that for any set `s`, the function `λ f : α →₁[μ] E, ∫ x in s,
 
 section ContinuousSetIntegral
 
-variable [NormedGroup E] [MeasurableSpace E] [SecondCountableTopology E] [BorelSpace E] {𝕜 : Type _} [IsROrC 𝕜]
-  [NormedGroup F] [MeasurableSpace F] [SecondCountableTopology F] [BorelSpace F] [NormedSpace 𝕜 F] {p : ℝ≥0∞}
-  {μ : Measure α}
+variable [NormedGroup E] {𝕜 : Type _} [IsROrC 𝕜] [NormedGroup F] [NormedSpace 𝕜 F] {p : ℝ≥0∞} {μ : Measure α}
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
@@ -548,51 +550,49 @@ end MeasureTheory
 
 open MeasureTheory Asymptotics Metric
 
-variable {ι : Type _} [MeasurableSpace E] [NormedGroup E]
+variable {ι : Type _} [NormedGroup E]
 
 /-- Fundamental theorem of calculus for set integrals: if `μ` is a measure that is finite at a
 filter `l` and `f` is a measurable function that has a finite limit `b` at `l ⊓ μ.ae`, then `∫ x in
-s i, f x ∂μ = μ (s i) • b + o(μ (s i))` at a filter `li` provided that `s i` tends to `l.lift'
-powerset` along `li`. Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the
-actual statement.
+s i, f x ∂μ = μ (s i) • b + o(μ (s i))` at a filter `li` provided that `s i` tends to `l.small_sets`
+along `li`. Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the actual statement.
 
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [SecondCountableTopology E] [CompleteSpace E]
-    [BorelSpace E] {μ : Measureₓ α} {l : Filter α} [l.IsMeasurablyGenerated] {f : α → E} {b : E}
-    (h : Tendsto f (l⊓μ.ae) (𝓝 b)) (hfm : MeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {s : ι → Set α}
-    {li : Filter ι} (hs : Tendsto s li (l.lift' Powerset)) (m : ι → ℝ := fun i => (μ (s i)).toReal)
+theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [CompleteSpace E] {μ : Measureₓ α} {l : Filter α}
+    [l.IsMeasurablyGenerated] {f : α → E} {b : E} (h : Tendsto f (l⊓μ.ae) (𝓝 b))
+    (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {s : ι → Set α} {li : Filter ι}
+    (hs : Tendsto s li l.smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
     IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • b) m li := by
-  suffices : is_o (fun s => (∫ x in s, f x ∂μ) - (μ s).toReal • b) (fun s => (μ s).toReal) (l.lift' powerset)
+  suffices : is_o (fun s => (∫ x in s, f x ∂μ) - (μ s).toReal • b) (fun s => (μ s).toReal) l.small_sets
   exact (this.comp_tendsto hs).congr' (hsμ.mono fun a ha => ha ▸ rfl) hsμ
   refine' is_o_iff.2 fun ε ε₀ => _
-  have : ∀ᶠ s in l.lift' powerset, ∀ᶠ x in μ.ae, x ∈ s → f x ∈ closed_ball b ε :=
-    eventually_lift'_powerset_eventually.2 (h.eventually <| closed_ball_mem_nhds _ ε₀)
+  have : ∀ᶠ s in l.small_sets, ∀ᶠ x in μ.ae, x ∈ s → f x ∈ closed_ball b ε :=
+    eventually_small_sets_eventually.2 (h.eventually <| closed_ball_mem_nhds _ ε₀)
   filter_upwards [hμ.eventually, (hμ.integrable_at_filter_of_tendsto_ae hfm h).Eventually, hfm.eventually, this]
   simp only [mem_closed_ball, dist_eq_norm]
   intro s hμs h_integrable hfm h_norm
   rw [← set_integral_const, ← integral_sub h_integrable (integrable_on_const.2 <| Or.inr hμs), Real.norm_eq_abs,
     abs_of_nonneg Ennreal.to_real_nonneg]
-  exact norm_set_integral_le_of_norm_le_const_ae' hμs h_norm (hfm.sub ae_measurable_const)
+  exact norm_set_integral_le_of_norm_le_const_ae' hμs h_norm (hfm.sub ae_strongly_measurable_const)
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure and `f` is an almost everywhere measurable function that is continuous at a point `a`
 within a measurable set `t`, then `∫ x in s i, f x ∂μ = μ (s i) • f a + o(μ (s i))` at a filter `li`
-provided that `s i` tends to `(𝓝[t] a).lift' powerset` along `li`.  Since `μ (s i)` is an `ℝ≥0∞`
+provided that `s i` tends to `(𝓝[t] a).small_sets` along `li`.  Since `μ (s i)` is an `ℝ≥0∞`
 number, we use `(μ (s i)).to_real` in the actual statement.
 
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
 theorem ContinuousWithinAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α] [NormedSpace ℝ E]
-    [SecondCountableTopology E] [CompleteSpace E] [BorelSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α}
-    {t : Set α} {f : α → E} (ha : ContinuousWithinAt f t a) (ht : MeasurableSet t)
-    (hfm : MeasurableAtFilter f (𝓝[t] a) μ) {s : ι → Set α} {li : Filter ι}
-    (hs : Tendsto s li ((𝓝[t] a).lift' Powerset)) (m : ι → ℝ := fun i => (μ (s i)).toReal)
+    [CompleteSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E}
+    (ha : ContinuousWithinAt f t a) (ht : MeasurableSet t) (hfm : StronglyMeasurableAtFilter f (𝓝[t] a) μ)
+    {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝[t] a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
@@ -602,64 +602,40 @@ theorem ContinuousWithinAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [Op
 
 /-- Fundamental theorem of calculus for set integrals, `nhds` version: if `μ` is a locally finite
 measure and `f` is an almost everywhere measurable function that is continuous at a point `a`, then
-`∫ x in s i, f x ∂μ = μ (s i) • f a + o(μ (s i))` at `li` provided that `s` tends to `(𝓝 a).lift'
-powerset` along `li.  Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the
-actual statement.
+`∫ x in s i, f x ∂μ = μ (s i) • f a + o(μ (s i))` at `li` provided that `s` tends to
+`(𝓝 a).small_sets` along `li.  Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in
+the actual statement.
 
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
 theorem ContinuousAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α] [NormedSpace ℝ E]
-    [SecondCountableTopology E] [CompleteSpace E] [BorelSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α}
-    {f : α → E} (ha : ContinuousAt f a) (hfm : MeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α} {li : Filter ι}
-    (hs : Tendsto s li ((𝓝 a).lift' Powerset)) (m : ι → ℝ := fun i => (μ (s i)).toReal)
+    [CompleteSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α} {f : α → E} (ha : ContinuousAt f a)
+    (hfm : StronglyMeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets)
+    (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
     IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • f a) m li :=
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds a) hs m hsμ
 
-/-- If a function is continuous on an open set `s`, then it is measurable at the filter `𝓝 x` for
-  all `x ∈ s`. -/
-theorem ContinuousOn.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
-    [TopologicalSpace β] [BorelSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α} (hs : IsOpen s)
-    (hf : ContinuousOn f s) : ∀, ∀ x ∈ s, ∀, MeasurableAtFilter f (𝓝 x) μ := fun x hx =>
-  ⟨s, IsOpen.mem_nhds hs hx, hf.AeMeasurable hs.MeasurableSet⟩
-
-theorem ContinuousAt.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [BorelSpace E] {f : α → E}
-    {s : Set α} {μ : Measureₓ α} (hs : IsOpen s) (hf : ∀, ∀ x ∈ s, ∀, ContinuousAt f x) :
-    ∀, ∀ x ∈ s, ∀, MeasurableAtFilter f (𝓝 x) μ :=
-  ContinuousOn.measurable_at_filter hs <| ContinuousAt.continuous_on hf
-
-theorem Continuous.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
-    [TopologicalSpace β] [BorelSpace β] {f : α → β} (hf : Continuous f) (μ : Measureₓ α) (l : Filter α) :
-    MeasurableAtFilter f l μ :=
-  hf.Measurable.MeasurableAtFilter
-
-/-- If a function is continuous on a measurable set `s`, then it is measurable at the filter
-  `𝓝[s] x` for all `x`. -/
-theorem ContinuousOn.measurable_at_filter_nhds_within {α β : Type _} [MeasurableSpace α] [TopologicalSpace α]
-    [OpensMeasurableSpace α] [MeasurableSpace β] [TopologicalSpace β] [BorelSpace β] {f : α → β} {s : Set α}
-    {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) (x : α) : MeasurableAtFilter f (𝓝[s] x) μ :=
-  ⟨s, self_mem_nhds_within, hf.AeMeasurable hs⟩
-
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure, `f` is continuous on a measurable set `t`, and `a ∈ t`, then `∫ x in (s i), f x ∂μ =
-μ (s i) • f a + o(μ (s i))` at `li` provided that `s i` tends to `(𝓝[t] a).lift' powerset` along
-`li`.  Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the actual statement.
+μ (s i) • f a + o(μ (s i))` at `li` provided that `s i` tends to `(𝓝[t] a).small_sets` along `li`.
+Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the actual statement.
 
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
 theorem ContinuousOn.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMeasurableSpace α] [NormedSpace ℝ E]
-    [SecondCountableTopology E] [CompleteSpace E] [BorelSpace E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α}
+    [CompleteSpace E] [SecondCountableTopologyEither α E] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α}
     {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ha : a ∈ t) (ht : MeasurableSet t) {s : ι → Set α} {li : Filter ι}
-    (hs : Tendsto s li ((𝓝[t] a).lift' Powerset)) (m : ι → ℝ := fun i => (μ (s i)).toReal)
+    (hs : Tendsto s li (𝓝[t] a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
     IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • f a) m li :=
-  (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhds_within, hft.AeMeasurable ht⟩ hs m hsμ
+  (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhds_within, hft.AeStronglyMeasurable ht⟩ hs m hsμ
 
 section
 
@@ -673,15 +649,13 @@ as `continuous_linear_map.comp_Lp`. We take advantage of this construction here.
 -/
 
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 variable {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] {p : Ennreal}
 
 namespace ContinuousLinearMap
 
-variable [MeasurableSpace F] [BorelSpace F]
-
-variable [SecondCountableTopology F] [CompleteSpace F] [BorelSpace E] [SecondCountableTopology E] [NormedSpace ℝ F]
+variable [CompleteSpace F] [NormedSpace ℝ F]
 
 theorem integral_comp_Lp (L : E →L[𝕜] F) (φ : lp E p μ) : (∫ a, (L.compLp φ) a ∂μ) = ∫ a, L (φ a) ∂μ :=
   integral_congr_ae <| coe_fn_comp_Lp _ _
@@ -721,8 +695,8 @@ theorem integral_comp_comm (L : E →L[𝕜] F) {φ : α → E} (φ_int : Integr
   all_goals
     assumption
 
-theorem integral_apply {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] [second_countable_topology <| H →L[𝕜] E]
-    {φ : α → H →L[𝕜] E} (φ_int : Integrable φ μ) (v : H) : (∫ a, φ a ∂μ) v = ∫ a, φ a v ∂μ :=
+theorem integral_apply {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] {φ : α → H →L[𝕜] E} (φ_int : Integrable φ μ)
+    (v : H) : (∫ a, φ a ∂μ) v = ∫ a, φ a v ∂μ :=
   ((ContinuousLinearMap.apply 𝕜 E v).integral_comp_comm φ_int).symm
 
 theorem integral_comp_comm' (L : E →L[𝕜] F) {K} (hL : AntilipschitzWith K L) (φ : α → E) :
@@ -741,16 +715,14 @@ end ContinuousLinearMap
 
 namespace LinearIsometry
 
-variable [MeasurableSpace F] [BorelSpace F] [SecondCountableTopology F] [CompleteSpace F] [NormedSpace ℝ F]
-  [BorelSpace E] [SecondCountableTopology E] [CompleteSpace E] [NormedSpace ℝ E]
+variable [CompleteSpace F] [NormedSpace ℝ F] [CompleteSpace E] [NormedSpace ℝ E]
 
 theorem integral_comp_comm (L : E →ₗᵢ[𝕜] F) (φ : α → E) : (∫ a, L (φ a) ∂μ) = L (∫ a, φ a ∂μ) :=
   L.toContinuousLinearMap.integral_comp_comm' L.antilipschitz _
 
 end LinearIsometry
 
-variable [BorelSpace E] [SecondCountableTopology E] [CompleteSpace E] [NormedSpace ℝ E] [MeasurableSpace F]
-  [BorelSpace F] [SecondCountableTopology F] [CompleteSpace F] [NormedSpace ℝ F]
+variable [CompleteSpace E] [NormedSpace ℝ E] [CompleteSpace F] [NormedSpace ℝ F]
 
 @[norm_cast]
 theorem integral_of_real {f : α → ℝ} : (∫ a, (f a : 𝕜) ∂μ) = ↑(∫ a, f a ∂μ) :=
@@ -810,8 +782,7 @@ theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (
 
 section Inner
 
-variable {E' : Type _} [InnerProductSpace 𝕜 E'] [MeasurableSpace E'] [BorelSpace E'] [SecondCountableTopology E']
-  [CompleteSpace E'] [NormedSpace ℝ E']
+variable {E' : Type _} [InnerProductSpace 𝕜 E'] [CompleteSpace E'] [NormedSpace ℝ E']
 
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
@@ -843,7 +814,7 @@ theorem integral_with_density_eq_integral_smul {f : α → ℝ≥0 } (f_meas : M
       
     · exact integral_nonneg fun x => Nnreal.coe_nonneg _
       
-    · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable, _⟩
+    · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable.AeStronglyMeasurable, _⟩
       rw [with_density_apply _ s_meas] at hs
       rw [has_finite_integral]
       convert hs

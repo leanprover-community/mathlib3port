@@ -5,7 +5,9 @@ Authors: Scott Morrison, Shing Tak Lam, Mario Carneiro
 -/
 import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Nat.Log
+import Mathbin.Data.Nat.Parity
 import Mathbin.Data.List.Indexes
+import Mathbin.Data.List.Palindrome
 import Mathbin.Tactic.IntervalCases
 import Mathbin.Tactic.Linarith.Default
 
@@ -24,6 +26,8 @@ A basic `norm_digits` tactic is also provided for proving goals of the form
 
 
 namespace Nat
+
+variable {n : ℕ}
 
 /-- (Impl.) An auxiliary definition for `digits`, to help get the desired definitional unfolding. -/
 def digitsAux0 : ℕ → List ℕ
@@ -274,7 +278,7 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀, ∀
         exact List.mem_cons_of_memₓ _ m
         
       · intro h
-        · rw [List.last_cons _ h] at w₂
+        · rw [List.last_cons h] at w₂
           convert w₂
           
         
@@ -294,7 +298,7 @@ theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀, ∀
         apply Nat.pos_of_ne_zeroₓ
         contrapose! w₂
         apply digits_zero_of_eq_zero _ w₂
-        · rw [List.last_cons _ h']
+        · rw [List.last_cons h']
           exact List.last_mem h'
           
         · exact le_of_ltₓ h
@@ -683,7 +687,7 @@ theorem dvd_iff_dvd_of_digits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : �
   rw [← Int.coe_nat_dvd]
   exact dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modeq_iff_dvd.2 h).symm _).symm.Dvd
 
-theorem eleven_dvd_iff (n : ℕ) : 11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum := by
+theorem eleven_dvd_iff : 11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum := by
   have t :=
     dvd_iff_dvd_of_digits 11 10 (-1 : ℤ)
       (by
@@ -691,6 +695,15 @@ theorem eleven_dvd_iff (n : ℕ) : 11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).ma
       n
   rw [of_digits_neg_one] at t
   exact t
+
+theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digits 10 n).length) : 11 ∣ n := by
+  let dig := (digits 10 n).map (coe : ℕ → ℤ)
+  replace h : Even dig.length := by
+    rwa [List.length_mapₓ]
+  refine' eleven_dvd_iff.2 ⟨0, (_ : dig.alternating_sum = 0)⟩
+  have := dig.alternating_sum_reverse
+  rw [(p.map _).reverse_eq, pow_succₓ, h.neg_one_pow, mul_oneₓ, neg_one_zsmul] at this
+  exact eq_zero_of_neg_eq this.symm
 
 /-! ### `norm_digits` tactic -/
 

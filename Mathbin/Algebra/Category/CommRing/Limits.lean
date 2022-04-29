@@ -82,7 +82,7 @@ end HasLimits
 
 open HasLimits
 
--- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits : HasLimits SemiRing :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -166,7 +166,7 @@ def limitCone (F : J ⥤ CommSemiRing) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRing) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits : HasLimits CommSemiRing.{u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ CommSemiRing SemiRing.{u}) } }
@@ -237,7 +237,7 @@ def limitCone (F : J ⥤ Ringₓₓ) : Cone F :=
 def limitConeIsLimit (F : J ⥤ Ringₓₓ) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits : HasLimits Ringₓₓ :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing) } }
@@ -324,7 +324,7 @@ def limitCone (F : J ⥤ CommRingₓₓ) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingₓₓ) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1201:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits : HasLimits CommRingₓₓ.{u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingₓₓ Ringₓₓ.{u}) } }

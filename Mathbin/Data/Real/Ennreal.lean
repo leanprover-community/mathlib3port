@@ -71,7 +71,7 @@ context, or if we have `(f : α → ℝ≥0∞) (hf : ∀ x, f x ≠ ∞)`.
 
 open Classical Set
 
-open_locale Classical BigOperators Nnreal
+open Classical BigOperators Nnreal
 
 variable {α : Type _} {β : Type _}
 
@@ -87,16 +87,16 @@ localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 -- mathport name: «expr∞»
 localized [Ennreal] notation "∞" => (⊤ : Ennreal)
 
--- TODO: why are the two covariant instances necessary? why aren't they inferred?
-instance covariant_class_mul : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·) (· ≤ ·) :=
-  CanonicallyOrderedCommSemiring.to_covariant_mul_le
-
-instance covariant_class_add : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· ≤ ·) :=
-  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0∞
-
 namespace Ennreal
 
 variable {a b c d : ℝ≥0∞} {r p q : ℝ≥0 }
+
+-- TODO: why are the two covariant instances necessary? why aren't they inferred?
+instance covariant_class_mul_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· * ·) (· ≤ ·) :=
+  CanonicallyOrderedCommSemiring.to_covariant_mul_le
+
+instance covariant_class_add_le : CovariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· ≤ ·) :=
+  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0∞
 
 instance : Inhabited ℝ≥0∞ :=
   ⟨0⟩
@@ -386,7 +386,7 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
   right_inv := fun x => to_nnreal_coe
 
 theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0 , f x :=
-  Eq.symm <| (infi_congr _ neTopEquivNnreal.symm.Surjective) fun x => rfl
+  Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0 , f x := by
@@ -415,7 +415,7 @@ theorem top_add : ∞ + a = ∞ :=
   top_add _
 
 /-- Coercion `ℝ≥0 → ℝ≥0∞` as a `ring_hom`. -/
-noncomputable def ofNnrealHom : ℝ≥0 →+* ℝ≥0∞ :=
+def ofNnrealHom : ℝ≥0 →+* ℝ≥0∞ :=
   ⟨coe, coe_one, fun _ _ => coe_mul, coe_zero, fun _ _ => coe_add⟩
 
 @[simp]
@@ -718,23 +718,41 @@ protected theorem pow_ne_zero : a ≠ 0 → ∀ n : ℕ, a ^ n ≠ 0 := by
 theorem not_lt_zero : ¬a < 0 := by
   simp
 
-theorem add_lt_add_iff_left (ha : a ≠ ∞) : a + c < a + b ↔ c < b :=
-  WithTop.add_lt_add_iff_left ha
+protected theorem le_of_add_le_add_left : a ≠ ∞ → a + b ≤ a + c → b ≤ c :=
+  WithTop.le_of_add_le_add_left
 
-theorem add_lt_add_left (ha : a ≠ ∞) (h : b < c) : a + b < a + c :=
-  (add_lt_add_iff_left ha).2 h
+protected theorem le_of_add_le_add_right : a ≠ ∞ → b + a ≤ c + a → b ≤ c :=
+  WithTop.le_of_add_le_add_right
 
-theorem add_lt_add_iff_right (ha : a ≠ ∞) : c + a < b + a ↔ c < b :=
-  WithTop.add_lt_add_iff_right ha
+protected theorem add_lt_add_left : a ≠ ∞ → b < c → a + b < a + c :=
+  WithTop.add_lt_add_left
 
-theorem add_lt_add_right (ha : a ≠ ∞) (h : b < c) : b + a < c + a :=
-  (add_lt_add_iff_right ha).2 h
+protected theorem add_lt_add_right : a ≠ ∞ → b < c → b + a < c + a :=
+  WithTop.add_lt_add_right
+
+protected theorem add_le_add_iff_left : a ≠ ∞ → (a + b ≤ a + c ↔ b ≤ c) :=
+  WithTop.add_le_add_iff_left
+
+protected theorem add_le_add_iff_right : a ≠ ∞ → (b + a ≤ c + a ↔ b ≤ c) :=
+  WithTop.add_le_add_iff_right
+
+protected theorem add_lt_add_iff_left : a ≠ ∞ → (a + b < a + c ↔ b < c) :=
+  WithTop.add_lt_add_iff_left
+
+protected theorem add_lt_add_iff_right : a ≠ ∞ → (b + a < c + a ↔ b < c) :=
+  WithTop.add_lt_add_iff_right
+
+protected theorem add_lt_add_of_le_of_lt : a ≠ ∞ → a ≤ b → c < d → a + c < b + d :=
+  WithTop.add_lt_add_of_le_of_lt
+
+protected theorem add_lt_add_of_lt_of_le : c ≠ ∞ → a < b → c ≤ d → a + c < b + d :=
+  WithTop.add_lt_add_of_lt_of_le
 
 instance contravariant_class_add_lt : ContravariantClass ℝ≥0∞ ℝ≥0∞ (· + ·) (· < ·) :=
   WithTop.contravariant_class_add_lt
 
 theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a + b := by
-  rwa [← pos_iff_ne_zero, ← add_lt_add_iff_left ha, add_zeroₓ] at hb
+  rwa [← pos_iff_ne_zero, ← Ennreal.add_lt_add_iff_left ha, add_zeroₓ] at hb
 
 theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε : ℝ≥0 , 0 < ε → b < ∞ → a ≤ b + ε) → a ≤ b
   | a, none, h => le_top
@@ -858,17 +876,6 @@ theorem coe_mem_upper_bounds {s : Set ℝ≥0 } : ↑r ∈ UpperBounds ((coe : �
   simp (config := { contextual := true })[UpperBounds, ball_image_iff, -mem_image, *]
 
 end CompleteLattice
-
-/-- `le_of_add_le_add_left` is normally applicable to `ordered_cancel_add_comm_monoid`,
-but it holds in `ℝ≥0∞` with the additional assumption that `a ≠ ∞`. -/
-theorem le_of_add_le_add_left {a b c : ℝ≥0∞} (ha : a ≠ ∞) : a + b ≤ a + c → b ≤ c := by
-  lift a to ℝ≥0 using ha
-  cases b <;> cases c <;> simp [← Ennreal.coe_add, Ennreal.coe_le_coe]
-
-/-- `le_of_add_le_add_right` is normally applicable to `ordered_cancel_add_comm_monoid`,
-but it holds in `ℝ≥0∞` with the additional assumption that `a ≠ ∞`. -/
-theorem le_of_add_le_add_right {a b c : ℝ≥0∞} : a ≠ ∞ → b + a ≤ c + a → b ≤ c := by
-  simpa only [add_commₓ _ a] using le_of_add_le_add_left
 
 section Mul
 
@@ -996,39 +1003,62 @@ theorem sub_eq_top_iff : a - b = ∞ ↔ a = ∞ ∧ b ≠ ∞ := by
 theorem sub_ne_top (ha : a ≠ ∞) : a - b ≠ ∞ :=
   mt sub_eq_top_iff.mp <| mt And.left ha
 
+protected theorem sub_eq_of_eq_add (hb : b ≠ ∞) : a = c + b → a - b = c :=
+  (cancel_of_ne hb).tsub_eq_of_eq_add
+
+protected theorem eq_sub_of_add_eq (hc : c ≠ ∞) : a + c = b → a = b - c :=
+  (cancel_of_ne hc).eq_tsub_of_add_eq
+
+protected theorem sub_eq_of_eq_add_rev (hb : b ≠ ∞) : a = b + c → a - b = c :=
+  (cancel_of_ne hb).tsub_eq_of_eq_add_rev
+
+theorem sub_eq_of_add_eq (hb : b ≠ ∞) (hc : a + b = c) : c - b = a :=
+  Ennreal.sub_eq_of_eq_add hb hc.symm
+
+@[simp]
+protected theorem add_sub_cancel_left (ha : a ≠ ∞) : a + b - a = b :=
+  (cancel_of_ne ha).add_tsub_cancel_left
+
+@[simp]
+protected theorem add_sub_cancel_right (hb : b ≠ ∞) : a + b - b = a :=
+  (cancel_of_ne hb).add_tsub_cancel_right
+
+protected theorem lt_add_of_sub_lt_left (h : a ≠ ∞ ∨ b ≠ ∞) : a - b < c → a < b + c := by
+  obtain rfl | hb := eq_or_ne b ∞
+  · rw [top_add, lt_top_iff_ne_top]
+    exact fun _ => h.resolve_right (not_not.2 rfl)
+    
+  · exact (cancel_of_ne hb).lt_add_of_tsub_lt_left
+    
+
+protected theorem lt_add_of_sub_lt_right (h : a ≠ ∞ ∨ c ≠ ∞) : a - c < b → a < b + c := by
+  obtain rfl | hc := eq_or_ne c ∞
+  · rw [add_top, lt_top_iff_ne_top]
+    exact fun _ => h.resolve_right (not_not.2 rfl)
+    
+  · exact (cancel_of_ne hc).lt_add_of_tsub_lt_right
+    
+
+theorem le_sub_of_add_le_left (ha : a ≠ ∞) : a + b ≤ c → b ≤ c - a :=
+  (cancel_of_ne ha).le_tsub_of_add_le_left
+
+theorem le_sub_of_add_le_right (hb : b ≠ ∞) : a + b ≤ c → a ≤ c - b :=
+  (cancel_of_ne hb).le_tsub_of_add_le_right
+
 protected theorem sub_lt_of_lt_add (hac : c ≤ a) (h : a < b + c) : a - c < b :=
   ((cancel_of_lt' <| hac.trans_lt h).tsub_lt_iff_right hac).mpr h
 
-@[simp]
-theorem add_sub_self (hb : b ≠ ∞) : a + b - b = a :=
-  (cancel_of_ne hb).add_tsub_cancel_right
-
-@[simp]
-theorem add_sub_self' (ha : a ≠ ∞) : a + b - a = b :=
-  (cancel_of_ne ha).add_tsub_cancel_left
-
-theorem sub_eq_of_add_eq (hb : b ≠ ∞) (hc : a + b = c) : c - b = a :=
-  (cancel_of_ne hb).tsub_eq_of_eq_add hc.symm
-
-protected theorem lt_add_of_sub_lt (ht : a ≠ ∞ ∨ b ≠ ∞) (h : a - b < c) : a < c + b := by
-  rcases eq_or_ne b ∞ with (rfl | hb)
-  · rw [add_top, lt_top_iff_ne_top]
-    exact ht.resolve_right (not_not.2 rfl)
-    
-  · exact (cancel_of_ne hb).lt_add_of_tsub_lt_right h
-    
-
-protected theorem sub_lt_iff_lt_add (hb : b ≠ ∞) (hab : b ≤ a) : a - b < c ↔ a < c + b :=
+protected theorem sub_lt_iff_lt_right (hb : b ≠ ∞) (hab : b ≤ a) : a - b < c ↔ a < c + b :=
   (cancel_of_ne hb).tsub_lt_iff_right hab
 
-protected theorem sub_lt_self (hat : a ≠ ∞) (ha0 : a ≠ 0) (hb : b ≠ 0) : a - b < a := by
-  cases b
-  · simp [pos_iff_ne_zero, ha0]
-    
-  exact (cancel_of_ne hat).tsub_lt_self cancel_coe (pos_iff_ne_zero.mpr ha0) (pos_iff_ne_zero.mpr hb)
+protected theorem sub_lt_self (ha : a ≠ ∞) (ha₀ : a ≠ 0) (hb : b ≠ 0) : a - b < a :=
+  (cancel_of_ne ha).tsub_lt_self (pos_iff_ne_zero.2 ha₀) (pos_iff_ne_zero.2 hb)
+
+protected theorem sub_lt_self_iff (ha : a ≠ ∞) : a - b < a ↔ 0 < a ∧ 0 < b :=
+  (cancel_of_ne ha).tsub_lt_self_iff
 
 theorem sub_lt_of_sub_lt (h₂ : c ≤ a) (h₃ : a ≠ ∞ ∨ b ≠ ∞) (h₁ : a - b < c) : a - c < b :=
-  Ennreal.sub_lt_of_lt_add h₂ (add_commₓ c b ▸ Ennreal.lt_add_of_sub_lt h₃ h₁)
+  Ennreal.sub_lt_of_lt_add h₂ (add_commₓ c b ▸ Ennreal.lt_add_of_sub_lt_right h₃ h₁)
 
 theorem sub_sub_cancel (h : a ≠ ∞) (h2 : b ≤ a) : a - (a - b) = b :=
   (cancel_of_ne <| sub_ne_top h).tsub_tsub_cancel_of_le h2
@@ -1495,7 +1525,7 @@ theorem le_of_forall_pos_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r : ℝ≥0 , 0 <
 theorem eq_top_of_forall_nnreal_le {x : ℝ≥0∞} (h : ∀ r : ℝ≥0 , ↑r ≤ x) : x = ∞ :=
   top_unique <| le_of_forall_nnreal_lt fun r hr => h r
 
-theorem add_div {a b c : ℝ≥0∞} : (a + b) / c = a / c + b / c :=
+theorem add_div : (a + b) / c = a / c + b / c :=
   right_distrib a b c⁻¹
 
 theorem div_add_div_same {a b c : ℝ≥0∞} : a / c + b / c = (a + b) / c :=
@@ -1842,6 +1872,15 @@ theorem of_real_eq_zero {p : ℝ} : Ennreal.ofReal p = 0 ↔ p ≤ 0 := by
 @[simp]
 theorem zero_eq_of_real {p : ℝ} : 0 = Ennreal.ofReal p ↔ p ≤ 0 :=
   eq_comm.trans of_real_eq_zero
+
+alias Ennreal.of_real_eq_zero ↔ _ Ennreal.of_real_of_nonpos
+
+theorem of_real_sub (p : ℝ) (hq : 0 ≤ q) : Ennreal.ofReal (p - q) = Ennreal.ofReal p - Ennreal.ofReal q := by
+  obtain h | h := le_totalₓ p q
+  · rw [of_real_of_nonpos (sub_nonpos_of_le h), tsub_eq_zero_of_le (of_real_le_of_real h)]
+    
+  refine' Ennreal.eq_sub_of_add_eq of_real_ne_top _
+  rw [← of_real_add (sub_nonneg_of_le h) hq, sub_add_cancel]
 
 theorem of_real_le_iff_le_to_real {a : ℝ} {b : ℝ≥0∞} (hb : b ≠ ∞) : Ennreal.ofReal a ≤ b ↔ a ≤ Ennreal.toReal b := by
   lift b to ℝ≥0 using hb

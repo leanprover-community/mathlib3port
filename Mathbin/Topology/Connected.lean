@@ -43,7 +43,7 @@ https://ncatlab.org/nlab/show/too+simple+to+be+simple#relationship_to_biased_def
 
 open Set Function TopologicalSpace Relation
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 universe u v
 
@@ -210,7 +210,7 @@ theorem IsConnected.Union_of_refl_trans_gen {ι : Type _} [Nonempty ι] {s : ι 
 
 section SuccOrder
 
-open SuccOrder
+open Order
 
 variable [LinearOrderₓ β] [SuccOrder β] [IsSuccArchimedean β]
 
@@ -625,6 +625,9 @@ class ConnectedSpace (α : Type u) [TopologicalSpace α] extends PreconnectedSpa
 attribute [instance] ConnectedSpace.to_nonempty
 
 -- see Note [lower instance priority]
+theorem is_connected_univ [ConnectedSpace α] : IsConnected (Univ : Set α) :=
+  ⟨univ_nonempty, is_preconnected_univ⟩
+
 theorem is_preconnected_range [TopologicalSpace β] [PreconnectedSpace α] {f : α → β} (h : Continuous f) :
     IsPreconnected (Range f) :=
   @image_univ _ _ f ▸ is_preconnected_univ.Image _ h.ContinuousOn
@@ -726,6 +729,12 @@ theorem is_clopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = �
 theorem eq_univ_of_nonempty_clopen [PreconnectedSpace α] {s : Set α} (h : s.Nonempty) (h' : IsClopen s) : s = univ := by
   rw [is_clopen_iff] at h'
   exact h'.resolve_left h.ne_empty
+
+theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} : Frontier s = ∅ ↔ s = ∅ ∨ s = univ :=
+  is_clopen_iff_frontier_eq_empty.symm.trans is_clopen_iff
+
+theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} : (Frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
+  simp only [← ne_empty_iff_nonempty, Ne.def, frontier_eq_empty_iff, not_or_distrib]
 
 theorem Subtype.preconnected_space {s : Set α} (h : IsPreconnected s) : PreconnectedSpace s :=
   { is_preconnected_univ := by
@@ -1114,6 +1123,20 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i
   · obtain ⟨a, t, ht, rfl⟩ := Sigma.is_connected_iff.1 ⟨h, hs⟩
     exact ht.is_preconnected.subsingleton.image _
     
+
+/-- Let `X` be a topological space, and suppose that for all distinct `x,y ∈ X`, there
+  is some clopen set `U` such that `x ∈ U` and `y ∉ U`. Then `X` is totally disconnected. -/
+theorem is_totally_disconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
+    (hX : ∀ {x y : X} h_diff : x ≠ y, ∃ (U : Set X)(h_clopen : IsClopen U), x ∈ U ∧ y ∉ U) :
+    IsTotallyDisconnected (Set.Univ : Set X) := by
+  rintro S - hS
+  unfold Set.Subsingleton
+  by_contra' h_contra
+  rcases h_contra with ⟨x, hx, y, hy, hxy⟩
+  obtain ⟨U, h_clopen, hxU, hyU⟩ := hX hxy
+  specialize hS U (Uᶜ) h_clopen.1 h_clopen.compl.1 (fun a ha => em (a ∈ U)) ⟨x, hx, hxU⟩ ⟨y, hy, hyU⟩
+  rw [inter_compl_self, Set.inter_empty] at hS
+  exact Set.not_nonempty_empty hS
 
 /-- A space is totally disconnected iff its connected components are subsingletons. -/
 theorem totally_disconnected_space_iff_connected_component_subsingleton :

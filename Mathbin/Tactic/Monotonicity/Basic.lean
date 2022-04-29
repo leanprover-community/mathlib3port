@@ -148,7 +148,7 @@ unsafe def monotonicity.attr : user_attribute (native.rb_lmap MonoKey Name) (Opt
       let (none, v) ← monotonicity.attr.get_param n | pure ()
       let k ← monotonicity.check n
       monotonicity.attr n (some k, v) p
-  Parser := Prod.mk none <$> side
+  parser := Prod.mk none <$> side
 
 unsafe def filter_instances (e : MonoSelection) (ns : List Name) : tactic (List Name) :=
   ns.mfilter fun n => do

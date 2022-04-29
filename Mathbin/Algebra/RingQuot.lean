@@ -338,7 +338,7 @@ variable {B : Type u₁} [CommRingₓ B]
 def ringQuotToIdealQuotient (r : B → B → Prop) : RingQuot r →+* B ⧸ Ideal.ofRel r :=
   lift
     ⟨Ideal.Quotient.mk (Ideal.ofRel r), fun x y h =>
-      Quot.sound (Submodule.mem_Inf.mpr fun p w => w ⟨x, y, h, sub_add_cancel x y⟩)⟩
+      Ideal.Quotient.eq.2 <| Submodule.mem_Inf.mpr fun p w => w ⟨x, y, h, sub_add_cancel x y⟩⟩
 
 @[simp]
 theorem ring_quot_to_ideal_quotient_apply (r : B → B → Prop) (x : B) :

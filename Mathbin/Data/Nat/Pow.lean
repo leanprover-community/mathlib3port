@@ -138,6 +138,11 @@ alias Nat.sq_sub_sq ← Nat.pow_two_sub_pow_two
 /-! ### `pow` and `mod` / `dvd` -/
 
 
+theorem pow_mod (a b n : ℕ) : a ^ b % n = (a % n) ^ b % n := by
+  induction' b with b ih
+  rfl
+  simp [pow_succₓ, Nat.mul_modₓ, ih]
+
 theorem mod_pow_succ {b : ℕ} (w m : ℕ) : m % b ^ succ w = b * (m / b % b ^ w) + m % b := by
   by_cases' b_h : b = 0
   · simp [b_h, pow_succₓ]
@@ -298,10 +303,9 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
     
   have : shiftl' tt m n + 1 = 1 := congr_argₓ (· + 1) s0
   rw [shiftl'_tt_eq_mul_pow] at this
-  have m0 := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
-  subst m0
-  simp at this
-  have : n = 0 :=
+  obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
+  rw [one_mulₓ] at this
+  obtain rfl : n = 0 :=
     Nat.eq_zero_of_le_zeroₓ
       (le_of_not_gtₓ fun hn =>
         ne_of_gtₓ
@@ -310,7 +314,6 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
               decide)
             hn)
           this)
-  subst n
   rfl
 
 @[simp]

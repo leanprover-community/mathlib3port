@@ -33,7 +33,7 @@ type class and the main results are the instances `field_completion` and
 
 noncomputable section
 
-open_locale Classical uniformity TopologicalSpace
+open Classical uniformity TopologicalSpace
 
 open Set UniformSpace UniformSpace.Completion Filter
 
@@ -93,7 +93,7 @@ instance Completion.hasInv : Inv (hat K) :=
 variable [TopologicalDivisionRing K]
 
 theorem hat_inv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coe (x⁻¹ : K) :=
-  dense_inducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (TopologicalDivisionRing.continuous_inv x h))
+  dense_inducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (continuous_at_inv₀ h))
 
 variable [CompletableTopField K]
 
@@ -121,7 +121,7 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
   let c := (coe : K → hat K)
   change f x = 1
   have cont : ContinuousAt f x := by
-    let this' : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace
+    let this : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace
     have : ContinuousAt (fun y : hat K => ((y, hatInv y) : hat K × hat K)) x :=
       continuous_id.continuous_at.prod (continuous_hat_inv x_ne)
     exact (_root_.continuous_mul.continuous_at.comp this : _)
@@ -159,7 +159,7 @@ instance fieldCompletion : Field (hat K) :=
 
 instance topological_division_ring_completion : TopologicalDivisionRing (hat K) :=
   { Completion.top_ring_compl with
-    continuous_inv := by
+    continuous_at_inv₀ := by
       intro x x_ne
       have : { y | hatInv y = y⁻¹ } ∈ 𝓝 x :=
         have : {(0 : hat K)}ᶜ ⊆ { y : hat K | hatInv y = y⁻¹ } := by

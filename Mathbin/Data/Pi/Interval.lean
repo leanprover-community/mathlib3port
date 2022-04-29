@@ -16,7 +16,7 @@ order are locally finite and calculates the cardinality of their intervals.
 
 open Finset Fintype
 
-open_locale BigOperators
+open BigOperators
 
 variable {ι : Type _} {α : ι → Type _} [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrderₓ (α i)]
   [∀ i, LocallyFiniteOrder (α i)]

@@ -18,6 +18,8 @@ supplied for true NFA's.
 -/
 
 
+open Set
+
 universe u v
 
 /-- An NFA is a set of states (`σ`), a transition function from state to state labelled by the
@@ -37,20 +39,50 @@ instance : Inhabited (NFA α σ) :=
   ⟨NFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
 /-- `M.step_set S a` is the union of `M.step s a` for all `s ∈ S`. -/
-def StepSet : Set σ → α → Set σ := fun Ss a => Ss >>= fun S => M.step S a
+def StepSet (S : Set σ) (a : α) : Set σ :=
+  ⋃ s ∈ S, M.step s a
 
-theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a := by
-  simp only [step_set, Set.mem_Union, Set.bind_def]
+theorem mem_step_set (s : σ) (S : Set σ) (a : α) : s ∈ M.StepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
+  mem_Union₂
+
+@[simp]
+theorem step_set_empty (a : α) : M.StepSet ∅ a = ∅ := by
+  simp_rw [step_set, Union_false, Union_empty]
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
   of `S`. -/
 def EvalFrom (start : Set σ) : List α → Set σ :=
   List.foldlₓ M.StepSet start
 
+@[simp]
+theorem eval_from_nil (S : Set σ) : M.evalFrom S [] = S :=
+  rfl
+
+@[simp]
+theorem eval_from_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.StepSet S a :=
+  rfl
+
+@[simp]
+theorem eval_from_append_singleton (S : Set σ) (x : List α) (a : α) :
+    M.evalFrom S (x ++ [a]) = M.StepSet (M.evalFrom S x) a := by
+  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
   `M.start`. -/
-def Eval :=
+def Eval : List α → Set σ :=
   M.evalFrom M.start
+
+@[simp]
+theorem eval_nil : M.eval [] = M.start :=
+  rfl
+
+@[simp]
+theorem eval_singleton (a : α) : M.eval [a] = M.StepSet M.start a :=
+  rfl
+
+@[simp]
+theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.StepSet (M.eval x) a :=
+  eval_from_append_singleton _ _ _ _
 
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def Accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
@@ -99,7 +131,7 @@ theorem to_NFA_eval_from_match (M : DFA α σ) (start : σ) (s : List α) :
     
   · rw [List.foldlₓ, List.foldlₓ,
       show M.to_NFA.step_set {start} a = {M.step start a} by
-        simpa [NFA.StepSet]]
+        simpa [NFA.StepSet] ]
     tauto
     
 

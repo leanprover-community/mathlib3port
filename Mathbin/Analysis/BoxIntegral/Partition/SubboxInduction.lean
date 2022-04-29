@@ -31,7 +31,7 @@ namespace BoxIntegral
 
 open Set Metric
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 noncomputable section
 

@@ -5,6 +5,7 @@ Authors: Kenny Lau, Mario Carneiro
 -/
 import Mathbin.GroupTheory.Congruence
 import Mathbin.LinearAlgebra.BilinearMap
+import Mathbin.LinearAlgebra.Span
 
 /-!
 # Tensor product of modules over commutative semirings.
@@ -389,7 +390,7 @@ theorem tmul_ite (x₁ : M) (x₂ : N) (P : Prop) [Decidable P] :
 
 section
 
-open_locale BigOperators
+open BigOperators
 
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
@@ -993,7 +994,7 @@ variable [Module R M] [Module R N] [Module R P] [Module R Q] [Module R S]
 
 namespace TensorProduct
 
-open_locale TensorProduct
+open TensorProduct
 
 open LinearMap
 
@@ -1079,7 +1080,7 @@ When `R` is a `ring` we get the required `tensor_product.compatible_smul` instan
 `is_scalar_tower`, but when it is only a `semiring` we need to build it from scratch.
 The instance diamond in `compatible_smul` doesn't matter because it's in `Prop`.
 -/
-instance CompatibleSmul.int [Module ℤ M] [Module ℤ N] : CompatibleSmul R ℤ M N :=
+instance CompatibleSmul.int : CompatibleSmul R ℤ M N :=
   ⟨fun r m n =>
     Int.induction_on r
       (by

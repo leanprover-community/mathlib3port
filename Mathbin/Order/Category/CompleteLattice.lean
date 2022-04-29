@@ -33,6 +33,10 @@ instance (X : CompleteLatticeₓ) : CompleteLattice X :=
 def of (α : Type _) [CompleteLattice α] : CompleteLatticeₓ :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [CompleteLattice α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited CompleteLatticeₓ :=
   ⟨of PUnit⟩
 

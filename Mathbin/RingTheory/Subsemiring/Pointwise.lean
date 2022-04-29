@@ -3,9 +3,8 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.RingTheory.Subsemiring.Basic
 import Mathbin.Algebra.GroupRingAction
-import Mathbin.Algebra.Pointwise
+import Mathbin.RingTheory.Subsemiring.Basic
 
 /-! # Pointwise instances on `subsemiring`s
 
@@ -39,7 +38,7 @@ protected def pointwiseMulAction : MulAction M (Subsemiring R) where
 
 localized [Pointwise] attribute [instance] Subsemiring.pointwiseMulAction
 
-open_locale Pointwise
+open Pointwise
 
 theorem pointwise_smul_def {a : M} (S : Subsemiring R) : a • S = S.map (MulSemiringAction.toRingHom _ _ a) :=
   rfl
@@ -68,7 +67,7 @@ section Groupₓ
 
 variable [Groupₓ M] [Semiringₓ R] [MulSemiringAction M R]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff {a : M} {S : Subsemiring R} {x : R} : a • x ∈ a • S ↔ x ∈ S :=
@@ -99,7 +98,7 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ M] [Semiringₓ R] [MulSemiringAction M R]
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem smul_mem_pointwise_smul_iff₀ {a : M} (ha : a ≠ 0) (S : Subsemiring R) (x : R) : a • x ∈ a • S ↔ x ∈ S :=

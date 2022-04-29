@@ -43,7 +43,7 @@ noncomputable section
 
 namespace Polynomial
 
-open_locale Nat BigOperators Polynomial
+open Nat BigOperators Polynomial
 
 open Function
 
@@ -154,6 +154,7 @@ theorem factorial_smul_hasse_deriv : ⇑(k ! • @hasseDeriv R _ k) = @derivativ
   simp only [factorial_succ, succ_eq_add_one]
   ring
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem hasse_deriv_comp (k l : ℕ) : (@hasseDeriv R _ k).comp (hasseDeriv l) = (k + l).choose k • hasseDeriv (k + l) :=
   by
   ext i : 2

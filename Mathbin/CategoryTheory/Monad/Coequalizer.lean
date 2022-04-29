@@ -40,18 +40,18 @@ Show that any algebra is a coequalizer of free algebras.
 
 /-- The top map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
+def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.a) ⟶ (Monad.free T).obj X.a :=
   (Monad.free T).map X.a
 
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A where
-  f := T.μ.app X.A
-  h' := T.assoc X.A
+def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.a) ⟶ (Monad.free T).obj X.a where
+  f := T.μ.app X.a
+  h' := T.assoc X.a
 
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
-def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X where
+def FreeCoequalizer.π : (Monad.free T).obj X.a ⟶ X where
   f := X.a
   h' := X.assoc.symm
 
@@ -104,13 +104,22 @@ def beckSplitCoequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
   ⟨T.η.app _, T.η.app _, X.assoc.symm, X.Unit, T.left_unit _, (T.η.naturality _).symm⟩
 
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
-@[simps]
+@[simps x]
 def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
   (beckSplitCoequalizer X).asCofork
+
+@[simp]
+theorem beck_cofork_π : (beckCofork X).π = X.a :=
+  rfl
 
 /-- The Beck cofork is a coequalizer. -/
 def beckCoequalizer : IsColimit (beckCofork X) :=
   (beckSplitCoequalizer X).isCoequalizer
+
+@[simp]
+theorem beck_coequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.a)) :
+    (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
+  rfl
 
 end Monadₓ
 

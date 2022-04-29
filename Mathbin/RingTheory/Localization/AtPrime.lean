@@ -66,8 +66,8 @@ protected abbrev Localization.AtPrime :=
 namespace IsLocalization
 
 theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
-  local_of_nonunits_ideal
-    (fun hze => by
+  @LocalRing.mk _ _
+    (nontrivial_of_ne (0 : S) 1 fun hze => by
       rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
       obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze
       exact
@@ -76,7 +76,7 @@ theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
             simpa using ht.symm
           htz.symm ▸ I.zero_mem))
     (by
-      intro x hx y hy hu
+      intro x y hx hy hu
       cases' is_unit_iff_exists_inv.1 hu with z hxyz
       have : ∀ {r : R} {s : I.prime_compl}, mk' S r s ∈ Nonunits S → r ∈ I := fun s : I.prime_compl =>
         not_imp_comm.1 fun nr =>

@@ -90,7 +90,7 @@ instance fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
 
 @[simp]
 theorem card (n : ℕ) [Fact (0 < n)] : Fintype.card (Zmod n) = n := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -123,7 +123,7 @@ def val : ∀ {n : ℕ}, Zmod n → ℕ
   | n + 1 => (coe : Finₓ (n + 1) → ℕ)
 
 theorem val_lt {n : ℕ} [Fact (0 < n)] (a : Zmod n) : a.val < n := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -150,7 +150,7 @@ theorem val_mul' {m n : Zmod 0} : (m * n).val = m.val * n.val := by
   simp [val, Int.nat_abs_mul]
 
 theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : Zmod n).val = a % n := by
-  cases' n
+  cases n
   · rw [Nat.mod_zeroₓ, Int.nat_cast_eq_coe_nat]
     exact Int.nat_abs_of_nat a
     
@@ -166,6 +166,11 @@ instance (n : ℕ) : CharP (Zmod n) n where
     rw [Finₓ.eq_iff_veq]
     show (k : Zmod (n + 1)).val = (0 : Zmod (n + 1)).val ↔ _
     rw [val_nat_cast, val_zero, Nat.dvd_iff_mod_eq_zeroₓ]
+
+/-- We have that `ring_char (zmod n) = n`. -/
+theorem ring_char_zmod_n (n : ℕ) : ringChar (Zmod n) = n := by
+  rw [ringChar.eq_iff]
+  exact Zmod.char_p n
 
 @[simp]
 theorem nat_cast_self (n : ℕ) : (n : Zmod n) = 0 :=
@@ -213,7 +218,7 @@ end
 /-- So-named because the coercion is `nat.cast` into `zmod`. For `nat.cast` into an arbitrary ring,
 see `zmod.nat_cast_val`. -/
 theorem nat_cast_zmod_val {n : ℕ} [Fact (0 < n)] (a : Zmod n) : (a.val : Zmod n) = a := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -255,7 +260,7 @@ variable (R) [Ringₓ R]
 /-- The coercions are respectively `nat.cast` and `zmod.cast`. -/
 @[simp]
 theorem nat_cast_comp_val [Fact (0 < n)] : (coe : ℕ → R) ∘ (val : Zmod n → ℕ) = coe := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -302,7 +307,7 @@ variable {n} {m : ℕ} [CharP R m]
 
 @[simp]
 theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 := by
-  cases' n
+  cases n
   · exact Int.cast_oneₓ
     
   show ((1 % (n + 1) : ℕ) : R) = 1
@@ -317,7 +322,7 @@ theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 := by
   exact Nat.lt_of_sub_eq_succₓ rfl
 
 theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a + b : Zmod n) : R) = a + b := by
-  cases' n
+  cases n
   · apply Int.cast_add
     
   simp only [coe_coe]
@@ -326,7 +331,7 @@ theorem cast_add (h : m ∣ n) (a b : Zmod n) : ((a + b : Zmod n) : R) = a + b :
   exact h.trans (Nat.dvd_sub_mod _)
 
 theorem cast_mul (h : m ∣ n) (a b : Zmod n) : ((a * b : Zmod n) : R) = a * b := by
-  cases' n
+  cases n
   · apply Int.cast_mul
     
   simp only [coe_coe]
@@ -409,7 +414,7 @@ theorem cast_int_cast' (k : ℤ) : ((k : Zmod n) : R) = k :=
 variable (R)
 
 theorem cast_hom_injective : Function.Injective (Zmod.castHom (dvd_refl n) R) := by
-  rw [RingHom.injective_iff]
+  rw [injective_iff_map_eq_zero]
   intro x
   obtain ⟨k, rfl⟩ := Zmod.int_cast_surjective x
   rw [RingHom.map_int_cast, CharP.int_cast_eq_zero_iff R n, CharP.int_cast_eq_zero_iff (Zmod n) n]
@@ -451,9 +456,56 @@ theorem int_coe_zmod_eq_zero_iff_dvd (a : ℤ) (b : ℕ) : (a : Zmod b) = 0 ↔ 
   change (a : Zmod b) = ((0 : ℤ) : Zmod b) ↔ (b : ℤ) ∣ a
   rw [Zmod.int_coe_eq_int_coe_iff, Int.modeq_zero_iff_dvd]
 
+theorem int_coe_eq_int_coe_iff_dvd_sub (a b : ℤ) (c : ℕ) : (a : Zmod c) = ↑b ↔ ↑c ∣ b - a := by
+  rw [Zmod.int_coe_eq_int_coe_iff, Int.modeq_iff_dvd]
+
 theorem nat_coe_zmod_eq_zero_iff_dvd (a b : ℕ) : (a : Zmod b) = 0 ↔ b ∣ a := by
   change (a : Zmod b) = ((0 : ℕ) : Zmod b) ↔ b ∣ a
   rw [Zmod.nat_coe_eq_nat_coe_iff, Nat.modeq_zero_iff_dvd]
+
+theorem val_int_cast {n : ℕ} (a : ℤ) [Fact (0 < n)] : ↑(a : Zmod n).val = a % n := by
+  have hle : (0 : ℤ) ≤ ↑(a : Zmod n).val := Int.coe_nat_nonneg _
+  have hlt : ↑(a : Zmod n).val < (n : ℤ) := int.coe_nat_lt.mpr (Zmod.val_lt a)
+  refine' (Int.mod_eq_of_lt hle hlt).symm.trans _
+  rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_coe_nat, Zmod.nat_cast_val, Zmod.cast_id]
+
+@[simp]
+theorem val_neg_one (n : ℕ) : (-1 : Zmod n.succ).val = n := by
+  rw [val, Finₓ.coe_neg]
+  cases n
+  · rw [Nat.mod_oneₓ]
+    
+  · rw [Finₓ.coe_one, Nat.succ_add_sub_one, Nat.mod_eq_of_ltₓ (Nat.Lt.base _)]
+    
+
+/-- `-1 : zmod n` lifts to `n - 1 : R`. This avoids the characteristic assumption in `cast_neg`. -/
+theorem cast_neg_one {R : Type _} [Ringₓ R] (n : ℕ) : ↑(-1 : Zmod n) = (n - 1 : R) := by
+  cases n
+  · rw [Int.cast_neg, Int.cast_oneₓ, Nat.cast_zeroₓ, zero_sub]
+    
+  · rw [← nat_cast_val, val_neg_one, Nat.cast_succₓ, add_sub_cancel]
+    
+
+theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : Zmod p) [Fact (0 < p)] : ↑n = z ↔ ∃ k, n = z.val + p * k := by
+  constructor
+  · rintro rfl
+    refine' ⟨n / p, _⟩
+    rw [val_nat_cast, Nat.mod_add_divₓ]
+    
+  · rintro ⟨k, rfl⟩
+    rw [Nat.cast_addₓ, nat_cast_zmod_val, Nat.cast_mulₓ, nat_cast_self, zero_mul, add_zeroₓ]
+    
+
+theorem int_coe_zmod_eq_iff (p : ℕ) (n : ℤ) (z : Zmod p) [Fact (0 < p)] : ↑n = z ↔ ∃ k, n = z.val + p * k := by
+  constructor
+  · rintro rfl
+    refine' ⟨n / p, _⟩
+    rw [val_int_cast, Int.mod_add_div]
+    
+  · rintro ⟨k, rfl⟩
+    rw [Int.cast_add, Int.cast_mul, Int.cast_coe_nat, Int.cast_coe_nat, nat_cast_val, Zmod.nat_cast_self, zero_mul,
+      add_zeroₓ, cast_id]
+    
 
 @[push_cast, simp]
 theorem int_cast_mod (a : ℤ) (b : ℕ) : ((a % b : ℤ) : Zmod b) = (a : Zmod b) := by
@@ -477,7 +529,7 @@ theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} h : 0 ≤ z, (z.toNat : Zmod p
   | -[1+ n], h => False.elim h
 
 theorem val_injective (n : ℕ) [Fact (0 < n)] : Function.Injective (Zmod.val : Zmod n → ℕ) := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -493,7 +545,7 @@ theorem val_one (n : ℕ) [Fact (1 < n)] : (1 : Zmod n).val = 1 := by
   exact Nat.mod_eq_of_ltₓ (Fact.out _)
 
 theorem val_add {n : ℕ} [Fact (0 < n)] (a b : Zmod n) : (a + b).val = (a.val + b.val) % n := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out _)
     
@@ -704,7 +756,6 @@ theorem neg_one_ne_one {n : ℕ} [Fact (2 < n)] : (-1 : Zmod n) ≠ 1 :=
   CharP.neg_one_ne_one (Zmod n) n
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
-@[simp]
 theorem neg_eq_self_mod_two (a : Zmod 2) : -a = a := by
   fin_cases a <;> ext <;> simp [Finₓ.coe_neg, Int.natModₓ] <;> norm_num
 
@@ -759,7 +810,7 @@ theorem val_min_abs_def_zero (x : Zmod 0) : valMinAbs x = x :=
 
 theorem val_min_abs_def_pos {n : ℕ} [Fact (0 < n)] (x : Zmod n) :
     valMinAbs x = if x.val ≤ n / 2 then x.val else x.val - n := by
-  cases' n
+  cases n
   · exfalso
     exact Nat.not_lt_zeroₓ 0 (Fact.out (0 < 0))
     
@@ -790,7 +841,6 @@ theorem nat_abs_val_min_abs_le {n : ℕ} [Fact (0 < n)] (x : Zmod n) : x.valMinA
   suffices ((n % 2 : ℕ) + n / 2 : ℤ) ≤ val x by
     rw [← sub_nonneg] at this⊢
     apply le_transₓ this (le_of_eqₓ _)
-    ring_nf
     ring
   norm_cast
   calc (n : ℕ) % 2 + n / 2 ≤ 1 + n / 2 :=

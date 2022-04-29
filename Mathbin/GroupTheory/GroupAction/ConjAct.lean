@@ -5,6 +5,7 @@ Authors: Chris Hughes
 -/
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Subgroup.Basic
+import Mathbin.Algebra.GroupRingAction
 
 /-!
 # Conjugation action of a group on itself
@@ -17,6 +18,10 @@ the definition of conjugation as a homomorphism into the automorphism group.
 A type alias `conj_act G` is introduced for a group `G`. The group `conj_act G` acts on `G`
 by conjugation. The group `conj_act G` also acts on any normal subgroup of `G` by conjugation.
 
+As a generalization, this also allows:
+* `conj_act Mˣ` to act on `M`, when `M` is a `monoid`
+* `conj_act G₀` to act on `G₀`, when `G₀` is a `group_with_zero`
+
 ## Implementation Notes
 
 The scalar action in defined in this file can also be written using `mul_aut.conj g • h`. This
@@ -27,7 +32,7 @@ is that some theorems about the group actions will not apply when since this
 -/
 
 
-variable (G : Type _)
+variable (M G G₀ R K : Type _)
 
 /-- A type alias for a group `G`. `conj_act G` acts on `G` by conjugation -/
 def ConjAct : Type _ :=
@@ -37,7 +42,7 @@ namespace ConjAct
 
 open MulAction Subgroup
 
-variable {G}
+variable {M G G₀ R K}
 
 instance : ∀ [Groupₓ G], Groupₓ (ConjAct G) :=
   id
@@ -126,19 +131,59 @@ theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G
 
 end DivInvMonoidₓ
 
+section Units
+
+section Monoidₓ
+
+variable [Monoidₓ M]
+
+instance hasUnitsScalar : HasScalar (ConjAct Mˣ) M where
+  smul := fun g h => ofConjAct g * h * ↑(ofConjAct g)⁻¹
+
+theorem units_smul_def (g : ConjAct Mˣ) (h : M) : g • h = ofConjAct g * h * ↑(ofConjAct g)⁻¹ :=
+  rfl
+
+instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
+  smul := (· • ·)
+  one_smul := by
+    simp [units_smul_def]
+  mul_smul := by
+    simp [units_smul_def, mul_assoc, mul_inv_rev₀]
+  smul_mul := by
+    simp [units_smul_def, mul_assoc]
+  smul_one := by
+    simp [units_smul_def]
+
+end Monoidₓ
+
+section Semiringₓ
+
+variable [Semiringₓ R]
+
+instance unitsMulSemiringAction : MulSemiringAction (ConjAct Rˣ) R :=
+  { ConjAct.unitsMulDistribMulAction with smul := (· • ·),
+    smul_zero := by
+      simp [units_smul_def],
+    smul_add := by
+      simp [units_smul_def, mul_addₓ, add_mulₓ] }
+
+end Semiringₓ
+
+end Units
+
 section GroupWithZeroₓ
 
-variable [GroupWithZeroₓ G]
+variable [GroupWithZeroₓ G₀]
 
 @[simp]
-theorem of_conj_act_zero : ofConjAct (0 : ConjAct G) = 0 :=
+theorem of_conj_act_zero : ofConjAct (0 : ConjAct G₀) = 0 :=
   rfl
 
 @[simp]
-theorem to_conj_act_zero : toConjAct (0 : G) = 0 :=
+theorem to_conj_act_zero : toConjAct (0 : G₀) = 0 :=
   rfl
 
-instance : MulAction (ConjAct G) G where
+instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   smul := (· • ·)
   one_smul := by
     simp [smul_def]
@@ -146,6 +191,19 @@ instance : MulAction (ConjAct G) G where
     simp [smul_def, mul_assoc, mul_inv_rev₀]
 
 end GroupWithZeroₓ
+
+section DivisionRing
+
+variable [DivisionRing K]
+
+instance distribMulAction₀ : DistribMulAction (ConjAct K) K :=
+  { ConjAct.mulAction₀ with smul := (· • ·),
+    smul_zero := by
+      simp [smul_def],
+    smul_add := by
+      simp [smul_def, mul_addₓ, add_mulₓ] }
+
+end DivisionRing
 
 variable [Groupₓ G]
 

@@ -28,7 +28,7 @@ attribute [local instance] Classical.propDecidable
 
 open Set LinearMap Submodule
 
-open_locale Cardinal
+open Cardinal
 
 universe u v w
 
@@ -56,10 +56,8 @@ theorem linear_independent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       rw [range_coe]
       apply range_comp_subset_range
       
-    · refine' supr_le_supr fun i => supr_le_supr _
-      intro hi
-      rw [span_le]
-      rw [range_coe]
+    · refine' supr₂_mono fun i hi => _
+      rw [span_le, range_coe]
       apply range_comp_subset_range
       
     
@@ -197,9 +195,9 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V =
       rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
 
 theorem cardinal_lt_omega_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ω := by
-  let this' : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
+  let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
-  exact Cardinal.power_lt_omega (Cardinal.lt_omega_iff_fintype.2 ⟨inferInstance⟩) (IsNoetherian.dim_lt_omega K V)
+  exact Cardinal.power_lt_omega (Cardinal.lt_omega_of_fintype K) (IsNoetherian.dim_lt_omega K V)
 
 end Module
 

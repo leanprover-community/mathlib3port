@@ -9,7 +9,7 @@ import Mathbin.Analysis.NormedSpace.Ordered
 /-!
 # Asymptotic equivalence
 
-In this file, we define the relation `is_equivalent u v l`, which means that `u-v` is little o of
+In this file, we define the relation `is_equivalent l u v`, which means that `u-v` is little o of
 `v` along the filter `l`.
 
 Unlike `is_[oO]` relations, this one requires `u` and `v` to have the same codomain `β`. While the
@@ -18,7 +18,7 @@ definition only requires `β` to be a `normed_group`, most interesting propertie
 
 ## Notations
 
-We introduce the notation `u ~[l] v := is_equivalent u v l`, which you can use by opening the
+We introduce the notation `u ~[l] v := is_equivalent l u v`, which you can use by opening the
 `asymptotics` locale.
 
 ## Main results
@@ -47,6 +47,11 @@ If `β` is a `normed_linear_ordered_field` :
 - If `u ~[l] v`, we have `tendsto u l at_top ↔ tendsto v l at_top`
   (see `is_equivalent.tendsto_at_top_iff`)
 
+## Implementation Notes
+
+Note that `is_equivalent` takes the parameters `(l : filter α) (u v : α → β)` in that order.
+This is to enable `calc` support, as `calc` requires that the last two explicit arguments are `u v`.
+
 -/
 
 
@@ -54,7 +59,7 @@ namespace Asymptotics
 
 open Filter Function
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section NormedGroup
 
@@ -62,11 +67,11 @@ variable {α β : Type _} [NormedGroup β]
 
 /-- Two functions `u` and `v` are said to be asymptotically equivalent along a filter `l` when
     `u x - v x = o(v x)` as x converges along `l`. -/
-def IsEquivalent (u v : α → β) (l : Filter α) :=
+def IsEquivalent (l : Filter α) (u v : α → β) :=
   IsOₓ (u - v) v l
 
 -- mathport name: «expr ~[ ] »
-localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent u v l
+localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent l u v
 
 variable {u v w : α → β} {l : Filter α}
 
@@ -91,7 +96,7 @@ theorem IsEquivalent.symm (h : u ~[l] v) : v ~[l] u :=
   (h.IsO.trans_is_O h.is_O_symm).symm
 
 @[trans]
-theorem IsEquivalent.trans (huv : u ~[l] v) (hvw : v ~[l] w) : u ~[l] w :=
+theorem IsEquivalent.trans {l : Filter α} {u v w : α → β} (huv : u ~[l] v) (hvw : v ~[l] w) : u ~[l] w :=
   (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
 
 theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
@@ -161,7 +166,7 @@ theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x :
 
 end NormedGroup
 
-open_locale Asymptotics
+open Asymptotics
 
 section NormedField
 
@@ -312,7 +317,7 @@ end Asymptotics
 
 open Filter Asymptotics
 
-open_locale Asymptotics
+open Asymptotics
 
 variable {α β : Type _} [NormedGroup β]
 

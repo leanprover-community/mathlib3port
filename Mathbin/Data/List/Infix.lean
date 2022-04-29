@@ -140,11 +140,28 @@ theorem reverse_suffix : reverse l₁ <:+ reverse l₂ ↔ l₁ <+: l₂ :=
 theorem reverse_prefix : reverse l₁ <+: reverse l₂ ↔ l₁ <:+ l₂ := by
   rw [← reverse_suffix] <;> simp only [reverse_reverse]
 
+@[simp]
+theorem reverse_infix : reverse l₁ <:+: reverse l₂ ↔ l₁ <:+: l₂ :=
+  ⟨fun ⟨s, t, e⟩ =>
+    ⟨reverse t, reverse s, by
+      rw [← reverse_reverse l₁, append_assoc, ← reverse_append, ← reverse_append, e, reverse_reverse]⟩,
+    fun ⟨s, t, e⟩ =>
+    ⟨reverse t, reverse s, by
+      rw [append_assoc, ← reverse_append, ← reverse_append, e]⟩⟩
+
 alias reverse_prefix ↔ _ List.IsSuffix.reverse
 
 alias reverse_suffix ↔ _ List.IsPrefix.reverse
 
-theorem Infix.length_le (h : l₁ <:+: l₂) : length l₁ ≤ length l₂ :=
+alias reverse_infix ↔ _ List.IsInfix.reverse
+
+theorem IsInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
+  length_le_of_sublistₓ h.Sublist
+
+theorem IsPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
+  length_le_of_sublistₓ h.Sublist
+
+theorem IsSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
   length_le_of_sublistₓ h.Sublist
 
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
@@ -218,6 +235,22 @@ theorem suffix_cons_iff : l₁ <:+ a :: l₂ ↔ l₁ = a :: l₂ ∨ l₁ <:+ l
     · exact (a :: l₂).suffix_refl
       
     · exact hl₁.trans (l₂.suffix_cons _)
+      
+    
+
+theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+: l₂ := by
+  constructor
+  · rintro ⟨⟨hd, tl⟩, t, hl₃⟩
+    · exact Or.inl ⟨t, hl₃⟩
+      
+    · simp only [cons_append] at hl₃
+      exact Or.inr ⟨_, t, hl₃.2⟩
+      
+    
+  · rintro (h | hl₁)
+    · exact h.is_infix
+      
+    · exact infix_cons hl₁
       
     
 
@@ -304,10 +337,9 @@ instance decidablePrefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
   | a :: l₁, [] => is_false fun ⟨t, te⟩ => List.noConfusion te
   | a :: l₁, b :: l₂ =>
     if h : a = b then
-      @decidableOfIff _ _
+      decidableOfDecidableOfIff (decidable_prefix l₁ l₂)
         (by
           rw [← h, prefix_cons_inj])
-        (decidable_prefix l₁ l₂)
     else
       is_false fun ⟨t, te⟩ =>
         h <| by
@@ -321,13 +353,18 @@ instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
       mt (length_le_of_sublist ∘ is_suffix.sublist)
         (by
           decide)
-  | l₁, l₂ =>
-    let len1 := length l₁
-    let len2 := length l₂
-    if hl : len1 ≤ len2 then decidableOfIff' (l₁ = dropₓ (len2 - len1) l₂) suffix_iff_eq_drop
-    else is_false fun h => hl <| length_le_of_sublist <| h.Sublist
+  | l₁, b :: l₂ => decidableOfDecidableOfIff (@Or.decidable _ _ _ (l₁.decidableSuffix l₂)) suffix_cons_iff.symm
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:531:6: unsupported: specialize @hyp
+instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
+  | [], l₂ => isTrue ⟨[], l₂, rfl⟩
+  | a :: l₁, [] =>
+    is_false fun ⟨s, t, te⟩ => by
+      simp at te <;> exact te
+  | l₁, b :: l₂ =>
+    decidableOfDecidableOfIff (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂))
+      infix_cons_iff.symm
+
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
 theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) : L.take m <+: L.take n ↔ m ≤ n := by
   simp only [prefix_iff_eq_take, length_take]
   induction' m with m IH generalizing L n
@@ -405,6 +442,21 @@ theorem IsInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List �
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
   exact infix_append _ _ _
+
+instance : IsPartialOrder (List α) (· <+: ·) where
+  refl := prefix_refl
+  trans := fun _ _ _ => IsPrefix.trans
+  antisymm := fun _ _ h₁ h₂ => eq_of_prefix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+
+instance : IsPartialOrder (List α) (· <:+ ·) where
+  refl := suffix_refl
+  trans := fun _ _ _ => IsSuffix.trans
+  antisymm := fun _ _ h₁ h₂ => eq_of_suffix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
+
+instance : IsPartialOrder (List α) (· <:+: ·) where
+  refl := infix_refl
+  trans := fun _ _ _ => IsInfix.trans
+  antisymm := fun _ _ h₁ h₂ => eq_of_infix_of_length_eq h₁ <| h₁.length_le.antisymm h₂.length_le
 
 end Fix
 
@@ -541,16 +593,6 @@ theorem nth_le_inits (l : List α) (n : ℕ) (hn : n < length (inits l)) : nthLe
     · simpa using IH n _
       
     
-
-instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
-  | [], l₂ => isTrue ⟨[], l₂, rfl⟩
-  | a :: l₁, [] =>
-    is_false fun ⟨s, t, te⟩ =>
-      absurd te <| append_ne_nil_of_ne_nil_left _ _ <| (append_ne_nil_of_ne_nil_right _ _) fun h => List.noConfusion h
-  | l₁, l₂ =>
-    decidableOfDecidableOfIff (List.decidableBex (fun t => l₁ <+: t) (tails l₂)) <| by
-      refine' (exists_congr fun t => _).trans (infix_iff_prefix_suffix _ _).symm <;>
-        exact ⟨fun ⟨h1, h2⟩ => ⟨h2, (mem_tails _ _).1 h1⟩, fun ⟨h2, h1⟩ => ⟨(mem_tails _ _).2 h1, h2⟩⟩
 
 end InitsTails
 

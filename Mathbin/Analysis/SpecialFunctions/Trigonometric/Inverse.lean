@@ -18,11 +18,11 @@ Basic inequalities on trigonometric functions.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 open Set Filter
 
-open_locale Real
+open Real
 
 namespace Real
 

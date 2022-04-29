@@ -45,6 +45,8 @@ open CategoryTheory
 
 open StructureSheaf
 
+open Spec (structureSheaf)
+
 open TopologicalSpace
 
 open AlgebraicGeometry.LocallyRingedSpace
@@ -66,7 +68,7 @@ def toΓSpecFun : X → PrimeSpectrum (Γ.obj (op X)) := fun x =>
   comap (X.ΓToStalk x) (LocalRing.closedPoint (X.Presheaf.stalk x))
 
 theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
-    (r ∉ (X.toΓSpecFun x).asIdeal) ↔ IsUnit (X.ΓToStalk x r) := by
+    r ∉ (X.toΓSpecFun x).asIdeal ↔ IsUnit (X.ΓToStalk x r) := by
   erw [LocalRing.mem_maximal_ideal, not_not]
 
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic
@@ -204,8 +206,7 @@ def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
     rw [← to_stalk_stalk_map_to_Γ_Spec, comp_apply]
     erw [← he]
     rw [RingHom.map_mul]
-    exact
-      ht.mul ((IsLocalization.map_units S s : _).map (PresheafedSpace.stalk_map X.to_Γ_Spec_SheafedSpace x).toMonoidHom)
+    exact ht.mul ((IsLocalization.map_units S s : _).map (PresheafedSpace.stalk_map X.to_Γ_Spec_SheafedSpace x))
 
 theorem comp_ring_hom_ext {X : LocallyRingedSpace} {R : CommRingₓₓ} {f : R ⟶ Γ.obj (op X)}
     {β : X ⟶ Spec.locallyRingedSpaceObj R} (w : X.toΓSpec.1.base ≫ (Spec.locallyRingedSpaceMap f).1.base = β.1.base)

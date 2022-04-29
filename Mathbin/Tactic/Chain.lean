@@ -29,7 +29,7 @@ inductive TacticScript (α : Type) : Type
 unsafe def tactic_script.to_string : TacticScript Stringₓ → Stringₓ
   | tactic_script.base a => a
   | tactic_script.work n a l c =>
-    "work_on_goal " ++ toString n ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
+    "work_on_goal " ++ toString (n + 1) ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
 
 unsafe instance : HasToString (TacticScript Stringₓ) where
   toString := fun s => s.toString

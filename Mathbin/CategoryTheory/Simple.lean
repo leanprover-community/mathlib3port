@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 -/
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Abelian.Basic
 
@@ -72,7 +72,7 @@ section
 
 variable [HasZeroObject C]
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- We don't want the definition of 'simple' to include the zero object, so we check that here. -/
 theorem zero_not_simple [Simple (0 : C)] : False :=
@@ -116,8 +116,7 @@ theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w :
    : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   is_iso_of_mono_of_epi f
 
-theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} [HasCokernel f] (w : f ≠ 0) :
-    cokernel.π f = 0 := by
+theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
   classical
   by_contra h
   have := is_iso_of_epi_of_nonzero h

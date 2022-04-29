@@ -49,7 +49,7 @@ noncomputable section
 
 open MvPolynomial Function
 
-open_locale BigOperators
+open BigOperators
 
 variable {p : ℕ} {R S T : Type _} [hp : Fact p.Prime] [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
@@ -59,7 +59,7 @@ variable {α : Type _} {β : Type _}
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
-open_locale Witt
+open Witt
 
 namespace WittVector
 
@@ -109,6 +109,18 @@ theorem mul : mapFun f (x * y) = mapFun f x * mapFun f y := by
     map_fun_tac
 
 theorem neg : mapFun f (-x) = -mapFun f x := by
+  run_tac
+    map_fun_tac
+
+theorem nsmul (n : ℕ) : mapFun f (n • x) = n • mapFun f x := by
+  run_tac
+    map_fun_tac
+
+theorem zsmul (z : ℤ) : mapFun f (z • x) = z • mapFun f x := by
+  run_tac
+    map_fun_tac
+
+theorem pow (n : ℕ) : mapFun f (x ^ n) = mapFun f x ^ n := by
   run_tac
     map_fun_tac
 
@@ -179,6 +191,15 @@ private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
 private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by
   ghost_fun_tac -X 0, ![x.coeff]
 
+private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
+  ghost_fun_tac m • X 0, ![x.coeff]
+
+private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
+  ghost_fun_tac m • X 0, ![x.coeff]
+
+private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
+  ghost_fun_tac X 0 ^ m, ![x.coeff]
+
 end GhostFun
 
 variable (p) (R)
@@ -206,17 +227,18 @@ include hp
 @[local instance]
 private def comm_ring_aux₁ : CommRingₓ (𝕎 (MvPolynomial R ℚ)) :=
   (ghostEquiv' p (MvPolynomial R ℚ)).Injective.CommRing ghostFun ghost_fun_zero ghost_fun_one ghost_fun_add
-    ghost_fun_mul ghost_fun_neg ghost_fun_sub
+    ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul ghost_fun_pow
 
 @[local instance]
 private def comm_ring_aux₂ : CommRingₓ (𝕎 (MvPolynomial R ℤ)) :=
   (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _ (mapFun.zero _) (mapFun.one _)
-    (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
+    (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _)
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRingₓ (𝕎 R) :=
   (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _) (mapFun.zero _)
-    (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
+    (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _) (mapFun.nsmul _) (mapFun.zsmul _)
+    (mapFun.pow _)
 
 variable {p R}
 

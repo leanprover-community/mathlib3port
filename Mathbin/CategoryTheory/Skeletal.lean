@@ -264,13 +264,13 @@ def lowerAdjunction (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) : ThinSkeleton.map
   Adjunction.mkOfUnitCounit
     { Unit :=
         { app := fun X => by
-            let this' := is_isomorphic_setoid C
+            let this := is_isomorphic_setoid C
             refine'
               Quotientₓ.recOnSubsingleton X fun x =>
                 hom_of_le ⟨h.unit.app x⟩ },-- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
       counit :=
         { app := fun X => by
-            let this' := is_isomorphic_setoid D
+            let this := is_isomorphic_setoid D
             refine' Quotientₓ.recOnSubsingleton X fun x => hom_of_le ⟨h.counit.app x⟩ } }
 
 end ThinSkeleton

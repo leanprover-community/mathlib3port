@@ -244,7 +244,7 @@ def support (f : Perm α) : Finset α :=
 theorem mem_support {x : α} : x ∈ f.support ↔ f x ≠ x := by
   rw [support, mem_filter, and_iff_right (mem_univ x)]
 
-theorem not_mem_support {x : α} : (x ∉ f.support) ↔ f x = x := by
+theorem not_mem_support {x : α} : x ∉ f.support ↔ f x = x := by
   simp
 
 theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = { x | f x ≠ x } := by
@@ -380,7 +380,7 @@ theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y :=
   simpa
 
 theorem support_swap_mul_swap {x y z : α} (h : List.Nodupₓ [x, y, z]) : support (swap x y * swap y z) = {x, y, z} := by
-  simp only [List.not_mem_nil, and_trueₓ, List.mem_cons_iff, not_false_iff, List.nodup_cons, List.mem_singleton,
+  simp only [List.not_mem_nilₓ, and_trueₓ, List.mem_cons_iff, not_false_iff, List.nodup_cons, List.mem_singletonₓ,
     and_selfₓ, List.nodup_nil] at h
   push_neg  at h
   apply le_antisymmₓ

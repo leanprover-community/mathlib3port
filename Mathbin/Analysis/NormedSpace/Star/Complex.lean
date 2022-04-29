@@ -26,7 +26,7 @@ variable {E : Type _}
 
 namespace StarModule
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 open Complex
 

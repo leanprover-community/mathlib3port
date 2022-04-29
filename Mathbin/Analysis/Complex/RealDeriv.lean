@@ -74,15 +74,15 @@ theorem ContDiff.real_of_complex {n : WithTop ℕ} (h : ContDiff ℂ n e) : Cont
 variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
-    HasStrictFderivAt f (reClm.smulRight f' + I • imClm.smulRight f') x := by
+    HasStrictFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_strict_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasDerivAt f f' x) :
-    HasFderivAt f (reClm.smulRight f' + I • imClm.smulRight f') x := by
+    HasFderivAt f (reClm.smul_right f' + I • imClm.smul_right f') x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_at.restrict_scalars ℝ
 
 theorem HasDerivWithinAt.complex_to_real_fderiv' {f : ℂ → E} {s : Set ℂ} {x : ℂ} {f' : E}
-    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (reClm.smulRight f' + I • imClm.smulRight f') s x := by
+    (h : HasDerivWithinAt f f' s x) : HasFderivWithinAt f (reClm.smul_right f' + I • imClm.smul_right f') s x := by
   simpa only [Complex.restrict_scalars_one_smul_right'] using h.has_fderiv_within_at.restrict_scalars ℝ
 
 theorem HasStrictDerivAt.complex_to_real_fderiv {f : ℂ → ℂ} {f' x : ℂ} (h : HasStrictDerivAt f f' x) :
@@ -106,20 +106,17 @@ section Conformality
 
 open Complex ContinuousLinearMap
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
-variable ()
+variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {z : ℂ} {f : ℂ → E}
 
 /-- A real differentiable function of the complex plane into some complex normed space `E` is
     conformal at a point `z` if it is holomorphic at that point with a nonvanishing differential.
     This is a version of the Cauchy-Riemann equations. -/
-theorem DifferentiableAt.conformal_at {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] {z : ℂ}
-    {f : ℂ → E} (hf' : fderiv ℝ f z ≠ 0) (h : DifferentiableAt ℂ f z) : ConformalAt f z := by
-  rw [conformal_at_iff_is_conformal_map_fderiv]
-  rw [(h.has_fderiv_at.restrict_scalars ℝ).fderiv] at hf'⊢
+theorem DifferentiableAt.conformal_at (h : DifferentiableAt ℂ f z) (hf' : deriv f z ≠ 0) : ConformalAt f z := by
+  rw [conformal_at_iff_is_conformal_map_fderiv, (h.has_fderiv_at.restrict_scalars ℝ).fderiv]
   apply is_conformal_map_complex_linear
-  contrapose! hf' with w
-  simp [w]
+  simpa only [Ne.def, ext_ring_iff]
 
 /-- A complex function is conformal if and only if the function is holomorphic or antiholomorphic
     with a nonvanishing differential. -/

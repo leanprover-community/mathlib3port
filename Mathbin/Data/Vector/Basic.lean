@@ -589,7 +589,7 @@ protected theorem traverse_def (f : α → F β) (x : α) :
     ∀ xs : Vector α n, (x::ᵥxs).traverse f = cons <$> f x <*> xs.traverse f := by
   rintro ⟨xs, rfl⟩ <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x := by
   rintro ⟨x, rfl⟩
   dsimp [Vector.traverse, cast]
@@ -607,7 +607,7 @@ variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 variable {α β γ : Type u}
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 -- We need to turn off the linter here as
 -- the `is_lawful_traversable` instance below expects a particular signature.
 @[nolint unused_arguments]
@@ -619,16 +619,16 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
     dsimp [Vector.traverse, cast] <;>
       induction' x with x xs <;> simp' [cast, *] with functor_norm <;> [rfl, simp [(· ∘ ·)]]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) :=
   by
   rintro ⟨x, rfl⟩ <;> simp <;> induction x <;> simp' [*] with functor_norm <;> rfl
 
 variable (η : ApplicativeTransformation F G)
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 protected theorem naturality {α β : Type _} (f : α → F β) :
     ∀ x : Vector α n, η (x.traverse f) = x.traverse (@η _ ∘ f) := by
   rintro ⟨x, rfl⟩ <;> simp [cast] <;> induction' x with x xs IH <;> simp' [*] with functor_norm
@@ -639,8 +639,8 @@ instance : Traversable.{u} (flip Vector n) where
   traverse := @Vector.traverse n
   map := fun α β => @Vector.map.{u, u} α β n
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 instance : IsLawfulTraversable.{u} (flip Vector n) where
   id_traverse := @Vector.id_traverse n
   comp_traverse := @Vector.comp_traverse n

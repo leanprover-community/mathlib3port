@@ -39,7 +39,7 @@ convex hull, caratheodory
 
 open Set Finset
 
-open_locale BigOperators
+open BigOperators
 
 universe u
 

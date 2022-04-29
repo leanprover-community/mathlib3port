@@ -23,7 +23,7 @@ continuous, monotone
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section LinearOrderₓ
 

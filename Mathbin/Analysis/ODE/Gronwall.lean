@@ -32,7 +32,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGr
 
 open Metric Set Asymptotics Filter Real
 
-open_locale Classical TopologicalSpace Nnreal
+open Classical TopologicalSpace Nnreal
 
 /-! ### Technical lemmas about `gronwall_bound` -/
 

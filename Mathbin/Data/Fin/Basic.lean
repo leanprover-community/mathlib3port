@@ -102,6 +102,10 @@ localized [FinFact] attribute [instance] Fact.Pow.pos
 
 namespace Finₓ
 
+/-- A non-dependent variant of `elim0`. -/
+def elim0' {α : Sort _} (x : Finₓ 0) : α :=
+  x.elim0
+
 variable {n m : ℕ} {a b : Finₓ n}
 
 instance finToNat (n : ℕ) : Coe (Finₓ n) Nat :=
@@ -225,6 +229,8 @@ instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
 instance {n : ℕ} : PartialOrderₓ (Finₓ n) :=
   LinearOrderₓ.toPartialOrder (Finₓ n)
 
+theorem coe_strict_mono : StrictMono (coe : Finₓ n → ℕ) := fun _ _ => id
+
 /-- The inclusion map `fin n → ℕ` is a relation embedding. -/
 def coeEmbedding n : Finₓ n ↪o ℕ :=
   ⟨⟨coe, @Finₓ.eq_of_veq _⟩, fun a b => Iff.rfl⟩
@@ -260,11 +266,16 @@ theorem val_zero' n : (0 : Finₓ (n + 1)).val = 0 :=
 theorem mk_zero : (⟨0, Nat.succ_pos'⟩ : Finₓ (n + 1)) = (0 : Finₓ _) :=
   rfl
 
+@[simp]
 theorem zero_le (a : Finₓ (n + 1)) : 0 ≤ a :=
   zero_le a.1
 
 theorem zero_lt_one : (0 : Finₓ (n + 2)) < 1 :=
   Nat.zero_lt_oneₓ
+
+@[simp]
+theorem not_lt_zero (a : Finₓ n.succ) : ¬a < 0 :=
+  fun.
 
 theorem pos_iff_ne_zero (a : Finₓ (n + 1)) : 0 < a ↔ a ≠ 0 := by
   rw [← coe_fin_lt, coe_zero, pos_iff_ne_zero, Ne.def, Ne.def, ext_iff, coe_zero]
@@ -602,6 +613,7 @@ section Succ
 theorem coe_succ (j : Finₓ n) : (j.succ : ℕ) = j + 1 := by
   cases j <;> simp [Finₓ.succ]
 
+@[simp]
 theorem succ_pos (a : Finₓ n) : (0 : Finₓ (n + 1)) < a.succ := by
   simp [lt_iff_coe_lt_coe]
 
@@ -717,6 +729,16 @@ theorem coe_cast (h : n = m) (i : Finₓ n) : (cast h i : ℕ) = i :=
   rfl
 
 @[simp]
+theorem cast_zero {n' : ℕ} {h : n + 1 = n' + 1} : cast h (0 : Finₓ (n + 1)) = 0 :=
+  ext rfl
+
+@[simp]
+theorem cast_last {n' : ℕ} {h : n + 1 = n' + 1} : cast h (last n) = last n' :=
+  ext
+    (by
+      rw [coe_cast, coe_last, coe_last, Nat.succ_injective h])
+
+@[simp]
 theorem cast_mk (h : n = m) (i : ℕ) (hn : i < n) : cast h ⟨i, hn⟩ = ⟨i, lt_of_lt_of_leₓ hn h.le⟩ :=
   rfl
 
@@ -728,6 +750,9 @@ theorem cast_trans {k : ℕ} (h : n = m) (h' : m = k) {i : Finₓ n} : cast h' (
 theorem cast_refl (h : n = n := rfl) : cast h = OrderIso.refl (Finₓ n) := by
   ext
   rfl
+
+theorem cast_le_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} : (castLe h' : Finₓ m → Finₓ n) = Finₓ.cast h :=
+  funext fun _ => rfl
 
 /-- While in many cases `fin.cast` is better than `equiv.cast`/`cast`, sometimes we want to apply
 a generic theorem about `cast`. -/
@@ -748,6 +773,10 @@ def castAdd m : Finₓ n ↪o Finₓ (n + m) :=
 
 @[simp]
 theorem coe_cast_add (m : ℕ) (i : Finₓ n) : (castAdd m i : ℕ) = i :=
+  rfl
+
+@[simp]
+theorem cast_add_zero : (castAdd 0 : Finₓ n → Finₓ (n + 0)) = cast rfl :=
   rfl
 
 theorem cast_add_lt {m : ℕ} (n : ℕ) (i : Finₓ m) : (castAdd n i : ℕ) < m :=
@@ -806,12 +835,22 @@ theorem coe_cast_succ (i : Finₓ n) : (i.cast_succ : ℕ) = i :=
 theorem cast_succ_mk (n i : ℕ) (h : i < n) : castSucc ⟨i, h⟩ = ⟨i, Nat.Lt.step h⟩ :=
   rfl
 
+@[simp]
+theorem cast_cast_succ {n' : ℕ} {h : n + 1 = n' + 1} {i : Finₓ n} :
+    cast h (castSucc i) = castSucc (cast (Nat.succ_injective h) i) := by
+  ext
+  simp only [coe_cast, coe_cast_succ]
+
 theorem cast_succ_lt_succ (i : Finₓ n) : i.cast_succ < i.succ :=
   lt_iff_coe_lt_coe.2 <| by
     simp only [coe_cast_succ, coe_succ, Nat.lt_succ_selfₓ]
 
 theorem le_cast_succ_iff {i : Finₓ (n + 1)} {j : Finₓ n} : i ≤ j.cast_succ ↔ i < j.succ := by
   simpa [lt_iff_coe_lt_coe, le_iff_coe_le_coe] using nat.succ_le_succ_iff.symm
+
+theorem cast_succ_lt_iff_succ_le {n : ℕ} {i : Finₓ n} {j : Finₓ (n + 1)} : i.cast_succ < j ↔ i.succ ≤ j := by
+  simpa only [Finₓ.lt_iff_coe_lt_coe, Finₓ.le_iff_coe_le_coe, Finₓ.coe_succ, Finₓ.coe_cast_succ] using
+    Nat.lt_iff_add_one_le
 
 @[simp]
 theorem succ_last (n : ℕ) : (last n).succ = last n.succ :=
@@ -904,6 +943,11 @@ def addNat m : Finₓ n ↪o Finₓ (n + m) :=
 @[simp]
 theorem coe_add_nat (m : ℕ) (i : Finₓ n) : (addNat m i : ℕ) = i + m :=
   rfl
+
+@[simp]
+theorem add_nat_one {i : Finₓ n} : addNat 1 i = i.succ := by
+  ext
+  rw [coe_add_nat, coe_succ]
 
 theorem le_coe_add_nat (m : ℕ) (i : Finₓ n) : m ≤ addNat m i :=
   Nat.le_add_leftₓ _ _
@@ -1307,6 +1351,55 @@ protected theorem coe_neg (a : Finₓ n) : ((-a : Finₓ n) : ℕ) = (n - a) % n
 protected theorem coe_sub (a b : Finₓ n) : ((a - b : Finₓ n) : ℕ) = (a + (n - b)) % n := by
   cases a <;> cases b <;> rfl
 
+@[simp]
+theorem coe_fin_one (a : Finₓ 1) : ↑a = 0 := by
+  rw [Subsingleton.elimₓ a 0, Finₓ.coe_zero]
+
+@[simp]
+theorem coe_neg_one : ↑(-1 : Finₓ (n + 1)) = n := by
+  cases n
+  · simp
+    
+  rw [Finₓ.coe_neg, Finₓ.coe_one, Nat.succ_sub_one, Nat.mod_eq_of_ltₓ]
+  constructor
+
+theorem coe_sub_one {n} (a : Finₓ (n + 1)) : ↑(a - 1) = if a = 0 then n else a - 1 := by
+  cases n
+  · simp
+    
+  split_ifs
+  · simp [h]
+    
+  rw [sub_eq_add_neg, coe_add_eq_ite, coe_neg_one, if_pos, add_commₓ, add_tsub_add_eq_tsub_left]
+  rw [add_commₓ ↑a, add_le_add_iff_left, Nat.one_le_iff_ne_zero]
+  rwa [Subtype.ext_iff] at h
+
+/-- By sending `x` to `last n - x`, `fin n` is order-equivalent to its `order_dual`. -/
+def _root_.order_iso.fin_equiv : ∀ {n}, OrderDual (Finₓ n) ≃o Finₓ n
+  | 0 => ⟨⟨elim0, elim0, elim0, elim0⟩, elim0⟩
+  | n + 1 =>
+    OrderIso.symm <|
+      { toFun := fun x => last n - x, invFun := fun x => last n - x, left_inv := sub_sub_cancel _,
+        right_inv := sub_sub_cancel _,
+        map_rel_iff' := fun a b => by
+          rw [OrderDual.hasLe]
+          simp only [Equivₓ.coe_fn_mk]
+          rw [le_iff_coe_le_coe, Finₓ.coe_sub, Finₓ.coe_sub, coe_last]
+          have : (n - ↑b) % (n + 1) ≤ (n - ↑a) % (n + 1) ↔ a ≤ b := by
+            rw [Nat.mod_eq_of_ltₓ, Nat.mod_eq_of_ltₓ, tsub_le_tsub_iff_left a.is_le, le_iff_coe_le_coe] <;>
+              exact tsub_le_self.trans_lt n.lt_succ_self
+          suffices key : ∀ {x : Finₓ (n + 1)}, (n + (n + 1 - x)) % (n + 1) = (n - x) % (n + 1)
+          · convert this using 2 <;> exact key
+            
+          intro x
+          rw [add_commₓ, tsub_add_eq_add_tsub x.is_lt.le, add_tsub_assoc_of_le x.is_le, Nat.add_mod_leftₓ] }
+
+theorem _root_.order_iso.fin_equiv_apply a : OrderIso.finEquiv a = last n - a.ofDual :=
+  rfl
+
+theorem _root_.order_iso.fin_equiv_symm_apply a : OrderIso.finEquiv.symm a = OrderDual.toDual (last n - a) :=
+  rfl
+
 end AddGroupₓ
 
 section SuccAbove
@@ -1417,7 +1510,7 @@ theorem succ_above_pos (p : Finₓ (n + 2)) (i : Finₓ (n + 1)) (h : 0 < i) : 0
   by_cases' H : i.cast_succ < p
   · simpa [succ_above_below _ _ H] using cast_succ_pos h
     
-  · simpa [succ_above_above _ _ (le_of_not_ltₓ H)] using succ_pos _
+  · simp [succ_above_above _ _ (le_of_not_ltₓ H)]
     
 
 @[simp]

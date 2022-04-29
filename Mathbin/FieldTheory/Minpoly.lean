@@ -20,7 +20,7 @@ are irreducible, and uniquely determined by their defining property.
 -/
 
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Polynomial Set Function
 
@@ -60,7 +60,7 @@ theorem monic (hx : IsIntegral A x) : Monic (minpoly A x) := by
 
 /-- A minimal polynomial is nonzero. -/
 theorem ne_zero [Nontrivial A] (hx : IsIntegral A x) : minpoly A x ≠ 0 :=
-  ne_zero_of_monic (monic hx)
+  (monic hx).ne_zero
 
 theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
   dif_neg hx
@@ -166,8 +166,9 @@ theorem degree_pos (hx : IsIntegral A x) : 0 < degree (minpoly A x) :=
 
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/
-theorem eq_X_sub_C_of_algebra_map_inj [Nontrivial A] (a : A) (hf : Function.Injective (algebraMap A B)) :
+theorem eq_X_sub_C_of_algebra_map_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
     minpoly A (algebraMap A B a) = X - c a := by
+  nontriviality A
   have hdegle : (minpoly A (algebraMap A B a)).natDegree ≤ 1 := by
     apply WithBot.coe_le_coe.1
     rw [← degree_eq_nat_degree (ne_zero (@is_integral_algebra_map A B _ _ _ a)), WithTop.coe_one, ← degree_X_sub_C a]
@@ -281,6 +282,9 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
     _ = degree p := degree_mul_leading_coeff_inv p pnz
     
 
+theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=
+  minpoly.ne_zero <| is_integral_of_noetherian (IsNoetherian.iff_fg.2 inferInstance) _
+
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
 if there is another monic polynomial of minimal degree that has `x` as a root,
 then this polynomial is equal to the minimal polynomial of `x`. -/
@@ -375,6 +379,24 @@ theorem eq_of_algebra_map_eq {K S T : Type _} [Field K] [CommRingₓ S] [CommRin
       (IsScalarTower.aeval_eq_zero_of_aeval_algebra_map_eq_zero K S T hST
         (h ▸ root_q : Polynomial.aeval (algebraMap S T x) q = 0))
 
+theorem add_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx : IsIntegral A x) (a : A) :
+    minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - c a) := by
+  refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_X_sub_C _) _ fun q qmo hq => _).symm
+  · simp [aeval_comp]
+    
+  · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by
+      simpa [aeval_comp] using hq
+    have H := minpoly.min A x (qmo.comp_X_add_C _) this
+    rw [degree_eq_nat_degree qmo.ne_zero, degree_eq_nat_degree ((minpoly.monic hx).comp_X_sub_C _).ne_zero,
+      WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_sub_C, mul_oneₓ]
+    rwa [degree_eq_nat_degree (minpoly.ne_zero hx), degree_eq_nat_degree (qmo.comp_X_add_C _).ne_zero,
+      WithBot.coe_le_coe, nat_degree_comp, nat_degree_X_add_C, mul_oneₓ] at H
+    
+
+theorem sub_algebra_map {B : Type _} [CommRingₓ B] [Algebra A B] {x : B} (hx : IsIntegral A x) (a : A) :
+    minpoly A (x - algebraMap A B a) = (minpoly A x).comp (X + c a) := by
+  simpa [sub_eq_add_neg] using add_algebra_map hx (-a)
+
 section GcdDomain
 
 /-- For GCD domains, the minimal polynomial over the ring is the same as the minimal polynomial
@@ -391,7 +413,7 @@ theorem gcd_domain_eq_field_fractions {A R : Type _} (K : Type _) [CommRingₓ A
   · have htower := IsScalarTower.aeval_apply A K R x (minpoly A x)
     rwa [aeval, eq_comm] at htower
     
-  · exact monic_map _ (monic hx)
+  · exact (monic hx).map _
     
 
 /-- For GCD domains, the minimal polynomial divides any primitive polynomial that has the integral

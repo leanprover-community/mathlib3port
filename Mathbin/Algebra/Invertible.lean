@@ -172,13 +172,13 @@ theorem inv_of_one [Monoidₓ α] [Invertible (1 : α)] : ⅟ (1 : α) = 1 :=
   inv_of_eq_right_inv (mul_oneₓ _)
 
 /-- `-⅟a` is the inverse of `-a` -/
-def invertibleNeg [Ringₓ α] (a : α) [Invertible a] : Invertible (-a) :=
+def invertibleNeg [Mul α] [One α] [HasDistribNeg α] (a : α) [Invertible a] : Invertible (-a) :=
   ⟨-⅟ a, by
     simp , by
     simp ⟩
 
 @[simp]
-theorem inv_of_neg [Ringₓ α] (a : α) [Invertible a] [Invertible (-a)] : ⅟ (-a) = -⅟ a :=
+theorem inv_of_neg [Monoidₓ α] [HasDistribNeg α] (a : α) [Invertible a] [Invertible (-a)] : ⅟ (-a) = -⅟ a :=
   inv_of_eq_right_inv
     (by
       simp )
@@ -189,7 +189,7 @@ theorem one_sub_inv_of_two [Ringₓ α] [Invertible (2 : α)] : 1 - (⅟ 2 : α)
     rw [mul_sub, mul_inv_of_self, mul_oneₓ, bit0, add_sub_cancel]
 
 @[simp]
-theorem inv_of_two_add_inv_of_two [Semiringₓ α] [Invertible (2 : α)] : (⅟ 2 : α) + (⅟ 2 : α) = 1 := by
+theorem inv_of_two_add_inv_of_two [NonAssocSemiringₓ α] [Invertible (2 : α)] : (⅟ 2 : α) + (⅟ 2 : α) = 1 := by
   simp only [← two_mul, mul_inv_of_self]
 
 /-- `a` is the inverse of `⅟a`. -/
@@ -238,6 +238,14 @@ theorem commute_inv_of {M : Type _} [One M] [Mul M] (m : M) [Invertible m] : Com
     _ = ⅟ m * m := (inv_of_mul_self m).symm
     
 
+theorem nonzero_of_invertible [MulZeroOneClassₓ α] (a : α) [Nontrivial α] [Invertible a] : a ≠ 0 := fun ha =>
+  zero_ne_one <|
+    calc
+      0 = ⅟ a * a := by
+        simp [ha]
+      _ = 1 := inv_of_mul_self a
+      
+
 section MonoidWithZeroₓ
 
 variable [MonoidWithZeroₓ α]
@@ -246,14 +254,6 @@ variable [MonoidWithZeroₓ α]
 @[simp]
 theorem Ringₓ.inverse_invertible (x : α) [Invertible x] : Ring.inverse x = ⅟ x :=
   Ring.inverse_unit (unitOfInvertible _)
-
-theorem nonzero_of_invertible (a : α) [Nontrivial α] [Invertible a] : a ≠ 0 := fun ha =>
-  zero_ne_one <|
-    calc
-      0 = ⅟ a * a := by
-        simp [ha]
-      _ = 1 := inv_of_mul_self a
-      
 
 end MonoidWithZeroₓ
 

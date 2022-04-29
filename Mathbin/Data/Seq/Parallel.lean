@@ -48,7 +48,7 @@ theorem TerminatesParallel.aux :
   have lem1 : ∀ l S, (∃ a : α, parallel.aux2 l = Sum.inl a) → terminates (corec parallel.aux1 (l, S)) := by
     intro l S e
     cases' e with a e
-    have this : corec parallel.aux1 (l, S) = return a := by
+    have : corec parallel.aux1 (l, S) = return a := by
       apply destruct_eq_ret
       simp [parallel.aux1]
       rw [e]

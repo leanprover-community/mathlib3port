@@ -42,22 +42,19 @@ theorem Applicativeₓ.ext {F} :
       ∀ {α β : Type u} f : F (α → β) x : F α, @Seqₓ.seq _ A1.toHasSeq _ _ f x = @Seqₓ.seq _ A2.toHasSeq _ _ f x, A1 = A2
   | { toFunctor := F1, seq := s1, pure := p1, seqLeft := sl1, seqRight := sr1 },
     { toFunctor := F2, seq := s2, pure := p2, seqLeft := sl2, seqRight := sr2 }, L1, L2, H1, H2 => by
-    have : @p1 = @p2 := by
+    obtain rfl : @p1 = @p2 := by
       funext α x
       apply H1
-    subst this
-    have : @s1 = @s2 := by
+    obtain rfl : @s1 = @s2 := by
       funext α β f x
       apply H2
-    subst this
     cases L1
     cases L2
-    have : F1 = F2 := by
+    obtain rfl : F1 = F2 := by
       skip
       apply Functor.ext
       intros
       exact (L1_pure_seq_eq_map _ _).symm.trans (L2_pure_seq_eq_map _ _)
-    subst this
     congr <;> funext α β x y
     · exact (L1_seq_left_eq _ _).trans (L2_seq_left_eq _ _).symm
       
@@ -118,7 +115,7 @@ theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicativ
 
 open IsCommApplicative
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
     [IsCommApplicative g] : IsCommApplicative (Comp f g) := by
   refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }

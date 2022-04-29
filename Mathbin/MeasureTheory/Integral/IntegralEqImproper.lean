@@ -55,7 +55,7 @@ in analysis.
 
 open MeasureTheory Filter Set TopologicalSpace
 
-open_locale Ennreal Nnreal TopologicalSpace
+open Ennreal Nnreal TopologicalSpace
 
 namespace MeasureTheory
 
@@ -164,6 +164,15 @@ theorem AeCover.ae_measurable {β : Type _} [MeasurableSpace β] [l.IsCountablyG
   filter_upwards [hφ.ae_eventually_mem] with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
 
+theorem AeCover.ae_strongly_measurable {β : Type _} [TopologicalSpace β] [MetrizableSpace β] [l.IsCountablyGenerated]
+    [l.ne_bot] {f : α → β} {φ : ι → Set α} (hφ : AeCover μ l φ)
+    (hfm : ∀ i, AeStronglyMeasurable f (μ.restrict <| φ i)) : AeStronglyMeasurable f μ := by
+  obtain ⟨u, hu⟩ := l.exists_seq_tendsto
+  have := ae_strongly_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
+  rwa [measure.restrict_eq_self_of_ae_mem] at this
+  filter_upwards [hφ.ae_eventually_mem] with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
+    mem_Union.mpr ⟨i, hi⟩
+
 end AeCover
 
 theorem AeCover.comp_tendsto {α ι ι' : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} {l' : Filter ι'}
@@ -244,17 +253,16 @@ end Lintegral
 
 section Integrable
 
-variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E] [MeasurableSpace E]
-  [OpensMeasurableSpace E]
+variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E]
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ Ennreal.ofReal I) : Integrable f μ := by
   refine' ⟨hfm, (le_of_tendsto _ hbounded).trans_lt Ennreal.of_real_lt_top⟩
-  exact hφ.lintegral_tendsto_of_countably_generated (measurable_nnnorm.comp_ae_measurable hfm).coe_nnreal_ennreal
+  exact hφ.lintegral_tendsto_of_countably_generated hfm.ennnorm
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 <| Ennreal.ofReal I)) : Integrable f μ := by
   refine' hφ.integrable_of_lintegral_nnnorm_bounded (max 1 (I + 1)) hfm _
   refine' htendsto.eventually (ge_mem_nhds _)
@@ -262,14 +270,14 @@ theorem AeCover.integrable_of_lintegral_nnnorm_tendsto [l.ne_bot] [l.IsCountably
   exact lt_max_of_lt_right (lt_add_one I)
 
 theorem AeCover.integrable_of_lintegral_nnnorm_bounded' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ∥f x∥₊ ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_bounded I hfm
     (by
       simpa only [Ennreal.of_real_coe_nnreal] using hbounded)
 
 theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
-    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeMeasurable f μ)
+    (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0 ) (hfm : AeStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ∥f x∥₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
   hφ.integrable_of_lintegral_nnnorm_tendsto I hfm
     (by
@@ -278,7 +286,7 @@ theorem AeCover.integrable_of_lintegral_nnnorm_tendsto' [l.ne_bot] [l.IsCountabl
 theorem AeCover.integrable_of_integral_norm_bounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
     (hbounded : ∀ᶠ i in l, (∫ x in φ i, ∥f x∥ ∂μ) ≤ I) : Integrable f μ := by
-  have hfm : AeMeasurable f μ := hφ.ae_measurable fun i => (hfi i).AeMeasurable
+  have hfm : ae_strongly_measurable f μ := hφ.ae_strongly_measurable fun i => (hfi i).AeStronglyMeasurable
   refine' hφ.integrable_of_lintegral_nnnorm_bounded I hfm _
   conv at hbounded in integral _ _ =>
     rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun x => @norm_nonneg E _ (f x)) hfm.norm.restrict]
@@ -311,7 +319,7 @@ end Integrable
 section Integral
 
 variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter ι} [NormedGroup E] [NormedSpace ℝ E]
-  [MeasurableSpace E] [BorelSpace E] [CompleteSpace E] [SecondCountableTopology E]
+  [CompleteSpace E]
 
 theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α} (hφ : AeCover μ l φ)
     {f : α → E} (hfi : Integrable f μ) : Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
@@ -320,7 +328,7 @@ theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated]
     ext n
     rw [integral_indicator (hφ.measurable n)]
   tendsto_integral_filter_of_dominated_convergence (fun x => ∥f x∥)
-    (eventually_of_forall fun i => hfi.AeMeasurable.indicator <| hφ.Measurable i)
+    (eventually_of_forall fun i => hfi.AeStronglyMeasurable.indicator <| hφ.Measurable i)
     (eventually_of_forall fun i => (ae_of_all _) fun x => norm_indicator_le_norm_self _ _) hfi.norm
     (hφ.ae_tendsto_indicator f)
 
@@ -341,28 +349,25 @@ end Integral
 
 section IntegrableOfIntervalIntegral
 
-variable {α ι E : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] [MeasurableSpace α]
-  [OpensMeasurableSpace α] {μ : Measure α} {l : Filter ι} [Filter.NeBot l] [IsCountablyGenerated l] [MeasurableSpace E]
-  [NormedGroup E] [BorelSpace E] {a b : ι → α} {f : α → E}
+variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [Filter.NeBot l] [IsCountablyGenerated l] [NormedGroup E]
+  {a b : ι → ℝ} {f : ℝ → E}
 
-theorem integrable_of_interval_integral_norm_bounded [NoMinOrder α] [Nonempty α] (I : ℝ)
-    (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ) (ha : Tendsto a l atBot) (hb : Tendsto b l atTop)
-    (h : ∀ᶠ i in l, (∫ x in a i..b i, ∥f x∥ ∂μ) ≤ I) : Integrable f μ := by
-  let c : α := Classical.choice ‹_›
+theorem integrable_of_interval_integral_norm_bounded (I : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ)
+    (ha : Tendsto a l atBot) (hb : Tendsto b l atTop) (h : ∀ᶠ i in l, (∫ x in a i..b i, ∥f x∥ ∂μ) ≤ I) :
+    Integrable f μ := by
   have hφ : ae_cover μ l _ := ae_cover_Ioc ha hb
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  filter_upwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)] with i hai hbi ht
+  filter_upwards [ha.eventually (eventually_le_at_bot 0), hb.eventually (eventually_ge_at_top 0)] with i hai hbi ht
   rwa [← intervalIntegral.integral_of_le (hai.trans hbi)]
 
-theorem integrable_of_interval_integral_norm_tendsto [NoMinOrder α] [Nonempty α] (I : ℝ)
-    (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ) (ha : Tendsto a l atBot) (hb : Tendsto b l atTop)
-    (h : Tendsto (fun i => ∫ x in a i..b i, ∥f x∥ ∂μ) l (𝓝 I)) : Integrable f μ :=
+theorem integrable_of_interval_integral_norm_tendsto (I : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ)
+    (ha : Tendsto a l atBot) (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a i..b i, ∥f x∥ ∂μ) l (𝓝 I)) :
+    Integrable f μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_of_interval_integral_norm_bounded I' hfi ha hb hI'
 
-theorem integrable_on_Iic_of_interval_integral_norm_bounded [NoMinOrder α] (I : ℝ) (b : α)
-    (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ) (ha : Tendsto a l atBot)
-    (h : ∀ᶠ i in l, (∫ x in a i..b, ∥f x∥ ∂μ) ≤ I) : IntegrableOn f (Iic b) μ := by
+theorem integrable_on_Iic_of_interval_integral_norm_bounded (I b : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ)
+    (ha : Tendsto a l atBot) (h : ∀ᶠ i in l, (∫ x in a i..b, ∥f x∥ ∂μ) ≤ I) : IntegrableOn f (Iic b) μ := by
   have hφ : ae_cover (μ.restrict <| Iic b) l _ := ae_cover_Ioi ha
   have hfi : ∀ i, integrable_on f (Ioi (a i)) (μ.restrict <| Iic b) := by
     intro i
@@ -373,13 +378,12 @@ theorem integrable_on_Iic_of_interval_integral_norm_bounded [NoMinOrder α] (I :
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   exact id
 
-theorem integrable_on_Iic_of_interval_integral_norm_tendsto [NoMinOrder α] (I : ℝ) (b : α)
-    (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ) (ha : Tendsto a l atBot)
-    (h : Tendsto (fun i => ∫ x in a i..b, ∥f x∥ ∂μ) l (𝓝 I)) : IntegrableOn f (Iic b) μ :=
+theorem integrable_on_Iic_of_interval_integral_norm_tendsto (I b : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ)
+    (ha : Tendsto a l atBot) (h : Tendsto (fun i => ∫ x in a i..b, ∥f x∥ ∂μ) l (𝓝 I)) : IntegrableOn f (Iic b) μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_on_Iic_of_interval_integral_norm_bounded I' b hfi ha hI'
 
-theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I : ℝ) (a : α) (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ)
+theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I a : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ)
     (hb : Tendsto b l atTop) (h : ∀ᶠ i in l, (∫ x in a..b i, ∥f x∥ ∂μ) ≤ I) : IntegrableOn f (Ioi a) μ := by
   have hφ : ae_cover (μ.restrict <| Ioi a) l _ := ae_cover_Iic hb
   have hfi : ∀ i, integrable_on f (Iic (b i)) (μ.restrict <| Ioi a) := by
@@ -391,7 +395,7 @@ theorem integrable_on_Ioi_of_interval_integral_norm_bounded (I : ℝ) (a : α) (
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   exact id
 
-theorem integrable_on_Ioi_of_interval_integral_norm_tendsto (I : ℝ) (a : α) (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ)
+theorem integrable_on_Ioi_of_interval_integral_norm_tendsto (I a : ℝ) (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ)
     (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a..b i, ∥f x∥ ∂μ) l (𝓝 <| I)) : IntegrableOn f (Ioi a) μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_on_Ioi_of_interval_integral_norm_bounded I' a hfi hb hI'
@@ -400,21 +404,19 @@ end IntegrableOfIntervalIntegral
 
 section IntegralOfIntervalIntegral
 
-variable {α ι E : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] [MeasurableSpace α]
-  [OpensMeasurableSpace α] {μ : Measure α} {l : Filter ι} [IsCountablyGenerated l] [MeasurableSpace E] [NormedGroup E]
-  [NormedSpace ℝ E] [BorelSpace E] [CompleteSpace E] [SecondCountableTopology E] {a b : ι → α} {f : α → E}
+variable {ι E : Type _} {μ : Measure ℝ} {l : Filter ι} [IsCountablyGenerated l] [NormedGroup E] [NormedSpace ℝ E]
+  [CompleteSpace E] {a b : ι → ℝ} {f : ℝ → E}
 
-theorem interval_integral_tendsto_integral [NoMinOrder α] [Nonempty α] (hfi : Integrable f μ) (ha : Tendsto a l atBot)
-    (hb : Tendsto b l atTop) : Tendsto (fun i => ∫ x in a i..b i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) := by
+theorem interval_integral_tendsto_integral (hfi : Integrable f μ) (ha : Tendsto a l atBot) (hb : Tendsto b l atTop) :
+    Tendsto (fun i => ∫ x in a i..b i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) := by
   let φ := fun i => Ioc (a i) (b i)
-  let c : α := Classical.choice ‹_›
   have hφ : ae_cover μ l φ := ae_cover_Ioc ha hb
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  filter_upwards [ha.eventually (eventually_le_at_bot c), hb.eventually (eventually_ge_at_top c)] with i hai hbi
+  filter_upwards [ha.eventually (eventually_le_at_bot 0), hb.eventually (eventually_ge_at_top 0)] with i hai hbi
   exact (intervalIntegral.integral_of_le (hai.trans hbi)).symm
 
-theorem interval_integral_tendsto_integral_Iic [NoMinOrder α] (b : α) (hfi : IntegrableOn f (Iic b) μ)
-    (ha : Tendsto a l atBot) : Tendsto (fun i => ∫ x in a i..b, f x ∂μ) l (𝓝 <| ∫ x in Iic b, f x ∂μ) := by
+theorem interval_integral_tendsto_integral_Iic (b : ℝ) (hfi : IntegrableOn f (Iic b) μ) (ha : Tendsto a l atBot) :
+    Tendsto (fun i => ∫ x in a i..b, f x ∂μ) l (𝓝 <| ∫ x in Iic b, f x ∂μ) := by
   let φ := fun i => Ioi (a i)
   have hφ : ae_cover (μ.restrict <| Iic b) l φ := ae_cover_Ioi ha
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
@@ -422,7 +424,7 @@ theorem interval_integral_tendsto_integral_Iic [NoMinOrder α] (b : α) (hfi : I
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   rfl
 
-theorem interval_integral_tendsto_integral_Ioi (a : α) (hfi : IntegrableOn f (Ioi a) μ) (hb : Tendsto b l atTop) :
+theorem interval_integral_tendsto_integral_Ioi (a : ℝ) (hfi : IntegrableOn f (Ioi a) μ) (hb : Tendsto b l atTop) :
     Tendsto (fun i => ∫ x in a..b i, f x ∂μ) l (𝓝 <| ∫ x in Ioi a, f x ∂μ) := by
   let φ := fun i => Iic (b i)
   have hφ : ae_cover (μ.restrict <| Ioi a) l φ := ae_cover_Iic hb

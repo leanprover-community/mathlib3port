@@ -60,7 +60,7 @@ variable {V : Type u} [Category.{v} V] [Abelian V]
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
-open_locale Pseudoelement
+open Pseudoelement
 
 namespace CategoryTheory.Abelian
 
@@ -78,7 +78,7 @@ include comm₁ comm₂ comm₃
 
 section
 
-variable [Exact f g] [Exact g h] [Exact f' g']
+variable (hfg : Exact f g) (hgh : Exact g h) (hf'g' : Exact f' g')
 
 /-- The four lemma, mono version. For names of objects and morphisms, refer to the following
     diagram:
@@ -103,7 +103,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
           rw [hc]
         _ = 0 := apply_zero _
         
-    (Exists.elim (pseudo_exact_of_exact.2 _ this)) fun b hb =>
+    (Exists.elim ((pseudo_exact_of_exact hgh).2 _ this)) fun b hb =>
       have : g' (β b) = 0 :=
         calc
           g' (β b) = γ (g b) := by
@@ -112,7 +112,7 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
             rw [hb]
           _ = 0 := hc
           
-      (Exists.elim (pseudo_exact_of_exact.2 _ this)) fun a' ha' =>
+      (Exists.elim ((pseudo_exact_of_exact hf'g').2 _ this)) fun a' ha' =>
         (Exists.elim (pseudo_surjective_of_epi α a')) fun a ha =>
           have : f a = b :=
             suffices β (f a) = β b from pseudo_injective_of_mono _ this
@@ -127,14 +127,14 @@ theorem mono_of_epi_of_mono_of_mono (hα : Epi α) (hβ : Mono β) (hδ : Mono �
             c = g b := hb.symm
             _ = g (f a) := by
               rw [this]
-            _ = 0 := pseudo_exact_of_exact.1 _
+            _ = 0 := (pseudo_exact_of_exact hfg).1 _
             
 
 end
 
 section
 
-variable [Exact g h] [Exact f' g'] [Exact g' h']
+variable (hgh : Exact g h) (hf'g' : Exact f' g') (hg'h' : Exact g' h')
 
 /-- The four lemma, epi version. For names of objects and morphisms, refer to the following
     diagram:
@@ -162,10 +162,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
     let y : R ⟶ pushout r g' := pushout.inl
     let z : C' ⟶ pushout r g' := pushout.inr
     have : Mono y :=
-      mono_inl_of_factor_thru_epi_mono_factorization r g' (cokernel.π f')
-        (cokernel.desc f' g'
-          (by
-            simp ))
+      mono_inl_of_factor_thru_epi_mono_factorization r g' (cokernel.π f') (cokernel.desc f' g' hf'g'.w)
         (by
           simp )
         (cokernel.desc f' r hf'r)
@@ -185,11 +182,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
     let v : pushout r g' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inl
     let w : D' ⟶ pushout (γ ≫ z) (h ≫ δ) := pushout.inr
     have : Mono v :=
-      mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g)
-        (cokernel.desc g h
-            (by
-              simp ) ≫
-          δ)
+      mono_inl_of_factor_thru_epi_mono_factorization _ _ (cokernel.π g) (cokernel.desc g h hgh.w ≫ δ)
         (by
           simp )
         (cokernel.desc _ _ hz)
@@ -210,7 +203,7 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
         rw [pushout.condition, category.assoc]
       _ = g' ≫ h' ≫ w := by
         rw [hzv]
-      _ = 0 ≫ w := Exact.w_assoc _
+      _ = 0 ≫ w := hg'h'.w_assoc _
       _ = 0 := HasZeroMorphisms.zero_comp _ _
       
 
@@ -220,11 +213,13 @@ section Five
 
 variable {E E' : V} {i : D ⟶ E} {i' : D' ⟶ E'} {ε : E ⟶ E'} (comm₄ : δ ≫ i' = i ≫ ε)
 
-variable [Exact f g] [Exact g h] [Exact h i] [Exact f' g'] [Exact g' h'] [Exact h' i']
+variable (hfg : Exact f g) (hgh : Exact g h) (hhi : Exact h i)
+
+variable (hf'g' : Exact f' g') (hg'h' : Exact g' h') (hh'i' : Exact h' i')
 
 variable [IsIso α] [IsIso β] [IsIso δ] [IsIso ε]
 
-include comm₄
+include comm₄ hfg hgh hhi hf'g' hg'h' hh'i'
 
 /-- The five lemma. For names of objects and morphisms, refer to the following diagram:
 
@@ -239,9 +234,9 @@ A' --f'-> B' --g'-> C' --h'-> D' --i'-> E'
 -/
 theorem is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso : IsIso γ :=
   have : Mono γ := by
-    apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ <;> infer_instance
+    apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
   have : Epi γ := by
-    apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ <;> infer_instance
+    apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
   is_iso_of_mono_of_epi _
 
 end Five

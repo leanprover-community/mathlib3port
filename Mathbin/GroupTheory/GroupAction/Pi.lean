@@ -161,6 +161,19 @@ end Pi
 
 namespace Function
 
+/-- Non-dependent version of `pi.has_scalar`. Lean gets confused by the dependent instance if this
+is not present. -/
+@[to_additive HasVadd]
+instance hasScalar {ι R M : Type _} [HasScalar R M] : HasScalar R (ι → M) :=
+  Pi.hasScalar
+
+/-- Non-dependent version of `pi.smul_comm_class`. Lean gets confused by the dependent instance if
+this is not present. -/
+@[to_additive]
+instance smul_comm_class {ι α β M : Type _} [HasScalar α M] [HasScalar β M] [SmulCommClass α β M] :
+    SmulCommClass α β (ι → M) :=
+  Pi.smul_comm_class
+
 @[to_additive]
 theorem update_smul {α : Type _} [∀ i, HasScalar α (f i)] [DecidableEq I] (c : α) (f₁ : ∀ i, f i) (i : I) (x₁ : f i) :
     update (c • f₁) i (c • x₁) = c • update f₁ i x₁ :=

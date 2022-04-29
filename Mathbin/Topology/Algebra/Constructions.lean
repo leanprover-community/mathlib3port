@@ -20,6 +20,10 @@ topological space, opposite monoid, units
 
 variable {M X : Type _}
 
+open Filter
+
+open TopologicalSpace
+
 namespace MulOpposite
 
 /-- Put the same topological space structure on the opposite monoid as on the original space. -/
@@ -37,12 +41,32 @@ theorem continuous_unop : Continuous (unop : Mᵐᵒᵖ → M) :=
 theorem continuous_op : Continuous (op : M → Mᵐᵒᵖ) :=
   continuous_induced_rng continuous_id
 
+@[to_additive]
+instance [T2Space M] : T2Space Mᵐᵒᵖ :=
+  ⟨fun x y h => separated_by_continuous MulOpposite.continuous_unop <| unop_injective.Ne h⟩
+
 /-- `mul_opposite.op` as a homeomorphism. -/
 @[to_additive "`add_opposite.op` as a homeomorphism."]
 def opHomeomorph : M ≃ₜ Mᵐᵒᵖ where
   toEquiv := opEquiv
   continuous_to_fun := continuous_op
   continuous_inv_fun := continuous_unop
+
+@[simp, to_additive]
+theorem map_op_nhds (x : M) : map (op : M → Mᵐᵒᵖ) (𝓝 x) = 𝓝 (op x) :=
+  opHomeomorph.map_nhds_eq x
+
+@[simp, to_additive]
+theorem map_unop_nhds (x : Mᵐᵒᵖ) : map (unop : Mᵐᵒᵖ → M) (𝓝 x) = 𝓝 (unop x) :=
+  opHomeomorph.symm.map_nhds_eq x
+
+@[simp, to_additive]
+theorem comap_op_nhds (x : Mᵐᵒᵖ) : comap (op : M → Mᵐᵒᵖ) (𝓝 x) = 𝓝 (unop x) :=
+  opHomeomorph.comap_nhds_eq x
+
+@[simp, to_additive]
+theorem comap_unop_nhds (x : M) : comap (unop : Mᵐᵒᵖ → M) (𝓝 x) = 𝓝 (op x) :=
+  opHomeomorph.symm.comap_nhds_eq x
 
 end MulOpposite
 

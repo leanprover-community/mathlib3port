@@ -63,8 +63,7 @@ theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by
   rintro ⟨_, _⟩ <;> constructor
 
 @[trans]
-theorem Rel.trans {x y z : α × α} : Rel α x y → Rel α y z → Rel α x z := by
-  intro a b
+theorem Rel.trans {x y z : α × α} (a : Rel α x y) (b : Rel α y z) : Rel α x z := by
   casesm* rel _ _ _ <;>
     first |
       apply rel.refl|
@@ -174,11 +173,13 @@ def map (f : α → β) : Sym2 α → Sym2 β :=
       apply rel.swap)
 
 @[simp]
-theorem map_id : Sym2.map (@id α) = id := by
-  tidy
+theorem map_id : map (@id α) = id := by
+  ext ⟨⟨x, y⟩⟩
+  rfl
 
 theorem map_comp {g : β → γ} {f : α → β} : Sym2.map (g ∘ f) = Sym2.map g ∘ Sym2.map f := by
-  tidy
+  ext ⟨⟨x, y⟩⟩
+  rfl
 
 theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) = map (g ∘ f) x := by
   tidy
@@ -260,16 +261,13 @@ theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z := by
   rw [other_spec h]
 
 theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y ∈ z ↔ z = ⟦(x, y)⟧ := by
-  refine' ⟨Quotientₓ.recOnSubsingleton z _, _⟩
-  · rintro ⟨z₁, z₂⟩ ⟨hx, hy⟩
-    rw [eq_iff]
-    cases' mem_iff.mp hx with hx hx <;>
-      cases' mem_iff.mp hy with hy hy <;>
-        subst x <;>
-          subst y <;>
-            try
-                exact (hne rfl).elim <;>
-              simp only [true_orₓ, eq_self_iff_true, and_selfₓ, or_trueₓ]
+  constructor
+  · induction' z using Sym2.ind with x' y'
+    rw [mem_iff, mem_iff]
+    rintro ⟨rfl | rfl, rfl | rfl⟩ <;>
+      try
+          trivial <;>
+        simp only [Sym2.eq_swap]
     
   · rintro rfl
     simp
@@ -281,34 +279,57 @@ theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h
 
 @[ext]
 protected theorem ext (z z' : Sym2 α) (h : ∀ x, x ∈ z ↔ x ∈ z') : z = z' := by
-  refine' Quotientₓ.recOnSubsingleton z (fun w => _) h
-  refine' Quotientₓ.recOnSubsingleton z' fun w' => _
-  intro h
-  cases' w with x y
-  cases' w' with x' y'
-  simp only [mem_iff] at h
-  apply eq_iff.mpr
+  induction' z using Sym2.ind with x y
+  induction' z' using Sym2.ind with x' y'
   have hx := h x
   have hy := h y
   have hx' := h x'
   have hy' := h y'
-  simp only [true_iffₓ, true_orₓ, eq_self_iff_true, iff_trueₓ, or_trueₓ] at hx hy hx' hy'
-  cases hx <;>
-    subst x <;>
-      cases hy <;>
-        subst y <;>
-          cases hx' <;>
-            try
-                subst x' <;>
-              cases hy' <;>
-                try
-                    subst y' <;>
-                  simp only [eq_self_iff_true, and_selfₓ, or_selfₓ, true_orₓ, or_trueₓ]
+  simp only [mem_iff, eq_self_iff_true, or_trueₓ, iff_trueₓ, true_orₓ, true_iffₓ] at hx hy hx' hy'
+  cases hx <;> cases hy <;> cases hx' <;> cases hy' <;> subst_vars
+  simp only [Sym2.eq_swap]
 
 instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x ∈ z) :=
   Quotientₓ.recOnSubsingleton z fun ⟨y₁, y₂⟩ => decidableOfIff' _ mem_iff
 
 end Membership
+
+@[simp]
+theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ ∃ a, a ∈ z ∧ f a = b := by
+  induction' z using Sym2.ind with x y
+  simp only [map, Quotientₓ.map_mk, Prod.map_mkₓ, mem_iff]
+  constructor
+  · rintro (rfl | rfl)
+    · exact
+        ⟨x, by
+          simp ⟩
+      
+    · exact
+        ⟨y, by
+          simp ⟩
+      
+    
+  · rintro ⟨w, rfl | rfl, rfl⟩ <;> simp
+    
+
+@[congr]
+theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀, ∀ x ∈ s, ∀, f x = g x) : map f s = map g s := by
+  ext y
+  simp only [mem_map]
+  constructor <;>
+    · rintro ⟨w, hw, rfl⟩
+      exact
+        ⟨w, hw, by
+          simp [hw, h]⟩
+      
+
+/-- Note: `sym2.map_id` will not simplify `sym2.map id z` due to `sym2.map_congr`. -/
+@[simp]
+theorem map_id' : (map fun x : α => x) = id :=
+  map_id
+
+/-! ### Diagonal -/
+
 
 /-- A type `α` is naturally included in the diagonal of `α × α`, and this function gives the image
 of this diagonal in `sym2 α`.
@@ -336,10 +357,9 @@ theorem diag_is_diag (a : α) : IsDiag (diag a) :=
   Eq.refl a
 
 theorem IsDiag.mem_range_diag {z : Sym2 α} : IsDiag z → z ∈ Set.Range (@diag α) := by
-  induction z using Quotientₓ.induction_on
-  cases z
-  rintro (rfl : z_fst = z_snd)
-  exact ⟨z_fst, rfl⟩
+  induction' z using Sym2.ind with x y
+  rintro (rfl : x = y)
+  exact ⟨_, rfl⟩
 
 theorem is_diag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.Range (@diag α) :=
   ⟨IsDiag.mem_range_diag, fun ⟨i, hi⟩ => hi ▸ diag_is_diag i⟩
@@ -350,10 +370,9 @@ instance IsDiag.decidablePred (α : Type u) [DecidableEq α] : DecidablePred (@I
   infer_instance
 
 theorem other_ne {a : α} {z : Sym2 α} (hd : ¬IsDiag z) (h : a ∈ z) : h.other ≠ a := by
-  intro hn
-  apply hd
+  contrapose! hd
   have h' := Sym2.other_spec h
-  rw [hn] at h'
+  rw [hd] at h'
   rw [← h']
   simp
 

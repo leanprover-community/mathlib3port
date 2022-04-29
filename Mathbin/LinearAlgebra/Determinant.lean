@@ -40,9 +40,9 @@ basis, det, determinant
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 open LinearMap
 
@@ -69,14 +69,14 @@ variable {A : Type _} [CommRingₓ A]
 variable {m n : Type _} [Fintype m] [Fintype n]
 
 /-- If `R^m` and `R^n` are linearly equivalent, then `m` and `n` are also equivalent. -/
-def equivOfPiLequivPi {R : Type _} [CommRingₓ R] [IsDomain R] (e : (m → R) ≃ₗ[R] n → R) : m ≃ n :=
+def equivOfPiLequivPi {R : Type _} [CommRingₓ R] [Nontrivial R] (e : (m → R) ≃ₗ[R] n → R) : m ≃ n :=
   Basis.indexEquiv (Basis.ofEquivFun e.symm) (Pi.basisFun _ _)
 
 namespace Matrix
 
 /-- If `M` and `M'` are each other's inverse matrices, they are square matrices up to
 equivalence of types. -/
-def indexEquivOfInv [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A}
+def indexEquivOfInv [Nontrivial A] [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : m ≃ n :=
   equivOfPiLequivPi (toLin'OfInv hMM' hM'M)
 
@@ -85,18 +85,19 @@ theorem det_comm [DecidableEq n] (M N : Matrix n n A) : det (M ⬝ N) = det (N �
 
 /-- If there exists a two-sided inverse `M'` for `M` (indexed differently),
 then `det (N ⬝ M) = det (M ⬝ N)`. -/
-theorem det_comm' [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix n m A} {N : Matrix m n A} {M' : Matrix m n A}
+theorem det_comm' [DecidableEq m] [DecidableEq n] {M : Matrix n m A} {N : Matrix m n A} {M' : Matrix m n A}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : det (M ⬝ N) = det (N ⬝ M) := by
-  let
-    e :=-- Although `m` and `n` are different a priori, we will show they have the same cardinality.
-      -- This turns the problem into one for square matrices, which is easy.
-      indexEquivOfInv
-      hMM' hM'M
+  nontriviality A
+  -- Although `m` and `n` are different a priori, we will show they have the same cardinality.
+  -- This turns the problem into one for square matrices, which is easy.
+  let e := index_equiv_of_inv hMM' hM'M
   rw [← det_minor_equiv_self e, ← minor_mul_equiv _ _ _ (Equivₓ.refl n) _, det_comm, minor_mul_equiv, Equivₓ.coe_refl,
     minor_id_id]
 
-/-- If `M'` is a two-sided inverse for `M` (indexed differently), `det (M ⬝ N ⬝ M') = det N`. -/
-theorem det_conj [IsDomain A] [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A} {N : Matrix n n A}
+/-- If `M'` is a two-sided inverse for `M` (indexed differently), `det (M ⬝ N ⬝ M') = det N`.
+
+See `matrix.det_conj` and `matrix.det_conj'` for the case when `M' = M⁻¹` or vice versa. -/
+theorem det_conj_of_mul_eq_one [DecidableEq m] [DecidableEq n] {M : Matrix m n A} {M' : Matrix n m A} {N : Matrix n n A}
     (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : det (M ⬝ N ⬝ M') = det N := by
   rw [← det_comm' hM'M hMM', ← Matrix.mul_assoc, hM'M, Matrix.one_mul]
 
@@ -109,7 +110,7 @@ namespace LinearMap
 /-! ### Determinant of a linear map -/
 
 
-variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M]
+variable {A : Type _} [CommRingₓ A] [Module A M]
 
 variable {κ : Type _} [Fintype κ]
 
@@ -117,7 +118,7 @@ variable {κ : Type _} [Fintype κ]
 theorem det_to_matrix_eq_det_to_matrix [DecidableEq κ] (b : Basis ι A M) (c : Basis κ A M) (f : M →ₗ[A] M) :
     det (LinearMap.toMatrix b b f) = det (LinearMap.toMatrix c c f) := by
   rw [← linear_map_to_matrix_mul_basis_to_matrix c b c, ← basis_to_matrix_mul_linear_map_to_matrix b c b,
-      Matrix.det_conj] <;>
+      Matrix.det_conj_of_mul_eq_one] <;>
     rw [Basis.to_matrix_mul_to_matrix, Basis.to_matrix_self]
 
 /-- The determinant of an endomorphism given a basis.
@@ -159,7 +160,7 @@ theorem det_aux_comp (b : Trunc <| Basis ι A M) (f g : M →ₗ[A] M) :
 
 section
 
-open_locale Classical
+open Classical
 
 /-- The determinant of an endomorphism independent of basis.
 
@@ -257,7 +258,7 @@ theorem det_conj {N : Type _} [AddCommGroupₓ N] [Module A N] (f : M →ₗ[A] 
   by_cases' H : ∃ s : Finset M, Nonempty (Basis s A M)
   · rcases H with ⟨s, ⟨b⟩⟩
     rw [← det_to_matrix b f, ← det_to_matrix (b.map e), to_matrix_comp (b.map e) b (b.map e),
-      to_matrix_comp (b.map e) b b, ← Matrix.mul_assoc, Matrix.det_conj]
+      to_matrix_comp (b.map e) b b, ← Matrix.mul_assoc, Matrix.det_conj_of_mul_eq_one]
     · rw [← to_matrix_comp, LinearEquiv.comp_coe, e.symm_trans_self, LinearEquiv.refl_to_linear_map, to_matrix_id]
       
     · rw [← to_matrix_comp, LinearEquiv.comp_coe, e.self_trans_symm, LinearEquiv.refl_to_linear_map, to_matrix_id]
@@ -271,8 +272,7 @@ theorem det_conj {N : Type _} [AddCommGroupₓ N] [Module A N] (f : M →ₗ[A] 
     
 
 /-- If a linear map is invertible, so is its determinant. -/
-theorem is_unit_det {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M] (f : M →ₗ[A] M) (hf : IsUnit f) :
-    IsUnit f.det := by
+theorem is_unit_det {A : Type _} [CommRingₓ A] [Module A M] (f : M →ₗ[A] M) (hf : IsUnit f) : IsUnit f.det := by
   obtain ⟨g, hg⟩ : ∃ g, f.comp g = 1 := hf.exists_right_inv
   have : LinearMap.det f * LinearMap.det g = 1 := by
     simp only [← LinearMap.det_comp, hg, MonoidHom.map_one]
@@ -311,8 +311,6 @@ end LinearMap
 
 namespace LinearEquiv
 
-variable [IsDomain R]
-
 /-- On a `linear_equiv`, the domain of `linear_map.det` can be promoted to `Rˣ`. -/
 protected def det : (M ≃ₗ[R] M) →* Rˣ :=
   (Units.map (LinearMap.det : (M →ₗ[R] M) →* R)).comp
@@ -347,13 +345,13 @@ end LinearEquiv
 
 /-- The determinants of a `linear_equiv` and its inverse multiply to 1. -/
 @[simp]
-theorem LinearEquiv.det_mul_det_symm {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M] (f : M ≃ₗ[A] M) :
+theorem LinearEquiv.det_mul_det_symm {A : Type _} [CommRingₓ A] [Module A M] (f : M ≃ₗ[A] M) :
     (f : M →ₗ[A] M).det * (f.symm : M →ₗ[A] M).det = 1 := by
   simp [← LinearMap.det_comp]
 
 /-- The determinants of a `linear_equiv` and its inverse multiply to 1. -/
 @[simp]
-theorem LinearEquiv.det_symm_mul_det {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M] (f : M ≃ₗ[A] M) :
+theorem LinearEquiv.det_symm_mul_det {A : Type _} [CommRingₓ A] [Module A M] (f : M ≃ₗ[A] M) :
     (f.symm : M →ₗ[A] M).det * (f : M →ₗ[A] M).det = 1 := by
   simp [← LinearMap.det_comp]
 
@@ -364,7 +362,7 @@ theorem LinearEquiv.is_unit_det (f : M ≃ₗ[R] M') (v : Basis ι R M) (v' : Ba
   simpa using (LinearMap.to_matrix_comp v v' v f.symm f).symm
 
 /-- Specialization of `linear_equiv.is_unit_det` -/
-theorem LinearEquiv.is_unit_det' {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M] (f : M ≃ₗ[A] M) :
+theorem LinearEquiv.is_unit_det' {A : Type _} [CommRingₓ A] [Module A M] (f : M ≃ₗ[A] M) :
     IsUnit (LinearMap.det (f : M →ₗ[A] M)) :=
   is_unit_of_mul_eq_one _ _ f.det_mul_det_symm
 
@@ -478,7 +476,7 @@ theorem AlternatingMap.map_basis_eq_zero_iff (f : AlternatingMap R M R ι) : f e
 theorem AlternatingMap.map_basis_ne_zero_iff (f : AlternatingMap R M R ι) : f e ≠ 0 ↔ f ≠ 0 :=
   not_congr <| f.map_basis_eq_zero_iff e
 
-variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M]
+variable {A : Type _} [CommRingₓ A] [Module A M]
 
 @[simp]
 theorem Basis.det_comp (e : Basis ι A M) (f : M →ₗ[A] M) (v : ι → M) : e.det (f ∘ v) = f.det * e.det v := by

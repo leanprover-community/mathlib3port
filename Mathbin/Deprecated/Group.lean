@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Algebra.Group.TypeTags
-import Mathbin.Algebra.Group.UnitsHom
+import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Algebra.Hom.Units
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Data.Equiv.MulAdd
 
 /-!
 # Unbundled monoid and group homomorphisms

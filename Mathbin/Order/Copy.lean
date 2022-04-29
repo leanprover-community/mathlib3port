@@ -29,7 +29,7 @@ def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : 
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       simp_rw [le_eq]
       assumption
 
@@ -41,7 +41,7 @@ def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Latti
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 
 /-- A function to create a provable equal copy of a distributive lattice
@@ -53,7 +53,7 @@ def DistribLattice.copy (c : DistribLattice α) (le : α → α → Prop) (eq_le
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 
 /-- A function to create a provable equal copy of a complete lattice
@@ -69,7 +69,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 
 /-- A function to create a provable equal copy of a frame with possibly different definitional
@@ -85,7 +85,7 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 
 /-- A function to create a provable equal copy of a coframe with possibly different definitional
@@ -101,7 +101,7 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 
 /-- A function to create a provable equal copy of a complete distributive lattice
@@ -129,6 +129,6 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
   all_goals
     abstract 
       subst_vars
-      cases' c
+      cases c
       assumption
 

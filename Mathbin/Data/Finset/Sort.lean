@@ -55,6 +55,14 @@ theorem mem_sort {s : Finset α} {a : α} : a ∈ sort r s ↔ a ∈ s :=
 theorem length_sort {s : Finset α} : (sort r s).length = s.card :=
   Multiset.length_sort _
 
+@[simp]
+theorem sort_empty : sort r ∅ = [] :=
+  Multiset.sort_zero r
+
+@[simp]
+theorem sort_singleton (a : α) : sort r {a} = [a] :=
+  Multiset.sort_singleton r a
+
 theorem sort_perm_to_list (s : Finset α) : sort r s ~ s.toList := by
   rw [← Multiset.coe_eq_coe]
   simp only [coe_to_list, sort_eq]

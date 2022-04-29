@@ -6,6 +6,7 @@ Authors: Aaron Anderson
 import Mathbin.Data.Fintype.Order
 import Mathbin.Algebra.DirectLimit
 import Mathbin.ModelTheory.Quotients
+import Mathbin.ModelTheory.FinitelyGenerated
 
 /-!
 # Direct Limits of First-Order Structures
@@ -19,15 +20,13 @@ This file constructs the direct limit of a directed system of first-order embedd
 
 universe v w u₁ u₂
 
-open_locale FirstOrder
+open FirstOrder
 
 namespace FirstOrder
 
 namespace Language
 
-open Structure
-
-open Set
+open Structure Set
 
 variable {L : Language} {ι : Type v} [Preorderₓ ι]
 
@@ -47,6 +46,28 @@ theorem map_self [DirectedSystem G fun i j h => f i j h] i x h : f i i h x = x :
 theorem map_map [DirectedSystem G fun i j h => f i j h] {i j k} hij hjk x :
     f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x :=
   DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
+
+variable {G' : ℕ → Type w} [∀ i, L.Structure (G' i)] (f' : ∀ n : ℕ, G' n ↪[L] G' (n + 1))
+
+/-- Given a chain of embeddings of structures indexed by `ℕ`, defines a `directed_system` by
+composing them. -/
+def natLeRec (m n : ℕ) (h : m ≤ n) : G' m ↪[L] G' n :=
+  Nat.leRecOn h (fun k g => (f' k).comp g) (Embedding.refl L _)
+
+@[simp]
+theorem coe_nat_le_rec (m n : ℕ) (h : m ≤ n) : (natLeRec f' m n h : G' m → G' n) = Nat.leRecOn h fun n => f' n := by
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
+  ext x
+  induction' k with k ih
+  · rw [nat_le_rec, Nat.le_rec_on_self, embedding.refl_apply, Nat.le_rec_on_self]
+    
+  · rw [Nat.le_rec_on_succ le_self_add, nat_le_rec, Nat.le_rec_on_succ le_self_add, ← nat_le_rec, embedding.comp_apply,
+      ih]
+    
+
+instance natLeRec.directed_system : DirectedSystem G' fun i j h => natLeRec f' i j h :=
+  ⟨fun i x h => congr (congr rfl (Nat.le_rec_on_self _)) rfl, fun i j k ij jk => by
+    simp [Nat.le_rec_on_trans ij jk]⟩
 
 end DirectedSystem
 
@@ -211,7 +232,7 @@ theorem exists_quotient_mk_sigma_mk_eq {α : Type _} [Fintype α] (x : α → Di
 variable (L ι)
 
 /-- The canonical map from a component to the direct limit. -/
-noncomputable def of (i : ι) : G i ↪[L] DirectLimit G f where
+def of (i : ι) : G i ↪[L] DirectLimit G f where
   toFun := Quotientₓ.mk ∘ Sigma.mk i
   inj' := fun x y h => by
     simp only [Quotientₓ.eq] at h
@@ -253,7 +274,7 @@ variable (L ι G f)
 /-- The universal property of the direct limit: maps from the components to another module
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
-noncomputable def lift : DirectLimit G f ↪[L] P where
+def lift : DirectLimit G f ↪[L] P where
   toFun :=
     Quotientₓ.lift (fun x : Σi, G i => (g x.1) x.2) fun x y xy => by
       simp only
@@ -294,6 +315,31 @@ theorem lift_unique (F : DirectLimit G f ↪[L] P) x :
         x :=
   (DirectLimit.induction_on x) fun i x => by
     rw [lift_of] <;> rfl
+
+/-- The direct limit of countably many countably generated structures is countably generated. -/
+theorem cg {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] {G : ι → Type w}
+    [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j) (h : ∀ i, Structure.Cg L (G i))
+    [DirectedSystem G fun i j h => f i j h] : Structure.Cg L (DirectLimit G f) := by
+  refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.some (h i).out, _, _⟩⟩
+  · exact Set.countable_Union fun i => Set.Countable.image (Classical.some_spec (h i).out).1 _
+    
+  · rw [eq_top_iff, substructure.closure_Union]
+    simp_rw [← embedding.coe_to_hom, substructure.closure_image]
+    rw [le_supr_iff]
+    intro S hS x hx
+    let out := @Quotientₓ.out _ (direct_limit.setoid G f)
+    refine' hS (out x).1 ⟨(out x).2, _, _⟩
+    · rw [(Classical.some_spec (h (out x).1).out).2]
+      simp only [substructure.coe_top]
+      
+    · simp only [embedding.coe_to_hom, direct_limit.of_apply, Sigma.eta, Quotientₓ.out_eq]
+      
+    
+
+instance cg' {ι : Type _} [Encodable ι] [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] {G : ι → Type w}
+    [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j) [h : ∀ i, Structure.Cg L (G i)]
+    [DirectedSystem G fun i j h => f i j h] : Structure.Cg L (DirectLimit G f) :=
+  cg f h
 
 end DirectLimit
 

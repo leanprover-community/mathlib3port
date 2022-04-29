@@ -3,10 +3,10 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 -/
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Data.Equiv.Basic
-import Mathbin.Data.Equiv.MulAdd
-import Mathbin.Data.Equiv.Option
+import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Option
 
 /-!
 # Adjoining a zero/one to semigroups and related algebraic structures
@@ -31,6 +31,19 @@ def WithOne α :=
   Option α
 
 namespace WithOne
+
+instance [HasRepr α] : HasRepr (WithZero α) :=
+  ⟨fun o =>
+    match o with
+    | none => "0"
+    | some a => "↑" ++ reprₓ a⟩
+
+@[to_additive]
+instance [HasRepr α] : HasRepr (WithOne α) :=
+  ⟨fun o =>
+    match o with
+    | none => "1"
+    | some a => "↑" ++ reprₓ a⟩
 
 @[to_additive]
 instance : Monadₓ WithOne :=
@@ -117,7 +130,7 @@ section
 -- workaround: we make `with_one`/`with_zero` irreducible for this definition, otherwise `simps`
 -- will unfold it in the statement of the lemma it generates.
 @[to_additive "`coe` as a bundled morphism", simps apply]
-def coeMulHom [Mul α] : MulHom α (WithOne α) where
+def coeMulHom [Mul α] : α →ₙ* WithOne α where
   toFun := coe
   map_mul' := fun x y => rfl
 
@@ -129,7 +142,7 @@ variable [Mul α] [MulOneClassₓ β]
 
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
-def lift : MulHom α β ≃ (WithOne α →* β) where
+def lift : (α →ₙ* β) ≃ (WithOne α →* β) where
   toFun := fun f =>
     { toFun := fun x => Option.casesOn x 1 f, map_one' := rfl,
       map_mul' := fun x y =>
@@ -147,7 +160,7 @@ def lift : MulHom α β ≃ (WithOne α →* β) where
   left_inv := fun f => MulHom.ext fun x => rfl
   right_inv := fun F => MonoidHom.ext fun x => (WithOne.cases_on x F.map_one.symm) fun x => rfl
 
-variable (f : MulHom α β)
+variable (f : α →ₙ* β)
 
 @[simp, to_additive]
 theorem lift_coe (x : α) : lift f x = f x :=
@@ -171,11 +184,11 @@ variable [Mul α] [Mul β] [Mul γ]
   from `with_one α` to `with_one β` -/
 @[to_additive
       "Given an additive map from `α → β` returns an add_monoid homomorphism\n  from `with_zero α` to `with_zero β`"]
-def map (f : MulHom α β) : WithOne α →* WithOne β :=
+def map (f : α →ₙ* β) : WithOne α →* WithOne β :=
   lift (coeMulHom.comp f)
 
 @[simp, to_additive]
-theorem map_coe (f : MulHom α β) (a : α) : map f (a : WithOne α) = f a :=
+theorem map_coe (f : α →ₙ* β) (a : α) : map f (a : WithOne α) = f a :=
   lift_coe _ _
 
 @[simp, to_additive]
@@ -184,11 +197,11 @@ theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by
   induction x using WithOne.cases_on <;> rfl
 
 @[to_additive]
-theorem map_map (f : MulHom α β) (g : MulHom β γ) x : map g (map f x) = map (g.comp f) x := by
+theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) x : map g (map f x) = map (g.comp f) x := by
   induction x using WithOne.cases_on <;> rfl
 
 @[simp, to_additive]
-theorem map_comp (f : MulHom α β) (g : MulHom β γ) : map (g.comp f) = (map g).comp (map f) :=
+theorem map_comp (f : α →ₙ* β) (g : β →ₙ* γ) : map (g.comp f) = (map g).comp (map f) :=
   MonoidHom.ext fun x => (map_map f g x).symm
 
 /-- A version of `equiv.option_congr` for `with_one`. -/

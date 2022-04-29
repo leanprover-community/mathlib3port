@@ -18,7 +18,7 @@ some basic properties of such measures.
 -/
 
 
-open_locale Ennreal Nnreal Pointwise TopologicalSpace
+open Ennreal Nnreal Pointwise TopologicalSpace
 
 open MeasureTheory MeasureTheory.Measure Set Function
 
@@ -145,9 +145,15 @@ theorem measure_preimage_smul (s : Set α) : μ ((· • ·) c ⁻¹' s) = μ s 
 theorem measure_smul_set (s : Set α) : μ (c • s) = μ s :=
   ((smul_invariant_measure_tfae G μ).out 0 4).mp ‹_› c s
 
+variable {μ}
+
+@[to_additive]
+theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) : NullMeasurableSet (c • s) μ := by
+  simpa only [← preimage_smul_inv] using hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
+
 section IsMinimal
 
-variable (G) {μ} [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α] {K U : Set α}
+variable (G) [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α] {K U : Set α}
 
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of

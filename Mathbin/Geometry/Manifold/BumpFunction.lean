@@ -34,7 +34,7 @@ variable {E : Type uE} [NormedGroup E] [NormedSpace ‚Ñù E] [FiniteDimensional ‚Ñ
 
 open Function Filter FiniteDimensional Set
 
-open_locale TopologicalSpace Manifold Classical Filter BigOperators
+open TopologicalSpace Manifold Classical Filter BigOperators
 
 noncomputable section
 

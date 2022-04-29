@@ -63,7 +63,7 @@ theorem mem_alternating_group {f : Perm α} : f ∈ alternatingGroup α ↔ sign
 theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (Perm α)} (hl : ∀, ∀ g ∈ l, ∀, IsSwap g) :
     l.Prod ∈ alternatingGroup α ↔ Even l.length := by
   rw [mem_alternating_group, sign_prod_list_swap hl, ← Units.coe_eq_one, Units.coe_pow, Units.coe_neg_one,
-    Nat.neg_one_pow_eq_one_iff_even]
+    neg_one_pow_eq_one_iff_even]
   decide
 
 theorem IsThreeCycle.mem_alternating_group {f : Perm α} (h : IsThreeCycle f) : f ∈ alternatingGroup α :=
@@ -133,6 +133,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ : Perm α | IsThreeCy
         l.Prod ∈ closure { σ : perm α | is_three_cycle σ }
     · obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ
       obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ
+      rw [← two_mul] at hn
       exact hind n l hl hn
       
     intro n
@@ -146,7 +147,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ : Perm α | IsThreeCy
     rw [List.prod_cons, List.prod_cons, ← mul_assoc]
     rw [List.length_cons, Nat.succ_inj'] at hn
     exact
-      mul_mem _
+      mul_mem
         (is_swap.mul_mem_closure_three_cycles (hl a (List.mem_cons_selfₓ a _))
           (hl b (List.mem_cons_of_memₓ a (l.mem_cons_self b))))
         (ih _ (fun g hg => hl g (List.mem_cons_of_memₓ _ (List.mem_cons_of_memₓ _ hg))) hn)
@@ -229,10 +230,10 @@ theorem normal_closure_fin_rotate_five :
       have h : (⟨finRotate 5, fin_rotate_bit1_mem_alternating_group⟩ : alternatingGroup (Finₓ 5)) ∈ normal_closure _ :=
         SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
       exact
-        mul_mem _
+        mul_mem
           (subgroup.normal_closure_normal.conj_mem _ h
             ⟨Finₓ.cycleRange 2, fin.is_three_cycle_cycle_range_two.mem_alternating_group⟩)
-          (inv_mem _ h))
+          (inv_mem h))
 
 /-- The normal closure of $(04)(13)$ within $A_5$ is the whole group. This will be
   used to show that the normal closure of any permutation of cycle type $(2,2)$ is the whole group.
@@ -266,7 +267,7 @@ theorem normal_closure_swap_mul_swap_five :
   refine' normal_closure_le_normal _
   rw [Set.singleton_subset_iff, SetLike.mem_coe, ← h5]
   have h : g2 ∈ normal_closure {g2} := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
-  exact mul_mem _ (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem _ h)
+  exact mul_mem (subgroup.normal_closure_normal.conj_mem _ h g1) (inv_mem h)
 
 /-- Shows that any non-identity element of $A_5$ whose cycle decomposition consists only of swaps
   is conjugate to $(04)(13)$. This is used to show that the normal closure of such a permutation
@@ -284,7 +285,7 @@ theorem is_conj_swap_mul_swap_of_cycle_type_two {g : Perm (Finₓ 5)} (ha : g �
   rw [mem_alternating_group, sign_of_cycle_type, h2] at ha
   norm_num  at ha
   rw [pow_addₓ, pow_mulₓ, Int.units_pow_two, one_mulₓ, Units.ext_iff, Units.coe_one, Units.coe_pow, Units.coe_neg_one,
-    Nat.neg_one_pow_eq_one_iff_even _] at ha
+    neg_one_pow_eq_one_iff_even _] at ha
   swap
   · decide
     
@@ -353,7 +354,7 @@ instance is_simple_group_five : IsSimpleGroup (alternatingGroup (Finₓ 5)) :=
       refine' normal_closure_le_normal _
       rw [Set.singleton_subset_iff, SetLike.mem_coe]
       have h := SetLike.mem_coe.1 (subset_normal_closure (Set.mem_singleton _))
-      exact mul_mem _ h h
+      exact mul_mem h h
       
     · -- The case `n = 4` leads to contradiction, as no element of $A_5$ includes a 4-cycle.
       have con := mem_alternating_group.1 gA

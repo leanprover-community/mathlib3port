@@ -15,7 +15,7 @@ The ring of integers is integrally closed inside the original ring.
 
 universe u v w
 
-open_locale BigOperators
+open BigOperators
 
 namespace Valuation
 

@@ -3,10 +3,10 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Topology.Opens
 import Mathbin.CategoryTheory.Category.Preorder
 import Mathbin.CategoryTheory.EqToHom
 import Mathbin.Topology.Category.Top.EpiMono
+import Mathbin.Topology.Sets.Opens
 
 /-!
 # The category of open sets in a topological space.
@@ -60,27 +60,27 @@ We now construct as morphisms various inclusions of open sets.
 -/
 -- This is tedious, but necessary because we decided not to allow Prop as morphisms in a category...
 def infLeLeft (U V : Opens X) : U⊓V ⟶ U :=
-  inf_le_left.hom
+  inf_le_left.Hom
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
 def infLeRight (U V : Opens X) : U⊓V ⟶ V :=
-  inf_le_right.hom
+  inf_le_right.Hom
 
 /-- The inclusion `U i ⟶ supr U` as a morphism in the category of open sets.
 -/
 def leSupr {ι : Type _} (U : ι → Opens X) (i : ι) : U i ⟶ supr U :=
-  (le_supr U i).hom
+  (le_supr U i).Hom
 
 /-- The inclusion `⊥ ⟶ U` as a morphism in the category of open sets.
 -/
 def botLe (U : Opens X) : ⊥ ⟶ U :=
-  bot_le.hom
+  bot_le.Hom
 
 /-- The inclusion `U ⟶ ⊤` as a morphism in the category of open sets.
 -/
 def leTop (U : Opens X) : U ⟶ ⊤ :=
-  le_top.hom
+  le_top.Hom
 
 -- We do not mark this as a simp lemma because it breaks open `x`.
 -- Nevertheless, it is useful in `sheaf_of_functions`.
@@ -120,17 +120,17 @@ theorem open_embedding {X : Top.{u}} (U : Opens X) : OpenEmbedding (inclusion U)
 /-- The inclusion of the top open subset (i.e. the whole space) is an isomorphism.
 -/
 def inclusionTopIso (X : Top.{u}) : (toTop X).obj ⊤ ≅ X where
-  hom := inclusion ⊤
+  Hom := inclusion ⊤
   inv := ⟨fun x => ⟨x, trivialₓ⟩, continuous_def.2 fun U ⟨S, hS, hSU⟩ => hSU ▸ hS⟩
 
 /-- `opens.map f` gives the functor from open sets in Y to open set in X,
     given by taking preimages under f. -/
 def map (f : X ⟶ Y) : Opens Y ⥤ Opens X where
-  obj := fun U => ⟨f ⁻¹' U.val, U.property.Preimage f.Continuous⟩
+  obj := fun U => ⟨f ⁻¹' U.val, U.property.preimage f.Continuous⟩
   map := fun U V i => ⟨⟨fun x h => i.le h⟩⟩
 
 @[simp]
-theorem map_obj (f : X ⟶ Y) U p : (map f).obj ⟨U, p⟩ = ⟨f ⁻¹' U, p.Preimage f.Continuous⟩ :=
+theorem map_obj (f : X ⟶ Y) U p : (map f).obj ⟨U, p⟩ = ⟨f ⁻¹' U, p.preimage f.Continuous⟩ :=
   rfl
 
 @[simp]
@@ -192,7 +192,7 @@ is naturally isomorphic to the identity functor.
 -/
 @[simps]
 def mapId : map (𝟙 X) ≅ 𝟭 (Opens X) where
-  hom := { app := fun U => eqToHom (map_id_obj U) }
+  Hom := { app := fun U => eqToHom (map_id_obj U) }
   inv := { app := fun U => eqToHom (map_id_obj U).symm }
 
 theorem map_id_eq : map (𝟙 X) = 𝟭 (Opens X) := by
@@ -209,7 +209,7 @@ of taking preimages under `g`, then preimages under `f`.
 -/
 @[simps]
 def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f where
-  hom := { app := fun U => eqToHom (map_comp_obj f g U) }
+  Hom := { app := fun U => eqToHom (map_comp_obj f g U) }
   inv := { app := fun U => eqToHom (map_comp_obj f g U).symm }
 
 theorem map_comp_eq (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) = map g ⋙ map f :=
@@ -240,7 +240,7 @@ theorem map_iso_refl (f : X ⟶ Y) h : mapIso f f h = Iso.refl (map _) :=
 
 @[simp]
 theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
-    (mapIso f g h).hom.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U) :=
+    (mapIso f g h).Hom.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U) :=
   rfl
 
 @[simp]
@@ -251,7 +251,7 @@ theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
 /-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
 @[simps]
 def mapMapIso {X Y : Top.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X where
-  Functor := map H.hom
+  Functor := map H.Hom
   inverse := map H.inv
   unitIso :=
     NatIso.ofComponents
@@ -290,7 +290,7 @@ def IsOpenMap.adjunction {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) :
       counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 
 instance IsOpenMap.functorFullOfMono {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] : Full hf.Functor where
-  Preimage := fun U V i =>
+  preimage := fun U V i =>
     homOfLe fun x hx => by
       obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩
       exact (Top.mono_iff_injective f).mp H Eq ▸ hy

@@ -3,8 +3,8 @@ Copyright (c) 2021 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+import Mathbin.Data.Set.Pointwise
 import Mathbin.Order.ConditionallyCompleteLattice
-import Mathbin.Algebra.Pointwise
 
 /-!
 # Upper/lower bounds in ordered monoids and groups
@@ -16,7 +16,7 @@ In this file we prove a few facts like “`-s` is bounded above iff `s` is bound
 
 open Function Set
 
-open_locale Pointwise
+open Pointwise
 
 section inv_neg
 

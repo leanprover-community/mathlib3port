@@ -24,7 +24,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGr
 
 open Filter Set Metric ContinuousLinearMap
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 attribute [local mono] prod_mono
 
@@ -127,9 +127,10 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
       exact (f_diff.continuous_on y this).mono ts
       
   have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) := by
-    simp [deriv_fderiv.symm]
-    refine' tendsto.comp is_bounded_bilinear_map_smul_right.continuous_right.continuous_at _
-    exact tendsto_nhds_within_mono_left Ioo_subset_Ioi_self f_lim'
+    simp only [deriv_fderiv.symm]
+    exact
+      tendsto.comp (is_bounded_bilinear_map_smul_right : IsBoundedBilinearMap ℝ _).continuous_right.ContinuousAt
+        (tendsto_nhds_within_mono_left Ioo_subset_Ioi_self f_lim')
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
   have : HasDerivWithinAt f e (Icc a b) a := by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]
@@ -162,9 +163,10 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
       exact (f_diff.continuous_on y this).mono ts
       
   have t_diff' : tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smul_right 1 e)) := by
-    simp [deriv_fderiv.symm]
-    refine' tendsto.comp is_bounded_bilinear_map_smul_right.continuous_right.continuous_at _
-    exact tendsto_nhds_within_mono_left Ioo_subset_Iio_self f_lim'
+    simp only [deriv_fderiv.symm]
+    exact
+      tendsto.comp (is_bounded_bilinear_map_smul_right : IsBoundedBilinearMap ℝ _).continuous_right.ContinuousAt
+        (tendsto_nhds_within_mono_left Ioo_subset_Iio_self f_lim')
   -- now we can apply `has_fderiv_at_boundary_of_differentiable`
   have : HasDerivWithinAt f e (Icc b a) a := by
     rw [has_deriv_within_at_iff_has_fderiv_within_at, ← t_closure]

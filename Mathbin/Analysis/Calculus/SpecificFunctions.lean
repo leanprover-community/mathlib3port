@@ -1,10 +1,12 @@
 /-
 Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Sébastien Gouëzel
+Authors: Sébastien Gouëzel, Floris van Doorn
 -/
 import Mathbin.Analysis.Calculus.IteratedDeriv
 import Mathbin.Analysis.InnerProductSpace.EuclideanDist
+import Mathbin.MeasureTheory.Function.LocallyIntegrable
+import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-!
 # Infinitely smooth bump function
@@ -29,6 +31,9 @@ function cannot have:
   function: real numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available
   through `coe_fn`.
 
+* If `f : cont_diff_bump_of_inner c` and `μ` is a measure on the domain of `f`, then `f.normed μ`
+  is a smooth bump function with integral `1` w.r.t. `μ`.
+
 * `f : cont_diff_bump c`, where `c` is a point in a finite dimensional real vector space, is a
   bundled smooth function such that
 
@@ -43,7 +48,7 @@ function cannot have:
 
 noncomputable section
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 open Polynomial Real Filter Set Function
 
@@ -84,13 +89,7 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
     HasDerivAt (fun x => (pAux n).eval x * exp (-x⁻¹) / x ^ (2 * n))
       ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
-  have A : ∀ k : ℕ, 2 * (k + 1) - 1 = 2 * k + 1 := by
-    intro k
-    rw [tsub_eq_iff_eq_add_of_le]
-    · ring
-      
-    · simp [mul_addₓ]
-      
+  have A : ∀ k : ℕ, 2 * (k + 1) - 1 = 2 * k + 1 := fun k => rfl
   convert
     (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (has_deriv_at_inv hx).neg)).div
       (has_deriv_at_pow (2 * n) x) (pow_ne_zero _ hx) using
@@ -238,6 +237,14 @@ theorem one_of_one_le (h : 1 ≤ x) : smoothTransition x = 1 :=
 theorem zero_of_nonpos (h : x ≤ 0) : smoothTransition x = 0 := by
   rw [smooth_transition, zero_of_nonpos h, zero_div]
 
+@[simp]
+protected theorem zero : smoothTransition 0 = 0 :=
+  zero_of_nonpos le_rfl
+
+@[simp]
+protected theorem one : smoothTransition 1 = 1 :=
+  one_of_one_le le_rfl
+
 theorem le_one (x : ℝ) : smoothTransition x ≤ 1 :=
   (div_le_one (pos_denom x)).2 <| le_add_of_nonneg_right (nonneg _)
 
@@ -258,11 +265,14 @@ protected theorem cont_diff {n} : ContDiff ℝ n smoothTransition :=
 protected theorem cont_diff_at {x n} : ContDiffAt ℝ n smoothTransition x :=
   smoothTransition.cont_diff.ContDiffAt
 
+protected theorem continuous : Continuous smoothTransition :=
+  (@smoothTransition.cont_diff 0).Continuous
+
 end SmoothTransition
 
 end Real
 
-variable {E : Type _}
+variable {E X : Type _}
 
 /-- `f : cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is a
 bundled smooth function such that
@@ -287,7 +297,9 @@ theorem R_pos {c : E} (f : ContDiffBumpOfInner c) : 0 < f.r :=
 instance (c : E) : Inhabited (ContDiffBumpOfInner c) :=
   ⟨⟨1, 2, zero_lt_one, one_lt_two⟩⟩
 
-variable [InnerProductSpace ℝ E] {c : E} (f : ContDiffBumpOfInner c) {x : E}
+variable [InnerProductSpace ℝ E] [NormedGroup X] [NormedSpace ℝ X]
+
+variable {c : E} (f : ContDiffBumpOfInner c) {x : E} {n : WithTop ℕ}
 
 /-- The function defined by `f : cont_diff_bump_of_inner c`. Use automatic coercion to
 function instead. -/
@@ -295,6 +307,15 @@ def toFun (f : ContDiffBumpOfInner c) : E → ℝ := fun x => Real.smoothTransit
 
 instance : CoeFun (ContDiffBumpOfInner c) fun _ => E → ℝ :=
   ⟨toFun⟩
+
+protected theorem def (x : E) : f x = Real.smoothTransition ((f.r - dist x c) / (f.r - f.R)) :=
+  rfl
+
+protected theorem sub (x : E) : f (c - x) = f (c + x) := by
+  simp_rw [f.def, dist_self_sub_left, dist_self_add_left]
+
+protected theorem neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f (-x) = f x := by
+  simp_rw [← zero_sub, f.sub, zero_addₓ]
 
 open Real (smoothTransition)
 
@@ -305,6 +326,10 @@ theorem one_of_mem_closed_ball (hx : x ∈ ClosedBall c f.R) : f x = 1 :=
 
 theorem nonneg : 0 ≤ f x :=
   nonneg _
+
+/-- A version of `cont_diff_bump_of_inner.nonneg` with `x` explicit -/
+theorem nonneg' (x : E) : 0 ≤ f x :=
+  f.Nonneg
 
 theorem le_one : f x ≤ 1 :=
   le_one _
@@ -328,6 +353,12 @@ theorem support_eq : Support (f : E → ℝ) = Metric.Ball c f.r := by
   · simp [hx.not_lt, f.zero_of_le_dist hx]
     
 
+theorem tsupport_eq : Tsupport f = ClosedBall c f.r := by
+  simp_rw [Tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
+
+protected theorem has_compact_support [FiniteDimensional ℝ E] : HasCompactSupport f := by
+  simp_rw [HasCompactSupport, f.tsupport_eq, is_compact_closed_ball]
+
 theorem eventually_eq_one_of_mem_ball (h : x ∈ Ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   ((is_open_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono fun z hz =>
     f.one_of_mem_closed_ball (le_of_ltₓ hz)
@@ -335,22 +366,97 @@ theorem eventually_eq_one_of_mem_ball (h : x ∈ Ball c f.R) : f =ᶠ[𝓝 x] 1 
 theorem eventually_eq_one : f =ᶠ[𝓝 c] 1 :=
   f.eventually_eq_one_of_mem_ball (mem_ball_self f.r_pos)
 
-protected theorem cont_diff_at {n} : ContDiffAt ℝ n f x := by
-  rcases em (x = c) with (rfl | hx)
-  · refine' ContDiffAt.congr_of_eventually_eq _ f.eventually_eq_one
-    rw [Pi.one_def]
-    exact cont_diff_at_const
+/-- `cont_diff_bump` is `𝒞ⁿ` in all its arguments. -/
+protected theorem _root_.cont_diff_at.cont_diff_bump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)} {x : X}
+    (hc : ContDiffAt ℝ n c x) (hr : ContDiffAt ℝ n (fun x => (f x).R) x) (hR : ContDiffAt ℝ n (fun x => (f x).r) x)
+    (hg : ContDiffAt ℝ n g x) : ContDiffAt ℝ n (fun x => f x (g x)) x := by
+  rcases eq_or_ne (g x) (c x) with (hx | hx)
+  · have : (fun x => f x (g x)) =ᶠ[𝓝 x] fun x => 1 := by
+      have : dist (g x) (c x) < (f x).R := by
+        simp_rw [hx, dist_self, (f x).r_pos]
+      have := ContinuousAt.eventually_lt (hg.continuous_at.dist hc.continuous_at) hr.continuous_at this
+      exact eventually_of_mem this fun x hx => (f x).one_of_mem_closed_ball (mem_set_of_eq.mp hx).le
+    exact cont_diff_at_const.congr_of_eventually_eq this
     
-  · exact
-      real.smooth_transition.cont_diff_at.comp x
-        (ContDiffAt.div_const <| cont_diff_at_const.sub <| cont_diff_at_id.dist cont_diff_at_const hx)
+  · refine' real.smooth_transition.cont_diff_at.comp x _
+    refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_R).ne'
     
 
-protected theorem cont_diff {n} : ContDiff ℝ n f :=
-  cont_diff_iff_cont_diff_at.2 fun y => f.ContDiffAt
+theorem _root_.cont_diff.cont_diff_bump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)} (hc : ContDiff ℝ n c)
+    (hr : ContDiff ℝ n fun x => (f x).R) (hR : ContDiff ℝ n fun x => (f x).r) (hg : ContDiff ℝ n g) :
+    ContDiff ℝ n fun x => f x (g x) := by
+  rw [cont_diff_iff_cont_diff_at] at *
+  exact fun x => (hc x).cont_diff_bump (hr x) (hR x) (hg x)
 
-protected theorem cont_diff_within_at {s n} : ContDiffWithinAt ℝ n f s x :=
+protected theorem cont_diff : ContDiff ℝ n f :=
+  cont_diff_const.cont_diff_bump cont_diff_const cont_diff_const cont_diff_id
+
+protected theorem cont_diff_at : ContDiffAt ℝ n f x :=
+  f.ContDiff.ContDiffAt
+
+protected theorem cont_diff_within_at {s : Set E} : ContDiffWithinAt ℝ n f s x :=
   f.ContDiffAt.ContDiffWithinAt
+
+protected theorem continuous : Continuous f :=
+  cont_diff_zero.mp f.ContDiff
+
+open MeasureTheory
+
+variable [MeasurableSpace E] {μ : Measureₓ E}
+
+/-- A bump function normed so that `∫ x, f.normed μ x ∂μ = 1`. -/
+protected def normed (μ : Measureₓ E) : E → ℝ := fun x => f x / ∫ x, f x ∂μ
+
+theorem normed_def {μ : Measureₓ E} (x : E) : f.normed μ x = f x / ∫ x, f x ∂μ :=
+  rfl
+
+theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
+  div_nonneg f.Nonneg <| integral_nonneg f.nonneg'
+
+theorem cont_diff_normed {n : WithTop ℕ} : ContDiff ℝ n (f.normed μ) :=
+  f.ContDiff.div_const
+
+theorem continuous_normed : Continuous (f.normed μ) :=
+  f.Continuous.div_const
+
+theorem normed_sub (x : E) : f.normed μ (c - x) = f.normed μ (c + x) := by
+  simp_rw [f.normed_def, f.sub]
+
+theorem normed_neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f.normed μ (-x) = f.normed μ x := by
+  simp_rw [f.normed_def, f.neg]
+
+variable [BorelSpace E] [FiniteDimensional ℝ E] [IsLocallyFiniteMeasure μ]
+
+protected theorem integrable : Integrable f μ :=
+  f.Continuous.integrable_of_has_compact_support f.HasCompactSupport
+
+protected theorem integrable_normed : Integrable (f.normed μ) μ :=
+  f.Integrable.div_const _
+
+variable [μ.IsOpenPosMeasure]
+
+theorem integral_pos : 0 < ∫ x, f x ∂μ := by
+  refine' (integral_pos_iff_support_of_nonneg f.nonneg' f.integrable).mpr _
+  rw [f.support_eq]
+  refine' is_open_ball.measure_pos _ (nonempty_ball.mpr f.R_pos)
+
+theorem integral_normed : (∫ x, f.normed μ x ∂μ) = 1 := by
+  simp_rw [ContDiffBumpOfInner.normed, div_eq_mul_inv, mul_comm (f _), ← smul_eq_mul, integral_smul]
+  exact inv_mul_cancel f.integral_pos.ne'
+
+theorem support_normed_eq : Support (f.normed μ) = Metric.Ball c f.r := by
+  simp_rw [ContDiffBumpOfInner.normed, support_div, f.support_eq, support_const f.integral_pos.ne', inter_univ]
+
+theorem tsupport_normed_eq : Tsupport (f.normed μ) = Metric.ClosedBall c f.r := by
+  simp_rw [Tsupport, f.support_normed_eq, closure_ball _ f.R_pos.ne']
+
+theorem has_compact_support_normed : HasCompactSupport (f.normed μ) := by
+  simp_rw [HasCompactSupport, f.tsupport_normed_eq, is_compact_closed_ball]
+
+variable (μ)
+
+theorem integral_normed_smul (z : X) [CompleteSpace X] : (∫ x, f.normed μ x • z ∂μ) = z := by
+  simp_rw [integral_smul_const, f.integral_normed, one_smul]
 
 end ContDiffBumpOfInner
 
@@ -409,7 +515,7 @@ theorem support_eq : Support (f : E → ℝ) = Euclidean.Ball c f.r := by
   rw [Euclidean.ball_eq_preimage, ← f.to_cont_diff_bump_of_inner.support_eq, ← support_comp_eq_preimage, coe_eq_comp]
 
 theorem tsupport_eq : Tsupport f = Euclidean.ClosedBall c f.r := by
-  rw [Tsupport, f.support_eq, Euclidean.closure_ball _ f.R_pos]
+  rw [Tsupport, f.support_eq, Euclidean.closure_ball _ f.R_pos.ne']
 
 protected theorem has_compact_support : HasCompactSupport f := by
   simp_rw [HasCompactSupport, f.tsupport_eq, Euclidean.is_compact_closed_ball]

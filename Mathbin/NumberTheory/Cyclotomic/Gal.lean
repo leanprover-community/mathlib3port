@@ -29,11 +29,11 @@ it is always a subgroup, and if the `n`th cyclotomic polynomial is irreducible, 
 
 ## TODO
 
-* `zeta_pow_power_basis` is not sufficiently general; the correct solution is some
-  `power_basis.map_conjugate`, but figuring out the exact correct assumptions + proof for this is
-  mathematically nontrivial. (Current thoughts: the ideal of polynomials with α as a root is equal
-  to the ideal of polynomials with β as a root, which, in an integrally closed domain, reduces
-  to the usual condition that they are the roots of each others' minimal polynomials.)
+* We currently can get away with the fact that the power of a primitive root is a primitive root,
+  but the correct long-term solution for computing other explicit Galois groups is creating
+  `power_basis.map_conjugate`; but figuring out the exact correct assumptions + proof for this is
+  mathematically nontrivial. (Current thoughts: the correct condition is that the annihilating
+  ideal of both elements is equal. This may not hold in an ID, and definitely holds in an ICD.)
 
 -/
 
@@ -45,9 +45,11 @@ variable {n : ℕ+} (K : Type _) [Field K] {L : Type _} [Field L] {μ : L} (hμ 
 
 open Polynomial NeZero IsCyclotomicExtension
 
+open Cyclotomic
+
 namespace IsPrimitiveRoot
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 /-- `is_primitive_root.aut_to_pow` is injective in the case that it's considered over a cyclotomic
 field extension, where `n` does not divide the characteristic of K. -/
 theorem aut_to_pow_injective : Function.Injective <| hμ.autToPow K := by
@@ -80,12 +82,13 @@ namespace IsCyclotomicExtension
 noncomputable def Aut.commGroup [NeZero ((n : ℕ) : K)] : CommGroupₓ (L ≃ₐ[K] L) :=
   let _ := of_no_zero_smul_divisors K L n
   ((zeta_primitive_root n K L).aut_to_pow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _) (map_div _)
+    (map_pow _) (map_zpow _)
 
 variable (h : Irreducible (cyclotomic n K)) {K} (L)
 
 include h
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1, 5]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1, 5]) }
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
 @[simps]
@@ -136,7 +139,7 @@ noncomputable def fromZetaAut [NeZero ((n : ℕ) : K)] : L ≃ₐ[K] L :=
     Zmod.unitOfCoprime hζ.some <|
       ((zeta_primitive_root n K L).pow_iff_coprime n.pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([4]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([4]) }
 theorem from_zeta_aut_spec [NeZero ((n : ℕ) : K)] : fromZetaAut hμ h (zeta n K L) = μ := by
   simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
   generalize_proofs _ hζ h _ hμ _
@@ -150,8 +153,6 @@ end IsCyclotomicExtension
 section Gal
 
 variable (h : Irreducible (cyclotomic n K)) {K}
-
-attribute [local instance] splitting_field_X_pow_sub_one splitting_field_cyclotomic
 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
 Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ` if `n` does not divide the

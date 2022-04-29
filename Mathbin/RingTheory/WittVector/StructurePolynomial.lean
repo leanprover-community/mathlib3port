@@ -100,9 +100,9 @@ attribute [-simp] coe_eval₂_hom
 
 variable {p : ℕ} {R : Type _} {idx : Type _} [CommRingₓ R]
 
-open_locale Witt
+open Witt
 
-open_locale BigOperators
+open BigOperators
 
 section PPrime
 

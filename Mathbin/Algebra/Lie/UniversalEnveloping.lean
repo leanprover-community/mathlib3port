@@ -55,7 +55,7 @@ inductive Rel : TensorAlgebra R L → TensorAlgebra R L → Prop
 
 end UniversalEnvelopingAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
 /-- The universal enveloping algebra of a Lie algebra. -/
 def UniversalEnvelopingAlgebra :=
   RingQuot (UniversalEnvelopingAlgebra.Rel R L)deriving Inhabited, Ringₓ, [anonymous]

@@ -13,15 +13,18 @@ This file contains the formal definition for regular expressions and basic lemma
 regular expressions in terms of formal language theory. Note this is different to regex's used in
 computer science such as the POSIX standard.
 
-TODO
+## TODO
+
 * Show that this regular expressions and DFA/NFA's are equivalent.
 * `attribute [pattern] has_mul.mul` has been added into this file, it could be moved.
 -/
 
 
+open List Set
+
 universe u
 
-variable {α : Type u} [dec : DecidableEq α]
+variable {α β γ : Type _} [dec : DecidableEq α]
 
 /-- This is the definition of regular expressions. The names used here is to mirror the definition
 of a Kleene algebra (https://en.wikipedia.org/wiki/Kleene_algebra).
@@ -41,6 +44,8 @@ inductive RegularExpression (α : Type u) : Type u
   | star : RegularExpression → RegularExpression
 
 namespace RegularExpression
+
+variable {a b : α}
 
 instance : Inhabited (RegularExpression α) :=
   ⟨zero⟩
@@ -76,6 +81,7 @@ theorem comp_def (P Q : RegularExpression α) : comp P Q = P * Q :=
   rfl
 
 /-- `matches P` provides a language which contains all strings that `P` matches -/
+@[simp]
 def Matches : RegularExpression α → Language α
   | 0 => 0
   | 1 => 1
@@ -85,23 +91,27 @@ def Matches : RegularExpression α → Language α
   | star P => P.Matches.star
 
 @[simp]
-theorem matches_zero_def : (0 : RegularExpression α).Matches = 0 :=
+theorem matches_zero : (0 : RegularExpression α).Matches = 0 :=
   rfl
 
 @[simp]
-theorem matches_epsilon_def : (1 : RegularExpression α).Matches = 1 :=
+theorem matches_epsilon : (1 : RegularExpression α).Matches = 1 :=
   rfl
 
 @[simp]
-theorem matches_add_def (P Q : RegularExpression α) : (P + Q).Matches = P.Matches + Q.Matches :=
+theorem matches_char (a : α) : (char a).Matches = {[a]} :=
   rfl
 
 @[simp]
-theorem matches_mul_def (P Q : RegularExpression α) : (P * Q).Matches = P.Matches * Q.Matches :=
+theorem matches_add (P Q : RegularExpression α) : (P + Q).Matches = P.Matches + Q.Matches :=
   rfl
 
 @[simp]
-theorem matches_star_def (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
+theorem matches_mul (P Q : RegularExpression α) : (P * Q).Matches = P.Matches * Q.Matches :=
+  rfl
+
+@[simp]
+theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
   rfl
 
 /-- `match_epsilon P` is true if and only if `P` matches the empty string -/
@@ -125,6 +135,30 @@ def deriv : RegularExpression α → α → RegularExpression α
   | P * Q, a => if P.matchEpsilon then deriv P a * Q + deriv Q a else deriv P a * Q
   | star P, a => deriv P a * star P
 
+@[simp]
+theorem deriv_zero (a : α) : deriv 0 a = 0 :=
+  rfl
+
+@[simp]
+theorem deriv_one (a : α) : deriv 1 a = 0 :=
+  rfl
+
+@[simp]
+theorem deriv_char_self (a : α) : deriv (char a) a = 1 :=
+  if_pos rfl
+
+@[simp]
+theorem deriv_char_of_ne (h : a ≠ b) : deriv (char a) b = 0 :=
+  if_neg h
+
+@[simp]
+theorem deriv_add (P Q : RegularExpression α) (a : α) : deriv (P + Q) a = deriv P a + deriv Q a :=
+  rfl
+
+@[simp]
+theorem deriv_star (P : RegularExpression α) (a : α) : deriv P.star a = deriv P a * star P :=
+  rfl
+
 /-- `P.rmatch x` is true if and only if `P` matches `x`. This is a computable definition equivalent
   to `matches`. -/
 def rmatch : RegularExpression α → List α → Bool
@@ -133,10 +167,10 @@ def rmatch : RegularExpression α → List α → Bool
 
 @[simp]
 theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
-  induction x <;> simp [rmatch, match_epsilon, deriv, *]
+  induction x <;> simp [rmatch, match_epsilon, *]
 
 theorem one_rmatch_iff (x : List α) : rmatch 1 x ↔ x = [] := by
-  induction x <;> simp [rmatch, match_epsilon, deriv, *]
+  induction x <;> simp [rmatch, match_epsilon, *]
 
 theorem char_rmatch_iff (a : α) (x : List α) : rmatch (char a) x ↔ x = [a] := by
   cases' x with _ x
@@ -363,6 +397,60 @@ instance (P : RegularExpression α) : DecidablePred P.Matches := by
   change Decidable (x ∈ P.matches)
   rw [← rmatch_iff_matches]
   exact Eq.decidable _ _
+
+omit dec
+
+/-- Map the alphabet of a regular expression. -/
+@[simp]
+def map (f : α → β) : RegularExpression α → RegularExpression β
+  | 0 => 0
+  | 1 => 1
+  | Charₓ a => char (f a)
+  | R + S => map R + map S
+  | R * S => map R * map S
+  | star R => star (map R)
+
+@[simp]
+theorem map_id : ∀ P : RegularExpression α, P.map id = P
+  | 0 => rfl
+  | 1 => rfl
+  | Charₓ a => rfl
+  | R + S => by
+    simp_rw [map, map_id]
+  | R * S => by
+    simp_rw [map, map_id]
+  | star R => by
+    simp_rw [map, map_id]
+
+@[simp]
+theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
+  | 0 => rfl
+  | 1 => rfl
+  | Charₓ a => rfl
+  | R + S => by
+    simp_rw [map, map_map]
+  | R * S => by
+    simp_rw [map, map_map]
+  | star R => by
+    simp_rw [map, map_map]
+
+/-- The language of the map is the map of the language. -/
+@[simp]
+theorem matches_map (f : α → β) : ∀ P : RegularExpression α, (P.map f).Matches = Language.map f P.Matches
+  | 0 => (map_zero _).symm
+  | 1 => (map_one _).symm
+  | Charₓ a => by
+    rw [eq_comm]
+    exact image_singleton
+  | R + S => by
+    simp only [matches_map, map, matches_add, map_add]
+  | R * S => by
+    simp only [matches_map, map, matches_mul, map_mul]
+  | star R => by
+    simp_rw [map, matches, matches_map]
+    rw [Language.star_eq_supr_pow, Language.star_eq_supr_pow]
+    simp_rw [← map_pow]
+    exact image_Union.symm
 
 end RegularExpression
 

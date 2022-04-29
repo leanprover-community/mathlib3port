@@ -3,9 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 -/
-import Mathbin.Data.Finset.Preimage
+import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Algebra.GroupActionHom
+import Mathbin.Data.Finset.Preimage
 
 /-!
 # Type of functions with finite support
@@ -91,7 +91,7 @@ noncomputable section
 
 open Finset Function
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 variable {α β γ ι M M' N P G H R S : Type _}
 
@@ -175,7 +175,7 @@ theorem mem_support_iff {f : α →₀ M} : ∀ {a : α}, a ∈ f.Support ↔ f 
 theorem fun_support_eq (f : α →₀ M) : Function.Support f = f.Support :=
   Set.ext fun x => mem_support_iff.symm
 
-theorem not_mem_support_iff {f : α →₀ M} {a} : (a ∉ f.Support) ↔ f a = 0 :=
+theorem not_mem_support_iff {f : α →₀ M} {a} : a ∉ f.Support ↔ f a = 0 :=
   not_iff_comm.1 mem_support_iff.symm
 
 @[simp, norm_cast]
@@ -318,6 +318,9 @@ theorem single_injective (a : α) : Function.Injective (single a : M → α →�
 theorem single_apply_eq_zero {a x : α} {b : M} : single a b x = 0 ↔ x = a → b = 0 := by
   simp [single_eq_indicator]
 
+theorem single_apply_ne_zero {a x : α} {b : M} : single a b x ≠ 0 ↔ x = a ∧ b ≠ 0 := by
+  simp [single_apply_eq_zero]
+
 theorem mem_support_single (a a' : α) (b : M) : a ∈ (single a' b).Support ↔ a = a' ∧ b ≠ 0 := by
   simp [single_apply_eq_zero, not_or_distrib]
 
@@ -359,10 +362,7 @@ theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
 
 theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).Support ≠ ⊥ := by
-  have : i ∈ (single i b).Support := by
-    simpa using h
-  intro H
-  simpa [H]
+  simpa only [support_single_ne_zero h] using singleton_ne_empty _
 
 theorem support_single_disjoint [DecidableEq α] {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
     Disjoint (single i b).Support (single j b').Support ↔ i ≠ j := by
@@ -582,6 +582,12 @@ theorem map_range_single {f : M → N} {hf : f 0 = 0} {a : α} {b : M} : mapRang
   ext fun a' =>
     show f (ite _ _ _) = ite _ _ _ by
       split_ifs <;> [rfl, exact hf]
+
+theorem support_map_range_of_injective {e : M → N} (he0 : e 0 = 0) (f : ι →₀ M) (he : Function.Injective e) :
+    (Finsupp.mapRange e he0 f).Support = f.Support := by
+  ext
+  simp only [Finsupp.mem_support_iff, Ne.def, Finsupp.map_range_apply]
+  exact he.ne_iff' he0
 
 end MapRange
 
@@ -894,9 +900,9 @@ theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : �
     
 
 @[to_additive]
-theorem _root_.submonoid.finsupp_prod_mem (S : Submonoid N) (f : α →₀ M) (g : α → M → N)
-    (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.Prod g ∈ S :=
-  S.prod_mem fun i hi => h _ (Finsupp.mem_support_iff.mp hi)
+theorem _root_.submonoid_class.finsupp_prod_mem {S : Type _} [SetLike S N] [SubmonoidClass S N] (s : S) (f : α →₀ M)
+    (g : α → M → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : f.Prod g ∈ s :=
+  prod_mem fun i hi => h _ (Finsupp.mem_support_iff.mp hi)
 
 @[to_additive]
 theorem prod_congr {f : α →₀ M} {g1 g2 : α → M → N} (h : ∀, ∀ x ∈ f.Support, ∀, g1 x (f x) = g2 x (f x)) :
@@ -933,7 +939,7 @@ theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint 
     (Finset.mem_union.1 ha).elim
       (fun ha => by
         have : a ∉ g₂.Support := disjoint_left.1 h ha
-        simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, add_zeroₓ])
+        simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, add_zeroₓ] )
       fun ha => by
       have : a ∉ g₁.Support := disjoint_right.1 h ha
       simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, zero_addₓ]
@@ -947,11 +953,8 @@ theorem single_add {a : α} {b₁ b₂ : M} : single a (b₁ + b₂) = single a 
     · rw [add_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, zero_addₓ]
       
 
-instance : AddZeroClass (α →₀ M) where
-  zero := 0
-  add := (· + ·)
-  zero_add := fun ⟨s, f, hf⟩ => ext fun a => zero_addₓ _
-  add_zero := fun ⟨s, f, hf⟩ => ext fun a => add_zeroₓ _
+instance : AddZeroClass (α →₀ M) :=
+  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
 
 /-- `finsupp.single` as an `add_monoid_hom`.
 
@@ -1014,7 +1017,7 @@ def eraseAddHom (a : α) : (α →₀ M) →+ α →₀ M where
 
 @[elab_as_eliminator]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ a b f : α →₀ M, (a ∉ f.Support) → b ≠ 0 → p f → p (single a b + f)) : p f :=
+    (ha : ∀ a b f : α →₀ M, a ∉ f.Support → b ≠ 0 → p f → p (single a b + f)) : p f :=
   suffices ∀ s f : α →₀ M, f.Support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by
@@ -1034,7 +1037,7 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
       
 
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-    (ha : ∀ a b f : α →₀ M, (a ∉ f.Support) → b ≠ 0 → p f → p (f + single a b)) : p f :=
+    (ha : ∀ a b f : α →₀ M, a ∉ f.Support → b ≠ 0 → p f → p (f + single a b)) : p f :=
   suffices ∀ s f : α →₀ M, f.Support = s → p f from this _ _ rfl
   fun s =>
   (Finset.induction_on s fun f hf => by
@@ -1120,38 +1123,44 @@ section AddMonoidₓ
 
 variable [AddMonoidₓ M]
 
+/-- Note the general `finsupp.has_scalar` instance doesn't apply as `ℕ` is not distributive
+unless `β i`'s addition is commutative. -/
+instance hasNatScalar : HasScalar ℕ (α →₀ M) :=
+  ⟨fun n v => v.map_range ((· • ·) n) (nsmul_zero _)⟩
+
 instance : AddMonoidₓ (α →₀ M) :=
-  { Finsupp.addZeroClass with zero := 0, add := (· + ·),
-    add_assoc := fun ⟨s, f, hf⟩ ⟨t, g, hg⟩ ⟨u, h, hh⟩ => ext fun a => add_assocₓ _ _ _,
-    nsmul := fun n v => v.map_range ((· • ·) n) (nsmul_zero _),
-    nsmul_zero' := fun v => by
-      ext i
-      simp ,
-    nsmul_succ' := fun n v => by
-      ext i
-      simp [Nat.succ_eq_one_add, add_nsmul] }
+  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => rfl
 
 end AddMonoidₓ
 
 end Finsupp
 
 @[to_additive]
-theorem MulEquiv.map_finsupp_prod [Zero M] [CommMonoidₓ N] [CommMonoidₓ P] (h : N ≃* P) (f : α →₀ M) (g : α → M → N) :
-    h (f.Prod g) = f.Prod fun a b => h (g a b) :=
-  h.map_prod _ _
+theorem map_finsupp_prod [Zero M] [CommMonoidₓ N] [CommMonoidₓ P] {H : Type _} [MonoidHomClass H N P] (h : H)
+    (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+  map_prod h _ _
 
-@[to_additive]
-theorem MonoidHom.map_finsupp_prod [Zero M] [CommMonoidₓ N] [CommMonoidₓ P] (h : N →* P) (f : α →₀ M) (g : α → M → N) :
-    h (f.Prod g) = f.Prod fun a b => h (g a b) :=
-  h.map_prod _ _
+/-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
+@[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
+protected theorem MulEquiv.map_finsupp_prod [Zero M] [CommMonoidₓ N] [CommMonoidₓ P] (h : N ≃* P) (f : α →₀ M)
+    (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+  map_finsupp_prod h f g
 
-theorem RingHom.map_finsupp_sum [Zero M] [Semiringₓ R] [Semiringₓ S] (h : R →+* S) (f : α →₀ M) (g : α → M → R) :
-    h (f.Sum g) = f.Sum fun a b => h (g a b) :=
-  h.map_sum _ _
+/-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
+@[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
+protected theorem MonoidHom.map_finsupp_prod [Zero M] [CommMonoidₓ N] [CommMonoidₓ P] (h : N →* P) (f : α →₀ M)
+    (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+  map_finsupp_prod h f g
 
-theorem RingHom.map_finsupp_prod [Zero M] [CommSemiringₓ R] [CommSemiringₓ S] (h : R →+* S) (f : α →₀ M)
+/-- Deprecated, use `_root_.map_finsupp_sum` instead. -/
+protected theorem RingHom.map_finsupp_sum [Zero M] [Semiringₓ R] [Semiringₓ S] (h : R →+* S) (f : α →₀ M)
+    (g : α → M → R) : h (f.Sum g) = f.Sum fun a b => h (g a b) :=
+  map_finsupp_sum h f g
+
+/-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
+protected theorem RingHom.map_finsupp_prod [Zero M] [CommSemiringₓ R] [CommSemiringₓ S] (h : R →+* S) (f : α →₀ M)
     (g : α → M → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
-  h.map_prod _ _
+  map_finsupp_prod h f g
 
 @[to_additive]
 theorem MonoidHom.coe_finsupp_prod [Zero β] [Monoidₓ N] [CommMonoidₓ P] (f : α →₀ β) (g : α → β → N →* P) :
@@ -1166,29 +1175,38 @@ theorem MonoidHom.finsupp_prod_apply [Zero β] [Monoidₓ N] [CommMonoidₓ P] (
 namespace Finsupp
 
 instance [AddCommMonoidₓ M] : AddCommMonoidₓ (α →₀ M) :=
-  { Finsupp.addMonoid with add_comm := fun ⟨s, f, _⟩ ⟨t, g, _⟩ => ext fun a => add_commₓ _ _ }
+  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
+
+instance [AddGroupₓ G] : Neg (α →₀ G) :=
+  ⟨mapRange Neg.neg neg_zero⟩
+
+@[simp]
+theorem coe_neg [AddGroupₓ G] (g : α →₀ G) : ⇑(-g) = -g :=
+  rfl
+
+theorem neg_apply [AddGroupₓ G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
+  rfl
 
 instance [AddGroupₓ G] : Sub (α →₀ G) :=
   ⟨zipWith Sub.sub (sub_zero _)⟩
 
+@[simp]
+theorem coe_sub [AddGroupₓ G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
+  rfl
+
+theorem sub_apply [AddGroupₓ G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
+  rfl
+
+/-- Note the general `finsupp.has_scalar` instance doesn't apply as `ℤ` is not distributive
+unless `β i`'s addition is commutative. -/
+instance hasIntScalar [AddGroupₓ G] : HasScalar ℤ (α →₀ G) :=
+  ⟨fun n v => v.map_range ((· • ·) n) (zsmul_zero _)⟩
+
 instance [AddGroupₓ G] : AddGroupₓ (α →₀ G) :=
-  { Finsupp.addMonoid with neg := mapRange Neg.neg neg_zero, sub := Sub.sub,
-    sub_eq_add_neg := fun x y => ext fun i => sub_eq_add_neg _ _,
-    add_left_neg := fun ⟨s, f, _⟩ => ext fun x => add_left_negₓ _,
-    zsmul := fun n v => v.map_range ((· • ·) n) (zsmul_zero _),
-    zsmul_zero' := fun v => by
-      ext i
-      simp ,
-    zsmul_succ' := fun n v => by
-      ext i
-      simp [Nat.succ_eq_one_add, add_zsmul],
-    zsmul_neg' := fun n v => by
-      ext i
-      simp only [Nat.succ_eq_add_one, map_range_apply, zsmul_neg_succ_of_nat, Int.coe_nat_succ, neg_inj, add_zsmul,
-        add_nsmul, one_zsmul, coe_nat_zsmul, one_nsmul] }
+  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddCommGroupₓ G] : AddCommGroupₓ (α →₀ G) :=
-  { Finsupp.addGroup with add_comm := add_commₓ }
+  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 theorem single_multiset_sum [AddCommMonoidₓ M] (s : Multiset M) (a : α) : single a s.Sum = (s.map (single a)).Sum :=
   (Multiset.induction_on s single_zero) fun a s ih => by
@@ -1209,20 +1227,6 @@ theorem single_sum [Zero M] [AddCommMonoidₓ N] (s : ι →₀ M) (f : ι → M
 theorem prod_neg_index [AddGroupₓ G] [CommMonoidₓ M] {g : α →₀ G} {h : α → G → M} (h0 : ∀ a, h a 0 = 1) :
     (-g).Prod h = g.Prod fun a b => h a (-b) :=
   prod_map_range_index h0
-
-@[simp]
-theorem coe_neg [AddGroupₓ G] (g : α →₀ G) : ⇑(-g) = -g :=
-  rfl
-
-theorem neg_apply [AddGroupₓ G] (g : α →₀ G) (a : α) : (-g) a = -g a :=
-  rfl
-
-@[simp]
-theorem coe_sub [AddGroupₓ G] (g₁ g₂ : α →₀ G) : ⇑(g₁ - g₂) = g₁ - g₂ :=
-  rfl
-
-theorem sub_apply [AddGroupₓ G] (g₁ g₂ : α →₀ G) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
-  rfl
 
 @[simp]
 theorem support_neg [AddGroupₓ G] (f : α →₀ G) : support (-f) = support f :=
@@ -1291,7 +1295,7 @@ theorem prod_mul [Zero M] [CommMonoidₓ N] {f : α →₀ M} {h₁ h₂ : α �
 
 @[simp, to_additive]
 theorem prod_inv [Zero M] [CommGroupₓ G] {f : α →₀ M} {h : α → M → G} : (f.Prod fun a b => (h a b)⁻¹) = (f.Prod h)⁻¹ :=
-  ((MonoidHom.id G)⁻¹.map_prod _ _).symm
+  (map_prod (MonoidHom.id G)⁻¹ _ _).symm
 
 @[simp]
 theorem sum_sub [Zero M] [AddCommGroupₓ G] {f : α →₀ M} {h₁ h₂ : α → M → G} :
@@ -1373,6 +1377,14 @@ theorem lift_add_hom_single_add_hom [AddCommMonoidₓ M] :
 @[simp]
 theorem sum_single [AddCommMonoidₓ M] (f : α →₀ M) : f.Sum single = f :=
   AddMonoidHom.congr_fun lift_add_hom_single_add_hom f
+
+@[simp]
+theorem sum_univ_single [AddCommMonoidₓ M] [Fintype α] (i : α) (m : M) : (∑ j : α, (single i m) j) = m := by
+  simp [single]
+
+@[simp]
+theorem sum_univ_single' [AddCommMonoidₓ M] [Fintype α] (i : α) (m : M) : (∑ j : α, (single j m) i) = m := by
+  simp [single]
 
 @[simp]
 theorem lift_add_hom_apply_single [AddCommMonoidₓ M] [AddCommMonoidₓ N] (f : α → M →+ N) (a : α) (b : M) :
@@ -2007,6 +2019,12 @@ theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then
 theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicator { x | p x } f :=
   rfl
 
+theorem filter_eq_zero_iff : f.filter p = 0 ↔ ∀ x, p x → f x = 0 := by
+  simp only [FunLike.ext_iff, filter_eq_indicator, zero_apply, Set.indicator_apply_eq_zero, Set.mem_set_of_eq]
+
+theorem filter_eq_self_iff : f.filter p = f ↔ ∀ x, f x ≠ 0 → p x := by
+  simp only [FunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_set_of_eq, not_imp_comm]
+
 @[simp]
 theorem filter_apply_pos {a : α} (h : p a) : f.filter p a = f a :=
   if_pos h
@@ -2024,13 +2042,28 @@ theorem filter_zero : (0 : α →₀ M).filter p = 0 := by
 
 @[simp]
 theorem filter_single_of_pos {a : α} {b : M} (h : p a) : (single a b).filter p = single a b :=
-  coe_fn_injective <| by
-    simp [filter_eq_indicator, Set.subset_def, mem_support_single, h]
+  (filter_eq_self_iff _ _).2 fun x hx => (single_apply_ne_zero.1 hx).1.symm ▸ h
 
 @[simp]
 theorem filter_single_of_neg {a : α} {b : M} (h : ¬p a) : (single a b).filter p = 0 :=
-  ext <| by
-    simp [filter_eq_indicator, single_apply_eq_zero, @Imp.swap (p _), h]
+  (filter_eq_zero_iff _ _).2 fun x hpx => single_apply_eq_zero.2 fun hxa => absurd hpx (hxa.symm ▸ h)
+
+@[to_additive]
+theorem prod_filter_index [CommMonoidₓ N] (g : α → M → N) :
+    (f.filter p).Prod g = ∏ x in (f.filter p).Support, g x (f x) := by
+  refine' Finset.prod_congr rfl fun x hx => _
+  rw [support_filter, Finset.mem_filter] at hx
+  rw [filter_apply_pos _ _ hx.2]
+
+@[simp, to_additive]
+theorem prod_filter_mul_prod_filter_not [CommMonoidₓ N] (g : α → M → N) :
+    (f.filter p).Prod g * (f.filter fun a => ¬p a).Prod g = f.Prod g := by
+  simp_rw [prod_filter_index, support_filter, prod_filter_mul_prod_filter_not, Finsupp.prod]
+
+@[simp, to_additive]
+theorem prod_div_prod_filter [CommGroupₓ G] (g : α → M → G) :
+    f.Prod g / (f.filter p).Prod g = (f.filter fun a => ¬p a).Prod g :=
+  div_eq_of_eq_mul' (prod_filter_mul_prod_filter_not _ _ _).symm
 
 end Zero
 
@@ -2377,6 +2410,16 @@ theorem sum_finsupp_add_equiv_prod_finsupp_symm_inr {α β : Type _} (fg : (α �
   rfl
 
 end Sum
+
+section
+
+variable [Zero M] [MonoidWithZeroₓ R] [MulActionWithZero R M]
+
+@[simp]
+theorem single_smul (a b : α) (f : α → M) (r : R) : single a r b • f a = single a (r • f b) b := by
+  by_cases' a = b <;> simp [h]
+
+end
 
 section
 

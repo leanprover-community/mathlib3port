@@ -53,6 +53,33 @@ theorem prod_comp {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) �
     f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) :=
   rfl
 
+theorem is_iso_prod_iff {P Q : C} {S T : D} {f : (P, S) ⟶ (Q, T)} : IsIso f ↔ IsIso f.1 ∧ IsIso f.2 := by
+  constructor
+  · rintro ⟨g, hfg, hgf⟩
+    simp at hfg hgf
+    rcases hfg with ⟨hfg₁, hfg₂⟩
+    rcases hgf with ⟨hgf₁, hgf₂⟩
+    exact ⟨⟨⟨g.1, hfg₁, hgf₁⟩⟩, ⟨⟨g.2, hfg₂, hgf₂⟩⟩⟩
+    
+  · rintro ⟨⟨g₁, hfg₁, hgf₁⟩, ⟨g₂, hfg₂, hgf₂⟩⟩
+    dsimp  at hfg₁ hgf₁ hfg₂ hgf₂
+    refine' ⟨⟨(g₁, g₂), _, _⟩⟩ <;>
+      · simp <;> constructor <;> assumption
+        
+    
+
+section
+
+variable {C D}
+
+/-- Construct an isomorphism in `C × D` out of two isomorphisms in `C` and `D`. -/
+@[simps]
+def Iso.prod {P Q : C} {S T : D} (f : P ≅ Q) (g : S ≅ T) : (P, S) ≅ (Q, T) where
+  Hom := (f.Hom, g.Hom)
+  inv := (f.inv, g.inv)
+
+end
+
 end
 
 section
@@ -186,6 +213,24 @@ def prod (F : A ⥤ B) (G : C ⥤ D) : A × C ⥤ B × D where
 def prod' (F : A ⥤ B) (G : A ⥤ C) : A ⥤ B × C where
   obj := fun a => (F.obj a, G.obj a)
   map := fun x y f => (F.map f, G.map f)
+
+section
+
+variable (C)
+
+/-- The diagonal functor. -/
+def diag : C ⥤ C × C :=
+  (𝟭 C).prod' (𝟭 C)
+
+@[simp]
+theorem diag_obj (X : C) : (diag C).obj X = (X, X) :=
+  rfl
+
+@[simp]
+theorem diag_map {X Y : C} (f : X ⟶ Y) : (diag C).map f = (f, f) :=
+  rfl
+
+end
 
 end Functor
 

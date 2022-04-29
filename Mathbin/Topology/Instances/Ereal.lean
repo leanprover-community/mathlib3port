@@ -29,7 +29,7 @@ noncomputable section
 
 open Classical Set Filter Metric TopologicalSpace
 
-open_locale Classical TopologicalSpace Ennreal Nnreal BigOperators Filter
+open Classical TopologicalSpace Ennreal Nnreal BigOperators Filter
 
 variable {α : Type _} [TopologicalSpace α]
 
@@ -249,7 +249,7 @@ theorem nhds_top' : 𝓝 (⊤ : Ereal) = ⨅ a : ℝ, 𝓟 (Ioi a) := by
   rw [nhds_top]
   apply le_antisymmₓ
   · exact
-      infi_le_infi2 fun x =>
+      infi_mono' fun x =>
         ⟨x, by
           simp ⟩
     
@@ -288,7 +288,7 @@ theorem nhds_bot' : 𝓝 (⊥ : Ereal) = ⨅ a : ℝ, 𝓟 (Iio a) := by
   rw [nhds_bot]
   apply le_antisymmₓ
   · exact
-      infi_le_infi2 fun x =>
+      infi_mono' fun x =>
         ⟨x, by
           simp ⟩
     
@@ -368,10 +368,8 @@ theorem continuous_at_add_bot_coe (a : ℝ) : ContinuousAt (fun p : Ereal × Ere
         (by
           simp [-coe_add, zero_lt_one]),
       fun x hx y hy => _⟩
-  dsimp
   convert add_lt_add hx hy
-  dsimp
-  ring
+  rw [sub_add_cancel]
 
 theorem continuous_at_add_coe_bot (a : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1 + p.2) (a, ⊥) := by
   change ContinuousAt ((fun p : Ereal × Ereal => p.2 + p.1) ∘ Prod.swap) (a, ⊥)

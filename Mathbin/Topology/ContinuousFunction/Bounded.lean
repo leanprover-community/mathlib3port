@@ -20,7 +20,7 @@ the uniform distance.
 
 noncomputable section
 
-open_locale TopologicalSpace Classical Nnreal
+open TopologicalSpace Classical Nnreal
 
 open Set Filter Metric Function
 
@@ -200,16 +200,47 @@ instance : MetricSpace (α →ᵇ β) where
     (dist_le (add_nonneg dist_nonneg' dist_nonneg')).2 fun x =>
       le_transₓ (dist_triangle _ _ _) (add_le_add (dist_coe_le_dist _) (dist_coe_le_dist _))
 
+theorem nndist_eq : nndist f g = inf { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
+  Subtype.ext <|
+    dist_eq.trans <| by
+      rw [Nnreal.coe_Inf, Nnreal.coe_image]
+      simp_rw [mem_set_of_eq, ← Nnreal.coe_le_coe, Subtype.coe_mk, exists_prop, coe_nndist]
+
+theorem nndist_set_exists : ∃ C, ∀ x : α, nndist (f x) (g x) ≤ C :=
+  Subtype.exists.mpr <| dist_set_exists.imp fun a ⟨ha, h⟩ => ⟨ha, h⟩
+
+theorem nndist_coe_le_nndist (x : α) : nndist (f x) (g x) ≤ nndist f g :=
+  dist_coe_le_dist x
+
 /-- On an empty space, bounded continuous functions are at distance 0 -/
 theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 :=
   dist_eq_zero.2 (eq_of_empty f g)
 
 theorem dist_eq_supr : dist f g = ⨆ x : α, dist (f x) (g x) := by
-  cases' is_empty_or_nonempty α
+  cases is_empty_or_nonempty α
   · rw [supr_of_empty', Real.Sup_empty, dist_zero_of_empty]
     
   refine' (dist_le_iff_of_nonempty.mpr <| le_csupr _).antisymm (csupr_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_range_iff.2 hC.2
+
+theorem nndist_eq_supr : nndist f g = ⨆ x : α, nndist (f x) (g x) :=
+  Subtype.ext <|
+    dist_eq_supr.trans <| by
+      simp_rw [Nnreal.coe_supr, coe_nndist]
+
+theorem tendsto_iff_tendsto_uniformly {ι : Type _} {F : ι → α →ᵇ β} {f : α →ᵇ β} {l : Filter ι} :
+    Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l :=
+  Iff.intro
+    (fun h =>
+      tendsto_uniformly_iff.2 fun ε ε0 =>
+        (Metric.tendsto_nhds.mp h ε ε0).mp
+          (eventually_of_forall fun n hn x => lt_of_le_of_ltₓ (dist_coe_le_dist x) (dist_comm (F n) f ▸ hn)))
+    fun h =>
+    Metric.tendsto_nhds.mpr fun ε ε_pos =>
+      (h _ (dist_mem_uniformity <| half_pos ε_pos)).mp
+        (eventually_of_forall fun n hn =>
+          lt_of_le_of_ltₓ ((dist_le (half_pos ε_pos).le).mpr fun x => dist_comm (f x) (F n x) ▸ le_of_ltₓ (hn x))
+            (half_lt_self ε_pos))
 
 variable (α) {β}
 
@@ -239,7 +270,7 @@ theorem continuous_coe : Continuous fun x => f x :=
 
 /-- When `x` is fixed, `(f : α →ᵇ β) ↦ f x` is continuous -/
 @[continuity]
-theorem continuous_evalx {x : α} : Continuous fun f : α →ᵇ β => f x :=
+theorem continuous_eval_const {x : α} : Continuous fun f : α →ᵇ β => f x :=
   (continuous_apply x).comp continuous_coe
 
 /-- The evaluation map is continuous, as a joint function of `u` and `x` -/
@@ -616,8 +647,29 @@ theorem add_comp_continuous [TopologicalSpace γ] (h : C(γ, α)) :
     (g + f).comp_continuous h = g.comp_continuous h + f.comp_continuous h :=
   rfl
 
+@[simp]
+theorem coe_nsmul_rec : ∀ n, ⇑(nsmulRec n f) = n • f
+  | 0 => by
+    rw [nsmulRec, zero_smul, coe_zero]
+  | n + 1 => by
+    rw [nsmulRec, succ_nsmul, coe_add, coe_nsmul_rec]
+
+instance hasNatScalar : HasScalar ℕ (α →ᵇ β) where
+  smul := fun n f =>
+    { toContinuousMap := n • f.toContinuousMap,
+      map_bounded' := by
+        simpa [coe_nsmul_rec] using (nsmulRec n f).map_bounded' }
+
+@[simp]
+theorem coe_nsmul (r : ℕ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
+  rfl
+
+@[simp]
+theorem nsmul_apply (r : ℕ) (f : α →ᵇ β) (v : α) : (r • f) v = r • f v :=
+  rfl
+
 instance : AddMonoidₓ (α →ᵇ β) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add
+  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => coe_nsmul _ _
 
 instance : HasLipschitzAdd (α →ᵇ β) where
   lipschitz_add :=
@@ -665,7 +717,7 @@ instance : AddCommMonoidₓ (α →ᵇ β) :=
     add_comm := fun f g => by
       ext <;> simp [add_commₓ] }
 
-open_locale BigOperators
+open BigOperators
 
 @[simp]
 theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → α →ᵇ β) : ⇑(∑ i in s, f i) = ∑ i in s, (f i : α → β) :=
@@ -801,16 +853,7 @@ theorem bdd_above_range_norm_comp : BddAbove <| Set.Range <| norm ∘ f :=
   (Real.bounded_iff_bdd_below_bdd_above.mp <| @bounded_range _ _ _ _ f.normComp).2
 
 theorem norm_eq_supr_norm : ∥f∥ = ⨆ x : α, ∥f x∥ := by
-  cases' is_empty_or_nonempty α with hα _
-  · suffices range (norm ∘ f) = ∅ by
-      rw [f.norm_eq_zero_of_empty, supr, this, Real.Sup_empty]
-    simp only [hα, range_eq_empty, not_nonempty_iff]
-    
-  · rw [norm_eq_of_nonempty, supr, ← cInf_upper_bounds_eq_cSup f.bdd_above_range_norm_comp (range_nonempty _)]
-    congr
-    ext
-    simp only [forall_apply_eq_imp_iff', mem_range, exists_imp_distrib]
-    
+  simp_rw [norm_def, dist_eq_supr, coe_zero, Pi.zero_apply, dist_zero_right]
 
 /-- The pointwise opposite of a bounded continuous function is again bounded continuous. -/
 instance : Neg (α →ᵇ β) :=
@@ -847,12 +890,59 @@ theorem mk_of_compact_neg [CompactSpace α] (f : C(α, β)) : mkOfCompact (-f) =
 theorem mk_of_compact_sub [CompactSpace α] (f g : C(α, β)) : mkOfCompact (f - g) = mkOfCompact f - mkOfCompact g :=
   rfl
 
+@[simp]
+theorem coe_zsmul_rec : ∀ z, ⇑(zsmulRec z f) = z • f
+  | Int.ofNat n => by
+    rw [zsmulRec, Int.of_nat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
+  | -[1+ n] => by
+    rw [zsmulRec, zsmul_neg_succ_of_nat, coe_neg, coe_nsmul_rec]
+
+instance hasIntScalar : HasScalar ℤ (α →ᵇ β) where
+  smul := fun n f =>
+    { toContinuousMap := n • f.toContinuousMap,
+      map_bounded' := by
+        simpa using (zsmulRec n f).map_bounded' }
+
+@[simp]
+theorem coe_zsmul (r : ℤ) (f : α →ᵇ β) : ⇑(r • f) = r • f :=
+  rfl
+
+@[simp]
+theorem zsmul_apply (r : ℤ) (f : α →ᵇ β) (v : α) : (r • f) v = r • f v :=
+  rfl
+
 instance : AddCommGroupₓ (α →ᵇ β) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
+  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ =>
+    coe_zsmul _ _
 
 instance : NormedGroup (α →ᵇ β) where
   dist_eq := fun f g => by
     simp only [norm_eq, dist_eq, dist_eq_norm, sub_apply]
+
+theorem nnnorm_def : ∥f∥₊ = nndist f 0 :=
+  rfl
+
+theorem nnnorm_coe_le_nnnorm (x : α) : ∥f x∥₊ ≤ ∥f∥₊ :=
+  norm_coe_le_norm _ _
+
+theorem nndist_le_two_nnnorm (x y : α) : nndist (f x) (f y) ≤ 2 * ∥f∥₊ :=
+  dist_le_two_norm _ _ _
+
+/-- The nnnorm of a function is controlled by the supremum of the pointwise nnnorms -/
+theorem nnnorm_le (C : ℝ≥0 ) : ∥f∥₊ ≤ C ↔ ∀ x : α, ∥f x∥₊ ≤ C :=
+  norm_le C.Prop
+
+theorem nnnorm_const_le (b : β) : ∥const α b∥₊ ≤ ∥b∥₊ :=
+  norm_const_le _
+
+@[simp]
+theorem nnnorm_const_eq [h : Nonempty α] (b : β) : ∥const α b∥₊ = ∥b∥₊ :=
+  Subtype.ext <| norm_const_eq _
+
+theorem nnnorm_eq_supr_nnnorm : ∥f∥₊ = ⨆ x : α, ∥f x∥₊ :=
+  Subtype.ext <|
+    (norm_eq_supr_norm f).trans <| by
+      simp_rw [Nnreal.coe_supr, coe_nnnorm]
 
 theorem abs_diff_coe_le_dist : ∥f x - g x∥ ≤ dist f g := by
   rw [dist_eq_norm]
@@ -1036,12 +1126,16 @@ continuous functions from `α` to `R` inherits a normed ring structure, by using
 pointwise operations and checking that they are compatible with the uniform distance. -/
 
 
-variable [TopologicalSpace α] {R : Type _} [NormedRing R]
+variable [TopologicalSpace α] {R : Type _}
+
+section NonUnital
+
+variable [NonUnitalNormedRing R]
 
 instance : Mul (α →ᵇ R) where
   mul := fun f g =>
     (ofNormedGroup (f * g) (f.Continuous.mul g.Continuous) (∥f∥ * ∥g∥)) fun x =>
-      le_transₓ (NormedRing.norm_mul (f x) (g x)) <|
+      le_transₓ (NonUnitalNormedRing.norm_mul (f x) (g x)) <|
         mul_le_mul (f.norm_coe_le_norm x) (g.norm_coe_le_norm x) (norm_nonneg _) (norm_nonneg _)
 
 @[simp]
@@ -1051,12 +1145,45 @@ theorem coe_mul (f g : α →ᵇ R) : ⇑(f * g) = f * g :=
 theorem mul_apply (f g : α →ᵇ R) (x : α) : (f * g) x = f x * g x :=
   rfl
 
-instance : Ringₓ (α →ᵇ R) :=
-  FunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub
+instance : NonUnitalRing (α →ᵇ R) :=
+  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ =>
+    coe_zsmul _ _
 
-instance : NormedRing (α →ᵇ R) :=
+instance : NonUnitalNormedRing (α →ᵇ R) :=
   { BoundedContinuousFunction.normedGroup with
     norm_mul := fun f g => norm_of_normed_group_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _ }
+
+end NonUnital
+
+variable [NormedRing R]
+
+@[simp]
+theorem coe_npow_rec (f : α →ᵇ R) : ∀ n, ⇑(npowRec n f) = f ^ n
+  | 0 => by
+    rw [npowRec, pow_zeroₓ, coe_one]
+  | n + 1 => by
+    rw [npowRec, pow_succₓ, coe_mul, coe_npow_rec]
+
+instance hasNatPow : Pow (α →ᵇ R) ℕ where
+  pow := fun f n =>
+    { toContinuousMap := f.toContinuousMap ^ n,
+      map_bounded' := by
+        simpa [coe_npow_rec] using (npowRec n f).map_bounded' }
+
+@[simp]
+theorem coe_pow (n : ℕ) (f : α →ᵇ R) : ⇑(f ^ n) = f ^ n :=
+  rfl
+
+@[simp]
+theorem pow_apply (n : ℕ) (f : α →ᵇ R) (v : α) : (f ^ n) v = f v ^ n :=
+  rfl
+
+instance : Ringₓ (α →ᵇ R) :=
+  FunLike.coe_injective.Ring _ coe_zero coe_one coe_add coe_mul coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
+    (fun _ _ => coe_zsmul _ _) fun _ _ => coe_pow _ _
+
+instance : NormedRing (α →ᵇ R) :=
+  { BoundedContinuousFunction.nonUnitalNormedRing with }
 
 end NormedRing
 
@@ -1116,12 +1243,8 @@ theorem algebra_map_apply (k : 𝕜) (a : α) : algebraMap 𝕜 (α →ᵇ γ) k
   rw [Algebra.algebra_map_eq_smul_one]
   rfl
 
-instance [Nonempty α] : NormedAlgebra 𝕜 (α →ᵇ γ) :=
-  { BoundedContinuousFunction.algebra with
-    norm_algebra_map_eq := fun c => by
-      calc ∥(algebraMap 𝕜 (α →ᵇ γ)).toFun c∥ = ∥(algebraMap 𝕜 γ) c∥ := _ _ = ∥c∥ := norm_algebra_map_eq _ _
-      apply norm_const_eq ((algebraMap 𝕜 γ) c)
-      assumption }
+instance : NormedAlgebra 𝕜 (α →ᵇ γ) :=
+  { BoundedContinuousFunction.normedSpace with }
 
 /-!
 ### Structure as normed module over scalar functions
@@ -1180,7 +1303,7 @@ section NormedGroup
 
 variable {𝕜 : Type _} [NormedField 𝕜] [StarRing 𝕜]
 
-variable [TopologicalSpace α] [NormedGroup β] [StarAddMonoid β] [NormedStarMonoid β]
+variable [TopologicalSpace α] [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
 
 variable [NormedSpace 𝕜 β] [StarModule 𝕜 β]
 
@@ -1199,242 +1322,9 @@ theorem coe_star (f : α →ᵇ β) : ⇑(star f) = star f :=
 theorem star_apply (f : α →ᵇ β) (x : α) : star f x = star (f x) :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
-/- failed to parenthesize: parenthesize: uncaught backtrack exception
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.instance
-  (Term.attrKind [])
-  "instance"
-  []
-  []
-  (Command.declSig
-   []
-   (Term.typeSpec
-    ":"
-    (Term.app
-     `NormedStarMonoid
-     [(BoundedContinuousFunction.Topology.ContinuousFunction.Bounded.«term_→ᵇ_» `α " →ᵇ " `β)])))
-  (Command.whereStructInst
-   "where"
-   [(group
-     (Command.whereStructField
-      (Term.letDecl
-       (Term.letIdDecl
-        `norm_star
-        []
-        []
-        ":="
-        (Term.fun
-         "fun"
-         (Term.basicFun
-          [(Term.simpleBinder [`f] [])]
-          "=>"
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
-              (group (Tactic.congr "congr" [] []) [])
-              (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
-              (group
-               (Mathlib.Tactic.Conv.convLHS
-                "conv_lhs"
-                []
-                []
-                "=>"
-                (Tactic.Conv.convSeq
-                 (Tactic.Conv.convSeq1Indented
-                  [(group
-                    (Mathlib.Tactic.Conv.find
-                     "find"
-                     (Analysis.Normed.Group.Basic.«term∥_∥» "∥" (Term.hole "_") "∥")
-                     "=>"
-                     (Tactic.tacticSeq
-                      (Tactic.tacticSeq1Indented
-                       [(group
-                         (Tactic.tacticErw__
-                          "erw"
-                          (Tactic.rwRuleSeq
-                           "["
-                           [(Tactic.rwRule
-                             []
-                             (Term.app
-                              (Term.explicit "@" `norm_star)
-                              [`β (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.app `f [`x])]))]
-                           "]")
-                          [])
-                         [])])))
-                    [])])))
-               [])]))))))))
-     [])])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.theorem'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.constant'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.instance.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValSimple'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.declValEqns'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructInst', expected 'Lean.Parser.Command.whereStructInst.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.whereStructField', expected 'Lean.Parser.Command.whereStructField.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letDecl', expected 'Lean.Parser.Term.letDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letIdDecl.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.fun
-   "fun"
-   (Term.basicFun
-    [(Term.simpleBinder [`f] [])]
-    "=>"
-    (Term.byTactic
-     "by"
-     (Tactic.tacticSeq
-      (Tactic.tacticSeq1Indented
-       [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
-        (group (Tactic.congr "congr" [] []) [])
-        (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
-        (group
-         (Mathlib.Tactic.Conv.convLHS
-          "conv_lhs"
-          []
-          []
-          "=>"
-          (Tactic.Conv.convSeq
-           (Tactic.Conv.convSeq1Indented
-            [(group
-              (Mathlib.Tactic.Conv.find
-               "find"
-               (Analysis.Normed.Group.Basic.«term∥_∥» "∥" (Term.hole "_") "∥")
-               "=>"
-               (Tactic.tacticSeq
-                (Tactic.tacticSeq1Indented
-                 [(group
-                   (Tactic.tacticErw__
-                    "erw"
-                    (Tactic.rwRuleSeq
-                     "["
-                     [(Tactic.rwRule
-                       []
-                       (Term.app
-                        (Term.explicit "@" `norm_star)
-                        [`β (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.app `f [`x])]))]
-                     "]")
-                    [])
-                   [])])))
-              [])])))
-         [])])))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.fun', expected 'Lean.Parser.Term.fun.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.basicFun.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group (Tactic.simp "simp" [] [] ["only"] ["[" [(Tactic.simpLemma [] [] `norm_eq)] "]"] []) [])
-      (group (Tactic.congr "congr" [] []) [])
-      (group (Mathlib.Tactic.Ext.«tacticExt___:_» "ext" [] []) [])
-      (group
-       (Mathlib.Tactic.Conv.convLHS
-        "conv_lhs"
-        []
-        []
-        "=>"
-        (Tactic.Conv.convSeq
-         (Tactic.Conv.convSeq1Indented
-          [(group
-            (Mathlib.Tactic.Conv.find
-             "find"
-             (Analysis.Normed.Group.Basic.«term∥_∥» "∥" (Term.hole "_") "∥")
-             "=>"
-             (Tactic.tacticSeq
-              (Tactic.tacticSeq1Indented
-               [(group
-                 (Tactic.tacticErw__
-                  "erw"
-                  (Tactic.rwRuleSeq
-                   "["
-                   [(Tactic.rwRule
-                     []
-                     (Term.app
-                      (Term.explicit "@" `norm_star)
-                      [`β (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.app `f [`x])]))]
-                   "]")
-                  [])
-                 [])])))
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Mathlib.Tactic.Conv.convLHS
-   "conv_lhs"
-   []
-   []
-   "=>"
-   (Tactic.Conv.convSeq
-    (Tactic.Conv.convSeq1Indented
-     [(group
-       (Mathlib.Tactic.Conv.find
-        "find"
-        (Analysis.Normed.Group.Basic.«term∥_∥» "∥" (Term.hole "_") "∥")
-        "=>"
-        (Tactic.tacticSeq
-         (Tactic.tacticSeq1Indented
-          [(group
-            (Tactic.tacticErw__
-             "erw"
-             (Tactic.rwRuleSeq
-              "["
-              [(Tactic.rwRule
-                []
-                (Term.app
-                 (Term.explicit "@" `norm_star)
-                 [`β (Term.hole "_") (Term.hole "_") (Term.hole "_") (Term.app `f [`x])]))]
-              "]")
-             [])
-            [])])))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.Tactic.Conv.convLHS', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.Tactic.Conv.find', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.Conv.convSeq'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.Conv.convSeq1Indented', expected 'Lean.Parser.Tactic.Conv.convSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.basicFun', expected 'Lean.Parser.Term.matchAlts'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letPatDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.letIdDecl', expected 'Lean.Parser.Term.letEqnsDecl'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.axiom'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.example'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.inductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.classInductive'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.instance', expected 'Lean.Parser.Command.structure'-/-- failed to format: format: uncaught backtrack exception
-instance
-  : NormedStarMonoid α →ᵇ β
-  where
-    norm_star := fun f => by simp only [ norm_eq ] congr ext conv_lhs => find ∥ _ ∥ => erw [ @ norm_star β _ _ _ f x ]
+instance : NormedStarGroup (α →ᵇ β) where
+  norm_star := fun f => by
+    simp only [norm_eq, star_apply, norm_star]
 
 instance : StarModule 𝕜 (α →ᵇ β) where
   star_smul := fun k f => ext fun x => star_smul k (f x)
@@ -1445,9 +1335,9 @@ section CstarRing
 
 variable [TopologicalSpace α]
 
-variable [NormedRing β] [StarRing β]
+variable [NonUnitalNormedRing β] [StarRing β]
 
-instance [NormedStarMonoid β] : StarRing (α →ᵇ β) :=
+instance [NormedStarGroup β] : StarRing (α →ᵇ β) :=
   { BoundedContinuousFunction.starAddMonoid with star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
 
 variable [CstarRing β]

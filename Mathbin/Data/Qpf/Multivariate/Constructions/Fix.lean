@@ -57,7 +57,7 @@ open Typevec
 
 open Mvfunctor (Liftp Liftr)
 
-open_locale Mvfunctor
+open Mvfunctor
 
 variable {n : ℕ} {F : Typevec.{u} (n + 1) → Type u} [Mvfunctor F] [q : Mvqpf F]
 

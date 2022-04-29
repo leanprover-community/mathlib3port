@@ -329,7 +329,7 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
     · simp [of_nat_code_eq, of_nat_code] <;> rfl
       
   simp [G]
-  rw [List.length_map, List.length_range]
+  rw [List.length_mapₓ, List.length_range]
   let m := n.div2.div2
   show G₁ ((a, (List.range (n + 4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n + 4)))
   have hm : m < n + 4 := by
@@ -417,7 +417,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
     · simp [of_nat_code_eq, of_nat_code] <;> rfl
       
   simp [G]
-  rw [List.length_map, List.length_range]
+  rw [List.length_mapₓ, List.length_range]
   let m := n.div2.div2
   show G₁ ((a, (List.range (n + 4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n + 4)))
   have hm : m < n + 4 := by
@@ -512,7 +512,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
     · simp [of_nat_code_eq, of_nat_code] <;> rfl
       
   simp [G]
-  rw [List.length_map, List.length_range]
+  rw [List.length_mapₓ, List.length_range]
   let m := n.div2.div2
   show G₁ ((a, (List.range (n + 4)).map fun n => F a (of_nat code n)), n, m) = some (F a (of_nat code (n + 4)))
   have hm : m < n + 4 := by
@@ -559,22 +559,36 @@ def eval : Code → ℕ →. ℕ
   | rfind' cf =>
     Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> eval cf (mkpair a (n + m))).map (· + m)
 
+/-- Helper lemma for the evaluation of `prec` in the base case. -/
+@[simp]
+theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (mkpair a 0) = eval cf a := by
+  rw [eval, Nat.unpaired, Nat.unpair_mkpair, Nat.elim_zero]
+
+/-- Helper lemma for the evaluation of `prec` in the recursive case. -/
+theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
+    eval (prec cf cg) (mkpair a (Nat.succ k)) = do
+      let ih ← eval (prec cf cg) (mkpair a k)
+      eval cg (mkpair a (mkpair k ih)) :=
+  by
+  rw [eval, Nat.unpaired, Part.bind_eq_bind, Nat.unpair_mkpair, Nat.elim_succ]
+  simp
+
 instance : HasMem (ℕ →. ℕ) Code :=
   ⟨fun f c => eval c = f⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_const : ∀ n m, eval (Code.const n) m = Part.some n
   | 0, m => rfl
   | n + 1, m => by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_id n : eval Code.id n = Part.some n := by
   simp [(· <*> ·)]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem eval_curry c n x : eval (curry c n) x = eval c (mkpair n x) := by
   simp [(· <*> ·)]
@@ -702,7 +716,7 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
       exact h
     · -- pair cf cg
       simp [(· <*> ·)] at h⊢
-      exact h.imp fun a => And.imp (hf _ _) <| Exists.impₓ fun b => And.imp_left (hg _ _)
+      exact h.imp fun a => And.imp (hf _ _) <| Exists.imp fun b => And.imp_left (hg _ _)
       
     · -- comp cf cg
       simp at h⊢

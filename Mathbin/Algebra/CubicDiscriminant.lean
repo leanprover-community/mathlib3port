@@ -42,7 +42,7 @@ namespace Cubic
 
 open Cubic Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable {R S F K : Type _}
 
@@ -257,7 +257,7 @@ theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3
           rw [hP, nat_degree_zero]
           exact zero_le 3)
     
-  · simpa only [← @WithBot.coe_le_coe _ _ _ 3] using (card_roots hP).trans degree_cubic_le
+  · exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
     
 
 end Extension

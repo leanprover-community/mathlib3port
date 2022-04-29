@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Scott Morrison, Jakob von Raumer
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
+import Mathbin.CategoryTheory.Closed.Monoidal
 import Mathbin.Algebra.Category.Module.Basic
 import Mathbin.LinearAlgebra.TensorProduct
+import Mathbin.CategoryTheory.Linear.Yoneda
+import Mathbin.CategoryTheory.Monoidal.Preadditive
 
 /-!
 # The symmetric monoidal category structure on R-modules
@@ -13,6 +16,12 @@ import Mathbin.LinearAlgebra.TensorProduct
 Mostly this uses existing machinery in `linear_algebra.tensor_product`.
 We just need to provide a few small missing pieces to build the
 `monoidal_category` instance and then the `symmetric_category` instance.
+
+Note the universe level of the modules must be at least the universe level of the ring,
+so that we have a monoidal unit.
+For now, we simplify by insisting both universe levels are the same.
+
+We then construct the monoidal closed structure on `Module R`.
 
 If you're happy using the bundled `Module R`, it may be possible to mostly
 use this as an interface and not need to interact much with the implementation details.
@@ -32,7 +41,7 @@ namespace MonoidalCategory
 -- The definitions inside this namespace are essentially private.
 -- After we build the `monoidal_category (Module R)` instance,
 -- you should use that API.
-open_locale TensorProduct
+open TensorProduct
 
 attribute [local ext] TensorProduct.ext
 
@@ -250,6 +259,61 @@ theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) : ((β_ M N).
   rfl
 
 end MonoidalCategory
+
+open Opposite
+
+instance : MonoidalPreadditive (ModuleCat.{u} R) where
+  tensor_zero' := by
+    intros
+    ext
+    simp
+  zero_tensor' := by
+    intros
+    ext
+    simp
+  tensor_add' := by
+    intros
+    ext
+    simp [TensorProduct.tmul_add]
+  add_tensor' := by
+    intros
+    ext
+    simp [TensorProduct.add_tmul]
+
+/-- Auxiliary definition for the `monoidal_closed` instance on `Module R`.
+(This is only a separate definition in order to speed up typechecking. )
+-/
+@[simps]
+def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
+    ((MonoidalCategory.tensorLeft M).obj N ⟶ P) ≃ (N ⟶ ((linearCoyoneda R (ModuleCat R)).obj (op M)).obj P) where
+  toFun := fun f => LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
+  invFun := fun f => (β_ M N).Hom ≫ TensorProduct.lift f
+  left_inv := fun f => by
+    ext m n
+    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply, Function.comp_app, coe_comp,
+      monoidal_category.braiding_hom_apply]
+  right_inv := fun f => by
+    ext m n
+    simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
+      symmetric_category.symmetry_assoc]
+
+instance : MonoidalClosed (ModuleCat.{u} R) where
+  closed' := fun M =>
+    { isAdj :=
+        { right := (linearCoyoneda R (ModuleCat.{u} R)).obj (op M),
+          adj := Adjunction.mkOfHomEquiv { homEquiv := fun N P => monoidalClosedHomEquiv M N P } } }
+
+-- I can't seem to express the function coercion here without writing `@coe_fn`.
+@[simp]
+theorem monoidal_closed_curry {M N P : ModuleCat.{u} R} (f : M ⊗ N ⟶ P) (x : M) (y : N) :
+    @coeFn _ _ LinearMap.hasCoeToFun ((MonoidalClosed.curry f : N →ₗ[R] M →ₗ[R] P) y) x = f (x ⊗ₜ[R] y) :=
+  rfl
+
+@[simp]
+theorem monoidal_closed_uncurry {M N P : ModuleCat.{u} R} (f : N ⟶ M ⟶[ModuleCat.{u} R] P) (x : M) (y : N) :
+    MonoidalClosed.uncurry f (x ⊗ₜ[R] y) = (@coeFn _ _ LinearMap.hasCoeToFun (f y)) x := by
+  simp only [monoidal_closed.uncurry, ihom.adjunction, is_left_adjoint.adj]
+  simp
 
 end ModuleCat
 

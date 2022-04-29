@@ -177,9 +177,9 @@ theorem LieAlgebra.is_engelian_of_subsingleton [Subsingleton L] : LieAlgebra.IsE
 
 theorem Function.Surjective.is_engelian {f : L →ₗ⁅R⁆ L₂} (hf : Function.Surjective f)
     (h : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L) : LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ := by
-  intros M _i1 _i2 _i3 _i4 h'
-  let this' : LieRingModule L M := LieRingModule.compLieHom M f
-  let this' : LieModule R L M := comp_lie_hom M f
+  intro M _i1 _i2 _i3 _i4 h'
+  let this : LieRingModule L M := LieRingModule.compLieHom M f
+  let this : LieModule R L M := comp_lie_hom M f
   have hnp : ∀ x, IsNilpotent (to_endomorphism R L M x) := fun x => h' (f x)
   have surj_id : Function.Surjective (LinearMap.id : M →ₗ[R] M) := Function.surjective_id
   have : LieModule.IsNilpotent R L M := h M hnp
@@ -202,7 +202,7 @@ theorem LieAlgebra.exists_engelian_lie_subalgebra_of_lt_normalizer {K : LieSubal
     rw [← LieSubalgebra.coe_submodule_le_coe_submodule]
     exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) hK₂.le
   refine' ⟨K', _, lt_iff_le_and_ne.mpr ⟨hKK', fun contra => hx₂ (contra.symm ▸ hxK')⟩⟩
-  intros M _i1 _i2 _i3 _i4 h
+  intro M _i1 _i2 _i3 _i4 h
   obtain ⟨I, hI₁ : (I : LieSubalgebra R K') = LieSubalgebra.ofLe hKK'⟩ :=
     LieSubalgebra.exists_nested_lie_ideal_of_le_normalizer hKK' hK'
   have hI₂ : (R∙(⟨x, hxK'⟩ : K'))⊔I = ⊤ := by
@@ -224,7 +224,7 @@ Note that this implies all traditional forms of Engel's theorem via
 `lie_module.nontrivial_max_triv_of_is_nilpotent`, `lie_module.is_nilpotent_iff_forall`,
 `lie_algebra.is_nilpotent_iff_forall`. -/
 theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := by
-  intros M _i1 _i2 _i3 _i4 h
+  intro M _i1 _i2 _i3 _i4 h
   rw [← is_nilpotent_range_to_endomorphism_iff]
   let L' := (to_endomorphism R L M).range
   replace h : ∀ y : L', IsNilpotent (y : Module.End R M)
@@ -267,7 +267,7 @@ theorem LieAlgebra.is_engelian_of_is_noetherian : LieAlgebra.IsEngelian R L := b
 /-- Engel's theorem. -/
 theorem LieModule.is_nilpotent_iff_forall : LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
   ⟨by
-    intros h
+    intro h
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
     exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.is_engelian_of_is_noetherian M h⟩
 

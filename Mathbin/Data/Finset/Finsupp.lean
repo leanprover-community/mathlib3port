@@ -3,7 +3,9 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
+import Mathbin.Data.Finset.Pointwise
 import Mathbin.Data.Finsupp.Indicator
+import Mathbin.Data.Fintype.Card
 
 /-!
 # Finitely supported product of finsets
@@ -28,7 +30,7 @@ noncomputable section
 
 open Finsupp
 
-open_locale BigOperators Classical Pointwise
+open BigOperators Classical Pointwise
 
 variable {ι α : Type _} [Zero α] {s : Finset ι} {f : ι →₀ α}
 

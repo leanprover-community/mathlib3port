@@ -68,7 +68,7 @@ namespace WittVector
 
 open MvPolynomial
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -198,9 +198,16 @@ theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by
   init_ring using witt_neg_vars
 
 theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by
-  simp only [sub_eq_add_neg]
-  rw [init_add, init_neg]
-  conv_rhs => rw [init_add, init_init]
+  init_ring using witt_sub_vars
+
+theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
+  init_ring using fun n => witt_nsmul_vars p m n
+
+theorem init_zsmul (m : ℤ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
+  init_ring using fun n => witt_zsmul_vars p m n
+
+theorem init_pow (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (x ^ m) = init n (init n x ^ m) := by
+  init_ring using fun n => witt_pow_vars p m n
 
 section
 

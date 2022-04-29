@@ -56,6 +56,11 @@ instance : SetLike (LieSubmodule R L M) M where
   coe_injective' := fun N O h => by
     cases N <;> cases O <;> congr
 
+instance : AddSubgroupClass (LieSubmodule R L M) M where
+  add_mem := fun N => N.add_mem'
+  zero_mem := fun N => N.zero_mem'
+  neg_mem := fun N x hx => show -x ∈ N.toSubmodule from neg_mem hx
+
 /-- The zero module is a Lie submodule of any Lie module. -/
 instance : Zero (LieSubmodule R L M) :=
   ⟨{ (0 : Submodule R M) with
@@ -93,8 +98,8 @@ theorem mem_coe {x : M} : x ∈ (N : Set M) ↔ x ∈ N :=
   Iff.rfl
 
 @[simp]
-theorem zero_mem : (0 : M) ∈ N :=
-  (N : Submodule R M).zero_mem
+protected theorem zero_mem : (0 : M) ∈ N :=
+  zero_mem N
 
 @[simp]
 theorem mk_eq_zero {x} (h : x ∈ N) : (⟨x, h⟩ : N) = 0 ↔ x = 0 :=
@@ -1113,14 +1118,16 @@ theorem comap_incl_self : comap N.incl N = ⊤ := by
 
 end LieSubmodule
 
-section TopEquivSelf
+section TopEquiv
 
 variable {R : Type u} {L : Type v}
 
 variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-/-- The natural equivalence between the 'top' Lie subalgebra and the enclosing Lie algebra. -/
-def LieSubalgebra.topEquivSelf : (⊤ : LieSubalgebra R L) ≃ₗ⁅R⁆ L :=
+/-- The natural equivalence between the 'top' Lie subalgebra and the enclosing Lie algebra.
+
+This is the Lie subalgebra version of `submodule.top_equiv`. -/
+def LieSubalgebra.topEquiv : (⊤ : LieSubalgebra R L) ≃ₗ⁅R⁆ L :=
   { (⊤ : LieSubalgebra R L).incl with invFun := fun x => ⟨x, Set.mem_univ x⟩,
     left_inv := fun x => by
       ext
@@ -1128,16 +1135,18 @@ def LieSubalgebra.topEquivSelf : (⊤ : LieSubalgebra R L) ≃ₗ⁅R⁆ L :=
     right_inv := fun x => rfl }
 
 @[simp]
-theorem LieSubalgebra.top_equiv_self_apply (x : (⊤ : LieSubalgebra R L)) : LieSubalgebra.topEquivSelf x = x :=
+theorem LieSubalgebra.top_equiv_apply (x : (⊤ : LieSubalgebra R L)) : LieSubalgebra.topEquiv x = x :=
   rfl
 
-/-- The natural equivalence between the 'top' Lie ideal and the enclosing Lie algebra. -/
-def LieIdeal.topEquivSelf : (⊤ : LieIdeal R L) ≃ₗ⁅R⁆ L :=
-  LieSubalgebra.topEquivSelf
+/-- The natural equivalence between the 'top' Lie ideal and the enclosing Lie algebra.
+
+This is the Lie ideal version of `submodule.top_equiv`. -/
+def LieIdeal.topEquiv : (⊤ : LieIdeal R L) ≃ₗ⁅R⁆ L :=
+  LieSubalgebra.topEquiv
 
 @[simp]
-theorem LieIdeal.top_equiv_self_apply (x : (⊤ : LieIdeal R L)) : LieIdeal.topEquivSelf x = x :=
+theorem LieIdeal.top_equiv_apply (x : (⊤ : LieIdeal R L)) : LieIdeal.topEquiv x = x :=
   rfl
 
-end TopEquivSelf
+end TopEquiv
 

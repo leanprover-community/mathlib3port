@@ -79,6 +79,10 @@ theorem pow_lt_pow' [CovariantClass M M (· * ·) (· < ·)] {a : M} {n m : ℕ}
   rw [pow_addₓ, pow_succ'ₓ, mul_assoc, ← pow_succₓ]
   exact lt_mul_of_one_lt_right' _ (one_lt_pow' ha k.succ_ne_zero)
 
+@[to_additive nsmul_strict_mono_right]
+theorem pow_strict_mono_left [CovariantClass M M (· * ·) (· < ·)] {a : M} (ha : 1 < a) :
+    StrictMono ((· ^ ·) a : ℕ → M) := fun m n => pow_lt_pow' ha
+
 end Preorderₓ
 
 section LinearOrderₓ
@@ -89,7 +93,7 @@ variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (· * ·) (· ≤ 
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
   ⟨le_imp_le_of_lt_imp_ltₓ fun h => pow_lt_one' h hn, fun h => one_le_pow_of_one_le' h n⟩
 
-@[to_additive nsmul_nonpos_iff]
+@[to_additive]
 theorem pow_le_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n ≤ 1 ↔ x ≤ 1 :=
   @one_le_pow_iff (OrderDual M) _ _ _ _ _ hn
 
@@ -97,19 +101,29 @@ theorem pow_le_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n ≤ 1 ↔ x ≤ 
 theorem one_lt_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 < x ^ n ↔ 1 < x :=
   lt_iff_lt_of_le_iff_le (pow_le_one_iff hn)
 
-@[to_additive nsmul_neg_iff]
+@[to_additive]
 theorem pow_lt_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n < 1 ↔ x < 1 :=
   lt_iff_lt_of_le_iff_le (one_le_pow_iff hn)
 
-@[to_additive nsmul_eq_zero_iff]
+@[to_additive]
 theorem pow_eq_one_iff {x : M} {n : ℕ} (hn : n ≠ 0) : x ^ n = 1 ↔ x = 1 := by
   simp only [le_antisymm_iffₓ, pow_le_one_iff hn, one_le_pow_iff hn]
 
+variable [CovariantClass M M (· * ·) (· < ·)] {a : M} {m n : ℕ}
+
+@[to_additive nsmul_le_nsmul_iff]
+theorem pow_le_pow_iff' (ha : 1 < a) : a ^ m ≤ a ^ n ↔ m ≤ n :=
+  (pow_strict_mono_left ha).le_iff_le
+
+@[to_additive nsmul_lt_nsmul_iff]
+theorem pow_lt_pow_iff' (ha : 1 < a) : a ^ m < a ^ n ↔ m < n :=
+  (pow_strict_mono_left ha).lt_iff_lt
+
 end LinearOrderₓ
 
-section Groupₓ
+section DivInvMonoidₓ
 
-variable [Groupₓ G] [Preorderₓ G] [CovariantClass G G (· * ·) (· ≤ ·)]
+variable [DivInvMonoidₓ G] [Preorderₓ G] [CovariantClass G G (· * ·) (· ≤ ·)]
 
 @[to_additive zsmul_nonneg]
 theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n := by
@@ -117,7 +131,7 @@ theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n
   rw [zpow_coe_nat]
   apply one_le_pow_of_one_le' H
 
-end Groupₓ
+end DivInvMonoidₓ
 
 namespace CanonicallyOrderedCommSemiring
 
@@ -131,25 +145,6 @@ end CanonicallyOrderedCommSemiring
 section OrderedSemiring
 
 variable [OrderedSemiring R] {a x y : R} {n m : ℕ}
-
-@[simp]
-theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
-  | 0 => by
-    nontriviality
-    rw [pow_zeroₓ]
-    exact zero_lt_one
-  | n + 1 => by
-    rw [pow_succₓ]
-    exact mul_pos H (pow_pos _)
-
-@[simp]
-theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
-  | 0 => by
-    rw [pow_zeroₓ]
-    exact zero_le_one
-  | n + 1 => by
-    rw [pow_succₓ]
-    exact mul_nonneg H (pow_nonneg _)
 
 theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_succ_of_ne_zero hn with ⟨k, rfl⟩
@@ -204,6 +199,9 @@ theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
 
 theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   pow_mono ha h
+
+theorem le_self_pow (ha : 1 ≤ a) (h : 1 ≤ m) : a ≤ a ^ m :=
+  Eq.trans_le (pow_oneₓ a).symm (pow_le_pow ha h)
 
 theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
   have : 0 < a := zero_le_one.trans_lt h
@@ -426,6 +424,9 @@ theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ abs x := by
 theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < abs x := by
   have t : 1 ^ 2 < x ^ 2 ↔ abs 1 < abs x := ⟨abs_lt_abs_of_sq_lt_sq, sq_lt_sq⟩
   simpa using t
+
+theorem pow_four_le_pow_two_of_pow_two_le {x y : R} (h : x ^ 2 ≤ y) : x ^ 4 ≤ y ^ 2 :=
+  (pow_mulₓ x 2 2).symm ▸ pow_le_pow_of_le_left (sq_nonneg x) h 2
 
 end LinearOrderedRing
 

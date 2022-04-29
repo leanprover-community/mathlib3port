@@ -24,7 +24,7 @@ def Tfae (l : List Prop) : Prop :=
   ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, x ↔ y
 
 theorem tfae_nil : Tfae [] :=
-  forall_mem_nil _
+  forall_mem_nilₓ _
 
 theorem tfae_singleton p : Tfae [p] := by
   simp [tfae, -eq_iff_iff]

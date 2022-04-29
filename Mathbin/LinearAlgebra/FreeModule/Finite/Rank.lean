@@ -21,7 +21,7 @@ universe u v w
 
 variable (R : Type u) (M : Type v) (N : Type w)
 
-open_locale TensorProduct DirectSum BigOperators Cardinal
+open TensorProduct DirectSum BigOperators Cardinal
 
 open Cardinal FiniteDimensional Fintype
 
@@ -37,7 +37,7 @@ variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 /-- The rank of a finite and free module is finite. -/
 theorem rank_lt_omega : Module.rank R M < ω := by
-  let this' := nontrivial_of_invariant_basis_number R
+  let this := nontrivial_of_invariant_basis_number R
   rw [← (choose_basis R M).mk_eq_dim'', lt_omega_iff_fintype]
   exact Nonempty.intro inferInstance
 
@@ -51,7 +51,7 @@ theorem finrank_eq_card_choose_basis_index :
     finrank R M =
       @card (ChooseBasisIndex R M) (@ChooseBasisIndex.fintype R M _ _ _ _ (nontrivial_of_invariant_basis_number R) _) :=
   by
-  let this' := nontrivial_of_invariant_basis_number R
+  let this := nontrivial_of_invariant_basis_number R
   simp [finrank, rank_eq_card_choose_basis_index]
 
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
@@ -68,7 +68,7 @@ theorem finrank_pi {ι : Type v} [Fintype ι] : finrank R (ι → R) = card ι :
 theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i : ι, AddCommGroupₓ (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (⨁ i, M i) = ∑ i, finrank R (M i) := by
-  let this' := nontrivial_of_invariant_basis_number R
+  let this := nontrivial_of_invariant_basis_number R
   simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_direct_sum, ← mk_sigma, mk_to_nat_eq_card,
     card_sigma]
 
@@ -82,14 +82,13 @@ theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
 theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] [∀ i : ι, Module.Finite R (M i)] :
     finrank R (∀ i, M i) = ∑ i, finrank R (M i) := by
-  let this' := nontrivial_of_invariant_basis_number R
+  let this := nontrivial_of_invariant_basis_number R
   simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_pi_fintype, ← mk_sigma, mk_to_nat_eq_card,
     card_sigma]
 
-/-- If `n` and `m` are `fintype`, the finrank of `n × m` matrices is
-  `(fintype.card n) * (fintype.card m)`. -/
-theorem finrank_matrix (n : Type v) [Fintype n] (m : Type w) [Fintype m] : finrank R (Matrix n m R) = card n * card m :=
-  by
+/-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is
+  `(fintype.card m) * (fintype.card n)`. -/
+theorem finrank_matrix (m n : Type v) [Fintype m] [Fintype n] : finrank R (Matrix m n R) = card m * card n := by
   simp [finrank]
 
 end Ringₓ
@@ -106,7 +105,7 @@ variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
   classical
-  let this' := nontrivial_of_invariant_basis_number R
+  let this := nontrivial_of_invariant_basis_number R
   have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
   let b := (Matrix.stdBasis _ _ _).map h.symm
   rw [finrank, dim_eq_card_basis b, ← mk_fintype, mk_to_nat_eq_card, finrank, finrank, rank_eq_card_choose_basis_index,

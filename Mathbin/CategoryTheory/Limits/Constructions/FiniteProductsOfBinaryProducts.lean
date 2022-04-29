@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Products
 import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteProducts
 import Mathbin.CategoryTheory.Pempty
-import Mathbin.Data.Equiv.Fin
+import Mathbin.Logic.Equiv.Fin
 
 /-!
 # Constructing finite products from binary products and terminal.
@@ -101,7 +101,7 @@ than this.
 -/
 private theorem has_product_ulift_fin : ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, HasProduct f
   | 0 => fun f => by
-    let this' : has_limits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
+    let this : has_limits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
       has_limits_of_shape_of_equivalence (Discrete.equivalence.{v} (equiv.ulift.trans finZeroEquiv').symm)
     infer_instance
   | n + 1 => fun f => by
@@ -115,7 +115,7 @@ than this.
 -/
 private theorem has_limits_of_shape_ulift_fin (n : ℕ) : HasLimitsOfShape (Discrete (ULift.{v} (Finₓ n))) C :=
   { HasLimit := fun K => by
-      let this' := has_product_ulift_fin n K.obj
+      let this := has_product_ulift_fin n K.obj
       let this : discrete.functor K.obj ≅ K := discrete.nat_iso fun i => iso.refl _
       apply has_limit_of_iso this }
 
@@ -145,7 +145,7 @@ variable [HasFiniteProducts.{v} C]
 noncomputable def preservesFinOfPreservesBinaryAndTerminalₓ :
     ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, PreservesLimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this' : preserves_limits_of_shape (discrete (ULift (Finₓ 0))) F :=
+    let this : preserves_limits_of_shape (discrete (ULift (Finₓ 0))) F :=
       preservesLimitsOfShapeOfEquiv.{v, v} (discrete.equivalence (equiv.ulift.trans finZeroEquiv').symm) _
     infer_instance
   | n + 1 => by
@@ -253,7 +253,7 @@ than this.
 -/
 private theorem has_coproduct_ulift_fin : ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, HasCoproduct f
   | 0 => fun f => by
-    let this' : has_colimits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
+    let this : has_colimits_of_shape (discrete (ULift.{v} (Finₓ 0))) C :=
       has_colimits_of_shape_of_equivalence (Discrete.equivalence.{v} (equiv.ulift.trans finZeroEquiv').symm)
     infer_instance
   | n + 1 => fun f => by
@@ -267,7 +267,7 @@ than this.
 -/
 private theorem has_colimits_of_shape_ulift_fin (n : ℕ) : HasColimitsOfShape (Discrete (ULift.{v} (Finₓ n))) C :=
   { HasColimit := fun K => by
-      let this' := has_coproduct_ulift_fin n K.obj
+      let this := has_coproduct_ulift_fin n K.obj
       let this : K ≅ discrete.functor K.obj := discrete.nat_iso fun i => iso.refl _
       apply has_colimit_of_iso this }
 
@@ -297,7 +297,7 @@ variable [HasFiniteCoproducts.{v} C]
 noncomputable def preservesFinOfPreservesBinaryAndInitialₓ :
     ∀ n : ℕ f : ULift.{v} (Finₓ n) → C, PreservesColimit (Discrete.functor f) F
   | 0 => fun f => by
-    let this' : preserves_colimits_of_shape (discrete (ULift (Finₓ 0))) F :=
+    let this : preserves_colimits_of_shape (discrete (ULift (Finₓ 0))) F :=
       preservesColimitsOfShapeOfEquiv.{v, v} (discrete.equivalence (equiv.ulift.trans finZeroEquiv').symm) _
     infer_instance
   | n + 1 => by

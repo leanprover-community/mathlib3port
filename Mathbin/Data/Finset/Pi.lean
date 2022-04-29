@@ -33,7 +33,7 @@ variable {δ : α → Type _} [DecidableEq α]
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
 def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀, ∀ a ∈ s, ∀, δ a) :=
-  ⟨s.1.pi fun a => (t a).1, nodup_pi s.2 fun a _ => (t a).2⟩
+  ⟨s.1.pi fun a => (t a).1, s.Nodup.pi fun a _ => (t a).Nodup⟩
 
 @[simp]
 theorem pi_val (s : Finset α) (t : ∀ a, Finset (δ a)) : (s.pi t).1 = s.1.pi fun a => (t a).1 :=
@@ -98,8 +98,7 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
   rw [pi_cons]
   congr
   funext b
-  rw [Multiset.Nodup.dedup]
-  exact Multiset.nodup_map (Multiset.pi_cons_injective ha) (pi s t).2
+  exact ((pi s t).Nodup.map <| Multiset.pi_cons_injective ha).dedup.symm
 
 theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} :=
   by

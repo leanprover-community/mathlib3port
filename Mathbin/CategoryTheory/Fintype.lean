@@ -3,7 +3,7 @@ Copyright (c) 2020 Adam Topaz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 -/
-import Mathbin.CategoryTheory.ConcreteCategory.Bundled
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.Data.Fin.Basic
@@ -22,7 +22,7 @@ We prove that `Fintype.skeleton` is a skeleton of `Fintype` in `Fintype.is_skele
 -/
 
 
-open_locale Classical
+open Classical
 
 open CategoryTheory
 
@@ -121,7 +121,7 @@ def incl : skeleton.{u} ⥤ Fintypeₓ.{u} where
   map := fun _ _ f => f
 
 instance : Full incl where
-  Preimage := fun _ _ f => f
+  preimage := fun _ _ f => f
 
 instance : Faithful incl :=
   {  }

@@ -23,7 +23,7 @@ be an intermediate typeclass for uniform spaces, but the algebraic hierarchy the
 -/
 
 
-open_locale Nnreal
+open Nnreal
 
 noncomputable section
 

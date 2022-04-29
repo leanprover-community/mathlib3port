@@ -21,7 +21,7 @@ sin, cos, tan, angle
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 open Set Filter
 

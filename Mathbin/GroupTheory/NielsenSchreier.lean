@@ -50,11 +50,11 @@ free group, free groupoid, Nielsen-Schreier
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 universe v u
 
--- ././Mathport/Syntax/Translate/Basic.lean:1160:11: unsupported: unusual advanced open style
+-- ././Mathport/Syntax/Translate/Basic.lean:1158:11: unsupported: unusual advanced open style
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
@@ -102,7 +102,7 @@ instance actionGroupoidIsFree {G A : Type u} [Groupₓ G] [IsFreeGroup G] [MulAc
   quiverGenerators := ⟨fun a b => { e : IsFreeGroup.Generators G // IsFreeGroup.of e • a.back = b.back }⟩
   of := fun a b e => ⟨IsFreeGroup.of e, e.property⟩
   unique_lift := by
-    intros X _ f
+    intro X _ f
     let f' : fgp.generators G → (A → X) ⋊[mulAutArrow] G := fun e =>
       ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, fgp.of e⟩
     rcases fgp.unique_lift f' with ⟨F', hF', uF'⟩
@@ -211,7 +211,7 @@ def endIsFree : IsFreeGroup (End (root' T)) where
   Generators := Set.Compl (wide_subquiver_equiv_set_total <| WideSubquiverSymmetrify T)
   of := fun e => loopOfHom T (of e.val.Hom)
   unique_lift' := by
-    intros X _ f
+    intro X _ f
     let f' : labelling (generators G) X := fun a b e =>
       if h : e ∈ wide_subquiver_symmetrify T a b then 1 else f ⟨⟨a, b, e⟩, h⟩
     rcases unique_lift f' with ⟨F', hF', uF'⟩

@@ -6,6 +6,7 @@ Authors: Adam Topaz
 import Mathbin.Algebra.FreeAlgebra
 import Mathbin.Algebra.RingQuot
 import Mathbin.Algebra.TrivSqZeroExt
+import Mathbin.Algebra.Algebra.Operations
 
 /-!
 # Tensor Algebras
@@ -52,7 +53,7 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=

@@ -55,7 +55,7 @@ this Hilbert basis.
 
 noncomputable section
 
-open_locale Ennreal ComplexConjugate Classical
+open Ennreal ComplexConjugate Classical
 
 open TopologicalSpace ContinuousMap MeasureTheory MeasureTheory.Measure Algebra Submodule Set
 
@@ -257,7 +257,7 @@ theorem tsum_sq_fourier_series_repr (f : lp ℂ 2 haarCircle) :
     norm_num
   have H₂ : ∥fourier_series.repr f∥ ^ 2 = ∥f∥ ^ 2 := by
     simp
-  have H₃ := congr_argₓ IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ _ _ _ f f)
+  have H₃ := congr_argₓ IsROrC.re (@L2.inner_def circle ℂ ℂ _ _ _ _ f f)
   rw [← integral_re] at H₃
   · simp only [← norm_sq_eq_inner] at H₃
     rw [← H₁, H₂]

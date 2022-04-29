@@ -14,7 +14,7 @@ namespace Omega
 
 namespace Nat
 
-open_locale Omega.Nat
+open Omega.Nat
 
 namespace Preterm
 
@@ -138,7 +138,7 @@ theorem sub_subst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
     apply le_max_leftₓ
     apply le_max_rightₓ
 
-theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.sat → (subElim t s p).sat := by
+theorem sat_sub_elim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat := by
   intro h1
   simp only [sub_elim, sub_elim_core]
   cases' h1 with v h1

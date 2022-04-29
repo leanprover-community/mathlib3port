@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir
 -/
 import Mathbin.Order.Filter.FilterProduct
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 
 /-!
 # Construction of the hyperreal numbers as an ultraproduct of real sequences.
@@ -13,7 +13,7 @@ import Mathbin.Analysis.SpecificLimits
 
 open Filter Filter.Germ
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 /-- Hyperreal numbers on the ultrafilter extending the cofinite filter -/
 def Hyperreal : Type :=
@@ -152,7 +152,7 @@ theorem epsilon_mul_omega : ε * ω = 1 :=
   @inv_mul_cancel _ _ ω omega_ne_zero
 
 theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) : ∀ {r : ℝ}, 0 < r → ofSeq f < (r : ℝ*) := by
-  simp only [Metric.tendsto_at_top, dist_zero_right, norm, lt_def] at hf⊢
+  simp only [Metric.tendsto_at_top, Real.dist_eq, sub_zero, lt_def] at hf⊢
   intro r hr
   cases' hf r hr with N hf'
   have hs : { i : ℕ | f i < r }ᶜ ⊆ { i : ℕ | i ≤ N } := fun i hi1 =>
@@ -237,10 +237,10 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sup { y : ℝ | (y :
       have HR₁ : S.Nonempty := ⟨r₁ - 1, lt_of_lt_of_leₓ (coe_lt_coe.2 <| sub_one_lt _) (not_ltₓ.mp hr₁)⟩
       have HR₂ : BddAbove S := ⟨r₂, fun y hy => le_of_ltₓ (coe_lt_coe.1 (lt_of_lt_of_leₓ hy (not_ltₓ.mp hr₂)))⟩
       fun δ hδ =>
-      ⟨lt_of_not_ge' fun c =>
+      ⟨lt_of_not_le fun c =>
           have hc : ∀, ∀ y ∈ S, ∀, y ≤ R - δ := fun y hy => coe_le_coe.1 <| le_of_ltₓ <| lt_of_lt_of_leₓ hy c
           not_lt_of_le (cSup_le HR₁ hc) <| sub_lt_self R hδ,
-        lt_of_not_ge' fun c =>
+        lt_of_not_le fun c =>
           have hc : ↑(R + δ / 2) < x := lt_of_lt_of_leₓ (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
           not_lt_of_le (le_cSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
 

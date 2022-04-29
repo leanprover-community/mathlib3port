@@ -265,6 +265,13 @@ theorem sup_eq_supr [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup
 theorem sup_id_eq_Sup [CompleteLattice α] (s : Finset α) : s.sup id = sup s := by
   simp [Sup_eq_supr, sup_eq_supr]
 
+theorem sup_id_set_eq_sUnion (s : Finset (Set α)) : s.sup id = ⋃₀↑s :=
+  sup_id_eq_Sup _
+
+@[simp]
+theorem sup_set_eq_bUnion (s : Finset α) (f : α → Set β) : s.sup f = ⋃ x ∈ s, f x :=
+  sup_eq_supr _ _
+
 theorem sup_eq_Sup_image [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup f = sup (f '' s) := by
   classical
   rw [← Finset.coe_image, ← sup_id_eq_Sup, sup_image, Function.comp.left_id]
@@ -476,6 +483,13 @@ theorem inf_eq_infi [CompleteLattice β] (s : Finset α) (f : α → β) : s.inf
 theorem inf_id_eq_Inf [CompleteLattice α] (s : Finset α) : s.inf id = inf s :=
   @sup_id_eq_Sup (OrderDual α) _ _
 
+theorem inf_id_set_eq_sInter (s : Finset (Set α)) : s.inf id = ⋂₀ ↑s :=
+  inf_id_eq_Inf _
+
+@[simp]
+theorem inf_set_eq_bInter (s : Finset α) (f : α → Set β) : s.inf f = ⋂ x ∈ s, f x :=
+  inf_eq_infi _ _
+
 theorem inf_eq_Inf_image [CompleteLattice β] (s : Finset α) (f : α → β) : s.inf f = inf (f '' s) :=
   @sup_eq_Sup_image _ (OrderDual β) _ _ _
 
@@ -484,7 +498,7 @@ section Sup'
 variable [SemilatticeSup α]
 
 theorem sup_of_mem {s : Finset β} (f : β → α) {b : β} (h : b ∈ s) : ∃ a : α, s.sup (coe ∘ f : β → WithBot α) = ↑a :=
-  Exists.impₓ (fun a => Exists.fst) (@le_sup (WithBot α) _ _ _ _ _ _ h (f b) rfl)
+  Exists.imp (fun a => Exists.fst) (@le_sup (WithBot α) _ _ _ _ _ _ h (f b) rfl)
 
 /-- Given nonempty finset `s` then `s.sup' H f` is the supremum of its image under `f` in (possibly
 unbounded) join-semilattice `α`, where `H` is a proof of nonemptiness. If `α` has a bottom element
@@ -1078,7 +1092,7 @@ ordered type : a predicate is true on all `s : finset α` provided that:
   `f x ≤ f a`, `p s` implies `p (insert a s)`. -/
 @[elab_as_eliminator]
 theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
-    (step : ∀ a s, (a ∉ s) → (∀, ∀ x ∈ s, ∀, f x ≤ f a) → p s → p (insert a s)) : p s := by
+    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f x ≤ f a) → p s → p (insert a s)) : p s := by
   induction' s using Finset.strongInductionOn with s ihs
   rcases(s.image f).eq_empty_or_nonempty with (hne | hne)
   · simp only [image_eq_empty] at hne
@@ -1101,7 +1115,7 @@ ordered type : a predicate is true on all `s : finset α` provided that:
   `f a ≤ f x`, `p s` implies `p (insert a s)`. -/
 @[elab_as_eliminator]
 theorem induction_on_min_value [DecidableEq ι] (f : ι → α) {p : Finset ι → Prop} (s : Finset ι) (h0 : p ∅)
-    (step : ∀ a s, (a ∉ s) → (∀, ∀ x ∈ s, ∀, f a ≤ f x) → p s → p (insert a s)) : p s :=
+    (step : ∀ a s, a ∉ s → (∀, ∀ x ∈ s, ∀, f a ≤ f x) → p s → p (insert a s)) : p s :=
   @induction_on_max_value (OrderDual α) ι _ _ _ _ s h0 step
 
 end MaxMinInductionValue
@@ -1130,7 +1144,7 @@ theorem map_finset_sup [DecidableEq α] [DecidableEq β] (s : Finset γ) (f : γ
 
 theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset β) (b : β) :
     count b (s.sup f) = s.sup fun a => count b (f a) := by
-  let this' := Classical.decEq α
+  let this := Classical.decEq α
   refine' s.induction _ _
   · exact count_zero _
     
@@ -1264,6 +1278,25 @@ theorem Inter_eq_Inter_finset' (s : ι' → Set α) : (⋂ i, s i) = ⋂ t : Fin
 end Set
 
 namespace Finset
+
+/-! ### Interaction with ordered algebra structures -/
+
+
+theorem sup_mul_le_mul_sup_of_nonneg [LinearOrderedSemiring α] [OrderBot α] {a b : ι → α} (s : Finset ι)
+    (ha : ∀, ∀ i ∈ s, ∀, 0 ≤ a i) (hb : ∀, ∀ i ∈ s, ∀, 0 ≤ b i) : s.sup (a * b) ≤ s.sup a * s.sup b :=
+  Finset.sup_le fun i hi => mul_le_mul (le_sup hi) (le_sup hi) (hb _ hi) ((ha _ hi).trans <| le_sup hi)
+
+theorem mul_inf_le_inf_mul_of_nonneg [LinearOrderedSemiring α] [OrderTop α] {a b : ι → α} (s : Finset ι)
+    (ha : ∀, ∀ i ∈ s, ∀, 0 ≤ a i) (hb : ∀, ∀ i ∈ s, ∀, 0 ≤ b i) : s.inf a * s.inf b ≤ s.inf (a * b) :=
+  Finset.le_inf fun i hi => mul_le_mul (inf_le hi) (inf_le hi) (Finset.le_inf hb) (ha i hi)
+
+theorem sup'_mul_le_mul_sup'_of_nonneg [LinearOrderedSemiring α] {a b : ι → α} (s : Finset ι) (H : s.Nonempty)
+    (ha : ∀, ∀ i ∈ s, ∀, 0 ≤ a i) (hb : ∀, ∀ i ∈ s, ∀, 0 ≤ b i) : s.sup' H (a * b) ≤ s.sup' H a * s.sup' H b :=
+  (sup'_le _ _) fun i hi => mul_le_mul (le_sup' _ hi) (le_sup' _ hi) (hb _ hi) ((ha _ hi).trans <| le_sup' _ hi)
+
+theorem inf'_mul_le_mul_inf'_of_nonneg [LinearOrderedSemiring α] {a b : ι → α} (s : Finset ι) (H : s.Nonempty)
+    (ha : ∀, ∀ i ∈ s, ∀, 0 ≤ a i) (hb : ∀, ∀ i ∈ s, ∀, 0 ≤ b i) : s.inf' H a * s.inf' H b ≤ s.inf' H (a * b) :=
+  (le_inf' _ _) fun i hi => mul_le_mul (inf'_le _ hi) (inf'_le _ hi) (le_inf' _ _ hb) (ha _ hi)
 
 open Function
 

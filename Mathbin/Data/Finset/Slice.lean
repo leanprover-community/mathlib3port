@@ -29,7 +29,7 @@ the set family made of its `r`-sets.
 
 open Finset Nat
 
-open_locale BigOperators
+open BigOperators
 
 variable {α : Type _} {ι : Sort _} {κ : ι → Sort _}
 

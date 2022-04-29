@@ -5,6 +5,7 @@ Authors: Kexing Ying
 -/
 import Mathbin.MeasureTheory.Constructions.BorelSpace
 import Mathbin.MeasureTheory.Function.L1Space
+import Mathbin.MeasureTheory.Function.StronglyMeasurable
 import Mathbin.Topology.Instances.Discrete
 
 /-!
@@ -18,13 +19,25 @@ at a specific time and is the first step in formalizing stochastic processes.
 
 * `measure_theory.filtration`: a filtration on a measurable space
 * `measure_theory.adapted`: a sequence of functions `u` is said to be adapted to a
-  filtration `f` if at each point in time `i`, `u i` is `f i`-measurable
+  filtration `f` if at each point in time `i`, `u i` is `f i`-strongly measurable
+* `measure_theory.prog_measurable`: a sequence of functions `u` is said to be progressively
+  measurable with respect to a filtration `f` if at each point in time `i`, `u` restricted to
+  `set.Iic i × α` is strongly measurable with respect to the product `measurable_space` structure
+  where the σ-algebra used for `α` is `f i`.
 * `measure_theory.filtration.natural`: the natural filtration with respect to a sequence of
   measurable functions is the smallest filtration to which it is adapted to
 * `measure_theory.is_stopping_time`: a stopping time with respect to some filtration `f` is a
   function `τ` such that for all `i`, the preimage of `{j | j ≤ i}` along `τ` is
   `f i`-measurable
 * `measure_theory.is_stopping_time.measurable_space`: the σ-algebra associated with a stopping time
+
+## Main results
+
+* `adapted.prog_measurable_of_continuous`: a continuous adapted process is progressively measurable.
+* `prog_measurable.stopped_process`: the stopped process of a progressively measurable process is
+  progressively measurable.
+* `mem_ℒp_stopped_process`: if a process belongs to `ℒp` at every time in `ℕ`, then its stopped
+  process belongs to `ℒp` as well.
 
 ## Tags
 
@@ -33,9 +46,9 @@ filtration, stopping time, stochastic process
 -/
 
 
-open TopologicalSpace Filter
+open Filter Order TopologicalSpace
 
-open_locale Classical MeasureTheory Nnreal Ennreal TopologicalSpace BigOperators
+open Classical MeasureTheory Nnreal Ennreal TopologicalSpace BigOperators
 
 namespace MeasureTheory
 
@@ -216,54 +229,145 @@ instance sigma_finite_of_sigma_finite_filtration [Preorderₓ ι] (μ : Measure 
   apply hf.sigma_finite
 
 -- can't exact here
-section Adapted
+section AdaptedProcess
 
-variable [MeasurableSpace β] [Preorderₓ ι]
+variable [TopologicalSpace β] [Preorderₓ ι] {u v : ι → α → β} {f : Filtration ι m}
 
 /-- A sequence of functions `u` is adapted to a filtration `f` if for all `i`,
 `u i` is `f i`-measurable. -/
 def Adapted (f : Filtration ι m) (u : ι → α → β) : Prop :=
-  ∀ i : ι, measurable[f i] (u i)
+  ∀ i : ι, strongly_measurable[f i] (u i)
 
 namespace Adapted
 
-theorem add [Add β] [HasMeasurableAdd₂ β] {u v : ι → α → β} {f : Filtration ι m} (hu : Adapted f u) (hv : Adapted f v) :
-    Adapted f (u + v) := fun i => @Measurable.add _ _ _ _ (f i) _ _ _ (hu i) (hv i)
+theorem add [Add β] [HasContinuousAdd β] (hu : Adapted f u) (hv : Adapted f v) : Adapted f (u + v) := fun i =>
+  (hu i).add (hv i)
 
-theorem neg [Neg β] [HasMeasurableNeg β] {u : ι → α → β} {f : Filtration ι m} (hu : Adapted f u) : Adapted f (-u) :=
-  fun i => @Measurable.neg _ α _ _ _ (f i) _ (hu i)
+theorem neg [AddGroupₓ β] [TopologicalAddGroup β] (hu : Adapted f u) : Adapted f (-u) := fun i => (hu i).neg
 
-theorem smul [HasScalar ℝ β] [HasMeasurableSmul ℝ β] {u : ι → α → β} {f : Filtration ι m} (c : ℝ) (hu : Adapted f u) :
-    Adapted f (c • u) := fun i => @Measurable.const_smul ℝ β α _ _ _ (f i) _ _ (hu i) c
+theorem smul [HasScalar ℝ β] [HasContinuousSmul ℝ β] (c : ℝ) (hu : Adapted f u) : Adapted f (c • u) := fun i =>
+  (hu i).const_smul c
 
 end Adapted
 
 variable (β)
 
 theorem adapted_zero [Zero β] (f : Filtration ι m) : Adapted f (0 : ι → α → β) := fun i =>
-  @measurable_zero β α (f i) _ _
+  @strongly_measurable_zero α β (f i) _ _
 
-end Adapted
+variable {β}
+
+/-- Progressively measurable process. A sequence of functions `u` is said to be progressively
+measurable with respect to a filtration `f` if at each point in time `i`, `u` restricted to
+`set.Iic i × α` is measurable with respect to the product `measurable_space` structure where the
+σ-algebra used for `α` is `f i`.
+The usual definition uses the interval `[0,i]`, which we replace by `set.Iic i`. We recover the
+usual definition for index types `ℝ≥0` or `ℕ`. -/
+def ProgMeasurable [MeasurableSpace ι] (f : Filtration ι m) (u : ι → α → β) : Prop :=
+  ∀ i, strongly_measurable[Subtype.measurableSpace.Prod (f i)] fun p : Set.Iic i × α => u p.1 p.2
+
+theorem prog_measurable_const [MeasurableSpace ι] (f : Filtration ι m) (b : β) :
+    ProgMeasurable f (fun _ _ => b : ι → α → β) := fun i =>
+  @strongly_measurable_const _ _ (Subtype.measurableSpace.Prod (f i)) _ _
+
+namespace ProgMeasurable
+
+variable [MeasurableSpace ι]
+
+protected theorem adapted (h : ProgMeasurable f u) : Adapted f u := by
+  intro i
+  have : u i = (fun p : Set.Iic i × α => u p.1 p.2) ∘ fun x => (⟨i, set.mem_Iic.mpr le_rfl⟩, x) := rfl
+  rw [this]
+  exact (h i).comp_measurable ((@measurable_const _ _ _ (f i) _).prod_mk (@measurable_id _ (f i)))
+
+protected theorem comp {t : ι → α → ι} [TopologicalSpace ι] [BorelSpace ι] [MetrizableSpace ι] (h : ProgMeasurable f u)
+    (ht : ProgMeasurable f t) (ht_le : ∀ i x, t i x ≤ i) : ProgMeasurable f fun i x => u (t i x) x := by
+  intro i
+  have :
+    (fun p : ↥(Set.Iic i) × α => u (t (p.fst : ι) p.snd) p.snd) =
+      (fun p : ↥(Set.Iic i) × α => u (p.fst : ι) p.snd) ∘ fun p : ↥(Set.Iic i) × α =>
+        (⟨t (p.fst : ι) p.snd, set.mem_Iic.mpr ((ht_le _ _).trans p.fst.prop)⟩, p.snd) :=
+    rfl
+  rw [this]
+  exact (h i).comp_measurable ((ht i).Measurable.subtype_mk.prod_mk (@measurable_snd _ _ _ (f i)))
+
+section Arithmetic
+
+@[to_additive]
+protected theorem mul [Mul β] [HasContinuousMul β] (hu : ProgMeasurable f u) (hv : ProgMeasurable f v) :
+    ProgMeasurable f fun i x => u i x * v i x := fun i => (hu i).mul (hv i)
+
+@[to_additive]
+protected theorem finset_prod' {γ} [CommMonoidₓ β] [HasContinuousMul β] {U : γ → ι → α → β} {s : Finset γ}
+    (h : ∀, ∀ c ∈ s, ∀, ProgMeasurable f (U c)) : ProgMeasurable f (∏ c in s, U c) :=
+  Finset.prod_induction U (ProgMeasurable f) (fun _ _ => ProgMeasurable.mul) (prog_measurable_const _ 1) h
+
+@[to_additive]
+protected theorem finset_prod {γ} [CommMonoidₓ β] [HasContinuousMul β] {U : γ → ι → α → β} {s : Finset γ}
+    (h : ∀, ∀ c ∈ s, ∀, ProgMeasurable f (U c)) : ProgMeasurable f fun i a => ∏ c in s, U c i a := by
+  convert prog_measurable.finset_prod' h
+  ext i a
+  simp only [Finset.prod_apply]
+
+@[to_additive]
+protected theorem inv [Groupₓ β] [TopologicalGroup β] (hu : ProgMeasurable f u) :
+    ProgMeasurable f fun i x => (u i x)⁻¹ := fun i => (hu i).inv
+
+@[to_additive]
+protected theorem div [Groupₓ β] [TopologicalGroup β] (hu : ProgMeasurable f u) (hv : ProgMeasurable f v) :
+    ProgMeasurable f fun i x => u i x / v i x := fun i => (hu i).div (hv i)
+
+end Arithmetic
+
+end ProgMeasurable
+
+theorem prog_measurable_of_tendsto' {γ} [MeasurableSpace ι] [MetrizableSpace β] (fltr : Filter γ) [fltr.ne_bot]
+    [fltr.IsCountablyGenerated] {U : γ → ι → α → β} (h : ∀ l, ProgMeasurable f (U l))
+    (h_tendsto : Tendsto U fltr (𝓝 u)) : ProgMeasurable f u := by
+  intro i
+  apply
+    @strongly_measurable_of_tendsto (Set.Iic i × α) β γ (MeasurableSpace.prod _ (f i)) _ _ fltr _ _ _ _ fun l => h l i
+  rw [tendsto_pi_nhds] at h_tendsto⊢
+  intro x
+  specialize h_tendsto x.fst
+  rw [tendsto_nhds] at h_tendsto⊢
+  exact fun s hs h_mem => h_tendsto { g | g x.snd ∈ s } (hs.Preimage (continuous_apply x.snd)) h_mem
+
+theorem prog_measurable_of_tendsto [MeasurableSpace ι] [MetrizableSpace β] {U : ℕ → ι → α → β}
+    (h : ∀ l, ProgMeasurable f (U l)) (h_tendsto : Tendsto U atTop (𝓝 u)) : ProgMeasurable f u :=
+  prog_measurable_of_tendsto' atTop h h_tendsto
+
+/-- A continuous and adapted process is progressively measurable. -/
+theorem Adapted.prog_measurable_of_continuous [TopologicalSpace ι] [MetrizableSpace ι] [MeasurableSpace ι]
+    [SecondCountableTopology ι] [OpensMeasurableSpace ι] [MetrizableSpace β] (h : Adapted f u)
+    (hu_cont : ∀ x, Continuous fun i => u i x) : ProgMeasurable f u := fun i =>
+  @strongly_measurable_uncurry_of_continuous_of_strongly_measurable _ _ (Set.Iic i) _ _ _ _ _ _ _ (f i) _
+    (fun x => (hu_cont x).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.Prop)
+
+end AdaptedProcess
 
 namespace Filtration
 
-variable {mβ : MeasurableSpace β} [Preorderₓ ι]
+variable [TopologicalSpace β] [MetrizableSpace β] [mβ : MeasurableSpace β] [BorelSpace β] [Preorderₓ ι]
 
 include mβ
 
 /-- Given a sequence of functions, the natural filtration is the smallest sequence
 of σ-algebras such that that sequence of functions is measurable with respect to
 the filtration. -/
-def natural (u : ι → α → β) (hum : ∀ i, Measurable (u i)) : Filtration ι m where
-  seq := fun i => ⨆ j ≤ i, MeasurableSpace.comap (u j) inferInstance
-  mono' := fun i j hij => bsupr_le_bsupr' fun k hk => le_transₓ hk hij
-  le' := fun i =>
-    bsupr_le fun j hj s hs =>
-      let ⟨t, ht, ht'⟩ := hs
-      ht' ▸ hum j ht
+def natural (u : ι → α → β) (hum : ∀ i, StronglyMeasurable (u i)) : Filtration ι m where
+  seq := fun i => ⨆ j ≤ i, MeasurableSpace.comap (u j) mβ
+  mono' := fun i j hij => bsupr_mono fun k => ge_transₓ hij
+  le' := fun i => by
+    refine' supr₂_le _
+    rintro j hj s ⟨t, ht, rfl⟩
+    exact (hum j).Measurable ht
 
-theorem adapted_natural {u : ι → α → β} (hum : ∀ i, measurable[m] (u i)) : Adapted (natural u hum) u := fun i =>
-  Measurable.le (le_bsupr_of_le i (le_reflₓ i) le_rfl) fun s hs => ⟨s, hs, rfl⟩
+theorem adapted_natural {u : ι → α → β} (hum : ∀ i, strongly_measurable[m] (u i)) : Adapted (natural u hum) u := by
+  intro i
+  refine' strongly_measurable.mono _ (le_supr₂_of_le i (le_reflₓ i) le_rfl)
+  rw [strongly_measurable_iff_measurable_separable]
+  exact ⟨measurable_iff_comap_le.2 le_rfl, (hum i).is_separable_range⟩
 
 end Filtration
 
@@ -302,15 +406,9 @@ theorem IsStoppingTime.measurable_set_lt_of_pred [PredOrder ι] (hτ : IsStoppin
     rw [is_min_iff_forall_not_lt] at hi_min
     exact hi_min (τ x)
     
-  have : { x : α | τ x < i } = τ ⁻¹' Set.Iio i := by
-    ext1 x
-    simp only [Set.mem_set_of_eq, Set.mem_preimage, Set.mem_Iio]
-  rw [this, PredOrder.Iio_eq_Iic_pred' hi_min]
-  have : τ ⁻¹' Set.Iic (PredOrder.pred i) = { x : α | τ x ≤ PredOrder.pred i } := by
-    ext1 x
-    simp only [Set.mem_preimage, Set.mem_Iic, Set.mem_set_of_eq]
-  rw [this]
-  exact f.mono (PredOrder.pred_le i) _ (hτ.measurable_set_le (PredOrder.pred i))
+  have : { x : α | τ x < i } = τ ⁻¹' Set.Iio i := rfl
+  rw [this, ← Iic_pred_of_not_is_min hi_min]
+  exact f.mono (pred_le i) _ (hτ.measurable_set_le <| pred i)
 
 end Preorderₓ
 
@@ -414,14 +512,14 @@ end MeasurableSet
 
 namespace IsStoppingTime
 
-theorem max [LinearOrderₓ ι] {f : Filtration ι m} {τ π : α → ι} (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime f π) :
-    IsStoppingTime f fun x => max (τ x) (π x) := by
+protected theorem max [LinearOrderₓ ι] {f : Filtration ι m} {τ π : α → ι} (hτ : IsStoppingTime f τ)
+    (hπ : IsStoppingTime f π) : IsStoppingTime f fun x => max (τ x) (π x) := by
   intro i
   simp_rw [max_le_iff, Set.set_of_and]
   exact (hτ i).inter (hπ i)
 
-theorem min [LinearOrderₓ ι] {f : Filtration ι m} {τ π : α → ι} (hτ : IsStoppingTime f τ) (hπ : IsStoppingTime f π) :
-    IsStoppingTime f fun x => min (τ x) (π x) := by
+protected theorem min [LinearOrderₓ ι] {f : Filtration ι m} {τ π : α → ι} (hτ : IsStoppingTime f τ)
+    (hπ : IsStoppingTime f π) : IsStoppingTime f fun x => min (τ x) (π x) := by
   intro i
   simp_rw [min_le_iff, Set.set_of_or]
   exact (hτ i).union (hπ i)
@@ -529,8 +627,8 @@ theorem measurable [TopologicalSpace ι] [MeasurableSpace ι] [BorelSpace ι] [O
   refine' @measurable_of_Iic ι α _ _ _ hτ.measurable_space _ _ _ _ _
   simp_rw [hτ.measurable_set, Set.Preimage, Set.mem_Iic]
   intro i j
-  rw [(_ : { x | τ x ≤ i } ∩ { x | τ x ≤ j } = { x | τ x ≤ LinearOrderₓ.min i j })]
-  · exact f.mono (min_le_rightₓ i j) _ (hτ (LinearOrderₓ.min i j))
+  rw [(_ : { x | τ x ≤ i } ∩ { x | τ x ≤ j } = { x | τ x ≤ min i j })]
+  · exact f.mono (min_le_rightₓ i j) _ (hτ (min i j))
     
   · ext
     simp only [Set.mem_inter_eq, iff_selfₓ, le_min_iff, Set.mem_set_of_eq]
@@ -555,7 +653,7 @@ variable [LinearOrderₓ ι]
 `i ≤ τ x`, and `u (τ x) x` otherwise.
 
 Intuitively, the stopped process stops evolving once the stopping time has occured. -/
-def stoppedProcess (u : ι → α → β) (τ : α → ι) : ι → α → β := fun i x => u (LinearOrderₓ.min i (τ x)) x
+def stoppedProcess (u : ι → α → β) (τ : α → ι) : ι → α → β := fun i x => u (min i (τ x)) x
 
 theorem stopped_process_eq_of_le {u : ι → α → β} {τ : α → ι} {i : ι} {x : α} (h : i ≤ τ x) :
     stoppedProcess u τ i x = u i x := by
@@ -565,8 +663,69 @@ theorem stopped_process_eq_of_ge {u : ι → α → β} {τ : α → ι} {i : ι
     stoppedProcess u τ i x = u (τ x) x := by
   simp [stopped_process, min_eq_rightₓ h]
 
--- We will need cadlag to generalize the following to continuous processes
+section ProgMeasurable
+
+variable [MeasurableSpace ι] [TopologicalSpace ι] [OrderTopology ι] [SecondCountableTopology ι] [BorelSpace ι]
+  [MetrizableSpace ι] [TopologicalSpace β] {u : ι → α → β} {τ : α → ι} {f : Filtration ι m}
+
+theorem prog_measurable_min_stopping_time (hτ : IsStoppingTime f τ) : ProgMeasurable f fun i x => min i (τ x) := by
+  intro i
+  let m_prod : MeasurableSpace (Set.Iic i × α) := MeasurableSpace.prod _ (f i)
+  let m_set : ∀ t : Set (Set.Iic i × α), MeasurableSpace t := fun _ => @Subtype.measurableSpace (Set.Iic i × α) _ m_prod
+  let s := { p : Set.Iic i × α | τ p.2 ≤ i }
+  have hs : measurable_set[m_prod] s := @measurable_snd (Set.Iic i) α _ (f i) _ (hτ i)
+  have h_meas_fst : ∀ t : Set (Set.Iic i × α), measurable[m_set t] fun x : t => ((x : Set.Iic i × α).fst : ι) :=
+    fun t => (@measurable_subtype_coe (Set.Iic i × α) m_prod _).fst.subtype_coe
+  apply Measurable.strongly_measurable
+  refine' measurable_of_restrict_of_restrict_compl hs _ _
+  · refine' @Measurable.min _ _ _ _ _ (m_set s) _ _ _ _ _ (h_meas_fst s) _
+    refine' @measurable_of_Iic ι s _ _ _ (m_set s) _ _ _ _ fun j => _
+    have h_set_eq :
+      (fun x : s => τ (x : Set.Iic i × α).snd) ⁻¹' Set.Iic j =
+        (fun x : s => (x : Set.Iic i × α).snd) ⁻¹' { x | τ x ≤ min i j } :=
+      by
+      ext1 x
+      simp only [Set.mem_preimage, Set.mem_Iic, iff_and_self, le_min_iff, Set.mem_set_of_eq]
+      exact fun _ => x.prop
+    rw [h_set_eq]
+    suffices h_meas : @Measurable _ _ (m_set s) (f i) fun x : s => (x : Set.Iic i × α).snd
+    exact h_meas (f.mono (min_le_leftₓ _ _) _ (hτ.measurable_set_le (min i j)))
+    exact (@measurable_snd _ _ _ (f i)).comp (@measurable_subtype_coe _ m_prod _)
+    
+  · suffices h_min_eq_left :
+      (fun x : sᶜ => min (↑(x : Set.Iic i × α).fst) (τ (x : Set.Iic i × α).snd)) = fun x : sᶜ =>
+        ↑(x : Set.Iic i × α).fst
+    · rw [Set.restrict, h_min_eq_left]
+      exact h_meas_fst _
+      
+    ext1 x
+    rw [min_eq_leftₓ]
+    have hx_fst_le : ↑(x : Set.Iic i × α).fst ≤ i := (x : Set.Iic i × α).fst.Prop
+    refine' hx_fst_le.trans (le_of_ltₓ _)
+    convert x.prop
+    simp only [not_leₓ, Set.mem_compl_eq, Set.mem_set_of_eq]
+    
+
+theorem ProgMeasurable.stopped_process (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
+    ProgMeasurable f (stoppedProcess u τ) :=
+  h.comp (prog_measurable_min_stopping_time hτ) fun i x => min_le_leftₓ _ _
+
+theorem ProgMeasurable.adapted_stopped_process (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
+    Adapted f (stoppedProcess u τ) :=
+  (h.stoppedProcess hτ).Adapted
+
+theorem ProgMeasurable.measurable_stopped_process (hu : ProgMeasurable f u) (hτ : IsStoppingTime f τ) (i : ι) :
+    StronglyMeasurable (stoppedProcess u τ i) :=
+  (hu.adapted_stopped_process hτ i).mono (f.le _)
+
+end ProgMeasurable
+
+end LinearOrderₓ
+
 section Nat
+
+/-! ### Filtrations indexed by `ℕ` -/
+
 
 open Filtration
 
@@ -593,6 +752,42 @@ theorem stopped_value_sub_eq_sum' [AddCommGroupₓ β] (hle : τ ≤ π) {N : �
 section AddCommMonoidₓ
 
 variable [AddCommMonoidₓ β]
+
+/-- For filtrations indexed by `ℕ`, `adapted` and `prog_measurable` are equivalent. This lemma
+provides `adapted f u → prog_measurable f u`. See `prog_measurable.adapted` for the reverse
+direction, which is true more generally. -/
+theorem Adapted.prog_measurable_of_nat [TopologicalSpace β] [HasContinuousAdd β] (h : Adapted f u) :
+    ProgMeasurable f u := by
+  intro i
+  have :
+    (fun p : ↥(Set.Iic i) × α => u (↑p.fst) p.snd) = fun p : ↥(Set.Iic i) × α =>
+      ∑ j in Finset.range (i + 1), if ↑p.fst = j then u j p.snd else 0 :=
+    by
+    ext1 p
+    rw [Finset.sum_ite_eq]
+    have hp_mem : (p.fst : ℕ) ∈ Finset.range (i + 1) := finset.mem_range_succ_iff.mpr p.fst.prop
+    simp only [hp_mem, if_true]
+  rw [this]
+  refine' Finset.strongly_measurable_sum _ fun j hj => strongly_measurable.ite _ _ _
+  · suffices h_meas : measurable[MeasurableSpace.prod _ (f i)] fun a : ↥(Set.Iic i) × α => (a.fst : ℕ)
+    exact h_meas (measurable_set_singleton j)
+    exact (@measurable_fst _ α _ (f i)).subtype_coe
+    
+  · have h_le : j ≤ i := finset.mem_range_succ_iff.mp hj
+    exact (strongly_measurable.mono (h j) (f.mono h_le)).comp_measurable (@measurable_snd _ α _ (f i))
+    
+  · exact strongly_measurable_const
+    
+
+/-- For filtrations indexed by `ℕ`, the stopped process obtained from an adapted process is
+adapted. -/
+theorem Adapted.stopped_process_of_nat [TopologicalSpace β] [HasContinuousAdd β] (hu : Adapted f u)
+    (hτ : IsStoppingTime f τ) : Adapted f (stoppedProcess u τ) :=
+  (hu.prog_measurable_of_nat.stoppedProcess hτ).Adapted
+
+theorem Adapted.measurable_stopped_process_of_nat [TopologicalSpace β] [HasContinuousAdd β] (hτ : IsStoppingTime f τ)
+    (hu : Adapted f u) (n : ℕ) : StronglyMeasurable (stoppedProcess u τ n) :=
+  hu.prog_measurable_of_nat.measurable_stopped_process hτ n
 
 theorem stopped_value_eq {N : ℕ} (hbdd : ∀ x, τ x ≤ N) :
     stoppedValue u τ = fun x => (∑ i in Finset.range (N + 1), Set.indicator { x | τ x = i } (u i)) x := by
@@ -639,40 +834,14 @@ theorem stopped_process_eq (n : ℕ) :
       
     
 
-theorem Adapted.stopped_process [MeasurableSpace β] [HasMeasurableAdd₂ β] (hu : Adapted f u) (hτ : IsStoppingTime f τ) :
-    Adapted f (stoppedProcess u τ) := by
-  intro i
-  rw [stopped_process_eq]
-  refine' @Measurable.add _ _ _ _ (f i) _ _ _ _ _
-  · refine' (hu i).indicator _
-    convert MeasurableSet.union (hτ i).Compl (hτ.measurable_set_eq i)
-    ext x
-    change i ≤ τ x ↔ ¬τ x ≤ i ∨ τ x = i
-    rw [not_leₓ, le_iff_lt_or_eqₓ, eq_comm]
-    
-  · refine' @Finset.measurable_sum' _ _ _ _ _ _ (f i) _ _ _
-    refine' fun j hij => Measurable.indicator _ _
-    · rw [Finset.mem_range] at hij
-      exact Measurable.le (f.mono hij.le) (hu j)
-      
-    · rw [Finset.mem_range] at hij
-      refine' f.mono hij.le _ _
-      convert hτ.measurable_set_eq j
-      
-    
-
 end AddCommMonoidₓ
 
 section NormedGroup
 
-variable [MeasurableSpace β] [NormedGroup β] [HasMeasurableAdd₂ β]
+variable [NormedGroup β] {p : ℝ≥0∞} {μ : Measure α}
 
-theorem measurable_stopped_process (hτ : IsStoppingTime f τ) (hu : Adapted f u) (n : ℕ) :
-    Measurable (stoppedProcess u τ n) :=
-  (hu.stoppedProcess hτ n).le (f.le _)
-
-theorem mem_ℒp_stopped_process {p : ℝ≥0∞} [BorelSpace β] {μ : Measure α} (hτ : IsStoppingTime f τ)
-    (hu : ∀ n, Memℒp (u n) p μ) (n : ℕ) : Memℒp (stoppedProcess u τ n) p μ := by
+theorem mem_ℒp_stopped_process (hτ : IsStoppingTime f τ) (hu : ∀ n, Memℒp (u n) p μ) (n : ℕ) :
+    Memℒp (stoppedProcess u τ n) p μ := by
   rw [stopped_process_eq]
   refine' mem_ℒp.add _ _
   · exact mem_ℒp.indicator (f.le n { a : α | n ≤ τ a } (hτ.measurable_set_ge n)) (hu n)
@@ -685,13 +854,13 @@ theorem mem_ℒp_stopped_process {p : ℝ≥0∞} [BorelSpace β] {μ : Measure 
     exact f.le i { a : α | τ a = i } (hτ.measurable_set_eq i)
     
 
-theorem integrable_stopped_process [BorelSpace β] {μ : Measure α} (hτ : IsStoppingTime f τ)
-    (hu : ∀ n, Integrable (u n) μ) (n : ℕ) : Integrable (stoppedProcess u τ n) μ := by
+theorem integrable_stopped_process (hτ : IsStoppingTime f τ) (hu : ∀ n, Integrable (u n) μ) (n : ℕ) :
+    Integrable (stoppedProcess u τ n) μ := by
   simp_rw [← mem_ℒp_one_iff_integrable]  at hu⊢
   exact mem_ℒp_stopped_process hτ hu n
 
-theorem mem_ℒp_stopped_value {p : ℝ≥0∞} [BorelSpace β] {μ : Measure α} (hτ : IsStoppingTime f τ)
-    (hu : ∀ n, Memℒp (u n) p μ) {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : Memℒp (stoppedValue u τ) p μ := by
+theorem mem_ℒp_stopped_value (hτ : IsStoppingTime f τ) (hu : ∀ n, Memℒp (u n) p μ) {N : ℕ} (hbdd : ∀ x, τ x ≤ N) :
+    Memℒp (stoppedValue u τ) p μ := by
   rw [stopped_value_eq hbdd]
   suffices mem_ℒp (fun x => ∑ i : ℕ in Finset.range (N + 1), { a : α | τ a = i }.indicator (u i) x) p μ by
     convert this
@@ -700,16 +869,14 @@ theorem mem_ℒp_stopped_value {p : ℝ≥0∞} [BorelSpace β] {μ : Measure α
   refine' mem_ℒp_finset_sum _ fun i hi => mem_ℒp.indicator _ (hu i)
   exact f.le i { a : α | τ a = i } (hτ.measurable_set_eq i)
 
-theorem integrable_stopped_value [BorelSpace β] {μ : Measure α} (hτ : IsStoppingTime f τ) (hu : ∀ n, Integrable (u n) μ)
-    {N : ℕ} (hbdd : ∀ x, τ x ≤ N) : Integrable (stoppedValue u τ) μ := by
+theorem integrable_stopped_value (hτ : IsStoppingTime f τ) (hu : ∀ n, Integrable (u n) μ) {N : ℕ}
+    (hbdd : ∀ x, τ x ≤ N) : Integrable (stoppedValue u τ) μ := by
   simp_rw [← mem_ℒp_one_iff_integrable]  at hu⊢
   exact mem_ℒp_stopped_value hτ hu hbdd
 
 end NormedGroup
 
 end Nat
-
-end LinearOrderₓ
 
 end MeasureTheory
 

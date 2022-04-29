@@ -64,7 +64,7 @@ end HomotopyEquiv
 
 end ContinuousMap
 
-open_locale ContinuousMap
+open ContinuousMap
 
 namespace Homeomorph
 

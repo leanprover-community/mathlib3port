@@ -56,9 +56,9 @@ combinatorial line, Ramsey theory, arithmetic progession
 -/
 
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators
+open BigOperators
 
 universe u v
 
@@ -185,15 +185,15 @@ private theorem exists_mono_in_high_dimension' :
     fun α α' e =>
       forall_imp fun κ =>
         forall_imp fun _ =>
-          Exists.impₓ fun ι =>
-            Exists.impₓ fun _ h C =>
+          Exists.imp fun ι =>
+            Exists.imp fun _ h C =>
               let ⟨l, c, lc⟩ := h fun v => C (e ∘ v)
               ⟨l.map e, c,
                 e.forall_congr_left.mp fun x => by
                   rw [← lc x, line.map_apply]⟩)
     (by
       -- This deals with the degenerate case where `α` is empty.
-      intros κ _
+      intro κ _
       by_cases' h : Nonempty κ
       · skip
         exact ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, Pempty.rec _⟩⟩
@@ -202,11 +202,11 @@ private theorem exists_mono_in_high_dimension' :
         )
     (by
       -- Now we have to show that the theorem holds for `option α` if it holds for `α`.
-      intros α _ ihα κ _
+      intro α _ ihα κ _
       -- Later we'll need `α` to be nonempty. So we first deal with the trivial case where `α` is empty.
       -- Then `option α` has only one element, so any line is monochromatic.
       by_cases' h : Nonempty α
-      on_goal 1 =>
+      on_goal 2 =>
         refine' ⟨Unit, inferInstance, fun C => ⟨diagonal _ _, C fun _ => none, _⟩⟩
         rintro (_ | ⟨a⟩)
         rfl
@@ -258,7 +258,7 @@ private theorem exists_mono_in_high_dimension' :
       specialize hι C'
       rcases hι with (⟨s, sr⟩ | _)
       -- By above, we are done if `C'` has a monochromatic line.
-      on_goal 1 =>
+      on_goal 2 =>
         exact Or.inr (mono_of_mono hι)
       -- Here we assume `C'` has `r` color focused lines. We split into cases depending on whether one of
       -- these `r` lines has the same color as the focus point.

@@ -39,6 +39,10 @@ attribute [protected] Pointed.X
 def of {X : Type _} (point : X) : Pointed :=
   ⟨X, point⟩
 
+@[simp]
+theorem coe_of {X : Type _} (point : X) : ↥(of point) = X :=
+  rfl
+
 alias of ← Prod.pointed
 
 instance : Inhabited Pointed :=

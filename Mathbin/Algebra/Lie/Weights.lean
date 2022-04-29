@@ -61,9 +61,9 @@ open TensorProduct
 
 open TensorProduct.LieModule
 
-open_locale BigOperators
+open BigOperators
 
-open_locale TensorProduct
+open TensorProduct
 
 /-- Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a
 map `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,
@@ -233,7 +233,7 @@ end LieModule
 
 namespace LieAlgebra
 
-open_locale TensorProduct
+open TensorProduct
 
 open TensorProduct.LieModule
 

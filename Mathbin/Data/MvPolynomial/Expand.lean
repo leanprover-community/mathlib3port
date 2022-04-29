@@ -18,7 +18,7 @@ This operation is called `mv_polynomial.expand` and it is an algebra homomorphis
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace MvPolynomial
 

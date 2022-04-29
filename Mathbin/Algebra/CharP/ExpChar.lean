@@ -51,23 +51,16 @@ theorem exp_char_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
 theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime := by
   cases' hq with q hq_one hq_prime
-  · constructor
+  · apply iff_of_false
     · rintro rfl
-      exact False.elim (one_ne_zero (hp.eq R (CharP.of_char_zero R)))
+      exact one_ne_zero (hp.eq R (CharP.of_char_zero R))
       
     · intro pprime
       rw [(CharP.eq R hp inferInstance : p = 0)] at pprime
-      exact False.elim (Nat.not_prime_zero pprime)
+      exact Nat.not_prime_zero pprime
       
     
-  · constructor
-    · intro hpq
-      rw [hpq]
-      exact hq_prime
-      
-    · intro
-      exact CharP.eq R hp hq_hchar
-      
+  · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
     
 
 section Nontrivial
@@ -76,7 +69,7 @@ variable [Nontrivial R]
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 := by
-  cases' hq
+  cases hq
   · exact CharP.eq R hp inferInstance
     
   · exact False.elim (CharP.char_ne_one R 1 rfl)
@@ -85,7 +78,7 @@ theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] 
 /-- The characteristic is zero if the exponential characteristic is one. -/
 -- see Note [lower instance priority]
 instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R := by
-  cases' hq
+  cases hq
   · assumption
     
   · exact False.elim (CharP.char_ne_one R 1 rfl)

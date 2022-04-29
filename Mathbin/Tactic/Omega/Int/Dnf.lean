@@ -16,7 +16,7 @@ namespace Omega
 
 namespace Int
 
-open_locale Omega.Int
+open Omega.Int
 
 /-- push_neg p returns the result of normalizing ¬ p by
     pushing the outermost negation all the way down,
@@ -207,18 +207,18 @@ theorem exists_clause_holds {v : Nat → Int} :
   · apply List.exists_mem_cons_ofₓ
     constructor
     · simp only [preterm.val, preform.holds] at h2
-      rw [List.forall_mem_singleton]
+      rw [List.forall_mem_singletonₓ]
       simp only [h2, Omega.Int.val_canonize, Omega.Term.val_sub, sub_self]
       
-    · apply List.forall_mem_nil
+    · apply List.forall_mem_nilₓ
       
     
   · apply List.exists_mem_cons_ofₓ
     constructor
-    · apply List.forall_mem_nil
+    · apply List.forall_mem_nilₓ
       
     · simp only [preterm.val, preform.holds] at h2
-      rw [List.forall_mem_singleton]
+      rw [List.forall_mem_singletonₓ]
       simp only [val_canonize, preterm.val, term.val_sub]
       rw [le_sub, sub_zero]
       assumption
@@ -242,7 +242,7 @@ theorem exists_clause_holds {v : Nat → Int} :
     constructor <;> assumption
     
 
-theorem clauses_sat_dnf_core {p : Preform} : NegFree p → p.sat → Clauses.Sat (dnfCore p) := by
+theorem clauses_sat_dnf_core {p : Preform} : NegFree p → p.Sat → Clauses.Sat (dnfCore p) := by
   intro h1 h2
   cases' h2 with v h2
   rcases exists_clause_holds h1 h2 with ⟨c, h3, h4⟩

@@ -61,7 +61,7 @@ open Filter hiding map
 
 open Function MeasurableSpace
 
-open_locale Classical TopologicalSpace BigOperators Filter Ennreal Nnreal
+open Classical TopologicalSpace BigOperators Filter Ennreal Nnreal
 
 variable {α β γ δ ι : Type _}
 
@@ -407,11 +407,7 @@ theorem ae_eq_set_inter {s' t' : Set α} (h : s =ᵐ[μ] t) (h' : s' =ᵐ[μ] t'
 @[to_additive]
 theorem _root_.set.mul_indicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} (h : s.mulIndicator f =ᵐ[μ] 1) :
     μ (s ∩ Function.MulSupport f) = 0 := by
-  rw [Filter.EventuallyEq, ae_iff] at h
-  convert h
-  ext a
-  rw [← Set.mul_indicator_eq_one_iff]
-  rfl
+  simpa [Filter.EventuallyEq, ae_iff] using h
 
 /-- If `s ⊆ t` modulo a set of measure `0`, then `μ s ≤ μ t`. -/
 @[mono]

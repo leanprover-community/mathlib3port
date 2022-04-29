@@ -30,7 +30,7 @@ unsafe def try_for (max : parse parser.pexpr) (tac : itactic) : tactic Unit := d
   fun s =>
     match _root_.try_for max (tac s) with
     | some r => r
-    | none => (tactic.trace "try_for timeout, using sorry" >> admit) s
+    | none => (tactic.trace "try_for timeout, using sorry" >> tactic.admit) s
 
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
 /-- Multiple `subst`. `substs x y z` is the same as `subst x, subst y, subst z`. -/
@@ -84,7 +84,7 @@ non-interactive tactic for patterns like `tac1; id {tac2}` where `tac2` is non-i
 protected unsafe def id (tac : itactic) : tactic Unit :=
   tac
 
-/-- `work_on_goal n { tac }` creates a block scope for the `n`-goal (indexed from zero),
+/-- `work_on_goal n { tac }` creates a block scope for the `n`-goal,
 and does not require that the goal be solved at the end
 (any remaining subgoals are inserted back into the list of goals).
 
@@ -93,16 +93,17 @@ Typically usage might look like:
 intros,
 simp,
 apply lemma_1,
-work_on_goal 2
+work_on_goal 3
 { dsimp,
   simp },
 refl
 ````
 
-See also `id { tac }`, which is equivalent to `work_on_goal 0 { tac }`.
+See also `id { tac }`, which is equivalent to `work_on_goal 1 { tac }`.
 -/
 unsafe def work_on_goal : parse small_nat → itactic → tactic Unit
-  | n, t => do
+  | 0, t => fail "work_on_goal failed: goals are 1-indexed"
+  | n + 1, t => do
     let goals ← get_goals
     let earlier_goals := goals.take n
     let later_goals := goals.drop (n + 1)
@@ -191,7 +192,7 @@ private unsafe def generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr = id" <| parser.pexpr 0 >>= generalize_arg_p_aux
 
 @[nolint def_lemma]
-theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
+noncomputable theorem generalizeAAux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
   h α id
 
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
@@ -390,6 +391,26 @@ unsafe def guard_hyp_nums (n : ℕ) : tactic Unit := do
   let k ← local_context
   guardₓ (n = k) <|> fail f! "{k} hypotheses found"
 
+/-- `guard_hyp_mod_implicit h : t` fails if the type of the hypothesis `h`
+is not definitionally equal to `t` modulo none transparency
+(i.e., unifying the implicit arguments modulo semireducible transparency).
+We use this tactic for writing tests.
+-/
+unsafe def guard_hyp_mod_implicit (n : parse ident) (p : parse <| tk ":" *> texpr) : tactic Unit := do
+  let h ← get_local n >>= infer_type >>= instantiate_mvars
+  let e ← to_expr p
+  is_def_eq h e transparency.none
+
+/-- `guard_target_mod_implicit t` fails if the target of the main goal
+is not definitionally equal to `t` modulo none transparency
+(i.e., unifying the implicit arguments modulo semireducible transparency).
+We use this tactic for writing tests.
+-/
+unsafe def guard_target_mod_implicit (p : parse texpr) : tactic Unit := do
+  let tgt ← target
+  let e ← to_expr p
+  is_def_eq tgt e transparency.none
+
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
 /-- Test that `t` is the tag of the main goal. -/
 unsafe def guard_tags (tags : parse («expr *» ident)) : tactic Unit := do
@@ -451,16 +472,14 @@ add_tactic_doc
     declNames := [`tactic.interactive.refine_struct, `tactic.interactive.apply_field, `tactic.interactive.have_field],
     tags := ["structures"], inheritDescriptionFrom := `tactic.interactive.refine_struct }
 
-/-- `apply_rules hs n` applies the list of lemmas `hs` and `assumption` on the
+/-- `apply_rules hs with attrs n` applies the list of lemmas `hs` and all lemmas tagged with an
+attribute from the list `attrs`, as well as the `assumption` tactic on the
 first goal and the resulting subgoals, iteratively, at most `n` times.
 `n` is optional, equal to 50 by default.
 You can pass an `apply_cfg` option argument as `apply_rules hs n opt`.
 (A typical usage would be with `apply_rules hs n { md := reducible })`,
 which asks `apply_rules` to not unfold `semireducible` definitions (i.e. most)
 when checking if a lemma matches the goal.)
-
-`hs` can contain user attributes: in this case all theorems with this
-attribute are added to the list of rules.
 
 For instance:
 
@@ -477,12 +496,13 @@ a + c * e + a + c + 0 ≤ b + d * e + b + d + e :=
 -- any of the following lines solve the goal:
 add_le_add (add_le_add (add_le_add (add_le_add h1 (mul_le_mul_of_nonneg_right h2 h3)) h1 ) h2) h3
 by apply_rules [add_le_add, mul_le_mul_of_nonneg_right]
-by apply_rules [mono_rules]
-by apply_rules mono_rules
+by apply_rules with mono_rules
+by apply_rules [add_le_add] with mono_rules
 ```
 -/
-unsafe def apply_rules (hs : parse pexpr_list_or_texpr) (n : Nat := 50) (opt : ApplyCfg := {  }) : tactic Unit :=
-  tactic.apply_rules hs n opt
+unsafe def apply_rules (args : parse opt_pexpr_list) (attrs : parse with_ident_list) (n : Nat := 50)
+    (opt : ApplyCfg := {  }) : tactic Unit :=
+  tactic.apply_rules args attrs n opt
 
 add_tactic_doc
   { Name := "apply_rules", category := DocCategory.tactic, declNames := [`tactic.interactive.apply_rules],

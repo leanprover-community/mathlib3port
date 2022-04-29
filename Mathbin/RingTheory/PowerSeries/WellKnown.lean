@@ -60,7 +60,7 @@ section Field
 
 variable (A A' : Type _) [Ringₓ A] [Ringₓ A'] [Algebra ℚ A] [Algebra ℚ A']
 
-open_locale Nat
+open Nat
 
 /-- Power series for the exponential function at zero. -/
 def exp : PowerSeries A :=

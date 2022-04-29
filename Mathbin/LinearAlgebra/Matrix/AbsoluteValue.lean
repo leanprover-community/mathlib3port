@@ -23,9 +23,9 @@ This file proves some bounds on matrices involving absolute values.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 namespace Matrix
 

@@ -4,10 +4,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.EqToHom
+import Mathbin.CategoryTheory.Quotient
 import Mathbin.Combinatorics.Quiver.Path
 
 /-!
 # The category paths on a quiver.
+When `C` is a quiver, `paths C` is the category of paths.
+
+## When the quiver is itself a category
+We provide `path_composition : paths C ⥤ C`.
+
+We check that the quotient of the path category of a category by the canonical relation
+(paths are related if they compose to the same path) is equivalent to the original category.
 -/
 
 
@@ -89,6 +97,10 @@ def composePathₓ {X : C} : ∀ {Y : C} p : Path X Y, X ⟶ Y
   | _, path.cons p e => compose_path p ≫ e
 
 @[simp]
+theorem compose_path_to_path {X Y : C} (f : X ⟶ Y) : composePathₓ f.toPath = f :=
+  Category.id_comp _
+
+@[simp]
 theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     composePathₓ (f.comp g) = composePathₓ f ≫ composePathₓ g := by
   induction' g with Y' Z' g e ih
@@ -96,6 +108,85 @@ theorem compose_path_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     
   · simp [ih]
     
+
+@[simp]
+theorem compose_path_id {X : Paths C} : composePathₓ (𝟙 X) = 𝟙 X :=
+  rfl
+
+@[simp]
+theorem compose_path_comp' {X Y Z : Paths C} (f : X ⟶ Y) (g : Y ⟶ Z) :
+    composePathₓ (f ≫ g) = composePathₓ f ≫ composePathₓ g :=
+  compose_path_comp f g
+
+variable (C)
+
+/-- Composition of paths as functor from the path category of a category to the category. -/
+@[simps]
+def pathComposition : Paths C ⥤ C where
+  obj := fun X => X
+  map := fun X Y f => composePathₓ f
+
+/-- The canonical relation on the path category of a category:
+two paths are related if they compose to the same morphism. -/
+-- TODO: This, and what follows, should be generalized to
+-- the `hom_rel` for the kernel of any functor.
+-- Indeed, this should be part of an equivalence between congruence relations on a category `C`
+-- and full, essentially surjective functors out of `C`.
+@[simp]
+def PathsHomRel : HomRel (Paths C) := fun X Y p q => (pathComposition C).map p = (pathComposition C).map q
+
+/-- The functor from a category to the canonical quotient of its path category. -/
+@[simps]
+def toQuotientPaths : C ⥤ Quotient (PathsHomRel C) where
+  obj := fun X => Quotient.mk X
+  map := fun X Y f => Quot.mk _ f.toPath
+  map_id' := fun X =>
+    Quot.sound
+      (Quotient.CompClosure.of _ _ _
+        (by
+          simp ))
+  map_comp' := fun X Y Z f g =>
+    Quot.sound
+      (Quotient.CompClosure.of _ _ _
+        (by
+          simp ))
+
+/-- The functor from the canonical quotient of a path category of a category
+to the original category. -/
+@[simps]
+def quotientPathsTo : Quotient (PathsHomRel C) ⥤ C :=
+  Quotient.lift _ (pathComposition C) fun X Y p q w => w
+
+/-- The canonical quotient of the path category of a category
+is equivalent to the original category. -/
+def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
+  Functor := quotientPathsTo C
+  inverse := toQuotientPaths C
+  unitIso :=
+    NatIso.ofComponents
+      (fun X => by
+        cases X
+        rfl)
+      (by
+        intros
+        cases X
+        cases Y
+        induction f
+        dsimp
+        simp only [category.comp_id, category.id_comp]
+        apply Quot.sound
+        apply quotient.comp_closure.of
+        simp [paths_hom_rel])
+  counitIso :=
+    NatIso.ofComponents (fun X => Iso.refl _)
+      (by
+        tidy)
+  functor_unit_iso_comp' := by
+    intros
+    cases X
+    dsimp
+    simp
+    rfl
 
 end
 

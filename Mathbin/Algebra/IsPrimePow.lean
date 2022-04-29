@@ -120,6 +120,32 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
   rintro rfl
   simpa using hm₁
 
+theorem is_prime_pow_iff_factorization_eq_single {n : ℕ} :
+    IsPrimePow n ↔ ∃ p k : ℕ, 0 < k ∧ n.factorization = Finsupp.single p k := by
+  rw [is_prime_pow_nat_iff]
+  refine' exists₂_congrₓ fun p k => _
+  constructor
+  · rintro ⟨hp, hk, hn⟩
+    exact
+      ⟨hk, by
+        rw [← hn, Nat.Prime.factorization_pow hp]⟩
+    
+  · rintro ⟨hk, hn⟩
+    have hn0 : n ≠ 0 := by
+      rintro rfl
+      simpa only [Finsupp.single_eq_zero, eq_comm, Nat.factorization_zero, hk.ne'] using hn
+    rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]
+    exact
+      ⟨Nat.prime_of_mem_factorization
+          (by
+            simp [hn, hk.ne'] : p ∈ n.factorization.support),
+        hk, rfl⟩
+    
+
+theorem is_prime_pow_iff_card_support_factorization_eq_one {n : ℕ} : IsPrimePow n ↔ n.factorization.support.card = 1 :=
+  by
+  simp_rw [is_prime_pow_iff_factorization_eq_single, Finsupp.card_support_eq_one', exists_prop, pos_iff_ne_zero]
+
 /-- An equivalent definition for prime powers: `n` is a prime power iff there is a unique prime
 dividing it. -/
 theorem is_prime_pow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n := by

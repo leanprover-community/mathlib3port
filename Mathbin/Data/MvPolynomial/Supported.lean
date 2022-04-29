@@ -39,7 +39,7 @@ noncomputable def supported (s : Set σ) : Subalgebra R (MvPolynomial σ R) :=
 
 variable {σ R}
 
-open_locale Classical
+open Classical
 
 open Algebra
 

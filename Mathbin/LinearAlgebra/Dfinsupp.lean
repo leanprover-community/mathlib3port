@@ -243,11 +243,11 @@ open Dfinsupp
 
 theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] (S : Submodule R N)
     (f : Π₀ i, β i) (g : ∀ i, β i → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.Sum g ∈ S :=
-  S.toAddSubmonoid.dfinsupp_sum_mem f g h
+  dfinsupp_sum_mem S f g h
 
 theorem dfinsupp_sum_add_hom_mem {β : ι → Type _} [∀ i, AddZeroClass (β i)] (S : Submodule R N) (f : Π₀ i, β i)
     (g : ∀ i, β i →+ N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : Dfinsupp.sumAddHom g f ∈ S :=
-  S.toAddSubmonoid.dfinsupp_sum_add_hom_mem f g h
+  dfinsupp_sum_add_hom_mem S f g h
 
 /-- The supremum of a family of submodules is equal to the range of `dfinsupp.lsum`; that is
 every element in the `supr` can be produced from taking a finite number of non-zero elements
@@ -271,9 +271,7 @@ theorem bsupr_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
     (⨆ (i) (h : p i), S i) = ((Dfinsupp.lsum ℕ fun i => (S i).Subtype).comp (Dfinsupp.filterLinearMap R _ p)).range :=
   by
   apply le_antisymmₓ
-  · apply bsupr_le _
-    intro i hi y hy
-    refine' ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
+  · refine' supr₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
     rw [LinearMap.comp_apply, filter_linear_map_apply, filter_single_pos _ _ hi]
     exact Dfinsupp.sum_add_hom_single _ _ _
     
@@ -382,7 +380,7 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
   rw [independent_iff_forall_dfinsupp] at h
   suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥ by
     -- Lean can't find this without our help
-    let this' : AddCommGroupₓ (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
+    let this : AddCommGroupₓ (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
     rw [LinearMap.ker_eq_bot] at this
     exact this
   rw [LinearMap.ker_eq_bot']

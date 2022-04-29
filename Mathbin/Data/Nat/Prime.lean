@@ -6,9 +6,10 @@ Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 import Mathbin.Data.List.Prime
 import Mathbin.Data.List.Sort
 import Mathbin.Data.Nat.Gcd
-import Mathbin.Data.Nat.Sqrt
-import Mathbin.Tactic.NormNum
+import Mathbin.Data.Nat.SqrtNormNum
+import Mathbin.Data.Set.Finite
 import Mathbin.Tactic.Wlog
+import Mathbin.Algebra.Parity
 
 /-!
 # Prime numbers
@@ -20,7 +21,8 @@ This file deals with prime numbers: natural numbers `p ≥ 2` whose only divisor
 - `nat.prime`: the predicate that expresses that a natural number `p` is prime
 - `nat.primes`: the subtype of natural numbers that are prime
 - `nat.min_fac n`: the minimal prime factor of a natural number `n ≠ 1`
-- `nat.exists_infinite_primes`: Euclid's theorem that there exist infinitely many prime numbers
+- `nat.exists_infinite_primes`: Euclid's theorem that there exist infinitely many prime numbers.
+  This also appears as `nat.not_bdd_above_set_of_prime` and `nat.infinite_set_of_prime`.
 - `nat.factors n`: the prime factorization of `n`
 - `nat.factors_unique`: uniqueness of the prime factorisation
 * `nat.prime_iff`: `nat.prime` coincides with the general definition of `prime`
@@ -31,7 +33,7 @@ This file deals with prime numbers: natural numbers `p ≥ 2` whose only divisor
 
 open Bool Subtype
 
-open_locale Nat
+open Nat
 
 namespace Nat
 
@@ -184,13 +186,8 @@ theorem dvd_prime_two_le {p m : ℕ} (pp : Prime p) (H : 2 ≤ m) : m ∣ p ↔ 
 theorem prime_dvd_prime_iff_eq {p q : ℕ} (pp : p.Prime) (qp : q.Prime) : p ∣ q ↔ p = q :=
   dvd_prime_two_le qp (Prime.two_le pp)
 
-theorem Prime.not_dvd_one {p : ℕ} (pp : Prime p) : ¬p ∣ 1
-  | d =>
-    not_le_of_gtₓ pp.one_lt <|
-      le_of_dvdₓ
-        (by
-          decide)
-        d
+theorem Prime.not_dvd_one {p : ℕ} (pp : Prime p) : ¬p ∣ 1 :=
+  pp.not_dvd_one
 
 theorem not_prime_mul {a b : ℕ} (a1 : 1 < a) (b1 : 1 < b) : ¬Prime (a * b) := fun h =>
   ne_of_ltₓ (Nat.mul_lt_mul_of_pos_leftₓ b1 (lt_of_succ_ltₓ a1)) <| by
@@ -199,6 +196,23 @@ theorem not_prime_mul {a b : ℕ} (a1 : 1 < a) (b1 : 1 < b) : ¬Prime (a * b) :=
 theorem not_prime_mul' {a b n : ℕ} (h : a * b = n) (h₁ : 1 < a) (h₂ : 1 < b) : ¬Prime n := by
   rw [← h]
   exact not_prime_mul h₁ h₂
+
+theorem prime_mul_iff {a b : ℕ} : Nat.Prime (a * b) ↔ a.Prime ∧ b = 1 ∨ b.Prime ∧ a = 1 := by
+  simp only [iff_selfₓ, irreducible_mul_iff, ← irreducible_iff_nat_prime, Nat.is_unit_iff]
+
+theorem Prime.dvd_iff_eq {p a : ℕ} (hp : p.Prime) (a1 : a ≠ 1) : a ∣ p ↔ p = a := by
+  refine'
+    ⟨_, by
+      rintro rfl
+      rfl⟩
+  -- rintro ⟨j, rfl⟩ does not work, due to `nat.prime` depending on the class `irreducible`
+  rintro ⟨j, hj⟩
+  rw [hj] at hp⊢
+  rcases prime_mul_iff.mp hp with (⟨h, rfl⟩ | ⟨h, rfl⟩)
+  · exact mul_oneₓ _
+    
+  · exact (a1 rfl).elim
+    
 
 section MinFac
 
@@ -469,11 +483,31 @@ theorem exists_infinite_primes (n : ℕ) : ∃ p, n ≤ p ∧ Prime p :=
       pp.not_dvd_one h₂
   ⟨p, np, pp⟩
 
+/-- A version of `nat.exists_infinite_primes` using the `bdd_above` predicate. -/
+theorem not_bdd_above_set_of_prime : ¬BddAbove { p | Prime p } := by
+  rw [not_bdd_above_iff]
+  intro n
+  obtain ⟨p, hi, hp⟩ := exists_infinite_primes n.succ
+  exact ⟨p, hp, hi⟩
+
+/-- A version of `nat.exists_infinite_primes` using the `set.infinite` predicate. -/
+theorem infinite_set_of_prime : { p | Prime p }.Infinite :=
+  Set.infinite_of_not_bdd_above not_bdd_above_set_of_prime
+
 theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
   p.mod_two_eq_zero_or_one.imp_left fun h =>
     ((hp.eq_one_or_self_of_dvd 2 (dvd_of_mod_eq_zeroₓ h)).resolve_left
         (by
           decide)).symm
+
+theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
+  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_mod p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
+
+/-- A prime `p` satisfies `p % 2 = 1` if and only if `p ≠ 2`. -/
+theorem Prime.mod_two_eq_one_iff_ne_two {p : ℕ} [Fact p.Prime] : p % 2 = 1 ↔ p ≠ 2 := by
+  refine' ⟨fun h hf => _, (Nat.Prime.eq_two_or_odd <| Fact.out p.prime).resolve_left⟩
+  rw [hf] at h
+  simpa using h
 
 theorem coprime_of_dvd {m n : ℕ} (H : ∀ k, Prime k → k ∣ m → ¬k ∣ n) : Coprime m n := by
   rw [coprime_iff_gcd_eq_one]
@@ -747,35 +781,7 @@ theorem eq_or_coprime_of_le_prime {n p} (n_pos : 0 < n) (hle : n ≤ p) (pp : Pr
   hle.eq_or_lt.imp Eq.symm fun h => coprime_of_lt_prime n_pos h pp
 
 theorem dvd_prime_pow {p : ℕ} (pp : Prime p) {m i : ℕ} : i ∣ p ^ m ↔ ∃ k ≤ m, i = p ^ k := by
-  induction' m with m IH generalizing i
-  · simp
-    
-  by_cases' p ∣ i
-  · cases' h with a e
-    subst e
-    rw [pow_succₓ, Nat.mul_dvd_mul_iff_left pp.pos, IH]
-    constructor <;> intro h <;> rcases h with ⟨k, h, e⟩
-    · exact
-        ⟨succ k, succ_le_succ h, by
-          rw [e, pow_succₓ] <;> rfl⟩
-      
-    cases' k with k
-    · apply pp.not_dvd_one.elim
-      rw [← pow_zeroₓ, ← e]
-      apply dvd_mul_right
-      
-    · refine' ⟨k, le_of_succ_le_succ h, _⟩
-      rwa [mul_comm, pow_succ'ₓ, Nat.mul_left_inj pp.pos] at e
-      
-    
-  · constructor <;> intro d
-    · rw [(pp.coprime_pow_of_not_dvd h).eq_one_of_dvd d]
-      exact ⟨0, zero_le _, (pow_zeroₓ p).symm⟩
-      
-    · rcases d with ⟨k, l, rfl⟩
-      exact pow_dvd_pow _ l
-      
-    
+  simp_rw [dvd_prime_pow (prime_iff.mp pp) m, associated_eq_eq]
 
 theorem Prime.dvd_mul_of_dvd_ne {p1 p2 n : ℕ} (h_neq : p1 ≠ p2) (pp1 : Prime p1) (pp2 : Prime p2) (h1 : p1 ∣ n)
     (h2 : p2 ∣ n) : p1 * p2 ∣ n :=
@@ -856,6 +862,12 @@ theorem Prime.factors_pow {p : ℕ} (hp : p.Prime) (n : ℕ) : (p ^ n).factors =
   intro q hq
   rwa [eq_of_mem_repeat hq]
 
+theorem eq_prime_pow_of_unique_prime_dvd {n p : ℕ} (hpos : n ≠ 0) (h : ∀ {d}, Nat.Prime d → d ∣ n → d = p) :
+    n = p ^ n.factors.length := by
+  set k := n.factors.length
+  rw [← prod_factors hpos, ← prod_repeat p k,
+    eq_repeat_of_mem fun d hd => h (prime_of_mem_factors hd) (dvd_of_mem_factors hd)]
+
 /-- For positive `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
 theorem perm_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) : (a * b).factors ~ a.factors ++ b.factors := by
   refine' (factors_unique _ _).symm
@@ -918,7 +930,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
   have hpd3 : p ∣ m * n / (p ^ k * p ^ l) := by
     simpa [pow_addₓ] using hpd2
   have hpd4 : p ∣ m / p ^ k * (n / p ^ l) := by
-    simpa [Nat.div_mul_div hpm hpn] using hpd3
+    simpa [Nat.div_mul_div_comm hpm hpn] using hpd3
   have hpd5 : p ∣ m / p ^ k ∨ p ∣ n / p ^ l := (Prime.dvd_mul p_prime).1 hpd4
   suffices p ^ k * p ∣ m ∨ p ^ l * p ∣ n by
     rwa [pow_succ'ₓ, pow_succ'ₓ]
@@ -1271,6 +1283,13 @@ theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : a ≠ 
   rw [mul_comm]
   exact mem_factors_mul_left hpb ha
 
+theorem eq_two_pow_or_exists_odd_prime_and_dvd (n : ℕ) : (∃ k : ℕ, n = 2 ^ k) ∨ ∃ p, Nat.Prime p ∧ p ∣ n ∧ Odd p :=
+  (eq_or_ne n 0).elim (fun hn => Or.inr ⟨3, prime_three, hn.symm ▸ dvd_zero 3, ⟨1, rfl⟩⟩) fun hn =>
+    or_iff_not_imp_right.mpr fun H =>
+      ⟨n.factors.length,
+        eq_prime_pow_of_unique_prime_dvd hn fun p hprime hdvd =>
+          hprime.eq_two_or_odd'.resolve_right fun hodd => H ⟨p, hprime, hdvd, hodd⟩⟩
+
 end Nat
 
 namespace Int
@@ -1282,4 +1301,19 @@ theorem prime_three : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
 
 end Int
+
+section
+
+open Finset
+
+/-- Exactly `n / p` naturals in `[1, n]` are multiples of `p`. -/
+theorem card_multiples (n p : ℕ) : card ((range n).filter fun e => p ∣ e + 1) = n / p := by
+  induction' n with n hn
+  · rw [Nat.zero_divₓ, range_zero, filter_empty, card_empty]
+    
+  · rw [Nat.succ_div, add_ite, add_zeroₓ, range_succ, filter_insert, apply_ite card,
+      card_insert_of_not_mem (mem_filter.not.mpr (not_and_of_not_left _ not_mem_range_self)), hn]
+    
+
+end
 

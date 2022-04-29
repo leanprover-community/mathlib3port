@@ -22,6 +22,15 @@ variable {ι : Type _} {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 attribute [inline] List.headₓ
 
+/-- There is only one list of an empty type -/
+-- TODO[gh-6025]: make this an instance once safe to do so
+def uniqueOfIsEmpty [IsEmpty α] : Unique (List α) :=
+  { List.inhabited α with
+    uniq := fun l =>
+      match l with
+      | [] => rfl
+      | a :: l => isEmptyElim a }
+
 instance : IsLeftId (List α) Append.append [] :=
   ⟨nil_append⟩
 
@@ -54,18 +63,21 @@ theorem exists_cons_of_ne_nil {l : List α} (h : l ≠ nil) : ∃ b L, l = b :: 
   contradiction
   use c, l'
 
+theorem set_of_mem_cons (l : List α) (a : α) : { x | x ∈ a :: l } = insert a { x | x ∈ l } :=
+  rfl
+
 /-! ### mem -/
 
 
-theorem mem_singleton_self (a : α) : a ∈ [a] :=
+theorem mem_singleton_selfₓ (a : α) : a ∈ [a] :=
   mem_cons_selfₓ _ _
 
-theorem eq_of_mem_singleton {a b : α} : a ∈ [b] → a = b := fun this : a ∈ [b] =>
-  Or.elim (eq_or_mem_of_mem_consₓ this) (fun this : a = b => this) fun this : a ∈ [] => absurd this (not_mem_nil a)
+theorem eq_of_mem_singletonₓ {a b : α} : a ∈ [b] → a = b := fun this : a ∈ [b] =>
+  Or.elim (eq_or_mem_of_mem_consₓ this) (fun this : a = b => this) fun this : a ∈ [] => absurd this (not_mem_nilₓ a)
 
 @[simp]
-theorem mem_singleton {a b : α} : a ∈ [b] ↔ a = b :=
-  ⟨eq_of_mem_singleton, Or.inl⟩
+theorem mem_singletonₓ {a b : α} : a ∈ [b] ↔ a = b :=
+  ⟨eq_of_mem_singletonₓ, Or.inl⟩
 
 theorem mem_of_mem_cons_of_memₓ {a b : α} {l : List α} : a ∈ b :: l → b ∈ l → a ∈ l := fun ainbl binl =>
   Or.elim (eq_or_mem_of_mem_consₓ ainbl)
@@ -101,15 +113,15 @@ theorem mem_split {a : α} {l : List α} (h : a ∈ l) : ∃ s t : List α, l = 
 theorem mem_of_ne_of_memₓ {a y : α} {l : List α} (h₁ : a ≠ y) (h₂ : a ∈ y :: l) : a ∈ l :=
   Or.elim (eq_or_mem_of_mem_consₓ h₂) (fun e => absurd e h₁) fun r => r
 
-theorem ne_of_not_mem_consₓ {a b : α} {l : List α} : (a ∉ b :: l) → a ≠ b := fun nin aeqb => absurd (Or.inl aeqb) nin
+theorem ne_of_not_mem_consₓ {a b : α} {l : List α} : a ∉ b :: l → a ≠ b := fun nin aeqb => absurd (Or.inl aeqb) nin
 
-theorem not_mem_of_not_mem_consₓ {a b : α} {l : List α} : (a ∉ b :: l) → a ∉ l := fun nin nainl =>
+theorem not_mem_of_not_mem_consₓ {a b : α} {l : List α} : a ∉ b :: l → a ∉ l := fun nin nainl =>
   absurd (Or.inr nainl) nin
 
-theorem not_mem_cons_of_ne_of_not_memₓ {a y : α} {l : List α} : a ≠ y → (a ∉ l) → a ∉ y :: l := fun p1 p2 =>
+theorem not_mem_cons_of_ne_of_not_memₓ {a y : α} {l : List α} : a ≠ y → a ∉ l → a ∉ y :: l := fun p1 p2 =>
   Not.intro fun Pain => absurd (eq_or_mem_of_mem_consₓ Pain) (not_orₓ p1 p2)
 
-theorem ne_and_not_mem_of_not_mem_consₓ {a y : α} {l : List α} : (a ∉ y :: l) → a ≠ y ∧ a ∉ l := fun p =>
+theorem ne_and_not_mem_of_not_mem_consₓ {a y : α} {l : List α} : a ∉ y :: l → a ≠ y ∧ a ∉ l := fun p =>
   And.intro (ne_of_not_mem_consₓ p) (not_mem_of_not_mem_consₓ p)
 
 @[simp]
@@ -196,18 +208,28 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
   | a :: l => by
     simp only [cons_bind, map_cons, map_bind l]
 
+theorem range_map (f : α → β) : Set.Range (map f) = { l | ∀, ∀ x ∈ l, ∀, x ∈ Set.Range f } := by
+  refine'
+    Set.Subset.antisymm (Set.range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => Set.mem_range_self _)
+      fun l hl => _
+  induction' l with a l ihl
+  · exact ⟨[], rfl⟩
+    
+  rcases ihl fun x hx => hl x <| subset_cons _ _ hx with ⟨l, rfl⟩
+  rcases hl a (mem_cons_self _ _) with ⟨a, rfl⟩
+  exact ⟨a :: l, map_cons _ _ _⟩
+
+theorem range_map_coe (s : Set α) : Set.Range (map (coe : s → α)) = { l | ∀, ∀ x ∈ l, ∀, x ∈ s } := by
+  rw [range_map, Subtype.range_coe]
+
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
 instance [h : CanLift α β] : CanLift (List α) (List β) where
   coe := List.map h.coe
   cond := fun l => ∀, ∀ x ∈ l, ∀, CanLift.Cond β x
   prf := fun l H => by
-    induction' l with a l ihl
-    · exact ⟨[], rfl⟩
-      
-    rcases ihl fun x hx => H x (Or.inr hx) with ⟨l, rfl⟩
-    rcases CanLift.prf a (H a (Or.inl rfl)) with ⟨a, rfl⟩
-    exact ⟨a :: l, rfl⟩
+    rw [← Set.mem_range, range_map]
+    exact fun a ha => CanLift.prf a (H a ha)
 
 /-! ### length -/
 
@@ -310,7 +332,7 @@ theorem doubleton_eq [DecidableEq α] {x y : α} (h : x ≠ y) : ({x, y} : List 
 /-! ### bounded quantifiers over lists -/
 
 
-theorem forall_mem_nil (p : α → Prop) : ∀, ∀ x ∈ @nil α, ∀, p x :=
+theorem forall_mem_nilₓ (p : α → Prop) : ∀, ∀ x ∈ @nil α, ∀, p x :=
   fun.
 
 theorem forall_mem_consₓ :
@@ -321,7 +343,7 @@ theorem forall_mem_of_forall_mem_consₓ {p : α → Prop} {a : α} {l : List α
     ∀, ∀ x ∈ l, ∀, p x :=
   (forall_mem_consₓ.1 h).2
 
-theorem forall_mem_singleton {p : α → Prop} {a : α} : (∀, ∀ x ∈ [a], ∀, p x) ↔ p a := by
+theorem forall_mem_singletonₓ {p : α → Prop} {a : α} : (∀, ∀ x ∈ [a], ∀, p x) ↔ p a := by
   simp only [mem_singleton, forall_eq]
 
 theorem forall_mem_appendₓ {p : α → Prop} {l₁ l₂ : List α} :
@@ -549,7 +571,7 @@ theorem eq_repeat {a : α} {n} {l : List α} : l = repeat a n ↔ length l = n �
 theorem repeat_add (a : α) m n : repeat a (m + n) = repeat a m ++ repeat a n := by
   induction m <;> simp only [*, zero_addₓ, succ_add, repeat] <;> constructor <;> rfl
 
-theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] := fun b h => mem_singleton.2 (eq_of_mem_repeat h)
+theorem repeat_subset_singleton (a : α) n : repeat a n ⊆ [a] := fun b h => mem_singletonₓ.2 (eq_of_mem_repeat h)
 
 @[simp]
 theorem map_const (l : List α) (b : β) : map (Function.const α b) l = repeat b l.length := by
@@ -594,7 +616,7 @@ theorem repeat_right_inj {a : α} {n m : ℕ} : repeat a n = repeat a m ↔ n = 
 /-! ### pure -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem mem_pure {α} (x y : α) : x ∈ (pure y : List α) ↔ x = y := by
   simp [pure, List.ret]
@@ -770,32 +792,43 @@ theorem length_init : ∀ l : List α, length (init l) = length l - 1
 
 
 @[simp]
-theorem last_cons {a : α} {l : List α} : ∀ h₁ : a :: l ≠ nil h₂ : l ≠ nil, last (a :: l) h₁ = last l h₂ := by
+theorem last_cons {a : α} {l : List α} : ∀ h : l ≠ nil, last (a :: l) (cons_ne_nil a l) = last l h := by
   induction l <;> intros
   contradiction
   rfl
 
 @[simp]
-theorem last_append {a : α} (l : List α) (h : l ++ [a] ≠ []) : last (l ++ [a]) h = a := by
-  induction l <;> [rfl, simp only [cons_append, last_cons _ fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2, *]]
+theorem last_append_singleton {a : α} (l : List α) :
+    last (l ++ [a]) (append_ne_nil_of_ne_nil_right l _ (cons_ne_nil a _)) = a := by
+  induction l <;> [rfl, simp only [cons_append, last_cons fun H => cons_ne_nil _ _ (append_eq_nil.1 H).2, *]]
 
-theorem last_concat {a : α} (l : List α) (h : concat l a ≠ []) : last (concat l a) h = a := by
-  simp only [concat_eq_append, last_append]
+theorem last_append (l₁ l₂ : List α) (h : l₂ ≠ []) :
+    last (l₁ ++ l₂) (append_ne_nil_of_ne_nil_right l₁ l₂ h) = last l₂ h := by
+  induction' l₁ with _ _ ih
+  · simp
+    
+  · simp only [cons_append]
+    rw [List.last_cons]
+    exact ih
+    
+
+theorem last_concat {a : α} (l : List α) : last (concat l a) (concat_ne_nil a l) = a := by
+  simp only [concat_eq_append, last_append_singleton]
 
 @[simp]
-theorem last_singleton (a : α) (h : [a] ≠ []) : last [a] h = a :=
+theorem last_singleton (a : α) : last [a] (cons_ne_nil a []) = a :=
   rfl
 
 @[simp]
-theorem last_cons_cons (a₁ a₂ : α) (l : List α) (h : a₁ :: a₂ :: l ≠ []) :
-    last (a₁ :: a₂ :: l) h = last (a₂ :: l) (cons_ne_nil a₂ l) :=
+theorem last_cons_cons (a₁ a₂ : α) (l : List α) :
+    last (a₁ :: a₂ :: l) (cons_ne_nil _ _) = last (a₂ :: l) (cons_ne_nil a₂ l) :=
   rfl
 
 theorem init_append_last : ∀ {l : List α} h : l ≠ [], init l ++ [last l h] = l
   | [], h => absurd rfl h
   | [a], h => rfl
   | a :: b :: l, h => by
-    rw [init, cons_append, last_cons (cons_ne_nil _ _) (cons_ne_nil _ _)]
+    rw [init, cons_append, last_cons (cons_ne_nil _ _)]
     congr
     exact init_append_last (cons_ne_nil b l)
 
@@ -1000,6 +1033,30 @@ theorem nth_le_tail (l : List α) i (h : i < l.tail.length)
   · simpa
     
 
+theorem nth_le_cons_aux {l : List α} {a : α} {n} (hn : n ≠ 0) (h : n < (a :: l).length) : n - 1 < l.length := by
+  contrapose! h
+  rw [length_cons]
+  convert succ_le_succ h
+  exact (Nat.succ_pred_eq_of_posₓ hn.bot_lt).symm
+
+theorem nth_le_cons {l : List α} {a : α} {n} hl :
+    (a :: l).nthLe n hl = if hn : n = 0 then a else l.nthLe (n - 1) (nth_le_cons_aux hn hl) := by
+  split_ifs
+  · simp [nth_le, h]
+    
+  cases l
+  · rw [length_singleton, Nat.lt_one_iff] at hl
+    contradiction
+    
+  cases n
+  · contradiction
+    
+  rfl
+
+@[simp]
+theorem modify_head_modify_head (l : List α) (f g : α → α) : (l.modifyHead f).modifyHead g = l.modifyHead (g ∘ f) := by
+  cases l <;> simp
+
 /-! ### Induction from the right -/
 
 
@@ -1169,7 +1226,7 @@ theorem Sublist.subset : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → l₁ ⊆ l�
 
 @[simp]
 theorem singleton_sublist {a : α} {l} : [a] <+ l ↔ a ∈ l :=
-  ⟨fun h => h.Subset (mem_singleton_self _), fun h =>
+  ⟨fun h => h.Subset (mem_singleton_selfₓ _), fun h =>
     let ⟨s, t, e⟩ := mem_split h
     e.symm ▸ ((nil_sublist _).cons_cons _).trans (sublist_append_right _ _)⟩
 
@@ -1256,7 +1313,7 @@ theorem index_of_eq_length {a : α} {l : List α} : indexOfₓ a l = length l �
     
 
 @[simp]
-theorem index_of_of_not_mem {l : List α} {a : α} : (a ∉ l) → indexOfₓ a l = length l :=
+theorem index_of_of_not_mem {l : List α} {a : α} : a ∉ l → indexOfₓ a l = length l :=
   index_of_eq_length.2
 
 theorem index_of_le_length {a : α} {l : List α} : indexOfₓ a l ≤ length l := by
@@ -1371,11 +1428,11 @@ theorem nth_le_map (f : α → β) {l n} H1 H2 : nthLe (map f l) n H1 = f (nthLe
     rw [← nth_le_nth, nth_map, nth_le_nth] <;> rfl
 
 /-- A version of `nth_le_map` that can be used for rewriting. -/
-theorem nth_le_map_rev (f : α → β) {l n} H : f (nthLe l n H) = nthLe (map f l) n ((length_map f l).symm ▸ H) :=
+theorem nth_le_map_rev (f : α → β) {l n} H : f (nthLe l n H) = nthLe (map f l) n ((length_mapₓ f l).symm ▸ H) :=
   (nth_le_map f _ _).symm
 
 @[simp]
-theorem nth_le_map' (f : α → β) {l n} H : nthLe (map f l) n H = f (nthLe l n (length_map f l ▸ H)) :=
+theorem nth_le_map' (f : α → β) {l n} H : nthLe (map f l) n H = f (nthLe l n (length_mapₓ f l ▸ H)) :=
   nth_le_map f _ _
 
 /-- If one has `nth_le L i hi` in a formula and `h : L = L'`, one can not `rw h` in the formula as
@@ -1404,8 +1461,8 @@ theorem nth_le_append : ∀ {l₁ l₂ : List α} {n : ℕ} hn₁ hn₂, (l₁ +
 theorem nth_le_append_right_aux {l₁ l₂ : List α} {n : ℕ} (h₁ : l₁.length ≤ n) (h₂ : n < (l₁ ++ l₂).length) :
     n - l₁.length < l₂.length := by
   rw [List.length_append] at h₂
-  convert (tsub_lt_tsub_iff_right h₁).mpr h₂
-  simp
+  apply lt_of_add_lt_add_right
+  rwa [Nat.sub_add_cancelₓ h₁, Nat.add_comm]
 
 theorem nth_le_append_right :
     ∀ {l₁ l₂ : List α} {n : ℕ} h₁ : l₁.length ≤ n h₂,
@@ -1413,7 +1470,7 @@ theorem nth_le_append_right :
   | [], _, n, h₁, h₂ => rfl
   | a :: l, _, n + 1, h₁, h₂ => by
     dsimp
-    conv => rhs congr skip rw [tsub_add_eq_tsub_tsub, tsub_right_comm, add_tsub_cancel_right]
+    conv => rhs congr skip rw [Nat.add_sub_add_right]
     rw [nth_le_append_right (nat.lt_succ_iff.mp h₁)]
 
 @[simp]
@@ -1505,7 +1562,7 @@ theorem index_of_inj [DecidableEq α] {l : List α} {x y : α} (hx : x ∈ l) (h
   ⟨fun h => by
     have : nthLe l (indexOfₓ x l) (index_of_lt_length.2 hx) = nthLe l (indexOfₓ y l) (index_of_lt_length.2 hy) := by
       simp only [h]
-    simpa only [index_of_nth_le], fun h => by
+    simpa only [index_of_nth_le] , fun h => by
     subst h⟩
 
 theorem nth_le_reverse_aux2 : ∀ l r : List α i : Nat h1 h2, nthLe (reverseCore l r) (length l - 1 - i) h1 = nthLe l i h2
@@ -1915,6 +1972,9 @@ theorem bind_ret_eq_map (f : α → β) (l : List α) : l.bind (List.ret ∘ f) 
   unfold List.bind <;>
     induction l <;> simp only [map, join, List.ret, cons_append, nil_append, *] <;> constructor <;> rfl
 
+theorem bind_congr {l : List α} {f g : α → List β} (h : ∀, ∀ x ∈ l, ∀, f x = g x) : List.bind l f = List.bind l g :=
+  (congr_argₓ List.join <| map_congr h : _)
+
 @[simp]
 theorem map_eq_map {α β} (f : α → β) (l : List α) : f <$> l = map f l :=
   rfl
@@ -1954,7 +2014,7 @@ theorem map_comp_map (g : β → γ) (f : α → β) : map g ∘ map f = map (g 
   ext l
   rw [comp_map]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem map_filter_eq_foldr (f : α → β) (p : α → Prop) [DecidablePred p] (as : List α) :
     map f (filterₓ p as) = foldr (fun a bs => if p a then f a :: bs else bs) [] as := by
   induction as
@@ -1984,7 +2044,7 @@ theorem nil_map₂ (f : α → β → γ) (l : List β) : map₂ₓ f [] l = [] 
 theorem map₂_nil (f : α → β → γ) (l : List α) : map₂ₓ f l [] = [] := by
   cases l <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 @[simp]
 theorem map₂_flip (f : α → β → γ) : ∀ as bs, map₂ₓ (flip f) bs as = map₂ₓ f as bs
   | [], [] => rfl
@@ -2441,6 +2501,28 @@ theorem foldr_append (f : α → β → β) : ∀ b : β l₁ l₂ : List α, fo
   | b, a :: l₁, l₂ => by
     simp only [cons_append, foldr_cons, foldr_append b l₁ l₂]
 
+theorem foldl_fixed' {f : α → β → α} {a : α} (hf : ∀ b, f a b = a) : ∀ l : List β, foldlₓ f a l = a
+  | [] => rfl
+  | b :: l => by
+    rw [foldl_cons, hf b, foldl_fixed' l]
+
+theorem foldr_fixed' {f : α → β → β} {b : β} (hf : ∀ a, f a b = b) : ∀ l : List α, foldr f b l = b
+  | [] => rfl
+  | a :: l => by
+    rw [foldr_cons, foldr_fixed' l, hf a]
+
+@[simp]
+theorem foldl_fixed {a : α} : ∀ l : List β, foldlₓ (fun a b => a) a l = a :=
+  foldl_fixed' fun _ => rfl
+
+@[simp]
+theorem foldr_fixed {b : β} : ∀ l : List α, foldr (fun a b => b) b l = b :=
+  foldr_fixed' fun _ => rfl
+
+@[simp]
+theorem foldl_combinator_K {a : α} : ∀ l : List β, foldlₓ Combinator.k a l = a :=
+  foldl_fixed
+
 @[simp]
 theorem foldl_join (f : α → β → α) : ∀ a : α L : List (List β), foldlₓ f a (join L) = foldlₓ (foldlₓ f) a L
   | a, [] => rfl
@@ -2840,6 +2922,10 @@ theorem intersperse_cons_cons {α : Type u} (a b c : α) (tl : List α) :
 /-! ### split_at and split_on -/
 
 
+section SplitAtOn
+
+variable (p : α → Prop) [DecidablePred p] (xs ys : List α) (ls : List (List α)) (f : List α → List α)
+
 @[simp]
 theorem split_at_eq_take_drop : ∀ n : ℕ l : List α, splitAtₓ n l = (takeₓ n l, dropₓ n l)
   | 0, a => rfl
@@ -2851,6 +2937,10 @@ theorem split_at_eq_take_drop : ∀ n : ℕ l : List α, splitAtₓ n l = (take�
 theorem split_on_nil {α : Type u} [DecidableEq α] (a : α) : [].splitOn a = [[]] :=
   rfl
 
+@[simp]
+theorem split_on_p_nil : [].splitOnP p = [[]] :=
+  rfl
+
 /-- An auxiliary definition for proving a specification lemma for `split_on_p`.
 
 `split_on_p_aux' P xs ys` splits the list `ys ++ xs` at every element satisfying `P`,
@@ -2860,9 +2950,8 @@ def splitOnPAux' {α : Type u} (P : α → Prop) [DecidablePred P] : List α →
   | [], xs => [xs]
   | h :: t, xs => if P h then xs :: split_on_p_aux' t [] else split_on_p_aux' t (xs ++ [h])
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
-theorem split_on_p_aux_eq {α : Type u} (P : α → Prop) [DecidablePred P] (xs ys : List α) :
-    splitOnPAux' P xs ys = splitOnPAux P xs ((· ++ ·) ys) := by
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+theorem split_on_p_aux_eq : splitOnPAux' p xs ys = splitOnPAux p xs ((· ++ ·) ys) := by
   induction' xs with a t ih generalizing ys <;> simp only [append_nil, eq_self_iff_true, and_selfₓ]
   split_ifs <;> rw [ih]
   · refine' ⟨rfl, rfl⟩
@@ -2872,15 +2961,14 @@ theorem split_on_p_aux_eq {α : Type u} (P : α → Prop) [DecidablePred P] (xs 
     simp
     
 
-theorem split_on_p_aux_nil {α : Type u} (P : α → Prop) [DecidablePred P] (xs : List α) :
-    splitOnPAux P xs id = splitOnPAux' P xs [] := by
+theorem split_on_p_aux_nil : splitOnPAux p xs id = splitOnPAux' p xs [] := by
   rw [split_on_p_aux_eq]
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 /-- The original list `L` can be recovered by joining the lists produced by `split_on_p p L`,
 interspersed with the elements `L.filter p`. -/
-theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : List α) :
+theorem split_on_p_spec (as : List α) :
     join (zipWithₓ (· ++ ·) (splitOnP p as) (((as.filter p).map fun x => [x]) ++ [[]])) = as := by
   rw [split_on_p, split_on_p_aux_nil]
   suffices
@@ -2889,6 +2977,112 @@ theorem split_on_p_spec {α : Type u} (p : α → Prop) [DecidablePred p] (as : 
     rfl
   induction as <;> intro <;> simp only [split_on_p_aux', append_nil]
   split_ifs <;> simp [zip_with, join, *]
+
+theorem split_on_p_aux_ne_nil : splitOnPAux p xs f ≠ [] := by
+  induction' xs with _ _ ih generalizing f
+  · trivial
+    
+  simp only [split_on_p_aux]
+  split_ifs
+  · trivial
+    
+  exact ih _
+
+theorem split_on_p_aux_spec : splitOnPAux p xs f = (xs.splitOnP p).modifyHead f := by
+  simp only [split_on_p]
+  induction' xs with hd tl ih generalizing f
+  · simp [split_on_p_aux]
+    
+  simp only [split_on_p_aux]
+  split_ifs
+  · simp
+    
+  rw [ih fun l => f (hd :: l), ih fun l => id (hd :: l)]
+  simp
+
+theorem split_on_p_ne_nil : xs.splitOnP p ≠ [] :=
+  split_on_p_aux_ne_nil _ _ id
+
+@[simp]
+theorem split_on_p_cons (x : α) (xs : List α) :
+    (x :: xs).splitOnP p = if p x then [] :: xs.splitOnP p else (xs.splitOnP p).modifyHead (cons x) := by
+  simp only [split_on_p, split_on_p_aux]
+  split_ifs
+  · simp
+    
+  rw [split_on_p_aux_spec]
+  rfl
+
+/-- If no element satisfies `p` in the list `xs`, then `xs.split_on_p p = [xs]` -/
+theorem split_on_p_eq_single (h : ∀, ∀ x ∈ xs, ∀, ¬p x) : xs.splitOnP p = [xs] := by
+  induction' xs with hd tl ih
+  · rfl
+    
+  simp [h hd _, ih fun t ht => h t (Or.inr ht)]
+
+/-- When a list of the form `[...xs, sep, ...as]` is split on `p`, the first element is `xs`,
+  assuming no element in `xs` satisfies `p` but `sep` does satisfy `p` -/
+theorem split_on_p_first (h : ∀, ∀ x ∈ xs, ∀, ¬p x) (sep : α) (hsep : p sep) (as : List α) :
+    (xs ++ sep :: as).splitOnP p = xs :: as.splitOnP p := by
+  induction' xs with hd tl ih
+  · simp [hsep]
+    
+  simp [h hd _, ih fun t ht => h t (Or.inr ht)]
+
+/-- `intercalate [x]` is the left inverse of `split_on x`  -/
+theorem intercalate_split_on (x : α) [DecidableEq α] : [x].intercalate (xs.splitOn x) = xs := by
+  simp only [intercalate, split_on]
+  induction' xs with hd tl ih
+  · simp [join]
+    
+  simp only [split_on_p_cons]
+  cases' h' : split_on_p (· = x) tl with hd' tl'
+  · exact (split_on_p_ne_nil _ tl h').elim
+    
+  rw [h'] at ih
+  split_ifs
+  · subst h
+    simp [ih, join]
+    
+  cases tl' <;> simpa [join] using ih
+
+/-- `split_on x` is the left inverse of `intercalate [x]`, on the domain
+  consisting of each nonempty list of lists `ls` whose elements do not contain `x`  -/
+theorem split_on_intercalate [DecidableEq α] (x : α) (hx : ∀, ∀ l ∈ ls, ∀, x ∉ l) (hls : ls ≠ []) :
+    ([x].intercalate ls).splitOn x = ls := by
+  simp only [intercalate]
+  induction' ls with hd tl ih
+  · contradiction
+    
+  cases tl
+  · suffices hd.split_on x = [hd] by
+      simpa [join]
+    refine' split_on_p_eq_single _ _ _
+    intro y hy H
+    rw [H] at hy
+    refine' hx hd _ hy
+    simp
+    
+  · simp only [intersperse_cons_cons, singleton_append, join]
+    specialize ih _ _
+    · intro l hl
+      apply hx l
+      simp at hl⊢
+      tauto
+      
+    · trivial
+      
+    have := split_on_p_first (· = x) hd _ x rfl _
+    · simp only [split_on] at ih⊢
+      rw [this]
+      rw [ih]
+      
+    intro y hy H
+    rw [H] at hy
+    exact hx hd (Or.inl rfl) hy
+    
+
+end SplitAtOn
 
 /-! ### map for partial functions -/
 
@@ -3352,6 +3546,9 @@ section Filter
 
 variable {p : α → Prop} [DecidablePred p]
 
+theorem filter_singleton {a : α} : [a].filter p = if p a then [a] else [] :=
+  rfl
+
 theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
     filterₓ p l = foldr (fun a out => if p a then a :: out else out) [] l := by
   induction l <;> simp [*, filter]
@@ -3651,7 +3848,7 @@ theorem erase_of_not_memₓ {a : α} {l : List α} (h : a ∉ l) : l.erase a = l
   rw [erase_eq_erasep, erasep_of_forall_not] <;> rintro b h' rfl <;> exact h h'
 
 theorem exists_erase_eqₓ {a : α} {l : List α} (h : a ∈ l) :
-    ∃ l₁ l₂, (a ∉ l₁) ∧ l = l₁ ++ a :: l₂ ∧ l.erase a = l₁ ++ l₂ := by
+    ∃ l₁ l₂, a ∉ l₁ ∧ l = l₁ ++ a :: l₂ ∧ l.erase a = l₁ ++ l₂ := by
   rcases exists_of_erasep h rfl with ⟨_, l₁, l₂, h₁, rfl, h₂, h₃⟩ <;>
     rw [erase_eq_erasep] <;> exact ⟨l₁, l₂, fun h => h₁ _ h rfl, h₂, h₃⟩
 
@@ -3779,7 +3976,7 @@ theorem diff_sublist : ∀ l₁ l₂ : List α, l₁.diff l₂ <+ l₁
 theorem diff_subset (l₁ l₂ : List α) : l₁.diff l₂ ⊆ l₁ :=
   (diff_sublist _ _).Subset
 
-theorem mem_diff_of_mem {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁ → (a ∉ l₂) → a ∈ l₁.diff l₂
+theorem mem_diff_of_mem {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁ → a ∉ l₂ → a ∈ l₁.diff l₂
   | l₁, [], h₁, h₂ => h₁
   | l₁, b :: l₂, h₁, h₂ => by
     rw [diff_cons] <;>
@@ -3980,9 +4177,9 @@ variable (f : α → Option β → γ) (as : List α)
 theorem map₂_left_nil_right : map₂Leftₓ f as [] = as.map fun a => f a none := by
   cases as <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂Leftₓ f as bs = (map₂Left'ₓ f as bs).fst
   | [], bs => by
     simp
@@ -3991,9 +4188,9 @@ theorem map₂_left_eq_map₂_left' : ∀ as bs, map₂Leftₓ f as bs = (map₂
   | a :: as, b :: bs => by
     simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem map₂_left_eq_map₂ : ∀ as bs, length as ≤ length bs → map₂Leftₓ f as bs = map₂ₓ (fun a b => f a (some b)) as bs
   | [], [], h => by
     simp
@@ -4164,6 +4361,36 @@ theorem to_chunks_length_le : ∀ n xs, n ≠ 0 → ∀ l : List α, l ∈ @toCh
       
 
 end ToChunks
+
+/-! ### all₂ -/
+
+
+section All₂
+
+variable {p q : α → Prop} {l : List α}
+
+@[simp]
+theorem all₂_cons (p : α → Prop) (x : α) : ∀ l : List α, All₂ p (x :: l) ↔ p x ∧ All₂ p l
+  | [] => (and_trueₓ _).symm
+  | x :: l => Iff.rfl
+
+theorem all₂_iff_forall : ∀ {l : List α}, All₂ p l ↔ ∀, ∀ x ∈ l, ∀, p x
+  | [] => (iff_true_intro <| ball_nilₓ _).symm
+  | x :: l => by
+    rw [ball_cons, all₂_cons, all₂_iff_forall]
+
+theorem All₂.imp (h : ∀ x, p x → q x) : ∀ {l : List α}, All₂ p l → All₂ q l
+  | [] => id
+  | x :: l => by
+    simpa using And.imp (h x) all₂.imp
+
+@[simp]
+theorem all₂_map_iff {p : β → Prop} (f : α → β) : All₂ p (l.map f) ↔ All₂ (p ∘ f) l := by
+  induction l <;> simp [*]
+
+instance (p : α → Prop) [DecidablePred p] : DecidablePred (All₂ p) := fun l => decidableOfIff' _ all₂_iff_forall
+
+end All₂
 
 /-! ### Retroattributes
 

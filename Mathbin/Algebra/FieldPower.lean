@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
 import Mathbin.Algebra.GroupWithZero.Power
+import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Tactic.Linarith.Default
-import Mathbin.Data.Equiv.Ring
 
 /-!
 # Integer power operation on fields and division rings
@@ -31,10 +31,6 @@ theorem RingEquiv.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f :
 theorem zpow_bit0_neg {K : Type _} [DivisionRing K] (x : K) (n : ℤ) : -x ^ bit0 n = x ^ bit0 n := by
   rw [zpow_bit0', zpow_bit0', neg_mul_neg]
 
-theorem Even.zpow_neg {K : Type _} [DivisionRing K] {n : ℤ} (h : Even n) (a : K) : -a ^ n = a ^ n := by
-  obtain ⟨k, rfl⟩ := h
-  rw [← bit0_eq_two_mul, zpow_bit0_neg]
-
 @[simp]
 theorem zpow_bit1_neg {K : Type _} [DivisionRing K] (x : K) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
@@ -44,11 +40,6 @@ section OrderedFieldPower
 open Int
 
 variable {K : Type u} [LinearOrderedField K] {a : K} {n : ℤ}
-
-theorem zpow_eq_zero_iff (hn : 0 < n) : a ^ n = 0 ↔ a = 0 := by
-  refine' ⟨zpow_eq_zero, _⟩
-  rintro rfl
-  exact zero_zpow _ hn.ne'
 
 theorem zpow_nonneg {a : K} (ha : 0 ≤ a) : ∀ z : ℤ, 0 ≤ a ^ z
   | (n : ℕ) => by
@@ -117,14 +108,14 @@ theorem zpow_bit0_nonneg (a : K) (n : ℤ) : 0 ≤ a ^ bit0 n := by
   rw [zpow_bit0₀]
   exact mul_self_nonneg _
 
-theorem zpow_two_nonneg (a : K) : 0 ≤ a ^ 2 :=
-  pow_bit0_nonneg a 1
+theorem zpow_two_nonneg (a : K) : 0 ≤ a ^ (2 : ℤ) :=
+  zpow_bit0_nonneg a 1
 
 theorem zpow_bit0_pos {a : K} (h : a ≠ 0) (n : ℤ) : 0 < a ^ bit0 n :=
   (zpow_bit0_nonneg a n).lt_of_ne (zpow_ne_zero _ h).symm
 
-theorem zpow_two_pos_of_ne_zero (a : K) (h : a ≠ 0) : 0 < a ^ 2 :=
-  pow_bit0_pos h 1
+theorem zpow_two_pos_of_ne_zero (a : K) (h : a ≠ 0) : 0 < a ^ (2 : ℤ) :=
+  zpow_bit0_pos h 1
 
 @[simp]
 theorem zpow_bit1_neg_iff : a ^ bit1 n < 0 ↔ a < 0 :=
@@ -156,43 +147,6 @@ theorem zpow_bit1_nonpos_iff : a ^ bit1 n ≤ 0 ↔ a ≤ 0 := by
 @[simp]
 theorem zpow_bit1_pos_iff : 0 < a ^ bit1 n ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le zpow_bit1_nonpos_iff
-
-theorem Even.zpow_nonneg {n : ℤ} (hn : Even n) (a : K) : 0 ≤ a ^ n := by
-  cases' le_or_ltₓ 0 a with h h
-  · exact zpow_nonneg h _
-    
-  · exact (hn.zpow_neg a).subst (zpow_nonneg (neg_nonneg_of_nonpos h.le) _)
-    
-
-theorem Even.zpow_pos (hn : Even n) (ha : a ≠ 0) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit0_pos ha k
-
-theorem Odd.zpow_nonneg (hn : Odd n) (ha : 0 ≤ a) : 0 ≤ a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonneg_iff.mpr ha
-
-theorem Odd.zpow_pos (hn : Odd n) (ha : 0 < a) : 0 < a ^ n := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_pos_iff.mpr ha
-
-theorem Odd.zpow_nonpos (hn : Odd n) (ha : a ≤ 0) : a ^ n ≤ 0 := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_nonpos_iff.mpr ha
-
-theorem Odd.zpow_neg (hn : Odd n) (ha : a < 0) : a ^ n < 0 := by
-  cases' hn with k hk <;> simpa only [hk, two_mul] using zpow_bit1_neg_iff.mpr ha
-
-theorem Even.zpow_abs {p : ℤ} (hp : Even p) (a : K) : abs a ^ p = a ^ p := by
-  cases' abs_choice a with h h <;> simp only [h, hp.zpow_neg _]
-
-@[simp]
-theorem zpow_bit0_abs (a : K) (p : ℤ) : abs a ^ bit0 p = a ^ bit0 p :=
-  (even_bit0 _).zpow_abs _
-
-theorem Even.abs_zpow {p : ℤ} (hp : Even p) (a : K) : abs (a ^ p) = a ^ p := by
-  rw [abs_eq_self]
-  exact hp.zpow_nonneg _
-
-@[simp]
-theorem abs_zpow_bit0 (a : K) (p : ℤ) : abs (a ^ bit0 p) = a ^ bit0 p :=
-  (even_bit0 _).abs_zpow _
 
 end OrderedFieldPower
 
@@ -235,6 +189,11 @@ theorem zpow_lt_iff_lt {x : K} (hx : 1 < x) {m n : ℤ} : x ^ m < x ^ n ↔ m < 
 theorem zpow_le_iff_le {x : K} (hx : 1 < x) {m n : ℤ} : x ^ m ≤ x ^ n ↔ m ≤ n :=
   (zpow_strict_mono hx).le_iff_le
 
+theorem min_le_of_zpow_le_max {x : K} (hx : 1 < x) {a b c : ℤ} (h_max : x ^ -c ≤ max (x ^ -a) (x ^ -b)) : min a b ≤ c :=
+  by
+  rw [min_le_iff]
+  refine' Or.imp (fun h => _) (fun h => _) (le_max_iff.mp h_max) <;> rwa [zpow_le_iff_le hx, neg_le_neg_iff] at h
+
 @[simp]
 theorem pos_div_pow_pos {a b : K} (ha : 0 < a) (hb : 0 < b) (k : ℕ) : 0 < a / b ^ k :=
   div_pos ha (pow_pos hb k)
@@ -265,7 +224,7 @@ end Ordered
 
 section
 
-variable {K : Type _} [Field K]
+variable {K : Type _} [DivisionRing K]
 
 @[simp, norm_cast]
 theorem Rat.cast_zpow [CharZero K] (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : K) = q ^ n :=

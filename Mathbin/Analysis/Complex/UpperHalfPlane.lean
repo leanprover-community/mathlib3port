@@ -24,18 +24,30 @@ noncomputable section
 
 open Matrix Matrix.SpecialLinearGroup
 
-open_locale Classical BigOperators MatrixGroups
+open Classical BigOperators MatrixGroups
 
 attribute [local instance] Fintype.card_fin_even
 
+/- Disable this instances as it is not the simp-normal form, and having them disabled ensures
+we state lemmas in this file without spurious `coe_fn` terms. -/
+attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
+
+-- mathport name: «expr↑ₘ »
+local prefix:1024 "↑ₘ" => @coe _ (Matrix (Finₓ 2) (Finₓ 2) _) _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler λ α, has_coe α exprℂ()
 /-- The open upper half plane -/
-abbrev UpperHalfPlane :=
-  { point : ℂ // 0 < point.im }
+def UpperHalfPlane :=
+  { point : ℂ // 0 < point.im }deriving TopologicalSpace, [anonymous]
 
 -- mathport name: «exprℍ»
 localized [UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane
+
+instance : Inhabited ℍ :=
+  ⟨⟨Complex.i, by
+      simp ⟩⟩
 
 /-- Imaginary part -/
 def im (z : ℍ) :=
@@ -72,12 +84,12 @@ theorem norm_sq_ne_zero (z : ℍ) : Complex.normSq (z : ℂ) ≠ 0 :=
 /-- Numerator of the formula for a fractional linear transformation -/
 @[simp]
 def num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
-  g 0 0 * z + g 0 1
+  (↑ₘg 0 0 : ℝ) * z + (↑ₘg 0 1 : ℝ)
 
 /-- Denominator of the formula for a fractional linear transformation -/
 @[simp]
 def denom (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
-  g 1 0 * z + g 1 1
+  (↑ₘg 1 0 : ℝ) * z + (↑ₘg 1 1 : ℝ)
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
@@ -92,7 +104,7 @@ theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 
   fin_cases i <;> assumption
 
 theorem denom_ne_zero (g : SL(2,ℝ)) (z : ℍ) : denom g z ≠ 0 :=
-  linear_ne_zero (g 1) z (g.row_ne_zero 1)
+  linear_ne_zero (↑ₘg 1) z (g.row_ne_zero 1)
 
 theorem norm_sq_denom_pos (g : SL(2,ℝ)) (z : ℍ) : 0 < Complex.normSq (denom g z) :=
   Complex.norm_sq_pos.mpr (denom_ne_zero g z)
@@ -167,6 +179,14 @@ theorem neg_smul (g : SL(2,ℝ)) (z : ℍ) : -g • z = g • z := by
   field_simp [denom_ne_zero, -denom, -Num]
   simp
   ring
+
+theorem c_mul_im_sq_le_norm_sq_denom (z : ℍ) (g : SL(2,ℝ)) : ((↑ₘg 1 0 : ℝ) * z.im) ^ 2 ≤ Complex.normSq (denom g z) :=
+  by
+  let c := (↑ₘg 1 0 : ℝ)
+  let d := (↑ₘg 1 1 : ℝ)
+  calc (c * z.im) ^ 2 ≤ (c * z.im) ^ 2 + (c * z.re + d) ^ 2 := by
+      nlinarith _ = Complex.normSq (denom g z) := by
+      simp [Complex.normSq] <;> ring
 
 end UpperHalfPlane
 

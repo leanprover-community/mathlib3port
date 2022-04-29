@@ -22,7 +22,7 @@ and a measurable set `ae_seq_set hf p`, such that
 
 open MeasureTheory
 
-open_locale Classical
+open Classical
 
 variable {α β γ ι : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β} {μ : Measureₓ α}
   {p : α → (ι → β) → Prop}

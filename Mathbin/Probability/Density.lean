@@ -51,14 +51,13 @@ which we currently do not have.
 
 noncomputable section
 
-open_locale Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory Nnreal Ennreal
 
 namespace MeasureTheory
 
 open TopologicalSpace MeasureTheory.Measure
 
-variable {α E : Type _} [NormedGroup E] [MeasurableSpace E] [SecondCountableTopology E] [NormedSpace ℝ E]
-  [CompleteSpace E] [BorelSpace E]
+variable {α E : Type _} [MeasurableSpace E]
 
 /-- A random variable `X : α → E` is said to `has_pdf` with respect to the measure `ℙ` on `α` and
 `μ` on `E` if there exists a measurable function `f` such that the push-forward measure of `ℙ`
@@ -159,8 +158,8 @@ theorem of_real_to_real_ae_eq [IsFiniteMeasure ℙ] {X : α → E} :
 
 theorem integrable_iff_integrable_mul_pdf [IsFiniteMeasure ℙ] {X : α → E} [HasPdf X ℙ μ] {f : E → ℝ}
     (hf : Measurable f) : Integrable (fun x => f (X x)) ℙ ↔ Integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ := by
-  rw [← integrable_map_measure hf.ae_measurable (has_pdf.measurable X ℙ μ), map_eq_with_density_pdf X ℙ μ,
-    integrable_with_density_iff (measurable_pdf _ _ _) ae_lt_top]
+  rw [← integrable_map_measure hf.ae_strongly_measurable (has_pdf.measurable X ℙ μ).AeMeasurable,
+    map_eq_with_density_pdf X ℙ μ, integrable_with_density_iff (measurable_pdf _ _ _) ae_lt_top]
   infer_instance
 
 /-- **The Law of the Unconscious Statistician**: Given a random variable `X` and a measurable
@@ -169,7 +168,7 @@ where `μ` is a measure on the codomain of `X`. -/
 theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : α → E} [HasPdf X ℙ μ] {f : E → ℝ} (hf : Measurable f) :
     (∫ x, f x * (pdf X ℙ μ x).toReal ∂μ) = ∫ x, f (X x) ∂ℙ := by
   by_cases' hpdf : integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ
-  · rw [← integral_map (has_pdf.measurable X ℙ μ) hf.ae_measurable, map_eq_with_density_pdf X ℙ μ,
+  · rw [← integral_map (has_pdf.measurable X ℙ μ).AeMeasurable hf.ae_strongly_measurable, map_eq_with_density_pdf X ℙ μ,
       integral_eq_lintegral_pos_part_sub_lintegral_neg_part hpdf, integral_eq_lintegral_pos_part_sub_lintegral_neg_part,
       lintegral_with_density_eq_lintegral_mul _ (measurable_pdf X ℙ μ) hf.neg.ennreal_of_real,
       lintegral_with_density_eq_lintegral_mul _ (measurable_pdf X ℙ μ) hf.ennreal_of_real]
@@ -194,7 +193,7 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : α → E} [HasPd
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
         
       
-    · refine' ⟨hf.ae_measurable, _⟩
+    · refine' ⟨hf.ae_strongly_measurable, _⟩
       rw [has_finite_integral,
         lintegral_with_density_eq_lintegral_mul _ (measurable_pdf _ _ _) hf.nnnorm.coe_nnreal_ennreal]
       have : (fun x => (pdf X ℙ μ * fun x => ↑∥f x∥₊) x) =ᵐ[μ] fun x => ∥f x * (pdf X ℙ μ x).toReal∥₊ := by
@@ -247,8 +246,7 @@ theorem has_pdf_iff_of_measurable {X : α → E} (hX : Measurable X) :
 
 section
 
-variable {F : Type _} [NormedGroup F] [MeasurableSpace F] [SecondCountableTopology F] [NormedSpace ℝ F]
-  [CompleteSpace F] [BorelSpace F] {ν : Measure F}
+variable {F : Type _} [MeasurableSpace F] {ν : Measure F}
 
 /-- A random variable that `has_pdf` transformed under a `quasi_measure_preserving`
 map also `has_pdf` if `(map g (map X ℙ)).have_lebesgue_decomposition μ`.
@@ -365,7 +363,7 @@ theorem mul_pdf_integrable (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
         simp : (fun x => 0 : ℝ → ℝ) = fun x => x * (0 : ℝ≥0∞).toReal)]
     refine' Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm Ennreal.toReal)
     
-  refine' ⟨ae_measurable_id'.mul (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real, _⟩
+  refine' ⟨ae_strongly_measurable_id.mul (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real.AeStronglyMeasurable, _⟩
   refine' has_finite_integral_mul huX _
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
   have : ∀ x, ↑∥x∥₊ * s.indicator ind x = s.indicator (fun x => ∥x∥₊ * ind x) x := fun x =>

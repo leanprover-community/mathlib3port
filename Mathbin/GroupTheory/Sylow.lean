@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Factorization
 import Mathbin.Data.SetLike.Fintype
 import Mathbin.GroupTheory.GroupAction.ConjAct
 import Mathbin.GroupTheory.PGroup
+import Mathbin.GroupTheory.NoncommPiCoprod
 
 /-!
 # Sylow theorems
@@ -70,18 +71,23 @@ instance : SetLike (Sylow p G) G where
   coe := coe
   coe_injective' := fun P Q h => ext (SetLike.coe_injective h)
 
+instance : SubgroupClass (Sylow p G) G where
+  mul_mem := fun s => s.mul_mem'
+  one_mem := fun s => s.one_mem'
+  inv_mem := fun s => s.inv_mem'
+
 end Sylow
 
 /-- A generalization of **Sylow's first theorem**.
   Every `p`-subgroup is contained in a Sylow `p`-subgroup. -/
 theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : Sylow p G, P ≤ Q :=
   Exists.elim
-    (Zorn.zorn_nonempty_partial_order₀ { Q : Subgroup G | IsPGroup p Q }
+    (zorn_nonempty_partial_order₀ { Q : Subgroup G | IsPGroup p Q }
       (fun c hc1 hc2 Q hQ =>
         ⟨{ Carrier := ⋃ R : c, R, one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩,
             inv_mem' := fun g ⟨_, ⟨R, rfl⟩, hg⟩ => ⟨R, ⟨R, rfl⟩, R.1.inv_mem hg⟩,
             mul_mem' := fun g h ⟨_, ⟨R, rfl⟩, hg⟩ ⟨_, ⟨S, rfl⟩, hh⟩ =>
-              (hc2.total_of_refl R.2 S.2).elim (fun T => ⟨S, ⟨S, rfl⟩, S.1.mul_mem (T hg) hh⟩) fun T =>
+              (hc2.Total R.2 S.2).elim (fun T => ⟨S, ⟨S, rfl⟩, S.1.mul_mem (T hg) hh⟩) fun T =>
                 ⟨R, ⟨R, rfl⟩, R.1.mul_mem hg (T hh)⟩ },
           fun ⟨g, _, ⟨S, rfl⟩, hg⟩ => by
           refine' exists_imp_exists (fun k hk => _) (hc1 S.2 ⟨g, hg⟩)
@@ -128,7 +134,7 @@ noncomputable def Sylow.fintypeOfInjective {H : Type _} [Groupₓ H] {f : H →*
 noncomputable instance (H : Subgroup G) [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
   Sylow.fintypeOfInjective (show Function.Injective H.Subtype from Subtype.coe_injective)
 
-open_locale Pointwise
+open Pointwise
 
 /-- `subgroup.pointwise_mul_action` preserves Sylow subgroups. -/
 instance Sylow.pointwiseMulAction {α : Type _} [Groupₓ α] [MulDistribMulAction α G] : MulAction α (Sylow p G) where
@@ -294,7 +300,7 @@ end InfiniteSylow
 
 open Equivₓ Equivₓ.Perm Finset Function List QuotientGroup
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w
 
@@ -314,7 +320,7 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
     (x : G ⧸ H) ∈ FixedPoints H (G ⧸ H) ↔ x ∈ normalizer H :=
   ⟨fun hx =>
     have ha : ∀ {y : G ⧸ H}, y ∈ Orbit H (x : G ⧸ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
-    (inv_mem_iff _).1
+    inv_mem_iff.1
       (@mem_normalizer_fintype _ _ _ _inst_2 _ fun hn : n ∈ H =>
         have : (n⁻¹ * x)⁻¹ * x ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
         show _ ∈ H by
@@ -327,9 +333,9 @@ theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fi
         QuotientGroup.eq.2
           (let ⟨⟨b, hb₁⟩, hb₂⟩ := hy
           have hb₂ : (b * x)⁻¹ * y ∈ H := QuotientGroup.eq.1 hb₂
-          (inv_mem_iff H).1 <|
+          inv_mem_iff.1 <|
             (hx _).2 <|
-              (mul_mem_cancel_left H (H.inv_mem hb₁)).1 <| by
+              (mul_mem_cancel_left (inv_mem hb₁)).1 <| by
                 rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assoc] using hb₂)⟩
 
 def fixedPointsMulLeftCosetsEquivQuotient (H : Subgroup G) [Fintype (H : Set G)] :
@@ -492,7 +498,7 @@ theorem subsingleton_of_normal {p : ℕ} [Fact p.Prime] [Fintype (Sylow p G)] (P
 
 section Pointwise
 
-open_locale Pointwise
+open Pointwise
 
 theorem characteristic_of_normal {p : ℕ} [Fact p.Prime] [Fintype (Sylow p G)] (P : Sylow p G)
     (h : (P : Subgroup G).Normal) : (P : Subgroup G).Characteristic := by
@@ -573,6 +579,61 @@ theorem normal_of_all_max_subgroups_normal [Fintype G] (hnc : ∀ H : Subgroup G
 theorem normal_of_normalizer_condition (hnc : NormalizerCondition G) {p : ℕ} [Fact p.Prime] [Fintype (Sylow p G)]
     (P : Sylow p G) : (↑P : Subgroup G).Normal :=
   normalizer_eq_top.mp <| normalizer_condition_iff_only_full_group_self_normalizing.mp hnc _ <| normalizer_normalizer _
+
+open BigOperators
+
+/-- If all its sylow groups are normal, then a finite group is isomorphic to the direct product
+of these sylow groups.
+-/
+noncomputable def directProductOfNormal [Fintype G]
+    (hn : ∀ {p : ℕ} [Fact p.Prime] P : Sylow p G, (↑P : Subgroup G).Normal) :
+    (∀ p : (card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G := by
+  set ps := (Fintype.card G).factorization.support
+  -- “The” sylow group for p
+  let P : ∀ p, Sylow p G := fun _ => default
+  have hcomm : Pairwise fun p₁ p₂ : ps => ∀ x y : G, x ∈ P p₁ → y ∈ P p₂ → Commute x y := by
+    rintro ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ hne
+    have hp₁' := Fact.mk (Nat.prime_of_mem_factorization hp₁)
+    have hp₂' := Fact.mk (Nat.prime_of_mem_factorization hp₂)
+    have hne' : p₁ ≠ p₂ := by
+      simpa using hne
+    apply Subgroup.commute_of_normal_of_disjoint _ _ (hn (P p₁)) (hn (P p₂))
+    apply IsPGroup.disjoint_of_ne p₁ p₂ hne' _ _ (P p₁).is_p_group' (P p₂).is_p_group'
+  refine' MulEquiv.trans _ _
+  -- There is only one sylow group for each p, so the inner product is trivial
+  show (∀ p : ps, ∀ P : Sylow p G, P) ≃* ∀ p : ps, P p
+  · -- here we need to help the elaborator with an explicit instantiation
+    apply @MulEquiv.piCongrRight ps (fun p => ∀ P : Sylow p G, P) (fun p => P p) _ _
+    rintro ⟨p, hp⟩
+    have hp' := Fact.mk (Nat.prime_of_mem_factorization hp)
+    have := subsingleton_of_normal _ (hn (P p))
+    change (∀ P : Sylow p G, P) ≃* P p
+    exact MulEquiv.piSubsingleton _ _
+    
+  show (∀ p : ps, P p) ≃* G
+  apply MulEquiv.ofBijective (Subgroup.noncommPiCoprod hcomm)
+  apply (bijective_iff_injective_and_card _).mpr
+  constructor
+  show injective _
+  · apply Subgroup.injective_noncomm_pi_coprod_of_independent
+    apply independent_of_coprime_order hcomm
+    rintro ⟨p₁, hp₁⟩ ⟨p₂, hp₂⟩ hne
+    have hp₁' := Fact.mk (Nat.prime_of_mem_factorization hp₁)
+    have hp₂' := Fact.mk (Nat.prime_of_mem_factorization hp₂)
+    have hne' : p₁ ≠ p₂ := by
+      simpa using hne
+    apply IsPGroup.coprime_card_of_ne p₁ p₂ hne' _ _ (P p₁).is_p_group' (P p₂).is_p_group'
+    
+  show card (∀ p : ps, P p) = card G
+  · calc card (∀ p : ps, P p) = ∏ p : ps, card ↥(P p) :=
+        Fintype.card_pi _ = ∏ p : ps, p.1 ^ (card G).factorization p.1 := by
+        congr 1 with ⟨p, hp⟩
+        exact
+          @card_eq_multiplicity _ _ _ p ⟨Nat.prime_of_mem_factorization hp⟩
+            (P p)_ = ∏ p in ps, p ^ (card G).factorization p :=
+        Finset.prod_finset_coe (fun p => p ^ (card G).factorization p) _ _ = (card G).factorization.Prod pow :=
+        rfl _ = card G := Nat.factorization_prod_pow_eq_self Fintype.card_ne_zero
+    
 
 end Sylow
 

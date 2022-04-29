@@ -14,7 +14,7 @@ In this file we prove formulas for products and sums over `finset.insert_none s`
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 open Function
 

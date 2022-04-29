@@ -7,6 +7,7 @@ import Mathbin.FieldTheory.Normal
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.FieldTheory.Fixed
 import Mathbin.RingTheory.PowerBasis
+import Mathbin.GroupTheory.GroupAction.FixingSubgroup
 
 /-!
 # Galois Extensions
@@ -22,17 +23,18 @@ In this file we define Galois extensions as extensions which are both separable 
 
 ## Main results
 
-- `fixing_subgroup_of_fixed_field` : If `E/F` is finite dimensional (but not necessarily Galois)
-  then `fixing_subgroup (fixed_field H) = H`
-- `fixed_field_of_fixing_subgroup`: If `E/F` is finite dimensional and Galois
+- `intermediate_field.fixing_subgroup_fixed_field` : If `E/F` is finite dimensional (but not
+  necessarily Galois) then `fixing_subgroup (fixed_field H) = H`
+- `intermediate_field.fixed_field_fixing_subgroup`: If `E/F` is finite dimensional and Galois
   then `fixed_field (fixing_subgroup K) = K`
-Together, these two result prove the Galois correspondence
+
+Together, these two results prove the Galois correspondence.
 
 - `is_galois.tfae` : Equivalent characterizations of a Galois extension of finite degree
 -/
 
 
-open_locale Polynomial
+open Polynomial
 
 open FiniteDimensional AlgEquiv
 
@@ -150,8 +152,8 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
         (Tactic.tacticLet_
          "let"
          (Term.letDecl
-          (Term.letIdDecl
-           `this'
+          (Term.letPatDecl
+           (Lean.termThis "this")
            []
            [(Term.typeSpec
              ":"
@@ -225,8 +227,8 @@ instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction
        (Tactic.tacticLet_
         "let"
         (Term.letDecl
-         (Term.letIdDecl
-          `this'
+         (Term.letPatDecl
+          (Lean.termThis "this")
           []
           [(Term.typeSpec
             ":"
@@ -368,7 +370,7 @@ theorem
   :=
     by
       let
-          this'
+          this
             :
               Fintype
                 F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
@@ -421,6 +423,7 @@ theorem
          (Term.letDecl
           (Term.letIdDecl
            `iso
+           []
            [(Term.typeSpec
              ":"
              (Algebra.Algebra.Basic.«term_≃ₐ[_]_»
@@ -591,17 +594,21 @@ theorem
                   (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))
            [])
           (group
-           (Tactic.simpa
+           (Mathlib.Tactic.tacticSimpa!?_
             "simpa"
             []
             []
-            []
-            ["[" [(Tactic.simpLemma [] [] `p)] "]"]
-            []
-            ["using"
-             (Term.app
-              `Polynomial.splits_comp_of_splits
-              [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits])])
+            (Mathlib.Tactic.simpaArgsRest
+             []
+             []
+             []
+             [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `p)] "]")]
+             []
+             [(Tactic.usingArg
+               "using"
+               (Term.app
+                `Polynomial.splits_comp_of_splits
+                [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits]))]))
            [])])
         [])
        (group
@@ -698,6 +705,7 @@ theorem
         (Term.letDecl
          (Term.letIdDecl
           `iso
+          []
           [(Term.typeSpec
             ":"
             (Algebra.Algebra.Basic.«term_≃ₐ[_]_»
@@ -868,17 +876,21 @@ theorem
                  (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))
           [])
          (group
-          (Tactic.simpa
+          (Mathlib.Tactic.tacticSimpa!?_
            "simpa"
            []
            []
-           []
-           ["[" [(Tactic.simpLemma [] [] `p)] "]"]
-           []
-           ["using"
-            (Term.app
-             `Polynomial.splits_comp_of_splits
-             [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits])])
+           (Mathlib.Tactic.simpaArgsRest
+            []
+            []
+            []
+            [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `p)] "]")]
+            []
+            [(Tactic.usingArg
+              "using"
+              (Term.app
+               `Polynomial.splits_comp_of_splits
+               [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits]))]))
           [])])
        [])
       (group
@@ -1397,34 +1409,42 @@ theorem
             (group (Tactic.simp "simp" [] [] [] [] []) [])]))))))
      [])
     (group
-     (Tactic.simpa
+     (Mathlib.Tactic.tacticSimpa!?_
       "simpa"
       []
       []
-      []
-      ["[" [(Tactic.simpLemma [] [] `p)] "]"]
-      []
-      ["using"
-       (Term.app
-        `Polynomial.splits_comp_of_splits
-        [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits])])
+      (Mathlib.Tactic.simpaArgsRest
+       []
+       []
+       []
+       [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `p)] "]")]
+       []
+       [(Tactic.usingArg
+         "using"
+         (Term.app
+          `Polynomial.splits_comp_of_splits
+          [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits]))]))
      [])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«tactic·.__;_»', expected 'antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.simpa
+  (Mathlib.Tactic.tacticSimpa!?_
    "simpa"
    []
    []
-   []
-   ["[" [(Tactic.simpLemma [] [] `p)] "]"]
-   []
-   ["using"
-    (Term.app
-     `Polynomial.splits_comp_of_splits
-     [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpa', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'optional.antiquot_scope'
+   (Mathlib.Tactic.simpaArgsRest
+    []
+    []
+    []
+    [(Tactic.simpArgs "[" [(Tactic.simpLemma [] [] `p)] "]")]
+    []
+    [(Tactic.usingArg
+      "using"
+      (Term.app
+       `Polynomial.splits_comp_of_splits
+       [(Term.app `algebraMap [`F `E]) `iso.symm.to_alg_hom.to_ring_hom `h_splits]))]))
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.Tactic.tacticSimpa!?_', expected 'antiquot'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.usingArg', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app
    `Polynomial.splits_comp_of_splits
@@ -1491,7 +1511,7 @@ theorem
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpArgs', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
@@ -1690,7 +1710,7 @@ theorem AlgEquiv.transfer_galois (f : E ≃ₐ[F] E') : IsGalois F E ↔ IsGaloi
   ⟨fun h => IsGalois.of_alg_equiv f, fun h => IsGalois.of_alg_equiv f.symm⟩
 
 theorem is_galois_iff_is_galois_top : IsGalois F (⊤ : IntermediateField F E) ↔ IsGalois F E :=
-  IntermediateField.topEquiv.transfer_galois
+  (IntermediateField.topEquiv : (⊤ : IntermediateField F E) ≃ₐ[F] E).transfer_galois
 
 instance is_galois_bot : IsGalois F (⊥ : IntermediateField F E) :=
   (IntermediateField.botEquiv F E).transfer_galois.mpr (IsGalois.self F)
@@ -1710,21 +1730,6 @@ def FixedPoints.intermediateField (M : Type _) [Monoidₓ M] [MulSemiringAction 
   { FixedPoints.subfield M E with Carrier := MulAction.FixedPoints M E,
     algebra_map_mem' := fun a g => by
       rw [Algebra.algebra_map_eq_smul_one, smul_comm, smul_one] }
-
-/-- The submonoid fixing a set under a `mul_action`. -/
-@[to_additive " The additive submonoid fixing a set under an `add_action`. "]
-def fixingSubmonoid (M : Type _) {α} [Monoidₓ M] [MulAction M α] (s : Set α) : Submonoid M where
-  Carrier := { ϕ : M | ∀ x : s, ϕ • (x : α) = x }
-  one_mem' := fun _ => one_smul _ _
-  mul_mem' := fun x y hx hy z => by
-    rw [mul_smul, hy z, hx z]
-
-/-- The subgroup fixing a set under a `mul_action`. -/
-@[to_additive " The additive subgroup fixing a set under an `add_action`. "]
-def fixingSubgroup (M : Type _) {α} [Groupₓ M] [MulAction M α] (s : Set α) : Subgroup M :=
-  { fixingSubmonoid M s with
-    inv_mem' := fun _ hx z => by
-      rw [inv_smul_eq_iff, hx z] }
 
 namespace IntermediateField
 
@@ -2035,9 +2040,10 @@ variable {F} {E} {p : F[X]}
          (Term.letDecl
           (Term.letIdDecl
            `key_equiv
+           []
            [(Term.typeSpec
              ":"
-             (Data.Equiv.Basic.«term_≃_»
+             (Logic.Equiv.Basic.«term_≃_»
               (Algebra.Algebra.Basic.«term_→ₐ[_]_»
                (Term.paren
                 "("
@@ -2329,9 +2335,10 @@ variable {F} {E} {p : F[X]}
         (Term.letDecl
          (Term.letIdDecl
           `key_equiv
+          []
           [(Term.typeSpec
             ":"
-            (Data.Equiv.Basic.«term_≃_»
+            (Logic.Equiv.Basic.«term_≃_»
              (Algebra.Algebra.Basic.«term_→ₐ[_]_»
               (Term.paren
                "("
@@ -3582,622 +3589,36 @@ theorem
             rw [ Polynomial.splits_map_iff , ← IsScalarTower.algebra_map_eq ]
             exact sp.splits
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
-[PrettyPrinter.parenthesize.input] (Command.declaration
- (Command.declModifiers [] [] [] [] [] [])
- (Command.theorem
-  "theorem"
-  (Command.declId `of_separable_splitting_field [])
-  (Command.declSig
-   [(Term.instBinder "[" [`sp ":"] (Term.app (Term.proj `p "." `IsSplittingField) [`F `E]) "]")
-    (Term.explicitBinder "(" [`hp] [":" (Term.proj `p "." `Separable)] [] ")")]
-   (Term.typeSpec ":" (Term.app `IsGalois [`F `E])))
-  (Command.declValSimple
-   ":="
-   (Term.byTactic
-    "by"
-    (Tactic.tacticSeq
-     (Tactic.tacticSeq1Indented
-      [(group
-        (Tactic.tacticHave_
-         "have"
-         (Term.haveDecl
-          (Term.haveIdDecl
-           [`hFE []]
-           [(Term.typeSpec ":" (Term.app `FiniteDimensional [`F `E]))]
-           ":="
-           (Term.app `Polynomial.IsSplittingField.finite_dimensional [`E `p]))))
-        [])
-       (group
-        (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `this' [] [] ":=" (Term.app `Classical.decEq [`E]))))
-        [])
-       (group
-        (Tactic.tacticLet_
-         "let"
-         (Term.letDecl
-          (Term.letIdDecl
-           `s
-           []
-           ":="
-           (Term.proj (Term.proj (Term.app `p.map [(Term.app `algebraMap [`F `E])]) "." `roots) "." `toFinset))))
-        [])
-       (group
-        (Tactic.tacticHave_
-         "have"
-         (Term.haveDecl
-          (Term.haveIdDecl
-           [`adjoin_root []]
-           [(Term.typeSpec
-             ":"
-             («term_=_»
-              (Term.app `IntermediateField.adjoin [`F (coeNotation "↑" `s)])
-              "="
-              (Order.BoundedOrder.«term⊤» "⊤")))]
-           ":="
-           (Term.byTactic
-            "by"
-            (Tactic.tacticSeq
-             (Tactic.tacticSeq1Indented
-              [(group (Tactic.apply "apply" `IntermediateField.to_subalgebra_injective) [])
-               (group
-                (Tactic.rwSeq
-                 "rw"
-                 []
-                 (Tactic.rwRuleSeq
-                  "["
-                  [(Tactic.rwRule [] `IntermediateField.top_to_subalgebra)
-                   ","
-                   (Tactic.rwRule ["←"] `top_le_iff)
-                   ","
-                   (Tactic.rwRule ["←"] `sp.adjoin_roots)]
-                  "]")
-                 [])
-                [])
-               (group (Tactic.apply "apply" `IntermediateField.algebra_adjoin_le_adjoin) [])]))))))
-        [])
-       (group
-        (Tactic.tacticLet_
-         "let"
-         (Term.letDecl
-          (Term.letIdDecl
-           `P
-           [(Term.typeSpec ":" (Term.arrow (Term.app `IntermediateField [`F `E]) "→" (Term.prop "Prop")))]
-           ":="
-           (Term.fun
-            "fun"
-            (Term.basicFun
-             [(Term.simpleBinder [`K] [])]
-             "=>"
-             («term_=_»
-              (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_→ₐ[_]_» `K " →ₐ[" `F "] " `E)])
-              "="
-              (Term.app `finrank [`F `K])))))))
-        [])
-       (group
-        (Tactic.tacticSuffices_
-         "suffices"
-         (Term.sufficesDecl
-          []
-          (Term.app `P [(Term.app `IntermediateField.adjoin [`F (coeNotation "↑" `s)])])
-          (Term.byTactic'
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `AdjoinRoot)] "]")
-                [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-               [])
-              (group (Tactic.apply "apply" `of_card_aut_eq_finrank) [])
-              (group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule
-                   ["←"]
-                   (Term.app
-                    `Eq.trans
-                    [`this (Term.app `LinearEquiv.finrank_eq [`intermediate_field.top_equiv.to_linear_equiv])]))]
-                 "]")
-                [])
-               [])
-              (group
-               (Tactic.exact
-                "exact"
-                (Term.app
-                 `Fintype.card_congr
-                 [(Term.app
-                   `Equivₓ.trans
-                   [(Term.app `algEquivEquivAlgHom [`F `E])
-                    (Term.app `AlgEquiv.arrowCongr [`intermediate_field.top_equiv.symm `AlgEquiv.refl])])]))
-               [])])))))
-        [])
-       (group (Tactic.apply "apply" (Term.app `IntermediateField.induction_on_adjoin_finset [`s `P])) [])
-       (group
-        («tactic·.__;_»
-         "·"
-         [(group
-           (Tactic.tacticHave_
-            "have"
-            (Term.haveDecl
-             (Term.haveIdDecl
-              [`key []]
-              []
-              ":="
-              (Term.app
-               `IntermediateField.card_alg_hom_adjoin_integral
-               [`F
-                (Term.show
-                 "show"
-                 (Term.app `IsIntegral [`F (Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")")])
-                 (Term.fromTerm "from" `is_integral_zero))]))))
-           [])
-          (group
-           (Tactic.rwSeq
-            "rw"
-            []
-            (Tactic.rwRuleSeq
-             "["
-             [(Tactic.rwRule [] `minpoly.zero) "," (Tactic.rwRule [] `Polynomial.nat_degree_X)]
-             "]")
-            [(Tactic.location "at" (Tactic.locationHyp [`key] []))])
-           [])
-          (group
-           (Tactic.specialize
-            "specialize"
-            (Term.app `key [`Polynomial.separable_X (Term.app `Polynomial.splits_X [(Term.app `algebraMap [`F `E])])]))
-           [])
-          (group
-           (Tactic.rwSeq
-            "rw"
-            []
-            (Tactic.rwRuleSeq
-             "["
-             [(Tactic.rwRule
-               ["←"]
-               (Term.app
-                (Term.explicit "@" `Subalgebra.finrank_bot)
-                [`F `E (Term.hole "_") (Term.hole "_") (Term.hole "_")]))
-              ","
-              (Tactic.rwRule ["←"] `IntermediateField.bot_to_subalgebra)]
-             "]")
-            [(Tactic.location "at" (Tactic.locationHyp [`key] []))])
-           [])
-          (group (Tactic.refine' "refine'" (Term.app `Eq.trans [(Term.hole "_") `key])) [])
-          (group (Tactic.apply "apply" `Fintype.card_congr) [])
-          (group
-           (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `IntermediateField.adjoin_zero)] "]") [])
-           [])])
-        [])
-       (group (Tactic.intro "intro" [`K `x `hx `hK]) [])
-       (group
-        (Tactic.simp
-         "simp"
-         []
-         []
-         ["only"]
-         ["[" [(Tactic.simpLemma [] [] `P)] "]"]
-         [(Tactic.location "at" (Tactic.locationWildcard "*"))])
-        [])
-       (group
-        (Tactic.rwSeq
-         "rw"
-         []
-         (Tactic.rwRuleSeq
-          "["
-          [(Tactic.rwRule
-            []
-            (Term.app `of_separable_splitting_field_aux [`hp `K (Term.app `multiset.mem_to_finset.mp [`hx])]))
-           ","
-           (Tactic.rwRule [] `hK)
-           ","
-           (Tactic.rwRule [] `finrank_mul_finrank)]
-          "]")
-         [])
-        [])
-       (group
-        (Tactic.exact
-         "exact"
-         (Term.proj
-          (Term.app
-           `LinearEquiv.finrank_eq
-           [(Term.proj
-             (Term.app
-              `IntermediateField.lift2AlgEquiv
-              [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                `K
-                "⟮"
-                (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-                "⟯")])
-             "."
-             `toLinearEquiv)])
-          "."
-          `symm))
-        [])])))
-   [])
-  []
-  []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.byTactic
-   "by"
-   (Tactic.tacticSeq
-    (Tactic.tacticSeq1Indented
-     [(group
-       (Tactic.tacticHave_
-        "have"
-        (Term.haveDecl
-         (Term.haveIdDecl
-          [`hFE []]
-          [(Term.typeSpec ":" (Term.app `FiniteDimensional [`F `E]))]
-          ":="
-          (Term.app `Polynomial.IsSplittingField.finite_dimensional [`E `p]))))
-       [])
-      (group
-       (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `this' [] [] ":=" (Term.app `Classical.decEq [`E]))))
-       [])
-      (group
-       (Tactic.tacticLet_
-        "let"
-        (Term.letDecl
-         (Term.letIdDecl
-          `s
-          []
-          ":="
-          (Term.proj (Term.proj (Term.app `p.map [(Term.app `algebraMap [`F `E])]) "." `roots) "." `toFinset))))
-       [])
-      (group
-       (Tactic.tacticHave_
-        "have"
-        (Term.haveDecl
-         (Term.haveIdDecl
-          [`adjoin_root []]
-          [(Term.typeSpec
-            ":"
-            («term_=_»
-             (Term.app `IntermediateField.adjoin [`F (coeNotation "↑" `s)])
-             "="
-             (Order.BoundedOrder.«term⊤» "⊤")))]
-          ":="
-          (Term.byTactic
-           "by"
-           (Tactic.tacticSeq
-            (Tactic.tacticSeq1Indented
-             [(group (Tactic.apply "apply" `IntermediateField.to_subalgebra_injective) [])
-              (group
-               (Tactic.rwSeq
-                "rw"
-                []
-                (Tactic.rwRuleSeq
-                 "["
-                 [(Tactic.rwRule [] `IntermediateField.top_to_subalgebra)
-                  ","
-                  (Tactic.rwRule ["←"] `top_le_iff)
-                  ","
-                  (Tactic.rwRule ["←"] `sp.adjoin_roots)]
-                 "]")
-                [])
-               [])
-              (group (Tactic.apply "apply" `IntermediateField.algebra_adjoin_le_adjoin) [])]))))))
-       [])
-      (group
-       (Tactic.tacticLet_
-        "let"
-        (Term.letDecl
-         (Term.letIdDecl
-          `P
-          [(Term.typeSpec ":" (Term.arrow (Term.app `IntermediateField [`F `E]) "→" (Term.prop "Prop")))]
-          ":="
-          (Term.fun
-           "fun"
-           (Term.basicFun
-            [(Term.simpleBinder [`K] [])]
-            "=>"
-            («term_=_»
-             (Term.app `Fintype.card [(Algebra.Algebra.Basic.«term_→ₐ[_]_» `K " →ₐ[" `F "] " `E)])
-             "="
-             (Term.app `finrank [`F `K])))))))
-       [])
-      (group
-       (Tactic.tacticSuffices_
-        "suffices"
-        (Term.sufficesDecl
-         []
-         (Term.app `P [(Term.app `IntermediateField.adjoin [`F (coeNotation "↑" `s)])])
-         (Term.byTactic'
-          "by"
-          (Tactic.tacticSeq
-           (Tactic.tacticSeq1Indented
-            [(group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `AdjoinRoot)] "]")
-               [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-              [])
-             (group (Tactic.apply "apply" `of_card_aut_eq_finrank) [])
-             (group
-              (Tactic.rwSeq
-               "rw"
-               []
-               (Tactic.rwRuleSeq
-                "["
-                [(Tactic.rwRule
-                  ["←"]
-                  (Term.app
-                   `Eq.trans
-                   [`this (Term.app `LinearEquiv.finrank_eq [`intermediate_field.top_equiv.to_linear_equiv])]))]
-                "]")
-               [])
-              [])
-             (group
-              (Tactic.exact
-               "exact"
-               (Term.app
-                `Fintype.card_congr
-                [(Term.app
-                  `Equivₓ.trans
-                  [(Term.app `algEquivEquivAlgHom [`F `E])
-                   (Term.app `AlgEquiv.arrowCongr [`intermediate_field.top_equiv.symm `AlgEquiv.refl])])]))
-              [])])))))
-       [])
-      (group (Tactic.apply "apply" (Term.app `IntermediateField.induction_on_adjoin_finset [`s `P])) [])
-      (group
-       («tactic·.__;_»
-        "·"
-        [(group
-          (Tactic.tacticHave_
-           "have"
-           (Term.haveDecl
-            (Term.haveIdDecl
-             [`key []]
-             []
-             ":="
-             (Term.app
-              `IntermediateField.card_alg_hom_adjoin_integral
-              [`F
-               (Term.show
-                "show"
-                (Term.app `IsIntegral [`F (Term.paren "(" [(numLit "0") [(Term.typeAscription ":" `E)]] ")")])
-                (Term.fromTerm "from" `is_integral_zero))]))))
-          [])
-         (group
-          (Tactic.rwSeq
-           "rw"
-           []
-           (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `minpoly.zero) "," (Tactic.rwRule [] `Polynomial.nat_degree_X)] "]")
-           [(Tactic.location "at" (Tactic.locationHyp [`key] []))])
-          [])
-         (group
-          (Tactic.specialize
-           "specialize"
-           (Term.app `key [`Polynomial.separable_X (Term.app `Polynomial.splits_X [(Term.app `algebraMap [`F `E])])]))
-          [])
-         (group
-          (Tactic.rwSeq
-           "rw"
-           []
-           (Tactic.rwRuleSeq
-            "["
-            [(Tactic.rwRule
-              ["←"]
-              (Term.app
-               (Term.explicit "@" `Subalgebra.finrank_bot)
-               [`F `E (Term.hole "_") (Term.hole "_") (Term.hole "_")]))
-             ","
-             (Tactic.rwRule ["←"] `IntermediateField.bot_to_subalgebra)]
-            "]")
-           [(Tactic.location "at" (Tactic.locationHyp [`key] []))])
-          [])
-         (group (Tactic.refine' "refine'" (Term.app `Eq.trans [(Term.hole "_") `key])) [])
-         (group (Tactic.apply "apply" `Fintype.card_congr) [])
-         (group
-          (Tactic.rwSeq "rw" [] (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `IntermediateField.adjoin_zero)] "]") [])
-          [])])
-       [])
-      (group (Tactic.intro "intro" [`K `x `hx `hK]) [])
-      (group
-       (Tactic.simp
-        "simp"
-        []
-        []
-        ["only"]
-        ["[" [(Tactic.simpLemma [] [] `P)] "]"]
-        [(Tactic.location "at" (Tactic.locationWildcard "*"))])
-       [])
-      (group
-       (Tactic.rwSeq
-        "rw"
-        []
-        (Tactic.rwRuleSeq
-         "["
-         [(Tactic.rwRule
-           []
-           (Term.app `of_separable_splitting_field_aux [`hp `K (Term.app `multiset.mem_to_finset.mp [`hx])]))
-          ","
-          (Tactic.rwRule [] `hK)
-          ","
-          (Tactic.rwRule [] `finrank_mul_finrank)]
-         "]")
-        [])
-       [])
-      (group
-       (Tactic.exact
-        "exact"
-        (Term.proj
-         (Term.app
-          `LinearEquiv.finrank_eq
-          [(Term.proj
-            (Term.app
-             `IntermediateField.lift2AlgEquiv
-             [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-               `K
-               "⟮"
-               (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-               "⟯")])
-            "."
-            `toLinearEquiv)])
-         "."
-         `symm))
-       [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Tactic.exact
-   "exact"
-   (Term.proj
-    (Term.app
-     `LinearEquiv.finrank_eq
-     [(Term.proj
-       (Term.app
-        `IntermediateField.lift2AlgEquiv
-        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-          `K
-          "⟮"
-          (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-          "⟯")])
-       "."
-       `toLinearEquiv)])
-    "."
-    `symm))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj
-   (Term.app
-    `LinearEquiv.finrank_eq
-    [(Term.proj
-      (Term.app
-       `IntermediateField.lift2AlgEquiv
-       [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-         `K
-         "⟮"
-         (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-         "⟯")])
-      "."
-      `toLinearEquiv)])
-   "."
-   `symm)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app
-   `LinearEquiv.finrank_eq
-   [(Term.proj
-     (Term.app
-      `IntermediateField.lift2AlgEquiv
-      [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-        `K
-        "⟮"
-        (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-        "⟯")])
-     "."
-     `toLinearEquiv)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj
-   (Term.app
-    `IntermediateField.lift2AlgEquiv
-    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-      `K
-      "⟮"
-      (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-      "⟯")])
-   "."
-   `toLinearEquiv)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app
-   `IntermediateField.lift2AlgEquiv
-   [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-     `K
-     "⟮"
-     (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-     "⟯")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-   `K
-   "⟮"
-   (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-   "⟯")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»', expected 'sepBy.antiquot_scope'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»', expected 'antiquot'-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
-theorem
-  of_separable_splitting_field
-  [ sp : p . IsSplittingField F E ] ( hp : p . Separable ) : IsGalois F E
-  :=
-    by
-      have hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
-        let this' := Classical.decEq E
-        let s := p.map algebraMap F E . roots . toFinset
-        have
-          adjoin_root
-            : IntermediateField.adjoin F ↑ s = ⊤
-            :=
-            by
-              apply IntermediateField.to_subalgebra_injective
-                rw [ IntermediateField.top_to_subalgebra , ← top_le_iff , ← sp.adjoin_roots ]
-                apply IntermediateField.algebra_adjoin_le_adjoin
-        let P : IntermediateField F E → Prop := fun K => Fintype.card K →ₐ[ F ] E = finrank F K
-        suffices
-          P IntermediateField.adjoin F ↑ s
-            by
-              rw [ AdjoinRoot ] at this
-                apply of_card_aut_eq_finrank
-                rw [ ← Eq.trans this LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv ]
-                exact
-                  Fintype.card_congr
-                    Equivₓ.trans
-                      algEquivEquivAlgHom F E AlgEquiv.arrowCongr intermediate_field.top_equiv.symm AlgEquiv.refl
-        apply IntermediateField.induction_on_adjoin_finset s P
-        ·
-          have key := IntermediateField.card_alg_hom_adjoin_integral F show IsIntegral F ( 0 : E ) from is_integral_zero
-            rw [ minpoly.zero , Polynomial.nat_degree_X ] at key
-            specialize key Polynomial.separable_X Polynomial.splits_X algebraMap F E
-            rw [ ← @ Subalgebra.finrank_bot F E _ _ _ , ← IntermediateField.bot_to_subalgebra ] at key
-            refine' Eq.trans _ key
-            apply Fintype.card_congr
-            rw [ IntermediateField.adjoin_zero ]
-        intro K x hx hK
-        simp only [ P ] at *
-        rw [ of_separable_splitting_field_aux hp K multiset.mem_to_finset.mp hx , hK , finrank_mul_finrank ]
-        exact
-          LinearEquiv.finrank_eq
-              IntermediateField.lift2AlgEquiv
-                  K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
-                .
-                toLinearEquiv
-            .
-            symm
+theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separable) : IsGalois F E := by
+  have hFE : FiniteDimensional F E := Polynomial.IsSplittingField.finite_dimensional E p
+  let this := Classical.decEq E
+  let s := (p.map (algebraMap F E)).roots.toFinset
+  have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ := by
+    apply IntermediateField.to_subalgebra_injective
+    rw [IntermediateField.top_to_subalgebra, ← top_le_iff, ← sp.adjoin_roots]
+    apply IntermediateField.algebra_adjoin_le_adjoin
+  let P : IntermediateField F E → Prop := fun K => Fintype.card (K →ₐ[F] E) = finrank F K
+  suffices P (IntermediateField.adjoin F ↑s) by
+    rw [AdjoinRoot] at this
+    apply of_card_aut_eq_finrank
+    rw [← Eq.trans this (LinearEquiv.finrank_eq intermediate_field.top_equiv.to_linear_equiv)]
+    exact
+      Fintype.card_congr
+        (Equivₓ.trans (algEquivEquivAlgHom F E) (AlgEquiv.arrowCongr intermediate_field.top_equiv.symm AlgEquiv.refl))
+  apply IntermediateField.induction_on_adjoin_finset s P
+  · have key := IntermediateField.card_alg_hom_adjoin_integral F (show IsIntegral F (0 : E) from is_integral_zero)
+    rw [minpoly.zero, Polynomial.nat_degree_X] at key
+    specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
+    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_to_subalgebra] at key
+    refine' Eq.trans _ key
+    apply Fintype.card_congr
+    rw [IntermediateField.adjoin_zero]
+    
+  intro K x hx hK
+  simp only [P] at *
+  rw [of_separable_splitting_field_aux hp K (multiset.mem_to_finset.mp hx), hK, finrank_mul_finrank]
+  symm
+  exact LinearEquiv.finrank_eq (AlgEquiv.toLinearEquiv (IntermediateField.lift2AlgEquiv _))
 
 /-- Equivalent characterizations of a Galois extension of finite degree-/
 theorem tfae [FiniteDimensional F E] :

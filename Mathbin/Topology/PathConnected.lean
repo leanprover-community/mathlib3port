@@ -61,7 +61,7 @@ on `(-∞, 0]` and to `y` on `[1, +∞)`.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter UnitInterval
+open Classical TopologicalSpace Filter UnitInterval
 
 open Filter Set Function UnitInterval
 
@@ -1008,7 +1008,7 @@ attribute [instance] PathConnectedSpace.nonempty
 
 theorem path_connected_space_iff_zeroth_homotopy :
     PathConnectedSpace X ↔ Nonempty (ZerothHomotopy X) ∧ Subsingleton (ZerothHomotopy X) := by
-  let this' := pathSetoid X
+  let this := pathSetoid X
   constructor
   · intro h
     refine' ⟨(nonempty_quotient_iff _).mpr h.1, ⟨_⟩⟩

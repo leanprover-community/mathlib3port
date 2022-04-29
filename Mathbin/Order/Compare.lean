@@ -198,3 +198,15 @@ theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y
   apply lt_iff_lt_of_cmp_eq_cmp
   rwa [cmp_eq_cmp_symm]
 
+theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=
+  (cmp_eq_lt_iff _ _).2 h
+
+theorem LT.lt.cmp_eq_gt (h : x < y) : cmp y x = Ordering.gt :=
+  (cmp_eq_gt_iff _ _).2 h
+
+theorem Eq.cmp_eq_eq (h : x = y) : cmp x y = Ordering.eq :=
+  (cmp_eq_eq_iff _ _).2 h
+
+theorem Eq.cmp_eq_eq' (h : x = y) : cmp y x = Ordering.eq :=
+  h.symm.cmp_eq_eq
+

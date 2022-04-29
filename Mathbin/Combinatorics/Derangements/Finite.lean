@@ -28,7 +28,7 @@ This file contains lemmas that describe the cardinality of `derangements α` whe
 
 open Derangements Equivₓ Fintype
 
-open_locale BigOperators
+open BigOperators
 
 variable {α : Type _} [DecidableEq α] [Fintype α]
 

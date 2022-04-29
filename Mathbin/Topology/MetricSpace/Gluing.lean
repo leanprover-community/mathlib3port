@@ -53,7 +53,7 @@ universe u v w
 
 open Function Set
 
-open_locale uniformity
+open uniformity
 
 namespace Metric
 
@@ -114,7 +114,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_le_cinfi (B _ _) fun p => _
+      refine' cinfi_mono (B _ _) fun p => _
       calc dist z (Φ p) + dist x (Ψ p) ≤ dist y z + dist y (Φ p) + dist x (Ψ p) :=
           add_le_add (dist_triangle_left _ _ _) le_rfl _ = dist y (Φ p) + dist x (Ψ p) + dist y z := by
           ring
@@ -132,7 +132,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_le_cinfi (B _ _) fun p => _
+      refine' cinfi_mono (B _ _) fun p => _
       calc dist z (Φ p) + dist x (Ψ p) ≤ dist z (Φ p) + (dist x y + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle _ _ _)_ = dist x y + (dist z (Φ p) + dist y (Ψ p)) := by
           ring
@@ -150,7 +150,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_le_cinfi (B _ _) fun p => _
+      refine' cinfi_mono (B _ _) fun p => _
       calc dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) :=
           add_le_add (dist_triangle _ _ _) le_rfl _ = dist x y + (dist y (Φ p) + dist z (Ψ p)) := by
           ring
@@ -168,7 +168,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         intro x y hx
         simpa
       rw [this, comp]
-      refine' cinfi_le_cinfi (B _ _) fun p => _
+      refine' cinfi_mono (B _ _) fun p => _
       calc dist x (Φ p) + dist z (Ψ p) ≤ dist x (Φ p) + (dist y z + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle_left _ _ _)_ = dist x (Φ p) + dist y (Ψ p) + dist y z := by
           ring
@@ -415,7 +415,7 @@ namespace Sigma
 of two spaces. I.e., work with sigma types instead of sum types. -/
 variable {ι : Type _} {E : ι → Type _} [∀ i, MetricSpace (E i)]
 
-open_locale Classical
+open Classical
 
 /-- Distance on a disjoint union. There are many (noncanonical) ways to put a distance compatible
 with each factor.
@@ -462,6 +462,10 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   contrapose! h
   apply one_le_dist_of_ne h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
   rcases x with ⟨i, x⟩
   rcases y with ⟨j, y⟩
@@ -562,7 +566,7 @@ protected def metricSpace : MetricSpace (Σi, E i) := by
 
 attribute [local instance] sigma.metric_space
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter
 
@@ -619,11 +623,11 @@ instance metricSpaceGlueSpace (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : MetricSp
 
 /-- The canonical map from `X` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueL (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (x : X) : GlueSpace hΦ hΨ := by
-  let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inl x⟧
+  let this : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inl x⟧
 
 /-- The canonical map from `Y` to the space obtained by gluing isometric subsets in `X` and `Y`. -/
 def toGlueR (hΦ : Isometry Φ) (hΨ : Isometry Ψ) (y : Y) : GlueSpace hΦ hΨ := by
-  let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inr y⟧
+  let this : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ <;> exact ⟦inr y⟧
 
 instance inhabitedLeft (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited X] : Inhabited (GlueSpace hΦ hΨ) :=
   ⟨toGlueL _ _ default⟩
@@ -632,7 +636,7 @@ instance inhabitedRight (hΦ : Isometry Φ) (hΨ : Isometry Ψ) [Inhabited Y] : 
   ⟨toGlueR _ _ default⟩
 
 theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : toGlueL hΦ hΨ ∘ Φ = toGlueR hΦ hΨ ∘ Ψ := by
-  let this' : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
+  let this : PseudoMetricSpace (Sum X Y) := glue_premetric hΦ hΨ
   funext
   simp only [comp, to_glue_l, to_glue_r, Quotientₓ.eq]
   exact glue_dist_glued_points Φ Ψ 0 x
@@ -730,7 +734,7 @@ instance metricSpaceInductiveLimit (I : ∀ n, Isometry (f n)) : MetricSpace (In
 
 /-- Mapping each `X n` to the inductive limit. -/
 def toInductiveLimit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.InductiveLimit I := by
-  let this' : PseudoMetricSpace (Σn, X n) := inductive_premetric I <;> exact ⟦Sigma.mk n x⟧
+  let this : PseudoMetricSpace (Σn, X n) := inductive_premetric I <;> exact ⟦Sigma.mk n x⟧
 
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLimit I) :=
   ⟨toInductiveLimit _ 0 default⟩

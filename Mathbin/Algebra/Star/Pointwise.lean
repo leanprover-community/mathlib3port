@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 -/
 import Mathbin.Algebra.Star.Basic
-import Mathbin.Algebra.Pointwise
+import Mathbin.Data.Set.Pointwise
 
 /-!
 # Pointwise star operation on sets
@@ -21,7 +21,7 @@ if `s t : set α`, then under suitable assumption on `α`, it is shown
 
 namespace Set
 
-open_locale Pointwise
+open Pointwise
 
 -- mathport name: «expr ⋆»
 local postfix:max "⋆" => star

@@ -18,7 +18,7 @@ universe u v
 
 open Set Filter
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 variable {β : Type v}
 

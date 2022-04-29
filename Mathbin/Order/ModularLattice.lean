@@ -90,7 +90,7 @@ theorem inf_lt_inf_of_lt_of_sup_le_sup (hxy : x < y) (hinf : y⊔z ≤ x⊔z) : 
 
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Artinian, then `M` is Artinian. -/
-theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
+theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Preorderₓ γ]
     (h₁ : WellFounded ((· < ·) : β → β → Prop)) (h₂ : WellFounded ((· < ·) : γ → γ → Prop)) (K : α) (f₁ : β → α)
     (f₂ : α → β) (g₁ : γ → α) (g₂ : α → γ) (gci : GaloisCoinsertion f₁ f₂) (gi : GaloisInsertion g₂ g₁)
     (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded ((· < ·) : α → α → Prop) :=
@@ -108,7 +108,7 @@ theorem well_founded_lt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [Pa
 
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Noetherian, then `M` is Noetherian.  -/
-theorem well_founded_gt_exact_sequence {β γ : Type _} [PartialOrderₓ β] [PartialOrderₓ γ]
+theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorderₓ β] [PartialOrderₓ γ]
     (h₁ : WellFounded ((· > ·) : β → β → Prop)) (h₂ : WellFounded ((· > ·) : γ → γ → Prop)) (K : α) (f₁ : β → α)
     (f₂ : α → β) (g₁ : γ → α) (g₂ : α → γ) (gci : GaloisCoinsertion f₁ f₂) (gi : GaloisInsertion g₂ g₁)
     (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded ((· > ·) : α → α → Prop) :=
@@ -163,14 +163,14 @@ instance (priority := 100) [DistribLattice α] : IsModularLattice α :=
 
 end DistribLattice
 
-theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [Lattice α] [BoundedOrder α] [IsModularLattice α] {a b c : α}
+theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [Lattice α] [OrderBot α] [IsModularLattice α] {a b c : α}
     (h : Disjoint a b) (hsup : Disjoint (a⊔b) c) : Disjoint a (b⊔c) := by
   rw [Disjoint, ← h.eq_bot, sup_comm]
   apply le_inf inf_le_left
   apply (inf_le_inf_right (c⊔b) le_sup_right).trans
   rw [sup_comm, IsModularLattice.sup_inf_sup_assoc, hsup.eq_bot, bot_sup_eq]
 
-theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [Lattice α] [BoundedOrder α] [IsModularLattice α] {a b c : α}
+theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [Lattice α] [OrderBot α] [IsModularLattice α] {a b c : α}
     (h : Disjoint b c) (hsup : Disjoint a (b⊔c)) : Disjoint (a⊔b) c := by
   rw [Disjoint.comm, sup_comm]
   apply Disjoint.disjoint_sup_right_of_disjoint_sup_left h.symm

@@ -3,7 +3,7 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
-import Mathbin.LinearAlgebra.BilinearForm
+import Mathbin.LinearAlgebra.Matrix.BilinearForm
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Vandermonde
@@ -73,9 +73,9 @@ open LinearMap
 
 open Matrix
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 namespace Algebra
 
@@ -213,7 +213,7 @@ theorem PowerBasis.trace_gen_eq_sum_roots [Nontrivial S] (pb : PowerBasis K S)
     (hf : (minpoly K pb.gen).Splits (algebraMap K F)) :
     algebraMap K F (trace K S pb.gen) = ((minpoly K pb.gen).map (algebraMap K F)).roots.Sum := by
   rw [PowerBasis.trace_gen_eq_next_coeff_minpoly, RingHom.map_neg, ← next_coeff_map (algebraMap K F).Injective,
-    sum_roots_eq_next_coeff_of_monic_of_split (monic_map _ (minpoly.monic (PowerBasis.is_integral_gen _)))
+    sum_roots_eq_next_coeff_of_monic_of_split ((minpoly.monic (PowerBasis.is_integral_gen _)).map _)
       ((splits_id_iff_splits _).2 hf),
     neg_negₓ]
 
@@ -662,7 +662,6 @@ theorem
 
 -- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
 /- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
@@ -712,42 +711,20 @@ theorem
          "have"
          (Term.haveDecl
           (Term.haveIdDecl
-           [`injKKx []]
-           [(Term.typeSpec
-             ":"
-             (Term.app
-              `Function.Injective
-              [(Term.app
-                `algebraMap
-                [`K
-                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                  `K
-                  "⟮"
-                  (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-                  "⟯")])]))]
-           ":="
-           (Term.app `RingHom.injective [(Term.hole "_")]))))
-        [])
-       (group
-        (Tactic.tacticHave_
-         "have"
-         (Term.haveDecl
-          (Term.haveIdDecl
            [`injKxL []]
-           [(Term.typeSpec
-             ":"
-             (Term.app
-              `Function.Injective
-              [(Term.app
-                `algebraMap
-                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                  `K
-                  "⟮"
-                  (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-                  "⟯")
-                 `L])]))]
+           []
            ":="
-           (Term.app `RingHom.injective [(Term.hole "_")]))))
+           (Term.proj
+            (Term.app
+             `algebraMap
+             [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
+               `K
+               "⟮"
+               (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+               "⟯")
+              `L])
+            "."
+            `Injective))))
         [])
        (group (Tactic.byCases' "by_cases'" [`hx ":"] (Term.app `IsIntegral [`K `x])) [])
        (group (Mathlib.Tactic.tacticSwap "swap") [])
@@ -856,42 +833,20 @@ theorem
         "have"
         (Term.haveDecl
          (Term.haveIdDecl
-          [`injKKx []]
-          [(Term.typeSpec
-            ":"
-            (Term.app
-             `Function.Injective
-             [(Term.app
-               `algebraMap
-               [`K
-                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                 `K
-                 "⟮"
-                 (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-                 "⟯")])]))]
-          ":="
-          (Term.app `RingHom.injective [(Term.hole "_")]))))
-       [])
-      (group
-       (Tactic.tacticHave_
-        "have"
-        (Term.haveDecl
-         (Term.haveIdDecl
           [`injKxL []]
-          [(Term.typeSpec
-            ":"
-            (Term.app
-             `Function.Injective
-             [(Term.app
-               `algebraMap
-               [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-                 `K
-                 "⟮"
-                 (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-                 "⟯")
-                `L])]))]
+          []
           ":="
-          (Term.app `RingHom.injective [(Term.hole "_")]))))
+          (Term.proj
+           (Term.app
+            `algebraMap
+            [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
+              `K
+              "⟮"
+              (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              "⟯")
+             `L])
+           "."
+           `Injective))))
        [])
       (group (Tactic.byCases' "by_cases'" [`hx ":"] (Term.app `IsIntegral [`K `x])) [])
       (group (Mathlib.Tactic.tacticSwap "swap") [])
@@ -1538,62 +1493,36 @@ theorem
    (Term.haveDecl
     (Term.haveIdDecl
      [`injKxL []]
-     [(Term.typeSpec
-       ":"
-       (Term.app
-        `Function.Injective
-        [(Term.app
-          `algebraMap
-          [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-            `K
-            "⟮"
-            (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-            "⟯")
-           `L])]))]
+     []
      ":="
-     (Term.app `RingHom.injective [(Term.hole "_")]))))
+     (Term.proj
+      (Term.app
+       `algebraMap
+       [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
+         `K
+         "⟮"
+         (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         "⟯")
+        `L])
+      "."
+      `Injective))))
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticHave_', expected 'antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveDecl', expected 'Lean.Parser.Term.haveDecl.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveIdDecl.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `RingHom.injective [(Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `RingHom.injective
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
-[PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app
-   `Function.Injective
-   [(Term.app
-     `algebraMap
-     [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
-       `K
-       "⟮"
-       (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
-       "⟯")
-      `L])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
-[PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
+  (Term.proj
+   (Term.app
+    `algebraMap
+    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
+      `K
+      "⟮"
+      (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      "⟯")
+     `L])
+   "."
+   `Injective)
+[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
+[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (Term.app
    `algebraMap
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
@@ -1643,19 +1572,9 @@ theorem
   :=
     by
       have
-          injKKx
-            :
-              Function.Injective
-                algebraMap K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
-            :=
-            RingHom.injective _
-        have
           injKxL
-            :
-              Function.Injective
-                algebraMap K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
             :=
-            RingHom.injective _
+            algebraMap K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L . Injective
         by_cases' hx : IsIntegral K x
         swap
         · simp [ minpoly.eq_zero hx , trace_gen_eq_zero hx ]
@@ -2584,7 +2503,7 @@ theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
     (hfx : (minpoly K pb.gen).Separable) :
     algebraMap K E (Algebra.trace K L pb.gen) = (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ => σ pb.gen :=
   by
-  let this' := Classical.decEq E
+  let this := Classical.decEq E
   rw [pb.trace_gen_eq_sum_roots hE, Fintype.sum_equiv pb.lift_equiv', Finset.sum_mem_multiset,
     Finset.sum_eq_multiset_sum, Multiset.to_finset_val, multiset.dedup_eq_self.mpr _, Multiset.map_id]
   · exact nodup_roots ((separable_map _).mpr hfx)
@@ -2604,13 +2523,13 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F] 
   by
   have : FiniteDimensional L F := FiniteDimensional.right K L F
   have : IsSeparable L F := is_separable_tower_top_of_is_separable K L F
-  let this' : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
-  let this' : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
+  let this : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
+  let this : ∀ f : L →ₐ[K] E, Fintype (@AlgHom L F E _ _ _ _ f.to_ring_hom.to_algebra) := _
   -- will be solved by unification
   rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ← Finset.univ_sigma_univ,
     Finset.sum_sigma, ← Finset.sum_nsmul]
   refine' Finset.sum_congr rfl fun σ _ => _
-  · let this' : Algebra L E := σ.to_ring_hom.to_algebra
+  · let this : Algebra L E := σ.to_ring_hom.to_algebra
     simp only [Finset.sum_const, Finset.card_univ]
     rw [AlgHom.card L F E]
     

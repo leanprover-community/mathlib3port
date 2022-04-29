@@ -20,7 +20,7 @@ noncomputable section
 
 open IsROrC Real Filter
 
-open_locale BigOperators Classical TopologicalSpace
+open BigOperators Classical TopologicalSpace
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 

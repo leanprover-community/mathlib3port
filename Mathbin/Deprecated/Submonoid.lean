@@ -32,7 +32,7 @@ submonoid, submonoids, is_submonoid
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {M : Type _} [Monoidₓ M] {s : Set M}
 
@@ -331,9 +331,9 @@ end Monoidₓ
 /-- Create a bundled submonoid from a set `s` and `[is_submonoid s]`. -/
 @[to_additive "Create a bundled additive submonoid from a set `s` and `[is_add_submonoid s]`."]
 def Submonoid.of {s : Set M} (h : IsSubmonoid s) : Submonoid M :=
-  ⟨s, h.1, h.2⟩
+  ⟨s, h.2, h.1⟩
 
 @[to_additive]
 theorem Submonoid.is_submonoid (S : Submonoid M) : IsSubmonoid (S : Set M) :=
-  ⟨S.2, S.3⟩
+  ⟨S.3, S.2⟩
 

@@ -378,7 +378,7 @@ theorem insert_to_finmap (a : α) (b : β a) (s : Alist β) : insert a b ⟦s⟧
   simp [insert]
 
 theorem insert_entries_of_neg {a : α} {b : β a} {s : Finmap β} :
-    (a ∉ s) → (insert a b s).entries = ⟨a, b⟩ ::ₘ s.entries :=
+    a ∉ s → (insert a b s).entries = ⟨a, b⟩ ::ₘ s.entries :=
   (induction_on s) fun s h => by
     simp [insert_entries_of_neg (mt mem_to_finmap.1 h)]
 
@@ -466,7 +466,7 @@ theorem lookup_union_left {a} {s₁ s₂ : Finmap β} : a ∈ s₁ → lookup a 
   (induction_on₂ s₁ s₂) fun s₁ s₂ => lookup_union_left
 
 @[simp]
-theorem lookup_union_right {a} {s₁ s₂ : Finmap β} : (a ∉ s₁) → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
+theorem lookup_union_right {a} {s₁ s₂ : Finmap β} : a ∉ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
   (induction_on₂ s₁ s₂) fun s₁ s₂ => lookup_union_right
 
 theorem lookup_union_left_of_not_in {a} {s₁ s₂ : Finmap β} (h : a ∉ s₂) : lookup a (s₁ ∪ s₂) = lookup a s₁ := by
@@ -478,11 +478,11 @@ theorem lookup_union_left_of_not_in {a} {s₁ s₂ : Finmap β} (h : a ∉ s₂)
 
 @[simp]
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : Finmap β} :
-    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ (a ∉ s₁) ∧ b ∈ lookup a s₂ :=
+    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ a ∉ s₁ ∧ b ∈ lookup a s₂ :=
   (induction_on₂ s₁ s₂) fun s₁ s₂ => mem_lookup_union
 
 theorem mem_lookup_union_middle {a} {b : β a} {s₁ s₂ s₃ : Finmap β} :
-    b ∈ lookup a (s₁ ∪ s₃) → (a ∉ s₂) → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
+    b ∈ lookup a (s₁ ∪ s₃) → a ∉ s₂ → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
   (induction_on₃ s₁ s₂ s₃) fun s₁ s₂ s₃ => mem_lookup_union_middle
 
 theorem insert_union {a} {b : β a} {s₁ s₂ : Finmap β} : insert a b (s₁ ∪ s₂) = insert a b s₁ ∪ s₂ :=

@@ -509,7 +509,7 @@ theorem pow_dvd_of_mul_eq_pow [GcdMonoid α] {a b c d₁ d₂ : α} (ha : a ≠ 
 
 theorem exists_associated_pow_of_mul_eq_pow [GcdMonoid α] {a b c : α} (hab : IsUnit (gcd a b)) {k : ℕ}
     (h : a * b = c ^ k) : ∃ d : α, Associated (d ^ k) a := by
-  cases' subsingleton_or_nontrivial α
+  cases subsingleton_or_nontrivial α
   · use 0
     rw [Subsingleton.elimₓ a (0 ^ k)]
     
@@ -604,7 +604,7 @@ theorem lcm_eq_zero_iff [GcdMonoid α] (a b : α) : lcm a b = 0 ↔ a = 0 ∨ b 
       have : Associated (a * b) 0 :=
         (gcd_mul_lcm a b).symm.trans <| by
           rw [h, mul_zero]
-      simpa only [associated_zero_iff_eq_zero, mul_eq_zero])
+      simpa only [associated_zero_iff_eq_zero, mul_eq_zero] )
     (by
       rintro (rfl | rfl) <;> [apply lcm_zero_left, apply lcm_zero_right])
 

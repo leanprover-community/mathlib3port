@@ -34,7 +34,7 @@ that index type is a `fintype` and there exists a basis of the same cardinality.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
 section OrderedCommSemiring
 
@@ -46,42 +46,38 @@ variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
 
 variable (ι : Type _) [DecidableEq ι]
 
-attribute [local instance] RayVector.sameRaySetoid
-
 /-- An orientation of a module, intended to be used when `ι` is a `fintype` with the same
 cardinality as a basis. -/
-abbrev Orientation [Nontrivial R] :=
+abbrev Orientation :=
   Module.Ray R (AlternatingMap R M R ι)
 
 /-- A type class fixing an orientation of a module. -/
-class Module.Oriented [Nontrivial R] where
+class Module.Oriented where
   positiveOrientation : Orientation R M ι
 
 variable {R M}
 
 /-- An equivalence between modules implies an equivalence between orientations. -/
-def Orientation.map [Nontrivial R] (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
+def Orientation.map (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N ι :=
   Module.Ray.map <| AlternatingMap.domLcongr R R ι R e
 
 @[simp]
-theorem Orientation.map_apply [Nontrivial R] (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
+theorem Orientation.map_apply (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
     Orientation.map ι e (rayOfNeZero _ v hv) =
       rayOfNeZero _ (v.compLinearMap e.symm) (mt (v.comp_linear_equiv_eq_zero_iff e.symm).mp hv) :=
   rfl
 
 @[simp]
-theorem Orientation.map_refl [Nontrivial R] : (Orientation.map ι <| LinearEquiv.refl R M) = Equivₓ.refl _ := by
+theorem Orientation.map_refl : (Orientation.map ι <| LinearEquiv.refl R M) = Equivₓ.refl _ := by
   rw [Orientation.map, AlternatingMap.dom_lcongr_refl, Module.Ray.map_refl]
 
 @[simp]
-theorem Orientation.map_symm [Nontrivial R] (e : M ≃ₗ[R] N) : (Orientation.map ι e).symm = Orientation.map ι e.symm :=
+theorem Orientation.map_symm (e : M ≃ₗ[R] N) : (Orientation.map ι e).symm = Orientation.map ι e.symm :=
   rfl
 
 end OrderedCommSemiring
 
 section OrderedCommRing
-
-attribute [local instance] RayVector.sameRaySetoid
 
 variable {R : Type _} [OrderedCommRing R]
 
@@ -101,8 +97,8 @@ theorem orientation_map [Nontrivial R] (e : Basis ι R M) (f : M ≃ₗ[R] N) :
 
 /-- The value of `orientation.map` when the index type has the cardinality of a basis, in terms
 of `f.det`. -/
-theorem map_orientation_eq_det_inv_smul [Nontrivial R] [IsDomain R] (e : Basis ι R M) (x : Orientation R M ι)
-    (f : M ≃ₗ[R] M) : Orientation.map ι f x = f.det⁻¹ • x := by
+theorem map_orientation_eq_det_inv_smul (e : Basis ι R M) (x : Orientation R M ι) (f : M ≃ₗ[R] M) :
+    Orientation.map ι f x = f.det⁻¹ • x := by
   induction' x using Module.Ray.ind with g hg
   rw [Orientation.map_apply, smul_ray_of_ne_zero, ray_eq_iff, Units.smul_def,
     (g.comp_linear_map ↑f.symm).eq_smul_basis_det e, g.eq_smul_basis_det e, AlternatingMap.comp_linear_map_apply,
@@ -136,18 +132,22 @@ variable [Fintype ι]
 
 /-- The orientations given by two bases are equal if and only if the determinant of one basis
 with respect to the other is positive. -/
-theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation = e₂.Orientation ↔ 0 < e₁.det e₂ := by
-  rw [Basis.orientation, Basis.orientation, ray_eq_iff, e₁.det.eq_smul_basis_det e₂, AlternatingMap.smul_apply,
-    Basis.det_self, smul_eq_mul, mul_oneₓ, same_ray_smul_left_iff e₂.det_ne_zero (_ : R)]
+theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) : e₁.Orientation = e₂.Orientation ↔ 0 < e₁.det e₂ :=
+  calc
+    e₁.Orientation = e₂.Orientation ↔ SameRay R e₁.det e₂.det := ray_eq_iff _ _
+    _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by
+      rw [← e₁.det.eq_smul_basis_det e₂]
+    _ ↔ 0 < e₁.det e₂ := same_ray_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).ne_zero
+    
 
 /-- Given a basis, any orientation equals the orientation given by that basis or its negation. -/
 theorem orientation_eq_or_eq_neg (e : Basis ι R M) (x : Orientation R M ι) : x = e.Orientation ∨ x = -e.Orientation :=
   by
   induction' x using Module.Ray.ind with x hx
-  rw [Basis.orientation, ray_eq_iff, ← ray_neg, ray_eq_iff, x.eq_smul_basis_det e,
-    same_ray_neg_smul_left_iff e.det_ne_zero (_ : R), same_ray_smul_left_iff e.det_ne_zero (_ : R), lt_or_lt_iff_ne,
-    ne_comm, AlternatingMap.map_basis_ne_zero_iff]
-  exact hx
+  rw [← x.map_basis_ne_zero_iff e] at hx
+  rwa [Basis.orientation, ray_eq_iff, neg_ray_of_ne_zero, ray_eq_iff, x.eq_smul_basis_det e,
+    same_ray_neg_smul_left_iff_of_ne e.det_ne_zero hx, same_ray_smul_left_iff_of_ne e.det_ne_zero hx, lt_or_lt_iff_ne,
+    ne_comm]
 
 /-- Given a basis, an orientation equals the negation of that given by that basis if and only
 if it does not equal that given by that basis. -/

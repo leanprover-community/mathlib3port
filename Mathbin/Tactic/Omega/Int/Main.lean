@@ -15,7 +15,7 @@ namespace Omega
 
 namespace Int
 
-open_locale Omega.Int
+open Omega.Int
 
 run_cmd
   mk_simp_attr `sugar

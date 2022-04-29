@@ -25,7 +25,7 @@ it suffices that `f` converges within `A` at any point of `B`, provided that
 
 noncomputable section
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter Set
 

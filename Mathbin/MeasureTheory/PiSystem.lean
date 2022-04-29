@@ -3,8 +3,8 @@ Copyright (c) 2021 Martin Zinkevich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Martin Zinkevich
 -/
+import Mathbin.Logic.Encodable.Lattice
 import Mathbin.MeasureTheory.MeasurableSpaceDef
-import Mathbin.Data.Equiv.Encodable.Lattice
 
 /-!
 # Induction principles for measurable sets, related to π-systems and λ-systems.
@@ -52,7 +52,7 @@ import Mathbin.Data.Equiv.Encodable.Lattice
 
 open MeasurableSpace Set
 
-open_locale Classical
+open Classical
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s t «expr ∈ » C)
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of

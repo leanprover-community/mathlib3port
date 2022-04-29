@@ -34,7 +34,7 @@ the 0th component of which must be nonzero.
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 namespace WittVector
 

@@ -3,9 +3,9 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Equiv.MulAdd
-import Mathbin.Tactic.NormNum
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Data.Part
+import Mathbin.Tactic.NormNum
 
 /-!
 # Natural numbers with infinity
@@ -513,7 +513,7 @@ end WithTop
 
 section WithTopEquiv
 
-open_locale Classical
+open Classical
 
 @[simp]
 theorem to_with_top_add {x y : Enat} : toWithTop (x + y) = toWithTop x + toWithTop y := by

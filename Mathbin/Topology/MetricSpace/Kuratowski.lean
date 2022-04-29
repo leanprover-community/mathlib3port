@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.Analysis.NormedSpace.LpSpace
-import Mathbin.Topology.Compacts
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 # The Kuratowski embedding
@@ -17,7 +17,7 @@ noncomputable section
 
 open Set Metric TopologicalSpace
 
-open_locale Ennreal
+open Ennreal
 
 -- mathport name: «exprℓ_infty_ℝ»
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
@@ -53,6 +53,8 @@ theorem embedding_of_subset_dist_le (a b : α) : dist (embeddingOfSubset x a) (e
   convert abs_dist_sub_le a b (x n) using 2
   ring
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embedding_of_subset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) := by
   refine' isometry_emetric_iff_metric.2 fun a b => _

@@ -69,7 +69,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
         ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)_ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ :=
       (mul_comm_div' _ _ _).symm
 
-open_locale Ennreal
+open Ennreal
 
 open Ennreal
 
@@ -91,7 +91,7 @@ theorem banach_steinhaus_supr_nnnorm {ι : Type _} [CompleteSpace E] {g : ι →
   rw [← norm_to_nnreal]
   exact coe_mono (Real.to_nnreal_le_to_nnreal <| hC' i)
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter
 

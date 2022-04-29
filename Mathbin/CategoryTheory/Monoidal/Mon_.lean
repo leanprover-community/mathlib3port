@@ -3,12 +3,19 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
+import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Monoidal.Discrete
+import Mathbin.CategoryTheory.Monoidal.CoherenceLemmas
 import Mathbin.CategoryTheory.Limits.Shapes.Terminal
 import Mathbin.Algebra.PunitInstances
 
 /-!
 # The category of monoids in a monoidal category.
+
+We define monoids in a monoidal category `C` and show that the category of monoids is equivalent to
+the category of lax monoidal functors from the unit monoidal category to `C`.  We also show that if
+`C` is braided, then the category of monoids is naturally monoidal.
+
 -/
 
 
@@ -55,6 +62,8 @@ attribute [simp, reassoc] Mon_.mul_assoc
 
 namespace Mon_
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 /-- The trivial monoid object. We later show this is initial in `Mon_ C`.
 -/
 @[simps]
@@ -63,9 +72,9 @@ def trivial : Mon_ C where
   one := 𝟙 _
   mul := (λ_ _).Hom
   mul_assoc' := by
-    simp_rw [triangle_assoc, iso.cancel_iso_hom_right, tensor_right_iff, unitors_equal]
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
   mul_one' := by
-    simp [unitors_equal]
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 instance : Inhabited (Mon_ C) :=
   ⟨trivial C⟩
@@ -153,6 +162,22 @@ instance : ReflectsIsomorphisms (forget C) where
               tensor_id, category.id_comp] },
         by
         tidy⟩⟩
+
+/-- Construct an isomorphism of monoids by giving an isomorphism between the underlying objects
+and checking compatibility with unit and multiplication only in the forward direction.
+-/
+def isoOfIso {M N : Mon_ C} (f : M.x ≅ N.x) (one_f : M.one ≫ f.Hom = N.one)
+    (mul_f : M.mul ≫ f.Hom = (f.Hom ⊗ f.Hom) ≫ N.mul) : M ≅ N where
+  Hom := { Hom := f.Hom, one_hom' := one_f, mul_hom' := mul_f }
+  inv :=
+    { Hom := f.inv,
+      one_hom' := by
+        rw [← one_f]
+        simp ,
+      mul_hom' := by
+        rw [← cancel_mono f.hom]
+        slice_rhs 2 3 => rw [mul_f]
+        simp }
 
 instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
   default :=
@@ -303,6 +328,187 @@ def equivLaxMonoidalFunctorPunit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C
 
 end Mon_
 
+namespace Mon_
+
+/-!
+In this section, we prove that the category of monoids in a braided monoidal category is monoidal.
+
+Given two monoids `M` and `N` in a braided monoidal category `C`, the multiplication on the tensor
+product `M.X ⊗ N.X` is defined in the obvious way: it is the tensor product of the multiplications
+on `M` and `N`, except that the tensor factors in the source come in the wrong order, which we fix
+by pre-composing with a permutation isomorphism constructed from the braiding.
+
+A more conceptual way of understanding this definition is the following: The braiding on `C` gives
+rise to a monoidal structure on the tensor product functor from `C × C` to `C`.  A pair of monoids
+in `C` gives rise to a monoid in `C × C`, which the tensor product functor by being monoidal takes
+to a monoid in `C`.  The permutation isomorphism appearing in the definition of the multiplication
+on the tensor product of two monoids is an instance of a more general family of isomorphisms which
+together form a strength that equips the tensor product functor with a monoidal structure, and the
+monoid axioms for the tensor product follow from the monoid axioms for the tensor factors plus the
+properties of the strength (i.e., monoidal functor axioms).  The strength `tensor_μ` of the tensor
+product functor has been defined in `category_theory.monoidal.braided`.  Its properties, stated as
+independent lemmas in that module, are used extensively in the proofs below.  Notice that we could
+have followed the above plan not only conceptually but also as a possible implementation and could
+have constructed the tensor product of monoids via `map_Mon`, but we chose to give a more explicit
+definition directly in terms of `tensor_μ`.
+
+To complete the definition of the monoidal category structure on the category of monoids, we need
+to provide definitions of associator and unitors.  The obvious candidates are the associator and
+unitors from `C`, but we need to prove that they are monoid morphisms, i.e., compatible with unit
+and multiplication.  These properties translate to the monoidality of the associator and unitors
+(with respect to the monoidal structures on the functors they relate), which have also been proved
+in `category_theory.monoidal.braided`.
+
+-/
+
+
+variable {C}
+
+-- The proofs that associators and unitors preserve monoid units don't require braiding.
+theorem one_associator {M N P : Mon_ C} :
+    ((λ_ (𝟙_ C)).inv ≫ ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ P.one)) ≫ (α_ M.x N.x P.x).Hom =
+      (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ (λ_ (𝟙_ C)).inv ≫ (N.one ⊗ P.one)) :=
+  by
+  simp
+  slice_lhs 1 3 => rw [← category.id_comp P.one, tensor_comp]
+  slice_lhs 2 3 => rw [associator_naturality]
+  slice_rhs 1 2 => rw [← category.id_comp M.one, tensor_comp]
+  slice_lhs 1 2 => rw [← left_unitor_tensor_inv]
+  rw [← cancel_epi (λ_ (𝟙_ C)).inv]
+  slice_lhs 1 2 => rw [left_unitor_inv_naturality]
+  simp only [category.assoc]
+
+theorem one_left_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (𝟙 (𝟙_ C) ⊗ M.one)) ≫ (λ_ M.x).Hom = M.one := by
+  slice_lhs 2 3 => rw [left_unitor_naturality]
+  simp
+
+theorem one_right_unitor {M : Mon_ C} : ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ 𝟙 (𝟙_ C))) ≫ (ρ_ M.x).Hom = M.one := by
+  slice_lhs 2 3 => rw [right_unitor_naturality, ← unitors_equal]
+  simp
+
+variable [BraidedCategory C]
+
+theorem Mon_tensor_one_mul (M N : Mon_ C) :
+    ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ 𝟙 (M.x ⊗ N.x)) ≫ tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
+      (λ_ (M.x ⊗ N.x)).Hom :=
+  by
+  rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
+  slice_lhs 2 3 => rw [← tensor_id, tensor_μ_natural]
+  slice_lhs 3 4 => rw [← tensor_comp, one_mulₓ M, one_mulₓ N]
+  symm
+  exact tensor_left_unitality C M.X N.X
+
+theorem Mon_tensor_mul_one (M N : Mon_ C) :
+    (𝟙 (M.x ⊗ N.x) ⊗ (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)) ≫ tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
+      (ρ_ (M.x ⊗ N.x)).Hom :=
+  by
+  rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
+  slice_lhs 2 3 => rw [← tensor_id, tensor_μ_natural]
+  slice_lhs 3 4 => rw [← tensor_comp, mul_oneₓ M, mul_oneₓ N]
+  symm
+  exact tensor_right_unitality C M.X N.X
+
+theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
+    (tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) ⊗ 𝟙 (M.x ⊗ N.x)) ≫
+        tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) =
+      (α_ (M.x ⊗ N.x) (M.x ⊗ N.x) (M.x ⊗ N.x)).Hom ≫
+        (𝟙 (M.x ⊗ N.x) ⊗ tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul)) ≫
+          tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) :=
+  by
+  rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
+  slice_lhs 2 3 => rw [← tensor_id, tensor_μ_natural]
+  slice_lhs 3 4 => rw [← tensor_comp, mul_assoc M, mul_assoc N, tensor_comp, tensor_comp]
+  slice_lhs 1 3 => rw [tensor_associativity]
+  slice_lhs 3 4 => rw [← tensor_μ_natural]
+  slice_lhs 2 3 => rw [← tensor_comp, tensor_id]
+  simp only [category.assoc]
+
+theorem mul_associator {M N P : Mon_ C} :
+    (tensorμ C (M.x ⊗ N.x, P.x) (M.x ⊗ N.x, P.x) ≫ (tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
+        (α_ M.x N.x P.x).Hom =
+      ((α_ M.x N.x P.x).Hom ⊗ (α_ M.x N.x P.x).Hom) ≫
+        tensorμ C (M.x, N.x ⊗ P.x) (M.x, N.x ⊗ P.x) ≫ (M.mul ⊗ tensorμ C (N.x, P.x) (N.x, P.x) ≫ (N.mul ⊗ P.mul)) :=
+  by
+  simp
+  slice_lhs 2 3 => rw [← category.id_comp P.mul, tensor_comp]
+  slice_lhs 3 4 => rw [associator_naturality]
+  slice_rhs 3 4 => rw [← category.id_comp M.mul, tensor_comp]
+  slice_lhs 1 3 => rw [associator_monoidal]
+  simp only [category.assoc]
+
+theorem mul_left_unitor {M : Mon_ C} :
+    (tensorμ C (𝟙_ C, M.x) (𝟙_ C, M.x) ≫ ((λ_ (𝟙_ C)).Hom ⊗ M.mul)) ≫ (λ_ M.x).Hom =
+      ((λ_ M.x).Hom ⊗ (λ_ M.x).Hom) ≫ M.mul :=
+  by
+  rw [← category.comp_id (λ_ (𝟙_ C)).Hom, ← category.id_comp M.mul, tensor_comp]
+  slice_lhs 3 4 => rw [left_unitor_naturality]
+  slice_lhs 1 3 => rw [← left_unitor_monoidal]
+  simp only [category.assoc, category.id_comp]
+
+theorem mul_right_unitor {M : Mon_ C} :
+    (tensorμ C (M.x, 𝟙_ C) (M.x, 𝟙_ C) ≫ (M.mul ⊗ (λ_ (𝟙_ C)).Hom)) ≫ (ρ_ M.x).Hom =
+      ((ρ_ M.x).Hom ⊗ (ρ_ M.x).Hom) ≫ M.mul :=
+  by
+  rw [← category.id_comp M.mul, ← category.comp_id (λ_ (𝟙_ C)).Hom, tensor_comp]
+  slice_lhs 3 4 => rw [right_unitor_naturality]
+  slice_lhs 1 3 => rw [← right_unitor_monoidal]
+  simp only [category.assoc, category.id_comp]
+
+instance monMonoidal : MonoidalCategory (Mon_ C) where
+  tensorObj := fun M N =>
+    { x := M.x ⊗ N.x, one := (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one),
+      mul := tensorμ C (M.x, N.x) (M.x, N.x) ≫ (M.mul ⊗ N.mul), one_mul' := Mon_tensor_one_mul M N,
+      mul_one' := Mon_tensor_mul_one M N, mul_assoc' := Mon_tensor_mul_assoc M N }
+  tensorHom := fun M N P Q f g =>
+    { Hom := f.Hom ⊗ g.Hom,
+      one_hom' := by
+        dsimp
+        slice_lhs 2 3 => rw [← tensor_comp, hom.one_hom f, hom.one_hom g],
+      mul_hom' := by
+        dsimp
+        slice_rhs 1 2 => rw [tensor_μ_natural]
+        slice_lhs 2 3 => rw [← tensor_comp, hom.mul_hom f, hom.mul_hom g, tensor_comp]
+        simp only [category.assoc] }
+  tensor_id' := by
+    intros
+    ext
+    apply tensor_id
+  tensor_comp' := by
+    intros
+    ext
+    apply tensor_comp
+  tensorUnit := trivial C
+  associator := fun M N P => isoOfIso (α_ M.x N.x P.x) one_associator mul_associator
+  associator_naturality' := by
+    intros
+    ext
+    dsimp
+    apply associator_naturality
+  leftUnitor := fun M => isoOfIso (λ_ M.x) one_left_unitor mul_left_unitor
+  left_unitor_naturality' := by
+    intros
+    ext
+    dsimp
+    apply left_unitor_naturality
+  rightUnitor := fun M => isoOfIso (ρ_ M.x) one_right_unitor mul_right_unitor
+  right_unitor_naturality' := by
+    intros
+    ext
+    dsimp
+    apply right_unitor_naturality
+  pentagon' := by
+    intros
+    ext
+    dsimp
+    apply pentagon
+  triangle' := by
+    intros
+    ext
+    dsimp
+    apply triangle
+
+end Mon_
+
 /-!
 Projects:
 * Check that `Mon_ Mon ≌ CommMon`, via the Eckmann-Hilton argument.
@@ -312,7 +518,9 @@ Projects:
   (We've already got `Mon_ (Module R) ≌ Algebra R`, in `category_theory.monoidal.internal.Module`.)
 * Can you transport this monoidal structure to `Ring` or `Algebra R`?
   How does it compare to the "native" one?
-* Show that if `C` is braided then `Mon_ C` is naturally monoidal.
+* Show that when `C` is braided, the forgetful functor `Mon_ C ⥤ C` is monoidal.
+* Show that when `F` is a lax braided functor `C ⥤ D`, the functor `map_Mon F : Mon_ C ⥤ Mon_ D`
+  is lax monoidal.
 -/
 
 

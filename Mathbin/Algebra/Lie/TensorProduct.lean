@@ -24,7 +24,7 @@ open LieModule
 
 namespace TensorProduct
 
-open_locale TensorProduct
+open TensorProduct
 
 namespace LieModule
 
@@ -161,7 +161,7 @@ end TensorProduct
 
 namespace LieModule
 
-open_locale TensorProduct
+open TensorProduct
 
 variable (R) (L : Type v) (M : Type w)
 
@@ -186,7 +186,7 @@ end LieModule
 
 namespace LieSubmodule
 
-open_locale TensorProduct
+open TensorProduct
 
 open TensorProduct.LieModule
 

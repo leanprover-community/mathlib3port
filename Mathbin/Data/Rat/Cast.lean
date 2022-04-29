@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.Rat.Order
 import Mathbin.Data.Int.CharZero
+import Mathbin.Algebra.Field.Opposite
 
 /-!
 # Casts for Rational Numbers
@@ -24,11 +25,11 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom, cast, coercion, 
 -/
 
 
+variable {F α β : Type _}
+
 namespace Rat
 
-variable {α : Type _}
-
-open_locale Rat
+open Rat
 
 section WithDivRing
 
@@ -293,6 +294,10 @@ theorem cast_id : ∀ n : ℚ, ↑n = n
   | ⟨n, d, h, c⟩ => by
     rw [num_denom', cast_mk, mk_eq_div]
 
+@[simp]
+theorem cast_hom_rat : castHom ℚ = RingHom.id ℚ :=
+  RingHom.ext cast_id
+
 @[simp, norm_cast]
 theorem cast_min [LinearOrderedField α] {a b : ℚ} : (↑(min a b) : α) = min a b := by
   by_cases' a ≤ b <;> simp [h, min_def]
@@ -320,8 +325,9 @@ theorem RingHom.eq_rat_cast {k} [DivisionRing k] (f : ℚ →+* k) (r : ℚ) : f
 
 -- This seems to be true for a `[char_p k]` too because `k'` must have the same characteristic
 -- but the proof would be much longer
-theorem RingHom.map_rat_cast {k k'} [DivisionRing k] [CharZero k] [DivisionRing k'] (f : k →+* k') (r : ℚ) : f r = r :=
-  (f.comp (castHom k)).eq_rat_cast r
+@[simp]
+theorem map_rat_cast [DivisionRing α] [DivisionRing β] [CharZero α] [RingHomClass F α β] (f : F) (q : ℚ) : f q = q :=
+  ((f : α →+* β).comp <| castHom α).eq_rat_cast q
 
 theorem RingHom.ext_rat {R : Type _} [Semiringₓ R] (f g : ℚ →+* R) : f = g := by
   ext r
@@ -370,4 +376,20 @@ theorem ext_rat_on_pnat {f g : ℚ →*₀ M} (same_on_neg_one : f (-1) = g (-1)
       ‹_›
 
 end MonoidWithZeroHom
+
+namespace MulOpposite
+
+variable [DivisionRing α]
+
+@[simp, norm_cast]
+theorem op_rat_cast (r : ℚ) : op (r : α) = (↑r : αᵐᵒᵖ) := by
+  rw [cast_def, div_eq_mul_inv, op_mul, op_inv, op_nat_cast, op_int_cast, (Commute.cast_int_right _ r.num).Eq, cast_def,
+    div_eq_mul_inv]
+
+@[simp, norm_cast]
+theorem unop_rat_cast (r : ℚ) : unop (r : αᵐᵒᵖ) = r := by
+  rw [cast_def, div_eq_mul_inv, unop_mul, unop_inv, unop_nat_cast, unop_int_cast, (Commute.cast_int_right _ r.num).Eq,
+    cast_def, div_eq_mul_inv]
+
+end MulOpposite
 

@@ -82,7 +82,7 @@ open Function
 
 open OrderDual (toDual ofDual)
 
-open_locale TopologicalSpace Classical Filter
+open TopologicalSpace Classical Filter
 
 universe u v w
 
@@ -171,6 +171,8 @@ theorem le_of_tendsto_of_tendsto {f g : β → α} {b : Filter β} {a₁ a₂ : 
     rw [nhds_prod_eq] <;> exact hf.prod_mk hg
   show (a₁, a₂) ∈ { p : α × α | p.1 ≤ p.2 } from t.is_closed_le'.mem_of_tendsto this h
 
+alias le_of_tendsto_of_tendsto ← tendsto_le_of_eventually_le
+
 theorem le_of_tendsto_of_tendsto' {f g : β → α} {b : Filter β} {a₁ a₂ : α} [NeBot b] (hf : Tendsto f b (𝓝 a₁))
     (hg : Tendsto g b (𝓝 a₂)) (h : ∀ x, f x ≤ g x) : a₁ ≤ a₂ :=
   le_of_tendsto_of_tendsto hf hg (eventually_of_forall h)
@@ -210,6 +212,11 @@ then the set `{x ∈ s | f x ≤ g x}` is a closed set. -/
 theorem IsClosed.is_closed_le [TopologicalSpace β] {f g : β → α} {s : Set β} (hs : IsClosed s) (hf : ContinuousOn f s)
     (hg : ContinuousOn g s) : IsClosed { x ∈ s | f x ≤ g x } :=
   (hf.Prod hg).preimage_closed_of_closed hs OrderClosedTopology.is_closed_le'
+
+theorem le_on_closure [TopologicalSpace β] {f g : β → α} {s : Set β} (h : ∀, ∀ x ∈ s, ∀, f x ≤ g x)
+    (hf : ContinuousOn f (Closure s)) (hg : ContinuousOn g (Closure s)) ⦃x⦄ (hx : x ∈ Closure s) : f x ≤ g x :=
+  have : s ⊆ { y ∈ Closure s | f y ≤ g y } := fun y hy => ⟨subset_closure hy, h y hy⟩
+  (closure_minimal this (is_closed_closure.is_closed_le hf hg) hx).2
 
 theorem IsClosed.epigraph [TopologicalSpace β] {f : β → α} {s : Set β} (hs : IsClosed s) (hf : ContinuousOn f s) :
     IsClosed { p : β × α | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
@@ -545,6 +552,22 @@ theorem Continuous.if_le [TopologicalSpace γ] [∀ x, Decidable (f x ≤ g x)] 
     Continuous fun x => if f x ≤ g x then f' x else g' x :=
   continuous_if_le hf hg hf'.ContinuousOn hg'.ContinuousOn hfg
 
+theorem Tendsto.eventually_lt {l : Filter γ} {f g : γ → α} {y z : α} (hf : Tendsto f l (𝓝 y)) (hg : Tendsto g l (𝓝 z))
+    (hyz : y < z) : ∀ᶠ x in l, f x < g x := by
+  by_cases' h : y ⋖ z
+  · filter_upwards [hf (Iio_mem_nhds hyz), hg (Ioi_mem_nhds hyz)]
+    rw [h.Iio_eq]
+    exact fun x hfx hgx => lt_of_le_of_ltₓ hfx hgx
+    
+  · obtain ⟨w, hyw, hwz⟩ := (not_covby_iff hyz).mp h
+    filter_upwards [hf (Iio_mem_nhds hyw), hg (Ioi_mem_nhds hwz)]
+    exact fun x => lt_transₓ
+    
+
+theorem ContinuousAt.eventually_lt {x₀ : β} (hf : ContinuousAt f x₀) (hg : ContinuousAt g x₀) (hfg : f x₀ < g x₀) :
+    ∀ᶠ x in 𝓝 x₀, f x < g x :=
+  Tendsto.eventually_lt hf hg hfg
+
 @[continuity]
 theorem Continuous.min (hf : Continuous f) (hg : Continuous g) : Continuous fun b => min (f b) (g b) := by
   simp only [min_def]
@@ -670,8 +693,8 @@ theorem nhds_eq_order (a : α) : 𝓝 a = (⨅ b ∈ Iio a, 𝓟 (Ioi b))⊓⨅ 
   rw [t.topology_eq_generate_intervals, nhds_generate_from] <;>
     exact
       le_antisymmₓ
-        (le_inf (le_binfi fun b hb => infi_le_of_le { c : α | b < c } <| infi_le _ ⟨hb, b, Or.inl rfl⟩)
-          (le_binfi fun b hb => infi_le_of_le { c : α | c < b } <| infi_le _ ⟨hb, b, Or.inr rfl⟩))
+        (le_inf (le_infi₂ fun b hb => infi_le_of_le { c : α | b < c } <| infi_le _ ⟨hb, b, Or.inl rfl⟩)
+          (le_infi₂ fun b hb => infi_le_of_le { c : α | c < b } <| infi_le _ ⟨hb, b, Or.inr rfl⟩))
         (le_infi fun s =>
           le_infi fun ⟨ha, b, hs⟩ =>
             match s, ha, hs with
@@ -737,9 +760,8 @@ instance tendsto_Ixx_nhds_within {α : Type _} [Preorderₓ α] [TopologicalSpac
 instance tendsto_Icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, PartialOrderₓ (α i)]
     [∀ i, TopologicalSpace (α i)] [∀ i, OrderTopology (α i)] (f : ∀ i, α i) : TendstoIxxClass Icc (𝓝 f) (𝓝 f) := by
   constructor
-  conv in (𝓝 f).lift' powerset => rw [nhds_pi, Filter.pi]
-  simp only [lift'_infi_powerset, comap_lift'_eq2 monotone_powerset, tendsto_infi, tendsto_lift', mem_powerset_iff,
-    subset_def, mem_preimage]
+  conv in (𝓝 f).smallSets => rw [nhds_pi, Filter.pi]
+  simp only [small_sets_infi, small_sets_comap, tendsto_infi, tendsto_lift', (· ∘ ·), mem_powerset_iff]
   intro i s hs
   have : tendsto (fun g : ∀ i, α i => g i) (𝓝 f) (𝓝 (f i)) := (continuous_apply i).Tendsto f
   refine' (tendsto_lift'.1 ((this.comp tendsto_fst).Icc (this.comp tendsto_snd)) s hs).mono _
@@ -748,7 +770,7 @@ instance tendsto_Icc_class_nhds_pi {ι : Type _} {α : ι → Type _} [∀ i, Pa
 theorem induced_order_topology' {α : Type u} {β : Type v} [PartialOrderₓ α] [ta : TopologicalSpace β] [PartialOrderₓ β]
     [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y) (H₁ : ∀ {a x}, x < f a → ∃ b < a, x ≤ f b)
     (H₂ : ∀ {a x}, f a < x → ∃ b > a, f b ≤ x) : @OrderTopology _ (induced f ta) _ := by
-  let this' := induced f ta
+  let this := induced f ta
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
   rw [nhds_induced, nhds_generate_from, nhds_eq_order (f a)]
   apply le_antisymmₓ
@@ -792,7 +814,7 @@ theorem induced_order_topology {α : Type u} {β : Type v} [PartialOrderₓ α] 
 order is the same as the restriction to the subset of the order topology. -/
 instance order_topology_of_ord_connected {α : Type u} [ta : TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
     {t : Set α} [ht : OrdConnected t] : OrderTopology t := by
-  let this' := induced (coe : t → α) ta
+  let this := induced (coe : t → α) ta
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
   rw [nhds_induced, nhds_generate_from, nhds_eq_order (a : α)]
   apply le_antisymmₓ
@@ -912,7 +934,7 @@ theorem exists_Ioc_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a)
     have A : 𝓟 (Iic a) ≤ ⨅ b ∈ Ioi a, 𝓟 (Iio b) :=
       le_infi fun b => le_infi fun hb => principal_mono.2 <| Iic_subset_Iio.2 hb
     have B : t₁ ∩ Iic a ⊆ t₁ ∩ t₂ := inter_subset_inter_right _ (A ht₂)
-    exact this.imp fun l' => Exists.impₓ fun hl' hl x hx => B ⟨hl hx.1, hx.2⟩
+    exact this.imp fun l' => Exists.imp fun hl' hl x hx => B ⟨hl hx.1, hx.2⟩
   clear ht₂ t₂
   -- Now we find `l` such that `(l', ∞) ⊆ t₁`
   rw [mem_binfi_of_directed] at ht₁
@@ -1495,8 +1517,8 @@ theorem order_topology_of_nhds_abs {α : Type _} [TopologicalSpace α] [LinearOr
     (h_nhds : ∀ a : α, 𝓝 a = ⨅ r > 0, 𝓟 { b | abs (a - b) < r }) : OrderTopology α := by
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
   rw [h_nhds]
-  let this' := Preorderₓ.topology α
-  let this' : OrderTopology α := ⟨rfl⟩
+  let this := Preorderₓ.topology α
+  let this : OrderTopology α := ⟨rfl⟩
   exact (nhds_eq_infi_abs_sub a).symm
 
 theorem LinearOrderedAddCommGroup.tendsto_nhds {x : Filter β} {a : α} :
@@ -1932,7 +1954,7 @@ end LinearOrderedField
 theorem preimage_neg [AddGroupₓ α] : Preimage (Neg.neg : α → α) = Image (Neg.neg : α → α) :=
   (image_eq_preimage_of_inverse neg_negₓ neg_negₓ).symm
 
-theorem Filter.map_neg [AddGroupₓ α] : map (Neg.neg : α → α) = comap (Neg.neg : α → α) :=
+theorem Filter.map_neg_eq_comap_neg [AddGroupₓ α] : map (Neg.neg : α → α) = comap (Neg.neg : α → α) :=
   funext fun f => map_eq_comap_of_inverse (funext neg_negₓ) (funext neg_negₓ)
 
 section OrderTopology
@@ -2184,6 +2206,18 @@ theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ 
     ∀ [Nonempty α] {s : Set α}, IsCompact s → BddAbove s :=
   @IsCompact.bdd_below (OrderDual α) _ _ _
 
+/-- A continuous function is bounded below on a compact set. -/
+theorem IsCompact.bdd_below_image {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
+    [Nonempty α] [TopologicalSpace γ] {f : γ → α} {K : Set γ} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddBelow (f '' K) :=
+  (hK.image_of_continuous_on hf).BddBelow
+
+/-- A continuous function is bounded above on a compact set. -/
+theorem IsCompact.bdd_above_image {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
+    [Nonempty α] [TopologicalSpace γ] {f : γ → α} {K : Set γ} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddAbove (f '' K) :=
+  @IsCompact.bdd_below_image _ (OrderDual α) _ _ _ _ _ _ _ hK hf
+
 end OrderTopology
 
 section DenselyOrdered
@@ -2416,7 +2450,7 @@ theorem comap_coe_nhds_within_Ioi_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : s.Nonem
 theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀, ∀ a' < b, ∀, ∃ a < b, Ioo a b ⊆ s) :
     map (coe : s → α) atTop = 𝓝[<] b := by
   rcases eq_empty_or_nonempty (Iio b) with (hb' | ⟨a, ha⟩)
-  · rw [filter_eq_bot_of_is_empty at_top, map_bot, hb', nhds_within_empty]
+  · rw [filter_eq_bot_of_is_empty at_top, Filter.map_bot, hb', nhds_within_empty]
     exact ⟨fun x => hb'.subset (hb x.2)⟩
     
   · rw [← comap_coe_nhds_within_Iio_of_Ioo_subset hb fun _ => hs a ha, map_comap_of_mem]

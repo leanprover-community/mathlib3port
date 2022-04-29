@@ -18,7 +18,7 @@ be satisfied by itself and all stricter types.
 
 * `Sup_hom`: Maps which preserve `⨆`.
 * `Inf_hom`: Maps which preserve `⨅`.
-* `frame_hom`: Frame homomorphisms. Maps which preserve `⨆` and `⊓`.
+* `frame_hom`: Frame homomorphisms. Maps which preserve `⨆`, `⊓` and `⊤`.
 * `complete_lattice_hom`: Complete lattice homomorphisms. Maps which preserve `⨆` and `⨅`.
 
 ## Typeclasses
@@ -27,10 +27,14 @@ be satisfied by itself and all stricter types.
 * `Inf_hom_class`
 * `frame_hom_class`
 * `complete_lattice_hom_class`
+
+## Concrete homs
+
+* `complete_lattice.set_preimage`: `set.preimage` as a complete lattice homomorphism.
 -/
 
 
-open Function OrderDual
+open Function OrderDual Set
 
 variable {F α β γ δ : Type _} {ι : Sort _} {κ : ι → Sort _}
 
@@ -44,13 +48,14 @@ structure InfHomₓ (α β : Type _) [HasInfₓ α] [HasInfₓ β] where
   toFun : α → β
   map_Inf' (s : Set α) : to_fun (inf s) = inf (to_fun '' s)
 
-/-- The type of frame homomorphisms from `α` to `β`. They preserve `⊓` and `⨆`. -/
-structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends SupHomₓ α β where
-  map_inf' (a b : α) : to_fun (a⊓b) = to_fun a⊓to_fun b
+/-- The type of frame homomorphisms from `α` to `β`. They preserve finite meets and arbitrary joins.
+-/
+structure FrameHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfTopHom α β where
+  map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
 
 /-- The type of complete lattice homomorphisms from `α` to `β`. -/
-structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends SupHomₓ α β where
-  map_Inf' (s : Set α) : to_fun (inf s) = inf (to_fun '' s)
+structure CompleteLatticeHom (α β : Type _) [CompleteLattice α] [CompleteLattice β] extends InfHomₓ α β where
+  map_Sup' (s : Set α) : to_fun (sup s) = sup (to_fun '' s)
 
 /-- `Sup_hom_class F α β` states that `F` is a type of `⨆`-preserving morphisms.
 
@@ -68,15 +73,15 @@ class InfHomClassₓ (F : Type _) (α β : outParam <| Type _) [HasInfₓ α] [H
 
 You should extend this class when you extend `frame_hom`. -/
 class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α] [CompleteLattice β] extends
-  SupHomClassₓ F α β where
-  map_inf (f : F) (a b : α) : f (a⊓b) = f a⊓f b
+  InfTopHomClass F α β where
+  map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 
 /-- `complete_lattice_hom_class F α β` states that `F` is a type of complete lattice morphisms.
 
 You should extend this class when you extend `complete_lattice_hom`. -/
 class CompleteLatticeHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α] [CompleteLattice β] extends
-  SupHomClassₓ F α β where
-  map_Inf (f : F) (s : Set α) : f (inf s) = inf (f '' s)
+  InfHomClassₓ F α β where
+  map_Sup (f : F) (s : Set α) : f (sup s) = sup (f '' s)
 
 export SupHomClassₓ (map_Sup)
 
@@ -103,54 +108,59 @@ theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : 
   simp_rw [map_infi]
 
 -- See note [lower instance priority]
-instance (priority := 100) SupHomClassₓ.toSupHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
-    SupHomClass F α β :=
-  ⟨fun f a b => by
-    rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]⟩
+instance (priority := 100) SupHomClassₓ.toSupBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
+    SupBotHomClass F α β where
+  map_sup := fun f a b => by
+    rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair]
+  map_bot := fun f => by
+    rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]
 
 -- See note [lower instance priority]
-instance (priority := 100) SupHomClassₓ.toBotHomClass [CompleteLattice α] [CompleteLattice β] [SupHomClassₓ F α β] :
-    BotHomClass F α β :=
-  ⟨fun f => by
-    rw [← Sup_empty, map_Sup, Set.image_empty, Sup_empty]⟩
+instance (priority := 100) InfHomClassₓ.toInfTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
+    InfTopHomClass F α β where
+  map_inf := fun f a b => by
+    rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]
+  map_top := fun f => by
+    rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]
 
 -- See note [lower instance priority]
-instance (priority := 100) InfHomClassₓ.toInfHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
-    InfHomClass F α β :=
-  ⟨fun f a b => by
-    rw [← Inf_pair, map_Inf, Set.image_pair, Inf_pair]⟩
-
--- See note [lower instance priority]
-instance (priority := 100) InfHomClassₓ.toTopHomClass [CompleteLattice α] [CompleteLattice β] [InfHomClassₓ F α β] :
-    TopHomClass F α β :=
-  ⟨fun f => by
-    rw [← Inf_empty, map_Inf, Set.image_empty, Inf_empty]⟩
-
--- See note [lower instance priority]
-instance (priority := 100) FrameHomClass.toLatticeHomClass [CompleteLattice α] [CompleteLattice β]
-    [FrameHomClass F α β] : LatticeHomClass F α β :=
+instance (priority := 100) FrameHomClass.toSupHomClass [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] :
+    SupHomClassₓ F α β :=
   { ‹FrameHomClass F α β› with }
 
 -- See note [lower instance priority]
-instance (priority := 100) CompleteLatticeHomClass.toInfHomClass [CompleteLattice α] [CompleteLattice β]
-    [CompleteLatticeHomClass F α β] : InfHomClassₓ F α β :=
-  { ‹CompleteLatticeHomClass F α β› with }
+instance (priority := 100) FrameHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
+    [FrameHomClass F α β] : BoundedLatticeHomClass F α β :=
+  { ‹FrameHomClass F α β›, SupHomClassₓ.toSupBotHomClass with }
 
 -- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toFrameHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : FrameHomClass F α β :=
-  { ‹CompleteLatticeHomClass F α β›, InfHomClassₓ.toInfHomClass with }
+  { ‹CompleteLatticeHomClass F α β›, InfHomClassₓ.toInfTopHomClass with }
 
 -- See note [lower instance priority]
 instance (priority := 100) CompleteLatticeHomClass.toBoundedLatticeHomClass [CompleteLattice α] [CompleteLattice β]
     [CompleteLatticeHomClass F α β] : BoundedLatticeHomClass F α β :=
-  { SupHomClassₓ.toBotHomClass, InfHomClassₓ.toTopHomClass with }
+  { SupHomClassₓ.toSupBotHomClass, InfHomClassₓ.toInfTopHomClass with }
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIso.completeLatticeHomClass [CompleteLattice α] [CompleteLattice β] :
-    CompleteLatticeHomClass (α ≃o β) α β :=
-  { RelIso.relHomClass with map_Sup := fun f s => (f.map_Sup s).trans Sup_image.symm,
-    map_Inf := fun f s => (f.map_Inf s).trans Inf_image.symm }
+instance (priority := 100) OrderIsoClass.toSupHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
+    SupHomClassₓ F α β :=
+  ⟨fun f s =>
+    eq_of_forall_ge_iff fun c => by
+      simp only [← le_map_inv_iff, Sup_le_iff, Set.ball_image_iff]⟩
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderIsoClass.toInfHomClassₓ [CompleteLattice α] [CompleteLattice β] [OrderIsoClass F α β] :
+    InfHomClassₓ F α β :=
+  ⟨fun f s =>
+    eq_of_forall_le_iff fun c => by
+      simp only [← map_inv_le_iff, le_Inf_iff, Set.ball_image_iff]⟩
+
+-- See note [lower instance priority]
+instance (priority := 100) OrderIsoClass.toCompleteLatticeHomClass [CompleteLattice α] [CompleteLattice β]
+    [OrderIsoClass F α β] : CompleteLatticeHomClass F α β :=
+  { OrderIsoClass.toSupHomClassₓ, OrderIsoClass.toLatticeHomClass with }
 
 instance [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] : CoeTₓ F (SupHomₓ α β) :=
   ⟨fun f => ⟨f, map_Sup f⟩⟩
@@ -159,10 +169,10 @@ instance [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] : CoeTₓ F (Inf
   ⟨fun f => ⟨f, map_Inf f⟩⟩
 
 instance [CompleteLattice α] [CompleteLattice β] [FrameHomClass F α β] : CoeTₓ F (FrameHom α β) :=
-  ⟨fun f => { toFun := f, map_Sup' := map_Sup f, map_inf' := map_inf f }⟩
+  ⟨fun f => ⟨f, map_Sup f⟩⟩
 
 instance [CompleteLattice α] [CompleteLattice β] [CompleteLatticeHomClass F α β] : CoeTₓ F (CompleteLatticeHom α β) :=
-  ⟨fun f => { toFun := f, map_Sup' := map_Sup f, map_Inf' := map_Inf f }⟩
+  ⟨fun f => ⟨f, map_Sup f⟩⟩
 
 /-! ### Supremum homomorphisms -/
 
@@ -184,7 +194,7 @@ instance : SupHomClassₓ (SupHomₓ α β) α β where
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (SupHomₓ α β) fun _ => α → β :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
 
 @[simp]
 theorem to_fun_eq_coe {f : SupHomₓ α β} : f.toFun = (f : α → β) :=
@@ -304,7 +314,7 @@ instance : InfHomClassₓ (InfHomₓ α β) α β where
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (InfHomₓ α β) fun _ => α → β :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
 
 @[simp]
 theorem to_fun_eq_coe {f : InfHomₓ α β} : f.toFun = (f : α → β) :=
@@ -404,22 +414,6 @@ theorem top_apply (a : α) : (⊤ : InfHomₓ α β) a = ⊤ :=
 
 end InfHomₓ
 
-/-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
-@[simps]
-protected def SupHomₓ.dual [HasSupₓ α] [HasSupₓ β] : SupHomₓ α β ≃ InfHomₓ (OrderDual α) (OrderDual β) where
-  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Inf' := fun _ => congr_argₓ toDual (map_Sup f _) }
-  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Sup' := fun _ => congr_argₓ ofDual (map_Inf f _) }
-  left_inv := fun f => SupHomₓ.ext fun a => rfl
-  right_inv := fun f => InfHomₓ.ext fun a => rfl
-
-/-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
-@[simps]
-protected def InfHomₓ.dual [HasInfₓ α] [HasInfₓ β] : InfHomₓ α β ≃ SupHomₓ (OrderDual α) (OrderDual β) where
-  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_argₓ toDual (map_Inf f _) }
-  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
-  left_inv := fun f => InfHomₓ.ext fun a => rfl
-  right_inv := fun f => SupHomₓ.ext fun a => rfl
-
 /-! ### Frame homomorphisms -/
 
 
@@ -430,20 +424,21 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [Complet
 instance : FrameHomClass (FrameHom α β) α β where
   coe := fun f => f.toFun
   coe_injective' := fun f g h => by
-    obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
+    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
+    obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
+    congr
   map_Sup := fun f => f.map_Sup'
   map_inf := fun f => f.map_inf'
+  map_top := fun f => f.map_top'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (FrameHom α β) fun _ => α → β :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
 
 /-- Reinterpret a `frame_hom` as a `lattice_hom`. -/
 def toLatticeHom (f : FrameHom α β) : LatticeHom α β :=
-  { f with toFun := f,
-    map_sup' := fun a b => by
-      rw [← Sup_pair, map_Sup, Set.image_pair, Sup_pair] }
+  f
 
 @[simp]
 theorem to_fun_eq_coe {f : FrameHom α β} : f.toFun = (f : α → β) :=
@@ -456,13 +451,13 @@ theorem ext {f g : FrameHom α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `frame_hom` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (f : FrameHom α β) (f' : α → β) (h : f' = f) : FrameHom α β :=
-  { f.toSupHom.copy f' h, f.toLatticeHom.copy f' h with }
+  { (f : SupHomₓ α β).copy f' h with toInfTopHom := f.toInfTopHom.copy f' h }
 
 variable (α)
 
 /-- `id` as a `frame_hom`. -/
 protected def id : FrameHom α α :=
-  { SupHomₓ.id α, InfHom.id α with }
+  { SupHomₓ.id α with toInfTopHom := InfTopHom.id α }
 
 instance : Inhabited (FrameHom α α) :=
   ⟨FrameHom.id α⟩
@@ -479,7 +474,7 @@ theorem id_apply (a : α) : FrameHom.id α a = a :=
 
 /-- Composition of `frame_hom`s as a `frame_hom`. -/
 def comp (f : FrameHom β γ) (g : FrameHom α β) : FrameHom α γ :=
-  { f.toSupHom.comp g.toSupHom, f.toLatticeHom.comp g.toLatticeHom with }
+  { (f : SupHomₓ β γ).comp (g : SupHomₓ α β) with toInfTopHom := f.toInfTopHom.comp g.toInfTopHom }
 
 @[simp]
 theorem coe_comp (f : FrameHom β γ) (g : FrameHom α β) : ⇑(f.comp g) = f ∘ g :=
@@ -514,20 +509,6 @@ theorem cancel_left {g : FrameHom β γ} {f₁ f₂ : FrameHom α β} (hg : Inje
 instance : PartialOrderₓ (FrameHom α β) :=
   PartialOrderₓ.lift _ FunLike.coe_injective
 
-instance : HasBot (FrameHom α β) :=
-  ⟨{ InfHom.const _ _, (⊥ : SupHomₓ α β) with }⟩
-
-instance : OrderBot (FrameHom α β) :=
-  ⟨⊥, fun f a => bot_le⟩
-
-@[simp]
-theorem coe_bot : ⇑(⊥ : FrameHom α β) = ⊥ :=
-  rfl
-
-@[simp]
-theorem bot_apply (a : α) : (⊥ : FrameHom α β) a = ⊥ :=
-  rfl
-
 end FrameHom
 
 /-! ### Complete lattice homomorphisms -/
@@ -537,16 +518,16 @@ namespace CompleteLatticeHom
 
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] [CompleteLattice δ]
 
-/-- Reinterpret a `complete_lattice_hom` as an `Inf_hom`. -/
-def toInfHom (f : CompleteLatticeHom α β) : InfHomₓ α β :=
-  { f with }
-
 instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β where
   coe := fun f => f.toFun
   coe_injective' := fun f g h => by
     obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
   map_Sup := fun f => f.map_Sup'
   map_Inf := fun f => f.map_Inf'
+
+/-- Reinterpret a `complete_lattice_hom` as a `Sup_hom`. -/
+def toSupHom (f : CompleteLatticeHom α β) : SupHomₓ α β :=
+  f
 
 /-- Reinterpret a `complete_lattice_hom` as a `bounded_lattice_hom`. -/
 def toBoundedLatticeHom (f : CompleteLatticeHom α β) : BoundedLatticeHom α β :=
@@ -555,7 +536,7 @@ def toBoundedLatticeHom (f : CompleteLatticeHom α β) : BoundedLatticeHom α β
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
 instance : CoeFun (CompleteLatticeHom α β) fun _ => α → β :=
-  ⟨fun f => f.toFun⟩
+  FunLike.hasCoeToFun
 
 @[simp]
 theorem to_fun_eq_coe {f : CompleteLatticeHom α β} : f.toFun = (f : α → β) :=
@@ -568,7 +549,7 @@ theorem ext {f g : CompleteLatticeHom α β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `complete_lattice_hom` with a new `to_fun` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : CompleteLatticeHom α β) (f' : α → β) (h : f' = f) : CompleteLatticeHom α β :=
-  { f.toSupHom.copy f' h, f.toInfHom.copy f' h with }
+  { f.toSupHom.copy f' h with toInfHom := f.toInfHom.copy f' h }
 
 variable (α)
 
@@ -591,7 +572,7 @@ theorem id_apply (a : α) : CompleteLatticeHom.id α a = a :=
 
 /-- Composition of `complete_lattice_hom`s as a `complete_lattice_hom`. -/
 def comp (f : CompleteLatticeHom β γ) (g : CompleteLatticeHom α β) : CompleteLatticeHom α γ :=
-  { f.toSupHom.comp g.toSupHom, f.toInfHom.comp g.toInfHom with }
+  { f.toSupHom.comp g.toSupHom with toInfHom := f.toInfHom.comp g.toInfHom }
 
 @[simp]
 theorem coe_comp (f : CompleteLatticeHom β γ) (g : CompleteLatticeHom α β) : ⇑(f.comp g) = f ∘ g :=
@@ -626,13 +607,136 @@ theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeH
         rw [← comp_apply, h, comp_apply],
     congr_argₓ _⟩
 
-/-- Reinterpret a lattice homomorphism as a lattice homomorphism between the dual lattices. -/
+end CompleteLatticeHom
+
+/-! ### Dual homs -/
+
+
+namespace SupHomₓ
+
+variable [HasSupₓ α] [HasSupₓ β] [HasSupₓ γ]
+
+/-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
+@[simps]
+protected def dual : SupHomₓ α β ≃ InfHomₓ (OrderDual α) (OrderDual β) where
+  toFun := fun f => ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
+  invFun := fun f => ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
+  left_inv := fun f => SupHomₓ.ext fun a => rfl
+  right_inv := fun f => InfHomₓ.ext fun a => rfl
+
+@[simp]
+theorem dual_id : (SupHomₓ.id α).dual = InfHomₓ.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : SupHomₓ β γ) (f : SupHomₓ α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : SupHomₓ.dual.symm (InfHomₓ.id _) = SupHomₓ.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : InfHomₓ (OrderDual β) (OrderDual γ)) (f : InfHomₓ (OrderDual α) (OrderDual β)) :
+    SupHomₓ.dual.symm (g.comp f) = (SupHomₓ.dual.symm g).comp (SupHomₓ.dual.symm f) :=
+  rfl
+
+end SupHomₓ
+
+namespace InfHomₓ
+
+variable [HasInfₓ α] [HasInfₓ β] [HasInfₓ γ]
+
+/-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
+@[simps]
+protected def dual : InfHomₓ α β ≃ SupHomₓ (OrderDual α) (OrderDual β) where
+  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_argₓ toDual (map_Inf f _) }
+  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
+  left_inv := fun f => InfHomₓ.ext fun a => rfl
+  right_inv := fun f => SupHomₓ.ext fun a => rfl
+
+@[simp]
+theorem dual_id : (InfHomₓ.id α).dual = SupHomₓ.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : InfHomₓ β γ) (f : InfHomₓ α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : InfHomₓ.dual.symm (SupHomₓ.id _) = InfHomₓ.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : SupHomₓ (OrderDual β) (OrderDual γ)) (f : SupHomₓ (OrderDual α) (OrderDual β)) :
+    InfHomₓ.dual.symm (g.comp f) = (InfHomₓ.dual.symm g).comp (InfHomₓ.dual.symm f) :=
+  rfl
+
+end InfHomₓ
+
+namespace CompleteLatticeHom
+
+variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ]
+
+/-- Reinterpret a complete lattice homomorphism as a complete lattice homomorphism between the dual
+lattices. -/
 @[simps]
 protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom (OrderDual α) (OrderDual β) where
-  toFun := fun f => { toSupHom := f.toInfHom.dual, map_Inf' := fun _ => congr_argₓ toDual (map_Sup f _) }
-  invFun := fun f => { toSupHom := f.toInfHom.dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
+  toFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
+  invFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
   left_inv := fun f => ext fun a => rfl
   right_inv := fun f => ext fun a => rfl
+
+@[simp]
+theorem dual_id : (CompleteLatticeHom.id α).dual = CompleteLatticeHom.id _ :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : CompleteLatticeHom β γ) (f : CompleteLatticeHom α β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : CompleteLatticeHom.dual.symm (CompleteLatticeHom.id _) = CompleteLatticeHom.id α :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : CompleteLatticeHom (OrderDual β) (OrderDual γ))
+    (f : CompleteLatticeHom (OrderDual α) (OrderDual β)) :
+    CompleteLatticeHom.dual.symm (g.comp f) = (CompleteLatticeHom.dual.symm g).comp (CompleteLatticeHom.dual.symm f) :=
+  rfl
+
+end CompleteLatticeHom
+
+/-! ### Concrete homs -/
+
+
+namespace CompleteLatticeHom
+
+/-- `set.preimage` as a complete lattice homomorphism. -/
+def setPreimage (f : α → β) : CompleteLatticeHom (Set β) (Set α) where
+  toFun := Preimage f
+  map_Sup' := fun s =>
+    preimage_sUnion.trans <| by
+      simp only [Set.Sup_eq_sUnion, Set.sUnion_image]
+  map_Inf' := fun s =>
+    preimage_sInter.trans <| by
+      simp only [Set.Inf_eq_sInter, Set.sInter_image]
+
+@[simp]
+theorem coe_set_preimage (f : α → β) : ⇑(setPreimage f) = Preimage f :=
+  rfl
+
+@[simp]
+theorem set_preimage_apply (f : α → β) (s : Set β) : setPreimage f s = s.Preimage f :=
+  rfl
+
+@[simp]
+theorem set_preimage_id : setPreimage (id : α → α) = CompleteLatticeHom.id _ :=
+  rfl
+
+-- This lemma can't be `simp` because `g ∘ f` matches anything (`id ∘ f = f` synctatically)
+theorem set_preimage_comp (g : β → γ) (f : α → β) : setPreimage (g ∘ f) = (setPreimage f).comp (setPreimage g) :=
+  rfl
 
 end CompleteLatticeHom
 

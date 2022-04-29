@@ -20,7 +20,7 @@ noncomputable section
 
 open Finsupp Finset AddMonoidAlgebra
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 namespace Polynomial
 
@@ -39,12 +39,14 @@ theorem coeff_one (n : ℕ) : coeff (1 : R[X]) n = if 0 = n then 1 else 0 :=
 theorem coeff_add (p q : R[X]) (n : ℕ) : coeff (p + q) n = coeff p n + coeff q n := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
-  simp [coeff, add_to_finsupp]
+  simp_rw [← of_finsupp_add, coeff]
+  exact Finsupp.add_apply _ _ _
 
 @[simp]
 theorem coeff_smul [Monoidₓ S] [DistribMulAction S R] (r : S) (p : R[X]) (n : ℕ) : coeff (r • p) n = r • coeff p n := by
   rcases p with ⟨⟩
-  simp [coeff, smul_to_finsupp]
+  simp_rw [← of_finsupp_smul, coeff]
+  exact Finsupp.smul_apply _ _ _
 
 theorem support_smul [Monoidₓ S] [DistribMulAction S R] (r : S) (p : R[X]) : support (r • p) ⊆ support p := by
   intro i hi
@@ -91,7 +93,7 @@ by using `finset.nat.sum_antidiagonal_eq_sum_range_succ`. -/
 theorem coeff_mul (p q : R[X]) (n : ℕ) : coeff (p * q) n = ∑ x in Nat.antidiagonal n, coeff p x.1 * coeff q x.2 := by
   rcases p with ⟨⟩
   rcases q with ⟨⟩
-  simp only [coeff, mul_to_finsupp]
+  simp_rw [← of_finsupp_mul, coeff]
   exact AddMonoidAlgebra.mul_apply_antidiagonal p q n _ fun x => nat.mem_antidiagonal
 
 @[simp]
@@ -115,8 +117,8 @@ theorem coeff_C_mul_X (x : R) (n : ℕ) : coeff (c x * X : R[X]) n = if n = 1 th
 @[simp]
 theorem coeff_C_mul (p : R[X]) : coeff (c a * p) n = a * coeff p n := by
   rcases p with ⟨⟩
-  simp only [C, monomial, monomial_fun, mul_to_finsupp, RingHom.coe_mk, coeff,
-    AddMonoidAlgebra.single_zero_mul_apply p a n]
+  simp_rw [← monomial_zero_left, ← of_finsupp_single, ← of_finsupp_mul, coeff]
+  exact AddMonoidAlgebra.single_zero_mul_apply p a n
 
 theorem C_mul' (a : R) (f : R[X]) : c a * f = a • f := by
   ext
@@ -125,8 +127,8 @@ theorem C_mul' (a : R) (f : R[X]) : c a * f = a • f := by
 @[simp]
 theorem coeff_mul_C (p : R[X]) (n : ℕ) (a : R) : coeff (p * c a) n = coeff p n * a := by
   rcases p with ⟨⟩
-  simp only [C, monomial, monomial_fun, mul_to_finsupp, RingHom.coe_mk, coeff,
-    AddMonoidAlgebra.mul_single_zero_apply p a n]
+  simp_rw [← monomial_zero_left, ← of_finsupp_single, ← of_finsupp_mul, coeff]
+  exact AddMonoidAlgebra.mul_single_zero_apply p a n
 
 theorem coeff_X_pow (k n : ℕ) : coeff (X ^ k : R[X]) n = if n = k then 1 else 0 := by
   simp only [one_mulₓ, RingHom.map_one, ← coeff_C_mul_X_pow]
@@ -175,6 +177,15 @@ theorem coeff_X_mul (p : R[X]) (n : ℕ) : coeff (X * p) (n + 1) = coeff p n := 
 
 theorem mul_X_pow_eq_zero {p : R[X]} {n : ℕ} (H : p * X ^ n = 0) : p = 0 :=
   ext fun k => (coeff_mul_X_pow p n k).symm.trans <| ext_iff.1 H (k + n)
+
+theorem mul_X_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n * P := by
+  intro P Q hPQ
+  simp only at hPQ
+  ext i
+  rw [← coeff_X_pow_mul P n i, hPQ, coeff_X_pow_mul Q n i]
+
+theorem mul_X_injective : Function.Injective fun P : R[X] => X * P :=
+  pow_oneₓ (x : R[X]) ▸ mul_X_pow_injective 1
 
 theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : c c * X ^ n = monomial n c := by
   ext1
@@ -281,6 +292,9 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ringₓ R] [CharZero R] : (↑m :
     
 
 end cast
+
+instance [CharZero R] : CharZero R[X] where
+  cast_injective := fun x y => nat_cast_inj.mp
 
 end Polynomial
 

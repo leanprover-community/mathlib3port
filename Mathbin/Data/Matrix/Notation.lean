@@ -6,6 +6,7 @@ Authors: Anne Baanen
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Tactic.FinCases
+import Mathbin.Algebra.BigOperators.Fin
 
 /-!
 # Matrix and vector notation
@@ -38,7 +39,7 @@ universe u
 
 variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
-open_locale Matrix
+open Matrix
 
 /-- Use `![...]` notation for displaying a `fin`-indexed matrix, for example:
 

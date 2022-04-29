@@ -1,9 +1,9 @@
 /-
 Copyright (c) 2021 Martin Zinkevich. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Martin Zinkevich
+Authors: Martin Zinkevich, Vincent Beffara
 -/
-import Mathbin.MeasureTheory.Integral.Lebesgue
+import Mathbin.MeasureTheory.Integral.SetIntegral
 import Mathbin.Probability.Independence
 
 /-!
@@ -31,19 +31,18 @@ noncomputable section
 
 open Set MeasureTheory
 
-open_locale Ennreal
+open Ennreal
 
-variable {α : Type _}
+variable {α : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α} {f g : α → ℝ≥0∞} {X Y : α → ℝ}
 
 namespace ProbabilityTheory
 
-/-- This (roughly) proves that if a random variable `f` is independent of an event `T`,
-   then if you restrict the random variable to `T`, then
-   `E[f * indicator T c 0]=E[f] * E[indicator T c 0]`. It is useful for
-   `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space`. -/
-theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf : MeasurableSpace α} [M : MeasurableSpace α]
-    {μ : Measureₓ α} (hMf : Mf ≤ M) (c : ℝ≥0∞) {T : Set α} (h_meas_T : MeasurableSet T)
-    (h_ind : IndepSetsₓ Mf.MeasurableSet' {T} μ) {f : α → ℝ≥0∞} (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f) :
+/-- If a random variable `f` in `ℝ≥0∞` is independent of an event `T`, then if you restrict the
+  random variable to `T`, then `E[f * indicator T c 0]=E[f] * E[indicator T c 0]`. It is useful for
+  `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space`. -/
+theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : MeasurableSpace α} {μ : Measureₓ α}
+    (hMf : Mf ≤ mα) (c : ℝ≥0∞) {T : Set α} (h_meas_T : MeasurableSet T) (h_ind : IndepSetsₓ Mf.MeasurableSet' {T} μ)
+    (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f) :
     (∫⁻ a, f a * T.indicator (fun _ => c) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, T.indicator (fun _ => c) a ∂μ := by
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a := fun g h_mg =>
@@ -78,16 +77,15 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf : Measu
       
     
 
-/-- This (roughly) proves that if `f` and `g` are independent random variables,
+/-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. However, instead of directly using the independence
    of the random variables, it uses the independence of measurable spaces for the
    domains of `f` and `g`. This is similar to the sigma-algebra approach to
    independence. See `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_fn` for
    a more common variant of the product of independent variables. -/
-theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg : MeasurableSpace α}
-    [M : MeasurableSpace α] {μ : Measureₓ α} (hMf : Mf ≤ M) (hMg : Mg ≤ M) (h_ind : Indepₓ Mf Mg μ) {f g : α → ℝ≥0∞}
-    (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f) (h_meas_g : @Measurable α ℝ≥0∞ Mg _ g) :
-    (∫⁻ a, f a * g a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg mα : MeasurableSpace α}
+    {μ : Measureₓ α} (hMf : Mf ≤ mα) (hMg : Mg ≤ mα) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f)
+    (h_meas_g : @Measurable α ℝ≥0∞ Mg _ g) : (∫⁻ a, f a * g a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
   apply Measurable.ennreal_induction
@@ -115,13 +113,123 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
       
     
 
-/-- This proves that if `f` and `g` are independent random variables,
+/-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. -/
-theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun [MeasurableSpace α] {μ : Measureₓ α} {f g : α → ℝ≥0∞}
-    (h_meas_f : Measurable f) (h_meas_g : Measurable g) (h_indep_fun : IndepFunₓ f g μ) :
-    (∫⁻ a, (f * g) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ :=
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun (h_meas_f : Measurable f) (h_meas_g : Measurable g)
+    (h_indep_fun : IndepFunₓ f g μ) : (∫⁻ a, (f * g) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space (measurable_iff_comap_le.1 h_meas_f)
     (measurable_iff_comap_le.1 h_meas_g) h_indep_fun (Measurable.of_comap_le le_rfl) (Measurable.of_comap_le le_rfl)
+
+/-- If `f` and `g` with values in `ℝ≥0∞` are independent and almost everywhere measurable,
+   then `E[f * g] = E[f] * E[g]` (slightly generalizing
+   `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun`). -/
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMeasurable f μ)
+    (h_meas_g : AeMeasurable g μ) (h_indep_fun : IndepFunₓ f g μ) :
+    (∫⁻ a, (f * g) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
+  have fg_ae : f * g =ᵐ[μ] h_meas_f.mk _ * h_meas_g.mk _ := h_meas_f.ae_eq_mk.mul h_meas_g.ae_eq_mk
+  rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk, lintegral_congr_ae fg_ae]
+  apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk h_meas_g.measurable_mk
+  exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
+
+/-- The product of two independent, integrable, real_valued random variables is integrable. -/
+theorem IndepFunₓ.integrable_mul {β : Type _} {mβ : MeasurableSpace β} {X Y : α → β} [NormedDivisionRing β]
+    [BorelSpace β] (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
+  let nX : α → Ennreal := fun a => ∥X a∥₊
+  let nY : α → Ennreal := fun a => ∥Y a∥₊
+  have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurable_nnnorm measurable_nnnorm
+  have hXY'' : indep_fun nX nY μ := hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
+  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
+  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
+  have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
+    convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
+  refine' ⟨hX.1.mul hY.1, _⟩
+  simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
+  exact ennreal.mul_lt_top_iff.mpr (Or.inl ⟨hX.2, hY.2⟩)
+
+/-- The (Bochner) integral of the product of two independent, nonnegative random
+  variables is the product of their integrals. The proof is just plumbing around
+  `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'`. -/
+theorem IndepFunₓ.integral_mul_of_nonneg (hXY : IndepFunₓ X Y μ) (hXp : 0 ≤ X) (hYp : 0 ≤ Y) (hXm : AeMeasurable X μ)
+    (hYm : AeMeasurable Y μ) : integral μ (X * Y) = integral μ X * integral μ Y := by
+  have h1 : AeMeasurable (fun a => Ennreal.ofReal (X a)) μ := ennreal.measurable_of_real.comp_ae_measurable hXm
+  have h2 : AeMeasurable (fun a => Ennreal.ofReal (Y a)) μ := ennreal.measurable_of_real.comp_ae_measurable hYm
+  have h3 : AeMeasurable (X * Y) μ := hXm.mul hYm
+  have h4 : 0 ≤ᵐ[μ] X * Y := ae_of_all _ fun ω => mul_nonneg (hXp ω) (hYp ω)
+  rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ hXp) hXm.ae_strongly_measurable,
+    integral_eq_lintegral_of_nonneg_ae (ae_of_all _ hYp) hYm.ae_strongly_measurable,
+    integral_eq_lintegral_of_nonneg_ae h4 h3.ae_strongly_measurable]
+  simp_rw [← Ennreal.to_real_mul, Pi.mul_apply, Ennreal.of_real_mul (hXp _)]
+  congr
+  apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h1 h2
+  exact hXY.comp Ennreal.measurable_of_real Ennreal.measurable_of_real
+
+/-- The (Bochner) integral of the product of two independent, integrable random
+  variables is the product of their integrals. The proof is pedestrian decomposition
+  into their positive and negative parts in order to apply `indep_fun.integral_mul_of_nonneg`
+  four times. -/
+theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) :
+    integral μ (X * Y) = integral μ X * integral μ Y := by
+  let pos : ℝ → ℝ := fun x => max x 0
+  let neg : ℝ → ℝ := fun x => max (-x) 0
+  have posm : Measurable Pos := measurable_id'.max measurable_const
+  have negm : Measurable neg := measurable_id'.neg.max measurable_const
+  let Xp := Pos ∘ X
+  -- `X⁺` would look better but it makes `simp_rw` below fail
+  let Xm := neg ∘ X
+  let Yp := Pos ∘ Y
+  let Ym := neg ∘ Y
+  have hXpm : X = Xp - Xm := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (X ω)).symm
+  have hYpm : Y = Yp - Ym := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (Y ω)).symm
+  have hp1 : 0 ≤ Xm := fun ω => le_max_rightₓ _ _
+  have hp2 : 0 ≤ Xp := fun ω => le_max_rightₓ _ _
+  have hp3 : 0 ≤ Ym := fun ω => le_max_rightₓ _ _
+  have hp4 : 0 ≤ Yp := fun ω => le_max_rightₓ _ _
+  have hm1 : AeMeasurable Xm μ := hX.1.AeMeasurable.neg.max ae_measurable_const
+  have hm2 : AeMeasurable Xp μ := hX.1.AeMeasurable.max ae_measurable_const
+  have hm3 : AeMeasurable Ym μ := hY.1.AeMeasurable.neg.max ae_measurable_const
+  have hm4 : AeMeasurable Yp μ := hY.1.AeMeasurable.max ae_measurable_const
+  have hv1 : integrable Xm μ := hX.neg.max_zero
+  have hv2 : integrable Xp μ := hX.max_zero
+  have hv3 : integrable Ym μ := hY.neg.max_zero
+  have hv4 : integrable Yp μ := hY.max_zero
+  have hi1 : indep_fun Xm Ym μ := hXY.comp negm negm
+  have hi2 : indep_fun Xp Ym μ := hXY.comp posm negm
+  have hi3 : indep_fun Xm Yp μ := hXY.comp negm posm
+  have hi4 : indep_fun Xp Yp μ := hXY.comp posm posm
+  have hl1 : integrable (Xm * Ym) μ := hi1.integrable_mul hv1 hv3
+  have hl2 : integrable (Xp * Ym) μ := hi2.integrable_mul hv2 hv3
+  have hl3 : integrable (Xm * Yp) μ := hi3.integrable_mul hv1 hv4
+  have hl4 : integrable (Xp * Yp) μ := hi4.integrable_mul hv2 hv4
+  have hl5 : integrable (Xp * Yp - Xm * Yp) μ := hl4.sub hl3
+  have hl6 : integrable (Xp * Ym - Xm * Ym) μ := hl2.sub hl1
+  simp_rw [hXpm, hYpm, mul_sub, sub_mul]
+  rw [integral_sub' hl5 hl6, integral_sub' hl4 hl3, integral_sub' hl2 hl1, integral_sub' hv2 hv1, integral_sub' hv4 hv3,
+    hi1.integral_mul_of_nonneg hp1 hp3 hm1 hm3, hi2.integral_mul_of_nonneg hp2 hp3 hm2 hm3,
+    hi3.integral_mul_of_nonneg hp1 hp4 hm1 hm4, hi4.integral_mul_of_nonneg hp2 hp4 hm2 hm4]
+  ring
+
+/-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
+  `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`
+  satisfying appropriate integrability conditions. -/
+theorem indep_fun_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _} {mβ : MeasurableSpace β}
+    {mβ' : MeasurableSpace β'} {f : α → β} {g : α → β'} {hfm : Measurable f} {hgm : Measurable g} :
+    IndepFunₓ f g μ ↔
+      ∀ {φ : β → ℝ} {ψ : β' → ℝ},
+        Measurable φ →
+          Measurable ψ →
+            Integrable (φ ∘ f) μ →
+              Integrable (ψ ∘ g) μ → integral μ (φ ∘ f * ψ ∘ g) = integral μ (φ ∘ f) * integral μ (ψ ∘ g) :=
+  by
+  refine' ⟨fun hfg _ _ hφ hψ => indep_fun.integral_mul_of_integrable (hfg.comp hφ hψ), _⟩
+  rintro h _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
+  specialize
+    h (measurable_one.indicator hA) (measurable_one.indicator hB)
+      ((integrable_const 1).indicator (hfm.comp measurable_id hA))
+      ((integrable_const 1).indicator (hgm.comp measurable_id hB))
+  rwa [← Ennreal.to_real_eq_to_real (measure_ne_top μ _), Ennreal.to_real_mul, ←
+    integral_indicator_one ((hfm hA).inter (hgm hB)), ← integral_indicator_one (hfm hA), ←
+    integral_indicator_one (hgm hB), Set.inter_indicator_one]
+  exact Ennreal.mul_ne_top (measure_ne_top μ _) (measure_ne_top μ _)
 
 end ProbabilityTheory
 

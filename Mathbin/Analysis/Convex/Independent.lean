@@ -40,7 +40,7 @@ independence, convex position
 -/
 
 
-open_locale Affine BigOperators Classical
+open Affine BigOperators Classical
 
 open Finset Function
 

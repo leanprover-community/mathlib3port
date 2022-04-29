@@ -40,7 +40,7 @@ theorem coe_fin_range (n : ℕ) : (finRange n : Set (Finₓ n)) = Set.Univ :=
 /-- Given a finset `s` of `ℕ` contained in `{0,..., n-1}`, the corresponding finset in `fin n`
 is `s.attach_fin h` where `h` is a proof that all elements of `s` are less than `n`. -/
 def attachFin (s : Finset ℕ) {n : ℕ} (h : ∀, ∀ m ∈ s, ∀, m < n) : Finset (Finₓ n) :=
-  ⟨s.1.pmap (fun a ha => ⟨a, ha⟩) h, Multiset.nodup_pmap (fun _ _ _ _ => Finₓ.veq_of_eq) s.2⟩
+  ⟨s.1.pmap (fun a ha => ⟨a, ha⟩) h, s.Nodup.pmap fun _ _ _ _ => Finₓ.veq_of_eq⟩
 
 @[simp]
 theorem mem_attach_fin {n : ℕ} {s : Finset ℕ} (h : ∀, ∀ m ∈ s, ∀, m < n) {a : Finₓ n} :

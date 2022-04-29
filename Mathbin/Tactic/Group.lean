@@ -50,17 +50,17 @@ open Tactic.SimpArgType Interactive Tactic.Group
 /-- Auxiliary tactic for the `group` tactic. Calls the simplifier only. -/
 unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
   simp_core {  } skip true
-      [expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ), expr (pquote.1 one_pow), expr (pquote.1 one_zpow),
-        expr (pquote.1 sub_self), expr (pquote.1 add_neg_selfₓ), expr (pquote.1 neg_add_selfₓ),
-        expr (pquote.1 neg_negₓ), expr (pquote.1 tsub_self), expr (pquote.1 Int.coe_nat_add),
-        expr (pquote.1 Int.coe_nat_mul), expr (pquote.1 Int.coe_nat_zero), expr (pquote.1 Int.coe_nat_one),
-        expr (pquote.1 Int.coe_nat_bit0), expr (pquote.1 Int.coe_nat_bit1), expr (pquote.1 Int.mul_neg_eq_neg_mul_symm),
-        expr (pquote.1 Int.neg_mul_eq_neg_mul_symm), symm_expr (pquote.1 zpow_coe_nat),
-        symm_expr (pquote.1 zpow_neg_one), symm_expr (pquote.1 zpow_mul), symm_expr (pquote.1 zpow_add_one),
-        symm_expr (pquote.1 zpow_one_add), symm_expr (pquote.1 zpow_add), expr (pquote.1 mul_zpow_neg_one),
-        expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow), symm_expr (pquote.1 mul_assoc), expr (pquote.1 zpow_trick),
-        expr (pquote.1 zpow_trick_one), expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub),
-        expr (pquote.1 Tactic.Ring.hornerₓ)]
+      [expr (pquote.1 commutator_element_def), expr (pquote.1 mul_oneₓ), expr (pquote.1 one_mulₓ),
+        expr (pquote.1 one_pow), expr (pquote.1 one_zpow), expr (pquote.1 sub_self), expr (pquote.1 add_neg_selfₓ),
+        expr (pquote.1 neg_add_selfₓ), expr (pquote.1 neg_negₓ), expr (pquote.1 tsub_self),
+        expr (pquote.1 Int.coe_nat_add), expr (pquote.1 Int.coe_nat_mul), expr (pquote.1 Int.coe_nat_zero),
+        expr (pquote.1 Int.coe_nat_one), expr (pquote.1 Int.coe_nat_bit0), expr (pquote.1 Int.coe_nat_bit1),
+        expr (pquote.1 Int.mul_neg_eq_neg_mul_symm), expr (pquote.1 Int.neg_mul_eq_neg_mul_symm),
+        symm_expr (pquote.1 zpow_coe_nat), symm_expr (pquote.1 zpow_neg_one), symm_expr (pquote.1 zpow_mul),
+        symm_expr (pquote.1 zpow_add_one), symm_expr (pquote.1 zpow_one_add), symm_expr (pquote.1 zpow_add),
+        expr (pquote.1 mul_zpow_neg_one), expr (pquote.1 zpow_zero), expr (pquote.1 mul_zpow),
+        symm_expr (pquote.1 mul_assoc), expr (pquote.1 zpow_trick), expr (pquote.1 zpow_trick_one),
+        expr (pquote.1 zpow_trick_one'), expr (pquote.1 zpow_trick_sub), expr (pquote.1 Tactic.Ring.hornerₓ)]
       [] locat >>
     skip
 

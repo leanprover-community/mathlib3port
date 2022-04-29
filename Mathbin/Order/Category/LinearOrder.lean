@@ -34,6 +34,10 @@ instance : CoeSort LinearOrderₓₓ (Type _) :=
 def of (α : Type _) [LinearOrderₓ α] : LinearOrderₓₓ :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [LinearOrderₓ α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited LinearOrderₓₓ :=
   ⟨of PUnit⟩
 

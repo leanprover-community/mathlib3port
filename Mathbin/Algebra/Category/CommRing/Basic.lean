@@ -5,7 +5,7 @@ Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 -/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # Category instances for semiring, ring, comm_semiring, and comm_ring.
@@ -51,6 +51,10 @@ def of (R : Type u) [Semiringₓ R] : SemiRing :=
 def ofHom {R S : Type u} [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
+@[simp]
+theorem of_hom_apply {R S : Type u} [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+  rfl
+
 instance : Inhabited SemiRing :=
   ⟨of PUnit⟩
 
@@ -80,7 +84,7 @@ namespace Ringₓₓ
 instance : BundledHom.ParentProjection @Ringₓ.toSemiring :=
   ⟨⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
 deriving instance [anonymous], LargeCategory, ConcreteCategory for Ringₓₓ
 
 /-- Construct a bundled Ring from the underlying type and typeclass. -/
@@ -90,6 +94,10 @@ def of (R : Type u) [Ringₓ R] : Ringₓₓ :=
 /-- Typecheck a `ring_hom` as a morphism in `Ring`. -/
 def ofHom {R S : Type u} [Ringₓ R] [Ringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
+
+@[simp]
+theorem of_hom_apply {R S : Type u} [Ringₓ R] [Ringₓ S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+  rfl
 
 instance : Inhabited Ringₓₓ :=
   ⟨of PUnit⟩
@@ -131,6 +139,10 @@ def of (R : Type u) [CommSemiringₓ R] : CommSemiRing :=
 /-- Typecheck a `ring_hom` as a morphism in `CommSemiRing`. -/
 def ofHom {R S : Type u} [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
+
+@[simp]
+theorem of_hom_apply {R S : Type u} [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+  rfl
 
 instance : Inhabited CommSemiRing :=
   ⟨of PUnit⟩
@@ -175,6 +187,10 @@ def of (R : Type u) [CommRingₓ R] : CommRingₓₓ :=
 def ofHom {R S : Type u} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
+@[simp]
+theorem of_hom_apply {R S : Type u} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) (x : R) : ofHom f x = f x :=
+  rfl
+
 instance : Inhabited CommRingₓₓ :=
   ⟨of PUnit⟩
 
@@ -195,7 +211,7 @@ instance hasForgetToCommSemiRing : HasForget₂ CommRingₓₓ CommSemiRing :=
       tidy)
 
 instance : Full (forget₂ CommRingₓₓ CommSemiRing) where
-  Preimage := fun X Y f => f
+  preimage := fun X Y f => f
 
 end CommRingₓₓ
 

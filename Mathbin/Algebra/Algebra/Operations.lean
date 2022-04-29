@@ -5,6 +5,8 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Algebra.Bilinear
 import Mathbin.Algebra.Module.SubmodulePointwise
+import Mathbin.Algebra.Module.Opposites
+import Mathbin.Data.Finset.Pointwise
 
 /-!
 # Multiplication and division of submodules of an algebra.
@@ -25,17 +27,17 @@ It is proved that `submodule R A` is a semiring, and also an algebra over `set A
 
 ## Tags
 
-multiplication of submodules, division of subodules, submodule semiring
+multiplication of submodules, division of submodules, submodule semiring
 -/
 
 
 universe uι u v
 
-open Algebra Set
+open Algebra Set MulOpposite
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Pointwise
+open Pointwise
 
 namespace Submodule
 
@@ -71,6 +73,30 @@ theorem one_eq_span : (1 : Submodule R A) = R∙1 := by
 theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P := by
   simpa only [one_eq_span, span_le, Set.singleton_subset_iff]
 
+protected theorem map_one {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
+    map f.toLinearMap (1 : Submodule R A) = 1 := by
+  ext
+  simp
+
+@[simp]
+theorem map_op_one : map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R A) = 1 := by
+  ext
+  induction x using MulOpposite.rec
+  simp
+
+@[simp]
+theorem comap_op_one : comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (1 : Submodule R Aᵐᵒᵖ) = 1 := by
+  ext
+  simp
+
+@[simp]
+theorem map_unop_one : map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (1 : Submodule R Aᵐᵒᵖ) = 1 := by
+  rw [← comap_equiv_eq_map_symm, comap_op_one]
+
+@[simp]
+theorem comap_unop_one : comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (1 : Submodule R A) = 1 := by
+  rw [← map_equiv_eq_comap_symm, map_op_one]
+
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
@@ -99,7 +125,7 @@ protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M * N) (
 @[elab_as_eliminator]
 protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
     (hm : ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, C (m * n) (mul_mem_mul ‹_› ‹_›))
-    (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem _ ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
+    (ha : ∀ x hx y hy, C x hx → C y hy → C (x + y) (add_mem ‹_› ‹_›)) {r : A} (hr : r ∈ M * N) : C r hr := by
   refine' Exists.elim _ fun hc : C r hr => hc
   exact
     Submodule.mul_induction_on hr (fun x hx y hy => ⟨_, hm _ hx _ hy⟩) fun x y ⟨_, hx⟩ ⟨_, hy⟩ => ⟨_, ha _ _ _ _ hx hy⟩
@@ -111,20 +137,16 @@ theorem span_mul_span : span R S * span R T = span R (S * T) := by
   · rw [mul_le]
     intro a ha b hb
     apply span_induction ha
-    on_goal 0 =>
+    on_goal 1 =>
       intros
       apply span_induction hb
-      on_goal 0 =>
+      on_goal 1 =>
         intros
         exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
     all_goals
       intros
       simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-      try
-        apply add_mem _ _ _
-      try
-        apply smul_mem _ _ _
-    assumption'
+      solve_by_elim [add_mem _ _, zero_mem _, smul_mem _ _ _]
     
   · rw [span_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
@@ -199,7 +221,7 @@ theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A
   rintro _ ⟨i, j, hi, hj, rfl⟩
   exact mul_mem_mul hi hj
 
-theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
+protected theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
     map f.toLinearMap (M * N) = map f.toLinearMap M * map f.toLinearMap N :=
   calc
     map f.toLinearMap (M * N) = ⨆ i : M, (N.map (lmul R A i)).map f.toLinearMap := map_supr _ _
@@ -221,11 +243,80 @@ theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
         
     
 
+theorem map_op_mul :
+    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M * N) =
+      map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) N *
+        map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M :=
+  by
+  apply le_antisymmₓ
+  · simp_rw [map_le_iff_le_comap]
+    refine' mul_le.2 fun m hm n hn => _
+    rw [mem_comap, map_equiv_eq_comap_symm, map_equiv_eq_comap_symm]
+    show op n * op m ∈ _
+    exact mul_mem_mul hn hm
+    
+  · refine' mul_le.2 (MulOpposite.rec fun m hm => MulOpposite.rec fun n hn => _)
+    rw [Submodule.mem_map_equiv] at hm hn⊢
+    exact mul_mem_mul hn hm
+    
+
+theorem comap_unop_mul :
+    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M * N) =
+      comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) N *
+        comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M :=
+  by
+  simp_rw [← map_equiv_eq_comap_symm, map_op_mul]
+
+theorem map_unop_mul (M N : Submodule R Aᵐᵒᵖ) :
+    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M * N) =
+      map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) N *
+        map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M :=
+  have : Function.Injective (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) := LinearEquiv.injective _
+  map_injective_of_injective this <| by
+    rw [← map_comp, map_op_mul, ← map_comp, ← map_comp, LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
+      LinearEquiv.refl_to_linear_map, map_id, map_id, map_id]
+
+theorem comap_op_mul (M N : Submodule R Aᵐᵒᵖ) :
+    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M * N) =
+      comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) N *
+        comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M :=
+  by
+  simp_rw [comap_equiv_eq_map_symm, map_unop_mul]
+
+section
+
+open Pointwise
+
+/-- `submodule.has_pointwise_neg` distributes over multiplication.
+
+This is available as an instance in the `pointwise` locale. -/
+protected def hasDistribPointwiseNeg {A} [Ringₓ A] [Algebra R A] : HasDistribNeg (Submodule R A) :=
+  { Submodule.hasInvolutivePointwiseNeg with neg := Neg.neg,
+    neg_mul := fun x y => by
+      refine' le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((Submodule.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+        simp only [Submodule.mem_neg, ← neg_mul] at *
+      · exact mul_mem_mul hm hn
+        
+      · exact mul_mem_mul (neg_mem_neg.2 hm) hn
+        ,
+    mul_neg := fun x y => by
+      refine' le_antisymmₓ (mul_le.2 fun m hm n hn => _) ((Submodule.neg_le _ _).2 <| mul_le.2 fun m hm n hn => _) <;>
+        simp only [Submodule.mem_neg, ← mul_neg] at *
+      · exact mul_mem_mul hm hn
+        
+      · exact mul_mem_mul hm (neg_mem_neg.2 hn)
+         }
+
+localized [Pointwise] attribute [instance] Submodule.hasDistribPointwiseNeg
+
+end
+
 section DecidableEq
 
-open_locale Classical
+open Classical
 
-theorem mem_span_mul_finite_of_mem_span_mul {S : Set A} {S' : Set A} {x : A} (hx : x ∈ span R (S * S')) :
+theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiringₓ R] [AddCommMonoidₓ A] [Mul A] [Module R A] {S : Set A}
+    {S' : Set A} {x : A} (hx : x ∈ span R (S * S')) :
     ∃ T T' : Finset A, ↑T ⊆ S ∧ ↑T' ⊆ S' ∧ x ∈ span R (T * T' : Set A) := by
   obtain ⟨U, h, hU⟩ := mem_span_finite_of_mem_span hx
   obtain ⟨T, T', hS, hS', h⟩ := Finset.subset_mul h
@@ -278,9 +369,10 @@ theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule 
     
 
 /-- Dependent version of `submodule.pow_induction_on`. -/
+@[elab_as_eliminator]
 protected theorem pow_induction_on' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
-    (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem _ ‹_› ‹_›))
+    (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul : ∀, ∀ m ∈ M, ∀ i x hx, C i x hx → C i.succ (m * x) (mul_mem_mul H hx)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C n x hx := by
   induction' n with n n_ih generalizing x
@@ -294,10 +386,57 @@ protected theorem pow_induction_on' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
 
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `m * x` where `m ∈ M` and it holds for `x` -/
+@[elab_as_eliminator]
 protected theorem pow_induction_on {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀, ∀ m ∈ M, ∀ x, C x → C (m * x)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C x :=
   Submodule.pow_induction_on' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
+
+/-- `submonoid.map` as a `monoid_with_zero_hom`, when applied to `alg_hom`s. -/
+@[simps]
+def mapHom {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') : Submodule R A →*₀ Submodule R A' where
+  toFun := map f.toLinearMap
+  map_zero' := Submodule.map_bot _
+  map_one' := Submodule.map_one _
+  map_mul' := fun _ _ => Submodule.map_mul _ _ _
+
+/-- The ring of submodules of the opposite algebra is isomorphic to the opposite ring of
+submodules. -/
+@[simps apply symmApply]
+def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
+  toFun := fun p => op <| p.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ)
+  invFun := fun p => p.unop.comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A)
+  left_inv := fun p => SetLike.coe_injective <| rfl
+  right_inv := fun p => unop_injective <| SetLike.coe_injective rfl
+  map_add' := fun p q => by
+    simp [comap_equiv_eq_map_symm, ← op_add]
+  map_mul' := fun p q => congr_argₓ op <| comap_op_mul _ _
+
+protected theorem map_pow {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') (n : ℕ) :
+    map f.toLinearMap (M ^ n) = map f.toLinearMap M ^ n :=
+  map_pow (mapHom f) M n
+
+theorem comap_unop_pow (n : ℕ) :
+    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M ^ n) =
+      comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M ^ n :=
+  (equivOpposite : Submodule R Aᵐᵒᵖ ≃+* _).symm.map_pow (op M) n
+
+theorem comap_op_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
+    comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M ^ n) =
+      comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M ^ n :=
+  op_injective <| (equivOpposite : Submodule R Aᵐᵒᵖ ≃+* _).map_pow M n
+
+theorem map_op_pow (n : ℕ) :
+    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M ^ n) =
+      map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M ^ n :=
+  by
+  rw [map_equiv_eq_comap_symm, map_equiv_eq_comap_symm, comap_unop_pow]
+
+theorem map_unop_pow (n : ℕ) (M : Submodule R Aᵐᵒᵖ) :
+    map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M ^ n) =
+      map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) M ^ n :=
+  by
+  rw [← comap_equiv_eq_map_symm, ← comap_equiv_eq_map_symm, comap_op_pow]
 
 /-- `span` is a semiring homomorphism (recall multiplication is pointwise multiplication of subsets
 on either side). -/
@@ -332,7 +471,7 @@ instance : CommSemiringₓ (Submodule R A) :=
 
 theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
     (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) := by
-  let this' := Classical.decEq ι
+  let this := Classical.decEq ι
   refine' Finset.induction_on s _ _
   · simp [one_eq_span, Set.singleton_one]
     
@@ -434,7 +573,7 @@ theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
   · rwa [le_div_iff_mul_le, one_mulₓ]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) := by
   rw [← mul_oneₓ I]
   apply mul_le_mul_right (one_le_one_div.mpr hI)
@@ -447,7 +586,7 @@ theorem mul_one_div_le_one {I : Submodule R A} : I * (1 / I) ≤ 1 := by
   exact hn m hm
 
 @[simp]
-theorem map_div {B : Type _} [CommRingₓ B] [Algebra R B] (I J : Submodule R A) (h : A ≃ₐ[R] B) :
+protected theorem map_div {B : Type _} [CommSemiringₓ B] [Algebra R B] (I J : Submodule R A) (h : A ≃ₐ[R] B) :
     (I / J).map h.toLinearMap = I.map h.toLinearMap / J.map h.toLinearMap := by
   ext x
   simp only [mem_map, mem_div_iff_forall_mul_mem]

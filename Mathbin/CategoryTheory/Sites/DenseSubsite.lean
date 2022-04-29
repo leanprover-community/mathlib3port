@@ -303,7 +303,7 @@ between presheaves.
 -/
 noncomputable def sheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ ⟶ ℱ'.val :=
   let α' := sheafYonedaHom H α
-  { app := fun X => yoneda.Preimage (α'.app X),
+  { app := fun X => yoneda.preimage (α'.app X),
     naturality' := fun X Y f =>
       yoneda.map_injective
         (by
@@ -415,7 +415,7 @@ theorem compatible_preserving [Faithful G] : CompatiblePreserving K G := by
 
 noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J K G) :
     Full (Sites.pullback A H.CompatiblePreserving Hp) where
-  Preimage := fun ℱ ℱ' α => ⟨H.sheafHom α.val⟩
+  preimage := fun ℱ ℱ' α => ⟨H.sheafHom α.val⟩
   witness' := fun ℱ ℱ' α => Sheaf.Hom.ext _ _ <| H.sheaf_hom_restrict_eq α.val
 
 instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :

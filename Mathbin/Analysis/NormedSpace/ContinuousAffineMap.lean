@@ -206,7 +206,7 @@ noncomputable instance : NormedGroup (V →A[𝕜] W) :=
       norm_neg := fun f => by
         simp [norm_def] }
 
-noncomputable instance : NormedSpace 𝕜 (V →A[𝕜] W) where
+instance : NormedSpace 𝕜 (V →A[𝕜] W) where
   norm_smul_le := fun t f => by
     simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ← mul_max_of_nonneg _ _ (norm_nonneg t)]
 
@@ -233,7 +233,7 @@ variable (𝕜 V W)
 /-- The space of affine maps between two normed spaces is linearly isometric to the product of the
 codomain with the space of linear maps, by taking the value of the affine map at `(0 : V)` and the
 linear part. -/
-noncomputable def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) where
+def toConstProdContinuousLinearMap : (V →A[𝕜] W) ≃ₗᵢ[𝕜] W × (V →L[𝕜] W) where
   toFun := fun f => ⟨f 0, f.contLinear⟩
   invFun := fun p => p.2.toContinuousAffineMap + const 𝕜 V p.1
   left_inv := fun f => by

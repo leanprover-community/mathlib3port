@@ -29,7 +29,7 @@ open Classical Set Filter
 
 open Ennreal (ofReal)
 
-open_locale BigOperators Ennreal Nnreal TopologicalSpace
+open BigOperators Ennreal Nnreal TopologicalSpace
 
 /-! ### Basic properties of Stieltjes functions -/
 
@@ -115,7 +115,7 @@ theorem length_empty : f.length ∅ = 0 :=
 @[simp]
 theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) := by
   refine'
-    le_antisymmₓ (infi_le_of_le a <| binfi_le b (subset.refl _))
+    le_antisymmₓ (infi_le_of_le a <| infi₂_le b subset.rfl)
       (le_infi fun a' => le_infi fun b' => le_infi fun h => Ennreal.coe_le_coe.2 _)
   cases' le_or_ltₓ b a with ab ab
   · rw [Real.to_nnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
@@ -125,7 +125,7 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) := by
   exact Real.to_nnreal_le_to_nnreal (sub_le_sub (f.mono h₁) (f.mono h₂))
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
-  infi_le_infi fun a => infi_le_infi fun b => infi_le_infi2 fun h' => ⟨Subset.trans h h', le_rfl⟩
+  infi_mono fun a => binfi_mono fun b => h.trans
 
 open MeasureTheory
 
@@ -157,7 +157,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
     exact
       this hf.to_finset _
         (by
-          simpa only [e])
+          simpa only [e] )
   clear ss b
   refine' fun s => Finset.strongInductionOn s fun s IH b cv => _
   cases' le_totalₓ b a with ab ab
@@ -197,7 +197,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
       (by
         rw [← f.length_Ioc]
         apply outer_le_length)
-      (le_binfi fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
+      (le_infi₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by
     simpa using εpos.ne'

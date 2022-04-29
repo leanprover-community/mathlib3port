@@ -3,10 +3,10 @@ Copyright (c) 2019 Amelia Livingston. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 -/
-import Mathbin.GroupTheory.Submonoid.Operations
-import Mathbin.Data.Equiv.MulAdd
-import Mathbin.Data.Setoid.Basic
 import Mathbin.Algebra.Group.Prod
+import Mathbin.Algebra.Hom.Equiv
+import Mathbin.Data.Setoid.Basic
+import Mathbin.GroupTheory.Submonoid.Operations
 
 /-!
 # Congruence relations
@@ -926,12 +926,12 @@ instance commSemigroup {M : Type _} [CommSemigroupₓ M] (c : Con M) : CommSemig
 /-- The quotient of a monoid by a congruence relation is a monoid. -/
 @[to_additive "The quotient of an `add_monoid` by an additive congruence relation is\nan `add_monoid`."]
 instance monoid {M : Type _} [Monoidₓ M] (c : Con M) : Monoidₓ c.Quotient :=
-  Function.Surjective.monoidPow _ Quotientₓ.surjective_quotient_mk' rfl (fun _ _ => rfl) fun _ _ => rfl
+  Function.Surjective.monoid _ Quotientₓ.surjective_quotient_mk' rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- The quotient of a `comm_monoid` by a congruence relation is a `comm_monoid`. -/
 @[to_additive "The quotient of an `add_comm_monoid` by an additive congruence\nrelation is an `add_comm_monoid`."]
 instance commMonoid {M : Type _} [CommMonoidₓ M] (c : Con M) : CommMonoidₓ c.Quotient :=
-  { c.CommSemigroup, c.Monoid with }
+  Function.Surjective.commMonoid _ Quotientₓ.surjective_quotient_mk' rfl (fun _ _ => rfl) fun _ _ => rfl
 
 end Monoids
 
@@ -984,7 +984,7 @@ instance hasZpow : Pow c.Quotient ℤ :=
 /-- The quotient of a group by a congruence relation is a group. -/
 @[to_additive "The quotient of an `add_group` by an additive congruence relation is\nan `add_group`."]
 instance group : Groupₓ c.Quotient :=
-  Function.Surjective.groupPow _ Quotientₓ.surjective_quotient_mk' rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Function.Surjective.group _ Quotientₓ.surjective_quotient_mk' rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 end Groups
@@ -997,7 +997,7 @@ variable {α : Type _} [Monoidₓ M] {c : Con M}
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
 that takes elements `x y : M` with proofs of `c (x * y) 1` and `c (y * x) 1`, and returns an element
 of `α` provided that `f x y _ _ = f x' y' _ _` whenever `c x x'` and `c y y'`. -/
-@[to_additive lift_on_add_units]
+@[to_additive]
 def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') : α := by
   refine'
@@ -1025,7 +1025,7 @@ theorem lift_on_units_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     liftOnUnits ⟨(x : c.Quotient), y, hxy, hyx⟩ f Hf = f x y (c.Eq.1 hxy) (c.Eq.1 hyx) :=
   rfl
 
-@[elab_as_eliminator, to_additive induction_on_add_units]
+@[elab_as_eliminator, to_additive]
 theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient)
     (H : ∀ x y : M hxy : c (x * y) 1 hyx : c (y * x) 1, p ⟨x, y, c.Eq.2 hxy, c.Eq.2 hyx⟩) : p u := by
   rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩

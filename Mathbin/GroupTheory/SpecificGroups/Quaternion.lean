@@ -200,13 +200,9 @@ theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k := by
 
 @[simp]
 theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 := by
-  cases n
-  · simp_rw [mul_zero, pow_zeroₓ]
-    
-  · rw [a_one_pow, one_def]
-    congr 1
-    exact Zmod.nat_cast_self _
-    
+  rw [a_one_pow, one_def]
+  congr 1
+  exact Zmod.nat_cast_self _
 
 @[simp]
 theorem xa_sq (i : Zmod (2 * n)) : xa i ^ 2 = a n := by

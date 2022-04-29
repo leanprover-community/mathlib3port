@@ -36,7 +36,7 @@ and `q` is notation for the cardinality of `K`.
 
 universe u v
 
-open_locale BigOperators
+open BigOperators
 
 section FiniteField
 
@@ -75,7 +75,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
       rw [sum_pow_lt_card_sub_one _ hi, mul_zero]
   intro a
   let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equivₓ.sumCompl _
-  let this' : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
+  let this : Unique { j // j = i } := { default := ⟨i, rfl⟩, uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
   calc (∏ j : σ, (e a : σ → K) j ^ d j) = (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by

@@ -37,11 +37,13 @@ theorem one_eq : (1 : PUnit) = star :=
 theorem mul_eq : x * y = star :=
   rfl
 
-@[simp, to_additive]
+-- `sub_eq` simplifies `punit.sub_eq`, but the latter is eligible for `dsimp`
+@[simp, nolint simp_nf, to_additive]
 theorem div_eq : x / y = star :=
   rfl
 
-@[simp, to_additive]
+-- `neg_eq` simplifies `punit.neg_eq`, but the latter is eligible for `dsimp`
+@[simp, nolint simp_nf, to_additive]
 theorem inv_eq : x⁻¹ = star :=
   rfl
 

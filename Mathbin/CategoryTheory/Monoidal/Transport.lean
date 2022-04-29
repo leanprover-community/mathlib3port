@@ -12,13 +12,14 @@ When `C` and `D` are equivalent as categories,
 we can transport a monoidal structure on `C` along the equivalence,
 obtaining a monoidal structure on `D`.
 
-We don't yet prove anything about this transported structure!
-The next step would be to show that the original functor can be upgraded
-to a monoidal functor with respect to this new structure.
+We then upgrade the original functor and its inverse to monoidal functors
+with respect to the new monoidal structure on `D`.
 -/
 
 
 universe v₁ v₂ u₁ u₂
+
+noncomputable section
 
 open CategoryTheory
 
@@ -130,135 +131,81 @@ instance (e : C ≌ D) : Inhabited (Transported e) :=
 /-- We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
-def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) :=
-  { e.Functor with ε := 𝟙 (e.Functor.obj (𝟙_ C)), μ := fun X Y => e.Functor.map (e.unitInv.app X ⊗ e.unitInv.app Y),
-    μ_natural' := fun X Y X' Y' f g => by
-      dsimp
-      simp only [equivalence.inv_fun_map, functor.map_comp, tensor_comp, category.assoc]
-      simp only [← e.functor.map_comp]
-      congr 1
-      rw [← tensor_comp, iso.hom_inv_id_app, iso.hom_inv_id_app, ← tensor_comp]
-      dsimp
-      rw [comp_id, comp_id],
-    associativity' := fun X Y Z => by
-      dsimp
-      simp only [comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp, id_tensor_comp, e.inverse.map_id]
-      simp only [← e.functor.map_comp]
-      congr 2
-      slice_lhs 3 3 => rw [← tensor_id_comp_id_tensor]
-      slice_lhs 2 3 => rw [← comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp only [id_comp]
-      slice_rhs 2 3 => rw [← id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp only [id_comp]
-      conv_rhs => rw [← id_tensor_comp_tensor_id _ (e.unit_inv.app X)]
-      dsimp only [functor.comp_obj]
-      slice_rhs 3 4 => rw [← id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp only [id_comp]
-      simp [associator_naturality],
-    left_unitality' := fun X => by
-      dsimp
-      simp only [tensor_id, assoc, id_comp, functor.map_comp, e.inverse.map_id]
-      rw [equivalence.counit_app_functor]
-      simp only [← e.functor.map_comp]
-      congr 1
-      rw [← left_unitor_naturality]
-      simp ,
-    right_unitality' := fun X => by
-      dsimp
-      simp only [tensor_id, assoc, id_comp, functor.map_comp, e.inverse.map_id]
-      rw [equivalence.counit_app_functor]
-      simp only [← e.functor.map_comp]
-      congr 1
-      rw [← right_unitor_naturality]
-      simp }
+def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) where
+  toFunctor := e.Functor
+  ε := 𝟙 (e.Functor.obj (𝟙_ C))
+  μ := fun X Y => e.Functor.map (e.unitInv.app X ⊗ e.unitInv.app Y)
+  μ_natural' := fun X Y X' Y' f g => by
+    dsimp
+    simp only [equivalence.inv_fun_map, functor.map_comp, tensor_comp, category.assoc]
+    simp only [← e.functor.map_comp]
+    congr 1
+    rw [← tensor_comp, iso.hom_inv_id_app, iso.hom_inv_id_app, ← tensor_comp]
+    dsimp
+    rw [comp_id, comp_id]
+  associativity' := fun X Y Z => by
+    dsimp
+    simp only [comp_tensor_id, assoc, equivalence.inv_fun_map, functor.map_comp, id_tensor_comp, e.inverse.map_id]
+    simp only [← e.functor.map_comp]
+    congr 2
+    slice_lhs 3 3 => rw [← tensor_id_comp_id_tensor]
+    slice_lhs 2 3 => rw [← comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
+    simp only [id_comp]
+    slice_rhs 2 3 => rw [← id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
+    simp only [id_comp]
+    conv_rhs => rw [← id_tensor_comp_tensor_id _ (e.unit_inv.app X)]
+    dsimp only [functor.comp_obj]
+    slice_rhs 3 4 => rw [← id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
+    simp only [associator_conjugation, ← tensor_id, ← tensor_comp, iso.inv_hom_id, iso.inv_hom_id_assoc, category.assoc,
+      category.id_comp, category.comp_id]
+  left_unitality' := fun X => by
+    dsimp
+    simp only [tensor_id, assoc, id_comp, functor.map_comp, e.inverse.map_id]
+    rw [equivalence.counit_app_functor]
+    simp only [← e.functor.map_comp]
+    congr 1
+    simp only [← left_unitor_naturality, id_comp, ← tensor_comp_assoc, comp_id]
+  right_unitality' := fun X => by
+    dsimp
+    simp only [tensor_id, assoc, id_comp, functor.map_comp, e.inverse.map_id]
+    rw [equivalence.counit_app_functor]
+    simp only [← e.functor.map_comp]
+    congr 1
+    simp only [← right_unitor_naturality, id_comp, ← tensor_comp_assoc, comp_id]
 
 /-- We can upgrade `e.functor` to a monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
-def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e) :=
-  { laxToTransported e with
-    ε_is_iso := by
-      dsimp
-      infer_instance,
-    μ_is_iso := fun X Y => by
-      dsimp
-      infer_instance }
+def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e) where
+  toLaxMonoidalFunctor := laxToTransported e
+  ε_is_iso := by
+    dsimp
+    infer_instance
+  μ_is_iso := fun X Y => by
+    dsimp
+    infer_instance
 
-/-- We can upgrade `e.inverse` to a lax monoidal functor from `D` with the transported structure to `C`.
--/
-@[simps]
-def laxFromTransported (e : C ≌ D) : LaxMonoidalFunctor (Transported e) C :=
-  { e.inverse with ε := e.Unit.app (𝟙_ C), μ := fun X Y => e.Unit.app (e.inverse.obj X ⊗ e.inverse.obj Y),
-    μ_natural' := fun X Y X' Y' f g => by
-      dsimp
-      simp only [iso.hom_inv_id_app_assoc, equivalence.inv_fun_map],
-    associativity' := fun X Y Z => by
-      dsimp
-      simp only [iso.hom_inv_id_app_assoc, assoc, equivalence.inv_fun_map, functor.map_comp]
-      slice_lhs 1 2 => rw [← comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp ,
-    left_unitality' := fun X => by
-      dsimp
-      simp only [iso.hom_inv_id_app_assoc, equivalence.unit_inverse_comp, assoc, equivalence.inv_fun_map, comp_id,
-        functor.map_comp]
-      slice_rhs 1 2 => rw [← comp_tensor_id, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp ,
-    right_unitality' := fun X => by
-      dsimp
-      simp only [iso.hom_inv_id_app_assoc, equivalence.unit_inverse_comp, assoc, equivalence.inv_fun_map, comp_id,
-        functor.map_comp]
-      slice_rhs 1 2 => rw [← id_tensor_comp, iso.hom_inv_id_app]dsimp rw [tensor_id]
-      simp }
+instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor := by
+  dsimp
+  infer_instance
 
 /-- We can upgrade `e.inverse` to a monoidal functor from `D` with the transported structure to `C`.
 -/
 @[simps]
 def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
-  { laxFromTransported e with
-    ε_is_iso := by
-      dsimp
-      infer_instance,
-    μ_is_iso := fun X Y => by
-      dsimp
-      infer_instance }
+  monoidalInverse (toTransported e)
 
 /-- The unit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
-def transportedMonoidalUnitIso (e : C ≌ D) : LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ laxFromTransported e :=
-  MonoidalNatIso.ofComponents (fun X => e.unitIso.app X) (fun X Y f => e.Unit.naturality f)
-    (by
-      dsimp
-      simp )
-    fun X Y => by
-    dsimp
-    simp only [iso.hom_inv_id_app_assoc, id_comp, equivalence.inv_fun_map]
-    slice_rhs 1 2 => rw [← tensor_comp, iso.hom_inv_id_app, iso.hom_inv_id_app]dsimp rw [tensor_id]
-    simp
+def transportedMonoidalUnitIso (e : C ≌ D) :
+    LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ (fromTransported e).toLaxMonoidalFunctor :=
+  asIso (monoidalUnit (toTransported e))
 
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
 def transportedMonoidalCounitIso (e : C ≌ D) :
-    laxFromTransported e ⊗⋙ laxToTransported e ≅ LaxMonoidalFunctor.id (Transported e) :=
-  MonoidalNatIso.ofComponents (fun X => e.counitIso.app X) (fun X Y f => e.counit.naturality f)
-    (by
-      dsimp
-      simp )
-    fun X Y => by
-    dsimp
-    simp only [iso.hom_inv_id_app_assoc, id_comp, equivalence.inv_fun_map]
-    simp only [equivalence.counit_app_functor, ← e.functor.map_id, ← e.functor.map_comp]
-    congr 1
-    simp [equivalence.unit_inv_app_inverse]
-    dsimp
-    simp
+    (fromTransported e).toLaxMonoidalFunctor ⊗⋙ laxToTransported e ≅ LaxMonoidalFunctor.id (Transported e) :=
+  asIso (monoidalCounit (toTransported e))
 
--- See note [dsimp, simp].
--- We could put these together as an equivalence of monoidal categories,
--- but I don't want to do this quite yet.
--- Etingof-Gelaki-Nikshych-Ostrik "Tensor categories" define an equivalence of monoidal categories
--- as a monoidal functor which, as a functor, is an equivalence.
--- Presumably one can show that the inverse functor can be upgraded to a monoidal
--- functor in a unique way, such that the unit and counit are monoidal natural isomorphisms,
--- but I've never seen this explained or worked it out.
 end CategoryTheory.Monoidal
 

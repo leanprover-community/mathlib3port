@@ -142,7 +142,7 @@ theorem is_searchable_balance1 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance1_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt t lo (some y) → IsSearchable lt s (some y) hi → IsSearchable lt (balance1Node t y s) lo hi :=
@@ -174,7 +174,7 @@ theorem is_searchable_balance2 {l y r v t lo hi} :
         run_tac
           is_searchable_tactic
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     ∀ {y s lo hi},
       IsSearchable lt s lo (some y) → IsSearchable lt t (some y) hi → IsSearchable lt (balance2Node t y s) lo hi :=
@@ -197,7 +197,7 @@ theorem is_searchable_balance2_node {t} [IsTrans α lt] :
     apply is_searchable_balance2
     assumption'
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:377:22: warning: unsupported simp config option: iota_eqn
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     ∀ {lo hi} h : IsSearchable lt t lo hi,
       Lift lt lo (some x) → Lift lt (some x) hi → IsSearchable lt (ins lt t x) lo hi :=
@@ -1006,11 +1006,11 @@ variable {lt : α → α → Prop} [DecidableRel lt]
 
 theorem of_get_color_eq_red {t : Rbnode α} {c n} : getColor t = red → IsRedBlack t c n → c = red := by
   intro h₁ h₂
-  cases h₂ <;> simp [get_color] at h₁ <;> contradiction
+  cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
 
 theorem of_get_color_ne_red {t : Rbnode α} {c n} : getColor t ≠ red → IsRedBlack t c n → c = black := by
   intro h₁ h₂
-  cases h₂ <;> simp [get_color] at h₁ <;> contradiction
+  cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
 
 variable (lt)
 
@@ -1030,15 +1030,11 @@ theorem ins_rb {t : Rbnode α} x : ∀ {c n} h : IsRedBlack t c n, InsRbResult (
     constructor <;> assumption
     
   · specialize ih h_rb_l
-    have := of_get_color_eq_red hr h_rb_l
-    subst h_c₁
-    simp [ins_rb_result] at ih
+    cases of_get_color_eq_red hr h_rb_l
     apply balance1_node_rb <;> assumption
     
   · specialize ih h_rb_l
-    have := of_get_color_ne_red hnr h_rb_l
-    subst h_c₁
-    simp [ins_rb_result] at ih
+    cases of_get_color_ne_red hnr h_rb_l
     cases ih
     constructor
     constructor <;> assumption
@@ -1047,15 +1043,11 @@ theorem ins_rb {t : Rbnode α} x : ∀ {c n} h : IsRedBlack t c n, InsRbResult (
     constructor <;> assumption
     
   · specialize ih h_rb_r
-    have := of_get_color_eq_red hr h_rb_r
-    subst h_c₂
-    simp [ins_rb_result] at ih
+    cases of_get_color_eq_red hr h_rb_r
     apply balance2_node_rb <;> assumption
     
   · specialize ih h_rb_r
-    have := of_get_color_ne_red hnr h_rb_r
-    subst h_c₂
-    simp [ins_rb_result] at ih
+    cases of_get_color_ne_red hnr h_rb_r
     cases ih
     constructor
     constructor <;> assumption

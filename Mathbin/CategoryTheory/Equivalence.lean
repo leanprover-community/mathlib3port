@@ -629,7 +629,7 @@ See https://stacks.math.columbia.edu/tag/02C3.
 -/
 -- see Note [lower instance priority]
 instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : Full F where
-  Preimage := fun X Y f => F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
+  preimage := fun X Y f => F.asEquivalence.Unit.app X ≫ F.inv.map f ≫ F.asEquivalence.unitInv.app Y
   witness' := fun X Y f =>
     F.inv.map_injective <| by
       simpa only [is_equivalence.inv_fun_map, assoc, iso.inv_hom_id_app_assoc, iso.inv_hom_id_app] using comp_id _
@@ -637,7 +637,7 @@ instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : F
 @[simps]
 private noncomputable def equivalence_inverse (F : C ⥤ D) [Full F] [Faithful F] [EssSurj F] : D ⥤ C where
   obj := fun X => F.objPreimage X
-  map := fun X Y f => F.Preimage ((F.objObjPreimageIso X).Hom ≫ f ≫ (F.objObjPreimageIso Y).inv)
+  map := fun X Y f => F.preimage ((F.objObjPreimageIso X).Hom ≫ f ≫ (F.objObjPreimageIso Y).inv)
   map_id' := fun X => by
     apply F.map_injective
     tidy
@@ -650,7 +650,7 @@ See https://stacks.math.columbia.edu/tag/02C3.
 -/
 noncomputable def ofFullyFaithfullyEssSurj (F : C ⥤ D) [Full F] [Faithful F] [EssSurj F] : IsEquivalence F :=
   IsEquivalence.mk (equivalenceInverse F)
-    (NatIso.ofComponents (fun X => (preimage_iso <| F.objObjPreimageIso <| F.obj X).symm) fun X Y f => by
+    (NatIso.ofComponents (fun X => (F.preimageIso <| F.objObjPreimageIso <| F.obj X).symm) fun X Y f => by
       apply F.map_injective
       run_tac
         obviously)

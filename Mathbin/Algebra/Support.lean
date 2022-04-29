@@ -19,7 +19,7 @@ We also define `function.mul_support f = {x | f x ≠ 1}`.
 
 open Set
 
-open_locale BigOperators
+open BigOperators
 
 namespace Function
 
@@ -43,7 +43,7 @@ theorem mul_support_eq_preimage (f : α → M) : MulSupport f = f ⁻¹' {1}ᶜ 
   rfl
 
 @[to_additive]
-theorem nmem_mul_support {f : α → M} {x : α} : (x ∉ MulSupport f) ↔ f x = 1 :=
+theorem nmem_mul_support {f : α → M} {x : α} : x ∉ MulSupport f ↔ f x = 1 :=
   not_not
 
 @[to_additive]
@@ -176,8 +176,17 @@ theorem mul_support_along_fiber_finite_of_finite (f : α × β → M) (a : α) (
 end One
 
 @[to_additive]
-theorem mul_support_mul [Monoidₓ M] (f g : α → M) : (MulSupport fun x => f x * g x) ⊆ MulSupport f ∪ MulSupport g :=
+theorem mul_support_mul [MulOneClassₓ M] (f g : α → M) :
+    (MulSupport fun x => f x * g x) ⊆ MulSupport f ∪ MulSupport g :=
   mul_support_binop_subset (· * ·) (one_mulₓ _) f g
+
+@[to_additive]
+theorem mul_support_pow [Monoidₓ M] (f : α → M) (n : ℕ) : (MulSupport fun x => f x ^ n) ⊆ MulSupport f := by
+  induction' n with n hfn
+  · simpa only [pow_zeroₓ, mul_support_one] using empty_subset _
+    
+  · simpa only [pow_succₓ] using subset_trans (mul_support_mul f _) (union_subset (subset.refl _) hfn)
+    
 
 @[simp, to_additive]
 theorem mul_support_inv [Groupₓ G] (f : α → G) : (MulSupport fun x => (f x)⁻¹) = MulSupport f :=

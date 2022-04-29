@@ -24,7 +24,7 @@ open Nat
 
 open Finset
 
-open_locale BigOperators
+open BigOperators
 
 variable {R : Type _}
 

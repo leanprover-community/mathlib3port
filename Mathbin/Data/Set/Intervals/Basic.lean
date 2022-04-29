@@ -36,7 +36,7 @@ open OrderDual (toDual ofDual)
 
 section Preorderₓ
 
-variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ x : α}
+variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ c x : α}
 
 /-- Left-open right-open interval -/
 def Ioo (a b : α) :=
@@ -450,6 +450,18 @@ theorem Ioi_inter_Iic : Ioi a ∩ Iic b = Ioc a b :=
 theorem Ioi_inter_Iio : Ioi a ∩ Iio b = Ioo a b :=
   rfl
 
+theorem Iic_inter_Ici : Iic a ∩ Ici b = Icc b a :=
+  inter_comm _ _
+
+theorem Iio_inter_Ici : Iio a ∩ Ici b = Ico b a :=
+  inter_comm _ _
+
+theorem Iic_inter_Ioi : Iic a ∩ Ioi b = Ioc b a :=
+  inter_comm _ _
+
+theorem Iio_inter_Ioi : Iio a ∩ Ioi b = Ioo b a :=
+  inter_comm _ _
+
 theorem mem_Icc_of_Ioo (h : x ∈ Ioo a b) : x ∈ Icc a b :=
   Ioo_subset_Icc_self h
 
@@ -494,6 +506,9 @@ theorem _root_.is_max.Ioi_eq (h : IsMax a) : Ioi a = ∅ :=
 
 theorem _root_.is_min.Iio_eq (h : IsMin a) : Iio a = ∅ :=
   eq_empty_of_subset_empty fun b => h.not_lt
+
+theorem Iic_inter_Ioc_of_le (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
+  ext fun x => ⟨fun H => ⟨H.2.1, H.1⟩, fun H => ⟨H.2, H.1, H.2.trans h⟩⟩
 
 end Preorderₓ
 
@@ -600,6 +615,30 @@ theorem Ioc_union_left (hab : a ≤ b) : Ioc a b ∪ {a} = Icc a b := by
 theorem Ico_union_right (hab : a ≤ b) : Ico a b ∪ {b} = Icc a b := by
   simpa only [dual_Ioc, dual_Icc] using Ioc_union_left hab.dual
 
+@[simp]
+theorem Ico_insert_right (h : a ≤ b) : insert b (Ico a b) = Icc a b := by
+  rw [insert_eq, union_comm, Ico_union_right h]
+
+@[simp]
+theorem Ioc_insert_left (h : a ≤ b) : insert a (Ioc a b) = Icc a b := by
+  rw [insert_eq, union_comm, Ioc_union_left h]
+
+@[simp]
+theorem Ioo_insert_left (h : a < b) : insert a (Ioo a b) = Ico a b := by
+  rw [insert_eq, union_comm, Ioo_union_left h]
+
+@[simp]
+theorem Ioo_insert_right (h : a < b) : insert b (Ioo a b) = Ioc a b := by
+  rw [insert_eq, union_comm, Ioo_union_right h]
+
+@[simp]
+theorem Iio_insert : insert a (Iio a) = Iic a :=
+  ext fun _ => le_iff_eq_or_lt.symm
+
+@[simp]
+theorem Ioi_insert : insert a (Ioi a) = Ici a :=
+  ext fun _ => (or_congr_left' eq_comm).trans le_iff_eq_or_lt.symm
+
 theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : Ioi a ⊆ s) (hc : s ⊆ Ici a) :
     s ∈ ({Ici a, Ioi a} : Set (Set α)) :=
   Classical.by_cases
@@ -613,6 +652,7 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s 
     s ∈ ({Iic a, Iio a} : Set (Set α)) :=
   @mem_Ici_Ioi_of_subset_of_subset (OrderDual α) _ a s ho hc
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
   classical
@@ -640,37 +680,20 @@ theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s
     apply_rules [subset_diff_singleton]
     
 
-theorem mem_Ioo_or_eq_endpoints_of_mem_Icc {x : α} (hmem : x ∈ Icc a b) : x = a ∨ x = b ∨ x ∈ Ioo a b := by
-  rw [mem_Icc, le_iff_lt_or_eqₓ, le_iff_lt_or_eqₓ] at hmem
-  rcases hmem with ⟨hxa | hxa, hxb | hxb⟩
-  · exact Or.inr (Or.inr ⟨hxa, hxb⟩)
-    
-  · exact Or.inr (Or.inl hxb)
-    
-  all_goals
-    exact Or.inl hxa.symm
+theorem eq_left_or_mem_Ioo_of_mem_Ico {x : α} (hmem : x ∈ Ico a b) : x = a ∨ x ∈ Ioo a b :=
+  hmem.1.eq_or_gt.imp_right fun h => ⟨h, hmem.2⟩
 
-theorem mem_Ioo_or_eq_left_of_mem_Ico {x : α} (hmem : x ∈ Ico a b) : x = a ∨ x ∈ Ioo a b := by
-  rw [mem_Ico, le_iff_lt_or_eqₓ] at hmem
-  rcases hmem with ⟨hxa | hxa, hxb⟩
-  · exact Or.inr ⟨hxa, hxb⟩
-    
-  · exact Or.inl hxa.symm
-    
+theorem eq_right_or_mem_Ioo_of_mem_Ioc {x : α} (hmem : x ∈ Ioc a b) : x = b ∨ x ∈ Ioo a b :=
+  hmem.2.eq_or_lt.imp_right <| And.intro hmem.1
 
-theorem mem_Ioo_or_eq_right_of_mem_Ioc {x : α} (hmem : x ∈ Ioc a b) : x = b ∨ x ∈ Ioo a b := by
-  have := @mem_Ioo_or_eq_left_of_mem_Ico _ _ (to_dual b) (to_dual a) (to_dual x)
-  rw [dual_Ioo, dual_Ico] at this
-  exact this hmem
+theorem eq_endpoints_or_mem_Ioo_of_mem_Icc {x : α} (hmem : x ∈ Icc a b) : x = a ∨ x = b ∨ x ∈ Ioo a b :=
+  hmem.1.eq_or_gt.imp_right fun h => eq_right_or_mem_Ioo_of_mem_Ioc ⟨h, hmem.2⟩
 
 theorem _root_.is_max.Ici_eq (h : IsMax a) : Ici a = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨left_mem_Ici, fun b => h.eq_of_ge⟩
 
 theorem _root_.is_min.Iic_eq (h : IsMin a) : Iic a = {a} :=
   h.toDual.Ici_eq
-
-theorem Iic_inter_Ioc_of_le (h : a ≤ c) : Iic a ∩ Ioc b c = Ioc b a :=
-  ext fun x => ⟨fun H => ⟨H.2.1, H.1⟩, fun H => ⟨H.2, H.1, H.2.trans h⟩⟩
 
 end PartialOrderₓ
 
@@ -730,10 +753,10 @@ section LinearOrderₓ
 
 variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
-theorem not_mem_Ici : (c ∉ Ici a) ↔ c < a :=
+theorem not_mem_Ici : c ∉ Ici a ↔ c < a :=
   not_leₓ
 
-theorem not_mem_Iic : (c ∉ Iic b) ↔ b < c :=
+theorem not_mem_Iic : c ∉ Iic b ↔ b < c :=
   not_leₓ
 
 theorem not_mem_Icc_of_lt (ha : c < a) : c ∉ Icc a b :=
@@ -748,10 +771,10 @@ theorem not_mem_Ico_of_lt (ha : c < a) : c ∉ Ico a b :=
 theorem not_mem_Ioc_of_gt (hb : b < c) : c ∉ Ioc a b :=
   not_mem_subset Ioc_subset_Iic_self <| not_mem_Iic.mpr hb
 
-theorem not_mem_Ioi : (c ∉ Ioi a) ↔ c ≤ a :=
+theorem not_mem_Ioi : c ∉ Ioi a ↔ c ≤ a :=
   not_ltₓ
 
-theorem not_mem_Iio : (c ∉ Iio b) ↔ b ≤ c :=
+theorem not_mem_Iio : c ∉ Iio b ↔ b ≤ c :=
   not_ltₓ
 
 theorem not_mem_Ioc_of_le (ha : c ≤ a) : c ∉ Ioc a b :=
@@ -845,7 +868,7 @@ theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : Ico a₁ b₁ = Ico a
     fun ⟨h₁, h₂⟩ => by
     rw [h₁, h₂]⟩
 
-open_locale Classical
+open Classical
 
 @[simp]
 theorem Ioi_subset_Ioi_iff : Ioi b ⊆ Ioi a ↔ a ≤ b := by
@@ -1464,8 +1487,7 @@ theorem Ioc_union_Ioc_union_Ioc_cycle : Ioc a b ∪ Ioc b c ∪ Ioc c a = Ioc (m
   rw [Ioc_union_Ioc, Ioc_union_Ioc]
   ac_rfl
   all_goals
-    solve_by_elim(config := { max_depth := 5 }) [min_le_of_left_le, min_le_of_right_le, le_max_of_le_left,
-      le_max_of_le_right, le_reflₓ]
+    solve_by_elim [min_le_of_left_le, min_le_of_right_le, le_max_of_le_left, le_max_of_le_right, le_reflₓ]
 
 end LinearOrderₓ
 
@@ -1714,4 +1736,43 @@ def iciBot [Preorderₓ α] [OrderBot α] : Set.Ici (⊥ : α) ≃o α :=
       rfl }
 
 end OrderIso
+
+/-! ### Lemmas about intervals in dense orders -/
+
+
+section Dense
+
+variable (α : Type _) [Preorderₓ α] [DenselyOrdered α] {x y : α}
+
+instance : NoMinOrder (Set.Ioo x y) :=
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+    rcases exists_between ha₁ with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, hb₁, hb₂.trans ha₂⟩, hb₂⟩⟩
+
+instance : NoMinOrder (Set.Ioc x y) :=
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+    rcases exists_between ha₁ with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, hb₁, hb₂.le.trans ha₂⟩, hb₂⟩⟩
+
+instance : NoMinOrder (Set.Ioi x) :=
+  ⟨fun ⟨a, ha⟩ => by
+    rcases exists_between ha with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, hb₁⟩, hb₂⟩⟩
+
+instance : NoMaxOrder (Set.Ioo x y) :=
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+    rcases exists_between ha₂ with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, ha₁.trans hb₁, hb₂⟩, hb₁⟩⟩
+
+instance : NoMaxOrder (Set.Ico x y) :=
+  ⟨fun ⟨a, ha₁, ha₂⟩ => by
+    rcases exists_between ha₂ with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, ha₁.trans hb₁.le, hb₂⟩, hb₁⟩⟩
+
+instance : NoMaxOrder (Set.Iio x) :=
+  ⟨fun ⟨a, ha⟩ => by
+    rcases exists_between ha with ⟨b, hb₁, hb₂⟩
+    exact ⟨⟨b, hb₂⟩, hb₁⟩⟩
+
+end Dense
 

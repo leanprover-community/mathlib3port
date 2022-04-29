@@ -24,7 +24,7 @@ We also give analogues of all these notions in the additive world.
 
 noncomputable section
 
-open_locale Ennreal Pointwise BigOperators
+open Ennreal Pointwise BigOperators
 
 open Inv Set Function MeasureTheory.Measure
 
@@ -73,7 +73,7 @@ theorem map_mul_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
   IsMulRightInvariant.map_mul_right_eq_self g
 
 /-- An alternative way to prove that `μ` is left invariant under multiplication. -/
-@[to_additive]
+@[to_additive "An alternative way to prove that `μ` is left invariant under addition."]
 theorem forall_measure_preimage_mul_iff [HasMeasurableMul G] (μ : Measure G) :
     (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
   trans ∀ g, map ((· * ·) g) μ = μ
@@ -84,7 +84,7 @@ theorem forall_measure_preimage_mul_iff [HasMeasurableMul G] (μ : Measure G) :
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
 
 /-- An alternative way to prove that `μ` is left invariant under multiplication. -/
-@[to_additive]
+@[to_additive "An alternative way to prove that `μ` is left invariant under addition."]
 theorem forall_measure_preimage_mul_right_iff [HasMeasurableMul G] (μ : Measure G) :
     (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
   trans ∀ g, map (· * g) μ = μ
@@ -97,12 +97,12 @@ theorem forall_measure_preimage_mul_right_iff [HasMeasurableMul G] (μ : Measure
 @[to_additive]
 instance [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
   ⟨fun g => by
-    rw [(map ((· * ·) g)).map_smul, map_mul_left_eq_self]⟩
+    rw [map_smul, map_mul_left_eq_self]⟩
 
 @[to_additive]
 instance [IsMulRightInvariant μ] (c : ℝ≥0∞) : IsMulRightInvariant (c • μ) :=
   ⟨fun g => by
-    rw [(map (· * g)).map_smul, map_mul_right_eq_self]⟩
+    rw [map_smul, map_mul_right_eq_self]⟩
 
 end Mul
 
@@ -118,7 +118,9 @@ variable [HasMeasurableMul G]
 
 /-- We shorten this from `measure_preimage_mul_left`, since left invariant is the preferred option
   for measures in this formalization. -/
-@[simp, to_additive]
+@[simp,
+  to_additive
+      "We shorten this from `measure_preimage_add_left`, since left invariant is the\npreferred option for measures in this formalization."]
 theorem measure_preimage_mul (μ : Measure G) [IsMulLeftInvariant μ] (g : G) (A : Set G) :
     μ ((fun h => g * h) ⁻¹' A) = μ A :=
   calc
@@ -256,9 +258,10 @@ theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular := by
 
 variable [IsMulLeftInvariant μ]
 
-/-- If a left-invariant measure gives positive mass to a compact set, then
-it gives positive mass to any open set. -/
-@[to_additive]
+/-- If a left-invariant measure gives positive mass to a compact set, then it gives positive mass to
+any open set. -/
+@[to_additive
+      "If a left-invariant measure gives positive mass to a compact set, then it gives\npositive mass to any open set."]
 theorem is_open_pos_measure_of_mul_left_invariant_of_compact (K : Set G) (hK : IsCompact K) (h : μ K ≠ 0) :
     IsOpenPosMeasure μ := by
   refine' ⟨fun U hU hne => _⟩
@@ -272,7 +275,7 @@ theorem is_open_pos_measure_of_mul_left_invariant_of_compact (K : Set G) (hK : I
       simp [measure_preimage_mul, h]
 
 /-- A nonzero left-invariant regular measure gives positive mass to any open set. -/
-@[to_additive]
+@[to_additive "A nonzero left-invariant regular measure gives positive mass to any open set."]
 theorem is_open_pos_measure_of_mul_left_invariant_of_regular [Regular μ] (h₀ : μ ≠ 0) : IsOpenPosMeasure μ :=
   let ⟨K, hK, h2K⟩ := Regular.exists_compact_not_null.mpr h₀
   is_open_pos_measure_of_mul_left_invariant_of_compact K hK h2K
@@ -296,9 +299,10 @@ theorem measure_pos_iff_nonempty_of_is_mul_left_invariant [Regular μ] (h3μ : �
     0 < μ s ↔ s.Nonempty :=
   pos_iff_ne_zero.trans <| measure_ne_zero_iff_nonempty_of_is_mul_left_invariant h3μ hs
 
-/-- If a left-invariant measure gives finite mass to a nonempty open set, then
-it gives finite mass to any compact set. -/
-@[to_additive]
+/-- If a left-invariant measure gives finite mass to a nonempty open set, then it gives finite mass
+to any compact set. -/
+@[to_additive
+      "If a left-invariant measure gives finite mass to a nonempty open set, then it gives\nfinite mass to any compact set."]
 theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : IsOpen U) (h'U : U.Nonempty)
     (h : μ U ≠ ∞) {K : Set G} (hK : IsCompact K) : μ K < ∞ := by
   rw [← hU.interior_eq] at h'U
@@ -312,7 +316,8 @@ theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant (U : Set G) (hU : 
 
 /-- If a left-invariant measure gives finite mass to a set with nonempty interior, then
 it gives finite mass to any compact set. -/
-@[to_additive]
+@[to_additive
+      "If a left-invariant measure gives finite mass to a set with nonempty interior, then\nit gives finite mass to any compact set."]
 theorem measure_lt_top_of_is_compact_of_is_mul_left_invariant' {U : Set G} (hU : (Interior U).Nonempty) (h : μ U ≠ ∞)
     {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
   measure_lt_top_of_is_compact_of_is_mul_left_invariant (Interior U) is_open_interior hU
@@ -327,7 +332,8 @@ variable [CommGroupₓ G]
 /-- In an abelian group every left invariant measure is also right-invariant.
   We don't declare the converse as an instance, since that would loop type-class inference, and
   we use `is_mul_left_invariant` as default hypotheses in abelian groups. -/
-@[to_additive]
+@[to_additive
+      "In an abelian additive group every left invariant measure is also\nright-invariant. We don't declare the converse as an instance, since that would loop type-class\ninference, and we use `is_add_left_invariant` as default hypotheses in abelian groups."]
 instance (priority := 100) IsMulLeftInvariant.is_mul_right_invariant {μ : Measure G} [IsMulLeftInvariant μ] :
     IsMulRightInvariant μ :=
   ⟨fun g => by
@@ -350,11 +356,13 @@ sets and positive mass to open sets. -/
 class IsHaarMeasure {G : Type _} [Groupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measure G) extends
   IsFiniteMeasureOnCompacts μ, IsMulLeftInvariant μ, IsOpenPosMeasure μ : Prop
 
-/- Record that a Haar measure on a locally compact space is locally finite. This is needed as the
+/-- Record that a Haar measure on a locally compact space is locally finite. This is needed as the
 fact that a measure which is finite on compacts is locally finite is not registered as an instance,
-to avoid an instance loop. -/
--- see Note [lower instance priority]
-@[to_additive]
+to avoid an instance loop.
+
+See Note [lower instance priority]. -/
+@[to_additive
+      "Record that an additive Haar measure on a locally compact space is\nlocally finite. This is needed as the fact that a measure which is finite on compacts is locally\nfinite is not registered as an instance, to avoid an instance loop.\n\nSee Note [lower instance priority]"]
 instance (priority := 100) is_locally_finite_measure_of_is_haar_measure {G : Type _} [Groupₓ G] [MeasurableSpace G]
     [TopologicalSpace G] [LocallyCompactSpace G] (μ : Measure G) [IsHaarMeasure μ] : IsLocallyFiniteMeasure μ :=
   is_locally_finite_measure_of_is_finite_measure_on_compacts
@@ -374,8 +382,9 @@ theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) 
     to_is_open_pos_measure := is_open_pos_measure_smul μ cpos }
 
 /-- If a left-invariant measure gives positive mass to some compact set with nonempty interior, then
-it is a Haar measure -/
-@[to_additive]
+it is a Haar measure. -/
+@[to_additive
+      "If a left-invariant measure gives positive mass to some compact set with nonempty\ninterior, then it is an additive Haar measure."]
 theorem is_haar_measure_of_is_compact_nonempty_interior [TopologicalGroup G] [BorelSpace G] (μ : Measure G)
     [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (Interior K).Nonempty) (h : μ K ≠ 0) (h' : μ K ≠ ∞) :
     IsHaarMeasure μ :=
@@ -384,7 +393,8 @@ theorem is_haar_measure_of_is_compact_nonempty_interior [TopologicalGroup G] [Bo
 
 /-- The image of a Haar measure under a group homomorphism which is also a homeomorphism is again
 a Haar measure. -/
-@[to_additive]
+@[to_additive
+      "The image of an additive Haar measure under an additive group homomorphism which is\nalso a homeomorphism is again an additive Haar measure."]
 theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Groupₓ H] [TopologicalSpace H]
     [MeasurableSpace H] [BorelSpace H] [T2Space H] [TopologicalGroup H] (f : G ≃* H) (hf : Continuous f)
     (hfsymm : Continuous f.symm) : IsHaarMeasure (Measure.map f μ) :=
@@ -405,24 +415,26 @@ theorem is_haar_measure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Gr
       exact IsCompact.measure_lt_top (hK.image hfsymm),
     to_is_open_pos_measure := hf.is_open_pos_measure_map f.Surjective }
 
-/-- A Haar measure on a sigma-compact space is sigma-finite. -/
--- see Note [lower instance priority]
-@[to_additive]
+/-- A Haar measure on a σ-compact space is σ-finite.
+
+See Note [lower instance priority] -/
+@[to_additive "A Haar measure on a σ-compact space is σ-finite.\n\nSee Note [lower instance priority]"]
 instance (priority := 100) IsHaarMeasure.sigma_finite [SigmaCompactSpace G] : SigmaFinite μ :=
   ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
         Finite := fun n => IsCompact.measure_lt_top <| is_compact_compact_covering G n,
         spanning := Union_compact_covering G }⟩⟩
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 open Filter
 
 /-- If the neutral element of a group is not isolated, then a Haar measure on this group has
-no atom.
+no atoms.
 
-This applies in particular to show that an additive Haar measure on a nontrivial
-finite-dimensional real vector space has no atom. -/
-@[to_additive]
+The additive version of this instance applies in particular to show that an additive Haar measure on
+a nontrivial finite-dimensional real vector space has no atom. -/
+@[to_additive
+      "If the zero element of an additive group is not isolated, then an\nadditive Haar measure on this group has no atoms.\n\nThis applies in particular to show that an additive Haar measure on a nontrivial finite-dimensional\nreal vector space has no atom."]
 instance (priority := 100) IsHaarMeasure.has_no_atoms [TopologicalGroup G] [BorelSpace G] [T1Space G]
     [LocallyCompactSpace G] [(𝓝[≠] (1 : G)).ne_bot] (μ : Measure G) [μ.IsHaarMeasure] : HasNoAtoms μ := by
   suffices H : μ {(1 : G)} ≤ 0

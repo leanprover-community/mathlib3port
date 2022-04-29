@@ -218,10 +218,10 @@ instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ αˢʸᵐ :=
   unsym_injective.AddCommSemigroup _ unsym_add
 
 instance [AddMonoidₓ α] : AddMonoidₓ αˢʸᵐ :=
-  unsym_injective.addMonoidSmul _ unsym_zero unsym_add fun _ _ => rfl
+  unsym_injective.AddMonoid _ unsym_zero unsym_add fun _ _ => rfl
 
 instance [AddGroupₓ α] : AddGroupₓ αˢʸᵐ :=
-  unsym_injective.addGroupSmul _ unsym_zero unsym_add unsym_neg unsym_sub (fun _ _ => rfl) fun _ _ => rfl
+  unsym_injective.AddGroup _ unsym_zero unsym_add unsym_neg unsym_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ αˢʸᵐ :=
   { SymAlg.addCommSemigroup, SymAlg.addMonoid with }
@@ -264,10 +264,8 @@ instance [Semiringₓ α] [Invertible (2 : α)] : NonAssocSemiringₓ αˢʸᵐ 
         rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_addₓ c, add_mulₓ _ _ c, add_add_add_commₓ,
           mul_addₓ] }
 
-/-- The symmetrization of a real (unital, associative) algebra is a non-associative ring.
-
-Note there is currently no typeclass for a `non_assoc_ring`, so we discard the `unit` here. -/
-instance [Ringₓ α] [Invertible (2 : α)] : NonUnitalNonAssocRing αˢʸᵐ :=
+/-- The symmetrization of a real (unital, associative) algebra is a non-associative ring. -/
+instance [Ringₓ α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
   { SymAlg.nonAssocSemiring, SymAlg.addCommGroup with }
 
 /-! The squaring operation coincides for both multiplications -/

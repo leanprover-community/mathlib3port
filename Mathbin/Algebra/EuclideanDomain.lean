@@ -231,7 +231,7 @@ theorem dvd_div_of_mul_dvd {a b c : R} (h : a * b ∣ c) : b ∣ c / a := by
 
 section
 
-open_locale Classical
+open Classical
 
 @[elab_as_eliminator]
 theorem Gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
@@ -387,7 +387,7 @@ theorem xgcd_aux_P (a b : R) {r r' : R} :
   (Gcd.induction r r'
       (by
         intros
-        simpa only [xgcd_zero_left]))
+        simpa only [xgcd_zero_left] ))
     fun x y h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p

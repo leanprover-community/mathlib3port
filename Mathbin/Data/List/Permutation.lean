@@ -142,14 +142,12 @@ theorem mem_permutations_aux2 {t : α} {ts : List α} {ys : List α} {l l' : Lis
       funext <;> simp ,
     mem_cons_iff, ih]
   constructor
-  · rintro (e | ⟨l₁, l₂, l0, ye, _⟩)
-    · subst l'
-      exact
+  · rintro (rfl | ⟨l₁, l₂, l0, rfl, rfl⟩)
+    · exact
         ⟨[], y :: ys, by
           simp ⟩
       
-    · substs l' ys
-      exact
+    · exact
         ⟨y :: l₁, l₂, l0, by
           simp ⟩
       

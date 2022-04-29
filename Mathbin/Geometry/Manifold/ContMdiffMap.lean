@@ -38,7 +38,7 @@ localized [Manifold] notation "C^" n "⟮" I ", " M "; " I' ", " M' "⟯" => Con
 -- mathport name: «exprC^ ⟮ , ; ⟯»
 localized [Manifold] notation "C^" n "⟮" I ", " M "; " k "⟯" => ContMdiffMap I (modelWithCornersSelf k k) M k n
 
-open_locale Manifold
+open Manifold
 
 namespace ContMdiffMap
 

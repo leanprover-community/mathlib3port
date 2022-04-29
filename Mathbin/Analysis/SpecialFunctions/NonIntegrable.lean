@@ -37,12 +37,11 @@ integrable function
 -/
 
 
-open_locale MeasureTheory TopologicalSpace Interval Nnreal Ennreal
+open MeasureTheory TopologicalSpace Interval Nnreal Ennreal
 
 open MeasureTheory TopologicalSpace Set Filter Asymptotics intervalIntegral
 
-variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
-  [CompleteSpace E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
+variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [SecondCountableTopology E] [CompleteSpace E] [NormedGroup F]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
@@ -94,7 +93,7 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
             ∀,
               (DifferentiableAt ℝ f y ∧ ∥deriv f y∥ ≤ C * ∥g y∥) ∧
                 y ∈ "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" :=
-      (tendsto_fst.interval tendsto_snd).Eventually ((hd.and hC.bound).And hl).lift'_powerset
+      (tendsto_fst.interval tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
     rcases mem_prod_self_iff.1 h with ⟨s, hsl, hs⟩
     simp only [prod_subset_iff, mem_set_of_eq] at hs
     exact
@@ -114,7 +113,8 @@ theorem not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter {f :
   have hg_ae : ∀ᵐ x ∂volume.restrict (Ι c d), ∥deriv f x∥ ≤ C * ∥g x∥ :=
     (ae_restrict_mem measurable_set_interval_oc).mono hg
   have hsub' : Ι c d ⊆ Ι a b := interval_oc_subset_interval_oc_of_interval_subset_interval hsub
-  have hfi : IntervalIntegrable (deriv f) volume c d := (hgi.mono_set hsub).mono_fun' (ae_measurable_deriv _ _) hg_ae
+  have hfi : IntervalIntegrable (deriv f) volume c d :=
+    (hgi.mono_set hsub).mono_fun' (ae_strongly_measurable_deriv _ _) hg_ae
   refine' hlt.not_le (sub_le_iff_le_add'.1 _)
   calc ∥f d∥ - ∥f c∥ ≤ ∥f d - f c∥ := norm_sub_norm_le _ _ _ = ∥∫ x in c..d, deriv f x∥ :=
       congr_argₓ _ (integral_deriv_eq_sub hfd hfi).symm _ = ∥∫ x in Ι c d, deriv f x∥ :=

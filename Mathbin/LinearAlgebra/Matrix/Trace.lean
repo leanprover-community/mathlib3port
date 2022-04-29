@@ -20,9 +20,9 @@ matrix, trace, diagonal
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 namespace Matrix
 
@@ -34,46 +34,12 @@ variable {m : Type _} (n : Type _) {p : Type _}
 
 variable (R : Type _) (M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-/-- The diagonal of a square matrix.
--/
-def diag : Matrix n n M →ₗ[R] n → M where
-  toFun := fun A i => A i i
-  map_add' := by
-    intros
-    ext
-    rfl
-  map_smul' := by
-    intros
-    ext
-    rfl
-
-variable {n} {R} {M}
-
-@[simp]
-theorem diag_apply (A : Matrix n n M) (i : n) : diag n R M A i = A i i :=
-  rfl
-
-@[simp]
-theorem diag_one [DecidableEq n] : diag n R R 1 = fun i => 1 := by
-  dunfold diag
-  ext
-  simp [one_apply_eq]
-
-@[simp]
-theorem diag_transpose (A : Matrix n n M) : diag n R M Aᵀ = diag n R M A :=
-  rfl
-
-@[simp]
-theorem diag_col_mul_row (a b : n → R) : diag n R R (colₓ a ⬝ rowₓ b) = a * b := by
-  ext
-  simp [Matrix.mul_apply]
-
 variable (n) (R) (M)
 
 /-- The trace of a square matrix.
 -/
 def trace [Fintype n] : Matrix n n M →ₗ[R] M where
-  toFun := fun A => ∑ i, diag n R M A i
+  toFun := fun A => ∑ i, diag A i
   map_add' := by
     intros
     apply Finset.sum_add_distrib
@@ -84,7 +50,7 @@ def trace [Fintype n] : Matrix n n M →ₗ[R] M where
 variable {n} {R} {M} [Fintype n] [Fintype m] [Fintype p]
 
 @[simp]
-theorem trace_diag (A : Matrix n n M) : trace n R M A = ∑ i, diag n R M A i :=
+theorem trace_diag (A : Matrix n n M) : trace n R M A = ∑ i, diag A i :=
   rfl
 
 theorem trace_apply (A : Matrix n n M) : trace n R M A = ∑ i, A i i :=
@@ -92,8 +58,8 @@ theorem trace_apply (A : Matrix n n M) : trace n R M A = ∑ i, A i i :=
 
 @[simp]
 theorem trace_one [DecidableEq n] : trace n R R 1 = Fintype.card n := by
-  have h : trace n R R 1 = ∑ i, diag n R R 1 i := rfl
-  simp_rw [h, diag_one, Finset.sum_const, nsmul_one] <;> rfl
+  have h : trace n R R 1 = ∑ i, diag 1 i := rfl
+  simp_rw [h, diag_one, Pi.one_def, Finset.sum_const, nsmul_one] <;> rfl
 
 @[simp]
 theorem trace_transpose (A : Matrix n n M) : trace n R M Aᵀ = trace n R M A :=

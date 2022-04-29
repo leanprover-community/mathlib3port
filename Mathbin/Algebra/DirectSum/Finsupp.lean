@@ -18,7 +18,7 @@ universe u v w
 
 noncomputable section
 
-open_locale DirectSum
+open DirectSum
 
 open LinearMap Submodule
 
@@ -42,7 +42,7 @@ theorem finsupp_lequiv_direct_sum_single (i : ι) (m : M) :
 @[simp]
 theorem finsupp_lequiv_direct_sum_symm_lof (i : ι) (m : M) :
     (finsuppLequivDirectSum R M ι).symm (DirectSum.lof R ι _ i m) = Finsupp.single i m := by
-  let this' : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
+  let this : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
   exact Dfinsupp.to_finsupp_single i m
 
 end finsuppLequivDirectSum

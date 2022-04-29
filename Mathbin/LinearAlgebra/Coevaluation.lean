@@ -29,7 +29,7 @@ section coevaluation
 
 open TensorProduct FiniteDimensional
 
-open_locale TensorProduct BigOperators
+open TensorProduct BigOperators
 
 universe u v
 
@@ -62,7 +62,7 @@ theorem contract_left_assoc_coevaluation :
         (TensorProduct.assoc K _ _ _).symm.toLinearMap ∘ₗ (coevaluation K V).ltensor (Module.Dual K V) =
       (TensorProduct.lid K _).symm.toLinearMap ∘ₗ (TensorProduct.rid K _).toLinearMap :=
   by
-  let this' := Classical.decEq (Basis.OfVectorSpaceIndex K V)
+  let this := Classical.decEq (Basis.OfVectorSpaceIndex K V)
   apply TensorProduct.ext
   apply (Basis.ofVectorSpace K V).dualBasis.ext
   intro j
@@ -85,7 +85,7 @@ theorem contract_left_assoc_coevaluation' :
     (contractLeft K V).ltensor _ ∘ₗ (TensorProduct.assoc K _ _ _).toLinearMap ∘ₗ (coevaluation K V).rtensor V =
       (TensorProduct.rid K _).symm.toLinearMap ∘ₗ (TensorProduct.lid K _).toLinearMap :=
   by
-  let this' := Classical.decEq (Basis.OfVectorSpaceIndex K V)
+  let this := Classical.decEq (Basis.OfVectorSpaceIndex K V)
   apply TensorProduct.ext
   apply LinearMap.ext_ring
   apply (Basis.ofVectorSpace K V).ext

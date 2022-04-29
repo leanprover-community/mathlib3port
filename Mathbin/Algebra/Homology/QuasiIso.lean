@@ -12,7 +12,6 @@ A chain map is a quasi-isomorphism if it induces isomorphisms on homology.
 
 ## Future work
 
-Prove the 2-out-of-3 property.
 Define the derived category as the localization at quasi-isomorphisms?
 -/
 
@@ -47,4 +46,10 @@ instance quasi_iso_comp (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso g] : 
   IsIso := fun i => by
     rw [functor.map_comp]
     infer_instance
+
+theorem quasi_iso_of_comp_left (f : C ⟶ D) [QuasiIso f] (g : D ⟶ E) [QuasiIso (f ≫ g)] : QuasiIso g :=
+  { IsIso := fun i => IsIso.of_is_iso_fac_left ((homologyFunctor V c i).map_comp f g).symm }
+
+theorem quasi_iso_of_comp_right (f : C ⟶ D) (g : D ⟶ E) [QuasiIso g] [QuasiIso (f ≫ g)] : QuasiIso f :=
+  { IsIso := fun i => IsIso.of_is_iso_fac_right ((homologyFunctor V c i).map_comp f g).symm }
 

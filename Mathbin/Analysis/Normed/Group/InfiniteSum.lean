@@ -28,7 +28,7 @@ infinite series, absolute convergence, normed group
 -/
 
 
-open_locale Classical BigOperators TopologicalSpace Nnreal
+open Classical BigOperators TopologicalSpace Nnreal
 
 open Finset Filter Metric
 

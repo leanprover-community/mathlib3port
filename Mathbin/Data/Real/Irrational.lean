@@ -54,9 +54,8 @@ theorem irrational_nrt_of_notint_nrt {x : ℝ} (n : ℕ) (m : ℤ) (hxr : x ^ n 
     Int.cast_inj] at hxr
   have hdivn : ↑D ^ n ∣ N ^ n := Dvd.intro_left m hxr
   rw [← Int.dvd_nat_abs, ← Int.coe_nat_pow, Int.coe_nat_dvd, Int.nat_abs_pow, Nat.pow_dvd_pow_iff hnpos] at hdivn
-  have hD : D = 1 := by
+  obtain rfl : D = 1 := by
     rw [← Nat.gcd_eq_rightₓ hdivn, C.gcd_eq_one]
-  subst D
   refine' hv ⟨N, _⟩
   rw [num_denom', Int.coe_nat_one, mk_eq_div, Int.cast_oneₓ, div_one, cast_coe_int]
 

@@ -19,14 +19,14 @@ universe u
 
 open Set Classical
 
-open_locale Classical
+open Classical
 
 /-- Any partial order can be extended to a linear order.
 -/
 theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOrder α r] :
     ∃ (s : α → α → Prop)(_ : IsLinearOrder α s), r ≤ s := by
   let S := { s | IsPartialOrder α s }
-  have hS : ∀ c, c ⊆ S → Zorn.Chain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ S, ∀, ∀ z ∈ c, ∀, z ≤ ub := by
+  have hS : ∀ c, c ⊆ S → IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ S, ∀, ∀ z ∈ c, ∀, z ≤ ub := by
     rintro c hc₁ hc₂ s hs
     have := (hc₁ hs).1
     refine' ⟨Sup c, _, fun z hz => le_Sup hz⟩
@@ -37,7 +37,7 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
     · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
       have : IsPartialOrder _ _ := hc₁ h₁s₁
       have : IsPartialOrder _ _ := hc₁ h₁s₂
-      cases hc₂.total_of_refl h₁s₁ h₁s₂
+      cases hc₂.total h₁s₁ h₁s₂
       · exact ⟨s₂, h₁s₂, trans (h _ _ h₂s₁) h₂s₂⟩
         
       · exact ⟨s₁, h₁s₁, trans h₂s₁ (h _ _ h₂s₂)⟩
@@ -46,13 +46,13 @@ theorem extend_partial_order {α : Type u} (r : α → α → Prop) [IsPartialOr
     · rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
       have : IsPartialOrder _ _ := hc₁ h₁s₁
       have : IsPartialOrder _ _ := hc₁ h₁s₂
-      cases hc₂.total_of_refl h₁s₁ h₁s₂
+      cases hc₂.total h₁s₁ h₁s₂
       · exact antisymm (h _ _ h₂s₁) h₂s₂
         
       · apply antisymm h₂s₁ (h _ _ h₂s₂)
         
       
-  obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := Zorn.zorn_nonempty_partial_order₀ S hS r ‹_›
+  obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := zorn_nonempty_partial_order₀ S hS r ‹_›
   skip
   refine' ⟨s, { Total := _ }, rs⟩
   intro x y

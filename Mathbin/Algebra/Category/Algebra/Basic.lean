@@ -3,8 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.FreeAlgebra
 import Mathbin.Algebra.Category.CommRing.Basic
 import Mathbin.Algebra.Category.Module.Basic
@@ -63,6 +62,11 @@ def of (X : Type v) [Ringₓ X] [Algebra R X] : AlgebraCat.{v} R :=
 def ofHom {R : Type u} [CommRingₓ R] {X Y : Type v} [Ringₓ X] [Algebra R X] [Ringₓ Y] [Algebra R Y] (f : X →ₐ[R] Y) :
     of R X ⟶ of R Y :=
   f
+
+@[simp]
+theorem of_hom_apply {R : Type u} [CommRingₓ R] {X Y : Type v} [Ringₓ X] [Algebra R X] [Ringₓ Y] [Algebra R Y]
+    (f : X →ₐ[R] Y) (x : X) : ofHom f x = f x :=
+  rfl
 
 instance : Inhabited (AlgebraCat R) :=
   ⟨of R R⟩

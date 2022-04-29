@@ -57,7 +57,7 @@ noncomputable section
 
 open MvPolynomial Finset
 
-open_locale BigOperators
+open BigOperators
 
 variable (p)
 
@@ -325,11 +325,22 @@ theorem frobenius_zmodp (x : 𝕎 (Zmod p)) : frobenius x = x := by
 
 variable (p R)
 
-theorem frobenius_bijective [PerfectRing R p] : Function.Bijective (@WittVector.frobenius p R _ _) := by
-  rw [WittVector.frobenius_eq_map_frobenius]
-  exact
-    ⟨WittVector.map_injective _ (frobeniusEquiv R p).Injective,
-      WittVector.map_surjective _ (frobeniusEquiv R p).Surjective⟩
+/-- `witt_vector.frobenius` as an equiv. -/
+@[simps (config := { fullyApplied := false })]
+def frobeniusEquiv [PerfectRing R p] : WittVector p R ≃+* WittVector p R :=
+  { (WittVector.frobenius : WittVector p R →+* WittVector p R) with toFun := WittVector.frobenius,
+    invFun := map (pthRoot R p),
+    left_inv := fun f =>
+      ext fun n => by
+        rw [frobenius_eq_map_frobenius]
+        exact pth_root_frobenius _,
+    right_inv := fun f =>
+      ext fun n => by
+        rw [frobenius_eq_map_frobenius]
+        exact frobenius_pth_root _ }
+
+theorem frobenius_bijective [PerfectRing R p] : Function.Bijective (@WittVector.frobenius p R _ _) :=
+  (frobeniusEquiv p R).Bijective
 
 end CharP
 

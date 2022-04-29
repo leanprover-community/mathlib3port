@@ -37,7 +37,7 @@ Given a group `G` and a ring `R`:
 
 open Filter Set TopologicalSpace Function
 
-open_locale TopologicalSpace Filter Pointwise
+open TopologicalSpace Filter Pointwise
 
 universe u
 
@@ -212,7 +212,7 @@ theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈
 a group filter basis then it's a topological group. -/
 @[to_additive]
 instance (priority := 100) is_topological_group (B : GroupFilterBasis G) : @TopologicalGroup G B.topology _ := by
-  let this' := B.topology
+  let this := B.topology
   have basis := B.nhds_one_has_basis
   have basis' := Basis.prod Basis
   refine' TopologicalGroup.of_nhds_one _ _ _ _
@@ -276,7 +276,7 @@ a ring filter basis then it's a topological ring. -/
 instance (priority := 100) is_topological_ring {R : Type u} [Ringₓ R] (B : RingFilterBasis R) :
     @TopologicalRing R B.topology _ := by
   let B' := B.to_add_group_filter_basis
-  let this' := B'.topology
+  let this := B'.topology
   have basis := B'.nhds_zero_has_basis
   have basis' := Basis.prod Basis
   have := B'.is_topological_add_group
@@ -345,8 +345,8 @@ instance [DiscreteTopology R] : Inhabited (ModuleFilterBasis R M) :=
         use {0}, rfl
         simp [h],
       smul_right' := by
-        rintro m₀ U (h : U ∈ {{(0 : M)}})
-        rw [mem_singleton_iff] at h
+        rintro m₀ U (h : U ∈ (0 : Set (Set M)))
+        rw [Set.mem_zero] at h
         simp [h, nhds_discrete] }⟩
 
 /-- The topology associated to a module filter basis on a module over a topological ring.
@@ -365,7 +365,7 @@ def topology' {R M : Type _} [CommRingₓ R] {tR : TopologicalSpace R} [AddCommG
 a module filter basis then it's a topological module. -/
 instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinuousSmul R M _ _ B.topology := by
   let B' := B.to_add_group_filter_basis
-  let this' := B'.topology
+  let this := B'.topology
   have basis := B'.nhds_zero_has_basis
   have := B'.is_topological_add_group
   apply HasContinuousSmul.of_nhds_zero

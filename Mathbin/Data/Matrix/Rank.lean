@@ -23,7 +23,7 @@ This definition does not depend on the choice of basis, see `matrix.rank_eq_finr
 -/
 
 
-open_locale Matrix
+open Matrix
 
 namespace Matrix
 

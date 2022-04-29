@@ -37,6 +37,10 @@ attribute [instance] BoundedOrderCat.isBoundedOrder
 def of (α : Type _) [PartialOrderₓ α] [BoundedOrder α] : BoundedOrderCat :=
   ⟨⟨α⟩⟩
 
+@[simp]
+theorem coe_of (α : Type _) [PartialOrderₓ α] [BoundedOrder α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited BoundedOrderCat :=
   ⟨of PUnit⟩
 
@@ -89,7 +93,7 @@ end BoundedOrderCat
 
 theorem BoundedOrder_dual_comp_forget_to_PartialOrder :
     BoundedOrderCat.dual ⋙ forget₂ BoundedOrderCat PartialOrderₓₓ =
-      forget₂ BoundedOrderCat PartialOrderₓₓ ⋙ PartialOrderₓₓ.toDual :=
+      forget₂ BoundedOrderCat PartialOrderₓₓ ⋙ PartialOrderₓₓ.dual :=
   rfl
 
 theorem BoundedOrder_dual_comp_forget_to_Bipointed :

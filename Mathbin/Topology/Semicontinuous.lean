@@ -53,7 +53,7 @@ ones for lower semicontinuous functions using `order_dual`.
 -/
 
 
-open_locale TopologicalSpace BigOperators Ennreal
+open TopologicalSpace BigOperators Ennreal
 
 open Set
 

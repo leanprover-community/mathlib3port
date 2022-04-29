@@ -22,7 +22,7 @@ namespace Polynomial
 
 open Polynomial Finsupp Finset
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 section Semiringₓ
 
@@ -112,7 +112,7 @@ theorem reflect_zero {N : ℕ} : reflect N (0 : R[X]) = 0 :=
 @[simp]
 theorem reflect_eq_zero_iff {N : ℕ} {f : R[X]} : reflect N (f : R[X]) = 0 ↔ f = 0 := by
   rcases f with ⟨⟩
-  simp [reflect, ← zero_to_finsupp]
+  simp [reflect]
 
 @[simp]
 theorem reflect_add (f g : R[X]) (N : ℕ) : reflect N (f + g) = reflect N f + reflect N g := by
@@ -159,7 +159,8 @@ theorem reflect_mul_induction (cf cg : ℕ) :
     -- second induction (right): base case
     · intro N O f g Cf Cg Nf Og
       rw [← C_mul_X_pow_eq_self Cf, ← C_mul_X_pow_eq_self Cg]
-      simp only [mul_assoc, X_pow_mul, ← pow_addₓ X, reflect_C_mul, reflect_monomial, add_commₓ, rev_at_add Nf Og]
+      simp_rw [mul_assoc, X_pow_mul, mul_assoc, ← pow_addₓ (X : R[X]), reflect_C_mul, reflect_monomial, add_commₓ,
+        rev_at_add Nf Og, mul_assoc, X_pow_mul, mul_assoc, ← pow_addₓ (X : R[X]), add_commₓ]
       
     -- second induction (right): induction step
     · intro N O f g Cf Cg Nf Og
@@ -175,7 +176,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
         
       · exact nat.lt_succ_iff.mp (gt_of_ge_of_gtₓ Cg (erase_lead_support_card_lt g0))
         
-      · exact le_transₓ erase_lead_nat_degree_le Og
+      · exact le_transₓ erase_lead_nat_degree_le_aux Og
         
       
     
@@ -193,7 +194,7 @@ theorem reflect_mul_induction (cf cg : ℕ) :
       
     · exact nat.lt_succ_iff.mp (gt_of_ge_of_gtₓ Cf (erase_lead_support_card_lt f0))
       
-    · exact le_transₓ erase_lead_nat_degree_le Nf
+    · exact le_transₓ erase_lead_nat_degree_le_aux Nf
       
     
 
@@ -302,7 +303,7 @@ theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) : 
   rw [nat_degree_mul' fg, reflect_mul f g rfl.le rfl.le]
 
 @[simp]
-theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (f g : R[X]) :
+theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [NoZeroDivisors R] (f g : R[X]) :
     reverse (f * g) = reverse f * reverse g := by
   by_cases' f0 : f = 0
   · simp only [f0, zero_mul, reverse_zero]
@@ -312,7 +313,7 @@ theorem reverse_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (f g : R[X])
     
   simp [reverse_mul, *]
 
-theorem trailing_coeff_mul {R : Type _} [Ringₓ R] [IsDomain R] (p q : R[X]) :
+theorem trailing_coeff_mul {R : Type _} [Ringₓ R] [NoZeroDivisors R] (p q : R[X]) :
     (p * q).trailingCoeff = p.trailingCoeff * q.trailingCoeff := by
   rw [← reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff, reverse_leading_coeff]
 

@@ -21,7 +21,7 @@ This file defines local homeomorphisms.
 -/
 
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {X Y Z : Type _} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z] (g : Y → Z) (f : X → Y)
 

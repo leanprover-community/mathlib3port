@@ -25,13 +25,13 @@ import Mathbin.Topology.UnitInterval
 
 variable {R : Type _}
 
-open_locale Polynomial
+open Polynomial
 
 namespace Polynomial
 
 section
 
-variable [Semiringₓ R] [TopologicalSpace R] [TopologicalRing R]
+variable [Semiringₓ R] [TopologicalSpace R] [TopologicalSemiring R]
 
 /-- Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
 -/
@@ -55,7 +55,7 @@ end
 
 section
 
-variable {α : Type _} [TopologicalSpace α] [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
+variable {α : Type _} [TopologicalSpace α] [CommSemiringₓ R] [TopologicalSpace R] [TopologicalSemiring R]
 
 @[simp]
 theorem aeval_continuous_map_apply (g : R[X]) (f : C(α, R)) (x : α) : ((Polynomial.aeval f) g) x = g.eval (f x) := by
@@ -73,7 +73,7 @@ section
 
 noncomputable section
 
-variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
+variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalSemiring R]
 
 /-- The algebra map from `polynomial R` to continuous functions `C(R, R)`.
 -/
@@ -129,9 +129,10 @@ end Polynomial
 
 section
 
-variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
+variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalSemiring R]
 
-/-- The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological ring `R`.
+/-- The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological semiring
+`R`.
 -/
 def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
   (⊤ : Subalgebra R R[X]).map (Polynomial.toContinuousMapOnAlgHom X)
@@ -153,7 +154,7 @@ theorem polynomial_functions_separates_points (X : Set R) : (polynomialFunctions
   simp only [Polynomial.eval_X]
   exact fun h' => h (Subtype.ext h')
 
-open_locale UnitInterval
+open UnitInterval
 
 open ContinuousMap
 
@@ -174,9 +175,10 @@ theorem polynomialFunctions.comap'_comp_right_alg_hom_Icc_homeo_I (a b : ℝ) (h
       
     · ext x
       simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ring_hom, Polynomial.eval_X,
-        Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, Polynomial.eval_mul, Polynomial.eval_add,
-        Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp, Polynomial.to_continuous_map_on_alg_hom_apply,
-        Polynomial.to_continuous_map_on_to_fun, Polynomial.to_continuous_map_to_fun]
+        Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul, smul_eq_mul, Polynomial.eval_mul,
+        Polynomial.eval_add, Polynomial.coe_aeval_eq_eval, Polynomial.eval_comp,
+        Polynomial.to_continuous_map_on_alg_hom_apply, Polynomial.to_continuous_map_on_to_fun,
+        Polynomial.to_continuous_map_to_fun]
       convert w ⟨_, _⟩ <;> clear w
       · -- why does `comm_ring.add` appear here!?
         change x = (iccHomeoI a b h).symm ⟨_ + _, _⟩

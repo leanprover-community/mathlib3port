@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov, Patrick Massot
 -/
 import Mathbin.Order.Filter.Bases
 import Mathbin.Data.Finset.Preimage
+import Mathbin.Data.Set.Intervals.Disjoint
 
 /-!
 # `at_top` and `at_bot` filters on preorded sets, monoids and groups.
@@ -22,7 +23,7 @@ variable {ι ι' α β γ : Type _}
 
 open Set
 
-open_locale Classical Filter BigOperators
+open Classical Filter BigOperators
 
 namespace Filter
 
@@ -53,9 +54,37 @@ theorem Ioi_mem_at_top [Preorderₓ α] [NoMaxOrder α] (x : α) : Ioi x ∈ (at
 theorem mem_at_bot [Preorderₓ α] (a : α) : { b : α | b ≤ a } ∈ @atBot α _ :=
   mem_infi_of_mem a <| Subset.refl _
 
+theorem Iic_mem_at_bot [Preorderₓ α] (a : α) : Iic a ∈ (atBot : Filter α) :=
+  mem_at_bot a
+
 theorem Iio_mem_at_bot [Preorderₓ α] [NoMinOrder α] (x : α) : Iio x ∈ (atBot : Filter α) :=
   let ⟨z, hz⟩ := exists_lt x
   (mem_of_superset (mem_at_bot z)) fun y h => lt_of_le_of_ltₓ h hz
+
+theorem disjoint_at_bot_principal_Ioi [Preorderₓ α] (x : α) : Disjoint atBot (𝓟 (Ioi x)) :=
+  disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl) (Iic_mem_at_bot x) (mem_principal_self _)
+
+theorem disjoint_at_top_principal_Iio [Preorderₓ α] (x : α) : Disjoint atTop (𝓟 (Iio x)) :=
+  @disjoint_at_bot_principal_Ioi (OrderDual α) _ _
+
+theorem disjoint_at_top_principal_Iic [Preorderₓ α] [NoMaxOrder α] (x : α) : Disjoint atTop (𝓟 (Iic x)) :=
+  disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl).symm (Ioi_mem_at_top x) (mem_principal_self _)
+
+theorem disjoint_at_bot_principal_Ici [Preorderₓ α] [NoMinOrder α] (x : α) : Disjoint atBot (𝓟 (Ici x)) :=
+  @disjoint_at_top_principal_Iic (OrderDual α) _ _ _
+
+theorem disjoint_at_bot_at_top [PartialOrderₓ α] [Nontrivial α] : Disjoint (atBot : Filter α) atTop := by
+  rcases exists_pair_ne α with ⟨x, y, hne⟩
+  by_cases' hle : x ≤ y
+  · refine' disjoint_of_disjoint_of_mem _ (Iic_mem_at_bot x) (Ici_mem_at_top y)
+    exact Iic_disjoint_Ici.2 (hle.lt_of_ne hne).not_le
+    
+  · refine' disjoint_of_disjoint_of_mem _ (Iic_mem_at_bot y) (Ici_mem_at_top x)
+    exact Iic_disjoint_Ici.2 hle
+    
+
+theorem disjoint_at_top_at_bot [PartialOrderₓ α] [Nontrivial α] : Disjoint (atTop : Filter α) atBot :=
+  disjoint_at_bot_at_top.symm
 
 theorem at_top_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) Ici :=
   has_basis_infi_principal (directed_of_sup fun a b => Ici_subset_Ici.2)
@@ -145,7 +174,7 @@ theorem OrderBot.at_bot_eq α [PartialOrderₓ α] [OrderBot α] : (atBot : Filt
 @[nontriviality]
 theorem Subsingleton.at_top_eq α [Subsingleton α] [Preorderₓ α] : (atTop : Filter α) = ⊤ := by
   refine' top_unique fun s hs x => _
-  let this' : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
+  let this : Unique α := ⟨⟨x⟩, fun y => Subsingleton.elimₓ y x⟩
   rw [at_top, infi_unique, Unique.default_eq x, mem_principal] at hs
   exact hs left_mem_Ici
 
@@ -529,6 +558,15 @@ theorem tendsto_neg_at_top_at_bot : Tendsto (Neg.neg : β → β) atTop atBot :=
 theorem tendsto_neg_at_bot_at_top : Tendsto (Neg.neg : β → β) atBot atTop :=
   @tendsto_neg_at_top_at_bot (OrderDual β) _
 
+theorem tendsto_at_top_iff_tends_to_neg_at_bot : Tendsto f l atTop ↔ Tendsto (-f) l atBot :=
+  have hf : f = Neg.neg ∘ -f := by
+    ext
+    simp
+  ⟨tendsto_neg_at_top_at_bot.comp, fun h => hf.symm ▸ tendsto_neg_at_bot_at_top.comp h⟩
+
+theorem tendsto_at_bot_iff_tends_to_neg_at_top : Tendsto f l atBot ↔ Tendsto (-f) l atTop :=
+  @tendsto_at_top_iff_tends_to_neg_at_bot α (OrderDual β) _ l f
+
 end OrderedGroup
 
 section OrderedSemiring
@@ -729,7 +767,7 @@ theorem tendsto_neg_const_mul_pow_at_top_iff (c : α) (n : ℕ) :
 
 end LinearOrderedField
 
-open_locale Filter
+open Filter
 
 theorem tendsto_at_top' [Nonempty α] [SemilatticeSup α] {f : α → β} {l : Filter β} :
     Tendsto f atTop l ↔ ∀, ∀ s ∈ l, ∀, ∃ a, ∀, ∀ b ≥ a, ∀, f b ∈ s := by
@@ -849,8 +887,8 @@ theorem tendsto_finset_preimage_at_top_at_top {f : α → β} (hf : Function.Inj
 
 theorem prod_at_top_at_top_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] :
     (atTop : Filter β₁) ×ᶠ (atTop : Filter β₂) = (atTop : Filter (β₁ × β₂)) := by
-  cases' (is_empty_or_nonempty β₁).symm
-  cases' (is_empty_or_nonempty β₂).symm
+  cases (is_empty_or_nonempty β₁).symm
+  cases (is_empty_or_nonempty β₂).symm
   · simp [at_top, prod_infi_left, prod_infi_right, infi_prod]
     exact infi_comm
     
@@ -1188,6 +1226,82 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
 theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [k.IsCountablyGenerated] :
     (∀ x : ℕ → α, Tendsto x atTop k → Tendsto (f ∘ x) atTop l) → Tendsto f k l :=
   tendsto_iff_seq_tendsto.2
+
+theorem tendsto_iff_forall_eventually_mem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
+    Tendsto x l f ↔ ∀, ∀ s ∈ f, ∀, ∀ᶠ n in l, x n ∈ s := by
+  rw [tendsto_def]
+  refine' forall_congrₓ fun s => imp_congr_right fun hsf => _
+  rfl
+
+theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
+    ¬Tendsto x l f ↔ ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
+  rw [tendsto_iff_forall_eventually_mem]
+  push_neg
+  refine' exists_congr fun s => _
+  rw [not_eventually, exists_prop]
+
+theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → Prop} [hl : l.IsCountablyGenerated] :
+    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in at_top, p (x n) := by
+  refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
+  · have : ne_bot (l⊓𝓟 { x : ι | p x }) := by
+      simpa [ne_bot_iff, inf_principal_eq_bot]
+    obtain ⟨x, hx⟩ := exists_seq_tendsto (l⊓𝓟 { x : ι | p x })
+    rw [tendsto_inf] at hx
+    cases' hx with hx_l hx_p
+    refine' ⟨x, hx_l, _⟩
+    rw [tendsto_principal] at hx_p
+    exact hx_p.frequently
+    
+  · obtain ⟨x, hx_tendsto, hx_freq⟩ := h_exists_freq
+    simp_rw [Filter.Frequently, Filter.Eventually]  at hx_freq⊢
+    have : { n : ℕ | ¬p (x n) } = { n | x n ∈ { y | ¬p y } } := rfl
+    rw [this, ← mem_map'] at hx_freq
+    contrapose! hx_freq
+    exact hx_tendsto hx_freq
+    
+
+theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → Prop} [hl : l.IsCountablyGenerated] :
+    (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in at_top, p (x n) := by
+  have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n := by
+    rw [not_frequently]
+    simp_rw [not_not]
+  rw [this, frequently_iff_seq_frequently]
+  push_neg
+  simp_rw [not_frequently, not_not]
+
+theorem subseq_forall_of_frequently {ι : Type _} {x : ℕ → ι} {p : ι → Prop} {l : Filter ι}
+    (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in at_top, p (x n)) :
+    ∃ ns : ℕ → ℕ, Tendsto (fun n => x (ns n)) atTop l ∧ ∀ n, p (x (ns n)) := by
+  rw [tendsto_iff_seq_tendsto] at h_tendsto
+  choose ns hge hns using frequently_at_top.1 h
+  exact ⟨ns, h_tendsto ns (tendsto_at_top_mono hge tendsto_id), hns⟩
+
+theorem exists_seq_forall_of_frequently {ι : Type _} {l : Filter ι} {p : ι → Prop} [hl : l.IsCountablyGenerated]
+    (h : ∃ᶠ n in l, p n) : ∃ ns : ℕ → ι, Tendsto ns atTop l ∧ ∀ n, p (ns n) := by
+  rw [frequently_iff_seq_frequently] at h
+  obtain ⟨x, hx_tendsto, hx_freq⟩ := h
+  obtain ⟨n_to_n, h_tendsto, h_freq⟩ := subseq_forall_of_frequently hx_tendsto hx_freq
+  exact ⟨x ∘ n_to_n, h_tendsto, h_freq⟩
+
+/-- A sequence converges if every subsequence has a convergent subsequence. -/
+theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} [l.IsCountablyGenerated]
+    (hxy : ∀ ns : ℕ → ι, Tendsto ns atTop l → ∃ ms : ℕ → ℕ, Tendsto (fun n => x (ns <| ms n)) atTop f) :
+    Tendsto x l f := by
+  by_contra h
+  obtain ⟨s, hs, hfreq⟩ : ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s := by
+    rwa [not_tendsto_iff_exists_frequently_nmem] at h
+  obtain ⟨y, hy_tendsto, hy_freq⟩ := exists_seq_forall_of_frequently hfreq
+  specialize hxy y hy_tendsto
+  obtain ⟨ms, hms_tendsto⟩ := hxy
+  specialize hms_tendsto hs
+  rw [mem_map] at hms_tendsto
+  have hms_freq : ∀ n : ℕ, x (y (ms n)) ∉ s := fun n => hy_freq (ms n)
+  have h_empty : (fun n : ℕ => x (y (ms n))) ⁻¹' s = ∅ := by
+    ext1 n
+    simp only [Set.mem_preimage, Set.mem_empty_eq, iff_falseₓ]
+    exact hms_freq n
+  rw [h_empty] at hms_tendsto
+  exact empty_not_mem at_top hms_tendsto
 
 theorem subseq_tendsto_of_ne_bot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α} (hx : NeBot (f⊓map u atTop)) :
     ∃ θ : ℕ → ℕ, StrictMono θ ∧ Tendsto (u ∘ θ) atTop f := by

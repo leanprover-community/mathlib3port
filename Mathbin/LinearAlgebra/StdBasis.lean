@@ -35,9 +35,9 @@ this is a basis over `fin 3 → R`.
 
 open Function Submodule
 
-open_locale BigOperators
+open BigOperators
 
-open_locale BigOperators
+open BigOperators
 
 namespace LinearMap
 
@@ -103,14 +103,14 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
           intro hiI
           rw [std_basis_same]
           exact hb _ ((hu trivialₓ).resolve_left hiI)]
-      exact sum_mem _ fun i hiI => mem_supr_of_mem i <| mem_supr_of_mem hiI <| (std_basis R φ i).mem_range_self (b i))
+      exact sum_mem fun i hiI => mem_supr_of_mem i <| mem_supr_of_mem hiI <| (std_basis R φ i).mem_range_self (b i))
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i) := by
   refine' le_antisymmₓ (supr_range_std_basis_le_infi_ker_proj _ _ _ _ hd) _
   have : Set.Univ ⊆ ↑hI.to_finset ∪ J := by
     rwa [hI.coe_to_finset]
-  refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_le_supr fun i => _)
+  refine' le_transₓ (infi_ker_proj_le_supr_range_std_basis R φ this) (supr_mono fun i => _)
   rw [Set.Finite.mem_to_finset]
   exact le_rfl
 
@@ -184,7 +184,7 @@ theorem linear_independent_std_basis [Ringₓ R] [∀ i, AddCommGroupₓ (Ms i)]
     have h₂ :
       (⨆ j ∈ J, span R (range fun i : ιs j => std_basis R Ms j (v j i))) ≤
         ⨆ j ∈ J, range (std_basis R (fun j : η => Ms j) j) :=
-      supr_le_supr fun i => supr_le_supr fun H => h₀ i
+      supr₂_mono fun i _ => h₀ i
     have h₃ : Disjoint (fun i : η => i ∈ {j}) J := by
       convert Set.disjoint_singleton_left.2 hiJ using 0
     exact (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂
@@ -263,11 +263,11 @@ end Pi
 
 namespace Matrix
 
-variable (R : Type _) (n : Type _) (m : Type _) [Fintype m] [Fintype n] [Semiringₓ R]
+variable (R : Type _) (m n : Type _) [Fintype m] [Fintype n] [Semiringₓ R]
 
-/-- The standard basis of `matrix n m R`. -/
-noncomputable def stdBasis : Basis (n × m) R (Matrix n m R) :=
-  Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equivₓ.sigmaEquivProd _ _)
+/-- The standard basis of `matrix m n R`. -/
+noncomputable def stdBasis : Basis (m × n) R (Matrix m n R) :=
+  Basis.reindex (Pi.basis fun i : m => Pi.basisFun R n) (Equivₓ.sigmaEquivProd _ _)
 
 variable {n m}
 

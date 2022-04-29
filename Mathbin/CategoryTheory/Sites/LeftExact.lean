@@ -192,7 +192,7 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
 instance [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [ReflectsIsomorphisms (forget D)] :
     PreservesFiniteLimits (J.plusFunctor D) := by
   constructor
-  intros K _ _
+  intro K _ _
   have : reflects_limits_of_shape K (forget D) := reflects_limits_of_shape_of_reflects_isomorphisms
   infer_instance
 

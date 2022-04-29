@@ -7,7 +7,6 @@ import Mathbin.Algebra.Group.Pi
 import Mathbin.GroupTheory.FreeGroup
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.Algebra.Module.Basic
-import Mathbin.Deprecated.Group
 
 /-!
 # Free abelian groups
@@ -69,8 +68,6 @@ are about `free_abelian_group.map`.
 
 -- we use the ℤ-module structure on an add_comm_group in punit_equiv
 -- we use the ℤ-module structure on an add_comm_group in punit_equiv
--- someone who understands `seq` can remove this
--- someone who understands `seq` can remove this
 universe u v
 
 variable (α : Type u)
@@ -130,7 +127,7 @@ end lift
 
 section
 
-open_locale Classical
+open Classical
 
 theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>
@@ -172,10 +169,6 @@ corresponding to the evaluation of the induced map `free_abelian_group X → A` 
 @[simps]
 def liftAddGroupHom {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) : (α → β) →+ β :=
   AddMonoidHom.mk' (fun f => lift f a) (lift.add' a)
-
-theorem is_add_group_hom_lift' {α} β [AddCommGroupₓ β] (a : FreeAbelianGroup α) :
-    IsAddGroupHom fun f => (lift f a : β) :=
-  { map_add := fun f g => lift.add' a f g }
 
 section Monadₓ
 
@@ -254,29 +247,29 @@ theorem neg_seq (f : FreeAbelianGroup (α → β)) (x : FreeAbelianGroup α) : -
 theorem sub_seq (f g : FreeAbelianGroup (α → β)) (x : FreeAbelianGroup α) : f - g <*> x = (f <*> x) - (g <*> x) :=
   sub_bind _ _ _
 
-theorem is_add_group_hom_seq (f : FreeAbelianGroup (α → β)) : IsAddGroupHom ((· <*> ·) f) :=
-  { map_add := fun x y =>
-      show lift (· <$> (x + y)) _ = _ by
-        simp only [map_add] <;>
-          exact
-            @IsAddHom.map_add _ _ _ (@FreeAbelianGroup.is_add_group_hom_lift' (FreeAbelianGroup β) _ _).to_is_add_hom _
-              _ }
+/-- If `f : free_abelian_group (α → β)`, then `f <*>` is an additive morphism
+`free_abelian_group α →+ free_abelian_group β`. -/
+def seqAddGroupHom (f : FreeAbelianGroup (α → β)) : FreeAbelianGroup α →+ FreeAbelianGroup β :=
+  AddMonoidHom.mk' ((· <*> ·) f) fun x y =>
+    show lift (· <$> (x + y)) _ = _ by
+      simp only [map_add]
+      exact lift.add' f _ _
 
 @[simp]
 theorem seq_zero (f : FreeAbelianGroup (α → β)) : f <*> 0 = 0 :=
-  IsAddGroupHom.map_zero (is_add_group_hom_seq f)
+  (seqAddGroupHom f).map_zero
 
 @[simp]
 theorem seq_add (f : FreeAbelianGroup (α → β)) (x y : FreeAbelianGroup α) : f <*> x + y = (f <*> x) + (f <*> y) :=
-  IsAddHom.map_add (is_add_group_hom_seq f).to_is_add_hom _ _
+  (seqAddGroupHom f).map_add x y
 
 @[simp]
 theorem seq_neg (f : FreeAbelianGroup (α → β)) (x : FreeAbelianGroup α) : f <*> -x = -(f <*> x) :=
-  IsAddGroupHom.map_neg (is_add_group_hom_seq f) _
+  (seqAddGroupHom f).map_neg x
 
 @[simp]
 theorem seq_sub (f : FreeAbelianGroup (α → β)) (x y : FreeAbelianGroup α) : f <*> x - y = (f <*> x) - (f <*> y) :=
-  IsAddGroupHom.map_sub (is_add_group_hom_seq f) _ _
+  (seqAddGroupHom f).map_sub x y
 
 instance : IsLawfulMonad FreeAbelianGroup.{u} where
   id_map := fun α x =>
@@ -629,7 +622,7 @@ def punitEquiv (T : Type _) [Unique T] : FreeAbelianGroup T ≃+ ℤ where
       simp only [AddMonoidHom.map_add, add_smul] at *
       rw [hx, hy]
   right_inv := fun n => by
-    rw [AddMonoidHom.map_int_module_smul, lift.of]
+    rw [AddMonoidHom.map_zsmul, lift.of]
     exact zsmul_int_one n
   map_add' := AddMonoidHom.map_add _
 

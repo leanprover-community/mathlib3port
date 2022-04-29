@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Data.Polynomial.Monic
-import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Algebra.GroupRingAction
-import Mathbin.Algebra.GroupActionHom
+import Mathbin.Algebra.Hom.GroupAction
+import Mathbin.Data.Polynomial.AlgebraMap
+import Mathbin.Data.Polynomial.Monic
 
 /-!
 # Group action on rings applied to polynomials
@@ -17,7 +17,7 @@ This file contains instances and definitions relating `mul_semiring_action` to `
 
 variable (M : Type _) [Monoidₓ M]
 
-open_locale Polynomial
+open Polynomial
 
 namespace Polynomial
 
@@ -37,8 +37,8 @@ variable (M)
 
 noncomputable instance [MulSemiringAction M R] : MulSemiringAction M R[X] :=
   { Polynomial.distribMulAction with smul := (· • ·),
-    smul_one := fun m => (smul_eq_map R m).symm ▸ map_one (MulSemiringAction.toRingHom M R m),
-    smul_mul := fun m p q => (smul_eq_map R m).symm ▸ map_mul (MulSemiringAction.toRingHom M R m) }
+    smul_one := fun m => (smul_eq_map R m).symm ▸ Polynomial.map_one (MulSemiringAction.toRingHom M R m),
+    smul_mul := fun m p q => (smul_eq_map R m).symm ▸ Polynomial.map_mul (MulSemiringAction.toRingHom M R m) }
 
 variable {M R}
 
@@ -78,7 +78,7 @@ variable (R : Type _) [CommRingₓ R] [MulSemiringAction G R]
 
 open MulAction
 
-open_locale Classical
+open Classical
 
 /-- the product of `(X - g • x)` over distinct `g • x`. -/
 noncomputable def prodXSubSmul (x : R) : R[X] :=

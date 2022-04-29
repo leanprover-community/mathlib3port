@@ -172,7 +172,7 @@ If `simp` is added first, the generated lemma will also have the `simp` attribut
 unsafe def elementwise_attr : user_attribute Unit (Option Name) where
   Name := `elementwise
   descr := "create a companion lemma for a morphism equation applied to an element"
-  Parser := optionalₓ ident
+  parser := optionalₓ ident
   after_set :=
     some fun n _ _ => do
       let some n' ← elementwise_attr.get_param n | elementwise_lemma n (n.appendSuffix "_apply")

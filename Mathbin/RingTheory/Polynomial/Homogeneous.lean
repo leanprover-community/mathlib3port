@@ -25,7 +25,7 @@ if all monomials occuring in `φ` have degree `n`.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace MvPolynomial
 
@@ -44,7 +44,7 @@ def IsHomogeneous [CommSemiringₓ R] (φ : MvPolynomial σ R) (n : ℕ) :=
 variable (σ R)
 
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
-noncomputable def homogeneousSubmodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomial σ R) where
+def homogeneousSubmodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomial σ R) where
   Carrier := { x | x.IsHomogeneous n }
   smul_mem' := fun r a ha c hc => by
     rw [coeff_smul] at hc
@@ -211,7 +211,7 @@ instance HomogeneousSubmodule.gcomm_semiring : SetLike.GradedMonoid (homogeneous
   one_mem := is_homogeneous_one σ R
   mul_mem := fun i j xi xj => IsHomogeneous.mul
 
-open_locale DirectSum
+open DirectSum
 
 noncomputable example : CommSemiringₓ (⨁ i, homogeneousSubmodule σ R i) :=
   inferInstance
@@ -225,7 +225,7 @@ section
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open Finset
 
@@ -294,6 +294,25 @@ theorem sum_homogeneous_component : (∑ i in range (φ.totalDegree + 1), homoge
   suffices φ.total_degree < d.support.sum d → 0 = coeff d φ by
     simpa [coeff_sum, coeff_homogeneous_component]
   exact fun h => (coeff_eq_zero_of_total_degree_lt h).symm
+
+theorem homogeneous_component_homogeneous_polynomial (m n : ℕ) (p : MvPolynomial σ R)
+    (h : p ∈ homogeneousSubmodule σ R n) : homogeneousComponent m p = if m = n then p else 0 := by
+  simp only [mem_homogeneous_submodule] at h
+  ext x
+  rw [coeff_homogeneous_component]
+  by_cases' zero_coeff : coeff x p = 0
+  · split_ifs
+    all_goals
+      simp only [zero_coeff, coeff_zero]
+    
+  · rw [h zero_coeff]
+    simp only [show n = m ↔ m = n from eq_comm]
+    split_ifs with h1
+    · rfl
+      
+    · simp only [coeff_zero]
+      
+    
 
 end HomogeneousComponent
 

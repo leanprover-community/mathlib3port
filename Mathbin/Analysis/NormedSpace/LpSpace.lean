@@ -60,7 +60,7 @@ say that `∥-f∥ = ∥f∥`, instead of the non-working `f.norm_neg`.
 
 noncomputable section
 
-open_locale Nnreal Ennreal BigOperators
+open Nnreal Ennreal BigOperators
 
 variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedGroup (E i)]
 
@@ -578,7 +578,7 @@ theorem norm_le_of_forall_le' [Nonempty α] {f : lp E ∞} (C : ℝ) (hCf : ∀ 
   exact hCf i
 
 theorem norm_le_of_forall_le {f : lp E ∞} {C : ℝ} (hC : 0 ≤ C) (hCf : ∀ i, ∥f i∥ ≤ C) : ∥f∥ ≤ C := by
-  cases' is_empty_or_nonempty α
+  cases is_empty_or_nonempty α
   · simpa [eq_zero' f] using hC
     
   · exact norm_le_of_forall_le' C hCf
@@ -781,7 +781,7 @@ section Topology
 
 open Filter
 
-open_locale TopologicalSpace uniformity
+open TopologicalSpace uniformity
 
 /-- The coercion from `lp E p` to `Π i, E i` is uniformly continuous. -/
 theorem uniform_continuous_coe [_i : Fact (1 ≤ p)] : UniformContinuous (coe : lp E p → ∀ i, E i) := by

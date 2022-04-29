@@ -28,7 +28,7 @@ Define the valuation on the tilt, and define a characteristic predicate for the 
 
 universe u₁ u₂ u₃ u₄
 
-open_locale Nnreal
+open Nnreal
 
 /-- The perfection of a monoid `M`, defined to be the projective limit of `M`
 using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
@@ -376,7 +376,7 @@ theorem pre_val_mk {x : O} (hx : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0
   obtain ⟨r, hr⟩ :=
     Ideal.mem_span_singleton'.1
       (Ideal.Quotient.eq.1 <| Quotientₓ.sound' <| @Quotientₓ.mk_out' O (Ideal.span {p} : Ideal O).quotientRel x)
-  refine' (if_neg hx).trans (v.map_eq_of_sub_lt <| lt_of_not_ge' _)
+  refine' (if_neg hx).trans (v.map_eq_of_sub_lt <| lt_of_not_le _)
   erw [← RingHom.map_sub, ← hr, hv.le_iff_dvd]
   exact fun hprx => hx (Ideal.Quotient.eq_zero_iff_mem.2 <| Ideal.mem_span_singleton.2 <| dvd_of_mul_left_dvd hprx)
 
@@ -426,7 +426,7 @@ theorem v_p_lt_pre_val {x : ModP K v O hv p} : v p < preVal K v O hv p x ↔ x �
   refine'
     ⟨fun h hx => by
       rw [hx, pre_val_zero] at h
-      exact not_lt_zero' h, fun h => lt_of_not_ge' fun hp => h _⟩
+      exact not_lt_zero' h, fun h => lt_of_not_le fun hp => h _⟩
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   rw [pre_val_mk h, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd] at hp
   rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
@@ -442,7 +442,7 @@ theorem pre_val_eq_zero {x : ModP K v O hv p} : preVal K v O hv p x = 0 ↔ x = 
 variable (hv hvp)
 
 theorem v_p_lt_val {x : O} : v p < v (algebraMap O K x) ↔ (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := by
-  rw [lt_iff_not_ge', not_iff_not, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd, Ideal.Quotient.eq_zero_iff_mem,
+  rw [lt_iff_not_le, not_iff_not, ← map_nat_cast (algebraMap O K) p, hv.le_iff_dvd, Ideal.Quotient.eq_zero_iff_mem,
     Ideal.mem_span_singleton]
 
 open Nnreal
@@ -494,7 +494,7 @@ instance : CharP (PreTilt K v O hv p) p :=
 
 section Classical
 
-open_locale Classical
+open Classical
 
 open Perfection
 

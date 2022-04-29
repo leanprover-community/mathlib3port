@@ -36,7 +36,7 @@ In complete lattices, however, it coincides with the `Inf Sup` definition.
 
 open Filter Set
 
-open_locale Filter
+open Filter
 
 variable {α β ι : Type _}
 
@@ -453,10 +453,10 @@ theorem liminf_const_top {f : Filter β} : (liminfₓ f fun x : β => (⊤ : α)
 
 theorem HasBasis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.HasBasis p s) :
     f.limsup = ⨅ (i) (hi : p i), sup (s i) :=
-  le_antisymmₓ (le_binfi fun i hi => Inf_le <| h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
+  le_antisymmₓ (le_infi₂ fun i hi => Inf_le <| h.eventually_iff.2 ⟨i, hi, fun x => le_Sup⟩)
     (le_Inf fun a ha =>
       let ⟨i, hi, ha⟩ := h.eventually_iff.1 ha
-      infi_le_of_le _ <| infi_le_of_le hi <| Sup_le ha)
+      infi₂_le_of_le _ hi <| Sup_le ha)
 
 theorem HasBasis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.HasBasis p s) :
     f.liminf = ⨆ (i) (hi : p i), inf (s i) :=

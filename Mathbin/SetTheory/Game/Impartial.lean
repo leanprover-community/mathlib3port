@@ -69,7 +69,7 @@ instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) :
 
 instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Impartial
   | G, H => by
-    intros hG hH
+    intro hG hH
     rw [impartial_def]
     constructor
     · apply equiv_trans _ (neg_add_relabelling G H).Equiv.symm
@@ -109,13 +109,13 @@ theorem winner_cases (G : Pgame) [G.Impartial] : G.FirstLoses ∨ G.FirstWins :=
   · cases' hl with hpos hnonneg
     rw [← not_ltₓ] at hnonneg
     have hneg := lt_of_lt_of_equiv hpos (neg_equiv_self G)
-    rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hneg
+    rw [lt_iff_neg_gt, neg_negₓ, Pgame.neg_zero] at hneg
     contradiction
     
   · cases' hr with hnonpos hneg
     rw [← not_ltₓ] at hnonpos
     have hpos := lt_of_equiv_of_lt (neg_equiv_self G).symm hneg
-    rw [lt_iff_neg_gt, neg_negₓ, neg_zero] at hpos
+    rw [lt_iff_neg_gt, neg_negₓ, Pgame.neg_zero] at hpos
     contradiction
     
   · left
@@ -133,7 +133,7 @@ theorem not_first_loses (G : Pgame) [G.Impartial] : ¬G.FirstLoses ↔ G.FirstWi
   Iff.symm <| iff_not_comm.1 <| Iff.symm <| not_first_wins G
 
 theorem add_self (G : Pgame) [G.Impartial] : (G + G).FirstLoses :=
-  first_loses_is_zero.2 <| equiv_trans (add_congr (neg_equiv_self G) G.equiv_refl) add_left_neg_equiv
+  first_loses_is_zero.2 <| equiv_trans (add_congr (neg_equiv_self G) G.equiv_refl) (add_left_neg_equiv G)
 
 theorem equiv_iff_sum_first_loses (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ (G + H).FirstLoses := by
   constructor
@@ -156,7 +156,7 @@ theorem le_zero_iff {G : Pgame} [G.Impartial] : G ≤ 0 ↔ 0 ≤ G := by
   rw [le_zero_iff_zero_le_neg, le_congr (equiv_refl 0) (neg_equiv_self G)]
 
 theorem lt_zero_iff {G : Pgame} [G.Impartial] : G < 0 ↔ 0 < G := by
-  rw [lt_iff_neg_gt, neg_zero, lt_congr (equiv_refl 0) (neg_equiv_self G)]
+  rw [lt_iff_neg_gt, Pgame.neg_zero, lt_congr (equiv_refl 0) (neg_equiv_self G)]
 
 theorem first_loses_symm (G : Pgame) [G.Impartial] : G.FirstLoses ↔ G ≤ 0 :=
   ⟨And.left, fun h => ⟨h, le_zero_iff.1 h⟩⟩

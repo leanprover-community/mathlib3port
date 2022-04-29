@@ -13,7 +13,7 @@ instead of Lie mainly because Lie ring has currently another use in mathematics.
 -/
 
 
-open_locale Manifold
+open Manifold
 
 section SmoothRing
 
@@ -58,6 +58,6 @@ variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [Nondis
 
 /-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/
-theorem topological_ring_of_smooth [Semiringₓ R] [SmoothRing I R] : TopologicalRing R :=
+theorem topological_semiring_of_smooth [Semiringₓ R] [SmoothRing I R] : TopologicalSemiring R :=
   { has_continuous_mul_of_smooth I, has_continuous_add_of_smooth I with }
 

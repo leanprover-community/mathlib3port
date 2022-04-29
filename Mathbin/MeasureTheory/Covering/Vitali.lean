@@ -38,7 +38,7 @@ variable {α : Type _}
 
 open Set Metric MeasureTheory TopologicalSpace Filter
 
-open_locale Nnreal Classical Ennreal TopologicalSpace
+open Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
@@ -75,7 +75,7 @@ theorem exists_disjoint_subfamily_covering_enlargment (t : Set (Set α)) (δ : S
           ∀, ∀ a ∈ t, ∀, ∀, ∀ b ∈ u, ∀, Set.Nonempty (a ∩ b) → ∃ c ∈ u, (a ∩ c).Nonempty ∧ δ a ≤ τ * δ c }
   -- By Zorn, choose a maximal family in the good set `T` of disjoint families.
   obtain ⟨u, uT, hu⟩ : ∃ u ∈ T, ∀, ∀ v ∈ T, ∀, u ⊆ v → v = u := by
-    refine' Zorn.zorn_subset _ fun U UT hU => _
+    refine' zorn_subset _ fun U UT hU => _
     refine' ⟨⋃₀U, _, fun s hs => subset_sUnion_of_mem hs⟩
     simp only [Set.sUnion_subset_iff, and_imp, exists_prop, forall_exists_index, Set.mem_set_of_eq]
     refine'

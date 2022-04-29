@@ -18,7 +18,7 @@ noncomputable section
 
 open Finset
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 namespace Polynomial
 
@@ -26,7 +26,7 @@ universe u v w z
 
 variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {A' B' : Type _} {a b : R} {n : ℕ}
 
-variable [CommSemiringₓ A'] [CommSemiringₓ B']
+variable [CommSemiringₓ A'] [Semiringₓ B']
 
 section CommSemiringₓ
 
@@ -35,21 +35,30 @@ variable [CommSemiringₓ R] {p q r : R[X]}
 variable [Semiringₓ A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R R[X]`. -/
-instance algebraOfAlgebra : Algebra R (Polynomial A) :=
-  { c.comp (algebraMap R A) with
-    smul_def' := fun r p => by
-      rcases p with ⟨⟩
-      simp only [C, monomial, monomial_fun, RingHom.coe_mk, RingHom.to_fun_eq_coe, Function.comp_app, RingHom.coe_comp,
-        smul_to_finsupp, mul_to_finsupp]
-      exact Algebra.smul_def' _ _,
-    commutes' := fun r p => by
-      rcases p with ⟨⟩
-      simp only [C, monomial, monomial_fun, RingHom.coe_mk, RingHom.to_fun_eq_coe, Function.comp_app, RingHom.coe_comp,
-        mul_to_finsupp]
-      convert Algebra.commutes' r p }
+instance algebraOfAlgebra : Algebra R (Polynomial A) where
+  smul_def' := fun r p =>
+    to_finsupp_injective <| by
+      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
+      exact Algebra.smul_def' _ _
+  commutes' := fun r p =>
+    to_finsupp_injective <| by
+      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      simp_rw [to_finsupp_mul, to_finsupp_C]
+      convert Algebra.commutes' r p.to_finsupp
+  toRingHom := c.comp (algebraMap R A)
 
 theorem algebra_map_apply (r : R) : algebraMap R (Polynomial A) r = c (algebraMap R A r) :=
   rfl
+
+@[simp]
+theorem to_finsupp_algebra_map (r : R) : (algebraMap R (Polynomial A) r).toFinsupp = algebraMap R _ r :=
+  show toFinsupp (c (algebraMap _ _ r)) = _ by
+    rw [to_finsupp_C]
+    rfl
+
+theorem of_finsupp_algebra_map (r : R) : (⟨algebraMap R _ r⟩ : A[X]) = algebraMap R (Polynomial A) r :=
+  to_finsupp_injective (to_finsupp_algebra_map _).symm
 
 /-- When we have `[comm_ring R]`, the function `C` is the same as `algebra_map R R[X]`.
 
@@ -77,8 +86,8 @@ implementation detail, but it can be useful to transfer results from `finsupp` t
 def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
   { toFinsuppIso R with
     commutes' := fun r => by
-      simp only [AddMonoidAlgebra.coe_algebra_map, Algebra.id.map_eq_self, Function.comp_app]
-      rw [← C_eq_algebra_map, ← monomial_zero_left, RingEquiv.to_fun_eq_coe, to_finsupp_iso_monomial] }
+      dsimp
+      exact to_finsupp_algebra_map _ }
 
 variable {R}
 
@@ -93,13 +102,14 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
       simp [coeff_C]⟩⟩
 
 @[simp]
-theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommRingₓ R] [Ringₓ A] [Ringₓ B] [Algebra R A] [Algebra R B]
-    (p : R[X]) (f : A →ₐ[R] B) (a : A) : f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p := by
+theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
+    [Algebra R B] (p : R[X]) (f : A →ₐ[R] B) (a : A) :
+    f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p := by
   dsimp [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, RingHom.eq_int_cast, RingHom.map_int_cast, AlgHom.commutes]
 
 @[simp]
-theorem eval₂_algebra_map_X {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
+theorem eval₂_algebra_map_X {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
     eval₂ (algebraMap R A) (f x) p = f p := by
   conv_rhs => rw [← Polynomial.sum_C_mul_X_eq p]
   dsimp [eval₂, Sum]
@@ -266,15 +276,6 @@ theorem aeval_eq_sum_range' [Algebra R S] {p : R[X]} {n : ℕ} (hn : p.natDegree
     aeval x p = ∑ i in Finset.range n, p.coeff i • x ^ i := by
   simp_rw [Algebra.smul_def]
   exact eval₂_eq_sum_range' (algebraMap R S) hn x
-
-theorem aeval_sum {ι : Type _} [Algebra R S] (s : Finset ι) (f : ι → R[X]) (g : S) :
-    aeval g (∑ i in s, f i) = ∑ i in s, aeval g (f i) :=
-  (Polynomial.aeval g : R[X] →ₐ[_] _).map_sum f s
-
-@[to_additive]
-theorem aeval_prod {ι : Type _} [Algebra R S] (s : Finset ι) (f : ι → R[X]) (g : S) :
-    aeval g (∏ i in s, f i) = ∏ i in s, aeval g (f i) :=
-  (Polynomial.aeval g : R[X] →ₐ[_] _).map_prod f s
 
 theorem is_root_of_eval₂_map_eq_zero (hf : Function.Injective f) {r : R} : eval₂ f (f r) p = 0 → p.IsRoot r := by
   intro h

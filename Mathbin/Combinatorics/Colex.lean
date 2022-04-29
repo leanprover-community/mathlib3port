@@ -52,7 +52,7 @@ variable {α : Type _}
 
 open Finset
 
-open_locale BigOperators
+open BigOperators
 
 /-- We define this type synonym to refer to the colexicographic ordering on finsets
 rather than the natural subset ordering.
@@ -71,17 +71,17 @@ theorem Colex.eq_iff (A B : Finset α) : A.toColex = B.toColex ↔ A = B :=
   Iff.rfl
 
 /-- `A` is less than `B` in the colex ordering if the largest thing that's not in both sets is in B.
-In other words, max (A Δ B) ∈ B (if the maximum exists).
+In other words, `max (A ∆ B) ∈ B` (if the maximum exists).
 -/
 instance [LT α] : LT (Finset.Colex α) :=
-  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ (k ∉ A) ∧ k ∈ B⟩
+  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
 
 /-- We can define (≤) in the obvious way. -/
 instance [LT α] : LE (Finset.Colex α) :=
   ⟨fun A B => A < B ∨ A = B⟩
 
 theorem Colex.lt_def [LT α] (A B : Finset α) :
-    A.toColex < B.toColex ↔ ∃ k, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ (k ∉ A) ∧ k ∈ B :=
+    A.toColex < B.toColex ↔ ∃ k, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B :=
   Iff.rfl
 
 theorem Colex.le_def [LT α] (A B : Finset α) : A.toColex ≤ B.toColex ↔ A.toColex < B.toColex ∨ A = B :=
@@ -133,16 +133,14 @@ theorem lt_trans [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b < c
   rintro ⟨k₁, k₁z, notinA, inB⟩ ⟨k₂, k₂z, notinB, inC⟩
   cases lt_or_gt_of_neₓ (ne_of_mem_of_not_mem inB notinB)
   · refine'
-      ⟨k₂, _, by
+      ⟨k₂, fun x hx => _, by
         rwa [k₁z h], inC⟩
-    intro x hx
     rw [← k₂z hx]
     apply k₁z (trans h hx)
     
   · refine'
-      ⟨k₁, _, notinA, by
+      ⟨k₁, fun x hx => _, notinA, by
         rwa [← k₂z h]⟩
-    intro x hx
     rw [k₁z hx]
     apply k₂z (trans h hx)
     

@@ -35,6 +35,10 @@ instance : CoeSort PartialOrderₓₓ (Type _) :=
 def of (α : Type _) [PartialOrderₓ α] : PartialOrderₓₓ :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [PartialOrderₓ α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited PartialOrderₓₓ :=
   ⟨of PUnit⟩
 
@@ -58,20 +62,20 @@ def Iso.mk {α β : PartialOrderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def toDual : PartialOrderₓₓ ⥤ PartialOrderₓₓ where
+def dual : PartialOrderₓₓ ⥤ PartialOrderₓₓ where
   obj := fun X => of (OrderDual X)
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `PartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PartialOrderₓₓ ≌ PartialOrderₓₓ :=
-  Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 
 end PartialOrderₓₓ
 
-theorem PartialOrder_to_dual_comp_forget_to_Preorder :
-    PartialOrderₓₓ.toDual ⋙ forget₂ PartialOrderₓₓ Preorderₓₓ = forget₂ PartialOrderₓₓ Preorderₓₓ ⋙ Preorderₓₓ.toDual :=
+theorem PartialOrder_dual_comp_forget_to_Preorder :
+    PartialOrderₓₓ.dual ⋙ forget₂ PartialOrderₓₓ Preorderₓₓ = forget₂ PartialOrderₓₓ Preorderₓₓ ⋙ Preorderₓₓ.dual :=
   rfl
 
 /-- `antisymmetrization` as a functor. It is the free functor. -/
@@ -103,7 +107,7 @@ def preorderToPartialOrderForgetAdjunction : preorderToPartialOrder.{u} ⊣ forg
 /-- `Preorder_to_PartialOrder` and `order_dual` commute. -/
 @[simps]
 def preorderToPartialOrderCompToDualIsoToDualCompPreorderToPartialOrder :
-    preorderToPartialOrder.{u} ⋙ PartialOrderₓₓ.toDual ≅ Preorderₓₓ.toDual ⋙ preorderToPartialOrder :=
+    preorderToPartialOrder.{u} ⋙ PartialOrderₓₓ.dual ≅ Preorderₓₓ.dual ⋙ preorderToPartialOrder :=
   (NatIso.ofComponents fun X => PartialOrderₓₓ.Iso.mk <| OrderIso.dualAntisymmetrization _) fun X Y f =>
     OrderHom.ext _ _ <| funext fun x => (Quotientₓ.induction_on' x) fun x => rfl
 

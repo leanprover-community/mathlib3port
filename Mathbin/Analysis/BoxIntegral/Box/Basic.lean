@@ -54,7 +54,7 @@ open Set Function Metric Filter
 
 noncomputable section
 
-open_locale Nnreal Classical TopologicalSpace
+open Nnreal Classical TopologicalSpace
 
 namespace BoxIntegral
 

@@ -3,8 +3,8 @@ Copyright (c) 2017 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 -/
-import Mathbin.CategoryTheory.Category.Cat
-import Mathbin.Order.Category.Preorder
+import Mathbin.CategoryTheory.Adjunction.Basic
+import Mathbin.Order.GaloisConnection
 
 /-!
 
@@ -143,30 +143,6 @@ theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map
 -/
 theorem Adjunction.gc {L : X ⥤ Y} {R : Y ⥤ X} (adj : L ⊣ R) : GaloisConnection L.obj R.obj := fun x y =>
   ⟨fun h => ((adj.homEquiv x y).toFun h.Hom).le, fun h => ((adj.homEquiv x y).invFun h.Hom).le⟩
-
-/-- The embedding of `Preorder` into `Cat`.
--/
-@[simps]
-def preorderToCat : Preorderₓₓ.{u} ⥤ Cat where
-  obj := fun X => Cat.of X.1
-  map := fun X Y f => f.Monotone.Functor
-  map_id' := fun X => by
-    apply CategoryTheory.Functor.ext
-    tidy
-  map_comp' := fun X Y Z f g => by
-    apply CategoryTheory.Functor.ext
-    tidy
-
-instance : Faithful preorderToCat.{u} where
-  map_injective' := fun X Y f g h => by
-    ext x
-    exact functor.congr_obj h x
-
-instance : Full preorderToCat.{u} where
-  Preimage := fun X Y f => ⟨f.obj, f.Monotone⟩
-  witness' := fun X Y f => by
-    apply CategoryTheory.Functor.ext
-    tidy
 
 end Preorderₓ
 

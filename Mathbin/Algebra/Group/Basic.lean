@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 -/
 import Mathbin.Algebra.Group.Defs
+import Mathbin.Data.Bracket
 import Mathbin.Logic.Function.Basic
 
 /-!
@@ -103,6 +104,14 @@ theorem mul_right_commₓ : ∀ a b c : G, a * b * c = a * c * b :=
 @[to_additive]
 theorem mul_mul_mul_commₓ (a b c d : G) : a * b * (c * d) = a * c * (b * d) := by
   simp only [mul_left_commₓ, mul_assoc]
+
+@[to_additive]
+theorem mul_rotate (a b c : G) : a * b * c = b * c * a := by
+  simp only [mul_left_commₓ, mul_comm]
+
+@[to_additive]
+theorem mul_rotate' (a b c : G) : a * (b * c) = b * (c * a) := by
+  simp only [mul_left_commₓ, mul_comm]
 
 end CommSemigroupₓ
 
@@ -206,7 +215,8 @@ section DivInvMonoidₓ
 
 variable {G : Type u} [DivInvMonoidₓ G]
 
-@[to_additive]
+-- The attributes are out of order on purpose
+@[to_additive, field_simps]
 theorem inv_eq_one_div (x : G) : x⁻¹ = 1 / x := by
   rw [div_eq_mul_inv, one_mulₓ]
 
@@ -218,13 +228,18 @@ theorem mul_one_div (x y : G) : x * (1 / y) = x / y := by
 theorem mul_div_assoc (a b c : G) : a * b / c = a * (b / c) := by
   rw [div_eq_mul_inv, div_eq_mul_inv, mul_assoc _ _ _]
 
-@[to_additive]
+-- The attributes are out of order on purpose
+@[to_additive, field_simps]
 theorem mul_div_assoc' (a b c : G) : a * (b / c) = a * b / c :=
   (mul_div_assoc _ _ _).symm
 
 @[simp, to_additive]
 theorem one_div (a : G) : 1 / a = a⁻¹ :=
   (inv_eq_one_div a).symm
+
+@[to_additive]
+theorem mul_div (a b c : G) : a * (b / c) = a * b / c := by
+  simp only [mul_assoc, div_eq_mul_inv]
 
 end DivInvMonoidₓ
 
@@ -241,7 +256,7 @@ theorem one_inv : 1⁻¹ = (1 : G) :=
   inv_eq_of_mul_eq_oneₓ (one_mulₓ 1)
 
 @[to_additive]
-theorem left_inverse_inv G [Groupₓ G] : Function.LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
+theorem left_inverse_inv G [HasInvolutiveInv G] : Function.LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
   inv_invₓ
 
 @[simp, to_additive]
@@ -402,12 +417,6 @@ theorem div_ne_one_of_ne (h : a ≠ b) : a / b ≠ 1 :=
 theorem div_inv_eq_mul (a b : G) : a / b⁻¹ = a * b := by
   rw [div_eq_mul_inv, inv_invₓ]
 
-attribute [local simp] mul_assoc
-
-@[to_additive]
-theorem mul_div (a b c : G) : a * (b / c) = a * b / c := by
-  simp only [mul_assoc, div_eq_mul_inv]
-
 @[to_additive]
 theorem div_mul_eq_div_div_swap (a b c : G) : a / (b * c) = a / c / b := by
   simp only [mul_assoc, mul_inv_rev, div_eq_mul_inv]
@@ -504,11 +513,26 @@ theorem left_inverse_mul_right_inv_mul (c : G) : Function.LeftInverse (fun x => 
 theorem left_inverse_inv_mul_mul_right (c : G) : Function.LeftInverse (fun x => c⁻¹ * x) fun x => c * x := fun x =>
   inv_mul_cancel_leftₓ c x
 
+@[to_additive]
+theorem exists_npow_eq_one_of_zpow_eq_one {n : ℤ} (hn : n ≠ 0) {x : G} (h : x ^ n = 1) : ∃ n : ℕ, 0 < n ∧ x ^ n = 1 :=
+  by
+  cases' n with n n
+  · rw [zpow_of_nat] at h
+    refine' ⟨n, Nat.pos_of_ne_zeroₓ fun n0 => hn _, h⟩
+    rw [n0]
+    rfl
+    
+  · rw [zpow_neg_succ_of_nat, inv_eq_one] at h
+    refine' ⟨n + 1, n.succ_pos, h⟩
+    
+
 end Groupₓ
 
 section CommGroupₓ
 
-variable {G : Type u} [CommGroupₓ G]
+variable {G : Type u} [CommGroupₓ G] {a b c d : G}
+
+attribute [local simp] mul_assoc mul_comm mul_left_commₓ div_eq_mul_inv
 
 @[to_additive neg_add]
 theorem mul_inv (a b : G) : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
@@ -519,13 +543,16 @@ theorem div_eq_of_eq_mul' {a b c : G} (h : a = b * c) : a / b = c := by
   rw [h, div_eq_mul_inv, mul_comm, inv_mul_cancel_leftₓ]
 
 @[to_additive]
-theorem div_mul_comm (a b c d : G) : a / b * (c / d) = a * c / (b * d) := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_assoc, mul_left_cancel_iffₓ, mul_comm,
-    mul_assoc]
+theorem mul_div_left_comm {x y z : G} : x * (y / z) = y * (x / z) := by
+  simp_rw [div_eq_mul_inv, mul_left_commₓ]
 
-variable {a b c d : G}
+@[to_additive]
+theorem div_mul_div_comm (a b c d : G) : a / b * (c / d) = a * c / (b * d) := by
+  simp
 
-attribute [local simp] mul_assoc mul_comm mul_left_commₓ div_eq_mul_inv
+@[to_additive]
+theorem div_div_div_comm (a b c d : G) : a / b / (c / d) = a / c / (b / d) := by
+  simp
 
 @[to_additive]
 theorem div_mul_eq_div_div (a b c : G) : a / (b * c) = a / b / c := by
@@ -665,4 +692,15 @@ theorem div_eq_div_iff_div_eq_div : a / b = c / d ↔ a / c = b / d := by
   rw [div_eq_iff_eq_mul, div_mul_eq_mul_div', div_eq_iff_eq_mul', mul_div_assoc]
 
 end CommGroupₓ
+
+section Commutator
+
+/-- The commutator of two elements `g₁` and `g₂`. -/
+instance commutatorElement {G : Type _} [Groupₓ G] : HasBracket G G :=
+  ⟨fun g₁ g₂ => g₁ * g₂ * g₁⁻¹ * g₂⁻¹⟩
+
+theorem commutator_element_def {G : Type _} [Groupₓ G] (g₁ g₂ : G) : ⁅g₁,g₂⁆ = g₁ * g₂ * g₁⁻¹ * g₂⁻¹ :=
+  rfl
+
+end Commutator
 

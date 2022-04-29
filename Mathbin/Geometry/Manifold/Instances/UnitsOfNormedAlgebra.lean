@@ -46,7 +46,7 @@ None of this should be particularly difficult.
 
 noncomputable section
 
-open_locale Manifold
+open Manifold
 
 namespace Units
 

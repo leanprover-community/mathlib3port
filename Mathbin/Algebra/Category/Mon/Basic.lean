@@ -70,6 +70,10 @@ def ofHom {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) : of X ⟶ o
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddMon`. -/
 add_decl_doc AddMon.ofHom
 
+@[simp]
+theorem of_hom_apply {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+  rfl
+
 @[to_additive]
 instance : Inhabited Mon :=
   ⟨-- The default instance for `monoid punit` is derived via `punit.comm_ring`,

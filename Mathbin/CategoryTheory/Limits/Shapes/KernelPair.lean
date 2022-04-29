@@ -149,9 +149,9 @@ def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofor
     rw [assoc, assoc]
     congr 1
     erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
-    apply w walking_parallel_pair.one
+    apply w
     erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
-    apply w walking_parallel_pair.one
+    apply w
     
 
 end IsKernelPair

@@ -64,7 +64,7 @@ universe u₁ u₂
 
 namespace Matrix
 
-open_locale Matrix
+open Matrix
 
 variable (n p : Type _) (R : Type u₂) {𝕜 : Type _} [Field 𝕜]
 

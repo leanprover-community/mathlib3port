@@ -85,7 +85,7 @@ noncomputable section
 
 open QuotientAddGroup Metric Set
 
-open_locale TopologicalSpace Nnreal
+open TopologicalSpace Nnreal
 
 variable {M N : Type _} [SemiNormedGroup M] [SemiNormedGroup N]
 
@@ -111,17 +111,16 @@ theorem quotient_norm_neg {S : AddSubgroup M} (x : M ⧸ S) : ∥-x∥ = ∥x∥
     simp only [this, norm]
   ext r
   constructor
-  · rintro ⟨m, hm : mk' S m = x, rfl⟩
-    subst hm
+  · rintro ⟨m, rfl : mk' S m = x, rfl⟩
     rw [← norm_neg]
     exact
       ⟨-m, by
         simp only [(mk' S).map_neg, Set.mem_set_of_eq], rfl⟩
     
   · rintro ⟨m, hm : mk' S m = -x, rfl⟩
-    use -m
-    simp at hm
-    simp [hm]
+    exact
+      ⟨-m, by
+        simpa [eq_comm] using eq_neg_iff_eq_neg.mp ((mk'_apply _ _).symm.trans hm)⟩
     
 
 theorem quotient_norm_sub_rev {S : AddSubgroup M} (x y : M ⧸ S) : ∥x - y∥ = ∥y - x∥ := by

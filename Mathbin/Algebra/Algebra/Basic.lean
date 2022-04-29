@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.Module.Basic
-import Mathbin.LinearAlgebra.Basic
+import Mathbin.Algebra.Ring.Aut
+import Mathbin.LinearAlgebra.Span
 import Mathbin.Tactic.Abel
-import Mathbin.Data.Equiv.RingAut
 
 /-!
 # Algebras over commutative semirings
@@ -99,7 +99,7 @@ the second approach only when you need to weaken a condition on either `R` or `A
 
 universe u v w u₁ v₁
 
-open_locale BigOperators
+open BigOperators
 
 section Prio
 
@@ -352,6 +352,23 @@ theorem smul_eq_mul (x y : R) : x • y = x * y :=
 
 end id
 
+section PUnit
+
+instance _root_.punit.algebra : Algebra R PUnit where
+  toFun := fun x => PUnit.unit
+  map_one' := rfl
+  map_mul' := fun _ _ => rfl
+  map_zero' := rfl
+  map_add' := fun _ _ => rfl
+  commutes' := fun _ _ => rfl
+  smul_def' := fun _ _ => rfl
+
+@[simp]
+theorem algebra_map_punit (r : R) : algebraMap R PUnit r = PUnit.unit :=
+  rfl
+
+end PUnit
+
 section Prod
 
 variable (R A B)
@@ -380,6 +397,15 @@ instance ofSubsemiring (S : Subsemiring R) : Algebra S A :=
   { (algebraMap R A).comp S.Subtype with smul := (· • ·), commutes' := fun r x => Algebra.commutes r x,
     smul_def' := fun r x => Algebra.smul_def r x }
 
+theorem algebra_map_of_subsemiring (S : Subsemiring R) : (algebraMap S R : S →+* R) = Subsemiring.subtype S :=
+  rfl
+
+theorem coe_algebra_map_of_subsemiring (S : Subsemiring R) : (algebraMap S R : S → R) = Subtype.val :=
+  rfl
+
+theorem algebra_map_of_subsemiring_apply (S : Subsemiring R) (x : S) : algebraMap S R x = x :=
+  rfl
+
 /-- Algebra over a subring. This builds upon `subring.module`. -/
 instance ofSubring {R A : Type _} [CommRingₓ R] [Ringₓ A] [Algebra R A] (S : Subring R) : Algebra S A :=
   { Algebra.ofSubsemiring S.toSubsemiring, (algebraMap R A).comp S.Subtype with smul := (· • ·) }
@@ -400,25 +426,15 @@ theorem algebra_map_of_subring_apply {R : Type _} [CommRingₓ R] (S : Subring R
 def algebraMapSubmonoid (S : Type _) [Semiringₓ S] [Algebra R S] (M : Submonoid R) : Submonoid S :=
   Submonoid.map (algebraMap R S : R →* S) M
 
-theorem mem_algebra_map_submonoid_of_mem [Algebra R S] {M : Submonoid R} (x : M) :
+theorem mem_algebra_map_submonoid_of_mem {S : Type _} [Semiringₓ S] [Algebra R S] {M : Submonoid R} (x : M) :
     algebraMap R S x ∈ algebraMapSubmonoid S M :=
   Set.mem_image_of_mem (algebraMap R S) x.2
 
 end Semiringₓ
 
-section Ringₓ
+section CommSemiringₓ
 
-variable [CommRingₓ R]
-
-variable (R)
-
-/-- A `semiring` that is an `algebra` over a commutative ring carries a natural `ring` structure.
-See note [reducible non-instances]. -/
-@[reducible]
-def semiringToRing [Semiringₓ A] [Algebra R A] : Ringₓ A :=
-  { Module.addCommMonoidToAddCommGroup R, (inferInstance : Semiringₓ A) with }
-
-variable {R}
+variable [CommSemiringₓ R]
 
 theorem mul_sub_algebra_map_commutes [Ringₓ A] [Algebra R A] (x : A) (r : R) :
     x * (x - algebraMap R A r) = (x - algebraMap R A r) * x := by
@@ -431,6 +447,20 @@ theorem mul_sub_algebra_map_pow_commutes [Ringₓ A] [Algebra R A] (x : A) (r : 
     
   · rw [pow_succₓ, ← mul_assoc, mul_sub_algebra_map_commutes, mul_assoc, ih, ← mul_assoc]
     
+
+end CommSemiringₓ
+
+section Ringₓ
+
+variable [CommRingₓ R]
+
+variable (R)
+
+/-- A `semiring` that is an `algebra` over a commutative ring carries a natural `ring` structure.
+See note [reducible non-instances]. -/
+@[reducible]
+def semiringToRing [Semiringₓ A] [Algebra R A] : Ringₓ A :=
+  { Module.addCommMonoidToAddCommGroup R, (inferInstance : Semiringₓ A) with }
 
 end Ringₓ
 
@@ -453,7 +483,8 @@ Cannot be an instance because there is no `injective (algebra_map R A)` typeclas
 -/
 theorem of_algebra_map_injective [Semiringₓ A] [Algebra R A] [NoZeroDivisors A]
     (h : Function.Injective (algebraMap R A)) : NoZeroSmulDivisors R A :=
-  ⟨fun c x hcx => (mul_eq_zero.mp ((smul_def c x).symm.trans hcx)).imp_left ((algebraMap R A).injective_iff.mp h _)⟩
+  ⟨fun c x hcx =>
+    (mul_eq_zero.mp ((smul_def c x).symm.trans hcx)).imp_left ((injective_iff_map_eq_zero (algebraMap R A)).mp h _)⟩
 
 variable (R A)
 
@@ -776,6 +807,10 @@ theorem to_linear_map_of_linear_map (f : A →ₗ[R] B) map_one map_mul : toLine
 theorem of_linear_map_id map_one map_mul : ofLinearMap LinearMap.id map_one map_mul = AlgHom.id R A :=
   ext fun _ => rfl
 
+theorem map_smul_of_tower {R'} [HasScalar R' A] [HasScalar R' B] [LinearMap.CompatibleSmul A B R' R] (r : R') (x : A) :
+    φ (r • x) = r • φ x :=
+  φ.toLinearMap.map_smul_of_tower r x
+
 theorem map_list_prod (s : List A) : φ s.Prod = (s.map φ).Prod :=
   φ.toRingHom.map_list_prod s
 
@@ -834,7 +869,7 @@ end Ringₓ
 
 section DivisionRing
 
-variable [CommRingₓ R] [DivisionRing A] [DivisionRing B]
+variable [CommSemiringₓ R] [DivisionRing A] [DivisionRing B]
 
 variable [Algebra R A] [Algebra R B] (φ : A →ₐ[R] B)
 
@@ -847,10 +882,6 @@ theorem map_div x y : φ (x / y) = φ x / φ y :=
   φ.toRingHom.map_div x y
 
 end DivisionRing
-
-theorem injective_iff {R A B : Type _} [CommSemiringₓ R] [Ringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
-    (f : A →ₐ[R] B) : Function.Injective f ↔ ∀ x, f x = 0 → x = 0 :=
-  RingHom.injective_iff (f : A →+* B)
 
 end AlgHom
 
@@ -933,6 +964,10 @@ theorem mk_coe (e : A₁ ≃ₐ[R] A₂) e' h₁ h₂ h₃ h₄ h₅ : (⟨e, e'
 
 @[simp]
 theorem to_fun_eq_coe (e : A₁ ≃ₐ[R] A₂) : e.toFun = e :=
+  rfl
+
+@[simp]
+theorem to_equiv_eq_coe : e.toEquiv = e :=
   rfl
 
 @[simp]
@@ -1067,6 +1102,10 @@ theorem symm_mk f f' h₁ h₂ h₃ h₄ h₅ :
       { (⟨f, f', h₁, h₂, h₃, h₄, h₅⟩ : A₁ ≃ₐ[R] A₂).symm with toFun := f', invFun := f } :=
   rfl
 
+@[simp]
+theorem refl_symm : (AlgEquiv.refl : A₁ ≃ₐ[R] A₁).symm = AlgEquiv.refl :=
+  rfl
+
 /-- Algebra equivalences are transitive. -/
 @[trans]
 def trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : A₁ ≃ₐ[R] A₃ :=
@@ -1091,6 +1130,7 @@ theorem symm_trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A�
 theorem coe_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) : ⇑(e₁.trans e₂) = e₂ ∘ e₁ :=
   rfl
 
+@[simp]
 theorem trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) (x : A₁) : (e₁.trans e₂) x = e₂ (e₁ x) :=
   rfl
 
@@ -1347,7 +1387,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable [CommRingₓ R] [Ringₓ A₁] [Ringₓ A₂]
+variable [CommSemiringₓ R] [Ringₓ A₁] [Ringₓ A₂]
 
 variable [Algebra R A₁] [Algebra R A₂] (e : A₁ ≃ₐ[R] A₂)
 
@@ -1455,6 +1495,8 @@ def toIntAlgHom [Ringₓ R] [Ringₓ S] [Algebra ℤ R] [Algebra ℤ S] (f : R �
     commutes' := fun n => by
       simp }
 
+-- note that `R`, `S` could be `semiring`s but this is useless mathematically speaking -
+-- a ℚ-algebra is a ring. furthermore, this change probably slows down elaboration.
 @[simp]
 theorem map_rat_algebra_map [Ringₓ R] [Ringₓ S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) (r : ℚ) :
     f (algebraMap ℚ R r) = algebraMap ℚ S r :=
@@ -1593,6 +1635,12 @@ theorem const_alg_hom_eq_algebra_of_id : constAlgHom R A R = Algebra.ofId R (A �
 
 end Pi
 
+/-- A special case of `pi.algebra` for non-dependent types. Lean struggles to elaborate
+definitions elsewhere in the library without this, -/
+instance Function.algebra {R : Type _} (I : Type _) (A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] :
+    Algebra R (I → A) :=
+  Pi.algebra _ _
+
 namespace AlgEquiv
 
 /-- A family of algebra equivalences `Π j, (A₁ j ≃ₐ A₂ j)` generates a
@@ -1646,6 +1694,20 @@ theorem algebra_compatible_smul (r : R) (m : M) : r • m = (algebraMap R A) r �
 @[simp]
 theorem algebra_map_smul (r : R) (m : M) : (algebraMap R A) r • m = r • m :=
   (algebra_compatible_smul A r m).symm
+
+theorem NoZeroSmulDivisors.trans (R A M : Type _) [CommRingₓ R] [Ringₓ A] [IsDomain A] [Algebra R A] [AddCommGroupₓ M]
+    [Module R M] [Module A M] [IsScalarTower R A M] [NoZeroSmulDivisors R A] [NoZeroSmulDivisors A M] :
+    NoZeroSmulDivisors R M := by
+  refine' ⟨fun r m h => _⟩
+  rw [algebra_compatible_smul A r m] at h
+  cases' smul_eq_zero.1 h with H H
+  · have : Function.Injective (algebraMap R A) := NoZeroSmulDivisors.iff_algebra_map_injective.1 inferInstance
+    left
+    exact (injective_iff_map_eq_zero _).1 this _ H
+    
+  · right
+    exact H
+    
 
 variable {A}
 
@@ -1724,7 +1786,7 @@ variable [Module R M] [Module A M] [IsScalarTower R A M]
 theorem span_eq_restrict_scalars (X : Set M) (hsur : Function.Surjective (algebraMap R A)) :
     span R X = restrictScalars R (span A X) := by
   apply (span_le_restrict_scalars R A X).antisymm fun m hm => _
-  refine' span_induction hm subset_span (zero_mem _) (fun _ _ => add_mem _) fun a m hm => _
+  refine' span_induction hm subset_span (zero_mem _) (fun _ _ => add_mem) fun a m hm => _
   obtain ⟨r, rfl⟩ := hsur a
   simpa [algebra_map_smul] using smul_mem _ r hm
 

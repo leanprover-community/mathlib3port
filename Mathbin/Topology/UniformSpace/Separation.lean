@@ -69,7 +69,7 @@ uniformly continuous).
 
 open Filter TopologicalSpace Set Classical Function UniformSpace
 
-open_locale Classical TopologicalSpace uniformity Filter
+open Classical TopologicalSpace uniformity Filter
 
 noncomputable section
 
@@ -440,14 +440,14 @@ def SeparationQuotient (α : Type _) [UniformSpace α] :=
 
 namespace SeparationQuotient
 
-instance : UniformSpace (SeparationQuotient α) := by
-  dunfold separation_quotient <;> infer_instance
+instance : UniformSpace (SeparationQuotient α) :=
+  separation_setoid.uniform_space
 
-instance : SeparatedSpace (SeparationQuotient α) := by
-  dunfold separation_quotient <;> infer_instance
+instance : SeparatedSpace (SeparationQuotient α) :=
+  UniformSpace.separated_separation
 
-instance [Inhabited α] : Inhabited (SeparationQuotient α) := by
-  unfold separation_quotient <;> infer_instance
+instance [Inhabited α] : Inhabited (SeparationQuotient α) :=
+  Quotientₓ.inhabited (separationSetoid α)
 
 /-- Factoring functions to a separated space through the separation quotient. -/
 def lift [SeparatedSpace β] (f : α → β) : SeparationQuotient α → β :=

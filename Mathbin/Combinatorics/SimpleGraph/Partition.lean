@@ -55,14 +55,14 @@ variable {V : Type u} (G : SimpleGraph V)
 * `independent`: a proof that each element of `parts` doesn't have a pair of adjacent vertices
 -/
 structure Partition where
-  Parts : Set (Set V)
+  parts : Set (Set V)
   IsPartition : Setoidₓ.IsPartition parts
   Independent : ∀, ∀ s ∈ parts, ∀, IsAntichain G.Adj s
 
 /-- Whether a partition `P` has at most `n` parts. A graph with a partition
 satisfying this predicate called `n`-partite. (See `simple_graph.partitionable`.) -/
 def Partition.PartsCardLe {G : SimpleGraph V} (P : G.partition) (n : ℕ) : Prop :=
-  ∃ h : P.Parts.Finite, h.toFinset.card ≤ n
+  ∃ h : P.parts.Finite, h.toFinset.card ≤ n
 
 /-- Whether a graph is `n`-partite, which is whether its vertex set
 can be partitioned in at most `n` independent sets. -/
@@ -77,7 +77,7 @@ variable {G} (P : G.partition)
 def PartOfVertex (v : V) : Set V :=
   Classical.some (P.IsPartition.2 v)
 
-theorem part_of_vertex_mem (v : V) : P.PartOfVertex v ∈ P.Parts := by
+theorem part_of_vertex_mem (v : V) : P.PartOfVertex v ∈ P.parts := by
   obtain ⟨h, -⟩ := (P.is_partition.2 v).some_spec.1
   exact h
 
@@ -93,7 +93,7 @@ theorem part_of_vertex_ne_of_adj {v w : V} (h : G.Adj v w) : P.PartOfVertex v �
 
 /-- Create a coloring using the parts themselves as the colors.
 Each vertex is colored by the part it's contained in. -/
-def toColoring : G.Coloring P.Parts :=
+def toColoring : G.Coloring P.parts :=
   (Coloring.mk fun v => ⟨P.PartOfVertex v, P.part_of_vertex_mem v⟩) fun _ _ hvw => by
     rw [Ne.def, Subtype.mk_eq_mk]
     exact P.part_of_vertex_ne_of_adj hvw
@@ -102,7 +102,7 @@ def toColoring : G.Coloring P.Parts :=
 def toColoring' : G.Coloring (Set V) :=
   (Coloring.mk P.PartOfVertex) fun _ _ hvw => P.part_of_vertex_ne_of_adj hvw
 
-theorem to_colorable [Fintype P.Parts] : G.Colorable (Fintype.card P.Parts) :=
+theorem to_colorable [Fintype P.parts] : G.Colorable (Fintype.card P.parts) :=
   P.toColoring.to_colorable
 
 end Partition
@@ -112,7 +112,7 @@ variable {G}
 /-- Creates a partition from a coloring. -/
 @[simps]
 def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.partition where
-  Parts := C.ColorClasses
+  parts := C.ColorClasses
   IsPartition := C.color_classes_is_partition
   Independent := by
     rintro s ⟨c, rfl⟩

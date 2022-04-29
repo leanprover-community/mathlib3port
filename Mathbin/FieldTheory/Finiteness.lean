@@ -14,17 +14,13 @@ import Mathbin.LinearAlgebra.Dimension
 
 universe u v
 
-open_locale Classical Cardinal
+open Classical Cardinal
 
 open Cardinal Submodule Module Function
 
 namespace IsNoetherian
 
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
-
--- PROJECT: Show all division rings are noetherian.
--- This is currently annoying because we only have ideal of commutative rings.
-variable [IsNoetherianRing K]
 
 /-- A module over a division ring is noetherian if and only if
 its dimension (as a cardinal) is strictly less than the first infinite cardinal `ω`.

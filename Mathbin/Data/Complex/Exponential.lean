@@ -21,7 +21,7 @@ local notation "abs'" => HasAbs.abs
 
 open IsAbsoluteValue
 
-open_locale Classical BigOperators Nat ComplexConjugate
+open Classical BigOperators Nat ComplexConjugate
 
 section
 
@@ -125,10 +125,10 @@ end NoArchimedean
 
 section
 
-variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] [Archimedean α] {abv : β → α} [IsAbsoluteValue abv]
+variable {α : Type _} [LinearOrderedField α] [Archimedean α]
 
-theorem is_cau_geo_series {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv] (x : β) (hx1 : abv x < 1) :
-    IsCauSeq abv fun n => ∑ m in range n, x ^ m :=
+theorem is_cau_geo_series {β : Type _} [Ringₓ β] [Nontrivial β] {abv : β → α} [IsAbsoluteValue abv] (x : β)
+    (hx1 : abv x < 1) : IsCauSeq abv fun n => ∑ m in range n, x ^ m :=
   have hx1' : abv x ≠ 1 := fun h => by
     simpa [h, lt_irreflₓ] using hx1
   is_cau_series_of_abv_cau
@@ -163,6 +163,8 @@ theorem is_cau_geo_series_const (a : α) {x : α} (hx1 : abs x < 1) : IsCauSeq a
   by
   have : IsCauSeq abs fun m => a * ∑ n in range m, x ^ n := (CauSeq.const abs a * ⟨_, is_cau_geo_series x hx1⟩).2
   simpa only [mul_sum]
+
+variable {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (hr1 : r < 1)
     (h : ∀ m, n ≤ m → abv (f m.succ) ≤ r * abv (f m)) : IsCauSeq abv fun m => ∑ n in range m, f n := by
@@ -226,25 +228,15 @@ theorem sum_range_diag_flip {α : Type _} [AddCommMonoidₓ α] (n : ℕ) (f : �
               ⟨mem_range.2 (lt_tsub_iff_right.1 ha.2), mem_range.2 (Nat.lt_succ_of_leₓ (Nat.le_add_leftₓ _ _))⟩,
             Sigma.mk.inj_iff.2 ⟨rfl, heq_of_eq (add_tsub_cancel_right _ _).symm⟩⟩⟩
 
--- TODO move to src/algebra/big_operators/basic.lean, rewrite with comm_group, and make to_additive
-theorem sum_range_sub_sum_range {α : Type _} [AddCommGroupₓ α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
-    ((∑ k in range m, f k) - ∑ k in range n, f k) = ∑ k in (range m).filter fun k => n ≤ k, f k := by
-  rw [← sum_sdiff (@filter_subset _ (fun k => n ≤ k) _ (range m)), sub_eq_iff_eq_add, ← eq_sub_iff_add_eq,
-    add_sub_cancel']
-  refine'
-    Finset.sum_congr
-      (Finset.ext fun a =>
-        ⟨fun h => by
-          simp at * <;> tauto, fun h => by
-          have ham : a < m := lt_of_lt_of_leₓ (mem_range.1 h) hnm
-          simp_all ⟩)
-      fun _ _ => rfl
-
 end
 
 section NoArchimedean
 
-variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] {abv : β → α} [IsAbsoluteValue abv]
+variable {α : Type _} {β : Type _} [LinearOrderedField α] {abv : β → α}
+
+section
+
+variable [Semiringₓ β] [IsAbsoluteValue abv]
 
 theorem abv_sum_le_sum_abv {γ : Type _} (f : γ → β) (s : Finset γ) : abv (∑ k in s, f k) ≤ ∑ k in s, abv (f k) :=
   have := Classical.decEq γ
@@ -253,6 +245,12 @@ theorem abv_sum_le_sum_abv {γ : Type _} (f : γ → β) (s : Finset γ) : abv (
       simp [abv_zero abv])
     fun a s has ih => by
     rw [sum_insert has, sum_insert has] <;> exact le_transₓ (abv_add abv _ _) (add_le_add_left ih _)
+
+end
+
+section
+
+variable [Ringₓ β] [IsAbsoluteValue abv]
 
 theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in range m, abv (a n))
     (hb : IsCauSeq abv fun m => ∑ n in range m, b n) (ε : α) (ε0 : 0 < ε) :
@@ -371,6 +369,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
               (lt_of_le_of_ltₓ (le_abs_self _)
                 (hM _ (le_transₓ (Nat.le_succ_of_leₓ (le_max_rightₓ _ _)) (le_of_ltₓ hNMK)) _
                   (Nat.le_succ_of_leₓ (le_max_rightₓ _ _))))⟩
+
+end
 
 end NoArchimedean
 
@@ -1088,6 +1088,10 @@ theorem cos_zero : cos 0 = 1 := by
 @[simp]
 theorem cos_neg : cos (-x) = cos x := by
   simp [cos, exp_neg]
+
+@[simp]
+theorem cos_abs : cos (abs x) = cos x := by
+  cases le_totalₓ x 0 <;> simp only [*, _root_.abs_of_nonneg, abs_of_nonpos, cos_neg]
 
 theorem cos_add : cos (x + y) = cos x * cos y - sin x * sin y := by
   rw [← of_real_inj] <;> simp [cos, cos_add]

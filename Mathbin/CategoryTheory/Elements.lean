@@ -81,12 +81,17 @@ noncomputable instance groupoidOfElements {G : Type u} [Groupoid.{v} G] (F : G �
       calc
         F.map (inv f.val) q.2 = F.map (inv f.val) (F.map f.val p.2) := by
           rw [f.2]
-        _ = (F.map f.val ≫ F.map (inv f.val)) p.2 := by
-          simp
+        _ = (F.map f.val ≫ F.map (inv f.val)) p.2 := rfl
         _ = p.2 := by
-          rw [← functor.map_comp]
+          rw [← F.map_comp]
           simp
         ⟩
+  inv_comp' := fun _ _ _ => by
+    ext
+    simp
+  comp_inv' := fun _ _ _ => by
+    ext
+    simp
 
 namespace CategoryOfElements
 

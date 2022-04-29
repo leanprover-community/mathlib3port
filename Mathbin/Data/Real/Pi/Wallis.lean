@@ -10,7 +10,7 @@ import Mathbin.Analysis.SpecialFunctions.Integrals
 
 namespace Real
 
-open_locale Real TopologicalSpace BigOperators
+open Real TopologicalSpace BigOperators
 
 open Filter Finset intervalIntegral
 

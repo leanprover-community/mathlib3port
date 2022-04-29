@@ -52,7 +52,7 @@ then defined as `bernoulli := (-1)^n * bernoulli'`.
 -/
 
 
-open_locale Nat BigOperators
+open Nat BigOperators
 
 open Finset Nat Finset.Nat PowerSeries
 
@@ -175,7 +175,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
     cases mul_eq_mul_right_iff.mp this <;> simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h
     · apply eq_zero_of_neg_eq
       specialize h n
-      split_ifs  at h <;> simp_all [neg_one_pow_of_odd h_odd, factorial_ne_zero]
+      split_ifs  at h <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
       
     · simpa using h 1
       

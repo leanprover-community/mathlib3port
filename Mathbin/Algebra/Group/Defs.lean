@@ -89,6 +89,9 @@ universe u
    Remark: we use a tactic for transporting theorems from the multiplicative fragment
    to the additive one.
 -/
+mk_simp_attribute field_simps :=
+  "The simpset `field_simps` is used by the tactic `field_simp` to\nreduce an expression in a field to an expression of the form `n / d` where `n` and `d` are\ndivision-free."
+
 section Mul
 
 variable {G : Type u} [Mul G]

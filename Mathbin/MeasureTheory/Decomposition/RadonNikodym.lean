@@ -33,7 +33,7 @@ Radon-Nikodym theorem
 
 noncomputable section
 
-open_locale Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory Nnreal Ennreal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 
@@ -99,7 +99,8 @@ theorem with_densityᵥ_rn_deriv_eq (s : SignedMeasure α) (μ : Measure α) [Si
       rw [← integrable_on_univ]
       refine' integrable_on.restrict _ MeasurableSet.univ
       refine' ⟨_, has_finite_integral_to_real_of_lintegral_ne_top _⟩
-      · measurability
+      · apply Measurable.ae_strongly_measurable
+        measurability
         
       · rw [set_lintegral_univ]
         exact (lintegral_rn_deriv_lt_top _ _).Ne

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Johannes Hölzl, Yury Kudryashov
+Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 -/
 import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.LinearAlgebra.Determinant
@@ -31,7 +31,7 @@ open Classical Set Filter MeasureTheory MeasureTheory.Measure
 
 open Ennreal (ofReal)
 
-open_locale BigOperators Ennreal Nnreal TopologicalSpace
+open BigOperators Ennreal Nnreal TopologicalSpace
 
 /-!
 ### Definition of the Lebesgue measure and lengths of intervals
@@ -46,7 +46,7 @@ namespace Real
 
 variable {ι : Type _} [Fintype ι]
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem volume_val s : volume s = StieltjesFunction.id.Measure s :=
   rfl
@@ -340,26 +340,23 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
   simp only [B]
 
 /-- A transvection preserves Lebesgue measure. -/
-theorem map_transvection_volume_pi [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
-    Measure.map t.toMatrix.toLin' volume = volume := by
+theorem volume_preserving_transvection_struct [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
+    MeasurePreserving t.toMatrix.toLin' := by
   /- We separate the coordinate along which there is a shearing from the other ones, and apply
     Fubini. Along this coordinate (and when all the other coordinates are fixed), it acts like a
     translation, and therefore preserves Lebesgue. -/
-  suffices H : measure_preserving t.to_matrix.to_lin' volume volume
-  · exact H.2
-    
   let p : ι → Prop := fun i => i ≠ t.i
   let α : Type _ := { x // p x }
   let β : Type _ := { x // ¬p x }
   let g : (α → ℝ) → (β → ℝ) → β → ℝ := fun a b => (fun x => t.c * a ⟨t.j, t.hij.symm⟩) + b
   let F : (α → ℝ) × (β → ℝ) → (α → ℝ) × (β → ℝ) := fun p => (id p.1, g p.1 p.2)
-  let e := Equivₓ.piEquivPiSubtypeProd p fun i : ι => ℝ
+  let e : (ι → ℝ) ≃ᵐ (α → ℝ) × (β → ℝ) := MeasurableEquiv.piEquivPiSubtypeProd (fun i : ι => ℝ) p
   have : (t.to_matrix.to_lin' : (ι → ℝ) → ι → ℝ) = e.symm ∘ F ∘ e := by
     cases t
     ext f k
     simp only [LinearEquiv.map_smul, dite_eq_ite, LinearMap.id_coe, p, ite_not, Algebra.id.smul_eq_mul, one_mulₓ,
-      dot_product, std_basis_matrix, Equivₓ.pi_equiv_pi_subtype_prod_symm_apply, id.def, transvection, Pi.add_apply,
-      zero_mul, LinearMap.smul_apply, Function.comp_app, Equivₓ.pi_equiv_pi_subtype_prod_apply,
+      dot_product, std_basis_matrix, MeasurableEquiv.pi_equiv_pi_subtype_prod_symm_apply, id.def, transvection,
+      Pi.add_apply, zero_mul, LinearMap.smul_apply, Function.comp_app, MeasurableEquiv.pi_equiv_pi_subtype_prod_apply,
       Matrix.TransvectionStruct.to_matrix_mk, Matrix.mulVecₓ, LinearEquiv.map_add, ite_mul, e, Matrix.to_lin'_apply,
       Pi.smul_apply, Subtype.coe_mk, g, LinearMap.add_apply, Finset.sum_congr, Matrix.to_lin'_one]
     by_cases' h : t_i = k
@@ -369,20 +366,15 @@ theorem map_transvection_volume_pi [DecidableEq ι] (t : TransvectionStruct ι �
     · simp only [h, Ne.symm h, add_zeroₓ, if_false, Finset.sum_const_zero, false_andₓ, mul_zero]
       
   rw [this]
-  have A : measure_preserving e volume volume :=
-    ⟨measurable_pi_equiv_pi_subtype_prod (fun i => ℝ) _,
-      (measure.map_pi_equiv_pi_subtype_prod (fun i => (volume : Measureₓ ℝ)) p : _)⟩
-  have B : measure_preserving F volume volume :=
+  have A : measure_preserving e := by
+    convert volume_preserving_pi_equiv_pi_subtype_prod (fun i : ι => ℝ) p
+  have B : measure_preserving F :=
     have g_meas : Measurable (Function.uncurry g) := by
       have : Measurable fun c : α → ℝ => c ⟨t.j, t.hij.symm⟩ := measurable_pi_apply ⟨t.j, t.hij.symm⟩
-      refine' Measurable.add (measurable_pi_lambda _ fun i => Measurable.const_mul _ _) measurable_snd
+      refine' (measurable_pi_lambda _ fun i => Measurable.const_mul _ _).add measurable_snd
       exact this.comp measurable_fst
-    measure_preserving.skew_product (measure_preserving.id _) g_meas
-      (eventually_of_forall fun a => map_add_left_eq_self _ _)
-  have C : measure_preserving e.symm volume volume :=
-    ⟨(measurable_pi_equiv_pi_subtype_prod_symm (fun i : ι => ℝ) p : _),
-      (measure.map_pi_equiv_pi_subtype_prod_symm (fun i : ι => volume) p : _)⟩
-  exact (C.comp B).comp A
+    (measure_preserving.id _).skew_product g_meas (eventually_of_forall fun a => map_add_left_eq_self _ _)
+  exact (A.symm.comp B).comp A
 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
@@ -395,10 +387,10 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
     rw [smul_smul, ← Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel hD, abs_one, Ennreal.of_real_one,
       one_smul]
     
-  · simp only [Matrix.TransvectionStruct.det, Ennreal.of_real_one, map_transvection_volume_pi, one_smul, _root_.inv_one,
-      abs_one]
+  · simp only [Matrix.TransvectionStruct.det, Ennreal.of_real_one, (volume_preserving_transvection_struct _).map_eq,
+      one_smul, _root_.inv_one, abs_one]
     
-  · rw [to_lin'_mul, det_mul, LinearMap.coe_comp, ← measure.map_map, IHB, LinearMap.map_smul, IHA, smul_smul, ←
+  · rw [to_lin'_mul, det_mul, LinearMap.coe_comp, ← measure.map_map, IHB, measure.map_smul, IHA, smul_smul, ←
       Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv₀]
     · apply Continuous.measurable
       apply LinearMap.continuous_on_pi
@@ -425,7 +417,7 @@ theorem map_linear_map_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ]
 
 end Real
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (h : ∀ᶠ x in 𝓝 a, p x) :
     (0 : ℝ≥0∞) < volume { x | p x } := by
@@ -435,7 +427,7 @@ theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (
 
 section RegionBetween
 
-open_locale Classical
+open Classical
 
 variable {α : Type _}
 
@@ -496,8 +488,10 @@ theorem volume_region_between_eq_lintegral [SigmaFinite μ] (hf : AeMeasurable f
     apply measure_congr
     apply eventually_eq.rfl.inter
     exact
-      ((ae_eq_comp' measurable_fst hf.ae_eq_mk measure.prod_fst_absolutely_continuous).comp₂ _ eventually_eq.rfl).inter
-        (eventually_eq.rfl.comp₂ _ (ae_eq_comp' measurable_fst hg.ae_eq_mk measure.prod_fst_absolutely_continuous))
+      ((ae_eq_comp' measurable_fst.ae_measurable hf.ae_eq_mk measure.prod_fst_absolutely_continuous).comp₂ _
+            eventually_eq.rfl).inter
+        (eventually_eq.rfl.comp₂ _
+          (ae_eq_comp' measurable_fst.ae_measurable hg.ae_eq_mk measure.prod_fst_absolutely_continuous))
   rw [lintegral_congr_ae h₁, ← volume_region_between_eq_lintegral' hf.measurable_mk hg.measurable_mk hs]
   convert h₂ using 1
   · rw [measure.restrict_prod_eq_prod_univ]
@@ -526,27 +520,3 @@ theorem volume_region_between_eq_integral [SigmaFinite μ] (f_int : IntegrableOn
 
 end RegionBetween
 
-/-
-section vitali
-
-def vitali_aux_h (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) :
-  ∃ y ∈ Icc (0:ℝ) 1, ∃ q:ℚ, ↑q = x - y :=
-⟨x, h, 0, by simp⟩
-
-def vitali_aux (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) : ℝ :=
-classical.some (vitali_aux_h x h)
-
-theorem vitali_aux_mem (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) : vitali_aux x h ∈ Icc (0:ℝ) 1 :=
-Exists.fst (classical.some_spec (vitali_aux_h x h):_)
-
-theorem vitali_aux_rel (x : ℝ) (h : x ∈ Icc (0:ℝ) 1) :
- ∃ q:ℚ, ↑q = x - vitali_aux x h :=
-Exists.snd (classical.some_spec (vitali_aux_h x h):_)
-
-def vitali : set ℝ := {x | ∃ h, x = vitali_aux x h}
-
-theorem vitali_nonmeasurable : ¬ null_measurable_set measure_space.μ vitali :=
-sorry
-
-end vitali
--/

@@ -17,7 +17,7 @@ spaces.
 
 noncomputable section
 
-open_locale Nnreal TopologicalSpace
+open Nnreal TopologicalSpace
 
 open Filter
 
@@ -105,7 +105,7 @@ theorem dist_vsub_cancel_right (x y z : P) : dist (x -ᵥ z) (y -ᵥ z) = dist x
 
 section Pointwise
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.Ball y r = Metric.Ball (x +ᵥ y) r :=

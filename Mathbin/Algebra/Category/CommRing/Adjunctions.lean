@@ -22,7 +22,7 @@ open CategoryTheory
 
 namespace CommRingₓₓ
 
-open_locale Classical
+open Classical
 
 /-- The free functor `Type u ⥤ CommRing` sending a type `X` to the multivariable (commutative)
 polynomials with variables `x : X`.

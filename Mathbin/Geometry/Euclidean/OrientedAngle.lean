@@ -39,7 +39,7 @@ generally use the definitions and results in the `orientation` namespace instead
 
 noncomputable section
 
-open_locale Real
+open Real
 
 namespace Orthonormal
 
@@ -359,7 +359,7 @@ theorem oangle_sub_eq_oangle_sub_rev_of_norm_eq {x y : V} (h : ∥x∥ = ∥y∥
     simp [hy]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 /-- The angle at the apex of an isosceles triangle is `π` minus twice a base angle, oriented
 vector angle form. -/
 theorem oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq {x y : V} (hn : x ≠ y) (h : ∥x∥ = ∥y∥) :

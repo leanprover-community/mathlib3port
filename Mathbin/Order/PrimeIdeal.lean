@@ -104,7 +104,7 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x⊓y ∈ I → x ∈ I 
   contrapose!
   let F := hI.compl_filter.to_pfilter
   show x ∈ F ∧ y ∈ F → x⊓y ∈ F
-  exact fun h => inf_mem _ h.1 _ h.2
+  exact fun h => inf_mem h.1 h.2
 
 theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x⊓y ∈ I → x ∈ I ∨ y ∈ I) : IsPrime I := by
   rw [is_prime_iff]
@@ -141,8 +141,7 @@ instance (priority := 100) IsMaximal.is_prime [IsMaximal I] : IsPrime I := by
   rw [coe_sup_eq] at hyJ
   rcases hyJ with ⟨a, ha, b, hb, hy⟩
   rw [hy]
-  apply sup_mem _ ha _
-  refine' I.mem_of_le (le_inf hb _) hxy
+  refine' sup_mem ha (I.lower (le_inf hb _) hxy)
   rw [hy]
   exact le_sup_right
 
@@ -155,7 +154,7 @@ variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 theorem IsPrime.mem_or_compl_mem (hI : IsPrime I) : x ∈ I ∨ xᶜ ∈ I := by
   apply hI.mem_or_mem
   rw [inf_compl_eq_bot]
-  exact bot_mem
+  exact I.bot_mem
 
 theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ ∈ I :=
   hI.mem_or_compl_mem.resolve_left hxnI
@@ -164,7 +163,7 @@ theorem is_prime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ 
   simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
-  have ass : x⊓y⊔y⊓xᶜ ∈ I := sup_mem _ hxy _ (mem_of_le I inf_le_right hxcI)
+  have ass : x⊓y⊔y⊓xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
   rwa [inf_comm, sup_inf_inf_compl] at ass
 
 theorem is_prime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I :=
@@ -177,9 +176,7 @@ instance (priority := 100) IsPrime.is_maximal [IsPrime I] : IsMaximal I := by
   suffices ass : x⊓y⊔x⊓yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
     
-  exact
-    sup_mem _ (J.mem_of_le inf_le_right hyJ) _
-      (hIJ.le <| I.mem_of_le inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
+  exact sup_mem (J.lower inf_le_right hyJ) (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
 
 end BooleanAlgebra
 

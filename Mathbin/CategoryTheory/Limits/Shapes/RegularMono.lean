@@ -48,7 +48,7 @@ attribute [reassoc] regular_mono.w
 
 /-- Every regular monomorphism is a monomorphism. -/
 instance (priority := 100) RegularMono.mono (f : X ⟶ Y) [RegularMono f] : Mono f :=
-  mono_of_is_limit_parallel_pair RegularMono.isLimit
+  mono_of_is_limit_fork RegularMono.isLimit
 
 instance equalizerRegular (g h : X ⟶ Y) [HasLimit (parallelPair g h)] : RegularMono (equalizer.ι g h) where
   z := Y
@@ -170,7 +170,7 @@ attribute [reassoc] regular_epi.w
 
 /-- Every regular epimorphism is an epimorphism. -/
 instance (priority := 100) RegularEpi.epi (f : X ⟶ Y) [RegularEpi f] : Epi f :=
-  epi_of_is_colimit_parallel_pair RegularEpi.isColimit
+  epi_of_is_colimit_cofork RegularEpi.isColimit
 
 instance coequalizerRegular (g h : X ⟶ Y) [HasColimit (parallelPair g h)] : RegularEpi (coequalizer.π g h) where
   w := X

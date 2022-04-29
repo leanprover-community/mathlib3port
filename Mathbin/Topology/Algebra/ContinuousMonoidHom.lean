@@ -3,6 +3,7 @@ Copyright (c) 2022 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
+import Mathbin.Analysis.Complex.Circle
 import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
@@ -18,7 +19,7 @@ This file defines the space of continuous homomorphisms between two topological 
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 open Function
 
@@ -272,4 +273,8 @@ instance : TopologicalGroup (ContinuousMonoidHom A E) :=
     continuous_inv := hi.continuous_iff.mpr (continuous_inv.comp hc) }
 
 end ContinuousMonoidHom
+
+/-- The Pontryagin dual of `G` is the group of continuous homomorphism `G → circle`. -/
+def PontryaginDual (G : Type _) [Monoidₓ G] [TopologicalSpace G] :=
+  ContinuousMonoidHom G circle deriving TopologicalSpace, T2Space, CommGroupₓ, TopologicalGroup, Inhabited
 

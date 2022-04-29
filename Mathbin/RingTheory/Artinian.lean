@@ -51,7 +51,7 @@ Artinian, artinian, Artinian ring, Artinian module, artinian ring, artinian modu
 
 open Set
 
-open_locale BigOperators Pointwise
+open BigOperators Pointwise
 
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
@@ -117,13 +117,13 @@ instance is_artinian_pi {R ι : Type _} [Fintype ι] :
       ∀ [∀ i, Module R (M i)], ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) :=
   Fintype.induction_empty_option
     (by
-      intros α β e hα M _ _ _ _
+      intro α β e hα M _ _ _ _
       exact is_artinian_of_linear_equiv (LinearEquiv.piCongrLeft R M e))
     (by
-      intros M _ _ _ _
+      intro M _ _ _ _
       infer_instance)
     (by
-      intros α _ ih M _ _ _ _
+      intro α _ ih M _ _ _ _
       exact is_artinian_of_linear_equiv (LinearEquiv.piOptionEquivProd R).symm)
     ι
 
@@ -154,8 +154,7 @@ theorem IsArtinian.finite_of_linear_independent [Nontrivial R] [IsArtinian R M] 
       (RelEmbedding.well_founded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := @Infinite.natEmbedding s ⟨fun f => hf ⟨f⟩⟩
   have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s := by
-    rintro n x ⟨y, hy₁, hy₂⟩
-    subst hy₂
+    rintro n x ⟨y, hy₁, rfl⟩
     exact (f y).2
   have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | b ≤ m }) ≤ span R (coe ∘ f '' { m | a ≤ m }) := by
     intro a b
@@ -311,7 +310,7 @@ theorem is_artinian_of_fg_of_artinian {R M} [Ringₓ R] [AddCommGroupₓ M] [Mod
   let ⟨s, hs⟩ := hN
   have := Classical.decEq M
   have := Classical.decEq R
-  let this' : IsArtinian R R := by
+  let this : IsArtinian R R := by
     infer_instance
   have : ∀, ∀ x ∈ s, ∀, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ is_artinian_pi

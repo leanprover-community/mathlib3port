@@ -110,7 +110,7 @@ variable {R}
 -- This enables the notation `⨂[R] i : ι, s i` for the pi tensor product, given `s : ι → Type*`.
 localized [TensorProduct] notation3:100 "⨂[" R "] " (...) ", " r:(scoped f => PiTensorProduct R f) => r
 
-open_locale TensorProduct
+open TensorProduct
 
 namespace PiTensorProduct
 
@@ -617,7 +617,7 @@ namespace PiTensorProduct
 
 open PiTensorProduct
 
-open_locale TensorProduct
+open TensorProduct
 
 variable {ι : Type _} [DecidableEq ι] {R : Type _} [CommRingₓ R]
 

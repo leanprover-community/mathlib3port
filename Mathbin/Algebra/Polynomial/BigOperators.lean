@@ -29,7 +29,7 @@ open Finset
 
 open Multiset
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 universe u w
 
@@ -99,7 +99,7 @@ theorem coeff_list_prod_of_nat_degree_le (l : List S[X]) (n : ℕ) (hl : ∀, �
     have h : nat_degree tl.prod ≤ n * tl.length := by
       refine' (nat_degree_list_prod_le _).trans _
       rw [← tl.length_map nat_degree, mul_comm]
-      refine' List.sum_le_of_forall_le _ _ _
+      refine' List.sum_le_card_nsmul _ _ _
       simpa using hl'
     have hdn : nat_degree hd ≤ n := hl _ (List.mem_cons_selfₓ _ _)
     rcases hdn.eq_or_lt with (rfl | hdn')
@@ -203,8 +203,8 @@ theorem nat_degree_prod' (h : (∏ i in s, (f i).leadingCoeff) ≠ 0) :
       (by
         simpa using h)
 
-theorem nat_degree_multiset_prod_of_monic [Nontrivial R] (h : ∀, ∀ f ∈ t, ∀, Monic f) :
-    t.Prod.natDegree = (t.map natDegree).Sum := by
+theorem nat_degree_multiset_prod_of_monic (h : ∀, ∀ f ∈ t, ∀, Monic f) : t.Prod.natDegree = (t.map natDegree).Sum := by
+  nontriviality R
   apply nat_degree_multiset_prod'
   suffices (t.map fun f => leading_coeff f).Prod = 1 by
     rw [this]
@@ -219,7 +219,7 @@ theorem nat_degree_multiset_prod_of_monic [Nontrivial R] (h : ∀, ∀ f ∈ t, 
   · simp
     
 
-theorem nat_degree_prod_of_monic [Nontrivial R] (h : ∀, ∀ i ∈ s, ∀, (f i).Monic) :
+theorem nat_degree_prod_of_monic (h : ∀, ∀ i ∈ s, ∀, (f i).Monic) :
     (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree := by
   simpa using
     nat_degree_multiset_prod_of_monic (s.1.map f)
@@ -261,22 +261,21 @@ open Monic
 
 -- Eventually this can be generalized with Vieta's formulas
 -- plus the connection between roots and factorization.
-theorem multiset_prod_X_sub_C_next_coeff [Nontrivial R] (t : Multiset R) :
-    nextCoeff (t.map fun x => X - c x).Prod = -t.Sum := by
+theorem multiset_prod_X_sub_C_next_coeff (t : Multiset R) : nextCoeff (t.map fun x => X - c x).Prod = -t.Sum := by
   rw [next_coeff_multiset_prod]
   · simp only [next_coeff_X_sub_C]
-    refine' t.sum_hom ⟨Neg.neg, _, _⟩ <;> simp [add_commₓ]
+    exact t.sum_hom (-AddMonoidHom.id R)
     
   · intros
     apply monic_X_sub_C
     
 
-theorem prod_X_sub_C_next_coeff [Nontrivial R] {s : Finset ι} (f : ι → R) :
-    nextCoeff (∏ i in s, X - c (f i)) = -∑ i in s, f i := by
+theorem prod_X_sub_C_next_coeff {s : Finset ι} (f : ι → R) : nextCoeff (∏ i in s, X - c (f i)) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_next_coeff (s.1.map f)
 
-theorem multiset_prod_X_sub_C_coeff_card_pred [Nontrivial R] (t : Multiset R) (ht : 0 < t.card) :
+theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card) :
     (t.map fun x => X - c x).Prod.coeff (t.card - 1) = -t.Sum := by
+  nontriviality R
   convert
     multiset_prod_X_sub_C_next_coeff
       (by
@@ -298,7 +297,7 @@ theorem multiset_prod_X_sub_C_coeff_card_pred [Nontrivial R] (t : Multiset R) (h
     · simp [nat_degree_X_sub_C, monic_X_sub_C]
       
 
-theorem prod_X_sub_C_coeff_card_pred [Nontrivial R] (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
+theorem prod_X_sub_C_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
     (∏ i in s, X - c (f i)).coeff (s.card - 1) = -∑ i in s, f i := by
   simpa using
     multiset_prod_X_sub_C_coeff_card_pred (s.1.map f)
@@ -309,7 +308,22 @@ end CommRingₓ
 
 section NoZeroDivisors
 
-variable [CommRingₓ R] [NoZeroDivisors R] (f : ι → R[X]) (t : Multiset R[X])
+section Semiringₓ
+
+variable [Semiringₓ R] [NoZeroDivisors R]
+
+/-- The degree of a product of polynomials is equal to
+the sum of the degrees, where the degree of the zero polynomial is ⊥.
+`[nontrivial R]` is needed, otherwise for `l = []` we have `⊥` in the LHS and `0` in the RHS.
+-/
+theorem degree_list_prod [Nontrivial R] (l : List R[X]) : l.Prod.degree = (l.map degree).Sum :=
+  map_list_prod (@degreeMonoidHom R _ _ _) l
+
+end Semiringₓ
+
+section CommSemiringₓ
+
+variable [CommSemiringₓ R] [NoZeroDivisors R] (f : ι → R[X]) (t : Multiset R[X])
 
 /-- The degree of a product of polynomials is equal to
 the sum of the degrees.
@@ -317,15 +331,15 @@ the sum of the degrees.
 See `polynomial.nat_degree_prod'` (with a `'`) for a version for commutative semirings,
 where additionally, the product of the leading coefficients must be nonzero.
 -/
-theorem nat_degree_prod [Nontrivial R] (h : ∀, ∀ i ∈ s, ∀, f i ≠ 0) :
-    (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree := by
+theorem nat_degree_prod (h : ∀, ∀ i ∈ s, ∀, f i ≠ 0) : (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree := by
+  nontriviality R
   apply nat_degree_prod'
   rw [prod_ne_zero_iff]
   intro x hx
   simp [h x hx]
 
-theorem nat_degree_multiset_prod [Nontrivial R] (s : Multiset R[X]) (h : (0 : R[X]) ∉ s) :
-    natDegree s.Prod = (s.map natDegree).Sum := by
+theorem nat_degree_multiset_prod (h : (0 : R[X]) ∉ t) : natDegree t.Prod = (t.map natDegree).Sum := by
+  nontriviality R
   rw [nat_degree_multiset_prod']
   simp_rw [Ne.def, Multiset.prod_eq_zero_iff, Multiset.mem_map, leading_coeff_eq_zero]
   rintro ⟨_, h, rfl⟩
@@ -334,18 +348,14 @@ theorem nat_degree_multiset_prod [Nontrivial R] (s : Multiset R[X]) (h : (0 : R[
 /-- The degree of a product of polynomials is equal to
 the sum of the degrees, where the degree of the zero polynomial is ⊥.
 -/
-theorem degree_multiset_prod [Nontrivial R] : t.Prod.degree = (t.map fun f => degree f).Sum := by
-  refine' Multiset.induction_on t _ fun a t ht => _
-  · simp
-    
-  · rw [Multiset.prod_cons, degree_mul, ht, map_cons, Multiset.sum_cons]
-    
+theorem degree_multiset_prod [Nontrivial R] : t.Prod.degree = (t.map fun f => degree f).Sum :=
+  map_multiset_prod (@degreeMonoidHom R _ _ _) _
 
 /-- The degree of a product of polynomials is equal to
 the sum of the degrees, where the degree of the zero polynomial is ⊥.
 -/
-theorem degree_prod [Nontrivial R] : (∏ i in s, f i).degree = ∑ i in s, (f i).degree := by
-  simpa using degree_multiset_prod (s.1.map f)
+theorem degree_prod [Nontrivial R] : (∏ i in s, f i).degree = ∑ i in s, (f i).degree :=
+  map_prod (@degreeMonoidHom R _ _ _) _ _
 
 /-- The leading coefficient of a product of polynomials is equal to
 the product of the leading coefficients.
@@ -365,6 +375,8 @@ where additionally, the product of the leading coefficients must be nonzero.
 -/
 theorem leading_coeff_prod : (∏ i in s, f i).leadingCoeff = ∏ i in s, (f i).leadingCoeff := by
   simpa using leading_coeff_multiset_prod (s.1.map f)
+
+end CommSemiringₓ
 
 end NoZeroDivisors
 

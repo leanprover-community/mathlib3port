@@ -23,8 +23,8 @@ section Powerset
 
 /-- When `s` is a finset, `s.powerset` is the finset of all subsets of `s` (seen as finsets). -/
 def powerset (s : Finset α) : Finset (Finset α) :=
-  ⟨s.1.Powerset.pmap Finset.mk fun t h => nodup_of_le (mem_powerset.1 h) s.2,
-    nodup_pmap (fun a ha b hb => congr_argₓ Finset.val) (nodup_powerset.2 s.2)⟩
+  ⟨(s.1.Powerset.pmap Finset.mk) fun t h => nodup_of_le (mem_powerset.1 h) s.Nodup,
+    s.Nodup.Powerset.pmap fun a ha b hb => congr_argₓ Finset.val⟩
 
 @[simp]
 theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
@@ -156,8 +156,8 @@ section PowersetLen
 /-- Given an integer `n` and a finset `s`, then `powerset_len n s` is the finset of subsets of `s`
 of cardinality `n`. -/
 def powersetLen (n : ℕ) (s : Finset α) : Finset (Finset α) :=
-  ⟨(s.1.powersetLen n).pmap Finset.mk fun t h => nodup_of_le (mem_powerset_len.1 h).1 s.2,
-    nodup_pmap (fun a ha b hb => congr_argₓ Finset.val) (nodup_powerset_len s.2)⟩
+  ⟨((s.1.powersetLen n).pmap Finset.mk) fun t h => nodup_of_le (mem_powerset_len.1 h).1 s.2,
+    s.2.powersetLen.pmap fun a ha b hb => congr_argₓ Finset.val⟩
 
 /-- **Formula for the Number of Combinations** -/
 theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powersetLen n t ↔ s ⊆ t ∧ card s = n := by

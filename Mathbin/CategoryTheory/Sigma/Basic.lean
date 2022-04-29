@@ -78,7 +78,7 @@ theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
   rfl
 
 instance (i : I) : Full (incl i : C i ⥤ Σi, C i) where
-  Preimage := fun X Y ⟨f⟩ => f
+  preimage := fun X Y ⟨f⟩ => f
   witness' := fun X Y ⟨f⟩ => rfl
 
 instance (i : I) : Faithful (incl i : C i ⥤ Σi, C i) :=

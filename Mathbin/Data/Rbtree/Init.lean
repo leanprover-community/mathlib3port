@@ -23,8 +23,8 @@ inductive Color
 open Color Nat
 
 instance Color.decidableEq : DecidableEq Color := fun a b =>
-  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusion h))
-    (Color.casesOn b (isFalse fun h => Color.noConfusion h) (isTrue rfl))
+  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusionₓ h))
+    (Color.casesOn b (isFalse fun h => Color.noConfusionₓ h) (isTrue rfl))
 
 def depth (f : Nat → Nat → Nat) : Rbnode α → Nat
   | leaf => 0

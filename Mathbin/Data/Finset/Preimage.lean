@@ -13,7 +13,7 @@ import Mathbin.Algebra.BigOperators.Basic
 
 open Set Function
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w x
 
@@ -142,7 +142,7 @@ theorem prod_preimage' [CommMonoidₓ β] (f : α → γ) [DecidablePred fun x =
 
 @[to_additive]
 theorem prod_preimage [CommMonoidₓ β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β)
-    (hg : ∀, ∀ x ∈ s, ∀, (x ∉ Set.Range f) → g x = 1) : (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
+    (hg : ∀, ∀ x ∈ s, ∀, x ∉ Set.Range f → g x = 1) : (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
   classical
   rw [prod_preimage', prod_filter_of_ne]
   exact fun x hx => Not.imp_symm (hg x hx)

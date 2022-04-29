@@ -15,7 +15,7 @@ intervals as finsets and fintypes.
 
 open Finset Finₓ
 
-open_locale BigOperators
+open BigOperators
 
 variable (n : ℕ)
 

@@ -30,7 +30,7 @@ universe u v w w₁ w₂
 
 section Matrices
 
-open_locale Matrix
+open Matrix
 
 variable {R : Type u} [CommRingₓ R]
 

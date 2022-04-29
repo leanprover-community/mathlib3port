@@ -84,14 +84,15 @@ inductive PSet : Type (u + 1)
 namespace PSet
 
 /-- The underlying type of a pre-set -/
+@[nolint has_inhabited_instance]
 def Type : PSet → Type u
   | ⟨α, A⟩ => α
 
 /-- The underlying pre-set family of a pre-set -/
-def func : ∀ x : PSet, x.Type → PSet
+def func : ∀ x : PSet, x.type → PSet
   | ⟨α, A⟩ => A
 
-theorem mk_type_func : ∀ x : PSet, mk x.Type x.func = x
+theorem mk_type_func : ∀ x : PSet, mk x.type x.func = x
   | ⟨α, A⟩ => rfl
 
 /-- Two pre-sets are extensionally equivalent if every element of the first family is extensionally
@@ -269,12 +270,12 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 
 /-- The pre-set union operator -/
 def union : PSet → PSet
-  | ⟨α, A⟩ => ⟨Σx, (A x).Type, fun ⟨x, y⟩ => (A x).func y⟩
+  | ⟨α, A⟩ => ⟨Σx, (A x).type, fun ⟨x, y⟩ => (A x).func y⟩
 
 theorem mem_Union : ∀ {x y : PSet.{u}}, y ∈ union x ↔ ∃ z : PSet.{u}, ∃ _ : z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
     ⟨fun ⟨⟨a, c⟩, (e : Equivₓ y ((A a).func c))⟩ =>
-      have : func (A a) c ∈ mk (A a).Type (A a).func := Mem.mk (A a).func c
+      have : func (A a) c ∈ mk (A a).type (A a).func := Mem.mk (A a).func c
       ⟨_, Mem.mk _ _,
         (Mem.congr_left e).2
           (by
@@ -409,7 +410,7 @@ noncomputable def allDefinable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
     have I := fun x => all_definable (F x)
     refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
     · dsimp [arity.equiv]
-      intros x y h
+      intro x y h
       rw [@Quotientₓ.sound PSet _ _ _ h]
       exact (definable.resp (F ⟦y⟧)).2
       
@@ -758,8 +759,8 @@ theorem mem_pair_sep {p} {x y z : Setₓ.{u}} : z ∈ pairSep p x y ↔ ∃ a �
 
 theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' ∧ y = y' := by
   have ae := ext_iff.2 H
-  simp [pair] at ae
-  have : x = x' := by
+  simp only [pair, mem_pair] at ae
+  obtain rfl : x = x' := by
     cases'
       (ae {x}).1
         (by
@@ -768,15 +769,11 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
     · exact singleton_inj h
       
     · have m : x' ∈ ({x} : Setₓ) := by
-        rw [h]
-        simp
-      simp at m
-      simp [*]
+        simp [h]
+      rw [mem_singleton.mp m]
       
-  subst x'
-  have he : y = x → y = y' := by
-    intro yx
-    subst y
+  have he : x = y → y = y' := by
+    rintro rfl
     cases'
       (ae {x, y'}).2
         (by
@@ -785,32 +782,26 @@ theorem pair_inj {x y x' y' : Setₓ.{u}} (H : pair x y = pair x' y') : x = x' �
     · rw [eq_comm, ← mem_singleton, ← xy'x, mem_pair]
       exact Or.inr rfl
       
-    · have yxx :=
+    · simpa [eq_comm] using
         (ext_iff.2 xy'xx y').1
           (by
             simp )
-      simp at yxx
-      subst y'
       
-  have xyxy' :=
+  obtain xyx | xyy' :=
     (ae {x, y}).1
       (by
         simp )
-  cases' xyxy' with xyx xyy'
-  · have yx :=
-      (ext_iff.2 xyx y).1
-        (by
+  · obtain rfl :=
+      mem_singleton.mp
+        ((ext_iff.2 xyx y).1 <| by
           simp )
-    simp at yx
-    simp [he yx]
+    simp [he rfl]
     
-  · have yxy' :=
-      (ext_iff.2 xyy' y).1
-        (by
+  · obtain rfl | yy' :=
+      mem_pair.mp
+        ((ext_iff.2 xyy' y).1 <| by
           simp )
-    simp at yxy'
-    cases' yxy' with yx yy'
-    · simp [he yx]
+    · simp [he rfl]
       
     · simp [yy']
       

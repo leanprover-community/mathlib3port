@@ -5,7 +5,7 @@ Authors: Fox Thomson, Markus Himmel
 -/
 import Mathbin.Data.Nat.Bitwise
 import Mathbin.SetTheory.Game.Impartial
-import Mathbin.SetTheory.OrdinalArithmetic
+import Mathbin.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Nim and the Sprague-Grundy theorem
@@ -35,29 +35,19 @@ useful.
 
 universe u
 
-/-- `ordinal.out` and `ordinal.type_out'` are required to make the definition of nim computable.
- `ordinal.out` performs the same job as `quotient.out` but is specific to ordinals. -/
-def Ordinal.out (o : Ordinal) : WellOrder :=
-  ⟨o.out.α, fun x y => o.out.R x y, o.out.wo⟩
-
-/-- This is the same as `ordinal.type_out` but defined to use `ordinal.out`. -/
-theorem Ordinal.type_out' : ∀ o : Ordinal, Ordinal.type (Ordinal.out o).R = o :=
-  Ordinal.type_out
+/-- `ordinal.out'` has the sole purpose of making `nim` computable. It performs the same job as
+  `quotient.out` but is specific to ordinals. -/
+def Ordinal.out' (o : Ordinal) : WellOrder :=
+  ⟨o.out.α, (· < ·), o.out.wo⟩
 
 /-- The definition of single-heap nim, which can be viewed as a pile of stones where each player can
- take a positive number of stones from it on their turn. -/
+  take a positive number of stones from it on their turn. -/
 def nim : Ordinal → Pgame
   | O₁ =>
-    ⟨O₁.out.α, O₁.out.α, fun O₂ =>
-      have hwf : Ordinal.typein O₁.out.R O₂ < O₁ := by
-        nth_rw_rhs 0[← Ordinal.type_out' O₁]
-        exact Ordinal.typein_lt_type _ _
-      nim (Ordinal.typein O₁.out.R O₂),
-      fun O₂ =>
-      have hwf : Ordinal.typein O₁.out.R O₂ < O₁ := by
-        nth_rw_rhs 0[← Ordinal.type_out' O₁]
-        exact Ordinal.typein_lt_type _ _
-      nim (Ordinal.typein O₁.out.R O₂)⟩
+    let f := fun O₂ =>
+      have hwf : Ordinal.typein O₁.out'.R O₂ < O₁ := Ordinal.typein_lt_self O₂
+      nim (Ordinal.typein O₁.out'.R O₂)
+    ⟨O₁.out'.α, O₁.out'.α, f, f⟩
 
 namespace Pgame
 
@@ -70,56 +60,42 @@ open Ordinal
 
 theorem nim_def (O : Ordinal) :
     nim O =
-      Pgame.mk O.out.α O.out.α (fun O₂ => nim (Ordinal.typein O.out.R O₂)) fun O₂ => nim (Ordinal.typein O.out.R O₂) :=
+      Pgame.mk O.out.α O.out.α (fun O₂ => nim (Ordinal.typein (· < ·) O₂)) fun O₂ => nim (Ordinal.typein (· < ·) O₂) :=
   by
   rw [nim]
-
-theorem nim_wf_lemma {O₁ : Ordinal} (O₂ : O₁.out.α) : Ordinal.typein O₁.out.R O₂ < O₁ := by
-  nth_rw_rhs 0[← Ordinal.type_out O₁]
-  exact Ordinal.typein_lt_type _ _
+  rfl
 
 instance nim_impartial : ∀ O : Ordinal, Impartial (nim O)
   | O => by
     rw [impartial_def, nim_def, neg_def]
     constructor
-    constructor
-    · rw [Pgame.le_def]
-      constructor
-      · intro i
-        let hwf : typein O.out.r i < O := nim_wf_lemma i
-        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r i).1⟩
-        
-      · intro j
-        let hwf : typein O.out.r j < O := nim_wf_lemma j
-        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r j).1⟩
-        
+    constructor <;> rw [Pgame.le_def]
+    all_goals
+      refine'
+        ⟨fun i =>
+          let hwf := Ordinal.typein_lt_self i
+          _,
+          fun j =>
+          let hwf := Ordinal.typein_lt_self j
+          _⟩
+    · exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein (· < ·) i).1⟩
       
-    · rw [Pgame.le_def]
-      constructor
-      · intro i
-        let hwf : typein O.out.r i < O := nim_wf_lemma i
-        exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r i).2⟩
-        
-      · intro j
-        let hwf : typein O.out.r j < O := nim_wf_lemma j
-        exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein O.out.r j).2⟩
-        
+    · exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein (· < ·) j).1⟩
       
-    constructor
-    · intro i
-      let hwf : typein O.out.r i < O := nim_wf_lemma i
-      simpa using nim_impartial (typein O.out.r i)
+    · exact Or.inl ⟨i, (@impartial.neg_equiv_self _ <| nim_impartial <| typein (· < ·) i).2⟩
       
-    · intro j
-      let hwf : typein O.out.r j < O := nim_wf_lemma j
-      simpa using nim_impartial (typein O.out.r j)
+    · exact Or.inr ⟨j, (@impartial.neg_equiv_self _ <| nim_impartial <| typein (· < ·) j).2⟩
+      
+    · exact nim_impartial (typein (· < ·) i)
+      
+    · exact nim_impartial (typein (· < ·) j)
       
 
 theorem exists_ordinal_move_left_eq (O : Ordinal) : ∀ i, ∃ O' < O, (nim O).moveLeft i = nim O' := by
   rw [nim_def]
-  exact fun i => ⟨Ordinal.typein O.out.r i, ⟨nim_wf_lemma _, rfl⟩⟩
+  exact fun i => ⟨_, ⟨Ordinal.typein_lt_self i, rfl⟩⟩
 
-theorem exists_move_left_eq (O : Ordinal) : ∀, ∀ O' < O, ∀, ∃ i, (nim O).moveLeft i = nim O' := by
+theorem exists_move_left_eq {O : Ordinal} : ∀, ∀ O' < O, ∀, ∃ i, (nim O).moveLeft i = nim O' := by
   rw [nim_def]
   exact fun _ h =>
     ⟨(Ordinal.principalSegOut h).top, by
@@ -127,16 +103,9 @@ theorem exists_move_left_eq (O : Ordinal) : ∀, ∀ O' < O, ∀, ∃ i, (nim O)
 
 theorem zero_first_loses : (nim (0 : Ordinal)).FirstLoses := by
   rw [impartial.first_loses_symm, nim_def, le_def_lt]
-  constructor
-  · rintro (i : (0 : Ordinal).out.α)
-    have h := Ordinal.typein_lt_type _ i
-    rw [Ordinal.type_out] at h
-    exact False.elim (not_le_of_lt h (Ordinal.zero_le (Ordinal.typein _ i)))
-    
-  · tidy
-    
+  exact ⟨@isEmptyElim (0 : Ordinal).out.α _ _, @isEmptyElim Pempty _ _⟩
 
-theorem non_zero_first_wins (O : Ordinal) (hO : O ≠ 0) : (nim O).FirstWins := by
+theorem non_zero_first_wins {O : Ordinal} (hO : O ≠ 0) : (nim O).FirstWins := by
   rw [impartial.first_wins_symm, nim_def, lt_def_le]
   rw [← Ordinal.pos_iff_ne_zero] at hO
   exact
@@ -180,43 +149,19 @@ theorem equiv_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ ≈ nim O₂) ↔ O₁ = 
 
 end nim
 
-/-- This definition will be used in the proof of the Sprague-Grundy theorem. It takes a function
-  from some type to ordinals and returns a nonempty set of ordinals with empty intersection with
-  the image of the function. It is guaranteed that the smallest ordinal not in the image will be
-  in the set, i.e. we can use this to find the mex. -/
-def Nonmoves {α : Type u} (M : α → Ordinal.{u}) : Set Ordinal.{u} :=
-  { O : Ordinal | ¬∃ a : α, M a = O }
-
-theorem nonmoves_nonempty {α : Type u} (M : α → Ordinal.{u}) : ∃ O : Ordinal, O ∈ Nonmoves M := by
-  classical
-  by_contra h
-  simp only [nonmoves, not_exists, not_forall, Set.mem_set_of_eq, not_not] at h
-  have hle : Cardinal.univ.{u, u + 1} ≤ Cardinal.lift.{u + 1} (Cardinal.mk α) := by
-    refine' ⟨⟨fun ⟨O⟩ => ⟨Classical.some (h O)⟩, _⟩⟩
-    rintro ⟨O₁⟩ ⟨O₂⟩ heq
-    ext
-    refine' Eq.trans (Classical.some_spec (h O₁)).symm _
-    injection HEq with heq
-    rw [HEq]
-    exact Classical.some_spec (h O₂)
-  have hlt : Cardinal.lift.{u + 1} (Cardinal.mk α) < Cardinal.univ.{u, u + 1} := Cardinal.lt_univ.2 ⟨Cardinal.mk α, rfl⟩
-  cases hlt
-  contradiction
-
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
 noncomputable def grundyValue : ∀ G : Pgame.{u} [G.Impartial], Ordinal.{u}
-  | G => fun hG => Inf (nonmoves fun i => grundy_value (G.move_left i))
+  | G => fun hG => Ordinal.mex.{u, u} fun i => grundy_value (G.move_left i)
 
 theorem grundy_value_def (G : Pgame) [G.Impartial] :
-    grundyValue G = inf (Nonmoves fun i => grundyValue (G.moveLeft i)) := by
+    grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) := by
   rw [grundy_value]
 
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
  nim, namely the game of nim corresponding to the games Grundy value -/
 theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (grundy_value G)
   | G => by
-    classical
     intro hG
     rw [impartial.equiv_iff_sum_first_loses, ← impartial.no_good_left_moves_iff_first_loses]
     intro i
@@ -227,13 +172,9 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       rw [nim.sum_first_wins_iff_neq]
       intro heq
       rw [eq_comm, grundy_value_def G] at heq
-      have h := Inf_mem (nonmoves_nonempty _)
+      have h := Ordinal.ne_mex _
       rw [HEq] at h
-      have hcontra :
-        ∃ i' : G.left_moves,
-          (fun i'' : G.left_moves => grundy_value (G.move_left i'')) i' = grundy_value (G.move_left i₁) :=
-        ⟨i₁, rfl⟩
-      contradiction
+      exact (h i₁).irrefl
       
     · rw [add_move_left_inr, ← impartial.good_left_move_iff_first_wins]
       revert i₂
@@ -241,22 +182,11 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       intro i₂
       have h' :
         ∃ i : G.left_moves, grundy_value (G.move_left i) = Ordinal.typein (Quotientₓ.out (grundy_value G)).R i₂ := by
-        have hlt :
-          Ordinal.typein (Quotientₓ.out (grundy_value G)).R i₂ < Ordinal.type (Quotientₓ.out (grundy_value G)).R :=
-          Ordinal.typein_lt_type _ _
-        rw [Ordinal.type_out] at hlt
-        revert i₂ hlt
+        revert i₂
         rw [grundy_value_def]
-        intro i₂ hlt
-        have hnotin :
-          Ordinal.typein (Inf (nonmoves fun i => grundy_value (G.move_left i))).out.R i₂ ∉
-            nonmoves fun i : G.left_moves => grundy_value (G.move_left i) :=
-          by
-          intro hin
-          have hge := cInf_le' hin
-          have hcontra := (le_not_le_of_ltₓ hlt).2
-          contradiction
-        simpa [nonmoves] using hnotin
+        intro i₂
+        have hnotin : _ ∉ _ := fun hin => (le_not_le_of_ltₓ (Ordinal.typein_lt_self i₂)).2 (cInf_le' hin)
+        simpa using hnotin
       cases' h' with i hi
       use (left_moves_add _ _).symm (Sum.inl i)
       rw [add_move_left_inl, move_left_mk]
@@ -284,7 +214,7 @@ theorem grundy_value_zero : grundyValue 0 = 0 := by
 theorem equiv_zero_iff_grundy_value (G : Pgame) [G.Impartial] : (G ≈ 0) ↔ grundyValue G = 0 := by
   rw [equiv_iff_grundy_value_eq, grundy_value_zero]
 
-theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat.lxor n m := by
+theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
   induction' n using Nat.strong_induction_onₓ with n hn generalizing m
   induction' m using Nat.strong_induction_onₓ with m hm
   rw [grundy_value_def]
@@ -292,10 +222,9 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
   -- steps:
   -- h₀: `n xor m` is not a reachable grundy number.
   -- h₁: every Grundy number strictly smaller than `n xor m` is reachable.
-  have h₀ : (Nat.lxor n m : Ordinal) ∈ nonmoves fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+  have h₀ : ∀ i, grundy_value ((nim n + nim m).moveLeft i) ≠ (Nat.lxor n m : Ordinal) := by
     -- To show that `n xor m` is unreachable, we show that every move produces a Grundy number
     -- different from `n xor m`.
-    simp only [nonmoves, not_exists, Set.mem_set_of_eq]
     equiv_rw left_moves_add _ _
     -- The move operates either on the left pile or on the right pile.
     rintro (a | a)
@@ -316,14 +245,14 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
       rw [Ordinal.nat_cast_inj] at h
       try
         rw [Nat.lxor_comm n k, Nat.lxor_comm n m] at h
-      exact _root_.ne_of_lt hk (Nat.lxor_left_inj h)
-  have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∉ nonmoves fun i => grundy_value ((nim n + nim m).moveLeft i) := by
+      exact hk.ne (Nat.lxor_left_inj h)
+  have h₁ : ∀ u : Ordinal, u < Nat.lxor n m → u ∈ Set.Range fun i => grundy_value ((nim n + nim m).moveLeft i) := by
     -- Take any natural number `u` less than `n xor m`.
     intro ou hu
     obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hu (Ordinal.nat_lt_omega _))
     replace hu := Ordinal.nat_cast_lt.1 hu
     -- Our goal is to produce a move that gives the Grundy value `u`.
-    simp only [nonmoves, not_exists, not_not, Set.mem_set_of_eq, not_forall]
+    rw [Set.mem_range]
     -- By a lemma about xor, either `u xor m < n` or `u xor n < m`.
     have : Nat.lxor u (Nat.lxor n m) ≠ 0 := by
       intro h
@@ -334,20 +263,20 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim n + nim m) = Nat
       
     -- Therefore, we can play the corresponding move, and by the inductive hypothesis the new state
     -- is `(u xor m) xor m = u` or `n xor (u xor n) = u` as required.
-    · obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ _ (Ordinal.nat_cast_lt.2 h)
+    · obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ (Ordinal.nat_cast_lt.2 h)
       refine' ⟨(left_moves_add _ _).symm (Sum.inl i), _⟩
       simp only [hi, add_move_left_inl]
       rw [hn _ h, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
-    · obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ _ (Ordinal.nat_cast_lt.2 h)
+    · obtain ⟨i, hi⟩ := nim.exists_move_left_eq _ (Ordinal.nat_cast_lt.2 h)
       refine' ⟨(left_moves_add _ _).symm (Sum.inr i), _⟩
       simp only [hi, add_move_left_inr]
       rw [hm _ h, Nat.lxor_comm, Nat.lxor_assoc, Nat.lxor_self, Nat.lxor_zero]
       
   -- We are done!
-  apply le_antisymmₓ (cInf_le' h₀)
+  apply (Ordinal.mex_le_of_ne.{u, u} h₀).antisymm
   contrapose! h₁
-  exact ⟨_, ⟨h₁, Inf_mem (nonmoves_nonempty _)⟩⟩
+  exact ⟨_, ⟨h₁, Ordinal.mex_not_mem_range _⟩⟩
 
 theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := by
   rw [equiv_nim_iff_grundy_value_eq, grundy_value_nim_add_nim]

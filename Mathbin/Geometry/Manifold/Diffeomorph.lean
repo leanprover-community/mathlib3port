@@ -43,7 +43,7 @@ diffeomorphism, manifold
 -/
 
 
-open_locale Manifold TopologicalSpace
+open Manifold TopologicalSpace
 
 open Function Set
 
@@ -286,7 +286,7 @@ theorem cont_mdiff_within_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N
     ContMdiffWithinAt I' J m (h ∘ f) s x ↔ ContMdiffWithinAt I' I m f s x :=
   ⟨fun Hhf => by
     simpa only [(· ∘ ·), h.symm_apply_apply] using (h.symm.cont_mdiff_at.of_le hm).comp_cont_mdiff_within_at _ Hhf,
-    fun Hf => (h.ContMdiffAt.of_le hm).comp_cont_mdiff_within_at _ Hf⟩
+    fun Hf => (h.ContMdiffAt.ofLe hm).comp_cont_mdiff_within_at _ Hf⟩
 
 @[simp]
 theorem cont_mdiff_at_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I,J⟯ N) {f : M' → M} (hm : m ≤ n) {x} :

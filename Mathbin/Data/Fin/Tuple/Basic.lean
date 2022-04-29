@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 -/
 import Mathbin.Data.Fin.Basic
+import Mathbin.Order.Pilex
 
 /-!
 # Operation on tuples
@@ -91,6 +92,22 @@ theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y := by
       
     
 
+/-- As a binary function, `fin.cons` is injective. -/
+theorem cons_injective2 : Function.Injective2 (@cons n α) := fun x₀ y₀ x y h =>
+  ⟨congr_funₓ h 0,
+    funext fun i => by
+      simpa using congr_funₓ h (Finₓ.succ i)⟩
+
+@[simp]
+theorem cons_eq_cons {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} : cons x₀ x = cons y₀ y ↔ x₀ = y₀ ∧ x = y :=
+  cons_injective2.eq_iff
+
+theorem cons_left_injective (x : ∀ i : Finₓ n, α i.succ) : Function.Injective fun x₀ => cons x₀ x :=
+  cons_injective2.left _
+
+theorem cons_right_injective (x₀ : α 0) : Function.Injective (cons x₀) :=
+  cons_injective2.right _
+
 /-- Adding an element at the beginning of a tuple and then updating it amounts to adding it
 directly. -/
 theorem update_cons_zero : update (cons x p) 0 z = cons z p := by
@@ -117,6 +134,22 @@ theorem cons_self_tail : cons (q 0) (tail q) = q := by
     have : j'.succ = j := succ_pred j h
     rw [← this, tail, cons_succ]
     
+
+/-- Recurse on an `n+1`-tuple by splitting it into a single element and an `n`-tuple. -/
+@[elab_as_eliminator]
+def consInduction {P : (∀ i : Finₓ n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Finₓ.cons x₀ x))
+    (x : ∀ i : Finₓ n.succ, α i) : P x :=
+  cast
+      (by
+        rw [cons_self_tail]) <|
+    h (x 0) (tail x)
+
+@[simp]
+theorem cons_induction_cons {P : (∀ i : Finₓ n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Finₓ.cons x₀ x)) (x₀ : α 0)
+    (x : ∀ i : Finₓ n, α i.succ) : @consInduction _ _ _ h (cons x₀ x) = h x₀ x := by
+  rw [cons_induction, cast_eq]
+  congr
+  exact tail_cons _ _
 
 /-- Updating the first element of a tuple does not change the tail. -/
 @[simp]
@@ -161,6 +194,19 @@ theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : �
 theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
     cons x p ≤ q ↔ x ≤ q 0 ∧ p ≤ tail q :=
   @le_cons _ (fun i => OrderDual (α i)) _ x q p
+
+theorem cons_le_cons [∀ i, Preorderₓ (α i)] {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} :
+    cons x₀ x ≤ cons y₀ y ↔ x₀ ≤ y₀ ∧ x ≤ y :=
+  forall_fin_succ.trans <|
+    and_congr_right' <| by
+      simp only [cons_succ, Pi.le_def]
+
+theorem pi_lex_lt_cons_cons {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} (s : ∀ {i : Finₓ n.succ}, α i → α i → Prop) :
+    Pi.Lex (· < ·) (@s) (Finₓ.cons x₀ x) (Finₓ.cons y₀ y) ↔
+      s x₀ y₀ ∨ x₀ = y₀ ∧ Pi.Lex (· < ·) (fun i : Finₓ n => @s i.succ) x y :=
+  by
+  simp_rw [Pi.Lex, Finₓ.exists_fin_succ, Finₓ.cons_succ, Finₓ.cons_zero, Finₓ.forall_fin_succ]
+  simp [and_assoc, exists_and_distrib_left]
 
 @[simp]
 theorem range_cons {α : Type _} {n : ℕ} (x : α) (b : Finₓ n → α) :
@@ -240,6 +286,12 @@ theorem snoc_cast_succ : snoc p x i.cast_succ = p i := by
   have h' := Finₓ.cast_lt_cast_succ i i.is_lt
   simp [snoc, this, h']
   convert cast_eq rfl (p i)
+
+@[simp]
+theorem snoc_comp_cast_succ {n : ℕ} {α : Sort _} {a : α} {f : Finₓ n → α} :
+    (snoc f a : Finₓ (n + 1) → α) ∘ cast_succ = f :=
+  funext fun i => by
+    rw [Function.comp_app, snoc_cast_succ]
 
 @[simp]
 theorem snoc_last : snoc p x (last n) = x := by
@@ -616,8 +668,7 @@ theorem find_min :
     cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with k
     · rw [h] at hi
       split_ifs  at hi with hl hl
-      · have := Option.some_inj.1 hi
-        subst this
+      · obtain rfl := Option.some_inj.1 hi
         rw [find_eq_none_iff] at h
         exact h ⟨j, hj⟩ hpj
         
@@ -626,8 +677,7 @@ theorem find_min :
       
     · rw [h] at hi
       dsimp  at hi
-      have := Option.some_inj.1 hi
-      subst this
+      obtain rfl := Option.some_inj.1 hi
       exact find_min h (show (⟨j, lt_transₓ hj k.2⟩ : Finₓ n) < k from hj) hpj
       
 

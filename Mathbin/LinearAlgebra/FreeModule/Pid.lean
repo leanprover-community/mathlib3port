@@ -46,7 +46,7 @@ free module, finitely generated module, rank, structure theorem
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 universe u v
 
@@ -323,9 +323,8 @@ theorem Submodule.basis_of_pid_bot {ι : Type _} [Fintype ι] (b : Basis ι R M)
     Submodule.basisOfPid b ⊥ = ⟨0, Basis.empty _⟩ := by
   obtain ⟨n, b'⟩ := Submodule.basisOfPid b ⊥
   let e : Finₓ n ≃ Finₓ 0 := b'.index_equiv (Basis.empty _ : Basis (Finₓ 0) R (⊥ : Submodule R M))
-  have : n = 0 := by
+  obtain rfl : n = 0 := by
     simpa using fintype.card_eq.mpr ⟨e⟩
-  subst this
   exact Sigma.eq rfl (Basis.eq_of_apply_eq <| finZeroElim)
 
 /-- A submodule inside a free `R`-submodule of finite rank is also a free `R`-module of finite rank,

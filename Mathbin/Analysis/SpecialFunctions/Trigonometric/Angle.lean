@@ -13,7 +13,7 @@ about trigonometric functions and angles.
 -/
 
 
-open_locale Real
+open Real
 
 noncomputable section
 

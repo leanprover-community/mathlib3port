@@ -16,7 +16,7 @@ namespace Omega
 
 namespace Nat
 
-open_locale Omega.Nat
+open Omega.Nat
 
 @[simp]
 def dnfCore : Preform → List Clause
@@ -33,16 +33,16 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     preform.induce sorry
   · apply List.exists_mem_cons_ofₓ
     constructor
-    rw [List.forall_mem_singleton]
+    rw [List.forall_mem_singletonₓ]
     cases' h0 with ht hs
     simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [h2, add_neg_selfₓ]
-    apply List.forall_mem_nil
+    apply List.forall_mem_nilₓ
     
   · apply List.exists_mem_cons_ofₓ
     constructor
-    apply List.forall_mem_nil
-    rw [List.forall_mem_singleton]
+    apply List.forall_mem_nilₓ
+    rw [List.forall_mem_singletonₓ]
     simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds, sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub, sub_zero, Int.coe_nat_le]
     assumption
@@ -83,7 +83,7 @@ def Terms.vars : List Term → List Bool
   | [] => []
   | t :: ts => Bools.or (Term.vars t) (terms.vars ts)
 
-open_locale List.Func
+open List.Func
 
 -- get notation for list.func.set
 def nonnegConstsCore : Nat → List Bool → List Term
@@ -144,7 +144,7 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
   intro x
   apply Int.coe_nat_nonneg
 
-theorem exists_clause_sat {p : Preform} : p.NegFree → p.SubFree → p.sat → ∃ c ∈ dnf p, Clause.Sat c := by
+theorem exists_clause_sat {p : Preform} : p.NegFree → p.SubFree → p.Sat → ∃ c ∈ dnf p, Clause.Sat c := by
   intro h1 h2 h3
   cases' h3 with v h3
   rcases exists_clause_holds h1 h2 h3 with ⟨c, h4, h5⟩

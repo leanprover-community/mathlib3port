@@ -3,10 +3,10 @@ Copyright (c) 2019 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Equiv.Encodable.Basic
 import Mathbin.Algebra.EuclideanDomain
-import Mathbin.Data.Nat.Gcd
 import Mathbin.Data.Int.Cast
+import Mathbin.Data.Nat.Gcd
+import Mathbin.Logic.Encodable.Basic
 
 /-!
 # Basics for the Rational Numbers
@@ -101,7 +101,7 @@ def mkPnat (n : ℤ) : ℕ+ → ℚ
     let g := n'.gcd d
     ⟨n / g, d / g, by
       apply (Nat.le_div_iff_mul_leₓ _ _ (Nat.gcd_pos_of_pos_rightₓ _ dpos)).2
-      simp
+      rw [one_mulₓ]
       exact Nat.le_of_dvdₓ dpos (Nat.gcd_dvd_rightₓ _ _), by
       have : Int.natAbs (n / ↑g) = n' / g := by
         cases' Int.nat_abs_eq n with e e <;> rw [e]
@@ -139,7 +139,9 @@ theorem mk_zero n : n /. 0 = 0 :=
 
 @[simp]
 theorem zero_mk_pnat n : mkPnat 0 n = 0 := by
-  cases n <;> simp [mk_pnat] <;> change Int.natAbs 0 with 0 <;> simp [*] <;> rfl
+  cases' n with n npos
+  simp only [mk_pnat, Int.nat_abs_zero, Nat.div_selfₓ npos, Nat.gcd_zero_leftₓ, Int.zero_div]
+  rfl
 
 @[simp]
 theorem zero_mk_nat n : mkNat 0 n = 0 := by
@@ -154,23 +156,24 @@ private theorem gcd_abs_dvd_left {a b} : (Nat.gcdₓ (Int.natAbs a) b : ℤ) ∣
 
 @[simp]
 theorem mk_eq_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b = 0 ↔ a = 0 := by
-  constructor <;>
-    intro h <;> [skip,
-      · subst a
-        simp
-        ]
+  refine'
+    ⟨fun h => _, by
+      rintro rfl
+      simp ⟩
   have : ∀ {a b}, mk_pnat a b = 0 → a = 0 := by
-    intro a b e
-    cases' b with b h
+    rintro a ⟨b, h⟩ e
     injection e with e
     apply Int.eq_mul_of_div_eq_right gcd_abs_dvd_left e
-  cases' b with b <;> simp [mk, mk_nat] at h
-  · simp [mt (congr_argₓ Int.ofNat) b0] at h
+  cases' b with b <;> simp only [mk, mk_nat, Int.of_nat_eq_coe, dite_eq_left_iff] at h
+  · simp only [mt (congr_argₓ Int.ofNat) b0, not_false_iff, forall_true_left] at h
     exact this h
     
   · apply neg_injective
     simp [this h]
     
+
+theorem mk_ne_zero {a b : ℤ} (b0 : b ≠ 0) : a /. b ≠ 0 ↔ a ≠ 0 :=
+  (mk_eq_zero b0).Not
 
 theorem mk_eq : ∀ {a b c d : ℤ} hb : b ≠ 0 hd : d ≠ 0, a /. b = c /. d ↔ a * d = c * b := by
   suffices ∀ a b c d hb hd, mkPnat a ⟨b, hb⟩ = mkPnat c ⟨d, hd⟩ ↔ a * d = c * b by
@@ -294,7 +297,7 @@ theorem num_dvd a {b : ℤ} (b0 : b ≠ 0) : (a /. b).num ∣ a := by
   rw [Rat.num_denom', Rat.mk_eq b0 (ne_of_gtₓ (Int.coe_nat_pos.2 h))] at e
   refine' Int.nat_abs_dvd.1 <| Int.dvd_nat_abs.1 <| Int.coe_nat_dvd.2 <| c.dvd_of_dvd_mul_right _
   have := congr_argₓ Int.natAbs e
-  simp [Int.nat_abs_mul, Int.nat_abs_of_nat] at this
+  simp only [Int.nat_abs_mul, Int.nat_abs_of_nat] at this
   simp [this]
 
 theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b := by
@@ -436,10 +439,9 @@ theorem inv_def {a b : ℤ} : (a /. b)⁻¹ = b /. a := by
       
     
   have n0 : n ≠ 0 := by
-    refine' mt (fun n0 : n = 0 => _) a0
-    subst n0
-    simp at ha
-    exact (mk_eq_zero b0).1 ha
+    rintro rfl
+    rw [Rat.zero_mk, mk_eq_zero b0] at ha
+    exact a0 ha
   have d0 := ne_of_gtₓ (Int.coe_nat_lt.2 h)
   have ha := (mk_eq b0 d0).1 ha
   apply (mk_eq n0 a0).2
@@ -524,9 +526,7 @@ protected theorem mul_add : a * (b + c) = a * b + a * c := by
   rw [Rat.mul_comm, Rat.add_mul, Rat.mul_comm, Rat.mul_comm c a]
 
 protected theorem zero_ne_one : 0 ≠ (1 : ℚ) := by
-  suffices (1 : ℚ) = 0 → False by
-    cc
-  rw [← mk_one_one, mk_eq_zero one_ne_zero]
+  rw [ne_comm, ← mk_one_one, mk_ne_zero one_ne_zero]
   exact one_ne_zero
 
 protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
@@ -534,7 +534,8 @@ protected theorem mul_inv_cancel : a ≠ 0 → a * a⁻¹ = 1 :=
     have n0 : n ≠ 0 :=
       mt
         (by
-          intro e <;> subst e <;> simp )
+          rintro rfl
+          simp )
         a0
     simpa [h, n0, mul_comm] using @div_mk_div_cancel_left 1 1 _ n0
 
@@ -680,8 +681,8 @@ theorem mk_denom_ne_zero_of_ne_zero {q : ℚ} {n d : ℤ} (hq : q ≠ 0) (hqnd :
   hq <| by
     simpa [this] using hqnd
 
-theorem mk_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /. d ≠ 0 := fun this : n /. d = 0 =>
-  h <| (mk_eq_zero hd).1 this
+theorem mk_ne_zero_of_ne_zero {n d : ℤ} (h : n ≠ 0) (hd : d ≠ 0) : n /. d ≠ 0 :=
+  (mk_ne_zero hd).mpr h
 
 theorem mul_num_denom (q r : ℚ) : q * r = q.num * r.num /. ↑(q.denom * r.denom) := by
   have hq' : (↑q.denom : ℤ) ≠ 0 := by
@@ -710,34 +711,25 @@ theorem div_num_denom (q r : ℚ) : q / r = q.num * r.denom /. (q.denom * r.num)
           hr
       
 
-theorem num_denom_mk {q : ℚ} {n d : ℤ} (hn : n ≠ 0) (hd : d ≠ 0) (qdf : q = n /. d) :
-    ∃ c : ℤ, n = c * q.num ∧ d = c * q.denom := by
-  have hq : q ≠ 0 := fun this : q = 0 =>
-    hn <|
-      (Rat.mk_eq_zero hd).1
-        (by
-          cc)
-  have : q.num /. q.denom = n /. d := by
-    rwa [num_denom]
-  have : q.num * d = n * ↑q.denom :=
-    (Rat.mk_eq
-          (by
-            simp [Rat.denom_ne_zero])
-          hd).1
-      this
-  exists n / q.num
+theorem num_denom_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) : ∃ c : ℤ, n = c * q.num ∧ d = c * q.denom := by
+  obtain rfl | hn := eq_or_ne n 0
+  · simp [qdf]
+    
+  have : q.num * d = n * ↑q.denom := by
+    refine' (Rat.mk_eq _ hd).mp _
+    · exact int.coe_nat_ne_zero.mpr (Rat.denom_ne_zero _)
+      
+    · rwa [num_denom]
+      
   have hqdn : q.num ∣ n := by
     rw [qdf]
-    apply Rat.num_dvd
-    assumption
-  constructor
+    exact Rat.num_dvd _ hd
+  refine' ⟨n / q.num, _, _⟩
   · rw [Int.div_mul_cancel hqdn]
     
-  · apply Int.eq_mul_div_of_mul_eq_mul_of_dvd_left
-    · apply Rat.num_ne_zero_of_ne_zero hq
-      
-    repeat'
-      assumption
+  · refine' Int.eq_mul_div_of_mul_eq_mul_of_dvd_left _ hqdn this
+    rw [qdf]
+    exact Rat.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
     
 
 theorem mk_pnat_num (n : ℤ) (d : ℕ+) : (mkPnat n d).num = n / Nat.gcdₓ n.natAbs d := by
@@ -836,11 +828,11 @@ theorem mk_eq_div (n d : ℤ) : n /. d = (n : ℚ) / d := by
 theorem num_div_denom (r : ℚ) : (r.num / r.denom : ℚ) = r := by
   rw [← Int.cast_coe_nat, ← mk_eq_div, num_denom]
 
-theorem exists_eq_mul_div_num_and_eq_mul_div_denom {n d : ℤ} (n_ne_zero : n ≠ 0) (d_ne_zero : d ≠ 0) :
+theorem exists_eq_mul_div_num_and_eq_mul_div_denom (n : ℤ) {d : ℤ} (d_ne_zero : d ≠ 0) :
     ∃ c : ℤ, n = c * ((n : ℚ) / d).num ∧ (d : ℤ) = c * ((n : ℚ) / d).denom :=
   have : (n : ℚ) / d = Rat.mk n d := by
     rw [← Rat.mk_eq_div]
-  Rat.num_denom_mk n_ne_zero d_ne_zero this
+  Rat.num_denom_mk d_ne_zero this
 
 theorem coe_int_eq_of_int (z : ℤ) : ↑z = ofInt z :=
   (coe_int_eq_mk z).trans (of_int_eq_mk z).symm

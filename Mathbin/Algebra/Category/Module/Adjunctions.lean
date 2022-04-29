@@ -24,7 +24,7 @@ namespace ModuleCat
 
 universe u
 
-open_locale Classical
+open Classical
 
 variable (R : Type u)
 

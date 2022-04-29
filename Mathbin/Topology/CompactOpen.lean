@@ -18,8 +18,7 @@ topological spaces.
 ## Main definitions
 
 * `compact_open` is the compact-open topology on `C(α, β)`. It is declared as an instance.
-* `ev` is the evaluation map `C(α, β) × α → β`. It is continuous as long as `α` is locally compact.
-* `coev` is the coevaluation map `β → C(α, β × α)`. It is always continuous.
+* `continuous_map.coev` is the coevaluation map `β → C(α, β × α)`. It is always continuous.
 * `continuous_map.curry` is the currying map `C(α × β, γ) → C(α, C(β, γ))`. This map always exists
   and it is continuous as long as `α × β` is locally compact.
 * `continuous_map.uncurry` is the uncurrying map `C(α, C(β, γ)) → C(α × β, γ)`. For this map to
@@ -37,7 +36,7 @@ compact-open, curry, function space
 
 open Set
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 namespace ContinuousMap
 
@@ -97,24 +96,20 @@ end Functorial
 
 section Ev
 
-variable (α β)
-
-/-- The evaluation map `map C(α, β) × α → β` -/
-def ev (p : C(α, β) × α) : β :=
-  p.1 p.2
-
 variable {α β}
 
-/-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact. -/
-theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
+/-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact.
+
+See also `continuous_map.continuous_eval` -/
+theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β) × α => p.1 p.2 :=
   continuous_iff_continuous_at.mpr fun n hn =>
     let ⟨v, vn, vo, fxv⟩ := mem_nhds_iff.mp hn
     have : v ∈ 𝓝 (f x) := IsOpen.mem_nhds vo fxv
     let ⟨s, hs, sv, sc⟩ := LocallyCompactSpace.local_compact_nhds x (f ⁻¹' v) (f.Continuous.Tendsto x this)
     let ⟨u, us, uo, xu⟩ := mem_nhds_iff.mp hs
-    show ev α β ⁻¹' n ∈ 𝓝 (f, x) from
+    show (fun p : C(α, β) × α => p.1 p.2) ⁻¹' n ∈ 𝓝 (f, x) from
       let w := CompactOpen.Gen s v ×ˢ u
-      have : w ⊆ ev α β ⁻¹' n := fun ⟨f', x'⟩ ⟨hf', hx'⟩ =>
+      have : w ⊆ (fun p : C(α, β) × α => p.1 p.2) ⁻¹' n := fun ⟨f', x'⟩ ⟨hf', hx'⟩ =>
         calc
           f' x' ∈ f' '' s := mem_image_of_mem f' (us hx')
           _ ⊆ v := hf'
@@ -128,8 +123,13 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
           assumption, by
           assumption⟩
 
-theorem continuous_ev₁ [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
-  continuous_ev.comp (continuous_id.prod_mk continuous_const)
+/-- See also `continuous_map.continuous_eval_const` -/
+theorem continuous_eval_const' [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
+  continuous_eval'.comp (continuous_id.prod_mk continuous_const)
+
+/-- See also `continuous_map.continuous_coe` -/
+theorem continuous_coe' [LocallyCompactSpace α] : @Continuous C(α, β) (α → β) _ _ coeFn :=
+  continuous_pi continuous_eval_const'
 
 instance [T2Space β] : T2Space C(α, β) :=
   ⟨by
@@ -173,7 +173,7 @@ theorem compact_open_eq_Inf_induced :
       ⨅ (s : Set α) (hs : IsCompact s), TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
   by
   refine' le_antisymmₓ _ _
-  · refine' le_binfi _
+  · refine' le_infi₂ _
     exact fun s hs => compact_open_le_induced s
     
   simp only [← generate_from_Union, induced_generate_from_eq, ContinuousMap.compactOpen]
@@ -229,8 +229,8 @@ theorem exists_tendsto_compact_open_iff_forall [LocallyCompactSpace α] [T2Space
       rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
       have := is_compact_iff_compact_space.mp hs₁
       have := is_compact_iff_compact_space.mp hs₂
-      have h₁ := (continuous_ev₁ (⟨x, hxs₁⟩ : s₁)).ContinuousAt.Tendsto.comp (hf s₁ hs₁)
-      have h₂ := (continuous_ev₁ (⟨x, hxs₂⟩ : s₂)).ContinuousAt.Tendsto.comp (hf s₂ hs₂)
+      have h₁ := (continuous_eval_const' (⟨x, hxs₁⟩ : s₁)).ContinuousAt.Tendsto.comp (hf s₁ hs₁)
+      have h₂ := (continuous_eval_const' (⟨x, hxs₂⟩ : s₂)).ContinuousAt.Tendsto.comp (hf s₂ hs₂)
       exact tendsto_nhds_unique h₁ h₂
     -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
     -- compact set `s`
@@ -254,7 +254,7 @@ variable (α β)
 /-- The coevaluation map `β → C(α, β × α)` sending a point `x : β` to the continuous function
 on `α` sending `y` to `(x, y)`. -/
 def coev (b : β) : C(α, β × α) :=
-  ⟨fun a => (b, a), Continuous.prod_mk continuous_const continuous_id⟩
+  ⟨Prod.mk b, continuous_const.prod_mk continuous_id⟩
 
 variable {α β}
 
@@ -310,7 +310,7 @@ theorem continuous_curry [LocallyCompactSpace (α × β)] : Continuous (curry : 
   apply continuous_of_continuous_uncurry
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _).symm]
-  convert continuous_ev <;> tidy
+  convert continuous_eval' <;> tidy
 
 @[simp]
 theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a, b) :=
@@ -319,10 +319,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  have hf : (Function.uncurry fun x y => f x y) = ev β γ ∘ Prod.map f id := by
-    ext
-    rfl
-  hf ▸ Continuous.comp continuous_ev <| Continuous.prod_map f.2 continuous_id
+  continuous_eval'.comp <| f.Continuous.prod_map continuous_id
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
     locally compact). If `α` is also locally compact, then this is a homeomorphism between the two
@@ -335,7 +332,7 @@ theorem continuous_uncurry [LocallyCompactSpace α] [LocallyCompactSpace β] :
     Continuous (uncurry : C(α, C(β, γ)) → C(α × β, γ)) := by
   apply continuous_of_continuous_uncurry
   rw [← Homeomorph.comp_continuous_iff' (Homeomorph.prodAssoc _ _ _)]
-  apply Continuous.comp continuous_ev (Continuous.prod_map continuous_ev continuous_id) <;> infer_instance
+  apply Continuous.comp continuous_eval' (Continuous.prod_map continuous_eval' continuous_id) <;> infer_instance
 
 /-- The family of constant maps: `β → C(α, β)` as a continuous map. -/
 def const' : C(β, C(α, β)) :=
@@ -371,15 +368,15 @@ def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) �
 
 /-- If `α` has a single element, then `β` is homeomorphic to `C(α, β)`. -/
 def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β) where
-  toFun := ContinuousMap.comp ⟨_, continuous_fst⟩ ∘ coev α β
-  invFun := ev α β ∘ fun f => (f, default)
+  toFun := const α
+  invFun := fun f => f default
   left_inv := fun a => rfl
   right_inv := fun f => by
     ext
     rw [Unique.eq_default a]
     rfl
-  continuous_to_fun := Continuous.comp (continuous_comp _) continuous_coev
-  continuous_inv_fun := Continuous.comp continuous_ev (Continuous.prod_mk continuous_id continuous_const)
+  continuous_to_fun := continuous_const'
+  continuous_inv_fun := continuous_eval'.comp (continuous_id.prod_mk continuous_const)
 
 @[simp]
 theorem continuous_map_of_unique_apply [Unique α] (b : β) (a : α) : continuousMapOfUnique b a = b :=

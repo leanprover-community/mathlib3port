@@ -77,6 +77,10 @@ instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
 theorem coe_to_linear_map : ⇑f.toLinearMap = f :=
   rfl
 
+@[simp]
+theorem coe_mk (f : E →ₛₗ[σ₁₂] E₂) hf : ⇑(mk f hf) = f :=
+  rfl
+
 theorem coe_injective : @Injective (E →ₛₗᵢ[σ₁₂] E₂) (E → E₂) coeFn :=
   FunLike.coe_injective
 
@@ -211,6 +215,10 @@ theorem id_apply (x : E) : (id : E →ₗᵢ[R] E) x = x :=
 
 @[simp]
 theorem id_to_linear_map : (id.toLinearMap : E →ₗ[R] E) = LinearMap.id :=
+  rfl
+
+@[simp]
+theorem id_to_continuous_linear_map : id.toContinuousLinearMap = ContinuousLinearMap.id R E :=
   rfl
 
 instance : Inhabited (E →ₗᵢ[R] E) :=
@@ -764,7 +772,7 @@ theorem symm_neg : (neg R : E ≃ₗᵢ[R] E).symm = neg R :=
 variable (R E E₂ E₃)
 
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
-noncomputable def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
+def prodAssoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=
   { Equivₓ.prodAssoc E E₂ E₃ with toFun := Equivₓ.prodAssoc E E₂ E₃, invFun := (Equivₓ.prodAssoc E E₂ E₃).symm,
     map_add' := by
       simp ,

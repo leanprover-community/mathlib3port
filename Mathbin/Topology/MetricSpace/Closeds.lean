@@ -3,9 +3,9 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Topology.MetricSpace.HausdorffDistance
-import Mathbin.Topology.Compacts
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Topology.Sets.Compacts
 
 /-!
 # Closed subsets
@@ -25,7 +25,7 @@ always finite in this context.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Ennreal
+open Classical TopologicalSpace Ennreal
 
 universe u
 

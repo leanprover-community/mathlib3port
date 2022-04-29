@@ -17,7 +17,7 @@ The only result so far is a characterization of Cauchy filters in topological gr
 -/
 
 
-open_locale uniformity Filter
+open uniformity Filter
 
 open Filter
 
@@ -39,7 +39,7 @@ protected theorem uniform_add_group : @UniformAddGroup G B.UniformSpace _ :=
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » M)
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔ F.ne_bot ∧ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U := by
-  let this' := B.uniform_space
+  let this := B.uniform_space
   have := B.uniform_add_group
   suffices F ×ᶠ F ≤ 𝓤 G ↔ ∀, ∀ U ∈ B, ∀, ∃ M ∈ F, ∀ x y _ : x ∈ M _ : y ∈ M, y - x ∈ U by
     constructor <;> rintro ⟨h', h⟩ <;> refine' ⟨h', _⟩ <;> [rwa [← this], rwa [this]]

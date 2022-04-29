@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Data.Equiv.List
 import Mathbin.Data.List.Join
+import Mathbin.Logic.Equiv.List
 import Mathbin.Logic.Function.Iterate
 
 /-!
@@ -258,13 +258,13 @@ theorem of_equiv {β} {e : β ≃ α} :
     have := Primcodable.ofEquiv α e
     Primrec e :=
   by
-  let this' : Primcodable β := Primcodable.ofEquiv α e <;> exact encode_iff.1 Primrec.encode
+  let this : Primcodable β := Primcodable.ofEquiv α e <;> exact encode_iff.1 Primrec.encode
 
 theorem of_equiv_symm {β} {e : β ≃ α} :
     have := Primcodable.ofEquiv α e
     Primrec e.symm :=
   by
-  let this' := Primcodable.ofEquiv α e <;>
+  let this := Primcodable.ofEquiv α e <;>
     exact
       encode_iff.1
         (show Primrec fun a => encode (e (e.symm a)) by
@@ -274,7 +274,7 @@ theorem of_equiv_iff {β} (e : β ≃ α) {f : σ → β} :
     have := Primcodable.ofEquiv α e
     (Primrec fun a => e (f a)) ↔ Primrec f :=
   by
-  let this' := Primcodable.ofEquiv α e <;>
+  let this := Primcodable.ofEquiv α e <;>
     exact
       ⟨fun h =>
         (of_equiv_symm.comp h).of_eq fun a => by
@@ -285,7 +285,7 @@ theorem of_equiv_symm_iff {β} (e : β ≃ α) {f : σ → α} :
     have := Primcodable.ofEquiv α e
     (Primrec fun a => e.symm (f a)) ↔ Primrec f :=
   by
-  let this' := Primcodable.ofEquiv α e <;>
+  let this := Primcodable.ofEquiv α e <;>
     exact
       ⟨fun h =>
         (of_equiv.comp h).of_eq fun a => by
@@ -793,7 +793,7 @@ private theorem list_cases' {f : α → List β} {g : α → σ} {h : α → β 
       have := prim H
       Primrec₂ h) :
     @Primrec _ σ _ _ fun a => List.casesOn (f a) (g a) fun b l => h a (b, l) := by
-  let this' := prim H <;>
+  let this := prim H <;>
     exact
       have :
         @Primrec _ (Option σ) _ _ fun a =>
@@ -814,7 +814,7 @@ private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ 
       have := prim H
       Primrec₂ h) :
     Primrec fun a => (f a).foldl (fun s b => h a (s, b)) (g a) := by
-  let this' := prim H <;>
+  let this := prim H <;>
     exact
       let G (a : α) (IH : σ × List β) : σ × List β := List.casesOn IH.2 IH fun b l => (h a (IH.1, b), l)
       let F (a : α) (n : ℕ) := (G a^[n]) (g a, f a)
@@ -840,13 +840,13 @@ private theorem list_cons' :
     have := prim H
     Primrec₂ (@List.cons β) :=
   by
-  let this' := prim H <;> exact encode_iff.1 (succ.comp <| primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))
+  let this := prim H <;> exact encode_iff.1 (succ.comp <| primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))
 
 private theorem list_reverse' :
     have := prim H
     Primrec (@List.reverse β) :=
   by
-  let this' := prim H <;>
+  let this := prim H <;>
     exact
       (list_foldl' H Primrec.id (const []) <| to₂ <| ((list_cons' H).comp snd fst).comp snd).of_eq
         (suffices ∀ l r, List.foldlₓ (fun b : β => b :: s) r l = List.reverseCore l r from fun l => this l []
@@ -1119,7 +1119,7 @@ theorem subtype_val {p : α → Prop} [DecidablePred p] {hp : PrimrecPred p} :
     have := Primcodable.subtype hp
     Primrec (@Subtype.val α p) :=
   by
-  let this' := Primcodable.subtype hp
+  let this := Primcodable.subtype hp
   refine' (Primcodable.prim (Subtype p)).of_eq fun n => _
   rcases decode (Subtype p) n with (_ | ⟨a, h⟩) <;> rfl
 
@@ -1127,7 +1127,7 @@ theorem subtype_val_iff {p : β → Prop} [DecidablePred p] {hp : PrimrecPred p}
     have := Primcodable.subtype hp
     (Primrec fun a => (f a).1) ↔ Primrec f :=
   by
-  let this' := Primcodable.subtype hp
+  let this := Primcodable.subtype hp
   refine' ⟨fun h => _, fun hf => subtype_val.comp hf⟩
   refine' Nat.Primrec.of_eq h fun n => _
   cases' decode α n with a
@@ -1149,11 +1149,11 @@ theorem option_get {f : α → Option β} {h : ∀ a, (f a).isSome} : Primrec f 
   cases x <;> simp
 
 theorem ulower_down : Primrec (Ulower.down : α → Ulower α) := by
-  let this' : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
+  let this : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
     exact subtype_mk Primrec.encode
 
 theorem ulower_up : Primrec (Ulower.up : Ulower α → α) := by
-  let this' : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
+  let this : ∀ a, Decidable (a ∈ Set.Range (encode : α → ℕ)) := decidable_range_encode _ <;>
     exact option_get (primrec.decode₂.comp subtype_val)
 
 theorem fin_val_iff {n} {f : α → Finₓ n} : (Primrec fun a => (f a).1) ↔ Primrec f := by
@@ -1260,7 +1260,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
--- ././Mathport/Syntax/Translate/Basic.lean:1546:6: unsupported: hide command
+-- ././Mathport/Syntax/Translate/Basic.lean:1543:6: unsupported: hide command
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f := by
   induction pf
   case nat.primrec'.zero =>

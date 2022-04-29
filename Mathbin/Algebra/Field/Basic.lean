@@ -63,8 +63,6 @@ variable [DivisionRing K] {a b : K}
 instance (priority := 100) DivisionRing.toGroupWithZero : GroupWithZeroₓ K :=
   { ‹DivisionRing K›, (inferInstance : Semiringₓ K) with }
 
-attribute [field_simps] inv_eq_one_div
-
 attribute [local simp] division_def mul_comm mul_assoc mul_left_commₓ mul_inv_cancel inv_mul_cancel
 
 theorem one_div_neg_one_eq_neg_one : (1 : K) / -1 = -1 :=
@@ -263,10 +261,19 @@ structure IsField (R : Type u) [Ringₓ R] : Prop where
 theorem Field.to_is_field (R : Type u) [Field R] : IsField R :=
   { ‹Field R› with mul_inv_cancel := fun a ha => ⟨a⁻¹, Field.mul_inv_cancel ha⟩ }
 
-open_locale Classical
+@[simp]
+theorem IsField.nontrivial {R : Type u} [Ringₓ R] (h : IsField R) : Nontrivial R :=
+  ⟨h.exists_pair_ne⟩
+
+@[simp]
+theorem not_is_field_of_subsingleton (R : Type u) [Ringₓ R] [Subsingleton R] : ¬IsField R := fun h =>
+  let ⟨x, y, h⟩ := h.exists_pair_ne
+  h (Subsingleton.elimₓ _ _)
+
+open Classical
 
 /-- Transferring from is_field to field -/
-noncomputable def IsField.toField (R : Type u) [Ringₓ R] (h : IsField R) : Field R :=
+noncomputable def IsField.toField {R : Type u} [Ringₓ R] (h : IsField R) : Field R :=
   { ‹Ringₓ R›, h with inv := fun a => if ha : a = 0 then 0 else Classical.some (IsField.mul_inv_cancel h ha),
     inv_zero := dif_pos rfl,
     mul_inv_cancel := fun a ha => by
@@ -324,7 +331,7 @@ theorem map_div : g (x / y) = g x / g y :=
   g.toMonoidWithZeroHom.map_div x y
 
 protected theorem injective : Function.Injective f :=
-  f.injective_iff.2 fun x => f.map_eq_zero.1
+  (injective_iff_map_eq_zero f).2 fun x => f.map_eq_zero.1
 
 end
 
@@ -350,18 +357,24 @@ end NoncomputableDefs
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K']
-    [One K'] [Inv K'] [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) :
-    DivisionRing K' :=
-  { hf.GroupWithZero f zero one mul inv div, hf.Ring f zero one add mul neg sub with }
+    [One K'] [Inv K'] [Div K'] [HasScalar ℕ K'] [HasScalar ℤ K'] [Pow K' ℕ] [Pow K' ℤ] (f : K' → K)
+    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivisionRing K' :=
+  { hf.GroupWithZero f zero one mul inv div npow zpow, hf.Ring f zero one add mul neg sub nsmul zsmul npow with }
 
 /-- Pullback a `field` along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'] [Neg K'] [Sub K'] [One K'] [Inv K']
-    [Div K'] (f : K' → K) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
-    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
-    (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y) : Field K' :=
-  { hf.CommGroupWithZero f zero one mul inv div, hf.CommRing f zero one add mul neg sub with }
+    [Div K'] [HasScalar ℕ K'] [HasScalar ℤ K'] [Pow K' ℕ] [Pow K' ℤ] (f : K' → K) (hf : Function.Injective f)
+    (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y)
+    (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
+    (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n)
+    (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : Field K' :=
+  { hf.CommGroupWithZero f zero one mul inv div npow zpow,
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow with }
 

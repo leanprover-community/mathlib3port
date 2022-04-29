@@ -43,9 +43,25 @@ instance (priority := 100) HasUniformContinuousConstSmul.to_has_continuous_const
     [HasUniformContinuousConstSmul M X] : HasContinuousConstSmul M X :=
   ⟨fun c => (uniform_continuous_const_smul c).Continuous⟩
 
+variable {M X Y}
+
+@[to_additive]
 theorem UniformContinuous.const_smul [HasUniformContinuousConstSmul M X] {f : Y → X} (hf : UniformContinuous f)
     (c : M) : UniformContinuous (c • f) :=
   (uniform_continuous_const_smul c).comp hf
+
+/-- If a scalar is central, then its right action is uniform continuous when its left action is. -/
+instance (priority := 100) HasUniformContinuousConstSmul.op [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X]
+    [HasUniformContinuousConstSmul M X] : HasUniformContinuousConstSmul Mᵐᵒᵖ X :=
+  ⟨MulOpposite.rec fun c => by
+      change UniformContinuous fun m => MulOpposite.op c • m
+      simp_rw [op_smul_eq_smul]
+      exact uniform_continuous_const_smul c⟩
+
+@[to_additive]
+instance MulOpposite.has_uniform_continuous_const_smul [HasUniformContinuousConstSmul M X] :
+    HasUniformContinuousConstSmul M Xᵐᵒᵖ :=
+  ⟨fun c => MulOpposite.uniform_continuous_op.comp <| MulOpposite.uniform_continuous_unop.const_smul c⟩
 
 end HasScalar
 
@@ -69,6 +85,9 @@ instance : HasScalar M (Completion X) :=
 @[to_additive]
 instance : HasUniformContinuousConstSmul M (Completion X) :=
   ⟨fun c => uniform_continuous_map⟩
+
+instance [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
+  ⟨fun c a => (congr_argₓ fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
 
 variable {M X} [HasUniformContinuousConstSmul M X]
 

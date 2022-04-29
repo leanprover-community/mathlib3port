@@ -36,8 +36,8 @@ namespace CategoryTheory
 We use this as the objects of a category to describe the sheaf condition.
 -/
 inductive Pairwise (ι : Type v)
-  | single : ι → Pairwise
-  | pair : ι → ι → Pairwise
+  | single : ι → pairwise
+  | pair : ι → ι → pairwise
 
 variable {ι : Type v}
 

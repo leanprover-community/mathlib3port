@@ -76,7 +76,7 @@ each proves that some operations on functors preserves the QPF structure
 
 universe u
 
-open_locale Mvfunctor
+open Mvfunctor
 
 /-- Multivariate quotients of polynomial functors.
 -/

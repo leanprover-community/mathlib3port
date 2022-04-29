@@ -66,7 +66,7 @@ Part A, Chapter 4.
 
 open MeasureTheory MeasurableSpace
 
-open_locale BigOperators Classical
+open BigOperators Classical MeasureTheory
 
 namespace ProbabilityTheory
 
@@ -102,7 +102,7 @@ def Indep {α ι} (m : ι → MeasurableSpace α) [MeasurableSpace α]
       run_tac
         volume_tac) :
     Prop :=
-  IndepSets (fun x => (m x).MeasurableSet') μ
+  IndepSets (fun x => { s | measurable_set[m x] s }) μ
 
 /-- Two measurable space structures (or σ-algebras) `m₁, m₂` are independent with respect to a
 measure `μ` (defined on a third σ-algebra) if for any sets `t₁ ∈ m₁, t₂ ∈ m₂`,
@@ -112,7 +112,7 @@ def Indepₓ {α} (m₁ m₂ : MeasurableSpace α) [MeasurableSpace α]
       run_tac
         volume_tac) :
     Prop :=
-  IndepSetsₓ m₁.MeasurableSet' m₂.MeasurableSet' μ
+  IndepSetsₓ { s | measurable_set[m₁] s } { s | measurable_set[m₂] s } μ
 
 /-- A family of sets is independent if the family of measurable space structures they generate is
 independent. For a set `s`, the generated measurable space has measurable sets `∅, s, sᶜ, univ`. -/
@@ -272,10 +272,8 @@ section FromMeasurableSpacesToSetsOfSets
 
 
 theorem Indep.Indep_sets {α ι} [MeasurableSpace α] {μ : Measureₓ α} {m : ι → MeasurableSpace α} {s : ι → Set (Set α)}
-    (hms : ∀ n, m n = MeasurableSpace.generateFrom (s n)) (h_indep : Indep m μ) : IndepSets s μ := by
-  refine' fun S f hfs => h_indep S fun x hxS => _
-  simp_rw [hms x]
-  exact measurable_set_generate_from (hfs x hxS)
+    (hms : ∀ n, m n = generateFrom (s n)) (h_indep : Indep m μ) : IndepSets s μ := fun S f hfs =>
+  (h_indep S) fun x hxS => ((hms x).symm ▸ measurable_set_generate_from (hfs x hxS) : measurable_set[m x] (f x))
 
 theorem Indepₓ.indep_sets {α} [MeasurableSpace α] {μ : Measureₓ α} {s1 s2 : Set (Set α)}
     (h_indep : Indepₓ (generateFrom s1) (generateFrom s2) μ) : IndepSetsₓ s1 s2 μ := fun t1 t2 ht1 ht2 =>
@@ -367,6 +365,30 @@ theorem IndepSetsₓ.indep_set_of_mem (hs : s ∈ S) (ht : t ∈ T) (hs_meas : M
   (indep_set_iff_measure_inter_eq_mul hs_meas ht_meas μ).mpr (h_indep s t hs ht)
 
 end IndepSet
+
+section IndepFun
+
+variable {α β β' γ γ' : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α}
+
+theorem IndepFunₓ.ae_eq {mβ : MeasurableSpace β} {f g f' g' : α → β} (hfg : IndepFunₓ f g μ) (hf : f =ᵐ[μ] f')
+    (hg : g =ᵐ[μ] g') : IndepFunₓ f' g' μ := by
+  rintro _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
+  have h1 : f ⁻¹' A =ᵐ[μ] f' ⁻¹' A := hf.fun_comp A
+  have h2 : g ⁻¹' B =ᵐ[μ] g' ⁻¹' B := hg.fun_comp B
+  rw [← measure_congr h1, ← measure_congr h2, ← measure_congr (h1.inter h2)]
+  exact hfg _ _ ⟨_, hA, rfl⟩ ⟨_, hB, rfl⟩
+
+theorem IndepFunₓ.comp {mβ : MeasurableSpace β} {mβ' : MeasurableSpace β'} {mγ : MeasurableSpace γ}
+    {mγ' : MeasurableSpace γ'} {f : α → β} {g : α → β'} {φ : β → γ} {ψ : β' → γ'} (hfg : IndepFunₓ f g μ)
+    (hφ : Measurable φ) (hψ : Measurable ψ) : IndepFunₓ (φ ∘ f) (ψ ∘ g) μ := by
+  rintro _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
+  apply hfg
+  · exact ⟨φ ⁻¹' A, hφ hA, set.preimage_comp.symm⟩
+    
+  · exact ⟨ψ ⁻¹' B, hψ hB, set.preimage_comp.symm⟩
+    
+
+end IndepFun
 
 end ProbabilityTheory
 

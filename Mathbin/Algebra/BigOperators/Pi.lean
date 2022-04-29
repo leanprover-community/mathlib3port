@@ -14,7 +14,7 @@ of monoids and groups
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace Pi
 
@@ -89,10 +89,10 @@ open Pi
 
 variable {I : Type _} [DecidableEq I] {f : I → Type _}
 
-variable [∀ i, Semiringₓ (f i)]
+variable [∀ i, NonAssocSemiringₓ (f i)]
 
 @[ext]
-theorem RingHom.functions_ext [Fintype I] (G : Type _) [Semiringₓ G] (g h : (∀ i, f i) →+* G)
+theorem RingHom.functions_ext [Fintype I] (G : Type _) [NonAssocSemiringₓ G] (g h : (∀ i, f i) →+* G)
     (w : ∀ i : I x : f i, g (single i x) = h (single i x)) : g = h :=
   RingHom.coe_add_monoid_hom_injective <| AddMonoidHom.functions_ext G (g : (∀ i, f i) →+ G) h w
 

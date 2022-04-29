@@ -19,7 +19,7 @@ We also prove differentiability and provide derivatives for the power functions 
 
 noncomputable section
 
-open_locale Classical Real TopologicalSpace Nnreal Ennreal Filter
+open Classical Real TopologicalSpace Nnreal Ennreal Filter
 
 open Filter
 

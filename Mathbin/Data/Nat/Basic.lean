@@ -133,7 +133,7 @@ theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonemp
     ((⊥ : s) : ℕ) = Nat.findₓ (nonempty_subtype.1 h) :=
   rfl
 
-theorem Nat.nsmul_eq_mul (m n : ℕ) : m • n = m * n :=
+protected theorem Nat.nsmul_eq_mul (m n : ℕ) : m • n = m * n :=
   rfl
 
 theorem Nat.eq_of_mul_eq_mul_rightₓ {n m k : ℕ} (Hm : 0 < m) (H : n * m = k * m) : n = k := by
@@ -416,6 +416,20 @@ theorem two_lt_of_ne : ∀ {n}, n ≠ 0 → n ≠ 1 → n ≠ 2 → 2 < n
   | n + 3, _, _, _ => by
     decide
 
+theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀, ∀ m < n.succ, ∀, P m) ↔ (∀, ∀ m < n, ∀, P m) ∧ P n :=
+  ⟨fun H => ⟨fun m hm => H m (lt_succ_iffₓ.2 hm.le), H n (lt_succ_selfₓ n)⟩, by
+    rintro ⟨H, hn⟩ m hm
+    rcases eq_or_lt_of_le (lt_succ_iff.1 hm) with (rfl | hmn)
+    · exact hn
+      
+    · exact H m hmn
+      ⟩
+
+theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n.succ, P m) ↔ (∃ m < n, P m) ∨ P n := by
+  rw [← not_iff_not]
+  push_neg
+  exact forall_lt_succ
+
 /-! ### `add` -/
 
 
@@ -482,17 +496,13 @@ theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
 theorem add_eq_one_iff : ∀ {a b : ℕ}, a + b = 1 ↔ a = 0 ∧ b = 1 ∨ a = 1 ∧ b = 0
   | 0, 0 => by
     decide
-  | 0, 1 => by
-    decide
   | 1, 0 => by
-    decide
-  | 1, 1 => by
     decide
   | a + 2, _ => by
     rw [add_right_commₓ] <;>
       exact by
         decide
-  | _, b + 2 => by
+  | _, b + 1 => by
     rw [← add_assocₓ] <;> simp only [Nat.succ_inj', Nat.succ_ne_zero] <;> simp
 
 theorem le_add_one_iff {i j : ℕ} : i ≤ j + 1 ↔ i ≤ j ∨ i = j + 1 :=
@@ -905,6 +915,12 @@ theorem le_div_iff_mul_le' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x ≤ y / k ↔ 
 theorem div_lt_iff_lt_mul' {x y : ℕ} {k : ℕ} (k0 : 0 < k) : x / k < y ↔ x < y * k :=
   lt_iff_lt_of_le_iff_le <| le_div_iff_mul_le' k0
 
+theorem one_le_div_iff {a b : ℕ} (hb : 0 < b) : 1 ≤ a / b ↔ b ≤ a := by
+  rw [le_div_iff_mul_le _ _ hb, one_mulₓ]
+
+theorem div_lt_one_iff {a b : ℕ} (hb : 0 < b) : a / b < 1 ↔ a < b :=
+  lt_iff_lt_of_le_iff_le <| one_le_div_iff hb
+
 protected theorem div_le_div_right {n m : ℕ} (h : n ≤ m) {k : ℕ} : n / k ≤ m / k :=
   ((Nat.eq_zero_or_posₓ k).elim fun k0 => by
       simp [k0])
@@ -1252,7 +1268,7 @@ theorem mul_dvd_of_dvd_div {a b c : ℕ} (hab : c ∣ b) (h : a ∣ b / c) : c *
 theorem dvd_div_iff {a b c : ℕ} (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b :=
   ⟨fun h => mul_dvd_of_dvd_div hbc h, fun h => dvd_div_of_mul_dvd h⟩
 
-theorem div_mul_div {a b c d : ℕ} (hab : b ∣ a) (hcd : d ∣ c) : a / b * (c / d) = a * c / (b * d) :=
+theorem div_mul_div_comm {a b c d : ℕ} (hab : b ∣ a) (hcd : d ∣ c) : a / b * (c / d) = a * c / (b * d) :=
   have exi1 : ∃ x, a = b * x := hab
   have exi2 : ∃ y, c = d * y := hcd
   if hb : b = 0 then by
@@ -1334,7 +1350,7 @@ theorem div_eq_self {a b : ℕ} : a / b = a ↔ a = 0 ∨ b = 1 := by
 theorem lt_iff_le_pred : ∀ {m n : ℕ}, 0 < n → (m < n ↔ m ≤ n - 1)
   | m, n + 1, _ => lt_succ_iffₓ
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 theorem div_eq_sub_mod_div {m n : ℕ} : m / n = (m - m % n) / n := by
   by_cases' n0 : n = 0
   · rw [n0, Nat.div_zeroₓ, Nat.div_zeroₓ]

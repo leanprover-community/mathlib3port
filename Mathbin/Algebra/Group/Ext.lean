@@ -3,7 +3,7 @@ Copyright (c) 2021 Bryan Gin-ge Chen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.Hom
+import Mathbin.Algebra.Hom.Group
 
 /-!
 # Extensionality lemmas for monoid and group structures
@@ -92,9 +92,9 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
   set f :
     @MonoidHom M M
       (by
-        let this' := m₁ <;> infer_instance)
+        let this := m₁ <;> infer_instance)
       (by
-        let this' := m₂ <;> infer_instance) :=
+        let this := m₂ <;> infer_instance) :=
     { toFun := id, map_one' := h₁, map_mul' := fun x y => congr_funₓ (congr_funₓ h_mul x) y }
   have hpow : (@DivInvMonoidₓ.toMonoid _ m₁).npow = (@DivInvMonoidₓ.toMonoid _ m₂).npow :=
     congr_argₓ (@Monoidₓ.npow M) (Monoidₓ.ext h_mul)
@@ -103,7 +103,7 @@ theorem DivInvMonoidₓ.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoidₓ M⦄ (h_
     exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_funₓ h_inv) x m
   have hdiv : m₁.div = m₂.div := by
     ext a b
-    exact @MonoidHom.map_div' M M m₁ m₂ f (congr_funₓ h_inv) a b
+    exact @map_div' M M _ m₁ m₂ _ f (congr_funₓ h_inv) a b
   cases m₁
   cases m₂
   congr
@@ -114,7 +114,7 @@ theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul
   set f :=
     @MonoidHom.mk' G G
       (by
-        let this' := g₁ <;> infer_instance)
+        let this := g₁ <;> infer_instance)
       g₂ id fun a b => congr_funₓ (congr_funₓ h_mul a) b
   exact Groupₓ.to_div_inv_monoid_injective (DivInvMonoidₓ.ext h_mul (funext <| @MonoidHom.map_inv G G g₁ g₂ f))
 

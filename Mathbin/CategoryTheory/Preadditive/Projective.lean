@@ -78,7 +78,7 @@ theorem factor_thru_comp {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) 
 
 section
 
-open_locale ZeroObject
+open ZeroObject
 
 instance zero_projective [HasZeroObject C] [HasZeroMorphisms C] : Projective (0 : C) where
   Factors := fun E X f e epi => by
@@ -89,7 +89,7 @@ end
 
 theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Projective P) : Projective Q := by
   fconstructor
-  intros E X f e e_epi
+  intro E X f e e_epi
   obtain ⟨f', hf'⟩ := projective.factors (i.hom ≫ f) e
   exact
     ⟨i.inv ≫ f', by
@@ -187,17 +187,13 @@ variable [HasZeroMorphisms C] [HasEqualizers C] [HasImages C]
 the middle object `R` of a pair of exact morphisms `f : Q ⟶ R` and `g : R ⟶ S`,
 such that `h ≫ g = 0`, there is a lift of `h` to `Q`.
 -/
-def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) : P ⟶ Q :=
-  factorThru
-    (factorThru (factorThruKernelSubobject g h w)
-      (imageToKernel f g
-        (by
-          simp )))
-    (factorThruImageSubobject f)
+def Exact.lift {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) (hfg : Exact f g) (w : h ≫ g = 0) :
+    P ⟶ Q :=
+  factorThru (factorThru (factorThruKernelSubobject g h w) (imageToKernel f g hfg.w)) (factorThruImageSubobject f)
 
 @[simp]
-theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) [Exact f g] (w : h ≫ g = 0) :
-    Exact.lift h f g w ≫ f = h := by
+theorem Exact.lift_comp {P Q R S : C} [Projective P] (h : P ⟶ R) (f : Q ⟶ R) (g : R ⟶ S) (hfg : Exact f g)
+    (w : h ≫ g = 0) : Exact.lift h f g hfg w ≫ f = h := by
   simp [exact.lift]
   conv_lhs => congr skip rw [← image_subobject_arrow_comp f]
   rw [← category.assoc, factor_thru_comp, ← image_to_kernel_arrow, ← category.assoc,

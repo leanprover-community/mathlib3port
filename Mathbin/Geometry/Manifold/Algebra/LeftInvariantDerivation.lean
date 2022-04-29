@@ -21,7 +21,7 @@ implementing one of the possible definitions of the Lie algebra attached to a Li
 
 noncomputable section
 
-open_locale LieGroup Manifold Derivation
+open LieGroup Manifold Derivation
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoidₓ G]
@@ -160,8 +160,18 @@ theorem lift_add : (↑(X + Y) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I
 theorem lift_zero : (↑(0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^∞⟮I, G; 𝕜⟯ C^∞⟮I, G; 𝕜⟯) = 0 :=
   rfl
 
+instance hasNatScalar : HasScalar ℕ (LeftInvariantDerivation I G) where
+  smul := fun r X =>
+    ⟨r • X, fun g => by
+      simp only [Derivation.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, LinearMap.map_smul_of_tower, left_invariant']⟩
+
+instance hasIntScalar : HasScalar ℤ (LeftInvariantDerivation I G) where
+  smul := fun r X =>
+    ⟨r • X, fun g => by
+      simp only [Derivation.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, LinearMap.map_smul_of_tower, left_invariant']⟩
+
 instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
+  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance : HasScalar 𝕜 (LeftInvariantDerivation I G) where
   smul := fun r X =>

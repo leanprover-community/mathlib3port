@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
 import Mathbin.Analysis.Calculus.FormalMultilinearSeries
-import Mathbin.Data.Equiv.Fin
+import Mathbin.Analysis.SpecificLimits.Normed
+import Mathbin.Logic.Equiv.Fin
 
 /-!
 # Analytic functions
@@ -26,8 +27,7 @@ space is analytic, as well as the inverse on invertible operators.
 Let `p` be a formal multilinear series from `E` to `F`, i.e., `p n` is a multilinear map on `E^n`
 for `n : ℕ`.
 
-* `p.radius`: the largest `r : ℝ≥0∞` such that `∥p n∥ * r^n` grows subexponentially, defined as
-  a liminf.
+* `p.radius`: the largest `r : ℝ≥0∞` such that `∥p n∥ * r^n` grows subexponentially.
 * `p.le_radius_of_bound`, `p.le_radius_of_bound_nnreal`, `p.le_radius_of_is_O`: if `∥p n∥ * r ^ n`
   is bounded above, then `r ≤ p.radius`;
 * `p.is_o_of_lt_radius`, `p.norm_mul_pow_le_mul_pow_of_lt_radius`, `p.is_o_one_of_lt_radius`,
@@ -46,6 +46,7 @@ Additionally, let `f` be a function from `E` to `F`.
   `has_fpower_series_on_ball f p x r`.
 * `analytic_at 𝕜 f x`: there exists a power series `p` such that holds
   `has_fpower_series_at f p x`.
+* `analytic_on 𝕜 f s`: the function `f` is analytic at every point of `s`.
 
 We develop the basic properties of these notions, notably:
 * If a function admits a power series, it is continuous (see
@@ -69,15 +70,43 @@ build the general theory. We do not define it here.
 
 noncomputable section
 
-variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+variable {𝕜 E F G : Type _}
 
-open_locale TopologicalSpace Classical BigOperators Nnreal Filter Ennreal
+open TopologicalSpace Classical BigOperators Nnreal Filter Ennreal
 
 open Set Filter Asymptotics
 
+namespace FormalMultilinearSeries
+
+variable [Ringₓ 𝕜] [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
+
+variable [TopologicalSpace E] [TopologicalSpace F]
+
+variable [TopologicalAddGroup E] [TopologicalAddGroup F]
+
+variable [HasContinuousConstSmul 𝕜 E] [HasContinuousConstSmul 𝕜 F]
+
+/-- Given a formal multilinear series `p` and a vector `x`, then `p.sum x` is the sum `Σ pₙ xⁿ`. A
+priori, it only behaves well when `∥x∥ < p.radius`. -/
+protected def sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
+  ∑' n : ℕ, p n fun i => x
+
+/-- Given a formal multilinear series `p` and a vector `x`, then `p.partial_sum n x` is the sum
+`Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/
+def partialSum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
+  ∑ k in Finset.range n, p k fun i : Finₓ k => x
+
+/-- The partial sums of a formal multilinear series are continuous. -/
+theorem partial_sum_continuous (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) : Continuous (p.partialSum n) := by
+  continuity
+
+end FormalMultilinearSeries
+
 /-! ### The radius of a formal multilinear series -/
 
+
+variable [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] [NormedGroup G]
+  [NormedSpace 𝕜 G]
 
 namespace FormalMultilinearSeries
 
@@ -270,23 +299,18 @@ theorem min_radius_le_radius_add (p q : FormalMultilinearSeries 𝕜 E F) : min 
 theorem radius_neg (p : FormalMultilinearSeries 𝕜 E F) : (-p).radius = p.radius := by
   simp [radius]
 
-/-- Given a formal multilinear series `p` and a vector `x`, then `p.sum x` is the sum `Σ pₙ xⁿ`. A
-priori, it only behaves well when `∥x∥ < p.radius`. -/
-protected def sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
-  ∑' n : ℕ, p n fun i => x
-
 protected theorem has_sum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
     (hx : x ∈ Emetric.Ball (0 : E) p.radius) : HasSum (fun n : ℕ => p n fun _ => x) (p.Sum x) :=
   (p.Summable hx).HasSum
 
-/-- Given a formal multilinear series `p` and a vector `x`, then `p.partial_sum n x` is the sum
-`Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/
-def partialSum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
-  ∑ k in Finset.range n, p k fun i : Finₓ k => x
-
-/-- The partial sums of a formal multilinear series are continuous. -/
-theorem partial_sum_continuous (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) : Continuous (p.partialSum n) := by
-  continuity
+theorem radius_le_radius_continuous_linear_map_comp (p : FormalMultilinearSeries 𝕜 E F) (f : F →L[𝕜] G) :
+    p.radius ≤ (f.compFormalMultilinearSeries p).radius := by
+  refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _
+  apply le_radius_of_is_O
+  apply (is_O.trans_is_o _ (p.is_o_one_of_lt_radius hr)).IsO
+  refine' is_O.mul (@is_O_with.is_O _ _ _ _ _ ∥f∥ _ _ _ _) (is_O_refl _ _)
+  apply is_O_with.of_bound (eventually_of_forall fun n => _)
+  simpa only [norm_norm] using f.norm_comp_continuous_multilinear_map_le (p n)
 
 end FormalMultilinearSeries
 
@@ -317,6 +341,11 @@ series expansion around `x`. -/
 def AnalyticAt (f : E → F) (x : E) :=
   ∃ p : FormalMultilinearSeries 𝕜 E F, HasFpowerSeriesAt f p x
 
+/-- Given a function `f : E → F`, we say that `f` is analytic on a set `s` if it is analytic around
+every point of `s`. -/
+def AnalyticOn (f : E → F) (s : Set E) :=
+  ∀ x, x ∈ s → AnalyticAt 𝕜 f x
+
 variable {𝕜}
 
 theorem HasFpowerSeriesOnBall.has_fpower_series_at (hf : HasFpowerSeriesOnBall f p x r) : HasFpowerSeriesAt f p x :=
@@ -327,6 +356,23 @@ theorem HasFpowerSeriesAt.analytic_at (hf : HasFpowerSeriesAt f p x) : AnalyticA
 
 theorem HasFpowerSeriesOnBall.analytic_at (hf : HasFpowerSeriesOnBall f p x r) : AnalyticAt 𝕜 f x :=
   hf.HasFpowerSeriesAt.AnalyticAt
+
+theorem HasFpowerSeriesOnBall.congr (hf : HasFpowerSeriesOnBall f p x r) (hg : EqOn f g (Emetric.Ball x r)) :
+    HasFpowerSeriesOnBall g p x r :=
+  { r_le := hf.r_le, r_pos := hf.r_pos,
+    HasSum := fun y hy => by
+      convert hf.has_sum hy
+      apply hg.symm
+      simpa [edist_eq_coe_nnnorm_sub] using hy }
+
+/-- If a function `f` has a power series `p` around `x`, then the function `z ↦ f (z - y)` has the
+same power series around `x + y`. -/
+theorem HasFpowerSeriesOnBall.comp_sub (hf : HasFpowerSeriesOnBall f p x r) (y : E) :
+    HasFpowerSeriesOnBall (fun z => f (z - y)) p (x + y) r :=
+  { r_le := hf.r_le, r_pos := hf.r_pos,
+    HasSum := fun z hz => by
+      convert hf.has_sum hz
+      abel }
 
 theorem HasFpowerSeriesOnBall.has_sum_sub (hf : HasFpowerSeriesOnBall f p x r) {y : E} (hy : y ∈ Emetric.Ball x r) :
     HasSum (fun n : ℕ => p n fun i => y - x) (f y) := by
@@ -406,6 +452,24 @@ theorem HasFpowerSeriesAt.coeff_zero (hf : HasFpowerSeriesAt f pf x) (v : Finₓ
   let ⟨rf, hrf⟩ := hf
   hrf.coeff_zero v
 
+/-- If a function `f` has a power series `p` on a ball and `g` is linear, then `g ∘ f` has the
+power series `g ∘ p` on the same ball. -/
+theorem _root_.continuous_linear_map.comp_has_fpower_series_on_ball (g : F →L[𝕜] G)
+    (h : HasFpowerSeriesOnBall f p x r) : HasFpowerSeriesOnBall (g ∘ f) (g.compFormalMultilinearSeries p) x r :=
+  { r_le := h.r_le.trans (p.radius_le_radius_continuous_linear_map_comp _), r_pos := h.r_pos,
+    HasSum := fun y hy => by
+      simpa only [ContinuousLinearMap.comp_formal_multilinear_series_apply,
+        ContinuousLinearMap.comp_continuous_multilinear_map_coe, Function.comp_app] using g.has_sum (h.has_sum hy) }
+
+/-- If a function `f` is analytic on a set `s` and `g` is linear, then `g ∘ f` is analytic
+on `s`. -/
+theorem _root_.continuous_linear_map.comp_analytic_on {s : Set E} (g : F →L[𝕜] G) (h : AnalyticOn 𝕜 f s) :
+    AnalyticOn 𝕜 (g ∘ f) s := by
+  rintro x hx
+  rcases h x hx with ⟨p, r, hp⟩
+  exact ⟨g.comp_formal_multilinear_series p, r, g.comp_has_fpower_series_on_ball hp⟩
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence.
 
@@ -476,9 +540,7 @@ theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x
   filter_upwards [Metric.ball_mem_nhds (0 : E) r'0] with y hy
   simpa [mul_powₓ, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 
--- hack to speed up simp when dealing with complicated types
-attribute [-instance] Unique.subsingleton Pi.subsingleton
-
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. This lemma formulates this property using `is_O` and
@@ -516,7 +578,7 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
             sub_sub_sub_cancel_right] using (p <| n + 2).norm_image_sub_le (fun _ => y.1 - x) fun _ => y.2 - x
         _ = ∥p (n + 2)∥ * ∥y - (x, x)∥ ^ n * (↑(n + 2) * ∥y - (x, x)∥ * ∥y.1 - y.2∥) := by
           rw [pow_succₓ ∥y - (x, x)∥]
-          ac_rfl
+          ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ∥y - (x, x)∥ * ∥y.1 - y.2∥) := by
           apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_of_le_left, hy'.le, norm_nonneg,
             pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg, ha.1.le]
@@ -630,6 +692,9 @@ protected theorem AnalyticAt.continuous_at (hf : AnalyticAt 𝕜 f x) : Continuo
   let ⟨p, hp⟩ := hf
   hp.ContinuousAt
 
+protected theorem AnalyticOn.continuous_on {s : Set E} (hf : AnalyticOn 𝕜 f s) : ContinuousOn f s := fun x hx =>
+  (hf x hx).ContinuousAt.ContinuousWithinAt
+
 /-- In a complete space, the sum of a converging power series `p` admits `p` as a power series.
 This is not totally obvious as we need to check the convergence of the series. -/
 protected theorem FormalMultilinearSeries.has_fpower_series_on_ball [CompleteSpace F]
@@ -639,9 +704,9 @@ protected theorem FormalMultilinearSeries.has_fpower_series_on_ball [CompleteSpa
       rw [zero_addₓ]
       exact p.has_sum hy }
 
-theorem HasFpowerSeriesOnBall.sum [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r) {y : E}
-    (hy : y ∈ Emetric.Ball (0 : E) r) : f (x + y) = p.Sum y :=
-  (h.HasSum hy).unique (p.HasSum (lt_of_lt_of_leₓ hy h.r_le))
+theorem HasFpowerSeriesOnBall.sum (h : HasFpowerSeriesOnBall f p x r) {y : E} (hy : y ∈ Emetric.Ball (0 : E) r) :
+    f (x + y) = p.Sum y :=
+  (h.HasSum hy).tsum_eq.symm
 
 /-- The sum of a converging power series is continuous in its disk of convergence. -/
 protected theorem FormalMultilinearSeries.continuous_on [CompleteSpace F] :
@@ -811,6 +876,8 @@ Given a formal multilinear series `p` and a point `x` in its ball of convergence
 `p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. Each term of `p.change_origin x`
 is itself an analytic function of `x` given by the series `p.change_origin_series`. Each term in
 `change_origin_series` is the sum of `change_origin_series_term`'s over all `s` of cardinality `l`.
+The definition is such that
+`p.change_origin_series_term k l s hs (λ _, x) (λ _, y) = p (k + l) (s.piecewise (λ _, x) (λ _, y))`
 -/
 def changeOriginSeriesTerm (k l : ℕ) (s : Finset (Finₓ (k + l))) (hs : s.card = l) : E[×l]→L[𝕜] E[×k]→L[𝕜] F :=
   ContinuousMultilinearMap.curryFinFinset 𝕜 E F hs
@@ -842,7 +909,8 @@ theorem nnnorm_change_origin_series_term_apply_le (k l : ℕ) (s : Finset (Fin�
 
 Given a formal multilinear series `p` and a point `x` in its ball of convergence,
 `p.change_origin x` is a formal multilinear series such that
-`p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. -/
+`p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. Its `k`-th term is the sum of
+the series `p.change_origin_series k`. -/
 def changeOriginSeries (k : ℕ) : FormalMultilinearSeries 𝕜 E (E[×k]→L[𝕜] F) := fun l =>
   ∑ s : { s : Finset (Finₓ (k + l)) // Finset.card s = l }, p.changeOriginSeriesTerm k l s s.2
 
@@ -1062,6 +1130,9 @@ theorem HasFpowerSeriesOnBall.analytic_at_of_mem (hf : HasFpowerSeriesOnBall f p
   have := hf.change_origin this
   rw [add_sub_cancel'_right] at this
   exact this.analytic_at
+
+theorem HasFpowerSeriesOnBall.analytic_on (hf : HasFpowerSeriesOnBall f p x r) : AnalyticOn 𝕜 f (Emetric.Ball x r) :=
+  fun y hy => hf.analytic_at_of_mem hy
 
 variable (𝕜 f)
 

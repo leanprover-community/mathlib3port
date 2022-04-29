@@ -3,10 +3,10 @@ Copyright (c) 2019 Oliver Nash. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
-import Mathbin.Tactic.NoncommRing
-import Mathbin.Data.Equiv.Module
+import Mathbin.Algebra.Module.Equiv
 import Mathbin.Data.Bracket
 import Mathbin.LinearAlgebra.Basic
+import Mathbin.Tactic.NoncommRing
 
 /-!
 # Lie algebras
@@ -541,6 +541,10 @@ theorem apply_symm_apply (e : L₁ ≃ₗ⁅R⁆ L₂) : ∀ x, e (e.symm x) = x
 theorem symm_apply_apply (e : L₁ ≃ₗ⁅R⁆ L₂) : ∀ x, e.symm (e x) = x :=
   e.toLinearEquiv.symm_apply_apply
 
+@[simp]
+theorem refl_symm : (refl : L₁ ≃ₗ⁅R⁆ L₁).symm = refl :=
+  rfl
+
 /-- Lie algebra equivalences are transitive. -/
 @[trans]
 def trans (e₁ : L₁ ≃ₗ⁅R⁆ L₂) (e₂ : L₂ ≃ₗ⁅R⁆ L₃) : L₁ ≃ₗ⁅R⁆ L₃ :=
@@ -778,19 +782,34 @@ theorem coe_neg (f : M →ₗ⁅R,L⁆ N) : ⇑(-f) = -f :=
 theorem neg_apply (f : M →ₗ⁅R,L⁆ N) (m : M) : (-f) m = -f m :=
   rfl
 
+instance hasNsmul : HasScalar ℕ (M →ₗ⁅R,L⁆ N) where
+  smul := fun n f =>
+    { n • (f : M →ₗ[R] N) with
+      map_lie' := fun x m => by
+        simp }
+
+@[norm_cast, simp]
+theorem coe_nsmul (n : ℕ) (f : M →ₗ⁅R,L⁆ N) : ⇑(n • f) = n • f :=
+  rfl
+
+theorem nsmul_apply (n : ℕ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (n • f) m = n • f m :=
+  rfl
+
+instance hasZsmul : HasScalar ℤ (M →ₗ⁅R,L⁆ N) where
+  smul := fun z f =>
+    { z • (f : M →ₗ[R] N) with
+      map_lie' := fun x m => by
+        simp }
+
+@[norm_cast, simp]
+theorem coe_zsmul (z : ℤ) (f : M →ₗ⁅R,L⁆ N) : ⇑(z • f) = z • f :=
+  rfl
+
+theorem zsmul_apply (z : ℤ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (z • f) m = z • f m :=
+  rfl
+
 instance : AddCommGroupₓ (M →ₗ⁅R,L⁆ N) :=
-  { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (M →ₗ⁅R,L⁆ N)) with zero := 0,
-    add := (· + ·), neg := Neg.neg, sub := Sub.sub,
-    nsmul := fun n f =>
-      { n • (f : M →ₗ[R] N) with
-        map_lie' := fun x m => by
-          simp },
-    nsmul_zero' := fun f => by
-      ext
-      simp ,
-    nsmul_succ' := fun n f => by
-      ext
-      simp [Nat.succ_eq_one_add, add_nsmul] }
+  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _) fun _ _ => coe_zsmul _ _
 
 instance : HasScalar R (M →ₗ⁅R,L⁆ N) where
   smul := fun t f =>

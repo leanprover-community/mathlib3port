@@ -3,8 +3,8 @@ Copyright (c) 2021 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.SetTheory.CardinalOrdinal
 import Mathbin.Data.W.Basic
+import Mathbin.SetTheory.Cardinal.Ordinal
 
 /-!
 # Cardinality of W-types
@@ -31,7 +31,7 @@ noncomputable section
 
 namespace WType
 
-open_locale Cardinal
+open Cardinal
 
 open Cardinal
 
@@ -63,13 +63,8 @@ theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType �
         _ ≤ m * Cardinal.sup.{u, u} fun a : α => m ^ # (β a) := mul_le_mul' (le_max_leftₓ _ _) le_rfl
         _ = m :=
           mul_eq_left.{u} (le_max_rightₓ _ _)
-            (Cardinal.sup_le.2 fun i => by
-              cases'
-                lt_omega.1
-                  (lt_omega_iff_fintype.2
-                    ⟨show Fintype (β i) by
-                        infer_instance⟩) with
-                n hn
+            (Cardinal.sup_le fun i => by
+              cases' lt_omega.1 (lt_omega_of_fintype (β i)) with n hn
               rw [hn]
               exact power_nat_le (le_max_rightₓ _ _))
             (pos_iff_ne_zero.1

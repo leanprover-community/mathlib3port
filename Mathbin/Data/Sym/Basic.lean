@@ -28,14 +28,14 @@ symmetric powers
 -/
 
 
-universe u
+open Function
 
 /-- The nth symmetric power is n-tuples up to permutation.  We define it
 as a subtype of `multiset` since these are well developed in the
 library.  We also give a definition `sym.sym'` in terms of vectors, and we
 show these are equivalent in `sym.sym_equiv_sym'`.
 -/
-def Sym (α : Type u) (n : ℕ) :=
+def Sym (α : Type _) (n : ℕ) :=
   { s : Multiset α // s.card = n }
 
 instance Sym.hasCoe (α : Type _) (n : ℕ) : Coe (Sym α n) (Multiset α) :=
@@ -46,14 +46,27 @@ instance Sym.hasCoe (α : Type _) (n : ℕ) : Coe (Sym α n) (Multiset α) :=
 See note [reducible non-instances].
 -/
 @[reducible]
-def Vector.Perm.isSetoid (α : Type u) (n : ℕ) : Setoidₓ (Vector α n) :=
+def Vector.Perm.isSetoid (α : Type _) (n : ℕ) : Setoidₓ (Vector α n) :=
   (List.isSetoid α).comap Subtype.val
 
 attribute [local instance] Vector.Perm.isSetoid
 
 namespace Sym
 
-variable {α : Type u} {n : ℕ} {s : Sym α n} {a b : α}
+variable {α β : Type _} {n : ℕ} {s : Sym α n} {a b : α}
+
+theorem coe_injective : Injective (coe : Sym α n → Multiset α) :=
+  Subtype.coe_injective
+
+@[simp, norm_cast]
+theorem coe_inj {s₁ s₂ : Sym α n} : (s₁ : Multiset α) = s₂ ↔ s₁ = s₂ :=
+  coe_injective.eq_iff
+
+/-- Construct an element of the `n`th symmetric power from a multiset of cardinality `n`.
+-/
+@[simps, matchPattern]
+abbrev mk (m : Multiset α) (h : m.card = n) : Sym α n :=
+  ⟨m, h⟩
 
 /-- The unique element in `sym α 0`.
 -/
@@ -64,7 +77,7 @@ def nil : Sym α 0 :=
 /-- Inserts an element into the term of `sym α n`, increasing the length by one.
 -/
 @[matchPattern]
-def cons (a : α) (s : Sym α n) : Sym α (Nat.succ n) :=
+def cons (a : α) (s : Sym α n) : Sym α n.succ :=
   ⟨a ::ₘ s.1, by
     rw [Multiset.card_cons, s.2]⟩
 
@@ -78,6 +91,9 @@ theorem cons_inj_left (a a' : α) (s : Sym α n) : a :: s = a' :: s ↔ a = a' :
 
 theorem cons_swap (a b : α) (s : Sym α n) : a :: b :: s = b :: a :: s :=
   Subtype.ext <| Multiset.cons_swap a b s.1
+
+theorem coe_cons (s : Sym α n) (a : α) : (a :: s : Multiset α) = a ::ₘ s :=
+  rfl
 
 /-- This is the quotient map that takes a list of n elements as an n-tuple and produces an nth
 symmetric power.
@@ -101,6 +117,10 @@ instance : HasMem α (Sym α n) :=
 
 instance decidableMem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=
   s.1.decidableMem _
+
+@[simp]
+theorem mem_mk (a : α) (s : Multiset α) (h : s.card = n) : a ∈ mk s h ↔ a ∈ s :=
+  Iff.rfl
 
 @[simp]
 theorem mem_cons {a b : α} {s : Sym α n} : a ∈ b :: s ↔ a = b ∨ a ∈ s :=
@@ -127,29 +147,48 @@ def erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : Sym α 
   ⟨s.val.erase a, (Multiset.card_erase_of_mem h).trans <| s.property.symm ▸ n.pred_succ⟩
 
 @[simp]
-theorem cons_erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : a :: s.erase a h = s :=
-  Subtype.ext <| Multiset.cons_erase h
+theorem erase_mk [DecidableEq α] (m : Multiset α) (hc : m.card = n + 1) (a : α) (h : a ∈ m) :
+    (mk m hc).erase a h =
+      mk (m.erase a)
+        (by
+          rw [Multiset.card_erase_of_mem h, hc]
+          rfl) :=
+  rfl
+
+@[simp]
+theorem coe_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
+    (s.erase a h : Multiset α) = Multiset.erase s a :=
+  rfl
+
+@[simp]
+theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) : a :: s.erase a h = s :=
+  coe_injective <| Multiset.cons_erase h
+
+@[simp]
+theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α) (h : a ∈ a :: s := mem_cons_self a s) :
+    (a :: s).erase a h = s :=
+  coe_injective <| Multiset.erase_cons_head a s.1
 
 /-- Another definition of the nth symmetric power, using vectors modulo permutations. (See `sym`.)
 -/
-def Sym' (α : Type u) (n : ℕ) :=
+def Sym' (α : Type _) (n : ℕ) :=
   Quotientₓ (Vector.Perm.isSetoid α n)
 
 /-- This is `cons` but for the alternative `sym'` definition.
 -/
-def cons' {α : Type u} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
+def cons' {α : Type _} {n : ℕ} : α → Sym' α n → Sym' α (Nat.succ n) := fun a =>
   Quotientₓ.map (Vector.cons a) fun h => List.Perm.cons _ h
 
 /-- Multisets of cardinality n are equivalent to length-n vectors up to permutations.
 -/
-def symEquivSym' {α : Type u} {n : ℕ} : Sym α n ≃ Sym' α n :=
+def symEquivSym' {α : Type _} {n : ℕ} : Sym α n ≃ Sym' α n :=
   Equivₓ.subtypeQuotientEquivQuotientSubtype _ _
     (fun _ => by
       rfl)
     fun _ _ => by
     rfl
 
-theorem cons_equiv_eq_equiv_cons (α : Type u) (n : ℕ) (a : α) (s : Sym α n) :
+theorem cons_equiv_eq_equiv_cons (α : Type _) (n : ℕ) (a : α) (s : Sym α n) :
     a :: symEquivSym' s = symEquivSym' (a :: s) := by
   rcases s with ⟨⟨l⟩, _⟩
   rfl
@@ -191,7 +230,7 @@ theorem exists_mem (s : Sym α n.succ) : ∃ a, a ∈ s :=
 theorem exists_eq_cons_of_succ (s : Sym α n.succ) : ∃ (a : α)(s' : Sym α n), s = a :: s' := by
   obtain ⟨a, ha⟩ := exists_mem s
   classical
-  exact ⟨a, s.erase a ha, (s.cons_erase _ _).symm⟩
+  exact ⟨a, s.erase a ha, (cons_erase ha).symm⟩
 
 theorem eq_repeat {a : α} {n : ℕ} {s : Sym α n} : s = repeat a n ↔ ∀, ∀ b ∈ s, ∀, b = a :=
   Subtype.ext_iff.trans <| Multiset.eq_repeat.trans <| and_iff_right s.Prop
@@ -234,15 +273,19 @@ instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
 
 /-- A function `α → β` induces a function `sym α n → sym β n` by applying it to every element of
 the underlying `n`-tuple. -/
-def map {α β : Type _} {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
+def map {n : ℕ} (f : α → β) (x : Sym α n) : Sym β n :=
   ⟨x.val.map f, by
     simpa [Multiset.card_map] using x.property⟩
 
 @[simp]
-theorem mem_map {α β : Type _} {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
+theorem mem_map {n : ℕ} {f : α → β} {b : β} {l : Sym α n} : b ∈ Sym.map f l ↔ ∃ a, a ∈ l ∧ f a = b :=
   Multiset.mem_map
 
+/-- Note: `sym.map_id` is not simp-normal, as simp ends up unfolding `id` with `sym.map_congr` -/
 @[simp]
+theorem map_id' {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map (fun x : α => x) s = s := by
+  simp [Sym.map]
+
 theorem map_id {α : Type _} {n : ℕ} (s : Sym α n) : Sym.map id s = s := by
   simp [Sym.map]
 
@@ -252,23 +295,72 @@ theorem map_map {α β γ : Type _} {n : ℕ} (g : β → γ) (f : α → β) (s
   simp [Sym.map]
 
 @[simp]
-theorem map_zero {α β : Type _} (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
+theorem map_zero (f : α → β) : Sym.map f (0 : Sym α 0) = (0 : Sym β 0) :=
   rfl
 
 @[simp]
-theorem map_cons {α β : Type _} {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a :: s).map f = f a :: s.map f := by
+theorem map_cons {n : ℕ} (f : α → β) (a : α) (s : Sym α n) : (a :: s).map f = f a :: s.map f := by
   simp [map, cons]
+
+@[congr]
+theorem map_congr {f g : α → β} {s : Sym α n} (h : ∀, ∀ x ∈ s, ∀, f x = g x) : map f s = map g s :=
+  Subtype.ext <| Multiset.map_congr rfl h
+
+@[simp]
+theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
+    map f (mk m hc) =
+      mk (m.map f)
+        (by
+          simp [hc]) :=
+  rfl
+
+@[simp]
+theorem coe_map (s : Sym α n) (f : α → β) : ↑(s.map f) = Multiset.map f s :=
+  rfl
+
+theorem map_injective {f : α → β} (hf : Injective f) (n : ℕ) : Injective (map f : Sym α n → Sym β n) := fun s t h =>
+  coe_injective <| Multiset.map_injective hf <| coe_inj.2 h
 
 /-- Mapping an equivalence `α ≃ β` using `sym.map` gives an equivalence between `sym α n` and
 `sym β n`. -/
 @[simps]
-def equivCongr {β : Type u} (e : α ≃ β) : Sym α n ≃ Sym β n where
+def equivCongr (e : α ≃ β) : Sym α n ≃ Sym β n where
   toFun := map e
   invFun := map e.symm
   left_inv := fun x => by
     rw [map_map, Equivₓ.symm_comp_self, map_id]
   right_inv := fun x => by
     rw [map_map, Equivₓ.self_comp_symm, map_id]
+
+/-- "Attach" a proof that `a ∈ s` to each element `a` in `s` to produce
+an element of the symmetric power on `{x // x ∈ s}`. -/
+def attach (s : Sym α n) : Sym { x // x ∈ s } n :=
+  ⟨s.val.attach, by
+    rw [Multiset.card_attach, s.2]⟩
+
+@[simp]
+theorem attach_mk {m : Multiset α} {hc : m.card = n} : attach (mk m hc) = mk m.attach (Multiset.card_attach.trans hc) :=
+  rfl
+
+@[simp]
+theorem coe_attach (s : Sym α n) : (s.attach : Multiset { a // a ∈ s }) = Multiset.attach s :=
+  rfl
+
+theorem attach_map_coe (s : Sym α n) : s.attach.map coe = s :=
+  coe_injective <| Multiset.attach_map_val _
+
+@[simp]
+theorem mem_attach (s : Sym α n) (x : { x // x ∈ s }) : x ∈ s.attach :=
+  Multiset.mem_attach _ _
+
+@[simp]
+theorem attach_nil : (nil : Sym α 0).attach = nil :=
+  rfl
+
+@[simp]
+theorem attach_cons (x : α) (s : Sym α n) :
+    (cons x s).attach = cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.Prop⟩) :=
+  coe_injective <| Multiset.attach_cons _ _
 
 end Sym
 

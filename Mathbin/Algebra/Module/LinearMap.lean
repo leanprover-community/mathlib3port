@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne Baanen,
   Frédéric Dupuis, Heather Macbeth
 -/
-import Mathbin.Algebra.Group.Hom
+import Mathbin.Algebra.Hom.Group
+import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.Pi
-import Mathbin.Algebra.GroupActionHom
 import Mathbin.Algebra.Ring.CompTypeclasses
 import Mathbin.Algebra.Star.Basic
 
@@ -56,7 +56,7 @@ linear map
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 universe u u' v w x y z
 
@@ -236,7 +236,7 @@ theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :
 
 section Pointwise
 
-open_locale Pointwise
+open Pointwise
 
 @[simp]
 theorem image_smul_setₛₗ (c : R) (s : Set M) : f '' (c • s) = σ c • f '' s := by
@@ -413,6 +413,22 @@ theorem comp_id : f.comp id = f :=
 theorem id_comp : id.comp f = f :=
   LinearMap.ext fun x => rfl
 
+variable {f g} {f' : M₂ →ₛₗ[σ₂₃] M₃} {g' : M₁ →ₛₗ[σ₁₂] M₂}
+
+include σ₁₃
+
+theorem cancel_right (hg : Function.Surjective g) : f.comp g = f'.comp g ↔ f = f' :=
+  ⟨fun h => ext <| hg.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
+
+theorem cancel_left (hf : Function.Injective f) : f.comp g = f.comp g' ↔ g = g' :=
+  ⟨fun h =>
+    ext fun x =>
+      hf <| by
+        rw [← comp_apply, h, comp_apply],
+    fun h => h ▸ rfl⟩
+
+omit σ₁₃
+
 end
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
@@ -574,7 +590,7 @@ abbrev Module.End (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M]
 def AddMonoidHom.toNatLinearMap [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] (f : M →+ M₂) : M →ₗ[ℕ] M₂ where
   toFun := f
   map_add' := f.map_add
-  map_smul' := f.map_nat_module_smul
+  map_smul' := map_nsmul f
 
 theorem AddMonoidHom.to_nat_linear_map_injective [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] :
     Function.Injective (@AddMonoidHom.toNatLinearMap M M₂ _ _) := by
@@ -586,7 +602,7 @@ theorem AddMonoidHom.to_nat_linear_map_injective [AddCommMonoidₓ M] [AddCommMo
 def AddMonoidHom.toIntLinearMap [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) : M →ₗ[ℤ] M₂ where
   toFun := f
   map_add' := f.map_add
-  map_smul' := f.map_int_module_smul
+  map_smul' := map_zsmul f
 
 theorem AddMonoidHom.to_int_linear_map_injective [AddCommGroupₓ M] [AddCommGroupₓ M₂] :
     Function.Injective (@AddMonoidHom.toIntLinearMap M M₂ _ _) := by
@@ -601,7 +617,7 @@ theorem AddMonoidHom.coe_to_int_linear_map [AddCommGroupₓ M] [AddCommGroupₓ 
 /-- Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
 def AddMonoidHom.toRatLinearMap [AddCommGroupₓ M] [Module ℚ M] [AddCommGroupₓ M₂] [Module ℚ M₂] (f : M →+ M₂) :
     M →ₗ[ℚ] M₂ :=
-  { f with map_smul' := f.map_rat_module_smul }
+  { f with map_smul' := map_rat_smul f }
 
 theorem AddMonoidHom.to_rat_linear_map_injective [AddCommGroupₓ M] [Module ℚ M] [AddCommGroupₓ M₂] [Module ℚ M₂] :
     Function.Injective (@AddMonoidHom.toRatLinearMap M M₂ _ _ _ _) := by
@@ -615,6 +631,51 @@ theorem AddMonoidHom.coe_to_rat_linear_map [AddCommGroupₓ M] [Module ℚ M] [A
   rfl
 
 namespace LinearMap
+
+section HasScalar
+
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃]
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
+
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
+
+variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+
+variable [Monoidₓ S] [DistribMulAction S M₂] [SmulCommClass R₂ S M₂]
+
+variable [Monoidₓ S₃] [DistribMulAction S₃ M₃] [SmulCommClass R₃ S₃ M₃]
+
+variable [Monoidₓ T] [DistribMulAction T M₂] [SmulCommClass R₂ T M₂]
+
+instance : HasScalar S (M →ₛₗ[σ₁₂] M₂) :=
+  ⟨fun a f =>
+    { toFun := a • f,
+      map_add' := fun x y => by
+        simp only [Pi.smul_apply, f.map_add, smul_add],
+      map_smul' := fun c x => by
+        simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
+
+@[simp]
+theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
+  rfl
+
+theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a • f :=
+  rfl
+
+instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
+  ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
+
+-- example application of this instance: if S -> T -> R are homomorphisms of commutative rings and
+-- M and M₂ are R-modules then the S-module and T-module structures on Hom_R(M,M₂) are compatible.
+instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
+  smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
+
+instance [DistribMulAction Sᵐᵒᵖ M₂] [SmulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
+    IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where
+  op_smul_eq_smul := fun a b => ext fun x => op_smul_eq_smul _ _
+
+end HasScalar
 
 /-! ### Arithmetic on the codomain -/
 
@@ -681,22 +742,8 @@ theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃
   ext fun _ => h.map_add _ _
 
 /-- The type of linear maps is an additive monoid. -/
-instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) where
-  zero := 0
-  add := (· + ·)
-  add_assoc := fun f g h => LinearMap.ext fun x => add_assocₓ _ _ _
-  zero_add := fun f => LinearMap.ext fun x => zero_addₓ _
-  add_zero := fun f => LinearMap.ext fun x => add_zeroₓ _
-  add_comm := fun f g => LinearMap.ext fun x => add_commₓ _ _
-  nsmul := fun n f =>
-    { toFun := fun x => n • f x,
-      map_add' := fun x y => by
-        rw [f.map_add, smul_add],
-      map_smul' := fun c x => by
-        rw [f.map_smulₛₗ]
-        simp [smul_comm n (σ₁₂ c) (f x)] }
-  nsmul_zero' := fun f => LinearMap.ext fun x => AddCommMonoidₓ.nsmul_zero' _
-  nsmul_succ' := fun n f => LinearMap.ext fun x => AddCommMonoidₓ.nsmul_succ' _ _
+instance : AddCommMonoidₓ (M →ₛₗ[σ₁₂] M₂) :=
+  FunLike.coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
@@ -748,24 +795,8 @@ omit σ₁₃
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroupₓ (M →ₛₗ[σ₁₂] N₂) :=
-  { LinearMap.addCommMonoid with zero := 0, add := (· + ·), neg := Neg.neg, sub := Sub.sub,
-    sub_eq_add_neg := fun f g => LinearMap.ext fun m => sub_eq_add_neg _ _,
-    add_left_neg := fun f => LinearMap.ext fun m => add_left_negₓ _,
-    nsmul := fun n f =>
-      { toFun := fun x => n • f x,
-        map_add' := fun x y => by
-          rw [f.map_add, smul_add],
-        map_smul' := fun c x => by
-          rw [f.map_smulₛₗ, smul_comm n (σ₁₂ c) (f x)] },
-    zsmul := fun n f =>
-      { toFun := fun x => n • f x,
-        map_add' := fun x y => by
-          rw [f.map_add, smul_add],
-        map_smul' := fun c x => by
-          rw [f.map_smulₛₗ, smul_comm n (σ₁₂ c) (f x)] },
-    zsmul_zero' := fun a => LinearMap.ext fun m => zero_smul _ _,
-    zsmul_succ' := fun n a => LinearMap.ext fun m => AddCommGroupₓ.zsmul_succ' n _,
-    zsmul_neg' := fun n a => LinearMap.ext fun m => AddCommGroupₓ.zsmul_neg' n _ }
+  FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 end Arithmetic
 
@@ -786,33 +817,6 @@ variable [Monoidₓ S] [DistribMulAction S M₂] [SmulCommClass R₂ S M₂]
 variable [Monoidₓ S₃] [DistribMulAction S₃ M₃] [SmulCommClass R₃ S₃ M₃]
 
 variable [Monoidₓ T] [DistribMulAction T M₂] [SmulCommClass R₂ T M₂]
-
-instance : HasScalar S (M →ₛₗ[σ₁₂] M₂) :=
-  ⟨fun a f =>
-    { toFun := a • f,
-      map_add' := fun x y => by
-        simp only [Pi.smul_apply, f.map_add, smul_add],
-      map_smul' := fun c x => by
-        simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
-
-@[simp]
-theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
-  rfl
-
-theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a • f :=
-  rfl
-
-instance [SmulCommClass S T M₂] : SmulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
-  ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
-
--- example application of this instance: if S -> T -> R are homomorphisms of commutative rings and
--- M and M₂ are R-modules then the S-module and T-module structures on Hom_R(M,M₂) are compatible.
-instance [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →ₛₗ[σ₁₂] M₂) where
-  smul_assoc := fun _ _ _ => ext fun _ => smul_assoc _ _ _
-
-instance [DistribMulAction Sᵐᵒᵖ M₂] [SmulCommClass R₂ Sᵐᵒᵖ M₂] [IsCentralScalar S M₂] :
-    IsCentralScalar S (M →ₛₗ[σ₁₂] M₂) where
-  op_smul_eq_smul := fun a b => ext fun x => op_smul_eq_smul _ _
 
 instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂) where
   one_smul := fun f => ext fun _ => one_smul _ _

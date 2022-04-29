@@ -71,8 +71,8 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ Closure s) :
   AddGroupₓ.InClosure.rec_on h
     (fun x hx =>
       match x, Monoidₓ.exists_list_of_mem_closure hx with
-      | _, ⟨L, h1, rfl⟩ => ⟨[L], List.forall_mem_singleton.2 fun r hr => Or.inl (h1 r hr), zero_addₓ _⟩)
-    ⟨[], List.forall_mem_nil _, rfl⟩
+      | _, ⟨L, h1, rfl⟩ => ⟨[L], List.forall_mem_singletonₓ.2 fun r hr => Or.inl (h1 r hr), zero_addₓ _⟩)
+    ⟨[], List.forall_mem_nilₓ _, rfl⟩
     (fun b _ ih =>
       match b, ih with
       | _, ⟨L1, h1, rfl⟩ =>
@@ -125,7 +125,7 @@ protected theorem InClosure.rec_on {C : R → Prop} {x : R} (hx : x ∈ Closure 
     rw [List.forall_mem_consₓ] at HL'
     exact hs _ HL'.1 _ (ih HL'.2)
   induction' hd with hd tl ih
-  · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
+  · exact ⟨[], List.forall_mem_nilₓ _, Or.inl rfl⟩
     
   rw [List.forall_mem_consₓ] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd

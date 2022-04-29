@@ -25,7 +25,7 @@ Finally, we use this to show unique factorization domains are integrally closed.
 -/
 
 
-open_locale Polynomial
+open Polynomial
 
 section scaleRoots
 

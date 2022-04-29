@@ -3,10 +3,10 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
+import Mathbin.Algebra.Module.Equiv
+import Mathbin.Data.Finsupp.Basic
 import Mathbin.GroupTheory.FreeAbelianGroup
 import Mathbin.GroupTheory.IsFreeGroup
-import Mathbin.Data.Finsupp.Basic
-import Mathbin.Data.Equiv.Module
 import Mathbin.LinearAlgebra.Dimension
 
 /-!
@@ -26,7 +26,7 @@ We use this to transport the notion of `support` from `finsupp` to `free_abelian
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
 variable {X : Type _}
 
@@ -132,7 +132,7 @@ theorem mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∈ a.Support ↔ c
   rw [support, Finsupp.mem_support_iff]
   exact Iff.rfl
 
-theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : (x ∉ a.Support) ↔ coeff x a = 0 := by
+theorem not_mem_support_iff (x : X) (a : FreeAbelianGroup X) : x ∉ a.Support ↔ coeff x a = 0 := by
   rw [support, Finsupp.not_mem_support_iff]
   exact Iff.rfl
 
@@ -159,7 +159,7 @@ theorem support_nsmul (k : ℕ) (h : k ≠ 0) (a : FreeAbelianGroup X) : support
   apply support_zsmul k _ a
   exact_mod_cast h
 
-open_locale Classical
+open Classical
 
 theorem support_add (a b : FreeAbelianGroup X) : support (a + b) ⊆ a.Support ∪ b.Support := by
   simp only [support, AddMonoidHom.map_add]

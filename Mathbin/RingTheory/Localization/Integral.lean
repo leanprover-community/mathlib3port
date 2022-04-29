@@ -3,7 +3,7 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 -/
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 import Mathbin.GroupTheory.MonoidLocalization
 import Mathbin.RingTheory.Algebraic
 import Mathbin.RingTheory.Ideal.LocalRing
@@ -32,7 +32,7 @@ variable {R : Type _} [CommRingₓ R] (M : Submonoid R) {S : Type _} [CommRing�
 
 variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 namespace IsLocalization
 
@@ -42,7 +42,7 @@ open Polynomial
 
 variable (M) {S} [IsLocalization M S]
 
-open_locale Classical
+open Classical
 
 /-- `coeff_integer_normalization p` gives the coefficients of the polynomial
 `integer_normalization p` -/
@@ -266,7 +266,7 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L) (inj : ∀ x, alge
       IsUnit.mk0 _
         (show algebraMap C L y ≠ 0 from fun h =>
           mem_non_zero_divisors_iff_ne_zero.mp hy
-            ((algebraMap C L).injective_iff.mp (algebra_map_injective C A L) _ h)),
+            ((injective_iff_map_eq_zero (algebraMap C L)).mp (algebra_map_injective C A L) _ h)),
     surj := fun z =>
       let ⟨x, y, hy, hxy⟩ := exists_integral_multiple (alg z) inj
       ⟨⟨mk' C (x : L) x.2, algebraMap _ _ y,
@@ -349,7 +349,7 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
             (is_unit_of_mem_non_zero_divisors
               (mem_non_zero_divisors_iff_ne_zero.2 fun h =>
                 nonZeroDivisors.ne_zero ha
-                  ((RingHom.injective_iff (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) b h)))
+                  ((injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) b h)))
         rw [Polynomial.aeval_def, ← inv_of_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff, Polynomial.eval₂_map, ←
           IsScalarTower.algebra_map_eq, ← Polynomial.aeval_def, ← IsScalarTower.algebra_map_aeval, hf₂,
           RingHom.map_zero]
@@ -360,8 +360,41 @@ theorem is_algebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alg
     obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
     use f, hf₁
     rw [← IsScalarTower.algebra_map_aeval] at hf₂
-    exact (algebraMap S K).injective_iff.1 (NoZeroSmulDivisors.algebra_map_injective _ _) _ hf₂
+    exact (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSmulDivisors.algebra_map_injective _ _) _ hf₂
     
+
+open nonZeroDivisors
+
+variable (R) {S K}
+
+/-- If the `S`-multiples of `a` are contained in some `R`-span, then `Frac(S)`-multiples of `a`
+are contained in the equivalent `Frac(R)`-span. -/
+theorem ideal_span_singleton_map_subset {L : Type _} [IsDomain R] [IsDomain S] [Field K] [Field L] [Algebra R K]
+    [Algebra R L] [Algebra S L] [IsIntegralClosure S R L] [IsFractionRing S L] [Algebra K L] [IsScalarTower R S L]
+    [IsScalarTower R K L] {a : S} {b : Set S} (alg : Algebra.IsAlgebraic R L)
+    (inj : Function.Injective (algebraMap R L)) (h : (Ideal.span ({a} : Set S) : Set S) ⊆ Submodule.span R b) :
+    (Ideal.span ({algebraMap S L a} : Set L) : Set L) ⊆ Submodule.span K (algebraMap S L '' b) := by
+  intro x hx
+  obtain ⟨x', rfl⟩ := ideal.mem_span_singleton.mp hx
+  obtain ⟨y', z', rfl⟩ := IsLocalization.mk'_surjective S⁰ x'
+  obtain ⟨y, z, hz0, yz_eq⟩ := IsIntegralClosure.exists_smul_eq_mul alg inj y' (nonZeroDivisors.coe_ne_zero z')
+  have injRS : Function.Injective (algebraMap R S) := by
+    refine' Function.Injective.of_comp (show Function.Injective (algebraMap S L ∘ algebraMap R S) from _)
+    rwa [← RingHom.coe_comp, ← IsScalarTower.algebra_map_eq]
+  have hz0' : algebraMap R S z ∈ S⁰ :=
+    map_mem_non_zero_divisors (algebraMap R S) injRS (mem_non_zero_divisors_of_ne_zero hz0)
+  have mk_yz_eq : IsLocalization.mk' L y' z' = IsLocalization.mk' L y ⟨_, hz0'⟩ := by
+    rw [Algebra.smul_def, mul_comm _ y, mul_comm _ y', ← SetLike.coe_mk (algebraMap R S z) hz0'] at yz_eq
+    exact IsLocalization.mk'_eq_of_eq yz_eq.symm
+  suffices hy : algebraMap S L (a * y) ∈ Submodule.span K (⇑(algebraMap S L) '' b)
+  · rw [mk_yz_eq, IsFractionRing.mk'_eq_div, SetLike.coe_mk, ← IsScalarTower.algebra_map_apply,
+      IsScalarTower.algebra_map_apply R K L, div_eq_mul_inv, ← mul_assoc, mul_comm, ← RingHom.map_inv, ←
+      Algebra.smul_def, ← _root_.map_mul]
+    exact (Submodule.span K _).smul_mem _ hy
+    
+  refine' Submodule.span_subset_span R K _ _
+  rw [Submodule.span_algebra_map_image_of_tower]
+  exact Submodule.mem_map_of_mem (h (ideal.mem_span_singleton.mpr ⟨y, rfl⟩))
 
 end IsFractionRing
 

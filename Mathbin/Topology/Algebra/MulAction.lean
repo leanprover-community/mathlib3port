@@ -34,7 +34,7 @@ or `filter.tendsto.smul` that provide dot-syntax access to `continuous_smul`.
 -/
 
 
-open_locale TopologicalSpace Pointwise
+open TopologicalSpace Pointwise
 
 open Filter
 
@@ -103,6 +103,10 @@ instance HasContinuousSmul.op [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X] : H
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
       this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
+
+@[to_additive]
+instance MulOpposite.has_continuous_smul : HasContinuousSmul M Xᵐᵒᵖ :=
+  ⟨MulOpposite.continuous_op.comp <| continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
 
 end HasScalar
 

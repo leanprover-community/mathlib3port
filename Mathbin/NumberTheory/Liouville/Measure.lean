@@ -26,7 +26,7 @@ Liouville number, Lebesgue measure, residual, generic property
 -/
 
 
-open_locale Filter BigOperators Ennreal TopologicalSpace Nnreal
+open Filter BigOperators Ennreal TopologicalSpace Nnreal
 
 open Filter Set Metric MeasureTheory Real
 

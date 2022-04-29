@@ -72,7 +72,7 @@ variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup
 
 open Filter List
 
-open_locale TopologicalSpace BigOperators Classical Nnreal Ennreal
+open TopologicalSpace BigOperators Classical Nnreal Ennreal
 
 /-! ### Composing formal multilinear series -/
 
@@ -438,9 +438,6 @@ theorem id_comp (p : FormalMultilinearSeries 𝕜 E F) (h : p 0 = 0) : (id 𝕜 
 
 section
 
--- this speeds up the proof below a lot, related to leanprover-community/lean#521
-attribute [-instance] Unique.subsingleton
-
 /-- If two formal multilinear series have positive radius of convergence, then the terms appearing
 in the definition of their composition are also summable (when multiplied by a suitable positive
 geometric term). -/
@@ -478,10 +475,10 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
           le_rfl _ = nnnorm (q c.length) * rq ^ n * ((∏ i, nnnorm (p (c.blocks_fun i))) * rp ^ n) * r0 ^ n :=
         by
         simp only [r, mul_powₓ]
-        ac_rfl _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl _ = Cq / 4 ^ n := by
+        ring _ ≤ Cq * Cp ^ n * r0 ^ n := mul_le_mul' (mul_le_mul' A B) le_rfl _ = Cq / 4 ^ n := by
         simp only [r0]
         field_simp [mul_powₓ, (zero_lt_one.trans_le hCp1).ne']
-        ac_rfl
+        ring
   refine' ⟨r, r_pos, Nnreal.summable_of_le I _⟩
   simp_rw [div_eq_mul_inv]
   refine' Summable.mul_left _ _

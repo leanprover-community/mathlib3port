@@ -97,7 +97,7 @@ theorem is_iso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.B
 
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) : X ≅ Y := by
-  let this' := is_iso_of_bijective _ bij <;> exact as_iso f
+  let this := is_iso_of_bijective _ bij <;> exact as_iso f
 
 end CompHaus
 
@@ -108,7 +108,7 @@ def compHausToTop : CompHaus.{u} ⥤ Top.{u} :=
 
 instance CompHaus.forget_reflects_isomorphisms : ReflectsIsomorphisms (forget CompHaus.{u}) :=
   ⟨by
-    intros A B f hf <;> exact CompHaus.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+    intro A B f hf <;> exact CompHaus.is_iso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
 
 /-- (Implementation) The object part of the compactification functor from topological spaces to
 compact Hausdorff spaces.
@@ -240,7 +240,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
 
 theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   constructor
-  · intros hf x₁ x₂ h
+  · intro hf x₁ x₂ h
     let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_of_discrete_topology⟩
     let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_of_discrete_topology⟩
     have : g₁ ≫ f = g₂ ≫ f := by

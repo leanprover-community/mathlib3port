@@ -34,7 +34,7 @@ variable {α : Type u} {β : Type v}
 
 open Set Function
 
-open_locale Classical BigOperators Pointwise
+open Classical BigOperators Pointwise
 
 /-- A (left) ideal in a semiring `R` is an additive submonoid `s` such that
 `a * b ∈ s` whenever `b ∈ s`. If `R` is a ring, then `s` is an additive subgroup.  -/
@@ -231,7 +231,7 @@ theorem IsMaximal.ne_top {I : Ideal α} (h : I.IsMaximal) : I ≠ ⊤ :=
   (is_maximal_def.1 h).1
 
 theorem is_maximal_iff {I : Ideal α} :
-    I.IsMaximal ↔ ((1 : α) ∉ I) ∧ ∀ J : Ideal α x, I ≤ J → (x ∉ I) → x ∈ J → (1 : α) ∈ J :=
+    I.IsMaximal ↔ (1 : α) ∉ I ∧ ∀ J : Ideal α x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans <|
     and_congr I.ne_top_iff_one <|
       forall_congrₓ fun J => by
@@ -512,17 +512,17 @@ namespace Ideal
 
 variable [Ringₓ α] (I : Ideal α) {a b : α}
 
-theorem neg_mem_iff : -a ∈ I ↔ a ∈ I :=
-  I.neg_mem_iff
+protected theorem neg_mem_iff : -a ∈ I ↔ a ∈ I :=
+  neg_mem_iff
 
-theorem add_mem_iff_left : b ∈ I → (a + b ∈ I ↔ a ∈ I) :=
+protected theorem add_mem_iff_left : b ∈ I → (a + b ∈ I ↔ a ∈ I) :=
   I.add_mem_iff_left
 
-theorem add_mem_iff_right : a ∈ I → (a + b ∈ I ↔ b ∈ I) :=
+protected theorem add_mem_iff_right : a ∈ I → (a + b ∈ I ↔ b ∈ I) :=
   I.add_mem_iff_right
 
 protected theorem sub_mem : a ∈ I → b ∈ I → a - b ∈ I :=
-  I.sub_mem
+  sub_mem
 
 theorem mem_span_insert' {s : Set α} {x y} : x ∈ span (insert y s) ↔ ∃ a, x + a * y ∈ span s :=
   Submodule.mem_span_insert'

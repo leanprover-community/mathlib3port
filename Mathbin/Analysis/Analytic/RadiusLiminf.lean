@@ -18,7 +18,7 @@ would create a circular dependency once we redefine `exp` using `formal_multilin
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F]
 
-open_locale TopologicalSpace Classical BigOperators Nnreal Ennreal
+open TopologicalSpace Classical BigOperators Nnreal Ennreal
 
 open Filter Asymptotics
 

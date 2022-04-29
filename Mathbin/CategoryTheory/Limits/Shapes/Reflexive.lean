@@ -120,12 +120,12 @@ attribute [instance] has_coreflexive_equalizers.has_eq
 
 theorem has_coequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
     (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g := by
-  let this' := is_reflexive_pair.mk' r rf rg
+  let this := is_reflexive_pair.mk' r rf rg
   infer_instance
 
 theorem has_equalizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B} (r : B ⟶ A)
     (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g := by
-  let this' := is_coreflexive_pair.mk' r fr gr
+  let this := is_coreflexive_pair.mk' r fr gr
   infer_instance
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/

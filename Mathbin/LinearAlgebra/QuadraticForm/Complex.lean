@@ -17,7 +17,7 @@ a sum of squares.
 
 namespace QuadraticForm
 
-open_locale BigOperators
+open BigOperators
 
 open Finset
 

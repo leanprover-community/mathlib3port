@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 -/
-import Mathbin.LinearAlgebra.Basic
+import Mathbin.LinearAlgebra.Span
 
 /-!
 # Quotients by submodules
@@ -25,13 +25,19 @@ variable (p p' : Submodule R M)
 
 open LinearMap
 
-/-- The equivalence relation associated to a submodule `p`, defined by `x ≈ y` iff `y - x ∈ p`. -/
--- TODO(Mario): Factor through add_subgroup
+/-- The equivalence relation associated to a submodule `p`, defined by `x ≈ y` iff `-x + y ∈ p`.
+
+Note this is equivalent to `y - x ∈ p`, but defined this way to be be defeq to the `add_subgroup`
+version, where commutativity can't be assumed. -/
 def quotientRel : Setoidₓ M :=
-  ⟨fun x y => x - y ∈ p, fun x => by
-    simp , fun x y h => by
-    simpa using neg_mem _ h, fun x y z h₁ h₂ => by
-    simpa [sub_eq_add_neg, add_left_commₓ, add_assocₓ] using add_mem _ h₁ h₂⟩
+  QuotientAddGroup.leftRel p.toAddSubgroup
+
+theorem quotient_rel_r_def {x y : M} : @Setoidₓ.R _ p.quotientRel x y ↔ x - y ∈ p :=
+  Iff.trans
+    (by
+      rw [sub_eq_add_neg, neg_add, neg_negₓ]
+      rfl)
+    neg_mem_iff
 
 /-- The quotient of a module `M` by a submodule `p ⊆ M`. -/
 instance hasQuotient : HasQuotient M (Submodule R M) :=
@@ -56,8 +62,11 @@ theorem mk'_eq_mk {p : Submodule R M} (x : M) : (Quotientₓ.mk' x : M ⧸ p) = 
 theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : M ⧸ p) = mk x :=
   rfl
 
-protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
+protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
   Quotientₓ.eq'
+
+protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
+  p.trans p.quotient_rel_r_def
 
 instance : Zero (M ⧸ p) :=
   ⟨mk 0⟩
@@ -73,87 +82,20 @@ theorem mk_zero : mk 0 = (0 : M ⧸ p) :=
 theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by
   simpa using (Quotientₓ.eq p : mk x = 0 ↔ _)
 
-instance : Add (M ⧸ p) :=
-  ⟨fun a b =>
-    (Quotientₓ.liftOn₂' a b fun a b => mk (a + b)) fun a₁ a₂ b₁ b₂ h₁ h₂ =>
-      (Quotient.eq p).2 <| by
-        simpa [sub_eq_add_neg, add_left_commₓ, add_commₓ] using add_mem p h₁ h₂⟩
+instance addCommGroup : AddCommGroupₓ (M ⧸ p) :=
+  QuotientAddGroup.addCommGroup p.toAddSubgroup
 
 @[simp]
 theorem mk_add : (mk (x + y) : M ⧸ p) = mk x + mk y :=
   rfl
 
-instance : Neg (M ⧸ p) :=
-  ⟨fun a =>
-    (Quotientₓ.liftOn' a fun a => mk (-a)) fun a b h =>
-      (Quotient.eq p).2 <| by
-        simpa using neg_mem p h⟩
-
 @[simp]
 theorem mk_neg : (mk (-x) : M ⧸ p) = -mk x :=
   rfl
 
-instance : Sub (M ⧸ p) :=
-  ⟨fun a b =>
-    (Quotientₓ.liftOn₂' a b fun a b => mk (a - b)) fun a₁ a₂ b₁ b₂ h₁ h₂ =>
-      (Quotient.eq p).2 <| by
-        simpa [sub_eq_add_neg, add_left_commₓ, add_commₓ] using add_mem p h₁ (neg_mem p h₂)⟩
-
 @[simp]
 theorem mk_sub : (mk (x - y) : M ⧸ p) = mk x - mk y :=
   rfl
-
-instance addCommGroup : AddCommGroupₓ (M ⧸ p) where
-  zero := (0 : M ⧸ p)
-  add := (· + ·)
-  neg := Neg.neg
-  sub := Sub.sub
-  add_assoc := by
-    rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
-    simp only [← mk_add p, quot_mk_eq_mk, add_assocₓ]
-  zero_add := by
-    rintro ⟨x⟩
-    simp only [← mk_zero p, ← mk_add p, quot_mk_eq_mk, zero_addₓ]
-  add_zero := by
-    rintro ⟨x⟩
-    simp only [← mk_zero p, ← mk_add p, add_zeroₓ, quot_mk_eq_mk]
-  add_comm := by
-    rintro ⟨x⟩ ⟨y⟩
-    simp only [← mk_add p, quot_mk_eq_mk, add_commₓ]
-  add_left_neg := by
-    rintro ⟨x⟩
-    simp only [← mk_zero p, ← mk_add p, ← mk_neg p, quot_mk_eq_mk, add_left_negₓ]
-  sub_eq_add_neg := by
-    rintro ⟨x⟩ ⟨y⟩
-    simp only [← mk_add p, ← mk_neg p, ← mk_sub p, sub_eq_add_neg, quot_mk_eq_mk]
-  nsmul := fun n x =>
-    (Quotientₓ.liftOn' x fun x => mk (n • x)) fun x y h =>
-      (Quotient.eq p).2 <| by
-        simpa [smul_sub] using smul_of_tower_mem p n h
-  nsmul_zero' := by
-    rintro ⟨⟩
-    simp only [mk_zero, quot_mk_eq_mk, zero_smul]
-    rfl
-  nsmul_succ' := by
-    rintro n ⟨⟩
-    simp only [Nat.succ_eq_one_add, add_nsmul, mk_add, quot_mk_eq_mk, one_nsmul]
-    rfl
-  zsmul := fun n x =>
-    (Quotientₓ.liftOn' x fun x => mk (n • x)) fun x y h =>
-      (Quotient.eq p).2 <| by
-        simpa [smul_sub] using smul_of_tower_mem p n h
-  zsmul_zero' := by
-    rintro ⟨⟩
-    simp only [mk_zero, quot_mk_eq_mk, zero_smul]
-    rfl
-  zsmul_succ' := by
-    rintro n ⟨⟩
-    simp [Nat.succ_eq_add_one, add_nsmul, mk_add, quot_mk_eq_mk, one_nsmul, add_smul, add_commₓ]
-    rfl
-  zsmul_neg' := by
-    rintro n ⟨x⟩
-    simp_rw [zsmul_neg_succ_of_nat, coe_nat_zsmul]
-    rfl
 
 section HasScalar
 
@@ -277,15 +219,10 @@ theorem linear_map_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp
 
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
 vanishing on `p`, as a linear map. -/
-def liftq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ f.ker) : M ⧸ p →ₛₗ[τ₁₂] M₂ where
-  toFun := fun x =>
-    (Quotientₓ.liftOn' x f) fun ab : a - b ∈ p =>
-      eq_of_sub_eq_zero <| by
-        simpa using h ab
-  map_add' := by
-    rintro ⟨x⟩ ⟨y⟩ <;> exact f.map_add x y
-  map_smul' := by
-    rintro a ⟨x⟩ <;> exact f.map_smulₛₗ a x
+def liftq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ f.ker) : M ⧸ p →ₛₗ[τ₁₂] M₂ :=
+  { QuotientAddGroup.lift p.toAddSubgroup f.toAddMonoidHom h with
+    map_smul' := by
+      rintro a ⟨x⟩ <;> exact f.map_smulₛₗ a x }
 
 @[simp]
 theorem liftq_apply (f : M →ₛₗ[τ₁₂] M₂) {h} (x : M) : p.liftq f h (Quotient.mk x) = f x :=

@@ -50,7 +50,7 @@ Uniform limit, uniform convergence, tends uniformly to
 
 noncomputable section
 
-open_locale TopologicalSpace Classical uniformity Filter
+open TopologicalSpace Classical uniformity Filter
 
 open Set Filter
 
@@ -101,6 +101,13 @@ theorem tendsto_uniformly_iff_tendsto {F : ι → α → β} {f : α → β} {p 
     TendstoUniformly F f p ↔ Tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) :=
   forall₂_congrₓ fun u u_in => by
     simp [mem_map, Filter.Eventually, mem_prod_top]
+
+/-- Uniform converence implies pointwise convergence. -/
+theorem TendstoUniformly.tendsto_at (h : TendstoUniformly F f p) (x : α) : Tendsto (fun n => F n x) p <| 𝓝 (f x) :=
+  Uniform.tendsto_nhds_right.mpr fun u hu =>
+    mem_map.mpr <| by
+      filter_upwards [h u hu]
+      tauto
 
 theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p Univ ↔ TendstoUniformly F f p := by
   simp [TendstoUniformlyOn, TendstoUniformly]
@@ -195,6 +202,52 @@ theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace �
   UniformContinuousOn.tendsto_uniformly univ_mem <| by
     rwa [univ_prod_univ, uniform_continuous_on_univ]
 
+section SeqTendsto
+
+theorem tendsto_uniformly_on_of_seq_tendsto_uniformly_on {l : Filter ι} [l.IsCountablyGenerated]
+    (h : ∀ u : ℕ → ι, Tendsto u atTop l → TendstoUniformlyOn (fun n => F (u n)) f atTop s) :
+    TendstoUniformlyOn F f l s := by
+  rw [tendsto_uniformly_on_iff_tendsto, tendsto_iff_seq_tendsto]
+  intro u hu
+  rw [tendsto_prod_iff'] at hu
+  specialize h (fun n => (u n).fst) hu.1
+  rw [tendsto_uniformly_on_iff_tendsto] at h
+  have :
+    (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ u =
+      (fun q : ℕ × α => (f q.snd, F ((fun n : ℕ => (u n).fst) q.fst) q.snd)) ∘ fun n => (n, (u n).snd) :=
+    by
+    ext1 n
+    simp
+  rw [this]
+  refine' tendsto.comp h _
+  rw [tendsto_prod_iff']
+  exact ⟨tendsto_id, hu.2⟩
+
+theorem TendstoUniformlyOn.seq_tendsto_uniformly_on {l : Filter ι} (h : TendstoUniformlyOn F f l s) (u : ℕ → ι)
+    (hu : Tendsto u atTop l) : TendstoUniformlyOn (fun n => F (u n)) f atTop s := by
+  rw [tendsto_uniformly_on_iff_tendsto] at h⊢
+  have :
+    (fun q : ℕ × α => (f q.snd, F (u q.fst) q.snd)) =
+      (fun q : ι × α => (f q.snd, F q.fst q.snd)) ∘ fun p : ℕ × α => (u p.fst, p.snd) :=
+    by
+    ext1 x
+    simp
+  rw [this]
+  refine' h.comp _
+  rw [tendsto_prod_iff']
+  exact ⟨hu.comp tendsto_fst, tendsto_snd⟩
+
+theorem tendsto_uniformly_on_iff_seq_tendsto_uniformly_on {l : Filter ι} [l.IsCountablyGenerated] :
+    TendstoUniformlyOn F f l s ↔ ∀ u : ℕ → ι, Tendsto u atTop l → TendstoUniformlyOn (fun n => F (u n)) f atTop s :=
+  ⟨TendstoUniformlyOn.seq_tendsto_uniformly_on, tendsto_uniformly_on_of_seq_tendsto_uniformly_on⟩
+
+theorem tendsto_uniformly_iff_seq_tendsto_uniformly {l : Filter ι} [l.IsCountablyGenerated] :
+    TendstoUniformly F f l ↔ ∀ u : ℕ → ι, Tendsto u atTop l → TendstoUniformly (fun n => F (u n)) f atTop := by
+  simp_rw [← tendsto_uniformly_on_univ]
+  exact tendsto_uniformly_on_iff_seq_tendsto_uniformly_on
+
+end SeqTendsto
+
 variable [TopologicalSpace α]
 
 /-- A sequence of functions `Fₙ` converges locally uniformly on a set `s` to a limiting function
@@ -229,6 +282,19 @@ theorem tendsto_locally_uniformly_on_iff_tendsto_locally_uniformly_comp_coe :
             (hu₂
               (by
                 simp [hy.1]))⟩
+    
+
+theorem tendsto_locally_uniformly_iff_forall_tendsto :
+    TendstoLocallyUniformly F f p ↔ ∀ x, Tendsto (fun y : ι × α => (f y.2, F y.1 y.2)) (p ×ᶠ 𝓝 x) (𝓤 β) := by
+  simp only [TendstoLocallyUniformly, Filter.forall_in_swap, tendsto_def, mem_prod_iff, Set.prod_subset_iff]
+  refine' forall₃_congrₓ fun x u hu => ⟨_, _⟩
+  · rintro ⟨n, hn, hp⟩
+    exact ⟨_, hp, n, hn, fun i hi a ha => hi a ha⟩
+    
+  · rintro ⟨I, hI, n, hn, hu⟩
+    exact
+      ⟨n, hn, by
+        filter_upwards [hI] using hu⟩
     
 
 protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :

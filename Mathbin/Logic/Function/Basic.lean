@@ -68,6 +68,9 @@ theorem hfunext {α α' : Sort u} {β : α → Sort v} {β' : α' → Sort v} {f
 theorem funext_iffₓ {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
   Iff.intro (fun h a => h ▸ rfl) funext
 
+theorem ne_iff {β : α → Sort _} {f₁ f₂ : ∀ a, β a} : f₁ ≠ f₂ ↔ ∃ a, f₁ a ≠ f₂ a :=
+  funext_iffₓ.Not.trans not_forall
+
 protected theorem Bijective.injective {f : α → β} (hf : Bijective f) : Injective f :=
   hf.1
 
@@ -716,22 +719,34 @@ end Involutive
 /-- The property of a binary function `f : α → β → γ` being injective.
 Mathematically this should be thought of as the corresponding function `α × β → γ` being injective.
 -/
-@[reducible]
 def Injective2 {α β γ} (f : α → β → γ) : Prop :=
   ∀ ⦃a₁ a₂ b₁ b₂⦄, f a₁ b₁ = f a₂ b₂ → a₁ = a₂ ∧ b₁ = b₂
 
 namespace Injective2
 
-variable {α β γ : Type _} (f : α → β → γ)
+variable {α β γ : Sort _} {f : α → β → γ}
 
-protected theorem left (hf : Injective2 f) ⦃a₁ a₂ b₁ b₂⦄ (h : f a₁ b₁ = f a₂ b₂) : a₁ = a₂ :=
-  (hf h).1
+/-- A binary injective function is injective when only the left argument varies. -/
+protected theorem left (hf : Injective2 f) (b : β) : Function.Injective fun a => f a b := fun a₁ a₂ h => (hf h).left
 
-protected theorem right (hf : Injective2 f) ⦃a₁ a₂ b₁ b₂⦄ (h : f a₁ b₁ = f a₂ b₂) : b₁ = b₂ :=
-  (hf h).2
+/-- A binary injective function is injective when only the right argument varies. -/
+protected theorem right (hf : Injective2 f) (a : α) : Function.Injective (f a) := fun a₁ a₂ h => (hf h).right
 
-theorem eq_iff (hf : Injective2 f) ⦃a₁ a₂ b₁ b₂⦄ : f a₁ b₁ = f a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨fun h => hf h, fun ⟨h1, h2⟩ => congr_arg2ₓ f h1 h2⟩
+protected theorem uncurry {α β γ : Type _} {f : α → β → γ} (hf : Injective2 f) : Function.Injective (uncurry f) :=
+  fun h => And.elimₓ (hf h) (congr_arg2ₓ _)
+
+/-- As a map from the left argument to a unary function, `f` is injective. -/
+theorem left' (hf : Injective2 f) [Nonempty β] : Function.Injective f := fun a₁ a₂ h =>
+  let ⟨b⟩ := ‹Nonempty β›
+  hf.left b <| (congr_funₓ h b : _)
+
+/-- As a map from the right argument to a unary function, `f` is injective. -/
+theorem right' (hf : Injective2 f) [Nonempty α] : Function.Injective fun b a => f a b := fun b₁ b₂ h =>
+  let ⟨a⟩ := ‹Nonempty α›
+  hf.right a <| (congr_funₓ h a : _)
+
+theorem eq_iff (hf : Injective2 f) {a₁ a₂ b₁ b₂} : f a₁ b₁ = f a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+  ⟨fun h => hf h, And.ndrec <| congr_arg2ₓ f⟩
 
 end Injective2
 

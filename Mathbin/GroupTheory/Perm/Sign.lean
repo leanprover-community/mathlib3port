@@ -25,7 +25,7 @@ universe u v
 
 open Equivₓ Function Fintype Finset
 
-open_locale BigOperators
+open BigOperators
 
 variable {α : Type u} {β : Type v}
 
@@ -74,7 +74,7 @@ theorem perm_inv_maps_to_iff_maps_to {f : Perm α} {s : Set α} [Fintype s] :
 
 theorem perm_inv_on_of_perm_on_fintype {f : Perm α} {p : α → Prop} [Fintype { x // p x }] (h : ∀ x, p x → p (f x))
     {x : α} (hx : p x) : p (f⁻¹ x) := by
-  let this' : Fintype ↥(show Set α from p) := ‹Fintype { x // p x }›
+  let this : Fintype ↥(show Set α from p) := ‹Fintype { x // p x }›
   exact perm_inv_maps_to_of_maps_to f h hx
 
 /-- If the permutation `f` maps `{x // p x}` into itself, then this returns the permutation
@@ -193,7 +193,7 @@ def swapFactorsAux :
     ⟨[],
       Equivₓ.ext fun x => by
         rw [List.prod_nil]
-        exact (not_not.1 (mt h (List.not_mem_nil _))).symm,
+        exact (not_not.1 (mt h (List.not_mem_nilₓ _))).symm,
       by
       simp ⟩
   | x :: l => fun f h =>
@@ -449,7 +449,7 @@ def signAux2 : List α → Perm α → ℤˣ
 theorem sign_aux_eq_sign_aux2 {n : ℕ} :
     ∀ l : List α f : Perm α e : α ≃ Finₓ n h : ∀ x, f x ≠ x → x ∈ l, signAux ((e.symm.trans f).trans e) = signAux2 l f
   | [], f, e, h => by
-    have : f = 1 := Equivₓ.ext fun y => not_not.1 (mt (h y) (List.not_mem_nil _))
+    have : f = 1 := Equivₓ.ext fun y => not_not.1 (mt (h y) (List.not_mem_nilₓ _))
     rw [this, one_def, Equivₓ.trans_refl, Equivₓ.symm_trans_self, ← one_def, sign_aux_one, sign_aux2]
   | x :: l, f, e, h => by
     rw [sign_aux2]
@@ -620,7 +620,7 @@ theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) :
     have hsl : ∀, ∀ a ∈ l.map s, ∀, a = (-1 : ℤˣ) := fun a ha =>
       let ⟨g, hg⟩ := List.mem_mapₓ.1 ha
       hg.2 ▸ this (hl₂ _ hg.1)
-    rw [← hl₁, ← l.prod_hom s, List.eq_repeat'.2 hsl, List.length_map, List.prod_repeat, sign_prod_list_swap hl₂]
+    rw [← hl₁, ← l.prod_hom s, List.eq_repeat'.2 hsl, List.length_mapₓ, List.prod_repeat, sign_prod_list_swap hl₂]
 
 theorem sign_subtype_perm (f : Perm α) {p : α → Prop} [DecidablePred p] (h₁ : ∀ x, p x ↔ p (f x))
     (h₂ : ∀ x, f x ≠ x → p x) : sign (subtypePerm f h₁) = sign f := by
@@ -631,7 +631,7 @@ theorem sign_subtype_perm (f : Perm α) {p : α → Prop} [DecidablePred p] (h�
   have hl'₂ : (l.1.map ofSubtype).Prod = f := by
     rw [l.1.prod_hom of_subtype, l.2.1, of_subtype_subtype_perm _ h₂]
   conv => congr rw [← l.2.1]skip rw [← hl'₂]
-  rw [sign_prod_list_swap l.2.2, sign_prod_list_swap hl', List.length_map]
+  rw [sign_prod_list_swap l.2.2, sign_prod_list_swap hl', List.length_mapₓ]
 
 @[simp]
 theorem sign_of_subtype {p : α → Prop} [DecidablePred p] (f : Perm (Subtype p)) : sign (ofSubtype f) = sign f := by
@@ -684,13 +684,13 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → Perm 
   -- but we have to keep track of whether we already passed `a` in the list.
   suffices
     a ∈ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, σ a b) ∨
-      (a ∉ l) ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, b)
+      a ∉ l ∧ (l.map fun a => prod_extend_right a (σ a)).Prod (a, b) = (a, b)
     by
     obtain ⟨_, prod_eq⟩ := Or.resolve_right this (not_and.mpr fun h _ => h (mem_l a))
     rw [prod_eq, prod_congr_right_apply]
   clear mem_l
   induction' l with a' l ih
-  · refine' Or.inr ⟨List.not_mem_nil _, _⟩
+  · refine' Or.inr ⟨List.not_mem_nilₓ _, _⟩
     rw [List.map_nil, List.prod_nil, one_apply]
     
   rw [List.map_cons, List.prod_cons, mul_apply]

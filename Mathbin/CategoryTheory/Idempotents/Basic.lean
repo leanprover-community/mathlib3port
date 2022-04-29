@@ -74,9 +74,10 @@ theorem is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent :
               · erw [assoc, h₂, ← limits.fork.condition s, comp_id]
                 
               · intro m hm
-                erw [← hm]
-                simp only [← hm, assoc, fork.ι_eq_app_zero, fork.of_ι_π_app, h₁]
-                erw [comp_id m]
+                rw [fork.ι_of_ι] at hm
+                rw [← hm]
+                simp only [← hm, assoc, h₁]
+                exact (comp_id m).symm
                  }⟩
     
   · intro h
@@ -120,7 +121,7 @@ theorem is_idempotent_complete_iff_idempotents_have_kernels [Preadditive C] :
     
   · intro h X p hp
     have : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
-    apply preadditive.has_limit_parallel_pair
+    apply preadditive.has_equalizer_of_has_kernel
     
 
 /-- An abelian category is idempotent complete. -/

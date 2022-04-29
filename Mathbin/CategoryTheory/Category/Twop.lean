@@ -40,6 +40,10 @@ attribute [protected] Twop.X
 def of {X : Type _} (to_two_pointing : TwoPointing X) : Twop :=
   ⟨X, to_two_pointing⟩
 
+@[simp]
+theorem coe_of {X : Type _} (to_two_pointing : TwoPointing X) : ↥(of to_two_pointing) = X :=
+  rfl
+
 alias of ← TwoPointing.twop
 
 instance : Inhabited Twop :=
@@ -49,6 +53,10 @@ instance : Inhabited Twop :=
 distinct. -/
 def toBipointed (X : Twop) : Bipointed :=
   X.toTwoPointing.toProd.Bipointed
+
+@[simp]
+theorem coe_to_Bipointed (X : Twop) : ↥X.toBipointed = ↥X :=
+  rfl
 
 instance largeCategory : LargeCategory Twop :=
   InducedCategory.category toBipointed

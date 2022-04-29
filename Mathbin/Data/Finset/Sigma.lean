@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yaël Dillies, Bhavik Mehta
 -/
 import Mathbin.Data.Finset.Lattice
+import Mathbin.Data.Set.Sigma
 
 /-!
 # Finite sets in a sigma type
@@ -37,13 +38,18 @@ variable {α : ι → Type _} {β : Type _} (s s₁ s₂ : Finset ι) (t t₁ t�
 
 /-- `s.sigma t` is the finset of dependent pairs `⟨i, a⟩` such that `i ∈ s` and `a ∈ t i`. -/
 protected def sigma : Finset (Σi, α i) :=
-  ⟨_, nodup_sigma s.2 fun i => (t i).2⟩
+  ⟨_, s.Nodup.Sigma fun i => (t i).Nodup⟩
 
 variable {s s₁ s₂ t t₁ t₂}
 
 @[simp]
 theorem mem_sigma {a : Σi, α i} : a ∈ s.Sigma t ↔ a.1 ∈ s ∧ a.2 ∈ t a.1 :=
   mem_sigma
+
+@[simp, norm_cast]
+theorem coe_sigma (s : Finset ι) (t : ∀ i, Finset (α i)) :
+    (s.Sigma t : Set (Σi, α i)) = (s : Set ι).Sigma fun i => t i :=
+  Set.ext fun _ => mem_sigma
 
 @[simp]
 theorem sigma_nonempty : (s.Sigma t).Nonempty ↔ ∃ i ∈ s, (t i).Nonempty := by

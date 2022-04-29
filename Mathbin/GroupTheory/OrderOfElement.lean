@@ -3,11 +3,10 @@ Copyright (c) 2018 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 -/
+import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
-import Mathbin.Algebra.IterateHom
-import Mathbin.Algebra.Pointwise
+import Mathbin.Data.Set.Pointwise
 import Mathbin.Dynamics.PeriodicPts
-import Mathbin.GroupTheory.Coset
 import Mathbin.GroupTheory.QuotientGroup
 
 /-!
@@ -20,7 +19,7 @@ This file defines the order of an element of a finite group. For a finite group 
 
 * `is_of_fin_order` is a predicate on an element `x` of a monoid `G` saying that `x` is of finite
   order.
-* `is_of_fin_add_order` is the additive analogue of `is_of_find_order`.
+* `is_of_fin_add_order` is the additive analogue of `is_of_fin_order`.
 * `order_of x` defines the order of an element `x` of a monoid `G`, by convention its value is `0`
   if `x` has infinite order.
 * `add_order_of` is the additive analogue of `order_of`.
@@ -32,7 +31,7 @@ order of an element
 
 open Function Nat
 
-open_locale Pointwise
+open Pointwise
 
 universe u v
 
@@ -46,7 +45,7 @@ variable [Monoidₓ G] [AddMonoidₓ A]
 
 section IsOfFinOrder
 
-@[to_additive is_periodic_pt_add_iff_nsmul_eq_zero]
+@[to_additive]
 theorem is_periodic_pt_mul_iff_pow_eq_one (x : G) : IsPeriodicPt ((· * ·) x) n 1 ↔ x ^ n = 1 := by
   rw [is_periodic_pt, is_fixed_pt, mul_left_iterate, mul_oneₓ]
 
@@ -72,22 +71,34 @@ theorem is_of_fin_order_iff_pow_eq_one (x : G) : IsOfFinOrder x ↔ ∃ n, 0 < n
   convert Iff.rfl
   simp [is_periodic_pt_mul_iff_pow_eq_one]
 
-/-- Elements of finite order are of finite order in subgroups.-/
+/-- Elements of finite order are of finite order in submonoids.-/
 @[to_additive is_of_fin_add_order_iff_coe]
-theorem is_of_fin_order_iff_coe {G : Type u} [Groupₓ G] (H : Subgroup G) (x : H) :
-    IsOfFinOrder x ↔ IsOfFinOrder (x : G) := by
+theorem is_of_fin_order_iff_coe (H : Submonoid G) (x : H) : IsOfFinOrder x ↔ IsOfFinOrder (x : G) := by
   rw [is_of_fin_order_iff_pow_eq_one, is_of_fin_order_iff_pow_eq_one]
   norm_cast
 
-variable ()
+/-- The image of an element of finite order has finite order. -/
+@[to_additive AddMonoidHom.is_of_fin_order
+      "The image of an element of finite additive order has finite additive order."]
+theorem MonoidHom.is_of_fin_order {H : Type v} [Monoidₓ H] (f : G →* H) {x : G} (h : IsOfFinOrder x) :
+    IsOfFinOrder <| f x :=
+  (is_of_fin_order_iff_pow_eq_one _).mpr <| by
+    rcases(is_of_fin_order_iff_pow_eq_one _).mp h with ⟨n, npos, hn⟩
+    exact
+      ⟨n, npos, by
+        rw [← f.map_pow, hn, f.map_one]⟩
 
-/-- Elements of finite order are of finite order in quotient groups.-/
-@[to_additive is_of_fin_add_order_iff_quotient]
-theorem IsOfFinOrder.quotient {G : Type u} [Groupₓ G] (N : Subgroup G) [N.Normal] (x : G) :
-    IsOfFinOrder x → IsOfFinOrder (x : G ⧸ N) := by
-  rw [is_of_fin_order_iff_pow_eq_one, is_of_fin_order_iff_pow_eq_one]
-  rintro ⟨n, ⟨npos, hn⟩⟩
-  exact ⟨n, ⟨npos, (QuotientGroup.con N).Eq.mpr <| hn ▸ (QuotientGroup.con N).Eq.mp rfl⟩⟩
+/-- If a direct product has finite order then so does each component. -/
+@[to_additive "If a direct product has finite additive order then so does each component."]
+theorem IsOfFinOrder.apply {η : Type _} {Gs : η → Type _} [∀ i, Monoidₓ (Gs i)] {x : ∀ i, Gs i} (h : IsOfFinOrder x) :
+    ∀ i, IsOfFinOrder (x i) := by
+  rcases(is_of_fin_order_iff_pow_eq_one _).mp h with ⟨n, npos, hn⟩
+  exact fun _ => (is_of_fin_order_iff_pow_eq_one _).mpr ⟨n, npos, (congr_funₓ hn.symm _).symm⟩
+
+/-- 1 is of finite order in any monoid. -/
+@[to_additive "0 is of finite order in any additive monoid."]
+theorem is_of_fin_order_one : IsOfFinOrder (1 : G) :=
+  (is_of_fin_order_iff_pow_eq_one 1).mpr ⟨1, one_pos, one_pow 1⟩
 
 end IsOfFinOrder
 
@@ -127,6 +138,11 @@ theorem order_of_eq_zero_iff : orderOf x = 0 ↔ ¬IsOfFinOrder x :=
 theorem order_of_eq_zero_iff' : orderOf x = 0 ↔ ∀ n : ℕ, 0 < n → x ^ n ≠ 1 := by
   simp_rw [order_of_eq_zero_iff, is_of_fin_order_iff_pow_eq_one, not_exists, not_and]
 
+/-- A group element has finite order iff its order is positive. -/
+@[to_additive add_order_of_pos_iff "A group element has finite additive order iff its order is positive."]
+theorem order_of_pos_iff : 0 < orderOf x ↔ IsOfFinOrder x := by
+  rwa [iff_not_comm.mp order_of_eq_zero_iff, pos_iff_ne_zero]
+
 @[to_additive nsmul_ne_zero_of_lt_add_order_of']
 theorem pow_ne_one_of_lt_order_of' (n0 : n ≠ 0) (h : n < orderOf x) : x ^ n ≠ 1 := fun j =>
   not_is_periodic_pt_of_pos_of_lt_minimal_period n0 h ((is_periodic_pt_mul_iff_pow_eq_one x).mpr j)
@@ -163,7 +179,13 @@ theorem order_of_dvd_iff_pow_eq_one {n : ℕ} : orderOf x ∣ n ↔ x ^ n = 1 :=
   ⟨fun h => by
     rw [pow_eq_mod_order_of, Nat.mod_eq_zero_of_dvdₓ h, pow_zeroₓ], order_of_dvd_of_pow_eq_one⟩
 
-@[to_additive exists_nsmul_eq_self_of_coprime]
+@[to_additive add_order_of_map_dvd]
+theorem order_of_map_dvd {H : Type _} [Monoidₓ H] (ψ : G →* H) (x : G) : orderOf (ψ x) ∣ orderOf x := by
+  apply order_of_dvd_of_pow_eq_one
+  rw [← map_pow, pow_order_of_eq_one]
+  apply map_one
+
+@[to_additive]
 theorem exists_pow_eq_self_of_coprime (h : n.Coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x := by
   by_cases' h0 : orderOf x = 0
   · rw [h0, coprime_zero_right] at h
@@ -221,7 +243,7 @@ theorem order_of_injective {H : Type _} [Monoidₓ H] (f : G →* H) (hf : Funct
 theorem order_of_submonoid {H : Submonoid G} (y : H) : orderOf (y : G) = orderOf y :=
   order_of_injective H.Subtype Subtype.coe_injective y
 
-@[to_additive order_of_add_units]
+@[to_additive]
 theorem order_of_units {y : Gˣ} : orderOf (y : G) = orderOf y :=
   order_of_injective (Units.coeHom G) Units.ext y
 
@@ -255,6 +277,13 @@ theorem Commute.order_of_mul_eq_mul_order_of_of_coprime {x y : G} (h : Commute x
   convert h.function_commute_mul_left.minimal_period_of_comp_eq_mul_of_coprime hco
   simp only [orderOf, comp_mul_left]
 
+/-- Commuting elements of finite order are closed under multiplication. -/
+@[to_additive "Commuting elements of finite additive order are closed under addition."]
+theorem Commute.is_of_fin_order_mul {x} (h : Commute x y) (hx : IsOfFinOrder x) (hy : IsOfFinOrder y) :
+    IsOfFinOrder (x * y) :=
+  order_of_pos_iff.mp <|
+    pos_of_dvd_of_posₓ h.order_of_mul_dvd_mul_order_of <| mul_pos (order_of_pos' hx) (order_of_pos' hy)
+
 section PPrime
 
 variable {a x n} {p : ℕ} [hp : Fact p.Prime]
@@ -287,26 +316,11 @@ section CancelMonoid
 
 variable [LeftCancelMonoid G] (x y)
 
-@[to_additive nsmul_injective_aux]
-theorem pow_injective_aux (h : n ≤ m) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
-  by_contradiction fun ne : n ≠ m =>
-    have h₁ : m - n > 0 :=
-      Nat.pos_of_ne_zeroₓ
-        (by
-          simp [tsub_eq_iff_eq_add_of_le h, Ne.symm])
-    have h₂ : m = n + (m - n) := (add_tsub_cancel_of_le h).symm
-    have h₃ : x ^ (m - n) = 1 := by
-      rw [h₂, pow_addₓ] at eq
-      apply mul_left_cancelₓ
-      convert Eq.symm
-      exact mul_oneₓ (x ^ n)
-    have le : orderOf x ≤ m - n := order_of_le_of_pow_eq_one h₁ h₃
-    have lt : m - n < orderOf x := (tsub_lt_iff_left h).mpr <| Nat.lt_add_left _ _ _ hm
-    lt_irreflₓ _ (le.trans_lt lt)
-
 @[to_additive nsmul_injective_of_lt_add_order_of]
 theorem pow_injective_of_lt_order_of (hn : n < orderOf x) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
-  (le_totalₓ n m).elim (fun h => pow_injective_aux x h hm Eq) fun h => (pow_injective_aux x h hn Eq.symm).symm
+  iterate_injective_of_lt_minimal_period hn hm
+    (by
+      simpa only [mul_left_iterate, mul_oneₓ] )
 
 @[to_additive mem_multiples_iff_mem_range_add_order_of']
 theorem mem_powers_iff_mem_range_order_of' [DecidableEq G] (hx : 0 < orderOf x) :
@@ -328,6 +342,20 @@ section Groupₓ
 
 variable [Groupₓ G] [AddGroupₓ A] {x a} {i : ℤ}
 
+/-- Inverses of elements of finite order have finite order. -/
+@[to_additive "Inverses of elements of finite additive order have finite additive order."]
+theorem IsOfFinOrder.inv {x : G} (hx : IsOfFinOrder x) : IsOfFinOrder x⁻¹ :=
+  (is_of_fin_order_iff_pow_eq_one _).mpr <| by
+    rcases(is_of_fin_order_iff_pow_eq_one x).mp hx with ⟨n, npos, hn⟩
+    refine'
+      ⟨n, npos, by
+        simp_rw [inv_pow, hn, one_inv]⟩
+
+/-- Inverses of elements of finite order have finite order. -/
+@[simp, to_additive "Inverses of elements of finite additive order have finite additive order."]
+theorem is_of_fin_order_inv_iff {x : G} : IsOfFinOrder x⁻¹ ↔ IsOfFinOrder x :=
+  ⟨fun h => inv_invₓ x ▸ h.inv, IsOfFinOrder.inv⟩
+
 @[to_additive add_order_of_dvd_iff_zsmul_eq_zero]
 theorem order_of_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 := by
   rcases Int.eq_coe_or_neg i with ⟨i, rfl | rfl⟩
@@ -335,6 +363,10 @@ theorem order_of_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 := 
     
   · rw [dvd_neg, Int.coe_nat_dvd, zpow_neg, inv_eq_one, zpow_coe_nat, order_of_dvd_iff_pow_eq_one]
     
+
+@[simp, to_additive]
+theorem order_of_inv (x : G) : orderOf x⁻¹ = orderOf x := by
+  simp [order_of_eq_order_of_iff]
 
 @[simp, norm_cast, to_additive]
 theorem order_of_subgroup {H : Subgroup G} (y : H) : orderOf (y : G) = orderOf y :=
@@ -348,9 +380,6 @@ theorem zpow_eq_mod_order_of : x ^ i = x ^ (i % orderOf x) :=
     _ = x ^ (i % orderOf x) := by
       simp [zpow_add, zpow_mul, pow_order_of_eq_one]
     
-
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option pp.all
-set_option pp.all true
 
 @[to_additive nsmul_inj_iff_of_add_order_of_eq_zero]
 theorem pow_inj_iff_of_order_of_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n = x ^ m ↔ n = m := by
@@ -370,7 +399,7 @@ theorem pow_inj_iff_of_order_of_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n 
       
     
 
-@[to_additive nsmul_inj_mod]
+@[to_additive]
 theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf x := by
   cases' (orderOf x).zero_le.eq_or_lt with hx hx
   · simp [pow_inj_iff_of_order_of_eq_zero, hx.symm]
@@ -380,6 +409,17 @@ theorem pow_inj_mod {n m : ℕ} : x ^ n = x ^ m ↔ n % orderOf x = m % orderOf 
 
 end Groupₓ
 
+section CommMonoidₓ
+
+variable [CommMonoidₓ G]
+
+/-- Elements of finite order are closed under multiplication. -/
+@[to_additive "Elements of finite additive order are closed under addition."]
+theorem IsOfFinOrder.mul (hx : IsOfFinOrder x) (hy : IsOfFinOrder y) : IsOfFinOrder (x * y) :=
+  (Commute.all x y).is_of_fin_order_mul hx hy
+
+end CommMonoidₓ
+
 section Fintype
 
 variable [Fintype G] [Fintype A]
@@ -388,7 +428,7 @@ section FiniteMonoid
 
 variable [Monoidₓ G] [AddMonoidₓ A]
 
-open_locale BigOperators
+open BigOperators
 
 @[to_additive sum_card_add_order_of_eq_card_nsmul_eq_zero]
 theorem sum_card_order_of_eq_card_pow_eq_one [DecidableEq G] (hn : 0 < n) :
@@ -423,7 +463,7 @@ section FiniteCancelMonoid
 variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 
 -- TODO: Use this to show that a finite left cancellative monoid is a group.
-@[to_additive exists_nsmul_eq_zero]
+@[to_additive]
 theorem exists_pow_eq_one (x : G) : IsOfFinOrder x := by
   refine' (is_of_fin_order_iff_pow_eq_one _).mpr _
   obtain ⟨i, j, a_eq, ne⟩ : ∃ i j : ℕ, x ^ i = x ^ j ∧ i ≠ j := by
@@ -605,7 +645,7 @@ theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by
   let ⟨m, hm⟩ := @order_of_dvd_card_univ _ x _ _
   simp [hm, pow_mulₓ, pow_order_of_eq_one]
 
-@[to_additive nsmul_eq_mod_card]
+@[to_additive]
 theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by
   rw [pow_eq_mod_order_of, ← Nat.mod_mod_of_dvd n order_of_dvd_card_univ, ← pow_eq_mod_order_of]
 
@@ -614,7 +654,7 @@ theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) := by
   rw [zpow_eq_mod_order_of, ← Int.mod_mod_of_dvd n (Int.coe_nat_dvd.2 order_of_dvd_card_univ), ← zpow_eq_mod_order_of]
 
 /-- If `gcd(|G|,n)=1` then the `n`th power map is a bijection -/
-@[to_additive nsmulCoprime "If `gcd(|G|,n)=1` then the smul by `n` is a bijection", simps]
+@[to_additive "If `gcd(|G|,n)=1` then the smul by `n` is a bijection", simps]
 def powCoprime (h : Nat.Coprime (Fintype.card G) n) : G ≃ G where
   toFun := fun g => g ^ n
   invFun := fun g => g ^ Nat.gcdB (Fintype.card G) n
@@ -687,9 +727,10 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
 def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 : S.Nonempty) (hS2 : S * S = S) :
     Subgroup G :=
   { submonoidOfIdempotent S hS1 hS2 with Carrier := S,
-    inv_mem' := fun a ha => by
-      rw [← one_mulₓ a⁻¹, ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
-      exact (submonoidOfIdempotent S hS1 hS2).pow_mem ha (orderOf a - 1) }
+    inv_mem' := fun a ha =>
+      show a⁻¹ ∈ submonoidOfIdempotent S hS1 hS2 by
+        rw [← one_mulₓ a⁻¹, ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
+        exact pow_mem ha (orderOf a - 1) }
 
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
 @[to_additive smulCardAddSubgroup

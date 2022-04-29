@@ -70,7 +70,7 @@ namespace LieAlgebra
 
 open Matrix
 
-open_locale Matrix
+open Matrix
 
 variable (n p q l : Type _) (R : Type u₂)
 

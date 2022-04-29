@@ -62,7 +62,7 @@ theorem val_add {v : Nat → Int} {t1 t2 : Term} : (add t1 t2).val v = t1.val v 
 @[simp]
 theorem val_mul {v : Nat → Int} {i : Int} {t : Term} : val v (mul i t) = i * val v t := by
   cases t
-  simp only [mul, mul_addₓ, add_mulₓ, List.length_map, coeffs.val, coeffs.val_between_map_mul, val, List.map]
+  simp only [mul, mul_addₓ, add_mulₓ, List.length_mapₓ, coeffs.val, coeffs.val_between_map_mul, val, List.map]
 
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
     i ∣ b → (∀, ∀ x ∈ as, ∀, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i := by

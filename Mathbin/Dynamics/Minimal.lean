@@ -23,7 +23,7 @@ group action, minimal
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 /-- An action of an additive monoid `M` on a topological space is called *minimal* if the `M`-orbit
 of every point `x : α` is dense. -/
@@ -92,7 +92,7 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} 
 theorem is_minimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
     IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ := by
   constructor
-  · intros h s
+  · intro h s
     exact eq_empty_or_univ_of_smul_invariant_closed M
     
   refine' fun H => ⟨fun x => dense_iff_closure_eq.2 <| (H _ _ _).resolve_left _⟩

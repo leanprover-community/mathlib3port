@@ -117,7 +117,7 @@ instance [Faithful R] (h : L ⊣ R) : Faithful (Monad.comparison h) where
   map_injective' := fun X Y f g w => R.map_injective (congr_argₓ Monad.Algebra.Hom.f w : _)
 
 instance (T : Monad C) : Full (Monad.comparison T.adj) where
-  Preimage := fun X Y f =>
+  preimage := fun X Y f =>
     ⟨f.f, by
       simpa using f.h⟩
 
@@ -165,7 +165,7 @@ instance Comonad.comparison_faithful_of_faithful [Faithful L] (h : L ⊣ R) : Fa
   map_injective' := fun X Y f g w => L.map_injective (congr_argₓ Comonad.Coalgebra.Hom.f w : _)
 
 instance (G : Comonad C) : Full (Comonad.comparison G.adj) where
-  Preimage := fun X Y f =>
+  preimage := fun X Y f =>
     ⟨f.f, by
       simpa using f.h⟩
 
@@ -233,7 +233,7 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
   apply (X.unit_assoc _).symm
 
 instance comparisonFull [Full R] [IsRightAdjoint R] : Full (Monad.comparison (Adjunction.ofRightAdjoint R)) where
-  Preimage := fun X Y f => R.Preimage f.f
+  preimage := fun X Y f => R.preimage f.f
 
 end Reflective
 

@@ -167,6 +167,14 @@ theorem comp_elim {α β γ δ : Sort _} (f : γ → δ) (g : α → γ) (h : β
 theorem elim_comp_inl_inr {α β γ : Sort _} (f : Sum α β → γ) : Sum.elim (f ∘ inl) (f ∘ inr) = f :=
   funext fun x => Sum.casesOn x (fun _ => rfl) fun _ => rfl
 
+theorem elim_comp_map {α β γ δ ε : Sort _} {f₁ : α → β} {f₂ : β → ε} {g₁ : γ → δ} {g₂ : δ → ε} :
+    Sum.elim f₂ g₂ ∘ Sum.map f₁ g₁ = Sum.elim (f₂ ∘ f₁) (g₂ ∘ g₁) := by
+  ext (_ | _)
+  · rw [Function.comp_app, map_inl, elim_inl, elim_inl]
+    
+  · rw [Function.comp_app, map_inr, elim_inr, elim_inr]
+    
+
 open Function (update update_eq_iff update_comp_eq_of_injective update_comp_eq_of_forall_ne)
 
 @[simp]

@@ -3,10 +3,10 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Logic.Function.Conjugate
+import Mathbin.Order.ConditionallyCompleteLattice
 import Mathbin.Order.OrdContinuous
-import Mathbin.Data.Equiv.MulAdd
 
 /-!
 # Semiconjugate by `Sup`

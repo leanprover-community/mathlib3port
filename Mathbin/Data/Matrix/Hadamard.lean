@@ -36,7 +36,7 @@ variable {R : Type _}
 
 namespace Matrix
 
-open_locale Matrix BigOperators
+open Matrix BigOperators
 
 /-- `matrix.hadamard` defines the Hadamard product,
     which is the pointwise product of two matrices of the same size.-/

@@ -5,6 +5,7 @@ Authors: Paul van Wamelen
 -/
 import Mathbin.NumberTheory.PythagoreanTriples
 import Mathbin.RingTheory.Coprime.Lemmas
+import Mathbin.Tactic.LinearCombination
 
 /-!
 # Fermat's Last Theorem for the case n = 4
@@ -14,7 +15,7 @@ There are no non-zero integers `a`, `b` and `c` such that `a ^ 4 + b ^ 4 = c ^ 4
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 /-- Shorthand for three non-zero integers `a`, `b`, and `c` satisfying `a ^ 4 + b ^ 4 = c ^ 2`.
 We will show that no integers satisfy this equation. Clearly Fermat's Last theorem for n = 4
@@ -39,10 +40,8 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
     constructor
     · exact mul_ne_zero hk0 f42.2.1
       
-    · calc (k * a) ^ 4 + (k * b) ^ 4 = k ^ 4 * (a ^ 4 + b ^ 4) := by
-          ring _ = k ^ 4 * c ^ 2 := by
-          rw [f42.2.2]_ = (k ^ 2 * c) ^ 2 := by
-          ring
+    · have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
+      linear_combination H * k ^ 4
       
     
   · intro f42
@@ -53,18 +52,12 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) : Fermat42 a b c ↔ Fermat42 (k * a
     · exact right_ne_zero_of_mul f42.2.1
       
     apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
-    · calc k ^ 4 * (a ^ 4 + b ^ 4) = (k * a) ^ 4 + (k * b) ^ 4 := by
-          ring _ = (k ^ 2 * c) ^ 2 := by
-          rw [f42.2.2]_ = k ^ 4 * c ^ 2 := by
-          ring
-      
+    have H : (k * a) ^ 4 + (k * b) ^ 4 = (k ^ 2 * c) ^ 2 := f42.2.2
+    linear_combination H
     
 
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
-  apply
-    ne_zero_pow
-      (by
-        decide : 2 ≠ 0)
+  apply ne_zero_pow two_ne_zero _
   apply ne_of_gtₓ
   rw [← h.2.2,
     (by
@@ -102,22 +95,14 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
   obtain ⟨a1, rfl⟩ := int.coe_nat_dvd_left.mpr hpa
   obtain ⟨b1, rfl⟩ := int.coe_nat_dvd_left.mpr hpb
   have hpc : (p : ℤ) ^ 2 ∣ c := by
-    apply
-      (Int.pow_dvd_pow_iff
-          (by
-            decide : 0 < 2)).mp
-    rw [← h.1.2.2]
+    rw [← Int.pow_dvd_pow_iff zero_lt_two, ← h.1.2.2]
     apply Dvd.intro (a1 ^ 4 + b1 ^ 4)
     ring
   obtain ⟨c1, rfl⟩ := hpc
   have hf : Fermat42 a1 b1 c1 := (Fermat42.mul (int.coe_nat_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
   apply Nat.le_lt_antisymmₓ (h.2 _ _ _ hf)
   rw [Int.nat_abs_mul, lt_mul_iff_one_lt_left, Int.nat_abs_pow, Int.nat_abs_of_nat]
-  · exact
-      Nat.one_lt_pow _ _
-        (show 0 < 2 by
-          decide)
-        (Nat.Prime.one_lt hp)
+  · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
     
   · exact Nat.pos_of_ne_zeroₓ (Int.nat_abs_ne_zero_of_ne_zero (ne_zero hf))
     
@@ -187,10 +172,9 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- a ^ 2 = m ^ 2 - n ^ 2, b ^ 2 = 2 * m * n and c = m ^ 2 + n ^ 2
   -- first the formula:
   have ht : PythagoreanTriple (a ^ 2) (b ^ 2) c := by
-    calc a ^ 2 * a ^ 2 + b ^ 2 * b ^ 2 = a ^ 4 + b ^ 4 := by
-        ring _ = c ^ 2 := by
-        rw [h.1.2.2]_ = c * c := by
-        rw [sq]
+    delta' PythagoreanTriple
+    have H := h.1.2.2
+    linear_combination H
   -- coprime requirement:
   have h2 : Int.gcdₓ (a ^ 2) (b ^ 2) = 1 := int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal h).pow
   -- in order to reduce the possibilities we get from the classification of pythagorean triples
@@ -198,14 +182,13 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   have ha22 : a ^ 2 % 2 = 1 := by
     rw [sq, Int.mul_mod, ha2]
     norm_num
-  obtain ⟨m, n, ht1, ht2, ht3, ht4, ht5, ht6⟩ := PythagoreanTriple.coprime_classification' ht h2 ha22 hc
+  obtain ⟨m, n, ht1, ht2, ht3, ht4, ht5, ht6⟩ := ht.coprime_classification' h2 ha22 hc
   -- Now a, n, m form a pythagorean triple and so we can obtain r and s such that
   -- a = r ^ 2 - s ^ 2, n = 2 * r * s and m = r ^ 2 + s ^ 2
   -- formula:
   have htt : PythagoreanTriple a n m := by
     delta' PythagoreanTriple
-    rw [← sq, ← sq, ← sq]
-    exact add_eq_of_eq_sub ht1
+    linear_combination ht1
   -- a and n are coprime, because a ^ 2 = m ^ 2 - n ^ 2 and m and n are coprime.
   have h3 : Int.gcdₓ a n = 1 := by
     apply int.gcd_eq_one_iff_coprime.mpr
@@ -222,7 +205,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     revert hb20
     rw [ht2]
     simp
-  obtain ⟨r, s, htt1, htt2, htt3, htt4, htt5, htt6⟩ := PythagoreanTriple.coprime_classification' htt h3 ha2 h4
+  obtain ⟨r, s, htt1, htt2, htt3, htt4, htt5, htt6⟩ := htt.coprime_classification' h3 ha2 h4
   -- Now use the fact that (b / 2) ^ 2 = m * r * s, and m, r and s are pairwise coprime to obtain
   -- i, j and k such that m = i ^ 2, r = j ^ 2 and s = k ^ 2.
   -- m and r * s are coprime because m = r ^ 2 + s ^ 2 and r and s are coprime.
@@ -243,10 +226,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       (mul_right_inj'
           (by
             norm_num : (4 : ℤ) ≠ 0)).mp
-    calc 4 * b' ^ 2 = 2 * b' * (2 * b') := by
-        ring _ = 2 * m * (2 * r * s) := by
-        rw [← hb2', ← sq, ht2, htt2]_ = 4 * (m * (r * s)) := by
-        ring
+    linear_combination hb2' * (-b - 2 * b') + ht2 * 1 + htt2 * 2 * m
   have hrsz : r * s ≠ 0 := by
     -- because b ^ 2 is not zero and (b / 2) ^ 2 = m * (r * s)
     by_contra hrsz
@@ -254,10 +234,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     rw [ht2, htt2, mul_assoc, @mul_assoc _ _ _ r s, hrsz]
     simp
   have h2b0 : b' ≠ 0 := by
-    apply
-      ne_zero_pow
-        (by
-          decide : 2 ≠ 0)
+    apply ne_zero_pow two_ne_zero
     rw [hs]
     apply mul_ne_zero
     · exact ne_of_gtₓ h4
@@ -298,11 +275,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   obtain ⟨j, hj⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hj0 : j ≠ 0 := by
     intro h0
-    rw [h0,
-      zero_pow
-        (by
-          decide : 0 < 2),
-      neg_zero, or_selfₓ] at hj
+    rw [h0, zero_pow zero_lt_two, neg_zero, or_selfₓ] at hj
     apply left_ne_zero_of_mul hrsz hj
   rw [mul_comm] at hd
   rw [Int.gcd_comm] at htt4
@@ -310,11 +283,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   obtain ⟨k, hk⟩ := Int.sq_of_gcd_eq_one htt4 hd
   have hk0 : k ≠ 0 := by
     intro h0
-    rw [h0,
-      zero_pow
-        (by
-          decide : 0 < 2),
-      neg_zero, or_selfₓ] at hk
+    rw [h0, zero_pow zero_lt_two, neg_zero, or_selfₓ] at hk
     apply right_ne_zero_of_mul hrsz hk
   have hj2 : r ^ 2 = j ^ 4 := by
     cases' hj with hjp hjp <;>

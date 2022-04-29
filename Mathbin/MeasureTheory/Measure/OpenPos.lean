@@ -16,7 +16,7 @@ about these measures.
 -/
 
 
-open_locale TopologicalSpace Ennreal MeasureTheory
+open TopologicalSpace Ennreal MeasureTheory
 
 open Set Function Filter
 

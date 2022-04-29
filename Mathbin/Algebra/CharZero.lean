@@ -34,7 +34,16 @@ from the natural numbers into it is injective.
 
 
 /-- Typeclass for monoids with characteristic zero.
-  (This is usually stated on fields but it makes sense for any additive monoid with 1.) -/
+  (This is usually stated on fields but it makes sense for any additive monoid with 1.)
+
+*Warning*: for a semiring `R`, `char_zero R` and `char_p R 0` need not coincide.
+* `char_zero R` requires an injection `ℕ ↪ R`;
+* `char_p R 0` asks that only `0 : ℕ` maps to `0 : R` under the map `ℕ → R`.
+
+For instance, endowing `{0, 1}` with addition given by `max` (i.e. `1` is absorbing), shows that
+`char_zero {0, 1}` does not hold and yet `char_p {0, 1} 0` does.
+This example is formalized in `counterexamples/char_p_zero_ne_char_zero`.
+ -/
 class CharZero (R : Type _) [AddMonoidₓ R] [One R] : Prop where
   cast_injective : Function.Injective (coe : ℕ → R)
 
@@ -76,9 +85,23 @@ theorem cast_inj {m n : ℕ} : (m : R) = n ↔ m = n :=
 theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by
   rw [← cast_zero, cast_inj]
 
+@[simp, norm_cast]
+theorem cast_eq_one {n : ℕ} : (n : R) = 1 ↔ n = 1 := by
+  rw [← cast_one, cast_inj]
+
+@[simp]
+theorem cast_pow_eq_one {R : Type _} [Semiringₓ R] [CharZero R] (q : ℕ) (n : ℕ) (hn : n ≠ 0) :
+    (q : R) ^ n = 1 ↔ q = 1 := by
+  rw [← cast_pow, cast_eq_one]
+  exact pow_eq_one_iff hn
+
 @[norm_cast]
 theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
-  not_congr cast_eq_zero
+  cast_eq_zero.Not
+
+@[norm_cast]
+theorem cast_ne_one {n : ℕ} : (n : R) ≠ 1 ↔ n ≠ 1 :=
+  cast_eq_one.Not
 
 theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by
   exact_mod_cast n.succ_ne_zero
@@ -117,7 +140,7 @@ end
 
 section
 
-variable {R : Type _} [Semiringₓ R] [NoZeroDivisors R] [CharZero R]
+variable {R : Type _} [NonAssocSemiringₓ R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
 theorem add_self_eq_zero {a : R} : a + a = 0 ↔ a = 0 := by
@@ -136,7 +159,7 @@ end
 
 section
 
-variable {R : Type _} [Ringₓ R] [NoZeroDivisors R] [CharZero R]
+variable {R : Type _} [NonAssocRing R] [NoZeroDivisors R] [CharZero R]
 
 theorem neg_eq_self_iff {a : R} : -a = a ↔ a = 0 :=
   neg_eq_iff_add_eq_zero.trans add_self_eq_zero
@@ -213,7 +236,7 @@ end WithTop
 
 section RingHom
 
-variable {R S : Type _} [Semiringₓ R] [Semiringₓ S]
+variable {R S : Type _} [NonAssocSemiringₓ R] [NonAssocSemiringₓ S]
 
 theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
   ⟨fun a b h =>

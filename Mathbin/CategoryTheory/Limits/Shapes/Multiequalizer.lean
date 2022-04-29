@@ -292,20 +292,22 @@ def ι (a : I.L) : K.x ⟶ I.left a :=
   K.π.app (WalkingMulticospan.left _)
 
 @[simp]
-theorem ι_eq_app_left a : K.ι a = K.π.app (WalkingMulticospan.left _) :=
+theorem app_left_eq_ι a : K.π.app (WalkingMulticospan.left a) = K.ι a :=
   rfl
 
 @[simp]
-theorem app_left_fst b :
-    K.π.app (WalkingMulticospan.left (I.fstTo b)) ≫ I.fst b = K.π.app (WalkingMulticospan.right b) := by
+theorem app_right_eq_ι_comp_fst b : K.π.app (WalkingMulticospan.right b) = K.ι (I.fstTo b) ≫ I.fst b := by
   rw [← K.w (walking_multicospan.hom.fst b)]
   rfl
 
-@[simp]
-theorem app_left_snd b :
-    K.π.app (WalkingMulticospan.left (I.sndTo b)) ≫ I.snd b = K.π.app (WalkingMulticospan.right b) := by
+@[reassoc]
+theorem app_right_eq_ι_comp_snd b : K.π.app (WalkingMulticospan.right b) = K.ι (I.sndTo b) ≫ I.snd b := by
   rw [← K.w (walking_multicospan.hom.snd b)]
   rfl
+
+@[simp, reassoc]
+theorem hom_comp_ι (K₁ K₂ : Multifork I) (f : K₁ ⟶ K₂) (j : I.L) : f.Hom ≫ K₂.ι j = K₁.ι j :=
+  f.w (WalkingMulticospan.left j)
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
@@ -332,9 +334,9 @@ def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
           apply w
            }
 
-@[reassoc]
+@[simp, reassoc]
 theorem condition b : K.ι (I.fstTo b) ≫ I.fst b = K.ι (I.sndTo b) ≫ I.snd b := by
-  simp
+  rw [← app_right_eq_ι_comp_fst, ← app_right_eq_ι_comp_snd]
 
 /-- This definition provides a convenient way to show that a multifork is a limit. -/
 @[simps]
@@ -382,7 +384,7 @@ noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
           simp }
 
 @[simp]
-theorem to_pi_fork_π_app_zero : K.toPiFork.π.app WalkingParallelPair.zero = Pi.lift K.ι :=
+theorem to_pi_fork_π_app_zero : K.toPiFork.ι = Pi.lift K.ι :=
   rfl
 
 @[simp]
@@ -415,8 +417,7 @@ noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
            }
 
 @[simp]
-theorem of_pi_fork_π_app_left (c : Fork I.fstPiMap I.sndPiMap) a :
-    (ofPiFork I c).π.app (WalkingMulticospan.left a) = c.ι ≫ Pi.π _ _ :=
+theorem of_pi_fork_π_app_left (c : Fork I.fstPiMap I.sndPiMap) a : (ofPiFork I c).ι a = c.ι ≫ Pi.π _ _ :=
   rfl
 
 @[simp]
@@ -460,7 +461,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
       (fun K =>
         Cones.ext (Iso.refl _)
           (by
-            rintro (_ | _) <;> dsimp <;> simp ))
+            rintro (_ | _) <;> dsimp <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
       fun K₁ K₂ f => by
       ext
       simp
@@ -487,18 +488,16 @@ def π (b : I.R) : I.right b ⟶ K.x :=
   K.ι.app (WalkingMultispan.right _)
 
 @[simp]
-theorem π_eq_app_right b : K.π b = K.ι.app (WalkingMultispan.right _) :=
+theorem π_eq_app_right b : K.ι.app (WalkingMultispan.right _) = K.π b :=
   rfl
 
 @[simp]
-theorem fst_app_right a :
-    I.fst a ≫ K.ι.app (WalkingMultispan.right (I.fstFrom a)) = K.ι.app (WalkingMultispan.left a) := by
+theorem fst_app_right a : K.ι.app (WalkingMultispan.left a) = I.fst a ≫ K.π _ := by
   rw [← K.w (walking_multispan.hom.fst a)]
   rfl
 
-@[simp]
-theorem snd_app_right a :
-    I.snd a ≫ K.ι.app (WalkingMultispan.right (I.sndFrom a)) = K.ι.app (WalkingMultispan.left a) := by
+@[reassoc]
+theorem snd_app_right a : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.π _ := by
   rw [← K.w (walking_multispan.hom.snd a)]
   rfl
 
@@ -527,9 +526,9 @@ def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
           apply (w _).symm
            }
 
-@[reassoc]
+@[simp, reassoc]
 theorem condition a : I.fst a ≫ K.π (I.fstFrom a) = I.snd a ≫ K.π (I.sndFrom a) := by
-  simp
+  rw [← K.snd_app_right, ← K.fst_app_right]
 
 /-- This definition provides a convenient way to show that a multicofork is a colimit. -/
 @[simps]
@@ -577,11 +576,7 @@ noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.snd
           simp }
 
 @[simp]
-theorem to_sigma_cofork_ι_app_zero : K.toSigmaCofork.ι.app WalkingParallelPair.zero = I.fstSigmaMap ≫ Sigma.desc K.π :=
-  rfl
-
-@[simp]
-theorem to_sigma_cofork_ι_app_one : K.toSigmaCofork.ι.app WalkingParallelPair.one = Sigma.desc K.π :=
+theorem to_sigma_cofork_π : K.toSigmaCofork.π = Sigma.desc K.π :=
   rfl
 
 variable (I)
@@ -603,12 +598,12 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multi
         }
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
           dsimp
-          simp [← cofork.left_app_one, -cofork.left_app_one]
+          simp only [cofork.condition, category.comp_id]
+          rw [← I.ι_fst_sigma_map_assoc, c.condition]
           
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ 𝟙 _
           rw [c.condition]
-          dsimp
-          simp [← cofork.right_app_one, -cofork.right_app_one]
+          simp
            }
 
 @[simp]
@@ -668,7 +663,8 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
           (by
             ext
             dsimp
-            simp ))
+            simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
+            rfl))
       fun K₁ K₂ f => by
       ext
       dsimp

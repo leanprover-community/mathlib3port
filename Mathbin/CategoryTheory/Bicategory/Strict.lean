@@ -24,7 +24,7 @@ identities.
 
 namespace CategoryTheory
 
-open_locale Bicategory
+open Bicategory
 
 universe w v u
 
@@ -89,7 +89,7 @@ theorem whisker_left_eq_to_hom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g
 theorem eq_to_hom_whisker_right {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
     eqToHom η ▷ h = eqToHom (congr_arg2ₓ (· ≫ ·) η rfl) := by
   cases η
-  simp only [whisker_right_id, eq_to_hom_refl]
+  simp only [id_whisker_right, eq_to_hom_refl]
 
 end Bicategory
 

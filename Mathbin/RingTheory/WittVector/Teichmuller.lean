@@ -104,7 +104,7 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
 This is a monoid homomorphism. -/
-noncomputable def teichmuller : R →* 𝕎 R where
+def teichmuller : R →* 𝕎 R where
   toFun := teichmullerFun p
   map_one' := by
     ext ⟨⟩

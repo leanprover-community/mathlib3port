@@ -57,7 +57,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
     -- Thus `m * m = m` as desired.
     rw [← absorbing_eq_self] at hm
     exact hm.2
-  apply Zorn.zorn_superset
+  apply zorn_superset
   intro c hcs hc
   refine' ⟨⋂₀ c, ⟨is_closed_sInter fun t ht => (hcs ht).1, _, _⟩, _⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
@@ -69,8 +69,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
         (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.set_of_mem_eq]
       
-    · refine' directed_on_iff_directed.mp (Zorn.Chain.directed_on _)
-      exact hc.symm
+    · refine' DirectedOn.directed_coe (IsChain.directed_on hc.symm)
       
     · intro i
       exact (hcs i.property).2.1
@@ -100,7 +99,7 @@ theorem exists_idempotent_in_compact_subsemigroup {M} [Semigroupₓ M] [Topologi
     (continuous_mul_left : ∀ r : M, Continuous (· * r)) (s : Set M) (snemp : s.Nonempty) (s_compact : IsCompact s)
     (s_add : ∀ x y _ : x ∈ s _ : y ∈ s, x * y ∈ s) : ∃ m ∈ s, m * m = m := by
   let M' := { m // m ∈ s }
-  let this' : Semigroupₓ M' :=
+  let this : Semigroupₓ M' :=
     { mul := fun p q => ⟨p.1 * q.1, s_add _ p.2 _ q.2⟩, mul_assoc := fun p q r => Subtype.eq (mul_assoc _ _ _) }
   have : CompactSpace M' := is_compact_iff_compact_space.mp s_compact
   have : Nonempty M' := nonempty_subtype.mpr snemp

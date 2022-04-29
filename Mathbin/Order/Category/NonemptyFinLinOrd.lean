@@ -59,6 +59,10 @@ instance : CoeSort NonemptyFinLinOrdₓ (Type _) :=
 def of (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrdₓ :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [NonemptyFinLinOrd α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited NonemptyFinLinOrdₓ :=
   ⟨of PUnit⟩
 
@@ -83,20 +87,20 @@ def Iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def toDual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
+def dual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
   obj := fun X => of (OrderDual X)
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdₓ ≌ NonemptyFinLinOrdₓ :=
-  Equivalence.mk toDual toDual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+  Equivalence.mk dual dual ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     ((NatIso.ofComponents fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 
 end NonemptyFinLinOrdₓ
 
-theorem NonemptyFinLinOrd_dual_equiv_comp_forget_to_LinearOrder :
-    NonemptyFinLinOrdₓ.dualEquiv.Functor ⋙ forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ =
-      forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ ⋙ LinearOrderₓₓ.dualEquiv.Functor :=
+theorem NonemptyFinLinOrd_dual_comp_forget_to_LinearOrder :
+    NonemptyFinLinOrdₓ.dual ⋙ forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ =
+      forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ ⋙ LinearOrderₓₓ.dual :=
   rfl
 

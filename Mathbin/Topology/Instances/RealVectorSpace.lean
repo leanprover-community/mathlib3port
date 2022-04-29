@@ -24,7 +24,7 @@ namespace AddMonoidHom
 theorem map_real_smul (f : E →+ F) (hf : Continuous f) (c : ℝ) (x : E) : f (c • x) = c • f x :=
   suffices (fun c : ℝ => f (c • x)) = fun c : ℝ => c • f x from congr_funₓ this c
   Rat.dense_embedding_coe_real.dense.equalizer (hf.comp <| continuous_id.smul continuous_const)
-    (continuous_id.smul continuous_const) (funext fun r => f.map_rat_cast_smul ℝ ℝ r x)
+    (continuous_id.smul continuous_const) (funext fun r => map_rat_cast_smul f ℝ ℝ r x)
 
 /-- Reinterpret a continuous additive homomorphism between two real vector spaces
 as a continuous real-linear map. -/

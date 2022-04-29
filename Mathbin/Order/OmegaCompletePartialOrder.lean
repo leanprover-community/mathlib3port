@@ -57,7 +57,7 @@ universe u v
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map
 
-open_locale Classical
+open Classical
 
 namespace OrderHom
 

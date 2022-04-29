@@ -6,6 +6,7 @@ Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
+import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.SesquilinearForm
 
@@ -71,7 +72,7 @@ noncomputable section
 
 open IsROrC Real Filter
 
-open_locale BigOperators TopologicalSpace ComplexConjugate
+open BigOperators TopologicalSpace ComplexConjugate
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
@@ -108,7 +109,7 @@ class InnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] extends Norme
   norm_sq_eq_inner : ∀ x : E, ∥x∥ ^ 2 = re (inner x x)
   conj_sym : ∀ x y, conj (inner y x) = inner x y
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
-  smulLeft : ∀ x y r, inner (r • x) y = conj r * inner x y
+  smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
 
 attribute [nolint dangerous_instance] InnerProductSpace.toNormedGroup
 
@@ -141,7 +142,7 @@ structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [Add
   nonneg_re : ∀ x, 0 ≤ re (inner x x)
   definite : ∀ x, inner x x = 0 → x = 0
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
-  smulLeft : ∀ x y r, inner (r • x) y = conj r * inner x y
+  smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
 
 /- We set `inner_product_space.core` to be a class as we will use it as such in the construction
 of the normed space structure that it produces. However, all the instances we will use will be
@@ -217,7 +218,7 @@ theorem inner_im_symm {x y : F} : im ⟪x, y⟫ = -im ⟪y, x⟫ := by
   rw [← inner_conj_sym, conj_im]
 
 theorem inner_smul_left {x y : F} {r : 𝕜} : ⟪r • x, y⟫ = r† * ⟪x, y⟫ :=
-  c.smulLeft _ _ _
+  c.smul_left _ _ _
 
 theorem inner_smul_right {x y : F} {r : 𝕜} : ⟪x, r • y⟫ = r * ⟪x, y⟫ := by
   rw [← inner_conj_sym, inner_smul_left] <;> simp only [conj_conj, inner_conj_sym, RingHom.map_mul]
@@ -402,8 +403,8 @@ end InnerProductSpace.ofCore
 the space into an inner product space, constructing the norm out of the inner product -/
 def InnerProductSpace.ofCore [AddCommGroupₓ F] [Module 𝕜 F] (c : InnerProductSpace.Core 𝕜 F) : InnerProductSpace 𝕜 F :=
   by
-  let this' : NormedGroup F := @InnerProductSpace.OfCore.toNormedGroup 𝕜 F _ _ _ c
-  let this' : NormedSpace 𝕜 F := @InnerProductSpace.OfCore.toNormedSpace 𝕜 F _ _ _ c
+  let this : NormedGroup F := @InnerProductSpace.OfCore.toNormedGroup 𝕜 F _ _ _ c
+  let this : NormedSpace 𝕜 F := @InnerProductSpace.OfCore.toNormedSpace 𝕜 F _ _ _ c
   exact
     { c with
       norm_sq_eq_inner := fun x => by
@@ -955,7 +956,7 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
     ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coe : w → E) ∧ ∀ u _ : u ⊇ w, Orthonormal 𝕜 (coe : u → E) → u = w := by
-  rcases Zorn.zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs with ⟨b, bi, sb, h⟩
+  obtain ⟨b, bi, sb, h⟩ := zorn_subset_nonempty { b | Orthonormal 𝕜 (coe : b → E) } _ _ hs
   · refine' ⟨b, sb, bi, _⟩
     exact fun u hus hu => h u hu hus
     
@@ -1083,6 +1084,9 @@ theorem abs_inner_le_norm (x y : E) : abs ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
 theorem norm_inner_le_norm (x y : E) : ∥⟪x, y⟫∥ ≤ ∥x∥ * ∥y∥ :=
   (IsROrC.norm_eq_abs _).le.trans (abs_inner_le_norm x y)
 
+theorem nnnorm_inner_le_nnnorm (x y : E) : ∥⟪x, y⟫∥₊ ≤ ∥x∥₊ * ∥y∥₊ :=
+  norm_inner_le_norm x y
+
 theorem re_inner_le_norm (x y : E) : re ⟪x, y⟫ ≤ ∥x∥ * ∥y∥ :=
   le_transₓ (re_le_abs (inner x y)) (abs_inner_le_norm x y)
 
@@ -1097,18 +1101,17 @@ theorem real_inner_le_norm (x y : F) : ⟪x, y⟫_ℝ ≤ ∥x∥ * ∥y∥ :=
 
 include 𝕜
 
-theorem parallelogram_law_with_norm {x y : E} : ∥x + y∥ * ∥x + y∥ + ∥x - y∥ * ∥x - y∥ = 2 * (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) :=
+theorem parallelogram_law_with_norm (x y : E) : ∥x + y∥ * ∥x + y∥ + ∥x - y∥ * ∥x - y∥ = 2 * (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) :=
   by
   simp only [← inner_self_eq_norm_mul_norm]
   rw [← re.map_add, parallelogram_law, two_mul, two_mul]
   simp only [re.map_add]
 
-omit 𝕜
+theorem parallelogram_law_with_nnnorm (x y : E) :
+    ∥x + y∥₊ * ∥x + y∥₊ + ∥x - y∥₊ * ∥x - y∥₊ = 2 * (∥x∥₊ * ∥x∥₊ + ∥y∥₊ * ∥y∥₊) :=
+  Subtype.ext <| parallelogram_law_with_norm x y
 
-theorem parallelogram_law_with_norm_real {x y : F} :
-    ∥x + y∥ * ∥x + y∥ + ∥x - y∥ * ∥x - y∥ = 2 * (∥x∥ * ∥x∥ + ∥y∥ * ∥y∥) := by
-  have h := @parallelogram_law_with_norm ℝ F _ _ x y
-  simpa using h
+omit 𝕜
 
 /-- Polarization identity: The real part of the  inner product, in terms of the norm. -/
 theorem re_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two (x y : E) :
@@ -1539,8 +1542,7 @@ theorem abs_inner_eq_norm_iff (x y : E) (hx0 : x ≠ 0) (hy0 : y ≠ 0) :
       rwa [IsROrC.abs_div, abs_of_real, _root_.abs_mul, abs_norm_eq_norm, abs_norm_eq_norm, div_eq_one_iff_eq hxy0] at h
       
   rw [h₁, abs_inner_div_norm_mul_norm_eq_one_iff x y]
-  have : x ≠ 0 := fun h => hx0' <| norm_eq_zero.mpr h
-  simp [this]
+  simp [hx0]
 
 /-- The inner product of two vectors, divided by the product of their
 norms, has value 1 if and only if they are nonzero and one is
@@ -1630,6 +1632,16 @@ of the equality case for Cauchy-Schwarz.
 Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y⟫ = ∥x∥ * ∥y∥`. -/
 theorem inner_eq_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ = ∥x∥ * ∥y∥ ↔ ∥y∥ • x = ∥x∥ • y :=
   inner_eq_norm_mul_iff
+
+/-- An inner product space is strictly convex. We do not register this as an instance for an inner
+space over `𝕜`, `is_R_or_C 𝕜`, because there is no order of the typeclass argument that does not
+lead to a search of `[is_scalar_tower ℝ ?m E]` with unknown `?m`. -/
+instance InnerProductSpace.strict_convex_space : StrictConvexSpace ℝ F := by
+  refine' StrictConvexSpace.of_norm_add fun x y h => _
+  rw [same_ray_iff_norm_smul_eq, eq_comm, ← inner_eq_norm_mul_iff_real,
+    real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two, h, add_mul_self_eq, sub_sub,
+    add_sub_add_right_eq_sub, add_sub_cancel', mul_assoc, mul_div_cancel_left]
+  exact _root_.two_ne_zero
 
 /-- If the inner product of two unit vectors is `1`, then the two vectors are equal. One form of
 the equality case for Cauchy-Schwarz. -/
@@ -1748,10 +1760,10 @@ instance may be not definitionally equal to some other “natural” instance. S
 -/
 theorem is_bounded_bilinear_map_inner [NormedSpace ℝ E] : IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   { add_left := fun _ _ _ => inner_add_left,
-    smulLeft := fun r x y => by
+    smul_left := fun r x y => by
       simp only [← algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left],
     add_right := fun _ _ _ => inner_add_right,
-    smulRight := fun r x y => by
+    smul_right := fun r x y => by
       simp only [← algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right],
     bound :=
       ⟨1, zero_lt_one, fun x y => by
@@ -1812,7 +1824,7 @@ instance IsROrC.innerProductSpace : InnerProductSpace 𝕜 𝕜 where
     simp [mul_comm]
   add_left := fun x y z => by
     simp [inner, add_mulₓ]
-  smulLeft := fun x y z => by
+  smul_left := fun x y z => by
     simp [inner, mul_assoc]
 
 @[simp]
@@ -1826,7 +1838,7 @@ theorem IsROrC.inner_apply (x y : 𝕜) : ⟪x, y⟫ = conj x * y :=
 instance Submodule.innerProductSpace (W : Submodule 𝕜 E) : InnerProductSpace 𝕜 W :=
   { Submodule.normedSpace W with inner := fun x y => ⟪(x : E), (y : E)⟫, conj_sym := fun _ _ => inner_conj_sym _ _,
     norm_sq_eq_inner := fun _ => norm_sq_eq_inner _, add_left := fun _ _ _ => inner_add_left,
-    smulLeft := fun _ _ _ => inner_smul_left }
+    smul_left := fun _ _ _ => inner_smul_left }
 
 /-- The inner product on submodules is the same as on the ambient space. -/
 @[simp]
@@ -1840,7 +1852,7 @@ section OrthogonalFamily
 
 variable {ι : Type _} [dec_ι : DecidableEq ι] (𝕜)
 
-open_locale DirectSum
+open DirectSum
 
 /-- An indexed family of mutually-orthogonal subspaces of an inner product space `E`.
 
@@ -2071,7 +2083,7 @@ def InnerProductSpace.isROrCToReal : InnerProductSpace ℝ E :=
     add_left := fun x y z => by
       change re ⟪x + y, z⟫ = re ⟪x, z⟫ + re ⟪y, z⟫
       simp [inner_add_left],
-    smulLeft := fun x y r => by
+    smul_left := fun x y r => by
       change re ⟪(r : 𝕜) • x, y⟫ = r * re ⟪x, y⟫
       simp [inner_smul_left] }
 
@@ -2099,7 +2111,7 @@ section Continuous
 
 
 theorem continuous_inner : Continuous fun p : E × E => ⟪p.1, p.2⟫ := by
-  let this' : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
+  let this : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
   exact is_bounded_bilinear_map_inner.continuous
 
 variable {α : Type _}

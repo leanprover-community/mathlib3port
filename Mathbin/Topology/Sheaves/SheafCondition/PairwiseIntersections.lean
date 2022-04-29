@@ -134,7 +134,7 @@ def coneEquivFunctor (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X
     Limits.Cone ((diagram U).op ⋙ F) ⥤ Limits.Cone (SheafConditionEqualizerProducts.diagram F U) where
   obj := fun c => coneEquivFunctorObj F U c
   map := fun c c' f =>
-    { hom := f.hom,
+    { Hom := f.Hom,
       w' := fun j => by
         cases j <;>
           · ext
@@ -178,7 +178,7 @@ def coneEquivInverseObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
           simp only [category.id_comp] at h
           have h' := h =≫ pi.π _ (i, j)
           rw [h']
-          simp
+          simp only [category.assoc, limit.lift_π, fan.mk_π_app]
           rfl
           
         · dsimp
@@ -202,12 +202,13 @@ def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X
     Limits.Cone (SheafConditionEqualizerProducts.diagram F U) ⥤ Limits.Cone ((diagram U).op ⋙ F) where
   obj := fun c => coneEquivInverseObj F U c
   map := fun c c' f =>
-    { hom := f.hom,
+    { Hom := f.Hom,
       w' := by
         intro x
         induction x using Opposite.rec
         rcases x with (⟨i⟩ | ⟨i, j⟩)
         · dsimp
+          dunfold fork.ι
           rw [← f.w walking_parallel_pair.zero, category.assoc]
           
         · dsimp
@@ -218,8 +219,8 @@ def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X
 @[simps]
 def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X) (c : Cone ((diagram U).op ⋙ F)) :
     (𝟭 (Cone ((diagram U).op ⋙ F))).obj c ≅ (coneEquivFunctor F U ⋙ coneEquivInverse F U).obj c where
-  hom :=
-    { hom := 𝟙 _,
+  Hom :=
+    { Hom := 𝟙 _,
       w' := fun j => by
         induction j using Opposite.rec
         rcases j with ⟨⟩ <;>
@@ -227,7 +228,7 @@ def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
             simp only [limits.fan.mk_π_app, category.id_comp, limits.limit.lift_π]
              }
   inv :=
-    { hom := 𝟙 _,
+    { Hom := 𝟙 _,
       w' := fun j => by
         induction j using Opposite.rec
         rcases j with ⟨⟩ <;>
@@ -255,8 +256,8 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
     coneEquivInverse F U ⋙ coneEquivFunctor F U ≅ 𝟭 (Limits.Cone (SheafConditionEqualizerProducts.diagram F U)) :=
   NatIso.ofComponents
     (fun c =>
-      { hom :=
-          { hom := 𝟙 _,
+      { Hom :=
+          { Hom := 𝟙 _,
             w' := by
               rintro ⟨_ | _⟩
               · ext
@@ -268,7 +269,7 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                  },
         inv :=
-          { hom := 𝟙 _,
+          { Hom := 𝟙 _,
             w' := by
               rintro ⟨_ | _⟩
               · ext
@@ -310,8 +311,8 @@ then `F.map_cone (cone U)` is a limit cone.
 def isLimitMapConeOfIsLimitSheafConditionFork (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
     (P : IsLimit (SheafConditionEqualizerProducts.fork F U)) : IsLimit (F.mapCone (cocone U).op) :=
   IsLimit.ofIsoLimit ((IsLimit.ofConeEquiv (coneEquiv F U).symm).symm P)
-    { hom :=
-        { hom := 𝟙 _,
+    { Hom :=
+        { Hom := 𝟙 _,
           w' := by
             intro x
             induction x using Opposite.rec
@@ -326,7 +327,7 @@ def isLimitMapConeOfIsLimitSheafConditionFork (F : Presheaf C X) ⦃ι : Type v�
               rfl
                },
       inv :=
-        { hom := 𝟙 _,
+        { Hom := 𝟙 _,
           w' := by
             intro x
             induction x using Opposite.rec
@@ -355,8 +356,8 @@ then `sheaf_condition_equalizer_products.fork` is an equalizer.
 def isLimitSheafConditionForkOfIsLimitMapCone (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
     (Q : IsLimit (F.mapCone (cocone U).op)) : IsLimit (SheafConditionEqualizerProducts.fork F U) :=
   IsLimit.ofIsoLimit ((IsLimit.ofConeEquiv (coneEquiv F U)).symm Q)
-    { hom :=
-        { hom := 𝟙 _,
+    { Hom :=
+        { Hom := 𝟙 _,
           w' := by
             rintro ⟨⟩
             · dsimp
@@ -370,7 +371,7 @@ def isLimitSheafConditionForkOfIsLimitMapCone (F : Presheaf C X) ⦃ι : Type v�
               rfl
                },
       inv :=
-        { hom := 𝟙 _,
+        { Hom := 𝟙 _,
           w' := by
             rintro ⟨⟩
             · dsimp

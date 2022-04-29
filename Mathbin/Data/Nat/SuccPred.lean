@@ -12,7 +12,9 @@ In this file, we show that `ℕ` is both an archimedean `succ_order` and an arch
 -/
 
 
-open Function Nat
+open Function Order
+
+namespace Nat
 
 -- so that Lean reads `nat.succ` through `succ_order.succ`
 @[reducible]
@@ -24,11 +26,11 @@ instance : SuccOrder ℕ :=
 instance : PredOrder ℕ where
   pred := pred
   pred_le := pred_leₓ
-  minimal_of_le_pred := fun a ha b h => by
+  min_of_le_pred := fun a ha => by
     cases a
-    · exact b.not_lt_zero h
+    · exact is_min_bot
       
-    · exact Nat.lt_irreflₓ a ha
+    · exact (not_succ_le_self _ ha).elim
       
   le_pred_of_lt := fun a b h => by
     cases b
@@ -43,13 +45,21 @@ instance : PredOrder ℕ where
     · exact h
       
 
-theorem Nat.succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
+@[simp]
+theorem succ_eq_succ : Order.succ = succ :=
+  rfl
+
+@[simp]
+theorem pred_eq_pred : Order.pred = pred :=
+  rfl
+
+theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', add_succ]
     exact congr_argₓ _ n.succ_iterate
 
-theorem Nat.pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
+theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', sub_succ]
@@ -58,10 +68,24 @@ theorem Nat.pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
 instance : IsSuccArchimedean ℕ :=
   ⟨fun a b h =>
     ⟨b - a, by
-      rw [Nat.succ_iterate, add_tsub_cancel_of_le h]⟩⟩
+      rw [succ_eq_succ, succ_iterate, add_tsub_cancel_of_le h]⟩⟩
 
 instance : IsPredArchimedean ℕ :=
   ⟨fun a b h =>
     ⟨b - a, by
-      rw [Nat.pred_iterate, tsub_tsub_cancel_of_le h]⟩⟩
+      rw [pred_eq_pred, pred_iterate, tsub_tsub_cancel_of_le h]⟩⟩
+
+/-! ### Covering relation -/
+
+
+protected theorem covby_iff_succ_eq {m n : ℕ} : m ⋖ n ↔ m + 1 = n :=
+  succ_eq_iff_covby.symm
+
+end Nat
+
+@[simp, norm_cast]
+theorem Finₓ.coe_covby_iff {n : ℕ} {a b : Finₓ n} : (a : ℕ) ⋖ b ↔ a ⋖ b :=
+  and_congr_right' ⟨fun h c hc => h hc, fun h c ha hb => @h ⟨c, hb.trans b.Prop⟩ ha hb⟩
+
+alias Finₓ.coe_covby_iff ↔ _ Covby.coe_fin
 

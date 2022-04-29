@@ -81,15 +81,17 @@ Hausdorff measure, Hausdorff dimension, dimension
 -/
 
 
-open_locale MeasureTheory Ennreal Nnreal TopologicalSpace
+open MeasureTheory Ennreal Nnreal TopologicalSpace
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 
 variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- Hausdorff dimension of a set in an (e)metric space. -/
 noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ := by
-  let this' := borel X <;> exact ⨆ (d : ℝ≥0 ) (hd : @hausdorff_measure X _ _ ⟨rfl⟩ d s = ∞), d
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  exact ⨆ (d : ℝ≥0 ) (hd : @hausdorff_measure X _ _ ⟨rfl⟩ d s = ∞), d
 
 /-!
 ### Basic properties
@@ -100,10 +102,11 @@ section Measurable
 
 variable [MeasurableSpace X] [BorelSpace X]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
 theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0 ) (hd : μH[d] s = ∞), d := by
-  obtain rfl : ‹MeasurableSpace X› = borel X := BorelSpace.measurable_eq
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   rw [dimH]
 
 theorem hausdorff_measure_of_lt_dimH {s : Set X} {d : ℝ≥0 } (h : ↑d < dimH s) : μH[d] s = ∞ := by
@@ -113,20 +116,20 @@ theorem hausdorff_measure_of_lt_dimH {s : Set X} {d : ℝ≥0 } (h : ↑d < dimH
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 
 theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' : ℝ≥0 , μH[d'] s = ∞ → ↑d' ≤ d) : dimH s ≤ d :=
-  (dimH_def s).trans_le <| bsupr_le H
+  (dimH_def s).trans_le <| supr₂_le H
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d : ℝ≥0 } (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
   le_of_not_ltₓ <| mt hausdorff_measure_of_lt_dimH h
 
 theorem le_dimH_of_hausdorff_measure_eq_top {s : Set X} {d : ℝ≥0 } (h : μH[d] s = ∞) : ↑d ≤ dimH s := by
   rw [dimH_def]
-  exact le_bsupr d h
+  exact le_supr₂ d h
 
 theorem hausdorff_measure_of_dimH_lt {s : Set X} {d : ℝ≥0 } (h : dimH s < d) : μH[d] s = 0 := by
   rw [dimH_def] at h
   rcases Ennreal.lt_iff_exists_nnreal_btwn.1 h with ⟨d', hsd', hd'd⟩
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hd'd
-  exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le (le_bsupr d' h)
+  exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supr₂ d' h
 
 theorem measure_zero_of_dimH_lt {μ : Measureₓ X} {d : ℝ≥0 } (h : μ ≪ μH[d]) {s : Set X} (hd : dimH s < d) : μ s = 0 :=
   h <| hausdorff_measure_of_dimH_lt hd
@@ -140,15 +143,15 @@ theorem dimH_of_hausdorff_measure_ne_zero_ne_top {d : ℝ≥0 } {s : Set X} (h :
 
 end Measurable
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 @[mono]
 theorem dimH_mono {s t : Set X} (h : s ⊆ t) : dimH s ≤ dimH t := by
-  let this' := borel X
-  have : BorelSpace X := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   exact dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top <| top_unique <| hd ▸ measure_mono h
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 theorem dimH_subsingleton {s : Set X} (h : s.Subsingleton) : dimH s = 0 := by
-  let this' := borel X
-  have : BorelSpace X := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   apply le_antisymmₓ _ (zero_le _)
   refine' dimH_le_of_hausdorff_measure_ne_top _
   exact ((hausdorff_measure_le_one_of_subsingleton h le_rfl).trans_lt Ennreal.one_lt_top).Ne
@@ -163,10 +166,10 @@ theorem dimH_empty : dimH (∅ : Set X) = 0 :=
 theorem dimH_singleton (x : X) : dimH ({x} : Set X) = 0 :=
   subsingleton_singleton.dimH_zero
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 @[simp]
 theorem dimH_Union [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = ⨆ i, dimH (s i) := by
-  let this' := borel X
-  have : BorelSpace X := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   refine' le_antisymmₓ (dimH_le fun d hd => _) (supr_le fun i => dimH_mono <| subset_Union _ _)
   contrapose! hd
   have : ∀ i, μH[d] (s i) = 0 := fun i => hausdorff_measure_of_dimH_lt ((le_supr (fun i => dimH (s i)) i).trans_lt hd)
@@ -221,43 +224,43 @@ theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (
   choose! t htx htr using h
   rcases countable_cover_nhds_within htx with ⟨S, hSs, hSc, hSU⟩
   calc dimH s ≤ dimH (⋃ x ∈ S, t x) := dimH_mono hSU _ = ⨆ x ∈ S, dimH (t x) := dimH_bUnion hSc _ _ ≤ r :=
-      bsupr_le fun x hx => htr x (hSs hx)
+      supr₂_le fun x hx => htr x <| hSs hx
 
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` along
-`(𝓝[s] x).lift' powerset`. -/
-theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsupₓ ((𝓝[s] x).lift' Powerset) dimH) = dimH s := by
-  refine' le_antisymmₓ (bsupr_le fun x hx => _) _
+`(𝓝[s] x).small_sets`. -/
+theorem bsupr_limsup_dimH (s : Set X) : (⨆ x ∈ s, limsupₓ (𝓝[s] x).smallSets dimH) = dimH s := by
+  refine' le_antisymmₓ (supr₂_le fun x hx => _) _
   · refine'
       Limsup_le_of_le
         (by
           infer_auto_param)
         (eventually_map.2 _)
-    exact eventually_lift'_powerset.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
+    exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
     
   · refine' le_of_forall_ge_of_dense fun r hr => _
     rcases exists_mem_nhds_within_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
-    refine' le_bsupr_of_le x hxs _
+    refine' le_supr₂_of_le x hxs _
     rw [limsup_eq]
     refine' le_Inf fun b hb => _
-    rcases eventually_lift'_powerset.1 hb with ⟨t, htx, ht⟩
+    rcases eventually_small_sets.1 hb with ⟨t, htx, ht⟩
     exact (hxr t htx).le.trans (ht t subset.rfl)
     
 
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
-`(𝓝[s] x).lift' powerset`. -/
-theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsupₓ ((𝓝[s] x).lift' Powerset) dimH) = dimH s := by
+`(𝓝[s] x).small_sets`. -/
+theorem supr_limsup_dimH (s : Set X) : (⨆ x, limsupₓ (𝓝[s] x).smallSets dimH) = dimH s := by
   refine' le_antisymmₓ (supr_le fun x => _) _
   · refine'
       Limsup_le_of_le
         (by
           infer_auto_param)
         (eventually_map.2 _)
-    exact eventually_lift'_powerset.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
+    exact eventually_small_sets.2 ⟨s, self_mem_nhds_within, fun t => dimH_mono⟩
     
   · rw [← bsupr_limsup_dimH]
-    exact bsupr_le_supr _ _
+    exact supr₂_le_supr _ _
     
 
 end
@@ -269,12 +272,10 @@ end
 
 variable {C K r : ℝ≥0 } {f : X → Y} {s t : Set X}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then `dimH (f '' s) ≤ dimH s / r`. -/
 theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) : dimH (f '' s) ≤ dimH s / r := by
-  let this' := borel X
-  have : BorelSpace X := ⟨rfl⟩
-  let this' := borel Y
-  have : BorelSpace Y := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   refine' dimH_le fun d hd => _
   have := h.hausdorff_measure_image_le hr d.coe_nonneg
   rw [hd, Ennreal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
@@ -310,7 +311,7 @@ theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
   rw [inter_Union₂] at huU
   rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]
   simp only [Ennreal.supr_div]
-  exact bsupr_le_bsupr fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
+  exact supr₂_mono fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 
 /-- If `f : X → Y` is Hölder continuous in a neighborhood of every point `x : X` with the same
 positive exponent `r` but possibly different coefficients, then the Hausdorff dimension of the range
@@ -362,11 +363,9 @@ theorem dimH_range_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X
 
 namespace AntilipschitzWith
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 theorem dimH_preimage_le (hf : AntilipschitzWith K f) (s : Set Y) : dimH (f ⁻¹' s) ≤ dimH s := by
-  let this' := borel X
-  have : BorelSpace X := ⟨rfl⟩
-  let this' := borel Y
-  have : BorelSpace Y := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   refine' dimH_le fun d hd => le_dimH_of_hausdorff_measure_eq_top _
   have := hf.hausdorff_measure_preimage_le d.coe_nonneg s
   rw [hd, top_le_iff] at this
@@ -436,7 +435,7 @@ namespace Real
 variable {E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.Ball x r) = Fintype.card ι := by
-  cases' is_empty_or_nonempty ι
+  cases is_empty_or_nonempty ι
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elimₓ x y
     

@@ -3,13 +3,9 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Topology.ContinuousOn
-import Mathbin.Topology.Separation
-import Mathbin.Topology.Algebra.MulAction
-import Mathbin.GroupTheory.Submonoid.Operations
-import Mathbin.Algebra.Group.Prod
-import Mathbin.Algebra.Pointwise
 import Mathbin.Algebra.BigOperators.Finprod
+import Mathbin.Data.Set.Pointwise
+import Mathbin.Topology.Algebra.MulAction
 
 /-!
 # Theory of topological monoids
@@ -24,7 +20,7 @@ universe u v
 
 open Classical Set Filter TopologicalSpace
 
-open_locale Classical TopologicalSpace BigOperators Pointwise
+open Classical TopologicalSpace BigOperators Pointwise
 
 variable {ι α X M N : Type _} [TopologicalSpace X]
 
@@ -93,6 +89,25 @@ theorem Filter.Tendsto.mul_const (b : M) {c : M} {f : α → M} {l : Filter α} 
     Tendsto (fun k : α => f k * b) l (𝓝 (c * b)) :=
   h.mul tendsto_const_nhds
 
+/-- Construct a unit from limits of units and their inverses. -/
+@[to_additive Filter.Tendsto.addUnits "Construct an additive unit from limits of additive units\nand their negatives.",
+  simps]
+def Filter.Tendsto.units [TopologicalSpace N] [Monoidₓ N] [HasContinuousMul N] [T2Space N] {f : ι → Nˣ} {r₁ r₂ : N}
+    {l : Filter ι} [l.ne_bot] (h₁ : Tendsto (fun x => ↑(f x)) l (𝓝 r₁)) (h₂ : Tendsto (fun x => ↑(f x)⁻¹) l (𝓝 r₂)) :
+    Nˣ where
+  val := r₁
+  inv := r₂
+  val_inv :=
+    tendsto_nhds_unique
+      (by
+        simpa using h₁.mul h₂)
+      tendsto_const_nhds
+  inv_val :=
+    tendsto_nhds_unique
+      (by
+        simpa using h₂.mul h₁)
+      tendsto_const_nhds
+
 @[to_additive]
 theorem ContinuousAt.mul {f g : X → M} {x : X} (hf : ContinuousAt f x) (hg : ContinuousAt g x) :
     ContinuousAt (fun x => f x * g x) x :=
@@ -127,7 +142,7 @@ instance (priority := 100) has_continuous_mul_of_discrete_topology [TopologicalS
     HasContinuousMul N :=
   ⟨continuous_of_discrete_topology⟩
 
-open_locale Filter
+open Filter
 
 open Function
 
@@ -230,7 +245,7 @@ theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
     Closure (s : Set M) * Closure (s : Set M) = (fun p : M × M => p.1 * p.2) '' Closure ((s : Set M) ×ˢ (s : Set M)) :=
       by
       simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : M × M => p.1 * p.2) '' ((s : Set M) ×ˢ (s : Set M))) :=
+    _ ⊆ Closure ((fun p : M × M => p.1 * p.2) '' (s : Set M) ×ˢ (s : Set M)) :=
       image_closure_subset_closure_image continuous_mul
     _ = Closure s := by
       simp [s.coe_mul_self_eq]
@@ -355,7 +370,7 @@ theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀, ∀ i 
     Continuous fun a => (l.map fun i => f i a).Prod :=
   continuous_iff_continuous_at.2 fun x => (tendsto_list_prod l) fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 
-@[continuity, to_additive continuous_nsmul]
+@[continuity, to_additive]
 theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
   | 0 => by
     simpa using continuous_const
@@ -367,15 +382,19 @@ instance AddMonoidₓ.has_continuous_const_smul_nat {A} [AddMonoidₓ A] [Topolo
     HasContinuousConstSmul ℕ A :=
   ⟨continuous_nsmul⟩
 
+instance AddMonoidₓ.has_continuous_smul_nat {A} [AddMonoidₓ A] [TopologicalSpace A] [HasContinuousAdd A] :
+    HasContinuousSmul ℕ A :=
+  ⟨continuous_uncurry_of_discrete_topology continuous_nsmul⟩
+
 @[continuity, to_additive Continuous.nsmul]
 theorem Continuous.pow {f : X → M} (h : Continuous f) (n : ℕ) : Continuous fun b => f b ^ n :=
   (continuous_pow n).comp h
 
-@[to_additive continuous_on_nsmul]
+@[to_additive]
 theorem continuous_on_pow {s : Set M} (n : ℕ) : ContinuousOn (fun x => x ^ n) s :=
   (continuous_pow n).ContinuousOn
 
-@[to_additive continuous_at_nsmul]
+@[to_additive]
 theorem continuous_at_pow (x : M) (n : ℕ) : ContinuousAt (fun x => x ^ n) x :=
   (continuous_pow n).ContinuousAt
 
@@ -402,7 +421,7 @@ end HasContinuousMul
 namespace MulOpposite
 
 /-- If multiplication is continuous in `α`, then it also is in `αᵐᵒᵖ`. -/
-@[to_additive]
+@[to_additive "If addition is continuous in `α`, then it also is in `αᵃᵒᵖ`."]
 instance [TopologicalSpace α] [Mul α] [HasContinuousMul α] : HasContinuousMul αᵐᵒᵖ :=
   ⟨let h₁ := @continuous_mul α _ _ _
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst
@@ -421,7 +440,8 @@ with respect to the induced topology, is continuous.
 
 Inversion is also continuous, but we register this in a later file, `topology.algebra.group`,
 because the predicate `has_continuous_inv` has not yet been defined. -/
-@[to_additive]
+@[to_additive
+      "If addition on an additive monoid is continuous, then addition on the additive units\nof the monoid, with respect to the induced topology, is continuous.\n\nNegation is also continuous, but we register this in a later file, `topology.algebra.group`, because\nthe predicate `has_continuous_neg` has not yet been defined."]
 instance : HasContinuousMul αˣ :=
   ⟨let h := @continuous_mul (α × αᵐᵒᵖ) _ _ _
     continuous_induced_rng <| h.comp <| continuous_embed_product.prod_map continuous_embed_product⟩
@@ -464,15 +484,28 @@ theorem continuous_finset_prod {f : ι → X → M} (s : Finset ι) :
 open Function
 
 @[to_additive]
+theorem LocallyFinite.exists_finset_mul_support {M : Type _} [CommMonoidₓ M] {f : ι → X → M}
+    (hf : LocallyFinite fun i => mul_support <| f i) (x₀ : X) :
+    ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (MulSupport fun i => f i x) ⊆ I := by
+  rcases hf x₀ with ⟨U, hxU, hUf⟩
+  refine' ⟨hUf.to_finset, (mem_of_superset hxU) fun y hy i hi => _⟩
+  rw [hUf.coe_to_finset]
+  exact ⟨y, hi, hy⟩
+
+@[to_additive]
+theorem finprod_eventually_eq_prod {M : Type _} [CommMonoidₓ M] {f : ι → X → M}
+    (hf : LocallyFinite fun i => MulSupport (f i)) (x : X) :
+    ∃ s : Finset ι, ∀ᶠ y in 𝓝 x, (∏ᶠ i, f i y) = ∏ i in s, f i y :=
+  let ⟨I, hI⟩ := hf.exists_finset_mul_support x
+  ⟨I, hI.mono fun y hy => (finprod_eq_prod_of_mul_support_subset _) fun i hi => hy hi⟩
+
+@[to_additive]
 theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i)) (hf : LocallyFinite fun i => MulSupport (f i)) :
     Continuous fun x => ∏ᶠ i, f i x := by
   refine' continuous_iff_continuous_at.2 fun x => _
-  rcases hf x with ⟨U, hxU, hUf⟩
-  have : ContinuousAt (fun x => ∏ i in hUf.to_finset, f i x) x := tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt
-  refine' this.congr ((mem_of_superset hxU) fun y hy => _)
-  refine' (finprod_eq_prod_of_mul_support_subset _ fun i hi => _).symm
-  rw [hUf.coe_to_finset]
-  exact ⟨y, hi, hy⟩
+  rcases finprod_eventually_eq_prod hf x with ⟨s, hs⟩
+  refine' ContinuousAt.congr _ (eventually_eq.symm hs)
+  exact tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt
 
 @[to_additive]
 theorem continuous_finprod_cond {f : ι → X → M} {p : ι → Prop} (hc : ∀ i, p i → Continuous (f i))
@@ -524,7 +557,7 @@ omit h₁ h₂
 @[to_additive]
 theorem has_continuous_mul_induced : @HasContinuousMul M (t.induced f) _ :=
   { continuous_mul := by
-      let this' : TopologicalSpace M := t.induced f
+      let this : TopologicalSpace M := t.induced f
       refine' continuous_induced_rng _
       simp_rw [Function.comp, map_mul]
       change Continuous ((fun p : N × N => p.1 * p.2) ∘ Prod.map f f)

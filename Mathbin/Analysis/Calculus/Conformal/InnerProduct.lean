@@ -18,7 +18,7 @@ noncomputable section
 
 variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 /-- A real differentiable map `f` is conformal at point `x` if and only if its
     differential `fderiv ℝ f x` at that point scales every inner product by a positive scalar. -/

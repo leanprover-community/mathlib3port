@@ -5,8 +5,8 @@ Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.Group.Commute
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Algebra.Opposites
-import Mathbin.Data.Equiv.MulAdd
 
 /-!
 # Group structures on the multiplicative and additive opposites
@@ -34,25 +34,25 @@ instance [AddRightCancelSemigroup α] : AddRightCancelSemigroup αᵐᵒᵖ :=
   unop_injective.AddRightCancelSemigroup _ fun x y => rfl
 
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ αᵐᵒᵖ :=
-  { MulOpposite.addSemigroup α with add_comm := fun x y => unop_injective <| add_commₓ (unop x) (unop y) }
+  unop_injective.AddCommSemigroup _ fun x y => rfl
 
 instance [AddZeroClass α] : AddZeroClass αᵐᵒᵖ :=
   unop_injective.AddZeroClass _ rfl fun x y => rfl
 
 instance [AddMonoidₓ α] : AddMonoidₓ αᵐᵒᵖ :=
-  unop_injective.addMonoidSmul _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.AddMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ αᵐᵒᵖ :=
-  { MulOpposite.addMonoid α, MulOpposite.addCommSemigroup α with }
+  unop_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [SubNegMonoidₓ α] : SubNegMonoidₓ αᵐᵒᵖ :=
-  unop_injective.subNegMonoidSmul _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.SubNegMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddGroupₓ α] : AddGroupₓ αᵐᵒᵖ :=
-  unop_injective.addGroupSmul _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.AddGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddCommGroupₓ α] : AddCommGroupₓ αᵐᵒᵖ :=
-  { MulOpposite.addGroup α, MulOpposite.addCommMonoid α with }
+  unop_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-!
 ### Multiplicative structures on `αᵐᵒᵖ`
@@ -131,6 +131,14 @@ instance [CommGroupₓ α] : CommGroupₓ αᵐᵒᵖ :=
 variable {α}
 
 @[simp, to_additive]
+theorem unop_div [DivInvMonoidₓ α] (x y : αᵐᵒᵖ) : unop (x / y) = (unop y)⁻¹ * unop x :=
+  rfl
+
+@[simp, to_additive]
+theorem op_div [DivInvMonoidₓ α] (x y : α) : op (x / y) = (op y)⁻¹ * op x := by
+  simp [div_eq_mul_inv]
+
+@[simp, to_additive]
 theorem semiconj_by_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) ↔ SemiconjBy a x y := by
   simp only [SemiconjBy, ← op_mul, op_inj, eq_comm]
 
@@ -190,7 +198,7 @@ instance [RightCancelSemigroup α] : RightCancelSemigroup αᵃᵒᵖ :=
   unop_injective.RightCancelSemigroup _ fun x y => rfl
 
 instance [CommSemigroupₓ α] : CommSemigroupₓ αᵃᵒᵖ :=
-  { AddOpposite.semigroup α with mul_comm := fun x y => unop_injective <| mul_comm (unop x) (unop y) }
+  unop_injective.CommSemigroup _ fun x y => rfl
 
 instance [MulOneClassₓ α] : MulOneClassₓ αᵃᵒᵖ :=
   unop_injective.MulOneClass _ rfl fun x y => rfl
@@ -207,19 +215,19 @@ theorem unop_pow {β} [Pow α β] (a : αᵃᵒᵖ) (b : β) : unop (a ^ b) = un
   rfl
 
 instance [Monoidₓ α] : Monoidₓ αᵃᵒᵖ :=
-  unop_injective.monoidPow _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [CommMonoidₓ α] : CommMonoidₓ αᵃᵒᵖ :=
-  { AddOpposite.monoid α, AddOpposite.commSemigroup α with }
+  unop_injective.CommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DivInvMonoidₓ α] : DivInvMonoidₓ αᵃᵒᵖ :=
-  unop_injective.divInvMonoidPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance [Groupₓ α] : Groupₓ αᵃᵒᵖ :=
-  unop_injective.groupPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance [CommGroupₓ α] : CommGroupₓ αᵃᵒᵖ :=
-  { AddOpposite.group α, AddOpposite.commMonoid α with }
+  unop_injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 variable {α}
 

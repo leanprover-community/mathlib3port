@@ -160,7 +160,7 @@ theorem mem_shadow_iff_exists_mem_card_add : s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈
 
 end Shadow
 
-open_locale FinsetFamily
+open FinsetFamily
 
 section UpShadow
 

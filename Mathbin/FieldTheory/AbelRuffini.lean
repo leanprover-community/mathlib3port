@@ -26,7 +26,7 @@ that is solvable by radicals has a solvable Galois group.
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Polynomial IntermediateField
 
@@ -115,7 +115,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
     exact gal_X_pow_is_solvable n
     
   have ha' : algebraMap F (X ^ n - C a).SplittingField a ≠ 0 :=
-    mt ((RingHom.injective_iff _).mp (RingHom.injective _) a) ha
+    mt ((injective_iff_map_eq_zero _).mp (RingHom.injective _) a) ha
   by_cases' hn : n = 0
   · rw [hn, pow_zeroₓ, ← C_1, ← C_sub]
     exact gal_C_is_solvable (1 - a)
@@ -154,7 +154,7 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
 
 theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} [Field E] (i : F →+* E) (n : ℕ) {a : F}
     (ha : a ≠ 0) (h : (X ^ n - c a).Splits i) : (X ^ n - 1).Splits i := by
-  have ha' : i a ≠ 0 := mt (i.injective_iff.mp i.injective a) ha
+  have ha' : i a ≠ 0 := mt ((injective_iff_map_eq_zero i).mp i.injective a) ha
   by_cases' hn : n = 0
   · rw [hn, pow_zeroₓ, sub_self]
     exact splits_zero i
@@ -397,8 +397,8 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
     "by"
     (Tactic.tacticSeq
      (Tactic.tacticSeq1Indented
-      [(group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `p [] ":=" (Term.app `minpoly [`F `α])))) [])
-       (group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `q [] ":=" (Term.app `minpoly [`F `β])))) [])
+      [(group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `p [] [] ":=" (Term.app `minpoly [`F `α])))) [])
+       (group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `q [] [] ":=" (Term.app `minpoly [`F `β])))) [])
        (group
         (Tactic.tacticHave_
          "have"
@@ -422,6 +422,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
          (Term.letDecl
           (Term.letIdDecl
            `f
+           []
            [(Term.typeSpec
              ":"
              (Algebra.Algebra.Basic.«term_→ₐ[_]_»
@@ -577,8 +578,8 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
    "by"
    (Tactic.tacticSeq
     (Tactic.tacticSeq1Indented
-     [(group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `p [] ":=" (Term.app `minpoly [`F `α])))) [])
-      (group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `q [] ":=" (Term.app `minpoly [`F `β])))) [])
+     [(group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `p [] [] ":=" (Term.app `minpoly [`F `α])))) [])
+      (group (Tactic.tacticLet_ "let" (Term.letDecl (Term.letIdDecl `q [] [] ":=" (Term.app `minpoly [`F `β])))) [])
       (group
        (Tactic.tacticHave_
         "have"
@@ -602,6 +603,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
         (Term.letDecl
          (Term.letIdDecl
           `f
+          []
           [(Term.typeSpec
             ":"
             (Algebra.Algebra.Basic.«term_→ₐ[_]_»
@@ -1684,17 +1686,17 @@ theorem is_solvable (α : solvableByRad F E) : IsSolvable (minpoly F α).Gal := 
     
   · exact fun α β =>
       induction2
-        (add_mem _ (subset_adjoin F _ (Set.mem_insert α _))
+        (add_mem (subset_adjoin F _ (Set.mem_insert α _))
           (subset_adjoin F _ (Set.mem_insert_of_mem α (Set.mem_singleton β))))
     
-  · exact fun α => induction1 (neg_mem _ (mem_adjoin_simple_self F α))
+  · exact fun α => induction1 (neg_mem (mem_adjoin_simple_self F α))
     
   · exact fun α β =>
       induction2
-        (mul_mem _ (subset_adjoin F _ (Set.mem_insert α _))
+        (mul_mem (subset_adjoin F _ (Set.mem_insert α _))
           (subset_adjoin F _ (Set.mem_insert_of_mem α (Set.mem_singleton β))))
     
-  · exact fun α => induction1 (inv_mem _ (mem_adjoin_simple_self F α))
+  · exact fun α => induction1 (inv_mem (mem_adjoin_simple_self F α))
     
   · exact fun α n => induction3
     

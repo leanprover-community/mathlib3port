@@ -42,18 +42,13 @@ class NumberField (K : Type _) [Field K] : Prop where
 
 open Function
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 /-- `ℤ` with its usual ring structure is not a field. -/
-theorem Int.not_is_field : ¬IsField ℤ := by
-  intro hf
-  cases' hf.mul_inv_cancel two_ne_zero with inv2 hinv2
-  have not_even_2 : ¬Even (2 : ℤ) := by
-    rw [← Int.odd_iff_not_even]
-    apply Int.Odd.of_mul_left
-    rw [hinv2, Int.odd_iff_not_even]
-    exact Int.not_even_one
-  exact not_even_2 (even_bit0 1)
+theorem Int.not_is_field : ¬IsField ℤ := fun h =>
+  Int.not_even_one <|
+    (h.mul_inv_cancel two_ne_zero).imp fun a => by
+      rw [← two_mul] <;> exact Eq.symm
 
 namespace NumberField
 
@@ -80,7 +75,12 @@ localized [NumberField] notation "𝓞" => NumberField.ringOfIntegers
 theorem mem_ring_of_integers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 
-instance ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
+/-- Given an algebra between two fields, create an algebra between their two rings of integers.
+
+For now, this is not an instance by default as it creates an equal-but-not-defeq diamond with
+`algebra.id` when `K = L`. This is caused by `x = ⟨x, x.prop⟩` not being defeq on subtypes. This
+will likely change in Lean 4. -/
+def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
   RingHom.toAlgebra
     { toFun := fun k => ⟨algebraMap K L k, IsIntegral.algebra_map k.2⟩,
       map_zero' :=

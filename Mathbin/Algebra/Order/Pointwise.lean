@@ -14,7 +14,7 @@ This file contains lemmas about the effect of pointwise operations on sets with 
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 namespace LinearOrderedField
 

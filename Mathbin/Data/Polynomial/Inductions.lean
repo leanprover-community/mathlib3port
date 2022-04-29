@@ -15,7 +15,7 @@ This file contains lemmas dealing with different flavours of induction on polyno
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 open Finset
 
@@ -48,7 +48,7 @@ theorem div_X_mul_X_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
 @[simp]
 theorem div_X_C (a : R) : divX (c a) = 0 :=
   ext fun n => by
-    cases n <;> simp [div_X, coeff_C] <;> simp [coeff]
+    simp [div_X, coeff_C] <;> simp [coeff]
 
 theorem div_X_eq_zero_iff : divX p = 0 ↔ p = c (p.coeff 0) :=
   ⟨fun h => by

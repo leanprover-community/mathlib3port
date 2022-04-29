@@ -23,7 +23,7 @@ namespace Set
 
 section Preorderₓ
 
-variable {α : Type _} [Preorderₓ α] {s t : Set α}
+variable {α β : Type _} [Preorderₓ α] [Preorderₓ β] {s t : Set α}
 
 /-- We say that a set `s : set α` is `ord_connected` if for all `x y ∈ s` it includes the
 interval `[x, y]`. If `α` is a `densely_ordered` `conditionally_complete_linear_order` with
@@ -51,9 +51,8 @@ theorem ord_connected_of_Ioo {α : Type _} [PartialOrderₓ α] {s : Set α}
   rcases eq_or_lt_of_le hxy with (rfl | hxy')
   · simpa
     
-  have := hs x hx y hy hxy'
-  rw [← union_diff_cancel Ioo_subset_Icc_self]
-  simp [*, insert_subset]
+  rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
+  exact insert_subset.2 ⟨hx, insert_subset.2 ⟨hy, hs x hx y hy hxy'⟩⟩
 
 protected theorem Icc_subset (s : Set α) [hs : OrdConnected s] {x y} (hx : x ∈ s) (hy : y ∈ s) : Icc x y ⊆ s :=
   hs.out hx hy
@@ -140,12 +139,21 @@ theorem ord_connected_univ : OrdConnected (Univ : Set α) :=
 
 /-- In a dense order `α`, the subtype from an `ord_connected` set is also densely ordered. -/
 instance [DenselyOrdered α] {s : Set α} [hs : OrdConnected s] : DenselyOrdered s :=
-  ⟨by
-    intro a₁ a₂ ha
-    have ha' : ↑a₁ < ↑a₂ := ha
-    obtain ⟨x, ha₁x, hxa₂⟩ := exists_between ha'
-    refine' ⟨⟨x, _⟩, ⟨ha₁x, hxa₂⟩⟩
-    exact (hs.out a₁.2 a₂.2) (Ioo_subset_Icc_self ⟨ha₁x, hxa₂⟩)⟩
+  ⟨fun h : (a : α) < b =>
+    let ⟨x, H⟩ := exists_between h
+    ⟨⟨x, (hs.out a.2 b.2) (Ioo_subset_Icc_self H)⟩, H⟩⟩
+
+@[instance]
+theorem ord_connected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set α} [hs : OrdConnected s] :
+    OrdConnected (e '' s) := by
+  constructor
+  rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ z ⟨hxz, hzy⟩
+  exact
+    ⟨EquivLike.inv e z, hs.out hx hy ⟨(le_map_inv_iff e).mpr hxz, (map_inv_le_iff e).mpr hzy⟩, EquivLike.right_inv e z⟩
+
+@[instance]
+theorem ord_connected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdConnected (Range e) := by
+  simp_rw [← image_univ, ord_connected_image e]
 
 end Preorderₓ
 

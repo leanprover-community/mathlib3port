@@ -118,7 +118,6 @@ instance : Category (Grothendieck F) where
       -- into a natural isomorphism.
       rw [← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber]
       simp
-      rfl
       
     · simp
       

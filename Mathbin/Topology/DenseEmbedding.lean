@@ -27,7 +27,7 @@ noncomputable section
 
 open Set Filter
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -244,7 +244,7 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
       dense_iff_closure_eq.2 <| by
         ext ⟨x, hx⟩
         rw [image_eq_range] at hx
-        simpa [closure_subtype, ← range_comp, (· ∘ ·)],
+        simpa [closure_subtype, ← range_comp, (· ∘ ·)] ,
     inj := (de.inj.comp Subtype.coe_injective).codRestrict _,
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by

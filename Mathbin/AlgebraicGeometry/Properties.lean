@@ -340,7 +340,7 @@ theorem is_integral_of_is_affine_is_domain [IsAffine X] [Nonempty X.Carrier] [h 
 
 theorem map_injective_of_is_integral [IsIntegral X] {U V : Opens X.Carrier} (i : U ⟶ V) [H : Nonempty U] :
     Function.Injective (X.Presheaf.map i.op) := by
-  rw [RingHom.injective_iff]
+  rw [injective_iff_map_eq_zero]
   intro x hx
   rw [← basic_open_eq_bot_iff] at hx⊢
   rw [Scheme.basic_open_res] at hx

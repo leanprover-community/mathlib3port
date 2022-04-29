@@ -171,7 +171,7 @@ section Vector3
 
 open Vector3
 
-open_locale Vector3
+open Vector3
 
 /-- "Curried" exists, i.e. `∃ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorEx : ∀ k, (Vector3 α k → Prop) → Prop

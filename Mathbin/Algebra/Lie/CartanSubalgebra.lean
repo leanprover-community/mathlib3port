@@ -54,7 +54,7 @@ theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H �
 
 theorem mem_normalizer_iff' (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅y,x⁆ ∈ H :=
   forall₂_congrₓ fun y hy => by
-    rw [← lie_skew, H.neg_mem_iff]
+    rw [← lie_skew, neg_mem_iff]
 
 theorem le_normalizer : H ≤ H.normalizer := fun x hx => show ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H from fun y => H.lie_mem hx
 

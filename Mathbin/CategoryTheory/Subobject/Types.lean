@@ -27,7 +27,7 @@ open CategoryTheory
 
 open CategoryTheory.Subobject
 
-open_locale CategoryTheory.Type
+open CategoryTheory.Type
 
 theorem subtype_val_mono {α : Type u} (s : Set α) : Mono (↾(Subtype.val : s → α)) :=
   (mono_iff_injective _).mpr Subtype.val_injective

@@ -15,7 +15,7 @@ namespace MultilinearMap
 
 section DomCoprod
 
-open_locale TensorProduct
+open TensorProduct
 
 variable {R ι₁ ι₂ ι₃ ι₄ : Type _}
 

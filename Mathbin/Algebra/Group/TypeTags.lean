@@ -3,8 +3,8 @@ Copyright (c) 2018 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Algebra.Group.Hom
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Algebra.Hom.Group
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # Type tags that turn additive structures into multiplicative, and vice versa
@@ -282,44 +282,67 @@ instance [CommGroupₓ α] : AddCommGroupₓ (Additive α) :=
 instance [AddCommGroupₓ α] : CommGroupₓ (Multiplicative α) :=
   { Multiplicative.group, Multiplicative.commMonoid with }
 
+open Multiplicative (ofAdd)
+
+open Additive (ofMul)
+
 /-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
+@[simps]
 def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
-    (α →+ β) ≃ (Multiplicative α →* Multiplicative β) :=
-  ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
+    (α →+ β) ≃ (Multiplicative α →* Multiplicative β) where
+  toFun := fun f => ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
+  invFun := fun f => ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
+  left_inv := fun x => by
     ext
-    rfl, fun x => by
+    rfl
+  right_inv := fun x => by
     ext
-    rfl⟩
+    rfl
 
 /-- Reinterpret `α →* β` as `additive α →+ additive β`. -/
-def MonoidHom.toAdditive [MulOneClassₓ α] [MulOneClassₓ β] : (α →* β) ≃ (Additive α →+ Additive β) :=
-  ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
+@[simps]
+def MonoidHom.toAdditive [MulOneClassₓ α] [MulOneClassₓ β] : (α →* β) ≃ (Additive α →+ Additive β) where
+  toFun := fun f => ⟨fun a => ofMul (f a.toMul), f.2, f.3⟩
+  invFun := fun f => ⟨fun a => (f (ofMul a)).toMul, f.2, f.3⟩
+  left_inv := fun x => by
     ext
-    rfl, fun x => by
+    rfl
+  right_inv := fun x => by
     ext
-    rfl⟩
+    rfl
 
 /-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
-def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClass β] : (Additive α →+ β) ≃ (α →* Multiplicative β) :=
-  ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
+@[simps]
+def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClass β] : (Additive α →+ β) ≃ (α →* Multiplicative β) where
+  toFun := fun f => ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
+  invFun := fun f => ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
+  left_inv := fun x => by
     ext
-    rfl, fun x => by
+    rfl
+  right_inv := fun x => by
     ext
-    rfl⟩
+    rfl
 
 /-- Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
+@[simps]
 def MonoidHom.toAdditive' [MulOneClassₓ α] [AddZeroClass β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
   AddMonoidHom.toMultiplicative'.symm
 
 /-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
-def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClassₓ β] : (α →+ Additive β) ≃ (Multiplicative α →* β) :=
-  ⟨fun f => ⟨f.1, f.2, f.3⟩, fun f => ⟨f.1, f.2, f.3⟩, fun x => by
+@[simps]
+def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClassₓ β] :
+    (α →+ Additive β) ≃ (Multiplicative α →* β) where
+  toFun := fun f => ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
+  invFun := fun f => ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
+  left_inv := fun x => by
     ext
-    rfl, fun x => by
+    rfl
+  right_inv := fun x => by
     ext
-    rfl⟩
+    rfl
 
 /-- Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
+@[simps]
 def MonoidHom.toAdditive'' [AddZeroClass α] [MulOneClassₓ β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
   AddMonoidHom.toMultiplicative''.symm
 

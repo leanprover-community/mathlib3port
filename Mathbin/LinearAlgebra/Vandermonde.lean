@@ -27,9 +27,9 @@ This file defines the `vandermonde` matrix and gives its determinant.
 
 variable {R : Type _} [CommRingₓ R]
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 open Equivₓ
 

@@ -3,7 +3,7 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Algebra.GroupActionHom
+import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Data.SetLike.Basic
 import Mathbin.GroupTheory.GroupAction.Basic
@@ -251,7 +251,7 @@ end SubMulAction
 
 namespace SubMulAction
 
-variable [DivisionRing S] [Semiringₓ R] [MulAction R M]
+variable [GroupWithZeroₓ S] [Monoidₓ R] [MulAction R M]
 
 variable [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
 

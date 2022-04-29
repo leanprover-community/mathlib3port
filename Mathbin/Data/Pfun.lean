@@ -256,16 +256,39 @@ theorem mem_fix_iff {f : α →. Sum β α} {a : α} {b : β} :
         
       ⟩
 
+/-- If advancing one step from `a` leads to `b : β`, then `f.fix a = b` -/
+theorem fix_stop {f : α →. Sum β α} (a : α) {b : β} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a := by
+  rw [Pfun.mem_fix_iff]
+  exact Or.inl hb
+
+/-- If advancing one step from `a` on `f` leads to `a' : α`, then `f.fix a = f.fix a'` -/
+theorem fix_fwd {f : α →. Sum β α} (a a' : α) (ha' : Sum.inr a' ∈ f a) : f.fix a = f.fix a' := by
+  ext b
+  constructor
+  · intro h
+    obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'
+    exact e'
+    
+  · intro h
+    rw [Pfun.mem_fix_iff]
+    right
+    use a'
+    exact ⟨ha', h⟩
+    
+
 /-- A recursion principle for `pfun.fix`. -/
 @[elab_as_eliminator]
 def fixInduction {f : α →. Sum β α} {b : β} {C : α → Sort _} {a : α} (h : b ∈ f.fix a)
-    (H : ∀ a', b ∈ f.fix a' → (∀ a'', b ∈ f.fix a'' → Sum.inr a'' ∈ f a' → C a'') → C a') : C a := by
+    (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a := by
   replace h := Part.mem_assert_iff.1 h
   have := h.snd
   revert this
   induction' h.fst with a ha IH
   intro h₂
-  refine' H a (Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩) fun a'' ha'' fa'' => _
+  have fb : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨_, ha⟩, h₂⟩
+  refine' H a fb fun a'' fa'' => _
+  have ha'' : b ∈ f.fix a'' := by
+    rwa [fix_fwd _ _ fa''] at fb
   have := (Part.mem_assert_iff.1 ha'').snd
   exact IH _ fa'' ⟨ha _ fa'', this⟩ this
 
@@ -278,16 +301,12 @@ def fixInduction' (f : α →. Sum β α) (b : β) {C : α → Sort _} {a : α} 
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) : C a := by
   refine' fix_induction h fun a' h ih => _
   cases' e : (f a').get (dom_of_mem_fix h) with b' a'' <;> replace e : _ ∈ f a' := ⟨_, e⟩
-  · have : b' = b := by
-      obtain h'' | ⟨a, h'', _⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique e h''
-      rfl
-    subst this
-    exact hbase _ e
+  · apply hbase
+    convert e
+    exact Part.mem_unique h (fix_stop _ e)
     
-  · have : b ∈ f.fix a'' := by
-      obtain h'' | ⟨a, h'', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique e h''
-      exact e'
-    refine' hind _ _ this e (ih _ this e)
+  · refine' hind _ _ _ e (ih _ e)
+    rwa [fix_fwd _ _ e] at h
     
 
 variable (f : α →. β)
@@ -362,7 +381,7 @@ theorem mem_core_res (f : α → β) (s : Set α) (t : Set β) (x : α) : x ∈ 
 
 section
 
-open_locale Classical
+open Classical
 
 theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).Core t = sᶜ ∪ f ⁻¹' t := by
   ext

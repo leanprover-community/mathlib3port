@@ -38,13 +38,12 @@ The definitions of filtration and adapted can be found in `probability.stopping`
 
 open TopologicalSpace Filter
 
-open_locale Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators
+open Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 
-variable {α E ι : Type _} [Preorderₓ ι] [MeasurableSpace E] {m0 : MeasurableSpace α} {μ : Measure α} [NormedGroup E]
-  [NormedSpace ℝ E] [CompleteSpace E] [BorelSpace E] [SecondCountableTopology E] {f g : ι → α → E} {ℱ : Filtration ι m0}
-  [SigmaFiniteFiltration μ ℱ]
+variable {α E ι : Type _} [Preorderₓ ι] {m0 : MeasurableSpace α} {μ : Measure α} [NormedGroup E] [NormedSpace ℝ E]
+  [CompleteSpace E] {f g : ι → α → E} {ℱ : Filtration ι m0} [SigmaFiniteFiltration μ ℱ]
 
 /-- A family of functions `f : ι → α → E` is a martingale with respect to a filtration `ℱ` if `f`
 is adapted with respect to `ℱ` and for all `i ≤ j`, `μ[f j | ℱ.le i] =ᵐ[μ] f i`. -/
@@ -80,7 +79,7 @@ theorem adapted (hf : Martingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem measurable (hf : Martingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem strongly_measurable (hf : Martingale f ℱ μ) (i : ι) : strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 theorem condexp_ae_eq (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j) : μ[f j|ℱ i,ℱ.le i] =ᵐ[μ] f i :=
@@ -92,7 +91,7 @@ theorem integrable (hf : Martingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
 
 theorem set_integral_eq (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j) {s : Set α} (hs : measurable_set[ℱ i] s) :
     (∫ x in s, f i x ∂μ) = ∫ x in s, f j x ∂μ := by
-  rw [← @set_integral_condexp _ _ _ _ _ _ _ _ (ℱ i) m0 _ (ℱ.le i) _ _ _ (hf.integrable j) hs]
+  rw [← @set_integral_condexp _ _ _ _ _ (ℱ i) m0 _ (ℱ.le i) _ _ _ (hf.integrable j) hs]
   refine' set_integral_congr_ae (ℱ.le i s hs) _
   filter_upwards [hf.2 i j hij] with _ heq _ using HEq.symm
 
@@ -126,7 +125,7 @@ theorem martingale_iff [PartialOrderₓ E] : Martingale f ℱ μ ↔ Supermartin
 
 theorem martingale_condexp (f : α → E) (ℱ : Filtration ι m0) (μ : Measure α) [SigmaFiniteFiltration μ ℱ] :
     Martingale (fun i => μ[f|ℱ i,ℱ.le i]) ℱ μ :=
-  ⟨fun i => measurable_condexp, fun i j hij => condexp_condexp_of_le (ℱ.mono hij) _⟩
+  ⟨fun i => strongly_measurable_condexp, fun i j hij => condexp_condexp_of_le (ℱ.mono hij) _⟩
 
 namespace Supermartingale
 
@@ -135,7 +134,7 @@ theorem adapted [LE E] (hf : Supermartingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem strongly_measurable [LE E] (hf : Supermartingale f ℱ μ) (i : ι) : strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 @[protected]
@@ -179,7 +178,7 @@ theorem adapted [LE E] (hf : Submartingale f ℱ μ) : Adapted ℱ f :=
   hf.1
 
 @[protected]
-theorem measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : measurable[ℱ i] (f i) :=
+theorem strongly_measurable [LE E] (hf : Submartingale f ℱ μ) (i : ι) : strongly_measurable[ℱ i] (f i) :=
   hf.Adapted i
 
 @[protected]
@@ -236,8 +235,7 @@ theorem sub_martingale [Preorderₓ E] [CovariantClass E E (· + ·) (· ≤ ·)
 
 section
 
-variable {F : Type _} [MeasurableSpace F] [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  [BorelSpace F] [SecondCountableTopology F] [OrderedSmul ℝ F]
+variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] [OrderedSmul ℝ F]
 
 theorem smul_nonneg {f : ι → α → F} {c : ℝ} (hc : 0 ≤ c) (hf : Supermartingale f ℱ μ) : Supermartingale (c • f) ℱ μ :=
   by
@@ -262,8 +260,7 @@ namespace Submartingale
 
 section
 
-variable {F : Type _} [MeasurableSpace F] [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
-  [BorelSpace F] [SecondCountableTopology F] [OrderedSmul ℝ F]
+variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] [OrderedSmul ℝ F]
 
 theorem smul_nonneg {f : ι → α → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) : Submartingale (c • f) ℱ μ := by
   rw [← neg_negₓ c,
@@ -294,7 +291,7 @@ theorem integrable_stopped_value [LE E] {f : ℕ → α → E} (hf : Submartinga
   integrable_stopped_value hτ hf.Integrable hbdd
 
 /-- Given a submartingale `f` and bounded stopping times `τ` and `π` such that `τ ≤ π`, the
-expectation of `stopped_value f τ` is less or equal to the expectation of `stopped_value f π`.
+expectation of `stopped_value f τ` is less than or equal to the expectation of `stopped_value f π`.
 This is the forward direction of the optional stopping theorem. -/
 -- We may generalize the below lemma to functions taking value in a `normed_lattice_add_comm_group`.
 -- Similarly, generalize `(super/)submartingale.set_integral_le`.

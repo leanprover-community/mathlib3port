@@ -28,7 +28,7 @@ to form the Dirichlet ring.
  * `id` is the identity arithmetic function on `ℕ`.
  * `ω n` is the number of distinct prime factors of `n`.
  * `Ω n` is the number of prime factors of `n` counted with multiplicity.
- * `μ` is the Möbius function.
+ * `μ` is the Möbius function (spelled `moebius` in code).
 
 ## Main Results
  * Several forms of Möbius inversion:
@@ -49,7 +49,7 @@ arithmetic functions, dirichlet convolution, divisors
 
 open Finset
 
-open_locale BigOperators
+open BigOperators
 
 namespace Nat
 
@@ -463,7 +463,7 @@ theorem mul_zeta_apply {f : ArithmeticFunction ℕ} {x : ℕ} : (f * ζ) x = ∑
 
 end Zeta
 
-open_locale ArithmeticFunction
+open ArithmeticFunction
 
 section Pmul
 
@@ -480,7 +480,9 @@ theorem pmul_comm [CommMonoidWithZero R] (f g : ArithmeticFunction R) : f.pmul g
   ext
   simp [mul_comm]
 
-variable [Semiringₓ R]
+section NonAssocSemiringₓ
+
+variable [NonAssocSemiringₓ R]
 
 @[simp]
 theorem pmul_zeta (f : ArithmeticFunction R) : f.pmul ↑ζ = f := by
@@ -491,6 +493,10 @@ theorem pmul_zeta (f : ArithmeticFunction R) : f.pmul ↑ζ = f := by
 theorem zeta_pmul (f : ArithmeticFunction R) : (ζ : ArithmeticFunction R).pmul f = f := by
   ext x
   cases x <;> simp [Nat.succ_ne_zero]
+
+end NonAssocSemiringₓ
+
+variable [Semiringₓ R]
 
 /-- This is the pointwise power of `arithmetic_function`s. -/
 def ppow (f : ArithmeticFunction R) (k : ℕ) : ArithmeticFunction R :=
@@ -644,6 +650,37 @@ theorem multiplicative_factorization [CommMonoidWithZero R] (f : ArithmeticFunct
     ∀ {n : ℕ}, n ≠ 0 → f n = n.factorization.Prod fun p k => f (p ^ k) := fun n hn =>
   multiplicative_factorization f hf.2 hf.1 hn
 
+/-- A recapitulation of the definition of multiplicative that is simpler for proofs -/
+theorem iff_ne_zero [MonoidWithZeroₓ R] {f : ArithmeticFunction R} :
+    IsMultiplicative f ↔ f 1 = 1 ∧ ∀ {m n : ℕ}, m ≠ 0 → n ≠ 0 → m.Coprime n → f (m * n) = f m * f n := by
+  refine' and_congr_right' (forall₂_congrₓ fun m n => ⟨fun h _ _ => h, fun h hmn => _⟩)
+  rcases eq_or_ne m 0 with (rfl | hm)
+  · simp
+    
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  exact h hm hn hmn
+
+/-- Two multiplicative functions `f` and `g` are equal if and only if
+they agree on prime powers -/
+theorem eq_iff_eq_on_prime_powers [CommMonoidWithZero R] (f : ArithmeticFunction R) (hf : f.IsMultiplicative)
+    (g : ArithmeticFunction R) (hg : g.IsMultiplicative) : f = g ↔ ∀ p i : ℕ, Nat.Prime p → f (p ^ i) = g (p ^ i) := by
+  constructor
+  · intro h p i _
+    rw [h]
+    
+  intro h
+  ext n
+  by_cases' hn : n = 0
+  · rw [hn, arithmetic_function.map_zero, arithmetic_function.map_zero]
+    
+  rw [multiplicative_factorization f hf hn, multiplicative_factorization g hg hn]
+  refine' Finset.prod_congr rfl _
+  simp only [support_factorization, List.mem_to_finset]
+  intro p hp
+  exact h p _ (Nat.prime_of_mem_factors hp)
+
 end IsMultiplicative
 
 section SpecialFunctions
@@ -745,7 +782,7 @@ theorem card_factors_eq_one_iff_prime {n : ℕ} : Ω n = 1 ↔ n.Prime := by
   rcases List.length_eq_one.1 h with ⟨x, hx⟩
   rw [← prod_factors n.succ_ne_zero, hx, List.prod_singleton]
   apply prime_of_mem_factors
-  rw [hx, List.mem_singleton]
+  rw [hx, List.mem_singletonₓ]
 
 theorem card_factors_mul {m n : ℕ} (m0 : m ≠ 0) (n0 : n ≠ 0) : Ω (m * n) = Ω m + Ω n := by
   rw [card_factors_apply, card_factors_apply, card_factors_apply, ← Multiset.coe_card, ← factors_eq,
@@ -820,10 +857,18 @@ theorem moebius_ne_zero_iff_eq_or {n : ℕ} : μ n ≠ 0 ↔ μ n = 1 ∨ μ n =
   · rcases h with (h | h) <;> simp [h]
     
 
+theorem is_multiplicative_moebius : IsMultiplicative μ := by
+  rw [is_multiplicative.iff_ne_zero]
+  refine'
+    ⟨by
+      simp , fun n m hn hm hnm => _⟩
+  simp only [moebius, ZeroHom.coe_mk, squarefree_mul hnm, ite_and, card_factors_mul hn hm]
+  rw [pow_addₓ, mul_comm, ite_mul_zero_left, ite_mul_zero_right, mul_comm]
+
 open UniqueFactorizationMonoid
 
 @[simp]
-theorem coe_moebius_mul_coe_zeta [CommRingₓ R] : (μ * ζ : ArithmeticFunction R) = 1 := by
+theorem coe_moebius_mul_coe_zeta [Ringₓ R] : (μ * ζ : ArithmeticFunction R) = 1 := by
   ext x
   cases x
   · simp only [divisors_zero, sum_empty, Ne.def, not_false_iff, coe_mul_zeta_apply, zero_ne_one, one_apply_ne]
@@ -950,15 +995,14 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
     rw [if_neg (ne_of_gtₓ (Nat.pos_of_mem_divisors (snd_mem_divisors_of_mem_antidiagonal hx)))]
     
 
-/-- Möbius inversion for functions to a `comm_ring`. -/
-theorem sum_eq_iff_sum_mul_moebius_eq [CommRingₓ R] {f g : ℕ → R} :
+/-- Möbius inversion for functions to a `ring`. -/
+theorem sum_eq_iff_sum_mul_moebius_eq [Ringₓ R] {f g : ℕ → R} :
     (∀ n : ℕ, 0 < n → (∑ i in n.divisors, f i) = g n) ↔
       ∀ n : ℕ, 0 < n → (∑ x : ℕ × ℕ in n.divisorsAntidiagonal, (μ x.fst : R) * g x.snd) = f n :=
   by
   rw [sum_eq_iff_sum_smul_moebius_eq]
   apply forall_congrₓ
-  intro a
-  apply imp_congr (Iff.refl _) (Eq.congr_left (sum_congr rfl fun x hx => _))
+  refine' fun a => imp_congr_right fun _ => ((sum_congr rfl) fun x hx => _).congr_left
   rw [zsmul_eq_mul]
 
 /-- Möbius inversion for functions to a `comm_group`. -/

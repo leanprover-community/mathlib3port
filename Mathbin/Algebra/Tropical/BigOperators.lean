@@ -31,7 +31,7 @@ directly transfer to minima over multisets or finsets.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {R S : Type _}
 

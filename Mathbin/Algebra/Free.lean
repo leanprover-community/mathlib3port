@@ -3,10 +3,10 @@ Copyright (c) 2019 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Algebra.Hom.Group
 import Mathbin.Control.Applicative
 import Mathbin.Control.Traversable.Basic
-import Mathbin.Algebra.Group.Hom
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # Free constructions
@@ -83,13 +83,13 @@ namespace FreeMagma
 variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 
 @[to_additive]
-theorem lift_aux_unique (F : MulHom (FreeMagma α) β) : ⇑F = liftAux (F ∘ of) :=
+theorem lift_aux_unique (F : FreeMagma α →ₙ* β) : ⇑F = liftAux (F ∘ of) :=
   funext fun x =>
     (FreeMagma.recOn x fun x => rfl) fun x y ih1 ih2 => (F.map_mul x y).trans <| congr (congr_argₓ _ ih1) ih2
 
 /-- The universal property of the free magma expressing its adjointness. -/
 @[to_additive "The universal property of the free additive magma expressing its adjointness."]
-def lift : (α → β) ≃ MulHom (FreeMagma α) β where
+def lift : (α → β) ≃ (FreeMagma α →ₙ* β) where
   toFun := fun f => { toFun := liftAux f, map_mul' := fun x y => rfl }
   invFun := fun F => F ∘ of
   left_inv := fun f => by

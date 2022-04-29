@@ -26,7 +26,7 @@ lemmas unconditional on the sum of the weights being `1`.
 
 open Set
 
-open_locale BigOperators Classical
+open BigOperators Classical
 
 universe u u'
 
@@ -106,7 +106,7 @@ theorem Finset.center_mass_ite_eq (hi : i ∈ t) : t.centerMass (fun j => if i =
 
 variable {t w}
 
-theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀, ∀ i ∈ t', ∀, (i ∉ t) → w i = 0) :
+theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀, ∀ i ∈ t', ∀, i ∉ t → w i = 0) :
     t.centerMass w z = t'.centerMass w z := by
   rw [center_mass, sum_subset ht h, smul_sum, center_mass, smul_sum]
   apply sum_subset ht
@@ -267,6 +267,8 @@ theorem convex_hull_range_eq_exists_affine_combination (v : ι → E) :
     exact affine_combination_mem_convex_hull hw₀ hw₁
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- Convex hull of `s` is equal to the set of all centers of masses of `finset`s `t`, `z '' t ⊆ s`.
 This version allows finsets in any type in any universe. -/
 theorem convex_hull_eq (s : Set E) :
@@ -299,6 +301,7 @@ theorem convex_hull_eq (s : Set E) :
     exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem Finset.convex_hull_eq (s : Finset E) :
     convexHull R ↑s =
       { x : E | ∃ (w : E → R)(hw₀ : ∀, ∀ y ∈ s, ∀, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.centerMass w id = x } :=
@@ -433,7 +436,7 @@ to prove that this map is linear. -/
 theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : Finite s) :
     convexHull R s =
       have := hs.fintype
-      ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smulRight x.1) '' StdSimplex R s :=
+      ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' StdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
   apply congr_argₓ

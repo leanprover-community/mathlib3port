@@ -191,7 +191,7 @@ theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := b
   rw [traverse, Multiset.id_traverse]
   exact s.val_to_finset
 
-open_locale Classical
+open Classical
 
 @[simp]
 theorem map_comp_coe (h : α → β) : Functor.map h ∘ Multiset.toFinset = Multiset.toFinset ∘ Functor.map h :=

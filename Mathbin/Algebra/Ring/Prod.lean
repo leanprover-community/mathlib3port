@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Chris Hughes, Mario Carneiro, Yury Kudryashov
 -/
 import Mathbin.Algebra.Group.Prod
 import Mathbin.Algebra.Ring.Basic
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # Semiring, ring etc structures on `R × S`
@@ -46,6 +46,10 @@ instance [NonAssocSemiringₓ R] [NonAssocSemiringₓ S] : NonAssocSemiringₓ (
 instance [Semiringₓ R] [Semiringₓ S] : Semiringₓ (R × S) :=
   { Prod.addCommMonoid, Prod.monoidWithZero, Prod.distrib with }
 
+/-- Product of two `non_unital_comm_semiring`s is a `non_unital_comm_semiring`. -/
+instance [NonUnitalCommSemiring R] [NonUnitalCommSemiring S] : NonUnitalCommSemiring (R × S) :=
+  { Prod.nonUnitalSemiring, Prod.commSemigroup with }
+
 /-- Product of two commutative semirings is a commutative semiring. -/
 instance [CommSemiringₓ R] [CommSemiringₓ S] : CommSemiringₓ (R × S) :=
   { Prod.semiring, Prod.commMonoid with }
@@ -62,6 +66,10 @@ instance [NonAssocRing R] [NonAssocRing S] : NonAssocRing (R × S) :=
 /-- Product of two rings is a ring. -/
 instance [Ringₓ R] [Ringₓ S] : Ringₓ (R × S) :=
   { Prod.addCommGroup, Prod.semiring with }
+
+/-- Product of two `non_unital_comm_ring`s is a `non_unital_comm_ring`. -/
+instance [NonUnitalCommRing R] [NonUnitalCommRing S] : NonUnitalCommRing (R × S) :=
+  { Prod.nonUnitalRing, Prod.commSemigroup with }
 
 /-- Product of two commutative rings is a commutative ring. -/
 instance [CommRingₓ R] [CommRingₓ S] : CommRingₓ (R × S) :=
@@ -126,7 +134,7 @@ variable [NonAssocSemiringₓ R'] [NonAssocSemiringₓ S'] [NonAssocSemiringₓ 
 variable (f : R →+* R') (g : S →+* S')
 
 /-- `prod.map` as a `ring_hom`. -/
-def prodMap : R × S →* R' × S' :=
+def prodMap : R × S →+* R' × S' :=
   (f.comp (fst R S)).Prod (g.comp (snd R S))
 
 theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) :=
@@ -136,7 +144,7 @@ theorem prod_map_def : prodMap f g = (f.comp (fst R S)).Prod (g.comp (snd R S)) 
 theorem coe_prod_map : ⇑(prodMap f g) = Prod.map f g :=
   rfl
 
-theorem prod_comp_prod_map (f : T →* R) (g : T →* S) (f' : R →* R') (g' : S →* S') :
+theorem prod_comp_prod_map (f : T →+* R) (g : T →+* S) (f' : R →+* R') (g' : S →+* S') :
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 

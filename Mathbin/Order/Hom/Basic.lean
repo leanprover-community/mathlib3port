@@ -3,6 +3,7 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
+import Mathbin.Logic.Equiv.Option
 import Mathbin.Order.RelIso
 import Mathbin.Tactic.Monotonicity.Basic
 
@@ -97,7 +98,7 @@ abbrev OrderIso (α β : Type _) [LE α] [LE β] :=
 infixl:25 " ≃o " => OrderIso
 
 /-- `order_hom_class F α b` asserts that `F` is a type of `≤`-preserving morphisms. -/
-abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [Preorderₓ α] [Preorderₓ β] :=
+abbrev OrderHomClass (F : Type _) (α β : outParam (Type _)) [LE α] [LE β] :=
   RelHomClass F ((· ≤ ·) : α → α → Prop) ((· ≤ ·) : β → β → Prop)
 
 /-- `order_iso_class F α β` states that `F` is a type of order isomorphisms.
@@ -114,8 +115,7 @@ instance [LE α] [LE β] [OrderIsoClass F α β] : CoeTₓ F (α ≃o β) :=
   ⟨fun f => ⟨f, fun _ _ => map_le_map_iff f⟩⟩
 
 -- See note [lower instance priority]
-instance (priority := 100) OrderIsoClass.toOrderHomClass [Preorderₓ α] [Preorderₓ β] [OrderIsoClass F α β] :
-    OrderHomClass F α β :=
+instance (priority := 100) OrderIsoClass.toOrderHomClass [LE α] [LE β] [OrderIsoClass F α β] : OrderHomClass F α β :=
   { EquivLike.toEmbeddingLike with map_rel := fun f a b => (map_le_map_iff f).2 }
 
 namespace OrderHomClass
@@ -130,6 +130,43 @@ instance : CoeTₓ F (α →o β) :=
   ⟨fun f => { toFun := f, monotone' := OrderHomClass.mono _ }⟩
 
 end OrderHomClass
+
+section OrderIsoClass
+
+section LE
+
+variable [LE α] [LE β] [OrderIsoClass F α β]
+
+@[simp]
+theorem map_inv_le_iff (f : F) {a : α} {b : β} : EquivLike.inv f b ≤ a ↔ b ≤ f a := by
+  convert (map_le_map_iff _).symm
+  exact (EquivLike.right_inv _ _).symm
+
+@[simp]
+theorem le_map_inv_iff (f : F) {a : α} {b : β} : a ≤ EquivLike.inv f b ↔ f a ≤ b := by
+  convert (map_le_map_iff _).symm
+  exact (EquivLike.right_inv _ _).symm
+
+end LE
+
+variable [Preorderₓ α] [Preorderₓ β] [OrderIsoClass F α β]
+
+include β
+
+theorem map_lt_map_iff (f : F) {a b : α} : f a < f b ↔ a < b :=
+  lt_iff_lt_of_le_iff_le' (map_le_map_iff f) (map_le_map_iff f)
+
+@[simp]
+theorem map_inv_lt_iff (f : F) {a : α} {b : β} : EquivLike.inv f b < a ↔ b < f a := by
+  convert (map_lt_map_iff _).symm
+  exact (EquivLike.right_inv _ _).symm
+
+@[simp]
+theorem lt_map_inv_iff (f : F) {a : α} {b : β} : a < EquivLike.inv f b ↔ f a < b := by
+  convert (map_lt_map_iff _).symm
+  exact (EquivLike.right_inv _ _).symm
+
+end OrderIsoClass
 
 namespace OrderHom
 
@@ -402,6 +439,23 @@ protected def dual : (α →o β) ≃ (OrderDual α →o OrderDual β) where
   left_inv := fun f => ext _ _ rfl
   right_inv := fun f => ext _ _ rfl
 
+@[simp]
+theorem dual_id : (OrderHom.id : α →o α).dual = OrderHom.id :=
+  rfl
+
+@[simp]
+theorem dual_comp (g : β →o γ) (f : α →o β) : (g.comp f).dual = g.dual.comp f.dual :=
+  rfl
+
+@[simp]
+theorem symm_dual_id : OrderHom.dual.symm OrderHom.id = (OrderHom.id : α →o α) :=
+  rfl
+
+@[simp]
+theorem symm_dual_comp (g : OrderDual β →o OrderDual γ) (f : OrderDual α →o OrderDual β) :
+    OrderHom.dual.symm (g.comp f) = (OrderHom.dual.symm g).comp (OrderHom.dual.symm f) :=
+  rfl
+
 /-- `order_hom.dual` as an order isomorphism. -/
 def dualIso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) ≃o OrderDual (OrderDual α →o OrderDual β) where
   toEquiv := OrderHom.dual.trans OrderDual.toDual
@@ -543,7 +597,7 @@ instance : OrderIsoClass (α ≃o β) α β where
 theorem to_fun_eq_coe {f : α ≃o β} : f.toFun = f :=
   rfl
 
--- See library note [partially-applied ext lemmas]
+-- See note [partially-applied ext lemmas]
 @[ext]
 theorem ext {f g : α ≃o β} (h : (f : α → β) = g) : f = g :=
   FunLike.coe_injective h
@@ -581,6 +635,7 @@ def refl (α : Type _) [LE α] : α ≃o α :=
 theorem coe_refl : ⇑(refl α) = id :=
   rfl
 
+@[simp]
 theorem refl_apply (x : α) : refl α x = x :=
   rfl
 
@@ -658,6 +713,7 @@ def trans (e : α ≃o β) (e' : β ≃o γ) : α ≃o γ :=
 theorem coe_trans (e : α ≃o β) (e' : β ≃o γ) : ⇑(e.trans e') = e' ∘ e :=
   rfl
 
+@[simp]
 theorem trans_apply (e : α ≃o β) (e' : β ≃o γ) (x : α) : e.trans e' x = e' (e x) :=
   rfl
 
@@ -669,6 +725,19 @@ theorem refl_trans (e : α ≃o β) : (refl α).trans e = e := by
 @[simp]
 theorem trans_refl (e : α ≃o β) : e.trans (refl β) = e := by
   ext x
+  rfl
+
+/-- `prod.swap` as an `order_iso`. -/
+def prodComm : α × β ≃o β × α where
+  toEquiv := Equivₓ.prodComm α β
+  map_rel_iff' := fun a b => Prod.swap_le_swap
+
+@[simp]
+theorem coe_prod_comm : ⇑(prodComm : α × β ≃o β × α) = Prod.swap :=
+  rfl
+
+@[simp]
+theorem prod_comm_symm : (prodComm : α × β ≃o β × α).symm = prod_comm :=
   rfl
 
 variable (α)
@@ -796,23 +865,41 @@ protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrderₓ α] [P
   toEquiv := hf.InjOn.bij_on_image.Equiv _
   map_rel_iff' := fun x y => hf.le_iff_le x.2 y.2
 
+namespace StrictMono
+
+variable {α β} [LinearOrderₓ α] [Preorderₓ β]
+
+variable (f : α → β) (h_mono : StrictMono f) (h_surj : Function.Surjective f)
+
 /-- A strictly monotone function from a linear order is an order isomorphism between its domain and
 its range. -/
-protected noncomputable def StrictMono.orderIso {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β)
-    (h_mono : StrictMono f) : α ≃o Set.Range f where
+@[simps apply]
+protected noncomputable def orderIso : α ≃o Set.Range f where
   toEquiv := Equivₓ.ofInjective f h_mono.Injective
   map_rel_iff' := fun a b => h_mono.le_iff_le
 
 /-- A strictly monotone surjective function from a linear order is an order isomorphism. -/
-noncomputable def StrictMono.orderIsoOfSurjective {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β)
-    (h_mono : StrictMono f) (h_surj : Function.Surjective f) : α ≃o β :=
+noncomputable def orderIsoOfSurjective : α ≃o β :=
   (h_mono.OrderIso f).trans <| (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
 
+@[simp]
+theorem coe_order_iso_of_surjective : (orderIsoOfSurjective f h_mono h_surj : α → β) = f :=
+  rfl
+
+@[simp]
+theorem order_iso_of_surjective_symm_apply_self (a : α) : (orderIsoOfSurjective f h_mono h_surj).symm (f a) = a :=
+  (orderIsoOfSurjective f h_mono h_surj).symm_apply_apply _
+
+theorem order_iso_of_surjective_self_symm_apply (b : β) : f ((orderIsoOfSurjective f h_mono h_surj).symm b) = b :=
+  (orderIsoOfSurjective f h_mono h_surj).apply_symm_apply _
+
 /-- A strictly monotone function with a right inverse is an order isomorphism. -/
-def StrictMono.orderIsoOfRightInverse {α β} [LinearOrderₓ α] [Preorderₓ β] (f : α → β) (h_mono : StrictMono f)
-    (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
+@[simps (config := { fullyApplied := False })]
+def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α ≃o β :=
   { OrderEmbedding.ofStrictMono f h_mono with toFun := f, invFun := g, left_inv := fun x => h_mono.Injective <| hg _,
     right_inv := hg }
+
+end StrictMono
 
 /-- An order isomorphism is also an order isomorphism between dual orders. -/
 protected def OrderIso.dual [LE α] [LE β] (f : α ≃o β) : OrderDual α ≃o OrderDual β :=
@@ -859,6 +946,84 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
 
 theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
   f.dual.map_inf x y
+
+namespace WithBot
+
+/-- Taking the dual then adding `⊥` is the same as adding `⊤` then taking the dual. -/
+protected def toDualTop [LE α] : WithBot (OrderDual α) ≃o OrderDual (WithTop α) :=
+  OrderIso.refl _
+
+@[simp]
+theorem to_dual_top_coe [LE α] (a : α) : WithBot.toDualTop ↑(toDual a) = toDual (a : WithTop α) :=
+  rfl
+
+@[simp]
+theorem to_dual_top_symm_coe [LE α] (a : α) : WithBot.toDualTop.symm (toDual (a : WithTop α)) = ↑(toDual a) :=
+  rfl
+
+end WithBot
+
+namespace WithTop
+
+/-- Taking the dual then adding `⊤` is the same as adding `⊥` then taking the dual. -/
+protected def toDualBot [LE α] : WithTop (OrderDual α) ≃o OrderDual (WithBot α) :=
+  OrderIso.refl _
+
+@[simp]
+theorem to_dual_bot_coe [LE α] (a : α) : WithTop.toDualBot ↑(toDual a) = toDual (a : WithBot α) :=
+  rfl
+
+@[simp]
+theorem to_dual_bot_symm_coe [LE α] (a : α) : WithTop.toDualBot.symm (toDual (a : WithBot α)) = ↑(toDual a) :=
+  rfl
+
+end WithTop
+
+namespace OrderIso
+
+variable [PartialOrderₓ α] [PartialOrderₓ β] [PartialOrderₓ γ]
+
+/-- A version of `equiv.option_congr` for `with_top`. -/
+@[simps apply]
+def withTopCongr (e : α ≃o β) : WithTop α ≃o WithTop β where
+  toEquiv := e.toEquiv.optionCongr
+  map_rel_iff' := fun x y => by
+    induction x using WithTop.recTopCoe <;> induction y using WithTop.recTopCoe <;> simp
+
+@[simp]
+theorem with_top_congr_refl : (OrderIso.refl α).withTopCongr = OrderIso.refl _ :=
+  RelIso.to_equiv_injective Equivₓ.option_congr_refl
+
+@[simp]
+theorem with_top_congr_symm (e : α ≃o β) : e.withTopCongr.symm = e.symm.withTopCongr :=
+  RelIso.to_equiv_injective e.toEquiv.option_congr_symm
+
+@[simp]
+theorem with_top_congr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
+    e₁.withTopCongr.trans e₂.withTopCongr = (e₁.trans e₂).withTopCongr :=
+  RelIso.to_equiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
+
+/-- A version of `equiv.option_congr` for `with_bot`. -/
+@[simps apply]
+def withBotCongr (e : α ≃o β) : WithBot α ≃o WithBot β where
+  toEquiv := e.toEquiv.optionCongr
+  map_rel_iff' := fun x y => by
+    induction x using WithBot.recBotCoe <;> induction y using WithBot.recBotCoe <;> simp
+
+@[simp]
+theorem with_bot_congr_refl : (OrderIso.refl α).withBotCongr = OrderIso.refl _ :=
+  RelIso.to_equiv_injective Equivₓ.option_congr_refl
+
+@[simp]
+theorem with_bot_congr_symm (e : α ≃o β) : e.withBotCongr.symm = e.symm.withBotCongr :=
+  RelIso.to_equiv_injective e.toEquiv.option_congr_symm
+
+@[simp]
+theorem with_bot_congr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
+    e₁.withBotCongr.trans e₂.withBotCongr = (e₁.trans e₂).withBotCongr :=
+  RelIso.to_equiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
+
+end OrderIso
 
 section BoundedOrder
 

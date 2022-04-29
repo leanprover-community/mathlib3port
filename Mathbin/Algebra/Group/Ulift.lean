@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Equiv.MulAdd
+import Mathbin.Algebra.Hom.Equiv
 
 /-!
 # `ulift` instances for groups and monoids
@@ -75,6 +75,9 @@ instance commSemigroup [CommSemigroupₓ α] : CommSemigroupₓ (ULift α) :=
 instance mulOneClass [MulOneClassₓ α] : MulOneClassₓ (ULift α) :=
   (Equivₓ.ulift.Injective.MulOneClass _ rfl) fun x y => rfl
 
+instance mulZeroOneClass [MulZeroOneClassₓ α] : MulZeroOneClassₓ (ULift α) :=
+  (Equivₓ.ulift.Injective.MulZeroOneClass _ rfl rfl) fun x y => rfl
+
 @[to_additive HasVadd]
 instance hasScalar {β : Type _} [HasScalar α β] : HasScalar α (ULift β) :=
   ⟨fun n x => up (n • x.down)⟩
@@ -85,24 +88,39 @@ instance hasPow {β : Type _} [Pow α β] : Pow (ULift α) β :=
 
 @[to_additive]
 instance monoid [Monoidₓ α] : Monoidₓ (ULift α) :=
-  Equivₓ.ulift.Injective.monoidPow _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equivₓ.ulift.Injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
 instance commMonoid [CommMonoidₓ α] : CommMonoidₓ (ULift α) :=
-  { ULift.monoid, ULift.commSemigroup with }
+  Equivₓ.ulift.Injective.CommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+
+instance monoidWithZero [MonoidWithZeroₓ α] : MonoidWithZeroₓ (ULift α) :=
+  Equivₓ.ulift.Injective.MonoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+
+instance commMonoidWithZero [CommMonoidWithZero α] : CommMonoidWithZero (ULift α) :=
+  Equivₓ.ulift.Injective.CommMonoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
 instance divInvMonoid [DivInvMonoidₓ α] : DivInvMonoidₓ (ULift α) :=
-  Equivₓ.ulift.Injective.divInvMonoidPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
-    fun _ _ => rfl
+  Equivₓ.ulift.Injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 @[to_additive]
 instance group [Groupₓ α] : Groupₓ (ULift α) :=
-  Equivₓ.ulift.Injective.groupPow _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Equivₓ.ulift.Injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
 instance commGroup [CommGroupₓ α] : CommGroupₓ (ULift α) :=
-  { ULift.group, ULift.commSemigroup with }
+  Equivₓ.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
+
+instance groupWithZero [GroupWithZeroₓ α] : GroupWithZeroₓ (ULift α) :=
+  Equivₓ.ulift.Injective.GroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
+
+instance commGroupWithZero [CommGroupWithZero α] : CommGroupWithZero (ULift α) :=
+  Equivₓ.ulift.Injective.CommGroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+    fun _ _ => rfl
 
 @[to_additive AddLeftCancelSemigroup]
 instance leftCancelSemigroup [LeftCancelSemigroup α] : LeftCancelSemigroup (ULift α) :=
@@ -114,19 +132,19 @@ instance rightCancelSemigroup [RightCancelSemigroup α] : RightCancelSemigroup (
 
 @[to_additive AddLeftCancelMonoid]
 instance leftCancelMonoid [LeftCancelMonoid α] : LeftCancelMonoid (ULift α) :=
-  { ULift.monoid, ULift.leftCancelSemigroup with }
+  Equivₓ.ulift.Injective.LeftCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive AddRightCancelMonoid]
 instance rightCancelMonoid [RightCancelMonoid α] : RightCancelMonoid (ULift α) :=
-  { ULift.monoid, ULift.rightCancelSemigroup with }
+  Equivₓ.ulift.Injective.RightCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive AddCancelMonoid]
 instance cancelMonoid [CancelMonoid α] : CancelMonoid (ULift α) :=
-  { ULift.leftCancelMonoid, ULift.rightCancelSemigroup with }
+  Equivₓ.ulift.Injective.CancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive AddCancelMonoid]
 instance cancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (ULift α) :=
-  { ULift.cancelMonoid, ULift.commSemigroup with }
+  Equivₓ.ulift.Injective.CancelCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance nontrivial [Nontrivial α] : Nontrivial (ULift α) :=
   Equivₓ.ulift.symm.Injective.Nontrivial

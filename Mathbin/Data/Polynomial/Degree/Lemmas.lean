@@ -17,7 +17,7 @@ Some of the main results include
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Finsupp Finset
 
@@ -108,8 +108,6 @@ theorem nat_degree_mul_C_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) : (p * c a)
 
 /-- Although not explicitly stated, the assumptions of lemma `nat_degree_mul_C_eq_of_mul_ne_zero`
 force the polynomial `p` to be non-zero, via `p.leading_coeff ≠ 0`.
-Lemma `nat_degree_mul_C_eq_of_no_zero_divisors` below separates cases, in order to overcome this
-hurdle.
 -/
 theorem nat_degree_mul_C_eq_of_mul_ne_zero (h : p.leadingCoeff * a ≠ 0) : (p * c a).natDegree = p.natDegree := by
   refine' eq_nat_degree_of_le_mem_support (nat_degree_mul_C_le p a) _
@@ -118,8 +116,6 @@ theorem nat_degree_mul_C_eq_of_mul_ne_zero (h : p.leadingCoeff * a ≠ 0) : (p *
 
 /-- Although not explicitly stated, the assumptions of lemma `nat_degree_C_mul_eq_of_mul_ne_zero`
 force the polynomial `p` to be non-zero, via `p.leading_coeff ≠ 0`.
-Lemma `nat_degree_C_mul_eq_of_no_zero_divisors` below separates cases, in order to overcome this
-hurdle.
 -/
 theorem nat_degree_C_mul_eq_of_mul_ne_zero (h : a * p.leadingCoeff ≠ 0) : (c a * p).natDegree = p.natDegree := by
   refine' eq_nat_degree_of_le_mem_support (nat_degree_C_mul_le a p) _
@@ -236,19 +232,34 @@ section NoZeroDivisors
 
 variable [Semiringₓ R] [NoZeroDivisors R] {p q : R[X]}
 
-theorem nat_degree_mul_C_eq_of_no_zero_divisors (a0 : a ≠ 0) : (p * c a).natDegree = p.natDegree := by
-  by_cases' p0 : p = 0
-  · rw [p0, zero_mul]
+theorem degree_mul_C (a0 : a ≠ 0) : (p * c a).degree = p.degree := by
+  rw [degree_mul, degree_C a0, add_zeroₓ]
+
+theorem degree_C_mul (a0 : a ≠ 0) : (c a * p).degree = p.degree := by
+  rw [degree_mul, degree_C a0, zero_addₓ]
+
+theorem nat_degree_mul_C (a0 : a ≠ 0) : (p * c a).natDegree = p.natDegree := by
+  simp only [nat_degree, degree_mul_C a0]
+
+theorem nat_degree_C_mul (a0 : a ≠ 0) : (c a * p).natDegree = p.natDegree := by
+  simp only [nat_degree, degree_C_mul a0]
+
+theorem nat_degree_comp : natDegree (p.comp q) = natDegree p * natDegree q := by
+  by_cases' q0 : q.nat_degree = 0
+  · rw [degree_le_zero_iff.mp (nat_degree_eq_zero_iff_degree_le_zero.mp q0), comp_C, nat_degree_C, nat_degree_C,
+      mul_zero]
     
-  · exact nat_degree_mul_C_eq_of_mul_ne_zero (mul_ne_zero (leading_coeff_ne_zero.mpr p0) a0)
+  · by_cases' p0 : p = 0
+    · simp only [p0, zero_comp, nat_degree_zero, zero_mul]
+      
+    refine' le_antisymmₓ nat_degree_comp_le (le_nat_degree_of_ne_zero _)
+    simp only [coeff_comp_degree_mul_degree q0, p0, mul_eq_zero, leading_coeff_eq_zero, or_selfₓ,
+      ne_zero_of_nat_degree_gt (Nat.pos_of_ne_zeroₓ q0), pow_ne_zero, Ne.def, not_false_iff]
     
 
-theorem nat_degree_C_mul_eq_of_no_zero_divisors (a0 : a ≠ 0) : (c a * p).natDegree = p.natDegree := by
-  by_cases' p0 : p = 0
-  · rw [p0, mul_zero]
-    
-  · exact nat_degree_C_mul_eq_of_mul_ne_zero (mul_ne_zero a0 (leading_coeff_ne_zero.mpr p0))
-    
+theorem leading_coeff_comp (hq : natDegree q ≠ 0) :
+    leadingCoeff (p.comp q) = leadingCoeff p * leadingCoeff q ^ natDegree p := by
+  rw [← coeff_comp_degree_mul_degree hq, ← nat_degree_comp, coeff_nat_degree]
 
 end NoZeroDivisors
 

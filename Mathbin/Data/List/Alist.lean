@@ -21,7 +21,7 @@ Association lists are represented by the `alist` structure. This file defines th
 provides ways to access, modify, and combine `alist`s.
 
 * `alist.keys` returns a list of keys of the alist.
-* `alist.mem` returns membership in the set of keys.
+* `alist.has_mem` returns membership in the set of keys.
 * `alist.erase` removes a certain key.
 * `alist.insert` adds a key-value mapping to the list.
 * `alist.union` combines two association lists.
@@ -99,7 +99,7 @@ instance : Inhabited (Alist β) :=
   ⟨∅⟩
 
 theorem not_mem_empty (a : α) : a ∉ (∅ : Alist β) :=
-  not_mem_nil a
+  not_mem_nilₓ a
 
 @[simp]
 theorem empty_entries : (∅ : Alist β).entries = [] :=
@@ -186,15 +186,15 @@ variable [DecidableEq α]
 
 /-- Erase a key from the map. If the key is not present, do nothing. -/
 def erase (a : α) (s : Alist β) : Alist β :=
-  ⟨kerase a s.entries, kerase_nodupkeys _ s.Nodupkeys⟩
+  ⟨s.entries.kerase a, s.Nodupkeys.kerase a⟩
 
 @[simp]
-theorem keys_erase (a : α) (s : Alist β) : (erase a s).keys = s.keys.erase a := by
-  simp only [erase, keys, keys_kerase]
+theorem keys_erase (a : α) (s : Alist β) : (erase a s).keys = s.keys.erase a :=
+  keys_kerase
 
 @[simp]
 theorem mem_erase {a a' : α} {s : Alist β} : a' ∈ erase a s ↔ a' ≠ a ∧ a' ∈ s := by
-  rw [mem_keys, keys_erase, mem_erase_iff_of_nodup s.keys_nodup, ← mem_keys]
+  rw [mem_keys, keys_erase, s.keys_nodup.mem_erase_iff, ← mem_keys]
 
 theorem perm_erase {a : α} {s₁ s₂ : Alist β} : s₁.entries ~ s₂.entries → (erase a s₁).entries ~ (erase a s₂).entries :=
   Perm.kerase s₁.Nodupkeys
@@ -278,7 +278,7 @@ theorem to_alist_cons (a : α) (b : β a) (xs : List (Sigma β)) : List.toAlist 
 /-- Erase a key from the map, and return the corresponding value, if found. -/
 def extract (a : α) (s : Alist β) : Option (β a) × Alist β :=
   have : (kextract a s.entries).2.Nodupkeys := by
-    rw [kextract_eq_lookup_kerase] <;> exact kerase_nodupkeys _ s.nodupkeys
+    rw [kextract_eq_lookup_kerase] <;> exact s.nodupkeys.kerase _
   match kextract a s.entries, this with
   | (b, l), h => (b, ⟨l, h⟩)
 
@@ -293,7 +293,7 @@ theorem extract_eq_lookup_erase (a : α) (s : Alist β) : extract a s = (lookup 
 left-biased: if there exists an `a ∈ s₁`, `lookup a (s₁ ∪ s₂) = lookup a s₁`.
 -/
 def union (s₁ s₂ : Alist β) : Alist β :=
-  ⟨kunion s₁.entries s₂.entries, kunion_nodupkeys s₁.Nodupkeys s₂.Nodupkeys⟩
+  ⟨s₁.entries.kunion s₂.entries, s₁.Nodupkeys.kunion s₂.Nodupkeys⟩
 
 instance : HasUnion (Alist β) :=
   ⟨union⟩
@@ -327,16 +327,16 @@ theorem lookup_union_left {a} {s₁ s₂ : Alist β} : a ∈ s₁ → lookup a (
   lookup_kunion_left
 
 @[simp]
-theorem lookup_union_right {a} {s₁ s₂ : Alist β} : (a ∉ s₁) → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
+theorem lookup_union_right {a} {s₁ s₂ : Alist β} : a ∉ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
   lookup_kunion_right
 
 @[simp]
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : Alist β} :
-    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ (a ∉ s₁) ∧ b ∈ lookup a s₂ :=
+    b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ a ∉ s₁ ∧ b ∈ lookup a s₂ :=
   mem_lookup_kunion
 
 theorem mem_lookup_union_middle {a} {b : β a} {s₁ s₂ s₃ : Alist β} :
-    b ∈ lookup a (s₁ ∪ s₃) → (a ∉ s₂) → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
+    b ∈ lookup a (s₁ ∪ s₃) → a ∉ s₂ → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
   mem_lookup_kunion_middle
 
 theorem insert_union {a} {b : β a} {s₁ s₂ : Alist β} : insert a b (s₁ ∪ s₂) = insert a b s₁ ∪ s₂ := by

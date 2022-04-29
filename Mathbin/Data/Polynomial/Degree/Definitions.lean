@@ -24,7 +24,7 @@ noncomputable section
 
 open Finsupp Finset
 
-open_locale BigOperators Classical Polynomial
+open BigOperators Classical Polynomial
 
 namespace Polynomial
 
@@ -179,6 +179,9 @@ theorem degree_ne_of_nat_degree_ne {n : ℕ} : p.natDegree ≠ n → degree p �
 theorem nat_degree_le_iff_degree_le {n : ℕ} : natDegree p ≤ n ↔ degree p ≤ n :=
   WithBot.get_or_else_bot_le_iff
 
+theorem nat_degree_lt_iff_degree_lt (hp : p ≠ 0) : p.natDegree < n ↔ p.degree < ↑n :=
+  WithBot.get_or_else_bot_lt_iff <| degree_eq_bot.Not.mpr hp
+
 alias Polynomial.nat_degree_le_iff_degree_le ↔ ..
 
 theorem nat_degree_le_nat_degree [Semiringₓ S] {q : S[X]} (hpq : p.degree ≤ q.degree) : p.natDegree ≤ q.natDegree :=
@@ -190,7 +193,13 @@ theorem degree_C (ha : a ≠ 0) : degree (c a) = (0 : WithBot ℕ) := by
   rfl
 
 theorem degree_C_le : degree (c a) ≤ 0 := by
-  by_cases' h : a = 0 <;> [rw [h, C_0], rw [degree_C h]] <;> [exact bot_le, exact le_rfl]
+  by_cases' h : a = 0
+  · rw [h, C_0]
+    exact bot_le
+    
+  · rw [degree_C h]
+    exact le_rfl
+    
 
 theorem degree_C_lt : degree (c a) < 1 :=
   degree_C_le.trans_lt <| WithBot.coe_lt_coe.mpr zero_lt_one
@@ -305,6 +314,17 @@ theorem sum_over_range [AddCommMonoidₓ S] (p : R[X]) {f : ℕ → R → S} (h 
     p.Sum f = ∑ a : ℕ in range (p.natDegree + 1), f a (coeff p a) :=
   sum_over_range' p h (p.natDegree + 1) (lt_add_one _)
 
+-- TODO this is essentially a duplicate of `sum_over_range`, and should be removed.
+theorem sum_fin [AddCommMonoidₓ S] (f : ℕ → R → S) (hf : ∀ i, f i 0 = 0) {n : ℕ} {p : R[X]} (hn : p.degree < n) :
+    (∑ i : Finₓ n, f i (p.coeff i)) = p.Sum f := by
+  by_cases' hp : p = 0
+  · rw [hp, sum_zero_index, Finset.sum_eq_zero]
+    intro i _
+    exact hf i
+    
+  rw [sum_over_range' _ hf n ((nat_degree_lt_iff_degree_lt hp).mpr hn),
+    Finₓ.sum_univ_eq_sum_range fun i => f i (p.coeff i)]
+
 theorem as_sum_range' (p : R[X]) (n : ℕ) (w : p.natDegree < n) : p = ∑ i in range n, monomial i (coeff p i) :=
   p.sum_monomial_eq.symm.trans <| p.sum_over_range' monomial_zero_right _ w
 
@@ -405,9 +425,6 @@ variable [Ringₓ R]
 theorem coeff_mul_X_sub_C {p : R[X]} {r : R} {a : ℕ} :
     coeff (p * (X - c r)) (a + 1) = coeff p a - coeff p (a + 1) * r := by
   simp [mul_sub]
-
-theorem C_eq_int_cast (n : ℤ) : c (n : R) = n :=
-  (c : R →+* _).map_int_cast n
 
 @[simp]
 theorem degree_neg (p : R[X]) : degree (-p) = degree p := by
@@ -1171,16 +1188,23 @@ theorem nat_degree_X_pow_add_C {n : ℕ} {r : R} : (X ^ n + c r).natDegree = n :
   · exact nat_degree_eq_of_degree_eq_some (degree_X_pow_add_C (pos_iff_ne_zero.mpr hn) r)
     
 
+end Semiringₓ
+
+end NonzeroRing
+
+section Semiringₓ
+
+variable [Semiringₓ R]
+
 @[simp]
 theorem leading_coeff_X_pow_add_C {n : ℕ} (hn : 0 < n) {r : R} : (X ^ n + c r).leadingCoeff = 1 := by
+  nontriviality R
   rw [leading_coeff, nat_degree_X_pow_add_C, coeff_add, coeff_X_pow_self, coeff_C, if_neg (pos_iff_ne_zero.mp hn),
     add_zeroₓ]
 
 @[simp]
 theorem leading_coeff_X_add_C [Semiringₓ S] (r : S) : (X + c r).leadingCoeff = 1 := by
-  nontriviality
   rw [← pow_oneₓ (X : S[X]), leading_coeff_X_pow_add_C zero_lt_one]
-  infer_instance
 
 @[simp]
 theorem leading_coeff_X_pow_add_one {n : ℕ} (hn : 0 < n) : (X ^ n + 1 : R[X]).leadingCoeff = 1 :=
@@ -1193,7 +1217,19 @@ theorem leading_coeff_pow_X_add_C (r : R) (i : ℕ) : leadingCoeff ((X + c r) ^ 
 
 end Semiringₓ
 
+section Ringₓ
+
 variable [Ringₓ R]
+
+@[simp]
+theorem leading_coeff_X_pow_sub_C {n : ℕ} (hn : 0 < n) {r : R} : (X ^ n - c r).leadingCoeff = 1 := by
+  rw [sub_eq_add_neg, ← map_neg C r, leading_coeff_X_pow_add_C hn] <;> infer_instance
+
+@[simp]
+theorem leading_coeff_X_pow_sub_one {n : ℕ} (hn : 0 < n) : (X ^ n - 1 : R[X]).leadingCoeff = 1 :=
+  leading_coeff_X_pow_sub_C hn
+
+variable [Nontrivial R]
 
 @[simp]
 theorem degree_X_sub_C (a : R) : degree (X - c a) = 1 := by
@@ -1226,18 +1262,10 @@ theorem nat_degree_X_pow_sub_C {n : ℕ} {r : R} : (X ^ n - c r).natDegree = n :
   rw [sub_eq_add_neg, ← map_neg C r, nat_degree_X_pow_add_C]
 
 @[simp]
-theorem leading_coeff_X_pow_sub_C {n : ℕ} (hn : 0 < n) {r : R} : (X ^ n - c r).leadingCoeff = 1 := by
-  rw [sub_eq_add_neg, ← map_neg C r, leading_coeff_X_pow_add_C hn] <;> infer_instance
-
-@[simp]
 theorem leading_coeff_X_sub_C [Ringₓ S] (r : S) : (X - c r).leadingCoeff = 1 := by
   rw [sub_eq_add_neg, ← map_neg C r, leading_coeff_X_add_C]
 
-@[simp]
-theorem leading_coeff_X_pow_sub_one {n : ℕ} (hn : 0 < n) : (X ^ n - 1 : R[X]).leadingCoeff = 1 :=
-  leading_coeff_X_pow_sub_C hn
-
-end NonzeroRing
+end Ringₓ
 
 section NoZeroDivisors
 
@@ -1252,9 +1280,16 @@ theorem degree_mul : degree (p * q) = degree p + degree q :=
       simp only [hq0, degree_zero, mul_zero, WithBot.add_bot]
     else degree_mul' <| mul_ne_zero (mt leading_coeff_eq_zero.1 hp0) (mt leading_coeff_eq_zero.1 hq0)
 
+/-- `degree` as a monoid homomorphism between `R[X]` and `multiplicative (with_bot ℕ)`.
+  This is useful to prove results about multiplication and degree. -/
+def degreeMonoidHom [Nontrivial R] : R[X] →* Multiplicative (WithBot ℕ) where
+  toFun := degree
+  map_one' := degree_one
+  map_mul' := fun _ _ => degree_mul
+
 @[simp]
-theorem degree_pow [Nontrivial R] (p : R[X]) (n : ℕ) : degree (p ^ n) = n • degree p := by
-  induction n <;> [simp only [pow_zeroₓ, degree_one, zero_nsmul], simp only [*, pow_succₓ, succ_nsmul, degree_mul]]
+theorem degree_pow [Nontrivial R] (p : R[X]) (n : ℕ) : degree (p ^ n) = n • degree p :=
+  map_pow (@degreeMonoidHom R _ _ _) _ _
 
 @[simp]
 theorem leading_coeff_mul (p q : R[X]) : leadingCoeff (p * q) = leadingCoeff p * leadingCoeff q := by

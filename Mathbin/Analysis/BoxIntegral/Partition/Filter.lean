@@ -163,7 +163,7 @@ integral, rectangular box, partition, filter
 
 open Set Function Filter Metric Finset Bool
 
-open_locale Classical TopologicalSpace Filter Nnreal
+open Classical TopologicalSpace Filter Nnreal
 
 noncomputable section
 
@@ -397,17 +397,17 @@ theorem RCond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → ioi (0 : ℝ)} (h�
 @[mono]
 theorem to_filter_distortion_mono (I : Box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) :
     l₁.toFilterDistortion I c₁ ≤ l₂.toFilterDistortion I c₂ :=
-  infi_le_infi fun r =>
-    infi_le_infi2 fun hr => ⟨hr.mono h, principal_mono.2 fun _ => MemBaseSet.mono I h hc fun _ _ => le_rfl⟩
+  infi_mono fun r =>
+    infi_mono' fun hr => ⟨hr.mono h, principal_mono.2 fun _ => MemBaseSet.mono I h hc fun _ _ => le_rfl⟩
 
 @[mono]
 theorem to_filter_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l₁ ≤ l₂) : l₁.toFilter I ≤ l₂.toFilter I :=
-  supr_le_supr fun c => to_filter_distortion_mono I h le_rfl
+  supr_mono fun c => to_filter_distortion_mono I h le_rfl
 
 @[mono]
 theorem to_filter_Union_mono (I : Box ι) {l₁ l₂ : IntegrationParams} (h : l₁ ≤ l₂) (π₀ : Prepartition I) :
     l₁.toFilterUnion I π₀ ≤ l₂.toFilterUnion I π₀ :=
-  supr_le_supr fun c => inf_le_inf_right _ <| to_filter_distortion_mono _ h le_rfl
+  supr_mono fun c => inf_le_inf_right _ <| to_filter_distortion_mono _ h le_rfl
 
 theorem to_filter_Union_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ : Prepartition I} (h : π₁.Union = π₂.Union) :
     l.toFilterUnion I π₁ = l.toFilterUnion I π₂ := by

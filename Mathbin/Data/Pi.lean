@@ -8,6 +8,7 @@ import Mathbin.Tactic.Simpa
 import Mathbin.Tactic.Congr
 import Mathbin.Algebra.Group.ToAdditive
 import Mathbin.Data.Prod
+import Mathbin.Logic.Unique
 
 /-!
 # Instances and theorems on pi types
@@ -261,6 +262,11 @@ theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) 
   ⟨injective_pi_map fun i => (hF i).Injective, surjective_pi_map fun i => (hF i).Surjective⟩
 
 end Function
+
+/-- If the one function is surjective, the codomain is trivial. -/
+@[to_additive "If the zero function is surjective, the codomain is trivial."]
+def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Surjective (1 : α → β)) : Unique β :=
+  h.uniqueOfSurjectiveConst α (1 : β)
 
 @[to_additive Subsingleton.pi_single_eq]
 theorem Subsingleton.pi_mul_single_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I) (x : α) :

@@ -5,6 +5,8 @@ Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
 -/
 import Mathbin.Tactic.TransformDecl
 import Mathbin.Tactic.Algebra
+import Mathbin.Tactic.Lint.Basic
+import Mathbin.Tactic.Alias
 
 /-!
 # Transport multiplicative to additive
@@ -226,8 +228,13 @@ unsafe def tr : Bool → List Stringₓ → List Stringₓ
   | is_comm, "one" :: s => add_comm_prefix is_comm "zero" :: tr false s
   | is_comm, "prod" :: s => add_comm_prefix is_comm "sum" :: tr false s
   | is_comm, "finprod" :: s => add_comm_prefix is_comm "finsum" :: tr false s
+  | is_comm, "pow" :: s => add_comm_prefix is_comm "nsmul" :: tr false s
   | is_comm, "npow" :: s => add_comm_prefix is_comm "nsmul" :: tr false s
   | is_comm, "zpow" :: s => add_comm_prefix is_comm "zsmul" :: tr false s
+  | is_comm, "is" :: "square" :: s => add_comm_prefix is_comm "even" :: tr false s
+  | is_comm, "is" :: "regular" :: s => add_comm_prefix is_comm "is_add_regular" :: tr false s
+  | is_comm, "is" :: "left" :: "regular" :: s => add_comm_prefix is_comm "is_add_left_regular" :: tr false s
+  | is_comm, "is" :: "right" :: "regular" :: s => add_comm_prefix is_comm "is_add_right_regular" :: tr false s
   | is_comm, "monoid" :: s => ("add_" ++ add_comm_prefix is_comm "monoid") :: tr false s
   | is_comm, "submonoid" :: s => ("add_" ++ add_comm_prefix is_comm "submonoid") :: tr false s
   | is_comm, "group" :: s => ("add_" ++ add_comm_prefix is_comm "group") :: tr false s
@@ -236,6 +243,8 @@ unsafe def tr : Bool → List Stringₓ → List Stringₓ
   | is_comm, "magma" :: s => ("add_" ++ add_comm_prefix is_comm "magma") :: tr false s
   | is_comm, "haar" :: s => ("add_" ++ add_comm_prefix is_comm "haar") :: tr false s
   | is_comm, "prehaar" :: s => ("add_" ++ add_comm_prefix is_comm "prehaar") :: tr false s
+  | is_comm, "unit" :: s => ("add_" ++ add_comm_prefix is_comm "unit") :: tr false s
+  | is_comm, "units" :: s => ("add_" ++ add_comm_prefix is_comm "units") :: tr false s
   | is_comm, "comm" :: s => tr true s
   | is_comm, x :: s => add_comm_prefix is_comm x :: tr false s
   | tt, [] => ["comm"]
@@ -315,14 +324,22 @@ To use this attribute, just write:
 theorem mul_comm' {α} [comm_semigroup α] (x y : α) : x * y = y * x := comm_semigroup.mul_comm
 ```
 
-This code will generate a theorem named `add_comm'`.  It is also
-possible to manually specify the name of the new declaration, and
-provide a documentation string:
+This code will generate a theorem named `add_comm'`. It is also
+possible to manually specify the name of the new declaration:
 
 ```
-@[to_additive add_foo "add_foo doc string"]
-/-- foo doc string -/
+@[to_additive add_foo]
 theorem foo := sorry
+```
+
+An existing documentation string will _not_ be automatically used, so if the theorem or definition
+has a doc string, a doc string for the additive version should be passed explicitly to
+`to_additive`.
+
+```
+/-- Multiplication is commutative -/
+@[to_additive "Addition is commutative"]
+theorem mul_comm' {α} [comm_semigroup α] (x y : α) : x * y = y * x := comm_semigroup.mul_comm
 ```
 
 The transport tries to do the right thing in most cases using several
@@ -532,13 +549,17 @@ protected unsafe def attr : user_attribute Unit ValueType where
         else do
           transform_decl_with_prefix_dict dict val val relevant ignore reorder src tgt
               [`reducible, `_refl_lemma, `simp, `norm_cast, `instance, `refl, `symm, `trans, `elab_as_eliminator,
-                `no_rsimp, `continuity, `ext, `ematch, `measurability, `alias, `_ext_core, `_ext_lemma_core, `nolint]
+                `no_rsimp, `continuity, `ext, `ematch, `measurability, `alias, `_ext_core, `_ext_lemma_core, `nolint,
+                `protected]
           mwhen (has_attribute' `simps src) (trace "Apply the simps attribute after the to_additive attribute")
           mwhen (has_attribute' `mono src)
               (trace <| "to_additive does not work with mono, apply the mono attribute to both" ++ "versions after")
           match val with
             | some doc => add_doc_string tgt doc
-            | none => skip
+            | none => do
+              let some alias_name ← tactic.alias.get_alias_target src | skip
+              let some add_alias_name ← pure (dict alias_name) | skip
+              add_doc_string tgt ("**Alias** of `" ++ toString add_alias_name ++ "`.")
 
 add_tactic_doc
   { Name := "to_additive", category := DocCategory.attr, declNames := [`to_additive.attr],
@@ -557,4 +578,41 @@ attribute [to_additive Pempty] Pempty
 attribute [to_additive PUnit] PUnit
 
 attribute [to_additive Unit] Unit
+
+section Linter
+
+open Tactic Expr
+
+/-- A linter that checks that multiplicative and additive lemmas have both doc strings if one of
+them has one -/
+@[linter]
+unsafe def linter.to_additive_doc : linter where
+  test := fun d => do
+    let mul_name := d.to_name
+    let dict ← to_additive.aux_attr.get_cache
+    match dict mul_name with
+      | some add_name => do
+        let mul_doc ← try_core <| doc_string mul_name
+        let add_doc ← try_core <| doc_string add_name
+        match mul_doc, add_doc with
+          | tt, ff =>
+            return <|
+              some <|
+                "declaration has a docstring, but its additive version `" ++ add_name ++
+                    "` does not. You might want to pass a string argument to " ++
+                  "`to_additive`."
+          | ff, tt =>
+            return <|
+              some <|
+                "declaration has no docstring, but its additive version `" ++ add_name ++
+                  "` does. You might want to add a doc string to the declaration."
+          | _, _ => return none
+      | none => return none
+  auto_decls := false
+  no_errors_found := "Multiplicative and additive lemmas are consistently documented"
+  errors_found :=
+    "The following declarations have doc strings, but their additive versions do " ++ "not (or vice versa)."
+  is_fast := false
+
+end Linter
 

@@ -5,6 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Monoidal.Coherence
 
 /-!
 # Half braidings and the Drinfeld center of a monoidal category
@@ -129,6 +130,7 @@ instance is_iso_of_f_is_iso {X Y : Center C} (f : X ⟶ Y) [IsIso f.f] : IsIso f
   change is_iso (iso_mk f).Hom
   infer_instance
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 @[simps]
 def tensorObj (X Y : Center C) : Center C :=
@@ -137,16 +139,21 @@ def tensorObj (X Y : Center C) : Center C :=
       monoidal' := fun U U' => by
         dsimp
         simp only [comp_tensor_id, id_tensor_comp, category.assoc, half_braiding.monoidal]
-        rw [pentagon_assoc, pentagon_inv_assoc, iso.eq_inv_comp, ← pentagon_assoc, ← id_tensor_comp_assoc,
-          iso.hom_inv_id, tensor_id, category.id_comp, ← associator_naturality_assoc, cancel_epi, cancel_epi, ←
-          associator_inv_naturality_assoc (X.2.β U).Hom, associator_inv_naturality_assoc _ _ (Y.2.β U').Hom, tensor_id,
-          tensor_id, id_tensor_comp_tensor_id_assoc, associator_naturality_assoc (X.2.β U).Hom, ←
-          associator_naturality_assoc _ _ (Y.2.β U').Hom, tensor_id, tensor_id, tensor_id_comp_id_tensor_assoc, ←
-          id_tensor_comp_tensor_id, tensor_id, category.comp_id, ← is_iso.inv_comp_eq, inv_tensor, is_iso.inv_id,
-          is_iso.iso.inv_inv, pentagon_assoc, iso.hom_inv_id_assoc, cancel_epi, cancel_epi, ← is_iso.inv_comp_eq,
-          is_iso.iso.inv_hom, ← pentagon_inv_assoc, ← comp_tensor_id_assoc, iso.inv_hom_id, tensor_id, category.id_comp,
-          ← associator_inv_naturality_assoc, cancel_epi, cancel_epi, ← is_iso.inv_comp_eq, inv_tensor,
-          is_iso.iso.inv_hom, is_iso.inv_id, pentagon_inv_assoc, iso.inv_hom_id, category.comp_id],
+        -- On the RHS, we'd like to commute `((X.snd.β U).hom ⊗ 𝟙 Y.fst) ⊗ 𝟙 U'`
+        -- and `𝟙 U ⊗ 𝟙 X.fst ⊗ (Y.snd.β U').hom` past each other,
+        -- but there are some associators we need to get out of the way first.
+        slice_rhs 6 8 => rw [pentagon]
+        slice_rhs 5 6 => rw [associator_naturality]
+        slice_rhs 7 8 => rw [← associator_naturality]
+        slice_rhs 6 7 =>
+          rw [tensor_id, tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id, ← tensor_id, ← tensor_id]
+        -- Now insert associators as needed to make the four half-braidings look identical
+        slice_rhs 10 10 => rw [associator_inv_conjugation]
+        slice_rhs 7 7 => rw [associator_inv_conjugation]
+        slice_rhs 6 6 => rw [associator_conjugation]
+        slice_rhs 3 3 => rw [associator_conjugation]
+        -- Finish with an application of the coherence theorem.
+        "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence",
       naturality' := fun U U' f => by
         dsimp
         rw [category.assoc, category.assoc, category.assoc, category.assoc, id_tensor_associator_naturality_assoc, ←
@@ -177,16 +184,14 @@ def tensorUnit : Center C :=
         dsimp
         rw [left_unitor_naturality_assoc, right_unitor_inv_naturality, category.assoc] }⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def associator (X Y Z : Center C) : tensorObj (tensorObj X Y) Z ≅ tensorObj X (tensorObj Y Z) :=
   isoMk
     ⟨(α_ X.1 Y.1 Z.1).Hom, fun U => by
       dsimp
-      simp only [category.assoc, comp_tensor_id, id_tensor_comp]
-      rw [pentagon, pentagon_assoc, ← associator_naturality_assoc (𝟙 X.1) (𝟙 Y.1), tensor_id, cancel_epi, cancel_epi,
-        iso.eq_inv_comp, ← pentagon_assoc, ← id_tensor_comp_assoc, iso.hom_inv_id, tensor_id, category.id_comp, ←
-        associator_naturality_assoc, cancel_epi, cancel_epi, ← is_iso.inv_comp_eq, inv_tensor, is_iso.inv_id,
-        is_iso.iso.inv_inv, pentagon_assoc, iso.hom_inv_id_assoc, ← tensor_id, ← associator_naturality_assoc]⟩
+      simp only [comp_tensor_id, id_tensor_comp, ← tensor_id, associator_conjugation]
+      "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"⟩
 
 /-- Auxiliary definition for the `monoidal_category` instance on `center C`. -/
 def leftUnitor (X : Center C) : tensorObj tensorUnit X ≅ X :=

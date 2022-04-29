@@ -3,7 +3,7 @@ Copyright (c) 2021 Jakob von Raumer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 -/
-import Mathbin.CategoryTheory.Monoidal.Category
+import Mathbin.CategoryTheory.Monoidal.CoherenceLemmas
 
 /-!
 # Rigid (autonomous) monoidal categories
@@ -34,6 +34,10 @@ exact pairings and duals.
 * Show that `X ⊗ Y` and `Yᘁ ⊗ Xᘁ` form an exact pairing.
 * Show that the left adjoint mate of the right adjoint mate of a morphism is the morphism itself.
 * Simplify constructions in the case where a symmetry or braiding is present.
+* Connect this definition to `monoidal_closed`: an object with a (left?) dual is
+  a closed object `X` such that the right adjoint of `X ⊗ -` is given by `Y ⊗ -` for some `Y`.
+* Show that `ᘁ` gives an equivalence of categories `C ≅ (Cᵒᵖ)ᴹᵒᵖ`.
+* Define pivotal categories (rigid categories equipped with a natural isomorphism `ᘁᘁ ≅ 𝟙 C`).
 
 ## References
 
@@ -80,23 +84,21 @@ notation "ε_" => ExactPairing.evaluation
 
 restate_axiom coevaluation_evaluation'
 
-attribute [reassoc, simp] exact_pairing.coevaluation_evaluation
+attribute [simp, reassoc] exact_pairing.coevaluation_evaluation
 
 restate_axiom evaluation_coevaluation'
 
-attribute [reassoc, simp] exact_pairing.evaluation_coevaluation
+attribute [simp, reassoc] exact_pairing.evaluation_coevaluation
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 instance exactPairingUnit : ExactPairing (𝟙_ C) (𝟙_ C) where
   coevaluation := (ρ_ _).inv
   evaluation := (ρ_ _).Hom
   coevaluation_evaluation' := by
-    rw [monoidal_category.triangle_assoc_comp_right, monoidal_category.unitors_inv_equal,
-      monoidal_category.unitors_equal]
-    simp
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
   evaluation_coevaluation' := by
-    rw [monoidal_category.triangle_assoc_comp_right_inv_assoc, monoidal_category.unitors_inv_equal,
-      monoidal_category.unitors_equal]
-    simp
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 /-- A class of objects which have a right dual. -/
 class HasRightDual (X : C) where
@@ -250,6 +252,53 @@ theorem comp_left_adjoint_mate {X Y Z : C} [HasLeftDual X] [HasLeftDual Y] [HasL
   rw [triangle_assoc_comp_left_inv_assoc, ← right_unitor_tensor_assoc, right_unitor_naturality_assoc, ← unitors_equal, ←
     category.assoc, ← category.assoc]
   simp
+
+/-- Transport an exact pairing across an isomorphism in the first argument. -/
+def exactPairingCongrLeft {X X' Y : C} [ExactPairing X' Y] (i : X ≅ X') : ExactPairing X Y where
+  evaluation := (𝟙 Y ⊗ i.Hom) ≫ ε_ _ _
+  coevaluation := η_ _ _ ≫ (i.inv ⊗ 𝟙 Y)
+  evaluation_coevaluation' := by
+    rw [id_tensor_comp, comp_tensor_id]
+    slice_lhs 2 3 => rw [associator_naturality]
+    slice_lhs 3 4 => rw [tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
+    slice_lhs 4 5 => rw [tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
+    slice_lhs 2 3 => rw [← associator_naturality]
+    slice_lhs 1 2 => rw [tensor_id, tensor_id_comp_id_tensor, ← id_tensor_comp_tensor_id]
+    slice_lhs 2 4 => rw [evaluation_coevaluation]
+    slice_lhs 1 2 => rw [left_unitor_naturality]
+    slice_lhs 3 4 => rw [← right_unitor_inv_naturality]
+    simp
+  coevaluation_evaluation' := by
+    rw [id_tensor_comp, comp_tensor_id]
+    simp only [iso.inv_hom_id_assoc, associator_conjugation, category.assoc]
+    slice_lhs 2 3 => rw [← tensor_comp]simp
+    simp
+
+/-- Transport an exact pairing across an isomorphism in the second argument. -/
+def exactPairingCongrRight {X Y Y' : C} [ExactPairing X Y'] (i : Y ≅ Y') : ExactPairing X Y where
+  evaluation := (i.Hom ⊗ 𝟙 X) ≫ ε_ _ _
+  coevaluation := η_ _ _ ≫ (𝟙 X ⊗ i.inv)
+  evaluation_coevaluation' := by
+    rw [id_tensor_comp, comp_tensor_id]
+    simp only [iso.inv_hom_id_assoc, associator_conjugation, category.assoc]
+    slice_lhs 3 4 => rw [← tensor_comp]simp
+    simp
+  coevaluation_evaluation' := by
+    rw [id_tensor_comp, comp_tensor_id]
+    slice_lhs 3 4 => rw [← associator_inv_naturality]
+    slice_lhs 2 3 => rw [tensor_id, id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
+    slice_lhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
+    slice_lhs 3 4 => rw [associator_inv_naturality]
+    slice_lhs 4 5 => rw [tensor_id, id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
+    slice_lhs 2 4 => rw [coevaluation_evaluation]
+    slice_lhs 1 2 => rw [right_unitor_naturality]
+    slice_lhs 3 4 => rw [← left_unitor_inv_naturality]
+    simp
+
+/-- Transport an exact pairing across isomorphisms. -/
+def exactPairingCongr {X X' Y Y' : C} [ExactPairing X' Y'] (i : X ≅ X') (j : Y ≅ Y') : ExactPairing X Y :=
+  have : exact_pairing X' Y := exact_pairing_congr_right j
+  exact_pairing_congr_left i
 
 /-- Right duals are isomorphic. -/
 def rightDualIso {X Y₁ Y₂ : C} (_ : ExactPairing X Y₁) (_ : ExactPairing X Y₂) : Y₁ ≅ Y₂ where

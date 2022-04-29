@@ -38,11 +38,11 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open_locale BigOperators
+open BigOperators
 
 variable {σ τ α R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S]
 
@@ -104,6 +104,29 @@ theorem rename_injective (f : σ → τ) (hf : Function.Injective f) :
     funext (rename_eq f)
   rw [this]
   exact Finsupp.map_domain_injective (Finsupp.map_domain_injective hf)
+
+section
+
+variable {f : σ → τ} (hf : Function.Injective f)
+
+open Classical
+
+/-- Given a function between sets of variables `f : σ → τ` that is injective with proof `hf`,
+  `kill_compl hf` is the `alg_hom` from `R[τ]` to `R[σ]` that is left inverse to
+  `rename f : R[σ] → R[τ]` and sends the variables in the complement of the range of `f` to `0`. -/
+def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
+  aeval fun i => if h : i ∈ Set.Range f then X <| (Equivₓ.ofInjective f hf).symm ⟨i, h⟩ else 0
+
+theorem kill_compl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
+  alg_hom_ext fun i => by
+    dsimp
+    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equivₓ.of_injective_symm_apply]
+
+@[simp]
+theorem kill_compl_rename_app (p : MvPolynomial σ R) : killCompl hf (rename f p) = p :=
+  AlgHom.congr_fun (kill_compl_comp_rename hf) p
+
+end
 
 section
 
@@ -203,6 +226,20 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
       rfl
       
     
+
+/-- `exists_finset_rename` for two polyonomials at once: for any two polynomials `p₁`, `p₂` in a
+  polynomial semiring `R[σ]` of possibly infinitely many variables, `exists_finset_rename₂` yields
+  a finite subset `s` of `σ` such that both `p₁` and `p₂` are contained in the polynomial semiring
+  `R[s]` of finitely many variables. -/
+theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
+    ∃ (s : Finset σ)(q₁ q₂ : MvPolynomial s R), p₁ = rename coe q₁ ∧ p₂ = rename coe q₂ := by
+  obtain ⟨s₁, q₁, rfl⟩ := exists_finset_rename p₁
+  obtain ⟨s₂, q₂, rfl⟩ := exists_finset_rename p₂
+  classical
+  use s₁ ∪ s₂
+  use rename (Set.inclusion <| s₁.subset_union_left s₂) q₁
+  use rename (Set.inclusion <| s₁.subset_union_right s₂) q₂
+  constructor <;> simpa
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_fin_rename (p : MvPolynomial σ R) :

@@ -64,7 +64,7 @@ free module, rank, invariant basis number, IBN
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Function
 
@@ -89,7 +89,7 @@ theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n �
 theorem strong_rank_condition_iff_succ :
     StrongRankCondition R ↔ ∀ n : ℕ f : (Finₓ (n + 1) → R) →ₗ[R] Finₓ n → R, ¬Function.Injective f := by
   refine' ⟨fun h n => fun f hf => _, fun h => ⟨fun n m f hf => _⟩⟩
-  · let this' : StrongRankCondition R := h
+  · let this : StrongRankCondition R := h
     exact Nat.not_succ_le_selfₓ n (le_of_fin_injective R f hf)
     
   · by_contra H
@@ -234,6 +234,7 @@ private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (ι
   Quotientₓ.liftOn' x (fun y => Ideal.Quotient.mk _ (e y))
     (by
       refine' fun a b hab => Ideal.Quotient.eq.2 fun h => _
+      rw [Submodule.quotient_rel_r_def] at hab
       rw [← LinearMap.map_sub]
       exact Ideal.map_pi _ _ hab e h)
 

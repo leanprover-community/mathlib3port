@@ -207,7 +207,7 @@ theorem zero_smul {α} [AddCommMonoidₓ α] c : smul c (0 : α) = 0 := by
   simp [smul, nsmul_zero]
 
 theorem zero_smulg {α} [AddCommGroupₓ α] c : smulg c (0 : α) = 0 := by
-  simp [smulg]
+  simp [smulg, zsmul_zero]
 
 theorem term_smul {α} [AddCommMonoidₓ α] c n x a n' a' (h₁ : c * n = n') (h₂ : smul c a = a') :
     smul c (@term α _ n x a) = term n' x a' := by

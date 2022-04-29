@@ -250,12 +250,14 @@ open Top.Presheaf
 
 This is provided as a bundled `SheafedSpace` as `Spec.SheafedSpace R` later.
 -/
-def structureSheaf : Sheaf CommRingₓₓ (PrimeSpectrum.top R) :=
+def Spec.structureSheaf : Sheaf CommRingₓₓ (PrimeSpectrum.top R) :=
   ⟨structurePresheafInCommRing R,
     (-- We check the sheaf condition under `forget CommRing`.
           is_sheaf_iff_is_sheaf_comp
           _ _).mpr
       (is_sheaf_of_iso (structurePresheafCompForget R).symm (structureSheafInType R).property)⟩
+
+open Spec (structureSheaf)
 
 namespace StructureSheaf
 
@@ -727,9 +729,9 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
   rw [pow_succₓ]
   ring
 
-open_locale Classical
+open Classical
 
-open_locale BigOperators
+open BigOperators
 
 -- The proof here follows the argument in Hartshorne's Algebraic Geometry, Proposition II.2.2.
 theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f) := by
@@ -874,6 +876,7 @@ theorem to_global_factors :
       CommRingₓₓ.ofHom (algebraMap R (Localization.Away (1 : R))) ≫
         toBasicOpen R (1 : R) ≫ (structureSheaf R).1.map (eqToHom basic_open_one.symm).op :=
   by
+  rw [← category.assoc]
   change to_open R ⊤ = (to_basic_open R 1).comp _ ≫ _
   unfold CommRingₓₓ.ofHom
   rw [localization_to_basic_open R, to_open_res]
@@ -903,8 +906,8 @@ theorem to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpec
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
 @[simp, reassoc, elementwise]
 theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
-    structureSheaf.localizationToStalk R y ≫ (structureSheaf R).val.stalkSpecializes h =
-      CommRingₓₓ.ofHom (PrimeSpectrum.localizationMapOfSpecializes h) ≫ structureSheaf.localizationToStalk R x :=
+    StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).val.stalkSpecializes h =
+      CommRingₓₓ.ofHom (PrimeSpectrum.localizationMapOfSpecializes h) ≫ StructureSheaf.localizationToStalk R x :=
   by
   apply IsLocalization.ring_hom_ext y.as_ideal.prime_compl
   any_goals {
@@ -917,8 +920,8 @@ theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x 
 
 @[simp, reassoc, elementwise]
 theorem stalk_specializes_stalk_to_fiber {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
-    (structureSheaf R).val.stalkSpecializes h ≫ structureSheaf.stalkToFiberRingHom R x =
-      structureSheaf.stalkToFiberRingHom R y ≫ PrimeSpectrum.localizationMapOfSpecializes h :=
+    (structureSheaf R).val.stalkSpecializes h ≫ StructureSheaf.stalkToFiberRingHom R x =
+      StructureSheaf.stalkToFiberRingHom R y ≫ PrimeSpectrum.localizationMapOfSpecializes h :=
   by
   change _ ≫ (structure_sheaf.stalk_iso R x).hom = (structure_sheaf.stalk_iso R y).hom ≫ _
   rw [← iso.eq_comp_inv, category.assoc, ← iso.inv_comp_eq]

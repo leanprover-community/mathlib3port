@@ -13,13 +13,13 @@ We prove that the discrete topology is a first-countable topology, and is second
 encodable type. Also, in linear orders which are also `pred_order` and `succ_order`, the discrete
 topology is the order topology.
 
-When importing this file and `data.nat.succ_pred.basic`, the instances `second_countable_topology ℕ`
+When importing this file and `data.nat.succ_pred`, the instances `second_countable_topology ℕ`
 and `order_topology ℕ` become available.
 
 -/
 
 
-open TopologicalSpace Set
+open Order Set TopologicalSpace
 
 variable {α : Type _} [TopologicalSpace α]
 
@@ -42,16 +42,16 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ' [h : Di
   ⟨by
     rw [h.eq_bot]
     refine' (eq_bot_of_singletons_open fun a => _).symm
-    have h_singleton_eq_inter : {a} = Iio (SuccOrder.succ a) ∩ Ioi (PredOrder.pred a) := by
+    have h_singleton_eq_inter : {a} = Iio (succ a) ∩ Ioi (pred a) := by
       suffices h_singleton_eq_inter' : {a} = Iic a ∩ Ici a
-      · rw [h_singleton_eq_inter', PredOrder.Ici_eq_Ioi_pred, SuccOrder.Iic_eq_Iio_succ]
+      · rw [h_singleton_eq_inter', ← Ioi_pred, ← Iio_succ]
         
       rw [inter_comm, Ici_inter_Iic, Icc_self a]
     rw [h_singleton_eq_inter]
     apply IsOpen.inter
-    · exact is_open_generate_from_of_mem ⟨SuccOrder.succ a, Or.inr rfl⟩
+    · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
       
-    · exact is_open_generate_from_of_mem ⟨PredOrder.pred a, Or.inl rfl⟩
+    · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
       ⟩
 
 instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : DiscreteTopology α] [LinearOrderₓ α]
@@ -69,25 +69,25 @@ instance (priority := 100) DiscreteTopology.order_topology_of_pred_succ [h : Dis
         apply is_open_univ
         
       · rw [is_bot_iff_is_min] at ha_bot
-        rw [PredOrder.Ici_eq_Ioi_pred' ha_bot] at h_singleton_eq_inter
+        rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
         rw [h_singleton_eq_inter]
-        exact is_open_generate_from_of_mem ⟨PredOrder.pred a, Or.inl rfl⟩
+        exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
         
       
     · rw [is_top_iff_is_max] at ha_top
-      rw [SuccOrder.Iic_eq_Iio_succ' ha_top] at h_singleton_eq_inter
+      rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
       by_cases' ha_bot : IsBot a
       · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
         rw [h_singleton_eq_inter]
-        exact is_open_generate_from_of_mem ⟨SuccOrder.succ a, Or.inr rfl⟩
+        exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
         
       · rw [is_bot_iff_is_min] at ha_bot
-        rw [PredOrder.Ici_eq_Ioi_pred' ha_bot] at h_singleton_eq_inter
+        rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
         rw [h_singleton_eq_inter]
         apply IsOpen.inter
-        · exact is_open_generate_from_of_mem ⟨SuccOrder.succ a, Or.inr rfl⟩
+        · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
           
-        · exact is_open_generate_from_of_mem ⟨PredOrder.pred a, Or.inl rfl⟩
+        · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
           
         
       ⟩

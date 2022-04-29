@@ -80,16 +80,16 @@ def expComparison (A : C) : exp A ⋙ F ⟶ F ⋙ exp (F.obj A) :=
   transferNatTrans (exp.adjunction A) (exp.adjunction (F.obj A)) (prodComparisonNatIso F A).inv
 
 theorem exp_comparison_ev (A B : C) :
-    Limits.prod.map (𝟙 (F.obj A)) ((expComparison F A).app B) ≫ (ev (F.obj A)).app (F.obj B) =
-      inv (prodComparison F _ _) ≫ F.map ((ev _).app _) :=
+    Limits.prod.map (𝟙 (F.obj A)) ((expComparison F A).app B) ≫ (exp.ev (F.obj A)).app (F.obj B) =
+      inv (prodComparison F _ _) ≫ F.map ((exp.ev _).app _) :=
   by
   convert transfer_nat_trans_counit _ _ (prod_comparison_nat_iso F A).inv B
   ext
   simp
 
 theorem coev_exp_comparison (A B : C) :
-    F.map ((coev A).app B) ≫ (expComparison F A).app (A ⨯ B) =
-      (coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prodComparison F A B)) :=
+    F.map ((exp.coev A).app B) ≫ (expComparison F A).app (A ⨯ B) =
+      (exp.coev _).app (F.obj B) ≫ (exp (F.obj A)).map (inv (prodComparison F A B)) :=
   by
   convert unit_transfer_nat_trans _ _ (prod_comparison_nat_iso F A).inv B
   ext
@@ -97,7 +97,7 @@ theorem coev_exp_comparison (A B : C) :
   simp
 
 theorem uncurry_exp_comparison (A B : C) :
-    CartesianClosed.uncurry ((expComparison F A).app B) = inv (prodComparison F _ _) ≫ F.map ((ev _).app _) := by
+    CartesianClosed.uncurry ((expComparison F A).app B) = inv (prodComparison F _ _) ≫ F.map ((exp.ev _).app _) := by
   rw [uncurry_eq, exp_comparison_ev]
 
 /-- The exponential comparison map is natural in `A`. -/
@@ -128,7 +128,7 @@ theorem frobenius_morphism_mate (h : L ⊣ F) (A : C) :
   dsimp [frobenius_morphism, transfer_nat_trans_self, transfer_nat_trans, adjunction.comp]
   simp only [id_comp, comp_id]
   rw [← L.map_comp_assoc, prod.map_id_comp, assoc, exp_comparison_ev, prod.map_id_comp, assoc, ← F.map_id, ←
-    prod_comparison_inv_natural_assoc, ← F.map_comp, ev_coev, F.map_id (A ⨯ L.obj B), comp_id]
+    prod_comparison_inv_natural_assoc, ← F.map_comp, exp.ev_coev, F.map_id (A ⨯ L.obj B), comp_id]
   apply prod.hom_ext
   · rw [assoc, assoc, ← h.counit_naturality, ← L.map_comp_assoc, assoc, inv_prod_comparison_map_fst]
     simp

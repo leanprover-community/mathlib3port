@@ -153,7 +153,7 @@ variable {ι : Type _} {B : Type _} {F : Type _}
 
 open TopologicalSpace Filter Set
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 /-! ### General definition of topological fiber bundles -/
 
@@ -209,7 +209,7 @@ theorem mk_proj_snd' (ex : proj x ∈ e.BaseSet) : (proj x, (e x).2) = e x :=
 
 /-- Composition of inverse and coercion from the subtype of the target. -/
 def setSymm : e.Target → Z :=
-  Set.restrict e.toLocalEquiv.symm e.Target
+  e.Target.restrict e.toLocalEquiv.symm
 
 theorem mem_target {x : B × F} : x ∈ e.Target ↔ x.1 ∈ e.BaseSet := by
   rw [e.target_eq, prod_univ, mem_preimage]
@@ -249,6 +249,19 @@ theorem preimage_symm_proj_inter (s : Set B) :
     simpa only [prod_mk_mem_set_prod_eq, mem_inter_eq, and_trueₓ, mem_univ, And.congr_left_iff]
   intro h
   rw [e.proj_symm_apply' h]
+
+theorem symm_trans_symm (e e' : Pretrivialization F proj) :
+    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).symm = e'.toLocalEquiv.symm.trans e.toLocalEquiv := by
+  rw [LocalEquiv.trans_symm_eq_symm_trans_symm, LocalEquiv.symm_symm]
+
+theorem symm_trans_source_eq (e e' : Pretrivialization F proj) :
+    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Source = (e.BaseSet ∩ e'.BaseSet) ×ˢ (Univ : Set F) := by
+  rw [LocalEquiv.trans_source, e'.source_eq, LocalEquiv.symm_source, e.target_eq, inter_comm,
+    e.preimage_symm_proj_inter, inter_comm]
+
+theorem symm_trans_target_eq (e e' : Pretrivialization F proj) :
+    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Target = (e.BaseSet ∩ e'.BaseSet) ×ˢ (Univ : Set F) := by
+  rw [← LocalEquiv.symm_source, symm_trans_symm, symm_trans_source_eq, inter_comm]
 
 end TopologicalFiberBundle.Pretrivialization
 
@@ -336,6 +349,14 @@ theorem apply_symm_apply' {b : B} {x : F} (hx : b ∈ e.BaseSet) : e (e.toLocalH
 @[simp, mfld_simps]
 theorem symm_apply_mk_proj (ex : x ∈ e.Source) : e.toLocalHomeomorph.symm (proj x, (e x).2) = x :=
   e.toPretrivialization.symm_apply_mk_proj ex
+
+theorem symm_trans_source_eq (e e' : Trivialization F proj) :
+    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Source = (e.BaseSet ∩ e'.BaseSet) ×ˢ (Univ : Set F) :=
+  Pretrivialization.symm_trans_source_eq e.toPretrivialization e'
+
+theorem symm_trans_target_eq (e e' : Trivialization F proj) :
+    (e.toLocalEquiv.symm.trans e'.toLocalEquiv).Target = (e.BaseSet ∩ e'.BaseSet) ×ˢ (Univ : Set F) :=
+  Pretrivialization.symm_trans_target_eq e.toPretrivialization e'
 
 theorem coe_fst_eventually_eq_proj (ex : x ∈ e.Source) : Prod.fst ∘ e =ᶠ[𝓝 x] proj :=
   mem_nhds_iff.2 ⟨e.Source, fun y hy => e.coe_fst hy, e.open_source, ex⟩
@@ -526,7 +547,7 @@ end TopologicalFiberBundle.Trivialization
 
 section Comap
 
-open_locale Classical
+open Classical
 
 variable {B' : Type _} [TopologicalSpace B']
 
@@ -1158,90 +1179,80 @@ variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z �
 
 open TopologicalFiberBundle
 
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences
 are also local homeomorphism and hence local trivializations. -/
 @[nolint has_inhabited_instance]
 structure TopologicalFiberPrebundle (proj : Z → B) where
+  PretrivializationAtlas : Set (Pretrivialization F proj)
   pretrivializationAt : B → Pretrivialization F proj
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet
+  pretrivialization_mem_atlas : ∀ x : B, pretrivialization_at x ∈ pretrivialization_atlas
   continuous_triv_change :
-    ∀ x y : B,
-      ContinuousOn (pretrivialization_at x ∘ (pretrivialization_at y).toLocalEquiv.symm)
-        ((pretrivialization_at y).Target ∩
-          (pretrivialization_at y).toLocalEquiv.symm ⁻¹' (pretrivialization_at x).Source)
+    ∀ e e' _ : e ∈ pretrivialization_atlas _ : e' ∈ pretrivialization_atlas,
+      ContinuousOn (e ∘ e'.toLocalEquiv.symm) (e'.Target ∩ e'.toLocalEquiv.symm ⁻¹' e.Source)
 
 namespace TopologicalFiberPrebundle
 
-variable {F} (a : TopologicalFiberPrebundle F proj) (x : B)
+variable {F} (a : TopologicalFiberPrebundle F proj) {e : Pretrivialization F proj}
 
 /-- Topology on the total space that will make the prebundle into a bundle. -/
 def totalSpaceTopology (a : TopologicalFiberPrebundle F proj) : TopologicalSpace Z :=
-  ⨆ x : B, coinduced (a.pretrivializationAt x).setSymm Subtype.topologicalSpace
+  ⨆ (e : Pretrivialization F proj) (he : e ∈ a.PretrivializationAtlas), coinduced e.setSymm Subtype.topologicalSpace
 
-theorem continuous_symm_pretrivialization_at :
-    @ContinuousOn _ _ _ a.totalSpaceTopology (a.pretrivializationAt x).toLocalEquiv.symm
-      (a.pretrivializationAt x).Target :=
-  by
-  refine'
-    id fun z H =>
-      id fun U h =>
-        preimage_nhds_within_coinduced' H (a.pretrivialization_at x).open_target (le_def.1 (nhds_mono _) U h)
-  exact le_supr _ x
+theorem continuous_symm_of_mem_pretrivialization_atlas (he : e ∈ a.PretrivializationAtlas) :
+    @ContinuousOn _ _ _ a.totalSpaceTopology e.toLocalEquiv.symm e.Target := by
+  refine' id fun z H => id fun U h => preimage_nhds_within_coinduced' H e.open_target (le_def.1 (nhds_mono _) U h)
+  exact le_supr₂ e he
 
-theorem is_open_source_pretrivialization_at : @IsOpen _ a.totalSpaceTopology (a.pretrivializationAt x).Source := by
-  let this' := a.total_space_topology
-  refine'
-    is_open_supr_iff.mpr fun y =>
-      is_open_coinduced.mpr
-        (is_open_induced_iff.mpr ⟨(a.pretrivialization_at x).Target, (a.pretrivialization_at x).open_target, _⟩)
-  rw [pretrivialization.set_symm, restrict, (a.pretrivialization_at x).target_eq, (a.pretrivialization_at x).source_eq,
-    preimage_comp, Subtype.preimage_coe_eq_preimage_coe_iff, (a.pretrivialization_at y).target_eq, prod_inter_prod,
-    inter_univ, pretrivialization.preimage_symm_proj_inter]
+theorem is_open_source (e : Pretrivialization F proj) : @IsOpen _ a.totalSpaceTopology e.Source := by
+  let this := a.total_space_topology
+  refine' is_open_supr_iff.mpr fun e' => _
+  refine' is_open_supr_iff.mpr fun he' => _
+  refine' is_open_coinduced.mpr (is_open_induced_iff.mpr ⟨e.target, e.open_target, _⟩)
+  rw [pretrivialization.set_symm, restrict, e.target_eq, e.source_eq, preimage_comp,
+    Subtype.preimage_coe_eq_preimage_coe_iff, e'.target_eq, prod_inter_prod, inter_univ,
+    pretrivialization.preimage_symm_proj_inter]
 
-theorem is_open_target_pretrivialization_at_inter (x y : B) :
-    IsOpen
-      ((a.pretrivializationAt y).toLocalEquiv.Target ∩
-        (a.pretrivializationAt y).toLocalEquiv.symm ⁻¹' (a.pretrivializationAt x).Source) :=
-  by
-  let this' := a.total_space_topology
+theorem is_open_target_of_mem_pretrivialization_atlas_inter (e e' : Pretrivialization F proj)
+    (he' : e' ∈ a.PretrivializationAtlas) : IsOpen (e'.toLocalEquiv.Target ∩ e'.toLocalEquiv.symm ⁻¹' e.Source) := by
+  let this := a.total_space_topology
   obtain ⟨u, hu1, hu2⟩ :=
-    continuous_on_iff'.mp (a.continuous_symm_pretrivialization_at y) (a.pretrivialization_at x).Source
-      (a.is_open_source_pretrivialization_at x)
+    continuous_on_iff'.mp (a.continuous_symm_of_mem_pretrivialization_atlas he') e.source (a.is_open_source e)
   rw [inter_comm, hu2]
-  exact hu1.inter (a.pretrivialization_at y).open_target
+  exact hu1.inter e'.open_target
 
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
-def trivializationAt (a : TopologicalFiberPrebundle F proj) (x : B) :
+def trivializationOfMemPretrivializationAtlas (he : e ∈ a.PretrivializationAtlas) :
     @Trivialization B F Z _ _ a.totalSpaceTopology proj :=
-  { a.pretrivializationAt x with open_source := a.is_open_source_pretrivialization_at x,
+  { e with open_source := a.is_open_source e,
     continuous_to_fun := by
-      let this' := a.total_space_topology
+      let this := a.total_space_topology
       refine'
         continuous_on_iff'.mpr fun s hs =>
-          ⟨a.pretrivialization_at x ⁻¹' s ∩ (a.pretrivialization_at x).Source, is_open_supr_iff.mpr fun y => _, by
+          ⟨e ⁻¹' s ∩ e.source, is_open_supr_iff.mpr fun e' => _, by
             rw [inter_assoc, inter_self]
             rfl⟩
+      refine' is_open_supr_iff.mpr fun he' => _
       rw [is_open_coinduced, is_open_induced_iff]
-      obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change x y) s hs
-      have hu3 := congr_argₓ (fun s => (fun x : (a.pretrivialization_at y).Target => (x : B × F)) ⁻¹' s) hu2
+      obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
+      have hu3 := congr_argₓ (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
-        ⟨u ∩ (a.pretrivialization_at y).toLocalEquiv.Target ∩
-            (a.pretrivialization_at y).toLocalEquiv.symm ⁻¹' (a.pretrivialization_at x).Source,
-          _, by
+        ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by
           simp only [preimage_inter, inter_univ, Subtype.coe_preimage_self, hu3.symm]
           rfl⟩
       rw [inter_assoc]
-      exact hu1.inter (a.is_open_target_pretrivialization_at_inter x y),
-    continuous_inv_fun := a.continuous_symm_pretrivialization_at x }
+      exact hu1.inter (a.is_open_target_of_mem_pretrivialization_atlas_inter e e' he'),
+    continuous_inv_fun := a.continuous_symm_of_mem_pretrivialization_atlas he }
 
 theorem is_topological_fiber_bundle : @IsTopologicalFiberBundle B F Z _ _ a.totalSpaceTopology proj := fun x =>
-  ⟨a.trivializationAt x, a.mem_base_pretrivialization_at x⟩
+  ⟨a.trivializationOfMemPretrivializationAtlas (a.pretrivialization_mem_atlas x), a.mem_base_pretrivialization_at x⟩
 
 theorem continuous_proj : @Continuous _ _ a.totalSpaceTopology _ proj := by
-  let this' := a.total_space_topology
+  let this := a.total_space_topology
   exact a.is_topological_fiber_bundle.continuous_proj
 
 end TopologicalFiberPrebundle

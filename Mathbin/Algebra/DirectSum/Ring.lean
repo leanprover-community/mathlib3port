@@ -21,13 +21,14 @@ additively-graded ring. The typeclasses are:
 
 Respectively, these imbue the external direct sum `⨁ i, A i` with:
 
-* `direct_sum.non_unital_non_assoc_semiring`
+* `direct_sum.non_unital_non_assoc_semiring`, `direct_sum.non_unital_non_assoc_ring`
 * `direct_sum.semiring`, `direct_sum.ring`
 * `direct_sum.comm_semiring`, `direct_sum.comm_ring`
 
 the base ring `A 0` with:
 
-* `direct_sum.grade_zero.non_unital_non_assoc_semiring`
+* `direct_sum.grade_zero.non_unital_non_assoc_semiring`,
+  `direct_sum.grade_zero.non_unital_non_assoc_ring`
 * `direct_sum.grade_zero.semiring`, `direct_sum.grade_zero.ring`
 * `direct_sum.grade_zero.comm_semiring`, `direct_sum.grade_zero.comm_ring`
 
@@ -70,7 +71,7 @@ variable {ι : Type _} [DecidableEq ι]
 
 namespace DirectSum
 
-open_locale DirectSum
+open DirectSum
 
 /-! ### Typeclasses -/
 
@@ -229,7 +230,7 @@ theorem list_prod_of_fn_of_eq_dprod (n : ℕ) (fι : Finₓ n → ι) (fA : ∀ 
     (List.ofFnₓ fun a => of A (fι a) (fA a)).Prod = of A _ ((List.finRange n).dprod fι fA) := by
   rw [List.of_fn_eq_map, of_list_dprod]
 
-open_locale BigOperators
+open BigOperators
 
 /-- A heavily unfolded version of the definition of multiplication -/
 theorem mul_eq_sum_support_ghas_mul [∀ i : ι x : A i, Decidable (x ≠ 0)] (a a' : ⨁ i, A i) :
@@ -265,9 +266,20 @@ instance commSemiring : CommSemiringₓ (⨁ i, A i) :=
 
 end CommSemiringₓ
 
+section NonUnitalNonAssocRing
+
+variable [∀ i, AddCommGroupₓ (A i)] [Add ι] [GnonUnitalNonAssocSemiring A]
+
+/-- The `ring` derived from `gsemiring A`. -/
+instance nonAssocRing : NonUnitalNonAssocRing (⨁ i, A i) :=
+  { DirectSum.nonUnitalNonAssocSemiring _, DirectSum.addCommGroup _ with mul := (· * ·), zero := 0, add := (· + ·),
+    neg := Neg.neg }
+
+end NonUnitalNonAssocRing
+
 section Ringₓ
 
-variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [Gsemiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddMonoidₓ ι] [Gsemiring A]
 
 /-- The `ring` derived from `gsemiring A`. -/
 instance ring : Ringₓ (⨁ i, A i) :=
@@ -308,7 +320,7 @@ end One
 
 section Mul
 
-variable [AddMonoidₓ ι] [∀ i, AddCommMonoidₓ (A i)] [GnonUnitalNonAssocSemiring A]
+variable [AddZeroClass ι] [∀ i, AddCommMonoidₓ (A i)] [GnonUnitalNonAssocSemiring A]
 
 @[simp]
 theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a * of _ _ b :=
@@ -320,10 +332,10 @@ theorem of_zero_mul (a b : A 0) : of _ 0 (a * b) = of _ 0 a * of _ 0 b :=
 
 instance GradeZero.nonUnitalNonAssocSemiring : NonUnitalNonAssocSemiringₓ (A 0) :=
   Function.Injective.nonUnitalNonAssocSemiring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of A 0).map_add
-    (of_zero_mul A)
+    (of_zero_mul A) fun x n => Dfinsupp.single_smul n x
 
 instance GradeZero.smulWithZero (i : ι) : SmulWithZero (A 0) (A i) := by
-  let this' := SmulWithZero.compHom (⨁ i, A i) (of A 0).toZeroHom
+  let this := SmulWithZero.compHom (⨁ i, A i) (of A 0).toZeroHom
   refine' dfinsupp.single_injective.smul_with_zero (of A i).toZeroHom (of_zero_smul A)
 
 end Mul
@@ -332,10 +344,17 @@ section Semiringₓ
 
 variable [∀ i, AddCommMonoidₓ (A i)] [AddMonoidₓ ι] [Gsemiring A]
 
+@[simp]
+theorem of_zero_pow (a : A 0) : ∀ n : ℕ, of _ 0 (a ^ n) = of _ 0 a ^ n
+  | 0 => by
+    rw [pow_zeroₓ, pow_zeroₓ, DirectSum.of_zero_one]
+  | n + 1 => by
+    rw [pow_succₓ, pow_succₓ, of_zero_mul, of_zero_pow]
+
 /-- The `semiring` structure derived from `gsemiring A`. -/
 instance GradeZero.semiring : Semiringₓ (A 0) :=
   Function.Injective.semiring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
-    (of_zero_mul A)
+    (of_zero_mul A) (fun x n => Dfinsupp.single_smul n x) fun x n => of_zero_pow _ _ _
 
 /-- `of A 0` is a `ring_hom`, using the `direct_sum.grade_zero.semiring` structure. -/
 def ofZeroRingHom : A 0 →+* ⨁ i, A i :=
@@ -345,7 +364,7 @@ def ofZeroRingHom : A 0 →+* ⨁ i, A i :=
 in an overall `module (A 0) (⨁ i, A i)` structure via `direct_sum.module`.
 -/
 instance GradeZero.module {i} : Module (A 0) (A i) := by
-  let this' := Module.compHom (⨁ i, A i) (of_zero_ring_hom A)
+  let this := Module.compHom (⨁ i, A i) (of_zero_ring_hom A)
   exact dfinsupp.single_injective.module (A 0) (of A i) fun a => of_zero_smul A a
 
 end Semiringₓ
@@ -357,18 +376,42 @@ variable [∀ i, AddCommMonoidₓ (A i)] [AddCommMonoidₓ ι] [GcommSemiring A]
 /-- The `comm_semiring` structure derived from `gcomm_semiring A`. -/
 instance GradeZero.commSemiring : CommSemiringₓ (A 0) :=
   Function.Injective.commSemiring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
-    (of_zero_mul A)
+    (of_zero_mul A) (fun x n => Dfinsupp.single_smul n x) fun x n => of_zero_pow _ _ _
 
 end CommSemiringₓ
 
 section Ringₓ
 
-variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [Gsemiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddZeroClass ι] [GnonUnitalNonAssocSemiring A]
+
+/-- The `non_unital_non_assoc_ring` derived from `gnon_unital_non_assoc_semiring A`. -/
+instance GradeZero.nonUnitalNonAssocRing : NonUnitalNonAssocRing (A 0) :=
+  Function.Injective.nonUnitalNonAssocRing (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of A 0).map_add
+    (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
+    (fun x n => by
+      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      exact Dfinsupp.single_smul n x)
+    fun x n => by
+    let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+    exact Dfinsupp.single_smul n x
+
+end Ringₓ
+
+section Ringₓ
+
+variable [∀ i, AddCommGroupₓ (A i)] [AddMonoidₓ ι] [Gsemiring A]
 
 /-- The `ring` derived from `gsemiring A`. -/
 instance GradeZero.ring : Ringₓ (A 0) :=
   Function.Injective.ring (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
     (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
+    (fun x n => by
+      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      exact Dfinsupp.single_smul n x)
+    (fun x n => by
+      let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+      exact Dfinsupp.single_smul n x)
+    fun x n => of_zero_pow _ _ _
 
 end Ringₓ
 
@@ -380,6 +423,13 @@ variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [GcommSemiring A]
 instance GradeZero.commRing : CommRingₓ (A 0) :=
   Function.Injective.commRing (of A 0) Dfinsupp.single_injective (of A 0).map_zero (of_zero_one A) (of A 0).map_add
     (of_zero_mul A) (of A 0).map_neg (of A 0).map_sub
+    (fun x n => by
+      let this : ∀ i, DistribMulAction ℕ (A i) := fun i => inferInstance
+      exact Dfinsupp.single_smul n x)
+    (fun x n => by
+      let this : ∀ i, DistribMulAction ℤ (A i) := fun i => inferInstance
+      exact Dfinsupp.single_smul n x)
+    fun x n => of_zero_pow _ _ _
 
 end CommRingₓ
 
@@ -481,7 +531,7 @@ instance NonUnitalNonAssocSemiringₓ.directSumGnonUnitalNonAssocSemiring {R : T
 instance Semiringₓ.directSumGsemiring {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] : DirectSum.Gsemiring fun i : ι => R :=
   { NonUnitalNonAssocSemiringₓ.directSumGnonUnitalNonAssocSemiring ι, Monoidₓ.gmonoid ι with }
 
-open_locale DirectSum
+open DirectSum
 
 -- To check `has_mul.ghas_mul_mul` matches
 example {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] (i j : ι) (a b : R) :

@@ -5,6 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.Algebra.SmulWithZero
+import Mathbin.GroupTheory.GroupAction.BigOperators
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.Tactic.NormNum
 
@@ -38,11 +39,11 @@ semimodule, module, vector space
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
-universe u u' v w x y z
+universe u v
 
-variable {R : Type u} {k : Type u'} {S : Type v} {M : Type w} {M₂ : Type x} {M₃ : Type y} {ι : Type z}
+variable {α R k S M M₂ M₃ ι : Type _}
 
 /-- A module is a generalization of vector spaces to a scalar semiring.
   It consists of a scalar semiring `R` and an additive monoid of "vectors" `M`,
@@ -74,6 +75,9 @@ instance AddCommMonoidₓ.natModule : Module ℕ M where
 theorem add_smul : (r + s) • x = r • x + s • x :=
   Module.add_smul r s x
 
+theorem Convex.combo_self {a b : R} (h : a + b = 1) (x : M) : a • x + b • x = x := by
+  rw [← add_smul, h, one_smul]
+
 variable (R)
 
 theorem two_smul : (2 : R) • x = x + x := by
@@ -83,8 +87,8 @@ theorem two_smul' : (2 : R) • x = bit0 x :=
   two_smul R x
 
 @[simp]
-theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) : (⅟ 2 : R) • x + (⅟ 2 : R) • x = x := by
-  rw [← add_smul, inv_of_two_add_inv_of_two, one_smul]
+theorem inv_of_two_smul_add_inv_of_two_smul [Invertible (2 : R)] (x : M) : (⅟ 2 : R) • x + (⅟ 2 : R) • x = x :=
+  Convex.combo_self inv_of_two_add_inv_of_two _
 
 /-- Pullback a `module` structure along an injective additive monoid homomorphism.
 See note [reducible non-instances]. -/
@@ -219,7 +223,7 @@ variable {R M}
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
 def Module.ofCore (H : Module.Core R M) : Module R M := by
-  let this' := H.to_has_scalar <;>
+  let this := H.to_has_scalar <;>
     exact
       { H with zero_smul := fun x => (AddMonoidHom.mk' (fun r : R => r • x) fun r s => H.add_smul r s x).map_zero,
         smul_zero := fun r => (AddMonoidHom.mk' ((· • ·) r) (H.smul_add r)).map_zero }
@@ -275,6 +279,11 @@ protected theorem Module.subsingleton (R M : Type _) [Semiringₓ R] [Subsinglet
     Subsingleton M :=
   ⟨fun x y => by
     rw [← one_smul R x, ← one_smul R y, Subsingleton.elimₓ (1 : R) 0, zero_smul, zero_smul]⟩
+
+/-- A semiring is `nontrivial` provided that there exists a nontrivial module over this semiring. -/
+protected theorem Module.nontrivial (R M : Type _) [Semiringₓ R] [Nontrivial M] [AddCommMonoidₓ M] [Module R M] :
+    Nontrivial R :=
+  (subsingleton_or_nontrivial R).resolve_left fun hR => not_subsingleton M <| Module.subsingleton R M
 
 -- see Note [lower instance priority]
 instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R where
@@ -350,18 +359,6 @@ instance AddCommMonoidₓ.nat_is_scalar_tower : IsScalarTower ℕ R M where
       fun n ih => by
       simp only [Nat.succ_eq_add_one, add_smul, one_smul, ih]
 
-instance AddCommMonoidₓ.nat_smul_comm_class : SmulCommClass ℕ R M where
-  smul_comm := fun n r m =>
-    Nat.recOn n
-      (by
-        simp only [zero_smul, smul_zero])
-      fun n ih => by
-      simp only [Nat.succ_eq_add_one, add_smul, one_smul, ← ih, smul_add]
-
--- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
-instance AddCommMonoidₓ.nat_smul_comm_class' : SmulCommClass R ℕ M :=
-  SmulCommClass.symm _ _ _
-
 end AddCommMonoidₓ
 
 section AddCommGroupₓ
@@ -395,26 +392,19 @@ def AddCommGroupₓ.intModule.unique : Unique (Module ℤ M) where
 
 end AddCommGroupₓ
 
-namespace AddMonoidHom
-
-theorem map_nat_module_smul [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] (f : M →+ M₂) (x : ℕ) (a : M) :
-    f (x • a) = x • f a :=
-  f.map_nsmul a x
-
-theorem map_int_module_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) (x : ℤ) (a : M) : f (x • a) = x • f a :=
-  f.map_zsmul a x
-
-theorem map_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] (f : M →+ M₂) (R S : Type _) [Ringₓ R] [Ringₓ S]
-    [Module R M] [Module S M₂] (x : ℤ) (a : M) : f ((x : R) • a) = (x : S) • f a := by
-  simp only [← zsmul_eq_smul_cast, f.map_zsmul]
-
-theorem map_nat_cast_smul [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] (f : M →+ M₂) (R S : Type _) [Semiringₓ R]
-    [Semiringₓ S] [Module R M] [Module S M₂] (x : ℕ) (a : M) : f ((x : R) • a) = (x : S) • f a := by
-  simp only [← nsmul_eq_smul_cast, f.map_nsmul]
-
-theorem map_inv_int_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroupₓ F] (f : E →+ F) (R S : Type _)
-    [DivisionRing R] [DivisionRing S] [Module R E] [Module S F] (n : ℤ) (x : E) : f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
+theorem map_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
+    (R S : Type _) [Ringₓ R] [Ringₓ S] [Module R M] [Module S M₂] (x : ℤ) (a : M) : f ((x : R) • a) = (x : S) • f a :=
   by
+  simp only [← zsmul_eq_smul_cast, map_zsmul]
+
+theorem map_nat_cast_smul [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
+    (R S : Type _) [Semiringₓ R] [Semiringₓ S] [Module R M] [Module S M₂] (x : ℕ) (a : M) :
+    f ((x : R) • a) = (x : S) • f a := by
+  simp only [← nsmul_eq_smul_cast, map_nsmul]
+
+theorem map_inv_int_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
+    (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (n : ℤ) (x : M) :
+    f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x := by
   by_cases' hR : (n : R) = 0 <;> by_cases' hS : (n : S) = 0
   · simp [hR, hS]
     
@@ -434,65 +424,68 @@ theorem map_inv_int_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroup�
   · rw [← inv_smul_smul₀ hS (f _), ← map_int_cast_smul f R S, smul_inv_smul₀ hR]
     
 
-theorem map_inv_nat_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroupₓ F] (f : E →+ F) (R S : Type _)
-    [DivisionRing R] [DivisionRing S] [Module R E] [Module S F] (n : ℕ) (x : E) : f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
-  f.map_inv_int_cast_smul R S n x
+theorem map_inv_nat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
+    (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (n : ℕ) (x : M) :
+    f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x :=
+  map_inv_int_cast_smul f R S n x
 
-theorem map_rat_cast_smul {E F : Type _} [AddCommGroupₓ E] [AddCommGroupₓ F] (f : E →+ F) (R S : Type _)
-    [DivisionRing R] [DivisionRing S] [Module R E] [Module S F] (c : ℚ) (x : E) : f ((c : R) • x) = (c : S) • f x := by
+theorem map_rat_cast_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] {F : Type _} [AddMonoidHomClass F M M₂] (f : F)
+    (R S : Type _) [DivisionRing R] [DivisionRing S] [Module R M] [Module S M₂] (c : ℚ) (x : M) :
+    f ((c : R) • x) = (c : S) • f x := by
   rw [Rat.cast_def, Rat.cast_def, div_eq_mul_inv, div_eq_mul_inv, mul_smul, mul_smul, map_int_cast_smul f R S,
     map_inv_nat_cast_smul f R S]
 
-theorem map_rat_module_smul {E : Type _} [AddCommGroupₓ E] [Module ℚ E] {F : Type _} [AddCommGroupₓ F] [Module ℚ F]
-    (f : E →+ F) (c : ℚ) (x : E) : f (c • x) = c • f x :=
-  Rat.cast_id c ▸ f.map_rat_cast_smul ℚ ℚ c x
-
-end AddMonoidHom
+theorem map_rat_smul [AddCommGroupₓ M] [AddCommGroupₓ M₂] [Module ℚ M] [Module ℚ M₂] {F : Type _}
+    [AddMonoidHomClass F M M₂] (f : F) (c : ℚ) (x : M) : f (c • x) = c • f x :=
+  Rat.cast_id c ▸ map_rat_cast_smul f ℚ ℚ c x
 
 /-- There can be at most one `module ℚ E` structure on an additive commutative group. This is not
 an instance because `simp` becomes very slow if we have many `subsingleton` instances,
 see [gh-6025]. -/
 theorem subsingleton_rat_module (E : Type _) [AddCommGroupₓ E] : Subsingleton (Module ℚ E) :=
-  ⟨fun P Q => (Module.ext' P Q) fun r x => @AddMonoidHom.map_rat_module_smul E ‹_› P E ‹_› Q (AddMonoidHom.id _) r x⟩
+  ⟨fun P Q => (Module.ext' P Q) fun r x => @map_rat_smul _ _ _ _ P Q _ _ (AddMonoidHom.id E) r x⟩
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on inverses of integer numbers in `R` and `S`. -/
 theorem inv_int_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S]
     [Module R E] [Module S E] (n : ℤ) (x : E) : (n⁻¹ : R) • x = (n⁻¹ : S) • x :=
-  (AddMonoidHom.id E).map_inv_int_cast_smul R S n x
+  map_inv_int_cast_smul (AddMonoidHom.id E) R S n x
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on inverses of natural numbers in `R` and `S`. -/
 theorem inv_nat_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S]
     [Module R E] [Module S E] (n : ℕ) (x : E) : (n⁻¹ : R) • x = (n⁻¹ : S) • x :=
-  (AddMonoidHom.id E).map_inv_nat_cast_smul R S n x
+  map_inv_nat_cast_smul (AddMonoidHom.id E) R S n x
+
+/-- If `E` is a vector space over a division rings `R` and has a monoid action by `α`, then that
+action commutes by scalar multiplication of inverses of integers in `R` -/
+theorem inv_int_cast_smul_comm {α E : Type _} (R : Type _) [AddCommGroupₓ E] [DivisionRing R] [Monoidₓ α] [Module R E]
+    [DistribMulAction α E] (n : ℤ) (s : α) (x : E) : (n⁻¹ : R) • s • x = s • (n⁻¹ : R) • x :=
+  (map_inv_int_cast_smul (DistribMulAction.toAddMonoidHom E s) R R n x).symm
+
+/-- If `E` is a vector space over a division rings `R` and has a monoid action by `α`, then that
+action commutes by scalar multiplication of inverses of natural numbers in `R`. -/
+theorem inv_nat_cast_smul_comm {α E : Type _} (R : Type _) [AddCommGroupₓ E] [DivisionRing R] [Monoidₓ α] [Module R E]
+    [DistribMulAction α E] (n : ℕ) (s : α) (x : E) : (n⁻¹ : R) • s • x = s • (n⁻¹ : R) • x :=
+  (map_inv_nat_cast_smul (DistribMulAction.toAddMonoidHom E s) R R n x).symm
 
 /-- If `E` is a vector space over two division rings `R` and `S`, then scalar multiplications
 agree on rational numbers in `R` and `S`. -/
 theorem rat_cast_smul_eq {E : Type _} (R S : Type _) [AddCommGroupₓ E] [DivisionRing R] [DivisionRing S] [Module R E]
     [Module S E] (r : ℚ) (x : E) : (r : R) • x = (r : S) • x :=
-  (AddMonoidHom.id E).map_rat_cast_smul R S r x
+  map_rat_cast_smul (AddMonoidHom.id E) R S r x
 
 instance AddCommGroupₓ.int_is_scalar_tower {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] :
     IsScalarTower ℤ R M where
-  smul_assoc := fun n x y => ((smulAddHom R M).flip y).map_int_module_smul n x
-
-instance AddCommGroupₓ.int_smul_comm_class {S : Type u} {M : Type v} [Semiringₓ S] [AddCommGroupₓ M] [Module S M] :
-    SmulCommClass ℤ S M where
-  smul_comm := fun n x y => ((smulAddHom S M x).map_zsmul y n).symm
-
--- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
-instance AddCommGroupₓ.int_smul_comm_class' {S : Type u} {M : Type v} [Semiringₓ S] [AddCommGroupₓ M] [Module S M] :
-    SmulCommClass S ℤ M :=
-  SmulCommClass.symm _ _ _
+  smul_assoc := fun n x y => ((smulAddHom R M).flip y).map_zsmul x n
 
 instance IsScalarTower.rat {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ R]
     [Module ℚ M] : IsScalarTower ℚ R M where
-  smul_assoc := fun r x y => ((smulAddHom R M).flip y).map_rat_module_smul r x
+  smul_assoc := fun r x y => map_rat_smul ((smulAddHom R M).flip y) r x
 
 instance SmulCommClass.rat {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
     SmulCommClass ℚ R M where
-  smul_comm := fun r x y => ((smulAddHom R M x).map_rat_module_smul r y).symm
+  smul_comm := fun r x y => (map_rat_smul (smulAddHom R M x) r y).symm
 
 instance SmulCommClass.rat' {R : Type u} {M : Type v} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] [Module ℚ M] :
     SmulCommClass R ℚ M :=
@@ -584,7 +577,7 @@ section SmulInjective
 variable (M)
 
 theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective ((· • ·) c : M → M) :=
-  (smulAddHom R M c).injective_iff.2 fun a ha => (smul_eq_zero.mp ha).resolve_left hc
+  (injective_iff_map_eq_zero (smulAddHom R M c)).2 fun a ha => (smul_eq_zero.mp ha).resolve_left hc
 
 variable {M}
 
@@ -655,4 +648,7 @@ theorem Nat.smul_one_eq_coe {R : Type _} [Semiringₓ R] (m : ℕ) : m • (1 : 
 @[simp]
 theorem Int.smul_one_eq_coe {R : Type _} [Ringₓ R] (m : ℤ) : m • (1 : R) = ↑m := by
   rw [zsmul_eq_mul, mul_oneₓ]
+
+theorem Finset.cast_card [CommSemiringₓ R] (s : Finset α) : (s.card : R) = ∑ a in s, 1 := by
+  rw [Finset.sum_const, Nat.smul_one_eq_coe]
 

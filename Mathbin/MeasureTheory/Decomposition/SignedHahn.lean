@@ -37,7 +37,7 @@ Hahn decomposition theorem
 
 noncomputable section
 
-open_locale Classical BigOperators Nnreal Ennreal MeasureTheory
+open Classical BigOperators Nnreal Ennreal MeasureTheory
 
 variable {α β : Type _} [MeasurableSpace α]
 
@@ -458,7 +458,7 @@ theorem exists_is_compl_positive_negative (s : SignedMeasure α) :
 /-- The symmetric difference of two Hahn decompositions has measure zero. -/
 theorem of_symm_diff_compl_positive_negative {s : SignedMeasure α} {i j : Set α} (hi : MeasurableSet i)
     (hj : MeasurableSet j) (hi' : 0 ≤[i] s ∧ s ≤[iᶜ] 0) (hj' : 0 ≤[j] s ∧ s ≤[jᶜ] 0) :
-    s (i Δ j) = 0 ∧ s (iᶜ Δ jᶜ) = 0 := by
+    s (i ∆ j) = 0 ∧ s (iᶜ ∆ jᶜ) = 0 := by
   rw [restrict_le_restrict_iff s 0, restrict_le_restrict_iff 0 s] at hi' hj'
   constructor
   · rw [symm_diff_def, Set.diff_eq_compl_inter, Set.diff_eq_compl_inter, Set.sup_eq_union, of_union,

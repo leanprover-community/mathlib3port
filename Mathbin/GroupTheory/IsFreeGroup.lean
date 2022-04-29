@@ -44,7 +44,7 @@ instance freeGroupIsFreeGroup {A} : IsFreeGroup (FreeGroup A) where
   Generators := A
   of := FreeGroup.of
   unique_lift' := by
-    intros X _ f
+    intro X _ f
     have := free_group.lift.symm.bijective.exists_unique f
     simp_rw [Function.funext_iffₓ]  at this
     exact this
@@ -87,7 +87,7 @@ def ofMulEquiv (h : G ≃* H) : IsFreeGroup H where
   Generators := Generators G
   of := h ∘ of
   unique_lift' := by
-    intros X _ f
+    intro X _ f
     refine' ⟨(lift' f).comp h.symm.to_monoid_hom, _, _⟩
     · simp
       

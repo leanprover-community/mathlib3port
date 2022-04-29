@@ -59,7 +59,7 @@ derivative, strictly differentiable, continuously differentiable, smooth, invers
 
 open Function Set Filter Metric
 
-open_locale TopologicalSpace Classical Nnreal
+open TopologicalSpace Classical Nnreal
 
 noncomputable section
 
@@ -431,6 +431,7 @@ theorem inverse_continuous_on (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F)
   refine' ((hf.antilipschitz hc).to_right_inv_on' _ (hf.to_local_equiv hc).right_inv').Continuous
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- The inverse function is approximated linearly on `f '' s` by `f'.symm`. -/
 theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     ApproximatesLinearOn (hf.toLocalEquiv hc).symm (f'.symm : F →L[𝕜] E) (f '' s) (N * (N⁻¹ - c)⁻¹ * c) := by

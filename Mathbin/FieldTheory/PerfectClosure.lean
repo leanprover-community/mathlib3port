@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.CharP.Basic
-import Mathbin.Data.Equiv.Ring
 import Mathbin.Algebra.GroupWithZero.Power
-import Mathbin.Algebra.IterateHom
+import Mathbin.Algebra.Hom.Iterate
+import Mathbin.Algebra.Ring.Equiv
 
 /-!
 # The perfect closure of a field

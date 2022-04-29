@@ -26,7 +26,7 @@ definitive definition of derivation will be implemented.
 
 open Algebra
 
-open_locale BigOperators
+open BigOperators
 
 /-- `D : derivation R A M` is an `R`-linear map from `A` to `M` that satisfies the `leibniz`
 equality. We also require that `D 1 = 0`. See `derivation.mk'` for a constructor that deduces this
@@ -198,15 +198,6 @@ theorem add_apply : (D1 + D2) a = D1 a + D2 a :=
 instance : Inhabited (Derivation R A M) :=
   ⟨0⟩
 
-instance : AddCommMonoidₓ (Derivation R A M) :=
-  coe_injective.AddCommMonoid _ coe_zero coe_add
-
-/-- `coe_fn` as an `add_monoid_hom`. -/
-def coeFnAddMonoidHom : Derivation R A M →+ A → M where
-  toFun := coeFn
-  map_zero' := coe_zero
-  map_add' := coe_add
-
 section Scalar
 
 variable {S : Type _} [Monoidₓ S] [DistribMulAction S M] [SmulCommClass R S M] [SmulCommClass S A M]
@@ -229,6 +220,15 @@ theorem coe_smul_linear_map (r : S) (D : Derivation R A M) : ↑(r • D) = (r �
 
 theorem smul_apply (r : S) (D : Derivation R A M) : (r • D) a = r • D a :=
   rfl
+
+instance : AddCommMonoidₓ (Derivation R A M) :=
+  coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
+
+/-- `coe_fn` as an `add_monoid_hom`. -/
+def coeFnAddMonoidHom : Derivation R A M →+ A → M where
+  toFun := coeFn
+  map_zero' := coe_zero
+  map_add' := coe_add
 
 instance (priority := 100) : DistribMulAction S (Derivation R A M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
@@ -378,7 +378,7 @@ theorem sub_apply : (D1 - D2) a = D1 a - D2 a :=
   rfl
 
 instance : AddCommGroupₓ (Derivation R A M) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
+  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 end
 

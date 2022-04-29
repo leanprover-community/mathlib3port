@@ -68,7 +68,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGr
 
 open Metric Set Asymptotics ContinuousLinearMap Filter
 
-open_locale Classical TopologicalSpace Nnreal
+open Classical TopologicalSpace Nnreal
 
 /-! ### One-dimensional fencing inequalities -/
 
@@ -426,7 +426,7 @@ variable {f : E → G} {C : ℝ} {s : Set E} {x y : E} {f' : E → E →L[𝕜] 
 the function is `C`-Lipschitz. Version with `has_fderiv_within`. -/
 theorem norm_image_sub_le_of_norm_has_fderiv_within_le (hf : ∀, ∀ x ∈ s, ∀, HasFderivWithinAt f (f' x) s x)
     (bound : ∀, ∀ x ∈ s, ∀, ∥f' x∥ ≤ C) (hs : Convex ℝ s) (xs : x ∈ s) (ys : y ∈ s) : ∥f y - f x∥ ≤ C * ∥y - x∥ := by
-  let this' : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
+  let this : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   /- By composition with `t ↦ x + t • (y-x)`, we reduce to a statement for functions defined
     on `[0,1]`, for which it is proved in `norm_image_sub_le_of_norm_deriv_le_segment`.
     We just have to check the differentiability of the composition and bounds on its derivative,
@@ -1190,7 +1190,7 @@ theorem has_strict_fderiv_at_of_has_fderiv_at_of_continuous_at (hder : ∀ᶠ y 
     rw [← dist_eq_norm]
     exact le_of_ltₓ (hε H').2
   -- apply mean value theorem
-  let this' : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
+  let this : NormedSpace ℝ G := RestrictScalars.normedSpace ℝ 𝕜 G
   refine' (convex_ball _ _).norm_image_sub_le_of_norm_has_fderiv_within_le' _ hf' h.2 h.1
   exact fun y hy => (hε hy).1.HasFderivWithinAt
 

@@ -32,7 +32,7 @@ variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 namespace IsLocalization
 

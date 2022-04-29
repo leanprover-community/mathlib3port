@@ -21,9 +21,9 @@ noncomputable section
 
 open LinearMap Matrix Set Submodule
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Matrix
+open Matrix
 
 universe u v w
 

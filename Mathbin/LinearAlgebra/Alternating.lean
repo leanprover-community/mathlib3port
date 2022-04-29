@@ -3,13 +3,13 @@ Copyright (c) 2020 Zhangir Azerbayev. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Zhangir Azerbayev
 -/
-import Mathbin.LinearAlgebra.Multilinear.Basis
-import Mathbin.LinearAlgebra.Multilinear.TensorProduct
-import Mathbin.LinearAlgebra.LinearIndependent
 import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.GroupTheory.Perm.Subgroup
-import Mathbin.Data.Equiv.Fin
 import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.LinearAlgebra.LinearIndependent
+import Mathbin.LinearAlgebra.Multilinear.Basis
+import Mathbin.LinearAlgebra.Multilinear.TensorProduct
+import Mathbin.Logic.Equiv.Fin
 
 /-!
 # Alternating Maps
@@ -197,6 +197,29 @@ as `multilinear_map`
 -/
 
 
+section HasScalar
+
+variable {S : Type _} [Monoidₓ S] [DistribMulAction S N] [SmulCommClass R S N]
+
+instance : HasScalar S (AlternatingMap R M N ι) :=
+  ⟨fun c f =>
+    { (c • f : MultilinearMap R (fun i : ι => M) N) with
+      map_eq_zero_of_eq' := fun v i j h hij => by
+        simp [f.map_eq_zero_of_eq v h hij] }⟩
+
+@[simp]
+theorem smul_apply (c : S) (m : ι → M) : (c • f) m = c • f m :=
+  rfl
+
+@[norm_cast]
+theorem coe_smul (c : S) : ((c • f : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = c • f :=
+  rfl
+
+theorem coe_fn_smul (c : S) (f : AlternatingMap R M N ι) : ⇑(c • f) = c • f :=
+  rfl
+
+end HasScalar
+
 instance : Add (AlternatingMap R M N ι) :=
   ⟨fun a b =>
     { (a + b : MultilinearMap R (fun i : ι => M) N) with
@@ -227,29 +250,8 @@ theorem coe_zero : ((0 : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι
 instance : Inhabited (AlternatingMap R M N ι) :=
   ⟨0⟩
 
-instance : AddCommMonoidₓ (AlternatingMap R M N ι) where
-  zero := 0
-  add := (· + ·)
-  zero_add := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  add_zero := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  add_comm := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  add_assoc := by
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ]
-  nsmul := fun n f =>
-    { (n • f : MultilinearMap R (fun i : ι => M) N) with
-      map_eq_zero_of_eq' := fun v i j h hij => by
-        simp [f.map_eq_zero_of_eq v h hij] }
-  nsmul_zero' := by
-    intros
-    ext
-    simp [add_smul]
-  nsmul_succ' := by
-    intros
-    ext
-    simp [add_smul, Nat.succ_eq_one_add]
+instance : AddCommMonoidₓ (AlternatingMap R M N ι) :=
+  coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => coe_fn_smul _ _
 
 instance : Neg (AlternatingMap R M N' ι) :=
   ⟨fun f =>
@@ -279,41 +281,13 @@ theorem sub_apply (m : ι → M) : (g - g₂) m = g m - g₂ m :=
 theorem coe_sub : (↑(g - g₂) : MultilinearMap R (fun i : ι => M) N') = g - g₂ :=
   rfl
 
-instance : AddCommGroupₓ (AlternatingMap R M N' ι) := by
-  refine'
-      { AlternatingMap.addCommMonoid with zero := 0, add := (· + ·), neg := Neg.neg, sub := Sub.sub,
-        sub_eq_add_neg := _,
-        nsmul := fun n f =>
-          { (n • f : MultilinearMap R (fun i : ι => M) N') with
-            map_eq_zero_of_eq' := fun v i j h hij => by
-              simp [f.map_eq_zero_of_eq v h hij] },
-        zsmul := fun n f =>
-          { (n • f : MultilinearMap R (fun i : ι => M) N') with
-            map_eq_zero_of_eq' := fun v i j h hij => by
-              simp [f.map_eq_zero_of_eq v h hij] },
-        zsmul_zero' := _, zsmul_succ' := _, zsmul_neg' := _, .. } <;>
-    intros <;> ext <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg, add_smul, Nat.succ_eq_add_one, coe_nat_zsmul]
+instance : AddCommGroupₓ (AlternatingMap R M N' ι) :=
+  coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => coe_fn_smul _ _)
+    fun _ _ => coe_fn_smul _ _
 
 section DistribMulAction
 
 variable {S : Type _} [Monoidₓ S] [DistribMulAction S N] [SmulCommClass R S N]
-
-instance : HasScalar S (AlternatingMap R M N ι) :=
-  ⟨fun c f =>
-    { (c • f : MultilinearMap R (fun i : ι => M) N) with
-      map_eq_zero_of_eq' := fun v i j h hij => by
-        simp [f.map_eq_zero_of_eq v h hij] }⟩
-
-@[simp]
-theorem smul_apply (c : S) (m : ι → M) : (c • f) m = c • f m :=
-  rfl
-
-@[norm_cast]
-theorem coe_smul (c : S) : ((c • f : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = c • f :=
-  rfl
-
-theorem coe_fn_smul (c : S) (f : AlternatingMap R M N ι) : ⇑(c • f) = c • f :=
-  rfl
 
 instance : DistribMulAction S (AlternatingMap R M N ι) where
   one_smul := fun f => ext fun x => one_smul _ _
@@ -494,7 +468,7 @@ open Function
 
 section
 
-open_locale BigOperators
+open BigOperators
 
 theorem map_update_sum {α : Type _} (t : Finset α) (i : ι) (g : α → M) (m : ι → M) :
     f (update m i (∑ a in t, g a)) = ∑ a in t, f (update m i (g a)) :=
@@ -568,7 +542,7 @@ theorem map_linear_dependent {K : Type _} [Ringₓ K] {M : Type _} [AddCommGroup
 
 end AlternatingMap
 
-open_locale BigOperators
+open BigOperators
 
 namespace MultilinearMap
 
@@ -641,9 +615,9 @@ end LinearMap
 
 section Coprod
 
-open_locale BigOperators
+open BigOperators
 
-open_locale TensorProduct
+open TensorProduct
 
 variable {ιa ιb : Type _} [DecidableEq ιa] [DecidableEq ιb] [Fintype ιa] [Fintype ιb]
 
@@ -696,7 +670,7 @@ theorem DomCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
     DomCoprod.summand a b σ v + DomCoprod.summand a b (swap i j • σ) v = 0 := by
   apply σ.induction_on' fun σ => _
   dsimp only [Quotientₓ.lift_on'_mk', Quotientₓ.map'_mk', MulAction.quotient.smul_mk, dom_coprod.summand]
-  rw [perm.sign_mul, perm.sign_swap hij]
+  rw [smul_eq_mul, perm.sign_mul, perm.sign_swap hij]
   simp only [one_mulₓ, neg_mul, Function.comp_app, Units.neg_smul, perm.coe_mul, Units.coe_neg,
     MultilinearMap.smul_apply, MultilinearMap.neg_apply, MultilinearMap.dom_dom_congr_apply,
     MultilinearMap.dom_coprod_apply]
@@ -720,20 +694,20 @@ theorem DomCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     -- the term pairs with and cancels another term
     all_goals
       obtain ⟨⟨sl, sr⟩, hσ⟩ := Quotientₓ.exact' hσ
-    on_goal 0 =>
-      replace hσ := Equivₓ.congr_fun hσ (Sum.inl i')
     on_goal 1 =>
+      replace hσ := Equivₓ.congr_fun hσ (Sum.inl i')
+    on_goal 2 =>
       replace hσ := Equivₓ.congr_fun hσ (Sum.inr i')
     all_goals
-      rw [← Equivₓ.mul_swap_eq_swap_mul, mul_inv_rev, Equivₓ.swap_inv, inv_mul_cancel_right] at hσ
+      rw [smul_eq_mul, ← mul_swap_eq_swap_mul, mul_inv_rev, swap_inv, inv_mul_cancel_right] at hσ
       simpa using hσ
   case' [Sum.inr, Sum.inr : i' j', Sum.inl, Sum.inl : i' j'] =>
     -- the term does not pair but is zero
     all_goals
       convert smul_zero _
-    on_goal 0 =>
-      convert TensorProduct.tmul_zero _ _
     on_goal 1 =>
+      convert TensorProduct.tmul_zero _ _
+    on_goal 2 =>
       convert TensorProduct.zero_tmul _ _
     all_goals
       exact AlternatingMap.map_eq_zero_of_eq _ _ hv fun hij' => hij (hij' ▸ rfl)

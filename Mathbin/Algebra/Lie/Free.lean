@@ -130,8 +130,8 @@ instance : Sub (FreeLieAlgebra R X) where
   sub := Quot.map₂ Sub.sub (fun _ _ _ => Rel.sub_left _) fun _ _ _ => Rel.sub_right _
 
 instance : AddGroupₓ (FreeLieAlgebra R X) :=
-  Function.Surjective.addGroupSmul (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl)
-    (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+  Function.Surjective.addGroup (Quot.mk _) (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 
 instance : AddCommSemigroupₓ (FreeLieAlgebra R X) :=
   Function.Surjective.addCommSemigroup (Quot.mk _) (surjective_quot_mk _) fun _ _ => rfl
@@ -206,7 +206,7 @@ theorem lift_aux_spec (f : X → L) (a b : lib R X) (h : FreeLieAlgebra.Rel R X 
     simp only [lift_aux_map_mul, h₂]
 
 /-- The quotient map as a `non_unital_alg_hom`. -/
-def mk : NonUnitalAlgHom R (lib R X) (FreeLieAlgebra R X) where
+def mk : lib R X →ₙₐ[R] FreeLieAlgebra R X where
   toFun := Quot.mk (Rel R X)
   map_smul' := fun t a => rfl
   map_zero' := rfl

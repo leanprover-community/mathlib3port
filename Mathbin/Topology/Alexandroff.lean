@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang, Yury Kudryashov
 -/
 import Mathbin.Topology.Separation
-import Mathbin.Topology.Opens
+import Mathbin.Topology.Sets.Opens
 
 /-!
 # The Alexandroff Compactification
@@ -35,7 +35,7 @@ one-point compactification, compactness
 
 open Set Filter
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 /-!
 ### Definition and basic properties
@@ -45,13 +45,20 @@ In this section we define `alexandroff X` to be the disjoint union of `X` and `�
 -/
 
 
+variable {X : Type _}
+
 /-- The Alexandroff extension of an arbitrary topological space `X` -/
 def Alexandroff (X : Type _) :=
   Option X
 
-namespace Alexandroff
+/-- The repr uses the notation from the `alexandroff` locale. -/
+instance [HasRepr X] : HasRepr (Alexandroff X) :=
+  ⟨fun o =>
+    match o with
+    | none => "∞"
+    | some a => "↑" ++ reprₓ a⟩
 
-variable {X : Type _}
+namespace Alexandroff
 
 /-- The point at infinity -/
 def infty : Alexandroff X :=
@@ -121,7 +128,7 @@ instance : CanLift (Alexandroff X) X where
   cond := fun x => x ≠ ∞
   prf := fun x => ne_infty_iff_exists.1
 
-theorem not_mem_range_coe_iff {x : Alexandroff X} : (x ∉ Range (coe : X → Alexandroff X)) ↔ x = ∞ := by
+theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ Range (coe : X → Alexandroff X) ↔ x = ∞ := by
   rw [← mem_compl_iff, compl_range_coe, mem_singleton_iff]
 
 theorem infty_not_mem_range_coe : ∞ ∉ Range (coe : X → Alexandroff X) :=

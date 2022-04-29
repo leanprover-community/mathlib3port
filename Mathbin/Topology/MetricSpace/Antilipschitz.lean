@@ -23,7 +23,7 @@ we do not have a `posreal` type.
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open_locale Nnreal Ennreal uniformity
+open Nnreal Ennreal uniformity
 
 open Set
 

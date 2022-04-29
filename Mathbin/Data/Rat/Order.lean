@@ -27,7 +27,7 @@ namespace Rat
 
 variable (a b c : ℚ)
 
-open_locale Rat
+open Rat
 
 /-- A rational number is called nonnegative if its numerator is nonnegative. -/
 protected def Nonneg (r : ℚ) : Prop :=

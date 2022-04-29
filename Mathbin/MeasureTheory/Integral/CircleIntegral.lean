@@ -13,7 +13,7 @@ import Mathbin.Analysis.Analytic.Basic
 
 In this file we define `∮ z in C(c, R), f z` to be the integral $\oint_{|z-c|=|R|} f(z)\,dz$ and
 prove some properties of this integral. We give definition and prove most lemmas for a function
-`f : ℂ → E`, where `E` is a complex Banach space with second countable topology. For this reason,
+`f : ℂ → E`, where `E` is a complex Banach space. For this reason,
 some lemmas use, e.g., `(z - c)⁻¹ • f z` instead of `f z / (z - c)`.
 
 ## Main definitions
@@ -66,11 +66,11 @@ integral, circle, Cauchy integral
 -/
 
 
-variable {E : Type _} [MeasurableSpace E] [NormedGroup E]
+variable {E : Type _} [NormedGroup E]
 
 noncomputable section
 
-open_locale Real Nnreal Interval Pointwise TopologicalSpace
+open Real Nnreal Interval Pointwise TopologicalSpace
 
 open Complex MeasureTheory TopologicalSpace Metric Function Set Filter Asymptotics
 
@@ -192,20 +192,19 @@ namespace CircleIntegrable
 
 variable {f g : ℂ → E} {c : ℂ} {R : ℝ}
 
-theorem add [BorelSpace E] [SecondCountableTopology E] (hf : CircleIntegrable f c R) (hg : CircleIntegrable g c R) :
-    CircleIntegrable (f + g) c R :=
+theorem add (hf : CircleIntegrable f c R) (hg : CircleIntegrable g c R) : CircleIntegrable (f + g) c R :=
   hf.add hg
 
-theorem neg [BorelSpace E] (hf : CircleIntegrable f c R) : CircleIntegrable (-f) c R :=
+theorem neg (hf : CircleIntegrable f c R) : CircleIntegrable (-f) c R :=
   hf.neg
 
 /-- The function we actually integrate over `[0, 2π]` in the definition of `circle_integral` is
 integrable. -/
-theorem out [BorelSpace E] [NormedSpace ℂ E] [SecondCountableTopology E] (hf : CircleIntegrable f c R) :
+theorem out [NormedSpace ℂ E] (hf : CircleIntegrable f c R) :
     IntervalIntegrable (fun θ : ℝ => deriv (circleMap c R) θ • f (circleMap c R θ)) volume 0 (2 * π) := by
   simp only [CircleIntegrable, deriv_circle_map, interval_integrable_iff] at *
   refine' (hf.norm.const_mul (abs R)).mono' _ _
-  · exact (((continuous_circle_map _ _).AeMeasurable _).mul_const I).smul hf.ae_measurable
+  · exact ((continuous_circle_map _ _).AeStronglyMeasurable.mul_const I).smul hf.ae_strongly_measurable
     
   · simp [norm_smul]
     
@@ -216,28 +215,31 @@ end CircleIntegrable
 theorem circle_integrable_zero_radius {f : ℂ → E} {c : ℂ} : CircleIntegrable f c 0 := by
   simp [CircleIntegrable]
 
-theorem circle_integrable_iff [BorelSpace E] [NormedSpace ℂ E] [SecondCountableTopology E] {f : ℂ → E} {c : ℂ} {R : ℝ}
-    (h₀ : R ≠ 0) :
+theorem circle_integrable_iff [NormedSpace ℂ E] {f : ℂ → E} {c : ℂ} (R : ℝ) :
     CircleIntegrable f c R ↔
       IntervalIntegrable (fun θ : ℝ => deriv (circleMap c R) θ • f (circleMap c R θ)) volume 0 (2 * π) :=
   by
+  by_cases' h₀ : R = 0
+  · simp [h₀]
+    
   refine' ⟨fun h => h.out, fun h => _⟩
   simp only [CircleIntegrable, interval_integrable_iff, deriv_circle_map] at h⊢
   refine' (h.norm.const_mul (abs R)⁻¹).mono' _ _
   · have H : ∀ {θ}, circleMap 0 R θ * I ≠ 0 := fun θ => by
       simp [h₀, I_ne_zero]
     simpa only [inv_smul_smul₀ H] using
-      (((continuous_circle_map 0 R).AeMeasurable _).mul_const I).inv.smul h.ae_measurable
+      ((continuous_circle_map 0 R).AeStronglyMeasurable.mul_const I).AeMeasurable.inv.AeStronglyMeasurable.smul
+        h.ae_strongly_measurable
     
   · simp [norm_smul, h₀]
     
 
-theorem ContinuousOn.circle_integrable' [BorelSpace E] {f : ℂ → E} {c : ℂ} {R : ℝ}
-    (hf : ContinuousOn f (Sphere c (abs R))) : CircleIntegrable f c R :=
+theorem ContinuousOn.circle_integrable' {f : ℂ → E} {c : ℂ} {R : ℝ} (hf : ContinuousOn f (Sphere c (abs R))) :
+    CircleIntegrable f c R :=
   (hf.comp_continuous (continuous_circle_map _ _) (circle_map_mem_sphere' _ _)).IntervalIntegrable _ _
 
-theorem ContinuousOn.circle_integrable [BorelSpace E] {f : ℂ → E} {c : ℂ} {R : ℝ} (hR : 0 ≤ R)
-    (hf : ContinuousOn f (Sphere c R)) : CircleIntegrable f c R :=
+theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR : 0 ≤ R) (hf : ContinuousOn f (Sphere c R)) :
+    CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
@@ -250,7 +252,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
   · intro h
     contrapose! h
     rcases h with ⟨hR, hn, hw⟩
-    simp only [circle_integrable_iff hR, deriv_circle_map]
+    simp only [circle_integrable_iff R, deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
     replace hθ : θ ∈ "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"
@@ -288,7 +290,7 @@ theorem circle_integrable_sub_inv_iff {c w : ℂ} {R : ℝ} :
   simp only [← zpow_neg_one, circle_integrable_sub_zpow_iff]
   norm_num
 
-variable [NormedSpace ℂ E] [CompleteSpace E] [BorelSpace E] [SecondCountableTopology E]
+variable [NormedSpace ℂ E] [CompleteSpace E]
 
 /-- Definition for $\oint_{|z-c|=R} f(z)\,dz$. -/
 def circleIntegral (f : ℂ → E) (c : ℂ) (R : ℝ) : E :=
@@ -318,11 +320,8 @@ theorem integral_sub_inv_smul_sub_smul (f : ℂ → E) (c w : ℂ) (R : ℝ) :
   change circleMap c R θ ≠ w at hθ
   simp only [inv_smul_smul₀ (sub_ne_zero.2 <| hθ)]
 
-theorem integral_undef {f : ℂ → E} {c : ℂ} {R : ℝ} (hf : ¬CircleIntegrable f c R) : (∮ z in C(c, R), f z) = 0 := by
-  rcases eq_or_ne R 0 with (rfl | h0)
-  · simp
-    
-  exact intervalIntegral.integral_undef (mt (circle_integrable_iff h0).mpr hf)
+theorem integral_undef {f : ℂ → E} {c : ℂ} {R : ℝ} (hf : ¬CircleIntegrable f c R) : (∮ z in C(c, R), f z) = 0 :=
+  intervalIntegral.integral_undef (mt (circle_integrable_iff R).mpr hf)
 
 theorem integral_sub {f g : ℂ → E} {c : ℂ} {R : ℝ} (hf : CircleIntegrable f c R) (hg : CircleIntegrable g c R) :
     (∮ z in C(c, R), f z - g z) = (∮ z in C(c, R), f z) - ∮ z in C(c, R), g z := by
@@ -513,6 +512,7 @@ theorem le_radius_cauchy_power_series (f : ℂ → E) (c : ℂ) (R : ℝ≥0 ) :
   · rw [inv_pow₀, inv_mul_cancel_right₀ hR]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R` multiplied
 by `2πI` converges to the integral `∮ z in C(c, R), (z - w)⁻¹ • f z` on the open disc
 `metric.ball c R`. -/
@@ -526,8 +526,10 @@ theorem has_sum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} 
     intervalIntegral.has_sum_integral_of_dominated_convergence (fun n θ => ∥f (circleMap c R θ)∥ * (abs w / R) ^ n)
       (fun n => _) (fun n => _) _ _ _
   · simp only [deriv_circle_map]
-    have := hf.def.1
-    measurability
+    apply_rules [ae_strongly_measurable.smul, hf.def.1] <;>
+      · apply Measurable.ae_strongly_measurable
+        measurability
+        
     
   · simp [norm_smul, abs_of_pos hR, mul_left_commₓ R, mul_inv_cancel_left₀ hR.ne', mul_comm ∥_∥]
     

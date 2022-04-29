@@ -29,7 +29,7 @@ def Sat (c : Clause) : Prop :=
 
 /-- unsat c := there is no valuation v under which c holds -/
 def Unsat (c : Clause) : Prop :=
-  ¬c.sat
+  ¬c.Sat
 
 /-- append two clauses by elementwise appending -/
 def append (c1 c2 : Clause) : Clause :=

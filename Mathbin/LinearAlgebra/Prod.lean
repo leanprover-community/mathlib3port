@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 -/
-import Mathbin.LinearAlgebra.Basic
+import Mathbin.LinearAlgebra.Span
 import Mathbin.Order.PartialSups
 
 /-! ### Products of modules
@@ -37,6 +37,8 @@ variable {R : Type u} {K : Type u'} {M : Type v} {V : Type v'} {M₂ : Type w} {
 
 variable {M₃ : Type y} {V₃ : Type y'} {M₄ : Type z} {ι : Type x}
 
+variable {M₅ M₆ : Type _}
+
 section Prod
 
 namespace LinearMap
@@ -45,7 +47,11 @@ variable (S : Type _) [Semiringₓ R] [Semiringₓ S]
 
 variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
+variable [AddCommMonoidₓ M₅] [AddCommMonoidₓ M₆]
+
 variable [Module R M] [Module R M₂] [Module R M₃] [Module R M₄]
+
+variable [Module R M₅] [Module R M₆]
 
 variable (f : M →ₗ[R] M₂)
 
@@ -278,6 +284,29 @@ theorem prod_map_comap_prod (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) (S 
 theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearMap.prodMap f g).ker = Submodule.prod f.ker g.ker := by
   dsimp only [ker]
   rw [← prod_map_comap_prod, Submodule.prod_bot]
+
+@[simp]
+theorem prod_map_id : (id : M →ₗ[R] M).prod_map (id : M₂ →ₗ[R] M₂) = id :=
+  LinearMap.ext fun _ => Prod.mk.eta
+
+@[simp]
+theorem prod_map_one : (1 : M →ₗ[R] M).prod_map (1 : M₂ →ₗ[R] M₂) = 1 :=
+  LinearMap.ext fun _ => Prod.mk.eta
+
+theorem prod_map_comp (f₁₂ : M →ₗ[R] M₂) (f₂₃ : M₂ →ₗ[R] M₃) (g₁₂ : M₄ →ₗ[R] M₅) (g₂₃ : M₅ →ₗ[R] M₆) :
+    f₂₃.prod_map g₂₃ ∘ₗ f₁₂.prod_map g₁₂ = (f₂₃ ∘ₗ f₁₂).prod_map (g₂₃ ∘ₗ g₁₂) :=
+  rfl
+
+theorem prod_map_mul (f₁₂ : M →ₗ[R] M) (f₂₃ : M →ₗ[R] M) (g₁₂ : M₂ →ₗ[R] M₂) (g₂₃ : M₂ →ₗ[R] M₂) :
+    f₂₃.prod_map g₂₃ * f₁₂.prod_map g₁₂ = (f₂₃ * f₁₂).prod_map (g₂₃ * g₁₂) :=
+  rfl
+
+/-- `linear_map.prod_map` as a `monoid_hom` -/
+@[simps]
+def prodMapMonoidHom : (M →ₗ[R] M) × (M₂ →ₗ[R] M₂) →* M × M₂ →ₗ[R] M × M₂ where
+  toFun := fun f => prodMap f.1 f.2
+  map_one' := prod_map_one
+  map_mul' := fun _ _ => prod_map_mul _ _ _ _
 
 section map_mul
 
@@ -560,11 +589,11 @@ theorem prod_le_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submod
     constructor
     · rintro _ ⟨x, hx, rfl⟩
       apply h
-      exact ⟨hx, zero_mem _⟩
+      exact ⟨hx, zero_mem p₂⟩
       
     · rintro _ ⟨x, hx, rfl⟩
       apply h
-      exact ⟨zero_mem _, hx⟩
+      exact ⟨zero_mem p₁, hx⟩
       
     
   · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
@@ -574,7 +603,7 @@ theorem prod_le_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submod
     have h2' : (LinearMap.inr R _ _) x2 ∈ q := by
       apply hK
       simpa using h2
-    simpa using add_mem _ h1' h2'
+    simpa using add_mem h1' h2'
     
 
 theorem prod_eq_bot_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} : p₁.Prod p₂ = ⊥ ↔ p₁ = ⊥ ∧ p₂ = ⊥ := by

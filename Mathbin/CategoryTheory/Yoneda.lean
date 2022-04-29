@@ -70,7 +70,7 @@ theorem naturality {X Y : C} (α : yoneda.obj X ⟶ yoneda.obj Y) {Z Z' : C} (f 
 See https://stacks.math.columbia.edu/tag/001P.
 -/
 instance yonedaFull : Full (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where
-  Preimage := fun X Y f => f.app (op X) (𝟙 X)
+  preimage := fun X Y f => f.app (op X) (𝟙 X)
 
 /-- The Yoneda embedding is faithful.
 
@@ -91,7 +91,7 @@ functions are inverses and natural in `Z`.
 def ext (X Y : C) (p : ∀ {Z : C}, (Z ⟶ X) → (Z ⟶ Y)) (q : ∀ {Z : C}, (Z ⟶ Y) → (Z ⟶ X))
     (h₁ : ∀ {Z : C} f : Z ⟶ X, q (p f) = f) (h₂ : ∀ {Z : C} f : Z ⟶ Y, p (q f) = f)
     (n : ∀ {Z Z' : C} f : Z' ⟶ Z g : Z ⟶ X, p (f ≫ g) = f ≫ p g) : X ≅ Y :=
-  @preimageIso _ _ _ _ yoneda _ _ _ _
+  yoneda.preimageIso
     (NatIso.ofComponents (fun Z => { Hom := p, inv := q })
       (by
         tidy))
@@ -111,7 +111,7 @@ theorem naturality {X Y : Cᵒᵖ} (α : coyoneda.obj X ⟶ coyoneda.obj Y) {Z Z
   (FunctorToTypes.naturality _ _ α f h).symm
 
 instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
-  Preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op
+  preimage := fun X Y f => (f.app _ (𝟙 X.unop)).op
 
 instance coyoneda_faithful : Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
   map_injective' := fun X Y f g p => by

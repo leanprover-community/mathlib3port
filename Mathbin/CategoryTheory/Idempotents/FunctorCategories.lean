@@ -127,7 +127,7 @@ def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C wher
   map_comp' := fun P Q R f g => rfl
 
 instance : Full (karoubiFunctorCategoryEmbedding J C) where
-  Preimage := fun P Q f =>
+  preimage := fun P Q f =>
     { f :=
         { app := fun j => (f.app j).f,
           naturality' := fun j j' φ => by

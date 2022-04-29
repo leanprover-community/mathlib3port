@@ -43,7 +43,7 @@ noncomputable section
 
 open InnerProductSpace ContinuousLinearMap IsROrC
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 variable {𝕜 E F G : Type _} [IsROrC 𝕜]
 
@@ -100,7 +100,7 @@ def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
     ⟨adjointAux A, adjoint_aux_adjoint_aux A⟩
 
 -- mathport name: «expr †»
-localized [InnerProduct] postfix:1000 "†" => adjoint
+localized [InnerProduct] postfix:1000 "†" => ContinuousLinearMap.adjoint
 
 /-- The fundamental property of the adjoint. -/
 theorem adjoint_inner_left (A : E →L[𝕜] F) (x : E) (y : F) : ⟪(A†) y, x⟫ = ⟪y, A x⟫ :=
@@ -198,10 +198,11 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 
 variable [CompleteSpace E'] [CompleteSpace F']
 
-theorem is_adjoint_pair (A : E' →L[ℝ] F') :
-    BilinForm.IsAdjointPair (bilinFormOfRealInner : BilinForm ℝ E') (bilinFormOfRealInner : BilinForm ℝ F') A (A†) :=
+-- Todo: Generalize this to `is_R_or_C`.
+theorem is_adjoint_pair_inner (A : E' →L[ℝ] F') :
+    LinearMap.IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A (A†) :=
   fun x y => by
-  simp only [adjoint_inner_right, to_linear_map_eq_coe, bilin_form_of_real_inner_apply, coe_coe]
+  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left, to_linear_map_eq_coe, coe_coe]
 
 end Real
 
@@ -321,13 +322,28 @@ variable {E' : Type _} {F' : Type _} [InnerProductSpace ℝ E'] [InnerProductSpa
 
 variable [FiniteDimensional ℝ E'] [FiniteDimensional ℝ F']
 
-theorem is_adjoint_pair (A : E' →ₗ[ℝ] F') :
-    BilinForm.IsAdjointPair (bilinFormOfRealInner : BilinForm ℝ E') (bilinFormOfRealInner : BilinForm ℝ F') A
-      A.adjoint :=
+-- Todo: Generalize this to `is_R_or_C`.
+theorem is_adjoint_pair_inner (A : E' →ₗ[ℝ] F') :
+    IsAdjointPair (sesqFormOfInner : E' →ₗ[ℝ] E' →ₗ[ℝ] ℝ) (sesqFormOfInner : F' →ₗ[ℝ] F' →ₗ[ℝ] ℝ) A A.adjoint :=
   fun x y => by
-  simp only [adjoint_inner_right, bilin_form_of_real_inner_apply]
+  simp only [sesq_form_of_inner_apply_apply, adjoint_inner_left]
 
 end Real
+
+/-- The Gram operator T†T is self-adjoint. -/
+theorem is_self_adjoint_adjoint_mul_self (T : E →ₗ[𝕜] E) : IsSelfAdjoint (T.adjoint * T) := fun x y => by
+  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_left, LinearMap.adjoint_inner_right]
+
+/-- The Gram operator T†T is a positive operator. -/
+theorem re_inner_adjoint_mul_self_nonneg (T : E →ₗ[𝕜] E) (x : E) : 0 ≤ IsROrC.re ⟪x, (T.adjoint * T) x⟫ := by
+  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
+  norm_cast
+  exact sq_nonneg _
+
+@[simp]
+theorem im_inner_adjoint_mul_self_eq_zero (T : E →ₗ[𝕜] E) (x : E) : IsROrC.im ⟪x, LinearMap.adjoint T (T x)⟫ = 0 := by
+  simp only [LinearMap.mul_apply, LinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
+  norm_cast
 
 end LinearMap
 
@@ -335,7 +351,7 @@ namespace Matrix
 
 variable {m n : Type _} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n]
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 /-- The adjoint of the linear map associated to a matrix is the linear map associated to the
 conjugate transpose of that matrix. -/

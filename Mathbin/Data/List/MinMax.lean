@@ -77,7 +77,7 @@ theorem foldl_argmax₂_eq_none {f : α → β} {l : List α} {o : Option α} :
 
 private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
     ∀ {a m : α} {o : Option α}, a ∈ l → m ∈ foldlₓ (argmax₂ f) o l → f a ≤ f m :=
-  List.reverseRecOn l (fun _ _ _ h => absurd h <| not_mem_nil _)
+  List.reverseRecOn l (fun _ _ _ h => absurd h <| not_mem_nilₓ _)
     (by
       intro tl _ ih _ _ _ h ho
       rw [foldl_append, foldl_cons, foldl_nil, argmax₂] at ho
@@ -300,7 +300,7 @@ theorem minimum_le_of_mem {a m : α} {l : List α} : a ∈ l → (minimum l : Wi
   argmin_le_of_mem
 
 theorem le_maximum_of_mem' {a : α} {l : List α} (ha : a ∈ l) : (a : WithBot α) ≤ maximum l :=
-  Option.casesOn (maximum l) (fun _ h => absurd ha ((h rfl).symm ▸ not_mem_nil _))
+  Option.casesOn (maximum l) (fun _ h => absurd ha ((h rfl).symm ▸ not_mem_nilₓ _))
     (fun m hm _ => WithBot.coe_le_coe.2 <| hm _ rfl) (fun m => @le_maximum_of_mem _ _ _ m _ ha)
     (@maximum_eq_none _ _ l).1
 

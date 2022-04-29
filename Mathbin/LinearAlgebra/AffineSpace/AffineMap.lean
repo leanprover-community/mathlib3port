@@ -45,7 +45,7 @@ topology are defined elsewhere; see `analysis.normed_space.add_torsor` and
 -/
 
 
-open_locale Affine
+open Affine
 
 /-- An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that
 induces a corresponding linear map from `V1` to `V2`. -/
@@ -123,8 +123,7 @@ theorem linear_map_vsub (f : P1 →ᵃ[k] P2) (p1 p2 : P1) : f.linear (p1 -ᵥ p
 theorem ext {f g : P1 →ᵃ[k] P2} (h : ∀ p, f p = g p) : f = g := by
   rcases f with ⟨f, f_linear, f_add⟩
   rcases g with ⟨g, g_linear, g_add⟩
-  have : f = g := funext h
-  subst g
+  obtain rfl : f = g := funext h
   congr with v
   cases' (AddTorsor.nonempty : Nonempty P1) with p
   apply vadd_right_cancel (f p)
@@ -190,42 +189,51 @@ theorem coe_mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : ⇑(mk' f f' p h) =
 theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : (mk' f f' p h).linear = f' :=
   rfl
 
-/-- The set of affine maps to a vector space is an additive commutative group. -/
-instance : AddCommGroupₓ (P1 →ᵃ[k] V2) where
-  zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩
-  add := fun f g =>
-    ⟨f + g, f.linear + g.linear, fun p v => by
-      simp [add_add_add_commₓ]⟩
-  sub := fun f g =>
-    ⟨f - g, f.linear - g.linear, fun p v => by
-      simp [sub_add_comm]⟩
-  sub_eq_add_neg := fun f g => ext fun p => sub_eq_add_neg _ _
-  neg := fun f =>
-    ⟨-f, -f.linear, fun p v => by
-      simp [add_commₓ]⟩
-  add_assoc := fun f₁ f₂ f₃ => ext fun p => add_assocₓ _ _ _
-  zero_add := fun f => ext fun p => zero_addₓ (f p)
-  add_zero := fun f => ext fun p => add_zeroₓ (f p)
-  add_comm := fun f g => ext fun p => add_commₓ (f p) (g p)
-  add_left_neg := fun f => ext fun p => add_left_negₓ (f p)
-  nsmul := fun n f =>
-    ⟨n • f, n • f.linear, fun p v => by
-      simp ⟩
-  nsmul_zero' := fun f => ext fun p => AddMonoidₓ.nsmul_zero' _
-  nsmul_succ' := fun n f => ext fun p => AddMonoidₓ.nsmul_succ' _ _
-  zsmul := fun z f =>
-    ⟨z • f, z • f.linear, fun p v => by
-      simp ⟩
-  zsmul_zero' := fun f => ext fun p => SubNegMonoidₓ.zsmul_zero' _
-  zsmul_succ' := fun z f => ext fun p => SubNegMonoidₓ.zsmul_succ' _ _
-  zsmul_neg' := fun z f => ext fun p => SubNegMonoidₓ.zsmul_neg' _ _
+section HasScalar
+
+variable {R : Type _} [Monoidₓ R] [DistribMulAction R V2] [SmulCommClass k R V2]
+
+/-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
+instance : MulAction R (P1 →ᵃ[k] V2) where
+  smul := fun c f =>
+    ⟨c • f, c • f.linear, fun p v => by
+      simp [smul_add]⟩
+  one_smul := fun f => ext fun p => one_smul _ _
+  mul_smul := fun c₁ c₂ f => ext fun p => mul_smul _ _ _
 
 @[simp, norm_cast]
-theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
+theorem coe_smul (c : R) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
   rfl
 
 @[simp]
-theorem zero_linear : (0 : P1 →ᵃ[k] V2).linear = 0 :=
+theorem smul_linear (t : R) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
+  rfl
+
+instance [DistribMulAction Rᵐᵒᵖ V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2) where
+  op_smul_eq_smul := fun r x => ext fun _ => op_smul_eq_smul _ _
+
+end HasScalar
+
+instance : Zero (P1 →ᵃ[k] V2) where
+  zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩
+
+instance : Add (P1 →ᵃ[k] V2) where
+  add := fun f g =>
+    ⟨f + g, f.linear + g.linear, fun p v => by
+      simp [add_add_add_commₓ]⟩
+
+instance : Sub (P1 →ᵃ[k] V2) where
+  sub := fun f g =>
+    ⟨f - g, f.linear - g.linear, fun p v => by
+      simp [sub_add_sub_comm]⟩
+
+instance : Neg (P1 →ᵃ[k] V2) where
+  neg := fun f =>
+    ⟨-f, -f.linear, fun p v => by
+      simp [add_commₓ]⟩
+
+@[simp, norm_cast]
+theorem coe_zero : ⇑(0 : P1 →ᵃ[k] V2) = 0 :=
   rfl
 
 @[simp, norm_cast]
@@ -241,6 +249,10 @@ theorem coe_sub (f g : P1 →ᵃ[k] V2) : ⇑(f - g) = f - g :=
   rfl
 
 @[simp]
+theorem zero_linear : (0 : P1 →ᵃ[k] V2).linear = 0 :=
+  rfl
+
+@[simp]
 theorem add_linear (f g : P1 →ᵃ[k] V2) : (f + g).linear = f.linear + g.linear :=
   rfl
 
@@ -251,6 +263,10 @@ theorem sub_linear (f g : P1 →ᵃ[k] V2) : (f - g).linear = f.linear - g.linea
 @[simp]
 theorem neg_linear (f : P1 →ᵃ[k] V2) : (-f).linear = -f.linear :=
   rfl
+
+/-- The set of affine maps to a vector space is an additive commutative group. -/
+instance : AddCommGroupₓ (P1 →ᵃ[k] V2) :=
+  coe_fn_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ => coe_smul _ _
 
 /-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
 from `P1` to the vector space `V2` corresponding to `P2`. -/
@@ -428,7 +444,7 @@ omit V2
 
 /-- The affine map from `k` to `P1` sending `0` to `p₀` and `1` to `p₁`. -/
 def lineMap (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
-  ((LinearMap.id : k →ₗ[k] k).smulRight (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
+  ((LinearMap.id : k →ₗ[k] k).smul_right (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
 
 theorem coe_line_map (p₀ p₁ : P1) : (lineMap p₀ p₁ : k → P1) = fun c => c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
   rfl
@@ -456,7 +472,7 @@ theorem line_map_vadd_apply (p : P1) (v : V1) (c : k) : lineMap p (v +ᵥ p) c =
   rw [line_map_apply, vadd_vsub]
 
 @[simp]
-theorem line_map_linear (p₀ p₁ : P1) : (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smulRight (p₁ -ᵥ p₀) :=
+theorem line_map_linear (p₀ p₁ : P1) : (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smul_right (p₁ -ᵥ p₀) :=
   add_zeroₓ _
 
 theorem line_map_same_apply (p : P1) (c : k) : lineMap p p c = p := by
@@ -526,7 +542,7 @@ theorem line_map_vadd_line_map (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
 theorem line_map_vsub_line_map (p₁ p₂ p₃ p₄ : P1) (c : k) :
     lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c := by
   -- Why Lean fails to find this instance without a hint?
-    let this' : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
+    let this : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor <;>
     exact ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
@@ -600,24 +616,8 @@ variable [Monoidₓ R] [DistribMulAction R V2] [SmulCommClass k R V2]
 
 /-- The space of affine maps to a module inherits an `R`-action from the action on its codomain. -/
 instance : DistribMulAction R (P1 →ᵃ[k] V2) where
-  smul := fun c f =>
-    ⟨c • f, c • f.linear, fun p v => by
-      simp [smul_add]⟩
-  one_smul := fun f => ext fun p => one_smul _ _
-  mul_smul := fun c₁ c₂ f => ext fun p => mul_smul _ _ _
   smul_add := fun c f g => ext fun p => smul_add _ _ _
   smul_zero := fun c => ext fun p => smul_zero _
-
-@[simp]
-theorem coe_smul (c : R) (f : P1 →ᵃ[k] V2) : ⇑(c • f) = c • f :=
-  rfl
-
-@[simp]
-theorem smul_linear (t : R) (f : P1 →ᵃ[k] V2) : (t • f).linear = t • f.linear :=
-  rfl
-
-instance [DistribMulAction Rᵐᵒᵖ V2] [IsCentralScalar R V2] : IsCentralScalar R (P1 →ᵃ[k] V2) where
-  op_smul_eq_smul := fun r x => ext fun _ => op_smul_eq_smul _ _
 
 end DistribMulAction
 
@@ -687,9 +687,12 @@ theorem homothety_one (c : P1) : homothety c (1 : k) = id k P1 := by
 theorem homothety_apply_same (c : P1) (r : k) : homothety c r c = c :=
   line_map_same_apply c r
 
-theorem homothety_mul (c : P1) (r₁ r₂ : k) : homothety c (r₁ * r₂) = (homothety c r₁).comp (homothety c r₂) := by
-  ext p
+theorem homothety_mul_apply (c : P1) (r₁ r₂ : k) (p : P1) :
+    homothety c (r₁ * r₂) p = homothety c r₁ (homothety c r₂ p) := by
   simp [homothety_apply, mul_smul]
+
+theorem homothety_mul (c : P1) (r₁ r₂ : k) : homothety c (r₁ * r₂) = (homothety c r₁).comp (homothety c r₂) :=
+  ext <| homothety_mul_apply c r₁ r₂
 
 @[simp]
 theorem homothety_zero (c : P1) : homothety c (0 : k) = const k P1 c := by

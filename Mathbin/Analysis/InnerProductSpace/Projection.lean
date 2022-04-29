@@ -49,7 +49,7 @@ noncomputable section
 
 open IsROrC Real Filter
 
-open_locale BigOperators TopologicalSpace
+open BigOperators TopologicalSpace
 
 variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
@@ -74,7 +74,7 @@ Then there exists a (unique) `v` in `K` that minimizes the distance `∥u - v∥
 theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h₁ : IsComplete K) (h₂ : Convex ℝ K) :
     ∀ u : F, ∃ v ∈ K, ∥u - v∥ = ⨅ w : K, ∥u - w∥ := fun u => by
   let δ := ⨅ w : K, ∥u - w∥
-  let this' : Nonempty K := ne.to_subtype
+  let this : Nonempty K := ne.to_subtype
   have zero_le_δ : 0 ≤ δ := le_cinfi fun _ => norm_nonneg _
   have δ_le : ∀ w : K, δ ≤ ∥u - w∥ := cinfi_le ⟨0, Set.forall_range_iff.2 fun _ => norm_nonneg _⟩
   have δ_le' : ∀, ∀ w ∈ K, ∀, δ ≤ ∥u - w∥ := fun w hw => δ_le ⟨w, hw⟩
@@ -133,7 +133,7 @@ theorem exists_norm_eq_infi_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
           show u + u - (wq + wp) = u - wq + (u - wp)
           abel
           rw [eq₁, eq₂]
-        _ = 2 * (∥a∥ * ∥a∥ + ∥b∥ * ∥b∥) := parallelogram_law_with_norm
+        _ = 2 * (∥a∥ * ∥a∥ + ∥b∥ * ∥b∥) := parallelogram_law_with_norm _ _
         
     have eq : δ ≤ ∥u - half • (wq + wp)∥ := by
       rw [smul_add]
@@ -225,7 +225,7 @@ theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
       let δ := ⨅ w : K, ∥u - w∥
       let p := ⟪u - v, w - v⟫_ℝ
       let q := ∥w - v∥ ^ 2
-      let this' : Nonempty K := ⟨⟨v, hv⟩⟩
+      let this : Nonempty K := ⟨⟨v, hv⟩⟩
       have zero_le_δ : 0 ≤ δ
       apply le_cinfi
       intro
@@ -315,7 +315,7 @@ theorem norm_eq_infi_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
         )
     (by
       intro h
-      let this' : Nonempty K := ⟨⟨v, hv⟩⟩
+      let this : Nonempty K := ⟨⟨v, hv⟩⟩
       apply le_antisymmₓ
       · apply le_cinfi
         intro w
@@ -346,8 +346,8 @@ This point `v` is usually called the orthogonal projection of `u` onto `K`.
 -/
 theorem exists_norm_eq_infi_of_complete_subspace (h : IsComplete (↑K : Set E)) :
     ∀ u : E, ∃ v ∈ K, ∥u - v∥ = ⨅ w : (K : Set E), ∥u - w∥ := by
-  let this' : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
-  let this' : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
+  let this : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
+  let this : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
   let K' : Submodule ℝ E := Submodule.restrictScalars ℝ K
   exact exists_norm_eq_infi_of_complete_convex ⟨0, K'.zero_mem⟩ h K'.convex
 
@@ -402,8 +402,8 @@ for all `w ∈ K`, `⟪u - v, w⟫ = 0` (i.e., `u - v` is orthogonal to the subs
 -/
 theorem norm_eq_infi_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
     (∥u - v∥ = ⨅ w : (↑K : Set E), ∥u - w∥) ↔ ∀, ∀ w ∈ K, ∀, ⟪u - v, w⟫ = 0 := by
-  let this' : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
-  let this' : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
+  let this : InnerProductSpace ℝ E := InnerProductSpace.isROrCToReal 𝕜 E
+  let this : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
   let K' : Submodule ℝ E := K.restrict_scalars ℝ
   constructor
   · intro H
@@ -606,7 +606,7 @@ theorem smul_orthogonal_projection_singleton {v : E} (w : E) :
 theorem orthogonal_projection_singleton {v : E} (w : E) : (orthogonalProjection (𝕜∙v) w : E) = (⟪v, w⟫ / ∥v∥ ^ 2) • v :=
   by
   by_cases' hv : v = 0
-  · rw [hv, eq_orthogonal_projection_of_eq_submodule Submodule.span_zero_singleton]
+  · rw [hv, eq_orthogonal_projection_of_eq_submodule (Submodule.span_zero_singleton 𝕜)]
     · simp
       
     · infer_instance
@@ -809,7 +809,7 @@ theorem eq_orthogonal_projection_of_mem_orthogonal' [CompleteSpace K] {u v z : E
     (hu : u = v + z) : (orthogonalProjection K u : E) = v :=
   eq_orthogonal_projection_of_mem_orthogonal hv
     (by
-      simpa [hu])
+      simpa [hu] )
 
 /-- The orthogonal projection onto `K` of an element of `Kᗮ` is zero. -/
 theorem orthogonal_projection_mem_subspace_orthogonal_complement_eq_zero [CompleteSpace K] {v : E} (hv : v ∈ Kᗮ) :
@@ -1219,7 +1219,7 @@ theorem coe_std_orthonormal_basis : ⇑(stdOrthonormalBasis 𝕜 E) = coe :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.2
 
 instance : Fintype (OrthonormalBasisIndex 𝕜 E) :=
-  @IsNoetherian.fintypeBasisIndex _ _ _ _ _ _ _ (IsNoetherian.iff_fg.2 inferInstance) (stdOrthonormalBasis 𝕜 E)
+  @IsNoetherian.fintypeBasisIndex _ _ _ _ _ _ (IsNoetherian.iff_fg.2 inferInstance) (stdOrthonormalBasis 𝕜 E)
 
 variable {𝕜 E}
 

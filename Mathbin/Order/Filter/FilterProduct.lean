@@ -23,7 +23,7 @@ universe u v
 
 variable {α : Type u} {β : Type v} {φ : Ultrafilter α}
 
-open_locale Classical
+open Classical
 
 namespace Filter
 

@@ -128,7 +128,7 @@ theorem IsCoatom.sup_eq_top_of_ne [SemilatticeSup α] [OrderTop α] {a b : α} (
 
 end Pairwise
 
-variable [PartialOrderₓ α] {a : α}
+variable [Preorderₓ α] {a : α}
 
 @[simp]
 theorem is_coatom_dual_iff_is_atom [OrderBot α] : IsCoatom (OrderDual.toDual a) ↔ IsAtom a :=
@@ -501,7 +501,7 @@ end DecidableEq
 
 variable [Lattice α] [BoundedOrder α] [IsSimpleOrder α]
 
-open_locale Classical
+open Classical
 
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
@@ -610,14 +610,13 @@ theorem is_simple_order_iff_is_coatom_bot [PartialOrderₓ α] [BoundedOrder α]
 
 namespace Set
 
-theorem is_simple_order_Iic_iff_is_atom [PartialOrderₓ α] [BoundedOrder α] {a : α} : IsSimpleOrder (Iic a) ↔ IsAtom a :=
+theorem is_simple_order_Iic_iff_is_atom [PartialOrderₓ α] [OrderBot α] {a : α} : IsSimpleOrder (Iic a) ↔ IsAtom a :=
   is_simple_order_iff_is_atom_top.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun hbotb =>
         Subtype.mk_eq_mk.2 (h b (Subtype.mk_lt_mk.1 hbotb))⟩
 
-theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [BoundedOrder α] {a : α} :
-    IsSimpleOrder (Ici a) ↔ IsCoatom a :=
+theorem is_simple_order_Ici_iff_is_coatom [PartialOrderₓ α] [OrderTop α] {a : α} : IsSimpleOrder (Ici a) ↔ IsCoatom a :=
   is_simple_order_iff_is_coatom_bot.trans <|
     and_congr (not_congr Subtype.mk_eq_mk)
       ⟨fun h b ab => Subtype.mk_eq_mk.1 (h ⟨b, le_of_ltₓ ab⟩ ab), fun hbotb =>

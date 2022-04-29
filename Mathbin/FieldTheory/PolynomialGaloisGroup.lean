@@ -41,7 +41,7 @@ equals the number of real roots plus the number of roots not fixed by complex co
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open FiniteDimensional
 
@@ -207,7 +207,7 @@ theorem gal_action_hom_restrict [Fact (p.Splits (algebraMap F E))] (ϕ : E ≃�
 
 /-- `gal p` embeds as a subgroup of permutations of the roots of `p` in `E`. -/
 theorem gal_action_hom_injective [Fact (p.Splits (algebraMap F E))] : Function.Injective (galActionHom p E) := by
-  rw [MonoidHom.injective_iff]
+  rw [injective_iff_map_eq_one]
   intro ϕ hϕ
   ext x hx
   have key := equiv.perm.ext_iff.mp hϕ (roots_equiv_roots p E ⟨x, hx⟩)
@@ -248,7 +248,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
   dsimp only [restrict_prod, restrict_dvd]  at hfg
   simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iffₓ] at hfg
   ext x hx
-  rw [root_set, map_mul, Polynomial.roots_mul] at hx
+  rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
   · have : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_right p q)⟩
@@ -403,6 +403,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
          (Term.letDecl
           (Term.letIdDecl
            `α
+           []
            [(Term.typeSpec ":" `p.splitting_field)]
            ":="
            (Term.app
@@ -561,6 +562,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
         (Term.letDecl
          (Term.letIdDecl
           `α
+          []
           [(Term.typeSpec ":" `p.splitting_field)]
           ":="
           (Term.app

@@ -41,7 +41,7 @@ More not-yet-PRed stuff is available on the branch `sperner_again`.
 -/
 
 
-open_locale Classical Affine
+open Classical Affine
 
 open Set
 
@@ -74,8 +74,7 @@ protected theorem IsExtreme.rfl : IsExtreme 𝕜 A A :=
 
 @[trans]
 protected theorem IsExtreme.trans (hAB : IsExtreme 𝕜 A B) (hBC : IsExtreme 𝕜 B C) : IsExtreme 𝕜 A C := by
-  use subset.trans hBC.1 hAB.1
-  rintro x₁ hx₁A x₂ hx₂A x hxC hx
+  refine' ⟨subset.trans hBC.1 hAB.1, fun x₁ hx₁A x₂ hx₂A x hxC hx => _⟩
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 x₁ hx₁A x₂ hx₂A x (hBC.1 hxC) hx
   exact hBC.2 x₁ hx₁B x₂ hx₂B x hxC hx
 
@@ -169,29 +168,27 @@ theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : 
 
 end OrderedSemiring
 
-section LinearOrderedField
+section LinearOrderedRing
 
-variable {𝕜} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
+variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
+
+variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
-theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
+theorem mem_extreme_points_iff_forall_segment :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x := by
+  refine' and_congr_right fun hxA => forall₄_congrₓ fun x₁ h₁ x₂ h₂ => _
   constructor
-  · rintro ⟨hxA, hAx⟩
-    use hxA
-    rintro x₁ hx₁ x₂ hx₂ hx
-    by_contra' h
-    exact h.1 (hAx _ hx₁ _ hx₂ (mem_open_segment_of_ne_left_right 𝕜 h.1 h.2 hx)).1
+  · rw [← insert_endpoints_open_segment]
+    rintro H (rfl | rfl | hx)
+    exacts[Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
     
-  rintro ⟨hxA, hAx⟩
-  use hxA
-  rintro x₁ x₂ hx₁ hx₂ hx
-  obtain rfl | rfl := hAx x₁ x₂ hx₁ hx₂ (open_segment_subset_segment 𝕜 _ _ hx)
-  · exact ⟨rfl, (left_mem_open_segment_iff.1 hx).symm⟩
+  · intro H hx
+    rcases H (open_segment_subset_segment _ _ _ hx) with (rfl | rfl)
+    exacts[⟨rfl, (left_mem_open_segment_iff.1 hx).symm⟩, ⟨right_mem_open_segment_iff.1 hx, rfl⟩]
     
-  exact ⟨right_mem_open_segment_iff.1 hx, rfl⟩
 
 theorem Convex.mem_extreme_points_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by
@@ -211,6 +208,7 @@ theorem extreme_points_convex_hull_subset : (convexHull 𝕜 A).ExtremePoints �
   rw [(convex_convex_hull 𝕜 _).mem_extreme_points_iff_convex_diff] at hx
   by_contra
   exact (convex_hull_min (subset_diff.2 ⟨subset_convex_hull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2 hx.1).2 rfl
+  infer_instance
 
-end LinearOrderedField
+end LinearOrderedRing
 

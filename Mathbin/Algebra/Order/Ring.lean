@@ -90,7 +90,57 @@ universe u
 
 variable {α : Type u}
 
-theorem add_one_le_two_mul [Preorderₓ α] [Semiringₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] {a : α} (a1 : 1 ≤ a) :
+namespace OrderDual
+
+/-! Note that `order_dual` does not satisfy any of the ordered ring typeclasses due to the
+`zero_le_one` field. -/
+
+
+instance [h : Distribₓ α] : Distribₓ (OrderDual α) :=
+  h
+
+instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg (OrderDual α) :=
+  h
+
+instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (OrderDual α) :=
+  h
+
+instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (OrderDual α) :=
+  h
+
+instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ (OrderDual α) :=
+  h
+
+instance [h : Semiringₓ α] : Semiringₓ (OrderDual α) :=
+  h
+
+instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring (OrderDual α) :=
+  h
+
+instance [h : CommSemiringₓ α] : CommSemiringₓ (OrderDual α) :=
+  h
+
+instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (OrderDual α) :=
+  h
+
+instance [h : NonUnitalRing α] : NonUnitalRing (OrderDual α) :=
+  h
+
+instance [h : NonAssocRing α] : NonAssocRing (OrderDual α) :=
+  h
+
+instance [h : Ringₓ α] : Ringₓ (OrderDual α) :=
+  h
+
+instance [h : NonUnitalCommRing α] : NonUnitalCommRing (OrderDual α) :=
+  h
+
+instance [h : CommRingₓ α] : CommRingₓ (OrderDual α) :=
+  h
+
+end OrderDual
+
+theorem add_one_le_two_mul [LE α] [Semiringₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] {a : α} (a1 : 1 ≤ a) :
     a + 1 ≤ 2 * a :=
   calc
     a + 1 ≤ a + a := add_le_add_left a1 a
@@ -174,6 +224,12 @@ theorem mul_lt_mul_of_pos_left (h₁ : a < b) (h₂ : 0 < c) : c * a < c * b :=
 theorem mul_lt_mul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : a * c < b * c :=
   OrderedSemiring.mul_lt_mul_of_pos_right a b c h₁ h₂
 
+theorem mul_lt_of_lt_one_left (hb : 0 < b) (ha : a < 1) : a * b < b :=
+  (mul_lt_mul_of_pos_right ha hb).trans_le (one_mulₓ _).le
+
+theorem mul_lt_of_lt_one_right (ha : 0 < a) (hb : b < 1) : a * b < a :=
+  (mul_lt_mul_of_pos_left hb ha).trans_le (mul_oneₓ _).le
+
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ ·)] (h₁ : a ≤ b) (h₂ : 0 ≤ c) :
     c * a ≤ c * b := by
@@ -231,6 +287,15 @@ protected theorem Decidable.mul_nonneg [@DecidableRel α (· ≤ ·)] (ha : 0 �
 theorem mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   classical <;> exact Decidable.mul_nonneg
 
+@[simp]
+theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
+  | 0 => by
+    rw [pow_zeroₓ]
+    exact zero_le_one
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact mul_nonneg H (pow_nonneg _)
+
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_nonpos_of_nonneg_of_nonpos [@DecidableRel α (· ≤ ·)] (ha : 0 ≤ a) (hb : b ≤ 0) :
     a * b ≤ 0 := by
@@ -274,6 +339,16 @@ theorem mul_lt_mul' : a ≤ c → b < d → 0 ≤ b → 0 < c → a * b < c * d 
 theorem mul_pos (ha : 0 < a) (hb : 0 < b) : 0 < a * b := by
   have h : 0 * b < a * b := mul_lt_mul_of_pos_right ha hb
   rwa [zero_mul] at h
+
+@[simp]
+theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
+  | 0 => by
+    nontriviality
+    rw [pow_zeroₓ]
+    exact zero_lt_one
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact mul_pos H (pow_pos _)
 
 theorem mul_neg_of_pos_of_neg (ha : 0 < a) (hb : b < 0) : a * b < 0 := by
   have h : a * b < a * 0 := mul_lt_mul_of_pos_left hb ha
@@ -349,6 +424,9 @@ protected theorem Decidable.lt_mul_of_one_lt_left [@DecidableRel α (· ≤ ·)]
 theorem lt_mul_of_one_lt_left : 0 < b → 1 < a → b < a * b := by
   classical <;> exact Decidable.lt_mul_of_one_lt_left
 
+theorem lt_two_mul_self [Nontrivial α] (ha : 0 < a) : a < 2 * a :=
+  lt_mul_of_one_lt_left ha one_lt_two
+
 -- See Note [decidable namespace]
 protected theorem Decidable.add_le_mul_two_add [@DecidableRel α (· ≤ ·)] {a b : α} (a2 : 2 ≤ a) (b0 : 0 ≤ b) :
     a + (2 + b) ≤ a * (2 + b) :=
@@ -373,10 +451,11 @@ theorem one_le_mul_of_one_le_of_one_le {a b : α} : 1 ≤ a → 1 ≤ b → (1 :
 /-- Pullback an `ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) : OrderedSemiring β :=
-  { hf.OrderedCancelAddCommMonoid f zero add, hf.Semiring f zero one add mul with
+def Function.Injective.orderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [HasScalar ℕ β] [Pow β ℕ]
+    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedSemiring β :=
+  { hf.OrderedCancelAddCommMonoid f zero add nsmul, hf.Semiring f zero one add mul nsmul npow with
     zero_le_one :=
       show f 0 ≤ f 1 by
         simp only [zero, one, zero_le_one],
@@ -505,9 +584,10 @@ class OrderedCommSemiring (α : Type u) extends OrderedSemiring α, CommSemiring
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.orderedCommSemiring [OrderedCommSemiring α] {β : Type _} [Zero β] [One β] [Add β] [Mul β]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) : OrderedCommSemiring β :=
-  { hf.CommSemiring f zero one add mul, hf.OrderedSemiring f zero one add mul with }
+    [HasScalar ℕ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCommSemiring β :=
+  { hf.CommSemiring f zero one add mul nsmul npow, hf.OrderedSemiring f zero one add mul nsmul npow with }
 
 end OrderedCommSemiring
 
@@ -691,8 +771,6 @@ theorem add_le_mul' (a2 : 2 ≤ a) (b2 : 2 ≤ b) : a + b ≤ b * a :=
 
 section
 
-variable [Nontrivial α]
-
 @[simp]
 theorem bit0_le_bit0 : bit0 a ≤ bit0 b ↔ a ≤ b := by
   rw [bit0, bit0, ← two_mul, ← two_mul, mul_le_mul_left (zero_lt_two : 0 < (2 : α))]
@@ -785,10 +863,11 @@ instance (priority := 100) LinearOrderedSemiring.to_no_max_order {α : Type _} [
 /-- Pullback a `linear_ordered_semiring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) : LinearOrderedSemiring β :=
-  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedSemiring f zero one add mul with }
+def Function.Injective.linearOrderedSemiring {β : Type _} [Zero β] [One β] [Add β] [Mul β] [HasScalar ℕ β] [Pow β ℕ]
+    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
+    (mul : ∀ x y, f (x * y) = f x * f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedSemiring β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedSemiring f zero one add mul nsmul npow with }
 
 @[simp]
 theorem Units.inv_pos {u : αˣ} : (0 : α) < ↑u⁻¹ ↔ (0 : α) < u :=
@@ -984,11 +1063,12 @@ theorem mul_pos_of_neg_of_neg {a b : α} (ha : a < 0) (hb : b < 0) : 0 < a * b :
 /-- Pullback an `ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.orderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
-    OrderedRing β :=
-  { hf.OrderedSemiring f zero one add mul, hf.Ring f zero one add mul neg sub with
+def Function.Injective.orderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasScalar ℕ β]
+    [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedRing β :=
+  { hf.OrderedSemiring f zero one add mul nsmul npow, hf.Ring f zero one add mul neg sub nsmul zsmul npow with
     mul_pos := fun a b a0 b0 =>
       show f 0 < f (a * b) by
         rw [zero, mul]
@@ -1022,10 +1102,12 @@ instance (priority := 100) OrderedCommRing.toOrderedCommSemiring {α : Type u} [
 See note [reducible non-instances]. -/
 @[reducible]
 def Function.Injective.orderedCommRing [OrderedCommRing α] {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β]
-    (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
-    OrderedCommRing β :=
-  { hf.OrderedRing f zero one add mul neg sub, hf.CommRing f zero one add mul neg sub with }
+    [HasScalar ℕ β] [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : OrderedCommRing β :=
+  { hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow,
+    hf.CommRing f zero one add mul neg sub nsmul zsmul npow with }
 
 end OrderedCommRing
 
@@ -1038,6 +1120,36 @@ class LinearOrderedRing (α : Type u) extends OrderedRing α, LinearOrderₓ α,
 instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup [s : LinearOrderedRing α] :
     LinearOrderedAddCommGroup α :=
   { s with }
+
+section LinearOrderedSemiring
+
+variable [LinearOrderedSemiring α] {a b c : α}
+
+attribute [local instance] LinearOrderedSemiring.decidableLe
+
+theorem le_of_mul_le_of_one_le {a b c : α} (h : a * c ≤ b) (hb : 0 ≤ b) (hc : 1 ≤ c) : a ≤ b :=
+  have h' : a * c ≤ b * c :=
+    calc
+      a * c ≤ b := h
+      _ = b * 1 := by
+        rw [mul_oneₓ]
+      _ ≤ b * c := Decidable.mul_le_mul_of_nonneg_left hc hb
+      
+  le_of_mul_le_mul_right h' (zero_lt_one.trans_le hc)
+
+theorem nonneg_le_nonneg_of_sq_le_sq {a b : α} (hb : 0 ≤ b) (h : a * a ≤ b * b) : a ≤ b :=
+  le_of_not_gtₓ fun hab => (Decidable.mul_self_lt_mul_self hb hab).not_le h
+
+theorem mul_self_le_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a ≤ b ↔ a * a ≤ b * b :=
+  ⟨Decidable.mul_self_le_mul_self h1, nonneg_le_nonneg_of_sq_le_sq h2⟩
+
+theorem mul_self_lt_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a < b ↔ a * a < b * b :=
+  ((@Decidable.strict_mono_on_mul_self α _ _).lt_iff_lt h1 h2).symm
+
+theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a * a = b * b ↔ a = b :=
+  (@Decidable.strict_mono_on_mul_self α _ _).InjOn.eq_iff h1 h2
+
+end LinearOrderedSemiring
 
 section LinearOrderedRing
 
@@ -1173,33 +1285,6 @@ theorem gt_of_mul_lt_mul_neg_left (h : c * a < c * b) (hc : c ≤ 0) : b < a :=
 theorem neg_one_lt_zero : -1 < (0 : α) :=
   neg_lt_zero.2 zero_lt_one
 
-theorem le_of_mul_le_of_one_le {a b c : α} (h : a * c ≤ b) (hb : 0 ≤ b) (hc : 1 ≤ c) : a ≤ b :=
-  have := @LinearOrderₓ.decidableLe α _
-  have h' : a * c ≤ b * c :=
-    calc
-      a * c ≤ b := h
-      _ = b * 1 := by
-        rw [mul_oneₓ]
-      _ ≤ b * c := Decidable.mul_le_mul_of_nonneg_left hc hb
-      
-  le_of_mul_le_mul_right h' (zero_lt_one.trans_le hc)
-
-theorem nonneg_le_nonneg_of_sq_le_sq {a b : α} (hb : 0 ≤ b) (h : a * a ≤ b * b) : a ≤ b :=
-  have := @LinearOrderₓ.decidableLe α _
-  le_of_not_gtₓ fun hab => (Decidable.mul_self_lt_mul_self hb hab).not_le h
-
-theorem mul_self_le_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a ≤ b ↔ a * a ≤ b * b :=
-  have := @LinearOrderₓ.decidableLe α _
-  ⟨Decidable.mul_self_le_mul_self h1, nonneg_le_nonneg_of_sq_le_sq h2⟩
-
-theorem mul_self_lt_mul_self_iff {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a < b ↔ a * a < b * b :=
-  have := @LinearOrderₓ.decidableLe α _
-  ((@Decidable.strict_mono_on_mul_self α _ _).lt_iff_lt h1 h2).symm
-
-theorem mul_self_inj {a b : α} (h1 : 0 ≤ a) (h2 : 0 ≤ b) : a * a = b * b ↔ a = b :=
-  have := @LinearOrderₓ.decidableLe α _
-  (@Decidable.strict_mono_on_mul_self α _ _).InjOn.eq_iff h1 h2
-
 @[simp]
 theorem mul_le_mul_left_of_neg {a b c : α} (h : c < 0) : c * a ≤ c * b ↔ b ≤ a :=
   have := @LinearOrderₓ.decidableLe α _
@@ -1284,11 +1369,13 @@ theorem abs_le_one_iff_mul_self_le_one : abs a ≤ 1 ↔ a * a ≤ 1 := by
 /-- Pullback a `linear_ordered_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
-    LinearOrderedRing β :=
-  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedRing f zero one add mul neg sub with }
+def Function.Injective.linearOrderedRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] [HasScalar ℕ β]
+    [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedRing β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one,
+    hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow with }
 
 end LinearOrderedRing
 
@@ -1349,12 +1436,6 @@ theorem self_dvd_abs (a : α) : a ∣ abs a :=
 theorem abs_dvd_abs (a b : α) : abs a ∣ abs b ↔ a ∣ b :=
   (abs_dvd _ _).trans (dvd_abs _ _)
 
-theorem even_abs {a : α} : Even (abs a) ↔ Even a :=
-  dvd_abs _ _
-
-theorem odd_abs {a : α} : Odd (abs a) ↔ Odd a := by
-  cases' abs_choice a with h h <;> simp only [h, odd_neg]
-
 end
 
 section LinearOrderedCommRing
@@ -1364,11 +1445,13 @@ variable [LinearOrderedCommRing α]
 /-- Pullback a `linear_ordered_comm_ring` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible]
-def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β] (f : β → α)
-    (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1) (add : ∀ x y, f (x + y) = f x + f y)
-    (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x) (sub : ∀ x y, f (x - y) = f x - f y) :
-    LinearOrderedCommRing β :=
-  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one, hf.OrderedCommRing f zero one add mul neg sub with }
+def Function.Injective.linearOrderedCommRing {β : Type _} [Zero β] [One β] [Add β] [Mul β] [Neg β] [Sub β]
+    [HasScalar ℕ β] [HasScalar ℤ β] [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (zero : f 0 = 0) (one : f 1 = 1)
+    (add : ∀ x y, f (x + y) = f x + f y) (mul : ∀ x y, f (x * y) = f x * f y) (neg : ∀ x, f (-x) = -f x)
+    (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ x n : ℕ, f (n • x) = n • f x)
+    (zsmul : ∀ x n : ℤ, f (n • x) = n • f x) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : LinearOrderedCommRing β :=
+  { LinearOrderₓ.lift f hf, pullback_nonzero f zero one,
+    hf.OrderedCommRing f zero one add mul neg sub nsmul zsmul npow with }
 
 end LinearOrderedCommRing
 
@@ -1584,7 +1667,7 @@ theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ 
   · simp [← coe_mul]
     
 
-theorem mul_lt_top [PartialOrderₓ α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
+theorem mul_lt_top [Preorderₓ α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ := by
   lift a to α using ha
   lift b to α using hb
   simp only [← coe_mul, coe_lt_top]
@@ -1728,7 +1811,7 @@ theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a 
 theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ ∨ a = ⊥ ∧ b ≠ 0 :=
   WithTop.mul_eq_top_iff
 
-theorem bot_lt_mul [PartialOrderₓ α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b := by
+theorem bot_lt_mul [Preorderₓ α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b := by
   lift a to α using ne_bot_of_gt ha
   lift b to α using ne_bot_of_gt hb
   simp only [← coe_mul, bot_lt_coe]

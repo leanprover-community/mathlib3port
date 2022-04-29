@@ -30,7 +30,7 @@ universe u v
 
 open Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 section Semiringₓ
 
@@ -101,6 +101,19 @@ theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n 
     rfl
     
 
+theorem pochhammer_succ_eval {S : Type _} [Semiringₓ S] (n : ℕ) (k : S) :
+    (pochhammer S (n + 1)).eval k = (pochhammer S n).eval k * (k + n) := by
+  rw [pochhammer_succ_right, mul_addₓ, eval_add, eval_mul_X, ← Nat.cast_comm, ← C_eq_nat_cast, eval_C_mul,
+    Nat.cast_comm, ← mul_addₓ]
+
+theorem pochhammer_succ_comp_X_add_one (n : ℕ) :
+    (pochhammer S (n + 1)).comp (X + 1) = pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) := by
+  suffices (pochhammer ℕ (n + 1)).comp (X + 1) = pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (X + 1) by
+    simpa [map_comp] using congr_argₓ (Polynomial.map (Nat.castRingHom S)) this
+  nth_rw 1[pochhammer_succ_left]
+  rw [← add_mulₓ, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp, add_commₓ ↑n, ←
+    add_assocₓ]
+
 theorem Polynomial.mul_X_add_nat_cast_comp {p q : S[X]} {n : ℕ} : (p * (X + n)).comp q = p.comp q * (q + n) := by
   rw [mul_addₓ, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_addₓ]
 
@@ -134,15 +147,6 @@ theorem pochhammer_nat_eq_desc_factorial (a b : ℕ) : (pochhammer ℕ b).eval a
 
 end Semiringₓ
 
-section CommSemiringₓ
-
-variable {S : Type _} [CommSemiringₓ S]
-
-theorem pochhammer_succ_eval (n : ℕ) (k : S) : (pochhammer S n.succ).eval k = (pochhammer S n).eval k * (k + ↑n) := by
-  rw [pochhammer_succ_right, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_nat_cast]
-
-end CommSemiringₓ
-
 section OrderedSemiring
 
 variable {S : Type _} [OrderedSemiring S] [Nontrivial S]
@@ -161,7 +165,7 @@ end OrderedSemiring
 
 section Factorial
 
-open_locale Nat
+open Nat
 
 variable (S : Type _) [Semiringₓ S] (r n : ℕ)
 

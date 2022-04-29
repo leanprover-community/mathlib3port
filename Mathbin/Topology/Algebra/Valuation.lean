@@ -16,7 +16,7 @@ values in a group with zero. Other instances are then deduced from this.
 -/
 
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 open Set Valuation
 

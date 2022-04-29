@@ -5,7 +5,7 @@ Authors: Scott Morrison, Justus Springer
 -/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 import Mathbin.AlgebraicGeometry.StructureSheaf
-import Mathbin.Data.Equiv.TransferInstance
+import Mathbin.Logic.Equiv.TransferInstance
 import Mathbin.RingTheory.Localization.LocalizationLocalization
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.Topology.Sheaves.Functors
@@ -44,6 +44,8 @@ open Opposite
 open CategoryTheory
 
 open StructureSheaf
+
+open Spec (structureSheaf)
 
 /-- The spectrum of a commutative ring, as a topological space.
 -/
@@ -250,7 +252,7 @@ open AlgebraicGeometry.LocallyRingedSpace
 /-- The counit morphism `R ⟶ Γ(Spec R)` given by `algebraic_geometry.structure_sheaf.to_open`.  -/
 @[simps]
 def toSpecΓ (R : CommRingₓₓ) : R ⟶ Γ.obj (op (Spec.toLocallyRingedSpace.obj (op R))) :=
-  structureSheaf.toOpen R ⊤
+  StructureSheaf.toOpen R ⊤
 
 instance is_iso_to_Spec_Γ (R : CommRingₓₓ) : IsIso (toSpecΓ R) := by
   cases R

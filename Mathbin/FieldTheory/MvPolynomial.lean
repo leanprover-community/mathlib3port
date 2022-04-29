@@ -16,11 +16,11 @@ finitely supported functions from the indexing set to `ℕ`.
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 open Set LinearMap Submodule
 
-open_locale BigOperators
+open BigOperators
 
 namespace MvPolynomial
 
@@ -32,7 +32,7 @@ variable (σ K) [Field K]
 
 theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠ ⊤) :
     Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.c) := by
-  refine' (RingHom.injective_iff _).2 fun x hx => _
+  refine' (injective_iff_map_eq_zero _).2 fun x hx => _
   rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem] at hx
   refine' Classical.by_contradiction fun hx0 => absurd (I.eq_top_iff_one.2 _) hI
   have := I.mul_mem_left (MvPolynomial.c x⁻¹) hx
@@ -46,7 +46,7 @@ universe u
 
 variable {σ : Type u} {K : Type u} [Field K]
 
-open_locale Classical
+open Classical
 
 theorem dim_mv_polynomial : Module.rank K (MvPolynomial σ K) = Cardinal.mk (σ →₀ ℕ) := by
   rw [← Cardinal.lift_inj, ← (basis_monomials σ K).mk_eq_dim]

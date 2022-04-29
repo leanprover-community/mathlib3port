@@ -117,6 +117,11 @@ noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGrou
         rw [hc, zero_smul])
       fun hx' => absurd hx' hx
 
+theorem mk_span_singleton_apply' (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E]
+    [AddCommGroupₓ F] [Module K F] {x : E} (hx : x ≠ 0) (y : F) :
+    (mkSpanSingleton x y hx).toFun ⟨x, (Submodule.mem_span_singleton_self x : x ∈ Submodule.span K {x})⟩ = y := by
+  convert LinearPmap.mk_span_singleton_apply x y _ (1 : K) _ <;> simp [Submodule.mem_span_singleton_self]
+
 /-- Projection to the first coordinate as a `linear_pmap` -/
 protected def fst (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × F) E where
   domain := p.Prod p'
@@ -150,8 +155,8 @@ theorem eq_of_le_of_domain_eq {f g : LinearPmap R E F} (hle : f ≤ g) (heq : f.
   rcases g with ⟨g_dom, g⟩
   change f_dom = g_dom at heq
   subst g_dom
-  have : f = g := LinearMap.ext fun x => hle.2 rfl
-  subst g
+  obtain rfl : f = g := LinearMap.ext fun x => hle.2 rfl
+  rfl
 
 /-- Given two partial linear maps `f`, `g`, the set of points `x` such that
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
@@ -159,7 +164,7 @@ def eqLocus (f g : LinearPmap R E F) : Submodule R E where
   Carrier := { x | ∃ (hf : x ∈ f.domain)(hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
-    ⟨add_mem _ hfx hfy, add_mem _ hgx hgy, by
+    ⟨add_mem hfx hfy, add_mem hgx hgy, by
       erw [f.map_add ⟨x, hfx⟩ ⟨y, hfy⟩, g.map_add ⟨x, hgx⟩ ⟨y, hgy⟩, hx, hy]⟩
   smul_mem' := fun c x ⟨hfx, hgx, hx⟩ =>
     ⟨smul_mem _ c hfx, smul_mem _ c hgx, by
@@ -218,7 +223,7 @@ private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.dom
     rw [add_commₓ, ← sub_eq_sub_iff_add_eq_add, eq_comm, ← map_sub, ← map_sub]
     apply h
     simp only [← eq_sub_iff_add_eq] at hxy
-    simp only [coe_sub, coe_mk, coe_mk, hxy, ← sub_add, ← sub_sub, sub_self, zero_sub, ← H]
+    simp only [AddSubgroupClass.coe_sub, coe_mk, coe_mk, hxy, ← sub_add, ← sub_sub, sub_self, zero_sub, ← H]
     apply neg_add_eq_sub
   refine' ⟨{ toFun := fg, .. }, fg_eq⟩
   · rintro ⟨z₁, hz₁⟩ ⟨z₂, hz₂⟩

@@ -75,6 +75,32 @@ def germSetoid (l : Filter α) (β : Type _) : Setoidₓ (α → β) where
 def Germ (l : Filter α) (β : Type _) : Type _ :=
   Quotientₓ (germSetoid l β)
 
+/-- Setoid used to define the filter product. This is a dependent version of
+  `filter.germ_setoid`. -/
+def productSetoid (l : Filter α) (ε : α → Type _) : Setoidₓ (∀ a, ε a) where
+  R := fun f g => ∀ᶠ a in l, f a = g a
+  iseqv :=
+    ⟨fun _ => eventually_of_forall fun _ => rfl, fun _ _ h => h.mono fun _ => Eq.symm, fun x y z h1 h2 =>
+      h1.congr (h2.mono fun x hx => hx ▸ Iff.rfl)⟩
+
+/-- The filter product `Π (a : α), ε a` at a filter `l`. This is a dependent version of
+  `filter.germ`. -/
+@[protected]
+def Product (l : Filter α) (ε : α → Type _) : Type _ :=
+  Quotientₓ (productSetoid l ε)
+
+namespace Product
+
+variable {ε : α → Type _}
+
+instance : CoeTₓ (∀ a, ε a) (l.product ε) :=
+  ⟨Quotientₓ.mk'⟩
+
+instance [∀ a, Inhabited (ε a)] : Inhabited (l.product ε) :=
+  ⟨(↑fun a => (default : ε a) : l.product ε)⟩
+
+end Product
+
 namespace Germ
 
 instance : CoeTₓ (α → β) (Germ l β) :=
@@ -267,18 +293,12 @@ theorem coe_one [One M] : ↑(1 : α → M) = (1 : Germ l M) :=
   rfl
 
 @[to_additive]
-instance [Semigroupₓ M] : Semigroupₓ (Germ l M) where
-  mul := (· * ·)
-  mul_assoc := by
-    rintro ⟨f⟩ ⟨g⟩ ⟨h⟩
-    simp only [mul_assoc, quot_mk_eq_coe, ← coe_mul]
+instance [Semigroupₓ M] : Semigroupₓ (Germ l M) :=
+  Function.Surjective.semigroup coe (surjective_quot_mk _) fun a b => coe_mul a b
 
 @[to_additive]
 instance [CommSemigroupₓ M] : CommSemigroupₓ (Germ l M) :=
-  { Germ.semigroup with mul := (· * ·),
-    mul_comm := by
-      rintro ⟨f⟩ ⟨g⟩
-      simp only [mul_comm, quot_mk_eq_coe, ← coe_mul] }
+  Function.Surjective.commSemigroup coe (surjective_quot_mk _) fun a b => coe_mul a b
 
 @[to_additive AddLeftCancelSemigroup]
 instance [LeftCancelSemigroup M] : LeftCancelSemigroup (Germ l M) :=
@@ -292,17 +312,33 @@ instance [RightCancelSemigroup M] : RightCancelSemigroup (Germ l M) :=
     mul_right_cancel := fun f₁ f₂ f₃ =>
       (induction_on₃ f₁ f₂ f₃) fun f₁ f₂ f₃ H => coe_eq.2 <| (coe_eq.1 H).mono fun x => mul_right_cancelₓ }
 
+instance hasNatPow [Monoidₓ G] : Pow (Germ l G) ℕ :=
+  ⟨fun f n => map (· ^ n) f⟩
+
+@[simp]
+theorem coe_pow [Monoidₓ G] (f : α → G) (n : ℕ) : ↑(f ^ n) = (f ^ n : Germ l G) :=
+  rfl
+
+instance hasIntPow [DivInvMonoidₓ G] : Pow (Germ l G) ℤ :=
+  ⟨fun f z => map (· ^ z) f⟩
+
+@[simp]
+theorem coe_zpow [DivInvMonoidₓ G] (f : α → G) (z : ℤ) : ↑(f ^ z) = (f ^ z : Germ l G) :=
+  rfl
+
+instance [HasScalar M β] : HasScalar M (Germ l β) :=
+  ⟨fun c => map ((· • ·) c)⟩
+
+@[simp, norm_cast]
+theorem coe_smul [HasScalar M β] (c : M) (f : α → β) : ↑(c • f) = (c • f : Germ l β) :=
+  rfl
+
+instance [AddMonoidₓ M] : AddMonoidₓ (Germ l M) :=
+  Function.Surjective.addMonoid coe (surjective_quot_mk _) rfl (fun a b => coe_add a b) fun _ _ => rfl
+
 @[to_additive]
 instance [Monoidₓ M] : Monoidₓ (Germ l M) :=
-  { Germ.semigroup with mul := (· * ·), one := 1,
-    one_mul := fun f =>
-      (induction_on f) fun f => by
-        norm_cast
-        rw [one_mulₓ],
-    mul_one := fun f =>
-      (induction_on f) fun f => by
-        norm_cast
-        rw [mul_oneₓ] }
+  Function.Surjective.monoid coe (surjective_quot_mk _) rfl (fun a b => coe_mul a b) coe_pow
 
 /-- coercion from functions to germs as a monoid homomorphism. -/
 @[to_additive]
@@ -336,12 +372,14 @@ instance [Div M] : Div (Germ l M) :=
 theorem coe_div [Div M] (f g : α → M) : ↑(f / g) = (f / g : Germ l M) :=
   rfl
 
-@[to_additive]
+instance [SubNegMonoidₓ G] : SubNegMonoidₓ (Germ l G) :=
+  Function.Surjective.subNegMonoid coe (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
+
+@[to_additive SubNegMonoidₓ]
 instance [DivInvMonoidₓ G] : DivInvMonoidₓ (Germ l G) :=
-  { Germ.monoid with inv := Inv.inv, div := Div.div,
-    div_eq_mul_inv := by
-      rintro ⟨f⟩ ⟨g⟩
-      exact congr_argₓ (Quot.mk _) (div_eq_mul_inv f g) }
+  Function.Surjective.divInvMonoid coe (surjective_quot_mk _) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ _ => rfl) fun _ _ => rfl
 
 @[to_additive]
 instance [Groupₓ G] : Groupₓ (Germ l G) :=
@@ -414,15 +452,8 @@ section Module
 
 variable {M N R : Type _}
 
-instance [HasScalar M β] : HasScalar M (Germ l β) :=
-  ⟨fun c => map ((· • ·) c)⟩
-
 instance hasScalar' [HasScalar M β] : HasScalar (Germ l M) (Germ l β) :=
   ⟨map₂ (· • ·)⟩
-
-@[simp, norm_cast]
-theorem coe_smul [HasScalar M β] (c : M) (f : α → β) : ↑(c • f) = (c • f : Germ l β) :=
-  rfl
 
 @[simp, norm_cast]
 theorem coe_smul' [HasScalar M β] (c : α → M) (f : α → β) : ↑(c • f) = (c : Germ l M) • (f : Germ l β) :=

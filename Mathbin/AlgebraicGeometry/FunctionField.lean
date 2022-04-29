@@ -61,7 +61,7 @@ noncomputable instance [IsIntegral X] : Field X.functionField := by
 
 theorem germ_injective_of_is_integral [IsIntegral X] {U : Opens X.Carrier} (x : U) :
     Function.Injective (X.Presheaf.germ x) := by
-  rw [RingHom.injective_iff]
+  rw [injective_iff_map_eq_zero]
   intro y hy
   rw [← (X.presheaf.germ x).map_zero] at hy
   obtain ⟨W, hW, iU, iV, e⟩ := X.presheaf.germ_eq _ x.prop x.prop _ _ hy

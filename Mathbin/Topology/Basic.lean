@@ -55,7 +55,7 @@ noncomputable section
 
 open Set Filter Classical
 
-open_locale Classical Filter
+open Classical Filter
 
 universe u v w
 
@@ -584,6 +584,15 @@ theorem frontier_eq_closure_inter_closure {s : Set α} : Frontier s = Closure s 
 
 theorem frontier_subset_closure {s : Set α} : Frontier s ⊆ Closure s :=
   diff_subset _ _
+
+theorem IsClosed.frontier_subset (hs : IsClosed s) : Frontier s ⊆ s :=
+  frontier_subset_closure.trans hs.closure_eq.Subset
+
+theorem frontier_closure_subset {s : Set α} : Frontier (Closure s) ⊆ Frontier s :=
+  diff_subset_diff closure_closure.Subset <| interior_mono subset_closure
+
+theorem frontier_interior_subset {s : Set α} : Frontier (Interior s) ⊆ Frontier s :=
+  diff_subset_diff (closure_mono interior_subset) interior_interior.symm.Subset
 
 /-- The complement of a set has the same frontier as the original set. -/
 @[simp]
@@ -1275,7 +1284,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- A function between topological spaces is continuous if the preimage
   of every open set is open. Registered as a structure to make sure it is not unfolded by Lean. -/

@@ -28,7 +28,7 @@ make the notation available.
 
 universe u
 
-open_locale Pointwise
+open Pointwise
 
 namespace Set
 
@@ -242,10 +242,12 @@ theorem interval_oc_of_le (h : a ≤ b) : Ι a b = Ioc a b := by
 theorem interval_oc_of_lt (h : b < a) : Ι a b = Ioc b a := by
   simp [interval_oc, le_of_ltₓ h]
 
+theorem interval_oc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by
+  cases le_totalₓ a b <;> simp [interval_oc, *]
+
 theorem forall_interval_oc_iff {P : α → Prop} :
     (∀, ∀ x ∈ Ι a b, ∀, P x) ↔ (∀, ∀ x ∈ Ioc a b, ∀, P x) ∧ ∀, ∀ x ∈ Ioc b a, ∀, P x := by
-  dsimp [interval_oc]
-  cases' le_totalₓ a b with hab hab <;> simp [hab]
+  simp only [interval_oc_eq_union, mem_union_eq, or_imp_distrib, forall_and_distrib]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
@@ -261,7 +263,7 @@ theorem interval_oc_swap (a b : α) : Ι a b = Ι b a := by
 
 end LinearOrderₓ
 
-open_locale Interval
+open Interval
 
 section OrderedAddCommGroup
 

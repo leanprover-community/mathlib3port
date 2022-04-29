@@ -91,10 +91,10 @@ the depth of recursive applications.
   `x : α ⊢ f x = g x`.
 -/
 unsafe def congr' (n : parse («expr ?» (with_desc "n" small_nat))) :
-    parse («expr ?» (tk "with" *> Prod.mk <$> «expr *» rcases_patt_parse_hi <*> «expr ?» (tk ":" *> small_nat))) →
+    parse («expr ?» (tk "with" *> Prod.mk <$> «expr *» rintro_patt_parse_hi <*> «expr ?» (tk ":" *> small_nat))) →
       tactic Unit
   | none => tactic.congr' n
-  | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p m $> ()))
+  | some ⟨p, m⟩ => focus1 (tactic.congr' n >> all_goals' (tactic.ext p.join m $> ()))
 
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
 /-- Repeatedly and apply `congr'` and `ext`, using the given patterns as arguments for `ext`.
@@ -123,7 +123,7 @@ and `congr' with x` (or `congr', ext x`) would produce
 x : α ⊢ f x + 3 = g x + 3
 ```
 -/
-unsafe def rcongr : parse («expr *» rcases_patt_parse_hi) → tactic Unit
+unsafe def rcongr : parse (List.join <$> «expr *» rintro_patt_parse_hi) → tactic Unit
   | ps => do
     let t ← target
     let qs ← try_core (tactic.ext ps none)

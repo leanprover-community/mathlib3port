@@ -30,7 +30,7 @@ open CategoryTheory.Preadditive
 
 open CategoryTheory.Limits
 
-open_locale BigOperators
+open BigOperators
 
 namespace CategoryTheory
 
@@ -155,13 +155,15 @@ def toKaroubi : C ⥤ Karoubi C where
       simp only [comp_id, id_comp]⟩
 
 instance : Full (toKaroubi C) where
-  Preimage := fun X Y f => f.f
+  preimage := fun X Y f => f.f
 
 instance : Faithful (toKaroubi C) :=
   {  }
 
 variable {C}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 @[simps]
 instance [Preadditive C] {P Q : Karoubi C} : AddCommGroupₓ (P ⟶ Q) where
   add := fun f g =>

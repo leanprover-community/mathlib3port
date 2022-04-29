@@ -12,7 +12,7 @@ namespace Omega
 
 namespace Nat
 
-open_locale Omega.Nat
+open Omega.Nat
 
 /-- push_neg p returns the result of normalizing ¬ p by
     pushing the outermost negation all the way down,

@@ -6,7 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Tactic.ApplyFun
 import Mathbin.Algebra.Field.Opposite
 import Mathbin.Algebra.FieldPower
-import Mathbin.Data.Equiv.RingAut
+import Mathbin.Algebra.Ring.Aut
 import Mathbin.GroupTheory.GroupAction.Units
 import Mathbin.GroupTheory.GroupAction.Opposite
 import Mathbin.Algebra.Ring.CompTypeclasses
@@ -74,7 +74,7 @@ theorem star_injective [HasInvolutiveStar R] : Function.Injective (star : R → 
 
 /-- `star` as an equivalence when it is involutive. -/
 protected def Equivₓ.star [HasInvolutiveStar R] : Equivₓ.Perm R :=
-  star_involutive.toEquiv _
+  star_involutive.toPerm _
 
 theorem eq_star_of_eq_star [HasInvolutiveStar R] {r s : R} (h : r = star s) : s = star r := by
   simp [h]
@@ -112,13 +112,13 @@ theorem star_mul' [CommSemigroupₓ R] [StarSemigroup R] (x y : R) : star (x * y
 /-- `star` as an `mul_equiv` from `R` to `Rᵐᵒᵖ` -/
 @[simps apply]
 def starMulEquiv [Semigroupₓ R] [StarSemigroup R] : R ≃* Rᵐᵒᵖ :=
-  { (HasInvolutiveStar.star_involutive.toEquiv star).trans opEquiv with toFun := fun x => MulOpposite.op (star x),
+  { (HasInvolutiveStar.star_involutive.toPerm star).trans opEquiv with toFun := fun x => MulOpposite.op (star x),
     map_mul' := fun x y => (star_mul x y).symm ▸ MulOpposite.op_mul _ _ }
 
 /-- `star` as a `mul_aut` for commutative `R`. -/
 @[simps apply]
 def starMulAut [CommSemigroupₓ R] [StarSemigroup R] : MulAut R :=
-  { HasInvolutiveStar.star_involutive.toEquiv star with toFun := star, map_mul' := star_mul' }
+  { HasInvolutiveStar.star_involutive.toPerm star with toFun := star, map_mul' := star_mul' }
 
 variable (R)
 
@@ -147,7 +147,7 @@ theorem star_div [CommGroupₓ R] [StarSemigroup R] (x y : R) : star (x / y) = s
 
 section
 
-open_locale BigOperators
+open BigOperators
 
 @[simp]
 theorem star_prod [CommMonoidₓ R] [StarSemigroup R] {α : Type _} (s : Finset α) (f : α → R) :
@@ -189,7 +189,7 @@ attribute [simp] star_add
 /-- `star` as an `add_equiv` -/
 @[simps apply]
 def starAddEquiv [AddMonoidₓ R] [StarAddMonoid R] : R ≃+ R :=
-  { HasInvolutiveStar.star_involutive.toEquiv star with toFun := star, map_add' := star_add }
+  { HasInvolutiveStar.star_involutive.toPerm star with toFun := star, map_add' := star_add }
 
 variable (R)
 
@@ -198,6 +198,13 @@ theorem star_zero [AddMonoidₓ R] [StarAddMonoid R] : star (0 : R) = 0 :=
   (starAddEquiv : R ≃+ R).map_zero
 
 variable {R}
+
+@[simp]
+theorem star_eq_zero [AddMonoidₓ R] [StarAddMonoid R] {x : R} : star x = 0 ↔ x = 0 :=
+  starAddEquiv.map_eq_zero_iff
+
+theorem star_ne_zero [AddMonoidₓ R] [StarAddMonoid R] {x : R} : star x ≠ 0 ↔ x ≠ 0 :=
+  star_eq_zero.Not
 
 @[simp]
 theorem star_neg [AddGroupₓ R] [StarAddMonoid R] (r : R) : star (-r) = -star r :=
@@ -217,7 +224,7 @@ theorem star_zsmul [AddCommGroupₓ R] [StarAddMonoid R] (x : R) (n : ℤ) : sta
 
 section
 
-open_locale BigOperators
+open BigOperators
 
 @[simp]
 theorem star_sum [AddCommMonoidₓ R] [StarAddMonoid R] {α : Type _} (s : Finset α) (f : α → R) :
@@ -241,6 +248,18 @@ instance (priority := 100) StarRing.toStarAddMonoid [NonUnitalSemiringₓ R] [St
 def starRingEquiv [NonUnitalSemiringₓ R] [StarRing R] : R ≃+* Rᵐᵒᵖ :=
   { starAddEquiv.trans (MulOpposite.opAddEquiv : R ≃+ Rᵐᵒᵖ), starMulEquiv with
     toFun := fun x => MulOpposite.op (star x) }
+
+@[simp, norm_cast]
+theorem star_nat_cast [Semiringₓ R] [StarRing R] (n : ℕ) : star (n : R) = n :=
+  (congr_argₓ unop (map_nat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) n)).trans (unop_nat_cast _)
+
+@[simp, norm_cast]
+theorem star_int_cast [Ringₓ R] [StarRing R] (z : ℤ) : star (z : R) = z :=
+  (congr_argₓ unop ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_int_cast z)).trans (unop_int_cast _)
+
+@[simp, norm_cast]
+theorem star_rat_cast [DivisionRing R] [CharZero R] [StarRing R] (r : ℚ) : star (r : R) = r :=
+  (congr_argₓ unop <| map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
 
 /-- `star` as a ring automorphism, for commutative `R`. -/
 @[simps apply]
@@ -420,7 +439,7 @@ instance Invertible.star {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [I
 
 theorem star_inv_of {R : Type _} [Monoidₓ R] [StarSemigroup R] (r : R) [Invertible r] [Invertible (star r)] :
     star (⅟ r) = ⅟ (star r) := by
-  let this' := Invertible.star r
+  let this := Invertible.star r
   convert (rfl : star (⅟ r) = _)
 
 namespace MulOpposite

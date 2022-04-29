@@ -52,7 +52,7 @@ open Padic Metric LocalRing
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 /-- The p-adic integers ℤ_p are the p-adic numbers with norm ≤ 1. -/
 def PadicInt (p : ℕ) [Fact p.Prime] :=
@@ -588,7 +588,7 @@ theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : �
   rw [← this]
   norm_cast
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2]) }
 theorem mem_span_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) :
     x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) ↔ ↑n ≤ x.Valuation := by
   rw [Ideal.mem_span_singleton]
@@ -642,8 +642,8 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  local_of_nonunits_ideal zero_ne_one <| by
-    simp only [mem_nonunits] <;> exact fun x h y => norm_lt_one_add h
+  LocalRing.mk <| by
+    simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by
   have : (p : ℝ)⁻¹ < 1 :=

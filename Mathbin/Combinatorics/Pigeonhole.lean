@@ -54,6 +54,13 @@ docstrings instead of the names.
   `measure_theory.exists_nonempty_inter_of_measure_univ_lt_sum_measure`: pigeonhole principle in a
   measure space.
 
+## TODO
+
+The `_nsmul` lemmas could be generalized from `linear_ordered_comm_ring` to
+`linear_ordered_comm_semiring` if the latter existed (or some combination of
+`covariant`/`contravariant` classes once the refactor has gone deep enough). This would allow
+deriving the `_mul` lemmas from the `_nsmul` ones.
+
 ## Tags
 
 pigeonhole principle
@@ -62,9 +69,11 @@ pigeonhole principle
 
 universe u v w
 
-variable {α : Type u} {β : Type v} {M : Type w} [LinearOrderedCancelAddCommMonoid M] [DecidableEq β]
+variable {α : Type u} {β : Type v} {M : Type w} [DecidableEq β]
 
-open_locale BigOperators
+open Nat
+
+open BigOperators
 
 namespace Finset
 
@@ -95,6 +104,10 @@ There are a few bits we can change in this theorem:
 We can do all these variations independently, so we have eight versions of the theorem.
 -/
 
+
+section
+
+variable [LinearOrderedCancelAddCommMonoid M]
 
 /-!
 #### Strict inequality versions
@@ -194,6 +207,10 @@ theorem exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
     (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum α β (OrderDual M) _ _ _ _ _ _ _ hf ht hb
 
+end
+
+variable [LinearOrderedCommRing M]
+
 /-!
 ### The pigeonhole principles on `finset`s, pigeons counted by heads
 
@@ -213,6 +230,13 @@ So, we prove four theorems: `finset.exists_lt_card_fiber_of_maps_to_of_mul_lt_ca
 
 
 /-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
+at least as many pigeons as the ceiling of the average number of pigeons across all pigeonholes. -/
+theorem exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.card • b < s.card) :
+    ∃ y ∈ t, b < (s.filter fun x => f x = y).card := by
+  simp_rw [cast_card]  at ht⊢
+  exact exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum hf ht
+
+/-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
 at least as many pigeons as the ceiling of the average number of pigeons across all pigeonholes.
 ("The maximum is at least the mean" specialized to integers.)
 
@@ -224,6 +248,13 @@ theorem exists_lt_card_fiber_of_mul_lt_card_of_maps_to (hf : ∀, ∀ a ∈ s, �
   simp only [card_eq_sum_ones]
   apply exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum hf
   simpa
+
+/-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
+at most as many pigeons as the floor of the average number of pigeons across all pigeonholes. -/
+theorem exists_card_fiber_lt_of_card_lt_nsmul (ht : ↑s.card < t.card • b) :
+    ∃ y ∈ t, ↑(s.filter fun x => f x = y).card < b := by
+  simp_rw [cast_card]  at ht⊢
+  exact exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul (fun _ _ => sum_nonneg fun _ _ => zero_le_one) ht
 
 /-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
 at most as many pigeons as the floor of the average number of pigeons across all pigeonholes.  ("The
@@ -239,7 +270,16 @@ theorem exists_card_fiber_lt_of_card_lt_mul (hn : s.card < t.card * n) :
   simpa
 
 /-- The pigeonhole principle for finitely many pigeons counted by heads: given a function between
-finite sets `s` and `t` and a natural number `n` such that `card t * n ≤ card s`, there exists `y ∈
+finite sets `s` and `t` and a number `b` such that `card t • b ≤ card s`, there exists `y ∈ t` such
+that its preimage in `s` has at least `b` elements.
+See also `finset.exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to` for a stronger statement. -/
+theorem exists_le_card_fiber_of_nsmul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.Nonempty)
+    (hb : t.card • b ≤ s.card) : ∃ y ∈ t, b ≤ (s.filter fun x => f x = y).card := by
+  simp_rw [cast_card]  at hb⊢
+  exact exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum hf ht hb
+
+/-- The pigeonhole principle for finitely many pigeons counted by heads: given a function between
+finite sets `s` and `t` and a natural number `b` such that `card t * n ≤ card s`, there exists `y ∈
 t` such that its preimage in `s` has at least `n` elements. See also
 `finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to` for a stronger statement. -/
 theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t) (ht : t.Nonempty)
@@ -247,6 +287,15 @@ theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀, ∀ a ∈ s, �
   simp only [card_eq_sum_ones]
   apply exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum hf ht
   simpa
+
+/-- The pigeonhole principle for finitely many pigeons counted by heads: given a function `f`, a
+finite sets `s` and `t`, and a number `b` such that `card s ≤ card t • b`, there exists `y ∈ t` such
+that its preimage in `s` has no more than `b` elements.
+See also `finset.exists_card_fiber_lt_of_card_lt_nsmul` for a stronger statement. -/
+theorem exists_card_fiber_le_of_card_le_nsmul (ht : t.Nonempty) (hb : ↑s.card ≤ t.card • b) :
+    ∃ y ∈ t, ↑(s.filter fun x => f x = y).card ≤ b := by
+  simp_rw [cast_card]  at hb⊢
+  refine' exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul (fun _ _ => sum_nonneg fun _ _ => zero_le_one) ht hb
 
 /-- The pigeonhole principle for finitely many pigeons counted by heads: given a function `f`, a
 finite sets `s` in its domain, a finite set `t` in its codomain, and a natural number `n` such that
@@ -265,6 +314,10 @@ namespace Fintype
 open Finset
 
 variable [Fintype α] [Fintype β] (f : α → β) {w : α → M} {b : M} {n : ℕ}
+
+section
+
+variable [LinearOrderedCancelAddCommMonoid M]
 
 /-!
 ### The pigeonhole principles on `fintypes`s, pigeons counted by weight
@@ -296,7 +349,7 @@ version: there is a pigeonhole with the total weight of pigeons in it less than 
 the total number of pigeonholes times `b` is greater than the total weight of all pigeons. -/
 theorem exists_sum_fiber_lt_of_sum_lt_nsmul (hb : (∑ x, w x) < card β • b) :
     ∃ y, (∑ x in univ.filter fun x => f x = y, w x) < b :=
-  @exists_lt_sum_fiber_of_nsmul_lt_sum α β (OrderDual M) _ _ _ _ _ w b hb
+  @exists_lt_sum_fiber_of_nsmul_lt_sum α β (OrderDual M) _ _ _ _ _ _ _ hb
 
 /-- The pigeonhole principle for finitely many pigeons of different weights, non-strict inequality
 version: there is a pigeonhole with the total weight of pigeons in it less than or equal to `b`
@@ -304,7 +357,19 @@ provided that the total number of pigeonholes times `b` is greater than or equal
 of all pigeons. -/
 theorem exists_sum_fiber_le_of_sum_le_nsmul [Nonempty β] (hb : (∑ x, w x) ≤ card β • b) :
     ∃ y, (∑ x in univ.filter fun x => f x = y, w x) ≤ b :=
-  @exists_le_sum_fiber_of_nsmul_le_sum α β (OrderDual M) _ _ _ _ _ w b _ hb
+  @exists_le_sum_fiber_of_nsmul_le_sum α β (OrderDual M) _ _ _ _ _ _ _ _ hb
+
+end
+
+variable [LinearOrderedCommRing M]
+
+/-- The strong pigeonhole principle for finitely many pigeons and pigeonholes. There is a pigeonhole
+with at least as many pigeons as the ceiling of the average number of pigeons across all
+pigeonholes. -/
+theorem exists_lt_card_fiber_of_nsmul_lt_card (hb : card β • b < card α) :
+    ∃ y : β, b < (univ.filter fun x => f x = y).card :=
+  let ⟨y, _, h⟩ := exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (fun _ _ => mem_univ _) hb
+  ⟨y, h⟩
 
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.
 There is a pigeonhole with at least as many pigeons as
@@ -317,6 +382,14 @@ elements. -/
 theorem exists_lt_card_fiber_of_mul_lt_card (hn : card β * n < card α) :
     ∃ y : β, n < (univ.filter fun x => f x = y).card :=
   let ⟨y, _, h⟩ := exists_lt_card_fiber_of_mul_lt_card_of_maps_to (fun _ _ => mem_univ _) hn
+  ⟨y, h⟩
+
+/-- The strong pigeonhole principle for finitely many pigeons and pigeonholes. There is a pigeonhole
+with at most as many pigeons as the floor of the average number of pigeons across all pigeonholes.
+-/
+theorem exists_card_fiber_lt_of_card_lt_nsmul (hb : ↑(card α) < card β • b) :
+    ∃ y : β, ↑(univ.filter fun x => f x = y).card < b :=
+  let ⟨y, _, h⟩ := exists_card_fiber_lt_of_card_lt_nsmul hb
   ⟨y, h⟩
 
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.
@@ -333,12 +406,30 @@ theorem exists_card_fiber_lt_of_card_lt_mul (hn : card α < card β * n) :
   ⟨y, h⟩
 
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
+between finite types `α` and `β` and a number `b` such that `card β • b ≤ card α`, there exists an
+element `y : β` such that its preimage has at least `b` elements.
+See also `fintype.exists_lt_card_fiber_of_nsmul_lt_card` for a stronger statement. -/
+theorem exists_le_card_fiber_of_nsmul_le_card [Nonempty β] (hb : card β • b ≤ card α) :
+    ∃ y : β, b ≤ (univ.filter fun x => f x = y).card :=
+  let ⟨y, _, h⟩ := exists_le_card_fiber_of_nsmul_le_card_of_maps_to (fun _ _ => mem_univ _) univ_nonempty hb
+  ⟨y, h⟩
+
+/-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
 between finite types `α` and `β` and a number `n` such that `card β * n ≤ card α`, there exists an
 element `y : β` such that its preimage has at least `n` elements. See also
 `fintype.exists_lt_card_fiber_of_mul_lt_card` for a stronger statement. -/
 theorem exists_le_card_fiber_of_mul_le_card [Nonempty β] (hn : card β * n ≤ card α) :
     ∃ y : β, n ≤ (univ.filter fun x => f x = y).card :=
   let ⟨y, _, h⟩ := exists_le_card_fiber_of_mul_le_card_of_maps_to (fun _ _ => mem_univ _) univ_nonempty hn
+  ⟨y, h⟩
+
+/-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`
+between finite types `α` and `β` and a number `b` such that `card α ≤ card β • b`, there exists an
+element `y : β` such that its preimage has at most `b` elements.
+See also `fintype.exists_card_fiber_lt_of_card_lt_nsmul` for a stronger statement. -/
+theorem exists_card_fiber_le_of_card_le_nsmul [Nonempty β] (hb : ↑(card α) ≤ card β • b) :
+    ∃ y : β, ↑(univ.filter fun x => f x = y).card ≤ b :=
+  let ⟨y, _, h⟩ := exists_card_fiber_le_of_card_le_nsmul univ_nonempty hb
   ⟨y, h⟩
 
 /-- The strong pigeonhole principle for finitely many pigeons and pigeonholes.  Given a function `f`

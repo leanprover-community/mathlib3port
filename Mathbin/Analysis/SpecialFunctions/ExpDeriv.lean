@@ -22,7 +22,7 @@ noncomputable section
 
 open Filter Asymptotics Set Function
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 namespace Complex
 

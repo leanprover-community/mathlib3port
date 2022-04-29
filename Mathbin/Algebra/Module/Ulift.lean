@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Ring.Ulift
-import Mathbin.Data.Equiv.Module
+import Mathbin.Algebra.Module.Equiv
 
 /-!
 # `ulift` instances for module and multiplicative actions
@@ -58,12 +58,8 @@ instance [HasScalar R M] [HasScalar Rᵐᵒᵖ M] [IsCentralScalar R M] : IsCent
 
 instance mulAction [Monoidₓ R] [MulAction R M] : MulAction (ULift R) M where
   smul := (· • ·)
-  mul_smul := fun r s f => by
-    cases r
-    cases s
-    simp [mul_smul]
-  one_smul := fun f => by
-    simp [one_smul]
+  mul_smul := fun _ _ => mul_smul _ _
+  one_smul := one_smul _
 
 instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) where
   smul := (· • ·)
@@ -75,14 +71,9 @@ instance mulAction' [Monoidₓ R] [MulAction R M] : MulAction R (ULift M) where
     ext
     simp [one_smul]
 
-instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (ULift R) M :=
-  { ULift.mulAction with
-    smul_zero := fun c => by
-      cases c
-      simp [smul_zero],
-    smul_add := fun c f g => by
-      cases c
-      simp [smul_add] }
+instance distribMulAction [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction (ULift R) M where
+  smul_zero := fun _ => smul_zero _
+  smul_add := fun _ => smul_add _
 
 instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (ULift M) :=
   { ULift.mulAction' with
@@ -93,41 +84,37 @@ instance distribMulAction' [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M]
       ext
       simp [smul_add] }
 
-instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M :=
-  { ULift.mulAction with
-    smul_one := fun c => by
-      cases c
-      simp [smul_one],
-    smul_mul := fun c f g => by
-      cases c
-      simp [smul_mul'] }
+instance mulDistribMulAction [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction (ULift R) M where
+  smul_one := fun _ => smul_one _
+  smul_mul := fun _ => smul_mul' _
 
 instance mulDistribMulAction' [Monoidₓ R] [Monoidₓ M] [MulDistribMulAction R M] : MulDistribMulAction R (ULift M) :=
   { ULift.mulAction' with
-    smul_one := fun c => by
+    smul_one := fun _ => by
       ext
       simp [smul_one],
     smul_mul := fun c f g => by
       ext
       simp [smul_mul'] }
 
-instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (ULift R) M :=
-  { ULift.distribMulAction with
-    add_smul := fun c f g => by
-      cases c
-      simp [add_smul],
-    zero_smul := fun f => by
-      simp [zero_smul] }
+instance smulWithZero [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero (ULift R) M :=
+  { ULift.hasScalarLeft with smul_zero := fun _ => smul_zero' _ _, zero_smul := zero_smul _ }
 
-instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (ULift M) where
-  add_smul := by
-    intros
-    ext1
-    apply add_smul
-  zero_smul := by
-    intros
-    ext1
-    apply zero_smul
+instance smulWithZero' [Zero R] [Zero M] [SmulWithZero R M] : SmulWithZero R (ULift M) where
+  smul_zero := fun _ => ULift.ext _ _ <| smul_zero' _ _
+  zero_smul := fun _ => ULift.ext _ _ <| zero_smul _ _
+
+instance mulActionWithZero [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M] : MulActionWithZero (ULift R) M :=
+  { ULift.smulWithZero with }
+
+instance mulActionWithZero' [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M] : MulActionWithZero R (ULift M) :=
+  { ULift.smulWithZero' with }
+
+instance module [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (ULift R) M :=
+  { ULift.smulWithZero with add_smul := fun _ _ => add_smul _ _ }
+
+instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (ULift M) :=
+  { ULift.smulWithZero' with add_smul := fun _ _ _ => ULift.ext _ _ <| add_smul _ _ _ }
 
 /-- The `R`-linear equivalence between `ulift M` and `M`.
 -/

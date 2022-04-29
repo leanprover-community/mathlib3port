@@ -54,6 +54,11 @@ instance semiring [∀ i, Semiringₓ <| f i] : Semiringₓ (∀ i : I, f i) := 
     run_tac
       tactic.pi_instance_derive_field
 
+instance nonUnitalCommSemiring [∀ i, NonUnitalCommSemiring <| f i] : NonUnitalCommSemiring (∀ i : I, f i) := by
+  refine_struct { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
 instance commSemiring [∀ i, CommSemiringₓ <| f i] : CommSemiringₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), nsmul := AddMonoidₓ.nsmul,
@@ -89,6 +94,13 @@ instance ring [∀ i, Ringₓ <| f i] : Ringₓ (∀ i : I, f i) := by
     run_tac
       tactic.pi_instance_derive_field
 
+instance nonUnitalCommRing [∀ i, NonUnitalCommRing <| f i] : NonUnitalCommRing (∀ i : I, f i) := by
+  refine_struct
+      { zero := (0 : ∀ i, f i), add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
+        zsmul := SubNegMonoidₓ.zsmul } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
 instance commRing [∀ i, CommRingₓ <| f i] : CommRingₓ (∀ i : I, f i) := by
   refine_struct
       { zero := (0 : ∀ i, f i), one := 1, add := (· + ·), mul := (· * ·), neg := Neg.neg, nsmul := AddMonoidₓ.nsmul,
@@ -120,7 +132,7 @@ universe u v
 
 variable {I : Type u}
 
-/-- Evaluation of functions into an indexed collection of monoids at a point is a monoid
+/-- Evaluation of functions into an indexed collection of rings at a point is a ring
 homomorphism. This is `function.eval` as a `ring_hom`. -/
 @[simps]
 def Pi.evalRingHom (f : I → Type v) [∀ i, NonAssocSemiringₓ (f i)] (i : I) : (∀ i, f i) →+* f i :=

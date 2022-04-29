@@ -112,12 +112,13 @@ theorem cond_pos_of_inter_ne_zero (hms : MeasurableSet s) (hci : μ (s ∩ t) �
 /-- Conditioning first on `s` and then on `t` results in the same measure as conditioning
 on `s ∩ t`. -/
 @[simp]
-theorem cond_cond_eq_cond_inter (hms : MeasurableSet s) (hmt : MeasurableSet t) (hcs : μ s ≠ 0) (hci : μ (s ∩ t) ≠ 0) :
+theorem cond_cond_eq_cond_inter (hms : MeasurableSet s) (hmt : MeasurableSet t) (hci : μ (s ∩ t) ≠ 0) :
     μ[|s][|t] = μ[|s ∩ t] := by
   have := hms.inter hmt
   have := measure_ne_top μ s
+  have hcs : μ s ≠ 0 := (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
   ext1
-  have := cond_is_probability_measure μ (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
+  have := cond_is_probability_measure μ hcs
   simp only [*, cond_apply, ← mul_assoc, ← Set.inter_assoc]
   congr
   simp [*, Ennreal.mul_inv, mul_comm, ← mul_assoc, Ennreal.inv_mul_cancel]

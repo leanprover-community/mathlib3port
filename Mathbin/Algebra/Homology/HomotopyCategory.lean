@@ -16,7 +16,7 @@ with chain maps identified when they are homotopic.
 
 universe v u
 
-open_locale Classical
+open Classical
 
 noncomputable section
 

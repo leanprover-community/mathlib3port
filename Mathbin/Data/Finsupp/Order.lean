@@ -21,7 +21,7 @@ This file lifts order structures on `α` to `ι →₀ α`.
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Finset
 

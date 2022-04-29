@@ -8,6 +8,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.FunctorCategory
 import Mathbin.CategoryTheory.Limits.Preserves.Finite
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
+import Mathbin.CategoryTheory.ConcreteCategory.Basic
 
 /-!
 # Filtered colimits commute with finite limits.

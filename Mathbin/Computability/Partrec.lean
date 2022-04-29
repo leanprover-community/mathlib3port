@@ -763,7 +763,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
       · rwa [le_antisymmₓ (Nat.le_of_lt_succₓ mk) km]
         
       
-    · rcases IH _ fa₃ am₃ k.succ _ with ⟨n, hn₁, hn₂⟩
+    · rcases IH _ am₃ k.succ _ with ⟨n, hn₁, hn₂⟩
       · refine' ⟨n, hn₁, fun m mn km => _⟩
         cases' km.lt_or_eq_dec with km km
         · exact hn₂ _ mn km

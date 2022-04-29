@@ -83,7 +83,7 @@ theorem val_between_eq_val_between {v w : Nat → Int} {as bs : List Int} {l : N
       
     rw [h1 _ _ h3, h2 _ _ h3] <;> apply Nat.le_add_rightₓ
 
-open_locale List.Func
+open List.Func
 
 theorem val_between_set {a : Int} {l n : Nat} : ∀ {m}, l ≤ n → n < l + m → valBetween v ([] {n ↦ a}) l m = a * v n
   | 0, h1, h2 => by
@@ -202,7 +202,7 @@ theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int
       
     
 
-open_locale Omega
+open Omega
 
 theorem val_except_update_set {n : Nat} {as : List Int} {i j : Int} :
     valExcept n (v ⟨n ↦ i⟩) (as {n ↦ j}) = valExcept n v as := by
@@ -305,7 +305,7 @@ theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀, ∀ x
 theorem val_map_div {as : List Int} {i : Int} :
     (∀, ∀ x ∈ as, ∀, i ∣ x) → val v (List.map (fun x => x / i) as) = val v as / i := by
   intro h1
-  simpa only [val, List.length_map] using val_between_map_div h1
+  simpa only [val, List.length_mapₓ] using val_between_map_div h1
 
 theorem val_between_eq_zero {is : List Int} {l : Nat} : ∀ {m}, (∀ x : Int, x ∈ is → x = 0) → valBetween v is l m = 0
   | 0, h1 => rfl

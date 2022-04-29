@@ -14,7 +14,7 @@ import Mathbin.Topology.Algebra.Monoid
 
 open TopologicalSpace Set Filter
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
@@ -69,7 +69,7 @@ theorem nhds_cons (a : α) (l : List α) : 𝓝 (a :: l) = List.cons <$> 𝓝 a 
 
 theorem List.tendsto_cons {a : α} {l : List α} :
     Tendsto (fun p : α × List α => List.cons p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a :: l)) := by
-  rw [nhds_cons, tendsto, map_prod] <;> exact le_rfl
+  rw [nhds_cons, tendsto, Filter.map_prod] <;> exact le_rfl
 
 theorem Filter.Tendsto.cons {α : Type _} {f : α → β} {g : α → List β} {a : Filter α} {b : β} {l : List β}
     (hf : Tendsto f a (𝓝 b)) (hg : Tendsto g a (𝓝 l)) : Tendsto (fun a => List.cons (f a) (g a)) a (𝓝 (b :: l)) :=

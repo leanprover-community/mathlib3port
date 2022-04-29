@@ -16,7 +16,7 @@ semigroups.
 -/
 
 
-open_locale Manifold
+open Manifold
 
 library_note "Design choices about smooth algebraic structures"/--
 1. All smooth algebraic structures on `G` are `Prop`-valued classes that extend
@@ -120,7 +120,7 @@ localized [LieGroup] notation "𝑳" => smoothLeftMul
 -- Right multiplication. The abbreviation is `MIR`.
 localized [LieGroup] notation "𝑹" => smoothRightMul
 
-open_locale LieGroup
+open LieGroup
 
 @[simp]
 theorem L_apply : (𝑳 I g) h = g * h :=
@@ -212,7 +212,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-open_locale BigOperators
+open BigOperators
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [ChartedSpace H G]
@@ -236,12 +236,8 @@ open Function Filter
 theorem smooth_finprod {ι} {f : ι → M → G} (h : ∀ i, Smooth I' I (f i))
     (hfin : LocallyFinite fun i => MulSupport (f i)) : Smooth I' I fun x => ∏ᶠ i, f i x := by
   intro x
-  rcases hfin x with ⟨U, hxU, hUf⟩
-  have : SmoothAt I' I (fun x => ∏ i in hUf.to_finset, f i x) x := smooth_finset_prod (fun i hi => h i) x
-  refine' this.congr_of_eventually_eq ((mem_of_superset hxU) fun y hy => _)
-  refine' finprod_eq_prod_of_mul_support_subset _ fun i hi => _
-  rw [hUf.coe_to_finset]
-  exact ⟨y, hi, hy⟩
+  rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
+  exact (smooth_finset_prod (fun i hi => h i) x).congr_of_eventually_eq hs
 
 @[to_additive]
 theorem smooth_finprod_cond {ι} {f : ι → M → G} {p : ι → Prop} (hc : ∀ i, p i → Smooth I' I (f i))

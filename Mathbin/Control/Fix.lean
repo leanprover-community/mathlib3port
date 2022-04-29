@@ -23,7 +23,7 @@ An instance is defined for `part`.
 
 universe u v
 
-open_locale Classical
+open Classical
 
 variable {α : Type _} {β : α → Type _}
 

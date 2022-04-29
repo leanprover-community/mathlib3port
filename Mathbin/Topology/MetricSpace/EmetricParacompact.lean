@@ -3,9 +3,9 @@ Copyright (c) 202 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
+import Mathbin.SetTheory.Ordinal.Basic
 import Mathbin.Topology.MetricSpace.EmetricSpace
 import Mathbin.Topology.Paracompact
-import Mathbin.SetTheory.Ordinal
 
 /-!
 # (Extended) metric spaces are paracompact
@@ -24,12 +24,13 @@ metric space, paracompact space, normal space
 
 variable {α : Type _}
 
-open_locale Ennreal TopologicalSpace
+open Ennreal TopologicalSpace
 
 open Set
 
 namespace Emetric
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
 -- See note [lower instance priority]
@@ -47,7 +48,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
   refine' ⟨fun ι s ho hcov => _⟩
   simp only [Union_eq_univ_iff] at hcov
   -- choose a well founded order on `S`
-  let this' : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
+  let this : LinearOrderₓ ι := linearOrderOfSTO' WellOrderingRel
   have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellOrder.wf ι WellOrderingRel _
   -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
   set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)

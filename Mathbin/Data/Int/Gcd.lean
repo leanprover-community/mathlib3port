@@ -302,6 +302,9 @@ theorem gcd_eq_zero_iff {i j : ℤ} : gcdₓ i j = 0 ↔ i = 0 ∧ j = 0 := by
     apply Nat.gcd_zero_leftₓ
     
 
+theorem gcd_pos_iff {i j : ℤ} : 0 < gcdₓ i j ↔ i ≠ 0 ∨ j ≠ 0 :=
+  pos_iff_ne_zero.trans <| gcd_eq_zero_iff.Not.trans not_and_distrib
+
 theorem gcd_div {i j k : ℤ} (H1 : k ∣ i) (H2 : k ∣ j) : gcdₓ (i / k) (j / k) = gcdₓ i j / natAbs k := by
   rw [gcd, nat_abs_div i k H1, nat_abs_div j k H2] <;>
     exact Nat.gcd_divₓ (nat_abs_dvd_iff_dvd.mpr H1) (nat_abs_dvd_iff_dvd.mpr H2)

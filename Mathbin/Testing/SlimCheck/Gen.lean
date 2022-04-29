@@ -41,7 +41,7 @@ It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/
 @[reducible]
 def Gen (α : Type u) :=
-  ReaderTₓ (ULift ℕ) Rand α deriving Monadₓ, IsLawfulMonad
+  ReaderTₓ (ULift ℕ) Randₓ α deriving Monadₓ, IsLawfulMonad
 
 variable (α : Type u)
 
@@ -55,19 +55,19 @@ def Io.runGen {α} (x : Gen α) (i : ℕ) : Io α :=
 
 namespace Gen
 
-section Rand
+section Randₓ
 
 /-- Lift `random.random` to the `gen` monad. -/
-def chooseAny [Random α] : Gen α :=
-  ⟨fun _ => Rand.random α⟩
+def chooseAny [Randomₓ α] : Gen α :=
+  ⟨fun _ => Randₓ.random α⟩
 
 variable {α} [Preorderₓ α]
 
 /-- Lift `random.random_r` to the `gen` monad. -/
-def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
-  ⟨fun _ => Rand.randomR x y p⟩
+def choose [BoundedRandomₓ α] (x y : α) (p : x ≤ y) : Gen (x .. y) :=
+  ⟨fun _ => Randₓ.randomR x y p⟩
 
-end Rand
+end Randₓ
 
 open Nat hiding choose
 
@@ -160,7 +160,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
   let s := (xs.map (Subtype.val ∘ Prod.fst)).Sum
   have ha : 1 ≤ s :=
     le_transₓ Pos <|
-      List.length_map (Subtype.val ∘ Prod.fst) xs ▸
+      List.length_mapₓ (Subtype.val ∘ Prod.fst) xs ▸
         List.length_le_sum_of_one_le _ fun i => by
           simp
           intros

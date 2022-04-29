@@ -6,7 +6,7 @@ Authors: Oliver Nash
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.Lie.Subalgebra
 import Mathbin.Algebra.Lie.Submodule
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 
 /-!
 # Lie algebras of associative algebras

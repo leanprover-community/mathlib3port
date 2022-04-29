@@ -68,7 +68,7 @@ protected noncomputable def Pilex.linearOrder [LinearOrderₓ ι] (wf : WellFoun
 
 theorem Pilex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop)) [∀ a, LinearOrderₓ (β a)]
     {a b : Pilex ι β} (h : ∀ i, a i ≤ b i) : a ≤ b := by
-  let this' : LinearOrderₓ (Pilex ι β) := Pilex.linearOrder wf
+  let this : LinearOrderₓ (Pilex ι β) := Pilex.linearOrder wf
   exact le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
 
 --we might want the analog of `pi.ordered_cancel_comm_monoid` as well in the future

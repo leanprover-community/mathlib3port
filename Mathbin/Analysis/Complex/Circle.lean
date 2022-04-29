@@ -35,7 +35,7 @@ noncomputable section
 
 open Complex Metric
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 /-- The unit circle in `ℂ`, here given the structure of a submonoid of `ℂ`. -/
 def circle : Submonoid ℂ where

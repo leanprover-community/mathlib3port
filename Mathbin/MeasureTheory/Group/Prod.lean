@@ -39,7 +39,7 @@ open Set hiding prod_eq
 
 open Function MeasureTheory
 
-open_locale Classical Ennreal Pointwise MeasureTheory
+open Classical Ennreal Pointwise MeasureTheory
 
 variable (G : Type _) [MeasurableSpace G]
 
@@ -83,7 +83,7 @@ theorem map_prod_mul_eq_swap [IsMulLeftInvariant μ] : map (fun z : G × G => (z
 theorem measurable_measure_mul_right {E : Set G} (hE : MeasurableSet E) :
     Measurable fun x => μ ((fun y => y * x) ⁻¹' E) := by
   suffices
-    Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' ((univ : Set G) ×ˢ E))) by
+    Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => ((1 : G), z.1 * z.2)) ⁻¹' (univ : Set G) ×ˢ E)) by
     convert this
     ext1 x
     congr 1 with y : 1
@@ -150,7 +150,7 @@ theorem lintegral_lintegral_mul_inv [IsMulLeftInvariant μ] [IsMulLeftInvariant 
   simp_rw [lintegral_lintegral h2f, lintegral_lintegral hf]
   conv_rhs => rw [← map_prod_mul_inv_eq μ ν]
   symm
-  exact lintegral_map' (hf.mono' (map_prod_mul_inv_eq μ ν).AbsolutelyContinuous) h
+  exact lintegral_map' (hf.mono' (map_prod_mul_inv_eq μ ν).AbsolutelyContinuous) h.ae_measurable
 
 @[to_additive]
 theorem measure_mul_right_null [IsMulLeftInvariant μ] {E : Set G} (y : G) : μ ((fun x => x * y) ⁻¹' E) = 0 ↔ μ E = 0 :=

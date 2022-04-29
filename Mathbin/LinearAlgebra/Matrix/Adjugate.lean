@@ -49,7 +49,7 @@ universe u v
 
 variable {n : Type u} [DecidableEq n] [Fintype n] {α : Type v} [CommRingₓ α]
 
-open_locale Matrix BigOperators Polynomial
+open Matrix BigOperators Polynomial
 
 open Equivₓ Equivₓ.Perm Finset
 
@@ -416,11 +416,7 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
   let A' := mv_polynomial_X n n ℤ
   suffices adjugate (adjugate A') = det A' ^ (Fintype.card n - 2) • A' by
     rw [← mv_polynomial_X_map_matrix_aeval ℤ A, ← AlgHom.map_adjugate, ← AlgHom.map_adjugate, this, ← AlgHom.map_det, ←
-      AlgHom.map_pow]
-    -- TODO: missing an `alg_hom.map_smul_of_tower` here.
-    ext i j
-    dsimp [-mv_polynomial_X]
-    rw [← AlgHom.map_mul]
+      AlgHom.map_pow, AlgHom.map_matrix_apply, AlgHom.map_matrix_apply, Matrix.map_smul' _ _ _ (_root_.map_mul _)]
   have h_card' : Fintype.card n - 2 + 1 = Fintype.card n - 1 := by
     simp [h_card]
   have is_reg : IsSmulRegular (MvPolynomial (n × n) ℤ) (det A') := fun x y =>

@@ -16,7 +16,7 @@ noncomputable section
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 universe u
 
@@ -25,7 +25,8 @@ variable {R : Type u} {a b : R} {m n : ℕ}
 variable [Semiringₓ R] {p q r : R[X]}
 
 theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : R[X]) = monomial j 1 ↔ i = j := by
-  simp [monomial, monomial_fun, Finsupp.single_eq_single_iff]
+  simp_rw [← of_finsupp_single]
+  exact add_monoid_algebra.of_injective.eq_iff
 
 instance [Nontrivial R] : Infinite R[X] :=
   (Infinite.of_injective fun i => monomial i 1) fun m n h => by

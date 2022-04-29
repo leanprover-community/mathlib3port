@@ -5,7 +5,8 @@ Authors: Sebastian Monnet
 -/
 import Mathbin.FieldTheory.Galois
 import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Topology.Algebra.OpenSubgroup
+import Mathbin.Tactic.ByContra
 
 /-!
 # Krull topology
@@ -33,9 +34,11 @@ all intermediate fields `E` with `E/K` finite dimensional.
 
 ## Main Results
 
-- `krull_topology_t2 K L h_int`. For an integral field extension `L/K` (one that satisfies
-  `h_int : algebra.is_integral K L`), the Krull topology on `L ≃ₐ[K] L`, `krull_topology K L`,
+- `krull_topology_t2 K L`. For an integral field extension `L/K`, the topology `krull_topology K L`
   is Hausdorff.
+
+- `krull_topology_totally_disconnected K L`. For an integral field extension `L/K`, the topology
+  `krull_topology K L` is totally disconnected.
 
 ## Notations
 
@@ -50,7 +53,7 @@ all intermediate fields `E` with `E/K` finite dimensional.
 -/
 
 
-open_locale Classical
+open Classical
 
 /-- Mapping intermediate fields along algebra equivalences preserves the partial order -/
 theorem IntermediateField.map_mono {K L M : Type _} [Field K] [Field L] [Field M] [Algebra K L] [Algebra K M]
@@ -104,8 +107,8 @@ theorem finite_dimensional_sup {K L : Type _} [Field K] [Field L] [Algebra K L] 
   IntermediateField.finite_dimensional_sup E1 E2
 
 /-- An element of `L ≃ₐ[K] L` is in `Gal(L/E)` if and only if it fixes every element of `E`-/
-theorem mem_fixing_subgroup_iff {K L : Type _} [Field K] [Field L] [Algebra K L] (E : IntermediateField K L)
-    (σ : L ≃ₐ[K] L) : σ ∈ E.fixingSubgroup ↔ ∀ x : L, x ∈ E → σ x = x :=
+theorem IntermediateField.mem_fixing_subgroup_iff {K L : Type _} [Field K] [Field L] [Algebra K L]
+    (E : IntermediateField K L) (σ : L ≃ₐ[K] L) : σ ∈ E.fixingSubgroup ↔ ∀ x : L, x ∈ E → σ x = x :=
   ⟨fun hσ x hx => hσ ⟨x, hx⟩, fun h ⟨x, hx⟩ => h x hx⟩
 
 /-- The map `E ↦ Gal(L/E)` is inclusion-reversing -/
@@ -155,7 +158,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
       exact hE
       
     change σ * g * σ⁻¹ ∈ E.fixing_subgroup
-    rw [mem_fixing_subgroup_iff]
+    rw [IntermediateField.mem_fixing_subgroup_iff]
     intro x hx
     change σ (g (σ⁻¹ x)) = x
     have h_in_F : σ⁻¹ x ∈ F :=
@@ -164,7 +167,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
         rw [← AlgEquiv.inv_fun_eq_symm]
         rfl⟩
     have h_g_fix : g (σ⁻¹ x) = σ⁻¹ x := by
-      rw [Subgroup.mem_carrier, mem_fixing_subgroup_iff F g] at hg
+      rw [Subgroup.mem_carrier, IntermediateField.mem_fixing_subgroup_iff F g] at hg
       exact hg (σ⁻¹ x) h_in_F
     rw [h_g_fix]
     change σ (σ⁻¹ x) = x
@@ -181,21 +184,7 @@ instance (K L : Type _) [Field K] [Field L] [Algebra K L] : TopologicalGroup (L 
 
 section KrullT2
 
-open_locale TopologicalSpace Filter
-
-/-- If a subgroup of a topological group has `1` in its interior, then it is open. -/
-theorem Subgroup.is_open_of_one_mem_interior {G : Type _} [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G]
-    {H : Subgroup G} (h_1_int : (1 : G) ∈ Interior (H : Set G)) : IsOpen (H : Set G) := by
-  have h : 𝓝 1 ≤ 𝓟 (H : Set G) := nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
-  rw [is_open_iff_nhds]
-  intro g hg
-  rw
-    [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by
-      simp ]
-  convert Filter.map_mono h
-  simp only [Homeomorph.coe_mul_left, Filter.map_principal, Set.image_mul_left, Filter.principal_eq_iff_eq]
-  ext
-  simp [H.mul_mem_cancel_left (H.inv_mem hg)]
+open TopologicalSpace Filter
 
 /-- Let `L/E/K` be a tower of fields with `E/K` finite. Then `Gal(L/E)` is an open subgroup of
   `L ≃ₐ[K] L`. -/
@@ -207,8 +196,14 @@ theorem IntermediateField.fixing_subgroup_is_open {K L : Type _} [Field K] [Fiel
   rcases h_nhd with ⟨U, hU_le, hU_open, h1U⟩
   exact Subgroup.is_open_of_one_mem_interior ⟨U, ⟨hU_open, hU_le⟩, h1U⟩
 
+/-- Given a tower of fields `L/E/K`, with `E/K` finite, the subgroup `Gal(L/E) ≤ L ≃ₐ[K] L` is
+  closed. -/
+theorem IntermediateField.fixing_subgroup_is_closed {K L : Type _} [Field K] [Field L] [Algebra K L]
+    (E : IntermediateField K L) [FiniteDimensional K E] : IsClosed (E.fixingSubgroup : Set (L ≃ₐ[K] L)) :=
+  OpenSubgroup.is_closed ⟨E.fixingSubgroup, E.fixing_subgroup_is_open⟩
+
 /-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/
-theorem krull_topology_t2 (K L : Type _) [Field K] [Field L] [Algebra K L] (h_int : Algebra.IsIntegral K L) :
+theorem krull_topology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L] (h_int : Algebra.IsIntegral K L) :
     T2Space (L ≃ₐ[K] L) :=
   { t2 := fun f g hfg => by
       let φ := f⁻¹ * g
@@ -238,7 +233,7 @@ theorem krull_topology_t2 (K L : Type _) [Field K] [Field L] [Algebra K L] (h_in
       have h_in_H : w1 * w2⁻¹ ∈ H := H.mul_mem (hWH hw1) (H.inv_mem (hWH hw2))
       rw [h] at h_in_H
       change φ ∈ E.fixing_subgroup at h_in_H
-      rw [mem_fixing_subgroup_iff] at h_in_H
+      rw [IntermediateField.mem_fixing_subgroup_iff] at h_in_H
       specialize h_in_H x
       have hxE : x ∈ E := by
         apply IntermediateField.subset_adjoin
@@ -246,4 +241,27 @@ theorem krull_topology_t2 (K L : Type _) [Field K] [Field L] [Algebra K L] (h_in
       exact hφx (h_in_H hxE) }
 
 end KrullT2
+
+section TotallyDisconnected
+
+/-- If `L/K` is an algebraic field extension, then the Krull topology on `L ≃ₐ[K] L` is
+  totally disconnected. -/
+theorem krull_topology_totally_disconnected {K L : Type _} [Field K] [Field L] [Algebra K L]
+    (h_int : Algebra.IsIntegral K L) : IsTotallyDisconnected (Set.Univ : Set (L ≃ₐ[K] L)) := by
+  apply is_totally_disconnected_of_clopen_set
+  intro σ τ h_diff
+  have hστ : σ⁻¹ * τ ≠ 1 := by
+    rwa [Ne.def, inv_mul_eq_one]
+  rcases FunLike.exists_ne hστ with ⟨x, hx : (σ⁻¹ * τ) x ≠ x⟩
+  let E := IntermediateField.adjoin K ({x} : Set L)
+  have := IntermediateField.adjoin.finite_dimensional (h_int x)
+  refine'
+    ⟨LeftCoset σ E.fixing_subgroup, ⟨E.fixing_subgroup_is_open.left_coset σ, E.fixing_subgroup_is_closed.left_coset σ⟩,
+      ⟨1, E.fixing_subgroup.one_mem', by
+        simp ⟩,
+      _⟩
+  simp only [mem_left_coset_iff, SetLike.mem_coe, IntermediateField.mem_fixing_subgroup_iff, not_forall]
+  exact ⟨x, IntermediateField.mem_adjoin_simple_self K x, hx⟩
+
+end TotallyDisconnected
 

@@ -297,7 +297,7 @@ theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x �
       let ⟨n, h⟩ := H x
       ⟨n + 1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
 
-variable [Archimedean α]
+variable [Archimedean α] {x y : α}
 
 theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
   let ⟨n, h⟩ := exists_int_lt x
@@ -326,6 +326,24 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   · rw [Rat.coe_nat_denom, Nat.cast_oneₓ]
     exact one_ne_zero
     
+
+theorem le_of_forall_rat_lt_imp_le (h : ∀ q : ℚ, (q : α) < x → (q : α) ≤ y) : x ≤ y :=
+  le_of_not_ltₓ fun hyx =>
+    let ⟨q, hy, hx⟩ := exists_rat_btwn hyx
+    hy.not_le <| h _ hx
+
+theorem le_of_forall_lt_rat_imp_le (h : ∀ q : ℚ, y < q → x ≤ q) : x ≤ y :=
+  le_of_not_ltₓ fun hyx =>
+    let ⟨q, hy, hx⟩ := exists_rat_btwn hyx
+    hx.not_le <| h _ hy
+
+theorem eq_of_forall_rat_lt_iff_lt (h : ∀ q : ℚ, (q : α) < x ↔ (q : α) < y) : x = y :=
+  (le_of_forall_rat_lt_imp_le fun q hq => ((h q).1 hq).le).antisymm <|
+    le_of_forall_rat_lt_imp_le fun q hq => ((h q).2 hq).le
+
+theorem eq_of_forall_lt_rat_iff_lt (h : ∀ q : ℚ, x < q ↔ y < q) : x = y :=
+  (le_of_forall_lt_rat_imp_le fun q hq => ((h q).2 hq).le).antisymm <|
+    le_of_forall_lt_rat_imp_le fun q hq => ((h q).1 hq).le
 
 theorem exists_nat_one_div_lt {ε : α} (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1 : α) < ε := by
   cases' exists_nat_gt (1 / ε) with n hn

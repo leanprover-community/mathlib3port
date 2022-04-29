@@ -113,15 +113,20 @@ theorem forget₂_map (X Y : ModuleCat R) (f : X ⟶ Y) :
   rfl
 
 /-- Typecheck a `linear_map` as a morphism in `Module R`. -/
-def ofHom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
+def ofHom {R : Type u} [Ringₓ R] {X Y : Type v} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
     (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
 
-instance : Zero (ModuleCat R) :=
-  ⟨of R PUnit⟩
+@[simp]
+theorem of_hom_apply {R : Type u} [Ringₓ R] {X Y : Type v} [AddCommGroupₓ X] [Module R X] [AddCommGroupₓ Y] [Module R Y]
+    (f : X →ₗ[R] Y) (x : X) : ofHom f x = f x :=
+  rfl
 
 instance : Inhabited (ModuleCat R) :=
-  ⟨0⟩
+  ⟨of R PUnit⟩
+
+instance ofUnique {X : Type v} [AddCommGroupₓ X] [Module R X] [i : Unique X] : Unique (of R X) :=
+  i
 
 @[simp]
 theorem coe_of (X : Type u) [AddCommGroupₓ X] [Module R X] : (of R X : Type u) = X :=
@@ -136,24 +141,18 @@ def ofSelfIso (M : ModuleCat R) : ModuleCat.of R M ≅ M where
   Hom := 𝟙 M
   inv := 𝟙 M
 
-instance : Subsingleton (of R PUnit) := by
-  rw [coe_of R PUnit]
-  infer_instance
+theorem is_zero_of_subsingleton (M : ModuleCat R) [Subsingleton M] : IsZero M := by
+  refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
+  · ext
+    have : x = 0 := Subsingleton.elimₓ _ _
+    rw [this, map_zero, map_zero]
+    
+  · ext
+    apply Subsingleton.elimₓ
+    
 
-instance : HasZeroObject (ModuleCat.{v} R) where
-  zero := 0
-  uniqueTo := fun X =>
-    { default := (0 : PUnit →ₗ[R] X),
-      uniq := fun _ =>
-        LinearMap.ext fun x => by
-          have h : x = 0 := by
-            decide
-          simp only [h, LinearMap.map_zero] }
-  uniqueFrom := fun X =>
-    { default := (0 : X →ₗ[R] PUnit),
-      uniq := fun _ =>
-        LinearMap.ext fun x => by
-          decide }
+instance : HasZeroObject (ModuleCat.{v} R) :=
+  ⟨⟨of R PUnit, is_zero_of_subsingleton _⟩⟩
 
 variable {R} {M N U : ModuleCat.{v} R}
 

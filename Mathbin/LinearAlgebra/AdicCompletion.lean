@@ -268,7 +268,7 @@ protected theorem subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingl
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M :=
   {  }
 
-open_locale BigOperators
+open BigOperators
 
 theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson := by
   intro x hx

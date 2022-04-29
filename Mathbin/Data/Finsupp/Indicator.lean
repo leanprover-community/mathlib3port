@@ -20,7 +20,7 @@ noncomputable section
 
 open Finset Function
 
-open_locale Classical
+open Classical
 
 variable {ι α : Type _}
 

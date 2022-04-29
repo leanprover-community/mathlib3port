@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
 import Mathbin.Topology.Instances.Irrational
+import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.Alexandroff
 
 /-!
@@ -28,7 +29,7 @@ compactification.
 
 open Set Metric Filter TopologicalSpace
 
-open_locale TopologicalSpace Alexandroff
+open TopologicalSpace Alexandroff
 
 -- mathport name: «exprℚ∞»
 local notation "ℚ∞" => Alexandroff ℚ

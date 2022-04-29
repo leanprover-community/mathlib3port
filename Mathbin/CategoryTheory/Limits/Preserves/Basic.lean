@@ -631,7 +631,7 @@ def fullyFaithfulReflectsLimits [Full F] [Faithful F] : ReflectsLimitsOfSize.{w,
   ReflectsLimitsOfShape := fun J 𝒥₁ =>
     { ReflectsLimit := fun K =>
         { reflects := fun c t =>
-            (is_limit.mk_cone_morphism fun s => (cones.functoriality K F).Preimage (t.liftConeMorphism _)) <| by
+            (is_limit.mk_cone_morphism fun s => (cones.functoriality K F).preimage (t.liftConeMorphism _)) <| by
               apply fun s m => (cones.functoriality K F).map_injective _
               rw [functor.image_preimage]
               apply t.uniq_cone_morphism } }
@@ -641,7 +641,7 @@ def fullyFaithfulReflectsColimits [Full F] [Faithful F] : ReflectsColimitsOfSize
   ReflectsColimitsOfShape := fun J 𝒥₁ =>
     { ReflectsColimit := fun K =>
         { reflects := fun c t =>
-            (is_colimit.mk_cocone_morphism fun s => (cocones.functoriality K F).Preimage (t.descCoconeMorphism _)) <| by
+            (is_colimit.mk_cocone_morphism fun s => (cocones.functoriality K F).preimage (t.descCoconeMorphism _)) <| by
               apply fun s m => (cocones.functoriality K F).map_injective _
               rw [functor.image_preimage]
               apply t.uniq_cocone_morphism } }

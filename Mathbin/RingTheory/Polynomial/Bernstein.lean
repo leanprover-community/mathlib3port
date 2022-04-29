@@ -38,7 +38,7 @@ open Nat (choose)
 
 open Polynomial (x)
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 variable (R : Type _) [CommRingₓ R]
 
@@ -265,11 +265,11 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
       simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp only [Finₓ.coe_last, Finₓ.init_def]
       dsimp
-      apply not_mem_span_of_apply_not_mem_span_image (Polynomial.derivativeLhom ℚ ^ (n - k))
+      apply not_mem_span_of_apply_not_mem_span_image (@Polynomial.derivative ℚ _ ^ (n - k))
       simp only [not_exists, not_and, Submodule.mem_map, Submodule.span_image]
       intro p m
       apply_fun Polynomial.eval (1 : ℚ)
-      simp only [Polynomial.derivative_lhom_coe, LinearMap.pow_apply]
+      simp only [LinearMap.pow_apply]
       -- The right hand side is nonzero,
       -- so it will suffice to show the left hand side is always zero.
       suffices ((Polynomial.derivative^[n - k]) p).eval 1 = 0 by

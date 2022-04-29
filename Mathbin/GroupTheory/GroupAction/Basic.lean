@@ -3,6 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
+import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.GroupTheory.QuotientGroup
@@ -11,6 +12,18 @@ import Mathbin.Data.Fintype.Card
 
 /-!
 # Basic properties of group actions
+
+This file primarily concerns itself with orbits, stabilizers, and other objects defined in terms of
+actions. Despite this file being called `basic`, low-level helper lemmas for algebraic manipulation
+of `•` belong elsewhere.
+
+## Main definitions
+
+* `mul_action.orbit`
+* `mul_action.fixed_points`
+* `mul_action.fixed_by`
+* `mul_action.stabilizer`
+
 -/
 
 
@@ -18,7 +31,7 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
-open_locale BigOperators Pointwise
+open BigOperators Pointwise
 
 open Function
 
@@ -124,6 +137,24 @@ theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submon
 theorem orbit_eq_univ [IsPretransitive α β] (x : β) : Orbit α x = Set.Univ :=
   (surjective_smul α x).range_eq
 
+variable {α} {β}
+
+@[to_additive]
+theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
+    a ∈ FixedPoints α β ↔ Fintype.card (Orbit α a) = 1 := by
+  rw [Fintype.card_eq_one_iff, mem_fixed_points]
+  constructor
+  · exact fun h =>
+      ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ =>
+        Subtype.eq <| by
+          simp [h x, hx.symm]⟩
+    
+  · intro h x
+    rcases h with ⟨⟨z, hz⟩, hz₁⟩
+    calc x • a = z := Subtype.mk.injₓ (hz₁ ⟨x • a, mem_orbit _ _⟩)_ = a :=
+        (Subtype.mk.injₓ (hz₁ ⟨a, mem_orbit_self _⟩)).symm
+    
+
 end MulAction
 
 namespace MulAction
@@ -177,22 +208,6 @@ instance (x : β) : IsPretransitive α (Orbit α x) :=
 @[to_additive]
 theorem orbit_eq_iff {a b : β} : Orbit α a = Orbit α b ↔ a ∈ Orbit α b :=
   ⟨fun h => h ▸ mem_orbit_self _, fun ⟨c, hc⟩ => hc ▸ orbit_smul _ _⟩
-
-@[to_additive]
-theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (Orbit α a)] :
-    a ∈ FixedPoints α β ↔ Fintype.card (Orbit α a) = 1 := by
-  rw [Fintype.card_eq_one_iff, mem_fixed_points]
-  constructor
-  · exact fun h =>
-      ⟨⟨a, mem_orbit_self _⟩, fun ⟨b, ⟨x, hx⟩⟩ =>
-        Subtype.eq <| by
-          simp [h x, hx.symm]⟩
-    
-  · intro h x
-    rcases h with ⟨⟨z, hz⟩, hz₁⟩
-    calc x • a = z := Subtype.mk.injₓ (hz₁ ⟨x • a, mem_orbit _ _⟩)_ = a :=
-        (Subtype.mk.injₓ (hz₁ ⟨a, mem_orbit_self _⟩)).symm
-    
 
 variable (α) {β}
 
@@ -333,45 +348,83 @@ end AddAction
 
 namespace MulAction
 
-variable [Groupₓ α] [MulAction α β]
+variable [Groupₓ α]
 
-open QuotientGroup
+section QuotientAction
 
-/-- Action on left cosets. -/
-@[to_additive "Action on left cosets."]
-def mulLeftCosets (H : Subgroup α) (x : α) (y : α ⧸ H) : α ⧸ H :=
-  Quotientₓ.liftOn' y (fun y => QuotientGroup.mk ((x : α) * y)) fun hab : _ ∈ H =>
-    QuotientGroup.eq.2
-      (by
-        rwa [mul_inv_rev, ← mul_assoc, mul_assoc a⁻¹, inv_mul_selfₓ, mul_oneₓ])
+open Subgroup MulOpposite
+
+variable (β) [Monoidₓ β] [MulAction β α] (H : Subgroup α)
+
+/-- A typeclass for when a `mul_action β α` descends to the quotient `α ⧸ H`. -/
+class QuotientAction : Prop where
+  inv_mul_mem : ∀ b : β {a a' : α}, a⁻¹ * a' ∈ H → (b • a)⁻¹ * b • a' ∈ H
+
+/-- A typeclass for when an `add_action β α` descends to the quotient `α ⧸ H`. -/
+class _root_.add_action.quotient_action {α : Type _} (β : Type _) [AddGroupₓ α] [AddMonoidₓ β] [AddAction β α]
+  (H : AddSubgroup α) : Prop where
+  inv_mul_mem : ∀ b : β {a a' : α}, -a + a' ∈ H → -(b +ᵥ a) + (b +ᵥ a') ∈ H
+
+attribute [to_additive AddAction.QuotientAction] MulAction.QuotientAction
 
 @[to_additive]
-instance quotient (H : Subgroup α) : MulAction α (α ⧸ H) where
-  smul := mulLeftCosets H
-  one_smul := fun a =>
-    Quotientₓ.induction_on' a fun a =>
-      QuotientGroup.eq.2
-        (by
-          simp [Subgroup.one_mem])
-  mul_smul := fun x y a =>
-    Quotientₓ.induction_on' a fun a =>
-      QuotientGroup.eq.2
-        (by
-          simp [mul_inv_rev, Subgroup.one_mem, mul_assoc])
+instance left_quotient_action : QuotientAction α H :=
+  ⟨fun _ _ _ _ => by
+    rwa [smul_eq_mul, smul_eq_mul, mul_inv_rev, mul_assoc, inv_mul_cancel_leftₓ]⟩
+
+@[to_additive]
+instance right_quotient_action : QuotientAction H.normalizer.opposite H :=
+  ⟨fun b c _ _ => by
+    rwa [smul_def, smul_def, smul_eq_mul_unop, smul_eq_mul_unop, mul_inv_rev, ← mul_assoc,
+      mem_normalizer_iff'.mp b.prop, mul_assoc, mul_inv_cancel_left]⟩
+
+@[to_additive]
+instance right_quotient_action' [hH : H.Normal] : QuotientAction αᵐᵒᵖ H :=
+  ⟨fun _ _ _ _ => by
+    rwa [smul_eq_mul_unop, smul_eq_mul_unop, mul_inv_rev, mul_assoc, hH.mem_comm_iff, mul_assoc, mul_inv_cancel_rightₓ]⟩
+
+@[to_additive]
+instance quotient [QuotientAction β H] : MulAction β (α ⧸ H) where
+  smul := fun b => Quotientₓ.map' ((· • ·) b) fun a a' h => QuotientAction.inv_mul_mem b h
+  one_smul := fun q => Quotientₓ.induction_on' q fun a => congr_argₓ Quotientₓ.mk' (one_smul β a)
+  mul_smul := fun b b' q => Quotientₓ.induction_on' q fun a => congr_argₓ Quotientₓ.mk' (mul_smul b b' a)
+
+variable {β}
 
 @[simp, to_additive]
-theorem quotient.smul_mk (H : Subgroup α) (a x : α) : (a • QuotientGroup.mk x : α ⧸ H) = QuotientGroup.mk (a * x) :=
+theorem quotient.smul_mk [QuotientAction β H] (b : β) (a : α) :
+    (b • QuotientGroup.mk a : α ⧸ H) = QuotientGroup.mk (b • a) :=
   rfl
 
 @[simp, to_additive]
-theorem quotient.smul_coe (H : Subgroup α) (a x : α) : (a • x : α ⧸ H) = ↑(a * x) :=
+theorem quotient.smul_coe [QuotientAction β H] (b : β) (a : α) : (b • a : α ⧸ H) = ↑(b • a) :=
+  rfl
+
+@[simp, to_additive]
+theorem quotient.mk_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : QuotientGroup.mk (b • q.out') = b • q := by
+  rw [← quotient.smul_mk, QuotientGroup.out_eq']
+
+@[simp, to_additive]
+theorem quotient.coe_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : ↑(b • q.out') = b • q :=
+  quotient.mk_smul_out' H b q
+
+end QuotientAction
+
+open QuotientGroup
+
+/-- The canonical map to the left cosets. -/
+def _root_.mul_action_hom.to_quotient (H : Subgroup α) : α →[α] α ⧸ H :=
+  ⟨coe, quotient.smul_coe H⟩
+
+@[simp]
+theorem _root_.mul_action_hom.to_quotient_apply (H : Subgroup α) (g : α) : MulActionHom.toQuotient H g = g :=
   rfl
 
 @[to_additive]
 instance mulLeftCosetsCompSubtypeVal (H I : Subgroup α) : MulAction I (α ⧸ H) :=
   MulAction.compHom (α ⧸ H) (Subgroup.subtype I)
 
-variable (α) {β} (x : β)
+variable (α) {β} [MulAction α β] (x : β)
 
 /-- The canonical map from the quotient of the stabilizer to the set. -/
 @[to_additive "The canonical map from the quotient of the stabilizer to the set. "]
@@ -522,60 +575,18 @@ instance is_pretransitive_quotient G [Groupₓ G] (H : Subgroup G) : IsPretransi
   exists_smul_eq := by
     rintro ⟨x⟩ ⟨y⟩
     refine' ⟨y * x⁻¹, quotient_group.eq.mpr _⟩
-    simp only [H.one_mem, mul_left_invₓ, inv_mul_cancel_right]
+    simp only [smul_eq_mul, H.one_mem, mul_left_invₓ, inv_mul_cancel_right]
 
 end MulAction
-
-section
-
-variable [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β]
-
-theorem List.smul_sum {r : α} {l : List β} : r • l.Sum = (l.map ((· • ·) r)).Sum :=
-  (DistribMulAction.toAddMonoidHom β r).map_list_sum l
 
 /-- `smul` by a `k : M` over a ring is injective, if `k` is not a zero divisor.
 The general theory of such `k` is elaborated by `is_smul_regular`.
 The typeclass that restricts all terms of `M` to have this property is `no_zero_smul_divisors`. -/
-theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoidₓ M] [Ringₓ R] [DistribMulAction M R] (k : M)
-    (h : ∀ x : R, k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) : a = b := by
+theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoidₓ M] [NonUnitalNonAssocRing R] [DistribMulAction M R]
+    (k : M) (h : ∀ x : R, k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) : a = b := by
   rw [← sub_eq_zero]
   refine' h _ _
   rw [smul_sub, h', sub_self]
-
-end
-
-section
-
-variable [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β]
-
-theorem List.smul_prod {r : α} {l : List β} : r • l.Prod = (l.map ((· • ·) r)).Prod :=
-  (MulDistribMulAction.toMonoidHom β r).map_list_prod l
-
-end
-
-section
-
-variable [Monoidₓ α] [AddCommMonoidₓ β] [DistribMulAction α β]
-
-theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.Sum = (s.map ((· • ·) r)).Sum :=
-  (DistribMulAction.toAddMonoidHom β r).map_multiset_sum s
-
-theorem Finset.smul_sum {r : α} {f : γ → β} {s : Finset γ} : (r • ∑ x in s, f x) = ∑ x in s, r • f x :=
-  (DistribMulAction.toAddMonoidHom β r).map_sum f s
-
-end
-
-section
-
-variable [Monoidₓ α] [CommMonoidₓ β] [MulDistribMulAction α β]
-
-theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.Prod = (s.map ((· • ·) r)).Prod :=
-  (MulDistribMulAction.toMonoidHom β r).map_multiset_prod s
-
-theorem Finset.smul_prod {r : α} {f : γ → β} {s : Finset γ} : (r • ∏ x in s, f x) = ∏ x in s, r • f x :=
-  (MulDistribMulAction.toMonoidHom β r).map_prod f s
-
-end
 
 namespace Subgroup
 
@@ -588,7 +599,7 @@ theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ke
         Equivₓ.Perm.ext fun q =>
           QuotientGroup.induction_on q fun g' => (MulAction.quotient.smul_mk H g g').trans (quotient_group.eq.mpr _))
       (subgroup.normal_le_normal_core.mpr fun g hg => _)
-  · rw [mul_inv_rev, ← inv_invₓ g', inv_invₓ]
+  · rw [smul_eq_mul, mul_inv_rev, ← inv_invₓ g', inv_invₓ]
     exact H.normal_core.inv_mem hg g'⁻¹
     
   · rw [← H.inv_mem_iff, ← mul_oneₓ g⁻¹, ← QuotientGroup.eq, ← mul_oneₓ g]

@@ -14,7 +14,7 @@ then `C ⥤ D` is also preadditive.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace CategoryTheory
 

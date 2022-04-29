@@ -6,6 +6,8 @@ Authors: Zhouhang Zhou
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Order.Filter.AtTopBot
 import Mathbin.Tactic.Linarith.Default
+import Mathbin.Tactic.FieldSimp
+import Mathbin.Tactic.LinearCombination
 
 /-!
 # Quadratic discriminants and roots of a quadratic
@@ -46,21 +48,15 @@ variable [CommRingₓ R] [IsDomain R] {a b c : R}
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
     a * x * x + b * x + c = 0 ↔ discrim a b c = (2 * a * x + b) ^ 2 := by
+  dsimp [discrim]  at *
   constructor
   · intro h
-    calc discrim a b c = 4 * a * (a * x * x + b * x + c) + b * b - 4 * a * c := by
-        rw [h, discrim]
-        ring _ = (2 * a * x + b) ^ 2 := by
-        ring
+    linear_combination h * -4 * a
     
   · intro h
     have ha : 2 * 2 * a ≠ 0 := mul_ne_zero (mul_ne_zero h2 h2) ha
     apply mul_left_cancel₀ ha
-    calc 2 * 2 * a * (a * x * x + b * x + c) = (2 * a * x + b) ^ 2 - (b ^ 2 - 4 * a * c) := by
-        ring _ = 0 := by
-        rw [← h, discrim]
-        ring _ = 2 * 2 * a * 0 := by
-        ring
+    linear_combination h * -1
     
 
 /-- A quadratic has no root if its discriminant has no square root. -/
@@ -82,31 +78,11 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   have h2 : (2 : K) ≠ 0 := nonzero_of_invertible 2
   rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, h, sq, mul_self_eq_mul_self_iff]
   have ne : 2 * a ≠ 0 := mul_ne_zero h2 ha
-  have : x = 2 * a * x / (2 * a) := (mul_div_cancel_left x Ne).symm
-  have h₁ : 2 * a * ((-b + s) / (2 * a)) = -b + s := mul_div_cancel' _ Ne
-  have h₂ : 2 * a * ((-b - s) / (2 * a)) = -b - s := mul_div_cancel' _ Ne
-  constructor
-  · intro h'
-    rcases h' with ⟨⟩
-    · left
-      rw [h']
-      simpa [add_commₓ]
-      
-    · right
-      rw [h']
-      simpa [add_commₓ, sub_eq_add_neg]
-      
+  field_simp
+  apply or_congr
+  · constructor <;> intro h' <;> linear_combination h' * -1
     
-  · intro h'
-    rcases h' with ⟨⟩
-    · left
-      rw [h', h₁]
-      ring
-      
-    · right
-      rw [h', h₂]
-      ring
-      
+  · constructor <;> intro h' <;> linear_combination h'
     
 
 /-- A quadratic has roots if its discriminant has square roots -/

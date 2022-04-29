@@ -32,7 +32,7 @@ endowed with an order.
 
 open Set Function Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-!
 ### Definition and notation
@@ -321,7 +321,7 @@ namespace Flow
 variable {τ : Type _} [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
   (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
-open_locale OmegaLimit
+open OmegaLimit
 
 theorem is_invariant_omega_limit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) := by
   refine' fun t => maps_to.mono_right _ (omega_limit_subset_of_tendsto ϕ s (hf t))
@@ -344,7 +344,7 @@ namespace Flow
 variable {τ : Type _} [TopologicalSpace τ] [AddCommGroupₓ τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
   (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
-open_locale OmegaLimit
+open OmegaLimit
 
 /-- the ω-limit of a forward image of `s` is the same as the ω-limit of `s`. -/
 @[simp]

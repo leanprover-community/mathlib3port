@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Prime
 import Mathbin.Data.Finsupp.Multiset
 import Mathbin.Algebra.BigOperators.Finsupp
 import Mathbin.Tactic.Linarith.Default
+import Mathbin.Tactic.IntervalCases
 
 /-!
 # Prime factorizations
@@ -38,7 +39,7 @@ with a normalization function, and then deduplicated.  The basics of this have b
 
 open Nat Finset List Finsupp
 
-open_locale BigOperators
+open BigOperators
 
 namespace Nat
 
@@ -84,22 +85,22 @@ theorem factorization_one : factorization 1 = 0 := by
 
 /-- The support of `n.factorization` is exactly `n.factors.to_finset` -/
 @[simp]
-theorem support_factorization {n : ℕ} : n.factorization.Support = n.factors.toFinset := by
+theorem support_factorization {n : ℕ} : n.factorization.support = n.factors.toFinset := by
   simpa [factorization, Multiset.to_finsupp_support]
 
-theorem factor_iff_mem_factorization {n p : ℕ} : p ∈ n.factorization.Support ↔ p ∈ n.factors := by
+theorem factor_iff_mem_factorization {n p : ℕ} : p ∈ n.factorization.support ↔ p ∈ n.factors := by
   simp only [support_factorization, List.mem_to_finset]
 
-theorem prime_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.Support) : p.Prime :=
+theorem prime_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support) : p.Prime :=
   prime_of_mem_factors (factor_iff_mem_factorization.mp hp)
 
-theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.Support) : 0 < p :=
+theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support) : 0 < p :=
   Prime.pos (prime_of_mem_factorization hp)
 
-theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support) : p ≤ n :=
+theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.support) : p ≤ n :=
   le_of_mem_factors (factor_iff_mem_factorization.mp h)
 
-theorem factorization_eq_zero_of_non_prime (n p : ℕ) (hp : ¬p.Prime) : n.factorization p = 0 :=
+theorem factorization_eq_zero_of_non_prime (n : ℕ) {p : ℕ} (hp : ¬p.Prime) : n.factorization p = 0 :=
   not_mem_support_iff.1 (mt prime_of_mem_factorization hp)
 
 theorem Prime.factorization_pos_of_dvd {n p : ℕ} (hp : p.Prime) (hn : n ≠ 0) (h : p ∣ n) : 0 < n.factorization p := by
@@ -117,7 +118,7 @@ theorem factorization_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
   simp only [add_apply, ← factors_count_eq, perm_iff_count.mp (perm_factors_mul ha hb) p, count_append]
 
 theorem factorization_mul_support {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
-    (a * b).factorization.Support = a.factorization.Support ∪ b.factorization.Support := by
+    (a * b).factorization.support = a.factorization.support ∪ b.factorization.support := by
   ext q
   simp only [Finset.mem_union, factor_iff_mem_factorization]
   exact mem_factors_mul ha hb
@@ -142,6 +143,12 @@ theorem Prime.factorization {p : ℕ} (hp : Prime p) : p.factorization = single 
 /-- For prime `p` the only prime factor of `p^k` is `p` with multiplicity `k` -/
 theorem Prime.factorization_pow {p k : ℕ} (hp : Prime p) : factorization (p ^ k) = single p k := by
   simp [hp]
+
+/-- If the factorization of `n` contains just one number `p` then `n` is a power of `p` -/
+theorem eq_pow_of_factorization_eq_single {n p k : ℕ} (hn : n ≠ 0) (h : n.factorization = Finsupp.single p k) :
+    n = p ^ k := by
+  rw [← Nat.factorization_prod_pow_eq_self hn, h]
+  simp
 
 /-- If a product over `n.factorization` doesn't use the multiplicities of the prime factors
 then it's equal to the corresponding product over `n.factors.to_finset` -/
@@ -170,21 +177,21 @@ theorem factorization_prod {α : Type _} {S : Finset α} {g : α → ℕ} (hS : 
 
 /-- Any finsupp `f : ℕ →₀ ℕ` whose support is in the primes is equal to the factorization of
 the product `∏ (a : ℕ) in f.support, a ^ f a`. -/
-theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p ∈ f.Support → Prime p) :
+theorem prod_pow_factorization_eq_self {f : ℕ →₀ ℕ} (hf : ∀ p : ℕ, p ∈ f.support → Prime p) :
     (f.Prod pow).factorization = f := by
   have h : ∀ x : ℕ, x ∈ f.support → x ^ f x ≠ 0 := fun p hp => pow_ne_zero _ (Prime.ne_zero (hf p hp))
   simp only [Finsupp.prod, factorization_prod h]
   nth_rw_rhs 0[(sum_single f).symm]
   exact sum_congr rfl fun p hp => prime.factorization_pow (hf p hp)
 
-theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf : ∀, ∀ p ∈ f.Support, ∀, Prime p) :
+theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf : ∀, ∀ p ∈ f.support, ∀, Prime p) :
     f = n.factorization ↔ f.Prod pow = n :=
   ⟨fun h => by
     rw [h, factorization_prod_pow_eq_self hn], fun h => by
     rw [← h, prod_pow_factorization_eq_self hf]⟩
 
 /-- The equiv between `ℕ+` and `ℕ →₀ ℕ` with support in the primes. -/
-noncomputable def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀, ∀ p ∈ f.Support, ∀, Prime p } where
+noncomputable def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀, ∀ p ∈ f.support, ∀, Prime p } where
   toFun := fun ⟨n, hn⟩ => ⟨n.factorization, fun _ => prime_of_mem_factorization⟩
   invFun := fun ⟨f, hf⟩ => ⟨f.Prod pow, prod_pow_pos_of_zero_not_mem_support fun H => not_prime_zero (hf 0 H)⟩
   left_inv := fun ⟨x, hx⟩ => Subtype.ext <| factorization_prod_pow_eq_self hx.Ne.symm
@@ -194,14 +201,14 @@ theorem factorization_equiv_apply (n : ℕ+) : (factorizationEquiv n).1 = n.1.fa
   cases n
   rfl
 
-theorem factorization_equiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀, ∀ p ∈ f.Support, ∀, Prime p) :
+theorem factorization_equiv_inv_apply {f : ℕ →₀ ℕ} (hf : ∀, ∀ p ∈ f.support, ∀, Prime p) :
     (factorizationEquiv.symm ⟨f, hf⟩).1 = f.Prod pow :=
   rfl
 
 /-! ### Factorization and divisibility -/
 
 
-theorem dvd_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support) : p ∣ n := by
+theorem dvd_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.support) : p ∣ n := by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
     
@@ -210,7 +217,7 @@ theorem dvd_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.Support)
 theorem pow_factorization_dvd (n p : ℕ) : p ^ n.factorization p ∣ n := by
   by_cases' hp : p.prime
   swap
-  · simp [factorization_eq_zero_of_non_prime n p hp]
+  · simp [factorization_eq_zero_of_non_prime n hp]
     
   rw [← factors_count_eq]
   apply dvd_of_factors_subperm (pow_ne_zero _ hp.ne_zero)
@@ -276,7 +283,7 @@ theorem factorization_div {d n : ℕ} (h : d ∣ n) : (n / d).factorization = n.
   rw [tsub_add_cancel_of_le <| (Nat.factorization_le_iff_dvd hd hn).mpr h, ←
     Nat.factorization_mul (Nat.div_pos (Nat.le_of_dvdₓ hn.bot_lt h) hd.bot_lt).ne' hd, Nat.div_mul_cancelₓ h]
 
-theorem dvd_iff_div_factorization_eq_tsub (d n : ℕ) (hd : d ≠ 0) (hdn : d ≤ n) :
+theorem dvd_iff_div_factorization_eq_tsub {d n : ℕ} (hd : d ≠ 0) (hdn : d ≤ n) :
     d ∣ n ↔ (n / d).factorization = n.factorization - d.factorization := by
   refine' ⟨factorization_div, _⟩
   rcases eq_or_lt_of_le hdn with (rfl | hd_lt_n)
@@ -289,14 +296,21 @@ theorem dvd_iff_div_factorization_eq_tsub (d n : ℕ) (hd : d ≠ 0) (hdn : d �
   cases' exists_factorization_lt_of_lt (mul_ne_zero h1 hd) (not_le.mp h2) with p hp
   rwa [factorization_mul h1 hd, add_apply, ← lt_tsub_iff_right, h, tsub_apply, lt_self_iff_false] at hp
 
-theorem dvd_iff_prime_pow_dvd_dvd {n d : ℕ} (hd : d ≠ 0) (hn : n ≠ 0) :
-    d ∣ n ↔ ∀ p k : ℕ, Prime p → p ^ k ∣ d → p ^ k ∣ n := by
+theorem dvd_iff_prime_pow_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ p k : ℕ, Prime p → p ^ k ∣ d → p ^ k ∣ n := by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  rcases eq_or_ne d 0 with (rfl | hd)
+  · simp only [zero_dvd_iff, hn, false_iffₓ, not_forall]
+    refine' ⟨2, n, prime_two, ⟨dvd_zero _, _⟩⟩
+    apply mt (le_of_dvd hn.bot_lt) (not_le.mpr (lt_two_pow n))
+    
   refine' ⟨fun h p k _ hpkd => dvd_trans hpkd h, _⟩
   rw [← factorization_le_iff_dvd hd hn, Finsupp.le_def]
   intro h p
   by_cases' pp : Prime p
   swap
-  · simp [factorization_eq_zero_of_non_prime d p pp]
+  · simp [factorization_eq_zero_of_non_prime d pp]
     
   rw [← pp.pow_dvd_iff_le_factorization hn]
   exact h p _ pp (pow_factorization_dvd _ _)
@@ -368,12 +382,12 @@ theorem factorization_eq_of_coprime_right {p a b : ℕ} (hab : Coprime a b) (hpb
 
 /-- The prime factorizations of coprime `a` and `b` are disjoint -/
 theorem factorization_disjoint_of_coprime {a b : ℕ} (hab : Coprime a b) :
-    Disjoint a.factorization.Support b.factorization.Support := by
+    Disjoint a.factorization.support b.factorization.support := by
   simpa only [support_factorization] using disjoint_to_finset_iff_disjoint.mpr (coprime_factors_disjoint hab)
 
 /-- For coprime `a` and `b` the prime factorization `a * b` is the union of those of `a` and `b` -/
 theorem factorization_mul_support_of_coprime {a b : ℕ} (hab : Coprime a b) :
-    (a * b).factorization.Support = a.factorization.Support ∪ b.factorization.Support := by
+    (a * b).factorization.support = a.factorization.support ∪ b.factorization.support := by
   rw [factorization_mul_of_coprime hab]
   exact support_add_eq (factorization_disjoint_of_coprime hab)
 
@@ -383,8 +397,8 @@ theorem factorization_mul_support_of_coprime {a b : ℕ} (hab : Coprime a b) :
 /-- Given `P 0, P 1` and a way to extend `P a` to `P (p ^ n * a)` for prime `p` not dividing `a`,
 we can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
-def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (h : ∀ a p n : ℕ, p.Prime → ¬p ∣ a → P a → P (p ^ n * a)) :
-    ∀ a : ℕ, P a := fun a =>
+def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1)
+    (h : ∀ a p n : ℕ, p.Prime → ¬p ∣ a → 0 < n → P a → P (p ^ n * a)) : ∀ a : ℕ, P a := fun a =>
   (Nat.strongRecOn a) fun n =>
     match n with
     | 0 => fun _ => h0
@@ -403,11 +417,13 @@ def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (h : ∀ a p n : �
       have htp : 0 < t := by
         rw [ht]
         exact hp.factorization_pos_of_dvd (Nat.succ_ne_zero _) (min_fac_dvd _)
-      convert h ((k + 2) / p ^ t) p t hp _ _
+      convert h ((k + 2) / p ^ t) p t hp _ _ _
       · rw [Nat.mul_div_cancel'ₓ hpt]
         
       · rw [Nat.dvd_div_iff hpt, ← pow_succ'ₓ, ht]
         exact pow_succ_factorization_not_dvd (k + 1).succ_ne_zero hp
+        
+      · exact htp
         
       · apply hk _ (Nat.div_lt_of_lt_mul _)
         simp [lt_mul_iff_one_lt_left Nat.succ_pos', one_lt_pow_iff htp.ne, hp.one_lt]
@@ -417,19 +433,29 @@ def recOnPrimePow {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (h : ∀ a p n : �
 `P b` to `P (a * b)` when `a, b` are positive coprime, we can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
 def recOnPosPrimePosCoprime {P : ℕ → Sort _} (hp : ∀ p n : ℕ, Prime p → 0 < n → P (p ^ n)) (h0 : P 0) (h1 : P 1)
-    (h : ∀ a b, 0 < a → 0 < b → Coprime a b → P a → P b → P (a * b)) : ∀ a, P a :=
-  (recOnPrimePow h0 h1) fun a p n hp' hpa ha =>
-    h (p ^ n) a (pow_pos hp'.Pos _)
-      (Nat.pos_of_ne_zeroₓ fun t => by
-        simpa [t] using hpa)
-      (Prime.coprime_pow_of_not_dvd hp' hpa).symm
-      (if h : n = 0 then Eq.ndrec h1 h.symm else hp p n hp' <| Nat.pos_of_ne_zeroₓ h) ha
+    (h : ∀ a b, 1 < a → 1 < b → Coprime a b → P a → P b → P (a * b)) : ∀ a, P a :=
+  recOnPrimePow h0 h1 <| by
+    intro a p n hp' hpa hn hPa
+    by_cases' ha1 : a = 1
+    · rw [ha1, mul_oneₓ]
+      exact hp p n hp' hn
+      
+    refine'
+      h (p ^ n) a (hp'.one_lt.trans_le (le_self_pow (prime.one_lt hp').le (succ_le_iff.mpr hn))) _ _ (hp _ _ hp' hn) hPa
+    · refine' lt_of_not_geₓ fun h : a ≤ 1 => _
+      interval_cases a
+      · simpa only [dvd_zero, not_true] using hpa
+        
+      · contradiction
+        
+      
+    simpa [hn, prime.coprime_iff_not_dvd hp']
 
 /-- Given `P 0`, `P (p ^ n)` for all prime powers, and a way to extend `P a` and `P b` to
 `P (a * b)` when `a, b` are positive coprime, we can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
 def recOnPrimeCoprime {P : ℕ → Sort _} (h0 : P 0) (hp : ∀ p n : ℕ, Prime p → P (p ^ n))
-    (h : ∀ a b, 0 < a → 0 < b → Coprime a b → P a → P b → P (a * b)) : ∀ a, P a :=
+    (h : ∀ a b, 1 < a → 1 < b → Coprime a b → P a → P b → P (a * b)) : ∀ a, P a :=
   recOnPosPrimePosCoprime (fun p n h _ => hp p n h) h0 (hp 2 0 prime_two) h
 
 /-- Given `P 0`, `P 1`, `P p` for all primes, and a way to extend `P a` and `P b` to

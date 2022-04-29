@@ -31,7 +31,7 @@ noncomputable section
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 /-- A probability mass function, or discrete probability measures is a function `α → ℝ≥0` such that
   the values have (infinite) sum `1`. -/
@@ -116,7 +116,7 @@ theorem to_outer_measure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.Support
           Set.indicator_apply_eq_self.1 (le_antisymmₓ (Set.indicator_apply_le fun _ => le_rfl) <| le_of_not_ltₓ <| this)
             has
     
-  · suffices : ∀ x, (x ∉ s) → p x = 0
+  · suffices : ∀ x, x ∉ s → p x = 0
     exact trans (tsum_congr fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 <| symm ∘ this a)) p.tsum_coe
     exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
     

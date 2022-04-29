@@ -15,7 +15,7 @@ We define chain homotopies, and prove that homotopic chain maps induce the same 
 
 universe v u
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -60,6 +60,7 @@ def fromNext [HasZeroObject V] (i : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.xNe
       exact (zero_addₓ _).symm
       exact preadditive.comp_add _ _ _ _ _ _)
 
+@[simp]
 theorem d_next_eq_d_from_from_next [HasZeroObject V] (f : ∀ i j, C.x i ⟶ D.x j) (i : ι) :
     dNext i f = C.dFrom i ≫ fromNext i f := by
   dsimp [dNext, fromNext]
@@ -124,6 +125,7 @@ def toPrev [HasZeroObject V] (j : ι) : (∀ i j, C.x i ⟶ D.x j) →+ (C.x j �
       exact (zero_addₓ _).symm
       exact preadditive.add_comp _ _ _ _ _ _)
 
+@[simp]
 theorem prev_d_eq_to_prev_d_to [HasZeroObject V] (f : ∀ i j, C.x i ⟶ D.x j) (j : ι) :
     prevD j f = toPrev j f ≫ D.dTo j := by
   dsimp [prevD, toPrev]
@@ -149,7 +151,7 @@ theorem prev_d_comp_left (f : C ⟶ D) (g : ∀ i j, D.x i ⟶ E.x j) (j : ι) :
     
 
 @[simp]
-theorem to_prev'_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (j : ι) :
+theorem prev_d_comp_right (f : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) (j : ι) :
     (prevD j fun i j => f i j ≫ g.f j) = prevD j f ≫ g.f j := by
   dsimp [prevD]
   rcases c.prev j with (_ | ⟨j', w⟩)
@@ -277,7 +279,7 @@ def compRight {e f : C ⟶ D} (h : Homotopy e f) (g : D ⟶ E) : Homotopy (e ≫
   zero' := fun i j w => by
     rw [h.zero i j w, zero_comp]
   comm := fun i => by
-    simp only [h.comm i, d_next_comp_right, preadditive.add_comp, to_prev'_comp_right, comp_f]
+    simp only [h.comm i, d_next_comp_right, preadditive.add_comp, prev_d_comp_right, comp_f]
 
 /-- homotopy is closed under composition (on the left) -/
 @[simps]
@@ -307,14 +309,14 @@ def compLeftId {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy 
 /-!
 Null homotopic maps can be constructed using the formula `hd+dh`. We show that
 these morphisms are homotopic to `0` and provide some convenient simplification
-lemmas that give a degreewise description of `hd+dh`, depending on whether we have 
+lemmas that give a degreewise description of `hd+dh`, depending on whether we have
 two differentials going to and from a certain degree, only one, or none.
 -/
 
 
 /-- The null homotopic map associated to a family `hom` of morphisms `C_i ⟶ D_j`.
 This is the same datum as for the field `hom` in the structure `homotopy`. For
-this definition, we do not need the field `zero` of that structure 
+this definition, we do not need the field `zero` of that structure
 as this definition uses only the maps `C_i ⟶ C_j` when `c.rel j i`. -/
 def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
   f := fun i => dNext i hom + prevD i hom
@@ -342,6 +344,74 @@ def nullHomotopicMap (hom : ∀ i j, C.x i ⟶ D.x j) : C ⟶ D where
 relevant maps `C_i ⟶ D_j` such that `c.rel j i`. -/
 def nullHomotopicMap' (h : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) : C ⟶ D :=
   nullHomotopicMap fun i j => dite (c.Rel j i) (h i j) fun _ => 0
+
+/-- Compatibility of `null_homotopic_map` with the postcomposition by a morphism
+of complexes. -/
+theorem null_homotopic_map_comp (hom : ∀ i j, C.x i ⟶ D.x j) (g : D ⟶ E) :
+    nullHomotopicMap hom ≫ g = nullHomotopicMap fun i j => hom i j ≫ g.f j := by
+  ext n
+  dsimp [null_homotopic_map]
+  simp only [preadditive.add_comp, d_next_comp_right, prev_d_comp_right]
+
+/-- Compatibility of `null_homotopic_map'` with the postcomposition by a morphism
+of complexes. -/
+theorem null_homotopic_map'_comp (hom : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) (g : D ⟶ E) :
+    nullHomotopicMap' hom ≫ g = nullHomotopicMap' fun i j hij => hom i j hij ≫ g.f j := by
+  ext n
+  erw [null_homotopic_map_comp]
+  congr
+  ext i j
+  split_ifs
+  · rfl
+    
+  · rw [zero_comp]
+    
+
+/-- Compatibility of `null_homotopic_map` with the precomposition by a morphism
+of complexes. -/
+theorem comp_null_homotopic_map (f : C ⟶ D) (hom : ∀ i j, D.x i ⟶ E.x j) :
+    f ≫ nullHomotopicMap hom = nullHomotopicMap fun i j => f.f i ≫ hom i j := by
+  ext n
+  dsimp [null_homotopic_map]
+  simp only [preadditive.comp_add, d_next_comp_left, prev_d_comp_left]
+
+/-- Compatibility of `null_homotopic_map'` with the precomposition by a morphism
+of complexes. -/
+theorem comp_null_homotopic_map' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.x i ⟶ E.x j)) :
+    f ≫ nullHomotopicMap' hom = nullHomotopicMap' fun i j hij => f.f i ≫ hom i j hij := by
+  ext n
+  erw [comp_null_homotopic_map]
+  congr
+  ext i j
+  split_ifs
+  · rfl
+    
+  · rw [comp_zero]
+    
+
+/-- Compatibility of `null_homotopic_map` with the application of additive functors -/
+theorem map_null_homotopic_map {W : Type _} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
+    (hom : ∀ i j, C.x i ⟶ D.x j) :
+    (G.mapHomologicalComplex c).map (nullHomotopicMap hom) = nullHomotopicMap fun i j => G.map (hom i j) := by
+  ext i
+  dsimp [null_homotopic_map, dNext, prevD]
+  rcases c.next i with (_ | ⟨inext, wn⟩) <;>
+    rcases c.prev i with (_ | ⟨iprev, wp⟩) <;>
+      dsimp [dNext, prevD] <;> simp only [G.map_comp, functor.map_zero, functor.map_add]
+
+/-- Compatibility of `null_homotopic_map'` with the application of additive functors -/
+theorem map_null_homotopic_map' {W : Type _} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
+    (hom : ∀ i j, c.Rel j i → (C.x i ⟶ D.x j)) :
+    (G.mapHomologicalComplex c).map (nullHomotopicMap' hom) = nullHomotopicMap' fun i j hij => G.map (hom i j hij) := by
+  ext n
+  erw [map_null_homotopic_map]
+  congr
+  ext i j
+  split_ifs
+  · rfl
+    
+  · rw [G.map_zero]
+    
 
 /-- Tautological construction of the `homotopy` to zero for maps constructed by
 `null_homotopic_map`, at least when we have the `zero'` condition. -/
@@ -454,7 +524,7 @@ theorem null_homotopic_map'_f_eq_zero {k₀ : ι} (hk₀ : ∀ l : ι, ¬c.Rel k
   exact null_homotopic_map_f_eq_zero hk₀ hk₀' fun i j => dite (c.rel j i) (h i j) fun _ => 0
 
 /-!
-`homotopy.mk_inductive` allows us to build a homotopy inductively,
+`homotopy.mk_inductive` allows us to build a homotopy of chain complexes inductively,
 so that as we construct each component, we have available the previous two components,
 and the fact that they satisfy the homotopy condition.
 
@@ -587,6 +657,139 @@ end
 
 end MkInductive
 
+/-!
+`homotopy.mk_coinductive` allows us to build a homotopy of cochain complexes inductively,
+so that as we construct each component, we have available the previous two components,
+and the fact that they satisfy the homotopy condition.
+-/
+
+
+section MkCoinductive
+
+variable {P Q : CochainComplex V ℕ}
+
+@[simp]
+theorem d_next_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (j : ℕ) : dNext j f = P.d _ _ ≫ f (j + 1) j := by
+  dsimp [dNext]
+  simp only [CochainComplex.next]
+  rfl
+
+@[simp]
+theorem prev_d_succ_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) (i : ℕ) :
+    prevD (i + 1) f = f (i + 1) _ ≫ Q.d i (i + 1) := by
+  dsimp [prevD]
+  simp [CochainComplex.prev_nat_succ]
+  rfl
+
+@[simp]
+theorem prev_d_zero_cochain_complex (f : ∀ i j, P.x i ⟶ Q.x j) : prevD 0 f = 0 := by
+  dsimp [prevD]
+  simp only [CochainComplex.prev_nat_zero]
+  rfl
+
+variable (e : P ⟶ Q) (zero : P.x 1 ⟶ Q.x 0) (comm_zero : e.f 0 = P.d 0 1 ≫ zero) (one : P.x 2 ⟶ Q.x 1)
+  (comm_one : e.f 1 = zero ≫ Q.d 0 1 + P.d 1 2 ≫ one)
+  (succ :
+    ∀ n : ℕ p :
+      Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+        e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f',
+      Σ'f'' : P.x (n + 3) ⟶ Q.x (n + 2), e.f (n + 2) = p.2.1 ≫ Q.d (n + 1) (n + 2) + P.d (n + 2) (n + 3) ≫ f'')
+
+include comm_one comm_zero succ
+
+/-- An auxiliary construction for `mk_coinductive`.
+
+Here we build by induction a family of diagrams,
+but don't require at the type level that these successive diagrams actually agree.
+They do in fact agree, and we then capture that at the type level (i.e. by constructing a homotopy)
+in `mk_coinductive`.
+
+At this stage, we don't check the homotopy condition in degree 0,
+because it "falls off the end", and is easier to treat using `X_next` and `X_prev`,
+which we do in `mk_inductive_aux₂`.
+-/
+@[simp, nolint unused_arguments]
+def mkCoinductiveAux₁ₓ :
+    ∀ n,
+      Σ'(f : P.x (n + 1) ⟶ Q.x n)(f' : P.x (n + 2) ⟶ Q.x (n + 1)),
+        e.f (n + 1) = f ≫ Q.d n (n + 1) + P.d (n + 1) (n + 2) ≫ f'
+  | 0 => ⟨zero, one, comm_one⟩
+  | 1 => ⟨one, (succ 0 ⟨zero, one, comm_one⟩).1, (succ 0 ⟨zero, one, comm_one⟩).2⟩
+  | n + 2 =>
+    ⟨(mk_coinductive_aux₁ (n + 1)).2.1, (succ (n + 1) (mk_coinductive_aux₁ (n + 1))).1,
+      (succ (n + 1) (mk_coinductive_aux₁ (n + 1))).2⟩
+
+section
+
+variable [HasZeroObject V]
+
+/-- An auxiliary construction for `mk_inductive`.
+-/
+@[simp]
+def mkCoinductiveAux₂ₓ : ∀ n, Σ'(f : P.x n ⟶ Q.xPrev n)(f' : P.xNext n ⟶ Q.x n), e.f n = f ≫ Q.dTo n + P.dFrom n ≫ f'
+  | 0 =>
+    ⟨0, (P.xNextIso rfl).Hom ≫ zero, by
+      simpa using comm_zero⟩
+  | n + 1 =>
+    let I := mkCoinductiveAux₁ₓ e zero comm_zero one comm_one succ n
+    ⟨I.1 ≫ (Q.xPrevIso rfl).inv, (P.xNextIso rfl).Hom ≫ I.2.1, by
+      simpa using I.2.2⟩
+
+theorem mk_coinductive_aux₃ (i : ℕ) :
+    (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ i).2.1 ≫ (Q.xPrevIso rfl).inv =
+      (P.xNextIso rfl).Hom ≫ (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ (i + 1)).1 :=
+  by
+  rcases i with (_ | _ | i) <;>
+    · dsimp
+      simp
+      
+
+/-- A constructor for a `homotopy e 0`, for `e` a chain map between `ℕ`-indexed cochain complexes,
+working by induction.
+
+You need to provide the components of the homotopy in degrees 0 and 1,
+show that these satisfy the homotopy condition,
+and then give a construction of each component,
+and the fact that it satisfies the homotopy condition,
+using as an inductive hypothesis the data and homotopy condition for the previous two components.
+-/
+def mkCoinductive : Homotopy e 0 where
+  Hom := fun i j =>
+    if h : j + 1 = i then (P.xNextIso h).inv ≫ (mkCoinductiveAux₂ₓ e zero comm_zero one comm_one succ j).2.1 else 0
+  zero' := fun i j w => by
+    rwa [dif_neg]
+  comm := fun i => by
+    dsimp
+    rw [add_zeroₓ, add_commₓ]
+    convert (mk_coinductive_aux₂ e zero comm_zero one comm_one succ i).2.2 using 2
+    · rcases i with (_ | _ | _ | i)
+      · simp only [mk_coinductive_aux₂, prev_d_zero_cochain_complex, zero_comp]
+        
+      all_goals
+        simp only [prev_d_succ_cochain_complex]
+        dsimp
+        simp only [eq_self_iff_true, iso.inv_hom_id_assoc, dite_eq_ite, if_true, category.assoc, X_prev_iso_comp_d_to]
+      
+    · cases i
+      · dsimp
+        simp only [eq_self_iff_true, d_next_cochain_complex, dif_pos, d_from_comp_X_next_iso_assoc, ← comm_zero]
+        rw [mk_coinductive_aux₂]
+        dsimp
+        convert comm_zero.symm
+        simp only [iso.inv_hom_id_assoc]
+        
+      · dsimp
+        simp only [eq_self_iff_true, d_next_cochain_complex, dif_pos, d_from_comp_X_next_iso_assoc]
+        rw [mk_coinductive_aux₂]
+        dsimp only
+        simp only [iso.inv_hom_id_assoc]
+        
+      
+
+end
+
+end MkCoinductive
+
 end Homotopy
 
 /-- A homotopy equivalence between two chain complexes consists of a chain map each way,
@@ -636,9 +839,7 @@ def trans {C D E : HomologicalComplex V c} (f : HomotopyEquiv C D) (g : Homotopy
 
 end HomotopyEquiv
 
-variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V]
-
-variable [HasZeroObject V]
+variable [HasEqualizers V] [HasCokernels V] [HasImages V] [HasImageMaps V] [HasZeroObject V]
 
 /-- Homotopic maps induce the same map on homology.
 -/

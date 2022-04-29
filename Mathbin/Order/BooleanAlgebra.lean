@@ -63,7 +63,7 @@ generalized Boolean algebras, Boolean algebras, lattices, sdiff, compl
 -/
 
 
-open Function
+open Function OrderDual
 
 universe u v
 
@@ -132,23 +132,6 @@ theorem sdiff_unique (s : x⊓y⊔z = x) (i : x⊓y⊓z = ⊥) : x \ y = z := by
   conv_rhs at i => rw [← inf_inf_sdiff x y, inf_comm]
   rw [inf_comm] at i
   exact (eq_of_inf_eq_sup_eq i s).symm
-
-theorem sdiff_symm (hy : y ≤ x) (hz : z ≤ x) (H : x \ y = z) : x \ z = y :=
-  have hyi : x⊓y = y := inf_eq_right.2 hy
-  have hzi : x⊓z = z := inf_eq_right.2 hz
-  eq_of_inf_eq_sup_eq
-    (by
-      have ixy := inf_inf_sdiff x y
-      rw [H, hyi] at ixy
-      have ixz := inf_inf_sdiff x z
-      rwa [hzi, inf_comm, ← ixy] at ixz)
-    (by
-      have sxz := sup_inf_sdiff x z
-      rw [hzi, sup_comm] at sxz
-      rw [sxz]
-      symm
-      have sxy := sup_inf_sdiff x y
-      rwa [H, hyi] at sxy)
 
 theorem sdiff_le : x \ y ≤ x :=
   calc
@@ -490,6 +473,9 @@ theorem sdiff_le_iff : y \ x ≤ z ↔ y ≤ x⊔z :=
           rw [sup_assoc, sup_comm, sup_assoc, sup_idem]
         )⟩
 
+theorem sdiff_sdiff_le : x \ (x \ y) ≤ y :=
+  sdiff_le_iff.2 le_sdiff_sup
+
 @[simp]
 theorem le_sdiff_iff : x ≤ y \ x ↔ x = ⊥ :=
   ⟨fun h => disjoint_self.1 (disjoint_sdiff_self_right.mono_right h), fun h => h.le.trans bot_le⟩
@@ -584,12 +570,24 @@ theorem sdiff_sdiff_right' : x \ (y \ z) = x \ y⊔x⊓z :=
       rw [sup_inf_inf_sdiff, sup_comm, inf_comm]
     
 
+theorem sdiff_sdiff_eq_sdiff_sup (h : z ≤ x) : x \ (y \ z) = x \ y⊔z := by
+  rw [sdiff_sdiff_right', inf_eq_right.2 h]
+
 @[simp]
 theorem sdiff_sdiff_right_self : x \ (x \ y) = x⊓y := by
   rw [sdiff_sdiff_right, inf_idem, sdiff_self, bot_sup_eq]
 
 theorem sdiff_sdiff_eq_self (h : y ≤ x) : x \ (x \ y) = y := by
   rw [sdiff_sdiff_right_self, inf_of_le_right h]
+
+theorem sdiff_eq_symm (hy : y ≤ x) (h : x \ y = z) : x \ z = y := by
+  rw [← h, sdiff_sdiff_eq_self hy]
+
+theorem sdiff_eq_comm (hy : y ≤ x) (hz : z ≤ x) : x \ y = z ↔ x \ z = y :=
+  ⟨sdiff_eq_symm hy, sdiff_eq_symm hz⟩
+
+theorem eq_of_sdiff_eq_sdiff (hxz : x ≤ z) (hyz : y ≤ z) (h : z \ x = z \ y) : x = y := by
+  rw [← sdiff_sdiff_eq_self hxz, h, sdiff_sdiff_eq_self hyz]
 
 theorem sdiff_sdiff_left : (x \ y) \ z = x \ (y⊔z) := by
   rw [sdiff_sup]
@@ -709,6 +707,18 @@ theorem inf_sdiff_assoc : (x⊓y) \ z = x⊓y \ z :=
       _ = ⊥ := by
         rw [inf_inf_sdiff, inf_bot_eq]
       )
+
+theorem inf_sdiff_right_comm : x \ z⊓y = (x⊓y) \ z := by
+  rw [@inf_comm _ _ x, inf_comm, inf_sdiff_assoc]
+
+theorem inf_sdiff_distrib_left (a b c : α) : a⊓b \ c = (a⊓b) \ (a⊓c) := by
+  rw [sdiff_inf, sdiff_eq_bot_iff.2 inf_le_left, bot_sup_eq, inf_sdiff_assoc]
+
+theorem inf_sdiff_distrib_right (a b c : α) : a \ b⊓c = (a⊓c) \ (b⊓c) := by
+  simp_rw [@inf_comm _ _ _ c, inf_sdiff_distrib_left]
+
+theorem sdiff_sup_sdiff_cancel (hyx : y ≤ x) (hzy : z ≤ y) : x \ y⊔y \ z = x \ z := by
+  rw [← sup_sdiff_inf (x \ z) y, sdiff_sdiff_left, sup_eq_right.2 hzy, inf_sdiff_right_comm, inf_eq_right.2 hyx]
 
 theorem sup_eq_sdiff_sup_sdiff_sup_inf : x⊔y = x \ y⊔y \ x⊔x⊓y :=
   Eq.symm <|
@@ -959,6 +969,12 @@ end OfCore
 section BooleanAlgebra
 
 variable [BooleanAlgebra α]
+
+--TODO@Yaël: Once we have co-Heyting algebras, we won't need to go through `boolean_algebra.of_core`
+instance : BooleanAlgebra (OrderDual α) :=
+  BooleanAlgebra.ofCore
+    { OrderDual.distribLattice α, OrderDual.boundedOrder α with Compl := fun a => toDual (ofDual aᶜ),
+      inf_compl_le_bot := fun _ => sup_compl_eq_top.Ge, top_le_sup_compl := fun _ => inf_compl_eq_bot.Ge }
 
 theorem sdiff_eq : x \ y = x⊓yᶜ :=
   BooleanAlgebra.sdiff_eq x y

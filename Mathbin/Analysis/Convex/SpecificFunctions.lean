@@ -32,7 +32,7 @@ For `p : ℝ`, prove that `λ x, x ^ p` is concave when `0 ≤ p ≤ 1` and stri
 
 open Real Set
 
-open_locale BigOperators
+open BigOperators
 
 /-- The norm of a real normed space is convex. Also see `seminorm.convex_on`. -/
 theorem convex_on_norm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ConvexOn ℝ Univ (norm : E → ℝ) :=
@@ -57,8 +57,8 @@ theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.Univ fun x
   · simp only [deriv_pow', Differentiable.mul, differentiable_const, differentiable_pow]
     
   · intro x
-    rcases Nat.Even.sub_even hn (Nat.even_bit0 1) with ⟨k, hk⟩
-    rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, pow_mul']
+    obtain ⟨k, hk⟩ := (hn.tsub_even <| even_bit0 _).exists_two_nsmul _
+    rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, nsmul_eq_mul, pow_mul']
     exact mul_nonneg (Nat.cast_nonneg _) (pow_two_nonneg _)
     
 
@@ -108,8 +108,9 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
   induction' n with n ihn
   · simp
     
-  rw [Nat.succ_eq_add_one, mul_addₓ, mul_oneₓ, bit0, ← add_assocₓ, Finset.prod_range_succ, Finset.prod_range_succ,
-    mul_assoc]
+  rw [← two_mul] at ihn
+  rw [← two_mul, Nat.succ_eq_add_one, mul_addₓ, mul_oneₓ, bit0, ← add_assocₓ, Finset.prod_range_succ,
+    Finset.prod_range_succ, mul_assoc]
   refine' mul_nonneg ihn _
   generalize (1 + 1) * n = k
   cases' le_or_ltₓ m k with hmk hmk
@@ -143,7 +144,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := 
   · intro x hx
     simp only [iter_deriv_zpow, ← Int.cast_coe_nat, ← Int.cast_sub, ← Int.cast_prod]
     refine' mul_nonneg (Int.cast_nonneg.2 _) (zpow_nonneg (le_of_ltₓ hx) _)
-    exact int_prod_range_nonneg _ _ (Nat.even_bit0 1)
+    exact int_prod_range_nonneg _ _ (even_bit0 1)
     
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
@@ -161,7 +162,7 @@ theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) : St
   intro x hx
   simp only [iter_deriv_zpow, ← Int.cast_coe_nat, ← Int.cast_sub, ← Int.cast_prod]
   refine' mul_pos (Int.cast_pos.2 _) (zpow_pos_of_pos hx _)
-  refine' int_prod_range_pos (Nat.even_bit0 1) fun hm => _
+  refine' int_prod_range_pos (even_bit0 1) fun hm => _
   norm_cast  at hm
   rw [← Finset.coe_Ico] at hm
   fin_cases hm
@@ -230,7 +231,7 @@ theorem strict_concave_on_log_Iio : StrictConcaveOn ℝ (Iio 0) log := by
   rw [deriv_log', deriv_inv]
   exact neg_neg_of_pos (inv_pos.2 <| sq_pos_of_ne_zero _ hx.ne)
 
-open_locale Real
+open Real
 
 theorem strict_concave_on_sin_Icc : StrictConcaveOn ℝ (Icc 0 π) sin := by
   apply

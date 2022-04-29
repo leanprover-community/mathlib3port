@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 -/
 import Mathbin.Algebra.Algebra.Operations
-import Mathbin.Algebra.Algebra.Subalgebra
+import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.DirectSum.Algebra
 
 /-!
@@ -40,9 +40,14 @@ internally graded ring
 -/
 
 
-open_locale DirectSum BigOperators
+open DirectSum BigOperators
 
 variable {ι : Type _} {S R : Type _}
+
+theorem SetLike.HasGradedOne.algebra_map_mem [Zero ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R]
+    (A : ι → Submodule S R) [SetLike.HasGradedOne A] (s : S) : algebraMap S R s ∈ A 0 := by
+  rw [Algebra.algebra_map_eq_smul_one]
+  exact (A 0).smul_mem s SetLike.HasGradedOne.one_mem
 
 section DirectSum
 
@@ -84,7 +89,7 @@ theorem DirectSum.coe_mul_apply_add_submonoid [AddMonoidₓ ι] [Semiringₓ R] 
     ((r * r') i : R) =
       ∑ ij in Finset.filter (fun ij : ι × ι => ij.1 + ij.2 = i) (r.support.product r'.support), r ij.1 * r' ij.2 :=
   by
-  rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoid.coe_finset_sum]
+  rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
   simp_rw [DirectSum.coe_of_add_submonoid_apply, ← Finset.sum_filter, SetLike.coe_ghas_mul]
 
 /-! #### From `add_subgroup`s -/
@@ -121,7 +126,7 @@ theorem DirectSum.coe_mul_apply_add_subgroup [AddMonoidₓ ι] [Ringₓ R] (A : 
     ((r * r') i : R) =
       ∑ ij in Finset.filter (fun ij : ι × ι => ij.1 + ij.2 = i) (r.support.product r'.support), r ij.1 * r' ij.2 :=
   by
-  rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubgroup.coe_finset_sum]
+  rw [DirectSum.mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
   simp_rw [DirectSum.coe_of_add_subgroup_apply, ← Finset.sum_filter, SetLike.coe_ghas_mul]
 
 /-! #### From `submodules`s -/
@@ -144,9 +149,7 @@ instance gcommSemiring [AddCommMonoidₓ ι] [CommSemiringₓ S] [CommSemiring�
 /-- Build a `galgebra` instance for a collection of `submodule`s. -/
 instance galgebra [AddMonoidₓ ι] [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (A : ι → Submodule S R)
     [h : SetLike.GradedMonoid A] : DirectSum.Galgebra S fun i => A i where
-  toFun := by
-    refine' (((Algebra.linearMap S R).codRestrict (A 0)) fun r => _).toAddMonoidHom
-    exact submodule.one_le.mpr SetLike.HasGradedOne.one_mem (Submodule.algebra_map_mem _)
+  toFun := ((Algebra.linearMap S R).codRestrict (A 0) <| SetLike.HasGradedOne.algebra_map_mem A).toAddMonoidHom
   map_one := Subtype.ext <| (algebraMap S R).map_one
   map_mul := fun x y => Sigma.subtype_ext (add_zeroₓ 0).symm <| (algebraMap S R).map_mul _ _
   commutes := fun r ⟨i, xi⟩ => Sigma.subtype_ext ((zero_addₓ i).trans (add_zeroₓ i).symm) <| Algebra.commutes _ _

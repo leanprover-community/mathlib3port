@@ -3,10 +3,10 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
-import Mathbin.SetTheory.Continuum
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Data.Rat.Denumerable
 import Mathbin.Data.Set.Intervals.ImagePreimage
+import Mathbin.SetTheory.Cardinal.Continuum
 
 /-!
 # The cardinality of the reals
@@ -43,7 +43,7 @@ continuum, cardinality, reals, cardinality of the reals
 
 open Nat Set
 
-open_locale Cardinal
+open Cardinal
 
 noncomputable section
 
@@ -256,7 +256,7 @@ theorem mk_Ioo_real {a b : ℝ} (h : a < b) : # (Ioo a b) = 𝔠 := by
   replace h := sub_pos_of_lt h
   have h2 : # (Inv.inv '' Ioo 0 (b - a)) ≤ # (Ioo 0 (b - a)) := mk_image_le
   refine' le_transₓ _ h2
-  rw [image_inv_Ioo_0_left h, mk_Ioi_real]
+  rw [image_inv, inv_Ioo_0_left h, mk_Ioi_real]
 
 /-- The cardinality of the interval [a, b). -/
 theorem mk_Ico_real {a b : ℝ} (h : a < b) : # (Ico a b) = 𝔠 :=

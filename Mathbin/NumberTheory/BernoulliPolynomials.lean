@@ -40,9 +40,9 @@ Bernoulli polynomials are defined using `bernoulli`, the Bernoulli numbers.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Nat Polynomial
+open Nat Polynomial
 
 open Nat Finset
 

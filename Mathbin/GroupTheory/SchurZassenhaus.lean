@@ -3,9 +3,8 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
-import Mathbin.GroupTheory.Complement
-import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.Sylow
+import Mathbin.GroupTheory.Transfer
 
 /-!
 # The Schur-Zassenhaus Theorem
@@ -23,167 +22,112 @@ In this file we prove the Schur-Zassenhaus theorem.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace Subgroup
 
 section SchurZassenhausAbelian
 
-variable {G : Type _} [Groupₓ G] {H : Subgroup G}
+open MulOpposite MulAction Subgroup.LeftTransversals MemLeftTransversals
 
-@[to_additive]
-instance : MulAction G (LeftTransversals (H : Set G)) where
-  smul := fun g T =>
-    ⟨LeftCoset g T,
-      mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g' => by
-        obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (g⁻¹ * g')
-        simp_rw [← mul_assoc, ← mul_inv_rev]  at ht1 ht2
-        refine' ⟨⟨g * t, mem_left_coset g t.2⟩, ht1, _⟩
-        rintro ⟨_, t', ht', rfl⟩ h
-        exact Subtype.ext ((mul_right_injₓ g).mpr (subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)))⟩
-  one_smul := fun T => Subtype.ext (one_left_coset T)
-  mul_smul := fun g g' T => Subtype.ext (left_coset_assoc (↑T) g g').symm
+variable {G : Type _} [Groupₓ G] (H : Subgroup G) [IsCommutative H] [Fintype (G ⧸ H)]
+  (α β : LeftTransversals (H : Set G))
 
-theorem smul_symm_apply_eq_mul_symm_apply_inv_smul (g : G) (α : LeftTransversals (H : Set G)) (q : G ⧸ H) :
-    ↑((Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)).symm q) =
-      g * (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm (g⁻¹ • q : G ⧸ H) :=
-  by
-  let w := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)
-  let y := Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp (g • α).2)
-  change ↑(y.symm q) = ↑(⟨_, mem_left_coset g (Subtype.mem _)⟩ : (g • α).1)
-  refine' subtype.ext_iff.mp (y.symm_apply_eq.mpr _)
-  change q = g • w (w.symm (g⁻¹ • q : G ⧸ H))
-  rw [Equivₓ.apply_symm_apply, ← mul_smul, mul_inv_selfₓ, one_smul]
+/-- The quotient of the transversals of an abelian normal `N` by the `diff` relation. -/
+def QuotientDiff :=
+  Quotientₓ
+    (Setoidₓ.mk (fun α β => diff (MonoidHom.id H) α β = 1)
+      ⟨fun α => diff_self (MonoidHom.id H) α, fun α β h => by
+        rw [← diff_inv, h, one_inv], fun α β γ h h' => by
+        rw [← diff_mul_diff, h, h', one_mulₓ]⟩)
 
-variable [IsCommutative H] [Fintype (G ⧸ H)]
-
-variable (α β γ : LeftTransversals (H : Set G))
-
-/-- The difference of two left transversals -/
-@[to_additive "The difference of two left transversals"]
-noncomputable def diff [hH : Normal H] : H :=
-  let α' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp α.2)).symm
-  let β' := (Equivₓ.ofBijective _ (mem_left_transversals_iff_bijective.mp β.2)).symm
-  ∏ q : G ⧸ H,
-    ⟨α' q * (β' q)⁻¹, hH.mem_comm (Quotientₓ.exact' ((β'.symm_apply_apply q).trans (α'.symm_apply_apply q).symm))⟩
-
-@[to_additive]
-theorem diff_mul_diff [Normal H] : diff α β * diff β γ = diff α γ :=
-  Finset.prod_mul_distrib.symm.trans
-    (Finset.prod_congr rfl fun x hx =>
-      Subtype.ext
-        (by
-          rw [coe_mul, coe_mk, coe_mk, coe_mk, mul_assoc, inv_mul_cancel_leftₓ]))
-
-@[to_additive]
-theorem diff_self [Normal H] : diff α α = 1 :=
-  mul_right_eq_self.mp (diff_mul_diff α α α)
-
-@[to_additive]
-theorem diff_inv [Normal H] : (diff α β)⁻¹ = diff β α :=
-  inv_eq_of_mul_eq_oneₓ ((diff_mul_diff α β α).trans (diff_self α))
-
-theorem smul_diff_smul [hH : Normal H] (g : G) :
-    diff (g • α) (g • β) = ⟨g * diff α β * g⁻¹, hH.conj_mem (diff α β).1 (diff α β).2 g⟩ := by
-  let ϕ : H →* H :=
-    { toFun := fun h => ⟨g * h * g⁻¹, hH.conj_mem h.1 h.2 g⟩,
-      map_one' :=
-        Subtype.ext
-          (by
-            rw [coe_mk, coe_one, mul_oneₓ, mul_inv_selfₓ]),
-      map_mul' := fun h₁ h₂ =>
-        Subtype.ext
-          (by
-            rw [coe_mk, coe_mul, coe_mul, coe_mk, coe_mk, mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc,
-              inv_mul_cancel_leftₓ]) }
-  refine'
-    Eq.trans
-      (Finset.prod_bij' (fun q _ => (↑g)⁻¹ * q) (fun _ _ => Finset.mem_univ _) (fun q _ => Subtype.ext _)
-        (fun q _ => ↑g * q) (fun _ _ => Finset.mem_univ _) (fun q _ => mul_inv_cancel_left g q) fun q _ =>
-        inv_mul_cancel_leftₓ g q)
-      (ϕ.map_prod _ _).symm
-  change _ * _ = g * (_ * _) * g⁻¹
-  simp_rw [smul_symm_apply_eq_mul_symm_apply_inv_smul, mul_inv_rev, mul_assoc]
-  rfl
-
-theorem smul_diff [H.Normal] (h : H) : diff (h • α) β = h ^ H.index * diff α β := by
-  rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]
-  refine' Finset.prod_congr rfl fun q _ => _
-  rw [Subtype.ext_iff, coe_mul, coe_mk, coe_mk, ← mul_assoc, mul_right_cancel_iffₓ]
-  rw [show h • α = (h : G) • α from rfl, smul_symm_apply_eq_mul_symm_apply_inv_smul]
-  rw [mul_left_cancel_iffₓ, ← Subtype.ext_iff, Equivₓ.apply_eq_iff_eq, inv_smul_eq_iff]
-  exact self_eq_mul_left.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
-
-variable (H)
-
-instance setoidDiff [H.Normal] : Setoidₓ (LeftTransversals (H : Set G)) :=
-  Setoidₓ.mk (fun α β => diff α β = 1)
-    ⟨fun α => diff_self α, fun α β h₁ => by
-      rw [← diff_inv, h₁, one_inv], fun α β γ h₁ h₂ => by
-      rw [← diff_mul_diff, h₁, h₂, one_mulₓ]⟩
-
-/-- The quotient of the transversals of an abelian normal `N` by the `diff` relation -/
-def QuotientDiff [H.Normal] :=
-  Quotientₓ H.setoidDiff
-
-instance [H.Normal] : Inhabited H.QuotientDiff :=
+instance : Inhabited H.QuotientDiff :=
   Quotientₓ.inhabited _
 
-variable {H}
+theorem smul_diff_smul' [hH : Normal H] (g : Gᵐᵒᵖ) :
+    diff (MonoidHom.id H) (g • α) (g • β) =
+      ⟨g.unop⁻¹ * (diff (MonoidHom.id H) α β : H) * g.unop,
+        hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩ :=
+  by
+  let ϕ : H →* H :=
+    { toFun := fun h =>
+        ⟨g.unop⁻¹ * h * g.unop, hH.mem_comm ((congr_argₓ (· ∈ H) (mul_inv_cancel_left _ _)).mpr (SetLike.coe_mem _))⟩,
+      map_one' := by
+        rw [Subtype.ext_iff, coe_mk, coe_one, mul_oneₓ, inv_mul_selfₓ],
+      map_mul' := fun h₁ h₂ => by
+        rw [Subtype.ext_iff, coe_mk, coe_mul, coe_mul, coe_mk, coe_mk, mul_assoc, mul_assoc, mul_assoc, mul_assoc,
+          mul_assoc, mul_inv_cancel_left] }
+  refine'
+    Eq.trans
+      (Finset.prod_bij' (fun q _ => g⁻¹ • q) (fun q _ => Finset.mem_univ _) (fun q _ => Subtype.ext _)
+        (fun q _ => g • q) (fun q _ => Finset.mem_univ _) (fun q _ => smul_inv_smul g q) fun q _ => inv_smul_smul g q)
+      (map_prod ϕ _ _).symm
+  simp_rw [MonoidHom.id_apply, MonoidHom.coe_mk, coe_mk, smul_apply_eq_smul_apply_inv_smul, smul_eq_mul_unop,
+    mul_inv_rev, mul_assoc]
 
-instance [H.Normal] : MulAction G H.QuotientDiff where
+variable {H} [Normal H]
+
+instance : MulAction G H.QuotientDiff where
   smul := fun g =>
-    Quotientₓ.map (fun α => g • α) fun α β h =>
-      (smul_diff_smul α β g).trans (Subtype.ext (mul_inv_eq_one.mpr (mul_right_eq_self.mpr (Subtype.ext_iff.mp h))))
-  mul_smul := fun g₁ g₂ q => Quotientₓ.induction_on q fun α => congr_argₓ Quotientₓ.mk (mul_smul g₁ g₂ α)
-  one_smul := fun q => Quotientₓ.induction_on q fun α => congr_argₓ Quotientₓ.mk (one_smul G α)
+    Quotientₓ.map' (fun α => op g⁻¹ • α) fun α β h =>
+      Subtype.ext
+        (by
+          rwa [smul_diff_smul', coe_mk, coe_one, mul_eq_one_iff_eq_inv, mul_right_eq_self, ← coe_one, ←
+            Subtype.ext_iff])
+  mul_smul := fun g₁ g₂ q =>
+    Quotientₓ.induction_on' q fun T =>
+      congr_argₓ Quotientₓ.mk'
+        (by
+          rw [mul_inv_rev] <;> exact mul_smul (op g₁⁻¹) (op g₂⁻¹) T)
+  one_smul := fun q =>
+    Quotientₓ.induction_on' q fun T =>
+      congr_argₓ Quotientₓ.mk'
+        (by
+          rw [one_inv] <;> apply one_smul Gᵐᵒᵖ T)
+
+theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff (MonoidHom.id H) α β * h ^ H.index := by
+  rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]
+  refine' Finset.prod_congr rfl fun q _ => _
+  simp_rw [Subtype.ext_iff, MonoidHom.id_apply, coe_mul, coe_mk, mul_assoc, mul_right_injₓ]
+  rw [smul_apply_eq_smul_apply_inv_smul, smul_eq_mul_unop, unop_op, mul_left_injₓ, ← Subtype.ext_iff,
+    Equivₓ.apply_eq_iff_eq, inv_smul_eq_iff]
+  exact self_eq_mul_right.mpr ((QuotientGroup.eq_one_iff _).mpr h.2)
 
 variable [Fintype H]
 
-theorem exists_smul_eq [H.Normal] (α β : H.QuotientDiff) (hH : Nat.Coprime (Fintype.card H) H.index) :
-    ∃ h : H, h • α = β :=
-  Quotientₓ.induction_on α
-    (Quotientₓ.induction_on β fun β α =>
-      exists_imp_exists (fun n => Quotientₓ.sound)
-        ⟨(powCoprime hH).symm (diff α β)⁻¹, by
-          change diff ((_ : H) • _) _ = 1
-          rw [smul_diff]
-          change powCoprime hH ((powCoprime hH).symm (diff α β)⁻¹) * diff α β = 1
-          rw [Equivₓ.apply_symm_apply, inv_mul_selfₓ]⟩)
+theorem eq_one_of_smul_eq_one (hH : Nat.Coprime (Fintype.card H) H.index) (α : H.QuotientDiff) (h : H) :
+    h • α = α → h = 1 :=
+  (Quotientₓ.induction_on' α) fun α hα =>
+    (powCoprime hH).Injective <|
+      calc
+        h ^ H.index = diff (MonoidHom.id H) (op ((h⁻¹ : H) : G) • α) α := by
+          rw [← diff_inv, smul_diff', diff_self, one_mulₓ, inv_pow, inv_invₓ]
+        _ = 1 ^ H.index := (Quotientₓ.exact' hα).trans (one_pow H.index).symm
+        
 
-theorem smul_left_injective [H.Normal] (α : H.QuotientDiff) (hH : Nat.Coprime (Fintype.card H) H.index) :
-    Function.Injective fun h : H => h • α := fun h₁ h₂ => by
-  refine' Quotientₓ.induction_on α fun α hα => _
-  replace hα : diff (h₁ • α) (h₂ • α) = 1 := Quotientₓ.exact hα
-  rw [smul_diff, ← diff_inv, smul_diff, diff_self, mul_oneₓ, mul_inv_eq_one] at hα
-  exact (powCoprime hH).Injective hα
+theorem exists_smul_eq (hH : Nat.Coprime (Fintype.card H) H.index) (α β : H.QuotientDiff) : ∃ h : H, h • α = β :=
+  Quotientₓ.induction_on' α
+    (Quotientₓ.induction_on' β fun β α =>
+      exists_imp_exists (fun n => Quotientₓ.sound')
+        ⟨(powCoprime hH).symm (diff (MonoidHom.id H) β α),
+          (diff_inv _ _ _).symm.trans
+            (inv_eq_one.mpr
+              ((smul_diff' β α ((powCoprime hH).symm (diff (MonoidHom.id H) β α))⁻¹).trans
+                (by
+                  rw [inv_pow, ← pow_coprime_apply hH, Equivₓ.apply_symm_apply, mul_inv_selfₓ])))⟩)
 
-theorem is_complement'_stabilizer_of_coprime [Fintype G] [H.Normal] {α : H.QuotientDiff}
-    (hH : Nat.Coprime (Fintype.card H) H.index) : IsComplement' H (MulAction.stabilizer G α) := by
-  classical
-  let ϕ : H ≃ MulAction.Orbit G α :=
-    Equivₓ.ofBijective (fun h => ⟨h • α, h, rfl⟩)
-      ⟨fun h₁ h₂ hh => smul_left_injective α hH (subtype.ext_iff.mp hh), fun β =>
-        exists_imp_exists (fun h hh => Subtype.ext hh) (exists_smul_eq α β hH)⟩
-  have key := card_eq_card_quotient_mul_card_subgroup (MulAction.stabilizer G α)
-  rw [← Fintype.card_congr (ϕ.trans (MulAction.orbitEquivQuotientStabilizer G α))] at key
-  apply is_complement'_of_coprime key.symm
-  rw [card_eq_card_quotient_mul_card_subgroup H, mul_comm, mul_right_inj'] at key
-  · rwa [← key, ← index_eq_card]
-    
-  · rw [← pos_iff_ne_zero, Fintype.card_pos_iff]
-    infer_instance
-    
+theorem is_complement'_stabilizer_of_coprime {α : H.QuotientDiff} (hH : Nat.Coprime (Fintype.card H) H.index) :
+    IsComplement' H (stabilizer G α) :=
+  is_complement'_stabilizer α (eq_one_of_smul_eq_one hH α) fun g => exists_smul_eq hH (g • α) α
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
-private theorem exists_right_complement'_of_coprime_aux [Fintype G] [H.Normal]
-    (hH : Nat.Coprime (Fintype.card H) H.index) : ∃ K : Subgroup G, IsComplement' H K :=
-  nonempty_of_inhabited.elim fun α : H.QuotientDiff =>
-    ⟨MulAction.stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
+private theorem exists_right_complement'_of_coprime_aux (hH : Nat.Coprime (Fintype.card H) H.index) :
+    ∃ K : Subgroup G, IsComplement' H K :=
+  nonempty_of_inhabited.elim fun α => ⟨stabilizer G α, is_complement'_stabilizer_of_coprime hH⟩
 
 end SchurZassenhausAbelian
 
-open_locale Classical
+open Classical
 
 universe u
 
@@ -367,14 +311,14 @@ theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Na
   subgroup `K` which is a (left) complement of `H`. -/
 theorem exists_left_complement'_of_coprime_of_fintype [Fintype G] {N : Subgroup G} [N.Normal]
     (hN : Nat.Coprime (Fintype.card N) N.index) : ∃ H : Subgroup G, IsComplement' H N :=
-  Exists.impₓ (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
+  Exists.imp (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime_of_fintype hN)
 
 /-- **Schur-Zassenhaus** for normal subgroups:
   If `H : subgroup G` is normal, and has order coprime to its index, then there exists a
   subgroup `K` which is a (left) complement of `H`. -/
 theorem exists_left_complement'_of_coprime {N : Subgroup G} [N.Normal] (hN : Nat.Coprime (Nat.card N) N.index) :
     ∃ H : Subgroup G, IsComplement' H N :=
-  Exists.impₓ (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime hN)
+  Exists.imp (fun _ => IsComplement'.symm) (exists_right_complement'_of_coprime hN)
 
 end Subgroup
 

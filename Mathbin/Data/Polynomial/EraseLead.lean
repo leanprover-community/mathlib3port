@@ -20,7 +20,7 @@ and thus works for polynomials over semirings as well as rings.
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 open Polynomial Finset
 
@@ -129,6 +129,30 @@ theorem erase_lead_X_pow (n : ℕ) : eraseLead (X ^ n : R[X]) = 0 := by
 theorem erase_lead_C_mul_X_pow (r : R) (n : ℕ) : eraseLead (c r * X ^ n) = 0 := by
   rw [C_mul_X_pow_eq_monomial, erase_lead_monomial]
 
+theorem erase_lead_add_of_nat_degree_lt_left {p q : R[X]} (pq : q.natDegree < p.natDegree) :
+    (p + q).eraseLead = p.eraseLead + q := by
+  ext n
+  by_cases' nd : n = p.nat_degree
+  · rw [nd, erase_lead_coeff, if_pos (nat_degree_add_eq_left_of_nat_degree_lt pq).symm]
+    simpa using (coeff_eq_zero_of_nat_degree_lt pq).symm
+    
+  · rw [erase_lead_coeff, coeff_add, coeff_add, erase_lead_coeff, if_neg, if_neg nd]
+    rintro rfl
+    exact nd (nat_degree_add_eq_left_of_nat_degree_lt pq)
+    
+
+theorem erase_lead_add_of_nat_degree_lt_right {p q : R[X]} (pq : p.natDegree < q.natDegree) :
+    (p + q).eraseLead = p + q.eraseLead := by
+  ext n
+  by_cases' nd : n = q.nat_degree
+  · rw [nd, erase_lead_coeff, if_pos (nat_degree_add_eq_right_of_nat_degree_lt pq).symm]
+    simpa using (coeff_eq_zero_of_nat_degree_lt pq).symm
+    
+  · rw [erase_lead_coeff, coeff_add, coeff_add, erase_lead_coeff, if_neg, if_neg nd]
+    rintro rfl
+    exact nd (nat_degree_add_eq_right_of_nat_degree_lt pq)
+    
+
 theorem erase_lead_degree_le : (eraseLead f).degree ≤ f.degree := by
   rw [degree_le_iff_coeff_zero]
   intro i hi
@@ -138,11 +162,11 @@ theorem erase_lead_degree_le : (eraseLead f).degree ≤ f.degree := by
     
   apply coeff_eq_zero_of_degree_lt hi
 
-theorem erase_lead_nat_degree_le : (eraseLead f).natDegree ≤ f.natDegree :=
+theorem erase_lead_nat_degree_le_aux : (eraseLead f).natDegree ≤ f.natDegree :=
   nat_degree_le_nat_degree erase_lead_degree_le
 
 theorem erase_lead_nat_degree_lt (f0 : 2 ≤ f.Support.card) : (eraseLead f).natDegree < f.natDegree :=
-  lt_of_le_of_neₓ erase_lead_nat_degree_le <|
+  lt_of_le_of_neₓ erase_lead_nat_degree_le_aux <|
     ne_nat_degree_of_mem_erase_lead_support <| nat_degree_mem_support_of_nonzero <| erase_lead_ne_zero f0
 
 theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : R[X]) :
@@ -154,6 +178,13 @@ theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : R[X]) :
     
   · left
     apply erase_lead_nat_degree_lt (lt_of_not_geₓ h)
+    
+
+theorem erase_lead_nat_degree_le (f : R[X]) : (eraseLead f).natDegree ≤ f.natDegree - 1 := by
+  rcases f.erase_lead_nat_degree_lt_or_erase_lead_eq_zero with (h | h)
+  · exact Nat.le_pred_of_lt h
+    
+  · simp only [h, nat_degree_zero, zero_le]
     
 
 end EraseLead
@@ -196,7 +227,7 @@ theorem induction_with_nat_degree_le (P : R[X] → Prop) (N : ℕ) (P_0 : P 0)
       
     · exact (nat_degree_C_mul_X_pow_le f.leading_coeff f.nat_degree).trans df
       
-    · exact hc _ (erase_lead_nat_degree_le.trans df) (erase_lead_card_support f0)
+    · exact hc _ (erase_lead_nat_degree_le_aux.trans df) (erase_lead_card_support f0)
       
     · refine' P_C_mul_pow _ _ _ df
       rw [Ne.def, leading_coeff_eq_zero, ← card_support_eq_zero, f0]

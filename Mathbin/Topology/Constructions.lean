@@ -36,11 +36,11 @@ noncomputable section
 
 open TopologicalSpace Set Filter
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
-universe u v w x
+universe u v
 
-variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
+variable {α : Type u} {β : Type v} {γ δ ε ζ : Type _}
 
 section Constructions
 
@@ -171,33 +171,66 @@ end Constructions
 
 section Prod
 
-variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ] [TopologicalSpace ε]
+  [TopologicalSpace ζ]
 
 @[continuity]
 theorem continuous_fst : Continuous (@Prod.fst α β) :=
   continuous_inf_dom_left continuous_induced_dom
 
-theorem continuous_at_fst {p : α × β} : ContinuousAt Prod.fst p :=
-  continuous_fst.ContinuousAt
-
+/-- Postcomposing `f` with `prod.fst` is continuous -/
 theorem Continuous.fst {f : α → β × γ} (hf : Continuous f) : Continuous fun a : α => (f a).1 :=
   continuous_fst.comp hf
 
+/-- Precomposing `f` with `prod.fst` is continuous -/
+theorem Continuous.fst' {f : α → γ} (hf : Continuous f) : Continuous fun x : α × β => f x.fst :=
+  hf.comp continuous_fst
+
+theorem continuous_at_fst {p : α × β} : ContinuousAt Prod.fst p :=
+  continuous_fst.ContinuousAt
+
+/-- Postcomposing `f` with `prod.fst` is continuous at `x` -/
 theorem ContinuousAt.fst {f : α → β × γ} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun a : α => (f a).1) x :=
   continuous_at_fst.comp hf
+
+/-- Precomposing `f` with `prod.fst` is continuous at `(x, y)` -/
+theorem ContinuousAt.fst' {f : α → γ} {x : α} {y : β} (hf : ContinuousAt f x) :
+    ContinuousAt (fun x : α × β => f x.fst) (x, y) :=
+  ContinuousAt.comp hf continuous_at_fst
+
+/-- Precomposing `f` with `prod.fst` is continuous at `x : α × β` -/
+theorem ContinuousAt.fst'' {f : α → γ} {x : α × β} (hf : ContinuousAt f x.fst) :
+    ContinuousAt (fun x : α × β => f x.fst) x :=
+  hf.comp continuous_at_fst
 
 @[continuity]
 theorem continuous_snd : Continuous (@Prod.snd α β) :=
   continuous_inf_dom_right continuous_induced_dom
 
-theorem continuous_at_snd {p : α × β} : ContinuousAt Prod.snd p :=
-  continuous_snd.ContinuousAt
-
+/-- Postcomposing `f` with `prod.snd` is continuous -/
 theorem Continuous.snd {f : α → β × γ} (hf : Continuous f) : Continuous fun a : α => (f a).2 :=
   continuous_snd.comp hf
 
+/-- Precomposing `f` with `prod.snd` is continuous -/
+theorem Continuous.snd' {f : β → γ} (hf : Continuous f) : Continuous fun x : α × β => f x.snd :=
+  hf.comp continuous_snd
+
+theorem continuous_at_snd {p : α × β} : ContinuousAt Prod.snd p :=
+  continuous_snd.ContinuousAt
+
+/-- Postcomposing `f` with `prod.snd` is continuous at `x` -/
 theorem ContinuousAt.snd {f : α → β × γ} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun a : α => (f a).2) x :=
   continuous_at_snd.comp hf
+
+/-- Precomposing `f` with `prod.snd` is continuous at `(x, y)` -/
+theorem ContinuousAt.snd' {f : β → γ} {x : α} {y : β} (hf : ContinuousAt f y) :
+    ContinuousAt (fun x : α × β => f x.snd) (x, y) :=
+  ContinuousAt.comp hf continuous_at_snd
+
+/-- Precomposing `f` with `prod.snd` is continuous at `x : α × β` -/
+theorem ContinuousAt.snd'' {f : β → γ} {x : α × β} (hf : ContinuousAt f x.snd) :
+    ContinuousAt (fun x : α × β => f x.snd) x :=
+  hf.comp continuous_at_snd
 
 @[continuity]
 theorem Continuous.prod_mk {f : γ → α} {g : γ → β} (hf : Continuous f) (hg : Continuous g) :
@@ -205,12 +238,29 @@ theorem Continuous.prod_mk {f : γ → α} {g : γ → β} (hf : Continuous f) (
   continuous_inf_rng (continuous_induced_rng hf) (continuous_induced_rng hg)
 
 @[continuity]
-theorem Continuous.Prod.mk (a : α) : Continuous (Prod.mk a : β → α × β) :=
+theorem Continuous.Prod.mk (a : α) : Continuous fun b : β => (a, b) :=
   continuous_const.prod_mk continuous_id'
+
+@[continuity]
+theorem Continuous.Prod.mk_left (b : β) : Continuous fun a : α => (a, b) :=
+  continuous_id'.prod_mk continuous_const
+
+theorem Continuous.comp₂ {g : α × β → γ} (hg : Continuous g) {e : δ → α} (he : Continuous e) {f : δ → β}
+    (hf : Continuous f) : Continuous fun x => g (e x, f x) :=
+  hg.comp <| he.prod_mk hf
+
+theorem Continuous.comp₃ {g : α × β × γ → ε} (hg : Continuous g) {e : δ → α} (he : Continuous e) {f : δ → β}
+    (hf : Continuous f) {k : δ → γ} (hk : Continuous k) : Continuous fun x => g (e x, f x, k x) :=
+  hg.comp₂ he <| hf.prod_mk hk
+
+theorem Continuous.comp₄ {g : α × β × γ × ζ → ε} (hg : Continuous g) {e : δ → α} (he : Continuous e) {f : δ → β}
+    (hf : Continuous f) {k : δ → γ} (hk : Continuous k) {l : δ → ζ} (hl : Continuous l) :
+    Continuous fun x => g (e x, f x, k x, l x) :=
+  hg.comp₃ he hf <| hk.prod_mk hl
 
 theorem Continuous.prod_map {f : γ → α} {g : δ → β} (hf : Continuous f) (hg : Continuous g) :
     Continuous fun x : γ × δ => (f x.1, g x.2) :=
-  (hf.comp continuous_fst).prod_mk (hg.comp continuous_snd)
+  hf.fst'.prod_mk hg.snd'
 
 /-- A version of `continuous_inf_dom_left` for binary functions -/
 theorem continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ta1 ta2 : TopologicalSpace α} {tb1 tb2 : TopologicalSpace β}
@@ -282,10 +332,20 @@ theorem continuous_curry {g : α × β → γ} (a : α) (h : Continuous g) : Con
         continuity)
 
 theorem IsOpen.prod {s : Set α} {t : Set β} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ˢ t) :=
-  IsOpen.inter (hs.Preimage continuous_fst) (ht.Preimage continuous_snd)
+  (hs.Preimage continuous_fst).inter (ht.Preimage continuous_snd)
 
 theorem nhds_prod_eq {a : α} {b : β} : 𝓝 (a, b) = 𝓝 a ×ᶠ 𝓝 b := by
   rw [Filter.prod, Prod.topologicalSpace, nhds_inf, nhds_induced, nhds_induced]
+
+/-- If a function `f x y` is such that `y ↦ f x y` is continuous for all `x`, and `x` lives in a
+discrete space, then `f` is continuous. -/
+theorem continuous_uncurry_of_discrete_topology [DiscreteTopology α] {f : α → β → γ} (hf : ∀ a, Continuous (f a)) :
+    Continuous (Function.uncurry f) := by
+  apply continuous_iff_continuous_at.2
+  rintro ⟨a, x⟩
+  change map _ _ ≤ _
+  rw [nhds_prod_eq, nhds_discrete, Filter.map_pure_prod]
+  exact (hf a).ContinuousAt
 
 theorem mem_nhds_prod_iff {a : α} {b : β} {s : Set (α × β)} : s ∈ 𝓝 (a, b) ↔ ∃ u ∈ 𝓝 a, ∃ v ∈ 𝓝 b, u ×ˢ v ⊆ s := by
   rw [nhds_prod_eq, mem_prod_iff]
@@ -348,13 +408,11 @@ theorem ContinuousAt.prod {f : α → β} {g : α → γ} {x : α} (hf : Continu
 
 theorem ContinuousAt.prod_map {f : α → γ} {g : β → δ} {p : α × β} (hf : ContinuousAt f p.fst)
     (hg : ContinuousAt g p.snd) : ContinuousAt (fun p : α × β => (f p.1, g p.2)) p :=
-  (hf.comp continuous_at_fst).Prod (hg.comp continuous_at_snd)
+  hf.fst''.Prod hg.snd''
 
 theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β} (hf : ContinuousAt f x) (hg : ContinuousAt g y) :
     ContinuousAt (fun p : α × β => (f p.1, g p.2)) (x, y) :=
-  have hf : ContinuousAt f (x, y).fst := hf
-  have hg : ContinuousAt g (x, y).snd := hg
-  hf.prod_map hg
+  hf.fst'.Prod hg.snd'
 
 theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} {t : Set (Set β)} (hs : ⋃₀s = univ)
     (ht : ⋃₀t = univ) :
@@ -367,28 +425,18 @@ theorem prod_generate_from_generate_from_eq {α β : Type _} {s : Set (Set α)} 
     (le_inf
       (coinduced_le_iff_le_induced.mp <|
         le_generate_from fun u hu =>
-          have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u :=
-            calc
-              (⋃ v ∈ t, u ×ˢ v) = u ×ˢ (Univ : Set β) :=
-                Set.ext fun ⟨a, b⟩ => by
-                  rw [← ht] <;> simp (config := { contextual := true })[And.left_comm]
-              _ = Prod.fst ⁻¹' u := Set.prod_univ
-              
-          show G.IsOpen (Prod.fst ⁻¹' u) from
-            (this ▸ @is_open_Union _ _ G _) fun v =>
-              (@is_open_Union _ _ G _) fun hv => GenerateOpen.basic _ ⟨_, hu, _, hv, rfl⟩)
+          have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u := by
+            simp_rw [← prod_Union, ← sUnion_eq_bUnion, ht, prod_univ]
+          show G.IsOpen (Prod.fst ⁻¹' u) by
+            rw [← this]
+            exact is_open_Union fun v => is_open_Union fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
       (coinduced_le_iff_le_induced.mp <|
         le_generate_from fun v hv =>
-          have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v :=
-            calc
-              (⋃ u ∈ s, u ×ˢ v) = (Univ : Set α) ×ˢ v :=
-                Set.ext fun ⟨a, b⟩ => by
-                  rw [← hs] <;> by_cases' b ∈ v <;> simp (config := { contextual := true })[h]
-              _ = Prod.snd ⁻¹' v := Set.univ_prod
-              
-          show G.IsOpen (Prod.snd ⁻¹' v) from
-            (this ▸ @is_open_Union _ _ G _) fun u =>
-              (@is_open_Union _ _ G _) fun hu => GenerateOpen.basic _ ⟨_, hu, _, hv, rfl⟩))
+          have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v := by
+            simp_rw [← Union_prod_const, ← sUnion_eq_bUnion, hs, univ_prod]
+          show G.IsOpen (Prod.snd ⁻¹' v) by
+            rw [← this]
+            exact is_open_Union fun u => is_open_Union fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
 
 theorem prod_eq_generate_from :
     Prod.topologicalSpace = generateFrom { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
@@ -415,12 +463,7 @@ theorem prod_induced_induced {α γ : Type _} (f : α → β) (g : γ → δ) :
     @Prod.topologicalSpace α γ (induced f ‹_›) (induced g ‹_›) =
       induced (fun p => (f p.1, g p.2)) Prod.topologicalSpace :=
   by
-  set fxg := fun p : α × γ => (f p.1, g p.2)
-  have key1 : f ∘ (Prod.fst : α × γ → α) = (Prod.fst : β × δ → β) ∘ fxg := rfl
-  have key2 : g ∘ (Prod.snd : α × γ → γ) = (Prod.snd : β × δ → δ) ∘ fxg := rfl
-  unfold Prod.topologicalSpace
-  conv_lhs => rw [induced_compose, induced_compose, key1, key2]congr rw [← induced_compose]skip rw [← induced_compose]
-  rw [induced_inf]
+  simp_rw [Prod.topologicalSpace, induced_inf, induced_compose]
 
 theorem continuous_uncurry_of_discrete_topology_left [DiscreteTopology α] {f : α → β → γ} (h : ∀ a, Continuous (f a)) :
     Continuous (Function.uncurry f) :=
@@ -609,10 +652,7 @@ theorem embedding_inl : Embedding (@inl α β) :=
       · intro u hu
         exists inl '' u
         change (IsOpen (inl ⁻¹' (@inl α β '' u)) ∧ IsOpen (inr ⁻¹' (@inl α β '' u))) ∧ inl ⁻¹' (inl '' u) = u
-        have : inl ⁻¹' (@inl α β '' u) = u := preimage_image_eq u fun _ _ => inl.inj_iff.mp
-        rw [this]
-        have : inr ⁻¹' (@inl α β '' u) = ∅ := eq_empty_iff_forall_not_mem.mpr fun a ⟨b, _, h⟩ => inl_ne_inr h
-        rw [this]
+        rw [preimage_image_eq u Sum.inl_injective, preimage_inr_image_inl]
         exact ⟨⟨hu, is_open_empty⟩, rfl⟩
         ,
     inj := fun _ _ => inl.inj_iff.mp }
@@ -627,10 +667,7 @@ theorem embedding_inr : Embedding (@inr α β) :=
       · intro u hu
         exists inr '' u
         change (IsOpen (inl ⁻¹' (@inr α β '' u)) ∧ IsOpen (inr ⁻¹' (@inr α β '' u))) ∧ inr ⁻¹' (inr '' u) = u
-        have : inl ⁻¹' (@inr α β '' u) = ∅ := eq_empty_iff_forall_not_mem.mpr fun b ⟨a, _, h⟩ => inr_ne_inl h
-        rw [this]
-        have : inr ⁻¹' (@inr α β '' u) = u := preimage_image_eq u fun _ _ => inr.inj_iff.mp
-        rw [this]
+        rw [preimage_inl_image_inr, preimage_image_eq u Sum.inr_injective]
         exact ⟨⟨is_open_empty, hu⟩, rfl⟩
         ,
     inj := fun _ _ => inr.inj_iff.mp }
@@ -768,6 +805,14 @@ theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
 theorem Continuous.cod_restrict {f : α → β} {s : Set β} (hf : Continuous f) (hs : ∀ a, f a ∈ s) :
     Continuous (s.codRestrict f hs) :=
   continuous_subtype_mk hs hf
+
+theorem Inducing.cod_restrict {e : α → β} (he : Inducing e) {s : Set β} (hs : ∀ x, e x ∈ s) :
+    Inducing (codRestrict e s hs) :=
+  inducing_of_inducing_compose (he.Continuous.codRestrict hs) continuous_subtype_coe he
+
+theorem Embedding.cod_restrict {e : α → β} (he : Embedding e) (s : Set β) (hs : ∀ x, e x ∈ s) :
+    Embedding (codRestrict e s hs) :=
+  embedding_of_embedding_compose (he.Continuous.codRestrict hs) continuous_subtype_coe he
 
 end Subtype
 

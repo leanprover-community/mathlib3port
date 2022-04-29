@@ -14,7 +14,7 @@ no `measurable_set.mul` etc.
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 open Set
 

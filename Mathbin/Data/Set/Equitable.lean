@@ -21,7 +21,7 @@ latter yet.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 variable {α β : Type _}
 

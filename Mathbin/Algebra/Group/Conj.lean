@@ -3,11 +3,11 @@ Copyright (c) 2018  Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 -/
-import Mathbin.Data.Fintype.Basic
-import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Group.Semiconj
-import Mathbin.Data.Equiv.MulAddAut
 import Mathbin.Algebra.GroupWithZero.Basic
+import Mathbin.Algebra.Hom.Aut
+import Mathbin.Algebra.Hom.Group
+import Mathbin.Data.Fintype.Basic
 
 /-!
 # Conjugacy of group elements
@@ -54,15 +54,12 @@ protected theorem MonoidHom.map_is_conj (f : α →* β) {a b : α} : IsConj a b
 
 end Monoidₓ
 
-section Groupₓ
+section CancelMonoid
 
-variable [Groupₓ α]
+variable [CancelMonoid α]
 
-@[simp]
-theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
-  ⟨fun ⟨c, hc⟩ => ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, fun ⟨c, hc⟩ =>
-    ⟨⟨c, c⁻¹, mul_inv_selfₓ c, inv_mul_selfₓ c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
-
+-- These lemmas hold for either `left_cancel_monoid` or `right_cancel_monoid`,
+-- with slightly different proofs; so far these don't seem necessary.
 @[simp]
 theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
   ⟨fun ⟨c, hc⟩ => mul_right_cancelₓ (hc.symm.trans ((mul_oneₓ _).trans (one_mulₓ _).symm)), fun h => by
@@ -74,6 +71,17 @@ theorem is_conj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
     IsConj a 1 ↔ IsConj 1 a := ⟨IsConj.symm, IsConj.symm⟩
     _ ↔ a = 1 := is_conj_one_right
     
+
+end CancelMonoid
+
+section Groupₓ
+
+variable [Groupₓ α]
+
+@[simp]
+theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
+  ⟨fun ⟨c, hc⟩ => ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, fun ⟨c, hc⟩ =>
+    ⟨⟨c, c⁻¹, mul_inv_selfₓ c, inv_mul_selfₓ c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
 
 @[simp]
 theorem conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=

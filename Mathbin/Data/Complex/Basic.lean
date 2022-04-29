@@ -14,7 +14,7 @@ of characteristic zero. The result that the complex numbers are algebraically cl
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 /-! ### Definition and basic arithmmetic -/
 
@@ -29,7 +29,7 @@ notation "ℂ" => Complex
 
 namespace Complex
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 noncomputable instance : DecidableEq ℂ :=
   Classical.decEq _
@@ -86,6 +86,9 @@ def _root_.set.re_prod_im (s t : Set ℝ) : Set ℂ :=
 
 -- mathport name: «expr ×ℂ »
 infixl:72 " ×ℂ " => Set.ReProdIm
+
+theorem mem_re_prod_im {z : ℂ} {s t : Set ℝ} : z ∈ s ×ℂ t ↔ z.re ∈ s ∧ z.im ∈ t :=
+  Iff.rfl
 
 instance : Zero ℂ :=
   ⟨(0 : ℝ)⟩
@@ -255,6 +258,18 @@ theorem mk_eq_add_mul_I (a b : ℝ) : Complex.mk a b = a + b * I :=
 theorem re_add_im (z : ℂ) : (z.re : ℂ) + z.im * I = z :=
   ext_iff.2 <| by
     simp
+
+theorem mul_I_re (z : ℂ) : (z * I).re = -z.im := by
+  simp
+
+theorem mul_I_im (z : ℂ) : (z * I).im = z.re := by
+  simp
+
+theorem I_mul_re (z : ℂ) : (I * z).re = -z.im := by
+  simp
+
+theorem I_mul_im (z : ℂ) : (I * z).im = z.re := by
+  simp
 
 /-! ### Commutative ring instance and lemmas -/
 
@@ -609,7 +624,7 @@ theorem int_cast_im (n : ℤ) : (n : ℂ).im = 0 := by
 
 @[simp, norm_cast]
 theorem of_real_rat_cast (n : ℚ) : ((n : ℝ) : ℂ) = n :=
-  ofReal.map_rat_cast n
+  map_rat_cast ofReal n
 
 @[simp, norm_cast]
 theorem rat_cast_re (q : ℚ) : (q : ℂ).re = q := by
@@ -715,13 +730,25 @@ theorem abs_conj (z : ℂ) : abs (conj z) = abs z := by
 theorem abs_mul (z w : ℂ) : abs (z * w) = abs z * abs w := by
   rw [abs, norm_sq_mul, Real.sqrt_mul (norm_sq_nonneg _)] <;> rfl
 
+/-- `complex.abs` as a `monoid_with_zero_hom`. -/
+@[simps]
+noncomputable def absHom : ℂ →*₀ ℝ where
+  toFun := abs
+  map_zero' := abs_zero
+  map_one' := abs_one
+  map_mul' := abs_mul
+
+@[simp]
+theorem abs_prod {ι : Type _} (s : Finset ι) (f : ι → ℂ) : abs (s.Prod f) = s.Prod fun i => abs (f i) :=
+  map_prod absHom _ _
+
 @[simp]
 theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
-  MonoidHom.map_pow ⟨abs, abs_one, abs_mul⟩ z n
+  map_pow absHom z n
 
 @[simp]
 theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
-  MonoidWithZeroHom.map_zpow ⟨abs, abs_zero, abs_one, abs_mul⟩ z n
+  absHom.map_zpow z n
 
 theorem abs_re_le_abs (z : ℂ) : abs z.re ≤ abs z := by
   rw [mul_self_le_mul_self_iff (_root_.abs_nonneg z.re) (abs_nonneg _), abs_mul_abs_self, mul_self_abs] <;>
@@ -736,6 +763,14 @@ theorem re_le_abs (z : ℂ) : z.re ≤ abs z :=
 
 theorem im_le_abs (z : ℂ) : z.im ≤ abs z :=
   (abs_le.1 (abs_im_le_abs _)).2
+
+@[simp]
+theorem abs_re_lt_abs {z : ℂ} : abs z.re < abs z ↔ z.im ≠ 0 := by
+  rw [abs, Real.lt_sqrt (_root_.abs_nonneg _), norm_sq_apply, _root_.sq_abs, ← sq, lt_add_iff_pos_right, mul_self_pos]
+
+@[simp]
+theorem abs_im_lt_abs {z : ℂ} : abs z.im < abs z ↔ z.re ≠ 0 := by
+  simpa using @abs_re_lt_abs (z * I)
 
 /-- The **triangle inequality** for complex numbers.
 -/
@@ -851,8 +886,14 @@ theorem zero_lt_real {x : ℝ} : (0 : ℂ) < (x : ℂ) ↔ 0 < x :=
 theorem not_le_iff {z w : ℂ} : ¬z ≤ w ↔ w.re < z.re ∨ z.im ≠ w.im := by
   rw [le_def, not_and_distrib, not_leₓ]
 
+theorem not_lt_iff {z w : ℂ} : ¬z < w ↔ w.re ≤ z.re ∨ z.im ≠ w.im := by
+  rw [lt_def, not_and_distrib, not_ltₓ]
+
 theorem not_le_zero_iff {z : ℂ} : ¬z ≤ 0 ↔ 0 < z.re ∨ z.im ≠ 0 :=
   not_le_iff
+
+theorem not_lt_zero_iff {z : ℂ} : ¬z < 0 ↔ 0 ≤ z.re ∨ z.im ≠ 0 :=
+  not_lt_iff
 
 /-- With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
 -/
@@ -935,7 +976,7 @@ theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :
     have := add_lt_add H₁ H₂
     rwa [add_halves] at this
 
-noncomputable instance : CauSeq.IsComplete ℂ abs :=
+instance : CauSeq.IsComplete ℂ abs :=
   ⟨fun f => ⟨limAux f, equiv_lim_aux f⟩⟩
 
 open CauSeq

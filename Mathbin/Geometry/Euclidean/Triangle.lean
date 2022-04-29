@@ -36,13 +36,13 @@ unnecessarily.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Classical
+open Classical
 
-open_locale Real
+open Real
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 namespace InnerProductGeometry
 
@@ -298,7 +298,7 @@ This section develops some geometrical definitions and results on
 
 open InnerProductGeometry
 
-open_locale EuclideanGeometry
+open EuclideanGeometry
 
 variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 

@@ -93,21 +93,22 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | _ => skip
 
 -- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- List of tactics used by `measurability` internally. -/
 unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic Stringₓ) :=
   [(propositional_goal >> apply_assumption) >> pure "apply_assumption",
     goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
-    apply_rules [pquote.1 measurability] 50 { md } >> pure "apply_rules measurability",
+    apply_rules [] [`` measurability] 50 { md } >> pure "apply_rules with measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",
-    sorry >> pure "refine measurable.ae_measurable _"]
+    sorry >> pure "refine measurable.ae_measurable _", sorry >> pure "refine measurable.ae_strongly_measurable _"]
 
 namespace Interactive
 
 setup_tactic_parser
 
-/-- Solve goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`.
-`measurability?` reports back the proof term it found.
+/-- Solve goals of the form `measurable f`, `ae_measurable f μ`, `ae_strongly_measurable f μ` or
+`measurable_set s`. `measurability?` reports back the proof term it found.
 -/
 unsafe def measurability (bang : parse <| optionalₓ (tk "!")) (trace : parse <| optionalₓ (tk "?"))
     (cfg : tidy.cfg := {  }) : tactic Unit :=
@@ -120,8 +121,9 @@ unsafe def measurability (bang : parse <| optionalₓ (tk "!")) (trace : parse <
 unsafe def measurability' : tactic Unit :=
   measurability none none {  }
 
-/-- `measurability` solves goals of the form `measurable f`, `ae_measurable f μ` or `measurable_set s`
-by applying lemmas tagged with the `measurability` user attribute.
+/-- `measurability` solves goals of the form `measurable f`, `ae_measurable f μ`,
+`ae_strongly_measurable f μ` or `measurable_set s` by applying lemmas tagged with the
+`measurability` user attribute.
 
 You can also use `measurability!`, which applies lemmas with `{ md := semireducible }`.
 The default behaviour is more conservative, and only unfolds `reducible` definitions

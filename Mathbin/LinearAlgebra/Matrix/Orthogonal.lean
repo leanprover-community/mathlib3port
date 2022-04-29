@@ -31,7 +31,7 @@ variable [Mul α] [AddCommMonoidₓ α]
 
 variable (A : Matrix m n α)
 
-open_locale Matrix
+open Matrix
 
 /-- `A.has_orthogonal_rows` means matrix `A` has orthogonal rows (with respect to
 `matrix.dot_product`). -/

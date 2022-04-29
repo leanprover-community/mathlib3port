@@ -27,7 +27,7 @@ namespace List
 
 section Sorted
 
-variable {α : Type uu} {r : α → α → Prop}
+variable {α : Type uu} {r : α → α → Prop} {a : α} {l : List α}
 
 /-- `sorted r l` is the same as `pairwise r l`, preferred in the case that `r`
   is a `<` or `≤`-like relation (transitive and antisymmetric or asymmetric) -/
@@ -41,8 +41,8 @@ instance decidableSorted [DecidableRel r] (l : List α) : Decidable (Sorted r l)
 theorem sorted_nil : Sorted r [] :=
   pairwise.nil
 
-theorem sorted_of_sorted_cons {a : α} {l : List α} : Sorted r (a :: l) → Sorted r l :=
-  pairwise_of_pairwise_cons
+theorem Sorted.of_cons : Sorted r (a :: l) → Sorted r l :=
+  pairwise.of_cons
 
 theorem Sorted.tail {r : α → α → Prop} {l : List α} (h : Sorted r l) : Sorted r l.tail :=
   h.tail
@@ -65,13 +65,10 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
   · have : a ∈ l₂ := p.subset (mem_cons_self _ _)
     rcases mem_split this with ⟨u₂, v₂, rfl⟩
     have p' := (perm_cons a).1 (p.trans perm_middle)
-    have :=
+    obtain rfl :=
       IH p'
-        (pairwise_of_sublist
-          (by
-            simp )
-          s₂)
-    subst l₁
+        (s₂.sublist <| by
+          simp )
     change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
     rw [← append_assoc]
     congr
@@ -87,7 +84,7 @@ theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ ~
 theorem sublist_of_subperm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (p : l₁ <+~ l₂) (s₁ : l₁.Sorted r)
     (s₂ : l₂.Sorted r) : l₁ <+ l₂ := by
   let ⟨_, h, h'⟩ := p
-  rwa [← List.eq_of_perm_of_sorted h (List.pairwise_of_sublist h' s₂) s₁]
+  rwa [← eq_of_perm_of_sorted h (s₂.sublist h') s₁]
 
 @[simp]
 theorem sorted_singleton (a : α) : Sorted r [a] :=
@@ -206,7 +203,7 @@ theorem Sorted.ordered_insert (a : α) : ∀ l, Sorted r l → Sorted r (ordered
     · simpa [ordered_insert, h', h] using fun b' bm => trans h' (rel_of_sorted_cons h _ bm)
       
     · suffices ∀ b' : α, b' ∈ ordered_insert r a l → r b b' by
-        simpa [ordered_insert, h', (sorted_of_sorted_cons h).orderedInsert l]
+        simpa [ordered_insert, h', h.of_cons.ordered_insert l]
       intro b' bm
       cases'
         show b' = a ∨ b' ∈ l by
@@ -354,7 +351,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
   | a :: l, b :: l', h₁, h₂ => by
     by_cases' a ≼ b
     · suffices ∀ b' : α _ : b' ∈ merge r l (b :: l'), r a b' by
-        simpa [merge, h, (sorted_of_sorted_cons h₁).merge h₂]
+        simpa [merge, h, h₁.of_cons.merge h₂]
       intro b' bm
       rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by
           simpa [Or.left_comm] using (perm_merge _ _ _).Subset bm with
@@ -368,7 +365,7 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
         
       
     · suffices ∀ b' : α _ : b' ∈ merge r (a :: l) l', r b b' by
-        simpa [merge, h, h₁.merge (sorted_of_sorted_cons h₂)]
+        simpa [merge, h, h₁.merge h₂.of_cons]
       intro b' bm
       have ba : b ≼ a := (total_of r _ _).resolve_left h
       rcases show b' = a ∨ b' ∈ l ∨ b' ∈ l' by
@@ -406,6 +403,14 @@ theorem merge_sort_eq_insertion_sort [IsAntisymm α r] (l : List α) : mergeSort
 end TotalAndTransitive
 
 end Correctness
+
+@[simp]
+theorem merge_sort_nil : [].mergeSort r = [] := by
+  rw [List.mergeSort]
+
+@[simp]
+theorem merge_sort_singleton (a : α) : [a].mergeSort r = [a] := by
+  rw [List.mergeSort]
 
 end MergeSort
 

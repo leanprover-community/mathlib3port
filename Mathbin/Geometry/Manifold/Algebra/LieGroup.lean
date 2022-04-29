@@ -38,7 +38,7 @@ so the definition does not apply. Hence the definition should be more general, a
 
 noncomputable section
 
-open_locale Manifold
+open Manifold
 
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/

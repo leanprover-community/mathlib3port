@@ -3,10 +3,9 @@ Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 -/
-import Mathbin.Tactic.RingExp
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Ring.Opposite
-import Mathbin.Data.Equiv.Ring
+import Mathbin.SetTheory.Cardinal.Ordinal
+import Mathbin.Tactic.RingExp
 
 /-!
 # Quaternions
@@ -61,6 +60,14 @@ structure QuaternionAlgebra (R : Type _) (a b : R) where mk {} ::
 localized [Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R a b
 
 namespace QuaternionAlgebra
+
+/-- The equivalence between a quaternion algebra over R and R × R × R × R. -/
+@[simps]
+def equivProd {R : Type _} (c₁ c₂ : R) : ℍ[R,c₁,c₂] ≃ R × R × R × R where
+  toFun := fun a => ⟨a.1, a.2, a.3, a.4⟩
+  invFun := fun a => ⟨a.1, a.2.1, a.2.2.1, a.2.2.2⟩
+  left_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
+  right_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
 
 @[simp]
 theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a.3 a.4 = a
@@ -343,7 +350,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
 
 theorem commute_self_conj : Commute a a.conj :=
   a.commute_conj_self.symm
@@ -428,6 +435,10 @@ def Quaternion (R : Type _) [One R] [Neg R] :=
 
 -- mathport name: «exprℍ[ ]»
 localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
+
+/-- The equivalence between the quaternions over R and R × R × R × R. -/
+def Quaternion.equivProd (R : Type _) [One R] [Neg R] : ℍ[R] ≃ R × R × R × R :=
+  QuaternionAlgebra.equivProd _ _
 
 namespace Quaternion
 
@@ -798,6 +809,7 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 @[simp]
 theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
@@ -809,6 +821,7 @@ theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
 theorem norm_sq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
   not_congr norm_sq_eq_zero
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 @[simp]
 theorem norm_sq_nonneg : 0 ≤ normSq a := by
   rw [norm_sq_def']
@@ -856,4 +869,62 @@ theorem norm_sq_div : normSq (a / b) = normSq a / normSq b :=
 end Field
 
 end Quaternion
+
+namespace Cardinal
+
+open Cardinal Quaternion
+
+section QuaternionAlgebra
+
+variable {R : Type _} (c₁ c₂ : R)
+
+private theorem pow_four [Infinite R] : # R ^ 4 = # R :=
+  power_nat_eq (omega_le_mk R) <| by
+    simp
+
+/-- The cardinality of a quaternion algebra, as a type. -/
+theorem mk_quaternion_algebra : # ℍ[R,c₁,c₂] = # R ^ 4 := by
+  rw [mk_congr (QuaternionAlgebra.equivProd c₁ c₂)]
+  simp only [mk_prod, lift_id]
+  ring
+
+@[simp]
+theorem mk_quaternion_algebra_of_infinite [Infinite R] : # ℍ[R,c₁,c₂] = # R := by
+  rw [mk_quaternion_algebra, pow_four]
+
+/-- The cardinality of a quaternion algebra, as a set. -/
+theorem mk_univ_quaternion_algebra : # (Set.Univ : Set ℍ[R,c₁,c₂]) = # R ^ 4 := by
+  rw [mk_univ, mk_quaternion_algebra]
+
+@[simp]
+theorem mk_univ_quaternion_algebra_of_infinite [Infinite R] : # (Set.Univ : Set ℍ[R,c₁,c₂]) = # R := by
+  rw [mk_univ_quaternion_algebra, pow_four]
+
+end QuaternionAlgebra
+
+section Quaternion
+
+variable (R : Type _) [One R] [Neg R]
+
+/-- The cardinality of the quaternions, as a type. -/
+@[simp]
+theorem mk_quaternion : # ℍ[R] = # R ^ 4 :=
+  mk_quaternion_algebra _ _
+
+@[simp]
+theorem mk_quaternion_of_infinite [Infinite R] : # ℍ[R] = # R := by
+  rw [mk_quaternion, pow_four]
+
+/-- The cardinality of the quaternions, as a set. -/
+@[simp]
+theorem mk_univ_quaternion : # (Set.Univ : Set ℍ[R]) = # R ^ 4 :=
+  mk_univ_quaternion_algebra _ _
+
+@[simp]
+theorem mk_univ_quaternion_of_infinite [Infinite R] : # (Set.Univ : Set ℍ[R]) = # R := by
+  rw [mk_univ_quaternion, pow_four]
+
+end Quaternion
+
+end Cardinal
 

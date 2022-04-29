@@ -19,7 +19,7 @@ namespace Complex
 
 open Set Filter
 
-open_locale Real TopologicalSpace
+open Real TopologicalSpace
 
 /-- Inverse of the `exp` function. Returns values such that `(log x).im > - π` and `(log x).im ≤ π`.
   `log 0 = 0`-/
@@ -164,7 +164,7 @@ section LogDeriv
 
 open Complex Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _}
 

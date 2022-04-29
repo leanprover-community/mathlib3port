@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Group.Defs
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Logic.Equiv.Basic
 import Mathbin.Logic.Nontrivial
 
 /-!
@@ -160,6 +160,9 @@ instance [Sub α] : Sub αᵐᵒᵖ where
 instance [Neg α] : Neg αᵐᵒᵖ where
   neg := fun x => op <| -unop x
 
+instance [HasInvolutiveNeg α] : HasInvolutiveNeg αᵐᵒᵖ :=
+  { MulOpposite.hasNeg α with neg_neg := fun a => unop_injective <| neg_negₓ _ }
+
 @[to_additive]
 instance [Mul α] : Mul αᵐᵒᵖ where
   mul := fun x y => op (unop y * unop x)
@@ -167,6 +170,10 @@ instance [Mul α] : Mul αᵐᵒᵖ where
 @[to_additive]
 instance [Inv α] : Inv αᵐᵒᵖ where
   inv := fun x => op <| (unop x)⁻¹
+
+@[to_additive]
+instance [HasInvolutiveInv α] : HasInvolutiveInv αᵐᵒᵖ :=
+  { MulOpposite.hasInv α with inv_inv := fun a => unop_injective <| inv_invₓ _ }
 
 @[to_additive]
 instance (R : Type _) [HasScalar R α] : HasScalar R αᵐᵒᵖ where
@@ -304,6 +311,9 @@ theorem unop_mul [Mul α] (a b : αᵃᵒᵖ) : unop (a * b) = unop a * unop b :
 
 instance [Inv α] : Inv αᵃᵒᵖ where
   inv := fun a => op (unop a)⁻¹
+
+instance [HasInvolutiveInv α] : HasInvolutiveInv αᵃᵒᵖ :=
+  { AddOpposite.hasInv with inv_inv := fun a => unop_injective <| inv_invₓ _ }
 
 @[simp]
 theorem op_inv [Inv α] (a : α) : op a⁻¹ = (op a)⁻¹ :=

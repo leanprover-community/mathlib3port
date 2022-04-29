@@ -44,7 +44,7 @@ universe u
 
 open Metric Set FiniteDimensional MeasureTheory Filter Finₓ
 
-open_locale Ennreal TopologicalSpace
+open Ennreal TopologicalSpace
 
 noncomputable section
 
@@ -131,6 +131,7 @@ section
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 /-- Any `1`-separated set in the ball of radius `2` has cardinality at most `5 ^ dim`. This is
 useful to show that the supremum in the definition of `besicovitch.multiplicity E` is
 well behaved. -/
@@ -139,8 +140,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
   /- We consider balls of radius `1/2` around the points in `s`. They are disjoint, and all
     contained in the ball of radius `5/2`. A volume argument gives `s.card * (1/2)^dim ≤ (5/2)^dim`,
     i.e., `s.card ≤ 5^dim`. -/
-  let this' : MeasurableSpace E := borel E
-  let this' : BorelSpace E := ⟨rfl⟩
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   let μ : Measureₓ E := measure.add_haar
   let δ : ℝ := (1 : ℝ) / 2
   let ρ : ℝ := (5 : ℝ) / 2
@@ -235,7 +235,7 @@ theorem exists_good_δ :
     · exact
         ⟨fun i => 0, fun i => by
           simp , fun i j hij => by
-          simpa only [norm_zero, sub_nonpos, sub_self]⟩
+          simpa only [norm_zero, sub_nonpos, sub_self] ⟩
       
   -- For `δ > 0`, `F δ` is a function from `fin N` to the ball of radius `2` for which two points
   -- in the image are separated by `1 - δ`.

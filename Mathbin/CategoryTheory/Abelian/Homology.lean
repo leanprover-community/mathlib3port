@@ -69,8 +69,7 @@ instance : Mono (homologyCToK f g w) := by
   apply_fun kernel.ι (cokernel.desc f g w)  at ha
   simp only [← pseudoelement.comp_apply, cokernel.π_desc, kernel.lift_ι, pseudoelement.apply_zero] at ha
   simp only [pseudoelement.comp_apply] at ha
-  have : exact f (cokernel.π f) := exact_cokernel f
-  obtain ⟨b, hb⟩ : ∃ b, f b = _ := pseudoelement.pseudo_exact_of_exact.2 _ ha
+  obtain ⟨b, hb⟩ : ∃ b, f b = _ := (pseudoelement.pseudo_exact_of_exact (exact_cokernel f)).2 _ ha
   suffices ∃ c, kernel.lift g f w c = a by
     obtain ⟨c, rfl⟩ := this
     simp [← pseudoelement.comp_apply]
@@ -85,7 +84,6 @@ instance : Epi (homologyCToK f g w) := by
   apply pseudoelement.epi_of_pseudo_surjective
   intro a
   let b := kernel.ι (cokernel.desc f g w) a
-  have : exact f (cokernel.π f) := exact_cokernel f
   obtain ⟨c, hc⟩ : ∃ c, cokernel.π f c = b
   apply pseudoelement.pseudo_surjective_of_epi (cokernel.π f)
   have : g c = 0 := by
@@ -96,8 +94,7 @@ instance : Epi (homologyCToK f g w) := by
       pseudoelement.comp_apply, hc]
     simp [← pseudoelement.comp_apply]
   obtain ⟨d, hd⟩ : ∃ d, kernel.ι g d = c := by
-    apply pseudoelement.pseudo_exact_of_exact.2 _ this
-    apply exact_kernel_ι
+    apply (pseudoelement.pseudo_exact_of_exact exact_kernel_ι).2 _ this
   use cokernel.π (kernel.lift g f w) d
   apply_fun kernel.ι (cokernel.desc f g w)
   swap
@@ -302,6 +299,19 @@ theorem map_eq_lift_desc'_right α β h :
   rw [map_eq_desc'_lift_right]
   ext
   simp
+
+@[simp, reassoc]
+theorem map_ι α β h :
+    map w w' α β h ≫ ι f' g' w' =
+      ι f g w ≫
+        cokernel.map f f' α.left β.left
+          (by
+            simp [h, β.w.symm]) :=
+  by
+  rw [map_eq_lift_desc'_left, lift_ι]
+  ext
+  simp only [← category.assoc]
+  rw [π'_ι, π'_desc', category.assoc, category.assoc, cokernel.π_desc]
 
 end
 

@@ -41,7 +41,7 @@ These require `open_locale kronecker`:
 
 namespace Matrix
 
-open_locale Matrix
+open Matrix
 
 variable {R α α' β β' γ γ' : Type _}
 
@@ -176,7 +176,7 @@ section Kronecker
 
 variable (R)
 
-open_locale Matrix
+open Matrix
 
 /-- The Kronecker product. This is just a shorthand for `kronecker_map (*)`. Prefer the notation
 `⊗ₖ` rather than this definition. -/
@@ -252,7 +252,7 @@ variable (R)
 
 open TensorProduct
 
-open_locale Matrix TensorProduct
+open Matrix TensorProduct
 
 section Module
 
@@ -322,7 +322,7 @@ section Algebra
 
 variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Algebra R α] [Algebra R β]
 
-open_locale Kronecker
+open Kronecker
 
 open Algebra.TensorProduct
 

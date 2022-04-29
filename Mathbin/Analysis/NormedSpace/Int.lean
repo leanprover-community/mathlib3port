@@ -17,7 +17,7 @@ The resulting nonnegative real number is denoted by `∥n∥₊`.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 namespace Int
 

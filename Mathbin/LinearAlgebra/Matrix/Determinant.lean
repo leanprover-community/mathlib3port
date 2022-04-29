@@ -44,7 +44,7 @@ open Equivₓ Equivₓ.Perm Finset Function
 
 namespace Matrix
 
-open_locale Matrix BigOperators
+open Matrix BigOperators
 
 variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
@@ -247,7 +247,6 @@ theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPequiv.toMatrix : Matri
   rw [← Matrix.mul_one (σ.to_pequiv.to_matrix : Matrix n n R), Pequiv.to_pequiv_mul_matrix, det_permute, det_one,
     mul_oneₓ]
 
-@[simp]
 theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n * det A :=
   calc
     det (c • A) = det (Matrix.mul (diagonalₓ fun _ => c) A) := by
@@ -256,6 +255,19 @@ theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n
     _ = c ^ Fintype.card n * det A := by
       simp [card_univ]
     
+
+@[simp]
+theorem det_smul_of_tower {α} [Monoidₓ α] [DistribMulAction α R] [IsScalarTower α R R] [SmulCommClass α R R] (c : α)
+    (A : Matrix n n R) : det (c • A) = c ^ Fintype.card n • det A := by
+  rw [← smul_one_smul R c A, det_smul, smul_pow, one_pow, smul_mul_assoc, one_mulₓ]
+
+theorem det_neg (A : Matrix n n R) : det (-A) = -1 ^ Fintype.card n * det A := by
+  rw [← det_smul, neg_one_smul]
+
+/-- A variant of `matrix.det_neg` with scalar multiplication by `units ℤ` instead of multiplication
+by `R`. -/
+theorem det_neg_eq_smul (A : Matrix n n R) : det (-A) = (-1 : Units ℤ) ^ Fintype.card n • det A := by
+  rw [← det_smul_of_tower, Units.neg_smul, one_smul]
 
 /-- Multiplying each row by a fixed `v i` multiplies the determinant by
 the product of the `v`s. -/
@@ -404,7 +416,7 @@ theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i �
   exact det_update_row_add_smul_self Aᵀ hij c
 
 theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Finset n} :
-    ∀ c : n → R hs : ∀ i, (i ∉ s) → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
+    ∀ c : n → R hs : ∀ i, i ∉ s → c i = 0 k : n hk : k ∉ s A_eq : ∀ i j, A i j = B i j + c i * B k j, det A = det B :=
   by
   revert B
   refine' s.induction_on _ _
@@ -512,7 +524,7 @@ end DetEq
 
 @[simp]
 theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Matrix n n R) :
-    (blockDiagonal M).det = ∏ k, (M k).det := by
+    (blockDiagonalₓ M).det = ∏ k, (M k).det := by
   -- Rewrite the determinants as a sum over permutations.
   simp_rw [det_apply']
   -- The right hand side is a product of sums, rewrite it as a sum of products.
@@ -591,10 +603,11 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
     exact hkx
     
 
-/-- The determinant of a 2x2 block matrix with the lower-left block equal to zero is the product of
+/-- The determinant of a 2×2 block matrix with the lower-left block equal to zero is the product of
 the determinants of the diagonal blocks. For the generalization to any number of blocks, see
-`matrix.upper_block_triangular_det`. -/
-theorem upper_two_block_triangular_det (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
+`matrix.det_of_upper_triangular`. -/
+@[simp]
+theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
     (Matrix.fromBlocks A B 0 D).det = A.det * D.det := by
   classical
   simp_rw [det_apply']
@@ -654,6 +667,14 @@ theorem upper_two_block_triangular_det (A : Matrix m m R) (B : Matrix m n R) (D 
       rfl
       
     
+
+/-- The determinant of a 2×2 block matrix with the upper-right block equal to zero is the product of
+the determinants of the diagonal blocks. For the generalization to any number of blocks, see
+`matrix.det_of_lower_triangular`. -/
+@[simp]
+theorem det_from_blocks_zero₁₂ (A : Matrix m m R) (C : Matrix n m R) (D : Matrix n n R) :
+    (Matrix.fromBlocks A 0 C D).det = A.det * D.det := by
+  rw [← det_transpose, from_blocks_transpose, transpose_zero, det_from_blocks_zero₂₁, det_transpose, det_transpose]
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column 0. -/
 theorem det_succ_column_zero {n : ℕ} (A : Matrix (Finₓ n.succ) (Finₓ n.succ) R) :

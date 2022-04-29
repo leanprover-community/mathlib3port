@@ -56,7 +56,7 @@ namespace Polynomial.Chebyshev
 
 open Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable (R S : Type _) [CommRingₓ R] [CommRingₓ S]
 

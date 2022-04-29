@@ -9,6 +9,7 @@ import Mathbin.MeasureTheory.Integral.CircleIntegral
 import Mathbin.Analysis.Calculus.Dslope
 import Mathbin.Analysis.Analytic.Basic
 import Mathbin.Analysis.Complex.ReImTopology
+import Mathbin.Analysis.Calculus.DiffOnIntCont
 import Mathbin.Data.Real.Cardinality
 
 /-!
@@ -144,14 +145,13 @@ Cauchy-Goursat theorem, Cauchy integral formula
 
 open TopologicalSpace Set MeasureTheory intervalIntegral Metric Filter Function
 
-open_locale Interval Real Nnreal Ennreal TopologicalSpace BigOperators
+open Interval Real Nnreal Ennreal TopologicalSpace BigOperators
 
 noncomputable section
 
 universe u
 
-variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [MeasurableSpace E] [BorelSpace E] [SecondCountableTopology E]
-  [CompleteSpace E]
+variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 
 namespace Complex
 
@@ -555,22 +555,20 @@ theorem circle_integral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ
   rw [← two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw hc hd, smul_inv_smul₀]
   simp [Real.pi_ne_zero, I_ne_zero]
 
-/-- **Cauchy integral formula**: if `f : ℂ → E` is continuous on a closed disc of radius `R` and is
-complex differentiable on its interior, then for any `w` in this interior we have
-$\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$.
--/
-theorem circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E}
-    (hw : w ∈ Ball c R) (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R)) :
-    (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw hc) fun z hz =>
-    hd.DifferentiableAt (is_open_ball.mem_nhds hz.1)
+/-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on an open disc and is
+continuous on its closure, then for any `w` in this open ball we have
+$\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
+theorem _root_.diff_cont_on_cl.circle_integral_sub_inv_smul {R : ℝ} {c w : ℂ} {f : ℂ → E}
+    (h : DiffContOnCl ℂ f (Ball c R)) (hw : w ∈ Ball c R) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
+  (circle_integral_sub_inv_smul_of_differentiable_on_off_countable countable_empty hw h.continuous_on_ball) fun x hx =>
+    h.DifferentiableAt is_open_ball hx.1
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on a closed disc of radius
 `R`, then for any `w` in its interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
-theorem circle_integral_sub_inv_smul_of_differentiable_on {R : ℝ} {c w : ℂ} {f : ℂ → E} (hw : w ∈ Ball c R)
-    (hd : DifferentiableOn ℂ f (ClosedBall c R)) : (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
-  circle_integral_sub_inv_smul_of_continuous_on_of_differentiable_on hw hd.ContinuousOn <|
-    hd.mono <| ball_subset_closed_ball
+theorem _root_.differentiable_on.circle_integral_sub_inv_smul {R : ℝ} {c w : ℂ} {f : ℂ → E}
+    (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hw : w ∈ Ball c R) :
+    (∮ z in C(c, R), (z - w)⁻¹ • f z) = (2 * π * I : ℂ) • f w :=
+  (hd.mono closure_ball_subset_closed_ball).DiffContOnCl.circle_integral_sub_inv_smul hw
 
 /-- **Cauchy integral formula**: if `f : ℂ → ℂ` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this
@@ -597,14 +595,13 @@ theorem has_fpower_series_on_ball_of_differentiable_off_countable {R : ℝ≥0 }
       exact
         (has_fpower_series_on_cauchy_integral ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.2) hR).HasSum hw }
 
-/-- If `f : ℂ → E` is continuous on a closed ball of positive radius and is complex differentiable
-on its interior, then it is analytic on the open ball with coefficients of the power series given by
+/-- If `f : ℂ → E` is complex differentiable on an open disc of positive radius and is continuous
+on its closure, then it is analytic on the open disc with coefficients of the power series given by
 Cauchy integral formulas. -/
-theorem has_fpower_series_on_ball_of_continuous_on_of_differentiable_on {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
-    (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R)) (hR : 0 < R) :
-    HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
-  has_fpower_series_on_ball_of_differentiable_off_countable countable_empty hc
-    (fun z hz => hd.DifferentiableAt <| is_open_ball.mem_nhds hz.1) hR
+theorem _root_.diff_cont_on_cl.has_fpower_series_on_ball {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
+    (hf : DiffContOnCl ℂ f (Ball c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
+  has_fpower_series_on_ball_of_differentiable_off_countable countable_empty hf.continuous_on_ball
+    (fun z hz => hf.DifferentiableAt is_open_ball hz.1) hR
 
 /-- If `f : ℂ → E` is complex differentiable on a closed disc of positive radius, then it is
 analytic on the corresponding open disc, and the coefficients of the power series are given by
@@ -613,7 +610,7 @@ Cauchy integral formulas. See also
 weaker assumptions. -/
 protected theorem _root_.differentiable_on.has_fpower_series_on_ball {R : ℝ≥0 } {c : ℂ} {f : ℂ → E}
     (hd : DifferentiableOn ℂ f (ClosedBall c R)) (hR : 0 < R) : HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
-  has_fpower_series_on_ball_of_continuous_on_of_differentiable_on hd.ContinuousOn (hd.mono ball_subset_closed_ball) hR
+  (hd.mono closure_ball_subset_closed_ball).DiffContOnCl.HasFpowerSeriesOnBall hR
 
 /-- If `f : ℂ → E` is complex differentiable on some set `s`, then it is analytic at any point `z`
 such that `s ∈ 𝓝 z` (equivalently, `z ∈ interior s`). -/

@@ -3,12 +3,12 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Logic.Equiv.Basic
 import Mathbin.Tactic.Clear
 import Mathbin.Tactic.SimpResult
 import Mathbin.Tactic.Apply
 import Mathbin.Control.EquivFunctor.Instances
-import Mathbin.Data.Equiv.Functor
+import Mathbin.Logic.Equiv.Functor
 
 /-!
 # The `equiv_rw` tactic transports goals or hypotheses along equivalences.

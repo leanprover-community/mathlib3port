@@ -15,9 +15,12 @@ Assorted theorems about integral domains.
 
 ## Main theorems
 
-* `is_cyclic_of_subgroup_is_domain` : A finite subgroup of the units of an integral domain
-                                            is cyclic.
-* `field_of_is_domain`              : A finite integral domain is a field.
+* `is_cyclic_of_subgroup_is_domain`: A finite subgroup of the units of an integral domain is cyclic.
+* `fintype.field_of_domain`: A finite integral domain is a field.
+
+## TODO
+
+Prove Wedderburn's little theorem, which shows that all finite division rings are actually fields.
 
 ## Tags
 
@@ -29,7 +32,7 @@ section
 
 open Finset Polynomial Function
 
-open_locale BigOperators Nat
+open BigOperators Nat
 
 section CancelMonoidWithZero
 
@@ -109,10 +112,6 @@ To support `ℤˣ` and other infinite monoids with finite groups of units, this 
 `fintype Rˣ` rather than deducing it from `fintype R`. -/
 instance [Fintype Rˣ] : IsCyclic Rˣ :=
   is_cyclic_of_subgroup_is_domain (Units.coeHom R) <| Units.ext
-
-/-- Every finite integral domain is a field. -/
-def fieldOfIsDomain [DecidableEq R] [Fintype R] : Field R :=
-  { Fintype.divisionRingOfIsDomain R, ‹CommRingₓ R› with }
 
 section
 

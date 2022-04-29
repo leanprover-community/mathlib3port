@@ -3,7 +3,7 @@ Copyright (c) 2020 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Data.Equiv.Ring
+import Mathbin.Algebra.Ring.Equiv
 import Mathbin.GroupTheory.GroupAction.Group
 import Mathbin.RingTheory.Subring.Basic
 
@@ -29,7 +29,7 @@ group action, invariant subring
 
 universe u v
 
-open_locale BigOperators
+open BigOperators
 
 /-- Typeclass for multiplicative actions by monoids on semirings.
 

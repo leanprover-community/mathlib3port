@@ -66,7 +66,7 @@ theorem mem_rev_list_aux :
         simp [DArray.iterateAux] <;>
           apply Or.inl <;> unfold read  at e <;> have H : j = ⟨i, h⟩ := Finₓ.eq_of_veq je <;> rwa [← H, e],
       fun m => by
-      simp [DArray.iterateAux, List.Mem] at m
+      simp [DArray.iterateAux, List.Memₓ] at m
       cases' m with e m'
       exact ⟨⟨i, h⟩, Nat.lt_succ_selfₓ _, Eq.symm e⟩
       exact

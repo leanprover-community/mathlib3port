@@ -343,9 +343,8 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         subst this
         exact ⟨_, ⟨h, hm⟩, rfl⟩
         
-      · simp only [List.headₓ, exists_eq_left, Part.mem_some_iff, List.tail_cons, false_orₓ] at this
-        refine'
-          IH _ this
+      · refine'
+          IH (n.succ :: v.val)
             (by
               simp_all )
             _ rfl fun m h' => _
@@ -531,7 +530,7 @@ def Cfg.then : Cfg → Cont → Cfg
   | cfg.halt v, k' => stepRet k' v
   | cfg.ret k v, k' => Cfg.ret (k.then k') v
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:311:16: warning: unsupported simp config option: constructor_eq
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:294:16: warning: unsupported simp config option: constructor_eq
 /-- The `step_normal` function respects the `then k'` homomorphism. Note that this is an exact
 equality, not a simulation; the original and embedded machines move in lock-step until the
 embedded machine reaches the halt state. -/
@@ -639,13 +638,10 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       · obtain ⟨k₀, v₀, e₀⟩ := step_normal.is_ret f cont.halt v'.tail
         have e₁ := step_normal_then f cont.halt (cont.fix f k) v'.tail
         rw [e₀, cont.then, cfg.then] at e₁
-        obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := IH (step_ret (k₀.then (cont.fix f k)) v₀) _ _ v'.tail _ step_ret_then _
+        obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ := IH (step_ret (k₀.then (cont.fix f k)) v₀) _ v'.tail _ step_ret_then _
         · refine' ⟨_, Pfun.mem_fix_iff.2 _, h₃⟩
           simp only [Part.eq_some_iff.2 hv₁, Part.map_some, Part.mem_some_iff]
           split_ifs  at hv₂⊢ <;> [exact Or.inl (Part.mem_some_iff.1 hv₂), exact Or.inr ⟨_, rfl, hv₂⟩]
-          
-        · rwa [← @reaches_eval _ _ (cfg.ret (k₀.then (cont.fix f k)) v₀), ← e₁]
-          exact refl_trans_gen.single rfl
           
         · rw [step_ret, if_neg he, e₁]
           rfl
@@ -656,10 +652,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
           
         
       
-    · rw [reaches_eval] at h
-      swap
-      exact refl_trans_gen.single rfl
-      exact IH _ h rfl _ _ step_ret_then (refl_trans_gen.tail hr rfl)
+    · exact IH _ rfl _ _ step_ret_then (refl_trans_gen.tail hr rfl)
       
     
   · rintro ⟨v', he, hr⟩
@@ -668,7 +661,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     exact refl_trans_gen.single rfl
     refine' Pfun.fixInduction he fun IH => _
     rw [fok, Part.bind_eq_bind, Part.mem_bind_iff]
-    obtain he | ⟨v'', he₁', he₂'⟩ := Pfun.mem_fix_iff.1 he
+    obtain he | ⟨v'', he₁', _⟩ := Pfun.mem_fix_iff.1 he
     · obtain ⟨v', he₁, he₂⟩ := (Part.mem_map_iff _).1 he
       split_ifs  at he₂ <;> cases he₂
       refine' ⟨_, he₁, _⟩
@@ -680,13 +673,12 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     · obtain ⟨v₁, he₁, he₂⟩ := (Part.mem_map_iff _).1 he₁'
       split_ifs  at he₂ <;> cases he₂
       clear he₂ he₁'
-      change _ ∈ f.fix.eval _ at he₂'
       refine' ⟨_, he₁, _⟩
       rw [reaches_eval]
       swap
       exact refl_trans_gen.single rfl
       rwa [step_ret, if_neg h]
-      exact IH v₁.tail he₂' ((Part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)
+      exact IH v₁.tail ((Part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)
       
     
 

@@ -90,7 +90,7 @@ universe u v
 
 open Finset
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 noncomputable section
 
@@ -362,7 +362,7 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0 ) {p q : ℝ} (hpq : p.IsConjug
   let f' := fun i => f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' := fun i => g i / (∑ i in s, g i ^ q) ^ (1 / q)
   suffices (∑ i in s, f' i * g' i) ≤ 1 by
-    simp_rw [f', g', div_mul_div, ← sum_div]  at this
+    simp_rw [f', g', div_mul_div_comm₀, ← sum_div]  at this
     rwa [div_le_iff, one_mulₓ] at this
     refine' mul_ne_zero _ _
     · rw [Ne.def, rpow_eq_zero_iff, not_and_distrib]

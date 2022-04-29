@@ -8,13 +8,18 @@ import Mathbin.LinearAlgebra.SpecialLinearGroup
 
 /-!
 # The General Linear group $GL(n, R)$
+
 This file defines the elements of the General Linear group `general_linear_group n R`,
 consisting of all invertible `n` by `n` `R`-matrices.
+
 ## Main definitions
+
 * `matrix.general_linear_group` is the type of matrices over R which are units in the matrix ring.
 * `matrix.GL_pos` gives the subgroup of matrices with
   positive determinant (over a linear ordered ring).
+
 ## Tags
+
 matrix group, group, matrix inverse
 -/
 
@@ -23,9 +28,12 @@ namespace Matrix
 
 universe u v
 
-open_locale Matrix
+open Matrix
 
 open LinearMap
+
+-- disable this instance so we do not accidentally use it in lemmas.
+attribute [-instance] special_linear_group.has_coe_to_fun
 
 /-- `GL n R` is the group of `n` by `n` `R`-matrices with unit determinant.
 Defined as a subtype of matrices-/
@@ -67,9 +75,6 @@ noncomputable def mk'' (A : Matrix n n R) (h : IsUnit (Matrix.det A)) : GL n R :
 def mkOfDetNeZero {K : Type _} [Field K] (A : Matrix n n K) (h : Matrix.det A ≠ 0) : GL n K :=
   mk' A (invertibleOfNonzero h)
 
-instance coeFun : CoeFun (GL n R) fun _ => n → n → R where
-  coe := fun A => A.val
-
 theorem ext_iff (A B : GL n R) : A = B ↔ ∀ i j, (A : Matrix n n R) i j = (B : Matrix n n R) i j :=
   Units.ext_iff.trans Matrix.ext_iff.symm
 
@@ -82,10 +87,6 @@ section CoeLemmas
 variable (A B : GL n R)
 
 @[simp]
-theorem coe_fn_eq_coe : ⇑A = (↑A : Matrix n n R) :=
-  rfl
-
-@[simp]
 theorem coe_mul : ↑(A * B) = (↑A : Matrix n n R) ⬝ (↑B : Matrix n n R) :=
   rfl
 
@@ -94,7 +95,7 @@ theorem coe_one : ↑(1 : GL n R) = (1 : Matrix n n R) :=
   rfl
 
 theorem coe_inv : ↑A⁻¹ = (↑A : Matrix n n R)⁻¹ := by
-  let this' := A.invertible
+  let this := A.invertible
   exact inv_of_eq_nonsing_inv (↑A : Matrix n n R)
 
 /-- An element of the matrix general linear group on `(n) [fintype n]` can be considered as an
@@ -111,7 +112,7 @@ theorem coe_to_linear : (@toLinear n ‹_› ‹_› _ _ A : (n → R) →ₗ[R]
   rfl
 
 @[simp]
-theorem to_linear_apply (v : n → R) : (@toLinear n ‹_› ‹_› _ _ A) v = Matrix.mulVecLin A v :=
+theorem to_linear_apply (v : n → R) : (@toLinear n ‹_› ‹_› _ _ A) v = Matrix.mulVecLin (↑A) v :=
   rfl
 
 end CoeLemmas
@@ -124,6 +125,10 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
   ⟨fun A => ⟨↑A, ↑A⁻¹, congr_argₓ coe (mul_right_invₓ A), congr_argₓ coe (mul_left_invₓ A)⟩⟩
+
+@[simp]
+theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
+  Units.ext g.Prop
 
 end SpecialLinearGroup
 
@@ -157,14 +162,9 @@ each element. -/
 instance : Neg (gLPos n R) :=
   ⟨fun g =>
     ⟨-g, by
-      simp only [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg]
-      have := det_smul g (-1)
-      simp only [general_linear_group.coe_fn_eq_coe, one_smul, coe_fn_coe_base', neg_smul] at this
-      rw [this]
-      simp [Nat.neg_one_pow_of_even (Fact.out (Even (Fintype.card n)))]
-      have gdet := g.property
-      simp only [mem_GL_pos, general_linear_group.coe_det_apply, Subtype.val_eq_coe] at gdet
-      exact gdet⟩⟩
+      rw [mem_GL_pos, general_linear_group.coe_det_apply, Units.coe_neg, det_neg,
+        (Fact.out <| Even <| Fintype.card n).neg_one_pow, one_mulₓ]
+      exact g.prop⟩⟩
 
 instance : HasDistribNeg (gLPos n R) where
   neg := Neg.neg
@@ -173,12 +173,12 @@ instance : HasDistribNeg (gLPos n R) where
   mul_neg := fun x y => Subtype.ext <| mul_neg _ _
 
 @[simp]
-theorem GL_pos_coe_neg (g : gLPos n R) : ↑(-g) = -(↑g : Matrix n n R) :=
+theorem gLPos.coe_neg (g : gLPos n R) : ↑(-g) = -(↑g : Matrix n n R) :=
   rfl
 
 @[simp]
-theorem GL_pos_neg_elt (g : gLPos n R) : ∀ i j, (↑(-g) : Matrix n n R) i j = -g i j := by
-  simp [coe_fn_coe_base']
+theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) : (↑(-g) : Matrix n n R) i j = -(↑g : Matrix n n R) i j :=
+  rfl
 
 end Neg
 
@@ -201,11 +201,28 @@ theorem coe_eq_to_GL_pos : (coe : SpecialLinearGroup n R → gLPos n R) = to_GL_
 theorem to_GL_pos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → gLPos n R) :=
   (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ to_GL_pos) from Subtype.coe_injective).of_comp
 
+/-- Coercing a `special_linear_group` via `GL_pos` and `GL` is the same as coercing striaght to a
+matrix. -/
+@[simp]
+theorem coe_GL_pos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
+    (↑(↑(↑g : gLPos n R) : GL n R) : Matrix n n R) = ↑g :=
+  rfl
+
+@[simp]
+theorem coe_to_GL_pos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
+  Units.ext g.Prop
+
+variable [Fact (Even (Fintype.card n))]
+
+@[norm_cast]
+theorem coe_GL_pos_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : gLPos n R) :=
+  Subtype.ext <| Units.ext rfl
+
 end SpecialLinearGroup
 
 section Examples
 
-/-- The matrix [a, b; -b, a] (inspired by multiplication by a complex number); it is an element of
+/-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
 def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : Matrix.GeneralLinearGroup (Finₓ 2) R :=
@@ -217,6 +234,25 @@ def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) : M
   `k_θ==![![cos θ, sin θ],![-sin θ, cos θ]]`
 -/
 end Examples
+
+namespace GeneralLinearGroup
+
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
+
+-- this section should be last to ensure we do not use it in lemmas
+section CoeFnInstance
+
+/-- This instance is here for convenience, but is not the simp-normal form. -/
+instance : CoeFun (GL n R) fun _ => n → n → R where
+  coe := fun A => A.val
+
+@[simp]
+theorem coe_fn_eq_coe (A : GL n R) : ⇑A = (↑A : Matrix n n R) :=
+  rfl
+
+end CoeFnInstance
+
+end GeneralLinearGroup
 
 end Matrix
 

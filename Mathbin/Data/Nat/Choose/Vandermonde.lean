@@ -19,7 +19,7 @@ https://en.wikipedia.org/wiki/Vandermonde%27s_identity#Algebraic_proof .
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 open Polynomial Finset.Nat
 

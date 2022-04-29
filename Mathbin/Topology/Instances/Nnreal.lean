@@ -16,11 +16,11 @@ The natural topology on `ℝ≥0` (the one induced from `ℝ`), and a basic API.
 Instances for the following typeclasses are defined:
 
 * `topological_space ℝ≥0`
-* `topological_ring ℝ≥0`
+* `topological_semiring ℝ≥0`
 * `second_countable_topology ℝ≥0`
 * `order_topology ℝ≥0`
 * `has_continuous_sub ℝ≥0`
-* `has_continuous_inv' ℝ≥0` (continuity of `x⁻¹` away from `0`)
+* `has_continuous_inv₀ ℝ≥0` (continuity of `x⁻¹` away from `0`)
 * `has_continuous_smul ℝ≥0 ℝ`
 
 Everything is inherited from the corresponding structures on the reals.
@@ -49,17 +49,17 @@ noncomputable section
 
 open Set TopologicalSpace Metric Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 namespace Nnreal
 
-open_locale Nnreal BigOperators Filter
+open Nnreal BigOperators Filter
 
 instance : TopologicalSpace ℝ≥0 :=
   inferInstance
 
 -- short-circuit type class inference
-instance : TopologicalRing ℝ≥0 where
+instance : TopologicalSemiring ℝ≥0 where
   continuous_mul :=
     continuous_subtype_mk _ <|
       (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
@@ -79,7 +79,7 @@ variable {α : Type _}
 
 open Filter Finset
 
-theorem continuous_of_real : Continuous Real.toNnreal :=
+theorem _root_.continuous_real_to_nnreal : Continuous Real.toNnreal :=
   continuous_subtype_mk _ <| continuous_id.max continuous_const
 
 theorem continuous_coe : Continuous (coe : ℝ≥0 → ℝ) :=
@@ -105,9 +105,9 @@ theorem comap_coe_at_top : comap (coe : ℝ≥0 → ℝ) atTop = at_top :=
 theorem tendsto_coe_at_top {f : Filter α} {m : α → ℝ≥0 } : Tendsto (fun a => (m a : ℝ)) f atTop ↔ Tendsto m f atTop :=
   tendsto_Ici_at_top.symm
 
-theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
+theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
-  (continuous_of_real.Tendsto _).comp h
+  (continuous_real_to_nnreal.Tendsto _).comp h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
@@ -133,12 +133,12 @@ instance : HasContinuousSmul ℝ≥0 ℝ where
 theorem has_sum_coe {f : α → ℝ≥0 } {r : ℝ≥0 } : HasSum (fun a => (f a : ℝ)) (r : ℝ) ↔ HasSum f r := by
   simp only [HasSum, coe_sum.symm, tendsto_coe]
 
-theorem has_sum_of_real_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
+theorem has_sum_real_to_nnreal_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
     HasSum (fun n => Real.toNnreal (f n)) (Real.toNnreal (∑' n, f n)) := by
   have h_sum : (fun s => ∑ b in s, Real.toNnreal (f b)) = fun s => Real.toNnreal (∑ b in s, f b) :=
     funext fun _ => (Real.to_nnreal_sum_of_nonneg fun n _ => hf_nonneg n).symm
   simp_rw [HasSum, h_sum]
-  exact tendsto_of_real hf.has_sum
+  exact tendsto_real_to_nnreal hf.has_sum
 
 @[norm_cast]
 theorem summable_coe {f : α → ℝ≥0 } : (Summable fun a => (f a : ℝ)) ↔ Summable f := by
@@ -151,7 +151,7 @@ theorem summable_coe_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
   lift f to α → ℝ≥0 using hf₁ with f rfl hf₁
   simp only [summable_coe, Subtype.coe_eta]
 
-open_locale Classical
+open Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0 } : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
@@ -193,15 +193,14 @@ theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0 } (k : ℕ) (hf : Summable f) 
 
 theorem infi_real_pos_eq_infi_nnreal_pos [CompleteLattice α] {f : ℝ → α} :
     (⨅ (n : ℝ) (h : 0 < n), f n) = ⨅ (n : ℝ≥0 ) (h : 0 < n), f n :=
-  le_antisymmₓ (infi_le_infi2 fun r => ⟨r, infi_le_infi fun hr => le_rfl⟩)
-    (le_infi fun r => le_infi fun hr => infi_le_of_le ⟨r, hr.le⟩ <| infi_le _ hr)
+  le_antisymmₓ (infi_mono' fun r => ⟨r, le_rfl⟩) (infi₂_mono' fun r hr => ⟨⟨r, hr.le⟩, hr, le_rfl⟩)
 
 end coe
 
 theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0 } (hf : Summable f) : Tendsto f cofinite (𝓝 0) := by
   have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ) := funext fun n => real.to_nnreal_coe.symm
   rw [h_f_coe, ← @Real.to_nnreal_coe 0]
-  exact tendsto_of_real (summable_coe.mpr hf).tendsto_cofinite_zero
+  exact tendsto_real_to_nnreal (summable_coe.mpr hf).tendsto_cofinite_zero
 
 theorem tendsto_at_top_zero_of_summable {f : ℕ → ℝ≥0 } (hf : Summable f) : Tendsto f atTop (𝓝 0) := by
   rw [← Nat.cofinite_eq_at_top]

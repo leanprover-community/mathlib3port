@@ -18,7 +18,7 @@ matrix, linear_map, transpose, dual
 -/
 
 
-open_locale Matrix
+open Matrix
 
 section Transpose
 

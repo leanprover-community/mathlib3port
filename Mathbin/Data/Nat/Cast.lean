@@ -40,7 +40,7 @@ protected def castₓ : ℕ → α
 
 /-- Computationally friendlier cast than `nat.cast`, using binary representation. -/
 protected def binCast (n : ℕ) : α :=
-  @Nat.binaryRec (fun _ => α) 0 (fun odd k a => cond Odd (a + a + 1) (a + a)) n
+  @Nat.binaryRec (fun _ => α) 0 (fun odd k a => cond odd (a + a + 1) (a + a)) n
 
 library_note "coercion into rings"/-- Coercions such as `nat.cast_coe` that go from a concrete structure such as
 `ℕ` to an arbitrary ring `α` should be set up as follows:
@@ -301,7 +301,7 @@ end Prod
 
 section AddMonoidHomClass
 
-variable {A B F : Type _} [AddMonoidₓ A] [AddMonoidₓ B] [One B]
+variable {A B F : Type _} [AddZeroClass A] [AddMonoidₓ B] [One B]
 
 theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
   FunLike.ext f g <| by
@@ -323,7 +323,7 @@ theorem eq_nat_cast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n 
   | n + 1 => by
     rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
 
-theorem map_nat_cast' [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : ℕ, f n = n
+theorem map_nat_cast' {A} [AddMonoidₓ A] [One A] [AddMonoidHomClass F A B] (f : F) (h : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by
     simp
   | n + 1 => by
@@ -333,7 +333,7 @@ end AddMonoidHomClass
 
 section MonoidWithZeroHomClass
 
-variable {A F : Type _} [MonoidWithZeroₓ A]
+variable {A F : Type _} [MulZeroOneClassₓ A]
 
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
 theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : ℕ}, 0 < n → f n = g n) : f = g := by
@@ -367,9 +367,21 @@ theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
 
 end RingHomClass
 
+namespace RingHom
+
+/-- This is primed to match `ring_hom.eq_int_cast'`. -/
+theorem eq_nat_cast' {R} [NonAssocSemiringₓ R] (f : ℕ →+* R) : f = Nat.castRingHom R :=
+  RingHom.ext <| eq_nat_cast f
+
+end RingHom
+
 @[simp, norm_cast]
 theorem Nat.cast_idₓ (n : ℕ) : ↑n = n :=
   (eq_nat_cast (RingHom.id ℕ) n).symm
+
+@[simp]
+theorem Nat.cast_ring_hom_nat : Nat.castRingHom ℕ = RingHom.id ℕ :=
+  (RingHom.id ℕ).eq_nat_cast'.symm
 
 @[simp]
 theorem Nat.cast_with_bot : ∀ n : ℕ, @coe ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
@@ -378,8 +390,25 @@ theorem Nat.cast_with_bot : ∀ n : ℕ, @coe ℕ (WithBot ℕ) (@coeToLift _ _ 
     rw [WithBot.coe_add, Nat.cast_addₓ, Nat.cast_with_bot n] <;> rfl
 
 -- I don't think `ring_hom_class` is good here, because of the `subsingleton` TC slowness
-instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiringₓ R] : Subsingleton (ℕ →+* R) :=
-  ⟨ext_nat⟩
+instance Nat.uniqueRingHom {R : Type _} [NonAssocSemiringₓ R] : Unique (ℕ →+* R) where
+  default := Nat.castRingHom R
+  uniq := RingHom.eq_nat_cast'
+
+namespace MulOpposite
+
+variable {α : Type _} [Zero α] [One α] [Add α]
+
+@[simp, norm_cast]
+theorem op_nat_cast : ∀ n : ℕ, op (n : α) = n
+  | 0 => rfl
+  | n + 1 => congr_argₓ (· + (1 : αᵐᵒᵖ)) <| op_nat_cast n
+
+@[simp, norm_cast]
+theorem unop_nat_cast : ∀ n : ℕ, unop (n : αᵐᵒᵖ) = n
+  | 0 => rfl
+  | n + 1 => congr_argₓ (· + (1 : α)) <| unop_nat_cast n
+
+end MulOpposite
 
 namespace WithTop
 

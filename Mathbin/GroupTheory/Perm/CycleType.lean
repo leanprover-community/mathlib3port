@@ -70,7 +70,7 @@ theorem cycle_type_eq {σ : Perm α} (l : List (Perm α)) (h0 : l.Prod = σ) (h1
     
   · simpa [hl] using h0
     
-  · simpa [list.dedup_eq_self.mpr hl] using List.forall_of_pairwise disjoint.symmetric h2
+  · simpa [list.dedup_eq_self.mpr hl] using h2.forall disjoint.symmetric
     
 
 theorem cycle_type_one : (1 : Perm α).cycleType = 0 :=
@@ -91,7 +91,7 @@ theorem one_lt_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleTyp
   two_le_of_mem_cycle_type h
 
 theorem IsCycle.cycle_type {σ : Perm α} (hσ : IsCycle σ) : σ.cycleType = [σ.support.card] :=
-  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_argₓ IsCycle (List.mem_singleton.mp hτ)).mpr hσ)
+  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_argₓ IsCycle (List.mem_singletonₓ.mp hτ)).mpr hσ)
     (pairwise_singleton Disjoint σ)
 
 theorem card_cycle_type_eq_one {σ : Perm α} : σ.cycleType.card = 1 ↔ σ.IsCycle := by
@@ -657,7 +657,7 @@ theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) 
     simp [swap_comm c a, mul_assoc]
   rw [h']
   exact
-    mul_mem _ (swap_mul_swap_same_mem_closure_three_cycles ab ac)
+    mul_mem (swap_mul_swap_same_mem_closure_three_cycles ab ac)
       (swap_mul_swap_same_mem_closure_three_cycles (Ne.symm ac) cd)
 
 end

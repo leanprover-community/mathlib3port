@@ -144,7 +144,7 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
   erw [closure_eq_iff_is_closed]
   exact h
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f g «expr ∈ » L)
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f g «expr ∈ » L)

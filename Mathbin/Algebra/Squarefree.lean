@@ -6,6 +6,7 @@ Authors: Aaron Anderson
 import Mathbin.RingTheory.UniqueFactorizationDomain
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.NumberTheory.Divisors
+import Mathbin.Algebra.IsPrimePow
 
 /-!
 # Squarefree elements of monoids
@@ -50,6 +51,10 @@ theorem not_squarefree_zero [MonoidWithZeroₓ R] [Nontrivial R] : ¬Squarefree 
     ⟨0, by
       simp ⟩
 
+theorem Squarefree.ne_zero [MonoidWithZeroₓ R] [Nontrivial R] {m : R} (hm : Squarefree (m : R)) : m ≠ 0 := by
+  rintro rfl
+  exact not_squarefree_zero hm
+
 @[simp]
 theorem Irreducible.squarefree [CommMonoidₓ R] {x : R} (h : Irreducible x) : Squarefree x := by
   rintro y ⟨z, hz⟩
@@ -64,10 +69,18 @@ theorem Irreducible.squarefree [CommMonoidₓ R] {x : R} (h : Irreducible x) : S
 theorem Prime.squarefree [CancelCommMonoidWithZero R] {x : R} (h : Prime x) : Squarefree x :=
   h.Irreducible.Squarefree
 
+theorem Squarefree.of_mul_left [CommMonoidₓ R] {m n : R} (hmn : Squarefree (m * n)) : Squarefree m := fun p hp =>
+  hmn p (dvd_mul_of_dvd_left hp n)
+
+theorem Squarefree.of_mul_right [CommMonoidₓ R] {m n : R} (hmn : Squarefree (m * n)) : Squarefree n := fun p hp =>
+  hmn p (dvd_mul_of_dvd_right hp m)
+
 theorem squarefree_of_dvd_of_squarefree [CommMonoidₓ R] {x y : R} (hdvd : x ∣ y) (hsq : Squarefree y) : Squarefree x :=
   fun a h => hsq _ (h.trans hdvd)
 
 namespace multiplicity
+
+section CommMonoidₓ
 
 variable [CommMonoidₓ R] [DecidableRel (Dvd.Dvd : R → R → Prop)]
 
@@ -79,6 +92,32 @@ theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R,
     
   convert Enat.add_one_le_iff_lt (Enat.coe_ne_top 1)
   norm_cast
+
+end CommMonoidₓ
+
+section CancelCommMonoidWithZero
+
+variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
+
+theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
+  classical
+  revert hb
+  refine'
+    WfDvdMonoid.induction_on_irreducible b
+      (by
+        contradiction)
+      (fun u hu hu' => _) fun b p hb hp ih hpb => _
+  · rw [multiplicity.finite_iff_dom, multiplicity.is_unit_right ha.not_unit hu]
+    exact Enat.dom_coe 0
+    
+  · refine'
+      multiplicity.finite_mul ha
+        (multiplicity.finite_iff_dom.mpr (Enat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _))) (ih hb)
+    norm_cast
+    exact ((multiplicity.squarefree_iff_multiplicity_le_one p).mp hp.squarefree a).resolve_right ha.not_unit
+    
+
+end CancelCommMonoidWithZero
 
 end multiplicity
 
@@ -372,7 +411,7 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
     (n.divisors.filter Squarefree).val =
       (UniqueFactorizationMonoid.normalizedFactors n).toFinset.Powerset.val.map fun x => x.val.Prod :=
   by
-  rw [Multiset.nodup_ext (Finset.nodup _) (Multiset.nodup_map_on _ (Finset.nodup _))]
+  rw [(Finset.nodup _).ext ((Finset.nodup _).map_on _)]
   · intro a
     simp only [Multiset.mem_filter, id.def, Multiset.mem_map, Finset.filter_val, ← Finset.mem_def, mem_divisors]
     constructor
@@ -421,7 +460,7 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       
     
 
-open_locale BigOperators
+open BigOperators
 
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [AddCommMonoidₓ α] {f : ℕ → α} :
     (∑ i in n.divisors.filter Squarefree, f i) =
@@ -475,6 +514,14 @@ theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefre
 
 theorem squarefree_iff_prime_sq_not_dvd (n : ℕ) : Squarefree n ↔ ∀ x : ℕ, x.Prime → ¬x * x ∣ n :=
   squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible ⟨2, (irreducible_iff_nat_prime _).2 prime_two⟩
+
+/-- `squarefree` is multiplicative. Note that the → direction does not require `hmn`
+and generalizes to arbitrary commutative monoids. See `squarefree.of_mul_left` and
+`squarefree.of_mul_right` above for auxiliary lemmas. -/
+theorem squarefree_mul {m n : ℕ} (hmn : m.Coprime n) : Squarefree (m * n) ↔ Squarefree m ∧ Squarefree n := by
+  simp only [squarefree_iff_prime_squarefree, ← sq, ← forall_and_distrib]
+  refine' ball_congr fun p hp => _
+  simp only [hmn.is_prime_pow_dvd_mul (hp.is_prime_pow.pow two_ne_zero), not_or_distrib]
 
 end Nat
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 -/
+import Mathbin.Algebra.Hom.Equiv
 import Mathbin.Data.Zmod.Basic
-import Mathbin.Data.Equiv.MulAdd
 import Mathbin.Tactic.Group
 
 /-!
@@ -118,7 +118,7 @@ localized [Quandles] infixr:65 " ◃⁻¹ " => Rack.invAct
 -- mathport name: «expr →◃ »
 localized [Quandles] infixr:25 " →◃ " => ShelfHom
 
-open_locale Quandles
+open Quandles
 
 namespace Rack
 
@@ -405,13 +405,13 @@ theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAc
 instance (n : ℕ) : Quandle (Dihedral n) where
   act := dihedralAct n
   self_distrib := fun x y z => by
-    dsimp [Function.Involutive.toEquiv, dihedral_act]
+    dsimp [dihedral_act]
     ring
   invAct := dihedralAct n
   left_inv := fun x => (dihedralAct.inv n x).LeftInverse
   right_inv := fun x => (dihedralAct.inv n x).RightInverse
   fix := fun x => by
-    dsimp [Function.Involutive.toEquiv, dihedral_act]
+    dsimp [dihedral_act]
     ring
 
 end Quandle
@@ -633,7 +633,7 @@ def toEnvelGroup.map {R : Type _} [Rack R] {G : Type _} [Groupₓ G] : (R →◃
   toFun := fun f =>
     { toFun := fun x => Quotientₓ.liftOn x (toEnvelGroup.mapAux f) fun a b ⟨hab⟩ => toEnvelGroup.mapAux.well_def f hab,
       map_one' := by
-        change Quotientₓ.liftOn ⟦Unit⟧ (to_envel_group.map_aux f) _ = 1
+        change Quotientₓ.liftOn ⟦Rack.PreEnvelGroup.unit⟧ (to_envel_group.map_aux f) _ = 1
         simp [to_envel_group.map_aux],
       map_mul' := fun x y =>
         Quotientₓ.induction_on₂ x y fun x y => by

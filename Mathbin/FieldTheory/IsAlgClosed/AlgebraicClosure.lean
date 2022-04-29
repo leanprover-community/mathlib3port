@@ -29,7 +29,7 @@ universe u v w
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 open Polynomial
 

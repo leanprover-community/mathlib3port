@@ -153,8 +153,7 @@ def restrict {U : Top} (X : SheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenE
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
 -/
 def restrictTopIso (X : SheafedSpace C) : X.restrict (Opens.open_embedding ⊤) ≅ X :=
-  @preimageIso _ _ _ _ forgetToPresheafedSpace _ _ (X.restrict (Opens.open_embedding ⊤)) _
-    X.toPresheafedSpace.restrictTopIso
+  forgetToPresheafedSpace.preimageIso X.toPresheafedSpace.restrictTopIso
 
 /-- The global sections, notated Gamma.
 -/

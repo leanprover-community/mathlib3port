@@ -3,8 +3,8 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Equiv.LocalEquiv
-import Mathbin.Topology.Opens
+import Mathbin.Logic.Equiv.LocalEquiv
+import Mathbin.Topology.Sets.Opens
 
 /-!
 # Local homeomorphisms
@@ -47,7 +47,7 @@ open Function Set Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} [TopologicalSpace α] [TopologicalSpace β]
   [TopologicalSpace γ] [TopologicalSpace δ]
@@ -1025,7 +1025,7 @@ theorem subtype_restr_def : e.subtypeRestr s = s.localHomeomorphSubtypeCoe.trans
   rfl
 
 @[simp, mfld_simps]
-theorem subtype_restr_coe : ((e.subtypeRestr s : LocalHomeomorph s β) : s → β) = Set.restrict (e : α → β) s :=
+theorem subtype_restr_coe : ((e.subtypeRestr s : LocalHomeomorph s β) : s → β) = Set.restrict ↑s (e : α → β) :=
   rfl
 
 @[simp, mfld_simps]

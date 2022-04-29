@@ -22,7 +22,7 @@ logarithm, continuity
 
 open Set Filter Function
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 noncomputable section
 
@@ -267,7 +267,7 @@ theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
   rintro h rfl
   exact not_tendsto_nhds_of_tendsto_at_bot tendsto_log_nhds_within_zero _ (h.tendsto.mono_left inf_le_left)
 
-open_locale BigOperators
+open BigOperators
 
 theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     log (∏ i in s, f i) = ∑ i in s, log (f i) := by

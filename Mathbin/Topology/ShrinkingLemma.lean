@@ -27,9 +27,9 @@ normal space, shrinking lemma
 -/
 
 
-open Set Zorn Function
+open Set Function
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -96,9 +96,9 @@ instance : PartialOrderₓ (PartialRefinement u s) where
 
 /-- If two partial refinements `v₁`, `v₂` belong to a chain (hence, they are comparable)
 and `i` belongs to the carriers of both partial refinements, then `v₁ i = v₂ i`. -/
-theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ ·) c) {v₁ v₂} (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c)
+theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) {v₁ v₂} (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c)
     {i} (hi₁ : i ∈ v₁.Carrier) (hi₂ : i ∈ v₂.Carrier) : v₁ i = v₂ i := by
-  wlog hle : v₁ ≤ v₂ := hc.total_of_refl h₁ h₂ using v₁ v₂, v₂ v₁
+  wlog hle : v₁ ≤ v₂ := hc.total h₁ h₂ using v₁ v₂, v₂ v₁
   exact hle.2 _ hi₁
 
 /-- The carrier of the least upper bound of a non-empty chain of partial refinements
@@ -123,17 +123,17 @@ theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.
   · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_Union₂.2 h⟩
     simp only [this]
     
-  · have : (i ∉ ne.some.carrier) ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
+  · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c := ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
     simp only [this]
     
 
-theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ ·) c) (ne : c.Nonempty) {i v} (hv : v ∈ c)
-    (hi : i ∈ Carrier v) : find c Ne i i = v i :=
+theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty) {i v}
+    (hv : v ∈ c) (hi : i ∈ Carrier v) : find c Ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_Union₂.2 ⟨v, hv, hi⟩) hi
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c)
 /-- Least upper bound of a nonempty chain of partial refinements. -/
-def chainSup (c : Set (PartialRefinement u s)) (hc : Chain (· ≤ ·) c) (ne : c.Nonempty)
+def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀, ∀ x ∈ s, ∀, Finite { i | x ∈ u i }) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s := by
   refine'
     ⟨fun i => find c Ne i i, chain_Sup_carrier c, fun i => (find _ _ _).IsOpen i, fun x hxs => mem_Union.2 _,
@@ -151,12 +151,12 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : Chain (· ≤ ·) c) (ne : 
     rcases mem_Union.1 ((v i).subset_Union hxs) with ⟨j, hj⟩
     use j
     have hj' : x ∈ u j := (v i).Subset _ hj
-    have : v j ≤ v i := (hc.total_of_refl (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).Ge) id
+    have : v j ≤ v i := (hc.total (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).Ge) id
     rwa [find_apply_of_mem hc Ne (hvc _ hxi) (this.1 <| hiv _ hj')]
     
 
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
-theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : Chain (· ≤ ·) c) (ne : c.Nonempty)
+theorem le_chain_Sup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀, ∀ x ∈ s, ∀, Finite { i | x ∈ u i }) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) :
     v ≤ chainSup c hc Ne hfin hU :=
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
@@ -224,7 +224,7 @@ theorem exists_subset_Union_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen
     ∃ v : ι → Set X, s ⊆ Unionₓ v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, Closure (v i) ⊆ u i := by
   classical
   have : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
-  have : ∀ c : Set (partial_refinement u s), chain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀, ∀ v ∈ c, ∀, v ≤ ub :=
+  have : ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀, ∀ v ∈ c, ∀, v ≤ ub :=
     fun c hc ne => ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv => partial_refinement.le_chain_Sup _ _ _ _ hv⟩
   rcases zorn_nonempty_partial_order this with ⟨v, hv⟩
   suffices : ∀ i, i ∈ v.carrier

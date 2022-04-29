@@ -3,6 +3,7 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
+import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.HasseDeriv
 
 /-!
@@ -23,7 +24,7 @@ noncomputable section
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable {R : Type _} [Semiringₓ R] (r : R) (f : R[X])
 
@@ -95,6 +96,11 @@ theorem nat_degree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegre
 @[simp]
 theorem taylor_mul {R} [CommSemiringₓ R] (r : R) (p q : R[X]) : taylor r (p * q) = taylor r p * taylor r q := by
   simp only [taylor_apply, mul_comp]
+
+/-- `polynomial.taylor` as a `alg_hom` for commutative semirings -/
+@[simps apply]
+def taylorAlgHom {R} [CommSemiringₓ R] (r : R) : R[X] →ₐ[R] R[X] :=
+  AlgHom.ofLinearMap (taylor r) (taylor_one r) (taylor_mul r)
 
 theorem taylor_taylor {R} [CommSemiringₓ R] (f : R[X]) (r s : R) : taylor r (taylor s f) = taylor (r + s) f := by
   simp only [taylor_apply, comp_assoc, map_add, add_comp, X_comp, C_comp, C_add, add_assocₓ]

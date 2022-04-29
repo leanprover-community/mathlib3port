@@ -22,7 +22,7 @@ as in `equivalent_one_zero_neg_one_weighted_sum_squared`.
 
 namespace QuadraticForm
 
-open_locale BigOperators
+open BigOperators
 
 open Real Finset
 

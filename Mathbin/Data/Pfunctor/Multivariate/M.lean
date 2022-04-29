@@ -47,7 +47,7 @@ that `A` is a possibly infinite tree.
 
 universe u
 
-open_locale Mvfunctor
+open Mvfunctor
 
 namespace Mvpfunctor
 

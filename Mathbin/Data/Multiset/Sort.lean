@@ -49,6 +49,14 @@ theorem mem_sort {s : Multiset α} {a : α} : a ∈ sort r s ↔ a ∈ s := by
 theorem length_sort {s : Multiset α} : (sort r s).length = s.card :=
   Quot.induction_on s <| length_merge_sort _
 
+@[simp]
+theorem sort_zero : sort r 0 = [] :=
+  List.merge_sort_nil r
+
+@[simp]
+theorem sort_singleton (a : α) : sort r {a} = [a] :=
+  List.merge_sort_singleton r a
+
 end Sort
 
 instance [HasRepr α] : HasRepr (Multiset α) :=

@@ -39,7 +39,7 @@ intermediate field, field extension
 
 open FiniteDimensional Polynomial
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 variable (K L : Type _) [Field K] [Field L] [Algebra K L]
 
@@ -64,6 +64,14 @@ instance : SetLike (IntermediateField K L) L :=
   ⟨fun S => S.toSubalgebra.Carrier, by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
     congr⟩
+
+instance : SubfieldClass (IntermediateField K L) L where
+  add_mem := fun s => s.add_mem'
+  zero_mem := fun s => s.zero_mem'
+  neg_mem := neg_mem'
+  mul_mem := fun s => s.mul_mem'
+  one_mem := fun s => s.one_mem'
+  inv_mem := inv_mem'
 
 @[simp]
 theorem mem_carrier {s : IntermediateField K L} {x : L} : x ∈ s.Carrier ↔ x ∈ s :=
@@ -95,46 +103,6 @@ theorem mem_to_subalgebra (s : IntermediateField K L) (x : L) : x ∈ s.toSubalg
 theorem mem_to_subfield (s : IntermediateField K L) (x : L) : x ∈ s.toSubfield ↔ x ∈ s :=
   Iff.rfl
 
-/-- An intermediate field contains the image of the smaller field. -/
-theorem algebra_map_mem (x : K) : algebraMap K L x ∈ S :=
-  S.algebra_map_mem' x
-
-/-- An intermediate field contains the ring's 1. -/
-theorem one_mem : (1 : L) ∈ S :=
-  S.one_mem'
-
-/-- An intermediate field contains the ring's 0. -/
-theorem zero_mem : (0 : L) ∈ S :=
-  S.zero_mem'
-
-/-- An intermediate field is closed under multiplication. -/
-theorem mul_mem : ∀ {x y : L}, x ∈ S → y ∈ S → x * y ∈ S :=
-  S.mul_mem'
-
-/-- An intermediate field is closed under scalar multiplication. -/
-theorem smul_mem {y : L} : y ∈ S → ∀ {x : K}, x • y ∈ S :=
-  S.toSubalgebra.smul_mem
-
-/-- An intermediate field is closed under addition. -/
-theorem add_mem : ∀ {x y : L}, x ∈ S → y ∈ S → x + y ∈ S :=
-  S.add_mem'
-
-/-- An intermediate field is closed under subtraction -/
-theorem sub_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x - y ∈ S :=
-  S.toSubfield.sub_mem hx hy
-
-/-- An intermediate field is closed under negation. -/
-theorem neg_mem : ∀ {x : L}, x ∈ S → -x ∈ S :=
-  S.neg_mem'
-
-/-- An intermediate field is closed under inverses. -/
-theorem inv_mem : ∀ {x : L}, x ∈ S → x⁻¹ ∈ S :=
-  S.inv_mem'
-
-/-- An intermediate field is closed under division. -/
-theorem div_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x / y ∈ S :=
-  S.toSubfield.div_mem hx hy
-
 /-- Copy of an intermediate field with a new `carrier` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : IntermediateField K L where
@@ -153,45 +121,113 @@ theorem coe_copy (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : (S.co
 theorem copy_eq (S : IntermediateField K L) (s : Set L) (hs : s = ↑S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
+section InheritedLemmas
+
+/-! ### Lemmas inherited from more general structures
+
+The declarations in this section derive from the fact that an `intermediate_field` is also a
+subalgebra or subfield. Their use should be replaceable with the corresponding lemma from a
+subobject class.
+-/
+
+
+/-- An intermediate field contains the image of the smaller field. -/
+theorem algebra_map_mem (x : K) : algebraMap K L x ∈ S :=
+  S.algebra_map_mem' x
+
+/-- An intermediate field is closed under scalar multiplication. -/
+theorem smul_mem {y : L} : y ∈ S → ∀ {x : K}, x • y ∈ S :=
+  S.toSubalgebra.smul_mem
+
+/-- An intermediate field contains the ring's 1. -/
+protected theorem one_mem : (1 : L) ∈ S :=
+  one_mem S
+
+/-- An intermediate field contains the ring's 0. -/
+protected theorem zero_mem : (0 : L) ∈ S :=
+  zero_mem S
+
+/-- An intermediate field is closed under multiplication. -/
+protected theorem mul_mem {x y : L} : x ∈ S → y ∈ S → x * y ∈ S :=
+  mul_mem
+
+/-- An intermediate field is closed under addition. -/
+protected theorem add_mem {x y : L} : x ∈ S → y ∈ S → x + y ∈ S :=
+  add_mem
+
+/-- An intermediate field is closed under subtraction -/
+protected theorem sub_mem {x y : L} : x ∈ S → y ∈ S → x - y ∈ S :=
+  sub_mem
+
+/-- An intermediate field is closed under negation. -/
+protected theorem neg_mem {x : L} : x ∈ S → -x ∈ S :=
+  neg_mem
+
+/-- An intermediate field is closed under inverses. -/
+protected theorem inv_mem {x : L} : x ∈ S → x⁻¹ ∈ S :=
+  inv_mem
+
+/-- An intermediate field is closed under division. -/
+protected theorem div_mem {x y : L} : x ∈ S → y ∈ S → x / y ∈ S :=
+  div_mem
+
 /-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
-theorem list_prod_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Prod ∈ S :=
-  S.toSubfield.list_prod_mem
+protected theorem list_prod_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Prod ∈ S :=
+  list_prod_mem
 
 /-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
-theorem list_sum_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Sum ∈ S :=
-  S.toSubfield.list_sum_mem
+protected theorem list_sum_mem {l : List L} : (∀, ∀ x ∈ l, ∀, x ∈ S) → l.Sum ∈ S :=
+  list_sum_mem
 
 /-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
-theorem multiset_prod_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Prod ∈ S :=
-  S.toSubfield.multiset_prod_mem m
+protected theorem multiset_prod_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Prod ∈ S :=
+  multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
-theorem multiset_sum_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Sum ∈ S :=
-  S.toSubfield.multiset_sum_mem m
+protected theorem multiset_sum_mem (m : Multiset L) : (∀, ∀ a ∈ m, ∀, a ∈ S) → m.Sum ∈ S :=
+  multiset_sum_mem m
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∏ i in t, f i) ∈ S :=
-  S.toSubfield.prod_mem h
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∏ i in t, f i) ∈ S :=
+  prod_mem h
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∑ i in t, f i) ∈ S :=
-  S.toSubfield.sum_mem h
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀, ∀ c ∈ t, ∀, f c ∈ S) : (∑ i in t, f i) ∈ S :=
+  sum_mem h
 
-theorem pow_mem {x : L} (hx : x ∈ S) : ∀ n : ℤ, x ^ n ∈ S
-  | (n : ℕ) => by
-    rw [zpow_coe_nat]
-    exact S.to_subfield.pow_mem hx _
-  | -[1+ n] => by
-    rw [zpow_neg_succ_of_nat]
-    exact S.to_subfield.inv_mem (S.to_subfield.pow_mem hx _)
+protected theorem pow_mem {x : L} (hx : x ∈ S) (n : ℤ) : x ^ n ∈ S :=
+  zpow_mem hx n
 
-theorem zsmul_mem {x : L} (hx : x ∈ S) (n : ℤ) : n • x ∈ S :=
-  S.toSubfield.zsmul_mem hx n
+protected theorem zsmul_mem {x : L} (hx : x ∈ S) (n : ℤ) : n • x ∈ S :=
+  zsmul_mem hx n
 
-theorem coe_int_mem (n : ℤ) : (n : L) ∈ S := by
-  simp only [← zsmul_one, zsmul_mem, one_mem]
+protected theorem coe_int_mem (n : ℤ) : (n : L) ∈ S :=
+  coe_int_mem S n
+
+protected theorem coe_add (x y : S) : (↑(x + y) : L) = ↑x + ↑y :=
+  rfl
+
+protected theorem coe_neg (x : S) : (↑(-x) : L) = -↑x :=
+  rfl
+
+protected theorem coe_mul (x y : S) : (↑(x * y) : L) = ↑x * ↑y :=
+  rfl
+
+protected theorem coe_inv (x : S) : (↑x⁻¹ : L) = (↑x)⁻¹ :=
+  rfl
+
+protected theorem coe_zero : ((0 : S) : L) = 0 :=
+  rfl
+
+protected theorem coe_one : ((1 : S) : L) = 1 :=
+  rfl
+
+protected theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n :=
+  SubmonoidClass.coe_pow x n
+
+end InheritedLemmas
 
 end IntermediateField
 
@@ -223,44 +259,12 @@ instance toField : Field S :=
   S.toSubfield.toField
 
 @[simp, norm_cast]
-theorem coe_add (x y : S) : (↑(x + y) : L) = ↑x + ↑y :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_neg (x : S) : (↑(-x) : L) = -↑x :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_mul (x y : S) : (↑(x * y) : L) = ↑x * ↑y :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_inv (x : S) : (↑x⁻¹ : L) = (↑x)⁻¹ :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_zero : ((0 : S) : L) = 0 :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_one : ((1 : S) : L) = 1 :=
-  rfl
-
-@[simp, norm_cast]
-theorem coe_pow (x : S) (n : ℕ) : (↑(x ^ n) : L) = ↑x ^ n := by
-  induction' n with n ih
-  · simp
-    
-  · simp [pow_succₓ, ih]
-    
-
-@[simp, norm_cast]
 theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
-  · rw [Finset.sum_insert hi, coe_add, H, Finset.sum_insert hi]
+  · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
     
 
 @[simp, norm_cast]
@@ -269,7 +273,7 @@ theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : 
   induction' Finset.univ using Finset.induction_on with i s hi H
   · simp
     
-  · rw [Finset.prod_insert hi, coe_mul, H, Finset.prod_insert hi]
+  · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
     
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/
@@ -350,9 +354,9 @@ theorem range_val : S.val.range = S.toSubalgebra :=
 theorem aeval_coe {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower R K L] (x : S) (P : R[X]) :
     aeval (x : L) P = aeval x P := by
   refine' Polynomial.induction_on' P (fun f g hf hg => _) fun n r => _
-  · rw [aeval_add, aeval_add, coe_add, hf, hg]
+  · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
     
-  · simp only [coe_mul, aeval_monomial, coe_pow, mul_eq_mul_right_iff]
+  · simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
     left
     rfl
     
@@ -361,14 +365,14 @@ theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra 
     IsIntegral R (x : L) ↔ IsIntegral R x := by
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
-    refine' ⟨P, hPmo, (RingHom.injective_iff _).1 (algebraMap (↥S) L).Injective _ _⟩
-    let this' : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
+    refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).Injective _ _⟩
+    let this : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
     rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, ←
       eval₂_eq_eval_map]
     
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, _⟩
-    rw [← aeval_def, aeval_coe, aeval_def, hProot, coe_zero]
+    rw [← aeval_def, aeval_coe, aeval_def, hProot, AddSubmonoidClass.coe_zero]
     
 
 variable {S}
@@ -407,11 +411,11 @@ def lift1 {F : IntermediateField K L} (E : IntermediateField K F) : Intermediate
 def lift2 {F : IntermediateField K L} (E : IntermediateField F L) : IntermediateField K L where
   Carrier := E.Carrier
   zero_mem' := zero_mem E
-  add_mem' := fun x y => add_mem E
-  neg_mem' := fun x => neg_mem E
+  add_mem' := fun hx : x ∈ E => add_mem hx
+  neg_mem' := fun hx : x ∈ E => neg_mem hx
   one_mem' := one_mem E
-  mul_mem' := fun x y => mul_mem E
-  inv_mem' := fun x => inv_mem E
+  mul_mem' := fun hx : x ∈ E => mul_mem hx
+  inv_mem' := fun hx : x ∈ E => inv_mem hx
   algebra_map_mem' := fun x => algebra_map_mem E (algebraMap K F x)
 
 instance hasLift1 {F : IntermediateField K L} : HasLiftT (IntermediateField K F) (IntermediateField K L) :=

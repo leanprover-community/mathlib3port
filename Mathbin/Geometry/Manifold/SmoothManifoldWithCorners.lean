@@ -116,7 +116,7 @@ universe u v w u' v' w'
 
 open Set Filter
 
-open_locale Manifold Filter TopologicalSpace
+open Manifold Filter TopologicalSpace
 
 -- mathport name: «expr∞»
 localized [Manifold] notation "∞" => (⊤ : WithTop ℕ)
@@ -648,7 +648,7 @@ end TopologicalSpace.Opens
 
 section ExtendedCharts
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
   [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] (x : M)

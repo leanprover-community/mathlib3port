@@ -35,7 +35,7 @@ universe v u
 
 open CategoryTheory
 
-open_locale Simplicial
+open Simplicial
 
 /-- The category of simplicial sets.
 This is the category of contravariant functors from
@@ -108,7 +108,7 @@ def hornInclusion (n : ℕ) (i : Finₓ (n + 1)) : Λ[n, i] ⟶ Δ[n] where
 
 section Examples
 
-open_locale Simplicial
+open Simplicial
 
 /-- The simplicial circle. -/
 noncomputable def s1 : SSet :=

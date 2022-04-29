@@ -33,7 +33,7 @@ lemmas for $m \in \mathbb{R}$.
 
 noncomputable section
 
-open_locale Nat BigOperators
+open Nat BigOperators
 
 open Real Finset
 

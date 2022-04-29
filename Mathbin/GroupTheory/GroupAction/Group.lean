@@ -3,7 +3,7 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
-import Mathbin.Data.Equiv.MulAddAut
+import Mathbin.Algebra.Hom.Aut
 import Mathbin.GroupTheory.GroupAction.Units
 
 /-!
@@ -100,6 +100,16 @@ theorem smul_zpow [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β
     (c • x) ^ p = c ^ p • x ^ p := by
   cases p <;> simp [smul_pow, smul_inv]
 
+@[simp]
+theorem Commute.smul_right_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
+    Commute a (r • b) ↔ Commute a b :=
+  ⟨fun h => inv_smul_smul r b ▸ h.smul_right r⁻¹, fun h => h.smul_right r⟩
+
+@[simp]
+theorem Commute.smul_left_iff [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} (r : α) :
+    Commute (r • a) b ↔ Commute a b := by
+  rw [Commute.symm_iff, Commute.smul_right_iff, Commute.symm_iff]
+
 @[to_additive]
 protected theorem MulAction.bijective (g : α) : Function.Bijective fun b : β => g • b :=
   (MulAction.toPerm g).Bijective
@@ -143,6 +153,16 @@ theorem inv_smul_eq_iff₀ {a : α} (ha : a ≠ 0) {x y : β} : a⁻¹ • x = y
 
 theorem eq_inv_smul_iff₀ {a : α} (ha : a ≠ 0) {x y : β} : x = a⁻¹ • y ↔ a • x = y :=
   (MulAction.toPerm (Units.mk0 a ha)).eq_symm_apply
+
+@[simp]
+theorem Commute.smul_right_iff₀ [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} {c : α} (hc : c ≠ 0) :
+    Commute a (c • b) ↔ Commute a b :=
+  Commute.smul_right_iff (Units.mk0 c hc)
+
+@[simp]
+theorem Commute.smul_left_iff₀ [Mul β] [SmulCommClass α β β] [IsScalarTower α β β] {a b : β} {c : α} (hc : c ≠ 0) :
+    Commute (c • a) b ↔ Commute a b :=
+  Commute.smul_left_iff (Units.mk0 c hc)
 
 end Gwz
 
@@ -283,8 +303,18 @@ end DistribMulAction
 
 end IsUnit
 
+section Smul
+
+variable [Groupₓ α] [Monoidₓ β]
+
 @[simp]
-theorem is_unit_smul_iff [Groupₓ α] [Monoidₓ β] [MulAction α β] [SmulCommClass α β β] [IsScalarTower α β β] {g : α}
-    {m : β} : IsUnit (g • m) ↔ IsUnit m :=
+theorem is_unit_smul_iff [MulAction α β] [SmulCommClass α β β] [IsScalarTower α β β] (g : α) (m : β) :
+    IsUnit (g • m) ↔ IsUnit m :=
   ⟨fun h => inv_smul_smul g m ▸ h.smul g⁻¹, IsUnit.smul g⟩
+
+theorem IsUnit.smul_sub_iff_sub_inv_smul [AddGroupₓ β] [DistribMulAction α β] [IsScalarTower α β β]
+    [SmulCommClass α β β] (r : α) (a : β) : IsUnit (r • 1 - a) ↔ IsUnit (1 - r⁻¹ • a) := by
+  rw [← is_unit_smul_iff r (1 - r⁻¹ • a), smul_sub, smul_inv_smul]
+
+end Smul
 

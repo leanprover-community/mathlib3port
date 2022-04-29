@@ -34,7 +34,7 @@ variable {ι : Type uι} {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [Fini
 
 open Function Filter FiniteDimensional Set
 
-open_locale TopologicalSpace Manifold Classical Filter BigOperators
+open TopologicalSpace Manifold Classical Filter BigOperators
 
 noncomputable section
 
@@ -108,8 +108,8 @@ theorem exists_immersion_euclidean (f : SmoothBumpCovering ι I M) :
       Smooth I (𝓡 n) e ∧ Injective e ∧ ∀ x : M, Injective (mfderiv I (𝓡 n) e x) :=
   by
   set F := EuclideanSpace ℝ (Finₓ <| finrank ℝ (ι → E × ℝ))
-  let this' : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
-  let this' : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
+  let this : IsNoetherian ℝ (E × ℝ) := IsNoetherian.iff_fg.2 inferInstance
+  let this : FiniteDimensional ℝ (ι → E × ℝ) := IsNoetherian.iff_fg.1 inferInstance
   set eEF : (ι → E × ℝ) ≃L[ℝ] F := ContinuousLinearEquiv.ofFinrankEq finrank_euclidean_space_fin.symm
   refine'
     ⟨_, eEF ∘ f.embedding_pi_tangent, eEF.to_diffeomorph.smooth.comp f.embedding_pi_tangent.smooth,

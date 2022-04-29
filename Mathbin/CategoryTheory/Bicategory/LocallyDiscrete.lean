@@ -22,7 +22,7 @@ namespace CategoryTheory
 
 open Bicategory Discrete
 
-open_locale Bicategory
+open Bicategory
 
 universe w₂ v v₁ v₂ u u₁ u₂
 
@@ -44,7 +44,7 @@ instance : ∀ [CategoryStruct.{v} C], CategoryStruct (LocallyDiscrete C) :=
 
 variable {C} [CategoryStruct.{v} C]
 
-instance (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
+instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCategory (X ⟶ Y) :=
   CategoryTheory.discreteCategory (X ⟶ Y)
 
 end LocallyDiscrete

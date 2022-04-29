@@ -153,7 +153,15 @@ theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Uni
   have hb₀ : b.coeff 0 = b₀ := rfl
   exact ⟨m, mk_unit hb₀, h₂⟩
 
-instance : DiscreteValuationRing (𝕎 k) :=
+/-- The ring of Witt Vectors of a perfect field of positive characteristic is a DVR.
+-/
+/-
+Note: The following lemma should be an instance, but it seems to cause some
+exponential blowups in certain typeclass resolution problems.
+See the following Lean4 issue as well as the zulip discussion linked there:
+https://github.com/leanprover/lean4/issues/1102
+-/
+theorem discrete_valuation_ring : DiscreteValuationRing (𝕎 k) :=
   DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     (by
       refine' ⟨p, Irreducible p, fun x hx => _⟩

@@ -3,9 +3,9 @@ Copyright (c) 2019 Reid Barton. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 -/
+import Mathbin.Logic.Equiv.Fin
 import Mathbin.Topology.DenseEmbedding
 import Mathbin.Topology.Support
-import Mathbin.Data.Equiv.Fin
 
 /-!
 # Homeomorphisms
@@ -29,7 +29,7 @@ directions continuous. We denote homeomorphisms with the notation `≃ₜ`.
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -219,14 +219,17 @@ protected theorem compact_space [CompactSpace α] (h : α ≃ₜ β) : CompactSp
       rw [← image_univ_of_surjective h.surjective, h.compact_image]
       apply CompactSpace.compact_univ }
 
+protected theorem t0_space [T0Space α] (h : α ≃ₜ β) : T0Space β :=
+  h.symm.Embedding.T0Space
+
+protected theorem t1_space [T1Space α] (h : α ≃ₜ β) : T1Space β :=
+  h.symm.Embedding.T1Space
+
 protected theorem t2_space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
-  { t2 := by
-      intro x y hxy
-      obtain ⟨u, v, hu, hv, hxu, hyv, huv⟩ := t2_separation (h.symm.injective.ne hxy)
-      refine'
-        ⟨h.symm ⁻¹' u, h.symm ⁻¹' v, h.symm.continuous.is_open_preimage _ hu, h.symm.continuous.is_open_preimage _ hv,
-          hxu, hyv, _⟩
-      rw [← preimage_inter, huv, preimage_empty] }
+  h.symm.Embedding.T2Space
+
+protected theorem regular_space [RegularSpace α] (h : α ≃ₜ β) : RegularSpace β :=
+  h.symm.Embedding.RegularSpace
 
 protected theorem dense_embedding (h : α ≃ₜ β) : DenseEmbedding h :=
   { h.Embedding with dense := h.Surjective.DenseRange }
@@ -256,6 +259,9 @@ protected theorem open_embedding (h : α ≃ₜ β) : OpenEmbedding h :=
 
 protected theorem closed_embedding (h : α ≃ₜ β) : ClosedEmbedding h :=
   closed_embedding_of_embedding_closed h.Embedding h.IsClosedMap
+
+protected theorem normal_space [NormalSpace α] (h : α ≃ₜ β) : NormalSpace β :=
+  h.symm.ClosedEmbedding.NormalSpace
 
 theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' Closure s = Closure (h ⁻¹' s) :=
   h.IsOpenMap.preimage_closure_eq_closure_preimage h.Continuous _

@@ -149,10 +149,17 @@ end
 variable {X Y : C}
 
 theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.Hom.app Y = G.map f := by
-  rw [naturality, ← category.assoc, ← nat_trans.comp_app, α.inv_hom_id, id_app, category.id_comp]
+  simp
 
 theorem naturality_2 (α : F ≅ G) (f : X ⟶ Y) : α.Hom.app X ≫ G.map f ≫ α.inv.app Y = F.map f := by
-  rw [naturality, ← category.assoc, ← nat_trans.comp_app, α.hom_inv_id, id_app, category.id_comp]
+  simp
+
+theorem naturality_1' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app X)] : inv (α.app X) ≫ F.map f ≫ α.app Y = G.map f := by
+  simp
+
+@[simp, reassoc]
+theorem naturality_2' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app Y)] : α.app X ≫ G.map f ≫ inv (α.app Y) = F.map f := by
+  rw [← category.assoc, ← naturality, category.assoc, is_iso.hom_inv_id, category.comp_id]
 
 /-- The components of a natural isomorphism are isomorphisms.
 -/

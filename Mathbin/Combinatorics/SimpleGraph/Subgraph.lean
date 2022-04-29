@@ -79,7 +79,7 @@ theorem adj_symm (G' : Subgraph G) {u v : V} (h : G'.Adj u v) : G'.Adj v u :=
 
 /-- Coercion from `G' : subgraph G` to a `simple_graph ↥G'.verts`. -/
 @[simps]
-def coe (G' : Subgraph G) : SimpleGraph G'.Verts where
+protected def coe (G' : Subgraph G) : SimpleGraph G'.Verts where
   Adj := fun v w => G'.Adj v w
   symm := fun v w h => G'.symm h
   loopless := fun v h => loopless G v (G'.adj_sub h)
@@ -99,7 +99,7 @@ theorem is_spanning_iff {G' : Subgraph G} : G'.IsSpanning ↔ G'.Verts = Set.Uni
 subgraph, then `G'.spanning_coe` yields an isomorphic graph.
 In general, this adds in all vertices from `V` as isolated vertices. -/
 @[simps]
-def spanningCoe (G' : Subgraph G) : SimpleGraph V where
+protected def spanningCoe (G' : Subgraph G) : SimpleGraph V where
   Adj := G'.Adj
   symm := G'.symm
   loopless := fun v hv => G.loopless v (G'.adj_sub hv)
@@ -468,6 +468,93 @@ theorem degree_eq_one_iff_unique_adj {G' : Subgraph G} {v : V} [Fintype (G'.Neig
     G'.degree v = 1 ↔ ∃! w : V, G'.Adj v w := by
   rw [← finset_card_neighbor_set_eq_degree, Finset.card_eq_one, Finset.singleton_iff_unique_mem]
   simp only [Set.mem_to_finset, mem_neighbor_set]
+
+/-! ## Edge deletion -/
+
+
+/-- Given a subgraph `G'` and a set of vertex pairs, remove all of the corresponding edges
+from its edge set, if present.
+
+See also: `simple_graph.delete_edges`. -/
+def deleteEdges (G' : G.Subgraph) (s : Set (Sym2 V)) : G.Subgraph where
+  Verts := G'.Verts
+  Adj := G'.Adj \ Sym2.ToRel s
+  adj_sub := fun a b h' => G'.adj_sub h'.1
+  edge_vert := fun a b h' => G'.edge_vert h'.1
+  symm := fun a b => by
+    simp [G'.adj_comm, Sym2.eq_swap]
+
+section DeleteEdges
+
+variable {G' : G.Subgraph} (s : Set (Sym2 V))
+
+@[simp]
+theorem delete_edges_verts : (G'.deleteEdges s).Verts = G'.Verts :=
+  rfl
+
+@[simp]
+theorem delete_edges_adj (v w : V) : (G'.deleteEdges s).Adj v w ↔ G'.Adj v w ∧ ¬⟦(v, w)⟧ ∈ s :=
+  Iff.rfl
+
+@[simp]
+theorem delete_edges_delete_edges (s s' : Set (Sym2 V)) : (G'.deleteEdges s).deleteEdges s' = G'.deleteEdges (s ∪ s') :=
+  by
+  ext <;> simp [and_assoc, not_or_distrib]
+
+@[simp]
+theorem delete_edges_empty_eq : G'.deleteEdges ∅ = G' := by
+  ext <;> simp
+
+@[simp]
+theorem delete_edges_spanning_coe_eq : G'.spanningCoe.deleteEdges s = (G'.deleteEdges s).spanningCoe := by
+  ext
+  simp
+
+theorem delete_edges_coe_eq (s : Set (Sym2 G'.Verts)) :
+    G'.coe.deleteEdges s = (G'.deleteEdges (Sym2.map coe '' s)).coe := by
+  ext ⟨v, hv⟩ ⟨w, hw⟩
+  simp only [SimpleGraph.delete_edges_adj, coe_adj, Subtype.coe_mk, delete_edges_adj, Set.mem_image, not_exists,
+    not_and, And.congr_right_iff]
+  intro h
+  constructor
+  · intro hs
+    refine' Sym2.ind _
+    rintro ⟨v', hv'⟩ ⟨w', hw'⟩
+    simp only [Sym2.map_pair_eq, Subtype.coe_mk, Quotientₓ.eq]
+    contrapose!
+    rintro (_ | _) <;> simpa [Sym2.eq_swap]
+    
+  · intro h' hs
+    exact h' _ hs rfl
+    
+
+theorem coe_delete_edges_eq (s : Set (Sym2 V)) : (G'.deleteEdges s).coe = G'.coe.deleteEdges (Sym2.map coe ⁻¹' s) := by
+  ext ⟨v, hv⟩ ⟨w, hw⟩
+  simp
+
+theorem delete_edges_le : G'.deleteEdges s ≤ G' := by
+  constructor <;> simp (config := { contextual := true })
+
+theorem delete_edges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') : G'.deleteEdges s' ≤ G'.deleteEdges s := by
+  constructor <;> simp (config := { contextual := true })only [delete_edges_verts, delete_edges_adj, true_andₓ, and_imp]
+  exact fun v w hvw hs' hs => hs' (h hs)
+
+@[simp]
+theorem delete_edges_inter_edge_set_left_eq : G'.deleteEdges (G'.EdgeSet ∩ s) = G'.deleteEdges s := by
+  ext <;> simp (config := { contextual := true })[imp_false]
+
+@[simp]
+theorem delete_edges_inter_edge_set_right_eq : G'.deleteEdges (s ∩ G'.EdgeSet) = G'.deleteEdges s := by
+  ext <;> simp (config := { contextual := true })[imp_false]
+
+theorem coe_delete_edges_le : (G'.deleteEdges s).coe ≤ (G'.coe : SimpleGraph G'.Verts) := fun v w => by
+  simp (config := { contextual := true })
+
+theorem spanning_coe_delete_edges_le (G' : G.Subgraph) (s : Set (Sym2 V)) :
+    (G'.deleteEdges s).spanningCoe ≤ G'.spanningCoe :=
+  spanning_coe_le_of_le (delete_edges_le s)
+
+end DeleteEdges
 
 end Subgraph
 

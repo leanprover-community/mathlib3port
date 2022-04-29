@@ -73,7 +73,7 @@ B → Y has a lifting iff there is a map B → X making the right part commute.
 theorem right_lifting_property_initial_iff (i p : Arrow C) (h : IsInitial i.left) :
     HasLiftingProperty i p ↔ ∀ {e : i.right ⟶ p.right}, ∃ l : i.right ⟶ p.left, l ≫ p.Hom = e := by
   fconstructor
-  · intros hlift e
+  · intro hlift e
     have comm : is_initial.to h p.left ≫ p.hom = i.hom ≫ e := is_initial.hom_ext h _ _
     use arrow.lift (arrow.hom_mk comm)
     simp

@@ -50,7 +50,7 @@ noncomputable section
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] (k : ℕ) (a : R)
 
@@ -86,11 +86,12 @@ variable {R S k a}
 
 theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dickson k (f a) n
   | 0 => by
-    simp only [dickson_zero, map_sub, Polynomial.map_nat_cast, bit1, bit0, map_add, map_one]
+    simp only [dickson_zero, Polynomial.map_sub, Polynomial.map_nat_cast, bit1, bit0, Polynomial.map_add,
+      Polynomial.map_one]
   | 1 => by
     simp only [dickson_one, map_X]
   | n + 2 => by
-    simp only [dickson_add_two, map_sub, map_mul, map_X, map_C]
+    simp only [dickson_add_two, Polynomial.map_sub, Polynomial.map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
 
 variable {R}

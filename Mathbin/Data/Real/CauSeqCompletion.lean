@@ -134,7 +134,7 @@ theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
 
 end
 
-open_locale Classical
+open Classical
 
 section
 
@@ -217,7 +217,7 @@ variable (β : Type _) [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
 
 /-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
-class IsComplete where
+class IsComplete : Prop where
   IsComplete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b
 
 end

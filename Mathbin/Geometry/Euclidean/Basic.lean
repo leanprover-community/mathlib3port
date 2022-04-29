@@ -54,13 +54,13 @@ theorems that need it.
 
 noncomputable section
 
-open_locale BigOperators
+open BigOperators
 
-open_locale Classical
+open Classical
 
-open_locale Real
+open Real
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 namespace InnerProductGeometry
 

@@ -106,7 +106,7 @@ theorem NatTrans.mono_iff_app_mono {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ 
   · intro h c
     exact right_adjoint_preserves_mono (evaluation_adjunction_right D c) h
     
-  · intros _
+  · intro _
     apply nat_trans.mono_app_of_mono
     
 

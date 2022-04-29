@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Topology.GDelta
 
@@ -28,7 +28,7 @@ has the countable intersection property.
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter Ennreal
+open Classical TopologicalSpace Filter Ennreal
 
 open Filter Encodable Set
 

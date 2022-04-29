@@ -5,6 +5,7 @@ Authors: Johan Commelin, Fabian Glöckle
 -/
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Projection
+import Mathbin.LinearAlgebra.SesquilinearForm
 
 /-!
 # Dual vector spaces
@@ -45,22 +46,29 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler module R
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]
 
-instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) := by
-  unfold dual
-  infer_instance
+instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
+  LinearMap.addCommGroup
 
 instance : AddMonoidHomClass (Dual R M) M R :=
   LinearMap.addMonoidHomClass
 
+/-- The canonical pairing of a vector space and its algebraic dual. -/
+def dualPairing R M [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module.Dual R M →ₗ[R] M →ₗ[R] R :=
+  LinearMap.id
+
+@[simp]
+theorem dual_pairing_apply v x : dualPairing R M v x = v x :=
+  rfl
+
 namespace Dual
 
-instance : Inhabited (Dual R M) := by
-  dunfold dual <;> infer_instance
+instance : Inhabited (Dual R M) :=
+  LinearMap.inhabited
 
 instance : CoeFun (Dual R M) fun _ => M → R :=
   ⟨LinearMap.toFun⟩
@@ -99,6 +107,8 @@ namespace Basis
 universe u v w
 
 open Module Module.Dual Submodule LinearMap Cardinal Function
+
+open BigOperators
 
 variable {R M K V ι : Type _}
 
@@ -188,6 +198,20 @@ theorem to_dual_range [fin : Fintype ι] : b.toDual.range = ⊤ := by
     
 
 end CommSemiringₓ
+
+section
+
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [Fintype ι]
+
+variable (b : Basis ι R M)
+
+@[simp]
+theorem sum_dual_apply_smul_coord (f : Module.Dual R M) : (∑ x, f (b x) • b.Coord x) = f := by
+  ext m
+  simp_rw [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, mul_comm (f _), ← smul_eq_mul, ← f.map_smul, ←
+    f.map_sum, Basis.coord_apply, Basis.sum_repr]
+
+end
 
 section CommRingₓ
 
@@ -294,7 +318,7 @@ theorem dual_dim_eq [FiniteDimensional K V] : Cardinal.lift (Module.rank K V) = 
   (Basis.ofVectorSpace K V).dual_dim_eq
 
 theorem erange_coe [FiniteDimensional K V] : (eval K V).range = ⊤ := by
-  let this' : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
+  let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   exact (Basis.ofVectorSpace K V).eval_range
 
 variable (K V)
@@ -546,7 +570,7 @@ theorem dual_equiv_dual_apply (φ : Module.Dual K W) : W.dualEquivDual φ = ⟨W
 
 section
 
-open_locale Classical
+open Classical
 
 open FiniteDimensional
 
@@ -697,6 +721,29 @@ theorem range_dual_map_eq_dual_annihilator_ker [FiniteDimensional K V₁] (f : V
   exact finrank_range_add_finrank_ker f
 
 end FiniteDimensional
+
+section Field
+
+variable {K V : Type _}
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
+
+theorem dual_pairing_nondegenerate : (dualPairing K V).Nondegenerate := by
+  refine' ⟨separating_left_iff_ker_eq_bot.mpr ker_id, _⟩
+  intro x
+  contrapose
+  rintro hx : x ≠ 0
+  rw [not_forall]
+  let f : V →ₗ[K] K := Classical.some (LinearPmap.mkSpanSingleton x 1 hx).toFun.exists_extend
+  use f
+  refine' ne_zero_of_eq_one _
+  have h : f.comp (K∙x).Subtype = (LinearPmap.mkSpanSingleton x 1 hx).toFun :=
+    Classical.some_spec (LinearPmap.mkSpanSingleton x (1 : K) hx).toFun.exists_extend
+  rw [LinearMap.ext_iff] at h
+  convert h ⟨x, Submodule.mem_span_singleton_self x⟩
+  exact (LinearPmap.mk_span_singleton_apply' K hx 1).symm
+
+end Field
 
 end LinearMap
 

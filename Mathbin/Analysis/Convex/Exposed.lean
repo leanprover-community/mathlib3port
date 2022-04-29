@@ -43,7 +43,7 @@ More not-yet-PRed stuff is available on the branch `sperner_again`.
 -/
 
 
-open_locale Classical Affine BigOperators
+open Classical Affine BigOperators
 
 open Set
 

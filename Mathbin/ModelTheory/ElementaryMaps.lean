@@ -5,7 +5,6 @@ Authors: Aaron Anderson
 -/
 import Mathbin.Data.Fintype.Basic
 import Mathbin.ModelTheory.Substructures
-import Mathbin.ModelTheory.TermsAndFormulas
 
 /-!
 # Elementary Maps Between First-Order Structures
@@ -16,10 +15,15 @@ import Mathbin.ModelTheory.TermsAndFormulas
 * A `first_order.language.elementary_substructure` is a substructure where the realization of each
   formula agrees with the realization in the larger model.
 
-  -/
+## Main Results
+* The Tarski-Vaught Test for embeddings: `first_order.language.embedding.is_elementary_of_exists`
+gives a simple criterion for an embedding to be elementary.
+* The Tarski-Vaught Test for substructures: `first_order.language.embedding.is_elementary_of_exists`
+gives a simple criterion for a substructure to be elementary.
+ -/
 
 
-open_locale FirstOrder
+open FirstOrder
 
 namespace FirstOrder
 
@@ -40,14 +44,20 @@ structure ElementaryEmbedding where
       obviously
 
 -- mathport name: «expr ↪ₑ[ ] »
-localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => L.ElementaryEmbedding A B
+localized [FirstOrder] notation:25 A " ↪ₑ[" L "] " B => FirstOrder.Language.ElementaryEmbedding L A B
 
 variable {L} {M} {N}
 
 namespace ElementaryEmbedding
 
-instance hasCoeToFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
-  ⟨fun f => f.toFun⟩
+instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
+  coe := fun f => f.toFun
+  coe_injective' := fun f g h => by
+    cases f
+    cases g
+    simp only
+    ext x
+    exact Function.funext_iffₓ.1 h x
 
 @[simp]
 theorem map_formula (f : M ↪ₑ[L] N) {α : Type} [Fintype α] (φ : L.Formula α) (x : α → M) :
@@ -62,21 +72,6 @@ theorem map_formula (f : M ↪ₑ[L] N) {α : Type} [Fintype α] (φ : L.Formula
   simp
 
 @[simp]
-theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) := by
-  have h := φ.map_formula (formula.graph f) (Finₓ.cons (fun_map f x) x)
-  rw [formula.realize_graph, Finₓ.comp_cons, formula.realize_graph] at h
-  rw [eq_comm, h]
-
-@[simp]
-theorem map_constants (φ : M ↪ₑ[L] N) (c : L.Constants) : φ c = c :=
-  (φ.map_fun c default).trans fun_map_eq_coe_constants
-
-@[simp]
-theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
-  have h := φ.map_formula (r.formula var) x
-  h
-
-@[simp]
 theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   intro x y
   have h := φ.map_formula ((var 0).equal (var 1) : L.formula (Finₓ 2)) fun i => if i = 0 then x else y
@@ -84,6 +79,31 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
   simp only [Nat.one_ne_zero, term.realize, Finₓ.one_eq_zero_iff, if_true, eq_self_iff_true, Function.comp_app,
     if_false] at h
   exact h.1
+
+instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N where
+  injective' := injective
+
+instance hasCoeToFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
+  ⟨fun f => f.toFun⟩
+
+@[simp]
+theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) := by
+  have h := φ.map_formula (formula.graph f) (Finₓ.cons (fun_map f x) x)
+  rw [formula.realize_graph, Finₓ.comp_cons, formula.realize_graph] at h
+  rw [eq_comm, h]
+
+@[simp]
+theorem map_rel (φ : M ↪ₑ[L] N) {n : ℕ} (r : L.Relations n) (x : Finₓ n → M) : RelMap r (φ ∘ x) ↔ RelMap r x :=
+  have h := φ.map_formula (r.formula var) x
+  h
+
+instance strongHomClass : StrongHomClass L (M ↪ₑ[L] N) M N where
+  map_fun := map_fun
+  map_rel := map_rel
+
+@[simp]
+theorem map_constants (φ : M ↪ₑ[L] N) (c : L.Constants) : φ c = c :=
+  HomClass.map_constants φ c
 
 /-- An elementary embedding is also a first-order embedding. -/
 def toEmbedding (f : M ↪ₑ[L] N) : M ↪[L] N where
@@ -106,20 +126,15 @@ theorem coe_to_hom {f : M ↪ₑ[L] N} : (f.toHom : M → N) = (f : M → N) :=
 theorem coe_to_embedding (f : M ↪ₑ[L] N) : (f.toEmbedding : M → N) = (f : M → N) :=
   rfl
 
-theorem coe_injective : @Function.Injective (M ↪ₑ[L] N) (M → N) coeFn
-  | f, g, h => by
-    cases f
-    cases g
-    simp only
-    ext x
-    exact Function.funext_iffₓ.1 h x
+theorem coe_injective : @Function.Injective (M ↪ₑ[L] N) (M → N) coeFn :=
+  FunLike.coe_injective
 
 @[ext]
 theorem ext ⦃f g : M ↪ₑ[L] N⦄ (h : ∀ x, f x = g x) : f = g :=
-  coe_injective (funext h)
+  FunLike.ext f g h
 
 theorem ext_iff {f g : M ↪ₑ[L] N} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun h x => h ▸ rfl, fun h => ext h⟩
+  FunLike.ext_iff
 
 variable (L) (M)
 
@@ -151,6 +166,62 @@ theorem comp_assoc (f : M ↪ₑ[L] N) (g : N ↪ₑ[L] P) (h : P ↪ₑ[L] Q) :
   rfl
 
 end ElementaryEmbedding
+
+namespace Embedding
+
+/-- The Tarski-Vaught test for elementarity of an embedding. -/
+theorem is_elementary_of_exists (f : M ↪[L] N)
+    (htv :
+      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → M a : N,
+        φ.realize default (Finₓ.snoc (f ∘ x) a : _ → N) →
+          ∃ b : M, φ.realize default (Finₓ.snoc (f ∘ x) (f b) : _ → N)) :
+    ∀ {n} φ : L.Formula (Finₓ n) x : Finₓ n → M, φ.realize (f ∘ x) ↔ φ.realize x := by
+  suffices h :
+    ∀ n : ℕ φ : L.bounded_formula Empty n xs : Finₓ n → M, φ.realize (f ∘ default) (f ∘ xs) ↔ φ.realize default xs
+  · intro n φ x
+    refine' φ.realize_relabel_sum_inr.symm.trans (trans (h n _ _) φ.realize_relabel_sum_inr)
+    
+  refine' fun n φ => φ.recOn _ _ _ _ _
+  · exact fun _ _ => Iff.rfl
+    
+  · intros
+    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
+    
+  · intros
+    simp [bounded_formula.realize, ← Sum.comp_elim, embedding.realize_term]
+    
+  · intro _ _ _ ih1 ih2 _
+    simp [ih1, ih2]
+    
+  · intro n φ ih xs
+    simp only [bounded_formula.realize_all]
+    refine' ⟨fun h a => _, _⟩
+    · rw [← ih, Finₓ.comp_snoc]
+      exact h (f a)
+      
+    · contrapose!
+      rintro ⟨a, ha⟩
+      obtain ⟨b, hb⟩ := htv n φ.not xs a _
+      · refine' ⟨b, fun h => hb (Eq.mp _ ((ih _).2 h))⟩
+        rw [Unique.eq_default (f ∘ default), Finₓ.comp_snoc]
+        
+      · rw [bounded_formula.realize_not, ← Unique.eq_default (f ∘ default)]
+        exact ha
+        
+      
+    
+
+/-- Bundles an embedding satisfying the Tarski-Vaught test as an elementary embedding. -/
+@[simps]
+def toElementaryEmbedding (f : M ↪[L] N)
+    (htv :
+      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → M a : N,
+        φ.realize default (Finₓ.snoc (f ∘ x) a : _ → N) →
+          ∃ b : M, φ.realize default (Finₓ.snoc (f ∘ x) (f b) : _ → N)) :
+    M ↪ₑ[L] N :=
+  ⟨f, fun _ => f.is_elementary_of_exists htv⟩
+
+end Embedding
 
 namespace Equivₓ
 
@@ -242,7 +313,45 @@ theorem mem_top (x : M) : x ∈ (⊤ : L.ElementarySubstructure M) :=
 theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.Univ :=
   rfl
 
+@[simp]
+theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S ⊨ φ ↔ M ⊨ φ := by
+  have h := S.is_elementary (φ.relabel (Empty.elimₓ : Empty → Finₓ 0)) default
+  rw [formula.realize_relabel, formula.realize_relabel] at h
+  exact (congr (congr rfl (congr rfl (Unique.eq_default _))) (congr rfl (Unique.eq_default _))).mp h.symm
+
+@[simp]
+theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by
+  simp only [Theory.model_iff, realize_sentence]
+
+instance Theory_model {T : L.Theory} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
+  (Theory_model_iff S T).2 h
+
+instance [h : Nonempty M] {S : L.ElementarySubstructure M} : Nonempty S :=
+  (Theory.model_nonempty_iff L).1 inferInstance
+
 end ElementarySubstructure
+
+namespace Substructure
+
+/-- The Tarski-Vaught test for elementarity of a substructure. -/
+theorem is_elementary_of_exists (S : L.Substructure M)
+    (htv :
+      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → S a : M,
+        φ.realize default (Finₓ.snoc (coe ∘ x) a : _ → M) →
+          ∃ b : S, φ.realize default (Finₓ.snoc (coe ∘ x) b : _ → M)) :
+    S.IsElementary := fun n => S.Subtype.is_elementary_of_exists htv
+
+/-- Bundles a substructure satisfying the Tarski-Vaught test as an elementary substructure. -/
+@[simps]
+def toElementarySubstructure (S : L.Substructure M)
+    (htv :
+      ∀ n : ℕ φ : L.BoundedFormula Empty (n + 1) x : Finₓ n → S a : M,
+        φ.realize default (Finₓ.snoc (coe ∘ x) a : _ → M) →
+          ∃ b : S, φ.realize default (Finₓ.snoc (coe ∘ x) b : _ → M)) :
+    L.ElementarySubstructure M :=
+  ⟨S, fun _ => S.is_elementary_of_exists htv⟩
+
+end Substructure
 
 end Language
 

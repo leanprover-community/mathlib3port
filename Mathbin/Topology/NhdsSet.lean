@@ -27,7 +27,7 @@ Furthermore, we have the following results:
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type _} [TopologicalSpace α] {s t s₁ s₂ t₁ t₂ : Set α} {x : α}
 
@@ -46,6 +46,10 @@ theorem subset_interior_iff_mem_nhds_set : s ⊆ Interior t ↔ t ∈ 𝓝ˢ s :
 
 theorem mem_nhds_set_iff_exists : s ∈ 𝓝ˢ t ↔ ∃ U : Set α, IsOpen U ∧ t ⊆ U ∧ U ⊆ s := by
   rw [← subset_interior_iff_mem_nhds_set, subset_interior_iff]
+
+theorem has_basis_nhds_set (s : Set α) : (𝓝ˢ s).HasBasis (fun U => IsOpen U ∧ s ⊆ U) fun U => U :=
+  ⟨fun t => by
+    simp [mem_nhds_set_iff_exists, and_assoc]⟩
 
 theorem IsOpen.mem_nhds_set (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
   rw [← subset_interior_iff_mem_nhds_set, interior_eq_iff_open.mpr hU]
@@ -71,14 +75,13 @@ theorem nhds_set_univ : 𝓝ˢ (Univ : Set α) = ⊤ := by
   ext
   rw [← subset_interior_iff_mem_nhds_set, univ_subset_iff, interior_eq_univ, mem_top]
 
-theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := by
-  intro s t hst O
-  simp_rw [← subset_interior_iff_mem_nhds_set]
-  exact subset.trans hst
+theorem monotone_nhds_set : Monotone (𝓝ˢ : Set α → Filter α) := fun s t hst => Sup_le_Sup <| image_subset _ hst
+
+@[simp]
+theorem nhds_set_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s⊔𝓝ˢ t := by
+  simp only [nhdsSet, image_union, Sup_union]
 
 theorem union_mem_nhds_set (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
-  rw [← subset_interior_iff_mem_nhds_set] at *
-  exact
-    union_subset (h₁.trans <| interior_mono <| subset_union_left _ _)
-      (h₂.trans <| interior_mono <| subset_union_right _ _)
+  rw [nhds_set_union]
+  exact union_mem_sup h₁ h₂
 

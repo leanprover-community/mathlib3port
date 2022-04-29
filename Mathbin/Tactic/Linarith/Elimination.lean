@@ -226,7 +226,7 @@ unsafe structure linarith_structure : Type where
   max_var : ℕ
   comps : rb_set pcomp
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler monad_except pcomp
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler monad_except pcomp
 /-- The linarith monad extends an exceptional monad with a `linarith_structure` state.
 An exception produces a contradictory `pcomp`.
 -/

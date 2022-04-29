@@ -37,7 +37,7 @@ universe u v w z
 
 open Polynomial Matrix
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 variable {R : Type u} [CommRingₓ R]
 
@@ -153,7 +153,6 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
 
 theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
     (trace n R R) M = -M.charpoly.coeff (Fintype.card n - 1) := by
-  nontriviality
   rw [charpoly_coeff_eq_prod_coeff_of_le]
   swap
   rfl
@@ -218,9 +217,9 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
 @[simp]
 theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
     (M ^ Fintype.card K).charpoly = M.charpoly := by
-  cases' (is_empty_or_nonempty n).symm
+  cases (is_empty_or_nonempty n).symm
   · cases' CharP.exists K with p hp
-    let this' := hp
+    let this := hp
     rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
     have : Fact p.prime := ⟨hp⟩
     dsimp  at hk
@@ -250,12 +249,15 @@ theorem Zmod.charpoly_pow_card (M : Matrix n n (Zmod p)) : (M ^ p).charpoly = M.
   have h := FiniteField.Matrix.charpoly_pow_card M
   rwa [Zmod.card] at h
 
-theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] [Nonempty n] (M : Matrix n n K) :
+theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
     trace n K K (M ^ Fintype.card K) = trace n K K M ^ Fintype.card K := by
+  cases is_empty_or_nonempty n
+  · simp [zero_pow Fintype.card_pos]
+    
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]
 
-theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] [Nonempty n] (M : Matrix n n (Zmod p)) :
+theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) :
     trace n (Zmod p) (Zmod p) (M ^ p) = trace n (Zmod p) (Zmod p) M ^ p := by
   have h := FiniteField.trace_pow_card M
   rwa [Zmod.card] at h
@@ -267,6 +269,17 @@ theorem is_integral : IsIntegral R M :=
 
 theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly K M ∣ M.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly M)
+
+/-- Any matrix polynomial `p` is equivalent under evaluation to `p %ₘ M.charpoly`; that is, `p`
+is equivalent to a polynomial with degree less than the dimension of the matrix. -/
+theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) : aeval M p = aeval M (p %ₘ M.charpoly) :=
+  (aeval_mod_by_monic_eq_self_of_root M.charpoly_monic M.aeval_self_charpoly).symm
+
+/-- Any matrix power can be computed as the sum of matrix powers less than `fintype.card n`.
+
+TODO: add the statement for negative powers phrased with `zpow`. -/
+theorem pow_eq_aeval_mod_charpoly (M : Matrix n n R) (k : ℕ) : M ^ k = aeval M (X ^ k %ₘ M.charpoly) := by
+  rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 
 end Matrix
 
@@ -285,7 +298,7 @@ theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRingₓ S] [Algeb
   apply minpoly.unique
   · apply Matrix.charpoly_monic
     
-  · apply (left_mul_matrix _).injective_iff.mp (left_mul_matrix_injective h.basis)
+  · apply (injective_iff_map_eq_zero (left_mul_matrix _)).mp (left_mul_matrix_injective h.basis)
     rw [← Polynomial.aeval_alg_hom_apply, aeval_self_charpoly]
     
   · intro q q_monic root_q

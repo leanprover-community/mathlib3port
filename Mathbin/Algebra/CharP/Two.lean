@@ -26,14 +26,25 @@ variable [Semiringₓ R] [CharP R 2]
 theorem two_eq_zero : (2 : R) = 0 := by
   rw [← Nat.cast_two, CharP.cast_eq_zero]
 
+@[simp]
 theorem add_self_eq_zero (x : R) : x + x = 0 := by
   rw [← two_smul R x, two_eq_zero, zero_smul]
 
-theorem bit0_eq_zero (x : R) : (bit0 x : R) = 0 :=
-  add_self_eq_zero x
+@[simp]
+theorem bit0_eq_zero : (bit0 : R → R) = 0 := by
+  funext
+  exact add_self_eq_zero _
 
-theorem bit1_eq_one (x : R) : (bit1 x : R) = 1 := by
-  rw [bit1, bit0_eq_zero, zero_addₓ]
+theorem bit0_apply_eq_zero (x : R) : (bit0 x : R) = 0 := by
+  simp
+
+@[simp]
+theorem bit1_eq_one : (bit1 : R → R) = 1 := by
+  funext
+  simp [bit1]
+
+theorem bit1_apply_eq_one (x : R) : (bit1 x : R) = 1 := by
+  simp
 
 end Semiringₓ
 
@@ -41,12 +52,14 @@ section Ringₓ
 
 variable [Ringₓ R] [CharP R 2]
 
+@[simp]
 theorem neg_eq (x : R) : -x = x := by
   rw [neg_eq_iff_add_eq_zero, ← two_smul R x, two_eq_zero, zero_smul]
 
 theorem neg_eq' : Neg.neg = (id : R → R) :=
   funext neg_eq
 
+@[simp]
 theorem sub_eq_add (x y : R) : x - y = x + y := by
   rw [sub_eq_add_neg, neg_eq]
 
@@ -65,7 +78,7 @@ theorem add_sq (x y : R) : (x + y) ^ 2 = x ^ 2 + y ^ 2 :=
 theorem add_mul_self (x y : R) : (x + y) * (x + y) = x * x + y * y := by
   rw [← pow_two, ← pow_two, ← pow_two, add_sq]
 
-open_locale BigOperators
+open BigOperators
 
 theorem list_sum_sq (l : List R) : l.Sum ^ 2 = (l.map (· ^ 2)).Sum :=
   list_sum_pow_char _ _

@@ -44,7 +44,7 @@ fewer type arguments.
 
 universe u v₁ v₂ v₃ v₄
 
-open_locale TensorProduct
+open TensorProduct
 
 open TensorProduct
 
@@ -777,19 +777,21 @@ theorem assoc_aux_2 (r : R) :
     (TensorProduct.assoc R A B C) (((algebraMap R A) r ⊗ₜ[R] 1) ⊗ₜ[R] 1) = (algebraMap R (A ⊗ (B ⊗ C))) r :=
   rfl
 
--- variables (R A B C)
--- -- local attribute [elab_simple] alg_equiv_of_linear_equiv_triple_tensor_product
--- /-- The associator for tensor product of R-algebras, as an algebra isomorphism. -/
--- -- FIXME This is _really_ slow to compile. :-(
--- protected def assoc : ((A ⊗[R] B) ⊗[R] C) ≃ₐ[R] (A ⊗[R] (B ⊗[R] C)) :=
--- alg_equiv_of_linear_equiv_triple_tensor_product
---   (tensor_product.assoc R A B C)
---   assoc_aux_1 assoc_aux_2
--- variables {R A B C}
--- @[simp] theorem assoc_tmul (a : A) (b : B) (c : C) :
---   ((tensor_product.assoc R A B C) :
---   (A ⊗[R] B) ⊗[R] C → A ⊗[R] (B ⊗[R] C)) ((a ⊗ₜ b) ⊗ₜ c) = a ⊗ₜ (b ⊗ₜ c) :=
--- rfl
+variable (R A B C)
+
+/-- The associator for tensor product of R-algebras, as an algebra isomorphism. -/
+protected def assoc : (A ⊗[R] B) ⊗[R] C ≃ₐ[R] A ⊗[R] B ⊗[R] C :=
+  algEquivOfLinearEquivTripleTensorProduct (TensorProduct.assoc.{u, v₁, v₂, v₃} R A B C : A ⊗ B ⊗ C ≃ₗ[R] A ⊗ (B ⊗ C))
+    (@Algebra.TensorProduct.assoc_aux_1.{u, v₁, v₂, v₃} R _ A _ _ B _ _ C _ _)
+    (@Algebra.TensorProduct.assoc_aux_2.{u, v₁, v₂, v₃} R _ A _ _ B _ _ C _ _)
+
+variable {R A B C}
+
+@[simp]
+theorem assoc_tmul (a : A) (b : B) (c : C) :
+    (TensorProduct.assoc R A B C : (A ⊗[R] B) ⊗[R] C → A ⊗[R] B ⊗[R] C) (a ⊗ₜ b ⊗ₜ c) = a ⊗ₜ (b ⊗ₜ c) :=
+  rfl
+
 end
 
 variable {R A B C D}

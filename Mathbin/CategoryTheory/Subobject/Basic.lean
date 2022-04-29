@@ -5,6 +5,8 @@ Authors: Bhavik Mehta, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Subobject.MonoOver
 import Mathbin.CategoryTheory.Skeletal
+import Mathbin.Tactic.Elementwise
+import Mathbin.Tactic.ApplyFun
 
 /-!
 # Subobjects
@@ -164,7 +166,7 @@ theorem representative_arrow (Y : Subobject X) : (representative.obj Y).arrow = 
 theorem underlying_arrow {X : C} {Y Z : Subobject X} (f : Y ⟶ Z) : underlying.map f ≫ arrow Z = arrow Y :=
   Over.w (representative.map f)
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem underlying_iso_arrow {X Y : C} (f : X ⟶ Y) [Mono f] : (underlyingIso f).inv ≫ (Subobject.mk f).arrow = f :=
   Over.w _
 

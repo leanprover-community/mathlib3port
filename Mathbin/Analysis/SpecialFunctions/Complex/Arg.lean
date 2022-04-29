@@ -19,7 +19,7 @@ noncomputable section
 
 namespace Complex
 
-open_locale ComplexConjugate Real TopologicalSpace
+open ComplexConjugate Real TopologicalSpace
 
 open Filter Set
 
@@ -215,6 +215,16 @@ theorem tan_arg (x : ℂ) : Real.tan (arg x) = x.im / x.re := by
 
 theorem arg_of_real_of_nonneg {x : ℝ} (hx : 0 ≤ x) : arg x = 0 := by
   simp [arg, hx]
+
+theorem arg_eq_zero_iff {z : ℂ} : arg z = 0 ↔ 0 ≤ z.re ∧ z.im = 0 := by
+  refine' ⟨fun h => _, _⟩
+  · rw [← abs_mul_cos_add_sin_mul_I z, h]
+    simp [abs_nonneg]
+    
+  · cases' z with x y
+    rintro ⟨h, rfl : y = 0⟩
+    exact arg_of_real_of_nonneg h
+    
 
 theorem arg_eq_pi_iff {z : ℂ} : arg z = π ↔ z.re < 0 ∧ z.im = 0 := by
   by_cases' h₀ : z = 0

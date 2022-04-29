@@ -38,7 +38,7 @@ namespace Polynomial
 
 noncomputable section
 
-open_locale Classical Polynomial
+open Classical Polynomial
 
 section CommSemiringₓ
 
@@ -95,7 +95,7 @@ variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 https://stacks.math.columbia.edu/tag/09H0 -/
 theorem irreducible_has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : F[X]) [irred : Irreducible f] :
     HasSeparableContraction q f := by
-  cases' hF
+  cases hF
   · exact
       ⟨f, irred.separable,
         ⟨0, by
@@ -143,7 +143,7 @@ theorem contraction_degree_eq_or_insep [hq : Fact q.Prime] [CharP F q] (g g' : F
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/
 theorem IsSeparableContraction.degree_eq [hF : ExpChar F q] (g : F[X]) (hg : IsSeparableContraction q f g) :
     g.natDegree = hf.degree := by
-  cases' hF
+  cases hF
   · rcases hg with ⟨g, m, hm⟩
     rw [one_pow, expand_one] at hm
     rw [hf.eq_degree]

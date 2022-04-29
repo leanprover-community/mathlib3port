@@ -53,7 +53,7 @@ theorem of_gt [CanonicallyOrderedAddMonoid M] (h : x < y) : NeZero y :=
 instance char_zero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n : M) :=
   ⟨Nat.cast_ne_zero.mpr <| NeZero.ne n⟩
 
-instance (priority := 100) invertible [MonoidWithZeroₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
+instance (priority := 100) invertible [MulZeroOneClassₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
   ⟨nonzero_of_invertible x⟩
 
 instance coe_trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
@@ -91,7 +91,7 @@ theorem of_no_zero_smul_divisors (n : ℕ) [CommRingₓ R] [NeZero (n : R)] [Rin
 
 theorem of_ne_zero_coe [Zero R] [One R] [Add R] [h : NeZero (n : R)] : NeZero n :=
   ⟨by
-    cases' h
+    cases h
     rintro rfl
     contradiction⟩
 

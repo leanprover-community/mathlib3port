@@ -522,7 +522,7 @@ theorem ext_hom {G : Type _} [Groupₓ G] (f g : FreeGroup α →* G) (h : ∀ a
 theorem lift.of_eq (x : FreeGroup α) : lift of x = x :=
   MonoidHom.congr_fun (lift.apply_symm_apply (MonoidHom.id _)) x
 
-theorem lift.range_subset {s : Subgroup β} (H : Set.Range f ⊆ s) : Set.Range (lift f) ⊆ s := by
+theorem lift.range_le {s : Subgroup β} (H : Set.Range f ⊆ s) : (lift f).range ≤ s := by
   rintro _ ⟨⟨L⟩, rfl⟩ <;>
     exact
       List.recOn L s.one_mem fun tl ih =>
@@ -532,19 +532,13 @@ theorem lift.range_subset {s : Subgroup β} (H : Set.Range f ⊆ s) : Set.Range 
           (by
             simp at ih⊢ <;> exact s.mul_mem (H ⟨x, rfl⟩) ih)
 
-theorem closure_subset {G : Type _} [Groupₓ G] {s : Set G} {t : Subgroup G} (h : s ⊆ t) : Subgroup.closure s ≤ t := by
-  simp only [h, Subgroup.closure_le]
-
-theorem lift.range_eq_closure : Set.Range (lift f) = Subgroup.closure (Set.Range f) :=
-  Set.Subset.antisymm (lift.range_subset Subgroup.subset_closure)
-    (by
-      suffices : Subgroup.closure (Set.Range f) ≤ MonoidHom.range (lift f)
-      simpa
-      rw [Subgroup.closure_le]
-      rintro y ⟨x, hx⟩
-      exact
-        ⟨of x, by
-          simpa⟩)
+theorem lift.range_eq_closure : (lift f).range = Subgroup.closure (Set.Range f) := by
+  apply le_antisymmₓ (lift.range_le Subgroup.subset_closure)
+  rw [Subgroup.closure_le]
+  rintro _ ⟨a, rfl⟩
+  exact
+    ⟨of a, by
+      simp only [lift.of]⟩
 
 end lift
 

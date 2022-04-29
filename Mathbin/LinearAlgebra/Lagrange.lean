@@ -20,7 +20,7 @@ import Mathbin.RingTheory.Polynomial.Basic
 
 noncomputable section
 
-open_locale BigOperators Classical Polynomial
+open BigOperators Classical Polynomial
 
 universe u
 
@@ -42,18 +42,18 @@ theorem basis_empty (x : F) : basis ∅ x = 1 :=
 
 @[simp]
 theorem basis_singleton_self (x : F) : basis {x} x = 1 := by
-  rw [basis, Finset.erase_singleton, Finset.prod_empty]
+  rw [Basis, Finset.erase_singleton, Finset.prod_empty]
 
 @[simp]
 theorem eval_basis_self (x : F) : (basis s x).eval x = 1 := by
-  rw [basis, ← coe_eval_ring_hom, (eval_ring_hom x).map_prod, coe_eval_ring_hom, Finset.prod_eq_one]
+  rw [Basis, ← coe_eval_ring_hom, (eval_ring_hom x).map_prod, coe_eval_ring_hom, Finset.prod_eq_one]
   intro y hy
   simp_rw [eval_mul, eval_sub, eval_C, eval_X]
   exact inv_mul_cancel (sub_ne_zero_of_ne (Finset.ne_of_mem_erase hy).symm)
 
 @[simp]
 theorem eval_basis_ne (x y : F) (h1 : y ∈ s) (h2 : y ≠ x) : (basis s x).eval y = 0 := by
-  rw [basis, ← coe_eval_ring_hom, (eval_ring_hom y).map_prod, coe_eval_ring_hom,
+  rw [Basis, ← coe_eval_ring_hom, (eval_ring_hom y).map_prod, coe_eval_ring_hom,
     Finset.prod_eq_zero (Finset.mem_erase.2 ⟨h2, h1⟩)]
   simp_rw [eval_mul, eval_sub, eval_C, eval_X, sub_self, mul_zero]
 
@@ -67,7 +67,7 @@ theorem eval_basis (x y : F) (h : y ∈ s) : (basis s x).eval y = if y = x then 
 
 @[simp]
 theorem nat_degree_basis (x : F) (hx : x ∈ s) : (basis s x).natDegree = s.card - 1 := by
-  unfold basis
+  unfold Basis
   generalize hsx : s.erase x = sx
   have : x ∉ sx := hsx ▸ Finset.not_mem_erase x s
   rw [← Finset.insert_erase hx, hsx, Finset.card_insert_of_not_mem this, add_tsub_cancel_right]
@@ -241,11 +241,11 @@ theorem interpolate_eq_interpolate_erase_add {x y : F} (hx : x ∈ s) (hy : y �
   · rw [degree_mul, degree_C (inv_ne_zero (sub_ne_zero.2 hxy.symm)), zero_addₓ]
     refine' lt_of_le_of_ltₓ (degree_add_le _ _) (max_ltₓ _ _)
     · rw [degree_mul, degree_X_sub_C]
-      convert (WithBot.add_lt_add_iff_left (WithBot.coe_ne_bot _)).2 (degree_interpolate_erase s f hx)
+      convert (WithBot.add_lt_add_iff_left WithBot.coe_ne_bot).2 (degree_interpolate_erase s f hx)
       simp [Nat.one_add, Nat.sub_one, Nat.succ_pred_eq_of_posₓ (Finset.card_pos.2 ⟨x, hx⟩)]
       
     · rw [degree_mul, ← neg_sub, degree_neg, degree_X_sub_C]
-      convert (WithBot.add_lt_add_iff_left (WithBot.coe_ne_bot _)).2 (degree_interpolate_erase s f hy)
+      convert (WithBot.add_lt_add_iff_left WithBot.coe_ne_bot).2 (degree_interpolate_erase s f hy)
       simp [Nat.one_add, Nat.sub_one, Nat.succ_pred_eq_of_posₓ (Finset.card_pos.2 ⟨y, hy⟩)]
       
     

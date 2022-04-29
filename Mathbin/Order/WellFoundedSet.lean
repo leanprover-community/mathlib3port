@@ -3,7 +3,7 @@ Copyright (c) 2021 Aaron Anderson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 -/
-import Mathbin.Algebra.Pointwise
+import Mathbin.Data.Set.Pointwise
 import Mathbin.Order.Antichain
 import Mathbin.Order.OrderIsoNat
 import Mathbin.Order.WellFounded
@@ -49,7 +49,7 @@ Prove that `s` is partial well ordered iff it has no infinite descending chain o
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 variable {α : Type _}
 
@@ -442,33 +442,13 @@ theorem is_wf_min_singleton a {hs : IsWf ({a} : Set α)} {hn : ({a} : Set α).No
 
 end Set
 
-@[simp]
 theorem Finset.is_wf_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g : ι → Set α)
-    (hf : ∀ i : ι, i ∈ f → (g i).IsWf) : (f.sup g).IsWf := by
-  classical
-  revert hf
-  apply f.induction_on
-  · intro h
-    simp [set.is_pwo_empty.is_wf]
-    
-  · intro s f sf hf hsf
-    rw [Finset.sup_insert]
-    exact (hsf s (Finset.mem_insert_self _ _)).union (hf fun s' s'f => hsf _ (Finset.mem_insert_of_mem s'f))
-    
+    (hf : ∀ i : ι, i ∈ f → (g i).IsWf) : (f.sup g).IsWf :=
+  Finset.sup_induction Set.is_pwo_empty.IsWf (fun a ha b hb => ha.union hb) hf
 
-@[simp]
 theorem Finset.is_pwo_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g : ι → Set α)
-    (hf : ∀ i : ι, i ∈ f → (g i).IsPwo) : (f.sup g).IsPwo := by
-  classical
-  revert hf
-  apply f.induction_on
-  · intro h
-    simp [set.is_pwo_empty.is_wf]
-    
-  · intro s f sf hf hsf
-    rw [Finset.sup_insert]
-    exact (hsf s (Finset.mem_insert_self _ _)).union (hf fun s' s'f => hsf _ (Finset.mem_insert_of_mem s'f))
-    
+    (hf : ∀ i : ι, i ∈ f → (g i).IsPwo) : (f.sup g).IsPwo :=
+  Finset.sup_induction Set.is_pwo_empty (fun a ha b hb => ha.union hb) hf
 
 namespace Set
 
@@ -675,8 +655,8 @@ theorem submonoid_closure [OrderedCancelCommMonoid α] {s : Set α} (hpos : ∀ 
     rw [SetLike.mem_coe] at hx
     refine'
       Submonoid.closure_induction hx (fun x hx => ⟨_, fun y hy => _, List.prod_singleton⟩)
-        ⟨_, fun y hy => (List.not_mem_nil _ hy).elim, List.prod_nil⟩ _
-    · rwa [List.mem_singleton.1 hy]
+        ⟨_, fun y hy => (List.not_mem_nilₓ _ hy).elim, List.prod_nil⟩ _
+    · rwa [List.mem_singletonₓ.1 hy]
       
     rintro _ _ ⟨l, hl, rfl⟩ ⟨l', hl', rfl⟩
     refine' ⟨_, fun y hy => _, List.prod_append⟩

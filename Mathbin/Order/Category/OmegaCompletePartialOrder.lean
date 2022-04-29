@@ -51,6 +51,10 @@ instance : CoeSort ωCPO (Type _) :=
 def of (α : Type _) [OmegaCompletePartialOrder α] : ωCPO :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [OmegaCompletePartialOrder α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited ωCPO :=
   ⟨of PUnit⟩
 

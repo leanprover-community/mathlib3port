@@ -446,10 +446,7 @@ theorem odd_mul_odd_div_two {m n : ℕ} (hm1 : m % 2 = 1) (hn1 : n % 2 = 1) : m 
   have hn0 : 0 < n :=
     Nat.pos_of_ne_zeroₓ fun h => by
       simp_all
-  (Nat.mul_right_inj
-        (show 0 < 2 by
-          decide)).1 <|
-    by
+  (Nat.mul_right_inj zero_lt_two).1 <| by
     rw [mul_addₓ, two_mul_odd_div_two hm1, mul_left_commₓ, two_mul_odd_div_two hn1,
       two_mul_odd_div_two (Nat.odd_mul_odd hm1 hn1), mul_tsub, mul_oneₓ, ← add_tsub_assoc_of_le (succ_le_of_lt hm0),
       tsub_add_cancel_of_le (le_mul_of_one_le_right (Nat.zero_leₓ _) hn0)]

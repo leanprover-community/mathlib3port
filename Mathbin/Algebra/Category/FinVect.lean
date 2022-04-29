@@ -27,13 +27,13 @@ noncomputable section
 
 open CategoryTheory ModuleCat.monoidalCategory
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 universe u
 
 variable (K : Type u) [Field K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:980:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 def FinVect :=
   { V : ModuleCat.{u} K // FiniteDimensional K V }deriving Category, [anonymous]

@@ -193,6 +193,16 @@ theorem IsMin.not_lt (h : IsMin a) : ¬b < a := fun hb => hb.not_le <| h hb.le
 
 theorem IsMax.not_lt (h : IsMax a) : ¬a < b := fun hb => hb.not_le <| h hb.le
 
+@[simp]
+theorem not_is_min_of_lt (h : b < a) : ¬IsMin a := fun ha => ha.not_lt h
+
+@[simp]
+theorem not_is_max_of_lt (h : a < b) : ¬IsMax a := fun ha => ha.not_lt h
+
+alias not_is_min_of_lt ← LT.lt.not_is_min
+
+alias not_is_max_of_lt ← LT.lt.not_is_max
+
 theorem is_min_iff_forall_not_lt : IsMin a ↔ ∀ b, ¬b < a :=
   ⟨fun h _ => h.not_lt, fun h b hba => of_not_not fun hab => h _ <| hba.lt_of_not_le hab⟩
 

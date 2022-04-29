@@ -20,7 +20,7 @@ noncomputable section
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- A real-valued sequence is subadditive if it satisfies the inequality `u (m + n) ≤ u m + u n`
 for all `m, n`. -/

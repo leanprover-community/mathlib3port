@@ -21,11 +21,13 @@ open CategoryTheory
 
 open ModuleCat
 
-open_locale ModuleCat
+open ModuleCat
 
 namespace ModuleCat
 
 variable {R : Type u} [Ringₓ R] {X Y : ModuleCat.{v} R} (f : X ⟶ Y)
+
+variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
   LinearMap.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
@@ -44,6 +46,10 @@ theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
 
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, LinearMap.range_eq_top]
+
+/-- If the zero morphism is an epi then the codomain is trivial. -/
+def uniqueOfEpiZero X [h : Epi (0 : X ⟶ of R M)] : Unique M :=
+  uniqueOfSurjectiveZero X ((ModuleCat.epi_iff_surjective _).mp h)
 
 instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=
   (mono_iff_ker_eq_bot _).mpr (Submodule.ker_subtype U)

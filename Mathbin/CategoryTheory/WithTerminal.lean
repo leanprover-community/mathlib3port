@@ -90,7 +90,7 @@ def incl : C ⥤ WithTerminal C where
   map := fun X Y f => f
 
 instance : Full (incl : C ⥤ _) where
-  Preimage := fun X Y f => f
+  preimage := fun X Y f => f
 
 instance : Faithful (incl : C ⥤ _) :=
   {  }
@@ -242,7 +242,7 @@ def incl : C ⥤ WithInitial C where
   map := fun X Y f => f
 
 instance : Full (incl : C ⥤ _) where
-  Preimage := fun X Y f => f
+  preimage := fun X Y f => f
 
 instance : Faithful (incl : C ⥤ _) :=
   {  }

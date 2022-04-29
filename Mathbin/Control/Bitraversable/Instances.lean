@@ -81,8 +81,7 @@ open IsLawfulBitraversable
 instance IsLawfulBitraversable.flip [IsLawfulBitraversable t] : IsLawfulBitraversable (flip t) := by
   constructor <;>
     intros <;>
-      (
-          casesm IsLawfulBitraversable t) <;>
+      casesm IsLawfulBitraversable t <;>
         run_tac
           tactic.apply_assumption
 

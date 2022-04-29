@@ -41,7 +41,7 @@ open Module
 
 open MonoidAlgebra
 
-open_locale BigOperators
+open BigOperators
 
 section
 

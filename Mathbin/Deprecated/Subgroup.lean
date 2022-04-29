@@ -332,7 +332,7 @@ attribute [local simp] one_mem inv_mem mul_mem IsNormalSubgroup.normal
 theorem preimage {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsSubgroup s) : IsSubgroup (f ⁻¹' s) := by
   refine' { .. } <;>
     simp (config := { contextual := true })[hs.one_mem, hs.mul_mem, hs.inv_mem, hf.map_mul, hf.map_one, hf.map_inv,
-      @inv_mem H _ s]
+      InvMemClass.inv_mem]
 
 @[to_additive]
 theorem preimage_normal {f : G → H} (hf : IsGroupHom f) {s : Set H} (hs : IsNormalSubgroup s) :
@@ -432,7 +432,7 @@ theorem subset_closure {s : Set G} : s ⊆ Closure s := fun a => mem_closure
 
 @[to_additive]
 theorem closure_subset {s t : Set G} (ht : IsSubgroup t) (h : s ⊆ t) : Closure s ⊆ t := fun a ha => by
-  induction ha <;> simp [h _, *, ht.one_mem, ht.mul_mem, inv_mem_iff]
+  induction ha <;> simp [h _, *, ht.one_mem, ht.mul_mem, IsSubgroup.inv_mem_iff]
 
 @[to_additive]
 theorem closure_subset_iff {s t : Set G} (ht : IsSubgroup t) : Closure s ⊆ t ↔ s ⊆ t :=
@@ -449,8 +449,8 @@ theorem closure_subgroup {s : Set G} (hs : IsSubgroup s) : Closure s = s :=
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ Closure s) :
     ∃ l : List G, (∀, ∀ x ∈ l, ∀, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.Prod = a :=
-  InClosure.rec_on h (fun x hxs => ⟨[x], List.forall_mem_singleton.2 <| Or.inl hxs, one_mulₓ _⟩)
-    ⟨[], List.forall_mem_nil _, rfl⟩
+  InClosure.rec_on h (fun x hxs => ⟨[x], List.forall_mem_singletonₓ.2 <| Or.inl hxs, one_mulₓ _⟩)
+    ⟨[], List.forall_mem_nilₓ _, rfl⟩
     (fun x _ ⟨L, HL1, HL2⟩ =>
       ⟨L.reverse.map Inv.inv, fun x hx =>
         let ⟨y, hy1, hy2⟩ := List.exists_of_mem_mapₓ hx

@@ -20,7 +20,7 @@ variable {R : Type _} [CommRingₓ R]
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 namespace EisensteinCriterionAux
 
@@ -90,7 +90,7 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       simp_all only [lt_irreflₓ],
     by
     rintro p q rfl
-    rw [map_mul] at hf
+    rw [Polynomial.map_mul] at hf
     rcases mul_eq_mul_prime_pow (show Prime (X : Polynomial (R ⧸ P)) from monic_X.prime_of_degree_eq_one degree_X)
         hf with
       ⟨m, n, b, c, hmnd, hbc, hp, hq⟩

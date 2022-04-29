@@ -30,7 +30,7 @@ namespace Ideal
 
 open Set
 
-open_locale BigOperators
+open BigOperators
 
 variable {R : Type u} [CommRingₓ R] (I : Ideal R) {a b : R}
 
@@ -60,6 +60,7 @@ instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
   ⟨fun a b =>
     (Quotientₓ.liftOn₂' a b fun a b => Submodule.Quotient.mk (a * b)) fun a₁ a₂ b₁ b₂ h₁ h₂ =>
       Quot.sound <| by
+        rw [Submodule.quotient_rel_r_def] at h₁ h₂⊢
         have F := I.add_mem (I.mul_mem_left a₂ h₁) (I.mul_mem_right b₁ h₂)
         have : a₁ * a₂ - b₁ * b₂ = a₂ * (a₁ - b₁) + (a₂ - b₂) * b₁ := by
           rw [mul_sub, sub_mul, sub_add_sub_cancel, mul_comm, mul_comm b₁]
@@ -101,8 +102,8 @@ protected theorem eq : mk I x = mk I y ↔ x - y ∈ I :=
 theorem mk_eq_mk (x : R) : (Submodule.Quotient.mk x : R ⧸ I) = mk I x :=
   rfl
 
-theorem eq_zero_iff_mem {I : Ideal R} : mk I a = 0 ↔ a ∈ I := by
-  conv => rhs rw [← sub_zero a] <;> exact Quotientₓ.eq'
+theorem eq_zero_iff_mem {I : Ideal R} : mk I a = 0 ↔ a ∈ I :=
+  Submodule.Quotient.mk_eq_zero _
 
 theorem zero_eq_one_iff {I : Ideal R} : (0 : R ⧸ I) = 1 ↔ I = ⊤ :=
   eq_comm.trans <| eq_zero_iff_mem.trans (eq_top_iff_one _).symm
@@ -158,9 +159,10 @@ theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] : ∀ {a : R ⧸ I}, a ≠ 0
   --quot.sound hb
   rw [← eq_sub_iff_add_eq'] at abc
   rw [abc, ← neg_mem_iff, neg_sub] at hc
+  rw [Submodule.quotient_rel_r_def]
   convert hc
 
-open_locale Classical
+open Classical
 
 /-- quotient by maximal ideal is a field. def rather than instance, since users will have
 computable inverses in some applications.
@@ -196,15 +198,10 @@ variable [CommRingₓ S]
 
 /-- Given a ring homomorphism `f : R →+* S` sending all elements of an ideal to zero,
 lift it to the quotient by this ideal. -/
-def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R ⧸ I →+* S where
-  toFun := fun x =>
-    (Quotientₓ.liftOn' x f) fun h : _ ∈ _ =>
-      eq_of_sub_eq_zero <| by
-        rw [← f.map_sub, H _ h]
-  map_one' := f.map_one
-  map_zero' := f.map_zero
-  map_add' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_add
-  map_mul' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_mul
+def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R ⧸ I →+* S :=
+  { QuotientAddGroup.lift I.toAddSubgroup f.toAddMonoidHom H with map_one' := f.map_one, map_zero' := f.map_zero,
+    map_add' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_add,
+    map_mul' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_mul }
 
 @[simp]
 theorem lift_mk (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : lift I f H (mk I a) = f a :=
@@ -253,6 +250,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
       (by
         intro c₁ m₁ c₂ m₂ hc hm
         apply Ideal.Quotient.eq.2
+        rw [Submodule.quotient_rel_r_def] at hc hm
         intro i
         exact I.mul_sub_mul_mem hc (hm i))
   one_smul := by
@@ -291,7 +289,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι) where
 noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → R ⧸ I where
   toFun := fun x =>
     (Quotientₓ.liftOn' x fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
-      funext fun i => Ideal.Quotient.eq.2 (hab i)
+      funext fun i => (Submodule.Quotient.eq' _).2 (hab i)
   map_add' := by
     rintro ⟨_⟩ ⟨_⟩
     rfl

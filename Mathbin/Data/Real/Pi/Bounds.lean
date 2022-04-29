@@ -3,7 +3,7 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Mario Carneiro
 -/
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 /-!
 # Pi
@@ -17,7 +17,7 @@ See also `data.real.pi.leibniz` and `data.real.pi.wallis` for infinite formulas 
 -/
 
 
-open_locale Real
+open Real
 
 namespace Real
 

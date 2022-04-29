@@ -3,10 +3,10 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
+import Mathbin.SetTheory.Cardinal.Basic
 import Mathbin.Topology.MetricSpace.Closeds
-import Mathbin.SetTheory.Cardinal
-import Mathbin.Topology.MetricSpace.GromovHausdorffRealized
 import Mathbin.Topology.MetricSpace.Completion
+import Mathbin.Topology.MetricSpace.GromovHausdorffRealized
 import Mathbin.Topology.MetricSpace.Kuratowski
 
 /-!
@@ -42,7 +42,7 @@ i.e., it is complete and second countable. We also prove the Gromov compactness 
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Ennreal
+open Classical TopologicalSpace Ennreal
 
 -- mathport name: «exprℓ_infty_ℝ»
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
@@ -169,7 +169,7 @@ instance : HasDist GHSpace where
   dist := fun x y =>
     Inf <|
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ => hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ''
-        ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y })
+        { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/
@@ -196,7 +196,7 @@ theorem GH_dist_le_Hausdorff_dist {X : Type u} [MetricSpace X] [CompactSpace X] 
   have IΦ' : Isometry Φ' := fun x y => ha x y
   have IΨ' : Isometry Ψ' := fun x y => hb x y
   have : IsCompact s := (is_compact_range ha.continuous).union (is_compact_range hb.continuous)
-  let this' : MetricSpace (Subtype s) := by
+  let this : MetricSpace (Subtype s) := by
     infer_instance
   have : CompactSpace (Subtype s) := ⟨is_compact_iff_is_compact_univ.1 ‹IsCompact s›⟩
   have : Nonempty (Subtype s) := ⟨Φ' xX⟩
@@ -448,11 +448,11 @@ instance : MetricSpace GHSpace where
   dist_comm := fun x y => by
     have A :
       (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ => Hausdorff_dist (p.1 : Set ℓ_infty_ℝ) p.2) ''
-          ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }) =
+          { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y } =
         (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ =>
               Hausdorff_dist (p.1 : Set ℓ_infty_ℝ) p.2) ∘
             Prod.swap ''
-          ({ a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }) :=
+          { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y } :=
       by
       congr
       funext
@@ -497,7 +497,7 @@ instance : MetricSpace GHSpace where
     let Ψ : Y → γ2 := optimal_GH_injl Y Z
     have hΨ : Isometry Ψ := isometry_optimal_GH_injl Y Z
     let γ := glue_space hΦ hΨ
-    let this' : MetricSpace γ := Metric.metricSpaceGlueSpace hΦ hΨ
+    let this : MetricSpace γ := Metric.metricSpaceGlueSpace hΦ hΨ
     have Comm : to_glue_l hΦ hΨ ∘ optimal_GH_injr X Y = to_glue_r hΦ hΨ ∘ optimal_GH_injl Y Z := to_glue_commute hΦ hΨ
     calc dist x z = dist (to_GH_space X) (to_GH_space Z) := by
         rw [x.to_GH_space_rep,
@@ -601,7 +601,7 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
   rcases exists_mem_of_nonempty X with ⟨xX, _⟩
   rcases hs xX with ⟨xs, hxs, Dxs⟩
   have sne : s.nonempty := ⟨xs, hxs⟩
-  let this' : Nonempty s := sne.to_subtype
+  let this : Nonempty s := sne.to_subtype
   have : 0 ≤ ε₂ := le_transₓ (abs_nonneg _) (H ⟨xs, hxs⟩ ⟨xs, hxs⟩)
   have : ∀ p q : s, abs (dist p q - dist (Φ p) (Φ q)) ≤ 2 * (ε₂ / 2 + δ) := fun p q =>
     calc
@@ -610,7 +610,7 @@ theorem GH_dist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
         linarith
       
   -- glue `X` and `Y` along the almost matching subsets
-  let this' : MetricSpace (Sum X Y) :=
+  let this : MetricSpace (Sum X Y) :=
     glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) (ε₂ / 2 + δ)
       (by
         linarith)
@@ -702,7 +702,7 @@ instance : SecondCountableTopology GHSpace := by
   choose s hs using this
   have : ∀ p : GH_space, ∀ t : Set p.rep, finite t → ∃ n : ℕ, ∃ e : Equivₓ t (Finₓ n), True := by
     intro p t ht
-    let this' : Fintype t := finite.fintype ht
+    let this : Fintype t := finite.fintype ht
     exact ⟨Fintype.card t, Fintype.equivFin t, trivialₓ⟩
   choose N e hne using this
   -- cardinality of the nice finite subset `s p` of `p.rep`, called `N p`
@@ -1051,7 +1051,7 @@ def auxGluing (n : ℕ) : AuxGluingStruct (X n) :=
         infer_instance,
       embed := id, isom := fun x y => rfl }
     fun n Y => by
-    let this' : MetricSpace Y.space := Y.metric <;>
+    let this : MetricSpace Y.space := Y.metric <;>
       exact
         { Space := glue_space Y.isom (isometry_optimal_GH_injl (X n) (X (n + 1))),
           metric := by
@@ -1070,7 +1070,7 @@ instance : CompleteSpace GHSpace := by
   let X := fun n => (u n).rep
   -- glue them together successively in an optimal way, getting a sequence of metric spaces `Y n`
   let Y := aux_gluing X
-  let this' : ∀ n, MetricSpace (Y n).Space := fun n => (Y n).metric
+  let this : ∀ n, MetricSpace (Y n).Space := fun n => (Y n).metric
   have E : ∀ n : ℕ, glue_space (Y n).isom (isometry_optimal_GH_injl (X n) (X n.succ)) = (Y n.succ).Space := fun n => by
     simp [Y, aux_gluing]
     rfl

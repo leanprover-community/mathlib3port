@@ -37,7 +37,7 @@ open Set Function
 
 open Submodule
 
-open_locale Classical
+open Classical
 
 section
 
@@ -202,7 +202,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
 end
 
 theorem IsField.is_principal_ideal_ring {R : Type _} [CommRingₓ R] (h : IsField R) : IsPrincipalIdealRing R :=
-  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R (h.toField R))
+  @EuclideanDomain.to_principal_ideal_domain R (@Field.toEuclideanDomain R h.toField)
 
 namespace PrincipalIdealRing
 
@@ -235,7 +235,7 @@ theorem associates_irreducible_iff_prime : ∀ {p : Associates R}, Irreducible p
 
 section
 
-open_locale Classical
+open Classical
 
 /-- `factors a` is a multiset of irreducible elements whose product is `a`, up to units -/
 noncomputable def factors (a : R) : Multiset R :=
@@ -254,7 +254,7 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
     (hfac : ∀, ∀ b ∈ factors a, ∀, b ∈ s) (hunit : ∀ c : Rˣ, (c : R) ∈ s) : a ∈ s := by
   rcases(factors_spec a ha).2 with ⟨c, hc⟩
   rw [← hc]
-  exact Submonoid.mul_mem _ (Submonoid.multiset_prod_mem _ _ hfac) (hunit _)
+  exact mul_mem (multiset_prod_mem _ hfac) (hunit _)
 
 /-- If a `ring_hom` maps all units and all factors of an element `a` into a submonoid `s`, then it
 also maps `a` into that submonoid. -/
@@ -394,6 +394,15 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
 
 theorem Prime.coprime_iff_not_dvd {p n : R} (pp : Prime p) : IsCoprime p n ↔ ¬p ∣ n :=
   pp.Irreducible.coprime_iff_not_dvd
+
+theorem Irreducible.dvd_iff_not_coprime {p n : R} (hp : Irreducible p) : p ∣ n ↔ ¬IsCoprime p n :=
+  iff_not_comm.2 hp.coprime_iff_not_dvd
+
+theorem Irreducible.coprime_pow_of_not_dvd {p a : R} (m : ℕ) (hp : Irreducible p) (h : ¬p ∣ a) : IsCoprime a (p ^ m) :=
+  (hp.coprime_iff_not_dvd.2 h).symm.pow_right
+
+theorem Irreducible.coprime_or_dvd {p : R} (hp : Irreducible p) (i : R) : IsCoprime p i ∨ p ∣ i :=
+  (em _).imp_right hp.dvd_iff_not_coprime.2
 
 theorem exists_associated_pow_of_mul_eq_pow' {a b c : R} (hab : IsCoprime a b) {k : ℕ} (h : a * b = c ^ k) :
     ∃ d, Associated (d ^ k) a :=

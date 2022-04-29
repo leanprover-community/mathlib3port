@@ -90,7 +90,7 @@ instance [Preorderₓ α] : OrderTop (Iic a) where
   le_top := fun x => x.Prop
 
 @[simp]
-theorem coe_top [PartialOrderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
+theorem coe_top [Preorderₓ α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 
 instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
@@ -129,7 +129,7 @@ instance [Preorderₓ α] : OrderBot (Ici a) where
   bot_le := fun x => x.Prop
 
 @[simp]
-theorem coe_bot [PartialOrderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
+theorem coe_bot [Preorderₓ α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 
 instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where

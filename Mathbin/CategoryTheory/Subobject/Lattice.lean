@@ -119,7 +119,7 @@ section ZeroOrderBot
 
 variable [HasZeroObject C]
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
 def botCoeIsoZero {B : C} : ((⊥ : MonoOver B) : C) ≅ 0 :=
@@ -302,7 +302,7 @@ section ZeroOrderBot
 
 variable [HasZeroObject C]
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
 def botCoeIsoZero {B : C} : ((⊥ : Subobject B) : C) ≅ 0 :=

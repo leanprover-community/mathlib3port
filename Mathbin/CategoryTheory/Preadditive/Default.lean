@@ -1,13 +1,13 @@
 /-
 Copyright (c) 2020 Markus Himmel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Markus Himmel
+Authors: Markus Himmel, Jakob von Raumer
 -/
-import Mathbin.Algebra.Group.Hom
-import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.Algebra.BigOperators.Basic
+import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Module.Basic
 import Mathbin.CategoryTheory.Endomorphism
+import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 
 /-!
 # Preadditive categories
@@ -47,7 +47,7 @@ universe v u
 
 open CategoryTheory.Limits
 
-open_locale BigOperators
+open BigOperators
 
 namespace CategoryTheory
 
@@ -154,16 +154,16 @@ theorem neg_comp_neg : -f ≫ -g = f ≫ g := by
   simp
 
 theorem nsmul_comp (n : ℕ) : (n • f) ≫ g = n • f ≫ g :=
-  map_nsmul (rightComp P g) f n
+  map_nsmul (rightComp P g) n f
 
 theorem comp_nsmul (n : ℕ) : f ≫ (n • g) = n • f ≫ g :=
-  map_nsmul (leftComp R f) g n
+  map_nsmul (leftComp R f) n g
 
 theorem zsmul_comp (n : ℤ) : (n • f) ≫ g = n • f ≫ g :=
-  map_zsmul (rightComp P g) f n
+  map_zsmul (rightComp P g) n f
 
 theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
-  map_zsmul (leftComp R f) g n
+  map_zsmul (leftComp R f) n g
 
 @[reassoc]
 theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
@@ -214,7 +214,19 @@ theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f
   epi_of_cancel_zero f fun P g h => by
     rw [← cokernel.π_desc f g h, w, limits.zero_comp]
 
-open_locale ZeroObject
+namespace IsIso
+
+@[simp]
+theorem comp_left_eq_zero [IsIso f] : f ≫ g = 0 ↔ g = 0 := by
+  rw [← is_iso.eq_inv_comp, limits.comp_zero]
+
+@[simp]
+theorem comp_right_eq_zero [IsIso g] : f ≫ g = 0 ↔ f = 0 := by
+  rw [← is_iso.eq_comp_inv, limits.zero_comp]
+
+end IsIso
+
+open ZeroObject
 
 variable [HasZeroObject C]
 
@@ -232,92 +244,124 @@ variable {C : Type u} [Category.{v} C] [Preadditive C]
 
 section
 
-variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
+variable {X Y : C} {f : X ⟶ Y} {g : X ⟶ Y}
+
+/-- Map a kernel cone on the difference of two morphisms to the equalizer fork. -/
+def forkOfKernelFork (c : KernelFork (f - g)) : Fork f g :=
+  Fork.ofι c.ι <| by
+    rw [← sub_eq_zero, ← comp_sub, c.condition]
+
+/-- Map any equalizer fork to a cone on the difference of the two morphisms. -/
+def kernelForkOfFork (c : Fork f g) : KernelFork (f - g) :=
+  Fork.ofι c.ι <| by
+    rw [comp_sub, comp_zero, sub_eq_zero, c.condition]
+
+@[simp]
+theorem kernel_fork_of_fork_ι (c : Fork f g) : (kernelForkOfFork c).ι = c.ι :=
+  rfl
+
+@[simp]
+theorem kernel_fork_of_fork_of_ι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ g) :
+    kernelForkOfFork (Fork.ofι ι w) =
+      KernelFork.ofι ι
+        (by
+          simp [w]) :=
+  rfl
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
-theorem has_limit_parallel_pair [HasKernel (f - g)] : HasLimit (parallelPair f g) :=
-  HasLimit.mk
-    { Cone :=
-        Fork.ofι (kernel.ι (f - g))
-          (sub_eq_zero.1 <| by
-            rw [← comp_sub]
-            exact kernel.condition _),
-      IsLimit :=
-        Fork.IsLimit.mk _
-          (fun s =>
-            kernel.lift (f - g) (Fork.ι s) <| by
-              rw [comp_sub]
-              apply sub_eq_zero.2
-              exact fork.condition _)
-          (fun s => by
-            simp )
-          fun s m h => by
-          ext
-          simpa using h walking_parallel_pair.zero }
+def isLimitForkOfKernelFork {c : KernelFork (f - g)} (i : IsLimit c) : IsLimit (forkOfKernelFork c) :=
+  (Fork.IsLimit.mk' _) fun s =>
+    ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by
+      apply fork.is_limit.hom_ext i <;> tidy⟩
 
-/-- Conversely, an equalizer of `f` and `g` is a kernel of `f - g`. -/
+@[simp]
+theorem is_limit_fork_of_kernel_fork_lift {c : KernelFork (f - g)} (i : IsLimit c) (s : Fork f g) :
+    (isLimitForkOfKernelFork i).lift s = i.lift (kernelForkOfFork s) :=
+  rfl
+
+/-- An equalizer of `f` and `g` is a kernel of `f - g`. -/
+def isLimitKernelForkOfFork {c : Fork f g} (i : IsLimit c) : IsLimit (kernelForkOfFork c) :=
+  (Fork.IsLimit.mk' _) fun s =>
+    ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by
+      apply fork.is_limit.hom_ext i <;> tidy⟩
+
+variable (f g)
+
+/-- A preadditive category has an equalizer for `f` and `g` if it has a kernel for `f - g`. -/
+theorem has_equalizer_of_has_kernel [HasKernel (f - g)] : HasEqualizer f g :=
+  HasLimit.mk { Cone := forkOfKernelFork _, IsLimit := isLimitForkOfKernelFork (equalizerIsEqualizer (f - g) 0) }
+
+/-- A preadditive category has a kernel for `f - g` if it has an equalizer for `f` and `g`. -/
 theorem has_kernel_of_has_equalizer [HasEqualizer f g] : HasKernel (f - g) :=
   HasLimit.mk
-    { Cone :=
-        Fork.ofι (equalizer.ι f g)
-          (by
-            erw [comp_zero, comp_sub, equalizer.condition f g, sub_self]),
-      IsLimit :=
-        Fork.IsLimit.mk _
-          (fun s =>
-            equalizer.lift s.ι
-              (by
-                simpa only [comp_sub, comp_zero, sub_eq_zero] using s.condition))
-          (fun s => by
-            simp only [fork.ι_eq_app_zero, fork.of_ι_π_app, equalizer.lift_ι])
-          fun s m h => by
-          ext
-          simpa only [equalizer.lift_ι] using h walking_parallel_pair.zero }
+    { Cone := kernelForkOfFork (equalizer.fork f g),
+      IsLimit := isLimitKernelForkOfFork (limit.isLimit (parallelPair f g)) }
+
+variable {f g}
+
+/-- Map a cokernel cocone on the difference of two morphisms to the coequalizer cofork. -/
+def coforkOfCokernelCofork (c : CokernelCofork (f - g)) : Cofork f g :=
+  Cofork.ofπ c.π <| by
+    rw [← sub_eq_zero, ← sub_comp, c.condition]
+
+/-- Map any coequalizer cofork to a cocone on the difference of the two morphisms. -/
+def cokernelCoforkOfCofork (c : Cofork f g) : CokernelCofork (f - g) :=
+  Cofork.ofπ c.π <| by
+    rw [sub_comp, zero_comp, sub_eq_zero, c.condition]
+
+@[simp]
+theorem cokernel_cofork_of_cofork_π (c : Cofork f g) : (cokernelCoforkOfCofork c).π = c.π :=
+  rfl
+
+@[simp]
+theorem cokernel_cofork_of_cofork_of_π {P : C} (π : Y ⟶ P) (w : f ≫ π = g ≫ π) :
+    cokernelCoforkOfCofork (Cofork.ofπ π w) =
+      CokernelCofork.ofπ π
+        (by
+          simp [w]) :=
+  rfl
+
+/-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
+def isColimitCoforkOfCokernelCofork {c : CokernelCofork (f - g)} (i : IsColimit c) :
+    IsColimit (coforkOfCokernelCofork c) :=
+  (Cofork.IsColimit.mk' _) fun s =>
+    ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by
+      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+
+@[simp]
+theorem is_colimit_cofork_of_cokernel_cofork_desc {c : CokernelCofork (f - g)} (i : IsColimit c) (s : Cofork f g) :
+    (isColimitCoforkOfCokernelCofork i).desc s = i.desc (cokernelCoforkOfCofork s) :=
+  rfl
+
+/-- A coequalizer of `f` and `g` is a cokernel of `f - g`. -/
+def isColimitCokernelCoforkOfCofork {c : Cofork f g} (i : IsColimit c) : IsColimit (cokernelCoforkOfCofork c) :=
+  (Cofork.IsColimit.mk' _) fun s =>
+    ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by
+      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+
+variable (f g)
+
+/-- A preadditive category has a coequalizer for `f` and `g` if it has a cokernel for `f - g`. -/
+theorem has_coequalizer_of_has_cokernel [HasCokernel (f - g)] : HasCoequalizer f g :=
+  HasColimit.mk
+    { Cocone := coforkOfCokernelCofork _,
+      IsColimit := isColimitCoforkOfCokernelCofork (coequalizerIsCoequalizer (f - g) 0) }
+
+/-- A preadditive category has a cokernel for `f - g` if it has a coequalizer for `f` and `g`. -/
+theorem has_cokernel_of_has_coequalizer [HasCoequalizer f g] : HasCokernel (f - g) :=
+  HasColimit.mk
+    { Cocone := cokernelCoforkOfCofork (coequalizer.cofork f g),
+      IsColimit := isColimitCokernelCoforkOfCofork (colimit.isColimit (parallelPair f g)) }
 
 end
-
-section
 
 /-- If a preadditive category has all kernels, then it also has all equalizers. -/
 theorem has_equalizers_of_has_kernels [HasKernels C] : HasEqualizers C :=
-  @has_equalizers_of_has_limit_parallel_pair _ _ fun _ _ f g => has_limit_parallel_pair f g
-
-end
-
-section
-
-variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
-
-/-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
-theorem has_colimit_parallel_pair [HasCokernel (f - g)] : HasColimit (parallelPair f g) :=
-  HasColimit.mk
-    { Cocone :=
-        Cofork.ofπ (cokernel.π (f - g))
-          (sub_eq_zero.1 <| by
-            rw [← sub_comp]
-            exact cokernel.condition _),
-      IsColimit :=
-        Cofork.IsColimit.mk _
-          (fun s =>
-            cokernel.desc (f - g) (Cofork.π s) <| by
-              rw [sub_comp]
-              apply sub_eq_zero.2
-              exact cofork.condition _)
-          (fun s => by
-            simp )
-          fun s m h => by
-          ext
-          simpa using h walking_parallel_pair.one }
-
-end
-
-section
+  @has_equalizers_of_has_limit_parallel_pair _ _ fun _ _ f g => has_equalizer_of_has_kernel f g
 
 /-- If a preadditive category has all cokernels, then it also has all coequalizers. -/
 theorem has_coequalizers_of_has_cokernels [HasCokernels C] : HasCoequalizers C :=
-  @has_coequalizers_of_has_colimit_parallel_pair _ _ fun _ _ f g => has_colimit_parallel_pair f g
-
-end
+  @has_coequalizers_of_has_colimit_parallel_pair _ _ fun _ _ f g => has_coequalizer_of_has_cokernel f g
 
 end Equalizers
 

@@ -5,7 +5,7 @@ Authors: Scott Morrison, Adam Topaz
 -/
 import Mathbin.CategoryTheory.Preadditive.Default
 import Mathbin.CategoryTheory.Preadditive.AdditiveFunctor
-import Mathbin.Data.Equiv.TransferInstance
+import Mathbin.Logic.Equiv.TransferInstance
 
 /-!
 # If `C` is preadditive, `Cᵒᵖ` has a natural preadditive structure.

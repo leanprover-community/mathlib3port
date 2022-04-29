@@ -8,6 +8,7 @@ import Mathbin.Data.Nat.Totient
 import Mathbin.Algebra.Periodic
 import Mathbin.Data.Finset.LocallyFinite
 import Mathbin.Data.Nat.Count
+import Mathbin.Data.Nat.Nth
 
 /-!
 # The Prime Counting Function
@@ -60,6 +61,14 @@ theorem monotone_prime_counting' : Monotone primeCounting' :=
 
 theorem monotone_prime_counting : Monotone primeCounting := fun a b a_le_b =>
   monotone_prime_counting' (add_le_add_right a_le_b 1)
+
+@[simp]
+theorem prime_counting'_nth_eq (n : ℕ) : π' (nth Prime n) = n :=
+  count_nth_of_infinite _ infinite_set_of_prime _
+
+@[simp]
+theorem prime_nth_prime (n : ℕ) : Prime (nth Prime n) :=
+  nth_mem_of_infinite _ infinite_set_of_prime _
 
 /-- A linear upper bound on the size of the `prime_counting'` function -/
 theorem prime_counting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :

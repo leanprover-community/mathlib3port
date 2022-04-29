@@ -44,7 +44,7 @@ open map, closed map, embedding, quotient map, identification map
 
 open Set Filter
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -105,6 +105,11 @@ theorem Inducing.continuous_at_iff' {f : α → β} {g : β → γ} (hf : Induci
 
 protected theorem Inducing.continuous {f : α → β} (hf : Inducing f) : Continuous f :=
   hf.continuous_iff.mp continuous_id
+
+protected theorem Inducing.inducing_iff {f : α → β} {g : β → γ} (hg : Inducing g) : Inducing f ↔ Inducing (g ∘ f) := by
+  refine' ⟨fun h => hg.comp h, fun hgf => inducing_of_inducing_compose _ hg.continuous hgf⟩
+  rw [hg.continuous_iff]
+  exact hgf.continuous
 
 theorem Inducing.closure_eq_preimage_closure_image {f : α → β} (hf : Inducing f) (s : Set α) :
     Closure s = f ⁻¹' Closure (f '' s) := by

@@ -21,7 +21,7 @@ We introduce a typeclass `nontrivial` formalizing this property.
 
 variable {α : Type _} {β : Type _}
 
-open_locale Classical
+open Classical
 
 /-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
 this is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. -/
@@ -54,6 +54,13 @@ theorem nontrivial_of_ne (x y : α) (h : x ≠ y) : Nontrivial α :=
 -- `x` and `y` are explicit here, as they are often needed to guide typechecking of `h`.
 theorem nontrivial_of_lt [Preorderₓ α] (x y : α) (h : x < y) : Nontrivial α :=
   ⟨⟨x, y, ne_of_ltₓ h⟩⟩
+
+theorem exists_pair_lt (α : Type _) [Nontrivial α] [LinearOrderₓ α] : ∃ x y : α, x < y := by
+  rcases exists_pair_ne α with ⟨x, y, hxy⟩
+  cases lt_or_gt_of_neₓ hxy <;> exact ⟨_, _, h⟩
+
+theorem nontrivial_iff_lt [LinearOrderₓ α] : Nontrivial α ↔ ∃ x y : α, x < y :=
+  ⟨fun h => @exists_pair_lt α h _, fun ⟨x, y, h⟩ => nontrivial_of_lt x y h⟩
 
 theorem nontrivial_iff_exists_ne (x : α) : Nontrivial α ↔ ∃ y, y ≠ x :=
   ⟨fun h => @exists_ne α h x, fun ⟨y, hy⟩ => nontrivial_of_ne _ _ hy⟩
@@ -89,7 +96,7 @@ noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : PSum (Nont
 
 theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
   ⟨by
-    intros h
+    intro h
     exact Subsingleton.elimₓ, fun h => ⟨h⟩⟩
 
 theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α := by

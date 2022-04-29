@@ -24,7 +24,7 @@ valuation from each `X i` to `r i`.
 
 universe u
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 open Finset Polynomial Fintype
 
@@ -48,13 +48,13 @@ theorem prod_X_add_C_eq_sum_esymm :
       (by
         congr)
       fun j hj => _
-  rw [esymm, polynomial.C.map_sum, sum_mul]
+  rw [esymm, map_sum, sum_mul]
   refine' sum_congr rfl fun t ht => _
   have h : (univ \ t).card = card σ - j := by
     rw [card_sdiff (mem_powerset_len.mp ht).1]
     congr
     exact (mem_powerset_len.mp ht).2
-  rw [(Polynomial.c : MvPolynomial σ R →+* Polynomial _).map_prod, prod_const, ← h]
+  rw [map_prod, prod_const, ← h]
   congr
 
 /-- A fully expanded sum version of Vieta's formula, evaluated at the roots.
@@ -68,19 +68,19 @@ theorem prod_X_add_C_eval (r : σ → R) :
   classical
   have h := @prod_X_add_C_eq_sum_esymm _ _ σ _
   apply_fun Polynomial.map (eval r)  at h
-  rw [map_prod, map_sum] at h
+  rw [Polynomial.map_prod, Polynomial.map_sum] at h
   convert h
   simp only [eval_X, Polynomial.map_add, Polynomial.map_C, Polynomial.map_X, eq_self_iff_true]
   funext
-  simp only [Function.funext_iffₓ, esymm, Polynomial.map_C, map_sum, polynomial.C.map_sum, Polynomial.map_C,
+  simp only [Function.funext_iffₓ, esymm, Polynomial.map_C, Polynomial.map_sum, map_sum, Polynomial.map_C,
     Polynomial.map_pow, Polynomial.map_X, Polynomial.map_mul]
   congr
   funext
-  simp only [eval_prod, eval_X, (Polynomial.c : R →+* R[X]).map_prod]
+  simp only [eval_prod, eval_X, map_prod]
 
 theorem esymm_to_sum (r : σ → R) (j : ℕ) :
     Polynomial.c (eval r (esymm σ R j)) = ∑ t in powersetLen j (univ : Finset σ), ∏ i in t, Polynomial.c (r i) := by
-  simp only [esymm, eval_sum, eval_prod, eval_X, polynomial.C.map_sum, (Polynomial.c : R →+* Polynomial _).map_prod]
+  simp only [esymm, eval_sum, eval_prod, eval_X, map_sum, map_prod]
 
 /-- Vieta's formula for the coefficients of the product of linear terms `X + r i`,
 The `k`th coefficient is `∑ t in powerset_len (card σ - k) (univ : finset σ), ∏ i in t, r i`,

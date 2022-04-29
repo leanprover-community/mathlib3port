@@ -51,9 +51,8 @@ def IsPfilter [Preorderₓ P] (F : Set P) : Prop :=
   @IsIdeal (OrderDual P) _ F
 
 theorem IsPfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
-    (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F := by
-  use Nonempty, Directed
-  exact fun _ _ _ _ => mem_of_le ‹_› ‹_›
+    (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F :=
+  ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
 
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
 `order.is_pfilter`. -/
@@ -64,7 +63,7 @@ namespace Pfilter
 
 section Preorderₓ
 
-variable [Preorderₓ P] {x y : P} (F : Pfilter P)
+variable [Preorderₓ P] {x y : P} (F s t : Pfilter P)
 
 /-- A filter on `P` is a subset of `P`. -/
 instance : Coe (Pfilter P) (Set P) :=
@@ -87,7 +86,7 @@ theorem nonempty : (F : Set P).Nonempty :=
 theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
   F.dual.Directed
 
-theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.mem_of_le h
+theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.lower h
 
 /-- The smallest filter containing a given element. -/
 def principal (p : P) : Pfilter P :=
@@ -98,8 +97,10 @@ instance [Inhabited P] : Inhabited (Pfilter P) :=
 
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
-theorem ext : ∀ F G : Pfilter P, (F : Set P) = G → F = G
-  | ⟨⟨_, _, _, _⟩⟩, ⟨⟨_, _, _, _⟩⟩, rfl => rfl
+theorem ext (h : (s : Set P) = t) : s = t := by
+  cases s
+  cases t
+  exact congr_argₓ _ (ideal.ext h)
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrderₓ (Pfilter P) :=
@@ -122,7 +123,7 @@ variable [Preorderₓ P] [OrderTop P] {F : Pfilter P}
 /-- A specific witness of `pfilter.nonempty` when `P` has a top element. -/
 @[simp]
 theorem top_mem : ⊤ ∈ F :=
-  ideal.bot_mem
+  Ideal.bot_mem _
 
 /-- There is a bottom filter when `P` has a top element. -/
 instance : OrderBot (Pfilter P) where
@@ -140,10 +141,9 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : Pfilter P}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » F)
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
-theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=
-  Ideal.sup_mem x ‹x ∈ F› y ‹y ∈ F›
+theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x⊓y ∈ F :=
+  Ideal.sup_mem hx hy
 
 @[simp]
 theorem inf_mem_iff : x⊓y ∈ F ↔ x ∈ F ∧ y ∈ F :=

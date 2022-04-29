@@ -78,7 +78,7 @@ def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   map := fun C D => id
 
 instance forgetToCatFull : Full forgetToCat where
-  Preimage := fun C D => id
+  preimage := fun C D => id
 
 instance forget_to_Cat_faithful : Faithful forgetToCat :=
   {  }
@@ -86,6 +86,10 @@ instance forget_to_Cat_faithful : Faithful forgetToCat :=
 /-- Convert arrows in the category of groupoids to functors,
 which sometimes helps in applying simp lemmas -/
 theorem hom_to_functor {C D E : Groupoidₓ.{v, u}} (f : C ⟶ D) (g : D ⟶ E) : f ≫ g = f ⋙ g :=
+  rfl
+
+/-- Converts identity in the category of groupoids to the functor identity -/
+theorem id_to_functor {C : Groupoidₓ.{v, u}} : 𝟭 C = 𝟙 C :=
   rfl
 
 section Products

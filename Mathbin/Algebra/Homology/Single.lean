@@ -22,6 +22,8 @@ an augmented exact complex of projectives.)
 -/
 
 
+noncomputable section
+
 open CategoryTheory
 
 open CategoryTheory.Limits
@@ -102,7 +104,7 @@ instance (j : ι) : Faithful (single V c j) where
     exact this
 
 instance (j : ι) : Full (single V c j) where
-  Preimage := fun X Y f =>
+  preimage := fun X Y f =>
     eqToHom
         (by
           simp ) ≫
@@ -230,9 +232,8 @@ noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homol
             simp )
           (by
             simp ) ≪≫
-        homologyZeroZero)
-    fun X Y f => by
-    ext
+        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 
 end
 
@@ -412,9 +413,8 @@ noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) : single₀ V ⋙ homol
             simp )
           (by
             simp ) ≪≫
-        homologyZeroZero)
-    fun X Y f => by
-    ext
+        homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
+    fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
 
 end
 

@@ -5,6 +5,7 @@ Authors: Kenny Lau
 -/
 import Mathbin.FieldTheory.SplittingField
 import Mathbin.FieldTheory.PerfectClosure
+import Mathbin.FieldTheory.Separable
 
 /-!
 # Algebraically Closed Field
@@ -36,7 +37,7 @@ algebraic closure, algebraically closed
 
 universe u v w
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 open Polynomial
 
@@ -175,7 +176,7 @@ variable (K L M)
 
 include hL
 
-open Zorn Subalgebra AlgHom Function
+open Subalgebra AlgHom Function
 
 /-- This structure is used to prove the existence of a homomorphism from any algebraic extension
 into an algebraic closure -/
@@ -214,7 +215,7 @@ instance : Preorderₓ (SubfieldWithHom K L M hL) where
 
 open Lattice
 
-theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M hL)) (hc : Chain (· ≤ ·) c) :
+theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M hL)) (hc : IsChain (· ≤ ·) c) :
     ∃ ub : SubfieldWithHom K L M hL, ∀ N, N ∈ c → N ≤ ub :=
   if hcn : c.Nonempty then
     let ub : SubfieldWithHom K L M hL :=
@@ -248,7 +249,7 @@ theorem maximal_subfield_with_hom_chain_bounded (c : Set (SubfieldWithHom K L M 
 variable (hL M)
 
 theorem exists_maximal_subfield_with_hom : ∃ E : SubfieldWithHom K L M hL, ∀ N, E ≤ N → N ≤ E :=
-  Zorn.exists_maximal_of_chains_bounded maximal_subfield_with_hom_chain_bounded fun _ _ _ => le_transₓ
+  exists_maximal_of_chains_bounded maximal_subfield_with_hom_chain_bounded fun _ _ _ => le_transₓ
 
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
 noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
@@ -263,8 +264,8 @@ theorem maximal_subfield_with_hom_eq_top : (maximalSubfieldWithHom M hL).Carrier
   intro x _
   let p := minpoly K x
   let N : Subalgebra K L := (maximal_subfield_with_hom M hL).Carrier
-  let this' : Field N := IsField.toField _ (Subalgebra.is_field_of_algebraic N hL)
-  let this' : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra
+  let this : Field N := (Subalgebra.is_field_of_algebraic N hL).toField
+  let this : Algebra N M := (maximal_subfield_with_hom M hL).emb.toRingHom.toAlgebra
   cases'
     IsAlgClosed.exists_aeval_eq_zero M (minpoly N x)
       (ne_of_gtₓ
@@ -318,7 +319,7 @@ include hS
 /-- A (random) homomorphism from an algebraic extension of R into an algebraically
   closed extension of R. -/
 noncomputable irreducible_def lift : S →ₐ[R] M := by
-  let this' : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
+  let this : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R S).IsDomain _
   have hfRfS : Algebra.IsAlgebraic (FractionRing R) (FractionRing S) := fun x =>
     (IsFractionRing.is_algebraic_iff R (FractionRing R) (FractionRing S)).1
       ((IsFractionRing.is_algebraic_iff' R S (FractionRing S)).1 hS x)
@@ -330,6 +331,23 @@ omit hS
 noncomputable instance (priority := 100) perfectRing (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
     PerfectRing k p :=
   (PerfectRing.ofSurjective k p) fun x => IsAlgClosed.exists_pow_nat_eq _ <| Fact.out _
+
+/-- Algebraically closed fields are infinite since `Xⁿ⁺¹ - 1` is separable when `#K = n` -/
+instance (priority := 500) {K : Type _} [Field K] [IsAlgClosed K] : Infinite K := by
+  apply Infinite.mk
+  intro hfin
+  set n := Fintype.card K with hn
+  set f := (X : K[X]) ^ (n + 1) - 1 with hf
+  have hfsep : separable f :=
+    separable_X_pow_sub_C 1
+      (by
+        simp )
+      one_ne_zero
+  apply Nat.not_succ_le_selfₓ (Fintype.card K)
+  have hroot : n.succ = Fintype.card (f.root_set K) := by
+    erw [card_root_set_eq_nat_degree hfsep (IsAlgClosed.splits_domain _), nat_degree_X_pow_sub_C]
+  rw [hroot]
+  exact Fintype.card_le_of_injective coe Subtype.coe_injective
 
 end IsAlgClosed
 
@@ -350,8 +368,8 @@ noncomputable def equiv : L ≃ₐ[R] M :=
   let f : L →ₐ[R] M := IsAlgClosed.lift IsAlgClosure.algebraic
   AlgEquiv.ofBijective f
     ⟨RingHom.injective f.toRingHom, by
-      let this' : Algebra L M := RingHom.toAlgebra f
-      let this' : IsScalarTower R L M :=
+      let this : Algebra L M := RingHom.toAlgebra f
+      let this : IsScalarTower R L M :=
         IsScalarTower.of_algebra_map_eq
           (by
             simp [RingHom.algebra_map_to_algebra])
@@ -373,14 +391,14 @@ variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarT
   an algebraic extension of `R` -/
 noncomputable def equivOfAlgebraic' [Nontrivial S] [NoZeroSmulDivisors R S] (hRL : Algebra.IsAlgebraic R L) :
     L ≃ₐ[R] M := by
-  let this' : NoZeroSmulDivisors R L :=
+  let this : NoZeroSmulDivisors R L :=
     NoZeroSmulDivisors.of_algebra_map_injective
       (by
         rw [IsScalarTower.algebra_map_eq R S L]
         exact
           Function.Injective.comp (NoZeroSmulDivisors.algebra_map_injective _ _)
             (NoZeroSmulDivisors.algebra_map_injective _ _))
-  let this' : IsAlgClosure R L :=
+  let this : IsAlgClosure R L :=
     { alg_closed := by
         infer_instance,
       algebraic := hRL }
@@ -400,14 +418,14 @@ variable {R S}
 /-- Used in the definition of `equiv_of_equiv` -/
 noncomputable def equivOfEquivAux (hSR : S ≃+* R) :
     { e : L ≃+* M // e.toRingHom.comp (algebraMap S L) = (algebraMap R M).comp hSR.toRingHom } := by
-  let this' : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
-  let this' : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
-  let this' : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R M).IsDomain _
-  let this' : IsDomain S := (NoZeroSmulDivisors.algebra_map_injective S L).IsDomain _
+  let this : Algebra R S := RingHom.toAlgebra hSR.symm.to_ring_hom
+  let this : Algebra S R := RingHom.toAlgebra hSR.to_ring_hom
+  let this : IsDomain R := (NoZeroSmulDivisors.algebra_map_injective R M).IsDomain _
+  let this : IsDomain S := (NoZeroSmulDivisors.algebra_map_injective S L).IsDomain _
   have : Algebra.IsAlgebraic R S := fun x => by
     rw [← RingEquiv.symm_apply_apply hSR x]
     exact is_algebraic_algebra_map _
-  let this' : Algebra R L := RingHom.toAlgebra ((algebraMap S L).comp (algebraMap R S))
+  let this : Algebra R L := RingHom.toAlgebra ((algebraMap S L).comp (algebraMap R S))
   have : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq fun _ => rfl
   have : IsScalarTower S R L :=
     IsScalarTower.of_algebra_map_eq

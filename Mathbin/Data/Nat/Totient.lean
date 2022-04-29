@@ -23,7 +23,7 @@ We prove the divisor sum formula, namely that `n` equals `φ` summed over the di
 
 open Finset
 
-open_locale BigOperators
+open BigOperators
 
 namespace Nat
 
@@ -314,9 +314,21 @@ theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintyp
 
 @[simp]
 theorem totient_two : φ 2 = 1 :=
-  (totient_prime prime_two).trans
-    (by
-      norm_num)
+  (totient_prime prime_two).trans rfl
+
+theorem totient_eq_one_iff : ∀ {n : ℕ}, n.totient = 1 ↔ n = 1 ∨ n = 2
+  | 0 => by
+    simp
+  | 1 => by
+    simp
+  | 2 => by
+    simp
+  | n + 3 => by
+    have : 3 ≤ n + 3 := le_add_self
+    simp only [succ_succ_ne_one, false_orₓ]
+    exact
+      ⟨fun h => not_even_one.elim <| h ▸ totient_even this, by
+        rintro ⟨⟩⟩
 
 /-! ### Euler's product formula for the totient function
 

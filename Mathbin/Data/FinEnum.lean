@@ -67,7 +67,7 @@ theorem mem_to_list [FinEnum α] (x : α) : x ∈ toList α := by
 
 @[simp]
 theorem nodup_to_list [FinEnum α] : List.Nodupₓ (toList α) := by
-  simp [to_list] <;> apply List.nodup_map <;> [apply Equivₓ.injective, apply List.nodup_fin_range]
+  simp [to_list] <;> apply List.Nodupₓ.map <;> [apply Equivₓ.injective, apply List.nodup_fin_range]
 
 /-- create a `fin_enum` instance using a surjection -/
 def ofSurjective {β} (f : β → α) [DecidableEq α] [FinEnum β] (h : Surjective f) : FinEnum α :=
@@ -153,8 +153,7 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) : s ∈ 
       simp only [sdiff_eq_self]
       intro a
       simp only [and_imp, mem_inter, mem_singleton, not_mem_empty]
-      intro h₀ h₁
-      subst a
+      rintro h₀ rfl
       apply h h₀
       
     

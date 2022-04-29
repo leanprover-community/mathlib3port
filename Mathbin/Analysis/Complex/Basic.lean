@@ -34,10 +34,14 @@ noncomputable section
 
 namespace Complex
 
-open_locale ComplexConjugate
+open ComplexConjugate
 
 instance : HasNorm ℂ :=
   ⟨abs⟩
+
+@[simp]
+theorem norm_eq_abs (z : ℂ) : ∥z∥ = abs z :=
+  rfl
 
 instance : NormedGroup ℂ :=
   NormedGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
@@ -48,10 +52,13 @@ instance : NormedField ℂ :=
 instance : NondiscreteNormedField ℂ where
   non_trivial :=
     ⟨2, by
-      simp [norm] <;> norm_num⟩
+      simp <;> norm_num⟩
 
 instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ where
-  norm_algebra_map_eq := fun x => (abs_of_real <| algebraMap R ℝ x).trans (norm_algebra_map_eq ℝ x)
+  norm_smul_le := fun r x => by
+    rw [norm_eq_abs, norm_eq_abs, ← algebra_map_smul ℝ r x, Algebra.smul_def, abs_mul, ← norm_algebra_map' ℝ r,
+      coe_algebra_map, abs_of_real]
+    rfl
   toAlgebra := Complex.algebra
 
 /-- The module structure from `module.complex_to_real` is a normed space. -/
@@ -59,10 +66,6 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
 instance (priority := 900) _root_.normed_space.complex_to_real {E : Type _} [NormedGroup E] [NormedSpace ℂ E] :
     NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
-
-@[simp]
-theorem norm_eq_abs (z : ℂ) : ∥z∥ = abs z :=
-  rfl
 
 theorem dist_eq (z w : ℂ) : dist z w = abs (z - w) :=
   rfl
@@ -79,9 +82,8 @@ theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
 
 @[simp]
 theorem norm_rat (r : ℚ) : ∥(r : ℂ)∥ = abs (r : ℝ) := by
-  suffices ∥((r : ℝ) : ℂ)∥ = abs r by
-    simpa
-  rw [norm_real, Real.norm_eq_abs]
+  rw [← of_real_rat_cast]
+  exact norm_real _
 
 @[simp]
 theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
@@ -89,12 +91,10 @@ theorem norm_nat (n : ℕ) : ∥(n : ℂ)∥ = n :=
 
 @[simp]
 theorem norm_int {n : ℤ} : ∥(n : ℂ)∥ = abs n := by
-  suffices ∥((n : ℝ) : ℂ)∥ = abs n by
-    simpa
-  rw [norm_real, Real.norm_eq_abs]
+  simp (config := { singlePass := true })[← Rat.cast_coe_int]
 
 theorem norm_int_of_nonneg {n : ℤ} (hn : 0 ≤ n) : ∥(n : ℂ)∥ = n := by
-  rw [norm_int, _root_.abs_of_nonneg] <;> exact Int.cast_nonneg.2 hn
+  simp [hn]
 
 @[continuity]
 theorem continuous_abs : Continuous abs :=
@@ -103,6 +103,27 @@ theorem continuous_abs : Continuous abs :=
 @[continuity]
 theorem continuous_norm_sq : Continuous normSq := by
   simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
+
+@[simp, norm_cast]
+theorem nnnorm_real (r : ℝ) : ∥(r : ℂ)∥₊ = ∥r∥₊ :=
+  Subtype.ext <| norm_real r
+
+@[simp, norm_cast]
+theorem nnnorm_nat (n : ℕ) : ∥(n : ℂ)∥₊ = n :=
+  Subtype.ext <| by
+    simp
+
+@[simp, norm_cast]
+theorem nnnorm_int (n : ℤ) : ∥(n : ℂ)∥₊ = ∥n∥₊ :=
+  Subtype.ext <| by
+    simp only [coe_nnnorm, norm_int, Int.norm_eq_abs]
+
+theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥₊ = 1 := by
+  refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
+  rw [← nnnorm_pow, h, nnnorm_one, one_pow]
+
+theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥ = 1 :=
+  congr_argₓ coe (nnnorm_eq_one_of_pow_eq_one h hn)
 
 /-- The `abs` function on `ℂ` is proper. -/
 theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
@@ -143,6 +164,10 @@ theorem re_clm_norm : ∥re_clm∥ = 1 :=
             simp )
       
 
+@[simp]
+theorem re_clm_nnnorm : ∥re_clm∥₊ = 1 :=
+  Subtype.ext re_clm_norm
+
 /-- Continuous linear map version of the real part function, from `ℂ` to `ℝ`. -/
 def imClm : ℂ →L[ℝ] ℝ :=
   imLm.mkContinuous 1 fun x => by
@@ -171,6 +196,10 @@ theorem im_clm_norm : ∥im_clm∥ = 1 :=
           (by
             simp )
       
+
+@[simp]
+theorem im_clm_nnnorm : ∥im_clm∥₊ = 1 :=
+  Subtype.ext im_clm_norm
 
 theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpace ℂ E] (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
@@ -204,8 +233,15 @@ theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
 theorem dist_conj_conj (z w : ℂ) : dist (conj z) (conj w) = dist z w :=
   isometry_conj.dist_eq z w
 
+@[simp]
+theorem nndist_conj_conj (z w : ℂ) : nndist (conj z) (conj w) = nndist z w :=
+  isometry_conj.nndist_eq z w
+
 theorem dist_conj_comm (z w : ℂ) : dist (conj z) w = dist z (conj w) := by
   rw [← dist_conj_conj, conj_conj]
+
+theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
+  Subtype.ext <| dist_conj_comm _ _
 
 /-- The determinant of `conj_lie`, as a linear map. -/
 @[simp]
@@ -237,6 +273,10 @@ theorem conj_cle_apply (z : ℂ) : conjCle z = conj z :=
 theorem conj_cle_norm : ∥(conjCle : ℂ →L[ℝ] ℂ)∥ = 1 :=
   conjLie.toLinearIsometry.norm_to_continuous_linear_map
 
+@[simp]
+theorem conj_cle_nnorm : ∥(conjCle : ℂ →L[ℝ] ℂ)∥₊ = 1 :=
+  Subtype.ext conj_cle_norm
+
 /-- Linear isometry version of the canonical embedding of `ℝ` in `ℂ`. -/
 def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
   ⟨ofRealAm.toLinearMap, norm_real⟩
@@ -263,6 +303,10 @@ theorem of_real_clm_apply (x : ℝ) : ofRealClm x = x :=
 @[simp]
 theorem of_real_clm_norm : ∥of_real_clm∥ = 1 :=
   ofRealLi.norm_to_continuous_linear_map
+
+@[simp]
+theorem of_real_clm_nnnorm : ∥of_real_clm∥₊ = 1 :=
+  Subtype.ext <| of_real_clm_norm
 
 noncomputable instance : IsROrC ℂ where
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩

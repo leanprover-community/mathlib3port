@@ -33,7 +33,7 @@ theorem quotient' {R : Type _} [CommRingₓ R] (p : ℕ) [CharP R p] (I : Ideal 
     (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) : CharP (R ⧸ I) p :=
   ⟨fun x => by
     rw [← cast_eq_zero_iff R p x, ← map_nat_cast (Ideal.Quotient.mk I)]
-    refine' quotient.eq'.trans (_ : ↑x - 0 ∈ I ↔ _)
+    refine' ideal.quotient.eq.trans (_ : ↑x - 0 ∈ I ↔ _)
     rw [sub_zero]
     exact ⟨h x, fun h' => h'.symm ▸ I.zero_mem⟩⟩
 

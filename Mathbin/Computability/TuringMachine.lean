@@ -76,10 +76,10 @@ theorem BlankExtends.refl {Γ} [Inhabited Γ] (l : List Γ) : BlankExtends l l :
 @[trans]
 theorem BlankExtends.trans {Γ} [Inhabited Γ] {l₁ l₂ l₃ : List Γ} :
     BlankExtends l₁ l₂ → BlankExtends l₂ l₃ → BlankExtends l₁ l₃ := by
-  rintro ⟨i, rfl⟩ ⟨j, rfl⟩ <;>
-    exact
-      ⟨i + j, by
-        simp [List.repeat_add]⟩
+  rintro ⟨i, rfl⟩ ⟨j, rfl⟩
+  exact
+    ⟨i + j, by
+      simp [List.repeat_add]⟩
 
 theorem BlankExtends.below_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
     BlankExtends l l₁ → BlankExtends l l₂ → l₁.length ≤ l₂.length → BlankExtends l₁ l₂ := by
@@ -718,10 +718,10 @@ holds of any point where `eval f a` evaluates to `b`. This formalizes the notion
 `eval f a` evaluates to `b` then it reaches terminal state `b` in finitely many steps. -/
 @[elab_as_eliminator]
 def evalInduction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
-    (H : ∀ a, b ∈ eval f a → (∀ a', b ∈ eval f a' → f a = some a' → C a') → C a) : C a :=
+    (H : ∀ a, b ∈ eval f a → (∀ a', f a = some a' → C a') → C a) : C a :=
   Pfun.fixInduction h fun a' ha' h' =>
-    (H _ ha') fun b' hb' e =>
-      h' _ hb' <|
+    (H _ ha') fun b' e =>
+      h' _ <|
         Part.mem_some_iff.2 <| by
           rw [e] <;> rfl
 
@@ -737,9 +737,9 @@ theorem mem_eval {σ} {f : σ → Option σ} {a b} : b ∈ eval f a ↔ Reaches 
                 rw [e] <;> rfl)]
       exact ⟨refl_trans_gen.refl, e⟩
       
-    · rcases Pfun.mem_fix_iff.1 h with (h | ⟨_, h, h'⟩) <;> rw [e] at h <;> cases Part.mem_some_iff.1 h
+    · rcases Pfun.mem_fix_iff.1 h with (h | ⟨_, h, _⟩) <;> rw [e] at h <;> cases Part.mem_some_iff.1 h
       cases'
-        IH a' h'
+        IH a'
           (by
             rwa [e]) with
         h₁ h₂
@@ -1181,7 +1181,7 @@ def SupportsStmt (S : Finset Λ) : stmt → Prop
   | goto l => ∀ a v, l a v ∈ S
   | halt => True
 
-open_locale Classical
+open Classical
 
 /-- The subterm closure of a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
@@ -1191,6 +1191,7 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(branch p q₁ q₂) => insert Q (stmts₁ q₁ ∪ stmts₁ q₂)
   | Q => {Q}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 
@@ -1427,7 +1428,7 @@ machine states in the target (even though the type `Λ'` is infinite). -/
 noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
   (TM1.stmts M S).product Finset.univ
 
-open_locale Classical
+open Classical
 
 attribute [local simp] TM1.stmts₁_self
 
@@ -1518,7 +1519,7 @@ theorem exists_enc_dec [Fintype Γ] :
     ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
       enc default = Vector.repeat false n ∧ ∀ a, dec (enc a) = a :=
   by
-  let this' := Classical.decEq Γ
+  let this := Classical.decEq Γ
   let n := Fintype.card Γ
   obtain ⟨F⟩ := Fintype.truncEquivFin Γ
   let G : Finₓ n ↪ Finₓ n → Bool :=
@@ -1778,7 +1779,7 @@ theorem tr_respects : Respects (step M) (step tr) fun c₁ c₂ => tr_cfg c₁ =
 
 omit enc0 encdec
 
-open_locale Classical
+open Classical
 
 parameter [Fintype Γ]
 
@@ -2047,7 +2048,7 @@ def SupportsStmt (S : Finset Λ) : stmt → Prop
   | goto l => ∀ v, l v ∈ S
   | halt => True
 
-open_locale Classical
+open Classical
 
 /-- The set of subtree statements in a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
@@ -2059,6 +2060,7 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(goto l) => {Q}
   | Q@halt => {Q}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 
@@ -2379,7 +2381,7 @@ def trNormal : stmt₂ → stmt₁
 theorem tr_normal_run {k} s q : tr_normal (st_run s q) = goto fun _ _ => go k s q := by
   rcases s with (_ | _ | _) <;> rfl
 
-open_locale Classical
+open Classical
 
 /-- The set of machine states accessible from an initial TM2 statement. -/
 noncomputable def trStmts₁ : stmt₂ → Finset Λ'
@@ -2419,18 +2421,18 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
     · subst k'
       split_ifs <;> simp only [List.reverse_cons, Function.update_same, list_blank.nth_mk, List.inth, List.map]
       · rw [List.nth_le_nth, List.nth_le_append_right] <;>
-          simp only [h, List.nth_le_singleton, List.length_map, List.length_reverse, Nat.succ_pos', List.length_append,
+          simp only [h, List.nth_le_singleton, List.length_mapₓ, List.length_reverse, Nat.succ_pos', List.length_append,
             lt_add_iff_pos_right, List.length]
         
       rw [← proj_map_nth, hL, list_blank.nth_mk, List.inth]
       cases' lt_or_gt_of_neₓ h with h h
       · rw [List.nth_append]
-        simpa only [List.length_map, List.length_reverse] using h
+        simpa only [List.length_mapₓ, List.length_reverse] using h
         
       · rw [gt_iff_lt] at h
         rw [List.nth_len_le, List.nth_len_le] <;>
           simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
-            List.length_map]
+            List.length_mapₓ]
         
       
     · split_ifs <;> rw [Function.update_noteq h', ← proj_map_nth, hL]
@@ -2473,17 +2475,17 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
         · rw [List.nth_len_le]
           · rfl
             
-          rw [h, List.length_reverse, List.length_map]
+          rw [h, List.length_reverse, List.length_mapₓ]
           
         rw [← proj_map_nth, hL, list_blank.nth_mk, List.inth, e, List.map, List.reverse_cons]
         cases' lt_or_gt_of_neₓ h with h h
         · rw [List.nth_append]
-          simpa only [List.length_map, List.length_reverse] using h
+          simpa only [List.length_mapₓ, List.length_reverse] using h
           
         · rw [gt_iff_lt] at h
           rw [List.nth_len_le, List.nth_len_le] <;>
             simp only [Nat.add_one_le_iff, h, List.length, le_of_ltₓ, List.length_reverse, List.length_append,
-              List.length_map]
+              List.length_mapₓ]
           
         
       · split_ifs <;> rw [Function.update_noteq h', ← proj_map_nth, hL]

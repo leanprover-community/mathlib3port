@@ -26,7 +26,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Function Set
 
-open_locale TopologicalSpace Ennreal
+open TopologicalSpace Ennreal
 
 /-- An isometry (also known as isometric embedding) is a map preserving the edistance
 between pseudoemetric spaces, or equivalently the distance between pseudometric space.  -/
@@ -49,6 +49,11 @@ theorem Isometry.edist_eq [PseudoEmetricSpace α] [PseudoEmetricSpace β] {f : �
 theorem Isometry.dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} (hf : Isometry f) (x y : α) :
     dist (f x) (f y) = dist x y := by
   rw [dist_edist, dist_edist, hf]
+
+/-- An isometry preserves non-negative distances. -/
+theorem Isometry.nndist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} (hf : Isometry f) (x y : α) :
+    nndist (f x) (f y) = nndist x y :=
+  Subtype.ext <| hf.dist_eq x y
 
 section PseudoEmetricIsometry
 
@@ -174,6 +179,32 @@ theorem maps_to_closed_ball (hf : Isometry f) (x : α) (r : ℝ) :
 
 end Isometry
 
+/-- A uniform embedding from a uniform space to a metric space is an isometry with respect to the
+induced metric space structure on the source space. -/
+theorem UniformEmbedding.to_isometry {α β} [UniformSpace α] [MetricSpace β] {f : α → β} (h : UniformEmbedding f) :
+    @Isometry α β
+      (@PseudoMetricSpace.toPseudoEmetricSpace α (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
+      (by
+        infer_instance)
+      f :=
+  by
+  apply isometry_emetric_iff_metric.2
+  intro x y
+  rfl
+
+/-- An embedding from a topological space to a metric space is an isometry with respect to the
+induced metric space structure on the source space. -/
+theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f : α → β} (h : Embedding f) :
+    @Isometry α β
+      (@PseudoMetricSpace.toPseudoEmetricSpace α (@MetricSpace.toPseudoMetricSpace α (h.comapMetricSpace f)))
+      (by
+        infer_instance)
+      f :=
+  by
+  apply isometry_emetric_iff_metric.2
+  intro x y
+  rfl
+
 /-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 -- such a bijection need not exist
 @[nolint has_inhabited_instance]
@@ -217,6 +248,10 @@ protected theorem edist_eq (h : α ≃ᵢ β) (x y : α) : edist (h x) (h y) = e
 protected theorem dist_eq {α β : Type _} [PseudoMetricSpace α] [PseudoMetricSpace β] (h : α ≃ᵢ β) (x y : α) :
     dist (h x) (h y) = dist x y :=
   h.Isometry.dist_eq x y
+
+protected theorem nndist_eq {α β : Type _} [PseudoMetricSpace α] [PseudoMetricSpace β] (h : α ≃ᵢ β) (x y : α) :
+    nndist (h x) (h y) = nndist x y :=
+  h.Isometry.nndist_eq x y
 
 protected theorem continuous (h : α ≃ᵢ β) : Continuous h :=
   h.Isometry.Continuous

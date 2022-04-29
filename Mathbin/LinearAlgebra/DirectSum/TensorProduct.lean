@@ -17,9 +17,9 @@ section Ringₓ
 
 namespace TensorProduct
 
-open_locale TensorProduct
+open TensorProduct
 
-open_locale DirectSum
+open DirectSum
 
 open LinearMap
 

@@ -146,6 +146,16 @@ theorem nth_mem_of_infinite (hp : (SetOf p).Infinite) (n : ℕ) : p (nth p n) :=
 theorem nth_strict_mono (hp : (SetOf p).Infinite) : StrictMono (nth p) := fun a b =>
   (nth_mem_of_infinite_aux p hp b).2 _
 
+theorem nth_injective_of_infinite (hp : (SetOf p).Infinite) : Function.Injective (nth p) := by
+  intro m n h
+  wlog h' : m ≤ n
+  rw [le_iff_lt_or_eqₓ] at h'
+  obtain h' | rfl := h'
+  · simpa [h] using nth_strict_mono p hp h'
+    
+  · rfl
+    
+
 theorem nth_monotone (hp : (SetOf p).Infinite) : Monotone (nth p) :=
   (nth_strict_mono p hp).Monotone
 

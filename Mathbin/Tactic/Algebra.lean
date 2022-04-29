@@ -5,6 +5,15 @@ Authors: Simon Hudon
 -/
 import Mathbin.Tactic.Core
 
+/-!
+# Recording typeclass ancestors
+
+The "old" structure command currently does not record the parent typeclasses. This file defines the
+`ancestor` attribute to remedy this. This information is notably used by `to_additive` to map
+structure fields and constructors of a multiplicative structure to its additive counterpart.
+-/
+
+
 open Lean.Parser
 
 namespace Tactic

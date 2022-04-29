@@ -180,7 +180,7 @@ section Groupₓ
 
 variable [Groupₓ M] (S : Submonoid M)
 
-open_locale Pointwise
+open Pointwise
 
 @[to_additive]
 theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=

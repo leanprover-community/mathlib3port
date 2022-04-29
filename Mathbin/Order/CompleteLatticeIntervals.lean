@@ -20,7 +20,7 @@ default values for `Sup` and `Inf`.
 -/
 
 
-open_locale Classical
+open Classical
 
 open Set
 

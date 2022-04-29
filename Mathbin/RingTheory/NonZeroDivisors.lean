@@ -125,7 +125,7 @@ theorem powers_le_non_zero_divisors_of_no_zero_divisors [NoZeroDivisors M] {a : 
 
 theorem map_le_non_zero_divisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M'] (f : F)
     (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map ↑f ≤ M'⁰ := by
-  cases' subsingleton_or_nontrivial M
+  cases subsingleton_or_nontrivial M
   · simp [Subsingleton.elimₓ S ⊥]
     
   · exact

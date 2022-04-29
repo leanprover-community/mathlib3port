@@ -25,7 +25,7 @@ namespace DirectSum
 
 open Dfinsupp
 
-open_locale DirectSum
+open DirectSum
 
 variable {R : Type u} {ι : Type v} [CommRingₓ R]
 

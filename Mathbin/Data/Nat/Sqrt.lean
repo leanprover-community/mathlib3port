@@ -79,14 +79,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) m' (hm
     (H1 : n < (r + 2 ^ m) * (r + 2 ^ m) → IsSqrt n (sqrtAux m' (r * 2 ^ m) (n - r * r)))
     (H2 : (r + 2 ^ m) * (r + 2 ^ m) ≤ n → IsSqrt n (sqrtAux m' ((r + 2 ^ m) * 2 ^ m) (n - (r + 2 ^ m) * (r + 2 ^ m)))) :
     IsSqrt n (sqrtAux (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r)) := by
-  have b0 :=
-    have b0 :=
-      ne_of_gtₓ
-        (pow_pos
-          (show 0 < 2 by
-            decide)
-          m)
-    Nat.mul_ne_zero b0 b0
+  have b0 : 2 ^ m * 2 ^ m ≠ 0 := mul_self_ne_zero.2 (pow_ne_zero m two_ne_zero)
   have lb : n - r * r < 2 * r * 2 ^ m + 2 ^ m * 2 ^ m ↔ n < (r + 2 ^ m) * (r + 2 ^ m) := by
     rw [tsub_lt_iff_right h₁]
     simp [left_distrib, right_distrib, two_mul, mul_comm, mul_assoc, add_commₓ, add_assocₓ, add_left_commₓ]
@@ -249,6 +242,10 @@ theorem sqrt_eq (n : ℕ) : sqrt (n * n) = n :=
 
 theorem sqrt_eq' (n : ℕ) : sqrt (n ^ 2) = n :=
   sqrt_add_eq' n (zero_le _)
+
+@[simp]
+theorem sqrt_one : sqrt 1 = 1 :=
+  sqrt_eq 1
 
 theorem sqrt_succ_le_succ_sqrt (n : ℕ) : sqrt n.succ ≤ n.sqrt.succ :=
   le_of_lt_succ <|

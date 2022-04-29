@@ -67,7 +67,7 @@ variable {X} (S : DiscreteQuotient X)
 
 /-- Construct a discrete quotient from a clopen set. -/
 def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X where
-  Rel := fun x y => x ∈ A ∧ y ∈ A ∨ (x ∉ A) ∧ y ∉ A
+  Rel := fun x y => x ∈ A ∧ y ∈ A ∨ x ∉ A ∧ y ∉ A
   Equiv :=
     ⟨by
       tauto!, by

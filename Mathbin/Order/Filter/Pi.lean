@@ -22,7 +22,7 @@ In this file we define two filters on `Π i, α i` and prove some basic properti
 
 open Set Function
 
-open_locale Classical Filter
+open Classical Filter
 
 namespace Filter
 
@@ -46,7 +46,7 @@ theorem le_pi {g : Filter (∀ i, α i)} : g ≤ pi f ↔ ∀ i, Tendsto (eval i
 
 @[mono]
 theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
-  infi_le_infi fun i => comap_mono <| h i
+  infi_mono fun i => comap_mono <| h i
 
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
   mem_infi_of_mem i <| preimage_mem_comap hs
@@ -155,11 +155,8 @@ protected def coprodₓ (f : ∀ i, Filter (α i)) : Filter (∀ i, α i) :=
 theorem mem_Coprod_iff {s : Set (∀ i, α i)} : s ∈ Filter.coprodₓ f ↔ ∀ i : ι, ∃ t₁ ∈ f i, eval i ⁻¹' t₁ ⊆ s := by
   simp [Filter.coprodₓ]
 
-theorem compl_mem_Coprod_iff {s : Set (∀ i, α i)} :
-    sᶜ ∈ Filter.coprodₓ f ↔ ∃ t : ∀ i, Set (α i), (∀ i, t iᶜ ∈ f i) ∧ s ⊆ Set.Pi Univ fun i => t i := by
-  rw [(surjective_pi_map fun i => @compl_surjective (Set (α i)) _).exists]
-  simp_rw [mem_Coprod_iff, Classical.skolem, exists_prop, @subset_compl_comm _ _ s, ← preimage_compl, ←
-    subset_Inter_iff, ← univ_pi_eq_Inter, compl_compl]
+theorem compl_mem_Coprod {s : Set (∀ i, α i)} : sᶜ ∈ Filter.coprodₓ f ↔ ∀ i, (eval i '' s)ᶜ ∈ f i := by
+  simp only [Filter.coprodₓ, mem_supr, compl_mem_comap]
 
 theorem Coprod_ne_bot_iff' : NeBot (Filter.coprodₓ f) ↔ (∀ i, Nonempty (α i)) ∧ ∃ d, NeBot (f d) := by
   simp only [Filter.coprodₓ, supr_ne_bot, ← exists_and_distrib_left, ← comap_eval_ne_bot_iff']
@@ -167,6 +164,21 @@ theorem Coprod_ne_bot_iff' : NeBot (Filter.coprodₓ f) ↔ (∀ i, Nonempty (α
 @[simp]
 theorem Coprod_ne_bot_iff [∀ i, Nonempty (α i)] : NeBot (Filter.coprodₓ f) ↔ ∃ d, NeBot (f d) := by
   simp [Coprod_ne_bot_iff', *]
+
+theorem Coprod_eq_bot_iff' : Filter.coprodₓ f = ⊥ ↔ (∃ i, IsEmpty (α i)) ∨ f = ⊥ := by
+  simpa [not_and_distrib, funext_iff] using not_congr Coprod_ne_bot_iff'
+
+@[simp]
+theorem Coprod_eq_bot_iff [∀ i, Nonempty (α i)] : Filter.coprodₓ f = ⊥ ↔ f = ⊥ := by
+  simpa [funext_iff] using not_congr Coprod_ne_bot_iff
+
+@[simp]
+theorem Coprod_bot' : Filter.coprodₓ (⊥ : ∀ i, Filter (α i)) = ⊥ :=
+  Coprod_eq_bot_iff'.2 (Or.inr rfl)
+
+@[simp]
+theorem Coprod_bot : Filter.coprodₓ (fun _ => ⊥ : ∀ i, Filter (α i)) = ⊥ :=
+  Coprod_bot'
 
 theorem NeBot.Coprod [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : NeBot (Filter.coprodₓ f) :=
   Coprod_ne_bot_iff.2 ⟨i, h⟩
@@ -178,7 +190,7 @@ theorem Coprod_ne_bot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter 
 
 @[mono]
 theorem Coprod_mono (hf : ∀ i, f₁ i ≤ f₂ i) : Filter.coprodₓ f₁ ≤ Filter.coprodₓ f₂ :=
-  supr_le_supr fun i => comap_mono (hf i)
+  supr_mono fun i => comap_mono (hf i)
 
 variable {β : ι → Type _} {m : ∀ i, α i → β i}
 

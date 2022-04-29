@@ -51,7 +51,7 @@ namespace Matrix
 
 universe u v
 
-open_locale Matrix
+open Matrix
 
 open LinearMap
 
@@ -104,6 +104,9 @@ instance hasMul : Mul (SpecialLinearGroup n R) :=
 instance hasOne : One (SpecialLinearGroup n R) :=
   ⟨⟨1, det_one⟩⟩
 
+instance : Pow (SpecialLinearGroup n R) ℕ where
+  pow := fun x n => ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
 
@@ -131,6 +134,10 @@ theorem coe_one : ↑ₘ(1 : SpecialLinearGroup n R) = (1 : Matrix n n R) :=
 theorem det_coe : det ↑ₘA = 1 :=
   A.2
 
+@[simp]
+theorem coe_pow (m : ℕ) : ↑ₘ(A ^ m) = ↑ₘA ^ m :=
+  rfl
+
 theorem det_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) : det ↑ₘg ≠ 0 := by
   rw [g.det_coe]
   norm_num
@@ -143,7 +150,7 @@ theorem row_ne_zero [Nontrivial R] (g : SpecialLinearGroup n R) (i : n) : ↑ₘ
 end CoeLemmas
 
 instance : Monoidₓ (SpecialLinearGroup n R) :=
-  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul
+  Function.Injective.monoid coe Subtype.coe_injective coe_one coe_mul coe_pow
 
 instance : Groupₓ (SpecialLinearGroup n R) :=
   { SpecialLinearGroup.monoid, SpecialLinearGroup.hasInv with
@@ -220,7 +227,7 @@ each element. -/
 instance : Neg (SpecialLinearGroup n R) :=
   ⟨fun g =>
     ⟨-g, by
-      simpa [Nat.neg_one_pow_of_even (Fact.out (Even (Fintype.card n))), g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
+      simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
 theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : Matrix n n R) :=

@@ -22,7 +22,7 @@ and then, by precomposing with suitable affine functions,
 
 open ContinuousMap Filter
 
-open_locale UnitInterval
+open UnitInterval
 
 /-- The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
 This is just a matter of unravelling definitions and using the Bernstein approximations.

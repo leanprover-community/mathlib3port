@@ -5,6 +5,7 @@ Authors: Sébastien Gouëzel, Yury Kudryashov
 -/
 import Mathbin.Analysis.Calculus.Deriv
 import Mathbin.MeasureTheory.Constructions.BorelSpace
+import Mathbin.MeasureTheory.Function.StronglyMeasurable
 import Mathbin.Tactic.RingExp
 
 /-!
@@ -76,7 +77,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 namespace ContinuousLinearMap
 
@@ -244,6 +245,7 @@ theorem differentiable_set_subset_D : { x | DifferentiableAt 𝕜 f x ∧ fderiv
             assumption)
       
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
     D f K ⊆ { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } := by
@@ -505,7 +507,17 @@ theorem measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [Mea
     Measurable (deriv f) := by
   simpa only [fderiv_deriv] using measurable_fderiv_apply_const 𝕜 f 1
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+theorem strongly_measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [SecondCountableTopology F] (f : 𝕜 → F) :
+    StronglyMeasurable (deriv f) := by
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  exact (measurable_deriv f).StronglyMeasurable
+
 theorem ae_measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F] [BorelSpace F] (f : 𝕜 → F)
     (μ : Measureₓ 𝕜) : AeMeasurable (deriv f) μ :=
   (measurable_deriv f).AeMeasurable
+
+theorem ae_strongly_measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [SecondCountableTopology F]
+    (f : 𝕜 → F) (μ : Measureₓ 𝕜) : AeStronglyMeasurable (deriv f) μ :=
+  (strongly_measurable_deriv f).AeStronglyMeasurable
 

@@ -3,8 +3,8 @@ Copyright (c) 2020 Yury G. Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 -/
-import Mathbin.Algebra.IterateHom
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Algebra.Hom.Iterate
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Order.Iterate
 import Mathbin.Order.SemiconjSup
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
@@ -122,7 +122,7 @@ open Function hiding Commute
 
 open Int
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 /-!
 ### Definition and monoid structure
@@ -864,7 +864,7 @@ theorem semiconj_of_group_action_of_forall_translation_number_eq {G : Type _} [G
   -- Now we apply `cSup_div_semiconj` and go back to `f₁` and `f₂`.
     refine' ⟨⟨_, fun x y hxy => _, fun x => _⟩, cSup_div_semiconj F₂ F₁ fun x => _⟩ <;>
     simp only [hF₁, hF₂, ← MonoidHom.map_inv, coe_mk]
-  · refine' csupr_le_csupr (this y) fun g => _
+  · refine' csupr_mono (this y) fun g => _
     exact mono _ (mono _ hxy)
     
   · simp only [map_add_one]

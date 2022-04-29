@@ -30,7 +30,7 @@ theorem periodic_mod (a : ℕ) : Periodic (fun n => n % a) a := by
 
 theorem _root_.function.periodic.map_mod_nat {α : Type _} {f : ℕ → α} {a : ℕ} (hf : Periodic f a) :
     ∀ n, f (n % a) = f n := fun n => by
-  conv_rhs => rw [← Nat.mod_add_divₓ n a, mul_comm, ← nsmul_eq_mul, hf.nsmul]
+  conv_rhs => rw [← Nat.mod_add_divₓ n a, mul_comm, ← Nat.nsmul_eq_mul, hf.nsmul]
 
 section Multiset
 

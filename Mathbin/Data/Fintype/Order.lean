@@ -79,7 +79,7 @@ section BoundedOrder
 
 variable (α)
 
-open_locale Classical
+open Classical
 
 /-- A finite bounded lattice is complete. -/
 -- See note [reducible non-instances]

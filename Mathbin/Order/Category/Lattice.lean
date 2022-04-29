@@ -41,6 +41,10 @@ instance (X : Latticeₓ) : Lattice X :=
 def of (α : Type _) [Lattice α] : Latticeₓ :=
   Bundled.of α
 
+@[simp]
+theorem coe_of (α : Type _) [Lattice α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited Latticeₓ :=
   ⟨of Bool⟩
 
@@ -87,6 +91,6 @@ def dualEquiv : Latticeₓ ≌ Latticeₓ :=
 end Latticeₓ
 
 theorem Lattice_dual_comp_forget_to_PartialOrder :
-    Latticeₓ.dual ⋙ forget₂ Latticeₓ PartialOrderₓₓ = forget₂ Latticeₓ PartialOrderₓₓ ⋙ PartialOrderₓₓ.toDual :=
+    Latticeₓ.dual ⋙ forget₂ Latticeₓ PartialOrderₓₓ = forget₂ Latticeₓ PartialOrderₓₓ ⋙ PartialOrderₓₓ.dual :=
   rfl
 

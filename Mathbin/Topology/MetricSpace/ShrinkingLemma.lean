@@ -23,7 +23,7 @@ universe u v
 
 open Set Metric
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {α : Type u} {ι : Type v} [MetricSpace α] [ProperSpace α] {c : ι → α}
 

@@ -3,9 +3,9 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
+import Mathbin.Algebra.Hom.Group
 import Mathbin.CategoryTheory.DiscreteCategory
-import Mathbin.Algebra.Group.Hom
+import Mathbin.CategoryTheory.Monoidal.NaturalTransformation
 
 /-!
 # Monoids as discrete monoidal categories
@@ -47,7 +47,7 @@ variable {M} {N : Type u} [Monoidₓ N]
 /-- A multiplicative morphism between monoids gives a monoidal functor between the corresponding
 discrete monoidal categories.
 -/
-@[to_additive Dicrete.addMonoidalFunctor
+@[to_additive Discrete.addMonoidalFunctor
       "An additive morphism between add_monoids gives a\n  monoidal functor between the corresponding discrete monoidal categories.",
   simps]
 def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N) where
@@ -60,7 +60,7 @@ variable {K : Type u} [Monoidₓ K]
 
 /-- The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.
 -/
-@[to_additive Dicrete.addMonoidalFunctorComp
+@[to_additive Discrete.addMonoidalFunctorComp
       "The monoidal natural isomorphism corresponding to\ncomposing two additive morphisms."]
 def Discrete.monoidalFunctorComp (F : M →* N) (G : N →* K) :
     Discrete.monoidalFunctor F ⊗⋙ Discrete.monoidalFunctor G ≅ Discrete.monoidalFunctor (G.comp F) where

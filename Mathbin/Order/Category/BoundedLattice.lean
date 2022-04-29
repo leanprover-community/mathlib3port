@@ -5,6 +5,7 @@ Authors: Yaël Dillies
 -/
 import Mathbin.Order.Category.BoundedOrder
 import Mathbin.Order.Category.Lattice
+import Mathbin.Order.Category.Semilattice
 
 /-!
 # The category of bounded lattices
@@ -39,6 +40,10 @@ attribute [instance] BoundedLattice.isBoundedOrder
 def of (α : Type _) [Lattice α] [BoundedOrder α] : BoundedLattice :=
   ⟨⟨α⟩⟩
 
+@[simp]
+theorem coe_of (α : Type _) [Lattice α] [BoundedOrder α] : ↥(of α) = α :=
+  rfl
+
 instance : Inhabited BoundedLattice :=
   ⟨of PUnit⟩
 
@@ -56,14 +61,46 @@ instance : ConcreteCategory BoundedLattice where
     ⟨fun X Y => by
       convert FunLike.coe_injective⟩
 
-instance hasForgetToLattice : HasForget₂ BoundedLattice Latticeₓ where
-  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
-
 instance hasForgetToBoundedOrder : HasForget₂ BoundedLattice BoundedOrderCat where
   forget₂ := { obj := fun X => BoundedOrderCat.of X, map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 
+instance hasForgetToLattice : HasForget₂ BoundedLattice Latticeₓ where
+  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toLatticeHom }
+
+instance hasForgetToSemilatticeSup : HasForget₂ BoundedLattice SemilatticeSupCat where
+  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toSupBotHom }
+
+instance hasForgetToSemilatticeInf : HasForget₂ BoundedLattice SemilatticeInfCat where
+  forget₂ := { obj := fun X => ⟨X⟩, map := fun X Y => BoundedLatticeHom.toInfTopHom }
+
+@[simp]
+theorem coe_forget_to_BoundedOrder (X : BoundedLattice) : ↥((forget₂ BoundedLattice BoundedOrderCat).obj X) = ↥X :=
+  rfl
+
+@[simp]
+theorem coe_forget_to_Lattice (X : BoundedLattice) : ↥((forget₂ BoundedLattice Latticeₓ).obj X) = ↥X :=
+  rfl
+
+@[simp]
+theorem coe_forget_to_SemilatticeSup (X : BoundedLattice) : ↥((forget₂ BoundedLattice SemilatticeSupCat).obj X) = ↥X :=
+  rfl
+
+@[simp]
+theorem coe_forget_to_SemilatticeInf (X : BoundedLattice) : ↥((forget₂ BoundedLattice SemilatticeInfCat).obj X) = ↥X :=
+  rfl
+
 theorem forget_Lattice_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
     forget₂ BoundedLattice Latticeₓ ⋙ forget₂ Latticeₓ PartialOrderₓₓ =
+      forget₂ BoundedLattice BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderₓₓ :=
+  rfl
+
+theorem forget_SemilatticeSup_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
+    forget₂ BoundedLattice SemilatticeSupCat ⋙ forget₂ SemilatticeSupCat PartialOrderₓₓ =
+      forget₂ BoundedLattice BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderₓₓ :=
+  rfl
+
+theorem forget_SemilatticeInf_PartialOrder_eq_forget_BoundedOrder_PartialOrder :
+    forget₂ BoundedLattice SemilatticeInfCat ⋙ forget₂ SemilatticeInfCat PartialOrderₓₓ =
       forget₂ BoundedLattice BoundedOrderCat ⋙ forget₂ BoundedOrderCat PartialOrderₓₓ :=
   rfl
 
@@ -94,12 +131,22 @@ def dualEquiv : BoundedLattice ≌ BoundedLattice :=
 
 end BoundedLattice
 
+theorem BoundedLattice_dual_comp_forget_to_BoundedOrder :
+    BoundedLattice.dual ⋙ forget₂ BoundedLattice BoundedOrderCat =
+      forget₂ BoundedLattice BoundedOrderCat ⋙ BoundedOrderCat.dual :=
+  rfl
+
 theorem BoundedLattice_dual_comp_forget_to_Lattice :
     BoundedLattice.dual ⋙ forget₂ BoundedLattice Latticeₓ = forget₂ BoundedLattice Latticeₓ ⋙ Latticeₓ.dual :=
   rfl
 
-theorem BoundedLattice_dual_comp_forget_to_BoundedOrder :
-    BoundedLattice.dual ⋙ forget₂ BoundedLattice BoundedOrderCat =
-      forget₂ BoundedLattice BoundedOrderCat ⋙ BoundedOrderCat.dual :=
+theorem BoundedLattice_dual_comp_forget_to_SemilatticeSup :
+    BoundedLattice.dual ⋙ forget₂ BoundedLattice SemilatticeSupCat =
+      forget₂ BoundedLattice SemilatticeInfCat ⋙ SemilatticeInfCat.dual :=
+  rfl
+
+theorem BoundedLattice_dual_comp_forget_to_SemilatticeInf :
+    BoundedLattice.dual ⋙ forget₂ BoundedLattice SemilatticeInfCat =
+      forget₂ BoundedLattice SemilatticeSupCat ⋙ SemilatticeSupCat.dual :=
   rfl
 

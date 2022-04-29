@@ -22,7 +22,7 @@ import Mathbin.Tactic.Ring
 -/
 
 
-open_locale Quaternion
+open Quaternion
 
 namespace QuaternionAlgebra
 

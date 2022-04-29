@@ -21,7 +21,7 @@ Add `is_well_order (Π₀ i, α i) (<)`.
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 open Finset
 

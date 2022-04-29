@@ -19,7 +19,7 @@ universe u v w
 
 noncomputable section
 
-open_locale DirectSum
+open DirectSum
 
 open Set LinearMap Submodule
 
@@ -29,7 +29,7 @@ section TensorProduct
 
 open TensorProduct
 
-open_locale TensorProduct Classical
+open TensorProduct Classical
 
 /-- The tensor product of ι →₀ M and κ →₀ N is linearly equivalent to (ι × κ) →₀ (M ⊗ N). -/
 def finsuppTensorFinsupp (R M N ι κ : Sort _) [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N]

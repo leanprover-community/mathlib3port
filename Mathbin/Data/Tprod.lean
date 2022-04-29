@@ -23,7 +23,7 @@ construction/theorem that is easier to define/prove on binary products than on f
 * Then we can use the equivalence `list.tprod.pi_equiv_tprod` below (or enhanced versions of it,
   like a `measurable_equiv` for product measures) to get the construction on `Π i : ι, α i`, at
   least when assuming `[fintype ι] [encodable ι]` (using `encodable.sorted_univ`).
-  Using `local attribute [instance] fintype.encodable` we can get rid of the argument
+  Using `local attribute [instance] fintype.to_encodable` we can get rid of the argument
   `[encodable ι]`.
 
 ## Main definitions
@@ -93,7 +93,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : Tprod α (i :: l))
     v.elim (mem_cons_of_memₓ _ hj) = Tprod.elimₓ v.2 hj := by
   apply elim_of_ne
   rintro rfl
-  exact not_mem_of_nodup_cons hl hj
+  exact hl.not_mem hj
 
 theorem elim_mk : ∀ l : List ι f : ∀ i, α i {i : ι} hi : i ∈ l, (Tprod.mkₓ l f).elim hi = f i
   | i :: is, f, j, hj => by

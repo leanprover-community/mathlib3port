@@ -19,14 +19,15 @@ import Mathbin.RingTheory.UniqueFactorizationDomain
   Hilbert basis theorem, that if a ring is noetherian then so is its polynomial ring.
 * `polynomial.wf_dvd_monoid`:
   If an integral domain is a `wf_dvd_monoid`, then so is its polynomial ring.
-* `polynomial.unique_factorization_monoid`:
-  If an integral domain is a `unique_factorization_monoid`, then so is its polynomial ring.
+* `polynomial.unique_factorization_monoid`, `mv_polynomial.unique_factorization_monoid`:
+  If an integral domain is a `unique_factorization_monoid`, then so is its polynomial ring (of any
+  number of variables).
 -/
 
 
 noncomputable section
 
-open_locale Classical BigOperators Polynomial
+open Classical BigOperators Polynomial
 
 universe u v w
 
@@ -78,7 +79,7 @@ theorem degree_le_eq_span_X_pow {n : ℕ} :
 
 theorem mem_degree_lt {n : ℕ} {f : R[X]} : f ∈ degreeLt R n ↔ degree f < n := by
   simp_rw [degree_lt, Submodule.mem_infi, LinearMap.mem_ker, degree, Finset.sup_lt_iff (WithBot.bot_lt_coe n),
-    mem_support_iff, WithBot.some_eq_coe, WithBot.coe_lt_coe, lt_iff_not_ge', Ne, not_imp_not]
+    mem_support_iff, WithBot.some_eq_coe, WithBot.coe_lt_coe, lt_iff_not_le, Ne, not_imp_not]
   rfl
 
 @[mono]
@@ -104,12 +105,12 @@ theorem degree_lt_eq_span_X_pow {n : ℕ} :
   apply mem_degree_lt.2
   exact lt_of_le_of_ltₓ (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finset.mem_range.1 hk)
 
-/-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → F`. -/
-def degreeLtEquiv (F : Type _) [Field F] (n : ℕ) : degreeLt F n ≃ₗ[F] Finₓ n → F where
-  toFun := fun p n => (↑p : F[X]).coeff n
+/-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → R`. -/
+def degreeLtEquiv (R : Type u) [CommRingₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
+  toFun := fun p n => (↑p : R[X]).coeff n
   invFun := fun f =>
     ⟨∑ i : Finₓ n, monomial i (f i),
-      (degreeLt F n).sum_mem fun i _ =>
+      (degreeLt R n).sum_mem fun i _ =>
         mem_degree_lt.mpr (lt_of_le_of_ltₓ (degree_monomial_le i (f i)) (WithBot.coe_lt_coe.mpr i.is_lt))⟩
   map_add' := fun p q => by
     ext
@@ -236,6 +237,58 @@ theorem eval₂_restriction {p : R[X]} :
   simp only [eval₂_eq_sum, Sum, support_restriction, ← @coeff_restriction _ _ p]
   rfl
 
+theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
+    (geomSum (x : R[X]) n).comp (X + 1) = (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i := by
+  ext i
+  trans (n.choose (i + 1) : R)
+  swap
+  · simp only [finset_sum_coeff, ← C_eq_nat_cast, coeff_C_mul_X_pow]
+    rw [Finset.sum_eq_single i, if_pos rfl]
+    · simp (config := { contextual := true })only [@eq_comm _ i, if_false, eq_self_iff_true, implies_true_iff]
+      
+    · simp (config := { contextual := true })only [Nat.lt_add_one_iff, Nat.choose_eq_zero_of_lt, Nat.cast_zeroₓ,
+        Finset.mem_range, not_ltₓ, eq_self_iff_true, if_true, implies_true_iff]
+      
+    
+  induction' n with n ih generalizing i
+  · simp only [geom_sum_zero, zero_comp, coeff_zero, Nat.choose_zero_succ, Nat.cast_zeroₓ]
+    
+  simp only [geom_sum_succ', ih, add_comp, pow_comp, X_comp, coeff_add, Nat.choose_succ_succ, Nat.cast_addₓ, add_pow,
+    one_pow, mul_oneₓ, finset_sum_coeff, ← C_eq_nat_cast, mul_comm _ (C _), coeff_C_mul_X_pow]
+  rw [Finset.sum_eq_single i, if_pos rfl]
+  · simp (config := { contextual := true })only [@eq_comm _ i, if_false, eq_self_iff_true, implies_true_iff]
+    
+  · simp (config := { contextual := true })only [Nat.lt_add_one_iff, Nat.choose_eq_zero_of_lt, Nat.cast_zeroₓ,
+      Finset.mem_range, eq_self_iff_true, if_true, implies_true_iff, not_leₓ]
+    
+
+theorem Monic.geom_sum {R : Type _} [Semiringₓ R] {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : ℕ}
+    (hn : n ≠ 0) : (geomSum P n).Monic := by
+  nontriviality R
+  cases n
+  · exact (hn rfl).elim
+    
+  rw [geom_sum_succ', geom_sum_def]
+  refine' (hP.pow _).add_of_left _
+  refine' lt_of_le_of_ltₓ (degree_sum_le _ _) _
+  rw [Finset.sup_lt_iff]
+  · simp only [Finset.mem_range, degree_eq_nat_degree (hP.pow _).ne_zero, WithBot.coe_lt_coe, hP.nat_degree_pow]
+    intro k
+    exact nsmul_lt_nsmul hdeg
+    
+  · rw [bot_lt_iff_ne_bot, Ne.def, degree_eq_bot]
+    exact (hP.pow _).ne_zero
+    
+
+theorem Monic.geom_sum' {R : Type _} [Semiringₓ R] {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ}
+    (hn : n ≠ 0) : (geomSum P n).Monic :=
+  hP.geomSum (nat_degree_pos_iff_degree_pos.2 hdeg) hn
+
+theorem monic_geom_sum_X (R : Type _) [Semiringₓ R] {n : ℕ} (hn : n ≠ 0) : (geomSum (x : R[X]) n).Monic := by
+  nontriviality R
+  apply monic_X.geom_sum _ hn
+  simpa only [nat_degree_X] using zero_lt_one
+
 section ToSubring
 
 variable (p : R[X]) (T : Subring R)
@@ -342,12 +395,11 @@ section ModByMonic
 
 variable {q : R[X]}
 
-theorem mem_ker_mod_by_monic [Nontrivial R] (hq : q.Monic) {p : R[X]} : p ∈ (modByMonicHom hq).ker ↔ q ∣ p :=
+theorem mem_ker_mod_by_monic (hq : q.Monic) {p : R[X]} : p ∈ (modByMonicHom q).ker ↔ q ∣ p :=
   LinearMap.mem_ker.trans (dvd_iff_mod_by_monic_eq_zero hq)
 
 @[simp]
-theorem ker_mod_by_monic_hom [Nontrivial R] (hq : q.Monic) :
-    (Polynomial.modByMonicHom hq).ker = (Ideal.span {q}).restrictScalars R :=
+theorem ker_mod_by_monic_hom (hq : q.Monic) : (Polynomial.modByMonicHom q).ker = (Ideal.span {q}).restrictScalars R :=
   Submodule.ext fun f => (mem_ker_mod_by_monic hq).trans Ideal.mem_span_singleton.symm
 
 end ModByMonic
@@ -389,7 +441,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : R[X]} : f ∈ (Ideal.map c I : Ideal R[
       
     · refine' fun f g hg n => _
       rw [smul_eq_mul, coeff_mul]
-      exact I.sum_mem fun c hc => I.smul_mem (f.coeff c.fst) (hg c.snd)
+      exact I.sum_mem fun c hc => I.mul_mem_left (f.coeff c.fst) (hg c.snd)
       
     
   · intro hf
@@ -502,7 +554,7 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
   obtain ⟨x, hx'⟩ := x
   obtain ⟨y, rfl⟩ := RingHom.mem_range.1 hx'
   refine' Subtype.eq _
-  simp only [RingHom.comp_apply, quotient.eq_zero_iff_mem, Subring.coe_zero, Subtype.val_eq_coe]
+  simp only [RingHom.comp_apply, quotient.eq_zero_iff_mem, AddSubmonoidClass.coe_zero, Subtype.val_eq_coe]
   suffices C (i y) ∈ I.map (Polynomial.mapRingHom i) by
     obtain ⟨f, hf⟩ :=
       mem_image_of_mem_map_of_surjective (Polynomial.mapRingHom i)
@@ -540,8 +592,8 @@ theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI
     x = 0 := by
   refine' Classical.by_contradiction fun hx0 => hI.ne_top ((eq_top_iff_one I).2 _)
   obtain ⟨y, hy⟩ := hR.mul_inv_cancel hx0
-  convert I.smul_mem (C y) hx
-  rw [smul_eq_mul, ← C.map_mul, mul_comm y x, hy, RingHom.map_one]
+  convert I.mul_mem_left (C y) hx
+  rw [← C.map_mul, mul_comm y x, hy, RingHom.map_one]
 
 /-- Transport an ideal of `R[X]` to an `R`-submodule of `R[X]`. -/
 def ofPolynomial (I : Ideal R[X]) : Submodule R R[X] where
@@ -634,6 +686,90 @@ theorem is_fg_degree_le [IsNoetherianRing R] (n : ℕ) : Submodule.Fg (I.degreeL
   is_noetherian_submodule_left.1 (is_noetherian_of_fg_of_noetherian _ ⟨_, degree_le_eq_span_X_pow.symm⟩) _
 
 end Ideal
+
+section Prime
+
+variable (σ) {r : R}
+
+namespace Polynomial
+
+theorem prime_C_iff : Prime (c r) ↔ Prime r :=
+  ⟨comap_prime c (evalRingHom (0 : R)) fun r => eval_C, fun hr => by
+    have := hr.1
+    rw [← Ideal.span_singleton_prime] at hr⊢
+    · convert Ideal.is_prime_map_C_of_is_prime hr using 1
+      rw [Ideal.map_span, Set.image_singleton]
+      
+    exacts[fun h => this (C_eq_zero.1 h), this]⟩
+
+end Polynomial
+
+namespace MvPolynomial
+
+private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (c r : MvPolynomial σ R) ↔ Prime r := by
+  rw [(rename_equiv R (Fintype.equivFin σ)).toMulEquiv.prime_iff]
+  convert_to Prime (C r) ↔ _
+  · congr
+    apply rename_C
+    
+  · symm
+    induction' Fintype.card σ with d hd
+    · exact (is_empty_alg_equiv R (Finₓ 0)).toMulEquiv.symm.prime_iff
+      
+    · rw [hd, ← Polynomial.prime_C_iff]
+      convert (finSuccEquiv R d).toMulEquiv.symm.prime_iff
+      rw [← fin_succ_equiv_comp_C_eq_C]
+      rfl
+      
+    
+
+theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
+  ⟨comap_prime c constantCoeff constant_coeff_C, fun hr =>
+    ⟨fun h =>
+      hr.1 <| by
+        rw [← C_inj, h]
+        simp ,
+      fun h =>
+      hr.2.1 <| by
+        rw [← constant_coeff_C r]
+        exact h.map _,
+      fun a b hd => by
+      obtain ⟨s, a', b', rfl, rfl⟩ := exists_finset_rename₂ a b
+      rw [← algebra_map_eq] at hd
+      have : algebraMap R _ r ∣ a' * b' := by
+        convert (kill_compl Subtype.coe_injective).toRingHom.map_dvd hd
+        simpa
+        simp
+      rw [← rename_C (coe : s → σ)]
+      let f := (rename (coe : s → σ)).toRingHom
+      exact (((prime_C_iff_of_fintype s).2 hr).2.2 a' b' this).imp f.map_dvd f.map_dvd⟩⟩
+
+variable {σ}
+
+theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} : Prime (rename (coe : s → σ) p) ↔ Prime p := by
+  classical
+  symm
+  let eqv :=
+    (sum_alg_equiv R _ _).symm.trans (rename_equiv R <| (Equivₓ.sumComm (↥(sᶜ)) s).trans <| Equivₓ.Set.sumCompl s)
+  rw [← prime_C_iff ↥(sᶜ), eqv.to_mul_equiv.prime_iff]
+  convert Iff.rfl
+  suffices (rename coe).toRingHom = eqv.to_alg_hom.to_ring_hom.comp C by
+    apply RingHom.congr_fun this
+  · apply ring_hom_ext
+    · intro
+      dsimp [eqv]
+      erw [iter_to_sum_C_C, rename_C, rename_C]
+      
+    · intro
+      dsimp [eqv]
+      erw [iter_to_sum_C_X, rename_X, rename_X]
+      rfl
+      
+    
+
+end MvPolynomial
+
+end Prime
 
 namespace Polynomial
 
@@ -780,7 +916,8 @@ theorem exists_irreducible_of_nat_degree_ne_zero {R : Type u} [CommRingₓ R] [I
 theorem linear_independent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
     (LinearIndependent R fun n : ℕ => (f ^ n) v) ↔ ∀ p : R[X], aeval f p v = 0 → p = 0 := by
   rw [linear_independent_iff]
-  simp only [Finsupp.total_apply, aeval_endomorphism, forall_iff_forall_finsupp, Sum, support, coeff, ← zero_to_finsupp]
+  simp only [Finsupp.total_apply, aeval_endomorphism, forall_iff_forall_finsupp, Sum, support, coeff,
+    of_finsupp_eq_zero]
   exact Iff.rfl
 
 theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
@@ -901,7 +1038,7 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {R : Type u} [CommRingₓ R]
     by
     apply rename_injective _ Subtype.val_injective
     simpa using h
-  let this' := MvPolynomial.is_domain_fintype R { x // x ∈ s ∪ t }
+  let this := MvPolynomial.is_domain_fintype R { x // x ∈ s ∪ t }
   rw [mul_eq_zero] at this
   cases this <;> [left, right]
   all_goals
@@ -971,7 +1108,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : MvPolynomial σ R} :
       
     · refine' fun f g hg n => _
       rw [smul_eq_mul, coeff_mul]
-      exact I.sum_mem fun c hc => I.smul_mem (f.coeff c.fst) (hg c.snd)
+      exact I.sum_mem fun c hc => I.mul_mem_left (f.coeff c.fst) (hg c.snd)
       
     
   · intro hf
@@ -1052,11 +1189,13 @@ def quotientEquivQuotientMvPolynomial (I : Ideal R) :
 
 end MvPolynomial
 
-namespace Polynomial
+section UniqueFactorizationDomain
+
+variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D] (σ)
 
 open UniqueFactorizationMonoid
 
-variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D]
+namespace Polynomial
 
 instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMonoid (Polynomial D) := by
   have := arbitrary (NormalizationMonoid D)
@@ -1064,4 +1203,35 @@ instance (priority := 100) unique_factorization_monoid : UniqueFactorizationMono
   exact ufm_of_gcd_of_wf_dvd_monoid
 
 end Polynomial
+
+namespace MvPolynomial
+
+private theorem unique_factorization_monoid_of_fintype [Fintype σ] : UniqueFactorizationMonoid (MvPolynomial σ D) :=
+  (renameEquiv D (Fintype.equivFin σ)).toMulEquiv.symm.UniqueFactorizationMonoid <| by
+    induction' Fintype.card σ with d hd
+    · apply (is_empty_alg_equiv D (Finₓ 0)).toMulEquiv.symm.UniqueFactorizationMonoid
+      infer_instance
+      
+    · apply (finSuccEquiv D d).toMulEquiv.symm.UniqueFactorizationMonoid
+      exact Polynomial.unique_factorization_monoid
+      
+
+instance (priority := 100) : UniqueFactorizationMonoid (MvPolynomial σ D) := by
+  rw [iff_exists_prime_factors]
+  intro a ha
+  obtain ⟨s, a', rfl⟩ := exists_finset_rename a
+  obtain ⟨w, h, u, hw⟩ :=
+    iff_exists_prime_factors.1 (unique_factorization_monoid_of_fintype s) a' fun h =>
+      ha <| by
+        simp [h]
+  exact
+    ⟨w.map (rename coe), fun b hb =>
+      let ⟨b', hb', he⟩ := Multiset.mem_map.1 hb
+      he ▸ (prime_rename_iff ↑s).2 (h b' hb'),
+      Units.map (@rename s σ D _ coe).toRingHom.toMonoidHom u, by
+      erw [Multiset.prod_hom, ← map_mul, hw]⟩
+
+end MvPolynomial
+
+end UniqueFactorizationDomain
 

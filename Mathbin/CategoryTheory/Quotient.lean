@@ -52,6 +52,9 @@ namespace Quotientₓ
 inductive CompClosure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
   | intro {a b} (f : s ⟶ a) (m₁ m₂ : a ⟶ b) (g : b ⟶ t) (h : r m₁ m₂) : comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
 
+theorem CompClosure.of {a b} (m₁ m₂ : a ⟶ b) (h : r m₁ m₂) : CompClosure r m₁ m₂ := by
+  simpa using comp_closure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
+
 theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : CompClosure r g₁ g₂, CompClosure r (f ≫ g₁) (f ≫ g₂)
   | _, _, ⟨x, m₁, m₂, y, h⟩ => by
     simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
@@ -90,7 +93,7 @@ def functor : C ⥤ Quotient r where
   map := fun _ _ f => Quot.mk _ f
 
 noncomputable instance : Full (functor r) where
-  Preimage := fun X Y f => Quot.out f
+  preimage := fun X Y f => Quot.out f
 
 instance : EssSurj (functor r) where
   mem_ess_image := fun Y =>

@@ -60,6 +60,10 @@ def ofHom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of 
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddGroup`. -/
 add_decl_doc AddGroupₓₓ.ofHom
 
+@[simp, to_additive]
+theorem of_hom_apply {X Y : Type _} [Groupₓ X] [Groupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+  rfl
+
 @[to_additive]
 instance (G : Groupₓₓ) : Groupₓ G :=
   G.str
@@ -69,19 +73,12 @@ theorem coe_of (R : Type u) [Groupₓ R] : (Groupₓₓ.of R : Type u) = R :=
   rfl
 
 @[to_additive]
-instance : One Groupₓₓ :=
+instance : Inhabited Groupₓₓ :=
   ⟨Groupₓₓ.of PUnit⟩
 
 @[to_additive]
-instance : Inhabited Groupₓₓ :=
-  ⟨1⟩
-
-@[to_additive]
-instance One.unique : Unique (1 : Groupₓₓ) where
-  default := 1
-  uniq := fun a => by
-    cases a
-    rfl
+instance ofUnique (G : Type _) [Groupₓ G] [i : Unique G] : Unique (Groupₓₓ.of G) :=
+  i
 
 @[simp, to_additive]
 theorem one_apply (G H : Groupₓₓ) (g : G) : (1 : G ⟶ H) g = 1 :=
@@ -140,6 +137,10 @@ def ofHom {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) : of X
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddCommGroup`. -/
 add_decl_doc AddCommGroupₓₓ.ofHom
 
+@[simp, to_additive]
+theorem of_hom_apply {X Y : Type _} [CommGroupₓ X] [CommGroupₓ Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
+  rfl
+
 @[to_additive]
 instance commGroupInstance (G : CommGroupₓₓ) : CommGroupₓ G :=
   G.str
@@ -149,19 +150,12 @@ theorem coe_of (R : Type u) [CommGroupₓ R] : (CommGroupₓₓ.of R : Type u) =
   rfl
 
 @[to_additive]
-instance : One CommGroupₓₓ :=
+instance : Inhabited CommGroupₓₓ :=
   ⟨CommGroupₓₓ.of PUnit⟩
 
 @[to_additive]
-instance : Inhabited CommGroupₓₓ :=
-  ⟨1⟩
-
-@[to_additive]
-instance One.unique : Unique (1 : CommGroupₓₓ) where
-  default := 1
-  uniq := fun a => by
-    cases a
-    rfl
+instance ofUnique (G : Type _) [CommGroupₓ G] [i : Unique G] : Unique (CommGroupₓₓ.of G) :=
+  i
 
 @[simp, to_additive]
 theorem one_apply (G H : CommGroupₓₓ) (g : G) : (1 : G ⟶ H) g = 1 :=
@@ -222,11 +216,9 @@ theorem injective_of_mono {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H) [Mono f] 
 
 end AddCommGroupₓₓ
 
-variable {X Y : Type u}
-
 /-- Build an isomorphism in the category `Group` from a `mul_equiv` between `group`s. -/
 @[to_additive AddEquiv.toAddGroupIso, simps]
-def MulEquiv.toGroupIso [Groupₓ X] [Groupₓ Y] (e : X ≃* Y) : Groupₓₓ.of X ≅ Groupₓₓ.of Y where
+def MulEquiv.toGroupIso {X Y : Groupₓₓ} (e : X ≃* Y) : X ≅ Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 
@@ -235,7 +227,7 @@ add_decl_doc AddEquiv.toAddGroupIso
 
 /-- Build an isomorphism in the category `CommGroup` from a `mul_equiv` between `comm_group`s. -/
 @[to_additive AddEquiv.toAddCommGroupIso, simps]
-def MulEquiv.toCommGroupIso [CommGroupₓ X] [CommGroupₓ Y] (e : X ≃* Y) : CommGroupₓₓ.of X ≅ CommGroupₓₓ.of Y where
+def MulEquiv.toCommGroupIso {X Y : CommGroupₓₓ} (e : X ≃* Y) : X ≅ Y where
   Hom := e.toMonoidHom
   inv := e.symm.toMonoidHom
 
@@ -262,7 +254,7 @@ end CategoryTheory.Iso
 in `Group` -/
 @[to_additive addEquivIsoAddGroupIso
       "additive equivalences between `add_group`s are the same\nas (isomorphic to) isomorphisms in `AddGroup`"]
-def mulEquivIsoGroupIso {X Y : Type u} [Groupₓ X] [Groupₓ Y] : X ≃* Y ≅ Groupₓₓ.of X ≅ Groupₓₓ.of Y where
+def mulEquivIsoGroupIso {X Y : Groupₓₓ.{u}} : X ≃* Y ≅ X ≅ Y where
   Hom := fun e => e.toGroupIso
   inv := fun i => i.groupIsoToMulEquiv
 
@@ -270,8 +262,7 @@ def mulEquivIsoGroupIso {X Y : Type u} [Groupₓ X] [Groupₓ Y] : X ≃* Y ≅ 
 in `CommGroup` -/
 @[to_additive addEquivIsoAddCommGroupIso
       "additive equivalences between `add_comm_group`s are\nthe same as (isomorphic to) isomorphisms in `AddCommGroup`"]
-def mulEquivIsoCommGroupIso {X Y : Type u} [CommGroupₓ X] [CommGroupₓ Y] :
-    X ≃* Y ≅ CommGroupₓₓ.of X ≅ CommGroupₓₓ.of Y where
+def mulEquivIsoCommGroupIso {X Y : CommGroupₓₓ.{u}} : X ≃* Y ≅ X ≅ Y where
   Hom := fun e => e.toCommGroupIso
   inv := fun i => i.commGroupIsoToMulEquiv
 

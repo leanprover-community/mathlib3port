@@ -37,7 +37,7 @@ namespace ArithmeticFunction
 
 open Finset
 
-open_locale ArithmeticFunction
+open ArithmeticFunction
 
 /-- `log` as an arithmetic function `ℕ → ℝ`. Note this is in the `nat.arithmetic_function`
 namespace to indicate that it is bundled as an `arithmetic_function` rather than being the usual
@@ -84,7 +84,7 @@ theorem von_mangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n :=
 theorem von_mangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p := by
   rw [von_mangoldt_apply, prime.min_fac_eq hp, if_pos (Nat.prime_iff.1 hp).IsPrimePow]
 
-open_locale BigOperators
+open BigOperators
 
 theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n := by
   refine' rec_on_prime_coprime _ _ _ n
@@ -97,7 +97,7 @@ theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
   intro a b ha' hb' hab ha hb
   simp only [von_mangoldt_apply, ← sum_filter] at ha hb⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union, sum_union (disjoint_divisors_filter_prime_pow hab), ha, hb,
-    Nat.cast_mulₓ, Real.log_mul (Nat.cast_ne_zero.2 ha'.ne') (Nat.cast_ne_zero.2 hb'.ne')]
+    Nat.cast_mulₓ, Real.log_mul (Nat.cast_ne_zero.2 (pos_of_gt ha').ne') (Nat.cast_ne_zero.2 (pos_of_gt hb').ne')]
 
 @[simp]
 theorem von_mangoldt_mul_zeta : Λ * ζ = log := by

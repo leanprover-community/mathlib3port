@@ -57,7 +57,7 @@ We also set up the theory for `pseudo_emetric_space` and `pseudo_metric_space`.
 
 open Real Set Filter IsROrC
 
-open_locale BigOperators uniformity TopologicalSpace Nnreal Ennreal
+open BigOperators uniformity TopologicalSpace Nnreal Ennreal
 
 noncomputable section
 
@@ -278,6 +278,11 @@ omit fact_one_le_p
 theorem norm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
     ∥f∥ = (∑ i : ι, ∥f i∥ ^ p) ^ (1 / p) :=
   rfl
+
+theorem nnnorm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
+    ∥f∥₊ = (∑ i : ι, ∥f i∥₊ ^ p) ^ (1 / p) := by
+  ext
+  simp [Nnreal.coe_sum, norm_eq]
 
 theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (n : ℕ) (h : p = n)
     (f : PiLp p β) : ∥f∥ = (∑ i : ι, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by

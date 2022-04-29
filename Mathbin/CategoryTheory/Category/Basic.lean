@@ -208,14 +208,10 @@ instance (X : C) : Mono (𝟙 X) :=
     simpa using w⟩
 
 theorem cancel_epi (f : X ⟶ Y) [Epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
-  ⟨fun p => Epi.left_cancellation g h p, by
-    intro a
-    subst a⟩
+  ⟨fun p => Epi.left_cancellation g h p, congr_argₓ _⟩
 
 theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
-  ⟨fun p => Mono.right_cancellation g h p, by
-    intro a
-    subst a⟩
+  ⟨fun p => Mono.right_cancellation g h p, congr_argₓ _⟩
 
 theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
   convert cancel_epi f

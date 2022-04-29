@@ -77,7 +77,7 @@ instance uniqueBot : Unique (⊥ : Submodule R M) :=
 instance : OrderBot (Submodule R M) where
   bot := ⊥
   bot_le := fun p x => by
-    simp (config := { contextual := true })
+    simp (config := { contextual := true })[zero_mem]
 
 protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀, ∀ x ∈ p, ∀, x = (0 : M) :=
   ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
@@ -162,9 +162,11 @@ instance : OrderTop (Submodule R M) where
 theorem eq_top_iff' {p : Submodule R M} : p = ⊤ ↔ ∀ x, x ∈ p :=
   eq_top_iff.trans ⟨fun h x => h trivialₓ, fun h x _ => h x⟩
 
-/-- The top submodule is linearly equivalent to the module. -/
+/-- The top submodule is linearly equivalent to the module.
+
+This is the module version of `add_submonoid.top_equiv`. -/
 @[simps]
-def topEquivSelf : (⊤ : Submodule R M) ≃ₗ[R] M where
+def topEquiv : (⊤ : Submodule R M) ≃ₗ[R] M where
   toFun := fun x => x
   invFun := fun x =>
     ⟨x, by
@@ -187,7 +189,7 @@ instance : HasInfₓ (Submodule R M) :=
   ⟨fun S =>
     { Carrier := ⋂ s ∈ S, (s : Set M),
       zero_mem' := by
-        simp ,
+        simp [zero_mem],
       add_mem' := by
         simp (config := { contextual := true })[add_mem],
       smul_mem' := by
@@ -203,7 +205,7 @@ instance : HasInf (Submodule R M) :=
   ⟨fun p q =>
     { Carrier := p ∩ q,
       zero_mem' := by
-        simp ,
+        simp [zero_mem],
       add_mem' := by
         simp (config := { contextual := true })[add_mem],
       smul_mem' := by
@@ -231,7 +233,7 @@ theorem Inf_coe (P : Set (Submodule R M)) : (↑(inf P) : Set M) = ⋂ p ∈ P, 
 
 @[simp]
 theorem finset_inf_coe {ι} (s : Finset ι) (p : ι → Submodule R M) : (↑(s.inf p) : Set M) = ⋂ i ∈ s, ↑(p i) := by
-  let this' := Classical.decEq ι
+  let this := Classical.decEq ι
   refine' s.induction_on _ fun i s hi ih => _
   · simp
     
@@ -262,21 +264,21 @@ theorem mem_sup_right {S T : Submodule R M} : ∀ {x : M}, x ∈ T → x ∈ S�
   show T ≤ S⊔T from le_sup_right
 
 theorem add_mem_sup {S T : Submodule R M} {s t : M} (hs : s ∈ S) (ht : t ∈ T) : s + t ∈ S⊔T :=
-  add_mem _ (mem_sup_left hs) (mem_sup_right ht)
+  add_mem (mem_sup_left hs) (mem_sup_right ht)
 
 theorem mem_supr_of_mem {ι : Sort _} {b : M} {p : ι → Submodule R M} (i : ι) (h : b ∈ p i) : b ∈ ⨆ i, p i :=
   have : p i ≤ ⨆ i, p i := le_supr p i
   @this b h
 
-open_locale BigOperators
+open BigOperators
 
 theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submodule R M} (h : ∀ i, f i ∈ p i) :
     (∑ i, f i) ∈ ⨆ i, p i :=
-  (sum_mem _) fun i hi => mem_supr_of_mem i (h i)
+  sum_mem fun i hi => mem_supr_of_mem i (h i)
 
 theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀, ∀ i ∈ s, ∀, f i ∈ p i) :
     (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
-  (sum_mem _) fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
+  sum_mem fun i hi => mem_supr_of_mem i <| mem_supr_of_mem hi (h i hi)
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
 
@@ -300,7 +302,7 @@ section NatSubmodule
 
 /-- An additive submonoid is equivalent to a ℕ-submodule. -/
 def AddSubmonoid.toNatSubmodule : AddSubmonoid M ≃o Submodule ℕ M where
-  toFun := fun S => { S with smul_mem' := fun r s hs => S.nsmul_mem hs _ }
+  toFun := fun S => { S with smul_mem' := fun r s hs => show r • s ∈ S from nsmul_mem hs _ }
   invFun := Submodule.toAddSubmonoid
   left_inv := fun ⟨S, _, _⟩ => rfl
   right_inv := fun ⟨S, _, _, _⟩ => rfl

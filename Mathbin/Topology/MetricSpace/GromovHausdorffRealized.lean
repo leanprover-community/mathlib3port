@@ -32,7 +32,7 @@ space structure on `X ⊕ Y`. The corresponding metric quotient is `optimal_GH_c
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Nnreal
+open Classical TopologicalSpace Nnreal
 
 universe u v w
 
@@ -69,6 +69,7 @@ private def Cb : Type _ :=
 private def max_var : ℝ≥0 :=
   2 * ⟨diam (Univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (Univ : Set Y), diam_nonneg⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by
@@ -102,6 +103,7 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (Univ : Set (Sum X Y)) := dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
@@ -260,16 +262,16 @@ private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by
   have I1 : ∀ x y, IsClosed { f : Cb X Y | f (inl x, inl y) = dist x y } := fun x y =>
-    is_closed_eq continuous_evalx continuous_const
+    is_closed_eq continuous_eval_const continuous_const
   have I2 : ∀ x y, IsClosed { f : Cb X Y | f (inr x, inr y) = dist x y } := fun x y =>
-    is_closed_eq continuous_evalx continuous_const
+    is_closed_eq continuous_eval_const continuous_const
   have I3 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) = f (y, x) } := fun x y =>
-    is_closed_eq continuous_evalx continuous_evalx
+    is_closed_eq continuous_eval_const continuous_eval_const
   have I4 : ∀ x y z, IsClosed { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) } := fun x y z =>
-    is_closed_le continuous_evalx (continuous_evalx.add continuous_evalx)
-  have I5 : ∀ x, IsClosed { f : Cb X Y | f (x, x) = 0 } := fun x => is_closed_eq continuous_evalx continuous_const
+    is_closed_le continuous_eval_const (continuous_eval_const.add continuous_eval_const)
+  have I5 : ∀ x, IsClosed { f : Cb X Y | f (x, x) = 0 } := fun x => is_closed_eq continuous_eval_const continuous_const
   have I6 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) ≤ max_var X Y } := fun x y =>
-    is_closed_le continuous_evalx continuous_const
+    is_closed_le continuous_eval_const continuous_const
   have :
     candidates_b X Y =
       (((((⋂ (x) (y), { f : Cb X Y | f (@inl X Y x, @inl X Y y) = dist x y }) ∩
@@ -404,8 +406,8 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
   -- prove the inequality but with `dist f g` inside, by using inequalities comparing
   -- supr to supr and infi to infi
   have Z : (⨆ x, ⨅ y, f (inl x, inr y)) ≤ ⨆ x, ⨅ y, g (inl x, inr y) + dist f g :=
-    csupr_le_csupr (HD_bound_aux1 _ (dist f g)) fun x =>
-      cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+    csupr_mono (HD_bound_aux1 _ (dist f g)) fun x =>
+      cinfi_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g := by
@@ -436,8 +438,8 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   -- prove the inequality but with `dist f g` inside, by using inequalities comparing
   -- supr to supr and infi to infi
   have Z : (⨆ y, ⨅ x, f (inl x, inr y)) ≤ ⨆ y, ⨅ x, g (inl x, inr y) + dist f g :=
-    csupr_le_csupr (HD_bound_aux2 _ (dist f g)) fun y =>
-      cinfi_le_cinfi ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
+    csupr_mono (HD_bound_aux2 _ (dist f g)) fun y =>
+      cinfi_mono ⟨cf, forall_range_iff.2 fun i => Hcf _⟩ fun y => coe_le_coe_add_dist
   -- move the `dist f g` out of the infimum and the supremum, arguing that continuous monotone maps
   -- (here the addition of `dist f g`) preserve infimum and supremum
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g := by

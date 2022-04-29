@@ -5,10 +5,9 @@ Authors: Frédéric Dupuis, Yaël Dillies
 -/
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Order.Field
 import Mathbin.Algebra.Order.Pi
 import Mathbin.Algebra.Order.Smul
-import Mathbin.Algebra.Pointwise
+import Mathbin.Data.Set.Pointwise
 
 /-!
 # Ordered module
@@ -25,7 +24,7 @@ ordered module, ordered scalar, ordered smul, ordered action, ordered vector spa
 -/
 
 
-open_locale Pointwise
+open Pointwise
 
 variable {k M N : Type _}
 

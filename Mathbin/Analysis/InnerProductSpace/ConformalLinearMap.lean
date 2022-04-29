@@ -17,26 +17,28 @@ variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
 open LinearIsometry ContinuousLinearMap
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
-theorem is_conformal_map_iff (f' : E →L[ℝ] F) :
-    IsConformalMap f' ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f' u, f' v⟫ = (c : ℝ) * ⟪u, v⟫ := by
+/-- A map between two inner product spaces is a conformal map if and only if it preserves inner
+products up to a scalar factor, i.e., there exists a positive `c : ℝ` such that `⟪f u, f v⟫ = c *
+⟪u, v⟫` for all `u`, `v`. -/
+theorem is_conformal_map_iff (f : E →L[ℝ] F) : IsConformalMap f ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f u, f v⟫ = c * ⟪u, v⟫ :=
+  by
   constructor
-  · rintro ⟨c₁, hc₁, li, h⟩
+  · rintro ⟨c₁, hc₁, li, rfl⟩
     refine' ⟨c₁ * c₁, mul_self_pos.2 hc₁, fun u v => _⟩
-    simp only [h, Pi.smul_apply, inner_map_map, real_inner_smul_left, real_inner_smul_right, mul_assoc]
+    simp only [real_inner_smul_left, real_inner_smul_right, mul_assoc, coe_smul', coe_to_continuous_linear_map,
+      Pi.smul_apply, inner_map_map]
     
   · rintro ⟨c₁, hc₁, huv⟩
-    let c := Real.sqrt c₁⁻¹
-    have hc : c ≠ 0 := fun w => by
-      simp only [c] at w <;> exact (real.sqrt_ne_zero'.mpr <| inv_pos.mpr hc₁) w
-    let f₁ := c • f'
-    have minor : (f₁ : E → F) = c • f' := rfl
-    have minor' : (f' : E → F) = c⁻¹ • f₁ := by
-      ext <;> simp_rw [minor, Pi.smul_apply] <;> rw [smul_smul, inv_mul_cancel hc, one_smul]
-    refine' ⟨c⁻¹, inv_ne_zero hc, f₁.to_linear_map.isometry_of_inner fun u v => _, minor'⟩
-    simp_rw [to_linear_map_eq_coe, ContinuousLinearMap.coe_coe, minor, Pi.smul_apply]
-    rw [real_inner_smul_left, real_inner_smul_right, huv u v, ← mul_assoc, ← mul_assoc,
-      Real.mul_self_sqrt <| le_of_ltₓ <| inv_pos.mpr hc₁, inv_mul_cancel <| ne_of_gtₓ hc₁, one_mulₓ]
+    obtain ⟨c, hc, rfl⟩ : ∃ c : ℝ, 0 < c ∧ c₁ = c * c
+    exact ⟨Real.sqrt c₁, Real.sqrt_pos.2 hc₁, (Real.mul_self_sqrt hc₁.le).symm⟩
+    refine' ⟨c, hc.ne', (c⁻¹ • f : E →ₗ[ℝ] F).isometryOfInner fun u v => _, _⟩
+    · simp only [real_inner_smul_left, real_inner_smul_right, huv, mul_assoc, coe_smul, inv_mul_cancel_left₀ hc.ne',
+        LinearMap.smul_apply, ContinuousLinearMap.coe_coe]
+      
+    · ext1 x
+      exact (smul_inv_smul₀ hc.ne' (f x)).symm
+      
     
 

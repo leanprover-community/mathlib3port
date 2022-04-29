@@ -30,7 +30,7 @@ variable {X Y Z α : Type _} [TopologicalSpace X]
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- A function between topological spaces is locally constant if the preimage of any set is open. -/
 def IsLocallyConstant (f : X → Y) : Prop :=
@@ -137,7 +137,7 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
   ⟨fun h x y => h.apply_eq_of_is_preconnected is_preconnected_univ trivialₓ trivialₓ, of_constant _⟩
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) : (Set.Range f).Finite := by
-  let this' : TopologicalSpace Y := ⊥
+  let this : TopologicalSpace Y := ⊥
   have : DiscreteTopology Y := ⟨rfl⟩
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
   exact (is_compact_range hf).finite_of_discrete
@@ -371,7 +371,7 @@ theorem flip_unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α
 
 section Comap
 
-open_locale Classical
+open Classical
 
 variable [TopologicalSpace Y]
 
@@ -384,7 +384,7 @@ noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant 
   if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
   else by
     by_cases' H : Nonempty X
-    · intros g
+    · intro g
       exact const X (g <| f <| Classical.arbitrary X)
       
     · intro g

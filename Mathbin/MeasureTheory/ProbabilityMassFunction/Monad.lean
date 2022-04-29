@@ -23,7 +23,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open_locale Classical BigOperators Nnreal Ennreal
+open Classical BigOperators Nnreal Ennreal
 
 namespace Pmf
 

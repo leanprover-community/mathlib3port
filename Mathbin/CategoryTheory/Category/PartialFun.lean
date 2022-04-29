@@ -47,6 +47,10 @@ instance : CoeSort PartialFun (Type _) :=
 def of : Type _ → PartialFun :=
   id
 
+@[simp]
+theorem coe_of (X : Type _) : ↥(of X) = X :=
+  rfl
+
 instance : Inhabited PartialFun :=
   ⟨Type _⟩
 

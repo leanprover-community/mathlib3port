@@ -5,8 +5,8 @@ Authors: Chris Hughes
 -/
 import Mathbin.Order.Lattice
 import Mathbin.Data.List.Sort
-import Mathbin.Data.Equiv.Fin
-import Mathbin.Data.Equiv.Functor
+import Mathbin.Logic.Equiv.Fin
+import Mathbin.Logic.Equiv.Functor
 
 /-!
 # Jordan-Hölder Theorem

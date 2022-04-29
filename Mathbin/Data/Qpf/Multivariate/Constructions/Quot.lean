@@ -16,7 +16,7 @@ functions found in the definition of `mvqpf`
 
 universe u
 
-open_locale Mvfunctor
+open Mvfunctor
 
 namespace Mvqpf
 

@@ -30,7 +30,7 @@ Let `p : R[X]`.
 
 namespace Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 section Primitive
 
@@ -216,7 +216,7 @@ theorem is_primitive_iff_content_eq_one {p : R[X]} : p.IsPrimitive ↔ p.content
 theorem IsPrimitive.content_eq_one {p : R[X]} (hp : p.IsPrimitive) : p.content = 1 :=
   is_primitive_iff_content_eq_one.mp hp
 
-open_locale Classical
+open Classical
 
 noncomputable section
 

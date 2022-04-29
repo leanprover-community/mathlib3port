@@ -34,7 +34,7 @@ especially when defining iterated derivatives.
 
 open Function Finₓ Set
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w w₁ w₁' w₂ w₃ w₄
 
@@ -112,6 +112,38 @@ theorem zero_apply (m : ∀ i, M₁ i) : (0 : ContinuousMultilinearMap R M₁ M�
 theorem to_multilinear_map_zero : (0 : ContinuousMultilinearMap R M₁ M₂).toMultilinearMap = 0 :=
   rfl
 
+section HasScalar
+
+variable {R' R'' A : Type _} [Monoidₓ R'] [Monoidₓ R''] [Semiringₓ A] [∀ i, Module A (M₁ i)] [Module A M₂]
+  [DistribMulAction R' M₂] [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂] [DistribMulAction R'' M₂]
+  [HasContinuousConstSmul R'' M₂] [SmulCommClass A R'' M₂]
+
+instance : HasScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
+  ⟨fun c f => { c • f.toMultilinearMap with cont := f.cont.const_smul c }⟩
+
+@[simp]
+theorem smul_apply (f : ContinuousMultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
+  rfl
+
+@[simp]
+theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M₂) :
+    (c • f).toMultilinearMap = c • f.toMultilinearMap :=
+  rfl
+
+instance [SmulCommClass R' R'' M₂] : SmulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
+  ⟨fun c₁ c₂ f => ext fun x => smul_comm _ _ _⟩
+
+instance [HasScalar R' R''] [IsScalarTower R' R'' M₂] : IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
+  ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
+
+instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] : IsCentralScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
+  ⟨fun c₁ f => ext fun x => op_smul_eq_smul _ _⟩
+
+instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
+  Function.Injective.mulAction toMultilinearMap to_multilinear_map_inj fun _ _ => rfl
+
+end HasScalar
+
 section HasContinuousAdd
 
 variable [HasContinuousAdd M₂]
@@ -129,7 +161,7 @@ theorem to_multilinear_map_add (f g : ContinuousMultilinearMap R M₁ M₂) :
   rfl
 
 instance addCommMonoid : AddCommMonoidₓ (ContinuousMultilinearMap R M₁ M₂) :=
-  to_multilinear_map_inj.AddCommMonoid _ rfl fun _ _ => rfl
+  to_multilinear_map_inj.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Evaluation of a `continuous_multilinear_map` at a vector as an `add_monoid_hom`. -/
 def applyAddHom (m : ∀ i, M₁ i) : ContinuousMultilinearMap R M₁ M₂ →+ M₂ :=
@@ -307,7 +339,8 @@ theorem sub_apply (m : ∀ i, M₁ i) : (f - f') m = f m - f' m :=
   rfl
 
 instance : AddCommGroupₓ (ContinuousMultilinearMap R M₁ M₂) :=
-  to_multilinear_map_inj.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  to_multilinear_map_inj.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 end TopologicalAddGroup
 
@@ -335,30 +368,6 @@ variable {R' R'' A : Type _} [Monoidₓ R'] [Monoidₓ R''] [Semiringₓ A] [∀
   [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [∀ i, Module A (M₁ i)] [Module A M₂] [DistribMulAction R' M₂]
   [HasContinuousConstSmul R' M₂] [SmulCommClass A R' M₂] [DistribMulAction R'' M₂] [HasContinuousConstSmul R'' M₂]
   [SmulCommClass A R'' M₂]
-
-instance : HasScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
-  ⟨fun c f => { c • f.toMultilinearMap with cont := f.cont.const_smul c }⟩
-
-@[simp]
-theorem smul_apply (f : ContinuousMultilinearMap A M₁ M₂) (c : R') (m : ∀ i, M₁ i) : (c • f) m = c • f m :=
-  rfl
-
-@[simp]
-theorem to_multilinear_map_smul (c : R') (f : ContinuousMultilinearMap A M₁ M₂) :
-    (c • f).toMultilinearMap = c • f.toMultilinearMap :=
-  rfl
-
-instance [SmulCommClass R' R'' M₂] : SmulCommClass R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
-  ⟨fun c₁ c₂ f => ext fun x => smul_comm _ _ _⟩
-
-instance [HasScalar R' R''] [IsScalarTower R' R'' M₂] : IsScalarTower R' R'' (ContinuousMultilinearMap A M₁ M₂) :=
-  ⟨fun c₁ c₂ f => ext fun x => smul_assoc _ _ _⟩
-
-instance [DistribMulAction R'ᵐᵒᵖ M₂] [IsCentralScalar R' M₂] : IsCentralScalar R' (ContinuousMultilinearMap A M₁ M₂) :=
-  ⟨fun c₁ f => ext fun x => op_smul_eq_smul _ _⟩
-
-instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
-  Function.Injective.mulAction toMultilinearMap to_multilinear_map_inj fun _ _ => rfl
 
 instance [HasContinuousAdd M₂] : DistribMulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.distribMulAction ⟨toMultilinearMap, to_multilinear_map_zero, to_multilinear_map_add⟩
@@ -395,6 +404,49 @@ def piLinearEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ 
   { piEquiv with map_add' := fun x y => rfl, map_smul' := fun c x => rfl }
 
 end Module
+
+section CommAlgebra
+
+variable (R ι) (A : Type _) [Fintype ι] [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] [TopologicalSpace A]
+  [HasContinuousMul A]
+
+/-- The continuous multilinear map on `A^ι`, where `A` is a normed commutative algebra
+over `𝕜`, associating to `m` the product of all the `m i`.
+
+See also `continuous_multilinear_map.mk_pi_algebra_fin`. -/
+protected def mkPiAlgebra : ContinuousMultilinearMap R (fun i : ι => A) A where
+  cont := (continuous_finset_prod _) fun i hi => continuous_apply _
+  toMultilinearMap := MultilinearMap.mkPiAlgebra R ι A
+
+@[simp]
+theorem mk_pi_algebra_apply (m : ι → A) : ContinuousMultilinearMap.mkPiAlgebra R ι A m = ∏ i, m i :=
+  rfl
+
+end CommAlgebra
+
+section Algebra
+
+variable (R n) (A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [TopologicalSpace A] [HasContinuousMul A]
+
+/-- The continuous multilinear map on `A^n`, where `A` is a normed algebra over `𝕜`, associating to
+`m` the product of all the `m i`.
+
+See also: `continuous_multilinear_map.mk_pi_algebra`. -/
+protected def mkPiAlgebraFin : A[×n]→L[R] A where
+  cont := by
+    change Continuous fun m => (List.ofFnₓ m).Prod
+    simp_rw [List.of_fn_eq_map]
+    exact continuous_list_prod _ fun i hi => continuous_apply _
+  toMultilinearMap := MultilinearMap.mkPiAlgebraFin R n A
+
+variable {R n A}
+
+@[simp]
+theorem mk_pi_algebra_fin_apply (m : Finₓ n → A) :
+    ContinuousMultilinearMap.mkPiAlgebraFin R n A m = (List.ofFnₓ m).Prod :=
+  rfl
+
+end Algebra
 
 end ContinuousMultilinearMap
 

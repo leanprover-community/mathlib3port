@@ -33,9 +33,9 @@ finitely many vertices.
    if `incidence_set` is finite
 
 * `simple_graph.dart` is an ordered pair of adjacent vertices, thought of as being an
-  orientated edge.
+  orientated edge. These are also known as "half-edges" or "bonds."
 
-* `simple_graph.homo`, `simple_graph.embedding`, and `simple_graph.iso` for graph
+* `simple_graph.hom`, `simple_graph.embedding`, and `simple_graph.iso` for graph
   homomorphisms, graph embeddings, and
   graph isomorphisms. Note that a graph embedding is a stronger notion than an
   injective graph homomorphism, since its image is an induced subgraph.
@@ -365,7 +365,9 @@ instance edgesFintype [DecidableEq V] [Fintype V] [DecidableRel G.Adj] : Fintype
 /-! ## Darts -/
 
 
-/-- A `dart` is an oriented edge, implemented as an ordered pair of adjacent vertices. -/
+/-- A `dart` is an oriented edge, implemented as an ordered pair of adjacent vertices.
+This terminology comes from combinatorial maps, and they are also known as "half-edges"
+or "bonds." -/
 @[ext]
 structure Dart extends V × V where
   is_adj : G.Adj fst snd
@@ -374,6 +376,14 @@ structure Dart extends V × V where
 section Darts
 
 variable {G}
+
+/-- The first vertex for the dart. -/
+abbrev Dart.fst (d : G.Dart) : V :=
+  d.fst
+
+/-- The second vertex for the dart. -/
+abbrev Dart.snd (d : G.Dart) : V :=
+  d.snd
 
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
   Fintype.ofEquiv (Σv, G.NeighborSet v)
@@ -409,6 +419,10 @@ theorem Dart.edge_symm (d : G.Dart) : d.symm.edge = d.edge :=
   Sym2.mk_prod_swap_eq
 
 @[simp]
+theorem Dart.edge_comp_symm : dart.edge ∘ dart.symm = (Dart.edge : G.Dart → Sym2 V) :=
+  funext Dart.edge_symm
+
+@[simp]
 theorem Dart.symm_symm (d : G.Dart) : d.symm.symm = d :=
   Dart.ext _ _ <| Prod.swap_swap _
 
@@ -423,7 +437,23 @@ theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d�
   rintro ⟨p, hp⟩ ⟨q, hq⟩
   simp [Sym2.mk_eq_mk_iff]
 
+theorem dart_edge_eq_mk_iff : ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap := by
+  rintro ⟨p, h⟩
+  apply Sym2.mk_eq_mk_iff
+
+theorem dart_edge_eq_mk_iff' :
+    ∀ {d : G.Dart} {u v : V}, d.edge = ⟦(u, v)⟧ ↔ d.fst = u ∧ d.snd = v ∨ d.fst = v ∧ d.snd = u := by
+  rintro ⟨⟨a, b⟩, h⟩ u v
+  rw [dart_edge_eq_mk_iff]
+  simp
+
 variable (G)
+
+/-- Two darts are said to be adjacent if they could be consecutive
+darts in a walk -- that is, the first dart's second vertex is equal to
+the second dart's first vertex. -/
+def DartAdj (d d' : G.Dart) : Prop :=
+  d.snd = d'.fst
 
 /-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
 to the darts `d` with `d.fst = v`. --/
@@ -465,7 +495,8 @@ theorem edge_mem_incidence_set_iff {e : G.EdgeSet} : ↑e ∈ G.IncidenceSet a �
 theorem incidence_set_inter_incidence_set_subset (h : a ≠ b) : G.IncidenceSet a ∩ G.IncidenceSet b ⊆ {⟦(a, b)⟧} :=
   fun e he => (Sym2.mem_and_mem_iff h).1 ⟨he.1.2, he.2.2⟩
 
-theorem incidence_set_inter_incidence_set (h : G.Adj a b) : G.IncidenceSet a ∩ G.IncidenceSet b = {⟦(a, b)⟧} := by
+theorem incidence_set_inter_incidence_set_of_adj (h : G.Adj a b) : G.IncidenceSet a ∩ G.IncidenceSet b = {⟦(a, b)⟧} :=
+  by
   refine' (G.incidence_set_inter_incidence_set_subset <| h.ne).antisymm _
   rintro _ (rfl : _ = ⟦(a, b)⟧)
   exact ⟨G.mk_mem_incidence_set_left_iff.2 h, G.mk_mem_incidence_set_right_iff.2 h⟩
@@ -473,6 +504,12 @@ theorem incidence_set_inter_incidence_set (h : G.Adj a b) : G.IncidenceSet a ∩
 theorem adj_of_mem_incidence_set (h : a ≠ b) (ha : e ∈ G.IncidenceSet a) (hb : e ∈ G.IncidenceSet b) : G.Adj a b := by
   rwa [← mk_mem_incidence_set_left_iff, ←
     Set.mem_singleton_iff.1 <| G.incidence_set_inter_incidence_set_subset h ⟨ha, hb⟩]
+
+theorem incidence_set_inter_incidence_set_of_not_adj (h : ¬G.Adj a b) (hn : a ≠ b) :
+    G.IncidenceSet a ∩ G.IncidenceSet b = ∅ := by
+  simp_rw [Set.eq_empty_iff_forall_not_mem, Set.mem_inter_eq, not_and]
+  intro u ha hb
+  exact h (G.adj_of_mem_incidence_set hn ha hb)
 
 instance decidableMemIncidenceSet [DecidableEq V] [DecidableRel G.Adj] (v : V) : DecidablePred (· ∈ G.IncidenceSet v) :=
   fun e => And.decidable
@@ -617,8 +654,10 @@ end Incidence
 /-! ## Edge deletion -/
 
 
-/-- Given a set of vertex pairs, remove all of the corresponding edges from the edge set.
-It is fine to delete edges outside the edge set. -/
+/-- Given a set of vertex pairs, remove all of the corresponding edges from the
+graph's edge set, if present.
+
+See also: `simple_graph.subgraph.delete_edges`. -/
 def deleteEdges (s : Set (Sym2 V)) : SimpleGraph V where
   Adj := G.Adj \ Sym2.ToRel s
   symm := fun a b => by
@@ -722,6 +761,11 @@ def incidenceFinset [DecidableEq V] : Finset (Sym2 V) :=
 theorem card_incidence_set_eq_degree [DecidableEq V] : Fintype.card (G.IncidenceSet v) = G.degree v := by
   rw [Fintype.card_congr (G.incidence_set_equiv_neighbor_set v)]
   simp
+
+@[simp]
+theorem card_incidence_finset_eq_degree [DecidableEq V] : (G.incidenceFinset v).card = G.degree v := by
+  rw [← G.card_incidence_set_eq_degree]
+  apply Set.to_finset_card
 
 @[simp]
 theorem mem_incidence_finset [DecidableEq V] (e : Sym2 V) : e ∈ G.incidenceFinset v ↔ e ∈ G.IncidenceSet v :=
@@ -986,6 +1030,14 @@ def mapEdgeSet (e : G.EdgeSet) : G'.EdgeSet :=
 @[simps]
 def mapNeighborSet (v : V) (w : G.NeighborSet v) : G'.NeighborSet (f v) :=
   ⟨f w, f.apply_mem_neighbor_set w.property⟩
+
+/-- The map between darts induced by a homomorphism. -/
+def mapDart (d : G.Dart) : G'.Dart :=
+  ⟨d.1.map f f, f.map_adj d.2⟩
+
+@[simp]
+theorem map_dart_apply (d : G.Dart) : f.mapDart d = ⟨d.1.map f f, f.map_adj d.2⟩ :=
+  rfl
 
 /-- The induced map for spanning subgraphs, which is the identity on vertices. -/
 def mapSpanningSubgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' where

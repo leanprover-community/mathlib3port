@@ -21,7 +21,7 @@ logarighm, derivative
 
 open Filter Finset Set
 
-open_locale TopologicalSpace BigOperators
+open TopologicalSpace BigOperators
 
 namespace Real
 
@@ -180,8 +180,9 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * lo
     tendsto_inv_at_top_zero'.mono_right (nhds_within_mono _ fun x hx => (set.mem_Ioi.mp hx).ne')
   simpa only [(· ∘ ·), inv_invₓ] using h₁.comp h₂
 
-open_locale BigOperators
+open BigOperators
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
@@ -230,6 +231,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'ₓ] using C
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- Power series expansion of the logarithm around `1`. -/
 theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by

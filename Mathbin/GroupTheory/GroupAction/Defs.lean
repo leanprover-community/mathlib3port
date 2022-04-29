@@ -3,9 +3,8 @@ Copyright (c) 2018 Chris Hughes. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yury Kudryashov
 -/
-import Mathbin.Algebra.Group.Defs
-import Mathbin.Algebra.Group.Hom
 import Mathbin.Algebra.Group.TypeTags
+import Mathbin.Algebra.Hom.Group
 import Mathbin.Algebra.Opposites
 import Mathbin.Logic.Embedding
 
@@ -46,9 +45,9 @@ group action
 -/
 
 
-variable {M N G A B α β γ : Type _}
+variable {M N G A B α β γ δ : Type _}
 
-open Function
+open Function (Injective Surjective)
 
 /-!
 ### Faithful actions
@@ -292,6 +291,37 @@ theorem comp.smul_comm_class' [HasScalar β α] [SmulCommClass β M α] (g : N �
 
 end HasScalar
 
+section
+
+/-- Note that the `smul_comm_class α β β` typeclass argument is usually satisfied by `algebra α β`.
+-/
+@[to_additive]
+theorem mul_smul_comm [Mul β] [HasScalar α β] [SmulCommClass α β β] (s : α) (x y : β) : x * s • y = s • (x * y) :=
+  (smul_comm s x y).symm
+
+/-- Note that the `is_scalar_tower α β β` typeclass argument is usually satisfied by `algebra α β`.
+-/
+theorem smul_mul_assoc [Mul β] [HasScalar α β] [IsScalarTower α β β] (r : α) (x y : β) : r • x * y = r • (x * y) :=
+  smul_assoc r x y
+
+theorem smul_smul_smul_comm [HasScalar α β] [HasScalar α γ] [HasScalar β δ] [HasScalar α δ] [HasScalar γ δ]
+    [IsScalarTower α β δ] [IsScalarTower α γ δ] [SmulCommClass β γ δ] (a : α) (b : β) (c : γ) (d : δ) :
+    (a • b) • c • d = (a • c) • b • d := by
+  rw [smul_assoc, smul_assoc, smul_comm b]
+  infer_instance
+
+variable [HasScalar M α]
+
+theorem Commute.smul_right [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
+    Commute a (r • b) :=
+  (mul_smul_comm _ _ _).trans ((congr_argₓ _ h).trans <| (smul_mul_assoc _ _ _).symm)
+
+theorem Commute.smul_left [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
+    Commute (r • a) b :=
+  (h.symm.smul_right r).symm
+
+end
+
 section ite
 
 variable [HasScalar M α] (p : Prop) [Decidable p]
@@ -394,17 +424,6 @@ instance IsScalarTower.left : IsScalarTower M M α :=
 
 variable {M}
 
-/-- Note that the `smul_comm_class α β β` typeclass argument is usually satisfied by `algebra α β`.
--/
-@[to_additive]
-theorem mul_smul_comm [Mul β] [HasScalar α β] [SmulCommClass α β β] (s : α) (x y : β) : x * s • y = s • (x * y) :=
-  (smul_comm s x y).symm
-
-/-- Note that the `is_scalar_tower α β β` typeclass argument is usually satisfied by `algebra α β`.
--/
-theorem smul_mul_assoc [Mul β] [HasScalar α β] [IsScalarTower α β β] (r : α) (x y : β) : r • x * y = r • (x * y) :=
-  smul_assoc r x y
-
 /-- Note that the `is_scalar_tower M α α` and `smul_comm_class M α α` typeclass arguments are
 usually satisfied by `algebra M α`. -/
 theorem smul_mul_smul [Mul α] (r s : M) (x y : α) [IsScalarTower M α α] [SmulCommClass M α α] :
@@ -470,7 +489,8 @@ theorem smul_one_mul {M N} [Monoidₓ N] [HasScalar M N] [IsScalarTower M N N] (
   smul_one_smul N x y
 
 @[simp, to_additive]
-theorem mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] (x : M) (y : N) : y * x • 1 = x • y := by
+theorem mul_smul_one {M N} [MulOneClassₓ N] [HasScalar M N] [SmulCommClass M N N] (x : M) (y : N) : y * x • 1 = x • y :=
+  by
   rw [← smul_eq_mul, ← smul_comm, smul_eq_mul, mul_oneₓ]
 
 theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasScalar M N] (h : ∀ x : M y : N, x • (1 : N) * y = x • y) :
@@ -572,11 +592,25 @@ def DistribMulAction.toAddMonoidEnd : M →* AddMonoidₓ.End A where
   map_one' := AddMonoidHom.ext <| one_smul M
   map_mul' := fun x y => AddMonoidHom.ext <| mul_smul x y
 
+instance AddMonoidₓ.nat_smul_comm_class : SmulCommClass ℕ M A where
+  smul_comm := fun n x y => ((DistribMulAction.toAddMonoidHom A x).map_nsmul y n).symm
+
+-- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
+instance AddMonoidₓ.nat_smul_comm_class' : SmulCommClass M ℕ A :=
+  SmulCommClass.symm _ _ _
+
 end
 
 section
 
 variable [Monoidₓ M] [AddGroupₓ A] [DistribMulAction M A]
+
+instance AddGroupₓ.int_smul_comm_class : SmulCommClass ℤ M A where
+  smul_comm := fun n x y => ((DistribMulAction.toAddMonoidHom A x).map_zsmul y n).symm
+
+-- `smul_comm_class.symm` is not registered as an instance, as it would cause a loop
+instance AddGroupₓ.int_smul_comm_class' : SmulCommClass M ℤ A :=
+  SmulCommClass.symm _ _ _
 
 @[simp]
 theorem smul_neg (r : M) (x : A) : r • -x = -(r • x) :=

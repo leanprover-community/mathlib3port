@@ -22,7 +22,7 @@ import Mathbin.RingTheory.Localization.FractionRing
 
 open HahnSeries
 
-open_locale BigOperators Classical Polynomial
+open BigOperators Classical Polynomial
 
 noncomputable section
 

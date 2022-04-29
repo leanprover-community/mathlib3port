@@ -15,6 +15,8 @@ import Mathbin.Tactic.Squeeze
 We define characteristic polynomials of matrices and
 prove the Cayley–Hamilton theorem over arbitrary commutative rings.
 
+See the file `matrix/charpoly/coeff` for corollaries of this theorem.
+
 ## Main definitions
 
 * `matrix.charpoly` is the characteristic polynomial of a matrix.
@@ -31,7 +33,7 @@ universe u v w
 
 open Polynomial Matrix
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 variable {R : Type u} [CommRingₓ R]
 
@@ -89,6 +91,8 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
 applied to the matrix itself, is zero.
 
 This holds over any commutative ring.
+
+See `linear_map.aeval_self_charpoly` for the equivalent statement about endomorphisms.
 -/
 -- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 := by

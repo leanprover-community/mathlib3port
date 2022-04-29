@@ -27,7 +27,7 @@ filter, countable
 
 open Set Filter
 
-open_locale Filter
+open Filter
 
 variable {ι α β : Type _}
 

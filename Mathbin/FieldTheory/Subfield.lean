@@ -58,11 +58,47 @@ subfield, subfields
 -/
 
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w
 
 variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
+
+/-- `subfield_class S K` states `S` is a type of subsets `s ⊆ K` closed under field operations. -/
+class SubfieldClass (S : Type _) (K : outParam <| Type _) [Field K] [SetLike S K] extends SubringClass S K,
+  InvMemClass S K
+
+namespace SubfieldClass
+
+variable (S : Type _) [SetLike S K] [h : SubfieldClass S K]
+
+include h
+
+/-- A subfield contains `1`, products and inverses.
+
+Be assured that we're not actually proving that subfields are subgroups:
+`subgroup_class` is really an abbreviation of `subgroup_with_or_without_zero_class`.
+ -/
+-- See note [lower instance priority]
+instance (priority := 100) SubfieldClass.toSubgroupClass : SubgroupClass S K :=
+  { h with }
+
+/-- A subfield inherits a field structure -/
+-- Prefer subclasses of `field` over subclasses of `subfield_class`.
+instance (priority := 75) toField (s : S) : Field s :=
+  Subtype.coe_injective.Field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+
+omit h
+
+/-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
+-- Prefer subclasses of `field` over subclasses of `subfield_class`.
+instance (priority := 75) toLinearOrderedField {K} [LinearOrderedField K] [SetLike S K] [SubfieldClass S K] (s : S) :
+    LinearOrderedField s :=
+  Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
+
+end SubfieldClass
 
 /-- `subfield R` is the type of subfields of `R`. A subfield of `R` is a subset `s` that is a
   multiplicative submonoid and an additive subgroup. Note in particular that it shares the
@@ -86,6 +122,14 @@ def toSubmonoid (s : Subfield K) : Submonoid K :=
 instance : SetLike (Subfield K) K :=
   ⟨Subfield.Carrier, fun p q h => by
     cases p <;> cases q <;> congr⟩
+
+instance : SubfieldClass (Subfield K) K where
+  add_mem := add_mem'
+  zero_mem := zero_mem'
+  neg_mem := neg_mem'
+  mul_mem := mul_mem'
+  one_mem := one_mem'
+  inv_mem := inv_mem'
 
 @[simp]
 theorem mem_carrier {s : Subfield K} {x : K} : x ∈ s.Carrier ↔ x ∈ s :=
@@ -139,71 +183,79 @@ namespace Subfield
 
 variable (s t : Subfield K)
 
-/-- A subfield contains the ring's 1. -/
-theorem one_mem : (1 : K) ∈ s :=
-  s.one_mem'
+section DerivedFromSubfieldClass
 
-/-- A subfield contains the ring's 0. -/
-theorem zero_mem : (0 : K) ∈ s :=
-  s.zero_mem'
+/-- A subfield contains the field's 1. -/
+protected theorem one_mem : (1 : K) ∈ s :=
+  one_mem s
+
+/-- A subfield contains the field's 0. -/
+protected theorem zero_mem : (0 : K) ∈ s :=
+  zero_mem s
 
 /-- A subfield is closed under multiplication. -/
-theorem mul_mem : ∀ {x y : K}, x ∈ s → y ∈ s → x * y ∈ s :=
-  s.mul_mem'
+protected theorem mul_mem {x y : K} : x ∈ s → y ∈ s → x * y ∈ s :=
+  mul_mem
 
 /-- A subfield is closed under addition. -/
-theorem add_mem : ∀ {x y : K}, x ∈ s → y ∈ s → x + y ∈ s :=
-  s.add_mem'
+protected theorem add_mem {x y : K} : x ∈ s → y ∈ s → x + y ∈ s :=
+  add_mem
 
 /-- A subfield is closed under negation. -/
-theorem neg_mem : ∀ {x : K}, x ∈ s → -x ∈ s :=
-  s.neg_mem'
+protected theorem neg_mem {x : K} : x ∈ s → -x ∈ s :=
+  neg_mem
 
 /-- A subfield is closed under subtraction. -/
-theorem sub_mem {x y : K} : x ∈ s → y ∈ s → x - y ∈ s :=
-  s.toSubring.sub_mem
+protected theorem sub_mem {x y : K} : x ∈ s → y ∈ s → x - y ∈ s :=
+  sub_mem
 
 /-- A subfield is closed under inverses. -/
-theorem inv_mem : ∀ {x : K}, x ∈ s → x⁻¹ ∈ s :=
-  s.inv_mem'
+protected theorem inv_mem {x : K} : x ∈ s → x⁻¹ ∈ s :=
+  inv_mem
 
 /-- A subfield is closed under division. -/
-theorem div_mem {x y : K} (hx : x ∈ s) (hy : y ∈ s) : x / y ∈ s := by
-  rw [div_eq_mul_inv]
-  exact s.mul_mem hx (s.inv_mem hy)
+protected theorem div_mem {x y : K} : x ∈ s → y ∈ s → x / y ∈ s :=
+  div_mem
 
 /-- Product of a list of elements in a subfield is in the subfield. -/
-theorem list_prod_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Prod ∈ s :=
-  s.toSubmonoid.list_prod_mem
+protected theorem list_prod_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Prod ∈ s :=
+  list_prod_mem
 
 /-- Sum of a list of elements in a subfield is in the subfield. -/
-theorem list_sum_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Sum ∈ s :=
-  s.toAddSubgroup.list_sum_mem
+protected theorem list_sum_mem {l : List K} : (∀, ∀ x ∈ l, ∀, x ∈ s) → l.Sum ∈ s :=
+  list_sum_mem
 
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
-theorem multiset_prod_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Prod ∈ s :=
-  s.toSubmonoid.multiset_prod_mem m
+protected theorem multiset_prod_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Prod ∈ s :=
+  multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
-theorem multiset_sum_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Sum ∈ s :=
-  s.toAddSubgroup.multiset_sum_mem m
+protected theorem multiset_sum_mem (m : Multiset K) : (∀, ∀ a ∈ m, ∀, a ∈ s) → m.Sum ∈ s :=
+  multiset_sum_mem m
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∏ i in t, f i) ∈ s :=
-  s.toSubmonoid.prod_mem h
+protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∏ i in t, f i) ∈ s :=
+  prod_mem h
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∑ i in t, f i) ∈ s :=
-  s.toAddSubgroup.sum_mem h
+protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀, ∀ c ∈ t, ∀, f c ∈ s) : (∑ i in t, f i) ∈ s :=
+  sum_mem h
 
-theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
-  s.toSubmonoid.pow_mem hx n
+protected theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
+  pow_mem hx n
 
-theorem zsmul_mem {x : K} (hx : x ∈ s) (n : ℤ) : n • x ∈ s :=
-  s.toAddSubgroup.zsmul_mem hx n
+protected theorem zsmul_mem {x : K} (hx : x ∈ s) (n : ℤ) : n • x ∈ s :=
+  zsmul_mem hx n
 
-theorem coe_int_mem (n : ℤ) : (n : K) ∈ s := by
-  simp only [← zsmul_one, zsmul_mem, one_mem]
+protected theorem coe_int_mem (n : ℤ) : (n : K) ∈ s :=
+  coe_int_mem s n
+
+theorem zpow_mem {x : K} (hx : x ∈ s) (n : ℤ) : x ^ n ∈ s := by
+  cases n
+  · simpa using s.pow_mem hx n
+    
+  · simpa [pow_succₓ] using s.inv_mem (s.mul_mem hx (s.pow_mem hx n))
+    
 
 instance : Ringₓ s :=
   s.toSubring.toRing
@@ -214,15 +266,18 @@ instance : Div s :=
 instance : Inv s :=
   ⟨fun x => ⟨x⁻¹, s.inv_mem x.2⟩⟩
 
+instance : Pow s ℤ :=
+  ⟨fun x z => ⟨x ^ z, s.zpow_mem x.2 z⟩⟩
+
 /-- A subfield inherits a field structure -/
 instance toField : Field s :=
   Subtype.coe_injective.Field coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ => rfl) fun _ _ => rfl
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 instance toLinearOrderedField {K} [LinearOrderedField K] (s : Subfield K) : LinearOrderedField s :=
   Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
-    (fun _ => rfl) fun _ _ => rfl
+    (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 @[simp, norm_cast]
 theorem coe_add (x y : s) : (↑(x + y) : K) = ↑x + ↑y :=
@@ -255,6 +310,8 @@ theorem coe_zero : ((0 : s) : K) = 0 :=
 @[simp, norm_cast]
 theorem coe_one : ((1 : s) : K) = 1 :=
   rfl
+
+end DerivedFromSubfieldClass
 
 /-- The embedding from a subfield of the field `K` to `K`. -/
 def subtype (s : Subfield K) : s →+* K :=
@@ -490,7 +547,7 @@ def closure (s : Set K) : Subfield K where
   mul_mem' := fun x y x_mem y_mem => by
     obtain ⟨nx, hnx, dx, hdx, rfl⟩ := id x_mem
     obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem
-    exact ⟨nx * ny, Subring.mul_mem _ hnx hny, dx * dy, Subring.mul_mem _ hdx hdy, (div_mul_div _ _ _ _).symm⟩
+    exact ⟨nx * ny, Subring.mul_mem _ hnx hny, dx * dy, Subring.mul_mem _ hdx hdy, (div_mul_div_comm₀ _ _ _ _).symm⟩
 
 theorem mem_closure_iff {s : Set K} {x} : x ∈ closure s ↔ ∃ y ∈ Subring.closure s, ∃ z ∈ Subring.closure s, y / z = x :=
   Iff.rfl
@@ -529,7 +586,7 @@ elements of the closure of `s`. -/
 theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀, ∀ x ∈ s, ∀, p x) (H1 : p 1)
     (Hadd : ∀ x y, p x → p y → p (x + y)) (Hneg : ∀ x, p x → p (-x)) (Hinv : ∀ x, p x → p x⁻¹)
     (Hmul : ∀ x y, p x → p y → p (x * y)) : p x :=
-  (@closure_le _ _ _ ⟨p, H1, Hmul, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hadd, Hneg, Hinv⟩).2 Hs h
+  (@closure_le _ _ _ ⟨p, Hmul, H1, Hadd, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hneg, Hinv⟩).2 Hs h
 
 variable (K)
 

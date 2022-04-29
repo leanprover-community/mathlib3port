@@ -32,7 +32,7 @@ open Set Filter Classical
 
 noncomputable section
 
-open_locale uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
+open uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
 universe u v w
 
@@ -79,7 +79,7 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
                   _ = ε := by
                     rw [Ennreal.add_halves]
                   
-              simpa [CompRel],
+              simpa [CompRel] ,
       symm :=
         tendsto_infi.2 fun ε =>
           tendsto_infi.2 fun h =>
@@ -404,8 +404,8 @@ theorem Subtype.edist_eq {p : α → Prop} (x y : Subtype p) : edist x y = edist
 
 namespace MulOpposite
 
-/-- Pseudoemetric space instance on multiplicative opposites of pseudoemetric spaces -/
-@[to_additive]
+/-- Pseudoemetric space instance on the multiplicative opposite of a pseudoemetric space. -/
+@[to_additive "Pseudoemetric space instance on the additive opposite of a pseudoemetric space."]
 instance {α : Type _} [PseudoEmetricSpace α] : PseudoEmetricSpace αᵐᵒᵖ :=
   PseudoEmetricSpace.induced unop ‹_›
 
@@ -969,8 +969,8 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
 instance {α : Type _} {p : α → Prop} [EmetricSpace α] : EmetricSpace (Subtype p) :=
   EmetricSpace.induced coe Subtype.coe_injective ‹_›
 
-/-- Emetric space instance on multiplicative opposites of emetric spaces -/
-@[to_additive]
+/-- Emetric space instance on the multiplicative opposite of an emetric space. -/
+@[to_additive "Emetric space instance on the additive opposite of an emetric space."]
 instance {α : Type _} [EmetricSpace α] : EmetricSpace αᵐᵒᵖ :=
   EmetricSpace.induced MulOpposite.unop MulOpposite.unop_injective ‹_›
 

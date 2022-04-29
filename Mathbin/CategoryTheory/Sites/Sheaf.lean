@@ -282,7 +282,7 @@ def sheafToPresheaf : Sheaf J A ⥤ Cᵒᵖ ⥤ A where
   map_comp' := fun X Y Z f g => rfl
 
 instance : Full (sheafToPresheaf J A) where
-  Preimage := fun X Y f => ⟨f⟩
+  preimage := fun X Y f => ⟨f⟩
 
 instance : Faithful (sheafToPresheaf J A) :=
   {  }
@@ -433,7 +433,7 @@ theorem is_sheaf_iff_multiequalizer [∀ X : C S : J.cover X, HasMultiequalizer 
     let e : P.obj (op X) ≅ multiequalizer (S.index P) := h.cone_point_unique_up_to_iso (limit.is_limit _)
     exact (inferInstance : is_iso e.hom)
     
-  · intros h
+  · intro h
     refine' ⟨is_limit.of_iso_limit (limit.is_limit _) (cones.ext _ _)⟩
     · apply (@as_iso _ _ _ _ _ h).symm
       
@@ -524,7 +524,7 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
     
   · refine' fork.ext (iso.refl _) _
     dsimp [equalizer.fork_map, fork_map]
-    simp
+    simp [fork.ι]
     
 
 /-- The equalizer definition of a sheaf given by `is_sheaf'` is equivalent to `is_sheaf`. -/
@@ -568,7 +568,7 @@ theorem is_sheaf_iff_is_sheaf_forget (s : A ⥤ Type max v₁ u₁) [HasLimits A
   rw [is_sheaf_iff_is_sheaf', is_sheaf_iff_is_sheaf']
   apply forall_congrₓ fun U => _
   apply ball_congr fun R hR => _
-  let this' : reflects_limits s := reflects_limits_of_reflects_isomorphisms
+  let this : reflects_limits s := reflects_limits_of_reflects_isomorphisms
   have : is_limit (s.map_cone (fork.of_ι _ (w R P))) ≃ is_limit (fork.of_ι _ (w R (P ⋙ s))) :=
     is_sheaf_for_is_sheaf_for' P s U R
   rw [← Equivₓ.nonempty_congr this]

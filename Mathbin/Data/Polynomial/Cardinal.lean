@@ -16,7 +16,7 @@ of `#R` and `ω`.
 
 universe u
 
-open_locale Cardinal Polynomial
+open Cardinal Polynomial
 
 open Cardinal
 
@@ -27,8 +27,7 @@ theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# 
     # R[X] = # (MvPolynomial PUnit.{u + 1} R) := Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
     _ ≤ _ := MvPolynomial.cardinal_mk_le_max
     _ ≤ _ := by
-      have : # PUnit.{u + 1} ≤ ω := le_of_ltₓ (lt_omega_iff_fintype.2 ⟨inferInstance⟩)
-      rw [max_assocₓ, max_eq_rightₓ this]
+      rw [max_assocₓ, max_eq_rightₓ (lt_omega_of_fintype PUnit).le]
     
 
 end Polynomial

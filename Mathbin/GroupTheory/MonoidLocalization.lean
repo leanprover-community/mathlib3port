@@ -81,6 +81,8 @@ add_decl_doc localization_map.to_add_monoid_hom
 
 end AddSubmonoid
 
+section CommMonoidₓ
+
 variable {M : Type _} [CommMonoidₓ M] (S : Submonoid M) (N : Type _) [CommMonoidₓ N] {P : Type _} [CommMonoidₓ P]
 
 namespace Submonoid
@@ -263,6 +265,10 @@ theorem mk_mul (a c : M) (b d : S) : mk a b * mk c d = mk (a * c) (b * d) :=
 
 @[to_additive]
 theorem mk_one : mk 1 (1 : S) = 1 :=
+  rfl
+
+@[to_additive]
+theorem mk_pow (n : ℕ) (a : M) (b : S) : mk a b ^ n = mk (a ^ n) (b ^ n) :=
   rfl
 
 @[simp, to_additive]
@@ -814,7 +820,9 @@ theorem lift_id x : f.lift f.map_units x = x :=
 /-- Given two localization maps `f : M →* N, k : M →* P` for a submonoid `S ⊆ M`,
 the hom from `P` to `N` induced by `f` is left inverse to the hom from `N` to `P`
 induced by `k`. -/
-@[simp, to_additive]
+@[simp,
+  to_additive
+      "Given two localization maps `f : M →+ N, k : M →+ P` for a submonoid `S ⊆ M`,\nthe hom from `P` to `N` induced by `f` is left inverse to the hom from `N` to `P`\ninduced by `k`."]
 theorem lift_left_inverse {k : LocalizationMap S P} (z : N) : k.lift f.map_units (f.lift k.map_units z) = z := by
   rw [lift_spec]
   cases' f.surj z with x hx
@@ -1026,7 +1034,7 @@ noncomputable def AwayMap.lift (hg : IsAddUnit (g x)) : B →+ C :=
       rw [← hn]
       dsimp
       rw [g.map_nsmul]
-      exact IsAddUnit.map (nsmulAddMonoidHom n) hg
+      exact IsAddUnit.map (nsmulAddMonoidHom n : C →+ C) hg
 
 @[simp]
 theorem AwayMap.lift_eq (hg : IsAddUnit (g x)) (a : A) : F.lift x hg (F.toMap a) = g a :=
@@ -1386,4 +1394,98 @@ noncomputable def Away.mulEquivOfQuotient (f : Submonoid.LocalizationMap.AwayMap
 end Away
 
 end Localization
+
+end CommMonoidₓ
+
+section CommMonoidWithZero
+
+variable {M : Type _} [CommMonoidWithZero M] (S : Submonoid M) (N : Type _) [CommMonoidWithZero N] {P : Type _}
+  [CommMonoidWithZero P]
+
+namespace Submonoid
+
+/-- The type of homomorphisms between monoids with zero satisfying the characteristic predicate:
+if `f : M →*₀ N` satisfies this predicate, then `N` is isomorphic to the localization of `M` at
+`S`. -/
+@[nolint has_inhabited_instance]
+structure LocalizationWithZeroMap extends LocalizationMap S N where
+  map_zero' : to_fun 0 = 0
+
+attribute [nolint doc_blame] localization_with_zero_map.to_localization_map
+
+variable {S N}
+
+/-- The monoid with zero hom underlying a `localization_map`. -/
+def LocalizationWithZeroMap.toMonoidWithZeroHom (f : LocalizationWithZeroMap S N) : M →*₀ N :=
+  { f with }
+
+end Submonoid
+
+namespace Localization
+
+attribute [local semireducible] Localization
+
+/-- The zero element in a localization is defined as `(0, 1)`.
+
+Should not be confused with `add_localization.zero` which is `(0, 0)`. -/
+protected irreducible_def zero : Localization S :=
+  mk 0 1
+
+instance : Zero (Localization S) :=
+  ⟨Localization.zero S⟩
+
+attribute [local semireducible] Localization.zero Localization.mul
+
+instance : CommMonoidWithZero (Localization S) := by
+  refine_struct { Localization.commMonoid S with zero := 0 } <;>
+    exact fun x =>
+      Localization.induction_on x <| by
+        intros
+        refine' mk_eq_mk_iff.mpr (r_of_eq _)
+        simp only [zero_mul, mul_zero]
+
+variable {S}
+
+theorem mk_zero (x : S) : mk 0 (x : S) = 0 :=
+  calc
+    mk 0 x = mk 0 1 :=
+      mk_eq_mk_iff.mpr
+        (r_of_eq
+          (by
+            simp ))
+    _ = 0 := rfl
+    
+
+theorem lift_on_zero {p : Type _} (f : ∀ x : M y : S, p) H : liftOn 0 f H = f 0 1 := by
+  rw [← mk_zero 1, lift_on_mk]
+
+end Localization
+
+variable {S N}
+
+namespace Submonoid
+
+@[simp]
+theorem LocalizationMap.sec_zero_fst {f : LocalizationMap S N} : f.toMap (f.sec 0).fst = 0 := by
+  rw [localization_map.sec_spec', mul_zero]
+
+namespace LocalizationWithZeroMap
+
+/-- Given a localization map `f : M →*₀ N` for a submonoid `S ⊆ M` and a map of
+`comm_monoid_with_zero`s `g : M →*₀ P` such that `g y` is invertible for all `y : S`, the
+homomorphism induced from `N` to `P` sending `z : N` to `g x * (g y)⁻¹`, where `(x, y) : M × S`
+are such that `z = f x * (f y)⁻¹`. -/
+noncomputable def lift (f : LocalizationWithZeroMap S N) (g : M →*₀ P) (hg : ∀ y : S, IsUnit (g y)) : N →*₀ P :=
+  { @LocalizationMap.lift _ _ _ _ _ _ _ f.toLocalizationMap g.toMonoidHom hg with
+    map_zero' := by
+      rw [MonoidHom.to_fun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ← g.to_monoid_hom_coe]
+      refine' f.to_localization_map.eq_of_eq hg _
+      rw [localization_map.sec_zero_fst]
+      exact f.to_monoid_with_zero_hom.map_zero.symm }
+
+end LocalizationWithZeroMap
+
+end Submonoid
+
+end CommMonoidWithZero
 

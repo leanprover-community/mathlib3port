@@ -74,6 +74,18 @@ instance bicategory.strict : Bicategory.Strict Cat.{v, u} where
 instance category : LargeCategory.{max v u} Cat.{v, u} :=
   StrictBicategory.category Cat.{v, u}
 
+@[simp]
+theorem id_map {C : Cat} {X Y : C} (f : X ⟶ Y) : (𝟙 C : C ⥤ C).map f = f :=
+  Functor.id_map f
+
+@[simp]
+theorem comp_obj {C D E : Cat} (F : C ⟶ D) (G : D ⟶ E) (X : C) : (F ≫ G).obj X = G.obj (F.obj X) :=
+  Functor.comp_obj F G X
+
+@[simp]
+theorem comp_map {C D E : Cat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X ⟶ Y) : (F ≫ G).map f = G.map (F.map f) :=
+  Functor.comp_map F G f
+
 /-- Functor that gets the set of objects of a category. It is not
 called `forget`, because it is not a faithful functor. -/
 def objects : Cat.{v, u} ⥤ Type u where

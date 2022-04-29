@@ -230,23 +230,19 @@ variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrd
 
 theorem map_add_left_Icc (a b c : α) : (icc a b).map ((· + ·) c) = icc (c + a) (c + b) := by
   classical
-  rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).dedup]
+  rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
 theorem map_add_left_Ico (a b c : α) : (ico a b).map ((· + ·) c) = ico (c + a) (c + b) := by
   classical
-  rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).dedup]
+  rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
 theorem map_add_left_Ioc (a b c : α) : (ioc a b).map ((· + ·) c) = ioc (c + a) (c + b) := by
   classical
-  rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).dedup]
+  rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
 theorem map_add_left_Ioo (a b c : α) : (ioo a b).map ((· + ·) c) = ioo (c + a) (c + b) := by
   classical
-  rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val,
-    (Multiset.nodup_map (add_right_injective c) <| Finset.nodup _).dedup]
+  rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val, ((Finset.nodup _).map <| add_right_injective c).dedup]
 
 theorem map_add_right_Icc (a b c : α) : ((icc a b).map fun x => x + c) = icc (a + c) (b + c) := by
   simp_rw [add_commₓ _ c]

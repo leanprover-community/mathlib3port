@@ -13,7 +13,7 @@ import Mathbin.Topology.ExtendFrom
 
 open Filter Set TopologicalSpace
 
-open_locale TopologicalSpace Classical
+open TopologicalSpace Classical
 
 universe u v
 
@@ -27,7 +27,7 @@ theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ 
   · rw [closure_Ioo hab]
     
   · intro x x_in
-    rcases mem_Ioo_or_eq_endpoints_of_mem_Icc x_in with (rfl | rfl | h)
+    rcases eq_endpoints_or_mem_Ioo_of_mem_Icc x_in with (rfl | rfl | h)
     · exact ⟨la, ha.mono_left <| nhds_within_mono _ Ioo_subset_Ioi_self⟩
       
     · exact ⟨lb, hb.mono_left <| nhds_within_mono _ Ioo_subset_Iio_self⟩
@@ -64,7 +64,7 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ 
     exact Ico_subset_Icc_self
     
   · intro x x_in
-    rcases mem_Ioo_or_eq_left_of_mem_Ico x_in with (rfl | h)
+    rcases eq_left_or_mem_Ioo_of_mem_Ico x_in with (rfl | h)
     · use la
       simpa [hab]
       

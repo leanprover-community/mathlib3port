@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.SetTheory.Cardinal
+import Mathbin.SetTheory.Cardinal.Basic
 
 /-!
 # Any small complete category is a preorder
@@ -29,7 +29,7 @@ namespace CategoryTheory
 
 open Category Limits
 
-open_locale Cardinal
+open Cardinal
 
 universe u
 

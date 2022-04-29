@@ -11,6 +11,8 @@ import Mathbin.Tactic.Linarith.Default
 -/
 
 
+noncomputable section
+
 open CategoryTheory
 
 open CategoryTheory.Limits
@@ -117,14 +119,12 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 
     truncate.obj (augment C f w) ≅ C where
   Hom := { f := fun i => 𝟙 _ }
   inv :=
-    { f := fun i => by
-        cases i <;> exact 𝟙 _,
+    { f := fun i => 𝟙 _,
       comm' := fun i j => by
-        cases i <;>
-          cases j <;>
-            · dsimp
-              simp
-               }
+        cases j <;>
+          · dsimp
+            simp
+             }
   hom_inv_id' := by
     ext i
     cases i <;>
@@ -145,8 +145,8 @@ theorem truncate_augment_hom_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X
 
 @[simp]
 theorem truncate_augment_inv_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) (i : ℕ) :
-    (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) := by
-  cases i <;> rfl
+    (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) :=
+  rfl
 
 @[simp]
 theorem chain_complex_d_succ_succ_zero (C : ChainComplex V ℕ) (i : ℕ) : C.d (i + 2) 0 = 0 := by
@@ -303,10 +303,7 @@ theorem augment_d_zero_one (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) 
 
 @[simp]
 theorem augment_d_succ_succ (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) (i j : ℕ) :
-    (augment C f w).d (i + 1) (j + 1) = C.d i j := by
-  dsimp [augment]
-  rcases i with (_ | i)
-  rfl
+    (augment C f w).d (i + 1) (j + 1) = C.d i j :=
   rfl
 
 /-- Truncating an augmented cochain complex is isomorphic (with components the identity)
@@ -316,14 +313,12 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f 
     truncate.obj (augment C f w) ≅ C where
   Hom := { f := fun i => 𝟙 _ }
   inv :=
-    { f := fun i => by
-        cases i <;> exact 𝟙 _,
+    { f := fun i => 𝟙 _,
       comm' := fun i j => by
-        cases i <;>
-          cases j <;>
-            · dsimp
-              simp
-               }
+        cases j <;>
+          · dsimp
+            simp
+             }
   hom_inv_id' := by
     ext i
     cases i <;>
@@ -344,8 +339,8 @@ theorem truncate_augment_hom_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x
 
 @[simp]
 theorem truncate_augment_inv_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0) (i : ℕ) :
-    (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) := by
-  cases i <;> rfl
+    (truncateAugment C f w).inv.f i = 𝟙 ((truncate.obj (augment C f w)).x i) :=
+  rfl
 
 @[simp]
 theorem cochain_complex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C.d 0 (i + 2) = 0 := by

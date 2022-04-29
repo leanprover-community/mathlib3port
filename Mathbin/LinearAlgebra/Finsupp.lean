@@ -5,6 +5,7 @@ Authors: Johannes Hölzl
 -/
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.LinearAlgebra.Pi
+import Mathbin.LinearAlgebra.Span
 
 /-!
 # Properties of the module `α →₀ M`
@@ -55,7 +56,7 @@ noncomputable section
 
 open Set LinearMap Submodule
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 namespace Finsupp
 
@@ -131,7 +132,7 @@ theorem infi_ker_lapply_le_bot : (⨅ a, ker (lapply a : (α →₀ M) →ₗ[R]
 theorem supr_lsingle_range : (⨆ a, (lsingle a : M →ₗ[R] α →₀ M).range) = ⊤ := by
   refine' eq_top_iff.2 <| SetLike.le_def.2 fun f _ => _
   rw [← sum_single f]
-  exact sum_mem _ fun a ha => Submodule.mem_supr_of_mem a ⟨_, rfl⟩
+  exact sum_mem fun a ha => Submodule.mem_supr_of_mem a ⟨_, rfl⟩
 
 theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
     Disjoint (⨆ a ∈ s, (lsingle a : M →ₗ[R] α →₀ M).range) (⨆ a ∈ t, (lsingle a).range) := by
@@ -156,13 +157,13 @@ variable (M R)
 /-- `finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
 def supported (s : Set α) : Submodule R (α →₀ M) := by
   refine' ⟨{ p | ↑p.Support ⊆ s }, _, _, _⟩
-  · simp only [subset_def, Finset.mem_coe, Set.mem_set_of_eq, mem_support_iff, zero_apply]
-    intro h ha
-    exact (ha rfl).elim
-    
   · intro p q hp hq
     refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
     rw [Finset.coe_union]
+    
+  · simp only [subset_def, Finset.mem_coe, Set.mem_set_of_eq, mem_support_iff, zero_apply]
+    intro h ha
+    exact (ha rfl).elim
     
   · intro a p hp
     refine' subset.trans (Finset.coe_subset.2 support_smul) hp
@@ -189,7 +190,7 @@ theorem supported_eq_span_single (s : Set α) : supported R R s = span R ((fun i
     exact single_mem_supported R 1 hp
     
   · rw [← l.sum_single]
-    refine' sum_mem _ fun i il => _
+    refine' sum_mem fun i il => _
     convert @smul_mem R (α →₀ R) _ _ _ _ (single i 1) (l i) _
     · simp
       
@@ -247,7 +248,7 @@ theorem supported_Union {δ : Type _} (s : δ → Set α) : supported M R (⋃ i
   apply Finsupp.induction l
   · exact zero_mem _
     
-  refine' fun x a l hl a0 => add_mem _ _
+  refine' fun x a l hl a0 => add_mem _
   by_cases' ∃ i, x ∈ s i <;> simp [h]
   · cases' h with i hi
     exact le_supr (fun i => supported M R (s i)) i (single_mem_supported R _ hi)
@@ -436,7 +437,7 @@ variable (α) {α' : Type _} (M) {M' : Type _} (R) [AddCommMonoidₓ M'] [Module
 /-- Interprets (l : α →₀ R) as linear combination of the elements in the family (v : α → M) and
     evaluates this linear combination. -/
 protected def total : (α →₀ R) →ₗ[R] M :=
-  Finsupp.lsum ℕ fun i => LinearMap.id.smulRight (v i)
+  Finsupp.lsum ℕ fun i => LinearMap.id.smul_right (v i)
 
 variable {α M v}
 
@@ -482,9 +483,7 @@ theorem range_total : (Finsupp.total α M R v).range = span R (range v) := by
     rcases hx with ⟨l, hl⟩
     rw [← hl]
     rw [Finsupp.total_apply]
-    unfold Finsupp.sum
-    apply sum_mem (span R (range v))
-    exact fun i hi => Submodule.smul_mem _ _ (subset_span (mem_range_self i))
+    exact sum_mem fun i hi => Submodule.smul_mem _ _ (subset_span (mem_range_self i))
     
   · apply span_le.2
     intro x hx
@@ -543,7 +542,7 @@ theorem span_image_eq_map_total (s : Set α) :
         
       · simp [(Finsupp.mem_supported' R _).1 hz _ h]
         
-    refine' sum_mem _ _
+    refine' sum_mem _
     simp [this]
     
 
@@ -845,9 +844,9 @@ theorem Span.finsupp_total_repr {w : Set M} (x : span R w) : Finsupp.total w M R
 
 end
 
-theorem Submodule.finsupp_sum_mem {ι β : Type _} [Zero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)
+protected theorem Submodule.finsupp_sum_mem {ι β : Type _} [Zero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)
     (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.Sum g ∈ S :=
-  S.toAddSubmonoid.finsupp_sum_mem f g h
+  AddSubmonoidClass.finsupp_sum_mem S f g h
 
 theorem LinearMap.map_finsupp_total (f : M →ₗ[R] N) {ι : Type _} {g : ι → M} (l : ι →₀ R) :
     f (Finsupp.total ι M R g l) = Finsupp.total ι N R (f ∘ g) l := by
@@ -882,7 +881,7 @@ theorem Submodule.exists_finset_of_mem_supr {ι : Sort _} (p : ι → Submodule 
 /-- `submodule.exists_finset_of_mem_supr` as an `iff` -/
 theorem Submodule.mem_supr_iff_exists_finset {ι : Sort _} {p : ι → Submodule R M} {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∃ s : Finset ι, m ∈ ⨆ i ∈ s, p i :=
-  ⟨Submodule.exists_finset_of_mem_supr p, fun ⟨_, hs⟩ => supr_le_supr (fun i => (supr_const_le : _ ≤ p i)) hs⟩
+  ⟨Submodule.exists_finset_of_mem_supr p, fun ⟨_, hs⟩ => supr_mono (fun i => (supr_const_le : _ ≤ p i)) hs⟩
 
 theorem mem_span_finset {s : Finset M} {x : M} : x ∈ span R (↑s : Set M) ↔ ∃ f : M → R, (∑ i in s, f i • i) = x :=
   ⟨fun hx =>
@@ -891,7 +890,7 @@ theorem mem_span_finset {s : Finset M} {x : M} : x ∈ span R (↑s : Set M) ↔
         (show x ∈ span R (id '' (↑s : Set M)) by
           rwa [Set.image_id])
     ⟨v, hvx ▸ (Finsupp.total_apply_of_mem_supported _ hvs).symm⟩,
-    fun ⟨f, hf⟩ => hf ▸ sum_mem _ fun i hi => smul_mem _ _ <| subset_span hi⟩
+    fun ⟨f, hf⟩ => hf ▸ sum_mem fun i hi => smul_mem _ _ <| subset_span hi⟩
 
 /-- An element `m ∈ M` is contained in the `R`-submodule spanned by a set `s ⊆ M`, if and only if
 `m` can be written as a finite `R`-linear combination of elements of `s`.
@@ -909,7 +908,7 @@ def Module.subsingletonEquiv (R M ι : Type _) [Semiringₓ R] [Subsingleton R] 
   toFun := fun m => 0
   invFun := fun f => 0
   left_inv := fun m => by
-    let this' := Module.subsingleton R M
+    let this := Module.subsingleton R M
     simp only [eq_iff_true_of_subsingleton]
   right_inv := fun f => by
     simp only [eq_iff_true_of_subsingleton]

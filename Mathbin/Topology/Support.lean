@@ -29,7 +29,7 @@ Furthermore, we say that `f` has compact support if the topological support of `
 
 open Function Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {X α α' β γ δ M E R : Type _}
 
@@ -73,7 +73,7 @@ variable [One β] [One γ] [One δ]
 variable {g : β → γ} {f : α → β} {f₂ : α → γ} {m : β → γ → δ} {x : α}
 
 @[to_additive]
-theorem not_mem_closure_mul_support_iff_eventually_eq : (x ∉ MulTsupport f) ↔ f =ᶠ[𝓝 x] 1 := by
+theorem not_mem_closure_mul_support_iff_eventually_eq : x ∉ MulTsupport f ↔ f =ᶠ[𝓝 x] 1 := by
   simp_rw [MulTsupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ← disjoint_iff_inter_eq_empty,
     disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
 
@@ -218,4 +218,48 @@ theorem HasCompactSupport.mul_left (hf : HasCompactSupport f') : HasCompactSuppo
       simp_rw [Pi.mul_apply, hx, Pi.zero_apply, mul_zero]
 
 end MulZeroClassₓ
+
+namespace LocallyFinite
+
+variable {ι : Type _} {U : ι → Set X} [TopologicalSpace X] [One R]
+
+/-- If a family of functions `f` has locally-finite multiplicative support, subordinate to a family
+of open sets, then for any point we can find a neighbourhood on which only finitely-many members of
+`f` are not equal to 1. -/
+@[to_additive
+      " If a family of functions `f` has locally-finite support, subordinate to a family of open sets,\nthen for any point we can find a neighbourhood on which only finitely-many members of `f` are\nnon-zero. "]
+theorem exists_finset_nhd_mul_support_subset {f : ι → X → R} (hlf : LocallyFinite fun i => MulSupport (f i))
+    (hso : ∀ i, MulTsupport (f i) ⊆ U i) (ho : ∀ i, IsOpen (U i)) (x : X) :
+    ∃ (is : Finset ι)(n : Set X)(hn₁ : n ∈ 𝓝 x)(hn₂ : n ⊆ ⋂ i ∈ is, U i),
+      ∀, ∀ z ∈ n, ∀, (MulSupport fun i => f i z) ⊆ is :=
+  by
+  obtain ⟨n, hn, hnf⟩ := hlf x
+  classical
+  let is := hnf.to_finset.filter fun i => x ∈ U i
+  let js := hnf.to_finset.filter fun j => x ∉ U j
+  refine'
+    ⟨is, (n ∩ ⋂ j ∈ js, MulTsupport (f j)ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn _) _, inter_subset_right _ _,
+      fun z hz => _⟩
+  · exact
+      (bInter_finset_mem js).mpr fun j hj =>
+        IsClosed.compl_mem_nhds (is_closed_mul_tsupport _) (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
+    
+  · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
+    
+  · have hzn : z ∈ n := by
+      rw [inter_assoc] at hz
+      exact mem_of_mem_inter_left hz
+    replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
+    simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
+    suffices (mul_support fun i => f i z) ⊆ hnf.to_finset by
+      refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _
+      specialize hz i ⟨z, ⟨hi, hzn⟩⟩
+      contrapose hz
+      simp [hz, subset_mul_tsupport (f i) hi]
+    intro i hi
+    simp only [finite.coe_to_finset, mem_set_of_eq]
+    exact ⟨z, ⟨hi, hzn⟩⟩
+    
+
+end LocallyFinite
 

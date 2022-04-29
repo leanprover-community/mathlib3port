@@ -5,6 +5,7 @@ Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Algebra.Group.Pi
 import Mathbin.Algebra.GroupPower.Lemmas
+import Mathbin.Logic.Function.Iterate
 
 /-!
 # The group of permutations (self-equivalences) of a type `α`
@@ -67,9 +68,15 @@ theorem eq_inv_iff_eq {f : Perm α} {x y : α} : x = f⁻¹ y ↔ f x = y :=
 theorem inv_eq_iff_eq {f : Perm α} {x y : α} : f⁻¹ x = y ↔ x = f y :=
   f.symm_apply_eq
 
-theorem zpow_apply_comm {α : Type _} (σ : Equivₓ.Perm α) (m n : ℤ) {x : α} :
-    (σ ^ m) ((σ ^ n) x) = (σ ^ n) ((σ ^ m) x) := by
+theorem zpow_apply_comm {α : Type _} (σ : Perm α) (m n : ℤ) {x : α} : (σ ^ m) ((σ ^ n) x) = (σ ^ n) ((σ ^ m) x) := by
   rw [← Equivₓ.Perm.mul_apply, ← Equivₓ.Perm.mul_apply, zpow_mul_comm]
+
+@[simp]
+theorem iterate_eq_pow (f : Perm α) : ∀ n, f^[n] = ⇑(f ^ n)
+  | 0 => rfl
+  | n + 1 => by
+    rw [Function.iterate_succ, pow_addₓ, iterate_eq_pow]
+    rfl
 
 /-! Lemmas about mixing `perm` with `equiv`. Because we have multiple ways to express
 `equiv.refl`, `equiv.symm`, and `equiv.trans`, we want simp lemmas for every combination.
@@ -239,12 +246,12 @@ def extendDomainHom : Perm α →* Perm β where
   map_mul' := fun e e' => (extend_domain_mul f e e').symm
 
 theorem extend_domain_hom_injective : Function.Injective (extendDomainHom f) :=
-  (extendDomainHom f).injective_iff.mpr fun e he =>
+  (injective_iff_map_eq_one (extendDomainHom f)).mpr fun e he =>
     ext fun x => f.Injective (Subtype.ext ((extend_domain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
 
 @[simp]
 theorem extend_domain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendDomain f = 1 ↔ e = 1 :=
-  (extendDomainHom f).injective_iff'.mp (extend_domain_hom_injective f) e
+  (injective_iff_map_eq_one' (extendDomainHom f)).mp (extend_domain_hom_injective f) e
 
 end ExtendDomain
 
@@ -359,7 +366,7 @@ theorem subtype_equiv_subtype_perm_apply_of_not_mem {α : Type _} {p : α → Pr
 
 variable (e : Perm α) (ι : α ↪ β)
 
-open_locale Classical
+open Classical
 
 /-- Noncomputable version of `equiv.perm.via_fintype_embedding` that does not assume `fintype` -/
 noncomputable def viaEmbedding : Perm β :=

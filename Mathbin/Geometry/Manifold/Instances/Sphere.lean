@@ -61,7 +61,7 @@ noncomputable section
 
 open Metric FiniteDimensional
 
-open_locale Manifold
+open Manifold
 
 attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 

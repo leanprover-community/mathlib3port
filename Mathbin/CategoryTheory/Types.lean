@@ -5,7 +5,7 @@ Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 -/
 import Mathbin.CategoryTheory.EpiMono
 import Mathbin.CategoryTheory.Functor.FullyFaithful
-import Mathbin.Data.Equiv.Basic
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # The category `Type`.
@@ -173,7 +173,7 @@ theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) : ulift
   rfl
 
 instance uliftFunctorFull : Full.{u} uliftFunctor where
-  Preimage := fun X Y f x => (f (ULift.up x)).down
+  preimage := fun X Y f x => (f (ULift.up x)).down
 
 instance ulift_functor_faithful : Faithful uliftFunctor where
   map_injective' := fun X Y f g p =>

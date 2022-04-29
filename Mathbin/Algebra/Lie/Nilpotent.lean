@@ -373,7 +373,7 @@ omit hf hg hfg
 
 theorem Equivₓ.lie_module_is_nilpotent_iff (f : L ≃ₗ⁅R⁆ L₂) (g : M ≃ₗ[R] M₂) (hfg : ∀ x m, ⁅f x,g m⁆ = g ⁅x,m⁆) :
     IsNilpotent R L M ↔ IsNilpotent R L₂ M₂ := by
-  constructor <;> intros h
+  constructor <;> intro h
   · have hg : surjective (g : M →ₗ[R] M₂) := g.surjective
     exact f.surjective.lie_module_is_nilpotent hg hfg
     
@@ -385,7 +385,7 @@ theorem Equivₓ.lie_module_is_nilpotent_iff (f : L ≃ₗ⁅R⁆ L₂) (g : M �
 
 @[simp]
 theorem LieModule.is_nilpotent_of_top_iff : IsNilpotent R (⊤ : LieSubalgebra R L) M ↔ IsNilpotent R L M :=
-  Equivₓ.lie_module_is_nilpotent_iff LieSubalgebra.topEquivSelf (1 : M ≃ₗ[R] M) fun x m => rfl
+  Equivₓ.lie_module_is_nilpotent_iff LieSubalgebra.topEquiv (1 : M ≃ₗ[R] M) fun x m => rfl
 
 end Morphisms
 
@@ -513,7 +513,7 @@ theorem Function.Surjective.lie_algebra_is_nilpotent [h₁ : IsNilpotent R L] {f
       simp only [LieIdeal.map_eq_bot_iff, bot_le] }
 
 theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') : IsNilpotent R L ↔ IsNilpotent R L' := by
-  constructor <;> intros h
+  constructor <;> intro h
   · exact e.symm.injective.lie_algebra_is_nilpotent
     
   · exact e.injective.lie_algebra_is_nilpotent
@@ -535,12 +535,12 @@ theorem LieAlgebra.is_nilpotent_range_ad_iff : IsNilpotent R (ad R L).range ↔ 
       LieAlgebra.nilpotent_of_nilpotent_quotient (le_of_eqₓ this)
         ((ad R L).quotKerEquivRange.nilpotent_iff_equiv_nilpotent.mpr h)
     
-  · intros h
+  · intro h
     exact (ad R L).is_nilpotent_range
     
 
 instance [h : LieAlgebra.IsNilpotent R L] : LieAlgebra.IsNilpotent R (⊤ : LieSubalgebra R L) :=
-  LieSubalgebra.topEquivSelf.nilpotent_iff_equiv_nilpotent.mpr h
+  LieSubalgebra.topEquiv.nilpotent_iff_equiv_nilpotent.mpr h
 
 end NilpotentAlgebras
 

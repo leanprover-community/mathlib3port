@@ -23,59 +23,51 @@ The proof is based on the Cauchy integral formula for the derivative of an analy
 
 open TopologicalSpace Metric Set Filter Asymptotics Function MeasureTheory
 
-open_locale TopologicalSpace Filter Nnreal Real
+open TopologicalSpace Filter Nnreal Real
 
 universe u v
 
 variable {E : Type u} [NormedGroup E] [NormedSpace ℂ E] {F : Type v} [NormedGroup F] [NormedSpace ℂ F]
-  [SecondCountableTopology F]
 
 -- mathport name: «expr ̂»
 local postfix:100 "̂" => UniformSpace.Completion
 
 namespace Complex
 
-/-- If `f` is complex differentiable on a closed disc with center `c` and radius `R > 0`, then
-`f' c` can be represented as an integral over the corresponding circle.
+/-- If `f` is complex differentiable on an open disc with center `c` and radius `R > 0` and is
+continuous on its closure, then `f' c` can be represented as an integral over the corresponding
+circle.
 
 TODO: add a version for `w ∈ metric.ball c R`.
 
 TODO: add a version for higher derivatives. -/
-theorem deriv_eq_smul_circle_integral [MeasurableSpace F] [BorelSpace F] [CompleteSpace F] {R : ℝ} {c : ℂ} {f : ℂ → F}
-    (hR : 0 < R) (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R)) :
-    deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z := by
+theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f : ℂ → F} (hR : 0 < R)
+    (hf : DiffContOnCl ℂ f (Ball c R)) : deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z := by
   lift R to ℝ≥0 using hR.le
-  refine' (has_fpower_series_on_ball_of_continuous_on_of_differentiable_on hc hd hR).HasFpowerSeriesAt.deriv.trans _
+  refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
   simp only [cauchy_power_series_apply, one_div, zpow_neg₀, pow_oneₓ, smul_smul, zpow_two, mul_inv₀]
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
-    (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R))
-    (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
-  let this' : MeasurableSpace F := borel F
-  have : BorelSpace F := ⟨rfl⟩
+    (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
   have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun hz : abs (z - c) = R => by
     simpa [norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
-      congr_argₓ norm (deriv_eq_smul_circle_integral hR hc hd)_ ≤ R * (C / (R * R)) :=
+      congr_argₓ norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
       circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this _ = C / R := by
       rw [mul_div_comm, div_self_mul_self', div_eq_mul_inv]
 
-/-- If `f` is continuous on a closed disc of radius `R`, is complex differentiable on its interior,
-and its values on the boundary circle of this disc are bounded from above by `C`, then the norm of
-its derivative at the center is at most `C / R`.
-
-TODO: drop unneeded assumption `[second_countable_topology F]`.  -/
+/-- If `f` is complex differentiable on an open disc of radius `R > 0`, is continuous on its
+closure, and its values on the boundary circle of this disc are bounded from above by `C`, then the
+norm of its derivative at the center is at most `C / R`. -/
 theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
-    (hc : ContinuousOn f (ClosedBall c R)) (hd : DifferentiableOn ℂ f (Ball c R))
-    (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
-  have : second_countable_topology (F̂) := UniformSpace.second_countable_of_separable _
+    (hd : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
-    e.has_fderiv_at.comp_has_deriv_at c (hd.has_deriv_at <| ball_mem_nhds _ hR)
+    e.has_fderiv_at.comp_has_deriv_at c (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
   calc ∥deriv f c∥ = ∥deriv (e ∘ f) c∥ := by
       rw [this.deriv]
       exact (UniformSpace.Completion.norm_coe _).symm _ ≤ C / R :=
-      norm_deriv_le_aux hR (e.continuous.comp_continuous_on hc) (e.differentiable.comp_differentiable_on hd) fun z hz =>
+      norm_deriv_le_aux hR (e.differentiable.comp_diff_cont_on_cl hd) fun z hz =>
         (UniformSpace.Completion.norm_coe _).trans_le (hC z hz)
 
 /-- An auxiliary lemma for Liouville's theorem `differentiable.apply_eq_apply_of_bounded`. -/
@@ -89,8 +81,7 @@ theorem liouville_theorem_aux {f : ℂ → F} (hf : Differentiable ℂ f) (hb : 
     exact ⟨max C 1, lt_max_iff.2 (Or.inr zero_lt_one), fun z => (hC (f z) (mem_range_self _)).trans (le_max_leftₓ _ _)⟩
   refine' norm_le_zero_iff.1 (le_of_forall_le_of_dense fun ε ε₀ => _)
   calc ∥deriv f c∥ ≤ C / (C / ε) :=
-      norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.continuous.continuous_on hf.differentiable_on
-        fun z _ => hC z _ = ε :=
+      norm_deriv_le_of_forall_mem_sphere_norm_le (div_pos C₀ ε₀) hf.diff_cont_on_cl fun z _ => hC z _ = ε :=
       div_div_cancel' C₀.lt.ne'
 
 end Complex

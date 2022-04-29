@@ -43,7 +43,7 @@ Legendre, p-adic
 
 open Finset Nat multiplicity
 
-open_locale BigOperators Nat
+open BigOperators Nat
 
 namespace Nat
 

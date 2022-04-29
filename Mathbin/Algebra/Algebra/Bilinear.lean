@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Hom.Iterate
 import Mathbin.LinearAlgebra.TensorProduct
-import Mathbin.Algebra.IterateHom
 
 /-!
 # Facts about algebras involving bilinear maps and tensor products
@@ -20,7 +20,7 @@ universe u v w
 
 namespace Algebra
 
-open_locale TensorProduct
+open TensorProduct
 
 open Module
 
@@ -169,15 +169,15 @@ section
 variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
 theorem lmul_left_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmulLeft R x) := by
-  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  let this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   exact mul_right_injective₀ hx
 
 theorem lmul_right_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmulRight R x) := by
-  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  let this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   exact mul_left_injective₀ hx
 
 theorem lmul_injective [NoZeroDivisors A] {x : A} (hx : x ≠ 0) : Function.Injective (lmul R A x) := by
-  let this' : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
+  let this : IsDomain A := { ‹Ringₓ A›, ‹NoZeroDivisors A› with exists_pair_ne := ⟨x, 0, hx⟩ }
   exact mul_right_injective₀ hx
 
 end

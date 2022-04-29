@@ -41,21 +41,17 @@ theorem Pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀, ∀ a ∈ 
 
 theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀, ∀ a ∈ m, ∀, δ a} (h : a ≠ a') :
     HEq (Pi.cons (a' ::ₘ m) a b (Pi.cons m a' b' f)) (Pi.cons (a ::ₘ m) a' b' (Pi.cons m a b f)) := by
-  apply hfunext
-  · rfl
-    
-  intro a'' _ h
-  subst h
-  apply hfunext
-  · rw [cons_swap]
-    
-  intro ha₁ ha₂ h
-  by_cases' h₁ : a'' = a
-  simp_all [pi.cons_same, pi.cons_ne]
-  · subst h₁
-    rw [pi.cons_same, pi.cons_same]
-    
-  by_cases' h₂ : a'' = a' <;> simp_all [pi.cons_same, pi.cons_ne] <;> subst h₂ <;> rw [pi.cons_same, pi.cons_same]
+  apply hfunext rfl
+  rintro a'' _ rfl
+  refine'
+    hfunext
+      (by
+        rw [cons_swap])
+      fun ha₁ ha₂ _ => _
+  rcases ne_or_eq a'' a with (h₁ | rfl)
+  rcases eq_or_ne a'' a' with (rfl | h₂)
+  all_goals
+    simp [*, pi.cons_same, pi.cons_ne]
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
 def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈ m, ∀, δ a) :=
@@ -63,7 +59,7 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀, ∀ a ∈
     (by
       intro a a' m n
       by_cases' eq : a = a'
-      · subst eq
+      · subst Eq
         
       · simp [map_bind, bind_bind (t a') (t a)]
         apply bind_hcongr
@@ -112,7 +108,8 @@ theorem card_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : card (pi m t) =
     (by
       simp (config := { contextual := true })[mul_comm])
 
-theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : Nodup s → (∀, ∀ a ∈ s, ∀, Nodup (t a)) → Nodup (pi s t) :=
+protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
+    Nodup s → (∀, ∀ a ∈ s, ∀, Nodup (t a)) → Nodup (pi s t) :=
   Multiset.induction_on s (fun _ _ => nodup_singleton _)
     (by
       intro a s ih hs ht
@@ -121,19 +118,15 @@ theorem nodup_pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} : Nodup s → (�
       have hs : nodup s := by
         simp at hs <;> exact hs.2
       simp
-      constructor
-      · intro b hb
-        exact nodup_map (pi_cons_injective has) ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h')
-        
-      · apply pairwise_of_nodup _ (ht a <| mem_cons_self _ _)
-        exact fun b₁ hb₁ b₂ hb₂ neb =>
-          disjoint_map_map.2 fun f hf g hg eq =>
-            have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by
-              rw [Eq]
-            neb <|
-              show b₁ = b₂ by
-                rwa [pi.cons_same, pi.cons_same] at this
-        )
+      refine' ⟨fun b hb => ((ih hs) fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has), _⟩
+      refine' (ht a <| mem_cons_self _ _).Pairwise _
+      exact fun b₁ hb₁ b₂ hb₂ neb =>
+        disjoint_map_map.2 fun f hf g hg eq =>
+          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) := by
+            rw [Eq]
+          neb <|
+            show b₁ = b₂ by
+              rwa [pi.cons_same, pi.cons_same] at this)
 
 @[simp]
 theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀, ∀ a' ∈ a ::ₘ m, ∀, δ a') :

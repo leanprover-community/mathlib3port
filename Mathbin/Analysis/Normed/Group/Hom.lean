@@ -3,9 +3,7 @@ Copyright (c) 2021 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
-import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Analysis.SpecificLimits
-import Mathbin.Topology.Sequences
+import Mathbin.Analysis.SpecificLimits.Normed
 
 /-!
 # Normed groups homomorphisms
@@ -28,7 +26,7 @@ theory of `semi_normed_group_hom` and we specialize to `normed_group_hom` when n
 
 noncomputable section
 
-open_locale Nnreal BigOperators
+open Nnreal BigOperators
 
 /-- A morphism of seminormed abelian groups is a bounded group homomorphism. -/
 structure NormedGroupHom (V W : Type _) [SemiNormedGroup V] [SemiNormedGroup W] where
@@ -439,12 +437,86 @@ theorem coe_sub (f g : NormedGroupHom V₁ V₂) : ⇑(f - g) = (f - g : V₁ �
 theorem sub_apply (f g : NormedGroupHom V₁ V₂) (v : V₁) : (f - g : NormedGroupHom V₁ V₂) v = f v - g v :=
   rfl
 
+/-! ### Scalar actions on normed group homs -/
+
+
+section HasScalar
+
+variable {R R' : Type _} [MonoidWithZeroₓ R] [DistribMulAction R V₂] [PseudoMetricSpace R] [HasBoundedSmul R V₂]
+  [MonoidWithZeroₓ R'] [DistribMulAction R' V₂] [PseudoMetricSpace R'] [HasBoundedSmul R' V₂]
+
+instance : HasScalar R (NormedGroupHom V₁ V₂) where
+  smul := fun r f =>
+    { toFun := r • f, map_add' := (r • f.toAddMonoidHom).map_add',
+      bound' :=
+        let ⟨b, hb⟩ := f.bound'
+        ⟨dist r 0 * b, fun x => by
+          have := dist_smul_pair r (f x) (f 0)
+          rw [f.map_zero, smul_zero, dist_zero_right, dist_zero_right] at this
+          rw [mul_assoc]
+          refine' this.trans _
+          refine' mul_le_mul_of_nonneg_left _ dist_nonneg
+          exact hb x⟩ }
+
+@[simp]
+theorem coe_smul (r : R) (f : NormedGroupHom V₁ V₂) : ⇑(r • f) = r • f :=
+  rfl
+
+@[simp]
+theorem smul_apply (r : R) (f : NormedGroupHom V₁ V₂) (v : V₁) : (r • f) v = r • f v :=
+  rfl
+
+instance [SmulCommClass R R' V₂] : SmulCommClass R R' (NormedGroupHom V₁ V₂) where
+  smul_comm := fun r r' f => ext fun v => smul_comm _ _ _
+
+instance [HasScalar R R'] [IsScalarTower R R' V₂] : IsScalarTower R R' (NormedGroupHom V₁ V₂) where
+  smul_assoc := fun r r' f => ext fun v => smul_assoc _ _ _
+
+instance [DistribMulAction Rᵐᵒᵖ V₂] [IsCentralScalar R V₂] : IsCentralScalar R (NormedGroupHom V₁ V₂) where
+  op_smul_eq_smul := fun r f => ext fun v => op_smul_eq_smul _ _
+
+end HasScalar
+
+instance hasNatScalar : HasScalar ℕ (NormedGroupHom V₁ V₂) where
+  smul := fun n f =>
+    { toFun := n • f, map_add' := (n • f.toAddMonoidHom).map_add',
+      bound' :=
+        let ⟨b, hb⟩ := f.bound'
+        ⟨n • b, fun v => by
+          rw [Pi.smul_apply, nsmul_eq_mul, mul_assoc]
+          exact (norm_nsmul_le _ _).trans (mul_le_mul_of_nonneg_left (hb _) (Nat.cast_nonneg _))⟩ }
+
+@[simp]
+theorem coe_nsmul (r : ℕ) (f : NormedGroupHom V₁ V₂) : ⇑(r • f) = r • f :=
+  rfl
+
+@[simp]
+theorem nsmul_apply (r : ℕ) (f : NormedGroupHom V₁ V₂) (v : V₁) : (r • f) v = r • f v :=
+  rfl
+
+instance hasIntScalar : HasScalar ℤ (NormedGroupHom V₁ V₂) where
+  smul := fun z f =>
+    { toFun := z • f, map_add' := (z • f.toAddMonoidHom).map_add',
+      bound' :=
+        let ⟨b, hb⟩ := f.bound'
+        ⟨∥z∥ • b, fun v => by
+          rw [Pi.smul_apply, smul_eq_mul, mul_assoc]
+          exact (norm_zsmul_le _ _).trans (mul_le_mul_of_nonneg_left (hb _) <| norm_nonneg _)⟩ }
+
+@[simp]
+theorem coe_zsmul (r : ℤ) (f : NormedGroupHom V₁ V₂) : ⇑(r • f) = r • f :=
+  rfl
+
+@[simp]
+theorem zsmul_apply (r : ℤ) (f : NormedGroupHom V₁ V₂) (v : V₁) : (r • f) v = r • f v :=
+  rfl
+
 /-! ### Normed group structure on normed group homs -/
 
 
 /-- Homs between two given normed groups form a commutative additive group. -/
 instance : AddCommGroupₓ (NormedGroupHom V₁ V₂) :=
-  coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
+  coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Normed group homomorphisms themselves form a seminormed group with respect to
     the operator norm. -/
@@ -470,6 +542,17 @@ theorem coe_sum {ι : Type _} (s : Finset ι) (f : ι → NormedGroupHom V₁ V�
 theorem sum_apply {ι : Type _} (s : Finset ι) (f : ι → NormedGroupHom V₁ V₂) (v : V₁) :
     (∑ i in s, f i) v = ∑ i in s, f i v := by
   simp only [coe_sum, Finset.sum_apply]
+
+/-! ### Module structure on normed group homs -/
+
+
+instance {R : Type _} [MonoidWithZeroₓ R] [DistribMulAction R V₂] [PseudoMetricSpace R] [HasBoundedSmul R V₂] :
+    DistribMulAction R (NormedGroupHom V₁ V₂) :=
+  Function.Injective.distribMulAction coeFnAddHom coe_injective coe_smul
+
+instance {R : Type _} [Semiringₓ R] [Module R V₂] [PseudoMetricSpace R] [HasBoundedSmul R V₂] :
+    Module R (NormedGroupHom V₁ V₂) :=
+  Function.Injective.module _ coeFnAddHom coe_injective coe_smul
 
 /-! ### Composition of normed group homs -/
 
@@ -811,7 +894,7 @@ section ControlledClosure
 
 open Filter Finset
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 variable {G : Type _} [NormedGroup G] [CompleteSpace G]
 

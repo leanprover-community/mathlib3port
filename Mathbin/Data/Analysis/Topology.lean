@@ -12,7 +12,7 @@ open Set
 
 open Filter hiding Realizer
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 /-- A `ctop α σ` is a realization of a topology (basis) on `α`,
   represented by a type `σ` together with operations for the top element and
@@ -64,7 +64,7 @@ def toTopsp (F : Ctop α σ) : TopologicalSpace α :=
 
 theorem to_topsp_is_topological_basis (F : Ctop α σ) :
     @TopologicalSpace.IsTopologicalBasis _ F.toTopsp (Set.Range F.f) := by
-  let this' := F.to_topsp <;>
+  let this := F.to_topsp <;>
     exact
       ⟨fun v ⟨b, e₂⟩ => e₁ ▸ e₂ ▸ fun x h => ⟨_, ⟨_, rfl⟩, F.inter_mem a b x h, F.inter_sub a b x h⟩,
         eq_univ_iff_forall.2 fun x => ⟨_, ⟨_, rfl⟩, F.top_mem x⟩, rfl⟩
@@ -107,7 +107,7 @@ theorem is_closed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
   is_open_compl_iff.symm.trans <|
     F.is_open_iff.trans <|
       forall_congrₓ fun a =>
-        show ((a ∉ s) → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
+        show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀, ∀ z ∈ F.f b, ∀, z ∉ s) ↔ _ by
           have := Classical.propDecidable <;> rw [not_imp_comm] <;> simp [not_exists, not_and, not_forall, and_comm]
 
 theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :

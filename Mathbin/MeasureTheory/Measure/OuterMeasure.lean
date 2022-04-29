@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Analysis.SpecificLimits
+import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.MeasureTheory.PiSystem
 import Mathbin.Data.Fin.VecNotation
 import Mathbin.Topology.Algebra.InfiniteSum
@@ -57,7 +57,7 @@ open Set Finset Function Filter Encodable
 
 open TopologicalSpace (SecondCountableTopology)
 
-open_locale Classical BigOperators Nnreal TopologicalSpace Ennreal
+open Classical BigOperators Nnreal TopologicalSpace Ennreal
 
 namespace MeasureTheory
 
@@ -283,11 +283,9 @@ end HasScalar
 instance [Monoidₓ R] [MulAction R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0∞] : MulAction R (OuterMeasure α) :=
   Injective.mulAction _ coe_fn_injective coe_smul
 
--- there is no `function.injective.add_comm_monoid_smul` so we do this in two steps
 instance addCommMonoid : AddCommMonoidₓ (OuterMeasure α) :=
-  { Injective.addMonoidSmul (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl (fun _ _ => rfl)
-      fun _ _ => rfl,
-    Injective.addCommSemigroup (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective fun _ _ => rfl with }
+  Injective.addCommMonoid (show OuterMeasure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl (fun _ _ => rfl)
+    fun _ _ => rfl
 
 /-- `coe_fn` as an `add_monoid_hom`. -/
 @[simps]
@@ -326,19 +324,19 @@ section Supremum
 instance : HasSupₓ (OuterMeasure α) :=
   ⟨fun ms =>
     { measureOf := fun s => ⨆ m ∈ ms, (m : OuterMeasure α) s,
-      Empty := nonpos_iff_eq_zero.1 <| bsupr_le fun m h => le_of_eqₓ m.Empty,
-      mono := fun s₁ s₂ hs => bsupr_le_bsupr fun m hm => m.mono hs,
+      Empty := nonpos_iff_eq_zero.1 <| supr₂_le fun m h => le_of_eqₓ m.Empty,
+      mono := fun s₁ s₂ hs => supr₂_mono fun m hm => m.mono hs,
       Union_nat := fun f =>
-        bsupr_le fun m hm =>
+        supr₂_le fun m hm =>
           calc
             m (⋃ i, f i) ≤ ∑' i : ℕ, m (f i) := m.Union_nat _
-            _ ≤ ∑' i, ⨆ m ∈ ms, (m : OuterMeasure α) (f i) := Ennreal.tsum_le_tsum fun i => le_bsupr m hm
+            _ ≤ ∑' i, ⨆ m ∈ ms, (m : OuterMeasure α) (f i) := Ennreal.tsum_le_tsum fun i => le_supr₂ m hm
              }⟩
 
 instance : CompleteLattice (OuterMeasure α) :=
   { OuterMeasure.orderBot,
     completeLatticeOfSup (OuterMeasure α) fun ms =>
-      ⟨fun m hm s => le_bsupr m hm, fun m hm s => bsupr_le fun m' hm' => hm hm' s⟩ with }
+      ⟨fun m hm s => le_supr₂ m hm, fun m hm s => supr₂_le fun m' hm' => hm hm' s⟩ with }
 
 @[simp]
 theorem Sup_apply (ms : Set (OuterMeasure α)) (s : Set α) : (sup ms) s = ⨆ m ∈ ms, (m : OuterMeasure α) s :=
@@ -534,7 +532,7 @@ theorem top_apply {s : Set α} (h : s.Nonempty) : (⊤ : OuterMeasure α) s = �
     le_transₓ
       (by
         simp [smul_dirac_apply, as])
-      (le_bsupr (∞ • dirac a) trivialₓ)
+      (le_supr₂ (∞ • dirac a) trivialₓ)
 
 theorem top_apply' (s : Set α) : (⊤ : OuterMeasure α) s = ⨅ h : s = ∅, 0 :=
   s.eq_empty_or_nonempty.elim
@@ -577,7 +575,7 @@ protected def ofFunction : OuterMeasure α :=
           infi_le_of_le (empty_subset _) <| by
             simp [m_empty])
         (zero_le _),
-    mono := fun s₁ s₂ hs => infi_le_infi fun f => infi_le_infi2 fun hb => ⟨Subset.trans hs hb, le_rfl⟩,
+    mono := fun s₁ s₂ hs => infi_mono fun f => infi_mono' fun hb => ⟨hs.trans hb, le_rfl⟩,
     Union_nat := fun s =>
       Ennreal.le_of_forall_pos_le_add <| by
         intro ε hε(hb : (∑' i, μ (s i)) < ∞)
@@ -683,8 +681,8 @@ theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f)
     apply of_function_le
     
   · rw [comap_apply, of_function_apply, of_function_apply]
-    refine' infi_le_infi2 fun t => ⟨fun k => f ⁻¹' t k, _⟩
-    refine' infi_le_infi2 fun ht => _
+    refine' infi_mono' fun t => ⟨fun k => f ⁻¹' t k, _⟩
+    refine' infi_mono' fun ht => _
     rw [Set.image_subset_iff, preimage_Union] at ht
     refine' ⟨ht, Ennreal.tsum_le_tsum fun n => _⟩
     cases h
@@ -1002,14 +1000,12 @@ theorem Inf_gen_def (m : Set (OuterMeasure α)) (t : Set α) : infGen m t = ⨅ 
 
 theorem Inf_eq_bounded_by_Inf_gen (m : Set (OuterMeasure α)) : inf m = OuterMeasure.boundedBy (infGen m) := by
   refine' le_antisymmₓ _ _
-  · refine' le_bounded_by.2 fun s => _
-    refine' le_binfi _
-    intro μ hμ
-    refine' (show Inf m ≤ μ from Inf_le hμ) s
+  · refine' le_bounded_by.2 fun s => le_infi₂ fun μ hμ => _
+    exact (show Inf m ≤ μ from Inf_le hμ) s
     
   · refine' le_Inf _
     intro μ hμ t
-    refine' le_transₓ (bounded_by_le t) (binfi_le μ hμ)
+    refine' le_transₓ (bounded_by_le t) (infi₂_le μ hμ)
     
 
 theorem supr_Inf_gen_nonempty {m : Set (OuterMeasure α)} (h : m.Nonempty) (t : Set α) :
@@ -1081,7 +1077,7 @@ theorem comap_infi {ι β} (f : α → β) (m : ι → OuterMeasure β) : comap 
   simp only [comap_apply, infi_apply' _ hs, infi_apply' _ (hs.image _), le_infi_iff, Set.image_subset_iff,
     preimage_Union]
   refine' fun t ht => infi_le_of_le _ (infi_le_of_le ht <| Ennreal.tsum_le_tsum fun k => _)
-  exact infi_le_infi fun i => (m i).mono (image_preimage_subset _ _)
+  exact infi_mono fun i => (m i).mono (image_preimage_subset _ _)
 
 theorem map_infi {ι β} {f : α → β} (hf : Injective f) (m : ι → OuterMeasure α) :
     map f (⨅ i, m i) = restrict (range f) (⨅ i, map f (m i)) := by
@@ -1096,7 +1092,7 @@ theorem map_infi_comap {ι β} [Nonempty ι] {f : α → β} (m : ι → OuterMe
   · rw [← Union_union, Set.union_comm, ← inter_subset, ← image_Union, ← image_preimage_eq_inter_range]
     exact image_subset _ ht
     
-  · refine' Ennreal.tsum_le_tsum fun n => infi_le_infi fun i => (m i).mono _
+  · refine' Ennreal.tsum_le_tsum fun n => infi_mono fun i => (m i).mono _
     simp
     
 
@@ -1309,8 +1305,7 @@ theorem induced_outer_measure_preimage (f : α ≃ α) (Pm : ∀ s : Set α, P (
     inducedOuterMeasure m P0 m0 (f ⁻¹' A) = inducedOuterMeasure m P0 m0 A := by
   simp only [induced_outer_measure_eq_infi _ msU m_mono]
   symm
-  refine' infi_congr (preimage f) f.injective.preimage_surjective _
-  intro s
+  refine' f.injective.preimage_surjective.infi_congr (preimage f) fun s => _
   refine' infi_congr_Prop (Pm s) _
   intro hs
   refine' infi_congr_Prop f.surjective.preimage_subset_preimage_iff _
@@ -1423,7 +1418,7 @@ theorem trim_congr {m₁ m₂ : OuterMeasure α} (H : ∀ {s : Set α}, Measurab
 
 @[mono]
 theorem trim_mono : Monotone (trim : OuterMeasure α → OuterMeasure α) := fun m₁ m₂ H s =>
-  binfi_le_binfi fun f hs => Ennreal.tsum_le_tsum fun b => infi_le_infi fun hf => H _
+  infi₂_mono fun f hs => Ennreal.tsum_le_tsum fun b => infi_mono fun hf => H _
 
 theorem le_trim_iff {m₁ m₂ : OuterMeasure α} : m₁ ≤ m₂.trim ↔ ∀ s, MeasurableSet s → m₁ s ≤ m₂ s :=
   le_of_function.trans <| forall_congrₓ fun s => le_infi_iff

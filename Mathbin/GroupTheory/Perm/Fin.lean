@@ -3,10 +3,10 @@ Copyright (c) 2021 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Equiv.Fin
-import Mathbin.Data.Equiv.Fintype
-import Mathbin.GroupTheory.Perm.Option
 import Mathbin.GroupTheory.Perm.CycleType
+import Mathbin.GroupTheory.Perm.Option
+import Mathbin.Logic.Equiv.Fin
+import Mathbin.Logic.Equiv.Fintype
 
 /-!
 # Permutations of `fin n`

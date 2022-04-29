@@ -39,9 +39,17 @@ instance (X : FinPartialOrder) : PartialOrderₓ X :=
 
 attribute [instance] FinPartialOrder.isFintype
 
+@[simp]
+theorem coe_to_PartialOrder (X : FinPartialOrder) : ↥X.toPartialOrder = ↥X :=
+  rfl
+
 /-- Construct a bundled `FinPartialOrder` from `fintype` + `partial_order`. -/
 def of (α : Type _) [PartialOrderₓ α] [Fintype α] : FinPartialOrder :=
   ⟨⟨α⟩⟩
+
+@[simp]
+theorem coe_of (α : Type _) [PartialOrderₓ α] [Fintype α] : ↥(of α) = α :=
+  rfl
 
 instance : Inhabited FinPartialOrder :=
   ⟨of PUnit⟩
@@ -86,6 +94,6 @@ end FinPartialOrder
 
 theorem FinPartialOrder_dual_comp_forget_to_PartialOrder :
     FinPartialOrder.dual ⋙ forget₂ FinPartialOrder PartialOrderₓₓ =
-      forget₂ FinPartialOrder PartialOrderₓₓ ⋙ PartialOrderₓₓ.toDual :=
+      forget₂ FinPartialOrder PartialOrderₓₓ ⋙ PartialOrderₓₓ.dual :=
   rfl
 

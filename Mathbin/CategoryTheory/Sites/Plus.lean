@@ -289,7 +289,7 @@ theorem is_iso_to_plus_of_is_sheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus
 
 /-- The natural isomorphism between `P` and `P⁺` when `P` is a sheaf. -/
 def isoToPlus (hP : Presheaf.IsSheaf J P) : P ≅ J.plusObj P := by
-  let this' := is_iso_to_plus_of_is_sheaf J P hP <;> exact as_iso (J.to_plus P)
+  let this := is_iso_to_plus_of_is_sheaf J P hP <;> exact as_iso (J.to_plus P)
 
 @[simp]
 theorem iso_to_plus_hom (hP : Presheaf.IsSheaf J P) : (J.isoToPlus P hP).Hom = J.toPlus P :=

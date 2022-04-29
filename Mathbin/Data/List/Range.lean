@@ -164,6 +164,21 @@ theorem range_succ (n : ℕ) : range (succ n) = range n ++ [n] := by
 theorem range_zero : range 0 = [] :=
   rfl
 
+theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) : Chain' r (range n.succ) ↔ ∀, ∀ m < n, ∀, r m m.succ := by
+  rw [range_succ]
+  induction' n with n hn
+  · simp
+    
+  · rw [range_succ]
+    simp only [append_assoc, singleton_append, chain'_append_cons_cons, chain'_singleton, and_trueₓ]
+    rw [hn, forall_lt_succ]
+    
+
+theorem chain_range_succ (r : ℕ → ℕ → Prop) (n a : ℕ) : Chain r a (range n.succ) ↔ r a 0 ∧ ∀, ∀ m < n, ∀, r m m.succ :=
+  by
+  rw [range_succ_eq_map, chain_cons, And.congr_right_iff, ← chain'_range_succ, range_succ_eq_map]
+  exact fun _ => Iff.rfl
+
 theorem range_add (a : ℕ) : ∀ b, range (a + b) = range a ++ (range b).map fun x => a + x
   | 0 => by
     rw [add_zeroₓ, range_zero, map_nil, append_nil]
@@ -209,7 +224,7 @@ theorem mem_fin_range {n : ℕ} (a : Finₓ n) : a ∈ finRange n :=
   mem_pmap.2 ⟨a.1, mem_range.2 a.2, Finₓ.eta _ _⟩
 
 theorem nodup_fin_range (n : ℕ) : (finRange n).Nodup :=
-  nodup_pmap (fun _ _ _ _ => Finₓ.veq_of_eq) (nodup_range _)
+  (nodup_range _).pmap fun _ _ _ _ => Finₓ.veq_of_eq
 
 @[simp]
 theorem length_fin_range (n : ℕ) : (finRange n).length = n := by
@@ -300,7 +315,8 @@ theorem of_fn_eq_map {α n} {f : Finₓ n → α} : ofFnₓ f = (finRange n).map
   rw [← of_fn_id, map_of_fn, Function.right_id]
 
 theorem nodup_of_fn {α n} {f : Finₓ n → α} (hf : Function.Injective f) : Nodupₓ (ofFnₓ f) := by
-  rw [of_fn_eq_pmap] <;> exact nodup_pmap (fun _ _ _ _ H => Finₓ.veq_of_eq <| hf H) (nodup_range n)
+  rw [of_fn_eq_pmap]
+  exact (nodup_range n).pmap fun _ _ _ _ H => Finₓ.veq_of_eq <| hf H
 
 end List
 

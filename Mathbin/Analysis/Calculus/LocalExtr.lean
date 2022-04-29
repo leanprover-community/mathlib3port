@@ -67,7 +67,7 @@ universe u v
 
 open Filter Set
 
-open_locale TopologicalSpace Classical Polynomial
+open TopologicalSpace Classical Polynomial
 
 section Module
 

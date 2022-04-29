@@ -73,7 +73,7 @@ end Biproducts
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   { HasBiproductsOfShape := fun J hJ₁ hJ₂ =>
       { HasBiproduct := fun F => by
-          let this' := hJ₂
+          let this := hJ₂
           apply has_biproduct_of_total (biproducts.bicone F)
           ext1
           ext1

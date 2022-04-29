@@ -122,7 +122,7 @@ The name of the produced lemma can be specified with `@[reassoc other_lemma_name
 unsafe def reassoc_attr : user_attribute Unit (Option Name) where
   Name := `reassoc
   descr := "create a companion lemma for associativity-aware rewriting"
-  Parser := optionalₓ ident
+  parser := optionalₓ ident
   after_set :=
     some fun n _ _ => do
       let some n' ← reassoc_attr.get_param n | reassoc_axiom n (n.appendSuffix "_assoc")

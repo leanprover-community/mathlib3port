@@ -77,7 +77,7 @@ theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ 
 is invertible, then `g` is invertible.
 -/
 theorem is_iso_right_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [IsIso (biprod.map f g)] : IsIso g := by
-  let this' : is_iso (biprod.map g f) := by
+  let this : is_iso (biprod.map g f) := by
     rw [← biprod.braiding_map_braiding]
     infer_instance
   exact is_iso_left_of_is_iso_biprod_map g f
@@ -196,17 +196,17 @@ then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
 -/
 def Biprod.isoElim' [IsIso f₁₁] [IsIso (Biprod.ofComponents f₁₁ f₁₂ f₂₁ f₂₂)] : X₂ ≅ Y₂ := by
   obtain ⟨L, R, g, w⟩ := biprod.gaussian' f₁₁ f₁₂ f₂₁ f₂₂
-  let this' : is_iso (biprod.map f₁₁ g) := by
+  let this : is_iso (biprod.map f₁₁ g) := by
     rw [← w]
     infer_instance
-  let this' : is_iso g := is_iso_right_of_is_iso_biprod_map f₁₁ g
+  let this : is_iso g := is_iso_right_of_is_iso_biprod_map f₁₁ g
   exact as_iso g
 
 /-- If `f` is an isomorphism `X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂` whose `X₁ ⟶ Y₁` entry is an isomorphism,
 then we can construct an isomorphism `X₂ ≅ Y₂`, via Gaussian elimination.
 -/
 def Biprod.isoElim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ f.hom ≫ biprod.fst)] : X₂ ≅ Y₂ := by
-  let this' :
+  let this :
     is_iso
       (biprod.of_components (biprod.inl ≫ f.hom ≫ biprod.fst) (biprod.inl ≫ f.hom ≫ biprod.snd)
         (biprod.inr ≫ f.hom ≫ biprod.fst) (biprod.inr ≫ f.hom ≫ biprod.snd)) :=
@@ -219,8 +219,7 @@ def Biprod.isoElim (f : X₁ ⊞ X₂ ≅ Y₁ ⊞ Y₂) [IsIso (biprod.inl ≫ 
 
 theorem Biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [IsIso f] :
     𝟙 W = 0 ∨ biprod.inl ≫ f ≫ biprod.fst ≠ 0 ∨ biprod.inl ≫ f ≫ biprod.snd ≠ 0 := by
-  by_contra
-  rw [not_or_distrib, not_or_distrib, not_not, not_not] at h
+  by_contra' h
   rcases h with ⟨nz, a₁, a₂⟩
   set x := biprod.inl ≫ f ≫ inv f ≫ biprod.fst
   have h₁ : x = 𝟙 W := by

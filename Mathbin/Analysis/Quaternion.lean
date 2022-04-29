@@ -30,7 +30,7 @@ quaternion, normed ring, normed space, normed algebra
 -- mathport name: «exprℍ»
 localized [Quaternion] notation "ℍ" => Quaternion ℝ
 
-open_locale RealInnerProductSpace
+open RealInnerProductSpace
 
 noncomputable section
 
@@ -53,7 +53,7 @@ instance : InnerProductSpace ℝ ℍ :=
       nonneg_re := fun x => norm_sq_nonneg, definite := fun x => norm_sq_eq_zero.1,
       add_left := fun x y z => by
         simp only [inner_def, add_mulₓ, add_re],
-      smulLeft := fun x y r => by
+      smul_left := fun x y r => by
         simp [inner_def] }
 
 theorem norm_sq_eq_norm_sq (a : ℍ) : normSq a = ∥a∥ * ∥a∥ := by
@@ -63,21 +63,22 @@ instance : NormOneClass ℍ :=
   ⟨by
     rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
 
-@[simp]
-theorem norm_mul (a b : ℍ) : ∥a * b∥ = ∥a∥ * ∥b∥ := by
-  simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
-  exact Real.sqrt_mul norm_sq_nonneg _
-
 @[simp, norm_cast]
 theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ := by
   rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
 
-noncomputable instance : NormedRing ℍ where
+@[simp, norm_cast]
+theorem nnnorm_coe (a : ℝ) : ∥(a : ℍ)∥₊ = ∥a∥₊ :=
+  Subtype.ext <| norm_coe a
+
+noncomputable instance : NormedDivisionRing ℍ where
   dist_eq := fun _ _ => rfl
-  norm_mul := fun a b => (norm_mul a b).le
+  norm_mul' := fun a b => by
+    simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
+    exact Real.sqrt_mul norm_sq_nonneg _
 
 noncomputable instance : NormedAlgebra ℝ ℍ where
-  norm_algebra_map_eq := norm_coe
+  norm_smul_le := fun a x => (norm_smul a x).le
   toAlgebra := Quaternion.algebra
 
 instance : Coe ℂ ℍ :=

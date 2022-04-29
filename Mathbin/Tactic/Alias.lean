@@ -3,7 +3,6 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Leanbin.Data.Buffer.Parser
 import Mathbin.Tactic.Core
 
 /-!
@@ -44,7 +43,7 @@ input theorem has the form `A_iff_B` or `A_iff_B_left` etc.
 -/
 
 
-open Lean.Parser Tactic Interactive Parser
+open Lean.Parser Tactic Interactive
 
 namespace Tactic.Alias
 
@@ -52,7 +51,7 @@ namespace Tactic.Alias
 unsafe def alias_attr : user_attribute where
   Name := `alias
   descr := "This definition is an alias of another."
-  Parser := failed
+  parser := failed
 
 unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic Unit := do
   updateex_env fun env =>
@@ -83,7 +82,7 @@ unsafe def alias_iff (d : declaration) (doc : Stringₓ) (al : Name) (iffmp : Na
 unsafe def make_left_right : Name → tactic (Name × Name)
   | Name.mk_string s p => do
     let buf : CharBuffer := s.toCharBuffer
-    let Sum.inr parts ← pure <| run (sepBy1 (ch '_') (manyChar (sat (· ≠ '_')))) s.toCharBuffer
+    let parts := s.splitOn '_'
     let (left, _ :: right) ← pure <| parts.span (· ≠ "iff")
     let pfx (a b : Stringₓ) := a.toList.isPrefixOf b.toList
     let (suffix', right') ← pure <| right.reverse.span fun s => pfx "left" s ∨ pfx "right" s

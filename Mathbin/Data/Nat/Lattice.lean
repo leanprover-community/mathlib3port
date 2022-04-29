@@ -21,7 +21,7 @@ open Set
 
 namespace Nat
 
-open_locale Classical
+open Classical
 
 noncomputable instance : HasInfₓ ℕ :=
   ⟨fun s => if h : ∃ n, n ∈ s then @Nat.findₓ (fun n => n ∈ s) _ h else 0⟩
@@ -196,7 +196,7 @@ end Set
 
 namespace Enat
 
-open_locale Classical
+open Classical
 
 noncomputable instance : CompleteLinearOrder Enat :=
   { Enat.lattice, withTopOrderIso.symm.toGaloisInsertion.liftCompleteLattice, Enat.linearOrder with inf := (·⊓·),

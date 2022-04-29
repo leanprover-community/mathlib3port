@@ -28,7 +28,7 @@ open Set
 
 noncomputable section
 
-open_locale Ennreal BigOperators Classical BoxIntegral
+open Ennreal BigOperators Classical BoxIntegral
 
 variable {ι : Type _}
 
@@ -48,7 +48,7 @@ variable [Fintype ι] (I : Box ι)
 
 theorem measurable_set_coe : MeasurableSet (I : Set (ι → ℝ)) := by
   rw [coe_eq_pi]
-  have := Fintype.encodable ι
+  have := Fintype.toEncodable ι
   exact MeasurableSet.univ_pi fun i => measurable_set_Ioc
 
 theorem measurable_set_Icc : MeasurableSet I.Icc :=

@@ -137,7 +137,7 @@ given suitable evidence that morphisms are taken to monomorphisms.
 def lift {Y : D} (F : Over Y ⥤ Over X) (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
     MonoOver Y ⥤ MonoOver X where
   obj := fun f => ⟨_, h f⟩
-  map := fun _ _ k => (MonoOver.forget X).Preimage ((MonoOver.forget Y ⋙ F).map k)
+  map := fun _ _ k => (MonoOver.forget X).preimage ((MonoOver.forget Y ⋙ F).map k)
 
 /-- Isomorphic functors `over Y ⥤ over X` lift to isomorphic functors `mono_over Y ⥤ mono_over X`.
 -/
@@ -234,7 +234,7 @@ theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).
   rfl
 
 instance fullMap (f : X ⟶ Y) [Mono f] : Full (map f) where
-  Preimage := fun g h e => by
+  preimage := fun g h e => by
     refine' hom_mk e.left _
     rw [← cancel_mono f, assoc]
     apply w e
@@ -338,7 +338,7 @@ variable [HasImages C]
 def image : Over X ⥤ MonoOver X where
   obj := fun f => imageMonoOver f.Hom
   map := fun f g k => by
-    apply (forget X).Preimage _
+    apply (forget X).preimage _
     apply over.hom_mk _ _
     refine' image.lift { i := image _, m := image.ι g.hom, e := k.left ≫ factor_thru_image g.hom }
     apply image.lift_fac
@@ -400,7 +400,7 @@ def existsIsoMap (f : X ⟶ Y) [Mono f] : exists f ≅ map f :=
     (by
       intro Z
       suffices : (forget _).obj ((exists f).obj Z) ≅ (forget _).obj ((map f).obj Z)
-      apply preimage_iso this
+      apply (forget _).preimageIso this
       apply over.iso_mk _ _
       apply image_mono_iso_source (Z.arrow ≫ f)
       apply image_mono_iso_source_hom_self)

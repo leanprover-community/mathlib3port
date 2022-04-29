@@ -429,27 +429,19 @@ inductive IsPath : Path F → M F → Prop
   | cons (xs : Path F) {a} (x : M F) (f : F.B a → M F) (i : F.B a) :
     x = M.mk ⟨a, f⟩ → is_path xs (f i) → is_path (⟨a, i⟩ :: xs) x
 
-theorem is_path_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} (h : IsPath (⟨a', i⟩ :: xs) (M.mk ⟨a, f⟩)) :
-    a = a' := by
-  revert h
+theorem is_path_cons {xs : Path F} {a a'} {f : F.B a → M F} {i : F.B a'} :
+    IsPath (⟨a', i⟩ :: xs) (M.mk ⟨a, f⟩) → a = a' := by
   generalize h : M.mk ⟨a, f⟩ = x
-  intro h'
-  cases h'
-  subst x
-  cases mk_inj ‹_›
+  rintro (_ | ⟨_, _, _, _, _, rfl, _⟩)
+  cases mk_inj h
   rfl
 
-theorem is_path_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} (h : IsPath (⟨a, i⟩ :: xs) (M.mk ⟨a, f⟩)) :
-    IsPath xs (f i) := by
-  revert h
+theorem is_path_cons' {xs : Path F} {a} {f : F.B a → M F} {i : F.B a} :
+    IsPath (⟨a, i⟩ :: xs) (M.mk ⟨a, f⟩) → IsPath xs (f i) := by
   generalize h : M.mk ⟨a, f⟩ = x
-  intro h'
-  cases h'
-  subst x
-  have := mk_inj ‹_›
-  cases this
-  cases this
-  assumption
+  rintro (_ | ⟨_, _, _, _, _, rfl, hp⟩)
+  cases mk_inj h
+  exact hp
 
 /-- follow a path through a value of `M F` and return the subtree
 found at the end of the path if it is a valid path for that value and
@@ -637,24 +629,21 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) s₁ s₂ (ps 
   intro h₀ hh
   induction' s₁ using Pfunctor.M.casesOn' with a f
   induction' s₂ using Pfunctor.M.casesOn' with a' f'
-  have : a = a' := bisim.head h₀
-  subst a'
+  obtain rfl : a = a' := bisim.head h₀
   induction' ps with i ps generalizing a f f'
   · exists rfl, a, f, f', rfl, rfl
     apply bisim.tail h₀
     
   cases' i with a' i
-  have : a = a' := by
+  obtain rfl : a = a' := by
     cases hh <;> cases is_path_cons hh <;> rfl
-  subst a'
   dsimp only [iselect]  at ps_ih⊢
   have h₁ := bisim.tail h₀ i
   induction' h : f i using Pfunctor.M.casesOn' with a₀ f₀
   induction' h' : f' i using Pfunctor.M.casesOn' with a₁ f₁
   simp only [h, h', isubtree_cons] at ps_ih⊢
   rw [h, h'] at h₁
-  have : a₀ = a₁ := bisim.head h₁
-  subst a₁
+  obtain rfl : a₀ = a₁ := bisim.head h₁
   apply ps_ih _ _ _ h₁
   rw [← h, ← h']
   apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'

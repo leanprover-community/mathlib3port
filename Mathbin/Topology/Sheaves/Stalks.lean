@@ -152,7 +152,7 @@ namespace StalkPushforward
 attribute [local tidy] tactic.op_induction'
 
 @[simp]
-theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).hom :=
+theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).Hom :=
   by
   dsimp [stalk_pushforward, stalk_functor]
   ext1
@@ -228,7 +228,7 @@ def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
   colimit.desc (Lan.diagram (Opens.map f).op F (op U))
     { x := F.stalk (f x),
       ι :=
-        { app := fun V => F.germ ⟨f x, V.hom.unop.le x.2⟩,
+        { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩,
           naturality' := fun _ _ i => by
             erw [category.comp_id]
             exact F.germ_res i.left.unop _ } }
@@ -245,7 +245,7 @@ def stalkPullbackInv (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : (pullbackObj f F
 
 /-- The isomorphism `ℱ_{f(x)} ≅ (f⁻¹ℱ)ₓ`. -/
 def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) ≅ (pullbackObj f F).stalk x where
-  hom := stalkPullbackHom _ _ _ _
+  Hom := stalkPullbackHom _ _ _ _
   inv := stalkPullbackInv _ _ _ _
   hom_inv_id' := by
     delta' stalk_pullback_hom stalk_pullback_inv stalk_functor presheaf.pullback stalk_pushforward germ_to_pullback_stalk germ

@@ -3,10 +3,10 @@ Copyright (c) 2021 Henry Swanson. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 -/
-import Mathbin.Data.Equiv.Basic
-import Mathbin.Data.Equiv.Option
 import Mathbin.Dynamics.FixedPoints.Basic
 import Mathbin.GroupTheory.Perm.Option
+import Mathbin.Logic.Equiv.Basic
+import Mathbin.Logic.Equiv.Option
 
 /-!
 # Derangements on types

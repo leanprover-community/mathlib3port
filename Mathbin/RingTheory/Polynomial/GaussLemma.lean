@@ -24,7 +24,7 @@ Gauss's Lemma is one of a few results pertaining to irreducibility of primitive 
 -/
 
 
-open_locale nonZeroDivisors Polynomial
+open nonZeroDivisors Polynomial
 
 variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
@@ -51,11 +51,11 @@ theorem IsPrimitive.is_unit_iff_is_unit_map_of_injective : IsUnit f ↔ IsUnit (
   rwa [eq_C_of_degree_eq_zero hdeg, is_unit_C]
 
 theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreducible (map φ f)) : Irreducible f := by
-  refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ).toMonoidHom h), _⟩
+  refine' ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), _⟩
   intro a b h
   rcases h_irr.is_unit_or_is_unit
       (by
-        rw [h, map_mul]) with
+        rw [h, Polynomial.map_mul]) with
     (hu | hu)
   · left
     rwa [(hf.is_primitive_of_dvd (Dvd.intro _ h.symm)).is_unit_iff_is_unit_map_of_injective hinj]
@@ -85,7 +85,7 @@ theorem is_unit_or_eq_zero_of_is_unit_integer_normalization_prim_part {p : K[X]}
   refine'
     ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), is_unit_iff_ne_zero.2 fun con => _, by
       simp ⟩
-  replace con := (algebraMap R K).injective_iff.1 (IsFractionRing.injective _ _) _ Con
+  replace con := (injective_iff_map_eq_zero (algebraMap R K)).1 (IsFractionRing.injective _ _) _ Con
   rw [mul_eq_zero, content_eq_zero_iff, IsFractionRing.integer_normalization_eq_zero_iff] at con
   rcases Con with (con | con)
   · apply h0 Con
@@ -108,7 +108,7 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
   rw [Ne.def, ← C_eq_zero] at hcd0
   have h1 : C c * C d * p = integer_normalization R⁰ a * integer_normalization R⁰ b := by
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _) _
-    rw [map_mul, map_mul, map_mul, hc, hd, map_C, map_C, hab]
+    rw [Polynomial.map_mul, Polynomial.map_mul, Polynomial.map_mul, hc, hd, map_C, map_C, hab]
     ring
   obtain ⟨u, hu⟩ : Associated (c * d) (content (integer_normalization R⁰ a) * content (integer_normalization R⁰ b)) :=
     by
@@ -140,7 +140,7 @@ theorem IsPrimitive.dvd_of_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.Is
   have h : p ∣ q * C s := by
     use integer_normalization R⁰ r
     apply map_injective (algebraMap R K) (IsFractionRing.injective _ _)
-    rw [map_mul, map_mul, hs, hr, mul_assoc, mul_comm r]
+    rw [Polynomial.map_mul, Polynomial.map_mul, hs, hr, mul_assoc, mul_comm r]
     simp
   rw [← hp.dvd_prim_part_iff_dvd, prim_part_mul, hq.prim_part_eq, Associated.dvd_iff_dvd_right] at h
   · exact h
@@ -160,7 +160,7 @@ variable (K)
 
 theorem IsPrimitive.dvd_iff_fraction_map_dvd_fraction_map {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     p ∣ q ↔ p.map (algebraMap R K) ∣ q.map (algebraMap R K) :=
-  ⟨fun ⟨a, b⟩ => ⟨a.map (algebraMap R K), b.symm ▸ map_mul (algebraMap R K)⟩, fun h =>
+  ⟨fun ⟨a, b⟩ => ⟨a.map (algebraMap R K), b.symm ▸ Polynomial.map_mul (algebraMap R K)⟩, fun h =>
     hp.dvd_of_fraction_map_dvd_fraction_map hq h⟩
 
 end FractionMap

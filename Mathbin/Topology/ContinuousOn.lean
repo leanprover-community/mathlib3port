@@ -29,7 +29,7 @@ equipped with the subspace topology.
 
 open Set Filter Function
 
-open_locale TopologicalSpace Filter
+open TopologicalSpace Filter
 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
@@ -88,7 +88,7 @@ theorem nhds_of_nhds_within_of_nhds {s t : Set α} {a : α} (h1 : s ∈ 𝓝 a) 
 theorem preimage_nhds_within_coinduced' {π : α → β} {s : Set β} {t : Set α} {a : α} (h : a ∈ t) (ht : IsOpen t)
     (hs : s ∈ @nhds β (TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace) (π a)) :
     π ⁻¹' s ∈ 𝓝[t] a := by
-  let this' := TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace
+  let this := TopologicalSpace.coinduced (fun x : t => π x) Subtype.topologicalSpace
   rcases mem_nhds_iff.mp hs with ⟨V, hVs, V_op, mem_V⟩
   refine'
     mem_nhds_within_iff_exists_mem_nhds_inter.mpr
@@ -523,10 +523,17 @@ theorem ContinuousWithinAt.mem_closure {f : α → β} {s : Set α} {x : α} {A 
     (hx : x ∈ Closure s) (hA : MapsTo f s A) : f x ∈ Closure A :=
   closure_mono (image_subset_iff.2 hA) (h.mem_closure_image hx)
 
+theorem Set.MapsTo.closure_of_continuous_within_at {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t)
+    (hc : ∀, ∀ x ∈ Closure s, ∀, ContinuousWithinAt f s x) : MapsTo f (Closure s) (Closure t) := fun x hx =>
+  (hc x hx).mem_closure hx h
+
+theorem Set.MapsTo.closure_of_continuous_on {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t)
+    (hc : ContinuousOn f (Closure s)) : MapsTo f (Closure s) (Closure t) :=
+  h.closure_of_continuous_within_at fun x hx => (hc x hx).mono subset_closure
+
 theorem ContinuousWithinAt.image_closure {f : α → β} {s : Set α}
-    (hf : ∀, ∀ x ∈ Closure s, ∀, ContinuousWithinAt f s x) : f '' Closure s ⊆ Closure (f '' s) := by
-  rintro _ ⟨x, hx, rfl⟩
-  exact (hf x hx).mem_closure_image hx
+    (hf : ∀, ∀ x ∈ Closure s, ∀, ContinuousWithinAt f s x) : f '' Closure s ⊆ Closure (f '' s) :=
+  maps_to'.1 <| (maps_to_image f s).closure_of_continuous_within_at hf
 
 theorem ContinuousOn.image_closure {f : α → β} {s : Set α} (hf : ContinuousOn f (Closure s)) :
     f '' Closure s ⊆ Closure (f '' s) :=
@@ -817,7 +824,7 @@ theorem OpenEmbedding.map_nhds_within_preimage_eq {f : α → β} (hf : OpenEmbe
   rw [inter_assoc, inter_self]
 
 theorem continuous_within_at_of_not_mem_closure {f : α → β} {s : Set α} {x : α} :
-    (x ∉ Closure s) → ContinuousWithinAt f s x := by
+    x ∉ Closure s → ContinuousWithinAt f s x := by
   intro hx
   rw [mem_closure_iff_nhds_within_ne_bot, ne_bot_iff, not_not] at hx
   rw [ContinuousWithinAt, hx]
@@ -905,6 +912,15 @@ theorem Continuous.if {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a
     Continuous fun a => if p a then f a else g a :=
   continuous_if hp hf.ContinuousOn hg.ContinuousOn
 
+theorem Continuous.if_const (p : Prop) {f g : α → β} [Decidable p] (hf : Continuous f) (hg : Continuous g) :
+    Continuous fun a => if p then f a else g a :=
+  continuous_if
+    (if h : p then by
+      simp [h]
+    else by
+      simp [h])
+    hf.ContinuousOn hg.ContinuousOn
+
 theorem continuous_piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a ∈ s)] (hs : ∀, ∀ a ∈ Frontier s, ∀, f a = g a)
     (hf : ContinuousOn f (Closure s)) (hg : ContinuousOn g (Closure (sᶜ))) : Continuous (piecewise s f g) :=
   continuous_if hs hf hg
@@ -952,6 +968,11 @@ theorem continuous_on_piecewise_ite {s s' t : Set α} {f f' : α → β} [∀ x,
     (h' : ContinuousOn f' s') (H : s ∩ Frontier t = s' ∩ Frontier t) (Heq : EqOn f f' (s ∩ Frontier t)) :
     ContinuousOn (t.piecewise f f') (t.ite s s') :=
   continuous_on_piecewise_ite' (h.mono (inter_subset_left _ _)) (h'.mono (inter_subset_left _ _)) H Heq
+
+theorem frontier_inter_open_inter {s t : Set α} (ht : IsOpen t) : Frontier (s ∩ t) ∩ t = Frontier s ∩ t := by
+  simp only [← Subtype.preimage_coe_eq_preimage_coe_iff,
+    ht.is_open_map_subtype_coe.preimage_frontier_eq_frontier_preimage continuous_subtype_coe,
+    Subtype.preimage_coe_inter_self]
 
 theorem continuous_on_fst {s : Set (α × β)} : ContinuousOn Prod.fst s :=
   continuous_fst.ContinuousOn

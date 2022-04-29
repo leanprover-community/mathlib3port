@@ -3,6 +3,7 @@ Copyright (c) 2021 Alex Kontorovich, Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 -/
+import Mathbin.Topology.Algebra.Constructions
 import Mathbin.Topology.Homeomorph
 import Mathbin.GroupTheory.GroupAction.Basic
 
@@ -35,7 +36,7 @@ Hausdorff, discrete group, properly discontinuous, quotient space
 -/
 
 
-open_locale TopologicalSpace Pointwise
+open TopologicalSpace Pointwise
 
 open Filter Set
 
@@ -95,6 +96,10 @@ theorem Continuous.const_smul (hg : Continuous g) (c : M) : Continuous fun x => 
 instance HasContinuousConstSmul.op [HasScalar Mᵐᵒᵖ α] [IsCentralScalar M α] : HasContinuousConstSmul Mᵐᵒᵖ α :=
   ⟨MulOpposite.rec fun c => by
       simpa only [op_smul_eq_smul] using continuous_const_smul c⟩
+
+@[to_additive]
+instance MulOpposite.has_continuous_const_smul : HasContinuousConstSmul M αᵐᵒᵖ :=
+  ⟨fun c => MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.const_smul c⟩
 
 @[to_additive]
 instance [HasScalar M β] [HasContinuousConstSmul M β] : HasContinuousConstSmul M (α × β) :=
@@ -159,7 +164,7 @@ theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ 
 /-- The homeomorphism given by scalar multiplication by a given element of a group `Γ` acting on
   `T` is a homeomorphism from `T` to itself. -/
 @[to_additive]
-def Homeomorph.smul {G : Type _} [Groupₓ G] [MulAction G α] [HasContinuousConstSmul G α] (γ : G) : α ≃ₜ α where
+def Homeomorph.smul (γ : G) : α ≃ₜ α where
   toEquiv := MulAction.toPerm γ
   continuous_to_fun := continuous_const_smul γ
   continuous_inv_fun := continuous_const_smul γ⁻¹
@@ -183,6 +188,14 @@ theorem is_closed_map_smul (c : G) : IsClosedMap fun x : α => c • x :=
 @[to_additive]
 theorem IsClosed.smul {s : Set α} (hs : IsClosed s) (c : G) : IsClosed (c • s) :=
   is_closed_map_smul c s hs
+
+@[to_additive]
+theorem closure_smul (c : G) (s : Set α) : Closure (c • s) = c • Closure s :=
+  ((Homeomorph.smul c).image_closure s).symm
+
+@[to_additive]
+theorem interior_smul (c : G) (s : Set α) : Interior (c • s) = c • Interior s :=
+  ((Homeomorph.smul c).image_interior s).symm
 
 end Groupₓ
 
@@ -223,12 +236,28 @@ theorem IsOpen.smul₀ {c : G₀} {s : Set α} (hs : IsOpen s) (hc : c ≠ 0) : 
 theorem interior_smul₀ {c : G₀} (hc : c ≠ 0) (s : Set α) : Interior (c • s) = c • Interior s :=
   ((Homeomorph.smulOfNeZero c hc).image_interior s).symm
 
+theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E] [T1Space E]
+    [HasContinuousConstSmul G₀ E] (c : G₀) (s : Set E) : Closure (c • s) = c • Closure s := by
+  rcases eq_or_ne c 0 with (rfl | hc)
+  · rcases eq_empty_or_nonempty s with (rfl | hs)
+    · simp
+      
+    · rw [zero_smul_set hs, zero_smul_set hs.closure]
+      exact closure_singleton
+      
+    
+  · exact ((Homeomorph.smulOfNeZero c hc).image_closure s).symm
+    
+
 /-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
 theorem is_closed_map_smul_of_ne_zero {c : G₀} (hc : c ≠ 0) : IsClosedMap fun x : α => c • x :=
   (Homeomorph.smulOfNeZero c hc).IsClosedMap
+
+theorem IsClosed.smul_of_ne_zero {c : G₀} {s : Set α} (hs : IsClosed s) (hc : c ≠ 0) : IsClosed (c • s) :=
+  is_closed_map_smul_of_ne_zero hc s hs
 
 /-- `smul` is a closed map in the second argument.
 
@@ -242,6 +271,10 @@ theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMono
     
   · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
     
+
+theorem IsClosed.smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoidₓ M] [TopologicalSpace M] [T1Space M] [Module 𝕜 M]
+    [HasContinuousConstSmul 𝕜 M] (c : 𝕜) {s : Set M} (hs : IsClosed s) : IsClosed (c • s) :=
+  is_closed_map_smul₀ c s hs
 
 end GroupWithZeroₓ
 
@@ -358,4 +391,36 @@ instance (priority := 100) t2_space_of_properly_discontinuous_smul_of_t2_space [
     simp only [image_smul, not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
     
+
+section nhds
+
+section MulAction
+
+variable {G₀ : Type _} [GroupWithZeroₓ G₀] [MulAction G₀ α] [TopologicalSpace α] [HasContinuousConstSmul G₀ α]
+
+/-- Scalar multiplication preserves neighborhoods. -/
+theorem set_smul_mem_nhds_smul {c : G₀} {s : Set α} {x : α} (hs : s ∈ 𝓝 x) (hc : c ≠ 0) : c • s ∈ 𝓝 (c • x : α) := by
+  rw [mem_nhds_iff] at hs⊢
+  obtain ⟨U, hs', hU, hU'⟩ := hs
+  exact ⟨c • U, Set.smul_set_mono hs', hU.smul₀ hc, Set.smul_mem_smul_set hU'⟩
+
+theorem set_smul_mem_nhds_smul_iff {c : G₀} {s : Set α} {x : α} (hc : c ≠ 0) : c • s ∈ 𝓝 (c • x : α) ↔ s ∈ 𝓝 x := by
+  refine' ⟨fun h => _, fun h => set_smul_mem_nhds_smul h hc⟩
+  rw [← inv_smul_smul₀ hc x, ← inv_smul_smul₀ hc s]
+  exact set_smul_mem_nhds_smul h (inv_ne_zero hc)
+
+end MulAction
+
+section DistribMulAction
+
+variable {G₀ : Type _} [GroupWithZeroₓ G₀] [AddMonoidₓ α] [DistribMulAction G₀ α] [TopologicalSpace α]
+  [HasContinuousConstSmul G₀ α]
+
+theorem set_smul_mem_nhds_zero_iff {s : Set α} {c : G₀} (hc : c ≠ 0) : c • s ∈ 𝓝 (0 : α) ↔ s ∈ 𝓝 (0 : α) := by
+  refine' Iff.trans _ (set_smul_mem_nhds_smul_iff hc)
+  rw [smul_zero]
+
+end DistribMulAction
+
+end nhds
 

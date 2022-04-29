@@ -37,17 +37,17 @@ section Mul
 variable {S : Type _} [Mul S]
 
 /-- Equality behind `commute a b`; useful for rewriting. -/
-@[to_additive]
+@[to_additive "Equality behind `add_commute a b`; useful for rewriting."]
 protected theorem eq {a b : S} (h : Commute a b) : a * b = b * a :=
   h
 
 /-- Any element commutes with itself. -/
-@[refl, simp, to_additive]
+@[refl, simp, to_additive "Any element commutes with itself."]
 protected theorem refl (a : S) : Commute a a :=
   Eq.refl (a * a)
 
 /-- If `a` commutes with `b`, then `b` commutes with `a`. -/
-@[symm, to_additive]
+@[symm, to_additive "If `a` commutes with `b`, then `b` commutes with `a`."]
 protected theorem symm {a b : S} (h : Commute a b) : Commute b a :=
   Eq.symm h
 
@@ -66,12 +66,12 @@ section Semigroupₓ
 variable {S : Type _} [Semigroupₓ S] {a b c : S}
 
 /-- If `a` commutes with both `b` and `c`, then it commutes with their product. -/
-@[simp, to_additive]
+@[simp, to_additive "If `a` commutes with both `b` and `c`, then it commutes with their sum."]
 theorem mul_right (hab : Commute a b) (hac : Commute a c) : Commute a (b * c) :=
   hab.mul_right hac
 
 /-- If both `a` and `b` commute with `c`, then their product commutes with `c`. -/
-@[simp, to_additive]
+@[simp, to_additive "If both `a` and `b` commute with `c`, then their product commutes with `c`."]
 theorem mul_left (hac : Commute a c) (hbc : Commute b c) : Commute (a * b) c :=
   hac.mul_left hbc
 

@@ -72,7 +72,7 @@ with the case `p = λ _, true`.
 
 open Set Filter
 
-open_locale Filter Classical
+open Filter Classical
 
 section Sort
 
@@ -502,7 +502,7 @@ theorem mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ f
       simpa [empty_not_nonempty] using h s hs, fun hs t ht =>
       inter_compl_nonempty_iff.2 fun hts => hs <| mem_of_superset ht hts⟩
 
-theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : (s ∉ f) ↔ NeBot (f⊓𝓟 (sᶜ)) :=
+theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f ↔ NeBot (f⊓𝓟 (sᶜ)) :=
   (not_congr mem_iff_inf_principal_compl).trans ne_bot_iff.symm
 
 @[simp]
@@ -686,6 +686,22 @@ theorem HasBasis.prod' {la : Filter α} {lb : Filter β} {ι : Type _} {p : ι �
   · rintro ⟨i, hi, h⟩
     exact ⟨⟨i, i⟩, ⟨hi, hi⟩, h⟩
     
+
+theorem HasAntitoneBasis.prod {f : Filter α} {g : Filter β} {s : ℕ → Set α} {t : ℕ → Set β} (hf : HasAntitoneBasis f s)
+    (hg : HasAntitoneBasis g t) : HasAntitoneBasis (f ×ᶠ g) fun n => s n ×ˢ t n := by
+  have h : has_basis (f ×ᶠ g) _ _ := has_basis.prod' hf.to_has_basis hg.to_has_basis _
+  swap
+  · intro i j
+    simp only [true_andₓ, forall_true_left]
+    exact ⟨max i j, hf.antitone (le_max_leftₓ _ _), hg.antitone (le_max_rightₓ _ _)⟩
+    
+  refine' ⟨h, fun n m hn_le_m => Set.prod_mono _ _⟩
+  exacts[hf.antitone hn_le_m, hg.antitone hn_le_m]
+
+theorem HasBasis.coprod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α} {pb : ι' → Prop} {sb : ι' → Set β}
+    (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb) :
+    (la.coprod lb).HasBasis (fun i : ι × ι' => pa i.1 ∧ pb i.2) fun i => Prod.fst ⁻¹' sa i.1 ∪ Prod.snd ⁻¹' sb i.2 :=
+  (hla.comap Prod.fst).sup (hlb.comap Prod.snd)
 
 end TwoTypes
 
@@ -887,6 +903,13 @@ theorem is_countably_generated_bot : IsCountablyGenerated (⊥ : Filter α) :=
 @[instance]
 theorem is_countably_generated_top : IsCountablyGenerated (⊤ : Filter α) :=
   @principal_univ α ▸ is_countably_generated_principal _
+
+instance IsCountablyGenerated.prod {f : Filter α} {g : Filter β} [hf : f.IsCountablyGenerated]
+    [hg : g.IsCountablyGenerated] : IsCountablyGenerated (f ×ᶠ g) := by
+  simp_rw [is_countably_generated_iff_exists_antitone_basis]  at hf hg⊢
+  rcases hf with ⟨s, hs⟩
+  rcases hg with ⟨t, ht⟩
+  refine' ⟨_, hs.prod ht⟩
 
 end Filter
 

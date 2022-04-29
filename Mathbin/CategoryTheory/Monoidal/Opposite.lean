@@ -3,7 +3,7 @@ Copyright (c) 2020 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Category
+import Mathbin.CategoryTheory.Monoidal.Coherence
 
 /-!
 # Monoidal opposites
@@ -141,6 +141,8 @@ variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   tensorObj := fun X Y => op (unop X ⊗ unop Y)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
@@ -151,25 +153,23 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   associator_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
-    simp [associator_inv_naturality]
+    simp
   left_unitor_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
-    simp [left_unitor_inv_naturality]
+    simp
   right_unitor_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
-    simp [right_unitor_inv_naturality]
+    simp
   triangle' := by
     intros
     apply Quiver.Hom.unop_inj
-    dsimp
-    simp
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
   pentagon' := by
     intros
     apply Quiver.Hom.unop_inj
-    dsimp
-    simp [pentagon_inv]
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
@@ -177,6 +177,8 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
@@ -187,25 +189,23 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   associator_naturality' := by
     intros
     apply unmop_inj
-    simp [associator_inv_naturality]
+    simp
   left_unitor_naturality' := by
     intros
     apply unmop_inj
-    simp [right_unitor_naturality]
+    simp
   right_unitor_naturality' := by
     intros
     apply unmop_inj
-    simp [left_unitor_naturality]
+    simp
   triangle' := by
     intros
     apply unmop_inj
-    dsimp
-    simp
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
   pentagon' := by
     intros
     apply unmop_inj
-    dsimp
-    simp [pentagon_inv]
+    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl

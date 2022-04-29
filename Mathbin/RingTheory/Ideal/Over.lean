@@ -31,7 +31,7 @@ namespace Ideal
 
 open Polynomial
 
-open_locale Polynomial
+open Polynomial
 
 open Submodule
 
@@ -109,7 +109,7 @@ theorem exists_nonzero_mem_of_ne_bot {P : Ideal R[X]} (Pb : P ≠ ⊥) (hP : ∀
     ∃ p : R[X], p ∈ P ∧ Polynomial.map (Quotient.mk (P.comap c)) p ≠ 0 := by
   obtain ⟨m, hm⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr Pb)
   refine' ⟨m, Submodule.coe_mem m, fun pp0 => hm (submodule.coe_eq_zero.mp _)⟩
-  refine' (RingHom.injective_iff (Polynomial.mapRingHom (Quotientₓ.mk (P.comap C)))).mp _ _ pp0
+  refine' (injective_iff_map_eq_zero (Polynomial.mapRingHom (Quotientₓ.mk (P.comap C)))).mp _ _ pp0
   refine' map_injective _ ((Quotientₓ.mk (P.comap C)).injective_iff_ker_eq_bot.mpr _)
   rw [mk_ker]
   exact (Submodule.eq_bot_iff _).mpr fun x hx => hP x (mem_comap.mp hx)
@@ -131,7 +131,7 @@ theorem comap_eq_of_scalar_tower_quotient [Algebra R S] [Algebra (R ⧸ p) (S �
     rw [mem_comap, ← quotient.eq_zero_iff_mem, ← quotient.eq_zero_iff_mem, quotient.mk_algebra_map,
       IsScalarTower.algebra_map_apply _ (R ⧸ p), quotient.algebra_map_eq]
   · intro hx
-    exact (algebraMap (R ⧸ p) (S ⧸ P)).injective_iff.mp h _ hx
+    exact (injective_iff_map_eq_zero (algebraMap (R ⧸ p) (S ⧸ P))).mp h _ hx
     
   · intro hx
     rw [hx, RingHom.map_zero]
@@ -318,7 +318,7 @@ theorem exists_ideal_over_prime_of_is_integral' (H : Algebra.IsIntegral R S) (P 
     exact absurd (hP x0) hx
   let Rₚ := Localization P.prime_compl
   let Sₚ := Localization (Algebra.algebraMapSubmonoid S P.prime_compl)
-  let this' : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
+  let this : IsDomain (Localization (Algebra.algebraMapSubmonoid S P.prime_compl)) :=
     IsLocalization.is_domain_localization (le_non_zero_divisors_of_no_zero_divisors hP0)
   obtain ⟨Qₚ : Ideal Sₚ, Qₚ_maximal⟩ := exists_maximal Sₚ
   have Qₚ_max : is_maximal (comap _ Qₚ) :=

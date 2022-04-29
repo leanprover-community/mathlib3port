@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
 import Mathbin.Algebra.Lie.Matrix
-import Mathbin.LinearAlgebra.BilinearForm
+import Mathbin.LinearAlgebra.Matrix.BilinearForm
 
 /-!
 # Lie algebras of skew-adjoint endomorphisms of a bilinear form
@@ -83,7 +83,7 @@ end SkewAdjointEndomorphisms
 
 section SkewAdjointMatrices
 
-open_locale Matrix
+open Matrix
 
 variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintype n]
 

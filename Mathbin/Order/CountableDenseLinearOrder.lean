@@ -10,14 +10,13 @@ import Mathbin.Order.Ideal
 
 ## Results
 
-Suppose `α β` are linear orders, with `α` countable and `β` dense, nonempty, without endpoints.
-Then there is an order embedding `α ↪ β`. If in addition `α` is dense, nonempty, without
-endpoints and `β` is countable, then we can upgrade this to an order isomorphism `α ≃ β`.
+Suppose `α β` are orders, with `α` countable and `β` dense, nontrivial. Then there is an order
+embedding `α ↪ β`. If in addition `α` is dense, nonempty, without endpoints and `β` is countable,
+without endpoints, then we can upgrade this to an order isomorphism `α ≃ β`.
 
-The idea for both results is to consider "partial isomorphisms", which
-identify a finite subset of `α` with a finite subset of `β`, and prove that
-for any such partial isomorphism `f` and `a : α`, we can extend `f` to
-include `a` in its domain.
+The idea for both results is to consider "partial isomorphisms", which identify a finite subset of
+`α` with a finite subset of `β`, and prove that for any such partial isomorphism `f` and `a : α`, we
+can extend `f` to include `a` in its domain.
 
 ## References
 
@@ -26,13 +25,12 @@ https://en.wikipedia.org/wiki/Back-and-forth_method
 ## Tags
 
 back and forth, dense, countable, order
-
 -/
 
 
 noncomputable section
 
-open_locale Classical
+open Classical
 
 namespace Order
 
@@ -92,7 +90,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     ∃ b : β, ∀, ∀ p ∈ f.val, ∀, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases' h : ∃ b, (a, b) ∈ f.val
   · cases' h with b hb
-    exact ⟨b, fun p hp => f.property _ hp _ hb⟩
+    exact ⟨b, fun p hp => f.prop _ hp _ hb⟩
     
   have :
     ∀,
@@ -104,7 +102,7 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     rcases hx with ⟨p, hp1, rfl⟩
     rcases hy with ⟨q, hq1, rfl⟩
     rw [Finset.mem_filter] at hp1 hq1
-    rw [← lt_iff_lt_of_cmp_eq_cmp (f.property _ hp1.1 _ hq1.1)]
+    rw [← lt_iff_lt_of_cmp_eq_cmp (f.prop _ hp1.1 _ hq1.1)]
     exact lt_transₓ hp1.right hq1.right
   cases' exists_between_finsets _ _ this with b hb
   use b
@@ -139,21 +137,19 @@ variable (β)
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) : Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ b : β, (a, b) ∈ f.val
-  mem_gt := by
-    intro f
+  mem_gt := fun f => by
     cases' exists_across f a with b a_b
-    refine' ⟨⟨insert (a, b) f.val, _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
-    intro p hp q hq
+    refine' ⟨⟨insert (a, b) f.val, fun p hp q hq => _⟩, ⟨b, Finset.mem_insert_self _ _⟩, Finset.subset_insert _ _⟩
     rw [Finset.mem_insert] at hp hq
     rcases hp with (rfl | pf) <;> rcases hq with (rfl | qf)
-    · simp
+    · simp only [cmp_self_eq_eq]
       
     · rw [cmp_eq_cmp_symm]
       exact a_b _ qf
       
     · exact a_b _ pf
       
-    · exact f.property _ pf _ qf
+    · exact f.prop _ pf _ qf
       
 
 variable (α) {β}
@@ -163,13 +159,10 @@ variable (α) {β}
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
     Cofinal (PartialIso α β) where
   Carrier := fun f => ∃ a, (a, b) ∈ f.val
-  mem_gt := by
-    intro f
+  mem_gt := fun f => by
     rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
-    use f'.comm
-    constructor
-    · use a
-      change (a, b) ∈ f'.val.image _
+    refine' ⟨f'.comm, ⟨a, _⟩, _⟩
+    · change (a, b) ∈ f'.val.image _
       rwa [← Finset.mem_coe, Finset.coe_image, Equivₓ.image_eq_preimage]
       
     · change _ ⊆ f'.val.image _
@@ -198,33 +191,32 @@ open PartialIso
 
 variable (α β)
 
-/-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
-def embeddingFromCountableToDense [Encodable α] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
-    α ↪o β :=
-  let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default <| definedAtLeft β
-  let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
-  OrderEmbedding.ofStrictMono (fun a => (F a).val)
-    (by
-      intro a₁ a₂
-      rcases(F a₁).property with ⟨f, hf, ha₁⟩
-      rcases(F a₂).property with ⟨g, hg, ha₂⟩
-      rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
-      exact (lt_iff_lt_of_cmp_eq_cmp <| m.property (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp)
+/-- Any countable order embeds in any nontrivial dense linear order. -/
+theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] : Nonempty (α ↪o β) := by
+  rcases exists_pair_lt β with ⟨x, y, hxy⟩
+  cases' exists_between hxy with a ha
+  have : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
+  let our_ideal : ideal (partial_iso α _) := ideal_of_cofinals default (defined_at_left (Set.Ioo x y))
+  let F := fun a => fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
+  refine'
+    ⟨RelEmbedding.trans (OrderEmbedding.ofStrictMono (fun a => (F a).val) fun a₁ a₂ => _) (OrderEmbedding.subtype _)⟩
+  rcases(F a₁).Prop with ⟨f, hf, ha₁⟩
+  rcases(F a₂).Prop with ⟨g, hg, ha₂⟩
+  rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
+  exact (lt_iff_lt_of_cmp_eq_cmp <| m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
 
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
-def isoOfCountableDense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
-    [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : α ≃o β :=
+theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] [Encodable β]
+    [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] : Nonempty (α ≃o β) :=
   let to_cofinal : Sum α β → Cofinal (PartialIso α β) := fun p => Sum.recOn p (definedAtLeft β) (definedAtRight α)
   let our_ideal : Ideal (PartialIso α β) := idealOfCofinals default to_cofinal
   let F := fun a => funOfIdeal a our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inl a))
   let G := fun b => invOfIdeal b our_ideal (cofinal_meets_ideal_of_cofinals _ to_cofinal (Sum.inr b))
-  OrderIso.ofCmpEqCmp (fun a => (F a).val) (fun b => (G b).val)
-    (by
-      intro a b
-      rcases(F a).property with ⟨f, hf, ha⟩
-      rcases(G b).property with ⟨g, hg, hb⟩
+  ⟨(OrderIso.ofCmpEqCmp (fun a => (F a).val) fun b => (G b).val) fun a b => by
+      rcases(F a).Prop with ⟨f, hf, ha⟩
+      rcases(G b).Prop with ⟨g, hg, hb⟩
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
-      exact m.property (a, _) (fm ha) (_, b) (gm hb))
+      exact m.prop (a, _) (fm ha) (_, b) (gm hb)⟩
 
 end Order
 

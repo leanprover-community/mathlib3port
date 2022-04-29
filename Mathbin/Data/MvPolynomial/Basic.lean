@@ -80,11 +80,11 @@ polynomial, multivariate polynomial, multivariable polynomial
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w x
 
@@ -338,13 +338,13 @@ theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (
 
 /-- Similar to `mv_polynomial.induction_on` but only a weak form of `h_add` is required.-/
 theorem induction_on''' {M : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h_C : ∀ a, M (c a))
-    (h_add_weak : ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, (a ∉ f.support) → b ≠ 0 → M f → M (monomial a b + f)) : M p :=
+    (h_add_weak : ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, a ∉ f.support → b ≠ 0 → M f → M (monomial a b + f)) : M p :=
   Finsupp.induction p (C_0.rec <| h_C 0) h_add_weak
 
 /-- Similar to `mv_polynomial.induction_on` but only a yet weaker form of `h_add` is required.-/
 theorem induction_on'' {M : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h_C : ∀ a, M (c a))
     (h_add_weak :
-      ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, (a ∉ f.support) → b ≠ 0 → M f → M (monomial a b) → M (monomial a b + f))
+      ∀ a : σ →₀ ℕ b : R f : (σ →₀ ℕ) →₀ R, a ∉ f.support → b ≠ 0 → M f → M (monomial a b) → M (monomial a b + f))
     (h_X : ∀ p : MvPolynomial σ R n : σ, M p → M (p * MvPolynomial.x n)) : M p :=
   induction_on''' p h_C fun a b f ha hb hf => h_add_weak a b f ha hb hf <| induction_on_monomial h_C h_X a b
 
@@ -430,6 +430,9 @@ theorem support_add : (p + q).support ⊆ p.support ∪ q.support :=
 theorem support_X [Nontrivial R] : (x n : MvPolynomial σ R).support = {single n 1} := by
   rw [X, support_monomial, if_neg] <;> exact one_ne_zero
 
+theorem support_X_pow [Nontrivial R] (s : σ) (n : ℕ) : (x s ^ n : MvPolynomial σ R).support = {Finsupp.single s n} := by
+  rw [X_pow_eq_monomial, support_monomial, if_neg (@one_ne_zero R _ _)]
+
 @[simp]
 theorem support_zero : (0 : MvPolynomial σ R).support = ∅ :=
   rfl
@@ -450,7 +453,7 @@ def coeff (m : σ →₀ ℕ) (p : MvPolynomial σ R) : R :=
 theorem mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : m ∈ p.support ↔ p.coeff m ≠ 0 := by
   simp [support, coeff]
 
-theorem not_mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : (m ∉ p.support) ↔ p.coeff m = 0 := by
+theorem not_mem_support_iff {p : MvPolynomial σ R} {m : σ →₀ ℕ} : m ∉ p.support ↔ p.coeff m = 0 := by
   simp
 
 theorem sum_def {A} [AddCommMonoidₓ A] {p : MvPolynomial σ R} {b : (σ →₀ ℕ) → R → A} :
@@ -585,7 +588,7 @@ theorem support_sdiff_support_subset_support_add [DecidableEq σ] (p q : MvPolyn
   simp [hm.2, hm.1]
 
 theorem support_symm_diff_support_subset_support_add [DecidableEq σ] (p q : MvPolynomial σ R) :
-    p.support Δ q.support ⊆ (p + q).support := by
+    p.support ∆ q.support ⊆ (p + q).support := by
   rw [symm_diff_def, Finset.sup_eq_union]
   apply Finset.union_subset
   · exact support_sdiff_support_subset_support_add p q

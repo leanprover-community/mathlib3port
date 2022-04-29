@@ -64,20 +64,24 @@ end
 instance [SemigroupWithZeroₓ β] : SemigroupWithZeroₓ (α →₀ β) :=
   Finsupp.coe_fn_injective.SemigroupWithZero _ coe_zero coe_mul
 
--- note we cannot use `function.injective.non_unital_non_assoc_semiring` here as it creates
--- a conflicting `nsmul` field
 instance [NonUnitalNonAssocSemiringₓ β] : NonUnitalNonAssocSemiringₓ (α →₀ β) :=
-  { (Function.Injective.distrib _ Finsupp.coe_fn_injective coe_add coe_mul : Distribₓ (α →₀ β)),
-    (Finsupp.mulZeroClass : MulZeroClassₓ (α →₀ β)), (Finsupp.addCommMonoid : AddCommMonoidₓ (α →₀ β)) with }
+  Finsupp.coe_fn_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiringₓ β] : NonUnitalSemiringₓ (α →₀ β) :=
-  { (inferInstance : Semigroupₓ (α →₀ β)), (inferInstance : NonUnitalNonAssocSemiringₓ (α →₀ β)) with }
+  Finsupp.coe_fn_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+
+instance [NonUnitalCommSemiring β] : NonUnitalCommSemiring (α →₀ β) :=
+  Finsupp.coe_fn_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
-  { (inferInstance : NonUnitalNonAssocSemiringₓ (α →₀ β)), (inferInstance : AddCommGroupₓ (α →₀ β)) with }
+  Finsupp.coe_fn_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
+    rfl
 
 instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
-  { (inferInstance : NonUnitalSemiringₓ (α →₀ β)), (inferInstance : AddCommGroupₓ (α →₀ β)) with }
+  Finsupp.coe_fn_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+
+instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
+  Finsupp.coe_fn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 -- TODO can this be generalized in the direction of `pi.has_scalar'`
 -- (i.e. dependent functions and finsupps)

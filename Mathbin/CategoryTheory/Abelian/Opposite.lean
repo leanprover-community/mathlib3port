@@ -88,6 +88,13 @@ def kernelUnopOp : Opposite.op (kernel g.unop) ≅ cokernel g :=
 def cokernelUnopOp : Opposite.op (cokernel g.unop) ≅ kernel g :=
   (kernelOpUnop g.unop).op
 
+theorem Cokernel.π_op :
+    (cokernel.π f.op).unop = (cokernelOpUnop f).Hom ≫ kernel.ι f ≫ eqToHom (Opposite.unop_op _).symm := by
+  simp [cokernel_op_unop]
+
+theorem Kernel.ι_op : (kernel.ι f.op).unop = eqToHom (Opposite.unop_op _) ≫ cokernel.π f ≫ (kernelOpUnop f).inv := by
+  simp [kernel_op_unop]
+
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]
 def kernelOpOp : kernel f.op ≅ Opposite.op (cokernel f) :=
@@ -102,6 +109,13 @@ def cokernelOpOp : cokernel f.op ≅ Opposite.op (kernel f) :=
 @[simps]
 def kernelUnopUnop : kernel g.unop ≅ (cokernel g).unop :=
   (kernelUnopOp g).unop.symm
+
+theorem Kernel.ι_unop : (kernel.ι g.unop).op = eqToHom (Opposite.op_unop _) ≫ cokernel.π g ≫ (kernelUnopOp g).inv := by
+  simp
+
+theorem Cokernel.π_unop :
+    (cokernel.π g.unop).op = (cokernelUnopOp g).Hom ≫ kernel.ι g ≫ eqToHom (Opposite.op_unop _).symm := by
+  simp
 
 /-- The cokernel of `g.unop` is the opposite of `kernel g`. -/
 @[simps]

@@ -101,10 +101,11 @@ theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
 theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Injective f₁)
     (h₂ : ∀ a, Function.Injective (f₂ a)) : Function.Injective (Sigma.map f₁ f₂)
   | ⟨i, x⟩, ⟨j, y⟩, h => by
-    have : i = j := h₁ (sigma.mk.inj_iff.mp h).1
-    subst j
-    have : x = y := h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)
-    subst y
+    obtain rfl : i = j
+    exact h₁ (sigma.mk.inj_iff.mp h).1
+    obtain rfl : x = y
+    exact h₂ i (eq_of_heq (sigma.mk.inj_iff.mp h).2)
+    rfl
 
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)} (h₁ : Function.Surjective f₁)
     (h₂ : ∀ a, Function.Surjective (f₂ a)) : Function.Surjective (Sigma.map f₁ f₂) := by

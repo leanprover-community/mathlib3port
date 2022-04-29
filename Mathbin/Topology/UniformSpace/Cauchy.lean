@@ -15,7 +15,7 @@ universe u v
 
 open Filter TopologicalSpace Set Classical UniformSpace Function
 
-open_locale Classical uniformity TopologicalSpace Filter
+open Classical uniformity TopologicalSpace Filter
 
 variable {α : Type u} {β : Type v} [UniformSpace α]
 
@@ -389,38 +389,41 @@ def TotallyBounded (s : Set α) : Prop :=
   ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)} (hU : U ∈ 𝓤 α) :
+    ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } := by
+  rcases comp_symm_of_uniformity hU with ⟨r, hr, rs, rU⟩
+  rcases hs r hr with ⟨k, fk, ks⟩
+  let u := k ∩ { y | ∃ x ∈ s, (x, y) ∈ r }
+  choose hk f hfs hfr using fun x : u => x.coe_prop
+  refine' ⟨range f, _, _, _⟩
+  · exact range_subset_iff.2 hfs
+    
+  · have : Fintype u := (fk.inter_of_left _).Fintype
+    exact finite_range f
+    
+  · intro x xs
+    obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r
+    exact mem_Union₂.1 (ks xs)
+    rw [bUnion_range, mem_Union]
+    set z : ↥u := ⟨y, hy, ⟨x, xs, xy⟩⟩
+    exact ⟨z, rU <| mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
+    
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff_subset {s : Set α} :
     TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
-  ⟨fun H d hd => by
-    rcases comp_symm_of_uniformity hd with ⟨r, hr, rs, rd⟩
-    rcases H r hr with ⟨k, fk, ks⟩
-    let u := k ∩ { y | ∃ x ∈ s, (x, y) ∈ r }
-    choose hk f hfs hfr using fun x : u => x.coe_prop
-    refine' ⟨range f, _, _, _⟩
-    · exact range_subset_iff.2 hfs
-      
-    · have : Fintype u := (fk.inter_of_left _).Fintype
-      exact finite_range f
-      
-    · intro x xs
-      obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r
-      exact mem_Union₂.1 (ks xs)
-      rw [bUnion_range, mem_Union]
-      set z : ↥u := ⟨y, hy, ⟨x, xs, xy⟩⟩
-      exact ⟨z, rd <| mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
-      ,
-    fun H d hd =>
+  ⟨fun H d hd => H.exists_subset hd, fun H d hd =>
     let ⟨t, _, ht⟩ := H d hd
     ⟨t, ht⟩⟩
 
+theorem Filter.HasBasis.totally_bounded_iff {ι} {p : ι → Prop} {U : ι → Set (α × α)} (H : (𝓤 α).HasBasis p U)
+    {s : Set α} : TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
+  H.forall_iff fun U V hUV h => h.imp fun t ht => ⟨ht.1, ht.2.trans <| Union₂_mono fun x hx y hy => hUV hy⟩
+
 theorem totally_bounded_of_forall_symm {s : Set α}
-    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s := by
-  intro V V_in
-  rcases h _ (symmetrize_mem_uniformity V_in) (symmetric_symmetrize_rel V) with ⟨t, tfin, h⟩
-  refine' ⟨t, tfin, subset.trans h _⟩
-  mono
-  intro x x_in z z_in
-  exact z_in.right
+    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s :=
+  UniformSpace.has_basis_symmetric.totally_bounded_iff.2 fun V hV => by
+    simpa only [ball_eq_of_symmetry hV.2] using h V hV.1 hV.2
 
 theorem totally_bounded_subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : TotallyBounded s₂) : TotallyBounded s₁ := fun d hd =>
   let ⟨t, ht₁, ht₂⟩ := h d hd
@@ -429,19 +432,13 @@ theorem totally_bounded_subset {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) (h : To
 theorem totally_bounded_empty : TotallyBounded (∅ : Set α) := fun d hd => ⟨∅, finite_empty, empty_subset _⟩
 
 /-- The closure of a totally bounded set is totally bounded. -/
-theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBounded (Closure s) := fun t ht =>
-  let ⟨t', ht', hct', htt'⟩ := mem_uniformity_is_closed ht
-  let ⟨c, hcf, hc⟩ := h t' ht'
-  ⟨c, hcf,
-    calc
-      Closure s ⊆ Closure (⋃ (y : α) (H : y ∈ c), { x : α | (x, y) ∈ t' }) := closure_mono hc
-      _ = _ :=
-        IsClosed.closure_eq <|
-          (is_closed_bUnion hcf) fun i hi => continuous_iff_is_closed.mp (continuous_id.prod_mk continuous_const) _ hct'
-      _ ⊆ _ := Union₂_subset fun i hi => Subset.trans (fun x => @htt' (x, i)) (subset_bUnion_of_mem hi)
-      ⟩
+theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBounded (Closure s) :=
+  uniformity_has_basis_closed.totally_bounded_iff.2 fun V hV =>
+    let ⟨t, htf, hst⟩ := h V hV.1
+    ⟨t, htf,
+      closure_minimal hst <| (is_closed_bUnion htf) fun y hy => hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
 
-/-- The image of a totally bounded set under a unifromly continuous map is totally bounded. -/
+/-- The image of a totally bounded set under a uniformly continuous map is totally bounded. -/
 theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs : TotallyBounded s)
     (hf : UniformContinuous f) : TotallyBounded (f '' s) := fun t ht =>
   have : { p : α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht
@@ -467,7 +464,7 @@ theorem Ultrafilter.cauchy_of_totally_bounded {s : Set α} (f : Ultrafilter α) 
 
 theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, NeBot f → f ≤ 𝓟 s → ∃ c ≤ f, Cauchy c := by
   constructor
-  · intros H f hf hfs
+  · intro H f hf hfs
     exact
       ⟨Ultrafilter.of f, Ultrafilter.of_le f,
         (Ultrafilter.of f).cauchy_of_totally_bounded H ((Ultrafilter.of_le f).trans hfs)⟩
@@ -504,7 +501,7 @@ theorem totally_bounded_iff_filter {s : Set α} : TotallyBounded s ↔ ∀ f, Ne
 theorem totally_bounded_iff_ultrafilter {s : Set α} :
     TotallyBounded s ↔ ∀ f : Ultrafilter α, ↑f ≤ 𝓟 s → Cauchy (f : Filter α) := by
   refine' ⟨fun hs f => f.cauchy_of_totally_bounded hs, fun H => totally_bounded_iff_filter.2 _⟩
-  intros f hf hfs
+  intro f hf hfs
   exact ⟨Ultrafilter.of f, Ultrafilter.of_le f, H _ ((Ultrafilter.of_le f).trans hfs)⟩
 
 theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ TotallyBounded s ∧ IsComplete s :=
@@ -518,7 +515,7 @@ theorem compact_iff_totally_bounded_complete {s : Set α} : IsCompact s ↔ Tota
     fun ⟨ht, hc⟩ =>
     is_compact_iff_ultrafilter_le_nhds.2 fun f hf => hc _ (totally_bounded_iff_ultrafilter.1 ht f hf) hf⟩
 
-theorem IsCompact.totally_bounded {s : Set α} (h : IsCompact s) : TotallyBounded s :=
+protected theorem IsCompact.totally_bounded {s : Set α} (h : IsCompact s) : TotallyBounded s :=
   (compact_iff_totally_bounded_complete.1 h).1
 
 protected theorem IsCompact.is_complete {s : Set α} (h : IsCompact s) : IsComplete s :=

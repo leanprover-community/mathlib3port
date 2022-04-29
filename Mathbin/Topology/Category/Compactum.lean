@@ -74,7 +74,7 @@ universe u
 
 open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits HasFiniteInter
 
-open_locale Classical TopologicalSpace
+open Classical TopologicalSpace
 
 -- mathport name: «exprβ»
 local notation "β" => ofTypeMonad Ultrafilter
@@ -436,15 +436,14 @@ namespace compactumToCompHaus
 
 /-- The functor Compactum_to_CompHaus is full. -/
 def full : Full compactumToCompHaus.{u} where
-  Preimage := fun X Y f => Compactum.homOfContinuous f.1 f.2
+  preimage := fun X Y f => Compactum.homOfContinuous f.1 f.2
 
 /-- The functor Compactum_to_CompHaus is faithful. -/
 theorem faithful : Faithful compactumToCompHaus :=
   {  }
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
-noncomputable def isoOfTopologicalSpace {D : CompHaus} :
-    compactumToCompHaus.obj (Compactum.ofTopologicalSpace D) ≅ D where
+def isoOfTopologicalSpace {D : CompHaus} : compactumToCompHaus.obj (Compactum.ofTopologicalSpace D) ≅ D where
   Hom :=
     { toFun := id,
       continuous_to_fun :=

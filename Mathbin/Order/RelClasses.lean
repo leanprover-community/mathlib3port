@@ -21,6 +21,9 @@ variable {α : Type u} {β : Type v} {r : α → α → Prop} {s : β → β →
 
 open Function
 
+theorem of_eq [IsRefl α r] : ∀ {a b}, a = b → r a b
+  | _, _, ⟨h⟩ => refl _
+
 theorem comm [IsSymm α r] {a b : α} : r a b ↔ r b a :=
   ⟨symm, symm⟩
 
@@ -124,6 +127,8 @@ theorem trans_trichotomous_right [IsTrans α r] [IsTrichotomous α r] {a b c : �
   exact h₁
   exfalso
   exact h₂ h₃
+
+theorem transitive_of_trans (r : α → α → Prop) [IsTrans α r] : Transitive r := fun _ _ _ => trans
 
 /-- Construct a partial order from a `is_strict_order` relation.
 
@@ -258,7 +263,7 @@ instance (priority := 100) IsWellOrder.is_asymm {α} (r : α → α → Prop) [I
 
 /-- Construct a decidable linear order from a well-founded linear order. -/
 noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder α r] : LinearOrderₓ α := by
-  let this' := fun x y => Classical.dec ¬r x y
+  let this := fun x y => Classical.dec ¬r x y
   exact linearOrderOfSTO' r
 
 instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation where
@@ -379,8 +384,8 @@ theorem ne_of_not_superset [IsRefl α (· ⊆ ·)] : ¬a ⊆ b → b ≠ a :=
   mt superset_of_eq
 
 @[trans]
-theorem subset_trans [IsTrans α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ c) : a ⊆ c :=
-  trans h h'
+theorem subset_trans [IsTrans α (· ⊆ ·)] {a b c : α} : a ⊆ b → b ⊆ c → a ⊆ c :=
+  trans
 
 theorem subset_antisymm [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) (h' : b ⊆ a) : a = b :=
   antisymm h h'
@@ -424,8 +429,8 @@ theorem ne_of_ssuperset [IsIrrefl α (· ⊂ ·)] {a b : α} : a ⊂ b → b ≠
   ne_of_irrefl'
 
 @[trans]
-theorem ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} (h : a ⊂ b) (h' : b ⊂ c) : a ⊂ c :=
-  trans h h'
+theorem ssubset_trans [IsTrans α (· ⊂ ·)] {a b c : α} : a ⊂ b → b ⊂ c → a ⊂ c :=
+  trans
 
 theorem ssubset_asymm [IsAsymm α (· ⊂ ·)] {a b : α} (h : a ⊂ b) : ¬b ⊂ a :=
   asymm h
@@ -617,9 +622,27 @@ instance [LinearOrderₓ α] : IsIncompTrans α (· < ·) := by
 instance [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) := by
   infer_instance
 
+theorem transitive_le [Preorderₓ α] : Transitive (@LE.le α _) :=
+  transitive_of_trans _
+
+theorem transitive_lt [Preorderₓ α] : Transitive (@LT.lt α _) :=
+  transitive_of_trans _
+
+theorem transitive_ge [Preorderₓ α] : Transitive (@Ge α _) :=
+  transitive_of_trans _
+
+theorem transitive_gt [Preorderₓ α] : Transitive (@Gt α _) :=
+  transitive_of_trans _
+
 instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (OrderDual α) (· ≤ ·) :=
   @IsTotal.swap α _ _
 
 instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
   ⟨Nat.lt_wf⟩
+
+instance [LinearOrderₓ α] [h : IsWellOrder α (· < ·)] : IsWellOrder (OrderDual α) (· > ·) :=
+  h
+
+instance [LinearOrderₓ α] [h : IsWellOrder α (· > ·)] : IsWellOrder (OrderDual α) (· < ·) :=
+  h
 

@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 -/
 import Mathbin.Analysis.Normed.Group.Hom
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
+import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 
 /-!
 # The category of seminormed groups
@@ -53,11 +54,11 @@ theorem coe_id (V : SemiNormedGroupₓ) : ⇑(𝟙 V) = id :=
 theorem coe_comp {M N K : SemiNormedGroupₓ} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : M → K) = g ∘ f :=
   rfl
 
-instance : Zero SemiNormedGroupₓ :=
+instance : Inhabited SemiNormedGroupₓ :=
   ⟨of PUnit⟩
 
-instance : Inhabited SemiNormedGroupₓ :=
-  ⟨0⟩
+instance ofUnique (V : Type u) [SemiNormedGroup V] [i : Unique V] : Unique (SemiNormedGroupₓ.of V) :=
+  i
 
 instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroupₓ :=
   {  }
@@ -66,17 +67,18 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroupₓ :=
 theorem zero_apply {V W : SemiNormedGroupₓ} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 
-instance hasZeroObject : Limits.HasZeroObject SemiNormedGroupₓ.{u} where
-  zero := 0
-  uniqueTo := fun X =>
-    { default := 0,
-      uniq := fun a => by
-        ext ⟨⟩
-        exact a.map_zero }
-  uniqueFrom := fun X =>
-    { default := 0,
-      uniq := fun f => by
-        ext }
+theorem is_zero_of_subsingleton (V : SemiNormedGroupₓ) [Subsingleton V] : Limits.IsZero V := by
+  refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
+  · ext
+    have : x = 0 := Subsingleton.elimₓ _ _
+    simp only [this, NormedGroupHom.map_zero]
+    
+  · ext
+    apply Subsingleton.elimₓ
+    
+
+instance has_zero_object : Limits.HasZeroObject SemiNormedGroupₓ.{u} :=
+  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 
 theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupₓ} (i : V ≅ W) (h1 : i.hom.NormNoninc)
     (h2 : i.inv.NormNoninc) : Isometry i.hom := by
@@ -161,11 +163,11 @@ theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
     (f ≫ g : NormedGroupHom M K) = (↑g : NormedGroupHom N K).comp ↑f :=
   rfl
 
-instance : Zero SemiNormedGroup₁ :=
+instance : Inhabited SemiNormedGroup₁ :=
   ⟨of PUnit⟩
 
-instance : Inhabited SemiNormedGroup₁ :=
-  ⟨0⟩
+instance ofUnique (V : Type u) [SemiNormedGroup V] [i : Unique V] : Unique (SemiNormedGroup₁.of V) :=
+  i
 
 instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁ where
   HasZero := fun X Y => { zero := ⟨0, NormedGroupHom.NormNoninc.zero⟩ }
@@ -180,17 +182,19 @@ instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁ where
 theorem zero_apply {V W : SemiNormedGroup₁} (x : V) : (0 : V ⟶ W) x = 0 :=
   rfl
 
-instance hasZeroObject : Limits.HasZeroObject SemiNormedGroup₁.{u} where
-  zero := 0
-  uniqueTo := fun X =>
-    { default := 0,
-      uniq := fun a => by
-        ext ⟨⟩
-        exact a.1.map_zero }
-  uniqueFrom := fun X =>
-    { default := 0,
-      uniq := fun f => by
-        ext }
+theorem is_zero_of_subsingleton (V : SemiNormedGroup₁) [Subsingleton V] : Limits.IsZero V := by
+  refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩
+  · ext
+    have : x = 0 := Subsingleton.elimₓ _ _
+    simp only [this, NormedGroupHom.map_zero]
+    apply f.1.map_zero
+    
+  · ext
+    apply Subsingleton.elimₓ
+    
+
+instance has_zero_object : Limits.HasZeroObject SemiNormedGroup₁.{u} :=
+  ⟨⟨of PUnit, is_zero_of_subsingleton _⟩⟩
 
 theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom := by
   apply NormedGroupHom.isometry_of_norm

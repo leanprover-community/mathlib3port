@@ -132,9 +132,9 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
     (h_map : ∀ X Y f, F.map f = eqToHom (h_obj X) ≫ G.map f ≫ eqToHom (h_obj Y).symm) : F = G := by
   cases' F with F_obj _ _ _
   cases' G with G_obj _ _ _
-  have : F_obj = G_obj := by
-    ext X <;> apply h_obj
-  subst this
+  obtain rfl : F_obj = G_obj := by
+    ext X
+    apply h_obj
   congr
   funext X Y f
   simpa using h_map X Y f
@@ -213,6 +213,11 @@ theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
 
 theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eqToHom rfl := by
   simp only [category.id_comp, eq_to_hom_refl, category.comp_id]
+
+theorem dcongr_arg {ι : Type _} {F G : ι → C} (α : ∀ i, F i ⟶ G i) {i j : ι} (h : i = j) :
+    α i = eqToHom (congr_argₓ F h) ≫ α j ≫ eqToHom (congr_argₓ G h.symm) := by
+  subst h
+  simp
 
 end CategoryTheory
 

@@ -5,7 +5,7 @@ Authors: Anne Baanen, Kexing Ying, Eric Wieser
 -/
 import Mathbin.Algebra.Invertible
 import Mathbin.LinearAlgebra.Matrix.Determinant
-import Mathbin.LinearAlgebra.BilinearForm
+import Mathbin.LinearAlgebra.Matrix.BilinearForm
 
 /-!
 # Quadratic forms
@@ -107,12 +107,19 @@ namespace QuadraticForm
 
 variable {Q : QuadraticForm R M}
 
+instance funLike : FunLike (QuadraticForm R M) M fun _ => R where
+  coe := toFun
+  coe_injective' := fun x y h => by
+    cases x <;> cases y <;> congr
+
+/-- Helper instance for when there's too many metavariables to apply
+`fun_like.has_coe_to_fun` directly. -/
 instance : CoeFun (QuadraticForm R M) fun _ => M → R :=
   ⟨toFun⟩
 
 /-- The `simp` normal form for a quadratic form is `coe_fn`, not `to_fun`. -/
 @[simp]
-theorem to_fun_eq_apply : Q.toFun = ⇑Q :=
+theorem to_fun_eq_coe : Q.toFun = ⇑Q :=
   rfl
 
 theorem map_smul (a : R) (x : M) : Q (a • x) = a * a * Q x :=
@@ -125,6 +132,9 @@ theorem map_add_self (x : M) : Q (x + x) = 4 * Q x := by
 @[simp]
 theorem map_zero : Q 0 = 0 := by
   rw [← @zero_smul R _ _ _ _ (0 : M), map_smul, zero_mul, zero_mul]
+
+instance zeroHomClass : ZeroHomClass (QuadraticForm R M) M R :=
+  { QuadraticForm.funLike with map_zero := fun _ => map_zero }
 
 @[simp]
 theorem map_neg (x : M) : Q (-x) = Q x := by
@@ -200,18 +210,55 @@ end OfTower
 variable {Q' : QuadraticForm R M}
 
 @[ext]
-theorem ext (H : ∀ x : M, Q x = Q' x) : Q = Q' := by
-  cases Q
-  cases Q'
-  congr
-  funext
-  apply H
+theorem ext (H : ∀ x : M, Q x = Q' x) : Q = Q' :=
+  FunLike.ext _ _ H
 
 theorem congr_fun (h : Q = Q') (x : M) : Q x = Q' x :=
-  h ▸ rfl
+  FunLike.congr_fun h _
 
 theorem ext_iff : Q = Q' ↔ ∀ x, Q x = Q' x :=
-  ⟨congr_fun, ext⟩
+  FunLike.ext_iff
+
+/-- Copy of a `quadratic_form` with a new `to_fun` equal to the old one. Useful to fix definitional
+equalities. -/
+protected def copy (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : QuadraticForm R M where
+  toFun := Q'
+  to_fun_smul := h.symm ▸ Q.to_fun_smul
+  polar_add_left' := h.symm ▸ Q.polar_add_left'
+  polar_smul_left' := h.symm ▸ Q.polar_smul_left'
+  polar_add_right' := h.symm ▸ Q.polar_add_right'
+  polar_smul_right' := h.symm ▸ Q.polar_smul_right'
+
+section HasScalar
+
+variable [Monoidₓ S] [DistribMulAction S R] [SmulCommClass S R R]
+
+/-- `quadratic_form R M` inherits the scalar action from any algebra over `R`.
+
+When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
+instance : HasScalar S (QuadraticForm R M) :=
+  ⟨fun a Q =>
+    { toFun := a • Q,
+      to_fun_smul := fun b x => by
+        rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm],
+      polar_add_left' := fun x x' y => by
+        simp only [polar_smul, polar_add_left, smul_add],
+      polar_smul_left' := fun b x y => by
+        simp only [polar_smul, polar_smul_left, ← mul_smul_comm, smul_eq_mul],
+      polar_add_right' := fun x y y' => by
+        simp only [polar_smul, polar_add_right, smul_add],
+      polar_smul_right' := fun b x y => by
+        simp only [polar_smul, polar_smul_right, ← mul_smul_comm, smul_eq_mul] }⟩
+
+@[simp]
+theorem coe_fn_smul (a : S) (Q : QuadraticForm R M) : ⇑(a • Q) = a • Q :=
+  rfl
+
+@[simp]
+theorem smul_apply (a : S) (Q : QuadraticForm R M) (x : M) : (a • Q) x = a • Q x :=
+  rfl
+
+end HasScalar
 
 instance : Zero (QuadraticForm R M) :=
   ⟨{ toFun := fun x => 0,
@@ -281,33 +328,20 @@ theorem coe_fn_neg (Q : QuadraticForm R M) : ⇑(-Q) = -Q :=
 theorem neg_apply (Q : QuadraticForm R M) (x : M) : (-Q) x = -Q x :=
   rfl
 
-instance : AddCommGroupₓ (QuadraticForm R M) where
-  add := (· + ·)
-  zero := 0
-  neg := Neg.neg
-  add_comm := fun Q Q' => by
-    ext
-    simp only [add_apply, add_commₓ]
-  add_assoc := fun Q Q' Q'' => by
-    ext
-    simp only [add_apply, add_assocₓ]
-  add_left_neg := fun Q => by
-    ext
-    simp only [add_apply, neg_apply, zero_apply, add_left_negₓ]
-  add_zero := fun Q => by
-    ext
-    simp only [zero_apply, add_apply, add_zeroₓ]
-  zero_add := fun Q => by
-    ext
-    simp only [zero_apply, add_apply, zero_addₓ]
+instance : Sub (QuadraticForm R M) :=
+  ⟨fun Q Q' => (Q + -Q').copy (Q - Q') (sub_eq_add_neg _ _)⟩
 
 @[simp]
-theorem coe_fn_sub (Q Q' : QuadraticForm R M) : ⇑(Q - Q') = Q - Q' := by
-  simp only [QuadraticForm.coe_fn_neg, add_left_injₓ, QuadraticForm.coe_fn_add, sub_eq_add_neg]
+theorem coe_fn_sub (Q Q' : QuadraticForm R M) : ⇑(Q - Q') = Q - Q' :=
+  rfl
 
 @[simp]
-theorem sub_apply (Q Q' : QuadraticForm R M) (x : M) : (Q - Q') x = Q x - Q' x := by
-  simp only [QuadraticForm.neg_apply, add_left_injₓ, QuadraticForm.add_apply, sub_eq_add_neg]
+theorem sub_apply (Q Q' : QuadraticForm R M) (x : M) : (Q - Q') x = Q x - Q' x :=
+  rfl
+
+instance : AddCommGroupₓ (QuadraticForm R M) :=
+  FunLike.coe_injective.AddCommGroup _ coe_fn_zero coe_fn_add coe_fn_neg coe_fn_sub (fun _ _ => coe_fn_smul _ _)
+    fun _ _ => coe_fn_smul _ _
 
 /-- `@coe_fn (quadratic_form R M)` as an `add_monoid_hom`.
 
@@ -325,7 +359,7 @@ def evalAddMonoidHom (m : M) : QuadraticForm R M →+ R :=
 
 section Sum
 
-open_locale BigOperators
+open BigOperators
 
 @[simp]
 theorem coe_fn_sum {ι : Type _} (Q : ι → QuadraticForm R M) (s : Finset ι) : ⇑(∑ i in s, Q i) = ∑ i in s, Q i :=
@@ -338,34 +372,9 @@ theorem sum_apply {ι : Type _} (Q : ι → QuadraticForm R M) (s : Finset ι) (
 
 end Sum
 
-section HasScalar
+section DistribMulAction
 
 variable [Monoidₓ S] [DistribMulAction S R] [SmulCommClass S R R]
-
-/-- `quadratic_form R M` inherits the scalar action from any algebra over `R`.
-
-When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
-instance : HasScalar S (QuadraticForm R M) :=
-  ⟨fun a Q =>
-    { toFun := a • Q,
-      to_fun_smul := fun b x => by
-        rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm],
-      polar_add_left' := fun x x' y => by
-        simp only [polar_smul, polar_add_left, smul_add],
-      polar_smul_left' := fun b x y => by
-        simp only [polar_smul, polar_smul_left, ← mul_smul_comm, smul_eq_mul],
-      polar_add_right' := fun x y y' => by
-        simp only [polar_smul, polar_add_right, smul_add],
-      polar_smul_right' := fun b x y => by
-        simp only [polar_smul, polar_smul_right, ← mul_smul_comm, smul_eq_mul] }⟩
-
-@[simp]
-theorem coe_fn_smul (a : S) (Q : QuadraticForm R M) : ⇑(a • Q) = a • Q :=
-  rfl
-
-@[simp]
-theorem smul_apply (a : S) (Q : QuadraticForm R M) (x : M) : (a • Q) x = a • Q x :=
-  rfl
 
 instance : DistribMulAction S (QuadraticForm R M) where
   mul_smul := fun a b Q =>
@@ -381,7 +390,7 @@ instance : DistribMulAction S (QuadraticForm R M) where
     ext
     simp only [zero_apply, smul_apply, smul_zero]
 
-end HasScalar
+end DistribMulAction
 
 section Module
 
@@ -780,7 +789,7 @@ variable [DecidableEq n] [Invertible (2 : R₁)]
 
 variable {m : Type w} [DecidableEq m] [Fintype m]
 
-open_locale Matrix
+open Matrix
 
 @[simp]
 theorem to_matrix'_comp (Q : QuadraticForm R₁ (m → R₁)) (f : (n → R₁) →ₗ[R₁] m → R₁) :
@@ -971,7 +980,7 @@ end BilinForm
 
 namespace QuadraticForm
 
-open_locale BigOperators
+open BigOperators
 
 open Finset BilinForm
 

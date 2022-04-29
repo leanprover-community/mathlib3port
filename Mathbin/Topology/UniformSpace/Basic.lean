@@ -113,7 +113,7 @@ But it makes a more systematic use of the filter library.
 
 open Set Filter Classical
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 -- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
@@ -222,6 +222,15 @@ def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀, ∀
     rw [mem_lift'_sets]
     exact comp _ ru
     apply monotone_comp_rel <;> exact monotone_id⟩
+
+/-- Defining an `uniform_space.core` from a filter basis satisfying some uniformity-like axioms. -/
+def UniformSpace.Core.mkOfBasis {α : Type u} (B : FilterBasis (α × α)) (refl : ∀, ∀ r ∈ B, ∀ x, (x, x) ∈ r)
+    (symm : ∀, ∀ r ∈ B, ∀, ∃ t ∈ B, t ⊆ Prod.swap ⁻¹' r) (comp : ∀, ∀ r ∈ B, ∀, ∃ t ∈ B, t ○ t ⊆ r) :
+    UniformSpace.Core α where
+  uniformity := B.filter
+  refl := B.HasBasis.ge_iff.mpr fun r ru => id_rel_subset.2 <| refl _ ru
+  symm := (B.HasBasis.tendsto_iff B.HasBasis).mpr symm
+  comp := (HasBasis.le_basis_iff (B.HasBasis.lift' (monotone_comp_rel monotone_id monotone_id)) B.HasBasis).mpr comp
 
 /-- A uniform space generates a topological space -/
 def UniformSpace.Core.toTopologicalSpace {α : Type u} (u : UniformSpace.Core α) : TopologicalSpace α where
@@ -379,6 +388,10 @@ theorem uniformity_le_symm : 𝓤 α ≤ @Prod.swap α α <$> 𝓤 α := by
 theorem uniformity_eq_symm : 𝓤 α = @Prod.swap α α <$> 𝓤 α :=
   le_antisymmₓ uniformity_le_symm symm_le_uniformity
 
+@[simp]
+theorem comap_swap_uniformity : comap (@Prod.swap α α) (𝓤 α) = 𝓤 α :=
+  (congr_argₓ _ uniformity_eq_symm).trans <| comap_map Prod.swap_injective
+
 theorem symmetrize_mem_uniformity {V : Set (α × α)} (h : V ∈ 𝓤 α) : SymmetrizeRel V ∈ 𝓤 α := by
   apply (𝓤 α).inter_sets h
   rw [← image_swap_eq_preimage_swap, uniformity_eq_symm]
@@ -511,23 +524,24 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
 -/
 
 
-theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
-  ⟨by
-    simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp_distrib]
-    exact fun t ts ht xt => by
-      filter_upwards [ht x xt] using fun h eq => ts <| h Eq,
-    fun hs =>
-    mem_nhds_iff.mpr
-      ⟨{ x | { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α }, fun x' hx' => refl_mem_uniformity hx' rfl,
-        is_open_uniformity.mpr fun x' hx' => by
-          let ⟨t, ht, tr⟩ := comp_mem_uniformity_sets hx'
-          filter_upwards [ht] using fun hax' : a = x' => by
-            filter_upwards [ht] using fun hab : a = b =>
-              have hp : (x', b) ∈ t := hax' ▸ hp'
-              have : (b, b') ∈ t := hab ▸ hp''
-              have : (x', b') ∈ t ○ t := ⟨b, hp, this⟩
-              show b' ∈ s from tr this rfl,
-        hs⟩⟩
+theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α := by
+  refine' ⟨_, fun hs => _⟩
+  · simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp_distrib]
+    intro t ts ht xt
+    filter_upwards [ht x xt] using fun y h eq => ts (h Eq)
+    
+  · refine' mem_nhds_iff.mpr ⟨{ x | { p : α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α }, _, _, hs⟩
+    · exact fun y hy => refl_mem_uniformity hy rfl
+      
+    · refine' is_open_uniformity.mpr fun y hy => _
+      rcases comp_mem_uniformity_sets hy with ⟨t, ht, tr⟩
+      filter_upwards [ht]
+      rintro ⟨a, b⟩ hp' rfl
+      filter_upwards [ht]
+      rintro ⟨a', b'⟩ hp'' rfl
+      exact @tr (a, b') ⟨a', hp', hp''⟩ rfl
+      
+    
 
 theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p : α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α := by
   rw [uniformity_eq_symm, mem_nhds_uniformity_iff_right]
@@ -936,7 +950,7 @@ theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → 
 
 end UniformSpace
 
-open_locale uniformity
+open uniformity
 
 section Constructions
 
@@ -1002,6 +1016,9 @@ theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} : (infi u).un
     le_antisymmₓ (le_infi fun i => infi_le_of_le (u i) <| infi_le _ ⟨i, rfl⟩)
       (le_infi fun a => le_infi fun ⟨i, (ha : u i = a)⟩ => ha ▸ infi_le _ _)
 
+theorem infi_uniformity' {ι : Sort _} {u : ι → UniformSpace α} : @uniformity α (infi u) = ⨅ i, @uniformity α (u i) :=
+  infi_uniformity
+
 theorem inf_uniformity {u v : UniformSpace α} : (u⊓v).uniformity = u.uniformity⊓v.uniformity :=
   have : u⊓v = ⨅ (i) (h : i = u ∨ i = v), i := by
     simp [infi_or, infi_inf_eq]
@@ -1011,6 +1028,9 @@ theorem inf_uniformity {u v : UniformSpace α} : (u⊓v).uniformity = u.uniformi
     _ = _ := by
       simp [infi_uniformity, infi_or, infi_inf_eq]
     
+
+theorem inf_uniformity' {u v : UniformSpace α} : @uniformity α (u⊓v) = @uniformity α u⊓@uniformity α v :=
+  inf_uniformity
 
 instance inhabitedUniformSpace : Inhabited (UniformSpace α) :=
   ⟨⊥⟩
@@ -1068,6 +1088,9 @@ theorem uniform_continuous_iff {α β} [uα : UniformSpace α] [uβ : UniformSpa
     UniformContinuous f ↔ uα ≤ uβ.comap f :=
   Filter.map_le_iff_le_comap
 
+theorem le_iff_uniform_continuous_id {u v : UniformSpace α} : u ≤ v ↔ @UniformContinuous _ _ u v id := by
+  rw [uniform_continuous_iff, uniform_space_comap_id, id]
+
 theorem uniform_continuous_comap {f : α → β} [u : UniformSpace β] :
     @UniformContinuous α β (UniformSpace.comap f u) u f :=
   tendsto_comap
@@ -1104,7 +1127,7 @@ theorem to_topological_space_top : @UniformSpace.toTopologicalSpace α ⊤ = ⊤
 
 theorem to_topological_space_infi {ι : Sort _} {u : ι → UniformSpace α} :
     (infi u).toTopologicalSpace = ⨅ i, (u i).toTopologicalSpace := by
-  cases' is_empty_or_nonempty ι
+  cases is_empty_or_nonempty ι
   · rw [infi_of_empty, infi_of_empty, to_topological_space_top]
     
   · refine' eq_of_nhds_eq_nhds fun a => _
@@ -1193,6 +1216,11 @@ instance [UniformSpace α] : UniformSpace αᵐᵒᵖ :=
 @[to_additive]
 theorem uniformity_mul_opposite [UniformSpace α] : 𝓤 αᵐᵒᵖ = comap (fun q : αᵐᵒᵖ × αᵐᵒᵖ => (q.1.unop, q.2.unop)) (𝓤 α) :=
   rfl
+
+@[simp, to_additive]
+theorem comap_uniformity_mul_opposite [UniformSpace α] :
+    comap (fun p : α × α => (MulOpposite.op p.1, MulOpposite.op p.2)) (𝓤 αᵐᵒᵖ) = 𝓤 α := by
+  simpa [uniformity_mul_opposite, comap_comap, (· ∘ ·)] using comap_id
 
 namespace MulOpposite
 

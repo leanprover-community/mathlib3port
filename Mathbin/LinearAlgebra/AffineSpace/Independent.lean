@@ -34,7 +34,7 @@ This file defines affinely independent families of points.
 
 noncomputable section
 
-open_locale BigOperators Classical Affine
+open BigOperators Classical Affine
 
 open Function
 
@@ -657,31 +657,25 @@ faces are given by the same subset of points. -/
 theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) : fs₁.centroid k s.points = fs₂.centroid k s.points ↔ fs₁ = fs₂ :=
   by
-  constructor
-  · intro h
-    rw [Finset.centroid_eq_affine_combination_fintype, Finset.centroid_eq_affine_combination_fintype] at h
-    have ha :=
-      (affine_independent_iff_indicator_eq_of_affine_combination_eq k s.points).1 s.independent _ _ _ _
-        (fs₁.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₁)
-        (fs₂.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₂) h
-    simp_rw [Finset.coe_univ, Set.indicator_univ, Function.funext_iffₓ, Finset.centroid_weights_indicator_def,
-      Finset.centroidWeights, h₁, h₂]  at ha
-    ext i
-    replace ha := ha i
-    constructor
-    all_goals
-      intro hi
-      by_contra hni
-      simp [hi, hni] at ha
-      norm_cast  at ha
+  refine' ⟨fun h => _, congr_argₓ _⟩
+  rw [Finset.centroid_eq_affine_combination_fintype, Finset.centroid_eq_affine_combination_fintype] at h
+  have ha :=
+    (affine_independent_iff_indicator_eq_of_affine_combination_eq k s.points).1 s.independent _ _ _ _
+      (fs₁.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₁)
+      (fs₂.sum_centroid_weights_indicator_eq_one_of_card_eq_add_one k h₂) h
+  simp_rw [Finset.coe_univ, Set.indicator_univ, Function.funext_iffₓ, Finset.centroid_weights_indicator_def,
+    Finset.centroidWeights, h₁, h₂]  at ha
+  ext i
+  specialize ha i
+  have key : ∀ n : ℕ, (n : k) + 1 ≠ 0 := fun n h => by
+    norm_cast  at h
+  -- we should be able to golf this to `refine ⟨λ hi, decidable.by_contradiction (λ hni, _), ...⟩`,
+    -- but for some unknown reason it doesn't work.
+    constructor <;>
+    intro hi <;> by_contra hni
+  · simpa [hni, hi, key] using ha
     
-  · intro h
-    have hm : m₁ = m₂ := by
-      subst h
-      simpa [h₁] using h₂
-    subst hm
-    congr
-    exact h
+  · simpa [hni, hi, key] using ha.symm
     
 
 /-- Over a characteristic-zero division ring, the centroids of two

@@ -14,7 +14,7 @@ In this file, we define instances of algebraic structures over smooth functions.
 
 noncomputable section
 
-open_locale Manifold
+open Manifold
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
   [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
@@ -221,12 +221,6 @@ instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
       ext x <;> exact Algebra.commutes' _ _,
     smul_def' := fun c f => by
       ext x <;> exact Algebra.smul_def' _ _ }
-
-/-- A special case of `pi.algebra` for non-dependent types. Lean get stuck on the definition
-below without this. -/
-instance _root_.function.algebra (I : Type _) {R : Type _} (A : Type _) {r : CommSemiringₓ R} [Semiringₓ A]
-    [Algebra R A] : Algebra R (I → A) :=
-  Pi.algebra _ _
 
 /-- Coercion to a function as an `alg_hom`. -/
 @[simps]

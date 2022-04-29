@@ -107,6 +107,8 @@ theorem fixed_points_id : FixedPoints (@id α) = Set.Univ :=
   Set.ext fun _ => by
     simpa using is_fixed_pt_id _
 
+theorem fixed_points_subset_range : FixedPoints f ⊆ Set.Range f := fun x hx => ⟨x, hx⟩
+
 /-- If `g` semiconjugates `fa` to `fb`, then it sends fixed points of `fa` to fixed points
 of `fb`. -/
 theorem Semiconj.maps_to_fixed_pts {g : α → β} (h : Semiconj g fa fb) :

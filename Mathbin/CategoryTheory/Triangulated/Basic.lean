@@ -3,6 +3,7 @@ Copyright (c) 2021 Luke Kershaw. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 -/
+import Mathbin.Data.Int.Basic
 import Mathbin.CategoryTheory.Shift
 
 /-!
@@ -60,7 +61,7 @@ section
 
 variable [HasZeroObject C] [HasZeroMorphisms C]
 
-open_locale ZeroObject
+open ZeroObject
 
 instance : Inhabited (Triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩

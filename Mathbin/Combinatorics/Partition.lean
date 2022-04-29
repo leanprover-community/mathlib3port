@@ -43,7 +43,7 @@ variable {α : Type _}
 
 open Multiset
 
-open_locale BigOperators
+open BigOperators
 
 namespace Nat
 

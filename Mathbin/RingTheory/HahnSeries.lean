@@ -50,7 +50,7 @@ in the file `ring_theory/laurent_series`.
 
 open Finset Function
 
-open_locale BigOperators Classical Pointwise Polynomial
+open BigOperators Classical Pointwise Polynomial
 
 noncomputable section
 
@@ -768,8 +768,8 @@ instance [NonAssocSemiringₓ R] : NonAssocSemiringₓ (HahnSeries Γ R) :=
 instance [Semiringₓ R] : Semiringₓ (HahnSeries Γ R) :=
   { HahnSeries.nonAssocSemiring, HahnSeries.nonUnitalSemiring with zero := 0, one := 1, add := (· + ·), mul := (· * ·) }
 
-instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
-  { HahnSeries.semiring with
+instance [NonUnitalCommSemiring R] : NonUnitalCommSemiring (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalSemiring with
     mul_comm := fun x y => by
       ext
       simp_rw [mul_coeff, mul_comm]
@@ -796,8 +796,23 @@ instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
         exact ⟨(add_commₓ _ _).trans ha.1, ha.2.2, ha.2.1⟩
          }
 
+instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalCommSemiring, HahnSeries.semiring with }
+
+instance [NonUnitalNonAssocRing R] : NonUnitalNonAssocRing (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalNonAssocSemiring, HahnSeries.addGroup with }
+
+instance [NonUnitalRing R] : NonUnitalRing (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalNonAssocRing, HahnSeries.nonUnitalSemiring with }
+
+instance [NonAssocRing R] : NonAssocRing (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalNonAssocRing, HahnSeries.nonAssocSemiring with }
+
 instance [Ringₓ R] : Ringₓ (HahnSeries Γ R) :=
   { HahnSeries.semiring, HahnSeries.addCommGroup with }
+
+instance [NonUnitalCommRing R] : NonUnitalCommRing (HahnSeries Γ R) :=
+  { HahnSeries.nonUnitalCommSemiring, HahnSeries.nonUnitalRing with }
 
 instance [CommRingₓ R] : CommRingₓ (HahnSeries Γ R) :=
   { HahnSeries.commSemiring, HahnSeries.ring with }

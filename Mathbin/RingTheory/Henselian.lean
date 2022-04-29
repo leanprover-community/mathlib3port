@@ -58,7 +58,7 @@ noncomputable section
 
 universe u v
 
-open_locale BigOperators Polynomial
+open BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
@@ -141,7 +141,7 @@ theorem HenselianLocalRing.tfae (R : Type u) [CommRingₓ R] [LocalRing R] :
     rwa [← sub_eq_zero, ← RingHom.map_sub] at ha₂
     
   tfae_have _1_3 : 1 → 3
-  · intros hR K _K φ hφ f hf a₀ h₁ h₂
+  · intro hR K _K φ hφ f hf a₀ h₁ h₂
     obtain ⟨a₀, rfl⟩ := hφ a₀
     have H := HenselianLocalRing.is_henselian f hf a₀
     simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂

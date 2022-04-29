@@ -346,8 +346,8 @@ def functoriality : Cone F ⥤ Cone (F ⋙ G) where
         simp [-cone_morphism.w, ← f.w j] }
 
 instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G) where
-  Preimage := fun X Y t =>
-    { Hom := G.Preimage t.Hom,
+  preimage := fun X Y t =>
+    { Hom := G.preimage t.Hom,
       w' := fun j =>
         G.map_injective
           (by
@@ -559,8 +559,8 @@ def functoriality : Cocone F ⥤ Cocone (F ⋙ G) where
         intros <;> rw [← functor.map_comp, cocone_morphism.w] }
 
 instance functorialityFull [Full G] [Faithful G] : Full (functoriality F G) where
-  Preimage := fun X Y t =>
-    { Hom := G.Preimage t.Hom,
+  preimage := fun X Y t =>
+    { Hom := G.preimage t.Hom,
       w' := fun j =>
         G.map_injective
           (by

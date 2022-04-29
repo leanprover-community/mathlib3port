@@ -39,7 +39,7 @@ local notation "𝕎" => WittVector p
 
 open Finset MvPolynomial
 
-open_locale BigOperators
+open BigOperators
 
 /-- ```
 (∑ i in range n, (y.coeff i)^(p^(n-i)) * p^i.val) *

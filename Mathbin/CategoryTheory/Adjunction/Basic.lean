@@ -507,6 +507,14 @@ def toAdjunction (e : C ≌ D) : e.Functor ⊣ e.inverse :=
       simp only [id_comp]
       exact e.unit_inverse_comp _⟩
 
+@[simp]
+theorem as_equivalence_to_adjunction_unit {e : C ≌ D} : e.Functor.asEquivalence.toAdjunction.Unit = e.Unit :=
+  rfl
+
+@[simp]
+theorem as_equivalence_to_adjunction_counit {e : C ≌ D} : e.Functor.asEquivalence.toAdjunction.counit = e.counit :=
+  rfl
+
 end Equivalenceₓ
 
 namespace Functor

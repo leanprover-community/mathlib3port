@@ -152,7 +152,7 @@ theorem find_aux_iff {a : α} {b : β a} :
       suffices b' = b ↔ b' = b ∨ Sigma.mk a' b ∈ t by
         simpa [find_aux, eq_comm]
       refine' (or_iff_left_of_imp fun m => _).symm
-      have : a' ∉ t.map Sigma.fst := List.not_mem_of_nodup_cons nd
+      have : a' ∉ t.map Sigma.fst := nd.not_mem
       exact this.elim (List.mem_map_of_memₓ Sigma.fst m)
       
     · have : Sigma.mk a b ≠ ⟨a', b'⟩ := by
@@ -498,8 +498,8 @@ theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} 
   rcases show
       (l.map Sigma.fst).Nodup ∧
         ((BucketArray.asList t).map Sigma.fst).Nodup ∧
-          (c.fst ∉ l.map Sigma.fst) ∧
-            (c.fst ∉ (BucketArray.asList t).map Sigma.fst) ∧
+          c.fst ∉ l.map Sigma.fst ∧
+            c.fst ∉ (BucketArray.asList t).map Sigma.fst ∧
               (l.map Sigma.fst).Disjoint ((BucketArray.asList t).map Sigma.fst)
       by
       simpa [List.nodup_append, not_or_distrib, and_comm, And.left_comm] using nd with
@@ -675,8 +675,7 @@ theorem mem_erase :
           by
           simp [eq_comm, not_and_self_iff, and_iff_right_of_imp this]
         simpa [hl, show bkts'.as_list = _ from hfl, and_or_distrib_left, and_comm, And.left_comm, Or.left_comm]
-      intro m e
-      subst a'
+      rintro m rfl
       revert m
       apply not_or_distrib.2
       have nd' := v.as_list_nodup _
@@ -685,8 +684,7 @@ theorem mem_erase :
       
     · suffices ∀ _ : Sigma.mk a' b' ∈ BucketArray.asList bkts, a ≠ a' by
         simp [erase, @dif_neg (contains_aux a bkt) _ Hc, entries, and_iff_right_of_imp this]
-      intro m e
-      subst a'
+      rintro m rfl
       exact Hc ((v.contains_aux_iff _ _).2 (List.mem_map_of_memₓ Sigma.fst m))
       
 

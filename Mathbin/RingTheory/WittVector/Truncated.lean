@@ -182,6 +182,15 @@ instance : Neg (TruncatedWittVector p n R) :=
 instance : Sub (TruncatedWittVector p n R) :=
   ⟨fun x y => truncateFun n (x.out - y.out)⟩
 
+instance hasNatScalar : HasScalar ℕ (TruncatedWittVector p n R) :=
+  ⟨fun m x => truncateFun n (m • x.out)⟩
+
+instance hasIntScalar : HasScalar ℤ (TruncatedWittVector p n R) :=
+  ⟨fun m x => truncateFun n (m • x.out)⟩
+
+instance hasNatPow : Pow (TruncatedWittVector p n R) ℕ :=
+  ⟨fun x m => truncateFun n (x.out ^ m)⟩
+
 @[simp]
 theorem coeff_zero (i : Finₓ n) : (0 : TruncatedWittVector p n R).coeff i = 0 := by
   show coeff i (truncate_fun _ 0 : TruncatedWittVector p n R) = 0
@@ -218,16 +227,32 @@ variable {p R}
 @[simp]
 theorem truncate_fun_add (x y : 𝕎 R) : truncateFun n (x + y) = truncateFun n x + truncateFun n y := by
   witt_truncate_fun_tac
+  rw [init_add]
 
 @[simp]
 theorem truncate_fun_mul (x y : 𝕎 R) : truncateFun n (x * y) = truncateFun n x * truncateFun n y := by
   witt_truncate_fun_tac
+  rw [init_mul]
 
 theorem truncate_fun_neg (x : 𝕎 R) : truncateFun n (-x) = -truncateFun n x := by
   witt_truncate_fun_tac
+  rw [init_neg]
 
 theorem truncate_fun_sub (x y : 𝕎 R) : truncateFun n (x - y) = truncateFun n x - truncateFun n y := by
   witt_truncate_fun_tac
+  rw [init_sub]
+
+theorem truncate_fun_nsmul (x : 𝕎 R) (m : ℕ) : truncateFun n (m • x) = m • truncateFun n x := by
+  witt_truncate_fun_tac
+  rw [init_nsmul]
+
+theorem truncate_fun_zsmul (x : 𝕎 R) (m : ℤ) : truncateFun n (m • x) = m • truncateFun n x := by
+  witt_truncate_fun_tac
+  rw [init_zsmul]
+
+theorem truncate_fun_pow (x : 𝕎 R) (m : ℕ) : truncateFun n (x ^ m) = truncateFun n x ^ m := by
+  witt_truncate_fun_tac
+  rw [init_pow]
 
 end WittVector
 
@@ -243,7 +268,8 @@ include hp
 
 instance : CommRingₓ (TruncatedWittVector p n R) :=
   (truncate_fun_surjective p n R).CommRing _ (truncate_fun_zero p n R) (truncate_fun_one p n R) (truncate_fun_add n)
-    (truncate_fun_mul n) (truncate_fun_neg n) (truncate_fun_sub n)
+    (truncate_fun_mul n) (truncate_fun_neg n) (truncate_fun_sub n) (truncate_fun_nsmul n) (truncate_fun_zsmul n)
+    (truncate_fun_pow n)
 
 end TruncatedWittVector
 

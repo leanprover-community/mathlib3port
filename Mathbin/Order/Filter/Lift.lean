@@ -12,7 +12,7 @@ import Mathbin.Order.Filter.Bases
 
 open Set
 
-open_locale Classical Filter
+open Classical Filter
 
 namespace Filter
 
@@ -73,16 +73,16 @@ theorem mem_lift {s : Set β} {t : Set α} (ht : t ∈ f) (hs : s ∈ g t) : s �
 
 theorem lift_le {f : Filter α} {g : Set α → Filter β} {h : Filter β} {s : Set α} (hs : s ∈ f) (hg : g s ≤ h) :
     f.lift g ≤ h :=
-  infi_le_of_le s <| infi_le_of_le hs <| hg
+  infi₂_le_of_le s hs hg
 
 theorem le_lift {f : Filter α} {g : Set α → Filter β} {h : Filter β} (hh : ∀, ∀ s ∈ f, ∀, h ≤ g s) : h ≤ f.lift g :=
-  le_infi fun s => le_infi fun hs => hh s hs
+  le_infi₂ hh
 
 theorem lift_mono (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) : f₁.lift g₁ ≤ f₂.lift g₂ :=
-  infi_le_infi fun s => infi_le_infi2 fun hs => ⟨hf hs, hg s⟩
+  infi_mono fun s => infi_mono' fun hs => ⟨hf hs, hg s⟩
 
 theorem lift_mono' (hg : ∀, ∀ s ∈ f, ∀, g₁ s ≤ g₂ s) : f.lift g₁ ≤ f.lift g₂ :=
-  infi_le_infi fun s => infi_le_infi fun hs => hg s hs
+  infi₂_mono hg
 
 theorem tendsto_lift {m : γ → β} {l : Filter γ} : Tendsto m l (f.lift g) ↔ ∀, ∀ s ∈ f, ∀, Tendsto m l (g s) := by
   simp only [Filter.lift, tendsto_infi]
@@ -106,11 +106,11 @@ theorem comap_lift_eq2 {m : β → α} {g : Set β → Filter γ} (hg : Monotone
 
 theorem map_lift_eq2 {g : Set β → Filter γ} {m : α → β} (hg : Monotone g) : (map m f).lift g = f.lift (g ∘ Image m) :=
   le_antisymmₓ
-    (infi_le_infi2 fun s =>
-      ⟨Image m s, infi_le_infi2 fun hs => ⟨(f.sets_of_superset hs) fun a h => mem_image_of_mem _ h, le_rfl⟩⟩)
-    (infi_le_infi2 fun t =>
+    (infi_mono' fun s =>
+      ⟨Image m s, infi_mono' fun hs => ⟨(f.sets_of_superset hs) fun a h => mem_image_of_mem _ h, le_rfl⟩⟩)
+    (infi_mono' fun t =>
       ⟨Preimage m t,
-        infi_le_infi2 fun ht =>
+        infi_mono' fun ht =>
           ⟨ht,
             hg fun x => fun h : x ∈ m '' Preimage m t =>
               let ⟨y, hy, h_eq⟩ := h
@@ -237,7 +237,7 @@ theorem lift'_mono (hf : f₁ ≤ f₂) (hh : h₁ ≤ h₂) : f₁.lift' h₁ �
   (lift_mono hf) fun s => principal_mono.mpr <| hh s
 
 theorem lift'_mono' (hh : ∀, ∀ s ∈ f, ∀, h₁ s ⊆ h₂ s) : f.lift' h₁ ≤ f.lift' h₂ :=
-  infi_le_infi fun s => infi_le_infi fun hs => principal_mono.mpr <| hh s hs
+  infi₂_mono fun s hs => principal_mono.mpr <| hh s hs
 
 theorem lift'_cong (hh : ∀, ∀ s ∈ f, ∀, h₁ s = h₂ s) : f.lift' h₁ = f.lift' h₂ :=
   le_antisymmₓ (lift'_mono' fun s hs => le_of_eqₓ <| hh s hs) (lift'_mono' fun s hs => le_of_eqₓ <| (hh s hs).symm)
@@ -340,52 +340,6 @@ theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ {t₁ t₂
 
 theorem comap_eq_lift' {f : Filter β} {m : α → β} : comap m f = f.lift' (Preimage m) :=
   Filter.ext fun s => (mem_lift'_sets monotone_preimage).symm
-
-theorem lift'_infi_powerset {f : ι → Filter α} : (infi f).lift' Powerset = ⨅ i, (f i).lift' Powerset := by
-  cases' is_empty_or_nonempty ι
-  · rw [infi_of_empty f, infi_of_empty, lift'_top, powerset_univ, principal_univ]
-    
-  · exact lift'_infi fun _ _ => (powerset_inter _ _).symm
-    
-
-theorem lift'_inf_powerset (f g : Filter α) : (f⊓g).lift' Powerset = f.lift' Powerset⊓g.lift' Powerset :=
-  (lift'_inf f g) fun _ _ => (powerset_inter _ _).symm
-
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
-theorem eventually_lift'_powerset {f : Filter α} {p : Set α → Prop} :
-    (∀ᶠ s in f.lift' Powerset, p s) ↔ ∃ s ∈ f, ∀ t _ : t ⊆ s, p t :=
-  eventually_lift'_iff monotone_powerset
-
-theorem eventually_lift'_powerset' {f : Filter α} {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
-    (∀ᶠ s in f.lift' Powerset, p s) ↔ ∃ s ∈ f, p s :=
-  eventually_lift'_powerset.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s (Subset.refl s), fun hs t ht => hp ht hs⟩
-
-instance lift'_powerset_ne_bot (f : Filter α) : NeBot (f.lift' Powerset) :=
-  (lift'_ne_bot_iff monotone_powerset).2 fun _ _ => powerset_nonempty
-
-theorem tendsto_lift'_powerset_mono {la : Filter α} {lb : Filter β} {s t : α → Set β}
-    (ht : Tendsto t la (lb.lift' Powerset)) (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la (lb.lift' Powerset) := by
-  simp only [Filter.lift', Filter.lift, (· ∘ ·), tendsto_infi, tendsto_principal] at ht⊢
-  exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
-
-@[simp]
-theorem eventually_lift'_powerset_forall {f : Filter α} {p : α → Prop} :
-    (∀ᶠ s in f.lift' Powerset, ∀, ∀ x ∈ s, ∀, p x) ↔ ∀ᶠ x in f, p x :=
-  Iff.trans (eventually_lift'_powerset' fun s t hst ht x hx => ht x (hst hx)) exists_mem_subset_iff
-
-alias eventually_lift'_powerset_forall ↔ Filter.Eventually.of_lift'_powerset Filter.Eventually.lift'_powerset
-
-@[simp]
-theorem eventually_lift'_powerset_eventually {f g : Filter α} {p : α → Prop} :
-    (∀ᶠ s in f.lift' Powerset, ∀ᶠ x in g, x ∈ s → p x) ↔ ∀ᶠ x in f⊓g, p x :=
-  calc
-    _ ↔ ∃ s ∈ f, ∀ᶠ x in g, x ∈ s → p x :=
-      eventually_lift'_powerset' fun s t hst ht => ht.mono fun x hx hs => hx (hst hs)
-    _ ↔ ∃ s ∈ f, ∃ t ∈ g, ∀ x, x ∈ t → x ∈ s → p x := by
-      simp only [eventually_iff_exists_mem]
-    _ ↔ ∀ᶠ x in f⊓g, p x := by
-      simp only [eventually_inf, and_comm, mem_inter_iff, ← and_imp]
-    
 
 end Lift'
 

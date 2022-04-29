@@ -40,7 +40,7 @@ theorem dedup_cons_of_mem {a : α} {s : Multiset α} : a ∈ s → dedup (a ::�
   (Quot.induction_on s) fun l m => @congr_argₓ _ _ _ _ coe <| dedup_cons_of_mem m
 
 @[simp]
-theorem dedup_cons_of_not_mem {a : α} {s : Multiset α} : (a ∉ s) → dedup (a ::ₘ s) = a ::ₘ dedup s :=
+theorem dedup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → dedup (a ::ₘ s) = a ::ₘ dedup s :=
   (Quot.induction_on s) fun l m => congr_argₓ coe <| dedup_cons_of_not_mem m
 
 theorem dedup_le (s : Multiset α) : dedup s ≤ s :=
@@ -82,7 +82,7 @@ theorem le_dedup {s t : Multiset α} : s ≤ dedup t ↔ s ≤ t ∧ Nodup s :=
     (le_iff_subset d).2 <| Subset.trans (subset_of_le l) (subset_dedup _)⟩
 
 theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by
-  simp [nodup_ext]
+  simp [nodup.ext]
 
 theorem dedup_map_dedup_eq [DecidableEq β] (f : α → β) (s : Multiset α) : dedup (map f (dedup s)) = dedup (map f s) :=
   by

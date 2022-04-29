@@ -42,7 +42,7 @@ sin, cos, tan, angle
 
 noncomputable section
 
-open_locale Classical TopologicalSpace Filter
+open Classical TopologicalSpace Filter
 
 open Set Filter
 
@@ -168,7 +168,7 @@ namespace Nnreal
 
 open Real
 
-open_locale Real Nnreal
+open Real Nnreal
 
 /-- `π` considered as a nonnegative real. -/
 noncomputable def pi : ℝ≥0 :=
@@ -188,7 +188,7 @@ end Nnreal
 
 namespace Real
 
-open_locale Real
+open Real
 
 @[simp]
 theorem sin_pi : sin π = 0 := by
@@ -618,61 +618,6 @@ theorem range_sin_infinite : (Range Real.sin).Infinite := by
     Icc.infinite
       (by
         norm_num)
-
-theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x := by
-  cases' le_or_gtₓ x 1 with h' h'
-  · have hx : abs x = x := abs_of_nonneg (le_of_ltₓ h)
-    have : abs x ≤ 1
-    rwa [hx]
-    have := sin_bound this
-    rw [abs_le] at this
-    have := this.2
-    rw [sub_le_iff_le_add', hx] at this
-    apply lt_of_le_of_ltₓ this
-    rw [sub_add]
-    apply lt_of_lt_of_leₓ _ (le_of_eqₓ (sub_zero x))
-    apply sub_lt_sub_left
-    rw [sub_pos, div_eq_mul_inv (x ^ 3)]
-    apply mul_lt_mul'
-    · rw [pow_succₓ x 3]
-      refine' le_transₓ _ (le_of_eqₓ (one_mulₓ _))
-      rw [mul_le_mul_right]
-      exact h'
-      apply pow_pos h
-      
-    norm_num
-    norm_num
-    apply pow_pos h
-    
-  exact lt_of_le_of_ltₓ (sin_le_one x) h'
-
-/- note 1: this inequality is not tight, the tighter inequality is sin x > x - x ^ 3 / 6.
-   note 2: this is also true for x > 1, but it's nontrivial for x just above 1. -/
-theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < sin x := by
-  have hx : abs x = x := abs_of_nonneg (le_of_ltₓ h)
-  have : abs x ≤ 1
-  rwa [hx]
-  have := sin_bound this
-  rw [abs_le] at this
-  have := this.1
-  rw [le_sub_iff_add_le, hx] at this
-  refine' lt_of_lt_of_leₓ _ this
-  rw [add_commₓ, sub_add, sub_neg_eq_add]
-  apply sub_lt_sub_left
-  apply add_lt_of_lt_sub_left
-  rw
-    [show x ^ 3 / 4 - x ^ 3 / 6 = x ^ 3 * 12⁻¹ by
-      simp [div_eq_mul_inv, ← mul_sub] <;> norm_num]
-  apply mul_lt_mul'
-  · rw [pow_succₓ x 3]
-    refine' le_transₓ _ (le_of_eqₓ (one_mulₓ _))
-    rw [mul_le_mul_right]
-    exact h'
-    apply pow_pos h
-    
-  norm_num
-  norm_num
-  apply pow_pos h
 
 section CosDivSq
 
@@ -1133,7 +1078,7 @@ end Real
 
 namespace Complex
 
-open_locale Real
+open Real
 
 theorem sin_eq_zero_iff_cos_eq {z : ℂ} : sin z = 0 ↔ cos z = 1 ∨ cos z = -1 := by
   rw [← mul_self_eq_one_iff, ← sin_sq_add_cos_sq, sq, sq, ← sub_eq_iff_eq_add, sub_self] <;>

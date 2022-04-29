@@ -43,7 +43,7 @@ variable {α : Type u} {a : α}
 
 section Cyclic
 
-open_locale BigOperators
+open BigOperators
 
 attribute [local instance] setFintype
 
@@ -162,7 +162,7 @@ theorem Infinite.order_of_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α} (
 
 @[to_additive Bot.is_add_cyclic]
 instance Bot.is_cyclic {α : Type u} [Groupₓ α] : IsCyclic (⊥ : Subgroup α) :=
-  ⟨⟨1, fun x => ⟨0, Subtype.eq <| Eq.symm (Subgroup.mem_bot.1 x.2)⟩⟩⟩
+  ⟨⟨1, fun x => ⟨0, Subtype.eq <| (zpow_zero (1 : α)).trans <| Eq.symm (Subgroup.mem_bot.1 x.2)⟩⟩⟩
 
 @[to_additive AddSubgroup.is_add_cyclic]
 instance Subgroup.is_cyclic {α : Type u} [Groupₓ α] [IsCyclic α] (H : Subgroup α) : IsCyclic H :=
@@ -221,9 +221,9 @@ open Finset Nat
 
 section Classical
 
-open_locale Classical
+open Classical
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:98:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2, 3]) }
+-- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([2, 3]) }
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
     (univ.filter fun a : α => a ^ n = 1).card ≤ n :=
@@ -302,7 +302,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
       _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_of_finset _ _
       )
 
-open_locale Nat
+open Nat
 
 -- use φ for nat.totient
 private theorem card_order_of_eq_totient_aux₁ :

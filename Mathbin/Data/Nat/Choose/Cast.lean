@@ -14,7 +14,7 @@ of characteristic `0`.
 -/
 
 
-open_locale Nat
+open Nat
 
 variable (K : Type _) [DivisionRing K] [CharZero K]
 

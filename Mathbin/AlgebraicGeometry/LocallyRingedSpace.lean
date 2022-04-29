@@ -5,7 +5,7 @@ Authors: Johan Commelin
 -/
 import Mathbin.AlgebraicGeometry.RingedSpace
 import Mathbin.AlgebraicGeometry.Stalks
-import Mathbin.Data.Equiv.TransferInstance
+import Mathbin.Logic.Equiv.TransferInstance
 
 /-!
 # The category of locally ringed spaces

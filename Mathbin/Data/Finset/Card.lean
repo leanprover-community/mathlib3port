@@ -35,7 +35,7 @@ variable {α β : Type _}
 
 namespace Finset
 
-variable {s t : Finset α} {a : α}
+variable {s t : Finset α} {a b : α}
 
 /-- `s.card` is the number of elements of `s`, aka its cardinality. -/
 def card (s : Finset α) : ℕ :=
@@ -112,6 +112,10 @@ theorem card_insert_eq_ite : card (insert a s) = if a ∈ s then s.card else s.c
     
   · rw [card_insert_of_not_mem h, if_neg h]
     
+
+@[simp]
+theorem card_doubleton (h : a ≠ b) : ({a, b} : Finset α).card = 2 := by
+  rw [card_insert_of_not_mem (not_mem_singleton.2 h), card_singleton]
 
 @[simp]
 theorem card_erase_of_mem : a ∈ s → (s.erase a).card = s.card - 1 :=
@@ -290,9 +294,9 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀, ∀ i < n, ∀, f i 
     _ ≤ s.card :=
       card_le_card_of_inj_on f
         (by
-          simpa only [mem_range])
+          simpa only [mem_range] )
         (by
-          simpa only [mem_range])
+          simpa only [mem_range] )
     
 
 theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
@@ -334,6 +338,10 @@ theorem inj_on_of_surj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀,
   have hif : injective f' := (left_inverse_of_surjective_of_right_inverse hsg (right_inverse_surj_inv _)).Injective
   Subtype.ext_iff_val.1 (@hif ⟨a₁, ha₁⟩ ⟨a₂, ha₂⟩ (Subtype.eq ha₁a₂))
 
+@[simp]
+theorem card_disj_union (s t : Finset α) h : (s.disjUnion t h).card = s.card + t.card :=
+  Multiset.card_add _ _
+
 /-! ### Lattice structure -/
 
 
@@ -352,16 +360,19 @@ theorem card_union_le (s t : Finset α) : (s ∪ t).card ≤ s.card + t.card :=
   card_union_add_card_inter s t ▸ Nat.le_add_rightₓ _ _
 
 theorem card_union_eq (h : Disjoint s t) : (s ∪ t).card = s.card + t.card := by
-  rw [← card_union_add_card_inter, disjoint_iff_inter_eq_empty.1 h, card_empty, add_zeroₓ]
+  rw [← (disj_union_eq_union s t) fun x => disjoint_left.mp h, card_disj_union _ _ _]
 
 @[simp]
-theorem card_disjoint_union (h : Disjoint s t) : card (s ∪ t) = s.card + t.card := by
-  rw [← card_union_add_card_inter, disjoint_iff_inter_eq_empty.1 h, card_empty, add_zeroₓ]
+theorem card_disjoint_union (h : Disjoint s t) : card (s ∪ t) = s.card + t.card :=
+  card_union_eq h
 
 theorem card_sdiff (h : s ⊆ t) : card (t \ s) = t.card - s.card := by
   suffices card (t \ s) = card (t \ s ∪ s) - s.card by
     rwa [sdiff_union_of_subset h] at this
   rw [card_disjoint_union sdiff_disjoint, add_tsub_cancel_right]
+
+theorem card_sdiff_add_card_eq_card {s t : Finset α} (h : s ⊆ t) : card (t \ s) + card s = card t :=
+  ((Nat.sub_eq_iff_eq_addₓ (card_le_of_subset h)).mp (card_sdiff h).symm).symm
 
 theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
   calc
@@ -522,7 +533,7 @@ theorem exists_ne_of_one_lt_card (hs : 1 < s.card) (a : α) : ∃ b, b ∈ s ∧
   · exact ⟨y, hy, ha⟩
     
 
-theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, (a ∉ t) ∧ insert a t = s ∧ t.card = n :=
+theorem card_eq_succ [DecidableEq α] : s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
   ⟨fun h =>
     let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succₓ _ : 0 < s.card)
     ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
@@ -536,8 +547,8 @@ theorem card_eq_two [DecidableEq α] : s.card = 2 ↔ ∃ x y, x ≠ y ∧ s = {
     rintro ⟨a, _, hab, rfl, b, rfl⟩
     exact ⟨a, b, not_mem_singleton.1 hab, rfl⟩
     
-  · rintro ⟨x, y, hxy, rfl⟩
-    simp only [hxy, card_insert_of_not_mem, not_false_iff, mem_singleton, card_singleton]
+  · rintro ⟨x, y, h, rfl⟩
+    exact card_doubleton h
     
 
 theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x ≠ z ∧ y ≠ z ∧ s = {x, y, z} := by
@@ -585,7 +596,7 @@ theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : �
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elab_as_eliminator]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
-    (h₁ : ∀ a s, (a ∉ s) → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
+    (h₁ : ∀ a s, a ∉ s → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=
   (Finset.strongInductionOn s) fun s =>
     (Finset.induction_on s fun _ => h₀) fun a s n _ ih =>
       (h₁ a s n) fun t ss => ih _ (lt_of_le_of_ltₓ ss (ssubset_insert n) : t < _)

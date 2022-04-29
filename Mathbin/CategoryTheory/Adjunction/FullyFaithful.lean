@@ -48,7 +48,7 @@ See
 instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjunction.unit h) :=
   (@NatIso.is_iso_of_is_iso_app _ _ _ _ _ _ (Adjunction.unit h)) fun X =>
     @yoneda.is_iso _ _ _ _ ((Adjunction.unit h).app X)
-      ⟨⟨{ app := fun Y f => L.Preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
+      ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
           ⟨by
             ext x f
             dsimp
@@ -68,7 +68,7 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
   (@NatIso.is_iso_of_is_iso_app _ _ _ _ _ _ (Adjunction.counit h)) fun X =>
     @is_iso_of_op _ _ _ _ _ <|
       @coyoneda.is_iso _ _ _ _ ((Adjunction.counit h).app X).op
-        ⟨⟨{ app := fun Y f => R.Preimage ((h.homEquiv (R.obj X) Y) f) },
+        ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
             ⟨by
               ext x f
               dsimp
@@ -104,7 +104,7 @@ noncomputable def whiskerLeftRUnitIsoOfIsIsoCounit [IsIso h.counit] : R ⋙ L �
 
 /-- If the unit is an isomorphism, then the left adjoint is full-/
 noncomputable def lFullOfUnitIsIso [IsIso h.Unit] : Full L where
-  Preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
+  preimage := fun X Y f => h.homEquiv X (L.obj Y) f ≫ inv (h.Unit.app Y)
 
 /-- If the unit is an isomorphism, then the left adjoint is faithful-/
 theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
@@ -114,7 +114,7 @@ theorem L_faithful_of_unit_is_iso [IsIso h.Unit] : Faithful L :=
 
 /-- If the counit is an isomorphism, then the right adjoint is full-/
 noncomputable def rFullOfCounitIsIso [IsIso h.counit] : Full R where
-  Preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
+  preimage := fun X Y f => inv (h.counit.app X) ≫ (h.homEquiv (R.obj X) Y).symm f
 
 /-- If the counit is an isomorphism, then the right adjoint is faithful-/
 theorem R_faithful_of_counit_is_iso [IsIso h.counit] : Faithful R :=

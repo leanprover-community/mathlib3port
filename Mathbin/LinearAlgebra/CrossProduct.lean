@@ -38,7 +38,7 @@ crossproduct
 
 open Matrix
 
-open_locale Matrix
+open Matrix
 
 variable {R : Type _} [CommRingₓ R]
 

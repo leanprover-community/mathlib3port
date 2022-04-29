@@ -42,7 +42,7 @@ universe u v w x
 
 open Filter Function Set
 
-open_locale TopologicalSpace Nnreal Ennreal
+open TopologicalSpace Nnreal Ennreal
 
 variable {α : Type u} {β : Type v} {γ : Type w} {ι : Type x}
 
@@ -357,6 +357,30 @@ protected theorem proj_Icc {a b : ℝ} (h : a ≤ b) : LipschitzWith 1 (projIcc 
   ((LipschitzWith.id.const_min _).const_max _).subtype_mk _
 
 end LipschitzWith
+
+namespace Metric
+
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] {s : Set α} {t : Set β}
+
+theorem Bounded.left_of_prod (h : Bounded (s ×ˢ t)) (ht : t.Nonempty) : Bounded s := by
+  simpa only [fst_image_prod s ht] using (@LipschitzWith.prod_fst α β _ _).bounded_image h
+
+theorem Bounded.right_of_prod (h : Bounded (s ×ˢ t)) (hs : s.Nonempty) : Bounded t := by
+  simpa only [snd_image_prod hs t] using (@LipschitzWith.prod_snd α β _ _).bounded_image h
+
+theorem bounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) : Bounded (s ×ˢ t) ↔ Bounded s ∧ Bounded t :=
+  ⟨fun h => ⟨h.left_of_prod ht, h.right_of_prod hs⟩, fun h => h.1.Prod h.2⟩
+
+theorem bounded_prod : Bounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ Bounded s ∧ Bounded t := by
+  rcases s.eq_empty_or_nonempty with (rfl | hs)
+  · simp
+    
+  rcases t.eq_empty_or_nonempty with (rfl | ht)
+  · simp
+    
+  simp only [bounded_prod_of_nonempty hs ht, hs.ne_empty, ht.ne_empty, false_orₓ]
+
+end Metric
 
 namespace LipschitzOnWith
 

@@ -32,7 +32,7 @@ tower law
 
 universe u v w u₁ v₁ w₁
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 section Field
 

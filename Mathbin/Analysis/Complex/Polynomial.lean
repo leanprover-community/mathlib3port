@@ -18,7 +18,7 @@ As a consequence, the complex numbers are algebraically closed.
 
 open Complex Polynomial Metric Filter IsAbsoluteValue Set
 
-open_locale Classical
+open Classical
 
 namespace Complex
 

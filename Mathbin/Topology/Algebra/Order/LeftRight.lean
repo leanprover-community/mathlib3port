@@ -25,7 +25,7 @@ left continuous, right continuous
 
 open Set Filter
 
-open_locale TopologicalSpace
+open TopologicalSpace
 
 section PartialOrderₓ
 

@@ -27,7 +27,9 @@ class HasSetProd (α β : Type _) (γ : outParam (Type _)) where
   Prod : α → β → γ
 
 -- mathport name: «expr ×ˢ »
-infixl:72 " ×ˢ " => HasSetProd.prod
+infixr:82
+  " ×ˢ " =>-- This notation binds more strongly than (pre)images, unions and intersections.
+  HasSetProd.prod
 
 namespace Set
 
@@ -128,66 +130,66 @@ theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t :=
   simp (config := { contextual := true })[image, iff_def, or_imp_distrib, Imp.swap]
 
 theorem prod_preimage_eq {f : γ → α} {g : δ → β} :
-    f ⁻¹' s ×ˢ g ⁻¹' t = (fun p : γ × δ => (f p.1, g p.2)) ⁻¹' (s ×ˢ t) :=
+    (f ⁻¹' s) ×ˢ (g ⁻¹' t) = (fun p : γ × δ => (f p.1, g p.2)) ⁻¹' s ×ˢ t :=
   rfl
 
-theorem prod_preimage_left {f : γ → α} : f ⁻¹' s ×ˢ t = (fun p : γ × β => (f p.1, p.2)) ⁻¹' (s ×ˢ t) :=
+theorem prod_preimage_left {f : γ → α} : (f ⁻¹' s) ×ˢ t = (fun p : γ × β => (f p.1, p.2)) ⁻¹' s ×ˢ t :=
   rfl
 
-theorem prod_preimage_right {g : δ → β} : s ×ˢ g ⁻¹' t = (fun p : α × δ => (p.1, g p.2)) ⁻¹' (s ×ˢ t) :=
+theorem prod_preimage_right {g : δ → β} : s ×ˢ (g ⁻¹' t) = (fun p : α × δ => (p.1, g p.2)) ⁻¹' s ×ˢ t :=
   rfl
 
 theorem preimage_prod_map_prod (f : α → β) (g : γ → δ) (s : Set β) (t : Set δ) :
-    Prod.map f g ⁻¹' (s ×ˢ t) = f ⁻¹' s ×ˢ g ⁻¹' t :=
+    Prod.map f g ⁻¹' s ×ˢ t = (f ⁻¹' s) ×ˢ (g ⁻¹' t) :=
   rfl
 
-theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x)) ⁻¹' (s ×ˢ t) = f ⁻¹' s ∩ g ⁻¹' t :=
+theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x)) ⁻¹' s ×ˢ t = f ⁻¹' s ∩ g ⁻¹' t :=
   rfl
 
 @[simp]
-theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = s := by
+theorem mk_preimage_prod_left (hb : b ∈ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = s := by
   ext a
   simp [hb]
 
 @[simp]
-theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' (s ×ˢ t) = t := by
+theorem mk_preimage_prod_right (ha : a ∈ s) : Prod.mk a ⁻¹' s ×ˢ t = t := by
   ext b
   simp [ha]
 
 @[simp]
-theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = ∅ := by
+theorem mk_preimage_prod_left_eq_empty (hb : b ∉ t) : (fun a => (a, b)) ⁻¹' s ×ˢ t = ∅ := by
   ext a
   simp [hb]
 
 @[simp]
-theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' (s ×ˢ t) = ∅ := by
+theorem mk_preimage_prod_right_eq_empty (ha : a ∉ s) : Prod.mk a ⁻¹' s ×ˢ t = ∅ := by
   ext b
   simp [ha]
 
-theorem mk_preimage_prod_left_eq_if [DecidablePred (· ∈ t)] : (fun a => (a, b)) ⁻¹' (s ×ˢ t) = if b ∈ t then s else ∅ :=
+theorem mk_preimage_prod_left_eq_if [DecidablePred (· ∈ t)] : (fun a => (a, b)) ⁻¹' s ×ˢ t = if b ∈ t then s else ∅ :=
   by
   split_ifs <;> simp [h]
 
-theorem mk_preimage_prod_right_eq_if [DecidablePred (· ∈ s)] : Prod.mk a ⁻¹' (s ×ˢ t) = if a ∈ s then t else ∅ := by
+theorem mk_preimage_prod_right_eq_if [DecidablePred (· ∈ s)] : Prod.mk a ⁻¹' s ×ˢ t = if a ∈ s then t else ∅ := by
   split_ifs <;> simp [h]
 
 theorem mk_preimage_prod_left_fn_eq_if [DecidablePred (· ∈ t)] (f : γ → α) :
-    (fun a => (f a, b)) ⁻¹' (s ×ˢ t) = if b ∈ t then f ⁻¹' s else ∅ := by
+    (fun a => (f a, b)) ⁻¹' s ×ˢ t = if b ∈ t then f ⁻¹' s else ∅ := by
   rw [← mk_preimage_prod_left_eq_if, prod_preimage_left, preimage_preimage]
 
 theorem mk_preimage_prod_right_fn_eq_if [DecidablePred (· ∈ s)] (g : δ → β) :
-    (fun b => (a, g b)) ⁻¹' (s ×ˢ t) = if a ∈ s then g ⁻¹' t else ∅ := by
+    (fun b => (a, g b)) ⁻¹' s ×ˢ t = if a ∈ s then g ⁻¹' t else ∅ := by
   rw [← mk_preimage_prod_right_eq_if, prod_preimage_right, preimage_preimage]
 
-theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' (t ×ˢ s) = s ×ˢ t := by
+theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' t ×ˢ s = s ×ˢ t := by
   ext ⟨x, y⟩
   simp [and_comm]
 
-theorem image_swap_prod : Prod.swap '' (t ×ˢ s) = s ×ˢ t := by
+theorem image_swap_prod : Prod.swap '' t ×ˢ s = s ×ˢ t := by
   rw [image_swap_eq_preimage_swap, preimage_swap_prod]
 
 theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
-    m₁ '' s ×ˢ m₂ '' t = Image (fun p : α × β => (m₁ p.1, m₂ p.2)) (s ×ˢ t) :=
+    (m₁ '' s) ×ˢ (m₂ '' t) = (fun p : α × β => (m₁ p.1, m₂ p.2)) '' s ×ˢ t :=
   ext <| by
     simp [-exists_and_distrib_right, exists_and_distrib_right.symm, And.left_comm, And.assoc, And.comm]
 
@@ -236,26 +238,24 @@ theorem image_prod_mk_subset_prod_right (ha : a ∈ s) : Prod.mk a '' t ⊆ s ×
   rintro _ ⟨b, hb, rfl⟩
   exact ⟨ha, hb⟩
 
-theorem fst_image_prod_subset (s : Set α) (t : Set β) : Prod.fst '' (s ×ˢ t) ⊆ s := fun _ h =>
-  let ⟨_, ⟨h₂, _⟩, h₁⟩ := (Set.mem_image _ _ _).1 h
-  h₁ ▸ h₂
-
 theorem prod_subset_preimage_fst (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.fst ⁻¹' s :=
-  image_subset_iff.1 (fst_image_prod_subset s t)
+  inter_subset_left _ _
 
-theorem fst_image_prod (s : Set β) {t : Set α} (ht : t.Nonempty) : Prod.fst '' (s ×ˢ t) = s :=
+theorem fst_image_prod_subset (s : Set α) (t : Set β) : Prod.fst '' s ×ˢ t ⊆ s :=
+  image_subset_iff.2 <| prod_subset_preimage_fst s t
+
+theorem fst_image_prod (s : Set β) {t : Set α} (ht : t.Nonempty) : Prod.fst '' s ×ˢ t = s :=
   (fst_image_prod_subset _ _).antisymm fun y hy =>
     let ⟨x, hx⟩ := ht
     ⟨(y, x), ⟨hy, hx⟩, rfl⟩
 
-theorem snd_image_prod_subset (s : Set α) (t : Set β) : Prod.snd '' (s ×ˢ t) ⊆ t := fun _ h =>
-  let ⟨_, ⟨_, h₂⟩, h₁⟩ := (Set.mem_image _ _ _).1 h
-  h₁ ▸ h₂
-
 theorem prod_subset_preimage_snd (s : Set α) (t : Set β) : s ×ˢ t ⊆ Prod.snd ⁻¹' t :=
-  image_subset_iff.1 (snd_image_prod_subset s t)
+  inter_subset_right _ _
 
-theorem snd_image_prod {s : Set α} (hs : s.Nonempty) (t : Set β) : Prod.snd '' (s ×ˢ t) = t :=
+theorem snd_image_prod_subset (s : Set α) (t : Set β) : Prod.snd '' s ×ˢ t ⊆ t :=
+  image_subset_iff.2 <| prod_subset_preimage_snd s t
+
+theorem snd_image_prod {s : Set α} (hs : s.Nonempty) (t : Set β) : Prod.snd '' s ×ˢ t = t :=
   (snd_image_prod_subset _ _).antisymm fun y y_in =>
     let ⟨x, x_in⟩ := hs
     ⟨(x, y), ⟨x_in, y_in⟩, rfl⟩
@@ -285,7 +285,19 @@ theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t 
     
 
 @[simp]
-theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' (s ×ˢ t) = Image2 f s t :=
+theorem prod_eq_iff_eq (ht : t.Nonempty) : s ×ˢ t = s₁ ×ˢ t ↔ s = s₁ := by
+  obtain ⟨b, hb⟩ := ht
+  constructor
+  · simp only [Set.ext_iff]
+    intro h a
+    simpa [hb, Set.mem_prod] using h (a, b)
+    
+  · rintro rfl
+    rfl
+    
+
+@[simp]
+theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s ×ˢ t = Image2 f s t :=
   Set.ext fun a =>
     ⟨by
       rintro ⟨_, _, rfl⟩
@@ -466,24 +478,18 @@ theorem univ_pi_update_univ [DecidableEq ι] (i : ι) (s : Set (α i)) :
     Pi Univ (update (fun j : ι => (Univ : Set (α j))) i s) = eval i ⁻¹' s := by
   rw [univ_pi_update i (fun j => (univ : Set (α j))) s fun j t => t, pi_univ, inter_univ, preimage]
 
+theorem eval_image_pi_subset (hs : i ∈ s) : eval i '' s.pi t ⊆ t i :=
+  image_subset_iff.2 fun f hf => hf i hs
+
+theorem eval_image_univ_pi_subset : eval i '' Pi Univ t ⊆ t i :=
+  eval_image_pi_subset (mem_univ i)
+
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i := by
+  refine' (eval_image_pi_subset hs).antisymm _
   classical
-  ext x
   obtain ⟨f, hf⟩ := ht
-  refine'
-    ⟨_, fun hg =>
-      ⟨update f i x, fun j hj => _, by
-        simp ⟩⟩
-  · rintro ⟨g, hg, rfl⟩
-    exact hg i hs
-    
-  · obtain rfl | hji := eq_or_ne j i
-    · simp [hg]
-      
-    · rw [mem_pi] at hf
-      simp [hji, hf _ hj]
-      
-    
+  refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
+  obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
 
 @[simp]
 theorem eval_image_univ_pi (ht : (Pi Univ t).Nonempty) : (fun f : ∀ i, α i => f i) '' Pi Univ t = t i :=

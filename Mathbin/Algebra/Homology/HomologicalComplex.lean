@@ -36,7 +36,7 @@ Defined in terms of these we have `C.d_from i : C.X i ⟶ C.X_next i` and
 
 universe v u
 
-open CategoryTheory CategoryTheory.Limits
+open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
 variable {ι : Type _}
 
@@ -80,6 +80,21 @@ theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k
       
     
   · rw [C.shape i j hij, zero_comp]
+    
+
+theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.x = C₂.x)
+    (h_d : ∀ i j : ι, c.Rel i j → C₁.d i j ≫ eqToHom (congr_funₓ h_X j) = eqToHom (congr_funₓ h_X i) ≫ C₂.d i j) :
+    C₁ = C₂ := by
+  cases C₁
+  cases C₂
+  dsimp  at h_X
+  subst h_X
+  simp only [true_andₓ, eq_self_iff_true, heq_iff_eq]
+  ext i j
+  by_cases' hij : c.rel i j
+  · simpa only [id_comp, eq_to_hom_refl, comp_id] using h_d i j hij
+    
+  · rw [C₁_shape' i j hij, C₂_shape' i j hij]
     
 
 end HomologicalComplex
@@ -195,6 +210,12 @@ theorem id_f (C : HomologicalComplex V c) (i : ι) : Hom.f (𝟙 C) i = 𝟙 (C.
 theorem comp_f {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : (f ≫ g).f i = f.f i ≫ g.f i :=
   rfl
 
+@[simp]
+theorem eq_to_hom_f {C₁ C₂ : HomologicalComplex V c} (h : C₁ = C₂) (n : ι) :
+    HomologicalComplex.Hom.f (eqToHom h) n = eqToHom (congr_funₓ (congr_argₓ HomologicalComplex.x h) n) := by
+  subst h
+  rfl
+
 -- We'll use this later to show that `homological_complex V c` is preadditive when `V` is.
 theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injective fun f : Hom C₁ C₂ => f.f := by
   tidy
@@ -206,19 +227,21 @@ instance : HasZeroMorphisms (HomologicalComplex V c) where
 theorem zero_apply (C D : HomologicalComplex V c) (i : ι) : (0 : C ⟶ D).f i = 0 :=
   rfl
 
-open_locale ZeroObject
+open ZeroObject
 
-instance [HasZeroObject V] : HasZeroObject (HomologicalComplex V c) where
-  zero := { x := fun i => 0, d := fun i j => 0 }
-  uniqueFrom := fun C =>
-    ⟨⟨0⟩, fun f => by
-      ext⟩
-  uniqueTo := fun C =>
-    ⟨⟨0⟩, fun f => by
-      ext⟩
+/-- The zero complex -/
+noncomputable def zero [HasZeroObject V] : HomologicalComplex V c where
+  x := fun i => 0
+  d := fun i j => 0
 
-instance [HasZeroObject V] : Inhabited (HomologicalComplex V c) :=
-  ⟨0⟩
+theorem is_zero_zero [HasZeroObject V] : IsZero (zero : HomologicalComplex V c) := by
+  refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩ <;> ext
+
+instance [HasZeroObject V] : HasZeroObject (HomologicalComplex V c) :=
+  ⟨⟨zero, is_zero_zero⟩⟩
+
+noncomputable instance [HasZeroObject V] : Inhabited (HomologicalComplex V c) :=
+  ⟨zero⟩
 
 theorem congr_hom {C D : HomologicalComplex V c} {f g : C ⟶ D} (w : f = g) (i : ι) : f.f i = g.f i :=
   congr_funₓ (congr_argₓ Hom.f w) i
@@ -249,7 +272,7 @@ def forgetEval (i : ι) : forget V c ⋙ GradedObject.eval i ≅ eval V c i :=
 
 end
 
-open_locale Classical
+open Classical
 
 noncomputable section
 
@@ -289,7 +312,7 @@ section
 
 variable [HasZeroObject V]
 
-open_locale ZeroObject
+open ZeroObject
 
 /-- Either `C.X i`, if there is some `i` with `c.rel i j`, or the zero object. -/
 def xPrev (j : ι) : V :=
@@ -457,7 +480,7 @@ theorem iso_of_components_app (f : ∀ i, C₁.x i ≅ C₂.x i)
 
 variable [HasZeroObject V]
 
-open_locale ZeroObject
+open ZeroObject
 
 /-! Lemmas relating chain maps and `d_to`/`d_from`. -/
 
@@ -486,7 +509,7 @@ theorem next_eq (f : Hom C₁ C₂) {i j : ι} (w : c.Rel i j) :
   rw [c.next_eq_some w]
   rfl
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem comm_from (f : Hom C₁ C₂) (i : ι) : f.f i ≫ C₂.dFrom i = C₁.dFrom i ≫ f.next i := by
   rcases h : c.next i with (_ | ⟨j, w⟩)
   · simp [h]
@@ -494,7 +517,7 @@ theorem comm_from (f : Hom C₁ C₂) (i : ι) : f.f i ≫ C₂.dFrom i = C₁.d
   · simp [d_from_eq _ w, next_eq _ w]
     
 
-@[simp, reassoc]
+@[simp, reassoc, elementwise]
 theorem comm_to (f : Hom C₁ C₂) (j : ι) : f.prev j ≫ C₂.dTo j = C₁.dTo j ≫ f.f j := by
   rcases h : c.prev j with (_ | ⟨j, w⟩)
   · simp [h]

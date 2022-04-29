@@ -298,9 +298,19 @@ theorem HasLimit.iso_of_nat_iso_hom_π {F G : J ⥤ C} [HasLimit F] [HasLimit G]
   IsLimit.cone_points_iso_of_nat_iso_hom_comp _ _ _ _
 
 @[simp, reassoc]
+theorem HasLimit.iso_of_nat_iso_inv_π {F G : J ⥤ C} [HasLimit F] [HasLimit G] (w : F ≅ G) (j : J) :
+    (HasLimit.isoOfNatIso w).inv ≫ limit.π F j = limit.π G j ≫ w.inv.app j :=
+  IsLimit.cone_points_iso_of_nat_iso_inv_comp _ _ _ _
+
+@[simp, reassoc]
 theorem HasLimit.lift_iso_of_nat_iso_hom {F G : J ⥤ C} [HasLimit F] [HasLimit G] (t : Cone F) (w : F ≅ G) :
     limit.lift F t ≫ (HasLimit.isoOfNatIso w).Hom = limit.lift G ((Cones.postcompose w.Hom).obj _) :=
   IsLimit.lift_comp_cone_points_iso_of_nat_iso_hom _ _ _
+
+@[simp, reassoc]
+theorem HasLimit.lift_iso_of_nat_iso_inv {F G : J ⥤ C} [HasLimit F] [HasLimit G] (t : Cone G) (w : F ≅ G) :
+    limit.lift G t ≫ (HasLimit.isoOfNatIso w).inv = limit.lift F ((Cones.postcompose w.inv).obj _) :=
+  IsLimit.lift_comp_cone_points_iso_of_nat_iso_inv _ _ _
 
 /-- The limits of `F : J ⥤ C` and `G : K ⥤ C` are isomorphic,
 if there is an equivalence `e : J ≌ K` making the triangle commute up to natural isomorphism.
@@ -504,7 +514,7 @@ theorem has_limits_of_shape_of_equivalence {J' : Type u₂} [Category.{v₂} J']
 
 variable (C)
 
-/-- `has_limits_of_size.{v u} C` tries to obtain `has_limits_of_size.{v u} C`
+/-- `has_limits_of_size_shrink.{v u} C` tries to obtain `has_limits_of_size.{v u} C`
 from some other `has_limits_of_size C`.
 -/
 theorem has_limits_of_size_shrink [HasLimitsOfSize.{max v₁ v₂, max u₁ u₂} C] : HasLimitsOfSize.{v₁, u₁} C :=
@@ -754,9 +764,19 @@ theorem HasColimit.iso_of_nat_iso_ι_hom {F G : J ⥤ C} [HasColimit F] [HasColi
   IsColimit.comp_cocone_points_iso_of_nat_iso_hom _ _ _ _
 
 @[simp, reassoc]
+theorem HasColimit.iso_of_nat_iso_ι_inv {F G : J ⥤ C} [HasColimit F] [HasColimit G] (w : F ≅ G) (j : J) :
+    colimit.ι G j ≫ (HasColimit.isoOfNatIso w).inv = w.inv.app j ≫ colimit.ι F j :=
+  IsColimit.comp_cocone_points_iso_of_nat_iso_inv _ _ _ _
+
+@[simp, reassoc]
 theorem HasColimit.iso_of_nat_iso_hom_desc {F G : J ⥤ C} [HasColimit F] [HasColimit G] (t : Cocone G) (w : F ≅ G) :
     (HasColimit.isoOfNatIso w).Hom ≫ colimit.desc G t = colimit.desc F ((Cocones.precompose w.Hom).obj _) :=
   IsColimit.cocone_points_iso_of_nat_iso_hom_desc _ _ _
+
+@[simp, reassoc]
+theorem HasColimit.iso_of_nat_iso_inv_desc {F G : J ⥤ C} [HasColimit F] [HasColimit G] (t : Cocone F) (w : F ≅ G) :
+    (HasColimit.isoOfNatIso w).inv ≫ colimit.desc F t = colimit.desc G ((Cocones.precompose w.inv).obj _) :=
+  IsColimit.cocone_points_iso_of_nat_iso_inv_desc _ _ _
 
 /-- The colimits of `F : J ⥤ C` and `G : K ⥤ C` are isomorphic,
 if there is an equivalence `e : J ≌ K` making the triangle commute up to natural isomorphism.
@@ -809,7 +829,7 @@ variable (D : L ⥤ K) [HasColimit (D ⋙ E ⋙ F)]
 theorem colimit.pre_pre : colimit.pre (E ⋙ F) D ≫ colimit.pre F E = colimit.pre F (D ⋙ E) := by
   ext j
   rw [← assoc, colimit.ι_pre, colimit.ι_pre]
-  let this' : has_colimit ((D ⋙ E) ⋙ F) :=
+  let this : has_colimit ((D ⋙ E) ⋙ F) :=
     show has_colimit (D ⋙ E ⋙ F) by
       infer_instance
   exact (colimit.ι_pre F (D ⋙ E) j).symm
@@ -878,7 +898,7 @@ theorem colimit.pre_post {D : Type u'} [Category.{v'} D] (E : K ⥤ J) (F : J �
   by
   ext
   rw [← assoc, colimit.ι_post, ← G.map_comp, colimit.ι_pre, ← assoc]
-  let this' : has_colimit (E ⋙ F ⋙ G) :=
+  let this : has_colimit (E ⋙ F ⋙ G) :=
     show has_colimit ((E ⋙ F) ⋙ G) by
       infer_instance
   erw [colimit.ι_pre (F ⋙ G) E j, colimit.ι_post]
@@ -981,7 +1001,7 @@ theorem has_colimits_of_shape_of_equivalence {J' : Type u₂} [Category.{v₂} J
 
 variable (C)
 
-/-- `has_colimits_of_size.{v u} C` tries to obtain `has_colimits_of_size.{v u} C`
+/-- `has_colimits_of_size_shrink.{v u} C` tries to obtain `has_colimits_of_size.{v u} C`
 from some other `has_colimits_of_size C`.
 -/
 theorem has_colimits_of_size_shrink [HasColimitsOfSize.{max v₁ v₂, max u₁ u₂} C] : HasColimitsOfSize.{v₁, u₁} C :=

@@ -26,7 +26,7 @@ matrix determinant, polynomial
 -/
 
 
-open_locale Matrix BigOperators Polynomial
+open Matrix BigOperators Polynomial
 
 variable {n α : Type _} [DecidableEq n] [Fintype n] [CommRingₓ α]
 
@@ -53,7 +53,7 @@ theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
         _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
       nat_degree_prod_le (Finset.univ : Finset n) fun i : n =>
         (X • A.map C + B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
-      Finset.sum_le_of_forall_le _ _ 1 fun _ => _ _ ≤ Fintype.card n := by
+      Finset.sum_le_card_nsmul _ _ 1 fun _ => _ _ ≤ Fintype.card n := by
       simpa
   calc
     nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) = nat_degree ((X : α[X]) * C (A (g i) i) + C (B (g i) i)) :=
@@ -87,12 +87,13 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     
   · intro p hp
     refine' (nat_degree_add_le _ _).trans _
-    simpa using (nat_degree_mul_C_le _ _).trans nat_degree_X_le
+    simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C, max_eq_leftₓ, zero_le'] using
+      (nat_degree_C_mul_le _ _).trans nat_degree_X_le
     
 
 theorem leading_coeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((x : α[X]) • (1 : Matrix n n α[X]) + A.map c)) = 1 := by
-  cases' subsingleton_or_nontrivial α
+  cases subsingleton_or_nontrivial α
   · simp
     
   rw [← @det_one n, ← coeff_det_X_add_C_card _ A, leading_coeff]

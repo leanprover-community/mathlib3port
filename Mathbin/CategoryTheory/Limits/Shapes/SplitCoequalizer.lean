@@ -96,9 +96,13 @@ section
 open Limits
 
 /-- A split coequalizer clearly induces a cofork. -/
-@[simps]
+@[simps x]
 def IsSplitCoequalizer.asCofork {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) : Cofork f g :=
   Cofork.ofπ h t.condition
+
+@[simp]
+theorem IsSplitCoequalizer.as_cofork_π {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) : t.asCofork.π = h :=
+  rfl
 
 /-- The cofork induced by a split coequalizer is a coequalizer, justifying the name. In some cases it
 is more convenient to show a given cofork is a coequalizer by showing it is split.

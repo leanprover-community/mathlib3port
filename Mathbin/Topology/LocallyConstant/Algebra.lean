@@ -178,11 +178,26 @@ def constRingHom [NonAssocSemiringₓ Y] : Y →+* LocallyConstant X Y :=
 instance [Semiringₓ Y] : Semiringₓ (LocallyConstant X Y) :=
   { LocallyConstant.addCommMonoid, LocallyConstant.monoid, LocallyConstant.distrib, LocallyConstant.mulZeroClass with }
 
+instance [NonUnitalCommSemiring Y] : NonUnitalCommSemiring (LocallyConstant X Y) :=
+  { LocallyConstant.nonUnitalSemiring, LocallyConstant.commSemigroup with }
+
 instance [CommSemiringₓ Y] : CommSemiringₓ (LocallyConstant X Y) :=
   { LocallyConstant.semiring, LocallyConstant.commMonoid with }
 
+instance [NonUnitalNonAssocRing Y] : NonUnitalNonAssocRing (LocallyConstant X Y) :=
+  { LocallyConstant.addCommGroup, LocallyConstant.hasMul, LocallyConstant.distrib, LocallyConstant.mulZeroClass with }
+
+instance [NonUnitalRing Y] : NonUnitalRing (LocallyConstant X Y) :=
+  { LocallyConstant.semigroup, LocallyConstant.nonUnitalNonAssocRing with }
+
+instance [NonAssocRing Y] : NonAssocRing (LocallyConstant X Y) :=
+  { LocallyConstant.mulOneClass, LocallyConstant.nonUnitalNonAssocRing with }
+
 instance [Ringₓ Y] : Ringₓ (LocallyConstant X Y) :=
   { LocallyConstant.semiring, LocallyConstant.addCommGroup with }
+
+instance [NonUnitalCommRing Y] : NonUnitalCommRing (LocallyConstant X Y) :=
+  { LocallyConstant.nonUnitalCommSemiring, LocallyConstant.nonUnitalRing with }
 
 instance [CommRingₓ Y] : CommRingₓ (LocallyConstant X Y) :=
   { LocallyConstant.commSemiring, LocallyConstant.ring with }

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Terminal
-import Mathbin.CategoryTheory.Limits.Shapes.Zero
+import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 
 /-!
 # Preservation of zero objects and zero morphisms
@@ -49,6 +49,16 @@ class PreservesZeroMorphisms (F : C ⥤ D) : Prop where
 protected theorem map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C) : F.map (0 : X ⟶ Y) = 0 :=
   PreservesZeroMorphisms.map_zero' _ _
 
+theorem zero_of_map_zero (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} (f : X ⟶ Y) (h : F.map f = 0) :
+    f = 0 :=
+  F.map_injective <| h.trans <| Eq.symm <| F.map_zero _ _
+
+theorem map_eq_zero_iff (F : C ⥤ D) [PreservesZeroMorphisms F] [Faithful F] {X Y : C} {f : X ⟶ Y} :
+    F.map f = 0 ↔ f = 0 :=
+  ⟨F.zero_of_map_zero _, by
+    rintro rfl
+    exact F.map_zero _ _⟩
+
 instance (priority := 100) preserves_zero_morphisms_of_is_left_adjoint (F : C ⥤ D) [IsLeftAdjoint F] :
     PreservesZeroMorphisms F where
   map_zero' := fun X Y => by
@@ -79,7 +89,7 @@ instance (priority := 100) preserves_zero_morphisms_of_is_right_adjoint (G : C �
 instance (priority := 100) preserves_zero_morphisms_of_full (F : C ⥤ D) [Full F] : PreservesZeroMorphisms F where
   map_zero' := fun X Y =>
     calc
-      F.map (0 : X ⟶ Y) = F.map (0 ≫ F.Preimage (0 : F.obj Y ⟶ F.obj Y)) := by
+      F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by
         rw [zero_comp]
       _ = 0 := by
         rw [F.map_comp, F.image_preimage, comp_zero]
@@ -91,7 +101,7 @@ section ZeroObject
 
 variable [HasZeroObject C] [HasZeroObject D]
 
-open_locale ZeroObject
+open ZeroObject
 
 variable [HasZeroMorphisms C] [HasZeroMorphisms D] (F : C ⥤ D)
 

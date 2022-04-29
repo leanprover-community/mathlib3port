@@ -56,7 +56,7 @@ structure AddUnits (α : Type u) [AddMonoidₓ α] where
   val_neg : val + neg = 0
   neg_val : neg + val = 0
 
-attribute [to_additive AddUnits] Units
+attribute [to_additive] Units
 
 section HasElem
 
@@ -126,7 +126,7 @@ theorem copy_eq (u : αˣ) val hv inv hi : u.copy val hv inv hi = u :=
   ext hv
 
 /-- Units of a monoid form a group. -/
-@[to_additive]
+@[to_additive "Additive units of an additive monoid form an additive group."]
 instance : Groupₓ αˣ where
   mul := fun u₁ u₂ =>
     ⟨u₁.val * u₂.val, u₂.inv * u₁.inv, by
@@ -356,12 +356,12 @@ variable {M : Type _} {N : Type _}
 /-- An element `a : M` of a monoid is a unit if it has a two-sided inverse.
 The actual definition says that `a` is equal to some `u : Mˣ`, where
 `Mˣ` is a bundled version of `is_unit`. -/
-@[to_additive IsAddUnit
+@[to_additive
       "An element `a : M` of an add_monoid is an `add_unit` if it has\na two-sided additive inverse. The actual definition says that `a` is equal to some\n`u : add_units M`, where `add_units M` is a bundled version of `is_add_unit`."]
 def IsUnit [Monoidₓ M] (a : M) : Prop :=
   ∃ u : Mˣ, (u : M) = a
 
-@[nontriviality, to_additive is_add_unit_of_subsingleton]
+@[nontriviality, to_additive]
 theorem is_unit_of_subsingleton [Monoidₓ M] [Subsingleton M] (a : M) : IsUnit a :=
   ⟨⟨a, a, Subsingleton.elimₓ _ _, Subsingleton.elimₓ _ _⟩, rfl⟩
 
@@ -382,11 +382,11 @@ instance [Monoidₓ M] [Subsingleton M] : Unique Mˣ where
 protected theorem Units.is_unit [Monoidₓ M] (u : Mˣ) : IsUnit (u : M) :=
   ⟨u, rfl⟩
 
-@[simp, to_additive is_add_unit_zero]
+@[simp, to_additive]
 theorem is_unit_one [Monoidₓ M] : IsUnit (1 : M) :=
   ⟨1, rfl⟩
 
-@[to_additive is_add_unit_of_add_eq_zero]
+@[to_additive]
 theorem is_unit_of_mul_eq_one [CommMonoidₓ M] (a b : M) (h : a * b = 1) : IsUnit a :=
   ⟨Units.mkOfMulEqOne a b h, rfl⟩
 
@@ -400,11 +400,11 @@ theorem IsUnit.exists_left_inv [Monoidₓ M] {a : M} (h : IsUnit a) : ∃ b, b *
   rcases h with ⟨⟨a, b, _, hba⟩, rfl⟩
   exact ⟨b, hba⟩
 
-@[to_additive is_add_unit_iff_exists_neg]
+@[to_additive]
 theorem is_unit_iff_exists_inv [CommMonoidₓ M] {a : M} : IsUnit a ↔ ∃ b, a * b = 1 :=
   ⟨fun h => h.exists_right_inv, fun ⟨b, hab⟩ => is_unit_of_mul_eq_one _ b hab⟩
 
-@[to_additive is_add_unit_iff_exists_neg']
+@[to_additive]
 theorem is_unit_iff_exists_inv' [CommMonoidₓ M] {a : M} : IsUnit a ↔ ∃ b, b * a = 1 := by
   simp [is_unit_iff_exists_inv, mul_comm]
 
@@ -414,8 +414,7 @@ theorem IsUnit.mul [Monoidₓ M] {x y : M} : IsUnit x → IsUnit y → IsUnit (x
   exact ⟨x * y, Units.coe_mul _ _⟩
 
 /-- Multiplication by a `u : Mˣ` on the right doesn't affect `is_unit`. -/
-@[simp,
-  to_additive is_add_unit_add_add_units "Addition of a `u : add_units M` on the right doesn't\naffect `is_add_unit`."]
+@[simp, to_additive "Addition of a `u : add_units M` on the right doesn't\naffect `is_add_unit`."]
 theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Mˣ) : IsUnit (a * u) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ => by
@@ -425,8 +424,7 @@ theorem Units.is_unit_mul_units [Monoidₓ M] (a : M) (u : Mˣ) : IsUnit (a * u)
     fun v => v.mul u.IsUnit
 
 /-- Multiplication by a `u : Mˣ` on the left doesn't affect `is_unit`. -/
-@[simp,
-  to_additive is_add_unit_add_units_add "Addition of a `u : add_units M` on the left doesn't\naffect `is_add_unit`."]
+@[simp, to_additive "Addition of a `u : add_units M` on the left doesn't affect `is_add_unit`."]
 theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : Mˣ) (a : M) : IsUnit (↑u * a) ↔ IsUnit a :=
   Iff.intro
     (fun ⟨v, hv⟩ => by
@@ -435,7 +433,7 @@ theorem Units.is_unit_units_mul {M : Type _} [Monoidₓ M] (u : Mˣ) (a : M) : I
       rwa [← mul_assoc, Units.inv_mul, one_mulₓ] at this)
     u.IsUnit.mul
 
-@[to_additive is_add_unit_of_add_is_add_unit_left]
+@[to_additive]
 theorem is_unit_of_mul_is_unit_left [CommMonoidₓ M] {x y : M} (hu : IsUnit (x * y)) : IsUnit x :=
   let ⟨z, hz⟩ := is_unit_iff_exists_inv.1 hu
   is_unit_iff_exists_inv.2

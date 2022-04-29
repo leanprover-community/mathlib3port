@@ -22,17 +22,21 @@ subspaces of affine spaces.
 
 noncomputable section
 
-open_locale BigOperators Classical Affine
+open BigOperators Classical Affine
 
 section AffineSpace'
 
-variable (k : Type _) {V : Type _} {P : Type _} [Field k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
+variable (k : Type _) {V : Type _} {P : Type _}
 
 variable {ι : Type _}
 
 include V
 
 open AffineSubspace FiniteDimensional Module
+
+section
+
+variable [DivisionRing k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 /-- The `vector_span` of a finite set is finite-dimensional. -/
 theorem finite_dimensional_vector_span_of_finite {s : Set P} (h : Set.Finite s) :
@@ -76,13 +80,19 @@ noncomputable def fintypeOfFinDimAffineIndependent [FiniteDimensional k V] {p : 
   else by
     let q := (not_is_empty_iff.mp hι).some
     rw [affine_independent_iff_linear_independent_vsub k p q] at hi
-    let this' : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
+    let this : IsNoetherian k V := IsNoetherian.iff_fg.2 inferInstance
     exact fintypeOfFintypeNe _ (fintypeOfIsNoetherianLinearIndependent hi)
 
 /-- An affine-independent subset of a finite-dimensional affine space is finite. -/
 theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
     (hi : AffineIndependent k (coe : s → P)) : s.Finite :=
   ⟨fintypeOfFinDimAffineIndependent k hi⟩
+
+end
+
+section
+
+variable [Field k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 variable {k}
 
@@ -239,6 +249,12 @@ theorem finrank_vector_span_le_iff_not_affine_independent [Fintype ι] (p : ι �
     (hc : Fintype.card ι = n + 2) : finrank k (vectorSpan k (Set.Range p)) ≤ n ↔ ¬AffineIndependent k p :=
   (not_iff_comm.1 (affine_independent_iff_not_finrank_vector_span_le k p hc).symm).symm
 
+end
+
+section DivisionRing
+
+variable [DivisionRing k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
+
 /-- A set of points is collinear if their `vector_span` has dimension
 at most `1`. -/
 def Collinear (s : Set P) : Prop :=
@@ -338,6 +354,12 @@ theorem collinear_insert_singleton (p₁ p₂ : P) : Collinear k ({p₁, p₂} :
     simp [hp]
     
 
+end DivisionRing
+
+section Field
+
+variable [Field k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
+
 /-- Three points are affinely independent if and only if they are not
 collinear. -/
 theorem affine_independent_iff_not_collinear (p : Finₓ 3 → P) : AffineIndependent k p ↔ ¬Collinear k (Set.Range p) := by
@@ -347,6 +369,8 @@ theorem affine_independent_iff_not_collinear (p : Finₓ 3 → P) : AffineIndepe
 independent. -/
 theorem collinear_iff_not_affine_independent (p : Finₓ 3 → P) : Collinear k (Set.Range p) ↔ ¬AffineIndependent k p := by
   rw [collinear_iff_finrank_le_one, finrank_vector_span_le_iff_not_affine_independent k p (Fintype.card_fin 3)]
+
+end Field
 
 end AffineSpace'
 

@@ -78,33 +78,34 @@ noncomputable instance categoryAsType : SmallCategory (AsType α) where
 
 attribute [local simp] category_as_type_hom category_as_type_id category_as_type_comp
 
+/-- The "identity" functor from `as_type α` to `obj_as_type α`. -/
+@[simps]
+noncomputable def asTypeToObjAsType : AsType α ⥤ ObjAsType α where
+  obj := id
+  map := fun i j => (Fintype.equivFin _).symm
+
+/-- The "identity" functor from `obj_as_type α` to `as_type α`. -/
+@[simps]
+noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α where
+  obj := id
+  map := fun i j => Fintype.equivFin _
+
 /-- The constructed category (`as_type α`) is equivalent to `obj_as_type α`. -/
-noncomputable def objAsTypeEquivAsType : AsType α ≌ ObjAsType α where
-  Functor :=
-    { obj := id, map := fun i j f => (Fintype.equivFin _).symm f,
-      map_comp' := fun _ _ _ _ _ => by
-        dsimp
-        simp }
-  inverse :=
-    { obj := id, map := fun i j f => Fintype.equivFin _ f,
-      map_comp' := fun _ _ _ _ _ => by
-        dsimp
-        simp }
-  unitIso :=
-    NatIso.ofComponents Iso.refl fun _ _ _ => by
+noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
+  Equivalence.mk (asTypeToObjAsType α) (objAsTypeToAsType α)
+    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
       dsimp
-      simp
-  counitIso :=
-    NatIso.ofComponents Iso.refl fun _ _ _ => by
+      simp )
+    ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
       dsimp
-      simp
+      simp )
 
 noncomputable instance asTypeFinCategory : FinCategory (AsType α) :=
   {  }
 
 /-- The constructed category (`as_type α`) is indeed equivalent to `α`. -/
 noncomputable def equivAsType : AsType α ≌ α :=
-  (objAsTypeEquivAsType α).trans (objAsTypeEquiv α)
+  (asTypeEquivObjAsType α).trans (objAsTypeEquiv α)
 
 end FinCategory
 

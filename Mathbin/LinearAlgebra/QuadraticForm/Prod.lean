@@ -116,7 +116,7 @@ theorem PosDef.prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : 
     (h₁ : Q₁.PosDef) (h₂ : Q₂.PosDef) : (Q₁.Prod Q₂).PosDef :=
   pos_def_prod_iff.mpr ⟨h₁, h₂⟩
 
-open_locale BigOperators
+open BigOperators
 
 /-- Construct a quadratic form on a family of modules from the quadratic form on each module. -/
 def pi [Fintype ι] (Q : ∀ i, QuadraticForm R (Mᵢ i)) : QuadraticForm R (∀ i, Mᵢ i) :=

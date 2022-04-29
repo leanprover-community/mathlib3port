@@ -257,6 +257,13 @@ def postcomposeInvEquiv {F G : J ⥤ C} (α : F ≅ G) (c : Cone G) :
     IsLimit ((Cones.postcompose α.inv).obj c) ≃ IsLimit c :=
   postcomposeHomEquiv α.symm c
 
+/-- Constructing an equivalence `is_limit c ≃ is_limit d` from a natural isomorphism
+between the underlying functors, and then an isomorphism between `c` transported along this and `d`.
+-/
+def equivOfNatIsoOfIso {F G : J ⥤ C} (α : F ≅ G) (c : Cone F) (d : Cone G) (w : (Cones.postcompose α.Hom).obj c ≅ d) :
+    IsLimit c ≃ IsLimit d :=
+  (postcomposeHomEquiv α _).symm.trans (equivIsoLimit w)
+
 /-- The cone points of two limit cones for naturally isomorphic functors
 are themselves isomorphic.
 -/
@@ -291,6 +298,13 @@ theorem lift_comp_cone_points_iso_of_nat_iso_hom {F G : J ⥤ C} {r s : Cone F} 
     (by
       simp )
 
+@[reassoc]
+theorem lift_comp_cone_points_iso_of_nat_iso_inv {F G : J ⥤ C} {r s : Cone G} {t : Cone F} (P : IsLimit t)
+    (Q : IsLimit s) (w : F ≅ G) : Q.lift r ≫ (conePointsIsoOfNatIso P Q w).inv = P.map r w.inv :=
+  P.hom_ext
+    (by
+      simp )
+
 section Equivalenceₓ
 
 open CategoryTheory.Equivalence
@@ -313,7 +327,7 @@ def whiskerEquivalenceEquiv {s : Cone F} (e : K ≌ J) : IsLimit s ≃ IsLimit (
     tidy, by
     tidy⟩
 
-/-- We can prove two cone points `(s : cone F).X` and `(t.cone F).X` are isomorphic if
+/-- We can prove two cone points `(s : cone F).X` and `(t.cone G).X` are isomorphic if
 * both cones are limit cones
 * their indexing categories are equivalent via some `e : J ≌ K`,
 * the triangle of functors commutes up to a natural isomorphism: `e.functor ⋙ G ≅ F`.
@@ -710,6 +724,13 @@ def precomposeInvEquiv {F G : J ⥤ C} (α : F ≅ G) (c : Cocone F) :
     IsColimit ((Cocones.precompose α.inv).obj c) ≃ IsColimit c :=
   precomposeHomEquiv α.symm c
 
+/-- Constructing an equivalence `is_colimit c ≃ is_colimit d` from a natural isomorphism
+between the underlying functors, and then an isomorphism between `c` transported along this and `d`.
+-/
+def equivOfNatIsoOfIso {F G : J ⥤ C} (α : F ≅ G) (c : Cocone F) (d : Cocone G)
+    (w : (Cocones.precompose α.inv).obj c ≅ d) : IsColimit c ≃ IsColimit d :=
+  (precomposeInvEquiv α _).symm.trans (equivIsoColimit w)
+
 /-- The cocone points of two colimit cocones for naturally isomorphic functors
 are themselves isomorphic.
 -/
@@ -746,6 +767,13 @@ theorem cocone_points_iso_of_nat_iso_hom_desc {F G : J ⥤ C} {s : Cocone F} {r 
     (by
       simp )
 
+@[reassoc]
+theorem cocone_points_iso_of_nat_iso_inv_desc {F G : J ⥤ C} {s : Cocone G} {r t : Cocone F} (P : IsColimit t)
+    (Q : IsColimit s) (w : F ≅ G) : (coconePointsIsoOfNatIso P Q w).inv ≫ P.desc r = Q.map _ w.inv :=
+  Q.hom_ext
+    (by
+      simp )
+
 section Equivalenceₓ
 
 open CategoryTheory.Equivalence
@@ -768,8 +796,8 @@ def whiskerEquivalenceEquiv {s : Cocone F} (e : K ≌ J) : IsColimit s ≃ IsCol
     tidy, by
     tidy⟩
 
-/-- We can prove two cocone points `(s : cocone F).X` and `(t.cocone F).X` are isomorphic if
-* both cocones are colimit ccoones
+/-- We can prove two cocone points `(s : cocone F).X` and `(t.cocone G).X` are isomorphic if
+* both cocones are colimit cocones
 * their indexing categories are equivalent via some `e : J ≌ K`,
 * the triangle of functors commutes up to a natural isomorphism: `e.functor ⋙ G ≅ F`.
 

@@ -17,13 +17,29 @@ multiplicative and additive structures on the values being combined.
 
 universe u v w
 
-open_locale BigOperators
+open BigOperators
 
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 namespace Finset
 
 variable {s s₁ s₂ : Finset α} {a : α} {b : β} {f g : α → β}
+
+section CommMonoidₓ
+
+variable [CommMonoidₓ β]
+
+open Classical
+
+theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (∏ i in s, x ^ f i) = x ^ ∑ x in s, f x := by
+  apply Finset.induction
+  · simp
+    
+  · intro a s has H
+    rw [Finset.prod_insert has, Finset.sum_insert has, pow_addₓ, H]
+    
+
+end CommMonoidₓ
 
 section Semiringₓ
 
@@ -107,7 +123,7 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
       
     
 
-open_locale Classical
+open Classical
 
 /-- The product of `f a + g a` over all of `s` is the sum
   over the powerset of `s` of the product of `f` over a subset `t` times
@@ -211,14 +227,6 @@ theorem sum_pow_mul_eq_add_pow {α R : Type _} [CommSemiringₓ R] (a b : R) (s 
   refine' Finset.sum_congr rfl fun t ht => _
   rw [prod_const, prod_const, ← card_sdiff (mem_powerset.1 ht)]
 
-theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (∏ i in s, x ^ f i) = x ^ ∑ x in s, f x := by
-  apply Finset.induction
-  · simp
-    
-  · intro a s has H
-    rw [Finset.prod_insert has, Finset.sum_insert has, pow_addₓ, H]
-    
-
 theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀, ∀ x ∈ s, ∀, b ∣ f x) : b ∣ ∑ x in s, f x :=
   Multiset.dvd_sum fun y hy => by
     rcases Multiset.mem_map.1 hy with ⟨x, hx, rfl⟩ <;> exact h x hx
@@ -246,7 +254,8 @@ end CommRingₓ
 
 /-- A product over all subsets of `s ∪ {x}` is obtained by multiplying the product over all subsets
 of `s`, and over all subsets of `s` to which one adds `x`. -/
-@[to_additive]
+@[to_additive
+      "A sum over all subsets of `s ∪ {x}` is obtained by summing the sum over all subsets\nof `s`, and over all subsets of `s` to which one adds `x`."]
 theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α} {x : α} (h : x ∉ s) (f : Finset α → β) :
     (∏ a in (insert x s).Powerset, f a) = (∏ a in s.Powerset, f a) * ∏ t in s.Powerset, f (insert x t) := by
   rw [powerset_insert, Finset.prod_union, Finset.prod_image]
@@ -261,9 +270,10 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α}
     exact ne_insert_of_not_mem _ _ (not_mem_of_mem_powerset_of_not_mem h₁ h)
     
 
-/-- A product over `powerset s` is equal to the double product over
-sets of subsets of `s` with `card s = k`, for `k = 1, ... , card s`. -/
-@[to_additive]
+/-- A product over `powerset s` is equal to the double product over sets of subsets of `s` with
+`card s = k`, for `k = 1, ..., card s`. -/
+@[to_additive
+      "A sum over `powerset s` is equal to the double sum over sets of subsets of `s` with\n`card s = k`, for `k = 1, ..., card s`"]
 theorem prod_powerset [CommMonoidₓ β] (s : Finset α) (f : Finset α → β) :
     (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by
   classical

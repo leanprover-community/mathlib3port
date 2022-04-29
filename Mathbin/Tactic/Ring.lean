@@ -562,15 +562,16 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency) (mode := 
           ext_simplify_core a {  } simp_lemmas.mk (fun _ => failed)
               (fun a _ _ _ e => do
                 write_ref atoms a
+                let (new_e, pr) ← eval' red atoms e
                 let (new_e, pr) ←
                   (match mode with
-                      | normalize_mode.raw => eval' red atoms
+                      | normalize_mode.raw => fun _ => pure (new_e, pr)
                       | normalize_mode.horner =>
-                        trans_conv (eval' red atoms) fun e => do
+                        trans_conv (fun _ => pure (new_e, pr)) fun e => do
                           let (e', prf, _) ← simplify lemmas [] e
                           pure (e', prf)
                       | normalize_mode.SOP =>
-                        trans_conv (eval' red atoms) <|
+                        (trans_conv fun _ => pure (new_e, pr)) <|
                           (trans_conv fun e => do
                               let (e', prf, _) ← simplify lemmas [] e
                               pure (e', prf)) <|

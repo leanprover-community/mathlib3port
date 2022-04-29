@@ -83,7 +83,7 @@ instance (priority := 100) is_semisimple_of_is_simple [h : IsSimple R L] : IsSem
   intro I hI
   obtain ⟨⟨h₁⟩, h₂⟩ := id h
   by_contra contra
-  rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquivSelf] at hI
+  rw [h₁ I contra, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI
   exact h₂ hI
 
 /-- A semisimple Abelian Lie algebra is trivial. -/

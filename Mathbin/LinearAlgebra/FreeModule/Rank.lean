@@ -19,7 +19,7 @@ universe u v w
 
 variable (R : Type u) (M : Type v) (N : Type w)
 
-open_locale TensorProduct DirectSum BigOperators Cardinal
+open TensorProduct DirectSum BigOperators Cardinal
 
 open Cardinal
 
@@ -73,25 +73,24 @@ theorem rank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : 
     Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) := by
   rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
 
-/-- If `n` and `m` are `fintype`, the rank of `n × m` matrices is `(# n).lift * (# m).lift`. -/
+/-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
-theorem rank_matrix (n : Type v) [Fintype n] (m : Type w) [Fintype m] :
-    Module.rank R (Matrix n m R) = lift.{max v w u, v} (# n) * lift.{max v w u, w} (# m) := by
-  have h := (Matrix.stdBasis R n m).mk_eq_dim
+theorem rank_matrix (m : Type v) (n : Type w) [Fintype m] [Fintype n] :
+    Module.rank R (Matrix m n R) = lift.{max v w u, v} (# m) * lift.{max v w u, w} (# n) := by
+  have h := (Matrix.stdBasis R m n).mk_eq_dim
   rw [← lift_lift.{max v w u, max v w}, lift_inj] at h
   simpa using h.symm
 
-/-- If `n` and `m` are `fintype` that lie in the same universe, the rank of `n × m` matrices is
+/-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
   `(# n * # m).lift`. -/
 @[simp]
-theorem rank_matrix' (n : Type v) [Fintype n] (m : Type v) [Fintype m] :
-    Module.rank R (Matrix n m R) = (# n * # m).lift := by
+theorem rank_matrix' (m n : Type v) [Fintype m] [Fintype n] : Module.rank R (Matrix m n R) = (# m * # n).lift := by
   rw [rank_matrix, lift_mul, lift_umax]
 
-/-- If `n` and `m` are `fintype` that lie in the same universe as `R`, the rank of `n × m` matrices
-  is `# n * # m`. -/
+/-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
+  is `# m * # n`. -/
 @[simp]
-theorem rank_matrix'' (n : Type u) [Fintype n] (m : Type u) [Fintype m] : Module.rank R (Matrix n m R) = # n * # m := by
+theorem rank_matrix'' (m n : Type u) [Fintype m] [Fintype n] : Module.rank R (Matrix m n R) = # m * # n := by
   simp
 
 end Ringₓ

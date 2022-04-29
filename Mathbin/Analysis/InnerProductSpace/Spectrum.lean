@@ -51,7 +51,7 @@ variable {E : Type _} [InnerProductSpace 𝕜 E]
 -- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
-open_locale BigOperators ComplexConjugate
+open BigOperators ComplexConjugate
 
 open Module.End
 

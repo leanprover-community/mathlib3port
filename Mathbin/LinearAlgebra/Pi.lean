@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 -/
 import Mathbin.LinearAlgebra.Basic
-import Mathbin.Data.Equiv.Fin
+import Mathbin.Logic.Equiv.Fin
 
 /-!
 # Pi types of modules
@@ -33,7 +33,7 @@ variable {M₃ : Type y} {V₃ : Type y'} {M₄ : Type z} {ι : Type x} {ι' : T
 
 open Function Submodule
 
-open_locale BigOperators
+open BigOperators
 
 namespace LinearMap
 
@@ -463,19 +463,6 @@ theorem LinearMap.vec_cons_apply {n} (f : M →ₗ[R] M₂) (g : M →ₗ[R] Fin
   rfl
 
 end Semiringₓ
-
-/-- Non-dependent version of `pi.has_scalar`. Lean gets confused by the dependent instance if this
-is not present. -/
-@[to_additive Function.hasVadd]
-instance Function.hasScalar {ι R M : Type _} [HasScalar R M] : HasScalar R (ι → M) :=
-  Pi.hasScalar
-
-/-- Non-dependent version of `pi.smul_comm_class`. Lean gets confused by the dependent instance if
-this is not present. -/
-@[to_additive]
-instance Function.smul_comm_class {ι α β M : Type _} [HasScalar α M] [HasScalar β M] [SmulCommClass α β M] :
-    SmulCommClass α β (ι → M) :=
-  Pi.smul_comm_class
 
 section CommSemiringₓ
 

@@ -3,11 +3,11 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Data.Equiv.Basic
 import Mathbin.Data.FunLike.Embedding
 import Mathbin.Data.Pprod
 import Mathbin.Data.Set.Basic
 import Mathbin.Data.Sigma.Basic
+import Mathbin.Logic.Equiv.Basic
 
 /-!
 # Injective functions
@@ -205,6 +205,17 @@ def coeWithTop {α} : α ↪ WithTop α :=
 @[simps]
 def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.Range f) : Option α ↪ β :=
   ⟨fun o => o.elim x f, Option.injective_iff.2 ⟨f.2, h⟩⟩
+
+/-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
+@[simps]
+def optionEmbeddingEquiv α β : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.Range fᶜ) where
+  toFun := fun f => ⟨coeOption.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
+  invFun := fun f => f.1.optionElim f.2 f.2.2
+  left_inv := fun f =>
+    ext <| by
+      rintro (_ | _) <;> simp [Option.coe_def]
+  right_inv := fun ⟨f, y, hy⟩ => by
+    ext <;> simp [Option.coe_def]
 
 /-- Embedding of a `subtype`. -/
 def subtype {α} (p : α → Prop) : Subtype p ↪ α :=

@@ -38,6 +38,10 @@ attribute [protected] Bipointed.X
 def of {X : Type _} (to_prod : X × X) : Bipointed :=
   ⟨X, to_prod⟩
 
+@[simp]
+theorem coe_of {X : Type _} (to_prod : X × X) : ↥(of to_prod) = X :=
+  rfl
+
 alias of ← Prod.bipointed
 
 instance : Inhabited Bipointed :=

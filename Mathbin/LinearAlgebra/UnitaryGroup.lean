@@ -41,7 +41,7 @@ namespace Matrix
 
 open LinearMap
 
-open_locale Matrix
+open Matrix
 
 section
 

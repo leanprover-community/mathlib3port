@@ -16,7 +16,7 @@ Mostly monotonicity results for the `∏` and `∑` operations.
 
 open Function
 
-open_locale BigOperators
+open BigOperators
 
 variable {ι α β M N G k R : Type _}
 
@@ -132,13 +132,13 @@ theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) 
       rw [prod_const_one])
 
 @[to_additive sum_le_sum_of_subset_of_nonneg]
-theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, (i ∉ s) → 1 ≤ f i) :
+theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, i ∉ s → 1 ≤ f i) :
     (∏ i in s, f i) ≤ ∏ i in t, f i := by
   classical <;>
     calc (∏ i in s, f i) ≤ (∏ i in t \ s, f i) * ∏ i in s, f i :=
         le_mul_of_one_le_left' <|
           one_le_prod' <| by
-            simpa only [mem_sdiff, and_imp]_ = ∏ i in t \ s ∪ s, f i :=
+            simpa only [mem_sdiff, and_imp] _ = ∏ i in t \ s ∪ s, f i :=
         (prod_union sdiff_disjoint).symm _ = ∏ i in t, f i := by
         rw [sdiff_union_of_subset h]
 
@@ -170,22 +170,21 @@ theorem single_le_prod' (hf : ∀, ∀ i ∈ s, ∀, 1 ≤ f i) {a} (h : a ∈ s
     _ ≤ ∏ i in s, f i := (prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h)) fun i hi _ => hf i hi
     
 
-@[to_additive]
-theorem prod_le_of_forall_le (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x ∈ s, ∀, f x ≤ n) : s.Prod f ≤ n ^ s.card :=
-  by
-  refine' (Multiset.prod_le_of_forall_le (s.val.map f) n _).trans _
+@[to_additive sum_le_card_nsmul]
+theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x ∈ s, ∀, f x ≤ n) : s.Prod f ≤ n ^ s.card := by
+  refine' (Multiset.prod_le_pow_card (s.val.map f) n _).trans _
   · simpa using h
     
   · simpa
     
 
-@[to_additive]
-theorem le_prod_of_forall_le (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x ∈ s, ∀, n ≤ f x) : n ^ s.card ≤ s.Prod f :=
-  @Finset.prod_le_of_forall_le _ (OrderDual N) _ _ _ _ h
+@[to_additive card_nsmul_le_sum]
+theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x ∈ s, ∀, n ≤ f x) : n ^ s.card ≤ s.Prod f :=
+  @Finset.prod_le_pow_card _ (OrderDual N) _ _ _ _ h
 
 theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
     (h : ∀, ∀ a ∈ s, ∀, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card * n :=
-  card_bUnion_le.trans <| sum_le_of_forall_le _ _ _ h
+  card_bUnion_le.trans <| sum_le_card_nsmul _ _ _ h
 
 variable {ι' : Type _} [DecidableEq ι']
 
@@ -266,7 +265,7 @@ variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
 times how many they are. -/
 theorem sum_card_inter_le (h : ∀, ∀ a ∈ s, ∀, (B.filter <| (· ∈ ·) a).card ≤ n) :
     (∑ t in B, (s ∩ t).card) ≤ s.card * n := by
-  refine' le_transₓ _ (s.sum_le_of_forall_le _ _ h)
+  refine' le_transₓ _ (s.sum_le_card_nsmul _ _ h)
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
 
@@ -283,7 +282,7 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card �
 times how many they are. -/
 theorem le_sum_card_inter (h : ∀, ∀ a ∈ s, ∀, n ≤ (B.filter <| (· ∈ ·) a).card) : s.card * n ≤ ∑ t in B, (s ∩ t).card :=
   by
-  apply (s.le_sum_of_forall_le _ _ h).trans
+  apply (s.card_nsmul_le_sum _ _ h).trans
   simp_rw [← filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
   exact sum_comm.le
 
@@ -353,7 +352,7 @@ theorem prod_le_prod_of_ne_one' (h : ∀, ∀ x ∈ s, ∀, f x ≠ 1 → x ∈ 
           (prod_le_one' <| by
             simp only [mem_filter, and_imp] <;> exact fun _ _ => le_of_eqₓ)
           (prod_le_prod_of_subset' <| by
-            simpa only [subset_iff, mem_filter, and_imp])
+            simpa only [subset_iff, mem_filter, and_imp] )
 
 end CanonicallyOrderedMonoid
 
@@ -381,7 +380,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀, ∀ i ∈ s, ∀
 
 @[to_additive sum_lt_sum_of_subset]
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
-    (hle : ∀, ∀ j ∈ t, ∀, (j ∉ s) → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
+    (hle : ∀, ∀ j ∈ t, ∀, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
   classical <;>
     calc (∏ j in s, f j) < ∏ j in insert i s, f j := by
         rw [prod_insert hs]
@@ -458,7 +457,7 @@ section OrderedCommSemiring
 
 variable [OrderedCommSemiring R] {f g : ι → R} {s t : Finset ι}
 
-open_locale Classical
+open Classical
 
 -- this is also true for a ordered commutative multiplicative monoid
 theorem prod_nonneg (h0 : ∀, ∀ i ∈ s, ∀, 0 ≤ f i) : 0 ≤ ∏ i in s, f i :=
@@ -609,7 +608,7 @@ variable {S : Type _}
 
 theorem AbsoluteValue.sum_le [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S) (s : Finset ι) (f : ι → R) :
     abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) := by
-  let this' := Classical.decEq ι
+  let this := Classical.decEq ι
   refine' Finset.induction_on s _ fun i s hi ih => _
   · simp
     

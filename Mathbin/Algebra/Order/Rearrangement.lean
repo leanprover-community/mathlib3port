@@ -32,7 +32,7 @@ file because it is easily deducible from the `monovary` API.
 
 open Equivₓ Equivₓ.Perm Finset OrderDual
 
-open_locale BigOperators
+open BigOperators
 
 variable {ι α β : Type _}
 

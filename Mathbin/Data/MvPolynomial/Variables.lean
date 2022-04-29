@@ -56,11 +56,11 @@ This will give rise to a monomial in `mv_polynomial σ R` which mathematicians m
 
 noncomputable section
 
-open_locale Classical BigOperators
+open Classical BigOperators
 
 open Set Function Finsupp AddMonoidAlgebra
 
-open_locale BigOperators
+open BigOperators
 
 universe u v w
 
@@ -688,10 +688,10 @@ theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p 
   conv_lhs => rw [p.as_sum]
   simp only [RingHom.map_sum, eval₂_hom_monomial]
   by_cases' h0 : constant_coeff p = 0
-  on_goal 0 =>
+  on_goal 1 =>
     rw [h0, f.map_zero, Finset.sum_eq_zero]
     intro d hd
-  on_goal 1 =>
+  on_goal 2 =>
     rw [Finset.sum_eq_single (0 : σ →₀ ℕ)]
     · rw [Finsupp.prod_zero_index, mul_oneₓ]
       rfl
