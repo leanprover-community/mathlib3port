@@ -56,7 +56,7 @@ Tensor product of natural transformations into `D`, when `D` is monoidal.
 def tensorHom : tensorObj F F' ⟶ tensorObj G G' where
   app := fun X => α.app X ⊗ β.app X
   naturality' := fun X Y f => by
-    dsimp
+    dsimp'
     rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
 
 end FunctorCategory
@@ -72,44 +72,44 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D) where
   tensorHom := fun F G F' G' α β => tensorHom α β
   tensor_id' := fun F G => by
     ext
-    dsimp
+    dsimp'
     rw [tensor_id]
   tensor_comp' := fun F G H F' G' H' α β γ δ => by
     ext
-    dsimp
+    dsimp'
     rw [tensor_comp]
   tensorUnit := (CategoryTheory.Functor.const C).obj (𝟙_ D)
   leftUnitor := fun F =>
     NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f => by
-      dsimp
+      dsimp'
       rw [left_unitor_naturality]
   rightUnitor := fun F =>
     NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f => by
-      dsimp
+      dsimp'
       rw [right_unitor_naturality]
   associator := fun F G H =>
     NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f => by
-      dsimp
+      dsimp'
       rw [associator_naturality]
   left_unitor_naturality' := fun F G α => by
     ext X
-    dsimp
+    dsimp'
     rw [left_unitor_naturality]
   right_unitor_naturality' := fun F G α => by
     ext X
-    dsimp
+    dsimp'
     rw [right_unitor_naturality]
   associator_naturality' := fun F G H F' G' H' α β γ => by
     ext X
-    dsimp
+    dsimp'
     rw [associator_naturality]
   triangle' := fun F G => by
     ext X
-    dsimp
+    dsimp'
     rw [triangle]
   pentagon' := fun F G H K => by
     ext X
-    dsimp
+    dsimp'
     rw [pentagon]
 
 @[simp]

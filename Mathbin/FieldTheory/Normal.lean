@@ -196,7 +196,7 @@ theorem Normal.of_is_splitting_field (p : F[X]) [hFEp : IsSplittingField F E p] 
   suffices (Algebra.adjoin C S).restrictScalars F = (Algebra.adjoin E {AdjoinRoot.root q}).restrictScalars F by
     rw [AdjoinRoot.adjoin_root_eq_top, Subalgebra.restrict_scalars_top, ← @Subalgebra.restrict_scalars_top F C] at this
     exact top_le_iff.mpr (Subalgebra.restrict_scalars_injective F this)
-  dsimp only [S]
+  dsimp' only [S]
   rw [← Finset.image_to_finset, Finset.coe_image]
   apply Eq.trans (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoin_root_eq_top)
   rw [Set.image_singleton, RingHom.algebra_map_to_algebra, AdjoinRoot.lift_root]

@@ -454,7 +454,7 @@ instance : Algebra R (A ⊗[R] B) :=
         simp
         
       · intros
-        dsimp
+        dsimp'
         simp [smul_add, mul_addₓ, *]
          }
 

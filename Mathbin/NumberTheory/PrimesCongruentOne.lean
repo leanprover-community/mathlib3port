@@ -3,9 +3,7 @@ Copyright (c) 2020 Riccardo Brasca. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 -/
-import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
-import Mathbin.Topology.Algebra.Polynomial
-import Mathbin.FieldTheory.Finite.Basic
+import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
 
 /-!
 # Primes congruent to one
@@ -20,32 +18,26 @@ namespace Nat
 open Polynomial Nat Filter
 
 /-- For any positive `k : ℕ` there are infinitely many primes `p` such that `p ≡ 1 [MOD k]`. -/
-theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
-  have hli : tendsto (abs ∘ fun a : ℕ => abs (a : ℚ)) at_top at_top := by
-    simp only [(· ∘ ·), abs_cast]
-    exact nat.strict_mono_cast.monotone.tendsto_at_top_at_top exists_nat_ge
-  have hcff : Int.castRingHom ℚ (cyclotomic k ℤ).leadingCoeff ≠ 0 := by
-    simp only [cyclotomic.monic, RingHom.eq_int_cast, monic.leading_coeff, Int.cast_oneₓ, Ne.def, not_false_iff,
-      one_ne_zero]
-  obtain ⟨a, ha⟩ :=
-    tendsto_at_top_at_top.1
-      (tendsto_abv_eval₂_at_top (Int.castRingHom ℚ) abs (cyclotomic k ℤ) (degree_cyclotomic_pos k ℤ hpos) hcff hli) 2
-  let b := a * (k * n.factorial)
-  have hgt : 1 < (eval (↑(a * (k * n.factorial))) (cyclotomic k ℤ)).natAbs := by
-    suffices hgtabs : 1 < abs (eval (↑b) (cyclotomic k ℤ))
-    · rw [Int.abs_eq_nat_abs] at hgtabs
-      exact_mod_cast hgtabs
+theorem exists_prime_ge_modeq_one {k : ℕ} (n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.Prime p ∧ n ≤ p ∧ p ≡ 1 [MOD k] := by
+  let b := 3 * (k * n.factorial)
+  have hgt : 1 < (eval (↑b) (cyclotomic k ℤ)).natAbs := by
+    have hkey : ∀ l : ℕ, 2 < 3 * (l.succ * n.factorial) := fun l =>
+      lt_mul_of_lt_of_one_le (2 : ℕ).lt_succ_self (le_mul_of_le_of_le_one (Nat.succ_posₓ _) n.factorial_pos)
+    rcases k with (_ | _ | k)
+    · simpa using hpos
       
-    suffices hgtrat : 1 < abs (eval (↑b) (cyclotomic k ℚ))
-    · rw [← map_cyclotomic_int k ℚ, ← Int.cast_coe_nat, ← Int.coe_cast_ring_hom, eval_map, eval₂_hom,
-        Int.coe_cast_ring_hom] at hgtrat
-      assumption_mod_cast
+    · simp only [one_mulₓ, Int.coe_nat_mul, Int.coe_nat_succ, Int.coe_nat_zero, zero_addₓ, cyclotomic_one, eval_sub,
+        eval_X, eval_one]
+      convert Int.nat_abs_lt_nat_abs_of_nonneg_of_lt Int.one_nonneg _
+      rw [lt_sub_iff_add_lt]
+      specialize hkey 0
+      norm_cast
+      rwa [one_mulₓ] at hkey
       
-    suffices hleab : a ≤ b
-    · replace ha := lt_of_lt_of_leₓ one_lt_two (ha b hleab)
-      rwa [← eval_map, map_cyclotomic_int k ℚ, abs_cast] at ha
-      
-    exact le_mul_of_pos_right (mul_pos hpos (factorial_pos n))
+    calc 1 ≤ _ := by
+        rw [le_tsub_iff_left (one_le_two.trans (hkey _).le)]
+        exact (hkey _).le _ < _ :=
+        sub_one_lt_nat_abs_cyclotomic_eval (one_lt_succ_succ k) (one_lt_two.trans (hkey k.succ)).Ne.symm
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
   have hprime : Fact p.prime := ⟨min_fac_prime (ne_of_ltₓ hgt).symm⟩
   have hroot : is_root (cyclotomic k (Zmod p)) (cast_ring_hom (Zmod p) b) := by
@@ -71,13 +63,13 @@ theorem exists_prime_ge_modeq_one (k n : ℕ) (hpos : 0 < k) : ∃ p : ℕ, Nat.
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
     
 
-theorem frequently_at_top_modeq_one (k : ℕ) (hpos : 0 < k) : ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
+theorem frequently_at_top_modeq_one {k : ℕ} (hpos : 0 < k) : ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] := by
   refine' frequently_at_top.2 fun n => _
-  obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one k n hpos
+  obtain ⟨p, hp⟩ := exists_prime_ge_modeq_one n hpos
   exact ⟨p, ⟨hp.2.1, hp.1, hp.2.2⟩⟩
 
-theorem infinite_set_of_prime_modeq_one (k : ℕ) (hpos : 0 < k) : Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
-  frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one k hpos)
+theorem infinite_set_of_prime_modeq_one {k : ℕ} (hpos : 0 < k) : Set.Infinite { p : ℕ | Nat.Prime p ∧ p ≡ 1 [MOD k] } :=
+  frequently_at_top_iff_infinite.1 (frequently_at_top_modeq_one hpos)
 
 end Nat
 

@@ -148,7 +148,7 @@ theorem id_rel_sub_separation_relation (α : Type _) [UniformSpace α] : IdRel �
 
 theorem separation_rel_comap {f : α → β} (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) :
     𝓢 α = Prod.map f f ⁻¹' 𝓢 β := by
-  dsimp [SeparationRel]
+  dsimp' [SeparationRel]
   simp_rw [uniformity_comap h, (Filter.comap_has_basis (Prod.map f f) (𝓤 β)).sInter_sets, ← preimage_Inter,
     sInter_eq_bInter]
   rfl
@@ -414,7 +414,7 @@ instance separated_separation : SeparatedSpace (Quotientₓ (separationSetoid α
             let ⟨t, ht, hts⟩ := this
             hts
               (by
-                dsimp [preimage]
+                dsimp' [preimage]
                 exact h t ht)
           show ⟦a⟧ = ⟦b⟧ from Quotientₓ.sound this,
           fun heq : ⟦a⟧ = ⟦b⟧ => fun h hs => HEq ▸ refl_mem_uniformity hs⟩⟩

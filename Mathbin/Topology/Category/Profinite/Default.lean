@@ -289,14 +289,14 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have H : h = g := by
       rw [← cancel_epi f]
       ext x
-      dsimp [LocallyConstant.ofClopen]
+      dsimp' [LocallyConstant.ofClopen]
       rw [if_neg]
       · rfl
         
       refine' mt (fun α => hVU α) _
       simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_eq]
     apply_fun fun e => (e y).down  at H
-    dsimp [LocallyConstant.ofClopen]  at H
+    dsimp' [LocallyConstant.ofClopen]  at H
     rw [if_pos hyV] at H
     exact top_ne_bot H
     

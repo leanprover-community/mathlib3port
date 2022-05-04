@@ -73,7 +73,7 @@ def HomotopyRel.pi (homotopies : ∀ i : I, HomotopyRel (f i) (g i) S) : Homotop
   { Homotopy.pi fun i => (homotopies i).toHomotopy with
     prop' := by
       intro t x hx
-      dsimp only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
+      dsimp' only [coe_mk, pi_eval, to_fun_eq_coe, homotopy_with.coe_to_continuous_map]
       simp only [Function.funext_iffₓ, ← forall_and_distrib]
       intro i
       exact (homotopies i).prop' t x hx }

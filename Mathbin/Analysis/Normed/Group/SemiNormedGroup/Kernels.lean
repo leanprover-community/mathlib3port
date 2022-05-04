@@ -101,7 +101,7 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupₓ.{u}} (f g : V ⟶ W) 
                   exact c.condition)
             (fun c => NormedGroupHom.ker.incl_comp_lift _ _ _) fun c g h => by
             ext x
-            dsimp
+            dsimp'
             rw [← h]
             rfl }
 

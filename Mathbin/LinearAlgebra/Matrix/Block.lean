@@ -207,7 +207,7 @@ theorem det_of_block_triangular_matrix'' (M : Matrix m m R) (b : m → ℕ) (h :
     have hbi : ∀ i, b i ∈ Finset.image b Finset.univ := by
       simp
     intro i
-    dsimp only [n]
+    dsimp' only [n]
     apply nat.lt_succ_iff.mpr
     exact le_cSup (Finset.bdd_above _) (hbi i)
   rw [det_of_block_triangular_matrix M b h n hn]

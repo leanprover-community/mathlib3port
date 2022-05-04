@@ -43,7 +43,7 @@ def sectionsSubgroup (F : J ⥤ Groupₓₓ) : Subgroup (∀ j, F.obj j) :=
   { Mon.sectionsSubmonoid (F ⋙ forget₂ Groupₓₓ Mon) with Carrier := (F ⋙ forget Groupₓₓ).sections,
     inv_mem' := fun a ah j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
-      dsimp [functor.sections]  at ah
+      dsimp' [functor.sections]  at ah
       rw [ah f] }
 
 @[to_additive]

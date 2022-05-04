@@ -73,9 +73,9 @@ def restrictedYonedaYoneda : restrictedYoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Type u
     (fun P =>
       NatIso.ofComponents (fun X => yonedaSectionsSmall X.unop _) fun X Y f =>
         funext fun x => by
-          dsimp
+          dsimp'
           rw [← functor_to_types.naturality _ _ x f (𝟙 _)]
-          dsimp
+          dsimp'
           simp )
     fun _ _ _ => rfl
 
@@ -99,7 +99,7 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ) {c : Cocone ((c
       left_inv := by
         rintro ⟨k₁, k₂⟩
         ext
-        dsimp
+        dsimp'
         congr 1
         simp ,
       right_inv := by
@@ -133,7 +133,7 @@ theorem extend_along_yoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     (extendAlongYoneda A).map f = colimit.pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op := by
   ext J
   erw [colimit.ι_pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op]
-  dsimp only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso', is_colimit.hom_iso, ulift_trivial]
+  dsimp' only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso', is_colimit.hom_iso, ulift_trivial]
   simpa
 
 /-- Show `extend_along_yoneda` is left adjoint to `restricted_yoneda`.
@@ -155,7 +155,7 @@ def isInitial (A : C) : IsInitial (Elements.initial A) where
   desc := fun s => ⟨s.x.2.op, comp_id _⟩
   uniq' := fun s m w => by
     simp_rw [← m.2]
-    dsimp [elements.initial]
+    dsimp' [elements.initial]
     simp
 
 /-- `extend_along_yoneda A` is an extension of `A` to the presheaf category along the yoneda embedding.
@@ -163,7 +163,7 @@ def isInitial (A : C) : IsInitial (Elements.initial A) where
 property (up to isomorphism).
 
 The first part of [MM92], Chapter I, Section 5, Corollary 4.
-See Property 1 of https://ncatlab.org/nlab/show/Yoneda+extension#properties.
+See Property 1 of <https://ncatlab.org/nlab/show/Yoneda+extension#properties>.
 -/
 def isExtensionAlongYoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extendAlongYoneda A ≅ A :=
   NatIso.ofComponents
@@ -177,7 +177,7 @@ def isExtensionAlongYoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extendAl
       rw [colimit.ι_desc_assoc, colimit.ι_desc_assoc]
       change (colimit.ι _ _ ≫ 𝟙 _) ≫ colimit.desc _ _ = _
       rw [comp_id, colimit.ι_desc]
-      dsimp
+      dsimp'
       rw [← A.map_comp]
       congr 1)
 
@@ -314,16 +314,16 @@ def natIsoOfNatIsoOnRepresentables (L₁ L₂ : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ)
   · intro P₁ P₂ f
     apply (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext
     intro j
-    dsimp only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
+    dsimp' only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
     have :
       (L₁.map_cocone (cocone_of_representable P₁)).ι.app j ≫ L₁.map f =
         (L₁.map_cocone (cocone_of_representable P₂)).ι.app ((category_of_elements.map f).op.obj j) :=
       by
-      dsimp
+      dsimp'
       rw [← L₁.map_comp, cocone_of_representable_naturality]
       rfl
     rw [reassoc_of this, is_colimit.ι_map_assoc, is_colimit.ι_map]
-    dsimp
+    dsimp'
     rw [← L₂.map_comp, cocone_of_representable_naturality]
     rfl
     

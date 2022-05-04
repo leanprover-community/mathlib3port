@@ -236,11 +236,11 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v := by
   induction' hf with n f hf
   induction hf
-  case' prim, zero =>
+  case'' prim, zero =>
     exact ⟨zero', fun ⟨[], _⟩ => rfl⟩
-  case' prim, succ =>
+  case'' prim, succ =>
     exact ⟨succ, fun ⟨[v], _⟩ => rfl⟩
-  case' prim, nth : n i =>
+  case'' prim, nth : n i =>
     refine' Finₓ.succRec (fun n => _) (fun n i IH => _) i
     · exact
         ⟨head, fun ⟨List.cons a as, _⟩ => by
@@ -251,9 +251,9 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         ⟨c.comp tail, fun v => by
           simpa [← Vector.nth_tail] using h v.tail⟩
       
-  case' prim, comp : m n f g hf hg IHf IHg =>
+  case'' prim, comp : m n f g hf hg IHf IHg =>
     simpa [Part.bind_eq_bind] using exists_code.comp IHf IHg
-  case' prim, prec : n f g hf hg IHf IHg =>
+  case'' prim, prec : n f g hf hg IHf IHg =>
     obtain ⟨cf, hf⟩ := IHf
     obtain ⟨cg, hg⟩ := IHg
     simp only [Part.map_eq_map, Part.map_some, Pfun.coe_val] at hf hg
@@ -1871,7 +1871,7 @@ theorem supports_bUnion {K : Option Γ' → Finset Λ'} {S} : Supports (Finset.u
   simp [supports] <;> apply forall_swap
 
 theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S := fun _ => by
-  dsimp only <;> split_ifs <;> exact H
+  dsimp' only <;> split_ifs <;> exact H
 
 theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) := by
   have W := fun {q} => tr_stmts₁_self q
@@ -1892,7 +1892,7 @@ theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (�
     have L := @Finset.mem_union_left
     have R := @Finset.mem_union_right
     intro s
-    dsimp only
+    dsimp' only
     cases nat_end s.iget
     · refine' H₁ (R _ <| L _ <| R _ <| R _ <| L _ W)
       

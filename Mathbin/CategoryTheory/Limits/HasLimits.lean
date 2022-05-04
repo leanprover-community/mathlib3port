@@ -212,13 +212,13 @@ def limit.isoLimitCone {F : J ⥤ C} [HasLimit F] (t : LimitCone F) : limit F �
 @[simp, reassoc]
 theorem limit.iso_limit_cone_hom_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
     (limit.isoLimitCone t).Hom ≫ t.Cone.π.app j = limit.π F j := by
-  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
+  dsimp' [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
   tidy
 
 @[simp, reassoc]
 theorem limit.iso_limit_cone_inv_π {F : J ⥤ C} [HasLimit F] (t : LimitCone F) (j : J) :
     (limit.isoLimitCone t).inv ≫ limit.π F j = t.Cone.π.app j := by
-  dsimp [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
+  dsimp' [limit.iso_limit_cone, is_limit.cone_point_unique_up_to_iso]
   tidy
 
 @[ext]
@@ -326,7 +326,7 @@ theorem HasLimit.iso_of_equivalence_hom_π {F : J ⥤ C} [HasLimit F] {G : K ⥤
       limit.π F (e.inverse.obj k) ≫ w.inv.app (e.inverse.obj k) ≫ G.map (e.counit.app k) :=
   by
   simp only [has_limit.iso_of_equivalence, is_limit.cone_points_iso_of_equivalence_hom]
-  dsimp
+  dsimp'
   simp
 
 @[simp]
@@ -334,7 +334,7 @@ theorem HasLimit.iso_of_equivalence_inv_π {F : J ⥤ C} [HasLimit F] {G : K ⥤
     (w : e.Functor ⋙ G ≅ F) (j : J) :
     (HasLimit.isoOfEquivalence e w).inv ≫ limit.π F j = limit.π G (e.Functor.obj j) ≫ w.Hom.app j := by
   simp only [has_limit.iso_of_equivalence, is_limit.cone_points_iso_of_equivalence_hom]
-  dsimp
+  dsimp'
   simp
 
 section Pre
@@ -683,13 +683,13 @@ def colimit.isoColimitCocone {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) 
 @[simp, reassoc]
 theorem colimit.iso_colimit_cocone_ι_hom {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
     colimit.ι F j ≫ (colimit.isoColimitCocone t).Hom = t.Cocone.ι.app j := by
-  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
+  dsimp' [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
   tidy
 
 @[simp, reassoc]
 theorem colimit.iso_colimit_cocone_ι_inv {F : J ⥤ C} [HasColimit F] (t : ColimitCocone F) (j : J) :
     t.Cocone.ι.app j ≫ (colimit.isoColimitCocone t).inv = colimit.ι F j := by
-  dsimp [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
+  dsimp' [colimit.iso_colimit_cocone, is_colimit.cocone_point_unique_up_to_iso]
   tidy
 
 @[ext]
@@ -790,7 +790,7 @@ theorem HasColimit.iso_of_equivalence_hom_π {F : J ⥤ C} [HasColimit F] {G : K
     (w : e.Functor ⋙ G ≅ F) (j : J) :
     colimit.ι F j ≫ (HasColimit.isoOfEquivalence e w).Hom = F.map (e.Unit.app j) ≫ w.inv.app _ ≫ colimit.ι G _ := by
   simp [has_colimit.iso_of_equivalence, is_colimit.cocone_points_iso_of_equivalence_inv]
-  dsimp
+  dsimp'
   simp
 
 @[simp]
@@ -800,7 +800,7 @@ theorem HasColimit.iso_of_equivalence_inv_π {F : J ⥤ C} [HasColimit F] {G : K
       G.map (e.counitInv.app k) ≫ w.Hom.app (e.inverse.obj k) ≫ colimit.ι F (e.inverse.obj k) :=
   by
   simp [has_colimit.iso_of_equivalence, is_colimit.cocone_points_iso_of_equivalence_inv]
-  dsimp
+  dsimp'
   simp
 
 section Pre
@@ -1023,7 +1023,7 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
     rw [← P.uniq s.unop m.unop]
     · rfl
       
-    · dsimp
+    · dsimp'
       intro j
       rw [← w]
       rfl
@@ -1038,7 +1038,7 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
     rw [← P.uniq s.unop m.unop]
     · rfl
       
-    · dsimp
+    · dsimp'
       intro j
       rw [← w]
       rfl
@@ -1053,7 +1053,7 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
     rw [← P.uniq s.op m.op]
     · rfl
       
-    · dsimp
+    · dsimp'
       intro j
       rw [← w]
       rfl
@@ -1068,7 +1068,7 @@ def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop where
     rw [← P.uniq s.op m.op]
     · rfl
       
-    · dsimp
+    · dsimp'
       intro j
       rw [← w]
       rfl

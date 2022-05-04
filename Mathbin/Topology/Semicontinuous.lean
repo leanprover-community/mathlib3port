@@ -169,7 +169,7 @@ section
 variable [Zero β]
 
 theorem IsOpen.lower_semicontinuous_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
-    LowerSemicontinuous (indicator s fun x => y) := by
+    LowerSemicontinuous (indicatorₓ s fun x => y) := by
   intro x z hz
   by_cases' h : x ∈ s <;> simp [h] at hz
   · filter_upwards [hs.mem_nhds h]
@@ -180,19 +180,19 @@ theorem IsOpen.lower_semicontinuous_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
     
 
 theorem IsOpen.lower_semicontinuous_on_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
-    LowerSemicontinuousOn (indicator s fun x => y) t :=
+    LowerSemicontinuousOn (indicatorₓ s fun x => y) t :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousOn t
 
 theorem IsOpen.lower_semicontinuous_at_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
-    LowerSemicontinuousAt (indicator s fun x => y) x :=
+    LowerSemicontinuousAt (indicatorₓ s fun x => y) x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousAt x
 
 theorem IsOpen.lower_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : 0 ≤ y) :
-    LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
+    LowerSemicontinuousWithinAt (indicatorₓ s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
 
 theorem IsClosed.lower_semicontinuous_indicator (hs : IsClosed s) (hy : y ≤ 0) :
-    LowerSemicontinuous (indicator s fun x => y) := by
+    LowerSemicontinuous (indicatorₓ s fun x => y) := by
   intro x z hz
   by_cases' h : x ∈ s <;> simp [h] at hz
   · apply Filter.eventually_of_forall fun x' => _
@@ -203,15 +203,15 @@ theorem IsClosed.lower_semicontinuous_indicator (hs : IsClosed s) (hy : y ≤ 0)
     
 
 theorem IsClosed.lower_semicontinuous_on_indicator (hs : IsClosed s) (hy : y ≤ 0) :
-    LowerSemicontinuousOn (indicator s fun x => y) t :=
+    LowerSemicontinuousOn (indicatorₓ s fun x => y) t :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousOn t
 
 theorem IsClosed.lower_semicontinuous_at_indicator (hs : IsClosed s) (hy : y ≤ 0) :
-    LowerSemicontinuousAt (indicator s fun x => y) x :=
+    LowerSemicontinuousAt (indicatorₓ s fun x => y) x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousAt x
 
 theorem IsClosed.lower_semicontinuous_within_at_indicator (hs : IsClosed s) (hy : y ≤ 0) :
-    LowerSemicontinuousWithinAt (indicator s fun x => y) t x :=
+    LowerSemicontinuousWithinAt (indicatorₓ s fun x => y) t x :=
   (hs.lower_semicontinuous_indicator hy).LowerSemicontinuousWithinAt t x
 
 end
@@ -590,35 +590,35 @@ section
 variable [Zero β]
 
 theorem IsOpen.upper_semicontinuous_indicator (hs : IsOpen s) (hy : y ≤ 0) :
-    UpperSemicontinuous (indicator s fun x => y) :=
+    UpperSemicontinuous (indicatorₓ s fun x => y) :=
   @IsOpen.lower_semicontinuous_indicator α _ (OrderDual β) _ s y _ hs hy
 
 theorem IsOpen.upper_semicontinuous_on_indicator (hs : IsOpen s) (hy : y ≤ 0) :
-    UpperSemicontinuousOn (indicator s fun x => y) t :=
+    UpperSemicontinuousOn (indicatorₓ s fun x => y) t :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousOn t
 
 theorem IsOpen.upper_semicontinuous_at_indicator (hs : IsOpen s) (hy : y ≤ 0) :
-    UpperSemicontinuousAt (indicator s fun x => y) x :=
+    UpperSemicontinuousAt (indicatorₓ s fun x => y) x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousAt x
 
 theorem IsOpen.upper_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : y ≤ 0) :
-    UpperSemicontinuousWithinAt (indicator s fun x => y) t x :=
+    UpperSemicontinuousWithinAt (indicatorₓ s fun x => y) t x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousWithinAt t x
 
 theorem IsClosed.upper_semicontinuous_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
-    UpperSemicontinuous (indicator s fun x => y) :=
+    UpperSemicontinuous (indicatorₓ s fun x => y) :=
   @IsClosed.lower_semicontinuous_indicator α _ (OrderDual β) _ s y _ hs hy
 
 theorem IsClosed.upper_semicontinuous_on_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
-    UpperSemicontinuousOn (indicator s fun x => y) t :=
+    UpperSemicontinuousOn (indicatorₓ s fun x => y) t :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousOn t
 
 theorem IsClosed.upper_semicontinuous_at_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
-    UpperSemicontinuousAt (indicator s fun x => y) x :=
+    UpperSemicontinuousAt (indicatorₓ s fun x => y) x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousAt x
 
 theorem IsClosed.upper_semicontinuous_within_at_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
-    UpperSemicontinuousWithinAt (indicator s fun x => y) t x :=
+    UpperSemicontinuousWithinAt (indicatorₓ s fun x => y) t x :=
   (hs.upper_semicontinuous_indicator hy).UpperSemicontinuousWithinAt t x
 
 end

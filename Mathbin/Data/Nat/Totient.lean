@@ -47,21 +47,14 @@ theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter n.Coprime).
   rfl
 
 theorem totient_le (n : ℕ) : φ n ≤ n :=
-  calc
-    totient n ≤ (range n).card := card_filter_le _ _
-    _ = n := card_range _
-    
+  ((range n).card_filter_le _).trans_eq (card_range n)
 
 theorem totient_lt (n : ℕ) (hn : 1 < n) : φ n < n :=
-  calc
-    totient n ≤ ((range n).filter (· ≠ 0)).card := by
-      apply card_le_of_subset (monotone_filter_right _ _)
-      intro n1 hn1 hn1'
-      simpa only [hn1', coprime_zero_right, hn.ne'] using hn1
-    _ = n - 1 := by
-      simp only [filter_ne' (range n) 0, card_erase_of_mem, card_range, pos_of_gt hn, mem_range]
-    _ < n := Nat.sub_ltₓ (pos_of_gt hn) zero_lt_one
-    
+  (card_lt_card
+        (filter_ssubset.2
+          ⟨0, by
+            simp [hn.ne', pos_of_gt hn]⟩)).trans_eq
+    (card_range n)
 
 theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
   | 0 => by
@@ -150,8 +143,8 @@ theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
     have : Fact (0 < m * n) := ⟨Nat.pos_of_ne_zeroₓ hmn0⟩
     have : Fact (0 < m) := ⟨Nat.pos_of_ne_zeroₓ <| left_ne_zero_of_mul hmn0⟩
     have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
-    rw [← Zmod.card_units_eq_totient, ← Zmod.card_units_eq_totient, ← Zmod.card_units_eq_totient,
-      Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
+    simp only [← Zmod.card_units_eq_totient]
+    rw [Fintype.card_congr (Units.mapEquiv (Zmod.chineseRemainder h).toMulEquiv).toEquiv,
       Fintype.card_congr (@MulEquiv.prodUnits (Zmod m) (Zmod n) _ _).toEquiv, Fintype.card_prod]
 
 theorem sum_totient (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m) = n :=
@@ -298,7 +291,7 @@ theorem totient_eq_iff_prime {p : ℕ} (hp : 0 < p) : p.totient = p - 1 ↔ p.Pr
 theorem card_units_zmod_lt_sub_one {p : ℕ} (hp : 1 < p) [Fintype (Zmod p)ˣ] : Fintype.card (Zmod p)ˣ ≤ p - 1 := by
   have : Fact (0 < p) := ⟨zero_lt_one.trans hp⟩
   rw [Zmod.card_units_eq_totient p]
-  exact Nat.le_pred_of_lt (Nat.totient_lt p hp)
+  exact Nat.le_pred_of_ltₓ (Nat.totient_lt p hp)
 
 theorem prime_iff_card_units (p : ℕ) [Fintype (Zmod p)ˣ] : p.Prime ↔ Fintype.card (Zmod p)ˣ = p - 1 := by
   by_cases' hp : p = 0

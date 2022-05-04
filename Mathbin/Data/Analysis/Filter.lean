@@ -267,7 +267,7 @@ protected def supₓ {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆ i
   F'.ofEquiv <|
     show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩, fun ⟨⟨⟩, f⟩ => by
-        dsimp <;> congr <;> simp , fun f => rfl⟩
+        dsimp' <;> congr <;> simp , fun f => rfl⟩
 
 /-- Construct a realizer for the product of filters -/
 protected def prod {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f.Prod g).Realizer :=

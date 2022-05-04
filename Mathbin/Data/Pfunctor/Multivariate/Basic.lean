@@ -92,7 +92,7 @@ theorem const.get_mk (x : A) : const.get (const.mk n x : (const n A).Obj α) = x
 @[simp]
 theorem const.mk_get (x : (const n A).Obj α) : const.mk n (const.get x) = x := by
   cases x
-  dsimp [const.get, const.mk]
+  dsimp' [const.get, const.mk]
   congr with _⟨⟩
 
 end Const
@@ -126,7 +126,7 @@ theorem comp.get_mk (x : P.Obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x
 @[simp]
 theorem comp.mk_get (x : (comp P Q).Obj α) : comp.mk (comp.get x) = x := by
   cases x
-  dsimp [comp.get, comp.mk]
+  dsimp' [comp.get, comp.mk]
   ext : 2 <;> intros
   rfl
   rfl
@@ -184,7 +184,7 @@ theorem liftr_iff {α : Typevec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
     
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
-  dsimp
+  dsimp'
   constructor
   · rw [xeq]
     rfl

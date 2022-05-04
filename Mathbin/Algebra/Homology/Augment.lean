@@ -107,7 +107,7 @@ theorem augment_d_one_zero (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w
 @[simp]
 theorem augment_d_succ_succ (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0) (i j : ℕ) :
     (augment C f w).d (i + 1) (j + 1) = C.d i j := by
-  dsimp [augment]
+  dsimp' [augment]
   rcases i with (_ | i)
   rfl
   rfl
@@ -122,19 +122,19 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 
     { f := fun i => 𝟙 _,
       comm' := fun i j => by
         cases j <;>
-          · dsimp
+          · dsimp'
             simp
              }
   hom_inv_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
   inv_hom_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -163,7 +163,7 @@ def augmentTruncate (C : ChainComplex V ℕ) : augment (truncate.obj C) (C.d 1 0
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;>
           cases j <;>
-            · dsimp
+            · dsimp'
               simp
                }
   inv :=
@@ -172,19 +172,19 @@ def augmentTruncate (C : ChainComplex V ℕ) : augment (truncate.obj C) (C.d 1 0
       comm' := fun i j => by
         rcases i with (_ | _ | i) <;>
           cases j <;>
-            · dsimp
+            · dsimp'
               simp
                }
   hom_inv_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
   inv_hom_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -316,19 +316,19 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f 
     { f := fun i => 𝟙 _,
       comm' := fun i j => by
         cases j <;>
-          · dsimp
+          · dsimp'
             simp
              }
   hom_inv_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
   inv_hom_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -358,7 +358,7 @@ def augmentTruncate (C : CochainComplex V ℕ) : augment (truncate.obj C) (C.d 0
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;>
           cases i <;>
-            · dsimp
+            · dsimp'
               simp
                }
   inv :=
@@ -367,19 +367,19 @@ def augmentTruncate (C : CochainComplex V ℕ) : augment (truncate.obj C) (C.d 0
       comm' := fun i j => by
         rcases j with (_ | _ | j) <;>
           cases i <;>
-            · dsimp
+            · dsimp'
               simp
                }
   hom_inv_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
   inv_hom_id' := by
     ext i
     cases i <;>
-      · dsimp
+      · dsimp'
         simp
         
 

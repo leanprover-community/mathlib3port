@@ -913,7 +913,7 @@ theorem exists_dropn_of_mem {s : Wseq α} {a} (h : a ∈ s) : ∃ n s', some (a,
     have := mem_unique (mem_map _ om) h
     cases' o with o <;> injection this with i
     cases' o with a' s'
-    dsimp  at i
+    dsimp'  at i
     rw [i] at om
     exact ⟨_, om⟩⟩
 
@@ -1194,10 +1194,10 @@ theorem tail_of_seq (s : Seqₓₓ α) : tail (ofSeq s) = ofSeq s.tail := by
 theorem dropn_of_seq (s : Seqₓₓ α) : ∀ n, drop (ofSeq s) n = ofSeq (s.drop n)
   | 0 => rfl
   | n + 1 => by
-    dsimp [drop] <;> rw [dropn_of_seq, tail_of_seq]
+    dsimp' [drop] <;> rw [dropn_of_seq, tail_of_seq]
 
 theorem nth_of_seq (s : Seqₓₓ α) n : nth (ofSeq s) n = return (Seqₓₓ.nth s n) := by
-  dsimp [nth] <;> rw [dropn_of_seq, head_of_seq, Seqₓₓ.head_dropn]
+  dsimp' [nth] <;> rw [dropn_of_seq, head_of_seq, Seqₓₓ.head_dropn]
 
 instance productive_of_seq (s : Seqₓₓ α) : Productive (ofSeq s) :=
   ⟨fun n => by
@@ -1206,7 +1206,7 @@ instance productive_of_seq (s : Seqₓₓ α) : Productive (ofSeq s) :=
 theorem to_seq_of_seq (s : Seqₓₓ α) : toSeq (ofSeq s) = s := by
   apply Subtype.eq
   funext n
-  dsimp [to_seq]
+  dsimp' [to_seq]
   apply get_eq_of_mem
   rw [nth_of_seq]
   apply ret_mem
@@ -1240,7 +1240,7 @@ theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (
   Seqₓₓ.map_append _ _ _
 
 theorem map_comp (f : α → β) (g : β → γ) (s : Wseq α) : map (g ∘ f) s = map g (map f s) := by
-  dsimp [map]
+  dsimp' [map]
   rw [← Seqₓₓ.map_comp]
   apply congr_funₓ
   apply congr_argₓ
@@ -1502,7 +1502,7 @@ theorem lift_rel_join (R : α → β → Prop) {S : Wseq (Wseq α)} {T : Wseq (W
       | some (a, s), some (b, t), ⟨h1, h2⟩ => by
         simp <;> exact ⟨h1, s, t, S, rfl, T, rfl, h2, ST⟩
       | none, none, _ => by
-        dsimp [destruct_append.aux, Computation.LiftRel]
+        dsimp' [destruct_append.aux, Computation.LiftRel]
         constructor
         · intro
           apply lift_rel_join.lem _ ST fun _ _ => id
@@ -1596,7 +1596,7 @@ theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S)
 
 @[simp]
 theorem bind_ret (f : α → β) s : bind s (ret ∘ f) ~ map f s := by
-  dsimp [bind]
+  dsimp' [bind]
   change fun x => ret (f x) with ret ∘ f
   rw [map_comp]
   apply join_map_ret

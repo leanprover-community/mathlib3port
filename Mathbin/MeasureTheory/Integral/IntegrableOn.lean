@@ -210,14 +210,14 @@ theorem MeasurePreserving.integrable_on_image [MeasurableSpace β] {e : α → �
     (h₂ : MeasurableEmbedding e) {f : β → E} {s : Set α} : IntegrableOn f (e '' s) ν ↔ IntegrableOn (f ∘ e) s μ :=
   ((h₁.restrict_image_emb h₂ s).integrable_comp_emb h₂).symm
 
-theorem integrable_indicator_iff (hs : MeasurableSet s) : Integrable (indicator s f) μ ↔ IntegrableOn f s μ := by
+theorem integrable_indicator_iff (hs : MeasurableSet s) : Integrable (indicatorₓ s f) μ ↔ IntegrableOn f s μ := by
   simp [integrable_on, integrable, has_finite_integral, nnnorm_indicator_eq_indicator_nnnorm, Ennreal.coe_indicator,
     lintegral_indicator _ hs, ae_strongly_measurable_indicator_iff hs]
 
-theorem IntegrableOn.indicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) : Integrable (indicator s f) μ :=
+theorem IntegrableOn.indicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) : Integrable (indicatorₓ s f) μ :=
   (integrable_indicator_iff hs).2 h
 
-theorem Integrable.indicator (h : Integrable f μ) (hs : MeasurableSet s) : Integrable (indicator s f) μ :=
+theorem Integrable.indicator (h : Integrable f μ) (hs : MeasurableSet s) : Integrable (indicatorₓ s f) μ :=
   h.IntegrableOn.indicator hs
 
 theorem integrable_indicator_const_Lp {E} [NormedGroup E] {p : ℝ≥0∞} {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞)

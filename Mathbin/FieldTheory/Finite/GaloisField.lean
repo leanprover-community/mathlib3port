@@ -66,7 +66,7 @@ instance : CharP (GaloisField p n) p :=
       infer_instance)
 
 instance : Fintype (GaloisField p n) := by
-  dsimp only [GaloisField]
+  dsimp' only [GaloisField]
   exact FiniteDimensional.fintypeOfFintype (Zmod p) (GaloisField p n)
 
 theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisField p n) = n := by
@@ -98,11 +98,11 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (Zmod p) (GaloisFi
     · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
       rw [← map_pow, Zmod.pow_card_pow, sub_self]
       
-    · dsimp only [GaloisField]  at hx
+    · dsimp' only [GaloisField]  at hx
       rwa [mem_root_set aux] at hx
       
     
-  · dsimp only [g_poly]
+  · dsimp' only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
     simp only [coeff_X_pow, coeff_X_zero, sub_zero, RingHom.map_eq_zero, ite_eq_right_iff, one_ne_zero, coeff_sub]
     intro hn

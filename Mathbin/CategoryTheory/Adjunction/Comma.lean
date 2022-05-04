@@ -134,7 +134,7 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
         tidy)
   uniq' := fun s m w => by
     ext
-    dsimp
+    dsimp'
     rw [Equivₓ.eq_symm_apply, adjunction.hom_equiv_unit]
     apply structured_arrow.w m
 
@@ -148,7 +148,7 @@ def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
         tidy)
   uniq' := fun s m w => by
     ext
-    dsimp
+    dsimp'
     rw [h.eq_hom_equiv_apply, adjunction.hom_equiv_counit]
     exact costructured_arrow.w m
 

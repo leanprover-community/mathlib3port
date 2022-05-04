@@ -40,7 +40,7 @@ def unpair (n : ℕ) : ℕ × ℕ :=
 
 @[simp]
 theorem mkpair_unpair (n : ℕ) : mkpair (unpair n).1 (unpair n).2 = n := by
-  dsimp only [unpair]
+  dsimp' only [unpair]
   set s := sqrt n
   have sm : s * s + (n - s * s) = n := add_tsub_cancel_of_le (sqrt_le _)
   split_ifs

@@ -109,7 +109,7 @@ def trivialBasicSmoothVectorBundleCore {ð•œ : Type _} [NondiscreteNormedField ð
   coord_change_self := fun i x hx v => rfl
   coord_change_comp := fun i j k x hx v => rfl
   coord_change_smooth_clm := fun i j => by
-    dsimp
+    dsimp'
     exact cont_diff_on_const
 
 namespace BasicSmoothVectorBundleCore

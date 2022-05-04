@@ -196,19 +196,19 @@ class PseudoMetricSpace (α : Type u) extends HasDist α : Type u where
 theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α} (h : m.toHasDist = m'.toHasDist) : m = m' := by
   rcases m with ⟨⟩
   rcases m' with ⟨⟩
-  dsimp  at h
+  dsimp'  at h
   subst h
   congr
   · ext x y : 2
-    dsimp  at m_edist_dist m'_edist_dist
+    dsimp'  at m_edist_dist m'_edist_dist
     simp [m_edist_dist, m'_edist_dist]
     
-  · dsimp  at m_uniformity_dist m'_uniformity_dist
+  · dsimp'  at m_uniformity_dist m'_uniformity_dist
     rw [← m'_uniformity_dist] at m_uniformity_dist
     exact uniform_space_eq m_uniformity_dist
     
   · ext1
-    dsimp  at m_cobounded_sets m'_cobounded_sets
+    dsimp'  at m_cobounded_sets m'_cobounded_sets
     rw [← m'_cobounded_sets] at m_cobounded_sets
     exact filter_eq m_cobounded_sets
     
@@ -234,7 +234,7 @@ def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : �
     toUniformSpace :=
       { UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle with
         is_open_uniformity := by
-          dsimp only [UniformSpace.coreOfDist]
+          dsimp' only [UniformSpace.coreOfDist]
           intro s
           change IsOpen s ↔ _
           rw [H s]
@@ -1483,7 +1483,7 @@ theorem uniform_continuous_dist : UniformContinuous fun p : α × α => dist p.1
         cases' q with q₁ q₂
         cases' max_lt_iff.1 h with h₁ h₂
         clear h
-        dsimp  at h₁ h₂⊢
+        dsimp'  at h₁ h₂⊢
         rw [Real.dist_eq]
         refine' abs_sub_lt_iff.2 ⟨_, _⟩
         · revert p₁ p₂ q₁ q₂ h₁ h₂
@@ -1633,7 +1633,7 @@ theorem _root_.topological_space.is_separable.separable_space {s : Set α} (hs :
   refine' ⟨(⟨z, zc⟩, n), _⟩
   change dist x (f (⟨z, zc⟩, n)) < r
   have A : (Metric.Ball z (u n) ∩ s).Nonempty := ⟨x, hz, xs⟩
-  dsimp [f]
+  dsimp' [f]
   simp only [A, dif_pos]
   calc dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _ _ < r / 2 + r / 2 :=
       add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn)_ = r := add_halves _
@@ -2401,7 +2401,7 @@ theorem MetricSpace.ext {α : Type _} {m m' : MetricSpace α} (h : m.toHasDist =
   have h' : m.to_pseudo_metric_space = m'.to_pseudo_metric_space := PseudoMetricSpace.ext h
   rcases m with ⟨⟩
   rcases m' with ⟨⟩
-  dsimp  at h'
+  dsimp'  at h'
   subst h'
 
 /-- Construct a metric space structure whose underlying topological space structure

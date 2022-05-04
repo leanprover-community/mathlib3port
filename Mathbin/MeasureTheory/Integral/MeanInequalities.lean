@@ -116,7 +116,7 @@ theorem ae_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0_lt : 0 < p) {f : α 
     (hf_zero : (∫⁻ a, f a ^ p ∂μ) = 0) : f =ᵐ[μ] 0 := by
   rw [lintegral_eq_zero_iff' (hf.pow_const p)] at hf_zero
   refine' Filter.Eventually.mp hf_zero (Filter.eventually_of_forall fun x => _)
-  dsimp only
+  dsimp' only
   rw [Pi.zero_apply, rpow_eq_zero_iff]
   intro hx
   cases hx
@@ -177,7 +177,7 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
   have hp0 : 0 ≤ p := le_of_ltₓ hp0_lt
   calc (∫⁻ a : α, (f a + g a) ^ p ∂μ) ≤ ∫⁻ a, (2 : ℝ≥0∞) ^ (p - 1) * f a ^ p + (2 : ℝ≥0∞) ^ (p - 1) * g a ^ p ∂μ := by
       refine' lintegral_mono fun a => _
-      dsimp only
+      dsimp' only
       have h_zero_lt_half_rpow : (0 : ℝ≥0∞) < (1 / 2) ^ p := by
         rw [← Ennreal.zero_rpow_of_pos hp0_lt]
         exact
@@ -290,7 +290,7 @@ theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ} (hpq 
   by
   calc (∫⁻ a, (f + g) a ^ p ∂μ) ≤ ∫⁻ a, (f + g) a * (f + g) a ^ (p - 1) ∂μ := by
       refine' lintegral_mono fun a => _
-      dsimp only
+      dsimp' only
       by_cases' h_zero : (f + g) a = 0
       · rw [h_zero, Ennreal.zero_rpow_of_pos hpq.pos]
         exact zero_le _

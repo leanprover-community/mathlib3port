@@ -423,7 +423,7 @@ theorem Preorderₓ.to_has_le_injective {α : Type _} : Function.Injective (@Pre
   injection h with h_le
   have : A_lt = B_lt := by
     funext a b
-    dsimp [(· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
+    dsimp' [(· ≤ ·)]  at A_lt_iff_le_not_le B_lt_iff_le_not_le h_le
     simp [A_lt_iff_le_not_le, B_lt_iff_le_not_le, h_le]
   congr
 

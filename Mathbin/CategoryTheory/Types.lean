@@ -197,7 +197,7 @@ theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfEle
 
 /-- A morphism in `Type` is a monomorphism if and only if it is injective.
 
-See https://stacks.math.columbia.edu/tag/003C.
+See <https://stacks.math.columbia.edu/tag/003C>.
 -/
 theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   constructor
@@ -214,7 +214,7 @@ theorem injective_of_mono {X Y : Type u} (f : X ⟶ Y) [hf : Mono f] : Function.
 
 /-- A morphism in `Type` is an epimorphism if and only if it is surjective.
 
-See https://stacks.math.columbia.edu/tag/003C.
+See <https://stacks.math.columbia.edu/tag/003C>.
 -/
 theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor

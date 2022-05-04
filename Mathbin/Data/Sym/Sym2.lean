@@ -537,7 +537,7 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
 theorem rel_bool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y := by
   cases' x with x₁ x₂
   cases' y with y₁ y₂
-  dsimp [rel_bool]
+  dsimp' [rel_bool]
   split_ifs <;> simp only [false_iffₓ, Bool.coe_sort_ff, Bool.of_to_bool_iff]
   rotate_left 2
   · contrapose! h
@@ -584,13 +584,13 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       cases' y with y₁ y₂
       cases' mem_iff.mp hy with hy' <;>
         subst a <;>
-          dsimp [rel_bool]  at h' <;>
+          dsimp' [rel_bool]  at h' <;>
             split_ifs  at h' <;>
               try
                   rw [Bool.of_to_bool_iff] at h'
                   subst x₁
                   subst x₂ <;>
-                dsimp [pair_other]
+                dsimp' [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
       exfalso
       exact Bool.not_ff h'
@@ -604,7 +604,7 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   induction z
   cases' z with x y
   have h' := mem_iff.mp h
-  dsimp [mem.other', Quot.rec, pair_other]
+  dsimp' [mem.other', Quot.rec, pair_other]
   cases h' <;> subst a
   · simp only [if_true, eq_self_iff_true]
     rfl
@@ -628,8 +628,8 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) : hb.other' = a := by
   induction z
   cases' z with x y
-  dsimp [mem.other', Quot.rec, pair_other]  at hb
-  split_ifs  at hb <;> dsimp [mem.other', Quot.rec, pair_other]
+  dsimp' [mem.other', Quot.rec, pair_other]  at hb
+  split_ifs  at hb <;> dsimp' [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs
   assumption

@@ -81,7 +81,7 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀, ∀ i < n, ∀,
   induction' n with k ih
   · cases x <;> simp [shift]
     
-  · dsimp
+  · dsimp'
     rw [verschiebung_shift]
     · exact ih fun i hi => h _ (hi.trans (Nat.lt_succ_selfₓ _))
       

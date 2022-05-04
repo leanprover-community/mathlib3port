@@ -50,7 +50,7 @@ def conesEquivInverseObj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : C
         Option.casesOn X c.x.Hom fun j : J =>
           (c.π.app j).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
-        dsimp
+        dsimp'
         cases X <;> cases Y <;> cases f
         · rw [category.id_comp, category.comp_id]
           
@@ -70,7 +70,7 @@ def conesEquivInverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
         cases j
         · simp
           
-        · dsimp
+        · dsimp'
           rw [← f.w j]
           rfl
            }
@@ -167,7 +167,7 @@ theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
                 ext
                 rw [over.hom_mk_left]
                 have := m.w
-                dsimp  at this
+                dsimp'  at this
                 rwa [category.comp_id, category.comp_id] at this } } }
 
 end CategoryTheory.Over

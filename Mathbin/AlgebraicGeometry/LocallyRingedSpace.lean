@@ -203,7 +203,7 @@ instance is_SheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] 
 def restrict {U : Top} (X : LocallyRingedSpace) {f : U ⟶ X.toTop} (h : OpenEmbedding f) : LocallyRingedSpace where
   LocalRing := by
     intro x
-    dsimp  at *
+    dsimp'  at *
     -- We show that the stalk of the restriction is isomorphic to the original stalk,
     apply @RingEquiv.local_ring _ _ _ (X.local_ring (f x))
     exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingIsoToRingEquiv

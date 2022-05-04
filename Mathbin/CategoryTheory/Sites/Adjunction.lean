@@ -67,14 +67,14 @@ def composeEquiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
     left_inv := by
       intro η
       ext1
-      dsimp
+      dsimp'
       symm
       apply J.sheafify_lift_unique
       rw [Equivₓ.symm_apply_apply],
     right_inv := by
       intro γ
       ext1
-      dsimp
+      dsimp'
       rw [J.to_sheafify_sheafify_lift, Equivₓ.apply_symm_apply] }
 
 /-- An adjunction `adj : G ⊣ F` with `F : D ⥤ E` and `G : E ⥤ D` induces an adjunction
@@ -86,11 +86,11 @@ def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
     { homEquiv := composeEquiv J adj,
       hom_equiv_naturality_left_symm' := fun X' X Y f g => by
         ext1
-        dsimp
+        dsimp'
         simp ,
       hom_equiv_naturality_right' := fun X Y Y' f g => by
         ext1
-        dsimp
+        dsimp'
         simp }
 
 instance [IsRightAdjoint F] : IsRightAdjoint (sheafCompose J F) :=
@@ -112,7 +112,7 @@ theorem adjunction_to_types_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ f
     ((adjunctionToTypes J adj).Unit.app Y).val =
       (adj.whiskerRight _).Unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫ whiskerRight (J.toSheafify _) (forget D) :=
   by
-  dsimp [adjunction_to_types, adjunction.comp]
+  dsimp' [adjunction_to_types, adjunction.comp]
   simpa
 
 @[simp]
@@ -120,12 +120,12 @@ theorem adjunction_to_types_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣
     ((adjunctionToTypes J adj).counit.app X).val =
       J.sheafifyLift ((Functor.associator _ _ _).Hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
   by
-  dsimp [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
+  dsimp' [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
   rw [category.id_comp]
   apply J.sheafify_lift_unique
   rw [adjunction_counit_app_val, J.sheafify_map_sheafify_lift, J.to_sheafify_sheafify_lift]
   ext
-  dsimp [Sheaf_equiv_SheafOfTypes, equivalence.symm, equivalence.to_adjunction, nat_iso.of_components]
+  dsimp' [Sheaf_equiv_SheafOfTypes, equivalence.symm, equivalence.to_adjunction, nat_iso.of_components]
   simp
 
 instance [IsRightAdjoint (forget D)] : IsRightAdjoint (sheafForget J) :=

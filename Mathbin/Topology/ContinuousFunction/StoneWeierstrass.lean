@@ -169,7 +169,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty) (inf_mem
     and finally using compactness to produce the desired function `h`
     as a maximum over finitely many `x` of a minimum over finitely many `y` of the `g x y`.
     -/
-  dsimp [Set.SeparatesPointsStrongly]  at sep
+  dsimp' [Set.SeparatesPointsStrongly]  at sep
   let g : X → X → L := fun x y => (sep f x y).some
   have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).some_spec.1
   have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).some_spec.2
@@ -202,7 +202,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty) (inf_mem
   have lt_h : ∀ x z, f z - ε < h x z := by
     intro x z
     obtain ⟨y, ym, zm⟩ := Set.exists_set_mem_of_union_eq_top _ _ (ys_w x) z
-    dsimp [h]
+    dsimp' [h]
     simp only [coe_fn_coe_base', Subtype.coe_mk, sup'_coe, Finset.sup'_apply, Finset.lt_sup'_iff]
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by
@@ -217,7 +217,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty) (inf_mem
     refine' IsOpen.mem_nhds _ _
     · apply is_open_lt <;> continuity
       
-    · dsimp only [W, Set.mem_set_of_eq]
+    · dsimp' only [W, Set.mem_set_of_eq]
       rw [h_eq]
       exact lt_add_of_pos_right _ Pos
       
@@ -241,11 +241,11 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty) (inf_mem
       intros
       simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm]]
   fconstructor
-  · dsimp [k]
+  · dsimp' [k]
     simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
     exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
     
-  · dsimp [k]
+  · dsimp' [k]
     simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
     intro x xm
     apply lt_h

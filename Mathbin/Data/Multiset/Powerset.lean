@@ -129,7 +129,7 @@ theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Mul
     rw [forall₂_map_right_iff]
     apply forall₂_same
     rintro ⟨s, t⟩ h
-    dsimp
+    dsimp'
     rw [← H h, add_tsub_cancel_left]
   rw [← forall₂_eq_eq_eq, forall₂_map_right_iff]
   simpa

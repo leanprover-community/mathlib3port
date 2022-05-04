@@ -77,7 +77,7 @@ theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   let tQ := (((tensoring_left C).obj Q).mapAddHom : (R ⟶ S) →+ _)
   change _ ≫ tQ _ = _
   rw [tQ.map_sum, preadditive.comp_sum]
-  dsimp [tQ]
+  dsimp' [tQ]
   simp only [tensor_id_comp_id_tensor]
 
 theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
@@ -86,7 +86,7 @@ theorem sum_tensor {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : 
   let tQ := (((tensoring_right C).obj P).mapAddHom : (R ⟶ S) →+ _)
   change tQ _ ≫ _ = _
   rw [tQ.map_sum, preadditive.sum_comp]
-  dsimp [tQ]
+  dsimp' [tQ]
   simp only [tensor_id_comp_id_tensor]
 
 variable {C}
@@ -100,7 +100,7 @@ instance (X : C) : PreservesFiniteBiproducts (tensorLeft X) where
         { preserves := fun b i =>
             is_bilimit_of_total _
               (by
-                dsimp
+                dsimp'
                 simp only [← tensor_comp, category.comp_id, ← tensor_sum, ← tensor_id, is_bilimit.total i]) } }
 
 instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
@@ -109,7 +109,7 @@ instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
         { preserves := fun b i =>
             is_bilimit_of_total _
               (by
-                dsimp
+                dsimp'
                 simp only [← tensor_comp, category.comp_id, ← sum_tensor, ← tensor_id, is_bilimit.total i]) } }
 
 variable [HasFiniteBiproducts C]
@@ -122,14 +122,14 @@ def leftDistributor {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → 
 theorem left_distributor_hom {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j := by
   ext
-  dsimp [tensor_left, left_distributor]
+  dsimp' [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
 @[simp]
 theorem left_distributor_inv {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) := by
   ext
-  dsimp [tensor_left, left_distributor]
+  dsimp' [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
 theorem left_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C) (f : J → C) :
@@ -155,14 +155,14 @@ def rightDistributor {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J →
 theorem right_distributor_hom {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j := by
   ext
-  dsimp [tensor_right, right_distributor]
+  dsimp' [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
 @[simp]
 theorem right_distributor_inv {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) := by
   ext
-  dsimp [tensor_right, right_distributor]
+  dsimp' [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
 theorem right_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C) (f : J → C) :

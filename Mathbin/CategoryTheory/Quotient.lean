@@ -167,7 +167,7 @@ theorem lift.is_lift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X
 
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) : (lift r F H).map ((functor r).map f) = F.map f := by
   rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
-  dsimp
+  dsimp'
   simp
 
 end Quotientₓ

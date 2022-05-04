@@ -680,9 +680,10 @@ theorem compact_space_of_finite_subfamily_closed
 theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
-  noncompact_univ {} : ¬IsCompact (Univ : Set α)
+  noncompact_univ : ¬IsCompact (Univ : Set α)
 
 export NoncompactSpace (noncompact_univ)
 
@@ -753,7 +754,8 @@ noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α]
 /-- The comap of the cocompact filter on `β` by a continuous function `f : α → β` is less than or
 equal to the cocompact filter on `α`.
 This is a reformulation of the fact that images of compact sets are compact. -/
-theorem Filter.comap_cocompact {f : α → β} (hf : Continuous f) : (Filter.cocompact β).comap f ≤ Filter.cocompact α := by
+theorem Filter.comap_cocompact_le {f : α → β} (hf : Continuous f) : (Filter.cocompact β).comap f ≤ Filter.cocompact α :=
+  by
   rw [(filter.has_basis_cocompact.comap f).le_basis_iff Filter.has_basis_cocompact]
   intro t ht
   refine' ⟨f '' t, ht.image hf, _⟩
@@ -962,7 +964,7 @@ instance Pi.compact_space [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π
 type `Π d, κ d` the `filter.Coprod` of filters `filter.cocompact` on `κ d`. -/
 theorem Filter.Coprod_cocompact {δ : Type _} {κ : δ → Type _} [∀ d, TopologicalSpace (κ d)] :
     (Filter.coprodₓ fun d => Filter.cocompact (κ d)) = Filter.cocompact (∀ d, κ d) := by
-  refine' le_antisymmₓ (supr_le fun i => Filter.comap_cocompact (continuous_apply i)) _
+  refine' le_antisymmₓ (supr_le fun i => Filter.comap_cocompact_le (continuous_apply i)) _
   refine' compl_surjective.forall.2 fun s H => _
   simp only [compl_mem_Coprod, Filter.mem_cocompact, compl_subset_compl, image_subset_iff] at H⊢
   choose K hKc htK using H
@@ -1467,14 +1469,16 @@ theorem is_closed_irreducible_component {x : α} : IsClosed (IrreducibleComponen
   closure_eq_iff_is_closed.1 <|
     eq_irreducible_component is_irreducible_irreducible_component.IsPreirreducible.closure subset_closure
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
-  is_preirreducible_univ {} : IsPreirreducible (Univ : Set α)
+  is_preirreducible_univ : IsPreirreducible (Univ : Set α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where
-  to_nonempty {} : Nonempty α
+  to_nonempty : Nonempty α
 
 -- see Note [lower instance priority]
 attribute [instance] IrreducibleSpace.to_nonempty

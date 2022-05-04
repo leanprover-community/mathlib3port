@@ -122,7 +122,7 @@ theorem add_mem' (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) (a b : ∀ x 
   · simp only [add_mulₓ, map_add, Pi.add_apply, RingHom.map_mul, ext_iff_val, add_val]
     obtain ⟨nin1, hy1⟩ := wa (opens.inf_le_left Va Vb y)
     obtain ⟨nin2, hy2⟩ := wb (opens.inf_le_right Va Vb y)
-    dsimp only  at hy1 hy2
+    dsimp' only  at hy1 hy2
     erw [hy1, hy2]
     simpa only [val_mk', add_mk, ← Subtype.val_eq_coe, add_commₓ]
     
@@ -307,7 +307,7 @@ def Proj.stalkIso' (x : ProjectiveSpectrum.top 𝒜) : (Proj.structureSheaf 𝒜
       obtain ⟨v2, memv2, i2, ⟨j2, ⟨a2, a2_mem⟩, ⟨b2, b2_mem⟩, hs2⟩⟩ := s2.2 ⟨x, memu2⟩
       obtain ⟨b1_nin_x, eq2⟩ := hs1 ⟨x, memv1⟩
       obtain ⟨b2_nin_x, eq3⟩ := hs2 ⟨x, memv2⟩
-      dsimp only  at eq1 eq2 eq3
+      dsimp' only  at eq1 eq2 eq3
       erw [stalk_to_fiber_ring_hom_germ 𝒜 u1 ⟨x, memu1⟩ s1, stalk_to_fiber_ring_hom_germ 𝒜 u2 ⟨x, memu2⟩ s2] at eq1
       erw [eq1] at eq2
       erw [eq2, Quotientₓ.eq] at eq3

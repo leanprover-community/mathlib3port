@@ -72,7 +72,7 @@ theorem to_pgame_move_left_heq {o : Ordinal} : HEq o.toPgame.moveLeft fun x : o.
 theorem to_pgame_move_left {o : Ordinal} (i : o.out.α) :
     o.toPgame.moveLeft (toLeftMovesToPgame i) = (typein (· < ·) i).toPgame := by
   rw [to_left_moves_to_pgame]
-  exact congr_fun_heq _ to_pgame_move_left_heq i
+  exact congr_heq to_pgame_move_left_heq (cast_heq _ i)
 
 theorem to_pgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame := by
   convert Pgame.move_left_lt (to_left_moves_to_pgame (enum (· < ·) a _))

@@ -70,7 +70,6 @@ theorem is_affine_of_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] [h : IsAffine Y]
 namespace AffineScheme
 
 /-- The `Spec` functor into the category of affine schemes. -/
-@[simps]
 def spec : CommRingₓₓᵒᵖ ⥤ AffineScheme :=
   Scheme.spec.toEssImage deriving Full, Faithful, EssSurj
 
@@ -184,7 +183,7 @@ theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : Opens X.Carri
       eqToHom
         (by
           cases h
-          dsimp
+          dsimp'
           induction W using Opposite.rec
           congr
           ext1
@@ -280,7 +279,7 @@ theorem Scheme.map_prime_spectrum_basic_open_of_affine (X : Scheme) [IsAffine X]
   · rw [eq_to_hom_map]
     rfl
     
-  · dsimp
+  · dsimp'
     congr
     
   · refine' (Scheme.preimage_basic_open _ _).trans _
@@ -318,7 +317,7 @@ noncomputable def IsAffineOpen.primeIdealOf {X : Scheme} {U : Opens X.Carrier} (
 
 theorem IsAffineOpen.from_Spec_prime_ideal_of {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) (x : U) :
     hU.fromSpec.val.base (hU.primeIdealOf x) = x.1 := by
-  dsimp only [is_affine_open.from_Spec, Subtype.coe_mk]
+  dsimp' only [is_affine_open.from_Spec, Subtype.coe_mk]
   erw [← Scheme.comp_val_base_apply, ← Scheme.comp_val_base_apply]
   simpa only [← functor.map_comp_assoc, ← functor.map_comp, ← op_comp, eq_to_hom_trans, op_id, eq_to_hom_refl,
     CategoryTheory.Functor.map_id, category.id_comp, iso.hom_inv_id_assoc]
@@ -373,7 +372,7 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.Carrier} (h
   refine' (PresheafedSpace.stalk_map_germ hU.from_Spec.1 _ ⟨_, _⟩).trans _
   delta' is_affine_open.from_Spec Scheme.iso_Spec structure_sheaf.to_stalk
   simp only [Scheme.comp_val_c_app, category.assoc]
-  dsimp only [functor.op, as_iso_inv, unop_op]
+  dsimp' only [functor.op, as_iso_inv, unop_op]
   erw [is_affine_open.is_localization_stalk_aux]
   simp only [category.assoc]
   conv_lhs => rw [← category.assoc]

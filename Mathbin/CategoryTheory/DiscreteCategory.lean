@@ -47,7 +47,7 @@ def Discrete (α : Type u₁) :=
 Because we do not allow morphisms in `Prop` (only in `Type`),
 somewhat annoyingly we have to define `X ⟶ Y` as `ulift (plift (X = Y))`.
 
-See https://stacks.math.columbia.edu/tag/001A
+See <https://stacks.math.columbia.edu/tag/001A>
 -/
 instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α) where
   Hom := fun X Y => ULift (Plift (X = Y))
@@ -61,11 +61,11 @@ namespace Discrete
 variable {α : Type u₁}
 
 instance [Inhabited α] : Inhabited (Discrete α) := by
-  dsimp [discrete]
+  dsimp' [discrete]
   infer_instance
 
 instance [Subsingleton α] : Subsingleton (Discrete α) := by
-  dsimp [discrete]
+  dsimp' [discrete]
   infer_instance
 
 /-- Extract the equation from a morphism in a discrete category. -/

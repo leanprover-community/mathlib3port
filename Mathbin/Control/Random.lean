@@ -74,9 +74,10 @@ open Streamₓ
 class BoundedRandomₓ (α : Type u) [Preorderₓ α] where
   randomR : ∀ g [RandomGen g] x y : α, x ≤ y → RandGₓ g (x .. y)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Random] []
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Randomₓ (α : Type u) where
-  Random {} : ∀ g : Type [RandomGen g], RandGₓ g α
+  Random : ∀ g : Type [RandomGen g], RandGₓ g α
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it

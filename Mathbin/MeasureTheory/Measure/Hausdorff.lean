@@ -474,7 +474,7 @@ theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
   refine'
     surjective_id.supr_congr (fun r => r) fun r =>
       (supr_congr_Prop Iff.rfl) fun hr => (surjective_id.infi_congr _) fun t => (infi_congr_Prop Iff.rfl) fun ht => _
-  dsimp
+  dsimp'
   by_cases' htr : ∀ n, diam (t n) ≤ r
   · rw [infi_eq_if, if_pos htr]
     congr 1 with n : 1

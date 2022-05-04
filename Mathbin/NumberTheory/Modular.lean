@@ -166,14 +166,14 @@ theorem tendsto_norm_sq_coprime_pair :
   let f : (Finₓ 2 → ℝ) →ₗ[ℝ] ℂ := π₀.smul_right (z : ℂ) + π₁.smul_right 1
   have f_def : ⇑f = fun p : Finₓ 2 → ℝ => (p 0 : ℂ) * ↑z + p 1 := by
     ext1
-    dsimp only [LinearMap.coe_proj, real_smul, LinearMap.coe_smul_right, LinearMap.add_apply]
+    dsimp' only [LinearMap.coe_proj, real_smul, LinearMap.coe_smul_right, LinearMap.add_apply]
     rw [mul_oneₓ]
   have :
     (fun p : Finₓ 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑(p 1))) = norm_sq ∘ f ∘ fun p : Finₓ 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
     by
     ext1
     rw [f_def]
-    dsimp only [Function.comp]
+    dsimp' only [Function.comp]
     rw [of_real_int_cast, of_real_int_cast]
   rw [this]
   have hf : f.ker = ⊥ := by
@@ -185,7 +185,7 @@ theorem tendsto_norm_sq_coprime_pair :
     have hz : (z : ℂ).im ≠ 0 := z.2.ne'
     rw [LinearMap.comp_apply, LinearMap.smul_apply, LinearMap.id_apply]
     ext i
-    dsimp only [g, Pi.smul_apply, LinearMap.pi_apply, smul_eq_mul]
+    dsimp' only [g, Pi.smul_apply, LinearMap.pi_apply, smul_eq_mul]
     fin_cases i
     · show (z : ℂ).im⁻¹ * (f c).im = c 0
       rw [f_def, add_im, of_real_mul_im, of_real_im, add_zeroₓ, mul_left_commₓ, inv_mul_cancel hz, mul_oneₓ]
@@ -239,7 +239,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
     simp only [continuous_pi_iff, Finₓ.forall_fin_two]
     have : ∀ c : ℝ, Continuous fun x : ℝ => c := fun c => continuous_const
     exact ⟨⟨continuous_id, @this (-1 : ℤ)⟩, ⟨this (cd 0), this (cd 1)⟩⟩
-  refine' Filter.Tendsto.of_tendsto_comp _ (comap_cocompact hmB)
+  refine' Filter.Tendsto.of_tendsto_comp _ (comap_cocompact_le hmB)
   let f₁ : SL(2, ℤ) → Matrix (Finₓ 2) (Finₓ 2) ℝ := fun g => Matrix.map (↑g : Matrix _ _ ℤ) (coe : ℤ → ℝ)
   have cocompact_ℝ_to_cofinite_ℤ_matrix :
     tendsto (fun m : Matrix (Finₓ 2) (Finₓ 2) ℤ => Matrix.map m (coe : ℤ → ℝ)) cofinite (cocompact _) := by

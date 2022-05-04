@@ -288,7 +288,7 @@ def ofSubtype {p : α → Prop} [DecidablePred p] : Perm (Subtype p) →* Perm �
       split_ifs  at * <;> simp_all only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk, not_true]⟩
   map_one' := by
     ext
-    dsimp
+    dsimp'
     split_ifs <;> rfl
   map_mul' := fun f g =>
     Equivₓ.ext fun x => by
@@ -335,7 +335,7 @@ theorem mem_iff_of_subtype_apply_mem {p : α → Prop} [DecidablePred p] (f : Pe
 theorem subtype_perm_of_subtype {p : α → Prop} [DecidablePred p] (f : Perm (Subtype p)) :
     subtypePerm (ofSubtype f) (mem_iff_of_subtype_apply_mem f) = f :=
   Equivₓ.ext fun ⟨x, hx⟩ => by
-    dsimp [subtype_perm, of_subtype]
+    dsimp' [subtype_perm, of_subtype]
     simp only [show p x from hx, dif_pos, Subtype.coe_eta]
 
 @[simp]

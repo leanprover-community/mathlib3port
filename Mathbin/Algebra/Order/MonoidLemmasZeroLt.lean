@@ -185,6 +185,46 @@ theorem mul_le_mul_iff_right [MulPosMono α] [MulPosMonoRev α] (a0 : 0 < a) : b
 
 end Preorderₓ
 
+section PartialOrderₓ
+
+variable [PartialOrderₓ α]
+
+-- see Note [lower instance priority]
+instance (priority := 100) PosMulStrictMono.to_pos_mul_mono [PosMulStrictMono α] : PosMulMono α :=
+  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rfl) fun h' => (mul_lt_mul_left' h' x.Prop).le⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) MulPosStrictMono.to_mul_pos_mono [MulPosStrictMono α] : MulPosMono α :=
+  ⟨fun x a b h => h.eq_or_lt.elim (fun h' => h' ▸ le_rfl) fun h' => (mul_lt_mul_right' h' x.Prop).le⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) PosMulMonoRev.to_pos_mul_reflect_lt [PosMulMonoRev α] : PosMulReflectLt α :=
+  ⟨fun x a b h =>
+    lt_of_le_of_neₓ (le_of_mul_le_mul_left' h.le x.Prop) fun h' => by
+      simpa [h'] using h⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) MulPosMonoRev.to_mul_pos_reflect_lt [MulPosMonoRev α] : MulPosReflectLt α :=
+  ⟨fun x a b h =>
+    lt_of_le_of_neₓ (le_of_mul_le_mul_right' h.le x.Prop) fun h' => by
+      simpa [h'] using h⟩
+
+end PartialOrderₓ
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α]
+
+-- see Note [lower instance priority]
+instance (priority := 100) PosMulStrictMono.to_pos_mul_mono_rev [PosMulStrictMono α] : PosMulMonoRev α :=
+  ⟨fun x a b h => le_of_not_ltₓ fun h' => h.not_lt (mul_lt_mul_left' h' x.Prop)⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) MulPosStrictMono.to_mul_pos_mono_rev [MulPosStrictMono α] : MulPosMonoRev α :=
+  ⟨fun x a b h => le_of_not_ltₓ fun h' => h.not_lt (mul_lt_mul_right' h' x.Prop)⟩
+
+end LinearOrderₓ
+
 end HasMulZero
 
 section MulZeroClassₓ

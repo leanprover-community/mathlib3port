@@ -41,7 +41,7 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { toFun := fun p => if p = 0 then 0 else Fintype.card Fq ^ p.natDegree,
     nonneg' := fun p => by
-      dsimp
+      dsimp'
       split_ifs
       · rfl
         

@@ -1198,7 +1198,7 @@ theorem valuation_p : valuation (p : ℚ_[p]) = 1 := by
     exact_mod_cast (Fact.out p.prime).one_lt
   rw [← neg_inj]
   apply (zpow_strict_mono h).Injective
-  dsimp only
+  dsimp' only
   rw [← norm_eq_pow_val]
   · simp
     

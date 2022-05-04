@@ -144,7 +144,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
       (linear_independent_iff'.1 (ih hs.1) s.attach (fun i => g • l i - l i) _ ⟨i, his⟩ (mem_attach _ _) : _)
   refine' (@sum_attach _ _ s _ fun i => (g • l i - l i) • MulAction.toFun G F i).trans _
   ext g'
-  dsimp only
+  dsimp' only
   conv_lhs => rw [sum_apply]congr skip ext rw [Pi.smul_apply, sub_smul, smul_eq_mul]
   rw [sum_sub_distrib, Pi.zero_apply, sub_eq_zero]
   conv_lhs => congr skip ext rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
@@ -152,7 +152,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
     (∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g')) =
       ∑ x in s, (fun y => l y • MulAction.toFun G F y) x g'
   rw [← smul_sum, ← sum_apply _ _ fun y => l y • to_fun G F y, ← sum_apply _ _ fun y => l y • to_fun G F y]
-  dsimp only
+  dsimp' only
   rw [hla, to_fun_apply, to_fun_apply, smul_smul, mul_inv_cancel_left]
 
 variable [Fintype G] (x : F)

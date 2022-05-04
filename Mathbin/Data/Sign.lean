@@ -203,7 +203,7 @@ variable [Zero α] [Preorderₓ α] [DecidableRel ((· < ·) : α → α → Pro
 /-- The sign of an element is 1 if it's positive, -1 if negative, 0 otherwise. -/
 def sign : α →o SignType :=
   ⟨fun a => if 0 < a then 1 else if a < 0 then -1 else 0, fun a b h => by
-    dsimp
+    dsimp'
     split_ifs with h₁ h₂ h₃ h₄ _ _ h₂ h₃ <;>
       try
         constructor

@@ -480,7 +480,7 @@ theorem normalize_scale_roots_coeff_mul_leading_coeff_pow (i : ℕ) (hp : 1 ≤ 
   · rw [h₂, leading_coeff, ← pow_succₓ, tsub_add_cancel_of_le hp]
     
   · rw [mul_assoc, ← pow_addₓ, tsub_add_cancel_of_le]
-    apply Nat.le_pred_of_lt
+    apply Nat.le_pred_of_ltₓ
     rw [lt_iff_le_and_ne]
     exact ⟨le_nat_degree_of_ne_zero h₁, h₂⟩
     
@@ -572,13 +572,14 @@ end
 
 section IsIntegralClosure
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.
 -/
 class IsIntegralClosure (A R B : Type _) [CommRingₓ R] [CommSemiringₓ A] [CommRingₓ B] [Algebra R B] [Algebra A B] :
   Prop where
-  algebra_map_injective {} : Function.Injective (algebraMap A B)
+  algebra_map_injective : Function.Injective (algebraMap A B)
   is_integral_iff : ∀ {x : B}, IsIntegral R x ↔ ∃ y, algebraMap A B y = x
 
 instance integralClosure.is_integral_closure (R A : Type _) [CommRingₓ R] [CommRingₓ A] [Algebra R A] :

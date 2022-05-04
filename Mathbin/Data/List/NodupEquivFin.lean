@@ -190,7 +190,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
   · rintro ⟨f, hf⟩
     refine' ⟨OrderEmbedding.ofStrictMono (fun i => if hi : i < l.length then f ⟨i, hi⟩ else i + l'.length) _, _⟩
     · intro i j h
-      dsimp only
+      dsimp' only
       split_ifs with hi hj hj hi
       · simpa using h
         

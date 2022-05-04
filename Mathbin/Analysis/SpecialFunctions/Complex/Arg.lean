@@ -329,6 +329,44 @@ theorem arg_inv (x : ℂ) : arg x⁻¹ = if arg x = π then π else -arg x := by
           simp [hx])
     
 
+theorem arg_le_pi_div_two_iff {z : ℂ} : arg z ≤ π / 2 ↔ 0 ≤ re z ∨ im z < 0 := by
+  cases' le_or_ltₓ 0 (re z) with hre hre
+  · simp only [hre, arg_of_re_nonneg hre, Real.arcsin_le_pi_div_two, true_orₓ]
+    
+  simp only [hre.not_le, false_orₓ]
+  cases' le_or_ltₓ 0 (im z) with him him
+  · simp only [him.not_lt]
+    rw [iff_falseₓ, not_leₓ, arg_of_re_neg_of_im_nonneg hre him, ← sub_lt_iff_lt_add, half_sub,
+      Real.neg_pi_div_two_lt_arcsin, neg_im, neg_div, neg_lt_neg_iff, div_lt_one, ← _root_.abs_of_nonneg him,
+      abs_im_lt_abs]
+    exacts[hre.ne, abs_pos.2 <| ne_of_apply_ne re hre.ne]
+    
+  · simp only [him]
+    rw [iff_trueₓ, arg_of_re_neg_of_im_neg hre him]
+    exact (sub_le_self _ real.pi_pos.le).trans (Real.arcsin_le_pi_div_two _)
+    
+
+theorem neg_pi_div_two_le_arg_iff {z : ℂ} : -(π / 2) ≤ arg z ↔ 0 ≤ re z ∨ 0 ≤ im z := by
+  cases' le_or_ltₓ 0 (re z) with hre hre
+  · simp only [hre, arg_of_re_nonneg hre, Real.neg_pi_div_two_le_arcsin, true_orₓ]
+    
+  simp only [hre.not_le, false_orₓ]
+  cases' le_or_ltₓ 0 (im z) with him him
+  · simp only [him]
+    rw [iff_trueₓ, arg_of_re_neg_of_im_nonneg hre him]
+    exact (Real.neg_pi_div_two_le_arcsin _).trans (le_add_of_nonneg_right real.pi_pos.le)
+    
+  · simp only [him.not_le]
+    rw [iff_falseₓ, not_leₓ, arg_of_re_neg_of_im_neg hre him, sub_lt_iff_lt_add', ← sub_eq_add_neg, sub_half,
+      Real.arcsin_lt_pi_div_two, div_lt_one, neg_im, ← abs_of_neg him, abs_im_lt_abs]
+    exacts[hre.ne, abs_pos.2 <| ne_of_apply_ne re hre.ne]
+    
+
+@[simp]
+theorem abs_arg_le_pi_div_two_iff {z : ℂ} : abs (arg z) ≤ π / 2 ↔ 0 ≤ re z := by
+  rw [abs_le, arg_le_pi_div_two_iff, neg_pi_div_two_le_arg_iff, ← or_and_distrib_left, ← not_leₓ, and_not_selfₓ,
+    or_falseₓ]
+
 @[simp]
 theorem arg_conj_coe_angle (x : ℂ) : (arg (conj x) : Real.Angle) = -arg x := by
   by_cases' h : arg x = π <;> simp [arg_conj, h]

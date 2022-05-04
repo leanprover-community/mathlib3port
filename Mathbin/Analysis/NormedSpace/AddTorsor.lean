@@ -123,6 +123,8 @@ theorem antilipschitz_with_line_map {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     rw [dist_line_map_line_map, Nnreal.coe_inv, ← dist_nndist, mul_left_commₓ, inv_mul_cancel (dist_ne_zero.2 h),
       mul_oneₓ]
 
+variable (𝕜)
+
 theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy : y ∈ Interior s) :
     ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
   rw [(NormedGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
@@ -144,7 +146,7 @@ theorem eventually_homothety_image_subset_of_finite_subset_interior (x : Q) {s :
     simp_rw [Set.image_subset_iff]
     exact (Filter.eventually_all_finite ht).mpr this
   intro y hy
-  exact eventually_homothety_mem_of_mem_interior x (h hy)
+  exact eventually_homothety_mem_of_mem_interior 𝕜 x (h hy)
 
 end NormedSpace
 

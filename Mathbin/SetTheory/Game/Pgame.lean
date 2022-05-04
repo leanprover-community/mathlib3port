@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison
 -/
 import Mathbin.Data.Fin.Basic
-import Mathbin.Data.Nat.Cast
-import Mathbin.Logic.Embedding
+import Mathbin.Data.List.Basic
 
 /-!
 # Combinatorial (pre-)games.
@@ -110,7 +109,7 @@ open Function
 universe u
 
 /-- The type of pre-games, before we have quotiented
-  by extensionality. In ZFC, a combinatorial game is constructed from
+  by equivalence (`pgame.setoid`). In ZFC, a combinatorial game is constructed from
   two sets of combinatorial games that have been constructed at an earlier
   stage. To do this in type theory, we say that a pre-game is built
   inductively from two families of pre-games indexed over any type
@@ -120,14 +119,6 @@ inductive Pgame : Type (u + 1)
   | mk : ∀ α β : Type u, (α → Pgame) → (β → Pgame) → Pgame
 
 namespace Pgame
-
-/-- Construct a pre-game from list of pre-games describing the available moves for Left and Right.
--/
--- TODO provide some API describing the interaction with
--- `left_moves`, `right_moves`, `move_left` and `move_right` below.
--- TODO define this at the level of games, as well, and perhaps also for finsets of games.
-def ofLists (L R : List Pgame.{0}) : Pgame.{0} :=
-  Pgame.mk (Finₓ L.length) (Finₓ R.length) (fun i => L.nthLe i i.is_lt) fun j => R.nthLe j.val j.is_lt
 
 /-- The indexing type for allowable moves by Left. -/
 def LeftMoves : Pgame → Type u
@@ -159,6 +150,45 @@ theorem right_moves_mk {xl xr xL xR} : (⟨xl, xr, xL, xR⟩ : Pgame).RightMoves
 
 @[simp]
 theorem move_right_mk {xl xr xL xR} : (⟨xl, xr, xL, xR⟩ : Pgame).moveRight = xR :=
+  rfl
+
+/-- Construct a pre-game from list of pre-games describing the available moves for Left and Right.
+-/
+-- TODO define this at the level of games, as well, and perhaps also for finsets of games.
+def ofLists (L R : List Pgame.{u}) : Pgame.{u} :=
+  mk (ULift (Finₓ L.length)) (ULift (Finₓ R.length)) (fun i => L.nthLe i.down i.down.is_lt) fun j =>
+    R.nthLe j.down j.down.Prop
+
+theorem left_moves_of_lists (L R : List Pgame) : (ofLists L R).LeftMoves = ULift (Finₓ L.length) :=
+  rfl
+
+theorem right_moves_of_lists (L R : List Pgame) : (ofLists L R).RightMoves = ULift (Finₓ R.length) :=
+  rfl
+
+/-- Converts a number into a left move for `of_lists`. -/
+def toOfListsLeftMoves {L R : List Pgame} : Finₓ L.length ≃ (ofLists L R).LeftMoves :=
+  ((Equivₓ.cast (left_moves_of_lists L R).symm).trans Equivₓ.ulift).symm
+
+/-- Converts a number into a right move for `of_lists`. -/
+def toOfListsRightMoves {L R : List Pgame} : Finₓ R.length ≃ (ofLists L R).RightMoves :=
+  ((Equivₓ.cast (right_moves_of_lists L R).symm).trans Equivₓ.ulift).symm
+
+theorem of_lists_move_left {L R : List Pgame} (i : Finₓ L.length) :
+    (ofLists L R).moveLeft (toOfListsLeftMoves i) = L.nthLe i i.is_lt :=
+  rfl
+
+@[simp]
+theorem of_lists_move_left' {L R : List Pgame} (i : (ofLists L R).LeftMoves) :
+    (ofLists L R).moveLeft i = L.nthLe (toOfListsLeftMoves.symm i) (toOfListsLeftMoves.symm i).is_lt :=
+  rfl
+
+theorem of_lists_move_right {L R : List Pgame} (i : Finₓ R.length) :
+    (ofLists L R).moveRight (toOfListsRightMoves i) = R.nthLe i i.is_lt :=
+  rfl
+
+@[simp]
+theorem of_lists_move_right' {L R : List Pgame} (i : (ofLists L R).RightMoves) :
+    (ofLists L R).moveRight i = R.nthLe (toOfListsRightMoves.symm i) (toOfListsRightMoves.symm i).is_lt :=
   rfl
 
 /-- A variant of `pgame.rec_on` expressed in terms of `pgame.move_left` and `pgame.move_right`.
@@ -237,17 +267,17 @@ instance : Zero Pgame :=
   ⟨⟨Pempty, Pempty, Pempty.elimₓ, Pempty.elimₓ⟩⟩
 
 @[simp]
-theorem zero_left_moves : (0 : Pgame).LeftMoves = Pempty :=
+theorem zero_left_moves : LeftMoves 0 = Pempty :=
   rfl
 
 @[simp]
-theorem zero_right_moves : (0 : Pgame).RightMoves = Pempty :=
+theorem zero_right_moves : RightMoves 0 = Pempty :=
   rfl
 
-instance is_empty_zero_left_moves : IsEmpty (0 : Pgame).LeftMoves :=
+instance is_empty_zero_left_moves : IsEmpty (LeftMoves 0) :=
   Pempty.is_empty
 
-instance is_empty_zero_right_moves : IsEmpty (0 : Pgame).RightMoves :=
+instance is_empty_zero_right_moves : IsEmpty (RightMoves 0) :=
   Pempty.is_empty
 
 instance : Inhabited Pgame :=
@@ -258,18 +288,21 @@ instance : One Pgame :=
   ⟨⟨PUnit, Pempty, fun _ => 0, Pempty.elimₓ⟩⟩
 
 @[simp]
-theorem one_left_moves : (1 : Pgame).LeftMoves = PUnit :=
+theorem one_left_moves : LeftMoves 1 = PUnit :=
   rfl
 
 @[simp]
-theorem one_move_left : (1 : Pgame).moveLeft PUnit.unit = 0 :=
+theorem one_move_left x : moveLeft 1 x = 0 :=
   rfl
 
 @[simp]
-theorem one_right_moves : (1 : Pgame).RightMoves = Pempty :=
+theorem one_right_moves : RightMoves 1 = Pempty :=
   rfl
 
-instance is_empty_one_right_moves : IsEmpty (1 : Pgame).RightMoves :=
+instance uniqueOneLeftMoves : Unique (LeftMoves 1) :=
+  PUnit.unique
+
+instance is_empty_one_right_moves : IsEmpty (RightMoves 1) :=
   Pempty.is_empty
 
 /-- Define simultaneously by mutual induction the `<=` and `<`
@@ -357,29 +390,37 @@ theorem lt_def {x y : Pgame} :
 theorem le_zero {x : Pgame} :
     x ≤ 0 ↔ ∀ i : x.LeftMoves, ∃ j : (x.moveLeft i).RightMoves, (x.moveLeft i).moveRight j ≤ 0 := by
   rw [le_def]
-  dsimp
+  dsimp'
   simp [forall_pempty, exists_pempty]
 
 /-- The definition of `0 ≤ x` on pre-games, in terms of `0 ≤` two moves later. -/
 theorem zero_le {x : Pgame} :
     0 ≤ x ↔ ∀ j : x.RightMoves, ∃ i : (x.moveRight j).LeftMoves, 0 ≤ (x.moveRight j).moveLeft i := by
   rw [le_def]
-  dsimp
+  dsimp'
   simp [forall_pempty, exists_pempty]
 
 /-- The definition of `x < 0` on pre-games, in terms of `< 0` two moves later. -/
 theorem lt_zero {x : Pgame} :
     x < 0 ↔ ∃ j : x.RightMoves, ∀ i : (x.moveRight j).LeftMoves, (x.moveRight j).moveLeft i < 0 := by
   rw [lt_def]
-  dsimp
+  dsimp'
   simp [forall_pempty, exists_pempty]
 
 /-- The definition of `0 < x` on pre-games, in terms of `< x` two moves later. -/
 theorem zero_lt {x : Pgame} :
     0 < x ↔ ∃ i : x.LeftMoves, ∀ j : (x.moveLeft i).RightMoves, 0 < (x.moveLeft i).moveRight j := by
   rw [lt_def]
-  dsimp
+  dsimp'
   simp [forall_pempty, exists_pempty]
+
+@[simp]
+theorem le_zero_of_is_empty_left_moves (x : Pgame) [IsEmpty x.LeftMoves] : x ≤ 0 :=
+  le_zero.2 isEmptyElim
+
+@[simp]
+theorem zero_le_of_is_empty_right_moves (x : Pgame) [IsEmpty x.RightMoves] : 0 ≤ x :=
+  zero_le.2 isEmptyElim
 
 /-- Given a right-player-wins game, provide a response to any move by left. -/
 noncomputable def rightResponse {x : Pgame} (h : x ≤ 0) (i : x.LeftMoves) : (x.moveLeft i).RightMoves :=
@@ -733,8 +774,24 @@ instance : HasInvolutiveNeg Pgame :=
 
 @[simp]
 protected theorem neg_zero : -(0 : Pgame) = 0 := by
-  dsimp [Zero.zero, Neg.neg, neg]
+  dsimp' [Zero.zero, Neg.neg, neg]
   congr <;> funext i <;> cases i
+
+@[simp]
+theorem neg_of_lists (L R : List Pgame) : -ofLists L R = ofLists (R.map fun x => -x) (L.map fun x => -x) := by
+  simp only [of_lists, neg_def, List.length_mapₓ, List.nth_le_map', eq_self_iff_true, true_andₓ]
+  constructor
+  all_goals
+    apply hfunext
+    · simp
+      
+    · intro a a' ha
+      congr 2
+      have : ∀ {m n} h₁ : m = n {b : ULift (Finₓ m)} {c : ULift (Finₓ n)} h₂ : HEq b c, (b.down : ℕ) = ↑c.down := by
+        rintro m n rfl b c rfl
+        rfl
+      exact this (List.length_mapₓ _ _).symm ha
+      
 
 /-- An explicit equivalence between the moves for Left in `-x` and the moves for Right in `x`. -/
 -- This equivalence is useful to avoid having to use `cases` unnecessarily.
@@ -787,7 +844,7 @@ theorem le_iff_neg_ge : ∀ {x y : Pgame}, x ≤ y ↔ -y ≤ -x
   | mk xl xr xL xR, mk yl yr yL yR => by
     rw [le_def]
     rw [le_def]
-    dsimp [neg]
+    dsimp' [neg]
     constructor
     · intro h
       constructor
@@ -1176,7 +1233,7 @@ theorem add_left_neg_le_zero : ∀ x : Pgame, -x + x ≤ 0
         
       · -- If Left in x, Right responds with the same move in -x.
         right
-        dsimp
+        dsimp'
         refine' ⟨(right_moves_add _ _).invFun (Sum.inl i), _⟩
         convert @add_left_neg_le_zero (xL i)
         exact add_move_right_inl
@@ -1246,64 +1303,93 @@ theorem lt_iff_sub_pos {x y : Pgame} : x < y ↔ 0 < y - x :=
       ⟩
 
 /-- The pre-game `star`, which is fuzzy/confused with zero. -/
-def star : Pgame :=
-  Pgame.ofLists [0] [0]
+def star : Pgame.{u} :=
+  ⟨PUnit, PUnit, fun _ => 0, fun _ => 0⟩
 
-instance inhabitedStarLeftMoves : Inhabited star.LeftMoves :=
-  show Inhabited (Finₓ 1) by
-    infer_instance
+@[simp]
+theorem star_left_moves : star.LeftMoves = PUnit :=
+  rfl
 
-instance inhabitedStarRightMoves : Inhabited star.RightMoves :=
-  show Inhabited (Finₓ 1) by
-    infer_instance
+@[simp]
+theorem star_right_moves : star.RightMoves = PUnit :=
+  rfl
+
+@[simp]
+theorem star_move_left x : star.moveLeft x = 0 :=
+  rfl
+
+@[simp]
+theorem star_move_right x : star.moveRight x = 0 :=
+  rfl
+
+instance uniqueStarLeftMoves : Unique star.LeftMoves :=
+  PUnit.unique
+
+instance uniqueStarRightMoves : Unique star.RightMoves :=
+  PUnit.unique
 
 theorem star_lt_zero : star < 0 := by
-  rw [lt_def] <;>
-    exact
-      Or.inr
-        ⟨⟨0, zero_lt_one⟩, by
-          constructor <;> rintro ⟨⟩⟩
+  rw [lt_zero]
+  use default
+  rintro ⟨⟩
 
 theorem zero_lt_star : 0 < star := by
-  rw [lt_def] <;>
-    exact
-      Or.inl
-        ⟨⟨0, zero_lt_one⟩, by
-          constructor <;> rintro ⟨⟩⟩
+  rw [zero_lt]
+  use default
+  rintro ⟨⟩
+
+@[simp]
+theorem neg_star : -star = star := by
+  simp [star]
 
 /-- The pre-game `ω`. (In fact all ordinals have game and surreal representatives.) -/
 def omega : Pgame :=
   ⟨ULift ℕ, Pempty, fun n => ↑n.1, Pempty.elimₓ⟩
 
+@[simp]
 theorem zero_lt_one : (0 : Pgame) < 1 := by
-  rw [lt_def]
-  left
-  use
-    ⟨PUnit.unit, by
-      constructor <;> rintro ⟨⟩⟩
+  rw [zero_lt]
+  use default
+  rintro ⟨⟩
+
+theorem zero_le_one : (0 : Pgame) ≤ 1 :=
+  zero_le_of_is_empty_right_moves 1
 
 /-- The pre-game `half` is defined as `{0 | 1}`. -/
 def half : Pgame :=
   ⟨PUnit, PUnit, 0, 1⟩
 
 @[simp]
-theorem half_move_left : half.moveLeft PUnit.unit = 0 :=
+theorem half_left_moves : half.LeftMoves = PUnit :=
   rfl
 
 @[simp]
-theorem half_move_right : half.moveRight PUnit.unit = 1 :=
+theorem half_right_moves : half.RightMoves = PUnit :=
   rfl
 
+@[simp]
+theorem half_move_left x : half.moveLeft x = 0 :=
+  rfl
+
+@[simp]
+theorem half_move_right x : half.moveRight x = 1 :=
+  rfl
+
+instance uniqueHalfLeftMoves : Unique half.LeftMoves :=
+  PUnit.unique
+
+instance uniqueHalfRightMoves : Unique half.RightMoves :=
+  PUnit.unique
+
 protected theorem zero_lt_half : 0 < half := by
-  rw [lt_def]
-  left
-  use PUnit.unit
-  constructor <;> rintro ⟨⟩
+  rw [zero_lt]
+  use default
+  rintro ⟨⟩
 
 theorem half_lt_one : half < 1 := by
   rw [lt_def]
   right
-  use PUnit.unit
+  use default
   constructor <;> rintro ⟨⟩
   exact zero_lt_one
 

@@ -125,7 +125,7 @@ instance : Full typeToCat.{u} where
     intro X Y F
     apply Functor.ext
     · intro x y f
-      dsimp
+      dsimp'
       ext
       
     · intro x

@@ -347,12 +347,12 @@ theorem not_is_unit_X_pow_sub_one (R : Type _) [CommRingₓ R] [Nontrivial R] (n
   rwa [← @nat_degree_X_pow_sub_C _ _ _ n (1 : R), eq_one_of_is_unit_of_monic (monic_X_pow_sub_C (1 : R) hn),
     nat_degree_one]
 
-theorem monic_sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) := by
+theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) := by
   rw [sub_eq_add_neg]
   apply hp.add_of_left
   rwa [degree_neg]
 
-theorem monic_sub_of_right {p q : R[X]} (hq : q.leadingCoeff = -1) (hpq : degree p < degree q) : Monic (p - q) := by
+theorem Monic.sub_of_right {p q : R[X]} (hq : q.leadingCoeff = -1) (hpq : degree p < degree q) : Monic (p - q) := by
   have : (-q).coeff (-q).natDegree = 1 := by
     rw [nat_degree_neg, coeff_neg, show q.coeff q.nat_degree = -1 from hq, neg_negₓ]
   rw [sub_eq_add_neg]

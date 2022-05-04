@@ -108,7 +108,7 @@ theorem Gamma_integral_convergent {s : ℂ} (hs : 1 ≤ s.re) :
   · rw [← has_finite_integral_norm_iff]
     refine' has_finite_integral.congr (Real.Gamma_integral_convergent hs).2 _
     refine' (ae_restrict_iff' measurable_set_Ioi).mpr (ae_of_all _ fun x hx => _)
-    dsimp only
+    dsimp' only
     rw [norm_eq_abs, abs_mul, abs_of_nonneg <| le_of_ltₓ <| exp_pos <| -x, abs_cpow_eq_rpow_re_of_pos hx _]
     simp
     
@@ -125,7 +125,7 @@ theorem Gamma_integral_of_real (s : ℝ) : gammaIntegral ↑s = ↑s.gammaIntegr
   rw [Real.gammaIntegral, ← integral_of_real]
   refine' set_integral_congr measurable_set_Ioi _
   intro x hx
-  dsimp only
+  dsimp' only
   rw [of_real_mul, of_real_cpow (mem_Ioi.mp hx).le]
   simp
 
@@ -232,7 +232,7 @@ theorem partial_Gamma_add_one {s : ℂ} (hs : 1 ≤ s.re) {X : ℝ} (hX : 0 ≤ 
     ring
   rw [this]
   have t := @integral_const_mul (0 : ℝ) X volume _ _ s fun x : ℝ => (-x).exp * x ^ (s - 1)
-  dsimp  at t
+  dsimp'  at t
   rw [← t, of_real_zero, zero_cpow]
   · rw [mul_zero, add_zeroₓ]
     congr
@@ -263,7 +263,7 @@ theorem Gamma_integral_add_one {s : ℂ} (hs : 1 ≤ s.re) : gammaIntegral (s + 
   have : (fun e : ℝ => ∥-((e : ℂ) ^ s) * (-e).exp∥) =ᶠ[at_top] fun e : ℝ => e ^ s.re * (-1 * e).exp := by
     refine' eventually_eq_of_mem (Ioi_mem_at_top 0) _
     intro x hx
-    dsimp only
+    dsimp' only
     rw [norm_eq_abs, abs_mul, abs_neg, abs_cpow_eq_rpow_re_of_pos hx, abs_of_nonneg (exp_pos (-x)).le, neg_mul,
       one_mulₓ]
   exact (tendsto_congr' this).mpr (tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 _ _ zero_lt_one)
@@ -283,14 +283,14 @@ noncomputable def gammaAux : ℕ → ℂ → ℂ
 theorem Gamma_aux_recurrence1 (s : ℂ) (n : ℕ) (h1 : 1 - s.re ≤ ↑n) : gammaAux n s = gammaAux n (s + 1) / s := by
   induction' n with n hn generalizing s
   · simp only [Nat.cast_zeroₓ, sub_nonpos] at h1
-    dsimp only [Gamma_aux]
+    dsimp' only [Gamma_aux]
     rw [Gamma_integral_add_one h1]
     rw [mul_comm, mul_div_cancel]
     contrapose! h1
     rw [h1]
     simp
     
-  · dsimp only [Gamma_aux]
+  · dsimp' only [Gamma_aux]
     have hh1 : 1 - (s + 1).re ≤ n := by
       rw [Nat.succ_eq_add_one, Nat.cast_addₓ, Nat.cast_oneₓ] at h1
       rw [add_re, one_re]
@@ -301,7 +301,7 @@ theorem Gamma_aux_recurrence1 (s : ℂ) (n : ℕ) (h1 : 1 - s.re ≤ ↑n) : gam
 theorem Gamma_aux_recurrence2 (s : ℂ) (n : ℕ) (h1 : 1 - s.re ≤ ↑n) : gammaAux n s = gammaAux (n + 1) s := by
   cases n
   · simp only [Nat.cast_zeroₓ, sub_nonpos] at h1
-    dsimp only [Gamma_aux]
+    dsimp' only [Gamma_aux]
     rw [Gamma_integral_add_one h1]
     have : s ≠ 0 := by
       contrapose! h1
@@ -310,7 +310,7 @@ theorem Gamma_aux_recurrence2 (s : ℂ) (n : ℕ) (h1 : 1 - s.re ≤ ↑n) : gam
     field_simp
     ring
     
-  · dsimp only [Gamma_aux]
+  · dsimp' only [Gamma_aux]
     have : Gamma_aux n (s + 1 + 1) / (s + 1) = Gamma_aux n (s + 1) := by
       have hh1 : 1 - (s + 1).re ≤ n := by
         rw [Nat.succ_eq_add_one, Nat.cast_addₓ, Nat.cast_oneₓ] at h1

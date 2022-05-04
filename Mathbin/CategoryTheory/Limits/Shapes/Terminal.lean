@@ -497,7 +497,7 @@ def coneOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) : Cone F where
   π :=
     { app := fun j => F.map (tX.to j),
       naturality' := fun j j' k => by
-        dsimp
+        dsimp'
         rw [← F.map_comp, category.id_comp, tX.hom_ext (tX.to j ≫ k) (tX.to j')] }
 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J`, show the cone
@@ -506,7 +506,7 @@ def limitOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) : IsLimit (co
   lift := fun s => s.π.app X
   uniq' := fun s m w => by
     rw [← w X, cone_of_diagram_initial_π_app, tX.hom_ext (tX.to X) (𝟙 _)]
-    dsimp
+    dsimp'
     simp
 
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object then the image of it is isomorphic
@@ -527,7 +527,7 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C) [∀ i j : J
     { app := fun i => inv (F.map (hX.from _)),
       naturality' := by
         intro i j f
-        dsimp
+        dsimp'
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.id_comp, ← F.map_comp,
           hX.hom_ext (hX.from i) (f ≫ hX.from j)] }
 
@@ -553,7 +553,7 @@ def coconeOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) : Cocone F
   ι :=
     { app := fun j => F.map (tX.from j),
       naturality' := fun j j' k => by
-        dsimp
+        dsimp'
         rw [← F.map_comp, category.comp_id, tX.hom_ext (k ≫ tX.from j') (tX.from j)] }
 
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J`, show the cocone
@@ -582,7 +582,7 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C) [∀ i j : J
     { app := fun i => inv (F.map (hX.to _)),
       naturality' := by
         intro i j f
-        dsimp
+        dsimp'
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.comp_id, ← F.map_comp,
           hX.hom_ext (hX.to i ≫ f) (hX.to j)] }
 

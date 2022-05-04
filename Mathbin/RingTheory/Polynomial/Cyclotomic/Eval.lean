@@ -71,7 +71,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   induction' n using Nat.strong_induction_onₓ with n ih
   have hn' : 0 < n := pos_of_gt hn
   have hn'' : 1 < n := one_lt_two.trans hn
-  dsimp  at ih
+  dsimp'  at ih
   have := prod_cyclotomic_eq_geom_sum hn' R
   apply_fun eval x  at this
   rw [divisors_eq_proper_divisors_insert_self_of_pos hn', insert_sdiff_of_not_mem, prod_insert, eval_mul,

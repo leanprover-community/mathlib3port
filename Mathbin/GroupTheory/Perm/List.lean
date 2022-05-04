@@ -282,7 +282,7 @@ theorem form_perm_reverse (l : List α) (h : Nodupₓ l) : formPerm l.reverse = 
       cases' hk.eq_or_lt with hk' hk'
       · simp [← hk']
         
-      · rw [length_reverse, Nat.mod_eq_of_ltₓ hk', tsub_add_eq_add_tsub (Nat.le_pred_of_lt hk'), Nat.mod_eq_of_ltₓ]
+      · rw [length_reverse, Nat.mod_eq_of_ltₓ hk', tsub_add_eq_add_tsub (Nat.le_pred_of_ltₓ hk'), Nat.mod_eq_of_ltₓ]
         · simp
           
         · rw [tsub_add_cancel_of_le]

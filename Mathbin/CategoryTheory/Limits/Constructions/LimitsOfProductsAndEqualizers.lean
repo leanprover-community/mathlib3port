@@ -55,7 +55,7 @@ def buildLimit : Cone F where
   π :=
     { app := fun j => i.ι ≫ c₁.π.app _,
       naturality' := fun j₁ j₂ f => by
-        dsimp
+        dsimp'
         rw [category.id_comp, category.assoc, ← hs ⟨⟨_, _⟩, f⟩, i.condition_assoc, ht] }
 
 variable {i}
@@ -101,14 +101,14 @@ theorem has_limit_of_equalizer_and_product (F : J ⥤ C) [HasLimit (Discrete.fun
 
 /-- Any category with products and equalizers has all limits.
 
-See https://stacks.math.columbia.edu/tag/002N.
+See <https://stacks.math.columbia.edu/tag/002N>.
 -/
 theorem limits_from_equalizers_and_products [HasProducts C] [HasEqualizers C] : HasLimits C :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_equalizer_and_product F } }
 
 /-- Any category with finite products and equalizers has all finite limits.
 
-See https://stacks.math.columbia.edu/tag/002O.
+See <https://stacks.math.columbia.edu/tag/002O>.
 -/
 theorem finite_limits_from_equalizers_and_finite_products [HasFiniteProducts C] [HasEqualizers C] : HasFiniteLimits C :=
   ⟨fun J _ _ => { HasLimit := fun F => has_limit_of_equalizer_and_product F }⟩
@@ -152,11 +152,11 @@ def preservesLimitOfPreservesEqualizersAndProduct : PreservesLimitsOfShape J G w
     · apply G.map t
       
     · intro f
-      dsimp
+      dsimp'
       simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
       
     · intro f
-      dsimp
+      dsimp'
       simp only [← G.map_comp, limit.lift_π, fan.mk_π_app]
       
     · apply fork.of_ι (G.map i) _
@@ -171,7 +171,7 @@ def preservesLimitOfPreservesEqualizersAndProduct : PreservesLimitsOfShape J G w
       
     refine' cones.ext (iso.refl _) _
     intro j
-    dsimp
+    dsimp'
     simp
 
 -- See note [dsimp, simp].
@@ -212,7 +212,7 @@ def buildColimit : Cocone F where
   ι :=
     { app := fun j => c₂.ι.app _ ≫ i.π,
       naturality' := fun j₁ j₂ f => by
-        dsimp
+        dsimp'
         rw [category.comp_id, ← reassoc_of (hs ⟨⟨_, _⟩, f⟩), i.condition, ← category.assoc, ht] }
 
 variable {i}
@@ -260,14 +260,14 @@ theorem has_colimit_of_coequalizer_and_coproduct (F : J ⥤ C) [HasColimit (Disc
 
 /-- Any category with coproducts and coequalizers has all colimits.
 
-See https://stacks.math.columbia.edu/tag/002P.
+See <https://stacks.math.columbia.edu/tag/002P>.
 -/
 theorem colimits_from_coequalizers_and_coproducts [HasCoproducts C] [HasCoequalizers C] : HasColimits C :=
   { HasColimitsOfShape := fun J 𝒥 => { HasColimit := fun F => has_colimit_of_coequalizer_and_coproduct F } }
 
 /-- Any category with finite coproducts and coequalizers has all finite colimits.
 
-See https://stacks.math.columbia.edu/tag/002Q.
+See <https://stacks.math.columbia.edu/tag/002Q>.
 -/
 theorem finite_colimits_from_coequalizers_and_finite_coproducts [HasFiniteCoproducts C] [HasCoequalizers C] :
     HasFiniteColimits C :=
@@ -310,11 +310,11 @@ def preservesColimitOfPreservesCoequalizersAndCoproduct : PreservesColimitsOfSha
     · apply G.map t
       
     · intro f
-      dsimp
+      dsimp'
       simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
       
     · intro f
-      dsimp
+      dsimp'
       simp only [← G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
       
     · apply cofork.of_π (G.map i) _
@@ -329,7 +329,7 @@ def preservesColimitOfPreservesCoequalizersAndCoproduct : PreservesColimitsOfSha
       
     refine' cocones.ext (iso.refl _) _
     intro j
-    dsimp
+    dsimp'
     simp
 
 -- See note [dsimp, simp].

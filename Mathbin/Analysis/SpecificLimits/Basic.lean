@@ -501,6 +501,12 @@ theorem tendsto_factorial_div_pow_self_at_top : Tendsto (fun n => n ! / n ^ n : 
 
 section
 
+theorem tendsto_nat_floor_at_top {α : Type _} [LinearOrderedSemiring α] [FloorSemiring α] :
+    Tendsto (fun x : α => ⌊x⌋₊) atTop atTop :=
+  Nat.floor_mono.tendsto_at_top_at_top fun x =>
+    ⟨max 0 (x + 1), by
+      simp [Nat.le_floor_iff]⟩
+
 variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology R] [FloorRing R]
 
 theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x => (⌊a * x⌋₊ : R) / x) atTop (𝓝 a) := by
@@ -517,6 +523,9 @@ theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x
     simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
     
 
+theorem tendsto_nat_floor_div_at_top : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
+  simpa using tendsto_nat_floor_mul_div_at_top (@zero_le_one R _)
+
 theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x => (⌈a * x⌉₊ : R) / x) atTop (𝓝 a) := by
   have A : tendsto (fun x : R => a + x⁻¹) at_top (𝓝 (a + 0)) := tendsto_const_nhds.add tendsto_inv_at_top_zero
   rw [add_zeroₓ] at A
@@ -529,6 +538,9 @@ theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x 
     simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
       (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mulₓ]
     
+
+theorem tendsto_nat_ceil_div_at_top : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by
+  simpa using tendsto_nat_ceil_mul_div_at_top (@zero_le_one R _)
 
 end
 

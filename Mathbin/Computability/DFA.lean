@@ -89,7 +89,7 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
   wlog hle : (n : ℕ) ≤ m using n m
   have hlt : (n : ℕ) < m := (Ne.le_iff_lt hneq).mp hle
   have hm : (m : ℕ) ≤ Fintype.card σ := Finₓ.is_le m
-  dsimp  at heq
+  dsimp'  at heq
   refine'
     ⟨M.eval_from s ((x.take m).take n), (x.take m).take n, (x.take m).drop n, x.drop m, _, _, _, by
       rfl, _⟩

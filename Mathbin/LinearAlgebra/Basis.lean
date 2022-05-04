@@ -325,7 +325,7 @@ def mapCoeffs : Basis ι R' M := by
   let this : Module R' R := Module.compHom R (↑f.symm : R' →+* R)
   have : IsScalarTower R' R M :=
     { smul_assoc := fun x y z => by
-        dsimp [(· • ·)]
+        dsimp' [(· • ·)]
         rw [mul_smul, ← h, f.apply_symm_apply] }
   exact
     of_repr <|
@@ -1265,7 +1265,7 @@ theorem LinearMap.exists_left_inverse_of_injective (f : V →ₗ[K] V') (hf_inj 
   have fb_eq : f b = hC ⟨f b, BC b.2⟩ := by
     change f b = Basis.extend this _
     rw [Basis.extend_apply_self, Subtype.coe_mk]
-  dsimp [hB]
+  dsimp' [hB]
   rw [Basis.of_vector_space_apply_self, fb_eq, hC.constr_basis]
   exact left_inverse_inv_fun (LinearMap.ker_eq_bot.1 hf_inj) _
 

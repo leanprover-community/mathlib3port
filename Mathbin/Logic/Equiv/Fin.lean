@@ -127,7 +127,7 @@ def finSuccEquiv' {n : ℕ} (i : Finₓ (n + 1)) : Finₓ (n + 1) ≃ Option (Fi
         simp )
       x
   right_inv := fun x => by
-    cases x <;> dsimp <;> simp
+    cases x <;> dsimp' <;> simp
 
 @[simp]
 theorem fin_succ_equiv'_at {n : ℕ} (i : Finₓ (n + 1)) : (finSuccEquiv' i) i = none := by
@@ -247,7 +247,7 @@ def finSumFinEquiv : Sum (Finₓ m) (Finₓ n) ≃ Finₓ (m + n) where
   toFun := Sum.elim (Finₓ.castAdd n) (Finₓ.natAdd m)
   invFun := fun i => @Finₓ.addCases m n (fun _ => Sum (Finₓ m) (Finₓ n)) Sum.inl Sum.inr i
   left_inv := fun x => by
-    cases' x with y y <;> dsimp <;> simp
+    cases' x with y y <;> dsimp' <;> simp
   right_inv := fun x => by
     refine' Finₓ.addCases (fun i => _) (fun i => _) x <;> simp
 
@@ -300,11 +300,11 @@ def finRotate : ∀ n, Equivₓ.Perm (Finₓ n)
 
 theorem fin_rotate_of_lt {k : ℕ} (h : k < n) :
     finRotate (n + 1) ⟨k, lt_of_lt_of_leₓ h (Nat.le_succₓ _)⟩ = ⟨k + 1, Nat.succ_lt_succₓ h⟩ := by
-  dsimp [finRotate]
+  dsimp' [finRotate]
   simp [h, add_commₓ]
 
 theorem fin_rotate_last' : finRotate (n + 1) ⟨n, lt_add_one _⟩ = ⟨0, Nat.zero_lt_succₓ _⟩ := by
-  dsimp [finRotate]
+  dsimp' [finRotate]
   rw [fin_add_flip_apply_mk_right]
   simp
 

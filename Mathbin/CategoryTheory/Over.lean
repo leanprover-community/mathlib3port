@@ -33,7 +33,7 @@ variable {T : Type u₁} [Category.{v₁} T]
 /-- The over category has as objects arrows in `T` with codomain `X` and as morphisms commutative
 triangles.
 
-See https://stacks.math.columbia.edu/tag/001G.
+See <https://stacks.math.columbia.edu/tag/001G>.
 -/
 def Over (X : T) :=
   CostructuredArrow (𝟭 T) X deriving Category
@@ -113,7 +113,7 @@ variable (X)
 
 /-- The forgetful functor mapping an arrow to its domain.
 
-See https://stacks.math.columbia.edu/tag/001G.
+See <https://stacks.math.columbia.edu/tag/001G>.
 -/
 def forget : Over X ⥤ T :=
   Comma.fst _ _
@@ -135,7 +135,7 @@ def forgetCocone (X : T) : Limits.Cocone (forget X) :=
 
 /-- A morphism `f : X ⟶ Y` induces a functor `over X ⥤ over Y` in the obvious way.
 
-See https://stacks.math.columbia.edu/tag/001G.
+See <https://stacks.math.columbia.edu/tag/001G>.
 -/
 def map {Y : T} (f : X ⟶ Y) : Over X ⥤ Over Y :=
   Comma.mapRight _ <| Discrete.natTrans fun _ => f
@@ -212,7 +212,7 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
   let l' : mk (m ≫ f.hom) ⟶ f :=
     hom_mk l
       (by
-        dsimp
+        dsimp'
         rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by
     apply congr_argₓ comma_morphism.left this
@@ -257,7 +257,7 @@ def iteratedSliceEquiv : Over f ≌ Over f.left where
             tidy))
       fun X Y g => by
       ext
-      dsimp
+      dsimp'
       simp
   counitIso :=
     NatIso.ofComponents
@@ -267,7 +267,7 @@ def iteratedSliceEquiv : Over f ≌ Over f.left where
             tidy))
       fun X Y g => by
       ext
-      dsimp
+      dsimp'
       simp
 
 theorem iterated_slice_forward_forget : iteratedSliceForward f ⋙ forget f.left = forget f ⋙ forget X :=

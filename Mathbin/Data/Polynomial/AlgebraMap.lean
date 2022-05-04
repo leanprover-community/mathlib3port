@@ -38,12 +38,12 @@ variable [Semiringₓ A] [Algebra R A]
 instance algebraOfAlgebra : Algebra R (Polynomial A) where
   smul_def' := fun r p =>
     to_finsupp_injective <| by
-      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      dsimp' only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
   commutes' := fun r p =>
     to_finsupp_injective <| by
-      dsimp only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
+      dsimp' only [RingHom.to_fun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
       convert Algebra.commutes' r p.to_finsupp
   toRingHom := c.comp (algebraMap R A)
@@ -86,7 +86,7 @@ implementation detail, but it can be useful to transfer results from `finsupp` t
 def toFinsuppIsoAlg : R[X] ≃ₐ[R] AddMonoidAlgebra R ℕ :=
   { toFinsuppIso R with
     commutes' := fun r => by
-      dsimp
+      dsimp'
       exact to_finsupp_algebra_map _ }
 
 variable {R}
@@ -105,14 +105,14 @@ instance [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
 theorem alg_hom_eval₂_algebra_map {R A B : Type _} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A]
     [Algebra R B] (p : R[X]) (f : A →ₐ[R] B) (a : A) :
     f (eval₂ (algebraMap R A) a p) = eval₂ (algebraMap R B) (f a) p := by
-  dsimp [eval₂, Sum]
+  dsimp' [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, RingHom.eq_int_cast, RingHom.map_int_cast, AlgHom.commutes]
 
 @[simp]
 theorem eval₂_algebra_map_X {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] (p : R[X]) (f : R[X] →ₐ[R] A) :
     eval₂ (algebraMap R A) (f x) p = f p := by
   conv_rhs => rw [← Polynomial.sum_C_mul_X_eq p]
-  dsimp [eval₂, Sum]
+  dsimp' [eval₂, Sum]
   simp only [f.map_sum, f.map_mul, f.map_pow, RingHom.eq_int_cast, RingHom.map_int_cast]
   simp [Polynomial.C_eq_algebra_map]
 

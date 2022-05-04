@@ -60,7 +60,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 elements γ₀. -/
 theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Γ₀ˣ => principal { γ : Γ₀ | γ < γ₀ } := by
   intro γ₁ γ₂
-  use LinearOrderₓ.min γ₁ γ₂ <;> dsimp only
+  use LinearOrderₓ.min γ₁ γ₂ <;> dsimp' only
   constructor <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
   · calc x < ↑(LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
     
@@ -159,6 +159,10 @@ theorem has_basis_nhds_units (γ : Γ₀ˣ) : HasBasis (𝓝 (γ : Γ₀)) (fun 
 
 theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : HasBasis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
   has_basis_nhds_units (Units.mk0 x h)
+
+theorem singleton_mem_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : {x} ∈ 𝓝 x := by
+  apply (has_basis_nhds_of_ne_zero h).mem_of_mem True.intro
+  exact Unit.star
 
 theorem tendsto_units {α : Type _} {F : Filter α} {f : α → Γ₀} {γ₀ : Γ₀ˣ} :
     Tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x : α | f x = γ₀ } ∈ F := by

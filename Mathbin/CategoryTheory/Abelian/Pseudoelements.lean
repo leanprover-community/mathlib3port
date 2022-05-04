@@ -336,7 +336,7 @@ theorem epi_of_pseudo_surjective {P Q : C} (f : P ⟶ Q) : Function.Surjective f
       match Quotientₓ.exact this with
       | ⟨R, x, y, ex, ey, comm⟩ =>
         @epi_of_epi_fac _ _ _ _ _ (x ≫ p.Hom) f y ey <| by
-          dsimp  at comm
+          dsimp'  at comm
           rw [category.assoc, comm]
           apply category.comp_id
 
@@ -425,7 +425,7 @@ theorem sub_of_eq_image {P Q : C} (f : P ⟶ Q) (x y : P) :
       let a'' : R ⟶ P := p ≫ a.Hom - q ≫ a'.Hom
       ⟨a'',
         ⟨show ⟦((p ≫ a.Hom - q ≫ a'.Hom) ≫ f : Over Q)⟧ = ⟦(0 : Q ⟶ Q)⟧ by
-            dsimp  at comm
+            dsimp'  at comm
             simp [sub_eq_zero.2 comm],
           fun Z g hh => by
           obtain ⟨X, p', q', ep', eq', comm'⟩ := Quotientₓ.exact hh

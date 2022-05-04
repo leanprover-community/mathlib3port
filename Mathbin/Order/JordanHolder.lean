@@ -182,7 +182,7 @@ theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.lengt
     (h : ∀ i, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ hl) i)) : s₁ = s₂ := by
   cases s₁
   cases s₂
-  dsimp  at *
+  dsimp'  at *
   subst hl
   simpa [Function.funext_iffₓ] using h
 
@@ -203,7 +203,7 @@ theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _)
     simp [h]
   cases s₁
   cases s₂
-  dsimp  at *
+  dsimp'  at *
   subst h₁
   simp only [heq_iff_eq, eq_self_iff_true, true_andₓ]
   simp only [Finₓ.cast_refl] at h₂
@@ -219,7 +219,7 @@ theorem chain'_to_list (s : CompositionSeries X) : List.Chain' IsMaximal s.toLis
 
 theorem to_list_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
   List.pairwise_iff_nth_le.2 fun i j hi hij => by
-    dsimp [to_list]
+    dsimp' [to_list]
     rw [List.nth_le_of_fn', List.nth_le_of_fn']
     exact s.strict_mono hij
 
@@ -252,7 +252,7 @@ theorem of_list_to_list (s : CompositionSeries X) : ofList s.toList s.to_list_ne
   · rw [length_of_list, length_to_list, Nat.succ_sub_one]
     
   · rintro ⟨i, hi⟩
-    dsimp [of_list, to_list]
+    dsimp' [of_list, to_list]
     rw [List.nth_le_of_fn']
     
 
@@ -266,7 +266,7 @@ theorem to_list_of_list (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal
   · rw [length_to_list, length_of_list, tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ <| List.length_pos_of_ne_nilₓ hl)]
     
   · intro i hi hi'
-    dsimp [of_list, to_list]
+    dsimp' [of_list, to_list]
     rw [List.nth_le_of_fn']
     rfl
     
@@ -366,7 +366,7 @@ theorem mem_erase_top_of_ne_of_mem {s : CompositionSeries X} {x : X} (hx : x ≠
 
 theorem mem_erase_top {s : CompositionSeries X} {x : X} (h : 0 < s.length) : x ∈ s.eraseTop ↔ x ≠ s.top ∧ x ∈ s := by
   simp only [mem_def]
-  dsimp only [erase_top, coe_fn_mk]
+  dsimp' only [erase_top, coe_fn_mk]
   constructor
   · rintro ⟨i, rfl⟩
     have hi : (i : ℕ) < s.length := by
@@ -615,7 +615,7 @@ theorem snoc_snoc_swap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat
         simp [Finₓ.cast_succ_lt_last])
   ⟨e, by
     intro i
-    dsimp only [e]
+    dsimp' only [e]
     refine' Finₓ.lastCases _ (fun i => _) i
     · erw [Equivₓ.swap_apply_left, snoc_cast_succ, snoc_last, Finₓ.succ_last, snoc_last, snoc_cast_succ, snoc_cast_succ,
         Finₓ.succ_cast_succ, snoc_cast_succ, Finₓ.succ_last, snoc_last]

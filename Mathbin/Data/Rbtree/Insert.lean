@@ -208,17 +208,17 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
         simp_all (config := { eta := false }) <;>
           run_tac
             is_searchable_tactic
-  case' is_red_lt, hs₁ =>
+  case'' is_red_lt, hs₁ =>
     apply ih h_hs₁
     assumption
     simp [*]
-  case' is_red_eq, hs₁ =>
+  case'' is_red_eq, hs₁ =>
     apply is_searchable_of_is_searchable_of_incomp hc
     assumption
-  case' is_red_eq, hs₂ =>
+  case'' is_red_eq, hs₂ =>
     apply is_searchable_of_incomp_of_is_searchable hc
     assumption
-  case' is_red_gt, hs₂ =>
+  case'' is_red_gt, hs₂ =>
     apply ih h_hs₂
     cases hi <;> simp [*]
     assumption
@@ -228,14 +228,14 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     assumption
     simp [*]
     assumption
-  case' is_black_lt_not_red, hs₁ =>
+  case'' is_black_lt_not_red, hs₁ =>
     apply ih h_hs₁
     assumption
     simp [*]
-  case' is_black_eq, hs₁ =>
+  case'' is_black_eq, hs₁ =>
     apply is_searchable_of_is_searchable_of_incomp hc
     assumption
-  case' is_black_eq, hs₂ =>
+  case'' is_black_eq, hs₂ =>
     apply is_searchable_of_incomp_of_is_searchable hc
     assumption
   case is_black_gt_red =>
@@ -244,7 +244,7 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     apply ih h_hs₂
     simp [*]
     assumption
-  case' is_black_gt_not_red, hs₂ =>
+  case'' is_black_gt_not_red, hs₂ =>
     apply ih h_hs₂
     assumption
     simp [*]
@@ -367,33 +367,33 @@ theorem mem_ins_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode �
           try
               contradiction <;>
             cases_type* or.1
-  case' is_red_eq, Or.inr, Or.inl =>
+  case'' is_red_eq, Or.inr, Or.inl =>
     have := incomp_trans_of lt h ⟨hc.2, hc.1⟩
     simp [this]
-  case' is_black_lt_red, Or.inl =>
+  case'' is_black_lt_red, Or.inl =>
     apply mem_balance1_node_of_mem_left
     apply ih h
-  case' is_black_lt_red, Or.inr, Or.inl =>
+  case'' is_black_lt_red, Or.inr, Or.inl =>
     apply mem_balance1_node_of_incomp
     cases h
     all_goals
       simp [*, ins_ne_leaf lt a z]
-  case' is_black_lt_red, Or.inr, Or.inr =>
+  case'' is_black_lt_red, Or.inr, Or.inr =>
     apply mem_balance1_node_of_mem_right
     assumption
-  case' is_black_eq, Or.inr, Or.inl =>
+  case'' is_black_eq, Or.inr, Or.inl =>
     have := incomp_trans_of lt hc ⟨h.2, h.1⟩
     simp [this]
-  case' is_black_gt_red, Or.inl =>
+  case'' is_black_gt_red, Or.inl =>
     apply mem_balance2_node_of_mem_right
     assumption
-  case' is_black_gt_red, Or.inr, Or.inl =>
+  case'' is_black_gt_red, Or.inr, Or.inl =>
     have := ins_ne_leaf lt a z
     apply mem_balance2_node_of_incomp
     cases h
     simp [*]
     apply ins_ne_leaf
-  case' is_black_gt_red, Or.inr, Or.inr =>
+  case'' is_black_gt_red, Or.inr, Or.inr =>
     apply mem_balance2_node_of_mem_left
     apply ih h
   any_goals {

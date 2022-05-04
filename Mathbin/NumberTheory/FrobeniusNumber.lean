@@ -63,7 +63,7 @@ theorem is_frobenius_number_pair (cop : Coprime m n) (hm : 1 < m) (hn : 1 < n) :
     ring
     
   · intro k hk
-    dsimp  at hk
+    dsimp'  at hk
     contrapose! hk
     let x := chinese_remainder cop 0 k
     have hx : x.val < m * n := chinese_remainder_lt_mul cop 0 k (ne_bot_of_gt hm) (ne_bot_of_gt hn)

@@ -271,11 +271,11 @@ variable (X)
 def congr (e : C ≌ D) : MonoOver X ≌ MonoOver (e.Functor.obj X) where
   Functor :=
     (lift (Over.post e.Functor)) fun f => by
-      dsimp
+      dsimp'
       infer_instance
   inverse :=
     ((lift (Over.post e.inverse)) fun f => by
-        dsimp
+        dsimp'
         infer_instance) ⋙
       (mapIso (e.unitIso.symm.app X)).Functor
   unitIso :=

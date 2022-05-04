@@ -94,7 +94,7 @@ unsafe def run : Computation α → α
     | Sum.inr ca => run ca
 
 theorem destruct_eq_ret {s : Computation α} {a : α} : destruct s = Sum.inl a → s = return a := by
-  dsimp [destruct]
+  dsimp' [destruct]
   induction' f0 : s.1 0 with <;> intro h
   · contradiction
     
@@ -109,13 +109,13 @@ theorem destruct_eq_ret {s : Computation α} {a : α} : destruct s = Sum.inl a �
     
 
 theorem destruct_eq_think {s : Computation α} {s'} : destruct s = Sum.inr s' → s = think s' := by
-  dsimp [destruct]
+  dsimp' [destruct]
   induction' f0 : s.1 0 with a' <;> intro h
   · injection h with h'
     rw [← h']
     cases' s with f al
     apply Subtype.eq
-    dsimp [think, tail]
+    dsimp' [think, tail]
     rw [← f0]
     exact (Streamₓ.eta f).symm
     
@@ -152,7 +152,7 @@ theorem tail_ret (a : α) : tail (return a) = return a :=
 
 @[simp]
 theorem tail_think (s : Computation α) : tail (think s) = s := by
-  cases' s with f al <;> apply Subtype.eq <;> dsimp [tail, think] <;> rw [Streamₓ.tail_cons]
+  cases' s with f al <;> apply Subtype.eq <;> dsimp' [tail, think] <;> rw [Streamₓ.tail_cons]
 
 @[simp]
 theorem tail_empty : tail (empty α) = empty α :=
@@ -195,8 +195,8 @@ def corec (f : β → Sum α β) (b : β) : Computation α := by
     cases' o with a b <;> intro h
     · exact h
       
-    dsimp [corec.F]  at h
-    dsimp [corec.F]
+    dsimp' [corec.F]  at h
+    dsimp' [corec.F]
     cases' f b with a b'
     · exact h
       
@@ -221,17 +221,17 @@ attribute [simp] lmap rmap
 
 @[simp]
 theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (corec f) (f b) := by
-  dsimp [corec, destruct]
+  dsimp' [corec, destruct]
   change Streamₓ.corec' (corec.F f) (Sum.inr b) 0 with corec.F._match_1 (f b)
   induction' h : f b with a b'
   · rfl
     
-  dsimp [corec.F, destruct]
+  dsimp' [corec.F, destruct]
   apply congr_argₓ
   apply Subtype.eq
-  dsimp [corec, tail]
+  dsimp' [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
-  dsimp [corec.F]
+  dsimp' [corec.F]
   rw [h]
 
 section Bisim
@@ -255,7 +255,7 @@ def IsBisimulation :=
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Streamₓ.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  dsimp [Streamₓ.IsBisimulation]
+  dsimp' [Streamₓ.IsBisimulation]
   intro t₁ t₂ e
   exact
     match t₁, t₂, e with
@@ -271,7 +271,7 @@ theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s
       revert r this
       apply cases_on s _ _ <;> intros <;> apply cases_on s' _ _ <;> intros <;> intro r this
       · constructor
-        dsimp  at this
+        dsimp'  at this
         rw [this]
         assumption
         
@@ -320,7 +320,7 @@ theorem terminates_of_mem {s : Computation α} {a : α} (h : a ∈ s) : Terminat
 theorem terminates_def (s : Computation α) : Terminates s ↔ ∃ n, (s.1 n).isSome :=
   ⟨fun ⟨⟨a, n, h⟩⟩ =>
     ⟨n, by
-      dsimp [Streamₓ.nth]  at h
+      dsimp' [Streamₓ.nth]  at h
       rw [← h]
       exact rfl⟩,
     fun ⟨n, h⟩ => ⟨⟨Option.getₓ h, n, (Option.eq_some_of_is_some h).symm⟩⟩⟩
@@ -552,7 +552,7 @@ def terminatesRecOn {C : Computation α → Sort v} s [Terminates s] (h1 : ∀ a
 def map (f : α → β) : Computation α → Computation β
   | ⟨s, al⟩ =>
     ⟨s.map fun o => Option.casesOn o none (some ∘ f), fun n b => by
-      dsimp [Streamₓ.map, Streamₓ.nth]
+      dsimp' [Streamₓ.map, Streamₓ.nth]
       induction' e : s n with a <;> intro h
       · contradiction
         
@@ -591,7 +591,7 @@ theorem map_ret (f : α → β) a : map f (return a) = return (f a) :=
 @[simp]
 theorem map_think (f : α → β) : ∀ s, map f (think s) = think (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp [think, map] <;> rw [Streamₓ.map_cons]
+    apply Subtype.eq <;> dsimp' [think, map] <;> rw [Streamₓ.map_cons]
 
 @[simp]
 theorem destruct_map (f : α → β) s : destruct (map f s) = lmap f (rmap (map f) (destruct s)) := by
@@ -607,7 +607,7 @@ theorem map_id : ∀ s : Computation α, map id s = s
 
 theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (g ∘ f) s = map g (map f s)
   | ⟨s, al⟩ => by
-    apply Subtype.eq <;> dsimp [map]
+    apply Subtype.eq <;> dsimp' [map]
     rw [Streamₓ.map_map]
     apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl

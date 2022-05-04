@@ -377,11 +377,11 @@ instance _root_.prod.algebra : Algebra R (A × B) :=
   { Prod.module, RingHom.prod (algebraMap R A) (algebraMap R B) with
     commutes' := by
       rintro r ⟨a, b⟩
-      dsimp
+      dsimp'
       rw [commutes r a, commutes r b],
     smul_def' := by
       rintro r ⟨a, b⟩
-      dsimp
+      dsimp'
       rw [smul_def r a, smul_def r b] }
 
 variable {R A B}
@@ -524,11 +524,11 @@ instance : Algebra R Aᵐᵒᵖ :=
   { MulOpposite.hasScalar A R with toRingHom := (algebraMap R A).toOpposite fun x y => Algebra.commutes _ _,
     smul_def' := fun c x =>
       unop_injective <| by
-        dsimp
+        dsimp'
         simp only [op_mul, Algebra.smul_def, Algebra.commutes, op_unop],
     commutes' := fun r =>
       MulOpposite.rec fun x => by
-        dsimp <;> simp only [← op_mul, Algebra.commutes] }
+        dsimp' <;> simp only [← op_mul, Algebra.commutes] }
 
 @[simp]
 theorem algebra_map_apply (c : R) : algebraMap R Aᵐᵒᵖ c = op (algebraMap R A c) :=

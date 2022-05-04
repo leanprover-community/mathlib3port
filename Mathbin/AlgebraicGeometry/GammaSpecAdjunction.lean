@@ -198,7 +198,7 @@ def toΓSpec : X ⟶ Spec.locallyRingedSpaceObj (Γ.obj (op X)) where
     let S := (structure_sheaf _).val.stalk p
     rintro (t : S) ht
     obtain ⟨⟨r, s⟩, he⟩ := IsLocalization.surj p.as_ideal.prime_compl t
-    dsimp  at he
+    dsimp'  at he
     apply is_unit_of_mul_is_unit_left
     rw [he]
     refine' IsLocalization.map_units S (⟨r, _⟩ : p.as_ideal.prime_compl)
@@ -245,7 +245,7 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.to_Lo
     symm
     apply LocallyRingedSpace.comp_ring_hom_ext
     · ext1 x
-      dsimp [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
+      dsimp' [Spec.Top_map, LocallyRingedSpace.to_Γ_Spec_fun]
       rw [← Subtype.val_eq_coe, ← LocalRing.comap_closed_point (PresheafedSpace.stalk_map _ x), ←
         PrimeSpectrum.comap_comp_apply, ← PrimeSpectrum.comap_comp_apply]
       congr 2
@@ -307,7 +307,7 @@ def adjunction : Scheme.Γ.rightOp ⊣ Scheme.Spec :=
 
 theorem adjunction_hom_equiv_apply {X : Scheme} {R : CommRingₓₓᵒᵖ} (f : (op <| Scheme.Γ.obj <| op X) ⟶ R) :
     ΓSpec.adjunction.homEquiv X R f = locallyRingedSpaceAdjunction.homEquiv X.1 R f := by
-  dsimp [adjunction, adjunction.restrict_fully_faithful]
+  dsimp' [adjunction, adjunction.restrict_fully_faithful]
   simp
 
 theorem adjunction_hom_equiv (X : Scheme) (R : CommRingₓₓᵒᵖ) :
@@ -351,7 +351,7 @@ theorem adjunction_unit_app_app_top (X : Scheme) :
       ((ΓSpec.adjunction.Unit.app X).val.c.app (op ⊤)) (specΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
   by
   have := congr_app Γ_Spec.adjunction.left_triangle X
-  dsimp  at this
+  dsimp'  at this
   rw [← is_iso.eq_comp_inv] at this
   simp only [Γ_Spec.LocallyRingedSpace_adjunction_counit, nat_trans.op_app, category.id_comp,
     Γ_Spec.adjunction_counit_app] at this

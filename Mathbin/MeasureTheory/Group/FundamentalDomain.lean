@@ -237,7 +237,7 @@ protected theorem set_lintegral_eq (hs : IsFundamentalDomain G s μ) (ht : IsFun
 theorem measure_set_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {A : Set α}
     (hA₀ : MeasurableSet A) (hA : ∀ g : G, (fun x => g • x) ⁻¹' A = A) : μ (A ∩ s) = μ (A ∩ t) := by
   have : (∫⁻ x in s, A.indicator 1 x ∂μ) = ∫⁻ x in t, A.indicator 1 x ∂μ := by
-    refine' hs.set_lintegral_eq ht (Set.indicator A fun _ => 1) _
+    refine' hs.set_lintegral_eq ht (Set.indicatorₓ A fun _ => 1) _
     intro g x
     convert (Set.indicator_comp_right fun x : α => g • x).symm
     rw [hA g]

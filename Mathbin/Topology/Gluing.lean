@@ -129,7 +129,7 @@ theorem rel_equiv : Equivalenceₓ D.Rel :=
     clear_value z
     right
     use (pullback.fst : _ ⟶ D.V (i, k)) (D.t' _ _ _ z)
-    dsimp only  at *
+    dsimp' only  at *
     substs e₁ e₃ e₄ eq₁ eq₂
     have h₁ : D.t' j i k ≫ pullback.fst ≫ D.f i k = pullback.fst ≫ D.t j i ≫ D.f i j := by
       rw [← 𝖣.t_fac_assoc]
@@ -189,12 +189,12 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
     exact
       Or.inr
         ⟨y, by
-          dsimp [glue_data.diagram]
+          dsimp' [glue_data.diagram]
           simp ⟩
     
   · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
     rfl
-    dsimp only  at *
+    dsimp' only  at *
     subst e₁
     subst e₂
     simp
@@ -205,7 +205,7 @@ theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) := by
   rcases(D.ι_eq_iff_rel _ _ _ _).mp h with (⟨⟨⟩⟩ | ⟨_, e₁, e₂⟩)
   · rfl
     
-  · dsimp only  at *
+  · dsimp' only  at *
     cases e₁
     cases e₂
     simp
@@ -223,7 +223,7 @@ theorem image_inter (i j : D.J) : Set.Range (𝖣.ι i) ∩ Set.Range (𝖣.ι j
         ⟨inv (D.f i i) x₁, by
           simp [eq₁]⟩
       
-    · dsimp only  at *
+    · dsimp' only  at *
       substs e₁ eq₁
       exact
         ⟨y, by

@@ -1032,7 +1032,7 @@ noncomputable def AwayMap.lift (hg : IsAddUnit (g x)) : B →+ C :=
     show IsAddUnit (g y.1) by
       obtain ⟨n, hn⟩ := y.2
       rw [← hn]
-      dsimp
+      dsimp'
       rw [g.map_nsmul]
       exact IsAddUnit.map (nsmulAddMonoidHom n : C →+ C) hg
 

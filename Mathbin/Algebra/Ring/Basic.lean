@@ -6,7 +6,7 @@ Neil Strickland
 -/
 import Mathbin.Algebra.Divisibility
 import Mathbin.Algebra.Regular.Basic
-import Mathbin.Data.Pi
+import Mathbin.Data.Pi.Algebra
 
 /-!
 # Properties and homomorphisms of semirings and rings

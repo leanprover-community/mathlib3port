@@ -16,17 +16,20 @@ This file deals with the satisfiability of first-order theories, as well as equi
 model.
 * `first_order.language.Theory.is_finitely_satisfiable`: `T.is_finitely_satisfiable` indicates that
 every finite subset of `T` is satisfiable.
+* `first_order.language.Theory.is_complete`: `T.is_complete` indicates that `T` is satisfiable and
+models each sentence or its negation.
 * `first_order.language.Theory.semantically_equivalent`: `T.semantically_equivalent φ ψ` indicates
 that `φ` and `ψ` are equivalent formulas or sentences in models of `T`.
 
 ## Main Results
 * The Compactness Theorem, `first_order.language.Theory.is_satisfiable_iff_is_finitely_satisfiable`,
 shows that a theory is satisfiable iff it is finitely satisfiable.
+* `first_order.language.complete_theory.is_complete`: The complete theory of a structure is
+complete.
 
 ## Implementation Details
 * Satisfiability of an `L.Theory` `T` is defined in the minimal universe containing all the symbols
-of `L`. By Löwenheim-Skolem, this is equivalent to satisfiability in any universe, but this is not
-yet proven in mathlib.
+of `L`. By Löwenheim-Skolem, this is equivalent to satisfiability in any universe.
 
 -/
 
@@ -101,6 +104,13 @@ theorem models_formula_iff {φ : L.Formula α} : T ⊨ φ ↔ ∀ M : ModelCat.{
 theorem models_sentence_iff {φ : L.Sentence} : T ⊨ φ ↔ ∀ M : ModelCat.{u, v, max u v} T, M ⊨ φ :=
   models_formula_iff.trans (forall_congrₓ fun M => Unique.forall_iff)
 
+theorem models_sentence_of_mem {φ : L.Sentence} (h : φ ∈ T) : T ⊨ φ :=
+  models_sentence_iff.2 fun _ => realize_sentence_of_mem T h
+
+/-- A theory is complete when it is satisfiable and models each sentence or its negation. -/
+def IsComplete (T : L.Theory) : Prop :=
+  T.IsSatisfiable ∧ ∀ φ : L.Sentence, T ⊨ φ ∨ T ⊨ φ.Not
+
 /-- Two (bounded) formulas are semantically equivalent over a theory `T` when they have the same
 interpretation in every model of `T`. (This is also known as logical equivalence, which also has a
 proof-theoretic definition.) -/
@@ -163,6 +173,21 @@ protected theorem SemanticallyEquivalent.imp {φ ψ φ' ψ' : L.BoundedFormula �
   exact fun M v xs => imp_congr h.realize_bd_iff h'.realize_bd_iff
 
 end Theory
+
+namespace CompleteTheory
+
+variable (L) (M : Type w) [L.Structure M]
+
+theorem is_satisfiable [Nonempty M] : (L.CompleteTheory M).IsSatisfiable :=
+  Theory.Model.is_satisfiable M
+
+theorem mem_or_not_mem (φ : L.Sentence) : φ ∈ L.CompleteTheory M ∨ φ.Not ∈ L.CompleteTheory M := by
+  simp_rw [complete_theory, Set.mem_set_of_eq, sentence.realize, formula.realize_not, or_not]
+
+theorem is_complete [Nonempty M] : (L.CompleteTheory M).IsComplete :=
+  ⟨is_satisfiable L M, fun φ => (mem_or_not_mem L M φ).imp Theory.models_sentence_of_mem Theory.models_sentence_of_mem⟩
+
+end CompleteTheory
 
 namespace BoundedFormula
 

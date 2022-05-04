@@ -43,7 +43,7 @@ theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} : x 
     have := Classical.decEq α
     simp [revzip_powerset_aux_lemma l revzip_powerset_aux, h.symm]
     cases' x with x₁ x₂
-    dsimp only
+    dsimp' only
     exact
       ⟨x₁, le_add_right _ _, by
         rw [add_tsub_cancel_left x₁ x₂]⟩

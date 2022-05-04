@@ -61,6 +61,11 @@ protected def mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (φ₀ : c → L
 
 variable (ϕ : L →ᴸ L')
 
+/-- Pulls a structure back along a language map. -/
+def reduct (M : Type _) [L'.Structure M] : L.Structure M where
+  funMap := fun n f xs => funMap (ϕ.onFunction f) xs
+  rel_map := fun n r xs => RelMap (ϕ.onRelation r) xs
+
 /-- The identity language homomorphism. -/
 @[simps]
 protected def id (L : Language) : L →ᴸ L :=
@@ -235,6 +240,11 @@ instance sum_inl_is_expansion_on (M : Type _) [L.Structure M] [L'.Structure M] :
 instance sum_inr_is_expansion_on (M : Type _) [L.Structure M] [L'.Structure M] :
     (Lhom.sumInr : L' →ᴸ L.Sum L').IsExpansionOn M :=
   ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
+
+instance (priority := 100) is_expansion_on_reduct (ϕ : L →ᴸ L') (M : Type _) [L'.Structure M] :
+    @IsExpansionOn L L' ϕ M (ϕ.reduct M) _ := by
+  let this := ϕ.reduct M
+  exact ⟨fun _ f _ => rfl, fun _ R _ => rfl⟩
 
 end Lhom
 

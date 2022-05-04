@@ -168,7 +168,7 @@ def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A) where
     ext <;> simp [basis.lift]
   right_inv := fun F => by
     ext
-    dsimp [basis.lift]
+    dsimp' [basis.lift]
     rw [← F.commutes]
     simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero, algebra_map_eq]
     congr

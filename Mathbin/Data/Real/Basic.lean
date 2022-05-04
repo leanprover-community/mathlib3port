@@ -641,7 +641,7 @@ theorem Sup_empty : sup (∅ : Set ℝ) = 0 :=
     simp
 
 theorem csupr_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨆ i, f i) = 0 := by
-  dsimp [supr]
+  dsimp' [supr]
   convert Real.Sup_empty
   rw [Set.range_eq_empty_iff]
   infer_instance
@@ -665,7 +665,7 @@ theorem Inf_empty : inf (∅ : Set ℝ) = 0 := by
   simp [Inf_def, Sup_empty]
 
 theorem cinfi_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) = 0 := by
-  dsimp [infi]
+  dsimp' [infi]
   convert Real.Inf_empty
   rw [Set.range_eq_empty_iff]
   infer_instance

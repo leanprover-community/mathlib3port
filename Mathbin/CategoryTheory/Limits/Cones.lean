@@ -306,7 +306,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cone F ≌ Cone (e.Functor ⋙ F) wher
         Cones.ext (Iso.refl _)
           (by
             intro k
-            dsimp
+            dsimp'
             -- See library note [dsimp, simp]
             simpa [e.counit_app_functor] using s.w (e.unit_inv.app k)))
       (by
@@ -520,7 +520,7 @@ def whiskeringEquivalence (e : K ≌ J) : Cocone F ≌ Cocone (e.Functor ⋙ F) 
         Cocones.ext (Iso.refl _)
           (by
             intro k
-            dsimp
+            dsimp'
             simpa [e.counit_inv_app_functor k] using s.w (e.unit.app k)))
       (by
         tidy)
@@ -597,16 +597,16 @@ def functorialityEquivalence (e : C ≌ D) : Cocone F ≌ Cocone (F ⋙ e.Functo
               -- Unfortunately this doesn't work by `tidy`.
               -- In this configuration `simp` reaches a dead-end and needs help.
               intro j
-              dsimp
+              dsimp'
               simp only [← equivalence.counit_inv_app_functor, iso.inv_hom_id_app, map_comp, equivalence.fun_inv_map,
                 assoc, id_comp, iso.inv_hom_id_app_assoc]
-              dsimp
+              dsimp'
               simp ))-- See note [dsimp, simp].
       fun c c' f => by
         ext
-        dsimp
+        dsimp'
         simp
-        dsimp
+        dsimp'
         simp }
 
 /-- If `F` reflects isomorphisms, then `cocones.functoriality F` reflects isomorphisms
@@ -819,7 +819,6 @@ variable (F)
 is equivalent to the opposite category of
 the category of cones on the opposite of `F`.
 -/
-@[simps]
 def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
   Functor :=
     { obj := fun c => op (Cocone.op c),
@@ -828,7 +827,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
           { Hom := f.Hom.op,
             w' := fun j => by
               apply Quiver.Hom.unop_inj
-              dsimp
+              dsimp'
               simp } }
   inverse :=
     { obj := fun c => Cone.unop (unop c),
@@ -836,7 +835,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
         { Hom := f.unop.Hom.unop,
           w' := fun j => by
             apply Quiver.Hom.op_inj
-            dsimp
+            dsimp'
             simp } }
   unitIso :=
     NatIso.ofComponents
@@ -850,7 +849,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
     NatIso.ofComponents
       (fun c => by
         induction c using Opposite.rec
-        dsimp
+        dsimp'
         apply iso.op
         exact
           cones.ext (iso.refl _)
@@ -860,13 +859,15 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ where
       Quiver.Hom.unop_inj
         (ConeMorphism.ext _ _
           (by
-            dsimp
+            dsimp'
             simp ))
   functor_unit_iso_comp' := fun c => by
     apply Quiver.Hom.unop_inj
     ext
-    dsimp
+    dsimp'
     simp
+
+attribute [simps] cocone_equivalence_op_cone_op
 
 end
 
@@ -899,7 +900,7 @@ def coconeOfConeLeftOp (c : Cone F.leftOp) : Cocone F where
 
 @[simp]
 theorem cocone_of_cone_left_op_ι_app (c : Cone F.leftOp) j : (coconeOfConeLeftOp c).ι.app j = (c.π.app (op j)).op := by
-  dsimp only [cocone_of_cone_left_op]
+  dsimp' only [cocone_of_cone_left_op]
   simp
 
 /-- Change a cocone on `F : J ⥤ Cᵒᵖ` to a cone on `F.left_op : Jᵒᵖ ⥤ C`. -/

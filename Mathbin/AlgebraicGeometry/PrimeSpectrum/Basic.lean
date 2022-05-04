@@ -570,7 +570,7 @@ theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocaliza
     Function.Injective (comap (algebraMap R S)) := by
   intro p q h
   replace h := congr_argₓ (fun x : PrimeSpectrum R => Ideal.map (algebraMap R S) x.asIdeal) h
-  dsimp only  at h
+  dsimp' only  at h
   erw [IsLocalization.map_comap M S, IsLocalization.map_comap M S] at h
   ext1
   exact h

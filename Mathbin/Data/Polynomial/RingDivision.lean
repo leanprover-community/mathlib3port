@@ -745,7 +745,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr
   · intro a b h
     have q := (leading_coeff_mul a b).symm
     rw [← h] at q
-    dsimp [monic]  at h_mon
+    dsimp' [monic]  at h_mon
     rw [h_mon] at q
     have au : IsUnit a.leading_coeff := is_unit_of_mul_eq_one _ _ q
     rw [mul_comm] at q

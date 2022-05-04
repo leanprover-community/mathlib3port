@@ -219,8 +219,9 @@ theorem mul_adj_matrix_apply [NonAssocSemiringₓ α] (M : Matrix V V α) (v w :
 
 variable (α)
 
-theorem trace_adj_matrix [NonAssocSemiringₓ α] [Semiringₓ β] [Module β α] : Matrix.trace _ β _ (G.adjMatrix α) = 0 := by
-  simp
+@[simp]
+theorem trace_adj_matrix [AddCommMonoidₓ α] [One α] : Matrix.trace (G.adjMatrix α) = 0 := by
+  simp [Matrix.trace]
 
 variable {α}
 

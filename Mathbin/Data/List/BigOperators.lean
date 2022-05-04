@@ -119,7 +119,7 @@ theorem prod_take_mul_prod_drop : ∀ L : List M i : ℕ, (L.take i).Prod * (L.d
   | L, 0 => by
     simp
   | h :: t, n + 1 => by
-    dsimp
+    dsimp'
     rw [prod_cons, prod_cons, mul_assoc, prod_take_mul_prod_drop]
 
 @[simp, to_additive]
@@ -129,7 +129,7 @@ theorem prod_take_succ : ∀ L : List M i : ℕ p, (L.take (i + 1)).Prod = (L.ta
   | h :: t, 0, _ => by
     simp
   | h :: t, n + 1, _ => by
-    dsimp
+    dsimp'
     rw [prod_cons, prod_cons, prod_take_succ, mul_assoc]
 
 /-- A list with product not one must have positive length. -/

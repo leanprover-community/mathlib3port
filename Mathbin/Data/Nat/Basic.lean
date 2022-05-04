@@ -192,7 +192,7 @@ theorem range_rec {α : Type _} (x : α) (f : ℕ → α → α) :
   induction' n with n ihn
   · rfl
     
-  · dsimp  at ihn⊢
+  · dsimp'  at ihn⊢
     rw [ihn]
     
 
@@ -554,7 +554,7 @@ theorem pred_eq_succ_iff {n m : ℕ} : pred n = succ m ↔ n = m + 2 := by
 theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) := by
   rw [← Nat.sub_one, Nat.sub_sub, one_add, sub_succ]
 
-theorem le_pred_of_lt {n m : ℕ} (h : m < n) : m ≤ n - 1 :=
+theorem le_pred_of_ltₓ {n m : ℕ} (h : m < n) : m ≤ n - 1 :=
   Nat.sub_le_sub_rightₓ h 1
 
 theorem le_of_pred_lt {m n : ℕ} : pred m < n → m ≤ n :=
@@ -1036,7 +1036,7 @@ theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy
 /-! ### `mod`, `dvd` -/
 
 
-theorem div_add_mod (m k : ℕ) : k * (m / k) + m % k = m :=
+theorem div_add_modₓ (m k : ℕ) : k * (m / k) + m % k = m :=
   (Nat.add_comm _ _).trans (mod_add_divₓ _ _)
 
 theorem mod_add_div' (m k : ℕ) : m % k + m / k * k = m := by

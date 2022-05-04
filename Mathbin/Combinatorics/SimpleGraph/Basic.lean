@@ -1046,7 +1046,7 @@ def mapSpanningSubgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' where
 
 theorem mapEdgeSet.injective (hinj : Function.Injective f) : Function.Injective f.mapEdgeSet := by
   rintro ⟨e₁, h₁⟩ ⟨e₂, h₂⟩
-  dsimp [hom.map_edge_set]
+  dsimp' [hom.map_edge_set]
   repeat'
     rw [Subtype.mk_eq_mk]
   apply Sym2.map.injective hinj

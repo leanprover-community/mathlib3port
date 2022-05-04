@@ -5,6 +5,7 @@ Authors: Oliver Nash
 -/
 import Mathbin.Analysis.NormedSpace.Banach
 import Mathbin.Analysis.NormedSpace.FiniteDimension
+import Mathbin.Analysis.Calculus.AffineMap
 import Mathbin.Analysis.Convex.Combination
 import Mathbin.LinearAlgebra.AffineSpace.Basis
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
@@ -42,6 +43,9 @@ attribute [local instance] FiniteDimensional.complete
 
 theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.Coord i) :=
   (b.Coord i).IsOpenMap (continuous_barycentric_coord b i) (b.surjective_coord i)
+
+theorem smooth_barycentric_coord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
+  (⟨b.Coord i, continuous_barycentric_coord b i⟩ : E →A[𝕜] 𝕜).ContDiff
 
 end Barycentric
 

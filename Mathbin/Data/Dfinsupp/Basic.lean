@@ -498,7 +498,7 @@ theorem mk_injective (s : Finset ι) : Function.Injective (@mk ι β _ _ s) := b
     rw [H]
   cases' i with i hi
   change i ∈ s at hi
-  dsimp only [mk_apply, Subtype.coe_mk]  at h1
+  dsimp' only [mk_apply, Subtype.coe_mk]  at h1
   simpa only [dif_pos hi] using h1
 
 omit dec
@@ -530,7 +530,7 @@ def single (i : ι) (b : β i) : Π₀ i, β i :=
 
 @[simp]
 theorem single_apply {i i' b} : (single i b : Π₀ i, β i) i' = if h : i = i' then Eq.recOnₓ h b else 0 := by
-  dsimp only [single]
+  dsimp' only [single]
   by_cases' h : i = i'
   · have h1 : i' ∈ ({i} : Finset ι) := Finset.mem_singleton.2 h.symm
     simp only [mk_apply, dif_pos h, dif_pos h1]
@@ -553,7 +553,7 @@ theorem single_eq_pi_single {i b} : ⇑(single i b : Π₀ i, β i) = Pi.single 
 theorem single_zero i : (single i 0 : Π₀ i, β i) = 0 :=
   Quotientₓ.sound fun j =>
     if H : j ∈ ({i} : Finset _) then by
-      dsimp only <;> rw [dif_pos H] <;> cases Finset.mem_singleton.1 H <;> rfl
+      dsimp' only <;> rw [dif_pos H] <;> cases Finset.mem_singleton.1 H <;> rfl
     else dif_neg H
 
 @[simp]
@@ -602,7 +602,7 @@ theorem filter_single (p : ι → Prop) [DecidablePred p] (i : ι) (x : β i) :
     (single i x).filter p = if p i then single i x else 0 := by
   ext j
   have := apply_ite (fun x : Π₀ i, β i => x j) (p i) (single i x) 0
-  dsimp  at this
+  dsimp'  at this
   rw [filter_apply, this]
   obtain rfl | hij := Decidable.eq_or_ne i j
   · rfl
@@ -857,7 +857,7 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
     
   intro i s ih f H
   have H2 : p (erase i ⟦{ toFun := f, preSupport := i ::ₘ s, zero := H }⟧) := by
-    dsimp only [erase, Quotientₓ.map_mk]
+    dsimp' only [erase, Quotientₓ.map_mk]
     have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0 := by
       intro j
       cases' H j with H2 H2
@@ -1001,7 +1001,7 @@ theorem support_mk_subset {s : Finset ι} {x : ∀ i : (↑s : Set ι), β i.1} 
 @[simp]
 theorem mem_support_to_fun (f : Π₀ i, β i) i : i ∈ f.support ↔ f i ≠ 0 := by
   refine' Quotientₓ.induction_on f fun x => _
-  dsimp only [support, Quotientₓ.lift_on_mk]
+  dsimp' only [support, Quotientₓ.lift_on_mk]
   rw [Finset.mem_filter, Multiset.mem_to_finset]
   exact and_iff_right_of_imp (x.3 i).resolve_right
 
@@ -1130,7 +1130,7 @@ theorem subtype_domain_def (f : Π₀ i, β i) : f.subtypeDomain p = mk (f.suppo
     by_cases' h2 : f i ≠ 0 <;>
       try
           simp at h2 <;>
-        dsimp <;> simp [h2]
+        dsimp' <;> simp [h2]
 
 @[simp]
 theorem support_subtype_domain {f : Π₀ i, β i} : (subtypeDomain p f).support = f.support.Subtype p := by
@@ -1489,9 +1489,9 @@ theorem prod_map_range_index {β₁ : ι → Type v₁} {β₂ : ι → Type v�
   rw [map_range_def]
   refine' (Finset.prod_subset support_mk_subset _).trans _
   · intro i h1 h2
-    dsimp
+    dsimp'
     simp [h1] at h2
-    dsimp  at h2
+    dsimp'  at h2
     simp [h1, h2, h0]
     
   · refine' Finset.prod_congr rfl _
@@ -1679,7 +1679,7 @@ theorem sum_add_hom_apply [∀ i, AddZeroClass (β i)] [∀ i x : β i, Decidabl
   change (∑ i in _, _) = ∑ i in Finset.filter _ _, _
   rw [Finset.sum_filter, Finset.sum_congr rfl]
   intro i _
-  dsimp only
+  dsimp' only
   split_ifs
   rfl
   rw [not_not.mp h, AddMonoidHom.map_zero]

@@ -105,7 +105,7 @@ theorem ext {c1 c2 : NumDenomSameDeg 𝒜 x} (hdeg : c1.deg = c2.deg) (hnum : (c
     (hdenom : (c1.denom : A) = c2.denom) : c1 = c2 := by
   rcases c1 with ⟨i1, ⟨n1, hn1⟩, ⟨d1, hd1⟩, h1⟩
   rcases c2 with ⟨i2, ⟨n2, hn2⟩, ⟨d2, hd2⟩, h2⟩
-  dsimp only [Subtype.coe_mk]  at *
+  dsimp' only [Subtype.coe_mk]  at *
   simp only
   exact
     ⟨hdeg, by
@@ -319,7 +319,7 @@ theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val =
   unfold HomogeneousLocalization.val HasScalar.smul
   simp only [Quotientₓ.lift_on₂'_mk, Quotientₓ.lift_on'_mk]
   change Localization.mk _ _ = n • Localization.mk _ _
-  dsimp only
+  dsimp' only
   rw [Localization.smul_mk]
   congr 1
 
@@ -376,7 +376,7 @@ theorem add_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 + y2).val = y1.va
   unfold HomogeneousLocalization.val Add.add
   simp only [Quotientₓ.lift_on₂'_mk, Quotientₓ.lift_on'_mk]
   change Localization.mk _ _ = Localization.mk _ _ + Localization.mk _ _
-  dsimp only
+  dsimp' only
   rw [Localization.add_mk]
   rfl
 
@@ -387,7 +387,7 @@ theorem mul_val (y1 y2 : HomogeneousLocalization 𝒜 x) : (y1 * y2).val = y1.va
   unfold HomogeneousLocalization.val Mul.mul
   simp only [Quotientₓ.lift_on₂'_mk, Quotientₓ.lift_on'_mk]
   change Localization.mk _ _ = Localization.mk _ _ * Localization.mk _ _
-  dsimp only
+  dsimp' only
   rw [Localization.mk_mul]
   rfl
 
@@ -397,7 +397,7 @@ theorem neg_val (y : HomogeneousLocalization 𝒜 x) : (-y).val = -y.val := by
   unfold HomogeneousLocalization.val Neg.neg
   simp only [Quotientₓ.lift_on₂'_mk, Quotientₓ.lift_on'_mk]
   change Localization.mk _ _ = -Localization.mk _ _
-  dsimp only
+  dsimp' only
   rw [Localization.neg_mk]
   rfl
 
@@ -412,7 +412,7 @@ theorem pow_val (y : HomogeneousLocalization 𝒜 x) (n : ℕ) : (y ^ n).val = y
   simp only [Quotientₓ.lift_on₂'_mk, Quotientₓ.lift_on'_mk]
   change Localization.mk _ _ = Localization.mk _ _ ^ n
   rw [Localization.mk_pow]
-  dsimp only
+  dsimp' only
   congr 1
 
 instance : CommRingₓ (HomogeneousLocalization 𝒜 x) :=
@@ -474,7 +474,7 @@ theorem is_unit_iff_is_unit_val (f : HomogeneousLocalization 𝒜 x) : IsUnit f.
     clear a eq2
     induction' b using Localization.induction_on with data
     rcases data with ⟨a, ⟨b, hb⟩⟩
-    dsimp only  at eq0 eq1
+    dsimp' only  at eq0 eq1
     have b_f_denom_not_mem : b * f.denom ∈ x.prime_compl := fun r =>
       Or.elim (Ideal.IsPrime.mem_or_mem inferInstance r) (fun r2 => hb r2) fun r2 => f.denom_not_mem r2
     rw [f.eq_num_div_denom, Localization.mk_mul,

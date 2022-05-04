@@ -256,7 +256,7 @@ def smulRight (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M where
   map_add' := fun x y => by
     rw [f.map_add, add_smul]
   map_smul' := fun b y => by
-    dsimp <;> rw [f.map_smul, smul_assoc]
+    dsimp' <;> rw [f.map_smul, smul_assoc]
 
 @[simp]
 theorem coe_smul_right (f : M₁ →ₗ[R] S) (x : M) : (smulRight f x : M₁ → M) = fun c => f c • x :=
@@ -1413,7 +1413,7 @@ def MapSubtype.relIso : Submodule R p ≃o { p' : Submodule R M // p' ≤ p } wh
   map_rel_iff' := fun p₁ p₂ =>
     Subtype.coe_le_coe.symm.trans
       (by
-        dsimp
+        dsimp'
         rw [map_le_iff_le_comap, comap_map_eq_of_injective (show injective p.subtype from Subtype.coe_injective) p₂])
 
 /-- If `p ⊆ M` is a submodule, the ordering of submodules of `p` is embedded in the ordering of
@@ -2232,7 +2232,7 @@ theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) : Surj
   intro g
   refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
   · ext
-    dsimp only [fun_left_apply]
+    dsimp' only [fun_left_apply]
     split_ifs with w
     · congr
       exact hf w.some_spec

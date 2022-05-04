@@ -210,6 +210,18 @@ protected theorem Summable.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf :
     (g : G) (hg : Continuous g) : Summable (g ∘ f) :=
   (hf.HasSum.map g hg).Summable
 
+protected theorem Summable.map_iff_of_left_inverse [AddCommMonoidₓ γ] [TopologicalSpace γ] {G G'}
+    [AddMonoidHomClass G α γ] [AddMonoidHomClass G' γ α] (g : G) (g' : G') (hg : Continuous g) (hg' : Continuous g')
+    (hinv : Function.LeftInverse g' g) : Summable (g ∘ f) ↔ Summable f :=
+  ⟨fun h => by
+    have := h.map _ hg'
+    rwa [← Function.comp.assoc, hinv.id] at this, fun h => h.map _ hg⟩
+
+/-- A special case of `summable.map_iff_of_left_inverse` for convenience -/
+protected theorem Summable.map_iff_of_equiv [AddCommMonoidₓ γ] [TopologicalSpace γ] {G} [AddEquivClass G α γ] (g : G)
+    (hg : Continuous g) (hg' : Continuous (AddEquivClass.inv g : γ → α)) : Summable (g ∘ f) ↔ Summable f :=
+  Summable.map_iff_of_left_inverse g (g : α ≃+ γ).symm hg hg' (AddEquivClass.left_inv g)
+
 /-- If `f : ℕ → α` has sum `a`, then the partial sums `∑_{i=0}^{n-1} f i` converge to `a`. -/
 theorem HasSum.tendsto_sum_nat {f : ℕ → α} (h : HasSum f a) : Tendsto (fun n : ℕ => ∑ i in range n, f i) atTop (𝓝 a) :=
   h.comp tendsto_finset_range
@@ -471,7 +483,7 @@ theorem tsum_supr_decode₂ [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0
       
     
   · rintro ⟨n, h⟩
-    dsimp only [Subtype.coe_mk]
+    dsimp' only [Subtype.coe_mk]
     trans
     swap
     rw [show decode₂ γ n = _ from Option.get_memₓ (H n h)]
@@ -755,6 +767,13 @@ theorem Summable.tsum_mul_left a (hf : Summable f) : (∑' b, a * f b) = a * ∑
 
 theorem Summable.tsum_mul_right a (hf : Summable f) : (∑' b, f b * a) = (∑' b, f b) * a :=
   (hf.HasSum.mul_right _).tsum_eq
+
+theorem Commute.tsum_right a (h : ∀ b, Commute a (f b)) : Commute a (∑' b, f b) :=
+  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_argₓ _ <| funext h).trans (hf.tsum_mul_right a))
+  else (tsum_eq_zero_of_not_summable hf).symm ▸ Commute.zero_right _
+
+theorem Commute.tsum_left a (h : ∀ b, Commute (f b) a) : Commute (∑' b, f b) a :=
+  ((Commute.tsum_right _) fun b => (h b).symm).symm
 
 end tsum
 

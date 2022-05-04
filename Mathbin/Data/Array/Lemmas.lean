@@ -233,7 +233,7 @@ theorem push_back_rev_list_aux :
   | i + 1, h, h' => by
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
-    dsimp [read, DArray.read, push_back]
+    dsimp' [read, DArray.read, push_back]
     rw [dif_neg]
     rfl
     exact ne_of_ltₓ h'
@@ -241,7 +241,7 @@ theorem push_back_rev_list_aux :
 @[simp]
 theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
   unfold push_back rev_list foldl iterate DArray.iterate
-  dsimp [DArray.iterateAux, read, DArray.read, push_back]
+  dsimp' [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
   apply congr_argₓ
   apply push_back_rev_list_aux

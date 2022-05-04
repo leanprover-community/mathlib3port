@@ -237,7 +237,7 @@ end
 
 /-- A symmetric monoidal category is a braided monoidal category for which the braiding is symmetric.
 
-See https://stacks.math.columbia.edu/tag/0FFW.
+See <https://stacks.math.columbia.edu/tag/0FFW>.
 -/
 class SymmetricCategory (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] extends BraidedCategory.{v} C where
   -- braiding symmetric:
@@ -282,7 +282,7 @@ variable {C D E}
 def comp (F : LaxBraidedFunctor C D) (G : LaxBraidedFunctor D E) : LaxBraidedFunctor C E :=
   { LaxMonoidalFunctor.comp F.toLaxMonoidalFunctor G.toLaxMonoidalFunctor with
     braided' := fun X Y => by
-      dsimp
+      dsimp'
       slice_lhs 2 3 => rw [← CategoryTheory.Functor.map_comp, F.braided, CategoryTheory.Functor.map_comp]
       slice_lhs 1 2 => rw [G.braided]
       simp only [category.assoc] }
@@ -375,7 +375,7 @@ section CommMonoidₓ
 variable (M : Type u) [CommMonoidₓ M]
 
 instance commMonoidDiscrete : CommMonoidₓ (Discrete M) := by
-  dsimp [discrete]
+  dsimp' [discrete]
   infer_instance
 
 instance : BraidedCategory (Discrete M) where
@@ -404,19 +404,19 @@ theorem tensor_μ_def₁ (X₁ X₂ Y₁ Y₂ : C) :
     tensorμ C (X₁, X₂) (Y₁, Y₂) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).inv) =
       (α_ X₁ X₂ (Y₁ ⊗ Y₂)).Hom ≫ (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).inv) ≫ (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   simp
 
 theorem tensor_μ_def₂ (X₁ X₂ Y₁ Y₂ : C) :
     (𝟙 X₁ ⊗ (α_ X₂ Y₁ Y₂).Hom) ≫ (α_ X₁ X₂ (Y₁ ⊗ Y₂)).inv ≫ tensorμ C (X₁, X₂) (Y₁, Y₂) =
       (𝟙 X₁ ⊗ (β_ X₂ Y₁).Hom ⊗ 𝟙 Y₂) ≫ (𝟙 X₁ ⊗ (α_ Y₁ X₂ Y₂).Hom) ≫ (α_ X₁ Y₁ (X₂ ⊗ Y₂)).inv :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   simp
 
 theorem tensor_μ_natural {X₁ X₂ Y₁ Y₂ U₁ U₂ V₁ V₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : U₁ ⟶ V₁) (g₂ : U₂ ⟶ V₂) :
     ((f₁ ⊗ f₂) ⊗ g₁ ⊗ g₂) ≫ tensorμ C (Y₁, Y₂) (V₁, V₂) = tensorμ C (X₁, X₂) (U₁, U₂) ≫ ((f₁ ⊗ g₁) ⊗ f₂ ⊗ g₂) := by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   slice_lhs 1 2 => rw [associator_naturality]
   slice_lhs 2 3 => rw [← tensor_comp, comp_id f₁, ← id_comp f₁, associator_inv_naturality, tensor_comp]
   slice_lhs 3 4 =>
@@ -432,7 +432,7 @@ theorem tensor_left_unitality (X₁ X₂ : C) :
     (λ_ (X₁ ⊗ X₂)).Hom =
       ((λ_ (𝟙_ C)).inv ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ tensorμ C (𝟙_ C, 𝟙_ C) (X₁, X₂) ≫ ((λ_ X₁).Hom ⊗ (λ_ X₂).Hom) :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   have :
     ((λ_ (𝟙_ C)).inv ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (α_ (𝟙_ C) (𝟙_ C) (X₁ ⊗ X₂)).Hom ≫ (𝟙 (𝟙_ C) ⊗ (α_ (𝟙_ C) X₁ X₂).inv) =
       𝟙 (𝟙_ C) ⊗ (λ_ X₁).inv ⊗ 𝟙 X₂ :=
@@ -450,7 +450,7 @@ theorem tensor_right_unitality (X₁ X₂ : C) :
     (ρ_ (X₁ ⊗ X₂)).Hom =
       (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).inv) ≫ tensorμ C (X₁, X₂) (𝟙_ C, 𝟙_ C) ≫ ((ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom) :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   have :
     (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).inv) ≫ (α_ X₁ X₂ (𝟙_ C ⊗ 𝟙_ C)).Hom ≫ (𝟙 X₁ ⊗ (α_ X₂ (𝟙_ C) (𝟙_ C)).inv) =
       (α_ X₁ X₂ (𝟙_ C)).Hom ≫ (𝟙 X₁ ⊗ (ρ_ X₂).inv ⊗ 𝟙 (𝟙_ C)) :=
@@ -562,7 +562,7 @@ theorem tensor_associativity (X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C) :
   slice_lhs 8 9 => rw [← tensor_comp, associator_naturality, tensor_comp]
   slice_lhs 9 10 => rw [associator_inv_naturality]
   slice_lhs 10 12 => rw [← tensor_comp, ← tensor_comp, ← tensor_μ_def₂, tensor_comp, tensor_comp]
-  dsimp
+  dsimp'
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 /-- The tensor product functor from `C × C` to `C` as a monoidal functor. -/
@@ -574,7 +574,7 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
     left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂,
     right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂,
     μ_is_iso := by
-      dsimp [tensor_μ]
+      dsimp' [tensor_μ]
       infer_instance }
 
 -- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `pure_coherence
@@ -583,7 +583,7 @@ theorem left_unitor_monoidal (X₁ X₂ : C) :
     (λ_ X₁).Hom ⊗ (λ_ X₂).Hom =
       tensorμ C (𝟙_ C, X₁) (𝟙_ C, X₂) ≫ ((λ_ (𝟙_ C)).Hom ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (λ_ (X₁ ⊗ X₂)).Hom :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   have :
     (λ_ X₁).Hom ⊗ (λ_ X₂).Hom =
       (α_ (𝟙_ C) X₁ (𝟙_ C ⊗ X₂)).Hom ≫
@@ -603,7 +603,7 @@ theorem right_unitor_monoidal (X₁ X₂ : C) :
     (ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom =
       tensorμ C (X₁, 𝟙_ C) (X₂, 𝟙_ C) ≫ (𝟙 (X₁ ⊗ X₂) ⊗ (λ_ (𝟙_ C)).Hom) ≫ (ρ_ (X₁ ⊗ X₂)).Hom :=
   by
-  dsimp [tensor_μ]
+  dsimp' [tensor_μ]
   have :
     (ρ_ X₁).Hom ⊗ (ρ_ X₂).Hom =
       (α_ X₁ (𝟙_ C) (X₂ ⊗ 𝟙_ C)).Hom ≫
@@ -710,7 +710,7 @@ theorem associator_monoidal (X₁ X₂ X₃ Y₁ Y₂ Y₃ : C) :
   slice_lhs 8 9 => rw [associator_naturality]
   slice_lhs 9 10 => rw [← tensor_comp, associator_naturality, tensor_comp]
   slice_lhs 10 12 => rw [tensor_id, ← tensor_μ_def₂]
-  dsimp
+  dsimp'
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 end Tensor

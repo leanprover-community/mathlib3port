@@ -9,9 +9,11 @@ import Mathbin.Topology.Algebra.Order.IntermediateValue
 # Compactness of a closed interval
 
 In this file we prove that a closed interval in a conditionally complete linear ordered type with
-order topology (or a product of such types) is compact. We also prove the extreme value theorem
-(`is_compact.exists_forall_le`, `is_compact.exists_forall_ge`): a continuous function on a compact
-set takes its minimum and maximum values.
+order topology (or a product of such types) is compact.
+
+We prove the extreme value theorem (`is_compact.exists_forall_le`, `is_compact.exists_forall_ge`):
+a continuous function on a compact set takes its minimum and maximum values. We provide many
+variations of this theorem.
 
 We also prove that the image of a closed interval under a continuous map is a closed interval, see
 `continuous_on.image_Icc`.
@@ -275,38 +277,15 @@ theorem IsCompact.lt_Inf_iff_of_continuous {α β : Type _} [ConditionallyComple
 @[to_additive]
 theorem _root_.continuous.exists_forall_le_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α}
     (hf : Continuous f) (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f x ≤ f y := by
-  -- Proof sketch: we use `continuous.exists_forall_le'` with as `x₀` any element outside the
-  -- support of `f`, if such an element exists (and otherwise an arbitrary element).
-  refine'
-    hf.exists_forall_le' (Classical.epsilon fun x => f x = 1) ((eventually_of_mem h.compl_mem_cocompact) fun x hx => _)
-  have : f x = 1 := nmem_mul_support.mp (mt (fun h2x => subset_closure h2x) hx)
-  exact ((Classical.epsilon_spec ⟨x, this⟩).trans this.symm).le
+  obtain ⟨_, ⟨x, rfl⟩, hx⟩ := (h.is_compact_range hf).exists_is_least (range_nonempty _)
+  rw [mem_lower_bounds, forall_range_iff] at hx
+  exact ⟨x, hx⟩
 
 /-- A continuous function with compact support has a global maximum. -/
 @[to_additive]
 theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α} (hf : Continuous f)
     (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
   @Continuous.exists_forall_le_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ _ hf h
-
-/-- A continuous function with compact support is bounded below. -/
-@[to_additive]
-theorem Continuous.bdd_below_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
-    (h : HasCompactMulSupport f) : BddBelow (Range f) := by
-  cases' is_empty_or_nonempty β with hβ hβ
-  · rw [range_eq_empty_iff.mpr]
-    exact bdd_below_empty
-    exact hβ
-    
-  obtain ⟨x, hx⟩ := hf.exists_forall_le_of_has_compact_mul_support h
-  refine' ⟨f x, _⟩
-  rintro _ ⟨x', rfl⟩
-  exact hx x'
-
-/-- A continuous function with compact support is bounded above. -/
-@[to_additive]
-theorem Continuous.bdd_above_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
-    (h : HasCompactMulSupport f) : BddAbove (Range f) :=
-  @Continuous.bdd_below_range_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ hf h
 
 theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCompact K) (hf : Continuous ↿f) :
     Continuous fun x => sup (f x '' K) := by

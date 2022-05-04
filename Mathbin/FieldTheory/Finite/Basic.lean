@@ -9,7 +9,6 @@ import Mathbin.Data.Zmod.Algebra
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField
 
 /-!
 # Finite fields
@@ -339,7 +338,7 @@ theorem expand_card (f : K[X]) : expand K q f = f ^ q := by
   let this := hp
   rcases FiniteField.card K p with ⟨⟨n, npos⟩, ⟨hp, hn⟩⟩
   have : Fact p.prime := ⟨hp⟩
-  dsimp  at hn
+  dsimp'  at hn
   rw [hn, ← map_expand_pow_char, frobenius_pow hn, RingHom.one_def, map_id]
 
 end FiniteField

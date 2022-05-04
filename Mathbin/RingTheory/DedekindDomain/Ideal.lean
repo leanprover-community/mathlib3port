@@ -3,10 +3,10 @@ Copyright (c) 2020 Kenji Nakagawa. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 -/
-import Mathbin.AlgebraicGeometry.PrimeSpectrum.Noetherian
-import Mathbin.RingTheory.FractionalIdeal
-import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.Algebra.Algebra.Subalgebra.Pointwise
+import Mathbin.AlgebraicGeometry.PrimeSpectrum.Noetherian
+import Mathbin.RingTheory.DedekindDomain.Basic
+import Mathbin.RingTheory.FractionalIdeal
 
 /-!
 # Dedekind domains and ideals
@@ -834,4 +834,170 @@ theorem HeightOneSpectrum.associates_irreducible (v : HeightOneSpectrum R) : Irr
 end IsDedekindDomain
 
 end HeightOneSpectrum
+
+section ChineseRemainder
+
+open Ideal UniqueFactorizationMonoid
+
+open BigOperators
+
+variable {R}
+
+theorem Ringₓ.DimensionLeOne.prime_le_prime_iff_eq (h : Ringₓ.DimensionLeOne R) {P Q : Ideal R} [hP : P.IsPrime]
+    [hQ : Q.IsPrime] (hP0 : P ≠ ⊥) : P ≤ Q ↔ P = Q :=
+  ⟨(h P hP0 hP).eq_of_le hQ.ne_top, Eq.le⟩
+
+theorem Ideal.coprime_of_no_prime_ge {I J : Ideal R} (h : ∀ P, I ≤ P → J ≤ P → ¬IsPrime P) : I⊔J = ⊤ := by
+  by_contra hIJ
+  obtain ⟨P, hP, hIJ⟩ := Ideal.exists_le_maximal _ hIJ
+  exact h P (le_transₓ le_sup_left hIJ) (le_transₓ le_sup_right hIJ) hP.is_prime
+
+section DedekindDomain
+
+variable {R} [IsDomain R] [IsDedekindDomain R]
+
+theorem Ideal.IsPrime.mul_mem_pow (I : Ideal R) [hI : I.IsPrime] {a b : R} {n : ℕ} (h : a * b ∈ I ^ n) :
+    a ∈ I ∨ b ∈ I ^ n := by
+  cases n
+  · simp
+    
+  by_cases' hI0 : I = ⊥
+  · simpa [pow_succₓ, hI0] using h
+    
+  simp only [← Submodule.span_singleton_le_iff_mem, Ideal.submodule_span_eq, ← Ideal.dvd_iff_le, ←
+    Ideal.span_singleton_mul_span_singleton] at h⊢
+  by_cases' ha : I ∣ span {a}
+  · exact Or.inl ha
+    
+  rw [mul_comm] at h
+  exact Or.inr (Prime.pow_dvd_of_dvd_mul_right ((Ideal.prime_iff_is_prime hI0).mpr hI) _ ha h)
+
+section
+
+open Classical
+
+theorem Ideal.count_normalized_factors_eq {p x : Ideal R} (hp0 : p ≠ ⊥) [hp : p.IsPrime] {n : ℕ} (hle : x ≤ p ^ n)
+    (hlt : ¬x ≤ p ^ (n + 1)) : (normalizedFactors x).count p = n :=
+  count_normalized_factors_eq ((Ideal.prime_iff_is_prime hp0).mpr hp).Irreducible (normalize_eq _)
+    (Ideal.dvd_iff_le.mpr hle) (mt Ideal.le_of_dvd hlt)
+
+end
+
+theorem Ideal.le_mul_of_no_prime_factors {I J K : Ideal R} (coprime : ∀ P, J ≤ P → K ≤ P → ¬IsPrime P) (hJ : I ≤ J)
+    (hK : I ≤ K) : I ≤ J * K := by
+  simp only [← Ideal.dvd_iff_le] at coprime hJ hK⊢
+  by_cases' hJ0 : J = 0
+  · simpa only [hJ0, zero_mul] using hJ
+    
+  obtain ⟨I', rfl⟩ := hK
+  rw [mul_comm]
+  exact
+    mul_dvd_mul_left K
+      (UniqueFactorizationMonoid.dvd_of_dvd_mul_right_of_no_prime_factors hJ0
+        (fun P hPJ hPK => mt Ideal.is_prime_of_prime (coprime P hPJ hPK)) hJ)
+
+theorem Ideal.le_of_pow_le_prime {I P : Ideal R} [hP : P.IsPrime] {n : ℕ} (h : I ^ n ≤ P) : I ≤ P := by
+  by_cases' hP0 : P = ⊥
+  · simp only [hP0, le_bot_iff] at h⊢
+    exact pow_eq_zero h
+    
+  rw [← Ideal.dvd_iff_le] at h⊢
+  exact ((Ideal.prime_iff_is_prime hP0).mpr hP).dvd_of_dvd_pow h
+
+theorem Ideal.pow_le_prime_iff {I P : Ideal R} [hP : P.IsPrime] {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ P ↔ I ≤ P :=
+  ⟨Ideal.le_of_pow_le_prime, fun h => trans (Ideal.pow_le_self hn) h⟩
+
+theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {P : Ideal R} [hP : P.IsPrime] :
+    (∏ i in s, f i) ≤ P ↔ ∃ i ∈ s, f i ≤ P := by
+  by_cases' hP0 : P = ⊥
+  · simp only [hP0, le_bot_iff]
+    rw [← Ideal.zero_eq_bot, Finset.prod_eq_zero_iff]
+    
+  simp only [← Ideal.dvd_iff_le]
+  exact ((Ideal.prime_iff_is_prime hP0).mpr hP).dvd_finset_prod_iff _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i j «expr ∈ » s)
+/-- The intersection of distinct prime powers in a Dedekind domain is the product of these
+prime powers. -/
+theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f : ι → Ideal R) (e : ι → ℕ)
+    (prime : ∀, ∀ i ∈ s, ∀, Prime (f i)) (coprime : ∀ i j _ : i ∈ s _ : j ∈ s, i ≠ j → f i ≠ f j) :
+    (s.inf fun i => f i ^ e i) = ∏ i in s, f i ^ e i := by
+  let this := Classical.decEq ι
+  revert prime coprime
+  refine' s.induction _ _
+  · simp
+    
+  intro a s ha ih prime coprime
+  specialize
+    ih (fun i hi => Prime i (Finset.mem_insert_of_mem hi)) fun i hi j hj =>
+      coprime i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj)
+  rw [Finset.inf_insert, Finset.prod_insert ha, ih]
+  refine' le_antisymmₓ (Ideal.le_mul_of_no_prime_factors _ inf_le_left inf_le_right) Ideal.mul_le_inf
+  intro P hPa hPs hPp
+  have := hPp
+  obtain ⟨b, hb, hPb⟩ := ideal.prod_le_prime.mp hPs
+  have := Ideal.is_prime_of_prime (Prime a (Finset.mem_insert_self a s))
+  have := Ideal.is_prime_of_prime (Prime b (Finset.mem_insert_of_mem hb))
+  refine'
+    coprime a (Finset.mem_insert_self a s) b (Finset.mem_insert_of_mem hb) _
+      (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq _).mp (Ideal.le_of_pow_le_prime hPa)).trans
+        ((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq _).mp (Ideal.le_of_pow_le_prime hPb)).symm)
+  · rintro rfl
+    contradiction
+    
+  · exact (Prime a (Finset.mem_insert_self a s)).ne_zero
+    
+  · exact (Prime b (Finset.mem_insert_of_mem hb)).ne_zero
+    
+
+/-- **Chinese remainder theorem** for a Dedekind domain: if the ideal `I` factors as
+`∏ i, P i ^ e i`, then `R ⧸ I` factors as `Π i, R ⧸ (P i ^ e i)`. -/
+noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintype ι] (I : Ideal R) (P : ι → Ideal R)
+    (e : ι → ℕ) (prime : ∀ i, Prime (P i)) (coprime : ∀ i j, i ≠ j → P i ≠ P j) (prod_eq : (∏ i, P i ^ e i) = I) :
+    R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
+  (Ideal.quotEquivOfEq
+        (by
+          simp only [← prod_eq, Finset.inf_eq_infi, Finset.mem_univ, cinfi_pos, ←
+            IsDedekindDomain.inf_prime_pow_eq_prod _ _ _ (fun i _ => Prime i) fun i _ j _ => coprime i j])).trans <|
+    Ideal.quotientInfRingEquivPiQuotient _ fun i j hij =>
+      Ideal.coprime_of_no_prime_ge
+        (by
+          intro P hPi hPj hPp
+          have := hPp
+          have := Ideal.is_prime_of_prime (Prime i)
+          have := Ideal.is_prime_of_prime (Prime j)
+          exact
+            coprime i j hij
+              (((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime i).ne_zero).mp
+                    (Ideal.le_of_pow_le_prime hPi)).trans
+                ((is_dedekind_domain.dimension_le_one.prime_le_prime_iff_eq (Prime j).ne_zero).mp
+                    (Ideal.le_of_pow_le_prime hPj)).symm))
+
+open Classical
+
+/-- **Chinese remainder theorem** for a Dedekind domain: `R ⧸ I` factors as `Π i, R ⧸ (P i ^ e i)`,
+where `P i` ranges over the prime factors of `I` and `e i` over the multiplicities. -/
+noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I ≠ ⊥) :
+    R ⧸ I ≃+* ∀ P : (factors I).toFinset, R ⧸ (P : Ideal R) ^ (factors I).count P :=
+  IsDedekindDomain.quotientEquivPiOfProdEq _ _ _
+    (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_to_finset.mp P.Prop))
+    (fun i j hij => Subtype.coe_injective.Ne hij)
+    (calc
+      (∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R)) =
+          ∏ P in (factors I).toFinset, P ^ (factors I).count P :=
+        (factors I).toFinset.prod_coe_sort fun P => P ^ (factors I).count P
+      _ = ((factors I).map fun P => P).Prod := (Finset.prod_multiset_map_count (factors I) id).symm
+      _ = (factors I).Prod := by
+        rw [Multiset.map_id']
+      _ = I := (@associated_iff_eq (Ideal R) _ Ideal.uniqueUnits _ _).mp (factors_prod hI)
+      )
+
+@[simp]
+theorem IsDedekindDomain.quotient_equiv_pi_factors_mk {I : Ideal R} (hI : I ≠ ⊥) (x : R) :
+    IsDedekindDomain.quotientEquivPiFactors hI (Ideal.Quotient.mk I x) = fun P => Ideal.Quotient.mk _ x :=
+  rfl
+
+end DedekindDomain
+
+end ChineseRemainder
 

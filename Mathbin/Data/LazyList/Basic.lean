@@ -119,7 +119,7 @@ instance : IsLawfulTraversable LazyList := by
       
     simp [Equivₓ.map, Functor.mapConst, Traversable.traverse] at *
     rw [x_ih]
-    dsimp [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓₓ]
+    dsimp' [list_equiv_lazy_list, Equivₓ.traverse, to_list, Traversable.traverse, List.traverseₓₓ]
     simp' with functor_norm
     rfl
     
@@ -189,7 +189,7 @@ instance : IsLawfulMonad LazyList where
     apply append_nil
   bind_assoc := by
     intros
-    dsimp [(· >>= ·)]
+    dsimp' [(· >>= ·)]
     induction x <;> simp [LazyList.bind, append_bind, *]
   id_map := by
     intros

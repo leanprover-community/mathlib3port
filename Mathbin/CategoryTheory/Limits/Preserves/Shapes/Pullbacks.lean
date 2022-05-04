@@ -55,7 +55,7 @@ def isLimitMapConePullbackConeEquiv :
     (IsLimit.postcomposeHomEquiv (diagramIsoCospan.{v₂} _) _).symm.trans <|
       is_limit.equiv_iso_limit <|
         Cones.ext (Iso.refl _) <| by
-          rintro (_ | _ | _) <;> dsimp <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
+          rintro (_ | _ | _) <;> dsimp' <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
 
 /-- The property of preserving pullbacks expressed in terms of binary fans. -/
 def isLimitPullbackConeMapOfIsLimit [PreservesLimit (cospan f g) G] (l : IsLimit (PullbackCone.mk h k comm)) :
@@ -84,7 +84,7 @@ def preservesPullbackSymmetry : PreservesLimit (cospan g f) G where
     apply pullback_cone.flip_is_limit
     apply (is_limit_map_cone_pullback_cone_equiv _ _).toFun
     · apply preserves_limit.preserves with { instances := false }
-      · dsimp [walking_cospan_equiv]
+      · dsimp' [walking_cospan_equiv]
         infer_instance
         
       apply pullback_cone.flip_is_limit
@@ -142,7 +142,7 @@ def isColimitMapCoconePushoutCoconeEquiv :
     (IsColimit.precomposeHomEquiv (diagramIsoSpan.{v₂} _).symm _).symm.trans <|
       is_colimit.equiv_iso_colimit <|
         Cocones.ext (Iso.refl _) <| by
-          rintro (_ | _ | _) <;> dsimp <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
+          rintro (_ | _ | _) <;> dsimp' <;> simpa only [category.comp_id, category.id_comp, ← G.map_comp]
 
 /-- The property of preserving pushouts expressed in terms of binary cofans. -/
 def isColimitPushoutCoconeMapOfIsColimit [PreservesColimit (span f g) G] (l : IsColimit (PushoutCocone.mk h k comm)) :
@@ -171,7 +171,7 @@ def preservesPushoutSymmetry : PreservesColimit (span g f) G where
     apply pushout_cocone.flip_is_colimit
     apply (is_colimit_map_cocone_pushout_cocone_equiv _ _).toFun
     · apply preserves_colimit.preserves with { instances := false }
-      · dsimp [walking_span_equiv]
+      · dsimp' [walking_span_equiv]
         infer_instance
         
       apply pushout_cocone.flip_is_colimit

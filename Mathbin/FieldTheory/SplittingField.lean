@@ -870,10 +870,12 @@ end SplittingField
 
 variable (K L) [Algebra K L]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Splits] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
-  Splits {} : Splits (algebraMap K L) f
-  adjoin_roots {} : Algebra.adjoin K (↑(f.map (algebraMap K L)).roots.toFinset : Set L) = ⊤
+  Splits : Splits (algebraMap K L) f
+  adjoin_roots : Algebra.adjoin K (↑(f.map (algebraMap K L)).roots.toFinset : Set L) = ⊤
 
 namespace IsSplittingField
 

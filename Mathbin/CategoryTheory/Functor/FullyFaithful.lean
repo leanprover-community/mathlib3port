@@ -33,7 +33,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 In fact, we use a constructive definition, so the `full F` typeclass contains data,
 specifying a particular preimage of each `f : F.obj X ⟶ F.obj Y`.
 
-See https://stacks.math.columbia.edu/tag/001C.
+See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class Full (F : C ⥤ D) where
   preimage : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, X ⟶ Y
@@ -45,12 +45,13 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
-See https://stacks.math.columbia.edu/tag/001C.
+See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class Faithful (F : C ⥤ D) : Prop where
-  map_injective' {} : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) := by
+  map_injective' : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) := by
     run_tac
       obviously
 
@@ -171,7 +172,7 @@ natural transformation between those functors composed with a fully faithful fun
 def natTransOfCompFullyFaithful (α : F ⋙ H ⟶ G ⋙ H) : F ⟶ G where
   app := fun X => (equivOfFullyFaithful H).symm (α.app X)
   naturality' := fun X Y f => by
-    dsimp
+    dsimp'
     apply H.map_injective
     simpa using α.naturality f
 
@@ -180,7 +181,7 @@ between those functors composed with a fully faithful functor. -/
 @[simps]
 def natIsoOfCompFullyFaithful (i : F ⋙ H ≅ G ⋙ H) : F ≅ G :=
   NatIso.ofComponents (fun X => (isoEquivOfFullyFaithful H).symm (i.app X)) fun X Y f => by
-    dsimp
+    dsimp'
     apply H.map_injective
     simpa using i.hom.naturality f
 
@@ -193,7 +194,7 @@ theorem nat_iso_of_comp_fully_faithful_inv (i : F ⋙ H ≅ G ⋙ H) :
     (natIsoOfCompFullyFaithful H i).inv = natTransOfCompFullyFaithful H i.inv := by
   ext
   simp [← preimage_comp]
-  dsimp
+  dsimp'
   simp
 
 end

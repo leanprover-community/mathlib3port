@@ -41,7 +41,7 @@ theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
   · refine' ⟨g', g_eq, _⟩
     · apply le_antisymmₓ (g.mk_continuous_norm_le (norm_nonneg f) _)
       refine' f.op_norm_le_bound (norm_nonneg _) fun x => _
-      dsimp  at g_eq
+      dsimp'  at g_eq
       rw [← g_eq]
       apply g'.le_op_norm
       

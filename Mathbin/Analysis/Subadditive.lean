@@ -75,7 +75,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     let s := p / n
     let r := p % n
     have hp : p = s * n + r := by
-      rw [mul_comm, Nat.div_add_mod]
+      rw [mul_comm, Nat.div_add_modₓ]
     calc u p = u (s * n + r) := by
         rw [hp]_ ≤ s * u n + u r := h.apply_mul_add_le _ _ _ _ = s * n * (u n / n) + u r := by
         field_simp [I _ hn.bot_lt]

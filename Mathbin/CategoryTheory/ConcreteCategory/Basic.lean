@@ -39,6 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -48,7 +49,7 @@ Note that `concrete_category` potentially depends on three independent universe 
 They are specified that order, to avoid unnecessary universe annotations.
 -/
 class ConcreteCategory (C : Type u) [Category.{v} C] where
-  forget {} : C ⥤ Type w
+  forget : C ⥤ Type w
   [forget_faithful : Faithful forget]
 
 attribute [instance] concrete_category.forget_faithful

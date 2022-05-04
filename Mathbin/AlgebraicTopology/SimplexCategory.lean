@@ -147,7 +147,7 @@ def mkHom {n m : ℕ} (f : Finₓ (n + 1) →o Finₓ (m + 1)) : [n] ⟶ [m] :=
 
 theorem hom_zero_zero (f : [0] ⟶ [0]) : f = 𝟙 _ := by
   ext : 2
-  dsimp
+  dsimp'
   apply Subsingleton.elimₓ
 
 end
@@ -175,7 +175,7 @@ def σ {n} (i : Finₓ (n + 1)) : [n + 1] ⟶ [n] :=
 /-- The generic case of the first simplicial identity -/
 theorem δ_comp_δ {n} {i j : Finₓ (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.cast_succ := by
   ext k
-  dsimp [δ, Finₓ.succAbove]
+  dsimp' [δ, Finₓ.succAbove]
   simp only [OrderEmbedding.to_order_hom_coe, OrderEmbedding.coe_of_strict_mono, Function.comp_app,
     SimplexCategory.Hom.to_order_hom_mk, OrderHom.comp_coe]
   rcases i with ⟨i, _⟩
@@ -211,14 +211,14 @@ theorem δ_comp_σ_of_le {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : i �
           i)
         (ite (j.cast_succ < k) (k - 1) k) (ite (j.cast_succ < k) (k - 1) k + 1)
     by
-    dsimp [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
+    dsimp' [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
     simp' [Finₓ.predAbove] with push_cast
     convert rfl
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
   simp only [Subtype.mk_le_mk, Finₓ.cast_succ_mk] at H
-  dsimp
+  dsimp'
   simp only [if_congr, Subtype.mk_lt_mk, dif_ctx_congr]
   split_ifs
   -- Most of the goals can now be handled by `linarith`,
@@ -246,11 +246,11 @@ theorem δ_comp_σ_self {n} {i : Finₓ (n + 1)} : δ i.cast_succ ≫ σ i = �
         (ite (j < i) j (j + 1)) =
       j
     by
-    dsimp [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
+    dsimp' [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
     simpa [Finₓ.predAbove] with push_cast
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
-  dsimp
+  dsimp'
   simp only [if_congr, Subtype.mk_lt_mk]
   split_ifs <;>
     · simp at * <;> linarith
@@ -261,7 +261,7 @@ theorem δ_comp_σ_succ {n} {i : Finₓ (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n]
   ext j
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
-  dsimp [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
+  dsimp' [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
   simp' [Finₓ.predAbove] with push_cast
   split_ifs <;>
     · simp at * <;> linarith
@@ -271,7 +271,7 @@ theorem δ_comp_σ_succ {n} {i : Finₓ (n + 1)} : δ i.succ ≫ σ i = 𝟙 [n]
 theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.cast_succ < i) :
     δ i.succ ≫ σ j.cast_succ = σ j ≫ δ i := by
   ext k
-  dsimp [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
+  dsimp' [δ, σ, Finₓ.succAbove, Finₓ.predAbove]
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
@@ -295,7 +295,7 @@ theorem δ_comp_σ_of_gt {n} {i : Finₓ (n + 2)} {j : Finₓ (n + 1)} (H : j.ca
     simp only [not_ltₓ] at h
     simp only [Nat.add_succ_sub_one, add_zeroₓ]
     exfalso
-    exact lt_irreflₓ _ (lt_of_le_of_ltₓ (Nat.le_pred_of_lt (Nat.lt_of_succ_leₓ h)) h_3)
+    exact lt_irreflₓ _ (lt_of_le_of_ltₓ (Nat.le_pred_of_ltₓ (Nat.lt_of_succ_leₓ h)) h_3)
     
   pick_goal 4
   · simp only [Subtype.mk_lt_mk] at h_1
@@ -312,7 +312,7 @@ attribute [local simp] Finₓ.pred_mk
 /-- The fifth simplicial identity -/
 theorem σ_comp_σ {n} {i j : Finₓ (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫ σ j = σ j.succ ≫ σ i := by
   ext k
-  dsimp [σ, Finₓ.predAbove]
+  dsimp' [σ, Finₓ.predAbove]
   rcases i with ⟨i, _⟩
   rcases j with ⟨j, _⟩
   rcases k with ⟨k, _⟩
@@ -376,7 +376,7 @@ instance : Full skeletalFunctor.{v} where
   preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (ULift.up i)).down, fun i j h => f.Monotone h⟩
   witness' := by
     intro m n f
-    dsimp  at *
+    dsimp'  at *
     ext1 ⟨i⟩
     ext1
     ext1
@@ -473,7 +473,7 @@ theorem mono_iff_injective {n m : SimplexCategory} {f : n ⟶ m} : Mono f ↔ Fu
   constructor
   · intro m x y h
     have H : const n x ≫ f = const n y ≫ f := by
-      dsimp
+      dsimp'
       rw [h]
     change (n.const x).toOrderHom 0 = (n.const y).toOrderHom 0
     rw [cancel_mono f] at H
@@ -499,7 +499,7 @@ theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} : Epi f ↔ Fun
       hom.mk
         ⟨fun u => if u ≤ x then 0 else 1, by
           intro a b h
-          dsimp only
+          dsimp' only
           split_ifs with h1 h2 h3
           any_goals {
           }
@@ -511,7 +511,7 @@ theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} : Epi f ↔ Fun
       hom.mk
         ⟨fun u => if u < x then 0 else 1, by
           intro a b h
-          dsimp only
+          dsimp' only
           split_ifs with h1 h2 h3
           any_goals {
           }
@@ -521,7 +521,7 @@ theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} : Epi f ↔ Fun
             ⟩
     -- The two auxiliary functions equalize f
     have f_comp_chi_i : f ≫ chi_1 = f ≫ chi_2 := by
-      dsimp
+      dsimp'
       ext
       simp [le_iff_lt_or_eqₓ, h_ab x_1]
     -- We now just have to show the two auxiliary functions are not equal.
@@ -591,7 +591,7 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
                   · by_contra h''
                     have eq := fun i => congr_hom (iso.inv_hom_id (as_iso ((forget _).map f))) i
                     have ineq := f.to_order_hom.monotone' (le_of_not_geₓ h'')
-                    dsimp  at ineq
+                    dsimp'  at ineq
                     erw [Eq, Eq] at ineq
                     exact not_le.mpr h' ineq
                     
@@ -747,7 +747,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
             simpa only [Finₓ.cast_succ_cast_pred h] using h')]
       erw [Finₓ.succ_above_above i _, Finₓ.succ_pred]
       simpa only [Finₓ.le_iff_coe_le_coe, Finₓ.coe_cast_succ, Finₓ.coe_pred] using
-        Nat.le_pred_of_lt (fin.lt_iff_coe_lt_coe.mp h')
+        Nat.le_pred_of_ltₓ (fin.lt_iff_coe_lt_coe.mp h')
       
     
   · obtain rfl := le_antisymmₓ (Finₓ.le_last i) (not_lt.mp h)

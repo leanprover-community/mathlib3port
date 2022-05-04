@@ -172,7 +172,7 @@ def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
         cases X
         cases Y
         induction f
-        dsimp
+        dsimp'
         simp only [category.comp_id, category.id_comp]
         apply Quot.sound
         apply quotient.comp_closure.of
@@ -184,7 +184,7 @@ def quotientPathsEquiv : Quotient (PathsHomRel C) ≌ C where
   functor_unit_iso_comp' := by
     intros
     cases X
-    dsimp
+    dsimp'
     simp
     rfl
 

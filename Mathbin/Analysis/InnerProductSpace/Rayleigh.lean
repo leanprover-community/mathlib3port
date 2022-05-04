@@ -203,7 +203,7 @@ theorem has_eigenvector_of_is_max_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
   rw [T.supr_rayleigh_eq_supr_rayleigh_sphere hx₀']
   refine' IsMaxOn.supr_eq hx₀'' _
   intro x hx
-  dsimp
+  dsimp'
   have : ∥x∥ = ∥x₀∥ := by
     simpa using hx
   rw [this]
@@ -223,7 +223,7 @@ theorem has_eigenvector_of_is_min_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E))
   rw [T.infi_rayleigh_eq_infi_rayleigh_sphere hx₀']
   refine' IsMinOn.infi_eq hx₀'' _
   intro x hx
-  dsimp
+  dsimp'
   have : ∥x∥ = ∥x₀∥ := by
     simpa using hx
   rw [this]

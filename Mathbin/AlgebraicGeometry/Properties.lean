@@ -106,9 +106,9 @@ theorem is_reduced_of_open_immersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImm
 instance {R : CommRingₓₓ} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) := by
   apply is_reduced_of_stalk_is_reduced with { instances := false }
   intro x
-  dsimp
+  dsimp'
   have : _root_.is_reduced (CommRingₓₓ.of <| Localization.AtPrime (PrimeSpectrum.asIdeal x)) := by
-    dsimp
+    dsimp'
     infer_instance
   exact
     is_reduced_of_injective (structure_sheaf.stalk_iso R x).Hom
@@ -322,7 +322,7 @@ instance {R : CommRingₓₓ} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| 
   apply is_integral_of_is_irreducible_is_reduced with { instances := false }
   · infer_instance
     
-  · dsimp [Spec.Top_obj]
+  · dsimp' [Spec.Top_obj]
     infer_instance
     
 

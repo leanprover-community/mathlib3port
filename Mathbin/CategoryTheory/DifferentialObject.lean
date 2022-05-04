@@ -121,9 +121,9 @@ theorem zero_f (P Q : DifferentialObject C) : (0 : P ⟶ Q).f = 0 :=
 @[simps]
 def isoApp {X Y : DifferentialObject C} (f : X ≅ Y) : X.x ≅ Y.x :=
   ⟨f.Hom.f, f.inv.f, by
-    dsimp
+    dsimp'
     rw [← comp_f, iso.hom_inv_id, id_f], by
-    dsimp
+    dsimp'
     rw [← comp_f, iso.inv_hom_id, id_f]⟩
 
 @[simp]
@@ -145,15 +145,15 @@ def mkIso {X Y : DifferentialObject C} (f : X.x ≅ Y.x) (hf : X.d ≫ f.Hom⟦1
   Hom := ⟨f.Hom, hf⟩
   inv :=
     ⟨f.inv, by
-      dsimp
+      dsimp'
       rw [← functor.map_iso_inv, iso.comp_inv_eq, category.assoc, iso.eq_inv_comp, functor.map_iso_hom, hf]⟩
   hom_inv_id' := by
     ext1
-    dsimp
+    dsimp'
     exact f.hom_inv_id
   inv_hom_id' := by
     ext1
-    dsimp
+    dsimp'
     exact f.inv_hom_id
 
 end DifferentialObject
@@ -183,7 +183,7 @@ def mapDifferentialObject (F : C ⥤ D) (η : (shiftFunctor C (1 : ℤ)).comp F 
   map := fun X Y f =>
     { f := F.map f.f,
       comm' := by
-        dsimp
+        dsimp'
         slice_lhs 2 3 => rw [← functor.comp_map F (shift_functor D (1 : ℤ)), ← η.naturality f.f]
         slice_lhs 1 2 => rw [functor.comp_map, ← F.map_comp, f.comm, F.map_comp]
         rw [category.assoc] }
@@ -249,17 +249,17 @@ def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
   map := fun X Y f =>
     { f := f.f⟦n⟧',
       comm' := by
-        dsimp
+        dsimp'
         rw [category.assoc, shift_comm_hom_comp, ← functor.map_comp_assoc, f.comm, functor.map_comp_assoc] }
   map_id' := by
     intro X
     ext1
-    dsimp
+    dsimp'
     rw [Functor.map_id]
   map_comp' := by
     intro X Y Z f g
     ext1
-    dsimp
+    dsimp'
     rw [functor.map_comp]
 
 attribute [local reducible] Discrete.addMonoidal shift_comm
@@ -268,7 +268,7 @@ attribute [local reducible] Discrete.addMonoidal shift_comm
 @[simps]
 def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m ⋙ shiftFunctor C n := by
   refine' nat_iso.of_components (fun X => mk_iso (shift_add X.x _ _) _) _
-  · dsimp
+  · dsimp'
     simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app, category.assoc,
       μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc,
       μ_inv_naturalityᵣ_assoc]
@@ -276,7 +276,7 @@ def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m �
     
   · intro X Y f
     ext
-    dsimp
+    dsimp'
     exact nat_trans.naturality _ _
     
 
@@ -290,14 +290,14 @@ attribute [local instance] endofunctor_monoidal_category
 @[simps]
 def shiftε : 𝟭 (DifferentialObject C) ≅ shiftFunctor C 0 := by
   refine' nat_iso.of_components (fun X => mk_iso ((shift_monoidal_functor C ℤ).εIso.app X.x) _) _
-  · dsimp
+  · dsimp'
     simp
-    dsimp
+    dsimp'
     simp
     
   · introv
     ext
-    dsimp
+    dsimp'
     simp
     
 

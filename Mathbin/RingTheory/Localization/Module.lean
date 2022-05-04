@@ -48,7 +48,7 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
   specialize hli s (fun i => if hi : i ∈ s then g' i hi else 0) _ i hi
   · rw [← @smul_zero _ M _ _ _ (a : R), ← hg, Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i hi => _
-    dsimp only
+    dsimp' only
     rw [dif_pos hi, ← IsScalarTower.algebra_map_smul Rₛ, hg' i hi, smul_assoc]
     infer_instance
     

@@ -42,7 +42,7 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j))
   refine'
     cones.ext (iso.refl _) fun j => by
-      dsimp
+      dsimp'
       simp
 
 /-- The property of preserving products expressed in terms of fans. -/
@@ -103,7 +103,7 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
   refine' discrete.nat_iso fun j => iso.refl (G.obj (f j))
   refine'
     cocones.ext (iso.refl _) fun j => by
-      dsimp
+      dsimp'
       simp
 
 /-- The property of preserving coproducts expressed in terms of cofans. -/

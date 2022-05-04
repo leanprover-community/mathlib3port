@@ -1077,7 +1077,7 @@ theorem tangent_map_chart {p q : TangentBundle I M} (h : q.1 ∈ (chartAt H p.1)
     tangentMap I I (chartAt H p.1) q =
       (Equivₓ.sigmaEquivProd _ _).symm ((chartAt (ModelProd H E) p : TangentBundle I M → ModelProd H E) q) :=
   by
-  dsimp [tangentMap]
+  dsimp' [tangentMap]
   rw [MdifferentiableAt.mfderiv]
   · rfl
     
@@ -1091,7 +1091,7 @@ theorem tangent_map_chart_symm {p : TangentBundle I M} {q : TangentBundle I H} (
     tangentMap I I (chartAt H p.1).symm q =
       ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I M) ((Equivₓ.sigmaEquivProd H E) q) :=
   by
-  dsimp only [tangentMap]
+  dsimp' only [tangentMap]
   rw [MdifferentiableAt.mfderiv (mdifferentiable_at_atlas_symm _ (chart_mem_atlas _ _) h)]
   -- a trivial instance is needed after the rewrite, handle it right now.
   rotate_left
@@ -1290,7 +1290,7 @@ theorem UniqueMdiffOn.unique_mdiff_on_preimage [SmoothManifoldWithCorners I' M']
     UniqueDiffWithinAt 𝕜 (G '' (F.symm ⁻¹' (s ∩ (e.source ∩ e ⁻¹' (extChartAt I' x).Source)) ∩ F.target)) (G (F z)) :=
     D₂.unique_diff_within_at B C
   have : G (F z) = (extChartAt I' x) x := by
-    dsimp [G, F]
+    dsimp' [G, F]
     simp' only [hx.1] with mfld_simps
   rw [this] at key
   apply key.mono

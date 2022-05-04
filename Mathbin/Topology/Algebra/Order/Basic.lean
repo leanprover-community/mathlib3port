@@ -621,6 +621,46 @@ theorem Dense.exists_between [DenselyOrdered α] {s : Set α} (hs : Dense s) {x 
     ∃ z ∈ s, z ∈ Ioo x y :=
   hs.exists_mem_open is_open_Ioo (nonempty_Ioo.2 h)
 
+variable [Nonempty α] [TopologicalSpace β]
+
+/-- A compact set is bounded below -/
+theorem IsCompact.bdd_below {s : Set α} (hs : IsCompact s) : BddBelow s := by
+  by_contra H
+  rcases hs.elim_finite_subcover_image (fun _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
+  · refine' H (ft.bdd_below.imp fun C hC y hy => _)
+    rcases mem_Union₂.1 (ht hy) with ⟨x, hx, xy⟩
+    exact le_transₓ (hC hx) (le_of_ltₓ xy)
+    
+  · refine' fun x hx => mem_Union₂.2 (not_imp_comm.1 _ H)
+    exact fun h => ⟨x, fun y hy => le_of_not_ltₓ (h.imp fun ys => ⟨_, hy, ys⟩)⟩
+    
+
+/-- A compact set is bounded above -/
+theorem IsCompact.bdd_above {s : Set α} (hs : IsCompact s) : BddAbove s :=
+  @IsCompact.bdd_below (OrderDual α) _ _ _ _ _ hs
+
+/-- A continuous function is bounded below on a compact set. -/
+theorem IsCompact.bdd_below_image {f : β → α} {K : Set β} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddBelow (f '' K) :=
+  (hK.image_of_continuous_on hf).BddBelow
+
+/-- A continuous function is bounded above on a compact set. -/
+theorem IsCompact.bdd_above_image {f : β → α} {K : Set β} (hK : IsCompact K) (hf : ContinuousOn f K) :
+    BddAbove (f '' K) :=
+  @IsCompact.bdd_below_image (OrderDual α) _ _ _ _ _ _ _ _ hK hf
+
+/-- A continuous function with compact support is bounded below. -/
+@[to_additive " A continuous function with compact support is bounded below. "]
+theorem Continuous.bdd_below_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : BddBelow (Range f) :=
+  (h.is_compact_range hf).BddBelow
+
+/-- A continuous function with compact support is bounded above. -/
+@[to_additive " A continuous function with compact support is bounded above. "]
+theorem Continuous.bdd_above_range_of_has_compact_mul_support [One α] {f : β → α} (hf : Continuous f)
+    (h : HasCompactMulSupport f) : BddAbove (Range f) :=
+  @Continuous.bdd_below_range_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ _ hf h
+
 end LinearOrderₓ
 
 end OrderClosedTopology
@@ -873,8 +913,8 @@ theorem nhds_bot_order [TopologicalSpace α] [PartialOrderₓ α] [OrderBot α] 
     𝓝 (⊥ : α) = ⨅ (l) (h₂ : ⊥ < l), 𝓟 (Iio l) := by
   simp [nhds_eq_order (⊥ : α)]
 
-theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSup α] [OrderTop α] [IsTotal α LE.le] [OrderTopology α]
-    [Nontrivial α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) fun a : α => Ioi a :=
+theorem nhds_top_basis [TopologicalSpace α] [LinearOrderₓ α] [OrderTop α] [OrderTopology α] [Nontrivial α] :
+    (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) fun a : α => Ioi a :=
   ⟨by
     simp only [nhds_top_order]
     refine' @Filter.mem_binfi_of_directed α α (fun a => 𝓟 (Ioi a)) (fun a => a < ⊤) _ _
@@ -887,21 +927,21 @@ theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSup α] [OrderTop α] [
       exact ⟨a, lt_top_iff_ne_top.mpr ha⟩
       ⟩
 
-theorem nhds_bot_basis [TopologicalSpace α] [SemilatticeInf α] [OrderBot α] [IsTotal α LE.le] [OrderTopology α]
-    [Nontrivial α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) fun a : α => Iio a :=
-  @nhds_top_basis (OrderDual α) _ _ _ _ _ _
+theorem nhds_bot_basis [TopologicalSpace α] [LinearOrderₓ α] [OrderBot α] [OrderTopology α] [Nontrivial α] :
+    (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) fun a : α => Iio a :=
+  @nhds_top_basis (OrderDual α) _ _ _ _ _
 
-theorem nhds_top_basis_Ici [TopologicalSpace α] [SemilatticeSup α] [OrderTop α] [IsTotal α LE.le] [OrderTopology α]
-    [Nontrivial α] [DenselyOrdered α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) Ici :=
+theorem nhds_top_basis_Ici [TopologicalSpace α] [LinearOrderₓ α] [OrderTop α] [OrderTopology α] [Nontrivial α]
+    [DenselyOrdered α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) Ici :=
   nhds_top_basis.to_has_basis
     (fun a ha =>
       let ⟨b, hab, hb⟩ := exists_between ha
       ⟨b, hb, Ici_subset_Ioi.mpr hab⟩)
     fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩
 
-theorem nhds_bot_basis_Iic [TopologicalSpace α] [SemilatticeInf α] [OrderBot α] [IsTotal α LE.le] [OrderTopology α]
-    [Nontrivial α] [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
-  @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _ _
+theorem nhds_bot_basis_Iic [TopologicalSpace α] [LinearOrderₓ α] [OrderBot α] [OrderTopology α] [Nontrivial α]
+    [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
+  @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _
 
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrderₓ β] [OrderTop β] [OrderTopology β] {l : Filter α}
     {f g : α → β} (hf : Tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : Tendsto g l (𝓝 ⊤) := by
@@ -2187,36 +2227,6 @@ theorem exists_seq_tendsto_Inf {α : Type _} [ConditionallyCompleteLinearOrder �
     [FirstCountableTopology α] {S : Set α} (hS : S.Nonempty) (hS' : BddBelow S) :
     ∃ u : ℕ → α, Antitone u ∧ Tendsto u atTop (𝓝 (inf S)) ∧ ∀ n, u n ∈ S :=
   @exists_seq_tendsto_Sup (OrderDual α) _ _ _ _ S hS hS'
-
-/-- A compact set is bounded below -/
-theorem IsCompact.bdd_below {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] [Nonempty α]
-    {s : Set α} (hs : IsCompact s) : BddBelow s := by
-  by_contra H
-  rcases hs.elim_finite_subcover_image (fun _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
-  · refine' H (ft.bdd_below.imp fun C hC y hy => _)
-    rcases mem_Union₂.1 (ht hy) with ⟨x, hx, xy⟩
-    exact le_transₓ (hC hx) (le_of_ltₓ xy)
-    
-  · refine' fun x hx => mem_Union₂.2 (not_imp_comm.1 _ H)
-    exact fun h => ⟨x, fun y hy => le_of_not_ltₓ (h.imp fun ys => ⟨_, hy, ys⟩)⟩
-    
-
-/-- A compact set is bounded above -/
-theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] :
-    ∀ [Nonempty α] {s : Set α}, IsCompact s → BddAbove s :=
-  @IsCompact.bdd_below (OrderDual α) _ _ _
-
-/-- A continuous function is bounded below on a compact set. -/
-theorem IsCompact.bdd_below_image {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
-    [Nonempty α] [TopologicalSpace γ] {f : γ → α} {K : Set γ} (hK : IsCompact K) (hf : ContinuousOn f K) :
-    BddBelow (f '' K) :=
-  (hK.image_of_continuous_on hf).BddBelow
-
-/-- A continuous function is bounded above on a compact set. -/
-theorem IsCompact.bdd_above_image {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
-    [Nonempty α] [TopologicalSpace γ] {f : γ → α} {K : Set γ} (hK : IsCompact K) (hf : ContinuousOn f K) :
-    BddAbove (f '' K) :=
-  @IsCompact.bdd_below_image _ (OrderDual α) _ _ _ _ _ _ _ hK hf
 
 end OrderTopology
 

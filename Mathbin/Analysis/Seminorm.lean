@@ -404,7 +404,7 @@ noncomputable instance : HasInf (Seminorm 𝕜 E) where
       triangle' := fun x y => by
         refine' le_cinfi_add_cinfi fun u v => _
         apply cinfi_le_of_le (bdd_below_range_add _ _ _) (v + u)
-        dsimp only
+        dsimp' only
         convert add_le_add (p.triangle v u) (q.triangle (y - v) (x - u)) using 1
         · rw
             [show x + y - (v + u) = y - v + (x - u) by

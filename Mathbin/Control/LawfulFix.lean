@@ -51,7 +51,7 @@ variable (f : (∀ a, Part <| β a) →o ∀ a, Part <| β a)
 
 theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
   induction i
-  dsimp [approx]
+  dsimp' [approx]
   apply @bot_le _ _ _ (f ⊥)
   intro
   apply f.monotone
@@ -154,7 +154,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
       apply approx_mono' f
       
     apply' le_ωSup_of_le i.succ
-    dsimp [approx]
+    dsimp' [approx]
     rfl'
     
   · apply ωSup_le _ _ _
@@ -169,7 +169,7 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := 
   simp only [fix.approx_chain, OrderHom.coe_fun_mk]
   intro i
   induction i
-  dsimp [fix.approx]
+  dsimp' [fix.approx]
   apply' bot_le
   trans' f X
   apply f.monotone i_ih
@@ -208,7 +208,7 @@ def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Par
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
     ext ⟨⟩ : 1
-    dsimp [OmegaCompletePartialOrder.ωSup]
+    dsimp' [OmegaCompletePartialOrder.ωSup]
     erw [hc, chain.map_comp]
     rfl
 
@@ -250,13 +250,13 @@ open OmegaCompletePartialOrder.Chain
 
 theorem continuous_curry : continuous <| monotoneCurry α β γ := fun c => by
   ext x y
-  dsimp [curry, ωSup]
+  dsimp' [curry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
 theorem continuous_uncurry : continuous <| monotoneUncurry α β γ := fun c => by
   ext x y
-  dsimp [uncurry, ωSup]
+  dsimp' [uncurry, ωSup]
   rw [map_comp, map_comp]
   rfl
 
@@ -282,7 +282,7 @@ end Curry
 
 instance Pi.lawfulFix' [LawfulFix <| ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) where
   fix_eq := fun f hc => by
-    dsimp [fix]
+    dsimp' [fix]
     conv => lhs erw [LawfulFix.fix_eq (uncurry_curry_continuous hc)]
     rfl
 

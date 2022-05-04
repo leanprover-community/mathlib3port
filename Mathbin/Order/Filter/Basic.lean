@@ -2090,7 +2090,7 @@ theorem comap_equiv_symm (e : α ≃ β) (f : Filter α) : comap e.symm f = map 
   (map_eq_comap_of_inverse e.self_comp_symm e.symm_comp_self).symm
 
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
-  map_eq_comap_of_inverse Prod.swap_swap_eq Prod.swap_swap_eq
+  map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
 
 theorem le_map {f : Filter α} {m : α → β} {g : Filter β} (h : ∀, ∀ s ∈ f, ∀, m '' s ∈ g) : g ≤ f.map m := fun s hs =>
   mem_of_superset (h _ hs) <| image_preimage_subset _ _

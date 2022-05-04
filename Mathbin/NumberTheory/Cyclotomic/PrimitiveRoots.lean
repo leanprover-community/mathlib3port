@@ -309,7 +309,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
     (Term.explicitBinder
      "("
      [`hζ]
-     [":" (Term.app `IsPrimitiveRoot [`ζ (coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))))])]
+     [":" (Term.app `IsPrimitiveRoot [`ζ (coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (num "1"))))])]
      []
      ")")
     (Term.instBinder
@@ -320,9 +320,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
     (Term.instBinder
      "["
      []
-     (Term.app
-      `IsCyclotomicExtension
-      [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (numLit "1")))] "}") `K `L])
+     (Term.app `IsCyclotomicExtension [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (num "1")))] "}") `K `L])
      "]")
     (Term.explicitBinder
      "("
@@ -334,8 +332,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
          `cyclotomic
          [(Term.paren
            "("
-           [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))))
-            [(Term.typeAscription ":" (termℕ "ℕ"))]]
+           [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (num "1")))) [(Term.typeAscription ":" (termℕ "ℕ"))]]
            ")")
           `K])])]
      []
@@ -350,7 +347,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
          `cyclotomic
          [(Term.paren
            "("
-           [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))))
+           [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))
             [(Term.typeAscription ":" (termℕ "ℕ"))]]
            ")")
           `K])])]
@@ -360,7 +357,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
     (Term.explicitBinder
      "("
      [`htwo]
-     [":" («term_≠_» («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))) "≠" (numLit "2"))]
+     [":" («term_≠_» («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))) "≠" (num "2"))]
      []
      ")")]
    (Term.typeSpec
@@ -372,7 +369,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
        («term_-_»
         («term_^_» `ζ "^" («term_^_» (Term.paren "(" [`p [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "^" `s))
         "-"
-        (numLit "1"))])
+        (num "1"))])
      "="
      («term_^_» `p "^" («term_^_» (Term.paren "(" [`p [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "^" `s)))))
   (Command.declValSimple
@@ -395,7 +392,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 "("
                 [(Term.paren
                   "("
-                  [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))))
+                  [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (num "1"))))
                    [(Term.typeAscription ":" (termℕ "ℕ"))]]
                   ")")
                  [(Term.typeAscription ":" `K)]]
@@ -460,7 +457,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 "("
                 [(Term.paren
                   "("
-                  [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))))
+                  [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))
                    [(Term.typeAscription ":" (termℕ "ℕ"))]]
                   ")")
                  [(Term.typeAscription ":" `K)]]
@@ -523,7 +520,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
            («term_-_»
             («term_^_» `ζ "^" («term_^_» (Term.paren "(" [`p [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "^" `s))
             "-"
-            (numLit "1")))))
+            (num "1")))))
         [])
        (group
         (Tactic.tacticLet_
@@ -537,7 +534,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `K
               "⟮"
-              (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
               "⟯"))]
            ":="
            (Term.app `IntermediateField.AdjoinSimple.gen [`K `η]))))
@@ -552,7 +549,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              ":"
              (Term.app
               `IsPrimitiveRoot
-              [(«term_+_» `η "+" (numLit "1")) («term_^_» `p "^" («term_-_» («term_+_» `k "+" (numLit "1")) "-" `s))]))]
+              [(«term_+_» `η "+" (num "1")) («term_^_» `p "^" («term_-_» («term_+_» `k "+" (num "1")) "-" `s))]))]
            ":="
            (Term.byTactic
             "by"
@@ -564,7 +561,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                  "refine'"
                  (Term.app
                   `IsPrimitiveRoot.pow
-                  [(Term.proj («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))) "." `Pos) `hζ (Term.hole "_")]))
+                  [(Term.proj («term_^_» `p "^" («term_+_» `k "+" (num "1"))) "." `Pos) `hζ (Term.hole "_")]))
                 [])
                (group
                 (Tactic.rwSeq
@@ -595,12 +592,12 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              ":"
              (Term.app
               `IsCyclotomicExtension
-              [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1")))] "}")
+              [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1")))] "}")
                `K
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                 "⟯")]))]
            ":="
            (Term.byTactic
@@ -614,13 +611,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                   []
                   (Term.app
                    `IsCyclotomicExtension
-                   [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1")))] "}")
+                   [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1")))] "}")
                     `K
                     (Term.proj
                      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `K
                       "⟮"
-                      (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                       "⟯")
                      "."
                      `toSubalgebra)])
@@ -641,7 +638,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                                `K
                                "⟮"
-                               (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                                "⟯")
                               "."
                               `toSubalgebra)
@@ -650,7 +647,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                                `K
                                "⟮"
-                               (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                                "⟯")
                               "."
                               `toSubalgebra)))]
@@ -675,7 +672,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                                      (Term.hole "_")
                                      (Term.app
                                       `IsCyclotomicExtension.integral
-                                      [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (numLit "1")))] "}")
+                                      [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (num "1")))] "}")
                                        `K
                                        `L
                                        (Term.hole "_")])]))]
@@ -754,10 +751,10 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                                  (group
                                   (Tactic.nthRw
                                    "nth_rw"
-                                   (numLit "0")
+                                   (num "0")
                                    (Tactic.rwRuleSeq
                                     "["
-                                    [(Tactic.rwRule ["←"] (Term.app `add_sub_cancel [`η (numLit "1")]))]
+                                    [(Tactic.rwRule ["←"] (Term.app `add_sub_cancel [`η (num "1")]))]
                                     "]")
                                    [])
                                   [])
@@ -795,7 +792,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                       (Term.hole "_")
                       (Term.app
                        `IsCyclotomicExtension.integral
-                       [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (numLit "1")))] "}")
+                       [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (num "1")))] "}")
                         `K
                         `L
                         (Term.hole "_")])]))]
@@ -812,8 +809,8 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                      ":"
                      (Term.app
                       `IsPrimitiveRoot
-                      [(«term_+_» `η "+" (numLit "1"))
-                       (coeNotation "↑" («term_^_» `p "^" («term_-_» («term_+_» `k "+" (numLit "1")) "-" `s)))]))]
+                      [(«term_+_» `η "+" (num "1"))
+                       (coeNotation "↑" («term_^_» `p "^" («term_-_» («term_+_» `k "+" (num "1")) "-" `s)))]))]
                    ":="
                    (Term.byTactic
                     "by"
@@ -844,8 +841,8 @@ attribute [local instance] IsCyclotomicExtension.is_galois
            ":"
            (Term.app
             `IsPrimitiveRoot
-            [(«term_+_» `η₁ "+" (numLit "1"))
-             (coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))))]))])
+            [(«term_+_» `η₁ "+" (num "1"))
+             (coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))]))])
         [])
        (group
         («tactic·.__;_»
@@ -932,7 +929,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `K
                  "⟮"
-                 (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                  "⟯")
                 `L]))))
            [])
@@ -951,7 +948,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `K
                   "⟮"
-                  (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                   "⟯")
                  `hirr₁]))
               ","
@@ -965,15 +962,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
               ","
               (Tactic.rwRule [] (Term.app `Nat.totient_prime_pow [`hpri.out `k.succ_pos]))
               ","
-              (Tactic.rwRule
-               []
-               (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))]))
+              (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (num "1"))]))
               ","
               (Tactic.rwRule [] `mul_assoc)
               ","
               (Tactic.rwRule
                []
-               (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))]))]
+               (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))]))]
              "]")
             [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
            [])
@@ -999,9 +994,9 @@ attribute [local instance] IsCyclotomicExtension.is_galois
               [(Term.typeSpec
                 ":"
                 («term_=_»
-                 («term_-_» `k.succ "-" (numLit "1"))
+                 («term_-_» `k.succ "-" (num "1"))
                  "="
-                 («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s)))]
+                 («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s)))]
               ":="
               (Term.byTactic
                "by"
@@ -1041,14 +1036,8 @@ attribute [local instance] IsCyclotomicExtension.is_galois
    [])
   []
   []))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declaration', expected 'Lean.Parser.Command.declaration.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.abbrev'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.def'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.theorem', expected 'Lean.Parser.Command.theorem.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Command.declValSimple', expected 'Lean.Parser.Command.declValSimple.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.byTactic
    "by"
@@ -1068,7 +1057,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                "("
                [(Term.paren
                  "("
-                 [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))))
+                 [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (num "1"))))
                   [(Term.typeAscription ":" (termℕ "ℕ"))]]
                  ")")
                 [(Term.typeAscription ":" `K)]]
@@ -1133,7 +1122,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                "("
                [(Term.paren
                  "("
-                 [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))))
+                 [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))
                   [(Term.typeAscription ":" (termℕ "ℕ"))]]
                  ")")
                 [(Term.typeAscription ":" `K)]]
@@ -1196,7 +1185,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           («term_-_»
            («term_^_» `ζ "^" («term_^_» (Term.paren "(" [`p [(Term.typeAscription ":" (termℕ "ℕ"))]] ")") "^" `s))
            "-"
-           (numLit "1")))))
+           (num "1")))))
        [])
       (group
        (Tactic.tacticLet_
@@ -1210,7 +1199,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
              "⟯"))]
           ":="
           (Term.app `IntermediateField.AdjoinSimple.gen [`K `η]))))
@@ -1225,7 +1214,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
             ":"
             (Term.app
              `IsPrimitiveRoot
-             [(«term_+_» `η "+" (numLit "1")) («term_^_» `p "^" («term_-_» («term_+_» `k "+" (numLit "1")) "-" `s))]))]
+             [(«term_+_» `η "+" (num "1")) («term_^_» `p "^" («term_-_» («term_+_» `k "+" (num "1")) "-" `s))]))]
           ":="
           (Term.byTactic
            "by"
@@ -1237,7 +1226,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 "refine'"
                 (Term.app
                  `IsPrimitiveRoot.pow
-                 [(Term.proj («term_^_» `p "^" («term_+_» `k "+" (numLit "1"))) "." `Pos) `hζ (Term.hole "_")]))
+                 [(Term.proj («term_^_» `p "^" («term_+_» `k "+" (num "1"))) "." `Pos) `hζ (Term.hole "_")]))
                [])
               (group
                (Tactic.rwSeq
@@ -1268,12 +1257,12 @@ attribute [local instance] IsCyclotomicExtension.is_galois
             ":"
             (Term.app
              `IsCyclotomicExtension
-             [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1")))] "}")
+             [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1")))] "}")
               `K
               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                `K
                "⟮"
-               (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                "⟯")]))]
           ":="
           (Term.byTactic
@@ -1287,13 +1276,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                  []
                  (Term.app
                   `IsCyclotomicExtension
-                  [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1")))] "}")
+                  [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1")))] "}")
                    `K
                    (Term.proj
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `K
                      "⟮"
-                     (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                      "⟯")
                     "."
                     `toSubalgebra)])
@@ -1314,7 +1303,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                               `K
                               "⟮"
-                              (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                               "⟯")
                              "."
                              `toSubalgebra)
@@ -1323,7 +1312,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                               `K
                               "⟮"
-                              (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                               "⟯")
                              "."
                              `toSubalgebra)))]
@@ -1348,7 +1337,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                                     (Term.hole "_")
                                     (Term.app
                                      `IsCyclotomicExtension.integral
-                                     [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (numLit "1")))] "}")
+                                     [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (num "1")))] "}")
                                       `K
                                       `L
                                       (Term.hole "_")])]))]
@@ -1427,10 +1416,10 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                                 (group
                                  (Tactic.nthRw
                                   "nth_rw"
-                                  (numLit "0")
+                                  (num "0")
                                   (Tactic.rwRuleSeq
                                    "["
-                                   [(Tactic.rwRule ["←"] (Term.app `add_sub_cancel [`η (numLit "1")]))]
+                                   [(Tactic.rwRule ["←"] (Term.app `add_sub_cancel [`η (num "1")]))]
                                    "]")
                                   [])
                                  [])
@@ -1468,7 +1457,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                      (Term.hole "_")
                      (Term.app
                       `IsCyclotomicExtension.integral
-                      [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (numLit "1")))] "}")
+                      [(Set.«term{_}» "{" [(«term_^_» `p "^" («term_+_» `k "+" (num "1")))] "}")
                        `K
                        `L
                        (Term.hole "_")])]))]
@@ -1485,8 +1474,8 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                     ":"
                     (Term.app
                      `IsPrimitiveRoot
-                     [(«term_+_» `η "+" (numLit "1"))
-                      (coeNotation "↑" («term_^_» `p "^" («term_-_» («term_+_» `k "+" (numLit "1")) "-" `s)))]))]
+                     [(«term_+_» `η "+" (num "1"))
+                      (coeNotation "↑" («term_^_» `p "^" («term_-_» («term_+_» `k "+" (num "1")) "-" `s)))]))]
                   ":="
                   (Term.byTactic
                    "by"
@@ -1517,8 +1506,8 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           ":"
           (Term.app
            `IsPrimitiveRoot
-           [(«term_+_» `η₁ "+" (numLit "1"))
-            (coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (numLit "1"))))]))])
+           [(«term_+_» `η₁ "+" (num "1"))
+            (coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))]))])
        [])
       (group
        («tactic·.__;_»
@@ -1605,7 +1594,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                 "⟯")
                `L]))))
           [])
@@ -1624,7 +1613,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `K
                  "⟮"
-                 (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
                  "⟯")
                 `hirr₁]))
              ","
@@ -1638,13 +1627,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              ","
              (Tactic.rwRule [] (Term.app `Nat.totient_prime_pow [`hpri.out `k.succ_pos]))
              ","
-             (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))]))
+             (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (num "1"))]))
              ","
              (Tactic.rwRule [] `mul_assoc)
              ","
              (Tactic.rwRule
               []
-              (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))]))]
+              (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))]))]
             "]")
            [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
           [])
@@ -1670,9 +1659,9 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              [(Term.typeSpec
                ":"
                («term_=_»
-                («term_-_» `k.succ "-" (numLit "1"))
+                («term_-_» `k.succ "-" (num "1"))
                 "="
-                («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s)))]
+                («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s)))]
              ":="
              (Term.byTactic
               "by"
@@ -1709,29 +1698,16 @@ attribute [local instance] IsCyclotomicExtension.is_galois
         "all_goals"
         (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticInfer_instance "infer_instance") [])])))
        [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Tactic.allGoals
    "all_goals"
    (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.tacticInfer_instance "infer_instance") [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.allGoals', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Tactic.tacticInfer_instance "infer_instance")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticInfer_instance', expected 'antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   («tactic·.__;_»
    "·"
@@ -1798,7 +1774,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
            `K
            "⟮"
-           (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+           (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
            "⟯")
           `L]))))
      [])
@@ -1817,7 +1793,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `K
             "⟮"
-            (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
             "⟯")
            `hirr₁]))
         ","
@@ -1829,13 +1805,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
         ","
         (Tactic.rwRule [] (Term.app `Nat.totient_prime_pow [`hpri.out `k.succ_pos]))
         ","
-        (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))]))
+        (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (num "1"))]))
         ","
         (Tactic.rwRule [] `mul_assoc)
         ","
         (Tactic.rwRule
          []
-         (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))]))]
+         (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))]))]
        "]")
       [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
      [])
@@ -1861,9 +1837,9 @@ attribute [local instance] IsCyclotomicExtension.is_galois
         [(Term.typeSpec
           ":"
           («term_=_»
-           («term_-_» `k.succ "-" (numLit "1"))
+           («term_-_» `k.succ "-" (num "1"))
            "="
-           («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s)))]
+           («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s)))]
         ":="
         (Term.byTactic
          "by"
@@ -1892,58 +1868,33 @@ attribute [local instance] IsCyclotomicExtension.is_galois
       "exact"
       (Term.app `Nat.eq_of_mul_eq_mul_leftₓ [(Term.app `pow_pos [`hpri.out.pos (Term.hole "_")]) `this]))
      [])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«tactic·.__;_»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Tactic.exact
    "exact"
    (Term.app `Nat.eq_of_mul_eq_mul_leftₓ [(Term.app `pow_pos [`hpri.out.pos (Term.hole "_")]) `this]))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app `Nat.eq_of_mul_eq_mul_leftₓ [(Term.app `pow_pos [`hpri.out.pos (Term.hole "_")]) `this])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `this
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (Term.app `pow_pos [`hpri.out.pos (Term.hole "_")])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1023, term))
   `hpri.out.pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1023, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `pow_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
@@ -1952,41 +1903,26 @@ attribute [local instance] IsCyclotomicExtension.is_galois
  ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.eq_of_mul_eq_mul_leftₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.rwSeq
    "rw"
    []
    (Tactic.rwRuleSeq "[" [(Tactic.rwRule [] `Hex) "," (Tactic.rwRule [] `pow_addₓ)] "]")
    [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `this
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `pow_addₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `Hex
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.tacticHave_
    "have"
@@ -1996,9 +1932,9 @@ attribute [local instance] IsCyclotomicExtension.is_galois
      [(Term.typeSpec
        ":"
        («term_=_»
-        («term_-_» `k.succ "-" (numLit "1"))
+        («term_-_» `k.succ "-" (num "1"))
         "="
-        («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s)))]
+        («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s)))]
      ":="
      (Term.byTactic
       "by"
@@ -2014,9 +1950,6 @@ attribute [local instance] IsCyclotomicExtension.is_galois
            [])
           [])
          (group (Tactic.exact "exact" (Term.proj (Term.app `Nat.sub_add_cancelₓ [`hs]) "." `symm)) [])]))))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticHave_', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveDecl', expected 'Lean.Parser.Term.haveDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveIdDecl.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.byTactic
    "by"
@@ -2032,42 +1965,25 @@ attribute [local instance] IsCyclotomicExtension.is_galois
         [])
        [])
       (group (Tactic.exact "exact" (Term.proj (Term.app `Nat.sub_add_cancelₓ [`hs]) "." `symm)) [])])))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.byTactic', expected 'Lean.Parser.Term.byTactic.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq', expected 'Lean.Parser.Tactic.tacticSeq.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeqBracketed'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.tacticSeq1Indented', expected 'Lean.Parser.Tactic.tacticSeq1Indented.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Tactic.exact "exact" (Term.proj (Term.app `Nat.sub_add_cancelₓ [`hs]) "." `symm))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.exact', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.proj (Term.app `Nat.sub_add_cancelₓ [`hs]) "." `symm)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (Term.app `Nat.sub_add_cancelₓ [`hs])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `hs
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.sub_add_cancelₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Nat.sub_add_cancelₓ [`hs]) []] ")")
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.simp
    "simp"
@@ -2076,66 +1992,42 @@ attribute [local instance] IsCyclotomicExtension.is_galois
    ["only"]
    ["[" [(Tactic.simpLemma [] [] `Nat.succ_sub_succ_eq_sub) "," (Tactic.simpLemma [] [] `tsub_zero)] "]"]
    [])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simp', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«]»', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `tsub_zero
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpStar'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.simpLemma', expected 'Lean.Parser.Tactic.simpErase'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `Nat.succ_sub_succ_eq_sub
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'only', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 0, tactic) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.typeSpec', expected 'Lean.Parser.Term.typeSpec.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   («term_=_»
-   («term_-_» `k.succ "-" (numLit "1"))
+   («term_-_» `k.succ "-" (num "1"))
    "="
-   («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_=_»', expected 'antiquot'
+   («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1")) "+" `s)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_+_»', expected 'antiquot'
+  («term_+_» («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1")) "+" `s)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
-  («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (numLit "1"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
+  («term_-_» (Term.proj («term_-_» `k "-" `s) "." `succ) "-" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+  (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   (Term.proj («term_-_» `k "-" `s) "." `succ)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   («term_-_» `k "-" `s)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 65, (some 66, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» `k "-" `s) []] ")")
@@ -2143,24 +2035,16 @@ attribute [local instance] IsCyclotomicExtension.is_galois
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 65, (some 66, term) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 50, term))
-  («term_-_» `k.succ "-" (numLit "1"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
+  («term_-_» `k.succ "-" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+  (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   `k.succ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 51 >? 65, (some 66, term) <=? (some 50, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 50, (some 51, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Mathlib.Tactic.tacticReplace_
    "replace"
@@ -2172,64 +2056,37 @@ attribute [local instance] IsCyclotomicExtension.is_galois
      (Term.app
       `Nat.eq_of_mul_eq_mul_leftₓ
       [(Term.app (Term.proj `tsub_pos_iff_lt "." (fieldIdx "2")) [(Term.app `Nat.Prime.one_lt [`hpri.out])]) `this]))))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Mathlib.Tactic.tacticReplace_', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveDecl', expected 'Lean.Parser.Term.haveDecl.antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.haveIdDecl', expected 'Lean.Parser.Term.haveIdDecl.antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app
    `Nat.eq_of_mul_eq_mul_leftₓ
    [(Term.app (Term.proj `tsub_pos_iff_lt "." (fieldIdx "2")) [(Term.app `Nat.Prime.one_lt [`hpri.out])]) `this])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `this
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (Term.app (Term.proj `tsub_pos_iff_lt "." (fieldIdx "2")) [(Term.app `Nat.Prime.one_lt [`hpri.out])])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app `Nat.Prime.one_lt [`hpri.out])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `hpri.out
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.Prime.one_lt
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(Term.app `Nat.Prime.one_lt [`hpri.out]) []] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   (Term.proj `tsub_pos_iff_lt "." (fieldIdx "2"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   `tsub_pos_iff_lt
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1022, (some 1023, term) <=? (some 1024, term)
@@ -2242,14 +2099,9 @@ attribute [local instance] IsCyclotomicExtension.is_galois
  ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.eq_of_mul_eq_mul_leftₓ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'null', expected 'optional.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'group', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.rwSeq
    "rw"
@@ -2265,7 +2117,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `K
          "⟮"
-         (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
          "⟯")
         `hirr₁]))
      ","
@@ -2277,244 +2129,149 @@ attribute [local instance] IsCyclotomicExtension.is_galois
      ","
      (Tactic.rwRule [] (Term.app `Nat.totient_prime_pow [`hpri.out `k.succ_pos]))
      ","
-     (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))]))
+     (Tactic.rwRule [] (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (num "1"))]))
      ","
      (Tactic.rwRule [] `mul_assoc)
      ","
-     (Tactic.rwRule
-      []
-      (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))]))]
+     (Tactic.rwRule [] (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))]))]
     "]")
    [(Tactic.location "at" (Tactic.locationHyp [`this] []))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwSeq', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.location', expected 'optional.antiquot_scope'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.locationHyp', expected 'Lean.Parser.Tactic.locationWildcard'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `this
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+  (Term.app `mul_comm [(«term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (numLit "1")))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_^_»', expected 'antiquot'
+  («term_^_» (coeNotation "↑" `p) "^" («term_-_» `k.succ "-" (num "1")))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_-_» `k.succ "-" (numLit "1"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
+  («term_-_» `k.succ "-" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+  (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   `k.succ
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 80 >? 65, (some 66, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» `k.succ "-" (numLit "1")) []] ")")
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» `k.succ "-" (num "1")) []] ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 80, term))
   (coeNotation "↑" `p)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 81 >? 1024, (some 1024, term) <=? (some 80, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 80, (some 80, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren
  "("
- [(«term_^_» (coeNotation "↑" `p) "^" (Term.paren "(" [(«term_-_» `k.succ "-" (numLit "1")) []] ")")) []]
+ [(«term_^_» (coeNotation "↑" `p) "^" (Term.paren "(" [(«term_-_» `k.succ "-" (num "1")) []] ")")) []]
  ")")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `mul_comm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `mul_assoc
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.namedArgument.antiquot'
+  (Term.app `mul_comm [(Term.hole "_") («term_-_» (coeNotation "↑" `p) "-" (num "1"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  («term_-_» (coeNotation "↑" `p) "-" (numLit "1"))
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
+  («term_-_» (coeNotation "↑" `p) "-" (num "1"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (numLit "1")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'numLit', expected 'numLit.antiquot'
+  (num "1")
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   (coeNotation "↑" `p)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `p
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (some 1024, term) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 65, (some 66, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» (coeNotation "↑" `p) "-" (numLit "1")) []] ")")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument.antiquot'
+[PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» (coeNotation "↑" `p) "-" (num "1")) []] ")")
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (Term.hole "_")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.hole.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `mul_comm
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app `Nat.totient_prime_pow [`hpri.out `k.succ_pos])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `k.succ_pos
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   `hpri.out
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.totient_prime_pow
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app `Nat.totient_prime_pow [`hpri.out (Term.proj («term_-_» `k "-" `s) "." `succ_pos)])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.proj («term_-_» `k "-" `s) "." `succ_pos)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.proj', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   («term_-_» `k "-" `s)
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«term_-_»', expected 'antiquot'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `s
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 66 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 65, term))
   `k
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 65 >? 1024, (none, [anonymous]) <=? (some 65, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 65, (some 66, term) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesized: (Term.paren "(" [(«term_-_» `k "-" `s) []] ")")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   `hpri.out
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (some 1024, term)
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
   `Nat.totient_prime_pow
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `Pnat.pow_coe
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `Pnat.pow_coe
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Tactic.rwRule', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app
    `IsCyclotomicExtension.finrank
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
      "⟯")
     `hirr₁])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   `hirr₁
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'ident.antiquot'
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'many.antiquot_scope'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.namedArgument.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.namedArgument'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.ellipsis.antiquot'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (strLit "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
    "⟯")
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind 'IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»', expected 'antiquot'
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»', expected 'sepBy.antiquot_scope'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""
-[PrettyPrinter.parenthesize.backtrack] unexpected node kind '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»', expected 'antiquot'-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
 /--
     If `irreducible (cyclotomic (p ^ (k + 1)) K)` and
     `irreducible (cyclotomic (p ^ (k - s + 1)) K))` (in particular for `K = ℚ`) and `p` is a prime,

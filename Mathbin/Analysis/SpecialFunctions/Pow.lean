@@ -112,7 +112,7 @@ theorem cpow_sub {x : ℂ} (y z : ℂ) (hx : x ≠ 0) : x ^ (y - z) = x ^ y / x 
 theorem cpow_neg_one (x : ℂ) : x ^ (-1 : ℂ) = x⁻¹ := by
   simpa using cpow_neg x 1
 
-@[simp]
+@[simp, norm_cast]
 theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
   | 0 => by
     simp
@@ -123,6 +123,11 @@ theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, x ^ (n : ℂ) = x ^ n
       simp [cpow_add, hx, pow_addₓ, cpow_nat_cast n]
 
 @[simp]
+theorem cpow_two (x : ℂ) : x ^ (2 : ℂ) = x ^ 2 := by
+  rw [← cpow_nat_cast]
+  simp only [Nat.cast_bit0, Nat.cast_oneₓ]
+
+@[simp, norm_cast]
 theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, x ^ (n : ℂ) = x ^ n
   | (n : ℕ) => by
     simp <;> rfl
@@ -169,7 +174,7 @@ theorem cpow_eq_nhds {a b : ℂ} (ha : a ≠ 0) : (fun x => x.cpow b) =ᶠ[𝓝 
   suffices : ∀ᶠ x : ℂ in 𝓝 a, x ≠ 0
   exact
     this.mono fun x hx => by
-      dsimp only
+      dsimp' only
       rw [cpow_eq_pow, cpow_def_of_ne_zero hx]
   exact IsOpen.eventually_mem is_open_ne ha
 
@@ -177,7 +182,7 @@ theorem cpow_eq_nhds' {p : ℂ × ℂ} (hp_fst : p.fst ≠ 0) : (fun x => x.1 ^ 
   suffices : ∀ᶠ x : ℂ × ℂ in 𝓝 p, x.1 ≠ 0
   exact
     this.mono fun x hx => by
-      dsimp only
+      dsimp' only
       rw [cpow_def_of_ne_zero hx]
   refine' IsOpen.eventually_mem _ hp_fst
   change IsOpen ({ x : ℂ × ℂ | x.1 = 0 }ᶜ)
@@ -541,6 +546,11 @@ theorem rpow_int_cast (x : ℝ) (n : ℤ) : x ^ (n : ℝ) = x ^ n := by
 theorem rpow_nat_cast (x : ℝ) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
   rpow_int_cast x n
 
+@[simp]
+theorem rpow_two (x : ℝ) : x ^ (2 : ℝ) = x ^ 2 := by
+  rw [← rpow_nat_cast]
+  simp only [Nat.cast_bit0, Nat.cast_oneₓ]
+
 theorem rpow_neg_one (x : ℝ) : x ^ (-1 : ℝ) = x⁻¹ := by
   suffices H : x ^ ((-1 : ℤ) : ℝ) = x⁻¹
   · exact_mod_cast H
@@ -777,7 +787,7 @@ theorem rpow_eq_nhds_of_neg {p : ℝ × ℝ} (hp_fst : p.fst < 0) :
   suffices : ∀ᶠ x : ℝ × ℝ in 𝓝 p, x.1 < 0
   exact
     this.mono fun x hx => by
-      dsimp only
+      dsimp' only
       rw [rpow_def_of_neg hx]
   exact IsOpen.eventually_mem (is_open_lt continuous_fst continuous_const) hp_fst
 
@@ -786,7 +796,7 @@ theorem rpow_eq_nhds_of_pos {p : ℝ × ℝ} (hp_fst : 0 < p.fst) :
   suffices : ∀ᶠ x : ℝ × ℝ in 𝓝 p, 0 < x.1
   exact
     this.mono fun x hx => by
-      dsimp only
+      dsimp' only
       rw [rpow_def_of_pos hx]
   exact IsOpen.eventually_mem (is_open_lt continuous_const continuous_fst) hp_fst
 
@@ -1133,6 +1143,11 @@ theorem rpow_nat_cast (x : ℝ≥0 ) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
   Nnreal.eq <| by
     simpa only [coe_rpow, coe_pow] using Real.rpow_nat_cast x n
 
+@[simp]
+theorem rpow_two (x : ℝ≥0 ) : x ^ (2 : ℝ) = x ^ 2 := by
+  rw [← rpow_nat_cast]
+  simp only [Nat.cast_bit0, Nat.cast_oneₓ]
+
 theorem mul_rpow {x y : ℝ≥0 } {z : ℝ} : (x * y) ^ z = x ^ z * y ^ z :=
   Nnreal.eq <| Real.mul_rpow x.2 y.2
 
@@ -1315,7 +1330,7 @@ theorem rpow_eq_pow (x : ℝ≥0∞) (y : ℝ) : rpow x y = x ^ y :=
 @[simp]
 theorem rpow_zero {x : ℝ≥0∞} : x ^ (0 : ℝ) = 1 := by
   cases x <;>
-    · dsimp only [(· ^ ·), rpow]
+    · dsimp' only [(· ^ ·), rpow]
       simp [lt_irreflₓ]
       
 
@@ -1333,13 +1348,13 @@ theorem top_rpow_of_neg {y : ℝ} (h : y < 0) : (⊤ : ℝ≥0∞) ^ y = 0 := by
 @[simp]
 theorem zero_rpow_of_pos {y : ℝ} (h : 0 < y) : (0 : ℝ≥0∞) ^ y = 0 := by
   rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
-  dsimp only [(· ^ ·), rpow]
+  dsimp' only [(· ^ ·), rpow]
   simp [h, asymm h, ne_of_gtₓ h]
 
 @[simp]
 theorem zero_rpow_of_neg {y : ℝ} (h : y < 0) : (0 : ℝ≥0∞) ^ y = ⊤ := by
   rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
-  dsimp only [(· ^ ·), rpow]
+  dsimp' only [(· ^ ·), rpow]
   simp [h, ne_of_gtₓ h]
 
 theorem zero_rpow_def (y : ℝ) : (0 : ℝ≥0∞) ^ y = if 0 < y then 0 else if y = 0 then 1 else ⊤ := by
@@ -1360,7 +1375,7 @@ theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y := b
 @[norm_cast]
 theorem coe_rpow_of_ne_zero {x : ℝ≥0 } (h : x ≠ 0) (y : ℝ) : (x : ℝ≥0∞) ^ y = (x ^ y : ℝ≥0 ) := by
   rw [← Ennreal.some_eq_coe]
-  dsimp only [(· ^ ·), rpow]
+  dsimp' only [(· ^ ·), rpow]
   simp [h]
 
 @[norm_cast]
@@ -1380,7 +1395,7 @@ theorem coe_rpow_def (x : ℝ≥0 ) (y : ℝ) : (x : ℝ≥0∞) ^ y = if x = 0 
 
 @[simp]
 theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x := by
-  cases x <;> dsimp only [(· ^ ·), rpow] <;> simp [zero_lt_one, not_lt_of_le zero_le_one]
+  cases x <;> dsimp' only [(· ^ ·), rpow] <;> simp [zero_lt_one, not_lt_of_le zero_le_one]
 
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 := by
@@ -1485,6 +1500,11 @@ theorem rpow_nat_cast (x : ℝ≥0∞) (n : ℕ) : x ^ (n : ℝ) = x ^ n := by
   · simp [coe_rpow_of_nonneg _ (Nat.cast_nonneg n)]
     
 
+@[simp]
+theorem rpow_two (x : ℝ≥0∞) : x ^ (2 : ℝ) = x ^ 2 := by
+  rw [← rpow_nat_cast]
+  simp only [Nat.cast_bit0, Nat.cast_oneₓ]
+
 theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
     (x * y) ^ z = if (x = 0 ∧ y = ⊤ ∨ x = ⊤ ∧ y = 0) ∧ z < 0 then ⊤ else x ^ z * y ^ z := by
   rcases eq_or_ne z 0 with (rfl | hz)
@@ -1563,7 +1583,7 @@ where the inverse is `λ x : ℝ≥0∞, x ^ (1 / y)`. -/
 @[simps apply]
 def orderIsoRpow (y : ℝ) (hy : 0 < y) : ℝ≥0∞ ≃o ℝ≥0∞ :=
   (strict_mono_rpow_of_pos hy).orderIsoOfRightInverse (fun x => x ^ y) (fun x => x ^ (1 / y)) fun x => by
-    dsimp
+    dsimp'
     rw [← rpow_mul, one_div_mul_cancel hy.ne.symm, rpow_one]
 
 theorem order_iso_rpow_symm_apply (y : ℝ) (hy : 0 < y) :
@@ -1762,7 +1782,7 @@ theorem of_real_rpow_of_nonneg {x p : ℝ} (hx_nonneg : 0 ≤ x) (hp_nonneg : 0 
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0∞ => y ^ x := by
   intro y z hyz
-  dsimp only  at hyz
+  dsimp' only  at hyz
   rw [← rpow_one y, ← rpow_one z, ← _root_.mul_inv_cancel hx, rpow_mul, rpow_mul, hyz]
 
 theorem rpow_left_surjective {x : ℝ} (hx : x ≠ 0) : Function.Surjective fun y : ℝ≥0∞ => y ^ x := fun y =>

@@ -157,7 +157,7 @@ theorem tendsto_approx_on {f : β → α} (hf : Measurable f) {s : Set α} {y₀
 theorem edist_approx_on_mono {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s]
     (x : β) {m n : ℕ} (h : m ≤ n) : edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
   by
-  dsimp only [approx_on, coe_comp, (· ∘ ·)]
+  dsimp' only [approx_on, coe_comp, (· ∘ ·)]
   exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
 
 theorem edist_approx_on_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s) [SeparableSpace s] (x : β)

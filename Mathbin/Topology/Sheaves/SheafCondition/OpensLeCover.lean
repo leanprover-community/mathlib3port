@@ -143,7 +143,7 @@ of all opens contained in some `U i`.
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     is_connected_of_zigzag fun A B => by
-      rcases A with ⟨⟨⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp  at *
+      rcases A with ⟨⟨⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp'  at *
       · refine' ⟨[{ left := PUnit.unit, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
@@ -269,7 +269,7 @@ def generateEquivalenceOpensLe :
       CategoryTheory.Functor.ext
         (by
           rintro ⟨⟨_, _⟩, _⟩
-          dsimp
+          dsimp'
           congr <;> ext)
         (by
           intros

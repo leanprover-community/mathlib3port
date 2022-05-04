@@ -282,7 +282,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] : ∃ a b c
               ring
             _ = _ := by
               rw [hn, habcd, Int.nat_abs_of_nonneg hn_nonneg]
-              dsimp [m]
+              dsimp' [m]
               ring
             
       False.elim <| Nat.find_minₓ hm hnm ⟨lt_transₓ hnm hmp, hn0, s, t, u, v, hstuv⟩

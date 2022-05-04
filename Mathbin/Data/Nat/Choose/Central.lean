@@ -199,7 +199,7 @@ theorem padic_val_nat_central_binom_of_large_eq_zero (hp : p.Prime) (n_big : 2 <
     · exact (add_lt_add_iff_left (2 * (p * (n / p)))).mp h23
       
     have n_big : 1 ≤ n / p := (Nat.le_div_iff_mul_le' p_pos).2 (trans (one_mulₓ _).le p_le_n)
-    rw [← mul_addₓ, Nat.div_add_mod]
+    rw [← mul_addₓ, Nat.div_add_modₓ]
     calc 2 * n < 3 * p := big _ = 2 * p + p := Nat.succ_mul _ _ _ ≤ 2 * (p * (n / p)) + p :=
         add_le_add_right ((mul_le_mul_left zero_lt_two).mpr <| (le_mul_iff_one_le_right p_pos).mpr n_big) _
     

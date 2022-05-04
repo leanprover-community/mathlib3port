@@ -88,13 +88,16 @@ instance fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
   | 0, h => False.elim <| Nat.not_lt_zeroₓ 0 h.1
   | n + 1, _ => Finₓ.fintype (n + 1)
 
+instance infinite : Infinite (Zmod 0) :=
+  Int.infinite
+
 @[simp]
-theorem card (n : ℕ) [Fact (0 < n)] : Fintype.card (Zmod n) = n := by
+theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
   cases n
   · exfalso
-    exact Nat.not_lt_zeroₓ 0 (Fact.out _)
+    exact not_fintype (Zmod 0)
     
-  · exact Fintype.card_fin (n + 1)
+  · convert Fintype.card_fin (n + 1)
     
 
 instance decidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
@@ -469,6 +472,13 @@ theorem val_int_cast {n : ℕ} (a : ℤ) [Fact (0 < n)] : ↑(a : Zmod n).val = 
   refine' (Int.mod_eq_of_lt hle hlt).symm.trans _
   rw [← Zmod.int_coe_eq_int_coe_iff', Int.cast_coe_nat, Zmod.nat_cast_val, Zmod.cast_id]
 
+theorem coe_int_cast {n : ℕ} (a : ℤ) : ↑(a : Zmod n) = a % n := by
+  cases n
+  · rw [Int.coe_nat_zero, Int.mod_zero, Int.cast_idₓ, Int.cast_idₓ]
+    
+  · rw [← val_int_cast, ← Int.nat_cast_eq_coe_nat, val, coe_coe]
+    
+
 @[simp]
 theorem val_neg_one (n : ℕ) : (-1 : Zmod n.succ).val = n := by
   rw [val, Finₓ.coe_neg]
@@ -484,6 +494,23 @@ theorem cast_neg_one {R : Type _} [Ringₓ R] (n : ℕ) : ↑(-1 : Zmod n) = (n 
   · rw [Int.cast_neg, Int.cast_oneₓ, Nat.cast_zeroₓ, zero_sub]
     
   · rw [← nat_cast_val, val_neg_one, Nat.cast_succₓ, add_sub_cancel]
+    
+
+theorem cast_sub_one {R : Type _} [Ringₓ R] {n : ℕ} (k : Zmod n) :
+    ((k - 1 : Zmod n) : R) = (if k = 0 then n else k) - 1 := by
+  split_ifs with hk
+  · rw [hk, zero_sub, Zmod.cast_neg_one]
+    
+  · cases n
+    · rw [Int.cast_sub, Int.cast_oneₓ]
+      
+    · rw [← Zmod.nat_cast_val, Zmod.val, Finₓ.coe_sub_one, if_neg]
+      · rw [Nat.cast_sub, Nat.cast_oneₓ, coe_coe]
+        rwa [Finₓ.ext_iff, Finₓ.coe_zero, ← Ne, ← Nat.one_le_iff_ne_zero] at hk
+        
+      · exact hk
+        
+      
     
 
 theorem nat_coe_zmod_eq_iff (p : ℕ) (n : ℕ) (z : Zmod p) [Fact (0 < p)] : ↑n = z ↔ ∃ k, n = z.val + p * k := by
@@ -693,7 +720,7 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
       have : Fact (0 < n) := ⟨Nat.pos_of_ne_zeroₓ <| right_ne_zero_of_mul hmn0⟩
       have left_inv : Function.LeftInverse inv_fun to_fun := by
         intro x
-        dsimp only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
+        dsimp' only [dvd_mul_left, dvd_mul_right, Zmod.cast_hom_apply, coe_coe, inv_fun, to_fun]
         conv_rhs => rw [← Zmod.nat_cast_zmod_val x]
         rw [if_neg hmn0, Zmod.eq_iff_modeq_nat, ← Nat.modeq_and_modeq_iff_modeq_mul h, Prod.fst_zmod_cast,
           Prod.snd_zmod_cast]

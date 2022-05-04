@@ -169,9 +169,9 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A) (f' : P.drop.B a ⟹ α)
     (f : P.last.B a → P.W α) : P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) := by
   rw [W_mk, W_rec]
-  dsimp
+  dsimp'
   rw [Wp_rec_eq]
-  dsimp only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
+  dsimp' only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
   congr <;> ext1 i <;> cases f i <;> rfl
 
 /-- Induction principle for `W` -/
@@ -180,11 +180,11 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
   intro x
   cases' x with a f
   apply @Wp_ind n P α fun a f => C ⟨a, f⟩
-  dsimp
+  dsimp'
   intro a f f' ih'
-  dsimp [W_mk]  at ih
+  dsimp' [W_mk]  at ih
   let ih'' := ih a (P.W_path_dest_left f') fun i => ⟨f i, P.W_path_dest_right f' i⟩
-  dsimp  at ih''
+  dsimp'  at ih''
   rw [W_path_cases_on_eta] at ih''
   apply ih''
   apply ih'
@@ -205,7 +205,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
   show _ = P.W_mk a (g ⊚ f') (Mvfunctor.map g ∘ f)
   have : Mvfunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ := by
     ext i : 1
-    dsimp [Function.comp]
+    dsimp' [Function.comp]
     cases f i
     rfl
   rw [this]
@@ -214,7 +214,7 @@ theorem W_map_W_mk {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B 
     cases f x
     rfl
   rw [this]
-  dsimp
+  dsimp'
   rw [W_mk_eq, W_mk_eq]
   have h := Mvpfunctor.map_eq P.Wp g
   rw [h, comp_W_path_cases_on]

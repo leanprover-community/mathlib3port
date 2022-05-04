@@ -58,7 +58,7 @@ def toFunBilinear : A →ₗ[A] R[X] →ₗ[R] A[X] :=
 
 theorem to_fun_bilinear_apply_eq_sum (a : A) (p : R[X]) :
     toFunBilinear R A a p = p.Sum fun n r => monomial n (a * algebraMap R A r) := by
-  dsimp [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum]
+  dsimp' [to_fun_bilinear_apply_apply, aeval_def, eval₂_eq_sum, Polynomial.sum]
   rw [Finset.smul_sum]
   congr with i : 1
   rw [← Algebra.smul_def, ← C_mul', mul_smul_comm, C_mul_X_pow_eq_monomial, ← Algebra.commutes, ← Algebra.smul_def,
@@ -120,7 +120,7 @@ def toFunAlgHom : A ⊗[R] R[X] →ₐ[R] Polynomial A :=
 @[simp]
 theorem to_fun_alg_hom_apply_tmul (a : A) (p : R[X]) :
     toFunAlgHom R A (a ⊗ₜ[R] p) = p.Sum fun n r => monomial n (a * (algebraMap R A) r) := by
-  dsimp [to_fun_alg_hom]
+  dsimp' [to_fun_alg_hom]
   rw [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
 
 /-- (Implementation detail.)
@@ -143,7 +143,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x := by
   · simp [inv_fun]
     
   · intro a p
-    dsimp only [inv_fun]
+    dsimp' only [inv_fun]
     rw [to_fun_alg_hom_apply_tmul, eval₂_sum]
     simp_rw [eval₂_monomial, AlgHom.coe_to_ring_hom, Algebra.TensorProduct.tmul_pow, one_pow,
       Algebra.TensorProduct.include_left_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_oneₓ, one_mulₓ, ←
@@ -255,7 +255,7 @@ theorem mat_poly_equiv_coeff_apply (m : Matrix n n R[X]) (k : ℕ) (i j : n) :
     
   · intro i' j' x
     erw [mat_poly_equiv_coeff_apply_aux_2]
-    dsimp [std_basis_matrix]
+    dsimp' [std_basis_matrix]
     split_ifs
     · rcases h with ⟨rfl, rfl⟩
       simp [std_basis_matrix]

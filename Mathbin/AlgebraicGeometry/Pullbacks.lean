@@ -388,7 +388,7 @@ theorem lift_comp_ι (i : 𝒰.J) :
   by
   apply ((gluing 𝒰 f g).OpenCover.pullbackCover pullback.fst).hom_ext
   intro j
-  dsimp only [open_cover.pullback_cover]
+  dsimp' only [open_cover.pullback_cover]
   trans pullback_fst_ι_to_V 𝒰 f g i j ≫ fV 𝒰 f g j i ≫ (gluing 𝒰 f g).ι _
   · rw [← show _ = fV 𝒰 f g j i ≫ _ from (gluing 𝒰 f g).glue_condition j i]
     simp_rw [← category.assoc]
@@ -547,7 +547,7 @@ def openCoverOfLeft (𝒰 : OpenCover X) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCover
   refine' Eq.trans _ (category.id_comp _).symm
   apply pullback.hom_ext
   all_goals
-    dsimp
+    dsimp'
     simp only [limit.iso_limit_cone_inv_π, pullback_cone.mk_π_app_left, category.comp_id, pullback_cone.mk_π_app_right,
       category.assoc, pullback.lift_fst, pullback.lift_snd]
     symm
@@ -565,7 +565,7 @@ def openCoverOfRight (𝒰 : OpenCover Y) (f : X ⟶ Z) (g : Y ⟶ Z) : OpenCove
           (category.comp_id _))
       (Equivₓ.refl _) fun i => pullback_symmetry _ _
   intro i
-  dsimp [open_cover.bind]
+  dsimp' [open_cover.bind]
   apply pullback.hom_ext <;> simp
 
 /-- (Implementation). Use `open_cover_of_base` instead. -/

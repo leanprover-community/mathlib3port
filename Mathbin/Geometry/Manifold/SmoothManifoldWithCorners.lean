@@ -392,7 +392,7 @@ instance ModelWithCorners.range_eq_univ_prod {𝕜 : Type u} [NondiscreteNormedF
     [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type w'} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H')
     [I'.Boundaryless] : (I.Prod I').Boundaryless := by
   constructor
-  dsimp [ModelWithCorners.prod, ModelProd]
+  dsimp' [ModelWithCorners.prod, ModelProd]
   rw [← prod_range_range_eq, ModelWithCorners.Boundaryless.range_eq_univ, ModelWithCorners.Boundaryless.range_eq_univ,
     univ_prod_univ]
 

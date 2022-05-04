@@ -40,7 +40,7 @@ def derivative : R[X] →ₗ[R] R[X] where
     rw [sum_add_index] <;>
       simp only [add_mulₓ, forall_const, RingHom.map_add, eq_self_iff_true, zero_mul, RingHom.map_zero]
   map_smul' := fun a p => by
-    dsimp <;>
+    dsimp' <;>
       rw [sum_smul_index] <;>
         simp only [mul_sum, ← C_mul', mul_assoc, coeff_C_mul, RingHom.map_mul, forall_const, zero_mul, RingHom.map_zero,
           Sum]
@@ -178,7 +178,7 @@ theorem nat_degree_derivative_le (p : R[X]) : p.derivative.natDegree ≤ p.natDe
   by_cases' p0 : p.nat_degree = 0
   · simp [p0, derivative_of_nat_degree_zero]
     
-  · exact Nat.le_pred_of_lt (nat_degree_derivative_lt p0)
+  · exact Nat.le_pred_of_ltₓ (nat_degree_derivative_lt p0)
     
 
 @[simp]
@@ -236,7 +236,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       · apply congr_argₓ
         exact monomial_eq_C_mul_X
         
-      dsimp
+      dsimp'
       rw [← smul_mul_assoc, smul_C, nsmul_eq_mul']
       exact derivative_C_mul_X_pow _ _
     _ =

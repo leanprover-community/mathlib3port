@@ -82,52 +82,52 @@ def ofAux : ∀ n : ℕ s : S h : turnBound s ≤ n, Pgame
 def ofAuxRelabelling :
     ∀ s : S n m : ℕ hn : turnBound s ≤ n hm : turnBound s ≤ m, Relabelling (ofAux n s hn) (ofAux m s hm)
   | s, 0, 0, hn, hm => by
-    dsimp [Pgame.ofAux]
+    dsimp' [Pgame.ofAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp  at i
+      dsimp'  at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
       
     · intro j
-      dsimp  at j
+      dsimp'  at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, 0, m + 1, hn, hm => by
-    dsimp [Pgame.ofAux]
+    dsimp' [Pgame.ofAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp  at i
+      dsimp'  at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hn)
       
     · intro j
-      dsimp  at j
+      dsimp'  at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hn)
       
   | s, n + 1, 0, hn, hm => by
-    dsimp [Pgame.ofAux]
+    dsimp' [Pgame.ofAux]
     fconstructor
     rfl
     rfl
     · intro i
-      dsimp  at i
+      dsimp'  at i
       exfalso
       exact turn_bound_ne_zero_of_left_move i.2 (nonpos_iff_eq_zero.mp hm)
       
     · intro j
-      dsimp  at j
+      dsimp'  at j
       exfalso
       exact turn_bound_ne_zero_of_right_move j.2 (nonpos_iff_eq_zero.mp hm)
       
   | s, n + 1, m + 1, hn, hm => by
-    dsimp [Pgame.ofAux]
+    dsimp' [Pgame.ofAux]
     fconstructor
     rfl
     rfl
@@ -235,7 +235,7 @@ instance shortOfAux : ∀ n : ℕ {s : S} h : turnBound s ≤ n, Short (ofAux n 
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_aux n _)
 
 instance shortOf (s : S) : Short (of s) := by
-  dsimp [Pgame.of]
+  dsimp' [Pgame.of]
   infer_instance
 
 end Pgame

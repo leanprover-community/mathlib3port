@@ -30,15 +30,7 @@ def ImpartialAux : Pgame → Prop
 
 theorem impartial_aux_def {G : Pgame} :
     G.ImpartialAux ↔ (G ≈ -G) ∧ (∀ i, ImpartialAux (G.moveLeft i)) ∧ ∀ j, ImpartialAux (G.moveRight j) := by
-  constructor
-  · intro hi
-    unfold1 impartial_aux  at hi
-    exact hi
-    
-  · intro hi
-    unfold1 impartial_aux
-    exact hi
-    
+  rw [impartial_aux]
 
 /-- A typeclass on impartial games. -/
 class Impartial (G : Pgame) : Prop where
@@ -55,8 +47,12 @@ namespace Impartial
 
 instance impartial_zero : Impartial 0 := by
   rw [impartial_def]
-  dsimp
+  dsimp'
   simp
+
+instance impartial_star : Impartial star := by
+  rw [impartial_def]
+  simpa using impartial.impartial_zero
 
 theorem neg_equiv_self (G : Pgame) [h : G.Impartial] : G ≈ -G :=
   (impartial_def.1 h).1
@@ -66,6 +62,18 @@ instance move_left_impartial {G : Pgame} [h : G.Impartial] (i : G.LeftMoves) : (
 
 instance move_right_impartial {G : Pgame} [h : G.Impartial] (j : G.RightMoves) : (G.moveRight j).Impartial :=
   (impartial_def.1 h).2.2 j
+
+theorem impartial_congr : ∀ {G H : Pgame} e : Relabelling G H [G.Impartial], H.Impartial
+  | G, H, e => by
+    intro h
+    rw [impartial_def]
+    refine' ⟨equiv_trans e.symm.equiv (equiv_trans (neg_equiv_self G) (neg_congr e.equiv)), fun i => _, fun j => _⟩ <;>
+      cases' e with _ _ L R hL hR
+    · convert impartial_congr (hL (L.symm i))
+      rw [Equivₓ.apply_symm_apply]
+      
+    · exact impartial_congr (hR j)
+      
 
 instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Impartial
   | G, H => by

@@ -497,9 +497,9 @@ theorem exp_zero : exp 0 = 1 :=
       cases j
       · exact absurd hj (not_le_of_gtₓ zero_lt_one)
         
-      · dsimp [exp']
+      · dsimp' [exp']
         induction' j with j ih
-        · dsimp [exp'] <;> simp
+        · dsimp' [exp'] <;> simp
           
         · rw [←
             ih
@@ -536,7 +536,7 @@ theorem exp_add : exp (x + y) = exp x * exp y :=
         Eq.symm
           (lim_eq_lim_of_equiv
             (by
-              dsimp <;> simp only [hj] <;> exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)))
+              dsimp' <;> simp only [hj] <;> exact cauchy_product (is_cau_abs_exp x) (is_cau_exp y)))
 
 theorem exp_list_sum (l : List ℂ) : exp l.Sum = (l.map exp).Prod :=
   @MonoidHom.map_list_prod (Multiplicative ℂ) ℂ _ _ ⟨exp, exp_zero, exp_add⟩ l
@@ -572,10 +572,10 @@ theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ 
 
 @[simp]
 theorem exp_conj : exp (conj x) = conj (exp x) := by
-  dsimp [exp]
+  dsimp' [exp]
   rw [← lim_conj]
   refine' congr_argₓ limₓ (CauSeq.ext fun _ => _)
-  dsimp [exp', Function.comp, cau_seq_conj]
+  dsimp' [exp', Function.comp, cau_seq_conj]
   rw [(starRingEnd _).map_sum]
   refine' sum_congr rfl fun n hn => _
   rw [RingHom.map_div, RingHom.map_pow, ← of_real_nat_cast, conj_of_real]

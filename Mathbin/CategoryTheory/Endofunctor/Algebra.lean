@@ -150,11 +150,11 @@ def functorOfNatTransId : functorOfNatTrans (𝟙 F) ≅ 𝟭 _ :=
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp ))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- A composition of natural transformations gives the composition of corresponding functors. -/
@@ -165,11 +165,11 @@ def functorOfNatTransComp {F₀ F₁ F₂ : C ⥤ C} (α : F₀ ⟶ F₁) (β : 
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp ))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- If `α` and `β` are two equal natural transformations, then the functors of algebras induced by them
@@ -183,11 +183,11 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) : functo
     (fun X =>
       isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp [h]))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- Naturally isomorphic endofunctors give equivalent categories of algebras.

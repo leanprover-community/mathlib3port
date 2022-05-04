@@ -92,7 +92,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     exact MeasurableSet.bInter (countable_encodable _) fun i _ => he₁ _
   have f_subset_f : ∀ {a b c d}, a ≤ b → c ≤ d → f a d ⊆ f b c := by
     intro a b c d hab hcd
-    dsimp only [f]
+    dsimp' only [f]
     rw [Finset.inf_eq_infi, Finset.inf_eq_infi]
     exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succₓ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) := by

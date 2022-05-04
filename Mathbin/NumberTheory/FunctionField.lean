@@ -231,73 +231,30 @@ theorem inftyValuation.polynomial {p : Polynomial Fq} (hp : p ≠ 0) :
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/
 def inftyValuedFqt : Valued (Ratfunc Fq) (WithZero (Multiplicative ℤ)) :=
-  ⟨inftyValuation Fq⟩
+  Valued.mk' <| inftyValuation Fq
 
 theorem inftyValuedFqt.def {x : Ratfunc Fq} :
     @Valued.v (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq) x = inftyValuationDef Fq x :=
   rfl
 
-namespace InftyValuedFqt
-
-/-- The topology structure on `Fq(t)` induced by the valuation at infinity. -/
-def topologicalSpace : TopologicalSpace (Ratfunc Fq) :=
-  @Valued.topologicalSpace (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq)
-
-theorem topological_division_ring : @TopologicalDivisionRing (Ratfunc Fq) _ (topologicalSpace Fq) :=
-  @Valued.topological_division_ring (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq)
-
-/-- The uniform structure on `k(t)` induced by the valuation at infinity. -/
-def uniformSpace : UniformSpace (Ratfunc Fq) :=
-  @TopologicalAddGroup.toUniformSpace (Ratfunc Fq) _ (topologicalSpace Fq) _
-
-theorem uniform_add_group : @UniformAddGroup (Ratfunc Fq) (uniformSpace Fq) _ :=
-  @topological_add_group_is_uniform (Ratfunc Fq) _ (topologicalSpace Fq) _
-
-theorem completable_top_field : @CompletableTopField (Ratfunc Fq) _ (uniformSpace Fq) :=
-  @Valued.completable (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq)
-
-theorem separated_space : @SeparatedSpace (Ratfunc Fq) (uniformSpace Fq) :=
-  @ValuedRing.separated (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq)
-
-end InftyValuedFqt
-
-open InftyValuedFqt
-
 /-- The completion `Fq((t⁻¹))`  of `Fq(t)` with respect to the valuation at infinity. -/
 def FqtInfty :=
-  @UniformSpace.Completion (Ratfunc Fq) (UniformSpace Fq)
+  @UniformSpace.Completion (Ratfunc Fq) <| (inftyValuedFqt Fq).toUniformSpace
 
-instance : Field (FqtInfty Fq) :=
-  @fieldCompletion (Ratfunc Fq) _ (UniformSpace Fq) (TopologicalDivisionRing Fq) _ (UniformAddGroup Fq)
+instance : Field (FqtInfty Fq) := by
+  let this := infty_valued_Fqt Fq
+  exact fieldCompletion
 
 instance : Inhabited (FqtInfty Fq) :=
   ⟨(0 : FqtInfty Fq)⟩
 
 /-- The valuation at infinity on `k(t)` extends to a valuation on `Fqt_infty`. -/
 instance valuedFqtInfty : Valued (FqtInfty Fq) (WithZero (Multiplicative ℤ)) :=
-  ⟨@Valued.extensionValuation (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq)⟩
+  @Valued.valuedCompletion _ _ _ _ (inftyValuedFqt Fq)
 
 theorem valuedFqtInfty.def {x : FqtInfty Fq} :
     Valued.v x = @Valued.extension (Ratfunc Fq) _ _ _ (inftyValuedFqt Fq) x :=
   rfl
-
-instance FqtInfty.topologicalSpace : TopologicalSpace (FqtInfty Fq) :=
-  Valued.topologicalSpace (WithZero (Multiplicative ℤ))
-
-instance FqtInfty.topological_division_ring : TopologicalDivisionRing (FqtInfty Fq) :=
-  Valued.topological_division_ring
-
-instance : TopologicalRing (FqtInfty Fq) :=
-  (FqtInfty.topological_division_ring Fq).to_topological_ring
-
-instance : TopologicalAddGroup (FqtInfty Fq) :=
-  TopologicalRing.to_topological_add_group
-
-instance FqtInfty.uniformSpace : UniformSpace (FqtInfty Fq) :=
-  TopologicalAddGroup.toUniformSpace (FqtInfty Fq)
-
-instance FqtInfty.uniform_add_group : UniformAddGroup (FqtInfty Fq) :=
-  topological_add_group_is_uniform
 
 end InftyValuation
 

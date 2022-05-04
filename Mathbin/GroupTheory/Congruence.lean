@@ -181,7 +181,7 @@ theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
 def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M where
   toSetoid := Setoidₓ.ker f
   mul' := fun _ _ _ _ h1 h2 => by
-    dsimp [Setoidₓ.ker, on_fun]  at *
+    dsimp' [Setoidₓ.ker, on_fun]  at *
     rw [h, h1, h2, h]
 
 /-- Given types with multiplications `M, N`, the product of two congruence relations `c` on `M` and

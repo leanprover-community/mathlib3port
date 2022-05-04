@@ -630,7 +630,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
     rw [sign_sum_congr, Units.coe_mul, Int.cast_mul]
     
   · intro σ₁ σ₂ h₁ h₂
-    dsimp only
+    dsimp' only
     intro h
     have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by
       intro x

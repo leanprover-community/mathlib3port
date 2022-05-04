@@ -157,7 +157,7 @@ theorem dense_range_pure_cauchy : DenseRange pure_cauchy := fun f => by
           ht'₂ <| prod_mk_mem_comp_rel (@h (a, x) ⟨h₁, hx⟩) h₂⟩
     ⟨x,
       ht''₂ <| by
-        dsimp [gen] <;> exact this⟩
+        dsimp' [gen] <;> exact this⟩
   simp only [closure_eq_cluster_pts, ClusterPt, nhds_eq_uniformity, lift'_inf_principal_eq,
     Set.inter_comm _ (range pure_cauchy), mem_set_of_eq]
   exact
@@ -271,7 +271,7 @@ theorem Cauchy_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace 
       exact f.2.1.mono (le_inf f.2.le_nhds_Lim (le_principal_iff.2 xf))
     have := dc.closure_subset_iff.2 h
     rw [closure_prod_eq] at this
-    refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
+    refine' dt (this ⟨_, _⟩) <;> dsimp' <;> apply limc <;> assumption
     
 
 section

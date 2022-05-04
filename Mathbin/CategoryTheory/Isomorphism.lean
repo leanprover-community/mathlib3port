@@ -45,7 +45,7 @@ The inverse morphism is bundled.
 See also `category_theory.core` for the category with the same objects and isomorphisms playing
 the role of morphisms.
 
-See https://stacks.math.columbia.edu/tag/0017.
+See <https://stacks.math.columbia.edu/tag/0017>.
 -/
 structure Iso {C : Type u} [Category.{v} C] (X Y : C) where
   Hom : X ⟶ Y

@@ -209,6 +209,10 @@ def comap {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) : Val
       simp only [comp_app, map_add, f.map_add] }
 
 @[simp]
+theorem comap_apply {S : Type _} [Ringₓ S] (f : S →+* R) (v : Valuation R Γ₀) (s : S) : v.comap f s = v (f s) :=
+  rfl
+
+@[simp]
 theorem comap_id : v.comap (RingHom.id R) = v :=
   ext fun r => rfl
 

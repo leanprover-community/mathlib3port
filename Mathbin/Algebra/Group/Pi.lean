@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 -/
 import Mathbin.Algebra.Hom.GroupInstances
-import Mathbin.Data.Pi
+import Mathbin.Data.Pi.Algebra
 import Mathbin.Data.Set.Function
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Tactic.PiInstances

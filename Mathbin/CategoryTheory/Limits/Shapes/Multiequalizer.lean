@@ -325,11 +325,11 @@ def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals {
         }
-        · dsimp
+        · dsimp'
           rw [category.id_comp]
           rfl
           
-        · dsimp
+        · dsimp'
           rw [category.id_comp]
           apply w
            }
@@ -461,7 +461,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
       (fun K =>
         Cones.ext (Iso.refl _)
           (by
-            rintro (_ | _) <;> dsimp <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
+            rintro (_ | _) <;> dsimp' <;> simp [← fork.app_one_eq_ι_comp_left, -fork.app_one_eq_ι_comp_left]))
       fun K₁ K₂ f => by
       ext
       simp
@@ -471,7 +471,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
         Fork.ext (Iso.refl _)
           (by
             ext
-            dsimp
+            dsimp'
             simp ))
       fun K₁ K₂ f => by
       ext
@@ -517,11 +517,11 @@ def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
         rintro (_ | _) (_ | _) (_ | _ | _)
         any_goals {
         }
-        · dsimp
+        · dsimp'
           rw [category.comp_id]
           rfl
           
-        · dsimp
+        · dsimp'
           rw [category.comp_id]
           apply (w _).symm
            }
@@ -597,7 +597,7 @@ noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multi
         any_goals {
         }
         · change _ ≫ _ ≫ _ = (_ ≫ _) ≫ _
-          dsimp
+          dsimp'
           simp only [cofork.condition, category.comp_id]
           rw [← I.ι_fst_sigma_map_assoc, c.condition]
           
@@ -652,7 +652,7 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
       (fun K =>
         Cocones.ext (Iso.refl _)
           (by
-            rintro (_ | _) <;> dsimp <;> simp ))
+            rintro (_ | _) <;> dsimp' <;> simp ))
       fun K₁ K₂ f => by
       ext
       simp
@@ -662,12 +662,12 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
         Cofork.ext (Iso.refl _)
           (by
             ext
-            dsimp
+            dsimp'
             simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
             rfl))
       fun K₁ K₂ f => by
       ext
-      dsimp
+      dsimp'
       simp
 
 end MultispanIndex

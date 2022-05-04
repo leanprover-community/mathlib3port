@@ -46,14 +46,14 @@ def eq : KleisliCat m ≌ Kleisli (of_type_monad m) where
       map_comp' := fun X Y Z f g => by
         unfold_projs
         ext
-        dsimp
+        dsimp'
         simp [mjoin, seq_bind_eq] }
   inverse :=
     { obj := fun X => X, map := fun X Y f => f, map_id' := fun X => rfl,
       map_comp' := fun X Y Z f g => by
         unfold_projs
         ext
-        dsimp
+        dsimp'
         simp [mjoin, seq_bind_eq] }
   unitIso := by
     refine' nat_iso.of_components (fun X => iso.refl X) fun X Y f => _

@@ -162,25 +162,25 @@ instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
         has_biproduct_of_total
           { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
             π := fun j x y => by
-              dsimp  at x⊢
+              dsimp'  at x⊢
               refine' if h : x.1 = j then _ else 0
               refine' if h' : @Eq.ndrec J x.1 (fun j => (f j).ι) x.2 _ h = y then _ else 0
               apply eq_to_hom
               substs h h',-- Notice we were careful not to use `subst` until we had a goal in `Prop`.
             ι := fun j x y => by
-              dsimp  at y⊢
+              dsimp'  at y⊢
               refine' if h : y.1 = j then _ else 0
               refine' if h' : @Eq.ndrec J y.1 (fun j => (f j).ι) y.2 _ h = x then _ else 0
               apply eq_to_hom
               substs h h',
             ι_π := fun j j' => by
               ext x y
-              dsimp
+              dsimp'
               simp_rw [dite_comp, comp_dite]
               simp only [if_t_t, dite_eq_ite, dif_ctx_congr, limits.comp_zero, limits.zero_comp, eq_to_hom_trans,
                 Finset.sum_congr]
               erw [Finset.sum_sigma]
-              dsimp
+              dsimp'
               simp only [if_congr, if_true, dif_ctx_congr, Finset.sum_dite_irrel, Finset.mem_univ,
                 Finset.sum_const_zero, Finset.sum_congr, Finset.sum_dite_eq']
               split_ifs with h h'
@@ -193,9 +193,9 @@ instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
               · rfl
                  }
           (by
-            dsimp
+            dsimp'
             funext i₁
-            dsimp  at i₁⊢
+            dsimp'  at i₁⊢
             rcases i₁ with ⟨j₁, i₁⟩
             -- I'm not sure why we can't just `simp` by `finset.sum_apply`: something doesn't quite match
             convert Finset.sum_apply _ _ _ using 1
@@ -316,16 +316,16 @@ def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M
   hom_inv_id' := by
     simp only [biproduct.lift_desc]
     funext i
-    dsimp
+    dsimp'
     convert Finset.sum_apply _ _ _
-    · dsimp
+    · dsimp'
       rfl
       
     · apply heq_of_eq
       symm
       funext j
       simp only [Finset.sum_apply]
-      dsimp
+      dsimp'
       simp [dite_comp, comp_dite, Mat_.id_apply]
       
   inv_hom_id' := by
@@ -362,11 +362,11 @@ theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [Functor.Additi
   ext
   simp only [additive_obj_iso_biproduct_hom, category.assoc, biproduct.lift_π, functor.map_bicone_π, biproduct.bicone_π,
     biproduct.lift_matrix]
-  dsimp [embedding]
+  dsimp' [embedding]
   simp only [← F.map_comp, biproduct.lift_π, biproduct.matrix_π, category.assoc]
   simp only [← F.map_comp, ← F.map_sum, biproduct.lift_desc, biproduct.lift_π_assoc, comp_sum]
   simp only [comp_def, comp_dite, comp_zero, Finset.sum_dite_eq', Finset.mem_univ, if_true]
-  dsimp
+  dsimp'
   simp only [Finset.sum_singleton, dite_comp, zero_comp]
   congr
   symm
@@ -410,7 +410,7 @@ def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F
   NatIso.ofComponents
     (fun X => { hom := biproduct.desc fun P => 𝟙 (F.obj X), inv := biproduct.lift fun P => 𝟙 (F.obj X) }) fun X Y f =>
     by
-    dsimp
+    dsimp'
     ext
     simp only [category.id_comp, biproduct.ι_desc_assoc]
     erw [biproduct.ι_matrix_assoc]
@@ -428,14 +428,14 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
           (biproduct.mapIso fun i => (embeddingLiftIso F).symm.app (M.x i)) ≪≫
             (additiveObjIsoBiproduct (lift F) M).symm)
     fun M N f => by
-    dsimp only [iso.trans_hom, iso.symm_hom, biproduct.map_iso_hom]
+    dsimp' only [iso.trans_hom, iso.symm_hom, biproduct.map_iso_hom]
     simp only [additive_obj_iso_biproduct_naturality_assoc]
     simp only [biproduct.matrix_map_assoc, category.assoc]
     simp only [additive_obj_iso_biproduct_naturality']
     simp only [biproduct.map_matrix_assoc, category.assoc]
     congr
     ext j k ⟨⟩
-    dsimp
+    dsimp'
     simp
     convert α.hom.naturality (f j k)
     erw [biproduct.matrix_π]
@@ -561,7 +561,7 @@ instance : EssSurj (equivalenceSingleObjInverse R) where
     ⟨{ ι := X, x := fun _ => PUnit.unit },
       ⟨eqToIso
           (by
-            dsimp
+            dsimp'
             cases X
             congr)⟩⟩
 

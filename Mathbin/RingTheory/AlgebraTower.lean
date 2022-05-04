@@ -211,7 +211,7 @@ theorem Basis.smul_apply {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (
   rw [Basis.apply_eq_iff]
   ext ⟨i', j'⟩
   rw [Basis.smul_repr, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply]
-  dsimp only
+  dsimp' only
   split_ifs with hi
   · simp [hi, Finsupp.single_apply]
     
@@ -347,7 +347,7 @@ def algHomEquivSigma : (C →ₐ[A] D) ≃ Σf : B →ₐ[A] D, @AlgHom B C D _ 
     let alg := fg.1.toRingHom.toAlgebra
     fg.2.restrictScalars A
   left_inv := fun f => by
-    dsimp only
+    dsimp' only
     ext
     rfl
   right_inv := by

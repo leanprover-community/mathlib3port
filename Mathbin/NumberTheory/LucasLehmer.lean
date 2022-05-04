@@ -44,7 +44,7 @@ def mersenne (p : ℕ) : ℕ :=
   2 ^ p - 1
 
 theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p := by
-  dsimp [mersenne]
+  dsimp' [mersenne]
   calc 0 < 2 ^ 1 - 1 := by
       norm_num _ ≤ 2 ^ p - 1 := Nat.pred_le_predₓ (Nat.pow_le_pow_of_le_rightₓ (Nat.succ_posₓ 1) h)
 
@@ -94,7 +94,7 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 := 
   exact_mod_cast Nat.one_lt_two_pow p w
 
 theorem s_mod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i := by
-  cases i <;> dsimp [s_mod]
+  cases i <;> dsimp' [s_mod]
   · exact sup_eq_left.mp rfl
     
   · apply Int.mod_nonneg
@@ -116,7 +116,7 @@ theorem s_mod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
 
 theorem s_zmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : Zmod (2 ^ (p' + 2) - 1)) := by
   induction' i with i ih
-  · dsimp [s, s_zmod]
+  · dsimp' [s, s_zmod]
     norm_num
     
   · push_cast [s, s_zmod, ih]
@@ -140,7 +140,7 @@ def lucasLehmerResidue (p : ℕ) : Zmod (2 ^ p - 1) :=
   sZmod p (p - 2)
 
 theorem residue_eq_zero_iff_s_mod_eq_zero (p : ℕ) (w : 1 < p) : lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 := by
-  dsimp [lucas_lehmer_residue]
+  dsimp' [lucas_lehmer_residue]
   rw [s_zmod_eq_s_mod p]
   constructor
   · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
@@ -243,14 +243,14 @@ theorem bit1_fst (x : X q) : (bit1 x).1 = bit1 x.1 :=
 
 @[simp]
 theorem bit1_snd (x : X q) : (bit1 x).2 = bit0 x.2 := by
-  dsimp [bit1]
+  dsimp' [bit1]
   simp
 
 instance : Monoidₓ (X q) :=
   { (inferInstance : Mul (X q)) with
     mul_assoc := fun x y z => by
       ext <;>
-        · dsimp
+        · dsimp'
           ring
           ,
     one := ⟨1, 0⟩,
@@ -261,13 +261,13 @@ instance : Monoidₓ (X q) :=
 
 theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
   ext <;>
-    · dsimp
+    · dsimp'
       ring
       
 
 theorem right_distrib (x y z : X q) : (x + y) * z = x * z + y * z := by
   ext <;>
-    · dsimp
+    · dsimp'
       ring
       
 
@@ -279,7 +279,7 @@ instance : CommRingₓ (X q) :=
   { (inferInstance : Ringₓ (X q)) with
     mul_comm := fun x y => by
       ext <;>
-        · dsimp
+        · dsimp'
           ring
            }
 
@@ -293,7 +293,7 @@ theorem nat_coe_fst (n : ℕ) : (n : X q).fst = (n : Zmod q) := by
   induction n
   · rfl
     
-  · dsimp
+  · dsimp'
     simp only [add_left_injₓ]
     exact n_ih
     
@@ -303,7 +303,7 @@ theorem nat_coe_snd (n : ℕ) : (n : X q).snd = (0 : Zmod q) := by
   induction n
   · rfl
     
-  · dsimp
+  · dsimp'
     simp only [add_zeroₓ]
     exact n_ih
     
@@ -326,7 +326,7 @@ theorem coe_nat (n : ℕ) : ((n : ℤ) : X q) = (n : X q) := by
 
 /-- The cardinality of `X` is `q^2`. -/
 theorem X_card : Fintype.card (X q) = q ^ 2 := by
-  dsimp [X]
+  dsimp' [X]
   rw [Fintype.card_prod, Zmod.card q]
   ring
 
@@ -345,17 +345,17 @@ def ωb : X q :=
   (2, -1)
 
 theorem ω_mul_ωb (q : ℕ+) : (ω : X q) * ωb = 1 := by
-  dsimp [ω, ωb]
+  dsimp' [ω, ωb]
   ext <;> simp <;> ring
 
 theorem ωb_mul_ω (q : ℕ+) : (ωb : X q) * ω = 1 := by
-  dsimp [ω, ωb]
+  dsimp' [ω, ωb]
   ext <;> simp <;> ring
 
 /-- A closed form for the recurrence relation. -/
 theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^ 2 ^ i := by
   induction' i with i ih
-  · dsimp [s, ω, ωb]
+  · dsimp' [s, ω, ωb]
     ext <;>
       · simp <;> rfl
         
@@ -383,7 +383,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
   simp at H
   interval_cases q (p' + 2) <;> clear H
   · -- If q = 1, we get a contradiction from 2^p = 2
-    dsimp [q]  at h
+    dsimp' [q]  at h
     injection h with h'
     clear h
     simp [mersenne] at h'
@@ -400,7 +400,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
           )
     
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
-    dsimp [q]  at h
+    dsimp' [q]  at h
     injection h with h'
     clear h
     rw [mersenne, Pnat.one_coe, Nat.min_fac_eq_two_iff, pow_succₓ] at h'
@@ -409,17 +409,17 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
 
 theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ, (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 := by
-  dsimp [lucas_lehmer_residue]  at h
+  dsimp' [lucas_lehmer_residue]  at h
   rw [s_zmod_eq_s p'] at h
   simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
   replace h := congr_argₓ (fun n : ℤ => (n : X (q (p' + 2)))) h
   -- coercion from ℤ to X q
-  dsimp  at h
+  dsimp'  at h
   rw [closed_form] at h
   replace h := congr_argₓ (fun x => ω ^ 2 ^ p' * x) h
-  dsimp  at h
+  dsimp'  at h
   have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by
     ring_exp
   rw [mul_addₓ, ← pow_addₓ ω, t, ← mul_powₓ ω ωb (2 ^ p'), ω_mul_ωb, one_pow] at h
@@ -528,7 +528,7 @@ unsafe instance int_pexpr : has_to_pexpr ℤ :=
 
 theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) (h3 : (b * b - 2) % a = c) :
     sMod p (i + 1) = c := by
-  dsimp [s_mod, mersenne]
+  dsimp' [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
@@ -604,7 +604,7 @@ Someone should do this, too!
 
 theorem modeq_mersenne (n k : ℕ) : k ≡ k / 2 ^ n + k % 2 ^ n [MOD 2 ^ n - 1] := by
   -- See https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/help.20finding.20a.20lemma/near/177698446
-  conv in k => rw [← Nat.div_add_mod k (2 ^ n)]
+  conv in k => rw [← Nat.div_add_modₓ k (2 ^ n)]
   refine' Nat.Modeq.add_right _ _
   conv => congr skip skip rw [← one_mulₓ (k / 2 ^ n)]
   exact (Nat.modeq_sub <| Nat.succ_le_of_ltₓ <| pow_pos zero_lt_two _).mul_right _

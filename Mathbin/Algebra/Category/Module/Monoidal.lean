@@ -141,7 +141,7 @@ theorem triangle (M N : ModuleCat.{u} R) :
   apply TensorProduct.ext_threefold
   intro x y z
   change R at y
-  dsimp [tensor_hom, associator]
+  dsimp' [tensor_hom, associator]
   erw [TensorProduct.lid_tmul, TensorProduct.rid_tmul]
   exact (TensorProduct.smul_tmul _ _ _).symm
 

@@ -284,7 +284,7 @@ theorem nth_mul_coeff' (n : ℕ) :
     cases' ha with ha ha <;> linarith only [ha]
   use f
   intro x y
-  dsimp [peval]
+  dsimp' [peval]
   rw [← hf₀]
   simp only [f, Function.uncurry_apply_pair]
   congr

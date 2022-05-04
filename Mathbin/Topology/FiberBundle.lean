@@ -572,7 +572,7 @@ noncomputable def TopologicalFiberBundle.Trivialization.comap (e : Trivializatio
     simp [hp]
   left_inv' := by
     rintro ⟨⟨b, x⟩, hbx⟩ hb
-    dsimp  at *
+    dsimp'  at *
     have hx : x ∈ e.source := e.mem_source.2 (hbx ▸ hb)
     ext <;> simp [*]
   right_inv' := fun hp : f p.1 ∈ e.BaseSet => by
@@ -949,7 +949,7 @@ def localTrivAsLocalEquiv (i : ι) : LocalEquiv Z.TotalSpace (B × F) where
   left_inv' := by
     rintro ⟨x, v⟩ hx
     change x ∈ Z.base_set i at hx
-    dsimp only
+    dsimp' only
     rw [Z.coord_change_comp, Z.coord_change_self]
     · exact Z.mem_base_set_at _
       
@@ -1046,7 +1046,7 @@ def localTriv (i : ι) : Trivialization F Z.proj where
       rw [(Z.local_triv_as_local_equiv_trans i j).source_inter_preimage_eq]
       exact (continuous_on_open_iff (Z.triv_change i j).open_source).1 (Z.triv_change i j).ContinuousOn _ s_open
     convert this using 1
-    dsimp [LocalEquiv.trans_source]
+    dsimp' [LocalEquiv.trans_source]
     rw [← preimage_comp, inter_assoc]
     rfl
   toLocalEquiv := Z.localTrivAsLocalEquiv i

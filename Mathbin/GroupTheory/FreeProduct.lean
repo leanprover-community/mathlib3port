@@ -411,13 +411,13 @@ def equiv : FreeProduct M ≃ Word M where
   toFun := fun m => m • Empty
   invFun := fun w => prod w
   left_inv := fun m => by
-    dsimp only <;> rw [prod_smul, prod_empty, mul_oneₓ]
+    dsimp' only <;> rw [prod_smul, prod_empty, mul_oneₓ]
   right_inv := by
     apply smul_induction
-    · dsimp only
+    · dsimp' only
       rw [prod_empty, one_smul]
       
-    · dsimp only
+    · dsimp' only
       intro i m w ih
       rw [prod_smul, mul_smul, ih]
       
@@ -777,7 +777,7 @@ theorem lift_injective_of_ping_pong : Function.Injective (lift f) := by
   apply (injective_iff_map_eq_one (lift f)).mpr
   rw [free_product.word.equiv.forall_congr_left']
   · intro w Heq
-    dsimp [word.equiv]  at *
+    dsimp' [word.equiv]  at *
     · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
       rfl
       

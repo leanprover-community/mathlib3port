@@ -399,7 +399,7 @@ theorem NormedGroup.cauchy_series_of_le_geometric'' {C : ℝ} {u : ℕ → α} {
   · exact C
     
   intro n
-  dsimp [v]
+  dsimp' [v]
   split_ifs with H H
   · rw [norm_zero]
     exact mul_nonneg hC (pow_nonneg hr₀.le _)
@@ -506,7 +506,7 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SemiNormedGroup 
     exact hN h''.symm
     
   · intro i
-    dsimp only [comp_app]
+    dsimp' only [comp_app]
     convert hN₀ (i + N) (hNN₀.trans (N.le_add_left i)) using 3
     ac_rfl
     

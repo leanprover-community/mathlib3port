@@ -616,14 +616,14 @@ variable (C)
 
 /-- `has_binary_products` represents a choice of product for every pair of objects.
 
-See https://stacks.math.columbia.edu/tag/001T.
+See <https://stacks.math.columbia.edu/tag/001T>.
 -/
 abbrev HasBinaryProducts :=
   HasLimitsOfShape (Discrete WalkingPair.{v}) C
 
 /-- `has_binary_coproducts` represents a choice of coproduct for every pair of objects.
 
-See https://stacks.math.columbia.edu/tag/04AP.
+See <https://stacks.math.columbia.edu/tag/04AP>.
 -/
 abbrev HasBinaryCoproducts :=
   HasColimitsOfShape (Discrete WalkingPair.{v}) C
@@ -988,21 +988,21 @@ def Over.coprod [HasBinaryCoproducts C] {A : C} : Over A ⥤ Over A ⥤ Over A w
     { app := fun g =>
         Over.homMk (coprod.map k.left (𝟙 _))
           (by
-            dsimp
+            dsimp'
             rw [coprod.map_desc, category.id_comp, over.w k]),
       naturality' := fun f g k => by
         ext <;>
-          · dsimp
+          · dsimp'
             simp
              }
   map_id' := fun X => by
     ext <;>
-      · dsimp
+      · dsimp'
         simp
         
   map_comp' := fun X Y Z f g => by
     ext <;>
-      · dsimp
+      · dsimp'
         simp
         
 

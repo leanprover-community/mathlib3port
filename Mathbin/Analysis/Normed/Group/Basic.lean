@@ -171,9 +171,12 @@ theorem dist_add_left (g h₁ h₂ : E) : dist (g + h₁) (g + h₂) = dist h₁
 theorem dist_add_right (g₁ g₂ h : E) : dist (g₁ + h) (g₂ + h) = dist g₁ g₂ := by
   simp [dist_eq_norm]
 
+theorem dist_neg (x y : E) : dist (-x) y = dist x (-y) := by
+  simp_rw [dist_eq_norm, ← norm_neg (-x - y), neg_sub, sub_neg_eq_add, add_commₓ]
+
 @[simp]
 theorem dist_neg_neg (g h : E) : dist (-g) (-h) = dist g h := by
-  simp only [dist_eq_norm, neg_sub_neg, norm_sub_rev]
+  rw [dist_neg, neg_negₓ]
 
 @[simp]
 theorem dist_sub_left (g h₁ h₂ : E) : dist (g - h₁) (g - h₂) = dist h₁ h₂ := by
@@ -686,9 +689,12 @@ theorem edist_add_left (g h₁ h₂ : E) : edist (g + h₁) (g + h₂) = edist h
 theorem edist_add_right (g₁ g₂ h : E) : edist (g₁ + h) (g₂ + h) = edist g₁ g₂ := by
   simp [edist_dist]
 
+theorem edist_neg (x y : E) : edist (-x) y = edist x (-y) := by
+  simp_rw [edist_dist, dist_neg]
+
 @[simp]
 theorem edist_neg_neg (x y : E) : edist (-x) (-y) = edist x y := by
-  rw [edist_dist, dist_neg_neg, edist_dist]
+  rw [edist_neg, neg_negₓ]
 
 @[simp]
 theorem edist_sub_left (g h₁ h₂ : E) : edist (g - h₁) (g - h₂) = edist h₁ h₂ := by
@@ -700,6 +706,10 @@ theorem edist_sub_right (g₁ g₂ h : E) : edist (g₁ - h) (g₂ - h) = edist 
 
 theorem nnnorm_sum_le (s : Finset ι) (f : ι → E) : ∥∑ a in s, f a∥₊ ≤ ∑ a in s, ∥f a∥₊ :=
   s.le_sum_of_subadditive nnnorm nnnorm_zero nnnorm_add_le f
+
+theorem nnnorm_sum_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ≥0 } (h : ∀, ∀ b ∈ s, ∀, ∥f b∥₊ ≤ n b) :
+    ∥∑ b in s, f b∥₊ ≤ ∑ b in s, n b :=
+  (norm_sum_le_of_le s h).trans_eq Nnreal.coe_sum.symm
 
 theorem AddMonoidHom.lipschitz_of_bound_nnnorm (f : E →+ F) (C : ℝ≥0 ) (h : ∀ x, ∥f x∥₊ ≤ C * ∥x∥₊) :
     LipschitzWith C f :=
@@ -837,7 +847,7 @@ theorem norm_prod_le_iff {x : E × F} {r : ℝ} : ∥x∥ ≤ r ↔ ∥x.1∥ �
 using the sup norm. -/
 noncomputable instance Pi.semiNormedGroup {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] :
     SemiNormedGroup (∀ i, π i) where
-  norm := fun f => ((Finset.sup Finset.univ fun b => ∥f b∥₊ : ℝ≥0 ) : ℝ)
+  norm := fun f => ↑(Finset.univ.sup fun b => ∥f b∥₊)
   dist_eq := fun x y =>
     congr_argₓ (coe : ℝ≥0 → ℝ) <|
       congr_argₓ (Finset.sup Finset.univ) <|
@@ -1079,7 +1089,7 @@ theorem cauchy_seq_sum_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀, 
       simp [d]]
   have : ∀, ∀ n ≥ N, ∀, d n = d N := by
     intro n hn
-    dsimp [d]
+    dsimp' [d]
     rw [eventually_constant_sum _ hn]
     intro m hm
     simp [huv m hm]

@@ -175,6 +175,12 @@ theorem exists_pempty {P : Pempty → Prop} : (∃ x : Pempty, P x) ↔ False :=
     cases' h with w
     cases w, False.elim⟩
 
+theorem congr_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} {x : α} {y : β} (h₁ : HEq f g) (h₂ : HEq x y) : f x = g y :=
+  by
+  cases h₂
+  cases h₁
+  rfl
+
 theorem congr_arg_heq {α} {β : α → Sort _} (f : ∀ a, β a) : ∀ {a₁ a₂ : α}, a₁ = a₂ → HEq (f a₁) (f a₂)
   | a, _, rfl => HEq.rfl
 
@@ -212,6 +218,7 @@ theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b
     rw [h], fun h a => by
     rw [h]⟩
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 
@@ -230,7 +237,7 @@ The compromise is to add the assumption `[fact p.prime]` to `zmod.field`.
 In particular, this class is not intended for turning the type class system
 into an automated theorem prover for first order logic. -/
 class Fact (p : Prop) : Prop where
-  out {} : p
+  out : p
 
 library_note "fact non-instances"/--
 In most cases, we should not have global instances of `fact`; typeclass search only reads the head
@@ -1061,11 +1068,6 @@ theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : �
 
 theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} e : α = β h₂ : cast e a = a', HEq a a'
   | α, _, a, a', rfl, h => Eq.recOnₓ h (HEq.refl _)
-
-theorem congr_fun_heq {α β γ : Sort _} {f : α → γ} {g : β → γ} (h₁ : β = α) (h₂ : HEq f g) (x : β) :
-    f (cast h₁ x) = g x := by
-  subst h₁
-  rw [eq_of_heq h₂, cast_eq]
 
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
   ⟨heq_of_cast_eq _, fun h => by

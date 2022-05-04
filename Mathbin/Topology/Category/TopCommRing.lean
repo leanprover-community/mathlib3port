@@ -48,7 +48,7 @@ instance : Category TopCommRing.{u} where
       -- TODO automate
       cases f
       cases g
-      dsimp
+      dsimp'
       apply Continuous.comp <;> assumption⟩
 
 instance : ConcreteCategory TopCommRing.{u} where

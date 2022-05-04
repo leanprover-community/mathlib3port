@@ -53,7 +53,7 @@ well as their duals) which can be simpler in practice.
 
 Uniqueness of adjoints is shown in `category_theory.adjunction.opposites`.
 
-See https://stacks.math.columbia.edu/tag/0037.
+See <https://stacks.math.columbia.edu/tag/0037>.
 -/
 structure Adjunction (F : C ⥤ D) (G : D ⥤ C) where
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
@@ -136,14 +136,14 @@ theorem hom_equiv_naturality_right_symm (f : X ⟶ G.obj Y) (g : Y ⟶ Y') :
 @[simp]
 theorem left_triangle : whiskerRight adj.Unit F ≫ whiskerLeft F adj.counit = NatTrans.id _ := by
   ext
-  dsimp
+  dsimp'
   erw [← adj.hom_equiv_counit, Equivₓ.symm_apply_eq, adj.hom_equiv_unit]
   simp
 
 @[simp]
 theorem right_triangle : whiskerLeft G adj.Unit ≫ whiskerRight adj.counit G = NatTrans.id _ := by
   ext
-  dsimp
+  dsimp'
   erw [← adj.hom_equiv_unit, ← Equivₓ.eq_symm_apply, adj.hom_equiv_counit]
   simp
 
@@ -263,14 +263,14 @@ def mkOfHomEquiv (adj : CoreHomEquiv F G) : F ⊣ G :=
         naturality' := by
           intros
           erw [← adj.hom_equiv_naturality_left, ← adj.hom_equiv_naturality_right]
-          dsimp
+          dsimp'
           simp },
     counit :=
       { app := fun Y => (adj.homEquiv _ _).invFun (𝟙 (G.obj Y)),
         naturality' := by
           intros
           erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm]
-          dsimp
+          dsimp'
           simp },
     hom_equiv_unit' := fun X Y f => by
       erw [← adj.hom_equiv_naturality_right] <;> simp ,
@@ -289,7 +289,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           rw [F.map_comp, assoc, ← functor.comp_map, adj.counit.naturality, ← assoc]
           convert id_comp f
           have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.left_triangle
-          dsimp  at t
+          dsimp'  at t
           simp only [id_comp] at t
           exact t,
         right_inv := fun g => by
@@ -297,7 +297,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           rw [G.map_comp, ← assoc, ← functor.comp_map, ← adj.unit.naturality, assoc]
           convert comp_id g
           have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.right_triangle
-          dsimp  at t
+          dsimp'  at t
           simp only [id_comp] at t
           exact t } }
 
@@ -355,7 +355,7 @@ variable {E : Type u₃} [ℰ : Category.{v₃} E] (H : D ⥤ E) (I : E ⥤ D)
 
 /-- Composition of adjunctions.
 
-See https://stacks.math.columbia.edu/tag/0DV0.
+See <https://stacks.math.columbia.edu/tag/0DV0>.
 -/
 def comp (adj₁ : F ⊣ G) (adj₂ : H ⊣ I) : F ⋙ H ⊣ I ⋙ G where
   homEquiv := fun X Z => Equivₓ.trans (adj₂.homEquiv _ _) (adj₁.homEquiv _ _)
@@ -499,11 +499,11 @@ def toAdjunction (e : C ≌ D) : e.Functor ⊣ e.inverse :=
   mkOfUnitCounit
     ⟨e.Unit, e.counit, by
       ext
-      dsimp
+      dsimp'
       simp only [id_comp]
       exact e.functor_unit_comp _, by
       ext
-      dsimp
+      dsimp'
       simp only [id_comp]
       exact e.unit_inverse_comp _⟩
 

@@ -370,7 +370,7 @@ theorem HasFderivAt.lim (hf : HasFderivAt f f' x) (v : E) {α : Type _} {c : α 
   intro U hU
   refine' (eventually_ne_of_tendsto_norm_at_top hc (0 : 𝕜)).mono fun y hy => _
   convert mem_of_mem_nhds hU
-  dsimp only
+  dsimp' only
   rw [← mul_smul, mul_inv_cancel hy, one_smul]
 
 theorem HasFderivAt.unique (h₀ : HasFderivAt f f₀' x) (h₁ : HasFderivAt f f₁' x) : f₀' = f₁' := by
@@ -1527,13 +1527,13 @@ variable {ι : Type _} {u : Finset ι} {A : ι → E → F} {A' : ι → E →L[
 
 theorem HasStrictFderivAt.sum (h : ∀, ∀ i ∈ u, ∀, HasStrictFderivAt (A i) (A' i) x) :
     HasStrictFderivAt (fun y => ∑ i in u, A i y) (∑ i in u, A' i) x := by
-  dsimp [HasStrictFderivAt]  at *
+  dsimp' [HasStrictFderivAt]  at *
   convert is_o.sum h
   simp [Finset.sum_sub_distrib, ContinuousLinearMap.sum_apply]
 
 theorem HasFderivAtFilter.sum (h : ∀, ∀ i ∈ u, ∀, HasFderivAtFilter (A i) (A' i) x L) :
     HasFderivAtFilter (fun y => ∑ i in u, A i y) (∑ i in u, A' i) x L := by
-  dsimp [HasFderivAtFilter]  at *
+  dsimp' [HasFderivAtFilter]  at *
   convert is_o.sum h
   simp [ContinuousLinearMap.sum_apply]
 

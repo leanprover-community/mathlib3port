@@ -295,12 +295,12 @@ theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v, S v ↔ p
 
 theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x) (p : Poly (Sum α β))
     (v : α → ℕ) : (∃ t, p (v ⊗ t) = 0) ↔ ∃ t, p.map (inl ⊗ inr ∘ f) (v ⊗ t) = 0 := by
-  dsimp
+  dsimp'
   refine' ⟨fun t => _, fun t => _⟩ <;> cases' t with t ht
   · have : (v ⊗ (0 ::ₒ t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
       funext fun s => by
         cases' s with a b <;>
-          dsimp [(· ∘ ·)] <;>
+          dsimp' [(· ∘ ·)] <;>
             try
                 rw [inv] <;>
               rfl
@@ -363,7 +363,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                   exact hm,
                 by
                 refine' List.All₂.imp (fun q hq => _) hn
-                dsimp [(· ∘ ·)]
+                dsimp' [(· ∘ ·)]
                 rw
                     [show (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n from
                       funext fun s => by
@@ -378,7 +378,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
                     hl⟩,
                 ⟨t ∘ inr, by
                   refine' List.All₂.imp (fun q hq => _) hr
-                  dsimp [(· ∘ ·)]  at hq
+                  dsimp' [(· ∘ ·)]  at hq
                   rwa
                     [show (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ t ∘ inr from
                       funext fun s => by
@@ -476,7 +476,7 @@ theorem dioph_fn_iff_pfun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α
 
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
   (of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none))) fun v => by
-    dsimp
+    dsimp'
     exact Int.eq_nat_abs_iff_mul_eq_zero
 
 theorem proj_dioph (i : α) : DiophFn fun v => v i :=
@@ -512,7 +512,7 @@ attribute [local reducible] Vector3
 theorem dioph_fn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : Vector3 ℕ n → ℕ} (df : DiophFn f) :
     Dioph { v : Vector3 ℕ n | f v :: v ∈ S } :=
   (ext (dioph_fn_comp1 (reindex_dioph _ (none :: some) d) df)) fun v => by
-    dsimp
+    dsimp'
     congr
     ext x
     cases x <;> rfl
@@ -520,7 +520,7 @@ theorem dioph_fn_vec_comp1 {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : V
 theorem vec_ex1_dioph n {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph { v : Fin2 n → ℕ | ∃ x, x :: v ∈ S } :=
   (ext (ex1_dioph <| reindex_dioph _ (none :: some) d)) fun v =>
     exists_congr fun x => by
-      dsimp
+      dsimp'
       rw
         [show Option.cons x v ∘ cons none some = x :: v from
           funext fun s => by
@@ -537,7 +537,7 @@ theorem dioph_fn_compn :
       Dioph { v : α → ℕ | (v ⊗ fun i => f i v) ∈ S }
   | 0, S, d, f => fun df =>
     (ext (reindex_dioph _ (id ⊗ Fin2.elim0) d)) fun v => by
-      dsimp
+      dsimp'
       congr
       ext x
       obtain _ | _ | _ := x
@@ -549,14 +549,14 @@ theorem dioph_fn_compn :
           have : Dioph { v | v ∘ inl ⊗ f (v ∘ inl) :: v ∘ inr ∈ S } :=
             (ext (dioph_fn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none :: some ∘ inr) d) <| reindex_dioph_fn inl df))
               fun v => by
-              dsimp
+              dsimp'
               congr
               ext x
               obtain _ | _ | _ := x <;> rfl
           have : Dioph { v | (v ⊗ f v :: fun i : Fin2 n => fl i v) ∈ S } :=
             @dioph_fn_compn n (fun v => S (v ∘ inl ⊗ f (v ∘ inl) :: v ∘ inr)) this _ dfl
           (ext this) fun v => by
-            dsimp
+            dsimp'
             congr
             ext x
             obtain _ | _ | _ := x <;> rfl
@@ -643,7 +643,7 @@ localized [Dioph] infixl:50 " D< " => Dioph.lt_dioph
 
 theorem ne_dioph : Dioph { v | f v ≠ g v } :=
   (ext (df D< dg D∨ dg D< df)) fun v => by
-    dsimp
+    dsimp'
     exact lt_or_lt_iff_ne
 
 -- mathport name: «expr D≠ »

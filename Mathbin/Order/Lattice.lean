@@ -110,10 +110,10 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
   le := fun a b => a⊔b = b
   le_refl := sup_idem
   le_trans := fun a b c hab hbc => by
-    dsimp only [(· ≤ ·)]  at *
+    dsimp' only [(· ≤ ·)]  at *
     rwa [← hbc, ← sup_assoc, hab]
   le_antisymm := fun a b hab hba => by
-    dsimp only [(· ≤ ·)]  at *
+    dsimp' only [(· ≤ ·)]  at *
     rwa [← hba, sup_comm]
   le_sup_left := fun a b =>
     show a⊔(a⊔b) = a⊔b by
@@ -122,7 +122,7 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
     show b⊔(a⊔b) = a⊔b by
       rw [sup_comm, sup_assoc, sup_idem]
   sup_le := fun a b c hac hbc => by
-    dsimp only [(· ≤ ·), Preorderₓ.Le]  at *
+    dsimp' only [(· ≤ ·), Preorderₓ.Le]  at *
     rwa [sup_assoc, hbc]
 
 instance (α : Type _) [HasInf α] : HasSup (OrderDual α) :=
@@ -206,37 +206,6 @@ theorem sup_le_sup_right (h₁ : a ≤ b) c : a⊔c ≤ b⊔c :=
 theorem le_of_sup_eq (h : a⊔b = b) : a ≤ b := by
   rw [← h]
   simp
-
-theorem sup_ind [IsTotal α (· ≤ ·)] (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊔b) :=
-  (IsTotal.total a b).elim
-    (fun h : a ≤ b => by
-      rwa [sup_eq_right.2 h])
-    fun h => by
-    rwa [sup_eq_left.2 h]
-
-@[simp]
-theorem sup_lt_iff [IsTotal α (· ≤ ·)] {a b c : α} : b⊔c < a ↔ b < a ∧ c < a :=
-  ⟨fun h => ⟨le_sup_left.trans_lt h, le_sup_right.trans_lt h⟩, fun h => sup_ind b c h.1 h.2⟩
-
-@[simp]
-theorem le_sup_iff [IsTotal α (· ≤ ·)] {a b c : α} : a ≤ b⊔c ↔ a ≤ b ∨ a ≤ c :=
-  ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp
-      (fun bc => by
-        rwa [sup_eq_left.2 bc] at h)
-      fun bc => by
-      rwa [sup_eq_right.2 bc] at h,
-    fun h => h.elim le_sup_of_le_left le_sup_of_le_right⟩
-
-@[simp]
-theorem lt_sup_iff [IsTotal α (· ≤ ·)] {a b c : α} : a < b⊔c ↔ a < b ∨ a < c :=
-  ⟨fun h =>
-    (total_of (· ≤ ·) c b).imp
-      (fun bc => by
-        rwa [sup_eq_left.2 bc] at h)
-      fun bc => by
-      rwa [sup_eq_right.2 bc] at h,
-    fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
 
 @[simp]
 theorem sup_idem : a⊔a = a := by
@@ -434,17 +403,6 @@ theorem inf_le_inf_left (a : α) {b c : α} (h : b ≤ c) : a⊓b ≤ a⊓c :=
 theorem le_of_inf_eq (h : a⊓b = a) : a ≤ b := by
   rw [← h]
   simp
-
-theorem inf_ind [IsTotal α (· ≤ ·)] (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊓b) :=
-  @sup_ind (OrderDual α) _ _ _ _ _ ha hb
-
-@[simp]
-theorem lt_inf_iff [IsTotal α (· ≤ ·)] {a b c : α} : a < b⊓c ↔ a < b ∧ a < c :=
-  @sup_lt_iff (OrderDual α) _ _ _ _ _
-
-@[simp]
-theorem inf_le_iff [IsTotal α (· ≤ ·)] {a b c : α} : b⊓c ≤ a ↔ b ≤ a ∨ c ≤ a :=
-  @le_sup_iff (OrderDual α) _ _ _ _ _
 
 @[simp]
 theorem inf_idem : a⊓a = a :=
@@ -746,11 +704,63 @@ instance (priority := 100) LinearOrderₓ.toLattice {α : Type u} [o : LinearOrd
   { o with sup := max, le_sup_left := le_max_leftₓ, le_sup_right := le_max_rightₓ, sup_le := fun a b c => max_leₓ,
     inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ, le_inf := fun a b c => le_minₓ }
 
-theorem sup_eq_max [LinearOrderₓ α] {x y : α} : x⊔y = max x y :=
+section LinearOrderₓ
+
+variable [LinearOrderₓ α] {a b c : α}
+
+theorem sup_eq_max : a⊔b = max a b :=
   rfl
 
-theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
+theorem inf_eq_min : a⊓b = min a b :=
   rfl
+
+theorem sup_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊔b) :=
+  (IsTotal.total a b).elim
+    (fun h : a ≤ b => by
+      rwa [sup_eq_right.2 h])
+    fun h => by
+    rwa [sup_eq_left.2 h]
+
+@[simp]
+theorem le_sup_iff : a ≤ b⊔c ↔ a ≤ b ∨ a ≤ c :=
+  ⟨fun h =>
+    (total_of (· ≤ ·) c b).imp
+      (fun bc => by
+        rwa [sup_eq_left.2 bc] at h)
+      fun bc => by
+      rwa [sup_eq_right.2 bc] at h,
+    fun h => h.elim le_sup_of_le_left le_sup_of_le_right⟩
+
+@[simp]
+theorem lt_sup_iff : a < b⊔c ↔ a < b ∨ a < c :=
+  ⟨fun h =>
+    (total_of (· ≤ ·) c b).imp
+      (fun bc => by
+        rwa [sup_eq_left.2 bc] at h)
+      fun bc => by
+      rwa [sup_eq_right.2 bc] at h,
+    fun h => h.elim lt_sup_of_lt_left lt_sup_of_lt_right⟩
+
+@[simp]
+theorem sup_lt_iff : b⊔c < a ↔ b < a ∧ c < a :=
+  ⟨fun h => ⟨le_sup_left.trans_lt h, le_sup_right.trans_lt h⟩, fun h => sup_ind b c h.1 h.2⟩
+
+theorem inf_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊓b) :=
+  @sup_ind (OrderDual α) _ _ _ _ ha hb
+
+@[simp]
+theorem inf_le_iff : b⊓c ≤ a ↔ b ≤ a ∨ c ≤ a :=
+  @le_sup_iff (OrderDual α) _ _ _ _
+
+@[simp]
+theorem inf_lt_iff : b⊓c < a ↔ b < a ∨ c < a :=
+  @lt_sup_iff (OrderDual α) _ _ _ _
+
+@[simp]
+theorem lt_inf_iff : a < b⊓c ↔ a < b ∧ a < c :=
+  @sup_lt_iff (OrderDual α) _ _ _ _
+
+end LinearOrderₓ
 
 theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel ((· ≤ ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] :
     (·⊔·) = (maxDefault : α → α → α) := by
@@ -858,20 +868,20 @@ protected theorem min [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf
 theorem le_map_sup [SemilatticeSup α] [SemilatticeSup β] {f : α → β} (h : Monotone f) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
   sup_le (h le_sup_left) (h le_sup_right)
 
-theorem map_sup [SemilatticeSup α] [IsTotal α (· ≤ ·)] [SemilatticeSup β] {f : α → β} (hf : Monotone f) (x y : α) :
-    f (x⊔y) = f x⊔f y :=
+theorem map_inf_le [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (h : Monotone f) (x y : α) : f (x⊓y) ≤ f x⊓f y :=
+  le_inf (h inf_le_left) (h inf_le_right)
+
+variable [LinearOrderₓ α]
+
+theorem map_sup [SemilatticeSup β] {f : α → β} (hf : Monotone f) (x y : α) : f (x⊔y) = f x⊔f y :=
   (IsTotal.total x y).elim
     (fun h : x ≤ y => by
       simp only [h, hf h, sup_of_le_right])
     fun h => by
     simp only [h, hf h, sup_of_le_left]
 
-theorem map_inf_le [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (h : Monotone f) (x y : α) : f (x⊓y) ≤ f x⊓f y :=
-  le_inf (h inf_le_left) (h inf_le_right)
-
-theorem map_inf [SemilatticeInf α] [IsTotal α (· ≤ ·)] [SemilatticeInf β] {f : α → β} (hf : Monotone f) (x y : α) :
-    f (x⊓y) = f x⊓f y :=
-  @Monotone.map_sup (OrderDual α) _ _ _ _ _ hf.dual x y
+theorem map_inf [SemilatticeInf β] {f : α → β} (hf : Monotone f) (x y : α) : f (x⊓y) = f x⊓f y :=
+  hf.dual.map_sup _ _
 
 end Monotone
 
@@ -898,15 +908,15 @@ protected theorem min [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf
 theorem map_sup_le [SemilatticeSup α] [SemilatticeInf β] {f : α → β} (h : Antitone f) (x y : α) : f (x⊔y) ≤ f x⊓f y :=
   h.dual_right.le_map_sup x y
 
-theorem map_sup [SemilatticeSup α] [IsTotal α (· ≤ ·)] [SemilatticeInf β] {f : α → β} (hf : Antitone f) (x y : α) :
-    f (x⊔y) = f x⊓f y :=
-  hf.dual_right.map_sup x y
-
 theorem le_map_inf [SemilatticeInf α] [SemilatticeSup β] {f : α → β} (h : Antitone f) (x y : α) : f x⊔f y ≤ f (x⊓y) :=
   h.dual_right.map_inf_le x y
 
-theorem map_inf [SemilatticeInf α] [IsTotal α (· ≤ ·)] [SemilatticeSup β] {f : α → β} (hf : Antitone f) (x y : α) :
-    f (x⊓y) = f x⊔f y :=
+variable [LinearOrderₓ α]
+
+theorem map_sup [SemilatticeInf β] {f : α → β} (hf : Antitone f) (x y : α) : f (x⊔y) = f x⊓f y :=
+  hf.dual_right.map_sup x y
+
+theorem map_inf [SemilatticeSup β] {f : α → β} (hf : Antitone f) (x y : α) : f (x⊓y) = f x⊔f y :=
   hf.dual_right.map_inf x y
 
 end Antitone

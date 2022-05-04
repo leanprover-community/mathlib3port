@@ -183,7 +183,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     let c : ℕ → R := fun n => Nat.recOn n a₀ fun _ b => b - f.eval b * Ring.inverse (f'.eval b)
     have hc : ∀ n, c (n + 1) = c n - f.eval (c n) * Ring.inverse (f'.eval (c n)) := by
       intro n
-      dsimp only [c, Nat.rec_add_one]
+      dsimp' only [c, Nat.rec_add_one]
       rfl
     -- we now spend some time determining properties of the sequence `c : ℕ → R`
     -- `hc_mod`: for every `n`, we have `c n ≡ a₀ [SMOD I]`

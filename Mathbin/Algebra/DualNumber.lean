@@ -94,7 +94,7 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
   Equivₓ.trans
     (show { e : A // e * e = 0 } ≃ { f : R →ₗ[R] A // ∀ x y, f x * f y = 0 } from
       (LinearMap.ringLmapEquivSelf R ℕ A).symm.toEquiv.subtypeEquiv fun a => by
-        dsimp
+        dsimp'
         simp_rw [smul_mul_smul]
         refine'
           ⟨fun h x y => h.symm ▸ smul_zero _, fun h => by

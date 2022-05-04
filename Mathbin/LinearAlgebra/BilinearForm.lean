@@ -334,7 +334,7 @@ def toLinHomAux₂ (A : BilinForm R M) : M →ₗ[R₂] M →ₗ[R] R where
       simp only [to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_left]
   map_smul' := fun c x =>
     LinearMap.ext <| by
-      dsimp [to_lin_hom_aux₁]
+      dsimp' [to_lin_hom_aux₁]
       intros
       simp only [← algebra_map_smul R c x, Algebra.smul_def, LinearMap.coe_mk, LinearMap.smul_apply, smul_left]
 
@@ -350,12 +350,12 @@ def toLinHom : BilinForm R M →ₗ[R₂] M →ₗ[R₂] M →ₗ[R] R where
   toFun := toLinHomAux₂
   map_add' := fun A₁ A₂ =>
     LinearMap.ext fun x => by
-      dsimp only [to_lin_hom_aux₁, to_lin_hom_aux₂]
+      dsimp' only [to_lin_hom_aux₁, to_lin_hom_aux₂]
       apply LinearMap.ext
       intro y
       simp only [to_lin_hom_aux₂, to_lin_hom_aux₁, LinearMap.coe_mk, LinearMap.add_apply, add_apply]
   map_smul' := fun c A => by
-    dsimp [to_lin_hom_aux₁, to_lin_hom_aux₂]
+    dsimp' [to_lin_hom_aux₁, to_lin_hom_aux₂]
     apply LinearMap.ext
     intro x
     apply LinearMap.ext

@@ -162,6 +162,10 @@ theorem Ico_succ_singleton : ico a (a + 1) = {a} := by
 theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : ico (a - 1) a = {a - 1} := by
   rw [← Icc_pred_right _ h, Icc_self]
 
+@[simp]
+theorem Ioc_succ_singleton : ioc b (b + 1) = {b + 1} := by
+  rw [← Nat.Icc_succ_left, Icc_self]
+
 variable {a b c}
 
 theorem Ico_succ_right_eq_insert_Ico (h : a ≤ b) : ico a (b + 1) = insert b (ico a b) := by

@@ -60,7 +60,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
   rw [mul_comm]
   /- Then the union of boxes `J ∈ π` such that `π.tag ∈ s` includes `F` and is included by `U`,
     hence its measure is `ε`-close to the measure of `s`. -/
-  dsimp [integral_sum]
+  dsimp' [integral_sum]
   simp only [mem_closed_ball, dist_eq_norm, ← indicator_const_smul_apply, sum_indicator_eq_sum_filter, ← sum_smul, ←
     sub_smul, norm_smul, Real.norm_eq_abs, ← prepartition.filter_boxes, ← prepartition.measure_Union_to_real]
   refine' mul_le_mul_of_nonneg_right _ (norm_nonneg y)
@@ -127,7 +127,7 @@ theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f 
   refine' le_transₓ _ (Nnreal.coe_lt_coe.2 hcε).le
   refine' (norm_sum_le_of_le _ _).trans (sum_le_has_sum _ (fun n _ => (δ n).2) (Nnreal.has_sum_coe.2 hδc))
   rintro n -
-  dsimp [integral_sum]
+  dsimp' [integral_sum]
   have : ∀, ∀ J ∈ π.filter fun J => N (π.tag J) = n, ∀, ∥(μ ↑J).toReal • f (π.tag J)∥ ≤ (μ J).toReal * n := by
     intro J hJ
     rw [tagged_prepartition.mem_filter] at hJ
@@ -261,7 +261,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
         the former in the formula for the integral sum changes the sum at most by `μ I * ε`. -/
     rw [← hπp.Union_eq, π.to_prepartition.measure_Union_to_real, sum_mul, integral_sum]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
-    dsimp
+    dsimp'
     rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.to_real_nonneg]
     refine' mul_le_mul_of_nonneg_left _ Ennreal.to_real_nonneg
     rw [← dist_eq_norm']

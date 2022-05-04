@@ -71,12 +71,12 @@ variable {c : M} (f : SmoothBumpFunction I c) {x : M} {I}
 /-- The function defined by `f : smooth_bump_function c`. Use automatic coercion to function
 instead. -/
 def toFun : M → ℝ :=
-  indicator (chartAt H c).Source (f.toContDiffBump ∘ extChartAt I c)
+  indicatorₓ (chartAt H c).Source (f.toContDiffBump ∘ extChartAt I c)
 
 instance : CoeFun (SmoothBumpFunction I c) fun _ => M → ℝ :=
   ⟨toFun⟩
 
-theorem coe_def : ⇑f = indicator (chartAt H c).Source (f.toContDiffBump ∘ extChartAt I c) :=
+theorem coe_def : ⇑f = indicatorₓ (chartAt H c).Source (f.toContDiffBump ∘ extChartAt I c) :=
   rfl
 
 theorem R_pos : 0 < f.r :=

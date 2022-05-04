@@ -150,14 +150,14 @@ def adj : T.free ⊣ T.forget :=
           invFun := fun f =>
             { f := T.map f ≫ Y.a,
               h' := by
-                dsimp
+                dsimp'
                 simp [← Y.assoc, ← T.μ.naturality_assoc] },
           left_inv := fun f => by
             ext
-            dsimp
+            dsimp'
             simp ,
           right_inv := fun f => by
-            dsimp only [forget_obj, monad_to_functor_eq_coe]
+            dsimp' only [forget_obj, monad_to_functor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
             apply category.comp_id } }
 
@@ -196,10 +196,10 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
   obj := fun A =>
     { a := A.a, a := h.app A.a ≫ A.a,
       unit' := by
-        dsimp
+        dsimp'
         simp [A.unit],
       assoc' := by
-        dsimp
+        dsimp'
         simp [A.assoc] }
   map := fun A₁ A₂ f => { f := f.f }
 
@@ -211,11 +211,11 @@ def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp ))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- A composition of monad morphisms gives the composition of corresponding functors.
@@ -227,11 +227,11 @@ def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) 
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp ))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- If `f` and `g` are two equal morphisms of monads, then the functors of algebras induced by them
@@ -246,11 +246,11 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
     (fun X =>
       Algebra.isoMk (Iso.refl _)
         (by
-          dsimp
+          dsimp'
           simp [h]))
     fun X Y f => by
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- Isomorphic monads give equivalent categories of algebras. Furthermore, they are equivalent as
@@ -396,15 +396,15 @@ def adj : G.forget ⊣ G.cofree :=
         { toFun := fun f =>
             { f := X.a ≫ G.map f,
               h' := by
-                dsimp
+                dsimp'
                 simp [← coalgebra.coassoc_assoc] },
           invFun := fun g => g.f ≫ G.ε.app Y,
           left_inv := fun f => by
-            dsimp
+            dsimp'
             rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc],
           right_inv := fun g => by
             ext1
-            dsimp
+            dsimp'
             rw [functor.map_comp, g.h_assoc, cofree_obj_a, comonad.right_counit]
             apply comp_id } }
 

@@ -860,7 +860,7 @@ theorem at_top_finset_eq_infi : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟
   refine' le_infi fun s => le_principal_iff.2 <| mem_infi_of_Inter s.finite_to_set (fun i => mem_principal_self _) _
   simp only [subset_def, mem_Inter, SetCoe.forall, mem_Ici, Finset.le_iff_subset, Finset.mem_singleton,
     Finset.subset_iff, forall_eq]
-  dsimp
+  dsimp'
   exact fun t => id
 
 /-- If `f` is a monotone sequence of `finset`s and each `x` belongs to one of `f n`, then

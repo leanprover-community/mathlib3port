@@ -152,14 +152,12 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
   apply h
 
 theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
-    (trace n R R) M = -M.charpoly.coeff (Fintype.card n - 1) := by
+    trace M = -M.charpoly.coeff (Fintype.card n - 1) := by
   rw [charpoly_coeff_eq_prod_coeff_of_le]
   swap
   rfl
-  rw [Fintype.card, prod_X_sub_C_coeff_card_pred univ fun i : n => M i i]
-  simp
-  rw [← Fintype.card, Fintype.card_pos_iff]
-  infer_instance
+  rw [Fintype.card, prod_X_sub_C_coeff_card_pred univ (fun i : n => M i i) Fintype.card_pos, neg_negₓ, trace]
+  rfl
 
 -- I feel like this should use polynomial.alg_hom_eval₂_algebra_map
 theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
@@ -169,7 +167,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
   trans Polynomial.sum (matPolyEquiv M) fun a : Matrix n n R => (a * (scalar n) r ^ e) i j
   · unfold Polynomial.sum
     rw [sum_apply]
-    dsimp
+    dsimp'
     rfl
     
   · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
@@ -222,7 +220,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     let this := hp
     rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
     have : Fact p.prime := ⟨hp⟩
-    dsimp  at hk
+    dsimp'  at hk
     rw [hk] at *
     apply (frobenius_inj K[X] p).iterate k
     repeat'
@@ -250,15 +248,14 @@ theorem Zmod.charpoly_pow_card (M : Matrix n n (Zmod p)) : (M ^ p).charpoly = M.
   rwa [Zmod.card] at h
 
 theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    trace n K K (M ^ Fintype.card K) = trace n K K M ^ Fintype.card K := by
+    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
   cases is_empty_or_nonempty n
-  · simp [zero_pow Fintype.card_pos]
+  · simp [zero_pow Fintype.card_pos, Matrix.trace]
     
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
     FiniteField.pow_card]
 
-theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) :
-    trace n (Zmod p) (Zmod p) (M ^ p) = trace n (Zmod p) (Zmod p) M ^ p := by
+theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) : trace (M ^ p) = trace M ^ p := by
   have h := FiniteField.trace_pow_card M
   rwa [Zmod.card] at h
 

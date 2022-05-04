@@ -573,7 +573,7 @@ instance is_noetherian_pi {R ι : Type _} {M : ι → Type _} [Ringₓ R] [∀ i
       have : ¬i = a := by
         rintro rfl
         exact has his
-      dsimp only [Or.byCases]
+      dsimp' only [Or.byCases]
       change i ∈ s at his
       rw [dif_neg this, dif_pos his]
       
@@ -664,7 +664,7 @@ theorem finite_of_linear_independent [Nontrivial R] [IsNoetherian R M] {s : Set 
     ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
         simp (config := { contextual := true })[le_antisymm_iffₓ, (this _ _).symm]⟩,
       by
-      dsimp [Gt] <;> simp only [lt_iff_le_not_leₓ, (this _ _).symm] <;> tauto⟩
+      dsimp' [Gt] <;> simp only [lt_iff_le_not_leₓ, (this _ _).symm] <;> tauto⟩
 
 /-- If the first and final modules in a short exact sequence are noetherian,
   then the middle module is also noetherian. -/
@@ -693,7 +693,7 @@ theorem IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot [I : IsNoe
     w (2 * n + 1)
       (by
         linarith)
-  dsimp  at w
+  dsimp'  at w
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   rw [eq_bot_iff]
   rintro - ⟨h, ⟨y, rfl⟩⟩

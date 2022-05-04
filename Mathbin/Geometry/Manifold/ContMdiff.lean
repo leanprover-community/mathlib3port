@@ -392,7 +392,7 @@ theorem cont_mdiff_on_iff :
       hdiff x (f x) (extChartAt I x x)
         (by
           simp' only [hx] with mfld_simps)
-    dsimp [ContDiffWithinAtProp]
+    dsimp' [ContDiffWithinAtProp]
     convert Z using 1
     mfld_set_tac
     
@@ -1047,7 +1047,7 @@ theorem ContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set
     rw [this] at B
     apply B.congr
     rintro ⟨x, v⟩ hx
-    dsimp [tangentMapWithin]
+    dsimp' [tangentMapWithin]
     ext
     · rfl
       
@@ -1061,7 +1061,7 @@ theorem ContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set
     ContinuousOn
       (fun p : H × E => (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I p.fst) : E →L[𝕜] E') p.snd)
       (Prod.fst ⁻¹' s)
-  · dsimp [writtenInExtChartAt, extChartAt]
+  · dsimp' [writtenInExtChartAt, extChartAt]
     apply ContinuousOn.prod (ContinuousOn.comp hf.continuous_on continuous_fst.continuous_on (subset.refl _))
     apply h.congr
     intro p hp
@@ -1209,7 +1209,7 @@ theorem ContMdiffOn.cont_mdiff_on_tangent_map_within (hf : ContMdiffOn I I' n f 
       exact this.1
       
     · have : TangentBundle.proj I M ⁻¹' s ∩ TangentBundle.proj I M ⁻¹' (o ∩ l.source) = s'_lift := by
-        dsimp only [s'_lift, s']
+        dsimp' only [s'_lift, s']
         rw [ho]
         mfld_set_tac
       rw [this]
@@ -1341,7 +1341,7 @@ theorem ContMdiffOn.cont_mdiff_on_tangent_map_within (hf : ContMdiffOn I I' n f 
           
       have : f p.1 = (tangentMapWithin I I' f s p).1 := rfl
       rw [A]
-      dsimp [r, Dr]
+      dsimp' [r, Dr]
       rw [this, tangent_map_chart]
       · simp' only [hq] with mfld_simps
         have : tangentMapWithin I I' f s' q ∈ (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).Source := by

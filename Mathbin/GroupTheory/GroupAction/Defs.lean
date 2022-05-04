@@ -93,6 +93,25 @@ class MulAction (α : Type _) (β : Type _) [Monoidₓ α] extends HasScalar α 
   one_smul : ∀ b : β, (1 : α) • b = b
   mul_smul : ∀ x y : α b : β, (x * y) • b = x • y • b
 
+instance Additive.addAction [Monoidₓ α] [MulAction α β] : AddAction (Additive α) β where
+  vadd := (· • ·) ∘ Additive.toMul
+  zero_vadd := MulAction.one_smul
+  add_vadd := MulAction.mul_smul
+
+@[simp]
+theorem Additive.of_mul_vadd [Monoidₓ α] [MulAction α β] (a : α) (b : β) : Additive.ofMul a +ᵥ b = a • b :=
+  rfl
+
+instance Multiplicative.mulAction [AddMonoidₓ α] [AddAction α β] : MulAction (Multiplicative α) β where
+  smul := (· +ᵥ ·) ∘ Multiplicative.toAdd
+  one_smul := AddAction.zero_vadd
+  mul_smul := AddAction.add_vadd
+
+@[simp]
+theorem Multiplicative.of_add_smul [AddMonoidₓ α] [AddAction α β] (a : α) (b : β) :
+    Multiplicative.ofAdd a • b = a +ᵥ b :=
+  rfl
+
 /-!
 ### (Pre)transitive action
 

@@ -687,7 +687,7 @@ theorem tendsto_translation_number₀' : Tendsto (fun n : ℕ => (f ^ (n + 1)) 0
     tendsto_iff_dist_tendsto_zero.2 <|
       squeeze_zero (fun _ => dist_nonneg) (fun n => _)
         ((tendsto_const_div_at_top_nhds_0_nat 1).comp (tendsto_add_at_top_nat 1))
-  dsimp
+  dsimp'
   have : (0 : ℝ) < n + 1 := n.cast_add_one_pos
   rw [Real.dist_eq, div_sub' _ _ _ (ne_of_gtₓ this), abs_div, ← Real.dist_eq, abs_of_pos this, div_le_div_right this, ←
     Nat.cast_add_one]

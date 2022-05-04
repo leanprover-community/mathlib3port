@@ -58,7 +58,7 @@ variable {C}
 theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqToHom h_X ≫ Q.p) : P = Q := by
   cases P
   cases Q
-  dsimp  at h_X h_p
+  dsimp'  at h_X h_p
   subst h_X
   simpa only [true_andₓ, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using h_p
 

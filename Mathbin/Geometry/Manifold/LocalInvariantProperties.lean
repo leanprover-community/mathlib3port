@@ -462,7 +462,7 @@ theorem lift_prop_on_chart_symm [HasGroupoid M G] (hG : G.LocalInvariantProp G Q
 
 theorem lift_prop_id (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id Univ y) : LiftProp Q (id : M → M) := by
   intro x
-  dsimp [lift_prop_at, lift_prop_within_at]
+  dsimp' [lift_prop_at, lift_prop_within_at]
   refine' ⟨continuous_within_at_id, _⟩
   let t := (chart_at H x).Target ∩ (chart_at H x).symm ⁻¹' (chart_at H x).Source
   suffices H : Q id t ((chart_at H x) x)

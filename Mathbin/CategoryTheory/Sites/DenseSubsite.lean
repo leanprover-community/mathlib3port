@@ -272,7 +272,7 @@ noncomputable def sheafCoyonedaHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
     apply H.is_cover
     intro Y' f' hf'
     change unop X ⟶ ℱ.obj (op (unop _)) at x
-    dsimp
+    dsimp'
     simp only [pushforward_family, functor.comp_map, coyoneda_obj_map, hom_over_app, category.assoc]
     congr 1
     conv_lhs => rw [← hf'.some.fac]
@@ -380,7 +380,7 @@ theorem sheaf_hom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom H (whiskerLeft G.op α) 
   apply sheaf_eq_amalgamation ℱ' (H.is_cover _)
   intro Y f hf
   conv_lhs => rw [← hf.some.fac]
-  dsimp
+  dsimp'
   simp
 
 /-- A full and cover-dense functor `G` induces an equivalence between morphisms into a sheaf and
@@ -424,7 +424,7 @@ instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
     intro ℱ ℱ' α β e
     ext1
     apply_fun fun e => e.val  at e
-    dsimp  at e
+    dsimp'  at e
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
 
 end CoverDense

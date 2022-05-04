@@ -27,8 +27,8 @@ sentence of `T` is realized in `M`. Also denoted `T ⊨ φ`.
 * `first_order.language.bounded_formula.realize_to_prenex` shows that the prenex normal form of a
 formula has the same realization as the original formula.
 * Several results in this file show that syntactic constructions such as `relabel`, `cast_le`,
-`lift_at`, and the actions of language maps commute with realization of terms, formulas, sentences,
-and theories.
+`lift_at`, `subst`, and the actions of language maps commute with realization of terms, formulas,
+sentences, and theories.
 
 ## Implementation Notes
 * Formulas use a modified version of de Bruijn variables. Specifically, a `L.bounded_formula α n`
@@ -109,6 +109,15 @@ theorem realize_functions_apply₂ {f : L.Functions 2} {t₁ t₂ : L.Term α} {
 theorem realize_con {A : Set M} {a : A} {v : α → M} : (L.con a).Term.realize v = a :=
   rfl
 
+@[simp]
+theorem realize_subst {t : L.Term α} {tf : α → L.Term β} {v : β → M} :
+    (t.subst tf).realize v = t.realize fun a => (tf a).realize v := by
+  induction' t with _ _ _ _ ih
+  · rfl
+    
+  · simp [ih]
+    
+
 end Term
 
 namespace Lhom
@@ -183,6 +192,15 @@ theorem realize_inf : (φ⊓ψ).realize v xs ↔ φ.realize v xs ∧ ψ.realize 
   simp [HasInf.inf, realize]
 
 @[simp]
+theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Finₓ n → M) :
+    (l.foldr (·⊓·) ⊤).realize v xs ↔ ∀, ∀ φ ∈ l, ∀, BoundedFormula.Realizeₓ φ v xs := by
+  induction' l with φ l ih
+  · simp
+    
+  · simp [ih]
+    
+
+@[simp]
 theorem realize_imp : (φ.imp ψ).realize v xs ↔ φ.realize v xs → ψ.realize v xs := by
   simp only [realize]
 
@@ -212,6 +230,16 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.Term _} :
 theorem realize_sup : (φ⊔ψ).realize v xs ↔ φ.realize v xs ∨ ψ.realize v xs := by
   simp only [realize, HasSup.sup, realize_not, eq_iff_iff]
   tauto
+
+@[simp]
+theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Finₓ n → M) :
+    (l.foldr (·⊔·) ⊥).realize v xs ↔ ∃ φ ∈ l, BoundedFormula.Realizeₓ φ v xs := by
+  induction' l with φ l ih
+  · simp
+    
+  · simp_rw [List.foldr_cons, realize_sup, ih, exists_prop, List.mem_cons_iff, or_and_distrib_right, exists_or_distrib,
+      exists_eq_left]
+    
 
 @[simp]
 theorem realize_all : (all θ).realize v xs ↔ ∀ a : M, θ.realize v (Finₓ.snoc xs a) :=
@@ -320,7 +348,33 @@ theorem realize_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α 
   refine' congr rfl (congr rfl (funext fun i => _))
   rw [if_pos i.is_lt]
 
-theorem realize_all_lift_at_one_self [Nonempty M] {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Finₓ n → M} :
+@[simp]
+theorem realize_subst_aux {tf : α → L.Term β} {v : β → M} {xs : Finₓ n → M} :
+    (fun x => Term.realizeₓ (Sum.elim v xs) (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr) x)) =
+      Sum.elim (fun a : α => Term.realizeₓ v (tf a)) xs :=
+  funext fun x =>
+    Sum.casesOn x
+      (fun x => by
+        simp only [Sum.elim_inl, term.realize_relabel, Sum.elim_comp_inl])
+      fun x => rfl
+
+theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.Term β} {v : β → M} {xs : Finₓ n → M} :
+    (φ.subst tf).realize v xs ↔ φ.realize (fun a => (tf a).realize v) xs := by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
+  · rfl
+    
+  · simp only [subst, bounded_formula.realize, realize_subst, realize_subst_aux]
+    
+  · simp only [subst, bounded_formula.realize, realize_subst, realize_subst_aux]
+    
+  · simp only [subst, realize_imp, ih1, ih2]
+    
+  · simp only [ih, subst, realize_all]
+    
+
+variable [Nonempty M]
+
+theorem realize_all_lift_at_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Finₓ n → M} :
     (φ.liftAt 1 n).all.realize v xs ↔ φ.realize v xs := by
   inhabit M
   simp only [realize_all, realize_lift_at_one_self]
@@ -331,8 +385,6 @@ theorem realize_all_lift_at_one_self [Nonempty M] {n : ℕ} {φ : L.BoundedFormu
   · refine' (congr rfl (funext fun i => _)).mp h
     simp
     
-
-variable [Nonempty M]
 
 theorem realize_to_prenex_imp_right {φ ψ : L.BoundedFormula α n} (hφ : IsQf φ) (hψ : IsPrenex ψ) {v : α → M}
     {xs : Finₓ n → M} : (φ.toPrenexImpRight ψ).realize v xs ↔ (φ.imp ψ).realize v xs := by
@@ -538,9 +590,21 @@ infixl:51 " ⊨ " => Sentence.Realize
 
 -- input using \|= or \vDash, but not using \models
 @[simp]
+theorem Sentence.realize_not {φ : L.Sentence} : M ⊨ φ.Not ↔ ¬M ⊨ φ :=
+  Iff.rfl
+
+@[simp]
 theorem Lhom.realize_on_sentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Sentence) :
     M ⊨ φ.onSentence ψ ↔ M ⊨ ψ :=
   φ.realize_on_formula ψ
+
+variable (L)
+
+/-- The complete theory of a structure `M` is the set of all sentences `M` satisfies. -/
+def CompleteTheory : L.Theory :=
+  { φ | M ⊨ φ }
+
+variable {L}
 
 /-- A model of a theory is a structure in which every sentence is realized as true. -/
 class Theory.Model (T : L.Theory) : Prop where
@@ -574,6 +638,22 @@ theorem Theory.Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨
 
 theorem Theory.model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by
   simp
+
+theorem Theory.model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.CompleteTheory M :=
+  T.model_iff
+
+instance model_complete_theory : M ⊨ L.CompleteTheory M :=
+  Theory.model_iff_subset_complete_theory.2 (subset_refl _)
+
+variable (M N)
+
+theorem realize_iff_of_model_complete_theory [N ⊨ L.CompleteTheory M] (φ : L.Sentence) : N ⊨ φ ↔ M ⊨ φ := by
+  refine' ⟨fun h => _, Theory.realize_sentence_of_mem (L.complete_theory M)⟩
+  contrapose! h
+  rw [← sentence.realize_not] at *
+  exact Theory.realize_sentence_of_mem (L.complete_theory M) h
+
+variable {M N}
 
 namespace BoundedFormula
 
@@ -677,22 +757,44 @@ theorem realize_total : M ⊨ r.Total ↔ Total fun x y : M => RelMap r ![x, y] 
 
 end Relations
 
-section Nonempty
+section Cardinality
 
 variable (L)
 
 @[simp]
-theorem Sentence.realize_nonempty : M ⊨ Sentence.nonempty L ↔ Nonempty M :=
-  BoundedFormula.realize_ex.trans (trans (exists_congr eq_self_iff_true) exists_true_iff_nonempty)
+theorem Sentence.realize_card_ge n : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M := by
+  rw [← lift_mk_fin, ← lift_le, lift_lift, lift_mk_le, sentence.card_ge, sentence.realize, bounded_formula.realize_exs]
+  simp_rw [bounded_formula.realize_foldr_inf]
+  simp only [Function.comp_app, List.mem_mapₓ, Prod.exists, Ne.def, List.mem_product, List.mem_fin_range,
+    forall_exists_index, and_imp, List.mem_filterₓ, true_andₓ]
+  refine' ⟨_, fun xs => ⟨xs.some, _⟩⟩
+  · rintro ⟨xs, h⟩
+    refine' ⟨⟨xs, fun i j ij => _⟩⟩
+    contrapose! ij
+    have hij := h _ i j ij rfl
+    simp only [bounded_formula.realize_not, term.realize, bounded_formula.realize_bd_equal, Sum.elim_inr] at hij
+    exact hij
+    
+  · rintro _ i j ij rfl
+    simp [ij]
+    
 
 @[simp]
-theorem Theory.model_nonempty_iff : M ⊨ Theory.Nonempty L ↔ Nonempty M :=
-  Theory.model_singleton_iff.trans (Sentence.realize_nonempty L)
+theorem model_infinite_theory_iff : M ⊨ L.InfiniteTheory ↔ Infinite M := by
+  simp [infinite_theory, infinite_iff, omega_le]
 
-instance Theory.model_nonempty [h : Nonempty M] : M ⊨ Theory.Nonempty L :=
-  (Theory.model_nonempty_iff L).2 h
+instance model_infinite_theory [h : Infinite M] : M ⊨ L.InfiniteTheory :=
+  L.model_infinite_theory_iff.2 h
 
-end Nonempty
+@[simp]
+theorem model_nonempty_theory_iff : M ⊨ L.NonemptyTheory ↔ Nonempty M := by
+  simp only [nonempty_theory, Theory.model_iff, Set.mem_singleton_iff, forall_eq, sentence.realize_card_ge,
+    Nat.cast_oneₓ, one_le_iff_ne_zero, mk_ne_zero_iff]
+
+instance model_nonempty [h : Nonempty M] : M ⊨ L.NonemptyTheory :=
+  L.model_nonempty_theory_iff.2 h
+
+end Cardinality
 
 end Language
 

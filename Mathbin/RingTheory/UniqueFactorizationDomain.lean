@@ -56,7 +56,7 @@ open Associates Nat
 theorem of_wf_dvd_monoid_associates (h : WfDvdMonoid (Associates α)) : WfDvdMonoid α :=
   ⟨by
     have := h
-    refine' (Surjective.well_founded_iff mk_surjective _).2 WfDvdMonoid.well_founded_dvd_not_unit
+    refine' (Surjective.well_founded_iff mk_surjective _).2 well_founded_dvd_not_unit
     intros
     rw [mk_dvd_not_unit_mk_iff]⟩
 
@@ -64,18 +64,18 @@ variable [WfDvdMonoid α]
 
 instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by
-    refine' (Surjective.well_founded_iff mk_surjective _).1 WfDvdMonoid.well_founded_dvd_not_unit
+    refine' (Surjective.well_founded_iff mk_surjective _).1 well_founded_dvd_not_unit
     intros
     rw [mk_dvd_not_unit_mk_iff]⟩
 
 theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Associates α → Prop) :=
-  Subrelation.wfₓ (fun x y => dvd_not_unit_of_lt) WfDvdMonoid.well_founded_dvd_not_unit
+  Subrelation.wfₓ (fun x y => dvd_not_unit_of_lt) well_founded_dvd_not_unit
 
 attribute [local elab_as_eliminator] WellFounded.fix
 
 theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : ∃ i, Irreducible i ∧ i ∣ a :=
   (irreducible_or_factor a ha).elim (fun hai => ⟨a, hai, dvd_rfl⟩)
-    (WellFounded.fix WfDvdMonoid.well_founded_dvd_not_unit
+    (WellFounded.fix well_founded_dvd_not_unit
       (fun a ih ha ha0 ⟨x, y, hx, hy, hxy⟩ =>
         have hx0 : x ≠ 0 := fun hx0 =>
           ha0
@@ -98,7 +98,7 @@ theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : �
 theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u : α, IsUnit u → P u)
     (hi : ∀ a i : α, a ≠ 0 → Irreducible i → P a → P (i * a)) : P a :=
   have := Classical.dec
-  WellFounded.fix WfDvdMonoid.well_founded_dvd_not_unit
+  WellFounded.fix well_founded_dvd_not_unit
     (fun a ih =>
       if ha0 : a = 0 then ha0.symm ▸ h0
       else
@@ -115,7 +115,7 @@ theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀
     a
 
 theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ Associated f.Prod a :=
-  WfDvdMonoid.induction_on_irreducible a (fun h => (h rfl).elim)
+  induction_on_irreducible a (fun h => (h rfl).elim)
     (fun u hu _ =>
       ⟨0,
         ⟨by
@@ -138,6 +138,25 @@ theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b �
         by
         rw [Multiset.prod_cons]
         exact hs.2.mul_left _⟩⟩
+
+theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
+    ¬IsUnit a ↔ ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ f.Prod = a ∧ f ≠ ∅ :=
+  ⟨fun hnu => by
+    obtain ⟨f, hi, u, rfl⟩ := exists_factors a hn0
+    obtain ⟨b, h⟩ :=
+      Multiset.exists_mem_of_ne_zero fun h : f = 0 =>
+        hnu <| by
+          simp [h]
+    classical
+    refine' ⟨(f.erase b).cons (b * u), fun a ha => _, _, Multiset.cons_ne_zero⟩
+    · obtain rfl | ha := Multiset.mem_cons.1 ha
+      exacts[Associated.irreducible ⟨u, rfl⟩ (hi b h), hi a (Multiset.mem_of_mem_erase ha)]
+      
+    · rw [Multiset.prod_cons, mul_comm b, mul_assoc, Multiset.prod_erase h, mul_comm]
+      ,
+    fun ⟨f, hi, he, hne⟩ =>
+    let ⟨b, h⟩ := Multiset.exists_mem_of_ne_zero hne
+    not_is_unit_of_not_is_unit_dvd (hi b h).not_unit (he.subst <| Multiset.dvd_prod h)⟩
 
 end WfDvdMonoid
 
@@ -712,7 +731,7 @@ protected def normalizationMonoid : NormalizationMonoid α :=
         simp [hx, hy] }
     (by
       intro x
-      dsimp
+      dsimp'
       by_cases' hx : x = 0
       · simp [hx]
         

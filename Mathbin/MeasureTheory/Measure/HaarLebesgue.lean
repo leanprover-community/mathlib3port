@@ -431,7 +431,7 @@ theorem add_haar_closed_unit_ball_eq_add_haar_unit_ball : μ (ClosedBall (0 : E)
     mem_nhds_within_Iio_iff_exists_Ioo_subset.2
       ⟨(0 : ℝ), by
         simp , fun r hr => _⟩
-  dsimp
+  dsimp'
   rw [← add_haar_closed_ball' μ (0 : E) hr.1.le]
   exact measure_mono (closed_ball_subset_ball hr.2)
 
@@ -578,7 +578,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E
     rw [mul_comm, ht', smul_smul, mul_assoc, mul_inv_cancel Rpos.ne', mul_oneₓ]
   have U : (R * r) • u' = r • u := by
     rw [mul_comm, hu', smul_smul, mul_assoc, mul_inv_cancel Rpos.ne', mul_oneₓ]
-  dsimp
+  dsimp'
   rw [T, U]
 
 /-- Consider a point `x` at which a set `s` has density zero, with respect to closed balls. Then it

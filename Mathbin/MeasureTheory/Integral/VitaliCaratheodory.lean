@@ -117,7 +117,7 @@ theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ �
         simple_func.const_zero, or_falseₓ, lintegral_indicator, Ennreal.coe_eq_zero, Ne.def, not_false_iff,
         simple_func.coe_zero, Set.piecewise_eq_indicator, simple_func.coe_piecewise, false_andₓ, restrict_apply] using h
     obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ε / c := s.exists_is_open_lt_of_lt _ this
-    refine' ⟨Set.indicator u fun x => c, fun x => _, u_open.lower_semicontinuous_indicator (zero_le _), _⟩
+    refine' ⟨Set.indicatorₓ u fun x => c, fun x => _, u_open.lower_semicontinuous_indicator (zero_le _), _⟩
     · simp only [simple_func.coe_const, simple_func.const_zero, simple_func.coe_zero, Set.piecewise_eq_indicator,
         simple_func.coe_piecewise]
       exact Set.indicator_le_indicator_of_subset su (fun x => zero_le _) _
@@ -336,7 +336,7 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
     have : (0 : ℝ≥0∞) < ε / c := Ennreal.div_pos_iff.2 ⟨ε0, Ennreal.coe_ne_top⟩
     obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ε / c :=
       hs.exists_is_closed_lt_add μs_lt_top.ne this.ne'
-    refine' ⟨Set.indicator F fun x => c, fun x => _, F_closed.upper_semicontinuous_indicator (zero_le _), _⟩
+    refine' ⟨Set.indicatorₓ F fun x => c, fun x => _, F_closed.upper_semicontinuous_indicator (zero_le _), _⟩
     · simp only [simple_func.coe_const, simple_func.const_zero, simple_func.coe_zero, Set.piecewise_eq_indicator,
         simple_func.coe_piecewise]
       exact Set.indicator_le_indicator_of_subset Fs (fun x => zero_le _) _
@@ -521,7 +521,7 @@ theorem exists_lt_lower_semicontinuous_integral_lt [SigmaFinite μ] (f : α → 
           Ereal.coe_ennreal_le_coe_ennreal_iff.2 hxy
       
     · apply ereal.continuous_neg.comp_upper_semicontinuous_antitone _ fun x y hxy => Ereal.neg_le_neg_iff.2 hxy
-      dsimp
+      dsimp'
       apply
         continuous_coe_ennreal_ereal.comp_upper_semicontinuous _ fun x y hxy =>
           Ereal.coe_ennreal_le_coe_ennreal_iff.2 hxy

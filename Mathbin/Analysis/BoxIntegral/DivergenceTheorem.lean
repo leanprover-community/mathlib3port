@@ -233,7 +233,7 @@ theorem has_integral_bot_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → �
       ∀, ∀ z ∈ Icc (J.lower i) (J.upper i), ∀, maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
     simp only [dist_eq_norm, F, fI]
-    dsimp
+    dsimp'
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
     · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]

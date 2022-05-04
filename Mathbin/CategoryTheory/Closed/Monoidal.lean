@@ -66,7 +66,7 @@ def unitClosed : Closed (𝟙_ C) where
                 right_inv := by
                   tidy },
             hom_equiv_naturality_left_symm' := fun X' X Y f g => by
-              dsimp
+              dsimp'
               rw [left_unitor_naturality_assoc] } }
 
 variable (A B : C) {X X' Y Y' Z : C}
@@ -221,7 +221,7 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) :
 @[simp]
 theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ := by
   simp only [pre, Functor.map_id]
-  dsimp
+  dsimp'
   simp
 
 @[simp]

@@ -336,7 +336,7 @@ theorem eq_iff' (x y : ℕ × K) :
   cases' x with m x
   cases' y with n y
   cases' H with z H
-  dsimp only  at H
+  dsimp' only  at H
   rw [r.sound K p (n + z) m x _ rfl, r.sound K p (m + z) n y _ rfl, H]
   rw [add_assocₓ, add_commₓ, add_commₓ z]
 
@@ -375,7 +375,7 @@ theorem frobenius_mk (x : ℕ × K) :
   by
   simp only [frobenius_def]
   cases' x with n x
-  dsimp only
+  dsimp' only
   suffices ∀ p' : ℕ, mk K p (n, x) ^ p' = mk K p (n, x ^ p') by
     apply this
   intro p

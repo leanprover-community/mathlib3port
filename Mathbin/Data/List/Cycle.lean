@@ -431,7 +431,7 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodupₓ l) (x : α) (hx : x ∈
   · simp_rw [pmap_prev_eq_rotate_length_sub_one _ (nodup_reverse.mpr h), rotate_reverse, length_reverse,
       Nat.mod_eq_of_ltₓ (tsub_lt_self lpos Nat.succ_pos'), tsub_tsub_cancel_of_le (Nat.succ_le_of_ltₓ lpos)]
     rw [← nth_le_reverse]
-    · simp [tsub_tsub_cancel_of_le (Nat.le_pred_of_lt hk)]
+    · simp [tsub_tsub_cancel_of_le (Nat.le_pred_of_ltₓ hk)]
       
     · simpa using (Nat.sub_leₓ _ _).trans_lt (tsub_lt_self lpos Nat.succ_pos')
       

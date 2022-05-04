@@ -122,12 +122,12 @@ protected def shrink : ShrinkFn (TotalFunction α β)
 
 variable [HasRepr α] [HasRepr β]
 
-instance Pi.sampleableExt : SampleableExt (α → β) where
+instance Pi.sampleableExt : SampleableExtₓ (α → β) where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.apply
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -181,22 +181,22 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β where
 
 variable [Sampleable α] [Sampleable β]
 
-instance Finsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExt (α →₀ β) where
+instance Finsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExtₓ (α →₀ β) where
   ProxyRepr := TotalFunction α β
   interp := TotalFunction.applyFinsupp
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
 -- TODO: support a non-constant codomain type
-instance Dfinsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExt (Π₀ a : α, β) where
+instance Dfinsupp.sampleableExt [HasRepr α] [HasRepr β] : SampleableExtₓ (Π₀ a : α, β) where
   ProxyRepr := TotalFunction α β
   interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
   sample := do
-    let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let xs ← (Sampleable.sample (List (α × β)) : Genₓ (List (α × β)))
+    let ⟨x⟩ ← (Uliftable.up <| sample β : Genₓ (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 
@@ -206,14 +206,14 @@ section SampleableExt
 
 open SampleableExt
 
-instance (priority := 2000) PiPred.sampleableExt [SampleableExt (α → Bool)] : SampleableExt.{u + 1} (α → Prop) where
+instance (priority := 2000) PiPred.sampleableExt [SampleableExtₓ (α → Bool)] : SampleableExtₓ.{u + 1} (α → Prop) where
   ProxyRepr := ProxyRepr (α → Bool)
   interp := fun m x => interp (α → Bool) m x
   sample := sample (α → Bool)
   shrink := shrink
 
-instance (priority := 2000) PiUncurry.sampleableExt [SampleableExt (α × β → γ)] :
-    SampleableExt.{imax (u + 1) (v + 1) w} (α → β → γ) where
+instance (priority := 2000) PiUncurry.sampleableExt [SampleableExtₓ (α × β → γ)] :
+    SampleableExtₓ.{imax (u + 1) (v + 1) w} (α → β → γ) where
   ProxyRepr := ProxyRepr (α × β → γ)
   interp := fun m x y => interp (α × β → γ) m (x, y)
   sample := sample (α × β → γ)
@@ -307,12 +307,12 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
     List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
   simp only [list.apply_id]
   cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
-  · dsimp [Option.getOrElse]
+  · dsimp' [Option.getOrElse]
     rw [h₁.mem_iff]
     
   · have h₂ : ys.nodup := h₁.nodup_iff.1 h₀
     replace h₁ : xs.length = ys.length := h₁.length_eq
-    dsimp
+    dsimp'
     induction xs generalizing ys
     case list.nil ys h₃ h₂ h₁ =>
       contradiction
@@ -320,7 +320,7 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
       cases' ys with y ys
       · cases h₃
         
-      dsimp [lookup]  at h₃
+      dsimp' [lookup]  at h₃
       split_ifs  at h₃
       · subst x'
         subst val
@@ -347,7 +347,7 @@ theorem apply_id_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup�
 theorem List.apply_id_eq_self [DecidableEq α] {xs ys : List α} (x : α) : x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
   by
   intro h
-  dsimp [list.apply_id]
+  dsimp' [list.apply_id]
   rw [lookup_eq_none.2]
   rfl
   simp only [keys, not_exists, to_sigma, exists_and_distrib_right, exists_eq_right, mem_map, comp_app, map_map,
@@ -436,7 +436,7 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] : ShrinkFn (Σ
       pure
         ⟨perm.slice (i * n) n xs, by
           rcases xs with ⟨a, b, c, d⟩ <;>
-            dsimp [sizeof_lt] <;>
+            dsimp' [sizeof_lt] <;>
               unfold_wf <;> simp only [perm.slice] <;> unfold_wf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
 
 instance [SizeOf α] : SizeOf (InjectiveFunction α) :=
@@ -457,7 +457,7 @@ protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (Inject
             simp only [comp, map_snd_zip, *, Prod.snd_to_sigma, map_map]⟩,
           by
           revert h₂ <;>
-            dsimp [sizeof_lt] <;>
+            dsimp' [sizeof_lt] <;>
               unfold_wf <;>
                 simp only [has_sizeof._match_1, map_map, comp, map_fst_zip, *, Prod.fst_to_sigma] <;>
                   unfold_wf <;> intro h₂ <;> convert h₂⟩
@@ -476,7 +476,7 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
   generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
-  dsimp [id]  at h₁
+  dsimp' [id]  at h₁
   have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) := by
     rw [← h₀, ← h₁, list.to_finmap']
     clear h₀ h₁ xs₀ xs₁ hperm hnodup
@@ -495,13 +495,13 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   · rwa [← hxs, h₀, h₁] at hperm
     
 
-instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f } where
+instance PiInjective.sampleableExt : SampleableExtₓ { f : ℤ → ℤ // Function.Injective f } where
   ProxyRepr := InjectiveFunction ℤ
   interp := fun f => ⟨apply f, f.Injective⟩
   sample :=
     gen.sized fun sz => do
       let xs' := Int.range (-(2 * sz + 2)) (2 * sz + 2)
-      let ys ← Gen.permutationOf xs'
+      let ys ← Genₓ.permutationOf xs'
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>
           Int.coe_nat_inj (add_right_injective _ h)
         let r : injective_function ℤ :=
@@ -514,18 +514,18 @@ end InjectiveFunction
 open Function
 
 instance Injective.testable (f : α → β)
-    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| f x = f y → x = y)] :
-    Testable (Injective f) :=
+    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| f x = f y → x = y)] :
+    Testableₓ (Injective f) :=
   I
 
 instance Monotone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| x ≤ y → f x ≤ f y)] :
-    Testable (Monotone f) :=
+    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| x ≤ y → f x ≤ f y)] :
+    Testableₓ (Monotone f) :=
   I
 
 instance Antitone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-    [I : Testable (NamedBinder "x" <| ∀ x : α, NamedBinder "y" <| ∀ y : α, NamedBinder "H" <| x ≤ y → f y ≤ f x)] :
-    Testable (Antitone f) :=
+    [I : Testableₓ (NamedBinderₓ "x" <| ∀ x : α, NamedBinderₓ "y" <| ∀ y : α, NamedBinderₓ "H" <| x ≤ y → f y ≤ f x)] :
+    Testableₓ (Antitone f) :=
   I
 
 end SlimCheck

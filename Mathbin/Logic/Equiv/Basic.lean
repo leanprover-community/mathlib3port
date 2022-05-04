@@ -974,9 +974,9 @@ def sumCompl {α : Type _} (p : α → Prop) [DecidablePred p] : Sum { a // p a 
   toFun := Sum.elim coe coe
   invFun := fun a => if h : p a then Sum.inl ⟨a, h⟩ else Sum.inr ⟨a, h⟩
   left_inv := by
-    rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp <;> [rw [dif_pos], rw [dif_neg]]
+    rintro (⟨x, hx⟩ | ⟨x, hx⟩) <;> dsimp' <;> [rw [dif_pos], rw [dif_neg]]
   right_inv := fun a => by
-    dsimp
+    dsimp'
     split_ifs <;> rfl
 
 @[simp]
@@ -1082,12 +1082,12 @@ def subtypePreimage : { x : α → β // x ∘ coe = x₀ } ≃ ({ a // ¬p a } 
   left_inv := fun ⟨x, hx⟩ =>
     Subtype.val_injective <|
       funext fun a => by
-        dsimp
+        dsimp'
         split_ifs <;> [rw [← hx], skip] <;> rfl
   right_inv := fun x =>
     funext fun ⟨a, h⟩ =>
       show dite (p a) _ _ = _ by
-        dsimp
+        dsimp'
         rw [dif_neg h]
 
 theorem subtype_preimage_symm_apply_coe_pos (x : { a // ¬p a } → β) (a : α) (h : p a) :
@@ -1367,11 +1367,11 @@ def prodExtendRight : Perm (α₁ × β₁) where
   invFun := fun ab => if ab.fst = a then (a, e.symm ab.snd) else ab
   left_inv := by
     rintro ⟨k', x⟩
-    dsimp only
+    dsimp' only
     split_ifs with h <;> simp [h]
   right_inv := by
     rintro ⟨k', x⟩
-    dsimp only
+    dsimp' only
     split_ifs with h <;> simp [h]
 
 @[simp]
@@ -1835,7 +1835,7 @@ theorem coe_subtype_equiv_codomain_symm (f : { x' // x' ≠ x } → Y) :
     ((subtypeEquivCodomain f).symm : Y → { g : X → Y // g ∘ coe = f }) = fun y =>
       ⟨fun x' => if h : x' ≠ x then f ⟨x', h⟩ else y, by
         funext x'
-        dsimp
+        dsimp'
         erw [dif_pos x'.2, Subtype.coe_eta]⟩ :=
   rfl
 
@@ -2093,7 +2093,7 @@ def setValue (f : α ≃ β) (a : α) (b : β) : α ≃ β :=
 
 @[simp]
 theorem set_value_eq (f : α ≃ β) (a : α) (b : β) : setValue f a b a = b := by
-  dsimp [set_value]
+  dsimp' [set_value]
   simp [swap_apply_left]
 
 end Swap
@@ -2242,7 +2242,7 @@ def piCongrLeft' : (∀ a, P a) ≃ ∀ b, P (e.symm b) where
       eq_of_heq
         ((eq_rec_heqₓ _ _).trans
           (by
-            dsimp
+            dsimp'
             rw [e.symm_apply_apply]))
   right_inv := fun f =>
     funext fun x =>

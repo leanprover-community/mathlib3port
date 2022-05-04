@@ -151,7 +151,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
     NatIso.ofComponents (fun X => (as_iso <| (ofRightAdjoint i).counit.app X).symm)
       (by
         intro X Y f
-        dsimp
+        dsimp'
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
         exact ((of_right_adjoint i).counit.naturality _).symm)
   counitIso :=
@@ -163,7 +163,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImage where
         exact functor.ess_image.unit_is_iso X.prop)
       (by
         intro X Y f
-        dsimp
+        dsimp'
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.assoc]
         exact ((of_right_adjoint i).Unit.naturality f).symm)
 

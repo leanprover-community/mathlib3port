@@ -61,7 +61,7 @@ variable [ConditionallyCompleteLinearOrder β]
 
 theorem ess_sup_eq_Inf {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → β) :
     essSup f μ = inf { a | μ { x | a < f x } = 0 } := by
-  dsimp [essSup, limsup, Limsup]
+  dsimp' [essSup, limsup, Limsup]
   congr
   ext a
   simp [eventually_map, ae_iff]

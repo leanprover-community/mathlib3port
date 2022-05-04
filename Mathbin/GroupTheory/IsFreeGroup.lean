@@ -146,11 +146,11 @@ def lift : (Generators G → X) ≃ (G →* X) where
         ext x
         simp )
   right_inv := fun F => by
-    dsimp
+    dsimp'
     rw [← lift_right_inv_aux]
     simp only [Equivₓ.apply_symm_apply]
     ext x
-    dsimp only [MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom]
+    dsimp' only [MonoidHom.comp_apply, MulEquiv.coe_to_monoid_hom]
     rw [MulEquiv.symm_apply_apply]
 
 @[ext]

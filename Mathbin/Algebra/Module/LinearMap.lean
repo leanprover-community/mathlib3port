@@ -436,7 +436,7 @@ variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂] [A
 /-- If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ'] (f : M →ₛₗ[σ] M₂) (g : M₂ → M)
     (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M := by
-  dsimp [left_inverse, Function.RightInverse]  at h₁ h₂ <;>
+  dsimp' [left_inverse, Function.RightInverse]  at h₁ h₂ <;>
     exact
       { toFun := g,
         map_add' := fun x y => by

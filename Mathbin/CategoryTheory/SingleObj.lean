@@ -68,7 +68,7 @@ theorem comp_as_mul [Monoidₓ α] {x y z : SingleObj α} (f : x ⟶ y) (g : y �
 
 /-- Groupoid structure on `single_obj α`.
 
-See https://stacks.math.columbia.edu/tag/0019.
+See <https://stacks.math.columbia.edu/tag/0019>.
 -/
 instance groupoid [Groupₓ α] : Groupoid (SingleObj α) where
   inv := fun _ _ x => x⁻¹
@@ -95,7 +95,7 @@ theorem to_End_def [Monoidₓ α] (x : α) : toEnd α x = x :=
     corresponding single-object categories. It means that `single_obj` is a fully faithful
     functor.
 
-See https://stacks.math.columbia.edu/tag/001F --
+See <https://stacks.math.columbia.edu/tag/001F> --
 although we do not characterize when the functor is full or faithful.
 -/
 def mapHom (α : Type u) (β : Type v) [Monoidₓ α] [Monoidₓ β] : (α →* β) ≃ SingleObj α ⥤ SingleObj β where

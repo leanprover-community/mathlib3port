@@ -513,7 +513,7 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
     rcases hs with ⟨z, hz⟩
     refine' ⟨f z - K * dist y z, _⟩
     rintro w ⟨t, rfl⟩
-    dsimp
+    dsimp'
     rw [sub_le_iff_le_add, add_assocₓ, ← mul_addₓ, add_commₓ (dist y t)]
     calc f z ≤ f t + K * dist z t := hf.le_add_mul hz t.2_ ≤ f t + K * (dist y z + dist y t) :=
         add_le_add_left (mul_le_mul_of_nonneg_left (dist_triangle_left _ _ _) K.2) _

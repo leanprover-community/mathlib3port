@@ -541,7 +541,7 @@ noncomputable def choice (α : Type _) : Option α :=
   if h : Nonempty α then some h.some else none
 
 theorem choice_eq {α : Type _} [Subsingleton α] (a : α) : choice α = some a := by
-  dsimp [choice]
+  dsimp' [choice]
   rw [dif_pos (⟨a⟩ : Nonempty α)]
   congr
 
@@ -554,7 +554,7 @@ theorem choice_is_some_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonem
     exact ⟨Option.getₓ h⟩
     
   · intro h
-    dsimp only [choice]
+    dsimp' only [choice]
     rw [dif_pos h]
     exact is_some_some
     

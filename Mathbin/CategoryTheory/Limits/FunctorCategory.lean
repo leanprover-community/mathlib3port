@@ -71,7 +71,7 @@ def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
     { obj := fun k => (c k).Cone.x, map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩,
       map_id' := fun k =>
         (c k).IsLimit.hom_ext fun j => by
-          dsimp
+          dsimp'
           simp ,
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ =>
         (c k₃).IsLimit.hom_ext fun j => by
@@ -104,7 +104,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
           rw [(t X).fac_assoc _ j]
           erw [← (c.ι.app j).naturality_assoc f]
           erw [(t Y).fac ⟨s.X.obj _, whisker_right s.ι _⟩ j]
-          dsimp
+          dsimp'
           simp }
   fac' := fun s j => NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
   uniq' := fun s m w =>
@@ -124,7 +124,7 @@ def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj
     { obj := fun k => (c k).Cocone.x, map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩,
       map_id' := fun k =>
         (c k).IsColimit.hom_ext fun j => by
-          dsimp
+          dsimp'
           simp ,
       map_comp' := fun k₁ k₂ k₃ f₁ f₂ =>
         (c k₁).IsColimit.hom_ext fun j => by
@@ -175,13 +175,13 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j = (limit.π F j).app k := by
-  dsimp [limit_obj_iso_limit_comp_evaluation]
+  dsimp' [limit_obj_iso_limit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem limit_obj_iso_limit_comp_evaluation_inv_π_app [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k = limit.π (F ⋙ (evaluation K C).obj k) j := by
-  dsimp [limit_obj_iso_limit_comp_evaluation]
+  dsimp' [limit_obj_iso_limit_comp_evaluation]
   rw [iso.inv_comp_eq]
   simp
 
@@ -191,7 +191,7 @@ theorem limit_map_limit_obj_iso_limit_comp_evaluation_hom [HasLimitsOfShape J C]
       (limitObjIsoLimitCompEvaluation _ _).Hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
   by
   ext
-  dsimp
+  dsimp'
   simp
 
 @[simp, reassoc]
@@ -225,14 +225,14 @@ def colimitObjIsoColimitCompEvaluation [HasColimitsOfShape J C] (F : J ⥤ K ⥤
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_inv [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv = (colimit.ι F j).app k :=
   by
-  dsimp [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
   simp
 
 @[simp, reassoc]
 theorem colimit_obj_iso_colimit_comp_evaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J) (k : K) :
     (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom = colimit.ι (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp' [colimit_obj_iso_colimit_comp_evaluation]
   rw [← iso.eq_comp_inv]
   simp
 
@@ -243,7 +243,7 @@ theorem colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map [HasColimitsOfSh
       colimMap (whiskerLeft _ ((evaluation _ _).map f)) ≫ (colimitObjIsoColimitCompEvaluation _ _).inv :=
   by
   ext
-  dsimp
+  dsimp'
   simp
 
 @[simp, reassoc]

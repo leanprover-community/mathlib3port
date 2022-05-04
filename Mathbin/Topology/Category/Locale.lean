@@ -50,6 +50,6 @@ def topToLocale : Top ⥤ Locale :=
 -- Note, `CompHaus` is too strong. We only need `t0_space`.
 instance CompHausToLocale.faithful : Faithful (compHausToTop ⋙ topToLocale.{u}) :=
   ⟨fun X Y f g h => by
-    dsimp  at h
+    dsimp'  at h
     exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
 

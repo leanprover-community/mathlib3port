@@ -51,18 +51,18 @@ instance unit_is_iso_of_L_fully_faithful [Full L] [Faithful L] : IsIso (Adjuncti
       ⟨⟨{ app := fun Y f => L.preimage ((h.homEquiv (unop Y) (L.obj X)).symm f) },
           ⟨by
             ext x f
-            dsimp
+            dsimp'
             apply L.map_injective
             simp , by
             ext x f
-            dsimp
+            dsimp'
             simp only [adjunction.hom_equiv_counit, preimage_comp, preimage_map, category.assoc]
             rw [← h.unit_naturality]
             simp ⟩⟩⟩
 
 /-- If the right adjoint is fully faithful, then the counit is an isomorphism.
 
-See https://stacks.math.columbia.edu/tag/07RB (we only prove the forward direction!)
+See <https://stacks.math.columbia.edu/tag/07RB> (we only prove the forward direction!)
 -/
 instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunction.counit h) :=
   (@NatIso.is_iso_of_is_iso_app _ _ _ _ _ _ (Adjunction.counit h)) fun X =>
@@ -71,11 +71,11 @@ instance counit_is_iso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunc
         ⟨⟨{ app := fun Y f => R.preimage ((h.homEquiv (R.obj X) Y) f) },
             ⟨by
               ext x f
-              dsimp
+              dsimp'
               apply R.map_injective
               simp , by
               ext x f
-              dsimp
+              dsimp'
               simp only [adjunction.hom_equiv_unit, preimage_comp, preimage_map]
               rw [← h.counit_naturality]
               simp ⟩⟩⟩

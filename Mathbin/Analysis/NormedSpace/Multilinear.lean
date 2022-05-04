@@ -452,7 +452,7 @@ theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', N
     [∀ i', NormedSpace 𝕜 (E' i')] (f : ∀ i', ContinuousMultilinearMap 𝕜 E (E' i')) : ∥pi f∥ = ∥f∥ := by
   apply le_antisymmₓ
   · refine' op_norm_le_bound _ (norm_nonneg f) fun m => _
-    dsimp
+    dsimp'
     rw [pi_norm_le_iff]
     exacts[fun i => (f i).le_of_op_norm_le m (norm_le_pi_norm f i),
       mul_nonneg (norm_nonneg f) (prod_nonneg fun _ _ => norm_nonneg _)]
@@ -577,7 +577,7 @@ theorem continuous_eval_left (m : ∀ i, E i) : Continuous fun p : ContinuousMul
 
 theorem has_sum_eval {α : Type _} {p : α → ContinuousMultilinearMap 𝕜 E G} {q : ContinuousMultilinearMap 𝕜 E G}
     (h : HasSum p q) (m : ∀ i, E i) : HasSum (fun a => p a m) (q m) := by
-  dsimp [HasSum]  at h⊢
+  dsimp' [HasSum]  at h⊢
   convert ((continuous_eval_left m).Tendsto _).comp h
   ext s
   simp

@@ -378,7 +378,7 @@ theorem coe_zeta_mul_apply [Semiringₓ R] {f : ArithmeticFunction R} {x : ℕ} 
       rfl
       
     · rintro ⟨a1, b1⟩ ⟨a2, b2⟩ h1 h2 h
-      dsimp  at h
+      dsimp'  at h
       rw [h] at *
       rw [mem_divisors_antidiagonal] at *
       ext
@@ -414,7 +414,7 @@ theorem coe_zeta_smul_apply {M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Mo
       rfl
       
     · rintro ⟨a1, b1⟩ ⟨a2, b2⟩ h1 h2 h
-      dsimp  at h
+      dsimp'  at h
       rw [h] at *
       rw [mem_divisors_antidiagonal] at *
       ext
@@ -582,7 +582,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
     · rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h
       rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
-      dsimp only
+      dsimp' only
       rw [hf.map_mul_of_coprime cop.coprime_mul_right.coprime_mul_right_right,
         hg.map_mul_of_coprime cop.coprime_mul_left.coprime_mul_left_right]
       ring
@@ -592,7 +592,7 @@ theorem mul [CommSemiringₓ R] {f g : ArithmeticFunction R} (hf : f.IsMultiplic
       rcases hab with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
       simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd
       simp only [Prod.mk.inj_iffₓ] at h
-      ext <;> dsimp only
+      ext <;> dsimp' only
       · trans Nat.gcdₓ (a1 * a2) (a1 * b1)
         · rw [Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
           
@@ -1024,12 +1024,12 @@ theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : 
             if h : 0 < n then Units.mk0 (g n) (hg n h) else 1))
         (forall_congrₓ fun n => _) <;>
     refine' imp_congr_right fun hn => _
-  · dsimp
+  · dsimp'
     rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.coe_mk0, prod_congr rfl _]
     intro x hx
     rw [dif_pos (Nat.pos_of_mem_divisors hx), Units.coe_hom_apply, Units.coe_mk0]
     
-  · dsimp
+  · dsimp'
     rw [dif_pos hn, ← Units.eq_iff, ← Units.coe_hom_apply, MonoidHom.map_prod, Units.coe_mk0, prod_congr rfl _]
     intro x hx
     rw [dif_pos (Nat.pos_of_mem_divisors (Nat.snd_mem_divisors_of_mem_antidiagonal hx)), Units.coe_hom_apply,

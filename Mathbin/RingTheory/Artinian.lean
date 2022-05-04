@@ -53,11 +53,12 @@ open Set
 
 open BigOperators Pointwise
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] []
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
 class IsArtinian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Prop where
-  well_founded_submodule_lt {} : WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop)
+  well_founded_submodule_lt : WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop)
 
 section
 
@@ -208,7 +209,7 @@ theorem IsArtinian.exists_endomorphism_iterate_ker_sup_range_eq_top [I : IsArtin
     w (n + 1 + n)
       (by
         linarith)
-  dsimp  at w
+  dsimp'  at w
   refine' ⟨n + 1, Nat.succ_ne_zero _, _⟩
   simp_rw [eq_top_iff', mem_sup]
   intro x

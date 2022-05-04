@@ -767,7 +767,7 @@ def equivariantOfLinearOfComm : V →ₗ[MonoidAlgebra k G] W where
     · simp
       
     · intro g r c' nm nz w
-      dsimp  at *
+      dsimp'  at *
       simp only [add_smul, f.map_add, w, add_left_injₓ, single_eq_algebra_map_mul_of, ← smul_smul]
       erw [algebra_map_smul (MonoidAlgebra k G) r, algebra_map_smul (MonoidAlgebra k G) r, f.map_smul, h g v, of_apply]
       all_goals
@@ -853,7 +853,7 @@ the `monoid_algebra Rᵐᵒᵖ Iᵐᵒᵖ` over the opposite ring, taking elemen
 protected noncomputable def opRingEquiv [Monoidₓ G] : (MonoidAlgebra k G)ᵐᵒᵖ ≃+* MonoidAlgebra kᵐᵒᵖ Gᵐᵒᵖ :=
   { opAddEquiv.symm.trans <| (Finsupp.mapRange.addEquiv (opAddEquiv : k ≃+ kᵐᵒᵖ)).trans <| Finsupp.domCongr opEquiv with
     map_mul' := by
-      dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
+      dsimp' only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
       ext i₁ r₁ i₂ r₂ : 6
       simp }
@@ -1319,7 +1319,7 @@ protected def AddMonoidAlgebra.toMultiplicative [Semiringₓ k] [Add G] :
     map_mul' := fun x y => by
       repeat'
         rw [equiv_map_domain_eq_map_domain]
-      dsimp [Multiplicative.ofAdd]
+      dsimp' [Multiplicative.ofAdd]
       convert MonoidAlgebra.map_domain_mul (MulHom.id (Multiplicative G)) _ _ }
 
 /-- The equivalence between `monoid_algebra` and `add_monoid_algebra` in terms of `additive` -/
@@ -1328,7 +1328,7 @@ protected def MonoidAlgebra.toAdditive [Semiringₓ k] [Mul G] : MonoidAlgebra k
     map_mul' := fun x y => by
       repeat'
         rw [equiv_map_domain_eq_map_domain]
-      dsimp [Additive.ofMul]
+      dsimp' [Additive.ofMul]
       convert MonoidAlgebra.map_domain_mul (MulHom.id G) _ _ }
 
 namespace AddMonoidAlgebra
@@ -1424,10 +1424,10 @@ the `add_monoid_algebra Rᵐᵒᵖ I` over the opposite ring, taking elements to
 protected noncomputable def opRingEquiv [AddCommMonoidₓ G] : (AddMonoidAlgebra k G)ᵐᵒᵖ ≃+* AddMonoidAlgebra kᵐᵒᵖ G :=
   { MulOpposite.opAddEquiv.symm.trans (Finsupp.mapRange.addEquiv (MulOpposite.opAddEquiv : k ≃+ kᵐᵒᵖ)) with
     map_mul' := by
-      dsimp only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
+      dsimp' only [AddEquiv.to_fun_eq_coe, ← AddEquiv.coe_to_add_monoid_hom]
       rw [AddMonoidHom.map_mul_iff]
       ext i r i' r' : 6
-      dsimp
+      dsimp'
       simp only [map_range_single, single_mul_single, ← op_mul, add_commₓ] }
 
 @[simp]

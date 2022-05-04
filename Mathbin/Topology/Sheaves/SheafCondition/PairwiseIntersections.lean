@@ -98,29 +98,29 @@ def coneEquivFunctorObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
       naturality' := fun Y Z f => by
         cases Y <;> cases Z <;> cases f
         · ext i
-          dsimp
+          dsimp'
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app, CategoryTheory.Functor.map_id, category.assoc]
-          dsimp
+          dsimp'
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
           
         · ext ⟨i, j⟩
-          dsimp [sheaf_condition_equalizer_products.left_res]
+          dsimp' [sheaf_condition_equalizer_products.left_res]
           simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
           have h := c.π.naturality (Quiver.Hom.op (hom.left i j))
-          dsimp  at h
+          dsimp'  at h
           simpa using h
           
         · ext ⟨i, j⟩
-          dsimp [sheaf_condition_equalizer_products.right_res]
+          dsimp' [sheaf_condition_equalizer_products.right_res]
           simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
           have h := c.π.naturality (Quiver.Hom.op (hom.right i j))
-          dsimp  at h
+          dsimp'  at h
           simpa using h
           
         · ext i
-          dsimp
+          dsimp'
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app, CategoryTheory.Functor.map_id, category.assoc]
-          dsimp
+          dsimp'
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
            }
 
@@ -167,31 +167,31 @@ def coneEquivInverseObj (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
         generalize f.unop = f'
         rintro rfl
         rcases x with (⟨i⟩ | ⟨⟩) <;> rcases y with (⟨⟩ | ⟨j, j⟩) <;> rcases f' with ⟨⟩
-        · dsimp
+        · dsimp'
           erw [F.map_id]
           simp
           
-        · dsimp
+        · dsimp'
           simp only [category.id_comp, category.assoc]
           have h := c.π.naturality walking_parallel_pair_hom.left
-          dsimp [sheaf_condition_equalizer_products.left_res]  at h
+          dsimp' [sheaf_condition_equalizer_products.left_res]  at h
           simp only [category.id_comp] at h
           have h' := h =≫ pi.π _ (i, j)
           rw [h']
           simp only [category.assoc, limit.lift_π, fan.mk_π_app]
           rfl
           
-        · dsimp
+        · dsimp'
           simp only [category.id_comp, category.assoc]
           have h := c.π.naturality walking_parallel_pair_hom.right
-          dsimp [sheaf_condition_equalizer_products.right_res]  at h
+          dsimp' [sheaf_condition_equalizer_products.right_res]  at h
           simp only [category.id_comp] at h
           have h' := h =≫ pi.π _ (j, i)
           rw [h']
           simp
           rfl
           
-        · dsimp
+        · dsimp'
           erw [F.map_id]
           simp
            }
@@ -207,11 +207,11 @@ def coneEquivInverse (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens ↥X
         intro x
         induction x using Opposite.rec
         rcases x with (⟨i⟩ | ⟨i, j⟩)
-        · dsimp
+        · dsimp'
           dunfold fork.ι
           rw [← f.w walking_parallel_pair.zero, category.assoc]
           
-        · dsimp
+        · dsimp'
           rw [← f.w walking_parallel_pair.one, category.assoc]
            }
 
@@ -224,7 +224,7 @@ def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
       w' := fun j => by
         induction j using Opposite.rec
         rcases j with ⟨⟩ <;>
-          · dsimp
+          · dsimp'
             simp only [limits.fan.mk_π_app, category.id_comp, limits.limit.lift_π]
              }
   inv :=
@@ -232,7 +232,7 @@ def coneEquivUnitIsoApp (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens �
       w' := fun j => by
         induction j using Opposite.rec
         rcases j with ⟨⟩ <;>
-          · dsimp
+          · dsimp'
             simp only [limits.fan.mk_π_app, category.id_comp, limits.limit.lift_π]
              }
   hom_inv_id' := by
@@ -261,11 +261,11 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
             w' := by
               rintro ⟨_ | _⟩
               · ext
-                dsimp
+                dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                 
               · ext ⟨i, j⟩
-                dsimp
+                dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                  },
         inv :=
@@ -273,24 +273,24 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
             w' := by
               rintro ⟨_ | _⟩
               · ext
-                dsimp
+                dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                 
               · ext ⟨i, j⟩
-                dsimp
+                dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                  },
         hom_inv_id' := by
           ext
-          dsimp
+          dsimp'
           simp only [category.comp_id],
         inv_hom_id' := by
           ext
-          dsimp
+          dsimp'
           simp only [category.comp_id] })
     fun c d f => by
     ext
-    dsimp
+    dsimp'
     simp only [category.comp_id, category.id_comp]
 
 /-- Cones over `diagram U ⋙ F` are the same as a cones over the usual sheaf condition equalizer diagram.
@@ -317,11 +317,11 @@ def isLimitMapConeOfIsLimitSheafConditionFork (F : Presheaf C X) ⦃ι : Type v�
             intro x
             induction x using Opposite.rec
             rcases x with ⟨⟩
-            · dsimp
+            · dsimp'
               simp
               rfl
               
-            · dsimp
+            · dsimp'
               simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
               rw [← F.map_comp]
               rfl
@@ -332,22 +332,22 @@ def isLimitMapConeOfIsLimitSheafConditionFork (F : Presheaf C X) ⦃ι : Type v�
             intro x
             induction x using Opposite.rec
             rcases x with ⟨⟩
-            · dsimp
+            · dsimp'
               simp
               rfl
               
-            · dsimp
+            · dsimp'
               simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
               rw [← F.map_comp]
               rfl
                },
       hom_inv_id' := by
         ext
-        dsimp
+        dsimp'
         simp only [category.comp_id],
       inv_hom_id' := by
         ext
-        dsimp
+        dsimp'
         simp only [category.comp_id] }
 
 /-- If `F.map_cone (cone U)` is a limit cone,
@@ -360,11 +360,11 @@ def isLimitSheafConditionForkOfIsLimitMapCone (F : Presheaf C X) ⦃ι : Type v�
         { Hom := 𝟙 _,
           w' := by
             rintro ⟨⟩
-            · dsimp
+            · dsimp'
               simp
               rfl
               
-            · dsimp
+            · dsimp'
               ext ⟨i, j⟩
               simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
               rw [← F.map_comp]
@@ -374,11 +374,11 @@ def isLimitSheafConditionForkOfIsLimitMapCone (F : Presheaf C X) ⦃ι : Type v�
         { Hom := 𝟙 _,
           w' := by
             rintro ⟨⟩
-            · dsimp
+            · dsimp'
               simp
               rfl
               
-            · dsimp
+            · dsimp'
               ext ⟨i, j⟩
               simp only [limit.lift_π, limit.lift_π_assoc, category.id_comp, fan.mk_π_app, category.assoc]
               rw [← F.map_comp]
@@ -386,11 +386,11 @@ def isLimitSheafConditionForkOfIsLimitMapCone (F : Presheaf C X) ⦃ι : Type v�
                },
       hom_inv_id' := by
         ext
-        dsimp
+        dsimp'
         simp only [category.comp_id],
       inv_hom_id' := by
         ext
-        dsimp
+        dsimp'
         simp only [category.comp_id] }
 
 end SheafConditionPairwiseIntersections
@@ -483,7 +483,7 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ∪ V)) := by
   rcases i with ((_ | _) | (_ | _)) <;>
     rcases j with ((_ | _) | (_ | _)) <;>
       rcases g with ⟨⟩ <;>
-        dsimp <;> simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
+        dsimp' <;> simp only [category.id_comp, s.condition, CategoryTheory.Functor.map_id, category.comp_id]
   · rw [← cancel_mono (F.1.map (eq_to_hom <| inf_comm : U ∩ V ⟶ _).op), category.assoc, category.assoc]
     erw [← F.1.map_comp, ← F.1.map_comp]
     convert s.condition.symm
@@ -536,7 +536,7 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) := by
       apply inter_union_pullback_cone_lift_right
       
     all_goals
-      dsimp only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op, pairwise.cocone_ι_app_2,
+      dsimp' only [functor.op, pairwise.cocone_ι_app, functor.map_cone_π_app, cocone.op, pairwise.cocone_ι_app_2,
         unop_op, op_comp, nat_trans.op]
       simp_rw [F.1.map_comp, ← category.assoc]
       congr 1

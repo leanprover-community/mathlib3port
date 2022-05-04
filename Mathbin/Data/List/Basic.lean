@@ -1401,14 +1401,14 @@ theorem nth_injective {α : Type u} {xs : List α} {i j : ℕ} (h₀ : i < xs.le
   · cases h₀
     
   · cases i <;> cases j
-    case' Nat.zero, Nat.zero =>
+    case'' Nat.zero, Nat.zero =>
       rfl
-    case' Nat.succ, Nat.succ =>
+    case'' Nat.succ, Nat.succ =>
       congr
       cases h₁
       apply xs_ih <;> solve_by_elim [lt_of_succ_lt_succ]
     iterate 2 
-      dsimp  at h₂
+      dsimp'  at h₂
       cases' h₁ with _ _ h h'
       cases h x _ rfl
       rw [mem_iff_nth]
@@ -1469,7 +1469,7 @@ theorem nth_le_append_right :
       (l₁ ++ l₂).nthLe n h₂ = l₂.nthLe (n - l₁.length) (nth_le_append_right_aux h₁ h₂)
   | [], _, n, h₁, h₂ => rfl
   | a :: l, _, n + 1, h₁, h₂ => by
-    dsimp
+    dsimp'
     conv => rhs congr skip rw [Nat.add_sub_add_right]
     rw [nth_le_append_right (nat.lt_succ_iff.mp h₁)]
 
@@ -1792,7 +1792,7 @@ theorem mem_insert_nth {a b : α} : ∀ {n : ℕ} {l : List α} hi : n ≤ l.len
   | 0, as, h => Iff.rfl
   | n + 1, [], h => (Nat.not_succ_le_zeroₓ _ h).elim
   | n + 1, a' :: as, h => by
-    dsimp [List.insertNthₓ]
+    dsimp' [List.insertNthₓ]
     erw [List.mem_cons_iff, mem_insert_nth (Nat.le_of_succ_le_succₓ h), List.mem_cons_iff, ← Or.assoc, or_comm (a = a'),
       Or.assoc]
 
@@ -2116,7 +2116,7 @@ theorem map_take {α β : Type _} (f : α → β) : ∀ L : List α i : ℕ, (L.
   | L, 0 => by
     simp
   | h :: t, n + 1 => by
-    dsimp
+    dsimp'
     rw [map_take]
 
 /-- Taking the first `n` elements in `l₁ ++ l₂` is the same as appending the first `n` elements
@@ -2323,6 +2323,17 @@ up to `i` in `l₂`. -/
 theorem drop_append {l₁ l₂ : List α} (i : ℕ) : dropₓ (l₁.length + i) (l₁ ++ l₂) = dropₓ i l₂ := by
   simp [drop_append_eq_append_drop, take_all_of_le le_self_add]
 
+theorem drop_sizeof_le [SizeOf α] (l : List α) : ∀ n : ℕ, (l.drop n).sizeof ≤ l.sizeof := by
+  induction' l with _ _ lih <;> intro n
+  · rw [drop_nil]
+    
+  · induction' n with n nih
+    · rfl
+      
+    · exact trans (lih _) le_add_self
+      
+    
+
 /-- The `i + j`-th element of a list coincides with the `j`-th element of the list obtained by
 dropping the first `i` elements. Version designed to rewrite from the big list to the small list. -/
 theorem nth_le_drop (L : List α) {i j : ℕ} (h : i + j < L.length) :
@@ -2380,7 +2391,7 @@ theorem map_drop {α β : Type _} (f : α → β) : ∀ L : List α i : ℕ, (L.
   | L, 0 => by
     simp
   | h :: t, n + 1 => by
-    dsimp
+    dsimp'
     rw [map_drop]
 
 theorem modify_nth_tail_eq_take_drop (f : List α → List α) (H : f [] = []) :
@@ -4451,7 +4462,7 @@ theorem sizeof_slice_lt [SizeOf α] (i j : ℕ) (hj : 0 < j) (xs : List α) (hi 
     cases i <;> simp only [-slice_eq, List.sliceₓ]
     · cases j
       cases h
-      dsimp only [drop]
+      dsimp' only [drop]
       unfold_wf
       apply @lt_of_le_of_ltₓ _ _ _ xs.sizeof
       · clear * -

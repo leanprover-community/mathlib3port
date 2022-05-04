@@ -69,16 +69,16 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
     { Hom := limit.lift (F ⋙ Mon_.forget C) ((Mon_.forget C).mapCone s),
       mul_hom' := by
         ext
-        dsimp
+        dsimp'
         simp
-        dsimp
+        dsimp'
         slice_rhs 1 2 => rw [← monoidal_category.tensor_comp, limit.lift_π]dsimp }
   fac' := fun s h => by
     ext
     simp
   uniq' := fun s m w => by
     ext
-    dsimp
+    dsimp'
     simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_argₓ Mon_.Hom.hom (w j)
 

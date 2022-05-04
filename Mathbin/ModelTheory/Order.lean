@@ -44,7 +44,9 @@ variable {L : Language.{u, v}} {α : Type w} {M : Type w'} {n : ℕ}
 protected def order : Language :=
   Language.mk₂ Empty Empty Empty Empty Unit
 
-instance order.structure [LE M] : Language.order.Structure M :=
+namespace Order
+
+instance structure [LE M] : Language.order.Structure M :=
   Structure.mk₂ Empty.elimₓ Empty.elimₓ Empty.elimₓ Empty.elimₓ fun _ => (· ≤ ·)
 
 instance : IsRelational Language.order :=
@@ -52,6 +54,8 @@ instance : IsRelational Language.order :=
 
 instance : Subsingleton (Language.order.Relations n) :=
   language.subsingleton_mk₂_relations
+
+end Order
 
 /-- A language is ordered if it has a symbol representing `≤`. -/
 class IsOrdered (L : Language.{u, v}) where

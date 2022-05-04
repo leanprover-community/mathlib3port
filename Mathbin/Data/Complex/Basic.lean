@@ -299,6 +299,11 @@ instance : CommRingₓ ℂ := by
                   ring_nf
                 
 
+/-- This shortcut instance ensures we do not find `add_comm_group` via the noncomputable
+`complex.normed_group` instance. -/
+instance : AddCommGroupₓ ℂ := by
+  infer_instance
+
 /-- This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
 instance. -/
 instance : Ringₓ ℂ := by
@@ -408,7 +413,7 @@ def normSq : ℂ →*₀ ℝ where
   map_one' := by
     simp
   map_mul' := fun z w => by
-    dsimp
+    dsimp'
     ring
 
 theorem norm_sq_apply (z : ℂ) : normSq z = z.re * z.re + z.im * z.im :=
@@ -465,7 +470,7 @@ theorem norm_sq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
   normSq.map_mul z w
 
 theorem norm_sq_add (z w : ℂ) : normSq (z + w) = normSq z + normSq w + 2 * (z * conj w).re := by
-  dsimp [norm_sq] <;> ring
+  dsimp' [norm_sq] <;> ring
 
 theorem re_sq_le_norm_sq (z : ℂ) : z.re * z.re ≤ normSq z :=
   le_add_of_nonneg_right (mul_self_nonneg _)
@@ -850,7 +855,7 @@ protected def partialOrder : PartialOrderₓ ℂ where
   le := fun z w => z.re ≤ w.re ∧ z.im = w.im
   lt := fun z w => z.re < w.re ∧ z.im = w.im
   lt_iff_le_not_le := fun z w => by
-    dsimp
+    dsimp'
     rw [lt_iff_le_not_leₓ]
     tauto
   le_refl := fun x => ⟨le_rfl, rfl⟩
@@ -972,7 +977,7 @@ theorem equiv_lim_aux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :
     fun i H j ij => by
     cases' H _ ij with H₁ H₂
     apply lt_of_le_of_ltₓ (abs_le_abs_re_add_abs_im _)
-    dsimp [lim_aux]  at *
+    dsimp' [lim_aux]  at *
     have := add_lt_add H₁ H₂
     rwa [add_halves] at this
 

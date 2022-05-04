@@ -89,6 +89,14 @@ to compare the `L^p` and `L^∞` distances through it. -/
 protected def equiv : PiLp p α ≃ ∀ i : ι, α i :=
   Equivₓ.refl _
 
+@[simp]
+theorem equiv_apply (x : PiLp p α) (i : ι) : PiLp.equiv p α x i = x i :=
+  rfl
+
+@[simp]
+theorem equiv_symm_apply (x : ∀ i, α i) (i : ι) : (PiLp.equiv p α).symm x i = x i :=
+  rfl
+
 section
 
 /-!
@@ -304,7 +312,13 @@ instance normedSpace [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (�
 
 /- Register simplification lemmas for the applications of `pi_Lp` elements, as the usual lemmas
 for Pi types will not trigger. -/
-variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜) (x y : PiLp p β) (i : ι)
+variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, NormedSpace 𝕜 (β i)] (c : 𝕜)
+
+variable (x y : PiLp p β) (x' y' : ∀ i, β i) (i : ι)
+
+@[simp]
+theorem zero_apply : (0 : PiLp p β) i = 0 :=
+  rfl
 
 @[simp]
 theorem add_apply : (x + y) i = x i + y i :=
@@ -321,6 +335,65 @@ theorem smul_apply : (c • x) i = c • x i :=
 @[simp]
 theorem neg_apply : (-x) i = -x i :=
   rfl
+
+@[simp]
+theorem equiv_zero : PiLp.equiv p β 0 = 0 :=
+  rfl
+
+@[simp]
+theorem equiv_symm_zero : (PiLp.equiv p β).symm 0 = 0 :=
+  rfl
+
+@[simp]
+theorem equiv_add : PiLp.equiv p β (x + y) = PiLp.equiv p β x + PiLp.equiv p β y :=
+  rfl
+
+@[simp]
+theorem equiv_symm_add : (PiLp.equiv p β).symm (x' + y') = (PiLp.equiv p β).symm x' + (PiLp.equiv p β).symm y' :=
+  rfl
+
+@[simp]
+theorem equiv_sub : PiLp.equiv p β (x - y) = PiLp.equiv p β x - PiLp.equiv p β y :=
+  rfl
+
+@[simp]
+theorem equiv_symm_sub : (PiLp.equiv p β).symm (x' - y') = (PiLp.equiv p β).symm x' - (PiLp.equiv p β).symm y' :=
+  rfl
+
+@[simp]
+theorem equiv_neg : PiLp.equiv p β (-x) = -PiLp.equiv p β x :=
+  rfl
+
+@[simp]
+theorem equiv_symm_neg : (PiLp.equiv p β).symm (-x') = -(PiLp.equiv p β).symm x' :=
+  rfl
+
+@[simp]
+theorem equiv_smul : PiLp.equiv p β (c • x) = c • PiLp.equiv p β x :=
+  rfl
+
+@[simp]
+theorem equiv_symm_smul : (PiLp.equiv p β).symm (c • x') = c • (PiLp.equiv p β).symm x' :=
+  rfl
+
+theorem nnnorm_equiv_symm_const {β} [SemiNormedGroup β] (b : β) :
+    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥₊ = Fintype.card ι ^ (1 / p) * ∥b∥₊ := by
+  have : p ≠ 0 := (zero_lt_one.trans_le (Fact.out <| 1 ≤ p)).ne'
+  simp_rw [PiLp.nnnorm_eq, equiv_symm_apply, Function.const_applyₓ, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
+    Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel this, Nnreal.rpow_one]
+
+theorem norm_equiv_symm_const {β} [SemiNormedGroup β] (b : β) :
+    ∥(PiLp.equiv p fun _ : ι => β).symm (Function.const _ b)∥ = Fintype.card ι ^ (1 / p) * ∥b∥ :=
+  (congr_argₓ coe <| nnnorm_equiv_symm_const b).trans <| by
+    simp
+
+theorem nnnorm_equiv_symm_one {β} [SemiNormedGroup β] [One β] :
+    ∥(PiLp.equiv p fun _ : ι => β).symm 1∥₊ = Fintype.card ι ^ (1 / p) * ∥(1 : β)∥₊ :=
+  (nnnorm_equiv_symm_const (1 : β)).trans rfl
+
+theorem norm_equiv_symm_one {β} [SemiNormedGroup β] [One β] :
+    ∥(PiLp.equiv p fun _ : ι => β).symm 1∥ = Fintype.card ι ^ (1 / p) * ∥(1 : β)∥ :=
+  (norm_equiv_symm_const (1 : β)).trans rfl
 
 end PiLp
 

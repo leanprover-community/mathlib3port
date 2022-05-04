@@ -236,7 +236,7 @@ theorem _root_.affine_independent.exists_unique_dist_eq {ι : Type _} [hne : Non
         simp [Classical.em]
       change ∃! cccr : P × ℝ, _ ∧ ∀ i2, (fun q => dist q cccr.fst = cccr.snd) (p i2)
       conv => congr ext conv => congr skip rw [← Set.forall_range_iff]
-      dsimp only
+      dsimp' only
       rw [hr]
       change ∃! cccr : P × ℝ, _ ∧ ∀ i2 : ι2, (fun q => dist q cccr.fst = cccr.snd) (p i2) at hm
       conv at hm => congr ext conv => congr skip rw [← Set.forall_range_iff]
@@ -575,8 +575,6 @@ theorem centroid_eq_affine_combination_of_points_with_circumcenter {n : ℕ} (s 
       (fun i wi => wi • (s.points i -ᵥ Classical.choice AddTorsor.nonempty)) fs.subset_univ fun i => zero_smul ℝ _,
     Set.indicator_apply]
   congr
-  funext
-  congr 2
 
 omit V
 

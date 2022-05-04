@@ -27,7 +27,7 @@ namespace CategoryTheory
 
 @[to_additive]
 instance monoidDiscrete : Monoidₓ (Discrete M) := by
-  dsimp [discrete]
+  dsimp' [discrete]
   infer_instance
 
 @[to_additive Discrete.addMonoidal]

@@ -948,7 +948,7 @@ def changeOriginIndexEquiv : (Σk l : ℕ, { s : Finset (Finₓ (k + l)) // s.ca
         Finset.card_map _⟩⟩
   left_inv := by
     rintro ⟨k, l, ⟨s : Finset (Finₓ <| k + l), hs : s.card = l⟩⟩
-    dsimp only [Subtype.coe_mk]
+    dsimp' only [Subtype.coe_mk]
     -- Lean can't automatically generalize `k' = k + l - s.card`, `l' = s.card`, so we explicitly
     -- formulate the generalized goal
     suffices
@@ -973,7 +973,7 @@ theorem change_origin_series_summable_aux₁ {r r' : ℝ≥0 } (hr : (r + r' : �
       ∥p (s.1 + s.2.1)∥₊ * r ^ s.2.1 * r' ^ s.1 :=
   by
   rw [← change_origin_index_equiv.symm.summable_iff]
-  dsimp only [(· ∘ ·), change_origin_index_equiv_symm_apply_fst, change_origin_index_equiv_symm_apply_snd_fst]
+  dsimp' only [(· ∘ ·), change_origin_index_equiv_symm_apply_fst, change_origin_index_equiv_symm_apply_snd_fst]
   have :
     ∀ n : ℕ,
       HasSum (fun s : Finset (Finₓ n) => ∥p (n - s.card + s.card)∥₊ * r ^ s.card * r' ^ (n - s.card))
@@ -1056,11 +1056,11 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
   have hsf : Summable f := by
     refine' summable_of_nnnorm_bounded _ (p.change_origin_series_summable_aux₁ h) _
     rintro ⟨k, l, s, hs⟩
-    dsimp only [Subtype.coe_mk]
+    dsimp' only [Subtype.coe_mk]
     exact p.nnnorm_change_origin_series_term_apply_le _ _ _ _ _ _
   have hf : HasSum f ((p.change_origin x).Sum y) := by
     refine' HasSum.sigma_of_has_sum ((p.change_origin x).Summable y_mem_ball).HasSum (fun k => _) hsf
-    · dsimp only [f]
+    · dsimp' only [f]
       refine' ContinuousMultilinearMap.has_sum_eval _ _
       have := (p.has_fpower_series_on_ball_change_origin k radius_pos).HasSum x_mem_ball
       rw [zero_addₓ] at this
@@ -1082,7 +1082,7 @@ theorem change_origin_eval (h : (∥x∥₊ + ∥y∥₊ : ℝ≥0∞) < p.radiu
   erw [(p n).map_add_univ (fun _ => x) fun _ => y]
   convert has_sum_fintype _
   ext1 s
-  dsimp only [f, change_origin_series_term, (· ∘ ·), change_origin_index_equiv_symm_apply_fst,
+  dsimp' only [f, change_origin_series_term, (· ∘ ·), change_origin_index_equiv_symm_apply_fst,
     change_origin_index_equiv_symm_apply_snd_fst, change_origin_index_equiv_symm_apply_snd_snd_coe]
   rw [ContinuousMultilinearMap.curry_fin_finset_apply_const]
   have :

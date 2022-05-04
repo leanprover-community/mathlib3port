@@ -170,7 +170,7 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) : decomposeAux f ↑x = D
     subst this
     simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
     let ih' := ih h2
-    dsimp  at ih'
+    dsimp'  at ih'
     rw [ih', ← AddMonoidHom.map_add]
     apply DirectSum.of_eq_of_graded_monoid_eq
     congr 2
@@ -180,7 +180,7 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)
     (by
       ext : 2
-      dsimp
+      dsimp'
       rw [decompose_aux_single, DirectSum.submodule_coe_alg_hom_of, Subtype.coe_mk])
     fun i x => by
     convert (decompose_aux_coe f x : _)

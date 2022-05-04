@@ -201,7 +201,7 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
   left_inv := fun ⟨x, h'⟩ => by
     by_cases' p x <;> simp [union'._match_1, h] <;> congr
   right_inv := fun o => by
-    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h], simp [ht _ h]]
+    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp' [union'._match_1] <;> [simp [hs _ h], simp [ht _ h]]
 
 /-- If sets `s` and `t` are disjoint, then `s ∪ t` is equivalent to `s ⊕ t`. -/
 protected def union {α} {s t : Set α} [DecidablePred fun x => x ∈ s] (H : s ∩ t ⊆ ∅) : (s ∪ t : Set α) ≃ Sum s t :=
@@ -556,7 +556,7 @@ theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Typ
   ext ⟨f, g⟩
   simp only [mem_preimage, mem_univ_pi, prod_mk_mem_set_prod_eq, Subtype.forall, ← forall_and_distrib]
   refine' forall_congrₓ fun i => _
-  dsimp only [Subtype.coe_mk]
+  dsimp' only [Subtype.coe_mk]
   by_cases' hi : p i <;> simp [hi]
 
 end Equivₓ

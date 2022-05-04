@@ -149,7 +149,7 @@ def inf {A : C} : MonoOver A ⥤ MonoOver A ⥤ MonoOver A where
         apply hom_mk _ _
         apply pullback.lift pullback.fst (pullback.snd ≫ k.left) _
         rw [pullback.condition, assoc, w k]
-        dsimp
+        dsimp'
         rw [pullback.lift_snd_assoc, assoc, w k] }
 
 /-- A morphism from the "infimum" of two objects in `mono_over A` to the first object. -/
@@ -196,7 +196,7 @@ def supLe {A : C} (f g h : MonoOver A) : (f ⟶ h) → (g ⟶ h) → ((sup.obj f
   intro k₁ k₂
   refine' hom_mk _ _
   apply image.lift ⟨_, h.arrow, coprod.desc k₁.left k₂.left, _⟩
-  · dsimp
+  · dsimp'
     ext1
     · simp [w k₁]
       
@@ -458,7 +458,7 @@ theorem inf_map {X Y : C} (g : Y ⟶ X) [Mono g] f₁ f₂ : (map g).obj (f₁�
   apply Quotientₓ.ind'
   intro f₁
   erw [inf_def, inf_def, inf_eq_map_pullback', inf_eq_map_pullback', ← map_comp]
-  dsimp
+  dsimp'
   rw [pullback_comp, pullback_map_self]
 
 end SemilatticeInfTop
@@ -590,7 +590,7 @@ theorem Inf_le {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : infₓ s ≤ f 
     apply congr_argₓ fun X : subobject A => (X : C)
     exact Equivₓ.symm_apply_apply _ _
     
-  · dsimp [Inf]
+  · dsimp' [Inf]
     simp only [category.comp_id, category.assoc, ← underlying_iso_hom_comp_eq_mk, subobject.arrow_congr,
       congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
     convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
@@ -600,7 +600,7 @@ theorem le_Inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g
   fapply le_of_comm
   · exact limits.limit.lift _ (le_Inf_cone s f k) ≫ (underlying_iso _).inv
     
-  · dsimp [Inf, wide_pullback_ι]
+  · dsimp' [Inf, wide_pullback_ι]
     simp
     
 
@@ -629,7 +629,7 @@ def supₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s := by
   fapply le_of_comm
-  · dsimp [Sup]
+  · dsimp' [Sup]
     refine' _ ≫ factor_thru_image _ ≫ (underlying_iso _).inv
     refine'
       _ ≫
@@ -638,9 +638,9 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s 
             simpa [Set.mem_image] using H⟩
     exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     
-  · dsimp [Sup, small_coproduct_desc]
+  · dsimp' [Sup, small_coproduct_desc]
     simp
-    dsimp
+    dsimp'
     simp
     
 
@@ -654,7 +654,7 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
 
 theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g ∈ s, ∀, g ≤ f) : supₓ s ≤ f := by
   fapply le_of_comm
-  · dsimp [Sup]
+  · dsimp' [Sup]
     refine' (underlying_iso _).Hom ≫ image.lift ⟨_, f.arrow, _, _⟩
     · refine' sigma.desc _
       rintro ⟨g, m⟩
@@ -663,13 +663,13 @@ theorem Sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀, ∀ g
       
     · ext j
       rcases j with ⟨j, m⟩
-      dsimp [small_coproduct_desc]
+      dsimp' [small_coproduct_desc]
       simp
-      dsimp
+      dsimp'
       simp
       
     
-  · dsimp [Sup]
+  · dsimp' [Sup]
     simp
     
 

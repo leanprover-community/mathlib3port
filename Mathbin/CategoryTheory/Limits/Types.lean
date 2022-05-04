@@ -36,7 +36,7 @@ def limitConeIsLimit (F : J ⥤ Type u) : IsLimit (limitCone F) where
 
 /-- The category of types has all limits.
 
-See https://stacks.math.columbia.edu/tag/002U.
+See <https://stacks.math.columbia.edu/tag/002U>.
 -/
 instance : HasLimits (Type u) where
   HasLimitsOfShape := fun J 𝒥 =>
@@ -86,7 +86,7 @@ noncomputable def Limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j'
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
     limit.π F j (Limit.mk F x h) = x j := by
-  dsimp [limit.mk]
+  dsimp' [limit.mk]
   simp
 
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
@@ -148,7 +148,7 @@ def colimitCoconeIsColimit (F : J ⥤ Type u) : IsColimit (colimitCocone F) wher
 
 /-- The category of types has all colimits.
 
-See https://stacks.math.columbia.edu/tag/002U.
+See <https://stacks.math.columbia.edu/tag/002U>.
 -/
 instance : HasColimits (Type u) where
   HasColimitsOfShape := fun J 𝒥 =>
@@ -205,7 +205,7 @@ theorem jointly_surjective (F : J ⥤ Type u) {t : Cocone F} (h : IsColimit t) (
   suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
     have := congr_funₓ this x
     have H := congr_argₓ ULift.down this
-    dsimp  at H
+    dsimp'  at H
     rwa [eq_trueₓ] at H
   refine' h.hom_ext _
   intro j

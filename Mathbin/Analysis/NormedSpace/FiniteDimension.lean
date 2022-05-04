@@ -8,7 +8,7 @@ import Mathbin.Analysis.NormedSpace.AffineIsometry
 import Mathbin.Analysis.NormedSpace.OperatorNorm
 import Mathbin.Analysis.NormedSpace.RieszLemma
 import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.Topology.Algebra.Matrix
+import Mathbin.Topology.Instances.Matrix
 
 /-!
 # Finite dimensional normed spaces over complete fields
@@ -123,13 +123,9 @@ theorem LinearMap.continuous_on_pi {ι : Type w} [Fintype ι] {𝕜 : Type u} [N
 /-- The space of continuous linear maps between finite-dimensional spaces is finite-dimensional. -/
 instance {𝕜 E F : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E]
     [FiniteDimensional 𝕜 E] [TopologicalSpace F] [AddCommGroupₓ F] [Module 𝕜 F] [TopologicalAddGroup F]
-    [HasContinuousSmul 𝕜 F] [FiniteDimensional 𝕜 F] : FiniteDimensional 𝕜 (E →L[𝕜] F) := by
-  have : IsNoetherian 𝕜 (E →ₗ[𝕜] F) :=
-    is_noetherian.iff_fg.mpr
-      (by
-        infer_instance)
-  let I : (E →L[𝕜] F) →ₗ[𝕜] E →ₗ[𝕜] F := ContinuousLinearMap.coeLm 𝕜
-  exact Module.Finite.of_injective I ContinuousLinearMap.coe_injective
+    [HasContinuousSmul 𝕜 F] [FiniteDimensional 𝕜 F] : FiniteDimensional 𝕜 (E →L[𝕜] F) :=
+  FiniteDimensional.of_injective (ContinuousLinearMap.coeLm 𝕜 : (E →L[𝕜] F) →ₗ[𝕜] E →ₗ[𝕜] F)
+    ContinuousLinearMap.coe_injective
 
 section CompleteField
 
@@ -230,7 +226,7 @@ theorem LinearMap.continuous_of_finite_dimensional [FiniteDimensional 𝕜 E] (f
   have : Continuous (f.comp (b.equiv_fun.symm : (Basis.OfVectorSpaceIndex 𝕜 E → 𝕜) →ₗ[𝕜] E) ∘ b.equiv_fun) := B.comp A
   convert this
   ext x
-  dsimp
+  dsimp'
   rw [Basis.equiv_fun_symm_apply, Basis.sum_repr]
 
 section Affine
@@ -713,6 +709,45 @@ theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
     
   · exact (closed_embedding_smul_left hc).IsClosedMap
     
+
+open ContinuousLinearMap
+
+/-- Continuous linear equivalence between continuous linear functions `𝕜ⁿ → E` and `Eⁿ`.
+The spaces `𝕜ⁿ` and `Eⁿ` are represented as `ι → 𝕜` and `ι → E`, respectively,
+where `ι` is a finite type. -/
+def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] : ((ι → 𝕜) →L[𝕜] E) ≃L[𝕜] ι → E :=
+  { LinearMap.toContinuousLinearMap.symm.trans (LinearEquiv.piRing 𝕜 E ι 𝕜) with
+    continuous_to_fun := by
+      refine' continuous_pi fun i => _
+      exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous,
+    continuous_inv_fun := by
+      simp_rw [LinearEquiv.inv_fun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
+      apply LinearMap.continuous_of_bound _ (Fintype.card ι : ℝ) fun g => _
+      rw [← nsmul_eq_mul]
+      apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _
+      simp_rw [LinearMap.coe_comp, LinearEquiv.coe_to_linear_map, Function.comp_app,
+        LinearMap.coe_to_continuous_linear_map', LinearEquiv.pi_ring_symm_apply]
+      apply le_transₓ (norm_sum_le _ _)
+      rw [smul_mul_assoc]
+      refine' Finset.sum_le_card_nsmul _ _ _ fun i hi => _
+      rw [norm_smul, mul_comm]
+      exact mul_le_mul (norm_le_pi_norm g i) (norm_le_pi_norm t i) (norm_nonneg _) (norm_nonneg g) }
+
+/-- A family of continuous linear maps is continuous on `s` if all its applications are. -/
+theorem continuous_on_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E] {f : X → E →L[𝕜] F}
+    {s : Set X} : ContinuousOn f s ↔ ∀ y, ContinuousOn (fun x => f x y) s := by
+  refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 F y).Continuous.comp_continuous_on h, fun h => _⟩
+  let d := finrank 𝕜 E
+  have hd : d = finrank 𝕜 (Finₓ d → 𝕜) := (finrank_fin_fun 𝕜).symm
+  let e₁ : E ≃L[𝕜] Finₓ d → 𝕜 := ContinuousLinearEquiv.ofFinrankEq hd
+  let e₂ : (E →L[𝕜] F) ≃L[𝕜] Finₓ d → F :=
+    (e₁.arrow_congr (1 : F ≃L[𝕜] F)).trans (ContinuousLinearEquiv.piRing (Finₓ d))
+  rw [← Function.comp.left_id f, ← e₂.symm_comp_self]
+  exact e₂.symm.continuous.comp_continuous_on (continuous_on_pi.mpr fun i => h _)
+
+theorem continuous_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E] {f : X → E →L[𝕜] F} :
+    Continuous f ↔ ∀ y, Continuous fun x => f x y := by
+  simp_rw [continuous_iff_continuous_on_univ, continuous_on_clm_apply]
 
 end CompleteField
 

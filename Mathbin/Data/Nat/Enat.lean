@@ -195,7 +195,7 @@ instance decidableLe (x y : Enat) [Decidable x.Dom] [Decidable y.Dom] : Decidabl
     decidableOfDecidableOfIff
         (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _) <|
       by
-      dsimp [(· ≤ ·)]
+      dsimp' [(· ≤ ·)]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
     if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy

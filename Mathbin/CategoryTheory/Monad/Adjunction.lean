@@ -28,11 +28,11 @@ def toMonad (h : L ⊣ R) : Monad C where
   η' := h.Unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
   assoc' := fun X => by
-    dsimp
+    dsimp'
     rw [← R.map_comp]
     simp
   right_unit' := fun X => by
-    dsimp
+    dsimp'
     rw [← R.map_comp]
     simp
 
@@ -45,11 +45,11 @@ def toComonad (h : L ⊣ R) : Comonad D where
   ε' := h.counit
   δ' := whiskerRight (whiskerLeft R h.Unit) L
   coassoc' := fun X => by
-    dsimp
+    dsimp'
     rw [← L.map_comp]
     simp
   right_counit' := fun X => by
-    dsimp
+    dsimp'
     rw [← L.map_comp]
     simp
 
@@ -61,10 +61,10 @@ def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
       (by
         tidy))
     (fun X => by
-      dsimp
+      dsimp'
       simp )
     fun X => by
-    dsimp
+    dsimp'
     simp
 
 /-- The comonad induced by the Eilenberg-Moore adjunction is the original comonad. -/
@@ -75,10 +75,10 @@ def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=
       (by
         tidy))
     (fun X => by
-      dsimp
+      dsimp'
       simp )
     fun X => by
-    dsimp
+    dsimp'
     simp
 
 end Adjunction
@@ -94,13 +94,13 @@ def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra where
   obj := fun X =>
     { a := R.obj X, a := R.map (h.counit.app X),
       assoc' := by
-        dsimp
+        dsimp'
         rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
         rfl }
   map := fun X Y f =>
     { f := R.map f,
       h' := by
-        dsimp
+        dsimp'
         rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
 
 /-- The underlying object of `(monad.comparison R).obj X` is just `R.obj X`.
@@ -141,13 +141,13 @@ def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra where
   obj := fun X =>
     { a := L.obj X, a := L.map (h.Unit.app X),
       coassoc' := by
-        dsimp
+        dsimp'
         rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
         rfl }
   map := fun X Y f =>
     { f := L.map f,
       h' := by
-        dsimp
+        dsimp'
         rw [← L.map_comp]
         simp }
 
@@ -200,7 +200,7 @@ noncomputable instance (G : Comonad C) : ComonadicLeftAdjoint G.forget :=
 
 -- TODO: This holds more generally for idempotent adjunctions, not just reflective adjunctions.
 instance μ_iso_of_reflective [Reflective R] : IsIso (Adjunction.ofRightAdjoint R).toMonad.μ := by
-  dsimp
+  dsimp'
   infer_instance
 
 attribute [instance] monadic_right_adjoint.eqv
@@ -213,9 +213,9 @@ instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
     IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
   ⟨⟨X.a,
       ⟨X.Unit, by
-        dsimp only [functor.id_obj]
+        dsimp' only [functor.id_obj]
         rw [← (adjunction.of_right_adjoint R).unit_naturality]
-        dsimp only [functor.comp_obj, adjunction.to_monad_coe]
+        dsimp' only [functor.comp_obj, adjunction.to_monad_coe]
         rw [unit_obj_eq_map_unit, ← functor.map_comp, ← functor.map_comp]
         erw [X.unit]
         simp ⟩⟩⟩
@@ -226,7 +226,7 @@ instance comparison_ess_surj [Reflective R] : EssSurj (Monad.comparison (Adjunct
   refine' monad.algebra.iso_mk _ _
   · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)
     
-  dsimp only [functor.comp_map, monad.comparison_obj_a, as_iso_hom, functor.comp_obj, monad.comparison_obj_A,
+  dsimp' only [functor.comp_map, monad.comparison_obj_a, as_iso_hom, functor.comp_obj, monad.comparison_obj_A,
     monad_to_functor_eq_coe, adjunction.to_monad_coe]
   rw [← cancel_epi ((adjunction.of_right_adjoint R).Unit.app X.A), adjunction.unit_naturality_assoc,
     adjunction.right_triangle_components, comp_id]

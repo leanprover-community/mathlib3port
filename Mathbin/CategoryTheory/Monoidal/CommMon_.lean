@@ -38,7 +38,7 @@ namespace CommMon_
 def trivial : CommMon_ C :=
   { Mon_.trivial C with
     mul_comm' := by
-      dsimp
+      dsimp'
       rw [braiding_left_unitor, unitors_equal] }
 
 instance : Inhabited (CommMon_ C) :=
@@ -102,7 +102,7 @@ def mapCommMon (F : LaxBraidedFunctor C D) : CommMon_ C ⥤ CommMon_ D where
   obj := fun A =>
     { F.toLaxMonoidalFunctor.mapMon.obj A.toMon_ with
       mul_comm' := by
-        dsimp
+        dsimp'
         have := F.braided
         slice_lhs 1 2 => rw [← this]
         slice_lhs 2 3 => rw [← CategoryTheory.Functor.map_comp, A.mul_comm] }
@@ -138,7 +138,7 @@ def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 
   map := fun A B f =>
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
-        dsimp
+        dsimp'
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 

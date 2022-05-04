@@ -51,7 +51,7 @@ def lmul : A →ₐ[R] End R A :=
     commutes' := by
       intro r
       ext a
-      dsimp
+      dsimp'
       rw [smul_def] }
 
 variable {R A}

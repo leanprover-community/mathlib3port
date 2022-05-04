@@ -110,7 +110,7 @@ theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n 
     supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
 
 theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
-  dsimp [Mul.mul]
+  dsimp' [Mul.mul]
   simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid]
   rw [supr_to_add_submonoid]
   rfl

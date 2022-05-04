@@ -133,7 +133,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       exact ⟨x'.inv, x, hx ▸ x'.inv_val⟩,
     left_inv := fun x =>
       Subtype.eq <| by
-        dsimp
+        dsimp'
         generalize_proofs h
         rw [← h.some.mul_left_inj]
         exact
@@ -142,7 +142,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
               (by
                 rw [h.some_spec])),
     right_inv := fun x => by
-      dsimp
+      dsimp'
       ext
       rw [from_left_inv_eq_iff]
       convert (hS x.prop).some.inv_val

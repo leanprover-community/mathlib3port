@@ -174,7 +174,7 @@ theorem is_sheaf_unique_gluing_of_is_sheaf_types (Fsh : F.IsSheaf) : F.IsSheafUn
     rwa [← compatible_iff_left_res_eq_right_res F U sf', inv_hom_id_apply]
   choose s s_spec s_uniq using types.unique_of_type_equalizer _ _ (Fsh U).some sf' hsf'
   use s
-  dsimp
+  dsimp'
   constructor
   · convert (is_gluing_iff_eq_res F U sf' _).mpr s_spec
     rw [inv_hom_id_apply]

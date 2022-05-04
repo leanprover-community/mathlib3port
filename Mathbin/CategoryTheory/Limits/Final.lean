@@ -75,7 +75,7 @@ variable {D : Type v} [SmallCategory D]
 /-- A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
 is connected.
 
-See https://stacks.math.columbia.edu/tag/04E6
+See <https://stacks.math.columbia.edu/tag/04E6>
 -/
 class Final (F : C ⥤ D) : Prop where
   out (d : D) : IsConnected (StructuredArrow d F)
@@ -187,13 +187,13 @@ def induction {d : D} (Z : ∀ X : C k : d ⟶ F.obj X, Sort _)
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
-    dsimp
+    dsimp'
     simp
     
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.right _ a
     convert f.w.symm
-    dsimp
+    dsimp'
     simp
     
 
@@ -208,7 +208,7 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G where
       ι :=
         { app := fun X => G.map (homToLift F X) ≫ c.ι.app (lift F X),
           naturality' := fun X Y f => by
-            dsimp
+            dsimp'
             simp
             -- This would be true if we'd chosen `lift F X` to be `lift F Y`
             -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
@@ -295,19 +295,19 @@ instance (priority := 100) comp_has_colimit [HasColimit G] : HasColimit (F ⋙ G
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x := by
-  dsimp [is_colimit_whisker_equiv]
+  dsimp' [is_colimit_whisker_equiv]
   apply P.hom_ext
   intro j
-  dsimp
+  dsimp'
   simp
-  dsimp
+  dsimp'
   simp
 
 -- See library note [dsimp, simp].
 instance colimit_pre_is_iso [HasColimit G] : IsIso (colimit.pre G F) := by
   rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
   erw [colimit_pre_is_iso_aux]
-  dsimp
+  dsimp'
   infer_instance
 
 section
@@ -393,7 +393,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ co
       exact ⟨structured_arrow.mk y⟩
     apply zigzag_is_connected
     rintro ⟨⟨⟩, X₁, f₁⟩ ⟨⟨⟩, X₂, f₂⟩
-    dsimp  at *
+    dsimp'  at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂
     have e : y₁ = y₂ := by
@@ -444,13 +444,13 @@ def induction {d : D} (Z : ∀ X : C k : F.obj X ⟶ d, Sort _)
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
-    dsimp
+    dsimp'
     simp
     
   · intro j₁ j₂ f a
     fapply h₂ _ _ _ _ f.left _ a
     convert f.w
-    dsimp
+    dsimp'
     simp
     
 
@@ -465,7 +465,7 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G where
       π :=
         { app := fun d => c.π.app (lift F d) ≫ G.map (homToLift F d),
           naturality' := fun X Y f => by
-            dsimp
+            dsimp'
             simp
             -- This would be true if we'd chosen `lift F Y` to be `lift F X`
             -- and `hom_to_lift F Y` to be `hom_to_lift F X ≫ f`.
@@ -554,7 +554,7 @@ instance (priority := 100) comp_has_limit [HasLimit G] : HasLimit (F ⋙ G) :=
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x := by
-  dsimp [is_limit_whisker_equiv]
+  dsimp' [is_limit_whisker_equiv]
   apply P.hom_ext
   intro j
   simp
@@ -562,7 +562,7 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
 instance limit_pre_is_iso [HasLimit G] : IsIso (limit.pre G F) := by
   rw [limit.pre_eq (limit_cone_comp F (get_limit_cone G)) (get_limit_cone G)]
   erw [limit_pre_is_iso_aux]
-  dsimp
+  dsimp'
   infer_instance
 
 section

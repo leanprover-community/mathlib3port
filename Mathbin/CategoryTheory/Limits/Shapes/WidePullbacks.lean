@@ -27,7 +27,7 @@ pullbacks and finite wide pullbacks.
 
 universe v u
 
-open CategoryTheory CategoryTheory.Limits
+open CategoryTheory CategoryTheory.Limits Opposite
 
 namespace CategoryTheory.Limits
 
@@ -119,7 +119,7 @@ def mkCone {F : WidePullbackShape J ⥤ C} {X : C} (f : X ⟶ F.obj none) (π : 
           | none => f
           | some j => π j,
         naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
+          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
 
 end WidePullbackShape
 
@@ -200,7 +200,7 @@ def mkCocone {F : WidePushoutShape J ⥤ C} {X : C} (f : F.obj none ⟶ X) (ι :
           | none => f
           | some j => ι j,
         naturality' := fun j j' f => by
-          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp <;> simp [w] } }
+          cases j <;> cases j' <;> cases f <;> unfold_aux <;> dsimp' <;> simp [w] } }
 
 end WidePushoutShape
 
@@ -377,6 +377,84 @@ theorem hom_ext (g1 g2 : widePushout _ _ arrows ⟶ X) :
     
 
 end WidePushout
+
+variable (J)
+
+/-- The action on morphisms of the obvious functor
+  `wide_pullback_shape_op : wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ`-/
+def widePullbackShapeOpMap :
+    ∀ X Y : WidePullbackShape J, (X ⟶ Y) → ((op X : (WidePushoutShape J)ᵒᵖ) ⟶ (op Y : (WidePushoutShape J)ᵒᵖ))
+  | _, _, wide_pullback_shape.hom.id X => Quiver.Hom.op (WidePushoutShape.Hom.id _)
+  | _, _, wide_pullback_shape.hom.term j => Quiver.Hom.op (WidePushoutShape.Hom.init _)
+
+/-- The obvious functor `wide_pullback_shape J ⥤ (wide_pushout_shape J)ᵒᵖ` -/
+@[simps]
+def widePullbackShapeOp : WidePullbackShape J ⥤ (WidePushoutShape J)ᵒᵖ where
+  obj := fun X => op X
+  map := widePullbackShapeOpMap J
+
+/-- The action on morphisms of the obvious functor
+`wide_pushout_shape_op : `wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ` -/
+def widePushoutShapeOpMap :
+    ∀ X Y : WidePushoutShape J, (X ⟶ Y) → ((op X : (WidePullbackShape J)ᵒᵖ) ⟶ (op Y : (WidePullbackShape J)ᵒᵖ))
+  | _, _, wide_pushout_shape.hom.id X => Quiver.Hom.op (WidePullbackShape.Hom.id _)
+  | _, _, wide_pushout_shape.hom.init j => Quiver.Hom.op (WidePullbackShape.Hom.term _)
+
+/-- The obvious functor `wide_pushout_shape J ⥤ (wide_pullback_shape J)ᵒᵖ` -/
+@[simps]
+def widePushoutShapeOp : WidePushoutShape J ⥤ (WidePullbackShape J)ᵒᵖ where
+  obj := fun X => op X
+  map := widePushoutShapeOpMap J
+
+/-- The obvious functor `(wide_pullback_shape J)ᵒᵖ ⥤ wide_pushout_shape J`-/
+@[simps]
+def widePullbackShapeUnop : (WidePullbackShape J)ᵒᵖ ⥤ WidePushoutShape J :=
+  (widePullbackShapeOp J).leftOp
+
+/-- The obvious functor `(wide_pushout_shape J)ᵒᵖ ⥤ wide_pullback_shape J` -/
+@[simps]
+def widePushoutShapeUnop : (WidePushoutShape J)ᵒᵖ ⥤ WidePullbackShape J :=
+  (widePushoutShapeOp J).leftOp
+
+/-- The inverse of the unit isomorphism of the equivalence
+`wide_pushout_shape_op_equiv : (wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
+def widePushoutShapeOpUnop : widePushoutShapeUnop J ⋙ widePullbackShapeOp J ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    decide
+
+/-- The counit isomorphism of the equivalence
+`wide_pullback_shape_op_equiv : (wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
+def widePushoutShapeUnopOp : widePushoutShapeOp J ⋙ widePullbackShapeUnop J ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    decide
+
+/-- The inverse of the unit isomorphism of the equivalence
+`wide_pullback_shape_op_equiv : (wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
+def widePullbackShapeOpUnop : widePullbackShapeUnop J ⋙ widePushoutShapeOp J ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    decide
+
+/-- The counit isomorphism of the equivalence
+`wide_pushout_shape_op_equiv : (wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
+def widePullbackShapeUnopOp : widePullbackShapeOp J ⋙ widePushoutShapeUnop J ≅ 𝟭 _ :=
+  NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
+    decide
+
+/-- The duality equivalence `(wide_pushout_shape J)ᵒᵖ ≌ wide_pullback_shape J` -/
+@[simps]
+def widePushoutShapeOpEquiv : (WidePushoutShape J)ᵒᵖ ≌ WidePullbackShape J where
+  Functor := widePushoutShapeUnop J
+  inverse := widePullbackShapeOp J
+  unitIso := (widePushoutShapeOpUnop J).symm
+  counitIso := widePullbackShapeUnopOp J
+
+/-- The duality equivalence `(wide_pullback_shape J)ᵒᵖ ≌ wide_pushout_shape J` -/
+@[simps]
+def widePullbackShapeOpEquiv : (WidePullbackShape J)ᵒᵖ ≌ WidePushoutShape J where
+  Functor := widePullbackShapeUnop J
+  inverse := widePushoutShapeOp J
+  unitIso := (widePullbackShapeOpUnop J).symm
+  counitIso := widePushoutShapeUnopOp J
 
 end CategoryTheory.Limits
 

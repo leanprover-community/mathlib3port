@@ -464,7 +464,7 @@ theorem entries_empty (hash_fn : α → Nat) n : (@mkHashMap α _ β hash_fn n).
   mk_as_list _
 
 theorem keys_empty (hash_fn : α → Nat) n : (@mkHashMap α _ β hash_fn n).keys = [] := by
-  dsimp [keys] <;> rw [entries_empty] <;> rfl
+  dsimp' [keys] <;> rw [entries_empty] <;> rfl
 
 theorem find_empty (hash_fn : α → Nat) n a : (@mkHashMap α _ β hash_fn n).find a = none := by
   induction' h : (@mkHashMap α _ β hash_fn n).find a with <;> [rfl,
@@ -474,7 +474,7 @@ theorem find_empty (hash_fn : α → Nat) n a : (@mkHashMap α _ β hash_fn n).f
       ]
 
 theorem not_contains_empty (hash_fn : α → Nat) n a : ¬(@mkHashMap α _ β hash_fn n).contains a := by
-  apply bool_iff_false.2 <;> dsimp [contains] <;> rw [find_empty] <;> rfl
+  apply bool_iff_false.2 <;> dsimp' [contains] <;> rw [find_empty] <;> rfl
 
 theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} {sz} (v : Valid hash_fn bkts sz) :
     Valid hash_fn (bkts.foldl (mkArray _ [] : BucketArray α β n') (reinsertAux hash_fn)) sz := by

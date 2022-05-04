@@ -38,6 +38,7 @@ We use notation `𝕎 R`, entered `\bbW`, for the Witt vectors over `R`.
 
 noncomputable section
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1285:32: infer kinds are unsupported in Lean 4: mk []
 /-- `witt_vector p R` is the ring of `p`-typical Witt vectors over the commutative ring `R`,
 where `p` is a prime number.
 
@@ -45,7 +46,7 @@ If `p` is invertible in `R`, this ring is isomorphic to `ℕ → R` (the product
 If `R` is a ring of characteristic `p`, then `witt_vector p R` is a ring of characteristic `0`.
 The canonical example is `witt_vector p (zmod p)`,
 which is isomorphic to the `p`-adic integers `ℤ_[p]`. -/
-structure WittVector (p : ℕ) (R : Type _) where mk {} ::
+structure WittVector (p : ℕ) (R : Type _) where mk ::
   coeff : ℕ → R
 
 variable {p : ℕ}

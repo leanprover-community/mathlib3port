@@ -103,7 +103,7 @@ theorem colimit_mul_aux_eq_of_rel_left {x x' y : Σj, F.obj j} (hxx' : Types.Fil
     tulip (left_to_max j₁ j₂) (right_to_max j₁ j₂) (right_to_max j₃ j₂) (left_to_max j₃ j₂) f g
   apply M.mk_eq
   use s, α, γ
-  dsimp
+  dsimp'
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
 
 /-- Multiplication in the colimit is well-defined in the right argument. -/
@@ -119,7 +119,7 @@ theorem colimit_mul_aux_eq_of_rel_right {x y y' : Σj, F.obj j}
     tulip (right_to_max j₂ j₁) (left_to_max j₂ j₁) (left_to_max j₂ j₃) (right_to_max j₂ j₃) f g
   apply M.mk_eq
   use s, α, γ
-  dsimp
+  dsimp'
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
 
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
@@ -151,7 +151,7 @@ theorem colimit_mul_mk_eq (x y : Σj, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 
   obtain ⟨s, α, β, h₁, h₂⟩ := bowtie (left_to_max j₁ j₂) f (right_to_max j₁ j₂) g
   apply M.mk_eq
   use s, α, β
-  dsimp
+  dsimp'
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂]
 
 @[to_additive]
@@ -228,7 +228,7 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x where
     cases' x with i x
     cases' y with j y
     rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j)]
-    dsimp [types.colimit_cocone_is_colimit]
+    dsimp' [types.colimit_cocone_is_colimit]
     rw [MonoidHom.map_mul, t.w_apply, t.w_apply]
 
 /-- The proposed colimit cocone is a colimit in `Mon`. -/
@@ -282,7 +282,7 @@ instance colimitCommMonoid : CommMonoidₓ M :=
       let f := left_to_max x.1 y.1
       let g := right_to_max x.1 y.1
       rw [colimit_mul_mk_eq _ x y k f g, colimit_mul_mk_eq _ y x k g f]
-      dsimp
+      dsimp'
       rw [mul_comm] }
 
 /-- The bundled commutative monoid giving the filtered colimit of a diagram. -/

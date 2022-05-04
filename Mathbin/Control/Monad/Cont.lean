@@ -130,7 +130,7 @@ instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT�
     intros
     simp [call_cc, ExceptTₓ.callCc, call_cc_bind_right]
     ext
-    dsimp
+    dsimp'
     congr with ⟨⟩ <;> simp [ExceptTₓ.bindCont, @call_cc_dummy m _]
   call_cc_bind_left := by
     intros
@@ -162,7 +162,7 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionTₓ m) 
     intros
     simp [call_cc, OptionTₓ.callCc, call_cc_bind_right]
     ext
-    dsimp
+    dsimp'
     congr with ⟨⟩ <;> simp [OptionTₓ.bindCont, @call_cc_dummy m _]
   call_cc_bind_left := by
     intros
@@ -208,7 +208,7 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateTₓ
     intros
     simp [call_cc, StateTₓ.callCc, call_cc_bind_right, (· >>= ·), StateTₓ.bind]
     ext
-    dsimp
+    dsimp'
     congr with ⟨x₀, x₁⟩
     rfl
   call_cc_bind_left := by

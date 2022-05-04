@@ -102,7 +102,6 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 maps `to_fun : α → β` and `inv_fun : β → α` map `source` to `target` and conversely, and are inverse
 to each other there. The values of `to_fun` outside of `source` and of `inv_fun` outside of `target`
 are irrelevant. -/
-@[nolint has_inhabited_instance]
 structure LocalEquiv (α : Type _) (β : Type _) where
   toFun : α → β
   invFun : β → α
@@ -127,6 +126,12 @@ def Equivₓ.toLocalEquiv (e : α ≃ β) : LocalEquiv α β where
 namespace LocalEquiv
 
 variable (e : LocalEquiv α β) (e' : LocalEquiv β γ)
+
+instance [Inhabited α] [Inhabited β] : Inhabited (LocalEquiv α β) :=
+  ⟨⟨const α default, const β default, ∅, ∅, maps_to_empty _ _, maps_to_empty _ _, eq_on_empty _ _, eq_on_empty _ _⟩⟩
+
+instance inhabitedOfEmpty [IsEmpty α] [IsEmpty β] : Inhabited (LocalEquiv α β) :=
+  ⟨((Equivₓ.equivEmpty α).trans (Equivₓ.equivEmpty β).symm).toLocalEquiv⟩
 
 /-- The inverse of a local equiv -/
 protected def symm : LocalEquiv β α where
@@ -243,6 +248,12 @@ theorem symm_symm : e.symm.symm = e := by
 theorem image_source_eq_target : e '' e.Source = e.Target :=
   e.BijOn.image_eq
 
+theorem forall_mem_target {p : β → Prop} : (∀, ∀ y ∈ e.Target, ∀, p y) ↔ ∀, ∀ x ∈ e.Source, ∀, p (e x) := by
+  rw [← image_source_eq_target, ball_image_iff]
+
+theorem exists_mem_target {p : β → Prop} : (∃ y ∈ e.Target, p y) ↔ ∃ x ∈ e.Source, p (e x) := by
+  rw [← image_source_eq_target, bex_image_iff]
+
 /-- We say that `t : set β` is an image of `s : set α` under a local equivalence if
 any of the following equivalent conditions hold:
 
@@ -260,10 +271,9 @@ variable {e} {s : Set α} {t : Set β} {x : α} {y : β}
 theorem apply_mem_iff (h : e.IsImage s t) (hx : x ∈ e.Source) : e x ∈ t ↔ x ∈ s :=
   h hx
 
-theorem symm_apply_mem_iff (h : e.IsImage s t) : ∀ ⦃y⦄, y ∈ e.Target → (e.symm y ∈ s ↔ y ∈ t) := by
-  rw [← e.image_source_eq_target, ball_image_iff]
-  intro x hx
-  rw [e.left_inv hx, h hx]
+theorem symm_apply_mem_iff (h : e.IsImage s t) : ∀ ⦃y⦄, y ∈ e.Target → (e.symm y ∈ s ↔ y ∈ t) :=
+  e.forall_mem_target.mpr fun x hx => by
+    rw [e.left_inv hx, h hx]
 
 protected theorem symm (h : e.IsImage s t) : e.symm.IsImage t s :=
   h.symm_apply_mem_iff

@@ -50,20 +50,20 @@ theorem ppred_eq_some {m : ℕ} : ∀ {n}, ppred n = some m ↔ succ m = n
   | 0 => by
     constructor <;> intro h <;> contradiction
   | n + 1 => by
-    dsimp <;> constructor <;> intro h <;> injection h <;> subst n
+    dsimp' <;> constructor <;> intro h <;> injection h <;> subst n
 
 @[simp]
 theorem ppred_eq_none : ∀ {n : ℕ}, ppred n = none ↔ n = 0
   | 0 => by
     simp
   | n + 1 => by
-    dsimp <;> constructor <;> contradiction
+    dsimp' <;> constructor <;> contradiction
 
 theorem psub_eq_some {m : ℕ} : ∀ {n k}, psub m n = some k ↔ k + n = m
   | 0, k => by
     simp [eq_comm]
   | n + 1, k => by
-    dsimp
+    dsimp'
     apply option.bind_eq_some.trans
     simp [psub_eq_some, add_commₓ, add_left_commₓ, Nat.succ_eq_add_one]
 

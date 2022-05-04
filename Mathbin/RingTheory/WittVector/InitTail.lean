@@ -90,7 +90,7 @@ def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if P n then x n else 0
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
-  dsimp [select, select_poly]
+  dsimp' [select, select_poly]
   split_ifs with hi
   · rw [aeval_X]
     
@@ -151,9 +151,9 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
       
   calc (x + y).coeff n = z.coeff n := by
       rw [← hx, ← hy, select_add_select_not P z]_ = x.coeff n + y.coeff n := _
-  dsimp [z]
+  dsimp' [z]
   split_ifs with hn
-  · dsimp [P]  at hn
+  · dsimp' [P]  at hn
     rw [hn, add_zeroₓ]
     
   · rw [(h n).resolve_right hn, zero_addₓ]

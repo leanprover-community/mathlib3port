@@ -91,8 +91,17 @@ open IsNoetherian
 
 section DivisionRing
 
-variable (K : Type u) (V : Type v) [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂]
+variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂]
   [Module K V₂]
+
+/-- If the codomain of an injective linear map is finite dimensional, the domain must be as well. -/
+theorem of_injective (f : V →ₗ[K] V₂) (w : Function.Injective f) [FiniteDimensional K V₂] : FiniteDimensional K V :=
+  have : IsNoetherian K V₂ := IsNoetherian.iff_fg.mpr ‹_›
+  Module.Finite.of_injective f w
+
+/-- If the domain of a surjective linear map is finite dimensional, the codomain must be as well. -/
+theorem of_surjective (f : V →ₗ[K] V₂) (w : Function.Surjective f) [FiniteDimensional K V] : FiniteDimensional K V₂ :=
+  Module.Finite.of_surjective f w
 
 variable (K V)
 
@@ -184,6 +193,12 @@ theorem fact_finite_dimensional_of_finrank_eq_succ {K V : Type _} [Field K] [Add
     [Fact (finrank K V = n + 1)] : FiniteDimensional K V :=
   finite_dimensional_of_finrank <| by
     convert Nat.succ_posₓ n <;> apply Fact.out
+
+theorem finite_dimensional_iff_of_rank_eq_nsmul {K V W : Type _} [Field K] [AddCommGroupₓ V] [AddCommGroupₓ W]
+    [Module K V] [Module K W] {n : ℕ} (hn : n ≠ 0) (hVW : Module.rank K V = n • Module.rank K W) :
+    FiniteDimensional K V ↔ FiniteDimensional K W := by
+  simp only [FiniteDimensional, ← IsNoetherian.iff_fg, IsNoetherian.iff_dim_lt_omega, hVW,
+    Cardinal.nsmul_lt_omega_iff_of_ne_zero hn]
 
 /-- If a vector space has a finite basis, then its dimension is equal to the cardinality of the
 basis. -/
@@ -442,11 +457,11 @@ theorem exists_nontrivial_relation_of_dim_lt_card [FiniteDimensional K V] {t : F
   let f : V → K := fun x => if h : x ∈ t then if (⟨x, h⟩ : t) ∈ s then g ⟨x, h⟩ else 0 else 0
   -- and finally clean up the mess caused by the extension.
   refine' ⟨f, _, _⟩
-  · dsimp [f]
+  · dsimp' [f]
     rw [← Sum]
     fapply sum_bij_ne_zero fun v hvt _ => (⟨v, hvt⟩ : { v // v ∈ t })
     · intro v hvt H
-      dsimp
+      dsimp'
       rw [dif_pos hvt] at H
       contrapose! H
       rw [if_neg H, zero_smul]
@@ -460,7 +475,7 @@ theorem exists_nontrivial_relation_of_dim_lt_card [FiniteDimensional K V] {t : F
         exists_prop_of_true, Ne.def] using hb
       
     · intro a h₁
-      dsimp
+      dsimp'
       rw [dif_pos h₁]
       intro h₂
       rw [if_pos]
@@ -469,7 +484,7 @@ theorem exists_nontrivial_relation_of_dim_lt_card [FiniteDimensional K V] {t : F
       
     
   · refine' ⟨z, z.2, _⟩
-    dsimp only [f]
+    dsimp' only [f]
     erw [dif_pos z.2, if_pos] <;> rwa [Subtype.coe_eta]
     
 
@@ -519,7 +534,7 @@ theorem exists_nontrivial_relation_sum_zero_of_dim_succ_lt_card [FiniteDimension
     -- Again we split off the `x₀` term,
     -- observing that it exactly cancels the other terms.
     rw [← insert_erase m, sum_insert (not_mem_erase x₀ t)]
-    dsimp [f]
+    dsimp' [f]
     rw [if_pos rfl]
     conv_lhs => congr skip apply_congr skip rw [if_neg (show x ≠ x₀ from (mem_erase.mp H).1)]
     exact neg_add_selfₓ _
@@ -532,7 +547,7 @@ theorem exists_nontrivial_relation_sum_zero_of_dim_succ_lt_card [FiniteDimension
       rw [mem_erase] at x₁_mem
       simp only [x₁_mem, sub_add_cancel, Function.Embedding.coe_fn_mk]
       
-    · dsimp only [f]
+    · dsimp' only [f]
       rwa [if_neg, add_sub_cancel]
       rw [add_left_eq_self]
       rintro rfl
@@ -599,12 +614,12 @@ section ZeroDim
 open FiniteDimensional
 
 theorem finite_dimensional_of_dim_eq_zero (h : Module.rank K V = 0) : FiniteDimensional K V := by
-  dsimp [FiniteDimensional]
+  dsimp' [FiniteDimensional]
   rw [← IsNoetherian.iff_fg, IsNoetherian.iff_dim_lt_omega, h]
   exact Cardinal.omega_pos
 
 theorem finite_dimensional_of_dim_eq_one (h : Module.rank K V = 1) : FiniteDimensional K V := by
-  dsimp [FiniteDimensional]
+  dsimp' [FiniteDimensional]
   rw [← IsNoetherian.iff_fg, IsNoetherian.iff_dim_lt_omega, h]
   exact one_lt_omega
 

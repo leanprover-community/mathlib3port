@@ -183,27 +183,27 @@ BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasSup
 localized [BooleanAlgebraOfBooleanRing] attribute [instance] BooleanRing.hasInf
 
 theorem sup_comm (a b : α) : a⊔b = b⊔a := by
-  dsimp only [(·⊔·)]
+  dsimp' only [(·⊔·)]
   ring
 
 theorem inf_comm (a b : α) : a⊓b = b⊓a := by
-  dsimp only [(·⊓·)]
+  dsimp' only [(·⊓·)]
   ring
 
 theorem sup_assoc (a b c : α) : a⊔b⊔c = a⊔(b⊔c) := by
-  dsimp only [(·⊔·)]
+  dsimp' only [(·⊔·)]
   ring
 
 theorem inf_assoc (a b c : α) : a⊓b⊓c = a⊓(b⊓c) := by
-  dsimp only [(·⊓·)]
+  dsimp' only [(·⊓·)]
   ring
 
 theorem sup_inf_self (a b : α) : a⊔a⊓b = a := by
-  dsimp only [(·⊔·), (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   assoc_rw [mul_self, add_self, add_zeroₓ]
 
 theorem inf_sup_self (a b : α) : a⊓(a⊔b) = a := by
-  dsimp only [(·⊔·), (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   assoc_rw [mul_addₓ, mul_addₓ, mul_self, mul_self, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
@@ -217,7 +217,7 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
     
 
 theorem le_sup_inf (a b c : α) : (a⊔b)⊓(a⊔c)⊔(a⊔b⊓c) = a⊔b⊓c := by
-  dsimp only [(·⊔·), (·⊓·)]
+  dsimp' only [(·⊔·), (·⊓·)]
   rw [le_sup_inf_aux, add_self, mul_self, zero_addₓ]
 
 /-- The Boolean algebra structure on a Boolean ring.
@@ -326,7 +326,7 @@ from `α` to `β` considered as Boolean algebras. -/
 protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg α) (AsBoolalg β) where
   toFun := toBoolalg ∘ f ∘ ofBoolalg
   map_sup' := fun a b => by
-    dsimp
+    dsimp'
     simp_rw [map_add f, map_mul f]
     rfl
   map_inf' := f.map_mul'

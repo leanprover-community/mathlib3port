@@ -113,33 +113,36 @@ argument of type `α` -/
 def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
 class Sampleable where
   [wf : SizeOf α]
-  sample {} : Gen α
+  sample : Genₓ α
   shrink : ∀ x : α, LazyList { y : α // @sizeof _ wf y < @sizeof _ wf x } := fun _ => LazyList.nil
 
 attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance] sampleable.wf
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
 class SampleableFunctor (F : Type u → Type v) [Functor F] where
   [wf : ∀ α [SizeOf α], SizeOf (F α)]
-  sample {} : ∀ {α}, Gen α → Gen (F α)
+  sample : ∀ {α}, Genₓ α → Genₓ (F α)
   shrink : ∀ α [SizeOf α], ShrinkFn α → ShrinkFn (F α)
   pRepr : ∀ α, HasRepr α → HasRepr (F α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
 class SampleableBifunctor (F : Type u → Type v → Type w) [Bifunctor F] where
   [wf : ∀ α β [SizeOf α] [SizeOf β], SizeOf (F α β)]
-  sample {} : ∀ {α β}, Gen α → Gen β → Gen (F α β)
+  sample : ∀ {α β}, Genₓ α → Genₓ β → Genₓ (F α β)
   shrink : ∀ α β [SizeOf α] [SizeOf β], ShrinkFn α → ShrinkFn β → ShrinkFn (F α β)
   pRepr : ∀ α β, HasRepr α → HasRepr β → HasRepr (F α β)
 
@@ -150,6 +153,8 @@ interpretation in `sampleable_ext` instances. -/
 unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine (pquote.1 id)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`interp] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`sample] []
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -159,14 +164,14 @@ counter-examples cannot be shrunken or printed meaningfully.
 For that purpose, `sampleable_ext` provides a proxy representation
 `proxy_repr` that can be printed and shrunken as well
 as interpreted (using `interp`) as an object of the right type. -/
-class SampleableExt (α : Sort u) where
+class SampleableExtₓ (α : Sort u) where
   ProxyRepr : Type v
   [wf : SizeOf proxy_repr]
-  interp {} : proxy_repr → α := by
+  interp : proxy_repr → α := by
     run_tac
       sampleable.mk_trivial_interp
   [pRepr : HasRepr proxy_repr]
-  sample {} : Gen proxy_repr
+  sample : Genₓ proxy_repr
   shrink : ShrinkFn proxy_repr
 
 attribute [instance] sampleable_ext.p_repr sampleable_ext.wf
@@ -180,7 +185,7 @@ open SampleableExt
 -- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 50
 
-instance SampleableExt.ofSampleable {α} [Sampleable α] [HasRepr α] : SampleableExt α where
+instance SampleableExtₓ.ofSampleable {α} [Sampleable α] [HasRepr α] : SampleableExtₓ α where
   ProxyRepr := α
   sample := Sampleable.sample α
   shrink := shrink
@@ -199,22 +204,23 @@ instance Sampleable.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] 
 -- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
 set_option default_priority 100
 
-instance SampleableExt.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExt α] : SampleableExt (F α) where
+instance SampleableExtₓ.functor {α} {F} [Functor F] [SampleableFunctor F] [SampleableExtₓ α] :
+    SampleableExtₓ (F α) where
   wf := _
   ProxyRepr := F (ProxyRepr α)
   interp := Functor.map (interp _)
-  sample := SampleableFunctor.sample F (SampleableExt.sample α)
-  shrink := SampleableFunctor.shrink _ SampleableExt.shrink
-  pRepr := SampleableFunctor.pRepr _ SampleableExt.pRepr
+  sample := SampleableFunctor.sample F (SampleableExtₓ.sample α)
+  shrink := SampleableFunctor.shrink _ SampleableExtₓ.shrink
+  pRepr := SampleableFunctor.pRepr _ SampleableExtₓ.pRepr
 
-instance SampleableExt.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] [SampleableExt α] [SampleableExt β] :
-    SampleableExt (F α β) where
+instance SampleableExtₓ.bifunctor {α β} {F} [Bifunctor F] [SampleableBifunctor F] [SampleableExtₓ α]
+    [SampleableExtₓ β] : SampleableExtₓ (F α β) where
   wf := _
   ProxyRepr := F (ProxyRepr α) (ProxyRepr β)
   interp := Bifunctor.bimap (interp _) (interp _)
-  sample := SampleableBifunctor.sample F (SampleableExt.sample α) (SampleableExt.sample β)
-  shrink := SampleableBifunctor.shrink _ _ SampleableExt.shrink SampleableExt.shrink
-  pRepr := SampleableBifunctor.pRepr _ _ SampleableExt.pRepr SampleableExt.pRepr
+  sample := SampleableBifunctor.sample F (SampleableExtₓ.sample α) (SampleableExtₓ.sample β)
+  shrink := SampleableBifunctor.shrink _ _ SampleableExtₓ.shrink SampleableExtₓ.shrink
+  pRepr := SampleableBifunctor.pRepr _ _ SampleableExtₓ.pRepr SampleableExtₓ.pRepr
 
 end Prio
 
@@ -246,7 +252,7 @@ def Nat.shrink' (k : ℕ) :
 /-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
 `n`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
-def Nat.shrink (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
+def Nat.shrinkₓ (n : ℕ) : List { m : ℕ // HasWellFounded.R m n } :=
   if h : n > 0 then
     have : ∀ k, 1 < k → n / k < n := fun k hk =>
       Nat.div_lt_of_lt_mul
@@ -287,7 +293,7 @@ instance Nat.sampleable : Sampleable ℕ where
       freq [(1, coe <$> chooseAny (Finₓ <| succ (sz ^ 3))), (3, coe <$> chooseAny (Finₓ <| succ sz))]
         (by
           decide)
-  shrink := fun x => LazyList.ofList <| Nat.shrink x
+  shrink := fun x => LazyList.ofList <| Nat.shrinkₓ x
 
 /-- `iterate_shrink p x` takes a decidable predicate `p` and a
 value `x` of some sampleable type and recursively shrinks `x`.
@@ -340,7 +346,7 @@ instance Int.sampleable : Sampleable ℤ where
       (nat.shrink <| Int.natAbs x).bind fun ⟨y, h⟩ =>
         [⟨y, h⟩,
           ⟨-y, by
-            dsimp [sizeof, SizeOf.sizeof] <;> rw [Int.nat_abs_neg] <;> exact h⟩]
+            dsimp' [sizeof, SizeOf.sizeof] <;> rw [Int.nat_abs_neg] <;> exact h⟩]
 
 instance Bool.sampleable : Sampleable Bool where
   wf := ⟨fun b => if b then 1 else 0⟩
@@ -367,18 +373,18 @@ def Prod.shrink {α β} [SizeOf α] [SizeOf β] (shr_a : ShrinkFn α) (shr_b : S
     let xs₀ : LazyList { y : α × β // SizeofLt y (x₀, x₁) } :=
       (shr_a x₀).map <|
         Subtype.map (fun a => (a, x₁)) fun x h => by
-          dsimp [sizeof_lt] <;> unfold_wf <;> apply h
+          dsimp' [sizeof_lt] <;> unfold_wf <;> apply h
     let xs₁ : LazyList { y : α × β // SizeofLt y (x₀, x₁) } :=
       (shr_b x₁).map <|
         Subtype.map (fun a => (x₀, a)) fun x h => by
-          dsimp [sizeof_lt] <;> unfold_wf <;> apply h
+          dsimp' [sizeof_lt] <;> unfold_wf <;> apply h
     xs₀.append xs₁
 
 instance Prod.sampleable : SampleableBifunctor.{u, v} Prod where
   wf := _
   sample := fun α β sama samb => do
-    let ⟨x⟩ ← (Uliftable.up <| sama : Gen (ULift.{max u v} α))
-    let ⟨y⟩ ← (Uliftable.up <| samb : Gen (ULift.{max u v} β))
+    let ⟨x⟩ ← (Uliftable.up <| sama : Genₓ (ULift.{max u v} α))
+    let ⟨y⟩ ← (Uliftable.up <| samb : Genₓ (ULift.{max u v} β))
     pure (x, y)
   shrink := @Prod.shrink
   pRepr := @Prod.hasRepr
@@ -391,24 +397,24 @@ def Sum.shrink {α β} [SizeOf α] [SizeOf β] (shrink_α : ShrinkFn α) (shrink
   | Sum.inr x =>
     (shrink_β x).map <|
       (Subtype.map Sum.inr) fun a => by
-        dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
+        dsimp' [sizeof_lt] <;> unfold_wf <;> solve_by_elim
   | Sum.inl x =>
     (shrink_α x).map <|
       (Subtype.map Sum.inl) fun a => by
-        dsimp [sizeof_lt] <;> unfold_wf <;> solve_by_elim
+        dsimp' [sizeof_lt] <;> unfold_wf <;> solve_by_elim
 
 instance Sum.sampleable : SampleableBifunctor.{u, v} Sum where
   wf := _
   sample := fun sam_α sam_β =>
-    @Uliftable.upMap Gen.{u} Gen.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
-      @Uliftable.upMap Gen.{v} Gen.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
+    @Uliftable.upMap Genₓ.{u} Genₓ.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
+      @Uliftable.upMap Genₓ.{v} Genₓ.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
   shrink := fun α β Iα Iβ shr_α shr_β => @Sum.shrink _ _ Iα Iβ shr_α shr_β
   pRepr := @Sum.hasRepr
 
 instance Rat.sampleable : Sampleable ℚ :=
   (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.Num, ⟨r.denom, r.Pos⟩)) <| by
     intro i
-    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [Rat.mkPnat]
+    rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp' [Rat.mkPnat]
     mono*
     · rw [← Int.coe_nat_le, ← Int.abs_eq_nat_abs, ← Int.abs_eq_nat_abs]
       apply Int.abs_div_le_abs
@@ -443,7 +449,7 @@ def sampleableChar (length : Nat) (characters : Stringₓ) : Sampleable Charₓ 
         pure (characters i).curr
   shrink := fun _ => LazyList.nil
 
-instance Char.sampleable : Sampleable Charₓ :=
+instance Char.sampleableₓ : Sampleable Charₓ :=
   sampleableChar 3 " 0123abcABC:,;`\\/"
 
 variable {α}
@@ -564,7 +570,7 @@ instance List.sampleable : SampleableFunctor List.{u} where
   shrink := fun α Iα shr_α => @List.shrinkWith _ Iα shr_α
   pRepr := @List.hasRepr
 
-instance Prop.sampleableExt : SampleableExt Prop where
+instance Prop.sampleableExtₓ : SampleableExtₓ Prop where
   ProxyRepr := Bool
   interp := coe
   sample := chooseAny Bool
@@ -599,7 +605,7 @@ instance String.sampleable : Sampleable Stringₓ :=
       pure x }
 
 /-- implementation of `sampleable (tree α)` -/
-def Tree.sample (sample : Gen α) : ℕ → Gen (Tree α)
+def Tree.sample (sample : Genₓ α) : ℕ → Genₓ (Tree α)
   | n =>
     if h : n > 0 then
       have : n / 2 < n :=
@@ -651,16 +657,16 @@ def Tree.shrinkWith [SizeOf α] (shrink_a : ShrinkFn α) : ShrinkFn (Tree α) :=
     | Tree.node x t₀ t₁ => fun f_rec =>
       have h₂ : SizeofLt Tree.nil (Tree.node x t₀ t₁) := by
         clear _match <;>
-          have := tree.one_le_sizeof t₀ <;> dsimp [sizeof_lt, sizeof, SizeOf.sizeof]  at * <;> unfold_wf <;> linarith
+          have := tree.one_le_sizeof t₀ <;> dsimp' [sizeof_lt, sizeof, SizeOf.sizeof]  at * <;> unfold_wf <;> linarith
       have h₀ : SizeofLt t₀ (Tree.node x t₀ t₁) := by
-        dsimp [sizeof_lt] <;> unfold_wf <;> linarith
+        dsimp' [sizeof_lt] <;> unfold_wf <;> linarith
       have h₁ : SizeofLt t₁ (Tree.node x t₀ t₁) := by
-        dsimp [sizeof_lt] <;> unfold_wf <;> linarith
+        dsimp' [sizeof_lt] <;> unfold_wf <;> linarith
       [LazyList.ofList [⟨Tree.nil, h₂⟩, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩],
         (Prod.shrink shrink_a (Prod.shrink f_rec f_rec) (x, ⟨t₀, h₀⟩, ⟨t₁, h₁⟩)).map
           fun ⟨⟨y, ⟨t'₀, _⟩, ⟨t'₁, _⟩⟩, hy⟩ =>
           ⟨Tree.node y t'₀ t'₁, by
-            revert hy <;> dsimp [sizeof_lt] <;> unfold_wf <;> intro <;> linarith⟩]
+            revert hy <;> dsimp' [sizeof_lt] <;> unfold_wf <;> intro <;> linarith⟩]
 
 instance sampleableTree : SampleableFunctor Tree where
   wf := _
@@ -698,13 +704,13 @@ instance Large.inhabited [Inhabited α] : Inhabited (Large α) :=
 
 instance Small.sampleableFunctor : SampleableFunctor Small where
   wf := _
-  sample := fun α samp => Gen.resize (fun n => n / 5 + 5) samp
+  sample := fun α samp => Genₓ.resize (fun n => n / 5 + 5) samp
   shrink := fun α _ => id
   pRepr := fun α => id
 
 instance Large.sampleableFunctor : SampleableFunctor Large where
   wf := _
-  sample := fun α samp => Gen.resize (fun n => n * 5) samp
+  sample := fun α samp => Genₓ.resize (fun n => n * 5) samp
   shrink := fun α _ => id
   pRepr := fun α => id
 
@@ -734,7 +740,7 @@ of `j`.
 instance NatLe.sampleable {y} : SlimCheck.Sampleable { x : ℕ // x ≤ y } where
   sample := do
     let ⟨x, h⟩ ←
-      SlimCheck.Gen.chooseNat 0 y
+      SlimCheck.Genₓ.chooseNat 0 y
           (by
             decide)
     pure ⟨x, h.2⟩
@@ -839,7 +845,7 @@ open Tactic
 
 /-- Print (at most) 10 samples of a given type to stdout for debugging.
 -/
-def printSamples {t : Type u} [HasRepr t] (g : Gen t) : Io Unit := do
+def printSamples {t : Type u} [HasRepr t] (g : Genₓ t) : Io Unit := do
   let xs ←
     Io.runRand <|
         Uliftable.down <| do
@@ -851,11 +857,11 @@ def printSamples {t : Type u} [HasRepr t] (g : Gen t) : Io Unit := do
 unsafe def mk_generator (e : expr) : tactic (expr × expr) := do
   let t ← infer_type e
   match t with
-    | quote.1 (Gen (%%ₓt)) => do
+    | quote.1 (Genₓ (%%ₓt)) => do
       let repr_inst ← mk_app `` HasRepr [t] >>= mk_instance
       pure (repr_inst, e)
     | _ => do
-      let samp_inst ← to_expr (pquote.1 (SampleableExt (%%ₓe))) >>= mk_instance
+      let samp_inst ← to_expr (pquote.1 (SampleableExtₓ (%%ₓe))) >>= mk_instance
       let repr_inst ← mk_mapp `` sampleable_ext.p_repr [e, samp_inst]
       let gen ← mk_mapp `` sampleable_ext.sample [none, samp_inst]
       pure (repr_inst, gen)

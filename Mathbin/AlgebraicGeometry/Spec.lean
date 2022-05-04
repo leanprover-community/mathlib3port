@@ -98,7 +98,7 @@ theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.sheafedSpaceMap (�
   PresheafedSpace.ext _ _ (Spec.Top_map_id R) <|
     NatTrans.ext _ _ <|
       funext fun U => by
-        dsimp
+        dsimp'
         erw [PresheafedSpace.id_c_app, comap_id]
         swap
         · rw [Spec.Top_map_id, TopologicalSpace.Opens.map_id_obj_unop]
@@ -110,7 +110,7 @@ theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S
   PresheafedSpace.ext _ _ (Spec.Top_map_comp f g) <|
     NatTrans.ext _ _ <|
       funext fun U => by
-        dsimp
+        dsimp'
         rw [CategoryTheory.Functor.map_id]
         rw [category.comp_id]
         erw [comap_comp f g]

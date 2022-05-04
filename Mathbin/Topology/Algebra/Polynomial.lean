@@ -43,7 +43,7 @@ variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSemirin
 
 @[continuity]
 protected theorem continuous_eval₂ [Semiringₓ S] (p : S[X]) (f : S →+* R) : Continuous fun x => p.eval₂ f x := by
-  dsimp only [eval₂_eq_sum, Finsupp.sum]
+  dsimp' only [eval₂_eq_sum, Finsupp.sum]
   exact continuous_finset_sum _ fun c hc => continuous_const.mul (continuous_pow _)
 
 @[continuity]

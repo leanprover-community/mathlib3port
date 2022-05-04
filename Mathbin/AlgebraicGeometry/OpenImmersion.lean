@@ -126,7 +126,7 @@ noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
       refine' as_iso (f.c.app (op (H.open_functor.obj (unop U)))) ≪≫ X.presheaf.map_iso (eq_to_iso _)
       · induction U using Opposite.rec
         cases U
-        dsimp only [IsOpenMap.functor, functor.op, opens.map]
+        dsimp' only [IsOpenMap.functor, functor.op, opens.map]
         congr 2
         erw [Set.preimage_image_eq _ H.base_open.inj]
         rfl
@@ -168,19 +168,19 @@ instance comp {Z : PresheafedSpace C} (f : X ⟶ Y) [hf : is_open_immersion f] (
   base_open := hg.base_open.comp hf.base_open
   c_iso := fun U => by
     generalize_proofs h
-    dsimp only [AlgebraicGeometry.PresheafedSpace.comp_c_app, unop_op, functor.op, comp_base,
+    dsimp' only [AlgebraicGeometry.PresheafedSpace.comp_c_app, unop_op, functor.op, comp_base,
       Top.Presheaf.pushforward_obj_obj, opens.map_comp_obj]
     apply is_iso.comp_is_iso with { instances := false }
     swap
     · have : (opens.map g.base).obj (h.functor.obj U) = hf.open_functor.obj U := by
-        dsimp only [opens.map, IsOpenMap.functor, PresheafedSpace.comp_base]
+        dsimp' only [opens.map, IsOpenMap.functor, PresheafedSpace.comp_base]
         congr 1
         rw [coe_comp, ← Set.image_image, Set.preimage_image_eq _ hg.base_open.inj]
       rw [this]
       infer_instance
       
     · have : h.functor.obj U = hg.open_functor.obj (hf.open_functor.obj U) := by
-        dsimp only [IsOpenMap.functor]
+        dsimp' only [IsOpenMap.functor]
         congr 1
         rw [comp_base, coe_comp, ← Set.image_image]
         congr
@@ -274,10 +274,10 @@ instance of_restrict {X : Top} (Y : PresheafedSpace C) {f : X ⟶ Y.Carrier} (hf
     is_open_immersion (Y.ofRestrict hf) where
   base_open := hf
   c_iso := fun U => by
-    dsimp
+    dsimp'
     have : (opens.map f).obj (hf.is_open_map.functor.obj U) = U := by
       cases U
-      dsimp only [opens.map, IsOpenMap.functor]
+      dsimp' only [opens.map, IsOpenMap.functor]
       congr 1
       rw [Set.preimage_image_eq _ hf.inj]
       rfl
@@ -310,7 +310,7 @@ theorem to_iso (f : X ⟶ Y) [h : is_open_immersion f] [h' : Epi f.base] : IsIso
     have : U = op (h.open_functor.obj ((opens.map f.base).obj (unop U))) := by
       induction U using Opposite.rec
       cases U
-      dsimp only [functor.op, opens.map]
+      dsimp' only [functor.op, opens.map]
       congr
       exact (Set.image_preimage_eq _ ((Top.epi_iff_surjective _).mp h')).symm
     convert @is_open_immersion.c_iso _ h ((opens.map f.base).obj (unop U))
@@ -364,7 +364,7 @@ def pullbackConeOfLeftFst : Y.restrict (Top.snd_open_embedding_of_left_open_embe
 theorem pullback_cone_of_left_condition : pullbackConeOfLeftFst f g ≫ f = Y.ofRestrict _ ≫ g := by
   ext U
   · induction U using Opposite.rec
-    dsimp only [comp_c_app, nat_trans.comp_app, unop_op, whisker_right_app, pullback_cone_of_left_fst]
+    dsimp' only [comp_c_app, nat_trans.comp_app, unop_op, whisker_right_app, pullback_cone_of_left_fst]
     simp only [Quiver.Hom.unop_op, Top.Presheaf.pushforward_obj_map, app_inv_app_assoc, eq_to_hom_app, eq_to_hom_unop,
       category.assoc, nat_trans.naturality_assoc, functor.op_map]
     erw [← Y.presheaf.map_comp, ← Y.presheaf.map_comp]
@@ -391,7 +391,7 @@ def pullbackConeOfLeftLift : s.x ⟶ (pullbackConeOfLeft f g).x where
           s.x.Presheaf.map
             (eqToHom
               (by
-                dsimp only [opens.map, IsOpenMap.functor, functor.op]
+                dsimp' only [opens.map, IsOpenMap.functor, functor.op]
                 congr 2
                 let s' : pullback_cone f.base g.base := pullback_cone.mk s.fst.base s.snd.base _
                 have : _ = s.snd.base := limit.lift_π s' walking_cospan.right
@@ -413,7 +413,7 @@ theorem pullback_cone_of_left_lift_fst : pullbackConeOfLeftLift f g s ≫ (pullb
     erw [← s.X.presheaf.map_comp]
     erw [s.snd.c.naturality_assoc]
     have := congr_app s.condition (op (hf.open_functor.obj x))
-    dsimp only [comp_c_app, unop_op]  at this
+    dsimp' only [comp_c_app, unop_op]  at this
     rw [← is_iso.comp_inv_eq] at this
     reassoc! this
     erw [← this, hf.inv_app_app_assoc, s.fst.c.naturality_assoc]
@@ -710,7 +710,7 @@ instance sheafedSpaceForgetPreservesOfLeft : PreservesLimit (cospan f g) (Sheafe
   @Limits.compPreservesLimit _ _ _ _ forget (PresheafedSpace.forget C) _
     (by
       apply preserves_limit_of_iso_diagram _ (diagramIsoCospan.{v} _).symm with { instances := true }
-      dsimp
+      dsimp'
       infer_instance)
 
 instance sheafedSpaceForgetPreservesOfRight : PreservesLimit (cospan g f) (SheafedSpace.forget C) :=
@@ -730,7 +730,7 @@ instance SheafedSpace_pullback_snd_of_left : SheafedSpace.IsOpenImmersion (pullb
   have := has_limit.iso_of_nat_iso_hom_π (diagramIsoCospan.{v} (cospan f g ⋙ forget)) right
   erw [category.comp_id] at this
   rw [← this]
-  dsimp
+  dsimp'
   infer_instance
 
 instance SheafedSpace_pullback_fst_of_right : SheafedSpace.IsOpenImmersion (pullback.fst : pullback g f ⟶ _) := by
@@ -740,7 +740,7 @@ instance SheafedSpace_pullback_fst_of_right : SheafedSpace.IsOpenImmersion (pull
   have := has_limit.iso_of_nat_iso_hom_π (diagramIsoCospan.{v} (cospan g f ⋙ forget)) left
   erw [category.comp_id] at this
   rw [← this]
-  dsimp
+  dsimp'
   infer_instance
 
 instance SheafedSpace_pullback_one_is_open_immersion [SheafedSpace.IsOpenImmersion g] :
@@ -848,7 +848,7 @@ instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpace.
     apply limit_π_is_iso_of_is_strict_terminal
     intro j hj
     induction j using Opposite.rec
-    dsimp
+    dsimp'
     convert (F.obj j).Sheaf.isTerminalOfEmpty
     convert image_preimage_is_empty F i j (fun h => hj (congr_argₓ op h.symm)) U
     exact (congr_argₓ PresheafedSpace.hom.base e).symm
@@ -985,7 +985,7 @@ instance forgetToTopPreservesPullbackOfLeft :
   apply limits.comp_preserves_limit with { instances := false }
   infer_instance
   apply preserves_limit_of_iso_diagram _ (diagramIsoCospan.{u} _).symm
-  dsimp [SheafedSpace.forget_to_PresheafedSpace, -Subtype.val_eq_coe]
+  dsimp' [SheafedSpace.forget_to_PresheafedSpace, -Subtype.val_eq_coe]
   infer_instance
 
 instance forgetReflectsPullbackOfLeft : ReflectsLimit (cospan f g) LocallyRingedSpace.forgetToSheafedSpace :=
@@ -1041,7 +1041,7 @@ theorem lift_uniq (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) (l : Y ⟶ X)
 theorem lift_range (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) :
     Set.Range (lift f g H').1.base = f.1.base ⁻¹' Set.Range g.1.base := by
   have := pullback_snd_is_iso_of_range_subset f g H'
-  dsimp only [lift]
+  dsimp' only [lift]
   have : _ = (pullback.fst : pullback f g ⟶ _).val.base :=
     preserves_pullback.iso_hom_fst (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _) f g
   rw [LocallyRingedSpace.comp_val, SheafedSpace.comp_base, ← this, ← category.assoc, coe_comp]
@@ -1468,7 +1468,7 @@ instance has_pullback_of_right : HasPullback g f :=
 
 instance pullback_snd_of_left : IsOpenImmersion (pullback.snd : pullback f g ⟶ _) := by
   have := preserves_pullback.iso_hom_snd forget f g
-  dsimp only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map]  at this
+  dsimp' only [Scheme.forget_to_LocallyRingedSpace, induced_functor_map]  at this
   rw [← this]
   change LocallyRingedSpace.is_open_immersion _
   infer_instance
@@ -1486,7 +1486,7 @@ instance forgetToTopPreservesOfLeft : PreservesLimit (cospan f g) Scheme.forgetT
   apply limits.comp_preserves_limit with { instances := false }
   infer_instance
   apply preserves_limit_of_iso_diagram _ (diagramIsoCospan.{u} _).symm
-  dsimp [LocallyRingedSpace.forget_to_Top]
+  dsimp' [LocallyRingedSpace.forget_to_Top]
   infer_instance
 
 instance forgetToTopPreservesOfRight : PreservesLimit (cospan g f) Scheme.forgetToTop :=

@@ -106,7 +106,7 @@ def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
       intro f
       rw [← (adj.homEquiv _ _).Injective.eq_iff, adjunction.hom_equiv_naturality_left, adj.hom_equiv_unit,
         adj.hom_equiv_unit, G.map_comp]
-      dsimp
+      dsimp'
       rw [adj.right_triangle_components_assoc, ← G.map_comp, F.map_comp, category.assoc, adj.counit_naturality,
         adj.left_triangle_components_assoc]
       apply eq_comm
@@ -130,7 +130,7 @@ def leftAdjointComparison [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.
     
   · intro A B B' g h
     ext1
-    dsimp [comparison_left_adjoint_hom_equiv]
+    dsimp' [comparison_left_adjoint_hom_equiv]
     rw [← adj.hom_equiv_naturality_right, category.assoc]
     
 
@@ -168,7 +168,7 @@ theorem comparison_adjunction_unit_f
     (comparison_adjunction.Unit.app A).f = (beckCoequalizer A).desc (unit_cofork A) := by
   apply limits.cofork.is_colimit.hom_ext (beck_coequalizer A)
   rw [cofork.is_colimit.π_comp_desc]
-  dsimp only [beck_cofork_π, unit_cofork_π]
+  dsimp' only [beck_cofork_π, unit_cofork_π]
   rw [comparison_adjunction_unit_f_aux, ← adj.hom_equiv_naturality_left A.a, coequalizer.condition,
     adj.hom_equiv_naturality_right, adj.hom_equiv_unit, category.assoc]
   apply adj.right_triangle_components_assoc
@@ -222,11 +222,11 @@ def createsGSplitCoequalizersOfMonadic [MonadicRightAdjoint G] ⦃A B⦄ (f g : 
   apply monadic_creates_colimit_of_preserves_colimit _ _
   infer_instance
   · apply preserves_colimit_of_iso_diagram _ (diagramIsoParallelPair.{v₁} _).symm
-    dsimp
+    dsimp'
     infer_instance
     
   · apply preserves_colimit_of_iso_diagram _ (diagramIsoParallelPair.{v₁} _).symm
-    dsimp
+    dsimp'
     infer_instance
     
 

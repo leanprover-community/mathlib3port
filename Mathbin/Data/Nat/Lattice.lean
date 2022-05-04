@@ -149,7 +149,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < inf { m | p m }) : inf { 
   refine'
     le_cInf ⟨m + n, _⟩ fun b hb =>
       le_of_not_ltₓ fun hbn => ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
-  · dsimp
+  · dsimp'
     rwa [add_tsub_cancel_right]
     
   · exact hb

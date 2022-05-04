@@ -47,10 +47,11 @@ quaternion
 -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1285:32: infer kinds are unsupported in Lean 4: mk {}
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext]
-structure QuaternionAlgebra (R : Type _) (a b : R) where mk {} ::
+structure QuaternionAlgebra (R : Type _) (a b : R) where mk ::
   re : R
   imI : R
   imJ : R

@@ -34,15 +34,6 @@ open Real Set
 
 open BigOperators
 
-/-- The norm of a real normed space is convex. Also see `seminorm.convex_on`. -/
-theorem convex_on_norm {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ConvexOn ℝ Univ (norm : E → ℝ) :=
-  ⟨convex_univ, fun x y hx hy a b ha hb hab =>
-    calc
-      ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
-      _ = a * ∥x∥ + b * ∥y∥ := by
-        rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
-      ⟩
-
 /-- `exp` is strictly convex on the whole real line. -/
 theorem strict_convex_on_exp : StrictConvexOn ℝ Univ exp :=
   strict_convex_on_univ_of_deriv2_pos differentiable_exp fun x => (iter_deriv_exp 2).symm ▸ exp_pos x

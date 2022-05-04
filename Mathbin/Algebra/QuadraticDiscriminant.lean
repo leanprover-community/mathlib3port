@@ -48,7 +48,7 @@ variable [CommRingₓ R] [IsDomain R] {a b c : R}
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (x : R) :
     a * x * x + b * x + c = 0 ↔ discrim a b c = (2 * a * x + b) ^ 2 := by
-  dsimp [discrim]  at *
+  dsimp' [discrim]  at *
   constructor
   · intro h
     linear_combination h * -4 * a

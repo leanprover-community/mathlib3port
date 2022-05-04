@@ -52,7 +52,7 @@ theorem eq_to_hom_d (X : DifferentialObject (GradedObjectWithShift b V)) {x y : 
             rfl) :=
   by
   cases h
-  dsimp
+  dsimp'
   simp
 
 @[simp, reassoc]
@@ -86,10 +86,10 @@ def dgoToHomologicalComplex :
                 simp [h])
         else 0,
       shape' := fun i j w => by
-        dsimp  at w
+        dsimp'  at w
         convert dif_neg w,
       d_comp_d' := fun i j k hij hjk => by
-        dsimp  at hij hjk
+        dsimp'  at hij hjk
         substs hij hjk
         have : X.d i ≫ X.d _ = _ := (congr_funₓ X.d_squared i : _)
         reassoc! this
@@ -97,7 +97,7 @@ def dgoToHomologicalComplex :
   map := fun X Y f =>
     { f := f.f,
       comm' := fun i j h => by
-        dsimp  at h⊢
+        dsimp'  at h⊢
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_funₓ f.comm i).symm
         reassoc! this
@@ -112,13 +112,13 @@ def homologicalComplexToDgo :
     { x := fun i => X.x i, d := fun i => X.d i (i + 1 • b),
       d_squared' := by
         ext i
-        dsimp
+        dsimp'
         simp }
   map := fun X Y f =>
     { f := f.f,
       comm' := by
         ext i
-        dsimp
+        dsimp'
         simp }
 
 /-- The unit isomorphism for `dgo_equiv_homological_complex`.
@@ -140,14 +140,14 @@ def dgoEquivHomologicalComplexCounitIso :
       { Hom :=
           { f := fun i => 𝟙 (X.x i),
             comm' := fun i j h => by
-              dsimp  at h⊢
+              dsimp'  at h⊢
               subst h
               delta' homological_complex_to_dgo
               simp },
         inv :=
           { f := fun i => 𝟙 (X.x i),
             comm' := fun i j h => by
-              dsimp  at h⊢
+              dsimp'  at h⊢
               subst h
               delta' homological_complex_to_dgo
               simp } })

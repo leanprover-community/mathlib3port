@@ -55,18 +55,18 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D where
         { Hom := A.x.map f,
           one_hom' := by
             rw [← A.one.naturality, tensor_unit_map]
-            dsimp
+            dsimp'
             rw [category.id_comp],
           mul_hom' := by
-            dsimp
+            dsimp'
             rw [← A.mul.naturality, tensor_obj_map] },
       map_id' := fun X => by
         ext
-        dsimp
+        dsimp'
         rw [CategoryTheory.Functor.map_id],
       map_comp' := fun X Y Z f g => by
         ext
-        dsimp
+        dsimp'
         rw [functor.map_comp] }
   map := fun A B f =>
     { app := fun X => { Hom := f.Hom.app X, one_hom' := congr_app f.OneHom X, mul_hom' := congr_app f.MulHom X } }
@@ -91,11 +91,11 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
     { Hom := { app := fun X => (α.app X).Hom, naturality' := fun X Y f => congr_argₓ Mon_.Hom.hom (α.naturality f) },
       one_hom' := by
         ext x
-        dsimp
+        dsimp'
         rw [(α.app x).OneHom],
       mul_hom' := by
         ext x
-        dsimp
+        dsimp'
         rw [(α.app x).MulHom] }
 
 /-- The unit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
@@ -108,21 +108,21 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [category.comp_id],
             mul_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [tensor_id, category.id_comp, category.comp_id] },
         inv :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [category.comp_id],
             mul_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [tensor_id, category.id_comp, category.comp_id] } })
     fun A B f => by
     ext X
@@ -195,25 +195,25 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [category.comp_id],
             mul_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [tensor_id, category.id_comp, category.comp_id] },
         inv :=
           { Hom := { app := fun _ => 𝟙 _ },
             one_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [category.comp_id],
             mul_hom' := by
               ext X
-              dsimp
+              dsimp'
               simp only [tensor_id, category.id_comp, category.comp_id] } })
     fun A B f => by
     ext X
-    dsimp
+    dsimp'
     simp only [category.id_comp, category.comp_id]
 
 /-- The counit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.

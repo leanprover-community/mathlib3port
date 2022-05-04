@@ -44,9 +44,9 @@ def coneCompEvaluationOfConeCompDiagramFunctorCompEvaluation {X : C} {K : Type m
     { app := fun k => E.π.app k ≫ multiequalizer.ι (W.index (F.obj k)) i,
       naturality' := by
         intro a b f
-        dsimp
+        dsimp'
         rw [category.id_comp, category.assoc, ← E.w f]
-        dsimp [diagram_nat_trans]
+        dsimp' [diagram_nat_trans]
         simp only [multiequalizer.lift_ι, category.assoc] }
 
 /-- An auxiliary definition to be used in the proof of the fact that
@@ -61,7 +61,7 @@ abbrev liftToDiagramLimitObj {X : C} {K : Type max v u} [SmallCategory K] [HasLi
     (by
       intro i
       change (_ ≫ _) ≫ _ = (_ ≫ _) ≫ _
-      dsimp [evaluate_combined_cones]
+      dsimp' [evaluate_combined_cones]
       erw [category.comp_id, category.comp_id, category.assoc, category.assoc, ← (limit.lift F _).naturality, ←
         (limit.lift F _).naturality, ← category.assoc, ← category.assoc]
       congr 1
@@ -77,11 +77,11 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
       { lift := fun E => liftToDiagramLimitObj F E,
         fac' := by
           intro E k
-          dsimp [diagram_nat_trans]
+          dsimp' [diagram_nat_trans]
           ext1
           simp only [multiequalizer.lift_ι, multiequalizer.lift_ι_assoc, category.assoc]
           change (_ ≫ _) ≫ _ = _
-          dsimp [evaluate_combined_cones]
+          dsimp' [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
           rfl,
         uniq' := by
@@ -90,11 +90,11 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
           delta' lift_to_diagram_limit_obj
           erw [multiequalizer.lift_ι, category.assoc]
           change _ = (_ ≫ _) ≫ _
-          dsimp [evaluate_combined_cones]
+          dsimp' [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
-          dsimp
+          dsimp'
           rw [← hm]
-          dsimp [diagram_nat_trans]
+          dsimp' [diagram_nat_trans]
           simp }
 
 instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] :
@@ -125,7 +125,7 @@ def liftToPlusObjLimitObj {K : Type max v u} [SmallCategory K] [FinCategory K] [
         intro i j f
         rw [← iso.eq_comp_inv, category.assoc, ← iso.inv_comp_eq]
         ext w
-        dsimp [plus_map]
+        dsimp' [plus_map]
         erw [colimit.ι_map_assoc, colimit_obj_iso_colimit_comp_evaluation_ι_inv (F ⋙ J.diagram_functor D X).flip w j,
           colimit_obj_iso_colimit_comp_evaluation_ι_inv_assoc (F ⋙ J.diagram_functor D X).flip w i]
         rw [← (colimit.ι (F ⋙ J.diagram_functor D X).flip w).naturality]
@@ -139,18 +139,18 @@ theorem lift_to_plus_obj_limit_obj_fac {K : Type max v u} [SmallCategory K] [Fin
     [PreservesLimitsOfShape K (forget D)] [ReflectsLimitsOfShape K (forget D)] (F : K ⥤ Cᵒᵖ ⥤ D) (X : C)
     (S : Cone (F ⋙ J.plusFunctor D ⋙ (evaluation Cᵒᵖ D).obj (op X))) k :
     liftToPlusObjLimitObj F X S ≫ (J.plusMap (limit.π F k)).app (op X) = S.π.app k := by
-  dsimp only [lift_to_plus_obj_limit_obj]
+  dsimp' only [lift_to_plus_obj_limit_obj]
   rw [← (limit.is_limit (F ⋙ J.plus_functor D ⋙ (evaluation Cᵒᵖ D).obj (op X))).fac S k, category.assoc]
   congr 1
-  dsimp
+  dsimp'
   simp only [category.assoc]
   rw [← iso.eq_inv_comp, iso.inv_comp_eq, iso.inv_comp_eq]
   ext
-  dsimp [plus_map]
+  dsimp' [plus_map]
   simp only [has_colimit.iso_of_nat_iso_ι_hom_assoc, ι_colim_map]
-  dsimp [is_limit.cone_point_unique_up_to_iso, has_limit.iso_of_nat_iso, is_limit.map]
+  dsimp' [is_limit.cone_point_unique_up_to_iso, has_limit.iso_of_nat_iso, is_limit.map]
   rw [limit.lift_π]
-  dsimp
+  dsimp'
   rw [ι_colimit_limit_iso_limit_π_assoc]
   simp_rw [← nat_trans.comp_app, ← category.assoc, ← nat_trans.comp_app]
   rw [limit.lift_π, category.assoc]
@@ -172,19 +172,19 @@ instance (K : Type max v u) [SmallCategory K] [FinCategory K] [HasLimitsOfShape 
     apply lift_to_plus_obj_limit_obj_fac
     
   · intro S m hm
-    dsimp [lift_to_plus_obj_limit_obj]
+    dsimp' [lift_to_plus_obj_limit_obj]
     simp_rw [← category.assoc, iso.eq_comp_inv, ← iso.comp_inv_eq]
     ext
     simp only [limit.lift_π, category.assoc, ← hm]
     congr 1
     ext
-    dsimp [plus_map, plus_obj]
+    dsimp' [plus_map, plus_obj]
     erw [colimit.ι_map, colimit.ι_desc_assoc, limit.lift_π]
-    dsimp
+    dsimp'
     simp only [category.assoc]
     rw [ι_colimit_limit_iso_limit_π_assoc]
     simp only [nat_iso.of_components.inv_app, colimit_obj_iso_colimit_comp_evaluation_ι_app_hom, iso.symm_inv]
-    dsimp [is_limit.cone_point_unique_up_to_iso]
+    dsimp' [is_limit.cone_point_unique_up_to_iso]
     rw [← category.assoc, ← nat_trans.comp_app, limit.lift_π]
     rfl
     

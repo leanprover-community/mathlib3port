@@ -299,7 +299,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     cases n
     · simp only [Ideal.one_eq_top, pow_zeroₓ]
       
-    · dsimp [f]
+    · dsimp' [f]
       rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_commₓ, ← sub_sub, sub_self, zero_sub,
         neg_mem_iff, mul_powₓ]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)

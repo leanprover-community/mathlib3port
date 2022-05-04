@@ -87,7 +87,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.x) : Cone (toDiagram (F.mapCone c) ⋙ map
     { app := fun j => homMk (c.π.app j) rfl,
       naturality' := fun j k g => by
         ext
-        dsimp
+        dsimp'
         simp }
 
 end StructuredArrowCone

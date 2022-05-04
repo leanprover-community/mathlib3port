@@ -929,7 +929,7 @@ def splittingOfFinsuppSurjective (f : M →ₗ[R] α →₀ R) (s : Surjective f
 theorem splitting_of_finsupp_surjective_splits (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
     f.comp (splittingOfFinsuppSurjective f s) = LinearMap.id := by
   ext x y
-  dsimp [splitting_of_finsupp_surjective]
+  dsimp' [splitting_of_finsupp_surjective]
   congr
   rw [sum_single_index, one_smul]
   · exact (s (Finsupp.single x 1)).some_spec
@@ -953,7 +953,7 @@ def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s
 theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ[R] α → R) (s : Surjective f) :
     f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id := by
   ext x y
-  dsimp [splitting_of_fun_on_fintype_surjective]
+  dsimp' [splitting_of_fun_on_fintype_surjective]
   rw [linear_equiv_fun_on_fintype_symm_single, Finsupp.sum_single_index, one_smul, (s (Finsupp.single x 1)).some_spec,
     Finsupp.single_eq_pi_single]
   rw [zero_smul]

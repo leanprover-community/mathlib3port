@@ -650,7 +650,7 @@ theorem sat_eq_done {p : Charₓ → Prop} [DecidablePred p] :
 
 theorem sat_eq_fail {p : Charₓ → Prop} [DecidablePred p] :
     sat p cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) := by
-  dsimp only [sat]
+  dsimp' only [sat]
   split_ifs <;> simp [*, eq_comm]
 
 theorem eps_eq_done : eps cb n = done n' u ↔ n = n' := by
@@ -1172,7 +1172,7 @@ instance foldr_core {f : α → β → β} [p.Static] : ∀ {b : β} {reps : ℕ
 
 instance foldr {f : α → β → β} [p.Static] : Static (foldr f p b) :=
   ⟨fun _ _ _ _ => by
-    dsimp [foldr]
+    dsimp' [foldr]
     exact of_done⟩
 
 instance foldl_core {f : α → β → α} {p : Parser β} [p.Static] : ∀ {a : α} {reps : ℕ}, (foldlCore f a p reps).Static
@@ -1190,7 +1190,7 @@ instance foldl_core {f : α → β → α} {p : Parser β} [p.Static] : ∀ {a :
 
 instance foldl {f : α → β → α} {p : Parser β} [p.Static] : Static (foldl f a p) :=
   ⟨fun _ _ _ _ => by
-    dsimp [foldl]
+    dsimp' [foldl]
     exact of_done⟩
 
 instance many [p.Static] : p.many.Static :=
@@ -1236,7 +1236,7 @@ theorem nat : ¬nat.Static :=
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) : Static (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
-    dsimp [fix]  at h
+    dsimp' [fix]  at h
     exact static.of_done h⟩
 
 end Static
@@ -1805,7 +1805,7 @@ instance nat : nat.ErrStatic :=
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) : ErrStatic (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
-    dsimp [fix]  at h
+    dsimp' [fix]  at h
     exact err_static.of_fail h⟩
 
 end ErrStatic
@@ -1983,7 +1983,7 @@ instance digit : digit.step :=
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : Step (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
-    dsimp [fix]  at h
+    dsimp' [fix]  at h
     exact of_done h⟩
 
 end Step
@@ -2212,7 +2212,7 @@ instance nat : nat.Prog :=
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) : Prog (fix F) :=
   ⟨fun cb n _ _ h => by
     have := fix_core hF (cb.size - n + 1)
-    dsimp [fix]  at h
+    dsimp' [fix]  at h
     exact of_done h⟩
 
 end Prog
@@ -2497,7 +2497,7 @@ theorem nat_of_done {val : ℕ} (h : nat cb n = done n' val) :
       
     · -- Here, we use the same result as above, that `n < cb.size`, and relate it to
       -- `n ≤ cb.size.pred`.
-      exact Nat.le_pred_of_lt (bounded.of_done hp)
+      exact Nat.le_pred_of_ltₓ (bounded.of_done hp)
       
   -- Finally, we simplify. On the LHS, we have a fold over `lhd :: ltl`, which simplifies to
   -- the operation of the summing folding function on `lhd` and the fold over `ltl`. To that we can

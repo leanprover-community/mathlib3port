@@ -409,7 +409,7 @@ noncomputable def allDefinable : ∀ {n} F : Arity Setₓ.{u} n, Definable n F
   | n + 1, (F : Arity Setₓ.{u} (n + 1)) => by
     have I := fun x => all_definable (F x)
     refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
-    · dsimp [arity.equiv]
+    · dsimp' [arity.equiv]
       intro x y h
       rw [@Quotientₓ.sound PSet _ _ _ h]
       exact (definable.resp (F ⟦y⟧)).2

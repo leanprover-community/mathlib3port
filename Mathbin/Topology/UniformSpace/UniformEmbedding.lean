@@ -173,7 +173,7 @@ theorem UniformInducing.uniform_continuous {f : α → β} (hf : UniformInducing
 
 theorem UniformInducing.uniform_continuous_iff {f : α → β} {g : β → γ} (hg : UniformInducing g) :
     UniformContinuous f ↔ UniformContinuous (g ∘ f) := by
-  dsimp only [UniformContinuous, tendsto]
+  dsimp' only [UniformContinuous, tendsto]
   rw [← hg.comap_uniformity, ← map_le_iff_le_comap, Filter.map_map]
 
 theorem UniformInducing.inducing {f : α → β} (h : UniformInducing f) : Inducing f := by

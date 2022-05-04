@@ -27,10 +27,11 @@ We also show that valuation rings are local and that their lattice of ideals is 
 
 universe u v w
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`cond] []
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRingₓ A] [IsDomain A] : Prop where
-  cond {} : ∀ a b : A, ∃ c : A, a * c = b ∨ b * c = a
+  cond : ∀ a b : A, ∃ c : A, a * c = b ∨ b * c = a
 
 namespace ValuationRing
 
@@ -60,7 +61,7 @@ instance : LE (ValueGroup A K) :=
           simpa [mul_smul] using he
           
         · rintro ⟨e, he⟩
-          dsimp
+          dsimp'
           use (d⁻¹ : Aˣ) * c * e
           erw [← he, ← mul_smul, ← mul_smul]
           congr 1
@@ -80,7 +81,7 @@ instance : Mul (ValueGroup A K) :=
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩
         apply Quotientₓ.sound'
-        dsimp
+        dsimp'
         use c * d
         simp only [mul_smul, Algebra.smul_def, Units.smul_def, RingHom.map_mul, Units.coe_mul]
         ring)
@@ -92,7 +93,7 @@ instance : Inv (ValueGroup A K) :=
         rintro _ a ⟨b, rfl⟩
         apply Quotientₓ.sound'
         use b⁻¹
-        dsimp
+        dsimp'
         rw [Units.smul_def, Units.smul_def, Algebra.smul_def, Algebra.smul_def, mul_inv₀, RingHom.map_units_inv])
 
 variable [IsDomain A] [ValuationRing A] [IsFractionRing A K]
@@ -225,7 +226,7 @@ def valuation : Valuation K (ValueGroup A K) where
     have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hya
     have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_non_zero_divisors hyb
     obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
-    dsimp
+    dsimp'
     · apply le_transₓ _ (le_max_leftₓ _ _)
       use c + 1
       rw [Algebra.smul_def]
@@ -272,7 +273,7 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
       constructor
       · intro x y h
         apply_fun (coe : _ → K)  at h
-        dsimp  at h
+        dsimp'  at h
         exact IsFractionRing.injective _ _ h
         
       · rintro ⟨a, ha : a ∈ (Valuation A K).integer⟩

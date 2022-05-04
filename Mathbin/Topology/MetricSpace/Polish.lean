@@ -55,6 +55,7 @@ variable {α : Type _} {β : Type _}
 /-! ### Basic properties of Polish spaces -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`second_countable] []
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -63,7 +64,7 @@ other way around as this is the most common use case.
 To endow a Polish space with a complete metric space structure, do `letI := upgrade_polish_space α`.
 -/
 class PolishSpace (α : Type _) [h : TopologicalSpace α] : Prop where
-  second_countable {} : SecondCountableTopology α
+  second_countable : SecondCountableTopology α
   complete : ∃ m : MetricSpace α, m.toUniformSpace.toTopologicalSpace = h ∧ @CompleteSpace α m.toUniformSpace
 
 /-- A convenience class, for a Polish space endowed with a complete metric. No instance of this

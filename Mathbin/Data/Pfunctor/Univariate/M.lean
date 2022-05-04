@@ -146,7 +146,7 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x
   intro
   cases' h₀ : x (succ n) with _ i₀ f₀
   cases' h₁ : x 1 with _ i₁ f₁
-  dsimp only [head']
+  dsimp' only [head']
   induction' n with n
   · rw [h₁] at h₀
     cases h₀
@@ -160,7 +160,7 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x
     cases' H with _ _ _ _ _ _ hagree
     congr
     funext j
-    dsimp only [comp_app]
+    dsimp' only [comp_app]
     rw [truncate_eq_of_agree]
     apply hagree
     
@@ -294,12 +294,12 @@ inductive Agree' : ℕ → M F → M F → Prop
 @[simp]
 theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x := by
   funext i
-  dsimp only [M.mk, dest]
+  dsimp' only [M.mk, dest]
   cases' x with x ch
   congr with i
   cases h : ch i
   simp only [children, M.approx.s_mk, children', cast_eq]
-  dsimp only [M.approx.s_mk, children']
+  dsimp' only [M.approx.s_mk, children']
   congr
   rw [h]
 
@@ -307,11 +307,11 @@ theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x := by
 theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   apply ext'
   intro n
-  dsimp only [M.mk]
+  dsimp' only [M.mk]
   induction' n with n
   · apply Subsingleton.elimₓ
     
-  dsimp only [approx.s_mk, dest, head]
+  dsimp' only [approx.s_mk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
   have h' : hd = head' (x.approx 1) := by
     rw [← head_succ' n, h, head']
@@ -321,7 +321,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x := by
   intros
   congr
   · ext a
-    dsimp only [children]
+    dsimp' only [children]
     h_generalize! hh : a = a''
     rw [h]
     intros
@@ -400,15 +400,15 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) : Agree (x.approx n) (y.approx <|
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     Pfunctor.M.cases f (M.mk x) = f x := by
-  dsimp only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
+  dsimp' only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
   cases x
-  dsimp only [approx.s_mk]
+  dsimp' only [approx.s_mk]
   apply eq_of_heq
   apply rec_heq_of_heq
   congr with x
-  dsimp only [children, approx.s_mk, children']
+  dsimp' only [children, approx.s_mk, children']
   cases h : x_snd x
-  dsimp only [head]
+  dsimp' only [head]
   congr with n
   change (x_snd x).approx n = _
   rw [h]
@@ -512,10 +512,10 @@ theorem children_mk {a} (x : F.B a → M F) (i : F.B (head (M.mk ⟨a, x⟩))) :
 @[simp]
 theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.Idx) :
     ichildren i (M.mk x) = x.iget i := by
-  dsimp only [ichildren, Pfunctor.Obj.iget]
+  dsimp' only [ichildren, Pfunctor.Obj.iget]
   congr with h
   apply ext'
-  dsimp only [children', M.mk, approx.s_mk]
+  dsimp' only [children', M.mk, approx.s_mk]
   intros
   rfl
 
@@ -534,15 +534,15 @@ theorem iselect_cons [DecidableEq F.A] [Inhabited (M F)] (ps : Path F) {a} (f : 
   simp only [iselect, isubtree_cons]
 
 theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.corec f <$> f x₀) := by
-  dsimp only [M.corec, M.mk]
+  dsimp' only [M.corec, M.mk]
   congr with n
   cases' n with n
-  · dsimp only [s_corec, approx.s_mk]
+  · dsimp' only [s_corec, approx.s_mk]
     rfl
     
-  · dsimp only [s_corec, approx.s_mk]
+  · dsimp' only [s_corec, approx.s_mk]
     cases h : f x₀
-    dsimp only [(· <$> ·), Pfunctor.map]
+    dsimp' only [(· <$> ·), Pfunctor.map]
     congr
     
 
@@ -601,7 +601,7 @@ theorem ext [Inhabited (M F)] (x y : M F) (H : ∀ ps : Path F, iselect ps x = i
       apply y.consistent
       
     introv H'
-    dsimp only [iselect]  at H
+    dsimp' only [iselect]  at H
     cases H'
     apply H ps
     
@@ -637,7 +637,7 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) s₁ s₂ (ps 
   cases' i with a' i
   obtain rfl : a = a' := by
     cases hh <;> cases is_path_cons hh <;> rfl
-  dsimp only [iselect]  at ps_ih⊢
+  dsimp' only [iselect]  at ps_ih⊢
   have h₁ := bisim.tail h₀ i
   induction' h : f i using Pfunctor.M.casesOn' with a₀ f₀
   induction' h' : f' i using Pfunctor.M.casesOn' with a₁ f₁

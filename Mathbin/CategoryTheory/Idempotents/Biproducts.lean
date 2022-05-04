@@ -157,7 +157,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
     rw [biprod.lift_desc]
     simp only [← decomp_p]
     ext
-    dsimp only [complement, to_karoubi]
+    dsimp' only [complement, to_karoubi]
     simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
 
 end Karoubi

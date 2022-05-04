@@ -196,7 +196,7 @@ theorem nat_degree_minpoly_gen (pb : PowerBasis A S) : natDegree (minpolyGen pb)
   nat_degree_eq_of_degree_eq_some pb.degree_minpoly_gen
 
 theorem minpoly_gen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) := by
-  apply monic_sub_of_left (monic_X_pow _) _
+  apply (monic_X_pow _).sub_of_left _
   rw [degree_X_pow]
   exact degree_sum_fin_lt _
 
@@ -464,7 +464,7 @@ variable [Algebra A S] [Algebra A S']
 
 @[simp]
 theorem minpoly_gen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') : (pb.map e).minpolyGen = pb.minpolyGen := by
-  dsimp only [minpoly_gen, map_dim]
+  dsimp' only [minpoly_gen, map_dim]
   -- Turn `fin (pb.map e).dim` into `fin pb.dim`
   simp only [LinearEquiv.trans_apply, map_basis, Basis.map_repr, map_gen, AlgEquiv.to_linear_equiv_apply,
     e.to_linear_equiv_symm, AlgEquiv.map_pow, AlgEquiv.symm_apply_apply, sub_right_inj]

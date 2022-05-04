@@ -266,7 +266,7 @@ theorem Fix.mk_dest (x : Fix F α) : Fix.mk (Fix.dest x) = x := by
   change (fix.mk ∘ fix.dest) x = x
   apply fix.ind_rec
   intro x
-  dsimp
+  dsimp'
   rw [fix.dest, fix.rec_eq, ← comp_map, ← append_fun_comp, id_comp]
   intro h
   rw [h]
@@ -324,11 +324,11 @@ def Fix.drec {β : Fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fi
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm
-    dsimp [y]
+    dsimp' [y]
     apply fix.ind_rec _ id _ x
     intro x' ih
     rw [fix.rec_eq]
-    dsimp
+    dsimp'
     simp [append_fun_id_id] at ih
     congr
     conv => rhs rw [← ih]

@@ -181,10 +181,10 @@ theorem Memℒp.integral_indicator_norm_ge_le (hf : Memℒp f 1 μ) (hmeas : Str
     
   · refine' fun n => univ_mem' (id fun x => _)
     by_cases' hx : (n : ℝ) ≤ ∥f x∥
-    · dsimp
+    · dsimp'
       rwa [indicator_of_mem]
       
-    · dsimp
+    · dsimp'
       rw [indicator_of_not_mem, norm_zero]
       · exact norm_nonneg _
         
@@ -824,7 +824,7 @@ theorem uniform_integrable_of [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
             (strongly_measurable.ae_strongly_measurable
               ((hf i).indicator (strongly_measurable_const.measurable_set_le (hf i).nnnorm)))
             hp)
-      · rw [indicator, Pi.add_apply]
+      · rw [Pi.add_apply, indicator_apply]
         split_ifs with hx
         · rw [indicator_of_not_mem, add_zeroₓ]
           simpa using hx

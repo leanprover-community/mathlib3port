@@ -582,7 +582,7 @@ theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
 theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by
   rw [← inv_subset_inv, inv_invₓ]
 
-@[to_additive]
+@[simp, to_additive]
 theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by
   rw [← image_inv, image_singleton]
 

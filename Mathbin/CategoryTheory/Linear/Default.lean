@@ -83,7 +83,7 @@ section End
 variable {R : Type w} [CommRingₓ R] [Linear R C]
 
 instance (X : C) : Module R (End X) := by
-  dsimp [End]
+  dsimp' [End]
   infer_instance
 
 instance (X : C) : Algebra R (End X) :=

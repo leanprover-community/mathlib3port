@@ -51,17 +51,17 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D where
       naturality' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp }
   map_id' := by
     intros
     ext
-    dsimp
+    dsimp'
     simp
   map_comp' := by
     intros
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- The adjunction showing that evaluation is a right adjoint. -/
@@ -75,27 +75,27 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
               naturality' := by
                 intros
                 ext
-                dsimp
+                dsimp'
                 simp },
           left_inv := by
             intro f
             ext x g
-            dsimp
+            dsimp'
             simp only [colimit.ι_desc, limits.cofan.mk_ι_app, category.assoc, ← f.naturality,
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
             congr 2
             rw [category.id_comp],
           right_inv := fun f => by
-            dsimp
+            dsimp'
             simp },
       hom_equiv_naturality_left_symm' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp ,
       hom_equiv_naturality_right' := by
         intros
-        dsimp
+        dsimp'
         simp }
 
 instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj c) :=
@@ -124,14 +124,14 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
       map_id' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
         congr
         simp ,
       map_comp' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp only [limit.lift_π, fan.mk_π_app, category.assoc]
         congr 1
         simp }
@@ -140,17 +140,17 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D where
       naturality' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp }
   map_id' := by
     intros
     ext
-    dsimp
+    dsimp'
     simp
   map_comp' := by
     intros
     ext
-    dsimp
+    dsimp'
     simp
 
 /-- The adjunction showing that evaluation is a left adjoint. -/
@@ -163,27 +163,27 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               naturality' := by
                 intros
                 ext
-                dsimp
+                dsimp'
                 simp },
           invFun := fun f => f.app _ ≫ Pi.π _ (𝟙 _),
           left_inv := fun f => by
-            dsimp
+            dsimp'
             simp ,
           right_inv := by
             intro f
             ext x g
-            dsimp
+            dsimp'
             simp only [limit.lift_π, evaluation_right_adjoint_obj_map, nat_trans.naturality_assoc, fan.mk_π_app]
             congr
             rw [category.comp_id] },
       hom_equiv_naturality_left_symm' := by
         intros
-        dsimp
+        dsimp'
         simp ,
       hom_equiv_naturality_right' := by
         intros
         ext
-        dsimp
+        dsimp'
         simp }
 
 instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c) :=

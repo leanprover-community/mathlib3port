@@ -431,21 +431,20 @@ def Measurable [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop 
 -- mathport name: «exprmeasurable[ ]»
 localized [MeasureTheory] notation "measurable[" m "]" => @Measurable _ _ m _
 
-variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
+theorem measurable_id {ma : MeasurableSpace α} : Measurable (@id α) := fun t => id
 
-theorem measurable_id : Measurable (@id α) := fun t => id
-
-theorem measurable_id' : Measurable fun a : α => a :=
+theorem measurable_id' {ma : MeasurableSpace α} : Measurable fun a : α => a :=
   measurable_id
 
-theorem Measurable.comp {α β γ} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {g : β → γ}
+theorem Measurable.comp {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ} {g : β → γ}
     {f : α → β} (hg : Measurable g) (hf : Measurable f) : Measurable (g ∘ f) := fun t ht => hf (hg ht)
 
 @[simp]
-theorem measurable_const {a : α} : Measurable fun b : β => a := fun s hs => MeasurableSet.const (a ∈ s)
+theorem measurable_const {ma : MeasurableSpace α} {mb : MeasurableSpace β} {a : α} : Measurable fun b : β => a :=
+  fun s hs => MeasurableSet.const (a ∈ s)
 
-theorem Measurable.le {α} {m m0 : MeasurableSpace α} (hm : m ≤ m0) {f : α → β} (hf : measurable[m] f) :
-    measurable[m0] f := fun s hs => hm _ (hf hs)
+theorem Measurable.le {α} {m m0 : MeasurableSpace α} {mb : MeasurableSpace β} (hm : m ≤ m0) {f : α → β}
+    (hf : measurable[m] f) : measurable[m0] f := fun s hs => hm _ (hf hs)
 
 end MeasurableFunctions
 

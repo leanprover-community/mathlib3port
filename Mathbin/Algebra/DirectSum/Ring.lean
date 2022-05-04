@@ -199,7 +199,7 @@ private theorem mul_assoc (a b c : ⨁ i, A i) : a * b * c = a * (b * c) := by
             (mulHom A)).flip
     from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
   ext ai ax bi bx ci cx : 6
-  dsimp only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
+  dsimp' only [coe_comp, Function.comp_app, comp_hom_apply_apply, flip_apply, flip_hom_apply]
   rw [mul_hom_of_of, mul_hom_of_of, mul_hom_of_of, mul_hom_of_of]
   exact of_eq_of_graded_monoid_eq (mul_assoc (GradedMonoid.mk ai ax) ⟨bi, bx⟩ ⟨ci, cx⟩)
 
@@ -239,7 +239,7 @@ theorem mul_eq_sum_support_ghas_mul [∀ i : ι x : A i, Decidable (x ≠ 0)] (a
         DirectSum.of _ _ (GradedMonoid.GhasMul.mul (a ij.fst) (a' ij.snd)) :=
   by
   change DirectSum.mulHom _ a a' = _
-  dsimp [DirectSum.mulHom, DirectSum.toAddMonoid, Dfinsupp.lift_add_hom_apply]
+  dsimp' [DirectSum.mulHom, DirectSum.toAddMonoid, Dfinsupp.lift_add_hom_apply]
   simp only [Dfinsupp.sum_add_hom_apply, Dfinsupp.sum, Dfinsupp.finset_sum_apply, AddMonoidHom.coe_finset_sum,
     Finset.sum_apply, AddMonoidHom.flip_apply, AddMonoidHom.comp_hom_apply_apply, AddMonoidHom.comp_apply,
     DirectSum.gmul_hom_apply_apply]

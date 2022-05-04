@@ -24,7 +24,7 @@ universe v u
 namespace CategoryTheory
 
 instance discreteFintype {α : Type _} [Fintype α] : Fintype (Discrete α) := by
-  dsimp [discrete]
+  dsimp' [discrete]
   infer_instance
 
 instance discreteHomFintype {α : Type _} [DecidableEq α] (X Y : Discrete α) : Fintype (X ⟶ Y) := by
@@ -94,10 +94,10 @@ noncomputable def objAsTypeToAsType : ObjAsType α ⥤ AsType α where
 noncomputable def asTypeEquivObjAsType : AsType α ≌ ObjAsType α :=
   Equivalence.mk (asTypeToObjAsType α) (objAsTypeToAsType α)
     ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
-      dsimp
+      dsimp'
       simp )
     ((NatIso.ofComponents Iso.refl) fun _ _ _ => by
-      dsimp
+      dsimp'
       simp )
 
 noncomputable instance asTypeFinCategory : FinCategory (AsType α) :=

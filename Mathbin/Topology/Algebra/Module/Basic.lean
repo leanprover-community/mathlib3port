@@ -529,6 +529,10 @@ instance uniqueOfLeft [Subsingleton M₁] : Unique (M₁ →SL[σ₁₂] M₂) :
 instance uniqueOfRight [Subsingleton M₂] : Unique (M₁ →SL[σ₁₂] M₂) :=
   coe_injective.unique
 
+theorem exists_ne_zero {f : M₁ →SL[σ₁₂] M₂} (hf : f ≠ 0) : ∃ x, f x ≠ 0 := by
+  by_contra' h
+  exact hf (ContinuousLinearMap.ext h)
+
 section
 
 variable (R₁ M₁)
@@ -1017,7 +1021,7 @@ def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjo
       exact this,
     continuous_subtype_mk _
       (continuous_pi fun i => by
-        dsimp
+        dsimp'
         split_ifs <;> [apply continuous_apply, exact continuous_zero])⟩
 
 end Pi
@@ -1159,6 +1163,25 @@ end
 
 end Ringₓ
 
+section DivisionMonoid
+
+variable {R M : Type _}
+
+/-- A nonzero continuous linear functional is open. -/
+protected theorem is_open_map_of_ne_zero [TopologicalSpace R] [DivisionRing R] [HasContinuousSub R] [AddCommGroupₓ M]
+    [TopologicalSpace M] [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M] (f : M →L[R] R) (hf : f ≠ 0) :
+    IsOpenMap f :=
+  let ⟨x, hx⟩ := exists_ne_zero hf
+  IsOpenMap.of_sections fun y =>
+    ⟨fun a => y + (a - f y) • (f x)⁻¹ • x,
+      Continuous.continuous_at <| by
+        continuity,
+      by
+      simp , fun a => by
+      simp [hx]⟩
+
+end DivisionMonoid
+
 section SmulMonoid
 
 -- The M's are used for semilinear maps, and the N's for plain linear maps
@@ -1289,7 +1312,7 @@ def smulRightₗ (c : M →L[R] S) : M₂ →ₗ[T] M →L[R] M₂ where
     apply smul_add
   map_smul' := fun a x => by
     ext e
-    dsimp
+    dsimp'
     apply smul_comm
 
 @[simp]
@@ -1804,7 +1827,7 @@ variable {M₁} {R₄ : Type _} [Semiringₓ R₄] [Module R₄ M₄] {σ₃₄ 
 include σ₂₁ σ₃₄ σ₂₃ σ₂₄ σ₁₃
 
 /-- A pair of continuous (semi)linear equivalences generates an equivalence between the spaces of
-continuous linear maps. -/
+continuous linear maps. See also `continuous_linear_equiv.arrow_congr`. -/
 @[simps]
 def arrowCongrEquiv (e₁₂ : M₁ ≃SL[σ₁₂] M₂) (e₄₃ : M₄ ≃SL[σ₄₃] M₃) : (M₁ →SL[σ₁₄] M₄) ≃ (M₂ →SL[σ₂₃] M₃) where
   toFun := fun f => (e₄₃ : M₄ →SL[σ₄₃] M₃).comp (f.comp (e₁₂.symm : M₂ →SL[σ₂₁] M₁))
@@ -2111,7 +2134,7 @@ theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
     rcases h₁ with ⟨F, hF⟩
     use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
     ext
-    dsimp
+    dsimp'
     rw [coe_fn_coe_base' F, hF]
     simp
     

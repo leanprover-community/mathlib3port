@@ -62,11 +62,12 @@ ordered map, ordered set, data structure
 
 universe u
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: nil {}
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
   and correctly stores subtree sizes at each level. -/
 inductive Ordnode (α : Type u) : Type u
-  | nil {} : Ordnode
+  | nil : Ordnode
   | node (size : ℕ) (l : Ordnode) (x : α) (r : Ordnode) : Ordnode
 
 namespace Ordnode

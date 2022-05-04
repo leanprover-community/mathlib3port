@@ -149,7 +149,7 @@ theorem digits_add (b : ℕ) (h : 2 ≤ b) (x y : ℕ) (w : x < b) (w' : 0 < x �
       · norm_num  at w'
         simp [w, w']
         
-      dsimp [digits]
+      dsimp' [digits]
       rw [digits_aux_def]
       · congr
         · simp [Nat.add_modₓ, Nat.mod_eq_of_ltₓ w]
@@ -177,7 +177,7 @@ theorem of_digits_eq_foldr {α : Type _} [Semiringₓ α] (b : α) (L : List ℕ
   induction' L with d L ih
   · rfl
     
-  · dsimp [of_digits]
+  · dsimp' [of_digits]
     rw [ih]
     
 
@@ -228,7 +228,7 @@ theorem coe_of_digits (α : Type _) [Semiringₓ α] (b : ℕ) (L : List ℕ) : 
   induction' L with d L ih
   · rfl
     
-  · dsimp [of_digits]
+  · dsimp' [of_digits]
     push_cast
     rw [ih]
     
@@ -238,7 +238,7 @@ theorem coe_int_of_digits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ
   induction' L with d L ih
   · rfl
     
-  · dsimp [of_digits]
+  · dsimp' [of_digits]
     push_cast
     rw [ih]
     
@@ -249,7 +249,7 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : ofDig
     cases m
     
   · intro l m
-    dsimp [of_digits]  at w
+    dsimp' [of_digits]  at w
     rcases m with ⟨rfl⟩
     · convert Nat.eq_zero_of_add_eq_zero_right w
       simp
@@ -261,10 +261,10 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : ofDig
 theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀, ∀ l ∈ L, ∀, l < b)
     (w₂ : ∀ h : L ≠ [], L.last h ≠ 0) : digits b (ofDigits b L) = L := by
   induction' L with d L ih
-  · dsimp [of_digits]
+  · dsimp' [of_digits]
     simp
     
-  · dsimp [of_digits]
+  · dsimp' [of_digits]
     replace w₂ :=
       w₂
         (by
@@ -313,7 +313,7 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
     · rfl
       
     · change of_digits 0 [n + 1] = n + 1
-      dsimp [of_digits]
+      dsimp' [of_digits]
       simp
       
     
@@ -332,7 +332,7 @@ theorem of_digits_digits (b n : ℕ) : ofDigits b (digits b n) = n := by
         rfl
         
       · simp only [Nat.succ_eq_add_one, digits_add_two_add_one]
-        dsimp [of_digits]
+        dsimp' [of_digits]
         rw [h _ (Nat.div_lt_self' n b)]
         rw [Nat.cast_idₓ, Nat.mod_add_divₓ]
         
@@ -591,8 +591,8 @@ theorem of_digits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List
   induction' L with d L ih
   · rfl
     
-  · dsimp [of_digits]
-    dsimp [Nat.Modeq]  at *
+  · dsimp' [of_digits]
+    dsimp' [Nat.Modeq]  at *
     conv_lhs => rw [Nat.add_modₓ, Nat.mul_modₓ, h, ih]
     conv_rhs => rw [Nat.add_modₓ, Nat.mul_modₓ]
     
@@ -608,8 +608,8 @@ theorem of_digits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Li
   induction' L with d L ih
   · rfl
     
-  · dsimp [of_digits]
-    dsimp [Int.Modeq]  at *
+  · dsimp' [of_digits]
+    dsimp' [Int.Modeq]  at *
     conv_lhs => rw [Int.add_mod, Int.mul_mod, h, ih]
     conv_rhs => rw [Int.add_mod, Int.mul_mod]
     

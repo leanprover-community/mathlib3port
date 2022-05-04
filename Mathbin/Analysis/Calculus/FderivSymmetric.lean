@@ -177,7 +177,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (
       norm_image_sub_le_of_norm_deriv_le_segment' g_deriv g'_bound 1 (right_mem_Icc.2 zero_le_one)
   convert I using 1
   · congr 1
-    dsimp only [g]
+    dsimp' only [g]
     simp only [Nat.one_ne_zero, add_zeroₓ, one_mulₓ, zero_div, zero_mul, sub_zero, zero_smul, Ne.def, not_false_iff,
       bit0_eq_zero, zero_pow']
     abel

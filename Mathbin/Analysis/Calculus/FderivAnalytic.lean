@@ -83,7 +83,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
       x r
   · apply A.congr
     intro z hz
-    dsimp
+    dsimp'
     rw [← h.fderiv_eq, add_sub_cancel'_right]
     simpa only [edist_eq_coe_nnnorm_sub, Emetric.mem_ball] using hz
     

@@ -305,7 +305,7 @@ theorem sign_bij_aux_surj {n : ℕ} {f : Perm (Finₓ n)} :
     ∀, ∀ a ∈ finPairsLt n, ∀, ∃ b ∈ finPairsLt n, a = signBijAux f b := fun ha =>
   if hxa : f⁻¹ a₂ < f⁻¹ a₁ then
     ⟨⟨f⁻¹ a₁, f⁻¹ a₂⟩, mem_fin_pairs_lt.2 hxa, by
-      dsimp [sign_bij_aux]
+      dsimp' [sign_bij_aux]
       rw [apply_inv_self, apply_inv_self, if_pos (mem_fin_pairs_lt.1 ha)]⟩
   else
     ⟨⟨f⁻¹ a₂, f⁻¹ a₁⟩,
@@ -313,7 +313,7 @@ theorem sign_bij_aux_surj {n : ℕ} {f : Perm (Finₓ n)} :
         (le_of_not_gtₓ hxa).lt_of_ne fun h => by
           simpa [mem_fin_pairs_lt, f⁻¹.Injective h, lt_irreflₓ] using ha,
       by
-      dsimp [sign_bij_aux]
+      dsimp' [sign_bij_aux]
       rw [apply_inv_self, apply_inv_self, if_neg (mem_fin_pairs_lt.1 ha).le.not_lt]⟩
 
 theorem sign_bij_aux_mem {n : ℕ} {f : Perm (Finₓ n)} :
@@ -376,7 +376,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Finₓ (n
           fun a ha₁ ha₂ => _)
     rcases a with ⟨a₁, a₂⟩
     replace ha₁ : a₂ < a₁ := mem_fin_pairs_lt.1 ha₁
-    dsimp only
+    dsimp' only
     rcases a₁.zero_le.eq_or_lt with (rfl | H)
     · exact absurd a₂.zero_le ha₁.not_le
       

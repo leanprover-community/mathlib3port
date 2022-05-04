@@ -42,7 +42,7 @@ This is far from completely effective, but seems to prove a useful principle.
 ## References
 * Tensor categories, Etingof, Gelaki, Nikshych, Ostrik,
   http://www-math.mit.edu/~etingof/egnobookfinal.pdf
-* https://stacks.math.columbia.edu/tag/0FFK.
+* <https://stacks.math.columbia.edu/tag/0FFK>.
 -/
 
 
@@ -58,21 +58,22 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
@@ -81,14 +82,14 @@ namespace CategoryTheory
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr𝟙_»
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«exprλ_»
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«exprλ_»
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗ »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr𝟙_»
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⊗' »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr𝟙_»
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprρ_
@@ -115,7 +116,7 @@ specified associator, `α_ X Y Z : (X ⊗ Y) ⊗ Z ≅ X ⊗ (Y ⊗ Z)`. There i
 with specified left and right unitor isomorphisms `λ_ X : 𝟙_ C ⊗ X ≅ X` and `ρ_ X : X ⊗ 𝟙_ C ≅ X`.
 These associators and unitors satisfy the pentagon and triangle equations.
 
-See https://stacks.math.columbia.edu/tag/0FFK.
+See <https://stacks.math.columbia.edu/tag/0FFK>.
 -/
 class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
   -- curried tensor product of objects:
@@ -134,7 +135,7 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
     run_tac
       obviously
   -- tensor unit:
-  tensorUnit {} : C
+  tensorUnit : C
   -- associator:
   associator : ∀ X Y Z : C, «expr ⊗ » («expr ⊗ » X Y) Z ≅ «expr ⊗ » X («expr ⊗ » Y Z)
   associator_naturality' :
@@ -504,7 +505,7 @@ tensoring on the left with `Y`, and then again with `X`.
 -/
 def tensorLeftTensor (X Y : C) : tensorLeft (X ⊗ Y) ≅ tensorLeft Y ⋙ tensorLeft X :=
   NatIso.ofComponents (associator _ _) fun Z Z' f => by
-    dsimp
+    dsimp'
     rw [← tensor_id]
     apply associator_naturality
 
@@ -561,7 +562,7 @@ tensoring on the right with `X`, and then again with `Y`.
 -/
 def tensorRightTensor (X Y : C) : tensorRight (X ⊗ Y) ≅ tensorRight X ⋙ tensorRight Y :=
   NatIso.ofComponents (fun Z => (associator Z X Y).symm) fun Z Z' f => by
-    dsimp
+    dsimp'
     rw [← tensor_id]
     apply associator_inv_naturality
 

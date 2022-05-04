@@ -942,10 +942,10 @@ theorem Set.finite_of_forall_between_eq_endpoints {α : Type _} [LinearOrderₓ 
   have key₂ : (1 : Finₓ 3) ≠ 2 := by
     decide
   cases this
-  · dsimp only [x, y]  at this
+  · dsimp' only [x, y]  at this
     exact key₁ (f.injective <| Subtype.coe_injective this)
     
-  · dsimp only [y, z]  at this
+  · dsimp' only [y, z]  at this
     exact key₂ (f.injective <| Subtype.coe_injective this)
     
 

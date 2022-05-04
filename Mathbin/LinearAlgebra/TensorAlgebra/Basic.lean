@@ -105,7 +105,7 @@ theorem ι_comp_lift {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R]
 
 @[simp]
 theorem lift_ι_apply {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) x : lift R f (ι R x) = f x := by
-  dsimp [lift, ι]
+  dsimp' [lift, ι]
   rfl
 
 @[simp]

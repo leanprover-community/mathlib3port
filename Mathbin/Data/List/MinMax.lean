@@ -87,7 +87,7 @@ private theorem le_of_foldl_argmax₂ {f : α → β} {l} :
         simp_all [hf.1, hf.2]
         
       rw [hf, Option.mem_def] at ho
-      dsimp only  at ho
+      dsimp' only  at ho
       cases' mem_append.1 h with h h
       · refine' le_transₓ (ih h hf) _
         have := @le_of_ltₓ _ _ (f val) (f m)
@@ -106,7 +106,7 @@ private theorem foldl_argmax₂_mem (f : α → β) l : ∀ a m : α, m ∈ fold
       cases hf : foldl (argmax₂ f) (some a) tl
       · simp (config := { contextual := true })
         
-      · dsimp only
+      · dsimp' only
         split_ifs
         · -- `finish [ih _ _ hf]` closes this goal
           rcases ih _ _ hf with (rfl | H)
@@ -160,27 +160,27 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     · simp [h]
       
     · simp [h]
-      dsimp
+      dsimp'
       by_cases' ham : f m ≤ f a
       · rw [if_pos ham]
-        dsimp
+        dsimp'
         by_cases' htlm : f tl ≤ f m
         · rw [if_pos htlm]
-          dsimp
+          dsimp'
           rw [if_pos (le_transₓ htlm ham), if_pos ham]
           
         · rw [if_neg htlm]
           
         
       · rw [if_neg ham]
-        dsimp
+        dsimp'
         by_cases' htlm : f tl ≤ f m
         · rw [if_pos htlm]
-          dsimp
+          dsimp'
           rw [if_neg ham]
           
         · rw [if_neg htlm]
-          dsimp
+          dsimp'
           rw [if_neg (not_le_of_gtₓ (lt_transₓ (lt_of_not_geₓ ham) (lt_of_not_geₓ htlm)))]
           
         
@@ -201,7 +201,7 @@ theorem index_of_argmax [DecidableEq α] {f : α → β} :
       simp_all
       
     · rw [h] at hm
-      dsimp only  at hm
+      dsimp' only  at hm
       cases' ha with hahd hatl
       · clear index_of_argmax
         subst hahd

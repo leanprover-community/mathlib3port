@@ -69,7 +69,7 @@ theorem numeric_pow_half {n} : (powHalf n).Numeric := by
     
   · constructor
     · rintro ⟨⟩ ⟨⟩
-      dsimp only [Pi.zero_apply]
+      dsimp' only [Pi.zero_apply]
       rw [← pow_half_move_left' n]
       apply Pgame.move_left_lt
       

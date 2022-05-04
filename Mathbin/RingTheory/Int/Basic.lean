@@ -227,7 +227,7 @@ def associatesIntEquivNat : Associates ℤ ≃ ℕ := by
     rw [Int.coe_nat_abs_eq_normalize, normalize_idem]
     
   · intro n
-    dsimp
+    dsimp'
     rw [← normalize_apply, ← Int.coe_nat_abs_eq_normalize, Int.nat_abs_of_nat, Int.nat_abs_of_nat]
     
 

@@ -47,7 +47,7 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
       map_id' := by
         intro X
         ext Y : 2
-        dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app, functor.left_op_obj,
+        dsimp' only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app, functor.left_op_obj,
           functor.right_op_obj]
         rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
         rfl,
@@ -67,6 +67,6 @@ def extSuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((ext R C (n + 1)).
         let Z : (ModuleCat R)ᵒᵖ := 0
         rw [← (0 : 0 ⟶ Z.unop).unop_op, ← (0 : Z.unop ⟶ 0).unop_op, ← unop_id, ← unop_comp]
         congr 1
-        dsimp
+        dsimp'
         decide }
 

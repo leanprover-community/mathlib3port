@@ -159,7 +159,7 @@ theorem function_field_is_fraction_ring_of_is_affine_open [IsIntegral X] (U : Op
   have : IsIntegral (X.restrict U.open_embedding) :=
     @is_integral_of_is_affine_is_domain _ _ _
       (by
-        dsimp
+        dsimp'
         rw [opens.open_embedding_obj_top]
         infer_instance)
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by

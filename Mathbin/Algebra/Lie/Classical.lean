@@ -79,11 +79,10 @@ variable [DecidableEq n] [DecidableEq p] [DecidableEq q] [DecidableEq l]
 variable [CommRingₓ R]
 
 @[simp]
-theorem matrix_trace_commutator_zero [Fintype n] (X Y : Matrix n n R) : Matrix.trace n R R ⁅X,Y⁆ = 0 :=
+theorem matrix_trace_commutator_zero [Fintype n] (X Y : Matrix n n R) : Matrix.trace ⁅X,Y⁆ = 0 :=
   calc
-    _ = Matrix.trace n R R (X ⬝ Y) - Matrix.trace n R R (Y ⬝ X) := LinearMap.map_sub _ _ _
-    _ = Matrix.trace n R R (X ⬝ Y) - Matrix.trace n R R (X ⬝ Y) :=
-      congr_argₓ (fun x => _ - x) (Matrix.trace_mul_comm Y X)
+    _ = Matrix.trace (X ⬝ Y) - Matrix.trace (Y ⬝ X) := trace_sub _ _
+    _ = Matrix.trace (X ⬝ Y) - Matrix.trace (X ⬝ Y) := congr_argₓ (fun x => _ - x) (Matrix.trace_mul_comm Y X)
     _ = 0 := sub_self _
     
 
@@ -91,7 +90,7 @@ namespace SpecialLinear
 
 /-- The special linear Lie algebra: square matrices of trace zero. -/
 def sl [Fintype n] : LieSubalgebra R (Matrix n n R) :=
-  { LinearMap.ker (Matrix.trace n R R) with
+  { LinearMap.ker (Matrix.traceLinearMap n R R) with
     lie_mem' := fun X Y _ _ => LinearMap.mem_ker.2 <| matrix_trace_commutator_zero _ _ _ _ }
 
 theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A,B⁆.val = A.val ⬝ B.val - B.val ⬝ A.val :=
@@ -105,7 +104,7 @@ variable {n} [Fintype n] (i j : n)
 basis of sl n R. -/
 def eb (h : j ≠ i) : sl n R :=
   ⟨Matrix.stdBasisMatrix i j (1 : R),
-    show Matrix.stdBasisMatrix i j (1 : R) ∈ LinearMap.ker (Matrix.trace n R R) from
+    show Matrix.stdBasisMatrix i j (1 : R) ∈ LinearMap.ker (Matrix.traceLinearMap n R R) from
       Matrix.stdBasisMatrix.trace_zero i j (1 : R) h⟩
 
 @[simp]

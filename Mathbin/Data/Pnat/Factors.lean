@@ -120,7 +120,7 @@ def ofNatMultiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : Pr
 
 theorem to_of_nat_multiset (v : Multiset ℕ) h : (ofNatMultiset v h : Multiset ℕ) = v := by
   unfold_coes
-  dsimp [of_nat_multiset, to_nat_multiset]
+  dsimp' [of_nat_multiset, to_nat_multiset]
   have : (fun h : p.Prime => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p := by
     funext p h
     rfl
@@ -135,7 +135,7 @@ def ofPnatMultiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) :
 
 theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (ofPnatMultiset v h : Multiset ℕ+) = v := by
   unfold_coes
-  dsimp [of_pnat_multiset, to_pnat_multiset]
+  dsimp' [of_pnat_multiset, to_pnat_multiset]
   have : (fun h : p.Prime => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p := by
     funext p h
     apply Subtype.eq
@@ -143,7 +143,7 @@ theorem to_of_pnat_multiset (v : Multiset ℕ+) h : (ofPnatMultiset v h : Multis
   rw [Multiset.map_pmap, this, Multiset.pmap_eq_map, Multiset.map_id]
 
 theorem prod_of_pnat_multiset (v : Multiset ℕ+) h : ((ofPnatMultiset v h).Prod : ℕ+) = v.Prod := by
-  dsimp [Prod]
+  dsimp' [Prod]
   rw [to_of_pnat_multiset]
 
 /-- Lists can be coerced to multisets; here we have some results
@@ -169,7 +169,7 @@ theorem prod_of_pnat_list (l : List ℕ+) h : (ofPnatList l h).Prod = l.Prod := 
 /-- The product map gives a homomorphism from the additive monoid
 of multisets to the multiplicative monoid ℕ+. -/
 theorem prod_zero : (0 : PrimeMultiset).Prod = 1 := by
-  dsimp [Prod]
+  dsimp' [Prod]
   exact Multiset.prod_zero
 
 theorem prod_add (u v : PrimeMultiset) : (u + v).Prod = u.Prod * v.Prod := by
@@ -193,7 +193,7 @@ def factorMultiset (n : ℕ+) : PrimeMultiset :=
 /-- The product of the factors is the original number -/
 theorem prod_factor_multiset (n : ℕ+) : (factorMultiset n).Prod = n :=
   Eq <| by
-    dsimp [factor_multiset]
+    dsimp' [factor_multiset]
     rw [PrimeMultiset.prod_of_nat_list]
     exact Nat.prod_factors n.ne_zero
 
@@ -211,7 +211,7 @@ theorem factor_multiset_prod (v : PrimeMultiset) : v.Prod.factorMultiset = v := 
   rw [v.prod.coe_nat_factor_multiset, PrimeMultiset.coe_prod]
   rcases v with ⟨l⟩
   unfold_coes
-  dsimp [PrimeMultiset.toNatMultiset]
+  dsimp' [PrimeMultiset.toNatMultiset]
   rw [Multiset.coe_prod]
   let l' := l.map (coe : Nat.Primes → ℕ)
   have : ∀ p : ℕ, p ∈ l' → p.Prime := fun p hp => by

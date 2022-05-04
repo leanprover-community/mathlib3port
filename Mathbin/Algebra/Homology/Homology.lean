@@ -49,7 +49,7 @@ def cycles (i : ι) : Subobject (C.x i) :=
 
 @[simp, reassoc]
 theorem cycles_arrow_d_from (i : ι) : (C.cycles i).arrow ≫ C.dFrom i = 0 := by
-  dsimp [cycles]
+  dsimp' [cycles]
   simp
 
 theorem cycles_eq_kernel_subobject {i j : ι} (r : c.Rel i j) : C.cycles i = kernelSubobject (C.d i j) :=
@@ -114,7 +114,7 @@ theorem image_to_kernel_as_boundaries_to_cycles (C : HomologicalComplex V c) (i 
 @[simp, reassoc]
 theorem boundaries_to_cycles_arrow (C : HomologicalComplex V c) (i : ι) :
     C.boundariesToCycles i ≫ (C.cycles i).arrow = (C.boundaries i).arrow := by
-  dsimp [cycles]
+  dsimp' [cycles]
   simp
 
 variable [HasCokernels V]

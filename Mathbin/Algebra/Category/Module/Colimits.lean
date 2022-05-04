@@ -137,7 +137,7 @@ instance : AddCommGroupₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp
+      dsimp'
       apply Quot.sound
       · exact relation.add_1 _ _ _ r
         
@@ -146,26 +146,26 @@ instance : AddCommGroupₓ (ColimitType F) where
       
   zero_add := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.zero_add
     rfl
   add_zero := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_zero
     rfl
   add_left_neg := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_left_neg
     rfl
   add_comm := fun x y => by
     induction x
     induction y
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_comm
     rfl
@@ -174,7 +174,7 @@ instance : AddCommGroupₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_assoc
     rfl
@@ -193,20 +193,20 @@ instance : Module R (ColimitType F) where
       
   one_smul := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.one_smul
     rfl
   mul_smul := fun s t x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_smul
     rfl
   smul_add := fun s x y => by
     induction x
     induction y
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.smul_add
     rfl
@@ -216,13 +216,13 @@ instance : Module R (ColimitType F) where
     apply relation.smul_zero
   add_smul := fun s t x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_smul
     rfl
   zero_smul := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.zero_smul
     rfl
@@ -295,7 +295,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
   · intro x y r
     induction r <;>
       try
-        dsimp
+        dsimp'
     -- refl
     · rfl
       

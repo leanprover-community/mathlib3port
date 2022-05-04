@@ -49,7 +49,7 @@ def unitIso : 𝟭 (Karoubi C) ≅ toKaroubi (Karoubi C) ⋙ inverse C :=
         ext
         simp only [functor.id_map, inverse_map_f, to_karoubi_map_f, eq_to_hom_f, eq_to_hom_refl, comp_id, p_comp_assoc,
           functor.comp_map, comp]
-        dsimp
+        dsimp'
         simp only [id_eq, comp_p]
         
       · intro P
@@ -112,11 +112,11 @@ def equivalence : Karoubi C ≌ Karoubi (Karoubi C) where
     erw [P.idem, P.idem]
 
 instance equivalence.additive_functor [Preadditive C] : Functor.Additive (equivalence C).Functor := by
-  dsimp
+  dsimp'
   infer_instance
 
 instance equivalence.additive_inverse [Preadditive C] : Functor.Additive (equivalence C).inverse := by
-  dsimp
+  dsimp'
   infer_instance
 
 end KaroubiKaroubi

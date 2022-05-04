@@ -110,7 +110,7 @@ is more convenient to show a given cofork is a coequalizer by showing it is spli
 def IsSplitCoequalizer.isCoequalizer {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) : IsColimit t.asCofork :=
   (Cofork.IsColimit.mk' _) fun s =>
     ⟨t.rightSection ≫ s.π, by
-      dsimp
+      dsimp'
       rw [← t.left_section_top_assoc, s.condition, t.left_section_bottom_assoc], fun m hm => by
       simp [← hm]⟩
 
@@ -118,11 +118,12 @@ end
 
 variable (f g)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`splittable] []
 /-- The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
 in `C`.
 -/
 class HasSplitCoequalizer : Prop where
-  splittable {} : ∃ (Z : C)(h : Y ⟶ Z), Nonempty (IsSplitCoequalizer f g h)
+  splittable : ∃ (Z : C)(h : Y ⟶ Z), Nonempty (IsSplitCoequalizer f g h)
 
 /-- The pair `f,g` is a `G`-split pair if there is a `h : G Y ⟶ Z` so that `G f, G g, h` forms a split
 coequalizer in `D`.

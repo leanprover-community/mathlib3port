@@ -100,7 +100,7 @@ instance colimitGroup : Groupₓ G :=
       cases' x with j x
       erw [colimit_inv_mk_eq, colimit_mul_mk_eq (F ⋙ forget₂ Groupₓₓ Mon) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
         colimit_one_eq (F ⋙ forget₂ Groupₓₓ Mon) j]
-      dsimp
+      dsimp'
       simp only [CategoryTheory.Functor.map_id, id_apply, mul_left_invₓ] }
 
 /-- The bundled group giving the filtered colimit of a diagram. -/

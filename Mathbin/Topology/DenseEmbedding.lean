@@ -172,7 +172,7 @@ theorem continuous_at_extend [RegularSpace γ] {b : β} {f : α → γ} (di : De
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
-    dsimp [V₁, φ]
+    dsimp' [V₁, φ]
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀, ∀ x ∈ i ⁻¹' V₂, ∀, f x ∈ V' := by
     simpa [and_assoc] using
@@ -307,4 +307,28 @@ theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Contin
   funext fun y => hfd.induction_on y (is_closed_eq hg hh) <| congr_funₓ H
 
 end
+
+-- Bourbaki GT III §3 no.4 Proposition 7 (generalised to any dense-inducing map to a regular space)
+theorem Filter.HasBasis.has_basis_of_dense_inducing [TopologicalSpace α] [TopologicalSpace β] [RegularSpace β]
+    {ι : Type _} {s : ι → Set α} {p : ι → Prop} {x : α} (h : (𝓝 x).HasBasis p s) {f : α → β} (hf : DenseInducing f) :
+    ((𝓝 (f x)).HasBasis p) fun i => Closure <| f '' s i := by
+  rw [Filter.has_basis_iff] at h⊢
+  intro T
+  refine' ⟨fun hT => _, fun hT => _⟩
+  · obtain ⟨T', hT₁, hT₂, hT₃⟩ := nhds_is_closed hT
+    have hT₄ : f ⁻¹' T' ∈ 𝓝 x := by
+      rw [hf.to_inducing.nhds_eq_comap x]
+      exact ⟨T', hT₁, subset.rfl⟩
+    obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄
+    exact
+      ⟨i, hi,
+        (closure_mono (image_subset f hi')).trans
+          (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₃) hT₂)⟩
+    
+  · obtain ⟨i, hi, hi'⟩ := hT
+    suffices Closure (f '' s i) ∈ 𝓝 (f x) by
+      filter_upwards [this] using hi'
+    replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
+    exact hf.closure_image_mem_nhds h
+    
 

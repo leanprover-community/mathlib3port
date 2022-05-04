@@ -59,7 +59,7 @@ theorem sup_sdiff_inj_on [GeneralizedBooleanAlgebra α] (u v : α) :
     { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x⊔u) \ v := by
   rintro a ha b hb hab
   have h : ((a⊔u) \ v) \ u⊔v = ((b⊔u) \ v) \ u⊔v := by
-    dsimp  at hab
+    dsimp'  at hab
     rw [hab]
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm, hb.1.symm.sup_sdiff_cancel_right,
     sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h
@@ -180,7 +180,7 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
     exact filter_inter_filter_neg_eq _ _
     
   intro a ha b hb hab
-  dsimp  at hab
+  dsimp'  at hab
   rw [mem_coe, mem_filter, Function.comp_app] at ha hb
   rw [compress] at ha hab
   split_ifs  at ha hab with has

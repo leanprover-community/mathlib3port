@@ -154,7 +154,7 @@ theorem compatible_preserving_of_flat {C : Type u₁} [Category.{v₁} C] {D : T
             simp ) :=
     by
     erw [← (c'.π.app left).w]
-    dsimp
+    dsimp'
     simp
   have eq₂ :
     f₂ =
@@ -164,7 +164,7 @@ theorem compatible_preserving_of_flat {C : Type u₁} [Category.{v₁} C] {D : T
             simp ) :=
     by
     erw [← (c'.π.app right).w]
-    dsimp
+    dsimp'
     simp
   conv_lhs => rw [eq₁]
   conv_rhs => rw [eq₂]
@@ -181,7 +181,7 @@ theorem compatible_preserving_of_flat {C : Type u₁} [Category.{v₁} C] {D : T
 /-- If `G` is cover-preserving and compatible-preserving,
 then `G.op ⋙ _` pulls sheaves back to sheaves.
 
-This result is basically https://stacks.math.columbia.edu/tag/00WW.
+This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
 theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
     (hG₂ : CoverPreserving J K G) (ℱ : Sheaf K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) := by
@@ -203,7 +203,7 @@ theorem pullback_is_sheaf_of_cover_preserving {G : C ⥤ D} (hG₁ : CompatibleP
     refine' H.is_separated_for _ y _ _ (H.is_amalgamation (hx.functor_pushforward hG₁ (sheaf_over ℱ X)))
     rintro V f ⟨Z, f', g', h, rfl⟩
     erw [family_of_elements.comp_of_compatible (S.functor_pushforward G) hx' (image_mem_functor_pushforward G S h) g']
-    dsimp
+    dsimp'
     simp [hG₁.apply_map (sheaf_over ℱ X) hx h, ← hy f' h]
     
 

@@ -133,7 +133,7 @@ theorem Biprod.of_components_comp {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : C} (f₁₁ :
       Biprod.ofComponents (f₁₁ ≫ g₁₁ + f₁₂ ≫ g₂₁) (f₁₁ ≫ g₁₂ + f₁₂ ≫ g₂₂) (f₂₁ ≫ g₁₁ + f₂₂ ≫ g₂₁)
         (f₂₁ ≫ g₁₂ + f₂₂ ≫ g₂₂) :=
   by
-  dsimp [biprod.of_components]
+  dsimp' [biprod.of_components]
   apply biprod.hom_ext <;>
     apply biprod.hom_ext' <;>
       simp only [add_comp, comp_add, add_comp_assoc, add_zeroₓ, zero_addₓ, biprod.inl_fst, biprod.inl_snd,
@@ -225,7 +225,7 @@ theorem Biprod.column_nonzero_of_iso {W X Y Z : C} (f : W ⊞ X ⟶ Y ⊞ Z) [Is
   have h₁ : x = 𝟙 W := by
     simp [x]
   have h₀ : x = 0 := by
-    dsimp [x]
+    dsimp' [x]
     rw [← category.id_comp (inv f), category.assoc, ← biprod.total]
     conv_lhs => slice 2 3rw [comp_add]
     simp only [category.assoc]
@@ -248,7 +248,7 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [Deci
   have h₁ : x = 𝟙 (S s) := by
     simp [x]
   have h₀ : x = 0 := by
-    dsimp [x]
+    dsimp' [x]
     rw [← category.id_comp (inv f), category.assoc, ← biproduct.total]
     simp only [comp_sum_assoc]
     conv_lhs => congr apply_congr skip simp only [reassoc_of z]

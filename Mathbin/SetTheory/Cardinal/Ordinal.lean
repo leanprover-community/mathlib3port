@@ -286,7 +286,7 @@ theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b 
   unbounded_lt_iff.2 fun a =>
     ⟨_,
       ⟨by
-        dsimp
+        dsimp'
         rw [card_ord], (lt_ord_succ_card a).le⟩⟩
 
 theorem eq_aleph'_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) : ∃ a, (aleph' a).ord = o :=
@@ -299,7 +299,7 @@ theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.car
   exact
     ⟨aleph'_is_normal.strict_mono,
       ⟨fun a => by
-        dsimp
+        dsimp'
         rw [card_ord], fun b hb => eq_aleph'_of_eq_card_ord hb⟩⟩
 
 /-- Infinite ordinals that are cardinals are unbounded. -/
@@ -828,7 +828,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
   ext
   constructor
   · rintro ⟨y, h⟩
-    dsimp only  at h
+    dsimp' only  at h
     by_cases' h' : ∃ z : s, g z = y
     · rw [dif_pos h'] at h
       cases Sum.inl.injₓ h
@@ -841,7 +841,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
   · intro h
     have : ∃ z : s, g z = g ⟨x, h⟩ := ⟨⟨x, h⟩, rfl⟩
     use g ⟨x, h⟩
-    dsimp only
+    dsimp' only
     rw [dif_pos this]
     congr
     suffices : Classical.some this = ⟨x, h⟩
@@ -869,7 +869,7 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
   use fun t => coe ⁻¹' t.1
   · rintro ⟨t, ht1, ht2⟩ ⟨t', h1t', h2t'⟩ h
     apply Subtype.eq
-    dsimp only  at h⊢
+    dsimp' only  at h⊢
     refine' (preimage_eq_preimage' _ _).1 h <;> rw [Subtype.range_coe] <;> assumption
     
   rintro ⟨t, h1t, h2t⟩
@@ -1010,7 +1010,7 @@ theorem bit1_eq_self_iff {c : Cardinal} : bit1 c = c ↔ ω ≤ c := by
   · refine' iff_of_false (ne_of_gtₓ _) h
     rcases lt_omega.1 (not_leₓ.1 h) with ⟨n, rfl⟩
     norm_cast
-    dsimp [bit1, bit0]
+    dsimp' [bit1, bit0]
     linarith
     
 

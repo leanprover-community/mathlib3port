@@ -532,7 +532,7 @@ theorem supr_generalized_eigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K 
     let f' : End K ER := f.restrict h_f_ER
     -- The dimension of `ES` is positive
     have h_dim_ES_pos : 0 < finrank K ES := by
-      dsimp only [ES]
+      dsimp' only [ES]
       rw [h_dim]
       apply pos_finrank_generalized_eigenspace_of_has_eigenvalue hμ₀ (Nat.zero_lt_succₓ n)
     -- and the dimensions of `ES` and `ER` add up to `finrank K V`.

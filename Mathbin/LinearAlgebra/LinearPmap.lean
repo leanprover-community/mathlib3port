@@ -100,7 +100,7 @@ theorem domain_mk_span_singleton (x : E) (y : F) (H : ∀ c : R, c • x = 0 →
 @[simp]
 theorem mk_span_singleton_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (c : R) h :
     mkSpanSingleton' x y H ⟨c • x, h⟩ = c • y := by
-  dsimp [mk_span_singleton']
+  dsimp' [mk_span_singleton']
   rw [← sub_eq_zero, ← sub_smul]
   apply H
   simp only [sub_smul, one_smul, sub_eq_zero]
@@ -219,7 +219,7 @@ private theorem sup_aux (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.dom
   set fg := fun z => f ⟨x z, hx z⟩ + g ⟨y z, hy z⟩
   have fg_eq : ∀ x' : f.domain y' : g.domain z' : f.domain⊔g.domain H : (x' : E) + y' = z', fg z' = f x' + g y' := by
     intro x' y' z' H
-    dsimp [fg]
+    dsimp' [fg]
     rw [add_commₓ, ← sub_eq_sub_iff_add_eq_add, eq_comm, ← map_sub, ← map_sub]
     apply h
     simp only [← eq_sub_iff_add_eq] at hxy

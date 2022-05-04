@@ -69,11 +69,11 @@ def whiskeringLeft : (C ⥤ D) ⥤ (D ⥤ E) ⥤ C ⥤ E where
     { app := fun H =>
         { app := fun c => H.map (τ.app c),
           naturality' := fun X Y f => by
-            dsimp
+            dsimp'
             rw [← H.map_comp, ← H.map_comp, ← τ.naturality] },
       naturality' := fun X Y f => by
         ext
-        dsimp
+        dsimp'
         rw [f.naturality] }
 
 /-- Right-composition gives a functor `(D ⥤ E) ⥤ ((C ⥤ D) ⥤ (C ⥤ E))`.
@@ -88,11 +88,11 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E where
     { app := fun F =>
         { app := fun c => τ.app (F.obj c),
           naturality' := fun X Y f => by
-            dsimp
+            dsimp'
             rw [τ.naturality] },
       naturality' := fun X Y f => by
         ext
-        dsimp
+        dsimp'
         rw [← nat_trans.naturality] }
 
 variable {C} {D} {E}
@@ -222,7 +222,7 @@ def associator (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H ≅ F
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom = whiskerRight (rightUnitor F).Hom G := by
   ext
-  dsimp
+  dsimp'
   simp
 
 -- See note [dsimp, simp].
@@ -235,7 +235,7 @@ theorem pentagon :
       (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
   by
   ext
-  dsimp
+  dsimp'
   simp
 
 end Functor

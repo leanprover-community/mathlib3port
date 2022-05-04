@@ -211,7 +211,7 @@ theorem restrict_scalars_one_smul_right' {E : Type _} [NormedGroup E] [NormedSpa
 theorem restrict_scalars_one_smul_right (x : ℂ) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 := by
   ext1 z
-  dsimp
+  dsimp'
   apply mul_comm
 
 /-- The complex-conjugation function from `ℂ` to itself is an isometric linear equivalence. -/

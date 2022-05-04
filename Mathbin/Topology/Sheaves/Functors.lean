@@ -49,7 +49,7 @@ theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Op
 
 theorem map_cocone : HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) := by
   unfold functor.map_cocone cocones.functoriality
-  dsimp
+  dsimp'
   congr
   iterate 2 
     rw [map_diagram]

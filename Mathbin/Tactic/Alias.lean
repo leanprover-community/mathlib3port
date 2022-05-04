@@ -142,7 +142,7 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
       do
       tk "↔" <|> tk "<->"
       let (left, right) ←
-        mcond ((tk "." *> tk ".") >> pure tt <|> pure ff)
+        mcond (tk ".." >> pure tt <|> pure ff)
             (make_left_right old <|> fail "invalid name for automatic name generation")
             (Prod.mk <$> types.ident_ <*> types.ident_)
       alias_iff d (doc left) left `iff.mp

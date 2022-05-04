@@ -301,10 +301,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -1229,7 +1229,7 @@ theorem supr_ge_eq_supr_nat_add {u : ℕ → α} (n : ℕ) : (⨆ i ≥ n, u i) 
   · exact fun i hi =>
       le_Sup
         ⟨i - n, by
-          dsimp only
+          dsimp' only
           rw [tsub_add_cancel_of_le hi]⟩
     
   · exact fun i => le_Sup ⟨i + n, supr_pos (Nat.le_add_leftₓ _ _)⟩
@@ -1281,6 +1281,9 @@ instance Prop.completeLattice : CompleteLattice Prop :=
   { Prop.boundedOrder, Prop.distribLattice with sup := fun s => ∃ a ∈ s, a, le_Sup := fun s a h p => ⟨a, h, p⟩,
     Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p, inf := fun s => ∀ a, a ∈ s → a, Inf_le := fun s a h p => p a h,
     le_Inf := fun s a h p b hb => h b hb p }
+
+noncomputable instance Prop.completeLinearOrder : CompleteLinearOrder Prop :=
+  { Prop.completeLattice, Prop.linearOrder with }
 
 @[simp]
 theorem Sup_Prop_eq {s : Set Prop} : sup s = ∃ p ∈ s, p :=

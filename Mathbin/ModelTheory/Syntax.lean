@@ -3,6 +3,7 @@ Copyright (c) 2021 Aaron Anderson, Jesse Michael Han, Floris van Doorn. All righ
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
+import Mathbin.Data.List.ProdSigma
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.ModelTheory.LanguageMap
 
@@ -23,6 +24,8 @@ This file defines first-order terms, formulas, sentences, and theories in a styl
 * `first_order.language.bounded_formula.cast_le` adds more `fin`-indexed variables.
 * `first_order.language.bounded_formula.lift_at` raises the indexes of the `fin`-indexed variables
 above a particular index.
+* `first_order.language.term.subst` and `first_order.language.bounded_formula.subst` substitute
+variables with given terms.
 * Language maps can act on syntactic objects with functions such as
 `first_order.language.Lhom.on_formula`.
 
@@ -59,11 +62,13 @@ open FirstOrder
 
 open Structure Finₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: var {}
+-- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
-  | var {} : ∀ a : α, term
-  | func {} : ∀ {l : ℕ} f : L.Functions l ts : Finₓ l → term, term
+  | var : ∀ a : α, term
+  | func : ∀ {l : ℕ} f : L.Functions l ts : Finₓ l → term, term
 
 export Term ()
 
@@ -71,7 +76,20 @@ variable {L}
 
 namespace Term
 
-open List
+open Finset
+
+/-- The `finset` of variables used in a given term. -/
+@[simp]
+def varFinsetₓ [DecidableEq α] : L.Term α → Finset α
+  | var i => {i}
+  | func f ts => univ.bUnion fun i => (ts i).varFinset
+
+/-- The `finset` of variables from the left side of a sum used in a given term. -/
+@[simp]
+def varFinsetLeftₓ [DecidableEq α] : L.Term (Sum α β) → Finset α
+  | var (Sum.inl i) => {i}
+  | var (Sum.inr i) => ∅
+  | func f ts => univ.bUnion fun i => (ts i).varFinsetLeft
 
 /-- Relabels a term's variables along a particular function. -/
 @[simp]
@@ -79,8 +97,16 @@ def relabelₓ (g : α → β) : L.Term α → L.Term β
   | var i => var (g i)
   | func f ts => func f fun i => (ts i).relabel
 
-instance inhabitedOfVar [Inhabited α] : Inhabited (L.Term α) :=
-  ⟨var default⟩
+/-- Restricts a term to use only a set of the given variables. -/
+def restrictVarₓ [DecidableEq α] : ∀ t : L.Term α f : t.varFinset → β, L.Term β
+  | var a, f => var (f ⟨a, mem_singleton_self a⟩)
+  | func F ts, f => func F fun i => (ts i).restrictVar (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
+
+/-- Restricts a term to use only a set of the given variables on the left side of a sum. -/
+def restrictVarLeftₓ [DecidableEq α] {γ : Type _} : ∀ t : L.Term (Sum α γ) f : t.varFinsetLeft → β, L.Term (Sum β γ)
+  | var (Sum.inl a), f => var (Sum.inl (f ⟨a, mem_singleton_self a⟩))
+  | var (Sum.inr a), f => var (Sum.inr a)
+  | func F ts, f => func F fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
 
 end Term
 
@@ -104,6 +130,12 @@ instance inhabitedOfConstant [Inhabited L.Constants] : Inhabited (L.Term α) :=
 /-- Raises all of the `fin`-indexed variables of a term greater than or equal to `m` by `n'`. -/
 def liftAt {n : ℕ} (n' m : ℕ) : L.Term (Sum α (Finₓ n)) → L.Term (Sum α (Finₓ (n + n'))) :=
   relabelₓ (Sum.map id fun i => if ↑i < m then Finₓ.castAdd n' i else Finₓ.addNat n' i)
+
+/-- Substitutes the variables in a given term with terms. -/
+@[simp]
+def substₓ : L.Term α → (α → L.Term β) → L.Term β
+  | var a, tf => tf a
+  | func f ts, tf => func f fun i => (ts i).subst tf
 
 end Term
 
@@ -153,10 +185,11 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.Term α ≃ L'.Term α where
 
 variable (L) (α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
-  | falsum {} {n} : bounded_formula n
+  | falsum {n} : bounded_formula n
   | equal {n} (t₁ t₂ : L.Term (Sum α (Finₓ n))) : bounded_formula n
   | rel {n l : ℕ} (R : L.Relations l) (ts : Finₓ l → L.Term (Sum α (Finₓ n))) : bounded_formula n
   | imp {n} (f₁ f₂ : bounded_formula n) : bounded_formula n
@@ -243,6 +276,17 @@ instance : HasSup (L.BoundedFormula α n) :=
 protected def iff (φ ψ : L.BoundedFormula α n) :=
   φ.imp ψ⊓ψ.imp φ
 
+open Finset
+
+/-- The `finset` of variables used in a given formula. -/
+@[simp]
+def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset α
+  | n, falsum => ∅
+  | n, equal t₁ t₂ => t₁.varFinsetLeft ∪ t₂.varFinsetLeft
+  | n, rel R ts => univ.bUnion fun i => (ts i).varFinsetLeft
+  | n, imp f₁ f₂ => f₁.freeVarFinset ∪ f₂.freeVarFinset
+  | n, all f => f.freeVarFinset
+
 /-- Casts `L.bounded_formula α m` as `L.bounded_formula α n`, where `m ≤ n`. -/
 def castLeₓ : ∀ {m n : ℕ} h : m ≤ n, L.BoundedFormula α m → L.BoundedFormula α n
   | m, n, h, falsum => falsum
@@ -274,6 +318,18 @@ def relabelₓ (g : α → Sum β (Finₓ n)) : ∀ {k : ℕ}, L.BoundedFormula 
   | k, imp f₁ f₂ => f₁.relabel.imp f₂.relabel
   | k, all f => f.relabel.all
 
+/-- Restricts a bounded formula to only use a particular set of free variables. -/
+def restrictFreeVarₓ [DecidableEq α] : ∀ {n : ℕ} φ : L.BoundedFormula α n f : φ.freeVarFinset → β, L.BoundedFormula β n
+  | n, falsum, f => falsum
+  | n, equal t₁ t₂, f =>
+    equal (t₁.restrictVarLeft (f ∘ Set.inclusion (subset_union_left _ _)))
+      (t₂.restrictVarLeft (f ∘ Set.inclusion (subset_union_right _ _)))
+  | n, rel R ts, f => rel R fun i => (ts i).restrictVarLeft (f ∘ Set.inclusion (subset_bUnion_of_mem _ (mem_univ i)))
+  | n, imp φ₁ φ₂, f =>
+    (φ₁.restrictFreeVar (f ∘ Set.inclusion (subset_union_left _ _))).imp
+      (φ₂.restrictFreeVar (f ∘ Set.inclusion (subset_union_right _ _)))
+  | n, all φ, f => (φ.restrictFreeVar f).all
+
 /-- Places universal quantifiers on all extra variables of a bounded formula. -/
 def allsₓ : ∀ {n}, L.BoundedFormula α n → L.Formula α
   | 0, φ => φ
@@ -294,6 +350,17 @@ def liftAtₓ : ∀ {n : ℕ} n' m : ℕ, L.BoundedFormula α n → L.BoundedFor
     ((f.liftAt n' m).cast_le
         (by
           rw [add_assocₓ, add_commₓ 1, ← add_assocₓ])).all
+
+/-- Substitutes the variables in a given formula with terms. -/
+@[simp]
+def substₓ : ∀ {n : ℕ}, L.BoundedFormula α n → (α → L.Term β) → L.BoundedFormula β n
+  | n, falsum, tf => falsum
+  | n, equal t₁ t₂, tf =>
+    equal (t₁.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr)))
+      (t₂.subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr)))
+  | n, rel R ts, tf => rel R fun i => (ts i).subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr))
+  | n, imp φ₁ φ₂, tf => (φ₁.subst tf).imp (φ₂.subst tf)
+  | n, all φ, tf => (φ.subst tf).all
 
 variable {l : ℕ} {φ ψ : L.BoundedFormula α l} {θ : L.BoundedFormula α l.succ}
 
@@ -642,19 +709,25 @@ protected def total : L.Sentence :=
 
 end Relations
 
-section Nonempty
+section Cardinality
 
 variable (L)
 
-/-- A sentence that indicates a structure is nonempty. -/
-protected def Sentence.nonempty : L.Sentence :=
-  ∃'(&0 =' &0)
+/-- A sentence indicating that a structure has `n` distinct elements. -/
+protected def Sentence.cardGe n : L.Sentence :=
+  (((((List.finRange n).product (List.finRange n)).filter fun ij : _ × _ => ij.1 ≠ ij.2).map fun ij : _ × _ =>
+          ∼((&ij.1).bdEqual &ij.2)).foldr
+      (·⊓·) ⊤).exs
+
+/-- A theory indicating that a structure is infinite. -/
+def InfiniteTheory : L.Theory :=
+  Set.Range (Sentence.cardGe L)
 
 /-- A theory that indicates a structure is nonempty. -/
-protected def Theory.Nonempty : L.Theory :=
-  {Sentence.nonempty L}
+def NonemptyTheory : L.Theory :=
+  {Sentence.cardGe L 1}
 
-end Nonempty
+end Cardinality
 
 end Language
 

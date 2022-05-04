@@ -41,15 +41,15 @@ theorem zero_bot (n : ℕ) : ico 0 n = range n := by
 
 @[simp]
 theorem length (n m : ℕ) : length (ico n m) = m - n := by
-  dsimp [Ico]
+  dsimp' [Ico]
   simp only [length_range']
 
 theorem pairwise_lt (n m : ℕ) : Pairwiseₓ (· < ·) (ico n m) := by
-  dsimp [Ico]
+  dsimp' [Ico]
   simp only [pairwise_lt_range']
 
 theorem nodup (n m : ℕ) : Nodupₓ (ico n m) := by
-  dsimp [Ico]
+  dsimp' [Ico]
   simp only [nodup_range']
 
 @[simp]
@@ -108,7 +108,7 @@ theorem bag_inter_consecutive (n m l : ℕ) : List.bagInterₓ (ico n m) (ico m 
 
 @[simp]
 theorem succ_singleton {n : ℕ} : ico n (n + 1) = [n] := by
-  dsimp [Ico]
+  dsimp' [Ico]
   simp [add_tsub_cancel_left]
 
 theorem succ_top {n m : ℕ} (h : n ≤ m) : ico n (m + 1) = ico n m ++ [m] := by
@@ -121,7 +121,7 @@ theorem eq_cons {n m : ℕ} (h : n < m) : ico n m = n :: ico (n + 1) m := by
 
 @[simp]
 theorem pred_singleton {m : ℕ} (h : 0 < m) : ico (m - 1) m = [m - 1] := by
-  dsimp [Ico]
+  dsimp' [Ico]
   rw [tsub_tsub_cancel_of_le (succ_le_of_lt h)]
   simp
 

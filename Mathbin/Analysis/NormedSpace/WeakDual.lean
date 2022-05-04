@@ -88,7 +88,7 @@ open NormedSpace
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 /-- For normed spaces `E`, there is a canonical map `dual 𝕜 E → weak_dual 𝕜 E` (the "identity"
 mapping). It is a linear equivalence. -/

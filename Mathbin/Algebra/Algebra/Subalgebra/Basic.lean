@@ -869,6 +869,9 @@ theorem inclusion_self {S : Subalgebra R A} : inclusion (le_reflₓ S) = AlgHom.
   AlgHom.ext fun x => Subtype.ext rfl
 
 @[simp]
+theorem inclusion_mk {S T : Subalgebra R A} (h : S ≤ T) (x : A) (hx : x ∈ S) : inclusion h ⟨x, hx⟩ = ⟨x, h hx⟩ :=
+  rfl
+
 theorem inclusion_right {S T : Subalgebra R A} (h : S ≤ T) (x : T) (m : (x : A) ∈ S) : inclusion h ⟨x, m⟩ = x :=
   Subtype.ext rfl
 

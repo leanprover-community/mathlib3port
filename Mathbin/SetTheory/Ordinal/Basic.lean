@@ -750,6 +750,17 @@ theorem typein_enum (r : α → α → Prop) [IsWellOrder α r] {o} (h : o < typ
   let ⟨a, e⟩ := typein_surj r h
   clear _let_match <;> subst e <;> rw [enum_typein]
 
+/-- The equivalence between ordinals less than `o` and `o.out.α`. -/
+@[simps]
+noncomputable def outEquivLt (o : Ordinal) : { o' : Ordinal // o' < o } ≃ o.out.α where
+  toFun := fun ⟨o', h⟩ =>
+    enum (· < ·) o'
+      (by
+        rwa [type_lt])
+  invFun := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
+  left_inv := fun ⟨o', h⟩ => Subtype.ext_val (typein_enum _ _)
+  right_inv := fun h => enum_typein _ _
+
 /-- A well order `r` is order isomorphic to the set of ordinals strictly smaller than the
 ordinal version of `r`. -/
 def typeinIso (r : α → α → Prop) [IsWellOrder α r] : r ≃r Subrel (· < ·) (· < type r) :=

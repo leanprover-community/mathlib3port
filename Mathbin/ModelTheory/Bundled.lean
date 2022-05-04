@@ -97,6 +97,14 @@ noncomputable def shrink (M : ModelCat.{u, v, w} T) [Small.{w'} M] : ModelCat.{u
 def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
   equivInduced (Equivₓ.ulift.symm : M ≃ _)
 
+/-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
+@[simps]
+def reduct {L' : Language} {φ : L →ᴸ L'} (M : (φ.OnTheory T).Model) : T.Model where
+  Carrier := M
+  struc := φ.reduct M
+  nonempty' := M.nonempty'
+  is_model := (@Lhom.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
+
 end Model
 
 variable {T}

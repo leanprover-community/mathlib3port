@@ -503,7 +503,7 @@ theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} : l₁ ++ a :: r�
     rw [← e₁]
     simp
     
-  · cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp  at e₁ e₂ <;> injections <;> subst x
+  · cases' l₁ with y l₁ <;> cases' l₂ with z l₂ <;> dsimp'  at e₁ e₂ <;> injections <;> subst x
     · substs t₁ t₂
       exact p
       
@@ -518,7 +518,7 @@ theorem perm_inv_core {a : α} {l₁ l₂ r₁ r₂ : List α} : l₁ ++ a :: r�
       
     
   · rcases l₁ with (_ | ⟨y, _ | ⟨z, l₁⟩⟩) <;>
-      rcases l₂ with (_ | ⟨u, _ | ⟨v, l₂⟩⟩) <;> dsimp  at e₁ e₂ <;> injections <;> substs x y
+      rcases l₂ with (_ | ⟨u, _ | ⟨v, l₂⟩⟩) <;> dsimp'  at e₁ e₂ <;> injections <;> substs x y
     · substs r₁ r₂
       exact p.cons a
       
@@ -1184,7 +1184,7 @@ theorem Perm.drop_inter {α} [DecidableEq α] {xs ys : List α} (n : ℕ) (h : x
   by_cases' h'' : n ≤ xs.length
   · let n' := xs.length - n
     have h₀ : n = xs.length - n' := by
-      dsimp [n']
+      dsimp' [n']
       rwa [tsub_tsub_cancel_of_le]
     have h₁ : n' ≤ xs.length := by
       apply tsub_le_self

@@ -130,12 +130,13 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   hlast : ∀, ∀ i < last N, ∀, r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ * r i
   inter : ∀, ∀ i < last N, ∀, dist (c i) (c (last N)) ≤ r i + r (last N)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] []
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
 finite-dimensional real vector spaces. -/
 class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
-  no_satellite_config {} : ∃ (N : ℕ)(τ : ℝ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ)
+  no_satellite_config : ∃ (N : ℕ)(τ : ℝ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ)
 
 /-- There is always a satellite configuration with a single point. -/
 instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
@@ -435,17 +436,17 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ} (hN : IsEmpty
         intro a ha
         have I : (a : ℕ) < N := ha
         have : G a < G (Finₓ.last N) := by
-          dsimp [G]
+          dsimp' [G]
           simp [I.ne, (hg a I).1]
         exact Gab _ _ this,
       inter := by
         intro a ha
         have I : (a : ℕ) < N := ha
         have J : G (Finₓ.last N) = i := by
-          dsimp [G]
+          dsimp' [G]
           simp only [if_true, eq_self_iff_true]
         have K : G a = g a := by
-          dsimp [G]
+          dsimp' [G]
           simp [I.ne, (hg a I).1]
         convert dist_le_add_of_nonempty_closed_ball_inter_closed_ball (hg _ I).2.1 }
   -- this is a contradiction

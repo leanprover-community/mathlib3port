@@ -71,7 +71,7 @@ theorem sheafification_whisker_left_iso_hom_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E
     [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (sheafificationWhiskerLeftIso J P).Hom.app F = (J.sheafifyCompIso F P).Hom := by
-  dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
+  dsimp' [sheafification_whisker_left_iso, sheafify_comp_iso]
   rw [category.comp_id]
 
 @[simp]
@@ -79,7 +79,7 @@ theorem sheafification_whisker_left_iso_inv_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E
     [∀ F : D ⥤ E X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
     [∀ F : D ⥤ E X : C W : J.cover X P : Cᵒᵖ ⥤ D, PreservesLimit (W.index P).multicospan F] :
     (sheafificationWhiskerLeftIso J P).inv.app F = (J.sheafifyCompIso F P).inv := by
-  dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
+  dsimp' [sheafification_whisker_left_iso, sheafify_comp_iso]
   erw [category.id_comp]
 
 /-- The isomorphism between the sheafification of `P` composed with `F` and
@@ -95,21 +95,21 @@ def sheafificationWhiskerRightIso :
 @[simp]
 theorem sheafification_whisker_right_iso_hom_app :
     (J.sheafificationWhiskerRightIso F).Hom.app P = (J.sheafifyCompIso F P).Hom := by
-  dsimp [sheafification_whisker_right_iso, sheafify_comp_iso]
+  dsimp' [sheafification_whisker_right_iso, sheafify_comp_iso]
   simp only [category.id_comp, category.comp_id]
   erw [category.id_comp]
 
 @[simp]
 theorem sheafification_whisker_right_iso_inv_app :
     (J.sheafificationWhiskerRightIso F).inv.app P = (J.sheafifyCompIso F P).inv := by
-  dsimp [sheafification_whisker_right_iso, sheafify_comp_iso]
+  dsimp' [sheafification_whisker_right_iso, sheafify_comp_iso]
   simp only [category.id_comp, category.comp_id]
   erw [category.id_comp]
 
 @[simp, reassoc]
 theorem whisker_right_to_sheafify_sheafify_comp_iso_hom :
     whiskerRight (J.toSheafify _) _ ≫ (J.sheafifyCompIso F P).Hom = J.toSheafify _ := by
-  dsimp [sheafify_comp_iso]
+  dsimp' [sheafify_comp_iso]
   erw [whisker_right_comp, category.assoc]
   slice_lhs 2 3 => rw [plus_comp_iso_whisker_right]
   rw [category.assoc, ← J.plus_map_comp, whisker_right_to_plus_comp_plus_comp_iso_hom, ← category.assoc,

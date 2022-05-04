@@ -29,7 +29,7 @@ theorem zip_with_to_list (x : Vector α n) (y : Vector β n) :
 
 @[simp]
 theorem zip_with_nth (x : Vector α n) (y : Vector β n) i : (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) := by
-  dsimp only [Vector.zipWith, Vector.nth]
+  dsimp' only [Vector.zipWith, Vector.nth]
   cases x
   cases y
   simp only [List.nth_le_zip_with, Subtype.coe_mk]

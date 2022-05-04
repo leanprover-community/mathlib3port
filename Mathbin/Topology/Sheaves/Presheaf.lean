@@ -80,7 +80,7 @@ theorem pushforward_eq_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ 
     (pushforwardEq h ℱ).Hom.app U =
       ℱ.map
         (by
-          dsimp [functor.op]
+          dsimp' [functor.op]
           apply Quiver.Hom.op
           apply eq_to_hom
           rw [h]) :=
@@ -99,7 +99,7 @@ theorem pushforward_eq'_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ
 @[simp]
 theorem pushforward_eq_rfl {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) U :
     (pushforwardEq (rfl : f = f) ℱ).Hom.app (op U) = 𝟙 _ := by
-  dsimp [pushforward_eq]
+  dsimp' [pushforward_eq]
   simp
 
 theorem pushforward_eq_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (ℱ : X.Presheaf C) :
@@ -122,7 +122,7 @@ theorem id_eq : 𝟙 X _* ℱ = ℱ := by
 
 @[simp]
 theorem id_hom_app' U p : (id ℱ).Hom.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
-  dsimp [id]
+  dsimp' [id]
   simp
 
 attribute [local tidy] tactic.op_induction'
@@ -133,7 +133,7 @@ theorem id_hom_app U : (id ℱ).Hom.app U = ℱ.map (eqToHom (Opens.op_map_id_ob
 
 @[simp]
 theorem id_inv_app' U p : (id ℱ).inv.app (op ⟨U, p⟩) = ℱ.map (𝟙 (op ⟨U, p⟩)) := by
-  dsimp [id]
+  dsimp' [id]
   simp
 
 /-- The natural isomorphism between
@@ -147,12 +147,12 @@ theorem comp_eq {Y Z : Top.{v}} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g) _* ℱ =
 
 @[simp]
 theorem comp_hom_app {Y Z : Top.{v}} (f : X ⟶ Y) (g : Y ⟶ Z) U : (comp ℱ f g).Hom.app U = 𝟙 _ := by
-  dsimp [comp]
+  dsimp' [comp]
   tidy
 
 @[simp]
 theorem comp_inv_app {Y Z : Top.{v}} (f : X ⟶ Y) (g : Y ⟶ Z) U : (comp ℱ f g).inv.app U = 𝟙 _ := by
-  dsimp [comp]
+  dsimp' [comp]
   tidy
 
 end Pushforward
@@ -226,7 +226,7 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
     erw [colimit.pre_desc_assoc]
     erw [colimit.ι_desc_assoc]
     erw [colimit.ι_desc_assoc]
-    dsimp
+    dsimp'
     simp only [← ℱ.map_comp]
     congr
 
@@ -240,9 +240,9 @@ theorem id_inv_app (U : Opens Y) :
             (by
               simp ))) :=
   by
-  dsimp [id]
+  dsimp' [id]
   simp [-eq_to_hom_map, -eq_to_iso_map]
-  dsimp [colimit_of_diagram_terminal]
+  dsimp' [colimit_of_diagram_terminal]
   delta' Lan.diagram
   refine' Eq.trans _ (category.id_comp _)
   rw [← ℱ.map_id]

@@ -2217,7 +2217,7 @@ theorem log_zero (b : Ordinal) : log b 0 = 0 :=
   if b1 : 1 < b then by
     rw [log_def b1, ← Ordinal.le_zero, pred_le]
     apply cInf_le'
-    dsimp
+    dsimp'
     rw [succ_zero, opow_one]
     exact zero_lt_one.trans b1
   else by
@@ -2518,7 +2518,7 @@ theorem nat_cast_div {m n : ℕ} : ((m / n : ℕ) : Ordinal) = m / n :=
 
 @[simp]
 theorem nat_cast_mod {m n : ℕ} : ((m % n : ℕ) : Ordinal) = m % n := by
-  rw [← add_left_cancelₓ (n * (m / n)), div_add_mod, ← nat_cast_div, ← nat_cast_mul, ← Nat.cast_addₓ, Nat.div_add_mod]
+  rw [← add_left_cancelₓ (n * (m / n)), div_add_mod, ← nat_cast_div, ← nat_cast_mul, ← Nat.cast_addₓ, Nat.div_add_modₓ]
 
 @[simp]
 theorem nat_le_card {o} {n : ℕ} : (n : Cardinal) ≤ card o ↔ (n : Ordinal) ≤ o :=

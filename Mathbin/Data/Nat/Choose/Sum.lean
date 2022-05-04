@@ -39,15 +39,15 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
   let t : ℕ → ℕ → R := fun n m => x ^ m * y ^ (n - m) * choose n m
   change (x + y) ^ n = ∑ m in range (n + 1), t n m
   have h_first : ∀ n, t n 0 = y ^ n := fun n => by
-    dsimp [t]
+    dsimp' [t]
     rw [choose_zero_right, pow_zeroₓ, Nat.cast_oneₓ, mul_oneₓ, one_mulₓ]
   have h_last : ∀ n, t n n.succ = 0 := fun n => by
-    dsimp [t]
+    dsimp' [t]
     rw [choose_succ_self, Nat.cast_zeroₓ, mul_zero]
   have h_middle : ∀ n i : ℕ, i ∈ range n.succ → (t n.succ ∘ Nat.succ) i = x * t n i + y * t n i.succ := by
     intro n i h_mem
     have h_le : i ≤ n := Nat.le_of_lt_succₓ (mem_range.mp h_mem)
-    dsimp [t]
+    dsimp' [t]
     rw [choose_succ_succ, Nat.cast_addₓ, mul_addₓ]
     congr 1
     · rw [pow_succₓ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
@@ -62,7 +62,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
       
   induction' n with n ih
   · rw [pow_zeroₓ, sum_range_succ, range_zero, sum_empty, zero_addₓ]
-    dsimp [t]
+    dsimp' [t]
     rw [pow_zeroₓ, pow_zeroₓ, choose_self, Nat.cast_oneₓ, mul_oneₓ, mul_oneₓ]
     
   · rw [sum_range_succ', h_first]

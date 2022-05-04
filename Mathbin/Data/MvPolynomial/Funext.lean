@@ -50,7 +50,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
     · infer_instance
       
     intro x
-    dsimp [e]
+    dsimp' [e]
     rw [fin_succ_equiv_apply]
     calc _ = eval _ p := _ _ = 0 := h _
     · intro i

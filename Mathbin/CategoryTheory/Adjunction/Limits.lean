@@ -82,7 +82,7 @@ def functorialityIsLeftAdjoint : IsLeftAdjoint (Cocones.functoriality K F) where
 
 /-- A left adjoint preserves colimits.
 
-See https://stacks.math.columbia.edu/tag/0038.
+See <https://stacks.math.columbia.edu/tag/0038>.
 -/
 def leftAdjointPreservesColimits : PreservesColimitsOfSize.{v, u} F where
   PreservesColimitsOfShape := fun J 𝒥 =>
@@ -176,7 +176,7 @@ def functorialityIsRightAdjoint : IsRightAdjoint (Cones.functoriality K G) where
 
 /-- A right adjoint preserves limits.
 
-See https://stacks.math.columbia.edu/tag/0038.
+See <https://stacks.math.columbia.edu/tag/0038>.
 -/
 def rightAdjointPreservesLimits : PreservesLimitsOfSize.{v, u} G where
   PreservesLimitsOfShape := fun J 𝒥 =>
@@ -238,7 +238,7 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
   app := fun j => (adj.homEquiv (K.obj j) Y) (t.app j)
   naturality' := fun j j' f => by
     erw [← adj.hom_equiv_naturality_left, t.naturality]
-    dsimp
+    dsimp'
     simp
 
 /-- auxiliary construction for `cocones_iso` -/
@@ -248,7 +248,7 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
   app := fun j => (adj.homEquiv (K.obj j) Y).symm (t.app j)
   naturality' := fun j j' f => by
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
-    dsimp
+    dsimp'
     simp
 
 /-- auxiliary construction for `cones_iso` -/

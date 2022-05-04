@@ -124,7 +124,7 @@ theorem a_add_one_le_four_pow_parts_card : a + 1 ≤ 4 ^ P.parts.card := by
         norm_num)
       _
   rw [step_bound, ← Nat.div_div_eq_div_mulₓ, Nat.add_le_to_le_subₓ _ h, tsub_le_iff_left, ← Nat.add_sub_assocₓ h]
-  exact Nat.le_pred_of_lt (Nat.lt_div_mul_add h)
+  exact Nat.le_pred_of_ltₓ (Nat.lt_div_mul_add h)
 
 theorem card_aux₁ (hucard : u.card = m * 4 ^ P.parts.card + a) : (4 ^ P.parts.card - a) * m + a * (m + 1) = u.card := by
   rw [hucard, mul_addₓ, mul_oneₓ, ← add_assocₓ, ← add_mulₓ,

@@ -80,6 +80,16 @@ theorem mul_support_eq_empty_iff {f : α → M} : MulSupport f = ∅ ↔ f = 1 :
 theorem mul_support_nonempty_iff {f : α → M} : (MulSupport f).Nonempty ↔ f ≠ 1 := by
   rw [← ne_empty_iff_nonempty, Ne.def, mul_support_eq_empty_iff]
 
+@[to_additive]
+theorem range_subset_insert_image_mul_support (f : α → M) : Range f ⊆ insert 1 (f '' MulSupport f) := by
+  intro y hy
+  rcases eq_or_ne y 1 with (rfl | h2y)
+  · exact mem_insert _ _
+    
+  · obtain ⟨x, rfl⟩ := hy
+    refine' mem_insert_of_mem _ ⟨x, h2y, rfl⟩
+    
+
 @[simp, to_additive]
 theorem mul_support_one' : MulSupport (1 : α → M) = ∅ :=
   mul_support_eq_empty_iff.2 rfl

@@ -15,7 +15,7 @@ import Mathbin.Algebra.Category.CommRing.Limits
 We introduce the category of ringed spaces, as an alias for `SheafedSpace CommRing`.
 
 The facts collected in this file are typically stated for locally ringed spaces, but never actually
-make use of the locality of stalks. See for instance https://stacks.math.columbia.edu/tag/01HZ.
+make use of the locality of stalks. See for instance <https://stacks.math.columbia.edu/tag/01HZ>.
 
 -/
 
@@ -186,7 +186,7 @@ theorem basic_open_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X
 theorem basic_open_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
     X.basicOpen (f * g) = X.basicOpen f⊓X.basicOpen g := by
   ext1
-  dsimp [RingedSpace.basic_open]
+  dsimp' [RingedSpace.basic_open]
   rw [Set.image_inter Subtype.coe_injective]
   congr
   ext

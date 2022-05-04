@@ -63,7 +63,7 @@ instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap
   apply is_reflexive_pair.mk' _ _ _
   apply (free T).map (T.η.app X.A)
   · ext
-    dsimp
+    dsimp'
     rw [← functor.map_comp, X.unit, Functor.map_id]
     
   · ext
@@ -85,7 +85,7 @@ def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
     have h₁ : (T : C ⥤ C).map X.a ≫ s.π.f = T.μ.app X.A ≫ s.π.f := congr_argₓ monad.algebra.hom.f s.condition
     have h₂ : (T : C ⥤ C).map s.π.f ≫ s.X.a = T.μ.app X.A ≫ s.π.f := s.π.h
     refine' ⟨⟨T.η.app _ ≫ s.π.f, _⟩, _, _⟩
-    · dsimp
+    · dsimp'
       rw [functor.map_comp, category.assoc, h₂, monad.right_unit_assoc,
         show X.a ≫ _ ≫ _ = _ from T.η.naturality_assoc _ _, h₁, monad.left_unit_assoc]
       
@@ -94,7 +94,7 @@ def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
       
     · intro m hm
       ext
-      dsimp only
+      dsimp' only
       rw [← hm]
       apply (X.unit_assoc _).symm
       

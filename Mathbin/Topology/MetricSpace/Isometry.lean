@@ -262,7 +262,7 @@ theorem ediam_image (h : α ≃ᵢ β) (s : Set α) : Emetric.diam (h '' s) = Em
 
 theorem to_equiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.toEquiv → h₁ = h₂
   | ⟨e₁, h₁⟩, ⟨e₂, h₂⟩, H => by
-    dsimp  at H
+    dsimp'  at H
     subst e₁
 
 @[ext]

@@ -139,7 +139,7 @@ theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C) 
 theorem image_to_kernel_is_iso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) : IsIso (imageToKernel f g (comp_eq_zero_of_image_eq_kernel f g p)) := by
   refine' ⟨⟨subobject.of_le _ _ p.ge, _⟩⟩
-  dsimp [imageToKernel]
+  dsimp' [imageToKernel]
   simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
 

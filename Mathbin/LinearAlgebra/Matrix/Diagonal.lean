@@ -72,7 +72,7 @@ theorem ker_diagonal_to_lin' [DecidableEq m] (w : m → K) :
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonalₓ w).toLin'.range = ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range := by
-  dsimp only [mem_set_of_eq]
+  dsimp' only [mem_set_of_eq]
   rw [← map_top, ← supr_range_std_basis, map_supr]
   congr
   funext i

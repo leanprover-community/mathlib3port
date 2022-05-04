@@ -32,8 +32,32 @@ theorem le_min_iff : c ≤ min a b ↔ c ≤ a ∧ c ≤ b :=
   le_inf_iff
 
 @[simp]
+theorem le_max_iff : a ≤ max b c ↔ a ≤ b ∨ a ≤ c :=
+  le_sup_iff
+
+@[simp]
+theorem min_le_iff : min a b ≤ c ↔ a ≤ c ∨ b ≤ c :=
+  inf_le_iff
+
+@[simp]
 theorem max_le_iff : max a b ≤ c ↔ a ≤ c ∧ b ≤ c :=
   sup_le_iff
+
+@[simp]
+theorem lt_min_iff : a < min b c ↔ a < b ∧ a < c :=
+  lt_inf_iff
+
+@[simp]
+theorem lt_max_iff : a < max b c ↔ a < b ∨ a < c :=
+  lt_sup_iff
+
+@[simp]
+theorem min_lt_iff : min a b < c ↔ a < c ∨ b < c :=
+  inf_lt_iff
+
+@[simp]
+theorem max_lt_iff : max a b < c ↔ a < c ∧ b < c :=
+  sup_lt_iff
 
 theorem max_le_max : a ≤ c → b ≤ d → max a b ≤ max c d :=
   sup_le_sup
@@ -128,6 +152,19 @@ theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := 
 theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
   @min_eq_iff (OrderDual α) _ a b c
 
+theorem min_lt_min_left_iff : min a c < min b c ↔ a < b ∧ a < c := by
+  simp_rw [lt_min_iff, min_lt_iff, or_iff_left (lt_irreflₓ _)]
+  exact and_congr_left fun h => or_iff_left_of_imp h.trans
+
+theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by
+  simp_rw [min_commₓ a, min_lt_min_left_iff]
+
+theorem max_lt_max_left_iff : max a c < max b c ↔ a < b ∧ c < b :=
+  @min_lt_min_left_iff (OrderDual α) _ _ _ _
+
+theorem max_lt_max_right_iff : max a b < max a c ↔ b < c ∧ a < c :=
+  @min_lt_min_right_iff (OrderDual α) _ _ _ _
+
 /-- An instance asserting that `max a a = a` -/
 instance max_idem : IsIdempotent α max := by
   infer_instance
@@ -138,30 +175,6 @@ instance min_idem : IsIdempotent α min := by
   infer_instance
 
 -- short-circuit type class inference
-@[simp]
-theorem max_lt_iff : max a b < c ↔ a < c ∧ b < c :=
-  sup_lt_iff
-
-@[simp]
-theorem lt_min_iff : a < min b c ↔ a < b ∧ a < c :=
-  lt_inf_iff
-
-@[simp]
-theorem lt_max_iff : a < max b c ↔ a < b ∨ a < c :=
-  lt_sup_iff
-
-@[simp]
-theorem min_lt_iff : min a b < c ↔ a < c ∨ b < c :=
-  @lt_max_iff (OrderDual α) _ _ _ _
-
-@[simp]
-theorem min_le_iff : min a b ≤ c ↔ a ≤ c ∨ b ≤ c :=
-  inf_le_iff
-
-@[simp]
-theorem le_max_iff : a ≤ max b c ↔ a ≤ b ∨ a ≤ c :=
-  @min_le_iff (OrderDual α) _ _ _ _
-
 theorem min_lt_max : min a b < max a b ↔ a ≠ b :=
   inf_lt_sup
 

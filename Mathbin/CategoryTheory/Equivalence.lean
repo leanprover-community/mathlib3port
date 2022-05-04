@@ -74,7 +74,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
   complicated if we write it as an equality of natural transformations, because then we would have
   to insert natural transformations like `F ⟶ F1`.
 
-See https://stacks.math.columbia.edu/tag/001J
+See <https://stacks.math.columbia.edu/tag/001J>
 -/
 structure Equivalence (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Category.{v₂} D] where mk' ::
   Functor : C ⥤ D
@@ -223,24 +223,24 @@ def adjointifyη : 𝟭 C ≅ F ⋙ G :=
     
 
 theorem adjointify_η_ε (X : C) : F.map ((adjointifyη η ε).Hom.app X) ≫ ε.Hom.app (F.obj X) = 𝟙 (F.obj X) := by
-  dsimp [adjointify_η]
+  dsimp' [adjointify_η]
   simp
   have := ε.hom.naturality (F.map (η.inv.app X))
-  dsimp  at this
+  dsimp'  at this
   rw [this]
   clear this
   rw [← assoc _ _ (F.map _)]
   have := ε.hom.naturality (ε.inv.app <| F.obj X)
-  dsimp  at this
+  dsimp'  at this
   rw [this]
   clear this
   have := (ε.app <| F.obj X).hom_inv_id
-  dsimp  at this
+  dsimp'  at this
   rw [this]
   clear this
   rw [id_comp]
   have := (F.map_iso <| η.app X).hom_inv_id
-  dsimp  at this
+  dsimp'  at this
   rw [this]
 
 end
@@ -281,7 +281,7 @@ def trans (e : C ≌ D) (f : D ≌ E) : C ≌ E where
   -- but we choose to avoid using that here, for the sake of good structure projection `simp`
   -- lemmas.
   functor_unit_iso_comp' := fun X => by
-    dsimp
+    dsimp'
     rw [← f.functor.map_comp_assoc, e.functor.map_comp, ← counit_inv_app_functor, fun_inv_map, iso.inv_hom_id_app_assoc,
       assoc, iso.inv_hom_id_app, counit_app_functor, ← functor.map_comp]
     erw [comp_id, iso.hom_inv_id_app, Functor.map_id]
@@ -294,13 +294,13 @@ def funInvIdAssoc (e : C ≌ D) (F : C ⥤ E) : e.Functor ⋙ e.inverse ⋙ F �
 @[simp]
 theorem fun_inv_id_assoc_hom_app (e : C ≌ D) (F : C ⥤ E) (X : C) :
     (funInvIdAssoc e F).Hom.app X = F.map (e.unitInv.app X) := by
-  dsimp [fun_inv_id_assoc]
+  dsimp' [fun_inv_id_assoc]
   tidy
 
 @[simp]
 theorem fun_inv_id_assoc_inv_app (e : C ≌ D) (F : C ⥤ E) (X : C) :
     (funInvIdAssoc e F).inv.app X = F.map (e.Unit.app X) := by
-  dsimp [fun_inv_id_assoc]
+  dsimp' [fun_inv_id_assoc]
   tidy
 
 /-- Composing a functor with both functors of an equivalence yields a naturally isomorphic
@@ -311,13 +311,13 @@ def invFunIdAssoc (e : C ≌ D) (F : D ⥤ E) : e.inverse ⋙ e.Functor ⋙ F �
 @[simp]
 theorem inv_fun_id_assoc_hom_app (e : C ≌ D) (F : D ⥤ E) (X : D) :
     (invFunIdAssoc e F).Hom.app X = F.map (e.counit.app X) := by
-  dsimp [inv_fun_id_assoc]
+  dsimp' [inv_fun_id_assoc]
   tidy
 
 @[simp]
 theorem inv_fun_id_assoc_inv_app (e : C ≌ D) (F : D ⥤ E) (X : D) :
     (invFunIdAssoc e F).inv.app X = F.map (e.counitInv.app X) := by
-  dsimp [inv_fun_id_assoc]
+  dsimp' [inv_fun_id_assoc]
   tidy
 
 /-- If `C` is equivalent to `D`, then `C ⥤ E` is equivalent to `D ⥤ E`. -/
@@ -548,7 +548,7 @@ def ofIso {F G : C ⥤ D} (e : F ≅ G) (hF : IsEquivalence F) : IsEquivalence G
   unitIso := hF.unitIso ≪≫ NatIso.hcomp e (Iso.refl hF.inverse)
   counitIso := NatIso.hcomp (Iso.refl hF.inverse) e.symm ≪≫ hF.counitIso
   functor_unit_iso_comp' := fun X => by
-    dsimp [nat_iso.hcomp]
+    dsimp' [nat_iso.hcomp]
     erw [id_comp, F.map_id, comp_id]
     apply (cancel_epi (e.hom.app X)).mp
     slice_lhs 1 2 => rw [← e.hom.naturality]
@@ -561,8 +561,8 @@ def ofIso {F G : C ⥤ D} (e : F ≅ G) (hF : IsEquivalence F) : IsEquivalence G
 /-- Compatibility of `of_iso` with the composition of isomorphisms of functors -/
 theorem of_iso_trans {F G H : C ⥤ D} (e : F ≅ G) (e' : G ≅ H) (hF : IsEquivalence F) :
     ofIso e' (ofIso e hF) = ofIso (e ≪≫ e') hF := by
-  dsimp [of_iso]
-  congr 1 <;> ext X <;> dsimp [nat_iso.hcomp]
+  dsimp' [of_iso]
+  congr 1 <;> ext X <;> dsimp' [nat_iso.hcomp]
   · simp only [id_comp, assoc, functor.map_comp]
     
   · simp only [Functor.map_id, comp_id, id_comp, assoc]
@@ -571,8 +571,8 @@ theorem of_iso_trans {F G H : C ⥤ D} (e : F ≅ G) (e' : G ≅ H) (hF : IsEqui
 /-- Compatibility of `of_iso` with identity isomorphisms of functors -/
 theorem of_iso_refl (F : C ⥤ D) (hF : IsEquivalence F) : ofIso (Iso.refl F) hF = hF := by
   rcases hF with ⟨Finv, Funit, Fcounit, Fcomp⟩
-  dsimp [of_iso]
-  congr 1 <;> ext X <;> dsimp [nat_iso.hcomp]
+  dsimp' [of_iso]
+  congr 1 <;> ext X <;> dsimp' [nat_iso.hcomp]
   · simp only [comp_id, map_id]
     
   · simp only [id_comp, map_id]
@@ -608,14 +608,14 @@ namespace Equivalenceₓ
 
 /-- An equivalence is essentially surjective.
 
-See https://stacks.math.columbia.edu/tag/02C3.
+See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 theorem ess_surj_of_equivalence (F : C ⥤ D) [IsEquivalence F] : EssSurj F :=
   ⟨fun Y => ⟨F.inv.obj Y, ⟨F.asEquivalence.counitIso.app Y⟩⟩⟩
 
 /-- An equivalence is faithful.
 
-See https://stacks.math.columbia.edu/tag/02C3.
+See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 -- see Note [lower instance priority]
 instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence F] : Faithful F where
@@ -625,7 +625,7 @@ instance (priority := 100) faithful_of_equivalence (F : C ⥤ D) [IsEquivalence 
 
 /-- An equivalence is full.
 
-See https://stacks.math.columbia.edu/tag/02C3.
+See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 -- see Note [lower instance priority]
 instance (priority := 100) fullOfEquivalence (F : C ⥤ D) [IsEquivalence F] : Full F where
@@ -646,7 +646,7 @@ private noncomputable def equivalence_inverse (F : C ⥤ D) [Full F] [Faithful F
 
 /-- A functor which is full, faithful, and essentially surjective is an equivalence.
 
-See https://stacks.math.columbia.edu/tag/02C3.
+See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
 noncomputable def ofFullyFaithfullyEssSurj (F : C ⥤ D) [Full F] [Faithful F] [EssSurj F] : IsEquivalence F :=
   IsEquivalence.mk (equivalenceInverse F)

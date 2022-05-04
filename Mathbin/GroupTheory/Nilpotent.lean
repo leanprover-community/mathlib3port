@@ -156,10 +156,11 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
     x ∈ upperCentralSeries G (n + 1) ↔ ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G n :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`nilpotent] []
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 class Groupₓ.IsNilpotent (G : Type _) [Groupₓ G] : Prop where
-  nilpotent {} : ∃ n : ℕ, upperCentralSeries G n = ⊤
+  nilpotent : ∃ n : ℕ, upperCentralSeries G n = ⊤
 
 open Groupₓ
 
@@ -214,7 +215,7 @@ theorem is_decending_rev_series_of_is_ascending {H : ℕ → Subgroup G} {n : �
     (hasc : IsAscendingCentralSeries H) : IsDescendingCentralSeries fun m : ℕ => H (n - m) := by
   cases' hasc with h0 hH
   refine' ⟨hn, fun x m hx g => _⟩
-  dsimp  at hx
+  dsimp'  at hx
   by_cases' hm : n ≤ m
   · rw [tsub_eq_zero_of_le hm, h0, Subgroup.mem_bot] at hx
     subst hx
@@ -231,7 +232,7 @@ theorem is_ascending_rev_series_of_is_descending {H : ℕ → Subgroup G} {n : �
     (hdesc : IsDescendingCentralSeries H) : IsAscendingCentralSeries fun m : ℕ => H (n - m) := by
   cases' hdesc with h0 hH
   refine' ⟨hn, fun x m hx g => _⟩
-  dsimp only  at hx⊢
+  dsimp' only  at hx⊢
   by_cases' hm : n ≤ m
   · have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm
     rw [hnm, h0]

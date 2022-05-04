@@ -488,7 +488,7 @@ theorem repr_sub : ∀ o₁ o₂ [NF o₁] [NF o₂], repr (o₁ - o₂) = repr 
     · change e₁ = e₂ at ee
       subst e₂
       unfold sub._match_1
-      cases mn : (n₁ : ℕ) - n₂ <;> dsimp only [sub._match_2]
+      cases mn : (n₁ : ℕ) - n₂ <;> dsimp' only [sub._match_2]
       · by_cases' en : n₁ = n₂
         · simp [en]
           rwa [add_sub_add_cancel]
@@ -1026,7 +1026,7 @@ def cmp (a b : Nonote) : Ordering :=
 theorem cmp_compares : ∀ a b : Nonote, (cmp a b).Compares a b
   | ⟨a, ha⟩, ⟨b, hb⟩ => by
     skip
-    dsimp [cmp]
+    dsimp' [cmp]
     have := Onote.cmp_compares a b
     cases Onote.cmp a b <;>
       try

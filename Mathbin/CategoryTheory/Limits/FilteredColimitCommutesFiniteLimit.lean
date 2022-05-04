@@ -66,7 +66,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   -- These elements of the colimit have representatives somewhere:
   obtain ⟨kx, x, rfl⟩ := jointly_surjective' x
   obtain ⟨ky, y, rfl⟩ := jointly_surjective' y
-  dsimp  at x y
+  dsimp'  at x y
   -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
   -- (indexed by `j : J`),
   replace h := fun j => congr_argₓ (limit.π (curry.obj F ⋙ colim) j) h
@@ -207,7 +207,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
     fun j j' f => by
     have q : ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) = ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
       (w f).some_spec.some_spec.some_spec
-    dsimp  at q
+    dsimp'  at q
     simp_rw [← functor_to_types.map_comp_apply]  at q
     convert q <;> simp only [comp_id]
   clear_value kf gf hf
@@ -267,7 +267,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
   · -- We construct the pre-image (which, recall is meant to be a point
     -- in the colimit (over `K`) of the limits (over `J`)) via a representative at `k''`.
     apply colimit.ι (curry.obj (swap K J ⋙ F) ⋙ limits.lim) k'' _
-    dsimp
+    dsimp'
     -- This representative is meant to be an element of a limit,
     -- so we need to construct a family of elements in `F.obj (j, k'')` for varying `j`,
     -- then show that are coherent with respect to morphisms in the `j` direction.
@@ -277,7 +277,7 @@ theorem colimit_limit_to_limit_colimit_surjective : Function.Surjective (colimit
       exact fun j => F.map (⟨𝟙 j, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)⟩ : (j, k j) ⟶ (j, k'')) (y j)
       
     · -- After which it's just a calculation, using `s` and `wf`, to see they are coherent.
-      dsimp
+      dsimp'
       simp only [← functor_to_types.map_comp_apply, prod_comp, id_comp, comp_id]
       calc
         F.map ((f, g j ≫ gf (𝟙 j) ≫ i (𝟙 j)) : (j, k j) ⟶ (j', k'')) (y j) =
@@ -317,7 +317,7 @@ instance colimit_limit_to_limit_colimit_is_iso : IsIso (colimitLimitToLimitColim
 
 instance colimit_limit_to_limit_colimit_cone_iso (F : J ⥤ K ⥤ Type v) : IsIso (colimitLimitToLimitColimitCone F) := by
   have : is_iso (colimit_limit_to_limit_colimit_cone F).Hom := by
-    dsimp only [colimit_limit_to_limit_colimit_cone]
+    dsimp' only [colimit_limit_to_limit_colimit_cone]
     infer_instance
   apply cones.cone_iso_of_hom_iso
 
@@ -372,14 +372,14 @@ theorem ι_colimit_limit_iso_limit_π (F : J ⥤ K ⥤ C) a b :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
       (limit.π F b).app a ≫ (colimit.ι F.flip a).app b :=
   by
-  dsimp [colimit_limit_iso]
+  dsimp' [colimit_limit_iso]
   simp only [functor.map_cone_π_app, iso.symm_hom, limits.limit.cone_point_unique_up_to_iso_hom_comp_assoc,
     limits.limit.cone_π, limits.colimit.ι_map_assoc, limits.colimit_flip_iso_comp_colim_inv_app, assoc,
     limits.has_limit.iso_of_nat_iso_hom_π]
   congr 1
   simp only [← category.assoc, iso.comp_inv_eq, limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom,
     limits.has_colimit.iso_of_nat_iso_ι_hom, nat_iso.of_components.hom_app]
-  dsimp
+  dsimp'
   simp
 
 end

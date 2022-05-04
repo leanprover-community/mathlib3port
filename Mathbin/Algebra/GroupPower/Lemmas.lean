@@ -404,19 +404,19 @@ theorem Int.nat_abs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n 
 -- The next four lemmas allow us to replace multiplication by a numeral with a `zsmul` expression.
 -- They are used by the `noncomm_ring` tactic, to normalise expressions before passing to `abel`.
 theorem bit0_mul [NonUnitalNonAssocRing R] {n r : R} : bit0 n * r = (2 : ℤ) • (n * r) := by
-  dsimp [bit0]
+  dsimp' [bit0]
   rw [add_mulₓ, add_zsmul, one_zsmul]
 
 theorem mul_bit0 [NonUnitalNonAssocRing R] {n r : R} : r * bit0 n = (2 : ℤ) • (r * n) := by
-  dsimp [bit0]
+  dsimp' [bit0]
   rw [mul_addₓ, add_zsmul, one_zsmul]
 
 theorem bit1_mul [NonAssocRing R] {n r : R} : bit1 n * r = (2 : ℤ) • (n * r) + r := by
-  dsimp [bit1]
+  dsimp' [bit1]
   rw [add_mulₓ, bit0_mul, one_mulₓ]
 
 theorem mul_bit1 [NonAssocRing R] {n r : R} : r * bit1 n = (2 : ℤ) • (r * n) + r := by
-  dsimp [bit1]
+  dsimp' [bit1]
   rw [mul_addₓ, mul_bit0, mul_oneₓ]
 
 @[simp]

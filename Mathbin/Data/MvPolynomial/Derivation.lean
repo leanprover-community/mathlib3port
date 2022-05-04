@@ -127,7 +127,7 @@ def mkDerivation (f : σ → A) : Derivation R (MvPolynomial σ R) A where
           ]
       rw [tsub_self, add_tsub_cancel_right, Nat.cast_oneₓ, ← C_apply, C_1, one_smul, add_commₓ, Finsupp.smul_sum]
       refine' congr_arg2ₓ (· + ·) rfl (Finset.sum_congr rfl fun j hj => _)
-      dsimp only
+      dsimp' only
       rw [smul_smul, monomial_mul, one_mulₓ, add_commₓ s, add_tsub_assoc_of_le]
       rwa [Finsupp.single_le_iff, Nat.succ_le_iff, pos_iff_ne_zero, ← Finsupp.mem_support_iff]
 

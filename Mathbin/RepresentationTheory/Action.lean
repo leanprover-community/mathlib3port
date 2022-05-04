@@ -10,6 +10,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Adjunction.Limits
 import Mathbin.CategoryTheory.Monoidal.FunctorCategory
 import Mathbin.CategoryTheory.Monoidal.Transport
+import Mathbin.CategoryTheory.Monoidal.Braided
 import Mathbin.CategoryTheory.Abelian.FunctorCategory
 import Mathbin.CategoryTheory.Abelian.Transfer
 
@@ -23,7 +24,7 @@ We check `Action V G ≌ (single_obj G ⥤ V)`,
 and construct the restriction functors `res {G H : Mon} (f : G ⟶ H) : Action V H ⥤ Action V G`.
 
 * When `V` has (co)limits so does `Action V G`.
-* When `V` is monoidal so is `Action V G`.
+* When `V` is monoidal, braided, or symmetric, so is `Action V G`.
 * When `V` is preadditive or abelian so is `Action V G`.
 -/
 
@@ -236,10 +237,11 @@ def forget : Action V G ⥤ V where
   obj := fun M => M.V
   map := fun M N f => f.Hom
 
+instance : Faithful (forget V G) where
+  map_injective' := fun X Y f g w => Hom.ext _ _ w
+
 instance [ConcreteCategory V] : ConcreteCategory (Action V G) where
   forget := forget V G ⋙ ConcreteCategory.forget V
-  forget_faithful :=
-    { map_injective' := fun M N f g w => Hom.ext _ _ (Faithful.map_injective (ConcreteCategory.forget V) w) }
 
 instance hasForgetToV [ConcreteCategory V] : HasForget₂ (Action V G) V where
   forget₂ := forget V G
@@ -335,15 +337,43 @@ end Abelian
 
 section Monoidal
 
-instance [MonoidalCategory V] : MonoidalCategory (Action V G) :=
+variable [MonoidalCategory V]
+
+instance : MonoidalCategory (Action V G) :=
   Monoidal.transport (Action.functorCategoryEquivalence _ _).symm
+
+variable (V G)
 
 /-- When `V` is monoidal the forgetful functor `Action V G` to `V` is monoidal. -/
 @[simps]
-def forgetMonoidal [MonoidalCategory V] : MonoidalFunctor (Action V G) V :=
+def forgetMonoidal : MonoidalFunctor (Action V G) V :=
   { Action.forget _ _ with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
 
--- TODO braiding and symmetry
+instance forget_monoidal_faithful : Faithful (forgetMonoidal V G).toFunctor := by
+  change faithful (forget V G)
+  infer_instance
+
+instance [BraidedCategory V] : BraidedCategory (Action V G) :=
+  braidedCategoryOfFaithful (forgetMonoidal V G)
+    (fun X Y =>
+      mkIso (β_ _ _)
+        (by
+          tidy))
+    (by
+      tidy)
+
+/-- When `V` is braided the forgetful functor `Action V G` to `V` is braided. -/
+@[simps]
+def forgetBraided [BraidedCategory V] : BraidedFunctor (Action V G) V :=
+  { forgetMonoidal _ _ with }
+
+instance forget_braided_faithful [BraidedCategory V] : Faithful (forgetBraided V G).toFunctor := by
+  change faithful (forget V G)
+  infer_instance
+
+instance [SymmetricCategory V] : SymmetricCategory (Action V G) :=
+  symmetricCategoryOfFaithful (forgetBraided V G)
+
 end Monoidal
 
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
@@ -429,7 +459,7 @@ def mapAction (F : V ⥤ W) (G : Mon.{u}) : Action V G ⥤ Action W G where
   map := fun M N f =>
     { Hom := F.map f.Hom,
       comm' := fun g => by
-        dsimp
+        dsimp'
         rw [← F.map_comp, f.comm, F.map_comp] }
   map_id' := fun M => by
     ext

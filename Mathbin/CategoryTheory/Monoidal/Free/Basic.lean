@@ -273,7 +273,7 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ 
       · simp only [project_map_aux, iso.inv_hom_id]
         
       · simp only [project_map_aux]
-        dsimp [project_obj]
+        dsimp' [project_obj]
         exact monoidal_category.right_unitor_naturality _
         
       · simp only [project_map_aux, iso.hom_inv_id]
@@ -281,7 +281,7 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObjₓ f X ⟶ projectObjₓ 
       · simp only [project_map_aux, iso.inv_hom_id]
         
       · simp only [project_map_aux]
-        dsimp [project_obj]
+        dsimp' [project_obj]
         exact monoidal_category.left_unitor_naturality _
         
       · simp only [project_map_aux]

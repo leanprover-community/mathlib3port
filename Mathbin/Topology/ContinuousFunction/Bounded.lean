@@ -1347,7 +1347,7 @@ instance : CstarRing (α →ᵇ β) where
     intro f
     refine' le_antisymmₓ _ _
     · rw [← sq, norm_le (sq_nonneg _)]
-      dsimp [star_apply]
+      dsimp' [star_apply]
       intro x
       rw [CstarRing.norm_star_mul_self, ← sq]
       refine' sq_le_sq' _ _

@@ -14,7 +14,7 @@ import Mathbin.CategoryTheory.Sites.SheafOfTypes
 If C is a category with a Grothendieck topology, we define the notion of a sheaf taking values in
 an arbitrary category `A`. We follow the definition in https://stacks.math.columbia.edu/tag/00VR,
 noting that the presheaf of sets "defined above" can be seen in the comments between tags 00VQ and
-00VR on the page https://stacks.math.columbia.edu/tag/00VL. The advantage of this definition is
+00VR on the page <https://stacks.math.columbia.edu/tag/00VL>. The advantage of this definition is
 that we need no assumptions whatsoever on `A` other than the assumption that the morphisms in `C`
 and `A` live in the same universe.
 
@@ -79,8 +79,8 @@ def conesEquivSieveCompatibleFamily :
     ⟨fun Y f h => π.app (op ⟨Over.mk f, h⟩), fun _ => by
       intros
       apply (id_comp _).symm.trans
-      dsimp
-      convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp <;> rfl⟩
+      dsimp'
+      convert π.naturality (Quiver.Hom.op (over.hom_mk _ _)) <;> dsimp' <;> rfl⟩
   invFun := fun x =>
     { app := fun f => x.1 f.unop.1.Hom f.unop.2,
       naturality' := fun f f' g => by
@@ -90,7 +90,7 @@ def conesEquivSieveCompatibleFamily :
         rw [over.w g.unop] }
   left_inv := fun π => by
     ext
-    dsimp
+    dsimp'
     congr
     rw [op_eq_iff_eq_unop]
     ext
@@ -127,7 +127,7 @@ variable (P S)
     iff `Hom (E, P -)` is a sheaf of types for the sieve `S` and all `E : A`. -/
 theorem is_limit_iff_is_sheaf_for :
     Nonempty (IsLimit (P.mapCone S.Arrows.Cocone.op)) ↔ ∀ E : Aᵒᵖ, IsSheafFor (P ⋙ coyoneda.obj E) S := by
-  dsimp [is_sheaf_for]
+  dsimp' [is_sheaf_for]
   simp_rw [compatible_iff_sieve_compatible]
   rw [((cone.is_limit_equiv_is_terminal _).trans (is_terminal_equiv_unique _ _)).nonempty_congr]
   rw [Classical.nonempty_piₓ]
@@ -200,7 +200,7 @@ theorem is_sheaf_iff_is_limit_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔
       ∀ ⦃X : C⦄ R : Presieve X, R ∈ K X → Nonempty (IsLimit (P.mapCone (generate R).Arrows.Cocone.op)) :=
   by
-  dsimp [is_sheaf]
+  dsimp' [is_sheaf]
   simp_rw [is_sheaf_pretopology]
   exact
     ⟨fun h X R hR => (is_limit_iff_is_sheaf_for_presieve P R).2 fun E => h E.unop R hR, fun h E X R hR =>
@@ -409,7 +409,7 @@ theorem is_sheaf_iff_multifork : IsSheaf J P ↔ ∀ X : C S : J.cover X, Nonemp
   obtain ⟨hh⟩ := h _ T
   let K : multifork (T.index P) := multifork.of_ι _ E (fun I => x I.f I.hf) fun I => hx _ _ _ _ I.w
   use hh.lift K
-  dsimp
+  dsimp'
   constructor
   · intro Y f hf
     apply hh.fac K (walking_multicospan.left ⟨Y, f, hf⟩)
@@ -452,13 +452,13 @@ section
 variable [HasProducts A]
 
 /-- The middle object of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
-of https://stacks.math.columbia.edu/tag/00VM.
+of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def firstObj : A :=
   ∏ fun f : ΣV, { f : V ⟶ U // R f } => P.obj (op f.1)
 
 /-- The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
-of https://stacks.math.columbia.edu/tag/00VM.
+of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def forkMap : P.obj (op U) ⟶ firstObj R P :=
   Pi.lift fun f => P.map f.2.1.op
@@ -471,11 +471,11 @@ contains the data used to check a family of elements for a presieve is compatibl
 def secondObj : A :=
   ∏ fun fg : (ΣV, { f : V ⟶ U // R f }) × ΣW, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 
-/-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VM. -/
+/-- The map `pr₀*` of <https://stacks.math.columbia.edu/tag/00VM>. -/
 def firstMap : firstObj R P ⟶ secondObj R P :=
   Pi.lift fun fg => Pi.π _ _ ≫ P.map pullback.fst.op
 
-/-- The map `pr₁*` of https://stacks.math.columbia.edu/tag/00VM. -/
+/-- The map `pr₁*` of <https://stacks.math.columbia.edu/tag/00VM>. -/
 def secondMap : firstObj R P ⟶ secondObj R P :=
   Pi.lift fun fg => Pi.π _ _ ≫ P.map pullback.snd.op
 
@@ -508,22 +508,22 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
       
     · rintro _ _ (_ | _)
       · ext : 1
-        dsimp [equalizer.presieve.first_map, first_map]
+        dsimp' [equalizer.presieve.first_map, first_map]
         simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
       · ext : 1
-        dsimp [equalizer.presieve.second_map, second_map]
+        dsimp' [equalizer.presieve.second_map, second_map]
         simp only [limit.lift_π, map_lift_pi_comparison, assoc, fan.mk_π_app, functor.map_comp]
         erw [pi_comparison_comp_π_assoc]
         
-      · dsimp
+      · dsimp'
         simp
         
       
     
   · refine' fork.ext (iso.refl _) _
-    dsimp [equalizer.fork_map, fork_map]
+    dsimp' [equalizer.fork_map, fork_map]
     simp [fork.ι]
     
 

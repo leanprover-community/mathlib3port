@@ -107,7 +107,7 @@ theorem ext {F F' : MonoFactorisation f} (hI : F.i = F'.i) (hm : F.m = eqToHom h
   cases F'
   cases hI
   simp at hm
-  dsimp  at F_fac' F'_fac'
+  dsimp'  at F_fac' F'_fac'
   congr
   · assumption
     

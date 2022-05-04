@@ -35,7 +35,7 @@ variable (C : Type u) [Category.{v} C] [HasShift C ℤ]
 
 /-- A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,
 and `f : X ⟶ Y`, `g : Y ⟶ Z`, `h : Z ⟶ X⟦1⟧` are morphisms in `C`.
-See https://stacks.math.columbia.edu/tag/0144.
+See <https://stacks.math.columbia.edu/tag/0144>.
 -/
 structure Triangle where mk' ::
   obj₁ : C
@@ -89,7 +89,7 @@ In other words, we have a commutative diagram:
   X' ───> Y' ───> Z' ───> X'⟦1⟧
      f'     g'     h'
 ```
-See https://stacks.math.columbia.edu/tag/0144.
+See <https://stacks.math.columbia.edu/tag/0144>.
 -/
 @[ext]
 structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where

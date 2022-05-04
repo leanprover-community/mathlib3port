@@ -111,7 +111,7 @@ def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x
   refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
   delta' eval eval₂
   simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]
-  dsimp
+  dsimp'
   congr with i r
   rw [mul_assoc, ← (pow_sub_pow_factor x y _).Prop, mul_sub]
 

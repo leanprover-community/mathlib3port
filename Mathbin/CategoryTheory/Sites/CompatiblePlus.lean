@@ -55,7 +55,7 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
     (by
       intro A B f
       ext
-      dsimp
+      dsimp'
       simp only [functor.map_cone_π_app, multiequalizer.multifork_π_app_left, iso.symm_hom, multiequalizer.lift_ι,
         eq_to_hom_refl, category.comp_id, limit.cone_point_unique_up_to_iso_hom_comp,
         grothendieck_topology.cover.multicospan_comp_hom_inv_left, has_limit.iso_of_nat_iso_hom_π, category.assoc]
@@ -65,7 +65,7 @@ def diagramCompIso (X : C) : J.diagram P X ⋙ F ≅ J.diagram (P ⋙ F) X :=
 theorem diagram_comp_iso_hom_ι (X : C) (W : (J.cover X)ᵒᵖ) (i : W.unop.arrow) :
     (J.diagramCompIso F P X).Hom.app W ≫ multiequalizer.ι _ i = F.map (multiequalizer.ι _ _) := by
   delta' diagram_comp_iso
-  dsimp
+  dsimp'
   simp
 
 variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
@@ -86,7 +86,7 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
       intro X Y f
       apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
       intro W
-      dsimp [plus_obj, plus_map]
+      dsimp' [plus_obj, plus_map]
       simp only [functor.map_comp, category.assoc]
       slice_rhs 1 2 => erw [(is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).fac]
       slice_lhs 1 3 =>
@@ -97,13 +97,13 @@ def plusCompIso : J.plusObj P ⋙ F ≅ J.plusObj (P ⋙ F) :=
           colimit.ι_desc]dsimp [cocone.whisker]rw [F.map_comp]
       simp only [category.assoc]
       slice_lhs 2 3 => erw [(is_colimit_of_preserves F (colimit.is_colimit (J.diagram P Y.unop))).fac]
-      dsimp
+      dsimp'
       simp only [has_colimit.iso_of_nat_iso_ι_hom_assoc, grothendieck_topology.diagram_pullback_app, colimit.ι_pre,
         has_colimit.iso_of_nat_iso_ι_hom, ι_colim_map_assoc]
       simp only [← category.assoc]
       congr 1
       ext
-      dsimp
+      dsimp'
       simp only [category.assoc]
       erw [multiequalizer.lift_ι, diagram_comp_iso_hom_ι, diagram_comp_iso_hom_ι, ← F.map_comp, multiequalizer.lift_ι])
 
@@ -112,10 +112,10 @@ theorem ι_plus_comp_iso_hom X W :
     F.map (colimit.ι _ W) ≫ (J.plusCompIso F P).Hom.app X = (J.diagramCompIso F P X.unop).Hom.app W ≫ colimit.ι _ W :=
   by
   delta' diagram_comp_iso plus_comp_iso
-  dsimp [is_colimit.cocone_point_unique_up_to_iso]
+  dsimp' [is_colimit.cocone_point_unique_up_to_iso]
   simp only [← category.assoc]
   erw [(is_colimit_of_preserves F (colimit.is_colimit (J.diagram P (unop X)))).fac]
-  dsimp
+  dsimp'
   simp
 
 @[simp, reassoc]
@@ -128,13 +128,13 @@ theorem plus_comp_iso_whisker_left {F G : D ⥤ E} (η : F ⟶ G) (P : Cᵒᵖ �
   ext X
   apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
   intro W
-  dsimp [plus_obj, plus_map]
+  dsimp' [plus_obj, plus_map]
   simp only [ι_plus_comp_iso_hom, ι_colim_map, whisker_left_app, ι_plus_comp_iso_hom_assoc, nat_trans.naturality_assoc,
     grothendieck_topology.diagram_nat_trans_app]
   simp only [← category.assoc]
   congr 1
   ext
-  dsimp
+  dsimp'
   simpa
 
 /-- The isomorphism between `P⁺ ⋙ F` and `(P ⋙ F)⁺`, functorially in `F`. -/
@@ -151,17 +151,17 @@ theorem plus_comp_iso_whisker_right {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) :
   ext X
   apply (is_colimit_of_preserves F (colimit.is_colimit (J.diagram P X.unop))).hom_ext
   intro W
-  dsimp [plus_obj, plus_map]
+  dsimp' [plus_obj, plus_map]
   simp only [ι_colim_map, whisker_right_app, ι_plus_comp_iso_hom_assoc, grothendieck_topology.diagram_nat_trans_app]
   simp only [← category.assoc, ← F.map_comp]
-  dsimp [colim_map, is_colimit.map]
+  dsimp' [colim_map, is_colimit.map]
   simp only [colimit.ι_desc]
-  dsimp [cocones.precompose]
+  dsimp' [cocones.precompose]
   simp only [functor.map_comp, category.assoc, ι_plus_comp_iso_hom]
   simp only [← category.assoc]
   congr 1
   ext
-  dsimp
+  dsimp'
   simp only [diagram_comp_iso_hom_ι_assoc, multiequalizer.lift_ι, diagram_comp_iso_hom_ι, category.assoc]
   simp only [← F.map_comp, multiequalizer.lift_ι]
 
@@ -175,7 +175,7 @@ def plusFunctorWhiskerRightIso :
 theorem whisker_right_to_plus_comp_plus_comp_iso_hom :
     whiskerRight (J.toPlus _) _ ≫ (J.plusCompIso F P).Hom = J.toPlus _ := by
   ext
-  dsimp [to_plus]
+  dsimp' [to_plus]
   simp only [ι_plus_comp_iso_hom, functor.map_comp, category.assoc]
   simp only [← category.assoc]
   congr 1

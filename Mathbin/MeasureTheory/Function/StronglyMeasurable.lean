@@ -639,7 +639,7 @@ theorem _root_.strongly_measurable_of_strongly_measurable_union_cover {m : Measu
       finite_range' := by
         apply ((hc.approx n).finite_range.union (hd.approx n).finite_range).Subset
         rintro - ⟨y, rfl⟩
-        dsimp
+        dsimp'
         by_cases' hy : y ∈ s
         · left
           rw [dif_pos hy]
@@ -1198,7 +1198,7 @@ protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α →
 end
 
 theorem _root_.ae_strongly_measurable_indicator_iff [Zero β] {s : Set α} (hs : MeasurableSet s) :
-    AeStronglyMeasurable (indicator s f) μ ↔ AeStronglyMeasurable f (μ.restrict s) := by
+    AeStronglyMeasurable (indicatorₓ s f) μ ↔ AeStronglyMeasurable f (μ.restrict s) := by
   constructor
   · intro h
     exact (h.mono_measure measure.restrict_le_self).congr (indicator_ae_eq_restrict hs)
@@ -1416,6 +1416,8 @@ variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
+variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+
 theorem _root_.strongly_measurable.apply_continuous_linear_map {m : MeasurableSpace α} {φ : α → F →L[𝕜] E}
     (hφ : StronglyMeasurable φ) (v : F) : StronglyMeasurable fun a => φ a v :=
   (ContinuousLinearMap.apply 𝕜 E v).Continuous.comp_strongly_measurable hφ
@@ -1423,6 +1425,10 @@ theorem _root_.strongly_measurable.apply_continuous_linear_map {m : MeasurableSp
 theorem apply_continuous_linear_map {φ : α → F →L[𝕜] E} (hφ : AeStronglyMeasurable φ μ) (v : F) :
     AeStronglyMeasurable (fun a => φ a v) μ :=
   (ContinuousLinearMap.apply 𝕜 E v).Continuous.comp_ae_strongly_measurable hφ
+
+theorem ae_strongly_measurable_comp₂ (L : E →L[𝕜] F →L[𝕜] G) {f : α → E} {g : α → F} (hf : AeStronglyMeasurable f μ)
+    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (fun x => L (f x) (g x)) μ :=
+  L.continuous₂.comp_ae_strongly_measurable <| hf.prod_mk hg
 
 end ContinuousLinearMapNondiscreteNormedField
 

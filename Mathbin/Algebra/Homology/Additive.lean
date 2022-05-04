@@ -127,7 +127,7 @@ variable [HasEqualizers V] [HasCokernels V]
 
 instance homology_additive : (homologyFunctor V c i).Additive where
   map_add' := fun C D f g => by
-    dsimp [homologyFunctor]
+    dsimp' [homologyFunctor]
     ext
     simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
     congr
@@ -155,7 +155,7 @@ def Functor.mapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape �
   map := fun C D f =>
     { f := fun i => F.map (f.f i),
       comm' := fun i j h => by
-        dsimp
+        dsimp'
         rw [← F.map_comp, ← F.map_comp, f.comm] }
 
 instance Functor.map_homogical_complex_additive (F : V ⥤ W) [F.Additive] (c : ComplexShape ι) :
@@ -238,7 +238,7 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
               else 0 },
         hom_inv_id' := by
           ext i
-          dsimp
+          dsimp'
           split_ifs with h
           · simp [h]
             
@@ -247,7 +247,7 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
             ,
         inv_hom_id' := by
           ext i
-          dsimp
+          dsimp'
           split_ifs with h
           · simp [h]
             
@@ -256,7 +256,7 @@ def singleMapHomologicalComplex (F : V ⥤ W) [F.Additive] (c : ComplexShape ι)
              })
     fun X Y f => by
     ext i
-    dsimp
+    dsimp'
     split_ifs with h <;> simp [h]
 
 variable (F : V ⥤ W) [Functor.Additive F] (c)
@@ -315,20 +315,20 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ 
             simp
             
           · unfold_aux
-            dsimp
+            dsimp'
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
             ,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
-              dsimp
+              dsimp'
               simp
                })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
-        dsimp
+        dsimp'
         simp
         
 
@@ -378,20 +378,20 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] : single₀ V ⋙ 
             simp
             
           · unfold_aux
-            dsimp
+            dsimp'
             simp only [comp_f, id_f, zero_comp]
             exact (zero_of_source_iso_zero _ F.map_zero_object).symm
             ,
         inv_hom_id' := by
           ext (_ | i) <;>
             · unfold_aux
-              dsimp
+              dsimp'
               simp
                })
     fun X Y f => by
     ext (_ | i) <;>
       · unfold_aux
-        dsimp
+        dsimp'
         simp
         
 

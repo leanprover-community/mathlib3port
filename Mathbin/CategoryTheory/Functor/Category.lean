@@ -103,7 +103,7 @@ theorem hcomp_app {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) (X : C) : (α �
 
 @[simp]
 theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) := by
-  dsimp
+  dsimp'
   simp
 
 -- See note [dsimp, simp].

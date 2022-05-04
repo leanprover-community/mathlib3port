@@ -59,7 +59,7 @@ def bernstein (n ν : ℕ) : C(I, ℝ) :=
 
 @[simp]
 theorem bernstein_apply (n ν : ℕ) (x : I) : bernstein n ν x = n.choose ν * x ^ ν * (1 - x) ^ (n - ν) := by
-  dsimp [bernstein, Polynomial.toContinuousMapOn, Polynomial.toContinuousMap, bernsteinPolynomial]
+  dsimp' [bernstein, Polynomial.toContinuousMapOn, Polynomial.toContinuousMap, bernsteinPolynomial]
   simp
 
 theorem bernstein_nonneg {n ν : ℕ} {x : I} : 0 ≤ bernstein n ν x := by
@@ -113,7 +113,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   have h' : (n : ℝ) ≠ 0 := ne_of_gtₓ h
   apply_fun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
   apply_fun fun x : ℝ => x * n using GroupWithZeroₓ.mul_right_injective h'
-  dsimp
+  dsimp'
   conv_lhs => simp only [Finset.sum_mul, z]
   conv_rhs => rw [div_mul_cancel _ h']
   have := bernsteinPolynomial.variance ℝ n

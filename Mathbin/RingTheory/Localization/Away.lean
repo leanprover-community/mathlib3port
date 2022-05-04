@@ -106,7 +106,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S := by
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
     use x * u.inv
-    dsimp only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
+    dsimp' only [Algebra.ofId, RingHom.to_fun_eq_coe, AlgHom.coe_mk]
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
     

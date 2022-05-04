@@ -59,6 +59,11 @@ theorem numeric_def (x : Pgame) :
   cases x
   rfl
 
+theorem Numeric.left_lt_right {x : Pgame} (o : Numeric x) (i : x.LeftMoves) (j : x.RightMoves) :
+    x.moveLeft i < x.moveRight j := by
+  cases' x with xl xr xL xR
+  exact o.1 i j
+
 theorem Numeric.move_left {x : Pgame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) := by
   cases' x with xl xr xL xR
   exact o.2.1 i
@@ -92,6 +97,14 @@ theorem lt_asymm {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x < y → ¬y
 
 theorem le_of_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) (h : x < y) : x ≤ y :=
   not_lt.1 (lt_asymm ox oy h)
+
+/-- `<` is transitive when both sides of the left inequality are numeric -/
+theorem lt_trans {x y z : Pgame} (ox : Numeric x) (oy : Numeric y) (h₁ : x < y) (h₂ : y < z) : x < z :=
+  lt_of_le_of_lt (le_of_lt ox oy h₁) h₂
+
+/-- `<` is transitive when both sides of the right inequality are numeric -/
+theorem lt_trans' {x y z : Pgame} (oy : Numeric y) (oz : Numeric z) (h₁ : x < y) (h₂ : y < z) : x < z :=
+  lt_of_lt_of_le h₁ (le_of_lt oy oz h₂)
 
 /-- On numeric pre-games, `<` and `≤` satisfy the axioms of a partial order (even though they
 don't on all pre-games). -/
@@ -292,39 +305,22 @@ def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ h => H _ _ _ _ (equiv_refl _) h)
     fun x₁ x₂ ox₁ ox₂ h => funext <| Quotientₓ.ind fun ⟨y, oy⟩ => H _ _ _ _ h (equiv_refl _)
 
-/-- The relation `x ≤ y` on surreals. -/
-def Le : Surreal → Surreal → Prop :=
-  lift₂ (fun x y _ _ => x ≤ y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (le_congr hx hy)
+instance : LE Surreal :=
+  ⟨lift₂ (fun x y _ _ => x ≤ y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (le_congr hx hy)⟩
 
-/-- The relation `x < y` on surreals. -/
-def Lt : Surreal → Surreal → Prop :=
-  lift₂ (fun x y _ _ => x < y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (lt_congr hx hy)
-
-theorem not_le : ∀ {x y : Surreal}, ¬Le x y ↔ Lt y x := by
-  rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> exact not_leₓ
+instance : LT Surreal :=
+  ⟨lift₂ (fun x y _ _ => x < y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (lt_congr hx hy)⟩
 
 /-- Addition on surreals is inherited from pre-game addition:
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
-def add : Surreal → Surreal → Surreal :=
-  Surreal.lift₂ (fun oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
-    Quotientₓ.sound (Pgame.add_congr hx hy)
+instance : Add Surreal :=
+  ⟨Surreal.lift₂ (fun oy => ⟦⟨x + y, ox.add oy⟩⟧) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy =>
+      Quotientₓ.sound (Pgame.add_congr hx hy)⟩
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
 the negation of `{L | R}` is `{-R | -L}`. -/
-def neg : Surreal → Surreal :=
-  Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)
-
-instance : LE Surreal :=
-  ⟨Le⟩
-
-instance : LT Surreal :=
-  ⟨Lt⟩
-
-instance : Add Surreal :=
-  ⟨add⟩
-
 instance : Neg Surreal :=
-  ⟨neg⟩
+  ⟨Surreal.lift (fun x ox => ⟦⟨-x, ox.neg⟩⟧) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)⟩
 
 instance : OrderedAddCommGroup Surreal where
   add := (· + ·)

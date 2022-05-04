@@ -408,6 +408,21 @@ theorem integrable_const_iff {c : β} : Integrable (fun x : α => c) μ ↔ c = 
 theorem integrable_const [IsFiniteMeasure μ] (c : β) : Integrable (fun x : α => c) μ :=
   integrable_const_iff.2 <| Or.inr <| measure_lt_top _ _
 
+theorem Memℒp.integrable_norm_rpow {f : α → β} {p : ℝ≥0∞} (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+    Integrable (fun x : α => ∥f x∥ ^ p.toReal) μ := by
+  rw [← mem_ℒp_one_iff_integrable]
+  exact hf.norm_rpow hp_ne_zero hp_ne_top
+
+theorem Memℒp.integrable_norm_rpow' [IsFiniteMeasure μ] {f : α → β} {p : ℝ≥0∞} (hf : Memℒp f p μ) :
+    Integrable (fun x : α => ∥f x∥ ^ p.toReal) μ := by
+  by_cases' h_zero : p = 0
+  · simp [h_zero, integrable_const]
+    
+  by_cases' h_top : p = ∞
+  · simp [h_top, integrable_const]
+    
+  exact hf.integrable_norm_rpow h_zero h_top
+
 theorem Integrable.mono_measure {f : α → β} (h : Integrable f ν) (hμ : μ ≤ ν) : Integrable f μ :=
   ⟨h.AeStronglyMeasurable.mono_measure hμ, h.HasFiniteIntegral.mono_measure hμ⟩
 
@@ -514,10 +529,13 @@ theorem Integrable.add' {f g : α → β} (hf : Integrable f μ) (hg : Integrabl
 theorem Integrable.add {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) : Integrable (f + g) μ :=
   ⟨hf.AeStronglyMeasurable.add hg.AeStronglyMeasurable, hf.add' hg⟩
 
+theorem integrable_finset_sum' {ι} (s : Finset ι) {f : ι → α → β} (hf : ∀, ∀ i ∈ s, ∀, Integrable (f i) μ) :
+    Integrable (∑ i in s, f i) μ :=
+  Finset.sum_induction f (fun g => Integrable g μ) (fun _ _ => Integrable.add) (integrable_zero _ _ _) hf
+
 theorem integrable_finset_sum {ι} (s : Finset ι) {f : ι → α → β} (hf : ∀, ∀ i ∈ s, ∀, Integrable (f i) μ) :
     Integrable (fun a => ∑ i in s, f i a) μ := by
-  simp only [← Finset.sum_apply]
-  exact Finset.sum_induction f (fun g => integrable g μ) (fun _ _ => integrable.add) (integrable_zero _ _ _) hf
+  simpa only [← Finset.sum_apply] using integrable_finset_sum' s hf
 
 theorem Integrable.neg {f : α → β} (hf : Integrable f μ) : Integrable (-f) μ :=
   ⟨hf.AeStronglyMeasurable.neg, hf.HasFiniteIntegral.neg⟩
@@ -543,6 +561,9 @@ theorem Integrable.sub {f g : α → β} (hf : Integrable f μ) (hg : Integrable
 
 theorem Integrable.norm {f : α → β} (hf : Integrable f μ) : Integrable (fun a => ∥f a∥) μ :=
   ⟨hf.AeStronglyMeasurable.norm, hf.HasFiniteIntegral.norm⟩
+
+theorem Integrable.abs {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun a => abs (f a)) μ := by
+  simpa [← Real.norm_eq_abs] using hf.norm
 
 theorem integrable_norm_iff {f : α → β} (hf : AeStronglyMeasurable f μ) :
     Integrable (fun a => ∥f a∥) μ ↔ Integrable f μ := by
@@ -738,11 +759,11 @@ section PosPart
 /-! ### Lemmas used for defining the positive part of a `L¹` function -/
 
 
-theorem Integrable.max_zero {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun a => max (f a) 0) μ :=
+theorem Integrable.pos_part {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun a => max (f a) 0) μ :=
   ⟨(hf.AeStronglyMeasurable.AeMeasurable.max ae_measurable_const).AeStronglyMeasurable, hf.HasFiniteIntegral.max_zero⟩
 
-theorem Integrable.min_zero {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun a => min (f a) 0) μ :=
-  ⟨(hf.AeStronglyMeasurable.AeMeasurable.min ae_measurable_const).AeStronglyMeasurable, hf.HasFiniteIntegral.min_zero⟩
+theorem Integrable.neg_part {f : α → ℝ} (hf : Integrable f μ) : Integrable (fun a => max (-f a) 0) μ :=
+  hf.neg.posPart
 
 end PosPart
 
@@ -759,8 +780,14 @@ theorem integrable_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) : Integrab
 theorem Integrable.const_mul {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (fun x => c * f x) μ :=
   Integrable.smul c h
 
+theorem Integrable.const_mul' {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable ((fun x : α => c) * f) μ :=
+  Integrable.smul c h
+
 theorem Integrable.mul_const {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (fun x => f x * c) μ := by
   simp_rw [mul_comm, h.const_mul _]
+
+theorem Integrable.mul_const' {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (f * fun x : α => c) μ :=
+  Integrable.mul_const h c
 
 theorem Integrable.div_const {f : α → ℝ} (h : Integrable f μ) (c : ℝ) : Integrable (fun x => f x / c) μ := by
   simp_rw [div_eq_mul_inv, h.mul_const]

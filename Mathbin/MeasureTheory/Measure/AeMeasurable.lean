@@ -145,6 +145,20 @@ theorem comp_measurable' {ν : Measureₓ δ} {f : α → δ} {g : δ → β} (h
     (h : μ.map f ≪ ν) : AeMeasurable (g ∘ f) μ :=
   (hg.mono' h).comp_measurable hf
 
+theorem map_map_of_ae_measurable {g : β → γ} {f : α → β} (hg : AeMeasurable g (Measure.map f μ))
+    (hf : AeMeasurable f μ) : (μ.map f).map g = μ.map (g ∘ f) := by
+  ext1 s hs
+  let g' := hg.mk g
+  have A : map g (map f μ) = map g' (map f μ) := by
+    apply MeasureTheory.Measure.map_congr
+    exact hg.ae_eq_mk
+  have B : map (g ∘ f) μ = map (g' ∘ f) μ := by
+    apply MeasureTheory.Measure.map_congr
+    exact ae_of_ae_map hf hg.ae_eq_mk
+  simp only [A, B, hs, hg.measurable_mk.ae_measurable.comp_ae_measurable hf, hg.measurable_mk, hg.measurable_mk hs, hf,
+    map_apply, map_apply_of_ae_measurable]
+  rfl
+
 @[measurability]
 theorem prod_mk {f : α → β} {g : α → γ} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (fun x => (f x, g x)) μ :=
@@ -250,7 +264,7 @@ theorem AeMeasurable.restrict (hfm : AeMeasurable f μ) {s} : AeMeasurable f (μ
 variable [Zero β]
 
 theorem ae_measurable_indicator_iff {s} (hs : MeasurableSet s) :
-    AeMeasurable (indicator s f) μ ↔ AeMeasurable f (μ.restrict s) := by
+    AeMeasurable (indicatorₓ s f) μ ↔ AeMeasurable f (μ.restrict s) := by
   constructor
   · intro h
     exact (h.mono_measure measure.restrict_le_self).congr (indicator_ae_eq_restrict hs)

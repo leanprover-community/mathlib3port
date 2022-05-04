@@ -87,21 +87,21 @@ def coneOfConeUncurry {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j)) (c :
             π :=
               { app := fun k => c.π.app (j, k),
                 naturality' := fun k k' f => by
-                  dsimp
+                  dsimp'
                   simp only [category.id_comp]
                   have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j, k') (𝟙 j, f)
-                  dsimp  at this
+                  dsimp'  at this
                   simp only [category.id_comp, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
                   exact this } },
       naturality' := fun j j' f =>
         (Q j').hom_ext
           (by
-            dsimp
+            dsimp'
             intro k
             simp only [limits.cone_morphism.w, limits.cones.postcompose_obj_π, limits.is_limit.fac_assoc,
               limits.is_limit.fac, nat_trans.comp_app, category.id_comp, category.assoc]
             have := @nat_trans.naturality _ _ _ _ _ _ c.π (j, k) (j', k) (f, 𝟙 k)
-            dsimp  at this
+            dsimp'  at this
             simp only [category.id_comp, category.comp_id, CategoryTheory.Functor.map_id, nat_trans.id_app] at this
             exact this) }
 
@@ -115,20 +115,20 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
         π :=
           { app := fun p => s.π.app p.1 ≫ (D.obj p.1).π.app p.2,
             naturality' := fun p p' f => by
-              dsimp
+              dsimp'
               simp only [category.id_comp, category.assoc]
               rcases p with ⟨j, k⟩
               rcases p' with ⟨j', k'⟩
               rcases f with ⟨fj, fk⟩
-              dsimp
+              dsimp'
               slice_rhs 3 4 => rw [← nat_trans.naturality]
               slice_rhs 2 3 => rw [← (D.obj j).π.naturality]
               simp only [functor.const.obj_map, category.id_comp, category.assoc]
               have w := (D.map fj).w k'
-              dsimp  at w
+              dsimp'  at w
               rw [← w]
               have n := s.π.naturality fj
-              dsimp  at n
+              dsimp'  at n
               simp only [category.id_comp] at n
               rw [n]
               simp } }
@@ -139,7 +139,7 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
   uniq' := fun s m w => by
     refine' P.uniq { x := s.X, π := _ } m _
     rintro ⟨j, k⟩
-    dsimp
+    dsimp'
     rw [← w j]
     simp
 
@@ -186,7 +186,7 @@ noncomputable def limitUncurryIsoLimitCompLim : limit (uncurry.obj F) ≅ limit 
 @[simp, reassoc]
 theorem limit_uncurry_iso_limit_comp_lim_hom_π_π {j} {k} :
     (limitUncurryIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ (j, k) := by
-  dsimp [limit_uncurry_iso_limit_comp_lim, is_limit.cone_point_unique_up_to_iso, is_limit.unique_up_to_iso]
+  dsimp' [limit_uncurry_iso_limit_comp_lim, is_limit.cone_point_unique_up_to_iso, is_limit.unique_up_to_iso]
   simp
 
 @[simp, reassoc]
@@ -219,20 +219,20 @@ noncomputable def limitFlipCompLimIsoLimitCompLim : limit (F.flip ⋙ lim) ≅ l
 @[simp, reassoc]
 theorem limit_flip_comp_lim_iso_limit_comp_lim_hom_π_π j k :
     (limitFlipCompLimIsoLimitCompLim F).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ k ≫ limit.π _ j := by
-  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
+  dsimp' [limit_flip_comp_lim_iso_limit_comp_lim]
   simp
-  dsimp
+  dsimp'
   simp
 
 -- See note [dsimp, simp]
 @[simp, reassoc]
 theorem limit_flip_comp_lim_iso_limit_comp_lim_inv_π_π k j :
     (limitFlipCompLimIsoLimitCompLim F).inv ≫ limit.π _ k ≫ limit.π _ j = limit.π _ j ≫ limit.π _ k := by
-  dsimp [limit_flip_comp_lim_iso_limit_comp_lim]
+  dsimp' [limit_flip_comp_lim_iso_limit_comp_lim]
   simp
-  dsimp
+  dsimp'
   simp
-  dsimp
+  dsimp'
   simp
 
 end
@@ -294,23 +294,23 @@ noncomputable def limitCurrySwapCompLimIsoLimitCurryCompLim :
 @[simp]
 theorem limit_curry_swap_comp_lim_iso_limit_curry_comp_lim_hom_π_π {j} {k} :
     (limitCurrySwapCompLimIsoLimitCurryCompLim G).Hom ≫ limit.π _ j ≫ limit.π _ k = limit.π _ k ≫ limit.π _ j := by
-  dsimp [limit_curry_swap_comp_lim_iso_limit_curry_comp_lim]
+  dsimp' [limit_curry_swap_comp_lim_iso_limit_curry_comp_lim]
   simp only [iso.refl_hom, braiding_counit_iso_hom_app, limits.has_limit.iso_of_equivalence_hom_π, iso.refl_inv,
     limit_iso_limit_curry_comp_lim_hom_π_π, eq_to_iso_refl, category.assoc]
   erw [nat_trans.id_app]
   -- Why can't `simp` do this`?
-  dsimp
+  dsimp'
   simp
 
 @[simp]
 theorem limit_curry_swap_comp_lim_iso_limit_curry_comp_lim_inv_π_π {j} {k} :
     (limitCurrySwapCompLimIsoLimitCurryCompLim G).inv ≫ limit.π _ k ≫ limit.π _ j = limit.π _ j ≫ limit.π _ k := by
-  dsimp [limit_curry_swap_comp_lim_iso_limit_curry_comp_lim]
+  dsimp' [limit_curry_swap_comp_lim_iso_limit_curry_comp_lim]
   simp only [iso.refl_hom, braiding_counit_iso_hom_app, limits.has_limit.iso_of_equivalence_inv_π, iso.refl_inv,
     limit_iso_limit_curry_comp_lim_hom_π_π, eq_to_iso_refl, category.assoc]
   erw [nat_trans.id_app]
   -- Why can't `simp` do this`?
-  dsimp
+  dsimp'
   simp
 
 end

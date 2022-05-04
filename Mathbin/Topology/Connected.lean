@@ -995,7 +995,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     constructor
     · exact mem_preimage.1 hat
       
-    dsimp only
+    dsimp' only
     cases fiber_decomp (f a) (mem_preimage.1 hat)
     · exact h
       
@@ -1015,7 +1015,7 @@ theorem preimage_connected_component_connected [TopologicalSpace β] {f : α →
     constructor
     · exact mem_preimage.1 hat
       
-    dsimp only
+    dsimp' only
     cases fiber_decomp (f a) (mem_preimage.1 hat)
     · exfalso
       rw [← not_nonempty_iff_eq_empty] at uv_disj
@@ -1214,10 +1214,11 @@ theorem is_totally_disconnected_of_is_totally_separated {s : Set α} (H : IsTota
 
 alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_totally_disconnected
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`is_totally_separated_univ] []
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where
-  is_totally_separated_univ {} : IsTotallySeparated (Univ : Set α)
+  is_totally_separated_univ : IsTotallySeparated (Univ : Set α)
 
 -- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α : Type u) [TopologicalSpace α]

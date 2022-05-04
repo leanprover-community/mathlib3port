@@ -53,7 +53,7 @@ theorem continuous_refl_trans_symm_aux : Continuous reflTransSymmAux := by
   norm_num [hx, mul_assoc]
 
 theorem refl_trans_symm_aux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
-  dsimp only [refl_trans_symm_aux]
+  dsimp' only [refl_trans_symm_aux]
   split_ifs
   · constructor
     · apply mul_nonneg
@@ -105,7 +105,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   map_zero_left' := by
     norm_num [refl_trans_symm_aux]
   map_one_left' := fun x => by
-    dsimp only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
+    dsimp' only [refl_trans_symm_aux, Path.coe_to_continuous_map, Path.trans]
     change _ = ite _ _ _
     split_ifs
     · rw [Path.extend, Set.Icc_extend_of_mem]

@@ -68,7 +68,7 @@ def limitConeIsLimit (F : J ⥤ Top.{u}) : IsLimit (limitCone F) where
   lift := fun S =>
     { toFun := fun x =>
         ⟨fun j => S.π.app _ x, fun i j f => by
-          dsimp
+          dsimp'
           erw [← S.w f]
           rfl⟩ }
   uniq' := fun S m h => by
@@ -178,7 +178,7 @@ def sigmaCofanIsColimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCo
     { toFun := fun s => S.ι.app s.1 s.2,
       continuous_to_fun := by
         continuity
-        dsimp only
+        dsimp' only
         continuity }
   uniq' := by
     intro S m h
@@ -750,12 +750,12 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (
     refine' ⟨U, {j}, _, _⟩
     · rintro i h
       rw [Finset.mem_singleton] at h
-      dsimp [U]
+      dsimp' [U]
       rw [dif_pos h]
       subst h
       exact hV
       
-    · dsimp [U]
+    · dsimp' [U]
       simp
       
     
@@ -785,20 +785,20 @@ theorem is_topological_basis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j))) (
       -- use the intermediate claim to finish off the goal using `univ` and `inter`.
       refine' this _ _ _ (univ _) (inter _) _
       intro e he
-      dsimp [Vs]
+      dsimp' [Vs]
       rw [dif_pos he]
       exact compat j e (g e he) (U e) (h1 e he)
       
     · -- conclude...
       rw [h2]
-      dsimp [V]
+      dsimp' [V]
       rw [Set.preimage_Inter]
       congr 1
       ext1 e
       rw [Set.preimage_Inter]
       congr 1
       ext1 he
-      dsimp [Vs]
+      dsimp' [Vs]
       rw [dif_pos he, ← Set.preimage_comp]
       congr 1
       change _ = ⇑(D.π.app j ≫ F.map (g e he))
@@ -830,7 +830,7 @@ The theorem is specialized to nonempty finite types (which are compact Hausdorff
 discrete topology) in `nonempty_sections_of_fintype_cofiltered_system` and
 `nonempty_sections_of_fintype_inverse_system`.
 
-(See https://stacks.math.columbia.edu/tag/086J for the Set version.)
+(See <https://stacks.math.columbia.edu/tag/086J> for the Set version.)
 -/
 
 
@@ -857,7 +857,7 @@ theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.ob
   use fun j : J =>
     if hj : j ∈ G then F.map (is_cofiltered.inf_to G H hj) (h (is_cofiltered.inf G H)).some else (h _).some
   rintro ⟨X, Y, hX, hY, f⟩ hf
-  dsimp only
+  dsimp' only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 
 theorem PartialSections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by

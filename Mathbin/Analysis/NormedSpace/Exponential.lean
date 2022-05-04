@@ -120,6 +120,18 @@ theorem exp_zero [T2Space 𝔸] : exp 𝕂 𝔸 0 = 1 := by
   refine' tsum_congr fun n => _
   split_ifs with h h <;> simp [h]
 
+variable (𝕂)
+
+theorem Commute.exp_right [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute x (exp 𝕂 𝔸 y) := by
+  rw [exp_eq_tsum]
+  exact Commute.tsum_right x fun n => (h.pow_right n).smul_right _
+
+theorem Commute.exp_left [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute (exp 𝕂 𝔸 x) y :=
+  (h.symm.exp_right 𝕂).symm
+
+theorem Commute.exp [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute (exp 𝕂 𝔸 x) (exp 𝕂 𝔸 y) :=
+  (h.exp_left _).exp_right _
+
 end TopologicalAlgebra
 
 section Normed
@@ -205,7 +217,7 @@ theorem exp_add_of_commute_of_mem_ball [CharZero 𝕂] {x y : 𝔸} (hxy : Commu
   rw [exp_eq_tsum,
     tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm (norm_exp_series_summable_of_mem_ball' x hx)
       (norm_exp_series_summable_of_mem_ball' y hy)]
-  dsimp only
+  dsimp' only
   conv_lhs => congr ext rw [hxy.add_pow' _, Finset.smul_sum]
   refine' tsum_congr fun n => (Finset.sum_congr rfl) fun kl hkl => _
   rw [nsmul_eq_smul_cast 𝕂, smul_smul, smul_mul_smul, ← finset.nat.mem_antidiagonal.mp hkl, Nat.cast_add_choose,
@@ -243,7 +255,7 @@ theorem map_exp_of_mem_ball {F} [RingHomClass F 𝔸 𝔹] (f : F) (hf : Continu
     (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : f (exp 𝕂 𝔸 x) = exp 𝕂 𝔹 (f x) := by
   rw [exp_eq_tsum, exp_eq_tsum]
   refine' ((exp_series_summable_of_mem_ball' _ hx).HasSum.map f hf).tsum_eq.symm.trans _
-  dsimp only [Function.comp]
+  dsimp' only [Function.comp]
   simp_rw [one_div, map_inv_nat_cast_smul f 𝕂 𝕂, map_pow]
 
 end CompleteAlgebra
@@ -370,9 +382,6 @@ theorem inv_of_exp (x : 𝔸) [Invertible (exp 𝕂 𝔸 x)] : ⅟ (exp 𝕂 �
 theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 𝔸 x) = exp 𝕂 𝔸 (-x) := by
   let this := invertibleExp 𝕂 x
   exact Ringₓ.inverse_invertible _
-
-theorem Commute.exp {x y : 𝔸} (h : Commute x y) : Commute (exp 𝕂 𝔸 x) (exp 𝕂 𝔸 y) :=
-  (exp_add_of_commute h).symm.trans <| (congr_argₓ _ <| add_commₓ _ _).trans (exp_add_of_commute h.symm)
 
 end
 
@@ -520,7 +529,7 @@ theorem star_exp {𝕜 A : Type _} [IsROrC 𝕜] [NormedRing A] [NormedAlgebra �
   have :=
     ContinuousLinearMap.map_tsum (starₗᵢ 𝕜 : A ≃ₗᵢ⋆[𝕜] A).toLinearIsometry.toContinuousLinearMap
       (exp_series_summable' a)
-  dsimp  at this
+  dsimp'  at this
   convert this
   funext
   simp only [star_smul, star_pow, one_div, star_inv', star_nat_cast]

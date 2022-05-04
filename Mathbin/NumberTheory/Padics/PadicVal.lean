@@ -244,7 +244,7 @@ theorem one_le_padic_val_nat_of_dvd {n p : Nat} [prime : Fact p.Prime] (n_pos : 
         exact div)
   simp only [Nat.cast_oneₓ] at one_le_mul
   rcases one_le_mul with ⟨_, q⟩
-  dsimp  at q
+  dsimp'  at q
   solve_by_elim
 
 end padicValNat

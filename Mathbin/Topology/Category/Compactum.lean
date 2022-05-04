@@ -476,7 +476,7 @@ end compactumToCompHaus
 def compactumToCompHausCompForget : compactumToCompHaus ⋙ CategoryTheory.forget CompHaus ≅ Compactum.forget :=
   (NatIso.ofComponents fun X => eqToIso rfl) <| by
     intro X Y f
-    dsimp
+    dsimp'
     simpa
 
 /-

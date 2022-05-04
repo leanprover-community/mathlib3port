@@ -45,7 +45,7 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin�
       rw [curry_left_apply]
       congr 1 with x
       refine' Finₓ.cases rfl (fun x => _) x
-      dsimp [Finₓ.tail]
+      dsimp' [Finₓ.tail]
       rw [Finₓ.cons_succ, Finₓ.cons_succ]
     
 

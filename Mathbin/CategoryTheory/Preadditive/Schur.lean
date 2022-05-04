@@ -19,11 +19,6 @@ Second, we prove Schur's lemma for `𝕜`-linear categories with finite dimensio
 over an algebraically closed field `𝕜`:
 the hom space `X ⟶ Y` between simple objects `X` and `Y` is at most one dimensional,
 and is 1-dimensional iff `X` and `Y` are isomorphic.
-
-## Future work
-It might be nice to provide a `division_ring` instance on `End X` when `X` is simple.
-This is an easy consequence of the results here,
-but may take some care setting up usable instances.
 -/
 
 
@@ -31,9 +26,7 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits
 
-universe v u
-
-variable {C : Type u} [Category.{v} C]
+variable {C : Type _} [Category C]
 
 variable [Preadditive C]
 
@@ -47,20 +40,40 @@ theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f :
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
 -/
-theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple.{v} X] [Simple.{v} Y] (f : X ⟶ Y) : IsIso.{v} f ↔ f ≠ 0 :=
+theorem is_iso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X ⟶ Y) : IsIso f ↔ f ≠ 0 :=
   ⟨fun I => by
     intro h
     apply id_nonzero X
     simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => is_iso_of_hom_simple w⟩
 
+/-- In any preadditive category with kernels,
+the endomorphisms of a simple object form a division ring.
+-/
+noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) := by
+  classical <;>
+    exact
+      { (inferInstance : Ringₓ (End X)) with
+        inv := fun f =>
+          if h : f = 0 then 0
+          else
+            have := is_iso_of_hom_simple h
+            inv f,
+        exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩, inv_zero := dif_pos rfl,
+        mul_inv_cancel := fun f h => by
+          have := is_iso_of_hom_simple h
+          convert is_iso.inv_hom_id f
+          exact dif_neg h }
+
 open FiniteDimensional
 
-variable (𝕜 : Type _) [Field 𝕜]
+section
+
+variable (𝕜 : Type _) [DivisionRing 𝕜]
 
 /-- Part of **Schur's lemma** for `𝕜`-linear categories:
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
-theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple.{v} X] [Simple.{v} Y]
+theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜 C] {X Y : C} [Simple X] [Simple Y]
     (h : (X ≅ Y) → False) : finrank 𝕜 (X ⟶ Y) = 0 :=
   have :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f => by
@@ -68,6 +81,10 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
       simp only [not_not, Ne.def] at p
       refine' p.mp fun _ => h (as_iso f)
   finrank_zero_of_subsingleton
+
+end
+
+variable (𝕜 : Type _) [Field 𝕜]
 
 variable [IsAlgClosed 𝕜] [Linear 𝕜 C]
 
@@ -114,13 +131,25 @@ variable [HasKernels C]
 
 /-- **Schur's lemma** for endomorphisms in `𝕜`-linear categories.
 -/
-theorem finrank_endomorphism_simple_eq_one (X : C) [Simple.{v} X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
+theorem finrank_endomorphism_simple_eq_one (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
     finrank 𝕜 (X ⟶ X) = 1 :=
   finrank_endomorphism_eq_one 𝕜 is_iso_iff_nonzero
 
-theorem endomorphism_simple_eq_smul_id {X : C} [Simple.{v} X] [I : FiniteDimensional 𝕜 (X ⟶ X)] (f : X ⟶ X) :
+theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] (f : X ⟶ X) :
     ∃ c : 𝕜, c • 𝟙 X = f :=
   (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X) f
+
+/-- Endomorphisms of a simple object form a field if they are finite dimensional.
+This can't be an instance as `𝕜` would be undetermined.
+-/
+noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] : Field (End X) := by
+  classical <;>
+    exact
+      { (inferInstance : DivisionRing (End X)) with
+        mul_comm := fun f g => by
+          obtain ⟨c, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 f
+          obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
+          simp [← mul_smul, mul_comm c d] }
 
 /-- **Schur's lemma** for `𝕜`-linear categories:
 if hom spaces are finite dimensional, then the hom space between simples is at most 1-dimensional.
@@ -128,10 +157,10 @@ if hom spaces are finite dimensional, then the hom space between simples is at m
 See `finrank_hom_simple_simple_eq_one_iff` and `finrank_hom_simple_simple_eq_zero_iff` below
 for the refinements when we know whether or not the simples are isomorphic.
 -/
--- We don't really need `[∀ X Y : C, finite_dimensional 𝕜 (X ⟶ Y)]` here,
--- just at least one of `[finite_dimensional 𝕜 (X ⟶ X)]` or `[finite_dimensional 𝕜 (Y ⟶ Y)]`.
-theorem finrank_hom_simple_simple_le_one (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple.{v} X]
-    [Simple.{v} Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 := by
+-- There is a symmetric argument that uses `[finite_dimensional 𝕜 (Y ⟶ Y)]` instead,
+-- but we don't bother proving that here.
+theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [Simple X] [Simple Y] :
+    finrank 𝕜 (X ⟶ Y) ≤ 1 := by
   cases' subsingleton_or_nontrivial (X ⟶ Y) with h
   · skip
     convert zero_le_one
@@ -147,8 +176,8 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [∀ X Y : C, FiniteDimension
         simpa using w =≫ f⟩
     
 
-theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple.{v} X]
-    [Simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) := by
+theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [FiniteDimensional 𝕜 (X ⟶ Y)]
+    [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) := by
   fconstructor
   · intro h
     rw [finrank_eq_one_iff'] at h
@@ -163,8 +192,8 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [∀ X Y : C, FiniteDimen
     linarith
     
 
-theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple.{v} X]
-    [Simple.{v} Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) := by
+theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [FiniteDimensional 𝕜 (X ⟶ Y)]
+    [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) := by
   rw [← not_nonempty_iff, ← not_congr (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y)]
   refine'
     ⟨fun h => by

@@ -64,7 +64,7 @@ add_hint_tactic intro
 
 add_hint_tactic infer_auto_param
 
-add_hint_tactic dsimp  at *
+add_hint_tactic dsimp'  at *
 
 add_hint_tactic simp at *
 

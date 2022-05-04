@@ -92,12 +92,15 @@ variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) (S : Type _) [CommSe
 
 variable [Algebra R S] {P : Type _} [CommSemiringₓ P]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_units] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`surj] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
-  map_units {} : ∀ y : M, IsUnit (algebraMap R S y)
-  surj {} : ∀ z : S, ∃ x : R × M, z * algebraMap R S x.2 = algebraMap R S x.1
-  eq_iff_exists {} : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, x * c = y * c
+  map_units : ∀ y : M, IsUnit (algebraMap R S y)
+  surj : ∀ z : S, ∃ x : R × M, z * algebraMap R S x.2 = algebraMap R S x.1
+  eq_iff_exists : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, x * c = y * c
 
 variable {M S}
 
@@ -624,13 +627,13 @@ theorem is_localization_of_base_ring_equiv [IsLocalization M S] (h : R ≃+* P) 
   constructor
   · rintro ⟨_, ⟨y, hy, rfl⟩⟩
     convert IsLocalization.map_units S ⟨y, hy⟩
-    dsimp only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]
+    dsimp' only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]
     exact congr_argₓ _ (h.symm_apply_apply _)
     
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M y
     refine' ⟨⟨h x, _, _, s.prop, rfl⟩, _⟩
-    dsimp only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]  at e⊢
+    dsimp' only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]  at e⊢
     convert e <;> exact h.symm_apply_apply _
     
   · intro x y
@@ -817,13 +820,13 @@ instance {S : Type _} [CommSemiringₓ S] [Algebra S R] : Algebra S (Localizatio
     Localization.ind <|
       Prod.rec <| by
         intro r x
-        dsimp
+        dsimp'
         simp only [← mk_one_eq_monoid_of_mk, mk_mul, Localization.smul_mk, one_mulₓ, Algebra.smul_def]
   commutes' := fun s =>
     Localization.ind <|
       Prod.rec <| by
         intro r x
-        dsimp
+        dsimp'
         simp only [← mk_one_eq_monoid_of_mk, mk_mul, Localization.smul_mk, one_mulₓ, mul_oneₓ, Algebra.commutes]
 
 instance : IsLocalization M (Localization M) where

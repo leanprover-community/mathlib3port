@@ -763,7 +763,7 @@ theorem has_finite_integral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMea
     refine' h2f.mp _
     apply eventually_of_forall
     intro x hx
-    dsimp only
+    dsimp' only
     rw [of_real_to_real]
     rw [← lt_top_iff_ne_top]
     exact hx

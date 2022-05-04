@@ -51,7 +51,7 @@ theorem lt_iff_to_list_lt : ∀ {s₁ s₂ : Stringₓ}, s₁ < s₂ ↔ s₁.to
       
     · exact iff_of_false Bool.ff_ne_tt (not_lt_of_lt List.Lex.nil)
       
-    · dsimp [iterator.has_next, iterator.curr, iterator.next]
+    · dsimp' [iterator.has_next, iterator.curr, iterator.next]
       split_ifs
       · subst b
         exact IH.trans list.lex.cons_iff.symm

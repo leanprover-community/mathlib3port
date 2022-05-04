@@ -62,6 +62,15 @@ theorem mul_tsupport_eq_empty_iff {f : X → α} : MulTsupport f = ∅ ↔ f = 1
 theorem image_eq_zero_of_nmem_mul_tsupport {f : X → α} {x : X} (hx : x ∉ MulTsupport f) : f x = 1 :=
   mul_support_subset_iff'.mp (subset_mul_tsupport f) x hx
 
+@[to_additive]
+theorem range_subset_insert_image_mul_tsupport (f : X → α) : Range f ⊆ insert 1 (f '' MulTsupport f) :=
+  (range_subset_insert_image_mul_support f).trans <| insert_subset_insert <| image_subset _ subset_closure
+
+@[to_additive]
+theorem range_eq_image_mul_tsupport_or (f : X → α) :
+    Range f = f '' MulTsupport f ∨ Range f = insert 1 (f '' MulTsupport f) :=
+  (wcovby_insert _ _).eq_or_eq (image_subset_range _ _) (range_subset_insert_image_mul_tsupport f)
+
 end One
 
 section
@@ -114,6 +123,12 @@ theorem has_compact_mul_support_iff_eventually_eq : HasCompactMulSupport f ↔ f
     fun h =>
     let ⟨C, hC⟩ := mem_coclosed_compact'.mp h
     compact_of_is_closed_subset hC.2.1 (is_closed_mul_tsupport _) (closure_minimal hC.2.2 hC.1)⟩
+
+@[to_additive]
+theorem HasCompactMulSupport.is_compact_range [TopologicalSpace β] (h : HasCompactMulSupport f) (hf : Continuous f) :
+    IsCompact (Range f) := by
+  cases' range_eq_image_mul_tsupport_or f with h2 h2 <;> rw [h2]
+  exacts[h.image hf, (h.image hf).insert 1]
 
 @[to_additive]
 theorem HasCompactMulSupport.mono' {f' : α → γ} (hf : HasCompactMulSupport f) (hff' : MulSupport f' ⊆ MulTsupport f) :

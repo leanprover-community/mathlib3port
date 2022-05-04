@@ -263,9 +263,9 @@ def single (a : α) (b : M) : α →₀ M :=
 theorem single_apply [Decidable (a = a')] : single a b a' = if a = a' then b else 0 := by
   convert rfl
 
-theorem single_eq_indicator : ⇑(single a b) = Set.indicator {a} fun _ => b := by
+theorem single_eq_indicator : ⇑(single a b) = Set.indicatorₓ {a} fun _ => b := by
   ext
-  simp [single_apply, Set.indicator, @eq_comm _ a]
+  simp [single_apply, Set.indicatorₓ, @eq_comm _ a]
 
 @[simp]
 theorem single_eq_same : (single a b : α →₀ M) a = b :=
@@ -839,7 +839,7 @@ theorem prod_comm (f : α →₀ M) (g : β →₀ M') (h : α → M → β → 
 @[simp, to_additive]
 theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
     (f.Prod fun x v => ite (a = x) (b x v) 1) = ite (a ∈ f.Support) (b a (f a)) 1 := by
-  dsimp [Finsupp.prod]
+  dsimp' [Finsupp.prod]
   rw [f.support.prod_ite_eq]
 
 @[simp]
@@ -852,7 +852,7 @@ theorem sum_ite_self_eq [DecidableEq α] {N : Type _} [AddCommMonoidₓ N] (f : 
 @[simp, to_additive "A restatement of `sum_ite_eq` with the equality test reversed."]
 theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
     (f.Prod fun x v => ite (x = a) (b x v) 1) = ite (a ∈ f.Support) (b a (f a)) 1 := by
-  dsimp [Finsupp.prod]
+  dsimp' [Finsupp.prod]
   rw [f.support.prod_ite_eq']
 
 @[simp]
@@ -2016,7 +2016,7 @@ def filter (p : α → Prop) (f : α →₀ M) : α →₀ M where
 theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then f a else 0 := by
   rw [Subsingleton.elimₓ D] <;> rfl
 
-theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicator { x | p x } f :=
+theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicatorₓ { x | p x } f :=
   rfl
 
 theorem filter_eq_zero_iff : f.filter p = 0 ↔ ∀ x, p x → f x = 0 := by
@@ -2314,7 +2314,7 @@ theorem filter_curry (f : α × β →₀ M) (p : α → Prop) : (f.filter fun a
   rw [Finsupp.curry, Finsupp.curry, Finsupp.sum, Finsupp.sum, filter_sum, support_filter, sum_filter]
   refine' Finset.sum_congr rfl _
   rintro ⟨a₁, a₂⟩ ha
-  dsimp only
+  dsimp' only
   split_ifs
   · rw [filter_apply_pos, filter_single_of_pos] <;> exact h
     
@@ -2454,11 +2454,11 @@ attribute [local instance] comap_mul_action
 def comapDistribMulAction : DistribMulAction G (α →₀ M) where
   smul_zero := fun g => by
     ext
-    dsimp [(· • ·)]
+    dsimp' [(· • ·)]
     simp
   smul_add := fun g f f' => by
     ext
-    dsimp [(· • ·)]
+    dsimp' [(· • ·)]
     simp [map_domain_add]
 
 end
@@ -2653,7 +2653,7 @@ def restrictSupportEquiv (s : Set α) (M : Type _) [AddCommMonoidₓ M] : { f : 
   · rintro ⟨f, hf⟩
     apply Subtype.eq
     ext a
-    dsimp only
+    dsimp' only
     refine' Classical.by_cases (fun h : a ∈ Set.Range (Subtype.val : s → α) => _) fun h => _
     · rcases h with ⟨x, rfl⟩
       rw [map_domain_apply Subtype.val_injective, subtype_domain_apply]
@@ -2666,7 +2666,7 @@ def restrictSupportEquiv (s : Set α) (M : Type _) [AddCommMonoidₓ M] : { f : 
     
   · intro f
     ext ⟨a, ha⟩
-    dsimp only
+    dsimp' only
     rw [subtype_domain_apply, map_domain_apply Subtype.val_injective]
     
 

@@ -4,9 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 -/
 import Mathbin.Analysis.Normed.Group.Pointwise
-import Mathbin.Analysis.Normed.Group.AddTorsor
 import Mathbin.Analysis.NormedSpace.Basic
-import Mathbin.Topology.MetricSpace.HausdorffDistance
 
 /-!
 # Properties of pointwise scalar multiplication of sets in normed spaces.
@@ -77,14 +75,6 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
     simp only [hz, add_neg_cancel_left]
   apply hε
   simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
-
-/-- Any ball is the image of a ball centered at the origin under a shift. -/
-theorem vadd_ball_zero (x : E) (r : ℝ) : x +ᵥ Ball 0 r = Ball x r := by
-  rw [vadd_ball, vadd_eq_add, add_zeroₓ]
-
-/-- Any closed ball is the image of a closed ball centered at the origin under a shift. -/
-theorem vadd_closed_ball_zero (x : E) (r : ℝ) : x +ᵥ ClosedBall 0 r = ClosedBall x r := by
-  rw [vadd_closed_ball, vadd_eq_add, add_zeroₓ]
 
 variable [NormedSpace ℝ E] {x y z : E} {δ ε : ℝ}
 
@@ -252,6 +242,57 @@ theorem cthickening_cthickening (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Set E) :
   (cthickening_cthickening_subset hε hδ _).antisymm fun x => by
     simp_rw [mem_cthickening_iff, Ennreal.of_real_add hε hδ, inf_edist_cthickening]
     exact tsub_le_iff_right.2
+
+@[simp]
+theorem thickening_ball (hε : 0 < ε) (hδ : 0 < δ) (x : E) : Thickening ε (Ball x δ) = Ball x (ε + δ) := by
+  rw [← thickening_singleton, thickening_thickening hε hδ, thickening_singleton] <;> infer_instance
+
+@[simp]
+theorem thickening_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (x : E) : Thickening ε (ClosedBall x δ) = Ball x (ε + δ) := by
+  rw [← cthickening_singleton _ hδ, thickening_cthickening hε hδ, thickening_singleton] <;> infer_instance
+
+@[simp]
+theorem cthickening_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (x : E) : Cthickening ε (Ball x δ) = ClosedBall x (ε + δ) := by
+  rw [← thickening_singleton, cthickening_thickening hε hδ, cthickening_singleton _ (add_nonneg hε hδ.le)] <;>
+    infer_instance
+
+@[simp]
+theorem cthickening_closed_ball (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (x : E) :
+    Cthickening ε (ClosedBall x δ) = ClosedBall x (ε + δ) := by
+  rw [← cthickening_singleton _ hδ, cthickening_cthickening hε hδ, cthickening_singleton _ (add_nonneg hε hδ)] <;>
+    infer_instance
+
+theorem ball_add_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) : Ball a ε + Ball b δ = Ball (a + b) (ε + δ) := by
+  rw [ball_add, thickening_ball hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
+
+theorem ball_sub_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) : Ball a ε - Ball b δ = Ball (a - b) (ε + δ) := by
+  simp_rw [sub_eq_add_neg, neg_ball, ball_add_ball hε hδ]
+
+theorem ball_add_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) : Ball a ε + ClosedBall b δ = Ball (a + b) (ε + δ) :=
+  by
+  rw [ball_add, thickening_closed_ball hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
+
+theorem ball_sub_closed_ball (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) : Ball a ε - ClosedBall b δ = Ball (a - b) (ε + δ) :=
+  by
+  simp_rw [sub_eq_add_neg, neg_closed_ball, ball_add_closed_ball hε hδ]
+
+theorem closed_ball_add_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε + Ball b δ = Ball (a + b) (ε + δ) :=
+  by
+  rw [add_commₓ, ball_add_closed_ball hδ hε, add_commₓ, add_commₓ δ] <;> infer_instance
+
+theorem closed_ball_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) : ClosedBall a ε - Ball b δ = Ball (a - b) (ε + δ) :=
+  by
+  simp_rw [sub_eq_add_neg, neg_ball, closed_ball_add_ball hε hδ]
+
+theorem closed_ball_add_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
+    ClosedBall a ε + ClosedBall b δ = ClosedBall (a + b) (ε + δ) := by
+  rw [(is_compact_closed_ball _ _).add_closed_ball hδ, cthickening_closed_ball hδ hε, vadd_closed_ball, vadd_eq_add,
+      add_commₓ, add_commₓ δ] <;>
+    infer_instance
+
+theorem closed_ball_sub_closed_ball [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
+    ClosedBall a ε - ClosedBall b δ = ClosedBall (a - b) (ε + δ) := by
+  simp_rw [sub_eq_add_neg, neg_closed_ball, closed_ball_add_closed_ball hε hδ]
 
 end SemiNormedGroup
 

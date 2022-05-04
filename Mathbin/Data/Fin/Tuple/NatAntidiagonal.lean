@@ -122,7 +122,7 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
       
     · rw [List.mem_mapₓ] at hx₁ hx₂
       obtain ⟨⟨x₁, hx₁, rfl⟩, ⟨x₂, hx₂, h₁₂⟩⟩ := hx₁, hx₂
-      dsimp  at h₁₂
+      dsimp'  at h₁₂
       rw [Finₓ.cons_eq_cons, Nat.succ_inj'] at h₁₂
       obtain ⟨h₁₂, rfl⟩ := h₁₂
       rw [h₁₂] at h
@@ -172,7 +172,7 @@ theorem antidiagonal_tuple_pairwise_pi_lex : ∀ k n, (antidiagonalTuple k n).Pa
         obtain ⟨a, b, hab, rfl : (Nat.succ a, b) = p⟩ := hp
         exact Or.inl (Nat.zero_lt_succₓ _)
         
-      dsimp
+      dsimp'
       simp_rw [Nat.succ_inj', Nat.succ_lt_succ_iff]
       exact n_ih
       

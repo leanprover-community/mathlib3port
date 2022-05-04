@@ -249,7 +249,7 @@ theorem mk_ring_hom_rel {r : R → R → Prop} {x y : R} (w : r x y) : mkRingHom
   simp [mk_ring_hom, Quot.sound (rel.of w)]
 
 theorem mk_ring_hom_surjective (r : R → R → Prop) : Function.Surjective (mkRingHom r) := by
-  dsimp [mk_ring_hom]
+  dsimp' [mk_ring_hom]
   rintro ⟨⟨⟩⟩
   simp
 
@@ -294,7 +294,7 @@ def lift {r : R → R → Prop} : { f : R →+* T // ∀ ⦃x y⦄, r x y → f 
         simp [mul_quot, f.map_mul x y] }
   invFun := fun F =>
     ⟨F.comp (mkRingHom r), fun x y h => by
-      dsimp
+      dsimp'
       rw [mk_ring_hom_rel h]⟩
   left_inv := fun f => by
     ext
@@ -320,7 +320,7 @@ theorem eq_lift_comp_mk_ring_hom {r : R → R → Prop} (f : RingQuot r →+* T)
     f =
       lift
         ⟨f.comp (mkRingHom r), fun x y h => by
-          dsimp
+          dsimp'
           rw [mk_ring_hom_rel h]⟩ :=
   (lift.apply_symm_apply f).symm
 
@@ -444,7 +444,7 @@ theorem mk_alg_hom_rel {s : A → A → Prop} {x y : A} (w : s x y) : mkAlgHom S
   simp [mk_alg_hom, mk_ring_hom, Quot.sound (rel.of w)]
 
 theorem mk_alg_hom_surjective (s : A → A → Prop) : Function.Surjective (mkAlgHom S s) := by
-  dsimp [mk_alg_hom]
+  dsimp' [mk_alg_hom]
   rintro ⟨⟨a⟩⟩
   use a
   rfl
@@ -493,7 +493,7 @@ def liftAlgHom {s : A → A → Prop} : { f : A →ₐ[S] B // ∀ ⦃x y⦄, s 
         simp [← one_quot, smul_quot, Algebra.algebra_map_eq_smul_one] }
   invFun := fun F =>
     ⟨F.comp (mkAlgHom S s), fun _ _ h => by
-      dsimp
+      dsimp'
       erw [mk_alg_hom_rel S h]⟩
   left_inv := fun f => by
     ext
@@ -519,7 +519,7 @@ theorem eq_lift_alg_hom_comp_mk_alg_hom {s : A → A → Prop} (f : RingQuot s �
     f =
       liftAlgHom S
         ⟨f.comp (mkAlgHom S s), fun x y h => by
-          dsimp
+          dsimp'
           erw [mk_alg_hom_rel S h]⟩ :=
   ((liftAlgHom S).apply_symm_apply f).symm
 

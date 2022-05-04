@@ -19,6 +19,7 @@ universe u v
 
 variable (R : Type u)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -30,7 +31,7 @@ For instance, endowing `{0, 1}` with addition given by `max` (i.e. `1` is absorb
 This example is formalized in `counterexamples/char_p_zero_ne_char_zero`.
  -/
 class CharP [AddMonoidₓ R] [One R] (p : ℕ) : Prop where
-  cast_eq_zero_iff {} : ∀ x : ℕ, (x : R) = 0 ↔ p ∣ x
+  cast_eq_zero_iff : ∀ x : ℕ, (x : R) = 0 ↔ p ∣ x
 
 theorem CharP.cast_eq_zero [AddMonoidₓ R] [One R] (p : ℕ) [CharP R p] : (p : R) = 0 :=
   (CharP.cast_eq_zero_iff R p p).2 (dvd_refl p)

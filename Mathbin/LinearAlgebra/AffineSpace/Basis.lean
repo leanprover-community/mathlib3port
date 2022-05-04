@@ -150,6 +150,14 @@ theorem affine_combination_coord_eq_self [Fintype ι] (q : P) :
   ext i
   exact b.coord_apply_combination_of_mem (Finset.mem_univ i) hw
 
+/-- A variant of `affine_basis.affine_combination_coord_eq_self` for the special case when the
+affine space is a module so we can talk about linear combinations. -/
+@[simp]
+theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (v : V) :
+    (∑ i, b.Coord i v • b.points i) = v := by
+  have hb := b.affine_combination_coord_eq_self v
+  rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
+
 theorem ext_elem [Fintype ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ := by
   rw [← b.affine_combination_coord_eq_self q₁, ← b.affine_combination_coord_eq_self q₂]
   simp only [h]

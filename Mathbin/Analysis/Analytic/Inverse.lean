@@ -87,7 +87,7 @@ theorem left_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[
   refine' Finset.sum_congr rfl fun c cuniv => _
   rcases c with ⟨c, hc⟩
   ext v
-  dsimp
+  dsimp'
   simp [IH _ hc]
 
 /-- The left inverse to a formal multilinear series is indeed a left inverse, provided its linear
@@ -449,7 +449,7 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       simp only [←
         MultilinearMap.map_sum_finset (MultilinearMap.mkPiAlgebra ℝ (Finₓ j) ℝ) fun m : ℕ => r * (a ^ m * p m)]
       simp only [MultilinearMap.mk_pi_algebra_apply]
-      dsimp
+      dsimp'
       simp [prod_const, ← mul_sum, mul_powₓ]
     
 

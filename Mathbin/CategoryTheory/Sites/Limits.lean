@@ -68,19 +68,19 @@ def multiforkEvaluationCone (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPreshe
               intro i
               simp only [category.assoc]
               erw [← (E.π.app k).naturality, ← (E.π.app k).naturality]
-              dsimp
+              dsimp'
               simp only [← category.assoc]
               congr 1
               apply S.condition),
       naturality' := by
         intro i j f
-        dsimp [presheaf.is_limit_of_is_sheaf]
+        dsimp' [presheaf.is_limit_of_is_sheaf]
         rw [category.id_comp]
         apply presheaf.is_sheaf.hom_ext (F.obj j).2 W
         intro ii
         rw [presheaf.is_sheaf.amalgamate_map, category.assoc, ← (F.map f).val.naturality, ← category.assoc,
           presheaf.is_sheaf.amalgamate_map]
-        dsimp [multifork.of_ι]
+        dsimp' [multifork.of_ι]
         erw [category.assoc, ← E.w f]
         tidy }
 
@@ -100,24 +100,24 @@ def isLimitMultiforkOfIsLimit (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPres
       intro S i
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
       intro k
-      dsimp [multifork.of_ι]
+      dsimp' [multifork.of_ι]
       erw [category.assoc, (E.π.app k).naturality]
-      dsimp
+      dsimp'
       rw [← category.assoc]
       erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac (multifork_evaluation_cone F E X W S)]
-      dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
+      dsimp' [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
       erw [presheaf.is_sheaf.amalgamate_map]
       rfl)
     (by
       intro S m hm
       apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).hom_ext
       intro k
-      dsimp
+      dsimp'
       erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac]
       apply presheaf.is_sheaf.hom_ext (F.obj k).2 W
       intro i
       erw [presheaf.is_sheaf.amalgamate_map]
-      dsimp [multifork.of_ι]
+      dsimp' [multifork.of_ι]
       change _ = S.ι i ≫ _
       erw [← hm, category.assoc, ← (E.π.app k).naturality, category.assoc]
       rfl)
@@ -140,7 +140,7 @@ instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
           ⟨fun t => ⟨E.π.app _⟩, fun u v e => Sheaf.Hom.ext _ _ <| E.π.naturality _⟩⟩,
       validLift :=
         (Cones.ext (eqToIso rfl)) fun j => by
-          dsimp
+          dsimp'
           simp ,
       makesLimit :=
         { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩,
@@ -200,7 +200,7 @@ def sheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPresheaf J D)
     { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.x⟩,
       naturality' := fun i j f => by
         ext1
-        dsimp
+        dsimp'
         erw [category.comp_id, ← category.assoc, E.w f] }
 
 /-- If `E` is a colimit cocone of presheaves, over a diagram factoring through sheaves,
@@ -212,7 +212,7 @@ def isColimitSheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPres
   fac' := by
     intro S j
     ext1
-    dsimp [sheafify_cocone]
+    dsimp' [sheafify_cocone]
     erw [category.assoc, J.to_sheafify_sheafify_lift, hE.fac]
     rfl
   uniq' := by
@@ -221,7 +221,7 @@ def isColimitSheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPres
     apply J.sheafify_lift_unique
     apply hE.uniq ((Sheaf_to_presheaf J D).mapCocone S)
     intro j
-    dsimp
+    dsimp'
     simpa only [← category.assoc, ← hm]
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (Sheaf J D) :=

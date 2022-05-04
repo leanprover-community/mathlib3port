@@ -489,7 +489,7 @@ theorem LinearIndependent.group_smul {G : Type _} [hG : Groupₓ G] [DistribMulA
   intro s g hgs hsum i
   refine' (smul_eq_zero_iff_eq (w i)).1 _
   refine' hv s (fun i => w i • g i) (fun i hi => _) _ i
-  · dsimp only
+  · dsimp' only
     exact (hgs i hi).symm ▸ smul_zero _
     
   · rw [← hsum, Finset.sum_congr rfl _]
@@ -505,7 +505,7 @@ theorem LinearIndependent.units_smul {v : ι → M} (hv : LinearIndependent R v)
   intro s g hgs hsum i
   rw [← (w i).mul_left_eq_zero]
   refine' hv s (fun i => g i • w i) (fun i hi => _) _ i
-  · dsimp only
+  · dsimp' only
     exact (hgs i hi).symm ▸ zero_smul _ _
     
   · rw [← hsum, Finset.sum_congr rfl _]
@@ -544,7 +544,7 @@ theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ringₓ R] [No
           ext
           simp )
     have q := congr_argₓ (fun s => (coe : w → M) '' s) p.range_eq
-    dsimp  at q
+    dsimp'  at q
     rw [← image_univ, image_image] at q
     simpa using q
     
@@ -813,15 +813,15 @@ theorem exists_maximal_independent' (s : ι → M) :
   let r : X → X → Prop := fun I J => I.1 ⊆ J.1
   have key : ∀ c : Set X, IsChain r c → indep (⋃ (I : X) (H : I ∈ c), I) := by
     intro c hc
-    dsimp [indep]
+    dsimp' [indep]
     rw [linear_independent_comp_subtype]
     intro f hsupport hsum
-    rcases eq_empty_or_nonempty c with (rfl | ⟨a, hac⟩)
+    rcases eq_empty_or_nonempty c with (rfl | hn)
     · simpa using hsupport
       
     have : IsRefl X r := ⟨fun _ => Set.Subset.refl _⟩
     obtain ⟨I, I_mem, hI⟩ : ∃ I ∈ c, (f.support : Set ι) ⊆ I :=
-      Finset.exists_mem_subset_of_subset_bUnion_of_directed_on hac hc.directed_on hsupport
+      hc.directed_on.exists_mem_subset_of_finset_subset_bUnion hn hsupport
     exact linear_independent_comp_subtype.mp I.2 f hI hsum
   have trans : Transitive r := fun I J K => Set.Subset.trans
   obtain ⟨⟨I, hli : indep I⟩, hmax : ∀ a, r ⟨I, hli⟩ a → r a ⟨I, hli⟩⟩ :=
@@ -876,7 +876,7 @@ theorem surjective_of_linear_independent_of_span [Nontrivial R] (hv : LinearInde
   let repr : (span R (range (v ∘ f)) : Type _) → ι' →₀ R := (hv.comp f f.injective).repr
   let l := (reprₓ ⟨v i, hss (mem_range_self i)⟩).mapDomain f
   have h_total_l : Finsupp.total ι M R v l = v i := by
-    dsimp only [l]
+    dsimp' only [l]
     rw [Finsupp.total_map_domain]
     rw [(hv.comp f f.injective).total_repr]
     · rfl
@@ -886,7 +886,7 @@ theorem surjective_of_linear_independent_of_span [Nontrivial R] (hv : LinearInde
   have h_total_eq : (Finsupp.total ι M R v) l = (Finsupp.total ι M R v) (Finsupp.single i 1) := by
     rw [h_total_l, Finsupp.total_single, one_smul]
   have l_eq : l = _ := LinearMap.ker_eq_bot.1 hv h_total_eq
-  dsimp only [l]  at l_eq
+  dsimp' only [l]  at l_eq
   rw [← Finsupp.emb_domain_eq_map_domain] at l_eq
   rcases Finsupp.single_of_emb_domain_single (reprₓ ⟨v i, _⟩) f i (1 : R) zero_ne_one.symm l_eq with ⟨i', hi'⟩
   use i'
@@ -1123,7 +1123,7 @@ theorem linear_independent_option' :
   by
   rw [← linear_independent_equiv (Equivₓ.optionEquivSumPunit ι).symm, linear_independent_sum, @range_unique _ PUnit,
     @linear_independent_unique_iff PUnit, disjoint_span_singleton]
-  dsimp [(· ∘ ·)]
+  dsimp' [(· ∘ ·)]
   refine' ⟨fun h => ⟨h.1, fun hx => h.2.1 <| h.2.2 hx⟩, fun h => ⟨h.1, _, fun hx => (h.2 hx).elim⟩⟩
   rintro rfl
   exact h.2 (zero_mem _)

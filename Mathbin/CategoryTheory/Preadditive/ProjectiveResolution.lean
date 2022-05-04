@@ -84,10 +84,11 @@ structure ProjectiveResolution (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where
-  out {} : Nonempty (ProjectiveResolution Z)
+  out : Nonempty (ProjectiveResolution Z)
 
 section
 
@@ -109,7 +110,7 @@ namespace ProjectiveResolution
 @[simp]
 theorem π_f_succ {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : P.π.f (n + 1) = 0 := by
   apply zero_of_target_iso_zero
-  dsimp
+  dsimp'
   rfl
 
 @[simp]
@@ -130,20 +131,20 @@ def self (Z : C) [CategoryTheory.Projective Z] : ProjectiveResolution Z where
   π := 𝟙 ((ChainComplex.single₀ C).obj Z)
   Projective := fun n => by
     cases n
-    · dsimp
+    · dsimp'
       infer_instance
       
-    · dsimp
+    · dsimp'
       infer_instance
       
   exact₀ := by
-    dsimp
+    dsimp'
     exact exact_zero_mono _
   exact := fun n => by
-    dsimp
+    dsimp'
     exact exact_of_zero _ _
   Epi := by
-    dsimp
+    dsimp'
     infer_instance
 
 /-- Auxiliary construction for `lift`. -/
@@ -162,7 +163,7 @@ def liftFOne {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : Projectiv
 @[simp]
 theorem lift_f_one_zero_comm {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : ProjectiveResolution Z) :
     liftFOne f P Q ≫ Q.complex.d 1 0 = P.complex.d 1 0 ≫ liftFZero f P Q := by
-  dsimp [lift_f_zero, lift_f_one]
+  dsimp' [lift_f_zero, lift_f_one]
   simp
 
 /-- Auxiliary construction for `lift`. -/
@@ -188,7 +189,7 @@ theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : 
     lift f P Q ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f := by
   ext n
   rcases n with (_ | _ | n) <;>
-    · dsimp [lift, lift_f_zero, lift_f_one]
+    · dsimp' [lift, lift_f_zero, lift_f_one]
       simp
       
 

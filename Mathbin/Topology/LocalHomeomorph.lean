@@ -741,7 +741,7 @@ theorem prod_trans {η : Type _} {ε : Type _} [TopologicalSpace η] [Topologica
     (f : LocalHomeomorph β γ) (e' : LocalHomeomorph δ η) (f' : LocalHomeomorph η ε) :
     (e.Prod e').trans (f.Prod f') = (e.trans f).Prod (e'.trans f') :=
   LocalHomeomorph.eq_of_local_equiv_eq <| by
-    dsimp only [trans_to_local_equiv, prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
+    dsimp' only [trans_to_local_equiv, prod_to_local_equiv] <;> apply LocalEquiv.prod_trans
 
 end Prod
 

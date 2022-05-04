@@ -124,7 +124,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Modₓ B ⥤ Modₓ A where
   map := fun M N g =>
     { Hom := g.Hom,
       act_hom' := by
-        dsimp
+        dsimp'
         slice_rhs 1 2 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
         slice_rhs 2 3 => rw [← g.act_hom]
         rw [category.assoc] }

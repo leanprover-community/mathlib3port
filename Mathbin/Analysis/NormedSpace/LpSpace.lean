@@ -79,20 +79,20 @@ def Memℓp (f : ∀ i, E i) (p : ℝ≥0∞) : Prop :=
   else if p = ∞ then BddAbove (Set.Range fun i => ∥f i∥) else Summable fun i => ∥f i∥ ^ p.toReal
 
 theorem mem_ℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite { i | f i ≠ 0 } := by
-  dsimp [Memℓp] <;> rw [if_pos rfl]
+  dsimp' [Memℓp] <;> rw [if_pos rfl]
 
 theorem mem_ℓp_zero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Memℓp f 0 :=
   mem_ℓp_zero_iff.2 hf
 
 theorem mem_ℓp_infty_iff {f : ∀ i, E i} : Memℓp f ∞ ↔ BddAbove (Set.Range fun i => ∥f i∥) := by
-  dsimp [Memℓp] <;> rw [if_neg Ennreal.top_ne_zero, if_pos rfl]
+  dsimp' [Memℓp] <;> rw [if_neg Ennreal.top_ne_zero, if_pos rfl]
 
 theorem mem_ℓp_infty {f : ∀ i, E i} (hf : BddAbove (Set.Range fun i => ∥f i∥)) : Memℓp f ∞ :=
   mem_ℓp_infty_iff.2 hf
 
 theorem mem_ℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} : Memℓp f p ↔ Summable fun i => ∥f i∥ ^ p.toReal := by
   rw [Ennreal.to_real_pos_iff] at hp
-  dsimp [Memℓp]
+  dsimp' [Memℓp]
   rw [if_neg hp.1.ne', if_neg hp.2.Ne]
 
 theorem mem_ℓp_gen {f : ∀ i, E i} (hf : Summable fun i => ∥f i∥ ^ p.toReal) : Memℓp f p := by
@@ -248,7 +248,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
   · exact fun b => Real.rpow_nonneg_of_nonneg (norm_nonneg (f b + g b)) p.to_real
     
   · refine' (Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp.le).trans _
-    dsimp [C]
+    dsimp' [C]
     split_ifs with h h
     · simpa using Nnreal.coe_le_coe.2 (Nnreal.rpow_add_le_add_rpow ∥f i∥₊ ∥g i∥₊ hp h.le)
       
@@ -394,7 +394,7 @@ theorem norm_eq_card_dsupport (f : lp E 0) : ∥f∥ = (lp.mem_ℓp f).finite_ds
   dif_pos rfl
 
 theorem norm_eq_csupr (f : lp E ∞) : ∥f∥ = ⨆ i, ∥f i∥ := by
-  dsimp [norm]
+  dsimp' [norm]
   rw [dif_neg Ennreal.top_ne_zero, if_pos rfl]
 
 theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.Range fun i => ∥f i∥) ∥f∥ := by
@@ -402,7 +402,7 @@ theorem is_lub_norm [Nonempty α] (f : lp E ∞) : IsLub (Set.Range fun i => ∥
   exact is_lub_csupr (lp.mem_ℓp f)
 
 theorem norm_eq_tsum_rpow (hp : 0 < p.toReal) (f : lp E p) : ∥f∥ = (∑' i, ∥f i∥ ^ p.toReal) ^ (1 / p.toReal) := by
-  dsimp [norm]
+  dsimp' [norm]
   rw [Ennreal.to_real_pos_iff] at hp
   rw [dif_neg hp.1.ne', if_neg hp.2.Ne]
 
@@ -757,7 +757,7 @@ protected theorem has_sum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) 
   have hp₀ : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
   have hp' : 0 < p.to_real := Ennreal.to_real_pos hp₀.ne' hp
   have := lp.has_sum_norm hp' f
-  dsimp [HasSum]  at this⊢
+  dsimp' [HasSum]  at this⊢
   rw [Metric.tendsto_nhds] at this⊢
   intro ε hε
   refine' (this _ (Real.rpow_pos_of_pos hε p.to_real)).mono _

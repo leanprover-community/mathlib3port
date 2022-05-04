@@ -41,8 +41,6 @@ incidence matrix for each `simple_graph α` has the same type.
 -/
 
 
-noncomputable section
-
 open Finset Matrix SimpleGraph Sym2
 
 open BigOperators Matrix
@@ -53,7 +51,7 @@ variable (R : Type _) {α : Type _} (G : SimpleGraph α)
 
 /-- `G.inc_matrix R` is the `α × sym2 α` matrix whose `(a, e)`-entry is `1` if `e` is incident to
 `a` and `0` otherwise. -/
-def incMatrix [Zero R] [One R] : Matrix α (Sym2 α) R := fun a => (G.IncidenceSet a).indicator 1
+noncomputable def incMatrix [Zero R] [One R] : Matrix α (Sym2 α) R := fun a => (G.IncidenceSet a).indicator 1
 
 variable {R}
 
@@ -71,6 +69,7 @@ variable [MulZeroOneClassₓ R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_apply_mul_inc_matrix_apply :
     G.incMatrix R a e * G.incMatrix R b e = (G.IncidenceSet a ∩ G.IncidenceSet b).indicator 1 e := by
+  classical
   simp only [inc_matrix, Set.indicator_apply, ← ite_and_mul_zero, Pi.one_apply, mul_oneₓ, Set.mem_inter_eq]
   congr
 
@@ -151,6 +150,7 @@ section Semiringₓ
 variable [Fintype (Sym2 α)] [Semiringₓ R] {a b : α} {e : Sym2 α}
 
 theorem inc_matrix_mul_transpose_apply_of_adj (h : G.Adj a b) : (G.incMatrix R ⬝ (G.incMatrix R)ᵀ) a b = (1 : R) := by
+  classical
   simp_rw [Matrix.mul_apply, Matrix.transpose_apply, inc_matrix_apply_mul_inc_matrix_apply, Set.indicator_apply,
     Pi.one_apply, sum_boole]
   convert Nat.cast_oneₓ

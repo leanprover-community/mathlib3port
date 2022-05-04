@@ -63,11 +63,11 @@ section TopologicalVectorSpace
 variable [Semiringₓ R] [∀ x, AddCommMonoidₓ (E x)] [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F]
   [Module R F] [TopologicalSpace B]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- Local pretrivialization for vector prebundles. -/
 @[nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Pretrivialization extends
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" where
   linear : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun y).2
 
 instance : CoeFun (TopologicalVectorBundle.Pretrivialization R F E) _ :=
@@ -79,11 +79,11 @@ instance :
 
 variable [TopologicalSpace (TotalSpace E)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- Local trivialization for vector bundles. -/
 @[nolint has_inhabited_instance]
 structure TopologicalVectorBundle.Trivialization extends
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" where
   linear : ∀, ∀ x ∈ base_set, ∀, IsLinearMap R fun y : E x => (to_fun y).2
 
 open TopologicalVectorBundle
@@ -140,17 +140,22 @@ def ContinuousTransitions (e : LocalEquiv (B × F) (B × F)) : Prop :=
 
 variable {B}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`total_space_mk_inducing] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`TrivializationAtlas] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`trivializationAt] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`mem_base_set_trivialization_at] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`trivialization_mem_atlas] []
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (e e' «expr ∈ » trivialization_atlas)
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
 class TopologicalVectorBundle where
-  total_space_mk_inducing {} : ∀ b : B, Inducing (totalSpaceMk E b)
-  TrivializationAtlas {} : Set (Trivialization R F E)
-  trivializationAt {} : B → Trivialization R F E
-  mem_base_set_trivialization_at {} : ∀ b : B, b ∈ (trivialization_at b).BaseSet
-  trivialization_mem_atlas {} : ∀ b : B, trivialization_at b ∈ trivialization_atlas
+  total_space_mk_inducing : ∀ b : B, Inducing (totalSpaceMk E b)
+  TrivializationAtlas : Set (Trivialization R F E)
+  trivializationAt : B → Trivialization R F E
+  mem_base_set_trivialization_at : ∀ b : B, b ∈ (trivialization_at b).BaseSet
+  trivialization_mem_atlas : ∀ b : B, trivialization_at b ∈ trivialization_atlas
   continuous_coord_change :
     ∀ e e' _ : e ∈ trivialization_atlas _ : e' ∈ trivialization_atlas,
       ContinuousTransitions R B F (e.toLocalEquiv.symm.trans e'.toLocalEquiv : _)
@@ -235,7 +240,7 @@ def continuousLinearEquivAt (e : Trivialization R F E) (b : B) (hb : b ∈ e.Bas
     have C : (e (e.to_local_homeomorph.symm (b, v))).2 = v := by
       rw [B]
     conv_rhs => rw [← C]
-    dsimp
+    dsimp'
     congr
     ext
     · exact (TopologicalFiberBundle.Trivialization.proj_symm_apply' _ hb).symm
@@ -256,7 +261,7 @@ def continuousLinearEquivAt (e : Trivialization R F E) (b : B) (hb : b ∈ e.Bas
     exact hb
   continuous_inv_fun := by
     rw [(TopologicalVectorBundle.total_space_mk_inducing R F E b).continuous_iff]
-    dsimp
+    dsimp'
     have : Continuous fun z : F => e.to_fiber_bundle_trivialization.to_local_homeomorph.symm (b, z) := by
       apply
         e.to_local_homeomorph.symm.continuous_on.comp_continuous (continuous_const.prod_mk continuous_id') fun z => _
@@ -890,7 +895,7 @@ theorem Prod.inv_fun'_apply {x : B} (hx₁ : x ∈ e₁.BaseSet) (hx₂ : x ∈ 
     Prod.invFun' e₁ e₂ ⟨x, w₁, w₂⟩ =
       ⟨x, ((e₁.continuousLinearEquivAt x hx₁).symm w₁, (e₂.continuousLinearEquivAt x hx₂).symm w₂)⟩ :=
   by
-  dsimp [prod.inv_fun']
+  dsimp' [prod.inv_fun']
   rw [dif_pos, dif_pos]
 
 theorem Prod.left_inv {x : TotalSpace (E₁×ᵇE₂)} (h : x ∈ proj (E₁×ᵇE₂) ⁻¹' (e₁.BaseSet ∩ e₂.BaseSet)) :
@@ -907,7 +912,7 @@ theorem Prod.right_inv {x : B × F₁ × F₂} (h : x ∈ (e₁.BaseSet ∩ e₂
     Prod.toFun' e₁ e₂ (Prod.invFun' e₁ e₂ x) = x := by
   obtain ⟨x, w₁, w₂⟩ := x
   obtain ⟨h, -⟩ := h
-  dsimp only [prod.to_fun', prod.inv_fun']
+  dsimp' only [prod.to_fun', prod.inv_fun']
   simp only [Prod.mk.inj_iffₓ, eq_self_iff_true, true_andₓ]
   constructor
   · rw [dif_pos, ← e₁.continuous_linear_equiv_at_apply x h.1, ContinuousLinearEquiv.apply_symm_apply]
@@ -925,18 +930,18 @@ theorem Prod.continuous_inv_fun :
     by
     refine' this.congr _
     rintro ⟨b, v₁, v₂⟩ ⟨⟨h₁, h₂⟩, _⟩
-    dsimp  at h₁ h₂⊢
+    dsimp'  at h₁ h₂⊢
     rw [prod.inv_fun'_apply h₁ h₂, e₁.symm_apply_eq_mk_continuous_linear_equiv_at_symm b h₁,
       e₂.symm_apply_eq_mk_continuous_linear_equiv_at_symm b h₂]
   have H₁ : Continuous fun p : B × F₁ × F₂ => ((p.1, p.2.1), (p.1, p.2.2)) :=
     (continuous_id.prod_map continuous_fst).prod_mk (continuous_id.prod_map continuous_snd)
   have H₂ := e₁.to_local_homeomorph.symm.continuous_on.prod_map e₂.to_local_homeomorph.symm.continuous_on
   refine' H₂.comp H₁.continuous_on fun x h => ⟨_, _⟩
-  · dsimp
+  · dsimp'
     rw [e₁.target_eq]
     exact ⟨h.1.1, mem_univ _⟩
     
-  · dsimp
+  · dsimp'
     rw [e₂.target_eq]
     exact ⟨h.1.2, mem_univ _⟩
     

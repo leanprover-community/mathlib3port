@@ -94,7 +94,7 @@ theorem desc_commutes {Y Z : C} (f : Z ⟶ Y) (I : InjectiveResolution Y) (J : I
     J.ι ≫ desc f I J = (CochainComplex.single₀ C).map f ≫ I.ι := by
   ext n
   rcases n with (_ | _ | n) <;>
-    · dsimp [desc, desc_f_one, desc_f_zero]
+    · dsimp' [desc, desc_f_one, desc_f_zero]
       simp
       
 

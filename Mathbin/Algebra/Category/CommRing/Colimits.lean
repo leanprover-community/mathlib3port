@@ -160,7 +160,7 @@ instance : CommRingₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp
+      dsimp'
       apply Quot.sound
       · exact relation.add_1 _ _ _ r
         
@@ -182,7 +182,7 @@ instance : CommRingₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp
+      dsimp'
       apply Quot.sound
       · exact relation.mul_1 _ _ _ r
         
@@ -191,38 +191,38 @@ instance : CommRingₓ (ColimitType F) where
       
   zero_add := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.zero_add
     rfl
   add_zero := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_zero
     rfl
   one_mul := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.one_mul
     rfl
   mul_one := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_one
     rfl
   add_left_neg := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_left_neg
     rfl
   add_comm := fun x y => by
     induction x
     induction y
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_comm
     rfl
@@ -230,7 +230,7 @@ instance : CommRingₓ (ColimitType F) where
   mul_comm := fun x y => by
     induction x
     induction y
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_comm
     rfl
@@ -239,7 +239,7 @@ instance : CommRingₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.add_assoc
     rfl
@@ -249,7 +249,7 @@ instance : CommRingₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_assoc
     rfl
@@ -259,7 +259,7 @@ instance : CommRingₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.left_distrib
     rfl
@@ -269,7 +269,7 @@ instance : CommRingₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.right_distrib
     rfl
@@ -353,7 +353,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
   · intro x y r
     induction r <;>
       try
-        dsimp
+        dsimp'
     -- refl
     · rfl
       

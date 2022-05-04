@@ -123,7 +123,7 @@ theorem is_sheaf_for_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presie
   apply presieve.is_sheaf_for_subsieve_aux P this
   apply is_sheaf_for_bind _ _ _ hR hS
   · intro Y f hf Z g
-    dsimp
+    dsimp'
     rw [← pullback_comp]
     apply (hS (R.downward_closed hf _)).IsSeparatedFor
     
@@ -172,7 +172,7 @@ def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C where
 
 /-- Construct the finest (largest) Grothendieck topology for which all the given presheaves are sheaves.
 
-This is equal to the construction of https://stacks.math.columbia.edu/tag/00Z9.
+This is equal to the construction of <https://stacks.math.columbia.edu/tag/00Z9>.
 -/
 def finestTopology (Ps : Set (Cᵒᵖ ⥤ Type v)) : GrothendieckTopology C :=
   inf (finest_topology_single '' Ps)
@@ -194,7 +194,7 @@ theorem le_finest_topology (Ps : Set (Cᵒᵖ ⥤ Type v)) (J : GrothendieckTopo
 /-- The `canonical_topology` on a category is the finest (largest) topology for which every
 representable presheaf is a sheaf.
 
-See https://stacks.math.columbia.edu/tag/00ZA
+See <https://stacks.math.columbia.edu/tag/00ZA>
 -/
 def canonicalTopology (C : Type u) [Category.{v} C] : GrothendieckTopology C :=
   finestTopology (Set.Range yoneda.obj)

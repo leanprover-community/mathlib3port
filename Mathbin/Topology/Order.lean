@@ -234,10 +234,11 @@ instance : CompleteLattice (TopologicalSpace α) :=
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
-  eq_bot {} : t = ⊥
+  eq_bot : t = ⊥
 
 instance (priority := 100) discrete_topology_bot (α : Type _) : @DiscreteTopology α ⊥ where
   eq_bot := rfl

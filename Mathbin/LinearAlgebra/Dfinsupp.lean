@@ -120,7 +120,7 @@ def lsum [Semiringₓ S] [Module S N] [SmulCommClass R S N] : (∀ i, M i →ₗ
   toFun := fun F =>
     { toFun := sumAddHom fun i => (F i).toAddMonoidHom, map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add,
       map_smul' := fun c f => by
-        dsimp
+        dsimp'
         apply Dfinsupp.induction f
         · rw [smul_zero, AddMonoidHom.map_zero, smul_zero]
           

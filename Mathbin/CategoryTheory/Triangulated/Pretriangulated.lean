@@ -42,6 +42,7 @@ We work in a preadditive category `C` equipped with an additive shift.
 variable (C : Type u) [Category.{v} C] [HasZeroObject C] [HasShift C ℤ] [Preadditive C]
   [∀ n : ℤ, Functor.Additive (shiftFunctor C n)]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`DistinguishedTriangles] []
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (T₂ «expr ≅ » T₁)
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
@@ -62,10 +63,10 @@ relative to that shift is called pretriangulated if the following hold:
   where the left square commutes, and whose rows are distinguished triangles,
   there exists a morphism `c : Z ⟶ Z'` such that `(a,b,c)` is a triangle morphism.
 
-See https://stacks.math.columbia.edu/tag/0145
+See <https://stacks.math.columbia.edu/tag/0145>
 -/
 class Pretriangulated where
-  DistinguishedTriangles {} : Set (Triangle C)
+  DistinguishedTriangles : Set (Triangle C)
   isomorphic_distinguished : ∀, ∀ T₁ ∈ distinguished_triangles, ∀ T₂ _ : T₂ ≅ T₁, T₂ ∈ distinguished_triangles
   contractible_distinguished : ∀ X : C, contractibleTriangle C X ∈ distinguished_triangles
   distinguished_cocone_triangle :
@@ -103,7 +104,7 @@ theorem inv_rot_of_dist_triangle T (_ : T ∈ (dist_triang C)) : T.invRotate ∈
   X  ───> Y  ───> Z  ───> X⟦1⟧
 ```
 the composition `f ≫ g = 0`.
-See https://stacks.math.columbia.edu/tag/0146
+See <https://stacks.math.columbia.edu/tag/0146>
 -/
 theorem comp_dist_triangle_mor_zero₁₂ T (_ : T ∈ (dist_triang C)) : T.mor₁ ≫ T.mor₂ = 0 := by
   have h := contractible_distinguished T.obj₁
@@ -123,7 +124,7 @@ theorem comp_dist_triangle_mor_zero₁₂ T (_ : T ∈ (dist_triang C)) : T.mor�
   X  ───> Y  ───> Z  ───> X⟦1⟧
 ```
 the composition `g ≫ h = 0`.
-See https://stacks.math.columbia.edu/tag/0146
+See <https://stacks.math.columbia.edu/tag/0146>
 -/
 -- TODO : tidy this proof up
 theorem comp_dist_triangle_mor_zero₂₃ T (_ : T ∈ (dist_triang C)) : T.mor₂ ≫ T.mor₃ = 0 :=
@@ -136,7 +137,7 @@ theorem comp_dist_triangle_mor_zero₂₃ T (_ : T ∈ (dist_triang C)) : T.mor�
   X  ───> Y  ───> Z  ───> X⟦1⟧
 ```
 the composition `h ≫ f⟦1⟧ = 0`.
-See https://stacks.math.columbia.edu/tag/0146
+See <https://stacks.math.columbia.edu/tag/0146>
 -/
 theorem comp_dist_triangle_mor_zero₃₁ T (_ : T ∈ (dist_triang C)) : T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 :=
   by
@@ -190,13 +191,13 @@ def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D 
   map := fun S T f =>
     { hom₁ := F.map f.hom₁, hom₂ := F.map f.hom₂, hom₃ := F.map f.hom₃,
       comm₁' := by
-        dsimp
+        dsimp'
         simp only [← F.to_functor.map_comp, f.comm₁],
       comm₂' := by
-        dsimp
+        dsimp'
         simp only [← F.to_functor.map_comp, f.comm₂],
       comm₃' := by
-        dsimp
+        dsimp'
         erw [category.assoc, ← F.comm_shift.hom.naturality]
         simp only [functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
 
@@ -208,7 +209,7 @@ variable (C D)
 together with given functorial isomorphisms `ξ X : F(X⟦1⟧) ⟶ F(X)⟦1⟧` such that for every
 distinguished triangle `(X,Y,Z,f,g,h)` of `C`, the triangle
 `(F(X), F(Y), F(Z), F(f), F(g), F(h) ≫ (ξ X))` is a distinguished triangle of `D`.
-See https://stacks.math.columbia.edu/tag/014V
+See <https://stacks.math.columbia.edu/tag/014V>
 -/
 structure TriangulatedFunctor [Pretriangulated C] [Pretriangulated D] extends TriangulatedFunctorStruct C D where
   map_distinguished' :
@@ -220,7 +221,7 @@ instance [Pretriangulated C] : Inhabited (TriangulatedFunctor C C) :=
         rfl,
       map_distinguished' := by
         rintro ⟨_, _, _, _⟩ Tdt
-        dsimp  at *
+        dsimp'  at *
         rwa [category.comp_id] }⟩
 
 variable {C D} [Pretriangulated C] [Pretriangulated D]

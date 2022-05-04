@@ -118,7 +118,7 @@ section LeibnizProperties
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
 /-- The cross product satisfies the Leibniz lie property. -/
 theorem leibniz_cross (u v w : Finₓ 3 → R) : u ×₃ (v ×₃ w) = u ×₃ v ×₃ w + v ×₃ (u ×₃ w) := by
-  dsimp only [cross_apply]
+  dsimp' only [cross_apply]
   ext i
   fin_cases i <;> norm_num <;> ring
 

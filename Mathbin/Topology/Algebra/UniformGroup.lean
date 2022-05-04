@@ -396,13 +396,12 @@ theorem topological_group_is_uniform : UniformGroup G := by
     prod_comap_comap_eq]
   simpa [(· ∘ ·), div_eq_mul_inv, mul_comm, mul_left_commₓ] using this
 
-attribute [local instance] topological_group_is_uniform
-
 open Set
 
 @[to_additive]
-theorem TopologicalGroup.separated_iff_one_closed : SeparatedSpace G ↔ IsClosed ({1} : Set G) := by
-  rw [separated_space_iff, ← closure_eq_iff_is_closed]
+theorem TopologicalGroup.t2_space_iff_one_closed : T2Space G ↔ IsClosed ({1} : Set G) := by
+  have : UniformGroup G := topological_group_is_uniform
+  rw [← separated_iff_t2, separated_space_iff, ← closure_eq_iff_is_closed]
   constructor <;> intro h
   · apply subset.antisymm
     · intro x x_in
@@ -422,8 +421,8 @@ theorem TopologicalGroup.separated_iff_one_closed : SeparatedSpace G ↔ IsClose
     
 
 @[to_additive]
-theorem TopologicalGroup.separated_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ nhds (1 : G), x ∉ U) : SeparatedSpace G := by
-  rw [TopologicalGroup.separated_iff_one_closed, ← is_open_compl_iff, is_open_iff_mem_nhds]
+theorem TopologicalGroup.t2_space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ nhds (1 : G), x ∉ U) : T2Space G := by
+  rw [TopologicalGroup.t2_space_iff_one_closed, ← is_open_compl_iff, is_open_iff_mem_nhds]
   intro x x_not
   have : x ≠ 1 := mem_compl_singleton_iff.mp x_not
   rcases H x this with ⟨U, U_in, xU⟩

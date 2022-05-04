@@ -241,11 +241,11 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
       rcases metric.mem_nhds_iff.mp this with ⟨ε, ε_pos, H⟩
       use ε / 2, half_pos ε_pos
       intro x x_in
-      dsimp  at x_in
+      dsimp'  at x_in
       rcases norm_mk_lt x (half_pos ε_pos) with ⟨y, rfl, ry⟩
       apply H
       rw [ball_zero_eq]
-      dsimp
+      dsimp'
       linarith
       
     · rintro ⟨ε, ε_pos, h⟩
@@ -291,7 +291,7 @@ noncomputable instance AddSubgroup.semiNormedGroupQuotient (S : AddSubgroup M) :
       by
       intro ε
       ext x
-      dsimp
+      dsimp'
       rw [quotient_norm_sub_rev]
     rw [funext this]
     refine' Filter.has_basis_binfi_principal _ Set.nonempty_Ioi

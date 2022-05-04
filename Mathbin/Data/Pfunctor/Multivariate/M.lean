@@ -167,7 +167,7 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.Obj (α.Append
   trans
   apply M.dest_corec'
   cases' g x with a f
-  dsimp
+  dsimp'
   rw [Mvpfunctor.map_eq]
   congr
   conv => rhs rw [← split_drop_fun_last_fun f, append_fun_comp_split_fun]
@@ -191,7 +191,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
     x y (r : R x y) : x = y := by
   cases' x with a₁ f₁
   cases' y with a₂ f₂
-  dsimp [Mp]  at *
+  dsimp' [Mp]  at *
   have : a₁ = a₂ := by
     refine' Pfunctor.M.bisim (fun a₁ a₂ => ∃ x y, R x y ∧ x.1 = a₁ ∧ y.1 = a₂) _ _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩
     rintro _ _ ⟨⟨a₁, f₁⟩, ⟨a₂, f₂⟩, r, rfl, rfl⟩

@@ -876,6 +876,14 @@ theorem is_open_map_div_right (a : G) : IsOpenMap fun x => x / a :=
 theorem is_closed_map_div_right (a : G) : IsClosedMap fun x => x / a :=
   (Homeomorph.divRight a).IsClosedMap
 
+@[to_additive]
+theorem tendsto_div_nhds_one_iff {α : Type _} {l : Filter α} {x : G} {u : α → G} :
+    Tendsto (fun n => u n / x) l (𝓝 1) ↔ Tendsto u l (𝓝 x) :=
+  have A : tendsto (fun n : α => x) l (𝓝 x) := tendsto_const_nhds
+  ⟨fun h => by
+    simpa using h.mul A, fun h => by
+    simpa using h.div' A⟩
+
 end DivInTopologicalGroup
 
 @[to_additive]
@@ -883,6 +891,7 @@ theorem nhds_translation_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup
     comap (fun y : G => y / x) (𝓝 1) = 𝓝 x := by
   simpa only [div_eq_mul_inv] using nhds_translation_mul_inv x
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`z] []
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
@@ -890,7 +899,7 @@ This is currently only available for commutative groups, but it can be extended 
 non-commutative groups too.
 -/
 class AddGroupWithZeroNhd (G : Type u) extends AddCommGroupₓ G where
-  z {} : Filter G
+  z : Filter G
   zero_Z : pure 0 ≤ Z
   sub_Z : Tendsto (fun p : G × G => p.1 - p.2) (Z ×ᶠ Z) Z
 

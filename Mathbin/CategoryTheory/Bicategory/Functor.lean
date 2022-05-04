@@ -254,20 +254,20 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
   { (F : PrelaxFunctor B C).comp ↑G with map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a),
     map_comp := fun a b c f g => (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g),
     map_comp_naturality_left' := fun a b c f f' η g => by
-      dsimp
+      dsimp'
       rw [← map₂_comp_assoc, map_comp_naturality_left, map₂_comp_assoc, map_comp_naturality_left, assoc],
     map_comp_naturality_right' := fun a b c f g g' η => by
-      dsimp
+      dsimp'
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right, assoc],
     map₂_associator' := fun a b c d f g h => by
-      dsimp
+      dsimp'
       simp only [map₂_associator, ← map₂_comp_assoc, ← map_comp_naturality_right_assoc, whisker_left_comp, assoc]
       simp only [map₂_associator, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_left_unitor' := fun a b f => by
-      dsimp
+      dsimp'
       simp only [map₂_left_unitor, map₂_comp, map_comp_naturality_left_assoc, comp_whisker_right, assoc],
     map₂_right_unitor' := fun a b f => by
-      dsimp
+      dsimp'
       simp only [map₂_right_unitor, map₂_comp, map_comp_naturality_right_assoc, whisker_left_comp, assoc] }
 
 /-- A structure on an oplax functor that promotes an oplax functor to a pseudofunctor.
@@ -464,13 +464,13 @@ def comp (F : Pseudofunctor B C) (G : Pseudofunctor C D) : Pseudofunctor B D :=
 def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
   { (F : PrelaxFunctor B C) with map_id := F'.mapIdIso, map_comp := F'.mapCompIso,
     map₂_whisker_left' := fun a b c f g h η => by
-      dsimp
+      dsimp'
       rw [F'.map_comp_iso_hom f g, ← F.map_comp_naturality_right_assoc, ← F'.map_comp_iso_hom f h, hom_inv_id, comp_id],
     map₂_whisker_right' := fun a b c f g η h => by
-      dsimp
+      dsimp'
       rw [F'.map_comp_iso_hom f h, ← F.map_comp_naturality_left_assoc, ← F'.map_comp_iso_hom g h, hom_inv_id, comp_id],
     map₂_associator' := fun a b c d f g h => by
-      dsimp
+      dsimp'
       rw [F'.map_comp_iso_hom (f ≫ g) h, F'.map_comp_iso_hom f g, ← F.map₂_associator_assoc, ←
         F'.map_comp_iso_hom f (g ≫ h), ← F'.map_comp_iso_hom g h, hom_inv_whisker_left_assoc, hom_inv_id, comp_id] }
 
@@ -482,13 +482,13 @@ noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
   { (F : PrelaxFunctor B C) with map_id := fun a => asIso (F.map_id a),
     map_comp := fun a b c f g => asIso (F.map_comp f g),
     map₂_whisker_left' := fun a b c f g h η => by
-      dsimp
+      dsimp'
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_right],
     map₂_whisker_right' := fun a b c f g η h => by
-      dsimp
+      dsimp'
       rw [← assoc, is_iso.eq_comp_inv, F.map_comp_naturality_left],
     map₂_associator' := fun a b c d f g h => by
-      dsimp
+      dsimp'
       simp only [← assoc]
       rw [is_iso.eq_comp_inv, ← inv_whisker_left, is_iso.eq_comp_inv]
       simp only [assoc, F.map₂_associator] }

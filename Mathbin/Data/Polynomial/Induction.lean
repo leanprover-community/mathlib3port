@@ -104,7 +104,7 @@ theorem mem_span_C_coeff : f ∈ span R[X] { g : R[X] | ∃ i : ℕ, g = c (coef
   let p := span R[X] { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
   nth_rw 0[(sum_C_mul_X_eq f).symm]
   refine' Submodule.sum_mem _ fun n hn => _
-  dsimp
+  dsimp'
   have : C (coeff f n) ∈ p := by
     apply subset_span
     simp

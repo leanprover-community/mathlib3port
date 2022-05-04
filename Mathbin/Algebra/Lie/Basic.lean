@@ -492,7 +492,7 @@ theorem coe_linear_equiv_injective : Injective (coe : (L₁ ≃ₗ⁅R⁆ L₂) 
   intro f₁ f₂ h
   cases f₁
   cases f₂
-  dsimp  at h
+  dsimp'  at h
   simp only at h
   congr
   exacts[LieHom.coe_injective h.1, h.2]
@@ -887,7 +887,7 @@ theorem to_equiv_injective : Function.Injective (toEquiv : (M ≃ₗ⁅R,L⁆ N)
   rcases e₁ with ⟨⟨⟩⟩
   rcases e₂ with ⟨⟨⟩⟩
   have inj := Equivₓ.mk.inj h
-  dsimp  at inj
+  dsimp'  at inj
   apply lie_module_equiv.mk.inj_eq.mpr
   constructor
   · congr

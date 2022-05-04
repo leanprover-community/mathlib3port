@@ -44,12 +44,13 @@ class Quiver (V : Type u) where
 -- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`obj] []
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
 -/
 -- type as \h
 structure Prefunctor (V : Type u₁) [Quiver.{v₁} V] (W : Type u₂) [Quiver.{v₂} W] where
-  obj {} : V → W
+  obj : V → W
   map : ∀ {X Y : V}, (X ⟶ Y) → (obj X ⟶ obj Y)
 
 namespace Prefunctor

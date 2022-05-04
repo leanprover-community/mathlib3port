@@ -721,9 +721,10 @@ namespace Filter
 
 variable {α β γ ι ι' : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
-  out {} : ∃ s : Set (Set α), Countable s ∧ f = generate s
+  out : ∃ s : Set (Set α), Countable s ∧ f = generate s
 
 /-- `is_countable_basis p s` means the image of `s` bounded by `p` is a countable filter basis. -/
 structure IsCountableBasis (p : ι → Prop) (s : ι → Set α) extends IsBasis p s : Prop where

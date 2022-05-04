@@ -40,7 +40,7 @@ theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.toNat < 2 ^ n := by
     simpa
   rw [to_nat_eq_foldr_reverse]
   cases' v with xs h
-  dsimp [Bitvec.toNat, bits_to_nat]
+  dsimp' [Bitvec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h
   generalize xs.reverse = ys  at h⊢
   clear xs
@@ -79,7 +79,7 @@ theorem of_nat_to_nat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v := b
   cases' v with xs h
   ext1
   change Vector.toList _ = xs
-  dsimp [Bitvec.toNat, bits_to_nat]
+  dsimp' [Bitvec.toNat, bits_to_nat]
   rw [← List.length_reverse] at h
   rw [← List.reverse_reverse xs, List.foldl_reverse]
   generalize xs.reverse = ys  at h⊢
@@ -116,7 +116,7 @@ theorem to_fin_of_fin {n} (i : Finₓ <| 2 ^ n) : (ofFin i).toFin = i :=
       simp [to_fin_val, of_fin, to_nat_of_nat, Nat.mod_eq_of_ltₓ, i.is_lt])
 
 theorem of_fin_to_fin {n} (v : Bitvec n) : ofFin (toFin v) = v := by
-  dsimp [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
+  dsimp' [of_fin] <;> rw [to_fin_val, of_nat_to_nat]
 
 end Bitvec
 

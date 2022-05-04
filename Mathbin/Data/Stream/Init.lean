@@ -191,9 +191,9 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
   · unfold tail iterate
     unfold tail iterate  at ih
     rw [add_one] at ih
-    dsimp  at ih
+    dsimp'  at ih
     rw [add_one]
-    dsimp
+    dsimp'
     rw [ih]
     
 
@@ -270,9 +270,9 @@ theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate 
   · rfl
     
   · unfold map iterate nth
-    dsimp
+    dsimp'
     unfold map iterate nth  at ih
-    dsimp  at ih
+    dsimp'  at ih
     rw [ih]
     
 
@@ -320,7 +320,7 @@ theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s := fun s
 theorem interleave_eq (s₁ s₂ : Streamₓ α) : s₁⋈s₂ = head s₁ :: head s₂ :: (tail s₁⋈tail s₂) := by
   unfold interleave corec_on
   rw [corec_eq]
-  dsimp
+  dsimp'
   rw [corec_eq]
   rfl
 

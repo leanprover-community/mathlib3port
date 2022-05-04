@@ -89,7 +89,7 @@ variable (Z : C → Prop)
 
 /-- The category structure on a subtype; morphisms just ignore the property.
 
-See https://stacks.math.columbia.edu/tag/001D. We do not define 'strictly full' subcategories.
+See <https://stacks.math.columbia.edu/tag/001D>. We do not define 'strictly full' subcategories.
 -/
 instance fullSubcategory : Category.{v} { X : C // Z X } :=
   InducedCategory.category Subtype.val

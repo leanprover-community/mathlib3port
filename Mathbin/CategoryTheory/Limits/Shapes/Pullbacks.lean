@@ -341,7 +341,7 @@ def cospanCompIso (F : C ⥤ D) {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) : cospan
     (by
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
-          dsimp
+          dsimp'
           simp )
 
 section
@@ -394,7 +394,7 @@ def spanCompIso (F : C ⥤ D) {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) : span f g
     (by
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
-          dsimp
+          dsimp'
           simp )
 
 section
@@ -456,54 +456,54 @@ def cospanExt (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ
     (by
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
-          dsimp
+          dsimp'
           simp [wf, wg])
 
 variable (wf : iX.Hom ≫ f' = f ≫ iZ.Hom) (wg : iY.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
 theorem cospan_ext_app_left : (cospanExt iX iY iZ wf wg).app WalkingCospan.left = iX := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_app_right : (cospanExt iX iY iZ wf wg).app WalkingCospan.right = iY := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_app_one : (cospanExt iX iY iZ wf wg).app WalkingCospan.one = iZ := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_left : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.left = iX.Hom := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_right : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.right = iY.Hom := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_hom_app_one : (cospanExt iX iY iZ wf wg).Hom.app WalkingCospan.one = iZ.Hom := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_left : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.left = iX.inv := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_right : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.right = iY.inv := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 @[simp]
 theorem cospan_ext_inv_app_one : (cospanExt iX iY iZ wf wg).inv.app WalkingCospan.one = iZ.inv := by
-  dsimp [cospan_ext]
+  dsimp' [cospan_ext]
   simp
 
 end
@@ -521,54 +521,54 @@ def spanExt (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.H
     (by
       rintro (⟨⟩ | ⟨⟨⟩⟩) (⟨⟩ | ⟨⟨⟩⟩) ⟨⟩ <;>
         repeat'
-          dsimp
+          dsimp'
           simp [wf, wg])
 
 variable (wf : iX.Hom ≫ f' = f ≫ iY.Hom) (wg : iX.Hom ≫ g' = g ≫ iZ.Hom)
 
 @[simp]
 theorem span_ext_app_left : (spanExt iX iY iZ wf wg).app WalkingSpan.left = iY := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_app_right : (spanExt iX iY iZ wf wg).app WalkingSpan.right = iZ := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_app_one : (spanExt iX iY iZ wf wg).app WalkingSpan.zero = iX := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_left : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.left = iY.Hom := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_right : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.right = iZ.Hom := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_hom_app_zero : (spanExt iX iY iZ wf wg).Hom.app WalkingSpan.zero = iX.Hom := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_left : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.left = iY.inv := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_right : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.right = iZ.inv := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 @[simp]
 theorem span_ext_inv_app_zero : (spanExt iX iY iZ wf wg).inv.app WalkingSpan.zero = iX.inv := by
-  dsimp [span_ext]
+  dsimp' [span_ext]
   simp
 
 end
@@ -1002,7 +1002,7 @@ def PullbackCone.isoMk {F : walking_cospan ⥤ C} (t : Cone F) :
         ((t.π.naturality inl).symm.trans (t.π.naturality inr : _)) :=
   Cones.ext (Iso.refl _) <| by
     rintro (_ | (_ | _)) <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -1022,7 +1022,7 @@ def PushoutCocone.isoMk {F : walking_span ⥤ C} (t : Cocone F) :
         ((t.ι.naturality fst).trans (t.ι.naturality snd).symm) :=
   Cocones.ext (Iso.refl _) <| by
     rintro (_ | (_ | _)) <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -2002,7 +2002,7 @@ def rightSquareIsPushout (H : IsColimit (PushoutCocone.mk _ _ h₁))
   have : i₁ ≫ g₁ ≫ s.inl = (f₁ ≫ f₂) ≫ s.inr := by
     rw [category.assoc, ← s.condition, ← category.assoc, ← category.assoc, h₁]
   rcases pushout_cocone.is_colimit.desc' H' (g₁ ≫ s.inl) s.inr this with ⟨l₁, hl₁, hl₁'⟩
-  dsimp  at *
+  dsimp'  at *
   use l₁
   refine' ⟨_, _, _⟩
   · apply pushout_cocone.is_colimit.hom_ext H
@@ -2508,7 +2508,7 @@ variable (C)
 
 /-- `has_pullbacks` represents a choice of pullback for every pair of morphisms
 
-See https://stacks.math.columbia.edu/tag/001W
+See <https://stacks.math.columbia.edu/tag/001W>
 -/
 abbrev HasPullbacks :=
   HasLimitsOfShape WalkingCospan.{v} C
@@ -2526,6 +2526,14 @@ theorem has_pullbacks_of_has_limit_cospan [∀ {X Y Z : C} {f : X ⟶ Z} {g : Y 
 theorem has_pushouts_of_has_colimit_span [∀ {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z}, HasColimit (span f g)] :
     HasPushouts C :=
   { HasColimit := fun F => has_colimit_of_iso (diagramIsoSpan F) }
+
+/-- The duality equivalence `walking_spanᵒᵖ ≌ walking_cospan` -/
+def walkingSpanOpEquiv : walking_spanᵒᵖ ≌ walking_cospan :=
+  widePushoutShapeOpEquiv _
+
+/-- The duality equivalence `walking_cospanᵒᵖ ≌ walking_span` -/
+def walkingCospanOpEquiv : walking_cospanᵒᵖ ≌ walking_span :=
+  widePullbackShapeOpEquiv _
 
 end CategoryTheory.Limits
 

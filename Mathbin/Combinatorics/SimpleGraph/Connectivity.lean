@@ -503,24 +503,24 @@ theorem edges_nodup_of_support_nodup {u v : V} {p : G.Walk u v} (h : p.Support.N
 structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.Nodup
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.tail.Nodup
 
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=

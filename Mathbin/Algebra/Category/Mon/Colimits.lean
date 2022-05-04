@@ -115,7 +115,7 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     · intro x x' r
       funext y
       induction y
-      dsimp
+      dsimp'
       apply Quot.sound
       · exact relation.mul_1 _ _ _ r
         
@@ -127,7 +127,7 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     induction x
     induction y
     induction z
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_assoc
     rfl
@@ -135,13 +135,13 @@ instance monoidColimitType : Monoidₓ (ColimitType F) where
     rfl
   one_mul := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.one_mul
     rfl
   mul_one := fun x => by
     induction x
-    dsimp
+    dsimp'
     apply Quot.sound
     apply relation.mul_one
     rfl
@@ -201,7 +201,7 @@ def descFun (s : Cocone F) : ColimitType F → s.x := by
   · intro x y r
     induction r <;>
       try
-        dsimp
+        dsimp'
     -- refl
     · rfl
       

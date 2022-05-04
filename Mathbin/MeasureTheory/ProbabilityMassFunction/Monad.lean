@@ -170,7 +170,7 @@ theorem to_outer_measure_bind_apply : (p.bind f).toOuterMeasure s = ∑' a : α,
             split_ifs <;> rfl
     _ = ∑' a : α, ↑(p a) * (f a).toOuterMeasure s :=
       tsum_congr fun a => by
-        rw [to_outer_measure_apply, Set.indicator]
+        simp only [to_outer_measure_apply, Set.indicator_apply]
     
 
 /-- The measure of a set under `p.bind f` is the sum over `a : α`

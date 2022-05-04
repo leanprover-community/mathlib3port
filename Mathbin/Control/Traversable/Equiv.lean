@@ -65,7 +65,7 @@ protected theorem is_lawful_functor' [F : Functor t'] (h₀ : ∀ {α β} f : α
     (h₁ : ∀ {α β} f : β, Functor.mapConst f = (Equivₓ.map ∘ Function.const α) f) : IsLawfulFunctor t' := by
   have : F = Equivₓ.functor := by
     cases F
-    dsimp [Equivₓ.functor]
+    dsimp' [Equivₓ.functor]
     congr <;> ext <;> [rw [← h₀], rw [← h₁]]
   subst this
   exact Equivₓ.is_lawful_functor

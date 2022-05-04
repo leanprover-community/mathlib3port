@@ -232,22 +232,22 @@ protected theorem mul_assoc (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : φ₁ * �
   refine' Finset.sum_bij (fun p _ => ⟨(p.2.1, p.2.2 + p.1.2), (p.2.2, p.1.2)⟩) _ _ _ _ <;>
     simp only [mem_antidiagonal, Finset.mem_sigma, heq_iff_eq, Prod.mk.inj_iffₓ, and_imp, exists_prop]
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
+    dsimp' only
     rintro rfl rfl
     simp [add_assocₓ]
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩
-    dsimp only
+    dsimp' only
     rintro rfl rfl
     apply mul_assoc
     
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
+    dsimp' only
     rintro rfl rfl - rfl rfl - rfl rfl
     rfl
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩
-    dsimp only
+    dsimp' only
     rintro rfl rfl
     refine' ⟨⟨(i + k, l), (i, k)⟩, _, _⟩ <;> simp [add_assocₓ]
     
@@ -1248,7 +1248,7 @@ theorem coeff_mul (n : ℕ) (φ ψ : PowerSeries R) :
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
       
     · rw [Prod.mk.inj_iffₓ]
-      dsimp
+      dsimp'
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
       
     
@@ -1612,7 +1612,7 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : PowerSeries R) :
       rw [Finset.Nat.mem_antidiagonal, ← Finsupp.add_apply, hfg, Finsupp.single_eq_same]
       
     · rw [Prod.mk.inj_iffₓ]
-      dsimp
+      dsimp'
       exact ⟨Finsupp.unique_single f, Finsupp.unique_single g⟩
       
     

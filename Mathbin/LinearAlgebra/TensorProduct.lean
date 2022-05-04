@@ -613,7 +613,7 @@ end
 
 @[simp]
 theorem lid_tmul (m : M) (r : R) : (TensorProduct.lid R M : R ⊗ M → M) (r ⊗ₜ m) = r • m := by
-  dsimp [TensorProduct.lid]
+  dsimp' [TensorProduct.lid]
   simp
 
 @[simp]
@@ -652,7 +652,7 @@ end
 
 @[simp]
 theorem rid_tmul (m : M) (r : R) : (TensorProduct.rid R M) (m ⊗ₜ r) = r • m := by
-  dsimp [TensorProduct.rid, TensorProduct.comm, TensorProduct.lid]
+  dsimp' [TensorProduct.rid, TensorProduct.comm, TensorProduct.lid]
   simp
 
 @[simp]
@@ -830,6 +830,31 @@ theorem tensor_tensor_tensor_comm_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
     (tensorTensorTensorComm R M N P Q).symm (m ⊗ₜ p ⊗ₜ (n ⊗ₜ q)) = m ⊗ₜ n ⊗ₜ (p ⊗ₜ q) :=
   rfl
 
+variable (M N P Q)
+
+/-- This special case is useful for describing the interplay between `dual_tensor_hom_equiv` and
+composition of linear maps.
+
+E.g., composition of linear maps gives a map `(M → N) ⊗ (N → P) → (M → P)`, and applying
+`dual_tensor_hom_equiv.symm` to the three hom-modules gives a map
+`(M.dual ⊗ N) ⊗ (N.dual ⊗ P) → (M.dual ⊗ P)`, which agrees with the application of `contract_right`
+on `N ⊗ N.dual` after the suitable rebracketting.
+-/
+def tensorTensorTensorAssoc : (M ⊗[R] N) ⊗[R] P ⊗[R] Q ≃ₗ[R] (M ⊗[R] N ⊗[R] P) ⊗[R] Q :=
+  (TensorProduct.assoc R (M ⊗[R] N) P Q).symm ≪≫ₗ congr (TensorProduct.assoc R M N P) (1 : Q ≃ₗ[R] Q)
+
+variable {M N P Q}
+
+@[simp]
+theorem tensor_tensor_tensor_assoc_tmul (m : M) (n : N) (p : P) (q : Q) :
+    tensorTensorTensorAssoc R M N P Q (m ⊗ₜ n ⊗ₜ (p ⊗ₜ q)) = m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q :=
+  rfl
+
+@[simp]
+theorem tensor_tensor_tensor_assoc_symm_tmul (m : M) (n : N) (p : P) (q : Q) :
+    (tensorTensorTensorAssoc R M N P Q).symm (m ⊗ₜ (n ⊗ₜ p) ⊗ₜ q) = m ⊗ₜ n ⊗ₜ (p ⊗ₜ q) :=
+  rfl
+
 end TensorProduct
 
 namespace LinearMap
@@ -865,7 +890,7 @@ def ltensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P where
     ext x y
     simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
   map_smul' := fun r f => by
-    dsimp
+    dsimp'
     ext x y
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 
@@ -876,7 +901,7 @@ def rtensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M where
     ext x y
     simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
   map_smul' := fun r f => by
-    dsimp
+    dsimp'
     ext x y
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
 

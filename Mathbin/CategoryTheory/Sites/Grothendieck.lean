@@ -65,7 +65,7 @@ three axioms:
 
 A sieve `S` on `X` is referred to as `J`-covering, (or just covering), if `S ∈ J X`.
 
-See https://stacks.math.columbia.edu/tag/00Z4, or [nlab], or [MM92][] Chapter III, Section 2,
+See <https://stacks.math.columbia.edu/tag/00Z4>, or [nlab], or [MM92][] Chapter III, Section 2,
 Definition 1.
 -/
 structure GrothendieckTopology where
@@ -116,7 +116,7 @@ theorem covering_of_eq_top : S = ⊤ → S ∈ J X := fun h => h.symm ▸ J.top_
 
 /-- If `S` is a subset of `R`, and `S` is covering, then `R` is covering as well.
 
-See https://stacks.math.columbia.edu/tag/00Z5 (2), or discussion after [MM92] Chapter III,
+See <https://stacks.math.columbia.edu/tag/00Z5> (2), or discussion after [MM92] Chapter III,
 Section 2, Definition 1.
 -/
 theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X := by
@@ -127,7 +127,7 @@ theorem superset_covering (Hss : S ≤ R) (sjx : S ∈ J X) : R ∈ J X := by
 
 /-- The intersection of two covering sieves is covering.
 
-See https://stacks.math.columbia.edu/tag/00Z5 (1), or [MM92] Chapter III,
+See <https://stacks.math.columbia.edu/tag/00Z5> (1), or [MM92] Chapter III,
 Section 2, Definition 1 (iv).
 -/
 theorem intersection_covering (rj : R ∈ J X) (sj : S ∈ J X) : R⊓S ∈ J X := by
@@ -216,20 +216,20 @@ variable {C}
 theorem trivial_covering : S ∈ trivial C X ↔ S = ⊤ :=
   Set.mem_singleton_iff
 
-/-- See https://stacks.math.columbia.edu/tag/00Z6 -/
+/-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
 instance : LE (GrothendieckTopology C) where
   le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (Sieve X)) ≤ (J₂ : ∀ X : C, Set (Sieve X))
 
 theorem le_def {J₁ J₂ : GrothendieckTopology C} : J₁ ≤ J₂ ↔ (J₁ : ∀ X : C, Set (Sieve X)) ≤ J₂ :=
   Iff.rfl
 
-/-- See https://stacks.math.columbia.edu/tag/00Z6 -/
+/-- See <https://stacks.math.columbia.edu/tag/00Z6> -/
 instance : PartialOrderₓ (GrothendieckTopology C) :=
   { GrothendieckTopology.hasLe with le_refl := fun J₁ => le_def.mpr le_rfl,
     le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => GrothendieckTopology.ext (le_antisymmₓ h₁₂ h₂₁) }
 
-/-- See https://stacks.math.columbia.edu/tag/00Z7 -/
+/-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 instance : HasInfₓ (GrothendieckTopology C) where
   inf := fun T =>
     { Sieves := inf (sieves '' T),
@@ -243,7 +243,7 @@ instance : HasInfₓ (GrothendieckTopology C) where
         rintro X S hS R h _ ⟨⟨_, J, hJ, rfl⟩, rfl⟩
         apply J.transitive (hS _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩) _ fun Y f hf => h hf _ ⟨⟨_, _, hJ, rfl⟩, rfl⟩ }
 
-/-- See https://stacks.math.columbia.edu/tag/00Z7 -/
+/-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 theorem is_glb_Inf (s : Set (GrothendieckTopology C)) : IsGlb s (inf s) := by
   refine' @IsGlb.of_image _ _ _ _ sieves _ _ _ _
   · intros
@@ -555,7 +555,7 @@ abbrev multifork {D : Type w} [Category.{max v u} D] (S : J.cover X) (P : Cᵒ�
   Limits.Multifork.ofι _ (P.obj (Opposite.op X)) (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp [index]
+      dsimp' [index]
       simp only [← P.map_comp, ← op_comp, I.w])
 
 /-- The canonical map from `P.obj (op X)` to the multiequalizer associated to a covering sieve,
@@ -566,7 +566,7 @@ noncomputable abbrev toMultiequalizer {D : Type w} [Category.{max v u} D] (S : J
   Limits.multiequalizer.lift _ _ (fun I => P.map I.f.op)
     (by
       intro I
-      dsimp only [index, relation.fst, relation.snd]
+      dsimp' only [index, relation.fst, relation.snd]
       simp only [← P.map_comp, ← op_comp, I.w])
 
 end Cover

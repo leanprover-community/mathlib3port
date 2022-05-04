@@ -34,12 +34,13 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`decode] []
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
 class Encodable (α : Type _) where
   encode : α → ℕ
-  decode {} : ℕ → Option α
+  decode : ℕ → Option α
   encodek : ∀ a, decode (encode a) = some a
 
 attribute [simp] Encodable.encodek
@@ -124,7 +125,7 @@ theorem decode_unit_succ n : decode PUnit (succ n) = none :=
 instance _root_.option.encodable {α : Type _} [h : Encodable α] : Encodable (Option α) :=
   ⟨fun o => Option.casesOn o Nat.zero fun a => succ (encode a), fun n =>
     Nat.casesOn n (some none) fun m => (decode α m).map some, fun o => by
-    cases o <;> dsimp <;> simp [encodek, Nat.succ_ne_zero]⟩
+    cases o <;> dsimp' <;> simp [encodek, Nat.succ_ne_zero]⟩
 
 @[simp]
 theorem encode_none [Encodable α] : encode (@none α) = 0 :=
@@ -191,10 +192,10 @@ def equivRangeEncode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode α
       (show isSome (decode₂ α n.1) by
         cases' n.2 with x hx <;> rw [← hx, encodek₂] <;> exact rfl)
   left_inv := fun a => by
-    dsimp <;> rw [← Option.some_inj, Option.some_getₓ, encodek₂]
+    dsimp' <;> rw [← Option.some_inj, Option.some_getₓ, encodek₂]
   right_inv := fun ⟨n, x, hx⟩ => by
     apply Subtype.eq
-    dsimp
+    dsimp'
     conv => rhs rw [← hx]
     rw [encode_injective.eq_iff, ← Option.some_inj, Option.some_getₓ, ← hx, encodek₂]
 
@@ -516,7 +517,7 @@ protected noncomputable def sequence {r : β → β → Prop} (f : α → β) (h
 
 theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directed r f) (n : ℕ) :
     r (f (hf.sequence f n)) (f (hf.sequence f (n + 1))) := by
-  dsimp [Directed.sequence]
+  dsimp' [Directed.sequence]
   generalize eq : hf.sequence f n = p
   cases' h : decode α n with a
   · exact (Classical.some_spec (hf p p)).1

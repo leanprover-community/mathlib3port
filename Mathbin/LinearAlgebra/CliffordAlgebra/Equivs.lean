@@ -141,7 +141,7 @@ theorem Q_apply (r : ℝ) : q r = -(r * r) :=
 def toComplex : CliffordAlgebra q →ₐ[ℝ] ℂ :=
   CliffordAlgebra.lift q
     ⟨LinearMap.toSpanSingleton _ _ Complex.i, fun r => by
-      dsimp [LinearMap.toSpanSingleton, LinearMap.id]
+      dsimp' [LinearMap.toSpanSingleton, LinearMap.id]
       rw [mul_mul_mul_commₓ]
       simp ⟩
 
@@ -173,7 +173,7 @@ theorem of_complex_I : ofComplex Complex.i = ι q 1 :=
 @[simp]
 theorem to_complex_comp_of_complex : toComplex.comp ofComplex = AlgHom.id ℝ ℂ := by
   ext1
-  dsimp only [AlgHom.comp_apply, Subtype.coe_mk, AlgHom.id_apply]
+  dsimp' only [AlgHom.comp_apply, Subtype.coe_mk, AlgHom.id_apply]
   rw [of_complex_I, to_complex_ι, one_smul]
 
 @[simp]
@@ -183,7 +183,7 @@ theorem to_complex_of_complex (c : ℂ) : toComplex (ofComplex c) = c :=
 @[simp]
 theorem of_complex_comp_to_complex : ofComplex.comp toComplex = AlgHom.id ℝ (CliffordAlgebra q) := by
   ext
-  dsimp only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply]
+  dsimp' only [LinearMap.comp_apply, Subtype.coe_mk, AlgHom.id_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply]
   rw [to_complex_ι, one_smul, of_complex_I]
 
 @[simp]
@@ -281,10 +281,10 @@ def toQuaternion : CliffordAlgebra (q c₁ c₂) →ₐ[R] ℍ[R,c₁,c₂] :=
         map_smul' := fun r v => by
           ext <;> simp },
       fun v => by
-      dsimp
+      dsimp'
       ext
       all_goals
-        dsimp
+        dsimp'
         ring⟩
 
 @[simp]
@@ -321,13 +321,13 @@ theorem of_quaternion_mk (a₁ a₂ a₃ a₄ : R) :
 theorem of_quaternion_comp_to_quaternion : ofQuaternion.comp toQuaternion = AlgHom.id R (CliffordAlgebra (q c₁ c₂)) :=
   by
   ext : 1
-  dsimp
+  dsimp'
   -- before we end up with two goals and have to do this twice
   ext
   all_goals
-    dsimp
+    dsimp'
     rw [to_quaternion_ι]
-    dsimp
+    dsimp'
     simp only [to_quaternion_ι, zero_smul, one_smul, zero_addₓ, add_zeroₓ, RingHom.map_zero]
 
 @[simp]
@@ -337,7 +337,7 @@ theorem of_quaternion_to_quaternion (c : CliffordAlgebra (q c₁ c₂)) : ofQuat
 @[simp]
 theorem to_quaternion_comp_of_quaternion : toQuaternion.comp ofQuaternion = AlgHom.id R ℍ[R,c₁,c₂] := by
   apply quaternion_algebra.lift.symm.injective
-  ext1 <;> dsimp [QuaternionAlgebra.Basis.lift] <;> simp
+  ext1 <;> dsimp' [QuaternionAlgebra.Basis.lift] <;> simp
 
 @[simp]
 theorem to_quaternion_of_quaternion (q : ℍ[R,c₁,c₂]) : toQuaternion (ofQuaternion q) = q :=
@@ -384,11 +384,11 @@ protected def equiv : CliffordAlgebra (0 : QuadraticForm R R) ≃ₐ[R] R[ε] :=
     (DualNumber.lift ⟨ι _ (1 : R), ι_mul_ι (1 : R) 1⟩)
     (by
       ext x : 1
-      dsimp
+      dsimp'
       rw [lift_apply_eps, Subtype.coe_mk, lift_ι_apply, inr_hom_apply, eps])
     (by
       ext : 2
-      dsimp
+      dsimp'
       rw [lift_ι_apply, inr_hom_apply, ← eps, lift_apply_eps, Subtype.coe_mk])
 
 @[simp]

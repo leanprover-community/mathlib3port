@@ -3,7 +3,7 @@ Copyright (c) 2022 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
-import Mathbin.CategoryTheory.Monoidal.Rigid
+import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 
 /-!
 # Transport rigid structures over a monoidal equivalence.
@@ -53,7 +53,7 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_left (F.to_functor.as_equivalence.counit_iso.app _)
-    dsimp
+    dsimp'
     infer_instance
 
 /-- Pull back a right dual along an equivalence. -/
@@ -62,7 +62,7 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
   exact := by
     apply exact_pairing_of_fully_faithful F _ _
     apply exact_pairing_congr_right (F.to_functor.as_equivalence.counit_iso.app _)
-    dsimp
+    dsimp'
     infer_instance
 
 /-- Pull back a left rigid structure along an equivalence. -/

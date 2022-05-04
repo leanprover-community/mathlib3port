@@ -350,14 +350,14 @@ def Conj (G : Type _) :=
 instance Conj.quandle (G : Type _) [Groupₓ G] : Quandle (Conj G) where
   act := fun x => @MulAut.conj G _ x
   self_distrib := fun x y z => by
-    dsimp only [MulEquiv.coe_to_equiv, MulAut.conj_apply, conj]
+    dsimp' only [MulEquiv.coe_to_equiv, MulAut.conj_apply, conj]
     group
   invAct := fun x => (@MulAut.conj G _ x).symm
   left_inv := fun x y => by
-    dsimp [act, conj]
+    dsimp' [act, conj]
     group
   right_inv := fun x y => by
-    dsimp [act, conj]
+    dsimp' [act, conj]
     group
   fix := fun x => by
     simp
@@ -367,7 +367,7 @@ theorem conj_act_eq_conj {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = ((
   rfl
 
 theorem conj_swap {G : Type _} [Groupₓ G] (x y : Conj G) : x ◃ y = y ↔ y ◃ x = x := by
-  dsimp [conj]  at *
+  dsimp' [conj]  at *
   constructor
   repeat'
     intro h
@@ -399,19 +399,19 @@ def dihedralAct (n : ℕ) (a : Zmod n) : Zmod n → Zmod n := fun b => 2 * a - b
 
 theorem dihedralAct.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedralAct n a) := by
   intro b
-  dsimp [dihedral_act]
+  dsimp' [dihedral_act]
   ring
 
 instance (n : ℕ) : Quandle (Dihedral n) where
   act := dihedralAct n
   self_distrib := fun x y z => by
-    dsimp [dihedral_act]
+    dsimp' [dihedral_act]
     ring
   invAct := dihedralAct n
   left_inv := fun x => (dihedralAct.inv n x).LeftInverse
   right_inv := fun x => (dihedralAct.inv n x).RightInverse
   fix := fun x => by
-    dsimp [dihedral_act]
+    dsimp' [dihedral_act]
     ring
 
 end Quandle

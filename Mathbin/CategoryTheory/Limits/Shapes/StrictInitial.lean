@@ -213,7 +213,7 @@ theorem limit_π_is_iso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     
   · ext
     rw [assoc, limit.lift_π]
-    dsimp only
+    dsimp' only
     split_ifs
     · cases h
       rw [id_comp, eq_to_hom_refl]

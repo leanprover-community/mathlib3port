@@ -165,17 +165,17 @@ def AndKind.cmp (p q : AndKind) : Ordering := by
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
 def Prop.cmp (p q : Prop) : Ordering := by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
-  case' var, var =>
+  case'' var, var =>
     exact cmp p q
-  case' True, True =>
+  case'' True, True =>
     exact Eq
-  case' False, False =>
+  case'' False, False =>
     exact Eq
-  case' and', and' : aq q₁ q₂ =>
+  case'' and', and' : aq q₁ q₂ =>
     exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
-  case' Or, Or : q₁ q₂ =>
+  case'' Or, Or : q₁ q₂ =>
     exact (p₁ q₁).orElse (p₂ q₂)
-  case' imp, imp : q₁ q₂ =>
+  case'' imp, imp : q₁ q₂ =>
     exact (p₁ q₁).orElse (p₂ q₂)
   exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt, Gt,
     Gt, Gt]

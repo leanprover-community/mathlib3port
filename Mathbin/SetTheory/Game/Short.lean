@@ -46,7 +46,7 @@ def Short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves] (sL : ∀
     (sR : ∀ j : x.RightMoves, Short (x.moveRight j)) : Short x := by
   (
       cases x
-      dsimp  at *) <;>
+      dsimp'  at *) <;>
     exact short.mk sL sR
 
 attribute [class] short
@@ -62,7 +62,7 @@ attribute [local instance] fintype_left
 
 instance fintypeLeftMoves (x : Pgame) [S : Short x] : Fintype x.LeftMoves := by
   cases x
-  dsimp
+  dsimp'
   infer_instance
 
 /-- Extracting the `fintype` instance for the indexing type for Right's moves in a short game.
@@ -76,7 +76,7 @@ attribute [local instance] fintype_right
 
 instance fintypeRightMoves (x : Pgame) [S : Short x] : Fintype x.RightMoves := by
   cases x
-  dsimp
+  dsimp'
   infer_instance
 
 instance moveLeftShort (x : Pgame) [S : Short x] (i : x.LeftMoves) : Short (x.moveLeft i) := by
@@ -207,11 +207,11 @@ instance shortNat : ∀ n : ℕ, Short n
   | n + 1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 
 instance shortBit0 (x : Pgame.{u}) [Short x] : Short (bit0 x) := by
-  dsimp [bit0]
+  dsimp' [bit0]
   infer_instance
 
 instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
-  dsimp [bit1]
+  dsimp' [bit1]
   infer_instance
 
 /-- Auxiliary construction of decidability instances.

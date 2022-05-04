@@ -154,7 +154,7 @@ def recolorOfEmbedding {α β : Type _} (f : α ↪ β) : G.Coloring α ↪ G.Co
   inj' := by
     -- this was strangely painful; seems like missing lemmas about embeddings
     intro C C' h
-    dsimp only  at h
+    dsimp' only  at h
     ext v
     apply (embedding.complete_graph.of_embedding f).inj'
     change ((embedding.complete_graph.of_embedding f).toHom.comp C) v = _
@@ -247,7 +247,7 @@ theorem chromatic_number_le_card [Fintype α] (C : G.Coloring α) : G.chromaticN
   cInf_le chromatic_number_bdd_below C.to_colorable
 
 theorem colorable_chromatic_number {m : ℕ} (hc : G.Colorable m) : G.Colorable G.chromaticNumber := by
-  dsimp only [chromatic_number]
+  dsimp' only [chromatic_number]
   rw [Nat.Inf_def]
   apply Nat.find_specₓ
   exact colorable_set_nonempty_of_colorable hc

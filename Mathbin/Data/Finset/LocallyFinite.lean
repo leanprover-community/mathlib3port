@@ -535,6 +535,10 @@ theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : ico a�
 theorem Ico_union_Ico_eq_Ico {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) : ico a b ∪ ico b c = ico a c := by
   rw [← coe_inj, coe_union, coe_Ico, coe_Ico, coe_Ico, Set.Ico_union_Ico_eq_Ico hab hbc]
 
+@[simp]
+theorem Ioc_union_Ioc_eq_Ioc {a b c : α} (h₁ : a ≤ b) (h₂ : b ≤ c) : ioc a b ∪ ioc b c = ioc a c := by
+  rw [← coe_inj, coe_union, coe_Ioc, coe_Ioc, coe_Ioc, Set.Ioc_union_Ioc_eq_Ioc h₁ h₂]
+
 theorem Ico_subset_Ico_union_Ico {a b c : α} : ico a c ⊆ ico a b ∪ ico b c := by
   rw [← coe_subset, coe_union, coe_Ico, coe_Ico, coe_Ico]
   exact Set.Ico_subset_Ico_union_Ico

@@ -76,7 +76,7 @@ instance yonedaPreservesLimits (X : C) : PreservesLimits (yoneda.obj X) where
               uniq' := fun s m w =>
                 funext fun x => by
                   refine' Quiver.Hom.op_inj (t.uniq ⟨op X, _, _⟩ _ fun j => _)
-                  · dsimp
+                  · dsimp'
                     simp [← s.w α]
                     
                   -- See library note [dsimp, simp]
@@ -91,7 +91,7 @@ instance coyonedaPreservesLimits (X : Cᵒᵖ) : PreservesLimits (coyoneda.obj X
             { lift := fun s x =>
                 t.lift
                   ⟨unop X, fun j => s.π.app j x, fun j₁ j₂ α => by
-                    dsimp
+                    dsimp'
                     simp [← s.w α]⟩,-- See library note [dsimp, simp]
               fac' := fun s j => funext fun x => t.fac _ _,
               uniq' := fun s m w =>

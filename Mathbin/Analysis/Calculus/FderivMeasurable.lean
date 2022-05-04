@@ -404,7 +404,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
         this
       linarith
     set m := k - 1 with hl
-    have m_ge : n e ≤ m := Nat.le_pred_of_lt k_gt
+    have m_ge : n e ≤ m := Nat.le_pred_of_ltₓ k_gt
     have km : k = m + 1 := (Nat.succ_pred_eq_of_posₓ (lt_of_le_of_ltₓ (zero_le _) k_gt)).symm
     rw [km] at hk h'k
     -- `f` is well approximated by `L e (n e) k` at the relevant scale

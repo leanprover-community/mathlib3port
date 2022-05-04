@@ -80,15 +80,15 @@ def adj : toKleisli T ⊣ fromKleisli T :=
     { homEquiv := fun X Y => Equivₓ.refl (X ⟶ T.obj Y),
       hom_equiv_naturality_left_symm' := fun X Y Z f g => by
         unfold_projs
-        dsimp
+        dsimp'
         rw [category.assoc, ← T.η.naturality_assoc g, functor.id_map]
-        dsimp
+        dsimp'
         simp [monad.left_unit] }
 
 /-- The composition of the adjunction gives the original functor. -/
 def toKleisliCompFromKleisliIsoSelf : toKleisli T ⋙ fromKleisli T ≅ T :=
   NatIso.ofComponents (fun X => Iso.refl _) fun X Y f => by
-    dsimp
+    dsimp'
     simp
 
 end Adjunction

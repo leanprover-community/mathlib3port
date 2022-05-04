@@ -329,7 +329,7 @@ theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (left
       (fun f =>
         f ≫ pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (j, index_of_hom U (hom_of_index U j)) ≫ F.map i_eq.op)
       s.condition
-  dsimp  at this
+  dsimp'  at this
   rw [category.assoc, category.assoc] at this
   symm
   -- We claim that this is equality is our goal
@@ -376,7 +376,7 @@ theorem pi_opens_to_first_obj_comp_second_map_eq :
 theorem fork_map_comp_first_map_to_pi_opens_eq :
     Presheaf.forkMap (PresieveOfCovering U) F ≫ firstObjToPiOpens F U = res F U := by
   ext i
-  dsimp [presheaf.fork_map, first_obj_to_pi_opens, res]
+  dsimp' [presheaf.fork_map, first_obj_to_pi_opens, res]
   rw [category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   rfl
 
@@ -454,7 +454,7 @@ def sheafSpacesEquivSheafSites : Sheaf (Opens.grothendieckTopology X) C ≌ Shea
       by
       intros
       ext1
-      dsimp
+      dsimp'
       simp
   counitIso :=
     (NatIso.ofComponents fun t =>
@@ -466,7 +466,7 @@ def sheafSpacesEquivSheafSites : Sheaf (Opens.grothendieckTopology X) C ≌ Shea
       by
       intros
       ext
-      dsimp
+      dsimp'
       simp
 
 /-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/

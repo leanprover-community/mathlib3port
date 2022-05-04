@@ -206,7 +206,7 @@ theorem degrees_add_of_disjoint {p q : MvPolynomial σ R} (h : Multiset.Disjoint
     
 
 theorem degrees_map [CommSemiringₓ S] (p : MvPolynomial σ R) (f : R →+* S) : (map f p).degrees ⊆ p.degrees := by
-  dsimp only [degrees]
+  dsimp' only [degrees]
   apply Multiset.subset_of_le
   apply Finset.sup_mono
   apply MvPolynomial.support_map_subset
@@ -458,7 +458,7 @@ theorem degree_of_add_le (n : σ) (f g : MvPolynomial σ R) : degreeOf n (f + g)
   repeat'
     rw [degree_of]
   apply (Multiset.count_le_of_le n (degrees_add f g)).trans
-  dsimp
+  dsimp'
   rw [Multiset.count_union]
 
 theorem monomial_le_degree_of (i : σ) {f : MvPolynomial σ R} {m : σ →₀ ℕ} (h_m : m ∈ f.support) : m i ≤ degreeOf i f :=

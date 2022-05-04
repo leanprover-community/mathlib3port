@@ -72,11 +72,11 @@ def punitAlgEquiv : MvPolynomial PUnit R ≃ₐ[R] R[X] where
     show ∀ p, f.comp g p = p
     apply is_id
     · ext a
-      dsimp
+      dsimp'
       rw [eval₂_C, Polynomial.eval₂_C]
       
     · rintro ⟨⟩
-      dsimp
+      dsimp'
       rw [eval₂_X, Polynomial.eval₂_X]
       
   right_inv := fun p =>
@@ -227,11 +227,11 @@ def sumRingEquiv : MvPolynomial (Sum S₁ S₂) R ≃+* MvPolynomial S₁ (MvPol
     rw [RingHom.comp_apply]
     convert hom_eq_hom ((sum_to_iter R S₁ S₂).comp ((iter_to_sum R S₁ S₂).comp C)) C _ _ p
     · ext1 a
-      dsimp
+      dsimp'
       rw [iter_to_sum_C_C R S₁ S₂, sum_to_iter_C R S₁ S₂]
       
     · intro c
-      dsimp
+      dsimp'
       rw [iter_to_sum_C_X R S₁ S₂, sum_to_iter_Xr R S₁ S₂]
       
     

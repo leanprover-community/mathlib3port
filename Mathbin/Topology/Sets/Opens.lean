@@ -209,7 +209,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
     rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
     refine' ⟨V, H₁, _⟩
     cases V
-    dsimp  at H₂
+    dsimp'  at H₂
     subst H₂
     exact hsV
     

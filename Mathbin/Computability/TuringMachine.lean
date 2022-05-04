@@ -1727,7 +1727,7 @@ theorem step_aux_read f v L R : stepAux (read f) v (tr_tape' L R) = stepAux (f R
   · rfl
     
   trans step_aux (read_aux l₂.length fun v => f (a::ᵥv)) v (tape.mk' ((L'.append l₁).cons a) (R'.append l₂))
-  · dsimp [read_aux, step_aux]
+  · dsimp' [read_aux, step_aux]
     simp
     cases a <;> rfl
     
@@ -2405,12 +2405,12 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
         TM1.stepAux (tr_st_act q o) v ((Tape.move Dir.right^[(S k).length]) (Tape.mk' ∅ (add_bottom L))) =
           TM1.stepAux q v' ((Tape.move Dir.right^[(S' k).length]) (Tape.mk' ∅ (add_bottom L'))) :=
   by
-  dsimp only
+  dsimp' only
   simp
   cases o <;> simp only [st_write, st_var, tr_st_act, TM1.step_aux]
   case TM2to1.st_act.push f =>
     have := tape.write_move_right_n fun a : Γ' => (a.1, update a.2 k (some (f v)))
-    dsimp only  at this
+    dsimp' only  at this
     refine'
       ⟨_, fun k' => _, by
         rw [tape.move_right_n_head, List.length, tape.mk'_nth_nat, this,
@@ -2610,7 +2610,7 @@ theorem tr_cfg_init k (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_in
       
     
   · rw [tr_init, TM1.init]
-    dsimp only
+    dsimp' only
     congr <;>
       cases L.reverse <;>
         try

@@ -44,7 +44,7 @@ def sectionsSubmonoid (F : J ⥤ Mon) : Submonoid (∀ j, F.obj j) where
     simp
   mul_mem' := fun a b ah bh j j' f => by
     simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
-    dsimp [functor.sections]  at ah bh
+    dsimp' [functor.sections]  at ah bh
     rw [ah f, bh f]
 
 @[to_additive]

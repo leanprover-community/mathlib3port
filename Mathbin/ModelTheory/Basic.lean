@@ -179,11 +179,13 @@ instance subsingleton_mk₂_relations {c f₁ f₂ : Type u} {r₁ r₂ : Type v
 theorem Encodable.countable [h : Encodable L.Symbols] : L.Countable :=
   ⟨Cardinal.encodable_iff.1 ⟨h⟩⟩
 
+@[simp]
+theorem empty_card : Language.empty.card = 0 := by
+  simp [card_eq_card_functions_add_card_relations]
+
 instance countable_empty : Language.empty.Countable :=
   ⟨by
-    rw [card_eq_card_functions_add_card_relations, add_le_omega, lift_le_omega, lift_le_omega, ← Cardinal.encodable_iff,
-      ← Cardinal.encodable_iff]
-    exact ⟨⟨Sigma.encodable⟩, ⟨Sigma.encodable⟩⟩⟩
+    simp ⟩
 
 instance (priority := 100) Countable.countable_functions [L.Countable] : L.CountableFunctions :=
   ⟨by

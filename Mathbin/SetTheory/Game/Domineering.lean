@@ -89,14 +89,14 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
   exact Nat.lt_of_le_of_ltₓ i₂ i₁
 
 theorem move_left_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : Finset.card (moveLeft b m) + 2 = Finset.card b := by
-  dsimp [move_left]
+  dsimp' [move_left]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
 
 theorem move_right_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : Finset.card (moveRight b m) + 2 = Finset.card b :=
   by
-  dsimp [move_right]
+  dsimp' [move_right]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
@@ -131,7 +131,7 @@ def domineering (b : Domineering.Board) : Pgame :=
 
 /-- All games of Domineering are short, because each move removes two squares. -/
 instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by
-  dsimp [domineering]
+  dsimp' [domineering]
   infer_instance
 
 /-- The Domineering board with two squares arranged vertically, in which Left has the only move. -/
@@ -143,11 +143,11 @@ def domineering.l :=
   domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
 
 instance shortOne : Short domineering.one := by
-  dsimp [domineering.one]
+  dsimp' [domineering.one]
   infer_instance
 
 instance shortL : Short domineering.l := by
-  dsimp [domineering.L]
+  dsimp' [domineering.L]
   infer_instance
 
 -- The VM can play small games successfully:

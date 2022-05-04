@@ -325,7 +325,7 @@ noncomputable def equivOption : Part α ≃ Option α :=
   ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
     Eq.trans
       (by
-        dsimp <;> congr)
+        dsimp' <;> congr)
       (to_of_option o)⟩
 
 /-- We give `part α` the order where everything is greater than `none`. -/
@@ -399,7 +399,7 @@ theorem mem_assert_iff {p : Prop} {f : p → Part α} {a} : a ∈ assert p f ↔
     fun ⟨a, h⟩ => mem_assert _ h⟩
 
 theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := by
-  dsimp [assert]
+  dsimp' [assert]
   cases h' : f h
   simp only [h', h, true_andₓ, iff_selfₓ, exists_prop_of_true, eq_iff_iff]
   apply Function.hfunext
@@ -409,7 +409,7 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
     
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
-  dsimp [assert, none]
+  dsimp' [assert, none]
   congr
   · simp only [h, not_false_iff, exists_prop_of_false]
     
@@ -539,7 +539,7 @@ def restrict (p : Prop) (o : Part α) (H : p → o.Dom) : Part α :=
 
 @[simp]
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) : a ∈ restrict p o h ↔ p ∧ a ∈ o := by
-  dsimp [restrict, mem_eq]
+  dsimp' [restrict, mem_eq]
   constructor
   · rintro ⟨h₀, h₁⟩
     exact ⟨h₀, ⟨_, h₁⟩⟩

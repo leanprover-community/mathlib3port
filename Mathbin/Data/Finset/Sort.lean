@@ -114,8 +114,8 @@ theorem sorted_last_eq_max'_aux (s : Finset α) (h : (s.sort (· ≤ ·)).length
   · have : s.max' H ∈ l := (Finset.mem_sort (· ≤ ·)).mpr (s.max'_mem H)
     obtain ⟨i, i_lt, hi⟩ : ∃ (i : _)(hi : i < l.length), l.nth_le i hi = s.max' H := List.mem_iff_nth_le.1 this
     rw [← hi]
-    have : i ≤ l.length - 1 := Nat.le_pred_of_lt i_lt
-    exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_lt i_lt)
+    have : i ≤ l.length - 1 := Nat.le_pred_of_ltₓ i_lt
+    exact (s.sort_sorted (· ≤ ·)).rel_nth_le_of_le _ _ (Nat.le_pred_of_ltₓ i_lt)
     
 
 theorem sorted_last_eq_max' {s : Finset α} {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :

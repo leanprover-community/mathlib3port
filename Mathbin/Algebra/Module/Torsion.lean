@@ -190,7 +190,7 @@ instance : HasScalar S (torsion' R M S) :=
     ⟨s • x, by
       obtain ⟨x, a, h⟩ := x
       use a
-      dsimp
+      dsimp'
       rw [smul_comm, h, smul_zero]⟩⟩
 
 instance : DistribMulAction S (torsion' R M S) :=

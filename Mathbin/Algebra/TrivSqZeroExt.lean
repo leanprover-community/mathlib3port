@@ -477,7 +477,7 @@ def liftAux (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) : tsze R M →ₐ[
       rw [map_zero, map_one, add_zeroₓ])
     (TrivSqZeroExt.ind fun r₁ m₁ =>
       TrivSqZeroExt.ind fun r₂ m₂ => by
-        dsimp
+        dsimp'
         simp only [add_zeroₓ, zero_addₓ, add_mulₓ, mul_addₓ, smul_mul_smul, hf, smul_zero]
         rw [← RingHom.map_mul, LinearMap.map_add, ← Algebra.commutes _ (f _), ← Algebra.smul_def, ← Algebra.smul_def,
           add_right_commₓ, add_assocₓ, LinearMap.map_smul, LinearMap.map_smul])

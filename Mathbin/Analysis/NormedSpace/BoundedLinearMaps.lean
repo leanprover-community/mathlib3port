@@ -55,7 +55,7 @@ open Classical BigOperators TopologicalSpace
 
 open Filter (Tendsto)
 
-open Metric
+open Metric ContinuousLinearMap
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
   [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
@@ -243,6 +243,62 @@ end
 
 section BilinearMap
 
+namespace ContinuousLinearMap
+
+/-! We prove some computation rules for continuous (semi-)bilinear maps in their first argument.
+  If `f` is a continuuous bilinear map, to use the corresponding rules for the second argument, use
+  `(f _).map_add` and similar.
+
+  We have to assume that `F` and `G` are normed spaces in this section, to use
+  `continuous_linear_map.to_normed_group`, but we don't need to assume this for the first argument
+  of `f`.
+-/
+
+
+variable {R : Type _}
+
+variable {𝕜₂ 𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NondiscreteNormedField 𝕜₂]
+
+variable {M : Type _} [TopologicalSpace M]
+
+variable {σ₁₂ : 𝕜 →+* 𝕜₂} [RingHomIsometric σ₁₂]
+
+variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜₂ G'] [NormedSpace 𝕜' G']
+
+variable [SmulCommClass 𝕜₂ 𝕜' G']
+
+section Semiringₓ
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] {ρ₁₂ : R →+* 𝕜'}
+
+theorem map_add₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x x' : M) (y : F) : f (x + x') y = f x y + f x' y := by
+  rw [f.map_add, add_apply]
+
+theorem map_zero₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (y : F) : f 0 y = 0 := by
+  rw [f.map_zero, zero_apply]
+
+theorem map_smulₛₗ₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (c : R) (x : M) (y : F) : f (c • x) y = ρ₁₂ c • f x y := by
+  rw [f.map_smulₛₗ, smul_apply]
+
+end Semiringₓ
+
+section Ringₓ
+
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] {ρ₁₂ : R →+* 𝕜'}
+
+theorem map_sub₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x x' : M) (y : F) : f (x - x') y = f x y - f x' y := by
+  rw [f.map_sub, sub_apply]
+
+theorem map_neg₂ (f : M →SL[ρ₁₂] F →SL[σ₁₂] G') (x : M) (y : F) : f (-x) y = -f x y := by
+  rw [f.map_neg, neg_apply]
+
+end Ringₓ
+
+theorem map_smul₂ (f : E →L[𝕜] F →L[𝕜] G) (c : 𝕜) (x : E) (y : F) : f (c • x) y = c • f x y := by
+  rw [f.map_smul, smul_apply]
+
+end ContinuousLinearMap
+
 variable (𝕜)
 
 /-- A map `f : E × F → G` satisfies `is_bounded_bilinear_map 𝕜 f` if it is bilinear and
@@ -261,11 +317,8 @@ variable {f : E × F → G}
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem ContinuousLinearMap.is_bounded_bilinear_map (f : E →L[𝕜] F →L[𝕜] G) :
     IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
-  { add_left := fun x₁ x₂ y => by
-      rw [f.map_add, ContinuousLinearMap.add_apply],
-    smul_left := fun c x y => by
-      rw [f.map_smul _, ContinuousLinearMap.smul_apply],
-    add_right := fun x => (f x).map_add, smul_right := fun c x y => (f x).map_smul c y,
+  { add_left := f.map_add₂, smul_left := f.map_smul₂, add_right := fun x => (f x).map_add,
+    smul_right := fun c x => (f x).map_smul c,
     bound :=
       ⟨max ∥f∥ 1, zero_lt_one.trans_le (le_max_rightₓ _ _), fun x y =>
         (f.le_op_norm₂ x y).trans <| by
@@ -308,6 +361,7 @@ theorem IsBoundedBilinearMap.map_sub_right (h : IsBoundedBilinearMap 𝕜 f) {x 
       simp [sub_eq_add_neg]
     
 
+/-- Useful to use together with `continuous.comp₂`. -/
 theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Continuous f := by
   have one_ne : (1 : ℝ) ≠ 0 := by
     simp
@@ -348,6 +402,10 @@ theorem IsBoundedBilinearMap.continuous_left (h : IsBoundedBilinearMap 𝕜 f) {
 theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) {e₁ : E} :
     Continuous fun e₂ => f (e₁, e₂) :=
   h.Continuous.comp (continuous_const.prod_mk continuous_id)
+
+/-- Useful to use together with `continuous.comp₂`. -/
+theorem ContinuousLinearMap.continuous₂ (f : E →L[𝕜] F →L[𝕜] G) : Continuous (Function.uncurry fun x y => f x y) :=
+  f.IsBoundedBilinearMap.Continuous
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMap 𝕜 f) (y : F) :

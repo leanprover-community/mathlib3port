@@ -53,11 +53,11 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
     { app := fun X =>
         { app := fun Y => T.app (X, Y),
           naturality' := fun Y Y' g => by
-            dsimp [curry_obj]
+            dsimp' [curry_obj]
             rw [nat_trans.naturality] },
       naturality' := fun X X' f => by
         ext
-        dsimp [curry_obj]
+        dsimp' [curry_obj]
         rw [nat_trans.naturality] }
 
 @[simp]

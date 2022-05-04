@@ -163,7 +163,7 @@ def galGroupBasis (K L : Type _) [Field K] [Field L] [Algebra K L] : GroupFilter
     change σ (g (σ⁻¹ x)) = x
     have h_in_F : σ⁻¹ x ∈ F :=
       ⟨x, hx, by
-        dsimp
+        dsimp'
         rw [← AlgEquiv.inv_fun_eq_symm]
         rfl⟩
     have h_g_fix : g (σ⁻¹ x) = σ⁻¹ x := by

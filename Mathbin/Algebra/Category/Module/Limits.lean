@@ -45,7 +45,7 @@ def sectionsSubmodule (F : J ⥤ ModuleCat R) : Submodule R (∀ j, F.obj j) :=
     Carrier := (F ⋙ forget (ModuleCat R)).sections,
     smul_mem' := fun r s sh j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
-      dsimp [functor.sections]  at sh
+      dsimp' [functor.sections]  at sh
       rw [sh f] }
 
 -- Adding the following instance speeds up `limit_module` noticeably,
@@ -181,7 +181,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
   fac' := fun s i => by
     apply LinearMap.ext
     intro x
-    dsimp
+    dsimp'
     exact direct_limit.lift_of s.ι.app _ x
   uniq' := fun s m h => by
     have : s.ι.app = fun i => LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i) := by

@@ -183,7 +183,7 @@ theorem size_up_to_zero : c.sizeUpTo 0 = 0 := by
   simp [size_up_to]
 
 theorem size_up_to_of_length_le (i : ℕ) (h : c.length ≤ i) : c.sizeUpTo i = n := by
-  dsimp [size_up_to]
+  dsimp' [size_up_to]
   convert c.blocks_sum
   exact take_all_of_le h
 
@@ -388,7 +388,7 @@ def blocksFinEquiv : (Σi : Finₓ c.length, Finₓ (c.blocksFun i)) ≃ Finₓ 
   invFun := fun j => ⟨c.index j, c.invEmbedding j⟩
   left_inv := fun x => by
     rcases x with ⟨i, y⟩
-    dsimp
+    dsimp'
     congr
     · exact c.index_embedding _ _
       

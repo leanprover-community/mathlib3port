@@ -153,7 +153,7 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
   simp only [neg_mul, sub_neg_eq_add]
   intro t h1 h2
   have h := congr_argₓ (fun a : R => a * ↑x⁻¹) h1
-  dsimp  at h
+  dsimp'  at h
   convert h
   rw [add_mulₓ, mul_assoc]
   simp [h2.symm]

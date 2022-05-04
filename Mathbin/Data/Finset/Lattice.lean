@@ -118,30 +118,6 @@ theorem sup_mono_fun {g : β → α} (h : ∀, ∀ b ∈ s, ∀, f b ≤ g b) : 
 theorem sup_mono (h : s₁ ⊆ s₂) : s₁.sup f ≤ s₂.sup f :=
   sup_le fun b hb => le_sup (h hb)
 
-@[simp]
-theorem sup_lt_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : s.sup f < a ↔ ∀, ∀ b ∈ s, ∀, f b < a :=
-  ⟨fun hs b hb => lt_of_le_of_ltₓ (le_sup hb) hs,
-    Finset.cons_induction_on s (fun _ => ha) fun c t hc => by
-      simpa only [sup_cons, sup_lt_iff, mem_cons, forall_eq_or_imp] using And.imp_right⟩
-
-@[simp]
-theorem le_sup_iff [IsTotal α (· ≤ ·)] {a : α} (ha : ⊥ < a) : a ≤ s.sup f ↔ ∃ b ∈ s, a ≤ f b :=
-  ⟨Finset.cons_induction_on s (fun h => absurd h (not_le_of_lt ha)) fun c t hc ih => by
-      simpa using
-        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a ≤ f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
-          let ⟨b, hb, hle⟩ := ih h
-          ⟨b, Or.inr hb, hle⟩,
-    fun ⟨b, hb, hle⟩ => trans hle (le_sup hb)⟩
-
-@[simp]
-theorem lt_sup_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.sup f ↔ ∃ b ∈ s, a < f b :=
-  ⟨Finset.cons_induction_on s (fun h => absurd h not_lt_bot) fun c t hc ih => by
-      simpa using
-        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a < f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
-          let ⟨b, hb, hlt⟩ := ih h
-          ⟨b, Or.inr hb, hlt⟩,
-    fun ⟨b, hb, hlt⟩ => lt_of_lt_of_leₓ hlt (le_sup hb)⟩
-
 theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
     (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c := by
   refine' eq_of_forall_ge_iff fun a => _
@@ -187,10 +163,6 @@ theorem comp_sup_eq_sup_comp [SemilatticeSup γ] [OrderBot γ] {s : Finset β} {
     (g_sup : ∀ x y, g (x⊔y) = g x⊔g y) (bot : g ⊥ = ⊥) : g (s.sup f) = s.sup (g ∘ f) :=
   Finset.cons_induction_on s bot fun c t hc ih => by
     rw [sup_cons, sup_cons, g_sup, ih]
-
-theorem comp_sup_eq_sup_comp_of_is_total [IsTotal α (· ≤ ·)] {γ : Type} [SemilatticeSup γ] [OrderBot γ] (g : α → γ)
-    (mono_g : Monotone g) (bot : g ⊥ = ⊥) : g (s.sup f) = s.sup (g ∘ f) :=
-  comp_sup_eq_sup_comp g mono_g.map_sup bot
 
 /-- Computing `sup` in a subtype (closed under `sup`) is the same as computing it in `α`. -/
 theorem sup_coe {P : α → Prop} {Pbot : P ⊥} {Psup : ∀ ⦃x y⦄, P x → P y → P (x⊔y)} (t : Finset β)
@@ -352,18 +324,6 @@ theorem inf_mono_fun {g : β → α} (h : ∀, ∀ b ∈ s, ∀, f b ≤ g b) : 
 theorem inf_mono (h : s₁ ⊆ s₂) : s₂.inf f ≤ s₁.inf f :=
   le_inf fun b hb => inf_le (h hb)
 
-@[simp]
-theorem lt_inf_iff [IsTotal α (· ≤ ·)] {a : α} (ha : a < ⊤) : a < s.inf f ↔ ∀, ∀ b ∈ s, ∀, a < f b :=
-  @sup_lt_iff (OrderDual α) _ _ _ _ _ _ _ ha
-
-@[simp]
-theorem inf_le_iff [IsTotal α (· ≤ ·)] {a : α} (ha : a < ⊤) : s.inf f ≤ a ↔ ∃ b ∈ s, f b ≤ a :=
-  @le_sup_iff (OrderDual α) _ _ _ _ _ _ _ ha
-
-@[simp]
-theorem inf_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf f < a ↔ ∃ b ∈ s, f b < a :=
-  @lt_sup_iff (OrderDual α) _ _ _ _ _ _ _
-
 theorem inf_attach (s : Finset β) (f : β → α) : (s.attach.inf fun x => f x) = s.inf f :=
   @sup_attach (OrderDual α) _ _ _ _ _
 
@@ -410,10 +370,6 @@ theorem inf_sdiff_right {α β : Type _} [BooleanAlgebra α] {s : Finset β} (hs
 theorem comp_inf_eq_inf_comp [SemilatticeInf γ] [OrderTop γ] {s : Finset β} {f : β → α} (g : α → γ)
     (g_inf : ∀ x y, g (x⊓y) = g x⊓g y) (top : g ⊤ = ⊤) : g (s.inf f) = s.inf (g ∘ f) :=
   @comp_sup_eq_sup_comp (OrderDual α) _ (OrderDual γ) _ _ _ _ _ _ _ g_inf top
-
-theorem comp_inf_eq_inf_comp_of_is_total [h : IsTotal α (· ≤ ·)] {γ : Type} [SemilatticeInf γ] [OrderTop γ] (g : α → γ)
-    (mono_g : Monotone g) (top : g ⊤ = ⊤) : g (s.inf f) = s.inf (g ∘ f) :=
-  comp_inf_eq_inf_comp g mono_g.map_inf top
 
 /-- Computing `inf` in a subtype (closed under `inf`) is the same as computing it in `α`. -/
 theorem inf_coe {P : α → Prop} {Ptop : P ⊤} {Pinf : ∀ ⦃x y⦄, P x → P y → P (x⊓y)} (t : Finset β)
@@ -476,6 +432,68 @@ theorem inf_sup_distrib_right (s : Finset ι) (f : ι → α) (a : α) : s.inf f
 end OrderTop
 
 end DistribLattice
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α]
+
+section OrderBot
+
+variable [OrderBot α] {s : Finset ι} {f : ι → α} {a : α}
+
+theorem comp_sup_eq_sup_comp_of_is_total [SemilatticeSup β] [OrderBot β] (g : α → β) (mono_g : Monotone g)
+    (bot : g ⊥ = ⊥) : g (s.sup f) = s.sup (g ∘ f) :=
+  comp_sup_eq_sup_comp g mono_g.map_sup bot
+
+@[simp]
+protected theorem le_sup_iff (ha : ⊥ < a) : a ≤ s.sup f ↔ ∃ b ∈ s, a ≤ f b :=
+  ⟨Finset.cons_induction_on s (fun h => absurd h (not_le_of_lt ha)) fun c t hc ih => by
+      simpa using
+        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a ≤ f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
+          let ⟨b, hb, hle⟩ := ih h
+          ⟨b, Or.inr hb, hle⟩,
+    fun ⟨b, hb, hle⟩ => trans hle (le_sup hb)⟩
+
+@[simp]
+protected theorem lt_sup_iff : a < s.sup f ↔ ∃ b ∈ s, a < f b :=
+  ⟨Finset.cons_induction_on s (fun h => absurd h not_lt_bot) fun c t hc ih => by
+      simpa using
+        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a < f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
+          let ⟨b, hb, hlt⟩ := ih h
+          ⟨b, Or.inr hb, hlt⟩,
+    fun ⟨b, hb, hlt⟩ => lt_of_lt_of_leₓ hlt (le_sup hb)⟩
+
+@[simp]
+protected theorem sup_lt_iff (ha : ⊥ < a) : s.sup f < a ↔ ∀, ∀ b ∈ s, ∀, f b < a :=
+  ⟨fun hs b hb => lt_of_le_of_ltₓ (le_sup hb) hs,
+    Finset.cons_induction_on s (fun _ => ha) fun c t hc => by
+      simpa only [sup_cons, sup_lt_iff, mem_cons, forall_eq_or_imp] using And.imp_right⟩
+
+end OrderBot
+
+section OrderTop
+
+variable [OrderTop α] {s : Finset ι} {f : ι → α} {a : α}
+
+theorem comp_inf_eq_inf_comp_of_is_total [SemilatticeInf β] [OrderTop β] (g : α → β) (mono_g : Monotone g)
+    (top : g ⊤ = ⊤) : g (s.inf f) = s.inf (g ∘ f) :=
+  comp_inf_eq_inf_comp g mono_g.map_inf top
+
+@[simp]
+protected theorem inf_le_iff (ha : a < ⊤) : s.inf f ≤ a ↔ ∃ b ∈ s, f b ≤ a :=
+  @Finset.le_sup_iff (OrderDual α) _ _ _ _ _ _ ha
+
+@[simp]
+protected theorem inf_lt_iff : s.inf f < a ↔ ∃ b ∈ s, f b < a :=
+  @Finset.lt_sup_iff (OrderDual α) _ _ _ _ _ _
+
+@[simp]
+protected theorem lt_inf_iff (ha : a < ⊤) : a < s.inf f ↔ ∀, ∀ b ∈ s, ∀, a < f b :=
+  @Finset.sup_lt_iff (OrderDual α) _ _ _ _ _ _ ha
+
+end OrderTop
+
+end LinearOrderₓ
 
 theorem inf_eq_infi [CompleteLattice β] (s : Finset α) (f : α → β) : s.inf f = ⨅ a ∈ s, f a :=
   @sup_eq_supr _ (OrderDual β) _ _ _
@@ -550,21 +568,6 @@ theorem sup'_const (a : α) : (s.sup' H fun b => a) = a := by
 theorem sup'_le_iff {a : α} : s.sup' H f ≤ a ↔ ∀, ∀ b ∈ s, ∀, f b ≤ a :=
   Iff.intro (fun h b hb => trans (le_sup' f hb) h) (sup'_le H f)
 
-@[simp]
-theorem sup'_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.sup' H f < a ↔ ∀, ∀ b ∈ s, ∀, f b < a := by
-  rw [← WithBot.coe_lt_coe, coe_sup', sup_lt_iff (WithBot.bot_lt_coe a)]
-  exact ball_congr fun b hb => WithBot.coe_lt_coe
-
-@[simp]
-theorem le_sup'_iff [IsTotal α (· ≤ ·)] {a : α} : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b := by
-  rw [← WithBot.coe_le_coe, coe_sup', le_sup_iff (WithBot.bot_lt_coe a)]
-  exact bex_congr fun b hb => WithBot.coe_le_coe
-
-@[simp]
-theorem lt_sup'_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.sup' H f ↔ ∃ b ∈ s, a < f b := by
-  rw [← WithBot.coe_lt_coe, coe_sup', lt_sup_iff]
-  exact bex_congr fun b hb => WithBot.coe_lt_coe
-
 theorem sup'_bUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ → Finset β} (Ht : ∀ b, (t b).Nonempty) :
     (s.bUnion t).sup' (Hs.bUnion fun b _ => Ht b) f = s.sup' Hs fun b => (t b).sup' (Ht b) f :=
   eq_of_forall_ge_iff fun c => by
@@ -598,19 +601,6 @@ theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
     
   cases a₂
   exacts[h₁, hp a₁ h₁ a₂ h₂]
-
-theorem exists_mem_eq_sup' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.sup' H f = f b := by
-  refine' H.cons_induction (fun c => _) fun c s hc hs ih => _
-  · exact ⟨c, mem_singleton_self c, rfl⟩
-    
-  · rcases ih with ⟨b, hb, h'⟩
-    rw [sup'_cons hs, h']
-    cases' total_of (· ≤ ·) (f b) (f c) with h h
-    · exact ⟨c, mem_cons.2 (Or.inl rfl), sup_eq_left.2 h⟩
-      
-    · exact ⟨b, mem_cons.2 (Or.inr hb), sup_eq_right.2 h⟩
-      
-    
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
@@ -667,22 +657,6 @@ theorem inf'_le {b : β} (h : b ∈ s) : s.inf' ⟨b, h⟩ f ≤ f b :=
 theorem inf'_const (a : α) : (s.inf' H fun b => a) = a :=
   @sup'_const (OrderDual α) _ _ _ _ _
 
-@[simp]
-theorem le_inf'_iff {a : α} : a ≤ s.inf' H f ↔ ∀, ∀ b ∈ s, ∀, a ≤ f b :=
-  @sup'_le_iff (OrderDual α) _ _ _ H f _
-
-@[simp]
-theorem lt_inf'_iff [IsTotal α (· ≤ ·)] {a : α} : a < s.inf' H f ↔ ∀, ∀ b ∈ s, ∀, a < f b :=
-  @sup'_lt_iff (OrderDual α) _ _ _ H f _ _
-
-@[simp]
-theorem inf'_le_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf' H f ≤ a ↔ ∃ b ∈ s, f b ≤ a :=
-  @le_sup'_iff (OrderDual α) _ _ _ H f _ _
-
-@[simp]
-theorem inf'_lt_iff [IsTotal α (· ≤ ·)] {a : α} : s.inf' H f < a ↔ ∃ b ∈ s, f b < a :=
-  @lt_sup'_iff (OrderDual α) _ _ _ H f _ _
-
 theorem inf'_bUnion [DecidableEq β] {s : Finset γ} (Hs : s.Nonempty) {t : γ → Finset β} (Ht : ∀ b, (t b).Nonempty) :
     (s.bUnion t).inf' (Hs.bUnion fun b _ => Ht b) f = s.inf' Hs fun b => (t b).inf' (Ht b) f :=
   @sup'_bUnion (OrderDual α) _ _ _ _ _ _ Hs _ Ht
@@ -694,9 +668,6 @@ theorem comp_inf'_eq_inf'_comp [SemilatticeInf γ] {s : Finset β} (H : s.Nonemp
 theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊓a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
     p (s.inf' H f) :=
   @sup'_induction (OrderDual α) _ _ _ H f _ hp hs
-
-theorem exists_mem_eq_inf' [IsTotal α (· ≤ ·)] : ∃ b, b ∈ s ∧ s.inf' H f = f b :=
-  @exists_mem_eq_sup' (OrderDual α) _ _ _ H f _
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inf'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
@@ -722,10 +693,6 @@ theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
 
-theorem exists_mem_eq_sup [IsTotal α (· ≤ ·)] (s : Finset β) (h : s.Nonempty) (f : β → α) :
-    ∃ b, b ∈ s ∧ s.sup f = f b :=
-  sup'_eq_sup h f ▸ exists_mem_eq_sup' h f
-
 theorem coe_sup_of_nonempty {s : Finset β} (h : s.Nonempty) (f : β → α) : (↑(s.sup f) : WithBot α) = s.sup (coe ∘ f) :=
   by
   simp only [← sup'_eq_sup h, coe_sup' h]
@@ -743,10 +710,6 @@ theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H 
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed (OrderDual α) _ _ _ t htne h_subset h
-
-theorem exists_mem_eq_inf [IsTotal α (· ≤ ·)] (s : Finset β) (h : s.Nonempty) (f : β → α) :
-    ∃ a, a ∈ s ∧ s.inf f = f a :=
-  @exists_mem_eq_sup (OrderDual α) _ _ _ _ _ h f
 
 theorem coe_inf_of_nonempty {s : Finset β} (h : s.Nonempty) (f : β → α) :
     (↑(s.inf f) : WithTop α) = s.inf fun i => f i :=
@@ -795,6 +758,61 @@ protected theorem inf'_apply {s : Finset α} (H : s.Nonempty) (f : α → ∀ b 
   @Finset.sup'_apply _ _ (fun b => OrderDual (C b)) _ _ H f b
 
 end Inf'
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α] {s : Finset ι} (H : s.Nonempty) {f : ι → α} {a : α}
+
+@[simp]
+theorem le_sup'_iff : a ≤ s.sup' H f ↔ ∃ b ∈ s, a ≤ f b := by
+  rw [← WithBot.coe_le_coe, coe_sup', Finset.le_sup_iff (WithBot.bot_lt_coe a)]
+  exact bex_congr fun b hb => WithBot.coe_le_coe
+
+@[simp]
+theorem lt_sup'_iff : a < s.sup' H f ↔ ∃ b ∈ s, a < f b := by
+  rw [← WithBot.coe_lt_coe, coe_sup', Finset.lt_sup_iff]
+  exact bex_congr fun b hb => WithBot.coe_lt_coe
+
+@[simp]
+theorem sup'_lt_iff : s.sup' H f < a ↔ ∀, ∀ i ∈ s, ∀, f i < a := by
+  rw [← WithBot.coe_lt_coe, coe_sup', Finset.sup_lt_iff (WithBot.bot_lt_coe a)]
+  exact ball_congr fun b hb => WithBot.coe_lt_coe
+
+@[simp]
+theorem inf'_le_iff : s.inf' H f ≤ a ↔ ∃ i ∈ s, f i ≤ a :=
+  @le_sup'_iff (OrderDual α) _ _ _ H f _
+
+@[simp]
+theorem inf'_lt_iff : s.inf' H f < a ↔ ∃ i ∈ s, f i < a :=
+  @lt_sup'_iff (OrderDual α) _ _ _ H f _
+
+@[simp]
+theorem lt_inf'_iff : a < s.inf' H f ↔ ∀, ∀ i ∈ s, ∀, a < f i :=
+  @sup'_lt_iff (OrderDual α) _ _ _ H f _
+
+theorem exists_mem_eq_sup' (f : ι → α) : ∃ i, i ∈ s ∧ s.sup' H f = f i := by
+  refine' H.cons_induction (fun c => _) fun c s hc hs ih => _
+  · exact ⟨c, mem_singleton_self c, rfl⟩
+    
+  · rcases ih with ⟨b, hb, h'⟩
+    rw [sup'_cons hs, h']
+    cases' total_of (· ≤ ·) (f b) (f c) with h h
+    · exact ⟨c, mem_cons.2 (Or.inl rfl), sup_eq_left.2 h⟩
+      
+    · exact ⟨b, mem_cons.2 (Or.inr hb), sup_eq_right.2 h⟩
+      
+    
+
+theorem exists_mem_eq_inf' (f : ι → α) : ∃ i, i ∈ s ∧ s.inf' H f = f i :=
+  @exists_mem_eq_sup' (OrderDual α) _ _ _ H f
+
+theorem exists_mem_eq_sup [OrderBot α] (s : Finset ι) (h : s.Nonempty) (f : ι → α) : ∃ i, i ∈ s ∧ s.sup f = f i :=
+  sup'_eq_sup h f ▸ exists_mem_eq_sup' h f
+
+theorem exists_mem_eq_inf [OrderTop α] (s : Finset ι) (h : s.Nonempty) (f : ι → α) : ∃ i, i ∈ s ∧ s.inf f = f i :=
+  @exists_mem_eq_sup (OrderDual α) _ _ _ _ h f
+
+end LinearOrderₓ
 
 /-! ### max and min of finite sets -/
 

@@ -35,7 +35,7 @@ theorem continuants_aux_stable_of_terminated (succ_n_le_m : n + 1 ≤ m) (termin
   · rfl
     
   · have : g.continuants_aux (m + 1) = g.continuants_aux m := by
-      have : n ≤ m - 1 := Nat.le_pred_of_lt succ_n_le_m
+      have : n ≤ m - 1 := Nat.le_pred_of_ltₓ succ_n_le_m
       have : g.terminated_at (m - 1) := terminated_stable this terminated_at_n
       have stable_step : g.continuants_aux (m - 1 + 2) = g.continuants_aux (m - 1 + 1) :=
         continuants_aux_stable_step_of_terminated this

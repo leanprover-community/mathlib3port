@@ -177,7 +177,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
         rfl
       induction' e : Seqₓₓ.nth S 0 with o
       · have D : Seqₓₓ.destruct S = none := by
-          dsimp [Seqₓₓ.destruct]
+          dsimp' [Seqₓₓ.destruct]
           rw [e]
           rfl
         rw [D]
@@ -186,7 +186,7 @@ theorem terminates_parallel {S : Wseq (Computation α)} {c} (h : c ∈ S) [T : T
         rwa [Seqₓₓ.destruct_eq_nil D, Seqₓₓ.tail_nil] at TT
         
       · have D : Seqₓₓ.destruct S = some (o, S.tail) := by
-          dsimp [Seqₓₓ.destruct]
+          dsimp' [Seqₓₓ.destruct]
           rw [e]
           rfl
         rw [D]
@@ -318,7 +318,7 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s 
     rw [← Wseq.map_comp]
     refine' (Wseq.map_id _).symm.trans (congr_argₓ (fun f => Wseq.map f S) _)
     funext c
-    dsimp [id, Function.comp]
+    dsimp' [id, Function.comp]
     rw [← map_comp]
     exact (map_id _).symm
   have pe := congr_argₓ parallel this
@@ -331,7 +331,7 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s 
     rcases exists_of_mem_map h' with ⟨d, dT, cd⟩
     rw [get_eq_of_mem _ dT] at e
     cases e
-    dsimp  at cd
+    dsimp'  at cd
     cases cd
     rcases exists_of_mem_parallel dT with ⟨d', dT', ad'⟩
     rcases Wseq.exists_of_mem_map dT' with ⟨c', cs', e'⟩

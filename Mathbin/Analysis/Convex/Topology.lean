@@ -18,7 +18,10 @@ We prove the following facts:
 * `convex.closure` : closure of a convex set is convex;
 * `set.finite.compact_convex_hull` : convex hull of a finite set is compact;
 * `set.finite.is_closed_convex_hull` : convex hull of a finite set is closed;
-* `convex_on_dist` : distance to a fixed point is convex on any convex set;
+* `convex_on_norm`, `convex_on_dist` : norm and distance to a fixed point is convex on any convex
+  set;
+* `convex_on_univ_norm`, `convex_on_univ_dist` : norm and distance to a fixed point is convex on
+  the whole space;
 * `convex_hull_ediam`, `convex_hull_diam` : convex hull of a set has the same (e)metric diameter
   as the original set;
 * `bounded_convex_hull` : convex hull of a set is bounded if and only if the original set
@@ -260,33 +263,41 @@ end HasContinuousSmul
 
 section NormedSpace
 
-variable [NormedGroup E] [NormedSpace ℝ E]
+variable [SemiNormedGroup E] [NormedSpace ℝ E]
 
-theorem convex_on_dist (z : E) (s : Set E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z :=
-  (And.intro hs) fun x y hx hy a b ha hb hab =>
+/-- The norm on a real normed space is convex on any convex set. See also `seminorm.convex_on`
+and `convex_on_univ_norm`. -/
+theorem convex_on_norm {s : Set E} (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
+  ⟨hs, fun x y hx hy a b ha hb hab =>
     calc
-      dist (a • x + b • y) z = ∥a • x + b • y - (a + b) • z∥ := by
-        rw [hab, one_smul, NormedGroup.dist_eq]
-      _ = ∥a • (x - z) + b • (y - z)∥ := by
-        rw [add_smul, smul_sub, smul_sub, sub_eq_add_neg, sub_eq_add_neg, sub_eq_add_neg, neg_add, ← add_assocₓ,
-            add_assocₓ (a • x), add_commₓ (b • y)] <;>
-          simp only [add_assocₓ]
-      _ ≤ ∥a • (x - z)∥ + ∥b • (y - z)∥ := norm_add_le (a • (x - z)) (b • (y - z))
-      _ = a * dist x z + b * dist y z := by
-        simp [norm_smul, NormedGroup.dist_eq, Real.norm_eq_abs, abs_of_nonneg ha, abs_of_nonneg hb]
-      
+      ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
+      _ = a * ∥x∥ + b * ∥y∥ := by
+        rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
+      ⟩
+
+/-- The norm on a real normed space is convex on the whole space. See also `seminorm.convex_on`
+and `convex_on_norm`. -/
+theorem convex_on_univ_norm : ConvexOn ℝ Univ (norm : E → ℝ) :=
+  convex_on_norm convex_univ
+
+theorem convex_on_dist (z : E) {s : Set E} (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z := by
+  simpa [dist_eq_norm, preimage_preimage] using
+    (convex_on_norm (hs.translate (-z))).comp_affine_map (AffineMap.id ℝ E - AffineMap.const ℝ E z)
+
+theorem convex_on_univ_dist (z : E) : ConvexOn ℝ Univ fun z' => dist z' z :=
+  convex_on_dist z convex_univ
 
 theorem convex_ball (a : E) (r : ℝ) : Convex ℝ (Metric.Ball a r) := by
-  simpa only [Metric.Ball, sep_univ] using (convex_on_dist a _ convex_univ).convex_lt r
+  simpa only [Metric.Ball, sep_univ] using (convex_on_univ_dist a).convex_lt r
 
 theorem convex_closed_ball (a : E) (r : ℝ) : Convex ℝ (Metric.ClosedBall a r) := by
-  simpa only [Metric.ClosedBall, sep_univ] using (convex_on_dist a _ convex_univ).convex_le r
+  simpa only [Metric.ClosedBall, sep_univ] using (convex_on_univ_dist a).convex_le r
 
 /-- Given a point `x` in the convex hull of `s` and a point `y`, there exists a point
 of `s` at distance at least `dist x y` from `y`. -/
 theorem convex_hull_exists_dist_ge {s : Set E} {x : E} (hx : x ∈ convexHull ℝ s) (y : E) :
     ∃ x' ∈ s, dist x y ≤ dist x' y :=
-  (convex_on_dist y _ (convex_convex_hull ℝ _)).exists_ge_of_mem_convex_hull hx
+  (convex_on_dist y (convex_convex_hull ℝ _)).exists_ge_of_mem_convex_hull hx
 
 /-- Given a point `x` in the convex hull of `s` and a point `y` in the convex hull of `t`,
 there exist points `x' ∈ s` and `y' ∈ t` at distance at least `dist x y`. -/

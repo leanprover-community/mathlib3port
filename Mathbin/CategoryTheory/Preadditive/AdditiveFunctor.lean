@@ -114,7 +114,7 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] : Pr
             is_bilimit_of_total _
               (by
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
-                dsimp only [map_bicone_X]
+                dsimp' only [map_bicone_X]
                 simp_rw [← F.map_id]
                 refine' congr_argₓ _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }

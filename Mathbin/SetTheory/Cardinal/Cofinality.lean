@@ -126,7 +126,7 @@ theorem cof_type (r : α → α → Prop) [IsWellOrder α r] : (type r).cof = St
   rfl
 
 theorem le_cof_type [IsWellOrder α r] {c} : c ≤ cof (type r) ↔ ∀ S : Set α, (∀ a, ∃ b ∈ S, ¬r b a) → c ≤ # S := by
-  dsimp [cof, StrictOrder.cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn] <;>
+  dsimp' [cof, StrictOrder.cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn] <;>
     rw [Cardinal.le_min, Subtype.forall] <;> rfl
 
 theorem cof_type_le [IsWellOrder α r] (S : Set α) (h : ∀ a, ∃ b ∈ S, ¬r b a) : cof (type r) ≤ # S :=
@@ -137,7 +137,7 @@ theorem lt_cof_type [IsWellOrder α r] (S : Set α) (hl : # S < cof (type r)) : 
 
 theorem cof_eq (r : α → α → Prop) [IsWellOrder α r] : ∃ S : Set α, (∀ a, ∃ b ∈ S, ¬r b a) ∧ # S = cof (type r) :=
   have : ∃ i, cof (type r) = _ := by
-    dsimp [cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn]
+    dsimp' [cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn]
     apply Cardinal.min_eq
   let ⟨⟨S, hl⟩, e⟩ := this
   ⟨S, hl, e.symm⟩
@@ -684,7 +684,7 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
       refine' l (lt_succ.2 _)
       rw [←
         show g (f.symm ⟨b, h⟩) = b by
-          dsimp [g] <;> simp ]
+          dsimp' [g] <;> simp ]
       apply le_sup)
 
 /-! ### Infinite pigeonhole principle -/

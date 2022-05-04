@@ -669,7 +669,7 @@ theorem Nonneg.add {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a +
     · apply Nat.le_add_rightₓ
       
     
-  · dsimp
+  · dsimp'
     rw [add_commₓ, add_commₓ ↑y]
     exact nonneg_add_lem hb ha
     
@@ -823,11 +823,12 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
 theorem not_sq_le_succ c d y (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gtₓ <| mul_pos (mul_pos h <| Nat.succ_posₓ _) <| Nat.succ_posₓ _
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`ns] []
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
 class Nonsquare (x : ℕ) : Prop where
-  ns {} : ∀ n : ℕ, x ≠ n * n
+  ns : ∀ n : ℕ, x ≠ n * n
 
 parameter [dnsq : Nonsquare d]
 

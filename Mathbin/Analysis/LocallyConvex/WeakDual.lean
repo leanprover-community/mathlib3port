@@ -106,10 +106,10 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     let U' := hU₁.to_finset
     by_cases' hU₃ : U.fst.nonempty
     · have hU₃' : U'.nonempty := (Set.Finite.toFinset.nonempty hU₁).mpr hU₃
-      let r := U'.inf' hU₃' U.snd
-      have hr : 0 < r := (Finset.lt_inf'_iff hU₃' _).mpr fun y hy => hU₂ y ((Set.Finite.mem_to_finset hU₁).mp hy)
-      use Seminorm.Ball (U'.sup p) (0 : E) r
-      refine' ⟨p.basis_sets_mem _ hr, fun x hx y hy => _⟩
+      refine'
+        ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
+          p.basis_sets_mem _ <| (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>
+          _⟩
       simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
       rw [Seminorm.mem_ball_zero] at hx
       rw [← LinearMap.to_seminorm_family_apply]

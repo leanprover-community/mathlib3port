@@ -75,7 +75,7 @@ protected theorem is_open_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu :
     IsOpen (CompactOpen.Gen s u) :=
   TopologicalSpace.GenerateOpen.basic _
     (by
-      dsimp [mem_set_of_eq] <;> tauto)
+      dsimp' [mem_set_of_eq] <;> tauto)
 
 section Functorial
 

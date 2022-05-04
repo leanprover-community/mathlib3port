@@ -474,7 +474,7 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠
     ⟨i + (m - n), by
       simpa only [add_assocₓ, tsub_add_cancel_of_le hnm] using hi⟩
 
-theorem measure_if {x : β} {t : Set β} {s : Set α} : μ (if x ∈ t then s else ∅) = indicator t (fun _ => μ s) x := by
+theorem measure_if {x : β} {t : Set β} {s : Set α} : μ (if x ∈ t then s else ∅) = indicatorₓ t (fun _ => μ s) x := by
   split_ifs <;> simp [h]
 
 end
@@ -607,7 +607,7 @@ instance [MeasurableSpace α] : HasScalar R (Measure α) :=
     { toOuterMeasure := c • μ.toOuterMeasure,
       m_Union := fun s hs hd => by
         rw [← smul_one_smul ℝ≥0∞ c (_ : outer_measure α)]
-        dsimp
+        dsimp'
         simp_rw [measure_Union hd hs, Ennreal.tsum_mul_left],
       trimmed := by
         rw [outer_measure.trim_smul, μ.trimmed] }⟩
@@ -1543,7 +1543,7 @@ def count : Measure α :=
 
 theorem le_count_apply : (∑' i : s, 1 : ℝ≥0∞) ≤ count s :=
   calc
-    (∑' i : s, 1 : ℝ≥0∞) = ∑' i, indicator s 1 i := tsum_subtype s 1
+    (∑' i : s, 1 : ℝ≥0∞) = ∑' i, indicatorₓ s 1 i := tsum_subtype s 1
     _ ≤ ∑' i, dirac i s := Ennreal.tsum_le_tsum fun x => le_dirac_apply
     _ ≤ count s := le_sum_apply _ _
     
@@ -2036,6 +2036,11 @@ instance Restrict.is_finite_measure (μ : Measure α) [hs : Fact (μ s < ∞)] :
 theorem measure_lt_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ s < ∞ :=
   (measure_mono (subset_univ s)).trans_lt IsFiniteMeasure.measure_univ_lt_top
 
+instance is_finite_measure_restrict (μ : Measure α) (s : Set α) [h : IsFiniteMeasure μ] :
+    IsFiniteMeasure (μ.restrict s) :=
+  ⟨by
+    simp [measure_lt_top μ s]⟩
+
 theorem measure_ne_top (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) : μ s ≠ ∞ :=
   ne_of_ltₓ (measure_lt_top μ s)
 
@@ -2134,6 +2139,8 @@ class IsProbabilityMeasure (μ : Measure α) : Prop where
 
 export IsProbabilityMeasure (measure_univ)
 
+attribute [simp] is_probability_measure.measure_univ
+
 instance (priority := 100) IsProbabilityMeasure.to_is_finite_measure (μ : Measure α) [IsProbabilityMeasure μ] :
     IsFiniteMeasure μ :=
   ⟨by
@@ -2164,6 +2171,11 @@ theorem is_probability_measure_smul [IsFiniteMeasure μ] (h : μ ≠ 0) : IsProb
     
   · exact measure_ne_top _ _
     
+
+theorem is_probability_measure_map [IsProbabilityMeasure μ] {f : α → β} (hf : AeMeasurable f μ) :
+    IsProbabilityMeasure (map f μ) :=
+  ⟨by
+    simp [map_apply_of_ae_measurable, hf]⟩
 
 end IsProbabilityMeasure
 
@@ -2952,8 +2964,15 @@ theorem measure_trim_to_measurable_eq_zero {hm : m ≤ m0} (hs : μ.trim hm s = 
     (by
       rwa [measure_to_measurable])
 
+theorem ae_of_ae_trim (hm : m ≤ m0) {μ : Measure α} {P : α → Prop} (h : ∀ᵐ x ∂μ.trim hm, P x) : ∀ᵐ x ∂μ, P x :=
+  measure_eq_zero_of_trim_eq_zero hm h
+
 theorem ae_eq_of_ae_eq_trim {E} {hm : m ≤ m0} {f₁ f₂ : α → E} (h12 : f₁ =ᶠ[@Measure.ae α m (μ.trim hm)] f₂) :
     f₁ =ᵐ[μ] f₂ :=
+  measure_eq_zero_of_trim_eq_zero hm h12
+
+theorem ae_le_of_ae_le_trim {E} [LE E] {hm : m ≤ m0} {f₁ f₂ : α → E} (h12 : f₁ ≤ᶠ[@Measure.ae α m (μ.trim hm)] f₂) :
+    f₁ ≤ᵐ[μ] f₂ :=
   measure_eq_zero_of_trim_eq_zero hm h12
 
 theorem trim_trim {m₁ m₂ : MeasurableSpace α} {hm₁₂ : m₁ ≤ m₂} {hm₂ : m₂ ≤ m0} :
@@ -3116,16 +3135,16 @@ theorem map_restrict_ae_le_map_indicator_ae [Zero β] (hs : MeasurableSet s) :
 
 variable [Zero β]
 
-theorem indicator_ae_eq_restrict (hs : MeasurableSet s) : indicator s f =ᵐ[μ.restrict s] f :=
+theorem indicator_ae_eq_restrict (hs : MeasurableSet s) : indicatorₓ s f =ᵐ[μ.restrict s] f :=
   piecewise_ae_eq_restrict hs
 
-theorem indicator_ae_eq_restrict_compl (hs : MeasurableSet s) : indicator s f =ᵐ[μ.restrict (sᶜ)] 0 :=
+theorem indicator_ae_eq_restrict_compl (hs : MeasurableSet s) : indicatorₓ s f =ᵐ[μ.restrict (sᶜ)] 0 :=
   piecewise_ae_eq_restrict_compl hs
 
 theorem indicator_ae_eq_of_ae_eq_set (hst : s =ᵐ[μ] t) : s.indicator f =ᵐ[μ] t.indicator f :=
   piecewise_ae_eq_of_ae_eq_set hst
 
-theorem indicator_meas_zero (hs : μ s = 0) : indicator s f =ᵐ[μ] 0 :=
+theorem indicator_meas_zero (hs : μ s = 0) : indicatorₓ s f =ᵐ[μ] 0 :=
   indicator_empty' f ▸ indicator_ae_eq_of_ae_eq_set (ae_eq_empty.2 hs)
 
 variable [MeasurableSpace β]

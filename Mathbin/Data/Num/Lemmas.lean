@@ -148,7 +148,7 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
   | bit0 a, bit0 b => by
     have := cmp_to_nat a b
     revert this
-    cases cmp a b <;> dsimp <;> intro
+    cases cmp a b <;> dsimp' <;> intro
     · exact add_lt_add this this
       
     · rw [this]
@@ -156,10 +156,10 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
     · exact add_lt_add this this
       
   | bit0 a, bit1 b => by
-    dsimp [cmp]
+    dsimp' [cmp]
     have := cmp_to_nat a b
     revert this
-    cases cmp a b <;> dsimp <;> intro
+    cases cmp a b <;> dsimp' <;> intro
     · exact Nat.le_succ_of_leₓ (add_lt_add this this)
       
     · rw [this]
@@ -168,10 +168,10 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
     · exact cmp_to_nat_lemma this
       
   | bit1 a, bit0 b => by
-    dsimp [cmp]
+    dsimp' [cmp]
     have := cmp_to_nat a b
     revert this
-    cases cmp a b <;> dsimp <;> intro
+    cases cmp a b <;> dsimp' <;> intro
     · exact cmp_to_nat_lemma this
       
     · rw [this]
@@ -182,7 +182,7 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
   | bit1 a, bit1 b => by
     have := cmp_to_nat a b
     revert this
-    cases cmp a b <;> dsimp <;> intro
+    cases cmp a b <;> dsimp' <;> intro
     · exact Nat.succ_lt_succₓ (add_lt_add this this)
       
     · rw [this]
@@ -321,7 +321,7 @@ theorem cmp_to_nat : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℕ) < n) (m = n
   | 0, Pos b => to_nat_pos _
   | Pos a, 0 => to_nat_pos _
   | Pos a, Pos b => by
-    have := PosNum.cmp_to_nat a b <;> revert this <;> dsimp [cmp] <;> cases PosNum.cmp a b
+    have := PosNum.cmp_to_nat a b <;> revert this <;> dsimp' [cmp] <;> cases PosNum.cmp a b
     exacts[id, congr_argₓ Pos, id]
 
 @[norm_cast]
@@ -1419,11 +1419,11 @@ theorem cmp_to_int : ∀ m n, (Ordering.casesOn (cmp m n) ((m : ℤ) < n) (m = n
   | 0, 0 => rfl
   | Pos a, Pos b => by
     have := PosNum.cmp_to_nat a b <;>
-      revert this <;> dsimp [cmp] <;> cases PosNum.cmp a b <;> dsimp <;> [simp , exact congr_argₓ Pos, simp [Gt]]
+      revert this <;> dsimp' [cmp] <;> cases PosNum.cmp a b <;> dsimp' <;> [simp , exact congr_argₓ Pos, simp [Gt]]
   | neg a, neg b => by
     have := PosNum.cmp_to_nat b a <;>
       revert this <;>
-        dsimp [cmp] <;> cases PosNum.cmp b a <;> dsimp <;> [simp , simp (config := { contextual := true }), simp [Gt]]
+        dsimp' [cmp] <;> cases PosNum.cmp b a <;> dsimp' <;> [simp , simp (config := { contextual := true }), simp [Gt]]
   | Pos a, 0 => PosNum.cast_pos _
   | Pos a, neg b => lt_transₓ (neg_lt_zero.2 <| PosNum.cast_pos _) (PosNum.cast_pos _)
   | 0, neg b => neg_lt_zero.2 <| PosNum.cast_pos _

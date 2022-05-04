@@ -182,8 +182,7 @@ theorem nat_degree_le_iff_degree_le {n : ℕ} : natDegree p ≤ n ↔ degree p �
 theorem nat_degree_lt_iff_degree_lt (hp : p ≠ 0) : p.natDegree < n ↔ p.degree < ↑n :=
   WithBot.get_or_else_bot_lt_iff <| degree_eq_bot.Not.mpr hp
 
-alias Polynomial.nat_degree_le_iff_degree_le ↔ ..
-
+-- ././Mathport/Syntax/Translate/Basic.lean:1575:43: in alias: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
 theorem nat_degree_le_nat_degree [Semiringₓ S] {q : S[X]} (hpq : p.degree ≤ q.degree) : p.natDegree ≤ q.natDegree :=
   WithBot.giGetOrElseBot.gc.monotone_l hpq
 
@@ -726,7 +725,7 @@ theorem coeff_mul_degree_add_degree (p q : R[X]) :
           cases H
           · subst H
             rw [add_left_cancel_iffₓ] at h₁
-            dsimp  at h₁
+            dsimp'  at h₁
             subst h₁
             exfalso
             exact h₂ rfl

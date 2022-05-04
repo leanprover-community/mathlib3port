@@ -299,7 +299,7 @@ theorem nth_count_le (hp : (SetOf p).Infinite) (n : ℕ) : n ≤ nth p (count p 
 theorem count_nth_gc (hp : (SetOf p).Infinite) : GaloisConnection (count p) (nth p) := by
   rintro x y
   rw [nth, le_cInf_iff ⟨0, fun _ _ => Nat.zero_leₓ _⟩ ⟨nth p y, nth_mem_of_infinite_aux p hp y⟩]
-  dsimp
+  dsimp'
   refine' ⟨_, fun h => _⟩
   · rintro hy n ⟨hn, h⟩
     obtain hy' | rfl := hy.lt_or_eq

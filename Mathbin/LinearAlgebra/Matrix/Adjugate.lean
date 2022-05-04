@@ -281,6 +281,24 @@ theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 := by
   ext
   simp [adjugate_def, Matrix.one_apply, Pi.single_apply, eq_comm]
 
+@[simp]
+theorem adjugate_diagonal (v : n → α) : adjugate (diagonalₓ v) = diagonalₓ fun i => ∏ j in Finset.univ.erase i, v j :=
+  by
+  ext
+  simp only [adjugate_def, cramer_apply, diagonal_transpose]
+  obtain rfl | hij := eq_or_ne i j
+  · rw [diagonal_apply_eq, diagonal_update_column_single, det_diagonal, prod_update_of_mem (Finset.mem_univ _),
+      sdiff_singleton_eq_erase, one_mulₓ]
+    
+  · rw [diagonal_apply_ne _ hij]
+    refine' det_eq_zero_of_row_eq_zero j fun k => _
+    obtain rfl | hjk := eq_or_ne k j
+    · rw [update_column_self, Pi.single_eq_of_ne' hij]
+      
+    · rw [update_column_ne hjk, diagonal_apply_ne' _ hjk]
+      
+    
+
 theorem _root_.ring_hom.map_adjugate {R S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) (M : Matrix n n R) :
     f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) := by
   ext i k
@@ -336,7 +354,7 @@ theorem adjugate_fin_two' (a b c d : α) : adjugate ![![a, b], ![c, d]] = ![![d,
   adjugate_fin_two _
 
 theorem adjugate_conj_transpose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ = adjugate Aᴴ := by
-  dsimp only [conj_transpose]
+  dsimp' only [conj_transpose]
   have : Aᵀ.adjugate.map star = adjugate (Aᵀ.map star) := (starRingEnd α).map_adjugate Aᵀ
   rw [A.adjugate_transpose, this]
 

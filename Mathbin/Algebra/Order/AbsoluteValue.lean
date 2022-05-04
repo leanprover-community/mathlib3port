@@ -188,16 +188,20 @@ end AbsoluteValue
 
 section IsAbsoluteValue
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`abv_nonneg] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`abv_eq_zero] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`abv_add] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`abv_mul] []
 /-- A function `f` is an absolute value if it is nonnegative, zero only at 0, additive, and
 multiplicative.
 
 See also the type `absolute_value` which represents a bundled version of absolute values.
 -/
 class IsAbsoluteValue {S} [OrderedSemiring S] {R} [Semiringₓ R] (f : R → S) : Prop where
-  abv_nonneg {} : ∀ x, 0 ≤ f x
-  abv_eq_zero {} : ∀ {x}, f x = 0 ↔ x = 0
-  abv_add {} : ∀ x y, f (x + y) ≤ f x + f y
-  abv_mul {} : ∀ x y, f (x * y) = f x * f y
+  abv_nonneg : ∀ x, 0 ≤ f x
+  abv_eq_zero : ∀ {x}, f x = 0 ↔ x = 0
+  abv_add : ∀ x y, f (x + y) ≤ f x + f y
+  abv_mul : ∀ x y, f (x * y) = f x * f y
 
 namespace IsAbsoluteValue
 

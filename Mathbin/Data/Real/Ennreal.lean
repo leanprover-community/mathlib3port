@@ -159,7 +159,7 @@ theorem coe_nnreal_eq (r : ℝ≥0 ) : (r : ℝ≥0∞) = Ennreal.ofReal r := by
   rw [Ennreal.ofReal, Real.toNnreal]
   cases' r with r h
   congr
-  dsimp
+  dsimp'
   rw [max_eq_leftₓ h]
 
 theorem of_real_eq_coe_nnreal {x : ℝ} (h : 0 ≤ x) : Ennreal.ofReal x = @coe ℝ≥0 ℝ≥0∞ _ (⟨x, h⟩ : ℝ≥0 ) := by
@@ -353,6 +353,9 @@ theorem one_lt_two : (1 : ℝ≥0∞) < 2 :=
   coe_one ▸
     coe_two ▸ by
       exact_mod_cast @one_lt_two ℕ _ _
+
+theorem one_le_two : (1 : ℝ≥0∞) ≤ 2 :=
+  one_lt_two.le
 
 @[simp]
 theorem zero_lt_two : (0 : ℝ≥0∞) < 2 :=
@@ -1493,6 +1496,9 @@ theorem le_inv_iff_mul_le : a ≤ b⁻¹ ↔ a * b ≤ 1 := by
   suffices a ≤ 1 / b ↔ a * b ≤ 1 by
     simpa [div_eq_mul_inv, h]
   exact le_div_iff_mul_le (Or.inl (mt coe_eq_coe.1 h)) (Or.inl coe_ne_top)
+
+theorem div_le_div {a b c d : ℝ≥0∞} (hab : a ≤ b) (hdc : d ≤ c) : a / c ≤ b / d :=
+  div_eq_mul_inv b d ▸ div_eq_mul_inv a c ▸ Ennreal.mul_le_mul hab (Ennreal.inv_le_inv.mpr hdc)
 
 theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : a * a⁻¹ = 1 := by
   lift a to ℝ≥0 using ht

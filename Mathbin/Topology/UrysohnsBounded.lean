@@ -51,6 +51,6 @@ theorem exists_bounded_mem_Icc_of_closed_of_le {X : Type _} [TopologicalSpace X]
     simp [hfs hx], fun x hx => by
     simp [hft hx], fun x =>
     ⟨by
-      dsimp <;> nlinarith [(hf01 x).1], by
-      dsimp <;> nlinarith [(hf01 x).2]⟩⟩
+      dsimp' <;> nlinarith [(hf01 x).1], by
+      dsimp' <;> nlinarith [(hf01 x).2]⟩⟩
 

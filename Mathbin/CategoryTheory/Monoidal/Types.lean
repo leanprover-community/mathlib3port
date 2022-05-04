@@ -76,8 +76,8 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxM
       tidy,
     associativity' := fun X Y Z => by
       ext ⟨⟨f, g⟩, h⟩
-      dsimp  at f g h
-      dsimp
+      dsimp'  at f g h
+      dsimp'
       simp only [iso.cancel_iso_inv_left, category.assoc]
       conv_lhs =>
         rw [← category.id_comp h, tensor_comp, category.assoc, associator_naturality, ← category.assoc,
@@ -87,8 +87,8 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxM
       tidy,
     right_unitality' := fun X => by
       ext ⟨f, ⟨⟩⟩
-      dsimp  at f
-      dsimp
+      dsimp'  at f
+      dsimp'
       simp only [category.assoc]
       rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
 

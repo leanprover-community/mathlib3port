@@ -33,9 +33,10 @@ section Basic
 
 variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`exists_basis] []
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
-  exists_basis {} : Nonempty (ΣI : Type v, Basis I R M)
+  exists_basis : Nonempty (ΣI : Type v, Basis I R M)
 
 /- If `M` fits in universe `w`, then freeness is equivalent to existence of a basis in that
 universe.

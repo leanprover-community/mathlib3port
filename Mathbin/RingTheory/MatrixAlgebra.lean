@@ -45,14 +45,14 @@ as an `R`-linear map in the second tensor factor.
 def toFunRightLinear (a : A) : Matrix n n R →ₗ[R] Matrix n n A where
   toFun := toFun R A n a
   map_add' := fun x y => by
-    dsimp only [to_fun]
+    dsimp' only [to_fun]
     ext
     simp [mul_addₓ]
   map_smul' := fun r x => by
-    dsimp only [to_fun]
+    dsimp' only [to_fun]
     ext
     simp only [Pi.smul_apply, RingHom.map_mul, Algebra.id.smul_eq_mul]
-    dsimp
+    dsimp'
     rw [Algebra.smul_def r, ← _root_.mul_assoc, ← _root_.mul_assoc, Algebra.commutes]
 
 /-- (Implementation detail).
@@ -85,9 +85,9 @@ def toFunAlgHom : A ⊗[R] Matrix n n R →ₐ[R] Matrix n n A :=
       intros
       ext
       simp_rw [to_fun_linear, to_fun_bilinear, lift.tmul]
-      dsimp
+      dsimp'
       simp_rw [to_fun_right_linear]
-      dsimp
+      dsimp'
       simp_rw [to_fun, Matrix.mul_mul_left, Pi.smul_apply, smul_eq_mul, Matrix.mul_apply, ← _root_.mul_assoc _ a₂ _,
         Algebra.commutes, _root_.mul_assoc a₂ _ _, ← Finset.mul_sum, RingHom.map_sum, RingHom.map_mul,
         _root_.mul_assoc])
@@ -126,7 +126,7 @@ theorem inv_fun_smul (a : A) (M : Matrix n n A) : (invFun R A n fun i j => a * M
 
 @[simp]
 theorem inv_fun_algebra_map (M : Matrix n n R) : (invFun R A n fun i j => algebraMap R A (M i j)) = 1 ⊗ₜ M := by
-  dsimp [inv_fun]
+  dsimp' [inv_fun]
   simp only [Algebra.algebra_map_eq_smul_one, smul_tmul, ← tmul_sum, mul_boole]
   congr
   conv_rhs => rw [matrix_eq_sum_std_basis M]

@@ -100,7 +100,7 @@ theorem map_path_comp {a b : V} (p : Path a b) :
     ∀ {c : V} q : Path b c, F.mapPath (p.comp q) = (F.mapPath p).comp (F.mapPath q)
   | _, path.nil => rfl
   | _, path.cons p e => by
-    dsimp
+    dsimp'
     rw [map_path_comp]
 
 end Prefunctor

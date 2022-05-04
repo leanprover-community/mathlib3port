@@ -38,7 +38,7 @@ theorem polynomial_functions_closure_eq_top' : (polynomialFunctions I).topologic
   apply Subalgebra.sum_mem
   rintro n -
   apply Subalgebra.smul_mem
-  dsimp [bernstein, polynomialFunctions]
+  dsimp' [bernstein, polynomialFunctions]
   simp
 
 /-- The **Weierstrass Approximation Theorem**:

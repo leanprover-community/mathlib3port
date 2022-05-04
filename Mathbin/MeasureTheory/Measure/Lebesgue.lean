@@ -443,7 +443,7 @@ variable [MeasurableSpace α] {μ : Measureₓ α} {f g : α → ℝ} {s : Set �
 /-- The region between two measurable functions on a measurable set is measurable. -/
 theorem measurable_set_region_between (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
     MeasurableSet (RegionBetween f g s) := by
-  dsimp only [RegionBetween, Ioo, mem_set_of_eq, set_of_and]
+  dsimp' only [RegionBetween, Ioo, mem_set_of_eq, set_of_and]
   refine'
     MeasurableSet.inter _
       ((measurable_set_lt (hf.comp measurable_fst) measurable_snd).inter
@@ -466,7 +466,7 @@ theorem volume_region_between_eq_lintegral' (hf : Measurable f) (hg : Measurable
           simp [h]
         simp only [hx, measure_empty]
         
-    dsimp only [RegionBetween, preimage_set_of_eq]
+    dsimp' only [RegionBetween, preimage_set_of_eq]
     rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
     
   · exact measurable_set_region_between hf hg hs

@@ -52,17 +52,17 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
         if h : i = j then
           eqToHom
               (by
-                dsimp
+                dsimp'
                 rw [if_pos h]) ≫
             f ≫
               eqToHom
                 (by
-                  dsimp
+                  dsimp'
                   rw [if_pos h])
         else 0 }
   map_id' := fun A => by
     ext
-    dsimp
+    dsimp'
     split_ifs with h
     · subst h
       simp
@@ -72,7 +72,7 @@ def single (j : ι) : V ⥤ HomologicalComplex V c where
       
   map_comp' := fun A B C f g => by
     ext
-    dsimp
+    dsimp'
     split_ifs with h
     · subst h
       simp
@@ -97,7 +97,7 @@ theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
 instance (j : ι) : Faithful (single V c j) where
   map_injective' := fun X Y f g w => by
     have := congr_hom w j
-    dsimp  at this
+    dsimp'  at this
     simp only [dif_pos] at this
     rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl, category.id_comp, ←
       is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans, eq_to_hom_refl, category.comp_id] at this
@@ -114,14 +114,14 @@ instance (j : ι) : Full (single V c j) where
             simp )
   witness' := fun X Y f => by
     ext i
-    dsimp
+    dsimp'
     split_ifs
     · subst h
       simp
       
     · symm
       apply zero_of_target_iso_zero
-      dsimp
+      dsimp'
       rw [if_neg h]
       
 
@@ -154,14 +154,14 @@ def single₀ : V ⥤ ChainComplex V ℕ where
     ext n
     cases n
     rfl
-    dsimp
+    dsimp'
     unfold_aux
     simp
   map_comp' := fun X Y Z f g => by
     ext n
     cases n
     rfl
-    dsimp
+    dsimp'
     unfold_aux
     simp
 
@@ -218,7 +218,7 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
         homologyZeroZero)
     fun X Y f => by
     ext
-    dsimp [homologyFunctor]
+    dsimp' [homologyFunctor]
     simp
 
 /-- Sending objects to chain complexes supported at `0` then taking `(n+1)`-st homology
@@ -287,7 +287,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
               cases i <;> simpa using 𝟙 _ },
         hom_inv_id' := by
           ext (_ | i) <;>
-            · dsimp
+            · dsimp'
               simp
               ,
         inv_hom_id' := by
@@ -298,7 +298,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
              })
     fun X Y f => by
     ext (_ | i) <;>
-      · dsimp
+      · dsimp'
         simp
         
 
@@ -335,14 +335,14 @@ def single₀ : V ⥤ CochainComplex V ℕ where
     ext n
     cases n
     rfl
-    dsimp
+    dsimp'
     unfold_aux
     simp
   map_comp' := fun X Y Z f g => by
     ext n
     cases n
     rfl
-    dsimp
+    dsimp'
     unfold_aux
     simp
 
@@ -399,7 +399,7 @@ noncomputable def homologyFunctor0Single₀ : single₀ V ⋙ homologyFunctor V 
         homologyZeroZero)
     fun X Y f => by
     ext
-    dsimp [homologyFunctor]
+    dsimp' [homologyFunctor]
     simp
 
 /-- Sending objects to cochain complexes supported at `0` then taking `(n+1)`-st homology
@@ -472,7 +472,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
               cases i <;> simpa using 𝟙 _ },
         hom_inv_id' := by
           ext (_ | i) <;>
-            · dsimp
+            · dsimp'
               simp
               ,
         inv_hom_id' := by
@@ -483,7 +483,7 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
              })
     fun X Y f => by
     ext (_ | i) <;>
-      · dsimp
+      · dsimp'
         simp
         
 

@@ -62,7 +62,7 @@ def conePoint : Algebra T where
   unit' :=
     t.hom_ext fun j => by
       rw [category.assoc, t.fac, new_cone_π_app, ← T.η.naturality_assoc, functor.id_map, (D.obj j).Unit]
-      dsimp
+      dsimp'
       simp
   -- See library note [dsimp, simp]
   assoc' :=
@@ -79,7 +79,7 @@ def liftedCone : Cone D where
     { app := fun j => { f := c.π.app j },
       naturality' := fun X Y f => by
         ext1
-        dsimp
+        dsimp'
         erw [c.w f]
         simp }
 
@@ -90,7 +90,7 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t) where
     { f := t.lift ((forget T).mapCone s),
       h' :=
         t.hom_ext fun j => by
-          dsimp
+          dsimp'
           rw [category.assoc, category.assoc, t.fac, new_cone_π_app, ← functor.map_comp_assoc, t.fac,
             functor.map_cone_π_app]
           apply (s.π.app j).h }
@@ -178,7 +178,7 @@ def coconePoint : Algebra T where
     intro j
     rw [show c.ι.app j ≫ T.η.app c.X ≫ _ = T.η.app (D.obj j).a ≫ _ ≫ _ from T.η.naturality_assoc _ _, commuting,
       algebra.unit_assoc (D.obj j)]
-    dsimp
+    dsimp'
     simp
   -- See library note [dsimp, simp]
   assoc' := by
@@ -196,7 +196,7 @@ def liftedCocone : Cocone D where
     { app := fun j => { f := c.ι.app j, h' := commuting _ _ _ },
       naturality' := fun A B f => by
         ext1
-        dsimp
+        dsimp'
         rw [comp_id]
         apply c.w }
 
@@ -207,7 +207,7 @@ def liftedCoconeIsColimit : IsColimit (liftedCocone c t) where
     { f := t.desc ((forget T).mapCocone s),
       h' :=
         (isColimitOfPreserves (T : C ⥤ C) t).hom_ext fun j => by
-          dsimp
+          dsimp'
           rw [← functor.map_comp_assoc, ← category.assoc, t.fac, commuting, category.assoc, t.fac]
           apply algebra.hom.h }
   uniq' := fun s m J => by
@@ -233,7 +233,7 @@ noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T) [PreservesColi
             { app := fun j => { f := c.ι.app j, h' := commuting _ _ _ },
               naturality' := fun A B f => by
                 ext1
-                dsimp
+                dsimp'
                 erw [comp_id, c.w] } },
       validLift :=
         Cocones.ext (Iso.refl _)
@@ -288,10 +288,10 @@ noncomputable def monadicCreatesColimitOfPreservesColimit (R : D ⥤ C) (K : J �
   let i : (K ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _ ≅ K ⋙ R :=
     functor.associator _ _ _ ≪≫ iso_whisker_left K (monad.comparison_forget (adjunction.of_right_adjoint R))
   apply CategoryTheory.Monad.forgetCreatesColimit _
-  · dsimp
+  · dsimp'
     refine' preserves_colimit_of_iso_diagram _ i.symm
     
-  · dsimp
+  · dsimp'
     refine' preserves_colimit_of_iso_diagram _ (iso_whisker_right i (left_adjoint R ⋙ R)).symm
     
 

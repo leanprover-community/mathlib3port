@@ -61,7 +61,7 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
       · rw [g.injective f_eq]
         ⟩
   left_inv := fun f => by
-    dsimp only
+    dsimp' only
     ext
     cases x <;> simp
   right_inv := fun ⟨⟨f, g⟩, _⟩ => by

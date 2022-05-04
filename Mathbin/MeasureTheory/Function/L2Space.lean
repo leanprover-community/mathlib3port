@@ -30,6 +30,30 @@ open Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
+section
+
+variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedGroup F]
+
+theorem Memℒp.integrable_sq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
+  simpa [Real.norm_eq_abs, ← mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
+
+theorem mem_ℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
+    Memℒp f 2 μ ↔ Integrable (fun x => ∥f x∥ ^ 2) μ := by
+  rw [← mem_ℒp_one_iff_integrable]
+  convert (mem_ℒp_norm_rpow_iff hf Ennreal.two_ne_zero Ennreal.two_ne_top).symm
+  · simp
+    
+  · rw [div_eq_mul_inv, Ennreal.mul_inv_cancel Ennreal.two_ne_zero Ennreal.two_ne_top]
+    
+
+theorem mem_ℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
+    Memℒp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ := by
+  convert mem_ℒp_two_iff_integrable_sq_norm hf
+  ext x
+  simp [Real.norm_eq_abs]
+
+end
+
 namespace L2
 
 variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E] [NormedGroup F]

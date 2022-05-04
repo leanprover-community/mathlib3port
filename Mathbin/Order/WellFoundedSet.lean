@@ -567,7 +567,7 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   refine'
     ⟨fun n => (fs n).1 n, ⟨Set.range_subset_iff.2 fun n => (fs n).2.1.1 (mem_range_self n), fun m n mn => _⟩,
       fun n g hg1 hg2 => _⟩
-  · dsimp
+  · dsimp'
     rw [← Subtype.val_eq_coe, h m n (le_of_ltₓ mn)]
     convert (fs n).2.1.2 m n mn
     

@@ -175,7 +175,7 @@ theorem nat_mul_inj' {n : ℕ} {a b : R} (h : (n : R) * a = (n : R) * b) (w : n 
   simpa [w] using nat_mul_inj h
 
 theorem bit0_injective : Function.Injective (bit0 : R → R) := fun a b h => by
-  dsimp [bit0]  at h
+  dsimp' [bit0]  at h
   simp only [(two_mul a).symm, (two_mul b).symm] at h
   refine' nat_mul_inj' _ two_ne_zero
   exact_mod_cast h

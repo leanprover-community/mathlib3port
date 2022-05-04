@@ -65,7 +65,7 @@ def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
 
 @[simp]
 theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by
-  dsimp [mk, mk']
+  dsimp' [mk, mk']
   congr 1
   simp
 
@@ -84,7 +84,7 @@ theorem rep_nonzero (v : ℙ K V) : v.rep ≠ 0 :=
 
 @[simp]
 theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by
-  dsimp [mk, Projectivization.rep]
+  dsimp' [mk, Projectivization.rep]
   simp
 
 open FiniteDimensional
@@ -164,7 +164,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         revert x
         erw [← Set.ext_iff]
         ext x
-        dsimp
+        dsimp'
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
         · obtain ⟨c, hc⟩ := h ⟨x, hh⟩
@@ -185,7 +185,7 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
   suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by
     exact congr_argₓ coe this
-  dsimp [mk'']
+  dsimp' [mk'']
   simp
 
 @[simp]
@@ -209,7 +209,7 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
     (by
       rintro ⟨u, hu⟩ ⟨v, hv⟩ ⟨a, ha⟩
       use Units.map σ.to_monoid_hom a
-      dsimp  at ha⊢
+      dsimp'  at ha⊢
       erw [← f.map_smulₛₗ, ha])
 
 /-- Mapping with respect to a semilinear map over an isomorphism of fields yields
@@ -219,11 +219,11 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   intro u v h
   rw [← u.mk_rep, ← v.mk_rep] at *
   apply Quotientₓ.sound'
-  dsimp [map, mk]  at h
+  dsimp' [map, mk]  at h
   simp only [Quotientₓ.eq'] at h
   obtain ⟨a, ha⟩ := h
   use Units.map τ.to_monoid_hom a
-  dsimp  at ha⊢
+  dsimp'  at ha⊢
   have : (a : L) = σ (τ a) := by
     rw [RingHomInvPair.comp_apply_eq₂]
   change (a : L) • f v.rep = f u.rep at ha

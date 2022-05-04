@@ -130,7 +130,7 @@ theorem const_inner {𝕜 β} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] {f : α 
   rcases hfm with ⟨f', hf'_meas, hf_ae⟩
   refine'
     ⟨fun x => (inner c (f' x) : 𝕜), (@strongly_measurable_const _ _ m _ _).inner hf'_meas, hf_ae.mono fun x hx => _⟩
-  dsimp only
+  dsimp' only
   rw [hx]
 
 /-- An `m`-strongly measurable function almost everywhere equal to `f`. -/
@@ -727,7 +727,7 @@ theorem lintegral_nnnorm_condexp_L2_le (hs : measurable_set[m] s) (hμs : μ s �
   have hg_eq_restrict : g =ᵐ[μ.restrict s] condexp_L2 ℝ hm f := ae_restrict_of_ae hg_eq
   have hg_nnnorm_eq : (fun x => (∥g x∥₊ : ℝ≥0∞)) =ᵐ[μ.restrict s] fun x => (∥condexp_L2 ℝ hm f x∥₊ : ℝ≥0∞) := by
     refine' hg_eq_restrict.mono fun x hx => _
-    dsimp only
+    dsimp' only
     rw [hx]
   rw [lintegral_congr_ae hg_nnnorm_eq.symm]
   refine' lintegral_nnnorm_le_of_forall_fin_meas_integral_eq hm (Lp.strongly_measurable f) _ _ _ _ hs hμs
@@ -748,7 +748,7 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
   suffices h_nnnorm_eq_zero : (∫⁻ x in s, ∥condexp_L2 ℝ hm f x∥₊ ∂μ) = 0
   · rw [lintegral_eq_zero_iff] at h_nnnorm_eq_zero
     refine' h_nnnorm_eq_zero.mono fun x hx => _
-    dsimp only  at hx
+    dsimp' only  at hx
     rw [Pi.zero_apply] at hx⊢
     · rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero] at hx
       
@@ -761,7 +761,7 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
   refine' (lintegral_nnnorm_condexp_L2_le hs hμs f).trans (le_of_eqₓ _)
   rw [lintegral_eq_zero_iff]
   · refine' hf.mono fun x hx => _
-    dsimp only
+    dsimp' only
     rw [hx]
     simp
     
@@ -776,6 +776,7 @@ theorem lintegral_nnnorm_condexp_L2_indicator_le_real (hs : MeasurableSet s) (h�
     refine' lintegral_congr_ae (ae_restrict_of_ae _)
     refine' (@indicator_const_Lp_coe_fn _ _ _ 2 _ _ _ hs hμs (1 : ℝ)).mono fun x hx => _
     rw [hx]
+    classical
     simp_rw [Set.indicator_apply]
     split_ifs <;> simp
   rw [h_eq, lintegral_indicator _ hs, lintegral_const, measure.restrict_restrict hs]
@@ -1104,7 +1105,7 @@ theorem norm_condexp_ind_L1_fin_le (hs : MeasurableSet s) (hμs : μ s ≠ ∞) 
   have h_eq : (∫⁻ a, ∥condexp_ind_L1_fin hm hs hμs x a∥₊ ∂μ) = ∫⁻ a, nnnorm (condexp_ind_smul hm hs hμs x a) ∂μ := by
     refine' lintegral_congr_ae _
     refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono fun z hz => _
-    dsimp only
+    dsimp' only
     rw [hz]
   rw [h_eq, of_real_norm_eq_coe_nnnorm]
   exact lintegral_nnnorm_condexp_ind_smul_le hm hs hμs x
@@ -1306,7 +1307,7 @@ theorem condexp_ind_of_measurable (hs : measurable_set[m] s) (hμs : μ s ≠ �
   refine' (condexp_ind_smul_ae_eq_smul hm (hm s hs) hμs c).trans _
   rw [Lp_meas_coe, condexp_L2_indicator_of_measurable hm hs hμs (1 : ℝ)]
   refine' (@indicator_const_Lp_coe_fn α _ _ 2 μ _ s (hm s hs) hμs (1 : ℝ)).mono fun x hx => _
-  dsimp only
+  dsimp' only
   rw [hx]
   by_cases' hx_mem : x ∈ s <;> simp [hx_mem]
 

@@ -470,7 +470,7 @@ protected def algebra (e : α ≃ β) [Semiringₓ β] : by
   · intro r x
     simp only [Function.comp_app, RingHom.coe_comp]
     have p := ring_equiv_symm_apply e
-    dsimp  at p
+    dsimp'  at p
     erw [p]
     clear p
     apply (RingEquiv e).Injective

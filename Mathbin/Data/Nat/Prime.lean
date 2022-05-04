@@ -501,7 +501,7 @@ theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
           decide)).symm
 
 theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
-  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_mod p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
+  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
 
 /-- A prime `p` satisfies `p % 2 = 1` if and only if `p ≠ 2`. -/
 theorem Prime.mod_two_eq_one_iff_ne_two {p : ℕ} [Fact p.Prime] : p % 2 = 1 ↔ p ≠ 2 := by

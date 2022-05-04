@@ -205,7 +205,7 @@ theorem valuation_lt_one_or_eq_one (a : A) : A.Valuation a < 1 ∨ A.Valuation a
 
 theorem valuation_lt_one_iff (a : A) : a ∈ LocalRing.maximalIdeal A ↔ A.Valuation a < 1 := by
   rw [LocalRing.mem_maximal_ideal]
-  dsimp [Nonunits]
+  dsimp' [Nonunits]
   rw [valuation_eq_one_iff]
   exact (A.valuation_le_one a).lt_iff_ne.symm
 

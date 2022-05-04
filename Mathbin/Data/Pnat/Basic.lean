@@ -456,7 +456,7 @@ theorem div_add_mod' (m k : ℕ+) : (div m k * k + mod m k : ℕ) = m := by
   exact div_add_mod _ _
 
 theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) := by
-  dsimp [mod, mod_div]
+  dsimp' [mod, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -467,7 +467,7 @@ theorem mod_coe (m k : ℕ+) : (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0)
 
 theorem div_coe (m k : ℕ+) : (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
-  dsimp [div, mod_div]
+  dsimp' [div, mod_div]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl

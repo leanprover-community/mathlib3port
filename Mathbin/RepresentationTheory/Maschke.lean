@@ -89,7 +89,7 @@ section
 include h
 
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v := by
-  dsimp [conjugate]
+  dsimp' [conjugate]
   simp only [← i.map_smul, h, ← mul_smul, single_mul_single, mul_oneₓ, mul_left_invₓ]
   change (1 : MonoidAlgebra k G) • v = v
   simp
@@ -109,9 +109,9 @@ def sumOfConjugates : W →ₗ[k] V :=
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v => by
-    dsimp [sum_of_conjugates]
+    dsimp' [sum_of_conjugates]
     simp only [LinearMap.sum_apply, Finset.smul_sum]
-    dsimp [conjugate]
+    dsimp' [conjugate]
     conv_lhs => rw [← Finset.univ_map_embedding (mulRightEmbedding g⁻¹)]simp only [mulRightEmbedding]
     simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_oneₓ, Function.Embedding.coe_fn_mk, Finset.sum_map,
       inv_invₓ, inv_mul_cancel_right]

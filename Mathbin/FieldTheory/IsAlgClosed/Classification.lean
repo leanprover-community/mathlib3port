@@ -44,7 +44,7 @@ theorem cardinal_mk_le_sigma_polynomial : # L ≤ # (Σp : R[X], { x : L // x �
     (fun x : L =>
       let p := Classical.indefiniteDescription _ (halg x)
       ⟨p.1, x, by
-        dsimp
+        dsimp'
         have h : p.1.map (algebraMap R L) ≠ 0 := by
           rw [Ne.def, ← Polynomial.degree_eq_bot,
             Polynomial.degree_map_eq_of_injective (NoZeroSmulDivisors.algebra_map_injective R L),

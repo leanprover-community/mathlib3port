@@ -100,7 +100,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     rw [comap_generate_from]
     apply generate_from_le
     rintro _ ⟨s, hs, rfl⟩
-    dsimp
+    dsimp'
     choose t h1t h2t using hC
     simp_rw [eval_preimage, ← h2t]
     rw [← @Union_const _ ℕ _ s]
@@ -125,7 +125,7 @@ theorem generate_from_pi_eq {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCountab
     apply measurable_set_generate_from
     apply mem_image_of_mem
     intro j _
-    dsimp only
+    dsimp' only
     by_cases' h : j = i
     subst h
     rwa [update_same]

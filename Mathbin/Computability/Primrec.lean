@@ -84,7 +84,7 @@ protected theorem id : Primrec id :=
 
 theorem prec1 {f} (m : ℕ) (hf : Primrec f) : Primrec fun n => n.elim m fun y IH => f <| mkpair y IH :=
   ((prec (const m) (hf.comp right)).comp (zero.pair Primrec.id)).of_eq fun n => by
-    simp <;> dsimp <;> rw [unpair_mkpair]
+    simp <;> dsimp' <;> rw [unpair_mkpair]
 
 theorem cases1 {f} (m : ℕ) (hf : Primrec f) : Primrec (Nat.cases m f) :=
   (prec1 m (hf.comp left)).of_eq <| by
@@ -127,10 +127,11 @@ end Primrec
 
 end Nat
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`prim] []
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
 class Primcodable (α : Type _) extends Encodable α where
-  prim {} : Nat.Primrec fun n => Encodable.encode (decode n)
+  prim : Nat.Primrec fun n => Encodable.encode (decode n)
 
 namespace Primcodable
 
@@ -147,7 +148,7 @@ def ofEquiv α {β} [Primcodable α] (e : β ≃ α) : Primcodable β :=
         show
           encode (decode α n) = (Option.casesOn (Option.map e.symm (decode α n)) 0 fun a => Nat.succ (encode (e a)) : ℕ)
           by
-          cases decode α n <;> dsimp <;> simp }
+          cases decode α n <;> dsimp' <;> simp }
 
 instance empty : Primcodable Empty :=
   ⟨zero⟩
@@ -612,7 +613,7 @@ theorem ite {c : α → Prop} [DecidablePred c] {f : α → σ} {g : α → σ} 
 
 theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
   (nat_cases nat_sub (const true) (const false).to₂).of_eq fun p => by
-    dsimp [swap]
+    dsimp' [swap]
     cases' e : p.1 - p.2 with n
     · simp [tsub_eq_zero_iff_le.1 e]
       
@@ -986,7 +987,7 @@ theorem list_nth : Primrec₂ (@List.nth α) :=
   have : @Primrec _ (Option α) _ _ fun p : List α × ℕ => Sum.casesOn (F p.1 p.2) (fun _ => none) some :=
     sum_cases hF (const none).to₂ (option_some.comp snd).to₂
   this.to₂.of_eq fun l n => by
-    dsimp
+    dsimp'
     symm
     induction' l with a l IH generalizing n
     · rfl
@@ -996,7 +997,7 @@ theorem list_nth : Primrec₂ (@List.nth α) :=
       · rfl
         
       clear IH
-      dsimp [F]
+      dsimp' [F]
       induction' l with b l IH <;> simp [*]
       
     · apply IH
@@ -1023,18 +1024,18 @@ theorem list_range : Primrec List.range :=
 
 theorem list_join : Primrec (@List.join α) :=
   (list_foldr Primrec.id (const []) <| to₂ <| comp (@list_append α _) snd).of_eq fun l => by
-    dsimp <;> induction l <;> simp [*]
+    dsimp' <;> induction l <;> simp [*]
 
 theorem list_length : Primrec (@List.length α) :=
   (list_foldr (@Primrec.id (List α) _) (const 0) <| to₂ <| (succ.comp <| snd.comp snd).to₂).of_eq fun l => by
-    dsimp <;> induction l <;> simp [*, -add_commₓ]
+    dsimp' <;> induction l <;> simp [*, -add_commₓ]
 
 theorem list_find_index {f : α → List β} {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hf : Primrec f)
     (hp : PrimrecRel p) : Primrec fun a => (f a).findIndex (p a) :=
   (list_foldr hf (const 0) <| to₂ <| ite (hp.comp fst <| fst.comp snd) (const 0) (succ.comp <| snd.comp snd)).of_eq
     fun a =>
     Eq.symm <| by
-      dsimp <;> induction' f a with b l <;> [rfl, simp [*, List.findIndex]]
+      dsimp' <;> induction' f a with b l <;> [rfl, simp [*, List.findIndex]]
 
 theorem list_index_of [DecidableEq α] : Primrec₂ (@List.indexOfₓ α _) :=
   to₂ <| list_find_index snd <| Primrec.eq.comp₂ (fst.comp fst).to₂ snd.to₂
@@ -1076,7 +1077,7 @@ def subtype {p : α → Prop} [DecidablePred p] (hp : PrimrecPred p) : Primcodab
           cases' decode α n with a
           · rfl
             
-          dsimp [Option.guard]
+          dsimp' [Option.guard]
           by_cases' h : p a <;> simp [h] <;> rfl⟩
 
 instance fin {n} : Primcodable (Finₓ n) :=
@@ -1260,7 +1261,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
--- ././Mathport/Syntax/Translate/Basic.lean:1543:6: unsupported: hide command
+-- ././Mathport/Syntax/Translate/Basic.lean:1538:6: unsupported: hide command
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f := by
   induction pf
   case nat.primrec'.zero =>
@@ -1385,7 +1386,7 @@ theorem sqrt : @Primrec' 1 fun v => v.head.sqrt := by
   induction' n with n IH
   · simp
     
-  dsimp
+  dsimp'
   rw [IH]
   split_ifs
   · exact le_antisymmₓ (Nat.sqrt_le_sqrt (Nat.le_succₓ _)) (Nat.lt_succ_iffₓ.1 <| Nat.sqrt_lt.2 h)

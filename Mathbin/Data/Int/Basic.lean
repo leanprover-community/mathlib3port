@@ -1552,8 +1552,8 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
       exact congr_argₓ of_nat n.bodd_add_div2
   | -[1+ n] => by
     refine' Eq.trans _ (congr_argₓ neg_succ_of_nat n.bodd_add_div2)
-    dsimp [bodd]
-    cases Nat.bodd n <;> dsimp [cond, bnot, div2, Int.mul]
+    dsimp' [bodd]
+    cases Nat.bodd n <;> dsimp' [cond, bnot, div2, Int.mul]
     · change -[1+ 2 * Nat.div2 n] = _
       rw [zero_addₓ]
       
@@ -1635,14 +1635,14 @@ theorem test_bit_zero b : ∀ n, testBit (bit b n) 0 = b
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_zero
   | -[1+ n] => by
-    rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.test_bit_zero] <;> clear test_bit_zero <;> cases b <;> rfl
+    rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_zero] <;> clear test_bit_zero <;> cases b <;> rfl
 
 @[simp]
 theorem test_bit_succ m b : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | (n : ℕ) => by
     rw [bit_coe_nat] <;> apply Nat.test_bit_succ
   | -[1+ n] => by
-    rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.test_bit_succ]
+    rw [bit_neg_succ] <;> dsimp' [test_bit] <;> rw [Nat.test_bit_succ]
 
 -- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 private unsafe def bitwise_tac : tactic Unit :=

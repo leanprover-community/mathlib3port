@@ -40,7 +40,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1270:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
@@ -157,7 +157,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
   invFun := fun 𝒞 => enriched_category_Type_of_category C
   left_inv := fun 𝒞 => by
     cases 𝒞
-    dsimp [enriched_category_Type_of_category]
+    dsimp' [enriched_category_Type_of_category]
     congr
     · ext X ⟨⟩
       rfl
@@ -167,7 +167,7 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
       
   right_inv := fun 𝒞 => by
     rcases 𝒞 with ⟨⟨⟨⟩⟩⟩
-    dsimp
+    dsimp'
     congr
 
 section
@@ -311,7 +311,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
   map := fun X Y f =>
     ForgetEnrichment.homOf W (ForgetEnrichment.homTo W f ≫ F.map (ForgetEnrichment.to W X) (ForgetEnrichment.to W Y))
   map_comp' := fun X Y Z f g => by
-    dsimp
+    dsimp'
     apply_fun forget_enrichment.hom_to W
     · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp, forget_enrichment.hom_to_hom_of,
         enriched_functor.map_comp, forget_enrichment_comp]
@@ -398,7 +398,7 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max 
     { app := fun X => f.unop ≫ σ.app X,
       naturality := fun X Y => by
         have p := σ.naturality X Y
-        dsimp  at p⊢
+        dsimp'  at p⊢
         rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc, category.assoc, ←
           braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ← tensor_comp_assoc, category.id_comp] }
 

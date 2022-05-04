@@ -5,7 +5,7 @@ Authors: Yury Kudryashov
 -/
 import Mathbin.MeasureTheory.Group.FundamentalDomain
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Topology.Algebra.FloorRing
+import Mathbin.Topology.Algebra.Order.Floor
 
 /-!
 # Integrals of periodic functions

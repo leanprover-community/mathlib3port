@@ -241,7 +241,7 @@ theorem exists_frobenius_solution_fraction_ring {a : FractionRing (𝕎 k)} (ha 
     
   have key : WittVector.frobenius b * p ^ m * r' * p ^ n = p ^ m * b * (p ^ n * q') := by
     have H := congr_argₓ (fun x : 𝕎 k => x * p ^ m * p ^ n) (frobenius_frobenius_rotation p hr' hq')
-    dsimp  at H
+    dsimp'  at H
     refine' (Eq.trans _ H).trans _ <;> ring
   have hq'' : algebraMap (𝕎 k) (FractionRing (𝕎 k)) q' ≠ 0 := by
     have hq''' : q' ≠ 0 := fun h =>

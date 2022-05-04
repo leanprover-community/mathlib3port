@@ -257,7 +257,7 @@ def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faith
           naturality' := fun Y Z f =>
             F.map_injective
               (by
-                dsimp
+                dsimp'
                 simp
                 erw [limit.w (K ⋙ F)]) } } :
       Cone K)
@@ -376,7 +376,7 @@ def createsLimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅ K
           F.mapConePostcompose ≪≫
             (Cones.postcompose (isoWhiskerRight h F).Hom).mapIso (liftedLimitMapsToOriginal t') ≪≫
               Cones.ext (Iso.refl _) fun j => by
-                dsimp
+                dsimp'
                 rw [category.assoc, ← F.map_comp]
                 simp } }
 
@@ -409,7 +409,7 @@ def createsColimitOfIsoDiagram {K₁ K₂ : J ⥤ C} (F : C ⥤ D) (h : K₁ ≅
           F.mapCoconePrecompose ≪≫
             (Cocones.precompose (isoWhiskerRight h F).inv).mapIso (liftedColimitMapsToOriginal t') ≪≫
               Cocones.ext (Iso.refl _) fun j => by
-                dsimp
+                dsimp'
                 rw [← F.map_comp_assoc]
                 simp } }
 

@@ -66,6 +66,18 @@ theorem prod_Ico_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk
   Ico_union_Ico_eq_Ico hmn hnk ▸ Eq.symm <| prod_union <| Ico_disjoint_Ico_consecutive m n k
 
 @[to_additive]
+theorem prod_Ioc_consecutive (f : ℕ → β) {m n k : ℕ} (hmn : m ≤ n) (hnk : n ≤ k) :
+    ((∏ i in ioc m n, f i) * ∏ i in ioc n k, f i) = ∏ i in ioc m k, f i := by
+  rw [← Ioc_union_Ioc_eq_Ioc hmn hnk, prod_union]
+  apply disjoint_left.2 fun x hx h'x => _
+  exact lt_irreflₓ _ ((mem_Ioc.1 h'x).1.trans_le (mem_Ioc.1 hx).2)
+
+@[to_additive]
+theorem prod_Ioc_succ_top {a b : ℕ} (hab : a ≤ b) (f : ℕ → β) :
+    (∏ k in ioc a (b + 1), f k) = (∏ k in ioc a b, f k) * f (b + 1) := by
+  rw [← prod_Ioc_consecutive _ hab (Nat.le_succₓ b), Nat.Ioc_succ_singleton, prod_singleton]
+
+@[to_additive]
 theorem prod_range_mul_prod_Ico (f : ℕ → β) {m n : ℕ} (h : m ≤ n) :
     ((∏ k in range m, f k) * ∏ k in ico m n, f k) = ∏ k in range n, f k :=
   Nat.Ico_zero_eq_range ▸ Nat.Ico_zero_eq_range ▸ prod_Ico_consecutive f m.zero_le h
@@ -167,7 +179,7 @@ theorem sum_range_id_mul_two (n : ℕ) : (∑ i in range n, i) * 2 = n * (n - 1)
       rw [sum_range_reflect (fun i => i) n, mul_two]
     _ = ∑ i in range n, i + (n - 1 - i) := sum_add_distrib.symm
     _ = ∑ i in range n, n - 1 :=
-      (sum_congr rfl) fun i hi => add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| mem_range.1 hi
+      (sum_congr rfl) fun i hi => add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| mem_range.1 hi
     _ = n * (n - 1) := by
       rw [sum_const, card_range, Nat.nsmul_eq_mul]
     
@@ -233,7 +245,7 @@ theorem sum_Ico_by_parts (hmn : m < n) :
     (∑ i in Ico (m + 1) n, f i • G(i + 1)) =
       (∑ i in Ico m (n - 1), f i • G(i + 1)) + f (n - 1) • G n - f m • G(m + 1) :=
     by
-    rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_lt hmn), Nat.sub_add_cancelₓ (pos_of_gt hmn),
+    rw [← sum_Ico_sub_bot _ hmn, ← sum_Ico_succ_sub_top _ (Nat.le_pred_of_ltₓ hmn), Nat.sub_add_cancelₓ (pos_of_gt hmn),
       sub_add_cancel]
   rw [sum_eq_sum_Ico_succ_bot hmn]
   conv =>

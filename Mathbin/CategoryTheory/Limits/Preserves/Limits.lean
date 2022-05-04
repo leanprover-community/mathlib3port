@@ -79,7 +79,7 @@ def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :
     (by
       intro _ _ f
       ext
-      dsimp
+      dsimp'
       simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
         preserves_limits_iso_hom_π_assoc, ← G.map_comp])
 
@@ -131,7 +131,7 @@ def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ c
       intro _ _ f
       rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
       ext
-      dsimp
+      dsimp'
       erw [ι_colim_map_assoc]
       simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc, ι_preserves_colimits_iso_inv_assoc, ←
         G.map_comp]

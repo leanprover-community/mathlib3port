@@ -314,6 +314,11 @@ def blockDiagonalRingHom [DecidableEq m] [Fintype o] [Fintype m] [NonAssocSemiri
 end
 
 @[simp]
+theorem block_diagonal_pow [DecidableEq m] [Fintype o] [Fintype m] [Semiringₓ α] (M : o → Matrix m m α) (n : ℕ) :
+    blockDiagonalₓ (M ^ n) = blockDiagonalₓ M ^ n :=
+  map_pow (blockDiagonalRingHom m o α) M n
+
+@[simp]
 theorem block_diagonal_smul {R : Type _} [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (x : R)
     (M : o → Matrix m n α) : blockDiagonalₓ (x • M) = x • blockDiagonalₓ M := by
   ext
@@ -459,6 +464,11 @@ def blockDiagonal'RingHom [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintyp
     map_mul' := block_diagonal'_mul }
 
 end
+
+@[simp]
+theorem block_diagonal'_pow [∀ i, DecidableEq (m' i)] [Fintype o] [∀ i, Fintype (m' i)] [Semiringₓ α]
+    (M : ∀ i, Matrix (m' i) (m' i) α) (n : ℕ) : blockDiagonal'ₓ (M ^ n) = blockDiagonal'ₓ M ^ n :=
+  map_pow (blockDiagonal'RingHom m' α) M n
 
 @[simp]
 theorem block_diagonal'_smul {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] (x : R)

@@ -34,7 +34,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       exists N
       intro b hb
       apply hεs
-      dsimp [Metric.Ball]
+      dsimp' [Metric.Ball]
       rw [dist_comm, dist_eq_norm]
       solve_by_elim)
 
@@ -83,7 +83,7 @@ theorem CauSeq.cauchy_seq (f : CauSeq β norm) : CauchySeq f := by
     simp [hb]
     
   · rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
-    dsimp  at ha'1 ha'2 hb'1 hb'2
+    dsimp'  at ha'1 ha'2 hb'1 hb'2
     rw [← ha'2, ← hb'2]
     apply hεs
     rw [dist_eq_norm]

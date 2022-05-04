@@ -42,10 +42,12 @@ variable [dec_ι : DecidableEq ι] [Preorderₓ ι]
 
 variable (G : ι → Type w)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_self] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_map] []
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
-  map_self {} : ∀ i x h, f i i h x = x
-  map_map {} : ∀ {i j k} hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
+  map_self : ∀ i x h, f i i h x = x
+  map_map : ∀ {i j k} hij hjk x, f j k hjk (f i j hij x) = f i k (le_transₓ hij hjk) x
 
 namespace Module
 
@@ -461,9 +463,9 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} (hxs : IsSupporte
   · rintro _ ⟨p, hps, rfl⟩ n ih
     rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih, (restriction _).map_mul,
       (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of, restriction_of, dif_pos (hst hps), lift_of]
-    dsimp only
+    dsimp' only
     have := DirectedSystem.map_map fun i j h => f' i j h
-    dsimp only  at this
+    dsimp' only  at this
     rw [this]
     rfl
     
@@ -491,9 +493,9 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos, restriction_of, dif_pos,
           lift_of, lift_of]
-        dsimp only
+        dsimp' only
         have := DirectedSystem.map_map fun i j h => f' i j h
-        dsimp only  at this
+        dsimp' only  at this
         rw [this]
         exact sub_self _
         exacts[Or.inr rfl, Or.inl rfl]
@@ -505,7 +507,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos, (restriction _).map_one,
           lift_of, (FreeCommRing.lift _).map_one]
-        dsimp only
+        dsimp' only
         rw [(f' i i _).map_one, sub_self]
         · exact Set.mem_singleton _
           
@@ -520,7 +522,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         
       · rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of, restriction_of, dif_pos,
           dif_pos, dif_pos, (FreeCommRing.lift _).map_sub, (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
-        dsimp only
+        dsimp' only
         rw [(f' i i _).map_add]
         exact sub_self _
         exacts[Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
@@ -535,7 +537,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         
       · rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of, restriction_of, dif_pos,
           dif_pos, dif_pos, (FreeCommRing.lift _).map_sub, (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
-        dsimp only
+        dsimp' only
         rw [(f' i i _).map_mul]
         exacts[sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
         

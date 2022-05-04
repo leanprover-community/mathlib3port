@@ -295,7 +295,7 @@ theorem outer_measure_caratheodory (A : Set G) :
     μ.OuterMeasure.caratheodory.MeasurableSet' A ↔
       ∀ U : Opens G, μ.OuterMeasure (U ∩ A) + μ.OuterMeasure (U \ A) ≤ μ.OuterMeasure U :=
   by
-  dsimp [opens]
+  dsimp' [opens]
   rw [Subtype.forall]
   apply induced_outer_measure_caratheodory
   apply inner_content_Union_nat

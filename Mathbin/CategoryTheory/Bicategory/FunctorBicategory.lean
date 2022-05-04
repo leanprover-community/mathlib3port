@@ -34,7 +34,7 @@ namespace OplaxNatTrans
 def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι where
   app := fun a => η.app a ◁ Γ.app a
   naturality' := fun a b f => by
-    dsimp
+    dsimp'
     rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc]
     simp
 
@@ -43,7 +43,7 @@ def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ �
 def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι where
   app := fun a => Γ.app a ▷ ι.app a
   naturality' := fun a b f => by
-    dsimp
+    dsimp'
     simp_rw [assoc, ← associator_inv_naturality_left, whisker_exchange_assoc]
     simp
 

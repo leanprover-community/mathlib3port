@@ -523,7 +523,7 @@ def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[
   toFun := lift (MultilinearMap.ofSubsingleton R M i₀)
   invFun := fun m => tprod R fun v => m
   left_inv := fun x => by
-    dsimp only
+    dsimp' only
     have : ∀ f : ι → M z : M, (fun i : ι => z) = update f i₀ z := by
       intro f z
       ext i

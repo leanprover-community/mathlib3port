@@ -264,7 +264,7 @@ This coercion is only a ring homomorphism if it coerces into a ring whose charac
 -/
 theorem to_zmod_spec (z : ℤ_[p]) : z - (toZmod z : ℤ_[p]) ∈ maximalIdeal ℤ_[p] := by
   convert sub_zmod_repr_mem z using 2
-  dsimp [to_zmod, to_zmod_hom]
+  dsimp' [to_zmod, to_zmod_hom]
   rcases exists_eq_add_of_lt hp_prime.1.Pos with ⟨p', rfl⟩
   change ↑(Zmod.val _) = _
   simp only [Zmod.val_nat_cast, add_zeroₓ, add_def, Nat.cast_inj, zero_addₓ]
@@ -280,7 +280,7 @@ theorem ker_to_zmod : (toZmod : ℤ_[p] →+* Zmod p).ker = maximalIdeal ℤ_[p]
     
   · intro h
     rw [← sub_zero x] at h
-    dsimp [to_zmod, to_zmod_hom]
+    dsimp' [to_zmod, to_zmod_hom]
     convert zmod_congr_of_sub_mem_max_ideal x _ 0 _ h
     apply sub_zmod_repr_mem
     
@@ -320,7 +320,7 @@ theorem appr_lt (x : ℤ_[p]) (n : ℕ) : x.appr n < p ^ n := by
 theorem appr_mono (x : ℤ_[p]) : Monotone x.appr := by
   apply monotone_nat_of_le_succ
   intro n
-  dsimp [appr]
+  dsimp' [appr]
   split_ifs
   · rfl
     
@@ -333,7 +333,7 @@ theorem dvd_appr_sub_appr (x : ℤ_[p]) (m n : ℕ) (h : m ≤ n) : p ^ m ∣ x.
   · simp only [add_zeroₓ, tsub_self, dvd_zero]
     
   rw [Nat.succ_eq_add_one, ← add_assocₓ]
-  dsimp [appr]
+  dsimp' [appr]
   split_ifs with h
   · exact ih
     
@@ -348,7 +348,7 @@ theorem appr_spec (n : ℕ) : ∀ x : ℤ_[p], x - appr x n ∈ (Ideal.span {p ^
   · simp only [is_unit_one, IsUnit.dvd, pow_zeroₓ, forall_true_iff]
     
   intro x
-  dsimp only [appr]
+  dsimp' only [appr]
   split_ifs with h
   · rw [h]
     apply dvd_zero
@@ -409,13 +409,13 @@ theorem ker_to_zmod_pow (n : ℕ) : (toZmodPow n : ℤ_[p] →+* Zmod (p ^ n)).k
     suffices x.appr n = 0 by
       convert appr_spec n x
       simp only [this, sub_zero, cast_zero]
-    dsimp [to_zmod_pow, to_zmod_hom]  at h
+    dsimp' [to_zmod_pow, to_zmod_hom]  at h
     rw [Zmod.nat_coe_zmod_eq_zero_iff_dvd] at h
     apply eq_zero_of_dvd_of_lt h (appr_lt _ _)
     
   · intro h
     rw [← sub_zero x] at h
-    dsimp [to_zmod_pow, to_zmod_hom]
+    dsimp' [to_zmod_pow, to_zmod_hom]
     rw [zmod_congr_of_sub_mem_span n x _ 0 _ h, cast_zero]
     apply appr_spec
     
@@ -501,7 +501,7 @@ include f_compat
 theorem pow_dvd_nth_hom_sub (r : R) (i j : ℕ) (h : i ≤ j) : ↑p ^ i ∣ nthHom f r j - nthHom f r i := by
   specialize f_compat i j h
   rw [← Int.coe_nat_pow, ← Zmod.int_coe_zmod_eq_zero_iff_dvd, Int.cast_sub]
-  dsimp [nth_hom]
+  dsimp' [nth_hom]
   rw [← f_compat, RingHom.comp_apply]
   have : Fact (p ^ i > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
@@ -541,10 +541,10 @@ theorem nth_hom_seq_add (r s : R) : nthHomSeq f_compat (r + s) ≈ nthHomSeq f_c
   obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε
   use n
   intro j hj
-  dsimp [nth_hom_seq]
+  dsimp' [nth_hom_seq]
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_add, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
-  dsimp [nth_hom]
+  dsimp' [nth_hom]
   have : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [Int.cast_coe_nat, Int.cast_add, RingHom.map_add, Int.cast_sub, Zmod.nat_cast_val]
@@ -560,10 +560,10 @@ theorem nth_hom_seq_mul (r s : R) : nthHomSeq f_compat (r * s) ≈ nthHomSeq f_c
   obtain ⟨n, hn⟩ := exists_pow_neg_lt_rat p hε
   use n
   intro j hj
-  dsimp [nth_hom_seq]
+  dsimp' [nth_hom_seq]
   apply lt_of_le_of_ltₓ _ hn
   rw [← Int.cast_mul, ← Int.cast_sub, ← padicNorm.dvd_iff_norm_le, ← Zmod.int_coe_zmod_eq_zero_iff_dvd]
-  dsimp [nth_hom]
+  dsimp' [nth_hom]
   have : Fact (p ^ n > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   have : Fact (p ^ j > 0) := ⟨pow_pos hp_prime.1.Pos _⟩
   simp only [Int.cast_coe_nat, Int.cast_mul, Int.cast_sub, RingHom.map_mul, Zmod.nat_cast_val]
@@ -625,7 +625,7 @@ theorem lift_sub_val_mem_span (r : R) (n : ℕ) : lift f_compat r - (f n r).val 
     lim_nth_hom_spec f_compat r _ (show (0 : ℝ) < p ^ (-n : ℤ) from Nat.zpow_pos_of_pos hp_prime.1.Pos _)
   have := le_of_ltₓ (hk (max n k) (le_max_rightₓ _ _))
   rw [norm_le_pow_iff_mem_span_pow] at this
-  dsimp [lift]
+  dsimp' [lift]
   rw [sub_eq_sub_add_sub (lim_nth_hom f_compat r) _ ↑(nth_hom f r (max n k))]
   apply Ideal.add_mem _ _ this
   rw [Ideal.mem_span_singleton]

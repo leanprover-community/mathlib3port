@@ -49,7 +49,7 @@ variable {F : J ⥤ C}
 /-- A cone `t` on `F` is a limit cone if each cone on `F` admits a unique
 cone morphism to `t`.
 
-See https://stacks.math.columbia.edu/tag/002E.
+See <https://stacks.math.columbia.edu/tag/002E>.
   -/
 @[nolint has_inhabited_instance]
 structure IsLimit (t : Cone F) where
@@ -345,7 +345,7 @@ def conePointsIsoOfEquivalence {F : J ⥤ C} {s : Cone F} {G : K ⥤ C} {t : Con
     hom_inv_id' := by
       apply hom_ext P
       intro j
-      dsimp
+      dsimp'
       simp only [limits.cone.whisker_π, limits.cones.postcompose_obj_π, fac, whisker_left_app, assoc, id_comp,
         inv_fun_id_assoc_hom_app, fac_assoc, nat_trans.comp_app]
       rw [counit_app_functor, ← functor.comp_map, w.hom.naturality]
@@ -362,7 +362,7 @@ def homIso (h : IsLimit t) (W : C) : ULift.{u₁} (W ⟶ t.x : Type v₃) ≅ (c
   Hom := fun f => (t.extend f.down).π
   inv := fun π => ⟨h.lift { x := W, π }⟩
   hom_inv_id' := by
-    ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
+    ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp' <;> rfl
 
 @[simp]
 theorem hom_iso_hom (h : IsLimit t) {W : C} (f : ULift.{u₁} (W ⟶ t.x)) :
@@ -388,7 +388,7 @@ def homIso' (h : IsLimit t) (W : C) :
       inv := fun p =>
         { app := fun j => p.1 j,
           naturality' := fun j j' f => by
-            dsimp
+            dsimp'
             rw [id_comp]
             exact (p.2 f).symm } }
 
@@ -439,10 +439,10 @@ def homOfCone (s : Cone F) : s.x ⟶ X :=
 
 @[simp]
 theorem cone_of_hom_of_cone (s : Cone F) : coneOfHom h (homOfCone h s) = s := by
-  dsimp [cone_of_hom, hom_of_cone]
+  dsimp' [cone_of_hom, hom_of_cone]
   cases s
   congr
-  dsimp
+  dsimp'
   convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) (op s_X)) s_π
   exact ULift.up_down _
 
@@ -458,10 +458,10 @@ def limitCone : Cone F :=
 /-- If `F.cones` is represented by `X`, the cone corresponding to a morphism `f : Y ⟶ X` is
 the limit cone extended by `f`. -/
 theorem cone_of_hom_fac {Y : C} (f : Y ⟶ X) : coneOfHom h f = (limitCone h).extend f := by
-  dsimp [cone_of_hom, limit_cone, cone.extend]
+  dsimp' [cone_of_hom, limit_cone, cone.extend]
   congr with j
   have t := congr_funₓ (h.hom.naturality f.op) ⟨𝟙 X⟩
-  dsimp  at t
+  dsimp'  at t
   simp only [comp_id] at t
   rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
   rfl
@@ -495,7 +495,7 @@ def ofNatIso {X : C} (h : yoneda.obj X ⋙ ulift_functor.{u₁} ≅ F.cones) : I
     rw [← hom_of_cone_of_hom h m]
     congr
     rw [cone_of_hom_fac]
-    dsimp [cone.extend]
+    dsimp' [cone.extend]
     cases s
     congr with j
     exact w j
@@ -507,7 +507,7 @@ end IsLimit
 /-- A cocone `t` on `F` is a colimit cocone if each cocone on `F` admits a unique
 cocone morphism from `t`.
 
-See https://stacks.math.columbia.edu/tag/002F.
+See <https://stacks.math.columbia.edu/tag/002F>.
 -/
 @[nolint has_inhabited_instance]
 structure IsColimit (t : Cocone F) where
@@ -814,11 +814,11 @@ def coconePointsIsoOfEquivalence {F : J ⥤ C} {s : Cocone F} {G : K ⥤ C} {t :
     hom_inv_id' := by
       apply hom_ext P
       intro j
-      dsimp
+      dsimp'
       simp only [limits.cocone.whisker_ι, fac, inv_fun_id_assoc_inv_app, whisker_left_app, assoc, comp_id,
         limits.cocones.precompose_obj_ι, fac_assoc, nat_trans.comp_app]
       rw [counit_inv_app_functor, ← functor.comp_map, ← w.inv.naturality_assoc]
-      dsimp
+      dsimp'
       simp ,
     inv_hom_id' := by
       apply hom_ext Q
@@ -832,7 +832,7 @@ def homIso (h : IsColimit t) (W : C) : ULift.{u₁} (t.x ⟶ W : Type v₃) ≅ 
   Hom := fun f => (t.extend f.down).ι
   inv := fun ι => ⟨h.desc { x := W, ι }⟩
   hom_inv_id' := by
-    ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp <;> rfl
+    ext f <;> apply h.hom_ext <;> intro j <;> simp <;> dsimp' <;> rfl
 
 @[simp]
 theorem hom_iso_hom (h : IsColimit t) {W : C} (f : ULift (t.x ⟶ W)) :
@@ -844,7 +844,7 @@ theorem hom_iso_hom (h : IsColimit t) {W : C} (f : ULift (t.x ⟶ W)) :
 def natIso (h : IsColimit t) : coyoneda.obj (op t.x) ⋙ ulift_functor.{u₁} ≅ F.cocones :=
   NatIso.ofComponents (IsColimit.homIso h)
     (by
-      intros <;> ext <;> dsimp <;> rw [← assoc] <;> rfl)
+      intros <;> ext <;> dsimp' <;> rw [← assoc] <;> rfl)
 
 /-- Another, more explicit, formulation of the universal property of a colimit cocone.
 See also `hom_iso`.
@@ -858,7 +858,7 @@ def homIso' (h : IsColimit t) (W : C) :
       inv := fun p =>
         { app := fun j => p.1 j,
           naturality' := fun j j' f => by
-            dsimp
+            dsimp'
             rw [comp_id]
             exact p.2 f } }
 
@@ -909,10 +909,10 @@ def homOfCocone (s : Cocone F) : X ⟶ s.x :=
 
 @[simp]
 theorem cocone_of_hom_of_cocone (s : Cocone F) : coconeOfHom h (homOfCocone h s) = s := by
-  dsimp [cocone_of_hom, hom_of_cocone]
+  dsimp' [cocone_of_hom, hom_of_cocone]
   cases s
   congr
-  dsimp
+  dsimp'
   convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) s_X) s_ι
   exact ULift.up_down _
 
@@ -928,10 +928,10 @@ def colimitCocone : Cocone F :=
 /-- If `F.cocones` is corepresented by `X`, the cocone corresponding to a morphism `f : Y ⟶ X` is
 the colimit cocone extended by `f`. -/
 theorem cocone_of_hom_fac {Y : C} (f : X ⟶ Y) : coconeOfHom h f = (colimitCocone h).extend f := by
-  dsimp [cocone_of_hom, colimit_cocone, cocone.extend]
+  dsimp' [cocone_of_hom, colimit_cocone, cocone.extend]
   congr with j
   have t := congr_funₓ (h.hom.naturality f) ⟨𝟙 X⟩
-  dsimp  at t
+  dsimp'  at t
   simp only [id_comp] at t
   rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
   rfl
@@ -965,7 +965,7 @@ def ofNatIso {X : C} (h : coyoneda.obj (op X) ⋙ ulift_functor.{u₁} ≅ F.coc
     rw [← hom_of_cocone_of_hom h m]
     congr
     rw [cocone_of_hom_fac]
-    dsimp [cocone.extend]
+    dsimp' [cocone.extend]
     cases s
     congr with j
     exact w j

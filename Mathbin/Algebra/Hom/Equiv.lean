@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 -/
 import Mathbin.Algebra.Group.TypeTags
 import Mathbin.Algebra.GroupWithZero.Basic
-import Mathbin.Data.Pi
+import Mathbin.Data.Pi.Algebra
 
 /-!
 # Multiplicative and additive equivs

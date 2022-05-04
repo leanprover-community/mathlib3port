@@ -98,7 +98,7 @@ instance : Inhabited (Pretopology C) :=
 /-- A pretopology `K` can be completed to a Grothendieck topology `J` by declaring a sieve to be
 `J`-covering if it contains a family in `K`.
 
-See https://stacks.math.columbia.edu/tag/00ZC, or [MM92] Chapter III, Section 2, Equation (2).
+See <https://stacks.math.columbia.edu/tag/00ZC>, or [MM92] Chapter III, Section 2, Equation (2).
 -/
 def toGrothendieck (K : Pretopology C) : GrothendieckTopology C where
   Sieves := fun X S => ∃ R ∈ K X, R ≤ (S : Presieve _)
@@ -162,7 +162,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C) where
 /-- The trivial pretopology, in which the coverings are exactly singleton isomorphisms. This topology is
 also known as the indiscrete, coarse, or chaotic topology.
 
-See https://stacks.math.columbia.edu/tag/07GE
+See <https://stacks.math.columbia.edu/tag/07GE>
 -/
 def trivial : Pretopology C where
   Coverings := fun X S => ∃ (Y : _)(f : Y ⟶ X)(h : IsIso f), S = Presieve.Singleton f

@@ -133,7 +133,7 @@ theorem weighted_vsub_of_point_insert [DecidableEq ι] (w : ι → k) (p : ι �
 /-- The weighted sum is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem weighted_vsub_of_point_indicator_subset (w : ι → k) (p : ι → P) (b : P) {s₁ s₂ : Finset ι} (h : s₁ ⊆ s₂) :
-    s₁.weightedVsubOfPoint p b w = s₂.weightedVsubOfPoint p b (Set.indicator (↑s₁) w) := by
+    s₁.weightedVsubOfPoint p b w = s₂.weightedVsubOfPoint p b (Set.indicatorₓ (↑s₁) w) := by
   rw [weighted_vsub_of_point_apply, weighted_vsub_of_point_apply]
   exact Set.sum_indicator_subset_of_eq_zero w (fun i wi => wi • (p i -ᵥ b : V)) h fun i => zero_smul k _
 
@@ -201,7 +201,7 @@ theorem weighted_vsub_empty (w : ι → k) (p : ι → P) : (∅ : Finset ι).we
 /-- The weighted sum is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem weighted_vsub_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ : Finset ι} (h : s₁ ⊆ s₂) :
-    s₁.weightedVsub p w = s₂.weightedVsub p (Set.indicator (↑s₁) w) :=
+    s₁.weightedVsub p w = s₂.weightedVsub p (Set.indicatorₓ (↑s₁) w) :=
   weighted_vsub_of_point_indicator_subset _ _ _ h
 
 /-- A weighted subtraction, over the image of an embedding, equals a
@@ -327,7 +327,7 @@ theorem affine_combination_of_eq_one_of_eq_zero (w : ι → k) (p : ι → P) {i
 /-- An affine combination is unaffected by changing the weights to the
 corresponding indicator function and adding points to the set. -/
 theorem affine_combination_indicator_subset (w : ι → k) (p : ι → P) {s₁ s₂ : Finset ι} (h : s₁ ⊆ s₂) :
-    s₁.affineCombination p w = s₂.affineCombination p (Set.indicator (↑s₁) w) := by
+    s₁.affineCombination p w = s₂.affineCombination p (Set.indicatorₓ (↑s₁) w) := by
   rw [affine_combination_apply, affine_combination_apply, weighted_vsub_of_point_indicator_subset _ _ _ h]
 
 /-- An affine combination, over the image of an embedding, equals an
@@ -533,10 +533,10 @@ form suitable for summing over a larger set of points, as an indicator
 function that is zero outside the set whose centroid is being taken.
 In the case of a `fintype`, the sum may be over `univ`. -/
 def centroidWeightsIndicator : ι → k :=
-  Set.indicator (↑s) (s.centroidWeights k)
+  Set.indicatorₓ (↑s) (s.centroidWeights k)
 
 /-- The definition of `centroid_weights_indicator`. -/
-theorem centroid_weights_indicator_def : s.centroidWeightsIndicator k = Set.indicator (↑s) (s.centroidWeights k) :=
+theorem centroid_weights_indicator_def : s.centroidWeightsIndicator k = Set.indicatorₓ (↑s) (s.centroidWeights k) :=
   rfl
 
 /-- The sum of the weights for the centroid indexed by a `fintype`. -/
@@ -637,7 +637,7 @@ theorem weighted_vsub_mem_vector_span {s : Finset ι} {w : ι → k} (h : (∑ i
     
   · rw [vector_span_range_eq_span_range_vsub_right k p i0, ← Set.image_univ, Finsupp.mem_span_image_iff_total,
       Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero s w p h (p i0), Finset.weighted_vsub_of_point_apply]
-    let w' := Set.indicator (↑s) w
+    let w' := Set.indicatorₓ (↑s) w
     have hwx : ∀ i, w' i ≠ 0 → i ∈ s := fun i => Set.mem_of_indicator_ne_zero
     use Finsupp.onFinset s w' hwx, Set.subset_univ _
     rw [Finsupp.total_apply, Finsupp.on_finset_sum hwx]
@@ -728,7 +728,7 @@ theorem eq_affine_combination_of_mem_affine_span {p1 : P} {p : ι → P} (h : p1
   rw [direction_affine_span, mem_vector_span_iff_eq_weighted_vsub] at hd
   rcases hd with ⟨s, w, h, hs⟩
   let s' := insert i0 s
-  let w' := Set.indicator (↑s) w
+  let w' := Set.indicatorₓ (↑s) w
   have h' : (∑ i in s', w' i) = 0 := by
     rw [← h, Set.sum_indicator_subset _ (Finset.subset_insert i0 s)]
   have hs' : s'.weighted_vsub p w' = p1 -ᵥ p i0 := by

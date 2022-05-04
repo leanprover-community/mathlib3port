@@ -101,7 +101,7 @@ theorem continuous_at_length : ∀ l : List α, ContinuousAt List.length l := by
   · exact tendsto_pure_pure _ _
     
   · intro l a ih
-    dsimp only [List.length]
+    dsimp' only [List.length]
     refine' tendsto.comp (tendsto_pure_pure (fun x => x + 1) _) _
     refine' tendsto.comp ih tendsto_snd
     
@@ -136,7 +136,7 @@ theorem tendsto_remove_nth : ∀ {n : ℕ} {l : List α}, Tendsto (fun l => remo
     rw [tendsto_cons_iff] <;> exact tendsto_snd
   | n + 1, a :: l => by
     rw [tendsto_cons_iff]
-    dsimp [remove_nth]
+    dsimp' [remove_nth]
     exact tendsto_fst.cons ((@tendsto_remove_nth n l).comp tendsto_snd)
 
 theorem continuous_remove_nth {n : ℕ} : Continuous fun l : List α => removeNthₓ l n :=

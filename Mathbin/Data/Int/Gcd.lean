@@ -118,7 +118,7 @@ theorem xgcd_aux_P {r r'} : ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → 
     fun a b h IH s t s' t' p p' => by
     rw [xgcd_aux_rec h]
     refine' IH _ p
-    dsimp [P]  at *
+    dsimp' [P]  at *
     rw [Int.mod_def]
     generalize (b / a : ℤ) = k
     rw [p, p']

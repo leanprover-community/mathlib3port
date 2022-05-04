@@ -52,7 +52,7 @@ def toMatrixₓ [DecidableEq n] [Zero α] [One α] (f : m ≃. n) : Matrix m n �
 
 theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiringₓ α] (f : l ≃. m) (M : Matrix m n α) i j :
     (f.toMatrix ⬝ M) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
-  dsimp [to_matrix, Matrix.mul_apply]
+  dsimp' [to_matrix, Matrix.mul_apply]
   cases' h : f i with fi
   · simp [h]
     
@@ -69,7 +69,7 @@ theorem to_matrix_refl [DecidableEq n] [Zero α] [One α] : ((Pequiv.refl n).toM
 
 theorem matrix_mul_apply [Fintype m] [Semiringₓ α] [DecidableEq n] (M : Matrix l m α) (f : m ≃. n) i j :
     (M ⬝ f.toMatrix) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
-  dsimp [to_matrix, Matrix.mul_apply]
+  dsimp' [to_matrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
   · simp [h, ← f.eq_some_iff]
     
@@ -92,7 +92,7 @@ theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ
     ((f.trans g).toMatrix : Matrix l n α) = f.toMatrix ⬝ g.toMatrix := by
   ext i j
   rw [mul_matrix_apply]
-  dsimp [to_matrix, Pequiv.trans]
+  dsimp' [to_matrix, Pequiv.trans]
   cases f i <;> simp
 
 @[simp]
@@ -125,7 +125,7 @@ theorem to_matrix_swap [DecidableEq n] [Ringₓ α] (i j : n) :
         (single j i).toMatrix :=
   by
   ext
-  dsimp [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
+  dsimp' [to_matrix, single, Equivₓ.swap_apply_def, Equivₓ.toPequiv, one_apply]
   split_ifs <;> simp_all
 
 @[simp]

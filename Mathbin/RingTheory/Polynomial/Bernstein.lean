@@ -69,7 +69,7 @@ theorem map (f : R →+* S) (n ν : ℕ) : (bernsteinPolynomial R n ν).map f = 
 end
 
 theorem flip (n ν : ℕ) (h : ν ≤ n) : (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
-  dsimp [bernsteinPolynomial]
+  dsimp' [bernsteinPolynomial]
   simp [h, tsub_tsub_assoc, mul_right_commₓ]
 
 theorem flip' (n ν : ℕ) (h : ν ≤ n) : bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
@@ -77,7 +77,7 @@ theorem flip' (n ν : ℕ) (h : ν ≤ n) : bernsteinPolynomial R n ν = (bernst
   simp
 
 theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0 then 1 else 0 := by
-  dsimp [bernsteinPolynomial]
+  dsimp' [bernsteinPolynomial]
   split_ifs
   · subst h
     simp
@@ -86,7 +86,7 @@ theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0
     
 
 theorem eval_at_1 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 1 = if ν = n then 1 else 0 := by
-  dsimp [bernsteinPolynomial]
+  dsimp' [bernsteinPolynomial]
   split_ifs
   · subst h
     simp
@@ -102,7 +102,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
     (bernsteinPolynomial R (n + 1) (ν + 1)).derivative =
       (n + 1) * (bernsteinPolynomial R n ν - bernsteinPolynomial R n (ν + 1)) :=
   by
-  dsimp [bernsteinPolynomial]
+  dsimp' [bernsteinPolynomial]
   suffices
     ↑((n + 1).choose (ν + 1)) * ((↑ν + 1) * X ^ ν) * (1 - X) ^ (n - ν) -
         ↑((n + 1).choose (ν + 1)) * X ^ (ν + 1) * (↑(n - ν) * (1 - X) ^ (n - ν - 1)) =
@@ -144,7 +144,7 @@ theorem derivative_succ (n ν : ℕ) :
     
 
 theorem derivative_zero (n : ℕ) : (bernsteinPolynomial R n 0).derivative = -n * bernsteinPolynomial R (n - 1) 0 := by
-  dsimp [bernsteinPolynomial]
+  dsimp' [bernsteinPolynomial]
   simp [Polynomial.derivative_pow]
 
 theorem iterate_derivative_at_0_eq_zero_of_lt (n : ℕ) {ν k : ℕ} :
@@ -197,7 +197,7 @@ theorem iterate_derivative_at_0 (n ν : ℕ) :
       
     
   · simp only [not_leₓ] at h
-    rw [tsub_eq_zero_iff_le.mpr (Nat.le_pred_of_lt h), eq_zero_of_lt R h]
+    rw [tsub_eq_zero_iff_le.mpr (Nat.le_pred_of_ltₓ h), eq_zero_of_lt R h]
     simp [pos_iff_ne_zero.mp (pos_of_gt h)]
     
 
@@ -264,7 +264,7 @@ theorem linear_independent_aux (n k : ℕ) (h : k ≤ n + 1) :
       clear ih
       simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h
       simp only [Finₓ.coe_last, Finₓ.init_def]
-      dsimp
+      dsimp'
       apply not_mem_span_of_apply_not_mem_span_image (@Polynomial.derivative ℚ _ ^ (n - k))
       simp only [not_exists, not_and, Submodule.mem_map, Submodule.span_image]
       intro p m
@@ -342,7 +342,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
     rintro (_ | k)
     · simp
       
-    · dsimp [bernsteinPolynomial]
+    · dsimp' [bernsteinPolynomial]
       simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zeroₓ, pow_succₓ]
       push_cast
       ring
@@ -386,7 +386,7 @@ theorem sum_mul_smul (n : ℕ) :
     · rcases k with (_ | k)
       · simp
         
-      · dsimp [bernsteinPolynomial]
+      · dsimp' [bernsteinPolynomial]
         simp only [← nat_cast_mul, Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zeroₓ, pow_succₓ]
         push_cast
         ring

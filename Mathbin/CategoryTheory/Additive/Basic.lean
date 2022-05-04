@@ -31,7 +31,7 @@ namespace CategoryTheory
 variable (C : Type u) [Category C]
 
 /-- A preadditive category `C` is called additive if it has all finite biproducts.
-See https://stacks.math.columbia.edu/tag/0104.
+See <https://stacks.math.columbia.edu/tag/0104>.
 -/
 class AdditiveCategory extends Preadditive C, HasFiniteBiproducts C
 

@@ -290,7 +290,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0 } (hm :
       by
       apply L0.congr' _
       filter_upwards [self_mem_nhds_within] with r hr
-      rw [HC.cthickening_eq_add_closed_ball (le_of_ltₓ hr), add_commₓ]
+      rw [← HC.add_closed_ball_zero (le_of_ltₓ hr), add_commₓ]
     have L2 : tendsto (fun ε => μ (closed_ball 0 ε + A '' closed_ball 0 1)) (𝓝[>] 0) (𝓝 (d * μ (closed_ball 0 1))) := by
       convert L1
       exact (add_haar_image_continuous_linear_map _ _ _).symm

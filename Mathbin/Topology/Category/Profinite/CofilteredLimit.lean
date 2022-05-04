@@ -69,11 +69,11 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
     refine' (hV s).1.1.preimage _
     continuity
     
-  · dsimp only
+  · dsimp' only
     rw [h]
     rintro x ⟨T, hT, hx⟩
     refine' ⟨_, ⟨⟨T, hT⟩, rfl⟩, _⟩
-    dsimp only
+    dsimp' only
     rwa [← (hV ⟨T, hT⟩).2]
     
   -- We thus obtain a finite set `G : finset J` and a clopen set of `F.obj j` for each
@@ -89,7 +89,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   refine' ⟨j0, ⋃ (s : S) (hs : s ∈ G), W s, _, _⟩
   · apply is_clopen_bUnion
     intro s hs
-    dsimp only [W]
+    dsimp' only [W]
     rw [dif_pos hs]
     refine' ⟨(hV s).1.1.preimage _, (hV s).1.2.preimage _⟩ <;> continuity
     
@@ -99,7 +99,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
       simp_rw [Set.preimage_Union, Set.mem_Union]
       obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
       refine' ⟨s, hs, _⟩
-      dsimp only [W]  at hh⊢
+      dsimp' only [W]  at hh⊢
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w]
       
     · intro hx
@@ -108,7 +108,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
       rw [h]
       refine' ⟨s.1, s.2, _⟩
       rw [(hV s).2]
-      dsimp only [W]  at hx
+      dsimp' only [W]  at hx
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx
       
     
@@ -154,11 +154,11 @@ theorem exists_locally_constant_fintype_aux {α : Type _} [Fintype α] (f : Loca
   ext1 a
   change ff a = _
   rw [h]
-  dsimp [ggg, gg]
+  dsimp' [ggg, gg]
   ext1
   repeat'
     rw [LocallyConstant.coe_comap]
-    dsimp [LocallyConstant.flip, LocallyConstant.unflip]
+    dsimp' [LocallyConstant.flip, LocallyConstant.unflip]
   · congr 1
     change _ = (C.π.app j0 ≫ F.map (fs a)) x
     rw [C.w]
@@ -175,7 +175,7 @@ theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Non
   refine' ⟨j, gg.map σ, _⟩
   ext
   rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
-  dsimp [σ]
+  dsimp' [σ]
   have h1 : ι (f x) = gg (C.π.app j x) := by
     change f.map (fun a b => if a = b then (0 : Finₓ 2) else 1) x = _
     rw [h, LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
@@ -187,7 +187,7 @@ theorem exists_locally_constant_fintype_nonempty {α : Type _} [Fintype α] [Non
     
   · intro a b hh
     apply_fun fun e => e a  at hh
-    dsimp [ι]  at hh
+    dsimp' [ι]  at hh
     rw [if_pos rfl] at hh
     split_ifs  at hh with hh1 hh1
     · exact hh1.symm
@@ -231,7 +231,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     ext1 t
     apply_fun fun e => e t  at hj
     rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj⊢
-    dsimp  at hj⊢
+    dsimp'  at hj⊢
     rw [← hj]
     rfl
     

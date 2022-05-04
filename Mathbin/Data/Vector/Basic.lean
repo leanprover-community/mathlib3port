@@ -467,7 +467,7 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
     ∀ {i : Finₓ (n + 1)} {j : Finₓ (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ => by
-    dsimp [insert_nth, remove_nth, Finₓ.succAbove, Finₓ.predAbove]
+    dsimp' [insert_nth, remove_nth, Finₓ.succAbove, Finₓ.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert (List.insert_nth_remove_nth_of_ge i (j - 1) _ _ _).symm
@@ -479,7 +479,7 @@ theorem remove_nth_insert_nth' {v : Vector α (n + 1)} :
       · convert hi
         exact v.2
         
-      · exact Nat.le_pred_of_lt h
+      · exact Nat.le_pred_of_ltₓ h
         
       
     · convert (List.insert_nth_remove_nth_of_le i j _ _ _).symm
@@ -592,7 +592,7 @@ protected theorem traverse_def (f : α → F β) (x : α) :
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x := by
   rintro ⟨x, rfl⟩
-  dsimp [Vector.traverse, cast]
+  dsimp' [Vector.traverse, cast]
   induction' x with x xs IH
   · rfl
     
@@ -616,7 +616,7 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
       Vector.traverse (comp.mk ∘ Functor.map f ∘ g) x = Comp.mk (Vector.traverse f <$> Vector.traverse g x) :=
   by
   rintro ⟨x, rfl⟩ <;>
-    dsimp [Vector.traverse, cast] <;>
+    dsimp' [Vector.traverse, cast] <;>
       induction' x with x xs <;> simp' [cast, *] with functor_norm <;> [rfl, simp [(· ∘ ·)]]
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn

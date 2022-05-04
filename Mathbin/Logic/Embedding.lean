@@ -173,7 +173,7 @@ is already occupied by some `f a'`, then swap the values at these two points. -/
 def setValue {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)] [∀ a', Decidable (f a' = b)] : α ↪ β :=
   ⟨fun a' => if a' = a then b else if f a' = b then f a else f a', by
     intro x y h
-    dsimp  at h
+    dsimp'  at h
     split_ifs  at h <;>
       try
           subst b <;>
@@ -433,7 +433,7 @@ into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to
 def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] : { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
   ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩, by
     intro x y
-    dsimp only
+    dsimp' only
     split_ifs <;> simp [Subtype.ext_iff]⟩
 
 theorem subtype_or_left_embedding_apply_left {p q : α → Prop} [DecidablePred p] (x : { x // p x ∨ q x }) (hx : p x) :

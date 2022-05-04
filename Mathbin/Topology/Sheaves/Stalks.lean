@@ -154,7 +154,7 @@ attribute [local tidy] tactic.op_induction'
 @[simp]
 theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (stalkFunctor C x).map (Pushforward.id ℱ).Hom :=
   by
-  dsimp [stalk_pushforward, stalk_functor]
+  dsimp' [stalk_pushforward, stalk_functor]
   ext1
   run_tac
     tactic.op_induction'
@@ -162,7 +162,7 @@ theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (s
   cases j_val
   rw [colimit.ι_map_assoc, colimit.ι_map, colimit.ι_pre, whisker_left_app, whisker_right_app, pushforward.id_hom_app,
     eq_to_hom_map, eq_to_hom_refl]
-  dsimp
+  dsimp'
   -- FIXME A simp lemma which unfortunately doesn't fire:
   erw [CategoryTheory.Functor.map_id]
 
@@ -171,13 +171,13 @@ theorem id (ℱ : X.Presheaf C) (x : X) : ℱ.stalkPushforward C (𝟙 X) x = (s
 @[simp]
 theorem comp (ℱ : X.Presheaf C) (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     ℱ.stalkPushforward C (f ≫ g) x = (f _* ℱ).stalkPushforward C g (f x) ≫ ℱ.stalkPushforward C f x := by
-  dsimp [stalk_pushforward, stalk_functor]
+  dsimp' [stalk_pushforward, stalk_functor]
   ext U
   induction U using Opposite.rec
   cases U
   cases U_val
   simp only [colimit.ι_map_assoc, colimit.ι_pre_assoc, whisker_right_app, category.assoc]
-  dsimp
+  dsimp'
   -- FIXME: Some of these are simp lemmas, but don't fire successfully:
   erw [CategoryTheory.Functor.map_id, category.id_comp, category.id_comp, category.id_comp, colimit.ι_pre,
     colimit.ι_pre]
@@ -195,7 +195,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
   · fapply nat_iso.of_components
     · intro U
       refine' F.map_iso (eq_to_iso _)
-      dsimp only [functor.op]
+      dsimp' only [functor.op]
       exact congr_argₓ op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
       
     · intro U V i
@@ -209,7 +209,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
     rw [colimit.ι_pre, category.assoc]
     erw [colimit.ι_map_assoc, colimit.ι_pre, ← F.map_comp_assoc]
     apply colimit.w ((open_nhds.inclusion (f x)).op ⋙ f _* F) _
-    dsimp only [functor.op]
+    dsimp' only [functor.op]
     refine' ((hom_of_le _).op : op (unop U) ⟶ _)
     exact Set.image_preimage_subset _ _
     
@@ -294,7 +294,7 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) : 
         (op ⟨(unop U).1, (specializes_iff_forall_open.mp h _ (unop U).1.2 (unop U).2 : _)⟩)
     
   · intro U V i
-    dsimp
+    dsimp'
     rw [category.comp_id]
     let U' : open_nhds x := ⟨_, (specializes_iff_forall_open.mp h _ (unop U).1.2 (unop U).2 : _)⟩
     let V' : open_nhds x := ⟨_, (specializes_iff_forall_open.mp h _ (unop V).1.2 (unop V).2 : _)⟩
@@ -450,7 +450,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
     intro z
     -- Here, we need to use injectivity of the stalk maps.
     apply hinj ⟨z, (iVU x).le ((inf_le_left : V x⊓V y ≤ V x) z.2)⟩
-    dsimp only
+    dsimp' only
     erw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply]
     simp_rw [← comp_apply, f.naturality, comp_apply, HEq, ← comp_apply, ← G.1.map_comp]
     rfl

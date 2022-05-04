@@ -47,11 +47,11 @@ def kernelOpUnop : (kernel f.op).unop ≅ cokernel f where
   hom_inv_id' := by
     rw [← unop_id, ← (cokernel.desc f _ _).unop_op, ← unop_comp]
     congr 1
-    dsimp
+    dsimp'
     ext
     simp [← op_comp]
   inv_hom_id' := by
-    dsimp
+    dsimp'
     ext
     simp [← unop_comp]
 
@@ -70,11 +70,11 @@ def cokernelOpUnop : (cokernel f.op).unop ≅ kernel f where
   hom_inv_id' := by
     rw [← unop_id, ← (kernel.lift f _ _).unop_op, ← unop_comp]
     congr 1
-    dsimp
+    dsimp'
     ext
     simp [← op_comp]
   inv_hom_id' := by
-    dsimp
+    dsimp'
     ext
     simp [← unop_comp]
 

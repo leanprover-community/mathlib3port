@@ -62,12 +62,12 @@ noncomputable def colimitLimitToLimitColimit : colimit (curry.obj (swap K J ⋙ 
                 ι :=
                   { app := fun k => limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k,
                     naturality' := by
-                      dsimp
+                      dsimp'
                       intro k k' f
                       simp only [functor.comp_map, curry.obj_map_app, limits.lim_map_π_assoc, swap_map,
                         category.comp_id, map_id_left_eq_curry_map, colimit.w] } },
           naturality' := by
-            dsimp
+            dsimp'
             intro j j' f
             ext k
             simp only [limits.colimit.ι_map, curry.obj_map_app, limits.colimit.ι_desc_assoc, limits.colimit.ι_desc,
@@ -81,7 +81,7 @@ theorem ι_colimit_limit_to_limit_colimit_π j k :
     colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
   by
-  dsimp [colimit_limit_to_limit_colimit]
+  dsimp' [colimit_limit_to_limit_colimit]
   simp
 
 @[simp]
@@ -89,7 +89,7 @@ theorem ι_colimit_limit_to_limit_colimit_π_apply (F : J × K ⥤ Type v) j k f
     limit.π (curry.obj F ⋙ colim) j (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by
-  dsimp [colimit_limit_to_limit_colimit]
+  dsimp' [colimit_limit_to_limit_colimit]
   simp
 
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
@@ -105,7 +105,7 @@ noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G
       whisker_right_app, colimit.ι_map, functor.map_cone_π_app, category.id_comp, eq_to_hom_refl, eq_to_hom_app,
       colimit.ι_map_assoc, limit.cone_π, lim_map_π_assoc, lim_map_π, category.assoc, currying_unit_iso_inv_app_app_app,
       limit_iso_swap_comp_lim_hom_app, lim_map_eq_lim_map]
-    dsimp
+    dsimp'
     simp only [category.id_comp]
     erw [limit_obj_iso_limit_comp_evaluation_hom_π_assoc]
 

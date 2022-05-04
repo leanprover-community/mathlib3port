@@ -97,12 +97,12 @@ def mapMultifork :
   Cones.ext (eqToIso rfl)
     (by
       rintro (a | b)
-      · dsimp
+      · dsimp'
         simpa
         
-      · dsimp
+      · dsimp'
         simp
-        dsimp [multifork.of_ι]
+        dsimp' [multifork.of_ι]
         simpa
         )
 

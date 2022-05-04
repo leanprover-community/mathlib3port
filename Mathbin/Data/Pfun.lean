@@ -106,7 +106,7 @@ the type of pairs `(p : α → Prop, f : subtype p → β)`. -/
 def equivSubtype : (α →. β) ≃ Σp : α → Prop, Subtype p → β :=
   ⟨fun f => ⟨fun a => (f a).Dom, asSubtype f⟩, fun f x => ⟨f.1 x, fun h => f.2 ⟨x, h⟩⟩, fun f =>
     funext fun a => Part.eta _, fun ⟨p, f⟩ => by
-    dsimp <;> congr <;> funext a <;> cases a <;> rfl⟩
+    dsimp' <;> congr <;> funext a <;> cases a <;> rfl⟩
 
 theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x) (domx : x ∈ f.Dom) :
     f.asSubtype ⟨x, domx⟩ = y :=
@@ -193,7 +193,7 @@ instance : Monadₓ (Pfun α) where
 instance : IsLawfulMonad (Pfun α) where
   bind_pure_comp_eq_map := fun β γ f x => funext fun a => Part.bind_some_eq_map _ _
   id_map := fun β f => by
-    funext a <;> dsimp [Functor.map, Pfun.map] <;> cases f a <;> rfl
+    funext a <;> dsimp' [Functor.map, Pfun.map] <;> cases f a <;> rfl
   pure_bind := fun β γ x f => funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
   bind_assoc := fun β γ δ f g k => funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 

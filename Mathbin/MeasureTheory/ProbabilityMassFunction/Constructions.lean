@@ -72,7 +72,7 @@ variable (s : Set β)
 
 @[simp]
 theorem to_outer_measure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
-  simp [map, Set.indicator, to_outer_measure_apply p (f ⁻¹' s)]
+  simp [map, Set.indicatorₓ, to_outer_measure_apply p (f ⁻¹' s)]
 
 @[simp]
 theorem to_measure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f) (hs : MeasurableSet s) :
@@ -232,7 +232,7 @@ theorem to_outer_measure_of_multiset_apply :
   by_cases' hx : x ∈ t
   · have : (Multiset.card s : ℝ≥0 ) ≠ 0 := by
       simp [hs]
-    simp [Set.indicator, hx, div_eq_mul_inv, Ennreal.coe_inv this]
+    simp [Set.indicatorₓ, hx, div_eq_mul_inv, Ennreal.coe_inv this]
     
   · simp [hx]
     

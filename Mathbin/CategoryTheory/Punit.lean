@@ -73,7 +73,7 @@ def equiv : Discrete PUnit ⥤ C ≌ C where
   counitIso := by
     refine' nat_iso.of_components iso.refl _
     intro X Y f
-    dsimp
+    dsimp'
     simp
 
 -- See note [dsimp, simp].

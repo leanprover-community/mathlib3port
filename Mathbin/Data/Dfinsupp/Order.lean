@@ -53,7 +53,7 @@ def orderEmbeddingToFun : (Π₀ i, α i) ↪o ∀ i, α i where
   toFun := fun f => f
   inj' := fun f g h =>
     Dfinsupp.ext fun i => by
-      dsimp  at h
+      dsimp'  at h
       rw [h]
   map_rel_iff' := fun a b => (@le_def _ _ _ _ a b).symm
 

@@ -110,7 +110,7 @@ def factorThruKernelSubobject {W : C} (h : W ⟶ X) (w : h ≫ f = 0) : W ⟶ ke
 @[simp]
 theorem factor_thru_kernel_subobject_comp_arrow {W : C} (h : W ⟶ X) (w : h ≫ f = 0) :
     factorThruKernelSubobject f h w ≫ (kernelSubobject f).arrow = h := by
-  dsimp [factor_thru_kernel_subobject]
+  dsimp' [factor_thru_kernel_subobject]
   simp
 
 @[simp]
@@ -139,7 +139,7 @@ theorem kernel_subobject_map_arrow (sq : Arrow.mk f ⟶ Arrow.mk f') :
 theorem kernel_subobject_map_id : kernelSubobjectMap (𝟙 (Arrow.mk f)) = 𝟙 _ := by
   ext
   simp
-  dsimp
+  dsimp'
   simp
 
 -- See library note [dsimp, simp].
@@ -237,7 +237,7 @@ def factorThruImageSubobject : X ⟶ imageSubobject f :=
   factorThruImage f ≫ (imageSubobjectIso f).inv
 
 instance [HasEqualizers C] : Epi (factorThruImageSubobject f) := by
-  dsimp [factor_thru_image_subobject]
+  dsimp' [factor_thru_image_subobject]
   apply epi_comp
 
 @[simp, reassoc, elementwise]

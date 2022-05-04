@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 -/
 import Mathbin.Data.Fin.Basic
-import Mathbin.Order.Pilex
+import Mathbin.Data.Pi.Lex
 
 /-!
 # Operation on tuples
@@ -610,11 +610,11 @@ def find : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p], Option (Finₓ
 theorem find_spec : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p] {i : Finₓ n} hi : i ∈ Finₓ.find p, p i
   | 0, p, I, i, hi => Option.noConfusion hi
   | n + 1, p, I, i, hi => by
-    dsimp [find]  at hi
+    dsimp' [find]  at hi
     skip
     cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
     · rw [h] at hi
-      dsimp  at hi
+      dsimp'  at hi
       split_ifs  at hi with hl hl
       · exact Option.some_inj.1 hi ▸ hl
         
@@ -635,7 +635,7 @@ theorem is_some_find_iff : ∀ {n : ℕ} {p : Finₓ n → Prop} [DecidablePred 
       cases' h with i hi
       exact ⟨i, find_spec _ hi⟩, fun ⟨⟨i, hin⟩, hi⟩ => by
       skip
-      dsimp [find]
+      dsimp' [find]
       cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
       · split_ifs with hl hl
         · exact Option.is_some_some
@@ -664,7 +664,7 @@ theorem find_min :
   | 0, p, _, i, hi, j, hj, hpj => Option.noConfusion hi
   | n + 1, p, _, i, hi, ⟨j, hjn⟩, hj, hpj => by
     skip
-    dsimp [find]  at hi
+    dsimp' [find]  at hi
     cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with k
     · rw [h] at hi
       split_ifs  at hi with hl hl
@@ -676,7 +676,7 @@ theorem find_min :
         
       
     · rw [h] at hi
-      dsimp  at hi
+      dsimp'  at hi
       obtain rfl := Option.some_inj.1 hi
       exact find_min h (show (⟨j, lt_transₓ hj k.2⟩ : Finₓ n) < k from hj) hpj
       

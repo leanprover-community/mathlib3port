@@ -293,7 +293,7 @@ theorem pow_smul_mem_adjoin_smul (r : R) (s : Set A) {x : A} (hx : x ∈ adjoin 
   refine' (adjoin R (r • s)).toSubmodule.sum_mem _
   intro a ha
   have : n ≥ n₁ a := le_transₓ (Finset.le_sup ha) hn
-  dsimp only
+  dsimp' only
   rw [← tsub_add_cancel_of_le this, pow_addₓ, ← smul_smul, smul_smul _ (l a), mul_comm, ← smul_smul, adjoin_eq_span]
   refine' Submodule.smul_mem _ _ _
   exact Submodule.smul_mem _ _ (Submodule.subset_span (n₂ a))

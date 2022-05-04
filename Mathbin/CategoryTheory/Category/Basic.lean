@@ -91,7 +91,7 @@ infixr:80
 The universe levels of the objects and morphisms are unconstrained, and will often need to be
 specified explicitly, as `category.{v} C`. (See also `large_category` and `small_category`.)
 
-See https://stacks.math.columbia.edu/tag/0014.
+See <https://stacks.math.columbia.edu/tag/0014>.
 -/
 -- type as \gg
 class Category (obj : Type u) extends CategoryStruct.{v} obj : Type max u (v + 1) where
@@ -186,7 +186,7 @@ theorem dite_comp {P : Prop} [Decidable P] {X Y Z : C} (f : P → (X ⟶ Y)) (f'
 /-- A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 `f ≫ g = f ≫ h` implies `g = h`.
 
-See https://stacks.math.columbia.edu/tag/003B.
+See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Epi (f : X ⟶ Y) : Prop where
   left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
@@ -194,7 +194,7 @@ class Epi (f : X ⟶ Y) : Prop where
 /-- A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 `g ≫ f = h ≫ f` implies `g = h`.
 
-See https://stacks.math.columbia.edu/tag/003B.
+See <https://stacks.math.columbia.edu/tag/003B>.
 -/
 class Mono (f : X ⟶ Y) : Prop where
   right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
@@ -239,7 +239,7 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
   constructor
   intro Z a b w
   replace w := congr_argₓ (fun k => k ≫ g) w
-  dsimp  at w
+  dsimp'  at w
   rw [category.assoc, category.assoc] at w
   exact (cancel_mono _).1 w
 
@@ -251,7 +251,7 @@ theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi
   constructor
   intro Z a b w
   replace w := congr_argₓ (fun k => f ≫ k) w
-  dsimp  at w
+  dsimp'  at w
   rw [← category.assoc, ← category.assoc] at w
   exact (cancel_epi _).1 w
 

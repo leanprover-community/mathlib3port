@@ -43,11 +43,11 @@ instance gradedAlgebra : GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlge
   GradedAlgebra.ofAlgHom _ (lift _ <| GradedAlgebra.ι R M)
     (by
       ext m
-      dsimp only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
+      dsimp' only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
       rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.submodule_coe_alg_hom_of, Subtype.coe_mk])
     fun i x => by
     cases' x with x hx
-    dsimp only [Subtype.coe_mk, DirectSum.lof_eq_of]
+    dsimp' only [Subtype.coe_mk, DirectSum.lof_eq_of]
     refine' Submodule.pow_induction_on' _ (fun r => _) (fun x y i hx hy ihx ihy => _) (fun m hm i x hx ih => _) hx
     · rw [AlgHom.commutes, DirectSum.algebra_map_apply]
       rfl

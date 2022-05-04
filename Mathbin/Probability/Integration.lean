@@ -188,10 +188,10 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
   have hm2 : AeMeasurable Xp μ := hX.1.AeMeasurable.max ae_measurable_const
   have hm3 : AeMeasurable Ym μ := hY.1.AeMeasurable.neg.max ae_measurable_const
   have hm4 : AeMeasurable Yp μ := hY.1.AeMeasurable.max ae_measurable_const
-  have hv1 : integrable Xm μ := hX.neg.max_zero
-  have hv2 : integrable Xp μ := hX.max_zero
-  have hv3 : integrable Ym μ := hY.neg.max_zero
-  have hv4 : integrable Yp μ := hY.max_zero
+  have hv1 : integrable Xm μ := hX.neg_part
+  have hv2 : integrable Xp μ := hX.pos_part
+  have hv3 : integrable Ym μ := hY.neg_part
+  have hv4 : integrable Yp μ := hY.pos_part
   have hi1 : indep_fun Xm Ym μ := hXY.comp negm negm
   have hi2 : indep_fun Xp Ym μ := hXY.comp posm negm
   have hi3 : indep_fun Xm Yp μ := hXY.comp negm posm

@@ -130,10 +130,10 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
   · rw [range_zero, sum_empty, zero_mul, zero_addₓ, pow_zeroₓ, pow_zeroₓ]
     
   · have f_last : f (n + 1) n = (x + y) ^ n := by
-      dsimp [f]
+      dsimp' [f]
       rw [← tsub_add_eq_tsub_tsub, Nat.add_comm, tsub_self, pow_zeroₓ, mul_oneₓ]
     have f_succ : ∀ i, i ∈ range n → f (n + 1) i = y * f n i := fun i hi => by
-      dsimp [f]
+      dsimp' [f]
       have : Commute y ((x + y) ^ i) := (h.symm.add_right (Commute.refl y)).pow_right i
       rw [← mul_assoc, this.eq, mul_assoc, ← pow_succₓ y (n - 1 - i)]
       congr 2
@@ -168,7 +168,7 @@ theorem geom_sum₂_self {α : Type _} [CommRingₓ α] (x : α) (n : ℕ) : geo
       simp_rw [← pow_addₓ]
     _ = ∑ i in Finset.range n, x ^ (n - 1) :=
       Finset.sum_congr rfl fun i hi =>
-        congr_argₓ _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| Finset.mem_range.1 hi
+        congr_argₓ _ <| add_tsub_cancel_of_le <| Nat.le_pred_of_ltₓ <| Finset.mem_range.1 hi
     _ = (Finset.range n).card • x ^ (n - 1) := Finset.sum_const _
     _ = n * x ^ (n - 1) := by
       rw [Finset.card_range, nsmul_eq_mul]
@@ -260,7 +260,7 @@ protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ringₓ α] {x y : 
   cases n
   · exact absurd (list.mem_range.mp hi) i.not_lt_zero
     
-  · rw [tsub_add_eq_add_tsub (Nat.le_pred_of_lt (list.mem_range.mp hi)),
+  · rw [tsub_add_eq_add_tsub (Nat.le_pred_of_ltₓ (list.mem_range.mp hi)),
       tsub_add_cancel_of_le (nat.succ_le_iff.mpr n.succ_pos)]
     
 
@@ -310,6 +310,21 @@ theorem geom_sum_Ico' [DivisionRing α] {x : α} (hx : x ≠ 1) {m n : ℕ} (hmn
     (∑ i in Finset.ico m n, x ^ i) = (x ^ m - x ^ n) / (1 - x) := by
   simp only [geom_sum_Ico hx hmn]
   convert neg_div_neg_eq (x ^ m - x ^ n) (1 - x) <;> abel
+
+theorem geom_sum_Ico_le_of_lt_one [LinearOrderedField α] {x : α} (hx : 0 ≤ x) (h'x : x < 1) {m n : ℕ} :
+    (∑ i in ico m n, x ^ i) ≤ x ^ m / (1 - x) := by
+  rcases le_or_ltₓ m n with (hmn | hmn)
+  · rw [geom_sum_Ico' h'x.ne hmn]
+    apply div_le_div (pow_nonneg hx _) _ (sub_pos.2 h'x) le_rfl
+    simpa using pow_nonneg hx _
+    
+  · rw [Ico_eq_empty, sum_empty]
+    · apply div_nonneg (pow_nonneg hx _)
+      simpa using h'x.le
+      
+    · simpa using hmn.le
+      
+    
 
 theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) (n : ℕ) :
     geomSum x⁻¹ n = (x - 1)⁻¹ * (x - x⁻¹ ^ n * x) := by

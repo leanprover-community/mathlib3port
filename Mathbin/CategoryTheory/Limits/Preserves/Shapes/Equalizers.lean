@@ -130,8 +130,8 @@ def isColimitMapCoconeCoforkEquiv :
   (IsColimit.precomposeInvEquiv (diagramIsoParallelPair.{v} _) _).symm.trans <|
     is_colimit.equiv_iso_colimit <|
       Cofork.ext (Iso.refl _) <| by
-        dsimp only [cofork.π, cofork.of_π_ι_app]
-        dsimp
+        dsimp' only [cofork.π, cofork.of_π_ι_app]
+        dsimp'
         rw [category.comp_id, category.id_comp]
 
 /-- The property of preserving coequalizers expressed in terms of coforks. -/

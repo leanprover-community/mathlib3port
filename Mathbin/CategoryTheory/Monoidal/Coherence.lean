@@ -82,12 +82,13 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     [LiftHom g] : LiftHom (f ⊗ g) where
   lift := LiftHom.lift f ⊗ LiftHom.lift g
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
 -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 class MonoidalCoherence (X Y : C) [LiftObj X] [LiftObj Y] where
-  Hom {} : X ⟶ Y
+  Hom : X ⟶ Y
   [IsIso : IsIso hom]
 
 attribute [instance] monoidal_coherence.is_iso
@@ -179,7 +180,7 @@ example {W X Y Z : C} (f : W ⟶ (X ⊗ Y) ⊗ Z) : W ⟶ X ⊗ Y ⊗ Z :=
 
 @[simp]
 theorem monoidal_comp_refl {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : f ⊗≫ g = f ≫ g := by
-  dsimp [monoidal_comp]
+  dsimp' [monoidal_comp]
   simp
 
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
@@ -272,10 +273,18 @@ example {W X Y Z : C} (f : Y ⟶ Z) g (w : False) : (λ_ _).Hom ≫ f = g := by
   guard_target =ₐ (𝟙 _ ≫ (λ_ _).Hom) ≫ f = 𝟙 _ ≫ g
   cases w
 
+theorem insert_id_lhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f ≫ 𝟙 _ = g) : f = g := by
+  simpa using w
+
+theorem insert_id_rhs {C : Type _} [Category C] {X Y : C} (f g : X ⟶ Y) (w : f = g ≫ 𝟙 _) : f = g := by
+  simpa using w
+
 end Coherence
 
 open Coherence
 
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 /-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
 where the two sides only differ by replacing strings of monoidal structural morphisms
 (that is, associators, unitors, and identities)
@@ -309,10 +318,16 @@ unsafe def coherence : tactic Unit := do
       -- Then check that either `g₀` is identically `g₁`,
           reflexivity <|>
           do
-          let-- or that both are compositions,
-              quote.1
-              (_ ≫ _ = _ ≫ _)
-            ← target | fail "`coherence` tactic failed, non-structural morphisms don't match"
+          (-- or that both are compositions,
+              do
+                let quote.1 (_ ≫ _ = _) ← target
+                skip) <|>
+              sorry
+          (do
+                let quote.1 (_ = _ ≫ _) ← target
+                skip) <|>
+              sorry
+          let quote.1 (_ ≫ _ = _ ≫ _) ← target | fail "`coherence` tactic failed, non-structural morphisms don't match"
           tactic.congr_core'
           -- with identical first terms,
               reflexivity <|>
@@ -333,6 +348,10 @@ example f : (λ_ (𝟙_ C)).Hom ≫ f ≫ (λ_ (𝟙_ C)).Hom = (ρ_ (𝟙_ C)).
 
 -- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
 example {U V W X Y : C} (f : U ⟶ V ⊗ W ⊗ X) (g : (V ⊗ W) ⊗ X ⟶ Y) : f ⊗≫ g = f ≫ (α_ _ _ _).inv ≫ g := by
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
+
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+example {U : C} (f : U ⟶ 𝟙_ C) : f ≫ (ρ_ (𝟙_ C)).inv ≫ (λ_ (𝟙_ C)).Hom = f := by
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
 
 -- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence

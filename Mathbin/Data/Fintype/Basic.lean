@@ -75,12 +75,13 @@ universe u v
 
 variable {α β γ : Type _}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`elems] []
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
   together with a proof that everything of type `α` is in the list. -/
 class Fintype (α : Type _) where
-  elems {} : Finset α
+  elems : Finset α
   complete : ∀ x : α, x ∈ elems
 
 namespace Finset
@@ -1647,7 +1648,7 @@ theorem Quotientₓ.fin_choice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {�
   swap
   change Quotientₓ.liftOn q _ _ = _
   have : q = ⟦fun i h => f i⟧ := by
-    dsimp [q]
+    dsimp' [q]
     exact Quotientₓ.induction_on (@Finset.univ ι _).1 fun l => Quotientₓ.fin_choice_aux_eq _ _
   simp [this]
   exact Setoidₓ.refl _

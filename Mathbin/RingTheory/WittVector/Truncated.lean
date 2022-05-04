@@ -141,7 +141,7 @@ variable [CommRingₓ R]
 @[simp]
 theorem out_truncate_fun (x : 𝕎 R) : (truncateFun n x).out = init n x := by
   ext i
-  dsimp [TruncatedWittVector.out, init, select]
+  dsimp' [TruncatedWittVector.out, init, select]
   split_ifs with hi
   swap
   · rfl

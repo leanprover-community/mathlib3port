@@ -362,25 +362,25 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
       (fun A B => _) (fun i => _) (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
   · refine' ⟨x, fun Q => _⟩
     specialize hx _ ⟨Q, rfl⟩
-    dsimp  at hx
+    dsimp'  at hx
     rcases proj_surjective _ (Qs Q) with ⟨y, hy⟩
     rw [← hy] at *
     rw [fiber_eq] at hx
     exact Quotientₓ.sound' (Q.symm y x hx)
     
   · refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
-    · dsimp only
+    · dsimp' only
       erw [← compat (A⊓B) A inf_le_left]
       exact fiber_le_of_le _ _ ha
       
-    · dsimp only
+    · dsimp' only
       erw [← compat (A⊓B) B inf_le_right]
       exact fiber_le_of_le _ _ ha
       
     
   · obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
     refine' ⟨x, _⟩
-    dsimp only
+    dsimp' only
     rw [← hx, fiber_eq]
     apply i.refl
     
@@ -399,7 +399,7 @@ noncomputable instance [CompactSpace X] : Fintype S := by
       (by
         tauto : x ∈ ⊤) with
     ⟨j, ⟨j, rfl⟩, h1, ⟨hj, rfl⟩, h2⟩
-  dsimp only  at h2
+  dsimp' only  at h2
   suffices S.proj x = j by
     rwa [this]
   rcases j with ⟨j⟩

@@ -331,10 +331,10 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClos
           apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
           
         · intro Y Z g
-          dsimp [prod_comparison]
+          dsimp' [prod_comparison]
           simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
-          dsimp
+          dsimp'
           simp
           
         -- See note [dsimp, simp]

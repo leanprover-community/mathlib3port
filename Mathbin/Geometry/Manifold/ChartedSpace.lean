@@ -205,7 +205,7 @@ instance StructureGroupoid.partialOrder : PartialOrderₓ (StructureGroupoid H) 
   PartialOrderₓ.lift StructureGroupoid.Members fun a b h => by
     cases a
     cases b
-    dsimp  at h
+    dsimp'  at h
     induction h
     rfl
 
@@ -329,7 +329,7 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H where
       rcases he x xu with ⟨s, s_open, xs, hs⟩
       refine' ⟨s, s_open, xs, _⟩
       convert hs.1 using 1
-      dsimp [LocalHomeomorph.restr]
+      dsimp' [LocalHomeomorph.restr]
       rw [s_open.interior_eq]
       
     · apply PG.locality e.open_target fun x xu => _
@@ -339,7 +339,7 @@ def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H where
         
       · rw [← inter_assoc, inter_self]
         convert hs.2 using 1
-        dsimp [LocalHomeomorph.restr]
+        dsimp' [LocalHomeomorph.restr]
         rw [s_open.interior_eq]
         
       
@@ -487,6 +487,10 @@ end Groupoid
 /-! ### Charted spaces -/
 
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Atlas] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`chartAt] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] []
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -497,10 +501,10 @@ given topological space. For instance, a complex manifold (modelled over `ℂ^n`
 sometimes as a real manifold over `ℝ^(2n)`.
 -/
 class ChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [TopologicalSpace M] where
-  Atlas {} : Set (LocalHomeomorph M H)
-  chartAt {} : M → LocalHomeomorph M H
-  mem_chart_source {} : ∀ x, x ∈ (chart_at x).Source
-  chart_mem_atlas {} : ∀ x, chart_at x ∈ atlas
+  Atlas : Set (LocalHomeomorph M H)
+  chartAt : M → LocalHomeomorph M H
+  mem_chart_source : ∀ x, x ∈ (chart_at x).Source
+  chart_mem_atlas : ∀ x, chart_at x ∈ atlas
 
 export ChartedSpace ()
 
@@ -755,11 +759,12 @@ section HasGroupoid
 
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`compatible] []
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   (G : StructureGroupoid H) : Prop where
-  compatible {} : ∀ {e e' : LocalHomeomorph M H}, e ∈ Atlas H M → e' ∈ Atlas H M → e.symm ≫ₕ e' ∈ G
+  compatible : ∀ {e e' : LocalHomeomorph M H}, e ∈ Atlas H M → e' ∈ Atlas H M → e.symm ≫ₕ e' ∈ G
 
 /-- Reformulate in the `structure_groupoid` namespace the compatibility condition of charts in a
 charted space admitting a structure groupoid, to make it more easily accessible with dot
@@ -829,7 +834,7 @@ theorem StructureGroupoid.compatible_of_mem_maximal_atlas {e e' : LocalHomeomorp
   have hs : IsOpen s := by
     apply e.symm.continuous_to_fun.preimage_open_of_open <;> apply open_source
   have xs : x ∈ s := by
-    dsimp  at hx
+    dsimp'  at hx
     simp [s, hx]
   refine' ⟨s, hs, xs, _⟩
   have A : e.symm ≫ₕ f ∈ G := (mem_maximal_atlas_iff.1 he f (chart_mem_atlas _ _)).1

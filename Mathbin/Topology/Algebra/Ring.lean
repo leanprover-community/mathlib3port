@@ -448,7 +448,7 @@ def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGro
   toFun := fun t => t.toAddGroupTopology
   inj' := by
     intro t₁ t₂ h_eq
-    dsimp only  at h_eq
+    dsimp' only  at h_eq
     ext
     have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
     rw [h_t₁, h_eq]

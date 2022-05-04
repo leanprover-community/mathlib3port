@@ -90,14 +90,14 @@ theorem affine_independent_iff_linear_independent_vsub (p : ι → P) (i1 : ι) 
     have hfg : ∀ x : { x // x ≠ i1 }, g x = f x := by
       intro x
       rw [hfdef]
-      dsimp only
+      dsimp' only
       erw [dif_neg x.property, Subtype.coe_eta]
     rw [hfg]
     have hf : (∑ ι in s2, f ι) = 0 := by
       rw [Finset.sum_insert (Finset.not_mem_map_subtype_of_not_property s (not_not.2 rfl)),
         Finset.sum_subtype_map_embedding fun x hx => (hfg x).symm]
       rw [hfdef]
-      dsimp only
+      dsimp' only
       rw [dif_pos rfl]
       exact neg_add_selfₓ _
     have hs2 : s2.weighted_vsub p f = (0 : V) := by
@@ -172,7 +172,7 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
       ∀ s1 s2 : Finset ι w1 w2 : ι → k,
         (∑ i in s1, w1 i) = 1 →
           (∑ i in s2, w2 i) = 1 →
-            s1.affineCombination p w1 = s2.affineCombination p w2 → Set.indicator (↑s1) w1 = Set.indicator (↑s2) w2 :=
+            s1.affineCombination p w1 = s2.affineCombination p w2 → Set.indicatorₓ (↑s1) w1 = Set.indicatorₓ (↑s2) w2 :=
   by
   constructor
   · intro ha s1 s2 w1 w2 hw1 hw2 heq
@@ -181,12 +181,12 @@ theorem affine_independent_iff_indicator_eq_of_affine_combination_eq (p : ι →
     · rw [← sub_eq_zero]
       rw [Set.sum_indicator_subset _ (Finset.subset_union_left s1 s2)] at hw1
       rw [Set.sum_indicator_subset _ (Finset.subset_union_right s1 s2)] at hw2
-      have hws : (∑ i in s1 ∪ s2, (Set.indicator (↑s1) w1 - Set.indicator (↑s2) w2) i) = 0 := by
+      have hws : (∑ i in s1 ∪ s2, (Set.indicatorₓ (↑s1) w1 - Set.indicatorₓ (↑s2) w2) i) = 0 := by
         simp [hw1, hw2]
       rw [Finset.affine_combination_indicator_subset _ _ (Finset.subset_union_left s1 s2),
         Finset.affine_combination_indicator_subset _ _ (Finset.subset_union_right s1 s2), ← @vsub_eq_zero_iff_eq V,
         Finset.affine_combination_vsub] at heq
-      exact ha (s1 ∪ s2) (Set.indicator (↑s1) w1 - Set.indicator (↑s2) w2) hws HEq i hi
+      exact ha (s1 ∪ s2) (Set.indicatorₓ (↑s1) w1 - Set.indicatorₓ (↑s2) w2) hws HEq i hi
       
     · rw [← Finset.mem_coe, Finset.coe_union] at hi
       simp [mt (Set.mem_union_left ↑s2) hi, mt (Set.mem_union_right ↑s1) hi]
@@ -249,7 +249,7 @@ theorem AffineIndependent.units_line_map {p : ι → P} (hp : AffineIndependent 
 
 theorem AffineIndependent.indicator_eq_of_affine_combination_eq {p : ι → P} (ha : AffineIndependent k p)
     (s₁ s₂ : Finset ι) (w₁ w₂ : ι → k) (hw₁ : (∑ i in s₁, w₁ i) = 1) (hw₂ : (∑ i in s₂, w₂ i) = 1)
-    (h : s₁.affineCombination p w₁ = s₂.affineCombination p w₂) : Set.indicator (↑s₁) w₁ = Set.indicator (↑s₂) w₂ :=
+    (h : s₁.affineCombination p w₁ = s₂.affineCombination p w₂) : Set.indicatorₓ (↑s₁) w₁ = Set.indicatorₓ (↑s₂) w₂ :=
   (affine_independent_iff_indicator_eq_of_affine_combination_eq k p).1 ha s₁ s₂ w₁ w₂ hw₁ hw₂ h
 
 /-- An affinely independent family is injective, if the underlying

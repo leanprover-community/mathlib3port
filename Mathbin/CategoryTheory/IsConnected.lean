@@ -65,7 +65,7 @@ component'.
 
 This allows us to show that the functor X ⨯ - preserves connected limits.
 
-See https://stacks.math.columbia.edu/tag/002S
+See <https://stacks.math.columbia.edu/tag/002S>
 -/
 class IsConnected (J : Type u₁) [Category.{v₁} J] extends IsPreconnected J : Prop where
   [is_nonempty : Nonempty J]
@@ -128,7 +128,7 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
     (h1 : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p := by
   injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
-  dsimp
+  dsimp'
   exact congr_argₓ ULift.up (propext (h1 f))
 
 /-- If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
@@ -141,7 +141,7 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
     have w :=
       h { j | F j = F j₀ } rfl fun _ _ f => by
         simp [a f]
-    dsimp  at w
+    dsimp'  at w
     intro j j'
     rw [w j, w j']
 

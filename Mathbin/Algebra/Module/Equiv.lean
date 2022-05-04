@@ -300,6 +300,9 @@ omit σ'
 include σ₃₁ σ₂₁ σ₃₂
 
 @[simp]
+theorem trans_symm : (e₁₂.trans e₂₃ : M₁ ≃ₛₗ[σ₁₃] M₃).symm = e₂₃.symm.trans e₁₂.symm :=
+  rfl
+
 theorem symm_trans_apply (c : M₃) : (e₁₂.trans e₂₃ : M₁ ≃ₛₗ[σ₁₃] M₃).symm c = e₁₂.symm (e₂₃.symm c) :=
   rfl
 

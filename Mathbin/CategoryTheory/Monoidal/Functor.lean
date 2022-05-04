@@ -34,7 +34,7 @@ to monoid objects.
 
 ## References
 
-See https://stacks.math.columbia.edu/tag/0FFL.
+See <https://stacks.math.columbia.edu/tag/0FFL>.
 -/
 
 
@@ -131,7 +131,7 @@ end
 
 /-- A monoidal functor is a lax monoidal functor for which the tensorator and unitor as isomorphisms.
 
-See https://stacks.math.columbia.edu/tag/0FFL.
+See <https://stacks.math.columbia.edu/tag/0FFL>.
 -/
 structure MonoidalFunctor extends LaxMonoidalFunctor.{v₁, v₂} C D where
   ε_is_iso : IsIso ε := by
@@ -272,7 +272,7 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [← category.assoc, lax_monoidal_functor.μ_natural, category.assoc, ← map_comp, ← map_comp, ←
         lax_monoidal_functor.μ_natural],
     associativity' := fun X Y Z => by
-      dsimp
+      dsimp'
       rw [id_tensor_comp]
       slice_rhs 3 4 => rw [← G.to_functor.map_id, G.μ_natural]
       slice_rhs 1 3 => rw [← G.associativity]
@@ -281,13 +281,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
       rw [category.assoc, category.assoc, category.assoc, category.assoc, category.assoc, ← G.to_functor.map_comp, ←
         G.to_functor.map_comp, ← G.to_functor.map_comp, ← G.to_functor.map_comp, F.associativity],
     left_unitality' := fun X => by
-      dsimp
+      dsimp'
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
       apply congr_argₓ
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
         nat_trans.id_app, map_id, ← category.assoc, map_comp],
     right_unitality' := fun X => by
-      dsimp
+      dsimp'
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
       apply congr_argₓ
       rw [F.right_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
@@ -341,12 +341,12 @@ theorem prod'_to_functor : (F.prod' G).toFunctor = F.toFunctor.prod' G.toFunctor
 
 @[simp]
 theorem prod'_ε : (F.prod' G).ε = (F.ε, G.ε) := by
-  dsimp [prod']
+  dsimp' [prod']
   simp
 
 @[simp]
 theorem prod'_μ (X Y : C) : (F.prod' G).μ X Y = (F.μ X Y, G.μ X Y) := by
-  dsimp [prod']
+  dsimp' [prod']
   simp
 
 end LaxMonoidalFunctor
@@ -360,10 +360,10 @@ variable (F : MonoidalFunctor.{v₁, v₂} C D) (G : MonoidalFunctor.{v₂, v₃
 def comp : MonoidalFunctor.{v₁, v₃} C E :=
   { F.toLaxMonoidalFunctor.comp G.toLaxMonoidalFunctor with
     ε_is_iso := by
-      dsimp
+      dsimp'
       infer_instance,
     μ_is_iso := by
-      dsimp
+      dsimp'
       infer_instance }
 
 -- mathport name: «expr ⊗⋙ »
@@ -447,10 +447,10 @@ noncomputable def monoidalAdjoint (F : MonoidalFunctor C D) {G : D ⥤ C} (h : F
 noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor] : MonoidalFunctor D C where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
   ε_is_iso := by
-    dsimp [equivalence.to_adjunction]
+    dsimp' [equivalence.to_adjunction]
     infer_instance
   μ_is_iso := fun X Y => by
-    dsimp [equivalence.to_adjunction]
+    dsimp' [equivalence.to_adjunction]
     infer_instance
 
 end CategoryTheory

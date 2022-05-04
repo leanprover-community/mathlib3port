@@ -183,10 +183,10 @@ instance uniqueHomFromTrivial (A : Mon_ C) : Unique (trivial C ⟶ A) where
   default :=
     { Hom := A.one,
       one_hom' := by
-        dsimp
+        dsimp'
         simp ,
       mul_hom' := by
-        dsimp
+        dsimp'
         simp [A.one_mul, unitors_equal] }
   uniq := fun f => by
     ext
@@ -240,10 +240,10 @@ def mapMon (F : LaxMonoidalFunctor C D) : Mon_ C ⥤ Mon_ D where
   map := fun A B f =>
     { Hom := F.map f.Hom,
       one_hom' := by
-        dsimp
+        dsimp'
         rw [category.assoc, ← F.to_functor.map_comp, f.one_hom],
       mul_hom' := by
-        dsimp
+        dsimp'
         rw [category.assoc, F.μ_natural_assoc, ← F.to_functor.map_comp, ← F.to_functor.map_comp, f.mul_hom] }
   map_id' := fun A => by
     ext
@@ -282,7 +282,7 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C 
   map := fun A B f =>
     { app := fun _ => f.Hom,
       naturality' := fun _ _ _ => by
-        dsimp
+        dsimp'
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 
@@ -462,10 +462,10 @@ instance monMonoidal : MonoidalCategory (Mon_ C) where
   tensorHom := fun M N P Q f g =>
     { Hom := f.Hom ⊗ g.Hom,
       one_hom' := by
-        dsimp
+        dsimp'
         slice_lhs 2 3 => rw [← tensor_comp, hom.one_hom f, hom.one_hom g],
       mul_hom' := by
-        dsimp
+        dsimp'
         slice_rhs 1 2 => rw [tensor_μ_natural]
         slice_lhs 2 3 => rw [← tensor_comp, hom.mul_hom f, hom.mul_hom g, tensor_comp]
         simp only [category.assoc] }
@@ -482,29 +482,29 @@ instance monMonoidal : MonoidalCategory (Mon_ C) where
   associator_naturality' := by
     intros
     ext
-    dsimp
+    dsimp'
     apply associator_naturality
   leftUnitor := fun M => isoOfIso (λ_ M.x) one_left_unitor mul_left_unitor
   left_unitor_naturality' := by
     intros
     ext
-    dsimp
+    dsimp'
     apply left_unitor_naturality
   rightUnitor := fun M => isoOfIso (ρ_ M.x) one_right_unitor mul_right_unitor
   right_unitor_naturality' := by
     intros
     ext
-    dsimp
+    dsimp'
     apply right_unitor_naturality
   pentagon' := by
     intros
     ext
-    dsimp
+    dsimp'
     apply pentagon
   triangle' := by
     intros
     ext
-    dsimp
+    dsimp'
     apply triangle
 
 end Mon_

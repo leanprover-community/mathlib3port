@@ -179,7 +179,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f, invFun := fun f => extensionHom f,
           left_inv := fun f => by
-            dsimp
+            dsimp'
             erw [extension_comp_coe],
           right_inv := fun f => by
             apply Subtype.eq
@@ -189,7 +189,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
       hom_equiv_naturality_left_symm' := fun X X' Y f g => by
         apply hom_ext
         funext x
-        dsimp
+        dsimp'
         erw [coe_comp, ← completion.extension_map]
         rfl
         exact g.property

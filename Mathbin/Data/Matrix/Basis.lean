@@ -136,8 +136,13 @@ theorem diag_same : diag (stdBasisMatrix i i c) = Pi.single i c := by
 
 variable [Fintype n]
 
-theorem trace_zero (h : j ≠ i) : trace n α α (stdBasisMatrix i j c) = 0 := by
-  simp [h]
+@[simp]
+theorem trace_zero (h : j ≠ i) : trace (stdBasisMatrix i j c) = 0 := by
+  simp [trace, h]
+
+@[simp]
+theorem trace_eq : trace (stdBasisMatrix i i c) = c := by
+  simp [trace]
 
 @[simp]
 theorem mul_left_apply_same (b : n) (M : Matrix n n α) : (stdBasisMatrix i j c ⬝ M) i b = c * M j b := by

@@ -332,7 +332,7 @@ theorem zero_locus_vanishing_ideal_eq_closure (t : Set (ProjectiveSpectrum 𝒜)
 
 theorem vanishing_ideal_closure (t : Set (ProjectiveSpectrum 𝒜)) : vanishingIdeal (Closure t) = vanishingIdeal t := by
   have := (gc_ideal 𝒜).u_l_u_eq_u t
-  dsimp only  at this
+  dsimp' only  at this
   ext1
   erw [zero_locus_vanishing_ideal_eq_closure 𝒜 t] at this
   exact this

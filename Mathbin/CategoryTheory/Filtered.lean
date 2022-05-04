@@ -74,7 +74,7 @@ class IsFilteredOrEmpty : Prop where
    are equal, and
 3. there exists some object.
 
-See https://stacks.math.columbia.edu/tag/002V. (They also define a diagram being filtered.)
+See <https://stacks.math.columbia.edu/tag/002V>. (They also define a diagram being filtered.)
 -/
 class IsFiltered extends IsFilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
@@ -261,7 +261,7 @@ theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
               simp ),
           _⟩⟩⟩
   intro j j' g
-  dsimp
+  dsimp'
   simp only [category.comp_id]
   apply w
   simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
@@ -337,12 +337,12 @@ noncomputable def coeq₃Hom {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : j₂ ⟶ 
       coeqHom (coeqHom f g ≫ leftToMax (coeq f g) (coeq g h)) (coeqHom g h ≫ rightToMax (coeq f g) (coeq g h))
 
 theorem coeq₃_condition₁ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : f ≫ coeq₃Hom f g h = g ≫ coeq₃Hom f g h := by
-  dsimp [coeq₃_hom]
+  dsimp' [coeq₃_hom]
   slice_lhs 1 2 => rw [coeq_condition f g]
   simp only [category.assoc]
 
 theorem coeq₃_condition₂ {j₁ j₂ : C} (f g h : j₁ ⟶ j₂) : g ≫ coeq₃Hom f g h = h ≫ coeq₃Hom f g h := by
-  dsimp [coeq₃_hom]
+  dsimp' [coeq₃_hom]
   slice_lhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_rhs 2 4 => rw [← category.assoc, coeq_condition _ _]
   slice_lhs 1 3 => rw [← category.assoc, coeq_condition _ _]
@@ -450,7 +450,7 @@ class IsCofilteredOrEmpty : Prop where
    are equal, and
 3. there exists some object.
 
-See https://stacks.math.columbia.edu/tag/04AZ.
+See <https://stacks.math.columbia.edu/tag/04AZ>.
 -/
 class IsCofiltered extends IsCofilteredOrEmpty C : Prop where
   [Nonempty : Nonempty C]
@@ -637,7 +637,7 @@ theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
               simp ),
           _⟩⟩⟩
   intro j j' g
-  dsimp
+  dsimp'
   simp only [category.id_comp]
   symm
   apply w

@@ -64,17 +64,10 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _) [
   inner := fun x y => ∑ i, inner (x i) (y i)
   norm_sq_eq_inner := by
     intro x
-    have h₁ : (∑ i : ι, ∥x i∥ ^ (2 : ℕ)) = ∑ i : ι, ∥x i∥ ^ (2 : ℝ) := by
-      apply Finset.sum_congr rfl
-      intro j hj
-      simp [← rpow_nat_cast]
-    have h₂ : 0 ≤ ∑ i : ι, ∥x i∥ ^ (2 : ℝ) := by
-      rw [← h₁]
-      exact Finset.sum_nonneg fun hj : j ∈ Finset.univ => pow_nonneg (norm_nonneg (x j)) 2
-    simp [norm, AddMonoidHom.map_sum, ← norm_sq_eq_inner]
-    rw [← rpow_nat_cast ((∑ i : ι, ∥x i∥ ^ (2 : ℝ)) ^ (2 : ℝ)⁻¹) 2]
-    rw [← rpow_mul h₂]
-    norm_num [h₁]
+    have h₂ : 0 ≤ ∑ i : ι, ∥x i∥ ^ (2 : ℝ) := Finset.sum_nonneg fun j hj => rpow_nonneg_of_nonneg (norm_nonneg (x j)) 2
+    simp only [norm, AddMonoidHom.map_sum, ← norm_sq_eq_inner, one_div]
+    rw [← rpow_nat_cast ((∑ i : ι, ∥x i∥ ^ (2 : ℝ)) ^ (2 : ℝ)⁻¹) 2, ← rpow_mul h₂]
+    norm_num
   conj_sym := by
     intro x y
     unfold inner

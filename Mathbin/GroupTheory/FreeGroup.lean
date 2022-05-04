@@ -313,7 +313,7 @@ theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ →
   | _, _, @step.bnot _ L1 L2 x b => by
     induction' L1 with hd tl ih
     case list.nil =>
-      dsimp [List.sizeof]
+      dsimp' [List.sizeof]
       have H :
         1 + sizeof (x, b) + (1 + sizeof (x, bnot b) + List.sizeof L2) =
           List.sizeof L2 + 1 + (sizeof (x, b) + sizeof (x, bnot b) + 1) :=
@@ -322,7 +322,7 @@ theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ →
       rw [H]
       exact Nat.le_add_rightₓ _ _
     case list.cons =>
-      dsimp [List.sizeof]
+      dsimp' [List.sizeof]
       exact Nat.add_lt_add_leftₓ ih _
 
 theorem length (h : Red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n := by
@@ -830,7 +830,7 @@ theorem reduce.red : Red L (reduce L) := by
   case list.nil =>
     constructor
   case list.cons =>
-    dsimp
+    dsimp'
     revert ih
     generalize htl : reduce tl1 = TL
     intro ih
@@ -838,7 +838,7 @@ theorem reduce.red : Red L (reduce L) := by
     case list.nil =>
       exact red.cons_cons ih
     case list.cons =>
-      dsimp
+      dsimp'
       by_cases' h : hd1.fst = hd2.fst ∧ hd1.snd = bnot hd2.snd
       · rw [if_pos h]
         trans
@@ -847,7 +847,7 @@ theorem reduce.red : Red L (reduce L) := by
         · cases hd1
           cases hd2
           cases h
-          dsimp  at *
+          dsimp'  at *
           subst_vars
           exact red.step.cons_bnot_rev.to_red
           
@@ -860,9 +860,9 @@ theorem reduce.not {p : Prop} : ∀ {L₁ L₂ L₃ : List (α × Bool)} {x b}, 
   | [], L2, L3, _, _ => fun h => by
     cases L2 <;> injections
   | (x, b) :: L1, L2, L3, x', b' => by
-    dsimp
+    dsimp'
     cases r : reduce L1
-    · dsimp
+    · dsimp'
       intro h
       have := congr_argₓ List.length h
       simp [-add_commₓ] at this

@@ -75,7 +75,7 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
   ⟨mk _ fun n => Classical.some <| hf <| x.coeff n, by
     ext n
-    dsimp [map_fun]
+    dsimp' [map_fun]
     rw [Classical.some_spec (hf (x.coeff n))]⟩
 
 variable (f : R →+* S) (x y : 𝕎 R)

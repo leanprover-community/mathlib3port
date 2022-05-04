@@ -756,10 +756,10 @@ def BinaryBicone.toBiconeIsBilimit {X Y : C} (b : BinaryBicone X Y) : b.toBicone
   toFun := fun h => ⟨b.toBiconeIsLimit h.IsLimit, b.toBiconeIsColimit h.IsColimit⟩
   invFun := fun h => ⟨b.toBiconeIsLimit.symm h.IsLimit, b.toBiconeIsColimit.symm h.IsColimit⟩
   left_inv := fun ⟨h, h'⟩ => by
-    dsimp only
+    dsimp' only
     simp
   right_inv := fun ⟨h, h'⟩ => by
-    dsimp only
+    dsimp' only
     simp
 
 /-- A bicone over a pair is a bilimit bicone if and only if the corresponding binary bicone is a
@@ -769,10 +769,10 @@ def Bicone.toBinaryBiconeIsBilimit {X Y : C} (b : Bicone (pair X Y).obj) :
   toFun := fun h => ⟨b.toBinaryBiconeIsLimit h.IsLimit, b.toBinaryBiconeIsColimit h.IsColimit⟩
   invFun := fun h => ⟨b.toBinaryBiconeIsLimit.symm h.IsLimit, b.toBinaryBiconeIsColimit.symm h.IsColimit⟩
   left_inv := fun ⟨h, h'⟩ => by
-    dsimp only
+    dsimp' only
     simp
   right_inv := fun ⟨h, h'⟩ => by
-    dsimp only
+    dsimp' only
     simp
 
 /-- A bicone over `P Q : C`, which is both a limit cone and a colimit cocone.
@@ -1238,7 +1238,7 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
       fac' := fun s j => by
         simp only [sum_comp, category.assoc, bicone.to_cone_π_app, b.ι_π, comp_dite]
         -- See note [dsimp, simp].
-        dsimp
+        dsimp'
         simp }
   IsColimit :=
     { desc := fun s => ∑ j, b.π j ≫ s.ι.app j,
@@ -1249,7 +1249,7 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
         erw [category.assoc, h],
       fac' := fun s j => by
         simp only [comp_sum, ← category.assoc, bicone.to_cocone_ι_app, b.ι_π, dite_comp]
-        dsimp
+        dsimp'
         simp }
 
 theorem IsBilimit.total {f : J → C} {b : Bicone f} (i : b.IsBilimit) : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x :=
@@ -1572,10 +1572,10 @@ def binaryBiconeOfSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [SplitMono f] {c :
   inl_snd' := by
     simp
   inr_fst' := by
-    dsimp only
+    dsimp' only
     rw [split_epi_of_idempotent_of_is_colimit_cofork_section_, is_colimit_cofork_of_cokernel_cofork_desc,
       is_cokernel_epi_comp_desc]
-    dsimp only [cokernel_cofork_of_cofork_of_π]
+    dsimp' only [cokernel_cofork_of_cofork_of_π]
     let this := epi_of_is_colimit_cofork i
     apply zero_of_epi_comp c.π
     simp only [sub_comp, comp_sub, category.comp_id, category.assoc, split_mono.id, sub_self,
@@ -1593,7 +1593,7 @@ def isBilimitBinaryBiconeOfSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [SplitMon
     (by
       simp only [binary_bicone_of_split_mono_of_cokernel_fst, binary_bicone_of_split_mono_of_cokernel_inr,
         binary_bicone_of_split_mono_of_cokernel_snd, split_epi_of_idempotent_of_is_colimit_cofork_section_]
-      dsimp only [binary_bicone_of_split_mono_of_cokernel_X]
+      dsimp' only [binary_bicone_of_split_mono_of_cokernel_X]
       rw [is_colimit_cofork_of_cokernel_cofork_desc, is_cokernel_epi_comp_desc]
       simp only [binary_bicone_of_split_mono_of_cokernel_inl, cofork.is_colimit.π_comp_desc,
         cokernel_cofork_of_cofork_π, cofork.π_of_π, add_sub_cancel'_right])
@@ -1626,10 +1626,10 @@ def binaryBiconeOfSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [SplitEpi f] {c : Ker
     inl_snd' := by
       simp ,
     inr_fst' := by
-      dsimp only
+      dsimp' only
       rw [split_mono_of_idempotent_of_is_limit_fork_retraction, is_limit_fork_of_kernel_fork_lift,
         is_kernel_comp_mono_lift]
-      dsimp only [kernel_fork_of_fork_ι]
+      dsimp' only [kernel_fork_of_fork_ι]
       let this := mono_of_is_limit_fork i
       apply zero_of_comp_mono c.ι
       simp only [comp_sub, category.comp_id, category.assoc, sub_self, fork.is_limit.lift_comp_ι, fork.ι_of_ι,
@@ -1646,7 +1646,7 @@ def isBilimitBinaryBiconeOfSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [SplitEpi f]
       simp only [binary_bicone_of_split_epi_of_kernel_fst, binary_bicone_of_split_epi_of_kernel_inl,
         binary_bicone_of_split_epi_of_kernel_inr, binary_bicone_of_split_epi_of_kernel_snd,
         split_mono_of_idempotent_of_is_limit_fork_retraction]
-      dsimp only [binary_bicone_of_split_epi_of_kernel_X]
+      dsimp' only [binary_bicone_of_split_epi_of_kernel_X]
       rw [is_limit_fork_of_kernel_fork_lift, is_kernel_comp_mono_lift]
       simp only [fork.is_limit.lift_comp_ι, fork.ι_of_ι, kernel_fork_of_fork_ι, sub_add_cancel])
 

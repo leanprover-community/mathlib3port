@@ -75,7 +75,7 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     -- A morphism `f` factors through the kernel of `g` exactly if `f ≫ g = 0`.
     apply kernel_subobject_factors
     -- Use a simplicial identity
-    dsimp [obj_X]
+    dsimp' [obj_X]
     erw [category.assoc, ← X.δ_comp_δ (Finₓ.zero_le i.succ), ← category.assoc]
     -- It's the first two factors which are zero.
     convert zero_comp
@@ -95,7 +95,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- It's a pity we need to do a case split here;
     -- after the first simp the proofs are almost identical
     cases n <;>
-    dsimp
+    dsimp'
   · simp only [subobject.factor_thru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Finₓ.zero_le 0)]
     rw [←
@@ -136,7 +136,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _
     (fun n => by
       refine' factor_thru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
-      cases n <;> dsimp
+      cases n <;> dsimp'
       · apply top_factors
         
       · refine' (finset_inf_factors _).mpr fun i m => _
@@ -151,7 +151,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
         simp
         )
     fun n => by
-    cases n <;> dsimp
+    cases n <;> dsimp'
     · ext
       simp
       erw [f.naturality]
@@ -184,7 +184,7 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ where
   map_id' := fun X => by
     ext n
     cases n <;>
-      · dsimp
+      · dsimp'
         simp
         
   map_comp' := fun X Y Z f g => by

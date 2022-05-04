@@ -57,7 +57,7 @@ theorem countable_iff_exists_surjective [ne : Nonempty α] {s : Set α} : Counta
     fun ⟨f, hf⟩ =>
     ⟨⟨fun x => invFun f x.1, fun n => if h : f n ∈ s then some ⟨f n, h⟩ else none, fun ⟨x, hx⟩ => by
         have := inv_fun_eq (hf hx)
-        dsimp  at this⊢
+        dsimp'  at this⊢
         simp [this, hx]⟩⟩⟩
 
 /-- A non-empty set is countable iff there exists a surjection from the

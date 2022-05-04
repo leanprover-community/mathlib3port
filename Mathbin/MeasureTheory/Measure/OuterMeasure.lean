@@ -409,7 +409,7 @@ instance : IsLawfulFunctor OuterMeasure where
 
 /-- The dirac outer measure. -/
 def dirac (a : α) : OuterMeasure α where
-  measureOf := fun s => indicator s (fun _ => 1) a
+  measureOf := fun s => indicatorₓ s (fun _ => 1) a
   Empty := by
     simp
   mono := fun s t h => indicator_le_indicator_of_subset h (fun _ => zero_le _) a
@@ -417,15 +417,15 @@ def dirac (a : α) : OuterMeasure α where
     if hs : a ∈ ⋃ n, s n then
       let ⟨i, hi⟩ := mem_Union.1 hs
       calc
-        indicator (⋃ n, s n) (fun _ => (1 : ℝ≥0∞)) a = 1 := indicator_of_mem hs _
-        _ = indicator (s i) (fun _ => 1) a := (indicator_of_mem hi _).symm
-        _ ≤ ∑' n, indicator (s n) (fun _ => 1) a := Ennreal.le_tsum _
+        indicatorₓ (⋃ n, s n) (fun _ => (1 : ℝ≥0∞)) a = 1 := indicator_of_mem hs _
+        _ = indicatorₓ (s i) (fun _ => 1) a := (indicator_of_mem hi _).symm
+        _ ≤ ∑' n, indicatorₓ (s n) (fun _ => 1) a := Ennreal.le_tsum _
         
     else by
       simp only [indicator_of_not_mem hs, zero_le]
 
 @[simp]
-theorem dirac_apply (a : α) (s : Set α) : dirac a s = indicator s (fun _ => 1) a :=
+theorem dirac_apply (a : α) (s : Set α) : dirac a s = indicatorₓ s (fun _ => 1) a :=
   rfl
 
 /-- The sum of an (arbitrary) collection of outer measures. -/
@@ -441,7 +441,7 @@ def sum {ι} (f : ι → OuterMeasure α) : OuterMeasure α where
 theorem sum_apply {ι} (f : ι → OuterMeasure α) (s : Set α) : sum f s = ∑' i, f i s :=
   rfl
 
-theorem smul_dirac_apply (a : ℝ≥0∞) (b : α) (s : Set α) : (a • dirac b) s = indicator s (fun _ => a) b := by
+theorem smul_dirac_apply (a : ℝ≥0∞) (b : α) (s : Set α) : (a • dirac b) s = indicatorₓ s (fun _ => a) b := by
   simp only [smul_apply, smul_eq_mul, dirac_apply, ← indicator_mul_right _ fun _ => a, mul_oneₓ]
 
 /-- Pullback of an `outer_measure`: `comap f μ s = μ (f '' s)`. -/

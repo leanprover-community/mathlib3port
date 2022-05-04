@@ -70,9 +70,10 @@ structure InjectiveResolution (Z : C) where
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
-  out {} : Nonempty (InjectiveResolution Z)
+  out : Nonempty (InjectiveResolution Z)
 
 section
 
@@ -92,7 +93,7 @@ namespace InjectiveResolution
 @[simp]
 theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1) = 0 := by
   apply zero_of_source_iso_zero
-  dsimp
+  dsimp'
   rfl
 
 @[simp]
@@ -113,17 +114,17 @@ def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolution Z where
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
   Injective := fun n => by
     cases n <;>
-      · dsimp
+      · dsimp'
         infer_instance
         
   exact₀ := by
-    dsimp
+    dsimp'
     exact exact_epi_zero _
   exact := fun n => by
-    dsimp
+    dsimp'
     exact exact_of_zero _ _
   mono := by
-    dsimp
+    dsimp'
     infer_instance
 
 end InjectiveResolution

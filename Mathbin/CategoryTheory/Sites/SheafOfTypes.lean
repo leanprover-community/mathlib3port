@@ -344,7 +344,7 @@ def FamilyOfElements.IsAmalgamation (x : FamilyOfElements P R) (t : P.obj (op X)
 theorem FamilyOfElements.IsAmalgamation.comp_presheaf_map {x : FamilyOfElements P R} {t} (f : P ⟶ Q)
     (h : x.IsAmalgamation t) : (x.compPresheafMap f).IsAmalgamation (f.app (op X) t) := by
   intro Y g hg
-  dsimp [family_of_elements.comp_presheaf_map]
+  dsimp' [family_of_elements.comp_presheaf_map]
   change (f.app _ ≫ Q.map _) _ = _
   simp [← f.naturality, h g hg]
 
@@ -361,7 +361,7 @@ theorem is_amalgamation_restrict {R₁ R₂ : Presieve X} (h : R₁ ≤ R₂) (x
 theorem is_amalgamation_sieve_extend {R : Presieve X} (x : FamilyOfElements P R) (t : P.obj (op X))
     (ht : x.IsAmalgamation t) : x.sieveExtend.IsAmalgamation t := by
   intro Y f hf
-  dsimp [family_of_elements.sieve_extend]
+  dsimp' [family_of_elements.sieve_extend]
   rw [← ht _, ← functor_to_types.map_comp_apply, ← op_comp, hf.some_spec.some_spec.some_spec.2]
 
 /-- A presheaf is separated for a presieve if there is at most one amalgamation. -/
@@ -419,7 +419,7 @@ This version is also useful to establish that being a sheaf is preserved under i
 presheaves.
 
 See the discussion before Equation (3) of [MM92], Chapter III, Section 4. See also C2.1.4 of
-[Elephant]. This is also a direct reformulation of https://stacks.math.columbia.edu/tag/00Z8.
+[Elephant]. This is also a direct reformulation of <https://stacks.math.columbia.edu/tag/00Z8>.
 -/
 def YonedaSheafCondition (P : Cᵒᵖ ⥤ Type v₁) (S : Sieve X) : Prop :=
   ∀ f : S.Functor ⟶ P, ∃! g, S.functorInclusion ≫ g = f
@@ -427,7 +427,7 @@ def YonedaSheafCondition (P : Cᵒᵖ ⥤ Type v₁) (S : Sieve X) : Prop :=
 /-- (Implementation). This is a (primarily internal) equivalence between natural transformations
 and compatible families.
 
-Cf the discussion after Lemma 7.47.10 in https://stacks.math.columbia.edu/tag/00YW. See also
+Cf the discussion after Lemma 7.47.10 in <https://stacks.math.columbia.edu/tag/00YW>. See also
 the proof of C2.1.4 of [Elephant], and the discussion in [MM92], Chapter III, Section 4.
 -/
 -- TODO: We can generalize the universe parameter v₁ above by composing with
@@ -440,7 +440,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
       
     · rw [compatible_iff_sieve_compatible]
       intro Y Z f g hf
-      dsimp
+      dsimp'
       rw [← functor_to_types.naturality _ _ α g.op]
       rfl
       
@@ -463,7 +463,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
   constructor
   · rintro rfl Y f hf
     rw [yoneda_equiv_naturality]
-    dsimp
+    dsimp'
     simp
     
   -- See note [dsimp, simp].
@@ -472,7 +472,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     have : _ = x.app Y _ := h f hf
     rw [yoneda_equiv_naturality] at this
     rw [← this]
-    dsimp
+    dsimp'
     simp
     
 
@@ -623,7 +623,7 @@ theorem is_sheaf_for_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') : IsSheafFor P
   use i.hom.app _ t
   fconstructor
   · convert family_of_elements.is_amalgamation.comp_presheaf_map i.hom ht1
-    dsimp [x']
+    dsimp' [x']
     simp
     
   · intro y hy
@@ -732,7 +732,7 @@ variable {C : Type u₁} [Category.{v₁} C] (P : Cᵒᵖ ⥤ Type max v₁ u₁
 noncomputable section
 
 /-- The middle object of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
-of https://stacks.math.columbia.edu/tag/00VM.
+of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def FirstObj : Type max v₁ u₁ :=
   ∏ fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)
@@ -753,7 +753,7 @@ instance : Inhabited (FirstObj P (⊥ : Presieve X)) :=
   (firstObjEqFamily P _).toEquiv.Inhabited
 
 /-- The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
-of https://stacks.math.columbia.edu/tag/00VM.
+of <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 def forkMap : P.obj (op X) ⟶ FirstObj P R :=
   Pi.lift fun f => P.map f.2.1.op
@@ -843,14 +843,14 @@ contains the data used to check a family of elements for a presieve is compatibl
 def SecondObj : Type max v₁ u₁ :=
   ∏ fun fg : (ΣY, { f : Y ⟶ X // R f }) × ΣZ, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
 
-/-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VL. -/
+/-- The map `pr₀*` of <https://stacks.math.columbia.edu/tag/00VL>. -/
 def firstMap : FirstObj P R ⟶ SecondObj P R :=
   Pi.lift fun fg => Pi.π _ _ ≫ P.map pullback.fst.op
 
 instance : Inhabited (SecondObj P (⊥ : Presieve X)) :=
   ⟨firstMap _ _ default⟩
 
-/-- The map `pr₁*` of https://stacks.math.columbia.edu/tag/00VL. -/
+/-- The map `pr₁*` of <https://stacks.math.columbia.edu/tag/00VL>. -/
 def secondMap : FirstObj P R ⟶ SecondObj P R :=
   Pi.lift fun fg => Pi.π _ _ ≫ P.map pullback.snd.op
 
@@ -879,7 +879,7 @@ theorem compatible_iff (x : FirstObj P R) :
     
 
 /-- `P` is a sheaf for `R`, iff the fork given by `w` is an equalizer.
-See https://stacks.math.columbia.edu/tag/00VM.
+See <https://stacks.math.columbia.edu/tag/00VM>.
 -/
 theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P R))) := by
   rw [types.type_equalizer_iff_unique]

@@ -102,14 +102,14 @@ instance : NormalizationMonoid R[X] where
   norm_unit_mul := fun p q hp0 hq0 =>
     Units.ext
       (by
-        dsimp
+        dsimp'
         rw [Ne.def, ← leading_coeff_eq_zero] at *
         rw [leading_coeff_mul, norm_unit_mul hp0 hq0, Units.coe_mul, C_mul])
   norm_unit_coe_units := fun u =>
     Units.ext
       (by
         rw [← mul_oneₓ u⁻¹, Units.coe_mul, Units.eq_inv_mul_iff_mul_eq]
-        dsimp
+        dsimp'
         rcases Polynomial.is_unit_iff.1 ⟨u, rfl⟩ with ⟨_, ⟨w, rfl⟩, h2⟩
         rw [← h2, leading_coeff_C, norm_unit_coe_units, ← C_mul, Units.mul_inv, C_1])
 
@@ -367,7 +367,7 @@ theorem is_coprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f)
 
 theorem mem_roots_map [Field k] {f : R →+* k} {x : k} (hp : p ≠ 0) : x ∈ (p.map f).roots ↔ p.eval₂ f x = 0 := by
   rw [mem_roots (show p.map f ≠ 0 from map_ne_zero hp)]
-  dsimp only [is_root]
+  dsimp' only [is_root]
   rw [Polynomial.eval_map]
 
 theorem mem_root_set [Field k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.RootSet k ↔ aeval x p = 0 :=

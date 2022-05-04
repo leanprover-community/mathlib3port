@@ -351,7 +351,7 @@ theorem kreplace_of_forall_not (a : α) (b : β a) {l : List (Sigma β)} (H : �
     kreplace a b l = l :=
   lookmap_of_forall_not _ <| by
     rintro ⟨a', b'⟩ h
-    dsimp
+    dsimp'
     split_ifs
     · subst a'
       exact H _ h
@@ -363,7 +363,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : Nodupkeys 
     kreplace a b l = l := by
   refine' (lookmap_congr _).trans (lookmap_id' (Option.guard fun s => a = s.1) _ _)
   · rintro ⟨a', b'⟩ h'
-    dsimp [Option.guard]
+    dsimp' [Option.guard]
     split_ifs
     · subst a'
       exact ⟨rfl, heq_of_eq <| nd.eq_of_mk_mem h h'⟩
@@ -372,7 +372,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : Nodupkeys 
       
     
   · rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩
-    dsimp [Option.guard]
+    dsimp' [Option.guard]
     split_ifs
     · subst a₁
       rintro ⟨⟩
@@ -384,7 +384,7 @@ theorem kreplace_self {a : α} {b : β a} {l : List (Sigma β)} (nd : Nodupkeys 
 
 theorem keys_kreplace (a : α) (b : β a) : ∀ l : List (Sigma β), (kreplace a b l).keys = l.keys :=
   lookmap_map_eq _ _ <| by
-    rintro ⟨a₁, b₂⟩ ⟨a₂, b₂⟩ <;> dsimp <;> split_ifs <;> simp (config := { contextual := true })[h]
+    rintro ⟨a₁, b₂⟩ ⟨a₂, b₂⟩ <;> dsimp' <;> split_ifs <;> simp (config := { contextual := true })[h]
 
 theorem kreplace_nodupkeys (a : α) (b : β a) {l : List (Sigma β)} : (kreplace a b l).Nodupkeys ↔ l.Nodupkeys := by
   simp [nodupkeys, keys_kreplace]
@@ -624,7 +624,7 @@ theorem kextract_eq_lookup_kerase (a : α) : ∀ l : List (Sigma β), kextract a
   | [] => rfl
   | ⟨a', b⟩ :: l => by
     simp [kextract]
-    dsimp
+    dsimp'
     split_ifs
     · subst a'
       simp [kerase]
@@ -643,7 +643,7 @@ theorem dedupkeys_cons {x : Sigma β} (l : List (Sigma β)) : dedupkeys (x :: l)
   rfl
 
 theorem nodupkeys_dedupkeys (l : List (Sigma β)) : Nodupkeys (dedupkeys l) := by
-  dsimp [dedupkeys]
+  dsimp' [dedupkeys]
   generalize hl : nil = l'
   have : nodupkeys l' := by
     rw [← hl]

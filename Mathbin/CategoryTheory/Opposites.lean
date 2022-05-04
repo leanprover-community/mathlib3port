@@ -55,7 +55,7 @@ variable [Category.{v₁} C]
 
 /-- The opposite category.
 
-See https://stacks.math.columbia.edu/tag/001M.
+See <https://stacks.math.columbia.edu/tag/001M>.
 -/
 instance Category.opposite : Category.{v₁} Cᵒᵖ where
   comp := fun _ _ _ f g => (g.unop ≫ f.unop).op
@@ -452,13 +452,13 @@ protected def op (α : F ≅ G) : G.op ≅ F.op where
   inv := NatTrans.op α.inv
   hom_inv_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← op_comp]
     rw [α.inv_hom_id_app]
     rfl
   inv_hom_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← op_comp]
     rw [α.hom_inv_id_app]
     rfl
@@ -471,13 +471,13 @@ protected def removeOp (α : F.op ≅ G.op) : G ≅ F where
   inv := NatTrans.removeOp α.inv
   hom_inv_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← unop_comp]
     rw [α.inv_hom_id_app]
     rfl
   inv_hom_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← unop_comp]
     rw [α.hom_inv_id_app]
     rfl
@@ -490,13 +490,13 @@ protected def unop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F ≅ G) : G.unop ≅ F.uno
   inv := NatTrans.unop α.inv
   hom_inv_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← unop_comp]
     rw [α.inv_hom_id_app]
     rfl
   inv_hom_id' := by
     ext
-    dsimp
+    dsimp'
     rw [← unop_comp]
     rw [α.hom_inv_id_app]
     rfl
@@ -517,7 +517,7 @@ def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
   counitIso := (NatIso.op e.counitIso).symm
   functor_unit_iso_comp' := fun X => by
     apply Quiver.Hom.unop_inj
-    dsimp
+    dsimp'
     simp
 
 /-- An equivalence between opposite categories gives an equivalence between the original categories.
@@ -530,7 +530,7 @@ def unop (e : Cᵒᵖ ≌ Dᵒᵖ) : C ≌ D where
   counitIso := (NatIso.unop e.counitIso).symm
   functor_unit_iso_comp' := fun X => by
     apply Quiver.Hom.op_inj
-    dsimp
+    dsimp'
     simp
 
 end Equivalenceₓ
@@ -578,7 +578,7 @@ def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ where
     NatIso.ofComponents (fun F => F.unop.opUnopIso.op)
       (by
         intro F G f
-        dsimp [op_unop_iso]
+        dsimp' [op_unop_iso]
         rw
           [show f = f.unop.op by
             simp ,
@@ -600,7 +600,7 @@ def leftOpRightOpEquiv : (Cᵒᵖ ⥤ D)ᵒᵖ ≌ C ⥤ Dᵒᵖ where
     NatIso.ofComponents (fun F => F.unop.rightOpLeftOpIso.op)
       (by
         intro F G η
-        dsimp
+        dsimp'
         rw
           [show η = η.unop.op by
             simp ,

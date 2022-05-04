@@ -127,7 +127,7 @@ theorem swap_prod_mkₓ {a : α} {b : β} : swap (a, b) = (b, a) :=
   rfl
 
 @[simp]
-theorem swap_swap_eq : swap ∘ swap = @id (α × β) :=
+theorem swap_swap_eqₓ : swap ∘ swap = @id (α × β) :=
   funext swap_swap
 
 @[simp]

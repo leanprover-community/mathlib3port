@@ -281,7 +281,7 @@ def chineseRemainder' (h : a ≡ b [MOD gcdₓ n m]) : { k // k ≡ a [MOD n] �
         Int.toNat ((n * c * b + m * d * a) / gcdₓ n m % lcmₓ n m),
         by
         rw [xgcd_val]
-        dsimp [chinese_remainder'._match_1]
+        dsimp' [chinese_remainder'._match_1]
         rw [modeq_iff_dvd, modeq_iff_dvd,
           Int.to_nat_of_nonneg (Int.mod_nonneg _ (Int.coe_nat_ne_zero.2 (lcm_ne_zero hn hm)))]
         have hnonzero : (gcd n m : ℤ) ≠ 0 := by
@@ -322,7 +322,7 @@ def chineseRemainder (co : Coprime n m) (a b : ℕ) : { k // k ≡ a [MOD n] ∧
 
 theorem chinese_remainder'_lt_lcm (h : a ≡ b [MOD gcdₓ n m]) (hn : n ≠ 0) (hm : m ≠ 0) :
     ↑(chineseRemainder' h) < lcmₓ n m := by
-  dsimp only [chinese_remainder']
+  dsimp' only [chinese_remainder']
   rw [dif_neg hn, dif_neg hm, Subtype.coe_mk, xgcd_val, ← Int.to_nat_coe_nat (lcm n m)]
   have lcm_pos := int.coe_nat_pos.mpr (Nat.pos_of_ne_zeroₓ (lcm_ne_zero hn hm))
   exact (Int.to_nat_lt_to_nat lcm_pos).mpr (Int.mod_lt_of_pos _ lcm_pos)

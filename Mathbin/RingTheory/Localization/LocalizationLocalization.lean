@@ -78,7 +78,7 @@ theorem localization_localization_surj [IsLocalization N T] (x : T) :
   -- y = z / t
   rcases IsLocalization.surj M (s : S) with ⟨⟨z', t'⟩, eq₃⟩
   -- s = z' / t'
-  dsimp only  at eq₁ eq₂ eq₃
+  dsimp' only  at eq₁ eq₂ eq₃
   use z * t'
   use z' * t
   -- x = y / s = (z * t') / (z' * t)
@@ -96,7 +96,7 @@ theorem localization_localization_eq_iff_exists [IsLocalization N T] (x y : R) :
   constructor
   · rintro ⟨z, eq₁⟩
     rcases IsLocalization.surj M (z : S) with ⟨⟨z', s⟩, eq₂⟩
-    dsimp only  at eq₂
+    dsimp' only  at eq₂
     obtain ⟨c, eq₃ : x * z' * ↑c = y * z' * ↑c⟩ := (IsLocalization.eq_iff_exists M S).mp _
     swap
     · rw [RingHom.map_mul, RingHom.map_mul, ← eq₂, ← mul_assoc, ← mul_assoc, ← eq₁]
@@ -205,7 +205,7 @@ theorem is_localization_of_submonoid_le (M N : Submonoid R) (h : M ≤ N) [IsLoc
       obtain ⟨⟨y₁, s₁⟩, e₁⟩ := IsLocalization.surj M x₁
       obtain ⟨⟨y₂, s₂⟩, e₂⟩ := IsLocalization.surj M x₂
       refine' Iff.trans _ (Set.exists_image_iff (algebraMap R S) N fun c => x₁ * c = x₂ * c).symm
-      dsimp only  at e₁ e₂⊢
+      dsimp' only  at e₁ e₂⊢
       suffices
         algebraMap R T (y₁ * s₂) = algebraMap R T (y₂ * s₁) ↔
           ∃ a : N, algebraMap R S (a * (y₁ * s₂)) = algebraMap R S (a * (y₂ * s₁))

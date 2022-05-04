@@ -76,10 +76,10 @@ theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
     f = g := by
   cases f <;> cases g
   congr
-  dsimp  at w_base
+  dsimp'  at w_base
   induction w_base
   rfl
-  dsimp  at w_base
+  dsimp'  at w_base
   induction w_base
   simpa using w_fiber
 
@@ -113,7 +113,7 @@ instance : Category (Grothendieck F) where
   comp := fun X Y Z f g => Grothendieck.comp f g
   comp_id' := fun X Y f => by
     ext
-    · dsimp
+    · dsimp'
       -- We need to turn `F.map_id` (which is an equation between functors)
       -- into a natural isomorphism.
       rw [← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber]
@@ -128,7 +128,7 @@ instance : Category (Grothendieck F) where
     swap
     · simp
       
-    · dsimp
+    · dsimp'
       rw [← nat_iso.naturality_2 (eq_to_iso (F.map_comp _ _)) f.fiber]
       simp
       rfl
@@ -150,7 +150,7 @@ theorem congr {X Y : Grothendieck F} {f g : X ⟶ Y} (h : f = g) :
         g.fiber :=
   by
   subst h
-  dsimp
+  dsimp'
   simp
 
 section
@@ -196,7 +196,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
         exact iso.refl _)
       (by
         rintro ⟨⟩ ⟨⟩ ⟨base, ⟨⟨f⟩⟩⟩
-        dsimp  at *
+        dsimp'  at *
         subst f
         ext
         simp )
@@ -207,13 +207,13 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
         exact iso.refl _)
       (by
         rintro ⟨⟩ ⟨⟩ ⟨f, e⟩
-        dsimp  at *
+        dsimp'  at *
         subst e
         ext
         simp )
   functor_unit_iso_comp' := by
     rintro ⟨⟩
-    dsimp
+    dsimp'
     simp
     rfl
 

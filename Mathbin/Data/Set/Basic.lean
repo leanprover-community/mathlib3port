@@ -2607,36 +2607,39 @@ namespace Set
 
 section Inclusion
 
-variable {α : Type _}
+variable {α : Type _} {s t u : Set α}
 
 /-- `inclusion` is the "identity" function between two subsets `s` and `t`, where `s ⊆ t` -/
-def inclusion {s t : Set α} (h : s ⊆ t) : s → t := fun x : s => (⟨x, h x.2⟩ : t)
+def inclusion (h : s ⊆ t) : s → t := fun x : s => (⟨x, h x.2⟩ : t)
 
 @[simp]
-theorem inclusion_self {s : Set α} (x : s) : inclusion Subset.rfl x = x := by
+theorem inclusion_self (x : s) : inclusion Subset.rfl x = x := by
   cases x
   rfl
 
 @[simp]
-theorem inclusion_right {s t : Set α} (h : s ⊆ t) (x : t) (m : (x : α) ∈ s) : inclusion h ⟨x, m⟩ = x := by
+theorem inclusion_mk {h : s ⊆ t} (a : α) (ha : a ∈ s) : inclusion h ⟨a, ha⟩ = ⟨a, h ha⟩ :=
+  rfl
+
+theorem inclusion_right (h : s ⊆ t) (x : t) (m : (x : α) ∈ s) : inclusion h ⟨x, m⟩ = x := by
   cases x
   rfl
 
 @[simp]
-theorem inclusion_inclusion {s t u : Set α} (hst : s ⊆ t) (htu : t ⊆ u) (x : s) :
-    inclusion htu (inclusion hst x) = inclusion (Set.Subset.trans hst htu) x := by
+theorem inclusion_inclusion (hst : s ⊆ t) (htu : t ⊆ u) (x : s) :
+    inclusion htu (inclusion hst x) = inclusion (hst.trans htu) x := by
   cases x
   rfl
 
 @[simp]
-theorem coe_inclusion {s t : Set α} (h : s ⊆ t) (x : s) : (inclusion h x : α) = (x : α) :=
+theorem coe_inclusion (h : s ⊆ t) (x : s) : (inclusion h x : α) = (x : α) :=
   rfl
 
-theorem inclusion_injective {s t : Set α} (h : s ⊆ t) : Function.Injective (inclusion h)
+theorem inclusion_injective (h : s ⊆ t) : Injective (inclusion h)
   | ⟨_, _⟩, ⟨_, _⟩ => Subtype.ext_iff_val.2 ∘ Subtype.ext_iff_val.1
 
 @[simp]
-theorem range_inclusion {s t : Set α} (h : s ⊆ t) : Range (inclusion h) = { x : t | (x : α) ∈ s } := by
+theorem range_inclusion (h : s ⊆ t) : Range (inclusion h) = { x : t | (x : α) ∈ s } := by
   ext ⟨x, hx⟩
   simp [inclusion]
 

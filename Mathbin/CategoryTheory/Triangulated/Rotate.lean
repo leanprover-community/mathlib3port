@@ -109,7 +109,7 @@ def rotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.rotate T₂.
   hom₂ := f.hom₃
   hom₃ := f.hom₁⟦1⟧'
   comm₃' := by
-    dsimp
+    dsimp'
     simp only [rotate_mor₃, comp_neg, neg_comp, ← functor.map_comp, f.comm₁]
 
 /-- Given a triangle morphism of the form:
@@ -142,13 +142,13 @@ def invRotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.invRotate
   hom₂ := f.hom₁
   hom₃ := f.hom₂
   comm₁' := by
-    dsimp [inv_rotate_mor₁]
+    dsimp' [inv_rotate_mor₁]
     simp only [discrete.functor_map_id, id_comp, preadditive.comp_neg, assoc, neg_inj, nat_trans.id_app,
       preadditive.neg_comp]
     rw [← functor.map_comp_assoc, ← f.comm₃, functor.map_comp_assoc, μ_naturality_assoc, nat_trans.naturality,
       functor.id_map]
   comm₃' := by
-    dsimp
+    dsimp'
     simp only [discrete.functor_map_id, id_comp, opaque_eq_to_iso_inv, μ_inv_naturality, category.assoc,
       nat_trans.id_app, unit_of_tensor_iso_unit_inv_app]
     erw [ε_naturality_assoc]
@@ -183,7 +183,7 @@ def toInvRotateRotate (T : Triangle C) : T ⟶ (invRotate C).obj ((rotate C).obj
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
   comm₃' := by
-    dsimp
+    dsimp'
     simp only [ε_app_obj, eq_to_iso.hom, discrete.functor_map_id, id_comp, eq_to_iso.inv, opaque_eq_to_iso_inv,
       category.assoc, obj_μ_inv_app, functor.map_comp, nat_trans.id_app, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
     erw [μ_inv_hom_app_assoc]
@@ -198,15 +198,15 @@ def rotCompInvRotHom : 𝟭 (Triangle C) ⟶ rotate C ⋙ invRotate C where
   naturality' := by
     introv
     ext
-    · dsimp
+    · dsimp'
       simp only [nat_iso.cancel_nat_iso_inv_right_assoc, discrete.functor_map_id, id_comp, opaque_eq_to_iso_inv,
         μ_inv_naturality, assoc, nat_trans.id_app, unit_of_tensor_iso_unit_inv_app]
       erw [ε_naturality]
       
-    · dsimp
+    · dsimp'
       rw [comp_id, id_comp]
       
-    · dsimp
+    · dsimp'
       rw [comp_id, id_comp]
       
 
@@ -217,7 +217,7 @@ def fromInvRotateRotate (T : Triangle C) : (invRotate C).obj ((rotate C).obj T) 
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
   comm₃' := by
-    dsimp
+    dsimp'
     rw [unit_of_tensor_iso_unit_inv_app, ε_app_obj]
     simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, assoc, functor.map_comp, obj_μ_app, obj_ε_inv_app,
       comp_id, μ_inv_hom_app_assoc]
@@ -246,13 +246,13 @@ def fromRotateInvRotate (T : Triangle C) : (rotate C).obj ((invRotate C).obj T) 
   hom₂ := 𝟙 T.obj₂
   hom₃ := (shiftEquiv C 1).counit.app T.obj₃
   comm₂' := by
-    dsimp
+    dsimp'
     rw [unit_of_tensor_iso_unit_inv_app]
     simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, add_neg_equiv_counit_iso_hom, eq_to_hom_refl,
       nat_trans.comp_app, assoc, μ_inv_hom_app_assoc, ε_hom_inv_app]
     exact category.comp_id _
   comm₃' := by
-    dsimp
+    dsimp'
     simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, functor.map_neg, functor.map_comp, obj_μ_app,
       obj_ε_inv_app, comp_id, assoc, μ_naturality_assoc, neg_negₓ, CategoryTheory.Functor.map_id,
       add_neg_equiv_counit_iso_hom, eq_to_hom_refl, nat_trans.comp_app]
@@ -273,7 +273,7 @@ def toRotateInvRotate (T : Triangle C) : T ⟶ (rotate C).obj ((invRotate C).obj
   hom₂ := 𝟙 T.obj₂
   hom₃ := (shiftEquiv C 1).counitInv.app T.obj₃
   comm₃' := by
-    dsimp
+    dsimp'
     rw [CategoryTheory.Functor.map_id]
     simp only [comp_id, add_neg_equiv_counit_iso_inv, eq_to_hom_refl, id_comp, nat_trans.comp_app,
       discrete.functor_map_id, nat_trans.id_app, functor.map_neg, functor.map_comp, obj_μ_app, obj_ε_inv_app, assoc,
@@ -290,13 +290,13 @@ def invRotCompRotInv : 𝟭 (Triangle C) ⟶ invRotate C ⋙ rotate C where
   naturality' := by
     introv
     ext
-    · dsimp
+    · dsimp'
       rw [comp_id, id_comp]
       
-    · dsimp
+    · dsimp'
       rw [comp_id, id_comp]
       
-    · dsimp
+    · dsimp'
       rw [add_neg_equiv_counit_iso_inv, eq_to_hom_refl, id_comp]
       simp only [nat_trans.comp_app, assoc]
       erw [μ_inv_naturality, ε_naturality_assoc]
@@ -324,13 +324,13 @@ def triangleRotation : Equivalenceₓ (Triangle C) (Triangle C) where
   functor_unit_iso_comp' := by
     introv
     ext
-    · dsimp
+    · dsimp'
       rw [comp_id]
       
-    · dsimp
+    · dsimp'
       rw [comp_id]
       
-    · dsimp
+    · dsimp'
       rw [unit_of_tensor_iso_unit_inv_app]
       simp only [discrete.functor_map_id, nat_trans.id_app, id_comp, functor.map_comp, obj_ε_app, obj_μ_inv_app, assoc,
         add_neg_equiv_counit_iso_hom, eq_to_hom_refl, nat_trans.comp_app, ε_inv_app_obj, comp_id, μ_inv_hom_app_assoc]

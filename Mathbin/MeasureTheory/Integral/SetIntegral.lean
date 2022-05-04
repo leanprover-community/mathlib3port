@@ -124,7 +124,7 @@ theorem integral_add_compl (hs : MeasurableSet s) (hfi : Integrable f μ) :
 
 /-- For a function `f` and a measurable set `s`, the integral of `indicator s f`
 over the whole space is equal to `∫ x in s, f x ∂μ` defined as `∫ x, f x ∂(μ.restrict s)`. -/
-theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicator s f x ∂μ) = ∫ x in s, f x ∂μ := by
+theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicatorₓ s f x ∂μ) = ∫ x in s, f x ∂μ := by
   by_cases' hfi : integrable_on f s μ
   swap
   · rwa [integral_undef, integral_undef]
@@ -136,6 +136,11 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicator s f x ∂�
         (integral_congr_ae (indicator_ae_eq_restrict_compl hs))_ = ∫ x in s, f x ∂μ :=
       by
       simp
+
+theorem integral_piecewise [DecidablePred (· ∈ s)] (hs : MeasurableSet s) {f g : α → E} (hf : IntegrableOn f s μ)
+    (hg : IntegrableOn g (sᶜ) μ) : (∫ x, s.piecewise f g x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in sᶜ, g x ∂μ := by
+  rw [← Set.indicator_add_compl_eq_piecewise, integral_add' (hf.indicator hs) (hg.indicator hs.compl),
+    integral_indicator hs, integral_indicator hs.compl]
 
 theorem tendsto_set_integral_of_monotone {ι : Type _} [Encodable ι] [SemilatticeSup ι] {s : ι → Set α} {f : α → E}
     (hsm : ∀ i, MeasurableSet (s i)) (h_mono : Monotone s) (hfi : IntegrableOn f (⋃ n, s n) μ) :
@@ -211,14 +216,14 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : StronglyMeasurable f
     _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ∥f x∥ ∂μ := by
       congr 1
       refine' set_integral_congr h_meas fun x hx => _
-      dsimp only
+      dsimp' only
       rw [Real.norm_eq_abs, abs_eq_self.mpr _]
       exact hx
     _ = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | 0 ≤ f x }ᶜ, f x ∂μ := by
       congr 1
       rw [← integral_neg]
       refine' set_integral_congr h_meas.compl fun x hx => _
-      dsimp only
+      dsimp' only
       rw [Real.norm_eq_abs, abs_eq_neg_self.mpr _]
       rw [Set.mem_compl_iff, Set.nmem_set_of_eq] at hx
       linarith

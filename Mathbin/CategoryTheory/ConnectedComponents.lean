@@ -120,7 +120,7 @@ theorem inclusion_comp_decomposed_to (j : ConnectedComponents J) : inclusion j �
 instance : Full (decomposedTo J) where
   Preimage := by
     rintro ⟨j', X, hX⟩ ⟨k', Y, hY⟩ f
-    dsimp  at f
+    dsimp'  at f
     have : j' = k'
     rw [← hX, ← hY, Quotientₓ.eq']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)

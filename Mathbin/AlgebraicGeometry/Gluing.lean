@@ -107,7 +107,7 @@ def gluedScheme : Scheme := by
   swap
   exact (D.U i).affineCover.map y
   constructor
-  · dsimp
+  · dsimp'
     rw [coe_comp, Set.range_comp]
     refine' Set.mem_image_of_mem _ _
     exact (D.U i).affineCover.Covers y

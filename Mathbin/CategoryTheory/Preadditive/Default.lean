@@ -107,7 +107,7 @@ instance InducedCategory.category : Preadditive.{v} (InducedCategory C F) where
 end InducedCategory
 
 instance (X : C) : AddCommGroupₓ (End X) := by
-  dsimp [End]
+  dsimp' [End]
   infer_instance
 
 instance (X : C) : Ringₓ (End X) :=

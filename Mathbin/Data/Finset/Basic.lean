@@ -1045,25 +1045,31 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
   rw [Finset.insert_eq]
   exact union_of singletons (symm hi)
 
-theorem exists_mem_subset_of_subset_bUnion_of_directed_on {α ι : Type _} {f : ι → Set α} {c : Set ι} {a : ι}
-    (hac : a ∈ c) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i ∈ c, f i) :
-    ∃ i ∈ c, (s : Set α) ⊆ f i := by
+theorem _root_.directed.exists_mem_subset_of_finset_subset_bUnion {α ι : Type _} [hn : Nonempty ι] {f : ι → Set α}
+    (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) : ∃ i, (s : Set α) ⊆ f i := by
   classical
   revert hs
   apply s.induction_on
-  · intros
-    use a, hac
-    simp
+  · refine' fun _ => ⟨hn.some, _⟩
+    simp only [coe_empty, Set.empty_subset]
     
   · intro b t hbt htc hbtc
-    obtain ⟨i : ι, hic : i ∈ c, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
-    obtain ⟨j, hjc, hbj⟩ : ∃ j ∈ c, b ∈ f j := by
+    obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
+    obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by
       simpa [Set.mem_Union₂] using hbtc (t.mem_insert_self b)
-    rcases hc j hjc i hic with ⟨k, hkc, hk, hk'⟩
-    use k, hkc
+    rcases h j i with ⟨k, hk, hk'⟩
+    use k
     rw [coe_insert, Set.insert_subset]
     exact ⟨hk hbj, trans hti hk'⟩
     
+
+theorem _root_.directed_on.exists_mem_subset_of_finset_subset_bUnion {α ι : Type _} {f : ι → Set α} {c : Set ι}
+    (hn : c.Nonempty) (hc : DirectedOn (fun i j => f i ⊆ f j) c) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i ∈ c, f i) :
+    ∃ i ∈ c, (s : Set α) ⊆ f i := by
+  rw [Set.bUnion_eq_Union] at hs
+  have := c.nonempty_coe_sort.2 hn
+  obtain ⟨⟨i, hic⟩, hi⟩ := (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_bUnion hs
+  exact ⟨i, hic, hi⟩
 
 /-! #### inter -/
 
@@ -1552,7 +1558,7 @@ def attach (s : Finset α) : Finset { x // x ∈ s } :=
 
 theorem sizeof_lt_sizeof_of_mem [SizeOf α] {x : α} {s : Finset α} (hx : x ∈ s) : sizeof x < sizeof s := by
   cases s
-  dsimp [sizeof, SizeOf.sizeof, Finset.sizeof]
+  dsimp' [sizeof, SizeOf.sizeof, Finset.sizeof]
   apply lt_add_left
   exact Multiset.sizeof_lt_sizeof_of_mem hx
 
@@ -3176,13 +3182,13 @@ def sigmaEquivOptionOfInhabited (α : Type u) [Inhabited α] [DecidableEq α] : 
   ⟨{ x : α // x ≠ default },
     { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩, invFun := fun o => Option.elim o default coe,
       left_inv := fun x => by
-        dsimp only
+        dsimp' only
         split_ifs <;> simp [*],
       right_inv := by
         rintro (_ | ⟨x, h⟩)
         · simp
           
-        · dsimp only
+        · dsimp' only
           split_ifs with hi
           · simpa [h] using hi
             

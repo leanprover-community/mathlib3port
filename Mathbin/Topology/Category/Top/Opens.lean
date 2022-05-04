@@ -179,7 +179,7 @@ theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) U : (map (f ≫ g)).op.obj U
 theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) : (map f).obj (supr U) = supr ((map f).obj ∘ U) := by
   apply Subtype.eq
   rw [supr_def, supr_def, map_obj]
-  dsimp
+  dsimp'
   rw [Set.preimage_Union]
   rfl
 

@@ -213,6 +213,27 @@ theorem EqOn.congr_strict_anti_on (h : s.EqOn f₁ f₂) : StrictAntiOn f₁ s �
 
 end Order
 
+/-! ### Mono lemmas-/
+
+
+section Mono
+
+variable [Preorderₓ α] [Preorderₓ β]
+
+theorem _root_.monotone_on.mono (h : MonotoneOn f s) (h' : s₂ ⊆ s) : MonotoneOn f s₂ := fun x hx y hy =>
+  h (h' hx) (h' hy)
+
+theorem _root_.antitone_on.mono (h : AntitoneOn f s) (h' : s₂ ⊆ s) : AntitoneOn f s₂ := fun x hx y hy =>
+  h (h' hx) (h' hy)
+
+theorem _root_.strict_mono_on.mono (h : StrictMonoOn f s) (h' : s₂ ⊆ s) : StrictMonoOn f s₂ := fun x hx y hy =>
+  h (h' hx) (h' hy)
+
+theorem _root_.strict_anti_on.mono (h : StrictAntiOn f s) (h' : s₂ ⊆ s) : StrictAntiOn f s₂ := fun x hx y hy =>
+  h (h' hx) (h' hy)
+
+end Mono
+
 /-! ### maps to -/
 
 

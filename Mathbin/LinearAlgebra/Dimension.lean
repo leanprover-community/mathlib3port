@@ -125,7 +125,7 @@ variable {M₁ : Type v} [AddCommGroupₓ M₁] [Module R M₁]
 
 theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : Injective f) :
     Cardinal.lift.{v'} (Module.rank R M) ≤ Cardinal.lift.{v} (Module.rank R M') := by
-  dsimp [Module.rank]
+  dsimp' [Module.rank]
   fapply Cardinal.lift_sup_le_lift_sup'
   · rintro ⟨s, li⟩
     use f '' s
@@ -148,7 +148,7 @@ theorem dim_le {n : ℕ} (H : ∀ s : Finset M, (LinearIndependent R fun i : s =
 
 theorem lift_dim_range_le (f : M →ₗ[R] M') :
     Cardinal.lift.{v} (Module.rank R f.range) ≤ Cardinal.lift.{v'} (Module.rank R M) := by
-  dsimp [Module.rank]
+  dsimp' [Module.rank]
   apply Cardinal.lift_sup_le
   rintro ⟨s, li⟩
   apply le_transₓ
@@ -377,7 +377,7 @@ theorem union_support_maximal_linear_independent_eq_range_basis {ι : Type w} (b
     · erw [Finsupp.congr_fun l₁ a]
       simp only [Finsupp.coe_zero, Pi.zero_apply]
       
-  dsimp [LinearIndependent.Maximal]  at m
+  dsimp' [LinearIndependent.Maximal]  at m
   specialize m (range v') i' r
   exact r'' m
 

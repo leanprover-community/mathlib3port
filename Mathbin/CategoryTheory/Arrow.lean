@@ -98,8 +98,8 @@ theorem w_mk_right {f : Arrow T} {X Y : T} {g : X ⟶ Y} (sq : f ⟶ mk g) : sq.
 theorem is_iso_of_iso_left_of_is_iso_right {f g : Arrow T} (ff : f ⟶ g) [IsIso ff.left] [IsIso ff.right] : IsIso ff :=
   { out :=
       ⟨⟨inv ff.left, inv ff.right⟩, by
-        ext <;> dsimp <;> simp only [is_iso.hom_inv_id], by
-        ext <;> dsimp <;> simp only [is_iso.inv_hom_id]⟩ }
+        ext <;> dsimp' <;> simp only [is_iso.hom_inv_id], by
+        ext <;> dsimp' <;> simp only [is_iso.inv_hom_id]⟩ }
 
 /-- Create an isomorphism between arrows,
 by providing isomorphisms between the domains and codomains,
@@ -305,7 +305,7 @@ def mapArrow (F : C ⥤ D) : Arrow C ⥤ Arrow D where
       w' := by
         have w := f.w
         simp only [id_map] at w
-        dsimp
+        dsimp'
         simp only [← F.map_comp, w] }
 
 end Functor

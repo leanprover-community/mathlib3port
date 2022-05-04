@@ -10,7 +10,7 @@ import Mathbin.CategoryTheory.DiscreteCategory
 # Limits in `C` give colimits in `Cᵒᵖ`.
 
 We also give special cases for (co)products,
-but not yet for pullbacks / pushouts or for (co)equalizers.
+(co)equalizers, and pullbacks / pushouts.
 
 -/
 
@@ -308,6 +308,15 @@ theorem has_finite_limits_opposite [HasFiniteColimits C] : HasFiniteLimits Cᵒ�
   { out := fun J 𝒟 𝒥 => by
       skip
       infer_instance }
+
+theorem has_pullbacks_opposite [HasPushouts C] : HasPullbacks Cᵒᵖ := by
+  have : has_colimits_of_shape walking_cospan.{v₁}ᵒᵖ C :=
+    has_colimits_of_shape_of_equivalence walking_cospan_op_equiv.symm
+  apply has_limits_of_shape_op_of_has_colimits_of_shape
+
+theorem has_pushouts_opposite [HasPullbacks C] : HasPushouts Cᵒᵖ := by
+  have : has_limits_of_shape walking_span.{v₁}ᵒᵖ C := has_limits_of_shape_of_equivalence walking_span_op_equiv.symm
+  apply has_colimits_of_shape_op_of_has_limits_of_shape
 
 end CategoryTheory.Limits
 

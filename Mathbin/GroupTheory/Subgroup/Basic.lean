@@ -280,6 +280,26 @@ def inclusion {H K : S} (h : H ≤ K) : H →* K :=
   MonoidHom.mk' (fun x => ⟨x, h x.Prop⟩) fun ⟨a, ha⟩ ⟨b, hb⟩ => rfl
 
 @[simp, to_additive]
+theorem inclusion_self (x : H) : inclusion le_rfl x = x := by
+  cases x
+  rfl
+
+@[simp, to_additive]
+theorem inclusion_mk {h : H ≤ K} (x : G) (hx : x ∈ H) : inclusion h ⟨x, hx⟩ = ⟨x, h hx⟩ :=
+  rfl
+
+@[to_additive]
+theorem inclusion_right (h : H ≤ K) (x : K) (hx : (x : G) ∈ H) : inclusion h ⟨x, hx⟩ = x := by
+  cases x
+  rfl
+
+@[simp]
+theorem inclusion_inclusion {L : S} (hHK : H ≤ K) (hKL : K ≤ L) (x : H) :
+    inclusion hKL (inclusion hHK x) = inclusion (hHK.trans hKL) x := by
+  cases x
+  rfl
+
+@[simp, to_additive]
 theorem coe_inclusion {H K : S} {h : H ≤ K} (a : H) : (inclusion h a : G) = a := by
   cases a
   simp only [inclusion, SetLike.coe_mk, MonoidHom.mk'_apply]
@@ -1626,9 +1646,10 @@ end Subgroup
 
 namespace AddSubgroup
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`conj_mem] []
 /-- An add_subgroup is normal if whenever `n ∈ H`, then `g + n - g ∈ H` for every `g : G` -/
 structure Normal (H : AddSubgroup A) : Prop where
-  conj_mem {} : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H
+  conj_mem : ∀ n, n ∈ H → ∀ g : A, g + n + -g ∈ H
 
 attribute [to_additive AddSubgroup.Normal] Subgroup.Normal
 
@@ -2603,7 +2624,7 @@ def liftOfRightInverseAux (hf : Function.RightInverse f_inv f) (g : G₁ →* G�
 @[simp, to_additive]
 theorem lift_of_right_inverse_aux_comp_apply (hf : Function.RightInverse f_inv f) (g : G₁ →* G₃) (hg : f.ker ≤ g.ker)
     (x : G₁) : (f.liftOfRightInverseAux f_inv hf g hg) (f x) = g x := by
-  dsimp [lift_of_right_inverse_aux]
+  dsimp' [lift_of_right_inverse_aux]
   rw [← mul_inv_eq_one, ← g.map_inv, ← g.map_mul, ← g.mem_ker]
   apply hg
   rw [f.mem_ker, f.map_mul, f.map_inv, mul_inv_eq_one]
@@ -2983,7 +3004,7 @@ theorem mul_normal (H N : Subgroup G) [N.Normal] : (↑(H⊔N) : Set G) = H * N 
     (show H⊔N ≤ mulNormalAux H N by
       rw [sup_eq_closure]
       apply Inf_le _
-      dsimp
+      dsimp'
       rfl)
     ((sup_eq_closure H N).symm ▸ subset_closure)
 
@@ -3008,7 +3029,7 @@ theorem normal_mul (N H : Subgroup G) [N.Normal] : (↑(N⊔H) : Set G) = N * H 
     (show N⊔H ≤ normalMulAux N H by
       rw [sup_eq_closure]
       apply Inf_le _
-      dsimp
+      dsimp'
       rfl)
     ((sup_eq_closure N H).symm ▸ subset_closure)
 

@@ -425,7 +425,7 @@ theorem forall_mem_pw_filter (neg_trans : ∀ {x y z}, R x z → R x y ∨ R y z
     · exact fun _ _ => False.elim
       
     simp only [forall_mem_cons]
-    by_cases' ∀, ∀ y ∈ pw_filter R l, ∀, R x y <;> dsimp  at h
+    by_cases' ∀, ∀ y ∈ pw_filter R l, ∀, R x y <;> dsimp'  at h
     · simp only [pw_filter_cons_of_pos h, forall_mem_cons, and_imp]
       exact fun r H => ⟨r, IH H⟩
       

@@ -650,7 +650,7 @@ def reflection : E ≃ₗᵢ[𝕜] E :=
       · rw [LinearEquiv.coe_mk, reflectionLinearEquiv, LinearEquiv.to_fun_eq_coe, LinearEquiv.coe_of_involutive,
           LinearMap.sub_apply, LinearMap.id_apply, bit0, LinearMap.add_apply, LinearMap.comp_apply,
           Submodule.subtype_apply, ContinuousLinearMap.to_linear_map_eq_coe, ContinuousLinearMap.coe_coe]
-        dsimp [w, v]
+        dsimp' [w, v]
         abel
         
       · simp only [add_sub_cancel'_right, eq_self_iff_true]

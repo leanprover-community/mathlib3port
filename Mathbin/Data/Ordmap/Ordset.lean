@@ -299,7 +299,7 @@ theorem dual_balance_l (l : Ordnode α) (x : α) (r : Ordnode α) : dual (balanc
       
     cases' ll with lls lll llx llr <;>
       cases' lr with lrs lrl lrx lrr <;>
-        dsimp only [dual] <;>
+        dsimp' only [dual] <;>
           try
             rfl
     split_ifs <;>
@@ -309,7 +309,7 @@ theorem dual_balance_l (l : Ordnode α) (x : α) (r : Ordnode α) : dual (balanc
   · cases' l with ls ll lx lr
     · rfl
       
-    dsimp only [dual]
+    dsimp' only [dual]
     split_ifs
     swap
     · simp [add_commₓ]
@@ -318,7 +318,7 @@ theorem dual_balance_l (l : Ordnode α) (x : α) (r : Ordnode α) : dual (balanc
       cases' lr with lrs lrl lrx lrr <;>
         try
           rfl
-    dsimp only [dual]
+    dsimp' only [dual]
     split_ifs <;> simp [h, add_commₓ]
     
 
@@ -336,10 +336,10 @@ theorem Sized.node4_l {l x m y r} (hl : @Sized α l) (hm : Sized m) (hr : Sized 
   cases m <;> [exact (hl.node' hm).node' hr, exact (hl.node' hm.2.1).node' (hm.2.2.node' hr)]
 
 theorem node3_l_size {l x m y r} : size (@node3L α l x m y r) = size l + size m + size r + 2 := by
-  dsimp [node3_l, node', size] <;> rw [add_right_commₓ _ 1]
+  dsimp' [node3_l, node', size] <;> rw [add_right_commₓ _ 1]
 
 theorem node3_r_size {l x m y r} : size (@node3R α l x m y r) = size l + size m + size r + 2 := by
-  dsimp [node3_r, node', size] <;> rw [← add_assocₓ, ← add_assocₓ]
+  dsimp' [node3_r, node', size] <;> rw [← add_assocₓ, ← add_assocₓ]
 
 theorem node4_l_size {l x m y r} (hm : Sized m) : size (@node4L α l x m y r) = size l + size m + size r + 2 := by
   cases m <;>
@@ -603,7 +603,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
     · rfl
       
     · rw [sr.eq_node'] at hr⊢
-      cases' rl with rls rll rlx rlr <;> cases' rr with rrs rrl rrx rrr <;> dsimp [balance, balance']
+      cases' rl with rls rll rlx rlr <;> cases' rr with rrs rrl rrx rrr <;> dsimp' [balance, balance']
       · rfl
         
       · have : size rrl = 0 ∧ size rrr = 0 := by
@@ -650,7 +650,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
     
   · cases' r with rs rl rx rr
     · rw [sl.eq_node'] at hl⊢
-      cases' ll with lls lll llx llr <;> cases' lr with lrs lrl lrx lrr <;> dsimp [balance, balance']
+      cases' ll with lls lll llx llr <;> cases' lr with lrs lrl lrx lrr <;> dsimp' [balance, balance']
       · rfl
         
       · have : size lrl = 0 ∧ size lrr = 0 := by
@@ -717,7 +717,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
                 (by
                   decide)
             
-          dsimp [rotate_l]
+          dsimp' [rotate_l]
           split_ifs
           · simp [node3_l, node', sr.1, add_commₓ, add_left_commₓ]
             
@@ -740,7 +740,7 @@ theorem balance_eq_balance' {l x r} (hl : Balanced l) (hr : Balanced r) (sl : Si
                 (by
                   decide)
             
-          dsimp [rotate_r]
+          dsimp' [rotate_r]
           split_ifs
           · simp [node3_r, node', sl.1, add_commₓ, add_left_commₓ]
             
@@ -811,7 +811,7 @@ theorem Raised.add_right k {n m} (H : Raised n m) : Raised (n + k) (m + k) := by
 
 theorem Raised.right {l x₁ x₂ r₁ r₂} (H : Raised (size r₁) (size r₂)) :
     Raised (size (@node' α l x₁ r₁)) (size (@node' α l x₂ r₂)) := by
-  dsimp [node', size]
+  dsimp' [node', size]
   generalize size r₂ = m  at H⊢
   rcases H with (rfl | rfl)
   · exact Or.inl rfl
@@ -1492,7 +1492,7 @@ theorem Valid'.glue_aux {l r o₁ o₂} (hl : Valid' o₁ l o₂) (hr : Valid' o
   cases' r with rs rl rx rr
   · exact ⟨hl, rfl⟩
     
-  dsimp [glue]
+  dsimp' [glue]
   split_ifs
   · rw [split_max_eq, glue]
     cases' valid'.erase_max_aux hl with v e

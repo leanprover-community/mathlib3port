@@ -161,7 +161,7 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
     rintro (k | k) <;> rfl
   map_mul' := by
     rintro (k | k) (l | l) <;>
-      · dsimp
+      · dsimp'
         simp
         
 

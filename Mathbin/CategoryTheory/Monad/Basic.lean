@@ -16,6 +16,8 @@ universe v₁ u₁
 -- morphism levels before object levels. See note [category_theory universes].
 variable (C : Type u₁) [Category.{v₁} C]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`η'] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`μ'] []
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -23,8 +25,8 @@ variable (C : Type u₁) [Category.{v₁} C]
 - Tη_X ≫ μ_X = 1_X (right unit)
 -/
 structure Monad extends C ⥤ C where
-  η' {} : 𝟭 _ ⟶ to_functor
-  μ' {} : to_functor ⋙ to_functor ⟶ to_functor
+  η' : 𝟭 _ ⟶ to_functor
+  μ' : to_functor ⋙ to_functor ⟶ to_functor
   assoc' : ∀ X, to_functor.map (NatTrans.app μ' X) ≫ μ'.app _ = μ'.app _ ≫ μ'.app _ := by
     run_tac
       obviously
@@ -35,6 +37,8 @@ structure Monad extends C ⥤ C where
     run_tac
       obviously
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`ε'] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`δ'] []
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -42,8 +46,8 @@ structure Monad extends C ⥤ C where
 - δ_X ≫ G ε_X = 1_X (right counit)
 -/
 structure Comonad extends C ⥤ C where
-  ε' {} : to_functor ⟶ 𝟭 _
-  δ' {} : to_functor ⟶ to_functor ⋙ to_functor
+  ε' : to_functor ⟶ 𝟭 _
+  δ' : to_functor ⟶ to_functor ⋙ to_functor
   coassoc' : ∀ X, NatTrans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ := by
     run_tac
       obviously

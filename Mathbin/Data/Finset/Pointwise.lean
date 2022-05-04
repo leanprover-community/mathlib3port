@@ -3,6 +3,7 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 -/
+import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Finset.Preimage
 import Mathbin.Data.Set.Pointwise
 
@@ -194,7 +195,7 @@ variable [DecidableEq α] [Mul α] {s s₁ s₂ t t₁ t₂ u : Finset α} {a b 
 /-- The pointwise product of two finsets `s` and `t`: `s * t = {x * y | x ∈ s, y ∈ t}`. -/
 @[to_additive "The pointwise sum of two finsets `s` and `t`: `s + t = {x + y | x ∈ s, y ∈ t}`."]
 protected def hasMul : Mul (Finset α) :=
-  ⟨fun s t => (s.product t).Image fun p : α × α => p.1 * p.2⟩
+  ⟨image₂ (· * ·)⟩
 
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
@@ -207,73 +208,61 @@ theorem image_mul_prod : ((s.product t).Image fun x : α × α => x.fst * x.snd)
   rfl
 
 @[to_additive]
-theorem mem_mul {x : α} : x ∈ s * t ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ y * z = x := by
-  simp only [Finset.mul_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
+theorem mem_mul {x : α} : x ∈ s * t ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ y * z = x :=
+  mem_image₂
 
 @[simp, norm_cast, to_additive]
 theorem coe_mul (s t : Finset α) : (↑(s * t) : Set α) = ↑s * ↑t :=
-  Set.ext fun _ => by
-    simp only [mem_mul, Set.mem_mul, mem_coe]
+  coe_image₂ _ _ _
 
 @[to_additive]
-theorem mul_mem_mul (ha : a ∈ s) (hb : b ∈ t) : a * b ∈ s * t :=
-  mem_mul.2 ⟨a, b, ha, hb, rfl⟩
+theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
+  mem_image₂_of_mem
 
 @[to_additive]
 theorem mul_card_le : (s * t).card ≤ s.card * t.card :=
-  card_image_le.trans (card_product _ _).le
+  card_image₂_le _ _ _
 
 @[simp, to_additive]
 theorem empty_mul (s : Finset α) : ∅ * s = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_mul]
+  image₂_empty_left
 
 @[simp, to_additive]
 theorem mul_empty (s : Finset α) : s * ∅ = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_mul]
+  image₂_empty_right
 
 @[simp, to_additive]
 theorem mul_nonempty_iff (s t : Finset α) : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
-  (Nonempty.image_iff _).trans nonempty_product
+  image₂_nonempty_iff
+
+@[to_additive]
+theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
+  nonempty.image₂
 
 @[to_additive, mono]
-theorem mul_subset_mul (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ * t₁ ⊆ s₂ * t₂ :=
-  image_subset_image <| product_subset_product hs ht
+theorem mul_subset_mul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ * t₁ ⊆ s₂ * t₂ :=
+  image₂_subset
 
 attribute [mono] add_subset_add
 
 @[simp, to_additive]
-theorem mul_singleton (a : α) : s * {a} = s.Image (· * a) := by
-  rw [mul_def, product_singleton, map_eq_image, image_image]
-  rfl
+theorem mul_singleton (a : α) : s * {a} = s.Image (· * a) :=
+  image₂_singleton_right
 
 @[simp, to_additive]
-theorem singleton_mul (a : α) : {a} * s = s.Image ((· * ·) a) := by
-  rw [mul_def, singleton_product, map_eq_image, image_image]
-  rfl
+theorem singleton_mul (a : α) : {a} * s = s.Image ((· * ·) a) :=
+  image₂_singleton_left
 
 @[simp, to_additive]
-theorem singleton_mul_singleton (a b : α) : ({a} : Finset α) * {b} = {a * b} := by
-  rw [mul_def, singleton_product_singleton, image_singleton]
+theorem singleton_mul_singleton (a b : α) : ({a} : Finset α) * {b} = {a * b} :=
+  image₂_singleton
 
 /-- If a finset `u` is contained in the product of two sets `s * t`, we can find two finsets `s'`,
 `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' * t'`. -/
 @[to_additive
       "If a finset `u` is contained in the sum of two sets `s + t`, we can find two finsets\n`s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' + t'`."]
-theorem subset_mul {s t : Set α} (f : ↑u ⊆ s * t) : ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' * t' := by
-  apply Finset.induction_on' u
-  · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
-    
-  rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
-  obtain ⟨x, y, hx, hy, ha⟩ := f ha
-  use insert x s', insert y t'
-  simp_rw [coe_insert, Set.insert_subset]
-  exact
-    ⟨⟨hx, hs⟩, ⟨hy, hs'⟩,
-      insert_subset.2
-        ⟨mem_mul.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩,
-          h.trans <| mul_subset_mul (subset_insert _ _) <| subset_insert _ _⟩⟩
+theorem subset_mul {s t : Set α} : ↑u ⊆ s * t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' * t' :=
+  subset_image₂
 
 end Mul
 
@@ -291,11 +280,11 @@ theorem zero_mul_subset (s : Finset α) : 0 * s ⊆ 0 := by
 
 theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
   s.mul_zero_subset.antisymm <| by
-    simpa [Finset.mem_mul] using hs
+    simpa [mem_mul] using hs
 
 theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
   s.zero_mul_subset.antisymm <| by
-    simpa [Finset.mem_mul] using hs
+    simpa [mem_mul] using hs
 
 end MulZeroClassₓ
 
@@ -385,73 +374,61 @@ theorem image_div_prod : ((s.product t).Image fun x : α × α => x.fst / x.snd)
   rfl
 
 @[to_additive]
-theorem mem_div {x : α} : x ∈ s / t ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ y / z = x := by
-  simp only [Finset.div_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
+theorem mem_div : a ∈ s / t ↔ ∃ b c, b ∈ s ∧ c ∈ t ∧ b / c = a :=
+  mem_image₂
 
 @[simp, norm_cast, to_additive]
 theorem coe_div (s t : Finset α) : (↑(s / t) : Set α) = ↑s / ↑t :=
-  Set.ext fun _ => by
-    simp only [mem_div, Set.mem_div, mem_coe]
+  coe_image₂ _ _ _
 
 @[to_additive]
-theorem div_mem_div (ha : a ∈ s) (hb : b ∈ t) : a / b ∈ s / t :=
-  mem_div.2 ⟨a, b, ha, hb, rfl⟩
+theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
+  mem_image₂_of_mem
 
 @[to_additive]
 theorem div_card_le : (s / t).card ≤ s.card * t.card :=
-  card_image_le.trans (card_product _ _).le
+  card_image₂_le _ _ _
 
 @[simp, to_additive]
 theorem empty_div (s : Finset α) : ∅ / s = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_div]
+  image₂_empty_left
 
 @[simp, to_additive]
 theorem div_empty (s : Finset α) : s / ∅ = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_div]
+  image₂_empty_right
 
 @[simp, to_additive]
 theorem div_nonempty_iff (s t : Finset α) : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
-  (Nonempty.image_iff _).trans nonempty_product
+  image₂_nonempty_iff
+
+@[to_additive]
+theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
+  nonempty.image₂
 
 @[to_additive, mono]
-theorem div_subset_div (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ / t₁ ⊆ s₂ / t₂ :=
-  image_subset_image <| product_subset_product hs ht
+theorem div_subset_div : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ / t₁ ⊆ s₂ / t₂ :=
+  image₂_subset
 
 attribute [mono] add_subset_add
 
 @[simp, to_additive]
-theorem div_singleton (a : α) : s / {a} = s.Image (· / a) := by
-  rw [div_def, product_singleton, map_eq_image, image_image]
-  rfl
+theorem div_singleton (a : α) : s / {a} = s.Image (· / a) :=
+  image₂_singleton_right
 
 @[simp, to_additive]
-theorem singleton_div (a : α) : {a} / s = s.Image ((· / ·) a) := by
-  rw [div_def, singleton_product, map_eq_image, image_image]
-  rfl
+theorem singleton_div (a : α) : {a} / s = s.Image ((· / ·) a) :=
+  image₂_singleton_left
 
 @[simp, to_additive]
-theorem singleton_div_singleton (a b : α) : ({a} : Finset α) / {b} = {a / b} := by
-  rw [div_def, singleton_product_singleton, image_singleton]
+theorem singleton_div_singleton (a b : α) : ({a} : Finset α) / {b} = {a / b} :=
+  image₂_singleton
 
 /-- If a finset `u` is contained in the product of two sets `s / t`, we can find two finsets `s'`,
 `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' / t'`. -/
 @[to_additive
       "If a finset `u` is contained in the sum of two sets `s - t`, we can find two finsets\n`s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' - t'`."]
-theorem subset_div {s t : Set α} (f : ↑u ⊆ s / t) : ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' / t' := by
-  apply Finset.induction_on' u
-  · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
-    
-  rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
-  obtain ⟨x, y, hx, hy, ha⟩ := f ha
-  use insert x s', insert y t'
-  simp_rw [coe_insert, Set.insert_subset]
-  exact
-    ⟨⟨hx, hs⟩, ⟨hy, hs'⟩,
-      insert_subset.2
-        ⟨mem_div.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩,
-          h.trans <| div_subset_div (subset_insert _ _) <| subset_insert _ _⟩⟩
+theorem subset_div {s t : Set α} : ↑u ⊆ s / t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' / t' :=
+  subset_image₂
 
 end Div
 
@@ -469,11 +446,11 @@ theorem zero_div_subset (s : Finset α) : 0 / s ⊆ 0 := by
 
 theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
   s.div_zero_subset.antisymm <| by
-    simpa [Finset.mem_div] using hs
+    simpa [mem_div] using hs
 
 theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
   s.zero_div_subset.antisymm <| by
-    simpa [Finset.mem_div] using hs
+    simpa [mem_div] using hs
 
 end GroupWithZeroₓ
 
@@ -588,7 +565,7 @@ variable [DecidableEq β] [HasScalar α β] {s s₁ s₂ : Finset α} {t t₁ t�
 /-- The pointwise product of two finsets `s` and `t`: `s • t = {x • y | x ∈ s, y ∈ t}`. -/
 @[to_additive HasVadd "The pointwise sum of two finsets `s` and\n`t`: `s +ᵥ t = {x +ᵥ y | x ∈ s, y ∈ t}`."]
 protected def hasScalar : HasScalar (Finset α) (Finset β) :=
-  ⟨fun s t => (s.product t).Image fun p : α × β => p.1 • p.2⟩
+  ⟨image₂ (· • ·)⟩
 
 localized [Pointwise] attribute [instance] Finset.hasScalar Finset.hasVadd
 
@@ -601,79 +578,62 @@ theorem image_smul_product : ((s.product t).Image fun x : α × β => x.fst • 
   rfl
 
 @[to_additive]
-theorem mem_smul {x : β} : x ∈ s • t ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ y • z = x := by
-  simp only [Finset.smul_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
+theorem mem_smul {x : β} : x ∈ s • t ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ y • z = x :=
+  mem_image₂
 
 @[simp, norm_cast, to_additive]
 theorem coe_smul (s : Finset α) (t : Finset β) : (↑(s • t) : Set β) = (s : Set α) • t :=
-  Set.ext fun _ => by
-    simp only [mem_smul, Set.mem_smul, mem_coe]
+  coe_image₂ _ _ _
 
 @[to_additive]
-theorem smul_mem_smul (ha : a ∈ s) (hb : b ∈ t) : a • b ∈ s • t :=
-  mem_smul.2 ⟨a, b, ha, hb, rfl⟩
+theorem smul_mem_smul : a ∈ s → b ∈ t → a • b ∈ s • t :=
+  mem_image₂_of_mem
 
 @[to_additive]
 theorem smul_card_le : (s • t).card ≤ s.card • t.card :=
-  card_image_le.trans (card_product _ _).le
+  card_image₂_le _ _ _
 
 @[simp, to_additive]
 theorem empty_smul (t : Finset β) : (∅ : Finset α) • t = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_smul]
+  image₂_empty_left
 
 @[simp, to_additive]
 theorem smul_empty (s : Finset α) : s • (∅ : Finset β) = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_smul]
+  image₂_empty_right
 
 @[simp, to_additive]
 theorem smul_nonempty_iff : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
-  (Nonempty.image_iff _).trans nonempty_product
+  image₂_nonempty_iff
 
 @[to_additive]
-theorem Nonempty.smul (hs : s.Nonempty) (ht : t.Nonempty) : (s • t).Nonempty :=
-  smul_nonempty_iff.2 ⟨hs, ht⟩
+theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
+  nonempty.image₂
 
 @[to_additive, mono]
-theorem smul_subset_smul (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ • t₁ ⊆ s₂ • t₂ :=
-  image_subset_image <| product_subset_product hs ht
+theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
+  image₂_subset
 
 attribute [mono] add_subset_add
 
 @[simp, to_additive]
-theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.Image (· • b) := by
-  classical
-  rw [smul_def, product_singleton, map_eq_image, image_image]
-  rfl
+theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.Image (· • b) :=
+  image₂_singleton_right
 
 @[simp, to_additive]
-theorem singleton_smul (a : α) : ({a} : Finset α) • t = t.Image ((· • ·) a) := by
-  classical
-  rw [smul_def, singleton_product, map_eq_image, image_image]
-  rfl
+theorem singleton_smul (a : α) : ({a} : Finset α) • t = t.Image ((· • ·) a) :=
+  image₂_singleton_left
 
 @[simp, to_additive]
-theorem singleton_smul_singleton (a : α) (b : β) : ({a} : Finset α) • ({b} : Finset β) = {a • b} := by
-  rw [smul_def, singleton_product_singleton, image_singleton]
+theorem singleton_smul_singleton (a : α) (b : β) : ({a} : Finset α) • ({b} : Finset β) = {a • b} :=
+  image₂_singleton
 
 /-- If a finset `u` is contained in the scalar product of two sets `s • t`, we can find two finsets
 `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' • t'`. -/
 @[to_additive
       "If a finset `u` is contained in the scalar sum of two sets `s +ᵥ t`, we can find two\nfinsets `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' +ᵥ t'`."]
-theorem subset_smul {s : Set α} {t : Set β} (f : ↑u ⊆ s • t) :
-    ∃ (s' : Finset α)(t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' • t' := by
-  apply Finset.induction_on' u
-  · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
-    
-  rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
-  obtain ⟨x, y, hx, hy, ha⟩ := f ha
-  classical
-  use insert x s', insert y t'
-  simp_rw [coe_insert, Set.insert_subset]
-  refine' ⟨⟨hx, hs⟩, ⟨hy, hs'⟩, _⟩
-  convert insert_subset.2 ⟨mem_smul.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩, h.trans <| _⟩
-  convert smul_subset_smul (subset_insert _ _) (subset_insert _ _)
+theorem subset_smul {s : Set α} {t : Set β} :
+    ↑u ⊆ s • t → ∃ (s' : Finset α)(t' : Finset β), ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' • t' :=
+  subset_image₂
 
 end HasScalar
 
@@ -688,82 +648,65 @@ include α
 
 /-- The pointwise product of two finsets `s` and `t`: `s -ᵥ t = {x -ᵥ y | x ∈ s, y ∈ t}`. -/
 protected def hasVsub : HasVsub (Finset α) (Finset β) :=
-  ⟨fun s t => (s.product t).Image fun p : β × β => p.1 -ᵥ p.2⟩
+  ⟨image₂ (· -ᵥ ·)⟩
 
 localized [Pointwise] attribute [instance] Finset.hasVsub
 
-theorem vsub_def : s -ᵥ t = (s.product t).Image fun p : β × β => p.1 -ᵥ p.2 :=
+theorem vsub_def : s -ᵥ t = image₂ (· -ᵥ ·) s t :=
   rfl
 
-theorem image_vsub_product : ((s.product t).Image fun x : β × β => x.fst -ᵥ x.snd) = s -ᵥ t :=
+@[simp]
+theorem image_vsub_product : image₂ (· -ᵥ ·) s t = s -ᵥ t :=
   rfl
 
-theorem mem_vsub : a ∈ s -ᵥ t ↔ ∃ b c, b ∈ s ∧ c ∈ t ∧ b -ᵥ c = a := by
-  simp only [Finset.vsub_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
+theorem mem_vsub : a ∈ s -ᵥ t ↔ ∃ b c, b ∈ s ∧ c ∈ t ∧ b -ᵥ c = a :=
+  mem_image₂
 
 @[simp, norm_cast]
 theorem coe_vsub (s t : Finset β) : (↑(s -ᵥ t) : Set α) = (s : Set β) -ᵥ t :=
-  Set.ext fun _ => by
-    simp only [mem_vsub, Set.mem_vsub, mem_coe]
+  coe_image₂ _ _ _
 
-theorem vsub_mem_vsub (hb : b ∈ s) (hc : c ∈ t) : b -ᵥ c ∈ s -ᵥ t :=
-  mem_vsub.2 ⟨b, c, hb, hc, rfl⟩
+theorem vsub_mem_vsub : b ∈ s → c ∈ t → b -ᵥ c ∈ s -ᵥ t :=
+  mem_image₂_of_mem
 
 theorem vsub_card_le : (s -ᵥ t : Finset α).card ≤ s.card * t.card :=
-  card_image_le.trans (card_product _ _).le
+  card_image₂_le _ _ _
 
 @[simp]
 theorem empty_vsub (t : Finset β) : (∅ : Finset β) -ᵥ t = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_vsub]
+  image₂_empty_left
 
 @[simp]
 theorem vsub_empty (s : Finset β) : s -ᵥ (∅ : Finset β) = ∅ :=
-  eq_empty_of_forall_not_mem <| by
-    simp [mem_vsub]
+  image₂_empty_right
 
 @[simp]
 theorem vsub_nonempty_iff : (s -ᵥ t : Finset α).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
-  (Nonempty.image_iff _).trans nonempty_product
+  image₂_nonempty_iff
 
-theorem Nonempty.vsub (hs : s.Nonempty) (ht : t.Nonempty) : (s -ᵥ t : Finset α).Nonempty :=
-  vsub_nonempty_iff.2 ⟨hs, ht⟩
+theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Finset α).Nonempty :=
+  nonempty.image₂
 
 @[mono]
-theorem vsub_subset_vsub (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
-  image_subset_image <| product_subset_product hs ht
+theorem vsub_subset_vsub : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
+  image₂_subset
 
 @[simp]
-theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.Image (· -ᵥ b) := by
-  classical
-  rw [vsub_def, product_singleton, map_eq_image, image_image]
-  rfl
+theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.Image (· -ᵥ b) :=
+  image₂_singleton_right
 
 @[simp]
-theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.Image ((· -ᵥ ·) a) := by
-  classical
-  rw [vsub_def, singleton_product, map_eq_image, image_image]
-  rfl
+theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.Image ((· -ᵥ ·) a) :=
+  image₂_singleton_left
 
 @[simp]
-theorem singleton_vsub_singleton (a b : β) : ({a} : Finset β) -ᵥ {b} = {a -ᵥ b} := by
-  rw [vsub_def, singleton_product_singleton, image_singleton]
+theorem singleton_vsub_singleton (a b : β) : ({a} : Finset β) -ᵥ {b} = {a -ᵥ b} :=
+  image₂_singleton
 
 /-- If a finset `u` is contained in the pointwise subtraction of two sets `s -ᵥ t`, we can find two
 finsets `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' -ᵥ t'`. -/
-theorem subset_vsub {s t : Set β} {u : Finset α} (f : ↑u ⊆ s -ᵥ t) :
-    ∃ s' t' : Finset β, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' -ᵥ t' := by
-  apply Finset.induction_on' u
-  · exact ⟨∅, ∅, Set.empty_subset _, Set.empty_subset _, empty_subset _⟩
-    
-  rintro a u ha _ _ ⟨s', t', hs, hs', h⟩
-  obtain ⟨x, y, hx, hy, ha⟩ := f ha
-  classical
-  use insert x s', insert y t'
-  simp_rw [coe_insert, Set.insert_subset]
-  refine' ⟨⟨hx, hs⟩, ⟨hy, hs'⟩, _⟩
-  convert insert_subset.2 ⟨mem_vsub.2 ⟨x, y, mem_insert_self _ _, mem_insert_self _ _, ha⟩, h.trans <| _⟩
-  convert vsub_subset_vsub (subset_insert _ _) (subset_insert _ _)
+theorem subset_vsub {s t : Set β} {u : Finset α} : ↑u ⊆ s -ᵥ t → ∃ s' t' : Finset β, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' -ᵥ t' :=
+  subset_image₂
 
 end HasVsub
 
@@ -800,8 +743,8 @@ theorem coe_smul_finset (s : Finset β) : (↑(a • s) : Set β) = a • s :=
   coe_image
 
 @[to_additive]
-theorem smul_finset_mem_smul_finset (hb : b ∈ s) : a • b ∈ a • s :=
-  mem_image_of_mem _ hb
+theorem smul_finset_mem_smul_finset : b ∈ s → a • b ∈ a • s :=
+  mem_image_of_mem _
 
 @[to_additive]
 theorem smul_finset_card_le : (a • s).card ≤ s.card :=

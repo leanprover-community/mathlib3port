@@ -601,7 +601,7 @@ theorem restrict_of_not_measurable {f : α →ₛ β} {s : Set α} (hs : ¬Measu
   dif_neg hs
 
 @[simp]
-theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) : ⇑(restrict f s) = indicator s f := by
+theorem coe_restrict (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) : ⇑(restrict f s) = indicatorₓ s f := by
   rw [restrict, dif_pos hs]
   rfl
 
@@ -629,7 +629,7 @@ theorem map_coe_nnreal_restrict (f : α →ₛ ℝ≥0 ) (s : Set α) :
     (f.restrict s).map (coe : ℝ≥0 → ℝ) = (f.map coe).restrict s :=
   map_restrict_of_zero Nnreal.coe_zero _ _
 
-theorem restrict_apply (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) a : restrict f s a = indicator s f a := by
+theorem restrict_apply (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) a : restrict f s a = indicatorₓ s f a := by
   simp only [f.coe_restrict hs]
 
 theorem restrict_preimage (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) {t : Set β} (ht : (0 : β) ∉ t) :
@@ -676,7 +676,7 @@ def approx (i : ℕ → β) (f : α → β) (n : ℕ) : α →ₛ β :=
 theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableSpace β] [OpensMeasurableSpace β]
     {i : ℕ → β} {f : α → β} {n : ℕ} (a : α) (hf : Measurable f) :
     (approx i f n : α →ₛ β) a = (Finset.range n).sup fun k => if i k ≤ f a then i k else 0 := by
-  dsimp only [approx]
+  dsimp' only [approx]
   rw [finset_sup_apply]
   congr
   funext k
@@ -1702,7 +1702,7 @@ theorem set_lintegral_eq_const {f : α → ℝ≥0∞} (hf : Measurable f) (r : 
     (∫⁻ x in { x | f x = r }, f x ∂μ) = r * μ { x | f x = r } := by
   have : ∀ᵐ x ∂μ, x ∈ { x | f x = r } → f x = r := ae_of_all μ fun _ hx => hx
   rw [set_lintegral_congr_fun _ this]
-  dsimp
+  dsimp'
   rw [lintegral_const, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
   exact hf (measurable_set_singleton r)
 
@@ -2443,7 +2443,7 @@ a simple function with a multiple of a characteristic function and that the inte
 of their images is a subset of `{0}`. -/
 @[elab_as_eliminator]
 theorem Measurable.ennreal_induction {α} [MeasurableSpace α] {P : (α → ℝ≥0∞) → Prop}
-    (h_ind : ∀ c : ℝ≥0∞ ⦃s⦄, MeasurableSet s → P (indicator s fun _ => c))
+    (h_ind : ∀ c : ℝ≥0∞ ⦃s⦄, MeasurableSet s → P (indicatorₓ s fun _ => c))
     (h_add : ∀ ⦃f g : α → ℝ≥0∞⦄, Disjoint (Support f) (Support g) → Measurable f → Measurable g → P f → P g → P (f + g))
     (h_supr :
       ∀ ⦃f : ℕ → α → ℝ≥0∞⦄ hf : ∀ n, Measurable (f n) h_mono : Monotone f hP : ∀ n, P (f n), P fun x => ⨆ n, f n x)
@@ -2543,7 +2543,7 @@ theorem lintegral_with_density_eq_lintegral_mul_non_measurable (μ : Measure α)
   refine' supr₂_le fun i i_meas => supr_le fun hi => _
   have A : (fun x => (f x)⁻¹ * i x) ≤ g := by
     intro x
-    dsimp
+    dsimp'
     rw [mul_comm, ← div_eq_mul_inv]
     exact div_le_of_le_mul' (hi x)
   refine' le_supr_of_le (fun x => (f x)⁻¹ * i x) (le_supr_of_le (f_meas.inv.mul i_meas) _)
@@ -2558,7 +2558,7 @@ theorem lintegral_with_density_eq_lintegral_mul_non_measurable (μ : Measure α)
     simp [this]
     
   · apply le_of_eqₓ _
-    dsimp
+    dsimp'
     rw [← mul_assoc, Ennreal.mul_inv_cancel hx h'x.ne, one_mulₓ]
     
 

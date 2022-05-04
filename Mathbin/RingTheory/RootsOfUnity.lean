@@ -1138,7 +1138,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
       map_one' := by
         generalize_proofs h1
         have h := h1.some_spec
-        dsimp only [AlgEquiv.one_apply, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe,
+        dsimp' only [AlgEquiv.one_apply, AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe,
           RingEquiv.coe_to_ring_hom, AlgEquiv.coe_ring_equiv]  at *
         replace h : μ' = μ' ^ h1.some :=
           rootsOfUnity.coe_injective
@@ -1151,7 +1151,7 @@ noncomputable def autToPow : (S ≃ₐ[R] S) →* (Zmod n)ˣ :=
         have hxy := hxy'.some_spec
         have hx := hx'.some_spec
         have hy := hy'.some_spec
-        dsimp only [AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom,
+        dsimp' only [AlgEquiv.to_ring_equiv_eq_coe, RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom,
           AlgEquiv.coe_ring_equiv, AlgEquiv.mul_apply]  at *
         replace hxy : x (↑μ' ^ hy'.some) = ↑μ' ^ hxy'.some := hy ▸ hxy
         rw [x.map_pow] at hxy
@@ -1168,7 +1168,7 @@ theorem aut_to_pow_spec (f : S ≃ₐ[R] S) : μ ^ (hμ.autToPow R f : Zmod n).v
   rw [IsPrimitiveRoot.coe_aut_to_pow_apply]
   generalize_proofs h
   have := h.some_spec
-  dsimp only [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom]  at this
+  dsimp' only [AlgEquiv.to_alg_hom_eq_coe, AlgEquiv.coe_alg_hom]  at this
   refine' (_ : ↑hμ.to_roots_of_unity ^ _ = _).trans this.symm
   rw [← rootsOfUnity.coe_pow, ← rootsOfUnity.coe_pow]
   congr 1

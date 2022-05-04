@@ -1182,6 +1182,9 @@ theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   · calc -abs a = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
     
 
+theorem neg_abs_le_neg (a : α) : -abs a ≤ -a := by
+  simpa using neg_abs_le_self (-a)
+
 theorem abs_nonneg (a : α) : 0 ≤ abs a :=
   (le_totalₓ 0 a).elim (fun h => h.trans (le_abs_self a)) fun h => (neg_nonneg.2 h).trans <| neg_le_abs_self a
 

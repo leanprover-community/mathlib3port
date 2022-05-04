@@ -89,7 +89,7 @@ end CoverLifting
 
 /-!
 We will now prove that `Ran G.op` (`ₚu`) maps sheaves to sheaves if `G` is cover-lifting. This can
-be found in https://stacks.math.columbia.edu/tag/00XK. However, the proof given here uses the
+be found in <https://stacks.math.columbia.edu/tag/00XK>. However, the proof given here uses the
 amalgamation definition of sheaves, and thus does not require that `C` or `D` has categorical
 pullbacks.
 
@@ -209,10 +209,10 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
     y ≫ limit.π (Ran.diagram G.op ℱ.val (op V)) W =
       (gluedLimitCone hu ℱ hS hx).π.app ((StructuredArrow.map f.op).obj W) :=
   by
-  dsimp only [glued_limit_cone_π_app]
+  dsimp' only [glued_limit_cone_π_app]
   apply get_section_is_unique hu ℱ hS hx ((structured_arrow.map f.op).obj W)
   intro V' fV' hV'
-  dsimp only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
+  dsimp' only [Ran.adjunction, Ran.equiv, pulledback_family_apply]
   erw [adjunction.adjunction_of_equiv_right_counit_app]
   have :
     y ≫ ((Ran G.op).obj ℱ.val).map (G.map fV' ≫ W.hom.unop).op =
@@ -306,11 +306,11 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
       invFun := fun f => ⟨((ran.adjunction A G.op).homEquiv X.val Y.val).symm f.val⟩,
       left_inv := fun f => by
         ext1
-        dsimp
+        dsimp'
         rw [Equivₓ.symm_apply_apply],
       right_inv := fun f => by
         ext1
-        dsimp
+        dsimp'
         rw [Equivₓ.apply_symm_apply] }
   Unit :=
     { app := fun X => ⟨(ran.adjunction A G.op).Unit.app X.val⟩,

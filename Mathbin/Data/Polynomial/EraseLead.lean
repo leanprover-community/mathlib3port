@@ -182,7 +182,7 @@ theorem erase_lead_nat_degree_lt_or_erase_lead_eq_zero (f : R[X]) :
 
 theorem erase_lead_nat_degree_le (f : R[X]) : (eraseLead f).natDegree ≤ f.natDegree - 1 := by
   rcases f.erase_lead_nat_degree_lt_or_erase_lead_eq_zero with (h | h)
-  · exact Nat.le_pred_of_lt h
+  · exact Nat.le_pred_of_ltₓ h
     
   · simp only [h, nat_degree_zero, zero_le]
     

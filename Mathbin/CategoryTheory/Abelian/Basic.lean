@@ -164,7 +164,7 @@ instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Mono f] [IsIso (Abelian.coim
   exact is_iso.comp_is_iso
 
 instance [HasZeroObject C] {X Y : C} (f : X ⟶ Y) [Epi f] : IsIso (imageMonoFactorisation f).m := by
-  dsimp
+  dsimp'
   infer_instance
 
 variable [∀ {X Y : C} f : X ⟶ Y, IsIso (Abelian.coimageImageComparison f)]
@@ -241,7 +241,7 @@ in which the coimage-image comparison morphism is always an isomorphism,
 is an abelian category.
 
 The Stacks project uses this characterisation at the definition of an abelian category.
-See https://stacks.math.columbia.edu/tag/0109.
+See <https://stacks.math.columbia.edu/tag/0109>.
 -/
 def ofCoimageImageComparisonIsIso : Abelian C :=
   {  }

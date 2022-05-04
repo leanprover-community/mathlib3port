@@ -478,9 +478,9 @@ theorem pell_zd_succ_succ n : pell_zd (n + 2) + pell_zd n = (2 * a : ℕ) * pell
     rw [Zsqrtd.coe_nat_val]
     change (⟨_, _⟩ : ℤ√d a1) = ⟨_, _⟩
     rw [dz_val]
-    dsimp [az]
+    dsimp' [az]
     rw [Zsqrtd.ext]
-    dsimp
+    dsimp'
     constructor <;> ring
   simpa [mul_addₓ, mul_comm, mul_left_commₓ, add_commₓ] using congr_argₓ (· * pell_zd a1 n) this
 

@@ -408,7 +408,7 @@ theorem ContMdiff.cod_restrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {
       simpa using hf' x
     rw [inner_eq_norm_mul_iff_of_norm_one hfx]
     exact norm_eq_of_mem_sphere (-v)
-  dsimp [chart_at]
+  dsimp' [chart_at]
   simp [not_iff_not, Subtype.ext_iff, hfxv, real_inner_comm]
 
 /-- The antipodal map is smooth. -/

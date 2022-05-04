@@ -880,11 +880,11 @@ theorem eval₂_congr (g₁ g₂ : σ → S₁) (h : ∀ {i : σ} {c : σ →₀
     p.eval₂ f g₁ = p.eval₂ f g₂ := by
   apply Finset.sum_congr rfl
   intro c hc
-  dsimp
+  dsimp'
   congr 1
   apply Finset.prod_congr rfl
   intro i hi
-  dsimp
+  dsimp'
   congr 1
   apply h hi
   rwa [Finsupp.mem_support_iff] at hc
@@ -996,7 +996,7 @@ theorem eval₂_eq_eval_map (g : σ → S₁) (p : MvPolynomial σ R) : p.eval�
   unfold map eval
   simp only [coe_eval₂_hom]
   have h := eval₂_comp_left (eval₂_hom _ g)
-  dsimp  at h
+  dsimp'  at h
   rw [h]
   congr
   · ext1 a

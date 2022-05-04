@@ -164,7 +164,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     simp only [min_lt_iff, mem_set_of_eq]
     intro z hz
     left
-    dsimp [-Subtype.val_eq_coe]  at hz
+    dsimp' [-Subtype.val_eq_coe]  at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -174,7 +174,7 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp  at hz h'z
+    dsimp'  at hz h'z
     have A : x + z 0 ≤ y := by
       linarith
     rw [Subsingleton.elimₓ i 0]
@@ -215,7 +215,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     simp only [lt_max_iff, mem_set_of_eq]
     intro z hz
     left
-    dsimp [-Subtype.val_eq_coe]  at hz
+    dsimp' [-Subtype.val_eq_coe]  at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -225,7 +225,7 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     rintro ⟨z, hz⟩ h'z
     rw [Subtype.mk_eq_mk]
     funext
-    dsimp  at hz h'z
+    dsimp'  at hz h'z
     have A : x ≤ y - z 0 := by
       linarith
     rw [Subsingleton.elimₓ i 0]

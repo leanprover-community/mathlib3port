@@ -236,7 +236,7 @@ def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x 
 @[simp]
 theorem emb_domain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} : (embDomain f x).coeff (f a) = x.coeff a := by
   rw [emb_domain]
-  dsimp only
+  dsimp' only
   by_cases' ha : a ∈ x.support
   · rw [dif_pos (Set.mem_image_of_mem f ha)]
     exact congr rfl (f.injective (Classical.some_spec (Set.mem_image_of_mem f ha)).2)

@@ -215,7 +215,7 @@ theorem independent_range_of_coprime_order [∀ i, Fintype (H i)]
     CompleteLattice.Independent fun i => (ϕ i).range := by
   classical
   rintro i f ⟨hxi, hxp⟩
-  dsimp  at hxi hxp
+  dsimp'  at hxi hxp
   rw [supr_subtype', ← noncomm_pi_coprod_range] at hxp
   rotate_left
   · intro _ _ hj

@@ -119,7 +119,7 @@ theorem Injective.dite (p : α → Prop) [DecidablePred p] {f : { a : α // p a 
     (hf : Injective f) (hf' : Injective f')
     (im_disj : ∀ {x x' : α} {hx : p x} {hx' : ¬p x'}, f ⟨x, hx⟩ ≠ f' ⟨x', hx'⟩) :
     Function.Injective fun x => if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩ := fun x₁ x₂ h => by
-  dsimp only  at h
+  dsimp' only  at h
   by_cases' h₁ : p x₁ <;> by_cases' h₂ : p x₂
   · rw [dif_pos h₁, dif_pos h₂] at h
     injection hf h
@@ -226,14 +226,14 @@ theorem Bijective.of_comp_iff' {f : α → β} (hf : Bijective f) (g : γ → α
 to `set α`. -/
 theorem cantor_surjective {α} (f : α → Set α) : ¬Function.Surjective f
   | h =>
-    let ⟨D, e⟩ := h fun a => ¬f a a
-    (iff_not_selfₓ (f D D)).1 <| iff_of_eq (congr_funₓ e D)
+    let ⟨D, e⟩ := h { a | ¬a ∈ f a }
+    (iff_not_selfₓ (D ∈ f D)).1 <| iff_of_eq (congr_argₓ ((· ∈ ·) D) e)
 
 /-- **Cantor's diagonal argument** implies that there are no injective functions from `set α`
 to `α`. -/
 theorem cantor_injective {α : Type _} (f : Set α → α) : ¬Function.Injective f
   | i =>
-    (cantor_surjective fun a b => ∀ U, a = f U → U b) <|
+    (cantor_surjective fun a => { b | ∀ U, a = f U → b ∈ U }) <|
       RightInverse.surjective fun U => funext fun a => propext ⟨fun h => h U rfl, fun h' U' e => i e ▸ h'⟩
 
 /-- There is no surjection from `α : Type u` into `Type u`. This theorem

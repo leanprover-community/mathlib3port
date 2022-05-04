@@ -26,7 +26,7 @@ TODO: This is just the beginning; a lot of rules are missing
 -/
 
 
-universe u
+variable {α β : Type _}
 
 namespace Set
 
@@ -36,7 +36,7 @@ open OrderDual (toDual ofDual)
 
 section Preorderₓ
 
-variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ c x : α}
+variable [Preorderₓ α] {a a₁ a₂ b b₁ b₂ c x : α}
 
 /-- Left-open right-open interval -/
 def Ioo (a b : α) :=
@@ -514,7 +514,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable {α : Type u} [PartialOrderₓ α] {a b c : α}
+variable [PartialOrderₓ α] {a b c : α}
 
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
@@ -700,10 +700,10 @@ end PartialOrderₓ
 section OrderTop
 
 @[simp]
-theorem Ici_top {α : Type u} [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
+theorem Ici_top [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
   is_max_top.Ici_eq
 
-variable {α : Type u} [Preorderₓ α] [OrderTop α] {a : α}
+variable [Preorderₓ α] [OrderTop α] {a : α}
 
 @[simp]
 theorem Ioi_top : Ioi (⊤ : α) = ∅ :=
@@ -726,10 +726,10 @@ end OrderTop
 section OrderBot
 
 @[simp]
-theorem Iic_bot {α : Type u} [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
+theorem Iic_bot [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
   is_min_bot.Iic_eq
 
-variable {α : Type u} [Preorderₓ α] [OrderBot α] {a : α}
+variable [Preorderₓ α] [OrderBot α] {a : α}
 
 @[simp]
 theorem Iio_bot : Iio (⊥ : α) = ∅ :=
@@ -749,9 +749,12 @@ theorem Ico_bot : Ico ⊥ a = Iio a := by
 
 end OrderBot
 
+theorem Icc_bot_top [PartialOrderₓ α] [BoundedOrder α] : Icc (⊥ : α) ⊤ = univ := by
+  simp
+
 section LinearOrderₓ
 
-variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
+variable [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
 theorem not_mem_Ici : c ∉ Ici a ↔ c < a :=
   not_leₓ
@@ -1362,17 +1365,12 @@ section Lattice
 
 section Inf
 
-variable {α : Type u} [SemilatticeInf α]
+variable [SemilatticeInf α]
 
 @[simp]
 theorem Iic_inter_Iic {a b : α} : Iic a ∩ Iic b = Iic (a⊓b) := by
   ext x
   simp [Iic]
-
-@[simp]
-theorem Iio_inter_Iio [IsTotal α (· ≤ ·)] {a b : α} : Iio a ∩ Iio b = Iio (a⊓b) := by
-  ext x
-  simp [Iio]
 
 @[simp]
 theorem Ioc_inter_Iic (a b c : α) : Ioc a b ∩ Iic c = Ioc a (b⊓c) := by
@@ -1382,7 +1380,7 @@ end Inf
 
 section Sup
 
-variable {α : Type u} [SemilatticeSup α]
+variable [SemilatticeSup α]
 
 @[simp]
 theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a⊔b) := by
@@ -1393,20 +1391,11 @@ theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a⊔b) := by
 theorem Ico_inter_Ici (a b c : α) : Ico a b ∩ Ici c = Ico (a⊔c) b := by
   rw [← Ici_inter_Iio, ← Ici_inter_Iio, ← Ici_inter_Ici, inter_right_comm]
 
-@[simp]
-theorem Ioi_inter_Ioi [IsTotal α (· ≤ ·)] {a b : α} : Ioi a ∩ Ioi b = Ioi (a⊔b) := by
-  ext x
-  simp [Ioi]
-
-@[simp]
-theorem Ioc_inter_Ioi [IsTotal α (· ≤ ·)] {a b c : α} : Ioc a b ∩ Ioi c = Ioc (a⊔c) b := by
-  rw [← Ioi_inter_Iic, inter_assoc, inter_comm, inter_assoc, Ioi_inter_Ioi, inter_comm, Ioi_inter_Iic, sup_comm]
-
 end Sup
 
 section Both
 
-variable {α : Type u} [Lattice α] [ht : IsTotal α (· ≤ ·)] {a b c a₁ a₂ b₁ b₂ : α}
+variable [Lattice α] {a b c a₁ a₂ b₁ b₂ : α}
 
 theorem Icc_inter_Icc : Icc a₁ b₁ ∩ Icc a₂ b₂ = Icc (a₁⊔a₂) (b₁⊓b₂) := by
   simp only [Ici_inter_Iic.symm, Ici_inter_Ici.symm, Iic_inter_Iic.symm] <;> ac_rfl
@@ -1415,7 +1404,21 @@ theorem Icc_inter_Icc : Icc a₁ b₁ ∩ Icc a₂ b₂ = Icc (a₁⊔a₂) (b�
 theorem Icc_inter_Icc_eq_singleton (hab : a ≤ b) (hbc : b ≤ c) : Icc a b ∩ Icc b c = {b} := by
   rw [Icc_inter_Icc, sup_of_le_right hab, inf_of_le_left hbc, Icc_self]
 
-include ht
+end Both
+
+end Lattice
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
+
+@[simp]
+theorem Ioi_inter_Ioi : Ioi a ∩ Ioi b = Ioi (a⊔b) :=
+  ext fun _ => sup_lt_iff.symm
+
+@[simp]
+theorem Iio_inter_Iio : Iio a ∩ Iio b = Iio (a⊓b) :=
+  ext fun _ => lt_inf_iff.symm
 
 theorem Ico_inter_Ico : Ico a₁ b₁ ∩ Ico a₂ b₂ = Ico (a₁⊔a₂) (b₁⊓b₂) := by
   simp only [Ici_inter_Iio.symm, Ici_inter_Ici.symm, Iio_inter_Iio.symm] <;> ac_rfl
@@ -1425,17 +1428,6 @@ theorem Ioc_inter_Ioc : Ioc a₁ b₁ ∩ Ioc a₂ b₂ = Ioc (a₁⊔a₂) (b�
 
 theorem Ioo_inter_Ioo : Ioo a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (a₁⊔a₂) (b₁⊓b₂) := by
   simp only [Ioi_inter_Iio.symm, Ioi_inter_Ioi.symm, Iio_inter_Iio.symm] <;> ac_rfl
-
-end Both
-
-theorem Icc_bot_top {α} [PartialOrderₓ α] [BoundedOrder α] : Icc (⊥ : α) ⊤ = univ := by
-  simp
-
-end Lattice
-
-section LinearOrderₓ
-
-variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
 theorem Ioc_inter_Ioo_of_left_lt (h : b₁ < b₂) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioc (max a₁ a₂) b₁ :=
   ext fun x => by
@@ -1459,6 +1451,10 @@ theorem Ico_diff_Iio : Ico a b \ Iio c = Ico (max a c) b := by
 theorem Ioc_diff_Ioi : Ioc a b \ Ioi c = Ioc a (min b c) :=
   ext <| by
     simp (config := { contextual := true })[iff_def]
+
+@[simp]
+theorem Ioc_inter_Ioi : Ioc a b ∩ Ioi c = Ioc (a⊔c) b := by
+  rw [← Ioi_inter_Iic, inter_assoc, inter_comm, inter_assoc, Ioi_inter_Ioi, inter_comm, Ioi_inter_Iic, sup_comm]
 
 @[simp]
 theorem Ico_inter_Iio : Ico a b ∩ Iio c = Ico a (min b c) :=
@@ -1498,7 +1494,7 @@ end LinearOrderₓ
 
 section Prod
 
-variable {α β : Type _} [Preorderₓ α] [Preorderₓ β]
+variable [Preorderₓ α] [Preorderₓ β]
 
 @[simp]
 theorem Iic_prod_Iic (a : α) (b : β) : Iic a ×ˢ Iic b = Iic (a, b) :=
@@ -1529,7 +1525,7 @@ end Prod
 
 section OrderedCommGroup
 
-variable {α : Type _} [OrderedCommGroup α] {a b c d : α}
+variable [OrderedCommGroup α] {a b c d : α}
 
 /-! `inv_mem_Ixx_iff`, `sub_mem_Ixx_iff` -/
 
@@ -1554,7 +1550,7 @@ end OrderedCommGroup
 
 section OrderedAddCommGroup
 
-variable {α : Type _} [OrderedAddCommGroup α] {a b c d : α}
+variable [OrderedAddCommGroup α] {a b c d : α}
 
 /-! `add_mem_Ixx_iff_left` -/
 
@@ -1626,7 +1622,7 @@ end OrderedAddCommGroup
 
 section LinearOrderedAddCommGroup
 
-variable {α : Type u} [LinearOrderedAddCommGroup α]
+variable [LinearOrderedAddCommGroup α]
 
 /-- If we remove a smaller interval from a larger, the result is nonempty -/
 theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) : Nonempty ↥(Ico x (x + dx) \ Ico y (y + dy)) :=
@@ -1646,8 +1642,6 @@ end Set
 open Set
 
 namespace OrderIso
-
-variable {α β : Type _}
 
 section Preorderₓ
 
@@ -1742,7 +1736,7 @@ end OrderIso
 
 section Dense
 
-variable (α : Type _) [Preorderₓ α] [DenselyOrdered α] {x y : α}
+variable (α) [Preorderₓ α] [DenselyOrdered α] {x y : α}
 
 instance : NoMinOrder (Set.Ioo x y) :=
   ⟨fun ⟨a, ha₁, ha₂⟩ => by

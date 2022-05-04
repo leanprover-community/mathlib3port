@@ -475,7 +475,7 @@ def mapIsoToOrderIso (e : X ≅ Y) : Subobject X ≃o Subobject Y where
   right_inv := fun g => by
     simp_rw [← map_comp, e.inv_hom_id, map_id]
   map_rel_iff' := fun A B => by
-    dsimp
+    dsimp'
     fconstructor
     · intro h
       apply_fun (map e.inv).obj  at h
@@ -530,7 +530,7 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
     · rw [← pullback.condition, assoc]
       rfl
       
-    · dsimp
+    · dsimp'
       rw [pullback.lift_snd_assoc]
       apply (pullback_cone.is_limit.lift' _ _ _ _).2.2
       

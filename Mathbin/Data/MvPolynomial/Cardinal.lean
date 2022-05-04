@@ -52,7 +52,7 @@ private def arity : MvPolynomialFun σ R → Type u
   | Sum.inr (Sum.inr ⟨tt⟩) => ULift Bool
 
 private def arity_fintype (x : MvPolynomialFun σ R) : Fintype (Arity σ R x) := by
-  rcases x with (x | x | ⟨_ | _⟩) <;> dsimp [arity] <;> infer_instance
+  rcases x with (x | x | ⟨_ | _⟩) <;> dsimp' [arity] <;> infer_instance
 
 attribute [local instance] arity_fintype
 
@@ -87,7 +87,7 @@ private theorem to_mv_polynomial_surjective : Function.Surjective (@toMvPolynomi
 private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max (max (# R) (# σ)) ω :=
   calc
     # (MvPolynomialFun σ R) = # R + # σ + # (ULift Bool) := by
-      dsimp [mv_polynomial_fun] <;> simp only [← add_def, add_assocₓ, Cardinal.mk_ulift]
+      dsimp' [mv_polynomial_fun] <;> simp only [← add_def, add_assocₓ, Cardinal.mk_ulift]
     _ ≤ max (max (# R + # σ) (# (ULift Bool))) ω := add_le_max _ _
     _ ≤ max (max (max (max (# R) (# σ)) ω) (# (ULift Bool))) ω := max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by

@@ -76,6 +76,10 @@ theorem prod_cons (a : α) s : prod (a ::ₘ s) = a * prod s :=
   foldr_cons _ _ _ _ _
 
 @[simp, to_additive]
+theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Prod := by
+  rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase ((s.mem_to_list a).2 h)]
+
+@[simp, to_additive]
 theorem prod_singleton (a : α) : prod {a} = a := by
   simp only [mul_oneₓ, prod_cons, singleton_eq_cons, eq_self_iff_true, prod_zero]
 

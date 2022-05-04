@@ -580,10 +580,10 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
       zero_mem' := by
         simp only [Set.mem_set_of_eq, mul_zero],
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by
-        dsimp  at hr₁ hr₂⊢
+        dsimp'  at hr₁ hr₂⊢
         simp only [mul_addₓ, hr₁, hr₂],
       smul_mem' := fun r₁ r₂ hr₂ => by
-        dsimp  at hr₂⊢
+        dsimp'  at hr₂⊢
         simp only [mul_comm r₁ r₂, ← mul_assoc, hr₂] }
   -- Our claim now reduces to showing that `f` is contained in the radical of `I`
   suffices f ∈ I.radical by
@@ -690,7 +690,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     obtain ⟨⟨c, n, rfl⟩, hc⟩ := is_localization.eq.mp (fractions_eq i j)
     use n + 1
     rw [pow_succₓ]
-    dsimp  at hc
+    dsimp'  at hc
     convert hc using 1 <;> ring
   let n := fun p : ι × ι => (exists_power p.1 p.2).some
   have n_spec := fun p : ι × ι => (exists_power p.fst p.snd).some_spec
@@ -770,7 +770,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
   erw [← pow_succₓ, Finsupp.mem_span_image_iff_total] at hn
   rcases hn with ⟨b, b_supp, hb⟩
   rw [Finsupp.total_apply_of_mem_supported R b_supp] at hb
-  dsimp  at hb
+  dsimp'  at hb
   -- Finally, we have all the ingredients.
   -- We claim that our preimage is given by `(∑ (i : ι) in t, b i * a i) / f ^ (n+1)`
   use
@@ -792,7 +792,7 @@ theorem to_basic_open_surjective (f : R) : Function.Surjective (toBasicOpen R f)
     use i, i_mem
     
   rintro ⟨i, hi⟩
-  dsimp
+  dsimp'
   change (structure_sheaf R).1.map _ _ = (structure_sheaf R).1.map _ _
   rw [s_eq i hi, res_const]
   -- Again, `res_const` spits out an additional goal
@@ -899,7 +899,7 @@ theorem global_sections_iso_hom (R : CommRingₓₓ) : (globalSectionsIso R).hom
 @[simp, reassoc, elementwise]
 theorem to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     toStalk R y ≫ (structureSheaf R).val.stalkSpecializes h = toStalk R x := by
-  dsimp [to_stalk]
+  dsimp' [to_stalk]
   simpa
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
@@ -914,7 +914,7 @@ theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x 
   }
   erw [RingHom.comp_assoc]
   conv_rhs => erw [RingHom.comp_assoc]
-  dsimp [CommRingₓₓ.ofHom, localization_to_stalk, PrimeSpectrum.localizationMapOfSpecializes]
+  dsimp' [CommRingₓₓ.ofHom, localization_to_stalk, PrimeSpectrum.localizationMapOfSpecializes]
   rw [IsLocalization.lift_comp, IsLocalization.lift_comp, IsLocalization.lift_comp]
   exact to_stalk_stalk_specializes h
 
@@ -959,7 +959,7 @@ theorem comap_fun_is_locally_fraction (f : R →+* S) (U : Opens (PrimeSpectrum.
   rintro ⟨q, ⟨hqW, hqV⟩⟩
   specialize h_frac ⟨PrimeSpectrum.comap f q, hqW⟩
   refine' ⟨h_frac.1, _⟩
-  dsimp only [comap_fun]
+  dsimp' only [comap_fun]
   erw [← Localization.local_ring_hom_to_map (PrimeSpectrum.comap f q).asIdeal, ← RingHom.map_mul, h_frac.2,
     Localization.local_ring_hom_to_map]
   rfl
@@ -1045,7 +1045,7 @@ theorem comap_id_eq_map (U V : Opens (PrimeSpectrum.top R)) (iVU : V ⟶ U) :
           h'
             ⟨PrimeSpectrum.comap (RingHom.id _) p.1, by
               rwa [PrimeSpectrum.comap_id]⟩
-        dsimp only  at s_eq₁ s_eq₂
+        dsimp' only  at s_eq₁ s_eq₂
         erw [s_eq₂, Localization.local_ring_hom_mk', ← s_eq₁, ← res_apply]
 
 /-- The comap of the identity is the identity. In this variant of the lemma, two open subsets `U` and

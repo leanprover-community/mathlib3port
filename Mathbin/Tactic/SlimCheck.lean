@@ -135,7 +135,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
     let v ← mk_local' n bi d
     summarize_instance <| b v
   | e@(app f x) => do
-    let quote.1 (Testable (%%ₓp)) ← infer_type e
+    let quote.1 (Testableₓ (%%ₓp)) ← infer_type e
     let xs ← e.get_app_args.mmapFilter (try_core ∘ summarize_instance)
     pure <| instance_tree.node e p xs
   | e => do

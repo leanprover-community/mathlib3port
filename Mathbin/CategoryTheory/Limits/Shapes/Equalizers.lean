@@ -320,14 +320,14 @@ def Fork.ofι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ g) : Fork f g where
         exact ι
         exact ι ≫ f,
       naturality' := fun X Y f => by
-        cases X <;> cases Y <;> cases f <;> dsimp <;> simp
-        · dsimp
+        cases X <;> cases Y <;> cases f <;> dsimp' <;> simp
+        · dsimp'
           simp
           
         -- See note [dsimp, simp].
         · exact w
           
-        · dsimp
+        · dsimp'
           simp
            }
 
@@ -339,7 +339,7 @@ def Cofork.ofπ {P : C} (π : Y ⟶ P) (w : f ≫ π = g ≫ π) : Cofork f g wh
   ι :=
     { app := fun X => WalkingParallelPair.casesOn X (f ≫ π) π,
       naturality' := fun i j f => by
-        cases f <;> dsimp <;> simp [w] }
+        cases f <;> dsimp' <;> simp [w] }
 
 -- See note [dsimp, simp]
 @[simp]
@@ -522,7 +522,7 @@ def Cone.ofFork {F : walking_parallel_pair ⥤ C} (t : Fork (F.map left) (F.map 
             (by
               tidy),
       naturality' := fun j j' g => by
-        cases j <;> cases j' <;> cases g <;> dsimp <;> simp }
+        cases j <;> cases j' <;> cases g <;> dsimp' <;> simp }
 
 /-- This is a helper construction that can be useful when verifying that a category has all
     coequalizers. Given `F : walking_parallel_pair ⥤ C`, which is really the same as
@@ -541,7 +541,7 @@ def Cocone.ofCofork {F : walking_parallel_pair ⥤ C} (t : Cofork (F.map left) (
               tidy) ≫
           t.ι.app X,
       naturality' := fun j j' g => by
-        cases j <;> cases j' <;> cases g <;> dsimp <;> simp }
+        cases j <;> cases j' <;> cases g <;> dsimp' <;> simp }
 
 @[simp]
 theorem Cone.of_fork_π {F : walking_parallel_pair ⥤ C} (t : Fork (F.map left) (F.map right)) j :
@@ -1063,7 +1063,7 @@ theorem cone_of_split_mono_ι : (coneOfSplitMono f).ι = f :=
 def splitMonoEqualizes {X Y : C} (f : X ⟶ Y) [SplitMono f] : IsLimit (coneOfSplitMono f) :=
   (Fork.IsLimit.mk' _) fun s =>
     ⟨s.ι ≫ retraction f, by
-      dsimp
+      dsimp'
       rw [category.assoc, ← s.condition]
       apply category.comp_id, fun m hm => by
       simp [← hm]⟩
@@ -1143,7 +1143,7 @@ theorem cocone_of_split_epi_π : (coconeOfSplitEpi f).π = f :=
 def splitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [SplitEpi f] : IsColimit (coconeOfSplitEpi f) :=
   (Cofork.IsColimit.mk' _) fun s =>
     ⟨section_ f ≫ s.π, by
-      dsimp
+      dsimp'
       rw [← category.assoc, ← s.condition, category.id_comp], fun m hm => by
       simp [← hm]⟩
 

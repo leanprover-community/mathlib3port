@@ -1523,7 +1523,7 @@ theorem succ_above_cast_lt {x y : Finₓ (n + 1)} (h : x < y) (hx : x.1 < n := l
 theorem succ_above_pred {x y : Finₓ (n + 1)} (h : x < y) (hy : y ≠ 0 := (x.zero_le.trans_lt h).ne') :
     x.succAbove (y.pred hy) = y := by
   rw [succ_above_above, succ_pred]
-  simpa [le_iff_coe_le_coe] using Nat.le_pred_of_lt h
+  simpa [le_iff_coe_le_coe] using Nat.le_pred_of_ltₓ h
 
 theorem cast_lt_succ_above {x : Finₓ n} {y : Finₓ (n + 1)} (h : castSucc x < y)
     (h' : (y.succAbove x).1 < n := lt_of_lt_of_leₓ ((succ_above_lt_iff _ _).2 h) (le_last y)) :
@@ -1617,7 +1617,7 @@ def predAbove (p : Finₓ n) (i : Finₓ (n + 1)) : Finₓ n :=
   else i.cast_lt (lt_of_le_of_ltₓ (le_of_not_ltₓ h) p.2)
 
 theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.predAbove := fun a b H => by
-  dsimp [pred_above]
+  dsimp' [pred_above]
   split_ifs with ha hb hb
   all_goals
     simp only [le_iff_coe_le_coe, coe_pred]
@@ -1632,7 +1632,7 @@ theorem pred_above_right_monotone (p : Finₓ n) : Monotone p.predAbove := fun a
     
 
 theorem pred_above_left_monotone (i : Finₓ (n + 1)) : Monotone fun p => predAbove p i := fun a b H => by
-  dsimp [pred_above]
+  dsimp' [pred_above]
   split_ifs with ha hb hb
   all_goals
     simp only [le_iff_coe_le_coe, coe_pred]
@@ -1659,7 +1659,7 @@ theorem cast_pred_one : castPred (1 : Finₓ (n + 2)) = 1 := by
 
 @[simp]
 theorem pred_above_zero {i : Finₓ (n + 2)} (hi : i ≠ 0) : predAbove 0 i = i.pred hi := by
-  dsimp [pred_above]
+  dsimp' [pred_above]
   rw [dif_pos]
   exact (pos_iff_ne_zero _).mpr hi
 
@@ -1696,7 +1696,7 @@ then back to `fin (n+1)` with a gap around `p` is the identity away from `p`. -/
 @[simp]
 theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.cast_succ) :
     p.cast_succ.succAbove (p.predAbove i) = i := by
-  dsimp [pred_above, succ_above]
+  dsimp' [pred_above, succ_above]
   rcases p with ⟨p, _⟩
   rcases i with ⟨i, _⟩
   cases' lt_or_leₓ i p with H H
@@ -1717,7 +1717,7 @@ theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.c
       
     · simp only [Subtype.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
       simp only [pred, Subtype.mk_lt_mk, not_ltₓ]
-      exact Nat.le_pred_of_lt (Nat.lt_of_le_and_neₓ H (Ne.symm h))
+      exact Nat.le_pred_of_ltₓ (Nat.lt_of_le_and_neₓ H (Ne.symm h))
       
     
 
@@ -1725,7 +1725,7 @@ theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.c
 then back to `fin n` by subtracting one from anything above `p` is the identity. -/
 @[simp]
 theorem pred_above_succ_above (p : Finₓ n) (i : Finₓ n) : p.predAbove (p.cast_succ.succAbove i) = i := by
-  dsimp [pred_above, succ_above]
+  dsimp' [pred_above, succ_above]
   rcases p with ⟨p, _⟩
   rcases i with ⟨i, _⟩
   split_ifs

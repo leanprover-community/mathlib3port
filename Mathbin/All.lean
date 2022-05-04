@@ -276,6 +276,7 @@ import Mathbin.Algebra.Star.Free
 import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Algebra.Star.Pointwise
+import Mathbin.Algebra.Star.Prod
 import Mathbin.Algebra.Star.SelfAdjoint
 import Mathbin.Algebra.Star.Subalgebra
 import Mathbin.Algebra.Star.Unitary
@@ -750,7 +751,8 @@ import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts
 import Mathbin.CategoryTheory.Monoidal.OfHasFiniteProducts
 import Mathbin.CategoryTheory.Monoidal.Opposite
 import Mathbin.CategoryTheory.Monoidal.Preadditive
-import Mathbin.CategoryTheory.Monoidal.Rigid
+import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
+import Mathbin.CategoryTheory.Monoidal.Rigid.FunctorCategory
 import Mathbin.CategoryTheory.Monoidal.Rigid.OfEquivalence
 import Mathbin.CategoryTheory.Monoidal.Skeleton
 import Mathbin.CategoryTheory.Monoidal.Tor
@@ -958,6 +960,7 @@ import Mathbin.Data.Finset.Functor
 import Mathbin.Data.Finset.Interval
 import Mathbin.Data.Finset.Lattice
 import Mathbin.Data.Finset.LocallyFinite
+import Mathbin.Data.Finset.NAry
 import Mathbin.Data.Finset.NatAntidiagonal
 import Mathbin.Data.Finset.NoncommProd
 import Mathbin.Data.Finset.Option
@@ -1155,8 +1158,9 @@ import Mathbin.Data.Pfunctor.Multivariate.Basic
 import Mathbin.Data.Pfunctor.Univariate.M
 import Mathbin.Data.Pfunctor.Univariate.Basic
 import Mathbin.Data.Pfunctor.Univariate.Default
-import Mathbin.Data.Pi
+import Mathbin.Data.Pi.Algebra
 import Mathbin.Data.Pi.Interval
+import Mathbin.Data.Pi.Lex
 import Mathbin.Data.Pnat.Basic
 import Mathbin.Data.Pnat.Factors
 import Mathbin.Data.Pnat.Find
@@ -1179,6 +1183,7 @@ import Mathbin.Data.Polynomial.Derivative
 import Mathbin.Data.Polynomial.Div
 import Mathbin.Data.Polynomial.EraseLead
 import Mathbin.Data.Polynomial.Eval
+import Mathbin.Data.Polynomial.Expand
 import Mathbin.Data.Polynomial.FieldDivision
 import Mathbin.Data.Polynomial.HasseDeriv
 import Mathbin.Data.Polynomial.Identities
@@ -1691,6 +1696,7 @@ import Mathbin.ModelTheory.ElementaryMaps
 import Mathbin.ModelTheory.Encoding
 import Mathbin.ModelTheory.FinitelyGenerated
 import Mathbin.ModelTheory.Fraisse
+import Mathbin.ModelTheory.Graph
 import Mathbin.ModelTheory.LanguageMap
 import Mathbin.ModelTheory.Order
 import Mathbin.ModelTheory.Quotients
@@ -1844,7 +1850,6 @@ import Mathbin.Order.PartialSups
 import Mathbin.Order.Partition.Equipartition
 import Mathbin.Order.Partition.Finpartition
 import Mathbin.Order.Pfilter
-import Mathbin.Order.Pilex
 import Mathbin.Order.PrimeIdeal
 import Mathbin.Order.RelClasses
 import Mathbin.Order.RelIso
@@ -1977,6 +1982,7 @@ import Mathbin.RingTheory.TensorProduct
 import Mathbin.RingTheory.Trace
 import Mathbin.RingTheory.UniqueFactorizationDomain
 import Mathbin.RingTheory.Valuation.Basic
+import Mathbin.RingTheory.Valuation.ExtendToLocalization
 import Mathbin.RingTheory.Valuation.Integers
 import Mathbin.RingTheory.Valuation.Integral
 import Mathbin.RingTheory.Valuation.ValuationRing
@@ -2195,13 +2201,11 @@ import Mathbin.Topology.Algebra.ContinuousAffineMap
 import Mathbin.Topology.Algebra.ContinuousMonoidHom
 import Mathbin.Topology.Algebra.Field
 import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Topology.Algebra.FloorRing
 import Mathbin.Topology.Algebra.Group
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.Algebra.GroupWithZero
 import Mathbin.Topology.Algebra.InfiniteSum
 import Mathbin.Topology.Algebra.Localization
-import Mathbin.Topology.Algebra.Matrix
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Topology.Algebra.Module.LocallyConvex
@@ -2217,6 +2221,7 @@ import Mathbin.Topology.Algebra.Order.Basic
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.Algebra.Order.ExtendFrom
 import Mathbin.Topology.Algebra.Order.ExtrClosure
+import Mathbin.Topology.Algebra.Order.Floor
 import Mathbin.Topology.Algebra.Order.IntermediateValue
 import Mathbin.Topology.Algebra.Order.LeftRight
 import Mathbin.Topology.Algebra.Order.LiminfLimsup
@@ -2289,6 +2294,7 @@ import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Instances.Ereal
 import Mathbin.Topology.Instances.Int
 import Mathbin.Topology.Instances.Irrational
+import Mathbin.Topology.Instances.Matrix
 import Mathbin.Topology.Instances.Nat
 import Mathbin.Topology.Instances.Nnreal
 import Mathbin.Topology.Instances.Rat
@@ -2326,6 +2332,7 @@ import Mathbin.Topology.MetricSpace.Metrizable
 import Mathbin.Topology.MetricSpace.PiNat
 import Mathbin.Topology.MetricSpace.Polish
 import Mathbin.Topology.MetricSpace.ShrinkingLemma
+import Mathbin.Topology.MetricSpace.ThickenedIndicator
 import Mathbin.Topology.NhdsSet
 import Mathbin.Topology.OmegaCompletePartialOrder
 import Mathbin.Topology.Order

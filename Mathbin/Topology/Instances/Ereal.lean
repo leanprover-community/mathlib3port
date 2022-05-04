@@ -334,7 +334,7 @@ theorem continuous_at_add_top_coe (a : ℝ) : ContinuousAt (fun p : Ereal × Ere
         (by
           simp [zero_lt_one]),
       fun x hx y hy => _⟩
-  dsimp
+  dsimp'
   convert add_lt_add hx hy
   simp
 
@@ -354,7 +354,7 @@ theorem continuous_at_add_top_top : ContinuousAt (fun p : Ereal × Ereal => p.1 
         (by
           simp [zero_lt_one]),
       fun x hx y hy => _⟩
-  dsimp
+  dsimp'
   convert add_lt_add hx hy
   simp
 
@@ -382,7 +382,7 @@ theorem continuous_at_add_bot_bot : ContinuousAt (fun p : Ereal × Ereal => p.1 
   intro r
   rw [eventually_prod_iff]
   refine' ⟨fun z => z < r, Iio_mem_nhds (bot_lt_coe _), fun z => z < 0, Iio_mem_nhds (bot_lt_coe _), fun x hx y hy => _⟩
-  dsimp
+  dsimp'
   convert add_lt_add hx hy
   simp
 

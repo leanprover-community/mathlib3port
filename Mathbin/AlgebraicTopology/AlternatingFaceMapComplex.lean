@@ -65,7 +65,7 @@ def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
 -/
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   -- we start by expanding d ≫ d as a double sum
-  dsimp
+  dsimp'
   rw [comp_sum]
   let d_l := fun j : Finₓ (n + 3) => (-1 : ℤ) ^ (j : ℕ) • X.δ j
   let d_r := fun i : Finₓ (n + 2) => (-1 : ℤ) ^ (i : ℕ) • X.δ i
@@ -121,7 +121,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
       simpa only [H, Nat.not_lt_zeroₓ, Finₓ.coe_zero] using hij'
       
     · simpa only [true_andₓ, Finset.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finset.mem_filter] using
-        Nat.le_pred_of_lt hij'
+        Nat.le_pred_of_ltₓ hij'
       
     · simp only [Prod.mk.inj_iffₓ, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
       constructor <;> rfl
@@ -143,7 +143,7 @@ variable {X} {Y}
 @[simp]
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _ (fun n => f.app (op [n])) fun n => by
-    dsimp
+    dsimp'
     rw [comp_sum, sum_comp]
     apply Finset.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
@@ -229,7 +229,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
       eq
     rw [one_smul] at eq
     rw [Eq]
-    cases n <;> dsimp <;> simp
+    cases n <;> dsimp' <;> simp
 
 @[simp]
 theorem inclusion_of_Moore_complex_map_f (X : SimplicialObject A) (n : ℕ) :

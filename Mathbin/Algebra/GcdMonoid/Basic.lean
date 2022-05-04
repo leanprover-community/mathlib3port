@@ -872,7 +872,7 @@ noncomputable def normalizedGcdMonoidOfGcd [NormalizationMonoid α] [DecidableEq
     lcm := fun a b =>
       if a = 0 then 0 else Classical.some (dvd_normalize_iff.2 ((gcd_dvd_left a b).trans (Dvd.intro b rfl))),
     normalize_lcm := fun a b => by
-      dsimp [normalize]
+      dsimp' [normalize]
       split_ifs with a0
       · exact @normalize_zero α _ _
         
@@ -998,7 +998,7 @@ noncomputable def normalizedGcdMonoidOfLcm [NormalizationMonoid α] [DecidableEq
       exact normalize_associated (a * b),
     normalize_lcm,
     normalize_gcd := fun a b => by
-      dsimp [normalize]
+      dsimp' [normalize]
       split_ifs with h h_1
       · apply normalize_idem
         

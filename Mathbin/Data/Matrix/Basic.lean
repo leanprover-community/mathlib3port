@@ -91,6 +91,9 @@ theorem map_map {M : Matrix m n α} {β γ : Type _} {f : α → β} {g : β →
   ext
   rfl
 
+theorem map_injective {f : α → β} (hf : Function.Injective f) : Function.Injective fun M : Matrix m n α => M.map f :=
+  fun M N h => ext fun i j => hf <| ext_iff.mpr h i j
+
 /-- The transpose of a matrix. -/
 def transposeₓ (M : Matrix m n α) : Matrix n m α
   | x, y => M y x
@@ -366,7 +369,7 @@ variable [AddZeroClass α] [One α]
 
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) : (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) :=
   by
-  dsimp [bit1] <;> by_cases' h : i = j <;> simp [h]
+  dsimp' [bit1] <;> by_cases' h : i = j <;> simp [h]
 
 @[simp]
 theorem bit1_apply_eq (M : Matrix n n α) (i : n) : (bit1 M) i i = bit1 (M i i) := by
@@ -443,6 +446,19 @@ theorem diag_map {f : α → β} {A : Matrix n n α} : diag (A.map f) = f ∘ di
 @[simp]
 theorem diag_conj_transpose [AddMonoidₓ α] [StarAddMonoid α] (A : Matrix n n α) : diag Aᴴ = star (diag A) :=
   rfl
+
+@[simp]
+theorem diag_list_sum [AddMonoidₓ α] (l : List (Matrix n n α)) : diag l.Sum = (l.map diag).Sum :=
+  map_list_sum (diagAddMonoidHom n α) l
+
+@[simp]
+theorem diag_multiset_sum [AddCommMonoidₓ α] (s : Multiset (Matrix n n α)) : diag s.Sum = (s.map diag).Sum :=
+  map_multiset_sum (diagAddMonoidHom n α) s
+
+@[simp]
+theorem diag_sum {ι} [AddCommMonoidₓ α] (s : Finset ι) (f : ι → Matrix n n α) :
+    diag (∑ i in s, f i) = ∑ i in s, diag (f i) :=
+  map_sum (diagAddMonoidHom n α) f s
 
 end Diag
 
@@ -827,6 +843,9 @@ section Semiringₓ
 
 variable [Semiringₓ α]
 
+theorem diagonal_pow [Fintype n] [DecidableEq n] (v : n → α) (k : ℕ) : diagonalₓ v ^ k = diagonalₓ (v ^ k) :=
+  (map_pow (diagonalRingHom n α) v k).symm
+
 @[simp]
 theorem mul_mul_left [Fintype n] (M : Matrix m n α) (N : Matrix n o α) (a : α) :
     (fun i j => a * M i j) ⬝ N = a • M ⬝ N :=
@@ -906,7 +925,7 @@ instance : Algebra R (Matrix n n α) :=
 
 theorem algebra_map_matrix_apply {r : R} {i j : n} :
     algebraMap R (Matrix n n α) r i j = if i = j then algebraMap R α r else 0 := by
-  dsimp [algebraMap, Algebra.toRingHom, Matrix.scalar]
+  dsimp' [algebraMap, Algebra.toRingHom, Matrix.scalar]
   split_ifs with h <;> simp [h, Matrix.one_apply_ne]
 
 theorem algebra_map_eq_diagonal (r : R) : algebraMap R (Matrix n n α) r = diagonalₓ (algebraMap R (n → α) r) :=
@@ -1439,15 +1458,23 @@ theorem transpose_sum [AddCommMonoidₓ α] {ι : Type _} (s : Finset ι) (M : �
     (∑ i in s, M i)ᵀ = ∑ i in s, (M i)ᵀ :=
   (transposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
 
+variable (m α)
+
 /-- `matrix.transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
 def transposeRingEquiv [AddCommMonoidₓ α] [CommSemigroupₓ α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { transposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᵀ, invFun := fun M => M.unopᵀ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
+variable {m α}
+
+@[simp]
+theorem transpose_pow [CommSemiringₓ α] [Fintype m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) : (M ^ k)ᵀ = Mᵀ ^ k :=
+  MulOpposite.op_injective <| map_pow (transposeRingEquiv m α) M k
+
 theorem transpose_list_prod [CommSemiringₓ α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
     l.Prodᵀ = (l.map transposeₓ).reverse.Prod :=
-  (transposeRingEquiv : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ).unop_map_list_prod l
+  (transposeRingEquiv m α).unop_map_list_prod l
 
 end Transpose
 
@@ -1529,16 +1556,25 @@ theorem conj_transpose_sum [AddCommMonoidₓ α] [StarAddMonoid α] {ι : Type _
     (∑ i in s, M i)ᴴ = ∑ i in s, (M i)ᴴ :=
   (conjTransposeAddEquiv : Matrix m n α ≃+ Matrix n m α).toAddMonoidHom.map_sum _ s
 
+variable (m α)
+
 /-- `matrix.conj_transpose` as a `ring_equiv` to the opposite ring -/
 @[simps]
-def conjTransposeRingEquiv [CommSemiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
+def conjTransposeRingEquiv [Semiringₓ α] [StarRing α] [Fintype m] : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ :=
   { conjTransposeAddEquiv.trans MulOpposite.opAddEquiv with toFun := fun M => MulOpposite.op Mᴴ,
     invFun := fun M => M.unopᴴ,
     map_mul' := fun M N => (congr_argₓ MulOpposite.op (conj_transpose_mul M N)).trans (MulOpposite.op_mul _ _) }
 
-theorem conj_transpose_list_prod [CommSemiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
+variable {m α}
+
+@[simp]
+theorem conj_transpose_pow [Semiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (M : Matrix m m α) (k : ℕ) :
+    (M ^ k)ᴴ = Mᴴ ^ k :=
+  MulOpposite.op_injective <| map_pow (conjTransposeRingEquiv m α) M k
+
+theorem conj_transpose_list_prod [Semiringₓ α] [StarRing α] [Fintype m] [DecidableEq m] (l : List (Matrix m m α)) :
     l.Prodᴴ = (l.map conjTranspose).reverse.Prod :=
-  (conjTransposeRingEquiv : Matrix m m α ≃+* (Matrix m m α)ᵐᵒᵖ).unop_map_list_prod l
+  (conjTransposeRingEquiv m α).unop_map_list_prod l
 
 end ConjTranspose
 
@@ -1946,12 +1982,35 @@ theorem update_column_conj_transpose [DecidableEq m] [HasStar α] : updateColumn
   rfl
 
 @[simp]
-theorem update_row_eq_self [DecidableEq m] (A : Matrix m n α) {i : m} : A.updateRow i (A i) = A :=
+theorem update_row_eq_self [DecidableEq m] (A : Matrix m n α) (i : m) : A.updateRow i (A i) = A :=
   Function.update_eq_self i A
 
 @[simp]
-theorem update_column_eq_self [DecidableEq n] (A : Matrix m n α) {i : n} : (A.updateColumn i fun j => A j i) = A :=
+theorem update_column_eq_self [DecidableEq n] (A : Matrix m n α) (i : n) : (A.updateColumn i fun j => A j i) = A :=
   funext fun j => Function.update_eq_self i (A j)
+
+theorem diagonal_update_column_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :
+    (diagonalₓ v).updateColumn i (Pi.single i x) = diagonalₓ (Function.update v i x) := by
+  ext j k
+  obtain rfl | hjk := eq_or_ne j k
+  · rw [diagonal_apply_eq]
+    obtain rfl | hji := eq_or_ne j i
+    · rw [update_column_self, Pi.single_eq_same, Function.update_same]
+      
+    · rw [update_column_ne hji, diagonal_apply_eq, Function.update_noteq hji]
+      
+    
+  · rw [diagonal_apply_ne _ hjk]
+    obtain rfl | hki := eq_or_ne k i
+    · rw [update_column_self, Pi.single_eq_of_ne hjk]
+      
+    · rw [update_column_ne hki, diagonal_apply_ne _ hjk]
+      
+    
+
+theorem diagonal_update_row_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :
+    (diagonalₓ v).updateRow i (Pi.single i x) = diagonalₓ (Function.update v i x) := by
+  rw [← diagonal_transpose, update_row_transpose, diagonal_update_column_single, diagonal_transpose]
 
 end Update
 

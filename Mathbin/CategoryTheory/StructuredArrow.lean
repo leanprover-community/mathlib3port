@@ -80,7 +80,7 @@ def homMk {f f' : StructuredArrow S T} (g : f.right ⟶ f'.right) (w : f.Hom ≫
         ext)
   right := g
   w' := by
-    dsimp
+    dsimp'
     simpa using w.symm
 
 /-- Given a structured arrow `X ⟶ F(U)`, and an arrow `U ⟶ Y`, we can construct a morphism of
@@ -145,7 +145,7 @@ def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
   desc := fun c =>
     homMk (T.preimage c.x.Hom)
       (by
-        dsimp
+        dsimp'
         simp )
   uniq' := fun c m _ => by
     ext
@@ -281,7 +281,7 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where
   lift := fun c =>
     homMk (S.preimage c.x.Hom)
       (by
-        dsimp
+        dsimp'
         simp )
   uniq' := by
     rintro c m -
@@ -321,7 +321,7 @@ def toCostructuredArrow (F : C ⥤ D) (d : D) : (StructuredArrow d F)ᵒᵖ ⥤ 
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.op
       (by
-        dsimp
+        dsimp'
         rw [← op_comp, ← f.unop.w, functor.const.obj_map]
         erw [category.id_comp])
 
@@ -335,7 +335,7 @@ def toCostructuredArrow' (F : C ⥤ D) (d : D) : (StructuredArrow (op d) F.op)�
   map := fun X Y f =>
     CostructuredArrow.homMk f.unop.right.unop
       (by
-        dsimp
+        dsimp'
         rw [← Quiver.Hom.unop_op (F.map (Quiver.Hom.unop f.unop.right)), ← unop_comp, ← F.op_map, ← f.unop.w,
           functor.const.obj_map]
         erw [category.id_comp])
@@ -354,7 +354,7 @@ def toStructuredArrow (F : C ⥤ D) (d : D) : (CostructuredArrow F d)ᵒᵖ ⥤ 
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.op
       (by
-        dsimp
+        dsimp'
         rw [← op_comp, f.unop.w, functor.const.obj_map]
         erw [category.comp_id])
 
@@ -368,7 +368,7 @@ def toStructuredArrow' (F : C ⥤ D) (d : D) : (CostructuredArrow F.op (op d))�
   map := fun X Y f =>
     StructuredArrow.homMk f.unop.left.unop
       (by
-        dsimp
+        dsimp'
         rw [← Quiver.Hom.unop_op (F.map f.unop.left.unop), ← unop_comp, ← F.op_map, f.unop.w, functor.const.obj_map]
         erw [category.comp_id])
 
@@ -387,7 +387,7 @@ def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (StructuredArrow d F)�
       fun X Y f =>
       Quiver.Hom.unop_inj <| by
         ext
-        dsimp
+        dsimp'
         simp )
     (NatIso.ofComponents
       (fun X =>
@@ -396,7 +396,7 @@ def structuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (StructuredArrow d F)�
             tidy))
       fun X Y f => by
       ext
-      dsimp
+      dsimp'
       simp )
 
 /-- For a functor `F : C ⥤ D` and an object `d : D`, the category of costructured arrows
@@ -413,7 +413,7 @@ def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (CostructuredArrow F 
       fun X Y f =>
       Quiver.Hom.unop_inj <| by
         ext
-        dsimp
+        dsimp'
         simp )
     (NatIso.ofComponents
       (fun X =>
@@ -422,7 +422,7 @@ def costructuredArrowOpEquivalence (F : C ⥤ D) (d : D) : (CostructuredArrow F 
             tidy))
       fun X Y f => by
       ext
-      dsimp
+      dsimp'
       simp )
 
 end CategoryTheory

@@ -40,7 +40,7 @@ def coimageObjIso : (Abelian.coimage α).obj X ≅ Abelian.coimage (α.app X) :=
   PreservesCokernel.iso ((evaluation C D).obj X) _ ≪≫
     cokernel.mapIso _ _ (PreservesKernel.iso ((evaluation C D).obj X) _) (Iso.refl _)
       (by
-        dsimp
+        dsimp'
         simp only [category.comp_id]
         exact (kernel_comparison_comp_ι _ ((evaluation C D).obj X)).symm)
 
@@ -52,7 +52,7 @@ def imageObjIso : (Abelian.image α).obj X ≅ Abelian.image (α.app X) :=
       (by
         apply (cancel_mono (preserves_cokernel.iso ((evaluation C D).obj X) α).inv).1
         simp only [category.assoc, iso.hom_inv_id]
-        dsimp
+        dsimp'
         simp only [category.id_comp, category.comp_id]
         exact (π_comp_cokernel_comparison _ ((evaluation C D).obj X)).symm)
 
@@ -61,7 +61,7 @@ theorem coimage_image_comparison_app :
       (coimage_obj_iso α X).inv ≫ (coimageImageComparison α).app X ≫ (image_obj_iso α X).Hom :=
   by
   ext
-  dsimp
+  dsimp'
   simp only [category.comp_id, category.id_comp, category.assoc, coimage_image_factorisation,
     limits.cokernel.π_desc_assoc, limits.kernel.lift_ι]
   simp only [← evaluation_obj_map C D X]

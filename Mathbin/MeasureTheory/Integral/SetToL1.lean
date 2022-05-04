@@ -212,7 +212,7 @@ theorem add (hT : DominatedFinMeasAdditive μ T C) (hT' : DominatedFinMeasAdditi
 theorem smul [NormedField 𝕜] [NormedSpace 𝕜 β] (hT : DominatedFinMeasAdditive μ T C) (c : 𝕜) :
     DominatedFinMeasAdditive μ (fun s => c • T s) (∥c∥ * C) := by
   refine' ⟨hT.1.smul c, fun s hs hμs => _⟩
-  dsimp only
+  dsimp' only
   rw [norm_smul, mul_assoc]
   exact mul_le_mul le_rfl (hT.2 s hs hμs) (norm_nonneg _) (norm_nonneg _)
 
@@ -348,7 +348,7 @@ theorem set_to_simple_func_congr' (T : Set α → E →L[ℝ] F) (h_add : FinMea
     refine' Finset.sum_congr rfl fun p hp => _
     rcases mem_range.1 hp with ⟨a, rfl⟩
     by_cases' eq : f a = g a
-    · dsimp only [pair_apply]
+    · dsimp' only [pair_apply]
       rw [Eq]
       
     · have : T (pair f g ⁻¹' {(f a, g a)}) = 0 := by
@@ -664,7 +664,7 @@ theorem norm_eq_sum_mul (f : α →₁ₛ[μ] G) :
     ∥f∥ = ∑ x in (toSimpleFunc f).range, (μ (toSimpleFunc f ⁻¹' {x})).toReal * ∥x∥ := by
   rw [norm_to_simple_func, snorm_one_eq_lintegral_nnnorm]
   have h_eq := simple_func.map_apply (fun x => (nnnorm x : ℝ≥0∞)) (to_simple_func f)
-  dsimp only  at h_eq
+  dsimp' only  at h_eq
   simp_rw [← h_eq]
   rw [simple_func.lintegral_eq_lintegral, simple_func.map_lintegral, Ennreal.to_real_sum]
   · congr
@@ -1381,7 +1381,7 @@ theorem set_to_fun_indicator_const (hT : DominatedFinMeasAdditive μ T C) {s : S
 
 theorem set_to_fun_const [IsFiniteMeasure μ] (hT : DominatedFinMeasAdditive μ T C) (x : E) :
     (setToFun μ T hT fun _ => x) = T univ x := by
-  have : (fun _ : α => x) = Set.indicator univ fun _ => x := (indicator_univ _).symm
+  have : (fun _ : α => x) = Set.indicatorₓ univ fun _ => x := (indicator_univ _).symm
   rw [this]
   exact set_to_fun_indicator_const hT MeasurableSet.univ (measure_ne_top _ _) x
 
@@ -1625,7 +1625,7 @@ theorem tendsto_set_to_fun_of_dominated_convergence (hT : DominatedFinMeasAdditi
   refine' lintegral_congr_ae _
   rw [← integrable.to_L1_sub]
   refine' ((fs_int n).sub f_int).coe_fn_to_L1.mono fun x hx => _
-  dsimp only
+  dsimp' only
   rw [hx, of_real_norm_eq_coe_nnnorm, Pi.sub_apply]
 
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/

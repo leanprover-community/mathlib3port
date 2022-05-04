@@ -45,7 +45,7 @@ variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G] [Top
 theorem Subgroup.smul_invariant_measure [μ.IsMulRightInvariant] : SmulInvariantMeasure Γ.opposite G μ :=
   { measure_preimage_smul := by
       rintro ⟨c, hc⟩ s hs
-      dsimp [(· • ·)]
+      dsimp' [(· • ·)]
       refine' measure_preimage_mul_right μ (MulOpposite.unop c) s }
 
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/

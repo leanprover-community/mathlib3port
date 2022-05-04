@@ -84,6 +84,12 @@ protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
 theorem ne_iff {x y : ℝ≥0 } : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
   not_iff_not_of_iff <| Nnreal.eq_iff
 
+protected theorem forall {p : ℝ≥0 → Prop} : (∀ x : ℝ≥0 , p x) ↔ ∀ x : ℝ hx : 0 ≤ x, p ⟨x, hx⟩ :=
+  Subtype.forall
+
+protected theorem exists {p : ℝ≥0 → Prop} : (∃ x : ℝ≥0 , p x) ↔ ∃ (x : ℝ)(hx : 0 ≤ x), p ⟨x, hx⟩ :=
+  Subtype.exists
+
 /-- Reinterpret a real number `r` as a non-negative real number. Returns `0` if `r < 0`. -/
 noncomputable def _root_.real.to_nnreal (r : ℝ) : ℝ≥0 :=
   ⟨max r 0, le_max_rightₓ _ _⟩
@@ -525,8 +531,8 @@ theorem to_nnreal_le_to_nnreal_iff {r p : ℝ} (hp : 0 ≤ p) : Real.toNnreal r 
   simp [nnreal.coe_le_coe.symm, Real.toNnreal, hp]
 
 @[simp]
-theorem to_nnreal_lt_to_nnreal_iff' {r p : ℝ} : Real.toNnreal r < Real.toNnreal p ↔ r < p ∧ 0 < p := by
-  simp [nnreal.coe_lt_coe.symm, Real.toNnreal, lt_irreflₓ]
+theorem to_nnreal_lt_to_nnreal_iff' {r p : ℝ} : Real.toNnreal r < Real.toNnreal p ↔ r < p ∧ 0 < p :=
+  Nnreal.coe_lt_coe.symm.trans max_lt_max_left_iff
 
 theorem to_nnreal_lt_to_nnreal_iff {r p : ℝ} (h : 0 < p) : Real.toNnreal r < Real.toNnreal p ↔ r < p :=
   to_nnreal_lt_to_nnreal_iff'.trans (and_iff_left h)

@@ -304,7 +304,7 @@ def goodτ : ℝ :=
   1 + goodδ E / 4
 
 theorem one_lt_good_τ : 1 < goodτ E := by
-  dsimp [good_τ, good_δ]
+  dsimp' [good_τ, good_δ]
   linarith [(exists_good_δ E).some_spec.1]
 
 variable {E}

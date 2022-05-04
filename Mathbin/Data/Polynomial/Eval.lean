@@ -582,7 +582,7 @@ theorem map_X : x.map f = X :=
 
 @[simp]
 theorem map_monomial {n a} : (monomial n a).map f = monomial n (f a) := by
-  dsimp only [map]
+  dsimp' only [map]
   rw [eval₂_monomial, monomial_eq_C_mul_X]
   rfl
 

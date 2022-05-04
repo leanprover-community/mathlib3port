@@ -137,7 +137,11 @@ theorem snorm_exponent_top {f : α → F} : snorm f ∞ μ = snormEssSup f μ :=
 
 /-- The property that `f:α→E` is ae strongly measurable and `(∫ ∥f a∥^p ∂μ)^(1/p)` is finite
 if `p < ∞`, or `ess_sup f < ∞` if `p = ∞`. -/
-def Memℒp {α} {m : MeasurableSpace α} (f : α → E) (p : ℝ≥0∞) (μ : Measure α) : Prop :=
+def Memℒp {α} {m : MeasurableSpace α} (f : α → E) (p : ℝ≥0∞)
+    (μ : Measure α := by
+      run_tac
+        volume_tac) :
+    Prop :=
   AeStronglyMeasurable f μ ∧ snorm f p μ < ∞
 
 theorem Memℒp.ae_strongly_measurable {f : α → E} {p : ℝ≥0∞} (h : Memℒp f p μ) : AeStronglyMeasurable f μ :=
@@ -345,6 +349,15 @@ theorem mem_ℒp_const (c : E) [IsFiniteMeasure μ] : Memℒp (fun a : α => c) 
   refine' Ennreal.mul_lt_top Ennreal.coe_ne_top _
   refine' (Ennreal.rpow_lt_top_of_nonneg _ (measure_ne_top μ Set.Univ)).Ne
   simp
+
+theorem mem_ℒp_top_const (c : E) : Memℒp (fun a : α => c) ∞ μ := by
+  refine' ⟨ae_strongly_measurable_const, _⟩
+  by_cases' h : μ = 0
+  · simp only [h, snorm_measure_zero, WithTop.zero_lt_top]
+    
+  · rw [snorm_const _ Ennreal.top_ne_zero h]
+    simp only [Ennreal.top_to_real, div_zero, Ennreal.rpow_zero, mul_oneₓ, Ennreal.coe_lt_top]
+    
 
 theorem mem_ℒp_const_iff {p : ℝ≥0∞} {c : E} (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     Memℒp (fun x : α => c) p μ ↔ c = 0 ∨ μ Set.Univ < ∞ := by
@@ -1131,6 +1144,12 @@ theorem mem_ℒp_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀
     exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
     
 
+theorem mem_ℒp_finset_sum' {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀, ∀ i ∈ s, ∀, Memℒp (f i) p μ) :
+    Memℒp (∑ i in s, f i) p μ := by
+  convert mem_ℒp_finset_sum s hf
+  ext x
+  simp
+
 end HasMeasurableAdd
 
 end BorelSpace
@@ -1299,7 +1318,10 @@ theorem Memℒp.snorm_mk_lt_top {α E : Type _} [MeasurableSpace α] {μ : Measu
   simp [hfp.2]
 
 /-- Lp space -/
-def lp {α} (E : Type _) {m : MeasurableSpace α} [NormedGroup E] (p : ℝ≥0∞) (μ : Measure α) :
+def lp {α} (E : Type _) {m : MeasurableSpace α} [NormedGroup E] (p : ℝ≥0∞)
+    (μ : Measure α := by
+      run_tac
+        volume_tac) :
     AddSubgroup (α →ₘ[μ] E) where
   Carrier := { f | snorm f p μ < ∞ }
   zero_mem' := by
@@ -1820,18 +1842,42 @@ theorem indicator_const_Lp_disjoint_union {s t : Set α} (hs : MeasurableSet s) 
 
 end IndicatorConstLp
 
+theorem Memℒp.norm_rpow_div {f : α → E} (hf : Memℒp f p μ) (q : ℝ≥0∞) :
+    Memℒp (fun x : α => ∥f x∥ ^ q.toReal) (p / q) μ := by
+  refine' ⟨(hf.1.norm.AeMeasurable.pow_const q.to_real).AeStronglyMeasurable, _⟩
+  by_cases' q_top : q = ∞
+  · simp [q_top]
+    
+  by_cases' q_zero : q = 0
+  · simp [q_zero]
+    by_cases' p_zero : p = 0
+    · simp [p_zero]
+      
+    rw [Ennreal.div_zero p_zero]
+    exact (mem_ℒp_top_const (1 : ℝ)).2
+    
+  rw [snorm_norm_rpow _ (Ennreal.to_real_pos q_zero q_top)]
+  apply Ennreal.rpow_lt_top_of_nonneg Ennreal.to_real_nonneg
+  rw [Ennreal.of_real_to_real q_top, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel q_zero q_top, mul_oneₓ]
+  exact hf.2.Ne
+
+theorem mem_ℒp_norm_rpow_iff {q : ℝ≥0∞} {f : α → E} (hf : AeStronglyMeasurable f μ) (q_zero : q ≠ 0) (q_top : q ≠ ∞) :
+    Memℒp (fun x : α => ∥f x∥ ^ q.toReal) (p / q) μ ↔ Memℒp f p μ := by
+  refine' ⟨fun h => _, fun h => h.norm_rpow_div q⟩
+  apply (mem_ℒp_norm_iff hf).1
+  convert h.norm_rpow_div q⁻¹
+  · ext x
+    rw [Real.norm_eq_abs, Real.abs_rpow_of_nonneg (norm_nonneg _), ← Real.rpow_mul (abs_nonneg _), Ennreal.to_real_inv,
+      mul_inv_cancel, abs_of_nonneg (norm_nonneg _), Real.rpow_one]
+    simp [Ennreal.to_real_eq_zero_iff, not_or_distrib, q_zero, q_top]
+    
+  · rw [div_eq_mul_inv, inv_invₓ, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel q_zero q_top, mul_oneₓ]
+    
+
 theorem Memℒp.norm_rpow {f : α → E} (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     Memℒp (fun x : α => ∥f x∥ ^ p.toReal) 1 μ := by
-  refine' ⟨(hf.1.norm.AeMeasurable.pow_const p.to_real).AeStronglyMeasurable, _⟩
-  have := hf.snorm_ne_top
-  rw [snorm_eq_lintegral_rpow_nnnorm hp_ne_zero hp_ne_top] at this
-  rw [snorm_one_eq_lintegral_nnnorm]
-  convert Ennreal.rpow_lt_top_of_nonneg (@Ennreal.to_real_nonneg p) this
-  rw [← Ennreal.rpow_mul, one_div_mul_cancel (Ennreal.to_real_pos hp_ne_zero hp_ne_top).Ne.symm, Ennreal.rpow_one]
-  congr
-  ext1 x
-  rw [Ennreal.coe_rpow_of_nonneg _ Ennreal.to_real_nonneg, Real.nnnorm_of_nonneg]
-  congr
+  convert hf.norm_rpow_div p
+  rw [div_eq_mul_inv, Ennreal.mul_inv_cancel hp_ne_zero hp_ne_top]
 
 end MeasureTheory
 
@@ -1992,7 +2038,7 @@ def compLpₗ (L : E →L[𝕜] F) : lp E p μ →ₗ[𝕜] lp F p μ where
     simp only [ha1, ha2, ha3, ha4, ha5, map_add, Pi.add_apply]
   map_smul' := by
     intro c f
-    dsimp
+    dsimp'
     ext1
     filter_upwards [Lp.coe_fn_smul c f, coe_fn_comp_Lp L (c • f), Lp.coe_fn_smul c (L.comp_Lp f),
       coe_fn_comp_Lp L f] with _ ha1 ha2 ha3 ha4
@@ -2044,7 +2090,7 @@ theorem indicator_const_Lp_eq_to_span_singleton_comp_Lp {s : Set α} [NormedSpac
   rw [← eventually_eq] at h_comp_Lp
   refine' eventually_eq.trans _ h_comp_Lp.symm
   refine' (@indicator_const_Lp_coe_fn _ _ _ 2 μ _ s hs hμs (1 : ℝ)).mono fun y hy => _
-  dsimp only
+  dsimp' only
   rw [hy]
   simp_rw [ContinuousLinearMap.to_span_singleton_apply]
   by_cases' hy_mem : y ∈ s <;> simp [hy_mem, ContinuousLinearMap.lsmul_apply]
@@ -2056,6 +2102,12 @@ section PosPart
 theorem lipschitz_with_pos_part : LipschitzWith 1 fun x : ℝ => max x 0 :=
   LipschitzWith.of_dist_le_mul fun x y => by
     simp [dist, abs_max_sub_max_le_abs]
+
+theorem _root_.measure_theory.mem_ℒp.pos_part {f : α → ℝ} (hf : Memℒp f p μ) : Memℒp (fun x => max (f x) 0) p μ :=
+  lipschitz_with_pos_part.comp_mem_ℒp (max_eq_rightₓ le_rfl) hf
+
+theorem _root_.measure_theory.mem_ℒp.neg_part {f : α → ℝ} (hf : Memℒp f p μ) : Memℒp (fun x => max (-f x) 0) p μ :=
+  lipschitz_with_pos_part.comp_mem_ℒp (max_eq_rightₓ le_rfl) hf.neg
 
 /-- Positive part of a function in `L^p`. -/
 def posPart (f : lp ℝ p μ) : lp ℝ p μ :=

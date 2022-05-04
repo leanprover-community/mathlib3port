@@ -93,7 +93,7 @@ def leftDerivedZeroToSelfAppInv [EnoughProjectives C] [PreservesFiniteColimits F
 
 theorem left_derived_zero_to_self_app_comp_inv [EnoughProjectives C] [PreservesFiniteColimits F] {X : C}
     (P : ProjectiveResolution X) : leftDerivedZeroToSelfApp F P ≫ leftDerivedZeroToSelfAppInv F P = 𝟙 _ := by
-  dsimp [left_derived_zero_to_self_app, left_derived_zero_to_self_app_inv]
+  dsimp' [left_derived_zero_to_self_app, left_derived_zero_to_self_app_inv]
   rw [← category.assoc, ← category.assoc, ← category.assoc, iso.comp_inv_eq, category.id_comp, category.assoc,
     category.assoc, category.assoc]
   convert category.comp_id _
@@ -108,7 +108,7 @@ theorem left_derived_zero_to_self_app_comp_inv [EnoughProjectives C] [PreservesF
 
 theorem left_derived_zero_to_self_app_inv_comp [EnoughProjectives C] [PreservesFiniteColimits F] {X : C}
     (P : ProjectiveResolution X) : leftDerivedZeroToSelfAppInv F P ≫ leftDerivedZeroToSelfApp F P = 𝟙 _ := by
-  dsimp [left_derived_zero_to_self_app, left_derived_zero_to_self_app_inv]
+  dsimp' [left_derived_zero_to_self_app, left_derived_zero_to_self_app_inv]
   rw [category.assoc, category.assoc, category.assoc, ← category.assoc (F.left_derived_obj_iso 0 P).inv, iso.inv_hom_id,
     category.id_comp, is_iso.inv_comp_eq, category.comp_id]
   ext
@@ -130,14 +130,14 @@ naturality of the square given by `left_derived_zero_to_self_obj_hom. -/
 theorem left_derived_zero_to_self_natural [EnoughProjectives C] {X : C} {Y : C} (f : X ⟶ Y) (P : ProjectiveResolution X)
     (Q : ProjectiveResolution Y) :
     (F.leftDerived 0).map f ≫ leftDerivedZeroToSelfApp F Q = leftDerivedZeroToSelfApp F P ≫ F.map f := by
-  dsimp only [left_derived_zero_to_self_app]
+  dsimp' only [left_derived_zero_to_self_app]
   rw
     [functor.left_derived_map_eq F 0 f (ProjectiveResolution.lift f P Q)
       (by
         simp ),
     category.assoc, category.assoc, ← category.assoc _ (F.left_derived_obj_iso 0 Q).Hom, iso.inv_hom_id,
     category.id_comp, category.assoc, whisker_eq]
-  dsimp only [homology_functor_map]
+  dsimp' only [homology_functor_map]
   ext
   simp only [HomologicalComplex.Hom.sq_to_right, map_homological_complex_map_f, homology.π'_map_assoc,
     homology.π'_desc', kernel.lift_ι_assoc, category.assoc, homology.π'_desc'_assoc, ← map_comp,

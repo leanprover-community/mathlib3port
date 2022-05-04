@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 -/
 import Mathbin.Data.Nat.Bitwise
+import Mathbin.SetTheory.Game.Birthday
 import Mathbin.SetTheory.Game.Impartial
-import Mathbin.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Nim and the Sprague-Grundy theorem
@@ -65,6 +65,15 @@ theorem nim_def (O : Ordinal) :
   rw [nim]
   rfl
 
+@[simp]
+theorem nim_birthday (O : Ordinal) : (nim O).birthday = O := by
+  induction' O using Ordinal.induction with O IH
+  rw [nim_def, birthday_def]
+  dsimp'
+  rw [max_eq_rightₓ le_rfl]
+  convert lsub_typein O
+  exact funext fun i => IH _ (typein_lt_self i)
+
 instance nim_impartial : ∀ O : Ordinal, Impartial (nim O)
   | O => by
     rw [impartial_def, nim_def, neg_def]
@@ -101,6 +110,7 @@ theorem exists_move_left_eq {O : Ordinal} : ∀, ∀ O' < O, ∀, ∃ i, (nim O)
     ⟨(Ordinal.principalSegOut h).top, by
       simp ⟩
 
+@[simp]
 theorem zero_first_loses : (nim (0 : Ordinal)).FirstLoses := by
   rw [impartial.first_loses_symm, nim_def, le_def_lt]
   exact ⟨@isEmptyElim (0 : Ordinal).out.α _ _, @isEmptyElim Pempty _ _⟩
@@ -113,6 +123,7 @@ theorem non_zero_first_wins {O : Ordinal} (hO : O ≠ 0) : (nim O).FirstWins := 
       ⟨(Ordinal.principalSegOut hO).top, by
         simpa using zero_first_loses.1⟩
 
+@[simp]
 theorem sum_first_loses_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).FirstLoses ↔ O₁ = O₂ := by
   constructor
   · contrapose
@@ -136,9 +147,11 @@ theorem sum_first_loses_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).Fir
     exact impartial.add_self (nim O₁)
     
 
+@[simp]
 theorem sum_first_wins_iff_neq (O₁ O₂ : Ordinal) : (nim O₁ + nim O₂).FirstWins ↔ O₁ ≠ O₂ := by
   rw [iff_not_comm, impartial.not_first_wins, sum_first_loses_iff_eq]
 
+@[simp]
 theorem equiv_iff_eq (O₁ O₂ : Ordinal) : (nim O₁ ≈ nim O₂) ↔ O₁ = O₂ :=
   ⟨fun h =>
     (sum_first_loses_iff_eq _ _).1 <| by
@@ -151,16 +164,15 @@ end nim
 
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
-noncomputable def grundyValue : ∀ G : Pgame.{u} [G.Impartial], Ordinal.{u}
-  | G => fun hG => Ordinal.mex.{u, u} fun i => grundy_value (G.move_left i)
+noncomputable def grundyValue : ∀ G : Pgame.{u}, Ordinal.{u}
+  | G => Ordinal.mex.{u, u} fun i => grundy_value (G.moveLeft i)
 
-theorem grundy_value_def (G : Pgame) [G.Impartial] :
-    grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) := by
+theorem grundy_value_def (G : Pgame) : grundyValue G = Ordinal.mex.{u, u} fun i => grundyValue (G.moveLeft i) := by
   rw [grundy_value]
 
 /-- The Sprague-Grundy theorem which states that every impartial game is equivalent to a game of
  nim, namely the game of nim corresponding to the games Grundy value -/
-theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (grundy_value G)
+theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (grundyValue G)
   | G => by
     intro hG
     rw [impartial.equiv_iff_sum_first_loses, ← impartial.no_good_left_moves_iff_first_loses]
@@ -194,26 +206,31 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       simpa only [hi] using impartial.add_self (nim (grundy_value (G.move_left i)))
       
 
-theorem equiv_nim_iff_grundy_value_eq (G : Pgame) [G.Impartial] (O : Ordinal) : (G ≈ nim O) ↔ grundyValue G = O :=
+@[simp]
+theorem grundy_value_eq_iff_equiv_nim (G : Pgame) [G.Impartial] (O : Ordinal) : grundyValue G = O ↔ (G ≈ nim O) :=
   ⟨by
+    rintro rfl
+    exact equiv_nim_grundy_value G, by
     intro h
     rw [← nim.equiv_iff_eq]
-    exact equiv_trans (equiv_symm (equiv_nim_grundy_value G)) h, by
-    rintro rfl
-    exact equiv_nim_grundy_value G⟩
+    exact equiv_trans (equiv_symm (equiv_nim_grundy_value G)) h⟩
 
 theorem Nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
-  rw [← equiv_nim_iff_grundy_value_eq]
+  simp
 
-theorem equiv_iff_grundy_value_eq (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ grundyValue G = grundyValue H :=
-  (equiv_congr_left.1 (equiv_nim_grundy_value H) _).trans <| equiv_nim_iff_grundy_value_eq _ _
+@[simp]
+theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : grundyValue G = grundyValue H ↔ (G ≈ H) :=
+  (grundy_value_eq_iff_equiv_nim _ _).trans (equiv_congr_left.1 (equiv_nim_grundy_value H) _).symm
 
+@[simp]
 theorem grundy_value_zero : grundyValue 0 = 0 := by
-  rw [(equiv_iff_grundy_value_eq 0 (nim 0)).1 (equiv_symm nim.zero_first_loses), nim.grundy_value]
+  rw [(grundy_value_eq_iff_equiv 0 (nim 0)).2 (equiv_symm nim.zero_first_loses), nim.grundy_value]
 
-theorem equiv_zero_iff_grundy_value (G : Pgame) [G.Impartial] : (G ≈ 0) ↔ grundyValue G = 0 := by
-  rw [equiv_iff_grundy_value_eq, grundy_value_zero]
+@[simp]
+theorem grundy_value_iff_equiv_zero (G : Pgame) [G.Impartial] : grundyValue G = 0 ↔ (G ≈ 0) := by
+  rw [← grundy_value_eq_iff_equiv, grundy_value_zero]
 
+@[simp]
 theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
   induction' n using Nat.strong_induction_onₓ with n hn generalizing m
   induction' m using Nat.strong_induction_onₓ with m hm
@@ -279,11 +296,11 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
   exact ⟨_, ⟨h₁, Ordinal.mex_not_mem_range _⟩⟩
 
 theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := by
-  rw [equiv_nim_iff_grundy_value_eq, grundy_value_nim_add_nim]
+  rw [← grundy_value_eq_iff_equiv_nim, grundy_value_nim_add_nim]
 
 theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (hG : grundyValue G = n)
     (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
-  rw [← nim.grundy_value (Nat.lxor n m), ← equiv_iff_grundy_value_eq]
+  rw [← nim.grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
   refine' equiv_trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
 

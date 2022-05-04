@@ -119,7 +119,7 @@ def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
 
 theorem kill_compl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
   alg_hom_ext fun i => by
-    dsimp
+    dsimp'
     rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equivₓ.of_injective_symm_apply]
 
 @[simp]

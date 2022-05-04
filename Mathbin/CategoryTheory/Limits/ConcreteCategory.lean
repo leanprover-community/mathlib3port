@@ -108,7 +108,7 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
           
         · rfl
           
-        · dsimp
+        · dsimp'
           erw [← x.2 b']
           rfl
           

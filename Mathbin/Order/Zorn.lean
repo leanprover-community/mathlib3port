@@ -93,46 +93,71 @@ theorem exists_maximal_of_nonempty_chains_bounded [Nonempty α]
         (h c hc))
     fun a b c => trans
 
-section PartialOrderₓ
+section Preorderₓ
 
-variable [PartialOrderₓ α]
+variable [Preorderₓ α]
 
-theorem zorn_partial_order (h : ∀ c : Set α, IsChain (· ≤ ·) c → ∃ ub, ∀, ∀ a ∈ c, ∀, a ≤ ub) :
-    ∃ m : α, ∀ a, m ≤ a → a = m :=
-  let ⟨m, hm⟩ := @exists_maximal_of_chains_bounded α (· ≤ ·) h fun a b c => le_transₓ
-  ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
+theorem zorn_preorder (h : ∀ c : Set α, IsChain (· ≤ ·) c → BddAbove c) : ∃ m : α, ∀ a, m ≤ a → a ≤ m :=
+  exists_maximal_of_chains_bounded h fun a b c => le_transₓ
 
-theorem zorn_nonempty_partial_order [Nonempty α]
-    (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀, ∀ a ∈ c, ∀, a ≤ ub) : ∃ m : α, ∀ a, m ≤ a → a = m :=
-  let ⟨m, hm⟩ := @exists_maximal_of_nonempty_chains_bounded α (· ≤ ·) _ h fun a b c => le_transₓ
-  ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
+theorem zorn_nonempty_preorder [Nonempty α] (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → BddAbove c) :
+    ∃ m : α, ∀ a, m ≤ a → a ≤ m :=
+  exists_maximal_of_nonempty_chains_bounded h fun a b c => le_transₓ
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
-theorem zorn_partial_order₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
-    ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
+theorem zorn_preorder₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
+    ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z ≤ m :=
   let ⟨⟨m, hms⟩, h⟩ :=
-    @zorn_partial_order { m // m ∈ s } _ fun c hc =>
+    @zorn_preorder s _ fun c hc =>
       let ⟨ub, hubs, hub⟩ :=
         ih (Subtype.val '' c) (fun _ ⟨⟨x, hx⟩, _, h⟩ => h ▸ hx)
           (by
             rintro _ ⟨p, hpc, rfl⟩ _ ⟨q, hqc, rfl⟩ hpq <;> refine' hc hpc hqc fun t => hpq (Subtype.ext_iff.1 t))
       ⟨⟨ub, hubs⟩, fun hc => hub _ ⟨_, hc, rfl⟩⟩
-  ⟨m, hms, fun z hzs hmz => congr_argₓ Subtype.val (h ⟨z, hzs⟩ hmz)⟩
+  ⟨m, hms, fun z hzs hmz => h ⟨z, hzs⟩ hmz⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
+theorem zorn_nonempty_preorder₀ (s : Set α)
+    (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
+    ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z ≤ m := by
+  rcases zorn_preorder₀ { y ∈ s | x ≤ y } fun c hcs hc => _ with ⟨m, ⟨hms, hxm⟩, hm⟩
+  · exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
+    
+  · rcases c.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
+    · exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
+      
+    · rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
+      exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
+      
+    
+
+end Preorderₓ
+
+section PartialOrderₓ
+
+variable [PartialOrderₓ α]
+
+theorem zorn_partial_order (h : ∀ c : Set α, IsChain (· ≤ ·) c → BddAbove c) : ∃ m : α, ∀ a, m ≤ a → a = m :=
+  let ⟨m, hm⟩ := zorn_preorder h
+  ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
+
+theorem zorn_nonempty_partial_order [Nonempty α] (h : ∀ c : Set α, IsChain (· ≤ ·) c → c.Nonempty → BddAbove c) :
+    ∃ m : α, ∀ a, m ≤ a → a = m :=
+  let ⟨m, hm⟩ := zorn_nonempty_preorder h
+  ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
+theorem zorn_partial_order₀ (s : Set α) (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) :
+    ∃ m ∈ s, ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
+  let ⟨m, hms, hm⟩ := zorn_preorder₀ s ih
+  ⟨m, hms, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » s)
 theorem zorn_nonempty_partial_order₀ (s : Set α)
     (ih : ∀ c _ : c ⊆ s, IsChain (· ≤ ·) c → ∀, ∀ y ∈ c, ∀, ∃ ub ∈ s, ∀, ∀ z ∈ c, ∀, z ≤ ub) (x : α) (hxs : x ∈ s) :
     ∃ m ∈ s, x ≤ m ∧ ∀, ∀ z ∈ s, ∀, m ≤ z → z = m :=
-  let ⟨⟨m, hms, hxm⟩, h⟩ :=
-    @zorn_partial_order { m // m ∈ s ∧ x ≤ m } _ fun c hc =>
-      c.eq_empty_or_nonempty.elim (fun hce => hce.symm ▸ ⟨⟨x, hxs, le_rfl⟩, fun _ => False.elim⟩) fun ⟨m, hmc⟩ =>
-        let ⟨ub, hubs, hub⟩ :=
-          ih (Subtype.val '' c) (image_subset_iff.2 fun z hzc => z.2.1)
-            (by
-              rintro _ ⟨p, hpc, rfl⟩ _ ⟨q, hqc, rfl⟩ hpq <;> exact hc hpc hqc (ne_of_apply_ne _ hpq))
-            m.1 (mem_image_of_mem _ hmc)
-        ⟨⟨ub, hubs, le_transₓ m.2.2 <| hub m.1 <| mem_image_of_mem _ hmc⟩, fun a hac => hub a.1 ⟨a, hac, rfl⟩⟩
-  ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val <| h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
+  let ⟨m, hms, hxm, hm⟩ := zorn_nonempty_preorder₀ s ih x hxs
+  ⟨m, hms, hxm, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 
 end PartialOrderₓ
 

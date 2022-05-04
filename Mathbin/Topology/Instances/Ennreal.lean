@@ -325,7 +325,7 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
           (by
             simp only [one_lt_top, add_lt_top, coe_lt_top, and_selfₓ]),
         fun z => z < b + 1, Iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun x hx y hy => _⟩
-    dsimp
+    dsimp'
     rw [lt_tsub_iff_right]
     have : (n : ℝ≥0∞) + y + (b + 1) < x + (b + 1) :=
       calc
@@ -370,7 +370,7 @@ protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a �
     exact coe_pos.1 hε
     filter_upwards [ProdIsOpen.mem_nhds (lt_mem_nhds <| @coe_lt_top (n / ε)) (lt_mem_nhds hεb)]
     rintro ⟨a₁, a₂⟩ ⟨h₁, h₂⟩
-    dsimp  at h₁ h₂⊢
+    dsimp'  at h₁ h₂⊢
     rw [← div_mul_cancel n hε.ne', coe_mul]
     exact mul_lt_mul h₁ h₂
   cases a
@@ -428,6 +428,11 @@ protected theorem continuous_const_mul {a : ℝ≥0∞} (ha : a ≠ ⊤) : Conti
 
 protected theorem continuous_mul_const {a : ℝ≥0∞} (ha : a ≠ ⊤) : Continuous fun x => x * a :=
   continuous_iff_continuous_at.2 fun x => Ennreal.continuous_at_mul_const (Or.inl ha)
+
+protected theorem continuous_div_const (c : ℝ≥0∞) (c_ne_zero : c ≠ 0) : Continuous fun x : ℝ≥0∞ => x / c := by
+  simp_rw [div_eq_mul_inv, continuous_iff_continuous_at]
+  intro x
+  exact Ennreal.continuous_at_mul_const (Or.intro_left _ (inv_ne_top.mpr c_ne_zero))
 
 @[continuity]
 theorem continuous_pow (n : ℕ) : Continuous fun a : ℝ≥0∞ => a ^ n := by
@@ -902,16 +907,7 @@ theorem tsum_sub {f : ℕ → ℝ≥0∞} {g : ℕ → ℝ≥0∞} (h₁ : (∑'
 theorem tsum_mono_subtype (f : α → ℝ≥0∞) {s t : Set α} (h : s ⊆ t) : (∑' x : s, f x) ≤ ∑' x : t, f x := by
   simp only [tsum_subtype]
   apply Ennreal.tsum_le_tsum
-  intro x
-  split_ifs
-  · exact le_rfl
-    
-  · exact (h_2 (h h_1)).elim
-    
-  · exact zero_le _
-    
-  · exact le_rfl
-    
+  exact indicator_le_indicator_of_subset h fun _ => zero_le _
 
 theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) : (∑' x : s ∪ t, f x) ≤ (∑' x : s, f x) + ∑' x : t, f x :=
   calc

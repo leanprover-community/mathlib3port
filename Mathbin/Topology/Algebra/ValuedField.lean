@@ -96,7 +96,8 @@ instance (priority := 100) Valued.topological_division_ring [Valued K Γ₀] : T
 
 /-- A valued division ring is separated. -/
 instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpace K := by
-  apply TopologicalAddGroup.separated_of_zero_sep
+  rw [separated_iff_t2]
+  apply TopologicalAddGroup.t2_space_of_zero_sep
   intro x x_ne
   refine' ⟨{ k | v k < v x }, _, fun h => lt_irreflₓ _ h⟩
   rw [Valued.mem_nhds]
@@ -137,7 +138,7 @@ end ValuationTopologicalDivisionRing
 
 end DivisionRing
 
-section ValuationOnValuedFieldCompletion
+namespace Valued
 
 open UniformSpace
 
@@ -145,13 +146,11 @@ variable {K : Type _} [Field K] {Γ₀ : Type _} [LinearOrderedCommGroupWithZero
 
 include hv
 
-open Valued UniformSpace
-
 -- mathport name: «exprhat»
 local notation "hat " => Completion
 
 /-- A valued field is completable. -/
-instance (priority := 100) Valued.completable : CompletableTopField K :=
+instance (priority := 100) completable : CompletableTopField K :=
   { ValuedRing.separated with
     nice := by
       rintro F hF h0
@@ -207,11 +206,11 @@ instance (priority := 100) Valued.completable : CompletableTopField K :=
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /-- The extension of the valuation of a valued field to the completion of the field. -/
-noncomputable def Valued.extension : hat K → Γ₀ :=
+noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » V')
-theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
+theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀
   by_cases' h : x₀ = coe 0
@@ -292,15 +291,15 @@ theorem Valued.continuous_extension : Continuous (Valued.extension : hat K → �
         rw [this, one_mulₓ]
     
 
-@[norm_cast]
-theorem Valued.extension_extends (x : K) : (Valued.extension (x : hat K) : Γ₀) = v x := by
+@[simp, norm_cast]
+theorem extension_extends (x : K) : extension (x : hat K) = v x := by
   have : T2Space Γ₀ := RegularSpace.t2_space _
   refine' completion.dense_inducing_coe.extend_eq_of_tendsto _
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at
 
 /-- the extension of a valuation on a division ring to its completion. -/
-noncomputable def Valued.extensionValuation : Valuation (hat K) Γ₀ where
+noncomputable def extensionValuation : Valuation (hat K) Γ₀ where
   toFun := Valued.extension
   map_zero' := by
     rw [← v.map_zero, ← Valued.extension_extends (0 : K)]
@@ -329,11 +328,57 @@ noncomputable def Valued.extensionValuation : Valuation (hat K) Γ₀ where
           (is_closed_le (cont.comp continuous_add) <| cont.comp continuous_snd)
       
     · intro x y
-      dsimp
+      dsimp'
       norm_cast
       rw [← le_max_iff]
       exact v.map_add x y
       
 
-end ValuationOnValuedFieldCompletion
+-- Bourbaki CA VI §5 no.3 Proposition 5 (d)
+theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
+    Closure (coe '' { x : K | v x < (γ : Γ₀) }) = { x : hat K | extensionValuation x < (γ : Γ₀) } := by
+  ext x
+  let γ₀ := extension_valuation x
+  suffices γ₀ ≠ 0 → (x ∈ Closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀)) by
+    cases eq_or_ne γ₀ 0
+    · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt, iff_trueₓ]
+      apply subset_closure
+      exact
+        ⟨0, by
+          simpa only [mem_set_of_eq, Valuation.map_zero, Units.zero_lt, true_andₓ] ⟩
+      
+    · exact this h
+      
+  intro h
+  have hγ₀ : extension ⁻¹' {γ₀} ∈ 𝓝 x :=
+    continuous_extension.continuous_at.preimage_mem_nhds
+      (LinearOrderedCommGroupWithZero.singleton_mem_nhds_of_ne_zero h)
+  rw [mem_closure_iff_nhds']
+  refine' ⟨fun hx => _, fun hx s hs => _⟩
+  · obtain ⟨⟨-, y, hy₁ : v y < (γ : Γ₀), rfl⟩, hy₂⟩ := hx _ hγ₀
+    replace hy₂ : v y = γ₀
+    · simpa using hy₂
+      
+    rwa [← hy₂]
+    
+  · obtain ⟨y, hy₁, hy₂ : ↑y ∈ s⟩ := completion.dense_range_coe.mem_nhds (inter_mem hγ₀ hs)
+    replace hy₁ : v y = γ₀
+    · simpa using hy₁
+      
+    rw [← hy₁] at hx
+    exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
+    
+
+noncomputable instance valuedCompletion : Valued (hat K) Γ₀ where
+  V := extensionValuation
+  is_topological_valuation := fun s => by
+    suffices has_basis (𝓝 (0 : hat K)) (fun _ => True) fun γ : Γ₀ˣ => { x | extension_valuation x < γ } by
+      rw [this.mem_iff]
+      exact
+        exists_congr fun γ => by
+          simp
+    simp_rw [← closure_coe_completion_v_lt]
+    exact (has_basis_nhds_zero K Γ₀).has_basis_of_dense_inducing completion.dense_inducing_coe
+
+end Valued
 

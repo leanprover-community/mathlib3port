@@ -86,8 +86,8 @@ protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[�
     r_pos := Ennreal.coe_lt_top,
     HasSum := fun y _ =>
       (has_sum_nat_add_iff' 3).1 <| by
-        simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add₂]
-        dsimp
+        simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add_add]
+        dsimp'
         simp only [add_commₓ, sub_self, has_sum_zero] }
 
 protected theorem has_fpower_series_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :

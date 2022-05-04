@@ -266,7 +266,7 @@ theorem continuous_id : Continuous (@OrderHom.id α _) := by
   intro <;> rw [c.map_id] <;> rfl
 
 theorem continuous_comp (hfc : Continuous f) (hgc : Continuous g) : Continuous (g.comp f) := by
-  dsimp [continuous]  at *
+  dsimp' [continuous]  at *
   intro
   rw [hfc, hgc, chain.map_comp]
 
@@ -423,7 +423,14 @@ instance : OmegaCompletePartialOrder (α × β) where
   ωSup_le := fun h => ⟨(ωSup_le _ _) fun i => (h i).1, (ωSup_le _ _) fun i => (h i).2⟩
   le_ωSup := fun c i => ⟨le_ωSup (c.map OrderHom.fst) i, le_ωSup (c.map OrderHom.snd) i⟩
 
+theorem ωSup_zip (c₀ : Chain α) (c₁ : Chain β) : ωSup (c₀.zip c₁) = (ωSup c₀, ωSup c₁) := by
+  apply eq_of_forall_ge_iff
+  rintro ⟨z₁, z₂⟩
+  simp [ωSup_le_iff, forall_and_distrib]
+
 end Prod
+
+open OmegaCompletePartialOrder
 
 namespace CompleteLattice
 
@@ -440,35 +447,6 @@ instance (priority := 100) [CompleteLattice α] : OmegaCompletePartialOrder α w
     simp only [OrderHom.coe_fun_mk] <;> apply le_supr_of_le i <;> rfl
 
 variable {α} {β : Type v} [OmegaCompletePartialOrder α] [CompleteLattice β]
-
-open OmegaCompletePartialOrder
-
-theorem inf_continuous [IsTotal β (· ≤ ·)] (f g : α →o β) (hf : Continuous f) (hg : Continuous g) : Continuous (f⊓g) :=
-  by
-  intro c
-  apply eq_of_forall_ge_iff
-  intro z
-  simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_distrib_left, ← forall_or_distrib_right,
-    Function.comp_app, chain.map_coe, OrderHom.has_inf_inf_coe]
-  constructor
-  · introv h
-    apply h
-    
-  · intro h i j
-    apply Or.imp _ _ (h (max i j)) <;>
-      apply le_transₓ <;>
-        mono* <;>
-          try
-            exact le_rfl
-    · apply le_max_leftₓ
-      
-    · apply le_max_rightₓ
-      
-    
-
-theorem inf_continuous' [IsTotal β (· ≤ ·)] {f g : α → β} (hf : Continuous' f) (hg : Continuous' g) :
-    Continuous' (f⊓g) :=
-  ⟨_, inf_continuous _ _ hf.snd hg.snd⟩
 
 theorem Sup_continuous (s : Set <| α →o β) (hs : ∀, ∀ f ∈ s, ∀, Continuous f) : Continuous (sup s) := by
   intro c
@@ -503,6 +481,24 @@ theorem top_continuous : Continuous (⊤ : α →o β) := by
 theorem bot_continuous : Continuous (⊥ : α →o β) := by
   rw [← Sup_empty]
   exact Sup_continuous _ fun f hf => hf.elim
+
+end CompleteLattice
+
+namespace CompleteLattice
+
+variable {α β : Type _} [OmegaCompletePartialOrder α] [CompleteLinearOrder β]
+
+theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g) : Continuous (f⊓g) := by
+  refine' fun c => eq_of_forall_ge_iff fun z => _
+  simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_distrib_left, ← forall_or_distrib_right,
+    Function.comp_app, chain.map_coe, OrderHom.has_inf_inf_coe]
+  exact
+    ⟨fun h _ => h _ _, fun h i j =>
+      (h (max i j)).imp (le_transₓ <| f.mono <| c.mono <| le_max_leftₓ _ _)
+        (le_transₓ <| g.mono <| c.mono <| le_max_rightₓ _ _)⟩
+
+theorem inf_continuous' {f g : α → β} (hf : Continuous' f) (hg : Continuous' g) : Continuous' (f⊓g) :=
+  ⟨_, inf_continuous _ _ hf.snd hg.snd⟩
 
 end CompleteLattice
 
@@ -692,21 +688,6 @@ theorem const_apply (f : β) (a : α) : const f a = f :=
 instance [Inhabited β] : Inhabited (α →𝒄 β) :=
   ⟨const default⟩
 
-namespace Prod
-
-/-- The application of continuous functions as a monotone function.
-
-(It would make sense to make it a continuous function, but we are currently constructing a
-`omega_complete_partial_order` instance for `α →𝒄 β`, and we cannot use it as the domain or image
-of a continuous function before we do.) -/
-@[simps]
-def apply : (α →𝒄 β) × α →o β where
-  toFun := fun f => f.1 f.2
-  monotone' := fun x y h => by
-    dsimp <;> trans y.fst x.snd <;> [apply h.1, apply y.1.Monotone h.2]
-
-end Prod
-
 /-- The map from continuous functions to monotone functions is itself a monotone function. -/
 @[simps]
 def toMono : (α →𝒄 β) →o α →o β where
@@ -757,17 +738,45 @@ protected def ωSup (c : Chain (α →𝒄 β)) : α →𝒄 β :=
 instance : OmegaCompletePartialOrder (α →𝒄 β) :=
   OmegaCompletePartialOrder.lift ContinuousHom.toMono ContinuousHom.ωSup (fun x y h => h) fun c => rfl
 
+namespace Prod
+
+/-- The application of continuous functions as a continuous function.  -/
+@[simps]
+def apply : (α →𝒄 β) × α →𝒄 β where
+  toFun := fun f => f.1 f.2
+  monotone' := fun x y h => by
+    dsimp'
+    trans y.fst x.snd <;> [apply h.1, apply y.1.Monotone h.2]
+  cont := by
+    intro c
+    apply le_antisymmₓ
+    · apply ωSup_le
+      intro i
+      dsimp'
+      rw [(c _).fst.Continuous]
+      apply ωSup_le
+      intro j
+      apply le_ωSup_of_le (max i j)
+      apply apply_mono
+      exact monotone_fst (OrderHom.mono _ (le_max_leftₓ _ _))
+      exact monotone_snd (OrderHom.mono _ (le_max_rightₓ _ _))
+      
+    · apply ωSup_le
+      intro i
+      apply le_ωSup_of_le i
+      dsimp'
+      apply OrderHom.mono _
+      apply le_ωSup_of_le i
+      rfl
+      
+
+end Prod
+
 theorem ωSup_def (c : Chain (α →𝒄 β)) (x : α) : ωSup c x = ContinuousHom.ωSup c x :=
   rfl
 
-theorem ωSup_ωSup (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) :
-    ωSup c₀ (ωSup c₁) = ωSup (ContinuousHom.Prod.apply.comp <| c₀.zip c₁) := by
-  apply eq_of_forall_ge_iff
-  intro z
-  simp only [ωSup_le_iff, (c₀ _).Continuous, chain.map_coe, to_mono_coe, coe_apply,
-    order_hom.omega_complete_partial_order_ωSup_coe, ωSup_def, forall_forall_merge, chain.zip_coe,
-    OrderHom.prod_map_coe, OrderHom.diag_coe, Prod.map_mkₓ, OrderHom.apply_coe, Function.comp_app, prod.apply_coe,
-    OrderHom.comp_coe, ωSup_apply, Function.eval]
+theorem ωSup_apply_ωSup (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) : ωSup c₀ (ωSup c₁) = Prod.apply (ωSup (c₀.zip c₁)) := by
+  simp [prod.apply_apply, Prod.ωSup_zip]
 
 /-- A family of continuous functions yields a continuous family of functions. -/
 @[simps]

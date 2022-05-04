@@ -763,7 +763,7 @@ end Groupₓ
 theorem Groupₓ.to_div_inv_monoid_injective {G : Type _} : Function.Injective (@Groupₓ.toDivInvMonoid G) := by
   rintro ⟨⟩ ⟨⟩ h
   replace h := DivInvMonoidₓ.mk.inj h
-  dsimp  at h
+  dsimp'  at h
   rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
   rfl
 
@@ -783,7 +783,7 @@ attribute [instance] AddCommGroupₓ.toAddCommMonoid
 theorem CommGroupₓ.to_group_injective {G : Type u} : Function.Injective (@CommGroupₓ.toGroup G) := by
   rintro ⟨⟩ ⟨⟩ h
   replace h := Groupₓ.mk.inj h
-  dsimp  at h
+  dsimp'  at h
   rcases h with ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
   rfl
 

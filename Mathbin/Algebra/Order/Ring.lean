@@ -1696,7 +1696,7 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
 
 instance [MulZeroClassₓ α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b => by
-    cases a <;> cases b <;> dsimp [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
+    cases a <;> cases b <;> dsimp' [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
 instance [SemigroupWithZeroₓ α] [NoZeroDivisors α] : SemigroupWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroClass with mul := (· * ·), zero := 0,

@@ -125,13 +125,13 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
           fun X Y f =>
           Pfun.ext fun a b => by
             unfold_projs
-            dsimp
+            dsimp'
             rw [Part.bind_some]
             refine' (part.mem_bind_iff.trans _).trans pfun.mem_to_subtype_iff.symm
             obtain ⟨b | b, hb⟩ := b
             · exact (hb rfl).elim
               
-            dsimp
+            dsimp'
             simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
             convert eq_comm

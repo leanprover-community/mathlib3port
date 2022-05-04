@@ -80,7 +80,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -91,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1284:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -502,21 +502,14 @@ theorem csupr_const [hι : Nonempty ι] {a : α} : (⨆ b : ι, a) = a := by
 theorem cinfi_const [hι : Nonempty ι] {a : α} : (⨅ b : ι, a) = a :=
   @csupr_const (OrderDual α) _ _ _ _
 
+@[simp]
 theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s default := by
   have : ∀ i, s i = s default := fun i => congr_argₓ s (Unique.eq_default i)
   simp only [this, csupr_const]
 
+@[simp]
 theorem infi_unique [Unique ι] {s : ι → α} : (⨅ i, s i) = s default :=
   @supr_unique (OrderDual α) _ _ _ _
-
-@[simp]
-theorem supr_unit {f : Unit → α} : (⨆ x, f x) = f () := by
-  convert supr_unique
-  infer_instance
-
-@[simp]
-theorem infi_unit {f : Unit → α} : (⨅ x, f x) = f () :=
-  @supr_unit (OrderDual α) _ _
 
 @[simp]
 theorem csupr_pos {p : Prop} {f : p → α} (hp : p) : (⨆ h : p, f h) = f hp :=

@@ -517,11 +517,11 @@ instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : Measu
   m₁.Prod m₂
 
 @[measurability]
-theorem measurable_fst [MeasurableSpace α] [MeasurableSpace β] : Measurable (Prod.fst : α × β → α) :=
+theorem measurable_fst {ma : MeasurableSpace α} {mb : MeasurableSpace β} : Measurable (Prod.fst : α × β → α) :=
   Measurable.of_comap_le le_sup_left
 
 @[measurability]
-theorem measurable_snd [MeasurableSpace α] [MeasurableSpace β] : Measurable (Prod.snd : α × β → β) :=
+theorem measurable_snd {ma : MeasurableSpace α} {mb : MeasurableSpace β} : Measurable (Prod.snd : α × β → β) :=
   Measurable.of_comap_le le_sup_right
 
 variable {m : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
@@ -594,8 +594,8 @@ theorem measurable_set_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t := by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
   refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
-  have : MeasurableSet ((fun x => (x, y)) ⁻¹' s ×ˢ t) := measurable_id.prod_mk measurable_const hst
-  have : MeasurableSet (Prod.mk x ⁻¹' s ×ˢ t) := measurable_const.prod_mk measurable_id hst
+  have : MeasurableSet ((fun x => (x, y)) ⁻¹' s ×ˢ t) := measurable_prod_mk_right hst
+  have : MeasurableSet (Prod.mk x ⁻¹' s ×ˢ t) := measurable_prod_mk_left hst
   simp_all
 
 theorem measurable_set_prod {s : Set α} {t : Set β} :
@@ -1262,14 +1262,14 @@ def sumProdDistrib α β γ [MeasurableSpace α] [MeasurableSpace β] [Measurabl
         _ _
     · refine' (set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inl (Set.Univ _)).symm.measurable_comp_iff.1 _
-      dsimp [(· ∘ ·)]
+      dsimp' [(· ∘ ·)]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
       
     · refine' (set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
       refine' (prod_congr set.range_inr (Set.Univ _)).symm.measurable_comp_iff.1 _
-      dsimp [(· ∘ ·)]
+      dsimp' [(· ∘ ·)]
       convert measurable_inr
       ext ⟨b, c⟩
       rfl

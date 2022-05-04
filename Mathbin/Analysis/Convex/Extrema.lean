@@ -28,7 +28,7 @@ open Classical TopologicalSpace
 theorem IsMinOn.of_is_local_min_on_of_convex_on_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) : IsMinOn f (Icc a b) a := by
   rintro c hc
-  dsimp only [mem_set_of_eq]
+  dsimp' only [mem_set_of_eq]
   rw [IsLocalMinOn, nhds_within_Icc_eq_nhds_within_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
   · exact le_rfl

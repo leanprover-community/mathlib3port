@@ -842,7 +842,7 @@ theorem integral_zero_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = 0) : (∫ x
     
 
 theorem integral_indicator {a₁ a₂ a₃ : ℝ} (h : a₂ ∈ Icc a₁ a₃) :
-    (∫ x in a₁..a₃, indicator { x | x ≤ a₂ } f x ∂μ) = ∫ x in a₁..a₂, f x ∂μ := by
+    (∫ x in a₁..a₃, indicatorₓ { x | x ≤ a₂ } f x ∂μ) = ∫ x in a₁..a₂, f x ∂μ := by
   have : { x | x ≤ a₂ } ∩ Ioc a₁ a₃ = Ioc a₁ a₂ := Iic_inter_Ioc_of_le h.2
   rw [integral_of_le h.1, integral_of_le (h.1.trans h.2), integral_indicator, measure.restrict_restrict, this]
   exact measurable_set_Iic
@@ -970,7 +970,7 @@ theorem continuous_within_at_primitive (hb₀ : μ {b₀} = 0) (h_int : Interval
       exacts[measurable_set_Iic, measurable_set_Iic]
       
     · refine' eventually_of_forall fun x => eventually_of_forall fun t => _
-      dsimp [indicator]
+      dsimp' [indicator]
       split_ifs <;> simp
       
     · have : ∀ᵐ t ∂μ, t < b₀ ∨ b₀ < t := by
@@ -1461,7 +1461,7 @@ theorem measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae (hab : Inter
       (tendsto_const_pure.mono_right FTC_filter.pure_le) hub
   filter_upwards [A, A', B, B'] with _ ua_va a_ua ub_vb b_ub
   rw [← integral_interval_sub_interval_comm']
-  · dsimp only
+  · dsimp' only
     abel
     
   exacts[ub_vb, ua_va, b_ub.symm.trans <| hab.symm.trans a_ua]

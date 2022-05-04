@@ -736,7 +736,7 @@ theorem real_inner_mul_inner_self_le (x y : F) : ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ
   have h₁ : ⟪y, x⟫_ℝ = ⟪x, y⟫_ℝ := by
     rw [← inner_conj_sym] <;> rfl
   have h₂ := @inner_mul_inner_self_le ℝ F _ _ x y
-  dsimp  at h₂
+  dsimp'  at h₂
   have h₃ := abs_mul_abs_self ⟪x, y⟫_ℝ
   rw [h₁] at h₂
   simpa [h₃] using h₂
@@ -1958,7 +1958,7 @@ theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset �
   have hF₂ : ∀, ∀ i ∈ s₂ \ s₁, ∀, F i = -f i := fun i hi => if_neg (finset.mem_sdiff.mp hi).2
   have hF : ∀ i, ∥F i∥ = ∥f i∥ := by
     intro i
-    dsimp [F]
+    dsimp' [F]
     split_ifs <;> simp
   have :
     ∥(∑ i in s₁ \ s₂, V i (F i)) + ∑ i in s₂ \ s₁, V i (F i)∥ ^ 2 =

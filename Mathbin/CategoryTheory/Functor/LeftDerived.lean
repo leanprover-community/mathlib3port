@@ -97,8 +97,8 @@ theorem Functor.left_derived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : 
       (F.leftDerivedObjIso n P).Hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫ (F.leftDerivedObjIso n Q).inv :=
   by
-  dsimp only [functor.left_derived, functor.left_derived_obj_iso]
-  dsimp
+  dsimp' only [functor.left_derived, functor.left_derived_obj_iso]
+  dsimp'
   simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
   simp only [← functor.map_comp]
@@ -143,7 +143,7 @@ theorem NatTrans.left_derived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α :
           (G.leftDerivedObjIso n P).inv :=
   by
   symm
-  dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
+  dsimp' [nat_trans.left_derived, functor.left_derived_obj_iso]
   simp only [category.comp_id, category.id_comp]
   rw [← homology_functor_map, HomotopyCategory.homology_functor_map_factors]
   simp only [← functor.map_comp]

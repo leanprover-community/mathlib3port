@@ -1078,11 +1078,11 @@ theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
   rfl
 
 theorem uniform_space_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id := by
-  ext u <;> dsimp [UniformSpace.comap] <;> rw [Prod.id_prod, Filter.comap_id]
+  ext u <;> dsimp' [UniformSpace.comap] <;> rw [Prod.id_prod, Filter.comap_id]
 
 theorem UniformSpace.comap_comap {α β γ} [uγ : UniformSpace γ] {f : α → β} {g : β → γ} :
     UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) := by
-  ext <;> dsimp [UniformSpace.comap] <;> rw [Filter.comap_comap]
+  ext <;> dsimp' [UniformSpace.comap] <;> rw [Filter.comap_comap]
 
 theorem uniform_continuous_iff {α β} [uα : UniformSpace α] [uβ : UniformSpace β] {f : α → β} :
     UniformContinuous f ↔ uα ≤ uβ.comap f :=
@@ -1459,7 +1459,7 @@ theorem lebesgue_number_lemma {α : Type u} [UniformSpace α] {s : Set α} {ι} 
     apply (𝓤 α).sets_of_superset hm'
     rintro ⟨x, y⟩ hp rfl
     refine' ⟨i, m', hm', fun z hz => h (monotone_comp_rel monotone_id monotone_const mm' _)⟩
-    dsimp  at hz⊢
+    dsimp'  at hz⊢
     rw [comp_rel_assoc]
     exact ⟨y, hp, hz⟩
   have hu₂ : s ⊆ ⋃ n ∈ 𝓤 α, u n := by

@@ -49,7 +49,7 @@ theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀, ∀ i
     
   · refine' fun h => ⟨fun i _ => f i, mem_pi.2 h.2, _⟩
     ext i
-    dsimp
+    dsimp'
     exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
     
 

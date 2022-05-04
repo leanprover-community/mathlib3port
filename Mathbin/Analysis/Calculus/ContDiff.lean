@@ -975,29 +975,29 @@ theorem cont_diff_on_iff_continuous_on_differentiable_on (hs : UniqueDiffOn 𝕜
     exact cont_diff_on_of_continuous_on_differentiable_on h.1 h.2
     
 
+theorem cont_diff_on_succ_of_fderiv_within {n : ℕ} (hf : DifferentiableOn 𝕜 f s)
+    (h : ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s) : ContDiffOn 𝕜 (n + 1 : ℕ) f s := by
+  intro x hx
+  rw [cont_diff_within_at_succ_iff_has_fderiv_within_at, insert_eq_of_mem hx]
+  exact ⟨s, self_mem_nhds_within, fderivWithin 𝕜 f s, fun y hy => (hf y hy).HasFderivWithinAt, h x hx⟩
+
 /-- A function is `C^(n + 1)` on a domain with unique derivatives if and only if it is
 differentiable there, and its derivative (expressed with `fderiv_within`) is `C^n`. -/
 theorem cont_diff_on_succ_iff_fderiv_within {n : ℕ} (hs : UniqueDiffOn 𝕜 s) :
     ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔ DifferentiableOn 𝕜 f s ∧ ContDiffOn 𝕜 n (fun y => fderivWithin 𝕜 f s y) s := by
-  constructor
-  · intro H
-    refine' ⟨H.differentiable_on (WithTop.coe_le_coe.2 (Nat.le_add_leftₓ 1 n)), fun x hx => _⟩
-    rcases cont_diff_within_at_succ_iff_has_fderiv_within_at.1 (H x hx) with ⟨u, hu, f', hff', hf'⟩
-    rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
-    rw [inter_comm, insert_eq_of_mem hx] at ho
-    have := hf'.mono ho
-    rw [cont_diff_within_at_inter' (mem_nhds_within_of_mem_nhds (IsOpen.mem_nhds o_open xo))] at this
-    apply this.congr_of_eventually_eq' _ hx
-    have : o ∩ s ∈ 𝓝[s] x := mem_nhds_within.2 ⟨o, o_open, xo, subset.refl _⟩
-    rw [inter_comm] at this
-    apply Filter.eventually_eq_of_mem this fun y hy => _
-    have A : fderivWithin 𝕜 f (s ∩ o) y = f' y := ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
-    rwa [fderiv_within_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
-    
-  · rintro ⟨hdiff, h⟩ x hx
-    rw [cont_diff_within_at_succ_iff_has_fderiv_within_at, insert_eq_of_mem hx]
-    exact ⟨s, self_mem_nhds_within, fderivWithin 𝕜 f s, fun y hy => (hdiff y hy).HasFderivWithinAt, h x hx⟩
-    
+  refine' ⟨fun H => _, fun h => cont_diff_on_succ_of_fderiv_within h.1 h.2⟩
+  refine' ⟨H.differentiable_on (WithTop.coe_le_coe.2 (Nat.le_add_leftₓ 1 n)), fun x hx => _⟩
+  rcases cont_diff_within_at_succ_iff_has_fderiv_within_at.1 (H x hx) with ⟨u, hu, f', hff', hf'⟩
+  rcases mem_nhds_within.1 hu with ⟨o, o_open, xo, ho⟩
+  rw [inter_comm, insert_eq_of_mem hx] at ho
+  have := hf'.mono ho
+  rw [cont_diff_within_at_inter' (mem_nhds_within_of_mem_nhds (IsOpen.mem_nhds o_open xo))] at this
+  apply this.congr_of_eventually_eq' _ hx
+  have : o ∩ s ∈ 𝓝[s] x := mem_nhds_within.2 ⟨o, o_open, xo, subset.refl _⟩
+  rw [inter_comm] at this
+  apply Filter.eventually_eq_of_mem this fun y hy => _
+  have A : fderivWithin 𝕜 f (s ∩ o) y = f' y := ((hff' y (ho hy)).mono ho).fderivWithin (hs.inter o_open y hy)
+  rwa [fderiv_within_inter (IsOpen.mem_nhds o_open hy.2) (hs y hy.1)] at A
 
 /-- A function is `C^(n + 1)` on an open domain if and only if it is
 differentiable there, and its derivative (expressed with `fderiv`) is `C^n`. -/
@@ -1355,7 +1355,7 @@ theorem iterated_fderiv_within_of_is_open (n : ℕ) (hs : IsOpen s) :
     
   · intro x hx
     rw [iterated_fderiv_succ_eq_comp_left, iterated_fderiv_within_succ_eq_comp_left]
-    dsimp
+    dsimp'
     congr 1
     rw [fderiv_within_of_open hs hx]
     apply Filter.EventuallyEq.fderiv_eq
@@ -2566,6 +2566,56 @@ theorem LocalHomeomorph.cont_diff_at_symm_deriv [CompleteSpace 𝕜] (f : LocalH
   f.cont_diff_at_symm ha (hf₀'.has_fderiv_at_equiv h₀) hf
 
 end FunctionInverse
+
+/-! ### Finite dimensional results -/
+
+
+section FiniteDimensional
+
+open Function FiniteDimensional
+
+variable [CompleteSpace 𝕜]
+
+/-- A family of continuous linear maps is `C^n` on `s` if all its applications are. -/
+theorem cont_diff_on_clm_apply {n : WithTop ℕ} {f : E → F →L[𝕜] G} {s : Set E} [FiniteDimensional 𝕜 F] :
+    ContDiffOn 𝕜 n f s ↔ ∀ y, ContDiffOn 𝕜 n (fun x => f x y) s := by
+  refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 G y).ContDiff.comp_cont_diff_on h, fun h => _⟩
+  let d := finrank 𝕜 F
+  have hd : d = finrank 𝕜 (Finₓ d → 𝕜) := (finrank_fin_fun 𝕜).symm
+  let e₁ := ContinuousLinearEquiv.ofFinrankEq hd
+  let e₂ := (e₁.arrow_congr (1 : G ≃L[𝕜] G)).trans (ContinuousLinearEquiv.piRing (Finₓ d))
+  rw [← comp.left_id f, ← e₂.symm_comp_self]
+  exact e₂.symm.cont_diff.comp_cont_diff_on (cont_diff_on_pi.mpr fun i => h _)
+
+theorem cont_diff_clm_apply {n : WithTop ℕ} {f : E → F →L[𝕜] G} [FiniteDimensional 𝕜 F] :
+    ContDiff 𝕜 n f ↔ ∀ y, ContDiff 𝕜 n fun x => f x y := by
+  simp_rw [← cont_diff_on_univ, cont_diff_on_clm_apply]
+
+/-- This is a useful lemma to prove that a certain operation preserves functions being `C^n`.
+When you do induction on `n`, this gives a useful characterization of a function being `C^(n+1)`,
+assuming you have already computed the derivative. The advantage of this version over
+`cont_diff_succ_iff_fderiv` is that both occurences of `cont_diff` are for functions with the same
+domain and codomain (`E` and `F`). This is not the case for `cont_diff_succ_iff_fderiv`, which
+often requires an inconvenient need to generalize `F`, which results in universe issues
+(see the discussion in the section of `cont_diff.comp`).
+
+This lemma avoids these universe issues, but only applies for finite dimensional `E`. -/
+theorem cont_diff_succ_iff_fderiv_apply [FiniteDimensional 𝕜 E] {n : ℕ} {f : E → F} :
+    ContDiff 𝕜 (n + 1 : ℕ) f ↔ Differentiable 𝕜 f ∧ ∀ y, ContDiff 𝕜 n fun x => fderiv 𝕜 f x y := by
+  rw [cont_diff_succ_iff_fderiv, cont_diff_clm_apply]
+
+theorem cont_diff_on_succ_of_fderiv_apply [FiniteDimensional 𝕜 E] {n : ℕ} {f : E → F} {s : Set E}
+    (hf : DifferentiableOn 𝕜 f s) (h : ∀ y, ContDiffOn 𝕜 n (fun x => fderivWithin 𝕜 f s x y) s) :
+    ContDiffOn 𝕜 (n + 1 : ℕ) f s :=
+  cont_diff_on_succ_of_fderiv_within hf <| cont_diff_on_clm_apply.mpr h
+
+theorem cont_diff_on_succ_iff_fderiv_apply [FiniteDimensional 𝕜 E] {n : ℕ} {f : E → F} {s : Set E}
+    (hs : UniqueDiffOn 𝕜 s) :
+    ContDiffOn 𝕜 (n + 1 : ℕ) f s ↔ DifferentiableOn 𝕜 f s ∧ ∀ y, ContDiffOn 𝕜 n (fun x => fderivWithin 𝕜 f s x y) s :=
+  by
+  rw [cont_diff_on_succ_iff_fderiv_within hs, cont_diff_on_clm_apply]
+
+end FiniteDimensional
 
 section Real
 

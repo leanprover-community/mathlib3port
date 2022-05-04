@@ -58,7 +58,7 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J â¥¤ Over B} {c : Cone (F â‹
   lift := fun s =>
     Over.homMk (t.lift ((forget B).mapCone s))
       (by
-        dsimp
+        dsimp'
         simp )
   uniq' := fun s m K => by
     ext1

@@ -37,11 +37,11 @@ def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R where
     { obj := fun Y => ModuleCat.of R (unop Y ⟶ X), map := fun Y Y' f => Linear.leftComp R _ f.unop,
       map_comp' := fun _ _ _ f g => by
         ext
-        dsimp
+        dsimp'
         erw [category.assoc],
       map_id' := fun Y => by
         ext
-        dsimp
+        dsimp'
         erw [category.id_comp] }
   map := fun X X' f => { app := fun Y => Linear.rightComp R _ f }
   map_id' := fun X => by

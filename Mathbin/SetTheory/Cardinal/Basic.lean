@@ -507,6 +507,11 @@ theorem lift_two : lift.{u, v} 2 = 2 := by
 theorem mk_set {α : Type u} : # (Set α) = (2^# α) := by
   simp [Set, mk_arrow]
 
+/-- A variant of `cardinal.mk_set` expressed in terms of a `set` instead of a `Type`. -/
+@[simp]
+theorem mk_powerset {α : Type u} (s : Set α) : # ↥(𝒫 s) = (2^# ↥s) :=
+  (mk_congr (Equivₓ.Set.powerset s)).trans mk_set
+
 theorem lift_two_power a : lift (2^a) = (2^lift a) := by
   simp
 
@@ -706,6 +711,19 @@ theorem sum_const' (ι : Type u) (a : Cardinal.{u}) : (sum fun _ : ι => a) = # 
 theorem sum_add_distrib {ι} (f g : ι → Cardinal) : sum (f + g) = sum f + sum g := by
   simpa only [mk_sigma, mk_sum, mk_out, lift_id] using
     mk_congr (Equivₓ.sigmaSumDistrib (Quotientₓ.out ∘ f) (Quotientₓ.out ∘ g))
+
+@[simp]
+theorem sum_add_distrib' {ι} (f g : ι → Cardinal) : (Cardinal.sum fun i => f i + g i) = sum f + sum g :=
+  sum_add_distrib f g
+
+@[simp]
+theorem lift_sum {ι : Type u} (f : ι → Cardinal.{v}) :
+    Cardinal.lift.{w} (Cardinal.sum f) = Cardinal.sum fun i => Cardinal.lift.{w} (f i) :=
+  Equivₓ.cardinal_eq <|
+    Equivₓ.ulift.trans <|
+      Equivₓ.sigmaCongrRight fun a =>
+        Nonempty.some <| by
+          rw [← lift_mk_eq, mk_out, mk_out, lift_lift]
 
 theorem sum_le_sum {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : sum f ≤ sum g :=
   ⟨(Embedding.refl _).sigma_map fun i =>
@@ -1097,6 +1115,21 @@ theorem add_lt_omega_iff {a b : Cardinal} : a + b < ω ↔ a < ω ∧ b < ω :=
 
 theorem omega_le_add_iff {a b : Cardinal} : ω ≤ a + b ↔ ω ≤ a ∨ ω ≤ b := by
   simp only [← not_ltₓ, add_lt_omega_iff, not_and_distrib]
+
+/-- See also `cardinal.nsmul_lt_omega_iff_of_ne_zero` if you already have `n ≠ 0`. -/
+theorem nsmul_lt_omega_iff {n : ℕ} {a : Cardinal} : n • a < ω ↔ n = 0 ∨ a < ω := by
+  cases n
+  · simpa using nat_lt_omega 0
+    
+  simp only [Nat.succ_ne_zero, false_orₓ]
+  induction' n with n ih
+  · simp
+    
+  rw [succ_nsmul, add_lt_omega_iff, ih, and_selfₓ]
+
+/-- See also `cardinal.nsmul_lt_omega_iff` for a hypothesis-free version. -/
+theorem nsmul_lt_omega_iff_of_ne_zero {n : ℕ} {a : Cardinal} (h : n ≠ 0) : n • a < ω ↔ a < ω :=
+  nsmul_lt_omega_iff.trans <| or_iff_right h
 
 theorem mul_lt_omega {a b : Cardinal} (ha : a < ω) (hb : b < ω) : a * b < ω :=
   match a, b, lt_omega.1 ha, lt_omega.1 hb with
@@ -1579,7 +1612,7 @@ theorem mk_preimage_of_subset_range_lift {α : Type u} {β : Type v} (f : α →
     exact ⟨x, hy⟩
     
   rintro ⟨y, hy⟩ ⟨y', hy'⟩
-  dsimp
+  dsimp'
   rcases Classical.subtypeOfExists (h hy) with ⟨x, rfl⟩
   rcases Classical.subtypeOfExists (h hy') with ⟨x', rfl⟩
   simp

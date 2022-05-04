@@ -669,7 +669,7 @@ theorem DomCoprod.summand_add_swap_smul_eq_zero (a : AlternatingMap R' Mᵢ N₁
     (σ : Perm.ModSumCongr ιa ιb) {v : Sum ιa ιb → Mᵢ} {i j : Sum ιa ιb} (hv : v i = v j) (hij : i ≠ j) :
     DomCoprod.summand a b σ v + DomCoprod.summand a b (swap i j • σ) v = 0 := by
   apply σ.induction_on' fun σ => _
-  dsimp only [Quotientₓ.lift_on'_mk', Quotientₓ.map'_mk', MulAction.quotient.smul_mk, dom_coprod.summand]
+  dsimp' only [Quotientₓ.lift_on'_mk', Quotientₓ.map'_mk', MulAction.quotient.smul_mk, dom_coprod.summand]
   rw [smul_eq_mul, perm.sign_mul, perm.sign_swap hij]
   simp only [one_mulₓ, neg_mul, Function.comp_app, Units.neg_smul, perm.coe_mul, Units.coe_neg,
     MultilinearMap.smul_apply, MultilinearMap.neg_apply, MultilinearMap.dom_dom_congr_apply,
@@ -685,12 +685,12 @@ theorem DomCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     (σ : Perm.ModSumCongr ιa ιb) {v : Sum ιa ιb → Mᵢ} {i j : Sum ιa ιb} (hv : v i = v j) (hij : i ≠ j) :
     swap i j • σ = σ → DomCoprod.summand a b σ v = 0 := by
   apply σ.induction_on' fun σ => _
-  dsimp only [Quotientₓ.lift_on'_mk', Quotientₓ.map'_mk', MultilinearMap.smul_apply, MultilinearMap.dom_dom_congr_apply,
-    MultilinearMap.dom_coprod_apply, dom_coprod.summand]
+  dsimp' only [Quotientₓ.lift_on'_mk', Quotientₓ.map'_mk', MultilinearMap.smul_apply,
+    MultilinearMap.dom_dom_congr_apply, MultilinearMap.dom_coprod_apply, dom_coprod.summand]
   intro hσ
   with_cases
     cases hi : σ⁻¹ i <;> cases hj : σ⁻¹ j <;> rw [perm.inv_eq_iff_eq] at hi hj <;> substs hi hj
-  case' [Sum.inl, Sum.inr : i' j', Sum.inr, Sum.inl : i' j'] =>
+  case'' [Sum.inl, Sum.inr : i' j', Sum.inr, Sum.inl : i' j'] =>
     -- the term pairs with and cancels another term
     all_goals
       obtain ⟨⟨sl, sr⟩, hσ⟩ := Quotientₓ.exact' hσ
@@ -701,7 +701,7 @@ theorem DomCoprod.summand_eq_zero_of_smul_invariant (a : AlternatingMap R' Mᵢ 
     all_goals
       rw [smul_eq_mul, ← mul_swap_eq_swap_mul, mul_inv_rev, swap_inv, inv_mul_cancel_right] at hσ
       simpa using hσ
-  case' [Sum.inr, Sum.inr : i' j', Sum.inl, Sum.inl : i' j'] =>
+  case'' [Sum.inr, Sum.inr : i' j', Sum.inl, Sum.inl : i' j'] =>
     -- the term does not pair but is zero
     all_goals
       convert smul_zero _
@@ -738,7 +738,7 @@ def domCoprod (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ 
   { ∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ with
     toFun := fun v => (⇑(∑ σ : Perm.ModSumCongr ιa ιb, DomCoprod.summand a b σ)) v,
     map_eq_zero_of_eq' := fun v i j hv hij => by
-      dsimp only
+      dsimp' only
       rw [MultilinearMap.sum_apply]
       exact
         Finset.sum_involution (fun σ _ => Equivₓ.swap i j • σ)
@@ -821,13 +821,13 @@ theorem MultilinearMap.dom_coprod_alternization (a : MultilinearMap R' (fun _ : 
   rw [Finset.filter_congr_decidable, Finset.univ_filter_exists (perm.sum_congr_hom ιa ιb),
     Finset.sum_image fun h : _ = _ => mul_right_injective _ h,
     Finset.sum_image fun h : _ = _ => perm.sum_congr_hom_injective h]
-  dsimp only
+  dsimp' only
   -- now we're ready to clean up the RHS, pulling out the summation
   rw [dom_coprod.summand_mk', MultilinearMap.dom_coprod_alternization_coe, ← Finset.sum_product',
     Finset.univ_product_univ, ← MultilinearMap.dom_dom_congr_equiv_apply, AddEquiv.map_sum, Finset.smul_sum]
   congr 1
   ext1 ⟨al, ar⟩
-  dsimp only
+  dsimp' only
   -- pull out the pair of smuls on the RHS, by rewriting to `_ →ₗ[ℤ] _` and back
   rw [← AddEquiv.coe_to_add_monoid_hom, ← AddMonoidHom.coe_to_int_linear_map, LinearMap.map_smul_of_tower,
     LinearMap.map_smul_of_tower, AddMonoidHom.coe_to_int_linear_map, AddEquiv.coe_to_add_monoid_hom,

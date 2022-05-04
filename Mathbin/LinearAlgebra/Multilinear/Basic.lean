@@ -506,10 +506,10 @@ theorem map_sum_finset_aux [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) 
       apply Finset.sum_union
       apply Finset.disjoint_right.2 fun j hj => _
       have : j = j₂ := by
-        dsimp [C]  at hj
+        dsimp' [C]  at hj
         simpa using hj
       rw [this]
-      dsimp [B]
+      dsimp' [B]
       simp only [mem_sdiff, eq_self_iff_true, not_true, not_false_iff, Finset.mem_singleton, update_same, and_falseₓ]
       
     · simp [hi]

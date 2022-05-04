@@ -520,9 +520,10 @@ instance is_countably_generated_nhds_within (x : α) [IsCountablyGenerated (𝓝
 
 variable (α)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`is_open_generated_countable] []
 /-- A second-countable space is one with a countable basis. -/
 class SecondCountableTopology : Prop where
-  is_open_generated_countable {} : ∃ b : Set (Set α), Countable b ∧ t = TopologicalSpace.generateFrom b
+  is_open_generated_countable : ∃ b : Set (Set α), Countable b ∧ t = TopologicalSpace.generateFrom b
 
 variable {α}
 
