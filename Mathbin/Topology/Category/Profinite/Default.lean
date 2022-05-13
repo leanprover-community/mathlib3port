@@ -170,18 +170,20 @@ namespace Profinite
 
 /-- An explicit limit cone for a functor `F : J ⥤ Profinite`, defined in terms of
 `Top.limit_cone`. -/
+-- TODO the following construction of limits could be generalised
+-- to allow diagrams in lower universes.
 def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.Cone F where
   x :=
-    { toCompHaus := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).x,
+    { toCompHaus := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).x,
       IsTotallyDisconnected := by
         change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }
         exact Subtype.totally_disconnected_space }
-  π := { app := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).π.app }
+  π := { app := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).π.app }
 
 /-- The limit cone `Profinite.limit_cone F` is indeed a limit cone. -/
 def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.IsLimit (limitCone F) where
-  lift := fun S => (CompHaus.limitConeIsLimit (F ⋙ profiniteToCompHaus)).lift (profiniteToCompHaus.mapCone S)
-  uniq' := fun S m h => (CompHaus.limitConeIsLimit _).uniq (profiniteToCompHaus.mapCone S) _ h
+  lift := fun S => (CompHaus.limitConeIsLimit.{u, u} (F ⋙ profiniteToCompHaus)).lift (profiniteToCompHaus.mapCone S)
+  uniq' := fun S m h => (CompHaus.limitConeIsLimit.{u, u} _).uniq (profiniteToCompHaus.mapCone S) _ h
 
 /-- The adjunction between CompHaus.to_Profinite and Profinite.to_CompHaus -/
 def toProfiniteAdjToCompHaus : CompHaus.toProfinite ⊣ profiniteToCompHaus :=

@@ -38,7 +38,7 @@ instance Finₓ.nonemptyFinLinOrd (n : ℕ) : NonemptyFinLinOrd (Finₓ (n + 1))
 instance ULift.nonemptyFinLinOrd (α : Type u) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (ULift.{v} α) :=
   { LinearOrderₓ.lift Equivₓ.ulift (Equivₓ.injective _), ULift.fintype _ with Nonempty := ⟨ULift.up ⊥⟩ }
 
-instance (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrd (OrderDual α) :=
+instance (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrd αᵒᵈ :=
   { OrderDual.fintype α with }
 
 /-- The category of nonempty finite linear orders. -/
@@ -88,7 +88,7 @@ def Iso.mk {α β : NonemptyFinLinOrdₓ.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : NonemptyFinLinOrdₓ ⥤ NonemptyFinLinOrdₓ where
-  obj := fun X => of (OrderDual X)
+  obj := fun X => of Xᵒᵈ
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `FinPartialOrder` and itself induced by `order_dual` both ways. -/

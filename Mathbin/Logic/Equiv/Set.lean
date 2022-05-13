@@ -559,6 +559,23 @@ theorem preimage_pi_equiv_pi_subtype_prod_symm_pi {α : Type _} {β : α → Typ
   dsimp' only [Subtype.coe_mk]
   by_cases' hi : p i <;> simp [hi]
 
+/-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
+the type of all preimages of points under `f` and the total space `α`. -/
+-- See also `equiv.sigma_fiber_equiv`.
+@[simps]
+def sigmaPreimageEquiv {α β} (f : α → β) : (Σb, f ⁻¹' {b}) ≃ α :=
+  sigmaFiberEquiv f
+
+/-- A family of equivalences between preimages of points gives an equivalence between domains. -/
+-- See also `equiv.of_fiber_equiv`.
+@[simps]
+def ofPreimageEquiv {α β γ} {f : α → γ} {g : β → γ} (e : ∀ c, f ⁻¹' {c} ≃ g ⁻¹' {c}) : α ≃ β :=
+  Equivₓ.ofFiberEquiv e
+
+theorem of_preimage_equiv_map {α β γ} {f : α → γ} {g : β → γ} (e : ∀ c, f ⁻¹' {c} ≃ g ⁻¹' {c}) (a : α) :
+    g (ofPreimageEquiv e a) = f a :=
+  Equivₓ.of_fiber_equiv_map e a
+
 end Equivₓ
 
 /-- If a function is a bijection between two sets `s` and `t`, then it induces an

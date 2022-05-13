@@ -125,10 +125,10 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b
     dsimp' only [(· ≤ ·), Preorderₓ.Le]  at *
     rwa [sup_assoc, hbc]
 
-instance (α : Type _) [HasInf α] : HasSup (OrderDual α) :=
+instance (α : Type _) [HasInf α] : HasSup αᵒᵈ :=
   ⟨((·⊓·) : α → α → α)⟩
 
-instance (α : Type _) [HasSup α] : HasInf (OrderDual α) :=
+instance (α : Type _) [HasSup α] : HasInf αᵒᵈ :=
   ⟨((·⊔·) : α → α → α)⟩
 
 section SemilatticeSup
@@ -316,16 +316,16 @@ class SemilatticeInf (α : Type u) extends HasInf α, PartialOrderₓ α where
   inf_le_right : ∀ a b : α, a⊓b ≤ b
   le_inf : ∀ a b c : α, a ≤ b → a ≤ c → a ≤ b⊓c
 
-instance α [SemilatticeInf α] : SemilatticeSup (OrderDual α) :=
+instance α [SemilatticeInf α] : SemilatticeSup αᵒᵈ :=
   { OrderDual.partialOrder α, OrderDual.hasSup α with le_sup_left := SemilatticeInf.inf_le_left,
     le_sup_right := SemilatticeInf.inf_le_right,
     sup_le := fun a b c hca hcb => @SemilatticeInf.le_inf α _ _ _ _ hca hcb }
 
-instance α [SemilatticeSup α] : SemilatticeInf (OrderDual α) :=
+instance α [SemilatticeSup α] : SemilatticeInf αᵒᵈ :=
   { OrderDual.partialOrder α, OrderDual.hasInf α with inf_le_left := @le_sup_left α _,
     inf_le_right := @le_sup_right α _, le_inf := fun a b c hca hcb => @sup_le α _ _ _ _ hca hcb }
 
-theorem SemilatticeSup.dual_dual (α : Type _) [H : SemilatticeSup α] : OrderDual.semilatticeSup (OrderDual α) = H :=
+theorem SemilatticeSup.dual_dual (α : Type _) [H : SemilatticeSup α] : OrderDual.semilatticeSup αᵒᵈ = H :=
   SemilatticeSup.ext fun _ _ => Iff.rfl
 
 section SemilatticeInf
@@ -365,7 +365,7 @@ theorem inf_lt_of_right_lt (h : b < c) : a⊓b < c :=
 
 @[simp]
 theorem le_inf_iff : a ≤ b⊓c ↔ a ≤ b ∧ a ≤ c :=
-  @sup_le_iff (OrderDual α) _ _ _ _
+  @sup_le_iff αᵒᵈ _ _ _ _
 
 @[simp]
 theorem inf_eq_left : a⊓b = a ↔ a ≤ b :=
@@ -406,19 +406,19 @@ theorem le_of_inf_eq (h : a⊓b = a) : a ≤ b := by
 
 @[simp]
 theorem inf_idem : a⊓a = a :=
-  @sup_idem (OrderDual α) _ _
+  @sup_idem αᵒᵈ _ _
 
 instance inf_is_idempotent : IsIdempotent α (·⊓·) :=
   ⟨@inf_idem _ _⟩
 
 theorem inf_comm : a⊓b = b⊓a :=
-  @sup_comm (OrderDual α) _ _ _
+  @sup_comm αᵒᵈ _ _ _
 
 instance inf_is_commutative : IsCommutative α (·⊓·) :=
   ⟨@inf_comm _ _⟩
 
 theorem inf_assoc : a⊓b⊓c = a⊓(b⊓c) :=
-  @sup_assoc (OrderDual α) _ a b c
+  @sup_assoc αᵒᵈ _ a b c
 
 instance inf_is_associative : IsAssociative α (·⊓·) :=
   ⟨@inf_assoc _ _⟩
@@ -428,29 +428,29 @@ theorem inf_left_right_swap (a b c : α) : a⊓b⊓c = c⊓b⊓a := by
 
 @[simp]
 theorem inf_left_idem : a⊓(a⊓b) = a⊓b :=
-  @sup_left_idem (OrderDual α) _ a b
+  @sup_left_idem αᵒᵈ _ a b
 
 @[simp]
 theorem inf_right_idem : a⊓b⊓b = a⊓b :=
-  @sup_right_idem (OrderDual α) _ a b
+  @sup_right_idem αᵒᵈ _ a b
 
 theorem inf_left_comm (a b c : α) : a⊓(b⊓c) = b⊓(a⊓c) :=
-  @sup_left_comm (OrderDual α) _ a b c
+  @sup_left_comm αᵒᵈ _ a b c
 
 theorem inf_right_comm (a b c : α) : a⊓b⊓c = a⊓c⊓b :=
-  @sup_right_comm (OrderDual α) _ a b c
+  @sup_right_comm αᵒᵈ _ a b c
 
 theorem inf_inf_inf_comm (a b c d : α) : a⊓b⊓(c⊓d) = a⊓c⊓(b⊓d) :=
-  @sup_sup_sup_comm (OrderDual α) _ _ _ _ _
+  @sup_sup_sup_comm αᵒᵈ _ _ _ _ _
 
 theorem inf_inf_distrib_left (a b c : α) : a⊓(b⊓c) = a⊓b⊓(a⊓c) :=
-  @sup_sup_distrib_left (OrderDual α) _ _ _ _
+  @sup_sup_distrib_left αᵒᵈ _ _ _ _
 
 theorem inf_inf_distrib_right (a b c : α) : a⊓b⊓c = a⊓c⊓(b⊓c) :=
-  @sup_sup_distrib_right (OrderDual α) _ _ _ _
+  @sup_sup_distrib_right αᵒᵈ _ _ _ _
 
 theorem forall_le_or_exists_lt_inf (a : α) : (∀ b, a ≤ b) ∨ ∃ b, b < a :=
-  @forall_le_or_exists_lt_sup (OrderDual α) _ a
+  @forall_le_or_exists_lt_sup αᵒᵈ _ a
 
 theorem SemilatticeInf.ext_inf {α} {A B : SemilatticeInf α}
     (H :
@@ -478,11 +478,11 @@ theorem SemilatticeInf.ext {α} {A B : SemilatticeInf α}
   cases B
   injection this <;> congr
 
-theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] : OrderDual.semilatticeInf (OrderDual α) = H :=
+theorem SemilatticeInf.dual_dual (α : Type _) [H : SemilatticeInf α] : OrderDual.semilatticeInf αᵒᵈ = H :=
   SemilatticeInf.ext fun _ _ => Iff.rfl
 
 theorem exists_lt_of_inf (α : Type _) [SemilatticeInf α] [Nontrivial α] : ∃ a b : α, a < b :=
-  let ⟨a, b, h⟩ := exists_lt_of_sup (OrderDual α)
+  let ⟨a, b, h⟩ := exists_lt_of_sup αᵒᵈ
   ⟨b, a, h⟩
 
 theorem inf_le_ite (s s' : α) (P : Prop) [Decidable P] : s⊓s' ≤ ite P s s' :=
@@ -497,8 +497,8 @@ The partial order is defined so that `a ≤ b` unfolds to `b ⊓ a = a`; cf. `in
 -/
 def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b = b⊓a)
     (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ a : α, a⊓a = a) : SemilatticeInf α := by
-  have : SemilatticeSup (OrderDual α) := SemilatticeSup.mk' inf_comm inf_assoc inf_idem
-  have i := OrderDual.semilatticeInf (OrderDual α)
+  have : SemilatticeSup αᵒᵈ := SemilatticeSup.mk' inf_comm inf_assoc inf_idem
+  have i := OrderDual.semilatticeInf αᵒᵈ
   exact i
 
 /-!
@@ -510,7 +510,7 @@ def SemilatticeInf.mk' {α : Type _} [HasInf α] (inf_comm : ∀ a b : α, a⊓b
 @[protect_proj]
 class Lattice (α : Type u) extends SemilatticeSup α, SemilatticeInf α
 
-instance α [Lattice α] : Lattice (OrderDual α) :=
+instance α [Lattice α] : Lattice αᵒᵈ :=
   { OrderDual.semilatticeSup α, OrderDual.semilatticeInf α with }
 
 /-- The partial orders from `semilattice_sup_mk'` and `semilattice_inf_mk'` agree
@@ -671,7 +671,7 @@ theorem inf_sup_left : x⊓(y⊔z) = x⊓y⊔x⊓z :=
       rw [sup_inf_left]
     
 
-instance (α : Type _) [DistribLattice α] : DistribLattice (OrderDual α) :=
+instance (α : Type _) [DistribLattice α] : DistribLattice αᵒᵈ :=
   { OrderDual.lattice α with le_sup_inf := fun x y z => le_of_eqₓ inf_sup_left.symm }
 
 theorem inf_sup_right : (y⊔z)⊓x = y⊓x⊔z⊓x := by
@@ -745,20 +745,20 @@ theorem lt_sup_iff : a < b⊔c ↔ a < b ∨ a < c :=
 theorem sup_lt_iff : b⊔c < a ↔ b < a ∧ c < a :=
   ⟨fun h => ⟨le_sup_left.trans_lt h, le_sup_right.trans_lt h⟩, fun h => sup_ind b c h.1 h.2⟩
 
-theorem inf_ind (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊓b) :=
-  @sup_ind (OrderDual α) _ _ _ _ ha hb
+theorem inf_ind (a b : α) {p : α → Prop} : p a → p b → p (a⊓b) :=
+  @sup_ind αᵒᵈ _ _ _ _
 
 @[simp]
 theorem inf_le_iff : b⊓c ≤ a ↔ b ≤ a ∨ c ≤ a :=
-  @le_sup_iff (OrderDual α) _ _ _ _
+  @le_sup_iff αᵒᵈ _ _ _ _
 
 @[simp]
 theorem inf_lt_iff : b⊓c < a ↔ b < a ∨ c < a :=
-  @lt_sup_iff (OrderDual α) _ _ _ _
+  @lt_sup_iff αᵒᵈ _ _ _ _
 
 @[simp]
 theorem lt_inf_iff : a < b⊓c ↔ a < b ∧ a < c :=
-  @sup_lt_iff (OrderDual α) _ _ _ _
+  @sup_lt_iff αᵒᵈ _ _ _ _
 
 end LinearOrderₓ
 
@@ -771,7 +771,7 @@ theorem sup_eq_max_default [SemilatticeSup α] [DecidableRel ((· ≤ ·) : α �
 
 theorem inf_eq_min_default [SemilatticeInf α] [DecidableRel ((· ≤ ·) : α → α → Prop)] [IsTotal α (· ≤ ·)] :
     (·⊓·) = (minDefault : α → α → α) :=
-  @sup_eq_max_default (OrderDual α) _ _ _
+  @sup_eq_max_default αᵒᵈ _ _ _
 
 /-- A lattice with total order is a linear order.
 
@@ -792,6 +792,49 @@ instance (priority := 100) LinearOrderₓ.toDistribLattice {α : Type u} [o : Li
 
 instance Nat.distribLattice : DistribLattice ℕ := by
   infer_instance
+
+/-! ### Dual order -/
+
+
+open OrderDual
+
+@[simp]
+theorem of_dual_inf [HasSup α] (a b : αᵒᵈ) : ofDual (a⊓b) = ofDual a⊔ofDual b :=
+  rfl
+
+@[simp]
+theorem of_dual_sup [HasInf α] (a b : αᵒᵈ) : ofDual (a⊔b) = ofDual a⊓ofDual b :=
+  rfl
+
+@[simp]
+theorem to_dual_inf [HasInf α] (a b : α) : toDual (a⊓b) = toDual a⊔toDual b :=
+  rfl
+
+@[simp]
+theorem to_dual_sup [HasSup α] (a b : α) : toDual (a⊔b) = toDual a⊓toDual b :=
+  rfl
+
+section LinearOrderₓ
+
+variable [LinearOrderₓ α]
+
+@[simp]
+theorem of_dual_min (a b : αᵒᵈ) : ofDual (min a b) = max (ofDual a) (ofDual b) :=
+  rfl
+
+@[simp]
+theorem of_dual_max (a b : αᵒᵈ) : ofDual (max a b) = min (ofDual a) (ofDual b) :=
+  rfl
+
+@[simp]
+theorem to_dual_min (a b : α) : toDual (min a b) = max (toDual a) (toDual b) :=
+  rfl
+
+@[simp]
+theorem to_dual_max (a b : α) : toDual (max a b) = min (toDual a) (toDual b) :=
+  rfl
+
+end LinearOrderₓ
 
 /-! ### Function lattices -/
 

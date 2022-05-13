@@ -120,7 +120,7 @@ def Iso.mk {α β : BoundedLattice.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : BoundedLattice ⥤ BoundedLattice where
-  obj := fun X => of (OrderDual X)
+  obj := fun X => of Xᵒᵈ
   map := fun X Y => BoundedLatticeHom.dual
 
 /-- The equivalence between `BoundedLattice` and itself induced by `order_dual` both ways. -/

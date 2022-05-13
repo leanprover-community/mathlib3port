@@ -4,16 +4,26 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 -/
 import Mathbin.RingTheory.DedekindDomain.Ideal
+import Mathbin.RingTheory.Valuation.ExtendToLocalization
+import Mathbin.RingTheory.Valuation.ValuationSubring
+import Mathbin.Topology.Algebra.ValuedField
 
 /-!
 # Adic valuations on Dedekind domains
 Given a Dedekind domain `R` of Krull dimension 1 and a maximal ideal `v` of `R`, we define the
-`v`-adic valuation on `R`.
+`v`-adic valuation on `R` and its extension to the field of fractions `K` of `R`.
 We prove several properties of this valuation, including the existence of uniformizers.
-TODO: extend the valuation to the field of fractions `K` of `R`.
+
+We define the completion of `K` with respect to the `v`-adic valuation, denoted
+`v.adic_completion`,and its ring of integers, denoted `v.adic_completion_integers`.
 
 ## Main definitions
  - `is_dedekind_domain.height_one_spectrum.int_valuation v` is the `v`-adic valuation on `R`.
+ - `is_dedekind_domain.height_one_spectrum.valuation v` is the `v`-adic valuation on `K`.
+ - `is_dedekind_domain.height_one_spectrum.adic_completion v` is the completion of `K` with respect
+    to its `v`-adic valuation.
+ - `is_dedekind_domain.height_one_spectrum.adic_completion_integers v` is the ring of integers of
+    `v.adic_completion`.
 
 ## Main results
 - `is_dedekind_domain.height_one_spectrum.int_valuation_le_one` : The `v`-adic valuation on `R` is
@@ -25,6 +35,14 @@ TODO: extend the valuation to the field of fractions `K` of `R`.
   ideal `(r)`.
 - `is_dedekind_domain.height_one_spectrum.int_valuation_exists_uniformizer` : There exists `π ∈ R`
   with `v`-adic valuation `multiplicative.of_add (-1)`.
+- `is_dedekind_domain.height_one_spectrum.int_valuation_div_eq_div` : The valuation of `k ∈ K` is
+  independent on how we express `k` as a fraction.
+- `is_dedekind_domain.height_one_spectrum.valuation_of_mk'` : The `v`-adic valuation of `r/s ∈ K`
+  is the valuation of `r` divided by the valuation of `s`.
+- `is_dedekind_domain.height_one_spectrum.valuation_of_algebra_map` : The `v`-adic valuation on `K`
+  extends the `v`-adic valuation on `R`.
+- `is_dedekind_domain.height_one_spectrum.valuation_exists_uniformizer` : There exists `π ∈ K` with
+  `v`-adic valuation `multiplicative.of_add (-1)`.
 
 ## Implementation notes
 We are only interested in Dedekind domains with Krull dimension 1.
@@ -235,6 +253,100 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
   rw [← pow_oneₓ (Associates.mk v.as_ideal), Associates.prime_pow_dvd_iff_le hπ hv] at mem
   rw [Associates.mk_pow, Associates.prime_pow_dvd_iff_le hπ hv, not_leₓ] at nmem
   exact Nat.eq_of_le_of_lt_succ mem nmem
+
+/-! ### Adic valuations on the field of fractions `K` -/
+
+
+/-- The `v`-adic valuation of `x ∈ K` is the valuation of `r` divided by the valuation of `s`,
+where `r` and `s` are chosen so that `x = r/s`. -/
+def valuation (v : HeightOneSpectrum R) : Valuation K (WithZero (Multiplicative ℤ)) :=
+  v.intValuation.extendToLocalization (fun r hr => Set.mem_compl <| v.int_valuation_ne_zero' ⟨r, hr⟩) K
+
+theorem valuation_def (x : K) :
+    v.Valuation x =
+      v.intValuation.extendToLocalization (fun r hr => Set.mem_compl (v.int_valuation_ne_zero' ⟨r, hr⟩)) K x :=
+  rfl
+
+/-- The `v`-adic valuation of `r/s ∈ K` is the valuation of `r` divided by the valuation of `s`. -/
+theorem valuation_of_mk' {r : R} {s : nonZeroDivisors R} :
+    v.Valuation (IsLocalization.mk' K r s) = v.intValuation r / v.intValuation s := by
+  erw [valuation_def, (IsLocalization.toLocalizationMap (nonZeroDivisors R) K).lift_mk', div_eq_mul_inv,
+    mul_eq_mul_left_iff]
+  left
+  rw [Units.coe_inv', inv_inj]
+  rfl
+
+/-- The `v`-adic valuation on `K` extends the `v`-adic valuation on `R`. -/
+theorem valuation_of_algebra_map (r : R) : v.Valuation (algebraMap R K r) = v.intValuation r := by
+  rw [valuation_def, Valuation.extend_to_localization_apply_map_apply]
+
+/-- The `v`-adic valuation on `R` is bounded above by 1. -/
+theorem valuation_le_one (r : R) : v.Valuation (algebraMap R K r) ≤ 1 := by
+  rw [valuation_of_algebra_map]
+  exact v.int_valuation_le_one r
+
+/-- The `v`-adic valuation of `r ∈ R` is less than 1 if and only if `v` divides the ideal `(r)`. -/
+theorem valuation_lt_one_iff_dvd (r : R) : v.Valuation (algebraMap R K r) < 1 ↔ v.asIdeal ∣ Ideal.span {r} := by
+  rw [valuation_of_algebra_map]
+  exact v.int_valuation_lt_one_iff_dvd r
+
+variable (K)
+
+/-- There exists `π ∈ K` with `v`-adic valuation `multiplicative.of_add (-1)`. -/
+theorem valuation_exists_uniformizer : ∃ π : K, v.Valuation π = Multiplicative.ofAdd (-1 : ℤ) := by
+  obtain ⟨r, hr⟩ := v.int_valuation_exists_uniformizer
+  use algebraMap R K r
+  rw [valuation_def, Valuation.extend_to_localization_apply_map_apply]
+  exact hr
+
+/-- Uniformizers are nonzero. -/
+theorem valuation_uniformizer_ne_zero : Classical.some (v.valuation_exists_uniformizer K) ≠ 0 :=
+  have hu := Classical.some_spec (v.valuation_exists_uniformizer K)
+  (Valuation.ne_zero_iff _).mp (ne_of_eq_of_ne hu WithZero.coe_ne_zero)
+
+/-! ### Completions with respect to adic valuations
+
+Given a Dedekind domain `R` with field of fractions `K` and a maximal ideal `v` of `R`, we define
+the completion of `K` with respect to its `v`-adic valuation, denoted `v.adic_completion`, and its
+ring of integers, denoted `v.adic_completion_integers`. -/
+
+
+variable {K}
+
+/-- `K` as a valued field with the `v`-adic valuation. -/
+def adicValued : Valued K (WithZero (Multiplicative ℤ)) :=
+  Valued.mk' v.Valuation
+
+theorem adic_valued_apply {x : K} : (v.adicValued.V : _) x = v.Valuation x :=
+  rfl
+
+variable (K)
+
+/-- The completion of `K` with respect to its `v`-adic valuation. -/
+def AdicCompletion :=
+  @UniformSpace.Completion K v.adicValued.toUniformSpace
+
+instance : Field (v.adicCompletion K) :=
+  @fieldCompletion K _ v.adicValued.toUniformSpace _ _ v.adicValued.to_uniform_add_group
+
+instance : Inhabited (v.adicCompletion K) :=
+  ⟨0⟩
+
+instance valuedAdicCompletion : Valued (v.adicCompletion K) (WithZero (Multiplicative ℤ)) :=
+  @Valued.valuedCompletion _ _ _ _ v.adicValued
+
+theorem valued_adic_completion_def {x : v.adicCompletion K} : Valued.v x = @Valued.extension K _ _ _ (adicValued v) x :=
+  rfl
+
+instance adic_completion_complete_space : CompleteSpace (v.adicCompletion K) :=
+  @UniformSpace.Completion.complete_space K v.adicValued.toUniformSpace
+
+instance AdicCompletion.hasLiftT : HasLiftT K (v.adicCompletion K) :=
+  (inferInstance : HasLiftT K (@UniformSpace.Completion K v.adicValued.toUniformSpace))
+
+/-- The ring of integers of `adic_completion`. -/
+def adicCompletionIntegers : ValuationSubring (v.adicCompletion K) :=
+  Valued.v.ValuationSubring
 
 end IsDedekindDomain.HeightOneSpectrum
 

@@ -109,7 +109,7 @@ theorem compatible_iff_left_res_eq_right_res (sf : piOpens F U) :
     IsCompatible F U ((piOpensIsoSectionsFamily F U).Hom sf) ↔ leftRes F U sf = rightRes F U sf := by
   constructor <;> intro h
   · ext ⟨i, j⟩
-    rw [left_res, types.limit.lift_π_apply, fan.mk_π_app, right_res, types.limit.lift_π_apply, fan.mk_π_app]
+    rw [left_res, types.limit.lift_π_apply', fan.mk_π_app, right_res, types.limit.lift_π_apply', fan.mk_π_app]
     exact h i j
     
   · intro i j
@@ -131,7 +131,7 @@ theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supr U))) :
     IsGluing F U ((piOpensIsoSectionsFamily F U).Hom sf) s ↔ res F U s = sf := by
   constructor <;> intro h
   · ext i
-    rw [res, types.limit.lift_π_apply, fan.mk_π_app]
+    rw [res, types.limit.lift_π_apply', fan.mk_π_app]
     exact h i
     
   · intro i

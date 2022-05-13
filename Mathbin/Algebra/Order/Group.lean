@@ -5,7 +5,6 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 -/
 import Mathbin.Algebra.Abs
 import Mathbin.Algebra.Order.Sub
-import Mathbin.Order.OrderDual
 
 /-!
 # Ordered groups
@@ -99,31 +98,31 @@ instance (priority := 100) OrderedCommGroup.has_exists_mul_of_le (α : Type u) [
   ⟨fun a b hab => ⟨b * a⁻¹, (mul_inv_cancel_comm_assoc a b).symm⟩⟩
 
 @[to_additive]
-instance [h : Inv α] : Inv (OrderDual α) :=
+instance [h : Inv α] : Inv αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : Div α] : Div (OrderDual α) :=
+instance [h : Div α] : Div αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : HasInvolutiveInv α] : HasInvolutiveInv (OrderDual α) :=
+instance [h : HasInvolutiveInv α] : HasInvolutiveInv αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : DivInvMonoidₓ α] : DivInvMonoidₓ (OrderDual α) :=
+instance [h : DivInvMonoidₓ α] : DivInvMonoidₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : Groupₓ α] : Groupₓ (OrderDual α) :=
+instance [h : Groupₓ α] : Groupₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : CommGroupₓ α] : CommGroupₓ (OrderDual α) :=
+instance [h : CommGroupₓ α] : CommGroupₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [OrderedCommGroup α] : OrderedCommGroup (OrderDual α) :=
+instance [OrderedCommGroup α] : OrderedCommGroup αᵒᵈ :=
   { OrderDual.orderedCommMonoid, OrderDual.group with }
 
 section Groupₓ
@@ -337,7 +336,7 @@ variable (α)
 
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
-def OrderIso.inv : α ≃o OrderDual α where
+def OrderIso.inv : α ≃o αᵒᵈ where
   toEquiv := (Equivₓ.inv α).trans OrderDual.toDual
   map_rel_iff' := fun a b => @inv_le_inv_iff α _ _ _ _ _ _
 
@@ -938,7 +937,7 @@ theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b * ε) : 
 
 @[to_additive]
 theorem le_of_forall_lt_one_mul_le (h : ∀, ∀ ε < 1, ∀, a * ε ≤ b) : a ≤ b :=
-  @le_of_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _ h
+  @le_of_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _ h
 
 @[to_additive]
 theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : a ≤ b :=
@@ -951,7 +950,7 @@ theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b * �
 
 @[to_additive]
 theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀, ∀ ε < 1, ∀, a * ε ≤ b :=
-  @le_iff_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _
+  @le_iff_forall_one_lt_le_mul αᵒᵈ _ _ _ _ _ _
 
 end DenselyOrdered
 
@@ -983,7 +982,7 @@ multiplication is monotone. -/
 class LinearOrderedCommGroup (α : Type u) extends OrderedCommGroup α, LinearOrderₓ α
 
 @[to_additive]
-instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup (OrderDual α) :=
+instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup αᵒᵈ :=
   { OrderDual.orderedCommGroup, OrderDual.linearOrder α with }
 
 section LinearOrderedCommGroup
@@ -1013,11 +1012,11 @@ theorem LinearOrderedCommGroup.mul_lt_mul_left' (a b : α) (h : a < b) (c : α) 
 
 @[to_additive min_neg_neg]
 theorem min_inv_inv' (a b : α) : min a⁻¹ b⁻¹ = (max a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_max α (OrderDual α) _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm <| (@Monotone.map_max α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
 
 @[to_additive max_neg_neg]
 theorem max_inv_inv' (a b : α) : max a⁻¹ b⁻¹ = (min a b)⁻¹ :=
-  Eq.symm <| (@Monotone.map_min α (OrderDual α) _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
+  Eq.symm <| (@Monotone.map_min α αᵒᵈ _ _ Inv.inv a b) fun a b => inv_le_inv_iff.mpr
 
 @[to_additive min_sub_sub_right]
 theorem min_div_div_right' (a b c : α) : min (a / c) (b / c) = min a b / c := by
@@ -1245,6 +1244,18 @@ theorem neg_le_of_abs_le (h : abs a ≤ b) : -b ≤ a :=
 
 theorem le_of_abs_le (h : abs a ≤ b) : a ≤ b :=
   (abs_le.mp h).2
+
+@[to_additive]
+theorem apply_abs_le_mul_of_one_le' {β : Type _} [MulOneClassₓ β] [Preorderₓ β] [CovariantClass β β (· * ·) (· ≤ ·)]
+    [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {f : α → β} {a : α} (h₁ : 1 ≤ f a) (h₂ : 1 ≤ f (-a)) :
+    f (abs a) ≤ f a * f (-a) :=
+  (le_totalₓ a 0).byCases (fun ha => (abs_of_nonpos ha).symm ▸ le_mul_of_one_le_left' h₁) fun ha =>
+    (abs_of_nonneg ha).symm ▸ le_mul_of_one_le_right' h₂
+
+@[to_additive]
+theorem apply_abs_le_mul_of_one_le {β : Type _} [MulOneClassₓ β] [Preorderₓ β] [CovariantClass β β (· * ·) (· ≤ ·)]
+    [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {f : α → β} (h : ∀ x, 1 ≤ f x) (a : α) : f (abs a) ≤ f a * f (-a) :=
+  apply_abs_le_mul_of_one_le' (h _) (h _)
 
 /-- The **triangle inequality** in `linear_ordered_add_comm_group`s.
 -/

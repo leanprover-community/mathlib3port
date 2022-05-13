@@ -7,6 +7,7 @@ import Mathbin.Data.Matrix.Block
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.RingTheory.AlgebraTower
+import Mathbin.Algebra.Module.Algebra
 
 /-!
 # Linear maps and matrices
@@ -596,8 +597,19 @@ variable {V : Type _} [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V]
 
 variable {W : Type _} [AddCommGroupₓ W] [Module K W] [FiniteDimensional K W]
 
-instance : FiniteDimensional K (V →ₗ[K] W) :=
+instance finite_dimensional : FiniteDimensional K (V →ₗ[K] W) :=
   LinearEquiv.finite_dimensional (LinearMap.toMatrix (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W)).symm
+
+section
+
+variable {A : Type _} [Ringₓ A] [Algebra K A] [Module A V] [IsScalarTower K A V] [Module A W] [IsScalarTower K A W]
+
+/-- Linear maps over a `k`-algebra are finite dimensional (over `k`) if both the source and
+target are, since they form a subspace of all `k`-linear maps. -/
+instance finite_dimensional' : FiniteDimensional K (V →ₗ[A] W) :=
+  FiniteDimensional.of_injective (restrictScalarsLinearMap K A V W) (restrict_scalars_injective _)
+
+end
 
 /-- The dimension of the space of linear transformations is the product of the dimensions of the
 domain and codomain.

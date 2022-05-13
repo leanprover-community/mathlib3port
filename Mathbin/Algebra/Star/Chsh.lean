@@ -174,7 +174,7 @@ theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 *
     simp only [← pow_mulₓ] <;> norm_num
 
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by
-  rw [← mul_inv₀]
+  rw [← mul_inv]
   norm_num
 
 end tsirelson_inequality

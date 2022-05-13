@@ -75,7 +75,7 @@ theorem map_inf [SemilatticeInf α] [LinearOrderₓ β] [RelHomClass F ((· < ·
 
 theorem map_sup [SemilatticeSup α] [LinearOrderₓ β] [RelHomClass F ((· > ·) : β → β → Prop) ((· > ·) : α → α → Prop)]
     (a : F) (m n : β) : a (m⊔n) = a m⊔a n :=
-  @map_inf (OrderDual α) (OrderDual β) _ _ _ _ _ _ _
+  @map_inf αᵒᵈ βᵒᵈ _ _ _ _ _ _ _
 
 protected theorem is_irrefl [RelHomClass F r s] (f : F) : ∀ [IsIrrefl β s], IsIrrefl α r
   | ⟨H⟩ => ⟨fun a h => H _ (map_rel f h)⟩

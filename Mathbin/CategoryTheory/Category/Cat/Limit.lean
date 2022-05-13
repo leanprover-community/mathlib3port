@@ -60,11 +60,11 @@ def homDiagram {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) :
 instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects)) where
   Hom := fun X Y => limit (homDiagram X Y)
   id := fun X =>
-    Types.Limit.mk (homDiagram X X) (fun j => 𝟙 _) fun j j' f => by
+    Types.Limit.mk.{v, v} (homDiagram X X) (fun j => 𝟙 _) fun j j' f => by
       simp
   comp := fun X Y Z f g =>
-    Types.Limit.mk (homDiagram X Z) (fun j => limit.π (homDiagram X Y) j f ≫ limit.π (homDiagram Y Z) j g) fun j j' h =>
-      by
+    Types.Limit.mk.{v, v} (homDiagram X Z) (fun j => limit.π (homDiagram X Y) j f ≫ limit.π (homDiagram Y Z) j g)
+      fun j j' h => by
       rw [← congr_funₓ (limit.w (hom_diagram X Y) h) f, ← congr_funₓ (limit.w (hom_diagram Y Z) h) g]
       dsimp'
       simp
@@ -94,7 +94,7 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F whe
           { app := fun j => (s.π.app j).obj,
             naturality' := fun j j' f => (congr_argₓ Functor.obj (s.π.naturality f) : _) } }
   map := fun X Y f => by
-    fapply types.limit.mk
+    fapply Types.Limit.mk.{v, v}
     · intro j
       refine' eq_to_hom _ ≫ (s.π.app j).map f ≫ eq_to_hom _ <;> simp
       
@@ -129,7 +129,7 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F) where
     · intro X
       ext
       dsimp'
-      simp only [types.limit.lift_π_apply, ← w j]
+      simp only [types.limit.lift_π_apply', ← w j]
       rfl
       
     · intro X Y f

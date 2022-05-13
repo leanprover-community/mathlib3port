@@ -202,6 +202,11 @@ theorem dist_self_sub_right (g h : E) : dist g (g - h) = ∥h∥ := by
 theorem dist_self_sub_left (g h : E) : dist (g - h) g = ∥h∥ := by
   rw [dist_comm, dist_self_sub_right]
 
+/-- In a (semi)normed group, negation `x ↦ -x` tends to infinity at infinity. TODO: use
+`bornology.cobounded` instead of `filter.comap has_norm.norm filter.at_top`. -/
+theorem Filter.tendsto_neg_cobounded : Tendsto (Neg.neg : E → E) (comap norm atTop) (comap norm atTop) := by
+  simpa only [norm_neg, tendsto_comap_iff, (· ∘ ·)] using tendsto_comap
+
 /-- **Triangle inequality** for the norm. -/
 theorem norm_add_le (g h : E) : ∥g + h∥ ≤ ∥g∥ + ∥h∥ := by
   simpa [dist_eq_norm] using dist_triangle g 0 (-h)

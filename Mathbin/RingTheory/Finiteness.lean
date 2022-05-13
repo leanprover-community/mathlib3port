@@ -126,7 +126,7 @@ theorem trans {R : Type _} (A B : Type _) [CommSemiringₓ R] [CommSemiringₓ A
           rw [Set.image2_smul, Submodule.span_smul hs (↑t : Set B), ht, Submodule.restrict_scalars_top]⟩⟩
 
 -- see Note [lower instance priority]
-instance (priority := 100) finite_type {R : Type _} (A : Type _) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
+instance (priority := 100) finite_type {R : Type _} (A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
     [hRA : Finite R A] : Algebra.FiniteType R A :=
   ⟨Subalgebra.fg_of_submodule_fg hRA.1⟩
 
@@ -135,6 +135,10 @@ end Algebra
 end Finite
 
 end Module
+
+instance Module.Finite.tensor_product [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
+    [hM : Module.Finite R M] [hN : Module.Finite R N] : Module.Finite R (TensorProduct R M N) where
+  out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.map₂ _ hN.out)
 
 namespace Algebra
 

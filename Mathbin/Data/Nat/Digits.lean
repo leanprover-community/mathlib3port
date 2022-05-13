@@ -538,7 +538,7 @@ theorem digits_len_le_digits_len_succ (b n : ℕ) : (digits b n).length ≤ (dig
     · simpa [succ_lt_succ_iff] using hb
       
     
-  simpa [digits_len, hb, hn] using log_le_log_of_le (le_succ _)
+  simpa [digits_len, hb, hn] using log_mono_right (le_succ _)
 
 theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (digits b m).length :=
   monotone_nat_of_le_succ (digits_len_le_digits_len_succ b) h

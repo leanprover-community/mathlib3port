@@ -61,39 +61,8 @@ def starNormedGroupHom : NormedGroupHom E E :=
 theorem star_isometry : Isometry (star : E → E) :=
   starAddEquiv.toAddMonoidHom.isometry_of_norm norm_star
 
-theorem continuous_star : Continuous (star : E → E) :=
-  star_isometry.Continuous
-
-theorem continuous_on_star {s : Set E} : ContinuousOn star s :=
-  continuous_star.ContinuousOn
-
-theorem continuous_at_star {x : E} : ContinuousAt star x :=
-  continuous_star.ContinuousAt
-
-theorem continuous_within_at_star {s : Set E} {x : E} : ContinuousWithinAt star s x :=
-  continuous_star.ContinuousWithinAt
-
-theorem tendsto_star (x : E) : Filter.Tendsto star (𝓝 x) (𝓝 x⋆) :=
-  continuous_star.Tendsto x
-
-theorem Filter.Tendsto.star {f : α → E} {l : Filter α} {y : E} (h : Filter.Tendsto f l (𝓝 y)) :
-    Filter.Tendsto (fun x => (f x)⋆) l (𝓝 y⋆) :=
-  (continuous_star.Tendsto y).comp h
-
-variable [TopologicalSpace α]
-
-theorem Continuous.star {f : α → E} (hf : Continuous f) : Continuous fun y => star (f y) :=
-  continuous_star.comp hf
-
-theorem ContinuousAt.star {f : α → E} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun x => (f x)⋆) x :=
-  continuous_at_star.comp hf
-
-theorem ContinuousOn.star {f : α → E} {s : Set α} (hf : ContinuousOn f s) : ContinuousOn (fun x => (f x)⋆) s :=
-  continuous_star.comp_continuous_on hf
-
-theorem ContinuousWithinAt.star {f : α → E} {s : Set α} {x : α} (hf : ContinuousWithinAt f s x) :
-    ContinuousWithinAt (fun x => (f x)⋆) s x :=
-  hf.star
+instance (priority := 100) NormedStarGroup.to_has_continuous_star : HasContinuousStar E :=
+  ⟨star_isometry.Continuous⟩
 
 end NormedStarGroup
 

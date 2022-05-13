@@ -201,7 +201,7 @@ theorem tendsto_div_pow_mul_exp_add_at_top (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) 
     intro b' c' h
     convert (tendsto_mul_exp_add_div_pow_at_top b' c' n h).inv_tendsto_at_top
     ext x
-    simpa only [Pi.inv_apply] using inv_div.symm
+    simpa only [Pi.inv_apply] using (inv_div _ _).symm
   cases lt_or_gt_of_neₓ hb
   · exact H b c h
     
@@ -268,4 +268,20 @@ theorem is_o_pow_exp_at_top {n : ℕ} : IsOₓ (fun x => x ^ n) Real.exp atTop :
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
 
 end Real
+
+namespace Complex
+
+/-- `complex.abs (complex.exp z) → ∞` as `complex.re z → ∞`. TODO: use `bornology.cobounded`. -/
+theorem tendsto_exp_comap_re_at_top : Tendsto exp (comap re atTop) (comap abs atTop) := by
+  simpa only [tendsto_comap_iff, (· ∘ ·), abs_exp] using real.tendsto_exp_at_top.comp tendsto_comap
+
+/-- `complex.exp z → 0` as `complex.re z → -∞`.-/
+theorem tendsto_exp_comap_re_at_bot : Tendsto exp (comap re atBot) (𝓝 0) :=
+  tendsto_zero_iff_norm_tendsto_zero.2 <| by
+    simpa only [norm_eq_abs, abs_exp] using real.tendsto_exp_at_bot.comp tendsto_comap
+
+theorem tendsto_exp_comap_re_at_bot_nhds_within : Tendsto exp (comap re atBot) (𝓝[≠] 0) :=
+  tendsto_inf.2 ⟨tendsto_exp_comap_re_at_bot, tendsto_principal.2 <| eventually_of_forall <| exp_ne_zero⟩
+
+end Complex
 

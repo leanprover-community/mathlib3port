@@ -284,7 +284,7 @@ theorem IsEquivalent.inv (huv : u ~[l] v) : (fun x => (u x)⁻¹) ~[l] fun x => 
       _⟩
   convert h.inv
   ext
-  simp [mul_inv₀]
+  simp [mul_inv]
 
 theorem IsEquivalent.div (htu : t ~[l] u) (hvw : v ~[l] w) : (fun x => t x / v x) ~[l] fun x => u x / w x := by
   simpa only [div_eq_mul_inv] using htu.mul hvw.inv

@@ -13,6 +13,8 @@ import Mathbin.LinearAlgebra.Prod
 We define `star_linear_equiv`, which is the star operation bundled as a star-linear map.
 It is defined on a star algebra `A` over the base ring `R`.
 
+This file also provides some lemmas that need `algebra.module.basic` imported to prove.
+
 ## TODO
 
 - Define `star_linear_equiv` for noncommutative `R`. We only the commutative case for now since,
@@ -25,6 +27,42 @@ It is defined on a star algebra `A` over the base ring `R`.
   equivalence.
 -/
 
+
+section SmulLemmas
+
+variable {R M : Type _}
+
+@[simp]
+theorem star_int_cast_smul [Ringₓ R] [AddCommGroupₓ M] [Module R M] [StarAddMonoid M] (n : ℤ) (x : M) :
+    star ((n : R) • x) = (n : R) • star x :=
+  map_int_cast_smul (starAddEquiv : M ≃+ M) R R n x
+
+@[simp]
+theorem star_nat_cast_smul [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [StarAddMonoid M] (n : ℕ) (x : M) :
+    star ((n : R) • x) = (n : R) • star x :=
+  map_nat_cast_smul (starAddEquiv : M ≃+ M) R R n x
+
+@[simp]
+theorem star_inv_int_cast_smul [DivisionRing R] [AddCommGroupₓ M] [Module R M] [StarAddMonoid M] (n : ℤ) (x : M) :
+    star ((n⁻¹ : R) • x) = (n⁻¹ : R) • star x :=
+  map_inv_int_cast_smul (starAddEquiv : M ≃+ M) R R n x
+
+@[simp]
+theorem star_inv_nat_cast_smul [DivisionRing R] [AddCommGroupₓ M] [Module R M] [StarAddMonoid M] (n : ℕ) (x : M) :
+    star ((n⁻¹ : R) • x) = (n⁻¹ : R) • star x :=
+  map_inv_nat_cast_smul (starAddEquiv : M ≃+ M) R R n x
+
+@[simp]
+theorem star_rat_cast_smul [DivisionRing R] [AddCommGroupₓ M] [Module R M] [StarAddMonoid M] (n : ℚ) (x : M) :
+    star ((n : R) • x) = (n : R) • star x :=
+  map_rat_cast_smul (starAddEquiv : M ≃+ M) _ _ _ x
+
+@[simp]
+theorem star_rat_smul {R : Type _} [AddCommGroupₓ R] [StarAddMonoid R] [Module ℚ R] (x : R) (n : ℚ) :
+    star (n • x) = n • star x :=
+  map_rat_smul (starAddEquiv : R ≃+ R) _ _
+
+end SmulLemmas
 
 /-- If `A` is a module over a commutative `R` with compatible actions,
 then `star` is a semilinear equivalence. -/
@@ -68,7 +106,7 @@ def skewAdjointPart : A →ₗ[R] skewAdjoint A where
       simp only [skewAdjoint.mem_iff, star_smul, star_sub, star_star, star_trivial, ← smul_neg, neg_sub]⟩
   map_add' := fun x y => by
     ext
-    simp only [sub_add, ← smul_add, sub_sub_assoc_swap, star_add, AddSubgroup.coe_mk, AddSubgroup.coe_add]
+    simp only [sub_add, ← smul_add, sub_sub_eq_add_sub, star_add, AddSubgroup.coe_mk, AddSubgroup.coe_add]
   map_smul' := fun r x => by
     ext
     simp [← mul_smul, ← smul_sub, show r * ⅟ 2 = ⅟ 2 * r from Commute.inv_of_right (Commute.one_right r).bit0_right]

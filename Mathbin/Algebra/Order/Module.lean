@@ -30,7 +30,7 @@ variable {k M N : Type _}
 
 namespace OrderDual
 
-instance [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k (OrderDual M) where
+instance [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k Mᵒᵈ where
   add_smul := fun r s x => OrderDual.rec (add_smul _ _) x
   zero_smul := fun m => OrderDual.rec (zero_smul _) m
 
@@ -88,7 +88,7 @@ theorem smul_nonpos_of_nonpos_of_nonneg (hc : c ≤ 0) (ha : 0 ≤ a) : c • a 
     
 
 theorem smul_nonneg_of_nonpos_of_nonpos (hc : c ≤ 0) (ha : a ≤ 0) : 0 ≤ c • a :=
-  @smul_nonpos_of_nonpos_of_nonneg k (OrderDual M) _ _ _ _ _ _ hc ha
+  @smul_nonpos_of_nonpos_of_nonneg k Mᵒᵈ _ _ _ _ _ _ hc ha
 
 alias smul_pos_iff_of_neg ↔ _ smul_pos_of_neg_of_neg
 
@@ -124,7 +124,7 @@ variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
-def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M where
+def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o Mᵒᵈ where
   toFun := fun b => OrderDual.toDual (c • b)
   invFun := fun b => c⁻¹ • OrderDual.ofDual b
   left_inv := inv_smul_smul₀ hc.Ne

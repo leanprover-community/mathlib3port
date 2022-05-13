@@ -183,11 +183,10 @@ theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set <| Submodule R M) (
 
 /-- A module is Artinian iff every decreasing chain of submodules stabilizes. -/
 theorem monotone_stabilizes_iff_artinian :
-    (∀ f : ℕ →o OrderDual (Submodule R M), ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M := by
-  rw [is_artinian_iff_well_founded] <;> exact (WellFounded.monotone_chain_condition (OrderDual (Submodule R M))).symm
+    (∀ f : ℕ →o (Submodule R M)ᵒᵈ, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M := by
+  rw [is_artinian_iff_well_founded] <;> exact (WellFounded.monotone_chain_condition (Submodule R M)ᵒᵈ).symm
 
-theorem IsArtinian.monotone_stabilizes [IsArtinian R M] (f : ℕ →o OrderDual (Submodule R M)) :
-    ∃ n, ∀ m, n ≤ m → f n = f m :=
+theorem IsArtinian.monotone_stabilizes [IsArtinian R M] (f : ℕ →o (Submodule R M)ᵒᵈ) : ∃ n, ∀ m, n ≤ m → f n = f m :=
   monotone_stabilizes_iff_artinian.mpr ‹_› f
 
 /-- If `∀ I > J, P I` implies `P J`, then `P` holds for all submodules. -/
@@ -352,17 +351,15 @@ theorem is_artinian_span_of_finite R {M} [Ringₓ R] [AddCommGroupₓ M] [Module
     (hA : Finite A) : IsArtinian R (Submodule.span R A) :=
   is_artinian_of_fg_of_artinian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
 
-theorem is_artinian_ring_of_surjective R [CommRingₓ R] S [CommRingₓ S] (f : R →+* S) (hf : Function.Surjective f)
+theorem is_artinian_ring_of_surjective R [Ringₓ R] S [Ringₓ S] (f : R →+* S) (hf : Function.Surjective f)
     [H : IsArtinianRing R] : IsArtinianRing S := by
   rw [is_artinian_ring_iff, is_artinian_iff_well_founded] at H⊢
   exact OrderEmbedding.well_founded (Ideal.orderEmbeddingOfSurjective f hf) H
 
-instance is_artinian_ring_range {R} [CommRingₓ R] {S} [CommRingₓ S] (f : R →+* S) [IsArtinianRing R] :
-    IsArtinianRing f.range :=
+instance is_artinian_ring_range {R} [Ringₓ R] {S} [Ringₓ S] (f : R →+* S) [IsArtinianRing R] : IsArtinianRing f.range :=
   is_artinian_ring_of_surjective R f.range f.range_restrict f.range_restrict_surjective
 
-theorem is_artinian_ring_of_ring_equiv R [CommRingₓ R] {S} [CommRingₓ S] (f : R ≃+* S) [IsArtinianRing R] :
-    IsArtinianRing S :=
+theorem is_artinian_ring_of_ring_equiv R [Ringₓ R] {S} [Ringₓ S] (f : R ≃+* S) [IsArtinianRing R] : IsArtinianRing S :=
   is_artinian_ring_of_surjective R S f.toRingHom f.toEquiv.Surjective
 
 namespace IsArtinianRing
@@ -373,7 +370,7 @@ variable {R : Type _} [CommRingₓ R] [IsArtinianRing R]
 
 theorem is_nilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) := by
   let Jac := Ideal.jacobson (⊥ : Ideal R)
-  let f : ℕ →o OrderDual (Ideal R) := ⟨fun n => Jac ^ n, fun _ _ h => Ideal.pow_le_pow h⟩
+  let f : ℕ →o (Ideal R)ᵒᵈ := ⟨fun n => Jac ^ n, fun _ _ h => Ideal.pow_le_pow h⟩
   obtain ⟨n, hn⟩ : ∃ n, ∀ m, n ≤ m → Jac ^ n = Jac ^ m := IsArtinian.monotone_stabilizes f
   refine' ⟨n, _⟩
   let J : Ideal R := annihilator (Jac ^ n)

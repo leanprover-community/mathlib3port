@@ -1399,7 +1399,7 @@ theorem antilipschitz_of_uniform_embedding (f : E →L[𝕜] Fₗ) (hf : Uniform
       exact hx.trans_lt (half_lt_self εpos)
     simpa using this
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
-  refine' ⟨⟨δ⁻¹, _⟩ * nnnorm c, f.to_linear_map.antilipschitz_of_bound fun x => _⟩
+  refine' ⟨⟨δ⁻¹, _⟩ * ∥c∥₊, f.to_linear_map.antilipschitz_of_bound fun x => _⟩
   exact inv_nonneg.2 (le_of_ltₓ δ_pos)
   by_cases' hx : f x = 0
   · have : f x = f 0 := by
@@ -1429,7 +1429,7 @@ that it belongs to the closure of the image of a bounded set `s : set (E →SL[�
 to function. Coercion to function of the result is definitionally equal to `f`. -/
 @[simps (config := { fullyApplied := false }) apply]
 def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} (hs : Bounded s)
-    (hf : f ∈ Closure ((fun g x => g x : (E' →SL[σ₁₂] F) → E' → F) '' s)) : E' →SL[σ₁₂] F := by
+    (hf : f ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) : E' →SL[σ₁₂] F := by
   -- `f` is a linear map due to `linear_map_of_mem_closure_range_coe`
   refine' (linearMapOfMemClosureRangeCoe f _).mkContinuousOfExistsBound _
   · refine' closure_mono (image_subset_iff.2 fun g hg => _) hf
@@ -1492,6 +1492,71 @@ instance [CompleteSpace F] : CompleteSpace (E' →SL[σ₁₂] F) := by
   -- Finally, `f n` converges to `Glin` in norm because of
   -- `continuous_linear_map.tendsto_of_tendsto_pointwise_of_cauchy_seq`
   exact ⟨Glin, tendsto_of_tendsto_pointwise_of_cauchy_seq (tendsto_pi_nhds.2 hG) hf⟩
+
+/-- Let `s` be a bounded set in the space of continuous (semi)linear maps `E →SL[σ] F` taking values
+in a proper space. Then `s` interpreted as a set in the space of maps `E → F` with topology of
+pointwise convergence is precompact: its closure is a compact set. -/
+theorem is_compact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s) :
+    IsCompact (Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
+  have : ∀ x, IsCompact (Closure (apply' F σ₁₂ x '' s)) := fun x =>
+    ((apply' F σ₁₂ x).lipschitz.bounded_image hb).is_compact_closure
+  compact_closure_of_subset_compact (is_compact_pi_infinite this)
+    (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
+
+/-- Let `s` be a bounded set in the space of continuous (semi)linear maps `E →SL[σ] F` taking values
+in a proper space. If `s` interpreted as a set in the space of maps `E → F` with topology of
+pointwise convergence is closed, then it is compact.
+
+TODO: reformulate this in terms of a type synonym with the right topology. -/
+theorem is_compact_image_coe_of_bounded_of_closed_image [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
+    (hc : IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) : IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
+  hc.closure_eq ▸ is_compact_closure_image_coe_of_bounded hb
+
+/-- If a set `s` of semilinear functions is bounded and is closed in the weak-* topology, then its
+image under coercion to functions `E → F` is a closed set. We don't have a name for `E →SL[σ] F`
+with weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`).
+
+TODO: reformulate this in terms of a type synonym with the right topology. -/
+theorem is_closed_image_coe_of_bounded_of_weak_closed {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
+    (hc : ∀ f, (⇑f : E' → F) ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
+    IsClosed ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
+  is_closed_of_closure_subset fun f hf =>
+    ⟨ofMemClosureImageCoeBounded f hb hf, hc (ofMemClosureImageCoeBounded f hb hf) hf, rfl⟩
+
+/-- If a set `s` of semilinear functions is bounded and is closed in the weak-* topology, then its
+image under coercion to functions `E → F` is a compact set. We don't have a name for `E →SL[σ] F`
+with weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`).
+-/
+theorem is_compact_image_coe_of_bounded_of_weak_closed [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)} (hb : Bounded s)
+    (hc : ∀ f, (⇑f : E' → F) ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) → f ∈ s) :
+    IsCompact ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s) :=
+  is_compact_image_coe_of_bounded_of_closed_image hb <| is_closed_image_coe_of_bounded_of_weak_closed hb hc
+
+/-- A closed ball is closed in the weak-* topology. We don't have a name for `E →SL[σ] F` with
+weak-* topology in `mathlib`, so we use an equivalent condition (see `is_closed_induced_iff'`). -/
+theorem is_weak_closed_closed_ball (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f : E' →SL[σ₁₂] F⦄
+    (hf : ⇑f ∈ Closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' ClosedBall f₀ r)) : f ∈ ClosedBall f₀ r := by
+  have hr : 0 ≤ r := nonempty_closed_ball.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
+  refine' mem_closed_ball_iff_norm.2 ((op_norm_le_bound _ hr) fun x => _)
+  have : IsClosed { g : E' → F | ∥g x - f₀ x∥ ≤ r * ∥x∥ } :=
+    is_closed_Iic.preimage ((@continuous_apply E' (fun _ => F) _ x).sub continuous_const).norm
+  refine' this.closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf
+  exact (g - f₀).le_of_op_norm_le (mem_closed_ball_iff_norm.1 hg) _
+
+/-- The set of functions `f : E → F` that represent continuous linear maps `f : E →SL[σ₁₂] F`
+at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is closed in the topology of pointwise convergence.
+This is one of the key steps in the proof of the **Banach-Alaoglu** theorem. -/
+theorem is_closed_image_coe_closed_ball (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
+    IsClosed ((coeFn : (E →SL[σ₁₂] F) → E → F) '' ClosedBall f₀ r) :=
+  is_closed_image_coe_of_bounded_of_weak_closed bounded_closed_ball (is_weak_closed_closed_ball f₀ r)
+
+/-- **Banach-Alaoglu** theorem. The set of functions `f : E → F` that represent continuous linear
+maps `f : E →SL[σ₁₂] F` at distance `≤ r` from `f₀ : E →SL[σ₁₂] F` is compact in the topology of
+pointwise convergence. Other versions of this theorem can be found in
+`analysis.normed_space.weak_dual`. -/
+theorem is_compact_image_coe_closed_ball [ProperSpace F] (f₀ : E →SL[σ₁₂] F) (r : ℝ) :
+    IsCompact ((coeFn : (E →SL[σ₁₂] F) → E → F) '' ClosedBall f₀ r) :=
+  is_compact_image_coe_of_bounded_of_weak_closed bounded_closed_ball <| is_weak_closed_closed_ball f₀ r
 
 end Completeness
 
@@ -1761,7 +1826,7 @@ section
 
 variable [RingHomIsometric σ₂₁]
 
-protected theorem antilipschitz (e : E ≃SL[σ₁₂] F) : AntilipschitzWith (nnnorm (e.symm : F →SL[σ₂₁] E)) e :=
+protected theorem antilipschitz (e : E ≃SL[σ₁₂] F) : AntilipschitzWith ∥(e.symm : F →SL[σ₂₁] E)∥₊ e :=
   e.symm.lipschitz.to_right_inverse e.left_inv
 
 theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) :
@@ -1780,7 +1845,7 @@ omit σ₂₁
 theorem norm_symm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < ∥(e.symm : F →SL[σ₂₁] E)∥ :=
   pos_of_mul_pos_left (lt_of_lt_of_leₓ zero_lt_one e.one_le_norm_mul_norm_symm) (norm_nonneg _)
 
-theorem nnnorm_symm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < nnnorm (e.symm : F →SL[σ₂₁] E) :=
+theorem nnnorm_symm_pos [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) : 0 < ∥(e.symm : F →SL[σ₂₁] E)∥₊ :=
   e.norm_symm_pos
 
 theorem subsingleton_or_norm_symm_pos [RingHomIsometric σ₁₂] (e : E ≃SL[σ₁₂] F) :
@@ -1794,7 +1859,7 @@ theorem subsingleton_or_norm_symm_pos [RingHomIsometric σ₁₂] (e : E ≃SL[�
     
 
 theorem subsingleton_or_nnnorm_symm_pos [RingHomIsometric σ₁₂] (e : E ≃SL[σ₁₂] F) :
-    Subsingleton E ∨ 0 < (nnnorm <| (e.symm : F →SL[σ₂₁] E)) :=
+    Subsingleton E ∨ 0 < ∥(e.symm : F →SL[σ₂₁] E)∥₊ :=
   subsingleton_or_norm_symm_pos e
 
 variable (𝕜)

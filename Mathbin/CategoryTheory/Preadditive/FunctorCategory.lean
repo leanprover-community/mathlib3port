@@ -22,7 +22,7 @@ open CategoryTheory.Limits Preadditive
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive D]
 
-instance : Preadditive (C ⥤ D) where
+instance functorCategoryPreadditive : Preadditive (C ⥤ D) where
   homGroup := fun F G =>
     { add := fun α β =>
         { app := fun X => α.app X + β.app X,

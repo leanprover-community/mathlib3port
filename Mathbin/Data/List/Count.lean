@@ -36,6 +36,9 @@ theorem countp_cons_of_pos {a : α} l (pa : p a) : countp p (a :: l) = countp p 
 theorem countp_cons_of_neg {a : α} l (pa : ¬p a) : countp p (a :: l) = countp p l :=
   if_neg pa
 
+theorem countp_cons (a : α) l : countp p (a :: l) = countp p l + ite (p a) 1 0 := by
+  by_cases' h : p a <;> simp [h]
+
 theorem length_eq_countp_add_countp l : length l = countp p l + countp (fun a => ¬p a) l := by
   induction' l with x h ih <;> [rfl, by_cases' p x] <;>
       [simp only [countp_cons_of_pos _ _ h, countp_cons_of_neg (fun a => ¬p a) _ (Decidable.not_not.2 h), ih, length],
@@ -56,6 +59,10 @@ theorem countp_append l₁ l₂ : countp p (l₁ ++ l₂) = countp p l₁ + coun
 
 theorem countp_pos {l} : 0 < countp p l ↔ ∃ a ∈ l, p a := by
   simp only [countp_eq_length_filter, length_pos_iff_exists_mem, mem_filter, exists_prop]
+
+theorem countp_eq_zero {l} : countp p l = 0 ↔ ∀, ∀ a ∈ l, ∀, ¬p a := by
+  rw [← not_iff_not, ← Ne.def, ← pos_iff_ne_zero, countp_pos]
+  simp
 
 theorem countp_eq_length {l} : countp p l = l.length ↔ ∀, ∀ a ∈ l, ∀, p a := by
   rw [countp_eq_length_filter, filter_length_eq_length]
@@ -146,6 +153,9 @@ theorem count_eq_zero_of_not_mem {a : α} {l : List α} (h : a ∉ l) : count a 
   Decidable.by_contradiction fun h' => h <| count_pos.1 (Nat.pos_of_ne_zeroₓ h')
 
 theorem not_mem_of_count_eq_zero {a : α} {l : List α} (h : count a l = 0) : a ∉ l := fun h' => (count_pos.2 h').ne' h
+
+theorem count_eq_zero {a : α} {l} : count a l = 0 ↔ a ∉ l :=
+  ⟨not_mem_of_count_eq_zero, count_eq_zero_of_not_mem⟩
 
 theorem count_eq_length {a : α} {l} : count a l = l.length ↔ ∀, ∀ b ∈ l, ∀, a = b := by
   rw [count, countp_eq_length]

@@ -253,9 +253,12 @@ theorem det_conj_lie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
 theorem linear_equiv_det_conj_lie : conjLie.toLinearEquiv.det = -1 :=
   linear_equiv_det_conj_ae
 
+instance : HasContinuousStar ℂ :=
+  ⟨conjLie.Continuous⟩
+
 @[continuity]
 theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
-  conjLie.Continuous
+  continuous_star
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
 def conjCle : ℂ ≃L[ℝ] ℂ :=

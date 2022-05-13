@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 -/
 import Mathbin.Order.CompleteLattice
-import Mathbin.Order.OrderDual
+import Mathbin.Order.Synonym
 
 /-!
 # Galois connections, insertions and coinsertions
@@ -44,7 +44,7 @@ intersection.
 -/
 
 
-open Function Order Set
+open Function OrderDual Set
 
 universe u v w x
 
@@ -378,8 +378,7 @@ def GaloisInsertion.monotoneIntro {α β : Type _} [Preorderₓ α] [Preorderₓ
   choice_eq := fun _ _ => rfl
 
 /-- Makes a Galois insertion from an order-preserving bijection. -/
-protected def OrderIso.toGaloisInsertion [Preorderₓ α] [Preorderₓ β] (oi : α ≃o β) :
-    @GaloisInsertion α β _ _ oi oi.symm where
+protected def OrderIso.toGaloisInsertion [Preorderₓ α] [Preorderₓ β] (oi : α ≃o β) : GaloisInsertion oi oi.symm where
   choice := fun b h => oi b
   gc := oi.to_galois_connection
   le_l_u := fun g => le_of_eqₓ (oi.right_inv g).symm
@@ -567,31 +566,39 @@ end GaloisInsertion
 choice function, to give better definitional equalities when lifting order structures. Dual to
 `galois_insertion` -/
 @[nolint has_inhabited_instance]
-structure GaloisCoinsertion {α β : Type _} [Preorderₓ α] [Preorderₓ β] (l : α → β) (u : β → α) where
+structure GaloisCoinsertion [Preorderₓ α] [Preorderₓ β] (l : α → β) (u : β → α) where
   choice : ∀ x : β, x ≤ l (u x) → α
   gc : GaloisConnection l u
   u_l_le : ∀ x, u (l x) ≤ x
   choice_eq : ∀ a h, choice a h = u a
 
-/-- Make a `galois_insertion u l` in the `order_dual`, from a `galois_coinsertion l u` -/
-def GaloisCoinsertion.dual {α β : Type _} [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
-    GaloisCoinsertion l u → @GaloisInsertion (OrderDual β) (OrderDual α) _ _ u l := fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+/-- Make a `galois_insertion` between `αᵒᵈ` and `βᵒᵈ` from a `galois_coinsertion` between `α` and
+`β`. -/
+def GaloisCoinsertion.dual [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
+    GaloisCoinsertion l u → GaloisInsertion (to_dual ∘ u ∘ of_dual) (to_dual ∘ l ∘ of_dual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 
-/-- Make a `galois_coinsertion u l` in the `order_dual`, from a `galois_insertion l u` -/
-def GaloisInsertion.dual {α β : Type _} [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
-    GaloisInsertion l u → @GaloisCoinsertion (OrderDual β) (OrderDual α) _ _ u l := fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+/-- Make a `galois_coinsertion` between `αᵒᵈ` and `βᵒᵈ` from a `galois_insertion` between `α` and
+`β`. -/
+def GaloisInsertion.dual [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
+    GaloisInsertion l u → GaloisCoinsertion (to_dual ∘ u ∘ of_dual) (to_dual ∘ l ∘ of_dual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 
-/-- Make a `galois_coinsertion l u` from a `galois_insertion l u` in the `order_dual` -/
-def GaloisCoinsertion.ofDual {α β : Type _} [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
-    @GaloisInsertion (OrderDual β) (OrderDual α) _ _ u l → GaloisCoinsertion l u := fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+/-- Make a `galois_insertion` between `α` and `β` from a `galois_coinsertion` between `αᵒᵈ` and
+`βᵒᵈ`. -/
+def GaloisCoinsertion.ofDual [Preorderₓ α] [Preorderₓ β] {l : αᵒᵈ → βᵒᵈ} {u : βᵒᵈ → αᵒᵈ} :
+    GaloisCoinsertion l u → GaloisInsertion (of_dual ∘ u ∘ to_dual) (of_dual ∘ l ∘ to_dual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 
-/-- Make a `galois_insertion l u` from a `galois_coinsertion l u` in the `order_dual` -/
-def GaloisInsertion.ofDual {α β : Type _} [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} :
-    @GaloisCoinsertion (OrderDual β) (OrderDual α) _ _ u l → GaloisInsertion l u := fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+/-- Make a `galois_coinsertion` between `α` and `β` from a `galois_insertion` between `αᵒᵈ` and
+`βᵒᵈ`. -/
+def GaloisInsertion.ofDual [Preorderₓ α] [Preorderₓ β] {l : αᵒᵈ → βᵒᵈ} {u : βᵒᵈ → αᵒᵈ} :
+    GaloisInsertion l u → GaloisCoinsertion (of_dual ∘ u ∘ to_dual) (of_dual ∘ l ∘ to_dual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 
 /-- Makes a Galois coinsertion from an order-preserving bijection. -/
-protected def RelIso.toGaloisCoinsertion [Preorderₓ α] [Preorderₓ β] (oi : α ≃o β) :
-    @GaloisCoinsertion α β _ _ oi oi.symm where
+protected def OrderIso.toGaloisCoinsertion [Preorderₓ α] [Preorderₓ β] (oi : α ≃o β) :
+    GaloisCoinsertion oi oi.symm where
   choice := fun b h => oi.symm b
   gc := oi.to_galois_connection
   u_l_le := fun g => le_of_eqₓ (oi.left_inv g)
@@ -600,7 +607,7 @@ protected def RelIso.toGaloisCoinsertion [Preorderₓ α] [Preorderₓ β] (oi :
 /-- A constructor for a Galois coinsertion with the trivial `choice` function. -/
 def GaloisCoinsertion.monotoneIntro [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α} (hu : Monotone u)
     (hl : Monotone l) (hlu : ∀ b, l (u b) ≤ b) (hul : ∀ a, u (l a) = a) : GaloisCoinsertion l u :=
-  GaloisCoinsertion.ofDual (GaloisInsertion.monotoneIntro hl.dual hu.dual hlu hul)
+  (GaloisInsertion.monotoneIntro hl.dual hu.dual hlu hul).ofDual
 
 /-- Make a `galois_coinsertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
 def GaloisConnection.toGaloisCoinsertion {α β : Type _} [Preorderₓ α] [Preorderₓ β] {l : α → β} {u : β → α}

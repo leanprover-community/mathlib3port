@@ -44,8 +44,8 @@ def toContinuousMapLinearMap (R : Type _) [Semiringₓ R] [AddCommMonoidₓ Y] [
 
 /-- The inclusion of locally-constant functions into continuous functions as an algebra map. -/
 @[simps]
-def toContinuousMapAlgHom (R : Type _) [CommSemiringₓ R] [Semiringₓ Y] [Algebra R Y] [TopologicalSemiring Y]
-    [HasContinuousConstSmul R Y] : LocallyConstant X Y →ₐ[R] C(X, Y) where
+def toContinuousMapAlgHom (R : Type _) [CommSemiringₓ R] [Semiringₓ Y] [Algebra R Y] [TopologicalSemiring Y] :
+    LocallyConstant X Y →ₐ[R] C(X, Y) where
   toFun := coe
   map_one' := by
     ext

@@ -94,7 +94,7 @@ instance : Inv (ValueGroup A K) :=
         apply Quotientₓ.sound'
         use b⁻¹
         dsimp'
-        rw [Units.smul_def, Units.smul_def, Algebra.smul_def, Algebra.smul_def, mul_inv₀, RingHom.map_units_inv])
+        rw [Units.smul_def, Units.smul_def, Algebra.smul_def, Algebra.smul_def, mul_inv, RingHom.map_units_inv])
 
 variable [IsDomain A] [ValuationRing A] [IsFractionRing A K]
 

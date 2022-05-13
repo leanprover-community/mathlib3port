@@ -3,7 +3,7 @@ Copyright (c) 2022 Violeta Hernández Palacios. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 -/
-import Mathbin.SetTheory.Ordinal.Arithmetic
+import Mathbin.SetTheory.Ordinal.FixedPoint
 
 /-!
 ### Principal ordinals
@@ -117,7 +117,7 @@ theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordin
     
 
 theorem unbounded_principal (op : Ordinal → Ordinal → Ordinal) : Set.Unbounded (· < ·) { o | Principal op o } :=
-  fun o => ⟨_, principal_nfp_blsub₂ op o, (le_nfp_self _ o).not_lt⟩
+  fun o => ⟨_, principal_nfp_blsub₂ op o, (le_nfp _ o).not_lt⟩
 
 /-! #### Additive principal ordinals -/
 
@@ -221,10 +221,11 @@ theorem principal_add_iff_zero_or_omega_opow {o : Ordinal} : Principal (· + ·)
   · rw [principal_add_iff_add_left_eq_self]
     simp only [ho, false_orₓ]
     refine'
-      ⟨fun H => ⟨_, ((lt_or_eq_of_leₓ (opow_log_le _ (Ordinal.pos_iff_ne_zero.2 ho))).resolve_left fun h => _).symm⟩,
+      ⟨fun H =>
+        ⟨_, ((lt_or_eq_of_leₓ (opow_log_le_self _ (Ordinal.pos_iff_ne_zero.2 ho))).resolve_left fun h => _).symm⟩,
         fun ⟨b, e⟩ => e.symm ▸ fun a => add_omega_opow⟩
     have := H _ h
-    have := lt_opow_succ_log one_lt_omega o
+    have := lt_opow_succ_log_self one_lt_omega o
     rw [opow_succ, lt_mul_of_limit omega_is_limit] at this
     rcases this with ⟨a, ao, h'⟩
     rcases lt_omega.1 ao with ⟨n, rfl⟩
@@ -430,10 +431,10 @@ theorem mul_eq_opow_log_succ {a b : Ordinal.{u}} (ha : 0 < a) (hb : Principal (�
     rw [mul_assoc, opow_succ]
     refine' mul_le_mul_left' (le_of_ltₓ (hb (hbl.2 _ _) hcb)) _
     rw [div_lt hbo₀, ← opow_succ]
-    exact lt_opow_succ_log hb₁ _
+    exact lt_opow_succ_log_self hb₁ _
     
   · rw [opow_succ]
-    exact mul_le_mul_right' (opow_log_le b ha) b
+    exact mul_le_mul_right' (opow_log_le_self b ha) b
     
 
 /-! #### Exponential principal ordinals -/

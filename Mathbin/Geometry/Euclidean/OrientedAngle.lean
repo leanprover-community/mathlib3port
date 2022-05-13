@@ -72,7 +72,7 @@ theorem oangle_self (x : V) : hb.oangle x x = 0 := by
 theorem oangle_rev (x y : V) : hb.oangle y x = -hb.oangle x y := by
   simp only [oangle]
   convert Complex.arg_inv_coe_angle _
-  exact inv_div.symm
+  exact (inv_div _ _).symm
 
 /-- Adding the angles between two vectors in each order results in 0. -/
 @[simp]

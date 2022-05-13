@@ -175,6 +175,19 @@ protected def cancelCommMonoid [CancelCommMonoid M₂] (f : M₁ → M₂) (hf :
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CancelCommMonoid M₁ :=
   { hf.LeftCancelSemigroup f mul, hf.CommMonoid f one mul npow with }
 
+/-- A type has an involutive inversion if it admits a surjective map that preserves `⁻¹` to a type
+which has an involutive inversion. -/
+--See note [reducible non-instances]
+@[reducible,
+  to_additive
+      "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]
+protected def hasInvolutiveInv {M₁ : Type _} [Inv M₁] [HasInvolutiveInv M₂] (f : M₁ → M₂) (hf : Injective f)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) : HasInvolutiveInv M₁ where
+  inv := Inv.inv
+  inv_inv := fun x =>
+    hf <| by
+      rw [inv, inv, inv_invₓ]
+
 variable [Inv M₁] [Div M₁] [Pow M₁ ℤ]
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`
@@ -199,6 +212,38 @@ protected def divInvMonoid [DivInvMonoidₓ M₂] (f : M₁ → M₂) (hf : Inje
     div_eq_mul_inv := fun x y =>
       hf <| by
         erw [div, mul, inv, div_eq_mul_inv] }
+
+/-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `division_monoid`
+if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `division_monoid`. -/
+-- See note [reducible non-instances]
+@[reducible,
+  to_additive SubtractionMonoid
+      "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `subtraction_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `subtraction_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
+protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivisionMonoid M₁ :=
+  { hf.DivInvMonoid f one mul inv div npow zpow, hf.HasInvolutiveInv f inv with
+    mul_inv_rev := fun x y =>
+      hf <| by
+        erw [inv, mul, mul_inv_rev, mul, inv, inv],
+    inv_eq_of_mul := fun x y h =>
+      hf <| by
+        erw [inv,
+          inv_eq_of_mul_eq_one_right
+            (by
+              erw [← mul, h, one])] }
+
+/-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `division_comm_monoid`
+if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `division_comm_monoid`.
+See note [reducible non-instances]. -/
+-- See note [reducible non-instances]
+@[reducible,
+  to_additive SubtractionCommMonoid
+      "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `subtraction_comm_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `subtraction_comm_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
+protected def divisionCommMonoid [DivisionCommMonoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
+    (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
+    (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivisionCommMonoid M₁ :=
+  { hf.DivisionMonoid f one mul inv div npow zpow, hf.CommSemigroup f mul with }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a group,
 if it admits an injective map that preserves `1`, `*` and `⁻¹` to a group.
@@ -307,6 +352,19 @@ See note [reducible non-instances]. -/
 protected def commMonoid [CommMonoidₓ M₁] (f : M₁ → M₂) (hf : Surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : CommMonoidₓ M₂ :=
   { hf.CommSemigroup f mul, hf.Monoid f one mul npow with }
+
+/-- A type has an involutive inversion if it admits a surjective map that preserves `⁻¹` to a type
+which has an involutive inversion. -/
+--See note [reducible non-instances]
+@[reducible,
+  to_additive
+      "A type has an involutive negation if it admits a surjective map that\npreserves `⁻¹` to a type which has an involutive inversion."]
+protected def hasInvolutiveInv {M₂ : Type _} [Inv M₂] [HasInvolutiveInv M₁] (f : M₁ → M₂) (hf : Surjective f)
+    (inv : ∀ x, f x⁻¹ = (f x)⁻¹) : HasInvolutiveInv M₂ where
+  inv := Inv.inv
+  inv_inv :=
+    hf.forall.2 fun x => by
+      erw [← inv, ← inv, inv_invₓ]
 
 variable [Inv M₂] [Div M₂] [Pow M₂ ℤ]
 

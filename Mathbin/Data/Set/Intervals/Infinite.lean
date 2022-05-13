@@ -59,8 +59,8 @@ section UnboundedAbove
 
 variable [NoMaxOrder α]
 
-theorem Ioi.infinite {a : α} : Infinite (Ioi a) := by
-  apply @Iio.infinite (OrderDual α)
+theorem Ioi.infinite {a : α} : Infinite (Ioi a) :=
+  @Iio.infinite αᵒᵈ _ _ _
 
 theorem Ici.infinite {a : α} : Infinite (Ici a) :=
   Ioi.infinite.mono Ioi_subset_Ici_self

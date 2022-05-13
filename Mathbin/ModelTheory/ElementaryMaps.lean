@@ -14,6 +14,10 @@ import Mathbin.ModelTheory.Substructures
   realizations of formulas.
 * A `first_order.language.elementary_substructure` is a substructure where the realization of each
   formula agrees with the realization in the larger model.
+* The `first_order.language.elementary_diagram` of a structure is the set of all sentences with
+  parameters that the structure satisfies.
+* `first_order.language.elementary_embedding.of_models_elementary_diagram` is the canonical
+elementary embedding of any structure into a model of its elementary diagram.
 
 ## Main Results
 * The Tarski-Vaught Test for embeddings: `first_order.language.embedding.is_elementary_of_exists`
@@ -166,6 +170,34 @@ theorem comp_assoc (f : M ↪ₑ[L] N) (g : N ↪ₑ[L] P) (h : P ↪ₑ[L] Q) :
   rfl
 
 end ElementaryEmbedding
+
+variable (L) (M)
+
+/-- The elementary diagram of an `L`-structure is the set of all sentences with parameters it
+  satisfies. -/
+abbrev ElementaryDiagram : L[[M]].Theory :=
+  L[[M]].CompleteTheory M
+
+/-- The canonical elementary embedding of an `L`-structure into any model of its elementary diagram
+-/
+@[simps]
+def ElementaryEmbedding.ofModelsElementaryDiagram (N : Type _) [L.Structure N] [L[[M]].Structure N]
+    [(lhomWithConstants L M).IsExpansionOn N] [N ⊨ L.ElementaryDiagram M] : M ↪ₑ[L] N :=
+  ⟨(coe : L[[M]].Constants → N) ∘ Sum.inr, fun n φ x => by
+    refine'
+      trans _
+        ((realize_iff_of_model_complete_theory M N
+              (((L.Lhom_with_constants M).onBoundedFormula φ).subst (constants.term ∘ Sum.inr ∘ x)).alls).trans
+          _)
+    · simp_rw [sentence.realize, bounded_formula.realize_alls, bounded_formula.realize_subst,
+        Lhom.realize_on_bounded_formula, formula.realize, Unique.forall_iff, realize_constants]
+      
+    · simp_rw [sentence.realize, bounded_formula.realize_alls, bounded_formula.realize_subst,
+        Lhom.realize_on_bounded_formula, formula.realize, Unique.forall_iff]
+      rfl
+      ⟩
+
+variable {L M}
 
 namespace Embedding
 

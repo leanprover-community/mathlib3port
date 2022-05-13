@@ -239,7 +239,7 @@ theorem IsPreconnected.Ioi_cInf_subset {s : Set α} (hs : IsPreconnected s) (hb 
 
 theorem IsPreconnected.Iio_cSup_subset {s : Set α} (hs : IsPreconnected s) (hb : ¬BddBelow s) (ha : BddAbove s) :
     Iio (sup s) ⊆ s :=
-  @IsPreconnected.Ioi_cInf_subset (OrderDual α) _ _ _ s hs ha hb
+  @IsPreconnected.Ioi_cInf_subset αᵒᵈ _ _ _ s hs ha hb
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 /-- A preconnected set in a conditionally complete linear order is either one of the intervals
@@ -555,7 +555,7 @@ theorem Continuous.surjective {f : α → δ} (hf : Continuous f) (h_top : Tends
 /-- A continuous function which tendsto `at_bot` `at_top` and to `at_top` `at_bot` is surjective. -/
 theorem Continuous.surjective' {f : α → δ} (hf : Continuous f) (h_top : Tendsto f atBot atTop)
     (h_bot : Tendsto f atTop atBot) : Function.Surjective f :=
-  @Continuous.surjective (OrderDual α) _ _ _ _ _ _ _ _ _ hf h_top h_bot
+  @Continuous.surjective αᵒᵈ _ _ _ _ _ _ _ _ _ hf h_top h_bot
 
 /-- If a function `f : α → β` is continuous on a nonempty interval `s`, its restriction to `s`
 tends to `at_bot : filter β` along `at_bot : filter ↥s` and tends to `at_top : filter β` along
@@ -574,5 +574,5 @@ conclusion as `surj_on f s univ`. -/
 theorem ContinuousOn.surj_on_of_tendsto' {f : α → δ} {s : Set α} [OrdConnected s] (hs : s.Nonempty)
     (hf : ContinuousOn f s) (hbot : Tendsto (fun x : s => f x) atBot atTop)
     (htop : Tendsto (fun x : s => f x) atTop atBot) : SurjOn f s Univ :=
-  @ContinuousOn.surj_on_of_tendsto α _ _ _ _ (OrderDual δ) _ _ _ _ _ _ hs hf hbot htop
+  @ContinuousOn.surj_on_of_tendsto α _ _ _ _ δᵒᵈ _ _ _ _ _ _ hs hf hbot htop
 

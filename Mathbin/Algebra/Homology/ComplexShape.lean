@@ -154,6 +154,9 @@ def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α 
   next_eq := fun i j k hi hj => add_right_cancelₓ (hi.trans hj.symm)
   prev_eq := fun i j k hi hj => hi.symm.trans hj
 
+theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) : (down' a).Rel i j :=
+  h
+
 /-- The `complex_shape` appropriate for cohomology, so `d : X i ⟶ X j` only when `j = i + 1`.
 -/
 @[simps]
@@ -165,6 +168,9 @@ def up (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :=
 @[simps]
 def down (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :=
   down' 1
+
+theorem down_mk {α : Type _} [AddRightCancelSemigroup α] [One α] (i j : α) (h : j + 1 = i) : (down α).Rel i j :=
+  down'_mk (1 : α) i j h
 
 end ComplexShape
 

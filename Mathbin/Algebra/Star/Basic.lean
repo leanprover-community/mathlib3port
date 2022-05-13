@@ -215,11 +215,11 @@ theorem star_sub [AddGroupₓ R] [StarAddMonoid R] (r s : R) : star (r - s) = st
   (starAddEquiv : R ≃+ R).map_sub _ _
 
 @[simp]
-theorem star_nsmul [AddCommMonoidₓ R] [StarAddMonoid R] (x : R) (n : ℕ) : star (n • x) = n • star x :=
+theorem star_nsmul [AddMonoidₓ R] [StarAddMonoid R] (x : R) (n : ℕ) : star (n • x) = n • star x :=
   (starAddEquiv : R ≃+ R).toAddMonoidHom.map_nsmul _ _
 
 @[simp]
-theorem star_zsmul [AddCommGroupₓ R] [StarAddMonoid R] (x : R) (n : ℤ) : star (n • x) = n • star x :=
+theorem star_zsmul [AddGroupₓ R] [StarAddMonoid R] (x : R) (n : ℤ) : star (n • x) = n • star x :=
   (starAddEquiv : R ≃+ R).toAddMonoidHom.map_zsmul _ _
 
 section

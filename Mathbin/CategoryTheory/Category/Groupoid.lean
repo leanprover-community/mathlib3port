@@ -78,7 +78,7 @@ def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u} where
   map := fun C D => id
 
 instance forgetToCatFull : Full forgetToCat where
-  preimage := fun C D => id
+  Preimage := fun C D => id
 
 instance forget_to_Cat_faithful : Faithful forgetToCat :=
   {  }

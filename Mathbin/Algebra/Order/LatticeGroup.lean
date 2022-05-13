@@ -178,12 +178,12 @@ theorem pos_one : (1 : α)⁺ = 1 :=
 
 @[simp, to_additive]
 theorem neg_one : (1 : α)⁻ = 1 := by
-  rw [m_neg_part_def, one_inv, sup_idem]
+  rw [m_neg_part_def, inv_one, sup_idem]
 
 -- a⁻ = -(a ⊓ 0)
 @[to_additive]
 theorem neg_eq_inv_inf_one [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : a⁻ = (a⊓1)⁻¹ := by
-  rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, one_inv]
+  rw [m_neg_part_def, ← inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, inv_one]
 
 @[to_additive le_abs]
 theorem le_mabs (a : α) : a ≤ abs a :=
@@ -309,7 +309,7 @@ theorem inf_eq_div_pos_div [CovariantClass α α (· * ·) (· ≤ ·)] (a b : �
       nth_rw 0[← inv_invₓ b]
       rw [← mul_inv, mul_comm b⁻¹, ← div_eq_mul_inv]
     _ = a * ((a / b)⁻¹⊓1⁻¹) := by
-      rw [one_inv]
+      rw [inv_one]
     _ = a / (a / b⊔1) := by
       rw [← inv_sup_eq_inv_inf_inv, ← div_eq_mul_inv]
     
@@ -536,7 +536,7 @@ theorem mabs_mul_le [CovariantClass α α (· * ·) (· ≤ ·)] (a b : α) : ab
 @[to_additive]
 theorem abs_inv_comm (a b : α) : abs (a / b) = abs (b / a) := by
   unfold HasAbs.abs
-  rw [inv_div' a b, ← inv_invₓ (a / b), inv_div', sup_comm]
+  rw [inv_div a b, ← inv_invₓ (a / b), inv_div, sup_comm]
 
 -- | |a| - |b| | ≤ |a - b|
 @[to_additive]

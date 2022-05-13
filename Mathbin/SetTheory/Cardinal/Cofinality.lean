@@ -409,6 +409,9 @@ theorem cof_eq_zero {o} : cof o = 0 ↔ o = 0 :=
     fun e => by
     simp [e]⟩
 
+theorem cof_ne_zero {o} : cof o ≠ 0 ↔ o ≠ 0 :=
+  cof_eq_zero.Not
+
 @[simp]
 theorem cof_succ o : cof (succ o) = 1 := by
   apply le_antisymmₓ
@@ -465,82 +468,45 @@ theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
     fun ⟨a, e⟩ => by
     simp [e]⟩
 
-@[simp]
-theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a + b) = cof b :=
-  (induction_on a) fun α r _ =>
-    (induction_on b) fun β s _ b0 => by
-      skip
-      change cof (type _) = _
-      refine' eq_of_forall_le_iff fun c => _
-      rw [le_cof_type, le_cof_type]
-      constructor <;> intro H S hS
-      · refine' le_transₓ (H { a | Sum.recOn a (∅ : Set α) S } fun a => _) ⟨⟨_, _⟩⟩
-        · cases' a with a b
-          · cases' type_ne_zero_iff_nonempty.1 b0 with b
-            rcases hS b with ⟨b', bs, _⟩
-            exact
-              ⟨Sum.inr b', bs, by
-                simp ⟩
-            
-          · rcases hS b with ⟨b', bs, h⟩
-            exact
-              ⟨Sum.inr b', bs, by
-                simp [h]⟩
-            
-          
-        · exact fun a =>
-            match a with
-            | ⟨Sum.inr b, h⟩ => ⟨b, h⟩
-          
-        · exact fun a b =>
-            match a, b with
-            | ⟨Sum.inr a, h₁⟩, ⟨Sum.inr b, h₂⟩, h => by
-              congr <;> injection h
-          
-        
-      · refine' le_transₓ (H (Sum.inr ⁻¹' S) fun a => _) ⟨⟨_, _⟩⟩
-        · rcases hS (Sum.inr a) with ⟨a' | b', bs, h⟩ <;> simp at h
-          · cases h
-            
-          · exact ⟨b', bs, h⟩
-            
-          
-        · exact fun ⟨a, h⟩ => ⟨_, h⟩
-          
-        · exact fun h => by
-            injection h with h <;> congr <;> injection h
-          
-        
-
 /-- A fundamental sequence for `a` is an increasing sequence of length `o = cof a` that converges at
     `a`. We provide `o` explicitly in order to avoid type rewrites. -/
 def IsFundamentalSequence (a o : Ordinal.{u}) (f : ∀, ∀ b < o, ∀, Ordinal.{u}) : Prop :=
   o ≤ a.cof.ord ∧ (∀ {i j} hi hj, i < j → f i hi < f j hj) ∧ blsub.{u, u} o f = a
 
-section FundamentalSequence
+namespace IsFundamentalSequence
 
-variable {a o : Ordinal.{u}} {f : ∀, ∀ b < o, ∀, Ordinal.{u}} (hf : IsFundamentalSequence a o f)
+variable {a o : Ordinal.{u}} {f : ∀, ∀ b < o, ∀, Ordinal.{u}}
 
-theorem IsFundamentalSequence.cof_eq : a.cof.ord = o :=
-  hf.1.antisymm'
-    (by
-      rw [← hf.2.2]
-      exact (ord_le_ord.2 (cof_blsub_le f)).trans (ord_card_le o))
+protected theorem cof_eq (hf : IsFundamentalSequence a o f) : a.cof.ord = o :=
+  hf.1.antisymm' <| by
+    rw [← hf.2.2]
+    exact (ord_le_ord.2 (cof_blsub_le f)).trans (ord_card_le o)
 
-theorem IsFundamentalSequence.strict_mono : ∀ {i j : Ordinal} hi : i < o hj : j < o, i < j → f i hi < f j hj :=
+protected theorem strict_mono (hf : IsFundamentalSequence a o f) : ∀ {i j} hi hj, i < j → f i hi < f j hj :=
   hf.2.1
 
-theorem IsFundamentalSequence.blsub_eq : blsub.{u, u} o f = a :=
+theorem blsub_eq (hf : IsFundamentalSequence a o f) : blsub.{u, u} o f = a :=
   hf.2.2
 
-theorem is_fundamental_sequence_id_of_le_cof (h : o ≤ o.cof.ord) : IsFundamentalSequence o o fun a _ => a :=
+theorem ord_cof (hf : IsFundamentalSequence a o f) :
+    IsFundamentalSequence a a.cof.ord fun i hi =>
+      f i
+        (hi.trans_le
+          (by
+            rw [hf.cof_eq])) :=
+  by
+  have H := hf.cof_eq
+  subst H
+  exact hf
+
+theorem id_of_le_cof (h : o ≤ o.cof.ord) : IsFundamentalSequence o o fun a _ => a :=
   ⟨h, fun _ _ _ _ => id, blsub_id o⟩
 
-theorem is_fundamental_sequence_zero {f : ∀, ∀ b < (0 : Ordinal), ∀, Ordinal} : IsFundamentalSequence 0 0 f :=
+protected theorem zero {f : ∀, ∀ b < (0 : Ordinal), ∀, Ordinal} : IsFundamentalSequence 0 0 f :=
   ⟨by
-    rw [cof_zero, ord_zero], fun i j hi => (Ordinal.not_lt_zero i hi).elim, blsub_zero rfl f⟩
+    rw [cof_zero, ord_zero], fun i j hi => (Ordinal.not_lt_zero i hi).elim, blsub_zero f⟩
 
-theorem is_fundamental_sequence_succ : IsFundamentalSequence o.succ 1 fun _ _ => o := by
+protected theorem succ : IsFundamentalSequence o.succ 1 fun _ _ => o := by
   refine' ⟨_, fun i j hi hj h => _, blsub_const Ordinal.one_ne_zero o⟩
   · rw [cof_succ, ord_one]
     
@@ -549,19 +515,16 @@ theorem is_fundamental_sequence_succ : IsFundamentalSequence o.succ 1 fun _ _ =>
     exact h.false.elim
     
 
-include hf
-
-theorem IsFundamentalSequence.monotone {i j : Ordinal} (hi : i < o) (hj : j < o) (hij : i ≤ j) : f i hi ≤ f j hj := by
+protected theorem monotone (hf : IsFundamentalSequence a o f) {i j : Ordinal} (hi : i < o) (hj : j < o) (hij : i ≤ j) :
+    f i hi ≤ f j hj := by
   rcases lt_or_eq_of_leₓ hij with (hij | rfl)
   · exact le_of_ltₓ (hf.2.1 hi hj hij)
     
   · rfl
     
 
-end FundamentalSequence
-
-theorem IsFundamentalSequence.trans {a o o' : Ordinal.{u}} {f : ∀, ∀ b < o, ∀, Ordinal.{u}}
-    (hf : IsFundamentalSequence a o f) {g : ∀, ∀ b < o', ∀, Ordinal.{u}} (hg : IsFundamentalSequence o o' g) :
+theorem trans {a o o' : Ordinal.{u}} {f : ∀, ∀ b < o, ∀, Ordinal.{u}} (hf : IsFundamentalSequence a o f)
+    {g : ∀, ∀ b < o', ∀, Ordinal.{u}} (hg : IsFundamentalSequence o o' g) :
     IsFundamentalSequence a o' fun i hi =>
       f (g i hi)
         (by
@@ -576,11 +539,13 @@ theorem IsFundamentalSequence.trans {a o o' : Ordinal.{u}} {f : ∀, ∀ b < o, 
     exact hf.2.2
     
 
+end IsFundamentalSequence
+
 /-- Every ordinal has a fundamental sequence. -/
 theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequence a a.cof.ord f := by
   suffices ∃ o f, is_fundamental_sequence a o f by
     rcases this with ⟨o, f, hf⟩
-    convert Exists.introₓ f hf <;> rw [hf.cof_eq]
+    exact ⟨_, hf.ord_cof⟩
   rcases exists_lsub_cof a with ⟨ι, f, hf, hι⟩
   rcases ord_eq ι with ⟨r, wo, hr⟩
   have := wo
@@ -622,6 +587,58 @@ theorem cof_cof (a : Ordinal.{u}) : cof (cof a).ord = cof a := by
   cases' exists_fundamental_sequence a.cof.ord with g hg
   exact ord_injective (hf.trans hg).cof_eq.symm
 
+protected theorem IsNormal.is_fundamental_sequence {f : Ordinal.{u} → Ordinal.{u}} (hf : IsNormal f) {a o}
+    (ha : IsLimit a) {g} (hg : IsFundamentalSequence a o g) : IsFundamentalSequence (f a) o fun b hb => f (g b hb) := by
+  refine' ⟨_, fun i j _ _ h => hf.strict_mono (hg.2.1 _ _ h), _⟩
+  · rcases exists_lsub_cof (f a) with ⟨ι, f', hf', hι⟩
+    rw [← hg.cof_eq, ord_le_ord, ← hι]
+    suffices (lsub.{u, u} fun i => Inf { b : Ordinal | f' i ≤ f b }) = a by
+      rw [← this]
+      apply cof_lsub_le
+    have H : ∀ i, ∃ b < a, f' i ≤ f b := fun i => by
+      have := lt_lsub.{u, u} f' i
+      rwa [hf', ← IsNormal.blsub_eq.{u, u} hf ha, lt_blsub_iff] at this
+    refine' le_antisymmₓ (lsub_le fun i => _) (le_of_forall_lt fun b hb => _)
+    · rcases H i with ⟨b, hb, hb'⟩
+      exact lt_of_le_of_ltₓ (cInf_le' hb') hb
+      
+    · have := hf.strict_mono hb
+      rw [← hf', lt_lsub_iff] at this
+      cases' this with i hi
+      rcases H i with ⟨b, _, hb⟩
+      exact
+        lt_of_le_of_ltₓ ((le_cInf_iff'' ⟨b, hb⟩).2 fun c hc => hf.strict_mono.le_iff_le.1 (hi.trans hc)) (lt_lsub _ i)
+      
+    
+  · rw [@blsub_comp.{u, u, u} a _ (fun b _ => f b) (fun i j hi hj h => hf.strict_mono.monotone h) g hg.2.2]
+    exact IsNormal.blsub_eq.{u, u} hf ha
+    
+
+theorem IsNormal.cof_eq {f} (hf : IsNormal f) {a} (ha : IsLimit a) : cof (f a) = cof a :=
+  let ⟨g, hg⟩ := exists_fundamental_sequence a
+  ord_injective (hf.IsFundamentalSequence ha hg).cof_eq
+
+theorem IsNormal.cof_le {f} (hf : IsNormal f) a : cof a ≤ cof (f a) := by
+  rcases zero_or_succ_or_limit a with (rfl | ⟨b, rfl⟩ | ha)
+  · rw [cof_zero]
+    exact zero_le _
+    
+  · rw [cof_succ, Cardinal.one_le_iff_ne_zero, cof_ne_zero, ← Ordinal.pos_iff_ne_zero]
+    exact (Ordinal.zero_le (f b)).trans_lt (hf.1 b)
+    
+  · rw [hf.cof_eq ha]
+    
+
+@[simp]
+theorem cof_add (a b : Ordinal) : b ≠ 0 → cof (a + b) = cof b := fun h => by
+  rcases zero_or_succ_or_limit b with (rfl | ⟨c, rfl⟩ | hb)
+  · contradiction
+    
+  · rw [add_succ, cof_succ, cof_succ]
+    
+  · exact (add_is_normal a).cof_eq hb
+    
+
 theorem omega_le_cof {o} : ω ≤ cof o ↔ IsLimit o := by
   rcases zero_or_succ_or_limit o with (rfl | ⟨o, rfl⟩ | l)
   · simp [not_zero_is_limit, Cardinal.omega_ne_zero]
@@ -643,6 +660,14 @@ theorem omega_le_cof {o} : ω ≤ cof o ↔ IsLimit o := by
       exact not_succ_is_limit _ l
       
     
+
+@[simp]
+theorem aleph'_cof {o : Ordinal} (ho : o.IsLimit) : (aleph' o).ord.cof = o.cof :=
+  aleph'_is_normal.cof_eq ho
+
+@[simp]
+theorem aleph_cof {o : Ordinal} (ho : o.IsLimit) : (aleph o).ord.cof = o.cof :=
+  aleph_is_normal.cof_eq ho
 
 @[simp]
 theorem cof_omega : cof omega = ω :=

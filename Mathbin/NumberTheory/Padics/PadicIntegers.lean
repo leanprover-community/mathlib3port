@@ -642,7 +642,7 @@ section Dvr
 
 
 instance : LocalRing ℤ_[p] :=
-  LocalRing.mk <| by
+  LocalRing.of_nonunits_add <| by
     simp only [mem_nonunits] <;> exact fun x y => norm_lt_one_add
 
 theorem p_nonnunit : (p : ℤ_[p]) ∈ Nonunits ℤ_[p] := by

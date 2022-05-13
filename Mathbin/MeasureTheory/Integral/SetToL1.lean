@@ -663,7 +663,7 @@ namespace SimpleFunc
 theorem norm_eq_sum_mul (f : α →₁ₛ[μ] G) :
     ∥f∥ = ∑ x in (toSimpleFunc f).range, (μ (toSimpleFunc f ⁻¹' {x})).toReal * ∥x∥ := by
   rw [norm_to_simple_func, snorm_one_eq_lintegral_nnnorm]
-  have h_eq := simple_func.map_apply (fun x => (nnnorm x : ℝ≥0∞)) (to_simple_func f)
+  have h_eq := simple_func.map_apply (fun x => (∥x∥₊ : ℝ≥0∞)) (to_simple_func f)
   dsimp' only  at h_eq
   simp_rw [← h_eq]
   rw [simple_func.lintegral_eq_lintegral, simple_func.map_lintegral, Ennreal.to_real_sum]

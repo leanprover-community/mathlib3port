@@ -170,8 +170,8 @@ def RingHom.toOpposite {R S : Type _} [Semiringₓ R] [Semiringₓ S] (f : R →
   { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMonoidHom.toOpposite hf with
     toFun := MulOpposite.op ∘ f }
 
-/-- A monoid homomorphism `f : R →* S` such that `f x` commutes with `f y` for all `x, y` defines
-a monoid homomorphism from `Rᵐᵒᵖ`. -/
+/-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
+a ring homomorphism from `Rᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := false })]
 def RingHom.fromOpposite {R S : Type _} [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (hf : ∀ x y, Commute (f x) (f y)) :
     Rᵐᵒᵖ →+* S :=

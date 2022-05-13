@@ -126,7 +126,7 @@ you should parametrize over `(F : Type*) [add_monoid_hom_class F M N] (f : F)`.
 When you extend this structure, make sure to extend `add_monoid_hom_class`.
 -/
 @[ancestor ZeroHom AddHom]
-structure AddMonoidHom (M : Type _) (N : Type _) [AddZeroClass M] [AddZeroClass N] extends ZeroHom M N, AddHom M N
+structure AddMonoidHom (M : Type _) (N : Type _) [AddZeroClassₓ M] [AddZeroClassₓ N] extends ZeroHom M N, AddHom M N
 
 attribute [nolint doc_blame] AddMonoidHom.toAddHom
 
@@ -141,7 +141,7 @@ homomorphisms.
 You should also extend this typeclass when you extend `add_monoid_hom`.
 -/
 @[ancestor AddHomClass ZeroHomClass]
-class AddMonoidHomClass (F : Type _) (M N : outParam <| Type _) [AddZeroClass M] [AddZeroClass N] extends
+class AddMonoidHomClass (F : Type _) (M N : outParam <| Type _) [AddZeroClassₓ M] [AddZeroClassₓ N] extends
   AddHomClass F M N, ZeroHomClass F M N
 
 -- Instances and lemmas are defined below through `@[to_additive]`.
@@ -294,7 +294,7 @@ theorem map_mul_eq_one [MonoidHomClass F M N] (f : F) {a b : M} (h : a * b = 1) 
 /-- Group homomorphisms preserve inverse. -/
 @[simp, to_additive "Additive group homomorphisms preserve negation."]
 theorem map_inv [Groupₓ G] [Groupₓ H] [MonoidHomClass F G H] (f : F) (g : G) : f g⁻¹ = (f g)⁻¹ :=
-  eq_inv_of_mul_eq_one <| map_mul_eq_one f <| inv_mul_selfₓ g
+  eq_inv_of_mul_eq_one_left <| map_mul_eq_one f <| inv_mul_selfₓ g
 
 /-- Group homomorphisms preserve division. -/
 @[simp, to_additive "Additive group homomorphisms preserve subtraction."]
@@ -735,7 +735,7 @@ end MonoidHom
 @[to_additive "Inversion on a commutative additive group, considered as an additive\nmonoid homomorphism."]
 def CommGroupₓ.invMonoidHom {G : Type _} [CommGroupₓ G] : G →* G where
   toFun := Inv.inv
-  map_one' := one_inv
+  map_one' := inv_one
   map_mul' := mul_inv
 
 /-- The identity map from a type with 1 to itself. -/
@@ -1024,7 +1024,7 @@ end Monoidₓ
 
 namespace AddMonoidₓ
 
-variable (A : Type _) [AddZeroClass A]
+variable (A : Type _) [AddZeroClassₓ A]
 
 /-- The monoid of endomorphisms. -/
 protected def End :=
@@ -1267,7 +1267,7 @@ def ofMapMulInv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, 
   (mk' f) fun x y =>
     calc
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
-        simp only [one_mulₓ, one_inv, ← map_div, inv_invₓ]
+        simp only [one_mulₓ, inv_one, ← map_div, inv_invₓ]
       _ = f x * f y := by
         simp only [map_div]
         simp only [mul_right_invₓ, one_mulₓ, inv_invₓ]

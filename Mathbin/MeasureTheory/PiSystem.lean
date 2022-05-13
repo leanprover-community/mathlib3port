@@ -84,7 +84,7 @@ theorem is_pi_system_Iio : IsPiSystem (Range Iio : Set (Set α)) :=
   @image_univ α _ Iio ▸ is_pi_system_image_Iio Univ
 
 theorem is_pi_system_image_Ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
-  @is_pi_system_image_Iio (OrderDual α) _ s
+  @is_pi_system_image_Iio αᵒᵈ _ s
 
 theorem is_pi_system_Ioi : IsPiSystem (Range Ioi : Set (Set α)) :=
   @image_univ α _ Ioi ▸ is_pi_system_image_Ioi Univ

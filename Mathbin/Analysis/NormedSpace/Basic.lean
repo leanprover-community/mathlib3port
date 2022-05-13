@@ -246,7 +246,7 @@ theorem rescale_to_shell_semi_normed {c : α} (hc : 1 < ∥c∥) {ε : ℝ} (εp
     exact (div_lt_iff εpos).1 hn.2
     
   show ε / ∥c∥ ≤ ∥(c ^ (n + 1))⁻¹ • x∥
-  · rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, mul_inv_rev₀, mul_comm, ←
+  · rw [div_le_iff cpos, norm_smul, norm_inv, norm_zpow, zpow_add₀ (ne_of_gtₓ cpos), zpow_one, mul_inv_rev, mul_comm, ←
       mul_assoc, ← mul_assoc, mul_inv_cancel (ne_of_gtₓ cpos), one_mulₓ, ← div_eq_inv_mul,
       le_div_iff (zpow_pos_of_pos cpos _), mul_comm]
     exact (le_div_iff εpos).1 hn.1
@@ -454,33 +454,38 @@ section RestrictScalars
 variable (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] (E : Type _)
   [SemiNormedGroup E] [NormedSpace 𝕜' E]
 
-/-- Warning: This declaration should be used judiciously.
-Please consider using `is_scalar_tower` instead.
-
-`𝕜`-normed space structure induced by a `𝕜'`-normed space structure when `𝕜'` is a
-normed algebra over `𝕜`. Not registered as an instance as `𝕜'` can not be inferred.
-
-The type synonym `restrict_scalars 𝕜 𝕜' E` will be endowed with this instance by default.
--/
-def NormedSpace.restrictScalars : NormedSpace 𝕜 E :=
-  { RestrictScalars.module 𝕜 𝕜' E with
-    norm_smul_le := fun c x =>
-      le_of_eqₓ <| by
-        change ∥algebraMap 𝕜 𝕜' c • x∥ = ∥c∥ * ∥x∥
-        simp [norm_smul] }
-
 instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : SemiNormedGroup E] : SemiNormedGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
 instance {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [I : NormedGroup E] : NormedGroup (RestrictScalars 𝕜 𝕜' E) :=
   I
 
-instance Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜']
-    [SemiNormedGroup E] [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
+/-- If `E` is a normed space over `𝕜'` and `𝕜` is a normed algebra over `𝕜'`, then
+`restrict_scalars.module` is additionally a `normed_space`. -/
+instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
+  { RestrictScalars.module 𝕜 𝕜' E with
+    norm_smul_le := fun c x =>
+      (NormedSpace.norm_smul_le (algebraMap 𝕜 𝕜' c) (_ : E)).trans_eq <| by
+        rw [norm_algebra_map'] }
+
+/-- The action of the original normed_field on `restrict_scalars 𝕜 𝕜' E`.
+This is not an instance as it would be contrary to the purpose of `restrict_scalars`.
+-/
+-- If you think you need this, consider instead reproducing `restrict_scalars.lsmul`
+-- appropriately modified here.
+def Module.RestrictScalars.normedSpaceOrig {𝕜 : Type _} {𝕜' : Type _} {E : Type _} [NormedField 𝕜'] [SemiNormedGroup E]
+    [I : NormedSpace 𝕜' E] : NormedSpace 𝕜' (RestrictScalars 𝕜 𝕜' E) :=
   I
 
-instance : NormedSpace 𝕜 (RestrictScalars 𝕜 𝕜' E) :=
-  (NormedSpace.restrictScalars 𝕜 𝕜' E : NormedSpace 𝕜 E)
+/-- Warning: This declaration should be used judiciously.
+Please consider using `is_scalar_tower` and/or `restrict_scalars 𝕜 𝕜' E` instead.
+
+This definition allows the `restrict_scalars.normed_space` instance to be put directly on `E`
+rather on `restrict_scalars 𝕜 𝕜' E`. This would be a very bad instance; both because `𝕜'` cannot be
+inferred, and because it is likely to create instance diamonds.
+-/
+def NormedSpace.restrictScalars : NormedSpace 𝕜 E :=
+  RestrictScalars.normedSpace _ 𝕜' _
 
 end RestrictScalars
 

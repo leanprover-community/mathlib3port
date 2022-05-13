@@ -355,9 +355,9 @@ theorem fg_ker_comp {R M N P : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R
   · rwa [inf_of_le_right (show f.ker ≤ comap f g.ker from comap_mono bot_le)]
     
 
-theorem fg_restrict_scalars {R S M : Type _} [CommRingₓ R] [CommRingₓ S] [Algebra R S] [AddCommGroupₓ M] [Module S M]
-    [Module R M] [IsScalarTower R S M] (N : Submodule S M) (hfin : N.Fg) (h : Function.Surjective (algebraMap R S)) :
-    (Submodule.restrictScalars R N).Fg := by
+theorem fg_restrict_scalars {R S M : Type _} [CommSemiringₓ R] [Semiringₓ S] [Algebra R S] [AddCommGroupₓ M]
+    [Module S M] [Module R M] [IsScalarTower R S M] (N : Submodule S M) (hfin : N.Fg)
+    (h : Function.Surjective (algebraMap R S)) : (Submodule.restrictScalars R N).Fg := by
   obtain ⟨X, rfl⟩ := hfin
   use X
   exact Submodule.span_eq_restrict_scalars R S M X h
@@ -758,8 +758,8 @@ class IsNoetherianRing (R) [Semiringₓ R] extends IsNoetherian R R : Prop
 theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNoetherian R R :=
   ⟨fun h => h.1, @IsNoetherianRing.mk _ _⟩
 
-/-- A commutative ring is Noetherian if and only if all its ideals are finitely-generated. -/
-theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.Fg :=
+/-- A ring is Noetherian if and only if all its ideals are finitely-generated. -/
+theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [Semiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.Fg :=
   is_noetherian_ring_iff.trans is_noetherian_def
 
 -- see Note [lower instance priority]
@@ -843,29 +843,45 @@ theorem is_noetherian_span_of_finite R {M} [Ringₓ R] [AddCommGroupₓ M] [Modu
     (hA : Finite A) : IsNoetherian R (Submodule.span R A) :=
   is_noetherian_of_fg_of_noetherian _ (Submodule.fg_def.mpr ⟨A, hA, rfl⟩)
 
-theorem is_noetherian_ring_of_surjective R [CommRingₓ R] S [CommRingₓ S] (f : R →+* S) (hf : Function.Surjective f)
+theorem is_noetherian_ring_of_surjective R [Ringₓ R] S [Ringₓ S] (f : R →+* S) (hf : Function.Surjective f)
     [H : IsNoetherianRing R] : IsNoetherianRing S := by
   rw [is_noetherian_ring_iff, is_noetherian_iff_well_founded] at H⊢
   exact OrderEmbedding.well_founded (Ideal.orderEmbeddingOfSurjective f hf).dual H
 
-instance is_noetherian_ring_range {R} [CommRingₓ R] {S} [CommRingₓ S] (f : R →+* S) [IsNoetherianRing R] :
+instance is_noetherian_ring_range {R} [Ringₓ R] {S} [Ringₓ S] (f : R →+* S) [IsNoetherianRing R] :
     IsNoetherianRing f.range :=
   is_noetherian_ring_of_surjective R f.range f.range_restrict f.range_restrict_surjective
 
-theorem is_noetherian_ring_of_ring_equiv R [CommRingₓ R] {S} [CommRingₓ S] (f : R ≃+* S) [IsNoetherianRing R] :
+theorem is_noetherian_ring_of_ring_equiv R [Ringₓ R] {S} [Ringₓ S] (f : R ≃+* S) [IsNoetherianRing R] :
     IsNoetherianRing S :=
   is_noetherian_ring_of_surjective R S f.toRingHom f.toEquiv.Surjective
 
 namespace Submodule
+
+section Map₂
+
+variable {R M N P : Type _}
+
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
+
+variable [Module R M] [Module R N] [Module R P]
+
+theorem Fg.map₂ (f : M →ₗ[R] N →ₗ[R] P) {p : Submodule R M} {q : Submodule R N} (hp : p.Fg) (hq : q.Fg) :
+    (map₂ f p q).Fg :=
+  let ⟨sm, hfm, hm⟩ := fg_def.1 hp
+  let ⟨sn, hfn, hn⟩ := fg_def.1 hq
+  fg_def.2 ⟨Set.Image2 (fun m n => f m n) sm sn, hfm.Image2 _ hfn, map₂_span_span R f sm sn ▸ hm ▸ hn ▸ rfl⟩
+
+end Map₂
+
+section Mul
 
 variable {R : Type _} {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 variable {M N : Submodule R A}
 
 theorem Fg.mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
-  let ⟨m, hfm, hm⟩ := fg_def.1 hm
-  let ⟨n, hfn, hn⟩ := fg_def.1 hn
-  fg_def.2 ⟨m * n, hfm.mul hfn, span_mul_span R m n ▸ hm ▸ hn ▸ rfl⟩
+  hm.map₂ _ hn
 
 theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
   Nat.recOn n
@@ -873,6 +889,8 @@ theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
       simp [one_eq_span]⟩
     fun n ih => by
     simpa [pow_succₓ] using h.mul ih
+
+end Mul
 
 end Submodule
 

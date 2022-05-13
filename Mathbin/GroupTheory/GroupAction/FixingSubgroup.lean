@@ -5,7 +5,6 @@ Authors: Antoine Chambert-Loir
 -/
 import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.GroupTheory.GroupAction.Basic
-import Mathbin.Order.OrderDual
 
 /-!
 

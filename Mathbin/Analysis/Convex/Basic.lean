@@ -571,8 +571,13 @@ theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Con
 theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 s) : Convex 𝕜 (⋂₀ S) :=
   fun x y hx hy a b ha hb hab s hs => h s hs (hx s hs) (hy s hs) ha hb hab
 
-theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i : ι, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
+theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
   sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E} (h : ∀ i j, Convex 𝕜 (s i j)) :
+    Convex 𝕜 (⋂ (i) (j), s i j) :=
+  convex_Inter fun i => convex_Inter <| h i
 
 theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s ×ˢ t) := by
   intro x y hx hy a b ha hb hab
@@ -650,12 +655,12 @@ theorem Convex.add {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Conve
   rw [← add_image_prod]
   exact (hs.prod ht).is_linear_image IsLinearMap.is_linear_map_add
 
-theorem Convex.translate (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => z + x) '' s) := by
-  intro x y hx hy a b ha hb hab
-  obtain ⟨x', hx', rfl⟩ := mem_image_iff_bex.1 hx
-  obtain ⟨y', hy', rfl⟩ := mem_image_iff_bex.1 hy
-  refine' ⟨a • x' + b • y', hs hx' hy' ha hb hab, _⟩
-  rw [smul_add, smul_add, add_add_add_commₓ, ← add_smul, hab, one_smul]
+theorem Convex.vadd (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 (z +ᵥ s) := by
+  simp_rw [← image_vadd, vadd_eq_add, ← singleton_add]
+  exact (convex_singleton _).add hs
+
+theorem Convex.translate (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => z + x) '' s) :=
+  hs.vadd _
 
 /-- The translation of a convex set is also convex. -/
 theorem Convex.translate_preimage_right (hs : Convex 𝕜 s) (z : E) : Convex 𝕜 ((fun x => z + x) ⁻¹' s) := by
@@ -678,7 +683,7 @@ theorem convex_Iic (r : β) : Convex 𝕜 (Iic r) := fun x y hx hy a b ha hb hab
     
 
 theorem convex_Ici (r : β) : Convex 𝕜 (Ici r) :=
-  @convex_Iic 𝕜 (OrderDual β) _ _ _ _ r
+  @convex_Iic 𝕜 βᵒᵈ _ _ _ _ r
 
 theorem convex_Icc (r s : β) : Convex 𝕜 (Icc r s) :=
   Ici_inter_Iic.subst ((convex_Ici r).inter <| convex_Iic s)
@@ -711,7 +716,7 @@ theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) := by
       Convex.combo_self hab _
 
 theorem convex_Ioi (r : β) : Convex 𝕜 (Ioi r) :=
-  @convex_Iio 𝕜 (OrderDual β) _ _ _ _ r
+  @convex_Iio 𝕜 βᵒᵈ _ _ _ _ r
 
 theorem convex_Ioo (r s : β) : Convex 𝕜 (Ioo r s) :=
   Ioi_inter_Iio.subst ((convex_Ioi r).inter <| convex_Iio s)
@@ -760,22 +765,22 @@ theorem MonotoneOn.convex_lt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β)
       (max_rec' _ hx.2 hy.2)⟩
 
 theorem MonotoneOn.convex_ge (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r ≤ f x } :=
-  @MonotoneOn.convex_le 𝕜 (OrderDual E) (OrderDual β) _ _ _ _ _ _ _ hf.dual hs r
+  @MonotoneOn.convex_le 𝕜 Eᵒᵈ βᵒᵈ _ _ _ _ _ _ _ hf.dual hs r
 
 theorem MonotoneOn.convex_gt (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
-  @MonotoneOn.convex_lt 𝕜 (OrderDual E) (OrderDual β) _ _ _ _ _ _ _ hf.dual hs r
+  @MonotoneOn.convex_lt 𝕜 Eᵒᵈ βᵒᵈ _ _ _ _ _ _ _ hf.dual hs r
 
 theorem AntitoneOn.convex_le (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x ≤ r } :=
-  @MonotoneOn.convex_ge 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
+  @MonotoneOn.convex_ge 𝕜 E βᵒᵈ _ _ _ _ _ _ _ hf hs r
 
 theorem AntitoneOn.convex_lt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | f x < r } :=
-  @MonotoneOn.convex_gt 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
+  @MonotoneOn.convex_gt 𝕜 E βᵒᵈ _ _ _ _ _ _ _ hf hs r
 
 theorem AntitoneOn.convex_ge (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r ≤ f x } :=
-  @MonotoneOn.convex_le 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
+  @MonotoneOn.convex_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ hf hs r
 
 theorem AntitoneOn.convex_gt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x ∈ s | r < f x } :=
-  @MonotoneOn.convex_lt 𝕜 E (OrderDual β) _ _ _ _ _ _ _ hf hs r
+  @MonotoneOn.convex_lt 𝕜 E βᵒᵈ _ _ _ _ _ _ _ hf hs r
 
 theorem Monotone.convex_le (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
   Set.sep_univ.subst ((hf.MonotoneOn Univ).convex_le convex_univ r)
@@ -814,9 +819,6 @@ theorem Convex.combo_eq_vadd {a b : 𝕜} {x y : E} (h : a + b = 1) : a • x + 
     _ = b • (y - x) + x := by
       rw [smul_sub, Convex.combo_self h]
     
-
-theorem Convex.sub {s : Set (E × E)} (hs : Convex 𝕜 s) : Convex 𝕜 ((fun x : E × E => x.1 - x.2) '' s) :=
-  hs.is_linear_image IsLinearMap.is_linear_map_sub
 
 theorem convex_segment (x y : E) : Convex 𝕜 [x -[𝕜] y] := by
   rintro p q ⟨ap, bp, hap, hbp, habp, rfl⟩ ⟨aq, bq, haq, hbq, habq, rfl⟩ a b ha hb hab
@@ -860,8 +862,7 @@ theorem Convex.smul_preimage (hs : Convex 𝕜 s) (c : 𝕜) : Convex 𝕜 ((fun
   hs.linear_preimage (LinearMap.lsmul _ _ c)
 
 theorem Convex.affinity (hs : Convex 𝕜 s) (z : E) (c : 𝕜) : Convex 𝕜 ((fun x => z + c • x) '' s) := by
-  have h := (hs.smul c).translate z
-  rwa [← image_smul, image_image] at h
+  simpa only [← image_smul, ← image_vadd, image_image] using (hs.smul c).vadd z
 
 end AddCommMonoidₓ
 
@@ -873,7 +874,7 @@ variable [OrderedRing 𝕜]
 
 section AddCommGroupₓ
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E}
 
 theorem Convex.add_smul_mem (hs : Convex 𝕜 s) {x y : E} (hx : x ∈ s) (hy : x + y ∈ s) {t : 𝕜} (ht : t ∈ Icc (0 : 𝕜) 1) :
     x + t • y ∈ s := by
@@ -917,16 +918,17 @@ theorem Convex.affine_preimage (f : E →ᵃ[𝕜] F) {s : Set F} (hs : Convex �
   exact hs xs ys ha hb hab
 
 /-- The image of a convex set under an affine map is convex. -/
-theorem Convex.affine_image (f : E →ᵃ[𝕜] F) {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (f '' s) := by
+theorem Convex.affine_image (f : E →ᵃ[𝕜] F) (hs : Convex 𝕜 s) : Convex 𝕜 (f '' s) := by
   rintro x y ⟨x', ⟨hx', hx'f⟩⟩ ⟨y', ⟨hy', hy'f⟩⟩ a b ha hb hab
   refine' ⟨a • x' + b • y', ⟨hs hx' hy' ha hb hab, _⟩⟩
   rw [Convex.combo_affine_apply hab, hx'f, hy'f]
 
-theorem Convex.neg (hs : Convex 𝕜 s) : Convex 𝕜 ((fun z => -z) '' s) :=
-  hs.is_linear_image IsLinearMap.is_linear_map_neg
-
-theorem Convex.neg_preimage (hs : Convex 𝕜 s) : Convex 𝕜 ((fun z => -z) ⁻¹' s) :=
+theorem Convex.neg (hs : Convex 𝕜 s) : Convex 𝕜 (-s) :=
   hs.is_linear_preimage IsLinearMap.is_linear_map_neg
+
+theorem Convex.sub (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s - t) := by
+  rw [sub_eq_add_neg]
+  exact hs.add ht.neg
 
 end AddCommGroupₓ
 

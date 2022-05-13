@@ -7,6 +7,7 @@ import Mathbin.Algebra.Group.InjSurj
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Algebra.Hom.Units
 import Mathbin.Logic.Nontrivial
+import Mathbin.GroupTheory.GroupAction.Units
 
 /-!
 # Groups with an adjoined zero element
@@ -546,8 +547,6 @@ section GroupWithZeroₓ
 
 variable [GroupWithZeroₓ G₀] {a b c g h x : G₀}
 
-alias div_eq_mul_inv ← division_def
-
 /-- Pullback a `group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -630,24 +629,28 @@ theorem inv_mul_cancel_left₀ (h : a ≠ 0) (b : G₀) : a⁻¹ * (a * b) = b :
       simp [h]
     
 
-@[simp]
-theorem inv_one : 1⁻¹ = (1 : G₀) :=
-  calc
-    1⁻¹ = 1 * 1⁻¹ := by
-      rw [one_mulₓ]
-    _ = (1 : G₀) := by
-      simp
-    
+private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
+  rw [← inv_mul_cancel_left₀ (left_ne_zero_of_mul_eq_one h) b, h, mul_oneₓ]
 
-instance (priority := 100) GroupWithZeroₓ.toHasInvolutiveInv : HasInvolutiveInv G₀ where
-  inv := Inv.inv
-  inv_inv := fun a => by
-    by_cases' h : a = 0
-    · simp [h]
-      
-    calc a⁻¹⁻¹ = a * (a⁻¹ * a⁻¹⁻¹) := by
-        simp [h]_ = a := by
-        simp [inv_ne_zero h]
+-- See note [lower instance priority]
+instance (priority := 100) GroupWithZeroₓ.toDivisionMonoid : DivisionMonoid G₀ :=
+  { ‹GroupWithZeroₓ G₀› with inv := Inv.inv,
+    inv_inv := fun a => by
+      by_cases' h : a = 0
+      · simp [h]
+        
+      · exact left_inv_eq_right_invₓ (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
+        ,
+    mul_inv_rev := fun a b => by
+      by_cases' ha : a = 0
+      · simp [ha]
+        
+      by_cases' hb : b = 0
+      · simp [hb]
+        
+      refine' inv_eq_of_mul _
+      simp [mul_assoc, ha, hb],
+    inv_eq_of_mul := fun a b => inv_eq_of_mul }
 
 /-- Multiplying `a` by itself and then by its inverse results in `a`
 (whether or not `a` is zero). -/
@@ -690,16 +693,6 @@ theorem mul_self_div_self (a : G₀) : a * a / a = a := by
 @[simp]
 theorem div_self_mul_self (a : G₀) : a / a * a = a := by
   rw [div_eq_mul_inv, mul_inv_mul_self a]
-
-theorem eq_inv_of_mul_right_eq_one (h : a * b = 1) : b = a⁻¹ := by
-  rw [← inv_mul_cancel_left₀ (left_ne_zero_of_mul_eq_one h) b, h, mul_oneₓ]
-
-theorem eq_inv_of_mul_left_eq_one (h : a * b = 1) : a = b⁻¹ := by
-  rw [← mul_inv_cancel_right₀ (right_ne_zero_of_mul_eq_one h) a, h, one_mulₓ]
-
-@[simp]
-theorem inv_eq_one₀ : g⁻¹ = 1 ↔ g = 1 := by
-  rw [inv_eq_iff_inv_eq, inv_one, eq_comm]
 
 theorem eq_mul_inv_iff_mul_eq₀ (hc : c ≠ 0) : a = b * c⁻¹ ↔ a * c = b := by
   constructor <;> rintro rfl <;> [rw [inv_mul_cancel_right₀ hc], rw [mul_inv_cancel_right₀ hc]]
@@ -757,7 +750,7 @@ theorem mk0_coe (u : G₀ˣ) (h : (u : G₀) ≠ 0) : mk0 (u : G₀) h = u :=
 
 @[simp, norm_cast]
 theorem coe_inv' (u : G₀ˣ) : ((u⁻¹ : G₀ˣ) : G₀) = u⁻¹ :=
-  eq_inv_of_mul_left_eq_one u.inv_mul
+  eq_inv_of_mul_eq_one_left u.inv_mul
 
 @[simp]
 theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
@@ -797,6 +790,10 @@ theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : G�
     simpa only [eq_comm] using units.exists_iff_ne_zero.mpr h
     
 
+@[simp]
+theorem smul_mk0 {α : Type _} [HasScalar G₀ α] {g : G₀} (hg : g ≠ 0) (a : α) : mk0 g hg • a = g • a :=
+  rfl
+
 end Units
 
 section GroupWithZeroₓ
@@ -832,24 +829,9 @@ theorem Units.mk0_mul (x y : G₀) hxy :
   ext
   rfl
 
-theorem mul_inv_rev₀ (x y : G₀) : (x * y)⁻¹ = y⁻¹ * x⁻¹ := by
-  by_cases' hx : x = 0
-  · simp [hx]
-    
-  by_cases' hy : y = 0
-  · simp [hy]
-    
-  symm
-  apply eq_inv_of_mul_left_eq_one
-  simp [mul_assoc, hx, hy]
-
 @[simp]
 theorem div_self {a : G₀} (h : a ≠ 0) : a / a = 1 := by
   rw [div_eq_mul_inv, mul_inv_cancel h]
-
-@[simp]
-theorem div_one (a : G₀) : a / 1 = a := by
-  simp [div_eq_mul_inv a 1]
 
 @[simp]
 theorem zero_div (a : G₀) : 0 / a = 0 := by
@@ -885,12 +867,9 @@ attribute [local simp] div_eq_mul_inv mul_comm mul_assoc mul_left_commₓ
 theorem div_self_mul_self' (a : G₀) : a / (a * a) = a⁻¹ :=
   calc
     a / (a * a) = a⁻¹⁻¹ * a⁻¹ * a⁻¹ := by
-      simp [mul_inv_rev₀]
+      simp [mul_inv_rev]
     _ = a⁻¹ := inv_mul_mul_self _
     
-
-theorem div_eq_mul_one_div (a b : G₀) : a / b = a * (1 / b) := by
-  simp
 
 theorem mul_one_div_cancel {a : G₀} (h : a ≠ 0) : a * (1 / a) = 1 := by
   simp [h]
@@ -898,27 +877,8 @@ theorem mul_one_div_cancel {a : G₀} (h : a ≠ 0) : a * (1 / a) = 1 := by
 theorem one_div_mul_cancel {a : G₀} (h : a ≠ 0) : 1 / a * a = 1 := by
   simp [h]
 
-theorem one_div_one : 1 / 1 = (1 : G₀) :=
-  div_self (Ne.symm zero_ne_one)
-
 theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by
   simpa only [one_div] using inv_ne_zero h
-
-theorem eq_one_div_of_mul_eq_one {a b : G₀} (h : a * b = 1) : b = 1 / a := by
-  simpa only [one_div] using eq_inv_of_mul_right_eq_one h
-
-theorem eq_one_div_of_mul_eq_one_left {a b : G₀} (h : b * a = 1) : b = 1 / a := by
-  simpa only [one_div] using eq_inv_of_mul_left_eq_one h
-
-@[simp]
-theorem one_div_div (a b : G₀) : 1 / (a / b) = b / a := by
-  rw [one_div, div_eq_mul_inv, mul_inv_rev₀, inv_invₓ, div_eq_mul_inv]
-
-theorem one_div_one_div (a : G₀) : 1 / (1 / a) = a := by
-  simp
-
-theorem eq_of_one_div_eq_one_div {a b : G₀} (h : 1 / a = 1 / b) : a = b := by
-  rw [← one_div_one_div a, h, one_div_one_div]
 
 variable {a b c : G₀}
 
@@ -930,21 +890,12 @@ theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 := by
 theorem zero_eq_inv {a : G₀} : 0 = a⁻¹ ↔ 0 = a :=
   eq_comm.trans <| inv_eq_zero.trans eq_comm
 
-theorem one_div_mul_one_div_rev (a b : G₀) : 1 / a * (1 / b) = 1 / (b * a) := by
-  simp only [div_eq_mul_inv, one_mulₓ, mul_inv_rev₀]
-
 theorem divp_eq_div (a : G₀) (u : G₀ˣ) : a /ₚ u = a / u := by
   simpa only [div_eq_mul_inv] using congr_argₓ ((· * ·) a) u.coe_inv'
 
 @[simp]
 theorem divp_mk0 (a : G₀) {b : G₀} (hb : b ≠ 0) : a /ₚ Units.mk0 b hb = a / b :=
   divp_eq_div _ _
-
-theorem inv_div : (a / b)⁻¹ = b / a := by
-  rw [div_eq_mul_inv, mul_inv_rev₀, div_eq_mul_inv, inv_invₓ]
-
-theorem inv_div_left : a⁻¹ / b = (b * a)⁻¹ := by
-  rw [mul_inv_rev₀, div_eq_mul_inv]
 
 theorem div_ne_zero (ha : a ≠ 0) (hb : b ≠ 0) : a / b ≠ 0 := by
   rw [div_eq_mul_inv]
@@ -974,22 +925,14 @@ theorem div_eq_of_eq_mul {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : y = z * x) 
 theorem eq_div_of_mul_eq {x : G₀} (hx : x ≠ 0) {y z : G₀} (h : z * x = y) : z = y / x :=
   Eq.symm <| div_eq_of_eq_mul hx h.symm
 
-theorem eq_of_div_eq_one (h : a / b = 1) : a = b := by
-  by_cases' hb : b = 0
-  · rw [hb, div_zero] at h
-    exact eq_of_zero_eq_one h a b
-    
-  · rwa [div_eq_iff_mul_eq hb, one_mulₓ, eq_comm] at h
-    
-
 theorem div_eq_one_iff_eq (hb : b ≠ 0) : a / b = 1 ↔ a = b :=
   ⟨eq_of_div_eq_one, fun h => h.symm ▸ div_self hb⟩
 
 theorem div_mul_left {a b : G₀} (hb : b ≠ 0) : b / (a * b) = 1 / a := by
-  simp only [div_eq_mul_inv, mul_inv_rev₀, mul_inv_cancel_left₀ hb, one_mulₓ]
+  simp only [div_eq_mul_inv, mul_inv_rev, mul_inv_cancel_left₀ hb, one_mulₓ]
 
 theorem mul_div_mul_right (a b : G₀) {c : G₀} (hc : c ≠ 0) : a * c / (b * c) = a / b := by
-  simp only [div_eq_mul_inv, mul_inv_rev₀, mul_assoc, mul_inv_cancel_left₀ hc]
+  simp only [div_eq_mul_inv, mul_inv_rev, mul_assoc, mul_inv_cancel_left₀ hc]
 
 theorem mul_mul_div (a : G₀) {b : G₀} (hb : b ≠ 0) : a = a * b * (1 / b) := by
   simp [hb]
@@ -1004,10 +947,6 @@ theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
 @[simp]
 theorem Ring.inverse_eq_inv' : (Ring.inverse : G₀ → G₀) = Inv.inv :=
   funext Ring.inverse_eq_inv
-
-@[field_simps]
-theorem div_div_eq_mul_div (a b c : G₀) : a / (b / c) = a * c / b := by
-  rw [div_eq_mul_one_div, one_div_div, ← mul_div_assoc]
 
 /-- Dividing `a` by the result of dividing `a` by itself results in
 `a` (whether or not `a` is zero). -/
@@ -1048,6 +987,10 @@ variable [CommGroupWithZero G₀] {a b c : G₀}
 instance (priority := 10) CommGroupWithZero.cancelCommMonoidWithZero : CancelCommMonoidWithZero G₀ :=
   { GroupWithZeroₓ.cancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with }
 
+-- See note [lower instance priority]
+instance (priority := 100) CommGroupWithZero.toDivisionCommMonoid : DivisionCommMonoid G₀ :=
+  { ‹CommGroupWithZero G₀›, GroupWithZeroₓ.toDivisionMonoid with }
+
 /-- Pullback a `comm_group_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -1063,12 +1006,6 @@ protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [On
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : CommGroupWithZero G₀' :=
   { hf.GroupWithZero h01 f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
-
-theorem mul_inv₀ : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
-  rw [mul_inv_rev₀, mul_comm]
-
-theorem one_div_mul_one_div (a b : G₀) : 1 / a * (1 / b) = 1 / (a * b) := by
-  rw [one_div_mul_one_div_rev, mul_comm b]
 
 theorem div_mul_right {a : G₀} (b : G₀) (ha : a ≠ 0) : a / (a * b) = 1 / b := by
   rw [mul_comm, div_mul_left ha]
@@ -1087,36 +1024,12 @@ theorem mul_div_cancel' (a : G₀) {b : G₀} (hb : b ≠ 0) : b * (a / b) = a :
 
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ
 
-theorem div_mul_div_comm₀ (a b c d : G₀) : a / b * (c / d) = a * c / (b * d) := by
-  simp [div_eq_mul_inv, mul_inv₀]
-
-theorem div_div_div_comm₀ (a b c d : G₀) : a / b / (c / d) = a / c / (b / d) := by
-  simp_rw [div_eq_mul_inv, mul_inv₀, inv_invₓ, mul_mul_mul_commₓ]
-
 theorem mul_div_mul_left (a b : G₀) {c : G₀} (hc : c ≠ 0) : c * a / (c * b) = a / b := by
   rw [mul_comm c, mul_comm c, mul_div_mul_right _ _ hc]
 
-@[field_simps]
-theorem div_mul_eq_mul_div (a b c : G₀) : b / c * a = b * a / c := by
-  simp [div_eq_mul_inv]
-
-theorem div_mul_eq_mul_div_comm (a b c : G₀) : b / c * a = b * (a / c) := by
-  rw [div_mul_eq_mul_div, ← one_mulₓ c, ← div_mul_div_comm₀, div_one, one_mulₓ]
-
 theorem mul_eq_mul_of_div_eq_div (a : G₀) {b : G₀} (c : G₀) {d : G₀} (hb : b ≠ 0) (hd : d ≠ 0) (h : a / b = c / d) :
     a * d = c * b := by
-  rw [← mul_oneₓ (a * d), mul_assoc, mul_comm d, ← mul_assoc, ← div_self hb, ← div_mul_eq_mul_div_comm, h,
-    div_mul_eq_mul_div, div_mul_cancel _ hd]
-
-@[field_simps]
-theorem div_div_eq_div_mul (a b c : G₀) : a / b / c = a / (b * c) := by
-  rw [div_eq_mul_one_div, div_mul_div_comm₀, mul_oneₓ]
-
-theorem div_div_div_div_eq (a : G₀) {b c d : G₀} : a / b / (c / d) = a * d / (b * c) := by
-  rw [div_div_eq_mul_div, div_mul_eq_mul_div, div_div_eq_div_mul]
-
-theorem div_mul_eq_div_mul_one_div (a b c : G₀) : a / (b * c) = a / b * (1 / c) := by
-  rw [← div_div_eq_div_mul, ← div_eq_mul_one_div]
+  rw [← mul_oneₓ a, ← div_self hb, ← mul_comm_div, h, div_mul_eq_mul_div, div_mul_cancel _ hd]
 
 theorem div_helper {a : G₀} (b : G₀) (h : a ≠ 0) : 1 / (a * b) * a = 1 / b := by
   rw [div_mul_eq_mul_div, one_mulₓ, div_mul_right _ h]
@@ -1126,24 +1039,6 @@ end CommGroupWithZero
 section CommGroupWithZero
 
 variable [CommGroupWithZero G₀] {a b c d : G₀}
-
-theorem div_eq_inv_mul : a / b = b⁻¹ * a := by
-  rw [div_eq_mul_inv, mul_comm]
-
-theorem mul_div_right_comm (a b c : G₀) : a * b / c = a / c * b := by
-  rw [div_eq_mul_inv, mul_assoc, mul_comm b, ← mul_assoc, div_eq_mul_inv]
-
-theorem mul_comm_div' (a b c : G₀) : a / b * c = a * (c / b) := by
-  rw [← mul_div_assoc, mul_div_right_comm]
-
-theorem div_mul_comm' (a b c : G₀) : a / b * c = c / b * a := by
-  rw [div_mul_eq_mul_div, mul_comm, mul_div_right_comm]
-
-theorem mul_div_comm (a b c : G₀) : a * (b / c) = b * (a / c) := by
-  rw [← mul_div_assoc, mul_comm, mul_div_assoc]
-
-theorem div_right_comm (a : G₀) : a / b / c = a / c / b := by
-  rw [div_div_eq_div_mul, div_div_eq_div_mul, mul_comm]
 
 @[field_simps]
 theorem div_eq_div_iff (hb : b ≠ 0) (hd : d ≠ 0) : a / b = c / d ↔ a * d = c * b :=
@@ -1272,7 +1167,7 @@ theorem map_inv : f a⁻¹ = (f a)⁻¹ := by
   by_cases' h : a = 0
   · simp [h]
     
-  apply eq_inv_of_mul_left_eq_one
+  apply eq_inv_of_mul_eq_one_left
   rw [← f.map_mul, inv_mul_cancel h, f.map_one]
 
 @[simp]
@@ -1288,7 +1183,7 @@ def invMonoidWithZeroHom {G₀ : Type _} [CommGroupWithZero G₀] : G₀ →*₀
   toFun := Inv.inv
   map_zero' := inv_zero
   map_one' := inv_one
-  map_mul' := fun _ _ => mul_inv₀
+  map_mul' := mul_inv
 
 @[simp]
 theorem MonoidHom.map_units_inv {M G₀ : Type _} [Monoidₓ M] [GroupWithZeroₓ G₀] (f : M →* G₀) (u : Mˣ) :

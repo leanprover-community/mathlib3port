@@ -325,13 +325,9 @@ theorem is_closed_induced_iff [t : TopologicalSpace β] {s : Set α} {f : α →
     @IsClosed α (t.induced f) s ↔ ∃ t, IsClosed t ∧ f ⁻¹' t = s := by
   simp only [← is_open_compl_iff, is_open_induced_iff]
   exact
-    ⟨fun ⟨t, ht, HEq⟩ =>
-      ⟨tᶜ, by
-        rwa [compl_compl], by
-        simp [preimage_compl, HEq, compl_compl]⟩,
-      fun ⟨t, ht, HEq⟩ =>
-      ⟨tᶜ, ht, by
-        simp only [preimage_compl, HEq.symm]⟩⟩
+    compl_surjective.exists.trans
+      (by
+        simp only [preimage_compl, compl_inj_iff])
 
 /-- Given `f : α → β` and a topology on `α`, the coinduced topology on `β` is defined
   such that `s:set β` is open if the preimage of `s` is open. This is the finest topology that
@@ -783,6 +779,10 @@ theorem closure_induced [t : TopologicalSpace β] {f : α → β} {a : α} {s : 
     a ∈ @Closure α (TopologicalSpace.induced f t) s ↔ f a ∈ Closure (f '' s) := by
   simp only [mem_closure_iff_frequently, nhds_induced, frequently_comap, mem_image, and_comm]
 
+theorem is_closed_induced_iff' [t : TopologicalSpace β] {f : α → β} {s : Set α} :
+    @IsClosed α (t.induced f) s ↔ ∀ a, f a ∈ Closure (f '' s) → a ∈ s := by
+  simp only [← closure_subset_iff_is_closed, subset_def, closure_induced]
+
 end Induced
 
 section Sierpinski
@@ -791,16 +791,23 @@ variable {α : Type _} [TopologicalSpace α]
 
 @[simp]
 theorem is_open_singleton_true : IsOpen ({True} : Set Prop) :=
-  TopologicalSpace.GenerateOpen.basic _
-    (by
-      simp )
+  TopologicalSpace.GenerateOpen.basic _ (mem_singleton _)
+
+@[simp]
+theorem nhds_true : 𝓝 True = pure True :=
+  le_antisymmₓ (le_pure_iff.2 <| is_open_singleton_true.mem_nhds <| mem_singleton _) (pure_le_nhds _)
+
+@[simp]
+theorem nhds_false : 𝓝 False = ⊤ :=
+  TopologicalSpace.nhds_generate_from.trans <| by
+    simp [@And.comm (_ ∈ _)]
 
 theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } :=
   ⟨fun h : Continuous p => by
     have : IsOpen (p ⁻¹' {True}) := is_open_singleton_true.Preimage h
-    simp [preimage, eq_trueₓ] at this <;> assumption, fun h : IsOpen { x | p x } =>
-    continuous_generated_from fun hs : s ∈ {{True}} => by
-      simp at hs <;> simp [hs, preimage, eq_trueₓ, h]⟩
+    simpa [preimage, eq_trueₓ] using this, fun h : IsOpen { x | p x } =>
+    continuous_generated_from fun hs : s = {True} => by
+      simp [hs, preimage, eq_trueₓ, h]⟩
 
 theorem is_open_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x => x ∈ s :=
   continuous_Prop.symm
@@ -813,51 +820,47 @@ variable {α : Type u} {ι : Sort v}
 
 theorem generate_from_union (a₁ a₂ : Set (Set α)) :
     TopologicalSpace.generateFrom (a₁ ∪ a₂) = TopologicalSpace.generateFrom a₁⊓TopologicalSpace.generateFrom a₂ :=
-  @GaloisConnection.l_sup _ (OrderDual (TopologicalSpace α)) a₁ a₂ _ _ _ _ fun g t =>
-    generate_from_le_iff_subset_is_open
+  @GaloisConnection.l_sup _ (TopologicalSpace α)ᵒᵈ a₁ a₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
 
 theorem set_of_is_open_sup (t₁ t₂ : TopologicalSpace α) :
     { s | (t₁⊔t₂).IsOpen s } = { s | t₁.IsOpen s } ∩ { s | t₂.IsOpen s } :=
-  @GaloisConnection.u_inf _ (OrderDual (TopologicalSpace α)) t₁ t₂ _ _ _ _ fun g t =>
-    generate_from_le_iff_subset_is_open
+  @GaloisConnection.u_inf _ (TopologicalSpace α)ᵒᵈ t₁ t₂ _ _ _ _ fun g t => generate_from_le_iff_subset_is_open
 
 theorem generate_from_Union {f : ι → Set (Set α)} :
     TopologicalSpace.generateFrom (⋃ i, f i) = ⨅ i, TopologicalSpace.generateFrom (f i) :=
-  @GaloisConnection.l_supr _ (OrderDual (TopologicalSpace α)) _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open)
-    f
+  @GaloisConnection.l_supr _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) f
 
 theorem set_of_is_open_supr {t : ι → TopologicalSpace α} : { s | (⨆ i, t i).IsOpen s } = ⋂ i, { s | (t i).IsOpen s } :=
-  @GaloisConnection.u_infi _ (OrderDual (TopologicalSpace α)) _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open)
-    t
+  @GaloisConnection.u_infi _ (TopologicalSpace α)ᵒᵈ _ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) t
 
 theorem generate_from_sUnion {S : Set (Set (Set α))} :
     TopologicalSpace.generateFrom (⋃₀S) = ⨅ s ∈ S, TopologicalSpace.generateFrom s :=
-  @GaloisConnection.l_Sup _ (OrderDual (TopologicalSpace α)) _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) S
+  @GaloisConnection.l_Sup _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) S
 
 theorem set_of_is_open_Sup {T : Set (TopologicalSpace α)} :
     { s | (sup T).IsOpen s } = ⋂ t ∈ T, { s | (t : TopologicalSpace α).IsOpen s } :=
-  @GaloisConnection.u_Inf _ (OrderDual (TopologicalSpace α)) _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) T
+  @GaloisConnection.u_Inf _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (fun g t => generate_from_le_iff_subset_is_open) T
 
 theorem generate_from_union_is_open (a b : TopologicalSpace α) :
     TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∪ { s | b.IsOpen s }) = a⊓b :=
-  @GaloisInsertion.l_sup_u _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) a b
+  @GaloisInsertion.l_sup_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) a b
 
 theorem generate_from_Union_is_open (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋃ i, { s | (f i).IsOpen s }) = ⨅ i, f i :=
-  @GaloisInsertion.l_supr_u _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) _ f
+  @GaloisInsertion.l_supr_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
 
 theorem generate_from_inter (a b : TopologicalSpace α) :
     TopologicalSpace.generateFrom ({ s | a.IsOpen s } ∩ { s | b.IsOpen s }) = a⊔b :=
-  @GaloisInsertion.l_inf_u _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) a b
+  @GaloisInsertion.l_inf_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) a b
 
 theorem generate_from_Inter (f : ι → TopologicalSpace α) :
     TopologicalSpace.generateFrom (⋂ i, { s | (f i).IsOpen s }) = ⨆ i, f i :=
-  @GaloisInsertion.l_infi_u _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) _ f
+  @GaloisInsertion.l_infi_u _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f
 
 theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
     (hf : ∀ i, { s | (TopologicalSpace.generateFrom (f i)).IsOpen s } = f i) :
     TopologicalSpace.generateFrom (⋂ i, f i) = ⨆ i, TopologicalSpace.generateFrom (f i) :=
-  @GaloisInsertion.l_infi_of_ul_eq_self _ (OrderDual (TopologicalSpace α)) _ _ _ _ (giGenerateFrom α) _ f hf
+  @GaloisInsertion.l_infi_of_ul_eq_self _ (TopologicalSpace α)ᵒᵈ _ _ _ _ (giGenerateFrom α) _ f hf
 
 variable {t : ι → TopologicalSpace α}
 

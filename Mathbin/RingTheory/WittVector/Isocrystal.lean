@@ -207,10 +207,9 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   refine' ⟨⟨(LinearEquiv.smulOfNeZero K(p,k) _ _ hb).trans F, _⟩⟩
   intro c
   rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smul_of_ne_zero_apply,
-    LinearEquiv.smul_of_ne_zero_apply, show F (Units.mk0 b hb • Φ(p,k) c) = _ from LinearEquiv.map_smul _ _ _,
-    show F (Units.mk0 b hb • c) = _ from LinearEquiv.map_smul _ _ _]
-  simp only [hax, Units.coe_mk0, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply,
-    LinearEquiv.map_smulₛₗ, standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
+    LinearEquiv.smul_of_ne_zero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
+  simp only [hax, LinearEquiv.of_bijective_apply, LinearMap.to_span_singleton_apply, LinearEquiv.map_smulₛₗ,
+    standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1
   linear_combination hmb * φ(p,k) c

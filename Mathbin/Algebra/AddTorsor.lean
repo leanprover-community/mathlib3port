@@ -131,7 +131,7 @@ theorem vsub_add_vsub_cancel (p1 p2 p3 : P) : p1 -ᵥ p2 + (p2 -ᵥ p3) = p1 -�
 of subtracting them. -/
 @[simp]
 theorem neg_vsub_eq_vsub_rev (p1 p2 : P) : -(p1 -ᵥ p2) = p2 -ᵥ p1 := by
-  refine' neg_eq_of_add_eq_zeroₓ (vadd_right_cancel p1 _)
+  refine' neg_eq_of_add_eq_zero_right (vadd_right_cancel p1 _)
   rw [vsub_add_vsub_cancel, vsub_self]
 
 theorem vadd_vsub_eq_sub_vsub (g : G) (p q : P) : g +ᵥ p -ᵥ q = g - (q -ᵥ p) := by

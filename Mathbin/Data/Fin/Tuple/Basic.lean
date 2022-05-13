@@ -193,7 +193,7 @@ theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : �
 
 theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
     cons x p ≤ q ↔ x ≤ q 0 ∧ p ≤ tail q :=
-  @le_cons _ (fun i => OrderDual (α i)) _ x q p
+  @le_cons _ (fun i => (α i)ᵒᵈ) _ x q p
 
 theorem cons_le_cons [∀ i, Preorderₓ (α i)] {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} :
     cons x₀ x ≤ cons y₀ y ↔ x₀ ≤ y₀ ∧ x ≤ y :=

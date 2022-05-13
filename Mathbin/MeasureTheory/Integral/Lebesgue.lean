@@ -1448,17 +1448,17 @@ theorem exists_pos_set_lintegral_lt_of_measure_lt {f : α → ℝ≥0∞} (h : (
       by
       rw [← simple_func.add_lintegral, ← simple_func.map_add @Ennreal.coe_add]
       refine' simple_func.lintegral_mono (fun x => _) le_rfl
-      simp [-Ennreal.coe_add, add_tsub_eq_max, le_max_rightₓ]_ ≤ (map coe φ).lintegral (μ.restrict s) + ε₁ := by
+      simp only [add_tsub_eq_max, le_max_rightₓ, coe_map, Function.comp_app, simple_func.coe_add, simple_func.coe_sub,
+        Pi.add_apply, Pi.sub_apply, WithTop.coe_max]_ ≤ (map coe φ).lintegral (μ.restrict s) + ε₁ :=
+      by
       refine' add_le_add le_rfl (le_transₓ _ (hφ _ hψ).le)
       exact
         simple_func.lintegral_mono le_rfl
           measure.restrict_le_self _ ≤ (simple_func.const α (C : ℝ≥0∞)).lintegral (μ.restrict s) + ε₁ :=
-      by
-      mono*
-      exacts[fun x => coe_le_coe.2 (hC x), le_rfl, le_rfl]_ = C * μ s + ε₁ := by
-      simp [← simple_func.lintegral_eq_lintegral]_ ≤ C * ((ε₂ - ε₁) / C) + ε₁ := by
-      mono*
-      exacts[le_rfl, hs.le, le_rfl]_ ≤ ε₂ - ε₁ + ε₁ := add_le_add mul_div_le le_rfl _ = ε₂ :=
+      add_le_add (simple_func.lintegral_mono (fun x => coe_le_coe.2 (hC x)) le_rfl) le_rfl _ = C * μ s + ε₁ := by
+      simp only [← simple_func.lintegral_eq_lintegral, coe_const, lintegral_const, measure.restrict_apply,
+        MeasurableSet.univ, univ_inter]_ ≤ C * ((ε₂ - ε₁) / C) + ε₁ :=
+      add_le_add_right (Ennreal.mul_le_mul le_rfl hs.le) _ _ ≤ ε₂ - ε₁ + ε₁ := add_le_add mul_div_le le_rfl _ = ε₂ :=
       tsub_add_cancel_of_le hε₁₂.le
 
 /-- If `f` has finite integral, then `∫⁻ x in s, f x ∂μ` is absolutely continuous in `s`: it tends

@@ -67,13 +67,13 @@ variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Module.Free R 
 
 variable [AddCommMonoidₓ N] [Module R N]
 
-/-- If `[finite_free R M]` then `choose_basis_index R M` is the `ι` which indexes the basis
+/-- If `module.free R M` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
 @[nolint has_inhabited_instance]
 def ChooseBasisIndex :=
   (exists_basis R M).some.1
 
-/-- If `[finite_free R M]` then `choose_basis : ι → M` is the basis.
+/-- If `module.free R M` then `choose_basis : ι → M` is the basis.
 Here `ι = choose_basis_index R M`. -/
 noncomputable def chooseBasis : Basis (ChooseBasisIndex R M) R M :=
   (exists_basis R M).some.2

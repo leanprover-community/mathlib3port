@@ -54,8 +54,8 @@ theorem eq_smul_of_le_smul_of_le_jacobson {I J : Ideal R} {N : Submodule R M} (h
   intro n hn
   cases' Submodule.exists_sub_one_mem_and_smul_eq_zero_of_fg_of_le_smul I N hN hIN with r hr
   cases' exists_mul_sub_mem_of_sub_one_mem_jacobson r (hIjac hr.1) with s hs
-  have : n = -(r * s - 1) • n := by
-    rw [neg_sub, sub_smul, mul_comm, mul_smul, hr.2 n hn, one_smul, smul_zero, sub_zero]
+  have : n = -(s * r - 1) • n := by
+    rw [neg_sub, sub_smul, mul_smul, hr.2 n hn, one_smul, smul_zero, sub_zero]
   rw [this]
   exact Submodule.smul_mem_smul (Submodule.neg_mem _ hs) hn
 

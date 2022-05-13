@@ -96,46 +96,46 @@ namespace OrderDual
 `zero_le_one` field. -/
 
 
-instance [h : Distribₓ α] : Distribₓ (OrderDual α) :=
+instance [h : Distribₓ α] : Distribₓ αᵒᵈ :=
   h
 
-instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg (OrderDual α) :=
+instance [Mul α] [h : HasDistribNeg α] : HasDistribNeg αᵒᵈ :=
   h
 
-instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ (OrderDual α) :=
+instance [h : NonUnitalNonAssocSemiringₓ α] : NonUnitalNonAssocSemiringₓ αᵒᵈ :=
   h
 
-instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ (OrderDual α) :=
+instance [h : NonUnitalSemiringₓ α] : NonUnitalSemiringₓ αᵒᵈ :=
   h
 
-instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ (OrderDual α) :=
+instance [h : NonAssocSemiringₓ α] : NonAssocSemiringₓ αᵒᵈ :=
   h
 
-instance [h : Semiringₓ α] : Semiringₓ (OrderDual α) :=
+instance [h : Semiringₓ α] : Semiringₓ αᵒᵈ :=
   h
 
-instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring (OrderDual α) :=
+instance [h : NonUnitalCommSemiring α] : NonUnitalCommSemiring αᵒᵈ :=
   h
 
-instance [h : CommSemiringₓ α] : CommSemiringₓ (OrderDual α) :=
+instance [h : CommSemiringₓ α] : CommSemiringₓ αᵒᵈ :=
   h
 
-instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (OrderDual α) :=
+instance [h : NonUnitalNonAssocRing α] : NonUnitalNonAssocRing αᵒᵈ :=
   h
 
-instance [h : NonUnitalRing α] : NonUnitalRing (OrderDual α) :=
+instance [h : NonUnitalRing α] : NonUnitalRing αᵒᵈ :=
   h
 
-instance [h : NonAssocRing α] : NonAssocRing (OrderDual α) :=
+instance [h : NonAssocRing α] : NonAssocRing αᵒᵈ :=
   h
 
-instance [h : Ringₓ α] : Ringₓ (OrderDual α) :=
+instance [h : Ringₓ α] : Ringₓ αᵒᵈ :=
   h
 
-instance [h : NonUnitalCommRing α] : NonUnitalCommRing (OrderDual α) :=
+instance [h : NonUnitalCommRing α] : NonUnitalCommRing αᵒᵈ :=
   h
 
-instance [h : CommRingₓ α] : CommRingₓ (OrderDual α) :=
+instance [h : CommRingₓ α] : CommRingₓ αᵒᵈ :=
   h
 
 end OrderDual

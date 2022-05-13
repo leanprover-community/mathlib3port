@@ -314,7 +314,7 @@ theorem to_weak_dual_bcnn_continuous : Continuous (@FiniteMeasure.toWeakDualBcnn
 depends continuously on the measure. -/
 theorem continuous_test_against_nn_eval (f : α →ᵇ ℝ≥0 ) : Continuous fun μ : FiniteMeasure α => μ.testAgainstNn f :=
   (by
-    apply (eval_continuous _ _).comp to_weak_dual_bcnn_continuous :
+    apply (WeakBilin.eval_continuous _ _).comp to_weak_dual_bcnn_continuous :
     Continuous ((fun φ : WeakDual ℝ≥0 (α →ᵇ ℝ≥0 ) => φ f) ∘ to_weak_dual_bcnn))
 
 theorem tendsto_iff_weak_star_tendsto {γ : Type _} {F : Filter γ} {μs : γ → FiniteMeasure α} {μ : FiniteMeasure α} :

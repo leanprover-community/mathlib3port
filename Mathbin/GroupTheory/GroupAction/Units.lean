@@ -34,6 +34,10 @@ instance [Monoidₓ M] [HasScalar M α] : HasScalar Mˣ α where
 theorem smul_def [Monoidₓ M] [HasScalar M α] (m : Mˣ) (a : α) : m • a = (m : M) • a :=
   rfl
 
+@[simp]
+theorem smul_is_unit [Monoidₓ M] [HasScalar M α] {m : M} (hm : IsUnit m) (a : α) : hm.Unit • a = m • a :=
+  rfl
+
 theorem _root_.is_unit.inv_smul [Monoidₓ α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
   h.coe_inv_mul
 

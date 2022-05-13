@@ -75,7 +75,7 @@ end IsMulHom
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_zero] []
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
-structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) extends IsAddHom f : Prop where
+structure IsAddMonoidHom [AddZeroClassₓ α] [AddZeroClassₓ β] (f : α → β) extends IsAddHom f : Prop where
   map_zero : f 0 = 0
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_one] []
@@ -139,7 +139,7 @@ theorem map_mul x y : f (x * y) = f x * f y :=
 preserves multiplication when the target is commutative. -/
 @[to_additive]
 theorem inv {α β} [MulOneClassₓ α] [CommGroupₓ β] {f : α → β} (hf : IsMonoidHom f) : IsMonoidHom fun a => (f a)⁻¹ :=
-  { map_one := hf.map_one.symm ▸ one_inv, map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
+  { map_one := hf.map_one.symm ▸ inv_one, map_mul := fun a b => (hf.map_mul a b).symm ▸ mul_inv _ _ }
 
 end IsMonoidHom
 
@@ -226,8 +226,12 @@ theorem map_one : f 1 = 1 :=
 /-- A group homomorphism sends inverses to inverses. -/
 @[to_additive]
 theorem map_inv (hf : IsGroupHom f) (a : α) : f a⁻¹ = (f a)⁻¹ :=
-  eq_inv_of_mul_eq_one <| by
+  eq_inv_of_mul_eq_one_left <| by
     rw [← hf.map_mul, inv_mul_selfₓ, hf.map_one]
+
+@[to_additive]
+theorem map_div (hf : IsGroupHom f) (a b : α) : f (a / b) = f a / f b := by
+  simp_rw [div_eq_mul_inv, hf.map_mul, hf.map_inv]
 
 /-- The identity is a group homomorphism. -/
 @[to_additive]
@@ -243,9 +247,10 @@ theorem comp (hf : IsGroupHom f) {γ} [Groupₓ γ] {g : β → γ} (hg : IsGrou
 @[to_additive]
 theorem injective_iff {f : α → β} (hf : IsGroupHom f) : Function.Injective f ↔ ∀ a, f a = 1 → a = 1 :=
   ⟨fun h _ => by
-    rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy => by
-    rw [← inv_invₓ (f x), inv_eq_iff_mul_eq_one, ← hf.map_inv, ← hf.map_mul] at hxy <;>
-      simpa using inv_eq_of_mul_eq_oneₓ (h _ hxy)⟩
+    rw [← hf.map_one] <;> exact @h _ _, fun h x y hxy =>
+    eq_of_div_eq_one <|
+      h _ <| by
+        rwa [hf.map_div, div_eq_one]⟩
 
 /-- The product of group homomorphisms is a group homomorphism if the target is commutative. -/
 @[to_additive]
@@ -298,22 +303,6 @@ end RingHom
 theorem Inv.is_group_hom [CommGroupₓ α] : IsGroupHom (Inv.inv : α → α) :=
   { map_mul := mul_inv }
 
-namespace IsAddGroupHom
-
-variable [AddGroupₓ α] [AddGroupₓ β] {f : α → β} (hf : IsAddGroupHom f)
-
-/-- Additive group homomorphisms commute with subtraction. -/
-theorem map_sub a b : f (a - b) = f a - f b :=
-  calc
-    f (a - b) = f (a + -b) := congr_argₓ f (sub_eq_add_neg a b)
-    _ = f a + f (-b) := hf.map_add _ _
-    _ = f a + -f b := by
-      rw [hf.map_neg]
-    _ = f a - f b := (sub_eq_add_neg _ _).symm
-    
-
-end IsAddGroupHom
-
 /-- The difference of two additive group homomorphisms is an additive group
 homomorphism if the target is commutative. -/
 theorem IsAddGroupHom.sub {α β} [AddGroupₓ α] [AddCommGroupₓ β] {f g : α → β} (hf : IsAddGroupHom f)
@@ -359,7 +348,7 @@ theorem Additive.is_add_monoid_hom [MulOneClassₓ α] [MulOneClassₓ β] {f : 
     @IsAddMonoidHom (Additive α) (Additive β) _ _ f :=
   { Additive.is_add_hom hf.to_is_mul_hom with map_zero := hf.map_one }
 
-theorem Multiplicative.is_monoid_hom [AddZeroClass α] [AddZeroClass β] {f : α → β} (hf : IsAddMonoidHom f) :
+theorem Multiplicative.is_monoid_hom [AddZeroClassₓ α] [AddZeroClassₓ β] {f : α → β} (hf : IsAddMonoidHom f) :
     @IsMonoidHom (Multiplicative α) (Multiplicative β) _ _ f :=
   { Multiplicative.is_mul_hom hf.to_is_add_hom with map_one := IsAddMonoidHom.map_zero hf }
 

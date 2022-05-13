@@ -52,7 +52,7 @@ protected def hasInv : Inv (Submonoid G) where
     { Carrier := (S : Set G)⁻¹,
       one_mem' :=
         show (1 : G)⁻¹ ∈ S by
-          rw [one_inv]
+          rw [inv_one]
           exact S.one_mem,
       mul_mem' := fun hb : b⁻¹ ∈ S =>
         show (a * b)⁻¹ ∈ S by
@@ -110,7 +110,7 @@ theorem inv_sup (S T : Submonoid G) : (S⊔T)⁻¹ = S⁻¹⊔T⁻¹ :=
 
 @[simp, to_additive]
 theorem inv_bot : (⊥ : Submonoid G)⁻¹ = ⊥ :=
-  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_argₓ _ one_inv
+  SetLike.coe_injective <| (Set.inv_singleton 1).trans <| congr_argₓ _ inv_one
 
 @[simp, to_additive]
 theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=

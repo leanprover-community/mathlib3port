@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 -/
 import Mathbin.Analysis.Convex.Basic
-import Mathbin.Order.OrderDual
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.Tactic.Ring
@@ -139,14 +138,14 @@ theorem convex_on_const (c : β) (hs : Convex 𝕜 s) : ConvexOn 𝕜 s fun x : 
   ⟨hs, fun x y _ _ a b _ _ hab => (Convex.combo_self hab c).Ge⟩
 
 theorem concave_on_const (c : β) (hs : Convex 𝕜 s) : ConcaveOn 𝕜 s fun x : E => c :=
-  @convex_on_const _ _ (OrderDual β) _ _ _ _ _ _ c hs
+  @convex_on_const _ _ βᵒᵈ _ _ _ _ _ _ c hs
 
 theorem convex_on_of_convex_epigraph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 }) : ConvexOn 𝕜 s f :=
   ⟨fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).1,
     fun x y hx hy a b ha hb hab => (@h (x, f x) (y, f y) ⟨hx, le_rfl⟩ ⟨hy, le_rfl⟩ a b ha hb hab).2⟩
 
 theorem concave_on_of_convex_hypograph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 }) : ConcaveOn 𝕜 s f :=
-  @convex_on_of_convex_epigraph 𝕜 E (OrderDual β) _ _ _ _ _ _ _ h
+  @convex_on_of_convex_epigraph 𝕜 E βᵒᵈ _ _ _ _ _ _ _ h
 
 end Module
 
@@ -179,7 +178,7 @@ theorem convex_on_iff_convex_epigraph : ConvexOn 𝕜 s f ↔ Convex 𝕜 { p : 
   ⟨ConvexOn.convex_epigraph, convex_on_of_convex_epigraph⟩
 
 theorem concave_on_iff_convex_hypograph : ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
-  @convex_on_iff_convex_epigraph 𝕜 E (OrderDual β) _ _ _ _ _ _ _ f
+  @convex_on_iff_convex_epigraph 𝕜 E βᵒᵈ _ _ _ _ _ _ _ f
 
 end OrderedSmul
 
@@ -241,7 +240,7 @@ theorem concave_on_iff_forall_pos {s : Set E} {f : E → β} :
     ConcaveOn 𝕜 s f ↔
       Convex 𝕜 s ∧
         ∀ ⦃x y : E⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y ≤ f (a • x + b • y) :=
-  @convex_on_iff_forall_pos 𝕜 E (OrderDual β) _ _ _ _ _ _ _
+  @convex_on_iff_forall_pos 𝕜 E βᵒᵈ _ _ _ _ _ _ _
 
 theorem convex_on_iff_pairwise_pos {s : Set E} {f : E → β} :
     ConvexOn 𝕜 s f ↔
@@ -259,7 +258,7 @@ theorem concave_on_iff_pairwise_pos {s : Set E} {f : E → β} :
     ConcaveOn 𝕜 s f ↔
       Convex 𝕜 s ∧
         s.Pairwise fun x y => ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y ≤ f (a • x + b • y) :=
-  @convex_on_iff_pairwise_pos 𝕜 E (OrderDual β) _ _ _ _ _ _ _
+  @convex_on_iff_pairwise_pos 𝕜 E βᵒᵈ _ _ _ _ _ _ _
 
 /-- A linear map is convex. -/
 theorem LinearMap.convex_on (f : E →ₗ[𝕜] β) {s : Set E} (hs : Convex 𝕜 s) : ConvexOn 𝕜 s f :=
@@ -324,7 +323,7 @@ theorem LinearOrderₓ.concave_on_of_lt (hs : Convex 𝕜 s)
       ∀ ⦃x y : E⦄,
         x ∈ s → y ∈ s → x < y → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y ≤ f (a • x + b • y)) :
     ConcaveOn 𝕜 s f :=
-  @LinearOrderₓ.convex_on_of_lt _ _ (OrderDual β) _ _ _ _ _ _ s f hs hf
+  @LinearOrderₓ.convex_on_of_lt _ _ βᵒᵈ _ _ _ _ _ _ s f hs hf
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic
 structures aren't necessarily compatible), in order to prove that it is convex, it suffices to
@@ -350,7 +349,7 @@ theorem LinearOrderₓ.strict_concave_on_of_lt (hs : Convex 𝕜 s)
       ∀ ⦃x y : E⦄,
         x ∈ s → y ∈ s → x < y → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → a + b = 1 → a • f x + b • f y < f (a • x + b • y)) :
     StrictConcaveOn 𝕜 s f :=
-  @LinearOrderₓ.strict_convex_on_of_lt _ _ (OrderDual β) _ _ _ _ _ _ _ _ hs hf
+  @LinearOrderₓ.strict_convex_on_of_lt _ _ βᵒᵈ _ _ _ _ _ _ _ _ hs hf
 
 end LinearOrderₓ
 
@@ -387,6 +386,18 @@ section DistribMulAction
 
 variable [HasScalar 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
 
+theorem StrictConvexOn.add_convex_on (hf : StrictConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f + g) :=
+  ⟨hf.1, fun x y hx hy hxy a b ha hb hab =>
+    calc
+      f (a • x + b • y) + g (a • x + b • y) < a • f x + b • f y + (a • g x + b • g y) :=
+        add_lt_add_of_lt_of_le (hf.2 hx hy hxy ha hb hab) (hg.2 hx hy ha.le hb.le hab)
+      _ = a • (f x + g x) + b • (f y + g y) := by
+        rw [smul_add, smul_add, add_add_add_commₓ]
+      ⟩
+
+theorem ConvexOn.add_strict_convex_on (hf : ConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f + g) :=
+  add_commₓ g f ▸ hg.add_convex_on hf
+
 theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f + g) :=
   ⟨hf.1, fun x y hx hy hxy a b ha hb hab =>
     calc
@@ -395,6 +406,14 @@ theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn �
       _ = a • (f x + g x) + b • (f y + g y) := by
         rw [smul_add, smul_add, add_add_add_commₓ]
       ⟩
+
+theorem StrictConcaveOn.add_concave_on (hf : StrictConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) :
+    StrictConcaveOn 𝕜 s (f + g) :=
+  hf.dual.add_convex_on hg.dual
+
+theorem ConcaveOn.add_strict_concave_on (hf : ConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) :
+    StrictConcaveOn 𝕜 s (f + g) :=
+  hf.dual.add_strict_convex_on hg.dual
 
 theorem StrictConcaveOn.add (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) : StrictConcaveOn 𝕜 s (f + g) :=
   hf.dual.add hg
@@ -645,7 +664,7 @@ end LinearOrderedCancelAddCommMonoid
 
 section OrderedAddCommGroup
 
-variable [OrderedAddCommGroup β] [HasScalar 𝕜 E] [Module 𝕜 β] {s : Set E} {f : E → β}
+variable [OrderedAddCommGroup β] [HasScalar 𝕜 E] [Module 𝕜 β] {s : Set E} {f g : E → β}
 
 /-- A function `-f` is convex iff `f` is concave. -/
 @[simp]
@@ -696,6 +715,33 @@ alias neg_concave_on_iff ↔ _ ConvexOn.neg
 alias neg_strict_convex_on_iff ↔ _ StrictConcaveOn.neg
 
 alias neg_strict_concave_on_iff ↔ _ StrictConvexOn.neg
+
+theorem ConvexOn.sub (hf : ConvexOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConvexOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
+
+theorem ConcaveOn.sub (hf : ConcaveOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConcaveOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
+
+theorem StrictConvexOn.sub (hf : StrictConvexOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) : StrictConvexOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
+
+theorem StrictConcaveOn.sub (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConcaveOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add hg.neg
+
+theorem ConvexOn.sub_strict_concave_on (hf : ConvexOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) :
+    StrictConvexOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add_strict_convex_on hg.neg
+
+theorem ConcaveOn.sub_strict_convex_on (hf : ConcaveOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) :
+    StrictConcaveOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add_strict_concave_on hg.neg
+
+theorem StrictConvexOn.sub_concave_on (hf : StrictConvexOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : StrictConvexOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add_convex_on hg.neg
+
+theorem StrictConcaveOn.sub_convex_on (hf : StrictConcaveOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) :
+    StrictConcaveOn 𝕜 s (f - g) :=
+  (sub_eq_add_neg f g).symm ▸ hf.add_concave_on hg.neg
 
 end OrderedAddCommGroup
 
@@ -837,7 +883,7 @@ theorem concave_on_iff_div {f : E → β} :
                 0 ≤ a →
                   0 ≤ b →
                     0 < a + b → (a / (a + b)) • f x + (b / (a + b)) • f y ≤ f ((a / (a + b)) • x + (b / (a + b)) • y) :=
-  @convex_on_iff_div _ _ (OrderDual β) _ _ _ _ _ _ _
+  @convex_on_iff_div _ _ βᵒᵈ _ _ _ _ _ _ _
 
 theorem strict_convex_on_iff_div {f : E → β} :
     StrictConvexOn 𝕜 s f ↔
@@ -868,7 +914,7 @@ theorem strict_concave_on_iff_div {f : E → β} :
                 ∀ ⦃a b : 𝕜⦄,
                   0 < a →
                     0 < b → (a / (a + b)) • f x + (b / (a + b)) • f y < f ((a / (a + b)) • x + (b / (a + b)) • y) :=
-  @strict_convex_on_iff_div _ _ (OrderDual β) _ _ _ _ _ _ _
+  @strict_convex_on_iff_div _ _ βᵒᵈ _ _ _ _ _ _ _
 
 end HasScalar
 

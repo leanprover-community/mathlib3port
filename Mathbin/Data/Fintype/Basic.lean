@@ -262,7 +262,7 @@ theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup 
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
 theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infi f :=
-  sup_univ_eq_supr (f : α → OrderDual β)
+  sup_univ_eq_supr (f : α → βᵒᵈ)
 
 @[simp]
 theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) : (Finset.univ.fold (·⊓·) a fun x => x) = ⊥ :=
@@ -270,7 +270,7 @@ theorem fold_inf_univ [SemilatticeInf α] [OrderBot α] (a : α) : (Finset.univ.
 
 @[simp]
 theorem fold_sup_univ [SemilatticeSup α] [OrderTop α] (a : α) : (Finset.univ.fold (·⊔·) a fun x => x) = ⊤ :=
-  @fold_inf_univ (OrderDual α) ‹Fintype α› _ _ _
+  @fold_inf_univ αᵒᵈ ‹Fintype α› _ _ _
 
 end Finset
 
@@ -982,11 +982,11 @@ instance (α : Type _) [Fintype α] : Fintype (Plift α) :=
 theorem Fintype.card_plift (α : Type _) [Fintype α] : Fintype.card (Plift α) = Fintype.card α :=
   Fintype.of_equiv_card _
 
-instance (α : Type _) [Fintype α] : Fintype (OrderDual α) :=
+instance (α : Type _) [Fintype α] : Fintype αᵒᵈ :=
   ‹Fintype α›
 
 @[simp]
-theorem Fintype.card_order_dual (α : Type _) [Fintype α] : Fintype.card (OrderDual α) = Fintype.card α :=
+theorem Fintype.card_order_dual (α : Type _) [Fintype α] : Fintype.card αᵒᵈ = Fintype.card α :=
   rfl
 
 instance (α : Type _) [Fintype α] : Fintype (Lex α) :=
@@ -1932,7 +1932,7 @@ theorem Finset.exists_minimal {α : Type _} [Preorderₓ α] (s : Finset α) (h 
 
 theorem Finset.exists_maximal {α : Type _} [Preorderₓ α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀, ∀ x ∈ s, ∀, ¬m < x :=
-  @Finset.exists_minimal (OrderDual α) _ s h
+  @Finset.exists_minimal αᵒᵈ _ s h
 
 namespace Infinite
 

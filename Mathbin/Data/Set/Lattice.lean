@@ -1419,6 +1419,10 @@ theorem image2_Inter₂_subset_right (s : Set α) (t : ∀ i, κ i → Set β) :
   simp_rw [image2_subset_iff, mem_Inter]
   exact fun x hx y hy i j => mem_image2_of_mem hx (hy _ _)
 
+/-- The `set.image2` version of `set.image_eq_Union` -/
+theorem image2_eq_Union (s : Set α) (t : Set β) : Image2 f s t = ⋃ (i ∈ s) (j ∈ t), {f i j} := by
+  simp_rw [← image_eq_Union, Union_image_left]
+
 end Image2
 
 section Seq
@@ -1775,7 +1779,12 @@ theorem supr_Union (s : ι → Set α) (f : α → β) : (⨆ a ∈ ⋃ i, s i, 
   rw [supr_comm]
   simp_rw [mem_Union, supr_exists]
 
-theorem infi_Union (s : ι → Set α) (f : α → β) : (⨅ a ∈ ⋃ i, s i, f a) = ⨅ (i) (a ∈ s i), f a := by
-  rw [infi_comm]
-  simp_rw [mem_Union, infi_exists]
+theorem infi_Union (s : ι → Set α) (f : α → β) : (⨅ a ∈ ⋃ i, s i, f a) = ⨅ (i) (a ∈ s i), f a :=
+  @supr_Union α βᵒᵈ _ _ s f
+
+theorem Sup_sUnion (s : Set (Set β)) : sup (⋃₀s) = ⨆ t ∈ s, sup t := by
+  simp only [sUnion_eq_bUnion, Sup_eq_supr, supr_Union]
+
+theorem Inf_sUnion (s : Set (Set β)) : inf (⋃₀s) = ⨅ t ∈ s, inf t :=
+  @Sup_sUnion βᵒᵈ _ _
 

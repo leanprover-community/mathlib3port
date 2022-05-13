@@ -124,11 +124,11 @@ theorem is_upper_set_preimage_of_dual_iff : IsUpperSet (of_dual ⁻¹' s) ↔ Is
   Iff.rfl
 
 @[simp]
-theorem is_lower_set_preimage_to_dual_iff {s : Set (OrderDual α)} : IsLowerSet (to_dual ⁻¹' s) ↔ IsUpperSet s :=
+theorem is_lower_set_preimage_to_dual_iff {s : Set αᵒᵈ} : IsLowerSet (to_dual ⁻¹' s) ↔ IsUpperSet s :=
   Iff.rfl
 
 @[simp]
-theorem is_upper_set_preimage_to_dual_iff {s : Set (OrderDual α)} : IsUpperSet (to_dual ⁻¹' s) ↔ IsLowerSet s :=
+theorem is_upper_set_preimage_to_dual_iff {s : Set αᵒᵈ} : IsUpperSet (to_dual ⁻¹' s) ↔ IsLowerSet s :=
   Iff.rfl
 
 alias is_lower_set_preimage_of_dual_iff ↔ _ IsUpperSet.of_dual
@@ -647,7 +647,7 @@ theorem Ici_sup (a b : α) : ici (a⊔b) = ici a⊓ici b :=
   ext Ici_inter_Ici.symm
 
 /-- `upper_set.Ici` as a `sup_hom`. -/
-def iciSupHom : SupHom α (OrderDual <| UpperSet α) :=
+def iciSupHom : SupHom α (UpperSet α)ᵒᵈ :=
   ⟨ici, Ici_sup⟩
 
 @[simp]
@@ -677,7 +677,7 @@ theorem Ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨅ (i
   simp_rw [Ici_supr]
 
 /-- `upper_set.Ici` as a `Sup_hom`. -/
-def iciSupHomₓ : SupHomₓ α (OrderDual <| UpperSet α) :=
+def iciSupHomₓ : SupHomₓ α (UpperSet α)ᵒᵈ :=
   ⟨ici, fun s => (Ici_Sup s).trans Inf_image.symm⟩
 
 @[simp]

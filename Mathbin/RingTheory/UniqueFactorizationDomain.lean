@@ -74,70 +74,35 @@ theorem well_founded_associates : WellFounded ((· < ·) : Associates α → Ass
 attribute [local elab_as_eliminator] WellFounded.fix
 
 theorem exists_irreducible_factor {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : ∃ i, Irreducible i ∧ i ∣ a :=
-  (irreducible_or_factor a ha).elim (fun hai => ⟨a, hai, dvd_rfl⟩)
-    (WellFounded.fix well_founded_dvd_not_unit
-      (fun a ih ha ha0 ⟨x, y, hx, hy, hxy⟩ =>
-        have hx0 : x ≠ 0 := fun hx0 =>
-          ha0
-            (by
-              rw [← hxy, hx0, zero_mul])
-        (irreducible_or_factor x hx).elim
-          (fun hxi =>
-            ⟨x, hxi,
-              hxy ▸ by
-                simp ⟩)
-          fun hxf =>
-          let ⟨i, hi⟩ := ih x ⟨hx0, y, hy, hxy.symm⟩ hx hx0 hxf
-          ⟨i, hi.1,
-            hi.2.trans
-              (hxy ▸ by
-                simp )⟩)
-      a ha ha0)
+  let ⟨b, hs, hr⟩ := well_founded_dvd_not_unit.has_min { b | b ∣ a ∧ ¬IsUnit b } ⟨a, dvd_rfl, ha⟩
+  ⟨b,
+    ⟨hs.2, fun c d he =>
+      let h := dvd_trans ⟨d, he⟩ hs.1
+      or_iff_not_imp_left.2 fun hc => of_not_not fun hd => hr c ⟨h, hc⟩ ⟨ne_zero_of_dvd_ne_zero ha0 h, d, hd, he⟩⟩,
+    hs.1⟩
 
 @[elab_as_eliminator]
 theorem induction_on_irreducible {P : α → Prop} (a : α) (h0 : P 0) (hu : ∀ u : α, IsUnit u → P u)
     (hi : ∀ a i : α, a ≠ 0 → Irreducible i → P a → P (i * a)) : P a :=
   have := Classical.dec
-  WellFounded.fix well_founded_dvd_not_unit
+  well_founded_dvd_not_unit.fix
     (fun a ih =>
-      if ha0 : a = 0 then ha0.symm ▸ h0
+      if ha0 : a = 0 then ha0.substr h0
       else
         if hau : IsUnit a then hu a hau
         else
-          let ⟨i, hii, ⟨b, hb⟩⟩ := exists_irreducible_factor hau ha0
-          have hb0 : b ≠ 0 := fun hb0 => by
-            simp_all
-          hb.symm ▸
-            hi _ _ hb0 hii
-              (ih _
-                ⟨hb0, i, hii.1, by
-                  rw [hb, mul_comm]⟩))
+          let ⟨i, hii, b, hb⟩ := exists_irreducible_factor hau ha0
+          let hb0 : b ≠ 0 := ne_zero_of_dvd_ne_zero ha0 ⟨i, mul_comm i b ▸ hb⟩
+          hb.symm ▸ hi b i hb0 hii <| ih b ⟨hb0, i, hii.1, mul_comm i b ▸ hb⟩)
     a
 
 theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ Associated f.Prod a :=
-  induction_on_irreducible a (fun h => (h rfl).elim)
-    (fun u hu _ =>
-      ⟨0,
-        ⟨by
-          simp [hu],
-          Associated.symm
-            (by
-              simp [hu, associated_one_iff_is_unit])⟩⟩)
-    fun a i ha0 hii ih hia0 =>
+  induction_on_irreducible a (fun h => (h rfl).elim) (fun u hu _ => ⟨0, fun _ h => h.elim, hu.Unit, one_mulₓ _⟩)
+    fun a i ha0 hi ih _ =>
     let ⟨s, hs⟩ := ih ha0
-    ⟨i ::ₘ s,
-      ⟨by
-        clear _let_match <;>
-          · intro b H
-            cases multiset.mem_cons.mp H
-            · convert hii
-              
-            · exact hs.1 b h
-              
-            ,
-        by
-        rw [Multiset.prod_cons]
-        exact hs.2.mul_left _⟩⟩
+    ⟨i ::ₘ s, fun b H => (Multiset.mem_cons.1 H).elim (fun h => h.symm ▸ hi) (hs.1 b), by
+      rw [s.prod_cons i]
+      exact hs.2.mul_left i⟩
 
 theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
     ¬IsUnit a ↔ ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ f.Prod = a ∧ f ≠ ∅ :=
@@ -156,7 +121,7 @@ theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
       ,
     fun ⟨f, hi, he, hne⟩ =>
     let ⟨b, h⟩ := Multiset.exists_mem_of_ne_zero hne
-    not_is_unit_of_not_is_unit_dvd (hi b h).not_unit (he.subst <| Multiset.dvd_prod h)⟩
+    not_is_unit_of_not_is_unit_dvd (hi b h).not_unit <| he ▸ Multiset.dvd_prod h⟩
 
 end WfDvdMonoid
 

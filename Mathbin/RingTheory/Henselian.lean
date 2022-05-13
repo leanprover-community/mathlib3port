@@ -238,7 +238,7 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
     -- we are now in the position to show that `c : ℕ → R` is a Cauchy sequence
     have aux : ∀ m n, m ≤ n → c m ≡ c n [SMOD (I ^ m • ⊤ : Ideal R)] := by
       intro m n hmn
-      rw [← Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ]
+      rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_oneₓ]
       obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
       clear hmn
       induction' k with k ih
@@ -259,14 +259,14 @@ instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRing�
         exact IsHausdorff.haus' _ this
       intro n
       specialize ha n
-      rw [← Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ] at ha⊢
+      rw [← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_oneₓ] at ha⊢
       refine' (ha.symm.eval f).trans _
       rw [Smodeq.zero]
       exact Ideal.pow_le_pow le_self_add (hfcI _)
       
     · show a - a₀ ∈ I
       specialize ha 1
-      rw [hc, pow_oneₓ, ← Ideal.one_eq_top, Algebra.id.smul_eq_mul, mul_oneₓ, sub_eq_add_neg] at ha
+      rw [hc, pow_oneₓ, ← Ideal.one_eq_top, Ideal.smul_eq_mul, mul_oneₓ, sub_eq_add_neg] at ha
       rw [← Smodeq.sub_mem, ← add_zeroₓ a₀]
       refine' ha.symm.trans (smodeq.refl.add _)
       rw [Smodeq.zero, Ideal.neg_mem_iff]

@@ -65,7 +65,7 @@ theorem IsMinOn.of_is_local_min_on_of_convex_on {f : E → β} {a : E} (a_in_s :
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
 theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)
     (h_conc : ConcaveOn ℝ s f) : IsMaxOn f s a :=
-  @IsMinOn.of_is_local_min_on_of_convex_on _ (OrderDual β) _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
+  @IsMinOn.of_is_local_min_on_of_convex_on _ βᵒᵈ _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
 
 /-- A local minimum of a convex function is a global minimum. -/
 theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_min : IsLocalMin f a)
@@ -75,5 +75,5 @@ theorem IsMinOn.of_is_local_min_of_convex_univ {f : E → β} {a : E} (h_local_m
 /-- A local maximum of a concave function is a global maximum. -/
 theorem IsMaxOn.of_is_local_max_of_convex_univ {f : E → β} {a : E} (h_local_max : IsLocalMax f a)
     (h_conc : ConcaveOn ℝ Univ f) : ∀ x, f x ≤ f a :=
-  @IsMinOn.of_is_local_min_of_convex_univ _ (OrderDual β) _ _ _ _ _ _ _ _ f a h_local_max h_conc
+  @IsMinOn.of_is_local_min_of_convex_univ _ βᵒᵈ _ _ _ _ _ _ _ _ f a h_local_max h_conc
 

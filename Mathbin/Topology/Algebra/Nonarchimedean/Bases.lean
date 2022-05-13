@@ -5,7 +5,7 @@ Authors: Patrick Massot
 -/
 import Mathbin.Topology.Algebra.Nonarchimedean.Basic
 import Mathbin.Topology.Algebra.FilterBasis
-import Mathbin.Algebra.Module.SubmodulePointwise
+import Mathbin.Algebra.Module.Submodule.Pointwise
 
 /-!
 # Neighborhood bases for non-archimedean rings and modules

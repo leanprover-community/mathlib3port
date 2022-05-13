@@ -60,7 +60,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
       let z' := (-f.eval z₀ * (g.eval z₀).abs * δ ^ n / ((f.eval z₀).abs * g.eval z₀)) ^ (n⁻¹ : ℂ) + z₀
       have hF₁ : F.eval z' = f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs := by
         simp only [F, cpow_nat_inv_pow _ hn0, div_eq_mul_inv, eval_pow, mul_assoc, mul_comm (g.eval z₀),
-            mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀)⁻¹, mul_inv₀, inv_mul_cancel hg0, eval_C, eval_add,
+            mul_left_commₓ (g.eval z₀), mul_left_commₓ (g.eval z₀)⁻¹, mul_inv, inv_mul_cancel hg0, eval_C, eval_add,
             eval_neg, sub_eq_add_neg, eval_mul, eval_X, add_neg_cancel_rightₓ, neg_mul, mul_oneₓ, div_eq_mul_inv] <;>
           simp only [mul_comm, mul_left_commₓ, mul_assoc]
       have hδs : (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs < 1 :=

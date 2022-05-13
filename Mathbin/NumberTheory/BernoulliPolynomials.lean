@@ -174,7 +174,7 @@ theorem bernoulli_generating_function (t : A) :
   -- finally cancel the Bernoulli polynomial and the algebra_map
   congr
   apply congr_argₓ
-  rw [mul_assoc, div_eq_mul_inv, ← mul_inv₀]
+  rw [mul_assoc, div_eq_mul_inv, ← mul_inv]
 
 end Polynomial
 

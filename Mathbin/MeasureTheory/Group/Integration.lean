@@ -5,6 +5,7 @@ Authors: Floris van Doorn
 -/
 import Mathbin.MeasureTheory.Integral.Bochner
 import Mathbin.MeasureTheory.Group.Measure
+import Mathbin.MeasureTheory.Group.Action
 
 /-!
 # Integration on Groups
@@ -20,7 +21,7 @@ open Measureₓ TopologicalSpace
 
 open Ennreal
 
-variable {𝕜 G E F : Type _} [MeasurableSpace G]
+variable {𝕜 M α G E F : Type _} [MeasurableSpace G]
 
 variable [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F]
 
@@ -63,21 +64,32 @@ theorem lintegral_mul_right_eq_self [IsMulRightInvariant μ] (f : G → ℝ≥0�
   convert (lintegral_map_equiv f <| MeasurableEquiv.mulRight g).symm
   simp [map_mul_right_eq_self μ g]
 
+@[simp, to_additive]
+theorem lintegral_div_right_eq_self [IsMulRightInvariant μ] (f : G → ℝ≥0∞) (g : G) :
+    (∫⁻ x, f (x / g) ∂μ) = ∫⁻ x, f x ∂μ := by
+  simp_rw [div_eq_mul_inv, lintegral_mul_right_eq_self f g⁻¹]
+
 /-- Translating a function by left-multiplication does not change its integral with respect to a
 left-invariant measure. -/
-@[to_additive
-      "Translating a function by left-addition does not change its integral with respect to\na left-invariant measure."]
+@[simp,
+  to_additive
+      "Translating a function by left-addition does not change its integral with\n  respect to a left-invariant measure."]
 theorem integral_mul_left_eq_self [IsMulLeftInvariant μ] (f : G → E) (g : G) : (∫ x, f (g * x) ∂μ) = ∫ x, f x ∂μ := by
   have h_mul : MeasurableEmbedding fun x => g * x := (MeasurableEquiv.mulLeft g).MeasurableEmbedding
   rw [← h_mul.integral_map, map_mul_left_eq_self]
 
 /-- Translating a function by right-multiplication does not change its integral with respect to a
 right-invariant measure. -/
-@[to_additive
-      "Translating a function by right-addition does not change its integral with respect to\na right-invariant measure."]
+@[simp,
+  to_additive
+      "Translating a function by right-addition does not change its integral with\n  respect to a right-invariant measure."]
 theorem integral_mul_right_eq_self [IsMulRightInvariant μ] (f : G → E) (g : G) : (∫ x, f (x * g) ∂μ) = ∫ x, f x ∂μ := by
   have h_mul : MeasurableEmbedding fun x => x * g := (MeasurableEquiv.mulRight g).MeasurableEmbedding
   rw [← h_mul.integral_map, map_mul_right_eq_self]
+
+@[simp, to_additive]
+theorem integral_div_right_eq_self [IsMulRightInvariant μ] (f : G → E) (g : G) : (∫ x, f (x / g) ∂μ) = ∫ x, f x ∂μ := by
+  simp_rw [div_eq_mul_inv, integral_mul_right_eq_self f g⁻¹]
 
 /-- If some left-translate of a function negates it, then the integral of the function with respect
 to a left-invariant measure is 0. -/
@@ -128,12 +140,31 @@ theorem Integrable.comp_div_left {f : G → F} [IsInvInvariant μ] [IsMulLeftInv
   · exact (measurable_id'.const_mul g⁻¹).inv.AeMeasurable
     
 
-@[to_additive]
+@[simp, to_additive]
+theorem integrable_comp_div_left (f : G → F) [IsInvInvariant μ] [IsMulLeftInvariant μ] (g : G) :
+    Integrable (fun t => f (g / t)) μ ↔ Integrable f μ := by
+  refine' ⟨fun h => _, fun h => h.comp_div_left g⟩
+  convert h.comp_inv.comp_mul_left g⁻¹
+  simp_rw [div_inv_eq_mul, mul_inv_cancel_left]
+
+@[simp, to_additive]
 theorem integral_div_left_eq_self (f : G → E) (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ] (x' : G) :
     (∫ x, f (x' / x) ∂μ) = ∫ x, f x ∂μ := by
   simp_rw [div_eq_mul_inv, integral_inv_eq_self (fun x => f (x' * x)) μ, integral_mul_left_eq_self f x']
 
 end MeasurableMul
+
+section Smul
+
+variable [Groupₓ G] [MeasurableSpace α] [MulAction G α] [HasMeasurableSmul G α]
+
+@[simp, to_additive]
+theorem integral_smul_eq_self {μ : Measure α} [SmulInvariantMeasure G α μ] (f : α → E) {g : G} :
+    (∫ x, f (g • x) ∂μ) = ∫ x, f x ∂μ := by
+  have h : MeasurableEmbedding fun x : α => g • x := (MeasurableEquiv.smul g).MeasurableEmbedding
+  rw [← h.integral_map, map_smul]
+
+end Smul
 
 section TopologicalGroup
 

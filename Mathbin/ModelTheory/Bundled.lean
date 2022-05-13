@@ -59,6 +59,10 @@ namespace Model
 instance : CoeSort T.Model (Type w) :=
   ⟨ModelCat.Carrier⟩
 
+@[simp]
+theorem carrier_eq_coe (M : T.Model) : M.Carrier = M :=
+  rfl
+
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
 def of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : T.Model :=
@@ -99,11 +103,17 @@ def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
 
 /-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
 @[simps]
-def reduct {L' : Language} {φ : L →ᴸ L'} (M : (φ.OnTheory T).Model) : T.Model where
+def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.OnTheory T).Model) : T.Model where
   Carrier := M
   struc := φ.reduct M
   nonempty' := M.nonempty'
   is_model := (@Lhom.on_Theory_model L L' M (φ.reduct M) _ φ _ T).1 M.is_model
+
+instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L.Structure M :=
+  (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
+
+instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L'.Structure M :=
+  (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
 
 end Model
 

@@ -3,6 +3,7 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
+import Mathbin.GroupTheory.Subsemigroup.Centralizer
 import Mathbin.GroupTheory.Submonoid.Center
 
 /-!
@@ -10,10 +11,8 @@ import Mathbin.GroupTheory.Submonoid.Center
 
 ## Main definitions
 
-* `set.centralizer`: the center of a magma
-* `submonoid.centralizer`: the center of a monoid
-* `set.add_centralizer`: the center of an additive magma
-* `add_submonoid.centralizer`: the center of an additive monoid
+* `submonoid.centralizer`: the centralizer of a subset of a monoid
+* `add_submonoid.centralizer`: the centralizer of a subset of an additive monoid
 
 We provide `subgroup.centralizer`, `add_subgroup.centralizer` in other files.
 -/
@@ -21,97 +20,11 @@ We provide `subgroup.centralizer`, `add_subgroup.centralizer` in other files.
 
 variable {M : Type _} {S T : Set M}
 
-namespace Set
-
-variable (S)
-
-/-- The centralizer of a subset of a magma. -/
-@[to_additive add_centralizer " The centralizer of a subset of an additive magma. "]
-def Centralizer [Mul M] : Set M :=
-  { c | ∀, ∀ m ∈ S, ∀, m * c = c * m }
-
-variable {S}
-
-@[to_additive mem_add_centralizer]
-theorem mem_centralizer_iff [Mul M] {c : M} : c ∈ Centralizer S ↔ ∀, ∀ m ∈ S, ∀, m * c = c * m :=
-  Iff.rfl
-
-@[to_additive decidable_mem_add_centralizer]
-instance decidableMemCentralizer [Mul M] [DecidableEq M] [Fintype M] [DecidablePred (· ∈ S)] :
-    DecidablePred (· ∈ Centralizer S) := fun _ => decidableOfIff' _ mem_centralizer_iff
-
-variable (S)
-
-@[simp, to_additive zero_mem_add_centralizer]
-theorem one_mem_centralizer [MulOneClassₓ M] : (1 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
-
-@[simp]
-theorem zero_mem_centralizer [MulZeroClassₓ M] : (0 : M) ∈ Centralizer S := by
-  simp [mem_centralizer_iff]
-
-variable {S} {a b : M}
-
-@[simp, to_additive add_mem_add_centralizer]
-theorem mul_mem_centralizer [Semigroupₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a * b ∈ Centralizer S :=
-  fun g hg => by
-  rw [mul_assoc, ← hb g hg, ← mul_assoc, ha g hg, mul_assoc]
-
-@[simp, to_additive neg_mem_add_centralizer]
-theorem inv_mem_centralizer [Groupₓ M] (ha : a ∈ Centralizer S) : a⁻¹ ∈ Centralizer S := fun g hg => by
-  rw [mul_inv_eq_iff_eq_mul, mul_assoc, eq_inv_mul_iff_mul_eq, ha g hg]
-
-@[simp]
-theorem add_mem_centralizer [Distribₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a + b ∈ Centralizer S :=
-  fun c hc => by
-  rw [add_mulₓ, mul_addₓ, ha c hc, hb c hc]
-
-@[simp]
-theorem neg_mem_centralizer [Mul M] [HasDistribNeg M] (ha : a ∈ Centralizer S) : -a ∈ Centralizer S := fun c hc => by
-  rw [mul_neg, ha c hc, neg_mul]
-
-@[simp]
-theorem inv_mem_centralizer₀ [GroupWithZeroₓ M] (ha : a ∈ Centralizer S) : a⁻¹ ∈ Centralizer S :=
-  (eq_or_ne a 0).elim
-    (fun h => by
-      rw [h, inv_zero]
-      exact zero_mem_centralizer S)
-    fun ha0 c hc => by
-    rw [mul_inv_eq_iff_eq_mul₀ ha0, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha0, ha c hc]
-
-@[simp, to_additive sub_mem_add_centralizer]
-theorem div_mem_centralizer [Groupₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) : a / b ∈ Centralizer S := by
-  rw [div_eq_mul_inv]
-  exact mul_mem_centralizer ha (inv_mem_centralizer hb)
-
-@[simp]
-theorem div_mem_centralizer₀ [GroupWithZeroₓ M] (ha : a ∈ Centralizer S) (hb : b ∈ Centralizer S) :
-    a / b ∈ Centralizer S := by
-  rw [div_eq_mul_inv]
-  exact mul_mem_centralizer ha (inv_mem_centralizer₀ hb)
-
-@[to_additive add_centralizer_subset]
-theorem centralizer_subset [Mul M] (h : S ⊆ T) : Centralizer T ⊆ Centralizer S := fun t ht s hs => ht s (h hs)
-
-variable (M)
-
-@[simp, to_additive add_centralizer_univ]
-theorem centralizer_univ [Mul M] : Centralizer Univ = Center M :=
-  Subset.antisymm (fun a ha b => ha b (Set.mem_univ b)) fun a ha b hb => ha b
-
-variable {M} (S)
-
-@[simp, to_additive add_centralizer_eq_univ]
-theorem centralizer_eq_univ [CommSemigroupₓ M] : Centralizer S = univ :=
-  (Subset.antisymm (subset_univ _)) fun x hx y hy => mul_comm y x
-
-end Set
-
 namespace Submonoid
 
 section
 
-variable {M} [Monoidₓ M] (S)
+variable [Monoidₓ M] (S)
 
 /-- The centralizer of a subset of a monoid `M`. -/
 @[to_additive "The centralizer of a subset of an additive monoid."]
@@ -123,6 +36,15 @@ def centralizer : Submonoid M where
 @[simp, norm_cast, to_additive]
 theorem coe_centralizer : ↑(centralizer S) = S.Centralizer :=
   rfl
+
+theorem centralizer_to_subsemigroup : (centralizer S).toSubsemigroup = Subsemigroup.centralizer S :=
+  rfl
+
+theorem _root_.add_submonoid.centralizer_to_add_subsemigroup {M} [AddMonoidₓ M] (S : Set M) :
+    (AddSubmonoid.centralizer S).toAddSubsemigroup = AddSubsemigroup.centralizer S :=
+  rfl
+
+attribute [to_additive AddSubmonoid.centralizer_to_add_subsemigroup] Submonoid.centralizer_to_subsemigroup
 
 variable {S}
 

@@ -312,7 +312,7 @@ theorem swap_lt_swap_iff : c.swap < d.swap ↔ d < c :=
 
 /-- The dual of a concept lattice is isomorphic to the concept lattice of the dual context. -/
 @[simps]
-def swapEquiv : OrderDual (Concept α β r) ≃o Concept β α (Function.swap r) where
+def swapEquiv : (Concept α β r)ᵒᵈ ≃o Concept β α (Function.swap r) where
   toFun := swap ∘ of_dual
   invFun := to_dual ∘ swap
   left_inv := swap_swap

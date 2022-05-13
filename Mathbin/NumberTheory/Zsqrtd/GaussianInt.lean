@@ -285,7 +285,8 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
       obtain ⟨k, k_lt_p, rfl⟩ : ∃ (k' : ℕ)(h : k' < p), (k' : Zmod p) = k := by
         refine' ⟨k.val, k.val_lt, Zmod.nat_cast_zmod_val k⟩
       have hpk : p ∣ k ^ 2 + 1 := by
-        rw [← CharP.cast_eq_zero_iff (Zmod p) p] <;> simp [*]
+        rw [pow_two, ← CharP.cast_eq_zero_iff (Zmod p) p, Nat.cast_addₓ, Nat.cast_mulₓ, Nat.cast_oneₓ, ← hk,
+          add_left_negₓ]
       have hkmul : (k ^ 2 + 1 : ℤ[i]) = ⟨k, 1⟩ * ⟨k, -1⟩ := by
         simp [sq, Zsqrtd.ext]
       have hpne1 : p ≠ 1 := ne_of_gtₓ hp.1.one_lt
@@ -359,7 +360,7 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (h
     Classical.by_contradiction fun hpi =>
       let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi
       have : ∀ a b : Zmod 4, a ^ 2 + b ^ 2 ≠ p := by
-        erw [← Zmod.nat_cast_mod 4 p, hp3] <;>
+        erw [← Zmod.nat_cast_mod p 4, hp3] <;>
           exact by
             decide
       this a b

@@ -3,6 +3,7 @@ Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 -/
+import Mathbin.Dynamics.Ergodic.MeasurePreserving
 import Mathbin.MeasureTheory.Measure.Regular
 import Mathbin.MeasureTheory.Group.MeasurableEquiv
 import Mathbin.MeasureTheory.Measure.OpenPos
@@ -72,28 +73,6 @@ theorem map_mul_left_eq_self (μ : Measure G) [IsMulLeftInvariant μ] (g : G) : 
 theorem map_mul_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) : map (· * g) μ = μ :=
   IsMulRightInvariant.map_mul_right_eq_self g
 
-/-- An alternative way to prove that `μ` is left invariant under multiplication. -/
-@[to_additive "An alternative way to prove that `μ` is left invariant under addition."]
-theorem forall_measure_preimage_mul_iff [HasMeasurableMul G] (μ : Measure G) :
-    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
-  trans ∀ g, map ((· * ·) g) μ = μ
-  · simp_rw [measure.ext_iff]
-    refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
-    rw [map_apply (measurable_const_mul g) hA]
-    
-  exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
-
-/-- An alternative way to prove that `μ` is left invariant under multiplication. -/
-@[to_additive "An alternative way to prove that `μ` is left invariant under addition."]
-theorem forall_measure_preimage_mul_right_iff [HasMeasurableMul G] (μ : Measure G) :
-    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
-  trans ∀ g, map (· * g) μ = μ
-  · simp_rw [measure.ext_iff]
-    refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
-    rw [map_apply (measurable_mul_const g) hA]
-    
-  exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
-
 @[to_additive]
 instance [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
   ⟨fun g => by
@@ -103,6 +82,43 @@ instance [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ
 instance [IsMulRightInvariant μ] (c : ℝ≥0∞) : IsMulRightInvariant (c • μ) :=
   ⟨fun g => by
     rw [map_smul, map_mul_right_eq_self]⟩
+
+section HasMeasurableMul
+
+variable [HasMeasurableMul G]
+
+@[to_additive]
+theorem measure_preserving_mul_left (μ : Measure G) [IsMulLeftInvariant μ] (g : G) :
+    MeasurePreserving ((· * ·) g) μ μ :=
+  ⟨measurable_const_mul g, map_mul_left_eq_self μ g⟩
+
+@[to_additive]
+theorem measure_preserving_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) : MeasurePreserving (· * g) μ μ :=
+  ⟨measurable_mul_const g, map_mul_right_eq_self μ g⟩
+
+/-- An alternative way to prove that `μ` is left invariant under multiplication. -/
+@[to_additive " An alternative way to prove that `μ` is left invariant under addition. "]
+theorem forall_measure_preimage_mul_iff (μ : Measure G) :
+    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔ IsMulLeftInvariant μ := by
+  trans ∀ g, map ((· * ·) g) μ = μ
+  · simp_rw [measure.ext_iff]
+    refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
+    rw [map_apply (measurable_const_mul g) hA]
+    
+  exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
+
+/-- An alternative way to prove that `μ` is right invariant under multiplication. -/
+@[to_additive " An alternative way to prove that `μ` is right invariant under addition. "]
+theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
+    (∀ g : G A : Set G, MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔ IsMulRightInvariant μ := by
+  trans ∀ g, map (· * g) μ = μ
+  · simp_rw [measure.ext_iff]
+    refine' forall_congrₓ fun g => forall_congrₓ fun A => forall_congrₓ fun hA => _
+    rw [map_apply (measurable_mul_const g) hA]
+    
+  exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
+
+end HasMeasurableMul
 
 end Mul
 
@@ -137,6 +153,18 @@ theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g 
     _ = μ A := by
       rw [map_mul_right_eq_self μ g]
     
+
+@[to_additive]
+theorem map_mul_left_ae (μ : Measure G) [IsMulLeftInvariant μ] (x : G) : Filter.map (fun h => x * h) μ.ae = μ.ae :=
+  ((MeasurableEquiv.mulLeft x).map_ae μ).trans <| congr_argₓ ae <| map_mul_left_eq_self μ x
+
+@[to_additive]
+theorem map_mul_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun h => h * x) μ.ae = μ.ae :=
+  ((MeasurableEquiv.mulRight x).map_ae μ).trans <| congr_argₓ ae <| map_mul_right_eq_self μ x
+
+@[to_additive]
+theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun t => t / x) μ.ae = μ.ae :=
+  ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_argₓ ae <| map_div_right_eq_self μ x
 
 end Groupₓ
 
@@ -230,6 +258,11 @@ theorem map_mul_right_inv_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLef
     map (fun t => (g * t)⁻¹) μ = μ := by
   conv_rhs => rw [← map_inv_eq_self μ, ← map_mul_left_eq_self μ g]
   exact (map_map measurable_inv (measurable_const_mul g)).symm
+
+@[to_additive]
+theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
+    Filter.map (fun t => x / t) μ.ae = μ.ae :=
+  ((MeasurableEquiv.divLeft x).map_ae μ).trans <| congr_argₓ ae <| map_div_left_eq_self μ x
 
 end mul_inv
 

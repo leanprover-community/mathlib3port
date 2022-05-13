@@ -608,18 +608,13 @@ theorem HasBasis.prod_self (hl : l.HasBasis p s) : (l ×ᶠ l).HasBasis p fun i 
 theorem mem_prod_self_iff {s} : s ∈ l ×ᶠ l ↔ ∃ t ∈ l, t ×ˢ t ⊆ s :=
   l.basis_sets.prod_self.mem_iff
 
+theorem HasBasis.forall_mem_mem (h : HasBasis l p s) {x : α} : (∀, ∀ t ∈ l, ∀, x ∈ t) ↔ ∀ i, p i → x ∈ s i := by
+  simp only [h.mem_iff, exists_imp_distrib]
+  exact ⟨fun h i hi => h (s i) i hi subset.rfl, fun h t i hi ht => ht (h i hi)⟩
+
 theorem HasBasis.sInter_sets (h : HasBasis l p s) : ⋂₀ l.Sets = ⋂ (i) (hi : p i), s i := by
   ext x
-  suffices (∀, ∀ t ∈ l, ∀, x ∈ t) ↔ ∀ i, p i → x ∈ s i by
-    simpa only [mem_Inter, mem_set_of_eq, mem_sInter]
-  simp_rw [h.mem_iff]
-  constructor
-  · intro h i hi
-    exact h (s i) ⟨i, hi, subset.refl _⟩
-    
-  · rintro h _ ⟨i, hi, sub⟩
-    exact sub (h i hi)
-    
+  simp only [mem_Inter, mem_sInter, Filter.mem_sets, h.forall_mem_mem]
 
 variable {ι'' : Type _} [Preorderₓ ι''] (l) (s'' : ι'' → Set α)
 
@@ -802,6 +797,10 @@ theorem countable_binfi_principal_eq_seq_infi {B : Set (Set α)} (Bcbl : Countab
   countable_binfi_eq_infi_seq' Bcbl 𝓟 principal_univ
 
 section IsCountablyGenerated
+
+protected theorem HasAntitoneBasis.mem [Preorderₓ ι] {l : Filter α} {s : ι → Set α} (hs : l.HasAntitoneBasis s)
+    (i : ι) : s i ∈ l :=
+  hs.to_has_basis.mem_of_mem trivialₓ
 
 /-- If `f` is countably generated and `f.has_basis p s`, then `f` admits a decreasing basis
 enumerated by natural numbers such that all sets have the form `s i`. More precisely, there is a

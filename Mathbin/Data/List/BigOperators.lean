@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 -/
 import Mathbin.Algebra.GroupPower.Default
-import Mathbin.Data.List.Basic
+import Mathbin.Data.List.Forall2
 
 /-!
 # Sums and products from lists
@@ -209,14 +209,45 @@ theorem _root_.commute.list_sum_left [NonUnitalNonAssocSemiringₓ R] (b : R) (l
   ((Commute.list_sum_right _ _) fun x hx => (h _ hx).symm).symm
 
 @[to_additive sum_le_sum]
-theorem prod_le_prod' [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
-    [CovariantClass M M (· * ·) (· ≤ ·)] {l : List ι} {f g : ι → M} (h : ∀, ∀ i ∈ l, ∀, f i ≤ g i) :
-    (l.map f).Prod ≤ (l.map g).Prod := by
-  induction' l with i l ihl
+theorem Forall₂.prod_le_prod' [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
+    [CovariantClass M M (· * ·) (· ≤ ·)] {l₁ l₂ : List M} (h : Forall₂ (· ≤ ·) l₁ l₂) : l₁.Prod ≤ l₂.Prod := by
+  induction' h with a b la lb hab ih ih'
   · rfl
     
-  rw [forall_mem_cons] at h
-  simpa using mul_le_mul' h.1 (ihl h.2)
+  · simpa only [prod_cons] using mul_le_mul' hab ih'
+    
+
+/-- If `l₁` is a sublist of `l₂` and all elements of `l₂` are greater than or equal to one, then
+`l₁.prod ≤ l₂.prod`. One can prove a stronger version assuming `∀ a ∈ l₂.diff l₁, 1 ≤ a` instead
+of `∀ a ∈ l₂, 1 ≤ a` but this lemma is not yet in `mathlib`. -/
+@[to_additive sum_le_sum
+      "If `l₁` is a sublist of `l₂` and all elements of `l₂` are nonnegative,\nthen `l₁.sum ≤ l₂.sum`. One can prove a stronger version assuming `∀ a ∈ l₂.diff l₁, 0 ≤ a` instead\nof `∀ a ∈ l₂, 0 ≤ a` but this lemma is not yet in `mathlib`."]
+theorem Sublist.prod_le_prod' [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
+    [CovariantClass M M (· * ·) (· ≤ ·)] {l₁ l₂ : List M} (h : l₁ <+ l₂) (h₁ : ∀, ∀ a ∈ l₂, ∀, (1 : M) ≤ a) :
+    l₁.Prod ≤ l₂.Prod := by
+  induction h
+  · rfl
+    
+  case cons l₁ l₂ a ih ih' =>
+    simp only [prod_cons, forall_mem_cons] at h₁⊢
+    exact (ih' h₁.2).trans (le_mul_of_one_le_left' h₁.1)
+  case cons2 l₁ l₂ a ih ih' =>
+    simp only [prod_cons, forall_mem_cons] at h₁⊢
+    exact mul_le_mul_left' (ih' h₁.2) _
+
+@[to_additive sum_le_sum]
+theorem SublistForall₂.prod_le_prod' [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
+    [CovariantClass M M (· * ·) (· ≤ ·)] {l₁ l₂ : List M} (h : SublistForall₂ (· ≤ ·) l₁ l₂)
+    (h₁ : ∀, ∀ a ∈ l₂, ∀, (1 : M) ≤ a) : l₁.Prod ≤ l₂.Prod :=
+  let ⟨l, hall, hsub⟩ := sublist_forall₂_iff.1 h
+  hall.prod_le_prod'.trans <| hsub.prod_le_prod' h₁
+
+@[to_additive sum_le_sum]
+theorem prod_le_prod' [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
+    [CovariantClass M M (· * ·) (· ≤ ·)] {l : List ι} {f g : ι → M} (h : ∀, ∀ i ∈ l, ∀, f i ≤ g i) :
+    (l.map f).Prod ≤ (l.map g).Prod :=
+  forall₂.prod_le_prod' <| by
+    simpa
 
 @[to_additive sum_lt_sum]
 theorem prod_lt_prod' [Preorderₓ M] [CovariantClass M M (· * ·) (· < ·)] [CovariantClass M M (· * ·) (· ≤ ·)]
@@ -244,7 +275,7 @@ theorem prod_le_pow_card [Preorderₓ M] [CovariantClass M M (Function.swap (· 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod [Preorderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
     [CovariantClass M M (· * ·) (· ≤ ·)] (l : List M) (n : M) (h : ∀, ∀ x ∈ l, ∀, n ≤ x) : n ^ l.length ≤ l.Prod :=
-  @prod_le_pow_card (OrderDual M) _ _ _ _ l n h
+  @prod_le_pow_card Mᵒᵈ _ _ _ _ l n h
 
 @[to_additive exists_lt_of_sum_lt]
 theorem exists_lt_of_prod_lt' [LinearOrderₓ M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
@@ -408,15 +439,8 @@ theorem all_one_of_le_one_le_of_prod_eq_one [OrderedCommMonoid M] {l : List M} (
 
 @[to_additive]
 theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) : l.Prod = 1 ↔ ∀, ∀ x ∈ l, ∀, x = (1 : M) :=
-  ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, by
-    induction l
-    · simp
-      
-    · intro h
-      rw [prod_cons, mul_eq_one_iff]
-      rw [forall_mem_cons] at h
-      exact ⟨h.1, l_ih h.2⟩
-      ⟩
+  ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
+    rw [eq_repeat.2 ⟨rfl, h⟩, prod_repeat, one_pow]⟩
 
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
@@ -527,7 +551,7 @@ variable [CommGroupₓ α]
 @[to_additive]
 theorem alternating_prod_cons' : ∀ a : α l : List α, alternatingProd (a :: l) = a * (alternatingProd l)⁻¹
   | a, [] => by
-    rw [alternating_prod_nil, one_inv, mul_oneₓ, alternating_prod_singleton]
+    rw [alternating_prod_nil, inv_one, mul_oneₓ, alternating_prod_singleton]
   | a, b :: l => by
     rw [alternating_prod_cons_cons', alternating_prod_cons' b l, mul_inv, inv_invₓ, mul_assoc]
 

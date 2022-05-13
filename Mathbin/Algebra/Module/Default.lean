@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Algebra.Module.Basic
-import Mathbin.Algebra.Module.Submodule
+import Mathbin.Algebra.Module.Submodule.Basic
 
 /-!
 # Default file for module

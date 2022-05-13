@@ -362,21 +362,19 @@ theorem mem_roots (hp : p ≠ 0) : a ∈ p.roots ↔ IsRoot p a := by
 theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ p.roots) : Z.card ≤ p.natDegree :=
   (Multiset.card_le_of_le (Finset.val_le_iff_val_subset.2 h)).trans (Polynomial.card_roots' p)
 
-theorem eq_zero_of_infinite_is_root (p : R[X]) (h : Set.Infinite { x | IsRoot p x }) : p = 0 := by
-  by_contra hp
-  apply h
-  convert p.roots.to_finset.finite_to_set using 1
-  ext1 r
-  simp only [mem_roots hp, Multiset.mem_to_finset, Set.mem_set_of_eq, Finset.mem_coe]
+theorem finite_set_of_is_root {p : R[X]} (hp : p ≠ 0) : Set.Finite { x | IsRoot p x } := by
+  simpa only [← Finset.set_of_mem, mem_to_finset, mem_roots hp] using p.roots.to_finset.finite_to_set
+
+theorem eq_zero_of_infinite_is_root (p : R[X]) (h : Set.Infinite { x | IsRoot p x }) : p = 0 :=
+  not_imp_comm.mp finite_set_of_is_root h
 
 theorem exists_max_root [LinearOrderₓ R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀, ∀ x, p.IsRoot x → x ≤ x₀ :=
-  Set.exists_upper_bound_image _ _ <| not_not.mp (mt (eq_zero_of_infinite_is_root p) hp)
+  Set.exists_upper_bound_image _ _ <| finite_set_of_is_root hp
 
 theorem exists_min_root [LinearOrderₓ R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀, ∀ x, p.IsRoot x → x₀ ≤ x :=
-  Set.exists_lower_bound_image _ _ <| not_not.mp (mt (eq_zero_of_infinite_is_root p) hp)
+  Set.exists_lower_bound_image _ _ <| finite_set_of_is_root hp
 
-theorem eq_of_infinite_eval_eq {R : Type _} [CommRingₓ R] [IsDomain R] (p q : R[X])
-    (h : Set.Infinite { x | eval x p = eval x q }) : p = q := by
+theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite { x | eval x p = eval x q }) : p = q := by
   rw [← sub_eq_zero]
   apply eq_zero_of_infinite_is_root
   simpa only [is_root, eval_sub, sub_eq_zero]

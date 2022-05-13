@@ -16,7 +16,7 @@ a join-semilattice structure.
 
 - `order.pfilter P`: The type of nonempty, downward directed, upward closed
                subsets of `P`. This is dual to `order.ideal`, so it
-               simply wraps `order.ideal (order_dual P)`.
+               simply wraps `order.ideal Pᵒᵈ`.
 - `order.is_pfilter P`: a predicate for when a `set P` is a filter.
 
 
@@ -44,11 +44,11 @@ variable {P : Type _}
   - downward directed
   - upward closed. -/
 structure Pfilter (P) [Preorderₓ P] where
-  dual : Ideal (OrderDual P)
+  dual : Ideal Pᵒᵈ
 
 /-- A predicate for when a subset of `P` is a filter. -/
 def IsPfilter [Preorderₓ P] (F : Set P) : Prop :=
-  @IsIdeal (OrderDual P) _ F
+  @IsIdeal Pᵒᵈ _ F
 
 theorem IsPfilter.of_def [Preorderₓ P] {F : Set P} (nonempty : F.Nonempty) (directed : DirectedOn (· ≥ ·) F)
     (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) : IsPfilter F :=

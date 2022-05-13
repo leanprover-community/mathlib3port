@@ -191,7 +191,7 @@ theorem Periodic.zsmul_sub_eq [AddCommGroupₓ α] (h : Periodic f c) (n : ℤ) 
 theorem Periodic.int_mul_sub_eq [Ringₓ α] (h : Periodic f c) (n : ℤ) : f (n * c - x) = f (-x) := by
   simpa only [sub_eq_neg_add] using h.int_mul n (-x)
 
-theorem Periodic.eq [AddZeroClass α] (h : Periodic f c) : f c = f 0 := by
+theorem Periodic.eq [AddZeroClassₓ α] (h : Periodic f c) : f c = f 0 := by
   simpa only [zero_addₓ] using h 0
 
 theorem Periodic.neg_eq [AddGroupₓ α] (h : Periodic f c) : f (-c) = f 0 :=
@@ -237,7 +237,7 @@ theorem Periodic.image_Ioc [LinearOrderedAddCommGroup α] [Archimedean α] (h : 
       let ⟨y, hy, hyx⟩ := h.exists_mem_Ioc hc x a
       ⟨y, hy, hyx.symm⟩
 
-theorem periodic_with_period_zero [AddZeroClass α] (f : α → β) : Periodic f 0 := fun x => by
+theorem periodic_with_period_zero [AddZeroClassₓ α] (f : α → β) : Periodic f 0 := fun x => by
   rw [add_zeroₓ]
 
 theorem Periodic.map_vadd_zmultiples [AddCommGroupₓ α] (hf : Periodic f c) (a : AddSubgroup.zmultiples c) (x : α) :
@@ -278,7 +278,7 @@ theorem Antiperiodic.funext' [Add α] [AddGroupₓ β] (h : Antiperiodic f c) : 
 theorem Antiperiodic.periodic [Semiringₓ α] [AddGroupₓ β] (h : Antiperiodic f c) : Periodic f (2 * c) := by
   simp [two_mul, ← add_assocₓ, h _]
 
-theorem Antiperiodic.eq [AddZeroClass α] [Neg β] (h : Antiperiodic f c) : f c = -f 0 := by
+theorem Antiperiodic.eq [AddZeroClassₓ α] [Neg β] (h : Antiperiodic f c) : f c = -f 0 := by
   simpa only [zero_addₓ] using h 0
 
 theorem Antiperiodic.nat_even_mul_periodic [Semiringₓ α] [AddGroupₓ β] (h : Antiperiodic f c) (n : ℕ) :

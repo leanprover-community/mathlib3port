@@ -579,6 +579,19 @@ theorem dense_compl_singleton_iff_not_open {x : α} : Dense ({x}ᶜ : Set α) �
 def Frontier (s : Set α) : Set α :=
   Closure s \ Interior s
 
+@[simp]
+theorem closure_diff_interior (s : Set α) : Closure s \ Interior s = Frontier s :=
+  rfl
+
+@[simp]
+theorem closure_diff_frontier (s : Set α) : Closure s \ Frontier s = Interior s := by
+  rw [Frontier, diff_diff_right_self, inter_eq_self_of_subset_right interior_subset_closure]
+
+@[simp]
+theorem self_diff_frontier (s : Set α) : s \ Frontier s = Interior s := by
+  rw [Frontier, diff_diff_right, diff_eq_empty.2 subset_closure, inter_eq_self_of_subset_right interior_subset,
+    empty_union]
+
 theorem frontier_eq_closure_inter_closure {s : Set α} : Frontier s = Closure s ∩ Closure (sᶜ) := by
   rw [closure_compl, Frontier, diff_eq]
 
@@ -704,12 +717,18 @@ theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen
 
 /-- The open sets containing `a` are a basis for the neighborhood filter. See `nhds_basis_opens'`
 for a variant using open neighborhoods instead. -/
-theorem nhds_basis_opens (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ IsOpen s) fun x => x := by
+theorem nhds_basis_opens (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ IsOpen s) fun s => s := by
   rw [nhds_def]
   exact
     has_basis_binfi_principal
       (fun t ⟨hat, ht⟩ => ⟨s ∩ t, ⟨⟨has, hat⟩, IsOpen.inter hs ht⟩, ⟨inter_subset_left _ _, inter_subset_right _ _⟩⟩)
       ⟨univ, ⟨mem_univ a, is_open_univ⟩⟩
+
+theorem nhds_basis_closeds (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∉ s ∧ IsClosed s) compl :=
+  ⟨fun t =>
+    (nhds_basis_opens a).mem_iff.trans <|
+      compl_surjective.exists.trans <| by
+        simp only [is_open_compl_iff, mem_compl_iff]⟩
 
 /-- A filter lies below the neighborhood filter at `a` iff it contains every open set around `a`. -/
 theorem le_nhds_iff {f a} : f ≤ 𝓝 a ↔ ∀ s : Set α, a ∈ s → IsOpen s → s ∈ f := by
@@ -760,23 +779,15 @@ for a variant using open sets around `a` instead. -/
 theorem nhds_basis_opens' (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 𝓝 a ∧ IsOpen s) fun x => x := by
   convert nhds_basis_opens a
   ext s
-  constructor
-  · rintro ⟨s_in, s_op⟩
-    exact ⟨mem_of_mem_nhds s_in, s_op⟩
-    
-  · rintro ⟨a_in, s_op⟩
-    exact ⟨IsOpen.mem_nhds s_op a_in, s_op⟩
-    
+  exact And.congr_left_iff.2 IsOpen.mem_nhds_iff
 
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of `s`:
 it contains an open set containing `s`. -/
 theorem exists_open_set_nhds {s U : Set α} (h : ∀, ∀ x ∈ s, ∀, U ∈ 𝓝 x) : ∃ V : Set α, s ⊆ V ∧ IsOpen V ∧ V ⊆ U := by
   have := fun x hx => (nhds_basis_opens x).mem_iff.1 (h x hx)
-  choose! Z hZ hZ' using this
-  refine' ⟨⋃ x ∈ s, Z x, fun x hx => mem_bUnion hx (hZ x hx).1, is_open_Union _, Union₂_subset hZ'⟩
-  intro x
-  by_cases' hx : x ∈ s <;> simp [hx]
-  exact (hZ x hx).2
+  choose! Z hZ hZU using this
+  choose hZmem hZo using hZ
+  exact ⟨⋃ x ∈ s, Z x, fun x hx => mem_bUnion hx (hZmem x hx), is_open_bUnion hZo, Union₂_subset hZU⟩
 
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of s:
 it contains an open set containing `s`. -/
@@ -854,6 +865,11 @@ theorem ptendsto'_nhds {f : β →. α} {l : Filter β} {a : α} :
 
 theorem tendsto_nhds {f : β → α} {l : Filter β} {a : α} : Tendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f ⁻¹' s ∈ l :=
   all_mem_nhds_filter _ _ (fun s t h => preimage_mono h) _
+
+theorem tendsto_at_top_nhds [Nonempty β] [SemilatticeSup β] {f : β → α} {a : α} :
+    Tendsto f atTop (𝓝 a) ↔ ∀ U : Set α, a ∈ U → IsOpen U → ∃ N, ∀ n, N ≤ n → f n ∈ U :=
+  (at_top_basis.tendsto_iff (nhds_basis_opens a)).trans <| by
+    simp only [and_imp, exists_prop, true_andₓ, mem_Ici, ge_iff_le]
 
 theorem tendsto_const_nhds {a : α} {f : Filter β} : Tendsto (fun b : β => a) f (𝓝 a) :=
   tendsto_nhds.mpr fun s hs ha => univ_mem' fun _ => ha

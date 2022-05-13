@@ -175,13 +175,13 @@ theorem zorn_subset_nonempty (S : Set (Set α))
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset (S : Set (Set α)) (h : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) :
     ∃ m ∈ S, ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
-  (@zorn_partial_order₀ (OrderDual (Set α)) _ S) fun c cS hc => h c cS hc.symm
+  (@zorn_partial_order₀ (Set α)ᵒᵈ _ S) fun c cS hc => h c cS hc.symm
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ⊆ » S)
 theorem zorn_superset_nonempty (S : Set (Set α))
     (H : ∀ c _ : c ⊆ S, IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀, ∀ s ∈ c, ∀, lb ⊆ s) x (hx : x ∈ S) :
     ∃ m ∈ S, m ⊆ x ∧ ∀, ∀ a ∈ S, ∀, a ⊆ m → a = m :=
-  @zorn_nonempty_partial_order₀ (OrderDual (Set α)) _ S (fun c cS hc y yc => H _ cS hc.symm ⟨y, yc⟩) _ hx
+  @zorn_nonempty_partial_order₀ (Set α)ᵒᵈ _ S (fun c cS hc y yc => H _ cS hc.symm ⟨y, yc⟩) _ hx
 
 /-- Every chain is contained in a maximal chain. This generalizes Hausdorff's maximality principle.
 -/

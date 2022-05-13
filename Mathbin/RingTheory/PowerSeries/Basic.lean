@@ -875,7 +875,7 @@ protected theorem mul_inv_rev (φ ψ : MvPowerSeries σ k) : (φ * ψ)⁻¹ = ψ
     
 
 @[simp]
-theorem one_inv : (1 : MvPowerSeries σ k)⁻¹ = 1 := by
+theorem inv_one : (1 : MvPowerSeries σ k)⁻¹ = 1 := by
   rw [MvPowerSeries.inv_eq_iff_mul_eq_one, mul_oneₓ]
   simp
 
@@ -1847,8 +1847,8 @@ protected theorem mul_inv_rev (φ ψ : PowerSeries k) : (φ * ψ)⁻¹ = ψ⁻¹
   MvPowerSeries.mul_inv_rev _ _
 
 @[simp]
-theorem one_inv : (1 : PowerSeries k)⁻¹ = 1 :=
-  MvPowerSeries.one_inv
+theorem inv_one : (1 : PowerSeries k)⁻¹ = 1 :=
+  MvPowerSeries.inv_one
 
 @[simp]
 theorem C_inv (r : k) : (c k r)⁻¹ = c k r⁻¹ :=

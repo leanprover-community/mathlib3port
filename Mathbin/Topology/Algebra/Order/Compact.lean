@@ -150,19 +150,19 @@ theorem IsCompact.Inf_mem {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : 
   hs.IsClosed.cInf_mem ne_s hs.BddBelow
 
 theorem IsCompact.Sup_mem {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : sup s ∈ s :=
-  @IsCompact.Inf_mem (OrderDual α) _ _ _ _ hs ne_s
+  @IsCompact.Inf_mem αᵒᵈ _ _ _ _ hs ne_s
 
 theorem IsCompact.is_glb_Inf {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : IsGlb s (inf s) :=
   is_glb_cInf ne_s hs.BddBelow
 
 theorem IsCompact.is_lub_Sup {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : IsLub s (sup s) :=
-  @IsCompact.is_glb_Inf (OrderDual α) _ _ _ _ hs ne_s
+  @IsCompact.is_glb_Inf αᵒᵈ _ _ _ _ hs ne_s
 
 theorem IsCompact.is_least_Inf {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : IsLeast s (inf s) :=
   ⟨hs.Inf_mem ne_s, (hs.is_glb_Inf ne_s).1⟩
 
 theorem IsCompact.is_greatest_Sup {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : IsGreatest s (sup s) :=
-  @IsCompact.is_least_Inf (OrderDual α) _ _ _ _ hs ne_s
+  @IsCompact.is_least_Inf αᵒᵈ _ _ _ _ hs ne_s
 
 theorem IsCompact.exists_is_least {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : ∃ x, IsLeast s x :=
   ⟨_, hs.is_least_Inf ne_s⟩
@@ -183,7 +183,7 @@ theorem IsCompact.exists_Inf_image_eq_and_le {s : Set β} (hs : IsCompact s) (ne
 
 theorem IsCompact.exists_Sup_image_eq_and_ge {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α}
     (hf : ContinuousOn f s) : ∃ x ∈ s, sup (f '' s) = f x ∧ ∀, ∀ y ∈ s, ∀, f y ≤ f x :=
-  @IsCompact.exists_Inf_image_eq_and_le (OrderDual α) _ _ _ _ _ _ hs ne_s _ hf
+  @IsCompact.exists_Inf_image_eq_and_le αᵒᵈ _ _ _ _ _ _ hs ne_s _ hf
 
 theorem IsCompact.exists_Inf_image_eq {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty) {f : β → α}
     (hf : ContinuousOn f s) : ∃ x ∈ s, inf (f '' s) = f x :=
@@ -192,7 +192,7 @@ theorem IsCompact.exists_Inf_image_eq {s : Set β} (hs : IsCompact s) (ne_s : s.
 
 theorem IsCompact.exists_Sup_image_eq :
     ∀ {s : Set β}, IsCompact s → s.Nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, sup (f '' s) = f x :=
-  @IsCompact.exists_Inf_image_eq (OrderDual α) _ _ _ _ _
+  @IsCompact.exists_Inf_image_eq αᵒᵈ _ _ _ _ _
 
 theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : IsCompact s) : s = Icc (inf s) (sup s) :=
   eq_Icc_cInf_cSup_of_connected_bdd_closed h₁ h₂.BddBelow h₂.BddAbove h₂.IsClosed
@@ -211,7 +211,7 @@ theorem IsCompact.exists_forall_le {s : Set β} (hs : IsCompact s) (ne_s : s.Non
 /-- The **extreme value theorem**: a continuous function realizes its maximum on a compact set. -/
 theorem IsCompact.exists_forall_ge :
     ∀ {s : Set β}, IsCompact s → s.Nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ x ∈ s, ∀, ∀ y ∈ s, ∀, f y ≤ f x :=
-  @IsCompact.exists_forall_le (OrderDual α) _ _ _ _ _
+  @IsCompact.exists_forall_le αᵒᵈ _ _ _ _ _
 
 /-- The **extreme value theorem**: if a function `f` is continuous on a closed set `s` and it is
 larger than a value in its image away from compact sets, then it has a minimum on this set. -/
@@ -229,7 +229,7 @@ theorem ContinuousOn.exists_forall_le' {s : Set β} {f : β → α} (hf : Contin
 smaller than a value in its image away from compact sets, then it has a maximum on this set. -/
 theorem ContinuousOn.exists_forall_ge' {s : Set β} {f : β → α} (hf : ContinuousOn f s) (hsc : IsClosed s) {x₀ : β}
     (h₀ : x₀ ∈ s) (hc : ∀ᶠ x in cocompact β⊓𝓟 s, f x ≤ f x₀) : ∃ x ∈ s, ∀, ∀ y ∈ s, ∀, f y ≤ f x :=
-  @ContinuousOn.exists_forall_le' (OrderDual α) _ _ _ _ _ _ _ hf hsc _ h₀ hc
+  @ContinuousOn.exists_forall_le' αᵒᵈ _ _ _ _ _ _ _ hf hsc _ h₀ hc
 
 /-- The **extreme value theorem**: if a continuous function `f` is larger than a value in its range
 away from compact sets, then it has a global minimum. -/
@@ -245,7 +245,7 @@ theorem _root_.continuous.exists_forall_le' {f : β → α} (hf : Continuous f) 
 away from compact sets, then it has a global maximum. -/
 theorem _root_.continuous.exists_forall_ge' {f : β → α} (hf : Continuous f) (x₀ : β)
     (h : ∀ᶠ x in cocompact β, f x ≤ f x₀) : ∃ x : β, ∀ y : β, f y ≤ f x :=
-  @Continuous.exists_forall_le' (OrderDual α) _ _ _ _ _ _ hf x₀ h
+  @Continuous.exists_forall_le' αᵒᵈ _ _ _ _ _ _ hf x₀ h
 
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
 sets, then it has a global minimum. -/
@@ -258,7 +258,7 @@ theorem _root_.continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : C
 compact sets, then it has a global maximum. -/
 theorem Continuous.exists_forall_ge [Nonempty β] {f : β → α} (hf : Continuous f)
     (hlim : Tendsto f (cocompact β) atBot) : ∃ x, ∀ y, f y ≤ f x :=
-  @Continuous.exists_forall_le (OrderDual α) _ _ _ _ _ _ _ hf hlim
+  @Continuous.exists_forall_le αᵒᵈ _ _ _ _ _ _ _ hf hlim
 
 theorem IsCompact.Sup_lt_iff_of_continuous {f : β → α} {K : Set β} (hK : IsCompact K) (h0K : K.Nonempty)
     (hf : ContinuousOn f K) (y : α) : sup (f '' K) < y ↔ ∀, ∀ x ∈ K, ∀, f x < y := by
@@ -271,7 +271,7 @@ theorem IsCompact.Sup_lt_iff_of_continuous {f : β → α} {K : Set β} (hK : Is
 theorem IsCompact.lt_Inf_iff_of_continuous {α β : Type _} [ConditionallyCompleteLinearOrder α] [TopologicalSpace α]
     [OrderTopology α] [TopologicalSpace β] {f : β → α} {K : Set β} (hK : IsCompact K) (h0K : K.Nonempty)
     (hf : ContinuousOn f K) (y : α) : y < inf (f '' K) ↔ ∀, ∀ x ∈ K, ∀, y < f x :=
-  @IsCompact.Sup_lt_iff_of_continuous (OrderDual α) β _ _ _ _ _ _ hK h0K hf y
+  @IsCompact.Sup_lt_iff_of_continuous αᵒᵈ β _ _ _ _ _ _ hK h0K hf y
 
 /-- A continuous function with compact support has a global minimum. -/
 @[to_additive]
@@ -285,7 +285,7 @@ theorem _root_.continuous.exists_forall_le_of_has_compact_mul_support [Nonempty 
 @[to_additive]
 theorem Continuous.exists_forall_ge_of_has_compact_mul_support [Nonempty β] [One α] {f : β → α} (hf : Continuous f)
     (h : HasCompactMulSupport f) : ∃ x : β, ∀ y : β, f y ≤ f x :=
-  @Continuous.exists_forall_le_of_has_compact_mul_support (OrderDual α) _ _ _ _ _ _ _ _ hf h
+  @Continuous.exists_forall_le_of_has_compact_mul_support αᵒᵈ _ _ _ _ _ _ _ _ hf h
 
 theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCompact K) (hf : Continuous ↿f) :
     Continuous fun x => sup (f x '' K) := by
@@ -316,7 +316,7 @@ theorem IsCompact.continuous_Sup {f : γ → β → α} {K : Set β} (hK : IsCom
 
 theorem IsCompact.continuous_Inf {f : γ → β → α} {K : Set β} (hK : IsCompact K) (hf : Continuous ↿f) :
     Continuous fun x => inf (f x '' K) :=
-  @IsCompact.continuous_Sup (OrderDual α) β γ _ _ _ _ _ _ _ hK hf
+  @IsCompact.continuous_Sup αᵒᵈ β γ _ _ _ _ _ _ _ hK hf
 
 namespace ContinuousOn
 

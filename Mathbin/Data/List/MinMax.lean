@@ -39,7 +39,7 @@ def argmax (f : α → β) (l : List α) : Option α :=
 that `f a = f b`, it returns whichever of `a` or `b` comes first in the list.
 `argmin f []` = none` -/
 def argmin (f : α → β) (l : List α) :=
-  @argmax _ (OrderDual β) _ f l
+  @argmax _ βᵒᵈ _ f l
 
 @[simp]
 theorem argmax_two_self (f : α → β) (a : α) : argmax₂ f (some a) a = a :=
@@ -128,7 +128,7 @@ theorem argmax_mem {f : α → β} : ∀ {l : List α} {m : α}, m ∈ argmax f 
     simpa [argmax, argmax₂] using foldl_argmax₂_mem f tl hd m
 
 theorem argmin_mem {f : α → β} : ∀ {l : List α} {m : α}, m ∈ argmin f l → m ∈ l :=
-  @argmax_mem _ (OrderDual β) _ _
+  @argmax_mem _ βᵒᵈ _ _
 
 @[simp]
 theorem argmax_eq_none {f : α → β} {l : List α} : l.argmax f = none ↔ l = [] := by
@@ -136,13 +136,13 @@ theorem argmax_eq_none {f : α → β} {l : List α} : l.argmax f = none ↔ l =
 
 @[simp]
 theorem argmin_eq_none {f : α → β} {l : List α} : l.argmin f = none ↔ l = [] :=
-  @argmax_eq_none _ (OrderDual β) _ _ _
+  @argmax_eq_none _ βᵒᵈ _ _ _
 
 theorem le_argmax_of_mem {f : α → β} {a m : α} {l : List α} : a ∈ l → m ∈ argmax f l → f a ≤ f m :=
   le_of_foldl_argmax₂
 
 theorem argmin_le_of_mem {f : α → β} {a m : α} {l : List α} : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
-  @le_argmax_of_mem _ (OrderDual β) _ _ _ _ _
+  @le_argmax_of_mem _ βᵒᵈ _ _ _ _ _
 
 theorem argmax_concat (f : α → β) (a : α) (l : List α) :
     argmax f (l ++ [a]) = Option.casesOn (argmax f l) (some a) fun c => if f a ≤ f c then some c else some a := by
@@ -150,7 +150,7 @@ theorem argmax_concat (f : α → β) (a : α) (l : List α) :
 
 theorem argmin_concat (f : α → β) (a : α) (l : List α) :
     argmin f (l ++ [a]) = Option.casesOn (argmin f l) (some a) fun c => if f c ≤ f a then some c else some a :=
-  @argmax_concat _ (OrderDual β) _ _ _ _
+  @argmax_concat _ βᵒᵈ _ _ _ _
 
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     argmax f (a :: l) = Option.casesOn (argmax f l) (some a) fun c => if f c ≤ f a then some a else some c :=
@@ -188,7 +188,7 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
 
 theorem argmin_cons (f : α → β) (a : α) (l : List α) :
     argmin f (a :: l) = Option.casesOn (argmin f l) (some a) fun c => if f a ≤ f c then some a else some c :=
-  @argmax_cons _ (OrderDual β) _ _ _ _
+  @argmax_cons _ βᵒᵈ _ _ _ _
 
 theorem index_of_argmax [DecidableEq α] {f : α → β} :
     ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
@@ -224,7 +224,7 @@ theorem index_of_argmax [DecidableEq α] {f : α → β} :
 
 theorem index_of_argmin [DecidableEq α] {f : α → β} :
     ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
-  @index_of_argmax _ (OrderDual β) _ _ _
+  @index_of_argmax _ βᵒᵈ _ _ _
 
 theorem mem_argmax_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
     m ∈ argmax f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f a ≤ f m) ∧ ∀, ∀ a ∈ l, ∀, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
@@ -245,7 +245,7 @@ theorem argmax_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List �
 
 theorem mem_argmin_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
     m ∈ argmin f l ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
-  @mem_argmax_iff _ (OrderDual β) _ _ _ _ _
+  @mem_argmax_iff _ βᵒᵈ _ _ _ _ _
 
 theorem argmin_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
     argmin f l = some m ↔ m ∈ l ∧ (∀, ∀ a ∈ l, ∀, f m ≤ f a) ∧ ∀, ∀ a ∈ l, ∀, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
@@ -305,7 +305,7 @@ theorem le_maximum_of_mem' {a : α} {l : List α} (ha : a ∈ l) : (a : WithBot 
     (@maximum_eq_none _ _ l).1
 
 theorem le_minimum_of_mem' {a : α} {l : List α} (ha : a ∈ l) : minimum l ≤ (a : WithTop α) :=
-  @le_maximum_of_mem' (OrderDual α) _ _ _ ha
+  @le_maximum_of_mem' αᵒᵈ _ _ _ ha
 
 theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximum l) a := by
   rw [max_commₓ]
@@ -320,7 +320,7 @@ theorem maximum_concat (a : α) (l : List α) : maximum (l ++ [a]) = max (maximu
   simp [max_def]
 
 theorem minimum_concat (a : α) (l : List α) : minimum (l ++ [a]) = min (minimum l) a :=
-  @maximum_concat (OrderDual α) _ _ _
+  @maximum_concat αᵒᵈ _ _ _
 
 theorem maximum_cons (a : α) (l : List α) : maximum (a :: l) = max a (maximum l) :=
   List.reverseRecOn l
@@ -330,7 +330,7 @@ theorem maximum_cons (a : α) (l : List α) : maximum (a :: l) = max a (maximum 
     rw [← cons_append, maximum_concat, ih, maximum_concat, max_assocₓ]
 
 theorem minimum_cons (a : α) (l : List α) : minimum (a :: l) = min a (minimum l) :=
-  @maximum_cons (OrderDual α) _ _ _
+  @maximum_cons αᵒᵈ _ _ _
 
 theorem maximum_eq_coe_iff {m : α} {l : List α} : maximum l = m ↔ m ∈ l ∧ ∀, ∀ a ∈ l, ∀, a ≤ m := by
   unfold_coes
@@ -344,7 +344,7 @@ theorem maximum_eq_coe_iff {m : α} {l : List α} : maximum l = m ↔ m ∈ l �
     
 
 theorem minimum_eq_coe_iff {m : α} {l : List α} : minimum l = m ↔ m ∈ l ∧ ∀, ∀ a ∈ l, ∀, m ≤ a :=
-  @maximum_eq_coe_iff (OrderDual α) _ _ _
+  @maximum_eq_coe_iff αᵒᵈ _ _ _
 
 section Fold
 
@@ -352,7 +352,7 @@ variable {M : Type _} [CanonicallyLinearOrderedAddMonoid M]
 
 /-! Note: since there is no typeclass typeclass dual
 to `canonically_linear_ordered_add_monoid α` we cannot express these lemmas generally for
-`minimum`; instead we are limited to doing so on `order_dual α`. -/
+`minimum`; instead we are limited to doing so on `αᵒᵈ`. -/
 
 
 theorem maximum_eq_coe_foldr_max_of_ne_nil (l : List M) (h : l ≠ []) : l.maximum = (l.foldr max ⊥ : M) := by
@@ -367,8 +367,7 @@ theorem maximum_eq_coe_foldr_max_of_ne_nil (l : List M) (h : l ≠ []) : l.maxim
       
     
 
-theorem minimum_eq_coe_foldr_min_of_ne_nil (l : List (OrderDual M)) (h : l ≠ []) :
-    l.minimum = (l.foldr min ⊤ : OrderDual M) :=
+theorem minimum_eq_coe_foldr_min_of_ne_nil (l : List Mᵒᵈ) (h : l ≠ []) : l.minimum = (l.foldr min ⊤ : Mᵒᵈ) :=
   maximum_eq_coe_foldr_max_of_ne_nil l h
 
 theorem maximum_nat_eq_coe_foldr_max_of_ne_nil (l : List ℕ) (h : l ≠ []) : l.maximum = (l.foldr max 0 : ℕ) :=
@@ -383,7 +382,7 @@ theorem max_le_of_forall_le (l : List M) (n : M) (h : ∀, ∀ x ∈ l, ∀, x �
     simpa [hy] using IH
     
 
-theorem le_min_of_le_forall (l : List (OrderDual M)) (n : OrderDual M) (h : ∀, ∀ x ∈ l, ∀, n ≤ x) : n ≤ l.foldr min ⊤ :=
+theorem le_min_of_le_forall (l : List Mᵒᵈ) (n : Mᵒᵈ) (h : ∀, ∀ x ∈ l, ∀, n ≤ x) : n ≤ l.foldr min ⊤ :=
   max_le_of_forall_le l n h
 
 theorem max_nat_le_of_forall_le (l : List ℕ) (n : ℕ) (h : ∀, ∀ x ∈ l, ∀, x ≤ n) : l.foldr max 0 ≤ n :=

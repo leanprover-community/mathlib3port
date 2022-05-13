@@ -134,21 +134,20 @@ variable (𝒜)
 
 /-- `zero_locus` and `vanishing_ideal` form a galois connection. -/
 theorem gc_ideal :
-    @GaloisConnection (Ideal A) (OrderDual (Set (ProjectiveSpectrum 𝒜))) _ _ (fun I => ZeroLocus 𝒜 I) fun t =>
+    @GaloisConnection (Ideal A) (Set (ProjectiveSpectrum 𝒜))ᵒᵈ _ _ (fun I => ZeroLocus 𝒜 I) fun t =>
       (vanishingIdeal t).toIdeal :=
   fun I t => subset_zero_locus_iff_le_vanishing_ideal t I
 
 /-- `zero_locus` and `vanishing_ideal` form a galois connection. -/
 theorem gc_set :
-    @GaloisConnection (Set A) (OrderDual (Set (ProjectiveSpectrum 𝒜))) _ _ (fun s => ZeroLocus 𝒜 s) fun t =>
-      vanishingIdeal t :=
+    @GaloisConnection (Set A) (Set (ProjectiveSpectrum 𝒜))ᵒᵈ _ _ (fun s => ZeroLocus 𝒜 s) fun t => vanishingIdeal t :=
   by
   have ideal_gc : GaloisConnection Ideal.span coe := (Submodule.gi A _).gc
   simpa [zero_locus_span, Function.comp] using GaloisConnection.compose ideal_gc (gc_ideal 𝒜)
 
 theorem gc_homogeneous_ideal :
-    @GaloisConnection (HomogeneousIdeal 𝒜) (OrderDual (Set (ProjectiveSpectrum 𝒜))) _ _ (fun I => ZeroLocus 𝒜 I)
-      fun t => vanishingIdeal t :=
+    @GaloisConnection (HomogeneousIdeal 𝒜) (Set (ProjectiveSpectrum 𝒜))ᵒᵈ _ _ (fun I => ZeroLocus 𝒜 I) fun t =>
+      vanishingIdeal t :=
   fun I t => by
   simpa [show I.to_ideal ≤ (vanishing_ideal t).toIdeal ↔ I ≤ vanishing_ideal t from Iff.rfl] using
     subset_zero_locus_iff_le_vanishing_ideal t I.to_ideal

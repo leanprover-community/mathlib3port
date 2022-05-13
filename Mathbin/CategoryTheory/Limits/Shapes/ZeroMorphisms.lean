@@ -152,6 +152,79 @@ theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
 
 end
 
+namespace IsZero
+
+variable [HasZeroMorphisms C]
+
+theorem eq_zero_of_src {X Y : C} (o : IsZero X) (f : X ⟶ Y) : f = 0 :=
+  o.eq_of_src _ _
+
+theorem eq_zero_of_tgt {X Y : C} (o : IsZero Y) (f : X ⟶ Y) : f = 0 :=
+  o.eq_of_tgt _ _
+
+theorem iff_id_eq_zero (X : C) : IsZero X ↔ 𝟙 X = 0 :=
+  ⟨fun h => h.eq_of_src _ _, fun h =>
+    ⟨fun Y =>
+      ⟨⟨⟨0⟩, fun f => by
+          rw [← id_comp f, ← id_comp default, h, zero_comp, zero_comp]⟩⟩,
+      fun Y =>
+      ⟨⟨⟨0⟩, fun f => by
+          rw [← comp_id f, ← comp_id default, h, comp_zero, comp_zero]⟩⟩⟩⟩
+
+theorem of_mono_zero (X Y : C) [Mono (0 : X ⟶ Y)] : IsZero X :=
+  (iff_id_eq_zero X).mpr
+    ((cancel_mono (0 : X ⟶ Y)).1
+      (by
+        simp ))
+
+theorem of_epi_zero (X Y : C) [Epi (0 : X ⟶ Y)] : IsZero Y :=
+  (iff_id_eq_zero Y).mpr
+    ((cancel_epi (0 : X ⟶ Y)).1
+      (by
+        simp ))
+
+theorem of_mono_eq_zero {X Y : C} (f : X ⟶ Y) [Mono f] (h : f = 0) : IsZero X := by
+  subst h
+  apply of_mono_zero X Y
+
+theorem of_epi_eq_zero {X Y : C} (f : X ⟶ Y) [Epi f] (h : f = 0) : IsZero Y := by
+  subst h
+  apply of_epi_zero X Y
+
+theorem iff_split_mono_eq_zero {X Y : C} (f : X ⟶ Y) [SplitMono f] : IsZero X ↔ f = 0 := by
+  rw [iff_id_eq_zero]
+  constructor
+  · intro h
+    rw [← category.id_comp f, h, zero_comp]
+    
+  · intro h
+    rw [← split_mono.id f]
+    simp [h]
+    
+
+theorem iff_split_epi_eq_zero {X Y : C} (f : X ⟶ Y) [SplitEpi f] : IsZero Y ↔ f = 0 := by
+  rw [iff_id_eq_zero]
+  constructor
+  · intro h
+    rw [← category.comp_id f, h, comp_zero]
+    
+  · intro h
+    rw [← split_epi.id f]
+    simp [h]
+    
+
+theorem of_mono {X Y : C} (f : X ⟶ Y) [Mono f] (i : IsZero Y) : IsZero X := by
+  have hf := i.eq_zero_of_tgt f
+  subst hf
+  exact is_zero.of_mono_zero X Y
+
+theorem of_epi {X Y : C} (f : X ⟶ Y) [Epi f] (i : IsZero X) : IsZero Y := by
+  have hf := i.eq_zero_of_src f
+  subst hf
+  exact is_zero.of_epi_zero X Y
+
+end IsZero
+
 /-- A category with a zero object has zero morphisms.
 
     It is rarely a good idea to use this. Many categories that have a zero object have zero
@@ -341,6 +414,16 @@ def isoZeroOfEpiZero {X Y : C} (h : Epi (0 : X ⟶ Y)) : Y ≅ 0 where
     (cancel_epi (0 : X ⟶ Y)).mp
       (by
         simp )
+
+/-- If a monomorphism out of `X` is zero, then `X ≅ 0`. -/
+def isoZeroOfMonoEqZero {X Y : C} {f : X ⟶ Y} [Mono f] (h : f = 0) : X ≅ 0 := by
+  subst h
+  apply iso_zero_of_mono_zero ‹_›
+
+/-- If an epimorphism in to `Y` is zero, then `Y ≅ 0`. -/
+def isoZeroOfEpiEqZero {X Y : C} {f : X ⟶ Y} [Epi f] (h : f = 0) : Y ≅ 0 := by
+  subst h
+  apply iso_zero_of_epi_zero ‹_›
 
 /-- If an object `X` is isomorphic to 0, there's no need to use choice to construct
 an explicit isomorphism: the zero morphism suffices. -/

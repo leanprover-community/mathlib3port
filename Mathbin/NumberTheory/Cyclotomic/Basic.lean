@@ -104,6 +104,11 @@ theorem iff_singleton :
 theorem empty [h : IsCyclotomicExtension ∅ A B] : (⊥ : Subalgebra A B) = ⊤ := by
   simpa [Algebra.eq_top_iff, is_cyclotomic_extension_iff] using h
 
+/-- If `is_cyclotomic_extension {1} A B`, then `A = B`. -/
+theorem singleton_one [h : IsCyclotomicExtension {1} A B] : (⊥ : Subalgebra A B) = ⊤ :=
+  Algebra.eq_top_iff.2 fun x => by
+    simpa [adjoin_singleton_one] using ((is_cyclotomic_extension_iff _ _ _).1 h).2 x
+
 /-- Transitivity of cyclotomic extensions. -/
 theorem trans (C : Type w) [CommRingₓ C] [Algebra A C] [Algebra B C] [IsScalarTower A B C]
     [hS : IsCyclotomicExtension S A B] [hT : IsCyclotomicExtension T B C] : IsCyclotomicExtension (S ∪ T) A C := by

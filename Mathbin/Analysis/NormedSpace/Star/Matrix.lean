@@ -19,25 +19,6 @@ open BigOperators Matrix
 
 variable {𝕜 m n E : Type _}
 
-namespace Matrix
-
-variable [Fintype m] [Fintype n] [SemiNormedGroup E] [StarAddMonoid E] [NormedStarGroup E]
-
-attribute [local instance] Matrix.semiNormedGroup
-
-@[simp]
-theorem norm_conj_transpose (M : Matrix m n E) : ∥Mᴴ∥ = ∥M∥ :=
-  (norm_map_eq _ _ norm_star).trans M.norm_transpose
-
-@[simp]
-theorem nnnorm_conj_transpose (M : Matrix m n E) : ∥Mᴴ∥₊ = ∥M∥₊ :=
-  Subtype.ext M.norm_conj_transpose
-
-instance : NormedStarGroup (Matrix n n E) :=
-  ⟨Matrix.norm_conj_transpose⟩
-
-end Matrix
-
 section EntrywiseSupNorm
 
 variable [IsROrC 𝕜] [Fintype n] [DecidableEq n]

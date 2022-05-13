@@ -328,6 +328,13 @@ theorem bot_factors_iff_zero {A B : C} (f : A ⟶ B) : (⊥ : Subobject B).Facto
       ⟨0, by
         simp ⟩⟩
 
+theorem mk_eq_bot_iff_zero {f : X ⟶ Y} [Mono f] : Subobject.mk f = ⊥ ↔ f = 0 :=
+  ⟨fun h => by
+    simpa [h, bot_factors_iff_zero] using mk_factors_self f, fun h =>
+    mk_eq_mk_of_comm _ _ ((isoZeroOfMonoEqZero h).trans HasZeroObject.zeroIsoInitial)
+      (by
+        simp [h])⟩
+
 end ZeroOrderBot
 
 section Functor
@@ -687,6 +694,54 @@ instance {B : C} : CompleteLattice (Subobject B) :=
     Subobject.completeSemilatticeSup with }
 
 end CompleteLattice
+
+section ZeroObject
+
+variable [HasZeroMorphisms C] [HasZeroObject C]
+
+open ZeroObject
+
+/-- A nonzero object has nontrivial subobject lattice. -/
+theorem nontrivial_of_not_is_zero {X : C} (h : ¬IsZero X) : Nontrivial (Subobject X) :=
+  ⟨⟨mk (0 : 0 ⟶ X), mk (𝟙 X), fun w => h (IsZero.of_iso (is_zero_zero C) (isoOfMkEqMk _ _ w).symm)⟩⟩
+
+end ZeroObject
+
+section SubobjectSubobject
+
+/-- The subobject lattice of a subobject `Y` is order isomorphic to the interval `set.Iic Y`. -/
+def subobjectOrderIso {X : C} (Y : Subobject X) : Subobject (Y : C) ≃o Set.Iic Y where
+  toFun := fun Z =>
+    ⟨Subobject.mk (Z.arrow ≫ Y.arrow),
+      Set.mem_Iic.mpr
+        (le_of_comm ((underlyingIso _).Hom ≫ Z.arrow)
+          (by
+            simp ))⟩
+  invFun := fun Z => Subobject.mk (ofLe _ _ Z.2)
+  left_inv := fun Z =>
+    mk_eq_of_comm _ (underlyingIso _)
+      (by
+        ext
+        simp )
+  right_inv := fun Z =>
+    Subtype.ext
+      (mk_eq_of_comm _ (underlyingIso _)
+        (by
+          dsimp'
+          simp [← iso.eq_inv_comp]))
+  map_rel_iff' := fun W Z =>
+    ⟨fun h =>
+      le_of_comm ((underlyingIso _).inv ≫ ofLe _ _ (Subtype.mk_le_mk.mp h) ≫ (underlyingIso _).Hom)
+        (by
+          ext
+          simp ),
+      fun h =>
+      Subtype.mk_le_mk.mpr
+        (le_of_comm ((underlyingIso _).Hom ≫ ofLe _ _ h ≫ (underlyingIso _).inv)
+          (by
+            simp ))⟩
+
+end SubobjectSubobject
 
 end Subobject
 

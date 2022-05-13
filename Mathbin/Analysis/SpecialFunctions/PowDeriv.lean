@@ -7,7 +7,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
 import Mathbin.Analysis.SpecialFunctions.Pow
 import Mathbin.Analysis.SpecialFunctions.Complex.LogDeriv
 import Mathbin.Analysis.Calculus.ExtendDeriv
-import Mathbin.Analysis.SpecialFunctions.LogDeriv
+import Mathbin.Analysis.SpecialFunctions.Log.Deriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 
 /-!
@@ -35,7 +35,7 @@ theorem has_strict_fderiv_at_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im �
     simpa [h, lt_irreflₓ] using hp
   have : (fun x : ℂ × ℂ => x.1 ^ x.2) =ᶠ[𝓝 p] fun x => exp (log x.1 * x.2) :=
     ((is_open_ne.preimage continuous_fst).eventually_mem A).mono fun p hp => cpow_def_of_ne_zero hp _
-  rw [cpow_sub _ _ A, cpow_one, mul_div_comm, mul_smul, mul_smul, ← smul_add]
+  rw [cpow_sub _ _ A, cpow_one, mul_div_left_comm, mul_smul, mul_smul, ← smul_add]
   refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm
   simpa only [cpow_def_of_ne_zero A, div_eq_mul_inv, mul_smul, add_commₓ] using
     ((has_strict_fderiv_at_fst.clog hp).mul has_strict_fderiv_at_snd).cexp
@@ -188,7 +188,7 @@ theorem has_strict_fderiv_at_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.1) :
     (continuous_at_fst.eventually (lt_mem_nhds hp)).mono fun p hp => rpow_def_of_pos hp _
   refine' HasStrictFderivAt.congr_of_eventually_eq _ this.symm
   convert ((has_strict_fderiv_at_fst.log hp.ne').mul has_strict_fderiv_at_snd).exp
-  rw [rpow_sub_one hp.ne', ← rpow_def_of_pos hp, smul_add, smul_smul, mul_div_comm, div_eq_mul_inv, smul_smul,
+  rw [rpow_sub_one hp.ne', ← rpow_def_of_pos hp, smul_add, smul_smul, mul_div_left_comm, div_eq_mul_inv, smul_smul,
     smul_smul, mul_assoc, add_commₓ]
 
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `p.fst < 0`. -/

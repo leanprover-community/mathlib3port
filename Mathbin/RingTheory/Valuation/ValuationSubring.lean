@@ -373,7 +373,7 @@ def primeSpectrumEquiv : PrimeSpectrum A ≃ { S | A ≤ S } where
 
 /-- An ordered variant of `prime_spectrum_equiv`. -/
 @[simps]
-def primeSpectrumOrderEquiv : OrderDual (PrimeSpectrum A) ≃o { S | A ≤ S } :=
+def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o { S | A ≤ S } :=
   { primeSpectrumEquiv A with
     map_rel_iff' := fun P Q =>
       ⟨fun h => by
@@ -392,6 +392,71 @@ instance linearOrderOverring : LinearOrderₓ { S | A ≤ S } :=
     decidableLe := inferInstance }
 
 end Order
+
+end ValuationSubring
+
+namespace Valuation
+
+variable {K} {Γ Γ₁ Γ₂ : Type _} [LinearOrderedCommGroupWithZero Γ] [LinearOrderedCommGroupWithZero Γ₁]
+  [LinearOrderedCommGroupWithZero Γ₂] (v : Valuation K Γ) (v₁ : Valuation K Γ₁) (v₂ : Valuation K Γ₂)
+
+/-- The valuation subring associated to a valuation. -/
+def valuationSubring : ValuationSubring K :=
+  { v.integer with
+    mem_or_inv_mem' := by
+      intro x
+      cases le_or_ltₓ (v x) 1
+      · left
+        exact h
+        
+      · right
+        change v x⁻¹ ≤ 1
+        rw [v.map_inv, ← inv_one, inv_le_inv₀]
+        · exact le_of_ltₓ h
+          
+        · intro c
+          simpa [c] using h
+          
+        · exact one_ne_zero
+          
+         }
+
+@[simp]
+theorem mem_valuation_subring_iff (x : K) : x ∈ v.ValuationSubring ↔ v x ≤ 1 :=
+  Iff.refl _
+
+theorem is_equiv_iff_valuation_subring : v₁.IsEquiv v₂ ↔ v₁.ValuationSubring = v₂.ValuationSubring := by
+  constructor
+  · intro h
+    ext x
+    specialize h x 1
+    simpa using h
+    
+  · intro h
+    apply is_equiv_of_val_le_one
+    intro x
+    have : x ∈ v₁.valuation_subring ↔ x ∈ v₂.valuation_subring := by
+      rw [h]
+    simpa using this
+    
+
+theorem is_equiv_valuation_valuation_subring : v.IsEquiv v.ValuationSubring.Valuation := by
+  rw [is_equiv_iff_val_le_one]
+  intro x
+  rw [ValuationSubring.valuation_le_one_iff]
+  rfl
+
+end Valuation
+
+namespace ValuationSubring
+
+variable {K} (A : ValuationSubring K)
+
+@[simp]
+theorem valuation_subring_valuation : A.Valuation.ValuationSubring = A := by
+  ext
+  rw [← A.valuation_le_one_iff]
+  rfl
 
 end ValuationSubring
 

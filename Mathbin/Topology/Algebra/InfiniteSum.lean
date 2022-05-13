@@ -129,6 +129,9 @@ theorem has_sum_subtype_iff_of_support_subset {s : Set β} (hf : Support f ⊆ s
 theorem has_sum_subtype_iff_indicator {s : Set β} : HasSum (f ∘ coe : s → α) a ↔ HasSum (s.indicator f) a := by
   rw [← Set.indicator_range_comp, Subtype.range_coe, has_sum_subtype_iff_of_support_subset Set.support_indicator_subset]
 
+theorem summable_subtype_iff_indicator {s : Set β} : Summable (f ∘ coe : s → α) ↔ Summable (s.indicator f) :=
+  exists_congr fun _ => has_sum_subtype_iff_indicator
+
 @[simp]
 theorem has_sum_subtype_support : HasSum (f ∘ coe : Support f → α) a ↔ HasSum f a :=
   has_sum_subtype_iff_of_support_subset <| Set.Subset.refl _
@@ -239,6 +242,63 @@ theorem Function.Surjective.summable_iff_of_has_sum_iff {α' : Type _} [AddCommM
     {e : α' → α} (hes : Function.Surjective e) {f : β → α} {g : γ → α'} (he : ∀ {a}, HasSum f (e a) ↔ HasSum g a) :
     Summable f ↔ Summable g :=
   hes.exists.trans <| exists_congr <| @he
+
+section MulOpposite
+
+open MulOpposite
+
+theorem HasSum.op (hf : HasSum f a) : HasSum (fun a => op (f a)) (op a) :=
+  (hf.map (@opAddEquiv α _) continuous_op : _)
+
+theorem Summable.op (hf : Summable f) : Summable (op ∘ f) :=
+  hf.HasSum.op.Summable
+
+theorem HasSum.unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} (hf : HasSum f a) : HasSum (fun a => unop (f a)) (unop a) :=
+  (hf.map (@opAddEquiv α _).symm continuous_unop : _)
+
+theorem Summable.unop {f : β → αᵐᵒᵖ} (hf : Summable f) : Summable (unop ∘ f) :=
+  hf.HasSum.unop.Summable
+
+@[simp]
+theorem has_sum_op : HasSum (fun a => op (f a)) (op a) ↔ HasSum f a :=
+  ⟨HasSum.unop, HasSum.op⟩
+
+@[simp]
+theorem has_sum_unop {f : β → αᵐᵒᵖ} {a : αᵐᵒᵖ} : HasSum (fun a => unop (f a)) (unop a) ↔ HasSum f a :=
+  ⟨HasSum.op, HasSum.unop⟩
+
+@[simp]
+theorem summable_op : (Summable fun a => op (f a)) ↔ Summable f :=
+  ⟨Summable.unop, Summable.op⟩
+
+@[simp]
+theorem summable_unop {f : β → αᵐᵒᵖ} : (Summable fun a => unop (f a)) ↔ Summable f :=
+  ⟨Summable.op, Summable.unop⟩
+
+end MulOpposite
+
+section HasContinuousStar
+
+variable [StarAddMonoid α] [HasContinuousStar α]
+
+theorem HasSum.star (h : HasSum f a) : HasSum (fun b => star (f b)) (star a) := by
+  simpa only using h.map (starAddEquiv : α ≃+ α) continuous_star
+
+theorem Summable.star (hf : Summable f) : Summable fun b => star (f b) :=
+  hf.HasSum.star.Summable
+
+theorem Summable.of_star (hf : Summable fun b => star (f b)) : Summable f := by
+  simpa only [star_star] using hf.star
+
+@[simp]
+theorem summable_star_iff : (Summable fun b => star (f b)) ↔ Summable f :=
+  ⟨Summable.of_star, Summable.star⟩
+
+@[simp]
+theorem summable_star_iff' : Summable (star f) ↔ Summable f :=
+  summable_star_iff
+
+end HasContinuousStar
 
 variable [HasContinuousAdd α]
 
@@ -417,6 +477,17 @@ theorem tsum_eq_tsum_of_ne_zero_bij {g : γ → α} (i : Support g → β) (hi :
 theorem tsum_subtype (s : Set β) (f : β → α) : (∑' x : s, f x) = ∑' x, s.indicator f x :=
   tsum_eq_tsum_of_has_sum_iff_has_sum fun _ => has_sum_subtype_iff_indicator
 
+theorem tsum_op : (∑' x, MulOpposite.op (f x)) = MulOpposite.op (∑' x, f x) := by
+  by_cases' h : Summable f
+  · exact h.has_sum.op.tsum_eq
+    
+  · have ho := summable_op.not.mpr h
+    rw [tsum_eq_zero_of_not_summable h, tsum_eq_zero_of_not_summable ho, MulOpposite.op_zero]
+    
+
+theorem tsum_unop {f : β → αᵐᵒᵖ} : (∑' x, MulOpposite.unop (f x)) = MulOpposite.unop (∑' x, f x) :=
+  MulOpposite.op_injective tsum_op.symm
+
 section HasContinuousAdd
 
 variable [HasContinuousAdd α]
@@ -447,6 +518,19 @@ theorem tsum_comm' [RegularSpace α] {f : β → γ → α} (h : Summable (Funct
   assumption
 
 end HasContinuousAdd
+
+section HasContinuousStar
+
+variable [StarAddMonoid α] [HasContinuousStar α]
+
+theorem tsum_star : star (∑' b, f b) = ∑' b, star (f b) := by
+  by_cases' hf : Summable f
+  · exact hf.has_sum.star.tsum_eq.symm
+    
+  · rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable (mt Summable.of_star hf), star_zero]
+    
+
+end HasContinuousStar
 
 section Encodable
 
@@ -665,8 +749,12 @@ section tsum
 
 variable [T2Space α]
 
-theorem tsum_neg (hf : Summable f) : (∑' b, -f b) = -∑' b, f b :=
-  hf.HasSum.neg.tsum_eq
+theorem tsum_neg : (∑' b, -f b) = -∑' b, f b := by
+  by_cases' hf : Summable f
+  · exact hf.has_sum.neg.tsum_eq
+    
+  · simp [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable (mt Summable.of_neg hf)]
+    
 
 theorem tsum_sub (hf : Summable f) (hg : Summable g) : (∑' b, f b - g b) = (∑' b, f b) - ∑' b, g b :=
   (hf.HasSum.sub hg.HasSum).tsum_eq

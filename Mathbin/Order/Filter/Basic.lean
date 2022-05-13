@@ -321,38 +321,20 @@ theorem sets_iff_generate {s : Set (Set α)} {f : Filter α} : f ≤ Filter.gene
 theorem mem_generate_iff {s : Set <| Set α} {U : Set α} : U ∈ generate s ↔ ∃ (t : _)(_ : t ⊆ s), Finite t ∧ ⋂₀ t ⊆ U :=
   by
   constructor <;> intro h
-  · induction' h with V V_in V W V_in hVW hV V W V_in W_in hV hW
-    · use {V}
-      simp [V_in]
-      
-    · use ∅
-      simp [subset.refl, univ]
-      
-    · rcases hV with ⟨t, hts, htfin, hinter⟩
-      exact ⟨t, hts, htfin, hinter.trans hVW⟩
-      
-    · rcases hV with ⟨t, hts, htfin, htinter⟩
-      rcases hW with ⟨z, hzs, hzfin, hzinter⟩
-      refine' ⟨t ∪ z, union_subset hts hzs, htfin.union hzfin, _⟩
-      rw [sInter_union]
-      exact inter_subset_inter htinter hzinter
-      
+  · induction h
+    case basic V V_in =>
+      exact ⟨{V}, singleton_subset_iff.2 V_in, finite_singleton _, (sInter_singleton _).Subset⟩
+    case univ =>
+      exact ⟨∅, empty_subset _, finite_empty, subset_univ _⟩
+    case superset V W hV' hVW hV =>
+      rcases hV with ⟨t, hts, ht, htV⟩
+      exact ⟨t, hts, ht, htV.trans hVW⟩
+    case inter V W hV' hW' hV hW =>
+      rcases hV, hW with ⟨⟨t, hts, ht, htV⟩, u, hus, hu, huW⟩
+      exact ⟨t ∪ u, union_subset hts hus, ht.union hu, (sInter_union _ _).Subset.trans <| inter_subset_inter htV huW⟩
     
-  · rcases h with ⟨t, ts, tfin, h⟩
-    apply generate_sets.superset _ h
-    revert ts
-    apply finite.induction_on tfin
-    · intro h
-      rw [sInter_empty]
-      exact generate_sets.univ
-      
-    · intro V r hV rfin hinter h
-      cases' insert_subset.mp h with V_in r_sub
-      rw [insert_eq V r, sInter_union]
-      apply generate_sets.inter _ (hinter r_sub)
-      rw [sInter_singleton]
-      exact generate_sets.basic V_in
-      
+  · rcases h with ⟨t, hts, tfin, h⟩
+    exact mem_of_superset ((sInter_mem tfin).2 fun V hV => generate_sets.basic <| hts hV) h
     
 
 /-- `mk_of_closure s hs` constructs a filter on `α` whose elements set is exactly
@@ -367,8 +349,7 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : (generate s).Sets = s} : Fil
   Filter.ext fun u => show u ∈ (Filter.mkOfClosure s hs).Sets ↔ u ∈ (generate s).Sets from hs.symm ▸ Iff.rfl
 
 /-- Galois insertion from sets of sets into filters. -/
-def giGenerate (α : Type _) :
-    @GaloisInsertion (Set (Set α)) (OrderDual (Filter α)) _ _ Filter.generate Filter.Sets where
+def giGenerate (α : Type _) : @GaloisInsertion (Set (Set α)) (Filter α)ᵒᵈ _ _ Filter.generate Filter.Sets where
   gc := fun s f => sets_iff_generate
   le_l_u := fun f u h => GenerateSets.basic h
   choice := fun s hs => Filter.mkOfClosure s (le_antisymmₓ hs <| sets_iff_generate.1 <| le_rfl)
@@ -1906,21 +1887,16 @@ theorem le_of_map_le_map_inj_iff {f g : Filter α} {m : α → β} {s : Set α} 
     (hm : ∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, m x = m y → x = y) : map m f ≤ map m g ↔ f ≤ g :=
   Iff.intro (le_of_map_le_map_inj' hsf hsg hm) fun h => map_mono h
 
-theorem eq_of_map_eq_map_inj' {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g)
-    (hm : ∀, ∀ x ∈ s, ∀, ∀, ∀ y ∈ s, ∀, m x = m y → x = y) (h : map m f = map m g) : f = g :=
+theorem eq_of_map_eq_map_inj' {f g : Filter α} {m : α → β} {s : Set α} (hsf : s ∈ f) (hsg : s ∈ g) (hm : InjOn m s)
+    (h : map m f = map m g) : f = g :=
   le_antisymmₓ (le_of_map_le_map_inj' hsf hsg hm <| le_of_eqₓ h) (le_of_map_le_map_inj' hsg hsf hm <| le_of_eqₓ h.symm)
 
-theorem map_inj {f g : Filter α} {m : α → β} (hm : Injective m) (h : map m f = map m g) : f = g := by
-  have : comap m (map m f) = comap m (map m g) := by
-    rw [h]
-  rwa [comap_map hm, comap_map hm] at this
+theorem map_inj {f g : Filter α} {m : α → β} (hm : Injective m) (h : map m f = map m g) : f = g :=
+  eq_of_map_eq_map_inj' univ_mem univ_mem (hm.InjOn _) h
 
 theorem comap_ne_bot_iff {f : Filter β} {m : α → β} : NeBot (comap m f) ↔ ∀, ∀ t ∈ f, ∀, ∃ a, m a ∈ t := by
-  rw [← forall_mem_nonempty_iff_ne_bot]
-  exact
-    ⟨fun h t t_in => h (m ⁻¹' t) ⟨t, t_in, subset.rfl⟩, fun h s ⟨u, u_in, hu⟩ =>
-      let ⟨x, hx⟩ := h u u_in
-      ⟨x, hu hx⟩⟩
+  simp only [← forall_mem_nonempty_iff_ne_bot, mem_comap, forall_exists_index]
+  exact ⟨fun h t t_in => h (m ⁻¹' t) t t_in subset.rfl, fun h s t ht hst => (h t ht).imp hst⟩
 
 theorem comap_ne_bot {f : Filter β} {m : α → β} (hm : ∀, ∀ t ∈ f, ∀, ∃ a, m a ∈ t) : NeBot (comap m f) :=
   comap_ne_bot_iff.mpr hm
@@ -2090,7 +2066,7 @@ theorem comap_equiv_symm (e : α ≃ β) (f : Filter α) : comap e.symm f = map 
   (map_eq_comap_of_inverse e.self_comp_symm e.symm_comp_self).symm
 
 theorem map_swap_eq_comap_swap {f : Filter (α × β)} : Prod.swap <$> f = comap Prod.swap f :=
-  map_eq_comap_of_inverse Prod.swap_swap_eqₓ Prod.swap_swap_eqₓ
+  map_eq_comap_of_inverse Prod.swap_swap_eq Prod.swap_swap_eq
 
 theorem le_map {f : Filter α} {m : α → β} {g : Filter β} (h : ∀, ∀ s ∈ f, ∀, m '' s ∈ g) : g ≤ f.map m := fun s hs =>
   mem_of_superset (h _ hs) <| image_preimage_subset _ _

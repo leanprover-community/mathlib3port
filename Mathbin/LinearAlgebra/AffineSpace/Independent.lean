@@ -448,6 +448,14 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h 
   all_goals
     simp only [Finset.sum_dite_of_true fun x h => h, Subtype.val_eq_coe, Finset.mk_coe, f, hwt, hw]
 
+/-- Viewing a module as an affine space modelled on itself, we can characterise affine independence
+in terms of linear combinations. -/
+theorem affine_independent_iff {ι} {p : ι → V} :
+    AffineIndependent k p ↔
+      ∀ s : Finset ι w : ι → k, s.Sum w = 0 → (∑ e in s, w e • p e) = 0 → ∀, ∀ e ∈ s, ∀, w e = 0 :=
+  forall₃_congrₓ fun s w hw => by
+    simp [s.weighted_vsub_eq_linear_combination hw]
+
 end AffineIndependent
 
 section DivisionRing

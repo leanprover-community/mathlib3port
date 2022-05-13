@@ -126,8 +126,7 @@ theorem revzip_powerset_aux' {l : List α} ⦃x⦄ (h : x ∈ revzipₓ (powerse
 theorem revzip_powerset_aux_lemma [DecidableEq α] (l : List α) {l' : List (Multiset α)}
     (H : ∀ ⦃x : _ × _⦄, x ∈ revzipₓ l' → x.1 + x.2 = ↑l) : revzipₓ l' = l'.map fun x => (x, ↑l - x) := by
   have : forall₂ (fun s : Multiset α => p = (s, ↑l - s)) (revzip l') ((revzip l').map Prod.fst) := by
-    rw [forall₂_map_right_iff]
-    apply forall₂_same
+    rw [forall₂_map_right_iff, forall₂_same]
     rintro ⟨s, t⟩ h
     dsimp'
     rw [← H h, add_tsub_cancel_left]

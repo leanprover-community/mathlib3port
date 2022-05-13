@@ -98,13 +98,18 @@ theorem domain_mk_span_singleton (x : E) (y : F) (H : ∀ c : R, c • x = 0 →
   rfl
 
 @[simp]
-theorem mk_span_singleton_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (c : R) h :
+theorem mk_span_singleton'_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (c : R) h :
     mkSpanSingleton' x y H ⟨c • x, h⟩ = c • y := by
   dsimp' [mk_span_singleton']
   rw [← sub_eq_zero, ← sub_smul]
   apply H
   simp only [sub_smul, one_smul, sub_eq_zero]
   apply Classical.some_spec (mem_span_singleton.1 h)
+
+@[simp]
+theorem mk_span_singleton'_apply_self (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) h :
+    mkSpanSingleton' x y H ⟨x, h⟩ = y := by
+  convert mk_span_singleton'_apply x y H 1 _ <;> rwa [one_smul]
 
 /-- The unique `linear_pmap` on `span R {x}` that sends a non-zero vector `x` to `y`.
 This version works for modules over division rings. -/
@@ -117,10 +122,10 @@ noncomputable def mkSpanSingleton {K E F : Type _} [DivisionRing K] [AddCommGrou
         rw [hc, zero_smul])
       fun hx' => absurd hx' hx
 
-theorem mk_span_singleton_apply' (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E]
+theorem mk_span_singleton_apply (K : Type _) {E F : Type _} [DivisionRing K] [AddCommGroupₓ E] [Module K E]
     [AddCommGroupₓ F] [Module K F] {x : E} (hx : x ≠ 0) (y : F) :
-    (mkSpanSingleton x y hx).toFun ⟨x, (Submodule.mem_span_singleton_self x : x ∈ Submodule.span K {x})⟩ = y := by
-  convert LinearPmap.mk_span_singleton_apply x y _ (1 : K) _ <;> simp [Submodule.mem_span_singleton_self]
+    mkSpanSingleton x y hx ⟨x, (Submodule.mem_span_singleton_self x : x ∈ Submodule.span K {x})⟩ = y :=
+  LinearPmap.mk_span_singleton'_apply_self _ _ _ _
 
 /-- Projection to the first coordinate as a `linear_pmap` -/
 protected def fst (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × F) E where
@@ -303,7 +308,7 @@ theorem sup_span_singleton_apply_mk (f : LinearPmap K E F) (x : E) (y : F) (hx :
     f.supSpanSingleton x y hx ⟨x' + c • x, mem_sup.2 ⟨x', hx', _, mem_span_singleton.2 ⟨c, rfl⟩, rfl⟩⟩ =
       f ⟨x', hx'⟩ + c • y :=
   by
-  erw [sup_apply _ ⟨x', hx'⟩ ⟨c • x, _⟩, mk_span_singleton_apply]
+  erw [sup_apply _ ⟨x', hx'⟩ ⟨c • x, _⟩, mk_span_singleton'_apply]
   rfl
   exact mem_span_singleton.2 ⟨c, rfl⟩
 

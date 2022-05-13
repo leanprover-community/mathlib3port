@@ -44,13 +44,13 @@ section
 -- passing around `F` all the time.
 parameter {R : Type u}[Ringₓ R]{J : Type v}[SmallCategory J][IsFiltered J]
 
-parameter (F : J ⥤ ModuleCat.{v} R)
+parameter (F : J ⥤ ModuleCat.{max v u} R)
 
 /-- The colimit of `F ⋙ forget₂ (Module R) AddCommGroup` in the category `AddCommGroup`.
 In the following, we will show that this has the structure of an `R`-module.
 -/
 abbrev m : AddCommGroupₓₓ :=
-  AddCommGroupₓₓ.FilteredColimits.colimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ)
+  AddCommGroupₓₓ.FilteredColimits.colimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v u})
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 abbrev m.mk : (Σj, F.obj j) → M :=
@@ -135,7 +135,7 @@ def colimit : ModuleCat R :=
 
 /-- The linear map from a given `R`-module in the diagram to the colimit module. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit :=
-  { (AddCommGroupₓₓ.FilteredColimits.colimitCocone (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ)).ι.app j with
+  { (AddCommGroupₓₓ.FilteredColimits.colimitCocone (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v u})).ι.app j with
     map_smul' := fun r x => by
       erw [colimit_smul_mk_eq F r ⟨j, x⟩]
       rfl }
@@ -153,8 +153,8 @@ We already know that this is a morphism between additive groups. The only thing 
 it is a linear map, i.e. preserves scalar multiplication.
 -/
 def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
-  { (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ)).desc
-      ((forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}).mapCocone t) with
+  { (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v u})).desc
+      ((forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v u}).mapCocone t) with
     map_smul' := fun r x => by
       apply Quot.induction_on x
       clear x
@@ -175,13 +175,13 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => LinearMap.congr_fun (h j) x
 
 instance forget₂AddCommGroupPreservesFilteredColimits :
-    PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}) where
+    PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{u}) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{v})) }
+          (AddCommGroupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupₓₓ.{u})) }
 
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget (ModuleCat R)) :=
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget (ModuleCat.{u} R)) :=
   Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupₓₓ) (forget AddCommGroupₓₓ)
 
 end

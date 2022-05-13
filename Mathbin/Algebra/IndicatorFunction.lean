@@ -559,7 +559,7 @@ theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a
 
 @[to_additive]
 theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) : y ≤ mulIndicator s g a :=
-  @mul_indicator_apply_le' α (OrderDual M) ‹_› _ _ _ _ _ hfg hf
+  @mul_indicator_apply_le' α Mᵒᵈ ‹_› _ _ _ _ _ hfg hf
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
 @[to_additive]
@@ -655,7 +655,7 @@ theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [Zero β] (s : Se
 
 theorem indicator_nonpos_le_indicator {β} [LinearOrderₓ β] [Zero β] (s : Set α) (f : α → β) :
     { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
-  @indicator_le_indicator_nonneg α (OrderDual β) _ _ s f
+  @indicator_le_indicator_nonneg α βᵒᵈ _ _ s f
 
 end Set
 

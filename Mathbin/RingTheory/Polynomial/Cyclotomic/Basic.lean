@@ -897,6 +897,29 @@ theorem cyclotomic_expand_eq_cyclotomic {p n : ℕ} (hp : Nat.Prime p) (hdiv : p
       Nat.totient_mul_of_prime_of_dvd hp hdiv, mul_comm]
     
 
+/-- If the `p ^ n`th cyclotomic polynomial is irreducible, so is the `p ^ m`th, for `m ≤ n`. -/
+theorem cyclotomic_irreducible_pow_of_irreducible_pow {p : ℕ} (hp : Nat.Prime p) {R} [CommRingₓ R] [IsDomain R]
+    {n m : ℕ} (hmn : m ≤ n) (h : Irreducible (cyclotomic (p ^ n) R)) : Irreducible (cyclotomic (p ^ m) R) := by
+  rcases m.eq_zero_or_pos with (rfl | hm)
+  · simpa using irreducible_X_sub_C (1 : R)
+    
+  obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
+  induction' k with k hk
+  · simpa using h
+    
+  have : m + k ≠ 0 := (add_pos_of_pos_of_nonneg hm k.zero_le).ne'
+  rw [Nat.add_succ, pow_succ'ₓ, ← cyclotomic_expand_eq_cyclotomic hp <| dvd_pow_self p this] at h
+  exact
+    hk
+      (by
+        linarith)
+      (of_irreducible_expand hp.ne_zero h)
+
+/-- If `irreducible (cyclotomic (p ^ n) R)` then `irreducible (cyclotomic p R).` -/
+theorem cyclotomic_irreducible_of_irreducible_pow {p : ℕ} (hp : Nat.Prime p) {R} [CommRingₓ R] [IsDomain R] {n : ℕ}
+    (hn : n ≠ 0) (h : Irreducible (cyclotomic (p ^ n) R)) : Irreducible (cyclotomic p R) :=
+  pow_oneₓ p ▸ cyclotomic_irreducible_pow_of_irreducible_pow hp hn.bot_lt h
+
 end Expand
 
 section CharP

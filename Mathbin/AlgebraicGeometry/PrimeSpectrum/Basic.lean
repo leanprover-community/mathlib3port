@@ -172,15 +172,12 @@ variable (R)
 
 /-- `zero_locus` and `vanishing_ideal` form a galois connection. -/
 theorem gc :
-    @GaloisConnection (Ideal R) (OrderDual (Set (PrimeSpectrum R))) _ _ (fun I => ZeroLocus I) fun t =>
-      vanishingIdeal t :=
+    @GaloisConnection (Ideal R) (Set (PrimeSpectrum R))ᵒᵈ _ _ (fun I => ZeroLocus I) fun t => vanishingIdeal t :=
   fun I t => subset_zero_locus_iff_le_vanishing_ideal t I
 
 /-- `zero_locus` and `vanishing_ideal` form a galois connection. -/
 theorem gc_set :
-    @GaloisConnection (Set R) (OrderDual (Set (PrimeSpectrum R))) _ _ (fun s => ZeroLocus s) fun t =>
-      vanishingIdeal t :=
-  by
+    @GaloisConnection (Set R) (Set (PrimeSpectrum R))ᵒᵈ _ _ (fun s => ZeroLocus s) fun t => vanishingIdeal t := by
   have ideal_gc : GaloisConnection Ideal.span coe := (Submodule.gi R R).gc
   simpa [zero_locus_span, Function.comp] using ideal_gc.compose (gc R)
 

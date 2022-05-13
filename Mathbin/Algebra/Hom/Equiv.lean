@@ -726,7 +726,7 @@ def MulEquiv.inv (G : Type _) [CommGroupₓ G] : G ≃* G :=
 /-- When the group with zero is commutative, `equiv.inv₀` is a `mul_equiv`. -/
 @[simps apply]
 def MulEquiv.inv₀ (G : Type _) [CommGroupWithZero G] : G ≃* G :=
-  { Equivₓ.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := fun x y => mul_inv₀ }
+  { Equivₓ.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
 
 @[simp]
 theorem MulEquiv.inv₀_symm (G : Type _) [CommGroupWithZero G] : (MulEquiv.inv₀ G).symm = MulEquiv.inv₀ G :=
@@ -735,7 +735,8 @@ theorem MulEquiv.inv₀_symm (G : Type _) [CommGroupWithZero G] : (MulEquiv.inv�
 section TypeTags
 
 /-- Reinterpret `G ≃+ H` as `multiplicative G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative [AddZeroClass G] [AddZeroClass H] : G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
+def AddEquiv.toMultiplicative [AddZeroClassₓ G] [AddZeroClassₓ H] :
+    G ≃+ H ≃ (Multiplicative G ≃* Multiplicative H) where
   toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative, f.symm.toAddMonoidHom.toMultiplicative, f.3, f.4, f.5⟩
   invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv := fun x => by
@@ -757,7 +758,7 @@ def MulEquiv.toAdditive [MulOneClassₓ G] [MulOneClassₓ H] : G ≃* H ≃ (Ad
     rfl
 
 /-- Reinterpret `additive G ≃+ H` as `G ≃* multiplicative H`. -/
-def AddEquiv.toMultiplicative' [MulOneClassₓ G] [AddZeroClass H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
+def AddEquiv.toMultiplicative' [MulOneClassₓ G] [AddZeroClassₓ H] : Additive G ≃+ H ≃ (G ≃* Multiplicative H) where
   toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative', f.symm.toAddMonoidHom.toMultiplicative'', f.3, f.4, f.5⟩
   invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv := fun x => by
@@ -768,11 +769,11 @@ def AddEquiv.toMultiplicative' [MulOneClassₓ G] [AddZeroClass H] : Additive G 
     rfl
 
 /-- Reinterpret `G ≃* multiplicative H` as `additive G ≃+ H` as. -/
-def MulEquiv.toAdditive' [MulOneClassₓ G] [AddZeroClass H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
+def MulEquiv.toAdditive' [MulOneClassₓ G] [AddZeroClassₓ H] : G ≃* Multiplicative H ≃ (Additive G ≃+ H) :=
   AddEquiv.toMultiplicative'.symm
 
 /-- Reinterpret `G ≃+ additive H` as `multiplicative G ≃* H`. -/
-def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClassₓ H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
+def AddEquiv.toMultiplicative'' [AddZeroClassₓ G] [MulOneClassₓ H] : G ≃+ Additive H ≃ (Multiplicative G ≃* H) where
   toFun := fun f => ⟨f.toAddMonoidHom.toMultiplicative'', f.symm.toAddMonoidHom.toMultiplicative', f.3, f.4, f.5⟩
   invFun := fun f => ⟨f.toMonoidHom, f.symm.toMonoidHom, f.3, f.4, f.5⟩
   left_inv := fun x => by
@@ -783,7 +784,7 @@ def AddEquiv.toMultiplicative'' [AddZeroClass G] [MulOneClassₓ H] : G ≃+ Add
     rfl
 
 /-- Reinterpret `multiplicative G ≃* H` as `G ≃+ additive H` as. -/
-def MulEquiv.toAdditive'' [AddZeroClass G] [MulOneClassₓ H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
+def MulEquiv.toAdditive'' [AddZeroClassₓ G] [MulOneClassₓ H] : Multiplicative G ≃* H ≃ (G ≃+ Additive H) :=
   AddEquiv.toMultiplicative''.symm
 
 end TypeTags

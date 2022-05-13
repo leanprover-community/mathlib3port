@@ -75,6 +75,15 @@ theorem Rel.is_equivalence : Equivalenceₓ (Rel α) := by
 instance Rel.setoid (α : Type u) : Setoidₓ (α × α) :=
   ⟨Rel α, Rel.is_equivalence⟩
 
+@[simp]
+theorem rel_iff {x y z w : α} : (x, y) ≈ (z, w) ↔ x = z ∧ y = w ∨ x = w ∧ y = z := by
+  constructor <;> intro h
+  · cases h <;> simp
+    
+  · cases h <;> rw [h.1, h.2]
+    constructor
+    
+
 end Sym2
 
 /-- `sym2 α` is the symmetric square of `α`, which, in other words, is the
@@ -127,18 +136,12 @@ theorem congr_left {a b c : α} : ⟦(b, a)⟧ = ⟦(c, a)⟧ ↔ b = c := by
   rw [h]
 
 theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w ∨ x = w ∧ y = z := by
-  constructor <;> intro h
-  · rw [Quotientₓ.eq] at h
-    cases h <;> tidy
-    
-  · cases h <;> rw [h.1, h.2]
-    rw [eq_swap]
-    
+  simp
 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
   cases q
-  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mkₓ]
+  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mk]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use

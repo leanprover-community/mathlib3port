@@ -244,13 +244,23 @@ theorem trans {a b c : ℝ} (hab : IntervalIntegrable f μ a b) (hbc : IntervalI
     IntervalIntegrable f μ a c :=
   ⟨(hab.1.union hbc.1).mono_set Ioc_subset_Ioc_union_Ioc, (hbc.2.union hab.2).mono_set Ioc_subset_Ioc_union_Ioc⟩
 
-theorem trans_iterate {a : ℕ → ℝ} {n : ℕ} (hint : ∀, ∀ k < n, ∀, IntervalIntegrable f μ (a k) (a <| k + 1)) :
-    IntervalIntegrable f μ (a 0) (a n) := by
-  induction' n with n hn
+theorem trans_iterate_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
+    (hint : ∀, ∀ k ∈ Ico m n, ∀, IntervalIntegrable f μ (a k) (a <| k + 1)) : IntervalIntegrable f μ (a m) (a n) := by
+  revert hint
+  refine' Nat.le_induction _ _ n hmn
   · simp
     
-  · exact (hn fun k hk => hint k (hk.trans n.lt_succ_self)).trans (hint n n.lt_succ_self)
+  · intro p hp IH h
+    exact
+      (IH fun k hk => h k (Ico_subset_Ico_right p.le_succ hk)).trans
+        (h p
+          (by
+            simp [hp]))
     
+
+theorem trans_iterate {a : ℕ → ℝ} {n : ℕ} (hint : ∀, ∀ k < n, ∀, IntervalIntegrable f μ (a k) (a <| k + 1)) :
+    IntervalIntegrable f μ (a 0) (a n) :=
+  trans_iterate_Ico bot_le fun k hk => hint k hk.2
 
 theorem neg (h : IntervalIntegrable f μ a b) : IntervalIntegrable (-f) μ a b :=
   ⟨h.1.neg, h.2.neg⟩
@@ -320,6 +330,10 @@ theorem sub (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b
     IntervalIntegrable (fun x => f x - g x) μ a b :=
   ⟨hf.1.sub hg.1, hf.2.sub hg.2⟩
 
+theorem sum (s : Finset ι) {f : ι → ℝ → E} (h : ∀, ∀ i ∈ s, ∀, IntervalIntegrable (f i) μ a b) :
+    IntervalIntegrable (∑ i in s, f i) μ a b :=
+  ⟨integrable_finset_sum' s fun i hi => (h i hi).1, integrable_finset_sum' s fun i hi => (h i hi).2⟩
+
 -- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
 theorem mul_continuous_on {f g : ℝ → ℝ} (hf : IntervalIntegrable f μ a b)
     (hg : ContinuousOn g "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)") :
@@ -366,7 +380,7 @@ theorem MonotoneOn.interval_integrable {u : ℝ → E} {a b : ℝ} (hu : Monoton
 
 theorem AntitoneOn.interval_integrable {u : ℝ → E} {a b : ℝ} (hu : AntitoneOn u (Interval a b)) :
     IntervalIntegrable u μ a b :=
-  @MonotoneOn.interval_integrable (OrderDual E) _ _ _ _ _ _ _ _ _ hu
+  hu.dual_right.IntervalIntegrable
 
 theorem Monotone.interval_integrable {u : ℝ → E} {a b : ℝ} (hu : Monotone u) : IntervalIntegrable u μ a b :=
   (hu.MonotoneOn _).IntervalIntegrable
@@ -755,7 +769,7 @@ theorem integral_congr {a b : ℝ}
 theorem integral_add_adjacent_intervals_cancel (hab : IntervalIntegrable f μ a b) (hbc : IntervalIntegrable f μ b c) :
     (((∫ x in a..b, f x ∂μ) + ∫ x in b..c, f x ∂μ) + ∫ x in c..a, f x ∂μ) = 0 := by
   have hac := hab.trans hbc
-  simp only [intervalIntegral, ← add_sub_comm, sub_eq_zero]
+  simp only [intervalIntegral, sub_add_sub_comm, sub_eq_zero]
   iterate 4 
     rw [← integral_union]
   · suffices Ioc a b ∪ Ioc b c ∪ Ioc c a = Ioc b a ∪ Ioc c b ∪ Ioc a c by
@@ -770,17 +784,31 @@ theorem integral_add_adjacent_intervals (hab : IntervalIntegrable f μ a b) (hbc
     ((∫ x in a..b, f x ∂μ) + ∫ x in b..c, f x ∂μ) = ∫ x in a..c, f x ∂μ := by
   rw [← add_neg_eq_zero, ← integral_symm, integral_add_adjacent_intervals_cancel hab hbc]
 
+theorem sum_integral_adjacent_intervals_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
+    (hint : ∀, ∀ k ∈ Ico m n, ∀, IntervalIntegrable f μ (a k) (a <| k + 1)) :
+    (∑ k : ℕ in Finset.ico m n, ∫ x in a k..a <| k + 1, f x ∂μ) = ∫ x in a m..a n, f x ∂μ := by
+  revert hint
+  refine' Nat.le_induction _ _ n hmn
+  · simp
+    
+  · intro p hmp IH h
+    rw [Finset.sum_Ico_succ_top hmp, IH, integral_add_adjacent_intervals]
+    · apply IntervalIntegrable.trans_iterate_Ico hmp fun k hk => h k _
+      exact (Ico_subset_Ico le_rfl (Nat.le_succₓ _)) hk
+      
+    · apply h
+      simp [hmp]
+      
+    · intro k hk
+      exact h _ (Ico_subset_Ico_right p.le_succ hk)
+      
+    
+
 theorem sum_integral_adjacent_intervals {a : ℕ → ℝ} {n : ℕ}
     (hint : ∀, ∀ k < n, ∀, IntervalIntegrable f μ (a k) (a <| k + 1)) :
     (∑ k : ℕ in Finset.range n, ∫ x in a k..a <| k + 1, f x ∂μ) = ∫ x in a 0 ..a n, f x ∂μ := by
-  induction' n with n hn
-  · simp
-    
-  · rw [Finset.sum_range_succ, hn fun k hk => hint k (hk.trans n.lt_succ_self)]
-    exact
-      integral_add_adjacent_intervals (IntervalIntegrable.trans_iterate fun k hk => hint k (hk.trans n.lt_succ_self))
-        (hint n n.lt_succ_self)
-    
+  rw [← Nat.Ico_zero_eq_range]
+  exact sum_integral_adjacent_intervals_Ico (zero_le n) fun k hk => hint k hk.2
 
 theorem integral_interval_sub_left (hab : IntervalIntegrable f μ a b) (hac : IntervalIntegrable f μ a c) :
     ((∫ x in a..b, f x ∂μ) - ∫ x in a..c, f x ∂μ) = ∫ x in c..b, f x ∂μ :=

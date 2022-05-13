@@ -134,6 +134,14 @@ theorem cast_mul [Ringₓ α] : ∀ m n, ((m * n : ℤ) : α) = m * n
     show (((m + 1) * (n + 1) : ℕ) : α) = -(m + 1) * -(n + 1) by
       rw [Nat.cast_mulₓ, Nat.cast_add_one, Nat.cast_add_one, neg_mul_neg]
 
+@[simp]
+theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℤ) : α) = m / n := by
+  rcases n_dvd with ⟨k, rfl⟩
+  have : n ≠ 0 := by
+    rintro rfl
+    simpa using n_nonzero
+  rw [Int.mul_div_cancel_left _ this, Int.cast_mul, mul_div_cancel_left _ n_nonzero]
+
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
   ⟨coe, cast_zeroₓ, cast_add⟩

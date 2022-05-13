@@ -144,7 +144,7 @@ theorem padic_val_nat_central_binom_le (hp : p.Prime) : padicValNat p (centralBi
 theorem padic_val_nat_central_binom_of_large_le_one (hp : p.Prime) (p_large : 2 * n < p ^ 2) :
     padicValNat p (centralBinom n) ≤ 1 := by
   have log_weak_bound : log p (2 * n) ≤ 2 := by
-    calc log p (2 * n) ≤ log p (p ^ 2) := log_le_log_of_le (le_of_ltₓ p_large)_ = 2 := log_pow hp.one_lt 2
+    calc log p (2 * n) ≤ log p (p ^ 2) := log_mono_right (le_of_ltₓ p_large)_ = 2 := log_pow hp.one_lt 2
   have log_bound : log p (2 * n) ≤ 1 := by
     cases' le_or_ltₓ (log p (2 * n)) 1 with log_le lt_log
     · exact log_le
@@ -159,7 +159,7 @@ theorem padic_val_nat_central_binom_of_large_le_one (hp : p.Prime) (p_large : 2 
           exact (Nat.le_div_iff_mul_leₓ _ _ (prime.pos hp)).1 v.2.2
         exact lt_irreflₓ _ (lt_of_le_of_ltₓ bad p_large)
         
-      · rw [log_eq_zero (Or.inl h)]
+      · rw [log_of_lt h]
         exact zero_le 1
         
       

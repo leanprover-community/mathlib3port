@@ -55,7 +55,7 @@ theorem diff_self : diff ϕ T T = 1 :=
 
 @[to_additive]
 theorem diff_inv : (diff ϕ S T)⁻¹ = diff ϕ T S :=
-  inv_eq_of_mul_eq_oneₓ ((diff_mul_diff ϕ S T S).trans (diff_self ϕ S))
+  inv_eq_of_mul_eq_one_right <| (diff_mul_diff ϕ S T S).trans <| diff_self ϕ S
 
 @[to_additive]
 theorem smul_diff_smul (g : G) : diff ϕ (g • S) (g • T) = diff ϕ S T :=

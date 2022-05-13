@@ -152,13 +152,13 @@ open Metric Set NormedSpace
 /-- Given a subset `s` in a normed space `E` (over a field `𝕜`), the polar
 `polar 𝕜 s` is the subset of `dual 𝕜 E` consisting of those functionals which
 evaluate to something of norm at most one at all points `z ∈ s`. -/
-def Polar (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] :
+def Polar (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E] :
     Set E → Set (Dual 𝕜 E) :=
   (dualPairing 𝕜 E).flip.Polar
 
 variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
-variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+variable {E : Type _} [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 theorem mem_polar_iff {x' : Dual 𝕜 E} (s : Set E) : x' ∈ Polar 𝕜 s ↔ ∀, ∀ z ∈ s, ∀, ∥x' z∥ ≤ 1 :=
   Iff.rfl
@@ -219,7 +219,7 @@ theorem closed_ball_inv_subset_polar_closed_ball {r : ℝ} :
     _ ≤ r⁻¹ * r :=
       mul_le_mul (mem_closed_ball_zero_iff.1 hx') (mem_closed_ball_zero_iff.1 hx) (norm_nonneg _)
         (dist_nonneg.trans hx')
-    _ = r / r := div_eq_inv_mul.symm
+    _ = r / r := inv_mul_eq_div _ _
     _ ≤ 1 := div_self_le_one r
     
 

@@ -605,6 +605,19 @@ theorem singleton_span_is_compact_element (x : M) : CompleteLattice.IsCompactEle
       ⟨hyd, by
         simpa only [span_le, singleton_subset_iff] ⟩⟩
 
+/-- The span of a finite subset is compact in the lattice of submodules. -/
+theorem finset_span_is_compact_element (S : Finset M) : CompleteLattice.IsCompactElement (span R S : Submodule R M) :=
+  by
+  rw [span_eq_supr_of_singleton_spans]
+  simp only [Finset.mem_coe]
+  rw [← Finset.sup_eq_supr]
+  exact CompleteLattice.finset_sup_compact_of_compact S fun x _ => singleton_span_is_compact_element x
+
+/-- The span of a finite subset is compact in the lattice of submodules. -/
+theorem finite_span_is_compact_element (S : Set M) (h : S.Finite) :
+    CompleteLattice.IsCompactElement (span R S : Submodule R M) :=
+  Finite.coe_to_finset h ▸ finset_span_is_compact_element h.toFinset
+
 instance : IsCompactlyGenerated (Submodule R M) :=
   ⟨fun s =>
     ⟨(fun x => span R {x}) '' s,

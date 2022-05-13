@@ -7,7 +7,7 @@ import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.RingTheory.Nilpotent
 import Mathbin.Topology.Sheaves.SheafCondition.Sites
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
-import Mathbin.Algebra.Category.CommRing.Constructions
+import Mathbin.Algebra.Category.Ring.Constructions
 import Mathbin.RingTheory.IntegralDomain
 import Mathbin.RingTheory.LocalProperties
 

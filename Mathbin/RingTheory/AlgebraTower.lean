@@ -48,9 +48,8 @@ variable (R S A B)
 /-- Suppose that `R -> S -> A` is a tower of algebras.
 If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
 def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] : Invertible (algebraMap R A r) :=
-  Invertible.copy (Invertible.map (algebraMap S A : S →* A) (algebraMap R S r)) (algebraMap R A r)
-    (by
-      rw [RingHom.coe_monoid_hom, IsScalarTower.algebra_map_apply R S A])
+  Invertible.copy (Invertible.map (algebraMap S A) (algebraMap R S r)) (algebraMap R A r)
+    (IsScalarTower.algebra_map_apply R S A r)
 
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
@@ -71,13 +70,6 @@ end CommSemiringₓ
 end IsScalarTower
 
 namespace Algebra
-
-theorem adjoin_algebra_map' {R : Type u} {S : Type v} {A : Type w} [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A]
-    [Algebra R S] [Algebra S A] (s : Set S) :
-    adjoin R (algebraMap S (RestrictScalars R S A) '' s) =
-      (adjoin R s).map ((Algebra.ofId S (RestrictScalars R S A)).restrictScalars R) :=
-  le_antisymmₓ (adjoin_le <| Set.image_subset_iff.2 fun y hy => ⟨y, subset_adjoin hy, rfl⟩)
-    (Subalgebra.map_le.2 <| adjoin_le fun y hy => subset_adjoin ⟨y, hy, rfl⟩)
 
 theorem adjoin_algebra_map (R : Type u) (S : Type v) (A : Type w) [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (s : Set S) :

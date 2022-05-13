@@ -7,7 +7,7 @@ import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Filtered
 import Mathbin.Tactic.EquivRw
 
-universe u
+universe v u
 
 open CategoryTheory
 
@@ -15,19 +15,19 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory.Limits.Types
 
-variable {J : Type u} [SmallCategory J]
+variable {J : Type v} [SmallCategory J]
 
 /-- (internal implementation) the limit cone of a functor,
 implemented as flat sections of a pi type
 -/
-def limitCone (F : J ⥤ Type u) : Cone F where
+def limitCone (F : J ⥤ Type max v u) : Cone F where
   x := F.sections
   π := { app := fun j u => u.val j }
 
 attribute [local elabWithoutExpectedType] congr_funₓ
 
 /-- (internal implementation) the fact that the proposed limit cone is the limit -/
-def limitConeIsLimit (F : J ⥤ Type u) : IsLimit (limitCone F) where
+def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F) where
   lift := fun s v => ⟨fun j => s.π.app j v, fun j j' f => congr_funₓ (Cone.w s f) _⟩
   uniq' := by
     intros
@@ -38,102 +38,141 @@ def limitConeIsLimit (F : J ⥤ Type u) : IsLimit (limitCone F) where
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance : HasLimits (Type u) where
+instance has_limits_of_size : HasLimitsOfSize.{v} (Type max v u) where
   HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
+
+instance : HasLimits (Type u) :=
+  types.has_limits_of_size.{u, u}
 
 /-- The equivalence between a limiting cone of `F` in `Type u` and the "concrete" definition as the
 sections of `F`.
 -/
-def isLimitEquivSections {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) : c.x ≃ F.sections :=
+def isLimitEquivSections {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c) : c.x ≃ F.sections :=
   (IsLimit.conePointUniqueUpToIso t (limitConeIsLimit F)).toEquiv
 
 @[simp]
-theorem is_limit_equiv_sections_apply {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) (j : J) (x : c.x) :
+theorem is_limit_equiv_sections_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c) (j : J) (x : c.x) :
     ((isLimitEquivSections t) x : ∀ j, F.obj j) j = c.π.app j x :=
   rfl
 
 @[simp]
-theorem is_limit_equiv_sections_symm_apply {F : J ⥤ Type u} {c : Cone F} (t : IsLimit c) (x : F.sections) (j : J) :
-    c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j := by
+theorem is_limit_equiv_sections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c) (x : F.sections)
+    (j : J) : c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j := by
   equiv_rw(is_limit_equiv_sections t).symm  at x
   simp
 
 /-- The equivalence between the abstract limit of `F` in `Type u`
 and the "concrete" definition as the sections of `F`.
 -/
-noncomputable def limitEquivSections (F : J ⥤ Type u) : (limit F : Type u) ≃ F.sections :=
+noncomputable def limitEquivSections (F : J ⥤ Type max v u) : (limit F : Type max v u) ≃ F.sections :=
   isLimitEquivSections (limit.isLimit _)
 
 @[simp]
-theorem limit_equiv_sections_apply (F : J ⥤ Type u) (x : limit F) (j : J) :
+theorem limit_equiv_sections_apply (F : J ⥤ Type max v u) (x : limit F) (j : J) :
     ((limitEquivSections F) x : ∀ j, F.obj j) j = limit.π F j x :=
   rfl
 
 @[simp]
-theorem limit_equiv_sections_symm_apply (F : J ⥤ Type u) (x : F.sections) (j : J) :
+theorem limit_equiv_sections_symm_apply (F : J ⥤ Type max v u) (x : F.sections) (j : J) :
     limit.π F j ((limitEquivSections F).symm x) = (x : ∀ j, F.obj j) j :=
+  is_limit_equiv_sections_symm_apply _ _ _
+
+@[simp]
+theorem limit_equiv_sections_symm_apply' (F : J ⥤ Type v) (x : F.sections) (j : J) :
+    limit.π F j ((limitEquivSections.{v, v} F).symm x) = (x : ∀ j, F.obj j) j :=
   is_limit_equiv_sections_symm_apply _ _ _
 
 /-- Construct a term of `limit F : Type u` from a family of terms `x : Π j, F.obj j`
 which are "coherent": `∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j'`.
 -/
 @[ext]
-noncomputable def Limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
-    (limit F : Type u) :=
+noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
+    (limit F : Type max v u) :=
   (limitEquivSections F).symm ⟨x, h⟩
 
 @[simp]
-theorem Limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
     limit.π F j (Limit.mk F x h) = x j := by
+  dsimp' [limit.mk]
+  simp
+
+@[simp]
+theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+    limit.π F j (Limit.mk.{v, v} F x h) = x j := by
   dsimp' [limit.mk]
   simp
 
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
 @[ext]
-theorem limit_ext (F : J ⥤ Type u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
+theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
   apply (limit_equiv_sections F).Injective
   ext j
   simp [w j]
 
-theorem limit_ext_iff (F : J ⥤ Type u) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
+@[ext]
+theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) : x = y := by
+  apply (limitEquivSections.{v, v} F).Injective
+  ext j
+  simp [w j]
+
+theorem limit_ext_iff (F : J ⥤ Type max v u) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
+  ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
+
+theorem limit_ext_iff' (F : J ⥤ Type v) (x y : limit F) : x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
 
 -- TODO: are there other limits lemmas that should have `_apply` versions?
 -- Can we generate these like with `@[reassoc]`?
 -- PROJECT: prove these for any concrete category where the forgetful functor preserves limits?
 @[simp]
-theorem Limit.w_apply {F : J ⥤ Type u} {j j' : J} {x : limit F} (f : j ⟶ j') :
+theorem Limit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : limit F} (f : j ⟶ j') :
     F.map f (limit.π F j x) = limit.π F j' x :=
   congr_funₓ (limit.w F f) x
 
 @[simp]
-theorem Limit.lift_π_apply (F : J ⥤ Type u) (s : Cone F) (j : J) (x : s.x) :
+theorem Limit.lift_π_apply (F : J ⥤ Type max v u) (s : Cone F) (j : J) (x : s.x) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
   congr_funₓ (limit.lift_π s j) x
 
 @[simp]
-theorem Limit.map_π_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
+theorem Limit.map_π_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
+    limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
+  congr_funₓ (lim_map_π α j) x
+
+@[simp]
+theorem Limit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : limit F} (f : j ⟶ j') :
+    F.map f (limit.π F j x) = limit.π F j' x :=
+  congr_funₓ (limit.w F f) x
+
+@[simp]
+theorem Limit.lift_π_apply' (F : J ⥤ Type v) (s : Cone F) (j : J) (x : s.x) :
+    limit.π F j (limit.lift F s x) = s.π.app j x :=
+  congr_funₓ (limit.lift_π s j) x
+
+@[simp]
+theorem Limit.map_π_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_funₓ (lim_map_π α j) x
 
 /-- The relation defining the quotient type which implements the colimit of a functor `F : J ⥤ Type u`.
 See `category_theory.limits.types.quot`.
 -/
-def Quot.Rel (F : J ⥤ Type u) : (Σj, F.obj j) → (Σj, F.obj j) → Prop := fun p p' => ∃ f : p.1 ⟶ p'.1, p'.2 = F.map f p.2
+def Quot.Rel (F : J ⥤ Type max v u) : (Σj, F.obj j) → (Σj, F.obj j) → Prop := fun p p' =>
+  ∃ f : p.1 ⟶ p'.1, p'.2 = F.map f p.2
 
 /-- A quotient type implementing the colimit of a functor `F : J ⥤ Type u`,
 as pairs `⟨j, x⟩` where `x : F.obj j`, modulo the equivalence relation generated by
 `⟨j, x⟩ ~ ⟨j', x'⟩` whenever there is a morphism `f : j ⟶ j'` so `F.map f x = x'`.
 -/
 @[nolint has_inhabited_instance]
-def Quot (F : J ⥤ Type u) : Type u :=
+def Quot (F : J ⥤ Type max v u) : Type max v u :=
   @Quot (Σj, F.obj j) (Quot.Rel F)
 
 /-- (internal implementation) the colimit cocone of a functor,
 implemented as a quotient of a sigma type
 -/
-def colimitCocone (F : J ⥤ Type u) : Cocone F where
+def colimitCocone (F : J ⥤ Type max v u) : Cocone F where
   x := Quot F
   ι :=
     { app := fun j x => Quot.mk _ ⟨j, x⟩, naturality' := fun j j' f => funext fun x => Eq.symm (Quot.sound ⟨f, rfl⟩) }
@@ -141,7 +180,7 @@ def colimitCocone (F : J ⥤ Type u) : Cocone F where
 attribute [local elab_with_expected_type] Quot.lift
 
 /-- (internal implementation) the fact that the proposed colimit cocone is the colimit -/
-def colimitCoconeIsColimit (F : J ⥤ Type u) : IsColimit (colimitCocone F) where
+def colimitCoconeIsColimit (F : J ⥤ Type max v u) : IsColimit (colimitCocone F) where
   desc := fun s =>
     Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
       rw [hf] <;> exact (congr_funₓ (cocone.w s f) x).symm
@@ -150,58 +189,77 @@ def colimitCoconeIsColimit (F : J ⥤ Type u) : IsColimit (colimitCocone F) wher
 
 See <https://stacks.math.columbia.edu/tag/002U>.
 -/
-instance : HasColimits (Type u) where
+instance has_colimits_of_size : HasColimitsOfSize.{v} (Type max v u) where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
+
+instance : HasColimits (Type u) :=
+  types.has_colimits_of_size.{u, u}
 
 /-- The equivalence between the abstract colimit of `F` in `Type u`
 and the "concrete" definition as a quotient.
 -/
-noncomputable def colimitEquivQuot (F : J ⥤ Type u) : (colimit F : Type u) ≃ Quot F :=
+noncomputable def colimitEquivQuot (F : J ⥤ Type max v u) : (colimit F : Type max v u) ≃ Quot F :=
   (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (colimitCoconeIsColimit F)).toEquiv
 
 @[simp]
-theorem colimit_equiv_quot_symm_apply (F : J ⥤ Type u) (j : J) (x : F.obj j) :
+theorem colimit_equiv_quot_symm_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
     (colimitEquivQuot F).symm (Quot.mk _ ⟨j, x⟩) = colimit.ι F j x :=
   rfl
 
 @[simp]
-theorem colimit_equiv_quot_apply (F : J ⥤ Type u) (j : J) (x : F.obj j) :
+theorem colimit_equiv_quot_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
     (colimitEquivQuot F) (colimit.ι F j x) = Quot.mk _ ⟨j, x⟩ := by
   apply (colimit_equiv_quot F).symm.Injective
   simp
 
 @[simp]
-theorem Colimit.w_apply {F : J ⥤ Type u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
+theorem Colimit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
   congr_funₓ (colimit.w F f) x
 
 @[simp]
-theorem Colimit.ι_desc_apply (F : J ⥤ Type u) (s : Cocone F) (j : J) (x : F.obj j) :
+theorem Colimit.ι_desc_apply (F : J ⥤ Type max v u) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
   congr_funₓ (colimit.ι_desc s j) x
 
 @[simp]
-theorem Colimit.ι_map_apply {F G : J ⥤ Type u} (α : F ⟶ G) (j : J) x :
+theorem Colimit.ι_map_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_funₓ (colimit.ι_map α j) x
 
-theorem colimit_sound {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (f : j ⟶ j') (w : F.map f x = x') :
-    colimit.ι F j x = colimit.ι F j' x' := by
+@[simp]
+theorem Colimit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
+    colimit.ι F j' (F.map f x) = colimit.ι F j x :=
+  congr_funₓ (colimit.w F f) x
+
+@[simp]
+theorem Colimit.ι_desc_apply' (F : J ⥤ Type v) (s : Cocone F) (j : J) (x : F.obj j) :
+    colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
+  congr_funₓ (colimit.ι_desc s j) x
+
+@[simp]
+theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
+    colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
+  congr_funₓ (colimit.ι_map α j) x
+
+theorem colimit_sound {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (f : j ⟶ j')
+    (w : F.map f x = x') : colimit.ι F j x = colimit.ι F j' x' := by
   rw [← w]
   simp
 
-theorem colimit_sound' {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} {j'' : J} (f : j ⟶ j'') (f' : j' ⟶ j'')
-    (w : F.map f x = F.map f' x') : colimit.ι F j x = colimit.ι F j' x' := by
+theorem colimit_sound' {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} {j'' : J} (f : j ⟶ j'')
+    (f' : j' ⟶ j'') (w : F.map f x = F.map f' x') : colimit.ι F j x = colimit.ι F j' x' := by
   rw [← colimit.w _ f, ← colimit.w _ f']
   rw [types_comp_apply, types_comp_apply, w]
 
-theorem colimit_eq {F : J ⥤ Type u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (w : colimit.ι F j x = colimit.ι F j' x') :
-    EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ := by
+theorem colimit_eq {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'}
+    (w : colimit.ι F j x = colimit.ι F j' x') : EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ := by
   apply Quot.eq.1
   simpa using congr_argₓ (colimit_equiv_quot F) w
 
-theorem jointly_surjective (F : J ⥤ Type u) {t : Cocone F} (h : IsColimit t) (x : t.x) : ∃ j y, t.ι.app j y = x := by
+theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimit t) (x : t.x) : ∃ j y, t.ι.app j y = x :=
+  by
   suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
     have := congr_funₓ this x
     have H := congr_argₓ ULift.down this
@@ -214,7 +272,7 @@ theorem jointly_surjective (F : J ⥤ Type u) {t : Cocone F} (h : IsColimit t) (
   exact ⟨j, y, rfl⟩
 
 /-- A variant of `jointly_surjective` for `x : colimit F`. -/
-theorem jointly_surjective' {F : J ⥤ Type u} (x : colimit F) : ∃ j y, colimit.ι F j y = x :=
+theorem jointly_surjective' {F : J ⥤ Type max v u} (x : colimit F) : ∃ j y, colimit.ι F j y = x :=
   jointly_surjective F (colimit.isColimit _) x
 
 namespace FilteredColimit
@@ -222,7 +280,7 @@ namespace FilteredColimit
 /- For filtered colimits of types, we can give an explicit description
   of the equivalence relation generated by the relation used to form
   the colimit.  -/
-variable (F : J ⥤ Type u)
+variable (F : J ⥤ Type max v u)
 
 /-- An alternative relation on `Σ j, F.obj j`,
 which generates the same equivalence relation as we use to define the colimit in `Type` above,

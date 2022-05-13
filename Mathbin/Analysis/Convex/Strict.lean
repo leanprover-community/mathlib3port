@@ -145,7 +145,7 @@ theorem strict_convex_Iic (r : β) : StrictConvex 𝕜 (Iic r) := by
     
 
 theorem strict_convex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
-  @strict_convex_Iic 𝕜 (OrderDual β) _ _ _ _ _ _ r
+  @strict_convex_Iic 𝕜 βᵒᵈ _ _ _ _ _ _ r
 
 theorem strict_convex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
   (strict_convex_Ici r).inter <| strict_convex_Iic s
@@ -276,7 +276,7 @@ variable [OrderedRing 𝕜] [TopologicalSpace E] [TopologicalSpace F]
 
 section AddCommGroupₓ
 
-variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E} {x y : E}
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s t : Set E} {x y : E}
 
 theorem StrictConvex.eq_of_open_segment_subset_frontier [Nontrivial 𝕜] [DenselyOrdered 𝕜] (hs : StrictConvex 𝕜 s)
     (hx : x ∈ s) (hy : y ∈ s) (h : OpenSegment 𝕜 x y ⊆ Frontier s) : x = y := by
@@ -326,12 +326,13 @@ theorem StrictConvex.affine_image (hs : StrictConvex 𝕜 s) {f : E →ᵃ[𝕜]
     hf.image_interior_subset _
       ⟨a • x + b • y, ⟨hs hx hy (ne_of_apply_ne _ hxy) ha hb hab, Convex.combo_affine_apply hab⟩⟩
 
-theorem StrictConvex.neg [TopologicalAddGroup E] (hs : StrictConvex 𝕜 s) : StrictConvex 𝕜 ((fun z => -z) '' s) :=
-  hs.is_linear_image IsLinearMap.is_linear_map_neg (Homeomorph.neg E).IsOpenMap
+variable [TopologicalAddGroup E]
 
-theorem StrictConvex.neg_preimage [TopologicalAddGroup E] (hs : StrictConvex 𝕜 s) :
-    StrictConvex 𝕜 ((fun z => -z) ⁻¹' s) :=
+theorem StrictConvex.neg (hs : StrictConvex 𝕜 s) : StrictConvex 𝕜 (-s) :=
   hs.is_linear_preimage IsLinearMap.is_linear_map_neg continuous_id.neg neg_injective
+
+theorem StrictConvex.sub (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) : StrictConvex 𝕜 (s - t) :=
+  (sub_eq_add_neg s t).symm ▸ hs.add ht.neg
 
 end AddCommGroupₓ
 

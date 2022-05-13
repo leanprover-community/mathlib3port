@@ -1241,16 +1241,7 @@ end Algebra
 
 section Valuation
 
-variable [LinearOrderedAddCommGroup Γ] [Ringₓ R] [IsDomain R]
-
-instance : LinearOrderedCommGroup (Multiplicative Γ) :=
-  { (inferInstance : LinearOrderₓ (Multiplicative Γ)), (inferInstance : OrderedCommGroup (Multiplicative Γ)) with }
-
-instance : LinearOrderedCommGroupWithZero (WithZero (Multiplicative Γ)) :=
-  { WithZero.orderedCommMonoid, (inferInstance : LinearOrderₓ (WithZero (Multiplicative Γ))),
-    (inferInstance : CommGroupWithZero (WithZero (Multiplicative Γ))) with zero_le_one := WithZero.zero_le 1 }
-
-variable (Γ) (R)
+variable (Γ R) [LinearOrderedAddCommGroup Γ] [Ringₓ R] [IsDomain R]
 
 /-- The additive valuation on `hahn_series Γ R`, returning the smallest index at which
   a Hahn Series has a nonzero coefficient, or `⊤` for the 0 series.  -/
@@ -1575,10 +1566,8 @@ def ofFinsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α where
     intro g hg
     obtain ⟨a, ha⟩ := Set.mem_Union.1 hg
     have haf : a ∈ f.support := by
-      rw [Finsupp.mem_support_iff]
-      contrapose! ha
-      rw [ha, support_zero]
-      exact Set.not_mem_empty _
+      rw [Finsupp.mem_support_iff, ← support_nonempty_iff]
+      exact ⟨g, ha⟩
     have h : (fun i => (f i).Support) a ≤ _ := le_sup haf
     exact h ha
   finite_co_support' := fun g => by

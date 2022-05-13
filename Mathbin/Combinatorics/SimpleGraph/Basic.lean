@@ -94,6 +94,10 @@ structure SimpleGraph (V : Type u) where
     run_tac
       obviously
 
+noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) := by
+  classical
+  exact Fintype.ofInjective SimpleGraph.Adj SimpleGraph.ext
+
 /-- Construct the simple graph induced by the given relation. It
 symmetrizes the relation and makes it irreflexive.
 -/
@@ -101,10 +105,6 @@ def SimpleGraph.fromRel {V : Type u} (r : V → V → Prop) : SimpleGraph V wher
   Adj := fun a b => a ≠ b ∧ (r a b ∨ r b a)
   symm := fun a b ⟨hn, hr⟩ => ⟨hn.symm, hr.symm⟩
   loopless := fun a ⟨hn, _⟩ => hn rfl
-
-noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) := by
-  classical
-  exact Fintype.ofInjective SimpleGraph.Adj SimpleGraph.ext
 
 @[simp]
 theorem SimpleGraph.from_rel_adj {V : Type u} (r : V → V → Prop) (v w : V) :
@@ -142,7 +142,7 @@ namespace SimpleGraph
 variable {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W) {a b c u v w : V} {e : Sym2 V}
 
 @[simp]
-theorem irrefl {v : V} : ¬G.Adj v v :=
+protected theorem irrefl {v : V} : ¬G.Adj v v :=
   G.loopless v
 
 theorem adj_comm (u v : V) : G.Adj u v ↔ G.Adj v u :=
@@ -516,17 +516,19 @@ instance decidableMemIncidenceSet [DecidableEq V] [DecidableRel G.Adj] (v : V) :
 
 /-- The `edge_set` of the graph as a `finset`.
 -/
-def edgeFinset [DecidableEq V] [Fintype V] [DecidableRel G.Adj] : Finset (Sym2 V) :=
+@[reducible]
+def edgeFinset [Fintype G.EdgeSet] : Finset (Sym2 V) :=
   Set.toFinset G.EdgeSet
 
 @[simp]
-theorem mem_edge_finset [DecidableEq V] [Fintype V] [DecidableRel G.Adj] (e : Sym2 V) :
-    e ∈ G.edgeFinset ↔ e ∈ G.EdgeSet :=
+theorem mem_edge_finset [Fintype G.EdgeSet] (e : Sym2 V) : e ∈ G.edgeFinset ↔ e ∈ G.EdgeSet :=
   Set.mem_to_finset
 
+theorem edge_finset_card [Fintype G.EdgeSet] : G.edgeFinset.card = Fintype.card G.EdgeSet :=
+  Set.to_finset_card _
+
 @[simp]
-theorem edge_set_univ_card [DecidableEq V] [Fintype V] [DecidableRel G.Adj] :
-    (univ : Finset G.EdgeSet).card = G.edgeFinset.card :=
+theorem edge_set_univ_card [Fintype G.EdgeSet] : (univ : Finset G.EdgeSet).card = G.edgeFinset.card :=
   Fintype.card_of_subtype G.edgeFinset (mem_edge_finset _)
 
 @[simp]

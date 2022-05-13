@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 import Mathbin.Topology.MetricSpace.Basic
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Algebra.Ring
+import Mathbin.Topology.Algebra.Star
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.GroupTheory.Archimedean
 import Mathbin.Algebra.Periodic
@@ -41,6 +42,9 @@ theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniform_continuous_iff.2 fun ε ε0 =>
     ⟨_, ε0, fun a b h => by
       rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
+
+instance : HasContinuousStar ℝ :=
+  ⟨continuous_id⟩
 
 instance : UniformAddGroup ℝ :=
   UniformAddGroup.mk' Real.uniform_continuous_add Real.uniform_continuous_neg

@@ -362,7 +362,7 @@ def colimitCompCoyonedaIso (d : D) [IsIso (colimit.pre (coyoneda.obj (op d)) F)]
   asIso (colimit.pre (coyoneda.obj (op d)) F) ≪≫ coyoneda.colimitCoyonedaIso (op d)
 
 theorem zigzag_of_eqv_gen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ F.obj X}
-    (t : EqvGen (Types.Quot.Rel (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
+    (t : EqvGen (Types.Quot.Rel.{v, v} (F ⋙ coyoneda.obj (op d))) f₁ f₂) :
     Zigzag (StructuredArrow.mk f₁.2) (StructuredArrow.mk f₂.2) := by
   induction t
   case eqv_gen.rel x y r =>
@@ -389,7 +389,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ co
   ⟨fun d => by
     have : Nonempty (structured_arrow d F) := by
       have := (I d).inv PUnit.unit
-      obtain ⟨j, y, rfl⟩ := limits.types.jointly_surjective' this
+      obtain ⟨j, y, rfl⟩ := Limits.Types.jointly_surjective'.{v, v} this
       exact ⟨structured_arrow.mk y⟩
     apply zigzag_is_connected
     rintro ⟨⟨⟩, X₁, f₁⟩ ⟨⟨⟩, X₂, f₂⟩
@@ -399,7 +399,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ co
     have e : y₁ = y₂ := by
       apply (I d).toEquiv.Injective
       ext
-    have t := types.colimit_eq e
+    have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
     exact zigzag_of_eqv_gen_quot_rel t⟩
 

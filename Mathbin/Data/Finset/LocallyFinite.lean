@@ -464,7 +464,7 @@ theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (ico a b).card = (icc a b).car
     
 
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (ioc a b).card = (icc a b).card - 1 :=
-  @card_Ico_eq_card_Icc_sub_one (OrderDual α) _ _ _ _
+  @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
 
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).card - 1 := by
   classical
@@ -479,7 +479,7 @@ theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (ioo a b).card = (ico a b).car
     
 
 theorem card_Ioo_eq_card_Ioc_sub_one (a b : α) : (ioo a b).card = (ioc a b).card - 1 :=
-  @card_Ioo_eq_card_Ico_sub_one (OrderDual α) _ _ _ _
+  @card_Ioo_eq_card_Ico_sub_one αᵒᵈ _ _ _ _
 
 theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (ioo a b).card = (icc a b).card - 2 := by
   rw [card_Ioo_eq_card_Ico_sub_one, card_Ico_eq_card_Icc_sub_one]

@@ -374,7 +374,7 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
 
 end TransGen
 
-theorem WellFounded.trans_gen {α} {r : α → α → Prop} (h : WellFounded r) : WellFounded (TransGen r) :=
+theorem _root_.well_founded.trans_gen {α} {r : α → α → Prop} (h : WellFounded r) : WellFounded (TransGen r) :=
   ⟨fun a =>
     h.induction a fun x H =>
       Acc.intro x fun y hy => by

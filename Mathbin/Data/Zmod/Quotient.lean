@@ -59,3 +59,48 @@ def quotientSpanEquivZmod (a : ℤ) : ℤ ⧸ Ideal.span ({a} : Set ℤ) ≃+* Z
 
 end Int
 
+namespace AddAction
+
+open AddSubgroup AddMonoidHom AddEquiv Function
+
+variable {α β : Type _} [AddGroupₓ α] (a : α) [AddAction α β] (b : β)
+
+/-- The quotient `(ℤ ∙ a) ⧸ (stabilizer b)` is cyclic of order `minimal_period ((+ᵥ) a) b`. -/
+noncomputable def zmultiplesQuotientStabilizerEquiv :
+    zmultiples a ⧸ stabilizer (zmultiples a) b ≃+ Zmod (minimalPeriod ((· +ᵥ ·) a) b) :=
+  (ofBijective
+          (map _ (stabilizer (zmultiples a) b) (zmultiplesHom (zmultiples a) ⟨a, mem_zmultiples a⟩)
+            (by
+              rw [zmultiples_le, mem_comap, mem_stabilizer_iff, zmultiples_hom_apply, coe_nat_zsmul, ← vadd_iterate]
+              exact is_periodic_pt_minimal_period ((· +ᵥ ·) a) b))
+          ⟨by
+            rw [← ker_eq_bot_iff, eq_bot_iff]
+            refine' fun q => induction_on' q fun n hn => _
+            rw [mem_bot, eq_zero_iff, Int.mem_zmultiples_iff, ← zsmul_vadd_eq_iff_minimal_period_dvd]
+            exact (eq_zero_iff _).mp hn, fun q => induction_on' q fun ⟨_, n, rfl⟩ => ⟨n, rfl⟩⟩).symm.trans
+    (Int.quotientZmultiplesNatEquivZmod (minimalPeriod ((· +ᵥ ·) a) b))
+
+theorem zmultiples_quotient_stabilizer_equiv_symm_apply (n : Zmod (minimalPeriod ((· +ᵥ ·) a) b)) :
+    (zmultiplesQuotientStabilizerEquiv a b).symm n = (n : ℤ) • (⟨a, mem_zmultiples a⟩ : zmultiples a) :=
+  rfl
+
+end AddAction
+
+namespace MulAction
+
+open Subgroup Function
+
+variable {α β : Type _} [Groupₓ α] (a : α) [MulAction α β] (b : β)
+
+/-- The quotient `(a ^ ℤ) ⧸ (stabilizer b)` is cyclic of order `minimal_period ((•) a) b`. -/
+noncomputable def zpowersQuotientStabilizerEquiv :
+    zpowers a ⧸ stabilizer (zpowers a) b ≃* Multiplicative (Zmod (minimalPeriod ((· • ·) a) b)) :=
+  let f := AddAction.zmultiplesQuotientStabilizerEquiv (Additive.ofMul a) b
+  ⟨f.toFun, f.invFun, f.left_inv, f.right_inv, f.map_add'⟩
+
+theorem zpowers_quotient_stabilizer_equiv_symm_apply (n : Zmod (minimalPeriod ((· • ·) a) b)) :
+    (zpowersQuotientStabilizerEquiv a b).symm n = (⟨a, mem_zpowers a⟩ : zpowers a) ^ (n : ℤ) :=
+  rfl
+
+end MulAction
+

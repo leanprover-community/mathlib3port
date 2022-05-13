@@ -1243,10 +1243,10 @@ instance [Lattice α] : Lattice (WithTop α) :=
   { WithTop.semilatticeSup, WithTop.semilatticeInf with }
 
 instance decidableLe [LE α] [@DecidableRel α (· ≤ ·)] : @DecidableRel (WithTop α) (· ≤ ·) := fun x y =>
-  @WithBot.decidableLe (OrderDual α) _ _ y x
+  @WithBot.decidableLe αᵒᵈ _ _ y x
 
 instance decidableLt [LT α] [@DecidableRel α (· < ·)] : @DecidableRel (WithTop α) (· < ·) := fun x y =>
-  @WithBot.decidableLt (OrderDual α) _ _ y x
+  @WithBot.decidableLt αᵒᵈ _ _ y x
 
 instance is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun a b =>
@@ -1279,10 +1279,10 @@ theorem well_founded_lt [Preorderₓ α] (h : @WellFounded α (· < ·)) : @Well
       acc_some⟩
 
 theorem well_founded_gt [Preorderₓ α] (h : @WellFounded α (· > ·)) : @WellFounded (WithTop α) (· > ·) :=
-  @WithBot.well_founded_lt (OrderDual α) _ h
+  @WithBot.well_founded_lt αᵒᵈ _ h
 
 theorem _root_.with_bot.well_founded_gt [Preorderₓ α] (h : @WellFounded α (· > ·)) : @WellFounded (WithBot α) (· > ·) :=
-  @WithTop.well_founded_lt (OrderDual α) _ h
+  @WithTop.well_founded_lt αᵒᵈ _ h
 
 instance [LT α] [DenselyOrdered α] [NoMaxOrder α] : DenselyOrdered (WithTop α) :=
   ⟨fun a b =>
@@ -1390,24 +1390,42 @@ theorem mk_eq_top_iff [OrderTop α] [OrderTop (Subtype p)] (htop : p ⊤) {x : �
 
 end Subtype
 
-namespace OrderDual
+section OrderDual
 
 variable (α)
 
-instance [HasBot α] : HasTop (OrderDual α) :=
+instance [HasBot α] : HasTop αᵒᵈ :=
   ⟨(⊥ : α)⟩
 
-instance [HasTop α] : HasBot (OrderDual α) :=
+instance [HasTop α] : HasBot αᵒᵈ :=
   ⟨(⊤ : α)⟩
 
-instance [LE α] [OrderBot α] : OrderTop (OrderDual α) :=
+instance [LE α] [OrderBot α] : OrderTop αᵒᵈ :=
   { OrderDual.hasTop α with le_top := @bot_le α _ _ }
 
-instance [LE α] [OrderTop α] : OrderBot (OrderDual α) :=
+instance [LE α] [OrderTop α] : OrderBot αᵒᵈ :=
   { OrderDual.hasBot α with bot_le := @le_top α _ _ }
 
-instance [LE α] [BoundedOrder α] : BoundedOrder (OrderDual α) :=
+instance [LE α] [BoundedOrder α] : BoundedOrder αᵒᵈ :=
   { OrderDual.orderTop α, OrderDual.orderBot α with }
+
+open OrderDual
+
+@[simp]
+theorem of_dual_bot [HasTop α] : ofDual ⊥ = (⊤ : α) :=
+  rfl
+
+@[simp]
+theorem of_dual_top [HasBot α] : ofDual ⊤ = (⊥ : α) :=
+  rfl
+
+@[simp]
+theorem to_dual_bot [HasBot α] : toDual (⊥ : α) = ⊤ :=
+  rfl
+
+@[simp]
+theorem to_dual_top [HasTop α] : toDual (⊤ : α) = ⊥ :=
+  rfl
 
 end OrderDual
 
@@ -1565,7 +1583,7 @@ theorem min_eq_bot [OrderBot α] {a b : α} : min a b = ⊥ ↔ a = ⊥ ∨ b = 
 
 @[simp]
 theorem max_eq_top [OrderTop α] {a b : α} : max a b = ⊤ ↔ a = ⊤ ∨ b = ⊤ :=
-  @min_eq_bot (OrderDual α) _ _ a b
+  @min_eq_bot αᵒᵈ _ _ a b
 
 @[simp]
 theorem max_eq_bot [OrderBot α] {a b : α} : max a b = ⊥ ↔ a = ⊥ ∧ b = ⊥ :=
@@ -1779,7 +1797,7 @@ namespace IsComplemented
 
 variable [Lattice α] [BoundedOrder α] [IsComplemented α]
 
-instance : IsComplemented (OrderDual α) :=
+instance : IsComplemented αᵒᵈ :=
   ⟨fun a =>
     let ⟨b, hb⟩ := exists_is_compl (show α from a)
     ⟨b, hb.to_order_dual⟩⟩

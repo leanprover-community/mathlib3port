@@ -79,7 +79,7 @@ def Iso.mk {α β : Latticeₓ.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : Latticeₓ ⥤ Latticeₓ where
-  obj := fun X => of (OrderDual X)
+  obj := fun X => of Xᵒᵈ
   map := fun X Y => LatticeHom.dual
 
 /-- The equivalence between `Lattice` and itself induced by `order_dual` both ways. -/

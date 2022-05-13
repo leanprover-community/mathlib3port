@@ -29,10 +29,8 @@ namespace Polynomial
 
 variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜] (P Q : 𝕜[X])
 
-theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠ x in Filter.atTop, ¬P.IsRoot x := by
-  obtain ⟨x₀, hx₀⟩ := exists_max_root P hP
-  refine' filter.eventually_at_top.mpr ⟨x₀ + 1, fun x hx h => _⟩
-  exact absurd (hx₀ x h) (not_le.mpr (lt_of_lt_of_leₓ (lt_add_one x₀) hx))
+theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠ x in at_top, ¬P.IsRoot x :=
+  at_top_le_cofinite <| (finite_set_of_is_root hP).compl_mem_cofinite
 
 variable [OrderTopology 𝕜]
 
@@ -143,7 +141,7 @@ theorem is_equivalent_at_top_div :
   refine'
     (P.is_equivalent_at_top_lead.symm.div Q.is_equivalent_at_top_lead.symm).symm.trans
       (eventually_eq.is_equivalent ((eventually_gt_at_top 0).mono fun x hx => _))
-  simp [← div_mul_div_comm₀, hP, hQ, zpow_sub₀ hx.ne.symm]
+  simp [← div_mul_div_comm, hP, hQ, zpow_sub₀ hx.ne.symm]
 
 theorem div_tendsto_zero_of_degree_lt (hdeg : P.degree < Q.degree) :
     Tendsto (fun x => eval x P / eval x Q) atTop (𝓝 0) := by

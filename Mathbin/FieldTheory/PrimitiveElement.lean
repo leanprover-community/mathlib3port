@@ -3511,7 +3511,9 @@ variable (K : Type _) [Field K] [Algebra F K]
 variable (E F)
 
 /-- Function from Hom_K(E,L) to pi type Π (x : basis), roots of min poly of x -/
-def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Set.Range (FiniteDimensional.finBasis F E : _ → E)) :
+-- Marked as `noncomputable!` since this definition takes multiple seconds to compile,
+-- and isn't very computable in practice (since neither `finrank` nor `fin_basis` are).
+noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Set.Range (FiniteDimensional.finBasis F E : _ → E)) :
     { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
   ⟨φ x, by
     rw [Polynomial.mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), ←

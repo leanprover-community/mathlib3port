@@ -30,7 +30,12 @@ variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 open Pointwise
 
 instance hasScalar' : HasScalar (Ideal R) (Submodule R M) :=
-  ⟨fun I N => ⨆ r : I, (r : R) • N⟩
+  ⟨Submodule.map₂ (LinearMap.lsmul R M)⟩
+
+/-- This duplicates the global `smul_eq_mul`, but doesn't have to unfold anywhere near as much to
+apply. -/
+protected theorem _root_.ideal.smul_eq_mul (I J : Ideal R) : I • J = I * J :=
+  rfl
 
 /-- `N.annihilator` is the ideal of all elements `r : R` such that `r • N = 0`. -/
 def annihilator (N : Submodule R M) : Ideal R :=
@@ -89,11 +94,10 @@ theorem annihilator_supr (ι : Sort w) (f : ι → Submodule R M) : annihilator 
         mem_annihilator'.1 this
 
 theorem smul_mem_smul {r} {n} (hr : r ∈ I) (hn : n ∈ N) : r • n ∈ I • N :=
-  (le_supr _ ⟨r, hr⟩ : _ ≤ I • N) ⟨n, hn, rfl⟩
+  apply_mem_map₂ _ hr hn
 
 theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, r • n ∈ P :=
-  ⟨fun H r hr n hn => H <| smul_mem_smul hr hn, fun H =>
-    supr_le fun r => map_le_iff_le_comap.2 fun n hn => H r.1 r.2 n hn⟩
+  map₂_le
 
 @[elab_as_eliminator]
 theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀, ∀ r ∈ I, ∀, ∀ n ∈ N, ∀, p (r • n))
@@ -119,13 +123,13 @@ theorem smul_le_right : I • N ≤ N :=
   smul_le.2 fun r hr n => N.smul_mem r
 
 theorem smul_mono (hij : I ≤ J) (hnp : N ≤ P) : I • N ≤ J • P :=
-  smul_le.2 fun r hr n hn => smul_mem_smul (hij hr) (hnp hn)
+  map₂_le_map₂ hij hnp
 
 theorem smul_mono_left (h : I ≤ J) : I • N ≤ J • N :=
-  smul_mono h (le_reflₓ N)
+  map₂_le_map₂_left h
 
 theorem smul_mono_right (h : N ≤ P) : I • N ≤ I • P :=
-  smul_mono (le_reflₓ I) h
+  map₂_le_map₂_right h
 
 theorem map_le_smul_top (I : Ideal R) (f : R →ₗ[R] M) : Submodule.map f I ≤ I • (⊤ : Submodule R M) := by
   rintro _ ⟨y, hy, rfl⟩
@@ -148,31 +152,21 @@ variable (I J N P)
 
 @[simp]
 theorem smul_bot : I • (⊥ : Submodule R M) = ⊥ :=
-  eq_bot_iff.2 <|
-    smul_le.2 fun r hri s hsb => (Submodule.mem_bot R).2 <| ((Submodule.mem_bot R).1 hsb).symm ▸ smul_zero r
+  map₂_bot_right _ _
 
 @[simp]
 theorem bot_smul : (⊥ : Ideal R) • N = ⊥ :=
-  eq_bot_iff.2 <|
-    smul_le.2 fun r hrb s hsi => (Submodule.mem_bot R).2 <| ((Submodule.mem_bot R).1 hrb).symm ▸ zero_smul _ s
+  map₂_bot_left _ _
 
 @[simp]
 theorem top_smul : (⊤ : Ideal R) • N = N :=
   (le_antisymmₓ smul_le_right) fun r hri => one_smul R r ▸ smul_mem_smul mem_top hri
 
 theorem smul_sup : I • (N⊔P) = I • N⊔I • P :=
-  le_antisymmₓ
-    (smul_le.2 fun r hri m hmnp =>
-      let ⟨n, hn, p, hp, hnpm⟩ := mem_sup.1 hmnp
-      mem_sup.2 ⟨_, smul_mem_smul hri hn, _, smul_mem_smul hri hp, hnpm ▸ (smul_add _ _ _).symm⟩)
-    (sup_le (smul_mono_right le_sup_left) (smul_mono_right le_sup_right))
+  map₂_sup_right _ _ _ _
 
 theorem sup_smul : (I⊔J) • N = I • N⊔J • N :=
-  le_antisymmₓ
-    (smul_le.2 fun r hrij n hn =>
-      let ⟨ri, hri, rj, hrj, hrijr⟩ := mem_sup.1 hrij
-      mem_sup.2 ⟨_, smul_mem_smul hri hn, _, smul_mem_smul hrj hn, hrijr ▸ (add_smul _ _ _).symm⟩)
-    (sup_le (smul_mono_left le_sup_left) (smul_mono_left le_sup_right))
+  map₂_sup_left _ _ _ _
 
 protected theorem smul_assoc : (I • J) • N = I • J • N :=
   le_antisymmₓ
@@ -188,36 +182,17 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
 variable (S : Set R) (T : Set M)
 
 theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t ∈ T), {s • t}) :=
-  le_antisymmₓ
-      (smul_le.2 fun r hrS n hnT =>
-        span_induction hrS
-          (fun r hrS =>
-            span_induction hnT
-              (fun n hnT => subset_span <| Set.mem_bUnion hrS <| Set.mem_bUnion hnT <| Set.mem_singleton _)
-              ((smul_zero r : r • 0 = (0 : M)).symm ▸ Submodule.zero_mem _)
-              (fun x y => (smul_add r x y).symm ▸ Submodule.add_mem _) fun c m => by
-              rw [smul_smul, mul_comm, mul_smul] <;> exact Submodule.smul_mem _ _)
-          ((zero_smul R n).symm ▸ Submodule.zero_mem _) (fun r s => (add_smul r s n).symm ▸ Submodule.add_mem _)
-          fun c r => by
-          rw [smul_eq_mul, mul_smul] <;> exact Submodule.smul_mem _ _) <|
-    span_le.2 <|
-      Set.Union₂_subset fun r hrS =>
-        Set.Union₂_subset fun n hnT => Set.singleton_subset_iff.2 <| smul_mem_smul (subset_span hrS) (subset_span hnT)
-
-theorem union_eq_smul_set (r : R) (T : Set M) : (⋃ (t : M) (x : t ∈ T), {r • t}) = r • T := by
-  tidy
+  (map₂_span_span _ _ _ _).trans <| congr_argₓ _ <| Set.image2_eq_Union _ _ _
 
 theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) : (Ideal.span {r} : Ideal R) • N = r • N := by
   have : span R (⋃ (t : M) (x : t ∈ N), {r • t}) = r • N := by
     convert span_eq _
-    exact union_eq_smul_set r (N : Set M)
+    exact (Set.image_eq_Union _ (N : Set M)).symm
   conv_lhs => rw [← span_eq N, span_smul_span]
   simpa
 
 theorem span_smul_eq (r : R) (s : Set M) : span R (r • s) = r • span R s := by
-  rw [← ideal_span_singleton_smul, span_smul_span]
-  congr
-  simpa using (union_eq_smul_set r s).symm
+  rw [← ideal_span_singleton_smul, span_smul_span, ← Set.image2_eq_Union, Set.image2_singleton_left, Set.image_smul]
 
 theorem mem_of_span_top_of_smul_mem (M' : Submodule R M) (s : Set R) (hs : Ideal.span s = ⊤) (x : M)
     (H : ∀ r : s, (r : R) • x ∈ M') : x ∈ M' := by

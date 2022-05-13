@@ -187,7 +187,7 @@ def linHom : Representation k G (V →ₗ[k] W) where
         simp_rw [RingHom.id_apply, smul_comp, comp_smul] }
   map_one' :=
     LinearMap.ext fun x => by
-      simp_rw [coe_mk, one_inv, map_one, one_apply, one_eq_id, comp_id, id_comp]
+      simp_rw [coe_mk, inv_one, map_one, one_apply, one_eq_id, comp_id, id_comp]
   map_mul' := fun g h =>
     LinearMap.ext fun x => by
       simp_rw [coe_mul, coe_mk, Function.comp_applyₓ, mul_inv_rev, map_mul, mul_eq_comp, comp_assoc]
@@ -209,7 +209,7 @@ def dual : Representation k G (Module.Dual k V) where
         simp only [coe_comp, Function.comp_app, smul_apply, RingHom.id_apply] }
   map_one' := by
     ext
-    simp only [coe_comp, Function.comp_app, map_one, one_inv, coe_mk, one_apply]
+    simp only [coe_comp, Function.comp_app, map_one, inv_one, coe_mk, one_apply]
   map_mul' := fun g h => by
     ext
     simp only [coe_comp, Function.comp_app, mul_inv_rev, map_mul, coe_mk, mul_apply]

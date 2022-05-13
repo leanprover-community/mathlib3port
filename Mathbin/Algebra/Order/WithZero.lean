@@ -31,11 +31,11 @@ variable {α : Type _}
 
 variable {a b c d x y z : α}
 
-instance [LinearOrderedAddCommMonoidWithTop α] : LinearOrderedCommMonoidWithZero (Multiplicative (OrderDual α)) :=
+instance [LinearOrderedAddCommMonoidWithTop α] : LinearOrderedCommMonoidWithZero (Multiplicative αᵒᵈ) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.linearOrder with zero := Multiplicative.ofAdd (⊤ : α),
     zero_mul := top_add, mul_zero := add_top, zero_le_one := (le_top : (0 : α) ≤ ⊤) }
 
-instance [LinearOrderedAddCommGroupWithTop α] : LinearOrderedCommGroupWithZero (Multiplicative (OrderDual α)) :=
+instance [LinearOrderedAddCommGroupWithTop α] : LinearOrderedCommGroupWithZero (Multiplicative αᵒᵈ) :=
   { Multiplicative.divInvMonoid, Multiplicative.linearOrderedCommMonoidWithZero, Multiplicative.nontrivial with
     inv_zero := LinearOrderedAddCommGroupWithTop.neg_top,
     mul_inv_cancel := LinearOrderedAddCommGroupWithTop.add_neg_cancel }
@@ -187,7 +187,7 @@ theorem ne_zero_of_lt (h : b < a) : a ≠ 0 := fun h1 => not_lt_zero' <| show b 
 theorem pow_pos_iff [NoZeroDivisors α] {n : ℕ} (hn : 0 < n) : 0 < a ^ n ↔ 0 < a := by
   simp_rw [zero_lt_iff, pow_ne_zero_iff hn]
 
-instance : LinearOrderedAddCommMonoidWithTop (Additive (OrderDual α)) :=
+instance : LinearOrderedAddCommMonoidWithTop (Additive αᵒᵈ) :=
   { Additive.orderedAddCommMonoid, Additive.linearOrder with top := (0 : α),
     top_add' := fun a => (zero_mul a : (0 : α) * a = 0), le_top := fun _ => zero_le' }
 
@@ -296,7 +296,7 @@ theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
 theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
   rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
 
-instance : LinearOrderedAddCommGroupWithTop (Additive (OrderDual α)) :=
+instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=
   { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with neg_top := inv_zero,
     add_neg_cancel := fun a ha => mul_inv_cancel ha }
 

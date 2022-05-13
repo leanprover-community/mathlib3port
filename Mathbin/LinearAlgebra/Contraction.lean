@@ -27,11 +27,11 @@ open TensorProduct LinearMap Matrix
 
 open TensorProduct BigOperators
 
-variable (R M N : Type _) [AddCommGroupₓ M] [AddCommGroupₓ N]
+variable (R M N P : Type _) [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P]
 
 section CommRingₓ
 
-variable [CommRingₓ R] [Module R M] [Module R N]
+variable [CommRingₓ R] [Module R M] [Module R N] [Module R P]
 
 variable {ι : Type _} [DecidableEq ι] [Fintype ι] (b : Basis ι R M)
 
@@ -48,7 +48,7 @@ def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
   let M' := Module.Dual R M
   (uncurry R M' N (M →ₗ[R] N) : _ → M' ⊗ N →ₗ[R] M →ₗ[R] N) LinearMap.smulRightₗ
 
-variable {R M N}
+variable {R M N P}
 
 @[simp]
 theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m := by
@@ -63,6 +63,13 @@ theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) : dualTensor
   dunfold dualTensorHom
   rw [uncurry_apply]
   rfl
+
+@[simp]
+theorem comp_dual_tensor_hom (f : Module.Dual R M) (n : N) (g : Module.Dual R N) (p : P) :
+    dualTensorHom R N P (g ⊗ₜ[R] p) ∘ₗ dualTensorHom R M N (f ⊗ₜ[R] n) = g n • dualTensorHom R M P (f ⊗ₜ p) := by
+  ext m
+  simp only [coe_comp, Function.comp_app, dual_tensor_hom_apply, map_smulₛₗ, RingHom.id_apply, smul_apply]
+  rw [smul_comm]
 
 /-- As a matrix, `dual_tensor_hom` evaluated on a basis element of `M* ⊗ N` is a matrix with a
 single one and zeros elsewhere -/
@@ -97,6 +104,8 @@ noncomputable def dualTensorHomEquivOfBasis {ι : Type _} [DecidableEq ι] [Fint
 theorem dual_tensor_hom_equiv_of_basis_to_linear_map :
     (dualTensorHomEquivOfBasis b : Module.Dual R M ⊗[R] N ≃ₗ[R] M →ₗ[R] N).toLinearMap = dualTensorHom R M N :=
   rfl
+
+variable (R M N)
 
 variable [Module.Free R M] [Module.Finite R M] [Nontrivial R]
 

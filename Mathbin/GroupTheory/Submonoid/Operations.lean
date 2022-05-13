@@ -100,7 +100,7 @@ end
 
 section
 
-variable {A : Type _} [AddZeroClass A]
+variable {A : Type _} [AddZeroClassₓ A]
 
 /-- Additive submonoids of an additive monoid `A` are isomorphic to
 multiplicative submonoids of `multiplicative A`. -/

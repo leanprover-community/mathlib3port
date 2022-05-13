@@ -237,6 +237,12 @@ theorem equiv_fun_on_fintype_symm_coe {α} [Fintype α] (f : α →₀ M) : equi
   ext
   simp [equiv_fun_on_fintype]
 
+/-- If `α` has a unique term,
+then the type of finitely supported functions `α →₀ β` is equivalent to `β`. -/
+@[simps]
+noncomputable def _root_.equiv.finsupp_unique {ι : Type _} [Unique ι] : (ι →₀ M) ≃ M :=
+  Finsupp.equivFunOnFintype.trans (Equivₓ.funUnique ι M)
+
 end Basic
 
 /-! ### Declarations about `single` -/
@@ -383,6 +389,7 @@ instance [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) := by
 theorem unique_single [Unique α] (x : α →₀ M) : x = single default (x default) :=
   ext <| Unique.forall_iff.2 single_eq_same.symm
 
+@[ext]
 theorem unique_ext [Unique α] {f g : α →₀ M} (h : f default = g default) : f = g :=
   ext fun a => by
     rwa [Unique.eq_default a]
@@ -916,9 +923,9 @@ end SumProd
 -/
 
 
-section AddZeroClass
+section AddZeroClassₓ
 
-variable [AddZeroClass M]
+variable [AddZeroClassₓ M]
 
 instance : Add (α →₀ M) :=
   ⟨zipWith (· + ·) (add_zeroₓ 0)⟩
@@ -953,7 +960,7 @@ theorem single_add {a : α} {b₁ b₂ : M} : single a (b₁ + b₂) = single a 
     · rw [add_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, zero_addₓ]
       
 
-instance : AddZeroClass (α →₀ M) :=
+instance : AddZeroClassₓ (α →₀ M) :=
   FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
 
 /-- `finsupp.single` as an `add_monoid_hom`.
@@ -1068,7 +1075,7 @@ theorem add_closure_set_of_eq_single : AddSubmonoid.closure { f : α →₀ M | 
 
 /-- If two additive homomorphisms from `α →₀ M` are equal on each `single a b`, then
 they are equal. -/
-theorem add_hom_ext [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄ (H : ∀ x y, f (single x y) = g (single x y)) : f = g := by
+theorem add_hom_ext [AddZeroClassₓ N] ⦃f g : (α →₀ M) →+ N⦄ (H : ∀ x y, f (single x y) = g (single x y)) : f = g := by
   refine' AddMonoidHom.eq_of_eq_on_mdense add_closure_set_of_eq_single _
   rintro _ ⟨x, y, rfl⟩
   apply H
@@ -1080,7 +1087,7 @@ We formulate this using equality of `add_monoid_hom`s so that `ext` tactic can a
 extensionality lemma after this one.  E.g., if the fiber `M` is `ℕ` or `ℤ`, then it suffices to
 verify `f (single a 1) = g (single a 1)`. -/
 @[ext]
-theorem add_hom_ext' [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
+theorem add_hom_ext' [AddZeroClassₓ N] ⦃f g : (α →₀ M) →+ N⦄
     (H : ∀ x, f.comp (singleAddHom x) = g.comp (singleAddHom x)) : f = g :=
   add_hom_ext fun x => AddMonoidHom.congr_fun (H x)
 
@@ -1093,7 +1100,7 @@ theorem mul_hom_ext' [MulOneClassₓ N] {f g : Multiplicative (α →₀ M) →*
     (H : ∀ x, f.comp (singleAddHom x).toMultiplicative = g.comp (singleAddHom x).toMultiplicative) : f = g :=
   mul_hom_ext fun x => MonoidHom.congr_fun (H x)
 
-theorem map_range_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0} (hf' : ∀ x y, f (x + y) = f x + f y)
+theorem map_range_add [AddZeroClassₓ N] {f : M → N} {hf : f 0 = 0} (hf' : ∀ x y, f (x + y) = f x + f y)
     (v₁ v₂ : α →₀ M) : mapRange f hf (v₁ + v₂) = mapRange f hf v₁ + mapRange f hf v₂ :=
   ext fun a => by
     simp only [hf', add_apply, map_range_apply]
@@ -1117,7 +1124,7 @@ def embDomain.addMonoidHom (f : α ↪ β) : (α →₀ M) →+ β →₀ M wher
 theorem emb_domain_add (f : α ↪ β) (v w : α →₀ M) : embDomain f (v + w) = embDomain f v + embDomain f w :=
   (embDomain.addMonoidHom f).map_add v w
 
-end AddZeroClass
+end AddZeroClassₓ
 
 section AddMonoidₓ
 
@@ -1307,7 +1314,7 @@ if `h` is an additive-to-multiplicative homomorphism on the support.
 This is a more general version of `finsupp.prod_add_index'`; the latter has simpler hypotheses. -/
 @[to_additive
       "Taking the product under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism on the support.\nThis is a more general version of `finsupp.sum_add_index'`; the latter has simpler hypotheses."]
-theorem prod_add_index [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N}
+theorem prod_add_index [AddZeroClassₓ M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N}
     (h_zero : ∀, ∀ a ∈ f.Support ∪ g.Support, ∀, h a 0 = 1)
     (h_add : ∀, ∀ a ∈ f.Support ∪ g.Support, ∀ b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
     (f + g).Prod h = f.Prod h * g.Prod h := by
@@ -1322,25 +1329,25 @@ theorem prod_add_index [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} {h
 if `h` is an additive-to-multiplicative homomorphism.
 This is a more specialized version of `finsupp.prod_add_index` with simpler hypotheses. -/
 @[to_additive
-      "Taking the product under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism.\nThis is a more specific version of `finsupp.sum_add_index` with simpler hypotheses."]
-theorem prod_add_index' [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N} (h_zero : ∀ a, h a 0 = 1)
+      "Taking the sum under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism.\nThis is a more specific version of `finsupp.sum_add_index` with simpler hypotheses."]
+theorem prod_add_index' [AddZeroClassₓ M] [CommMonoidₓ N] {f g : α →₀ M} {h : α → M → N} (h_zero : ∀ a, h a 0 = 1)
     (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) : (f + g).Prod h = f.Prod h * g.Prod h :=
   prod_add_index (fun a ha => h_zero a) fun a ha => h_add a
 
 @[simp]
-theorem sum_hom_add_index [AddZeroClass M] [AddCommMonoidₓ N] {f g : α →₀ M} (h : α → M →+ N) :
+theorem sum_hom_add_index [AddZeroClassₓ M] [AddCommMonoidₓ N] {f g : α →₀ M} (h : α → M →+ N) :
     ((f + g).Sum fun x => h x) = (f.Sum fun x => h x) + g.Sum fun x => h x :=
   sum_add_index' (fun a => (h a).map_zero) fun a => (h a).map_add
 
 @[simp]
-theorem prod_hom_add_index [AddZeroClass M] [CommMonoidₓ N] {f g : α →₀ M} (h : α → Multiplicative M →* N) :
+theorem prod_hom_add_index [AddZeroClassₓ M] [CommMonoidₓ N] {f g : α →₀ M} (h : α → Multiplicative M →* N) :
     ((f + g).Prod fun a b => h a (Multiplicative.ofAdd b)) =
       (f.Prod fun a b => h a (Multiplicative.ofAdd b)) * g.Prod fun a b => h a (Multiplicative.ofAdd b) :=
   prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_mul
 
 /-- The canonical isomorphism between families of additive monoid homomorphisms `α → (M →+ N)`
 and monoid homomorphisms `(α →₀ M) →+ N`. -/
-def liftAddHom [AddZeroClass M] [AddCommMonoidₓ N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N) where
+def liftAddHom [AddZeroClassₓ M] [AddCommMonoidₓ N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N) where
   toFun := fun F =>
     { toFun := fun f => f.Sum fun x => F x, map_zero' := Finset.sum_empty,
       map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
@@ -1833,6 +1840,7 @@ section ComapDomain
 /-- Given `f : α → β`, `l : β →₀ M` and a proof `hf` that `f` is injective on
 the preimage of `l.support`, `comap_domain f l hf` is the finitely supported function
 from `α` to `M` given by composing `l` with `f`. -/
+@[simps Support]
 def comapDomain [Zero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f ⁻¹' ↑l.Support)) : α →₀ M where
   Support := l.Support.Preimage f hf
   toFun := fun a => l (f a)
@@ -1859,8 +1867,61 @@ theorem eq_zero_of_comap_domain_eq_zero [AddCommMonoidₓ M] (f : α → β) (l 
   cases' hf.2.2 ha with b hb
   exact h b (hb.2.symm ▸ ha)
 
-theorem map_domain_comap_domain [AddCommMonoidₓ M] (f : α → β) (l : β →₀ M) (hf : Function.Injective f)
-    (hl : ↑l.Support ⊆ Set.Range f) : mapDomain f (comapDomain f l (hf.InjOn _)) = l := by
+section FInjective
+
+section Zero
+
+variable [Zero M]
+
+/-- Note the `hif` argument is needed for this to work in `rw`. -/
+@[simp]
+theorem comap_domain_zero (f : α → β) (hif : Set.InjOn f (f ⁻¹' ↑(0 : β →₀ M).Support) := Set.inj_on_empty _) :
+    comapDomain f (0 : β →₀ M) hif = (0 : α →₀ M) := by
+  ext
+  rfl
+
+@[simp]
+theorem comap_domain_single (f : α → β) (a : α) (m : M) (hif : Set.InjOn f (f ⁻¹' (single (f a) m).Support)) :
+    comapDomain f (Finsupp.single (f a) m) hif = Finsupp.single a m := by
+  rcases eq_or_ne m 0 with (rfl | hm)
+  · simp only [single_zero, comap_domain_zero]
+    
+  · rw [eq_single_iff, comap_domain_apply, comap_domain_support, ← Finset.coe_subset, coe_preimage,
+      support_single_ne_zero hm, coe_singleton, coe_singleton, single_eq_same]
+    rw [support_single_ne_zero hm, coe_singleton] at hif
+    exact ⟨fun x hx => hif hx rfl hx, rfl⟩
+    
+
+end Zero
+
+section AddZeroClassₓ
+
+variable [AddZeroClassₓ M] {f : α → β}
+
+theorem comap_domain_add (v₁ v₂ : β →₀ M) (hv₁ : Set.InjOn f (f ⁻¹' ↑v₁.Support))
+    (hv₂ : Set.InjOn f (f ⁻¹' ↑v₂.Support)) (hv₁₂ : Set.InjOn f (f ⁻¹' ↑(v₁ + v₂).Support)) :
+    comapDomain f (v₁ + v₂) hv₁₂ = comapDomain f v₁ hv₁ + comapDomain f v₂ hv₂ := by
+  ext
+  simp only [comap_domain_apply, coe_add, Pi.add_apply]
+
+/-- A version of `finsupp.comap_domain_add` that's easier to use. -/
+theorem comap_domain_add_of_injective (hf : Function.Injective f) (v₁ v₂ : β →₀ M) :
+    comapDomain f (v₁ + v₂) (hf.InjOn _) = comapDomain f v₁ (hf.InjOn _) + comapDomain f v₂ (hf.InjOn _) :=
+  comap_domain_add _ _ _ _ _
+
+/-- `finsupp.comap_domain` is an `add_monoid_hom`. -/
+@[simps]
+def comapDomain.addMonoidHom (hf : Function.Injective f) : (β →₀ M) →+ α →₀ M where
+  toFun := fun x => comapDomain f x (hf.InjOn _)
+  map_zero' := comap_domain_zero f
+  map_add' := comap_domain_add_of_injective hf
+
+end AddZeroClassₓ
+
+variable [AddCommMonoidₓ M] (f : α → β)
+
+theorem map_domain_comap_domain (hf : Function.Injective f) (l : β →₀ M) (hl : ↑l.Support ⊆ Set.Range f) :
+    mapDomain f (comapDomain f l (hf.InjOn _)) = l := by
   ext a
   by_cases' h_cases : a ∈ Set.Range f
   · rcases Set.mem_range.1 h_cases with ⟨b, hb⟩
@@ -1870,6 +1931,8 @@ theorem map_domain_comap_domain [AddCommMonoidₓ M] (f : α → β) (l : β →
     by_contra h_contr
     apply h_cases (hl <| Finset.mem_coe.2 <| mem_support_iff.2 fun h => h_contr h.symm)
     
+
+end FInjective
 
 end ComapDomain
 
@@ -2067,7 +2130,7 @@ theorem prod_div_prod_filter [CommGroupₓ G] (g : α → M → G) :
 
 end Zero
 
-theorem filter_pos_add_filter_neg [AddZeroClass M] (f : α →₀ M) (p : α → Prop) :
+theorem filter_pos_add_filter_neg [AddZeroClassₓ M] (f : α →₀ M) (p : α → Prop) :
     (f.filter p + f.filter fun a => ¬p a) = f :=
   coe_fn_injective <| Set.indicator_self_add_compl { x | p x } f
 
@@ -2142,9 +2205,9 @@ theorem prod_subtype_domain_index [CommMonoidₓ N] {v : α →₀ M} {h : α �
 
 end Zero
 
-section AddZeroClass
+section AddZeroClassₓ
 
-variable [AddZeroClass M] {p : α → Prop} {v v' : α →₀ M}
+variable [AddZeroClassₓ M] {p : α → Prop} {v v' : α →₀ M}
 
 @[simp]
 theorem subtype_domain_add {v v' : α →₀ M} : (v + v').subtypeDomain p = v.subtypeDomain p + v'.subtypeDomain p :=
@@ -2166,7 +2229,7 @@ def filterAddHom (p : α → Prop) : (α →₀ M) →+ α →₀ M where
 theorem filter_add {v v' : α →₀ M} : (v + v').filter p = v.filter p + v'.filter p :=
   (filterAddHom p).map_add v v'
 
-end AddZeroClass
+end AddZeroClassₓ
 
 section CommMonoidₓ
 
@@ -2580,6 +2643,20 @@ theorem map_range_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M]
 
 theorem smul_single_one [Semiringₓ R] (a : α) (b : R) : b • single a 1 = single a b := by
   rw [smul_single, smul_eq_mul, mul_oneₓ]
+
+theorem comap_domain_smul [AddMonoidₓ M] [Monoidₓ R] [DistribMulAction R M] {f : α → β} (r : R) (v : β →₀ M)
+    (hfv : Set.InjOn f (f ⁻¹' ↑v.Support))
+    (hfrv : Set.InjOn f (f ⁻¹' ↑(r • v).Support) :=
+      hfv.mono <| Set.preimage_mono <| Finset.coe_subset.mpr support_smul) :
+    comapDomain f (r • v) hfrv = r • comapDomain f v hfv := by
+  ext
+  rfl
+
+/-- A version of `finsupp.comap_domain_smul` that's easier to use. -/
+theorem comap_domain_smul_of_injective [AddMonoidₓ M] [Monoidₓ R] [DistribMulAction R M] {f : α → β}
+    (hf : Function.Injective f) (r : R) (v : β →₀ M) :
+    comapDomain f (r • v) (hf.InjOn _) = r • comapDomain f v (hf.InjOn _) :=
+  comap_domain_smul _ _ _ _
 
 end
 

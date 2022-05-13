@@ -123,11 +123,11 @@ theorem snd_swap {p : α × β} : (swap p).2 = p.1 :=
   rfl
 
 @[simp]
-theorem swap_prod_mkₓ {a : α} {b : β} : swap (a, b) = (b, a) :=
+theorem swap_prod_mk {a : α} {b : β} : swap (a, b) = (b, a) :=
   rfl
 
 @[simp]
-theorem swap_swap_eqₓ : swap ∘ swap = @id (α × β) :=
+theorem swap_swap_eq : swap ∘ swap = @id (α × β) :=
   funext swap_swap
 
 @[simp]

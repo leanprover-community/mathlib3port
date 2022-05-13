@@ -269,6 +269,12 @@ theorem mk'_to_equiv (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (q : G �
     Quotientₓ.mk' (toEquiv hS q : G) = q :=
   (toEquiv hS).symm_apply_apply q
 
+@[to_additive]
+theorem to_equiv_apply {f : G ⧸ H → G} (hf : ∀ q, (f q : G ⧸ H) = q) (q : G ⧸ H) :
+    (toEquiv (range_mem_left_transversals hf) q : G) = f q := by
+  refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
+  exact (to_equiv (range_mem_left_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
+
 /-- A left transversal can be viewed as a function mapping each element of the group
   to the chosen representative from that left coset. -/
 @[to_additive
@@ -301,6 +307,12 @@ noncomputable def toEquiv (hS : S ∈ Subgroup.RightTransversals (H : Set G)) :
 theorem mk'_to_equiv (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (q : Quotientₓ (QuotientGroup.rightRel H)) :
     Quotientₓ.mk' (toEquiv hS q : G) = q :=
   (toEquiv hS).symm_apply_apply q
+
+@[to_additive]
+theorem to_equiv_apply {f : Quotientₓ (QuotientGroup.rightRel H) → G} (hf : ∀ q, Quotientₓ.mk' (f q) = q)
+    (q : Quotientₓ (QuotientGroup.rightRel H)) : (toEquiv (range_mem_right_transversals hf) q : G) = f q := by
+  refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
+  exact (to_equiv (range_mem_right_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
 
 /-- A right transversal can be viewed as a function mapping each element of the group
   to the chosen representative from that right coset. -/
@@ -430,7 +442,7 @@ theorem is_complement'_stabilizer {α : Type _} [MulAction G α] (a : α) (h1 : 
     h1 (h * h')
       (by
         rwa [mul_smul, smul_def h', ← hg, ← mul_smul, hg])
-  refine' Prod.extₓ (eq_inv_of_eq_inv (eq_inv_of_mul_eq_one h1)) (Subtype.ext _)
+  refine' Prod.extₓ (eq_inv_of_mul_eq_one_right h1) (Subtype.ext _)
   rwa [Subtype.ext_iff, coe_one, coe_mul, ← self_eq_mul_left, mul_assoc (↑h) (↑h') g] at h1
 
 end Subgroup

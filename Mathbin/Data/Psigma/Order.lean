@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 -/
 import Mathbin.Data.Sigma.Lex
-import Mathbin.Order.Lexicographic
+import Mathbin.Order.Synonym
 
 /-!
 # Lexicographic order on a sigma type

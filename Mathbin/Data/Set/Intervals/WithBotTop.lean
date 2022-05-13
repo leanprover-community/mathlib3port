@@ -116,12 +116,12 @@ namespace WithBot
 
 @[simp]
 theorem preimage_coe_bot : (coe : α → WithBot α) ⁻¹' {⊥} = (∅ : Set α) :=
-  @WithTop.preimage_coe_top (OrderDual α)
+  @WithTop.preimage_coe_top αᵒᵈ
 
 variable [PartialOrderₓ α] {a b : α}
 
 theorem range_coe : Range (coe : α → WithBot α) = Ioi ⊥ :=
-  @WithTop.range_coe (OrderDual α) _
+  @WithTop.range_coe αᵒᵈ _
 
 @[simp]
 theorem preimage_coe_Ioi : (coe : α → WithBot α) ⁻¹' Ioi a = Ioi a :=

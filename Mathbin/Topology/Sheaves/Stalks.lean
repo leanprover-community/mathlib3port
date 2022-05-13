@@ -11,7 +11,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Topology.Sober
 import Mathbin.Tactic.Elementwise
-import Mathbin.Algebra.Category.CommRing.Default
+import Mathbin.Algebra.Category.Ring.Default
 
 /-!
 # Stalks
@@ -350,7 +350,7 @@ every element of the stalk is the germ of a section.
 -/
 theorem germ_exist (F : X.Presheaf C) (x : X) (t : stalk F x) :
     ∃ (U : Opens X)(m : x ∈ U)(s : F.obj (op U)), F.germ ⟨x, m⟩ s = t := by
-  obtain ⟨U, s, e⟩ := types.jointly_surjective _ (is_colimit_of_preserves (forget C) (colimit.is_colimit _)) t
+  obtain ⟨U, s, e⟩ := Types.jointly_surjective.{v, v} _ (is_colimit_of_preserves (forget C) (colimit.is_colimit _)) t
   revert s e
   rw [show U = op (unop U) from rfl]
   generalize unop U = V
@@ -363,7 +363,7 @@ theorem germ_eq (F : X.Presheaf C) {U V : Opens X} (x : X) (mU : x ∈ U) (mV : 
     (t : F.obj (op V)) (h : germ F ⟨x, mU⟩ s = germ F ⟨x, mV⟩ t) :
     ∃ (W : Opens X)(m : x ∈ W)(iU : W ⟶ U)(iV : W ⟶ V), F.map iU.op s = F.map iV.op t := by
   obtain ⟨W, iU, iV, e⟩ :=
-    (types.filtered_colimit.is_colimit_eq_iff _
+    (Types.FilteredColimit.is_colimit_eq_iff.{v, v} _
           (is_colimit_of_preserves _ (colimit.is_colimit ((open_nhds.inclusion x).op ⋙ F)))).mp
       h
   exact ⟨(unop W).1, (unop W).2, iU.unop, iV.unop, e⟩

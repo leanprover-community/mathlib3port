@@ -144,7 +144,7 @@ theorem mul_support_supr [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι 
 @[to_additive]
 theorem mul_support_infi [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
     (MulSupport fun x => ⨅ i, f i x) ⊆ ⋃ i, MulSupport (f i) :=
-  @mul_support_supr _ (OrderDual M) ι ⟨(1 : M)⟩ _ _ f
+  @mul_support_supr _ Mᵒᵈ ι ⟨(1 : M)⟩ _ _ f
 
 @[to_additive]
 theorem mul_support_comp_subset {g : M → N} (hg : g 1 = 1) (f : α → M) : MulSupport (g ∘ f) ⊆ MulSupport f := fun x =>
@@ -208,7 +208,7 @@ theorem mul_support_inv' [Groupₓ G] (f : α → G) : MulSupport f⁻¹ = MulSu
 
 @[simp]
 theorem mul_support_inv₀ [GroupWithZeroₓ G₀] (f : α → G₀) : (MulSupport fun x => (f x)⁻¹) = MulSupport f :=
-  Set.ext fun x => not_congr inv_eq_one₀
+  Set.ext fun x => inv_ne_one
 
 @[to_additive]
 theorem mul_support_mul_inv [Groupₓ G] (f g : α → G) :
@@ -223,7 +223,7 @@ theorem mul_support_group_div [Groupₓ G] (f g : α → G) :
     (MulSupport fun x => f x / g x) ⊆ MulSupport f ∪ MulSupport g :=
   mul_support_binop_subset (· / ·)
     (by
-      simp only [one_div, one_inv])
+      simp only [one_div, inv_one])
     f g
 
 theorem mul_support_div [GroupWithZeroₓ G₀] (f g : α → G₀) :

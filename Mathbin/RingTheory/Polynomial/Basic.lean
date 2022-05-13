@@ -112,7 +112,7 @@ theorem degree_lt_eq_span_X_pow {n : ℕ} :
   exact lt_of_le_of_ltₓ (degree_X_pow_le _) (WithBot.coe_lt_coe.2 <| Finset.mem_range.1 hk)
 
 /-- The first `n` coefficients on `degree_lt n` form a linear equivalence with `fin n → R`. -/
-def degreeLtEquiv (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
+def degreeLtEquiv R [Semiringₓ R] (n : ℕ) : degreeLt R n ≃ₗ[R] Finₓ n → R where
   toFun := fun p n => (↑p : R[X]).coeff n
   invFun := fun f =>
     ⟨∑ i : Finₓ n, monomial i (f i),
@@ -299,7 +299,7 @@ section ToSubring
 variable (p : R[X]) (T : Subring R)
 
 /-- Given a polynomial `p` and a subring `T` that contains the coefficients of `p`,
-return the corresponding polynomial whose coefficients are in `T. -/
+return the corresponding polynomial whose coefficients are in `T`. -/
 def toSubring (hp : (↑p.frange : Set R) ⊆ T) : T[X] :=
   ∑ i in p.support,
     monomial i (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_frange _ H)⟩ : T)
@@ -573,27 +573,16 @@ variable [Ringₓ R]
 
 /-- `polynomial R` is never a field for any ring `R`. -/
 theorem polynomial_not_is_field : ¬IsField R[X] := by
-  by_contra hR
-  by_cases' hR' : ∃ x y : R, x ≠ y
-  · have : Nontrivial R :=
-      let ⟨x, y, hxy⟩ := hR'
-      nontrivial_of_ne x y hxy
-    obtain ⟨p, hp⟩ := hR.mul_inv_cancel X_ne_zero
-    by_cases' hp0 : p = 0
-    · replace hp := congr_argₓ degree hp
-      rw [hp0, mul_zero, degree_zero, degree_one] at hp
-      contradiction
-      
-    · have : p.degree < (X * p).degree := (X_mul.symm : p * X = _) ▸ degree_lt_degree_mul_X hp0
-      rw [congr_argₓ degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
-      exact hp0 this
-      
-    
-  · push_neg  at hR'
-    exact
-      let ⟨x, y, hxy⟩ := hR.exists_pair_ne
-      hxy (Polynomial.ext fun n => hR' _ _)
-    
+  nontriviality R
+  intro hR
+  obtain ⟨p, hp⟩ := hR.mul_inv_cancel X_ne_zero
+  have hp0 : p ≠ 0 := by
+    rintro rfl
+    rw [mul_zero] at hp
+    exact zero_ne_one hp
+  have := degree_lt_degree_mul_X hp0
+  rw [← X_mul, congr_argₓ degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
+  exact hp0 this
 
 /-- The only constant in a maximal ideal over a field is `0`. -/
 theorem eq_zero_of_constant_mem_of_maximal (hR : IsField R) (I : Ideal R[X]) [hI : I.IsMaximal] (x : R) (hx : c x ∈ I) :

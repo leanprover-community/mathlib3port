@@ -37,8 +37,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
   refine' ⟨fun i => ⟨nat_abs (floor ((A i % b : ℤ) / abs b • ε : ℝ)), _⟩, _⟩
   · rw [← coe_nat_lt, nat_abs_of_nonneg (hfloor i), floor_lt]
     apply lt_of_lt_of_leₓ _ (Nat.le_ceil _)
-    rw [Algebra.smul_def, RingHom.eq_int_cast, ← div_div_eq_div_mul, div_lt_div_right hε, div_lt_iff hb', one_mulₓ,
-      cast_lt]
+    rw [Algebra.smul_def, RingHom.eq_int_cast, ← div_div, div_lt_div_right hε, div_lt_iff hb', one_mulₓ, cast_lt]
     exact Int.mod_lt _ hb
     
   intro i₀ i₁ hi

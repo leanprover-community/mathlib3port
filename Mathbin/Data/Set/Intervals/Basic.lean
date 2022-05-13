@@ -304,7 +304,7 @@ theorem Ici_subset_Ici : Ici a ⊆ Ici b ↔ b ≤ a :=
   ⟨fun h => h <| left_mem_Ici, fun h x hx => h.trans hx⟩
 
 theorem Iic_subset_Iic : Iic a ⊆ Iic b ↔ a ≤ b :=
-  @Ici_subset_Ici (OrderDual α) _ _ _
+  @Ici_subset_Ici αᵒᵈ _ _ _
 
 theorem Ici_subset_Ioi : Ici a ⊆ Ioi b ↔ b < a :=
   ⟨fun h => h left_mem_Ici, fun h x hx => h.trans_le hx⟩
@@ -650,7 +650,7 @@ theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : Ioi a ⊆ s) (hc : s 
 
 theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s ⊆ Iic a) :
     s ∈ ({Iic a, Iio a} : Set (Set α)) :=
-  @mem_Ici_Ioi_of_subset_of_subset (OrderDual α) _ a s ho hc
+  @mem_Ici_Ioi_of_subset_of_subset αᵒᵈ _ a s ho hc
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
@@ -847,7 +847,7 @@ theorem Ico_subset_Ico_iff (h₁ : a₁ < b₁) : Ico a₁ b₁ ⊆ Ico a₂ b�
     fun ⟨h₁, h₂⟩ => Ico_subset_Ico h₁ h₂⟩
 
 theorem Ioc_subset_Ioc_iff (h₁ : a₁ < b₁) : Ioc a₁ b₁ ⊆ Ioc a₂ b₂ ↔ b₁ ≤ b₂ ∧ a₂ ≤ a₁ := by
-  convert @Ico_subset_Ico_iff (OrderDual α) _ b₁ b₂ a₁ a₂ h₁ <;> exact (@dual_Ico α _ _ _).symm
+  convert @Ico_subset_Ico_iff αᵒᵈ _ b₁ b₂ a₁ a₂ h₁ <;> exact (@dual_Ico α _ _ _).symm
 
 theorem Ioo_subset_Ioo_iff [DenselyOrdered α] (h₁ : a₁ < b₁) : Ioo a₁ b₁ ⊆ Ioo a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
   ⟨fun h => by

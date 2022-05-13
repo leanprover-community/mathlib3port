@@ -249,9 +249,8 @@ variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] (r s : R) (x y : M)
 
 @[simp]
 theorem neg_smul : -r • x = -(r • x) :=
-  eq_neg_of_add_eq_zero
-    (by
-      rw [← add_smul, add_left_negₓ, zero_smul])
+  eq_neg_of_add_eq_zero_left <| by
+    rw [← add_smul, add_left_negₓ, zero_smul]
 
 @[simp]
 theorem neg_smul_neg : -r • -x = r • x := by

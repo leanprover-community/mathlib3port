@@ -195,7 +195,7 @@ theorem irreducible_of_monic {p : R[X]} (hp1 : p.Monic) (hp2 : p ≠ 1) :
         hp3 (f * c f.leadingCoeff⁻¹) (g * c g.leadingCoeff⁻¹) (monic_mul_leading_coeff_inv hf)
             (monic_mul_leading_coeff_inv hg) <|
           by
-          rw [mul_assoc, mul_left_commₓ _ g, ← mul_assoc, ← C_mul, ← mul_inv₀, ← leading_coeff_mul, ← hp,
+          rw [mul_assoc, mul_left_commₓ _ g, ← mul_assoc, ← C_mul, ← mul_inv, ← leading_coeff_mul, ← hp,
             monic.def.1 hp1, inv_one, C_1, mul_oneₓ]⟩⟩
 
 /-- Division of polynomials. See `polynomial.div_by_monic` for more details.-/
@@ -434,7 +434,7 @@ theorem div_C_mul : p / (c a * q) = c a⁻¹ * (p / q) := by
   by_cases' ha : a = 0
   · simp [ha]
     
-  simp only [div_def, leading_coeff_mul, mul_inv₀, leading_coeff_C, C.map_mul, mul_assoc]
+  simp only [div_def, leading_coeff_mul, mul_inv, leading_coeff_C, C.map_mul, mul_assoc]
   congr 3
   rw [mul_left_commₓ q, ← mul_assoc, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mulₓ]
 

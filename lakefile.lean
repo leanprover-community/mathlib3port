@@ -5,7 +5,7 @@ open Lake DSL System
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
 -- You can find the relevant SHA by inspecting the URL of the artifacts on the release page.
-def tag : String := "nightly-2022-05-03"
+def tag : String := "nightly-2022-05-13"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
 def leanTarName : String := "mathlib3-synport.tar.gz"
@@ -53,6 +53,6 @@ package mathlib3port (dir) {
   defaultFacet := PackageFacet.oleans
   dependencies := #[{
     name := "lean3port",
-    src := Source.git "https://github.com/leanprover-community/lean3port.git" "9fa58e0bd55598945f81692645534a40862c5cfd"
+    src := Source.git "https://github.com/leanprover-community/lean3port.git" "00e341422f0ab6671ae92f20f2722f75065aea6c"
   }]
 }

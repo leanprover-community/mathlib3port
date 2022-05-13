@@ -992,7 +992,7 @@ variable [Semiringₓ R] [∀ i, AddCommGroupₓ (M₁ i)] [AddCommGroupₓ M₂
 
 @[simp]
 theorem map_neg (m : ∀ i, M₁ i) (i : ι) (x : M₁ i) : f (update m i (-x)) = -f (update m i x) :=
-  eq_neg_of_add_eq_zero <| by
+  eq_neg_of_add_eq_zero_left <| by
     rw [← MultilinearMap.map_add, add_left_negₓ, f.map_coord_zero i (update_same i 0 m)]
 
 @[simp]

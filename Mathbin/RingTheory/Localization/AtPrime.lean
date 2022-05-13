@@ -30,9 +30,9 @@ commutative ring, field of fractions
 -/
 
 
-variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
+variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) (S : Type _) [CommSemiringₓ S]
 
-variable [Algebra R S] {P : Type _} [CommRingₓ P]
+variable [Algebra R S] {P : Type _} [CommSemiringₓ P]
 
 section AtPrime
 
@@ -65,16 +65,18 @@ protected abbrev Localization.AtPrime :=
 
 namespace IsLocalization
 
+theorem AtPrime.nontrivial [IsLocalization.AtPrime S I] : Nontrivial S :=
+  (nontrivial_of_ne (0 : S) 1) fun hze => by
+    rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
+    obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze
+    have htz : (t : R) = 0 := by
+      simpa using ht.symm
+    exact t.2 (htz.symm ▸ I.zero_mem : ↑t ∈ I)
+
+attribute [local instance] at_prime.nontrivial
+
 theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
-  @LocalRing.mk _ _
-    (nontrivial_of_ne (0 : S) 1 fun hze => by
-      rw [← (algebraMap R S).map_one, ← (algebraMap R S).map_zero] at hze
-      obtain ⟨t, ht⟩ := (eq_iff_exists I.prime_compl S).1 hze
-      exact
-        (show (t : R) ∉ I from t.2)
-          (have htz : (t : R) = 0 := by
-            simpa using ht.symm
-          htz.symm ▸ I.zero_mem))
+  LocalRing.of_nonunits_add
     (by
       intro x y hx hy hu
       cases' is_unit_iff_exists_inv.1 hu with z hxyz
@@ -89,14 +91,11 @@ theorem AtPrime.local_ring [IsLocalization.AtPrime S I] : LocalRing S :=
       rw [← hry] at hy
       obtain ⟨t, ht⟩ := IsLocalization.eq.1 hxyz
       simp only [mul_oneₓ, one_mulₓ, Submonoid.coe_mul, Subtype.coe_mk] at ht
-      rw [← sub_eq_zero, ← sub_mul] at ht
-      have hr := (hp.mem_or_mem_of_mul_eq_zero ht).resolve_right t.2
-      rw [sub_eq_add_neg] at hr
-      have := I.neg_mem_iff.1 ((Ideal.add_mem_iff_right _ _).1 hr)
-      · exact not_orₓ (mt hp.mem_or_mem (not_orₓ sx.2 sy.2)) sz.2 (hp.mem_or_mem this)
-        
-      · exact I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ (this hx)) (I.mul_mem_right _ (this hy)))
-        )
+      suffices : ↑sx * ↑sy * ↑sz * ↑t ∈ I
+      exact
+        not_orₓ (mt hp.mem_or_mem <| not_orₓ sx.2 sy.2) sz.2 (hp.mem_or_mem <| (hp.mem_or_mem this).resolve_right t.2)
+      rw [← ht, mul_assoc]
+      exact I.mul_mem_right _ (I.add_mem (I.mul_mem_right _ <| this hx) (I.mul_mem_right _ <| this hy)))
 
 end IsLocalization
 
@@ -136,7 +135,7 @@ theorem is_unit_to_map_iff (x : R) : IsUnit ((algebraMap R S) x) ↔ x ∈ I.pri
 theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := local_ring S I) :
     algebraMap R S x ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [@LocalRing.mem_maximal_ideal S, mem_nonunits_iff, not_not] using is_unit_to_map_iff S I x
+    simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_to_map_iff S I x
 
 theorem is_unit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x ∈ I.primeCompl :=
   ⟨fun h hx => mk'_mem_iff.mpr ((to_map_mem_maximal_iff S I x).mpr hx) h, fun h =>
@@ -145,7 +144,7 @@ theorem is_unit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x �
 theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := local_ring S I) :
     mk' S x y ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
-    simpa only [@LocalRing.mem_maximal_ideal S, mem_nonunits_iff, not_not] using is_unit_mk'_iff S I x y
+    simpa only [LocalRing.mem_maximal_ideal, mem_nonunits_iff, not_not] using is_unit_mk'_iff S I x y
 
 end AtPrime
 
@@ -223,7 +222,7 @@ theorem local_ring_hom_id : localRingHom I I (RingHom.id R) (Ideal.comap_id I).s
   local_ring_hom_unique _ _ _ _ fun x => rfl
 
 @[simp]
-theorem local_ring_hom_comp {S : Type _} [CommRingₓ S] (J : Ideal S) [hJ : J.IsPrime] (K : Ideal P) [hK : K.IsPrime]
+theorem local_ring_hom_comp {S : Type _} [CommSemiringₓ S] (J : Ideal S) [hJ : J.IsPrime] (K : Ideal P) [hK : K.IsPrime]
     (f : R →+* S) (hIJ : I = J.comap f) (g : S →+* P) (hJK : J = K.comap g) :
     localRingHom I K (g.comp f)
         (by

@@ -38,13 +38,6 @@ section TopologicalSpace
 
 variable [TopologicalSpace α] [TopologicalSpace β]
 
-/-- A sequence converges in the sence of topological spaces iff the associated statement for filter
-holds. -/
-theorem TopologicalSpace.seq_tendsto_iff {x : ℕ → α} {limit : α} :
-    Tendsto x atTop (𝓝 limit) ↔ ∀ U : Set α, limit ∈ U → IsOpen U → ∃ N, ∀, ∀ n ≥ N, ∀, x n ∈ U :=
-  (at_top_basis.tendsto_iff (nhds_basis_opens limit)).trans <| by
-    simp only [and_imp, exists_prop, true_andₓ, Set.mem_Ici, ge_iff_le, id]
-
 /-- The sequential closure of a subset M ⊆ α of a topological space α is
 the set of all p ∈ α which arise as limit of sequences in M. -/
 def SequentialClosure (M : Set α) : Set α :=
@@ -352,41 +345,30 @@ end UniformSpaceSeqCompact
 
 section MetricSeqCompact
 
-variable [MetricSpace β] {s : Set β}
+variable [PseudoMetricSpace β]
 
 open Metric
 
-/-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
+theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Sort _} {c : ι → Set β} {s : Set β} (hs : IsSeqCompact s)
+    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀, ∀ x ∈ s, ∀, ∃ i, Ball x δ ⊆ c i :=
+  lebesgue_number_lemma_of_metric hs.IsCompact hc₁ hc₂
+
+variable [ProperSpace β] {s : Set β}
+
+/-- A version of **Bolzano-Weistrass**: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. This version assumes only
 that the sequence is frequently in some bounded set. -/
-theorem tendsto_subseq_of_frequently_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β}
-    (hu : ∃ᶠ n in at_top, u n ∈ s) : ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 b) := by
-  have hcs : IsCompact (Closure s) := compact_iff_closed_bounded.mpr ⟨is_closed_closure, bounded_closure_of_bounded hs⟩
-  replace hcs : IsSeqCompact (Closure s)
-  exact uniform_space.compact_iff_seq_compact.mp hcs
-  have hu' : ∃ᶠ n in at_top, u n ∈ Closure s := by
-    apply frequently.mono hu
-    intro n
-    apply subset_closure
-  exact hcs.subseq_of_frequently_in hu'
+theorem tendsto_subseq_of_frequently_bounded (hs : Bounded s) {u : ℕ → β} (hu : ∃ᶠ n in at_top, u n ∈ s) :
+    ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 b) :=
+  have hcs : IsSeqCompact (Closure s) := hs.is_compact_closure.IsSeqCompact
+  have hu' : ∃ᶠ n in at_top, u n ∈ Closure s := hu.mono fun n hn => subset_closure hn
+  hcs.subseq_of_frequently_in hu'
 
 /-- A version of Bolzano-Weistrass: in a proper metric space (eg. $ℝ^n$),
 every bounded sequence has a converging subsequence. -/
-theorem tendsto_subseq_of_bounded [ProperSpace β] (hs : Bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
+theorem tendsto_subseq_of_bounded (hs : Bounded s) {u : ℕ → β} (hu : ∀ n, u n ∈ s) :
     ∃ b ∈ Closure s, ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto (u ∘ φ) atTop (𝓝 b) :=
   tendsto_subseq_of_frequently_bounded hs <| frequently_of_forall hu
-
-theorem SeqCompact.lebesgue_number_lemma_of_metric {ι : Type _} {c : ι → Set β} (hs : IsSeqCompact s)
-    (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ δ > 0, ∀, ∀ x ∈ s, ∀, ∃ i, Ball x δ ⊆ c i := by
-  rcases lebesgue_number_lemma_seq hs hc₁ hc₂ with ⟨V, V_in, _, hV⟩
-  rcases uniformity_basis_dist.mem_iff.mp V_in with ⟨δ, δ_pos, h⟩
-  use δ, δ_pos
-  intro x x_in
-  rcases hV x x_in with ⟨i, hi⟩
-  use i
-  have := ball_mono h x
-  rw [ball_eq_ball'] at this
-  exact subset.trans this hi
 
 end MetricSeqCompact
 

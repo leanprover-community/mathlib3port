@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 -/
 import Mathbin.Data.List.ProdSigma
+import Mathbin.Data.Set.Prod
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.ModelTheory.LanguageMap
 
@@ -123,6 +124,9 @@ def Functions.apply₂ (f : L.Functions 2) (t₁ t₂ : L.Term α) : L.Term α :
   func f ![t₁, t₂]
 
 namespace Term
+
+instance inhabitedOfVar [Inhabited α] : Inhabited (L.Term α) :=
+  ⟨var default⟩
 
 instance inhabitedOfConstant [Inhabited L.Constants] : Inhabited (L.Term α) :=
   ⟨(default : L.Constants).Term⟩
@@ -726,6 +730,40 @@ def InfiniteTheory : L.Theory :=
 /-- A theory that indicates a structure is nonempty. -/
 def NonemptyTheory : L.Theory :=
   {Sentence.cardGe L 1}
+
+/-- A theory indicating that each of a set of constants is distinct. -/
+def DistinctConstantsTheory (s : Set α) : L[[α]].Theory :=
+  (s ×ˢ s ∩ (Set.Diagonal α).Compl).Image fun ab => ((L.con ab.1).Term.equal (L.con ab.2).Term).Not
+
+variable {L} {α}
+
+open Set
+
+theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
+  fun s t st => image_subset _ (inter_subset_inter_left _ (prod_mono st st))
+
+theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
+  Monotone.directed_le monotone_distinct_constants_theory
+
+theorem distinct_constants_theory_eq_Union (s : Set α) :
+    L.DistinctConstantsTheory s =
+      ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
+  by
+  classical
+  simp only [distinct_constants_theory]
+  rw [← image_Union, ← Union_inter]
+  refine' congr rfl (congr (congr rfl _) rfl)
+  ext ⟨i, j⟩
+  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union, mem_image,
+    Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
+  refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
+  · simp
+    
+  · simp
+    
+  · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
+    exact ⟨is, js⟩
+    
 
 end Cardinality
 

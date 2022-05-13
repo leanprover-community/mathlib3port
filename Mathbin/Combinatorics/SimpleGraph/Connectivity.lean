@@ -1044,9 +1044,12 @@ protected theorem Reachable.elim_path {p : Prop} {u v : V} (h : G.Reachable u v)
   exact h.elim fun q => hp q.toPath
 
 @[refl]
-protected theorem Reachable.refl {u : V} : G.Reachable u u := by
+protected theorem Reachable.refl (u : V) : G.Reachable u u := by
   fconstructor
   rfl
+
+protected theorem Reachable.rfl {u : V} : G.Reachable u u :=
+  Reachable.refl _
 
 @[symm]
 protected theorem Reachable.symm {u v : V} (huv : G.Reachable u v) : G.Reachable v u :=
@@ -1095,7 +1098,7 @@ of `h.preconnected u v`. -/
 @[protect_proj]
 structure Connected : Prop where
   Preconnected : G.Preconnected
-  Nonempty : Nonempty V
+  [Nonempty : Nonempty V]
 
 instance : CoeFun G.Connected fun _ => ∀ u v : V, G.Reachable u v :=
   ⟨fun h => h.Preconnected⟩

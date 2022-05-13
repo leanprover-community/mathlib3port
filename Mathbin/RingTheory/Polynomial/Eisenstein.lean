@@ -93,7 +93,7 @@ theorem exists_mem_adjoin_mul_eq_pow_nat_degree {x : S} (hx : aeval x f = 0) (hm
     ∃ y ∈ adjoin R ({x} : Set S), (algebraMap R S) p * y = x ^ (f.map (algebraMap R S)).natDegree := by
   rw [aeval_def, Polynomial.eval₂_eq_eval_map, eval_eq_sum_range, range_add_one, sum_insert not_mem_range_self,
     sum_range, (hmo.map (algebraMap R S)).coeff_nat_degree, one_mulₓ] at hx
-  replace hx := eq_neg_of_add_eq_zero hx
+  replace hx := eq_neg_of_add_eq_zero_left hx
   have : ∀, ∀ n < f.nat_degree, ∀, p ∣ f.coeff n := by
     intro n hn
     refine'
@@ -138,7 +138,7 @@ theorem pow_nat_degree_le_of_root_of_monic_mem {x : R} (hroot : IsRoot f x) (hmo
     exact mul_mem_right (x ^ k) 𝓟 this
   rw [is_root.def, eval_eq_sum_range, Finset.range_add_one, Finset.sum_insert Finset.not_mem_range_self,
     Finset.sum_range, hmo.coeff_nat_degree, one_mulₓ] at hroot
-  rw [eq_neg_of_add_eq_zero hroot, neg_mem_iff]
+  rw [eq_neg_of_add_eq_zero_left hroot, neg_mem_iff]
   refine' Submodule.sum_mem _ fun i hi => mul_mem_right _ _ (hf.mem (Finₓ.is_lt i))
 
 theorem pow_nat_degree_le_of_aeval_zero_of_monic_mem_map {x : S} (hx : aeval x f = 0) (hmo : f.Monic) :

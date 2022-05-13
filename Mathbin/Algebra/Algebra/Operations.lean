@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
 import Mathbin.Algebra.Algebra.Bilinear
-import Mathbin.Algebra.Module.SubmodulePointwise
+import Mathbin.Algebra.Module.Submodule.Pointwise
+import Mathbin.Algebra.Module.Submodule.Bilinear
 import Mathbin.Algebra.Module.Opposites
 import Mathbin.Data.Finset.Pointwise
 
@@ -100,18 +101,17 @@ theorem comap_unop_one : comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).sy
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
 instance : Mul (Submodule R A) :=
-  ⟨fun M N => ⨆ s : M, N.map <| Algebra.lmul R A s.1⟩
+  ⟨Submodule.map₂ (Algebra.lmul R A).toLinearMap⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : m * n ∈ M * N :=
-  (le_supr _ ⟨m, hm⟩ : _ ≤ M * N) ⟨n, hn, rfl⟩
+  apply_mem_map₂ _ hm hn
 
 theorem mul_le : M * N ≤ P ↔ ∀, ∀ m ∈ M, ∀, ∀ n ∈ N, ∀, m * n ∈ P :=
-  ⟨fun H m hm n hn => H <| mul_mem_mul hm hn, fun H =>
-    supr_le fun ⟨m, hm⟩ => map_le_iff_le_comap.2 fun n hn => H m hm n hn⟩
+  map₂_le
 
 theorem mul_to_add_submonoid : (M * N).toAddSubmonoid = M.toAddSubmonoid * N.toAddSubmonoid := by
   dsimp' [Mul.mul]
-  simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid]
+  simp_rw [← Algebra.lmul_left_to_add_monoid_hom R, Algebra.lmulLeft, ← map_to_add_submonoid, map₂]
   rw [supr_to_add_submonoid]
   rfl
 
@@ -132,26 +132,8 @@ protected theorem mul_induction_on' {C : ∀ r, r ∈ M * N → Prop}
 
 variable (R)
 
-theorem span_mul_span : span R S * span R T = span R (S * T) := by
-  apply le_antisymmₓ
-  · rw [mul_le]
-    intro a ha b hb
-    apply span_induction ha
-    on_goal 1 =>
-      intros
-      apply span_induction hb
-      on_goal 1 =>
-        intros
-        exact subset_span ⟨_, _, ‹_›, ‹_›, rfl⟩
-    all_goals
-      intros
-      simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm, smul_mul_assoc]
-      solve_by_elim [add_mem _ _, zero_mem _, smul_mem _ _ _]
-    
-  · rw [span_le]
-    rintro _ ⟨a, b, ha, hb, rfl⟩
-    exact mul_mem_mul (subset_span ha) (subset_span hb)
-    
+theorem span_mul_span : span R S * span R T = span R (S * T) :=
+  map₂_span_span _ _ _ _
 
 variable {R}
 
@@ -169,15 +151,11 @@ protected theorem mul_assoc : M * N * P = M * (N * P) :=
 
 @[simp]
 theorem mul_bot : M * ⊥ = ⊥ :=
-  eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by
-      rw [Submodule.mem_bot] at hn⊢ <;> rw [hn, mul_zero]
+  map₂_bot_right _ _
 
 @[simp]
 theorem bot_mul : ⊥ * M = ⊥ :=
-  eq_bot_iff.2 <|
-    mul_le.2 fun m hm n hn => by
-      rw [Submodule.mem_bot] at hm⊢ <;> rw [hm, zero_mul]
+  map₂_bot_left _ _
 
 @[simp]
 protected theorem one_mul : (1 : Submodule R A) * M = M := by
@@ -193,33 +171,24 @@ variable {M N P Q}
 
 @[mono]
 theorem mul_le_mul (hmp : M ≤ P) (hnq : N ≤ Q) : M * N ≤ P * Q :=
-  mul_le.2 fun m hm n hn => mul_mem_mul (hmp hm) (hnq hn)
+  map₂_le_map₂ hmp hnq
 
 theorem mul_le_mul_left (h : M ≤ N) : M * P ≤ N * P :=
-  mul_le_mul h (le_reflₓ P)
+  map₂_le_map₂_left h
 
 theorem mul_le_mul_right (h : N ≤ P) : M * N ≤ M * P :=
-  mul_le_mul (le_reflₓ M) h
+  map₂_le_map₂_right h
 
 variable (M N P)
 
 theorem mul_sup : M * (N⊔P) = M * N⊔M * P :=
-  le_antisymmₓ
-    (mul_le.2 fun m hm np hnp =>
-      let ⟨n, hn, p, hp, hnp⟩ := mem_sup.1 hnp
-      mem_sup.2 ⟨_, mul_mem_mul hm hn, _, mul_mem_mul hm hp, hnp ▸ (mul_addₓ m n p).symm⟩)
-    (sup_le (mul_le_mul_right le_sup_left) (mul_le_mul_right le_sup_right))
+  map₂_sup_right _ _ _ _
 
 theorem sup_mul : (M⊔N) * P = M * P⊔N * P :=
-  le_antisymmₓ
-    (mul_le.2 fun mn hmn p hp =>
-      let ⟨m, hm, n, hn, hmn⟩ := mem_sup.1 hmn
-      mem_sup.2 ⟨_, mul_mem_mul hm hp, _, mul_mem_mul hn hp, hmn ▸ (add_mulₓ m n p).symm⟩)
-    (sup_le (mul_le_mul_left le_sup_left) (mul_le_mul_left le_sup_right))
+  map₂_sup_left _ _ _ _
 
-theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A) := by
-  rintro _ ⟨i, j, hi, hj, rfl⟩
-  exact mul_mem_mul hi hj
+theorem mul_subset_mul : (↑M : Set A) * (↑N : Set A) ⊆ (↑(M * N) : Set A) :=
+  image2_subset_map₂ (Algebra.lmul R A).toLinearMap M N
 
 protected theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') :
     map f.toLinearMap (M * N) = map f.toLinearMap M * map f.toLinearMap N :=
@@ -328,18 +297,14 @@ theorem mem_span_mul_finite_of_mem_span_mul {R A} [Semiringₓ R] [AddCommMonoid
 
 end DecidableEq
 
-theorem mul_eq_span_mul_set (s t : Submodule R A) : s * t = span R ((s : Set A) * (t : Set A)) := by
-  rw [← span_mul_span, span_eq, span_eq]
+theorem mul_eq_span_mul_set (s t : Submodule R A) : s * t = span R ((s : Set A) * (t : Set A)) :=
+  map₂_eq_span_image2 _ s t
 
-theorem supr_mul (s : ι → Submodule R A) (t : Submodule R A) : (⨆ i, s i) * t = ⨆ i, s i * t := by
-  suffices (⨆ i, span R (s i : Set A)) * span R t = ⨆ i, span R (s i) * span R t by
-    simpa only [span_eq] using this
-  simp_rw [span_mul_span, ← span_Union, span_mul_span, Set.Union_mul]
+theorem supr_mul (s : ι → Submodule R A) (t : Submodule R A) : (⨆ i, s i) * t = ⨆ i, s i * t :=
+  map₂_supr_left _ s t
 
-theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s i) = ⨆ i, t * s i := by
-  suffices (span R (t : Set A) * ⨆ i, span R (s i)) = ⨆ i, span R t * span R (s i) by
-    simpa only [span_eq] using this
-  simp_rw [span_mul_span, ← span_Union, span_mul_span, Set.mul_Union]
+theorem mul_supr (t : Submodule R A) (s : ι → Submodule R A) : (t * ⨆ i, s i) = ⨆ i, t * s i :=
+  map₂_supr_right _ t s
 
 theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈ P * Q) :
     ∃ T T' : Finset A, (T : Set A) ⊆ P ∧ (T' : Set A) ⊆ Q ∧ x ∈ span R (T * T' : Set A) :=

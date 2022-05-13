@@ -72,10 +72,6 @@ instance Prime.one_lt' (p : ℕ) [hp : Fact p.Prime] : Fact (1 < p) :=
 theorem Prime.ne_one {p : ℕ} (hp : p.Prime) : p ≠ 1 :=
   hp.one_lt.ne'
 
-theorem two_le_iff (n : ℕ) : 2 ≤ n ↔ n ≠ 0 ∧ ¬IsUnit n := by
-  rw [Nat.is_unit_iff]
-  rcases n with (_ | _ | m) <;> norm_num [one_lt_succ_succ, succ_le_iff]
-
 theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m ∣ p) : m = 1 ∨ m = p := by
   obtain ⟨n, hn⟩ := hm
   have := pp.is_unit_or_is_unit hn

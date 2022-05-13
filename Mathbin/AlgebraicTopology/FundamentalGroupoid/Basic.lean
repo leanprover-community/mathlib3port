@@ -118,7 +118,7 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
     · rw [Path.symm, Path.extend, Set.Icc_extend_of_mem]
       · congr 1
         ext
-        norm_num [sub_sub_assoc_swap]
+        norm_num [sub_sub_eq_add_sub]
         
       · rw [UnitInterval.two_mul_sub_one_mem_iff]
         exact ⟨(not_leₓ.1 h).le, UnitInterval.le_one x⟩

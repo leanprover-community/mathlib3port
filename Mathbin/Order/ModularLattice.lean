@@ -51,7 +51,7 @@ theorem IsModularLattice.inf_sup_inf_assoc {x y z : α} : x⊓z⊔y⊓z = (x⊓z
 theorem inf_sup_assoc_of_le {x : α} (y : α) {z : α} (h : z ≤ x) : x⊓y⊔z = x⊓(y⊔z) := by
   rw [inf_comm, sup_comm, ← sup_inf_assoc_of_le y h, inf_comm, sup_comm]
 
-instance : IsModularLattice (OrderDual α) :=
+instance : IsModularLattice αᵒᵈ :=
   ⟨fun x y z xz =>
     le_of_eqₓ
       (by
@@ -61,7 +61,7 @@ instance : IsModularLattice (OrderDual α) :=
 variable {x y z : α}
 
 theorem IsModularLattice.sup_inf_sup_assoc : (x⊔z)⊓(y⊔z) = (x⊔z)⊓y⊔z :=
-  @IsModularLattice.inf_sup_inf_assoc (OrderDual α) _ _ _ _ _
+  @IsModularLattice.inf_sup_inf_assoc αᵒᵈ _ _ _ _ _
 
 theorem eq_of_le_of_inf_le_of_sup_le (hxy : x ≤ y) (hinf : y⊓z ≤ x⊓z) (hsup : y⊔z ≤ x⊔z) : x = y :=
   le_antisymmₓ hxy <|
@@ -86,7 +86,7 @@ theorem sup_lt_sup_of_lt_of_inf_le_inf (hxy : x < y) (hinf : y⊓z ≤ x⊓z) : 
     ne_of_ltₓ hxy <| eq_of_le_of_inf_le_of_sup_le (le_of_ltₓ hxy) hinf (le_of_eqₓ hsup.symm)
 
 theorem inf_lt_inf_of_lt_of_sup_le_sup (hxy : x < y) (hinf : y⊔z ≤ x⊔z) : x⊓z < y⊓z :=
-  @sup_lt_sup_of_lt_of_inf_le_inf (OrderDual α) _ _ _ _ _ hxy hinf
+  @sup_lt_sup_of_lt_of_inf_le_inf αᵒᵈ _ _ _ _ _ hxy hinf
 
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
   `N` and `M / N` are both Artinian, then `M` is Artinian. -/
@@ -112,8 +112,7 @@ theorem well_founded_gt_exact_sequence {β γ : Type _} [Preorderₓ β] [Partia
     (h₁ : WellFounded ((· > ·) : β → β → Prop)) (h₂ : WellFounded ((· > ·) : γ → γ → Prop)) (K : α) (f₁ : β → α)
     (f₂ : α → β) (g₁ : γ → α) (g₂ : α → γ) (gci : GaloisCoinsertion f₁ f₂) (gi : GaloisInsertion g₂ g₁)
     (hf : ∀ a, f₁ (f₂ a) = a⊓K) (hg : ∀ a, g₁ (g₂ a) = a⊔K) : WellFounded ((· > ·) : α → α → Prop) :=
-  @well_founded_lt_exact_sequence (OrderDual α) _ _ (OrderDual γ) (OrderDual β) _ _ h₂ h₁ K g₁ g₂ f₁ f₂ gi.dual gci.dual
-    hg hf
+  @well_founded_lt_exact_sequence αᵒᵈ _ _ γᵒᵈ βᵒᵈ _ _ h₂ h₁ K g₁ g₂ f₁ f₂ gi.dual gci.dual hg hf
 
 /-- The diamond isomorphism between the intervals `[a ⊓ b, a]` and `[b, a ⊔ b]` -/
 def infIccOrderIsoIccSup (a b : α) : Set.Icc (a⊓b) a ≃o Set.Icc b (a⊔b) where

@@ -165,11 +165,9 @@ instance : LieRing (RestrictScalars R A L) :=
 
 variable [CommRingₓ A] [LieAlgebra A L]
 
-@[nolint unused_arguments]
-instance lieAlgebra [CommRingₓ R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L) :=
-  { (by
-      infer_instance : Module R (RestrictScalars R A L)) with
-    lie_smul := fun t x y => (lie_smul _ (show L from x) (show L from y) : _) }
+instance lieAlgebra [CommRingₓ R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L) where
+  lie_smul := fun t x y =>
+    (lie_smul (algebraMap R A t) (RestrictScalars.addEquiv R A L x) (RestrictScalars.addEquiv R A L y) : _)
 
 end RestrictScalars
 

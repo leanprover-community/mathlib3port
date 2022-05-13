@@ -2187,3 +2187,32 @@ theorem ContinuousLinearMap.closed_complemented_ker_of_right_inverse {R : Type _
     f₁.ker.ClosedComplemented :=
   ⟨f₁.projKerOfRightInverse f₂ h, f₁.proj_ker_of_right_inverse_apply_idem f₂ h⟩
 
+section Quotientₓ
+
+namespace Submodule
+
+variable {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [TopologicalSpace M] (S : Submodule R M)
+
+theorem is_open_map_mkq [TopologicalAddGroup M] : IsOpenMap S.mkq :=
+  QuotientAddGroup.is_open_map_coe S.toAddSubgroup
+
+instance topological_add_group_quotient [TopologicalAddGroup M] : TopologicalAddGroup (M ⧸ S) :=
+  topological_add_group_quotient S.toAddSubgroup
+
+instance has_continuous_smul_quotient [TopologicalSpace R] [TopologicalAddGroup M] [HasContinuousSmul R M] :
+    HasContinuousSmul R (M ⧸ S) := by
+  constructor
+  have quot : QuotientMap fun au : R × M => (au.1, S.mkq au.2) :=
+    IsOpenMap.to_quotient_map (is_open_map.id.prod S.is_open_map_mkq) (continuous_id.prod_map continuous_quot_mk)
+      (function.surjective_id.prod_map <| surjective_quot_mk _)
+  rw [quot.continuous_iff]
+  exact continuous_quot_mk.comp continuous_smul
+
+instance regular_quotient_of_is_closed [TopologicalAddGroup M] [IsClosed (S : Set M)] : RegularSpace (M ⧸ S) := by
+  let this : IsClosed (S.to_add_subgroup : Set M) := ‹_›
+  exact S.to_add_subgroup.regular_quotient_of_is_closed
+
+end Submodule
+
+end Quotientₓ
+

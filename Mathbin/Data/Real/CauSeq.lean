@@ -348,10 +348,9 @@ theorem add_equiv_add {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 �
   simp
 
 theorem neg_equiv_neg {f g : CauSeq β abv} (hf : f ≈ g) : -f ≈ -g := by
-  have hf : lim_zero _ := neg_lim_zero hf
   show lim_zero (-f - -g)
-  convert hf using 1
-  simp
+  rw [← neg_sub']
+  exact neg_lim_zero hf
 
 theorem equiv_def₃ {f g : CauSeq β abv} (h : f ≈ g) {ε : α} (ε0 : 0 < ε) :
     ∃ i, ∀, ∀ j ≥ i, ∀, ∀, ∀ k ≥ j, ∀, abv (f k - g j) < ε :=

@@ -68,8 +68,8 @@ section One
 
 variable [One α] {s : Set α} {a : α}
 
-/-- The set `(1 : set α)` is defined as `{1}` in locale `pointwise`. -/
-@[to_additive "The set `(0 : set α)` is defined as `{0}` in locale `pointwise`. "]
+/-- The set `1 : set α` is defined as `{1}` in locale `pointwise`. -/
+@[to_additive "The set `0 : set α` is defined as `{0}` in locale `pointwise`."]
 protected def hasOne : One (Set α) :=
   ⟨{1}⟩
 
@@ -99,7 +99,132 @@ theorem one_nonempty : (1 : Set α).Nonempty :=
 theorem image_one {f : α → β} : f '' 1 = {f 1} :=
   image_singleton
 
+@[to_additive]
+theorem subset_one_iff_eq : s ⊆ 1 ↔ s = ∅ ∨ s = 1 :=
+  subset_singleton_iff_eq
+
+@[to_additive]
+theorem Nonempty.subset_one_iff (h : s.Nonempty) : s ⊆ 1 ↔ s = 1 :=
+  h.subset_singleton_iff
+
+/-- The singleton operation as a `one_hom`. -/
+@[to_additive "The singleton operation as a `zero_hom`."]
+def singletonOneHom : OneHom α (Set α) :=
+  ⟨singleton, singleton_one⟩
+
+@[simp, to_additive]
+theorem coe_singleton_one_hom : (singletonOneHom : α → Set α) = singleton :=
+  rfl
+
 end One
+
+/-! ### Set negation/inversion -/
+
+
+section Inv
+
+/-- The pointwise inversion of set `s⁻¹` is defined as `{x | x⁻¹ ∈ s}` in locale `pointwise`. It i
+equal to `{x⁻¹ | x ∈ s}`, see `set.image_inv`. -/
+@[to_additive
+      "The pointwise negation of set `-s` is defined as `{x | -x ∈ s}` in locale\n`pointwise`. It is equal to `{-x | x ∈ s}`, see `set.image_neg`."]
+protected def hasInv [Inv α] : Inv (Set α) :=
+  ⟨Preimage Inv.inv⟩
+
+localized [Pointwise] attribute [instance] Set.hasInv Set.hasNeg
+
+section Inv
+
+variable {ι : Sort _} [Inv α] {s t : Set α} {a : α}
+
+@[simp, to_additive]
+theorem mem_inv : a ∈ s⁻¹ ↔ a⁻¹ ∈ s :=
+  Iff.rfl
+
+@[simp, to_additive]
+theorem inv_preimage : Inv.inv ⁻¹' s = s⁻¹ :=
+  rfl
+
+@[simp, to_additive]
+theorem inv_empty : (∅ : Set α)⁻¹ = ∅ :=
+  rfl
+
+@[simp, to_additive]
+theorem inv_univ : (Univ : Set α)⁻¹ = univ :=
+  rfl
+
+@[simp, to_additive]
+theorem inter_inv : (s ∩ t)⁻¹ = s⁻¹ ∩ t⁻¹ :=
+  preimage_inter
+
+@[simp, to_additive]
+theorem union_inv : (s ∪ t)⁻¹ = s⁻¹ ∪ t⁻¹ :=
+  preimage_union
+
+@[simp, to_additive]
+theorem Inter_inv (s : ι → Set α) : (⋂ i, s i)⁻¹ = ⋂ i, (s i)⁻¹ :=
+  preimage_Inter
+
+@[simp, to_additive]
+theorem Union_inv (s : ι → Set α) : (⋃ i, s i)⁻¹ = ⋃ i, (s i)⁻¹ :=
+  preimage_Union
+
+@[simp, to_additive]
+theorem compl_inv : (sᶜ)⁻¹ = s⁻¹ᶜ :=
+  preimage_compl
+
+end Inv
+
+section HasInvolutiveInv
+
+variable [HasInvolutiveInv α] {s t : Set α} {a : α}
+
+@[to_additive]
+theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by
+  simp only [mem_inv, inv_invₓ]
+
+@[simp, to_additive]
+theorem nonempty_inv : s⁻¹.Nonempty ↔ s.Nonempty :=
+  inv_involutive.Surjective.nonempty_preimage
+
+@[to_additive]
+theorem Nonempty.inv (h : s.Nonempty) : s⁻¹.Nonempty :=
+  nonempty_inv.2 h
+
+@[to_additive]
+theorem Finite.inv (hs : Finite s) : Finite s⁻¹ :=
+  hs.Preimage <| inv_injective.InjOn _
+
+@[simp, to_additive]
+theorem image_inv : Inv.inv '' s = s⁻¹ :=
+  congr_funₓ (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
+
+@[simp, to_additive]
+instance : HasInvolutiveInv (Set α) where
+  inv := Inv.inv
+  inv_inv := fun s => by
+    simp only [← inv_preimage, preimage_preimage, inv_invₓ, preimage_id']
+
+@[simp, to_additive]
+theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
+  (Equivₓ.inv α).Surjective.preimage_subset_preimage_iff
+
+@[to_additive]
+theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by
+  rw [← inv_subset_inv, inv_invₓ]
+
+@[simp, to_additive]
+theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by
+  rw [← image_inv, image_singleton]
+
+open MulOpposite
+
+@[to_additive]
+theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
+  simp_rw [← image_inv, image_comm op_inv]
+
+end HasInvolutiveInv
+
+end Inv
 
 open Pointwise
 
@@ -108,18 +233,15 @@ open Pointwise
 
 section Mul
 
-variable {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α}
+variable {ι : Sort _} {κ : ι → Sort _} [Mul α] {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α}
 
-/-- The set `(s * t : set α)` is defined as `{x * y | x ∈ s, y ∈ t}` in locale `pointwise`. -/
-@[to_additive " The set `(s + t : set α)` is defined as `{x + y | x ∈ s, y ∈ t}` in locale `pointwise`."]
-protected def hasMul [Mul α] : Mul (Set α) :=
-  ⟨Image2 Mul.mul⟩
+/-- The pointwise multiplication of sets `s * t` and `t` is defined as `{x * y | x ∈ s, y ∈ t}` in
+locale `pointwise`. -/
+@[to_additive "The pointwise addition of sets `s + t` is defined as `{x + y | x ∈ s, y ∈ t}` in\nlocale `pointwise`."]
+protected def hasMul : Mul (Set α) :=
+  ⟨Image2 (· * ·)⟩
 
 localized [Pointwise] attribute [instance] Set.hasMul Set.hasAdd
-
-section Mul
-
-variable {ι : Sort _} {κ : ι → Sort _} [Mul α]
 
 @[simp, to_additive]
 theorem image2_mul : Image2 Mul.mul s t = s * t :=
@@ -130,12 +252,8 @@ theorem mem_mul : a ∈ s * t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x * y = a :=
   Iff.rfl
 
 @[to_additive]
-theorem mul_mem_mul (ha : a ∈ s) (hb : b ∈ t) : a * b ∈ s * t :=
-  mem_image2_of_mem ha hb
-
-@[to_additive]
-theorem mul_subset_mul (h₁ : s₁ ⊆ t₁) (h₂ : s₂ ⊆ t₂) : s₁ * s₂ ⊆ t₁ * t₂ :=
-  image2_subset h₁ h₂
+theorem mul_mem_mul : a ∈ s → b ∈ t → a * b ∈ s * t :=
+  mem_image2_of_mem
 
 @[to_additive add_image_prod]
 theorem image_mul_prod : (fun x : α × α => x.fst * x.snd) '' s ×ˢ t = s * t :=
@@ -150,6 +268,26 @@ theorem mul_empty : s * ∅ = ∅ :=
   image2_empty_right
 
 @[simp, to_additive]
+theorem mul_eq_empty : s * t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image2_eq_empty_iff
+
+@[simp, to_additive]
+theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+  image2_nonempty_iff
+
+@[to_additive]
+theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
+  nonempty.image2
+
+@[to_additive]
+theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
+  nonempty.of_image2_left
+
+@[to_additive]
+theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
+  nonempty.of_image2_right
+
+@[simp, to_additive]
 theorem mul_singleton : s * {b} = (· * b) '' s :=
   image2_singleton_right
 
@@ -161,13 +299,23 @@ theorem singleton_mul : {a} * t = (· * ·) a '' t :=
 theorem singleton_mul_singleton : ({a} : Set α) * {b} = {a * b} :=
   image2_singleton
 
-@[to_additive]
-theorem mul_subset_mul_left (h : t₁ ⊆ t₂) : s * t₁ ⊆ s * t₂ :=
-  image2_subset_left h
+@[to_additive, mono]
+theorem mul_subset_mul : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ * s₂ ⊆ t₁ * t₂ :=
+  image2_subset
 
 @[to_additive]
-theorem mul_subset_mul_right (h : s₁ ⊆ s₂) : s₁ * t ⊆ s₂ * t :=
-  image2_subset_right h
+theorem mul_subset_mul_left : t₁ ⊆ t₂ → s * t₁ ⊆ s * t₂ :=
+  image2_subset_left
+
+@[to_additive]
+theorem mul_subset_mul_right : s₁ ⊆ s₂ → s₁ * t ⊆ s₂ * t :=
+  image2_subset_right
+
+@[to_additive]
+theorem mul_subset_iff : s * t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x * y ∈ u :=
+  image2_subset_iff
+
+attribute [mono] add_subset_add
 
 @[to_additive]
 theorem union_mul : (s₁ ∪ s₂) * t = s₁ * t ∪ s₂ * t :=
@@ -186,11 +334,11 @@ theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
   image2_inter_subset_right
 
 @[to_additive]
-theorem Union_mul_left_image : (⋃ a ∈ s, (fun x => a * x) '' t) = s * t :=
+theorem Union_mul_left_image : (⋃ a ∈ s, (· * ·) a '' t) = s * t :=
   Union_image_left _
 
 @[to_additive]
-theorem Union_mul_right_image : (⋃ a ∈ t, (fun x => x * a) '' s) = s * t :=
+theorem Union_mul_right_image : (⋃ a ∈ t, (· * a) '' s) = s * t :=
   Union_image_right _
 
 @[to_additive]
@@ -234,21 +382,26 @@ theorem mul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s * ⋂
   image2_Inter₂_subset_right _ _ _
 
 @[to_additive]
-theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
-  nonempty.image2
-
-@[to_additive]
 theorem Finite.mul : Finite s → Finite t → Finite (s * t) :=
   Finite.image2 _
 
-/-- Under `[has_mul M]`, the `singleton` map from `M` to `set M` as a `mul_hom`, that is, a map
-which preserves multiplication. -/
-@[to_additive
-      "Under `[has_add A]`, the `singleton` map from `A` to `set A` as an `add_hom`,\nthat is, a map which preserves addition.",
-  simps]
-def singletonMulHom : α →ₙ* Set α where
-  toFun := singleton
-  map_mul' := fun a b => singleton_mul_singleton.symm
+/-- Multiplication preserves finiteness. -/
+@[to_additive "Addition preserves finiteness."]
+def fintypeMul [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] : Fintype (s * t : Set α) :=
+  Set.fintypeImage2 _ _ _
+
+/-- The singleton operation as a `mul_hom`. -/
+@[to_additive "The singleton operation as an `add_hom`."]
+def singletonMulHom : α →ₙ* Set α :=
+  ⟨singleton, fun a b => singleton_mul_singleton.symm⟩
+
+@[simp, to_additive]
+theorem coe_singleton_mul_hom : (singletonMulHom : α → Set α) = singleton :=
+  rfl
+
+@[simp, to_additive]
+theorem singleton_mul_hom_apply (a : α) : singletonMulHom a = {a} :=
+  rfl
 
 open MulOpposite
 
@@ -258,57 +411,164 @@ theorem image_op_mul : op '' (s * t) = op '' t * op '' s :=
 
 end Mul
 
-@[simp, to_additive]
-theorem image_mul_left [Groupₓ α] : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by
-  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+/-! ### Set subtraction/division -/
+
+
+section Div
+
+variable {ι : Sort _} {κ : ι → Sort _} [Div α] {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α}
+
+/-- The pointwise division of sets `s / t` is defined as `{x / y | x ∈ s, y ∈ t}` in locale
+`pointwise`. -/
+@[to_additive
+      "The pointwise subtraction of sets `s - t` is defined as `{x - y | x ∈ s, y ∈ t}` in\nlocale `pointwise`."]
+protected def hasDiv : Div (Set α) :=
+  ⟨Image2 (· / ·)⟩
+
+localized [Pointwise] attribute [instance] Set.hasDiv Set.hasSub
 
 @[simp, to_additive]
-theorem image_mul_right [Groupₓ α] : (· * b) '' t = (· * b⁻¹) ⁻¹' t := by
-  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+theorem image2_div : Image2 Div.div s t = s / t :=
+  rfl
 
 @[to_additive]
-theorem image_mul_left' [Groupₓ α] : (fun b => a⁻¹ * b) '' t = (fun b => a * b) ⁻¹' t := by
-  simp
+theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
+  Iff.rfl
 
 @[to_additive]
-theorem image_mul_right' [Groupₓ α] : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by
-  simp
+theorem div_mem_div : a ∈ s → b ∈ t → a / b ∈ s / t :=
+  mem_image2_of_mem
+
+@[to_additive add_image_prod]
+theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t :=
+  image_prod _
 
 @[simp, to_additive]
-theorem preimage_mul_left_singleton [Groupₓ α] : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by
-  rw [← image_mul_left', image_singleton]
+theorem empty_div : ∅ / s = ∅ :=
+  image2_empty_left
 
 @[simp, to_additive]
-theorem preimage_mul_right_singleton [Groupₓ α] : (· * a) ⁻¹' {b} = {b * a⁻¹} := by
-  rw [← image_mul_right', image_singleton]
+theorem div_empty : s / ∅ = ∅ :=
+  image2_empty_right
 
 @[simp, to_additive]
-theorem preimage_mul_left_one [Groupₓ α] : (· * ·) a ⁻¹' 1 = {a⁻¹} := by
-  rw [← image_mul_left', image_one, mul_oneₓ]
+theorem div_eq_empty : s / t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image2_eq_empty_iff
 
 @[simp, to_additive]
-theorem preimage_mul_right_one [Groupₓ α] : (· * b) ⁻¹' 1 = {b⁻¹} := by
-  rw [← image_mul_right', image_one, one_mulₓ]
+theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+  image2_nonempty_iff
 
 @[to_additive]
-theorem preimage_mul_left_one' [Groupₓ α] : (fun b => a⁻¹ * b) ⁻¹' 1 = {a} := by
-  simp
+theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
+  nonempty.image2
 
 @[to_additive]
-theorem preimage_mul_right_one' [Groupₓ α] : (· * b⁻¹) ⁻¹' 1 = {b} := by
-  simp
+theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
+  nonempty.of_image2_left
 
-/-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
-@[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
-protected def mulOneClass [MulOneClassₓ α] : MulOneClassₓ (Set α) :=
-  { Set.hasOne, Set.hasMul with
-    mul_one := fun s => by
-      simp only [← singleton_one, mul_singleton, mul_oneₓ, image_id'],
-    one_mul := fun s => by
-      simp only [← singleton_one, singleton_mul, one_mulₓ, image_id'] }
+@[to_additive]
+theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
+  nonempty.of_image2_right
+
+@[simp, to_additive]
+theorem div_singleton : s / {b} = (· / b) '' s :=
+  image2_singleton_right
+
+@[simp, to_additive]
+theorem singleton_div : {a} / t = (· / ·) a '' t :=
+  image2_singleton_left
+
+@[simp, to_additive]
+theorem singleton_div_singleton : ({a} : Set α) / {b} = {a / b} :=
+  image2_singleton
+
+@[to_additive, mono]
+theorem div_subset_div : s₁ ⊆ t₁ → s₂ ⊆ t₂ → s₁ / s₂ ⊆ t₁ / t₂ :=
+  image2_subset
+
+@[to_additive]
+theorem div_subset_div_left : t₁ ⊆ t₂ → s / t₁ ⊆ s / t₂ :=
+  image2_subset_left
+
+@[to_additive]
+theorem div_subset_div_right : s₁ ⊆ s₂ → s₁ / t ⊆ s₂ / t :=
+  image2_subset_right
+
+@[to_additive]
+theorem div_subset_iff : s / t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x / y ∈ u :=
+  image2_subset_iff
+
+attribute [mono] sub_subset_sub
+
+@[to_additive]
+theorem union_div : (s₁ ∪ s₂) / t = s₁ / t ∪ s₂ / t :=
+  image2_union_left
+
+@[to_additive]
+theorem div_union : s / (t₁ ∪ t₂) = s / t₁ ∪ s / t₂ :=
+  image2_union_right
+
+@[to_additive]
+theorem inter_div_subset : s₁ ∩ s₂ / t ⊆ s₁ / t ∩ (s₂ / t) :=
+  image2_inter_subset_left
+
+@[to_additive]
+theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
+  image2_inter_subset_right
+
+@[to_additive]
+theorem Union_div_left_image : (⋃ a ∈ s, (· / ·) a '' t) = s / t :=
+  Union_image_left _
+
+@[to_additive]
+theorem Union_div_right_image : (⋃ a ∈ t, (· / a) '' s) = s / t :=
+  Union_image_right _
+
+@[to_additive]
+theorem Union_div (s : ι → Set α) (t : Set α) : (⋃ i, s i) / t = ⋃ i, s i / t :=
+  image2_Union_left _ _ _
+
+@[to_additive]
+theorem div_Union (s : Set α) (t : ι → Set α) : (s / ⋃ i, t i) = ⋃ i, s / t i :=
+  image2_Union_right _ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[to_additive]
+theorem Union₂_div (s : ∀ i, κ i → Set α) (t : Set α) : (⋃ (i) (j), s i j) / t = ⋃ (i) (j), s i j / t :=
+  image2_Union₂_left _ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[to_additive]
+theorem div_Union₂ (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋃ (i) (j), t i j) = ⋃ (i) (j), s / t i j :=
+  image2_Union₂_right _ _ _
+
+@[to_additive]
+theorem Inter_div_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) / t ⊆ ⋂ i, s i / t :=
+  image2_Inter_subset_left _ _ _
+
+@[to_additive]
+theorem div_Inter_subset (s : Set α) (t : ι → Set α) : (s / ⋂ i, t i) ⊆ ⋂ i, s / t i :=
+  image2_Inter_subset_right _ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[to_additive]
+theorem Inter₂_div_subset (s : ∀ i, κ i → Set α) (t : Set α) : (⋂ (i) (j), s i j) / t ⊆ ⋂ (i) (j), s i j / t :=
+  image2_Inter₂_subset_left _ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[to_additive]
+theorem div_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s / t i j :=
+  image2_Inter₂_subset_right _ _ _
+
+end Div
 
 /-- `set α` is a `semigroup` under pointwise operations if `α` is. -/
-@[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is. "]
+@[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is."]
 protected def semigroup [Semigroupₓ α] : Semigroupₓ (Set α) :=
   { Set.hasMul with mul_assoc := fun _ _ _ => image2_assoc mul_assoc }
 
@@ -317,39 +577,84 @@ protected def semigroup [Semigroupₓ α] : Semigroupₓ (Set α) :=
 protected def commSemigroup [CommSemigroupₓ α] : CommSemigroupₓ (Set α) :=
   { Set.semigroup with mul_comm := fun s t => image2_comm mul_comm }
 
-/-- `set α` is a `monoid` under pointwise operations if `α` is. -/
-@[to_additive "`set α` is an `add_monoid` under pointwise operations if `α` is. "]
-protected def monoid [Monoidₓ α] : Monoidₓ (Set α) :=
-  { Set.semigroup, Set.mulOneClass with }
+section MulOneClassₓ
 
-/-- `set α` is a `comm_monoid` under pointwise operations if `α` is. -/
-@[to_additive "`set α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
-protected def commMonoid [CommMonoidₓ α] : CommMonoidₓ (Set α) :=
-  { Set.monoid, Set.commSemigroup with }
+variable [MulOneClassₓ α]
+
+/-- `set α` is a `mul_one_class` under pointwise operations if `α` is. -/
+@[to_additive "`set α` is an `add_zero_class` under pointwise operations if `α` is."]
+protected def mulOneClass : MulOneClassₓ (Set α) :=
+  { Set.hasOne, Set.hasMul with
+    mul_one := fun s => by
+      simp only [← singleton_one, mul_singleton, mul_oneₓ, image_id'],
+    one_mul := fun s => by
+      simp only [← singleton_one, singleton_mul, one_mulₓ, image_id'] }
 
 localized [Pointwise]
   attribute [instance]
-    Set.mulOneClass Set.addZeroClass Set.semigroup Set.addSemigroup Set.commSemigroup Set.addCommSemigroup Set.monoid Set.addMonoid Set.commMonoid Set.addCommMonoid
+    Set.mulOneClass Set.addZeroClass Set.semigroup Set.addSemigroup Set.commSemigroup Set.addCommSemigroup
 
 @[to_additive]
-theorem pow_mem_pow [Monoidₓ α] (ha : a ∈ s) (n : ℕ) : a ^ n ∈ s ^ n := by
-  induction' n with n ih
-  · rw [pow_zeroₓ]
-    exact Set.mem_singleton 1
-    
-  · rw [pow_succₓ]
-    exact Set.mul_mem_mul ha ih
-    
+theorem subset_mul_left (s : Set α) {t : Set α} (ht : (1 : α) ∈ t) : s ⊆ s * t := fun x hx => ⟨x, 1, hx, ht, mul_oneₓ _⟩
 
 @[to_additive]
-theorem empty_pow [Monoidₓ α] (n : ℕ) (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
+theorem subset_mul_right {s : Set α} (t : Set α) (hs : (1 : α) ∈ s) : t ⊆ s * t := fun x hx =>
+  ⟨1, x, hs, hx, one_mulₓ _⟩
+
+/-- The singleton operation as a `monoid_hom`. -/
+@[to_additive "The singleton operation as an `add_monoid_hom`."]
+def singletonMonoidHom : α →* Set α :=
+  { singletonMulHom, singletonOneHom with }
+
+@[simp, to_additive]
+theorem coe_singleton_monoid_hom : (singletonMonoidHom : α → Set α) = singleton :=
+  rfl
+
+@[simp, to_additive]
+theorem singleton_monoid_hom_apply (a : α) : singletonMonoidHom a = {a} :=
+  rfl
+
+end MulOneClassₓ
+
+section Monoidₓ
+
+variable [Monoidₓ α] {s t : Set α} {a : α}
+
+/-- `set α` is a `monoid` under pointwise operations if `α` is. -/
+@[to_additive "`set α` is an `add_monoid` under pointwise operations if `α` is."]
+protected def monoid : Monoidₓ (Set α) :=
+  { Set.semigroup, Set.mulOneClass with }
+
+localized [Pointwise] attribute [instance] Set.monoid Set.addMonoid
+
+@[to_additive]
+theorem pow_mem_pow (ha : a ∈ s) : ∀ n : ℕ, a ^ n ∈ s ^ n
+  | 0 => by
+    rw [pow_zeroₓ]
+    exact one_mem_one
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact mul_mem_mul ha (pow_mem_pow _)
+
+@[to_additive]
+theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
+  | 0 => by
+    rw [pow_zeroₓ]
+    exact subset.rfl
+  | n + 1 => by
+    rw [pow_succₓ]
+    exact mul_subset_mul hst (pow_subset_pow _)
+
+@[to_additive]
+theorem empty_pow (n : ℕ) (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
   rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ <| Nat.pos_of_ne_zeroₓ hn), pow_succₓ, empty_mul]
 
-instance decidableMemMul [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
+@[to_additive]
+instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)] :
     DecidablePred (· ∈ s * t) := fun _ => decidableOfIff _ mem_mul.symm
 
-instance decidableMemPow [Monoidₓ α] [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
-    DecidablePred (· ∈ s ^ n) := by
+@[to_additive]
+instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) : DecidablePred (· ∈ s ^ n) := by
   induction' n with n ih
   · simp_rw [pow_zeroₓ, mem_one]
     infer_instance
@@ -359,49 +664,172 @@ instance decidableMemPow [Monoidₓ α] [Fintype α] [DecidableEq α] [Decidable
     infer_instance
     
 
-@[to_additive]
-theorem subset_mul_left [MulOneClassₓ α] (s : Set α) {t : Set α} (ht : (1 : α) ∈ t) : s ⊆ s * t := fun x hx =>
-  ⟨x, 1, hx, ht, mul_oneₓ _⟩
-
-@[to_additive]
-theorem subset_mul_right [MulOneClassₓ α] {s : Set α} (t : Set α) (hs : (1 : α) ∈ s) : t ⊆ s * t := fun x hx =>
-  ⟨1, x, hs, hx, one_mulₓ _⟩
-
-theorem pow_subset_pow [Monoidₓ α] (hst : s ⊆ t) (n : ℕ) : s ^ n ⊆ t ^ n := by
-  induction' n with n ih
-  · rw [pow_zeroₓ]
-    exact subset.rfl
-    
-  · rw [pow_succₓ, pow_succₓ]
-    exact mul_subset_mul hst ih
-    
-
 @[simp, to_additive]
-theorem univ_mul_univ [Monoidₓ α] : (Univ : Set α) * univ = univ := by
-  have : ∀ x, ∃ a b : α, a * b = x := fun x => ⟨x, ⟨1, mul_oneₓ x⟩⟩
+theorem univ_mul_univ : (Univ : Set α) * univ = univ := by
+  have : ∀ x, ∃ a b : α, a * b = x := fun x => ⟨x, 1, mul_oneₓ x⟩
   simpa only [mem_mul, eq_univ_iff_forall, mem_univ, true_andₓ]
 
+@[to_additive]
+protected theorem _root_.is_unit.set : IsUnit a → IsUnit ({a} : Set α) :=
+  IsUnit.map (singletonMonoidHom : α →* Set α)
+
+end Monoidₓ
+
+/-- `set α` is a `comm_monoid` under pointwise operations if `α` is. -/
+@[to_additive "`set α` is an `add_comm_monoid` under pointwise operations if `α` is."]
+protected def commMonoid [CommMonoidₓ α] : CommMonoidₓ (Set α) :=
+  { Set.monoid, Set.commSemigroup with }
+
+localized [Pointwise] attribute [instance] Set.commMonoid Set.addCommMonoid
+
+open Pointwise
+
+/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. -/
+protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Set α) :=
+  ⟨nsmulRec⟩
+
+/-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
+`set`. -/
+@[to_additive]
+protected def hasNpow [One α] [Mul α] : Pow (Set α) ℕ :=
+  ⟨fun s n => npowRec n s⟩
+
+/-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
+addition/subtraction!) of a `set`. -/
+protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Set α) :=
+  ⟨zsmulRec⟩
+
+/-- Repeated pointwise multiplication/division (not the same as pointwise repeated
+multiplication/division!) of a `set`. -/
+@[to_additive]
+protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Set α) ℤ :=
+  ⟨fun s n => zpowRec n s⟩
+
+section DivisionMonoid
+
+variable [DivisionMonoid α] {s t : Set α}
+
+@[to_additive]
+protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 := by
+  refine' ⟨fun h => _, _⟩
+  · have hst : (s * t).Nonempty := h.symm.subst one_nonempty
+    obtain ⟨a, ha⟩ := hst.of_image2_left
+    obtain ⟨b, hb⟩ := hst.of_image2_right
+    have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) := fun a b ha hb => h.subset <| mem_image2_of_mem ha hb
+    refine' ⟨a, b, _, _, H ha hb⟩ <;> refine' eq_singleton_iff_unique_mem.2 ⟨‹_›, fun x hx => _⟩
+    · exact (eq_inv_of_mul_eq_one_left <| H hx hb).trans (inv_eq_of_mul_eq_one_left <| H ha hb)
+      
+    · exact (eq_inv_of_mul_eq_one_right <| H ha hx).trans (inv_eq_of_mul_eq_one_right <| H ha hb)
+      
+    
+  · rintro ⟨b, c, rfl, rfl, h⟩
+    rw [singleton_mul_singleton, h, singleton_one]
+    
+
+/-- `set α` is a division monoid under pointwise operations if `α` is. -/
+@[to_additive SubtractionMonoid "`set α` is a subtraction monoid under pointwise operations if `α`\nis."]
+protected def divisionMonoid : DivisionMonoid (Set α) :=
+  { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv with
+    mul_inv_rev := fun s t => by
+      simp_rw [← image_inv]
+      exact image_image2_antidistrib mul_inv_rev,
+    inv_eq_of_mul := fun s t h => by
+      obtain ⟨a, b, rfl, rfl, hab⟩ := Set.mul_eq_one_iff.1 h
+      rw [inv_singleton, inv_eq_of_mul_eq_one_right hab],
+    div_eq_mul_inv := fun s t => by
+      rw [← image_id (s / t), ← image_inv]
+      exact image_image2_distrib_right div_eq_mul_inv }
+
 @[simp, to_additive]
-theorem mul_univ [Groupₓ α] (hs : s.Nonempty) : s * (Univ : Set α) = univ :=
+theorem is_unit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
+  constructor
+  · rintro ⟨u, rfl⟩
+    obtain ⟨a, b, ha, hb, h⟩ := Set.mul_eq_one_iff.1 u.mul_inv
+    refine' ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩
+    rw [← singleton_mul_singleton, ← ha, ← hb]
+    exact u.inv_mul
+    
+  · rintro ⟨a, rfl, ha⟩
+    exact ha.set
+    
+
+end DivisionMonoid
+
+/-- `set α` is a commutative division monoid under pointwise operations if `α` is. -/
+@[to_additive SubtractionCommMonoid
+      "`set α` is a commutative subtraction monoid under pointwise\noperations if `α` is."]
+protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Set α) :=
+  { Set.divisionMonoid, Set.commSemigroup with }
+
+localized [Pointwise]
+  attribute [instance] Set.divisionMonoid Set.subtractionMonoid Set.divisionCommMonoid Set.subtractionCommMonoid
+
+section Groupₓ
+
+variable [Groupₓ α] {s t : Set α} {a b : α}
+
+/-! Note that `set` is not a `group` because `s / s ≠ 1` in general. -/
+
+
+@[to_additive]
+theorem is_unit_singleton (a : α) : IsUnit ({a} : Set α) :=
+  (Groupₓ.is_unit a).Set
+
+@[simp, to_additive]
+theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
+  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
+
+@[simp, to_additive]
+theorem image_mul_left : (· * ·) a '' t = (· * ·) a⁻¹ ⁻¹' t := by
+  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+
+@[simp, to_additive]
+theorem image_mul_right : (· * b) '' t = (· * b⁻¹) ⁻¹' t := by
+  rw [image_eq_preimage_of_inverse] <;> intro c <;> simp
+
+@[to_additive]
+theorem image_mul_left' : (fun b => a⁻¹ * b) '' t = (fun b => a * b) ⁻¹' t := by
+  simp
+
+@[to_additive]
+theorem image_mul_right' : (· * b⁻¹) '' t = (· * b) ⁻¹' t := by
+  simp
+
+@[simp, to_additive]
+theorem preimage_mul_left_singleton : (· * ·) a ⁻¹' {b} = {a⁻¹ * b} := by
+  rw [← image_mul_left', image_singleton]
+
+@[simp, to_additive]
+theorem preimage_mul_right_singleton : (· * a) ⁻¹' {b} = {b * a⁻¹} := by
+  rw [← image_mul_right', image_singleton]
+
+@[simp, to_additive]
+theorem preimage_mul_left_one : (· * ·) a ⁻¹' 1 = {a⁻¹} := by
+  rw [← image_mul_left', image_one, mul_oneₓ]
+
+@[simp, to_additive]
+theorem preimage_mul_right_one : (· * b) ⁻¹' 1 = {b⁻¹} := by
+  rw [← image_mul_right', image_one, one_mulₓ]
+
+@[to_additive]
+theorem preimage_mul_left_one' : (fun b => a⁻¹ * b) ⁻¹' 1 = {a} := by
+  simp
+
+@[to_additive]
+theorem preimage_mul_right_one' : (· * b⁻¹) ⁻¹' 1 = {b} := by
+  simp
+
+@[simp, to_additive]
+theorem mul_univ (hs : s.Nonempty) : s * (Univ : Set α) = univ :=
   let ⟨a, ha⟩ := hs
   eq_univ_of_forall fun b => ⟨a, a⁻¹ * b, ha, trivialₓ, mul_inv_cancel_left _ _⟩
 
 @[simp, to_additive]
-theorem univ_mul [Groupₓ α] (ht : t.Nonempty) : (Univ : Set α) * t = univ :=
+theorem univ_mul (ht : t.Nonempty) : (Univ : Set α) * t = univ :=
   let ⟨a, ha⟩ := ht
   eq_univ_of_forall fun b => ⟨b * a⁻¹, a, trivialₓ, ha, inv_mul_cancel_right _ _⟩
 
-/-- `singleton` is a monoid hom. -/
-@[to_additive singleton_add_hom "singleton is an add monoid hom"]
-def singletonHom [Monoidₓ α] : α →* Set α where
-  toFun := singleton
-  map_one' := rfl
-  map_mul' := fun a b => singleton_mul_singleton.symm
-
-/-- multiplication preserves finiteness -/
-@[to_additive "addition preserves finiteness"]
-def fintypeMul [Mul α] [DecidableEq α] (s t : Set α) [hs : Fintype s] [ht : Fintype t] : Fintype (s * t : Set α) :=
-  Set.fintypeImage2 _ s t
+end Groupₓ
 
 @[to_additive]
 theorem bdd_above_mul [OrderedCommMonoid α] {A B : Set α} : BddAbove A → BddAbove B → BddAbove (A * B) := by
@@ -409,8 +837,6 @@ theorem bdd_above_mul [OrderedCommMonoid α] {A B : Set α} : BddAbove A → Bdd
   use bA * bB
   rintro x ⟨xa, xb, hxa, hxb, rfl⟩
   exact mul_le_mul' (hbA hxa) (hbB hxb)
-
-end Mul
 
 open Pointwise
 
@@ -488,317 +914,20 @@ theorem finset_prod_singleton {M ι : Type _} [CommMonoidₓ M] (s : Finset ι) 
 
 end BigOperators
 
-/-! ### Set negation/inversion -/
-
-
-section Inv
-
-/-- The set `(s⁻¹ : set α)` is defined as `{x | x⁻¹ ∈ s}` in locale `pointwise`.
-It is equal to `{x⁻¹ | x ∈ s}`, see `set.image_inv`. -/
-@[to_additive
-      " The set `(-s : set α)` is defined as `{x | -x ∈ s}` in locale `pointwise`.\nIt is equal to `{-x | x ∈ s}`, see `set.image_neg`. "]
-protected def hasInv [Inv α] : Inv (Set α) :=
-  ⟨Preimage Inv.inv⟩
-
-localized [Pointwise] attribute [instance] Set.hasInv Set.hasNeg
-
-section Inv
-
-variable [Inv α] {s t : Set α} {a : α}
-
-@[simp, to_additive]
-theorem inv_empty : (∅ : Set α)⁻¹ = ∅ :=
-  rfl
-
-@[simp, to_additive]
-theorem inv_univ : (Univ : Set α)⁻¹ = univ :=
-  rfl
-
-@[simp, to_additive]
-theorem mem_inv : a ∈ s⁻¹ ↔ a⁻¹ ∈ s :=
-  Iff.rfl
-
-@[simp, to_additive]
-theorem inv_preimage : Inv.inv ⁻¹' s = s⁻¹ :=
-  rfl
-
-@[simp, to_additive]
-theorem inter_inv : (s ∩ t)⁻¹ = s⁻¹ ∩ t⁻¹ :=
-  preimage_inter
-
-@[simp, to_additive]
-theorem union_inv : (s ∪ t)⁻¹ = s⁻¹ ∪ t⁻¹ :=
-  preimage_union
-
-@[simp, to_additive]
-theorem Inter_inv {ι : Sort _} (s : ι → Set α) : (⋂ i, s i)⁻¹ = ⋂ i, (s i)⁻¹ :=
-  preimage_Inter
-
-@[simp, to_additive]
-theorem Union_inv {ι : Sort _} (s : ι → Set α) : (⋃ i, s i)⁻¹ = ⋃ i, (s i)⁻¹ :=
-  preimage_Union
-
-@[simp, to_additive]
-theorem compl_inv : (sᶜ)⁻¹ = s⁻¹ᶜ :=
-  preimage_compl
-
-end Inv
-
-section HasInvolutiveInv
-
-variable [HasInvolutiveInv α] {s t : Set α} {a : α}
-
-@[to_additive]
-theorem inv_mem_inv : a⁻¹ ∈ s⁻¹ ↔ a ∈ s := by
-  simp only [mem_inv, inv_invₓ]
-
-@[simp, to_additive]
-theorem nonempty_inv : s⁻¹.Nonempty ↔ s.Nonempty :=
-  inv_involutive.Surjective.nonempty_preimage
-
-@[to_additive]
-theorem Nonempty.inv (h : s.Nonempty) : s⁻¹.Nonempty :=
-  nonempty_inv.2 h
-
-@[to_additive]
-theorem Finite.inv (hs : Finite s) : Finite s⁻¹ :=
-  hs.Preimage <| inv_injective.InjOn _
-
-@[simp, to_additive]
-theorem image_inv : Inv.inv '' s = s⁻¹ :=
-  congr_funₓ (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
-
-@[simp, to_additive]
-instance : HasInvolutiveInv (Set α) where
-  inv := Inv.inv
-  inv_inv := fun s => by
-    simp only [← inv_preimage, preimage_preimage, inv_invₓ, preimage_id']
-
-@[simp, to_additive]
-theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
-  (Equivₓ.inv α).Surjective.preimage_subset_preimage_iff
-
-@[to_additive]
-theorem inv_subset : s⁻¹ ⊆ t ↔ s ⊆ t⁻¹ := by
-  rw [← inv_subset_inv, inv_invₓ]
-
-@[simp, to_additive]
-theorem inv_singleton (a : α) : ({a} : Set α)⁻¹ = {a⁻¹} := by
-  rw [← image_inv, image_singleton]
-
-open MulOpposite
-
-@[to_additive]
-theorem image_op_inv : op '' s⁻¹ = (op '' s)⁻¹ := by
-  simp_rw [← image_inv, image_comm op_inv]
-
-end HasInvolutiveInv
-
-@[to_additive]
-protected theorem mul_inv_rev [Groupₓ α] (s t : Set α) : (s * t)⁻¹ = t⁻¹ * s⁻¹ := by
-  simp_rw [← image_inv]
-  exact image_image2_antidistrib mul_inv_rev
-
-protected theorem mul_inv_rev₀ [GroupWithZeroₓ α] (s t : Set α) : (s * t)⁻¹ = t⁻¹ * s⁻¹ := by
-  simp_rw [← image_inv]
-  exact image_image2_antidistrib mul_inv_rev₀
-
-end Inv
-
-open Pointwise
-
-/-! ### Set multiplication/division -/
-
-
-section Div
-
-variable {s s₁ s₂ t t₁ t₂ u : Set α} {a b : α}
-
-/-- The set `(s / t : set α)` is defined as `{x / y | x ∈ s, y ∈ t}` in locale `pointwise`. -/
-@[to_additive "The set `(s - t : set α)` is defined as `{x - y | x ∈ s, y ∈ t}` in locale\n`pointwise`."]
-protected def hasDiv [Div α] : Div (Set α) :=
-  ⟨Image2 Div.div⟩
-
-localized [Pointwise] attribute [instance] Set.hasDiv Set.hasSub
-
-section Div
-
-variable {ι : Sort _} {κ : ι → Sort _} [Div α]
-
-@[simp, to_additive]
-theorem image2_div : Image2 Div.div s t = s / t :=
-  rfl
-
-@[to_additive]
-theorem mem_div : a ∈ s / t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x / y = a :=
-  Iff.rfl
-
-@[to_additive]
-theorem div_mem_div (ha : a ∈ s) (hb : b ∈ t) : a / b ∈ s / t :=
-  mem_image2_of_mem ha hb
-
-@[to_additive]
-theorem div_subset_div (h₁ : s₁ ⊆ t₁) (h₂ : s₂ ⊆ t₂) : s₁ / s₂ ⊆ t₁ / t₂ :=
-  image2_subset h₁ h₂
-
-@[to_additive add_image_prod]
-theorem image_div_prod : (fun x : α × α => x.fst / x.snd) '' s ×ˢ t = s / t :=
-  image_prod _
-
-@[simp, to_additive]
-theorem empty_div : ∅ / s = ∅ :=
-  image2_empty_left
-
-@[simp, to_additive]
-theorem div_empty : s / ∅ = ∅ :=
-  image2_empty_right
-
-@[simp, to_additive]
-theorem div_singleton : s / {b} = (· / b) '' s :=
-  image2_singleton_right
-
-@[simp, to_additive]
-theorem singleton_div : {a} / t = (· / ·) a '' t :=
-  image2_singleton_left
-
-@[simp, to_additive]
-theorem singleton_div_singleton : ({a} : Set α) / {b} = {a / b} :=
-  image2_singleton
-
-@[to_additive]
-theorem div_subset_div_left (h : t₁ ⊆ t₂) : s / t₁ ⊆ s / t₂ :=
-  image2_subset_left h
-
-@[to_additive]
-theorem div_subset_div_right (h : s₁ ⊆ s₂) : s₁ / t ⊆ s₂ / t :=
-  image2_subset_right h
-
-@[to_additive]
-theorem union_div : (s₁ ∪ s₂) / t = s₁ / t ∪ s₂ / t :=
-  image2_union_left
-
-@[to_additive]
-theorem div_union : s / (t₁ ∪ t₂) = s / t₁ ∪ s / t₂ :=
-  image2_union_right
-
-@[to_additive]
-theorem inter_div_subset : s₁ ∩ s₂ / t ⊆ s₁ / t ∩ (s₂ / t) :=
-  image2_inter_subset_left
-
-@[to_additive]
-theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
-  image2_inter_subset_right
-
-@[to_additive]
-theorem Union_div_left_image : (⋃ a ∈ s, (fun x => a / x) '' t) = s / t :=
-  Union_image_left _
-
-@[to_additive]
-theorem Union_div_right_image : (⋃ a ∈ t, (fun x => x / a) '' s) = s / t :=
-  Union_image_right _
-
-@[to_additive]
-theorem Union_div (s : ι → Set α) (t : Set α) : (⋃ i, s i) / t = ⋃ i, s i / t :=
-  image2_Union_left _ _ _
-
-@[to_additive]
-theorem div_Union (s : Set α) (t : ι → Set α) : (s / ⋃ i, t i) = ⋃ i, s / t i :=
-  image2_Union_right _ _ _
-
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
-@[to_additive]
-theorem Union₂_div (s : ∀ i, κ i → Set α) (t : Set α) : (⋃ (i) (j), s i j) / t = ⋃ (i) (j), s i j / t :=
-  image2_Union₂_left _ _ _
-
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
-@[to_additive]
-theorem div_Union₂ (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋃ (i) (j), t i j) = ⋃ (i) (j), s / t i j :=
-  image2_Union₂_right _ _ _
-
-@[to_additive]
-theorem Inter_div_subset (s : ι → Set α) (t : Set α) : (⋂ i, s i) / t ⊆ ⋂ i, s i / t :=
-  image2_Inter_subset_left _ _ _
-
-@[to_additive]
-theorem div_Inter_subset (s : Set α) (t : ι → Set α) : (s / ⋂ i, t i) ⊆ ⋂ i, s / t i :=
-  image2_Inter_subset_right _ _ _
-
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
-@[to_additive]
-theorem Inter₂_div_subset (s : ∀ i, κ i → Set α) (t : Set α) : (⋂ (i) (j), s i j) / t ⊆ ⋂ (i) (j), s i j / t :=
-  image2_Inter₂_subset_left _ _ _
-
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
-@[to_additive]
-theorem div_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s / t i j :=
-  image2_Inter₂_subset_right _ _ _
-
-end Div
-
-/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. -/
-protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Set α) :=
-  ⟨nsmulRec⟩
-
-/-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
-`set`. -/
-@[to_additive]
-protected def hasNpow [One α] [Mul α] : Pow (Set α) ℕ :=
-  ⟨fun s n => npowRec n s⟩
-
-/-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
-addition/subtraction!) of a `set`. -/
-protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Set α) :=
-  ⟨zsmulRec⟩
-
-/-- Repeated pointwise multiplication/division (not the same as pointwise repeated
-multiplication/division!) of a `set`. -/
-@[to_additive]
-protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Set α) ℤ :=
-  ⟨fun s n => zpowRec n s⟩
-
-/-- `s / t = s * t⁻¹` for all `s t : set α` if `a / b = a * b⁻¹` for all `a b : α`. -/
-/-TODO: The below instances are duplicate because there is no typeclass greater than
-`div_inv_monoid` and `has_involutive_inv` but smaller than `group` and `group_with_zero`. -/
-@[to_additive "`s - t = s + -t` for all `s t : set α` if `a - b = a + -b` for all `a b : α`."]
-protected def divInvMonoid [Groupₓ α] : DivInvMonoidₓ (Set α) :=
-  { Set.monoid, Set.hasInv, Set.hasDiv with
-    div_eq_mul_inv := fun s t => by
-      rw [← image_id (s / t), ← image_inv]
-      exact image_image2_distrib_right div_eq_mul_inv }
-
-/-- `s / t = s * t⁻¹` for all `s t : set α` if `a / b = a * b⁻¹` for all `a b : α`. -/
-protected def divInvMonoid' [GroupWithZeroₓ α] : DivInvMonoidₓ (Set α) :=
-  { Set.monoid, Set.hasInv, Set.hasDiv with
-    div_eq_mul_inv := fun s t => by
-      rw [← image_id (s / t), ← image_inv]
-      exact image_image2_distrib_right div_eq_mul_inv }
-
-localized [Pointwise]
-  attribute [instance]
-    Set.hasNsmul Set.hasNpow Set.hasZsmul Set.hasZpow Set.divInvMonoid Set.divInvMonoid' Set.subNegAddMonoid
-
-end Div
-
 /-! ### Translation/scaling of sets -/
 
 
 section Smul
 
-/-- The scaling of a set `(x • s : set β)` by a scalar `x ∶ α` is defined as `{x • y | y ∈ s}`
-in locale `pointwise`. -/
-@[to_additive has_vadd_set
-      "The translation of a set `(x +ᵥ s : set β)` by a scalar `x ∶ α` is\ndefined as `{x +ᵥ y | y ∈ s}` in locale `pointwise`."]
+/-- The dilation of set `x • s` is defined as `{x • y | y ∈ s}` in locale `pointwise`. -/
+@[to_additive has_vadd_set "The translation of set `x +ᵥ s` is defined as `{x +ᵥ y | y ∈ s}` in\nlocale `pointwise`."]
 protected def hasScalarSet [HasScalar α β] : HasScalar α (Set β) :=
   ⟨fun a => Image (HasScalar.smul a)⟩
 
-/-- The pointwise scalar multiplication `(s • t : set β)` by a set of scalars `s ∶ set α`
-is defined as `{x • y | x ∈ s, y ∈ t}` in locale `pointwise`. -/
+/-- The pointwise scalar multiplication of sets `s • t` is defined as `{x • y | x ∈ s, y ∈ t}` in
+locale `pointwise`. -/
 @[to_additive HasVadd
-      "The pointwise translation `(s +ᵥ t : set β)` by a set of constants\n`s ∶ set α` is defined as `{x +ᵥ y | x ∈ s, y ∈ t}` in locale `pointwise`."]
+      "The pointwise scalar addition of sets `s +ᵥ t` is defined as\n`{x +ᵥ y | x ∈ s, y ∈ t}` in locale `pointwise`."]
 protected def hasScalar [HasScalar α β] : HasScalar (Set α) (Set β) :=
   ⟨Image2 HasScalar.smul⟩
 
@@ -823,16 +952,8 @@ theorem mem_smul : b ∈ s • t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x • y = 
   Iff.rfl
 
 @[to_additive]
-theorem smul_mem_smul (ha : a ∈ s) (hb : b ∈ t) : a • b ∈ s • t :=
-  mem_image2_of_mem ha hb
-
-@[to_additive]
-theorem smul_subset_smul (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ • t₁ ⊆ s₂ • t₂ :=
-  image2_subset hs ht
-
-@[to_additive]
-theorem smul_subset_iff : s • t ⊆ u ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a • b ∈ u :=
-  image2_subset_iff
+theorem smul_mem_smul : a ∈ s → b ∈ t → a • b ∈ s • t :=
+  mem_image2_of_mem
 
 @[simp, to_additive]
 theorem empty_smul : (∅ : Set α) • t = ∅ :=
@@ -841,6 +962,26 @@ theorem empty_smul : (∅ : Set α) • t = ∅ :=
 @[simp, to_additive]
 theorem smul_empty : s • (∅ : Set β) = ∅ :=
   image2_empty_right
+
+@[simp, to_additive]
+theorem smul_eq_empty : s • t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image2_eq_empty_iff
+
+@[simp, to_additive]
+theorem smul_nonempty : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+  image2_nonempty_iff
+
+@[to_additive]
+theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
+  nonempty.image2
+
+@[to_additive]
+theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
+  nonempty.of_image2_left
+
+@[to_additive]
+theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
+  nonempty.of_image2_right
 
 @[simp, to_additive]
 theorem smul_singleton : s • {b} = (· • b) '' s :=
@@ -854,13 +995,23 @@ theorem singleton_smul : ({a} : Set α) • t = a • t :=
 theorem singleton_smul_singleton : ({a} : Set α) • ({b} : Set β) = {a • b} :=
   image2_singleton
 
-@[to_additive]
-theorem smul_subset_smul_left (h : t₁ ⊆ t₂) : s • t₁ ⊆ s • t₂ :=
-  image2_subset_left h
+@[to_additive, mono]
+theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
+  image2_subset
 
 @[to_additive]
-theorem smul_subset_smul_right (h : s₁ ⊆ s₂) : s₁ • t ⊆ s₂ • t :=
-  image2_subset_right h
+theorem smul_subset_smul_left : t₁ ⊆ t₂ → s • t₁ ⊆ s • t₂ :=
+  image2_subset_left
+
+@[to_additive]
+theorem smul_subset_smul_right : s₁ ⊆ s₂ → s₁ • t ⊆ s₂ • t :=
+  image2_subset_right
+
+@[to_additive]
+theorem smul_subset_iff : s • t ⊆ u ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a • b ∈ u :=
+  image2_subset_iff
+
+attribute [mono] vadd_subset_vadd
 
 @[to_additive]
 theorem union_smul : (s₁ ∪ s₂) • t = s₁ • t ∪ s₂ • t :=
@@ -883,7 +1034,7 @@ theorem Union_smul_left_image : (⋃ a ∈ s, a • t) = s • t :=
   Union_image_left _
 
 @[to_additive]
-theorem Union_smul_right_image : (⋃ a ∈ t, (fun x => x • a) '' s) = s • t :=
+theorem Union_smul_right_image : (⋃ a ∈ t, (· • a) '' s) = s • t :=
   Union_image_right _
 
 @[to_additive]
@@ -927,10 +1078,6 @@ theorem smul_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set β) : (s • 
   image2_Inter₂_subset_right _ _ _
 
 @[to_additive]
-theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
-  nonempty.image2
-
-@[to_additive]
 theorem Finite.smul : Finite s → Finite t → Finite (s • t) :=
   Finite.image2 _
 
@@ -949,16 +1096,20 @@ theorem mem_smul_set : x ∈ a • t ↔ ∃ y, y ∈ t ∧ a • y = x :=
   Iff.rfl
 
 @[to_additive]
-theorem smul_mem_smul_set (hy : y ∈ t) : a • y ∈ a • t :=
-  ⟨y, hy, rfl⟩
-
-@[to_additive]
-theorem mem_smul_of_mem {s : Set α} (ha : a ∈ s) (hb : b ∈ t) : a • b ∈ s • t :=
-  mem_image2_of_mem ha hb
+theorem smul_mem_smul_set : b ∈ s → a • b ∈ a • s :=
+  mem_image_of_mem _
 
 @[simp, to_additive]
 theorem smul_set_empty : a • (∅ : Set β) = ∅ :=
   image_empty _
+
+@[simp, to_additive]
+theorem smul_set_eq_empty : a • s = ∅ ↔ s = ∅ :=
+  image_eq_empty
+
+@[simp, to_additive]
+theorem smul_set_nonempty : (a • s).Nonempty ↔ s.Nonempty :=
+  nonempty_image_iff
 
 @[simp, to_additive]
 theorem smul_set_singleton : a • ({b} : Set β) = {a • b} :=
@@ -1107,7 +1258,7 @@ end Smul
 
 section Vsub
 
-variable {ι : Sort _} {κ : ι → Sort _} [HasVsub α β] {s s₁ s₂ t t₁ t₂ : Set β} {a : α} {b c : β}
+variable {ι : Sort _} {κ : ι → Sort _} [HasVsub α β] {s s₁ s₂ t t₁ t₂ : Set β} {u : Set α} {a : α} {b c : β}
 
 include α
 
@@ -1127,12 +1278,6 @@ theorem mem_vsub : a ∈ s -ᵥ t ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ x -ᵥ y 
 theorem vsub_mem_vsub (hb : b ∈ s) (hc : c ∈ t) : b -ᵥ c ∈ s -ᵥ t :=
   mem_image2_of_mem hb hc
 
-theorem vsub_subset_vsub (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
-  image2_subset hs ht
-
-theorem vsub_subset_iff {u : Set α} : s -ᵥ t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x -ᵥ y ∈ u :=
-  image2_subset_iff
-
 @[simp]
 theorem empty_vsub (t : Set β) : ∅ -ᵥ t = ∅ :=
   image2_empty_left
@@ -1140,6 +1285,23 @@ theorem empty_vsub (t : Set β) : ∅ -ᵥ t = ∅ :=
 @[simp]
 theorem vsub_empty (s : Set β) : s -ᵥ ∅ = ∅ :=
   image2_empty_right
+
+@[simp]
+theorem vsub_eq_empty : s -ᵥ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image2_eq_empty_iff
+
+@[simp]
+theorem vsub_nonempty : (s -ᵥ t : Set α).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+  image2_nonempty_iff
+
+theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Set α).Nonempty :=
+  nonempty.image2
+
+theorem Nonempty.of_vsub_left : (s -ᵥ t : Set α).Nonempty → s.Nonempty :=
+  nonempty.of_image2_left
+
+theorem Nonempty.of_vsub_right : (s -ᵥ t : Set α).Nonempty → t.Nonempty :=
+  nonempty.of_image2_right
 
 @[simp]
 theorem vsub_singleton (s : Set β) (b : β) : s -ᵥ {b} = (· -ᵥ b) '' s :=
@@ -1153,11 +1315,21 @@ theorem singleton_vsub (t : Set β) (b : β) : {b} -ᵥ t = (· -ᵥ ·) b '' t 
 theorem singleton_vsub_singleton : ({b} : Set β) -ᵥ {c} = {b -ᵥ c} :=
   image2_singleton
 
-theorem vsub_subset_vsub_left (h : t₁ ⊆ t₂) : s -ᵥ t₁ ⊆ s -ᵥ t₂ :=
-  image2_subset_left h
+@[mono]
+theorem vsub_subset_vsub : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
+  image2_subset
 
-theorem vsub_subset_vsub_right (h : s₁ ⊆ s₂) : s₁ -ᵥ t ⊆ s₂ -ᵥ t :=
-  image2_subset_right h
+theorem vsub_subset_vsub_left : t₁ ⊆ t₂ → s -ᵥ t₁ ⊆ s -ᵥ t₂ :=
+  image2_subset_left
+
+theorem vsub_subset_vsub_right : s₁ ⊆ s₂ → s₁ -ᵥ t ⊆ s₂ -ᵥ t :=
+  image2_subset_right
+
+theorem vsub_subset_iff : s -ᵥ t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x -ᵥ y ∈ u :=
+  image2_subset_iff
+
+theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
+  vsub_subset_vsub h h
 
 theorem union_vsub : s₁ ∪ s₂ -ᵥ t = s₁ -ᵥ t ∪ (s₂ -ᵥ t) :=
   image2_union_left
@@ -1209,14 +1381,8 @@ theorem Inter₂_vsub_subset (s : ∀ i, κ i → Set β) (t : Set β) : (⋂ (i
 theorem vsub_Inter₂_subset (s : Set β) (t : ∀ i, κ i → Set β) : (s -ᵥ ⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), s -ᵥ t i j :=
   image2_Inter₂_subset_right _ _ _
 
-theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Set α).Nonempty :=
-  nonempty.image2
-
 theorem Finite.vsub (hs : Finite s) (ht : Finite t) : Finite (s -ᵥ t) :=
   hs.Image2 _ ht
-
-theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
-  vsub_subset_vsub h h
 
 end Vsub
 

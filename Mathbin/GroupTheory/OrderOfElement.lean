@@ -7,7 +7,7 @@ import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Data.Nat.Modeq
 import Mathbin.Data.Set.Pointwise
 import Mathbin.Dynamics.PeriodicPts
-import Mathbin.GroupTheory.QuotientGroup
+import Mathbin.GroupTheory.Index
 
 /-!
 # Order of an element
@@ -349,7 +349,7 @@ theorem IsOfFinOrder.inv {x : G} (hx : IsOfFinOrder x) : IsOfFinOrder x⁻¹ :=
     rcases(is_of_fin_order_iff_pow_eq_one x).mp hx with ⟨n, npos, hn⟩
     refine'
       ⟨n, npos, by
-        simp_rw [inv_pow, hn, one_inv]⟩
+        simp_rw [inv_pow, hn, inv_one]⟩
 
 /-- Inverses of elements of finite order have finite order. -/
 @[simp, to_additive "Inverses of elements of finite additive order have finite additive order."]
@@ -644,6 +644,11 @@ theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
 theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by
   let ⟨m, hm⟩ := @order_of_dvd_card_univ _ x _ _
   simp [hm, pow_mulₓ, pow_order_of_eq_one]
+
+@[to_additive]
+theorem Subgroup.pow_index_mem {G : Type _} [Groupₓ G] (H : Subgroup G) [Fintype (G ⧸ H)] [Normal H] (g : G) :
+    g ^ index H ∈ H := by
+  rw [← eq_one_iff, QuotientGroup.coe_pow H, index_eq_card, pow_card_eq_one]
 
 @[to_additive]
 theorem pow_eq_mod_card (n : ℕ) : x ^ n = x ^ (n % Fintype.card G) := by

@@ -38,7 +38,7 @@ def QuotientDiff :=
   Quotientₓ
     (Setoidₓ.mk (fun α β => diff (MonoidHom.id H) α β = 1)
       ⟨fun α => diff_self (MonoidHom.id H) α, fun α β h => by
-        rw [← diff_inv, h, one_inv], fun α β γ h h' => by
+        rw [← diff_inv, h, inv_one], fun α β γ h h' => by
         rw [← diff_mul_diff, h, h', one_mulₓ]⟩)
 
 instance : Inhabited H.QuotientDiff :=
@@ -83,7 +83,7 @@ instance : MulAction G H.QuotientDiff where
     Quotientₓ.induction_on' q fun T =>
       congr_argₓ Quotientₓ.mk'
         (by
-          rw [one_inv] <;> apply one_smul Gᵐᵒᵖ T)
+          rw [inv_one] <;> apply one_smul Gᵐᵒᵖ T)
 
 theorem smul_diff' (h : H) : diff (MonoidHom.id H) α (op (h : G) • β) = diff (MonoidHom.id H) α β * h ^ H.index := by
   rw [diff, diff, index_eq_card, ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]

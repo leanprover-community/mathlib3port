@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 -/
 import Mathbin.RepresentationTheory.Basic
+import Mathbin.RepresentationTheory.Rep
 
 /-!
 # Subspace of invariants a group representation
@@ -62,6 +63,8 @@ end GroupAlgebra
 
 namespace Representation
 
+section Invariants
+
 open GroupAlgebra
 
 variable {k G V : Type _} [CommSemiringₓ k] [Groupₓ G] [AddCommMonoidₓ V] [Module k V]
@@ -105,6 +108,39 @@ theorem average_map_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun
 theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v := by
   rw [mem_invariants] at hv
   simp [average_def, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
+
+end Invariants
+
+namespace LinHom
+
+universe u
+
+open CategoryTheory Action
+
+variable {k : Type u} [CommRingₓ k] {G : Groupₓₓ.{u}}
+
+theorem mem_invariants_iff_comm {X Y : Rep k G} (f : X.V →ₗ[k] Y.V) (g : G) :
+    (linHom X.ρ Y.ρ) g f = f ↔ X.ρ g ≫ f = f ≫ Y.ρ g := by
+  rw [lin_hom_apply, ← ρ_Aut_apply_inv, ← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def,
+    iso.inv_comp_eq, ρ_Aut_apply_hom]
+  exact comm
+
+/-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
+homomorphisms from `X` to `Y` -/
+@[simps]
+def invariantsEquivRepHom (X Y : Rep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y where
+  toFun := fun f => ⟨f.val, fun g => (mem_invariants_iff_comm _ g).1 (f.property g)⟩
+  map_add' := fun _ _ => rfl
+  map_smul' := fun _ _ => rfl
+  invFun := fun f => ⟨f.hom, fun g => (mem_invariants_iff_comm _ g).2 (f.comm g)⟩
+  left_inv := fun _ => by
+    ext
+    rfl
+  right_inv := fun _ => by
+    ext
+    rfl
+
+end LinHom
 
 end Representation
 

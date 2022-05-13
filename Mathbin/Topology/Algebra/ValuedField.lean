@@ -66,7 +66,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0) (
         rw [Valuation.map_mul]_ = (v x)⁻¹ * (v <| y - x) * (v y)⁻¹ :=
       by
       rw [v.map_inv, v.map_inv]_ = (v <| y - x) * (v y * v y)⁻¹ := by
-      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev₀]_ = (v <| y - x) * (v y * v y)⁻¹ :=
+      rw [mul_assoc, mul_comm, key, mul_assoc, mul_inv_rev]_ = (v <| y - x) * (v y * v y)⁻¹ :=
       rfl _ = (v <| x - y) * (v y * v y)⁻¹ := by
       rw [Valuation.map_sub_swap]_ < γ := hyp1'
 
@@ -283,7 +283,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     have : (v (x * z₀⁻¹) : Γ₀) = 1 := by
       apply hV
       have : ((z₀⁻¹ : K) : hat K) = z₀⁻¹ := RingHom.map_inv (completion.coe_ring_hom : K →+* hat K) z₀
-      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv₀, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
+      rw [completion.coe_mul, this, ← hy, hz₀, mul_inv, mul_comm y₀⁻¹, ← mul_assoc, mul_assoc y, mul_inv_cancel h,
         mul_oneₓ]
       solve_by_elim
     calc v x = v (x * z₀⁻¹ * z₀) := by

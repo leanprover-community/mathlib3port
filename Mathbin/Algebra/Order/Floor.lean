@@ -89,6 +89,14 @@ def floor : α → ℕ :=
 def ceil : α → ℕ :=
   FloorSemiring.ceil
 
+@[simp]
+theorem floor_nat : (Nat.floor : ℕ → ℕ) = id :=
+  rfl
+
+@[simp]
+theorem ceil_nat : (Nat.ceil : ℕ → ℕ) = id :=
+  rfl
+
 -- mathport name: «expr⌊ ⌋₊»
 notation "⌊" a "⌋₊" => Nat.floor a
 
@@ -469,6 +477,19 @@ def ceil : α → ℤ :=
 /-- `int.fract a`, the fractional part of `a`, is `a` minus its floor. -/
 def fract (a : α) : α :=
   a - floor a
+
+@[simp]
+theorem floor_int : (Int.floor : ℤ → ℤ) = id :=
+  rfl
+
+@[simp]
+theorem ceil_int : (Int.ceil : ℤ → ℤ) = id :=
+  rfl
+
+@[simp]
+theorem fract_int : (Int.fract : ℤ → ℤ) = 0 :=
+  funext fun x => by
+    simp [fract]
 
 -- mathport name: «expr⌊ ⌋»
 notation "⌊" a "⌋" => Int.floor a
@@ -895,6 +916,14 @@ theorem Int.floor_to_nat (a : α) : ⌊a⌋.toNat = ⌊a⌋₊ :=
   rfl
 
 theorem Int.ceil_to_nat (a : α) : ⌈a⌉.toNat = ⌈a⌉₊ :=
+  rfl
+
+@[simp]
+theorem Nat.floor_int : (Nat.floor : ℤ → ℕ) = Int.toNat :=
+  rfl
+
+@[simp]
+theorem Nat.ceil_int : (Nat.ceil : ℤ → ℕ) = Int.toNat :=
   rfl
 
 variable {a : α}

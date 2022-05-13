@@ -47,16 +47,6 @@ theorem one_left_wins : LeftWins 1 :=
 theorem star_first_wins : FirstWins star :=
   ⟨zero_lt_star, star_lt_zero⟩
 
-theorem omega_left_wins : LeftWins omega :=
-  ⟨by
-    rw [lt_def_le]
-    exact
-      Or.inl
-        ⟨ULift.up 0, by
-          tidy⟩,
-    by
-    rw [le_def] <;> tidy⟩
-
 theorem winner_cases (G : Pgame) : G.LeftWins ∨ G.RightWins ∨ G.FirstLoses ∨ G.FirstWins := by
   classical
   by_cases' hpos : 0 < G <;>

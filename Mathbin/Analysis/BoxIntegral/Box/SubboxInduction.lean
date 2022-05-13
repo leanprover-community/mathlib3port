@@ -139,7 +139,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι) (H_ind : ∀, �
     induction' m with m ihm
     · simp [J]
       
-    simp only [pow_succ'ₓ, J_succ, upper_sub_lower_split_center_box, ihm, div_div_eq_div_mul]
+    simp only [pow_succ'ₓ, J_succ, upper_sub_lower_split_center_box, ihm, div_div]
   have h0 : J 0 = I := rfl
   -- Now we clear unneeded assumptions
   clear_value J

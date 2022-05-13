@@ -145,7 +145,7 @@ variable [GroupWithZeroₓ R] [StarSemigroup R]
 
 @[norm_cast]
 theorem coe_inv (U : unitary R) : ↑U⁻¹ = (U⁻¹ : R) :=
-  eq_inv_of_mul_right_eq_one (coe_mul_star_self _)
+  eq_inv_of_mul_eq_one_right <| coe_mul_star_self _
 
 @[norm_cast]
 theorem coe_div (U₁ U₂ : unitary R) : ↑(U₁ / U₂) = (U₁ / U₂ : R) := by

@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 -/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
-import Mathbin.Algebra.Category.CommRing.Colimits
-import Mathbin.Algebra.Category.CommRing.Limits
+import Mathbin.Algebra.Category.Ring.Colimits
+import Mathbin.Algebra.Category.Ring.Limits
 import Mathbin.Topology.Sheaves.LocalPredicate
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Subring.Basic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Joseph Myers
 -/
 import Mathbin.Data.Complex.Exponential
-import Mathbin.Analysis.SpecialFunctions.LogDeriv
+import Mathbin.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Bounds on specific values of the exponential

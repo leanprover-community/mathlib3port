@@ -132,11 +132,11 @@ theorem Filter.Tendsto.exists_forall_le [Nonempty α] [LinearOrderₓ β] {f : �
 
 theorem Filter.Tendsto.exists_within_forall_ge [LinearOrderₓ β] {s : Set α} (hs : s.Nonempty) {f : α → β}
     (hf : Filter.Tendsto f Filter.cofinite Filter.atBot) : ∃ a₀ ∈ s, ∀, ∀ a ∈ s, ∀, f a ≤ f a₀ :=
-  @Filter.Tendsto.exists_within_forall_le _ (OrderDual β) _ _ hs _ hf
+  @Filter.Tendsto.exists_within_forall_le _ βᵒᵈ _ _ hs _ hf
 
 theorem Filter.Tendsto.exists_forall_ge [Nonempty α] [LinearOrderₓ β] {f : α → β} (hf : Tendsto f cofinite atBot) :
     ∃ a₀, ∀ a, f a ≤ f a₀ :=
-  @Filter.Tendsto.exists_forall_le _ (OrderDual β) _ _ _ hf
+  @Filter.Tendsto.exists_forall_le _ βᵒᵈ _ _ _ hf
 
 /-- For an injective function `f`, inverse images of finite sets are finite. See also
 `filter.comap_cofinite_le` and `function.injective.comap_cofinite_eq`. -/

@@ -105,7 +105,7 @@ theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a
   rfl
 
 theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
-    (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (nnnorm (f a) : ℝ≥0∞) ^ (2 : ℝ) ∂μ) := by
+    (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (∥f a∥₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) := by
   simp_rw [inner_self_eq_norm_sq_to_K]
   norm_cast
   rw [integral_eq_lintegral_of_nonneg_ae]

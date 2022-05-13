@@ -5,7 +5,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.FreeAlgebra
-import Mathbin.Algebra.Category.CommRing.Basic
+import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Algebra.Category.Module.Basic
 
 /-!

@@ -3,7 +3,7 @@ Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 -/
-import Mathbin.Order.OrderDual
+import Mathbin.Order.Synonym
 
 /-!
 # Minimal/maximal and bottom/top elements
@@ -63,16 +63,16 @@ instance nonempty_lt [LT α] [NoMinOrder α] (a : α) : Nonempty { x // x < a } 
 instance nonempty_gt [LT α] [NoMaxOrder α] (a : α) : Nonempty { x // a < x } :=
   nonempty_subtype.2 (exists_gt a)
 
-instance OrderDual.no_bot_order (α : Type _) [LE α] [NoTopOrder α] : NoBotOrder (OrderDual α) :=
+instance OrderDual.no_bot_order (α : Type _) [LE α] [NoTopOrder α] : NoBotOrder αᵒᵈ :=
   ⟨fun a => @exists_not_le α _ _ a⟩
 
-instance OrderDual.no_top_order (α : Type _) [LE α] [NoBotOrder α] : NoTopOrder (OrderDual α) :=
+instance OrderDual.no_top_order (α : Type _) [LE α] [NoBotOrder α] : NoTopOrder αᵒᵈ :=
   ⟨fun a => @exists_not_ge α _ _ a⟩
 
-instance OrderDual.no_min_order (α : Type _) [LT α] [NoMaxOrder α] : NoMinOrder (OrderDual α) :=
+instance OrderDual.no_min_order (α : Type _) [LT α] [NoMaxOrder α] : NoMinOrder αᵒᵈ :=
   ⟨fun a => @exists_gt α _ _ a⟩
 
-instance OrderDual.no_max_order (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder (OrderDual α) :=
+instance OrderDual.no_max_order (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder αᵒᵈ :=
   ⟨fun a => @exists_lt α _ _ a⟩
 
 -- See note [lower instance priority]
@@ -144,19 +144,19 @@ theorem is_max_to_dual_iff : IsMax (toDual a) ↔ IsMin a :=
   Iff.rfl
 
 @[simp]
-theorem is_bot_of_dual_iff {a : OrderDual α} : IsBot (ofDual a) ↔ IsTop a :=
+theorem is_bot_of_dual_iff {a : αᵒᵈ} : IsBot (ofDual a) ↔ IsTop a :=
   Iff.rfl
 
 @[simp]
-theorem is_top_of_dual_iff {a : OrderDual α} : IsTop (ofDual a) ↔ IsBot a :=
+theorem is_top_of_dual_iff {a : αᵒᵈ} : IsTop (ofDual a) ↔ IsBot a :=
   Iff.rfl
 
 @[simp]
-theorem is_min_of_dual_iff {a : OrderDual α} : IsMin (ofDual a) ↔ IsMax a :=
+theorem is_min_of_dual_iff {a : αᵒᵈ} : IsMin (ofDual a) ↔ IsMax a :=
   Iff.rfl
 
 @[simp]
-theorem is_max_of_dual_iff {a : OrderDual α} : IsMax (ofDual a) ↔ IsMin a :=
+theorem is_max_of_dual_iff {a : αᵒᵈ} : IsMax (ofDual a) ↔ IsMin a :=
   Iff.rfl
 
 alias is_bot_to_dual_iff ↔ _ IsTop.to_dual
@@ -270,7 +270,7 @@ theorem is_top_or_exists_gt (a : α) : IsTop a ∨ ∃ b, a < b := by
   simpa only [or_iff_not_imp_left, IsTop, not_forall, not_leₓ] using id
 
 theorem is_bot_or_exists_lt (a : α) : IsBot a ∨ ∃ b, b < a :=
-  @is_top_or_exists_gt (OrderDual α) _ a
+  @is_top_or_exists_gt αᵒᵈ _ a
 
 end LinearOrderₓ
 

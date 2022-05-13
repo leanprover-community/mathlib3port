@@ -971,10 +971,18 @@ section BooleanAlgebra
 variable [BooleanAlgebra α]
 
 --TODO@Yaël: Once we have co-Heyting algebras, we won't need to go through `boolean_algebra.of_core`
-instance : BooleanAlgebra (OrderDual α) :=
+instance : BooleanAlgebra αᵒᵈ :=
   BooleanAlgebra.ofCore
     { OrderDual.distribLattice α, OrderDual.boundedOrder α with Compl := fun a => toDual (ofDual aᶜ),
       inf_compl_le_bot := fun _ => sup_compl_eq_top.Ge, top_le_sup_compl := fun _ => inf_compl_eq_bot.Ge }
+
+@[simp]
+theorem of_dual_compl (a : αᵒᵈ) : ofDual (aᶜ) = ofDual aᶜ :=
+  rfl
+
+@[simp]
+theorem to_dual_compl (a : α) : toDual (aᶜ) = toDual aᶜ :=
+  rfl
 
 theorem sdiff_eq : x \ y = x⊓yᶜ :=
   BooleanAlgebra.sdiff_eq x y

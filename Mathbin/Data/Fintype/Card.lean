@@ -208,7 +208,7 @@ theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoidₓ γ] (
 @[to_additive]
 theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommMonoidₓ γ] (f : α → β) (g : α → γ) :
     (∏ b : β, ∏ a : { a // f a = b }, g (a : α)) = ∏ a, g a := by
-  rw [← (Equivₓ.sigmaPreimageEquiv f).prod_comp, ← univ_sigma_univ, prod_sigma]
+  rw [← (Equivₓ.sigmaFiberEquiv f).prod_comp, ← univ_sigma_univ, prod_sigma]
   rfl
 
 theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoidₓ β] (f : ∀ a : α ha : p a, β)

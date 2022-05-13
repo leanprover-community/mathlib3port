@@ -161,7 +161,7 @@ theorem prod_eq_one_iff_of_one_le' : (∀, ∀ i ∈ s, ∀, 1 ≤ f i) → ((�
 
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_le_one' : (∀, ∀ i ∈ s, ∀, f i ≤ 1) → ((∏ i in s, f i) = 1 ↔ ∀, ∀ i ∈ s, ∀, f i = 1) :=
-  @prod_eq_one_iff_of_one_le' _ (OrderDual N) _ _ _
+  @prod_eq_one_iff_of_one_le' _ Nᵒᵈ _ _ _
 
 @[to_additive single_le_sum]
 theorem single_le_prod' (hf : ∀, ∀ i ∈ s, ∀, 1 ≤ f i) {a} (h : a ∈ s) : f a ≤ ∏ x in s, f x :=
@@ -180,7 +180,7 @@ theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x 
 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀, ∀ x ∈ s, ∀, n ≤ f x) : n ^ s.card ≤ s.Prod f :=
-  @Finset.prod_le_pow_card _ (OrderDual N) _ _ _ _ h
+  @Finset.prod_le_pow_card _ Nᵒᵈ _ _ _ _ h
 
 theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
     (h : ∀, ∀ a ∈ s, ∀, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card * n :=
@@ -204,7 +204,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ y _ : y ∉ t, (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
     (∏ x in s, f x) ≤ ∏ y in t, ∏ x in s.filter fun x => g x = y, f x :=
-  @prod_fiberwise_le_prod_of_one_le_prod_fiber' _ (OrderDual N) _ _ _ _ _ _ _ h
+  @prod_fiberwise_le_prod_of_one_le_prod_fiber' _ Nᵒᵈ _ _ _ _ _ _ _ h
 
 end OrderedCommMonoid
 

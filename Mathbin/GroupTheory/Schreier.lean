@@ -79,7 +79,7 @@ theorem closure_mul_image_eq (hR : R ∈ RightTransversals (H : Set G)) (hR1 : (
   · rw [Subtype.coe_mk, mul_inv_selfₓ]
     exact H.one_mem
     
-  · rw [Subtype.coe_mk, one_inv, mul_oneₓ]
+  · rw [Subtype.coe_mk, inv_one, mul_oneₓ]
     exact (H.mul_mem_cancel_left (hU hg)).mp hh
     
 

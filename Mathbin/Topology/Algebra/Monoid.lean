@@ -416,6 +416,26 @@ theorem ContinuousAt.pow {f : X → M} {x : X} (hf : ContinuousAt f x) (n : ℕ)
 theorem ContinuousOn.pow {f : X → M} {s : Set X} (hf : ContinuousOn f s) (n : ℕ) : ContinuousOn (fun x => f x ^ n) s :=
   fun x hx => (hf x hx).pow n
 
+/-- If `R` acts on `A` via `A`, then continuous multiplication implies continuous scalar
+multiplication by constants.
+
+Notably, this instances applies when `R = A`, or when `[algebra R A]` is available. -/
+instance (priority := 100) IsScalarTower.has_continuous_const_smul {R A : Type _} [Monoidₓ A] [HasScalar R A]
+    [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] : HasContinuousConstSmul R A where
+  continuous_const_smul := fun q => by
+    simp (config := { singlePass := true })only [← smul_one_mul q (_ : A)]
+    exact continuous_const.mul continuous_id
+
+/-- If the action of `R` on `A` commutes with left-multiplication, then continuous multiplication
+implies continuous scalar multiplication by constants.
+
+Notably, this instances applies when `R = Aᵐᵒᵖ` -/
+instance (priority := 100) SmulCommClass.has_continuous_const_smul {R A : Type _} [Monoidₓ A] [HasScalar R A]
+    [SmulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] : HasContinuousConstSmul R A where
+  continuous_const_smul := fun q => by
+    simp (config := { singlePass := true })only [← mul_smul_one q (_ : A)]
+    exact continuous_id.mul continuous_const
+
 end HasContinuousMul
 
 namespace MulOpposite

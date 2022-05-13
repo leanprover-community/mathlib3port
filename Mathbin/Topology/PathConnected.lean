@@ -265,7 +265,7 @@ theorem trans_symm (γ : Path x y) (γ' : Path y z) : (γ.trans γ').symm = γ'.
     norm_num [ht]
     
   · refine' congr_argₓ _ (Subtype.ext _)
-    norm_num [sub_sub_assoc_swap, mul_sub]
+    norm_num [sub_sub_eq_add_sub, mul_sub]
     
   · refine' congr_argₓ _ (Subtype.ext _)
     have h : 2 - 2 * (t : ℝ) - 1 = 1 - 2 * t := by

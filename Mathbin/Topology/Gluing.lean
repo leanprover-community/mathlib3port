@@ -98,7 +98,7 @@ theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i
   delta' CategoryTheory.GlueData.ι
   simp_rw [← multicoequalizer.ι_sigma_π 𝖣.diagram]
   rw [← (homeo_of_iso (multicoequalizer.iso_coequalizer 𝖣.diagram).symm).is_open_preimage]
-  rw [coequalizer_is_open_iff, colimit_is_open_iff]
+  rw [coequalizer_is_open_iff, colimit_is_open_iff.{u}]
   rfl
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
@@ -171,15 +171,15 @@ theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) : 𝖣.ι i x = 𝖣.�
   · delta' glue_data.ι
     simp_rw [← multicoequalizer.ι_sigma_π]
     intro h
-    rw [← show _ = Sigma.mk i x from concrete_category.congr_hom (sigma_iso_sigma D.U).inv_hom_id _]
-    rw [← show _ = Sigma.mk j y from concrete_category.congr_hom (sigma_iso_sigma D.U).inv_hom_id _]
-    change InvImage D.rel (sigma_iso_sigma D.U).Hom _ _
+    rw [← show _ = Sigma.mk i x from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
+    rw [← show _ = Sigma.mk j y from concrete_category.congr_hom (sigmaIsoSigma.{u} D.U).inv_hom_id _]
+    change InvImage D.rel (sigmaIsoSigma.{u} D.U).Hom _ _
     simp only [Top.sigma_iso_sigma_inv_apply]
     rw [← (InvImage.equivalence _ _ D.rel_equiv).eqv_gen_iff]
     refine' EqvGen.mono _ (D.eqv_gen_of_π_eq h : _)
     rintro _ _ ⟨x⟩
-    rw [← show (sigma_iso_sigma _).inv _ = x from concrete_category.congr_hom (sigma_iso_sigma _).hom_inv_id x]
-    generalize (sigma_iso_sigma D.V).Hom x = x'
+    rw [← show (sigmaIsoSigma.{u} _).inv _ = x from concrete_category.congr_hom (sigmaIsoSigma.{u} _).hom_inv_id x]
+    generalize (sigmaIsoSigma.{u} D.V).Hom x = x'
     obtain ⟨⟨i, j⟩, y⟩ := x'
     unfold InvImage multispan_index.fst_sigma_map multispan_index.snd_sigma_map
     simp only [opens.inclusion_to_fun, Top.comp_app, sigma_iso_sigma_inv_apply,

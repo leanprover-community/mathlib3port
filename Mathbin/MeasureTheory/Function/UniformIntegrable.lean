@@ -723,7 +723,7 @@ theorem unif_integrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → 
           (div_pos hε (mul_pos two_pos (Nnreal.coe_pos.2 hCpos)))]_ ≤ Ennreal.ofReal (ε / 2) + Ennreal.ofReal (ε / 2) :=
       by
       refine' add_le_add_left _ _
-      rw [← Ennreal.of_real_coe_nnreal, ← Ennreal.of_real_mul (Nnreal.coe_nonneg _), ← div_div_eq_div_mul,
+      rw [← Ennreal.of_real_coe_nnreal, ← Ennreal.of_real_mul (Nnreal.coe_nonneg _), ← div_div,
         mul_div_cancel' _ (Nnreal.coe_pos.2 hCpos).Ne.symm]
       exact le_rfl _ ≤ Ennreal.ofReal ε := by
       rw [← Ennreal.of_real_add (half_pos hε).le (half_pos hε).le, add_halves]

@@ -131,7 +131,7 @@ instance [Neg R] [Neg M] : Neg (tsze R M) :=
 instance [AddSemigroupₓ R] [AddSemigroupₓ M] : AddSemigroupₓ (tsze R M) :=
   Prod.addSemigroup
 
-instance [AddZeroClass R] [AddZeroClass M] : AddZeroClass (tsze R M) :=
+instance [AddZeroClassₓ R] [AddZeroClassₓ M] : AddZeroClassₓ (tsze R M) :=
   Prod.addZeroClass
 
 instance [AddMonoidₓ R] [AddMonoidₓ M] : AddMonoidₓ (tsze R M) :=
@@ -215,7 +215,7 @@ theorem inl_zero [Zero R] [Zero M] : (inl 0 : tsze R M) = 0 :=
   rfl
 
 @[simp]
-theorem inl_add [Add R] [AddZeroClass M] (r₁ r₂ : R) : (inl (r₁ + r₂) : tsze R M) = inl r₁ + inl r₂ :=
+theorem inl_add [Add R] [AddZeroClassₓ M] (r₁ r₂ : R) : (inl (r₁ + r₂) : tsze R M) = inl r₁ + inl r₂ :=
   ext rfl (add_zeroₓ 0).symm
 
 @[simp]
@@ -238,7 +238,7 @@ theorem inr_zero [Zero R] [Zero M] : (inr 0 : tsze R M) = 0 :=
   rfl
 
 @[simp]
-theorem inr_add [AddZeroClass R] [AddZeroClass M] (m₁ m₂ : M) : (inr (m₁ + m₂) : tsze R M) = inr m₁ + inr m₂ :=
+theorem inr_add [AddZeroClassₓ R] [AddZeroClassₓ M] (m₁ m₂ : M) : (inr (m₁ + m₂) : tsze R M) = inr m₁ + inr m₂ :=
   ext (add_zeroₓ 0).symm rfl
 
 @[simp]
@@ -252,14 +252,14 @@ theorem inr_smul [Zero R] [Zero S] [SmulWithZero S R] [HasScalar S M] (r : S) (m
 
 end
 
-theorem inl_fst_add_inr_snd_eq [AddZeroClass R] [AddZeroClass M] (x : tsze R M) : inl x.fst + inr x.snd = x :=
+theorem inl_fst_add_inr_snd_eq [AddZeroClassₓ R] [AddZeroClassₓ M] (x : tsze R M) : inl x.fst + inr x.snd = x :=
   ext (add_zeroₓ x.1) (zero_addₓ x.2)
 
 /-- To show a property hold on all `triv_sq_zero_ext R M` it suffices to show it holds
 on terms of the form `inl r + inr m`.
 
 This can be used as `induction x using triv_sq_zero_ext.ind`. -/
-theorem ind {R M} [AddZeroClass R] [AddZeroClass M] {P : TrivSqZeroExt R M → Prop} (h : ∀ r m, P (inl r + inr m)) x :
+theorem ind {R M} [AddZeroClassₓ R] [AddZeroClassₓ M] {P : TrivSqZeroExt R M → Prop} (h : ∀ r m, P (inl r + inr m)) x :
     P x :=
   inl_fst_add_inr_snd_eq x ▸ h x.1 x.2
 

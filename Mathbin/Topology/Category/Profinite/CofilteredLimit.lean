@@ -43,7 +43,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- First, we have the topological basis of the cofiltered limit obtained by pulling back
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
-    Top.is_topological_basis_cofiltered_limit (F ⋙ Profinite.toTop) (Profinite.to_Top.map_cone C)
+    Top.is_topological_basis_cofiltered_limit.{u} (F ⋙ Profinite.toTop) (Profinite.to_Top.map_cone C)
       (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _ (fun i => is_clopen_univ)
       (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
   rotate_left
@@ -222,7 +222,7 @@ theorem exists_locally_constant {α : Type _} (f : LocallyConstant C.x α) :
     exact IsEmpty.false (S.proj this.some)
     let D := Profinite.to_Top.map_cone C
     have hD : is_limit D := is_limit_of_preserves Profinite.toTop hC
-    have CD := (hD.cone_point_unique_up_to_iso (Top.limitConeIsLimit _)).inv
+    have CD := (hD.cone_point_unique_up_to_iso (Top.limitConeIsLimit.{u} _)).inv
     exact cond.map CD
     
   · let f' : LocallyConstant C.X S := ⟨S.proj, S.proj_is_locally_constant⟩

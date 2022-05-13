@@ -3,11 +3,11 @@ Copyright (c) 2021 Justus Springer. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 -/
-import Mathbin.Algebra.Category.CommRing.FilteredColimits
+import Mathbin.Algebra.Category.Ring.FilteredColimits
 import Mathbin.AlgebraicGeometry.SheafedSpace
 import Mathbin.Topology.Sheaves.Stalks
-import Mathbin.Algebra.Category.CommRing.Colimits
-import Mathbin.Algebra.Category.CommRing.Limits
+import Mathbin.Algebra.Category.Ring.Colimits
+import Mathbin.Algebra.Category.Ring.Limits
 
 /-!
 # Ringed spaces

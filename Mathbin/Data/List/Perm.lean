@@ -227,6 +227,21 @@ theorem Perm.pmap {p : α → Prop} (f : ∀ a, p a → β) {l₁ l₂ : List α
 theorem Perm.filter (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} (s : l₁ ~ l₂) : filterₓ p l₁ ~ filterₓ p l₂ := by
   rw [← filter_map_eq_filter] <;> apply s.filter_map _
 
+theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
+    filterₓ p l ++ filterₓ (fun x => ¬p x) l ~ l := by
+  induction' l with x l ih
+  · rfl
+    
+  · by_cases' h : p x
+    · simp only [h, filter_cons_of_pos, filter_cons_of_neg, not_true, not_false_iff, cons_append]
+      exact ih.cons x
+      
+    · simp only [h, filter_cons_of_neg, not_false_iff, filter_cons_of_pos]
+      refine' perm.trans _ (ih.cons x)
+      exact perm_append_comm.trans (perm_append_comm.cons _)
+      
+    
+
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
@@ -408,6 +423,22 @@ theorem Perm.countp_eq (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α}
 
 theorem Subperm.countp_le (p : α → Prop) [DecidablePred p] {l₁ l₂ : List α} : l₁ <+~ l₂ → countp p l₁ ≤ countp p l₂
   | ⟨l, p', s⟩ => p'.countp_eq p ▸ s.countp_le p
+
+theorem Perm.countp_congr (s : l₁ ~ l₂) {p p' : α → Prop} [DecidablePred p] [DecidablePred p']
+    (hp : ∀, ∀ x ∈ l₁, ∀, p x = p' x) : l₁.countp p = l₂.countp p' := by
+  rw [← s.countp_eq p']
+  clear s
+  induction' l₁ with y s hs
+  · rfl
+    
+  · simp only [mem_cons_iff, forall_eq_or_imp] at hp
+    simp only [countp_cons, hs hp.2, hp.1]
+    
+
+theorem countp_eq_countp_filter_add (l : List α) (p q : α → Prop) [DecidablePred p] [DecidablePred q] :
+    l.countp p = (l.filter q).countp p + (l.filter fun a => ¬q a).countp p := by
+  rw [← countp_append]
+  exact perm.countp_eq _ (filter_append_perm _ _).symm
 
 theorem Perm.count_eq [DecidableEq α] {l₁ l₂ : List α} (p : l₁ ~ l₂) a : count a l₁ = count a l₂ :=
   p.countp_eq _

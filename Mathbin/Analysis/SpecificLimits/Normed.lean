@@ -330,7 +330,7 @@ theorem has_sum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜
       congr
       exact tsum_eq_zero_add A _ = ((r * ∑' n : ℕ, (n + 1) * r ^ n) - r * s) / (1 - r) := by
       simp [pow_succₓ, mul_left_commₓ _ r, tsum_mul_left]_ = r / (1 - r) ^ 2 := by
-      simp [add_mulₓ, tsum_add A B.summable, mul_addₓ, B.tsum_eq, ← div_eq_mul_inv, sq, div_div_eq_div_mul]
+      simp [add_mulₓ, tsum_add A B.summable, mul_addₓ, B.tsum_eq, ← div_eq_mul_inv, sq, div_div]
 
 /-- If `∥r∥ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
 theorem tsum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜] [CompleteSpace 𝕜] {r : 𝕜} (hr : ∥r∥ < 1) :
@@ -597,7 +597,7 @@ end
 -/
 
 
-/-- The series `∑' n, x ^ n / n!` is summable of any `x : ℝ`. See also `exp_series_field_summable`
+/-- The series `∑' n, x ^ n / n!` is summable of any `x : ℝ`. See also `exp_series_div_summable`
 for a version that also works in `ℂ`, and `exp_series_summable'` for a version that works in
 any normed algebra over `ℝ` or `ℂ`. -/
 theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n ! : ℕ → ℝ) := by
@@ -613,7 +613,7 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
   -- Finally, we prove the upper estimate
   intro n hn
   calc ∥x ^ (n + 1) / (n + 1)!∥ = ∥x∥ / (n + 1) * ∥x ^ n / n !∥ := by
-      rw [pow_succₓ, Nat.factorial_succ, Nat.cast_mulₓ, ← div_mul_div_comm₀, norm_mul, norm_div, Real.norm_coe_nat,
+      rw [pow_succₓ, Nat.factorial_succ, Nat.cast_mulₓ, ← div_mul_div_comm, norm_mul, norm_div, Real.norm_coe_nat,
         Nat.cast_succₓ]_ ≤ ∥x∥ / (⌊∥x∥⌋₊ + 1) * ∥x ^ n / n !∥ :=
       by
       mono* with 0 ≤ ∥x ^ n / n !∥, 0 ≤ ∥x∥ <;> apply norm_nonneg

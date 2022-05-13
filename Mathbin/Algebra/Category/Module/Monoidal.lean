@@ -8,7 +8,7 @@ import Mathbin.CategoryTheory.Closed.Monoidal
 import Mathbin.Algebra.Category.Module.Basic
 import Mathbin.LinearAlgebra.TensorProduct
 import Mathbin.CategoryTheory.Linear.Yoneda
-import Mathbin.CategoryTheory.Monoidal.Preadditive
+import Mathbin.CategoryTheory.Monoidal.Linear
 
 /-!
 # The symmetric monoidal category structure on R-modules
@@ -279,6 +279,16 @@ instance : MonoidalPreadditive (ModuleCat.{u} R) where
     intros
     ext
     simp [TensorProduct.add_tmul]
+
+instance : MonoidalLinear R (ModuleCat.{u} R) where
+  tensor_smul' := by
+    intros
+    ext
+    simp
+  smul_tensor' := by
+    intros
+    ext
+    simp [TensorProduct.smul_tmul]
 
 /-- Auxiliary definition for the `monoidal_closed` instance on `Module R`.
 (This is only a separate definition in order to speed up typechecking. )

@@ -137,7 +137,7 @@ theorem to_dfinsupp_zero [Zero M] : (0 : ι →₀ M).toDfinsupp = 0 :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_dfinsupp_add [AddZeroClass M] (f g : ι →₀ M) : (f + g).toDfinsupp = f.toDfinsupp + g.toDfinsupp :=
+theorem to_dfinsupp_add [AddZeroClassₓ M] (f g : ι →₀ M) : (f + g).toDfinsupp = f.toDfinsupp + g.toDfinsupp :=
   Dfinsupp.coe_fn_injective rfl
 
 @[simp]
@@ -164,7 +164,7 @@ theorem to_finsupp_zero [Zero M] [∀ m : M, Decidable (m ≠ 0)] : toFinsupp 0 
   Finsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
+theorem to_finsupp_add [AddZeroClassₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀ i : ι, M) :
     (toFinsupp (f + g) : ι →₀ M) = toFinsupp f + toFinsupp g :=
   Finsupp.coe_fn_injective <| Dfinsupp.coe_add _ _
 
@@ -203,7 +203,7 @@ def finsuppEquivDfinsupp [DecidableEq ι] [Zero M] [∀ m : M, Decidable (m ≠ 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
-def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃+ Π₀ i : ι, M :=
+def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClassₓ M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃+ Π₀ i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_add' := Finsupp.to_dfinsupp_add }
 
@@ -287,7 +287,7 @@ theorem sigma_finsupp_equiv_dfinsupp_single [Zero N] (a : Σi, η i) (n : N) :
 attribute [-instance] Finsupp.hasZero
 
 @[simp]
-theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →₀ N) :
+theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClassₓ N] (f g : (Σi, η i) →₀ N) :
     sigmaFinsuppEquivDfinsupp (f + g) =
       (sigmaFinsuppEquivDfinsupp f + sigmaFinsuppEquivDfinsupp g : Π₀ i : ι, η i →₀ N) :=
   by
@@ -296,7 +296,7 @@ theorem sigma_finsupp_equiv_dfinsupp_add [AddZeroClass N] (f g : (Σi, η i) →
 
 /-- `finsupp.split` is an additive equivalence between `(Σ i, η i) →₀ N` and `Π₀ i, (η i →₀ N)`. -/
 @[simps]
-def sigmaFinsuppAddEquivDfinsupp [AddZeroClass N] : ((Σi, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
+def sigmaFinsuppAddEquivDfinsupp [AddZeroClassₓ N] : ((Σi, η i) →₀ N) ≃+ Π₀ i, η i →₀ N :=
   { sigmaFinsuppEquivDfinsupp with toFun := sigmaFinsuppEquivDfinsupp, invFun := sigmaFinsuppEquivDfinsupp.symm,
     map_add' := sigma_finsupp_equiv_dfinsupp_add }
 

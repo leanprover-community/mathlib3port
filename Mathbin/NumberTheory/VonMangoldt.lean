@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 import Mathbin.Algebra.IsPrimePow
 import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.Analysis.SpecialFunctions.Log
+import Mathbin.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # The von Mangoldt Function
@@ -84,6 +84,18 @@ theorem von_mangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n :=
 theorem von_mangoldt_apply_prime {p : ℕ} (hp : p.Prime) : Λ p = Real.log p := by
   rw [von_mangoldt_apply, prime.min_fac_eq hp, if_pos (Nat.prime_iff.1 hp).IsPrimePow]
 
+theorem von_mangoldt_ne_zero_iff {n : ℕ} : Λ n ≠ 0 ↔ IsPrimePow n := by
+  rcases eq_or_ne n 1 with (rfl | hn)
+  · simp [not_is_prime_pow_one]
+    
+  exact (Real.log_pos (one_lt_cast.2 (min_fac_prime hn).one_lt)).ne'.ite_ne_right_iff
+
+theorem von_mangoldt_pos_iff {n : ℕ} : 0 < Λ n ↔ IsPrimePow n :=
+  von_mangoldt_nonneg.lt_iff_ne.trans (ne_comm.trans von_mangoldt_ne_zero_iff)
+
+theorem von_mangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
+  von_mangoldt_ne_zero_iff.not_right
+
 open BigOperators
 
 theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n := by
@@ -97,7 +109,7 @@ theorem von_mangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
   intro a b ha' hb' hab ha hb
   simp only [von_mangoldt_apply, ← sum_filter] at ha hb⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union, sum_union (disjoint_divisors_filter_prime_pow hab), ha, hb,
-    Nat.cast_mulₓ, Real.log_mul (Nat.cast_ne_zero.2 (pos_of_gt ha').ne') (Nat.cast_ne_zero.2 (pos_of_gt hb').ne')]
+    Nat.cast_mulₓ, Real.log_mul (cast_ne_zero.2 (pos_of_gt ha').ne') (cast_ne_zero.2 (pos_of_gt hb').ne')]
 
 @[simp]
 theorem von_mangoldt_mul_zeta : Λ * ζ = log := by
@@ -137,10 +149,17 @@ theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * 
         hn
           (by
             simpa using mn)
-    rw [Nat.cast_dvd mn this, Real.log_div (cast_ne_zero.2 hn) this, neg_sub, mul_sub]
+    rw [Nat.cast_div mn this, Real.log_div (cast_ne_zero.2 hn) this, neg_sub, mul_sub]
   rw [this, sum_sub_distrib, ← sum_mul, ← Int.cast_sum, ← coe_mul_zeta_apply, eq_comm, sub_eq_self,
     moebius_mul_coe_zeta, mul_eq_zero, Int.cast_eq_zero]
   rcases eq_or_ne n 1 with (hn | hn) <;> simp [hn]
+
+theorem von_mangoldt_le_log : ∀ {n : ℕ}, Λ n ≤ Real.log (n : ℝ)
+  | 0 => by
+    simp
+  | n + 1 => by
+    rw [← von_mangoldt_sum]
+    exact single_le_sum (fun _ _ => von_mangoldt_nonneg) (mem_divisors_self _ n.succ_ne_zero)
 
 end ArithmeticFunction
 

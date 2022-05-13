@@ -76,7 +76,7 @@ theorem IsDiag.neg [AddGroupₓ α] {A : Matrix n n α} (ha : A.IsDiag) : (-A).I
 theorem is_diag_neg_iff [AddGroupₓ α] {A : Matrix n n α} : (-A).IsDiag ↔ A.IsDiag :=
   ⟨fun ha i j h => neg_eq_zero.1 (ha h), IsDiag.neg⟩
 
-theorem IsDiag.add [AddZeroClass α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) : (A + B).IsDiag := by
+theorem IsDiag.add [AddZeroClassₓ α] {A B : Matrix n n α} (ha : A.IsDiag) (hb : B.IsDiag) : (A + B).IsDiag := by
   intro i j h
   simp [ha h, hb h]
 

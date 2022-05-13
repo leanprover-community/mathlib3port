@@ -227,7 +227,7 @@ end One
 
 section Mul
 
-variable [AddZeroClass ι] [GhasMul A]
+variable [AddZeroClassₓ ι] [GhasMul A]
 
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.

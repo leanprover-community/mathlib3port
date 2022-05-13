@@ -570,7 +570,7 @@ theorem coe_neg (x : ℝ) : ((-x : ℝ) : Ereal) = -(x : Ereal) :=
   rfl
 
 /-- Negation as an order reversing isomorphism on `ereal`. -/
-def negOrderIso : Ereal ≃o OrderDual Ereal :=
+def negOrderIso : Ereal ≃o Erealᵒᵈ :=
   { Equivₓ.neg Ereal with toFun := fun x => OrderDual.toDual (-x), invFun := fun x => -x.ofDual,
     map_rel_iff' := fun x y => neg_le_neg_iff }
 

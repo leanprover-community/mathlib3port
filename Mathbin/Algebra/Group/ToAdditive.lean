@@ -198,7 +198,7 @@ unsafe def map_namespace (src tgt : Name) : Tactic Unit := do
 * if `allow_auto_name` is `ff` (default) then `@[to_additive]` will check whether the given name
   can be auto-generated.
 -/
-structure ValueType : Type where
+structure ValueTypeₓ : Type where
   replaceAll : Bool
   trace : Bool
   tgt : Name
@@ -283,7 +283,7 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
 -- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
 /-- the parser for the arguments to `to_additive`. -/
-unsafe def parser : lean.parser ValueType := do
+unsafe def parser : lean.parser ValueTypeₓ := do
   let bang ← Option.isSome <$> «expr ?» (tk "!")
   let ques ← Option.isSome <$> «expr ?» (tk "?")
   let tgt ← «expr ?» ident
@@ -527,7 +527,7 @@ that the new name differs from the original one.
 
 -/
 @[user_attribute]
-protected unsafe def attr : user_attribute Unit ValueType where
+protected unsafe def attr : user_attribute Unit ValueTypeₓ where
   Name := `to_additive
   descr := "Transport multiplicative to additive"
   parser := parser
@@ -557,9 +557,10 @@ protected unsafe def attr : user_attribute Unit ValueType where
           match val with
             | some doc => add_doc_string tgt doc
             | none => do
-              let some alias_name ← tactic.alias.get_alias_target src | skip
+              let some alias_target ← tactic.alias.get_alias_target src | skip
+              let alias_name := alias_target
               let some add_alias_name ← pure (dict alias_name) | skip
-              add_doc_string tgt ("**Alias** of `" ++ toString add_alias_name ++ "`.")
+              add_doc_string tgt alias_target
 
 add_tactic_doc
   { Name := "to_additive", category := DocCategory.attr, declNames := [`to_additive.attr],

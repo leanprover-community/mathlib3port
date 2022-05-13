@@ -190,7 +190,7 @@ theorem term_neg {α} [AddCommGroupₓ α] n x a n' a' (h₁ : -n = n') (h₂ : 
 
 unsafe def eval_neg (c : context) : normal_expr → tactic (normal_expr × expr)
   | zero e => do
-    let p ← c.mk_app `` neg_zero `` AddGroupₓ []
+    let p ← c.mk_app `` neg_zero `` SubtractionMonoid []
     return (zero' c, p)
   | nterm e n x a => do
     let (n', h₁) ← mk_app `` Neg.neg [n.1] >>= norm_num.eval_field
@@ -234,7 +234,7 @@ unsafe def eval_atom (c : context) (e : expr) : tactic (normal_expr × expr) := 
   let n1 ← c.int_to_expr 1
   return (term' c (n1, 1) e (zero' c), c `` term_atom [e])
 
-theorem unfold_sub {α} [AddGroupₓ α] (a b c : α) (h : a + -b = c) : a - b = c := by
+theorem unfold_sub {α} [SubtractionMonoid α] (a b c : α) (h : a + -b = c) : a - b = c := by
   rw [sub_eq_add_neg, h]
 
 theorem unfold_smul {α} [AddCommMonoidₓ α] n (x y : α) (h : smul n x = y) : n • x = y :=
@@ -297,7 +297,7 @@ unsafe def eval (c : context) : expr → tactic (normal_expr × expr)
     let e₂' ← mk_app `` Neg.neg [e₂]
     let e ← mk_app `` Add.add [e₁, e₂']
     let (e', p) ← eval e
-    let p' ← c.mk_app `` unfold_sub `` AddGroupₓ [e₁, e₂, e', p]
+    let p' ← c.mk_app `` unfold_sub `` SubtractionMonoid [e₁, e₂, e', p]
     return (e', p')
   | quote.1 (-%%ₓe) => do
     let (e₁, p₁) ← eval e

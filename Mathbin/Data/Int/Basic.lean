@@ -1070,6 +1070,11 @@ theorem sub_div_of_dvd (a : ℤ) {b c : ℤ} (hcb : c ∣ b) : (a - b) / c = a /
 theorem sub_div_of_dvd_sub {a b c : ℤ} (hcab : c ∣ a - b) : (a - b) / c = a / c - b / c := by
   rw [eq_sub_iff_add_eq, ← Int.add_div_of_dvd_left hcab, sub_add_cancel]
 
+@[simp]
+protected theorem div_left_inj {a b d : ℤ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
+  refine' ⟨fun h => _, congr_argₓ _⟩
+  rw [← Int.mul_div_cancel' hda, ← Int.mul_div_cancel' hdb, h]
+
 theorem nat_abs_sign (z : ℤ) : z.sign.natAbs = if z = 0 then 0 else 1 := by
   rcases z with ((_ | _) | _) <;> rfl
 

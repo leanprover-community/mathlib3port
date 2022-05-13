@@ -101,7 +101,7 @@ theorem inv_of_eq_right_inv [Monoidₓ α] {a b : α} [Invertible a] (hac : a * 
 theorem inv_of_eq_left_inv [Monoidₓ α] {a b : α} [Invertible a] (hac : b * a = 1) : ⅟ a = b :=
   (left_inv_eq_right_invₓ hac (mul_inv_of_self _)).symm
 
-theorem invertible_unique {α : Type u} [Monoidₓ α] (a b : α) (h : a = b) [Invertible a] [Invertible b] : ⅟ a = ⅟ b := by
+theorem invertible_unique {α : Type u} [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] (h : a = b) : ⅟ a = ⅟ b := by
   apply inv_of_eq_right_inv
   rw [h, mul_inv_of_self]
 
@@ -197,8 +197,12 @@ instance invertibleInvOf [One α] [Mul α] {a : α} [Invertible a] : Invertible 
   ⟨a, mul_inv_of_self a, inv_of_mul_self a⟩
 
 @[simp]
-theorem inv_of_inv_of [Monoidₓ α] {a : α} [Invertible a] [Invertible (⅟ a)] : ⅟ (⅟ a) = a :=
+theorem inv_of_inv_of [Monoidₓ α] (a : α) [Invertible a] [Invertible (⅟ a)] : ⅟ (⅟ a) = a :=
   inv_of_eq_right_inv (inv_of_mul_self _)
+
+@[simp]
+theorem inv_of_inj [Monoidₓ α] {a b : α} [Invertible a] [Invertible b] : ⅟ a = ⅟ b ↔ a = b :=
+  ⟨invertible_unique _ _, invertible_unique _ _⟩
 
 /-- `⅟b * ⅟a` is the inverse of `a * b` -/
 def invertibleMul [Monoidₓ α] (a b : α) [Invertible a] [Invertible b] : Invertible (a * b) :=
@@ -309,13 +313,12 @@ def invertibleInv {a : α} [Invertible a] : Invertible a⁻¹ :=
 
 end GroupWithZeroₓ
 
-/-- Monoid homs preserve invertibility.
--/
-def Invertible.map {R : Type _} {S : Type _} [Monoidₓ R] [Monoidₓ S] (f : R →* S) (r : R) [Invertible r] :
-    Invertible (f r) where
+/-- Monoid homs preserve invertibility. -/
+def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClassₓ R] [MulOneClassₓ S] [MonoidHomClass F R S]
+    (f : F) (r : R) [Invertible r] : Invertible (f r) where
   invOf := f (⅟ r)
   inv_of_mul_self := by
-    rw [← f.map_mul, inv_of_mul_self, f.map_one]
+    rw [← map_mul, inv_of_mul_self, map_one]
   mul_inv_of_self := by
-    rw [← f.map_mul, mul_inv_of_self, f.map_one]
+    rw [← map_mul, mul_inv_of_self, map_one]
 

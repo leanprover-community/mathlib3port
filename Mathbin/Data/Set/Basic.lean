@@ -1059,6 +1059,9 @@ theorem subset_singleton_iff_eq {s : Set α} {x : α} : s ⊆ {x} ↔ s = ∅ �
   use ⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
   simp [eq_singleton_iff_nonempty_unique_mem, hs, ne_empty_iff_nonempty.2 hs]
 
+theorem Nonempty.subset_singleton_iff (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :=
+  subset_singleton_iff_eq.trans <| or_iff_right h.ne_empty
+
 theorem ssubset_singleton_iff {s : Set α} {x : α} : s ⊂ {x} ↔ s = ∅ := by
   rw [ssubset_iff_subset_ne, subset_singleton_iff_eq, or_and_distrib_right, and_not_selfₓ, or_falseₓ,
     and_iff_left_iff_imp]
@@ -2632,6 +2635,11 @@ theorem inclusion_inclusion (hst : s ⊆ t) (htu : t ⊆ u) (x : s) :
   rfl
 
 @[simp]
+theorem inclusion_comp_inclusion {α} {s t u : Set α} (hst : s ⊆ t) (htu : t ⊆ u) :
+    inclusion htu ∘ inclusion hst = inclusion (hst.trans htu) :=
+  funext (inclusion_inclusion hst htu)
+
+@[simp]
 theorem coe_inclusion (h : s ⊆ t) (x : s) : (inclusion h x : α) = (x : α) :=
   rfl
 
@@ -2786,6 +2794,12 @@ theorem Nonempty.image2 : s.Nonempty → t.Nonempty → (Image2 f s t).Nonempty 
 @[simp]
 theorem image2_nonempty_iff : (Image2 f s t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   ⟨fun ⟨_, a, b, ha, hb, _⟩ => ⟨⟨a, ha⟩, b, hb⟩, fun h => h.1.Image2 h.2⟩
+
+theorem Nonempty.of_image2_left (h : (Image2 f s t).Nonempty) : s.Nonempty :=
+  (image2_nonempty_iff.1 h).1
+
+theorem Nonempty.of_image2_right (h : (Image2 f s t).Nonempty) : t.Nonempty :=
+  (image2_nonempty_iff.1 h).2
 
 @[simp]
 theorem image2_eq_empty_iff : Image2 f s t = ∅ ↔ s = ∅ ∨ t = ∅ := by

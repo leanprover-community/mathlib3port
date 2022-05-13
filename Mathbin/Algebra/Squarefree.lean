@@ -227,6 +227,73 @@ theorem squarefree_iff_nodup_factors {n : ℕ} (h0 : n ≠ 0) : Squarefree n ↔
 theorem squarefree_iff_prime_squarefree {n : ℕ} : Squarefree n ↔ ∀ x, Prime x → ¬x * x ∣ n :=
   squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible ⟨_, prime_two⟩
 
+theorem Squarefree.factorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) : n.factorization p ≤ 1 := by
+  rcases eq_or_ne n 0 with (rfl | hn')
+  · simp
+    
+  rw [multiplicity.squarefree_iff_multiplicity_le_one] at hn
+  by_cases' hp : p.prime
+  · have := hn p
+    simp only [multiplicity_eq_factorization hp hn', Nat.is_unit_iff, hp.ne_one, or_falseₓ] at this
+    exact_mod_cast this
+    
+  · rw [factorization_eq_zero_of_non_prime _ hp]
+    exact zero_le_one
+    
+
+theorem squarefree_of_factorization_le_one {n : ℕ} (hn : n ≠ 0) (hn' : ∀ p, n.factorization p ≤ 1) : Squarefree n := by
+  rw [squarefree_iff_nodup_factors hn, List.nodup_iff_count_le_one]
+  intro a
+  rw [factors_count_eq]
+  apply hn'
+
+theorem squarefree_iff_factorization_le_one {n : ℕ} (hn : n ≠ 0) : Squarefree n ↔ ∀ p, n.factorization p ≤ 1 :=
+  ⟨fun p hn => Squarefree.factorization_le_one hn p, squarefree_of_factorization_le_one hn⟩
+
+theorem Squarefree.ext_iff {n m : ℕ} (hn : Squarefree n) (hm : Squarefree m) : n = m ↔ ∀ p, Prime p → (p ∣ n ↔ p ∣ m) :=
+  by
+  refine'
+    ⟨by
+      rintro rfl
+      simp , fun h => eq_of_factorization_eq hn.ne_zero hm.ne_zero fun p => _⟩
+  by_cases' hp : p.prime
+  · have h₁ := h _ hp
+    rw [← not_iff_not, hp.dvd_iff_one_le_factorization hn.ne_zero, not_leₓ, lt_one_iff,
+      hp.dvd_iff_one_le_factorization hm.ne_zero, not_leₓ, lt_one_iff] at h₁
+    have h₂ := squarefree.factorization_le_one p hn
+    have h₃ := squarefree.factorization_le_one p hm
+    rw [Nat.le_add_one_iff, le_zero_iff] at h₂ h₃
+    cases h₂
+    · rwa [h₂, eq_comm, ← h₁]
+      
+    · rw [h₂, h₃.resolve_left]
+      rw [← h₁, h₂]
+      simp only [Nat.one_ne_zero, not_false_iff]
+      
+    
+  rw [factorization_eq_zero_of_non_prime _ hp, factorization_eq_zero_of_non_prime _ hp]
+
+theorem squarefree_pow_iff {n k : ℕ} (hn : n ≠ 1) (hk : k ≠ 0) : Squarefree (n ^ k) ↔ Squarefree n ∧ k = 1 := by
+  refine'
+    ⟨fun h => _, by
+      rintro ⟨hn, rfl⟩
+      simpa⟩
+  rcases eq_or_ne n 0 with (rfl | hn₀)
+  · simpa [zero_pow hk.bot_lt] using h
+    
+  refine' ⟨squarefree_of_dvd_of_squarefree (dvd_pow_self _ hk) h, by_contradiction fun h₁ => _⟩
+  have : 2 ≤ k := k.two_le_iff.mpr ⟨hk, h₁⟩
+  apply hn (Nat.is_unit_iff.1 (h _ _))
+  rw [← sq]
+  exact pow_dvd_pow _ this
+
+theorem squarefree_and_prime_pow_iff_prime {n : ℕ} : Squarefree n ∧ IsPrimePow n ↔ Prime n := by
+  refine' Iff.symm ⟨fun hn => ⟨hn.Squarefree, hn.IsPrimePow⟩, _⟩
+  rw [is_prime_pow_nat_iff]
+  rintro ⟨h, p, k, hp, hk, rfl⟩
+  rw [squarefree_pow_iff hp.ne_one hk.ne'] at h
+  rwa [h.2, pow_oneₓ]
+
 /-- Assuming that `n` has no factors less than `k`, returns the smallest prime `p` such that
   `p^2 ∣ n`. -/
 def minSqFacAux : ℕ → ℕ → Option ℕ
@@ -511,9 +578,6 @@ theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefre
   · obtain ⟨a, b, -, -, h₁, h₂⟩ := sq_mul_squarefree_of_pos (succ_pos n)
     exact ⟨a, b, h₁, h₂⟩
     
-
-theorem squarefree_iff_prime_sq_not_dvd (n : ℕ) : Squarefree n ↔ ∀ x : ℕ, x.Prime → ¬x * x ∣ n :=
-  squarefree_iff_irreducible_sq_not_dvd_of_exists_irreducible ⟨2, (irreducible_iff_nat_prime _).2 prime_two⟩
 
 /-- `squarefree` is multiplicative. Note that the → direction does not require `hmn`
 and generalizes to arbitrary commutative monoids. See `squarefree.of_mul_left` and

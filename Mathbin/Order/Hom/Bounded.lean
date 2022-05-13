@@ -579,7 +579,7 @@ variable [LE α] [OrderTop α] [LE β] [OrderTop β] [LE γ] [OrderTop γ]
 
 /-- Reinterpret a top homomorphism as a bot homomorphism between the dual lattices. -/
 @[simps]
-protected def dual : TopHom α β ≃ BotHom (OrderDual α) (OrderDual β) where
+protected def dual : TopHom α β ≃ BotHom αᵒᵈ βᵒᵈ where
   toFun := fun f => ⟨f, f.map_top'⟩
   invFun := fun f => ⟨f, f.map_bot'⟩
   left_inv := fun f => TopHom.ext fun _ => rfl
@@ -598,7 +598,7 @@ theorem symm_dual_id : TopHom.dual.symm (BotHom.id _) = TopHom.id α :=
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : BotHom (OrderDual β) (OrderDual γ)) (f : BotHom (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : BotHom βᵒᵈ γᵒᵈ) (f : BotHom αᵒᵈ βᵒᵈ) :
     TopHom.dual.symm (g.comp f) = (TopHom.dual.symm g).comp (TopHom.dual.symm f) :=
   rfl
 
@@ -610,7 +610,7 @@ variable [LE α] [OrderBot α] [LE β] [OrderBot β] [LE γ] [OrderBot γ]
 
 /-- Reinterpret a bot homomorphism as a top homomorphism between the dual lattices. -/
 @[simps]
-protected def dual : BotHom α β ≃ TopHom (OrderDual α) (OrderDual β) where
+protected def dual : BotHom α β ≃ TopHom αᵒᵈ βᵒᵈ where
   toFun := fun f => ⟨f, f.map_bot'⟩
   invFun := fun f => ⟨f, f.map_top'⟩
   left_inv := fun f => BotHom.ext fun _ => rfl
@@ -629,7 +629,7 @@ theorem symm_dual_id : BotHom.dual.symm (TopHom.id _) = BotHom.id α :=
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : TopHom (OrderDual β) (OrderDual γ)) (f : TopHom (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : TopHom βᵒᵈ γᵒᵈ) (f : TopHom αᵒᵈ βᵒᵈ) :
     BotHom.dual.symm (g.comp f) = (BotHom.dual.symm g).comp (BotHom.dual.symm f) :=
   rfl
 
@@ -642,7 +642,7 @@ variable [Preorderₓ α] [BoundedOrder α] [Preorderₓ β] [BoundedOrder β] [
 /-- Reinterpret a bounded order homomorphism as a bounded order homomorphism between the dual
 orders. -/
 @[simps]
-protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom (OrderDual α) (OrderDual β) where
+protected def dual : BoundedOrderHom α β ≃ BoundedOrderHom αᵒᵈ βᵒᵈ where
   toFun := fun f => ⟨f.toOrderHom.dual, f.map_bot', f.map_top'⟩
   invFun := fun f => ⟨OrderHom.dual.symm f.toOrderHom, f.map_bot', f.map_top'⟩
   left_inv := fun f => ext fun a => rfl
@@ -661,8 +661,7 @@ theorem symm_dual_id : BoundedOrderHom.dual.symm (BoundedOrderHom.id _) = Bounde
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : BoundedOrderHom (OrderDual β) (OrderDual γ))
-    (f : BoundedOrderHom (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : BoundedOrderHom βᵒᵈ γᵒᵈ) (f : BoundedOrderHom αᵒᵈ βᵒᵈ) :
     BoundedOrderHom.dual.symm (g.comp f) = (BoundedOrderHom.dual.symm g).comp (BoundedOrderHom.dual.symm f) :=
   rfl
 

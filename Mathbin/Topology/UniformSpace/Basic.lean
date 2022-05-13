@@ -3,7 +3,7 @@ Copyright (c) 2017 Johannes Hölzl. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 -/
-import Mathbin.Order.Filter.Lift
+import Mathbin.Order.Filter.SmallSets
 import Mathbin.Topology.SubsetProperties
 
 /-!
@@ -176,12 +176,16 @@ theorem id_comp_rel {r : Set (α × α)} : IdRel ○ r = r :=
 theorem comp_rel_assoc {r s t : Set (α × α)} : r ○ s ○ t = r ○ (s ○ t) := by
   ext p <;> cases p <;> simp only [mem_comp_rel] <;> tauto
 
-theorem subset_comp_self {α : Type _} {s : Set (α × α)} (h : IdRel ⊆ s) : s ⊆ s ○ s := fun xy_in =>
-  ⟨x,
-    h
-      (by
-        rw [mem_id_rel]),
-    xy_in⟩
+theorem left_subset_comp_rel {s t : Set (α × α)} (h : IdRel ⊆ t) : s ⊆ s ○ t := fun xy_in => ⟨y, xy_in, h <| rfl⟩
+
+theorem right_subset_comp_rel {s t : Set (α × α)} (h : IdRel ⊆ s) : t ⊆ s ○ t := fun xy_in => ⟨x, h <| rfl, xy_in⟩
+
+theorem subset_comp_self {s : Set (α × α)} (h : IdRel ⊆ s) : s ⊆ s ○ s :=
+  left_subset_comp_rel h
+
+theorem subset_iterate_comp_rel {s t : Set (α × α)} (h : IdRel ⊆ s) (n : ℕ) : t ⊆ ((· ○ ·) s^[n]) t := by
+  induction' n with n ihn generalizing t
+  exacts[subset.rfl, (right_subset_comp_rel h).trans ihn]
 
 /-- The relation is invariant under swapping factors. -/
 def SymmetricRel (V : Set (α × α)) : Prop :=
@@ -200,6 +204,9 @@ theorem symmetrize_rel_subset_self (V : Set (α × α)) : SymmetrizeRel V ⊆ V 
 @[mono]
 theorem symmetrize_mono {V W : Set (α × α)} (h : V ⊆ W) : SymmetrizeRel V ⊆ SymmetrizeRel W :=
   inter_subset_inter h <| preimage_mono h
+
+theorem SymmetricRel.mk_mem_comm {V : Set (α × α)} (hV : SymmetricRel V) {x y : α} : (x, y) ∈ V ↔ (y, x) ∈ V :=
+  Set.ext_iff.1 hV (y, x)
 
 theorem symmetric_rel_inter {U V : Set (α × α)} (hU : SymmetricRel U) (hV : SymmetricRel V) : SymmetricRel (U ∩ V) := by
   unfold SymmetricRel  at *
@@ -352,6 +359,25 @@ theorem tendsto_swap_uniformity : Tendsto (@Prod.swap α α) (𝓤 α) (𝓤 α)
 theorem comp_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃ t ∈ 𝓤 α, t ○ t ⊆ s :=
   have : s ∈ (𝓤 α).lift' fun t : Set (α × α) => t ○ t := comp_le_uniformity hs
   (mem_lift'_sets <| monotone_comp_rel monotone_id monotone_id).mp this
+
+/-- If `s ∈ 𝓤 α`, then for any natural `n`, for a subset `t` of a sufficiently small set in `𝓤 α`,
+we have `t ○ t ○ ... ○ t ⊆ s` (`n` compositions). -/
+theorem eventually_uniformity_iterate_comp_subset {s : Set (α × α)} (hs : s ∈ 𝓤 α) (n : ℕ) :
+    ∀ᶠ t in (𝓤 α).smallSets, ((· ○ ·) t^[n]) t ⊆ s := by
+  suffices : ∀ᶠ t in (𝓤 α).smallSets, t ⊆ s ∧ ((· ○ ·) t^[n]) t ⊆ s
+  exact (eventually_and.1 this).2
+  induction' n with n ihn generalizing s
+  · simpa
+    
+  rcases comp_mem_uniformity_sets hs with ⟨t, htU, hts⟩
+  refine' (ihn htU).mono fun U hU => _
+  rw [Function.iterate_succ_apply']
+  exact ⟨hU.1.trans <| (subset_comp_self <| refl_le_uniformity htU).trans hts, (comp_rel_mono hU.1 hU.2).trans hts⟩
+
+/-- If `s ∈ 𝓤 α`, then for any natural `n`, for a subset `t` of a sufficiently small set in `𝓤 α`,
+we have `t ○ t ⊆ s`. -/
+theorem eventually_uniformity_comp_subset {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∀ᶠ t in (𝓤 α).smallSets, t ○ t ⊆ s :=
+  eventually_uniformity_iterate_comp_subset hs 1
 
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is transitive. -/
 theorem Filter.Tendsto.uniformity_trans {l : Filter β} {f₁ f₂ f₃ : β → α}
@@ -1055,8 +1081,7 @@ def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α w
       (by
         rw [comap_lift'_eq, comap_lift'_eq2]
         exact lift'_mono' fun s hs ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ => ⟨f x, h₁, h₂⟩
-        repeat'
-          exact monotone_comp_rel monotone_id monotone_id)
+        exact monotone_comp_rel monotone_id monotone_id)
       (comap_mono u.comp)
   is_open_uniformity := fun s => by
     change @IsOpen α (u.to_topological_space.induced f) s ↔ _

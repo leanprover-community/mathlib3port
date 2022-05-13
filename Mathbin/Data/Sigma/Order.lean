@@ -5,7 +5,6 @@ Authors: Yaël Dillies
 -/
 import Mathbin.Data.Sigma.Lex
 import Mathbin.Order.BoundedOrder
-import Mathbin.Order.Lexicographic
 
 /-!
 # Orders on a sigma type

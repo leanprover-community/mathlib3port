@@ -30,11 +30,15 @@ variable {C : Type _} [Category C]
 
 variable [Preadditive C]
 
+-- See also `epi_of_nonzero_to_simple`, which does not require `preadditive C`.
+theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X ⟶ Y} (w : f ≠ 0) : Mono f :=
+  Preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
+
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
 theorem is_iso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : IsIso f :=
-  have : mono f := preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
+  have := mono_of_nonzero_from_simple w
   is_iso_of_mono_of_nonzero w
 
 /-- As a corollary of Schur's lemma for preadditive categories,

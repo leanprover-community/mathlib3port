@@ -3,9 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 -/
-import Mathbin.Data.Prod
-import Mathbin.Logic.Equiv.Basic
-import Mathbin.Tactic.Basic
+import Mathbin.Order.Synonym
 
 /-!
 # Lexicographic order
@@ -32,50 +30,7 @@ Related files are:
 -/
 
 
-universe u v
-
-/-- A type synonym to equip a type with its lexicographic order. -/
-def Lex (α : Type u) :=
-  α
-
-variable {α : Type u} {β : Type v} {γ : Type _}
-
-/-- `to_lex` is the identity function to the `lex` of a type.  -/
-@[matchPattern]
-def toLex : α ≃ Lex α :=
-  ⟨id, id, fun h => rfl, fun h => rfl⟩
-
-/-- `of_lex` is the identity function from the `lex` of a type.  -/
-@[matchPattern]
-def ofLex : Lex α ≃ α :=
-  toLex.symm
-
-@[simp]
-theorem to_lex_symm_eq : (@toLex α).symm = ofLex :=
-  rfl
-
-@[simp]
-theorem of_lex_symm_eq : (@ofLex α).symm = toLex :=
-  rfl
-
-@[simp]
-theorem to_lex_of_lex (a : Lex α) : toLex (ofLex a) = a :=
-  rfl
-
-@[simp]
-theorem of_lex_to_lex (a : α) : ofLex (toLex a) = a :=
-  rfl
-
-@[simp]
-theorem to_lex_inj {a b : α} : toLex a = toLex b ↔ a = b :=
-  Iff.rfl
-
-@[simp]
-theorem of_lex_inj {a b : Lex α} : ofLex a = ofLex b ↔ a = b :=
-  Iff.rfl
-
-/-- A recursor for `lex`. Use as `induction x using lex.rec`. -/
-protected def Lex.rec {β : Lex α → Sort _} (h : ∀ a, β (toLex a)) : ∀ a, β a := fun a => h (ofLex a)
+variable {α β γ : Type _}
 
 namespace Prod.Lex
 

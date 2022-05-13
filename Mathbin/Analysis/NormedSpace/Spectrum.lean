@@ -382,33 +382,33 @@ section ExpMapping
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
-/-- For `𝕜 = ℝ` or `𝕜 = ℂ`, `exp 𝕜 𝕜` maps the spectrum of `a` into the spectrum of `exp 𝕜 A a`. -/
+/-- For `𝕜 = ℝ` or `𝕜 = ℂ`, `exp 𝕜` maps the spectrum of `a` into the spectrum of `exp 𝕜 a`. -/
 theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [CompleteSpace A] (a : A) {z : 𝕜}
-    (hz : z ∈ Spectrum 𝕜 a) : exp 𝕜 𝕜 z ∈ Spectrum 𝕜 (exp 𝕜 A a) := by
-  have hexpmul : exp 𝕜 A a = exp 𝕜 A (a - ↑ₐ z) * ↑ₐ (exp 𝕜 𝕜 z) := by
+    (hz : z ∈ Spectrum 𝕜 a) : exp 𝕜 z ∈ Spectrum 𝕜 (exp 𝕜 a) := by
+  have hexpmul : exp 𝕜 a = exp 𝕜 (a - ↑ₐ z) * ↑ₐ (exp 𝕜 z) := by
     rw [algebra_map_exp_comm z, ← exp_add_of_commute (Algebra.commutes z (a - ↑ₐ z)).symm, sub_add_cancel]
-  let b := ∑' n : ℕ, (1 / (n + 1).factorial : 𝕜) • (a - ↑ₐ z) ^ n
-  have hb : Summable fun n : ℕ => (1 / (n + 1).factorial : 𝕜) • (a - ↑ₐ z) ^ n := by
+  let b := ∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n
+  have hb : Summable fun n : ℕ => ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n := by
     refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ∥a - ↑ₐ z∥) _
     filter_upwards [Filter.eventually_cofinite_ne 0] with n hn
-    rw [norm_smul, mul_comm, norm_div, norm_one, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, ← div_eq_mul_one_div]
+    rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_eq_abs, IsROrC.abs_cast_nat, ← div_eq_mul_inv]
     exact
       div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
         (by
           exact_mod_cast Nat.factorial_pos n)
         (by
           exact_mod_cast Nat.factorial_le (lt_add_one n).le)
-  have h₀ : (∑' n : ℕ, (1 / (n + 1).factorial : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = (a - ↑ₐ z) * b := by
+  have h₀ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = (a - ↑ₐ z) * b := by
     simpa only [mul_smul_comm, pow_succₓ] using hb.tsum_mul_left (a - ↑ₐ z)
-  have h₁ : (∑' n : ℕ, (1 / (n + 1).factorial : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = b * (a - ↑ₐ z) := by
+  have h₁ : (∑' n : ℕ, ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ (n + 1)) = b * (a - ↑ₐ z) := by
     simpa only [pow_succ'ₓ, Algebra.smul_mul_assoc] using hb.tsum_mul_right (a - ↑ₐ z)
-  have h₃ : exp 𝕜 A (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b := by
+  have h₃ : exp 𝕜 (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b := by
     rw [exp_eq_tsum]
     convert tsum_eq_zero_add (exp_series_summable' (a - ↑ₐ z))
-    simp only [Nat.factorial_zero, Nat.cast_oneₓ, _root_.div_one, pow_zeroₓ, one_smul]
+    simp only [Nat.factorial_zero, Nat.cast_oneₓ, inv_one, pow_zeroₓ, one_smul]
     exact h₀.symm
-  rw [Spectrum.mem_iff, IsUnit.sub_iff, ← one_mulₓ (↑ₐ (exp 𝕜 𝕜 z)), hexpmul, ← _root_.sub_mul,
-    Commute.is_unit_mul_iff (Algebra.commutes (exp 𝕜 𝕜 z) (exp 𝕜 A (a - ↑ₐ z) - 1)).symm, sub_eq_iff_eq_add'.mpr h₃,
+  rw [Spectrum.mem_iff, IsUnit.sub_iff, ← one_mulₓ (↑ₐ (exp 𝕜 z)), hexpmul, ← _root_.sub_mul,
+    Commute.is_unit_mul_iff (Algebra.commutes (exp 𝕜 z) (exp 𝕜 (a - ↑ₐ z) - 1)).symm, sub_eq_iff_eq_add'.mpr h₃,
     Commute.is_unit_mul_iff (h₀ ▸ h₁ : (a - ↑ₐ z) * b = b * (a - ↑ₐ z))]
   exact not_and_of_not_left _ (not_and_of_not_left _ ((not_iff_not.mpr IsUnit.sub_iff).mp hz))
 

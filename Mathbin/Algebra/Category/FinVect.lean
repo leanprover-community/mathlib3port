@@ -11,8 +11,8 @@ import Mathbin.Algebra.Category.Module.Monoidal
 /-!
 # The category of finite dimensional vector spaces
 
-This introduces `FinVect K`, the category of finite dimensional vector spaces on a field `K`.
-It is implemented as a full subcategory on a subtype of  `Module K`.
+This introduces `FinVect K`, the category of finite dimensional vector spaces over a field `K`.
+It is implemented as a full subcategory on a subtype of `Module K`.
 We first create the instance as a category, then as a monoidal category and then as a rigid monoidal
 category.
 
@@ -36,7 +36,7 @@ variable (K : Type u) [Field K]
 -- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler λ α, has_coe_to_sort α (Sort*)
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
 def FinVect :=
-  { V : ModuleCat.{u} K // FiniteDimensional K V }deriving Category, [anonymous]
+  { V : ModuleCat.{u} K // FiniteDimensional K V }deriving LargeCategory, [anonymous], ConcreteCategory
 
 namespace FinVect
 
@@ -52,9 +52,22 @@ instance : Coe (FinVect.{u} K) (ModuleCat.{u} K) where
 protected theorem coe_comp {U V W : FinVect K} (f : U ⟶ V) (g : V ⟶ W) : (f ≫ g : U → W) = (g : V → W) ∘ (f : U → V) :=
   rfl
 
+/-- Lift an unbundled vector space to `FinVect K`. -/
+def of (V : Type u) [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V] : FinVect K :=
+  ⟨ModuleCat.of K V, by
+    change FiniteDimensional K V
+    infer_instance⟩
+
+instance : HasForget₂ (FinVect.{u} K) (ModuleCat.{u} K) := by
+  dsimp' [FinVect]
+  infer_instance
+
+instance : Full (forget₂ (FinVect K) (ModuleCat.{u} K)) where
+  preimage := fun X Y f => f
+
 instance monoidalCategory : MonoidalCategory (FinVect K) :=
   MonoidalCategory.fullMonoidalSubcategory (fun V => FiniteDimensional K V)
-    (FiniteDimensional.finite_dimensional_self K) fun X Y hX hY => finite_dimensional_tensor_product X Y
+    (FiniteDimensional.finite_dimensional_self K) fun X Y hX hY => Module.Finite.tensor_product K X Y
 
 variable (V : FinVect K)
 

@@ -43,7 +43,7 @@ structure Enorm (𝕜 : Type _) (V : Type _) [NormedField 𝕜] [AddCommGroupₓ
   toFun : V → ℝ≥0∞
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
   map_add_le' : ∀ x y : V, to_fun (x + y) ≤ to_fun x + to_fun y
-  map_smul_le' : ∀ c : 𝕜 x : V, to_fun (c • x) ≤ nnnorm c * to_fun x
+  map_smul_le' : ∀ c : 𝕜 x : V, to_fun (c • x) ≤ ∥c∥₊ * to_fun x
 
 namespace Enorm
 
@@ -67,13 +67,13 @@ theorem coe_inj {e₁ e₂ : Enorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
   coe_fn_injective.eq_iff
 
 @[simp]
-theorem map_smul (c : 𝕜) (x : V) : e (c • x) = nnnorm c * e x :=
+theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ∥c∥₊ * e x :=
   le_antisymmₓ (e.map_smul_le' c x) <| by
     by_cases' hc : c = 0
     · simp [hc]
       
-    calc (nnnorm c : ℝ≥0∞) * e x = nnnorm c * e (c⁻¹ • c • x) := by
-        rw [inv_smul_smul₀ hc]_ ≤ nnnorm c * (nnnorm c⁻¹ * e (c • x)) := _ _ = e (c • x) := _
+    calc (∥c∥₊ : ℝ≥0∞) * e x = ∥c∥₊ * e (c⁻¹ • c • x) := by
+        rw [inv_smul_smul₀ hc]_ ≤ ∥c∥₊ * (∥c⁻¹∥₊ * e (c • x)) := _ _ = e (c • x) := _
     · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
       
     · rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top, one_mulₓ] <;> simp [hc]
@@ -91,7 +91,7 @@ theorem eq_zero_iff {x : V} : e x = 0 ↔ x = 0 :=
 @[simp]
 theorem map_neg (x : V) : e (-x) = e x :=
   calc
-    e (-x) = nnnorm (-1 : 𝕜) * e x := by
+    e (-x) = ∥(-1 : 𝕜)∥₊ * e x := by
       rw [← map_smul, neg_one_smul]
     _ = e x := by
       simp
@@ -199,7 +199,7 @@ def finiteSubspace : Subspace 𝕜 V where
   add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
   smul_mem' := fun hx : _ < _ =>
     calc
-      e (c • x) = nnnorm c * e x := e.map_smul c x
+      e (c • x) = ∥c∥₊ * e x := e.map_smul c x
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
       
 

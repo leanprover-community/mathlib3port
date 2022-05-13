@@ -23,7 +23,11 @@ universe u v
 
 variable {R : Type u} {I : Type v} [CommSemiringₓ R] {x y z : R} {s : I → R} {t : Finset I}
 
-open BigOperators Classical
+open BigOperators
+
+section
+
+open Classical
 
 theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
@@ -78,9 +82,11 @@ theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s))
     (∏ x, s x) ∣ z :=
   Finset.prod_dvd_of_coprime (Hs.set_pairwise _) fun i _ => Hs1 i
 
+end
+
 open Finset
 
-theorem exists_sum_eq_one_iff_pairwise_coprime (h : t.Nonempty) :
+theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔ Pairwise (IsCoprime on fun i : t => s i) := by
   refine' h.cons_induction _ _ <;> clear t h
   · simp only [Pairwise, sum_singleton, Finset.sdiff_self, prod_empty, mul_oneₓ, exists_apply_eq_applyₓ, Ne.def,
@@ -141,13 +147,13 @@ theorem exists_sum_eq_one_iff_pairwise_coprime (h : t.Nonempty) :
     rw [sdiff_singleton_eq_erase, erase_insert hat]
     
 
-theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] :
+theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
     (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) := by
   convert exists_sum_eq_one_iff_pairwise_coprime Finset.univ_nonempty using 1
   simp only [Function.onFun, pairwise_subtype_iff_pairwise_finset', coe_univ, Set.pairwise_univ]
   assumption
 
-theorem pairwise_coprime_iff_coprime_prod :
+theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
     Pairwise (IsCoprime on fun i : t => s i) ↔ ∀, ∀ i ∈ t, ∀, IsCoprime (s i) (∏ j in t \ {i}, s j) := by
   refine' ⟨fun hp i hi => is_coprime.prod_right_iff.mpr fun j hj => _, fun hp => _⟩
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj

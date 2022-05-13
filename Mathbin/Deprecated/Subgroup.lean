@@ -275,13 +275,13 @@ variable [Groupₓ G] [Groupₓ H]
 @[to_additive]
 theorem one_ker_inv {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a * b⁻¹) = 1) : f a = f b := by
   rw [hf.map_mul, hf.map_inv] at h
-  rw [← inv_invₓ (f b), eq_inv_of_mul_eq_one h]
+  rw [← inv_invₓ (f b), eq_inv_of_mul_eq_one_left h]
 
 @[to_additive]
 theorem one_ker_inv' {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f (a⁻¹ * b) = 1) : f a = f b := by
   rw [hf.map_mul, hf.map_inv] at h
   apply inv_injective
-  rw [eq_inv_of_mul_eq_one h]
+  rw [eq_inv_of_mul_eq_one_left h]
 
 @[to_additive]
 theorem inv_ker_one {f : G → H} (hf : IsGroupHom f) {a b : G} (h : f a = f b) : f (a * b⁻¹) = 1 := by
@@ -356,7 +356,7 @@ theorem injective_of_trivial_ker {f : G → H} (hf : IsGroupHom f) (h : Ker f = 
   simp [ext_iff, ker, IsSubgroup.Trivial] at h
   have ha : a₁ * a₂⁻¹ = 1 := by
     rw [← h] <;> exact hf.inv_ker_one hfa
-  rw [eq_inv_of_mul_eq_one ha, inv_invₓ a₂]
+  rw [eq_inv_of_mul_eq_one_left ha, inv_invₓ a₂]
 
 @[to_additive]
 theorem trivial_ker_of_injective {f : G → H} (hf : IsGroupHom f) (h : Function.Injective f) : Ker f = trivialₓ G :=
@@ -460,7 +460,7 @@ theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ Closure s) :
               rw [inv_invₓ] <;> exact id)
             (HL1 _ <| List.mem_reverseₓ.1 hy1).symm,
         HL2 ▸
-          List.recOn L one_inv.symm fun hd tl ih => by
+          List.recOn L inv_one.symm fun hd tl ih => by
             rw [List.reverse_cons, List.map_append, List.prod_append, ih, List.map_singleton, List.prod_cons,
               List.prod_nil, mul_oneₓ, List.prod_cons, mul_inv_rev]⟩)
     fun x y hx hy ⟨L1, HL1, HL2⟩ ⟨L2, HL3, HL4⟩ =>
@@ -506,7 +506,7 @@ theorem closure_eq_mclosure {s : Set G} : Closure s = Monoidₓ.Closure (s ∪ I
             (fun x hx =>
               Or.cases_on hx (fun hx => Monoidₓ.subset_closure <| Or.inr <| show x⁻¹⁻¹ ∈ s from (inv_invₓ x).symm ▸ hx)
                 fun hx => Monoidₓ.subset_closure <| Or.inl hx)
-            ((@one_inv G _).symm ▸ IsSubmonoid.one_mem (Monoidₓ.Closure.is_submonoid _)) fun x y hx hy ihx ihy =>
+            ((@inv_one G _).symm ▸ IsSubmonoid.one_mem (Monoidₓ.Closure.is_submonoid _)) fun x y hx hy ihx ihy =>
             (mul_inv_rev x y).symm ▸ IsSubmonoid.mul_mem (Monoidₓ.Closure.is_submonoid _) ihy ihx }
       (Set.Subset.trans (Set.subset_union_left _ _) Monoidₓ.subset_closure))
     (Monoidₓ.closure_subset (Closure.is_subgroup _).to_is_submonoid <|

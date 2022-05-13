@@ -20,12 +20,15 @@ every finite subset of `T` is satisfiable.
 models each sentence or its negation.
 * `first_order.language.Theory.semantically_equivalent`: `T.semantically_equivalent φ ψ` indicates
 that `φ` and `ψ` are equivalent formulas or sentences in models of `T`.
+* `cardinal.categorical`: A theory is `κ`-categorical if all models of size `κ` are isomorphic.
 
 ## Main Results
 * The Compactness Theorem, `first_order.language.Theory.is_satisfiable_iff_is_finitely_satisfiable`,
 shows that a theory is satisfiable iff it is finitely satisfiable.
 * `first_order.language.complete_theory.is_complete`: The complete theory of a structure is
 complete.
+* `first_order.language.Theory.exists_large_model_of_infinite_model` shows that any theory with an
+infinite model has arbitrarily large models.
 
 ## Implementation Details
 * Satisfiability of an `L.Theory` `T` is defined in the minimal universe containing all the symbols
@@ -34,13 +37,17 @@ of `L`. By Löwenheim-Skolem, this is equivalent to satisfiability in any univer
 -/
 
 
-universe u v w
+universe u v w w'
+
+open Cardinal
+
+open Cardinal FirstOrder
 
 namespace FirstOrder
 
 namespace Language
 
-variable {L : Language.{u, v}} {T : L.Theory} {α : Type _} {n : ℕ}
+variable {L : Language.{u, v}} {T : L.Theory} {α : Type w} {n : ℕ}
 
 namespace Theory
 
@@ -84,6 +91,57 @@ theorem is_satisfiable_iff_is_finitely_satisfiable {T : L.Theory} : T.IsSatisfia
         Subtype.coe_mk, exists_and_distrib_right, exists_eq_right]
       exact ⟨hφ, h' (Finset.mem_singleton_self _)⟩
     exact ⟨Model.of T M'⟩⟩
+
+theorem is_satisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι → L.Theory} (h : Directed (· ⊆ ·) T) :
+    Theory.IsSatisfiable (⋃ i, T i) ↔ ∀ i, (T i).IsSatisfiable := by
+  refine' ⟨fun h' i => h'.mono (Set.subset_Union _ _), fun h' => _⟩
+  rw [is_satisfiable_iff_is_finitely_satisfiable, is_finitely_satisfiable]
+  intro T0 hT0
+  obtain ⟨i, hi⟩ := h.exists_mem_subset_of_finset_subset_bUnion hT0
+  exact (h' i).mono hi
+
+theorem is_satisfiable_union_distinct_constants_theory_of_card_le (T : L.Theory) (s : Set α) (M : Type w') [Nonempty M]
+    [L.Structure M] [M ⊨ T] (h : Cardinal.lift.{w'} (# s) ≤ Cardinal.lift.{w} (# M)) :
+    ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
+  have : Inhabited M := Classical.inhabitedOfNonempty inferInstance
+  rw [Cardinal.lift_mk_le'] at h
+  let this : (constants_on α).Structure M := constants_on.Structure (Function.extendₓ coe h.some default)
+  have : M ⊨ (L.Lhom_with_constants α).OnTheory T ∪ L.distinct_constants_theory s := by
+    refine' ((Lhom.on_Theory_model _ _).2 inferInstance).union _
+    rw [model_distinct_constants_theory]
+    refine' fun a as b bs ab => _
+    rw [← Subtype.coe_mk a as, ← Subtype.coe_mk b bs, ← Subtype.ext_iff]
+    exact
+      h.some.injective
+        ((Function.extend_applyₓ Subtype.coe_injective h.some default ⟨a, as⟩).symm.trans
+          (ab.trans (Function.extend_applyₓ Subtype.coe_injective h.some default ⟨b, bs⟩)))
+  exact model.is_satisfiable M
+
+theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory) (s : Set α) (M : Type w')
+    [L.Structure M] [M ⊨ T] [Infinite M] :
+    ((L.lhomWithConstants α).OnTheory T ∪ L.DistinctConstantsTheory s).IsSatisfiable := by
+  classical
+  rw [distinct_constants_theory_eq_Union, Set.union_Union, is_satisfiable_directed_union_iff]
+  · exact fun t =>
+      is_satisfiable_union_distinct_constants_theory_of_card_le T _ M
+        ((lift_le_omega.2 (le_of_ltₓ (finset_card_lt_omega _))).trans (omega_le_lift.2 (omega_le_mk M)))
+    
+  · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
+    simp only [Finset.coe_map, Function.Embedding.coe_subtype]
+    exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
+    
+
+/-- Any theory with an infinite model has arbitrarily large models. -/
+theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) (M : Type w') [L.Structure M] [M ⊨ T]
+    [Infinite M] : ∃ N : ModelCat.{_, _, max u v w} T, Cardinal.lift.{max u v w} κ ≤ # N := by
+  obtain ⟨N⟩ := is_satisfiable_union_distinct_constants_theory_of_infinite T (Set.Univ : Set κ.out) M
+  refine' ⟨(N.is_model.mono (Set.subset_union_left _ _)).Bundled.reduct _, _⟩
+  have : N ⊨ distinct_constants_theory _ _ := N.is_model.mono (Set.subset_union_right _ _)
+  simp only [Model.reduct_carrier, coe_of, Model.carrier_eq_coe]
+  refine' trans (lift_le.2 (le_of_eqₓ (Cardinal.mk_out κ).symm)) _
+  rw [← mk_univ]
+  refine' (card_le_of_model_distinct_constants_theory L Set.Univ N).trans (lift_le.1 _)
+  rw [lift_lift]
 
 variable (T)
 
@@ -287,4 +345,19 @@ end BoundedFormula
 end Language
 
 end FirstOrder
+
+namespace Cardinal
+
+open FirstOrder FirstOrder.Language
+
+variable {L : Language.{u, v}} (κ : Cardinal.{w}) (T : L.Theory)
+
+/-- A theory is `κ`-categorical if all models of size `κ` are isomorphic. -/
+def Categorical : Prop :=
+  ∀ M N : T.Model, # M = κ → # N = κ → Nonempty (M ≃[L] N)
+
+theorem empty_Theory_categorical (T : Language.empty.Theory) : κ.Categorical T := fun M N hM hN => by
+  rw [empty.nonempty_equiv_iff, hM, hN]
+
+end Cardinal
 

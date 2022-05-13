@@ -45,6 +45,14 @@ def functor : Mon_ (Type u) ⥤ Mon.{u} where
 def inverse : Mon.{u} ⥤ Mon_ (Type u) where
   obj := fun A =>
     { x := A, one := fun _ => 1, mul := fun p => p.1 * p.2,
+      one_mul' := by
+        ext ⟨_, _⟩
+        dsimp'
+        simp ,
+      mul_one' := by
+        ext ⟨_, _⟩
+        dsimp'
+        simp ,
       mul_assoc' := by
         ext ⟨⟨x, y⟩, z⟩
         simp [mul_assoc] }

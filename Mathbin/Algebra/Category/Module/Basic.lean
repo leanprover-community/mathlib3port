@@ -7,6 +7,7 @@ import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Linear.Default
 import Mathbin.LinearAlgebra.Basic
+import Mathbin.CategoryTheory.Conj
 
 /-!
 # The category of `R`-modules
@@ -129,7 +130,7 @@ instance ofUnique {X : Type v} [AddCommGroupₓ X] [Module R X] [i : Unique X] :
   i
 
 @[simp]
-theorem coe_of (X : Type u) [AddCommGroupₓ X] [Module R X] : (of R X : Type u) = X :=
+theorem coe_of (X : Type v) [AddCommGroupₓ X] [Module R X] : (of R X : Type v) = X :=
   rfl
 
 variable {R}
@@ -309,6 +310,15 @@ instance : Linear S (ModuleCat.{v} S) where
     intros
     ext
     simp
+
+variable {X Y X' Y' : ModuleCat.{v} S}
+
+theorem Iso.hom_congr_eq_arrow_congr (i : X ≅ X') (j : Y ≅ Y') (f : X ⟶ Y) :
+    Iso.homCongr i j f = LinearEquiv.arrowCongr i.toLinearEquiv j.toLinearEquiv f :=
+  rfl
+
+theorem Iso.conj_eq_conj (i : X ≅ X') (f : End X) : Iso.conj i f = LinearEquiv.conj i.toLinearEquiv f :=
+  rfl
 
 end
 

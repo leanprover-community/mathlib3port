@@ -133,7 +133,7 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ α] {s t : Set α} {a : α}
 
-theorem is_wf_iff_no_descending_seq : IsWf s ↔ ∀ f : OrderDual ℕ ↪o α, ¬Range f ⊆ s := by
+theorem is_wf_iff_no_descending_seq : IsWf s ↔ ∀ f : ℕᵒᵈ ↪o α, ¬Range f ⊆ s := by
   have : IsStrictOrder α fun a b : α => a < b ∧ a ∈ s ∧ b ∈ s :=
     { to_is_irrefl := ⟨fun x con => lt_irreflₓ x con.1⟩,
       to_is_trans := ⟨fun a b c ab bc => ⟨lt_transₓ ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
@@ -666,19 +666,7 @@ theorem submonoid_closure [OrderedCancelCommMonoid α] {s : Set α} (hpos : ∀ 
     · exact hl' _ hy
       
   apply ((h.partially_well_ordered_on_sublist_forall₂ (· ≤ ·)).image_of_monotone_on _).mono hl
-  intro l1 l2 hl1 hl2 h12
-  obtain ⟨l, hll1, hll2⟩ := List.sublist_forall₂_iff.1 h12
-  refine' le_transₓ (List.rel_prod (le_reflₓ 1) (fun a b ab c d cd => mul_le_mul' ab cd) hll1) _
-  obtain ⟨l', hl'⟩ := hll2.exists_perm_append
-  rw [hl'.prod_eq, List.prod_append, ← mul_oneₓ l.prod, mul_assoc, one_mulₓ]
-  apply mul_le_mul_left'
-  have hl's := fun x hx => hl2 x (List.Subset.trans (l.subset_append_right _) hl'.symm.subset hx)
-  clear hl'
-  induction' l' with x1 x2 x3 x4 x5
-  · rfl
-    
-  rw [List.prod_cons, ← one_mulₓ (1 : α)]
-  exact mul_le_mul' (hpos x1 (hl's x1 (List.mem_cons_selfₓ x1 x2))) (x3 fun x hx => hl's x (List.mem_cons_of_memₓ _ hx))
+  exact fun l1 l2 hl1 hl2 h12 => h12.prod_le_prod' fun x hx => hpos x <| hl2 x hx
 
 end IsPwo
 

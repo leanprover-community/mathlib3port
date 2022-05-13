@@ -46,26 +46,25 @@ namespace OrderDual
 
 variable {R M : Type _}
 
-instance [HasScalar R M] : HasScalar R (OrderDual M) where
-  smul := fun k x => OrderDual.rec (fun x' => (k • x' : M)) x
+instance [HasScalar R M] : HasScalar R Mᵒᵈ :=
+  ⟨fun k x => OrderDual.rec (fun x' => (k • x' : M)) x⟩
 
-instance [Zero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R (OrderDual M) :=
+instance [Zero R] [AddZeroClassₓ M] [h : SmulWithZero R M] : SmulWithZero R Mᵒᵈ :=
   { OrderDual.hasScalar with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
 
-instance [Monoidₓ R] [MulAction R M] : MulAction R (OrderDual M) :=
+instance [Monoidₓ R] [MulAction R M] : MulAction R Mᵒᵈ :=
   { OrderDual.hasScalar with one_smul := fun m => OrderDual.rec (one_smul _) m,
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
-instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R (OrderDual M) :=
+instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R Mᵒᵈ :=
   { OrderDual.mulAction, OrderDual.smulWithZero with }
 
-instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (OrderDual M) where
+instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R Mᵒᵈ where
   smul_add := fun k a => OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a
   smul_zero := fun r => OrderDual.rec smul_zero r
 
-instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
-    OrderedSmul R (OrderDual M) where
+instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] : OrderedSmul R Mᵒᵈ where
   smul_lt_smul_of_pos := fun a b => @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a
   lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a
 
@@ -74,7 +73,7 @@ theorem to_dual_smul [HasScalar R M] {c : R} {a : M} : toDual (c • a) = c • 
   rfl
 
 @[simp]
-theorem of_dual_smul [HasScalar R M] {c : R} {a : OrderDual M} : ofDual (c • a) = c • ofDual a :=
+theorem of_dual_smul [HasScalar R M] {c : R} {a : Mᵒᵈ} : ofDual (c • a) = c • ofDual a :=
   rfl
 
 end OrderDual
@@ -105,7 +104,7 @@ theorem smul_nonneg (hc : 0 ≤ c) (ha : 0 ≤ a) : 0 ≤ c • a :=
     
 
 theorem smul_nonpos_of_nonneg_of_nonpos (hc : 0 ≤ c) (ha : a ≤ 0) : c • a ≤ 0 :=
-  @smul_nonneg R (OrderDual M) _ _ _ _ _ _ hc ha
+  @smul_nonneg R Mᵒᵈ _ _ _ _ _ _ hc ha
 
 theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) (hle : a ≤ b) : a = b :=
   hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁

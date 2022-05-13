@@ -19,23 +19,19 @@ commutative ring, field of fractions
 -/
 
 
-variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
-
-variable [Algebra R S] {P : Type _} [CommRingₓ P]
-
 namespace IsLocalization
 
-variable [IsLocalization M S]
+section CommSemiringₓ
 
-section Ideals
+variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) (S : Type _) [CommSemiringₓ S]
 
-variable (M) (S)
+variable [Algebra R S] [IsLocalization M S]
 
 include M
 
 /-- Explicit characterization of the ideal given by `ideal.map (algebra_map R S) I`.
 In practice, this ideal differs only in that the carrier set is defined explicitly.
-This definition is only meant to be used in proving `mem_map_to_map_iff`,
+This definition is only meant to be used in proving `mem_map_algebra_map_iff`,
 and any proof that needs to refer to the explicit carrier set should use that theorem. -/
 private def map_ideal (I : Ideal R) : Ideal S where
   Carrier := { z : S | ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 }
@@ -84,27 +80,14 @@ theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algeb
 theorem comap_map_of_is_prime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjoint (M : Set R) I) :
     Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I := by
   refine' le_antisymmₓ (fun a ha => _) Ideal.le_comap_map
-  rw [Ideal.mem_comap, mem_map_algebra_map_iff M S] at ha
-  obtain ⟨⟨b, s⟩, h⟩ := ha
-  have : (algebraMap R S) (a * ↑s - b) = 0 := by
-    simpa [sub_eq_zero] using h
-  rw [← (algebraMap R S).map_zero, eq_iff_exists M S] at this
-  obtain ⟨c, hc⟩ := this
-  have : a * s ∈ I := by
-    rw [zero_mul] at hc
-    let this : (a * ↑s - ↑b) * ↑c ∈ I := hc.symm ▸ I.zero_mem
-    cases' hI.mem_or_mem this with h1 h2
-    · simpa using I.add_mem h1 b.2
-      
-    · exfalso
-      refine' hM ⟨c.2, h2⟩
-      
-  cases' hI.mem_or_mem this with h1 h2
-  · exact h1
-    
-  · exfalso
-    refine' hM ⟨s.2, h2⟩
-    
+  obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
+  replace h : algebraMap R S (a * s) = algebraMap R S b := by
+    simpa only [← map_mul] using h
+  obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
+  have : a * (s * c) ∈ I := by
+    rw [← mul_assoc, hc]
+    exact I.mul_mem_right c b.2
+  exact (hI.mem_or_mem this).resolve_right fun hsc => hM ⟨(s * c).2, hsc⟩
 
 /-- If `S` is the localization of `R` at a submonoid, the ordering of ideals of `S` is
 embedded in the ordering of ideals of `R`. -/
@@ -165,6 +148,16 @@ def orderIsoOfPrime : { p : Ideal S // p.IsPrime } ≃o { p : Ideal R // p.IsPri
     ⟨fun h => show I.val ≤ I'.val from map_comap M S I.val ▸ map_comap M S I'.val ▸ Ideal.map_mono h, fun h x hx =>
       h hx⟩
 
+end CommSemiringₓ
+
+section CommRingₓ
+
+variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
+
+variable [Algebra R S] [IsLocalization M S]
+
+include M
+
 /-- `quotient_map` applied to maximal ideals of a localization is `surjective`.
   The quotient by a maximal ideal is a field, so inverses to elements already exist,
   and the localization necessarily maps the equivalence class of the inverse in the localization -/
@@ -206,7 +199,7 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
               rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
     
 
-end Ideals
+end CommRingₓ
 
 end IsLocalization
 

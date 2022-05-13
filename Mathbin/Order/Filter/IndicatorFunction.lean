@@ -94,6 +94,13 @@ theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : 
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left
 
+theorem Filter.EventuallyEq.support [Zero β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) :
+    Function.Support f =ᶠ[l] Function.Support g := by
+  filter_upwards [h] with x hx
+  rw [eq_iff_iff]
+  change f x ≠ 0 ↔ g x ≠ 0
+  rw [hx]
+
 theorem Filter.EventuallyEq.indicator [Zero β] {l : Filter α} {f g : α → β} {s : Set α} (hfg : f =ᶠ[l] g) :
     s.indicator f =ᶠ[l] s.indicator g := by
   filter_upwards [hfg] with x hx

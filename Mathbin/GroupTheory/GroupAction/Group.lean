@@ -255,7 +255,7 @@ def arrowAction {G A B : Type _} [Groupₓ G] [MulAction G A] : MulAction G (A �
   smul := fun g F a => F (g⁻¹ • a)
   one_smul := by
     intro
-    simp only [one_inv, one_smul]
+    simp only [inv_one, one_smul]
   mul_smul := by
     intros
     simp only [mul_smul, mul_inv_rev]

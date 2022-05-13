@@ -182,5 +182,19 @@ def inv G [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : G ≃�
 theorem symm_inv {G} [MeasurableSpace G] [HasInvolutiveInv G] [HasMeasurableInv G] : (inv G).symm = inv G :=
   rfl
 
+/-- `equiv.div_right` as a `measurable_equiv`. -/
+@[to_additive " `equiv.sub_right` as a `measurable_equiv` "]
+def divRight [HasMeasurableMul G] (g : G) : G ≃ᵐ G where
+  toEquiv := Equivₓ.divRight g
+  measurable_to_fun := measurable_div_const' g
+  measurable_inv_fun := measurable_mul_const g
+
+/-- `equiv.div_left` as a `measurable_equiv` -/
+@[to_additive " `equiv.sub_left` as a `measurable_equiv` "]
+def divLeft [HasMeasurableMul G] [HasMeasurableInv G] (g : G) : G ≃ᵐ G where
+  toEquiv := Equivₓ.divLeft g
+  measurable_to_fun := measurable_id.const_div g
+  measurable_inv_fun := measurable_inv.mul_const g
+
 end MeasurableEquiv
 

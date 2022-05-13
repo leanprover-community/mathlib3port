@@ -79,7 +79,7 @@ theorem sup_sigma [SemilatticeSup β] [OrderBot β] : (s.Sigma t).sup f = s.sup 
   convert le_sup hb.2
 
 theorem inf_sigma [SemilatticeInf β] [OrderTop β] : (s.Sigma t).inf f = s.inf fun i => (t i).inf fun b => f ⟨i, b⟩ :=
-  @sup_sigma _ _ (OrderDual β) _ _ _ _ _
+  @sup_sigma _ _ βᵒᵈ _ _ _ _ _
 
 end Sigma
 

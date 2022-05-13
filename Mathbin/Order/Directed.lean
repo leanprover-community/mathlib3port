@@ -137,10 +137,10 @@ theorem exists_ge_ge [LE α] [IsDirected α (· ≤ ·)] (a b : α) : ∃ c, a �
 theorem exists_le_le [LE α] [IsDirected α (swap (· ≤ ·))] (a b : α) : ∃ c, c ≤ a ∧ c ≤ b :=
   directed_of (swap (· ≤ ·)) a b
 
-instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected (OrderDual α) (swap (· ≤ ·)) := by
+instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected αᵒᵈ (swap (· ≤ ·)) := by
   assumption
 
-instance OrderDual.is_directed_le [LE α] [IsDirected α (swap (· ≤ ·))] : IsDirected (OrderDual α) (· ≤ ·) := by
+instance OrderDual.is_directed_le [LE α] [IsDirected α (swap (· ≤ ·))] : IsDirected αᵒᵈ (· ≤ ·) := by
   assumption
 
 section Preorderₓ

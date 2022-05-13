@@ -28,7 +28,7 @@ classes of integrable functions, already defined as a special case of `L^p` spac
 ## Main definitions
 
 * Let `f : α → β` be a function, where `α` is a `measure_space` and `β` a `normed_group`.
-  Then `has_finite_integral f` means `(∫⁻ a, nnnorm (f a)) < ∞`.
+  Then `has_finite_integral f` means `(∫⁻ a, ∥f a∥₊) < ∞`.
 
 * If `β` is moreover a `measurable_space` then `f` is called `integrable` if
   `f` is `measurable` and `has_finite_integral f` holds.
@@ -62,7 +62,7 @@ namespace MeasureTheory
 /-! ### Some results about the Lebesgue integral involving a normed group -/
 
 
-theorem lintegral_nnnorm_eq_lintegral_edist (f : α → β) : (∫⁻ a, nnnorm (f a) ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ := by
+theorem lintegral_nnnorm_eq_lintegral_edist (f : α → β) : (∫⁻ a, ∥f a∥₊ ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ := by
   simp only [edist_eq_coe_nnnorm]
 
 theorem lintegral_norm_eq_lintegral_edist (f : α → β) : (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ := by
@@ -75,14 +75,14 @@ theorem lintegral_edist_triangle {f g h : α → β} (hf : AeStronglyMeasurable 
   refine' lintegral_mono fun a => _
   apply edist_triangle_right
 
-theorem lintegral_nnnorm_zero : (∫⁻ a : α, nnnorm (0 : β) ∂μ) = 0 := by
+theorem lintegral_nnnorm_zero : (∫⁻ a : α, ∥(0 : β)∥₊ ∂μ) = 0 := by
   simp
 
 theorem lintegral_nnnorm_add {f : α → β} {g : α → γ} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
-    (∫⁻ a, nnnorm (f a) + nnnorm (g a) ∂μ) = (∫⁻ a, nnnorm (f a) ∂μ) + ∫⁻ a, nnnorm (g a) ∂μ :=
+    (∫⁻ a, ∥f a∥₊ + ∥g a∥₊ ∂μ) = (∫⁻ a, ∥f a∥₊ ∂μ) + ∫⁻ a, ∥g a∥₊ ∂μ :=
   lintegral_add' hf.ennnorm hg.ennnorm
 
-theorem lintegral_nnnorm_neg {f : α → β} : (∫⁻ a, nnnorm ((-f) a) ∂μ) = ∫⁻ a, nnnorm (f a) ∂μ := by
+theorem lintegral_nnnorm_neg {f : α → β} : (∫⁻ a, ∥(-f) a∥₊ ∂μ) = ∫⁻ a, ∥f a∥₊ ∂μ := by
   simp only [Pi.neg_apply, nnnorm_neg]
 
 /-! ### The predicate `has_finite_integral` -/
@@ -95,7 +95,7 @@ def HasFiniteIntegral {m : MeasurableSpace α} (f : α → β)
       run_tac
         volume_tac) :
     Prop :=
-  (∫⁻ a, nnnorm (f a) ∂μ) < ∞
+  (∫⁻ a, ∥f a∥₊ ∂μ) < ∞
 
 theorem has_finite_integral_iff_norm (f : α → β) : HasFiniteIntegral f μ ↔ (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) < ∞ := by
   simp only [has_finite_integral, of_real_norm_eq_coe_nnnorm]
@@ -192,7 +192,7 @@ theorem has_finite_integral_neg_iff {f : α → β} : HasFiniteIntegral (-f) μ 
   ⟨fun h => neg_negₓ f ▸ h.neg, HasFiniteIntegral.neg⟩
 
 theorem HasFiniteIntegral.norm {f : α → β} (hfi : HasFiniteIntegral f μ) : HasFiniteIntegral (fun a => ∥f a∥) μ := by
-  have eq : (fun a => (nnnorm ∥f a∥ : ℝ≥0∞)) = fun a => (nnnorm (f a) : ℝ≥0∞) := by
+  have eq : (fun a => (nnnorm ∥f a∥ : ℝ≥0∞)) = fun a => (∥f a∥₊ : ℝ≥0∞) := by
     funext
     rw [nnnorm_norm]
   rwa [has_finite_integral, Eq]
@@ -330,7 +330,7 @@ variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 theorem HasFiniteIntegral.smul (c : 𝕜) {f : α → β} : HasFiniteIntegral f μ → HasFiniteIntegral (c • f) μ := by
   simp only [has_finite_integral]
   intro hfi
-  calc (∫⁻ a : α, nnnorm (c • f a) ∂μ) = ∫⁻ a : α, nnnorm c * nnnorm (f a) ∂μ := by
+  calc (∫⁻ a : α, ∥c • f a∥₊ ∂μ) = ∫⁻ a : α, ∥c∥₊ * ∥f a∥₊ ∂μ := by
       simp only [nnnorm_smul, Ennreal.coe_mul]_ < ∞ := by
       rw [lintegral_const_mul']
       exacts[mul_lt_top coe_ne_top hfi.ne, coe_ne_top]
@@ -461,6 +461,12 @@ theorem Integrable.smul_measure {f : α → β} (h : Integrable f μ) {c : ℝ�
   rw [← mem_ℒp_one_iff_integrable] at h⊢
   exact h.smul_measure hc
 
+theorem integrable_smul_measure {f : α → β} {c : ℝ≥0∞} (h₁ : c ≠ 0) (h₂ : c ≠ ∞) :
+    Integrable f (c • μ) ↔ Integrable f μ :=
+  ⟨fun h => by
+    simpa only [smul_smul, Ennreal.inv_mul_cancel h₁ h₂, one_smul] using h.smul_measure (Ennreal.inv_ne_top.2 h₁),
+    fun h => h.smul_measure h₂⟩
+
 theorem Integrable.to_average {f : α → β} (h : Integrable f μ) : Integrable f ((μ Univ)⁻¹ • μ) := by
   rcases eq_or_ne μ 0 with (rfl | hne)
   · rwa [smul_zero]
@@ -468,6 +474,13 @@ theorem Integrable.to_average {f : α → β} (h : Integrable f μ) : Integrable
   · apply h.smul_measure
     simpa
     
+
+theorem integrable_average [IsFiniteMeasure μ] {f : α → β} : Integrable f ((μ Univ)⁻¹ • μ) ↔ Integrable f μ :=
+  ((eq_or_ne μ 0).byCases fun h => by
+      simp [h])
+    fun h =>
+    integrable_smul_measure (Ennreal.inv_ne_zero.2 <| measure_ne_top _ _)
+      (Ennreal.inv_ne_top.2 <| mt Measure.measure_univ_eq_zero.1 h)
 
 theorem integrable_map_measure {f : α → δ} {g : δ → β} (hg : AeStronglyMeasurable g (Measure.map f μ))
     (hf : AeMeasurable f μ) : Integrable g (Measure.map f μ) ↔ Integrable (g ∘ f) μ := by
@@ -519,7 +532,7 @@ variable {α β μ}
 
 theorem Integrable.add' {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) : HasFiniteIntegral (f + g) μ :=
   calc
-    (∫⁻ a, nnnorm (f a + g a) ∂μ) ≤ ∫⁻ a, nnnorm (f a) + nnnorm (g a) ∂μ :=
+    (∫⁻ a, ∥f a + g a∥₊ ∂μ) ≤ ∫⁻ a, ∥f a∥₊ + ∥g a∥₊ ∂μ :=
       lintegral_mono fun a => by
         exact_mod_cast nnnorm_add_le _ _
     _ = _ := lintegral_nnnorm_add hf.AeStronglyMeasurable hg.AeStronglyMeasurable
@@ -546,7 +559,7 @@ theorem integrable_neg_iff {f : α → β} : Integrable (-f) μ ↔ Integrable f
 
 theorem Integrable.sub' {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) : HasFiniteIntegral (f - g) μ :=
   calc
-    (∫⁻ a, nnnorm (f a - g a) ∂μ) ≤ ∫⁻ a, nnnorm (f a) + nnnorm (-g a) ∂μ :=
+    (∫⁻ a, ∥f a - g a∥₊ ∂μ) ≤ ∫⁻ a, ∥f a∥₊ + ∥-g a∥₊ ∂μ :=
       lintegral_mono fun a => by
         simp only [sub_eq_add_neg]
         exact_mod_cast nnnorm_add_le _ _
@@ -879,12 +892,12 @@ variable {E : Type _} {m0 : MeasurableSpace α} [NormedGroup E]
 
 theorem integrable_of_forall_fin_meas_le' {μ : Measure α} (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (C : ℝ≥0∞)
     (hC : C < ∞) {f : α → E} (hf_meas : AeStronglyMeasurable f μ)
-    (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻ x in s, nnnorm (f x) ∂μ) ≤ C) : Integrable f μ :=
+    (hf : ∀ s, measurable_set[m] s → μ s ≠ ∞ → (∫⁻ x in s, ∥f x∥₊ ∂μ) ≤ C) : Integrable f μ :=
   ⟨hf_meas, (lintegral_le_of_forall_fin_meas_le' hm C hf_meas.ennnorm hf).trans_lt hC⟩
 
 theorem integrable_of_forall_fin_meas_le [SigmaFinite μ] (C : ℝ≥0∞) (hC : C < ∞) {f : α → E}
-    (hf_meas : AeStronglyMeasurable f μ)
-    (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻ x in s, nnnorm (f x) ∂μ) ≤ C) : Integrable f μ :=
+    (hf_meas : AeStronglyMeasurable f μ) (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻ x in s, ∥f x∥₊ ∂μ) ≤ C) :
+    Integrable f μ :=
   @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _
     (by
       rwa [trim_eq_self])
@@ -980,28 +993,27 @@ theorem dist_def (f g : α →₁[μ] β) : dist f g = (∫⁻ a, edist (f a) (g
   simp [Lp.dist_def, snorm, snorm']
   simp [edist_eq_coe_nnnorm_sub]
 
-theorem norm_def (f : α →₁[μ] β) : ∥f∥ = (∫⁻ a, nnnorm (f a) ∂μ).toReal := by
+theorem norm_def (f : α →₁[μ] β) : ∥f∥ = (∫⁻ a, ∥f a∥₊ ∂μ).toReal := by
   simp [Lp.norm_def, snorm, snorm']
 
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `norm_def` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
-theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻ x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ).toReal := by
+theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) : ∥f - g∥ = (∫⁻ x, (∥f x - g x∥₊ : ℝ≥0∞) ∂μ).toReal := by
   rw [norm_def]
   congr 1
   rw [lintegral_congr_ae]
   filter_upwards [Lp.coe_fn_sub f g] with _ ha
   simp only [ha, Pi.sub_apply]
 
-theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f∥ = ∫⁻ x, (nnnorm (f x) : ℝ≥0∞) ∂μ := by
+theorem of_real_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ∥f∥ = ∫⁻ x, (∥f x∥₊ : ℝ≥0∞) ∂μ := by
   rw [norm_def, Ennreal.of_real_to_real]
   exact ne_of_ltₓ (has_finite_integral_coe_fn f)
 
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `of_real_norm_eq_lintegral` since `(f - g) x` and `f x - g x` are not equal
   (but only a.e.-equal). -/
-theorem of_real_norm_sub_eq_lintegral (f g : α →₁[μ] β) :
-    Ennreal.ofReal ∥f - g∥ = ∫⁻ x, (nnnorm (f x - g x) : ℝ≥0∞) ∂μ := by
+theorem of_real_norm_sub_eq_lintegral (f g : α →₁[μ] β) : Ennreal.ofReal ∥f - g∥ = ∫⁻ x, (∥f x - g x∥₊ : ℝ≥0∞) ∂μ := by
   simp_rw [of_real_norm_eq_lintegral, ← edist_eq_coe_nnnorm]
   apply lintegral_congr_ae
   filter_upwards [Lp.coe_fn_sub f g] with _ ha

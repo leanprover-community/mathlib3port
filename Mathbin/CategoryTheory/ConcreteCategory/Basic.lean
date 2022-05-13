@@ -178,6 +178,15 @@ instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [C
   forget₂ := inducedFunctor f
   forget_comp := rfl
 
+instance fullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
+    ConcreteCategory { X : C // Z X } where
+  forget := fullSubcategoryInclusion Z ⋙ forget C
+
+instance fullSubcategory.hasForget₂ {C : Type v} [Category C] [ConcreteCategory C] (Z : C → Prop) :
+    HasForget₂ { X : C // Z X } C where
+  forget₂ := fullSubcategoryInclusion Z
+  forget_comp := rfl
+
 /-- In order to construct a “partially forgetting” functor, we do not need to verify functor laws;
 it suffices to ensure that compositions agree with `forget₂ C D ⋙ forget D = forget C`.
 -/

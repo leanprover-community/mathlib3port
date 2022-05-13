@@ -228,3 +228,66 @@ theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ�
 theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0 ) ↔ 1 < p := by
   simp
 
+section
+
+open Finset
+
+variable {α : Type _} [LinearOrderedField α]
+
+theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) : (∑ i in ioc k n, ((i ^ 2)⁻¹ : α)) ≤ k⁻¹ - n⁻¹ := by
+  refine' Nat.le_induction _ _ n h
+  · simp only [Ioc_self, sum_empty, sub_self]
+    
+  intro n hn IH
+  rw [sum_Ioc_succ_top hn]
+  apply (add_le_add IH le_rfl).trans
+  simp only [sub_eq_add_neg, add_assocₓ, Nat.cast_addₓ, Nat.cast_oneₓ, le_add_neg_iff_add_le, add_le_iff_nonpos_right,
+    neg_add_le_iff_le_add, add_zeroₓ]
+  have A : 0 < (n : α) := by
+    simpa using hk.bot_lt.trans_le hn
+  have B : 0 < (n : α) + 1 := by
+    linarith
+  field_simp [B.ne']
+  rw [div_le_div_iff _ A, ← sub_nonneg]
+  · ring_nf
+    exact B.le
+    
+  · nlinarith
+    
+
+theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
+  calc
+    (∑ i in ioo k n, ((i ^ 2)⁻¹ : α)) ≤ ∑ i in ioc k (max (k + 1) n), (i ^ 2)⁻¹ := by
+      apply sum_le_sum_of_subset_of_nonneg
+      · intro x hx
+        simp only [mem_Ioo] at hx
+        simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_trueₓ, and_selfₓ]
+        
+      · intro i hi hident
+        exact inv_nonneg.2 (sq_nonneg _)
+        
+    _ ≤ ((k + 1) ^ 2)⁻¹ + ∑ i in ioc k.succ (max (k + 1) n), (i ^ 2)⁻¹ := by
+      rw [← Nat.Icc_succ_left, ← Nat.Ico_succ_right, sum_eq_sum_Ico_succ_bot]
+      swap
+      · exact Nat.succ_lt_succₓ ((Nat.lt_succ_selfₓ k).trans_le (le_max_leftₓ _ _))
+        
+      rw [Nat.Ico_succ_right, Nat.Icc_succ_left, Nat.cast_succₓ]
+    _ ≤ ((k + 1) ^ 2)⁻¹ + (k + 1)⁻¹ := by
+      refine' add_le_add le_rfl ((sum_Ioc_inv_sq_le_sub _ (le_max_leftₓ _ _)).trans _)
+      · simp only [Ne.def, Nat.succ_ne_zero, not_false_iff]
+        
+      · simp only [Nat.cast_succₓ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
+        
+    _ ≤ 1 / (k + 1) + 1 / (k + 1) := by
+      have A : (1 : α) ≤ k + 1 := by
+        simp only [le_add_iff_nonneg_left, Nat.cast_nonneg]
+      simp_rw [← one_div]
+      apply add_le_add_right
+      refine' div_le_div zero_le_one le_rfl (zero_lt_one.trans_le A) _
+      simpa using pow_le_pow A one_le_two
+    _ = 2 / (k + 1) := by
+      ring
+    
+
+end
+

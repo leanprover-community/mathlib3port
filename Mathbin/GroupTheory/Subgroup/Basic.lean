@@ -2108,7 +2108,7 @@ def normalCore (H : Subgroup G) : Subgroup G where
   mul_mem' := fun a b ha hb c => (congr_argₓ (· ∈ H) conj_mul).mp (H.mul_mem (ha c) (hb c))
 
 theorem normal_core_le (H : Subgroup G) : H.normalCore ≤ H := fun a h => by
-  rw [← mul_oneₓ a, ← one_inv, ← one_mulₓ a]
+  rw [← mul_oneₓ a, ← inv_one, ← one_mulₓ a]
   exact h 1
 
 instance normal_core_normal (H : Subgroup G) : H.normalCore.Normal :=

@@ -48,7 +48,7 @@ instance invertiblePow (m : M) [Invertible m] (n : ℕ) : Invertible (m ^ n) whe
     rw [← (commute_inv_of m).mul_pow, mul_inv_of_self, one_pow]
 
 theorem inv_of_pow (m : M) [Invertible m] (n : ℕ) [Invertible (m ^ n)] : ⅟ (m ^ n) = ⅟ m ^ n :=
-  @invertible_unique M _ (m ^ n) (m ^ n) rfl ‹_› (invertiblePow m n)
+  @invertible_unique M _ (m ^ n) (m ^ n) _ (invertiblePow m n) rfl
 
 theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ =>
   ⟨u ^ n, by

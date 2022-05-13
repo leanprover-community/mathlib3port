@@ -37,7 +37,7 @@ theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
 
 theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
     ContinuousWithinAt f (Iio a) a ↔ ContinuousWithinAt f (Iic a) a :=
-  @continuous_within_at_Ioi_iff_Ici (OrderDual α) _ ‹TopologicalSpace α› _ _ _ f
+  @continuous_within_at_Ioi_iff_Ici αᵒᵈ _ ‹TopologicalSpace α› _ _ _ f
 
 end PartialOrderₓ
 

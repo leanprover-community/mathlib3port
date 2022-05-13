@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 -/
 import Mathbin.AlgebraicGeometry.LocallyRingedSpace
-import Mathbin.Algebra.Category.CommRing.Constructions
+import Mathbin.Algebra.Category.Ring.Constructions
 import Mathbin.AlgebraicGeometry.OpenImmersion
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 
@@ -168,7 +168,7 @@ theorem image_basic_open_image_preimage :
 
 theorem image_basic_open_image_open : IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) := by
   rw [← (Top.homeoOfIso (preserves_coequalizer.iso (SheafedSpace.forget _) f.1 g.1)).is_open_preimage,
-    Top.coequalizer_is_open_iff, ← Set.preimage_comp]
+    Top.coequalizer_is_open_iff.{u}, ← Set.preimage_comp]
   erw [← coe_comp]
   rw [preserves_coequalizer.iso_hom, ι_comp_coequalizer_comparison]
   dsimp' only [SheafedSpace.forget]

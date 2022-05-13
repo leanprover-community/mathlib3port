@@ -89,12 +89,12 @@ theorem spectral_radius_eq_nnnorm_of_star_normal [NormOneClass A] (a : A) [IsSta
 theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] [Nontrivial A] {a : A} (ha : a ∈ selfAdjoint A) {z : ℂ}
     (hz : z ∈ Spectrum ℂ a) : z = z.re := by
   let Iu := Units.mk0 I I_ne_zero
-  have : exp ℂ ℂ (I • z) ∈ Spectrum ℂ (exp ℂ A (I • a)) := by
+  have : exp ℂ (I • z) ∈ Spectrum ℂ (exp ℂ (I • a)) := by
     simpa only [Units.smul_def, Units.coe_mk0] using Spectrum.exp_mem_exp (Iu • a) (smul_mem_smul_iff.mpr hz)
   exact
     Complex.ext (of_real_re _)
       (by
-        simpa only [← Complex.exp_eq_exp_ℂ_ℂ, mem_sphere_zero_iff_norm, norm_eq_abs, abs_exp, Real.exp_eq_one_iff,
+        simpa only [← Complex.exp_eq_exp_ℂ, mem_sphere_zero_iff_norm, norm_eq_abs, abs_exp, Real.exp_eq_one_iff,
           smul_eq_mul, I_mul, neg_eq_zero] using
           Spectrum.subset_circle_of_unitary (selfAdjoint.exp_i_smul_unitary ha) this)
 

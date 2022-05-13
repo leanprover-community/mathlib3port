@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathbin.Order.Hom.Basic
-import Mathbin.Order.Lexicographic
 
 /-!
 # Orders on a sum type
@@ -552,7 +551,7 @@ theorem sum_assoc_symm_apply_inr_inr : (sumAssoc α β γ).symm (inr (inr c)) = 
   rfl
 
 /-- `order_dual` is distributive over `⊕` up to an order isomorphism. -/
-def sumDualDistrib (α β : Type _) [LE α] [LE β] : OrderDual (Sum α β) ≃o Sum (OrderDual α) (OrderDual β) :=
+def sumDualDistrib (α β : Type _) [LE α] [LE β] : (Sum α β)ᵒᵈ ≃o Sum αᵒᵈ βᵒᵈ :=
   { Equivₓ.refl _ with
     map_rel_iff' := by
       rintro (a | a) (b | b)
@@ -630,7 +629,7 @@ theorem sum_lex_assoc_symm_apply_inr_inr : (sumLexAssoc α β γ).symm (inr (inr
   rfl
 
 /-- `order_dual` is antidistributive over `⊕ₗ` up to an order isomorphism. -/
-def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : OrderDual (α ⊕ₗ β) ≃o OrderDual β ⊕ₗ OrderDual α :=
+def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : (α ⊕ₗ β)ᵒᵈ ≃o βᵒᵈ ⊕ₗ αᵒᵈ :=
   { Equivₓ.sumComm α β with
     map_rel_iff' := by
       rintro (a | a) (b | b)

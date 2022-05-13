@@ -297,9 +297,14 @@ end Ultrafilter
 
 namespace Filter
 
+variable {f : Filter α} {s : Set α} {a : α}
+
 open Ultrafilter
 
-theorem mem_iff_ultrafilter {s : Set α} {f : Filter α} : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
+protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure a :=
+  ⟨Ultrafilter.unique (pure a), le_of_eqₓ⟩
+
+theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f → s ∈ g := by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f
   have : ne_bot g :=

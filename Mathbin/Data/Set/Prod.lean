@@ -64,6 +64,14 @@ theorem mk_mem_prod (ha : a ∈ s) (hb : b ∈ t) : (a, b) ∈ s ×ˢ t :=
 
 theorem prod_mono (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁ ×ˢ t₁ ⊆ s₂ ×ˢ t₂ := fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
 
+@[simp]
+theorem prod_self_subset_prod_self : s₁ ×ˢ s₁ ⊆ s₂ ×ˢ s₂ ↔ s₁ ⊆ s₂ :=
+  ⟨fun h x hx => (h (mk_mem_prod hx hx)).1, fun h x hx => ⟨h hx.1, h hx.2⟩⟩
+
+@[simp]
+theorem prod_self_ssubset_prod_self : s₁ ×ˢ s₁ ⊂ s₂ ×ˢ s₂ ↔ s₁ ⊂ s₂ :=
+  and_congr prod_self_subset_prod_self <| not_congr prod_self_subset_prod_self
+
 theorem prod_subset_iff {P : Set (α × β)} : s ×ˢ t ⊆ P ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, (x, y) ∈ P :=
   ⟨fun h _ hx _ hy => h (mk_mem_prod hx hy), fun hp => h _ hp.1 _ hp.2⟩
 

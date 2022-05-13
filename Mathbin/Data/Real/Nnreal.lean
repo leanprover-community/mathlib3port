@@ -173,6 +173,9 @@ protected theorem coe_bit0 (r : ℝ≥0 ) : ((bit0 r : ℝ≥0 ) : ℝ) = bit0 r
 protected theorem coe_bit1 (r : ℝ≥0 ) : ((bit1 r : ℝ≥0 ) : ℝ) = bit1 r :=
   rfl
 
+protected theorem coe_two : ((2 : ℝ≥0 ) : ℝ) = 2 :=
+  rfl
+
 @[simp, norm_cast]
 protected theorem coe_sub {r₁ r₂ : ℝ≥0 } (h : r₂ ≤ r₁) : ((r₁ - r₂ : ℝ≥0 ) : ℝ) = r₁ - r₂ :=
   max_eq_leftₓ <|
@@ -430,6 +433,11 @@ theorem coe_Inf (s : Set ℝ≥0 ) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 �
 @[norm_cast]
 theorem coe_infi {ι : Sort _} (s : ι → ℝ≥0 ) : (↑(⨅ i, s i) : ℝ) = ⨅ i, s i := by
   rw [infi, infi, coe_Inf, Set.range_comp]
+
+theorem le_infi_add_infi {ι ι' : Sort _} [Nonempty ι] [Nonempty ι'] {f : ι → ℝ≥0 } {g : ι' → ℝ≥0 } {a : ℝ≥0 }
+    (h : ∀ i j, a ≤ f i + g j) : a ≤ (⨅ i, f i) + ⨅ j, g j := by
+  rw [← Nnreal.coe_le_coe, Nnreal.coe_add, coe_infi, coe_infi]
+  exact le_cinfi_add_cinfi h
 
 example : Archimedean ℝ≥0 := by
   infer_instance
@@ -689,7 +697,7 @@ theorem div_pos {r p : ℝ≥0 } (hr : 0 < r) (hp : 0 < p) : 0 < r / p := by
   simpa only [div_eq_mul_inv] using mul_pos hr (inv_pos.2 hp)
 
 protected theorem mul_inv {r p : ℝ≥0 } : (r * p)⁻¹ = p⁻¹ * r⁻¹ :=
-  Nnreal.eq <| mul_inv_rev₀ _ _
+  Nnreal.eq <| mul_inv_rev _ _
 
 theorem div_self_le (r : ℝ≥0 ) : r / r ≤ 1 :=
   div_self_le_one (r : ℝ)
@@ -783,6 +791,9 @@ theorem half_pos {a : ℝ≥0 } (h : 0 < a) : 0 < a / 2 :=
 
 theorem add_halves (a : ℝ≥0 ) : a / 2 + a / 2 = a :=
   Nnreal.eq (add_halves a)
+
+theorem half_le_self (a : ℝ≥0 ) : a / 2 ≤ a :=
+  Nnreal.coe_le_coe.mp <| half_le_self a.coe_nonneg
 
 theorem half_lt_self {a : ℝ≥0 } (h : a ≠ 0) : a / 2 < a := by
   rw [← Nnreal.coe_lt_coe, Nnreal.coe_div] <;> exact half_lt_self (bot_lt_iff_ne_bot.2 h)

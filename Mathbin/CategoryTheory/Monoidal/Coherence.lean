@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yuma Mizuno, Oleksandr Manzyuk
 -/
 import Mathbin.CategoryTheory.Monoidal.Free.Coherence
+import Mathbin.CategoryTheory.Bicategory.CoherenceTactic
 
 /-!
 # A `coherence` tactic for monoidal categories, and `⊗≫` (composition up to associators)
@@ -228,9 +229,8 @@ Users will typicall just use the `coherence` tactic, which can also cope with id
 `a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
 where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`
 -/
--- TODO: provide the `bicategory_coherence` tactic, and add that here.
 unsafe def pure_coherence : tactic Unit :=
-  monoidal_coherence
+  monoidal_coherence <|> bicategorical_coherence
 
 example (X₁ X₂ : C) :
     ((λ_ (𝟙_ C)).inv ⊗ 𝟙 (X₁ ⊗ X₂)) ≫ (α_ (𝟙_ C) (𝟙_ C) (X₁ ⊗ X₂)).Hom ≫ (𝟙 (𝟙_ C) ⊗ (α_ (𝟙_ C) X₁ X₂).inv) =
@@ -285,20 +285,8 @@ open Coherence
 
 -- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
 -- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
-/-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
-where the two sides only differ by replacing strings of monoidal structural morphisms
-(that is, associators, unitors, and identities)
-with different strings of structural morphisms with the same source and target.
-
-That is, `coherence` can handle goals of the form
-`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
-where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.
-
-(If you have very large equations on which `coherence` is unexpectedly failing,
-you may need to increase the typeclass search depth,
-using e.g. `set_option class.instance_max_depth 500`.)
--/
-unsafe def coherence : tactic Unit := do
+/-- The main part of `coherence` tactic. -/
+unsafe def coherence_loop : tactic Unit := do
   -- To prove an equality `f = g` in a monoidal category,
       -- first try the `pure_coherence` tactic on the entire equation:
       pure_coherence <|>
@@ -333,7 +321,30 @@ unsafe def coherence : tactic Unit := do
               reflexivity <|>
               fail "`coherence` tactic failed, non-structural morphisms don't match"
           -- and whose second terms can be identified by recursively called `coherence`.
-            coherence
+            coherence_loop
+
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+/-- Use the coherence theorem for monoidal categories to solve equations in a monoidal equation,
+where the two sides only differ by replacing strings of monoidal structural morphisms
+(that is, associators, unitors, and identities)
+with different strings of structural morphisms with the same source and target.
+
+That is, `coherence` can handle goals of the form
+`a ≫ f ≫ b ≫ g ≫ c = a' ≫ f ≫ b' ≫ g ≫ c'`
+where `a = a'`, `b = b'`, and `c = c'` can be proved using `pure_coherence`.
+
+(If you have very large equations on which `coherence` is unexpectedly failing,
+you may need to increase the typeclass search depth,
+using e.g. `set_option class.instance_max_depth 500`.)
+-/
+unsafe def coherence : tactic Unit := do
+  try sorry
+  try sorry
+  -- TODO: put similar normalization simp lemmas for monoidal categories
+      try
+      bicategory.whisker_simps
+  coherence_loop
 
 run_cmd
   add_interactive [`pure_coherence, `coherence]

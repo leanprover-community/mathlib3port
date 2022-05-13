@@ -98,7 +98,7 @@ theorem induction_on_pi_min [∀ i, LinearOrderₓ (α i)] {p : (∀ i, Finset (
     (h0 : p fun _ => ∅)
     (step : ∀ g : ∀ i, Finset (α i) i : ι x : α i, (∀, ∀ y ∈ g i, ∀, x < y) → p g → p (update g i (insert x (g i)))) :
     p f :=
-  @induction_on_pi_max ι (fun i => OrderDual (α i)) _ _ _ _ _ _ h0 step
+  @induction_on_pi_max ι (fun i => (α i)ᵒᵈ) _ _ _ _ _ _ h0 step
 
 end Finset
 

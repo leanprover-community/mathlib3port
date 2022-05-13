@@ -3,7 +3,7 @@ Copyright (c) 2022 Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
-import Mathbin.Algebra.Category.CommRing.Basic
+import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Algebra.Ring.BooleanRing
 import Mathbin.Order.Category.BoolAlg
 

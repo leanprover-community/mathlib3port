@@ -71,6 +71,15 @@ unsafe instance : has_reflect ℚ :=
 
 end
 
+/-- `rat.to_pexpr q` creates a `pexpr` that will evaluate to `q`.
+The `pexpr` does not hold any typing information:
+`to_expr ``((%%(rat.to_pexpr (3/4)) : K))` will create a native `K` numeral `(3/4 : K)`.
+-/
+unsafe def rat.to_pexpr (q : ℚ) : pexpr :=
+  let n := q.num
+  let d := q.denom
+  if d = 1 then n.to_pexpr else pquote.1 ((%%ₓn.to_pexpr) / %%ₓd.to_pexpr)
+
 /-- Evaluates an expression as a rational number,
 if that expression represents a numeral or the quotient of two numerals. -/
 protected unsafe def expr.to_nonneg_rat : expr → Option ℚ

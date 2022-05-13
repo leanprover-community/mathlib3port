@@ -92,17 +92,13 @@ theorem map_lift_eq {m : β → γ} (hg : Monotone g) : map m (f.lift g) = f.lif
   Filter.ext fun s => by
     simp only [mem_lift_sets hg, mem_lift_sets this, exists_prop, mem_map, Function.comp_app]
 
-theorem comap_lift_eq {m : γ → β} (hg : Monotone g) : comap m (f.lift g) = f.lift (comap m ∘ g) := by
-  have : Monotone (comap m ∘ g) := comap_mono.comp hg
-  ext
-  simp only [mem_lift_sets hg, mem_lift_sets this, mem_comap, exists_prop, mem_lift_sets]
-  exact ⟨fun ⟨b, ⟨a, ha, hb⟩, hs⟩ => ⟨a, ha, b, hb, hs⟩, fun ⟨a, ha, b, hb, hs⟩ => ⟨b, ⟨a, ha, hb⟩, hs⟩⟩
+theorem comap_lift_eq {m : γ → β} : comap m (f.lift g) = f.lift (comap m ∘ g) := by
+  simp only [Filter.lift, comap_infi]
 
 theorem comap_lift_eq2 {m : β → α} {g : Set β → Filter γ} (hg : Monotone g) :
     (comap m f).lift g = f.lift (g ∘ Preimage m) :=
-  le_antisymmₓ (le_infi fun s => le_infi fun hs => infi_le_of_le (Preimage m s) <| infi_le _ ⟨s, hs, Subset.refl _⟩)
-    (le_infi fun s =>
-      le_infi fun ⟨s', hs', (h_sub : preimage m s' ⊆ s)⟩ => infi_le_of_le s' <| infi_le_of_le hs' <| hg h_sub)
+  le_antisymmₓ (le_infi₂ fun s hs => infi₂_le (m ⁻¹' s) ⟨s, hs, Subset.rfl⟩)
+    (le_infi₂ fun s ⟨s', hs', (h_sub : m ⁻¹' s' ⊆ s)⟩ => infi₂_le_of_le s' hs' <| hg h_sub)
 
 theorem map_lift_eq2 {g : Set β → Filter γ} {m : α → β} (hg : Monotone g) : (map m f).lift g = f.lift (g ∘ Image m) :=
   le_antisymmₓ
@@ -252,12 +248,8 @@ theorem map_lift'_eq {m : β → γ} (hh : Monotone h) : map m (f.lift' h) = f.l
 theorem map_lift'_eq2 {g : Set β → Set γ} {m : α → β} (hg : Monotone g) : (map m f).lift' g = f.lift' (g ∘ Image m) :=
   map_lift_eq2 <| monotone_principal.comp hg
 
-theorem comap_lift'_eq {m : γ → β} (hh : Monotone h) : comap m (f.lift' h) = f.lift' (Preimage m ∘ h) :=
-  calc
-    comap m (f.lift' h) = f.lift (comap m ∘ 𝓟 ∘ h) := comap_lift_eq <| monotone_principal.comp hh
-    _ = f.lift' (Preimage m ∘ h) := by
-      simp only [(· ∘ ·), Filter.lift', comap_principal, eq_self_iff_true]
-    
+theorem comap_lift'_eq {m : γ → β} : comap m (f.lift' h) = f.lift' (Preimage m ∘ h) := by
+  simp only [Filter.lift', comap_lift_eq, (· ∘ ·), comap_principal]
 
 theorem comap_lift'_eq2 {m : β → α} {g : Set β → Set γ} (hg : Monotone g) :
     (comap m f).lift' g = f.lift' (g ∘ Preimage m) :=
@@ -351,8 +343,8 @@ theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = f.lift fun s => g
   have : ∀ s : Set α t : Set β, 𝓟 (s ×ˢ t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd := by
     simp only [principal_eq_iff_eq, comap_principal, inf_principal] <;> intros <;> rfl
   simp only [Filter.lift', Function.comp, this, lift_inf, lift_const, lift_inf]
-  rw [← comap_lift_eq monotone_principal, ← comap_lift_eq monotone_principal]
-  simp only [Filter.prod, lift_principal2, eq_self_iff_true]
+  rw [← comap_lift_eq, ← comap_lift_eq]
+  simp only [Filter.prod, lift_principal2]
 
 theorem prod_same_eq : f ×ᶠ f = f.lift' fun t : Set α => t ×ˢ t := by
   rw [prod_def] <;>

@@ -105,7 +105,7 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   refine' ⟨r.denom ^ p * (abs r * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
-    simp [← div_mul_div_comm₀, ← r.cast_def, mul_comm]
+    simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
   refine' ⟨r.num * m, _, _⟩
   · rw [A]
     simp [hne, hr]

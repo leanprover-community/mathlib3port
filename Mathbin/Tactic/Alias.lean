@@ -47,13 +47,32 @@ open Lean.Parser Tactic Interactive
 
 namespace Tactic.Alias
 
+/-- An alias can be in one of three forms -/
+unsafe inductive target
+  | plain : Name → target
+  | forward : Name → target
+  | backwards : Name → target
+  deriving has_reflect
+
+/-- The name underlying an alias target -/
+unsafe def target.to_name : target → Name
+  | target.plain n => n
+  | target.forward n => n
+  | target.backwards n => n
+
+/-- The docstring for an alias. Used by `alias` _and_ by `to_additive` -/
+unsafe def target.to_string : target → Stringₓ
+  | target.plain n => s! "**Alias** of {n}`."
+  | target.forward n => s! "**Alias** of the forward direction of {n}`."
+  | target.backwards n => s! "**Alias** of the reverse direction of {n}`."
+
 @[user_attribute]
-unsafe def alias_attr : user_attribute where
+unsafe def alias_attr : user_attribute Unit target where
   Name := `alias
   descr := "This definition is an alias of another."
   parser := failed
 
-unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic Unit := do
+unsafe def alias_direct (d : declaration) (al : Name) : tactic Unit := do
   updateex_env fun env =>
       env
         (match d with
@@ -61,23 +80,26 @@ unsafe def alias_direct (d : declaration) (doc : Stringₓ) (al : Name) : tactic
           declaration.defn al ls t (expr.const n (level.param <$> ls)) ReducibilityHints.abbrev tt
         | declaration.thm n ls t _ => declaration.thm al ls t <| task.pure <| expr.const n (level.param <$> ls)
         | _ => undefined)
-  alias_attr al () tt
-  add_doc_string al doc
+  let target := target.plain d.to_name
+  alias_attr al target tt
+  add_doc_string al target
 
 unsafe def mk_iff_mp_app (iffmp : Name) : expr → (ℕ → expr) → tactic expr
   | expr.pi n bi e t, f => expr.lam n bi e <$> mk_iff_mp_app t fun n => f (n + 1) (expr.var n)
   | quote.1 ((%%ₓa) ↔ %%ₓb), f => pure <| @expr.const true iffmp [] a b (f 0)
   | _, f => fail "Target theorem must have the form `Π x y z, a ↔ b`"
 
-unsafe def alias_iff (d : declaration) (doc : Stringₓ) (al : Name) (iffmp : Name) : tactic Unit :=
+unsafe def alias_iff (d : declaration) (al : Name) (is_forward : Bool) : tactic Unit :=
   (if al = `_ then skip else get_decl al >> skip) <|> do
     let ls := d.univ_params
     let t := d.type
+    let target := if is_forward then target.forward d.to_name else target.backwards d.to_name
+    let iffmp := if is_forward then `iff.mp else `iff.mpr
     let v ← mk_iff_mp_app iffmp t fun _ => expr.const d.to_name (level.param <$> ls)
     let t' ← infer_type v
     updateex_env fun env => env (declaration.thm al ls t' <| task.pure v)
-    alias_attr al () tt
-    add_doc_string al doc
+    alias_attr al target tt
+    add_doc_string al target
 
 unsafe def make_left_right : Name → tactic (Name × Name)
   | Name.mk_string s p => do
@@ -134,19 +156,19 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
           let old ← resolve_constant old
           get_decl old) <|>
         fail ("declaration " ++ toString old ++ " not found")
-  let doc := fun al : Name => meta_info.doc_string.getOrElse <| "**Alias** of `" ++ toString old ++ "`."
+  let doc := fun inf : Stringₓ => meta_info.doc_string.getOrElse <| s! "**Alias** of {inf }`{old}`."
   (do
         tk "←" <|> tk "<-"
         let aliases ← many ident
-        ↑(aliases fun al => alias_direct d (doc al) al)) <|>
+        ↑(aliases fun al => alias_direct d al)) <|>
       do
       tk "↔" <|> tk "<->"
       let (left, right) ←
         mcond (tk ".." >> pure tt <|> pure ff)
             (make_left_right old <|> fail "invalid name for automatic name generation")
             (Prod.mk <$> types.ident_ <*> types.ident_)
-      alias_iff d (doc left) left `iff.mp
-      alias_iff d (doc right) right `iff.mpr
+      alias_iff d left tt
+      alias_iff d right ff
 
 add_tactic_doc
   { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd], tags := ["renaming"] }
@@ -155,14 +177,10 @@ unsafe def get_lambda_body : expr → expr
   | expr.lam _ _ _ b => get_lambda_body b
   | a => a
 
-unsafe def get_alias_target (n : Name) : tactic (Option Name) := do
+unsafe def get_alias_target (n : Name) : tactic (Option target) := do
   let tt ← has_attribute' `alias n | pure none
-  let d ← get_decl n
-  let (head, args) := (get_lambda_body d.value).get_app_fn_args
-  let head :=
-    if head.is_constant_of `iff.mp ∨ head.is_constant_of `iff.mpr then expr.get_app_fn (head.ith_arg 2) else head
-  guardb <| head
-  pure <| head
+  let v ← alias_attr.get_param n
+  pure <| some v
 
 end Tactic.Alias
 

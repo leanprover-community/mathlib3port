@@ -285,8 +285,8 @@ theorem mem_ℒp_top (f : α →ₛ E) (μ : Measure α) : Memℒp f ∞ μ :=
   mem_ℒp_top_of_bound f.AeStronglyMeasurable C <| eventually_of_forall hfC
 
 protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measure α) :
-    snorm' f p μ = (∑ y in f.range, (nnnorm y : ℝ≥0∞) ^ p * μ (f ⁻¹' {y})) ^ (1 / p) := by
-  have h_map : (fun a => (nnnorm (f a) : ℝ≥0∞) ^ p) = f.map fun a : F => (nnnorm a : ℝ≥0∞) ^ p := by
+    snorm' f p μ = (∑ y in f.range, (∥y∥₊ : ℝ≥0∞) ^ p * μ (f ⁻¹' {y})) ^ (1 / p) := by
+  have h_map : (fun a => (∥f a∥₊ : ℝ≥0∞) ^ p) = f.map fun a : F => (∥a∥₊ : ℝ≥0∞) ^ p := by
     simp
   rw [snorm', h_map, lintegral_eq_lintegral, map_lintegral]
 

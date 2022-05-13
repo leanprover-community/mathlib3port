@@ -197,8 +197,7 @@ noncomputable def OrderEmbedding.ofAntisymmetrization : Antisymmetrization α (�
   map_rel_iff' := fun a b => of_antisymmetrization_le_of_antisymmetrization_iff
 
 /-- `antisymmetrization` and `order_dual` commute. -/
-def OrderIso.dualAntisymmetrization :
-    OrderDual (Antisymmetrization α (· ≤ ·)) ≃o Antisymmetrization (OrderDual α) (· ≤ ·) where
+def OrderIso.dualAntisymmetrization : (Antisymmetrization α (· ≤ ·))ᵒᵈ ≃o Antisymmetrization αᵒᵈ (· ≤ ·) where
   toFun := (Quotientₓ.map' id) fun _ _ => And.symm
   invFun := (Quotientₓ.map' id) fun _ _ => And.symm
   left_inv := fun a =>

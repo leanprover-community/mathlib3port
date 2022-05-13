@@ -32,7 +32,7 @@ not hard but quite a pain to go about as there are many cases to consider.
 -/
 
 
-open Function Set
+open Function OrderDual Set
 
 variable {𝕜 E F β : Type _}
 
@@ -66,21 +66,21 @@ def QuasilinearOn : Prop :=
 
 variable {𝕜 s f}
 
-theorem QuasiconvexOn.dual (hf : QuasiconvexOn 𝕜 s f) : @QuasiconcaveOn 𝕜 E (OrderDual β) _ _ _ _ s f :=
-  hf
+theorem QuasiconvexOn.dual : QuasiconvexOn 𝕜 s f → QuasiconcaveOn 𝕜 s (to_dual ∘ f) :=
+  id
 
-theorem QuasiconcaveOn.dual (hf : QuasiconcaveOn 𝕜 s f) : @QuasiconvexOn 𝕜 E (OrderDual β) _ _ _ _ s f :=
-  hf
+theorem QuasiconcaveOn.dual : QuasiconcaveOn 𝕜 s f → QuasiconvexOn 𝕜 s (to_dual ∘ f) :=
+  id
 
-theorem QuasilinearOn.dual (hf : QuasilinearOn 𝕜 s f) : @QuasilinearOn 𝕜 E (OrderDual β) _ _ _ _ s f :=
-  ⟨hf.2, hf.1⟩
+theorem QuasilinearOn.dual : QuasilinearOn 𝕜 s f → QuasilinearOn 𝕜 s (to_dual ∘ f) :=
+  And.swap
 
 theorem Convex.quasiconvex_on_of_convex_le (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | f x ≤ r }) :
     QuasiconvexOn 𝕜 s f := fun r => hs.inter (h r)
 
 theorem Convex.quasiconcave_on_of_convex_ge (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | r ≤ f x }) :
     QuasiconcaveOn 𝕜 s f :=
-  @Convex.quasiconvex_on_of_convex_le 𝕜 E (OrderDual β) _ _ _ _ _ _ hs h
+  @Convex.quasiconvex_on_of_convex_le 𝕜 E βᵒᵈ _ _ _ _ _ _ hs h
 
 theorem QuasiconvexOn.convex [IsDirected β (· ≤ ·)] (hf : QuasiconvexOn 𝕜 s f) : Convex 𝕜 s :=
   fun x y hx hy a b ha hb hab =>
@@ -121,7 +121,7 @@ theorem quasiconcave_on_iff_min_le :
     QuasiconcaveOn 𝕜 s f ↔
       Convex 𝕜 s ∧
         ∀ ⦃x y : E⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → min (f x) (f y) ≤ f (a • x + b • y) :=
-  @quasiconvex_on_iff_le_max 𝕜 E (OrderDual β) _ _ _ _ _ _
+  @quasiconvex_on_iff_le_max 𝕜 E βᵒᵈ _ _ _ _ _ _
 
 theorem quasilinear_on_iff_mem_interval :
     QuasilinearOn 𝕜 s f ↔

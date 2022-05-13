@@ -62,7 +62,7 @@ theorem zip_swap : ∀ l₁ : List α l₂ : List β, (zipₓ l₁ l₂).map Pro
   | l₁, [] => by
     rw [zip_nil_right] <;> rfl
   | a :: l₁, b :: l₂ => by
-    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mkₓ] <;> constructor <;> rfl
+    simp only [zip_cons_cons, map_cons, zip_swap l₁ l₂, Prod.swap_prod_mk] <;> constructor <;> rfl
 
 @[simp]
 theorem length_zip_with (f : α → β → γ) :
@@ -76,6 +76,15 @@ theorem length_zip_with (f : α → β → γ) :
 @[simp]
 theorem length_zip : ∀ l₁ : List α l₂ : List β, length (zipₓ l₁ l₂) = min (length l₁) (length l₂) :=
   length_zip_with _
+
+theorem all₂_zip_with {f : α → β → γ} {p : γ → Prop} :
+    ∀ {l₁ : List α} {l₂ : List β} h : length l₁ = length l₂,
+      All₂ p (zipWithₓ f l₁ l₂) ↔ Forall₂ (fun x y => p (f x y)) l₁ l₂
+  | [], [], _ => by
+    simp
+  | a :: l₁, b :: l₂, h => by
+    simp only [length_cons, add_left_injₓ] at h
+    simp [all₂_zip_with h]
 
 theorem lt_length_left_of_zip_with {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
     (h : i < (zipWithₓ f l l').length) : i < l.length := by

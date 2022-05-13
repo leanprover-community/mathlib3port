@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 -/
 import Mathbin.LinearAlgebra.Matrix.BilinearForm
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
+import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Vandermonde
 import Mathbin.LinearAlgebra.Trace

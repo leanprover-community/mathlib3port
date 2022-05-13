@@ -330,6 +330,14 @@ unsafe def nat.to_pexpr : ℕ → pexpr
   | 1 => pquote.1 1
   | n => if n % 2 = 0 then pquote.1 (bit0 (%%ₓnat.to_pexpr (n / 2))) else pquote.1 (bit1 (%%ₓnat.to_pexpr (n / 2)))
 
+/-- `int.to_pexpr n` creates a `pexpr` that will evaluate to `n`.
+The `pexpr` does not hold any typing information:
+`to_expr ``((%%(int.to_pexpr (-5)) : ℚ))` will create a native `ℚ` numeral `(-5 : ℚ)`.
+-/
+unsafe def int.to_pexpr : ℤ → pexpr
+  | Int.ofNat k => k.to_pexpr
+  | Int.negSucc k => pquote.1 (-%%ₓ(k + 1).to_pexpr)
+
 namespace Expr
 
 /-- Turns an expression into a natural number, assuming it is only built up from

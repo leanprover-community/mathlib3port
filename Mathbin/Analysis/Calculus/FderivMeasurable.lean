@@ -178,7 +178,7 @@ theorem norm_sub_le_of_mem_A {c : 𝕜} (hc : 1 < ∥c∥) {r ε : ℝ} (hε : 0
       hε.le
   refine' op_norm_le_of_shell (half_pos hr) this hc _
   intro y ley ylt
-  rw [div_div_eq_div_mul,
+  rw [div_div,
     div_le_iff'
       (mul_pos
         (by

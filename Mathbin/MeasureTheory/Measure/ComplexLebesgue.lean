@@ -35,7 +35,7 @@ def measurableEquivRealProd : ℂ ≃ᵐ ℝ × ℝ :=
   equivRealProdₗ.toHomeomorph.toMeasurableEquiv
 
 theorem volume_preserving_equiv_pi : MeasurePreserving measurableEquivPi :=
-  (measurableEquivPi.symm.Measurable.MeasurePreserving _).symm
+  (measurableEquivPi.symm.Measurable.MeasurePreserving _).symm _
 
 theorem volume_preserving_equiv_real_prod : MeasurePreserving measurableEquivRealProd :=
   (volume_preserving_fin_two_arrow ℝ).comp volume_preserving_equiv_pi

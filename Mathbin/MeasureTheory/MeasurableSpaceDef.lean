@@ -56,7 +56,7 @@ structure MeasurableSpace (α : Type _) where
 
 attribute [class] MeasurableSpace
 
-instance [h : MeasurableSpace α] : MeasurableSpace (OrderDual α) :=
+instance [h : MeasurableSpace α] : MeasurableSpace αᵒᵈ :=
   h
 
 section

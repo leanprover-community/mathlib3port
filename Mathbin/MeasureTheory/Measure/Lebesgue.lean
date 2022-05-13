@@ -374,7 +374,7 @@ theorem volume_preserving_transvection_struct [DecidableEq ι] (t : Transvection
       refine' (measurable_pi_lambda _ fun i => Measurable.const_mul _ _).add measurable_snd
       exact this.comp measurable_fst
     (measure_preserving.id _).skew_product g_meas (eventually_of_forall fun a => map_add_left_eq_self _ _)
-  exact (A.symm.comp B).comp A
+  exact ((A.symm e).comp B).comp A
 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
@@ -391,7 +391,7 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
       one_smul, _root_.inv_one, abs_one]
     
   · rw [to_lin'_mul, det_mul, LinearMap.coe_comp, ← measure.map_map, IHB, measure.map_smul, IHA, smul_smul, ←
-      Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv₀]
+      Ennreal.of_real_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv]
     · apply Continuous.measurable
       apply LinearMap.continuous_on_pi
       

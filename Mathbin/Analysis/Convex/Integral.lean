@@ -101,6 +101,13 @@ theorem Convex.set_average_mem {t : Set α} {s : Set E} (hs : Convex ℝ s) (hsc
   refine' hs.average_mem hsc _ hfs hfi
   rwa [Ne.def, restrict_eq_zero]
 
+/-- If `μ` is a non-zero finite measure on `α`, `s` is a convex set in `E`, and `f` is an integrable
+function sending `μ`-a.e. points to `s`, then the average value of `f` belongs to `closure s`:
+`⨍ x, f x ∂μ ∈ s`. See also `convex.center_mass_mem` for a finite sum version of this lemma. -/
+theorem Convex.set_average_mem_closure {t : Set α} {s : Set E} (hs : Convex ℝ s) (h0 : μ t ≠ 0) (ht : μ t ≠ ∞)
+    {f : α → E} (hfs : ∀ᵐ x ∂μ.restrict t, f x ∈ s) (hfi : IntegrableOn f t μ) : (⨍ x in t, f x ∂μ) ∈ Closure s :=
+  hs.closure.set_average_mem is_closed_closure h0 ht (hfs.mono fun x hx => subset_closure hx) hfi
+
 theorem ConvexOn.average_mem_epigraph [IsFiniteMeasure μ] {s : Set E} {g : E → ℝ} (hg : ConvexOn ℝ s g)
     (hgc : ContinuousOn g s) (hsc : IsClosed s) (hμ : μ ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ)
     (hgi : Integrable (g ∘ f) μ) : (⨍ x, f x ∂μ, ⨍ x, g (f x) ∂μ) ∈ { p : E × ℝ | p.1 ∈ s ∧ g p.1 ≤ p.2 } := by
@@ -226,12 +233,12 @@ theorem MeasureTheory.Integrable.ae_eq_const_or_exists_average_ne_compl [IsFinit
   rw [← H s hs h₀ h₀', open_segment_same, mem_singleton_iff] at this
   rw [this, measure_smul_set_average _ (measure_ne_top μ _)]
 
-/-- If an integrable function `f : α → E` takes values in a convex closed set `s` and for some set
-`t` of positive measure, the average value of `f` over `t` belongs to the interior of `s`, then the
-average of `f` over the whole space belongs to the interior of `s`. -/
-theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] {t : Set α} {s : Set E} (hs : Convex ℝ s)
-    (hsc : IsClosed s) (h0 : μ t ≠ 0) {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ)
-    (ht : (⨍ x in t, f x ∂μ) ∈ Interior s) : (⨍ x, f x ∂μ) ∈ Interior s := by
+/-- If an integrable function `f : α → E` takes values in a convex set `s` and for some set `t` of
+positive measure, the average value of `f` over `t` belongs to the interior of `s`, then the average
+of `f` over the whole space belongs to the interior of `s`. -/
+theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] {t : Set α} {s : Set E} (hs : Convex ℝ s) (h0 : μ t ≠ 0)
+    {f : α → E} (hfs : ∀ᵐ x ∂μ, f x ∈ s) (hfi : Integrable f μ) (ht : (⨍ x in t, f x ∂μ) ∈ Interior s) :
+    (⨍ x, f x ∂μ) ∈ Interior s := by
   rw [← measure_to_measurable] at h0
   rw [← restrict_to_measurable (measure_ne_top μ t)] at ht
   by_cases' h0' : μ (to_measurable μ tᶜ) = 0
@@ -239,8 +246,8 @@ theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] {t : Set α} {s 
     rwa [restrict_congr_set h0', restrict_univ] at ht
     
   exact
-    hs.open_segment_interior_self_subset_interior ht
-      (hs.set_average_mem hsc h0' (measure_ne_top _ _) (ae_restrict_of_ae hfs) hfi.integrable_on)
+    hs.open_segment_interior_closure_subset_interior ht
+      (hs.set_average_mem_closure h0' (measure_ne_top _ _) (ae_restrict_of_ae hfs) hfi.integrable_on)
       (average_mem_open_segment_compl_self (measurable_set_to_measurable μ t).NullMeasurableSet h0 h0' hfi)
 
 /-- If an integrable function `f : α → E` takes values in a strictly convex closed set `s`, then
@@ -289,29 +296,40 @@ theorem StrictConcaveOn.ae_eq_const_or_lt_map_average [IsFiniteMeasure μ] {s : 
     hg.neg.ae_eq_const_or_map_average_lt hgc.neg hsc hfs hfi hgi.neg
 
 /-- If `E` is a strictly normed space and `f : α → E` is a function such that `∥f x∥ ≤ C` a.e., then
-either either this function is a.e. equal to its average value, or the norm of its integral is
-strictly less than `(μ univ).to_real * C`. -/
-theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ E] [IsFiniteMeasure μ] {f : α → E} {C : ℝ}
-    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ Univ).toReal * C := by
+either this function is a.e. equal to its average value, or the norm of its average value is
+strictly less than `C`. -/
+theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E] {f : α → E} {C : ℝ}
+    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥⨍ x, f x ∂μ∥ < C := by
   cases' le_or_ltₓ C 0 with hC0 hC0
   · have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
     simp only [average_congr this, Pi.zero_apply, average_zero]
     exact Or.inl this
     
-  cases' eq_or_ne μ 0 with hμ hμ
-  · rw [hμ]
-    exact Or.inl rfl
-    
   by_cases' hfi : integrable f μ
   swap
-  · right
-    simpa [integral_undef hfi, hC0, measure_lt_top, Ennreal.to_real_pos_iff, pos_iff_ne_zero] using hμ
+  · simp [average_def', integral_undef hfi, hC0, Ennreal.to_real_pos_iff]
     
+  cases' (le_top : μ univ ≤ ∞).eq_or_lt with hμt hμt
+  · simp [average_def', hμt, hC0]
+    
+  have : is_finite_measure μ := ⟨hμt⟩
   replace h_le : ∀ᵐ x ∂μ, f x ∈ closed_ball (0 : E) C
   · simpa only [mem_closed_ball_zero_iff]
     
-  have hμ' : 0 < (μ univ).toReal := Ennreal.to_real_pos (mt measure_univ_eq_zero.1 hμ) (measure_ne_top _ _)
-  simpa only [interior_closed_ball _ hC0.ne', mem_ball_zero_iff, average_def', norm_smul, Real.norm_eq_abs, abs_inv,
-    abs_of_pos hμ', ← div_eq_inv_mul, div_lt_iff' hμ'] using
+  simpa only [interior_closed_ball _ hC0.ne', mem_ball_zero_iff] using
     (strict_convex_closed_ball ℝ (0 : E) C).ae_eq_const_or_average_mem_interior is_closed_ball h_le hfi
+
+/-- If `E` is a strictly normed space and `f : α → E` is a function such that `∥f x∥ ≤ C` a.e., then
+either this function is a.e. equal to its average value, or the norm of its integral is strictly
+less than `(μ univ).to_real * C`. -/
+theorem ae_eq_const_or_norm_integral_lt_of_norm_le_const [StrictConvexSpace ℝ E] [IsFiniteMeasure μ] {f : α → E} {C : ℝ}
+    (h_le : ∀ᵐ x ∂μ, ∥f x∥ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ∥∫ x, f x ∂μ∥ < (μ Univ).toReal * C := by
+  cases' eq_or_ne μ 0 with h₀ h₀
+  · left
+    simp [h₀]
+    
+  have hμ : 0 < (μ univ).toReal := by
+    simp [Ennreal.to_real_pos_iff, pos_iff_ne_zero, h₀, measure_lt_top]
+  refine' (ae_eq_const_or_norm_average_lt_of_norm_le_const h_le).imp_right fun H => _
+  rwa [average_def', norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hμ, ← div_eq_inv_mul, div_lt_iff' hμ] at H
 

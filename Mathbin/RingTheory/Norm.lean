@@ -5,7 +5,7 @@ Authors: Anne Baanen
 -/
 import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.LinearAlgebra.Determinant
-import Mathbin.LinearAlgebra.Matrix.Charpoly.Coeff
+import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
 

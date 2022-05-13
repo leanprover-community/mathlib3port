@@ -488,7 +488,7 @@ def orthogonalProjection : E →L[𝕜] K :=
           Submodule.add_mem K (orthogonal_projection_fn_mem x) (orthogonal_projection_fn_mem y)
         have ho : ∀, ∀ w ∈ K, ∀, ⟪x + y - (orthogonalProjectionFn K x + orthogonalProjectionFn K y), w⟫ = 0 := by
           intro w hw
-          rw [add_sub_comm, inner_add_left, orthogonal_projection_fn_inner_eq_zero _ w hw,
+          rw [add_sub_add_comm, inner_add_left, orthogonal_projection_fn_inner_eq_zero _ w hw,
             orthogonal_projection_fn_inner_eq_zero _ w hw, add_zeroₓ]
         ext
         simp [eq_orthogonal_projection_fn_of_mem_of_inner_eq_zero hm ho],

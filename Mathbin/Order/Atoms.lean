@@ -159,7 +159,7 @@ export IsCoatomic (eq_top_or_exists_le_coatom)
 variable {α}
 
 @[simp]
-theorem is_coatomic_dual_iff_is_atomic [OrderBot α] : IsCoatomic (OrderDual α) ↔ IsAtomic α :=
+theorem is_coatomic_dual_iff_is_atomic [OrderBot α] : IsCoatomic αᵒᵈ ↔ IsAtomic α :=
   ⟨fun h =>
     ⟨fun b => by
       apply h.eq_top_or_exists_le_coatom⟩,
@@ -168,7 +168,7 @@ theorem is_coatomic_dual_iff_is_atomic [OrderBot α] : IsCoatomic (OrderDual α)
       apply h.eq_bot_or_exists_atom_le⟩⟩
 
 @[simp]
-theorem is_atomic_dual_iff_is_coatomic [OrderTop α] : IsAtomic (OrderDual α) ↔ IsCoatomic α :=
+theorem is_atomic_dual_iff_is_coatomic [OrderTop α] : IsAtomic αᵒᵈ ↔ IsCoatomic α :=
   ⟨fun h =>
     ⟨fun b => by
       apply h.eq_bot_or_exists_atom_le⟩,
@@ -180,7 +180,7 @@ namespace IsAtomic
 
 variable [OrderBot α] [IsAtomic α]
 
-instance is_coatomic_dual : IsCoatomic (OrderDual α) :=
+instance is_coatomic_dual : IsCoatomic αᵒᵈ :=
   is_coatomic_dual_iff_is_atomic.2 ‹IsAtomic α›
 
 instance {x : α} : IsAtomic (Set.Iic x) :=
@@ -194,7 +194,7 @@ namespace IsCoatomic
 
 variable [OrderTop α] [IsCoatomic α]
 
-instance is_coatomic : IsAtomic (OrderDual α) :=
+instance is_coatomic : IsAtomic αᵒᵈ :=
   is_atomic_dual_iff_is_coatomic.2 ‹IsCoatomic α›
 
 instance {x : α} : IsCoatomic (Set.Ici x) :=
@@ -213,6 +213,20 @@ theorem is_atomic_iff_forall_is_atomic_Iic [OrderBot α] : IsAtomic α ↔ ∀ x
 theorem is_coatomic_iff_forall_is_coatomic_Ici [OrderTop α] : IsCoatomic α ↔ ∀ x : α, IsCoatomic (Set.Ici x) :=
   is_atomic_dual_iff_is_coatomic.symm.trans <|
     is_atomic_iff_forall_is_atomic_Iic.trans <| forall_congrₓ fun x => is_coatomic_dual_iff_is_atomic.symm.trans Iff.rfl
+
+section WellFounded
+
+theorem is_atomic_of_order_bot_well_founded_lt [OrderBot α] (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
+  ⟨fun a =>
+    or_iff_not_imp_left.2 fun ha =>
+      let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
+      ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
+
+theorem is_coatomic_of_order_top_gt_well_founded [OrderTop α] (h : WellFounded ((· > ·) : α → α → Prop)) :
+    IsCoatomic α :=
+  is_atomic_dual_iff_is_coatomic.1 (@is_atomic_of_order_bot_well_founded_lt αᵒᵈ _ _ h)
+
+end WellFounded
 
 end Atomic
 
@@ -235,7 +249,7 @@ export IsCoatomistic (eq_Inf_coatoms)
 variable {α}
 
 @[simp]
-theorem is_coatomistic_dual_iff_is_atomistic : IsCoatomistic (OrderDual α) ↔ IsAtomistic α :=
+theorem is_coatomistic_dual_iff_is_atomistic : IsCoatomistic αᵒᵈ ↔ IsAtomistic α :=
   ⟨fun h =>
     ⟨fun b => by
       apply h.eq_Inf_coatoms⟩,
@@ -244,7 +258,7 @@ theorem is_coatomistic_dual_iff_is_atomistic : IsCoatomistic (OrderDual α) ↔ 
       apply h.eq_Sup_atoms⟩⟩
 
 @[simp]
-theorem is_atomistic_dual_iff_is_coatomistic : IsAtomistic (OrderDual α) ↔ IsCoatomistic α :=
+theorem is_atomistic_dual_iff_is_coatomistic : IsAtomistic αᵒᵈ ↔ IsCoatomistic α :=
   ⟨fun h =>
     ⟨fun b => by
       apply h.eq_Sup_atoms⟩,
@@ -254,7 +268,7 @@ theorem is_atomistic_dual_iff_is_coatomistic : IsAtomistic (OrderDual α) ↔ Is
 
 namespace IsAtomistic
 
-instance is_coatomistic_dual [h : IsAtomistic α] : IsCoatomistic (OrderDual α) :=
+instance is_coatomistic_dual [h : IsAtomistic α] : IsCoatomistic αᵒᵈ :=
   is_coatomistic_dual_iff_is_atomistic.2 h
 
 variable [IsAtomistic α]
@@ -293,7 +307,7 @@ end IsAtomistic
 
 namespace IsCoatomistic
 
-instance is_atomistic_dual [h : IsCoatomistic α] : IsAtomistic (OrderDual α) :=
+instance is_atomistic_dual [h : IsCoatomistic α] : IsAtomistic αᵒᵈ :=
   is_atomistic_dual_iff_is_coatomistic.2 h
 
 variable [IsCoatomistic α]
@@ -317,15 +331,15 @@ class IsSimpleOrder (α : Type _) [LE α] [BoundedOrder α] extends Nontrivial �
 
 export IsSimpleOrder (eq_bot_or_eq_top)
 
-theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α] :
-    IsSimpleOrder α ↔ IsSimpleOrder (OrderDual α) := by
+theorem is_simple_order_iff_is_simple_order_order_dual [LE α] [BoundedOrder α] : IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ :=
+  by
   constructor <;> intro i <;> have := i
   · exact
       { exists_pair_ne := @exists_pair_ne α _,
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
     
   · exact
-      { exists_pair_ne := @exists_pair_ne (OrderDual α) _,
+      { exists_pair_ne := @exists_pair_ne αᵒᵈ _,
         eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
     
 
@@ -341,7 +355,7 @@ section IsSimpleOrder
 
 variable [PartialOrderₓ α] [BoundedOrder α] [IsSimpleOrder α]
 
-instance {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] : IsSimpleOrder (OrderDual α) :=
+instance {α} [LE α] [BoundedOrder α] [IsSimpleOrder α] : IsSimpleOrder αᵒᵈ :=
   is_simple_order_iff_is_simple_order_order_dual.1
     (by
       infer_instance)

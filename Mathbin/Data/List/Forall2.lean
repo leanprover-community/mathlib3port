@@ -41,13 +41,17 @@ theorem Forall₂.flip : ∀ {a b}, Forall₂ (flip r) b a → Forall₂ r a b
   | _, _, forall₂.nil => Forall₂.nil
   | a :: as, b :: bs, forall₂.cons h₁ h₂ => Forall₂.cons h₁ h₂.flip
 
-theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀, ∀ x ∈ l, ∀, r x x) → Forall₂ r l l
-  | [], _ => Forall₂.nil
-  | a :: as, h => Forall₂.cons (h _ (mem_cons_selfₓ _ _)) (forall₂_same fun a ha => h a <| mem_cons_of_memₓ _ ha)
+@[simp]
+theorem forall₂_same {r : α → α → Prop} : ∀ {l : List α}, Forall₂ r l l ↔ ∀, ∀ x ∈ l, ∀, r x x
+  | [] => by
+    simp
+  | a :: l => by
+    simp [@forall₂_same l]
 
 theorem forall₂_refl {r} [IsRefl α r] (l : List α) : Forall₂ r l l :=
-  forall₂_same fun a h => IsRefl.refl _
+  forall₂_same.2 fun a h => refl _
 
+@[simp]
 theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = ·) := by
   funext a b
   apply propext

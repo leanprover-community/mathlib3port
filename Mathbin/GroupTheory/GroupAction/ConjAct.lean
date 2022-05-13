@@ -148,7 +148,7 @@ instance unitsMulDistribMulAction : MulDistribMulAction (ConjAct Mˣ) M where
   one_smul := by
     simp [units_smul_def]
   mul_smul := by
-    simp [units_smul_def, mul_assoc, mul_inv_rev₀]
+    simp [units_smul_def, mul_assoc, mul_inv_rev]
   smul_mul := by
     simp [units_smul_def, mul_assoc]
   smul_one := by
@@ -188,7 +188,7 @@ instance mulAction₀ : MulAction (ConjAct G₀) G₀ where
   one_smul := by
     simp [smul_def]
   mul_smul := by
-    simp [smul_def, mul_assoc, mul_inv_rev₀]
+    simp [smul_def, mul_assoc, mul_inv_rev]
 
 end GroupWithZeroₓ
 

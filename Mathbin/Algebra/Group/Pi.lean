@@ -68,13 +68,31 @@ instance commMonoid [∀ i, CommMonoidₓ <| f i] : CommMonoidₓ (∀ i : I, f 
     run_tac
       tactic.pi_instance_derive_field
 
-@[to_additive]
-instance divInvMonoid [∀ i, DivInvMonoidₓ <| f i] : DivInvMonoidₓ (∀ i : I, f i) := by
+@[to_additive Pi.subNegMonoid]
+instance [∀ i, DivInvMonoidₓ <| f i] : DivInvMonoidₓ (∀ i : I, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
         zpow := fun z x i => x i ^ z } <;>
     run_tac
       tactic.pi_instance_derive_field
+
+@[to_additive]
+instance [∀ i, HasInvolutiveInv <| f i] : HasInvolutiveInv (∀ i, f i) := by
+  refine_struct { inv := Inv.inv } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
+@[to_additive Pi.subtractionMonoid]
+instance [∀ i, DivisionMonoid <| f i] : DivisionMonoid (∀ i, f i) := by
+  refine_struct
+      { one := (1 : ∀ i, f i), mul := (· * ·), inv := Inv.inv, div := Div.div, npow := Monoidₓ.npow,
+        zpow := fun z x i => x i ^ z } <;>
+    run_tac
+      tactic.pi_instance_derive_field
+
+@[to_additive Pi.subtractionCommMonoid]
+instance [∀ i, DivisionCommMonoid <| f i] : DivisionCommMonoid (∀ i, f i) :=
+  { Pi.divisionMonoid, Pi.commSemigroup with }
 
 @[to_additive]
 instance group [∀ i, Groupₓ <| f i] : Groupₓ (∀ i : I, f i) := by
@@ -155,6 +173,45 @@ namespace MulHom
 @[to_additive]
 theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroupₓ N} (f g : M →ₙ* N) : (f * g : M → N) = fun x => f x * g x :=
   rfl
+
+end MulHom
+
+section MulHom
+
+variable (f) [∀ i, Mul (f i)]
+
+/-- Evaluation of functions into an indexed collection of semigroups at a point is a semigroup
+homomorphism.
+This is `function.eval i` as a `mul_hom`. -/
+@[to_additive
+      "Evaluation of functions into an indexed collection of additive semigroups at a\npoint is an additive semigroup homomorphism.\nThis is `function.eval i` as an `add_hom`.",
+  simps]
+def Pi.evalMulHom (i : I) : (∀ i, f i) →ₙ* f i where
+  toFun := fun g => g i
+  map_mul' := fun x y => Pi.mul_apply _ _ i
+
+/-- `function.const` as a `mul_hom`. -/
+@[to_additive "`function.const` as an `add_hom`.", simps]
+def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β where
+  toFun := Function.const α
+  map_mul' := fun _ _ => rfl
+
+/-- Coercion of a `mul_hom` into a function is itself a `mul_hom`.
+See also `mul_hom.eval`. -/
+@[to_additive "Coercion of an `add_hom` into a function is itself a `add_hom`.\nSee also `add_hom.eval`. ", simps]
+def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroupₓ β] : (α →ₙ* β) →ₙ* α → β where
+  toFun := fun g => g
+  map_mul' := fun x y => rfl
+
+/-- Semigroup homomorphism between the function spaces `I → α` and `I → β`, induced by a semigroup
+homomorphism `f` between `α` and `β`. -/
+@[to_additive
+      "Additive semigroup homomorphism between the function spaces `I → α` and `I → β`,\ninduced by an additive semigroup homomorphism `f` between `α` and `β`",
+  simps]
+protected def MulHom.compLeft {α β : Type _} [Mul α] [Mul β] (f : α →ₙ* β) (I : Type _) : (I → α) →ₙ* I → β where
+  toFun := fun h => f ∘ h
+  map_mul' := fun _ _ => by
+    ext <;> simp
 
 end MulHom
 

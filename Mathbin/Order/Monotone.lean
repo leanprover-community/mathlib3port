@@ -584,7 +584,7 @@ protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha :
 
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares b a :=
-  OrderDual.dual_compares.trans <| hf.dual_right.Compares hb ha
+  to_dual_compares_to_dual.trans <| hf.dual_right.Compares hb ha
 
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares a b :=
@@ -655,13 +655,13 @@ theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n + 1))
   Nat.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 
 theorem antitone_nat_of_succ_le {f : ℕ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
-  @monotone_nat_of_le_succ (OrderDual α) _ _ hf
+  @monotone_nat_of_le_succ αᵒᵈ _ _ hf
 
 theorem strict_mono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Nat.rel_of_forall_rel_succ_of_lt (· < ·) hf
 
 theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
-  @strict_mono_nat_of_lt_succ (OrderDual α) _ f hf
+  @strict_mono_nat_of_lt_succ αᵒᵈ _ f hf
 
 theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β} (h : ∀ n, r (f n) (f (n + 1)))
     ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by

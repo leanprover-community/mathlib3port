@@ -336,10 +336,9 @@ theorem det_smul_coords_eq_cramer_coords (x : P) :
 
 end CommRingₓ
 
-section Field
+section DivisionRing
 
--- TODO Relax `field` to `division_ring` (results are still true)
-variable [Field k] [Module k V]
+variable [DivisionRing k] [Module k V]
 
 include V
 
@@ -364,7 +363,7 @@ theorem exists_affine_basis_of_finite_dimensional {ι : Type _} [Fintype ι] [Fi
   rw [range_comp]
   simp [h_tot]
 
-end Field
+end DivisionRing
 
 end AffineBasis
 

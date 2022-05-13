@@ -106,6 +106,10 @@ theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.swap = p.swap⁻¹ :=
   rfl
 
 @[to_additive]
+instance [HasInvolutiveInv M] [HasInvolutiveInv N] : HasInvolutiveInv (M × N) :=
+  { Prod.hasInv with inv_inv := fun a => extₓ (inv_invₓ _) (inv_invₓ _) }
+
+@[to_additive]
 instance [Div M] [Div N] : Div (M × N) :=
   ⟨fun p q => ⟨p.1 / q.1, p.2 / q.2⟩⟩
 
@@ -134,6 +138,10 @@ instance [MulZeroClassₓ M] [MulZeroClassₓ N] : MulZeroClassₓ (M × N) :=
 instance [Semigroupₓ M] [Semigroupₓ N] : Semigroupₓ (M × N) :=
   { Prod.hasMul with mul_assoc := fun a b c => mk.inj_iffₓ.mpr ⟨mul_assoc _ _ _, mul_assoc _ _ _⟩ }
 
+@[to_additive]
+instance [CommSemigroupₓ G] [CommSemigroupₓ H] : CommSemigroupₓ (G × H) :=
+  { Prod.semigroup with mul_comm := fun a b => mk.inj_iffₓ.mpr ⟨mul_comm _ _, mul_comm _ _⟩ }
+
 instance [SemigroupWithZeroₓ M] [SemigroupWithZeroₓ N] : SemigroupWithZeroₓ (M × N) :=
   { Prod.mulZeroClass, Prod.semigroup with }
 
@@ -149,7 +157,7 @@ instance [Monoidₓ M] [Monoidₓ N] : Monoidₓ (M × N) :=
     npow_zero' := fun z => extₓ (Monoidₓ.npow_zero' _) (Monoidₓ.npow_zero' _),
     npow_succ' := fun z a => extₓ (Monoidₓ.npow_succ' _ _) (Monoidₓ.npow_succ' _ _) }
 
-@[to_additive]
+@[to_additive Prod.subNegMonoid]
 instance [DivInvMonoidₓ G] [DivInvMonoidₓ H] : DivInvMonoidₓ (G × H) :=
   { Prod.monoid, Prod.hasInv, Prod.hasDiv with
     div_eq_mul_inv := fun a b => mk.inj_iffₓ.mpr ⟨div_eq_mul_inv _ _, div_eq_mul_inv _ _⟩,
@@ -158,13 +166,19 @@ instance [DivInvMonoidₓ G] [DivInvMonoidₓ H] : DivInvMonoidₓ (G × H) :=
     zpow_succ' := fun z a => extₓ (DivInvMonoidₓ.zpow_succ' _ _) (DivInvMonoidₓ.zpow_succ' _ _),
     zpow_neg' := fun z a => extₓ (DivInvMonoidₓ.zpow_neg' _ _) (DivInvMonoidₓ.zpow_neg' _ _) }
 
+@[to_additive SubtractionMonoid]
+instance [DivisionMonoid G] [DivisionMonoid H] : DivisionMonoid (G × H) :=
+  { Prod.divInvMonoid, Prod.hasInvolutiveInv with mul_inv_rev := fun a b => extₓ (mul_inv_rev _ _) (mul_inv_rev _ _),
+    inv_eq_of_mul := fun a b h =>
+      extₓ (inv_eq_of_mul_eq_one_right <| congr_argₓ fst h) (inv_eq_of_mul_eq_one_right <| congr_argₓ snd h) }
+
+@[to_additive SubtractionCommMonoid]
+instance [DivisionCommMonoid G] [DivisionCommMonoid H] : DivisionCommMonoid (G × H) :=
+  { Prod.divisionMonoid, Prod.commSemigroup with }
+
 @[to_additive]
 instance [Groupₓ G] [Groupₓ H] : Groupₓ (G × H) :=
   { Prod.divInvMonoid with mul_left_inv := fun a => mk.inj_iffₓ.mpr ⟨mul_left_invₓ _, mul_left_invₓ _⟩ }
-
-@[to_additive]
-instance [CommSemigroupₓ G] [CommSemigroupₓ H] : CommSemigroupₓ (G × H) :=
-  { Prod.semigroup with mul_comm := fun a b => mk.inj_iffₓ.mpr ⟨mul_comm _ _, mul_comm _ _⟩ }
 
 @[to_additive]
 instance [LeftCancelSemigroup G] [LeftCancelSemigroup H] : LeftCancelSemigroup (G × H) :=
@@ -536,7 +550,7 @@ Used mainly to define the natural topology of `αˣ`. -/
 def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ where
   toFun := fun x => ⟨x, op ↑x⁻¹⟩
   map_one' := by
-    simp only [one_inv, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
+    simp only [inv_one, eq_self_iff_true, Units.coe_one, op_one, Prod.mk_eq_one, and_selfₓ]
   map_mul' := fun x y => by
     simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
 
@@ -569,8 +583,8 @@ def mulMonoidWithZeroHom [CommMonoidWithZero α] : α × α →*₀ α :=
 @[to_additive "Subtraction as an additive monoid homomorphism.", simps]
 def divMonoidHom [CommGroupₓ α] : α × α →* α where
   toFun := fun a => a.1 / a.2
-  map_one' := div_one' _
-  map_mul' := fun a b => mul_div_comm' _ _ _ _
+  map_one' := div_one _
+  map_mul' := fun a b => mul_div_mul_comm _ _ _ _
 
 /-- Division as a multiplicative homomorphism with zero. -/
 @[simps]
@@ -578,7 +592,7 @@ def divMonoidWithZeroHom [CommGroupWithZero α] : α × α →*₀ α where
   toFun := fun a => a.1 / a.2
   map_zero' := zero_div _
   map_one' := div_one _
-  map_mul' := fun a b => (div_mul_div_comm₀ _ _ _ _).symm
+  map_mul' := fun a b => mul_div_mul_comm _ _ _ _
 
 end BundledMulDiv
 

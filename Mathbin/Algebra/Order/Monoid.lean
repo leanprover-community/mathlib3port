@@ -708,124 +708,124 @@ end LinearOrderedCancelCommMonoid
 namespace OrderDual
 
 @[to_additive]
-instance [h : Mul α] : Mul (OrderDual α) :=
+instance [h : Mul α] : Mul αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : One α] : One (OrderDual α) :=
+instance [h : One α] : One αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : Semigroupₓ α] : Semigroupₓ (OrderDual α) :=
+instance [h : Semigroupₓ α] : Semigroupₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : CommSemigroupₓ α] : CommSemigroupₓ (OrderDual α) :=
+instance [h : CommSemigroupₓ α] : CommSemigroupₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : MulOneClassₓ α] : MulOneClassₓ (OrderDual α) :=
+instance [h : MulOneClassₓ α] : MulOneClassₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : Monoidₓ α] : Monoidₓ (OrderDual α) :=
+instance [h : Monoidₓ α] : Monoidₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : CommMonoidₓ α] : CommMonoidₓ (OrderDual α) :=
+instance [h : CommMonoidₓ α] : CommMonoidₓ αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : LeftCancelMonoid α] : LeftCancelMonoid (OrderDual α) :=
+instance [h : LeftCancelMonoid α] : LeftCancelMonoid αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : RightCancelMonoid α] : RightCancelMonoid (OrderDual α) :=
+instance [h : RightCancelMonoid α] : RightCancelMonoid αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : CancelMonoid α] : CancelMonoid (OrderDual α) :=
+instance [h : CancelMonoid α] : CancelMonoid αᵒᵈ :=
   h
 
 @[to_additive]
-instance [h : CancelCommMonoid α] : CancelCommMonoid (OrderDual α) :=
+instance [h : CancelCommMonoid α] : CancelCommMonoid αᵒᵈ :=
   h
 
-instance [h : MulZeroClassₓ α] : MulZeroClassₓ (OrderDual α) :=
+instance [h : MulZeroClassₓ α] : MulZeroClassₓ αᵒᵈ :=
   h
 
-instance [h : MulZeroOneClassₓ α] : MulZeroOneClassₓ (OrderDual α) :=
+instance [h : MulZeroOneClassₓ α] : MulZeroOneClassₓ αᵒᵈ :=
   h
 
-instance [h : MonoidWithZeroₓ α] : MonoidWithZeroₓ (OrderDual α) :=
+instance [h : MonoidWithZeroₓ α] : MonoidWithZeroₓ αᵒᵈ :=
   h
 
-instance [h : CommMonoidWithZero α] : CommMonoidWithZero (OrderDual α) :=
+instance [h : CommMonoidWithZero α] : CommMonoidWithZero αᵒᵈ :=
   h
 
-instance [h : CancelCommMonoidWithZero α] : CancelCommMonoidWithZero (OrderDual α) :=
+instance [h : CancelCommMonoidWithZero α] : CancelCommMonoidWithZero αᵒᵈ :=
   h
 
 @[to_additive]
 instance contravariant_class_mul_le [LE α] [Mul α] [c : ContravariantClass α α (· * ·) (· ≤ ·)] :
-    ContravariantClass (OrderDual α) (OrderDual α) (· * ·) (· ≤ ·) :=
+    ContravariantClass αᵒᵈ αᵒᵈ (· * ·) (· ≤ ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance covariant_class_mul_le [LE α] [Mul α] [c : CovariantClass α α (· * ·) (· ≤ ·)] :
-    CovariantClass (OrderDual α) (OrderDual α) (· * ·) (· ≤ ·) :=
+    CovariantClass αᵒᵈ αᵒᵈ (· * ·) (· ≤ ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance contravariant_class_swap_mul_le [LE α] [Mul α] [c : ContravariantClass α α (swap (· * ·)) (· ≤ ·)] :
-    ContravariantClass (OrderDual α) (OrderDual α) (swap (· * ·)) (· ≤ ·) :=
+    ContravariantClass αᵒᵈ αᵒᵈ (swap (· * ·)) (· ≤ ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance covariant_class_swap_mul_le [LE α] [Mul α] [c : CovariantClass α α (swap (· * ·)) (· ≤ ·)] :
-    CovariantClass (OrderDual α) (OrderDual α) (swap (· * ·)) (· ≤ ·) :=
+    CovariantClass αᵒᵈ αᵒᵈ (swap (· * ·)) (· ≤ ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance contravariant_class_mul_lt [LT α] [Mul α] [c : ContravariantClass α α (· * ·) (· < ·)] :
-    ContravariantClass (OrderDual α) (OrderDual α) (· * ·) (· < ·) :=
+    ContravariantClass αᵒᵈ αᵒᵈ (· * ·) (· < ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance covariant_class_mul_lt [LT α] [Mul α] [c : CovariantClass α α (· * ·) (· < ·)] :
-    CovariantClass (OrderDual α) (OrderDual α) (· * ·) (· < ·) :=
+    CovariantClass αᵒᵈ αᵒᵈ (· * ·) (· < ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance contravariant_class_swap_mul_lt [LT α] [Mul α] [c : ContravariantClass α α (swap (· * ·)) (· < ·)] :
-    ContravariantClass (OrderDual α) (OrderDual α) (swap (· * ·)) (· < ·) :=
+    ContravariantClass αᵒᵈ αᵒᵈ (swap (· * ·)) (· < ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
 instance covariant_class_swap_mul_lt [LT α] [Mul α] [c : CovariantClass α α (swap (· * ·)) (· < ·)] :
-    CovariantClass (OrderDual α) (OrderDual α) (swap (· * ·)) (· < ·) :=
+    CovariantClass αᵒᵈ αᵒᵈ (swap (· * ·)) (· < ·) :=
   ⟨c.1.flip⟩
 
 @[to_additive]
-instance [OrderedCommMonoid α] : OrderedCommMonoid (OrderDual α) :=
+instance [OrderedCommMonoid α] : OrderedCommMonoid αᵒᵈ :=
   { OrderDual.partialOrder α, OrderDual.commMonoid with mul_le_mul_left := fun a b h c => mul_le_mul_left' h c }
 
 @[to_additive OrderedCancelAddCommMonoid.to_contravariant_class]
 instance OrderedCancelCommMonoid.to_contravariant_class [OrderedCancelCommMonoid α] :
-    ContravariantClass (OrderDual α) (OrderDual α) Mul.mul LE.le where
+    ContravariantClass αᵒᵈ αᵒᵈ Mul.mul LE.le where
   elim := fun a b c bc => OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b (dual_le.mp bc)
 
 @[to_additive]
-instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid (OrderDual α) :=
+instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid αᵒᵈ :=
   { OrderDual.orderedCommMonoid, OrderDual.cancelCommMonoid with
     le_of_mul_le_mul_left := fun a b c : α => le_of_mul_le_mul_left' }
 
 @[to_additive]
-instance [LinearOrderedCancelCommMonoid α] : LinearOrderedCancelCommMonoid (OrderDual α) :=
+instance [LinearOrderedCancelCommMonoid α] : LinearOrderedCancelCommMonoid αᵒᵈ :=
   { OrderDual.linearOrder α, OrderDual.orderedCancelCommMonoid with }
 
 @[to_additive]
-instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoid (OrderDual α) :=
+instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoid αᵒᵈ :=
   { OrderDual.linearOrder α, OrderDual.orderedCommMonoid with }
 
 end OrderDual
@@ -1075,7 +1075,7 @@ instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithTop α) :=
               intro <;>
         simp [← WithTop.coe_add, add_commₓ] }
 
-instance [AddZeroClass α] : AddZeroClass (WithTop α) :=
+instance [AddZeroClassₓ α] : AddZeroClassₓ (WithTop α) :=
   { WithTop.hasZero, WithTop.hasAdd with
     zero_add := by
       refine' WithTop.recTopCoe _ _
@@ -1176,7 +1176,7 @@ instance [AddSemigroupₓ α] : AddSemigroupₓ (WithBot α) :=
 instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (WithBot α) :=
   WithTop.addCommSemigroup
 
-instance [AddZeroClass α] : AddZeroClass (WithBot α) :=
+instance [AddZeroClassₓ α] : AddZeroClassₓ (WithBot α) :=
   WithTop.addZeroClass
 
 instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
@@ -1247,7 +1247,7 @@ theorem add_ne_bot : a + b ≠ ⊥ ↔ a ≠ ⊥ ∧ b ≠ ⊥ :=
   WithTop.add_ne_top
 
 theorem bot_lt_add [PartialOrderₓ α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < a ∧ ⊥ < b :=
-  @WithTop.add_lt_top (OrderDual α) _ _ _ _
+  @WithTop.add_lt_top αᵒᵈ _ _ _ _
 
 theorem add_eq_coe : a + b = x ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=
   WithTop.add_eq_coe
@@ -1264,34 +1264,34 @@ variable [Preorderₓ α]
 
 instance covariant_class_add_le [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithBot α) (WithBot α) (· + ·) (· ≤ ·) :=
-  @OrderDual.covariant_class_add_le (WithTop <| OrderDual α) _ _ _
+  @OrderDual.covariant_class_add_le (WithTop αᵒᵈ) _ _ _
 
 instance covariant_class_swap_add_le [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithBot α) (WithBot α) (swap (· + ·)) (· ≤ ·) :=
-  @OrderDual.covariant_class_swap_add_le (WithTop <| OrderDual α) _ _ _
+  @OrderDual.covariant_class_swap_add_le (WithTop αᵒᵈ) _ _ _
 
 instance contravariant_class_add_lt [ContravariantClass α α (· + ·) (· < ·)] :
     ContravariantClass (WithBot α) (WithBot α) (· + ·) (· < ·) :=
-  @OrderDual.contravariant_class_add_lt (WithTop <| OrderDual α) _ _ _
+  @OrderDual.contravariant_class_add_lt (WithTop αᵒᵈ) _ _ _
 
 instance contravariant_class_swap_add_lt [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithBot α) (WithBot α) (swap (· + ·)) (· < ·) :=
-  @OrderDual.contravariant_class_swap_add_lt (WithTop <| OrderDual α) _ _ _
+  @OrderDual.contravariant_class_swap_add_lt (WithTop αᵒᵈ) _ _ _
 
 protected theorem le_of_add_le_add_left [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊥) (h : a + b ≤ a + c) :
     b ≤ c :=
-  @WithTop.le_of_add_le_add_left (OrderDual α) _ _ _ _ _ _ ha h
+  @WithTop.le_of_add_le_add_left αᵒᵈ _ _ _ _ _ _ ha h
 
 protected theorem le_of_add_le_add_right [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊥)
     (h : b + a ≤ c + a) : b ≤ c :=
-  @WithTop.le_of_add_le_add_right (OrderDual α) _ _ _ _ _ _ ha h
+  @WithTop.le_of_add_le_add_right αᵒᵈ _ _ _ _ _ _ ha h
 
 protected theorem add_lt_add_left [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊥) (h : b < c) : a + b < a + c :=
-  @WithTop.add_lt_add_left (OrderDual α) _ _ _ _ _ _ ha h
+  @WithTop.add_lt_add_left αᵒᵈ _ _ _ _ _ _ ha h
 
 protected theorem add_lt_add_right [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊥) (h : b < c) :
     b + a < c + a :=
-  @WithTop.add_lt_add_right (OrderDual α) _ _ _ _ _ _ ha h
+  @WithTop.add_lt_add_right αᵒᵈ _ _ _ _ _ _ ha h
 
 protected theorem add_le_add_iff_left [CovariantClass α α (· + ·) (· ≤ ·)] [ContravariantClass α α (· + ·) (· ≤ ·)]
     (ha : a ≠ ⊥) : a + b ≤ a + c ↔ b ≤ c :=
@@ -1311,11 +1311,11 @@ protected theorem add_lt_add_iff_right [CovariantClass α α (swap (· + ·)) (�
 
 protected theorem add_lt_add_of_le_of_lt [CovariantClass α α (· + ·) (· < ·)]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] (hb : b ≠ ⊥) (hab : a ≤ b) (hcd : c < d) : a + c < b + d :=
-  @WithTop.add_lt_add_of_le_of_lt (OrderDual α) _ _ _ _ _ _ _ _ hb hab hcd
+  @WithTop.add_lt_add_of_le_of_lt αᵒᵈ _ _ _ _ _ _ _ _ hb hab hcd
 
 protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤ ·)]
     [CovariantClass α α (swap (· + ·)) (· < ·)] (hd : d ≠ ⊥) (hab : a < b) (hcd : c ≤ d) : a + c < b + d :=
-  @WithTop.add_lt_add_of_lt_of_le (OrderDual α) _ _ _ _ _ _ _ _ hd hab hcd
+  @WithTop.add_lt_add_of_lt_of_le αᵒᵈ _ _ _ _ _ _ _ _ hd hab hcd
 
 end Add
 

@@ -108,7 +108,7 @@ theorem tripolar_eq_polar (s : Set E) : B.Polar (B.flip.Polar (B.Polar s)) = B.P
 theorem polar_weak_closed (s : Set E) : @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.Polar s) := by
   rw [polar_eq_Inter]
   refine' is_closed_Inter fun x => is_closed_Inter fun _ => _
-  exact is_closed_le (eval_continuous B.flip x).norm continuous_const
+  exact is_closed_le (WeakBilin.eval_continuous B.flip x).norm continuous_const
 
 end NormedRing
 

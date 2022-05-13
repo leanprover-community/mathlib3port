@@ -51,11 +51,11 @@ class InfConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] :
   tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → Tendsto (coe : s → α) atBot (𝓝 a)
 
 instance OrderDual.Sup_convergence_class [Preorderₓ α] [TopologicalSpace α] [InfConvergenceClass α] :
-    SupConvergenceClass (OrderDual α) :=
+    SupConvergenceClass αᵒᵈ :=
   ⟨‹InfConvergenceClass α›.1⟩
 
 instance OrderDual.Inf_convergence_class [Preorderₓ α] [TopologicalSpace α] [SupConvergenceClass α] :
-    InfConvergenceClass (OrderDual α) :=
+    InfConvergenceClass αᵒᵈ :=
   ⟨‹SupConvergenceClass α›.1⟩
 
 -- see Note [lower instance priority]
@@ -72,7 +72,7 @@ instance (priority := 100) LinearOrderₓ.Sup_convergence_class [TopologicalSpac
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderₓ.Inf_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
     InfConvergenceClass α :=
-  show InfConvergenceClass (OrderDual <| OrderDual α) from OrderDual.Inf_convergence_class
+  show InfConvergenceClass αᵒᵈᵒᵈ from OrderDual.Inf_convergence_class
 
 section
 
@@ -87,8 +87,8 @@ theorem tendsto_at_top_is_lub (h_mono : Monotone f) (ha : IsLub (Set.Range f) a)
   exact (SupConvergenceClass.tendsto_coe_at_top_is_lub _ _ ha).comp this
   exact h_mono.range_factorization.tendsto_at_top_at_top fun b => b.2.imp fun a ha => ha.Ge
 
-theorem tendsto_at_bot_is_lub (h_anti : Antitone f) (ha : IsLub (Set.Range f) a) : Tendsto f atBot (𝓝 a) :=
-  @tendsto_at_top_is_lub α (OrderDual ι) _ _ _ _ f a h_anti.dual ha
+theorem tendsto_at_bot_is_lub (h_anti : Antitone f) (ha : IsLub (Set.Range f) a) : Tendsto f atBot (𝓝 a) := by
+  convert tendsto_at_top_is_lub h_anti.dual_left ha
 
 end IsLub
 
@@ -96,11 +96,11 @@ section IsGlb
 
 variable [Preorderₓ α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
-theorem tendsto_at_bot_is_glb (h_mono : Monotone f) (ha : IsGlb (Set.Range f) a) : Tendsto f atBot (𝓝 a) :=
-  @tendsto_at_top_is_lub (OrderDual α) (OrderDual ι) _ _ _ _ f a h_mono.dual ha
+theorem tendsto_at_bot_is_glb (h_mono : Monotone f) (ha : IsGlb (Set.Range f) a) : Tendsto f atBot (𝓝 a) := by
+  convert tendsto_at_top_is_lub h_mono.dual ha.dual
 
-theorem tendsto_at_top_is_glb (h_anti : Antitone f) (ha : IsGlb (Set.Range f) a) : Tendsto f atTop (𝓝 a) :=
-  @tendsto_at_top_is_lub (OrderDual α) ι _ _ _ _ f a h_anti ha
+theorem tendsto_at_top_is_glb (h_anti : Antitone f) (ha : IsGlb (Set.Range f) a) : Tendsto f atTop (𝓝 a) := by
+  convert tendsto_at_bot_is_lub h_anti.dual ha.dual
 
 end IsGlb
 
@@ -112,8 +112,8 @@ theorem tendsto_at_top_csupr (h_mono : Monotone f) (hbdd : BddAbove <| Range f) 
   cases is_empty_or_nonempty ι
   exacts[tendsto_of_is_empty, tendsto_at_top_is_lub h_mono (is_lub_csupr hbdd)]
 
-theorem tendsto_at_bot_csupr (h_anti : Antitone f) (hbdd : BddAbove <| Range f) : Tendsto f atBot (𝓝 (⨆ i, f i)) :=
-  @tendsto_at_top_csupr α (OrderDual ι) _ _ _ _ _ h_anti.dual hbdd
+theorem tendsto_at_bot_csupr (h_anti : Antitone f) (hbdd : BddAbove <| Range f) : Tendsto f atBot (𝓝 (⨆ i, f i)) := by
+  convert tendsto_at_top_csupr h_anti.dual hbdd.dual
 
 end Csupr
 
@@ -121,11 +121,11 @@ section Cinfi
 
 variable [ConditionallyCompleteLattice α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
-theorem tendsto_at_bot_cinfi (h_mono : Monotone f) (hbdd : BddBelow <| Range f) : Tendsto f atBot (𝓝 (⨅ i, f i)) :=
-  @tendsto_at_top_csupr (OrderDual α) (OrderDual ι) _ _ _ _ _ h_mono.dual hbdd
+theorem tendsto_at_bot_cinfi (h_mono : Monotone f) (hbdd : BddBelow <| Range f) : Tendsto f atBot (𝓝 (⨅ i, f i)) := by
+  convert tendsto_at_top_csupr h_mono.dual hbdd.dual
 
-theorem tendsto_at_top_cinfi (h_anti : Antitone f) (hbdd : BddBelow <| Range f) : Tendsto f atTop (𝓝 (⨅ i, f i)) :=
-  @tendsto_at_top_csupr (OrderDual α) ι _ _ _ _ _ h_anti hbdd
+theorem tendsto_at_top_cinfi (h_anti : Antitone f) (hbdd : BddBelow <| Range f) : Tendsto f atTop (𝓝 (⨅ i, f i)) := by
+  convert tendsto_at_bot_csupr h_anti.dual hbdd.dual
 
 end Cinfi
 
@@ -168,7 +168,7 @@ instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpa
 
 instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpace β] [InfConvergenceClass α]
     [InfConvergenceClass β] : InfConvergenceClass (α × β) :=
-  show InfConvergenceClass (OrderDual <| OrderDual α × OrderDual β) from OrderDual.Inf_convergence_class
+  show InfConvergenceClass (αᵒᵈ × βᵒᵈ)ᵒᵈ from OrderDual.Inf_convergence_class
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, SupConvergenceClass (α i)] : SupConvergenceClass (∀ i, α i) := by
@@ -178,7 +178,7 @@ instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, 
 
 instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, InfConvergenceClass (α i)] : InfConvergenceClass (∀ i, α i) :=
-  show InfConvergenceClass (OrderDual <| ∀ i, OrderDual (α i)) from OrderDual.Inf_convergence_class
+  show InfConvergenceClass (∀ i, (α i)ᵒᵈ)ᵒᵈ from OrderDual.Inf_convergence_class
 
 instance Pi.Sup_convergence_class' {ι : Type _} [Preorderₓ α] [TopologicalSpace α] [SupConvergenceClass α] :
     SupConvergenceClass (ι → α) :=
@@ -244,15 +244,15 @@ theorem is_lub_of_tendsto_at_top [TopologicalSpace α] [Preorderₓ α] [OrderCl
 
 theorem is_glb_of_tendsto_at_bot [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [Nonempty β]
     [SemilatticeInf β] {f : β → α} {a : α} (hf : Monotone f) (ha : Tendsto f atBot (𝓝 a)) : IsGlb (Set.Range f) a :=
-  @is_lub_of_tendsto_at_top (OrderDual α) (OrderDual β) _ _ _ _ _ _ _ hf.dual ha
+  @is_lub_of_tendsto_at_top αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ hf.dual ha
 
 theorem is_lub_of_tendsto_at_bot [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [Nonempty β]
     [SemilatticeInf β] {f : β → α} {a : α} (hf : Antitone f) (ha : Tendsto f atBot (𝓝 a)) : IsLub (Set.Range f) a :=
-  @is_lub_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ _ _ hf.dual_left ha
+  @is_lub_of_tendsto_at_top α βᵒᵈ _ _ _ _ _ _ _ hf.dual_left ha
 
 theorem is_glb_of_tendsto_at_top [TopologicalSpace α] [Preorderₓ α] [OrderClosedTopology α] [Nonempty β]
     [SemilatticeSup β] {f : β → α} {a : α} (hf : Antitone f) (ha : Tendsto f atTop (𝓝 a)) : IsGlb (Set.Range f) a :=
-  @is_glb_of_tendsto_at_bot α (OrderDual β) _ _ _ _ _ _ _ hf.dual_left ha
+  @is_glb_of_tendsto_at_bot α βᵒᵈ _ _ _ _ _ _ _ hf.dual_left ha
 
 theorem supr_eq_of_tendsto {α β} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α] [Nonempty β]
     [SemilatticeSup β] {f : β → α} {a : α} (hf : Monotone f) : Tendsto f atTop (𝓝 a) → supr f = a :=

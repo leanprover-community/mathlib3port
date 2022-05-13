@@ -103,7 +103,7 @@ theorem not_is_bounded_under_of_tendsto_at_top [Preorderₓ β] [NoMaxOrder β] 
 
 theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoMinOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
     (hf : Tendsto f l atBot) : ¬IsBoundedUnder (· ≥ ·) l f :=
-  @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
+  @not_is_bounded_under_of_tendsto_at_top α βᵒᵈ _ _ _ _ _ hf
 
 theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α → β}
     (hf : IsBoundedUnder (· ≤ ·) cofinite f) : BddAbove (Range f) := by
@@ -114,7 +114,7 @@ theorem IsBoundedUnder.bdd_above_range_of_cofinite [SemilatticeSup β] {f : α �
 
 theorem IsBoundedUnder.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
     (hf : IsBoundedUnder (· ≥ ·) cofinite f) : BddBelow (Range f) :=
-  @IsBoundedUnder.bdd_above_range_of_cofinite α (OrderDual β) _ _ hf
+  @IsBoundedUnder.bdd_above_range_of_cofinite α βᵒᵈ _ _ hf
 
 theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : IsBoundedUnder (· ≤ ·) atTop f) :
     BddAbove (Range f) := by
@@ -123,7 +123,7 @@ theorem IsBoundedUnder.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf 
 
 theorem IsBoundedUnder.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : IsBoundedUnder (· ≥ ·) atTop f) :
     BddBelow (Range f) :=
-  @IsBoundedUnder.bdd_above_range (OrderDual β) _ _ hf
+  @IsBoundedUnder.bdd_above_range βᵒᵈ _ _ hf
 
 /-- `is_cobounded (≺) f` states that the filter `f` does not tend to infinity w.r.t. `≺`. This is
 also called frequently bounded. Will be usually instantiated with `≤` or `≥`.
@@ -353,7 +353,7 @@ theorem liminf_le_liminf {α : Type _} [ConditionallyCompleteLattice β] {f : Fi
       run_tac
         is_bounded_default) :
     f.liminf u ≤ f.liminf v :=
-  @limsup_le_limsup (OrderDual β) α _ _ _ _ h hv hu
+  @limsup_le_limsup βᵒᵈ α _ _ _ _ h hv hu
 
 theorem limsup_le_limsup_of_le {α β} [ConditionallyCompleteLattice β] {f g : Filter α} (h : f ≤ g) {u : α → β}
     (hf : f.IsCoboundedUnder (· ≤ ·) u := by
@@ -379,7 +379,7 @@ theorem Limsup_principal {s : Set α} (h : BddAbove s) (hs : s.Nonempty) : (𝓟
   simp [Limsup] <;> exact cInf_upper_bounds_eq_cSup h hs
 
 theorem Liminf_principal {s : Set α} (h : BddBelow s) (hs : s.Nonempty) : (𝓟 s).liminf = inf s :=
-  @Limsup_principal (OrderDual α) _ s h hs
+  @Limsup_principal αᵒᵈ _ s h hs
 
 theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a = v a) : limsupₓ f u = limsupₓ f v := by
@@ -392,7 +392,7 @@ theorem limsup_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
 
 theorem liminf_congr {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} {u v : α → β}
     (h : ∀ᶠ a in f, u a = v a) : liminfₓ f u = liminfₓ f v :=
-  @limsup_congr (OrderDual β) _ _ _ _ _ h
+  @limsup_congr βᵒᵈ _ _ _ _ _ h
 
 theorem limsup_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} [NeBot f] (b : β) :
     (limsupₓ f fun x => b) = b := by
@@ -400,7 +400,7 @@ theorem limsup_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter
 
 theorem liminf_const {α : Type _} [ConditionallyCompleteLattice β] {f : Filter α} [NeBot f] (b : β) :
     (liminfₓ f fun x => b) = b :=
-  @limsup_const (OrderDual β) α _ f _ b
+  @limsup_const βᵒᵈ α _ f _ b
 
 theorem liminf_le_limsup {f : Filter β} [NeBot f] {u : β → α}
     (h : f.IsBoundedUnder (· ≤ ·) u := by
@@ -449,7 +449,7 @@ theorem limsup_const_bot {f : Filter β} : (limsupₓ f fun x : β => (⊥ : α)
 
 /-- Same as limsup_const applied to `⊤` but without the `ne_bot f` assumption -/
 theorem liminf_const_top {f : Filter β} : (liminfₓ f fun x : β => (⊤ : α)) = (⊤ : α) :=
-  @limsup_const_bot (OrderDual α) β _ _
+  @limsup_const_bot αᵒᵈ β _ _
 
 theorem HasBasis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.HasBasis p s) :
     f.limsup = ⨅ (i) (hi : p i), sup (s i) :=
@@ -460,13 +460,13 @@ theorem HasBasis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (
 
 theorem HasBasis.Liminf_eq_supr_Inf {p : ι → Prop} {s : ι → Set α} {f : Filter α} (h : f.HasBasis p s) :
     f.liminf = ⨆ (i) (hi : p i), inf (s i) :=
-  @HasBasis.Limsup_eq_infi_Sup (OrderDual α) _ _ _ _ _ h
+  @HasBasis.Limsup_eq_infi_Sup αᵒᵈ _ _ _ _ _ h
 
 theorem Limsup_eq_infi_Sup {f : Filter α} : f.limsup = ⨅ s ∈ f, sup s :=
   f.basis_sets.Limsup_eq_infi_Sup
 
 theorem Liminf_eq_supr_Inf {f : Filter α} : f.liminf = ⨆ s ∈ f, inf s :=
-  @Limsup_eq_infi_Sup (OrderDual α) _ _
+  @Limsup_eq_infi_Sup αᵒᵈ _ _
 
 /-- In a complete lattice, the limsup of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
@@ -489,17 +489,17 @@ theorem HasBasis.limsup_eq_infi_supr {p : ι → Prop} {s : ι → Set β} {f : 
 /-- In a complete lattice, the liminf of a function is the infimum over sets `s` in the filter
 of the supremum of the function over `s` -/
 theorem liminf_eq_supr_infi {f : Filter β} {u : β → α} : f.liminf u = ⨆ s ∈ f, ⨅ a ∈ s, u a :=
-  @limsup_eq_infi_supr (OrderDual α) β _ _ _
+  @limsup_eq_infi_supr αᵒᵈ β _ _ _
 
 theorem liminf_eq_supr_infi_of_nat {u : ℕ → α} : liminfₓ atTop u = ⨆ n : ℕ, ⨅ i ≥ n, u i :=
-  @limsup_eq_infi_supr_of_nat (OrderDual α) _ u
+  @limsup_eq_infi_supr_of_nat αᵒᵈ _ u
 
 theorem liminf_eq_supr_infi_of_nat' {u : ℕ → α} : liminfₓ atTop u = ⨆ n : ℕ, ⨅ i : ℕ, u (i + n) :=
-  @limsup_eq_infi_supr_of_nat' (OrderDual α) _ _
+  @limsup_eq_infi_supr_of_nat' αᵒᵈ _ _
 
 theorem HasBasis.liminf_eq_supr_infi {p : ι → Prop} {s : ι → Set β} {f : Filter β} {u : β → α} (h : f.HasBasis p s) :
     f.liminf u = ⨆ (i) (hi : p i), ⨅ a ∈ s i, u a :=
-  @HasBasis.limsup_eq_infi_supr (OrderDual α) _ _ _ _ _ _ _ h
+  @HasBasis.limsup_eq_infi_supr αᵒᵈ _ _ _ _ _ _ _ h
 
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : (atTop.liminf fun i => f (i + k)) = atTop.liminf f := by
@@ -508,7 +508,7 @@ theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : (atTop.liminf fun i => f (i 
 
 @[simp]
 theorem limsup_nat_add (f : ℕ → α) (k : ℕ) : (atTop.limsup fun i => f (i + k)) = atTop.limsup f :=
-  @liminf_nat_add (OrderDual α) _ f k
+  @liminf_nat_add αᵒᵈ _ f k
 
 theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
     (h : ∃ᶠ a in f, u a ≤ x) : f.liminf u ≤ x := by
@@ -522,7 +522,7 @@ theorem liminf_le_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α}
 
 theorem le_limsup_of_frequently_le' {α β} [CompleteLattice β] {f : Filter α} {u : α → β} {x : β}
     (h : ∃ᶠ a in f, x ≤ u a) : x ≤ f.limsup u :=
-  @liminf_le_of_frequently_le' _ (OrderDual β) _ _ _ _ h
+  @liminf_le_of_frequently_le' _ βᵒᵈ _ _ _ _ h
 
 end CompleteLattice
 
@@ -543,7 +543,7 @@ theorem eventually_lt_of_limsup_lt {f : Filter α} [ConditionallyCompleteLinearO
       run_tac
         is_bounded_default) :
     ∀ᶠ a in f, u a < b :=
-  @eventually_lt_of_lt_liminf _ (OrderDual β) _ _ _ _ h hu
+  @eventually_lt_of_lt_liminf _ βᵒᵈ _ _ _ _ h hu
 
 theorem le_limsup_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu_le : ∃ᶠ x in f, b ≤ u x)
@@ -562,7 +562,7 @@ theorem liminf_le_of_frequently_le {α β} [ConditionallyCompleteLinearOrder β]
       run_tac
         is_bounded_default) :
     f.liminf u ≤ b :=
-  @le_limsup_of_frequently_le _ (OrderDual β) _ f u b hu_le hu
+  @le_limsup_of_frequently_le _ βᵒᵈ _ f u b hu_le hu
 
 theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {b : β}
     (hu : f.IsCoboundedUnder (· ≤ ·) u := by
@@ -578,7 +578,7 @@ theorem frequently_lt_of_liminf_lt {α β} [ConditionallyCompleteLinearOrder β]
       run_tac
         is_bounded_default)
     (h : f.liminf u < b) : ∃ᶠ x in f, u x < b :=
-  @frequently_lt_of_lt_limsup _ (OrderDual β) _ f u b hu h
+  @frequently_lt_of_lt_limsup _ βᵒᵈ _ f u b hu h
 
 end ConditionallyCompleteLinearOrder
 
@@ -641,7 +641,7 @@ theorem OrderIso.liminf_apply {γ} [ConditionallyCompleteLattice β] [Conditiona
       run_tac
         is_bounded_default) :
     g (f.liminf u) = f.liminf fun x => g (u x) :=
-  @OrderIso.limsup_apply α (OrderDual β) (OrderDual γ) _ _ f u g.dual hu hu_co hgu hgu_co
+  @OrderIso.limsup_apply α βᵒᵈ γᵒᵈ _ _ f u g.dual hu hu_co hgu hgu_co
 
 end Order
 

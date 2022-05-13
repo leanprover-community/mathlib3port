@@ -177,7 +177,7 @@ end Prod
 
 section Diag
 
-variable (s : Finset α) [DecidableEq α]
+variable (s t : Finset α) [DecidableEq α]
 
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
 `a ∈ s`. -/
@@ -243,6 +243,46 @@ theorem diag_union_off_diag : s.diag ∪ s.offDiag = s.product s :=
 @[simp]
 theorem disjoint_diag_off_diag : Disjoint s.diag s.offDiag :=
   disjoint_filter_filter_neg _ _
+
+theorem product_sdiff_diag : s.product s \ s.diag = s.offDiag := by
+  rw [← diag_union_off_diag, union_comm, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _).symm]
+
+theorem product_sdiff_off_diag : s.product s \ s.offDiag = s.diag := by
+  rw [← diag_union_off_diag, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _)]
+
+theorem diag_union : (s ∪ t).diag = s.diag ∪ t.diag := by
+  ext ⟨i, j⟩
+  simp only [mem_diag, mem_union, or_and_distrib_right]
+
+variable {s t}
+
+theorem off_diag_union (h : Disjoint s t) : (s ∪ t).offDiag = s.offDiag ∪ t.offDiag ∪ s.product t ∪ t.product s := by
+  rw [off_diag, union_product, product_union, product_union, union_comm _ (t.product t), union_assoc,
+    union_left_comm (s.product t), ← union_assoc, filter_union, filter_union, ← off_diag, ← off_diag,
+    filter_true_of_mem, ← union_assoc]
+  simp only [mem_union, mem_product, Ne.def, Prod.forall]
+  rintro i j (⟨hi, hj⟩ | ⟨hi, hj⟩)
+  · exact h.forall_ne_finset hi hj
+    
+  · exact h.symm.forall_ne_finset hi hj
+    
+
+variable (a : α)
+
+@[simp]
+theorem off_diag_singleton : ({a} : Finset α).offDiag = ∅ := by
+  simp [← Finset.card_eq_zero]
+
+theorem diag_singleton : ({a} : Finset α).diag = {(a, a)} := by
+  rw [← product_sdiff_off_diag, off_diag_singleton, sdiff_empty, singleton_product_singleton]
+
+theorem diag_insert : (insert a s).diag = insert (a, a) s.diag := by
+  rw [insert_eq, insert_eq, diag_union, diag_singleton]
+
+theorem off_diag_insert (has : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ ({a} : Finset α).product s ∪ s.product {a} :=
+  by
+  rw [insert_eq, union_comm, off_diag_union (disjoint_singleton_right.2 has), off_diag_singleton, union_empty,
+    union_right_comm]
 
 end Diag
 

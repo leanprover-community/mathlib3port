@@ -280,16 +280,16 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
       (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p).card :=
     card_congr (fun x _ => Prod.swap x)
       (fun ⟨_, _⟩ => by
-        simp (config := { contextual := true })only [mem_filter, and_selfₓ, Prod.swap_prod_mkₓ, forall_true_iff,
+        simp (config := { contextual := true })only [mem_filter, and_selfₓ, Prod.swap_prod_mk, forall_true_iff,
           mem_product])
       (fun ⟨_, _⟩ ⟨_, _⟩ => by
-        simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, Prod.swap_prod_mkₓ,
+        simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, Prod.swap_prod_mk,
           forall_true_iff])
       fun h =>
       ⟨⟨x₂, x₁⟩, by
         revert h <;>
           simp (config := { contextual := true })only [mem_filter, eq_self_iff_true, and_selfₓ, exists_prop_of_true,
-            Prod.swap_prod_mkₓ, forall_true_iff, mem_product]⟩
+            Prod.swap_prod_mk, forall_true_iff, mem_product]⟩
   have hdisj :
     Disjoint (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
       (((Ico 1 (p / 2).succ).product (Ico 1 (q / 2).succ)).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=

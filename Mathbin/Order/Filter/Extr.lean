@@ -497,7 +497,7 @@ theorem Filter.EventuallyEq.is_max_filter_iff {α β : Type _} [Preorderₓ β] 
 
 theorem Filter.EventuallyLe.is_min_filter {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α}
     (hle : f ≤ᶠ[l] g) (hfga : f a = g a) (h : IsMinFilter f l a) : IsMinFilter g l a :=
-  @Filter.EventuallyLe.is_max_filter _ (OrderDual β) _ _ _ _ _ hle hfga h
+  @Filter.EventuallyLe.is_max_filter _ βᵒᵈ _ _ _ _ _ hle hfga h
 
 theorem IsMinFilter.congr {α β : Type _} [Preorderₓ β] {f g : α → β} {a : α} {l : Filter α} (h : IsMinFilter f l a)
     (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=
@@ -530,7 +530,7 @@ theorem IsMaxOn.supr_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s
   csupr_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 
 theorem IsMinOn.infi_eq (hx₀ : x₀ ∈ s) (h : IsMinOn f s x₀) : (⨅ x : s, f x) = f x₀ :=
-  @IsMaxOn.supr_eq (OrderDual α) β _ _ _ _ hx₀ h
+  @IsMaxOn.supr_eq αᵒᵈ β _ _ _ _ hx₀ h
 
 end ConditionallyCompleteLinearOrder
 

@@ -24,7 +24,7 @@ universe u v w x
 
 variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
 
-open Set Function
+open Function OrderDual Set
 
 /-!
 ### Definitions
@@ -54,8 +54,8 @@ protected theorem id : LeftOrdContinuous (id : α → α) := fun s x h => by
 
 variable {α}
 
-protected theorem order_dual (hf : LeftOrdContinuous f) : @RightOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
-  hf
+protected theorem order_dual : LeftOrdContinuous f → RightOrdContinuous (to_dual ∘ f ∘ of_dual) :=
+  id
 
 theorem map_is_greatest (hf : LeftOrdContinuous f) {s : Set α} {x : α} (h : IsGreatest s x) :
     IsGreatest (f '' s) (f x) :=
@@ -144,8 +144,8 @@ protected theorem id : RightOrdContinuous (id : α → α) := fun s x h => by
 
 variable {α}
 
-protected theorem order_dual (hf : RightOrdContinuous f) : @LeftOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
-  hf
+protected theorem order_dual : RightOrdContinuous f → LeftOrdContinuous (to_dual ∘ f ∘ of_dual) :=
+  id
 
 theorem map_is_least (hf : RightOrdContinuous f) {s : Set α} {x : α} (h : IsLeast s x) : IsLeast (f '' s) (f x) :=
   hf.OrderDual.map_is_greatest h

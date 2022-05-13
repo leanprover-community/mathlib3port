@@ -74,6 +74,19 @@ into a `def` instead. -/
 instance : LT Game :=
   ⟨Quotientₓ.lift₂ (fun x y => x < y) fun x₁ y₁ x₂ y₂ hx hy => propext (lt_congr hx hy)⟩
 
+theorem lt_or_eq_of_le : ∀ {x y : Game}, x ≤ y → x < y ∨ x = y := by
+  rintro ⟨x⟩ ⟨y⟩
+  change _ → _ ∨ ⟦x⟧ = ⟦y⟧
+  rw [Quotientₓ.eq]
+  exact lt_or_equiv_of_le
+
+instance : IsTrichotomous Game (· < ·) :=
+  ⟨by
+    rintro ⟨x⟩ ⟨y⟩
+    change _ ∨ ⟦x⟧ = ⟦y⟧ ∨ _
+    rw [Quotientₓ.eq]
+    apply lt_or_equiv_or_gt⟩
+
 @[simp]
 theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ y < x := by
   rintro ⟨x⟩ ⟨y⟩
@@ -213,18 +226,28 @@ instance : Mul Pgame.{u} :=
     · exact IHxr i y + IHyl j - IHxr i (yL j)
       ⟩
 
-/-- An explicit description of the moves for Left in `x * y`. -/
-def leftMovesMul (x y : Pgame) : (x * y).LeftMoves ≃ Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) := by
-  cases x
-  cases y
-  rfl
+theorem left_moves_mul :
+    ∀ x y : Pgame.{u}, (x * y).LeftMoves = Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves)
+  | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
 
-/-- An explicit description of the moves for Right in `x * y`. -/
-def rightMovesMul (x y : Pgame) : (x * y).RightMoves ≃ Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) :=
-  by
-  cases x
-  cases y
-  rfl
+theorem right_moves_mul :
+    ∀ x y : Pgame.{u}, (x * y).RightMoves = Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves)
+  | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩ => rfl
+
+/-- Turns two left or right moves for `x` and `y` into a left move for `x * y` and vice versa.
+
+Even though these types are the same (not definitionally so), this is the preferred way to convert
+between them. -/
+def toLeftMovesMul {x y : Pgame} : Sum (x.LeftMoves × y.LeftMoves) (x.RightMoves × y.RightMoves) ≃ (x * y).LeftMoves :=
+  Equivₓ.cast (left_moves_mul x y).symm
+
+/-- Turns a left and a right move for `x` and `y` into a right move for `x * y` and vice versa.
+
+Even though these types are the same (not definitionally so), this is the preferred way to convert
+between them. -/
+def toRightMovesMul {x y : Pgame} :
+    Sum (x.LeftMoves × y.RightMoves) (x.RightMoves × y.LeftMoves) ≃ (x * y).RightMoves :=
+  Equivₓ.cast (right_moves_mul x y).symm
 
 @[simp]
 theorem mk_mul_move_left_inl {xl xr yl yr} {xL xR yL yR} {i j} :
@@ -234,7 +257,7 @@ theorem mk_mul_move_left_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_left_inl {x y : Pgame} {i j} :
-    (x * y).moveLeft ((leftMovesMul x y).symm (Sum.inl (i, j))) =
+    (x * y).moveLeft (toLeftMovesMul (Sum.inl (i, j))) =
       x.moveLeft i * y + x * y.moveLeft j - x.moveLeft i * y.moveLeft j :=
   by
   cases x
@@ -249,7 +272,7 @@ theorem mk_mul_move_left_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_left_inr {x y : Pgame} {i j} :
-    (x * y).moveLeft ((leftMovesMul x y).symm (Sum.inr (i, j))) =
+    (x * y).moveLeft (toLeftMovesMul (Sum.inr (i, j))) =
       x.moveRight i * y + x * y.moveRight j - x.moveRight i * y.moveRight j :=
   by
   cases x
@@ -264,7 +287,7 @@ theorem mk_mul_move_right_inl {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_right_inl {x y : Pgame} {i j} :
-    (x * y).moveRight ((rightMovesMul x y).symm (Sum.inl (i, j))) =
+    (x * y).moveRight (toRightMovesMul (Sum.inl (i, j))) =
       x.moveLeft i * y + x * y.moveRight j - x.moveLeft i * y.moveRight j :=
   by
   cases x
@@ -279,7 +302,7 @@ theorem mk_mul_move_right_inr {xl xr yl yr} {xL xR yL yR} {i j} :
 
 @[simp]
 theorem mul_move_right_inr {x y : Pgame} {i j} :
-    (x * y).moveRight ((rightMovesMul x y).symm (Sum.inr (i, j))) =
+    (x * y).moveRight (toRightMovesMul (Sum.inr (i, j))) =
       x.moveRight i * y + x * y.moveLeft j - x.moveRight i * y.moveLeft j :=
   by
   cases x

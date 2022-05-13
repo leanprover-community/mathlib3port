@@ -18,7 +18,7 @@ Also `V.ρ` gives the homomorphism `G →* (V →ₗ[k] V)`.
 Conversely, given a homomorphism `ρ : G →* (V →ₗ[k] V)`,
 you can construct the bundled representation as `Rep.of ρ`.
 
-We verify that `Rep k G` is an abelian symmetric monoidal category with all (co)limits.
+We verify that `Rep k G` is a `k`-linear abelian symmetric monoidal category with all (co)limits.
 -/
 
 
@@ -32,6 +32,9 @@ open CategoryTheory.Limits
 /-- The category of `k`-linear representations of a monoid `G`. -/
 abbrev Rep (k G : Type u) [Ringₓ k] [Monoidₓ G] :=
   Action (ModuleCat.{u} k) (Mon.of G)
+
+instance (k G : Type u) [CommRingₓ k] [Monoidₓ G] : Linear k (Rep k G) := by
+  infer_instance
 
 namespace Rep
 
@@ -72,6 +75,12 @@ variable {k G : Type u} [CommRingₓ k] [Monoidₓ G]
 
 -- Verify that the symmetric monoidal structure is available.
 example : SymmetricCategory (Rep k G) := by
+  infer_instance
+
+example : MonoidalPreadditive (Rep k G) := by
+  infer_instance
+
+example : MonoidalLinear k (Rep k G) := by
   infer_instance
 
 end Rep

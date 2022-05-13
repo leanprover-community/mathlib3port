@@ -869,38 +869,13 @@ theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
 
 end Setₓ
 
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler has_sep Set
+-- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler has_insert Set
 /-- The collection of all classes. A class is defined as a `set` of ZFC sets. -/
 def Class :=
-  Set Setₓ
+  Set Setₓ deriving HasSubset, [anonymous], HasEmptyc, Inhabited, [anonymous], HasUnion, HasInter, HasCompl, HasSdiff
 
 namespace Class
-
-instance : HasSubset Class :=
-  ⟨Set.Subset⟩
-
-instance : HasSep Setₓ Class :=
-  ⟨Set.Sep⟩
-
-instance : HasEmptyc Class :=
-  ⟨fun a => False⟩
-
-instance : Inhabited Class :=
-  ⟨∅⟩
-
-instance : HasInsert Setₓ Class :=
-  ⟨Set.Insert⟩
-
-instance : HasUnion Class :=
-  ⟨Set.Union⟩
-
-instance : HasInter Class :=
-  ⟨Set.Inter⟩
-
-instance : Neg Class :=
-  ⟨Set.Compl⟩
-
-instance : HasSdiff Class :=
-  ⟨Set.Diff⟩
 
 /-- Coerce a ZFC set into a class -/
 def OfSet (x : Setₓ.{u}) : Class.{u} :=

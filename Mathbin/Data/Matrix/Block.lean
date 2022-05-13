@@ -15,8 +15,10 @@ import Mathbin.Data.Matrix.Basic
   extract each of the four blocks from `matrix.from_blocks`.
 * `matrix.block_diagonal`: block diagonal of equally sized blocks. On square blocks, this is a
   ring homomorphisms, `matrix.block_diagonal_ring_hom`.
+* `matrix.block_diag`: extract the blocks from the diagonal of a block diagonal matrix.
 * `matrix.block_diagonal'`: block diagonal of unequally sized blocks. On square blocks, this is a
   ring homomorphisms, `matrix.block_diagonal'_ring_hom`.
+* `matrix.block_diag'`: extract the blocks from the diagonal of a block diagonal matrix.
 -/
 
 
@@ -265,7 +267,7 @@ theorem block_diagonal_one [DecidableEq m] [One α] : blockDiagonalₓ (1 : o �
 end Zero
 
 @[simp]
-theorem block_diagonal_add [AddZeroClass α] (M N : o → Matrix m n α) :
+theorem block_diagonal_add [AddZeroClassₓ α] (M N : o → Matrix m n α) :
     blockDiagonalₓ (M + N) = blockDiagonalₓ M + blockDiagonalₓ N := by
   ext
   simp only [block_diagonal_apply, Pi.add_apply]
@@ -277,7 +279,7 @@ variable (o m n α)
 
 /-- `matrix.block_diagonal` as an `add_monoid_hom`. -/
 @[simps]
-def blockDiagonalAddMonoidHom [AddZeroClass α] : (o → Matrix m n α) →+ Matrix (m × o) (n × o) α where
+def blockDiagonalAddMonoidHom [AddZeroClassₓ α] : (o → Matrix m n α) →+ Matrix (m × o) (n × o) α where
   toFun := blockDiagonalₓ
   map_zero' := block_diagonal_zero
   map_add' := block_diagonal_add
@@ -326,6 +328,90 @@ theorem block_diagonal_smul {R : Type _} [Monoidₓ R] [AddMonoidₓ α] [Distri
   split_ifs <;> simp
 
 end BlockDiagonal
+
+section BlockDiag
+
+/-- Extract a block from the diagonal of a block diagonal matrix.
+
+This is the block form of `matrix.diag`, and the left-inverse of `matrix.block_diagonal`. -/
+def blockDiagₓ (M : Matrix (m × o) (n × o) α) (k : o) : Matrix m n α
+  | i, j => M (i, k) (j, k)
+
+theorem block_diag_map (M : Matrix (m × o) (n × o) α) (f : α → β) :
+    blockDiagₓ (M.map f) = fun k => (blockDiagₓ M k).map f :=
+  rfl
+
+@[simp]
+theorem block_diag_transpose (M : Matrix (m × o) (n × o) α) (k : o) : blockDiagₓ Mᵀ k = (blockDiagₓ M k)ᵀ :=
+  ext fun i j => rfl
+
+@[simp]
+theorem block_diag_conj_transpose {α : Type _} [AddMonoidₓ α] [StarAddMonoid α] (M : Matrix (m × o) (n × o) α) (k : o) :
+    blockDiagₓ Mᴴ k = (blockDiagₓ M k)ᴴ :=
+  ext fun i j => rfl
+
+section Zero
+
+variable [Zero α] [Zero β]
+
+@[simp]
+theorem block_diag_zero : blockDiagₓ (0 : Matrix (m × o) (n × o) α) = 0 :=
+  rfl
+
+@[simp]
+theorem block_diag_diagonal [DecidableEq o] [DecidableEq m] (d : m × o → α) (k : o) :
+    blockDiagₓ (diagonalₓ d) k = diagonalₓ fun i => d (i, k) :=
+  ext fun i j => by
+    obtain rfl | hij := Decidable.eq_or_ne i j
+    · rw [block_diag, diagonal_apply_eq, diagonal_apply_eq]
+      
+    · rw [block_diag, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
+      exact prod.fst_eq_iff.mpr
+      
+
+@[simp]
+theorem block_diag_block_diagonal [DecidableEq o] (M : o → Matrix m n α) : blockDiagₓ (blockDiagonalₓ M) = M :=
+  funext fun k => ext fun i j => block_diagonal_apply_eq _ _ _ _
+
+@[simp]
+theorem block_diag_one [DecidableEq o] [DecidableEq m] [One α] : blockDiagₓ (1 : Matrix (m × o) (m × o) α) = 1 :=
+  funext <| block_diag_diagonal _
+
+end Zero
+
+@[simp]
+theorem block_diag_add [AddZeroClassₓ α] (M N : Matrix (m × o) (n × o) α) :
+    blockDiagₓ (M + N) = blockDiagₓ M + blockDiagₓ N :=
+  rfl
+
+section
+
+variable (o m n α)
+
+/-- `matrix.block_diag` as an `add_monoid_hom`. -/
+@[simps]
+def blockDiagAddMonoidHom [AddZeroClassₓ α] : Matrix (m × o) (n × o) α →+ o → Matrix m n α where
+  toFun := blockDiagₓ
+  map_zero' := block_diag_zero
+  map_add' := block_diag_add
+
+end
+
+@[simp]
+theorem block_diag_neg [AddGroupₓ α] (M : Matrix (m × o) (n × o) α) : blockDiagₓ (-M) = -blockDiagₓ M :=
+  map_neg (blockDiagAddMonoidHom m n o α) M
+
+@[simp]
+theorem block_diag_sub [AddGroupₓ α] (M N : Matrix (m × o) (n × o) α) :
+    blockDiagₓ (M - N) = blockDiagₓ M - blockDiagₓ N :=
+  map_sub (blockDiagAddMonoidHom m n o α) M N
+
+@[simp]
+theorem block_diag_smul {R : Type _} [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (x : R)
+    (M : Matrix (m × o) (n × o) α) : blockDiagₓ (x • M) = x • blockDiagₓ M :=
+  rfl
+
+end BlockDiag
 
 section BlockDiagonal'
 
@@ -408,7 +494,7 @@ theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [One α] : blockDiagonal
 end Zero
 
 @[simp]
-theorem block_diagonal'_add [AddZeroClass α] (M N : ∀ i, Matrix (m' i) (n' i) α) :
+theorem block_diagonal'_add [AddZeroClassₓ α] (M N : ∀ i, Matrix (m' i) (n' i) α) :
     blockDiagonal'ₓ (M + N) = blockDiagonal'ₓ M + blockDiagonal'ₓ N := by
   ext
   simp only [block_diagonal'_apply, Pi.add_apply]
@@ -420,7 +506,7 @@ variable (m' n' α)
 
 /-- `matrix.block_diagonal'` as an `add_monoid_hom`. -/
 @[simps]
-def blockDiagonal'AddMonoidHom [AddZeroClass α] : (∀ i, Matrix (m' i) (n' i) α) →+ Matrix (Σi, m' i) (Σi, n' i) α where
+def blockDiagonal'AddMonoidHom [AddZeroClassₓ α] : (∀ i, Matrix (m' i) (n' i) α) →+ Matrix (Σi, m' i) (Σi, n' i) α where
   toFun := blockDiagonal'ₓ
   map_zero' := block_diagonal'_zero
   map_add' := block_diagonal'_add
@@ -478,6 +564,93 @@ theorem block_diagonal'_smul {R : Type _} [Semiringₓ R] [AddCommMonoidₓ α] 
   split_ifs <;> simp
 
 end BlockDiagonal'
+
+section BlockDiag'
+
+/-- Extract a block from the diagonal of a block diagonal matrix.
+
+This is the block form of `matrix.diag`, and the left-inverse of `matrix.block_diagonal'`. -/
+def blockDiag'ₓ (M : Matrix (Σi, m' i) (Σi, n' i) α) (k : o) : Matrix (m' k) (n' k) α
+  | i, j => M ⟨k, i⟩ ⟨k, j⟩
+
+theorem block_diag'_map (M : Matrix (Σi, m' i) (Σi, n' i) α) (f : α → β) :
+    blockDiag'ₓ (M.map f) = fun k => (blockDiag'ₓ M k).map f :=
+  rfl
+
+@[simp]
+theorem block_diag'_transpose (M : Matrix (Σi, m' i) (Σi, n' i) α) (k : o) : blockDiag'ₓ Mᵀ k = (blockDiag'ₓ M k)ᵀ :=
+  ext fun i j => rfl
+
+@[simp]
+theorem block_diag'_conj_transpose {α : Type _} [AddMonoidₓ α] [StarAddMonoid α] (M : Matrix (Σi, m' i) (Σi, n' i) α)
+    (k : o) : blockDiag'ₓ Mᴴ k = (blockDiag'ₓ M k)ᴴ :=
+  ext fun i j => rfl
+
+section Zero
+
+variable [Zero α] [Zero β]
+
+@[simp]
+theorem block_diag'_zero : blockDiag'ₓ (0 : Matrix (Σi, m' i) (Σi, n' i) α) = 0 :=
+  rfl
+
+@[simp]
+theorem block_diag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σi, m' i) → α) (k : o) :
+    blockDiag'ₓ (diagonalₓ d) k = diagonalₓ fun i => d ⟨k, i⟩ :=
+  ext fun i j => by
+    obtain rfl | hij := Decidable.eq_or_ne i j
+    · rw [block_diag', diagonal_apply_eq, diagonal_apply_eq]
+      
+    · rw [block_diag', diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => _) hij)]
+      cases h
+      rfl
+      
+
+@[simp]
+theorem block_diag'_block_diagonal' [DecidableEq o] (M : ∀ i, Matrix (m' i) (n' i) α) :
+    blockDiag'ₓ (blockDiagonal'ₓ M) = M :=
+  funext fun k => ext fun i j => block_diagonal'_apply_eq _ _ _ _
+
+@[simp]
+theorem block_diag'_one [DecidableEq o] [∀ i, DecidableEq (m' i)] [One α] :
+    blockDiag'ₓ (1 : Matrix (Σi, m' i) (Σi, m' i) α) = 1 :=
+  funext <| block_diag'_diagonal _
+
+end Zero
+
+@[simp]
+theorem block_diag'_add [AddZeroClassₓ α] (M N : Matrix (Σi, m' i) (Σi, n' i) α) :
+    blockDiag'ₓ (M + N) = blockDiag'ₓ M + blockDiag'ₓ N :=
+  rfl
+
+section
+
+variable (m' n' α)
+
+/-- `matrix.block_diag'` as an `add_monoid_hom`. -/
+@[simps]
+def blockDiag'AddMonoidHom [AddZeroClassₓ α] : Matrix (Σi, m' i) (Σi, n' i) α →+ ∀ i, Matrix (m' i) (n' i) α where
+  toFun := blockDiag'ₓ
+  map_zero' := block_diag'_zero
+  map_add' := block_diag'_add
+
+end
+
+@[simp]
+theorem block_diag'_neg [AddGroupₓ α] (M : Matrix (Σi, m' i) (Σi, n' i) α) : blockDiag'ₓ (-M) = -blockDiag'ₓ M :=
+  map_neg (blockDiag'AddMonoidHom m' n' α) M
+
+@[simp]
+theorem block_diag'_sub [AddGroupₓ α] (M N : Matrix (Σi, m' i) (Σi, n' i) α) :
+    blockDiag'ₓ (M - N) = blockDiag'ₓ M - blockDiag'ₓ N :=
+  map_sub (blockDiag'AddMonoidHom m' n' α) M N
+
+@[simp]
+theorem block_diag'_smul {R : Type _} [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (x : R)
+    (M : Matrix (Σi, m' i) (Σi, n' i) α) : blockDiag'ₓ (x • M) = x • blockDiag'ₓ M :=
+  rfl
+
+end BlockDiag'
 
 end Matrix
 

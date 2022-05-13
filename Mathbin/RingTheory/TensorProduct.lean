@@ -925,6 +925,34 @@ end TensorProduct
 
 end Algebra
 
+namespace Module
+
+variable {R M N : Type _} [CommSemiringₓ R]
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N]
+
+variable [Module R M] [Module R N]
+
+/-- The algebra homomorphism from `End M ⊗ End N` to `End (M ⊗ N)` sending `f ⊗ₜ g` to
+the `tensor_product.map f g`, the tensor product of the two maps. -/
+def endTensorEndAlgHom : End R M ⊗[R] End R N →ₐ[R] End R (M ⊗[R] N) := by
+  refine' Algebra.TensorProduct.algHomOfLinearMapTensorProduct (hom_tensor_hom_map R M N M N) _ _
+  · intro f₁ f₂ g₁ g₂
+    simp only [hom_tensor_hom_map_apply, TensorProduct.map_mul]
+    
+  · intro r
+    simp only [hom_tensor_hom_map_apply]
+    ext m n
+    simp [smul_tmul]
+    
+
+theorem End_tensor_End_alg_hom_apply (f : End R M) (g : End R N) :
+    endTensorEndAlgHom (f ⊗ₜ[R] g) = TensorProduct.map f g := by
+  simp only [End_tensor_End_alg_hom, Algebra.TensorProduct.alg_hom_of_linear_map_tensor_product_apply,
+    hom_tensor_hom_map_apply]
+
+end Module
+
 theorem Subalgebra.finite_dimensional_sup {K L : Type _} [Field K] [CommRingₓ L] [Algebra K L] (E1 E2 : Subalgebra K L)
     [FiniteDimensional K E1] [FiniteDimensional K E2] : FiniteDimensional K ↥(E1⊔E2) := by
   rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.product_map_range]

@@ -42,16 +42,3 @@ theorem Basis.tensor_product_apply' (b : Basis ι R M) (c : Basis κ R N) (i : �
 
 end CommRingₓ
 
-section Field
-
-variable {K : Type _} (V W : Type _)
-
-variable [Field K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ W] [Module K W]
-
-/-- If `V` and `W` are finite dimensional `K` vector spaces, so is `V ⊗ W`. -/
-instance finite_dimensional_tensor_product [FiniteDimensional K V] [FiniteDimensional K W] :
-    FiniteDimensional K (TensorProduct K V W) :=
-  FiniteDimensional.of_fintype_basis (Basis.tensorProduct (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W))
-
-end Field
-

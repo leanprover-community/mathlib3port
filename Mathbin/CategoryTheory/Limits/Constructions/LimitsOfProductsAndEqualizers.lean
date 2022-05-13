@@ -83,21 +83,35 @@ end HasLimitOfHasProductsOfHasEqualizers
 
 open HasLimitOfHasProductsOfHasEqualizers
 
+/-- Given the existence of the appropriate (possibly finite) products and equalizers,
+we can construct a limit cone for `F`.
+(This assumes the existence of all equalizers, which is technically stronger than needed.)
+-/
+noncomputable def limitConeOfEqualizerAndProduct (F : J ⥤ C) [HasLimit (Discrete.functor F.obj)]
+    [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : LimitCone F where
+  Cone := _
+  IsLimit :=
+    buildIsLimit (Pi.lift fun f => limit.π _ _ ≫ F.map f.2) (Pi.lift fun f => limit.π _ f.1.2)
+      (by
+        simp )
+      (by
+        simp )
+      (limit.isLimit _) (limit.isLimit _) (limit.isLimit _)
+
 /-- Given the existence of the appropriate (possibly finite) products and equalizers, we know a limit of
 `F` exists.
 (This assumes the existence of all equalizers, which is technically stronger than needed.)
 -/
 theorem has_limit_of_equalizer_and_product (F : J ⥤ C) [HasLimit (Discrete.functor F.obj)]
     [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : HasLimit F :=
-  HasLimit.mk
-    { Cone := _,
-      IsLimit :=
-        buildIsLimit (Pi.lift fun f => limit.π _ _ ≫ F.map f.2) (Pi.lift fun f => limit.π _ f.1.2)
-          (by
-            simp )
-          (by
-            simp )
-          (limit.isLimit _) (limit.isLimit _) (limit.isLimit _) }
+  HasLimit.mk (limitConeOfEqualizerAndProduct F)
+
+/-- A limit can be realised as a subobject of a product. -/
+noncomputable def limitSubobjectProduct [HasLimits C] (F : J ⥤ C) : limit F ⟶ ∏ fun j => F.obj j :=
+  (limit.isoLimitCone (limitConeOfEqualizerAndProduct F)).Hom ≫ equalizer.ι _ _
+
+instance limit_subobject_product_mono [HasLimits C] (F : J ⥤ C) : Mono (limitSubobjectProduct F) :=
+  mono_comp _ _
 
 /-- Any category with products and equalizers has all limits.
 
@@ -242,21 +256,36 @@ end HasColimitOfHasCoproductsOfHasCoequalizers
 open HasColimitOfHasCoproductsOfHasCoequalizers
 
 /-- Given the existence of the appropriate (possibly finite) coproducts and coequalizers,
+we can construct a colimit cocone for `F`.
+(This assumes the existence of all coequalizers, which is technically stronger than needed.)
+-/
+noncomputable def colimitCoconeOfCoequalizerAndCoproduct (F : J ⥤ C) [HasColimit (Discrete.functor F.obj)]
+    [HasColimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] :
+    ColimitCocone F where
+  Cocone := _
+  IsColimit :=
+    buildIsColimit (Sigma.desc fun f => F.map f.2 ≫ colimit.ι (Discrete.functor F.obj) f.1.2)
+      (Sigma.desc fun f => colimit.ι (Discrete.functor F.obj) f.1.1)
+      (by
+        simp )
+      (by
+        simp )
+      (colimit.isColimit _) (colimit.isColimit _) (colimit.isColimit _)
+
+/-- Given the existence of the appropriate (possibly finite) coproducts and coequalizers,
 we know a colimit of `F` exists.
 (This assumes the existence of all coequalizers, which is technically stronger than needed.)
 -/
 theorem has_colimit_of_coequalizer_and_coproduct (F : J ⥤ C) [HasColimit (Discrete.functor F.obj)]
     [HasColimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [HasCoequalizers C] : HasColimit F :=
-  HasColimit.mk
-    { Cocone := _,
-      IsColimit :=
-        buildIsColimit (Sigma.desc fun f => F.map f.2 ≫ colimit.ι (Discrete.functor F.obj) f.1.2)
-          (Sigma.desc fun f => colimit.ι (Discrete.functor F.obj) f.1.1)
-          (by
-            simp )
-          (by
-            simp )
-          (colimit.isColimit _) (colimit.isColimit _) (colimit.isColimit _) }
+  HasColimit.mk (colimitCoconeOfCoequalizerAndCoproduct F)
+
+/-- A colimit can be realised as a quotient of a coproduct. -/
+noncomputable def colimitQuotientCoproduct [HasColimits C] (F : J ⥤ C) : (∐ fun j => F.obj j) ⟶ colimit F :=
+  coequalizer.π _ _ ≫ (colimit.isoColimitCocone (colimitCoconeOfCoequalizerAndCoproduct F)).inv
+
+instance colimit_quotient_coproduct_epi [HasColimits C] (F : J ⥤ C) : Epi (colimitQuotientCoproduct F) :=
+  epi_comp _ _
 
 /-- Any category with coproducts and coequalizers has all colimits.
 

@@ -911,7 +911,7 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
     (h₁ : ∀, ∀ i ∈ s, ∀, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
-  @piecewise_le α (fun i => OrderDual (δ i)) _ s _ _ _ _ h₁ h₂
+  @piecewise_le α (fun i => (δ i)ᵒᵈ) _ s _ _ _ _ h₁ h₂
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
@@ -1025,7 +1025,7 @@ theorem StrictMonoOn.inj_on [LinearOrderₓ α] [Preorderₓ β] {f : α → β}
   fun x hx y hy hxy => show Ordering.eq.Compares x y from (H.Compares hx hy).1 hxy
 
 theorem StrictAntiOn.inj_on [LinearOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α} (H : StrictAntiOn f s) : s.InjOn f :=
-  @StrictMonoOn.inj_on α (OrderDual β) _ _ f s H
+  @StrictMonoOn.inj_on α βᵒᵈ _ _ f s H
 
 theorem StrictMonoOn.comp [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α} {t : Set β}
     (hg : StrictMonoOn g t) (hf : StrictMonoOn f s) (hs : Set.MapsTo f s t) : StrictMonoOn (g ∘ f) s :=

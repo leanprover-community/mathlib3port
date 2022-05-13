@@ -750,24 +750,6 @@ theorem typein_enum (r : α → α → Prop) [IsWellOrder α r] {o} (h : o < typ
   let ⟨a, e⟩ := typein_surj r h
   clear _let_match <;> subst e <;> rw [enum_typein]
 
-/-- The equivalence between ordinals less than `o` and `o.out.α`. -/
-@[simps]
-noncomputable def outEquivLt (o : Ordinal) : { o' : Ordinal // o' < o } ≃ o.out.α where
-  toFun := fun ⟨o', h⟩ =>
-    enum (· < ·) o'
-      (by
-        rwa [type_lt])
-  invFun := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
-  left_inv := fun ⟨o', h⟩ => Subtype.ext_val (typein_enum _ _)
-  right_inv := fun h => enum_typein _ _
-
-/-- A well order `r` is order isomorphic to the set of ordinals strictly smaller than the
-ordinal version of `r`. -/
-def typeinIso (r : α → α → Prop) [IsWellOrder α r] : r ≃r Subrel (· < ·) (· < type r) :=
-  ⟨⟨fun x => ⟨typein r x, typein_lt_type r x⟩, fun x => enum r x.1 x.2, fun y => enum_typein r y, fun ⟨y, hy⟩ =>
-      Subtype.eq (typein_enum r hy)⟩,
-    fun a b => typein_lt_typein r⟩
-
 theorem enum_lt_enum {r : α → α → Prop} [IsWellOrder α r] {o₁ o₂ : Ordinal} (h₁ : o₁ < type r) (h₂ : o₂ < type r) :
     r (enum r o₁ h₁) (enum r o₂ h₂) ↔ o₁ < o₂ := by
   rw [← typein_lt_typein r, typein_enum, typein_enum]
@@ -1290,6 +1272,31 @@ theorem enum_inj {r : α → α → Prop} [IsWellOrder α r] {o₁ o₂ : Ordina
       ,
     fun h => by
     simp_rw [h]⟩
+
+/-- A well order `r` is order isomorphic to the set of ordinals smaller than `type r`. -/
+@[simps]
+def enumIso (r : α → α → Prop) [IsWellOrder α r] : Subrel (· < ·) (· < type r) ≃r r where
+  toFun := fun ⟨o, h⟩ => enum r o h
+  invFun := fun x => ⟨typein r x, typein_lt_type r x⟩
+  left_inv := fun ⟨o, h⟩ => Subtype.ext_val (typein_enum _ _)
+  right_inv := fun h => enum_typein _ _
+  map_rel_iff' := by
+    rintro ⟨a, _⟩ ⟨b, _⟩
+    apply enum_lt_enum
+
+/-- The order isomorphism between ordinals less than `o` and `o.out.α`. -/
+@[simps]
+noncomputable def enumIsoOut (o : Ordinal.{u}) : Set.Iio o ≃o o.out.α where
+  toFun := fun ⟨o', h⟩ =>
+    enum (· < ·) o'
+      (by
+        rwa [type_lt])
+  invFun := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
+  left_inv := fun ⟨o', h⟩ => Subtype.ext_val (typein_enum _ _)
+  right_inv := fun h => enum_typein _ _
+  map_rel_iff' := by
+    rintro ⟨a, _⟩ ⟨b, _⟩
+    apply enum_le_enum'
 
 /-- `o.out.α` is an `order_bot` whenever `0 < o`. -/
 def outOrderBotOfPos {o : Ordinal} (ho : 0 < o) : OrderBot o.out.α :=

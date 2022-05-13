@@ -309,7 +309,7 @@ theorem inner_mul_inner_self_le (x y : F) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
           field_simp [-mul_re, inner_conj_sym, hT, RingHom.map_div, h₁, h₃]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
-          rw [div_mul_eq_mul_div_comm, ← mul_div_assoc]
+          rw [← mul_div_right_comm]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by
           conv_lhs => rw [h₄]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫) / re ⟪y, y⟫ := by
@@ -525,12 +525,12 @@ theorem Finsupp.inner_sum {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x :
   convert inner_sum l.support (fun a => l a • v a) x
   simp [inner_smul_right, Finsupp.sum]
 
-theorem Dfinsupp.sum_inner {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClass (α i)]
+theorem Dfinsupp.sum_inner {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClassₓ (α i)]
     [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
     ⟪l.Sum f, x⟫ = l.Sum fun i a => ⟪f i a, x⟫ := by
   simp (config := { contextual := true })[Dfinsupp.sum, sum_inner]
 
-theorem Dfinsupp.inner_sum {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClass (α i)]
+theorem Dfinsupp.inner_sum {ι : Type _} [dec : DecidableEq ι] {α : ι → Type _} [∀ i, AddZeroClassₓ (α i)]
     [∀ i x : α i, Decidable (x ≠ 0)] (f : ∀ i, α i → E) (l : Π₀ i, α i) (x : E) :
     ⟪x, l.Sum f⟫ = l.Sum fun i a => ⟪x, f i a⟫ := by
   simp (config := { contextual := true })[Dfinsupp.sum, inner_sum]
@@ -715,7 +715,7 @@ theorem inner_mul_inner_self_le (x y : E) : abs ⟪x, y⟫ * abs ⟪y, x⟫ ≤ 
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ / ⟪y, y⟫ * ⟪y, x⟫) := by
           field_simp [-mul_re, hT, RingHom.map_div, h₁, h₃, inner_conj_sym]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / ⟪y, y⟫) := by
-          rw [div_mul_eq_mul_div_comm, ← mul_div_assoc]
+          rw [← mul_div_right_comm]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫ / re ⟪y, y⟫) := by
           conv_lhs => rw [h₄]
         _ = re ⟪x, x⟫ - re (⟪x, y⟫ * ⟪y, x⟫) / re ⟪y, y⟫ := by
@@ -1427,8 +1427,8 @@ theorem abs_inner_div_norm_mul_norm_eq_one_of_ne_zero_of_ne_zero_mul {x : E} {r 
   have hr' : abs r ≠ 0 := by
     simp [IsROrC.abs_eq_zero, hr]
   rw [inner_smul_right, IsROrC.abs_mul, ← inner_self_re_abs, inner_self_eq_norm_mul_norm, norm_smul]
-  rw [IsROrC.norm_eq_abs, ← mul_assoc, ← div_div_eq_div_mul, mul_div_cancel _ hx', ← div_div_eq_div_mul, mul_comm,
-    mul_div_cancel _ hr', div_self hx']
+  rw [IsROrC.norm_eq_abs, ← mul_assoc, ← div_div, mul_div_cancel _ hx', ← div_div, mul_comm, mul_div_cancel _ hr',
+    div_self hx']
 
 /-- The inner product of a nonzero vector with a nonzero multiple of
 itself, divided by the product of their norms, has absolute value
@@ -2257,8 +2257,7 @@ variable (𝕜 E)
 /-- `submodule.orthogonal` gives a `galois_connection` between
 `submodule 𝕜 E` and its `order_dual`. -/
 theorem Submodule.orthogonal_gc :
-    @GaloisConnection (Submodule 𝕜 E) (OrderDual <| Submodule 𝕜 E) _ _ Submodule.orthogonal Submodule.orthogonal :=
-  fun K₁ K₂ =>
+    @GaloisConnection (Submodule 𝕜 E) (Submodule 𝕜 E)ᵒᵈ _ _ Submodule.orthogonal Submodule.orthogonal := fun K₁ K₂ =>
   ⟨fun h v hv u hu => Submodule.inner_left_of_mem_orthogonal hv (h hu), fun h v hv u hu =>
     Submodule.inner_left_of_mem_orthogonal hv (h hu)⟩
 

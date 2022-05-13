@@ -66,7 +66,7 @@ def Iso.mk {α β : Preorderₓₓ.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : Preorderₓₓ ⥤ Preorderₓₓ where
-  obj := fun X => of (OrderDual X)
+  obj := fun X => of Xᵒᵈ
   map := fun X Y => OrderHom.dual
 
 /-- The equivalence between `Preorder` and itself induced by `order_dual` both ways. -/

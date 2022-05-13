@@ -299,6 +299,13 @@ theorem attach_affine_combination_coe (s : Finset P) (w : P → k) :
 
 omit S
 
+/-- Viewing a module as an affine space modelled on itself, a `weighted_vsub` is just a linear
+combination. -/
+@[simp]
+theorem weighted_vsub_eq_linear_combination {ι} (s : Finset ι) {w : ι → k} {p : ι → V} (hw : s.Sum w = 0) :
+    s.weightedVsub p w = ∑ i in s, w i • p i := by
+  simp [s.weighted_vsub_apply, vsub_eq_sub, smul_sub, ← Finset.sum_smul, hw]
+
 /-- Viewing a module as an affine space modelled on itself, affine combinations are just linear
 combinations. -/
 @[simp]

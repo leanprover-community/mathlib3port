@@ -51,11 +51,9 @@ because the more bundled version usually does not work with dot notation.
   `α →o Π i, π i`;
 * `order_hom.pi_iso`: order isomorphism between `α →o Π i, π i` and `Π i, α →o π i`;
 * `order_hom.subtyle.val`: embedding `subtype.val : subtype p → α` as a bundled monotone map;
-* `order_hom.dual`: reinterpret a monotone map `α →o β` as a monotone map
-  `order_dual α →o order_dual β`;
-* `order_hom.dual_iso`: order isomorphism between `α →o β` and
-  `order_dual (order_dual α →o order_dual β)`;
-* `order_iso.compl`: order isomorphism `α ≃o order_dual α` given by taking complements in a
+* `order_hom.dual`: reinterpret a monotone map `α →o β` as a monotone map `αᵒᵈ →o βᵒᵈ`;
+* `order_hom.dual_iso`: order isomorphism between `α →o β` and `(αᵒᵈ →o βᵒᵈ)ᵒᵈ`;
+* `order_iso.compl`: order isomorphism `α ≃o αᵒᵈ` given by taking complements in a
   boolean algebra;
 
 We also define two functions to convert other bundled maps to `α →o β`:
@@ -433,7 +431,7 @@ theorem order_hom_eq_id [Subsingleton α] (g : α →o α) : g = OrderHom.id :=
 
 /-- Reinterpret a bundled monotone function as a monotone function between dual orders. -/
 @[simps]
-protected def dual : (α →o β) ≃ (OrderDual α →o OrderDual β) where
+protected def dual : (α →o β) ≃ (αᵒᵈ →o βᵒᵈ) where
   toFun := fun f => ⟨OrderDual.toDual ∘ f ∘ OrderDual.ofDual, f.mono.dual⟩
   invFun := fun f => ⟨OrderDual.ofDual ∘ f ∘ OrderDual.toDual, f.mono.dual⟩
   left_inv := fun f => ext _ _ rfl
@@ -452,12 +450,12 @@ theorem symm_dual_id : OrderHom.dual.symm OrderHom.id = (OrderHom.id : α →o �
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : OrderDual β →o OrderDual γ) (f : OrderDual α →o OrderDual β) :
+theorem symm_dual_comp (g : βᵒᵈ →o γᵒᵈ) (f : αᵒᵈ →o βᵒᵈ) :
     OrderHom.dual.symm (g.comp f) = (OrderHom.dual.symm g).comp (OrderHom.dual.symm f) :=
   rfl
 
 /-- `order_hom.dual` as an order isomorphism. -/
-def dualIso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) ≃o OrderDual (OrderDual α →o OrderDual β) where
+def dualIso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) ≃o (αᵒᵈ →o βᵒᵈ)ᵒᵈ where
   toEquiv := OrderHom.dual.trans OrderDual.toDual
   map_rel_iff' := fun f g => Iff.rfl
 
@@ -518,7 +516,7 @@ protected theorem is_well_order [IsWellOrder β (· < ·)] : IsWellOrder α (· 
   f.ltEmbedding.IsWellOrder
 
 /-- An order embedding is also an order embedding between dual orders. -/
-protected def dual : OrderDual α ↪o OrderDual β :=
+protected def dual : αᵒᵈ ↪o βᵒᵈ :=
   ⟨f.toEmbedding, fun a b => f.map_rel_iff⟩
 
 /-- To define an order embedding from a partial order to a preorder it suffices to give a function
@@ -743,7 +741,7 @@ theorem prod_comm_symm : (prodComm : α × β ≃o β × α).symm = prod_comm :=
 variable (α)
 
 /-- The order isomorphism between a type and its double dual. -/
-def dualDual : α ≃o OrderDual (OrderDual α) :=
+def dualDual : α ≃o αᵒᵈᵒᵈ :=
   refl α
 
 @[simp]
@@ -761,7 +759,7 @@ theorem dual_dual_apply (a : α) : dualDual α a = toDual (toDual a) :=
   rfl
 
 @[simp]
-theorem dual_dual_symm_apply (a : OrderDual (OrderDual α)) : (dualDual α).symm a = ofDual (ofDual a) :=
+theorem dual_dual_symm_apply (a : αᵒᵈᵒᵈ) : (dualDual α).symm a = ofDual (ofDual a) :=
   rfl
 
 end LE
@@ -902,7 +900,7 @@ def orderIsoOfRightInverse (g : β → α) (hg : Function.RightInverse g f) : α
 end StrictMono
 
 /-- An order isomorphism is also an order isomorphism between dual orders. -/
-protected def OrderIso.dual [LE α] [LE β] (f : α ≃o β) : OrderDual α ≃o OrderDual β :=
+protected def OrderIso.dual [LE α] [LE β] (f : α ≃o β) : αᵒᵈ ≃o βᵒᵈ :=
   ⟨f.toEquiv, fun _ _ => f.map_rel_iff⟩
 
 section LatticeIsos
@@ -950,7 +948,7 @@ theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β
 namespace WithBot
 
 /-- Taking the dual then adding `⊥` is the same as adding `⊤` then taking the dual. -/
-protected def toDualTop [LE α] : WithBot (OrderDual α) ≃o OrderDual (WithTop α) :=
+protected def toDualTop [LE α] : WithBot αᵒᵈ ≃o (WithTop α)ᵒᵈ :=
   OrderIso.refl _
 
 @[simp]
@@ -966,7 +964,7 @@ end WithBot
 namespace WithTop
 
 /-- Taking the dual then adding `⊤` is the same as adding `⊥` then taking the dual. -/
-protected def toDualBot [LE α] : WithTop (OrderDual α) ≃o OrderDual (WithBot α) :=
+protected def toDualBot [LE α] : WithTop αᵒᵈ ≃o (WithBot α)ᵒᵈ :=
   OrderIso.refl _
 
 @[simp]
@@ -1066,7 +1064,7 @@ variable (α) [BooleanAlgebra α]
 
 /-- Taking complements as an order isomorphism to the order dual. -/
 @[simps]
-def OrderIso.compl : α ≃o OrderDual α where
+def OrderIso.compl : α ≃o αᵒᵈ where
   toFun := OrderDual.toDual ∘ compl
   invFun := compl ∘ OrderDual.ofDual
   left_inv := compl_compl

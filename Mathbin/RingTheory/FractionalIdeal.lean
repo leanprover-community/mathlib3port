@@ -963,7 +963,7 @@ theorem div_one {I : FractionalIdeal R₁⁰ K} : I / 1 = I := by
     exact (Algebra.smul_def _ _).symm
     
 
-theorem eq_one_div_of_mul_eq_one (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = 1 / I := by
+theorem eq_one_div_of_mul_eq_one_right (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = 1 / I := by
   have hI : I ≠ 0 := ne_zero_of_mul_eq_one I J h
   suffices h' : I * (1 / I) = 1
   · exact congr_argₓ Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
@@ -983,7 +983,7 @@ theorem eq_one_div_of_mul_eq_one (I J : FractionalIdeal R₁⁰ K) (h : I * J = 
 
 theorem mul_div_self_cancel_iff {I : FractionalIdeal R₁⁰ K} : I * (1 / I) = 1 ↔ ∃ J, I * J = 1 :=
   ⟨fun h => ⟨1 / I, h⟩, fun ⟨J, hJ⟩ => by
-    rwa [← eq_one_div_of_mul_eq_one I J hJ]⟩
+    rwa [← eq_one_div_of_mul_eq_one_right I J hJ]⟩
 
 variable {K' : Type _} [Field K'] [Algebra R₁ K'] [IsFractionRing R₁ K']
 
@@ -1250,7 +1250,7 @@ theorem one_div_span_singleton (x : K) : 1 / spanSingleton R₁⁰ x = spanSingl
   if h : x = 0 then by
     simp [h]
   else
-    (eq_one_div_of_mul_eq_one _ _
+    (eq_one_div_of_mul_eq_one_right _ _
         (by
           simp [h])).symm
 

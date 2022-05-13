@@ -124,7 +124,7 @@ theorem id_le_iterate_of_id_le (h : id ≤ f) (n : ℕ) : id ≤ f^[n] := by
   simpa only [iterate_id] using monotone_id.iterate_le_of_le h n
 
 theorem iterate_le_id_of_le_id (h : f ≤ id) (n : ℕ) : f^[n] ≤ id :=
-  @id_le_iterate_of_id_le (OrderDual α) _ f h n
+  @id_le_iterate_of_id_le αᵒᵈ _ f h n
 
 theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
   monotone_nat_of_le_succ fun n x => by
@@ -132,7 +132,7 @@ theorem monotone_iterate_of_id_le (h : id ≤ f) : Monotone fun m => f^[m] :=
     exact h _
 
 theorem antitone_iterate_of_le_id (h : f ≤ id) : Antitone fun m => f^[m] := fun m n hmn =>
-  @monotone_iterate_of_id_le (OrderDual α) _ f h m n hmn
+  @monotone_iterate_of_id_le αᵒᵈ _ f h m n hmn
 
 end Preorderₓ
 
@@ -163,7 +163,7 @@ theorem iterate_pos_lt_of_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stric
 
 theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x} (hx : f x < g x) {n}
     (hn : 0 < n) : (f^[n]) x < (g^[n]) x :=
-  @iterate_pos_lt_of_map_lt (OrderDual α) _ g f h.symm hg.dual hf.dual x hx n hn
+  @iterate_pos_lt_of_map_lt αᵒᵈ _ g f h.symm hg.dual hf.dual x hx n hn
 
 end Preorderₓ
 
@@ -181,7 +181,7 @@ theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : Stri
 
 theorem iterate_pos_lt_iff_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Monotone g) {x n} (hn : 0 < n) :
     (f^[n]) x < (g^[n]) x ↔ f x < g x :=
-  @iterate_pos_lt_iff_map_lt (OrderDual α) _ _ _ h.symm hg.dual hf.dual x n hn
+  @iterate_pos_lt_iff_map_lt αᵒᵈ _ _ _ h.symm hg.dual hf.dual x n hn
 
 theorem iterate_pos_le_iff_map_le (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
     (f^[n]) x ≤ (g^[n]) x ↔ f x ≤ g x := by

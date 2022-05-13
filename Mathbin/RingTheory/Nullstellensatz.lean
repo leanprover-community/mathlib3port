@@ -78,7 +78,7 @@ theorem le_vanishing_ideal_zero_locus (I : Ideal (MvPolynomial σ k)) : I ≤ va
 theorem zero_locus_vanishing_ideal_le (V : Set (σ → k)) : V ≤ ZeroLocus (vanishingIdeal V) := fun V hV p hp => hp V hV
 
 theorem zero_locus_vanishing_ideal_galois_connection :
-    @GaloisConnection (Ideal (MvPolynomial σ k)) (OrderDual (Set (σ → k))) _ _ ZeroLocus vanishingIdeal := fun I V =>
+    @GaloisConnection (Ideal (MvPolynomial σ k)) (Set (σ → k))ᵒᵈ _ _ ZeroLocus vanishingIdeal := fun I V =>
   ⟨fun h => le_transₓ (le_vanishing_ideal_zero_locus I) (vanishing_ideal_anti_mono h), fun h =>
     le_transₓ (zero_locus_anti_mono h) (zero_locus_vanishing_ideal_le V)⟩
 

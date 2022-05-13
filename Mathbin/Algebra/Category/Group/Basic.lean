@@ -93,6 +93,10 @@ theorem ext (G H : Groupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ 
 instance hasForgetToMon : HasForget₂ Groupₓₓ Mon :=
   BundledHom.forget₂ _ _
 
+@[to_additive]
+instance : Coe Groupₓₓ.{u} Mon.{u} where
+  coe := (forget₂ Groupₓₓ Mon).obj
+
 end Groupₓₓ
 
 /-- The category of commutative groups and group morphisms. -/
@@ -170,9 +174,17 @@ theorem ext (G H : CommGroupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f
 instance hasForgetToGroup : HasForget₂ CommGroupₓₓ Groupₓₓ :=
   BundledHom.forget₂ _ _
 
+@[to_additive]
+instance : Coe CommGroupₓₓ.{u} Groupₓₓ.{u} where
+  coe := (forget₂ CommGroupₓₓ Groupₓₓ).obj
+
 @[to_additive has_forget_to_AddCommMon]
 instance hasForgetToCommMon : HasForget₂ CommGroupₓₓ CommMon :=
   InducedCategory.hasForget₂ fun G : CommGroupₓₓ => CommMon.of G
+
+@[to_additive]
+instance : Coe CommGroupₓₓ.{u} CommMon.{u} where
+  coe := (forget₂ CommGroupₓₓ CommMon).obj
 
 end CommGroupₓₓ
 

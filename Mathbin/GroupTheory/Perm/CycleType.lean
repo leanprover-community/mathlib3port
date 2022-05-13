@@ -420,7 +420,7 @@ def vectorEquiv : Vector G n ≃ VectorsProdEqOne G (n + 1) where
   right_inv := fun v =>
     Subtype.ext
       ((congr_arg2ₓ Vector.cons
-            (eq_inv_of_mul_eq_one
+            (eq_inv_of_mul_eq_one_left
                 (by
                   rw [← List.prod_cons, ← Vector.to_list_cons, v.1.cons_head_tail]
                   exact v.2)).symm

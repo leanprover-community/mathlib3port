@@ -665,10 +665,7 @@ theorem Inf_empty : inf (∅ : Set ℝ) = 0 := by
   simp [Inf_def, Sup_empty]
 
 theorem cinfi_empty {α : Sort _} [IsEmpty α] (f : α → ℝ) : (⨅ i, f i) = 0 := by
-  dsimp' [infi]
-  convert Real.Inf_empty
-  rw [Set.range_eq_empty_iff]
-  infer_instance
+  rw [infi_of_empty', Inf_empty]
 
 @[simp]
 theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 := by

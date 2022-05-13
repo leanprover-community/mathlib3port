@@ -59,7 +59,7 @@ section NonAssoc
 
 variable [MulOneClassₓ M] {s : Set M}
 
-variable [AddZeroClass A] {t : Set A}
+variable [AddZeroClassₓ A] {t : Set A}
 
 /-- `one_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `1 ∈ s` for all `s`. -/
 class OneMemClass (S : Type _) (M : outParam <| Type _) [One M] [SetLike S M] where
@@ -95,7 +95,7 @@ section
 
 /-- An additive submonoid of an additive monoid `M` is a subset containing 0 and
   closed under addition. -/
-structure AddSubmonoid (M : Type _) [AddZeroClass M] extends AddSubsemigroup M where
+structure AddSubmonoid (M : Type _) [AddZeroClassₓ M] extends AddSubsemigroup M where
   zero_mem' : (0 : M) ∈ carrier
 
 end
@@ -106,7 +106,7 @@ add_decl_doc AddSubmonoid.toAddSubsemigroup
 
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
-class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClass M] [SetLike S M] extends
+class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClassₓ M] [SetLike S M] extends
   AddMemClass S M where
   zero_mem : ∀ s : S, (0 : M) ∈ s
 

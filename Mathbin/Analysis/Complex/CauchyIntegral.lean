@@ -220,7 +220,8 @@ theorem integral_boundary_rect_of_has_fderiv_at_real_off_countable (f : ℂ → 
     (integral2_divergence_prod_of_has_fderiv_within_at_off_countable (fun p => -(I • F p)) F (fun p => -(I • F' p)) F'
         z.re w.im w.re z.im t (hs.preimage e.injective) (htc.const_smul _).neg htc
         (fun p hp => ((htd p hp).const_smul I).neg) htd _).symm
-  rw [← volume_preserving_equiv_real_prod.symm.integrable_on_comp_preimage (MeasurableEquiv.measurable_embedding _)] at
+  rw [←
+    (volume_preserving_equiv_real_prod.symm _).integrable_on_comp_preimage (MeasurableEquiv.measurable_embedding _)] at
     Hi
   simpa only [hF'] using Hi.neg
 

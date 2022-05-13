@@ -59,7 +59,7 @@ theorem inv_pow₀ (a : G₀) (n : ℕ) : a⁻¹ ^ n = (a ^ n)⁻¹ := by
   · rw [pow_zeroₓ, pow_zeroₓ]
     exact inv_one.symm
     
-  · rw [pow_succ'ₓ, pow_succₓ, ih, mul_inv_rev₀]
+  · rw [pow_succ'ₓ, pow_succₓ, ih, mul_inv_rev]
     
 
 theorem pow_sub₀ (a : G₀) {m n : ℕ} (ha : a ≠ 0) (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
@@ -128,7 +128,7 @@ theorem zpow_neg₀ (a : G₀) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
     rfl
 
 theorem mul_zpow_neg_one₀ (a b : G₀) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a ^ (-1 : ℤ) := by
-  simp only [mul_inv_rev₀, zpow_one, zpow_neg₀]
+  simp only [mul_inv_rev, zpow_one, zpow_neg₀]
 
 theorem zpow_neg_one₀ (x : G₀) : x ^ (-1 : ℤ) = x⁻¹ := by
   rw [← congr_argₓ Inv.inv (pow_oneₓ x), zpow_neg₀, ← zpow_coe_nat]
@@ -145,7 +145,7 @@ theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a
     simp [← Int.coe_nat_succ, pow_succ'ₓ]
   | -[1+ n] => by
     rw [Int.neg_succ_of_nat_eq, zpow_neg₀, neg_add, neg_add_cancel_right, zpow_neg₀, ← Int.coe_nat_succ, zpow_coe_nat,
-      zpow_coe_nat, pow_succₓ _ n, mul_inv_rev₀, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
+      zpow_coe_nat, pow_succₓ _ n, mul_inv_rev, mul_assoc, inv_mul_cancel ha, mul_oneₓ]
 
 theorem zpow_sub_one₀ {a : G₀} (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
   calc
@@ -263,7 +263,7 @@ theorem Commute.mul_zpow₀ {a b : G₀} (h : Commute a b) : ∀ i : ℤ, (a * b
   | (n : ℕ) => by
     simp [h.mul_pow n]
   | -[1+ n] => by
-    simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev₀]
+    simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 
 theorem zpow_bit0' (a : G₀) (n : ℤ) : a ^ bit0 n = (a * a) ^ n :=
   (zpow_bit0₀ a n).trans ((Commute.refl a).mul_zpow₀ n).symm

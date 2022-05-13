@@ -51,7 +51,7 @@ theorem ConvexOn.map_center_mass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i 
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
 theorem ConcaveOn.le_map_center_mass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : 0 < ∑ i in t, w i)
     (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.centerMass w (f ∘ p) ≤ f (t.centerMass w p) :=
-  @ConvexOn.map_center_mass_le 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
+  @ConvexOn.map_center_mass_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
@@ -61,7 +61,7 @@ theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, �
 /-- Concave **Jensen's inequality**, `finset.sum` version. -/
 theorem ConcaveOn.le_map_sum (hf : ConcaveOn 𝕜 s f) (h₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hmem : ∀, ∀ i ∈ t, ∀, p i ∈ s) : (∑ i in t, w i • f (p i)) ≤ f (∑ i in t, w i • p i) :=
-  @ConvexOn.map_sum_le 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
+  @ConvexOn.map_sum_le 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ hf h₀ h₁ hmem
 
 end Jensen
 
@@ -95,7 +95,7 @@ theorem ConvexOn.exists_ge_of_center_mass (h : ConvexOn 𝕜 s f) (hw₀ : ∀, 
 `s` is greater than the value it takes on one of those points. -/
 theorem ConcaveOn.exists_le_of_center_mass (h : ConcaveOn 𝕜 s f) (hw₀ : ∀, ∀ i ∈ t, ∀, 0 ≤ w i)
     (hw₁ : 0 < ∑ i in t, w i) (hp : ∀, ∀ i ∈ t, ∀, p i ∈ s) : ∃ i ∈ t, f (p i) ≤ f (t.centerMass w p) :=
-  @ConvexOn.exists_ge_of_center_mass 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ _ _ _ _ h hw₀ hw₁ hp
+  @ConvexOn.exists_ge_of_center_mass 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ _ _ _ _ h hw₀ hw₁ hp
 
 /-- Maximum principle for convex functions. If a function `f` is convex on the convex hull of `s`,
 then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
@@ -111,7 +111,7 @@ theorem ConvexOn.exists_ge_of_mem_convex_hull (hf : ConvexOn 𝕜 (convexHull �
 then the eventual minimum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConcaveOn.exists_le_of_mem_convex_hull (hf : ConcaveOn 𝕜 (convexHull 𝕜 s) f) {x} (hx : x ∈ convexHull 𝕜 s) :
     ∃ y ∈ s, f y ≤ f x :=
-  @ConvexOn.exists_ge_of_mem_convex_hull 𝕜 E (OrderDual β) _ _ _ _ _ _ _ _ hf _ hx
+  @ConvexOn.exists_ge_of_mem_convex_hull 𝕜 E βᵒᵈ _ _ _ _ _ _ _ _ hf _ hx
 
 end MaximumPrinciple
 

@@ -62,6 +62,17 @@ theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
     Chain R a (l₁ ++ b :: c :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ R b c ∧ Chain R c l₂ := by
   rw [chain_split, chain_cons]
 
+theorem chain_iff_forall₂ : ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: init l) l
+  | a, [] => by
+    simp
+  | a, [b] => by
+    simp [init]
+  | a, b :: c :: l => by
+    simp [@chain_iff_forall₂ b]
+
+theorem chain_append_singleton_iff_forall₂ : Chain R a (l ++ [b]) ↔ Forall₂ R (a :: l) (l ++ [b]) := by
+  simp [chain_iff_forall₂, init]
+
 theorem chain_map (f : β → α) {b : β} {l : List β} :
     Chain R (f b) (map f l) ↔ Chain (fun a b : β => R (f a) (f b)) b l := by
   induction l generalizing b <;> simp only [map, chain.nil, chain_cons, *]

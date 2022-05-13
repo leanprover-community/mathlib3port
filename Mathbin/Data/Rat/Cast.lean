@@ -114,7 +114,7 @@ theorem cast_add_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', add_def d₁0' d₂0']
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹ by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [division_def, left_distrib, right_distrib, mul_inv_rev₀, d₁0, d₂0, mul_assoc]
+      · simpa [division_def, left_distrib, right_distrib, mul_inv_rev, d₁0, d₂0, mul_assoc]
         
       all_goals
         simp [d₁0, d₂0]
@@ -146,7 +146,7 @@ theorem cast_mul_of_ne_zero : ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom
     rw [num_denom', num_denom', mul_def d₁0' d₂0']
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹)) by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
-      · simpa [division_def, mul_inv_rev₀, d₁0, d₂0, mul_assoc]
+      · simpa [division_def, mul_inv_rev, d₁0, d₂0, mul_assoc]
         
       all_goals
         simp [d₁0, d₂0]

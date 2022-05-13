@@ -1347,6 +1347,9 @@ def toLp (f : α → E) (h_mem_ℒp : Memℒp f p μ) : lp E p μ :=
 theorem coe_fn_to_Lp {f : α → E} (hf : Memℒp f p μ) : hf.toLp f =ᵐ[μ] f :=
   AeEqFun.coe_fn_mk _ _
 
+theorem to_Lp_congr {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) (hfg : f =ᵐ[μ] g) : hf.toLp f = hg.toLp g := by
+  simp [to_Lp, hfg]
+
 @[simp]
 theorem to_Lp_eq_to_Lp_iff {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : hf.toLp f = hg.toLp g ↔ f =ᵐ[μ] g := by
   simp [to_Lp]
@@ -2337,7 +2340,7 @@ private theorem lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum {f : ℕ → α �
     one_div_one_div p]
   simp_rw [snorm']  at hn
   have h_nnnorm_nonneg :
-    (fun a => (nnnorm (∑ i in Finset.range (n + 1), ∥f (i + 1) a - f i a∥) : ℝ≥0∞) ^ p) = fun a =>
+    (fun a => (∥∑ i in Finset.range (n + 1), ∥f (i + 1) a - f i a∥∥₊ : ℝ≥0∞) ^ p) = fun a =>
       (∑ i in Finset.range (n + 1), (∥f (i + 1) a - f i a∥₊ : ℝ≥0∞)) ^ p :=
     by
     ext1 a

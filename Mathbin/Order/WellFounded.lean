@@ -22,6 +22,21 @@ variable {α : Type _}
 
 namespace WellFounded
 
+theorem not_gt_of_lt {α : Sort _} {r : α → α → Prop} (h : WellFounded r) : ∀ ⦃a b⦄, r a b → ¬r b a
+  | a => fun b hab hba => not_gt_of_lt hba hab
+
+protected theorem is_asymm {α : Sort _} {r : α → α → Prop} (h : WellFounded r) : IsAsymm α r :=
+  ⟨h.not_gt_of_lt⟩
+
+instance {α : Sort _} [HasWellFounded α] : IsAsymm α HasWellFounded.R :=
+  HasWellFounded.wf.IsAsymm
+
+protected theorem is_irrefl {α : Sort _} {r : α → α → Prop} (h : WellFounded r) : IsIrrefl α r :=
+  @IsAsymm.is_irrefl α r h.IsAsymm
+
+instance {α : Sort _} [HasWellFounded α] : IsIrrefl α HasWellFounded.R :=
+  IsAsymm.is_irrefl
+
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) : s.Nonempty → ∃ a ∈ s, ∀, ∀ x ∈ s, ∀, ¬r x a
@@ -78,7 +93,7 @@ theorem well_founded_iff_has_max' [PartialOrderₓ α] :
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
     WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, x ≤ m → x = m :=
-  @well_founded_iff_has_max' (OrderDual α) _
+  @well_founded_iff_has_max' αᵒᵈ _
 
 open Set
 

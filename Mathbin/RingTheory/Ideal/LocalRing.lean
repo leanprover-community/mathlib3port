@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 -/
 import Mathbin.Algebra.Algebra.Basic
-import Mathbin.Algebra.Category.CommRing.Basic
+import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.RingTheory.Ideal.Operations
 
 /-!
@@ -15,9 +15,9 @@ Define local rings as commutative rings having a unique maximal ideal.
 
 ## Main definitions
 
-* `local_ring`: A predicate on commutative semirings, stating that the set of nonunits is closed
-  under the addition. This is shown to be equivalent to the condition that there exists a unique
-  maximal ideal.
+* `local_ring`: A predicate on commutative semirings, stating that for any pair of elements that
+  adds up to `1`, one of them is a unit. This is shown to be equivalent to the condition that there
+  exists a unique maximal ideal.
 * `local_ring.maximal_ideal`: The unique maximal ideal for a local rings. Its carrier set is the
   set of non units.
 * `is_local_ring_hom`: A predicate on semiring homomorphisms, requiring that it maps nonunits
@@ -32,10 +32,10 @@ universe u v w u'
 
 variable {R : Type u} {S : Type v} {T : Type w} {K : Type u'}
 
-/-- A semiring is local if it is nontrivial and the set of nonunits is closed under the addition.
+/-- A semiring is local if it is nontrivial and `a` or `b` is a unit whenever `a + b = 1`.
 Note that `local_ring` is a predicate. -/
-class LocalRing (R : Type u) [Semiringₓ R] extends Nontrivial R : Prop where
-  nonunits_add : ∀ {a b : R}, a ∈ Nonunits R → b ∈ Nonunits R → a + b ∈ Nonunits R
+class LocalRing (R : Type u) [Semiringₓ R] extends Nontrivial R : Prop where of_is_unit_or_is_unit_of_add_one ::
+  is_unit_or_is_unit_of_add_one {a b : R} (h : a + b = 1) : IsUnit a ∨ IsUnit b
 
 section CommSemiringₓ
 
@@ -43,9 +43,18 @@ variable [CommSemiringₓ R]
 
 namespace LocalRing
 
+theorem of_is_unit_or_is_unit_of_is_unit_add [Nontrivial R] (h : ∀ a b : R, IsUnit (a + b) → IsUnit a ∨ IsUnit b) :
+    LocalRing R :=
+  ⟨fun a b hab => h a b <| hab.symm ▸ is_unit_one⟩
+
+/-- A semiring is local if it is nontrivial and the set of nonunits is closed under the addition. -/
+theorem of_nonunits_add [Nontrivial R] (h : ∀ a b : R, a ∈ Nonunits R → b ∈ Nonunits R → a + b ∈ Nonunits R) :
+    LocalRing R :=
+  ⟨fun a b hab => or_iff_not_and_not.2 fun H => h a b H.1 H.2 <| hab.symm ▸ is_unit_one⟩
+
 /-- A semiring is local if it has a unique maximal ideal. -/
 theorem of_unique_max_ideal (h : ∃! I : Ideal R, I.IsMaximal) : LocalRing R :=
-  (@LocalRing.mk _ _
+  (@of_nonunits_add _ _
       (nontrivial_of_ne (0 : R) 1 <|
         let ⟨I, Imax, _⟩ := h
         fun H : 0 = 1 => Imax.1.1 <| I.eq_top_iff_one.2 <| H ▸ I.zero_mem))
@@ -69,7 +78,23 @@ theorem of_unique_nonzero_prime (h : ∃! P : Ideal R, P ≠ ⊥ ∧ Ideal.IsPri
         exact hPnot_top (hM.1.2 P (bot_lt_iff_ne_bot.2 hPnonzero))
         )
 
-variable (R) [LocalRing R]
+variable [LocalRing R]
+
+theorem is_unit_or_is_unit_of_is_unit_add {a b : R} (h : IsUnit (a + b)) : IsUnit a ∨ IsUnit b := by
+  rcases h with ⟨u, hu⟩
+  replace hu : ↑u⁻¹ * a + ↑u⁻¹ * b = 1
+  exact by
+    rw [← mul_addₓ, ← hu, Units.inv_mul]
+  cases is_unit_or_is_unit_of_add_one hu <;> [left, right] <;>
+    exact
+      is_unit_of_mul_is_unit_right
+        (by
+          assumption)
+
+theorem nonunits_add {a b : R} (ha : a ∈ Nonunits R) (hb : b ∈ Nonunits R) : a + b ∈ Nonunits R := fun H =>
+  not_orₓ ha hb (is_unit_or_is_unit_of_is_unit_add H)
+
+variable (R)
 
 /-- The ideal of elements that are not units. -/
 def maximalIdeal : Ideal R where
@@ -119,29 +144,12 @@ variable [CommRingₓ R]
 namespace LocalRing
 
 theorem of_is_unit_or_is_unit_one_sub_self [Nontrivial R] (h : ∀ a : R, IsUnit a ∨ IsUnit (1 - a)) : LocalRing R :=
-  LocalRing.mk
-    (by
-      intro x y hx hy
-      rintro ⟨u, hu⟩
-      apply hy
-      suffices IsUnit ((↑u⁻¹ : R) * y) by
-        rcases this with ⟨s, hs⟩
-        use u * s
-        convert congr_argₓ (fun z => (u : R) * z) hs
-        rw [← mul_assoc]
-        simp
-      rw
-        [show ↑u⁻¹ * y = 1 - ↑u⁻¹ * x by
-          rw [eq_sub_iff_add_eq]
-          replace hu := congr_argₓ (fun z => (↑u⁻¹ : R) * z) hu.symm
-          simpa [mul_addₓ, add_commₓ] using hu]
-      apply or_iff_not_imp_left.1 (h _)
-      exact mul_mem_nonunits_right hx)
+  ⟨fun a b hab => add_sub_cancel' a b ▸ hab.symm ▸ h a⟩
 
 variable [LocalRing R]
 
 theorem is_unit_or_is_unit_one_sub_self (a : R) : IsUnit a ∨ IsUnit (1 - a) :=
-  or_iff_not_and_not.2 fun h => nonunits_add h.1 h.2 <| (add_sub_cancel'_right a 1).symm ▸ is_unit_one
+  is_unit_or_is_unit_of_is_unit_add <| (add_sub_cancel'_right a 1).symm ▸ is_unit_one
 
 theorem is_unit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ Nonunits R) : IsUnit a :=
   or_iff_not_imp_right.1 (is_unit_or_is_unit_one_sub_self a) h
@@ -149,7 +157,7 @@ theorem is_unit_of_mem_nonunits_one_sub_self (a : R) (h : 1 - a ∈ Nonunits R) 
 theorem is_unit_one_sub_self_of_mem_nonunits (a : R) (h : a ∈ Nonunits R) : IsUnit (1 - a) :=
   or_iff_not_imp_left.1 (is_unit_or_is_unit_one_sub_self a) h
 
-theorem of_surjective [CommRingₓ S] [Nontrivial S] (f : R →+* S) (hf : Function.Surjective f) : LocalRing S :=
+theorem of_surjective' [CommRingₓ S] [Nontrivial S] (f : R →+* S) (hf : Function.Surjective f) : LocalRing S :=
   of_is_unit_or_is_unit_one_sub_self
     (by
       intro b
@@ -187,10 +195,10 @@ instance is_local_ring_hom_comp (g : S →+* T) (f : R →+* S) [IsLocalRingHom 
     IsLocalRingHom (g.comp f) where
   map_nonunit := fun a => IsLocalRingHom.map_nonunit a ∘ IsLocalRingHom.map_nonunit (f a)
 
-instance is_local_ring_hom_equiv (f : R ≃+* S) : IsLocalRingHom f.toRingHom where
+instance is_local_ring_hom_equiv (f : R ≃+* S) : IsLocalRingHom (f : R →+* S) where
   map_nonunit := fun a ha => by
-    convert f.symm.to_ring_hom.is_unit_map ha
-    rw [RingEquiv.symm_to_ring_hom_apply_to_ring_hom_apply]
+    convert (f.symm : S →+* R).is_unit_map ha
+    exact (RingEquiv.symm_apply_apply f a).symm
 
 @[simp]
 theorem is_unit_of_map_unit (f : R →+* S) [IsLocalRingHom f] a (h : IsUnit (f a)) : IsUnit a :=
@@ -212,7 +220,7 @@ instance _root_.CommRing.is_local_ring_hom_comp {R S T : CommRingₓₓ} (f : R 
 theorem _root_.ring_hom.domain_local_ring {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [H : LocalRing S]
     (f : R →+* S) [IsLocalRingHom f] : LocalRing R := by
   have : Nontrivial R := pullback_nonzero f f.map_zero f.map_one
-  constructor
+  apply LocalRing.of_nonunits_add
   intro a b
   simp_rw [← map_mem_nonunits_iff f, f.map_add]
   exact LocalRing.nonunits_add
@@ -283,6 +291,18 @@ theorem local_hom_tfae (f : R →+* S) :
   tfae_finish
 
 end
+
+theorem of_surjective [CommSemiringₓ R] [LocalRing R] [CommSemiringₓ S] [Nontrivial S] (f : R →+* S) [IsLocalRingHom f]
+    (hf : Function.Surjective f) : LocalRing S :=
+  of_is_unit_or_is_unit_of_is_unit_add
+    (by
+      intro a b hab
+      obtain ⟨a, rfl⟩ := hf a
+      obtain ⟨b, rfl⟩ := hf b
+      replace hab : IsUnit (f (a + b))
+      exact by
+        simpa only [map_add] using hab
+      exact (is_unit_or_is_unit_of_is_unit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map f.is_unit_map)
 
 section
 

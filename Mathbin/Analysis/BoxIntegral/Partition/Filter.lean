@@ -197,7 +197,7 @@ variable {l l₁ l₂ : IntegrationParams}
 namespace IntegrationParams
 
 /-- Auxiliary equivalence with a product type used to lift an order. -/
-def equivProd : integration_params ≃ Bool × OrderDual Bool × OrderDual Bool where
+def equivProd : integration_params ≃ Bool × Boolᵒᵈ × Boolᵒᵈ where
   toFun := fun l => ⟨l.1, OrderDual.toDual l.2, OrderDual.toDual l.3⟩
   invFun := fun l => ⟨l.1, OrderDual.ofDual l.2.1, OrderDual.ofDual l.2.2⟩
   left_inv := fun ⟨a, b, c⟩ => rfl
@@ -207,7 +207,7 @@ instance : PartialOrderₓ IntegrationParams :=
   PartialOrderₓ.lift equivProd equivProd.Injective
 
 /-- Auxiliary `order_iso` with a product type used to lift a `bounded_order` structure. -/
-def isoProd : integration_params ≃o Bool × OrderDual Bool × OrderDual Bool :=
+def isoProd : integration_params ≃o Bool × Boolᵒᵈ × Boolᵒᵈ :=
   ⟨equivProd, fun ⟨x, y, z⟩ => Iff.rfl⟩
 
 instance : BoundedOrder IntegrationParams :=

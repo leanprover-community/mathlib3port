@@ -111,7 +111,7 @@ protected theorem le_total : a ≤ b ∨ b ≤ a := by
 
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b := by
   have :=
-    eq_neg_of_add_eq_zero
+    eq_neg_of_add_eq_zero_left
       (Rat.nonneg_antisymm hba <| by
         rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_negₓ] at this

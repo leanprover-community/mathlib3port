@@ -137,6 +137,21 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicatorₓ s f x �
       by
       simp
 
+theorem of_real_set_integral_one_of_measure_ne_top {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {s : Set α}
+    (hs : μ s ≠ ∞) : Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = μ s :=
+  calc
+    Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = Ennreal.ofReal (∫ x in s, ∥(1 : ℝ)∥ ∂μ) := by
+      simp only [norm_one]
+    _ = ∫⁻ x in s, 1 ∂μ := by
+      rw [of_real_integral_norm_eq_lintegral_nnnorm (integrable_on_const.2 (Or.inr hs.lt_top))]
+      simp only [nnnorm_one, Ennreal.coe_one]
+    _ = μ s := set_lintegral_one _
+    
+
+theorem of_real_set_integral_one {α : Type _} {m : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ] (s : Set α) :
+    Ennreal.ofReal (∫ x in s, (1 : ℝ) ∂μ) = μ s :=
+  of_real_set_integral_one_of_measure_ne_top (measure_ne_top μ s)
+
 theorem integral_piecewise [DecidablePred (· ∈ s)] (hs : MeasurableSet s) {f g : α → E} (hf : IntegrableOn f s μ)
     (hg : IntegrableOn g (sᶜ) μ) : (∫ x, s.piecewise f g x ∂μ) = (∫ x in s, f x ∂μ) + ∫ x in sᶜ, g x ∂μ := by
   rw [← Set.indicator_add_compl_eq_piecewise, integral_add' (hf.indicator hs) (hg.indicator hs.compl),

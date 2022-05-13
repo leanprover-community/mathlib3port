@@ -9,7 +9,7 @@ import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Pullbacks
 import Mathbin.Topology.Sheaves.Functors
 import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
-import Mathbin.Algebra.Category.CommRing.Instances
+import Mathbin.Algebra.Category.Ring.Instances
 
 /-!
 # Open immersions of structured spaces
@@ -791,7 +791,7 @@ theorem sigma_ι_open_embedding : OpenEmbedding (colimit.ι F i).base := by
     has_colimit.iso_of_nat_iso_ι_hom discrete.nat_iso_functor i
   rw [← iso.eq_comp_inv] at this
   rw [this]
-  have : colimit.ι _ _ ≫ _ = _ := Top.sigma_iso_sigma_hom_ι (F ⋙ SheafedSpace.forget C).obj i
+  have : colimit.ι _ _ ≫ _ = _ := Top.sigma_iso_sigma_hom_ι.{v} (F ⋙ SheafedSpace.forget C).obj i
   rw [← iso.eq_comp_inv] at this
   rw [this]
   simp_rw [← category.assoc, Top.open_embedding_iff_comp_is_iso, Top.open_embedding_iff_is_iso_comp]
@@ -809,13 +809,13 @@ theorem image_preimage_is_empty (j : ι) (h : i ≠ j) (U : Opens (F.obj i)) :
   replace eq :=
     concrete_category.congr_arg
       (preserves_colimit_iso (SheafedSpace.forget C) F ≪≫
-          has_colimit.iso_of_nat_iso discrete.nat_iso_functor ≪≫ Top.sigmaIsoSigma _).Hom
+          has_colimit.iso_of_nat_iso discrete.nat_iso_functor ≪≫ Top.sigmaIsoSigma.{v} _).Hom
       Eq
   simp_rw [CategoryTheory.Iso.trans_hom, ← Top.comp_app, ← PresheafedSpace.comp_base]  at eq
   rw [ι_preserves_colimits_iso_inv] at eq
   change ((SheafedSpace.forget C).map (colimit.ι F i) ≫ _) y = ((SheafedSpace.forget C).map (colimit.ι F j) ≫ _) x at eq
   rw [ι_preserves_colimits_iso_hom_assoc, ι_preserves_colimits_iso_hom_assoc, has_colimit.iso_of_nat_iso_ι_hom_assoc,
-    has_colimit.iso_of_nat_iso_ι_hom_assoc, Top.sigma_iso_sigma_hom_ι, Top.sigma_iso_sigma_hom_ι] at eq
+    has_colimit.iso_of_nat_iso_ι_hom_assoc, Top.sigma_iso_sigma_hom_ι.{v}, Top.sigma_iso_sigma_hom_ι.{v}] at eq
   exact h (congr_argₓ Sigma.fst Eq)
 
 instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpace.IsOpenImmersion (colimit.ι F i) where

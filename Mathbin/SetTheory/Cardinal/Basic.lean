@@ -732,7 +732,7 @@ theorem sum_le_sum {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : sum f
 
 theorem mk_le_mk_mul_of_mk_preimage_le {c : Cardinal} (f : α → β) (hf : ∀ b : β, # (f ⁻¹' {b}) ≤ c) : # α ≤ # β * c :=
   by
-  simpa only [← mk_congr (@Equivₓ.sigmaPreimageEquiv α β f), mk_sigma, ← sum_const'] using sum_le_sum _ _ hf
+  simpa only [← mk_congr (@Equivₓ.sigmaFiberEquiv α β f), mk_sigma, ← sum_const'] using sum_le_sum _ _ hf
 
 /-- The range of an indexed cardinal function, whose outputs live in a higher universe than the
     inputs, is always bounded above. -/
@@ -791,6 +791,10 @@ theorem sum_le_sup {ι : Type u} (f : ι → Cardinal.{u}) : sum f ≤ # ι * su
 theorem sum_le_sup_lift {ι : Type u} (f : ι → Cardinal.{max u v}) : sum f ≤ (# ι).lift * sup.{u, v} f := by
   rw [← (sup f).lift_id, ← lift_umax, lift_umax.{max u v, u}, ← sum_const]
   exact sum_le_sum _ _ (le_sup _)
+
+theorem sum_nat_eq_add_sum_succ (f : ℕ → Cardinal.{u}) : Cardinal.sum f = f 0 + Cardinal.sum fun i => f (i + 1) := by
+  refine' (Equivₓ.sigmaNatSucc fun i => Quotientₓ.out (f i)).cardinal_eq.trans _
+  simp only [mk_sum, mk_out, lift_id, mk_sigma]
 
 theorem sup_eq_zero {ι} {f : ι → Cardinal} [IsEmpty ι] : sup f = 0 := by
   rw [← nonpos_iff_eq_zero]
@@ -1455,7 +1459,7 @@ theorem mk_vector (α : Type u) (n : ℕ) : # (Vector α n) = # α ^ℕ n :=
 
 theorem mk_list_eq_sum_pow (α : Type u) : # (List α) = sum fun n : ℕ => # α ^ℕ n :=
   calc
-    # (List α) = # (Σn, Vector α n) := mk_congr (Equivₓ.sigmaPreimageEquiv List.length).symm
+    # (List α) = # (Σn, Vector α n) := mk_congr (Equivₓ.sigmaFiberEquiv List.length).symm
     _ = sum fun n : ℕ => # α ^ℕ n := by
       simp
     

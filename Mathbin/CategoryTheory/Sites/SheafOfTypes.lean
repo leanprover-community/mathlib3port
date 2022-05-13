@@ -747,7 +747,7 @@ def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P where
     simpa
   inv_hom_id' := by
     ext x Y f hf
-    apply limits.types.limit.lift_π_apply
+    apply limits.types.limit.lift_π_apply'
 
 instance : Inhabited (FirstObj P (⊥ : Presieve X)) :=
   (firstObjEqFamily P _).toEquiv.Inhabited
@@ -800,7 +800,7 @@ theorem compatible_iff (x : FirstObj P S) :
     simpa [first_map, second_map] using t _ g hf
     
   · intro t Y Z f g hf
-    rw [types.limit_ext_iff] at t
+    rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨Y, Z, g, f, hf⟩
     
 
@@ -874,7 +874,7 @@ theorem compatible_iff (x : FirstObj P R) :
     simpa [first_map, second_map] using t hf hg
     
   · intro t Y Z f g hf hg
-    rw [types.limit_ext_iff] at t
+    rw [types.limit_ext_iff'] at t
     simpa [first_map, second_map] using t ⟨⟨Y, f, hf⟩, Z, g, hg⟩
     
 

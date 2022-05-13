@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 -/
 import Mathbin.Order.Filter.Lift
+import Mathbin.Order.Filter.AtTopBot
 
 /-!
 # The filter of small sets
@@ -49,12 +50,16 @@ theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets �
   (has_basis_small_sets lb).tendsto_right_iff
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
-theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.lift' Powerset, p s) ↔ ∃ s ∈ l, ∀ t _ : t ⊆ s, p t :=
+theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ t _ : t ⊆ s, p t :=
   eventually_lift'_iff monotone_powerset
 
 theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
-    (∀ᶠ s in l.lift' Powerset, p s) ↔ ∃ s ∈ l, p s :=
+    (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_small_sets.trans <| exists₂_congrₓ fun s hsf => ⟨fun H => H s (Subset.refl s), fun hs t ht => hp ht hs⟩
+
+theorem HasAntitoneBasis.tendsto_small_sets {ι} [Preorderₓ ι] {s : ι → Set α} (hl : l.HasAntitoneBasis s) :
+    Tendsto s atTop l.smallSets :=
+  tendsto_small_sets_iff.2 fun t ht => hl.eventually_subset ht
 
 @[mono]
 theorem monotone_small_sets : Monotone (@smallSets α) :=
@@ -76,7 +81,7 @@ theorem small_sets_comap (l : Filter β) (f : α → β) : (comap f l).smallSets
   comap_lift'_eq2 monotone_powerset
 
 theorem comap_small_sets (l : Filter β) (f : α → Set β) : comap f l.smallSets = l.lift' (Preimage f ∘ powerset) :=
-  comap_lift'_eq monotone_powerset
+  comap_lift'_eq
 
 theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f i).smallSets := by
   cases is_empty_or_nonempty ι
@@ -112,6 +117,10 @@ theorem eventually_small_sets_forall {p : α → Prop} : (∀ᶠ s in l.smallSet
   simpa only [inf_top_eq, eventually_top] using @eventually_small_sets_eventually α l ⊤ p
 
 alias eventually_small_sets_forall ↔ Filter.Eventually.of_small_sets Filter.Eventually.small_sets
+
+@[simp]
+theorem eventually_small_sets_subset {s : Set α} : (∀ᶠ t in l.smallSets, t ⊆ s) ↔ s ∈ l :=
+  eventually_small_sets_forall
 
 end Filter
 

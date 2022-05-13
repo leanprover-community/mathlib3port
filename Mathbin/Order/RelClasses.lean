@@ -634,15 +634,15 @@ theorem transitive_ge [Preorderₓ α] : Transitive (@Ge α _) :=
 theorem transitive_gt [Preorderₓ α] : Transitive (@Gt α _) :=
   transitive_of_trans _
 
-instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (OrderDual α) (· ≤ ·) :=
+instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal αᵒᵈ (· ≤ ·) :=
   @IsTotal.swap α _ _
 
 instance Nat.Lt.is_well_order : IsWellOrder ℕ (· < ·) :=
   ⟨Nat.lt_wf⟩
 
-instance [LinearOrderₓ α] [h : IsWellOrder α (· < ·)] : IsWellOrder (OrderDual α) (· > ·) :=
+instance [LinearOrderₓ α] [h : IsWellOrder α (· < ·)] : IsWellOrder αᵒᵈ (· > ·) :=
   h
 
-instance [LinearOrderₓ α] [h : IsWellOrder α (· > ·)] : IsWellOrder (OrderDual α) (· < ·) :=
+instance [LinearOrderₓ α] [h : IsWellOrder α (· > ·)] : IsWellOrder αᵒᵈ (· < ·) :=
   h
 

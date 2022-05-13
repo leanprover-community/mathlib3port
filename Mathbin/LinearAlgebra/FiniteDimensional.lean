@@ -85,14 +85,15 @@ Use `finite_dimensional.of_fintype_basis` to prove finite dimension from another
 def FiniteDimensional (K V : Type _) [DivisionRing K] [AddCommGroupₓ V] [Module K V] :=
   Module.Finite K V
 
+variable {K : Type u} {V : Type v}
+
 namespace FiniteDimensional
 
 open IsNoetherian
 
 section DivisionRing
 
-variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂]
-  [Module K V₂]
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 /-- If the codomain of an injective linear map is finite dimensional, the domain must be as well. -/
 theorem of_injective (f : V →ₗ[K] V₂) (w : Function.Injective f) [FiniteDimensional K V₂] : FiniteDimensional K V :=
@@ -106,6 +107,11 @@ theorem of_surjective (f : V →ₗ[K] V₂) (w : Function.Surjective f) [Finite
 variable (K V)
 
 instance finite_dimensional_pi {ι} [Fintype ι] : FiniteDimensional K (ι → K) :=
+  iff_fg.1 is_noetherian_pi
+
+instance finite_dimensional_pi' {ι} [Fintype ι] (M : ι → Type _) [∀ i, AddCommGroupₓ (M i)] [∀ i, Module K (M i)]
+    [I : ∀ i, FiniteDimensional K (M i)] : FiniteDimensional K (∀ i, M i) :=
+  have : ∀ i : ι, IsNoetherian K (M i) := fun i => iff_fg.2 (I i)
   iff_fg.1 is_noetherian_pi
 
 /-- A finite dimensional vector space over a finite field is finite -/
@@ -575,41 +581,49 @@ end
 
 end
 
-end DivisionRing
-
-section Field
-
-variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂]
-  [Module K V₂]
-
 /-- In a vector space with dimension 1, each set {v} is a basis for `v ≠ 0`. -/
+@[simps]
 noncomputable def basisSingleton (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) : Basis ι K V :=
   let b := basisUnique ι h
-  b.map (LinearEquiv.smulOfUnit (Units.mk0 (b.repr v default) (mt basisUnique.repr_eq_zero_iff.mp hv)))
+  let h : b.repr v default ≠ 0 := mt basisUnique.repr_eq_zero_iff.mp hv
+  Basis.of_repr
+    { toFun := fun w => Finsupp.single default (b.repr w default / b.repr v default), invFun := fun f => f default • v,
+      map_add' := by
+        simp [add_div],
+      map_smul' := by
+        simp [mul_div],
+      left_inv := fun w => by
+        apply_fun b.repr using b.repr.to_equiv.injective
+        apply_fun Equivₓ.finsuppUnique
+        simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same, RingHom.id_apply, smul_eq_mul,
+          Pi.smul_apply, Equivₓ.finsupp_unique_apply]
+        exact div_mul_cancel _ h,
+      right_inv := fun f => by
+        ext
+        simp only [LinearEquiv.map_smulₛₗ, Finsupp.coe_smul, Finsupp.single_eq_same, RingHom.id_apply, smul_eq_mul,
+          Pi.smul_apply]
+        exact mul_div_cancel _ h }
 
 @[simp]
 theorem basis_singleton_apply (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) (i : ι) :
-    basisSingleton ι h v hv i = v :=
-  calc
-    basisSingleton ι h v hv i = ((basisUnique ι h).repr v) default • (basisUnique ι h) default := by
-      simp [Subsingleton.elimₓ i default, basis_singleton, LinearEquiv.smulOfUnit, Units.smul_def]
-    _ = v := by
-      rw [← Finsupp.total_unique K (Basis.repr _ v), Basis.total_repr]
-    
+    basisSingleton ι h v hv i = v := by
+  cases Unique.uniq ‹Unique ι› i
+  simp [basis_singleton]
 
 @[simp]
 theorem range_basis_singleton (ι : Type _) [Unique ι] (h : finrank K V = 1) (v : V) (hv : v ≠ 0) :
     Set.Range (basisSingleton ι h v hv) = {v} := by
   rw [Set.range_unique, basis_singleton_apply]
 
-end Field
+end DivisionRing
 
 end FiniteDimensional
 
-variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂]
-  [Module K V₂]
+variable {K V}
 
 section ZeroDim
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 open FiniteDimensional
 
@@ -687,6 +701,10 @@ namespace Submodule
 
 open IsNoetherian FiniteDimensional
 
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
+
 /-- A submodule is finitely generated if and only if it is finite-dimensional -/
 theorem fg_iff_finite_dimensional (s : Submodule K V) : s.Fg ↔ FiniteDimensional K s :=
   ⟨fun h => Module.finite_def.2 <| (fg_top s).2 h, fun h => (fg_top s).1 <| Module.finite_def.1 h⟩
@@ -751,6 +769,20 @@ instance finite_dimensional_supr_prop {P : Prop} (S : P → Submodule K V) [∀ 
     infer_instance
     
 
+/-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
+theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V := by
+  simpa only [Cardinal.nat_cast_le, ← finrank_eq_dim] using s.subtype.dim_le_of_injective (injective_subtype s)
+
+/-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
+theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) : finrank K (V ⧸ s) ≤ finrank K V := by
+  simpa only [Cardinal.nat_cast_le, ← finrank_eq_dim] using (mkq s).dim_le_of_surjective (surjective_quot_mk _)
+
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
+
 /-- In a finite-dimensional vector space, the dimensions of a submodule and of the corresponding
 quotient add up to the dimension of the space. -/
 theorem finrank_quotient_add_finrank [FiniteDimensional K V] (s : Submodule K V) :
@@ -759,21 +791,11 @@ theorem finrank_quotient_add_finrank [FiniteDimensional K V] (s : Submodule K V)
   rw [← finrank_eq_dim, ← finrank_eq_dim, ← finrank_eq_dim] at this
   exact_mod_cast this
 
-/-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
-theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V := by
-  rw [← s.finrank_quotient_add_finrank]
-  exact Nat.le_add_leftₓ _ _
-
 /-- The dimension of a strict submodule is strictly bounded by the dimension of the ambient
 space. -/
 theorem finrank_lt [FiniteDimensional K V] {s : Submodule K V} (h : s < ⊤) : finrank K s < finrank K V := by
   rw [← s.finrank_quotient_add_finrank, add_commₓ]
   exact Nat.lt_add_of_zero_lt_left _ _ (finrank_pos_iff.mpr (quotient.nontrivial_of_lt_top _ h))
-
-/-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
-theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) : finrank K (V ⧸ s) ≤ finrank K V := by
-  rw [← s.finrank_quotient_add_finrank]
-  exact Nat.le_add_rightₓ _ _
 
 /-- The sum of the dimensions of s + t and s ∩ t is the sum of the dimensions of s and t -/
 theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) [FiniteDimensional K s] [FiniteDimensional K t] :
@@ -796,11 +818,15 @@ theorem eq_top_of_disjoint [FiniteDimensional K V] (s t : Submodule K V)
   rw [h_finrank_inf]
   rfl
 
+end Field
+
 end Submodule
 
 namespace LinearEquiv
 
 open FiniteDimensional
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 /-- Finite dimensionality is preserved under linear equivalence. -/
 protected theorem finite_dimensional (f : V ≃ₗ[K] V₂) [FiniteDimensional K V] : FiniteDimensional K V₂ :=
@@ -821,12 +847,22 @@ theorem finrank_map_eq (f : M ≃ₗ[R] M₂) (p : Submodule R M) : finrank R (p
 
 end LinearEquiv
 
+section
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
+
 instance finite_dimensional_finsupp {ι : Type _} [Fintype ι] [h : FiniteDimensional K V] :
     FiniteDimensional K (ι →₀ V) := by
   let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   exact (Finsupp.linearEquivFunOnFintype K V ι).symm.FiniteDimensional
 
+end
+
 namespace FiniteDimensional
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 /-- Two finite-dimensional vector spaces are isomorphic if they have the same (finite) dimension.
 -/
@@ -842,8 +878,6 @@ theorem nonempty_linear_equiv_iff_finrank_eq [FiniteDimensional K V] [FiniteDime
     Nonempty (V ≃ₗ[K] V₂) ↔ finrank K V = finrank K V₂ :=
   ⟨fun ⟨h⟩ => h.finrank_eq, fun h => nonempty_linear_equiv_of_finrank_eq h⟩
 
-section
-
 variable (V V₂)
 
 /-- Two finite-dimensional vector spaces are isomorphic if they have the same (finite) dimension.
@@ -852,7 +886,7 @@ noncomputable def LinearEquiv.ofFinrankEq [FiniteDimensional K V] [FiniteDimensi
     (cond : finrank K V = finrank K V₂) : V ≃ₗ[K] V₂ :=
   Classical.choice <| nonempty_linear_equiv_of_finrank_eq cond
 
-end
+variable {V}
 
 theorem eq_of_le_of_finrank_le {S₁ S₂ : Submodule K V} [FiniteDimensional K S₂] (hle : S₁ ≤ S₂)
     (hd : finrank K S₂ ≤ finrank K S₁) : S₁ = S₂ := by
@@ -869,9 +903,15 @@ theorem eq_of_le_of_finrank_eq {S₁ S₂ : Submodule K V} [FiniteDimensional K 
   eq_of_le_of_finrank_le hle hd.Ge
 
 @[simp]
-theorem finrank_map_subtype_eq (p : Subspace K V) (q : Subspace K p) :
+theorem finrank_map_subtype_eq (p : Submodule K V) (q : Submodule K p) :
     FiniteDimensional.finrank K (q.map p.Subtype) = FiniteDimensional.finrank K q :=
   (Submodule.equivSubtypeMap p q).symm.finrank_eq
+
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 variable [FiniteDimensional K V] [FiniteDimensional K V₂]
 
@@ -891,17 +931,42 @@ noncomputable def LinearEquiv.quotEquivOfQuotEquiv {p q : Subspace K V} (f : (V 
       rw [← @add_right_cancel_iffₓ _ _ (finrank K q), Submodule.finrank_quotient_add_finrank, ←
         LinearEquiv.finrank_eq f, add_commₓ, Submodule.finrank_quotient_add_finrank])
 
+end Field
+
 end FiniteDimensional
 
 namespace LinearMap
 
 open FiniteDimensional
 
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
+
 /-- On a finite-dimensional space, an injective linear map is surjective. -/
 theorem surjective_of_injective [FiniteDimensional K V] {f : V →ₗ[K] V} (hinj : Injective f) : Surjective f := by
   have h := dim_eq_of_injective _ hinj
   rw [← finrank_eq_dim, ← finrank_eq_dim, nat_cast_inj] at h
   exact range_eq_top.1 (eq_top_of_finrank_eq h.symm)
+
+/-- The image under an onto linear map of a finite-dimensional space is also finite-dimensional. -/
+theorem finite_dimensional_of_surjective [h : FiniteDimensional K V] (f : V →ₗ[K] V₂) (hf : f.range = ⊤) :
+    FiniteDimensional K V₂ :=
+  Module.Finite.of_surjective f <| range_eq_top.1 hf
+
+/-- The range of a linear map defined on a finite-dimensional space is also finite-dimensional. -/
+instance finite_dimensional_range [h : FiniteDimensional K V] (f : V →ₗ[K] V₂) : FiniteDimensional K f.range :=
+  f.quotKerEquivRange.FiniteDimensional
+
+/-- The dimensions of the domain and range of an injective linear map are equal. -/
+theorem finrank_range_of_inj {f : V →ₗ[K] V₂} (hf : Function.Injective f) : finrank K f.range = finrank K V := by
+  rw [(LinearEquiv.ofInjective f hf).finrank_eq]
+
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 /-- On a finite-dimensional space, a linear map is injective if and only if it is surjective. -/
 theorem injective_iff_surjective [FiniteDimensional K V] {f : V →ₗ[K] V} : Injective f ↔ Surjective f :=
@@ -935,15 +1000,6 @@ they are inverse to each other on the other side. -/
 theorem comp_eq_id_comm [FiniteDimensional K V] {f g : V →ₗ[K] V} : f.comp g = id ↔ g.comp f = id :=
   mul_eq_one_comm
 
-/-- The image under an onto linear map of a finite-dimensional space is also finite-dimensional. -/
-theorem finite_dimensional_of_surjective [h : FiniteDimensional K V] (f : V →ₗ[K] V₂) (hf : f.range = ⊤) :
-    FiniteDimensional K V₂ :=
-  Module.Finite.of_surjective f <| range_eq_top.1 hf
-
-/-- The range of a linear map defined on a finite-dimensional space is also finite-dimensional. -/
-instance finite_dimensional_range [h : FiniteDimensional K V] (f : V →ₗ[K] V₂) : FiniteDimensional K f.range :=
-  f.quotKerEquivRange.FiniteDimensional
-
 /-- rank-nullity theorem : the dimensions of the kernel and the range of a linear map add up to
 the dimension of the source space. -/
 theorem finrank_range_add_finrank_ker [FiniteDimensional K V] (f : V →ₗ[K] V₂) :
@@ -951,15 +1007,15 @@ theorem finrank_range_add_finrank_ker [FiniteDimensional K V] (f : V →ₗ[K] V
   rw [← f.quot_ker_equiv_range.finrank_eq]
   exact Submodule.finrank_quotient_add_finrank _
 
-/-- The dimensions of the domain and range of an injective linear map are equal. -/
-theorem finrank_range_of_inj {f : V →ₗ[K] V₂} (hf : Function.Injective f) : finrank K f.range = finrank K V := by
-  rw [(LinearEquiv.ofInjective f hf).finrank_eq]
+end Field
 
 end LinearMap
 
 namespace LinearEquiv
 
 open FiniteDimensional
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 variable [FiniteDimensional K V]
 
@@ -984,6 +1040,8 @@ end LinearEquiv
 
 namespace LinearMap
 
+variable [Field K] [AddCommGroupₓ V] [Module K V]
+
 theorem is_unit_iff_ker_eq_bot [FiniteDimensional K V] (f : V →ₗ[K] V) : IsUnit f ↔ f.ker = ⊥ := by
   constructor
   · rintro ⟨u, rfl⟩
@@ -1004,6 +1062,10 @@ end LinearMap
 
 open Module FiniteDimensional
 
+section
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
+
 section Top
 
 @[simp]
@@ -1022,7 +1084,11 @@ noncomputable def basisOfFinrankZero [FiniteDimensional K V] {ι : Type _} [IsEm
   have : Subsingleton V := finrank_zero_iff.1 hV
   Basis.empty _
 
+end
+
 namespace LinearMap
+
+variable [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 theorem injective_iff_surjective_of_finrank_eq_finrank [FiniteDimensional K V] [FiniteDimensional K V₂]
     (H : finrank K V = finrank K V₂) {f : V →ₗ[K] V₂} : Function.Injective f ↔ Function.Surjective f := by
@@ -1116,11 +1182,9 @@ end
 
 namespace Submodule
 
-theorem finrank_mono [FiniteDimensional K V] : Monotone fun s : Submodule K V => finrank K s := fun s t hst =>
-  calc
-    finrank K s = finrank K (comap t.Subtype s) := LinearEquiv.finrank_eq (comapSubtypeEquivOfLe hst).symm
-    _ ≤ finrank K t := Submodule.finrank_le _
-    
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t) (lt : finrank K s < finrank K t) : s < t :=
   lt_of_le_of_neₓ le fun h =>
@@ -1131,6 +1195,18 @@ theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t) (lt 
 theorem lt_top_of_finrank_lt_finrank {s : Submodule K V} (lt : finrank K s < finrank K V) : s < ⊤ := by
   rw [← @finrank_top K V] at lt
   exact lt_of_le_of_finrank_lt_finrank le_top lt
+
+theorem finrank_mono [FiniteDimensional K V] : Monotone fun s : Submodule K V => finrank K s := fun s t hst =>
+  calc
+    finrank K s = finrank K (comap t.Subtype s) := LinearEquiv.finrank_eq (comapSubtypeEquivOfLe hst).symm
+    _ ≤ finrank K t := Submodule.finrank_le _
+    
+
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V] {V₂ : Type v'} [AddCommGroupₓ V₂] [Module K V₂]
 
 theorem finrank_lt_finrank_of_lt [FiniteDimensional K V] {s t : Submodule K V} (hst : s < t) :
     finrank K s < finrank K t := by
@@ -1145,11 +1221,17 @@ theorem finrank_add_eq_of_is_compl [FiniteDimensional K V] {U W : Submodule K V}
   rw [← Submodule.dim_sup_add_dim_inf_eq, top_le_iff.1 h.2, le_bot_iff.1 h.1, finrank_bot, add_zeroₓ]
   exact finrank_top
 
+end Field
+
 end Submodule
 
 section Span
 
 open Submodule
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 variable (K)
 
@@ -1158,9 +1240,6 @@ protected noncomputable def Set.finrank (s : Set V) : ℕ :=
   finrank K (span K s)
 
 variable {K}
-
-theorem Set.finrank_mono [FiniteDimensional K V] {s t : Set V} (h : s ⊆ t) : s.finrank K ≤ t.finrank K :=
-  finrank_mono (span_mono h)
 
 theorem finrank_span_le_card (s : Set V) [fin : Fintype s] : finrank K (span K s) ≤ s.toFinset.card := by
   have := span_of_finite K ⟨Finₓ⟩
@@ -1212,9 +1291,24 @@ theorem finrank_span_singleton {v : V} (hv : v ≠ 0) : finrank K (K∙v) = 1 :=
     simp [hv]
     
 
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
+
+theorem Set.finrank_mono [FiniteDimensional K V] {s t : Set V} (h : s ⊆ t) : s.finrank K ≤ t.finrank K :=
+  finrank_mono (span_mono h)
+
+end Field
+
 end Span
 
 section Basis
+
+section DivisionRing
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 theorem linear_independent_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fintype ι] {b : ι → V}
     (span_eq : span K (Set.Range b) = ⊤) (card_eq : Fintype.card ι = finrank K V) : LinearIndependent K b :=
@@ -1253,7 +1347,7 @@ theorem linear_independent_of_span_eq_top_of_card_eq_finrank {ι : Type _} [Fint
       
     -- To show `b i` is a weighted sum of the other `b j`s, we'll rewrite this sum
     -- to have the form of the assumption `dependent`.
-    apply eq_neg_of_add_eq_zero
+    apply eq_neg_of_add_eq_zero_left
     calc
       (b i + (g i)⁻¹ • (s.erase i).Sum fun j => g j • b j) =
           (g i)⁻¹ • (g i • b i + (s.erase i).Sum fun j => g j • b j) :=
@@ -1314,6 +1408,12 @@ noncomputable def setBasisOfSpanEqTopOfCardEqFinrank {s : Set V} [Fintype s] (sp
   basisOfSpanEqTopOfCardEqFinrank (coe : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ span_eq)
     (trans s.to_finset_card.symm card_eq)
 
+end DivisionRing
+
+section Field
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
+
 theorem span_eq_top_of_linear_independent_of_card_eq_finrank {ι : Type _} [hι : Nonempty ι] [Fintype ι] {b : ι → V}
     (lin_ind : LinearIndependent K b) (card_eq : Fintype.card ι = finrank K V) : span K (Set.Range b) = ⊤ := by
   by_cases' fin : FiniteDimensional K V
@@ -1366,6 +1466,8 @@ theorem coe_set_basis_of_linear_independent_of_card_eq_finrank {s : Set V} [None
     ⇑(setBasisOfLinearIndependentOfCardEqFinrank lin_ind card_eq) = coe :=
   Basis.coe_mk _ _
 
+end Field
+
 end Basis
 
 /-!
@@ -1374,6 +1476,8 @@ We now give characterisations of `finrank K V = 1` and `finrank K V ≤ 1`.
 
 
 section finrank_eq_one
+
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 /-- If there is a nonzero vector and every other vector is a multiple of it,
 then the module has dimension one. -/
@@ -1460,6 +1564,20 @@ theorem finrank_le_one_iff [FiniteDimensional K V] : finrank K V ≤ 1 ↔ ∃ v
   · rintro ⟨v, p⟩
     exact finrank_le_one v p
     
+
+-- We use the `linear_map.compatible_smul` typeclass here, to encompass two situations:
+-- * `A = K`
+-- * `[field K] [algebra K A] [is_scalar_tower K A V] [is_scalar_tower K A W]`
+theorem surjective_of_nonzero_of_finrank_eq_one {K : Type _} [DivisionRing K] {A : Type _} [Semiringₓ A] [Module K V]
+    [Module A V] {W : Type _} [AddCommGroupₓ W] [Module K W] [Module A W] [LinearMap.CompatibleSmul V W K A]
+    (h : finrank K W = 1) {f : V →ₗ[A] W} (w : f ≠ 0) : Surjective f := by
+  change surjective (f.restrict_scalars K)
+  obtain ⟨v, n⟩ := fun_like.ne_iff.mp w
+  intro z
+  obtain ⟨c, rfl⟩ := (finrank_eq_one_iff_of_nonzero' (f v) n).mp h z
+  exact
+    ⟨c • v, by
+      simp ⟩
 
 end finrank_eq_one
 
@@ -1559,6 +1677,8 @@ end SubalgebraDim
 namespace Module
 
 namespace End
+
+variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
     ∃ k : ℕ, k ≤ finrank K V ∧ (f ^ k).ker = (f ^ k.succ).ker := by

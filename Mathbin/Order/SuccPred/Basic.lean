@@ -75,14 +75,14 @@ class PredOrder (α : Type _) [Preorderₓ α] where
   le_pred_of_lt {a b} : a < b → a ≤ pred b
   le_of_pred_lt {a b} : pred a < b → a ≤ b
 
-instance [Preorderₓ α] [SuccOrder α] : PredOrder (OrderDual α) where
+instance [Preorderₓ α] [SuccOrder α] : PredOrder αᵒᵈ where
   pred := to_dual ∘ SuccOrder.succ ∘ of_dual
   pred_le := SuccOrder.le_succ
   min_of_le_pred := fun _ => SuccOrder.max_of_succ_le
   le_pred_of_lt := fun a b h => SuccOrder.succ_le_of_lt h
   le_of_pred_lt := fun a b => SuccOrder.le_of_lt_succ
 
-instance [Preorderₓ α] [PredOrder α] : SuccOrder (OrderDual α) where
+instance [Preorderₓ α] [PredOrder α] : SuccOrder αᵒᵈ where
   succ := to_dual ∘ PredOrder.pred ∘ of_dual
   le_succ := PredOrder.pred_le
   max_of_succ_le := fun _ => PredOrder.min_of_le_pred
@@ -632,11 +632,11 @@ theorem pred_bot : pred (⊥ : α) = ⊥ :=
 
 @[simp]
 theorem le_pred_iff_eq_bot : a ≤ pred a ↔ a = ⊥ :=
-  @succ_le_iff_eq_top (OrderDual α) _ _ _ _
+  @succ_le_iff_eq_top αᵒᵈ _ _ _ _
 
 @[simp]
 theorem pred_lt_iff_ne_bot : pred a < a ↔ a ≠ ⊥ :=
-  @lt_succ_iff_ne_top (OrderDual α) _ _ _ _
+  @lt_succ_iff_ne_top αᵒᵈ _ _ _ _
 
 end OrderBot
 
@@ -1049,7 +1049,7 @@ section SuccOrder
 
 variable [SuccOrder α] [IsSuccArchimedean α] {a b : α}
 
-instance : IsPredArchimedean (OrderDual α) :=
+instance : IsPredArchimedean αᵒᵈ :=
   ⟨fun a b h => by
     convert exists_succ_iterate_of_le h.of_dual⟩
 
@@ -1084,7 +1084,7 @@ section PredOrder
 
 variable [PredOrder α] [IsPredArchimedean α] {a b : α}
 
-instance : IsSuccArchimedean (OrderDual α) :=
+instance : IsSuccArchimedean αᵒᵈ :=
   ⟨fun a b h => by
     convert exists_pred_iterate_of_le h.of_dual⟩
 
@@ -1092,15 +1092,15 @@ theorem LE.le.exists_pred_iterate (h : a ≤ b) : ∃ n, (pred^[n]) b = a :=
   exists_pred_iterate_of_le h
 
 theorem exists_pred_iterate_iff_le : (∃ n, (pred^[n]) b = a) ↔ a ≤ b :=
-  @exists_succ_iterate_iff_le (OrderDual α) _ _ _ _ _
+  @exists_succ_iterate_iff_le αᵒᵈ _ _ _ _ _
 
 /-- Induction principle on a type with a `pred_order` for all elements below a given element `m`. -/
 @[elab_as_eliminator]
 theorem Pred.rec {P : α → Prop} {m : α} (h0 : P m) (h1 : ∀ n, n ≤ m → P n → P (pred n)) ⦃n : α⦄ (hmn : n ≤ m) : P n :=
-  @Succ.rec (OrderDual α) _ _ _ _ _ h0 h1 _ hmn
+  @Succ.rec αᵒᵈ _ _ _ _ _ h0 h1 _ hmn
 
 theorem Pred.rec_iff {p : α → Prop} (hsucc : ∀ a, p a ↔ p (pred a)) {a b : α} (h : a ≤ b) : p a ↔ p b :=
-  (@Succ.rec_iff (OrderDual α) _ _ _ _ hsucc _ _ h).symm
+  (@Succ.rec_iff αᵒᵈ _ _ _ _ hsucc _ _ h).symm
 
 end PredOrder
 
@@ -1157,7 +1157,7 @@ instance (priority := 100) IsWellOrder.to_is_pred_archimedean [h : IsWellOrder �
 
 instance (priority := 100) IsWellOrder.to_is_succ_archimedean [h : IsWellOrder α (· > ·)] [SuccOrder α] :
     IsSuccArchimedean α := by
-  convert @OrderDual.is_succ_archimedean (OrderDual α) _ _ _
+  convert @OrderDual.is_succ_archimedean αᵒᵈ _ _ _
 
 end IsWellOrder
 

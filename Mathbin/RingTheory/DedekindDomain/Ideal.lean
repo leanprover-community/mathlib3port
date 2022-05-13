@@ -174,7 +174,7 @@ theorem is_principal_inv (I : FractionalIdeal R₁⁰ K) [Submodule.IsPrincipal 
   exact (right_inverse_eq _ I (FractionalIdeal.spanSingleton _ (generator (I : Submodule R₁ K))⁻¹) hI).symm
 
 @[simp]
-theorem one_inv : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
+theorem inv_one : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
   FractionalIdeal.div_one
 
 end FractionalIdeal
@@ -400,7 +400,7 @@ theorem mul_inv_cancel_of_le_one [h : IsDedekindDomain A] {I : Ideal A} (hI0 : I
     (hI : ((I * I⁻¹)⁻¹ : FractionalIdeal A⁰ K) ≤ 1) : (I * I⁻¹ : FractionalIdeal A⁰ K) = 1 := by
   -- Handle a few trivial cases.
   by_cases' hI1 : I = ⊤
-  · rw [hI1, coe_ideal_top, one_mulₓ, FractionalIdeal.one_inv]
+  · rw [hI1, coe_ideal_top, one_mulₓ, FractionalIdeal.inv_one]
     
   by_cases' hNF : IsField A
   · let this := hNF.to_field

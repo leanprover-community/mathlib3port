@@ -46,7 +46,7 @@ on R / J = `ideal.quotient J` is `on_quot v h`.
 
 ## Implementation Details
 
-`add_valuation R Γ₀` is implemented as `valuation R (multiplicative (order_dual Γ₀))`.
+`add_valuation R Γ₀` is implemented as `valuation R (multiplicative Γ₀)ᵒᵈ`.
 
 ## TODO
 
@@ -287,6 +287,19 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
     rwa [add_commₓ, max_commₓ] at h'
     
 
+theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y := by
+  convert v.map_add_of_distinct_val _
+  · symm
+    rw [max_eq_right_iff]
+    exact le_of_ltₓ h
+    
+  · exact ne_of_ltₓ h
+    
+
+theorem map_add_eq_of_lt_left (h : v y < v x) : v (x + y) = v x := by
+  rw [add_commₓ]
+  exact map_add_eq_of_lt_right _ h
+
 theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x := by
   have := Valuation.map_add_of_distinct_val v (ne_of_gtₓ h).symm
   rw [max_eq_rightₓ (le_of_ltₓ h)] at this
@@ -386,6 +399,57 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
     replace hy := v'.ne_zero_iff.mpr hy
     replace H := le_of_le_mul_right hy H
     rwa [h]
+    
+
+theorem is_equiv_iff_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] {K : Type _}
+    [DivisionRing K] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x ≤ 1 ↔ v' x ≤ 1 :=
+  ⟨fun h x => by
+    simpa using h x 1, is_equiv_of_val_le_one _ _⟩
+
+theorem is_equiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀] {K : Type _}
+    [DivisionRing K] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) : v.IsEquiv v' ↔ ∀ {x : K}, v x = 1 ↔ v' x = 1 := by
+  constructor
+  · intro h x
+    simpa using @is_equiv.val_eq _ _ _ _ _ _ v v' h x 1
+    
+  · intro h
+    apply is_equiv_of_val_le_one
+    intro x
+    constructor
+    · intro hx
+      cases' lt_or_eq_of_leₓ hx with hx' hx'
+      · have : v (1 + x) = 1 := by
+          rw [← v.map_one]
+          apply map_add_eq_of_lt_left
+          simpa
+        rw [h] at this
+        rw
+          [show x = -1 + (1 + x) by
+            simp ]
+        refine' le_transₓ (v'.map_add _ _) _
+        simp [this]
+        
+      · rw [h] at hx'
+        exact le_of_eqₓ hx'
+        
+      
+    · intro hx
+      cases' lt_or_eq_of_leₓ hx with hx' hx'
+      · have : v' (1 + x) = 1 := by
+          rw [← v'.map_one]
+          apply map_add_eq_of_lt_left
+          simpa
+        rw [← h] at this
+        rw
+          [show x = -1 + (1 + x) by
+            simp ]
+        refine' le_transₓ (v.map_add _ _) _
+        simp [this]
+        
+      · rw [← h] at hx'
+        exact le_of_eqₓ hx'
+        
+      
     
 
 end
@@ -516,7 +580,7 @@ variable (R) [Ringₓ R] (Γ₀ : Type _) [LinearOrderedAddCommMonoidWithTop Γ�
 /-- The type of `Γ₀`-valued additive valuations on `R`. -/
 @[nolint has_inhabited_instance]
 def AddValuation :=
-  Valuation R (Multiplicative (OrderDual Γ₀))
+  Valuation R (Multiplicative Γ₀ᵒᵈ)
 
 end AddMonoidₓ
 
@@ -544,8 +608,7 @@ variable (f : R → Γ₀) (h0 : f 0 = ⊤) (h1 : f 1 = 0)
 
 variable (hadd : ∀ x y, min (f x) (f y) ≤ f (x + y)) (hmul : ∀ x y, f (x * y) = f x + f y)
 
-/-- An alternate constructor of `add_valuation`, that doesn't reference
-  `multiplicative (order_dual Γ₀)` -/
+/-- An alternate constructor of `add_valuation`, that doesn't reference `multiplicative Γ₀ᵒᵈ` -/
 def of : AddValuation R Γ₀ where
   toFun := f
   map_one' := h1
@@ -561,7 +624,7 @@ theorem of_apply : (of f h0 h1 hadd hmul) r = f r :=
 
 /-- The `valuation` associated to an `add_valuation` (useful if the latter is constructed using
 `add_valuation.of`). -/
-def valuation : Valuation R (Multiplicative (OrderDual Γ₀)) :=
+def valuation : Valuation R (Multiplicative Γ₀ᵒᵈ) :=
   v
 
 @[simp]

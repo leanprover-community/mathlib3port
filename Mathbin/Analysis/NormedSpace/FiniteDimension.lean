@@ -424,7 +424,7 @@ protected theorem LinearIndependent.eventually {ι} [Fintype ι] {f : ι → E} 
     tendsto_finset_sum _ fun i hi => tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
-  replace hg : (∑ i, nnnorm (g i - f i)) < K⁻¹
+  replace hg : (∑ i, ∥g i - f i∥₊) < K⁻¹
   · rw [← Nnreal.coe_lt_coe]
     push_cast
     exact hg
@@ -814,7 +814,7 @@ theorem summable_norm_iff {α E : Type _} [NormedGroup E] [NormedSpace ℝ E] [F
     obtain v := fin_basis ℝ E
     set e := v.equiv_funL
     have : Summable fun x => ∥e (f x)∥ := this (e.summable.2 hf)
-    refine' summable_of_norm_bounded _ (this.mul_left ↑(nnnorm (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E))) fun i => _
+    refine' summable_of_norm_bounded _ (this.mul_left ↑∥(e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E)∥₊) fun i => _
     simpa using (e.symm : (Finₓ (finrank ℝ E) → ℝ) →L[ℝ] E).le_op_norm (e <| f i)
   clear! E
   -- Now we deal with `g : α → fin N → ℝ`

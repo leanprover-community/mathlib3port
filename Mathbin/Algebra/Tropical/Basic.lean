@@ -383,7 +383,7 @@ theorem untrop_pow {α : Type _} [HasScalar α R] (x : Tropical R) (n : α) : un
 theorem trop_smul {α : Type _} [HasScalar α R] (x : R) (n : α) : trop (n • x) = trop x ^ n :=
   rfl
 
-instance [AddZeroClass R] : MulOneClassₓ (Tropical R) where
+instance [AddZeroClassₓ R] : MulOneClassₓ (Tropical R) where
   one := 1
   mul := (· * ·)
   one_mul := fun _ => untrop_injective <| zero_addₓ _

@@ -792,17 +792,19 @@ end PingPongLemma
 instance {ι : Type _} (G : ι → Type _) [∀ i, Groupₓ (G i)] [hG : ∀ i, IsFreeGroup (G i)] :
     IsFreeGroup (FreeProduct G) where
   Generators := Σi, IsFreeGroup.Generators (G i)
-  of := fun x => FreeProduct.of (IsFreeGroup.of x.2)
-  unique_lift' := by
-    intro X _ f
-    refine' ⟨FreeProduct.lift fun i => IsFreeGroup.lift fun x => f ⟨i, x⟩, _⟩
-    constructor
-    · simp
-      
-    · intro g hfg
-      ext i x
-      simpa using hfg ⟨i, x⟩
-      
+  MulEquiv :=
+    MonoidHom.toMulEquiv
+      (FreeGroup.lift fun x : Σi, IsFreeGroup.Generators (G i) => FreeProduct.of (IsFreeGroup.of x.2 : G x.1))
+      (FreeProduct.lift fun i : ι =>
+        (IsFreeGroup.lift fun x : IsFreeGroup.Generators (G i) =>
+          FreeGroup.of (⟨i, x⟩ : Σi, IsFreeGroup.Generators (G i)) :
+          G i →* FreeGroup (Σi, IsFreeGroup.Generators (G i))))
+      (by
+        ext
+        simp )
+      (by
+        ext
+        simp )
 
 /-- A free group is a free product of copies of the free_group over one generator. -/
 -- NB: One might expect this theorem to be phrased with ℤ, but ℤ is an additive group,

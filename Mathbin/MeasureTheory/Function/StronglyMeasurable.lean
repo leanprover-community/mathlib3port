@@ -680,11 +680,11 @@ protected theorem norm {m : MeasurableSpace α} {β : Type _} [NormedGroup β] {
   continuous_norm.comp_strongly_measurable hf
 
 protected theorem nnnorm {m : MeasurableSpace α} {β : Type _} [NormedGroup β] {f : α → β} (hf : StronglyMeasurable f) :
-    StronglyMeasurable fun x => nnnorm (f x) :=
+    StronglyMeasurable fun x => ∥f x∥₊ :=
   continuous_nnnorm.comp_strongly_measurable hf
 
 protected theorem ennnorm {m : MeasurableSpace α} {β : Type _} [NormedGroup β] {f : α → β} (hf : StronglyMeasurable f) :
-    Measurable fun a => (nnnorm (f a) : ℝ≥0∞) :=
+    Measurable fun a => (∥f a∥₊ : ℝ≥0∞) :=
   (Ennreal.continuous_coe.comp_strongly_measurable hf.nnnorm).Measurable
 
 protected theorem real_to_nnreal {m : MeasurableSpace α} {f : α → ℝ} (hf : StronglyMeasurable f) :
@@ -1163,11 +1163,11 @@ protected theorem norm {β : Type _} [NormedGroup β] {f : α → β} (hf : AeSt
   continuous_norm.comp_ae_strongly_measurable hf
 
 protected theorem nnnorm {β : Type _} [NormedGroup β] {f : α → β} (hf : AeStronglyMeasurable f μ) :
-    AeStronglyMeasurable (fun x => nnnorm (f x)) μ :=
+    AeStronglyMeasurable (fun x => ∥f x∥₊) μ :=
   continuous_nnnorm.comp_ae_strongly_measurable hf
 
 protected theorem ennnorm {β : Type _} [NormedGroup β] {f : α → β} (hf : AeStronglyMeasurable f μ) :
-    AeMeasurable (fun a => (nnnorm (f a) : ℝ≥0∞)) μ :=
+    AeMeasurable (fun a => (∥f a∥₊ : ℝ≥0∞)) μ :=
   (Ennreal.continuous_coe.comp_ae_strongly_measurable hf.nnnorm).AeMeasurable
 
 protected theorem edist {β : Type _} [NormedGroup β] {f g : α → β} (hf : AeStronglyMeasurable f μ)
@@ -1228,6 +1228,11 @@ theorem comp_ae_measurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : Measu
 theorem comp_measurable {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α} {μ : Measure γ}
     (hg : AeStronglyMeasurable g (Measure.map f μ)) (hf : Measurable f) : AeStronglyMeasurable (g ∘ f) μ :=
   hg.comp_ae_measurable hf.AeMeasurable
+
+theorem comp_measurable' {γ : Type _} {mγ : MeasurableSpace γ} {mα : MeasurableSpace α} {f : γ → α} {μ : Measure γ}
+    {ν : Measure α} (hg : AeStronglyMeasurable g ν) (hf : Measurable f) (h : μ.map f ≪ ν) :
+    AeStronglyMeasurable (g ∘ f) μ :=
+  (hg.mono' h).comp_measurable hf
 
 theorem is_separable_ae_range (hf : AeStronglyMeasurable f μ) : ∃ t : Set β, IsSeparable t ∧ ∀ᵐ x ∂μ, f x ∈ t := by
   refine' ⟨range (hf.mk f), hf.strongly_measurable_mk.is_separable_range, _⟩
@@ -1426,8 +1431,8 @@ theorem apply_continuous_linear_map {φ : α → F →L[𝕜] E} (hφ : AeStrong
     AeStronglyMeasurable (fun a => φ a v) μ :=
   (ContinuousLinearMap.apply 𝕜 E v).Continuous.comp_ae_strongly_measurable hφ
 
-theorem ae_strongly_measurable_comp₂ (L : E →L[𝕜] F →L[𝕜] G) {f : α → E} {g : α → F} (hf : AeStronglyMeasurable f μ)
-    (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (fun x => L (f x) (g x)) μ :=
+theorem _root_.continuous_linear_map.ae_strongly_measurable_comp₂ (L : E →L[𝕜] F →L[𝕜] G) {f : α → E} {g : α → F}
+    (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (fun x => L (f x) (g x)) μ :=
   L.continuous₂.comp_ae_strongly_measurable <| hf.prod_mk hg
 
 end ContinuousLinearMapNondiscreteNormedField

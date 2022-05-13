@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Arthur, Chris Hughes, Shing Tak Lam
 -/
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
-import Mathbin.Analysis.SpecialFunctions.Log
+import Mathbin.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Inverse of the sinh function
@@ -39,7 +39,7 @@ theorem sinh_injective : Function.Injective sinh :=
   sinh_strict_mono.Injective
 
 private theorem aux_lemma (x : ℝ) : 1 / (x + sqrt (1 + x ^ 2)) = -x + sqrt (1 + x ^ 2) := by
-  refine' (eq_one_div_of_mul_eq_one _).symm
+  refine' (eq_one_div_of_mul_eq_one_right _).symm
   have : 0 ≤ 1 + x ^ 2 := add_nonneg zero_le_one (sq_nonneg x)
   rw [add_commₓ, ← sub_eq_neg_add, ← mul_self_sub_mul_self, mul_self_sqrt this, sq, add_sub_cancel]
 

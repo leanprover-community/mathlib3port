@@ -1,9 +1,10 @@
 /-
 Copyright (c) 2020 Yury Kudryashov. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Alexander Bentkamp, Yury Kudriashov
+Authors: Alexander Bentkamp, Yury Kudryashov
 -/
 import Mathbin.Analysis.Convex.Jensen
+import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Analysis.NormedSpace.FiniteDimension
 import Mathbin.Analysis.NormedSpace.Ray
 import Mathbin.Topology.PathConnected
@@ -33,7 +34,7 @@ We prove the following facts:
 
 variable {ι : Type _} {E : Type _}
 
-open Set
+open Metric Set
 
 open Pointwise Convex
 
@@ -263,11 +264,11 @@ end HasContinuousSmul
 
 section NormedSpace
 
-variable [SemiNormedGroup E] [NormedSpace ℝ E]
+variable [SemiNormedGroup E] [NormedSpace ℝ E] {s t : Set E}
 
 /-- The norm on a real normed space is convex on any convex set. See also `seminorm.convex_on`
 and `convex_on_univ_norm`. -/
-theorem convex_on_norm {s : Set E} (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
+theorem convex_on_norm (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
   ⟨hs, fun x y hx hy a b ha hb hab =>
     calc
       ∥a • x + b • y∥ ≤ ∥a • x∥ + ∥b • y∥ := norm_add_le _ _
@@ -280,7 +281,7 @@ and `convex_on_norm`. -/
 theorem convex_on_univ_norm : ConvexOn ℝ Univ (norm : E → ℝ) :=
   convex_on_norm convex_univ
 
-theorem convex_on_dist (z : E) {s : Set E} (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z := by
+theorem convex_on_dist (z : E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z := by
   simpa [dist_eq_norm, preimage_preimage] using
     (convex_on_norm (hs.translate (-z))).comp_affine_map (AffineMap.id ℝ E - AffineMap.const ℝ E z)
 
@@ -292,6 +293,27 @@ theorem convex_ball (a : E) (r : ℝ) : Convex ℝ (Metric.Ball a r) := by
 
 theorem convex_closed_ball (a : E) (r : ℝ) : Convex ℝ (Metric.ClosedBall a r) := by
   simpa only [Metric.ClosedBall, sep_univ] using (convex_on_univ_dist a).convex_le r
+
+theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (Thickening δ s) := by
+  rw [← add_ball_zero]
+  exact hs.add (convex_ball 0 _)
+
+theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (Cthickening δ s) := by
+  obtain hδ | hδ := le_totalₓ 0 δ
+  · rw [cthickening_eq_Inter_thickening hδ]
+    exact convex_Inter₂ fun _ _ => hs.thickening _
+    
+  · rw [cthickening_of_nonpos hδ]
+    exact hs.closure
+    
+
+/-- If `s`, `t` are disjoint convex sets, `s` is compact and `t` is closed then we can find open
+disjoint convex sets containing them. -/
+theorem Disjoint.exists_open_convexes (disj : Disjoint s t) (hs₁ : Convex ℝ s) (hs₂ : IsCompact s) (ht₁ : Convex ℝ t)
+    (ht₂ : IsClosed t) : ∃ u v, IsOpen u ∧ IsOpen v ∧ Convex ℝ u ∧ Convex ℝ v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v :=
+  let ⟨δ, hδ, hst⟩ := disj.exists_thickenings hs₂ ht₂
+  ⟨_, _, is_open_thickening, is_open_thickening, hs₁.Thickening _, ht₁.Thickening _, self_subset_thickening hδ _,
+    self_subset_thickening hδ _, hst⟩
 
 /-- Given a point `x` in the convex hull of `s` and a point `y`, there exists a point
 of `s` at distance at least `dist x y` from `y`. -/

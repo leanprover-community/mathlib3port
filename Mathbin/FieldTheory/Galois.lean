@@ -1560,7 +1560,7 @@ theorem card_fixing_subgroup_eq_finrank [DecidablePred (· ∈ IntermediateField
 
 /-- The Galois correspondence from intermediate fields to subgroups -/
 def intermediateFieldEquivSubgroup [FiniteDimensional F E] [IsGalois F E] :
-    IntermediateField F E ≃o OrderDual (Subgroup (E ≃ₐ[F] E)) where
+    IntermediateField F E ≃o (Subgroup (E ≃ₐ[F] E))ᵒᵈ where
   toFun := IntermediateField.fixingSubgroup
   invFun := IntermediateField.fixedField
   left_inv := fun K => fixed_field_fixing_subgroup K

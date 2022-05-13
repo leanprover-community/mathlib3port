@@ -542,7 +542,7 @@ theorem inner_vsub_vsub_of_dist_eq_of_dist_eq {c₁ c₂ p₁ p₂ : P} (hc₁ :
     (hc₂ : dist p₁ c₂ = dist p₂ c₂) : ⟪c₂ -ᵥ c₁, p₂ -ᵥ p₁⟫ = 0 := by
   have h : ⟪c₂ -ᵥ c₁ + (c₂ -ᵥ c₁), p₂ -ᵥ p₁⟫ = 0 := by
     conv_lhs => congr congr rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₁]skip rw [← vsub_sub_vsub_cancel_right c₂ c₁ p₂]
-    rw [← add_sub_comm, inner_sub_left]
+    rw [sub_add_sub_comm, inner_sub_left]
     conv_lhs => congr rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₂]skip rw [← vsub_sub_vsub_cancel_right p₂ p₁ c₁]
     rw [dist_comm p₁, dist_comm p₂, dist_eq_norm_vsub V _ p₁, dist_eq_norm_vsub V _ p₂, ←
       real_inner_add_sub_eq_zero_iff] at hc₁ hc₂

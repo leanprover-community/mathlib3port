@@ -245,7 +245,7 @@ theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ i x : β
     (f : Π₀ i, β i) (g : ∀ i, β i → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : f.Sum g ∈ S :=
   dfinsupp_sum_mem S f g h
 
-theorem dfinsupp_sum_add_hom_mem {β : ι → Type _} [∀ i, AddZeroClass (β i)] (S : Submodule R N) (f : Π₀ i, β i)
+theorem dfinsupp_sum_add_hom_mem {β : ι → Type _} [∀ i, AddZeroClassₓ (β i)] (S : Submodule R N) (f : Π₀ i, β i)
     (g : ∀ i, β i →+ N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) : Dfinsupp.sumAddHom g f ∈ S :=
   dfinsupp_sum_add_hom_mem S f g h
 

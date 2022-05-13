@@ -60,7 +60,7 @@ protected theorem id (μ : Measure α) : MeasurePreserving id μ μ :=
 protected theorem ae_measurable {f : α → β} (hf : MeasurePreserving f μa μb) : AeMeasurable f μa :=
   hf.1.AeMeasurable
 
-theorem symm {e : α ≃ᵐ β} {μa : Measure α} {μb : Measure β} (h : MeasurePreserving e μa μb) :
+theorem symm (e : α ≃ᵐ β) {μa : Measure α} {μb : Measure β} (h : MeasurePreserving e μa μb) :
     MeasurePreserving e.symm μb μa :=
   ⟨e.symm.Measurable, by
     rw [← h.map_eq, map_map e.symm.measurable e.measurable, e.symm_comp_self, map_id]⟩

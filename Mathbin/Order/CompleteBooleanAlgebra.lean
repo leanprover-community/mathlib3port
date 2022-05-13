@@ -65,7 +65,7 @@ section Frame
 
 variable [Frame α] {s t : Set α} {a b : α}
 
-instance OrderDual.coframe : Coframe (OrderDual α) :=
+instance OrderDual.coframe : Coframe αᵒᵈ :=
   { OrderDual.completeLattice α with infi_sup_le_sup_Inf := Frame.inf_Sup_le_supr_inf }
 
 theorem inf_Sup_eq : a⊓sup s = ⨆ b ∈ s, a⊓b :=
@@ -124,40 +124,40 @@ section Coframe
 
 variable [Coframe α] {s t : Set α} {a b : α}
 
-instance OrderDual.frame : Frame (OrderDual α) :=
+instance OrderDual.frame : Frame αᵒᵈ :=
   { OrderDual.completeLattice α with inf_Sup_le_supr_inf := Coframe.infi_sup_le_sup_Inf }
 
 theorem sup_Inf_eq : a⊔inf s = ⨅ b ∈ s, a⊔b :=
-  @inf_Sup_eq (OrderDual α) _ _ _
+  @inf_Sup_eq αᵒᵈ _ _ _
 
 theorem Inf_sup_eq : inf s⊔b = ⨅ a ∈ s, a⊔b :=
-  @Sup_inf_eq (OrderDual α) _ _ _
+  @Sup_inf_eq αᵒᵈ _ _ _
 
 theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a :=
-  @supr_inf_eq (OrderDual α) _ _ _ _
+  @supr_inf_eq αᵒᵈ _ _ _ _
 
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
-  @inf_supr_eq (OrderDual α) _ _ _ _
+  @inf_supr_eq αᵒᵈ _ _ _ _
 
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
-  @bsupr_inf_eq (OrderDual α) _ _ _ _ _
+  @bsupr_inf_eq αᵒᵈ _ _ _ _ _
 
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
-  @inf_bsupr_eq (OrderDual α) _ _ _ _ _
+  @inf_bsupr_eq αᵒᵈ _ _ _ _ _
 
 theorem infi_sup_infi {ι ι' : Type _} {f : ι → α} {g : ι' → α} : ((⨅ i, f i)⊔⨅ i, g i) = ⨅ i : ι × ι', f i.1⊔g i.2 :=
-  @supr_inf_supr (OrderDual α) _ _ _ _ _
+  @supr_inf_supr αᵒᵈ _ _ _ _ _
 
 theorem binfi_sup_binfi {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : Set ι} {t : Set ι'} :
     ((⨅ i ∈ s, f i)⊔⨅ j ∈ t, g j) = ⨅ p ∈ s ×ˢ t, f (p : ι × ι').1⊔g p.2 :=
-  @bsupr_inf_bsupr (OrderDual α) _ _ _ _ _ _ _
+  @bsupr_inf_bsupr αᵒᵈ _ _ _ _ _ _ _
 
 theorem Inf_sup_Inf : inf s⊔inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2 :=
-  @Sup_inf_Sup (OrderDual α) _ _ _
+  @Sup_inf_Sup αᵒᵈ _ _ _
 
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
   { Pi.completeLattice with inf := inf,
@@ -170,7 +170,7 @@ section CompleteDistribLattice
 
 variable [CompleteDistribLattice α] {a b : α} {s t : Set α}
 
-instance : CompleteDistribLattice (OrderDual α) :=
+instance : CompleteDistribLattice αᵒᵈ :=
   { OrderDual.frame, OrderDual.coframe with }
 
 instance Pi.completeDistribLattice {ι : Type _} {π : ι → Type _} [∀ i, CompleteDistribLattice (π i)] :

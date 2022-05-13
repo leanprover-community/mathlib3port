@@ -504,9 +504,10 @@ end Equivₓ
 
 namespace RingEquiv
 
-protected theorem local_ring {A B : Type _} [CommRingₓ A] [LocalRing A] [CommRingₓ B] (e : A ≃+* B) : LocalRing B := by
+protected theorem local_ring {A B : Type _} [CommSemiringₓ A] [LocalRing A] [CommSemiringₓ B] (e : A ≃+* B) :
+    LocalRing B :=
   have := e.symm.to_equiv.nontrivial
-  refine' @LocalRing.of_surjective A B _ _ _ _ e e.to_equiv.surjective
+  LocalRing.of_surjective (e : A →+* B) e.surjective
 
 end RingEquiv
 

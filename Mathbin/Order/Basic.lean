@@ -14,7 +14,7 @@ classes and allows to transfer order instances.
 
 ## Type synonyms
 
-* `order_dual α` : A type synonym reversing the meaning of all inequalities.
+* `order_dual α` : A type synonym reversing the meaning of all inequalities, with notation `αᵒᵈ`.
 * `as_linear_order α`: A type synonym to promote `partial_order α` to `linear_order α` using
   `is_total α (≤)`.
 
@@ -495,58 +495,62 @@ instance Order.Preimage.decidable {α β} (f : α → β) (s : β → β → Pro
 /-! ### Order dual -/
 
 
-/-- Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. -/
+/-- Type synonym to equip a type with the dual order: `≤` means `≥` and `<` means `>`. `αᵒᵈ` is
+notation for `order_dual α`. -/
 def OrderDual (α : Type _) : Type _ :=
   α
 
+-- mathport name: «expr ᵒᵈ»
+notation:max α "ᵒᵈ" => OrderDual α
+
 namespace OrderDual
 
-instance (α : Type _) [h : Nonempty α] : Nonempty (OrderDual α) :=
+instance (α : Type _) [h : Nonempty α] : Nonempty αᵒᵈ :=
   h
 
-instance (α : Type _) [h : Subsingleton α] : Subsingleton (OrderDual α) :=
+instance (α : Type _) [h : Subsingleton α] : Subsingleton αᵒᵈ :=
   h
 
-instance (α : Type _) [LE α] : LE (OrderDual α) :=
+instance (α : Type _) [LE α] : LE αᵒᵈ :=
   ⟨fun x y : α => y ≤ x⟩
 
-instance (α : Type _) [LT α] : LT (OrderDual α) :=
+instance (α : Type _) [LT α] : LT αᵒᵈ :=
   ⟨fun x y : α => y < x⟩
 
-instance (α : Type _) [Zero α] : Zero (OrderDual α) :=
+instance (α : Type _) [Zero α] : Zero αᵒᵈ :=
   ⟨(0 : α)⟩
 
 -- `dual_le` and `dual_lt` should not be simp lemmas:
--- they cause a loop since `α` and `order_dual α` are definitionally equal
-theorem dual_le [LE α] {a b : α} : @LE.le (OrderDual α) _ a b ↔ @LE.le α _ b a :=
+-- they cause a loop since `α` and `αᵒᵈ` are definitionally equal
+theorem dual_le [LE α] {a b : α} : @LE.le αᵒᵈ _ a b ↔ @LE.le α _ b a :=
   Iff.rfl
 
-theorem dual_lt [LT α] {a b : α} : @LT.lt (OrderDual α) _ a b ↔ @LT.lt α _ b a :=
+theorem dual_lt [LT α] {a b : α} : @LT.lt αᵒᵈ _ a b ↔ @LT.lt α _ b a :=
   Iff.rfl
 
-instance (α : Type _) [Preorderₓ α] : Preorderₓ (OrderDual α) :=
+instance (α : Type _) [Preorderₓ α] : Preorderₓ αᵒᵈ :=
   { OrderDual.hasLe α, OrderDual.hasLt α with le_refl := le_reflₓ, le_trans := fun a b c hab hbc => hbc.trans hab,
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
 
-instance (α : Type _) [PartialOrderₓ α] : PartialOrderₓ (OrderDual α) :=
+instance (α : Type _) [PartialOrderₓ α] : PartialOrderₓ αᵒᵈ :=
   { OrderDual.preorder α with le_antisymm := fun a b hab hba => @le_antisymmₓ α _ a b hba hab }
 
-instance (α : Type _) [LinearOrderₓ α] : LinearOrderₓ (OrderDual α) :=
+instance (α : Type _) [LinearOrderₓ α] : LinearOrderₓ αᵒᵈ :=
   { OrderDual.partialOrder α with le_total := fun a b : α => le_totalₓ b a,
     decidableLe := (inferInstance : DecidableRel fun a b : α => b ≤ a),
     decidableLt := (inferInstance : DecidableRel fun a b : α => b < a), min := @max α _, max := @min α _,
     min_def := @LinearOrderₓ.max_def α _, max_def := @LinearOrderₓ.min_def α _ }
 
-instance : ∀ [Inhabited α], Inhabited (OrderDual α) :=
+instance : ∀ [Inhabited α], Inhabited αᵒᵈ :=
   id
 
-theorem preorder.dual_dual (α : Type _) [H : Preorderₓ α] : OrderDual.preorder (OrderDual α) = H :=
+theorem preorder.dual_dual (α : Type _) [H : Preorderₓ α] : OrderDual.preorder αᵒᵈ = H :=
   Preorderₓ.ext fun _ _ => Iff.rfl
 
-theorem partialOrder.dual_dual (α : Type _) [H : PartialOrderₓ α] : OrderDual.partialOrder (OrderDual α) = H :=
+theorem partialOrder.dual_dual (α : Type _) [H : PartialOrderₓ α] : OrderDual.partialOrder αᵒᵈ = H :=
   PartialOrderₓ.ext fun _ _ => Iff.rfl
 
-theorem linearOrder.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.linearOrder (OrderDual α) = H :=
+theorem linearOrder.dual_dual (α : Type _) [H : LinearOrderₓ α] : OrderDual.linearOrder αᵒᵈ = H :=
   LinearOrderₓ.ext fun _ _ => Iff.rfl
 
 end OrderDual
@@ -738,7 +742,7 @@ class DenselyOrdered (α : Type u) [LT α] : Prop where
 theorem exists_between [LT α] [DenselyOrdered α] : ∀ {a₁ a₂ : α}, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂ :=
   DenselyOrdered.dense
 
-instance OrderDual.densely_ordered (α : Type u) [LT α] [DenselyOrdered α] : DenselyOrdered (OrderDual α) :=
+instance OrderDual.densely_ordered (α : Type u) [LT α] [DenselyOrdered α] : DenselyOrdered αᵒᵈ :=
   ⟨fun a₁ a₂ ha => (@exists_between α _ _ _ _ ha).imp fun a => And.symm⟩
 
 theorem le_of_forall_le_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a, a₂ < a → a₁ ≤ a) : a₁ ≤ a₂ :=

@@ -393,9 +393,9 @@ end Lex
 
 end Sum
 
-namespace Function
-
 open Sum
+
+namespace Function
 
 theorem Injective.sum_elim {f : α → γ} {g : β → γ} (hf : Injective f) (hg : Injective g) (hfg : ∀ a b, f a ≠ g b) :
     Injective (Sum.elim f g)
@@ -417,4 +417,30 @@ theorem Surjective.sum_map {f : α → β} {g : α' → β'} (hf : Surjective f)
     ⟨inr x, congr_argₓ inr hx⟩
 
 end Function
+
+/-!
+### Ternary sum
+
+Abbreviations for the maps from the summands to `α ⊕ β ⊕ γ`. This is useful for pattern-matching.
+-/
+
+
+namespace Sum3
+
+/-- The map from the first summand into a ternary sum. -/
+@[matchPattern, simp, reducible]
+def in₀ a : Sum α (Sum β γ) :=
+  inl a
+
+/-- The map from the second summand into a ternary sum. -/
+@[matchPattern, simp, reducible]
+def in₁ b : Sum α (Sum β γ) :=
+  inr <| inl b
+
+/-- The map from the third summand into a ternary sum. -/
+@[matchPattern, simp, reducible]
+def in₂ c : Sum α (Sum β γ) :=
+  inr <| inr c
+
+end Sum3
 

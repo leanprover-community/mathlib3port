@@ -376,11 +376,13 @@ theorem zero_rpow_nonneg (x : ℝ) : 0 ≤ (0 : ℝ) ^ x := by
 theorem rpow_nonneg_of_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : 0 ≤ x ^ y := by
   rw [rpow_def_of_nonneg hx] <;> split_ifs <;> simp only [zero_le_one, le_reflₓ, le_of_ltₓ (exp_pos _)]
 
+theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : abs (x ^ y) = abs x ^ y := by
+  have h_rpow_nonneg : 0 ≤ x ^ y := Real.rpow_nonneg_of_nonneg hx_nonneg _
+  rw [abs_eq_self.mpr hx_nonneg, abs_eq_self.mpr h_rpow_nonneg]
+
 theorem abs_rpow_le_abs_rpow (x y : ℝ) : abs (x ^ y) ≤ abs x ^ y := by
-  rcases lt_trichotomyₓ 0 x with (hx | rfl | hx)
-  · rw [abs_of_pos hx, abs_of_pos (rpow_pos_of_pos hx _)]
-    
-  · rw [abs_zero, abs_of_nonneg (rpow_nonneg_of_nonneg le_rfl _)]
+  cases' le_or_ltₓ 0 x with hx hx
+  · rw [abs_rpow_of_nonneg hx]
     
   · rw [abs_of_neg hx, rpow_def_of_neg hx, rpow_def_of_pos (neg_pos.2 hx), log_neg_eq_log, abs_mul,
       abs_of_pos (exp_pos _)]
@@ -394,10 +396,6 @@ theorem abs_rpow_le_exp_log_mul (x y : ℝ) : abs (x ^ y) ≤ exp (log x * y) :=
     
   · rw [rpow_def_of_pos (abs_pos.2 hx), log_abs]
     
-
-theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : abs (x ^ y) = abs x ^ y := by
-  have h_rpow_nonneg : 0 ≤ x ^ y := Real.rpow_nonneg_of_nonneg hx_nonneg _
-  rw [abs_eq_self.mpr hx_nonneg, abs_eq_self.mpr h_rpow_nonneg]
 
 theorem norm_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : ∥x ^ y∥ = ∥x∥ ^ y := by
   simp_rw [Real.norm_eq_abs]
@@ -752,6 +750,12 @@ theorem lt_rpow_of_log_lt (hx : 0 ≤ x) (hy : 0 < y) (h : Real.log x < z * Real
 theorem rpow_le_one_iff_of_pos (hx : 0 < x) : x ^ y ≤ 1 ↔ 1 ≤ x ∧ y ≤ 0 ∨ x ≤ 1 ∧ 0 ≤ y := by
   rw [rpow_def_of_pos hx, exp_le_one_iff, mul_nonpos_iff, log_nonneg_iff hx, log_nonpos_iff hx]
 
+/-- Bound for `|log x * x ^ t|` in the interval `(0, 1]`, for positive real `t`. -/
+theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0 < t) : abs (log x * x ^ t) < 1 / t := by
+  rw [lt_div_iff ht]
+  have := abs_log_mul_self_lt (x ^ t) (rpow_pos_of_pos h1 t) (rpow_le_one h1.le h2 ht.le)
+  rwa [log_rpow h1, mul_assoc, abs_mul, abs_of_pos ht, mul_comm] at this
+
 theorem pow_nat_rpow_nat_inv {x : ℝ} (hx : 0 ≤ x) {n : ℕ} (hn : 0 < n) : (x ^ n) ^ (n⁻¹ : ℝ) = x := by
   have hn0 : (n : ℝ) ≠ 0 := by
     simpa [pos_iff_ne_zero] using hn
@@ -979,6 +983,30 @@ theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 <
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
   "././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error"
 
+namespace Asymptotics
+
+variable {α : Type _} {r c : ℝ} {l : Filter α} {f g : α → ℝ}
+
+theorem IsOWith.rpow (h : IsOWith c f g l) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) :
+    IsOWith (c ^ r) (fun x => f x ^ r) (fun x => g x ^ r) l := by
+  apply is_O_with.of_bound
+  filter_upwards [hg, h.bound] with x hgx hx
+  calc abs (f x ^ r) ≤ abs (f x) ^ r := abs_rpow_le_abs_rpow _ _ _ ≤ (c * abs (g x)) ^ r :=
+      rpow_le_rpow (abs_nonneg _) hx hr _ = c ^ r * abs (g x ^ r) := by
+      rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
+
+theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : IsO f g l) : IsO (fun x => f x ^ r) (fun x => g x ^ r) l :=
+  let ⟨c, hc, h'⟩ := h.exists_nonneg
+  (h'.rpow hc hr hg).IsO
+
+theorem IsOₓ.rpow (hr : 0 < r) (hg : 0 ≤ᶠ[l] g) (h : IsOₓ f g l) : IsOₓ (fun x => f x ^ r) (fun x => g x ^ r) l :=
+  is_o.of_is_O_with fun c hc =>
+    ((h.forall_is_O_with (rpow_pos_of_pos hc r⁻¹)).rpow (rpow_nonneg_of_nonneg hc.le _) hr.le hg).congr_const
+      (by
+        rw [← rpow_mul hc.le, inv_mul_cancel hr.ne', rpow_one])
+
+end Asymptotics
+
 open Asymptotics
 
 /-- `x ^ s = o(exp(b * x))` as `x → ∞` for any real `s` and positive `b`. -/
@@ -1000,6 +1028,20 @@ theorem is_o_pow_exp_pos_mul_at_top (k : ℕ) {b : ℝ} (hb : 0 < b) :
 /-- `x ^ s = o(exp x)` as `x → ∞` for any real `s`. -/
 theorem is_o_rpow_exp_at_top (s : ℝ) : IsOₓ (fun x : ℝ => x ^ s) exp atTop := by
   simpa only [one_mulₓ] using is_o_rpow_exp_pos_mul_at_top s one_pos
+
+theorem is_o_log_rpow_at_top {r : ℝ} (hr : 0 < r) : IsOₓ log (fun x => x ^ r) atTop := by
+  rw [← is_o_const_mul_left_iff hr.ne']
+  refine' (is_o_log_id_at_top.comp_tendsto (tendsto_rpow_at_top hr)).congr' _ eventually_eq.rfl
+  filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using log_rpow hx _
+
+theorem is_o_log_rpow_rpow_at_top {r s : ℝ} (hr : 0 < r) (hs : 0 < s) :
+    IsOₓ (fun x => log x ^ r) (fun x => x ^ s) atTop := by
+  refine' ((is_o_log_rpow_at_top (div_pos hs hr)).rpow hr _).congr' eventually_eq.rfl _
+  · filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx
+    rw [← rpow_mul hx, div_mul_cancel _ hr.ne']
+    
+  · exact (tendsto_rpow_at_top (div_pos hs hr)).Eventually (eventually_ge_at_top 0)
+    
 
 end Limits
 
@@ -1555,7 +1597,7 @@ theorem inv_rpow (x : ℝ≥0∞) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ := by
   rcases eq_or_ne x ⊤ with (rfl | h_top)
   · cases hy <;> simp [*]
     
-  apply eq_inv_of_mul_eq_one
+  apply eq_inv_of_mul_eq_one_left
   rw [← mul_rpow_of_ne_zero (inv_ne_zero.2 h_top) h0, inv_mul_cancel h0 h_top, one_rpow]
 
 theorem div_rpow_of_nonneg (x y : ℝ≥0∞) {z : ℝ} (hz : 0 ≤ z) : (x / y) ^ z = x ^ z / y ^ z := by
@@ -1857,12 +1899,12 @@ namespace NormNum
 
 open Tactic
 
-theorem rpow_pos (a b : ℝ) (b' : ℕ) (c : ℝ) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
-  rw [← h, hb, Real.rpow_nat_cast]
+theorem rpow_pos (a b : ℝ) (b' : ℕ) (c : ℝ) (hb : (b' : ℝ) = b) (h : a ^ b' = c) : a ^ b = c := by
+  rw [← h, ← hb, Real.rpow_nat_cast]
 
-theorem rpow_neg (a b : ℝ) (b' : ℕ) (c c' : ℝ) (a0 : 0 ≤ a) (hb : b = b') (h : a ^ b' = c) (hc : c⁻¹ = c') :
+theorem rpow_neg (a b : ℝ) (b' : ℕ) (c c' : ℝ) (a0 : 0 ≤ a) (hb : (b' : ℝ) = b) (h : a ^ b' = c) (hc : c⁻¹ = c') :
     a ^ -b = c' := by
-  rw [← hc, ← h, hb, Real.rpow_neg a0, Real.rpow_nat_cast]
+  rw [← hc, ← h, ← hb, Real.rpow_neg a0, Real.rpow_nat_cast]
 
 /-- Evaluate `real.rpow a b` where `a` is a rational numeral and `b` is an integer.
 (This cannot go via the generalized version `prove_rpow'` because `rpow_pos` has a side condition;

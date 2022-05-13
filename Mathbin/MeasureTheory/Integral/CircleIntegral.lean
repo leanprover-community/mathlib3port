@@ -99,6 +99,9 @@ theorem Set.Countable.preimage_circle_map {s : Set ℂ} (hs : s.Countable) (c : 
 theorem circle_map_sub_center (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ - c = circleMap 0 R θ := by
   simp [circleMap]
 
+theorem circle_map_zero (R θ : ℝ) : circleMap 0 R θ = R * exp (θ * I) :=
+  zero_addₓ _
+
 @[simp]
 theorem abs_circle_map_zero (R : ℝ) (θ : ℝ) : abs (circleMap 0 R θ) = abs R := by
   simp [circleMap]
@@ -299,6 +302,11 @@ def circleIntegral (f : ℂ → E) (c : ℂ) (R : ℝ) : E :=
 -- mathport name: «expr∮ inC( , ), »
 notation3 "∮ " (...) " in " "C(" c ", " R ")" ", " r:(scoped f => circleIntegral f c R) => r
 
+theorem circle_integral_def_Icc (f : ℂ → E) (c : ℂ) (R : ℝ) :
+    (∮ z in C(c, R), f z) = ∫ θ in Icc 0 (2 * π), deriv (circleMap c R) θ • f (circleMap c R θ) := by
+  simp only [circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
+    measure.restrict_congr_set Ioc_ae_eq_Icc]
+
 namespace circleIntegral
 
 @[simp]
@@ -491,7 +499,7 @@ theorem norm_cauchy_power_series_le (f : ℂ → E) (c : ℂ) (R : ℝ) (n : ℕ
       simp [norm_smul, mul_left_commₓ (abs R)]
     _ ≤ ((2 * π)⁻¹ * ∫ θ : ℝ in 0 ..2 * π, ∥f (circleMap c R θ)∥) * (abs R)⁻¹ ^ n := by
       rcases eq_or_ne R 0 with (rfl | hR)
-      · cases n <;> simp [Real.two_pi_pos]
+      · cases n <;> simp [-mul_inv_rev, Real.two_pi_pos]
         
       · rw [mul_inv_cancel_left₀, mul_assoc, mul_comm ((abs R)⁻¹ ^ n)]
         rwa [Ne.def, _root_.abs_eq_zero]
@@ -543,7 +551,7 @@ theorem has_sum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} 
     have : ∥w / (circleMap c R θ - c)∥ < 1 := by
       simpa [abs_of_pos hR] using hwR.2
     convert (has_sum_geometric_of_norm_lt_1 this).mul_right _
-    simp [← sub_sub, ← mul_inv₀, sub_mul, div_mul_cancel _ (circle_map_ne_center hR.ne')]
+    simp [← sub_sub, ← mul_inv, sub_mul, div_mul_cancel _ (circle_map_ne_center hR.ne')]
     
 
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R`, `R > 0`,

@@ -522,7 +522,7 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
     mem_of_subset_of_mem _
       (chaar_mem_cl_prehaar K₀
         ⟨V⁻¹, (IsOpen.inter h2V₁ h2V₂).Preimage continuous_inv, by
-          simp only [mem_inv, one_inv, h3V₁, h3V₂, V, mem_inter_eq, true_andₓ]⟩)
+          simp only [mem_inv, inv_one, h3V₁, h3V₂, V, mem_inter_eq, true_andₓ]⟩)
   unfold cl_prehaar
   rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩

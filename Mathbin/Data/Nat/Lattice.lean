@@ -167,10 +167,10 @@ theorem supr_lt_succ' (u : ℕ → α) (n : ℕ) : (⨆ k < n + 1, u k) = u 0⊔
   simp
 
 theorem infi_lt_succ (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = (⨅ k < n, u k)⊓u n :=
-  @supr_lt_succ (OrderDual α) _ _ _
+  @supr_lt_succ αᵒᵈ _ _ _
 
 theorem infi_lt_succ' (u : ℕ → α) (n : ℕ) : (⨅ k < n + 1, u k) = u 0⊓⨅ k < n, u (k + 1) :=
-  @supr_lt_succ' (OrderDual α) _ _ _
+  @supr_lt_succ' αᵒᵈ _ _ _
 
 end
 

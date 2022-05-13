@@ -48,12 +48,12 @@ Some concrete circular orders one encounters in the wild are `zmod n` for `0 < n
 
 ## Notes
 
-There's an unsolved diamond here. The instances `has_le α → has_btw (order_dual α)` and
-`has_lt α → has_sbtw (order_dual α)` can each be inferred in two ways:
-* `has_le α` → `has_btw α` → `has_btw (order_dual α)` vs
-  `has_le α` → `has_le (order_dual α)` → `has_btw (order_dual α)`
-* `has_lt α` → `has_sbtw α` → `has_sbtw (order_dual α)` vs
-  `has_lt α` → `has_lt (order_dual α)` → `has_sbtw (order_dual α)`
+There's an unsolved diamond on `order_dual α` here. The instances `has_le α → has_btw αᵒᵈ` and
+`has_lt α → has_sbtw αᵒᵈ` can each be inferred in two ways:
+* `has_le α` → `has_btw α` → `has_btw αᵒᵈ` vs
+  `has_le α` → `has_le αᵒᵈ` → `has_btw αᵒᵈ`
+* `has_lt α` → `has_sbtw α` → `has_sbtw αᵒᵈ` vs
+  `has_lt α` → `has_lt αᵒᵈ` → `has_sbtw αᵒᵈ`
 The fields are propeq, but not defeq. It is temporarily fixed by turning the circularizing instances
 into definitions.
 
@@ -425,21 +425,21 @@ def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularO
 
 section OrderDual
 
-instance (α : Type _) [HasBtw α] : HasBtw (OrderDual α) :=
+instance (α : Type _) [HasBtw α] : HasBtw αᵒᵈ :=
   ⟨fun a b c : α => Btw c b a⟩
 
-instance (α : Type _) [HasSbtw α] : HasSbtw (OrderDual α) :=
+instance (α : Type _) [HasSbtw α] : HasSbtw αᵒᵈ :=
   ⟨fun a b c : α => Sbtw c b a⟩
 
-instance (α : Type _) [h : CircularPreorder α] : CircularPreorder (OrderDual α) :=
+instance (α : Type _) [h : CircularPreorder α] : CircularPreorder αᵒᵈ :=
   { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl, btw_cyclic_left := fun a b c => btw_cyclic_right,
     sbtw_trans_left := fun a b c d habc hbdc => hbdc.trans_right habc,
     sbtw_iff_btw_not_btw := fun a b c => @sbtw_iff_btw_not_btw α _ c b a }
 
-instance (α : Type _) [CircularPartialOrder α] : CircularPartialOrder (OrderDual α) :=
+instance (α : Type _) [CircularPartialOrder α] : CircularPartialOrder αᵒᵈ :=
   { OrderDual.circularPreorder α with btw_antisymm := fun a b c habc hcba => @btw_antisymm α _ _ _ _ hcba habc }
 
-instance (α : Type _) [CircularOrder α] : CircularOrder (OrderDual α) :=
+instance (α : Type _) [CircularOrder α] : CircularOrder αᵒᵈ :=
   { OrderDual.circularPartialOrder α with btw_total := fun a b c => btw_total c b a }
 
 end OrderDual

@@ -51,7 +51,7 @@ theorem ess_sup_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essSup f μ = 
   limsup_congr hfg
 
 theorem ess_inf_congr_ae {f g : α → β} (hfg : f =ᵐ[μ] g) : essInf f μ = essInf g μ :=
-  @ess_sup_congr_ae α (OrderDual β) _ _ _ _ _ hfg
+  @ess_sup_congr_ae α βᵒᵈ _ _ _ _ _ hfg
 
 end ConditionallyCompleteLattice
 
@@ -81,7 +81,7 @@ theorem ess_sup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f
 
 @[simp]
 theorem ess_inf_measure_zero {m : MeasurableSpace α} {f : α → β} : essInf f (0 : Measureₓ α) = ⊤ :=
-  @ess_sup_measure_zero α (OrderDual β) _ _ _
+  @ess_sup_measure_zero α βᵒᵈ _ _ _
 
 theorem ess_sup_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essSup f μ ≤ essSup g μ :=
   limsup_le_limsup hfg
@@ -103,10 +103,10 @@ theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ =>
     
 
 theorem ess_inf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
-  @ess_sup_const α (OrderDual β) _ _ _ _ hμ
+  @ess_sup_const α βᵒᵈ _ _ _ _ hμ
 
 theorem le_ess_inf_of_ae_le {f : α → β} (c : β) (hf : (fun _ => c) ≤ᵐ[μ] f) : c ≤ essInf f μ :=
-  @ess_sup_le_of_ae_le α (OrderDual β) _ _ _ _ c hf
+  @ess_sup_le_of_ae_le α βᵒᵈ _ _ _ _ c hf
 
 theorem ess_sup_const_bot : essSup (fun x : α => (⊥ : β)) μ = (⊥ : β) :=
   limsup_const_bot
@@ -123,7 +123,7 @@ theorem OrderIso.ess_sup_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ
 
 theorem OrderIso.ess_inf_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ] (f : α → β) (μ : Measureₓ α)
     (g : β ≃o γ) : g (essInf f μ) = essInf (fun x => g (f x)) μ :=
-  @OrderIso.ess_sup_apply α (OrderDual β) _ _ (OrderDual γ) _ _ _ g.dual
+  @OrderIso.ess_sup_apply α βᵒᵈ _ _ γᵒᵈ _ _ _ g.dual
 
 theorem ess_sup_mono_measure {f : α → β} (hμν : ν ≪ μ) : essSup f ν ≤ essSup f μ := by
   refine' limsup_le_limsup_of_le (measure.ae_le_iff_absolutely_continuous.mpr hμν) _ _
@@ -229,7 +229,7 @@ theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : �
   Filter.eventually_lt_of_limsup_lt hf
 
 theorem ae_lt_of_lt_ess_inf {f : α → β} {x : β} (hf : x < essInf f μ) : ∀ᵐ y ∂μ, x < f y :=
-  @ae_lt_of_ess_sup_lt α (OrderDual β) _ _ _ _ _ hf
+  @ae_lt_of_ess_sup_lt α βᵒᵈ _ _ _ _ _ hf
 
 theorem ess_sup_indicator_eq_ess_sup_restrict [Zero β] {s : Set α} {f : α → β} (hf : 0 ≤ᵐ[μ.restrict s] f)
     (hs : MeasurableSet s) (hs_not_null : μ s ≠ 0) : essSup (s.indicator f) μ = essSup f (μ.restrict s) := by

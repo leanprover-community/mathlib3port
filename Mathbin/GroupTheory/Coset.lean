@@ -453,7 +453,7 @@ def rightCosetEquivSubgroup (g : α) : RightCoset (↑s) g ≃ s :=
 @[to_additive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
 noncomputable def groupEquivQuotientTimesSubgroup : α ≃ (α ⧸ s) × s :=
   calc
-    α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equivₓ.sigmaPreimageEquiv QuotientGroup.mk).symm
+    α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equivₓ.sigmaFiberEquiv QuotientGroup.mk).symm
     _ ≃ ΣL : α ⧸ s, LeftCoset (Quotientₓ.out' L) s :=
       Equivₓ.sigmaCongrRight fun L => by
         rw [← eq_class_eq_left_coset]

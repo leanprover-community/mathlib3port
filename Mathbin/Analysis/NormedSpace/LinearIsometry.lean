@@ -123,7 +123,7 @@ theorem norm_map (x : E) : ∥f x∥ = ∥x∥ :=
   f.norm_map' x
 
 @[simp]
-theorem nnnorm_map (x : E) : nnnorm (f x) = nnnorm x :=
+theorem nnnorm_map (x : E) : ∥f x∥₊ = ∥x∥₊ :=
   Nnreal.eq <| f.norm_map x
 
 protected theorem isometry : Isometry f :=
@@ -684,7 +684,7 @@ theorem map_smul [Module R E₂] {e : E ≃ₗᵢ[R] E₂} (c : R) (x : E) : e (
   e.1.map_smul c x
 
 @[simp]
-theorem nnnorm_map (x : E) : nnnorm (e x) = nnnorm x :=
+theorem nnnorm_map (x : E) : ∥e x∥₊ = ∥x∥₊ :=
   e.toLinearIsometry.nnnorm_map x
 
 @[simp]

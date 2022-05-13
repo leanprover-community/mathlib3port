@@ -206,7 +206,7 @@ theorem discr_power_basis_eq_prod'' [IsSeparable K L] (e : Finₓ pb.dim ≃ (L 
   have hle : 1 ≤ pb.dim := by
     rw [← hn, Nat.one_le_iff_ne_zero, ← zero_lt_iff, FiniteDimensional.finrank_pos_iff]
     infer_instance
-  rw [hn, Nat.cast_dvd h₂ hne, Nat.cast_mulₓ, Nat.cast_sub hle]
+  rw [hn, Nat.cast_div h₂ hne, Nat.cast_mulₓ, Nat.cast_sub hle]
   field_simp
   ring
 

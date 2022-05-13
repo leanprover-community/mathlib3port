@@ -117,7 +117,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         fun b => one_div_pow_le_one_div_pow_of_le m1.le (b.add_factorial_succ_le_factorial_add_succ n))
         (-- 3. the term with index `i = 2` of the first series is strictly smaller than
           -- the corresponding term of the second series
-          one_div_pow_strict_mono
+          one_div_pow_strict_anti
           m1 (n.add_factorial_succ_lt_factorial_add_succ rfl.le))
         (-- 4. the second series is summable, since its terms grow quickly
           summable_one_div_pow_of_le
@@ -126,7 +126,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     by
       congr
       ext i
-      rw [pow_addₓ, ← div_div_eq_div_mul, div_eq_mul_one_div, ← one_div_pow i]
+      rw [pow_addₓ, ← div_div, div_eq_mul_one_div, ← one_div_pow i]
     -- factor the constant `(1 / m ^ (n + 1)!)` out of the series
         _ =
         (∑' i, (1 / m) ^ i) * (1 / m ^ (n + 1)!) :=

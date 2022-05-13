@@ -3,7 +3,7 @@ Copyright (c) 2019 Scott Morrison. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 -/
-import Mathbin.Algebra.Category.CommRing.Basic
+import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Data.MvPolynomial.CommRing
 
 /-!

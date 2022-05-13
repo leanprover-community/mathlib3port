@@ -92,7 +92,7 @@ theorem cast_ite (P : Prop) [Decidable P] (m n : ℕ) : ((ite P m n : ℕ) : α)
 end
 
 @[simp, norm_cast]
-theorem cast_oneₓ [AddZeroClass α] [One α] : ((1 : ℕ) : α) = 1 :=
+theorem cast_oneₓ [AddZeroClassₓ α] [One α] : ((1 : ℕ) : α) = 1 :=
   zero_addₓ _
 
 @[simp, norm_cast]
@@ -134,7 +134,7 @@ theorem cast_bit0 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit0 n : ℕ) : α) =
 theorem cast_bit1 [AddMonoidₓ α] [One α] (n : ℕ) : ((bit1 n : ℕ) : α) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 
-theorem cast_two {α : Type _} [AddZeroClass α] [One α] : ((2 : ℕ) : α) = 2 := by
+theorem cast_two {α : Type _} [AddZeroClassₓ α] [One α] : ((2 : ℕ) : α) = 2 := by
   rw [cast_add_one, cast_one, bit0]
 
 @[simp, norm_cast]
@@ -155,14 +155,12 @@ theorem cast_mulₓ [NonAssocSemiringₓ α] m : ∀ n, ((m * n : ℕ) : α) = m
         rw [cast_mul n, left_distrib, mul_oneₓ]
 
 @[simp]
-theorem cast_dvd {α : Type _} [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
-    ((m / n : ℕ) : α) = m / n := by
+theorem cast_div [Field α] {m n : ℕ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) : ((m / n : ℕ) : α) = m / n := by
   rcases n_dvd with ⟨k, rfl⟩
   have : n ≠ 0 := by
     rintro rfl
     simpa using n_nonzero
-  rw [Nat.mul_div_cancel_leftₓ _ (pos_iff_ne_zero.2 this)]
-  rw [Nat.cast_mulₓ, mul_div_cancel_left _ n_nonzero]
+  rw [Nat.mul_div_cancel_leftₓ _ this.bot_lt, cast_mul, mul_div_cancel_left _ n_nonzero]
 
 /-- `coe : ℕ → α` as a `ring_hom` -/
 def castRingHom (α : Type _) [NonAssocSemiringₓ α] : ℕ →+* α :=
@@ -301,7 +299,7 @@ end Prod
 
 section AddMonoidHomClass
 
-variable {A B F : Type _} [AddZeroClass A] [AddMonoidₓ B] [One B]
+variable {A B F : Type _} [AddZeroClassₓ A] [AddMonoidₓ B] [One B]
 
 theorem ext_nat' [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
   FunLike.ext f g <| by

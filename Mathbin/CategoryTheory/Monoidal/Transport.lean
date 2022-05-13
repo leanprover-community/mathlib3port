@@ -35,7 +35,8 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 /-- Transport a monoidal structure along an equivalence of (plain) categories.
 -/
-@[simps]
+-- We just want these simp lemmas locally
+@[simps (config := { attrs := [`_refl_lemma] })]
 def transport (e : C ≌ D) : MonoidalCategory.{v₂} D where
   tensorObj := fun X Y => e.Functor.obj (e.inverse.obj X ⊗ e.inverse.obj Y)
   tensorHom := fun W X Y Z f g => e.Functor.map (e.inverse.map f ⊗ e.inverse.map g)
@@ -128,6 +129,14 @@ instance (e : C ≌ D) : MonoidalCategory (Transported e) :=
 instance (e : C ≌ D) : Inhabited (Transported e) :=
   ⟨𝟙_ _⟩
 
+section
+
+attribute [local simp] transport_tensor_unit
+
+section
+
+attribute [local simp] transport_tensor_hom transport_associator transport_left_unitor transport_right_unitor
+
 /-- We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
@@ -173,6 +182,8 @@ def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e) where
     congr 1
     simp only [← right_unitor_naturality, id_comp, ← tensor_comp_assoc, comp_id]
 
+end
+
 /-- We can upgrade `e.functor` to a monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
@@ -184,6 +195,8 @@ def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e) where
   μ_is_iso := fun X Y => by
     dsimp'
     infer_instance
+
+end
 
 instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor := by
   dsimp'

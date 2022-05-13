@@ -447,7 +447,7 @@ theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) :=
 theorem subgroup_eq_top_of_subsingleton (H : Subgroup G) (h : Subsingleton (G ⧸ H)) : H = ⊤ :=
   top_unique fun x _ => by
     have this : 1⁻¹ * x ∈ H := QuotientGroup.eq.1 (Subsingleton.elimₓ _ _)
-    rwa [one_inv, one_mulₓ] at this
+    rwa [inv_one, one_mulₓ] at this
 
 end trivialₓ
 

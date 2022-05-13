@@ -64,20 +64,16 @@ variable {M : Type _} [MeasurableSpace M]
 
 section OrderDual
 
-instance (priority := 100) OrderDual.has_measurable_sup [HasInf M] [HasMeasurableInf M] :
-    HasMeasurableSup (OrderDual M) :=
+instance (priority := 100) [HasInf M] [HasMeasurableInf M] : HasMeasurableSup Mᵒᵈ :=
   ⟨@measurable_const_inf M _ _ _, @measurable_inf_const M _ _ _⟩
 
-instance (priority := 100) OrderDual.has_measurable_inf [HasSup M] [HasMeasurableSup M] :
-    HasMeasurableInf (OrderDual M) :=
+instance (priority := 100) [HasSup M] [HasMeasurableSup M] : HasMeasurableInf Mᵒᵈ :=
   ⟨@measurable_const_sup M _ _ _, @measurable_sup_const M _ _ _⟩
 
-instance (priority := 100) OrderDual.has_measurable_sup₂ [HasInf M] [HasMeasurableInf₂ M] :
-    HasMeasurableSup₂ (OrderDual M) :=
+instance (priority := 100) [HasInf M] [HasMeasurableInf₂ M] : HasMeasurableSup₂ Mᵒᵈ :=
   ⟨@measurable_inf M _ _ _⟩
 
-instance (priority := 100) OrderDual.has_measurable_inf₂ [HasSup M] [HasMeasurableSup₂ M] :
-    HasMeasurableInf₂ (OrderDual M) :=
+instance (priority := 100) [HasSup M] [HasMeasurableSup₂ M] : HasMeasurableInf₂ Mᵒᵈ :=
   ⟨@measurable_sup M _ _ _⟩
 
 end OrderDual

@@ -1305,6 +1305,13 @@ theorem prod_erase [DecidableEq α] (s : Finset α) {f : α → β} {a : α} (h 
   rw [sdiff_singleton_eq_erase] at hnx
   rwa [eq_of_mem_of_not_mem_erase hx hnx]
 
+theorem sum_erase_lt_of_pos {γ : Type _} [DecidableEq α] [OrderedAddCommMonoid γ] [CovariantClass γ γ (· + ·) (· < ·)]
+    {s : Finset α} {d : α} (hd : d ∈ s) {f : α → γ} (hdf : 0 < f d) : (∑ m : α in s.erase d, f m) < ∑ m : α in s, f m :=
+  by
+  nth_rw_rhs 0[← Finset.insert_erase hd]
+  rw [Finset.sum_insert (Finset.not_mem_erase d s)]
+  exact lt_add_of_pos_left _ hdf
+
 /-- If a product is 1 and the function is 1 except possibly at one
 point, it is 1 everywhere on the `finset`. -/
 @[to_additive "If a sum is 0 and the function is 0 except possibly at one\npoint, it is 0 everywhere on the `finset`."]

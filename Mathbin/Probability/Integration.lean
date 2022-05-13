@@ -132,8 +132,8 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMea
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
 
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
-theorem IndepFunₓ.integrable_mul {β : Type _} {mβ : MeasurableSpace β} {X Y : α → β} [NormedDivisionRing β]
-    [BorelSpace β] (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
+theorem IndepFunₓ.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : α → β} [NormedDivisionRing β] [BorelSpace β]
+    (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) : Integrable (X * Y) μ := by
   let nX : α → Ennreal := fun a => ∥X a∥₊
   let nY : α → Ennreal := fun a => ∥Y a∥₊
   have hXY' : indep_fun (fun a => ∥X a∥₊) (fun a => ∥Y a∥₊) μ := hXY.comp measurable_nnnorm measurable_nnnorm
@@ -207,6 +207,10 @@ theorem IndepFunₓ.integral_mul_of_integrable (hXY : IndepFunₓ X Y μ) (hX : 
     hi1.integral_mul_of_nonneg hp1 hp3 hm1 hm3, hi2.integral_mul_of_nonneg hp2 hp3 hm2 hm3,
     hi3.integral_mul_of_nonneg hp1 hp4 hm1 hm4, hi4.integral_mul_of_nonneg hp2 hp4 hm2 hm4]
   ring
+
+theorem IndepFunₓ.integral_mul_of_integrable' (hXY : IndepFunₓ X Y μ) (hX : Integrable X μ) (hY : Integrable Y μ) :
+    (integral μ fun x => X x * Y x) = integral μ X * integral μ Y :=
+  hXY.integral_mul_of_integrable hX hY
 
 /-- Independence of functions `f` and `g` into arbitrary types is characterized by the relation
   `E[(φ ∘ f) * (ψ ∘ g)] = E[φ ∘ f] * E[ψ ∘ g]` for all measurable `φ` and `ψ` with values in `ℝ`

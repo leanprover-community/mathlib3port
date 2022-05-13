@@ -20,9 +20,11 @@ set consists of all previous ordinals.
 # Todo
 
 - Extend this map to `game` and `surreal`.
-- Prove that `birthday o.to_pgame = o`.
 -/
 
+
+-- mathport name: «expr ≈ »
+local infixl:0 " ≈ " => Pgame.Equiv
 
 universe u
 
@@ -48,7 +50,7 @@ theorem to_pgame_left_moves (o : Ordinal) : o.toPgame.LeftMoves = o.out.α := by
 theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = Pempty := by
   rw [to_pgame, Pgame.RightMoves]
 
-instance : IsEmpty (0 : Ordinal).toPgame.LeftMoves := by
+instance : IsEmpty (toPgame 0).LeftMoves := by
   rw [to_pgame_left_moves]
   infer_instance
 
@@ -56,12 +58,14 @@ instance (o : Ordinal) : IsEmpty o.toPgame.RightMoves := by
   rw [to_pgame_right_moves]
   infer_instance
 
-/-- Converts a member of `o.out.α` into a move for the `pgame` corresponding to `o`, and vice versa.
+/-- Converts an ordinal less than `o` into a move for the `pgame` corresponding to `o`, and vice
+versa. -/
+noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.Iio o ≃ o.toPgame.LeftMoves :=
+  (enumIsoOut o).toEquiv.trans (Equivₓ.cast (to_pgame_left_moves o).symm)
 
-Even though these types are the same (not definitionally so), this is the preferred way to convert
-between them. -/
-def toLeftMovesToPgame {o : Ordinal} : o.out.α ≃ o.toPgame.LeftMoves :=
-  Equivₓ.cast (to_pgame_left_moves o).symm
+@[simp]
+theorem to_left_moves_to_pgame_symm_lt {o : Ordinal} (i : o.toPgame.LeftMoves) : ↑(toLeftMovesToPgame.symm i) < o :=
+  (toLeftMovesToPgame.symm i).Prop
 
 theorem to_pgame_move_left_heq {o : Ordinal} : HEq o.toPgame.moveLeft fun x : o.out.α => (typein (· < ·) x).toPgame :=
   by
@@ -69,31 +73,23 @@ theorem to_pgame_move_left_heq {o : Ordinal} : HEq o.toPgame.moveLeft fun x : o.
   rfl
 
 @[simp]
-theorem to_pgame_move_left {o : Ordinal} (i : o.out.α) :
-    o.toPgame.moveLeft (toLeftMovesToPgame i) = (typein (· < ·) i).toPgame := by
-  rw [to_left_moves_to_pgame]
-  exact congr_heq to_pgame_move_left_heq (cast_heq _ i)
+theorem to_pgame_move_left' {o : Ordinal} i : o.toPgame.moveLeft i = (toLeftMovesToPgame.symm i).val.toPgame :=
+  (congr_heq to_pgame_move_left_heq.symm (cast_heq _ i)).symm
+
+theorem to_pgame_move_left {o : Ordinal} i : o.toPgame.moveLeft (toLeftMovesToPgame i) = i.val.toPgame := by
+  simp
 
 theorem to_pgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame := by
-  convert Pgame.move_left_lt (to_left_moves_to_pgame (enum (· < ·) a _))
-  · rw [to_pgame_move_left, typein_enum]
-    
-  · rwa [type_lt]
-    
+  convert Pgame.move_left_lt (to_left_moves_to_pgame ⟨a, h⟩)
+  rw [to_pgame_move_left]
 
-theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame := by
-  rw [Pgame.le_def]
-  refine'
-    ⟨fun i => Or.inl ⟨to_left_moves_to_pgame (enum (· < ·) (typein (· < ·) (to_left_moves_to_pgame.symm i)) _), _⟩,
+theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame :=
+  Pgame.le_def.2
+    ⟨fun i =>
+      Or.inl
+        ⟨toLeftMovesToPgame ⟨(toLeftMovesToPgame.symm i).val, (to_left_moves_to_pgame_symm_lt i).trans_le h⟩, by
+          simp ⟩,
       isEmptyElim⟩
-  · rw [type_lt]
-    apply lt_of_lt_of_leₓ _ h
-    simp_rw [← type_lt a]
-    apply typein_lt_type
-    
-  · rw [← to_left_moves_to_pgame.apply_symm_apply i, to_pgame_move_left]
-    simp
-    
 
 @[simp]
 theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
@@ -108,6 +104,10 @@ theorem to_pgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
     contrapose
     rw [not_leₓ, Pgame.not_le]
     exact to_pgame_lt, to_pgame_le⟩
+
+@[simp]
+theorem to_pgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
+  rw [Pgame.Equiv, le_antisymm_iffₓ, to_pgame_le_iff, to_pgame_le_iff]
 
 theorem to_pgame_injective : Function.Injective Ordinal.toPgame := fun a b h => by
   by_contra hne

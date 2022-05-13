@@ -68,7 +68,7 @@ instance hasForgetToBipointed : HasForget₂ BoundedOrderCat Bipointed where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : BoundedOrderCat ⥤ BoundedOrderCat where
-  obj := fun X => of (OrderDual X)
+  obj := fun X => of Xᵒᵈ
   map := fun X Y => BoundedOrderHom.dual
 
 /-- Constructs an equivalence between bounded orders from an order isomorphism between them. -/

@@ -374,7 +374,7 @@ instance (priority := 100) has_continuous_smul [TopologicalRing R] : @HasContinu
     rcases B.smul U_in with ⟨V, V_in, W, W_in, H⟩
     apply mem_of_superset (prod_mem_prod V_in <| B'.mem_nhds_zero W_in)
     rintro ⟨v, w⟩ ⟨v_in : v ∈ V, w_in : w ∈ W⟩
-    exact H (Set.mem_smul_of_mem v_in w_in)
+    exact H (Set.smul_mem_smul v_in w_in)
     
   · intro m₀
     rw [basis.tendsto_right_iff]

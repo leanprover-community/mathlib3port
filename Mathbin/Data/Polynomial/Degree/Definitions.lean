@@ -265,6 +265,9 @@ theorem nat_degree_monomial [DecidableEq R] (i : ℕ) (r : R) : natDegree (monom
   · rw [← C_mul_X_pow_eq_monomial, nat_degree_C_mul_X_pow i r hr]
     
 
+theorem nat_degree_monomial_eq (i : ℕ) {r : R} (r0 : r ≠ 0) : (monomial i r).natDegree = i :=
+  Eq.trans (nat_degree_monomial _ _) (if_neg r0)
+
 theorem coeff_eq_zero_of_degree_lt (h : degree p < n) : coeff p n = 0 :=
   not_not.1 (mt le_degree_of_ne_zero (not_le_of_gtₓ h))
 

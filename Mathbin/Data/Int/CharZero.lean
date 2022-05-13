@@ -40,6 +40,15 @@ theorem cast_injective [AddGroupₓ α] [One α] [CharZero α] : Function.Inject
 theorem cast_ne_zero [AddGroupₓ α] [One α] [CharZero α] {n : ℤ} : (n : α) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 
+@[simp, norm_cast]
+theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dvd : n ∣ m) : ((m / n : ℤ) : k) = m / n :=
+  by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp [Int.div_zero]
+    
+  · exact cast_div n_dvd (cast_ne_zero.mpr hn)
+    
+
 end Int
 
 theorem RingHom.injective_int {α : Type _} [Ringₓ α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=

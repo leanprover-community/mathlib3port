@@ -75,7 +75,7 @@ theorem continuous_on_Ico_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ 
 theorem continuous_on_Ioc_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α] [DenselyOrdered α] [OrderTopology α]
     [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {lb : β} (hab : a < b) (hf : ContinuousOn f (Ioo a b))
     (hb : Tendsto f (𝓝[<] b) (𝓝 lb)) : ContinuousOn (extendFrom (Ioo a b) f) (Ioc a b) := by
-  have := @continuous_on_Ico_extend_from_Ioo (OrderDual α) _ _ _ _ _ _ _ f _ _ _ hab
+  have := @continuous_on_Ico_extend_from_Ioo αᵒᵈ _ _ _ _ _ _ _ f _ _ _ hab
   erw [dual_Ico, dual_Ioi, dual_Ioo] at this
   exact this hf hb
 

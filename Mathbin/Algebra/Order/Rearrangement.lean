@@ -5,6 +5,7 @@ Authors: Mantas Bakšys
 -/
 import Mathbin.Algebra.Order.Module
 import Mathbin.GroupTheory.Perm.Support
+import Mathbin.Order.Lexicographic
 import Mathbin.Order.Monovary
 import Mathbin.Tactic.Abel
 

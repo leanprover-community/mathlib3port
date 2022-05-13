@@ -1166,11 +1166,11 @@ instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg
   neg := Neg.neg
   neg_neg := neg_negₓ
   neg_mul := fun a b =>
-    (neg_eq_of_add_eq_zeroₓ <| by
-        rw [← right_distrib, add_right_negₓ, zero_mul]).symm
+    eq_neg_of_add_eq_zero_left <| by
+      rw [← right_distrib, add_left_negₓ, zero_mul]
   mul_neg := fun a b =>
-    (neg_eq_of_add_eq_zeroₓ <| by
-        rw [← left_distrib, add_right_negₓ, mul_zero]).symm
+    eq_neg_of_add_eq_zero_left <| by
+      rw [← left_distrib, add_left_negₓ, mul_zero]
 
 theorem mul_sub_left_distrib (a b c : α) : a * (b - c) = a * b - a * c := by
   simpa only [sub_eq_add_neg, neg_mul_eq_mul_neg] using mul_addₓ a b (-c)
@@ -1516,9 +1516,10 @@ attribute [local simp] add_assocₓ add_commₓ add_left_commₓ mul_comm
   and `x * y` is the `a_0` coefficient. -/
 theorem Vieta_formula_quadratic {b c x : α} (h : x * x - b * x + c = 0) :
     ∃ y : α, y * y - b * y + c = 0 ∧ x + y = b ∧ x * y = c := by
-  have : c = -(x * x - b * x) := (neg_eq_of_add_eq_zeroₓ h).symm
-  have : c = x * (b - x) := by
-    subst this <;> simp [mul_sub, mul_comm]
+  have : c = x * (b - x) :=
+    (eq_neg_of_add_eq_zero_right h).trans
+      (by
+        simp [mul_sub, mul_comm])
   refine'
     ⟨b - x, _, by
       simp , by

@@ -6,6 +6,8 @@ Authors: Johan Commelin, Fabian Glöckle
 import Mathbin.LinearAlgebra.FiniteDimensional
 import Mathbin.LinearAlgebra.Projection
 import Mathbin.LinearAlgebra.SesquilinearForm
+import Mathbin.RingTheory.Finiteness
+import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 
 /-!
 # Dual vector spaces
@@ -280,6 +282,20 @@ def evalEquiv {ι : Type _} [Fintype ι] (b : Basis ι R M) : M ≃ₗ[R] Dual R
 @[simp]
 theorem eval_equiv_to_linear_map {ι : Type _} [Fintype ι] (b : Basis ι R M) : b.evalEquiv.toLinearMap = Dual.eval R M :=
   rfl
+
+section
+
+open Classical
+
+variable [Finite R M] [Free R M] [Nontrivial R]
+
+instance dual_free : Free R (Dual R M) :=
+  Free.of_basis (Free.chooseBasis R M).dualBasis
+
+instance dual_finite : Finite R (Dual R M) :=
+  Finite.of_basis (Free.chooseBasis R M).dualBasis
+
+end
 
 end CommRingₓ
 
@@ -576,8 +592,8 @@ open FiniteDimensional
 
 variable {V₁ : Type _} [AddCommGroupₓ V₁] [Module K V₁]
 
-instance [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) :=
-  LinearEquiv.finite_dimensional (Basis.ofVectorSpace K V).toDualEquiv
+instance [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) := by
+  infer_instance
 
 variable [FiniteDimensional K V] [FiniteDimensional K V₁]
 
@@ -739,11 +755,101 @@ theorem dual_pairing_nondegenerate : (dualPairing K V).Nondegenerate := by
   refine' ne_zero_of_eq_one _
   have h : f.comp (K∙x).Subtype = (LinearPmap.mkSpanSingleton x 1 hx).toFun :=
     Classical.some_spec (LinearPmap.mkSpanSingleton x (1 : K) hx).toFun.exists_extend
-  rw [LinearMap.ext_iff] at h
-  convert h ⟨x, Submodule.mem_span_singleton_self x⟩
-  exact (LinearPmap.mk_span_singleton_apply' K hx 1).symm
+  exact (FunLike.congr_fun h _).trans (LinearPmap.mk_span_singleton_apply _ hx _)
 
 end Field
 
 end LinearMap
+
+namespace TensorProduct
+
+variable (R) (M : Type _) (N : Type _)
+
+variable [AddCommGroupₓ M] [AddCommGroupₓ N]
+
+variable [Module R M] [Module R N]
+
+variable {ι κ : Type _}
+
+variable [DecidableEq ι] [DecidableEq κ]
+
+variable [Fintype ι] [Fintype κ]
+
+open BigOperators
+
+open TensorProduct
+
+attribute [local ext] TensorProduct.ext
+
+open TensorProduct
+
+open LinearMap
+
+open Module (dual)
+
+/-- The canonical linear map from `dual M ⊗ dual N` to `dual (M ⊗ N)`,
+sending `f ⊗ g` to the composition of `tensor_product.map f g` with
+the natural isomorphism `R ⊗ R ≃ R`.
+-/
+def dualDistrib : Dual R M ⊗[R] Dual R N →ₗ[R] Dual R (M ⊗[R] N) :=
+  compRight ↑(TensorProduct.lid R R) ∘ₗ homTensorHomMap R M N R R
+
+variable {R M N}
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+/-- An inverse to `dual_tensor_dual_map` given bases.
+-/
+noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
+    Dual R (M ⊗[R] N) →ₗ[R] Dual R M ⊗[R] Dual R N :=
+  ∑ (i) (j),
+    (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
+
+@[simp]
+theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
+    dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
+  simp only [dual_distrib, coe_comp, Function.comp_app, hom_tensor_hom_map_apply, comp_right_apply, LinearEquiv.coe_coe,
+    map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[simp]
+theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
+    dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by
+  simp [dual_distrib_inv_of_basis]
+
+/-- A linear equivalence between `dual M ⊗ dual N` and `dual (M ⊗ N)` given bases for `M` and `N`.
+It sends `f ⊗ g` to the composition of `tensor_product.map f g` with the natural
+isomorphism `R ⊗ R ≃ R`.
+-/
+@[simps]
+noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) :
+    Dual R M ⊗[R] Dual R N ≃ₗ[R] Dual R (M ⊗[R] N) := by
+  refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
+  · ext f m n
+    have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
+    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, LinearMap.map_sum,
+      map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ← f.map_smul, ← f.map_sum, ← smul_tmul_smul, ←
+      tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.coord_apply, Basis.sum_repr]
+    
+  · ext f g
+    simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply, dual_distrib_apply, ←
+      smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dual_basis, Basis.sum_dual_apply_smul_coord]
+    
+
+variable (R M N)
+
+variable [Module.Finite R M] [Module.Finite R N] [Module.Free R M] [Module.Free R N]
+
+variable [Nontrivial R]
+
+open Classical
+
+/-- A linear equivalence between `dual M ⊗ dual N` and `dual (M ⊗ N)` when `M` and `N` are finite free
+modules. It sends `f ⊗ g` to the composition of `tensor_product.map f g` with the natural
+isomorphism `R ⊗ R ≃ R`.
+-/
+@[simp]
+noncomputable def dualDistribEquiv : Dual R M ⊗[R] Dual R N ≃ₗ[R] Dual R (M ⊗[R] N) :=
+  dualDistribEquivOfBasis (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)
+
+end TensorProduct
 

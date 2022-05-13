@@ -1706,6 +1706,10 @@ protected theorem id {m0 : MeasurableSpace α} (μ : Measure α) : QuasiMeasureP
 
 variable {μa μa' : Measure α} {μb μb' : Measure β} {μc : Measure γ} {f : α → β}
 
+protected theorem _root_.measurable.quasi_measure_preserving {m0 : MeasurableSpace α} (hf : Measurable f)
+    (μ : Measure α) : QuasiMeasurePreserving f μ (μ.map f) :=
+  ⟨hf, AbsolutelyContinuous.rfl⟩
+
 theorem mono_left (h : QuasiMeasurePreserving f μa μb) (ha : μa' ≪ μa) : QuasiMeasurePreserving f μa' μb :=
   ⟨h.1, (ha.map h.1).trans h.2⟩
 
@@ -1975,7 +1979,7 @@ theorem Iio_ae_eq_Iic' (ha : μ {a} = 0) : Iio a =ᵐ[μ] Iic a := by
   rw [← Iic_diff_right, diff_ae_eq_self, measure_mono_null (Set.inter_subset_right _ _) ha]
 
 theorem Ioi_ae_eq_Ici' (ha : μ {a} = 0) : Ioi a =ᵐ[μ] Ici a :=
-  @Iio_ae_eq_Iic' (OrderDual α) ‹_› ‹_› _ _ ha
+  @Iio_ae_eq_Iic' αᵒᵈ ‹_› ‹_› _ _ ha
 
 theorem Ioo_ae_eq_Ioc' (hb : μ {b} = 0) : Ioo a b =ᵐ[μ] Ioc a b :=
   (ae_eq_refl _).inter (Iio_ae_eq_Iic' hb)
@@ -2913,6 +2917,10 @@ theorem map_apply_eq_iff_map_symm_apply_eq (e : α ≃ᵐ β) : μ.map e = ν �
 
 theorem restrict_map (e : α ≃ᵐ β) (s : Set β) : (μ.map e).restrict s = (μ.restrict <| e ⁻¹' s).map e :=
   e.MeasurableEmbedding.restrict_map _ _
+
+theorem map_ae (f : α ≃ᵐ β) (μ : Measureₓ α) : Filter.map f μ.ae = (map f μ).ae := by
+  ext s
+  simp_rw [mem_map, mem_ae_iff, ← preimage_compl, f.map_apply]
 
 end MeasurableEquiv
 

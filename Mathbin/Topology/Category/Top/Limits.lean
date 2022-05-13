@@ -31,7 +31,7 @@ noncomputable section
 
 namespace Top
 
-variable {J : Type u} [SmallCategory J]
+variable {J : Type v} [SmallCategory J]
 
 -- mathport name: «exprforget»
 local notation "forget" => forget Top
@@ -40,7 +40,7 @@ local notation "forget" => forget Top
 Generally you should just use `limit.cone F`, unless you need the actual definition
 (which is in terms of `types.limit_cone`).
 -/
-def limitCone (F : J ⥤ Top.{u}) : Cone F where
+def limitCone (F : J ⥤ Top.{max v u}) : Cone F where
   x := Top.of { u : ∀ j : J, F.obj j | ∀ {i j : J} f : i ⟶ j, F.map f (u i) = u j }
   π :=
     { app := fun j =>
@@ -54,7 +54,7 @@ infimum of topologies infimum.
 Generally you should just use `limit.cone F`, unless you need the actual definition
 (which is in terms of `types.limit_cone`).
 -/
-def limitConeInfi (F : J ⥤ Top.{u}) : Cone F where
+def limitConeInfi (F : J ⥤ Top.{max v u}) : Cone F where
   x := ⟨(Types.limitCone (F ⋙ forget)).x, ⨅ j, (F.obj j).str.induced ((Types.limitCone (F ⋙ forget)).π.app j)⟩
   π :=
     { app := fun j => ⟨(Types.limitCone (F ⋙ forget)).π.app j, continuous_iff_le_induced.mpr (infi_le _ _)⟩,
@@ -64,7 +64,7 @@ def limitConeInfi (F : J ⥤ Top.{u}) : Cone F where
 Generally you should just use `limit.is_limit F`, unless you need the actual definition
 (which is in terms of `types.limit_cone_is_limit`).
 -/
-def limitConeIsLimit (F : J ⥤ Top.{u}) : IsLimit (limitCone F) where
+def limitConeIsLimit (F : J ⥤ Top.{max v u}) : IsLimit (limitCone F) where
   lift := fun S =>
     { toFun := fun x =>
         ⟨fun j => S.π.app _ x, fun i j f => by
@@ -79,26 +79,32 @@ def limitConeIsLimit (F : J ⥤ Top.{u}) : IsLimit (limitCone F) where
 Generally you should just use `limit.is_limit F`, unless you need the actual definition
 (which is in terms of `types.limit_cone_is_limit`).
 -/
-def limitConeInfiIsLimit (F : J ⥤ Top.{u}) : IsLimit (limitConeInfi F) := by
+def limitConeInfiIsLimit (F : J ⥤ Top.{max v u}) : IsLimit (limitConeInfi F) := by
   refine' is_limit.of_faithful forget (types.limit_cone_is_limit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_coinduced_le.mpr
       (le_infi fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 
-instance Top_has_limits : HasLimits.{u} Top.{u} where
+instance Top_has_limits_of_size : HasLimitsOfSize.{v} Top.{max v u} where
   HasLimitsOfShape := fun J 𝒥 =>
     { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } }
 
-instance forgetPreservesLimits : PreservesLimits (forget : Top.{u} ⥤ Type u) where
+instance Top_has_limits : HasLimits Top.{u} :=
+  Top.Top_has_limits_of_size.{u, u}
+
+instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget : Top.{max v u} ⥤ Type max v u) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget)) }
+
+instance forgetPreservesLimits : PreservesLimits (forget : Top.{u} ⥤ Type u) :=
+  Top.forgetPreservesLimitsOfSize.{u, u}
 
 /-- A choice of colimit cocone for a functor `F : J ⥤ Top`.
 Generally you should just use `colimit.coone F`, unless you need the actual definition
 (which is in terms of `types.colimit_cocone`).
 -/
-def colimitCocone (F : J ⥤ Top.{u}) : Cocone F where
+def colimitCocone (F : J ⥤ Top.{max v u}) : Cocone F where
   x := ⟨(Types.colimitCocone (F ⋙ forget)).x, ⨆ j, (F.obj j).str.coinduced ((Types.colimitCocone (F ⋙ forget)).ι.app j)⟩
   ι :=
     { app := fun j => ⟨(Types.colimitCocone (F ⋙ forget)).ι.app j, continuous_iff_coinduced_le.mpr (le_supr _ j)⟩,
@@ -108,33 +114,39 @@ def colimitCocone (F : J ⥤ Top.{u}) : Cocone F where
 Generally you should just use `colimit.is_colimit F`, unless you need the actual definition
 (which is in terms of `types.colimit_cocone_is_colimit`).
 -/
-def colimitCoconeIsColimit (F : J ⥤ Top.{u}) : IsColimit (colimitCocone F) := by
+def colimitCoconeIsColimit (F : J ⥤ Top.{max v u}) : IsColimit (colimitCocone F) := by
   refine' is_colimit.of_faithful forget (types.colimit_cocone_is_colimit _) (fun s => ⟨_, _⟩) fun s => rfl
   exact
     continuous_iff_le_induced.mpr
       (supr_le fun j => coinduced_le_iff_le_induced.mp <| (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 
-instance Top_has_colimits : HasColimits.{u} Top.{u} where
+instance Top_has_colimits_of_size : HasColimitsOfSize.{v} Top.{max v u} where
   HasColimitsOfShape := fun J 𝒥 =>
     { HasColimit := fun F => has_colimit.mk { Cocone := colimit_cocone F, IsColimit := colimit_cocone_is_colimit F } }
 
-instance forgetPreservesColimits : PreservesColimits (forget : Top.{u} ⥤ Type u) where
+instance Top_has_colimits : HasColimits Top.{u} :=
+  Top.Top_has_colimits_of_size.{u, u}
+
+instance forgetPreservesColimitsOfSize : PreservesColimitsOfSize.{v, v} (forget : Top.{max v u} ⥤ Type max v u) where
   PreservesColimitsOfShape := fun J 𝒥 =>
     { PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
           (types.colimit_cocone_is_colimit (F ⋙ forget)) }
 
+instance forgetPreservesColimits : PreservesColimits (forget : Top.{u} ⥤ Type u) :=
+  Top.forgetPreservesColimitsOfSize.{u, u}
+
 /-- The projection from the product as a bundled continous map. -/
-abbrev piπ {ι : Type u} (α : ι → Top.{u}) (i : ι) : Top.of (∀ i, α i) ⟶ α i :=
+abbrev piπ {ι : Type v} (α : ι → Top.{max v u}) (i : ι) : Top.of (∀ i, α i) ⟶ α i :=
   ⟨fun f => f i, continuous_apply i⟩
 
 /-- The explicit fan of a family of topological spaces given by the pi type. -/
 @[simps x π_app]
-def piFan {ι : Type u} (α : ι → Top.{u}) : Fan α :=
+def piFan {ι : Type v} (α : ι → Top.{max v u}) : Fan α :=
   Fan.mk (Top.of (∀ i, α i)) (piπ α)
 
 /-- The constructed fan is indeed a limit -/
-def piFanIsLimit {ι : Type u} (α : ι → Top.{u}) : IsLimit (piFan α) where
+def piFanIsLimit {ι : Type v} (α : ι → Top.{max v u}) : IsLimit (piFan α) where
   lift := fun S => { toFun := fun s i => S.π.app i s }
   uniq' := by
     intro S m h
@@ -144,36 +156,36 @@ def piFanIsLimit {ι : Type u} (α : ι → Top.{u}) : IsLimit (piFan α) where
 /-- The product is homeomorphic to the product of the underlying spaces,
 equipped with the product topology.
 -/
-def piIsoPi {ι : Type u} (α : ι → Top.{u}) : ∏ α ≅ Top.of (∀ i, α i) :=
+def piIsoPi {ι : Type v} (α : ι → Top.{max v u}) : ∏ α ≅ Top.of (∀ i, α i) :=
   (limit.isLimit _).conePointUniqueUpToIso (piFanIsLimit α)
 
 @[simp, reassoc]
-theorem pi_iso_pi_inv_π {ι : Type u} (α : ι → Top) (i : ι) : (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by
+theorem pi_iso_pi_inv_π {ι : Type v} (α : ι → Top.{max v u}) (i : ι) : (piIsoPi α).inv ≫ Pi.π α i = piπ α i := by
   simp [pi_iso_pi]
 
 @[simp]
-theorem pi_iso_pi_inv_π_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : ∀ i, α i) :
+theorem pi_iso_pi_inv_π_apply {ι : Type v} (α : ι → Top.{max v u}) (i : ι) (x : ∀ i, α i) :
     (Pi.π α i : _) ((piIsoPi α).inv x) = x i :=
   ConcreteCategory.congr_hom (pi_iso_pi_inv_π α i) x
 
 @[simp]
-theorem pi_iso_pi_hom_apply {ι : Type u} (α : ι → Top.{u}) (i : ι) (x : ∏ α) : (piIsoPi α).Hom x i = (Pi.π α i : _) x :=
-  by
+theorem pi_iso_pi_hom_apply {ι : Type v} (α : ι → Top.{max v u}) (i : ι) (x : ∏ α) :
+    (piIsoPi α).Hom x i = (Pi.π α i : _) x := by
   have := pi_iso_pi_inv_π α i
   rw [iso.inv_comp_eq] at this
   exact concrete_category.congr_hom this x
 
 /-- The inclusion to the coproduct as a bundled continous map. -/
-abbrev sigmaι {ι : Type u} (α : ι → Top.{u}) (i : ι) : α i ⟶ Top.of (Σi, α i) :=
+abbrev sigmaι {ι : Type v} (α : ι → Top.{max v u}) (i : ι) : α i ⟶ Top.of (Σi, α i) :=
   ⟨Sigma.mk i⟩
 
 /-- The explicit cofan of a family of topological spaces given by the sigma type. -/
 @[simps x ι_app]
-def sigmaCofan {ι : Type u} (α : ι → Top.{u}) : Cofan α :=
+def sigmaCofan {ι : Type v} (α : ι → Top.{max v u}) : Cofan α :=
   Cofan.mk (Top.of (Σi, α i)) (sigmaι α)
 
 /-- The constructed cofan is indeed a colimit -/
-def sigmaCofanIsColimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCofan α) where
+def sigmaCofanIsColimit {ι : Type v} (α : ι → Top.{max v u}) : IsColimit (sigmaCofan α) where
   desc := fun S =>
     { toFun := fun s => S.ι.app s.1 s.2,
       continuous_to_fun := by
@@ -187,33 +199,33 @@ def sigmaCofanIsColimit {ι : Type u} (α : ι → Top.{u}) : IsColimit (sigmaCo
 
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
-def sigmaIsoSigma {ι : Type u} (α : ι → Top.{u}) : ∐ α ≅ Top.of (Σi, α i) :=
+def sigmaIsoSigma {ι : Type v} (α : ι → Top.{max v u}) : ∐ α ≅ Top.of (Σi, α i) :=
   (colimit.isColimit _).coconePointUniqueUpToIso (sigmaCofanIsColimit α)
 
 @[simp, reassoc]
-theorem sigma_iso_sigma_hom_ι {ι : Type u} (α : ι → Top) (i : ι) : Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i :=
-  by
+theorem sigma_iso_sigma_hom_ι {ι : Type v} (α : ι → Top.{max v u}) (i : ι) :
+    Sigma.ι α i ≫ (sigmaIsoSigma α).Hom = sigmaι α i := by
   simp [sigma_iso_sigma]
 
 @[simp]
-theorem sigma_iso_sigma_hom_ι_apply {ι : Type u} (α : ι → Top) (i : ι) (x : α i) :
+theorem sigma_iso_sigma_hom_ι_apply {ι : Type v} (α : ι → Top.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).Hom ((Sigma.ι α i : _) x) = Sigma.mk i x :=
   ConcreteCategory.congr_hom (sigma_iso_sigma_hom_ι α i) x
 
 @[simp]
-theorem sigma_iso_sigma_inv_apply {ι : Type u} (α : ι → Top) (i : ι) (x : α i) :
+theorem sigma_iso_sigma_inv_apply {ι : Type v} (α : ι → Top.{max v u}) (i : ι) (x : α i) :
     (sigmaIsoSigma α).inv ⟨i, x⟩ = (Sigma.ι α i : _) x := by
   rw [← sigma_iso_sigma_hom_ι_apply, ← comp_app]
   simp
 
-theorem induced_of_is_limit {F : J ⥤ Top.{u}} (C : Cone F) (hC : IsLimit C) :
+theorem induced_of_is_limit {F : J ⥤ Top.{max v u}} (C : Cone F) (hC : IsLimit C) :
     C.x.TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (C.π.app j) := by
   let homeo := homeo_of_iso (hC.cone_point_unique_up_to_iso (limit_cone_infi_is_limit F))
   refine' homeo.inducing.induced.trans _
   change induced homeo (⨅ j : J, _) = _
   simpa [induced_infi, induced_compose]
 
-theorem limit_topology (F : J ⥤ Top.{u}) :
+theorem limit_topology (F : J ⥤ Top.{max v u}) :
     (limit F).TopologicalSpace = ⨅ j, (F.obj j).TopologicalSpace.induced (limit.π F j) :=
   induced_of_is_limit _ (limit.isLimit F)
 
@@ -669,25 +681,25 @@ theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) 
 end Pullback
 
 --TODO: Add analogous constructions for `coprod` and `pushout`.
-theorem coinduced_of_is_colimit {F : J ⥤ Top.{u}} (c : Cocone F) (hc : IsColimit c) :
+theorem coinduced_of_is_colimit {F : J ⥤ Top.{max v u}} (c : Cocone F) (hc : IsColimit c) :
     c.x.TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (c.ι.app j) := by
   let homeo := homeo_of_iso (hc.cocone_point_unique_up_to_iso (colimit_cocone_is_colimit F))
   ext
   refine' homeo.symm.is_open_preimage.symm.trans (Iff.trans _ is_open_supr_iff.symm)
   exact is_open_supr_iff
 
-theorem colimit_topology (F : J ⥤ Top.{u}) :
+theorem colimit_topology (F : J ⥤ Top.{max v u}) :
     (colimit F).TopologicalSpace = ⨆ j, (F.obj j).TopologicalSpace.coinduced (colimit.ι F j) :=
   coinduced_of_is_colimit _ (colimit.isColimit F)
 
-theorem colimit_is_open_iff (F : J ⥤ Top.{u}) (U : Set ((colimit F : _) : Type u)) :
+theorem colimit_is_open_iff (F : J ⥤ Top.{max v u}) (U : Set ((colimit F : _) : Type max v u)) :
     IsOpen U ↔ ∀ j, IsOpen (colimit.ι F j ⁻¹' U) := by
   conv_lhs => rw [colimit_topology F]
   exact is_open_supr_iff
 
 theorem coequalizer_is_open_iff (F : walking_parallel_pair.{u} ⥤ Top.{u}) (U : Set ((colimit F : _) : Type u)) :
     IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) := by
-  rw [colimit_is_open_iff]
+  rw [colimit_is_open_iff.{u}]
   constructor
   · intro H
     exact H _
@@ -707,7 +719,7 @@ namespace Top
 
 section CofilteredLimit
 
-variable {J : Type u} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Top.{u}) (C : Cone F) (hC : IsLimit C)
+variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Top.{max v u}) (C : Cone F) (hC : IsLimit C)
 
 include hC
 
@@ -899,7 +911,7 @@ theorem PartialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H 
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 --/
 theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J] [∀ j : J, Nonempty (F.obj j)]
-    [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] : Nonempty (Top.limitCone F).x := by
+    [∀ j : J, CompactSpace (F.obj j)] [∀ j : J, T2Space (F.obj j)] : Nonempty (Top.limitCone.{u} F).x := by
   classical
   obtain ⟨u, hu⟩ :=
     IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun G => partial_sections F _)

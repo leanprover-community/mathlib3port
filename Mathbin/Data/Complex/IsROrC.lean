@@ -1057,9 +1057,12 @@ theorem conj_cle_apply : (conjCle : K → K) = conj :=
 theorem conj_cle_norm : ∥(@conjCle K _ : K →L[ℝ] K)∥ = 1 :=
   (@conjLie K _).toLinearIsometry.norm_to_continuous_linear_map
 
+instance (priority := 100) : HasContinuousStar K :=
+  ⟨conjLie.Continuous⟩
+
 @[continuity]
 theorem continuous_conj : Continuous (conj : K → K) :=
-  conjLie.Continuous
+  continuous_star
 
 /-- The `ℝ → K` coercion, as a linear map -/
 noncomputable def ofRealAm : ℝ →ₐ[ℝ] K :=

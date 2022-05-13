@@ -127,7 +127,7 @@ instance small_vector {α : Type v} {n : ℕ} [Small.{u} α] : Small.{u} (Vector
   small_of_injective (Equivₓ.vectorEquivFin α n).Injective
 
 instance small_list {α : Type v} [Small.{u} α] : Small.{u} (List α) := by
-  let e : (Σn, Vector α n) ≃ List α := Equivₓ.sigmaPreimageEquiv List.length
+  let e : (Σn, Vector α n) ≃ List α := Equivₓ.sigmaFiberEquiv List.length
   exact small_of_surjective e.surjective
 
 end

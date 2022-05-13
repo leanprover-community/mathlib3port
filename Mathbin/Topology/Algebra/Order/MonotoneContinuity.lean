@@ -136,8 +136,7 @@ assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` we use for stri
 because otherwise the function `floor : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (hf : MonotoneOn f s)
     (hs : s ∈ 𝓝[≤] a) (hfs : ∀, ∀ b < f a, ∀, ∃ c ∈ s, f c ∈ Ioo b (f a)) : ContinuousWithinAt f (Iic a) a :=
-  (@continuous_at_right_of_monotone_on_of_exists_between (OrderDual α) (OrderDual β) _ _ _ _ _ _ f s a hf.dual hs)
-    fun b hb =>
+  (@continuous_at_right_of_monotone_on_of_exists_between αᵒᵈ βᵒᵈ _ _ _ _ _ _ f s a hf.dual hs) fun b hb =>
     let ⟨c, hcs, hcb, hca⟩ := hfs b hb
     ⟨c, hcs, hca, hcb⟩
 
@@ -147,8 +146,7 @@ continuous at `a` from the left -/
 theorem continuous_at_left_of_monotone_on_of_closure_image_mem_nhds_within [DenselyOrdered β] {f : α → β} {s : Set α}
     {a : α} (hf : MonotoneOn f s) (hs : s ∈ 𝓝[≤] a) (hfs : Closure (f '' s) ∈ 𝓝[≤] f a) :
     ContinuousWithinAt f (Iic a) a :=
-  @continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within (OrderDual α) (OrderDual β) _ _ _ _ _ _ _ f s a
-    hf.dual hs hfs
+  @continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ f s a hf.dual hs hfs
 
 /-- If a function `f` with a densely ordered codomain is monotone on a left neighborhood of `a` and
 the image of this neighborhood under `f` is a left neighborhood of `f a`, then `f` is continuous at

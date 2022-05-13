@@ -136,7 +136,7 @@ theorem min_cases (a b : α) : min a b = a ∧ a ≤ b ∨ min a b = b ∧ b < a
     or `max a b = b` and `a < b`.
     Use cases on this lemma to automate linarith in inequalities -/
 theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b :=
-  @min_cases (OrderDual α) _ a b
+  @min_cases αᵒᵈ _ a b
 
 theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := by
   constructor
@@ -150,7 +150,7 @@ theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := 
     
 
 theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
-  @min_eq_iff (OrderDual α) _ a b c
+  @min_eq_iff αᵒᵈ _ a b c
 
 theorem min_lt_min_left_iff : min a c < min b c ↔ a < b ∧ a < c := by
   simp_rw [lt_min_iff, min_lt_iff, or_iff_left (lt_irreflₓ _)]
@@ -160,10 +160,10 @@ theorem min_lt_min_right_iff : min a b < min a c ↔ b < c ∧ b < a := by
   simp_rw [min_commₓ a, min_lt_min_left_iff]
 
 theorem max_lt_max_left_iff : max a c < max b c ↔ a < b ∧ c < b :=
-  @min_lt_min_left_iff (OrderDual α) _ _ _ _
+  @min_lt_min_left_iff αᵒᵈ _ _ _ _
 
 theorem max_lt_max_right_iff : max a b < max a c ↔ b < c ∧ a < c :=
-  @min_lt_min_right_iff (OrderDual α) _ _ _ _
+  @min_lt_min_right_iff αᵒᵈ _ _ _ _
 
 /-- An instance asserting that `max a a = a` -/
 instance max_idem : IsIdempotent α max := by
@@ -182,7 +182,7 @@ theorem max_lt_max (h₁ : a < c) (h₂ : b < d) : max a b < max c d := by
   simp [lt_max_iff, max_lt_iff, *]
 
 theorem min_lt_min (h₁ : a < c) (h₂ : b < d) : min a b < min c d :=
-  @max_lt_max (OrderDual α) _ _ _ _ _ h₁ h₂
+  @max_lt_max αᵒᵈ _ _ _ _ _ h₁ h₂
 
 theorem min_right_comm (a b c : α) : min (min a b) c = min (min a c) b :=
   right_comm min min_commₓ min_assocₓ a b c
@@ -221,7 +221,7 @@ theorem min_rec {p : α → Prop} {x y : α} (hx : x ≤ y → p x) (hy : y ≤ 
   (le_totalₓ x y).rec (fun h => (min_eq_leftₓ h).symm.subst (hx h)) fun h => (min_eq_rightₓ h).symm.subst (hy h)
 
 theorem max_rec {p : α → Prop} {x y : α} (hx : y ≤ x → p x) (hy : x ≤ y → p y) : p (max x y) :=
-  @min_rec (OrderDual α) _ _ _ _ hx hy
+  @min_rec αᵒᵈ _ _ _ _ hx hy
 
 theorem min_rec' (p : α → Prop) {x y : α} (hx : p x) (hy : p y) : p (min x y) :=
   min_rec (fun _ => hx) fun _ => hy
@@ -233,7 +233,7 @@ theorem min_choice (a b : α) : min a b = a ∨ min a b = b := by
   cases le_totalₓ a b <;> simp [*]
 
 theorem max_choice (a b : α) : max a b = a ∨ max a b = b :=
-  @min_choice (OrderDual α) _ a b
+  @min_choice αᵒᵈ _ a b
 
 theorem le_of_max_le_left {a b c : α} (h : max a b ≤ c) : a ≤ c :=
   le_transₓ (le_max_leftₓ _ _) h

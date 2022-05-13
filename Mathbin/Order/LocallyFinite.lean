@@ -529,13 +529,13 @@ open OrderDual
 variable [LocallyFiniteOrder α] (a b : α)
 
 /-- Note we define `Icc (to_dual a) (to_dual b)` as `Icc α _ _ b a` (which has type `finset α` not
-`finset (order_dual α)`!) instead of `(Icc b a).map to_dual.to_embedding` as this means the
+`finset αᵒᵈ`!) instead of `(Icc b a).map to_dual.to_embedding` as this means the
 following is defeq:
 ```
 lemma this : (Icc (to_dual (to_dual a)) (to_dual (to_dual b)) : _) = (Icc a b : _) := rfl
 ```
 -/
-instance : LocallyFiniteOrder (OrderDual α) where
+instance : LocallyFiniteOrder αᵒᵈ where
   finsetIcc := fun a b => @icc α _ _ (ofDual b) (ofDual a)
   finsetIco := fun a b => @ioc α _ _ (ofDual b) (ofDual a)
   finsetIoc := fun a b => @ico α _ _ (ofDual b) (ofDual a)
@@ -693,7 +693,7 @@ namespace WithBot
 variable (α) [PartialOrderₓ α] [OrderBot α] [LocallyFiniteOrder α]
 
 instance : LocallyFiniteOrder (WithBot α) :=
-  @OrderDual.locallyFiniteOrder (WithTop (OrderDual α)) _ _
+  @OrderDual.locallyFiniteOrder (WithTop αᵒᵈ) _ _
 
 variable (a b : α)
 

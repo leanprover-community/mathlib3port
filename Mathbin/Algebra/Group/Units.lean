@@ -243,7 +243,7 @@ theorem mul_inv_eq_iff_eq_mul {a c : α} : a * ↑b⁻¹ = c ↔ a = c * b :=
     rw [← h, inv_mul_cancel_right], fun h => by
     rw [h, mul_inv_cancel_rightₓ]⟩
 
-theorem inv_eq_of_mul_eq_one {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
+theorem inv_eq_of_mul_eq_one_right {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
   calc
     ↑u⁻¹ = ↑u⁻¹ * 1 := by
       rw [mul_oneₓ]
@@ -254,7 +254,7 @@ theorem inv_eq_of_mul_eq_one {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ 
     
 
 theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
-  inv_eq_of_mul_eq_oneₓ <| by
+  inv_eq_of_mul_eq_one_right <| by
     rw [h, u₂.mul_inv]
 
 end Units
@@ -462,6 +462,10 @@ theorem IsUnit.mul_left_inj [Monoidₓ M] {a b c : M} (ha : IsUnit a) : b * a = 
       "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit."]
 noncomputable def IsUnit.unit [Monoidₓ M] {a : M} (h : IsUnit a) : Mˣ :=
   (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
+
+@[simp, to_additive]
+theorem IsUnit.unit_of_coe_units [Monoidₓ M] {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
+  Units.ext <| rfl
 
 @[to_additive]
 theorem IsUnit.unit_spec [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit = a :=

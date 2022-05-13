@@ -174,19 +174,19 @@ instance [MulZeroClassₓ β] [HasContinuousMul β] : MulZeroClassₓ C₀(α, �
 instance [SemigroupWithZeroₓ β] [HasContinuousMul β] : SemigroupWithZeroₓ C₀(α, β) :=
   FunLike.coe_injective.SemigroupWithZero _ coe_zero coe_mul
 
-instance [AddZeroClass β] [HasContinuousAdd β] : Add C₀(α, β) :=
+instance [AddZeroClassₓ β] [HasContinuousAdd β] : Add C₀(α, β) :=
   ⟨fun f g =>
     ⟨f + g, by
       simpa only [add_zeroₓ] using (zero_at_infty f).add (zero_at_infty g)⟩⟩
 
 @[simp]
-theorem coe_add [AddZeroClass β] [HasContinuousAdd β] (f g : C₀(α, β)) : ⇑(f + g) = f + g :=
+theorem coe_add [AddZeroClassₓ β] [HasContinuousAdd β] (f g : C₀(α, β)) : ⇑(f + g) = f + g :=
   rfl
 
-theorem add_apply [AddZeroClass β] [HasContinuousAdd β] (f g : C₀(α, β)) : (f + g) x = f x + g x :=
+theorem add_apply [AddZeroClassₓ β] [HasContinuousAdd β] (f g : C₀(α, β)) : (f + g) x = f x + g x :=
   rfl
 
-instance [AddZeroClass β] [HasContinuousAdd β] : AddZeroClass C₀(α, β) :=
+instance [AddZeroClassₓ β] [HasContinuousAdd β] : AddZeroClassₓ C₀(α, β) :=
   FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
 
 section AddMonoidₓ
@@ -478,16 +478,15 @@ section Star
 /-! ### Star structure
 
 It is possible to equip `C₀(α, β)` with a pointwise `star` operation whenever there is a continuous
-`star : β → β` for which `star (0 : β) = 0`. However, we have no such minimal type classes (e.g.,
-`has_continuous_star` or `star_zero_class`) and so the type class assumptions on `β` sufficient to
-guarantee these conditions are `[normed_group β]`, `[star_add_monoid β]` and
-`[normed_star_group β]`, which allow for the corresponding classes on `C₀(α, β)` essentially
-inherited from their counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is
-`C₀(α, β)`.
+`star : β → β` for which `star (0 : β) = 0`. We don't have quite this weak a typeclass, but
+`star_add_monoid` is close enough.
+
+The `star_add_monoid` and `normed_star_group` classes on `C₀(α, β)` are inherited from their
+counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is `C₀(α, β)`.
 -/
 
 
-variable [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
+variable [TopologicalSpace β] [AddMonoidₓ β] [StarAddMonoid β] [HasContinuousStar β]
 
 instance : HasStar C₀(α, β) where
   star := fun f =>
@@ -502,19 +501,25 @@ theorem coe_star (f : C₀(α, β)) : ⇑(star f) = star f :=
 theorem star_apply (f : C₀(α, β)) (x : α) : (star f) x = star (f x) :=
   rfl
 
-instance : StarAddMonoid C₀(α, β) where
+instance [HasContinuousAdd β] : StarAddMonoid C₀(α, β) where
   star_involutive := fun f => ext fun x => star_star (f x)
   star_add := fun f g => ext fun x => star_add (f x) (g x)
+
+end Star
+
+section NormedStar
+
+variable [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β]
 
 instance : NormedStarGroup C₀(α, β) where
   norm_star := fun f => (norm_star f.toBcf : _)
 
-end Star
+end NormedStar
 
 section StarModule
 
-variable {𝕜 : Type _} [Semiringₓ 𝕜] [HasStar 𝕜] [NormedGroup β] [StarAddMonoid β] [NormedStarGroup β] [Module 𝕜 β]
-  [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
+variable {𝕜 : Type _} [Zero 𝕜] [HasStar 𝕜] [AddMonoidₓ β] [StarAddMonoid β] [TopologicalSpace β] [HasContinuousStar β]
+  [SmulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarModule 𝕜 C₀(α, β) where
   star_smul := fun k f => ext fun x => star_smul k (f x)
@@ -523,15 +528,19 @@ end StarModule
 
 section StarRing
 
-variable [NonUnitalNormedRing β] [StarRing β]
+variable [NonUnitalSemiringₓ β] [StarRing β] [TopologicalSpace β] [HasContinuousStar β] [TopologicalSemiring β]
 
-instance [NormedStarGroup β] : StarRing C₀(α, β) :=
+instance : StarRing C₀(α, β) :=
   { ZeroAtInftyContinuousMap.starAddMonoid with star_mul := fun f g => ext fun x => star_mul (f x) (g x) }
 
-instance [CstarRing β] : CstarRing C₀(α, β) where
+end StarRing
+
+section CstarRing
+
+instance [NonUnitalNormedRing β] [StarRing β] [CstarRing β] : CstarRing C₀(α, β) where
   norm_star_mul_self := fun f => @CstarRing.norm_star_mul_self _ _ _ _ f.toBcf
 
-end StarRing
+end CstarRing
 
 /-! ### C₀ as a functor
 

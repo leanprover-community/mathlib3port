@@ -60,6 +60,8 @@ class HasMeasurableAdd (M : Type _) [MeasurableSpace M] [Add M] : Prop where
   measurable_const_add : ∀ c : M, Measurable ((· + ·) c)
   measurable_add_const : ∀ c : M, Measurable (· + c)
 
+export HasMeasurableAdd (measurable_const_add measurable_add_const)
+
 /-- We say that a type `has_measurable_add` if `uncurry (+)` is a measurable functions.
 For a typeclass assuming measurability of `((+) c)` and `(+ c)` see `has_measurable_add`. -/
 class HasMeasurableAdd₂ (M : Type _) [MeasurableSpace M] [Add M] : Prop where
@@ -76,6 +78,8 @@ class HasMeasurableMul (M : Type _) [MeasurableSpace M] [Mul M] : Prop where
   measurable_const_mul : ∀ c : M, Measurable ((· * ·) c)
   measurable_mul_const : ∀ c : M, Measurable (· * c)
 
+export HasMeasurableMul (measurable_const_mul measurable_mul_const)
+
 /-- We say that a type `has_measurable_mul` if `uncurry (*)` is a measurable functions.
 For a typeclass assuming measurability of `((*) c)` and `(* c)` see `has_measurable_mul`. -/
 @[to_additive HasMeasurableAdd₂]
@@ -83,8 +87,6 @@ class HasMeasurableMul₂ (M : Type _) [MeasurableSpace M] [Mul M] : Prop where
   measurable_mul : Measurable fun p : M × M => p.1 * p.2
 
 export HasMeasurableMul₂ (measurable_mul)
-
-export HasMeasurableMul (measurable_const_mul measurable_mul_const)
 
 section Mul
 
@@ -150,6 +152,14 @@ attribute [measurability]
 
 end Mul
 
+/-- A version of `measurable_div_const` that assumes `has_measurable_mul` instead of
+  `has_measurable_div`. This can be nice to avoid unnecessary type-class assumptions. -/
+@[to_additive
+      " A version of `measurable_sub_const` that assumes `has_measurable_add` instead of\n  `has_measurable_sub`. This can be nice to avoid unnecessary type-class assumptions. "]
+theorem measurable_div_const' {G : Type _} [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul G] (g : G) :
+    Measurable fun h => h / g := by
+  simp_rw [div_eq_mul_inv, measurable_mul_const]
+
 /-- This class assumes that the map `β × γ → β` given by `(x, y) ↦ x ^ y` is measurable. -/
 class HasMeasurablePow (β γ : Type _) [MeasurableSpace β] [MeasurableSpace γ] [Pow β γ] where
   measurable_pow : Measurable fun p : β × γ => p.1 ^ p.2
@@ -208,6 +218,8 @@ class HasMeasurableSub (G : Type _) [MeasurableSpace G] [Sub G] : Prop where
   measurable_const_sub : ∀ c : G, Measurable fun x => c - x
   measurable_sub_const : ∀ c : G, Measurable fun x => x - c
 
+export HasMeasurableSub (measurable_const_sub measurable_sub_const)
+
 /-- We say that a type `has_measurable_sub` if `uncurry (-)` is a measurable functions.
 For a typeclass assuming measurability of `((-) c)` and `(- c)` see `has_measurable_sub`. -/
 class HasMeasurableSub₂ (G : Type _) [MeasurableSpace G] [Sub G] : Prop where
@@ -221,6 +233,8 @@ For a typeclass assuming measurability of `uncurry (/)` see `has_measurable_div�
 class HasMeasurableDiv (G₀ : Type _) [MeasurableSpace G₀] [Div G₀] : Prop where
   measurable_const_div : ∀ c : G₀, Measurable ((· / ·) c)
   measurable_div_const : ∀ c : G₀, Measurable (· / c)
+
+export HasMeasurableDiv (measurable_const_div measurable_div_const)
 
 /-- We say that a type `has_measurable_div` if `uncurry (/)` is a measurable functions.
 For a typeclass assuming measurability of `((/) c)` and `(/ c)` see `has_measurable_div`. -/

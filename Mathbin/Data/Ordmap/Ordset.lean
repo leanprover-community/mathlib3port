@@ -587,7 +587,7 @@ theorem merge_node {ls ll lx lr rs rl rx rr} :
 
 
 theorem dual_insert [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x : α) :
-    ∀ t : Ordnode α, dual (Ordnode.insert x t) = @Ordnode.insert (OrderDual α) _ _ x (dual t)
+    ∀ t : Ordnode α, dual (Ordnode.insert x t) = @Ordnode.insert αᵒᵈ _ _ x (dual t)
   | nil => rfl
   | node _ l y r => by
     rw [Ordnode.insert, dual, Ordnode.insert, OrderDual.cmp_le_flip, ← cmp_le_swap x y]
@@ -901,7 +901,7 @@ def Bounded : Ordnode α → WithBot α → WithTop α → Prop
   | nil, _, _ => True
   | node _ l x r, o₁, o₂ => bounded l o₁ ↑x ∧ bounded r (↑x) o₂
 
-theorem Bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂, @Bounded (OrderDual α) _ (dual t) o₂ o₁
+theorem Bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂, @Bounded αᵒᵈ _ (dual t) o₂ o₁
   | nil, o₁, o₂, h => by
     cases o₁ <;>
       cases o₂ <;>
@@ -910,7 +910,7 @@ theorem Bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂,
           exact h
   | node s l x r, _, _, ⟨ol, Or⟩ => ⟨Or.dual, ol.dual⟩
 
-theorem Bounded.dual_iff {t : Ordnode α} {o₁ o₂} : Bounded t o₁ o₂ ↔ @Bounded (OrderDual α) _ (dual t) o₂ o₁ :=
+theorem Bounded.dual_iff {t : Ordnode α} {o₁ o₂} : Bounded t o₁ o₂ ↔ @Bounded αᵒᵈ _ (dual t) o₂ o₁ :=
   ⟨Bounded.dual, fun h => by
     have := bounded.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
 
@@ -1040,7 +1040,7 @@ theorem Valid'.node {s l x r o₁ o₂} (hl : Valid' o₁ l ↑x) (hr : Valid' (
     (hs : s = size l + size r + 1) : Valid' o₁ (@node α s l x r) o₂ :=
   ⟨⟨hl.1, hr.1⟩, ⟨hs, hl.2, hr.2⟩, ⟨H, hl.3, hr.3⟩⟩
 
-theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Valid' o₁ t o₂, @Valid' (OrderDual α) _ o₂ (dual t) o₁
+theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Valid' o₁ t o₂, @Valid' αᵒᵈ _ o₂ (dual t) o₁
   | nil, o₁, o₂, h => valid'_nil h.1.dual
   | node s l x r, o₁, o₂, ⟨⟨ol, Or⟩, ⟨rfl, sl, sr⟩, ⟨b, bl, br⟩⟩ =>
     let ⟨ol', sl', bl'⟩ := valid'.dual ⟨ol, sl, bl⟩
@@ -1051,14 +1051,14 @@ theorem Valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Valid' o₁ t o₂, @
       ⟨by
         rw [size_dual, size_dual] <;> exact b.symm, br', bl'⟩⟩
 
-theorem Valid'.dual_iff {t : Ordnode α} {o₁ o₂} : Valid' o₁ t o₂ ↔ @Valid' (OrderDual α) _ o₂ (dual t) o₁ :=
+theorem Valid'.dual_iff {t : Ordnode α} {o₁ o₂} : Valid' o₁ t o₂ ↔ @Valid' αᵒᵈ _ o₂ (dual t) o₁ :=
   ⟨Valid'.dual, fun h => by
     have := valid'.dual h <;> rwa [dual_dual, OrderDual.preorder.dual_dual] at this⟩
 
-theorem Valid.dual {t : Ordnode α} : Valid t → @Valid (OrderDual α) _ (dual t) :=
+theorem Valid.dual {t : Ordnode α} : Valid t → @Valid αᵒᵈ _ (dual t) :=
   valid'.dual
 
-theorem Valid.dual_iff {t : Ordnode α} : Valid t ↔ @Valid (OrderDual α) _ (dual t) :=
+theorem Valid.dual_iff {t : Ordnode α} : Valid t ↔ @Valid αᵒᵈ _ (dual t) :=
   valid'.dual_iff
 
 theorem Valid'.left {s l x r o₁ o₂} (H : Valid' o₁ (@node α s l x r) o₂) : Valid' o₁ l x :=

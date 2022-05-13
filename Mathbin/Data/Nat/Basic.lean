@@ -353,6 +353,14 @@ theorem succ_succ_ne_one (n : ℕ) : n.succ.succ ≠ 1 :=
 theorem one_lt_succ_succ (n : ℕ) : 1 < n.succ.succ :=
   succ_lt_succ <| succ_posₓ n
 
+theorem two_le_iff : ∀ n, 2 ≤ n ↔ n ≠ 0 ∧ n ≠ 1
+  | 0 => by
+    simp
+  | 1 => by
+    simp
+  | n + 2 => by
+    simp
+
 theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
   ⟨le_of_succ_le_succₓ, succ_le_succₓ⟩
 
@@ -1006,6 +1014,12 @@ protected theorem div_eq_iff_eq_mul_left {a b c : ℕ} (H : 0 < b) (H' : b ∣ a
 protected theorem eq_mul_of_div_eq_left {a b c : ℕ} (H1 : b ∣ a) (H2 : a / b = c) : a = c * b := by
   rw [mul_comm, Nat.eq_mul_of_div_eq_right H1 H2]
 
+protected theorem lt_div_iff_mul_lt {n d : ℕ} (hnd : d ∣ n) (a : ℕ) : a < n / d ↔ d * a < n := by
+  rcases d.eq_zero_or_pos with (rfl | hd0)
+  · simp [zero_dvd_iff.mp hnd]
+    
+  rw [← mul_lt_mul_left hd0, ← Nat.eq_mul_of_div_eq_right hnd rfl]
+
 protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) = b := by
   rw [mul_comm, Nat.div_mul_cancelₓ Hd]
 
@@ -1032,6 +1046,11 @@ theorem div_eq_iff_eq_of_dvd_dvd {n x y : ℕ} (hn : n ≠ 0) (hx : x ∣ n) (hy
   · intro h
     rw [h]
     
+
+@[simp]
+protected theorem div_left_inj {a b d : ℕ} (hda : d ∣ a) (hdb : d ∣ b) : a / d = b / d ↔ a = b := by
+  refine' ⟨fun h => _, congr_argₓ _⟩
+  rw [← Nat.mul_div_cancel'ₓ hda, ← Nat.mul_div_cancel'ₓ hdb, h]
 
 /-! ### `mod`, `dvd` -/
 
@@ -1408,6 +1427,10 @@ theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m =
 /-- `dvd` is injective in the left argument -/
 theorem dvd_left_injective : Function.Injective ((· ∣ ·) : ℕ → ℕ → Prop) := fun m n h =>
   dvd_right_iff_eq.mp fun a => iff_of_eq (congr_funₓ h a)
+
+theorem div_lt_div_of_lt_of_dvd {a b d : ℕ} (hdb : d ∣ b) (h : a < b) : a / d < b / d := by
+  rw [Nat.lt_div_iff_mul_lt hdb]
+  exact lt_of_le_of_ltₓ (mul_div_le a d) h
 
 /-! ### `find` -/
 

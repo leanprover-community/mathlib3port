@@ -79,6 +79,30 @@ theorem is_left_regular [Mul R] {a : R} (h : IsSmulRegular R a) : IsLeftRegular 
 theorem is_right_regular [Mul R] {a : R} (h : IsSmulRegular R (MulOpposite.op a)) : IsRightRegular a :=
   h
 
+theorem mul [Mul R] [IsScalarTower R R M] (ra : IsSmulRegular M a) (rb : IsSmulRegular M b) : IsSmulRegular M (a * b) :=
+  ra.smul rb
+
+theorem of_mul [Mul R] [IsScalarTower R R M] (ab : IsSmulRegular M (a * b)) : IsSmulRegular M b := by
+  rw [← smul_eq_mul] at ab
+  exact ab.of_smul _
+
+@[simp]
+theorem mul_iff_right [Mul R] [IsScalarTower R R M] (ha : IsSmulRegular M a) :
+    IsSmulRegular M (a * b) ↔ IsSmulRegular M b :=
+  ⟨of_mul, ha.mul⟩
+
+/-- Two elements `a` and `b` are `M`-regular if and only if both products `a * b` and `b * a`
+are `M`-regular. -/
+theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
+    IsSmulRegular M (a * b) ∧ IsSmulRegular M (b * a) ↔ IsSmulRegular M a ∧ IsSmulRegular M b := by
+  refine' ⟨_, _⟩
+  · rintro ⟨ab, ba⟩
+    refine' ⟨ba.of_mul, ab.of_mul⟩
+    
+  · rintro ⟨ha, hb⟩
+    exact ⟨ha.mul hb, hb.mul ha⟩
+    
+
 end HasScalar
 
 section Monoidₓ
@@ -94,28 +118,12 @@ theorem one : IsSmulRegular M (1 : R) := fun a b ab => by
 
 variable {M}
 
-theorem mul (ra : IsSmulRegular M a) (rb : IsSmulRegular M b) : IsSmulRegular M (a * b) :=
-  ra.smul rb
-
-theorem of_mul (ab : IsSmulRegular M (a * b)) : IsSmulRegular M b := by
-  rw [← smul_eq_mul] at ab
-  exact ab.of_smul _
-
-@[simp]
-theorem mul_iff_right (ha : IsSmulRegular M a) : IsSmulRegular M (a * b) ↔ IsSmulRegular M b :=
-  ⟨of_mul, ha.mul⟩
-
-/-- Two elements `a` and `b` are `M`-regular if and only if both products `a * b` and `b * a`
-are `M`-regular. -/
-theorem mul_and_mul_iff : IsSmulRegular M (a * b) ∧ IsSmulRegular M (b * a) ↔ IsSmulRegular M a ∧ IsSmulRegular M b :=
-  by
-  refine' ⟨_, _⟩
-  · rintro ⟨ab, ba⟩
-    refine' ⟨ba.of_mul, ab.of_mul⟩
-    
-  · rintro ⟨ha, hb⟩
-    exact ⟨ha.mul hb, hb.mul ha⟩
-    
+/-- An element of `R` admitting a left inverse is `M`-regular. -/
+theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
+  of_mul
+    (by
+      rw [h]
+      exact one M)
 
 /-- Any power of an `M`-regular element is `M`-regular. -/
 theorem pow (n : ℕ) (ra : IsSmulRegular M a) : IsSmulRegular M (a ^ n) := by
@@ -133,6 +141,19 @@ theorem pow_iff {n : ℕ} (n0 : 0 < n) : IsSmulRegular M (a ^ n) ↔ IsSmulRegul
   exact of_smul _
 
 end Monoidₓ
+
+section MonoidSmul
+
+variable [Monoidₓ S] [HasScalar R M] [HasScalar R S] [MulAction S M] [IsScalarTower R S M]
+
+/-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
+theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
+  of_smul a
+    (by
+      rw [h]
+      exact one M)
+
+end MonoidSmul
 
 section MonoidWithZeroₓ
 
@@ -165,25 +186,11 @@ theorem zero [sM : Subsingleton M] : IsSmulRegular M (0 : R) :=
 theorem not_zero [nM : Nontrivial M] : ¬IsSmulRegular M (0 : R) :=
   not_zero_iff.mpr nM
 
-/-- An element of `S` admitting a left inverse in `R` is `M`-regular. -/
-theorem of_smul_eq_one (h : a • s = 1) : IsSmulRegular M s :=
-  of_smul a
-    (by
-      rw [h]
-      exact one M)
-
-/-- An element of `R` admitting a left inverse is `M`-regular. -/
-theorem of_mul_eq_one (h : a * b = 1) : IsSmulRegular M b :=
-  of_mul
-    (by
-      rw [h]
-      exact one M)
-
 end MonoidWithZeroₓ
 
-section CommMonoidₓ
+section CommSemigroupₓ
 
-variable [CommMonoidₓ R] [MulAction R M]
+variable [CommSemigroupₓ R] [HasScalar R M] [IsScalarTower R R M]
 
 /-- A product is `M`-regular if and only if the factors are. -/
 theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegular M b := by
@@ -194,7 +201,7 @@ theorem mul_iff : IsSmulRegular M (a * b) ↔ IsSmulRegular M a ∧ IsSmulRegula
         rwa [mul_comm]⟩,
       fun rab => rab.1⟩
 
-end CommMonoidₓ
+end CommSemigroupₓ
 
 end IsSmulRegular
 
@@ -210,7 +217,9 @@ theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g := 
 
 end Groupₓ
 
-variable [MonoidWithZeroₓ R] [Zero M] [MulActionWithZero R M]
+section Units
+
+variable [Monoidₓ R] [MulAction R M]
 
 /-- Any element in `Rˣ` is `M`-regular. -/
 theorem Units.is_smul_regular (a : Rˣ) : IsSmulRegular M (a : R) :=
@@ -220,4 +229,6 @@ theorem Units.is_smul_regular (a : Rˣ) : IsSmulRegular M (a : R) :=
 theorem IsUnit.is_smul_regular (ua : IsUnit a) : IsSmulRegular M a := by
   rcases ua with ⟨a, rfl⟩
   exact a.is_smul_regular M
+
+end Units
 

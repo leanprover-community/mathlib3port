@@ -118,6 +118,27 @@ theorem realize_subst {t : L.Term α} {tf : α → L.Term β} {v : β → M} :
   · simp [ih]
     
 
+@[simp]
+theorem realize_restrict_var [DecidableEq α] {t : L.Term α} {s : Set α} (h : ↑t.varFinset ⊆ s) {v : α → M} :
+    (t.restrictVar (Set.inclusion h)).realize (v ∘ coe) = t.realize v := by
+  induction' t with _ _ _ _ ih
+  · rfl
+    
+  · simp_rw [var_finset, Finset.coe_bUnion, Set.Union_subset_iff]  at h
+    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+    
+
+@[simp]
+theorem realize_restrict_var_left [DecidableEq α] {γ : Type _} {t : L.Term (Sum α γ)} {s : Set α}
+    (h : ↑t.varFinsetLeft ⊆ s) {v : α → M} {xs : γ → M} :
+    (t.restrictVarLeft (Set.inclusion h)).realize (Sum.elim (v ∘ coe) xs) = t.realize (Sum.elim v xs) := by
+  induction' t with a _ _ _ ih
+  · cases a <;> rfl
+    
+  · simp_rw [var_finset_left, Finset.coe_bUnion, Set.Union_subset_iff]  at h
+    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+    
+
 end Term
 
 namespace Lhom
@@ -370,6 +391,22 @@ theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.Term β} {v : 
   · simp only [subst, realize_imp, ih1, ih2]
     
   · simp only [ih, subst, realize_all]
+    
+
+@[simp]
+theorem realize_restrict_free_var [DecidableEq α] {n : ℕ} {φ : L.BoundedFormula α n} {s : Set α}
+    (h : ↑φ.freeVarFinset ⊆ s) {v : α → M} {xs : Finₓ n → M} :
+    (φ.restrictFreeVar (Set.inclusion h)).realize (v ∘ coe) xs ↔ φ.realize v xs := by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
+  · rfl
+    
+  · simp [restrict_free_var, realize]
+    
+  · simp [restrict_free_var, realize]
+    
+  · simp [restrict_free_var, realize, ih1, ih2]
+    
+  · simp [restrict_free_var, realize, ih3]
     
 
 variable [Nonempty M]
@@ -633,14 +670,26 @@ variable {M} {T}
 instance model_empty : M ⊨ (∅ : L.Theory) :=
   ⟨fun φ hφ => (Set.not_mem_empty φ hφ).elim⟩
 
-theorem Theory.Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
+namespace Theory
+
+theorem Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
   ⟨fun φ hφ => T'.realize_sentence_of_mem (hs hφ)⟩
 
-theorem Theory.model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by
+theorem Model.union {T' : L.Theory} (h : M ⊨ T) (h' : M ⊨ T') : M ⊨ T ∪ T' := by
+  simp only [model_iff, Set.mem_union_eq] at *
+  exact fun φ hφ => hφ.elim (h _) (h' _)
+
+@[simp]
+theorem model_union_iff {T' : L.Theory} : M ⊨ T ∪ T' ↔ M ⊨ T ∧ M ⊨ T' :=
+  ⟨fun h => ⟨h.mono (T.subset_union_left T'), h.mono (T.subset_union_right T')⟩, fun h => h.1.union h.2⟩
+
+theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by
   simp
 
-theorem Theory.model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.CompleteTheory M :=
+theorem model_iff_subset_complete_theory : M ⊨ T ↔ T ⊆ L.CompleteTheory M :=
   T.model_iff
+
+end Theory
 
 instance model_complete_theory : M ⊨ L.CompleteTheory M :=
   Theory.model_iff_subset_complete_theory.2 (subset_refl _)
@@ -793,6 +842,25 @@ theorem model_nonempty_theory_iff : M ⊨ L.NonemptyTheory ↔ Nonempty M := by
 
 instance model_nonempty [h : Nonempty M] : M ⊨ L.NonemptyTheory :=
   L.model_nonempty_theory_iff.2 h
+
+theorem model_distinct_constants_theory {M : Type w} [L[[α]].Structure M] (s : Set α) :
+    M ⊨ L.DistinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s := by
+  simp only [distinct_constants_theory, Set.compl_eq_compl, Theory.model_iff, Set.mem_image, Set.mem_inter_eq,
+    Set.mem_prod, Set.mem_compl_eq, Prod.exists, forall_exists_index, and_imp]
+  refine' ⟨fun h a as b bs ab => _, _⟩
+  · contrapose! ab
+    have h' := h _ a b as bs ab rfl
+    simp only [sentence.realize, formula.realize_not, formula.realize_equal, term.realize_constants] at h'
+    exact h'
+    
+  · rintro h φ a b as bs ab rfl
+    simp only [sentence.realize, formula.realize_not, formula.realize_equal, term.realize_constants]
+    exact fun contra => ab (h as bs contra)
+    
+
+theorem card_le_of_model_distinct_constants_theory (s : Set α) (M : Type w) [L[[α]].Structure M]
+    [h : M ⊨ L.DistinctConstantsTheory s] : Cardinal.lift.{w} (# s) ≤ Cardinal.lift.{u'} (# M) :=
+  lift_mk_le'.2 ⟨⟨_, Set.inj_on_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
 
 end Cardinality
 

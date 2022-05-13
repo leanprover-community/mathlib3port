@@ -111,7 +111,7 @@ protected theorem pow (m : ℕ) (h : a ≡ b [MOD n]) : a ^ m ≡ b ^ m [MOD n] 
   exact h.mul hd
 
 protected theorem add (h₁ : a ≡ b [MOD n]) (h₂ : c ≡ d [MOD n]) : a + c ≡ b + d [MOD n] := by
-  rw [modeq_iff_dvd, Int.coe_nat_add, Int.coe_nat_add, add_sub_comm]
+  rw [modeq_iff_dvd, Int.coe_nat_add, Int.coe_nat_add, add_sub_add_comm]
   exact dvd_add h₁.dvd h₂.dvd
 
 protected theorem add_left (c : ℕ) (h : a ≡ b [MOD n]) : c + a ≡ c + b [MOD n] :=
@@ -122,7 +122,7 @@ protected theorem add_right (c : ℕ) (h : a ≡ b [MOD n]) : a + c ≡ b + c [M
 
 protected theorem add_left_cancel (h₁ : a ≡ b [MOD n]) (h₂ : a + c ≡ b + d [MOD n]) : c ≡ d [MOD n] := by
   simp only [modeq_iff_dvd, Int.coe_nat_add] at *
-  rw [add_sub_comm] at h₂
+  rw [add_sub_add_comm] at h₂
   convert _root_.dvd_sub h₂ h₁ using 1
   rw [add_sub_cancel']
 

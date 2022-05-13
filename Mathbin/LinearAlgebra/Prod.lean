@@ -5,6 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric W
 -/
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Order.PartialSups
+import Mathbin.Algebra.Algebra.Basic
 
 /-! ### Products of modules
 
@@ -301,12 +302,39 @@ theorem prod_map_mul (f₁₂ : M →ₗ[R] M) (f₂₃ : M →ₗ[R] M) (g₁�
     f₂₃.prod_map g₂₃ * f₁₂.prod_map g₁₂ = (f₂₃ * f₁₂).prod_map (g₂₃ * g₁₂) :=
   rfl
 
-/-- `linear_map.prod_map` as a `monoid_hom` -/
+theorem prod_map_add (f₁ : M →ₗ[R] M₃) (f₂ : M →ₗ[R] M₃) (g₁ : M₂ →ₗ[R] M₄) (g₂ : M₂ →ₗ[R] M₄) :
+    (f₁ + f₂).prod_map (g₁ + g₂) = f₁.prod_map g₁ + f₂.prod_map g₂ :=
+  rfl
+
+@[simp]
+theorem prod_map_zero : (0 : M →ₗ[R] M₂).prod_map (0 : M₃ →ₗ[R] M₄) = 0 :=
+  rfl
+
+@[simp]
+theorem prod_map_smul [Module S M₃] [Module S M₄] [SmulCommClass R S M₃] [SmulCommClass R S M₄] (s : S) (f : M →ₗ[R] M₃)
+    (g : M₂ →ₗ[R] M₄) : prodMap (s • f) (s • g) = s • prodMap f g :=
+  rfl
+
+variable (R M M₂ M₃ M₄)
+
+/-- `linear_map.prod_map` as a `linear_map` -/
 @[simps]
-def prodMapMonoidHom : (M →ₗ[R] M) × (M₂ →ₗ[R] M₂) →* M × M₂ →ₗ[R] M × M₂ where
+def prodMapLinear [Module S M₃] [Module S M₄] [SmulCommClass R S M₃] [SmulCommClass R S M₄] :
+    (M →ₗ[R] M₃) × (M₂ →ₗ[R] M₄) →ₗ[S] M × M₂ →ₗ[R] M₃ × M₄ where
+  toFun := fun f => prodMap f.1 f.2
+  map_add' := fun _ _ => rfl
+  map_smul' := fun _ _ => rfl
+
+/-- `linear_map.prod_map` as a `ring_hom` -/
+@[simps]
+def prodMapRingHom : (M →ₗ[R] M) × (M₂ →ₗ[R] M₂) →+* M × M₂ →ₗ[R] M × M₂ where
   toFun := fun f => prodMap f.1 f.2
   map_one' := prod_map_one
-  map_mul' := fun _ _ => prod_map_mul _ _ _ _
+  map_zero' := rfl
+  map_add' := fun _ _ => rfl
+  map_mul' := fun _ _ => rfl
+
+variable {R M M₂ M₃ M₄}
 
 section map_mul
 
@@ -330,6 +358,23 @@ end map_mul
 end LinearMap
 
 end Prod
+
+namespace LinearMap
+
+variable (R M M₂)
+
+variable [CommSemiringₓ R]
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+
+variable [Module R M] [Module R M₂]
+
+/-- `linear_map.prod_map` as an `algebra_hom` -/
+@[simps]
+def prodMapAlgHom : Module.End R M × Module.End R M₂ →ₐ[R] Module.End R (M × M₂) :=
+  { prodMapRingHom R M M₂ with commutes' := fun _ => rfl }
+
+end LinearMap
 
 namespace LinearMap
 
@@ -774,7 +819,7 @@ noncomputable def tunnel'ₓ (f : M × N →ₗ[R] M) (i : Injective f) : ℕ �
 /-- Give an injective map `f : M × N →ₗ[R] M` we can find a nested sequence of submodules
 all isomorphic to `M`.
 -/
-def tunnel (f : M × N →ₗ[R] M) (i : Injective f) : ℕ →o OrderDual (Submodule R M) :=
+def tunnel (f : M × N →ₗ[R] M) (i : Injective f) : ℕ →o (Submodule R M)ᵒᵈ :=
   ⟨fun n => (tunnel'ₓ f i n).1,
     monotone_nat_of_le_succ fun n => by
       dsimp' [tunnel', tunnel_aux]

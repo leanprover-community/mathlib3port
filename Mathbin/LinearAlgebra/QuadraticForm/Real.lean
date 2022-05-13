@@ -70,7 +70,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by
       ring,
-    Real.rpow_neg_one, mul_inv₀, inv_sign, mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
+    Real.rpow_neg_one, mul_inv, inv_sign, mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_oneₓ]
   infer_instance
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted

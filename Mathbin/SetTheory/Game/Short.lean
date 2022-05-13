@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 -/
 import Mathbin.Data.Fintype.Basic
+import Mathbin.SetTheory.Cardinal.Cofinality
 import Mathbin.SetTheory.Game.Basic
+import Mathbin.SetTheory.Game.Birthday
 
 /-!
 # Short games
@@ -107,15 +109,29 @@ def moveRightShort' {xl xr} xL xR [S : Short (mk xl xr xL xR)] (j : xr) : Short 
 
 attribute [local instance] move_right_short'
 
-instance Short.ofPempty {xL} {xR} : Short (mk Pempty Pempty xL xR) :=
-  Short.mk (fun i => Pempty.elimₓ i) fun j => Pempty.elimₓ j
+theorem short_birthday : ∀ x : Pgame.{u} [Short x], x.birthday < Ordinal.omega
+  | ⟨xl, xr, xL, xR⟩, hs => by
+    have := hs
+    rcases hs with ⟨_, _, _, _, sL, sR, hl, hr⟩
+    rw [birthday, max_lt_iff]
+    constructor
+    all_goals
+      rw [← Cardinal.ord_omega]
+      refine'
+        Cardinal.lsub_lt_ord_of_is_regular.{u, u} Cardinal.is_regular_omega (Cardinal.lt_omega_of_fintype _) fun i => _
+      rw [Cardinal.ord_omega]
+      apply short_birthday _
+    · exact move_left_short' xL xR i
+      
+    · exact move_right_short' xL xR i
+      
+
+/-- This leads to infinite loops if made into an instance. -/
+def Short.ofIsEmpty {l r xL xR} [IsEmpty l] [IsEmpty r] : Short (mk l r xL xR) :=
+  Short.mk isEmptyElim isEmptyElim
 
 instance short0 : Short 0 :=
-  Short.mk
-    (fun i => by
-      cases i)
-    fun j => by
-    cases j
+  short.of_is_empty
 
 instance short1 : Short 1 :=
   Short.mk
@@ -166,41 +182,22 @@ def shortOfRelabelling : ∀ {x y : Pgame.{u}} R : Relabelling x y S : Short x, 
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
         fun j => short_of_relabelling (rR j) inferInstance
 
-/-- If `x` has no left move or right moves, it is (very!) short. -/
-def shortOfEquivEmpty {x : Pgame.{u}} (el : x.LeftMoves ≃ Pempty) (er : x.RightMoves ≃ Pempty) : Short x :=
-  shortOfRelabelling (relabelRelabelling el er).symm Short.ofPempty
-
 instance shortNeg : ∀ x : Pgame.{u} [Short x], Short (-x)
   | mk xl xr xL xR, _ => by
     skip
-    apply short.mk
-    · rintro i
-      apply short_neg _
-      infer_instance
-      
-    · rintro j
-      apply short_neg _
-      infer_instance
-      
+    exact short.mk (fun i => short_neg _) fun i => short_neg _
 
 instance shortAdd : ∀ x y : Pgame.{u} [Short x] [Short y], Short (x + y)
   | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
     apply short.mk
-    · rintro ⟨i⟩
+    all_goals
+      rintro ⟨i⟩
       · apply short_add
         
-      · change short (mk xl xr xL xR + yL i)
+      · change short (mk xl xr xL xR + _)
         apply short_add
         
-      
-    · rintro ⟨j⟩
-      · apply short_add
-        
-      · change short (mk xl xr xL xR + yR j)
-        apply short_add
-        
-      
 
 instance shortNat : ∀ n : ℕ, Short n
   | 0 => Pgame.short0

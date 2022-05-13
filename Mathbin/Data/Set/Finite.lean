@@ -872,12 +872,12 @@ variable [SemilatticeInf α] [Nonempty α] {s : Set α}
 
 /-- A finite set is bounded below.-/
 protected theorem Finite.bdd_below (hs : Finite s) : BddBelow s :=
-  @Finite.bdd_above (OrderDual α) _ _ _ hs
+  @Finite.bdd_above αᵒᵈ _ _ _ hs
 
 /-- A finite union of sets which are all bounded below is still bounded below.-/
 theorem Finite.bdd_below_bUnion {I : Set β} {S : β → Set α} (H : Finite I) :
     BddBelow (⋃ i ∈ I, S i) ↔ ∀, ∀ i ∈ I, ∀, BddBelow (S i) :=
-  @Finite.bdd_above_bUnion (OrderDual α) _ _ _ _ _ H
+  @Finite.bdd_above_bUnion αᵒᵈ _ _ _ _ _ H
 
 theorem infinite_of_not_bdd_below : ¬BddBelow s → s.Infinite := by
   contrapose!

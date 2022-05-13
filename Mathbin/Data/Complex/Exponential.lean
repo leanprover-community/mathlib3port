@@ -297,8 +297,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
       simpa [h, lt_irreflₓ] using hQε0
     have h2Q0 : 2 * Q ≠ 0 := mul_ne_zero two_ne_zero hQ0
     have hε : ε / (2 * P) * P + ε / (4 * Q) * (2 * Q) = ε := by
-      rw [← div_div_eq_div_mul, div_mul_cancel _ (Ne.symm (ne_of_ltₓ hP0)), two_mul_two, mul_assoc, ←
-        div_div_eq_div_mul, div_mul_cancel _ h2Q0, add_halves]
+      rw [← div_div, div_mul_cancel _ (Ne.symm (ne_of_ltₓ hP0)), two_mul_two, mul_assoc, ← div_div,
+        div_mul_cancel _ h2Q0, add_halves]
     have hNMK : max N M + 1 < K :=
       lt_of_lt_of_leₓ
         (by
@@ -389,8 +389,8 @@ theorem is_cau_abs_exp (z : ℂ) : IsCauSeq HasAbs.abs fun n => ∑ m in range n
     (by
       rwa [div_lt_iff hn0, one_mulₓ])
     fun m hm => by
-    rw [abs_abs, abs_abs, Nat.factorial_succ, pow_succₓ, mul_comm m.succ, Nat.cast_mulₓ, ← div_div_eq_div_mul,
-        mul_div_assoc, mul_div_right_comm, abs_mul, abs_div, abs_cast_nat] <;>
+    rw [abs_abs, abs_abs, Nat.factorial_succ, pow_succₓ, mul_comm m.succ, Nat.cast_mulₓ, ← div_div, mul_div_assoc,
+        mul_div_right_comm, abs_mul, abs_div, abs_cast_nat] <;>
       exact
         mul_le_mul_of_nonneg_right
           (div_le_div_of_le_left (abs_nonneg _) hn0 (Nat.cast_le.2 (le_transₓ hm (Nat.le_succₓ _)))) (abs_nonneg _)
@@ -526,7 +526,7 @@ theorem exp_add : exp (x + y) = exp x * exp y :=
         have h₁ : (m.choose i : ℂ) ≠ 0 :=
           Nat.cast_ne_zero.2 (pos_iff_ne_zero.1 (Nat.choose_pos (Nat.le_of_lt_succₓ (mem_range.1 hi))))
         have h₂ := Nat.choose_mul_factorial_mul_factorial (Nat.le_of_lt_succₓ <| Finset.mem_range.1 hi)
-        rw [← h₂, Nat.cast_mulₓ, Nat.cast_mulₓ, mul_inv₀, mul_inv₀]
+        rw [← h₂, Nat.cast_mulₓ, Nat.cast_mulₓ, mul_inv, mul_inv]
         simp only [mul_left_commₓ (m.choose i : ℂ), mul_assoc, mul_left_commₓ (m.choose i : ℂ)⁻¹,
           mul_comm (m.choose i : ℂ)]
         rw [inv_mul_cancel h₁]
@@ -1418,7 +1418,7 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       · exact mul_pos (Nat.cast_pos.2 (Nat.factorial_pos _)) (pow_pos (Nat.cast_pos.2 (Nat.succ_posₓ _)) _)
         
     _ = n !⁻¹ * ∑ m in range (j - n), n.succ⁻¹ ^ m := by
-      simp [mul_inv₀, mul_sum.symm, sum_mul.symm, -Nat.factorial_succ, mul_comm, inv_pow₀]
+      simp [mul_inv, mul_sum.symm, sum_mul.symm, -Nat.factorial_succ, mul_comm, inv_pow₀]
     _ = (n.succ - n.succ * n.succ⁻¹ ^ (j - n)) / (n ! * n) := by
       have h₁ : (n.succ : α) ≠ 1 := @Nat.cast_oneₓ α _ _ ▸ mt Nat.cast_inj.1 (mt Nat.succ.injₓ (pos_iff_ne_zero.1 hn))
       have h₂ : (n.succ : α) ≠ 0 := Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)
@@ -1428,7 +1428,7 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       have h₄ : (n.succ - 1 : α) = n := by
         simp
       rw [← geom_sum_def, geom_sum_inv h₁ h₂, eq_div_iff_mul_eq h₃, mul_comm _ (n ! * n : α), ← mul_assoc (n !⁻¹ : α), ←
-          mul_inv_rev₀, h₄, ← mul_assoc (n ! * n : α), mul_comm (n : α) n !, mul_inv_cancel h₃] <;>
+          mul_inv_rev, h₄, ← mul_assoc (n ! * n : α), mul_comm (n : α) n !, mul_inv_cancel h₃] <;>
         simp [mul_addₓ, add_mulₓ, mul_assoc, mul_comm]
     _ ≤ n.succ / (n ! * n) := by
       refine' Iff.mpr (div_le_div_right (mul_pos _ _)) _
@@ -1489,7 +1489,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
       
     
   · refine' Finset.sum_congr rfl fun _ _ => _
-    simp only [pow_addₓ, div_eq_inv_mul, mul_inv₀, mul_left_commₓ, mul_assoc]
+    simp only [pow_addₓ, div_eq_inv_mul, mul_inv, mul_left_commₓ, mul_assoc]
     
   · rw [← mul_sum]
     apply mul_le_mul_of_nonneg_left
@@ -1564,6 +1564,17 @@ theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n
   have t := sub_le_iff_le_add'.1 h''
   simpa [mul_div_assoc] using t
 
+theorem abs_exp_sub_one_le {x : ℝ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 * abs x := by
+  have : Complex.abs x ≤ 1 := by
+    exact_mod_cast hx
+  exact_mod_cast Complex.abs_exp_sub_one_le this
+
+theorem abs_exp_sub_one_sub_id_le {x : ℝ} (hx : abs x ≤ 1) : abs (exp x - 1 - x) ≤ x ^ 2 := by
+  rw [← _root_.sq_abs]
+  have : Complex.abs x ≤ 1 := by
+    exact_mod_cast hx
+  exact_mod_cast Complex.abs_exp_sub_one_sub_id_le this
+
 /-- A finite initial segment of the exponential series, followed by an arbitrary tail.
 For fixed `n` this is just a linear map wrt `r`, and each map is a simple linear function
 of the previous (see `exp_near_succ`), with `exp_near n x r ⟶ exp x` as `n ⟶ ∞`,
@@ -1577,7 +1588,7 @@ theorem exp_near_zero x r : expNear 0 x r = r := by
 
 @[simp]
 theorem exp_near_succ n x r : expNear (n + 1) x r = expNear n x (1 + x / (n + 1) * r) := by
-  simp [exp_near, range_succ, mul_addₓ, add_left_commₓ, add_assocₓ, pow_succₓ, div_eq_mul_inv, mul_inv₀] <;> ac_rfl
+  simp [exp_near, range_succ, mul_addₓ, add_left_commₓ, add_assocₓ, pow_succₓ, div_eq_mul_inv, mul_inv] <;> ac_rfl
 
 theorem exp_near_sub n x r₁ r₂ : expNear n x r₁ - expNear n x r₂ = x ^ n / n ! * (r₁ - r₂) := by
   simp [exp_near, mul_sub]
@@ -1596,7 +1607,7 @@ theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a�
   subst e₁
   rw [exp_near_succ, exp_near_sub, _root_.abs_mul]
   convert mul_le_mul_of_nonneg_left (le_sub_iff_add_le'.1 e) _
-  · simp [mul_addₓ, pow_succ'ₓ, div_eq_mul_inv, _root_.abs_mul, _root_.abs_inv, ← pow_abs, mul_inv₀]
+  · simp [mul_addₓ, pow_succ'ₓ, div_eq_mul_inv, _root_.abs_mul, _root_.abs_inv, ← pow_abs, mul_inv]
     ac_rfl
     
   · simp [_root_.div_nonneg, _root_.abs_nonneg]
@@ -1678,7 +1689,7 @@ theorem sin_bound {x : ℝ} (hx : abs x ≤ 1) : abs (sin x - (x - x ^ 3 / 6)) �
     abs (sin x - (x - x ^ 3 / 6)) = abs (Complex.sin x - (x - x ^ 3 / 6)) := by
       rw [← abs_of_real] <;> simp [of_real_bit0, of_real_one, of_real_inv]
     _ = abs (((Complex.exp (-x * I) - Complex.exp (x * I)) * I - (2 * x - x ^ 3 / 3)) / 2) := by
-      simp [Complex.sin, sub_div, add_div, neg_div, mul_div_cancel_left _ (@two_ne_zero' ℂ _ _ _), div_div_eq_div_mul,
+      simp [Complex.sin, sub_div, add_div, neg_div, mul_div_cancel_left _ (@two_ne_zero' ℂ _ _ _), div_div,
         show (3 : ℂ) * 2 = 6 by
           norm_num]
     _ =

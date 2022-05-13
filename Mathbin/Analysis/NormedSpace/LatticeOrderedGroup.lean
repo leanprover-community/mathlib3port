@@ -64,7 +64,7 @@ instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : 
 /-- Let `α` be a normed group with a partial order. Then the order dual is also a normed group.
 -/
 -- see Note [lower instance priority]
-instance (priority := 100) {α : Type _} : ∀ [NormedGroup α], NormedGroup (OrderDual α) :=
+instance (priority := 100) {α : Type _} : ∀ [NormedGroup α], NormedGroup αᵒᵈ :=
   id
 
 variable {α : Type _} [NormedLatticeAddCommGroup α]
@@ -84,7 +84,7 @@ theorem dual_solid (a b : α) (h : b⊓-b ≤ a⊓-a) : ∥a∥ ≤ ∥b∥ := b
 normed lattice ordered group.
 -/
 -- see Note [lower instance priority]
-instance (priority := 100) : NormedLatticeAddCommGroup (OrderDual α) where
+instance (priority := 100) : NormedLatticeAddCommGroup αᵒᵈ where
   add_le_add_left := by
     intro a b h₁ c
     rw [← OrderDual.dual_le]
@@ -140,7 +140,7 @@ instance (priority := 100) normed_lattice_add_comm_group_has_continuous_inf : Ha
 -- see Note [lower instance priority]
 instance (priority := 100) normed_lattice_add_comm_group_has_continuous_sup {α : Type _} [NormedLatticeAddCommGroup α] :
     HasContinuousSup α :=
-  OrderDual.has_continuous_sup (OrderDual α)
+  OrderDual.has_continuous_sup αᵒᵈ
 
 /-- Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.
 -/

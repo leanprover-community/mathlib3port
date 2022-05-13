@@ -84,7 +84,7 @@ def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoidₓ M] : Subgroup Mˣ where
   mul_mem' := fun ζ ξ hζ hξ => by
     simp_all only [Set.mem_set_of_eq, mul_powₓ, one_mulₓ]
   inv_mem' := fun ζ hζ => by
-    simp_all only [Set.mem_set_of_eq, inv_pow, one_inv]
+    simp_all only [Set.mem_set_of_eq, inv_pow, inv_one]
 
 @[simp]
 theorem mem_roots_of_unity (k : ℕ+) (ζ : Mˣ) : ζ ∈ rootsOfUnity k M ↔ ζ ^ (k : ℕ) = 1 :=
@@ -465,16 +465,16 @@ theorem zpow_eq_one_iff_dvd (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1 �
     lift -l to ℕ using this with l' hl'
     rw [← dvd_neg, ← hl']
     norm_cast
-    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, one_inv]
+    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, inv_one]
     
 
 theorem inv (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot ζ⁻¹ k :=
   { pow_eq_one := by
-      simp only [h.pow_eq_one, one_inv, eq_self_iff_true, inv_pow],
+      simp only [h.pow_eq_one, inv_one, eq_self_iff_true, inv_pow],
     dvd_of_pow_eq_one := by
       intro l hl
       apply h.dvd_of_pow_eq_one l
-      rw [← inv_inj, ← inv_pow, hl, one_inv] }
+      rw [← inv_inj, ← inv_pow, hl, inv_one] }
 
 @[simp]
 theorem inv_iff : IsPrimitiveRoot ζ⁻¹ k ↔ IsPrimitiveRoot ζ k := by
@@ -865,7 +865,6 @@ theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (prim
   rintro ⟨⟨hzk, Hzk⟩, ⟨hzl, Hzl⟩⟩
   apply_rules [h, Nat.dvd_antisymm, Hzk, Hzl, hzk, hzl]
 
--- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:95:4: warning: unsupported: rw with cfg: { occs := occurrences.pos «expr[ ,]»([1]) }
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`.
 This holds for any `nat`, not just `pnat`, see `nth_roots_one_eq_bUnion_primitive_roots`. -/
@@ -887,11 +886,10 @@ theorem nth_roots_one_eq_bUnion_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrim
     
   · apply le_of_eqₓ
     rw [h.card_nth_roots_finset, Finset.card_bUnion]
-    · rw [← Nat.sum_totient n, Nat.filter_dvd_eq_divisors (Pnat.ne_zero n), sum_congr rfl]
-      simp only [Finset.mem_filter, Finset.mem_range, Nat.mem_divisors]
-      rintro k ⟨H, hk⟩
-      have hdvd := H
-      rcases H with ⟨d, hd⟩
+    · nth_rw_lhs 0[← Nat.sum_totient n]
+      refine' sum_congr rfl _
+      simp only [Nat.mem_divisors]
+      rintro k ⟨⟨d, hd⟩, -⟩
       rw [mul_comm] at hd
       rw [(h.pow n.pos hd).card_primitive_roots]
       

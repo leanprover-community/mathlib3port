@@ -14,7 +14,7 @@ This file defines graded orders, also known as ranked orders.
 
 A `𝕆`-graded order is an order `α` equipped with a distinguished "grade" function `α → 𝕆` which
 should be understood as giving the "height" of the elements. Usual graded orders are `ℕ`-graded,
-cograded orders are `order_dual ℕ`-graded, but we can also grade by `ℤ`, and polytopes are naturally
+cograded orders are `ℕᵒᵈ`-graded, but we can also grade by `ℤ`, and polytopes are naturally
 `fin n`-graded.
 
 Visually, `grade ℕ a` is the height of `a` in the Hasse diagram of `α`.
@@ -215,26 +215,26 @@ theorem grade_self (a : α) : grade α a = a :=
 /-! #### Dual -/
 
 
-instance [GradeOrder 𝕆 α] : GradeOrder (OrderDual 𝕆) (OrderDual α) where
+instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ where
   grade := to_dual ∘ grade 𝕆 ∘ of_dual
   grade_strict_mono := grade_strict_mono.dual
   covby_grade := fun a b h => (h.ofDual.grade _).toDual
 
-instance [GradeMaxOrder 𝕆 α] : GradeMinOrder (OrderDual 𝕆) (OrderDual α) :=
+instance [GradeMaxOrder 𝕆 α] : GradeMinOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeOrder with is_min_grade := fun _ => IsMax.grade _ }
 
-instance [GradeMinOrder 𝕆 α] : GradeMaxOrder (OrderDual 𝕆) (OrderDual α) :=
+instance [GradeMinOrder 𝕆 α] : GradeMaxOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeOrder with is_max_grade := fun _ => IsMin.grade _ }
 
-instance [GradeBoundedOrder 𝕆 α] : GradeBoundedOrder (OrderDual 𝕆) (OrderDual α) :=
+instance [GradeBoundedOrder 𝕆 α] : GradeBoundedOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeMinOrder, OrderDual.gradeMaxOrder with }
 
 @[simp]
-theorem grade_to_dual [GradeOrder 𝕆 α] (a : α) : grade (OrderDual 𝕆) (toDual a) = toDual (grade 𝕆 a) :=
+theorem grade_to_dual [GradeOrder 𝕆 α] (a : α) : grade 𝕆ᵒᵈ (toDual a) = toDual (grade 𝕆 a) :=
   rfl
 
 @[simp]
-theorem grade_of_dual [GradeOrder 𝕆 α] (a : OrderDual α) : grade 𝕆 (ofDual a) = ofDual (grade (OrderDual 𝕆) a) :=
+theorem grade_of_dual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a) = ofDual (grade 𝕆ᵒᵈ a) :=
   rfl
 
 /-! #### Lifting a graded order -/

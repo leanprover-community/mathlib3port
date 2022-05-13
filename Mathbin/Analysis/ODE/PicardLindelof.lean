@@ -264,7 +264,7 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
       _
   simp_rw [mul_powₓ, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left, MeasureTheory.integral_mul_right,
     integral_pow_abs_sub_interval_oc, div_eq_mul_inv, pow_succₓ (v.L : ℝ), Nat.factorial_succ, Nat.cast_mulₓ,
-    Nat.cast_succₓ, mul_inv₀, mul_assoc]
+    Nat.cast_succₓ, mul_inv, mul_assoc]
 
 theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : Icc v.tMin v.tMax) :
     dist ((next^[n]) f₁ t) ((next^[n]) f₂ t) ≤ (v.l * abs (t - v.t₀)) ^ n / n ! * dist f₁ f₂ := by

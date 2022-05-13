@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2020 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Floris van Doorn, Robert Y. Lewis
+Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
 -/
 import Mathbin.Data.Bool.Basic
 import Mathbin.Meta.RbMap
@@ -502,4 +502,51 @@ unsafe def linter.unprintable_interactive : linter where
         "like `?` `*>` `<*` `<*>` `<|>` and `<$>` (but not `>>=` or `do` blocks) " ++
       "that automatically generate a description."
   is_fast := true
+
+/-!
+## Linter for iff's
+-/
+
+
+open BinderInfo
+
+/-- Recursively consumes a Pi expression while accumulating names and the complement of de-Bruijn
+indexes of explicit variables, ultimately obtaining the remaining non-Pi expression as well.
+-/
+unsafe def unravel_explicits_of_pi : expr → ℕ → List Name → List ℕ → List Name × List ℕ × expr
+  | pi n default _ e, i, ln, li => unravel_explicits_of_pi e (i + 1) (n :: ln) (i :: li)
+  | pi n _ _ e, i, ln, li => unravel_explicits_of_pi e (i + 1) ln li
+  | e, _, ln, li => (ln, li, e)
+
+/-- This function works as follows:
+1. Call `unravel_explicits_of_pi` to obtain the names, complements of de-Bruijn indexes and the
+remaining non-Pi expression;
+2. Check if the remaining non-Pi expression is an iff, already obtaining the respective left and
+right expressions if this is the case. Returns `none` otherwise;
+3. Filter the explicit variables that appear on the left *and* right side of the iff;
+4. If no variable satisfies the condition above, return `none`;
+5. Return a message mentioning the variables that do, otherwise.
+-/
+unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option Stringₓ) := do
+  let (ln, li, e) := unravel_explicits_of_pi d.type 0 [] []
+  match e with
+    | none => return none
+    | some (el, er) => do
+      let li := li fun i => d - i - 1
+      let-- fixing for the actual de-Bruijn indexes
+      l := (ln li).filter fun t => el t.2 && er t.2
+      if l = [] then return none
+        else
+          return <|
+            "The following variables are used on both sides of an iff and ".append <|
+              "should be made implicit: ".append <| ", ".intercalate (l fun t => toString t.1)
+
+/-- A linter for checking if variables appearing on both sides of an iff are explicit. Ideally, such
+variables should be implicit instead.
+-/
+unsafe def linter.explicit_vars_of_iff : linter where
+  test := explicit_vars_of_iff
+  auto_decls := false
+  no_errors_found := "No explicit variables on both sides of iff"
+  errors_found := "EXPLICIT VARIABLES ON BOTH SIDES OF IFF"
 

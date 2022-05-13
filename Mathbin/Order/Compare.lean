@@ -3,7 +3,7 @@ Copyright (c) 2017 Mario Carneiro. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 -/
-import Mathbin.Order.Basic
+import Mathbin.Order.Synonym
 
 /-!
 # Comparison
@@ -136,24 +136,29 @@ theorem or_else_eq_lt o₁ o₂ : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ =
 
 end Ordering
 
-theorem OrderDual.dual_compares [LT α] {a b : α} {o : Ordering} :
-    @Ordering.Compares (OrderDual α) _ o a b ↔ @Ordering.Compares α _ o b a := by
+open Ordering OrderDual
+
+@[simp]
+theorem to_dual_compares_to_dual [LT α] {a b : α} {o : Ordering} : Compares o (toDual a) (toDual b) ↔ Compares o b a :=
+  by
+  cases o
+  exacts[Iff.rfl, eq_comm, Iff.rfl]
+
+@[simp]
+theorem of_dual_compares_of_dual [LT α] {a b : αᵒᵈ} {o : Ordering} :
+    Compares o (ofDual a) (ofDual b) ↔ Compares o b a := by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
 
 theorem cmp_compares [LinearOrderₓ α] (a b : α) : (cmp a b).Compares a b := by
-  unfold cmp cmpUsing
-  by_cases' a < b <;> simp [h]
-  by_cases' h₂ : b < a <;> simp [h₂, Gt]
-  exact (Decidable.lt_or_eq_of_leₓ (le_of_not_gtₓ h₂)).resolve_left h
+  obtain h | h | h := lt_trichotomyₓ a b <;> simp [cmp, cmpUsing, h, h.not_lt]
 
 theorem cmp_swap [Preorderₓ α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a := by
   unfold cmp cmpUsing
-  by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [h, h₂, Gt, Ordering.swap]
+  by_cases' a < b <;> by_cases' h₂ : b < a <;> simp [h, h₂, Ordering.swap]
   exact lt_asymmₓ h h₂
 
-theorem OrderDual.cmp_le_flip {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) :
-    @cmpLe (OrderDual α) _ _ x y = cmpLe y x :=
+theorem OrderDual.cmp_le_flip {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : @cmpLe αᵒᵈ _ _ x y = cmpLe y x :=
   rfl
 
 /-- Generate a linear order structure from a preorder and `cmp` function. -/

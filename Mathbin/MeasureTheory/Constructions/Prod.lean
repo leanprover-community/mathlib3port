@@ -563,9 +563,9 @@ theorem map_prod_map {δ} [MeasurableSpace δ] {f : α → β} {g : γ → δ} {
 
 end Measureₓ
 
-namespace MeasurePreserving
-
 open Measureₓ
+
+namespace MeasurePreserving
 
 variable {δ : Type _} [MeasurableSpace δ] {μa : Measure α} {μb : Measure β} {μc : Measure γ} {μd : Measure δ}
 
@@ -610,6 +610,28 @@ protected theorem prod [SigmaFinite μb] [SigmaFinite μd] {f : α → β} {g : 
 
 end MeasurePreserving
 
+namespace QuasiMeasurePreserving
+
+theorem prod_of_right {f : α × β → γ} {μ : Measure α} {ν : Measure β} {τ : Measure γ} (hf : Measurable f)
+    [SigmaFinite ν] (h2f : ∀ᵐ x ∂μ, QuasiMeasurePreserving (fun y => f (x, y)) ν τ) :
+    QuasiMeasurePreserving f (μ.Prod ν) τ := by
+  refine' ⟨hf, _⟩
+  refine' absolutely_continuous.mk fun s hs h2s => _
+  simp_rw [map_apply hf hs, prod_apply (hf hs), preimage_preimage,
+    lintegral_congr_ae (h2f.mono fun x hx => hx.preimage_null h2s), lintegral_zero]
+
+theorem prod_of_left {α β γ} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α × β → γ} {μ : Measure α}
+    {ν : Measure β} {τ : Measure γ} (hf : Measurable f) [SigmaFinite μ] [SigmaFinite ν]
+    (h2f : ∀ᵐ y ∂ν, QuasiMeasurePreserving (fun x => f (x, y)) μ τ) : QuasiMeasurePreserving f (μ.Prod ν) τ := by
+  rw [← prod_swap]
+  convert
+    (quasi_measure_preserving.prod_of_right (hf.comp measurable_swap) h2f).comp
+      ((measurable_swap.measure_preserving (ν.prod μ)).symm MeasurableEquiv.prodComm).QuasiMeasurePreserving
+  ext ⟨x, y⟩
+  rfl
+
+end QuasiMeasurePreserving
+
 end MeasureTheory
 
 open MeasureTheory.Measure
@@ -633,6 +655,14 @@ theorem AeMeasurable.fst [SigmaFinite ν] {f : α → γ} (hf : AeMeasurable f �
 
 theorem AeMeasurable.snd [SigmaFinite ν] {f : β → γ} (hf : AeMeasurable f ν) :
     AeMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
+  hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
+
+theorem MeasureTheory.AeStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
+    (hf : AeStronglyMeasurable f μ) : AeStronglyMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
+  hf.comp_measurable' measurable_fst prod_fst_absolutely_continuous
+
+theorem MeasureTheory.AeStronglyMeasurable.snd {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : β → γ}
+    (hf : AeStronglyMeasurable f ν) : AeStronglyMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
   hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
 
 /-- The Bochner integral is a.e.-measurable.
@@ -909,15 +939,15 @@ theorem continuous_integral_integral : Continuous fun f : α × β →₁[μ.Pro
   refine'
     tendsto_integral_of_L1 _ (L1.integrable_coe_fn g).integral_prod_left
       (eventually_of_forall fun h => (L1.integrable_coe_fn h).integral_prod_left) _
-  simp_rw [← lintegral_fn_integral_sub (fun x => (nnnorm x : ℝ≥0∞)) (L1.integrable_coe_fn _) (L1.integrable_coe_fn g)]
+  simp_rw [← lintegral_fn_integral_sub (fun x => (∥x∥₊ : ℝ≥0∞)) (L1.integrable_coe_fn _) (L1.integrable_coe_fn g)]
   refine' tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (fun i => zero_le _) _
-  · exact fun i => ∫⁻ x, ∫⁻ y, nnnorm (i (x, y) - g (x, y)) ∂ν ∂μ
+  · exact fun i => ∫⁻ x, ∫⁻ y, ∥i (x, y) - g (x, y)∥₊ ∂ν ∂μ
     
   swap
   · exact fun i => lintegral_mono fun x => ennnorm_integral_le_lintegral_ennnorm _
     
-  show tendsto (fun i : α × β →₁[μ.prod ν] E => ∫⁻ x, ∫⁻ y : β, nnnorm (i (x, y) - g (x, y)) ∂ν ∂μ) (𝓝 g) (𝓝 0)
-  have : ∀ i : α × β →₁[μ.prod ν] E, Measurable fun z => (nnnorm (i z - g z) : ℝ≥0∞) := fun i =>
+  show tendsto (fun i : α × β →₁[μ.prod ν] E => ∫⁻ x, ∫⁻ y : β, ∥i (x, y) - g (x, y)∥₊ ∂ν ∂μ) (𝓝 g) (𝓝 0)
+  have : ∀ i : α × β →₁[μ.prod ν] E, Measurable fun z => (∥i z - g z∥₊ : ℝ≥0∞) := fun i =>
     ((Lp.strongly_measurable i).sub (Lp.strongly_measurable g)).ennnorm
   simp_rw [← lintegral_prod_of_measurable _ (this _), ← L1.of_real_norm_sub_eq_lintegral, ← of_real_zero]
   refine' (continuous_of_real.tendsto 0).comp _

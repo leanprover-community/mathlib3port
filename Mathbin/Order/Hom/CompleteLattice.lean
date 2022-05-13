@@ -618,7 +618,7 @@ variable [HasSupₓ α] [HasSupₓ β] [HasSupₓ γ]
 
 /-- Reinterpret a `⨆`-homomorphism as an `⨅`-homomorphism between the dual orders. -/
 @[simps]
-protected def dual : SupHomₓ α β ≃ InfHomₓ (OrderDual α) (OrderDual β) where
+protected def dual : SupHomₓ α β ≃ InfHomₓ αᵒᵈ βᵒᵈ where
   toFun := fun f => ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
   invFun := fun f => ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
   left_inv := fun f => SupHomₓ.ext fun a => rfl
@@ -637,7 +637,7 @@ theorem symm_dual_id : SupHomₓ.dual.symm (InfHomₓ.id _) = SupHomₓ.id α :=
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : InfHomₓ (OrderDual β) (OrderDual γ)) (f : InfHomₓ (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : InfHomₓ βᵒᵈ γᵒᵈ) (f : InfHomₓ αᵒᵈ βᵒᵈ) :
     SupHomₓ.dual.symm (g.comp f) = (SupHomₓ.dual.symm g).comp (SupHomₓ.dual.symm f) :=
   rfl
 
@@ -649,7 +649,7 @@ variable [HasInfₓ α] [HasInfₓ β] [HasInfₓ γ]
 
 /-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
 @[simps]
-protected def dual : InfHomₓ α β ≃ SupHomₓ (OrderDual α) (OrderDual β) where
+protected def dual : InfHomₓ α β ≃ SupHomₓ αᵒᵈ βᵒᵈ where
   toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_argₓ toDual (map_Inf f _) }
   invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
   left_inv := fun f => InfHomₓ.ext fun a => rfl
@@ -668,7 +668,7 @@ theorem symm_dual_id : InfHomₓ.dual.symm (SupHomₓ.id _) = InfHomₓ.id α :=
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : SupHomₓ (OrderDual β) (OrderDual γ)) (f : SupHomₓ (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : SupHomₓ βᵒᵈ γᵒᵈ) (f : SupHomₓ αᵒᵈ βᵒᵈ) :
     InfHomₓ.dual.symm (g.comp f) = (InfHomₓ.dual.symm g).comp (InfHomₓ.dual.symm f) :=
   rfl
 
@@ -681,7 +681,7 @@ variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ]
 /-- Reinterpret a complete lattice homomorphism as a complete lattice homomorphism between the dual
 lattices. -/
 @[simps]
-protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom (OrderDual α) (OrderDual β) where
+protected def dual : CompleteLatticeHom α β ≃ CompleteLatticeHom αᵒᵈ βᵒᵈ where
   toFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
   invFun := fun f => ⟨f.toSupHom.dual, f.map_Inf'⟩
   left_inv := fun f => ext fun a => rfl
@@ -700,8 +700,7 @@ theorem symm_dual_id : CompleteLatticeHom.dual.symm (CompleteLatticeHom.id _) = 
   rfl
 
 @[simp]
-theorem symm_dual_comp (g : CompleteLatticeHom (OrderDual β) (OrderDual γ))
-    (f : CompleteLatticeHom (OrderDual α) (OrderDual β)) :
+theorem symm_dual_comp (g : CompleteLatticeHom βᵒᵈ γᵒᵈ) (f : CompleteLatticeHom αᵒᵈ βᵒᵈ) :
     CompleteLatticeHom.dual.symm (g.comp f) = (CompleteLatticeHom.dual.symm g).comp (CompleteLatticeHom.dual.symm f) :=
   rfl
 

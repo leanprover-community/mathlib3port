@@ -145,8 +145,7 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
   calc h a a = h a (lfp (h a)) := congr_argₓ (h a) ha.symm _ = lfp (h a) := (h a).map_lfp _ = a := ha
 
 theorem gfp_gfp (h : α →o α →o α) : gfp (gfp.comp h) = gfp h.onDiag :=
-  @lfp_lfp (OrderDual α) _ <|
-    (OrderHom.dualIso (OrderDual α) (OrderDual α)).symm.toOrderEmbedding.toOrderHom.comp h.dual
+  @lfp_lfp αᵒᵈ _ <| (OrderHom.dualIso αᵒᵈ αᵒᵈ).symm.toOrderEmbedding.toOrderHom.comp h.dual
 
 end Eqn
 

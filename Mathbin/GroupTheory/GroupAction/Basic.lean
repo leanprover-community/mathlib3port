@@ -291,7 +291,7 @@ a special case. -/
       "Decomposition of a type `X` as a disjoint union of its orbits under an additive group\naction. This version works with any right inverse to `quotient.mk'` in order to stay computable.\nIn most cases you'll want to use `quotient.out'`, so we provide `add_action.self_equiv_sigma_orbits`\nas a special case."]
 def selfEquivSigmaOrbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ.mk') : β ≃ Σω : Ω, Orbit α (φ ω) :=
   calc
-    β ≃ Σω : Ω, { b // Quotientₓ.mk' b = ω } := (Equivₓ.sigmaPreimageEquiv Quotientₓ.mk').symm
+    β ≃ Σω : Ω, { b // Quotientₓ.mk' b = ω } := (Equivₓ.sigmaFiberEquiv Quotientₓ.mk').symm
     _ ≃ Σω : Ω, Orbit α (φ ω) :=
       Equivₓ.sigmaCongrRight fun ω =>
         Equivₓ.subtypeEquivRight fun x => by

@@ -275,7 +275,7 @@ theorem has_fderiv_at_filter_iff_tendsto :
     simp
   unfold HasFderivAtFilter
   rw [← is_o_norm_left, ← is_o_norm_right, is_o_iff_tendsto h]
-  exact tendsto_congr fun _ => div_eq_inv_mul
+  exact tendsto_congr fun _ => div_eq_inv_mul _ _
 
 theorem has_fderiv_within_at_iff_tendsto :
     HasFderivWithinAt f f' s x ↔ Tendsto (fun x' => ∥x' - x∥⁻¹ * ∥f x' - f x - f' (x' - x)∥) (𝓝[s] x) (𝓝 0) :=

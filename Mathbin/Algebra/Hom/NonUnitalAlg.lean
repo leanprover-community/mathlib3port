@@ -210,7 +210,106 @@ theorem coe_inverse (f : A →ₙₐ[R] B) (g : B → A) (h₁ : Function.LeftIn
     (inverse f g h₁ h₂ : B → A) = g :=
   rfl
 
+/-! ### Operations on the product type
+
+Note that much of this is copied from [`linear_algebra/prod`](../../linear_algebra/prod). -/
+
+
+section Prod
+
+variable (R A B)
+
+/-- The first projection of a product is a non-unital alg_hom. -/
+@[simps]
+def fst : A × B →ₙₐ[R] A where
+  toFun := Prod.fst
+  map_zero' := rfl
+  map_add' := fun x y => rfl
+  map_smul' := fun x y => rfl
+  map_mul' := fun x y => rfl
+
+/-- The second projection of a product is a non-unital alg_hom. -/
+@[simps]
+def snd : A × B →ₙₐ[R] B where
+  toFun := Prod.snd
+  map_zero' := rfl
+  map_add' := fun x y => rfl
+  map_smul' := fun x y => rfl
+  map_mul' := fun x y => rfl
+
+variable {R A B}
+
+/-- The prod of two morphisms is a morphism. -/
+@[simps]
+def prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : A →ₙₐ[R] B × C where
+  toFun := Pi.prod f g
+  map_zero' := by
+    simp only [Pi.prod, Prod.zero_eq_mk, map_zero]
+  map_add' := fun x y => by
+    simp only [Pi.prod, Prod.mk_add_mk, map_add]
+  map_mul' := fun x y => by
+    simp only [Pi.prod, Prod.mk_mul_mk, map_mul]
+  map_smul' := fun c x => by
+    simp only [Pi.prod, Prod.smul_mk, map_smul, RingHom.id_apply]
+
+theorem coe_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
+  rfl
+
+@[simp]
+theorem fst_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (fst R B C).comp (prod f g) = f := by
+  ext <;> rfl
+
+@[simp]
+theorem snd_prod (f : A →ₙₐ[R] B) (g : A →ₙₐ[R] C) : (snd R B C).comp (prod f g) = g := by
+  ext <;> rfl
+
+@[simp]
+theorem prod_fst_snd : prod (fst R A B) (snd R A B) = 1 :=
+  coe_injective Pi.prod_fst_snd
+
+/-- Taking the product of two maps with the same domain is equivalent to taking the product of
+their codomains. -/
+@[simps]
+def prodEquiv : (A →ₙₐ[R] B) × (A →ₙₐ[R] C) ≃ (A →ₙₐ[R] B × C) where
+  toFun := fun f => f.1.Prod f.2
+  invFun := fun f => ((fst _ _ _).comp f, (snd _ _ _).comp f)
+  left_inv := fun f => by
+    ext <;> rfl
+  right_inv := fun f => by
+    ext <;> rfl
+
+variable (R A B)
+
+/-- The left injection into a product is a non-unital algebra homomorphism. -/
+def inl : A →ₙₐ[R] A × B :=
+  prod 1 0
+
+/-- The right injection into a product is a non-unital algebra homomorphism. -/
+def inr : B →ₙₐ[R] A × B :=
+  prod 0 1
+
+variable {R A B}
+
+@[simp]
+theorem coe_inl : (inl R A B : A → A × B) = fun x => (x, 0) :=
+  rfl
+
+theorem inl_apply (x : A) : inl R A B x = (x, 0) :=
+  rfl
+
+@[simp]
+theorem coe_inr : (inr R A B : B → A × B) = Prod.mk 0 :=
+  rfl
+
+theorem inr_apply (x : B) : inr R A B x = (0, x) :=
+  rfl
+
+end Prod
+
 end NonUnitalAlgHom
+
+/-! ### Interaction with `alg_hom` -/
+
 
 namespace AlgHom
 

@@ -35,7 +35,9 @@ namespace FirstOrder
 
 namespace Language
 
-open Structure
+open Structure Cardinal
+
+open Cardinal
 
 variable (L : Language.{u, v}) (L' : Language.{u', v'}) {M : Type w} [L.Structure M]
 
@@ -293,46 +295,43 @@ section ConstantsOn
 
 variable (α : Type u')
 
-/-- The function symbols of a language with constants indexed by a type. -/
-def ConstantsOnFunctions : ℕ → Type u'
-  | 0 => α
-  | _ => Pempty
-
-instance [h : Inhabited α] : Inhabited (ConstantsOnFunctions α 0) :=
-  h
-
 /-- A language with constants indexed by a type. -/
+@[simp]
 def constantsOn : Language.{u', 0} :=
-  ⟨ConstantsOnFunctions α, fun _ => Empty⟩
+  Language.mk₂ α Pempty Pempty Pempty Pempty
 
 variable {α}
 
-@[simp]
 theorem constants_on_constants : (constantsOn α).Constants = α :=
   rfl
 
 instance is_algebraic_constants_on : IsAlgebraic (constantsOn α) :=
-  language.is_algebraic_of_empty_relations
+  language.is_algebraic_mk₂
 
 instance is_relational_constants_on [ie : IsEmpty α] : IsRelational (constantsOn α) :=
-  ⟨fun n => Nat.casesOn n ie fun _ => Pempty.is_empty⟩
+  language.is_relational_mk₂
+
+instance is_empty_functions_constants_on_succ {n : ℕ} : IsEmpty ((constantsOn α).Functions (n + 1)) :=
+  Nat.casesOn n Pempty.is_empty fun n => Nat.casesOn n Pempty.is_empty fun _ => Pempty.is_empty
+
+theorem card_constants_on : (constantsOn α).card = # α := by
+  simp
 
 /-- Gives a `constants_on α` structure to a type by assigning each constant a value. -/
-def constantsOn.structure (f : α → M) : (constantsOn α).Structure M where
-  funMap := fun n => Nat.casesOn n (fun a _ => f a) fun _ => Pempty.elimₓ
-  rel_map := fun _ => Empty.elimₓ
+def constantsOn.structure (f : α → M) : (constantsOn α).Structure M :=
+  Structure.mk₂ f Pempty.elimₓ Pempty.elimₓ Pempty.elimₓ Pempty.elimₓ
 
 variable {β : Type v'}
 
 /-- A map between index types induces a map between constant languages. -/
 def Lhom.constantsOnMap (f : α → β) : constantsOn α →ᴸ constantsOn β :=
-  ⟨fun n => Nat.casesOn n f fun _ => Pempty.elimₓ, fun n => Empty.elimₓ⟩
+  Lhom.mk₂ f Pempty.elimₓ Pempty.elimₓ Pempty.elimₓ Pempty.elimₓ
 
 theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ : β → M} (h : fβ ∘ f = fα) :
     @Lhom.IsExpansionOn _ _ (Lhom.constantsOnMap f) M (constantsOn.structure fα) (constantsOn.structure fβ) := by
   let this := constants_on.Structure fα
   let this := constants_on.Structure fβ
-  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_funₓ h F : _)) fun n F => Pempty.elimₓ F, fun _ R => Empty.elimₓ R⟩
+  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_funₓ h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
 
 end ConstantsOn
 
@@ -350,6 +349,10 @@ def withConstants : Language.{max u w, v} :=
 
 -- mathport name: «expr [[ ]]»
 localized [FirstOrder] notation:95 L "[[" α "]]" => L.withConstants α
+
+@[simp]
+theorem card_with_constants : L[[α]].card = Cardinal.lift.{w} L.card + Cardinal.lift.{max u v} (# α) := by
+  rw [with_constants, card_sum, card_constants_on]
 
 /-- The language map adding constants.  -/
 @[simps]
@@ -399,12 +402,21 @@ end
 
 open FirstOrder
 
-variable (A : Set M)
+instance constantsOnSelfStructure : (constantsOn M).Structure M :=
+  constantsOn.structure id
 
-instance withConstantsStructure : L[[A]].Structure M :=
+instance withConstantsSelfStructure : L[[M]].Structure M :=
+  Language.sumStructure _ _ M
+
+instance with_constants_self_expansion : (lhomWithConstants L M).IsExpansionOn M :=
+  ⟨fun _ _ _ => rfl, fun _ _ _ => rfl⟩
+
+variable (α : Type _) [(constantsOn α).Structure M]
+
+instance withConstantsStructure : L[[α]].Structure M :=
   Language.sumStructure _ _ _
 
-instance with_constants_expansion : (L.lhomWithConstants A).IsExpansionOn M :=
+instance with_constants_expansion : (L.lhomWithConstants α).IsExpansionOn M :=
   ⟨fun _ _ _ => rfl, fun _ _ _ => rfl⟩
 
 instance add_empty_constants_is_expansion_on' : (Lequiv.addEmptyConstants L (∅ : Set M)).toLhom.IsExpansionOn M :=
@@ -415,8 +427,10 @@ instance add_empty_constants_symm_is_expansion_on :
   Lhom.sum_elim_is_expansion_on _ _ _
 
 instance add_constants_expansion {L' : Language} [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] :
-    (φ.addConstants A).IsExpansionOn M :=
+    (φ.addConstants α).IsExpansionOn M :=
   Lhom.sum_map_is_expansion_on _ _ M
+
+variable {α} (A : Set M)
 
 @[simp]
 theorem coe_con {a : A} : (L.con a : M) = a :=

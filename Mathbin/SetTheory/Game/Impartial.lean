@@ -98,19 +98,16 @@ instance impartial_neg : ∀ G : Pgame [G.Impartial], (-G).Impartial
   | G => by
     intro hG
     rw [impartial_def]
-    constructor
+    refine' ⟨_, fun i => _, fun i => _⟩
     · rw [neg_negₓ]
-      symm
-      exact neg_equiv_self G
+      exact (neg_equiv_self G).symm
       
-    constructor
-    all_goals
-      intro i
-      first |
-        equiv_rw G.left_moves_neg  at i|
-        equiv_rw G.right_moves_neg  at i
-      simp only [move_left_left_moves_neg_symm, move_right_right_moves_neg_symm]
-      exact impartial_neg _
+    · rw [move_left_neg']
+      apply impartial_neg
+      
+    · rw [move_right_neg']
+      apply impartial_neg
+      
 
 theorem winner_cases (G : Pgame) [G.Impartial] : G.FirstLoses ∨ G.FirstWins := by
   rcases G.winner_cases with (hl | hr | hp | hn)
@@ -201,9 +198,11 @@ theorem no_good_right_moves_iff_first_loses (G : Pgame) [G.Impartial] :
     (∀ j : G.RightMoves, (G.moveRight j).FirstWins) ↔ G.FirstLoses := by
   rw [first_loses_of_equiv_iff (neg_equiv_self G), ← no_good_left_moves_iff_first_loses]
   refine' ⟨fun h i => _, fun h i => _⟩
-  · simpa [first_wins_of_equiv_iff (neg_equiv_self ((-G).moveLeft i))] using h (left_moves_neg _ i)
+  · rw [move_left_neg', ← first_wins_of_equiv_iff (neg_equiv_self (G.move_right (to_left_moves_neg.symm i)))]
+    apply h
     
-  · simpa [first_wins_of_equiv_iff (neg_equiv_self (G.move_right i))] using h ((left_moves_neg _).symm i)
+  · rw [move_right_neg_symm', ← first_wins_of_equiv_iff (neg_equiv_self ((-G).moveLeft (to_left_moves_neg i)))]
+    apply h
     
 
 theorem good_left_move_iff_first_wins (G : Pgame) [G.Impartial] :

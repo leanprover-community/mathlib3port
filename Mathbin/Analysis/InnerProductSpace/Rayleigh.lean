@@ -152,7 +152,7 @@ theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint (T : F →ₗ[
     have : b * (b⁻¹ * a) = a := by
       field_simp [mul_comm]
     apply smul_right_injective F hb
-    simp [c, ← neg_eq_of_add_eq_zeroₓ h₂, ← mul_smul, this]
+    simp [c, eq_neg_of_add_eq_zero_left h₂, ← mul_smul, this]
   convert hc
   have : ∥x₀∥ ≠ 0 := by
     simp [hx₀]

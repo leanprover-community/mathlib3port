@@ -353,6 +353,11 @@ theorem ext_ring {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
 theorem ext_ring_iff {σ : R →+* R} {f g : R →ₛₗ[σ] M} : f = g ↔ f 1 = g 1 :=
   ⟨fun h => h ▸ rfl, ext_ring⟩
 
+@[ext]
+theorem ext_ring_op {σ : Rᵐᵒᵖ →+* S} {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
+  ext fun x => by
+    rw [← one_mulₓ x, ← op_smul_eq_mul, f.map_smulₛₗ, g.map_smulₛₗ, h]
+
 end
 
 /-- Interpret a `ring_hom` `f` as an `f`-semilinear map. -/
@@ -775,7 +780,7 @@ instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f g =>
     { toFun := f - g,
       map_add' := fun x y => by
-        simp only [Pi.sub_apply, map_add, add_sub_comm],
+        simp only [Pi.sub_apply, map_add, add_sub_add_comm],
       map_smul' := fun r x => by
         simp [Pi.sub_apply, map_smul, smul_sub] }⟩
 
@@ -1001,6 +1006,20 @@ This is a stronger version of `distrib_mul_action.to_module_End`. -/
 def toModuleEnd : S →+* Module.End R M :=
   { DistribMulAction.toModuleEnd R M with toFun := DistribMulAction.toLinearMap R M,
     map_zero' := LinearMap.ext <| zero_smul _, map_add' := fun f g => LinearMap.ext <| add_smul _ _ }
+
+/-- The canonical (semi)ring isomorphism from `Rᵐᵒᵖ` to `module.End R R` induced by the right
+multiplication. -/
+@[simps]
+def moduleEndSelf : Rᵐᵒᵖ ≃+* Module.End R R :=
+  { Module.toModuleEnd R R with toFun := DistribMulAction.toLinearMap R R, invFun := fun f => MulOpposite.op (f 1),
+    left_inv := mul_oneₓ, right_inv := fun f => LinearMap.ext_ring <| one_mulₓ _ }
+
+/-- The canonical (semi)ring isomorphism from `R` to `module.End Rᵐᵒᵖ R` induced by the left
+multiplication. -/
+@[simps]
+def moduleEndSelfOp : R ≃+* Module.End Rᵐᵒᵖ R :=
+  { Module.toModuleEnd _ _ with toFun := DistribMulAction.toLinearMap _ _, invFun := fun f => f 1, left_inv := mul_oneₓ,
+    right_inv := fun f => LinearMap.ext_ring_op <| mul_oneₓ _ }
 
 end Module
 

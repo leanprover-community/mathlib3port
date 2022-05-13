@@ -109,7 +109,7 @@ theorem card_modeq_card_fixed_points : card α ≡ card (FixedPoints G α) [MOD 
   classical
   calc card α = card (Σy : Quotientₓ (orbit_rel G α), { x // Quotientₓ.mk' x = y }) :=
       card_congr
-        (Equivₓ.sigmaPreimageEquiv
+        (Equivₓ.sigmaFiberEquiv
             (@Quotientₓ.mk' _
               (orbit_rel G α))).symm _ = ∑ a : Quotientₓ (orbit_rel G α), card { x // Quotientₓ.mk' x = a } :=
       card_sigma _ _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _ _ = _ := by

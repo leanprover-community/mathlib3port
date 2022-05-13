@@ -79,6 +79,10 @@ theorem mk_factors_iff {X Y Z : C} (f : Y ⟶ X) [Mono f] (g : Z ⟶ X) :
     (Subobject.mk f).Factors g ↔ (MonoOver.mk' f).Factors g :=
   Iff.rfl
 
+theorem mk_factors_self (f : X ⟶ Y) [Mono f] : (mk f).Factors f :=
+  ⟨𝟙 _, by
+    simp ⟩
+
 theorem factors_iff {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : P.Factors f ↔ (representative.obj P).Factors f :=
   (Quot.induction_on P) fun a => MonoOver.factors_congr _ (representativeIso _).symm
 
@@ -122,6 +126,11 @@ theorem factor_thru_arrow {X Y : C} (P : Subobject Y) (f : X ⟶ Y) (h : Factors
 
 @[simp]
 theorem factor_thru_self {X : C} (P : Subobject X) h : P.factorThru P.arrow h = 𝟙 P := by
+  ext
+  simp
+
+@[simp]
+theorem factor_thru_mk_self (f : X ⟶ Y) [Mono f] : (mk f).factorThru f (mk_factors_self f) = (underlyingIso f).inv := by
   ext
   simp
 

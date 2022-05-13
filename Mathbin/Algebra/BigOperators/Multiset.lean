@@ -249,7 +249,7 @@ theorem prod_map_inv' : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ :
 
 @[simp, to_additive]
 theorem prod_map_div : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map g).Prod :=
-  m.prod_hom₂ (· / ·) mul_div_comm' (div_one' _) _ _
+  m.prod_hom₂ (· / ·) mul_div_mul_comm (div_one _) _ _
 
 @[to_additive]
 theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod ^ n := by
@@ -279,7 +279,7 @@ theorem prod_map_inv₀ : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹
 
 @[simp]
 theorem prod_map_div₀ : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map g).Prod :=
-  m.prod_hom₂ (· / ·) (fun _ _ _ _ => (div_mul_div_comm₀ _ _ _ _).symm) (div_one _) _ _
+  m.prod_hom₂ (· / ·) (fun _ _ _ _ => (div_mul_div_comm _ _ _ _).symm) (div_one _) _ _
 
 theorem prod_map_zpow₀ {n : ℤ} : prod (m.map fun i => f i ^ n) = (m.map f).Prod ^ n := by
   convert (m.map f).prod_hom (zpowGroupHom₀ _ : α →* α)
@@ -372,7 +372,7 @@ theorem prod_map_le_prod (f : α → α) (h : ∀ x, x ∈ s → f x ≤ x) : (s
 
 @[to_additive]
 theorem prod_le_sum_prod (f : α → α) (h : ∀ x, x ∈ s → x ≤ f x) : s.Prod ≤ (s.map f).Prod :=
-  @prod_map_le_prod (OrderDual α) _ _ f h
+  @prod_map_le_prod αᵒᵈ _ _ f h
 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod (h : ∀, ∀ x ∈ s, ∀, a ≤ x) : a ^ s.card ≤ s.Prod := by

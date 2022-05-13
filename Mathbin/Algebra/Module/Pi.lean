@@ -54,6 +54,18 @@ instance module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [�
   { Pi.distribMulAction _ with add_smul := fun c f g => funext fun i => add_smul _ _ _,
     zero_smul := fun f => funext fun i => zero_smul α _ }
 
+/-- A special case of `pi.module` for non-dependent types. Lean struggles to elaborate
+definitions elsewhere in the library without this. -/
+/- Extra instance to short-circuit type class resolution.
+For unknown reasons, this is necessary for certain inference problems. E.g., for this to succeed:
+```lean
+example (β X : Type*) [normed_group β] [normed_space ℝ β] : module ℝ (X → β) := by apply_instance
+```
+See: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Typeclass.20resolution.20under.20binders/near/281296989
+-/
+instance _root_.function.module (α β : Type _) [Semiringₓ α] [AddCommMonoidₓ β] [Module α β] : Module α (I → β) :=
+  Pi.module _ _ _
+
 variable {I f}
 
 instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, AddCommMonoidₓ (g i)} [∀ i, Module (f i) (g i)] :

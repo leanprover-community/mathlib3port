@@ -1052,7 +1052,7 @@ theorem to_jordan_decomposition_eq_of_eq_add_with_density {f : α → ℝ} (hf :
   simp_rw [jordan_decomposition.to_signed_measure, hadd]
   ext i hi
   rw [vector_measure.sub_apply, to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi, add_apply,
-      add_apply, Ennreal.to_real_add, Ennreal.to_real_add, add_sub_comm, ← to_signed_measure_apply_measurable hi, ←
+      add_apply, Ennreal.to_real_add, Ennreal.to_real_add, add_sub_add_comm, ← to_signed_measure_apply_measurable hi, ←
       to_signed_measure_apply_measurable hi, ← vector_measure.sub_apply, ← jordan_decomposition.to_signed_measure,
       to_signed_measure_to_jordan_decomposition, vector_measure.add_apply, ← to_signed_measure_apply_measurable hi, ←
       to_signed_measure_apply_measurable hi, with_densityᵥ_eq_with_density_pos_part_sub_with_density_neg_part hfi,

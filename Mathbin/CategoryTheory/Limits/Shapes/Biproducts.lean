@@ -1091,6 +1091,28 @@ def biprod.uniqueUpToIso (X Y : C) [HasBinaryBiproduct X Y] {b : BinaryBicone X 
     rw [← biprod.cone_point_unique_up_to_iso_hom X Y hb, ← biprod.cone_point_unique_up_to_iso_inv X Y hb,
       iso.inv_hom_id]
 
+section
+
+variable (X Y : C) [HasBinaryBiproduct X Y]
+
+-- There are three further variations,
+-- about `is_iso biprod.inr`, `is_iso biprod.fst` and `is_iso biprod.snd`,
+-- but any one suffices to prove `indecomposable_of_simple`
+-- and they are likely not separately useful.
+theorem biprod.is_iso_inl_iff_id_eq_fst_comp_inl :
+    IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ 𝟙 (X ⊞ Y) = biprod.fst ≫ biprod.inl := by
+  constructor
+  · intro h
+    have := (cancel_epi (inv biprod.inl : X ⊞ Y ⟶ X)).2 biprod.inl_fst
+    rw [is_iso.inv_hom_id_assoc, category.comp_id] at this
+    rw [this, is_iso.inv_hom_id]
+    
+  · intro h
+    exact ⟨⟨biprod.fst, biprod.inl_fst, h.symm⟩⟩
+    
+
+end
+
 section BiprodKernel
 
 variable (X Y : C) [HasBinaryBiproduct X Y]
@@ -1672,6 +1694,8 @@ end Limits
 
 open CategoryTheory.Limits
 
+section
+
 attribute [local ext] preadditive
 
 /-- The existence of binary biproducts implies that there is at most one preadditive structure. -/
@@ -1689,6 +1713,14 @@ instance subsingleton_preadditive_of_has_binary_biproducts {C : Type u} [Categor
           convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)
     congr 2 <;> exact Subsingleton.elimₓ _ _
+
+end
+
+variable {C : Type u} [Category.{v} C] [HasZeroMorphisms C] [HasBinaryBiproducts C]
+
+/-- An object is indecomposable if it cannot be written as the biproduct of two nonzero objects. -/
+def Indecomposable (X : C) : Prop :=
+  ¬IsZero X ∧ ∀ Y Z, (X ≅ Y ⊞ Z) → IsZero Y ∨ IsZero Z
 
 end CategoryTheory
 

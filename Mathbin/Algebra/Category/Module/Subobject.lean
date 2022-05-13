@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 -/
 import Mathbin.Algebra.Category.Module.EpiMono
+import Mathbin.Algebra.Category.Module.Kernels
 import Mathbin.CategoryTheory.Subobject.WellPowered
+import Mathbin.CategoryTheory.Subobject.Limits
+import Mathbin.CategoryTheory.Limits.ConcreteCategory
 
 /-!
 # Subobjects in the category of `R`-modules
@@ -18,6 +21,8 @@ and its submodules. This immediately implies that the category of `R`-modules is
 open CategoryTheory
 
 open CategoryTheory.Subobject
+
+open CategoryTheory.Limits
 
 open ModuleCat
 
@@ -74,6 +79,30 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
 
 instance well_powered_Module : WellPowered (ModuleCat.{v} R) :=
   ⟨fun M => ⟨⟨_, ⟨(subobjectModule M).toEquiv⟩⟩⟩⟩
+
+attribute [local instance] has_kernels_Module
+
+/-- Bundle an element `m : M` such that `f m = 0` as a term of `kernel_subobject f`. -/
+noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} : LinearMap.ker f →ₗ[R] kernelSubobject f :=
+  (kernelSubobjectIso f ≪≫ ModuleCat.kernelIsoKer f).inv
+
+@[simp]
+theorem to_kernel_subobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
+    (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by
+  simp [to_kernel_subobject]
+
+/-- An extensionality lemma showing that two elements of a cokernel by an image
+are equal if they differ by an element of the image.
+
+The application is for homology:
+two elements in homology are equal if they differ by a boundary.
+-/
+@[ext]
+theorem cokernel_π_image_subobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [HasImage f]
+    (g : (imageSubobject f : ModuleCat.{v} R) ⟶ N) [HasCokernel g] {x y : N} (l : L)
+    (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y := by
+  subst w
+  simp
 
 end ModuleCat
 

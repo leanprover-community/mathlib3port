@@ -177,13 +177,13 @@ theorem MonotoneOn.integrable_on_compact (hs : IsCompact s) (hmono : MonotoneOn 
       ((ae_restrict_iff' hs.measurable_set).mpr <| (ae_of_all _) fun y hy => hC (f y) (mem_image_of_mem f hy))
 
 theorem AntitoneOn.integrable_on_compact (hs : IsCompact s) (hanti : AntitoneOn f s) : IntegrableOn f s μ :=
-  @MonotoneOn.integrable_on_compact X (OrderDual E) _ _ _ _ _ _ _ _ _ _ _ _ _ _ hs hanti
+  hanti.dual_right.integrable_on_compact hs
 
 theorem Monotone.locally_integrable (hmono : Monotone f) : LocallyIntegrable f μ := fun s hs =>
-  MonotoneOn.integrable_on_compact hs fun x y _ _ hxy => hmono hxy
+  (hmono.MonotoneOn _).integrable_on_compact hs
 
 theorem Antitone.locally_integrable (hanti : Antitone f) : LocallyIntegrable f μ :=
-  @Monotone.locally_integrable X (OrderDual E) _ _ _ _ _ _ _ _ _ _ _ _ _ hanti
+  hanti.dual_right.LocallyIntegrable
 
 end Monotone
 

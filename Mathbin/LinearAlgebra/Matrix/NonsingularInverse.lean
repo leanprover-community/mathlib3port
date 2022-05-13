@@ -167,13 +167,7 @@ def unitOfDetInvertible [Invertible A.det] : (Matrix n n α)ˣ :=
 
 /-- When lowered to a prop, `matrix.invertible_equiv_det_invertible` forms an `iff`. -/
 theorem is_unit_iff_is_unit_det : IsUnit A ↔ IsUnit A.det := by
-  constructor <;> rintro ⟨x, hx⟩ <;> refine' @is_unit_of_invertible _ _ _ (id _)
-  · have : Invertible A := hx.rec x.invertible
-    apply det_invertible_of_invertible
-    
-  · have : Invertible A.det := hx.rec x.invertible
-    apply invertible_of_det_invertible
-    
+  simp only [← nonempty_invertible_iff_is_unit, (invertible_equiv_det_invertible A).nonempty_congr]
 
 /-! #### Variants of the statements above with `is_unit`-/
 
@@ -398,6 +392,59 @@ theorem inv_smul' (k : αˣ) (h : IsUnit A.det) : (k • A)⁻¹ = k⁻¹ • A�
 theorem inv_adjugate (A : Matrix n n α) (h : IsUnit A.det) : (adjugate A)⁻¹ = h.Unit⁻¹ • A := by
   refine' inv_eq_left_inv _
   rw [smul_mul, mul_adjugate, Units.smul_def, smul_smul, h.coe_inv_mul, one_smul]
+
+/-- `diagonal v` is invertible if `v` is -/
+def diagonalInvertible {α} [NonAssocSemiringₓ α] (v : n → α) [Invertible v] : Invertible (diagonalₓ v) :=
+  Invertible.map (diagonalRingHom n α) v
+
+theorem inv_of_diagonal_eq {α} [Semiringₓ α] (v : n → α) [Invertible v] [Invertible (diagonalₓ v)] :
+    ⅟ (diagonalₓ v) = diagonalₓ (⅟ v) := by
+  let this := diagonal_invertible v
+  convert (rfl : ⅟ (diagonal v) = _)
+
+/-- `v` is invertible if `diagonal v` is -/
+def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonalₓ v)] : Invertible v where
+  invOf := diag (⅟ (diagonalₓ v))
+  inv_of_mul_self :=
+    funext fun i => by
+      let this : Invertible (diagonal v).det := det_invertible_of_invertible _
+      rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
+      dsimp'
+      rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
+      exact mul_inv_of_self _
+  mul_inv_of_self :=
+    funext fun i => by
+      let this : Invertible (diagonal v).det := det_invertible_of_invertible _
+      rw [inv_of_eq, diag_smul, adjugate_diagonal, diag_diagonal]
+      dsimp'
+      rw [mul_left_commₓ, mul_prod_erase _ _ (Finset.mem_univ _), ← det_diagonal]
+      exact mul_inv_of_self _
+
+/-- Together `matrix.diagonal_invertible` and `matrix.invertible_of_diagonal_invertible` form an
+equivalence, although both sides of the equiv are subsingleton anyway. -/
+@[simps]
+def diagonalInvertibleEquivInvertible (v : n → α) : Invertible (diagonalₓ v) ≃ Invertible v where
+  toFun := @invertibleOfDiagonalInvertible _ _ _ _ _ _
+  invFun := @diagonalInvertible _ _ _ _ _ _
+  left_inv := fun _ => Subsingleton.elimₓ _ _
+  right_inv := fun _ => Subsingleton.elimₓ _ _
+
+/-- When lowered to a prop, `matrix.diagonal_invertible_equiv_invertible` forms an `iff`. -/
+@[simp]
+theorem is_unit_diagonal {v : n → α} : IsUnit (diagonalₓ v) ↔ IsUnit v := by
+  simp only [← nonempty_invertible_iff_is_unit, (diagonal_invertible_equiv_invertible v).nonempty_congr]
+
+theorem inv_diagonal (v : n → α) : (diagonalₓ v)⁻¹ = diagonalₓ (Ring.inverse v) := by
+  rw [nonsing_inv_eq_ring_inverse]
+  by_cases' h : IsUnit v
+  · have := is_unit_diagonal.mpr h
+    cases this.nonempty_invertible
+    cases h.nonempty_invertible
+    rw [Ringₓ.inverse_invertible, Ringₓ.inverse_invertible, inv_of_diagonal_eq]
+    
+  · have := is_unit_diagonal.not.mpr h
+    rw [Ring.inverse_non_unit _ h, Pi.zero_def, diagonal_zero, Ring.inverse_non_unit _ this]
+    
 
 @[simp]
 theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ := by

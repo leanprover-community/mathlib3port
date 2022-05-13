@@ -104,7 +104,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
       multiplicity p (n + 1)! = multiplicity p n ! + multiplicity p (n + 1) := by
         rw [factorial_succ, hp.multiplicity_mul, add_commₓ]
       _ = (∑ i in ico 1 b, n / p ^ i : ℕ) + ((Finset.ico 1 b).filter fun i => p ^ i ∣ n + 1).card := by
-        rw [multiplicity_factorial ((log_le_log_of_le <| le_succ _).trans_lt hb), ←
+        rw [multiplicity_factorial ((log_mono_right <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
       _ = (∑ i in ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
         rw [sum_add_distrib, sum_boole]
@@ -183,8 +183,8 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb 
       ((Finset.ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card + multiplicity p (k ! * (n - k)!) :=
     by
     rw [← hp.multiplicity_mul, ← mul_assoc, choose_mul_factorial_mul_factorial hkn, hp.multiplicity_factorial hnb,
-      hp.multiplicity_mul, hp.multiplicity_factorial ((log_le_log_of_le hkn).trans_lt hnb),
-      hp.multiplicity_factorial (lt_of_le_of_ltₓ (log_le_log_of_le tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
+      hp.multiplicity_mul, hp.multiplicity_factorial ((log_mono_right hkn).trans_lt hnb),
+      hp.multiplicity_factorial (lt_of_le_of_ltₓ (log_mono_right tsub_le_self) hnb), multiplicity_choose_aux hp hkn]
     simp [add_commₓ]
   (Enat.add_right_cancel_iff
         (Enat.ne_top_iff_dom.2 <|
@@ -192,33 +192,17 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb 
     h₁
 
 /-- A lower bound on the multiplicity of `p` in `choose n k`. -/
-theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) (n k : ℕ) :
-    multiplicity p n ≤ multiplicity p (choose n k) + multiplicity p k :=
-  if hkn : n < k then by
-    simp [choose_eq_zero_of_lt hkn]
-  else
-    if hk0 : k = 0 then by
-      simp [hk0]
-    else
-      if hn0 : n = 0 then by
-        cases k <;> simp_all [hn0]
-      else by
-        rw [multiplicity_choose hp (le_of_not_gtₓ hkn) (lt_succ_self _),
-          multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) (Nat.pos_of_ne_zeroₓ hk0)
-            (lt_succ_of_le (log_le_log_of_le (le_of_not_gtₓ hkn))),
-          multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) (Nat.pos_of_ne_zeroₓ hn0) (lt_succ_self _), ←
-          Nat.cast_addₓ, Enat.coe_le_coe]
-        calc
-          ((Ico 1 (log p n).succ).filter fun i => p ^ i ∣ n).card ≤
-              (((Ico 1 (log p n).succ).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i) ∪
-                  (Ico 1 (log p n).succ).filter fun i => p ^ i ∣ k).card :=
-            card_le_of_subset fun i => by
-              have := @le_mod_add_mod_of_dvd_add_of_not_dvd k (n - k) (p ^ i)
-              simp (config := { contextual := true })[add_tsub_cancel_of_le (le_of_not_gtₓ hkn)] at *
-              tauto _ ≤
-              ((Ico 1 (log p n).succ).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card +
-                ((Ico 1 (log p n).succ).filter fun i => p ^ i ∣ k).card :=
-            card_union_le _ _
+theorem multiplicity_le_multiplicity_choose_add {p : ℕ} (hp : p.Prime) :
+    ∀ n k : ℕ, multiplicity p n ≤ multiplicity p (choose n k) + multiplicity p k
+  | _, 0 => by
+    simp
+  | 0, _ + 1 => by
+    simp
+  | n + 1, k + 1 => by
+    rw [← hp.multiplicity_mul]
+    refine' multiplicity_le_multiplicity_of_dvd_right _
+    rw [← succ_mul_choose_eq]
+    exact dvd_mul_right _ _
 
 theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ p ^ n) (hk0 : 0 < k) :
     multiplicity p (choose (p ^ n) k) + multiplicity p k = n :=
@@ -231,7 +215,7 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
         simp (config := { contextual := true })[disjoint_right, *, dvd_iff_mod_eq_zero,
           Nat.mod_ltₓ _ (pow_pos hp.pos _)]
       rw [multiplicity_choose hp hkn (lt_succ_self _),
-        multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) hk0 (lt_succ_of_le (log_le_log_of_le hkn)), ← Nat.cast_addₓ,
+        multiplicity_eq_card_pow_dvd (ne_of_gtₓ hp.one_lt) hk0 (lt_succ_of_le (log_mono_right hkn)), ← Nat.cast_addₓ,
         Enat.coe_le_coe, log_pow hp.one_lt, ← card_disjoint_union hdisj, filter_union_right]
       have filter_le_Ico := (Ico 1 n.succ).card_filter_le _
       rwa [card_Ico 1 n.succ] at filter_le_Ico)

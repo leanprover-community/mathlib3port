@@ -86,6 +86,14 @@ theorem nnnorm_entry_le_entrywise_sup_nnnorm (A : Matrix m n α) {i : m} {j : n}
   (nnnorm_le_pi_nnnorm (A i) j).trans (nnnorm_le_pi_nnnorm A i)
 
 @[simp]
+theorem nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
+  simp_rw [Pi.nnnorm_def, Matrix.map, hf]
+
+@[simp]
+theorem norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=
+  (congr_argₓ (coe : ℝ≥0 → ℝ) <| (nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+
+@[simp]
 theorem nnnorm_transpose (A : Matrix m n α) : ∥Aᵀ∥₊ = ∥A∥₊ := by
   simp_rw [Pi.nnnorm_def]
   exact Finset.sup_comm _ _ _
@@ -95,12 +103,15 @@ theorem norm_transpose (A : Matrix m n α) : ∥Aᵀ∥ = ∥A∥ :=
   congr_argₓ coe <| nnnorm_transpose A
 
 @[simp]
-theorem nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
-  simp_rw [Pi.nnnorm_def, Matrix.map, hf]
+theorem nnnorm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ∥Aᴴ∥₊ = ∥A∥₊ :=
+  (nnnorm_map_eq _ _ nnnorm_star).trans A.nnnorm_transpose
 
 @[simp]
-theorem norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=
-  (congr_argₓ (coe : ℝ≥0 → ℝ) <| (nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+theorem norm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ∥Aᴴ∥ = ∥A∥ :=
+  congr_argₓ coe <| nnnorm_conj_transpose A
+
+instance [StarAddMonoid α] [NormedStarGroup α] : NormedStarGroup (Matrix m m α) :=
+  ⟨norm_conj_transpose⟩
 
 @[simp]
 theorem nnnorm_col (v : m → α) : ∥colₓ v∥₊ = ∥v∥₊ := by
@@ -375,6 +386,14 @@ theorem frobenius_norm_def (A : Matrix m n α) : ∥A∥ = (∑ (i) (j), ∥A i 
     simp [Nnreal.coe_sum]
 
 @[simp]
+theorem frobenius_nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
+  simp_rw [frobenius_nnnorm_def, Matrix.map, hf]
+
+@[simp]
+theorem frobenius_norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=
+  (congr_argₓ (coe : ℝ≥0 → ℝ) <| (frobenius_nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+
+@[simp]
 theorem frobenius_nnnorm_transpose (A : Matrix m n α) : ∥Aᵀ∥₊ = ∥A∥₊ := by
   rw [frobenius_nnnorm_def, frobenius_nnnorm_def, Finset.sum_comm]
   rfl
@@ -384,12 +403,15 @@ theorem frobenius_norm_transpose (A : Matrix m n α) : ∥Aᵀ∥ = ∥A∥ :=
   congr_argₓ coe <| frobenius_nnnorm_transpose A
 
 @[simp]
-theorem frobenius_nnnorm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥₊ = ∥a∥₊) : ∥A.map f∥₊ = ∥A∥₊ := by
-  simp_rw [frobenius_nnnorm_def, Matrix.map, hf]
+theorem frobenius_nnnorm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ∥Aᴴ∥₊ = ∥A∥₊ :=
+  (frobenius_nnnorm_map_eq _ _ nnnorm_star).trans A.frobenius_nnnorm_transpose
 
 @[simp]
-theorem frobenius_norm_map_eq (A : Matrix m n α) (f : α → β) (hf : ∀ a, ∥f a∥ = ∥a∥) : ∥A.map f∥ = ∥A∥ :=
-  (congr_argₓ (coe : ℝ≥0 → ℝ) <| (frobenius_nnnorm_map_eq A f) fun a => Subtype.ext <| hf a : _)
+theorem frobenius_norm_conj_transpose [StarAddMonoid α] [NormedStarGroup α] (A : Matrix m n α) : ∥Aᴴ∥ = ∥A∥ :=
+  congr_argₓ coe <| frobenius_nnnorm_conj_transpose A
+
+instance frobenius_normed_star_group [StarAddMonoid α] [NormedStarGroup α] : NormedStarGroup (Matrix m m α) :=
+  ⟨frobenius_norm_conj_transpose⟩
 
 @[simp]
 theorem frobenius_norm_row (v : m → α) : ∥rowₓ v∥ = ∥(PiLp.equiv 2 _).symm v∥ := by

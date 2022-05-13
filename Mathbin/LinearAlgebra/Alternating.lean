@@ -507,7 +507,7 @@ theorem map_add_swap {i j : ι} (hij : i ≠ j) : f v + f (v ∘ Equivₓ.swap i
   exact f.map_swap_add v hij
 
 theorem map_swap {i j : ι} (hij : i ≠ j) : g (v ∘ Equivₓ.swap i j) = -g v :=
-  eq_neg_of_add_eq_zero (g.map_swap_add v hij)
+  eq_neg_of_add_eq_zero_left <| g.map_swap_add v hij
 
 theorem map_perm [Fintype ι] (v : ι → M) (σ : Equivₓ.Perm ι) : g (v ∘ σ) = σ.sign • g v := by
   apply Equivₓ.Perm.swap_induction_on' σ

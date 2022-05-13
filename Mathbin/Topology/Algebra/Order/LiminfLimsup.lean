@@ -55,7 +55,7 @@ section OrderClosedTopology
 variable [SemilatticeInf α] [TopologicalSpace α] [OrderTopology α]
 
 theorem is_bounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
-  @is_bounded_le_nhds (OrderDual α) _ _ _ a
+  @is_bounded_le_nhds αᵒᵈ _ _ _ a
 
 theorem Filter.Tendsto.is_bounded_under_ge {f : Filter β} {u : β → α} {a : α} (h : Tendsto u f (𝓝 a)) :
     f.IsBoundedUnder (· ≥ ·) u :=
@@ -86,7 +86,7 @@ theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·
   (mem_of_superset h) fun a hac => lt_of_le_of_ltₓ hac hcb
 
 theorem gt_mem_sets_of_Liminf_gt : ∀ {f : Filter α} {b}, f.IsBounded (· ≥ ·) → b < f.liminf → ∀ᶠ a in f, b < a :=
-  @lt_mem_sets_of_Limsup_lt (OrderDual α) _
+  @lt_mem_sets_of_Limsup_lt αᵒᵈ _
 
 variable [TopologicalSpace α] [OrderTopology α]
 
@@ -107,7 +107,7 @@ theorem Limsup_nhds (a : α) : limsup (𝓝 a) = a :=
       | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
 
 theorem Liminf_nhds : ∀ a : α, liminf (𝓝 a) = a :=
-  @Limsup_nhds (OrderDual α) _ _ _
+  @Limsup_nhds αᵒᵈ _ _ _
 
 /-- If a filter is converging, its limsup coincides with its limit. -/
 theorem Liminf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 a) : f.liminf = a :=
@@ -126,7 +126,7 @@ theorem Liminf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 
 
 /-- If a filter is converging, its liminf coincides with its limit. -/
 theorem Limsup_eq_of_le_nhds : ∀ {f : Filter α} {a : α} [NeBot f], f ≤ 𝓝 a → f.limsup = a :=
-  @Liminf_eq_of_le_nhds (OrderDual α) _ _ _
+  @Liminf_eq_of_le_nhds αᵒᵈ _ _ _
 
 /-- If a function has a limit, then its limsup coincides with its limit. -/
 theorem Filter.Tendsto.limsup_eq {f : Filter β} {u : β → α} {a : α} [NeBot f] (h : Tendsto u f (𝓝 a)) :

@@ -604,8 +604,7 @@ theorem measure_preserving_pi_equiv_pi_subtype_prod {ι : Type u} {α : ι → T
       ((measure.pi fun i : Subtype p => μ i).Prod (measure.pi fun i => μ i)) :=
   by
   set e := (MeasurableEquiv.piEquivPiSubtypeProd α p).symm
-  suffices : measure_preserving e _ _
-  exact this.symm
+  refine' measure_preserving.symm e _
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
   have : e ⁻¹' pi univ s = (pi univ fun i : { i // p i } => s i) ×ˢ pi univ fun i : { i // ¬p i } => s i :=
     Equivₓ.preimage_pi_equiv_pi_subtype_prod_symm_pi p s
@@ -623,8 +622,7 @@ theorem measure_preserving_pi_fin_succ_above_equiv {n : ℕ} {α : Finₓ (n + 1
       ((μ i).Prod <| measure.pi fun j => μ (i.succAbove j)) :=
   by
   set e := (MeasurableEquiv.piFinSuccAboveEquiv α i).symm
-  suffices : measure_preserving e _ _
-  exact this.symm
+  refine' measure_preserving.symm e _
   refine' ⟨e.measurable, (pi_eq fun s hs => _).symm⟩
   rw [e.map_apply, i.prod_univ_succ_above _, ← pi_pi, ← prod_prod]
   congr 1 with ⟨x, f⟩
@@ -644,7 +642,7 @@ theorem measure_preserving_fun_unique {β : Type u} {m : MeasurableSpace β} (μ
     congr 1
     exact e.to_equiv.image_eq_preimage s
   simp only [measure.pi, outer_measure.pi, this, bounded_by_measure, to_outer_measure_to_measure]
-  exact ((MeasurableEquiv.funUnique α β).symm.Measurable.MeasurePreserving _).symm
+  exact (e.symm.measurable.measure_preserving _).symm e.symm
 
 theorem volume_preserving_fun_unique (α : Type u) (β : Type v) [Unique α] [MeasureSpace β] :
     MeasurePreserving (MeasurableEquiv.funUnique α β) volume volume :=

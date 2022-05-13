@@ -320,7 +320,7 @@ end One
 
 section Mul
 
-variable [AddZeroClass ι] [∀ i, AddCommMonoidₓ (A i)] [GnonUnitalNonAssocSemiring A]
+variable [AddZeroClassₓ ι] [∀ i, AddCommMonoidₓ (A i)] [GnonUnitalNonAssocSemiring A]
 
 @[simp]
 theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a * of _ _ b :=
@@ -382,7 +382,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable [∀ i, AddCommGroupₓ (A i)] [AddZeroClass ι] [GnonUnitalNonAssocSemiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddZeroClassₓ ι] [GnonUnitalNonAssocSemiring A]
 
 /-- The `non_unital_non_assoc_ring` derived from `gnon_unital_non_assoc_semiring A`. -/
 instance GradeZero.nonUnitalNonAssocRing : NonUnitalNonAssocRing (A 0) :=

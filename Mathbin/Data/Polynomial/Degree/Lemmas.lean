@@ -67,6 +67,18 @@ theorem degree_pos_of_root {p : R[X]} (hp : p ≠ 0) (h : IsRoot p a) : 0 < degr
 theorem nat_degree_le_iff_coeff_eq_zero : p.natDegree ≤ n ↔ ∀ N : ℕ, n < N → p.coeff N = 0 := by
   simp_rw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero, WithBot.coe_lt_coe]
 
+theorem nat_degree_add_le_iff_left {n : ℕ} (p q : R[X]) (qn : q.natDegree ≤ n) :
+    (p + q).natDegree ≤ n ↔ p.natDegree ≤ n := by
+  refine' ⟨fun h => _, fun h => nat_degree_add_le_of_degree_le h qn⟩
+  refine' nat_degree_le_iff_coeff_eq_zero.mpr fun m hm => _
+  convert nat_degree_le_iff_coeff_eq_zero.mp h m hm using 1
+  rw [coeff_add, nat_degree_le_iff_coeff_eq_zero.mp qn _ hm, add_zeroₓ]
+
+theorem nat_degree_add_le_iff_right {n : ℕ} (p q : R[X]) (pn : p.natDegree ≤ n) :
+    (p + q).natDegree ≤ n ↔ q.natDegree ≤ n := by
+  rw [add_commₓ]
+  exact nat_degree_add_le_iff_left _ _ pn
+
 theorem nat_degree_C_mul_le (a : R) (f : R[X]) : (c a * f).natDegree ≤ f.natDegree :=
   calc
     (c a * f).natDegree ≤ (c a).natDegree + f.natDegree := nat_degree_mul_le

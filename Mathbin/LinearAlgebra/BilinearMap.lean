@@ -259,6 +259,9 @@ variable {R Pₗ}
 theorem lcomp_apply (f : M →ₗ[R] Nₗ) (g : Nₗ →ₗ[R] Pₗ) (x : M) : lcomp R Pₗ f g x = g (f x) :=
   rfl
 
+theorem lcomp_apply' (f : M →ₗ[R] Nₗ) (g : Nₗ →ₗ[R] Pₗ) : lcomp R Pₗ f g = g ∘ₗ f :=
+  rfl
+
 variable (P σ₂₃)
 
 /-- Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
@@ -290,6 +293,9 @@ section
 
 @[simp]
 theorem llcomp_apply (f : Nₗ →ₗ[R] Pₗ) (g : M →ₗ[R] Nₗ) (x : M) : llcomp R M Nₗ Pₗ f g x = f (g x) :=
+  rfl
+
+theorem llcomp_apply' (f : Nₗ →ₗ[R] Pₗ) (g : M →ₗ[R] Nₗ) : llcomp R M Nₗ Pₗ f g = f ∘ₗ g :=
   rfl
 
 end

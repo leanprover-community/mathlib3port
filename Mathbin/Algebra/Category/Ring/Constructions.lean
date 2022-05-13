@@ -5,8 +5,8 @@ Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.Limits.Shapes.Pullbacks
 import Mathbin.RingTheory.TensorProduct
-import Mathbin.Algebra.Category.CommRing.Limits
-import Mathbin.Algebra.Category.CommRing.Colimits
+import Mathbin.Algebra.Category.Ring.Limits
+import Mathbin.Algebra.Category.Ring.Colimits
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.RingTheory.Ideal.LocalRing

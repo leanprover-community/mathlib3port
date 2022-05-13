@@ -21,7 +21,7 @@ particular, this implies that `forget Group` preserves filtered colimits. Simila
 -/
 
 
-universe v
+universe v u
 
 noncomputable section
 
@@ -42,7 +42,7 @@ open Mon.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
 
 -- We use parameters here, mainly so we can have the abbreviations `G` and `G.mk` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ Groupₓₓ.{v})
+parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ Groupₓₓ.{max v u})
 
 /-- The colimit of `F ⋙ forget₂ Group Mon` in the category `Mon`.
 In the following, we will show that this has the structure of a group.
@@ -50,7 +50,7 @@ In the following, we will show that this has the structure of a group.
 @[to_additive
       "The colimit of `F ⋙ forget₂ AddGroup AddMon` in the category `AddMon`.\nIn the following, we will show that this has the structure of an additive group."]
 abbrev g : Mon :=
-  Mon.FilteredColimits.colimit (F ⋙ forget₂ Groupₓₓ Mon)
+  Mon.FilteredColimits.colimit (F ⋙ forget₂ Groupₓₓ Mon.{max v u})
 
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
@@ -98,8 +98,8 @@ instance colimitGroup : Groupₓ G :=
       clear x
       intro x
       cases' x with j x
-      erw [colimit_inv_mk_eq, colimit_mul_mk_eq (F ⋙ forget₂ Groupₓₓ Mon) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
-        colimit_one_eq (F ⋙ forget₂ Groupₓₓ Mon) j]
+      erw [colimit_inv_mk_eq, colimit_mul_mk_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) ⟨j, _⟩ ⟨j, _⟩ j (𝟙 j) (𝟙 j),
+        colimit_one_eq (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) j]
       dsimp'
       simp only [CategoryTheory.Functor.map_id, id_apply, mul_left_invₓ] }
 
@@ -112,12 +112,13 @@ def colimit : Groupₓₓ :=
 @[to_additive "The cocone over the proposed colimit additive group."]
 def colimitCocone : cocone F where
   x := colimit
-  ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ Groupₓₓ Mon)).ι with }
+  ι := { (Mon.FilteredColimits.colimitCocone (F ⋙ forget₂ Groupₓₓ Mon.{max v u})).ι with }
 
 /-- The proposed colimit cocone is a colimit in `Group`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddGroup`."]
 def colimitCoconeIsColimit : IsColimit colimit_cocone where
-  desc := fun t => Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ Groupₓₓ Mon) ((forget₂ Groupₓₓ Mon).mapCocone t)
+  desc := fun t =>
+    Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ Groupₓₓ Mon.{max v u}) ((forget₂ Groupₓₓ Mon).mapCocone t)
   fac' := fun t j =>
     MonoidHom.coe_inj <| (Types.colimitCoconeIsColimit (F ⋙ forget Groupₓₓ)).fac ((forget Groupₓₓ).mapCocone t) j
   uniq' := fun t m h =>
@@ -126,15 +127,15 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
-instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ Groupₓₓ Mon.{v}) where
+instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ Groupₓₓ Mon.{u}) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ Groupₓₓ Mon.{v})) }
+        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+          (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ Groupₓₓ Mon.{u})) }
 
 @[to_additive]
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Groupₓₓ) :=
-  Limits.compPreservesFilteredColimits (forget₂ Groupₓₓ Mon) (forget Mon)
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Groupₓₓ.{u}) :=
+  Limits.compPreservesFilteredColimits (forget₂ Groupₓₓ Mon) (forget Mon.{u})
 
 end
 
@@ -146,7 +147,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `G` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommGroupₓₓ.{v})
+parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommGroupₓₓ.{max v u})
 
 /-- The colimit of `F ⋙ forget₂ CommGroup Group` in the category `Group`.
 In the following, we will show that this has the structure of a _commutative_ group.
@@ -154,11 +155,11 @@ In the following, we will show that this has the structure of a _commutative_ gr
 @[to_additive
       "The colimit of `F ⋙ forget₂ AddCommGroup AddGroup` in the category `AddGroup`.\nIn the following, we will show that this has the structure of a _commutative_ additive group."]
 abbrev g : Groupₓₓ :=
-  Groupₓₓ.FilteredColimits.colimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{v})
+  Groupₓₓ.FilteredColimits.colimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{max v u})
 
 @[to_additive]
 instance colimitCommGroup : CommGroupₓ G :=
-  { G.Group, CommMon.FilteredColimits.colimitCommMonoid (F ⋙ forget₂ CommGroupₓₓ CommMon.{v}) with }
+  { G.Group, CommMon.FilteredColimits.colimitCommMonoid (F ⋙ forget₂ CommGroupₓₓ CommMon.{max v u}) with }
 
 /-- The bundled commutative group giving the filtered colimit of a diagram. -/
 @[to_additive "The bundled additive commutative group giving the filtered colimit of a diagram."]
@@ -169,14 +170,14 @@ def colimit : CommGroupₓₓ :=
 @[to_additive "The cocone over the proposed colimit additive commutative group."]
 def colimitCocone : cocone F where
   x := colimit
-  ι := { (Groupₓₓ.FilteredColimits.colimitCocone (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ)).ι with }
+  ι := { (Groupₓₓ.FilteredColimits.colimitCocone (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{max v u})).ι with }
 
 /-- The proposed colimit cocone is a colimit in `CommGroup`. -/
 @[to_additive "The proposed colimit cocone is a colimit in `AddCommGroup`."]
 def colimitCoconeIsColimit : IsColimit colimit_cocone where
   desc := fun t =>
-    (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{v})).desc
-      ((forget₂ CommGroupₓₓ Groupₓₓ.{v}).mapCocone t)
+    (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{max v u})).desc
+      ((forget₂ CommGroupₓₓ Groupₓₓ.{max v u}).mapCocone t)
   fac' := fun t j =>
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupₓₓ)).fac ((forget CommGroupₓₓ).mapCocone t) j
@@ -186,15 +187,15 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone where
         funext fun x => MonoidHom.congr_fun (h j) x
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]
-instance forget₂GroupPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommGroupₓₓ Groupₓₓ.{v}) where
+instance forget₂GroupPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommGroupₓₓ Groupₓₓ.{u}) where
   PreservesFilteredColimits := fun J _ _ =>
     { PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{v})) }
+        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+          (Groupₓₓ.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommGroupₓₓ Groupₓₓ.{u})) }
 
 @[to_additive]
-instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommGroupₓₓ) :=
-  Limits.compPreservesFilteredColimits (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ)
+instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommGroupₓₓ.{u}) :=
+  Limits.compPreservesFilteredColimits (forget₂ CommGroupₓₓ Groupₓₓ) (forget Groupₓₓ.{u})
 
 end
 

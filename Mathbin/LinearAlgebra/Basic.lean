@@ -7,7 +7,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
 import Mathbin.Algebra.BigOperators.Pi
 import Mathbin.Algebra.Module.Hom
 import Mathbin.Algebra.Module.Prod
-import Mathbin.Algebra.Module.SubmoduleLattice
+import Mathbin.Algebra.Module.Submodule.Lattice
 import Mathbin.Data.Dfinsupp.Basic
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Order.CompactlyGenerated
@@ -1004,7 +1004,7 @@ end Sum
 
 section SumAddHom
 
-variable [∀ i, AddZeroClass (γ i)]
+variable [∀ i, AddZeroClassₓ (γ i)]
 
 @[simp]
 theorem map_dfinsupp_sum_add_hom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i →+ M} :
@@ -1038,6 +1038,10 @@ def range [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) : Submod
   (map f ⊤).copy (Set.Range f) Set.image_univ.symm
 
 theorem range_coe [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) : (range f : Set M₂) = Set.Range f :=
+  rfl
+
+theorem range_to_add_submonoid [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
+    f.range.toAddSubmonoid = f.toAddMonoidHom.mrange :=
   rfl
 
 @[simp]
@@ -1085,7 +1089,7 @@ end
 /-- The decreasing sequence of submodules consisting of the ranges of the iterates of a linear map.
 -/
 @[simps]
-def iterateRange (f : M →ₗ[R] M) : ℕ →o OrderDual (Submodule R M) :=
+def iterateRange (f : M →ₗ[R] M) : ℕ →o (Submodule R M)ᵒᵈ :=
   ⟨fun n => (f ^ n).range, fun n m w x h => by
     obtain ⟨c, rfl⟩ := le_iff_exists_add.mp w
     rw [LinearMap.mem_range] at h
@@ -1123,6 +1127,9 @@ theorem ker_id : ker (LinearMap.id : M →ₗ[R] M) = ⊥ :=
 @[simp]
 theorem map_coe_ker (f : M →ₛₗ[τ₁₂] M₂) (x : ker f) : f x = 0 :=
   mem_ker.1 x.2
+
+theorem ker_to_add_submonoid (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubmonoid = f.toAddMonoidHom.mker :=
+  rfl
 
 theorem comp_ker_subtype (f : M →ₛₗ[τ₁₂] M₂) : f.comp f.ker.Subtype = 0 :=
   LinearMap.ext fun x =>
@@ -1242,6 +1249,13 @@ variable {f : M →ₛₗ[τ₁₂] M₂}
 include R
 
 open Submodule
+
+theorem range_to_add_subgroup [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) :
+    f.range.toAddSubgroup = f.toAddMonoidHom.range :=
+  rfl
+
+theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgroup = f.toAddMonoidHom.ker :=
+  rfl
 
 theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
   rw [mem_ker, map_sub, sub_eq_zero]
@@ -1663,7 +1677,7 @@ theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ i x : γ i, Decidable (x ≠ 
   f.map_sum _
 
 @[simp]
-theorem map_dfinsupp_sum_add_hom [∀ i, AddZeroClass (γ i)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i) (g : ∀ i, γ i →+ M) :
+theorem map_dfinsupp_sum_add_hom [∀ i, AddZeroClassₓ (γ i)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i) (g : ∀ i, γ i →+ M) :
     f (sumAddHom g t) = sumAddHom (fun i => f.toAddEquiv.toAddMonoidHom.comp (g i)) t :=
   f.toAddEquiv.map_dfinsupp_sum_add_hom _ _
 

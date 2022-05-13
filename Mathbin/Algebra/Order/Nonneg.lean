@@ -99,16 +99,16 @@ protected theorem coe_zero [Zero α] [Preorderₓ α] : ((0 : { x : α // 0 ≤ 
 theorem mk_eq_zero [Zero α] [Preorderₓ α] {x : α} (hx : 0 ≤ x) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) = 0 ↔ x = 0 :=
   Subtype.ext_iff
 
-instance hasAdd [AddZeroClass α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : Add { x : α // 0 ≤ x } :=
+instance hasAdd [AddZeroClassₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] : Add { x : α // 0 ≤ x } :=
   ⟨fun x y => ⟨x + y, add_nonneg x.2 y.2⟩⟩
 
 @[simp]
-theorem mk_add_mk [AddZeroClass α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] {x y : α} (hx : 0 ≤ x)
+theorem mk_add_mk [AddZeroClassₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)] {x y : α} (hx : 0 ≤ x)
     (hy : 0 ≤ y) : (⟨x, hx⟩ : { x : α // 0 ≤ x }) + ⟨y, hy⟩ = ⟨x + y, add_nonneg hx hy⟩ :=
   rfl
 
 @[simp, norm_cast]
-protected theorem coe_add [AddZeroClass α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)]
+protected theorem coe_add [AddZeroClassₓ α] [Preorderₓ α] [CovariantClass α α (· + ·) (· ≤ ·)]
     (a b : { x : α // 0 ≤ x }) : ((a + b : { x : α // 0 ≤ x }) : α) = a + b :=
   rfl
 

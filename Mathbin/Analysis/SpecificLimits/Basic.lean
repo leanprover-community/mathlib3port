@@ -358,7 +358,7 @@ include hu₂
 theorem dist_le_of_le_geometric_two_of_tendsto {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) :
     dist (f n) a ≤ C / 2 ^ n := by
   convert dist_le_tsum_of_dist_le_of_tendsto _ hu₂ (summable_geometric_two' C) ha n
-  simp only [add_commₓ n, pow_addₓ, ← div_div_eq_div_mul]
+  simp only [add_commₓ n, pow_addₓ, ← div_div]
   symm
   exact ((has_sum_geometric_two' C).div_const _).tsum_eq
 

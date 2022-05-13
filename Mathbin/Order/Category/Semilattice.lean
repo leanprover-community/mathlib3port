@@ -134,7 +134,7 @@ def Iso.mk {α β : SemilatticeSupCat.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatticeSupCat ⥤ SemilatticeInfCat where
-  obj := fun X => SemilatticeInfCat.of (OrderDual X)
+  obj := fun X => SemilatticeInfCat.of Xᵒᵈ
   map := fun X Y => SupBotHom.dual
 
 end SemilatticeSupCat
@@ -156,7 +156,7 @@ def Iso.mk {α β : SemilatticeInfCat.{u}} (e : α ≃o β) : α ≅ β where
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatticeInfCat ⥤ SemilatticeSupCat where
-  obj := fun X => SemilatticeSupCat.of (OrderDual X)
+  obj := fun X => SemilatticeSupCat.of Xᵒᵈ
   map := fun X Y => InfTopHom.dual
 
 end SemilatticeInfCat

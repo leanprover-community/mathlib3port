@@ -31,8 +31,8 @@ theorem Concrete.to_product_injective_of_is_limit {D : Cone F} (hD : IsLimit D) 
     Function.Injective fun j : J => D.π.app j x := by
   let E := (forget C).mapCone D
   let hE : is_limit E := is_limit_of_preserves _ hD
-  let G := types.limit_cone (F ⋙ forget C)
-  let hG := types.limit_cone_is_limit (F ⋙ forget C)
+  let G := Types.limitCone.{v, v} (F ⋙ forget C)
+  let hG := Types.limitConeIsLimit.{v, v} (F ⋙ forget C)
   let T : E.X ≅ G.X := hE.cone_point_unique_up_to_iso hG
   change Function.Injective (T.hom ≫ fun x j => G.π.app j x)
   have h : Function.Injective T.hom := by
@@ -136,7 +136,7 @@ noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex C) [HasMult
     (multiequalizer I : C) ≃ { x : ∀ i : I.L, I.left i // ∀ i : I.R, I.fst i (x _) = I.snd i (x _) } :=
   let h1 := limit.isLimit I.multicospan
   let h2 := isLimitOfPreserves (forget C) h1
-  let E := h2.conePointUniqueUpToIso (Types.limitConeIsLimit _)
+  let E := h2.conePointUniqueUpToIso (Types.limitConeIsLimit.{v, v} _)
   Equivₓ.trans E.toEquiv (Concrete.multiequalizerEquivAux I)
 
 @[simp]
@@ -152,6 +152,13 @@ end Limits
 
 section Colimits
 
+-- We don't mark this as an `@[ext]` lemma as we don't always want to work elementwise.
+theorem cokernel_funext {C : Type _} [Category C] [HasZeroMorphisms C] [ConcreteCategory C] {M N K : C} {f : M ⟶ N}
+    [HasCokernel f] {g h : cokernel f ⟶ K} (w : ∀ n : N, g (cokernel.π f n) = h (cokernel.π f n)) : g = h := by
+  apply coequalizer.hom_ext
+  apply concrete_category.hom_ext _ _
+  simpa using w
+
 variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {J : Type v} [SmallCategory J] (F : J ⥤ C)
   [PreservesColimit F (forget C)]
 
@@ -162,8 +169,8 @@ theorem Concrete.from_union_surjective_of_is_colimit {D : Cocone F} (hD : IsColi
   intro ff
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
-  let G := types.colimit_cocone (F ⋙ forget C)
-  let hG := types.colimit_cocone_is_colimit (F ⋙ forget C)
+  let G := Types.colimitCocone.{v, v} (F ⋙ forget C)
+  let hG := Types.colimitCoconeIsColimit.{v, v} (F ⋙ forget C)
   let T : E ≅ G := hE.unique_up_to_iso hG
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
   suffices Function.Surjective (TX.hom ∘ ff) by
@@ -193,8 +200,8 @@ theorem Concrete.is_colimit_rep_eq_of_exists {D : Cocone F} {i j : J} (hD : IsCo
     (h : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y) : D.ι.app i x = D.ι.app j y := by
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
-  let G := types.colimit_cocone (F ⋙ forget C)
-  let hG := types.colimit_cocone_is_colimit (F ⋙ forget C)
+  let G := Types.colimitCocone.{v, v} (F ⋙ forget C)
+  let hG := Types.colimitCoconeIsColimit.{v, v} (F ⋙ forget C)
   let T : E ≅ G := hE.unique_up_to_iso hG
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
   apply_fun TX.hom
@@ -224,8 +231,8 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
     (h : D.ι.app _ x = D.ι.app _ y) : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y := by
   let E := (forget C).mapCocone D
   let hE : is_colimit E := is_colimit_of_preserves _ hD
-  let G := types.colimit_cocone (F ⋙ forget C)
-  let hG := types.colimit_cocone_is_colimit (F ⋙ forget C)
+  let G := Types.colimitCocone.{v, v} (F ⋙ forget C)
+  let hG := Types.colimitCoconeIsColimit.{v, v} (F ⋙ forget C)
   let T : E ≅ G := hE.unique_up_to_iso hG
   let TX : E.X ≅ G.X := (cocones.forget _).mapIso T
   apply_fun TX.hom  at h
@@ -233,7 +240,7 @@ theorem Concrete.is_colimit_exists_of_rep_eq {D : Cocone F} {i j : J} (hD : IsCo
   erw [T.hom.w, T.hom.w] at h
   replace h := Quot.exact _ h
   suffices
-    ∀ a b : Σj, F.obj j h : EqvGen (limits.types.quot.rel (F ⋙ forget C)) a b,
+    ∀ a b : Σj, F.obj j h : EqvGen (Limits.Types.Quot.Rel.{v, v} (F ⋙ forget C)) a b,
       ∃ (k : _)(f : a.1 ⟶ k)(g : b.1 ⟶ k), F.map f a.2 = F.map g b.2
     by
     exact this ⟨i, x⟩ ⟨j, y⟩ h

@@ -606,7 +606,7 @@ def withConstants (S : L.Substructure M) {A : Set M} (h : A ⊆ S) : L[[A]].Subs
     · cases n
       · exact fun _ _ => h f.2
         
-      · exact Pempty.elimₓ f
+      · exact isEmptyElim f
         
       
 

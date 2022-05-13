@@ -156,7 +156,7 @@ theorem supr_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 theorem infi_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
-  supr_unpair (show ℕ → ℕ → OrderDual α from f)
+  supr_unpair (show ℕ → ℕ → αᵒᵈ from f)
 
 end CompleteLattice
 

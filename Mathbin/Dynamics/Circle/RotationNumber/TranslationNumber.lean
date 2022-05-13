@@ -485,7 +485,7 @@ theorem dist_map_zero_lt_of_semiconj {f g₁ g₂ : CircleDeg1Lift} (h : Functio
   calc
     dist (g₁ 0) (g₂ 0) ≤ dist (g₁ 0) (f (g₁ 0) - f 0) + dist _ (g₂ 0) := dist_triangle _ _ _
     _ = dist (f 0 + g₁ 0) (f (g₁ 0)) + dist (g₂ 0 + f 0) (g₂ (f 0)) := by
-      simp only [h.eq, Real.dist_eq, sub_sub, add_commₓ (f 0), sub_sub_assoc_swap, abs_sub_comm (g₂ (f 0))]
+      simp only [h.eq, Real.dist_eq, sub_sub, add_commₓ (f 0), sub_sub_eq_add_sub, abs_sub_comm (g₂ (f 0))]
     _ < 2 := add_lt_add (f.dist_map_map_zero_lt g₁) (g₂.dist_map_map_zero_lt f)
     
 
@@ -597,7 +597,7 @@ theorem transnum_aux_seq_zero : f.transnumAuxSeq 0 = f 0 := by
 
 theorem transnum_aux_seq_dist_lt (n : ℕ) : dist (f.transnumAuxSeq n) (f.transnumAuxSeq (n + 1)) < 1 / 2 / 2 ^ n := by
   have : 0 < (2 ^ (n + 1) : ℝ) := pow_pos zero_lt_two _
-  rw [div_div_eq_div_mul, ← pow_succₓ, ← abs_of_pos this]
+  rw [div_div, ← pow_succₓ, ← abs_of_pos this]
   replace := abs_pos.2 (ne_of_gtₓ this)
   convert (div_lt_div_right this).2 ((f ^ 2 ^ n).dist_map_map_zero_lt (f ^ 2 ^ n))
   simp_rw [transnum_aux_seq, Real.dist_eq]

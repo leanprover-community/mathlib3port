@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro
 -/
 import Mathbin.GroupTheory.Congruence
-import Mathbin.LinearAlgebra.BilinearMap
-import Mathbin.LinearAlgebra.Span
+import Mathbin.Algebra.Module.Submodule.Bilinear
 
 /-!
 # Tensor product of modules over commutative semirings.
@@ -97,7 +96,7 @@ namespace TensorProduct
 
 section Module
 
-instance : AddZeroClass (M ⊗[R] N) :=
+instance : AddZeroClassₓ (M ⊗[R] N) :=
   { (addConGen (TensorProduct.Eqv R M N)).AddMonoid with }
 
 instance : AddCommSemigroupₓ (M ⊗[R] N) :=
@@ -307,6 +306,9 @@ theorem tmul_smul [DistribMulAction R' N] [CompatibleSmul R R' M N] (r : R') (x 
     x ⊗ₜ (r • y) = r • x ⊗ₜ[R] y :=
   (smul_tmul _ _ _).symm
 
+theorem smul_tmul_smul (r s : R) (m : M) (n : N) : (r • m) ⊗ₜ[R] (s • n) = (r * s) • m ⊗ₜ[R] n := by
+  simp only [tmul_smul, smul_tmul, mul_smul]
+
 instance leftModule : Module R'' (M ⊗[R] N) :=
   { TensorProduct.leftDistribMulAction with smul := (· • ·), add_smul := TensorProduct.add_smul,
     zero_smul := TensorProduct.zero_smul }
@@ -426,6 +428,11 @@ theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ
   · intro t₁ t₂ ht₁ ht₂
     exact Submodule.add_mem _ ht₁ ht₂
     
+
+@[simp]
+theorem map₂_mk_top_top_eq_top : Submodule.map₂ (mk R M N) ⊤ ⊤ = ⊤ := by
+  rw [← top_le_iff, ← span_tmul_eq_top, Submodule.map₂_eq_span_image2]
+  exact Submodule.span_mono fun _ ⟨m, n, h⟩ => ⟨m, n, trivialₓ, trivialₓ, h⟩
 
 end Module
 
@@ -760,6 +767,43 @@ protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) : ma
     
   · simp only [pow_succ'ₓ, ih, map_mul]
     
+
+theorem map_add_left (f₁ f₂ : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (f₁ + f₂) g = map f₁ g + map f₂ g := by
+  ext
+  simp only [add_tmul, compr₂_apply, mk_apply, map_tmul, add_apply]
+
+theorem map_add_right (f : M →ₗ[R] P) (g₁ g₂ : N →ₗ[R] Q) : map f (g₁ + g₂) = map f g₁ + map f g₂ := by
+  ext
+  simp only [tmul_add, compr₂_apply, mk_apply, map_tmul, add_apply]
+
+theorem map_smul_left (r : R) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : map (r • f) g = r • map f g := by
+  ext
+  simp only [smul_tmul, compr₂_apply, mk_apply, map_tmul, smul_apply, tmul_smul]
+
+theorem map_smul_right (r : R) (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : map f (r • g) = r • map f g := by
+  ext
+  simp only [smul_tmul, compr₂_apply, mk_apply, map_tmul, smul_apply, tmul_smul]
+
+variable (R M N P Q)
+
+/-- The tensor product of a pair of linear maps between modules, bilinear in both maps. -/
+def mapBilinear : (M →ₗ[R] P) →ₗ[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
+  LinearMap.mk₂ R map map_add_left map_smul_left map_add_right map_smul_right
+
+/-- The linear map from `(M →ₗ P) ⊗ (N →ₗ Q)` to `(M ⊗ N →ₗ P ⊗ Q)` sending `f ⊗ₜ g` to
+the `tensor_product.map f g`, the tensor product of the two maps. -/
+def homTensorHomMap : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
+  lift (mapBilinear R M N P Q)
+
+variable {R M N P Q}
+
+@[simp]
+theorem map_bilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear R M N P Q f g = map f g :=
+  rfl
+
+@[simp]
+theorem hom_tensor_hom_map_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : homTensorHomMap R M N P Q (f ⊗ₜ g) = map f g := by
+  simp only [hom_tensor_hom_map, lift.tmul, map_bilinear_apply]
 
 end
 

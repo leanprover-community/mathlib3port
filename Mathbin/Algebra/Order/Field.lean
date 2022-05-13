@@ -276,8 +276,12 @@ theorem inv_le_of_inv_le (ha : 0 < a) (h : a⁻¹ ≤ b) : b⁻¹ ≤ a :=
 theorem le_inv (ha : 0 < a) (hb : 0 < b) : a ≤ b⁻¹ ↔ b ≤ a⁻¹ := by
   rw [← inv_le_inv (inv_pos.2 hb) ha, inv_invₓ]
 
+/-- See `inv_lt_inv_of_lt` for the implication from right-to-left with one fewer assumption. -/
 theorem inv_lt_inv (ha : 0 < a) (hb : 0 < b) : a⁻¹ < b⁻¹ ↔ b < a :=
   lt_iff_lt_of_le_iff_le (inv_le_inv hb ha)
+
+theorem inv_lt_inv_of_lt (hb : 0 < b) (h : b < a) : a⁻¹ < b⁻¹ :=
+  (inv_lt_inv (hb.trans h) hb).2 h
 
 /-- In a linear ordered field, for positive `a` and `b` we have `a⁻¹ < b ↔ b⁻¹ < a`.
 See also `inv_lt_of_inv_lt` for a one-sided implication with one fewer assumption. -/
@@ -337,7 +341,7 @@ theorem inv_le_one_iff : a⁻¹ ≤ 1 ↔ a ≤ 0 ∨ 1 ≤ a := by
   rcases em (a = 1) with (rfl | ha)
   · simp [le_rfl]
     
-  · simp only [Ne.le_iff_lt (Ne.symm ha), Ne.le_iff_lt (mt inv_eq_one₀.1 ha), inv_lt_one_iff]
+  · simp only [Ne.le_iff_lt (Ne.symm ha), Ne.le_iff_lt (mt inv_eq_one.1 ha), inv_lt_one_iff]
     
 
 theorem one_le_inv_iff : 1 ≤ a⁻¹ ↔ 0 < a ∧ a ≤ 1 :=
@@ -726,10 +730,10 @@ theorem max_div_div_right {c : α} (hc : 0 ≤ c) (a b : α) : max (a / c) (b / 
   Eq.symm <| Monotone.map_max fun x y => div_le_div_of_le hc
 
 theorem min_div_div_right_of_nonpos {c : α} (hc : c ≤ 0) (a b : α) : min (a / c) (b / c) = max a b / c :=
-  Eq.symm <| @Monotone.map_max α (OrderDual α) _ _ _ _ _ fun x y => div_le_div_of_nonpos_of_le hc
+  Eq.symm <| Antitone.map_max fun x y => div_le_div_of_nonpos_of_le hc
 
 theorem max_div_div_right_of_nonpos {c : α} (hc : c ≤ 0) (a b : α) : max (a / c) (b / c) = min a b / c :=
-  Eq.symm <| @Monotone.map_min α (OrderDual α) _ _ _ _ _ fun x y => div_le_div_of_nonpos_of_le hc
+  Eq.symm <| Antitone.map_min fun x y => div_le_div_of_nonpos_of_le hc
 
 theorem abs_div (a b : α) : abs (a / b) = abs a / abs b :=
   (absHom : α →*₀ α).map_div a b
@@ -740,7 +744,6 @@ theorem abs_one_div (a : α) : abs (1 / a) = 1 / abs a := by
 theorem abs_inv (a : α) : abs a⁻¹ = (abs a)⁻¹ :=
   (absHom : α →*₀ α).map_inv a
 
--- TODO: add lemmas with `a⁻¹`.
 theorem one_div_strict_anti_on : StrictAntiOn (fun x : α => 1 / x) (Set.Ioi 0) := fun x x1 y y1 xy =>
   (one_div_lt_one_div (Set.mem_Ioi.mp y1) (Set.mem_Ioi.mp x1)).mpr xy
 
@@ -750,11 +753,23 @@ theorem one_div_pow_le_one_div_pow_of_le (a1 : 1 ≤ a) {m n : ℕ} (mn : m ≤ 
 theorem one_div_pow_lt_one_div_pow_of_lt (a1 : 1 < a) {m n : ℕ} (mn : m < n) : 1 / a ^ n < 1 / a ^ m := by
   refine' (one_div_lt_one_div _ _).mpr (pow_lt_pow a1 mn) <;> exact pow_pos (trans zero_lt_one a1) _
 
-theorem one_div_pow_mono (a1 : 1 ≤ a) : Monotone fun n : ℕ => OrderDual.toDual 1 / a ^ n := fun m n =>
+theorem one_div_pow_anti (a1 : 1 ≤ a) : Antitone fun n : ℕ => 1 / a ^ n := fun m n =>
   one_div_pow_le_one_div_pow_of_le a1
 
-theorem one_div_pow_strict_mono (a1 : 1 < a) : StrictMono fun n : ℕ => OrderDual.toDual 1 / a ^ n := fun m n =>
+theorem one_div_pow_strict_anti (a1 : 1 < a) : StrictAnti fun n : ℕ => 1 / a ^ n := fun m n =>
   one_div_pow_lt_one_div_pow_of_lt a1
+
+theorem inv_strict_anti_on : StrictAntiOn (fun x : α => x⁻¹) (Set.Ioi 0) := fun x hx y hy xy => (inv_lt_inv hy hx).2 xy
+
+theorem inv_pow_le_inv_pow_of_le (a1 : 1 ≤ a) {m n : ℕ} (mn : m ≤ n) : (a ^ n)⁻¹ ≤ (a ^ m)⁻¹ := by
+  convert one_div_pow_le_one_div_pow_of_le a1 mn <;> simp
+
+theorem inv_pow_lt_inv_pow_of_lt (a1 : 1 < a) {m n : ℕ} (mn : m < n) : (a ^ n)⁻¹ < (a ^ m)⁻¹ := by
+  convert one_div_pow_lt_one_div_pow_of_lt a1 mn <;> simp
+
+theorem inv_pow_anti (a1 : 1 ≤ a) : Antitone fun n : ℕ => (a ^ n)⁻¹ := fun m n => inv_pow_le_inv_pow_of_le a1
+
+theorem inv_pow_strict_anti (a1 : 1 < a) : StrictAnti fun n : ℕ => (a ^ n)⁻¹ := fun m n => inv_pow_lt_inv_pow_of_lt a1
 
 /-! ### Results about `is_lub` and `is_glb` -/
 

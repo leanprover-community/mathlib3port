@@ -155,7 +155,7 @@ theorem lipschitz_sub (hf : ApproximatesLinearOn f f' s c) : LipschitzWith c fun
   rw [f'.map_sub]
   abel
 
-protected theorem lipschitz (hf : ApproximatesLinearOn f f' s c) : LipschitzWith (nnnorm f' + c) (s.restrict f) := by
+protected theorem lipschitz (hf : ApproximatesLinearOn f f' s c) : LipschitzWith (∥f'∥₊ + c) (s.restrict f) := by
   simpa only [restrict_apply, add_sub_cancel'_right] using (f'.lipschitz.restrict s).add hf.lipschitz_sub
 
 protected theorem continuous (hf : ApproximatesLinearOn f f' s c) : Continuous (s.restrict f) :=
@@ -378,7 +378,7 @@ We also assume that either `E = {0}`, or `c < ∥f'⁻¹∥⁻¹`. We use `N` as
 variable {f' : E ≃L[𝕜] F} {s : Set E} {c : ℝ≥0 }
 
 -- mathport name: «exprN»
-local notation "N" => nnnorm (f'.symm : F →L[𝕜] E)
+local notation "N" => ∥(f'.symm : F →L[𝕜] E)∥₊
 
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     AntilipschitzWith (N⁻¹ - c)⁻¹ (s.restrict f) := by
@@ -570,8 +570,7 @@ theorem map_nhds_eq_of_surj [CompleteSpace E] [CompleteSpace F] {f : E → F} {f
 variable [cs : CompleteSpace E] {f : E → F} {f' : E ≃L[𝕜] F} {a : E}
 
 theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
-    ∃ (s : Set E)(hs : a ∈ s ∧ IsOpen s),
-      ApproximatesLinearOn f (f' : E →L[𝕜] F) s ((nnnorm (f'.symm : F →L[𝕜] E))⁻¹ / 2) :=
+    ∃ (s : Set E)(hs : a ∈ s ∧ IsOpen s), ApproximatesLinearOn f (f' : E →L[𝕜] F) s (∥(f'.symm : F →L[𝕜] E)∥₊⁻¹ / 2) :=
   by
   refine' ((nhds_basis_opens a).exists_iff _).1 _
   exact fun s t => ApproximatesLinearOn.mono_set

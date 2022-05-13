@@ -65,7 +65,7 @@ When possible, instead of parametrizing results over `(f : α →+o β)`,
 you should parametrize over `(F : Type*) [order_add_monoid_hom_class F α β] (f : F)`.
 
 When you extend this structure, make sure to extend `order_add_monoid_hom_class`. -/
-structure OrderAddMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClass α] [AddZeroClass β] extends
+structure OrderAddMonoidHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α] [AddZeroClassₓ β] extends
   α →+ β where
   monotone' : Monotone to_fun
 
@@ -75,8 +75,8 @@ infixr:25 " →+o " => OrderAddMonoidHom
 /-- `order_add_monoid_hom_class F α β` states that `F` is a type of ordered monoid homomorphisms.
 
 You should also extend this typeclass when you extend `order_add_monoid_hom`. -/
-class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClass α]
-  [AddZeroClass β] extends AddMonoidHomClass F α β where
+class OrderAddMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorderₓ α] [Preorderₓ β] [AddZeroClassₓ α]
+  [AddZeroClassₓ β] extends AddMonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 
 -- Instances and lemmas are defined below through `@[to_additive]`.

@@ -184,7 +184,7 @@ def toCat : Mon ⥤ Cat where
   map := fun x y f => SingleObj.mapHom x y f
 
 instance toCatFull : Full toCat where
-  preimage := fun x y => (SingleObj.mapHom x y).invFun
+  Preimage := fun x y => (SingleObj.mapHom x y).invFun
   witness' := fun x y => by
     apply Equivₓ.right_inv
 

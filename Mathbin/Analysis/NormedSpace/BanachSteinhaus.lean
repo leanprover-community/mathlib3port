@@ -67,7 +67,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
       (m.cast_add m).symm _ ≤ (m + m : ℕ) * (∥y∥ / (ε / ∥k∥)) :=
       le_mul_of_one_le_right (Nat.cast_nonneg _)
         ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y)_ = (m + m : ℕ) / (ε / ∥k∥) * ∥y∥ :=
-      (mul_comm_div' _ _ _).symm
+      (mul_comm_div _ _ _).symm
 
 open Ennreal
 

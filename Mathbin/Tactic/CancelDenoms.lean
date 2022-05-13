@@ -38,7 +38,7 @@ theorem mul_subst {α} [CommRingₓ α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1
 
 theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1) (h3 : n1 * n2 = k) :
     k * (e1 / e2) = t1 := by
-  rw [← h3, mul_assoc, mul_div_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
+  rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mulₓ]
 
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) : e = e' / n :=
   eq_div_of_mul_eq h2 <| by

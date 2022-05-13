@@ -131,12 +131,12 @@ variable [LinearOrderₓ γ] [OrderClosedTopology γ]
 
 theorem inf'_apply {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) (b : β) :
     s.inf' H f b = s.inf' H fun a => f a b :=
-  @sup'_apply _ (OrderDual γ) _ _ _ _ _ _ H f b
+  @sup'_apply _ γᵒᵈ _ _ _ _ _ _ H f b
 
 @[simp, norm_cast]
 theorem inf'_coe {ι : Type _} {s : Finset ι} (H : s.Nonempty) (f : ι → C(β, γ)) :
     ((s.inf' H f : C(β, γ)) : ι → β) = s.inf' H fun a => (f a : β → γ) :=
-  @sup'_coe _ (OrderDual γ) _ _ _ _ _ _ H f
+  @sup'_coe _ γᵒᵈ _ _ _ _ _ _ H f
 
 end Inf'
 

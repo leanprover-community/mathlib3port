@@ -297,9 +297,7 @@ def circleEquivGen (hk : ∀ x : K, 1 + x ^ 2 ≠ 0) : K ≃ { p : K × K // p.1
     field_simp [hk x, h2, add_assocₓ, add_commₓ, add_sub_cancel'_right, mul_comm]
   right_inv := fun ⟨⟨x, y⟩, hxy, hy⟩ => by
     change x ^ 2 + y ^ 2 = 1 at hxy
-    have h2 : y + 1 ≠ 0 := by
-      apply mt eq_neg_of_add_eq_zero
-      exact hy
+    have h2 : y + 1 ≠ 0 := mt eq_neg_of_add_eq_zero_left hy
     have h3 : (y + 1) ^ 2 + x ^ 2 = 2 * (y + 1) := by
       rw [(add_neg_eq_iff_eq_add.mpr hxy.symm).symm]
       ring

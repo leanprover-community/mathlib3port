@@ -17,6 +17,10 @@ We define two type tags:
   multiplicative structure on `multiplicative α`.
 
 We also define instances `additive.*` and `multiplicative.*` that actually transfer the structures.
+
+## See also
+
+This file is similar to `order.synonym`.
 -/
 
 
@@ -178,13 +182,13 @@ theorem of_add_eq_one {A : Type _} [Zero A] {x : A} : Multiplicative.ofAdd x = 1
 theorem to_add_one [Zero α] : (1 : Multiplicative α).toAdd = 0 :=
   rfl
 
-instance [MulOneClassₓ α] : AddZeroClass (Additive α) where
+instance [MulOneClassₓ α] : AddZeroClassₓ (Additive α) where
   zero := 0
   add := (· + ·)
   zero_add := one_mulₓ
   add_zero := mul_oneₓ
 
-instance [AddZeroClass α] : MulOneClassₓ (Multiplicative α) where
+instance [AddZeroClassₓ α] : MulOneClassₓ (Multiplicative α) where
   one := 1
   mul := (· * ·)
   one_mul := zero_addₓ
@@ -260,6 +264,12 @@ theorem of_mul_div [Div α] (x y : α) : Additive.ofMul (x / y) = Additive.ofMul
 theorem to_mul_sub [Div α] (x y : Additive α) : (x - y).toMul = x.toMul / y.toMul :=
   rfl
 
+instance [HasInvolutiveInv α] : HasInvolutiveNeg (Additive α) :=
+  { Additive.hasNeg with neg_neg := @inv_invₓ _ _ }
+
+instance [HasInvolutiveNeg α] : HasInvolutiveInv (Multiplicative α) :=
+  { Multiplicative.hasInv with inv_inv := @neg_negₓ _ _ }
+
 instance [DivInvMonoidₓ α] : SubNegMonoidₓ (Additive α) :=
   { Additive.hasNeg, Additive.hasSub, Additive.addMonoid with sub_eq_add_neg := @div_eq_mul_inv α _,
     zsmul := @DivInvMonoidₓ.zpow α _, zsmul_zero' := DivInvMonoidₓ.zpow_zero', zsmul_succ' := DivInvMonoidₓ.zpow_succ',
@@ -269,6 +279,20 @@ instance [SubNegMonoidₓ α] : DivInvMonoidₓ (Multiplicative α) :=
   { Multiplicative.hasInv, Multiplicative.hasDiv, Multiplicative.monoid with div_eq_mul_inv := @sub_eq_add_neg α _,
     zpow := @SubNegMonoidₓ.zsmul α _, zpow_zero' := SubNegMonoidₓ.zsmul_zero', zpow_succ' := SubNegMonoidₓ.zsmul_succ',
     zpow_neg' := SubNegMonoidₓ.zsmul_neg' }
+
+instance [DivisionMonoid α] : SubtractionMonoid (Additive α) :=
+  { Additive.subNegMonoid, Additive.hasInvolutiveNeg with neg_add_rev := @mul_inv_rev _ _,
+    neg_eq_of_add := @inv_eq_of_mul_eq_one_right _ _ }
+
+instance [SubtractionMonoid α] : DivisionMonoid (Multiplicative α) :=
+  { Multiplicative.divInvMonoid, Multiplicative.hasInvolutiveInv with mul_inv_rev := @neg_add_rev _ _,
+    inv_eq_of_mul := @neg_eq_of_add_eq_zero_right _ _ }
+
+instance [DivisionCommMonoid α] : SubtractionCommMonoid (Additive α) :=
+  { Additive.subtractionMonoid, Additive.addCommSemigroup with }
+
+instance [SubtractionCommMonoid α] : DivisionCommMonoid (Multiplicative α) :=
+  { Multiplicative.divisionMonoid, Multiplicative.commSemigroup with }
 
 instance [Groupₓ α] : AddGroupₓ (Additive α) :=
   { Additive.subNegMonoid with add_left_neg := @mul_left_invₓ α _ }
@@ -288,7 +312,7 @@ open Additive (ofMul)
 
 /-- Reinterpret `α →+ β` as `multiplicative α →* multiplicative β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative [AddZeroClass α] [AddZeroClass β] :
+def AddMonoidHom.toMultiplicative [AddZeroClassₓ α] [AddZeroClassₓ β] :
     (α →+ β) ≃ (Multiplicative α →* Multiplicative β) where
   toFun := fun f => ⟨fun a => ofAdd (f a.toAdd), f.2, f.3⟩
   invFun := fun f => ⟨fun a => (f (ofAdd a)).toAdd, f.2, f.3⟩
@@ -313,7 +337,8 @@ def MonoidHom.toAdditive [MulOneClassₓ α] [MulOneClassₓ β] : (α →* β) 
 
 /-- Reinterpret `additive α →+ β` as `α →* multiplicative β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClass β] : (Additive α →+ β) ≃ (α →* Multiplicative β) where
+def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClassₓ β] :
+    (Additive α →+ β) ≃ (α →* Multiplicative β) where
   toFun := fun f => ⟨fun a => ofAdd (f (ofMul a)), f.2, f.3⟩
   invFun := fun f => ⟨fun a => (f a.toMul).toAdd, f.2, f.3⟩
   left_inv := fun x => by
@@ -325,12 +350,12 @@ def AddMonoidHom.toMultiplicative' [MulOneClassₓ α] [AddZeroClass β] : (Addi
 
 /-- Reinterpret `α →* multiplicative β` as `additive α →+ β`. -/
 @[simps]
-def MonoidHom.toAdditive' [MulOneClassₓ α] [AddZeroClass β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
+def MonoidHom.toAdditive' [MulOneClassₓ α] [AddZeroClassₓ β] : (α →* Multiplicative β) ≃ (Additive α →+ β) :=
   AddMonoidHom.toMultiplicative'.symm
 
 /-- Reinterpret `α →+ additive β` as `multiplicative α →* β`. -/
 @[simps]
-def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClassₓ β] :
+def AddMonoidHom.toMultiplicative'' [AddZeroClassₓ α] [MulOneClassₓ β] :
     (α →+ Additive β) ≃ (Multiplicative α →* β) where
   toFun := fun f => ⟨fun a => (f a.toAdd).toMul, f.2, f.3⟩
   invFun := fun f => ⟨fun a => ofMul (f (ofAdd a)), f.2, f.3⟩
@@ -343,7 +368,7 @@ def AddMonoidHom.toMultiplicative'' [AddZeroClass α] [MulOneClassₓ β] :
 
 /-- Reinterpret `multiplicative α →* β` as `α →+ additive β`. -/
 @[simps]
-def MonoidHom.toAdditive'' [AddZeroClass α] [MulOneClassₓ β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
+def MonoidHom.toAdditive'' [AddZeroClassₓ α] [MulOneClassₓ β] : (Multiplicative α →* β) ≃ (α →+ Additive β) :=
   AddMonoidHom.toMultiplicative''.symm
 
 /-- If `α` has some multiplicative structure and coerces to a function,

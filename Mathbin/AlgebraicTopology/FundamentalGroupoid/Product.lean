@@ -98,7 +98,7 @@ def coneDiscreteComp : Limits.Cone (Discrete.functor X ⋙ π) ≌ Limits.Cone (
   Limits.Cones.postcomposeEquivalence (Discrete.compNatIsoDiscrete X π)
 
 theorem cone_discrete_comp_obj_map_cone :
-    (coneDiscreteComp X).Functor.obj (π.mapCone (Top.piFan X)) = Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) :=
+    (coneDiscreteComp X).Functor.obj (π.mapCone (Top.piFan.{u} X)) = Limits.Fan.mk (πₓ (Top.of (∀ i, X i))) (proj X) :=
   rfl
 
 /-- This is `pi_iso.inv` as a cone morphism (in fact, isomorphism) -/
@@ -111,7 +111,7 @@ instance : IsIso (piTopToPiCone X) :=
 
 /-- The fundamental groupoid functor preserves products -/
 def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π := by
-  apply limits.preserves_limit_of_preserves_limit_cone (Top.piFanIsLimit X)
+  apply limits.preserves_limit_of_preserves_limit_cone (Top.piFanIsLimit.{u} X)
   apply (limits.is_limit.of_cone_equiv (cone_discrete_comp X)).toFun
   simp only [cone_discrete_comp_obj_map_cone]
   apply limits.is_limit.of_iso_limit _ (as_iso (pi_Top_to_pi_cone X)).symm

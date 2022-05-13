@@ -721,11 +721,18 @@ theorem reverse_reverse (l : List α) : reverse (reverse l) = l := by
   induction l <;> [rfl, simp only [*, reverse_cons, reverse_append]] <;> rfl
 
 @[simp]
-theorem reverse_involutive : Involutive (@reverse α) := fun l => reverse_reverse l
+theorem reverse_involutive : Involutive (@reverse α) :=
+  reverse_reverse
 
 @[simp]
 theorem reverse_injective : Injective (@reverse α) :=
   reverse_involutive.Injective
+
+theorem reverse_surjective : Surjective (@reverse α) :=
+  reverse_involutive.Surjective
+
+theorem reverse_bijective : Bijective (@reverse α) :=
+  reverse_involutive.Bijective
 
 @[simp]
 theorem reverse_inj {l₁ l₂ : List α} : reverse l₁ = reverse l₂ ↔ l₁ = l₂ :=
@@ -3962,6 +3969,26 @@ theorem diff_erase (l₁ l₂ : List α) (a : α) : (l₁.diff l₂).erase a = (
 theorem nil_diff (l : List α) : [].diff l = [] := by
   induction l <;> [rfl, simp only [*, diff_cons, erase_of_not_mem (not_mem_nil _)]]
 
+theorem cons_diff (a : α) (l₁ l₂ : List α) :
+    (a :: l₁).diff l₂ = if a ∈ l₂ then l₁.diff (l₂.erase a) else a :: l₁.diff l₂ := by
+  induction' l₂ with b l₂ ih
+  · rfl
+    
+  rcases eq_or_ne a b with (rfl | hne)
+  · simp
+    
+  · simp only [mem_cons_iff, *, false_orₓ, diff_cons_right]
+    split_ifs with h₂ <;> simp [diff_erase, List.eraseₓ, hne, hne.symm]
+    
+
+theorem cons_diff_of_mem {a : α} {l₂ : List α} (h : a ∈ l₂) (l₁ : List α) : (a :: l₁).diff l₂ = l₁.diff (l₂.erase a) :=
+  by
+  rw [cons_diff, if_pos h]
+
+theorem cons_diff_of_not_mem {a : α} {l₂ : List α} (h : a ∉ l₂) (l₁ : List α) : (a :: l₁).diff l₂ = a :: l₁.diff l₂ :=
+  by
+  rw [cons_diff, if_neg h]
+
 theorem diff_eq_foldl : ∀ l₁ l₂ : List α, l₁.diff l₂ = foldlₓ List.eraseₓ l₁ l₂
   | l₁, [] => rfl
   | l₁, a :: l₂ => (diff_cons l₁ l₂ a).trans (diff_eq_foldl _ _)
@@ -4443,7 +4470,7 @@ theorem mem_map_swap (x : α) (y : β) (xs : List (α × β)) : (y, x) ∈ map P
   · simp only [not_mem_nil, map_nil]
     
   · cases' x with a b
-    simp only [mem_cons_iff, Prod.mk.inj_iffₓ, map, Prod.swap_prod_mkₓ, Prod.exists, xs_ih, and_comm]
+    simp only [mem_cons_iff, Prod.mk.inj_iffₓ, map, Prod.swap_prod_mk, Prod.exists, xs_ih, and_comm]
     
 
 theorem slice_eq (xs : List α) (n m : ℕ) : sliceₓ n m xs = xs.take n ++ xs.drop (n + m) := by

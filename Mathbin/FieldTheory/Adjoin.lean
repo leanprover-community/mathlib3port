@@ -172,18 +172,24 @@ variable {F E}
 theorem bot_equiv_def (x : F) : botEquiv F E (algebraMap F (⊥ : IntermediateField F E) x) = x :=
   AlgEquiv.commutes (botEquiv F E) x
 
+@[simp]
+theorem bot_equiv_symm (x : F) : (botEquiv F E).symm x = algebraMap F _ x :=
+  rfl
+
 noncomputable instance algebraOverBot : Algebra (⊥ : IntermediateField F E) F :=
   (IntermediateField.botEquiv F E).toAlgHom.toRingHom.toAlgebra
+
+theorem coe_algebra_map_over_bot :
+    (algebraMap (⊥ : IntermediateField F E) F : (⊥ : IntermediateField F E) → F) = IntermediateField.botEquiv F E :=
+  rfl
 
 instance is_scalar_tower_over_bot : IsScalarTower (⊥ : IntermediateField F E) F E :=
   IsScalarTower.of_algebra_map_eq
     (by
       intro x
-      let ϕ := Algebra.ofId F (⊥ : Subalgebra F E)
-      let ψ := AlgEquiv.ofBijective ϕ (Algebra.botEquiv F E).symm.Bijective
-      change (↑x : E) = ↑(ψ (ψ.symm ⟨x, _⟩))
-      rw [AlgEquiv.apply_symm_apply ψ ⟨x, _⟩]
-      rfl)
+      obtain ⟨y, rfl⟩ := (bot_equiv F E).symm.Surjective x
+      rw [coe_algebra_map_over_bot, (bot_equiv F E).apply_symm_apply, bot_equiv_symm,
+        IsScalarTower.algebra_map_apply F (⊥ : IntermediateField F E) E])
 
 /-- The top intermediate_field is isomorphic to the field.
 
@@ -1153,9 +1159,7 @@ theorem
                  [(Term.app `ϕ.symm [(«term_⁻¹» (Term.app `ϕ [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩")]) "⁻¹")])])
                 [])
                [])
-              (group
-               (Tactic.refine' "refine'" (Term.proj (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) "." `symm))
-               [])
+              (group (Tactic.refine' "refine'" (Term.app `inv_eq_of_mul_eq_one_right [(Term.hole "_")])) [])
               (group
                (Tactic.applyFun "apply_fun" `ϕ.symm [(Tactic.location "at" (Tactic.locationHyp [`this] []))] [])
                [])
@@ -1297,9 +1301,7 @@ theorem
                 [(Term.app `ϕ.symm [(«term_⁻¹» (Term.app `ϕ [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩")]) "⁻¹")])])
                [])
               [])
-             (group
-              (Tactic.refine' "refine'" (Term.proj (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) "." `symm))
-              [])
+             (group (Tactic.refine' "refine'" (Term.app `inv_eq_of_mul_eq_one_right [(Term.hole "_")])) [])
              (group
               (Tactic.applyFun "apply_fun" `ϕ.symm [(Tactic.location "at" (Tactic.locationHyp [`this] []))] [])
               [])
@@ -1578,9 +1580,7 @@ theorem
            [(Term.app `ϕ.symm [(«term_⁻¹» (Term.app `ϕ [(Term.anonymousCtor "⟨" [`x "," `hx] "⟩")]) "⁻¹")])])
           [])
          [])
-        (group
-         (Tactic.refine' "refine'" (Term.proj (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) "." `symm))
-         [])
+        (group (Tactic.refine' "refine'" (Term.app `inv_eq_of_mul_eq_one_right [(Term.hole "_")])) [])
         (group (Tactic.applyFun "apply_fun" `ϕ.symm [(Tactic.location "at" (Tactic.locationHyp [`this] []))] []) [])
         (group
          (Tactic.rwSeq
@@ -1680,25 +1680,18 @@ theorem
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
-  (Tactic.refine' "refine'" (Term.proj (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) "." `symm))
+  (Tactic.refine' "refine'" (Term.app `inv_eq_of_mul_eq_one_right [(Term.hole "_")]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  (Term.proj (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) "." `symm)
-[PrettyPrinter.parenthesize] parenthesizing (cont := (some 1024, term))
-  (Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")])
+  (Term.app `inv_eq_of_mul_eq_one_right [(Term.hole "_")])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.hole', expected 'Lean.Parser.Term.ellipsis'
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.hole "_")
 [PrettyPrinter.parenthesize] ...precedences are 1023 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, term))
-  `eq_inv_of_mul_right_eq_one
+  `inv_eq_of_mul_eq_one_right
 [PrettyPrinter.parenthesize] ...precedences are 1024 >? 1024, (none, [anonymous]) <=? (some 1022, term)
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (some 1024, term)
-[PrettyPrinter.parenthesize] parenthesized: (Term.paren
- "("
- [(Term.app `eq_inv_of_mul_right_eq_one [(Term.hole "_")]) []]
- ")")
-[PrettyPrinter.parenthesize] ...precedences are 0 >? 1024, (none, [anonymous]) <=? (none, [anonymous])
+[PrettyPrinter.parenthesize] ...precedences are 0 >? 1022, (some 1023, term) <=? (none, [anonymous])
 [PrettyPrinter.parenthesize] ...precedences are 0 >? 1022
 [PrettyPrinter.parenthesize] parenthesizing (cont := (some 1022, tactic))
   (Tactic.convert
@@ -2003,7 +1996,7 @@ theorem
           ϕ ⟨ x , hx ⟩ * ϕ ⟨ x , hx ⟩ ⁻¹ = 1
             by
               convert Subtype.mem ϕ.symm ϕ ⟨ x , hx ⟩ ⁻¹
-                refine' eq_inv_of_mul_right_eq_one _ . symm
+                refine' inv_eq_of_mul_eq_one_right _
                 apply_fun ϕ.symm at this
                 rw [ AlgEquiv.map_one , AlgEquiv.map_mul , AlgEquiv.symm_apply_apply ] at this
                 rw [ ← Subsemiring.coe_one , ← this , Subsemiring.coe_mul , Subtype.coe_mk ]
@@ -10525,7 +10518,7 @@ theorem sup_to_subalgebra {K L : Type _} [Field K] [Field L] [Algebra K L] (E1 E
       exact (S1⊔S2).zero_mem
       
     · obtain ⟨y, h⟩ := this.mul_inv_cancel hx'
-      exact (congr_argₓ (· ∈ S1⊔S2) (eq_inv_of_mul_right_eq_one (subtype.ext_iff.mp h))).mp y.2
+      exact (congr_argₓ (· ∈ S1⊔S2) <| eq_inv_of_mul_eq_one_right <| subtype.ext_iff.mp h).mp y.2
       
   exact
     is_field_of_is_integral_of_is_field'

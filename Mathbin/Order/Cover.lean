@@ -93,7 +93,7 @@ theorem to_dual_wcovby_to_dual_iff : toDual b ⩿ toDual a ↔ a ⩿ b :=
   and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 @[simp]
-theorem of_dual_wcovby_of_dual_iff {a b : OrderDual α} : ofDual a ⩿ ofDual b ↔ b ⩿ a :=
+theorem of_dual_wcovby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⩿ ofDual b ↔ b ⩿ a :=
   and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 alias to_dual_wcovby_to_dual_iff ↔ _ Wcovby.to_dual
@@ -169,7 +169,7 @@ theorem to_dual_covby_to_dual_iff : toDual b ⋖ toDual a ↔ a ⋖ b :=
   and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 @[simp]
-theorem of_dual_covby_of_dual_iff {a b : OrderDual α} : ofDual a ⋖ ofDual b ↔ b ⋖ a :=
+theorem of_dual_covby_of_dual_iff {a b : αᵒᵈ} : ofDual a ⋖ ofDual b ↔ b ⋖ a :=
   and_congr_right' <| forall_congrₓ fun c => forall_swap
 
 alias to_dual_covby_to_dual_iff ↔ _ Covby.to_dual

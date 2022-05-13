@@ -1073,32 +1073,32 @@ theorem deriv.scomp (hg : DifferentiableAt 𝕜' g₁ (h x)) (hh : Differentiabl
 /-! ### Derivative of the composition of a scalar and vector functions -/
 
 
-theorem HasDerivAtFilter.comp_has_fderiv_at_filter {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} x {L' : Filter E}
-    (hh₁ : HasDerivAtFilter h₁ h₁' (f x) L) (hf : HasFderivAtFilter f f' x L') (hL : Tendsto f L' L) :
-    HasFderivAtFilter (h₁ ∘ f) (h₁' • f') x L' := by
-  convert hh₁.comp x hf hL
+theorem HasDerivAtFilter.comp_has_fderiv_at_filter {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} x {L'' : Filter E}
+    (hh₂ : HasDerivAtFilter h₂ h₂' (f x) L') (hf : HasFderivAtFilter f f' x L'') (hL : Tendsto f L'' L') :
+    HasFderivAtFilter (h₂ ∘ f) (h₂' • f') x L'' := by
+  convert (hh₂.restrict_scalars 𝕜).comp x hf hL
   ext x
   simp [mul_comm]
 
-theorem HasStrictDerivAt.comp_has_strict_fderiv_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} x (hh₁ : HasStrictDerivAt h₁ h₁' (f x))
-    (hf : HasStrictFderivAt f f' x) : HasStrictFderivAt (h₁ ∘ f) (h₁' • f') x := by
-  rw [HasStrictDerivAt] at hh₁
-  convert hh₁.comp x hf
+theorem HasStrictDerivAt.comp_has_strict_fderiv_at {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} x (hh : HasStrictDerivAt h₂ h₂' (f x))
+    (hf : HasStrictFderivAt f f' x) : HasStrictFderivAt (h₂ ∘ f) (h₂' • f') x := by
+  rw [HasStrictDerivAt] at hh
+  convert (hh.restrict_scalars 𝕜).comp x hf
   ext x
   simp [mul_comm]
 
-theorem HasDerivAt.comp_has_fderiv_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} x (hh₁ : HasDerivAt h₁ h₁' (f x))
-    (hf : HasFderivAt f f' x) : HasFderivAt (h₁ ∘ f) (h₁' • f') x :=
-  hh₁.comp_has_fderiv_at_filter x hf hf.ContinuousAt
+theorem HasDerivAt.comp_has_fderiv_at {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} x (hh : HasDerivAt h₂ h₂' (f x))
+    (hf : HasFderivAt f f' x) : HasFderivAt (h₂ ∘ f) (h₂' • f') x :=
+  hh.comp_has_fderiv_at_filter x hf hf.ContinuousAt
 
-theorem HasDerivAt.comp_has_fderiv_within_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} {s} x (hh₁ : HasDerivAt h₁ h₁' (f x))
-    (hf : HasFderivWithinAt f f' s x) : HasFderivWithinAt (h₁ ∘ f) (h₁' • f') s x :=
-  hh₁.comp_has_fderiv_at_filter x hf hf.ContinuousWithinAt
+theorem HasDerivAt.comp_has_fderiv_within_at {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s} x (hh : HasDerivAt h₂ h₂' (f x))
+    (hf : HasFderivWithinAt f f' s x) : HasFderivWithinAt (h₂ ∘ f) (h₂' • f') s x :=
+  hh.comp_has_fderiv_at_filter x hf hf.ContinuousWithinAt
 
-theorem HasDerivWithinAt.comp_has_fderiv_within_at {f : E → 𝕜} {f' : E →L[𝕜] 𝕜} {s t} x
-    (hh₁ : HasDerivWithinAt h₁ h₁' t (f x)) (hf : HasFderivWithinAt f f' s x) (hst : MapsTo f s t) :
-    HasFderivWithinAt (h₁ ∘ f) (h₁' • f') s x :=
-  hh₁.comp_has_fderiv_at_filter x hf <| hf.ContinuousWithinAt.tendsto_nhds_within hst
+theorem HasDerivWithinAt.comp_has_fderiv_within_at {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} {s t} x
+    (hh : HasDerivWithinAt h₂ h₂' t (f x)) (hf : HasFderivWithinAt f f' s x) (hst : MapsTo f s t) :
+    HasFderivWithinAt (h₂ ∘ f) (h₂' • f') s x :=
+  hh.comp_has_fderiv_at_filter x hf <| hf.ContinuousWithinAt.tendsto_nhds_within hst
 
 /-! ### Derivative of the composition of two scalar functions -/
 
@@ -1810,7 +1810,7 @@ theorem has_strict_deriv_at_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) 
       exact zpow_ne_zero_of_ne_zero hx _]
     simp only [(· ∘ ·), zpow_neg₀, one_div, inv_invₓ, smul_eq_mul] at this
     convert this using 1
-    rw [sq, mul_inv₀, inv_invₓ, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ← zpow_add₀ hx]
+    rw [sq, mul_inv, inv_invₓ, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ← zpow_add₀ hx]
     congr
     abel
     

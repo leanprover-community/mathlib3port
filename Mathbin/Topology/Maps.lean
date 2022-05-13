@@ -120,6 +120,10 @@ theorem Inducing.is_closed_iff {f : α → β} (hf : Inducing f) {s : Set α} : 
   by
   rw [hf.induced, is_closed_induced_iff]
 
+theorem Inducing.is_closed_iff' {f : α → β} (hf : Inducing f) {s : Set α} :
+    IsClosed s ↔ ∀ x, f x ∈ Closure (f '' s) → x ∈ s := by
+  rw [hf.induced, is_closed_induced_iff']
+
 theorem Inducing.is_open_iff {f : α → β} (hf : Inducing f) {s : Set α} : IsOpen s ↔ ∃ t, IsOpen t ∧ f ⁻¹' t = s := by
   rw [hf.induced, is_open_induced_iff]
 

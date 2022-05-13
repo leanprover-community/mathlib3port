@@ -139,7 +139,7 @@ instance [Neg R] [Neg A] : Neg (Unitization R A) :=
 instance [AddSemigroupₓ R] [AddSemigroupₓ A] : AddSemigroupₓ (Unitization R A) :=
   Prod.addSemigroup
 
-instance [AddZeroClass R] [AddZeroClass A] : AddZeroClass (Unitization R A) :=
+instance [AddZeroClassₓ R] [AddZeroClassₓ A] : AddZeroClassₓ (Unitization R A) :=
   Prod.addZeroClass
 
 instance [AddMonoidₓ R] [AddMonoidₓ A] : AddMonoidₓ (Unitization R A) :=
@@ -223,7 +223,7 @@ theorem inl_zero [Zero R] [Zero A] : (inl 0 : Unitization R A) = 0 :=
   rfl
 
 @[simp]
-theorem inl_add [Add R] [AddZeroClass A] (r₁ r₂ : R) : (inl (r₁ + r₂) : Unitization R A) = inl r₁ + inl r₂ :=
+theorem inl_add [Add R] [AddZeroClassₓ A] (r₁ r₂ : R) : (inl (r₁ + r₂) : Unitization R A) = inl r₁ + inl r₂ :=
   ext rfl (add_zeroₓ 0).symm
 
 @[simp]
@@ -246,7 +246,7 @@ theorem coe_zero [Zero R] [Zero A] : ↑(0 : A) = (0 : Unitization R A) :=
   rfl
 
 @[simp]
-theorem coe_add [AddZeroClass R] [Add A] (m₁ m₂ : A) : (↑(m₁ + m₂) : Unitization R A) = m₁ + m₂ :=
+theorem coe_add [AddZeroClassₓ R] [Add A] (m₁ m₂ : A) : (↑(m₁ + m₂) : Unitization R A) = m₁ + m₂ :=
   ext (add_zeroₓ 0).symm rfl
 
 @[simp]
@@ -260,15 +260,15 @@ theorem coe_smul [Zero R] [Zero S] [SmulWithZero S R] [HasScalar S A] (r : S) (m
 
 end
 
-theorem inl_fst_add_coe_snd_eq [AddZeroClass R] [AddZeroClass A] (x : Unitization R A) : inl x.fst + ↑x.snd = x :=
+theorem inl_fst_add_coe_snd_eq [AddZeroClassₓ R] [AddZeroClassₓ A] (x : Unitization R A) : inl x.fst + ↑x.snd = x :=
   ext (add_zeroₓ x.1) (zero_addₓ x.2)
 
 /-- To show a property hold on all `unitization R A` it suffices to show it holds
 on terms of the form `inl r + a`.
 
 This can be used as `induction x using unitization.ind`. -/
-theorem ind {R A} [AddZeroClass R] [AddZeroClass A] {P : Unitization R A → Prop} (h : ∀ r : R a : A, P (inl r + a)) x :
-    P x :=
+theorem ind {R A} [AddZeroClassₓ R] [AddZeroClassₓ A] {P : Unitization R A → Prop} (h : ∀ r : R a : A, P (inl r + a))
+    x : P x :=
   inl_fst_add_coe_snd_eq x ▸ h x.1 x.2
 
 /-- This cannot be marked `@[ext]` as it ends up being used instead of `linear_map.prod_ext` when

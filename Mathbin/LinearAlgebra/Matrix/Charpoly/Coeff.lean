@@ -3,15 +3,8 @@ Copyright (c) 2020 Aaron Anderson, Jalex Stark. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 -/
-import Mathbin.Algebra.Polynomial.BigOperators
-import Mathbin.Data.Matrix.CharP
-import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.GroupTheory.Perm.Cycles
+import Mathbin.Data.Polynomial.Expand
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Basic
-import Mathbin.LinearAlgebra.Matrix.Trace
-import Mathbin.LinearAlgebra.Matrix.ToLin
-import Mathbin.RingTheory.Polynomial.Basic
-import Mathbin.RingTheory.PowerBasis
 
 /-!
 # Characteristic polynomials
@@ -212,60 +205,7 @@ theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matr
       simp only [hij, zero_sub, Dmatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def, not_false_iff]
     
 
-@[simp]
-theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    (M ^ Fintype.card K).charpoly = M.charpoly := by
-  cases (is_empty_or_nonempty n).symm
-  · cases' CharP.exists K with p hp
-    let this := hp
-    rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
-    have : Fact p.prime := ⟨hp⟩
-    dsimp'  at hk
-    rw [hk] at *
-    apply (frobenius_inj K[X] p).iterate k
-    repeat'
-      rw [iterate_frobenius]
-      rw [← hk]
-    rw [← FiniteField.expand_card]
-    unfold charpoly
-    rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
-    apply congr_argₓ det
-    refine' mat_poly_equiv.injective _
-    rw [AlgEquiv.map_pow, mat_poly_equiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
-    · exact (id (mat_poly_equiv_eq_X_pow_sub_C (p ^ k) M) : _)
-      
-    · exact (C M).commute_X
-      
-    
-  · -- TODO[gh-6025]: remove this `haveI` once `subsingleton_of_empty_right` is a global instance
-    have : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
-    exact congr_argₓ _ (Subsingleton.elimₓ _ _)
-    
-
-@[simp]
-theorem Zmod.charpoly_pow_card (M : Matrix n n (Zmod p)) : (M ^ p).charpoly = M.charpoly := by
-  have h := FiniteField.Matrix.charpoly_pow_card M
-  rwa [Zmod.card] at h
-
-theorem FiniteField.trace_pow_card {K : Type _} [Field K] [Fintype K] (M : Matrix n n K) :
-    trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
-  cases is_empty_or_nonempty n
-  · simp [zero_pow Fintype.card_pos, Matrix.trace]
-    
-  rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, FiniteField.Matrix.charpoly_pow_card,
-    FiniteField.pow_card]
-
-theorem Zmod.trace_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (Zmod p)) : trace (M ^ p) = trace M ^ p := by
-  have h := FiniteField.trace_pow_card M
-  rwa [Zmod.card] at h
-
 namespace Matrix
-
-theorem is_integral : IsIntegral R M :=
-  ⟨M.charpoly, ⟨charpoly_monic M, aeval_self_charpoly M⟩⟩
-
-theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly K M ∣ M.charpoly :=
-  minpoly.dvd _ _ (aeval_self_charpoly M)
 
 /-- Any matrix polynomial `p` is equivalent under evaluation to `p %ₘ M.charpoly`; that is, `p`
 is equivalent to a polynomial with degree less than the dimension of the matrix. -/
@@ -279,30 +219,4 @@ theorem pow_eq_aeval_mod_charpoly (M : Matrix n n R) (k : ℕ) : M ^ k = aeval M
   rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 
 end Matrix
-
-section PowerBasis
-
-open Algebra
-
-/-- The characteristic polynomial of the map `λ x, a * x` is the minimal polynomial of `a`.
-
-In combination with `det_eq_sign_charpoly_coeff` or `trace_eq_neg_charpoly_coeff`
-and a bit of rewriting, this will allow us to conclude the
-field norm resp. trace of `x` is the product resp. sum of `x`'s conjugates.
--/
-theorem charpoly_left_mul_matrix {K S : Type _} [Field K] [CommRingₓ S] [Algebra K S] (h : PowerBasis K S) :
-    (leftMulMatrix h.Basis h.gen).charpoly = minpoly K h.gen := by
-  apply minpoly.unique
-  · apply Matrix.charpoly_monic
-    
-  · apply (injective_iff_map_eq_zero (left_mul_matrix _)).mp (left_mul_matrix_injective h.basis)
-    rw [← Polynomial.aeval_alg_hom_apply, aeval_self_charpoly]
-    
-  · intro q q_monic root_q
-    rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin, degree_eq_nat_degree q_monic.ne_zero]
-    apply with_bot.some_le_some.mpr
-    exact h.dim_le_nat_degree_of_root q_monic.ne_zero root_q
-    
-
-end PowerBasis
 

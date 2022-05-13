@@ -75,7 +75,7 @@ instance : Neg Cauchy :=
   ⟨fun x =>
     (Quotientₓ.liftOn x fun f => mk (-f)) fun f₁ f₂ hf =>
       Quotientₓ.sound <| by
-        simpa [(· ≈ ·), Setoidₓ.R] using neg_lim_zero hf⟩
+        simpa [neg_sub', (· ≈ ·), Setoidₓ.R] using neg_lim_zero hf⟩
 
 @[simp]
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
@@ -254,7 +254,7 @@ theorem lim_const (x : β) : lim (const abv x) = x :=
 theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f + lim g) - (f + g)) by
-      rw [const_add, add_sub_comm] <;> exact add_lim_zero (Setoidₓ.symm (equiv_lim f)) (Setoidₓ.symm (equiv_lim g))
+      rw [const_add, add_sub_add_comm] <;> exact add_lim_zero (Setoidₓ.symm (equiv_lim f)) (Setoidₓ.symm (equiv_lim g))
 
 theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
   eq_lim_of_const_equiv <|

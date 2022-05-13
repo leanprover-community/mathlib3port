@@ -218,6 +218,18 @@ theorem not_is_regular_zero [Nontrivial R] : ¬IsRegular (0 : R) := fun h => IsR
 
 end MulZeroClassₓ
 
+section MulOneClassₓ
+
+variable [MulOneClassₓ R]
+
+/-- If multiplying by `1` on either side is the identity, `1` is regular. -/
+@[to_additive "If adding `0` on either side is the identity, `0` is regular."]
+theorem is_regular_one : IsRegular (1 : R) :=
+  ⟨fun a b ab => (one_mulₓ a).symm.trans (Eq.trans ab (one_mulₓ b)), fun a b ab =>
+    (mul_oneₓ a).symm.trans (Eq.trans ab (mul_oneₓ b))⟩
+
+end MulOneClassₓ
+
 section CommSemigroupₓ
 
 variable [CommSemigroupₓ R]
@@ -237,12 +249,6 @@ end CommSemigroupₓ
 section Monoidₓ
 
 variable [Monoidₓ R]
-
-/-- In a monoid, `1` is regular. -/
-@[to_additive "In an additive monoid, `0` is regular."]
-theorem is_regular_one : IsRegular (1 : R) :=
-  ⟨fun a b ab => (one_mulₓ a).symm.trans (Eq.trans ab (one_mulₓ b)), fun a b ab =>
-    (mul_oneₓ a).symm.trans (Eq.trans ab (mul_oneₓ b))⟩
 
 /-- An element admitting a left inverse is left-regular. -/
 @[to_additive "An element admitting a left additive opposite is add-left-regular."]

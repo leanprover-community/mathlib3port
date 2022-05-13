@@ -36,11 +36,10 @@ in the implementation details section.
 * `is_primitive_root.sub_one_norm_eq_eval_cyclotomic`: if `irreducible (cyclotomic n K)`
   (in particular for `K = ℚ`), then the norm of `ζ - 1` is `eval 1 (cyclotomic n ℤ)`, for a
   primitive root ζ. We also prove the analogous of this result for `zeta`.
-* `is_primitive_root.pow_prime_pow_sub_one_norm` : if
-  `irreducible (cyclotomic (p ^ (k + 1)) K)` and `irreducible (cyclotomic (p ^ (k - s + 1)) K))`
-  (in particular for `K = ℚ`) and `p` is a prime, then the norm of `ζ ^ (p ^ s) - 1` is
-  `p ^ (p ^ s)` `p ^ (k - s + 1) ≠ 2`. See the following lemmas for similar results. We  also prove
-  the analogous of this result for `zeta`.
+* `is_primitive_root.pow_sub_one_norm_prime_pow_ne_two` : if
+  `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
+  then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` `p ^ (k - s + 1) ≠ 2`. See the following
+  lemmas for similar results. We also prove the analogous of this result for `zeta`.
 * `is_primitive_root.sub_one_norm_prime_ne_two` : if `irreducible (cyclotomic (p ^ (k + 1)) K)`
   (in particular for `K = ℚ`) and `p` is an odd prime, then the norm of `ζ - 1` is `p`. We also
   prove the analogous of this result for `zeta`.
@@ -285,7 +284,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
  (Command.declModifiers
   [(Command.docComment
     "/--"
-    "If `irreducible (cyclotomic (p ^ (k + 1)) K)` and\n`irreducible (cyclotomic (p ^ (k - s + 1)) K))` (in particular for `K = ℚ`) and `p` is a prime,\nthen the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. See the next lemmas\nfor similar results. -/")]
+    "If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,\nthen the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. See the next lemmas\nfor similar results. -/")]
   []
   []
   []
@@ -333,22 +332,6 @@ attribute [local instance] IsCyclotomicExtension.is_galois
          [(Term.paren
            "("
            [(coeNotation "↑" («term_^_» `p "^" («term_+_» `k "+" (num "1")))) [(Term.typeAscription ":" (termℕ "ℕ"))]]
-           ")")
-          `K])])]
-     []
-     ")")
-    (Term.explicitBinder
-     "("
-     [`hirr₁]
-     [":"
-      (Term.app
-       `Irreducible
-       [(Term.app
-         `cyclotomic
-         [(Term.paren
-           "("
-           [(coeNotation "↑" («term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))))
-            [(Term.typeAscription ":" (termℕ "ℕ"))]]
            ")")
           `K])])]
      []
@@ -507,6 +490,33 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                   []
                   [(Tactic.usingArg "using" `hzero)]))
                 [])]))))))
+        [])
+       (group
+        (Tactic.tacticHave_
+         "have"
+         (Term.haveDecl
+          (Term.haveIdDecl
+           [`hirr₁ []]
+           [(Term.typeSpec
+             ":"
+             (Term.app
+              `Irreducible
+              [(Term.app `cyclotomic [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))) `K])]))]
+           ":="
+           (Term.app
+            `cyclotomic_irreducible_pow_of_irreducible_pow
+            [(Term.proj `hpri "." (fieldIdx "1"))
+             (Term.byTactic
+              "by"
+              (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.linarith "linarith" [] [] []) [])])))
+             `hirr]))))
+        [])
+       (group
+        (Tactic.rwSeq
+         "rw"
+         []
+         (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Pnat.pow_coe)] "]")
+         [(Tactic.location "at" (Tactic.locationHyp [`hirr₁] []))])
         [])
        (group
         (Tactic.tacticLet_
@@ -1172,6 +1182,33 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                  []
                  [(Tactic.usingArg "using" `hzero)]))
                [])]))))))
+       [])
+      (group
+       (Tactic.tacticHave_
+        "have"
+        (Term.haveDecl
+         (Term.haveIdDecl
+          [`hirr₁ []]
+          [(Term.typeSpec
+            ":"
+            (Term.app
+             `Irreducible
+             [(Term.app `cyclotomic [(«term_^_» `p "^" («term_+_» («term_-_» `k "-" `s) "+" (num "1"))) `K])]))]
+          ":="
+          (Term.app
+           `cyclotomic_irreducible_pow_of_irreducible_pow
+           [(Term.proj `hpri "." (fieldIdx "1"))
+            (Term.byTactic
+             "by"
+             (Tactic.tacticSeq (Tactic.tacticSeq1Indented [(group (Tactic.linarith "linarith" [] [] []) [])])))
+            `hirr]))))
+       [])
+      (group
+       (Tactic.rwSeq
+        "rw"
+        []
+        (Tactic.rwRuleSeq "[" [(Tactic.rwRule ["←"] `Pnat.pow_coe)] "]")
+        [(Tactic.location "at" (Tactic.locationHyp [`hirr₁] []))])
        [])
       (group
        (Tactic.tacticLet_
@@ -2273,8 +2310,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
 /--
-    If `irreducible (cyclotomic (p ^ (k + 1)) K)` and
-    `irreducible (cyclotomic (p ^ (k - s + 1)) K))` (in particular for `K = ℚ`) and `p` is a prime,
+    If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
     then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. See the next lemmas
     for similar results. -/
   theorem
@@ -2285,7 +2321,6 @@ attribute [local instance] IsCyclotomicExtension.is_galois
         [ hpri : Fact ( p : ℕ ) . Prime ]
         [ IsCyclotomicExtension { p ^ k + 1 } K L ]
         ( hirr : Irreducible cyclotomic ( ↑ p ^ k + 1 : ℕ ) K )
-        ( hirr₁ : Irreducible cyclotomic ( ↑ p ^ k - s + 1 : ℕ ) K )
         ( hs : s ≤ k )
         ( htwo : p ^ k - s + 1 ≠ 2 )
       : norm K ζ ^ ( p : ℕ ) ^ s - 1 = p ^ ( p : ℕ ) ^ s
@@ -2305,6 +2340,12 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 refine' ⟨ fun hzero => _ ⟩
                   rw [ Pnat.pow_coe ] at hzero
                   simpa [ NeZero.ne ( ( p : ℕ ) : K ) ] using hzero
+          have
+            hirr₁
+              : Irreducible cyclotomic p ^ k - s + 1 K
+              :=
+              cyclotomic_irreducible_pow_of_irreducible_pow hpri . 1 by linarith hirr
+          rw [ ← Pnat.pow_coe ] at hirr₁
           let η := ζ ^ ( p : ℕ ) ^ s - 1
           let
             η₁
@@ -2417,15 +2458,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
               exact Nat.eq_of_mul_eq_mul_leftₓ pow_pos hpri.out.pos _ this
           all_goals infer_instance
 
-/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` and
-`irreducible (cyclotomic (p ^ (k - s + 1)) K))` (in particular for `K = ℚ`) and `p` is a prime,
+/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
 then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ≠ 2`. -/
 theorem pow_sub_one_norm_prime_ne_two [NeZero ((p : ℕ) : K)] {k : ℕ} (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
     [hpri : Fact (p : ℕ).Prime] [IsCyclotomicExtension {p ^ (k + 1)} K L]
-    (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) {s : ℕ}
-    (hirr₁ : Irreducible (cyclotomic (↑(p ^ (k - s + 1)) : ℕ) K)) (hs : s ≤ k) (hodd : p ≠ 2) :
+    (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) {s : ℕ} (hs : s ≤ k) (hodd : p ≠ 2) :
     norm K (ζ ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s := by
-  refine' hζ.pow_sub_one_norm_prime_pow_ne_two hirr hirr₁ hs fun h => _
+  refine' hζ.pow_sub_one_norm_prime_pow_ne_two hirr hs fun h => _
   rw [← Pnat.coe_inj, Pnat.coe_bit0, Pnat.one_coe, Pnat.pow_coe, ← pow_oneₓ 2] at h
   replace h := eq_of_prime_pow_eq (prime_iff.1 hpri.out) (prime_iff.1 Nat.prime_two) (k - s).succ_pos h
   rw [← Pnat.one_coe, ← Pnat.coe_bit0, Pnat.coe_inj] at h
@@ -2436,7 +2475,7 @@ prime, then the norm of `ζ - 1` is `p`. -/
 theorem sub_one_norm_prime_ne_two [NeZero ((p : ℕ) : K)] {k : ℕ} (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1)))
     [hpri : Fact (p : ℕ).Prime] [IsCyclotomicExtension {p ^ (k + 1)} K L]
     (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (h : p ≠ 2) : norm K (ζ - 1) = p := by
-  simpa using hζ.pow_sub_one_norm_prime_ne_two hirr hirr (zero_le k) h
+  simpa using hζ.pow_sub_one_norm_prime_ne_two hirr k.zero_le h
 
 /-- If `irreducible (cyclotomic p K)` (in particular for `K = ℚ`) and `p` is an odd prime,
 then the norm of `ζ - 1` is `p`. -/
@@ -2493,14 +2532,12 @@ theorem sub_one_norm_two [NeZero (2 : K)] {k : ℕ} (hζ : IsPrimitiveRoot ζ (2
   obtain ⟨k₁, hk₁⟩ := exists_eq_succ_of_ne_zero (lt_of_lt_of_leₓ zero_lt_two hk).Ne.symm
   simpa [hk₁] using sub_one_norm_eq_eval_cyclotomic hζ this hirr
 
-/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` and
-`irreducible (cyclotomic (p ^ (k - s + 1)) K))` (in particular for `K = ℚ`) and `p` is a prime,
+/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
 then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `1 ≤ k`. -/
 theorem pow_sub_one_norm_prime_pow_of_one_le [hne : NeZero ((p : ℕ) : K)] {k s : ℕ}
     (hζ : IsPrimitiveRoot ζ ↑(p ^ (k + 1))) [hpri : Fact (p : ℕ).Prime]
     [hcycl : IsCyclotomicExtension {p ^ (k + 1)} K L] (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K))
-    (hirr₁ : Irreducible (cyclotomic (↑(p ^ (k - s + 1)) : ℕ) K)) (hs : s ≤ k) (hk : 1 ≤ k) :
-    norm K (ζ ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s := by
+    (hs : s ≤ k) (hk : 1 ≤ k) : norm K (ζ ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s := by
   by_cases' htwo : p ^ (k - s + 1) = 2
   · have hp : p = 2 := by
       rw [← Pnat.coe_inj, Pnat.coe_bit0, Pnat.one_coe, Pnat.pow_coe, ← pow_oneₓ 2] at htwo
@@ -2526,7 +2563,7 @@ theorem pow_sub_one_norm_prime_pow_of_one_le [hne : NeZero ((p : ℕ) : K)] {k s
     rw [hζ.pow_sub_one_norm_two hirr]
     rw [hk₁, pow_succₓ, pow_mulₓ, neg_eq_neg_one_mul, mul_powₓ, neg_one_sq, one_mulₓ, ← pow_mulₓ, ← pow_succₓ]
     
-  · exact hζ.pow_sub_one_norm_prime_pow_ne_two hirr hirr₁ hs htwo
+  · exact hζ.pow_sub_one_norm_prime_pow_ne_two hirr hs htwo
     
 
 end IsPrimitiveRoot
@@ -2551,19 +2588,19 @@ theorem is_prime_pow_norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomic
   have := NeZero.of_no_zero_smul_divisors K L n
   (zeta_primitive_root n K L).sub_one_norm_is_prime_pow hn hirr h
 
-/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` and `irreducible (cyclotomic (p ^ (k - s + 1)) K)`
-(in particular for `K = ℚ`) and `p` is a prime, then the norm of
-`(zeta (p ^ (k + 1)) K L) ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. -/
+/-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
+then the norm of `(zeta (p ^ (k + 1)) K L) ^ (p ^ s) - 1` is `p ^ (p ^ s)`
+if `p ^ (k - s + 1) ≠ 2`. -/
 theorem prime_ne_two_pow_norm_zeta_pow_sub_one [NeZero ((p : ℕ) : K)] {k : ℕ} [hpri : Fact (p : ℕ).Prime]
     [IsCyclotomicExtension {p ^ (k + 1)} K L] (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) {s : ℕ}
-    (hirr₁ : Irreducible (cyclotomic (↑(p ^ (k - s + 1)) : ℕ) K)) (hs : s ≤ k) (htwo : p ^ (k - s + 1) ≠ 2) :
-    norm K (zeta (p ^ (k + 1)) K L ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s := by
+    (hs : s ≤ k) (htwo : p ^ (k - s + 1) ≠ 2) : norm K (zeta (p ^ (k + 1)) K L ^ (p : ℕ) ^ s - 1) = p ^ (p : ℕ) ^ s :=
+  by
   have := NeZero.of_no_zero_smul_divisors K L p
   have : NeZero ((↑(p ^ (k + 1)) : ℕ) : L) := by
     refine' ⟨fun hzero => _⟩
     rw [pow_coe] at hzero
     simpa [NeZero.ne ((p : ℕ) : L)] using hzero
-  exact (zeta_primitive_root _ K L).pow_sub_one_norm_prime_pow_ne_two hirr hirr₁ hs htwo
+  exact (zeta_primitive_root _ K L).pow_sub_one_norm_prime_pow_ne_two hirr hs htwo
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is an odd
 prime, then the norm of `zeta (p ^ (k + 1)) K L - 1` is `p`. -/

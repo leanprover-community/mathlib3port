@@ -203,12 +203,6 @@ theorem numeric_nat : ∀ n : ℕ, Numeric n
   | 0 => numeric_zero
   | n + 1 => (numeric_nat n).add numeric_one
 
-/-- The pre-game omega is numeric. -/
-theorem numeric_omega : Numeric omega :=
-  ⟨by
-    rintro ⟨⟩ ⟨⟩, fun i => numeric_nat i.down, by
-    rintro ⟨⟩⟩
-
 /-- The pre-game `half` is numeric. -/
 theorem numeric_half : Numeric half := by
   constructor

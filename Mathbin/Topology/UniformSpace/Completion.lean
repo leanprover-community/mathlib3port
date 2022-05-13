@@ -136,7 +136,7 @@ theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cau
     calc
       comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
           (𝓤 α).lift' ((Preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
-        comap_lift'_eq monotone_gen
+        comap_lift'_eq
       _ = 𝓤 α := by
         simp [this]
       ⟩

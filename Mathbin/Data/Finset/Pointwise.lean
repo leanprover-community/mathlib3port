@@ -65,8 +65,8 @@ section One
 
 variable [One α] {s : Finset α} {a : α}
 
-/-- The finset `(1 : finset α)` is defined as `{1}` in locale `pointwise`. -/
-@[to_additive "The finset `(0 : finset α)` is defined as `{0}` in locale `pointwise`."]
+/-- The finset `1 : finset α` is defined as `{1}` in locale `pointwise`. -/
+@[to_additive "The finset `0 : finset α` is defined as `{0}` in locale `pointwise`."]
 protected def hasOne : One (Finset α) :=
   ⟨{1}⟩
 
@@ -104,9 +104,20 @@ protected theorem map_one {f : α ↪ β} : map f 1 = {f 1} :=
 theorem image_one [DecidableEq β] {f : α → β} : image f 1 = {f 1} :=
   image_singleton f 1
 
-end One
+/-- The singleton operation as a `one_hom`. -/
+@[to_additive "The singleton operation as a `zero_hom`."]
+def singletonOneHom : OneHom α (Finset α) :=
+  ⟨singleton, singleton_one⟩
 
-open Pointwise
+@[simp, to_additive]
+theorem coe_singleton_one_hom : (singletonOneHom : α → Finset α) = singleton :=
+  rfl
+
+@[simp, to_additive]
+theorem singleton_one_hom_apply (a : α) : singletonOneHom a = {a} :=
+  rfl
+
+end One
 
 /-! ### Finset negation/inversion -/
 
@@ -115,8 +126,8 @@ section Inv
 
 variable [DecidableEq α] [Inv α] {s s₁ s₂ t t₁ t₂ u : Finset α} {a b : α}
 
-/-- The pointwise inverse of a finset `s`: `s⁻¹ = {x⁻¹ | x ∈ s}`. -/
-@[to_additive "The pointwise negation of a finset `s`: `-s = {-x | x ∈ s}`."]
+/-- The pointwise inversion of finset `s⁻¹` is defined as `{x⁻¹ | x ∈ s}` in locale `pointwise`. -/
+@[to_additive "The pointwise negation of finset `-s` is defined as `{-x | x ∈ s}` in locale\n`pointwise`."]
 protected def hasInv : Inv (Finset α) :=
   ⟨image Inv.inv⟩
 
@@ -192,8 +203,10 @@ section Mul
 
 variable [DecidableEq α] [Mul α] {s s₁ s₂ t t₁ t₂ u : Finset α} {a b : α}
 
-/-- The pointwise product of two finsets `s` and `t`: `s * t = {x * y | x ∈ s, y ∈ t}`. -/
-@[to_additive "The pointwise sum of two finsets `s` and `t`: `s + t = {x + y | x ∈ s, y ∈ t}`."]
+/-- The pointwise multiplication of finsets `s * t` and `t` is defined as `{x * y | x ∈ s, y ∈ t}`
+in locale `pointwise`. -/
+@[to_additive
+      "The pointwise addition of finsets `s + t` is defined as `{x + y | x ∈ s, y ∈ t}` in\nlocale `pointwise`."]
 protected def hasMul : Mul (Finset α) :=
   ⟨image₂ (· * ·)⟩
 
@@ -232,18 +245,24 @@ theorem mul_empty (s : Finset α) : s * ∅ = ∅ :=
   image₂_empty_right
 
 @[simp, to_additive]
-theorem mul_nonempty_iff (s t : Finset α) : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem mul_eq_empty : s * t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image₂_eq_empty_iff
+
+@[simp, to_additive]
+theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
 
 @[to_additive]
 theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
   nonempty.image₂
 
-@[to_additive, mono]
-theorem mul_subset_mul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ * t₁ ⊆ s₂ * t₂ :=
-  image₂_subset
+@[to_additive]
+theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
+  nonempty.of_image₂_left
 
-attribute [mono] add_subset_add
+@[to_additive]
+theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
+  nonempty.of_image₂_right
 
 @[simp, to_additive]
 theorem mul_singleton (a : α) : s * {a} = s.Image (· * a) :=
@@ -257,6 +276,40 @@ theorem singleton_mul (a : α) : {a} * s = s.Image ((· * ·) a) :=
 theorem singleton_mul_singleton (a b : α) : ({a} : Finset α) * {b} = {a * b} :=
   image₂_singleton
 
+@[to_additive, mono]
+theorem mul_subset_mul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ * t₁ ⊆ s₂ * t₂ :=
+  image₂_subset
+
+@[to_additive]
+theorem mul_subset_mul_left : t₁ ⊆ t₂ → s * t₁ ⊆ s * t₂ :=
+  image₂_subset_left
+
+@[to_additive]
+theorem mul_subset_mul_right : s₁ ⊆ s₂ → s₁ * t ⊆ s₂ * t :=
+  image₂_subset_right
+
+@[to_additive]
+theorem mul_subset_iff : s * t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x * y ∈ u :=
+  image₂_subset_iff
+
+attribute [mono] add_subset_add
+
+@[to_additive]
+theorem union_mul : (s₁ ∪ s₂) * t = s₁ * t ∪ s₂ * t :=
+  image₂_union_left
+
+@[to_additive]
+theorem mul_union : s * (t₁ ∪ t₂) = s * t₁ ∪ s * t₂ :=
+  image₂_union_right
+
+@[to_additive]
+theorem inter_mul_subset : s₁ ∩ s₂ * t ⊆ s₁ * t ∩ (s₂ * t) :=
+  image₂_inter_subset_left
+
+@[to_additive]
+theorem mul_inter_subset : s * (t₁ ∩ t₂) ⊆ s * t₁ ∩ (s * t₂) :=
+  image₂_inter_subset_right
+
 /-- If a finset `u` is contained in the product of two sets `s * t`, we can find two finsets `s'`,
 `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' * t'`. -/
 @[to_additive
@@ -264,92 +317,20 @@ theorem singleton_mul_singleton (a b : α) : ({a} : Finset α) * {b} = {a * b} :
 theorem subset_mul {s t : Set α} : ↑u ⊆ s * t → ∃ s' t' : Finset α, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' * t' :=
   subset_image₂
 
+/-- The singleton operation as a `mul_hom`. -/
+@[to_additive "The singleton operation as an `add_hom`."]
+def singletonMulHom : α →ₙ* Finset α :=
+  ⟨singleton, fun a b => (singleton_mul_singleton _ _).symm⟩
+
+@[simp, to_additive]
+theorem coe_singleton_mul_hom : (singletonMulHom : α → Finset α) = singleton :=
+  rfl
+
+@[simp, to_additive]
+theorem singleton_mul_hom_apply (a : α) : singletonMulHom a = {a} :=
+  rfl
+
 end Mul
-
-open Pointwise
-
-section MulZeroClassₓ
-
-variable [DecidableEq α] [MulZeroClassₓ α] {s t : Finset α}
-
-theorem mul_zero_subset (s : Finset α) : s * 0 ⊆ 0 := by
-  simp [subset_iff, mem_mul]
-
-theorem zero_mul_subset (s : Finset α) : 0 * s ⊆ 0 := by
-  simp [subset_iff, mem_mul]
-
-theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
-  s.mul_zero_subset.antisymm <| by
-    simpa [mem_mul] using hs
-
-theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
-  s.zero_mul_subset.antisymm <| by
-    simpa [mem_mul] using hs
-
-end MulZeroClassₓ
-
-section Groupₓ
-
-variable [Groupₓ α] {s t : Finset α} {a b : α}
-
-section DecidableEq
-
-variable [DecidableEq α]
-
-@[simp, to_additive]
-theorem image_mul_left :
-    image (fun b => a * b) t = preimage t (fun b => a⁻¹ * b) fun x hx y hy => (mul_right_injₓ a⁻¹).mp :=
-  coe_injective <| by
-    simp
-
-@[simp, to_additive]
-theorem image_mul_right : image (· * b) t = preimage t (· * b⁻¹) fun x hx y hy => (mul_left_injₓ b⁻¹).mp :=
-  coe_injective <| by
-    simp
-
-@[to_additive]
-theorem image_mul_left' :
-    image (fun b => a⁻¹ * b) t = preimage t (fun b => a * b) fun x hx y hy => (mul_right_injₓ a).mp := by
-  simp
-
-@[to_additive]
-theorem image_mul_right' : image (· * b⁻¹) t = preimage t (· * b) fun x hx y hy => (mul_left_injₓ b).mp := by
-  simp
-
-end DecidableEq
-
-@[simp, to_additive]
-theorem preimage_mul_left_singleton : (preimage {b} ((· * ·) a) fun x hx y hy => (mul_right_injₓ a).mp) = {a⁻¹ * b} :=
-  by
-  classical
-  rw [← image_mul_left', image_singleton]
-
-@[simp, to_additive]
-theorem preimage_mul_right_singleton : (preimage {b} (· * a) fun x hx y hy => (mul_left_injₓ a).mp) = {b * a⁻¹} := by
-  classical
-  rw [← image_mul_right', image_singleton]
-
-@[simp, to_additive]
-theorem preimage_mul_left_one : (preimage 1 (fun b => a * b) fun x hx y hy => (mul_right_injₓ a).mp) = {a⁻¹} := by
-  classical
-  rw [← image_mul_left', image_one, mul_oneₓ]
-
-@[simp, to_additive]
-theorem preimage_mul_right_one : (preimage 1 (· * b) fun x hx y hy => (mul_left_injₓ b).mp) = {b⁻¹} := by
-  classical
-  rw [← image_mul_right', image_one, one_mulₓ]
-
-@[to_additive]
-theorem preimage_mul_left_one' : (preimage 1 (fun b => a⁻¹ * b) fun x hx y hy => (mul_right_injₓ _).mp) = {a} := by
-  rw [preimage_mul_left_one, inv_invₓ]
-
-@[to_additive]
-theorem preimage_mul_right_one' : (preimage 1 (· * b⁻¹) fun x hx y hy => (mul_left_injₓ _).mp) = {b} := by
-  rw [preimage_mul_right_one, inv_invₓ]
-
-end Groupₓ
-
-open Pointwise
 
 /-! ### Finset subtraction/division -/
 
@@ -358,10 +339,12 @@ section Div
 
 variable [DecidableEq α] [Div α] {s s₁ s₂ t t₁ t₂ u : Finset α} {a b : α}
 
-/-- The pointwise product of two finsets `s` and `t`: `s / t = {x / y | x ∈ s, y ∈ t}`. -/
-@[to_additive "The pointwise sum of two finsets `s` and `t`: `s - t = {x - y | x ∈ s, y ∈ t}`."]
+/-- The pointwise division of sfinets `s / t` is defined as `{x / y | x ∈ s, y ∈ t}` in locale
+`pointwise`. -/
+@[to_additive
+      "The pointwise subtraction of finsets `s - t` is defined as `{x - y | x ∈ s, y ∈ t}`\nin locale `pointwise`."]
 protected def hasDiv : Div (Finset α) :=
-  ⟨fun s t => (s.product t).Image fun p : α × α => p.1 / p.2⟩
+  ⟨image₂ (· / ·)⟩
 
 localized [Pointwise] attribute [instance] Finset.hasDiv Finset.hasAdd
 
@@ -398,18 +381,24 @@ theorem div_empty (s : Finset α) : s / ∅ = ∅ :=
   image₂_empty_right
 
 @[simp, to_additive]
-theorem div_nonempty_iff (s t : Finset α) : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem div_eq_empty : s / t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image₂_eq_empty_iff
+
+@[simp, to_additive]
+theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
 
 @[to_additive]
 theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
   nonempty.image₂
 
-@[to_additive, mono]
-theorem div_subset_div : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ / t₁ ⊆ s₂ / t₂ :=
-  image₂_subset
+@[to_additive]
+theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
+  nonempty.of_image₂_left
 
-attribute [mono] add_subset_add
+@[to_additive]
+theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
+  nonempty.of_image₂_right
 
 @[simp, to_additive]
 theorem div_singleton (a : α) : s / {a} = s.Image (· / a) :=
@@ -423,6 +412,40 @@ theorem singleton_div (a : α) : {a} / s = s.Image ((· / ·) a) :=
 theorem singleton_div_singleton (a b : α) : ({a} : Finset α) / {b} = {a / b} :=
   image₂_singleton
 
+@[to_additive, mono]
+theorem div_subset_div : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ / t₁ ⊆ s₂ / t₂ :=
+  image₂_subset
+
+@[to_additive]
+theorem div_subset_div_left : t₁ ⊆ t₂ → s / t₁ ⊆ s / t₂ :=
+  image₂_subset_left
+
+@[to_additive]
+theorem div_subset_div_right : s₁ ⊆ s₂ → s₁ / t ⊆ s₂ / t :=
+  image₂_subset_right
+
+@[to_additive]
+theorem div_subset_iff : s / t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x / y ∈ u :=
+  image₂_subset_iff
+
+attribute [mono] sub_subset_sub
+
+@[to_additive]
+theorem union_div : (s₁ ∪ s₂) / t = s₁ / t ∪ s₂ / t :=
+  image₂_union_left
+
+@[to_additive]
+theorem div_union : s / (t₁ ∪ t₂) = s / t₁ ∪ s / t₂ :=
+  image₂_union_right
+
+@[to_additive]
+theorem inter_div_subset : s₁ ∩ s₂ / t ⊆ s₁ / t ∩ (s₂ / t) :=
+  image₂_inter_subset_left
+
+@[to_additive]
+theorem div_inter_subset : s / (t₁ ∩ t₂) ⊆ s / t₁ ∩ (s / t₂) :=
+  image₂_inter_subset_right
+
 /-- If a finset `u` is contained in the product of two sets `s / t`, we can find two finsets `s'`,
 `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' / t'`. -/
 @[to_additive
@@ -431,28 +454,6 @@ theorem subset_div {s t : Set α} : ↑u ⊆ s / t → ∃ s' t' : Finset α, �
   subset_image₂
 
 end Div
-
-open Pointwise
-
-section GroupWithZeroₓ
-
-variable [DecidableEq α] [GroupWithZeroₓ α] {s t : Finset α}
-
-theorem div_zero_subset (s : Finset α) : s / 0 ⊆ 0 := by
-  simp [subset_iff, mem_div]
-
-theorem zero_div_subset (s : Finset α) : 0 / s ⊆ 0 := by
-  simp [subset_iff, mem_div]
-
-theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
-  s.div_zero_subset.antisymm <| by
-    simpa [mem_div] using hs
-
-theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
-  s.zero_div_subset.antisymm <| by
-    simpa [mem_div] using hs
-
-end GroupWithZeroₓ
 
 /-! ### Instances -/
 
@@ -486,38 +487,6 @@ protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Finset α) ℤ :=
 
 localized [Pointwise] attribute [instance] Finset.hasNsmul Finset.hasNpow Finset.hasZsmul Finset.hasZpow
 
-@[simp, to_additive]
-theorem coe_pow [Monoidₓ α] (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) := by
-  change ↑(npowRec n s) = _
-  induction' n with n ih
-  · rw [npowRec, pow_zeroₓ, coe_one]
-    
-  · rw [npowRec, pow_succₓ, coe_mul, ih]
-    
-
-/- TODO: The below lemmas are duplicate because there is no typeclass greater than
-`div_inv_monoid` and `has_involutive_inv` but smaller than `group` and `group_with_zero`. -/
-@[simp, to_additive]
-theorem coe_zpow [Groupₓ α] (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
-  | Int.ofNat n => coe_pow _ _
-  | Int.negSucc n => by
-    refine' (coe_inv _).trans _
-    convert congr_argₓ Inv.inv (coe_pow _ _)
-
-@[simp]
-theorem coe_zpow' [GroupWithZeroₓ α] (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
-  | Int.ofNat n => coe_pow _ _
-  | Int.negSucc n => by
-    refine' (coe_inv _).trans _
-    convert congr_argₓ Inv.inv (coe_pow _ _)
-
-/-- `finset α` is a `mul_one_class` under pointwise operations if `α` is. -/
-@[to_additive "`finset α` is an `add_zero_class` under pointwise operations if `α` is."]
-protected def mulOneClass [MulOneClassₓ α] : MulOneClassₓ (Finset α) :=
-  coe_injective.MulOneClass _ (coe_singleton 1)
-    (by
-      simp )
-
 /-- `finset α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_semigroup` under pointwise operations if `α` is. "]
 protected def semigroup [Semigroupₓ α] : Semigroupₓ (Finset α) :=
@@ -528,34 +497,241 @@ protected def semigroup [Semigroupₓ α] : Semigroupₓ (Finset α) :=
 protected def commSemigroup [CommSemigroupₓ α] : CommSemigroupₓ (Finset α) :=
   coe_injective.CommSemigroup _ coe_mul
 
+section MulOneClassₓ
+
+variable [MulOneClassₓ α]
+
+/-- `finset α` is a `mul_one_class` under pointwise operations if `α` is. -/
+@[to_additive "`finset α` is an `add_zero_class` under pointwise operations if `α` is."]
+protected def mulOneClass : MulOneClassₓ (Finset α) :=
+  coe_injective.MulOneClass _ (coe_singleton 1) coe_mul
+
+localized [Pointwise]
+  attribute [instance]
+    Finset.semigroup Finset.addSemigroup Finset.commSemigroup Finset.addCommSemigroup Finset.mulOneClass Finset.addZeroClass
+
+/-- The singleton operation as a `monoid_hom`. -/
+@[to_additive "The singleton operation as an `add_monoid_hom`."]
+def singletonMonoidHom : α →* Finset α :=
+  { singletonMulHom, singletonOneHom with }
+
+@[simp, to_additive]
+theorem coe_singleton_monoid_hom : (singletonMonoidHom : α → Finset α) = singleton :=
+  rfl
+
+@[simp, to_additive]
+theorem singleton_monoid_hom_apply (a : α) : singletonMonoidHom a = {a} :=
+  rfl
+
+end MulOneClassₓ
+
+section Monoidₓ
+
+variable [Monoidₓ α] {s t : Finset α} {a : α}
+
+@[simp, to_additive]
+theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) := by
+  change ↑(npowRec n s) = _
+  induction' n with n ih
+  · rw [npowRec, pow_zeroₓ, coe_one]
+    
+  · rw [npowRec, pow_succₓ, coe_mul, ih]
+    
+
 /-- `finset α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_monoid` under pointwise operations if `α` is. "]
-protected def monoid [Monoidₓ α] : Monoidₓ (Finset α) :=
+protected def monoid : Monoidₓ (Finset α) :=
   coe_injective.Monoid _ coe_one coe_mul coe_pow
+
+localized [Pointwise] attribute [instance] Finset.monoid Finset.addMonoid
+
+@[to_additive]
+protected theorem _root_.is_unit.finset : IsUnit a → IsUnit ({a} : Finset α) :=
+  IsUnit.map (singletonMonoidHom : α →* Finset α)
+
+end Monoidₓ
 
 /-- `finset α` is a `comm_monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
 protected def commMonoid [CommMonoidₓ α] : CommMonoidₓ (Finset α) :=
   coe_injective.CommMonoid _ coe_one coe_mul coe_pow
 
-/-- `finset α` is a `div_inv_monoid` under pointwise operations if `α` is. -/
-/- TODO: The below instances are duplicate because there is no typeclass greater than
-`div_inv_monoid` and `has_involutive_inv` but smaller than `group` and `group_with_zero`. -/
-@[to_additive "`finset α` is an `sub_neg_add_monoid` under pointwise operations if `α` is."]
-protected def divInvMonoid [Groupₓ α] : DivInvMonoidₓ (Finset α) :=
-  coe_injective.DivInvMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+open Pointwise
 
-/-- `finset α` is a `div_inv_monoid` under pointwise operations if `α` is. -/
-protected def divInvMonoid' [GroupWithZeroₓ α] : DivInvMonoidₓ (Finset α) :=
-  coe_injective.DivInvMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow'
+section DivisionMonoid
+
+variable [DivisionMonoid α] {s t : Finset α}
+
+@[simp, to_additive]
+theorem coe_zpow (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
+  | Int.ofNat n => coe_pow _ _
+  | Int.negSucc n => by
+    refine' (coe_inv _).trans _
+    convert congr_argₓ Inv.inv (coe_pow _ _)
+
+@[to_additive]
+protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 := by
+  simp_rw [← coe_inj, coe_mul, coe_one, Set.mul_eq_one_iff, coe_singleton]
+
+/-- `finset α` is a division monoid under pointwise operations if `α` is. -/
+@[to_additive SubtractionMonoid "`finset α` is a subtraction monoid under pointwise operations if\n`α` is."]
+protected def divisionMonoid : DivisionMonoid (Finset α) :=
+  coe_injective.DivisionMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+
+@[simp, to_additive]
+theorem is_unit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
+  constructor
+  · rintro ⟨u, rfl⟩
+    obtain ⟨a, b, ha, hb, h⟩ := Finset.mul_eq_one_iff.1 u.mul_inv
+    refine' ⟨a, ha, ⟨a, b, h, singleton_injective _⟩, rfl⟩
+    rw [← singleton_mul_singleton, ← ha, ← hb]
+    exact u.inv_mul
+    
+  · rintro ⟨a, rfl, ha⟩
+    exact ha.finset
+    
+
+@[simp, to_additive]
+theorem is_unit_coe : IsUnit (s : Set α) ↔ IsUnit s := by
+  simp_rw [is_unit_iff, Set.is_unit_iff, coe_eq_singleton]
+
+end DivisionMonoid
+
+/-- `finset α` is a commutative division monoid under pointwise operations if `α` is. -/
+@[to_additive SubtractionCommMonoid
+      "`finset α` is a commutative subtraction monoid under\npointwise operations if `α` is."]
+protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Finset α) :=
+  coe_injective.DivisionCommMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
 
 localized [Pointwise]
   attribute [instance]
-    Finset.mulOneClass Finset.addZeroClass Finset.semigroup Finset.addSemigroup Finset.monoid Finset.addMonoid Finset.commMonoid Finset.addCommMonoid Finset.divInvMonoid Finset.subNegAddMonoid Finset.divInvMonoid'
+    Finset.commMonoid Finset.addCommMonoid Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid
+
+section Groupₓ
+
+variable [Groupₓ α] {s t : Finset α}
+
+/-! Note that `finset` is not a `group` because `s / s ≠ 1` in general. -/
+
+
+@[to_additive]
+theorem is_unit_singleton (a : α) : IsUnit ({a} : Finset α) :=
+  (Groupₓ.is_unit a).Finset
+
+@[simp]
+theorem is_unit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
+  simp only [is_unit_iff, Groupₓ.is_unit, and_trueₓ]
+
+end Groupₓ
 
 end Instances
 
-/-! ### Finset addition/multiplication -/
+section MulZeroClassₓ
+
+variable [DecidableEq α] [MulZeroClassₓ α] {s t : Finset α}
+
+/-! Note that `finset` is not a `mul_zero_class` because `0 * ∅ ≠ 0`. -/
+
+
+theorem mul_zero_subset (s : Finset α) : s * 0 ⊆ 0 := by
+  simp [subset_iff, mem_mul]
+
+theorem zero_mul_subset (s : Finset α) : 0 * s ⊆ 0 := by
+  simp [subset_iff, mem_mul]
+
+theorem Nonempty.mul_zero (hs : s.Nonempty) : s * 0 = 0 :=
+  s.mul_zero_subset.antisymm <| by
+    simpa [mem_mul] using hs
+
+theorem Nonempty.zero_mul (hs : s.Nonempty) : 0 * s = 0 :=
+  s.zero_mul_subset.antisymm <| by
+    simpa [mem_mul] using hs
+
+end MulZeroClassₓ
+
+section Groupₓ
+
+variable [Groupₓ α] {s t : Finset α} {a b : α}
+
+/-! Note that `finset` is not a `group` because `s / s ≠ 1` in general. -/
+
+
+section DecidableEq
+
+variable [DecidableEq α]
+
+@[simp, to_additive]
+theorem image_mul_left : image (fun b => a * b) t = preimage t (fun b => a⁻¹ * b) ((mul_right_injective _).InjOn _) :=
+  coe_injective <| by
+    simp
+
+@[simp, to_additive]
+theorem image_mul_right : image (· * b) t = preimage t (· * b⁻¹) ((mul_left_injective _).InjOn _) :=
+  coe_injective <| by
+    simp
+
+@[to_additive]
+theorem image_mul_left' : image (fun b => a⁻¹ * b) t = preimage t (fun b => a * b) ((mul_right_injective _).InjOn _) :=
+  by
+  simp
+
+@[to_additive]
+theorem image_mul_right' : image (· * b⁻¹) t = preimage t (· * b) ((mul_left_injective _).InjOn _) := by
+  simp
+
+end DecidableEq
+
+@[simp, to_additive]
+theorem preimage_mul_left_singleton : preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by
+  classical
+  rw [← image_mul_left', image_singleton]
+
+@[simp, to_additive]
+theorem preimage_mul_right_singleton : preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by
+  classical
+  rw [← image_mul_right', image_singleton]
+
+@[simp, to_additive]
+theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹} := by
+  classical
+  rw [← image_mul_left', image_one, mul_oneₓ]
+
+@[simp, to_additive]
+theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).InjOn _) = {b⁻¹} := by
+  classical
+  rw [← image_mul_right', image_one, one_mulₓ]
+
+@[to_additive]
+theorem preimage_mul_left_one' : preimage 1 ((· * ·) a⁻¹) ((mul_right_injective _).InjOn _) = {a} := by
+  rw [preimage_mul_left_one, inv_invₓ]
+
+@[to_additive]
+theorem preimage_mul_right_one' : preimage 1 (· * b⁻¹) ((mul_left_injective _).InjOn _) = {b} := by
+  rw [preimage_mul_right_one, inv_invₓ]
+
+end Groupₓ
+
+section GroupWithZeroₓ
+
+variable [DecidableEq α] [GroupWithZeroₓ α] {s t : Finset α}
+
+theorem div_zero_subset (s : Finset α) : s / 0 ⊆ 0 := by
+  simp [subset_iff, mem_div]
+
+theorem zero_div_subset (s : Finset α) : 0 / s ⊆ 0 := by
+  simp [subset_iff, mem_div]
+
+theorem Nonempty.div_zero (hs : s.Nonempty) : s / 0 = 0 :=
+  s.div_zero_subset.antisymm <| by
+    simpa [mem_div] using hs
+
+theorem Nonempty.zero_div (hs : s.Nonempty) : 0 / s = 0 :=
+  s.zero_div_subset.antisymm <| by
+    simpa [mem_div] using hs
+
+end GroupWithZeroₓ
+
+/-! ### Scalar addition/multiplication of finsets -/
 
 
 section HasScalar
@@ -602,6 +778,10 @@ theorem smul_empty (s : Finset α) : s • (∅ : Finset β) = ∅ :=
   image₂_empty_right
 
 @[simp, to_additive]
+theorem smul_eq_empty : s • t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image₂_eq_empty_iff
+
+@[simp, to_additive]
 theorem smul_nonempty_iff : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
 
@@ -609,11 +789,13 @@ theorem smul_nonempty_iff : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
   nonempty.image₂
 
-@[to_additive, mono]
-theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
-  image₂_subset
+@[to_additive]
+theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
+  nonempty.of_image₂_left
 
-attribute [mono] add_subset_add
+@[to_additive]
+theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
+  nonempty.of_image₂_right
 
 @[simp, to_additive]
 theorem smul_singleton (b : β) : s • ({b} : Finset β) = s.Image (· • b) :=
@@ -626,6 +808,40 @@ theorem singleton_smul (a : α) : ({a} : Finset α) • t = t.Image ((· • ·)
 @[simp, to_additive]
 theorem singleton_smul_singleton (a : α) (b : β) : ({a} : Finset α) • ({b} : Finset β) = {a • b} :=
   image₂_singleton
+
+@[to_additive, mono]
+theorem smul_subset_smul : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ • t₁ ⊆ s₂ • t₂ :=
+  image₂_subset
+
+@[to_additive]
+theorem smul_subset_smul_left : t₁ ⊆ t₂ → s • t₁ ⊆ s • t₂ :=
+  image₂_subset_left
+
+@[to_additive]
+theorem smul_subset_smul_right : s₁ ⊆ s₂ → s₁ • t ⊆ s₂ • t :=
+  image₂_subset_right
+
+@[to_additive]
+theorem smul_subset_iff : s • t ⊆ u ↔ ∀, ∀ a ∈ s, ∀, ∀ b ∈ t, ∀, a • b ∈ u :=
+  image₂_subset_iff
+
+attribute [mono] vadd_subset_vadd
+
+@[to_additive]
+theorem union_smul [DecidableEq α] : (s₁ ∪ s₂) • t = s₁ • t ∪ s₂ • t :=
+  image₂_union_left
+
+@[to_additive]
+theorem smul_union : s • (t₁ ∪ t₂) = s • t₁ ∪ s • t₂ :=
+  image₂_union_right
+
+@[to_additive]
+theorem inter_smul_subset [DecidableEq α] : (s₁ ∩ s₂) • t ⊆ s₁ • t ∩ s₂ • t :=
+  image₂_inter_subset_left
+
+@[to_additive]
+theorem smul_inter_subset : s • (t₁ ∩ t₂) ⊆ s • t₁ ∩ s • t₂ :=
+  image₂_inter_subset_right
 
 /-- If a finset `u` is contained in the scalar product of two sets `s • t`, we can find two finsets
 `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' • t'`. -/
@@ -642,7 +858,7 @@ end HasScalar
 
 section HasVsub
 
-variable [DecidableEq α] [HasVsub α β] {s s₁ s₂ t t₁ t₂ u : Finset β} {a : α} {b c : β}
+variable [DecidableEq α] [HasVsub α β] {s s₁ s₂ t t₁ t₂ : Finset β} {u : Finset α} {a : α} {b c : β}
 
 include α
 
@@ -681,15 +897,21 @@ theorem vsub_empty (s : Finset β) : s -ᵥ (∅ : Finset β) = ∅ :=
   image₂_empty_right
 
 @[simp]
-theorem vsub_nonempty_iff : (s -ᵥ t : Finset α).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
+theorem vsub_eq_empty : s -ᵥ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
+  image₂_eq_empty_iff
+
+@[simp]
+theorem vsub_nonempty : (s -ᵥ t : Finset α).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
   image₂_nonempty_iff
 
 theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Finset α).Nonempty :=
   nonempty.image₂
 
-@[mono]
-theorem vsub_subset_vsub : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
-  image₂_subset
+theorem Nonempty.of_vsub_left : (s -ᵥ t : Finset α).Nonempty → s.Nonempty :=
+  nonempty.of_image₂_left
+
+theorem Nonempty.of_vsub_right : (s -ᵥ t : Finset α).Nonempty → t.Nonempty :=
+  nonempty.of_image₂_right
 
 @[simp]
 theorem vsub_singleton (b : β) : s -ᵥ ({b} : Finset β) = s.Image (· -ᵥ b) :=
@@ -703,14 +925,43 @@ theorem singleton_vsub (a : β) : ({a} : Finset β) -ᵥ t = t.Image ((· -ᵥ �
 theorem singleton_vsub_singleton (a b : β) : ({a} : Finset β) -ᵥ {b} = {a -ᵥ b} :=
   image₂_singleton
 
+@[mono]
+theorem vsub_subset_vsub : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ -ᵥ t₁ ⊆ s₂ -ᵥ t₂ :=
+  image₂_subset
+
+theorem vsub_subset_vsub_left : t₁ ⊆ t₂ → s -ᵥ t₁ ⊆ s -ᵥ t₂ :=
+  image₂_subset_left
+
+theorem vsub_subset_vsub_right : s₁ ⊆ s₂ → s₁ -ᵥ t ⊆ s₂ -ᵥ t :=
+  image₂_subset_right
+
+theorem vsub_subset_iff : s -ᵥ t ⊆ u ↔ ∀, ∀ x ∈ s, ∀, ∀ y ∈ t, ∀, x -ᵥ y ∈ u :=
+  image₂_subset_iff
+
+section
+
+variable [DecidableEq β]
+
+theorem union_vsub : s₁ ∪ s₂ -ᵥ t = s₁ -ᵥ t ∪ (s₂ -ᵥ t) :=
+  image₂_union_left
+
+theorem vsub_union : s -ᵥ (t₁ ∪ t₂) = s -ᵥ t₁ ∪ (s -ᵥ t₂) :=
+  image₂_union_right
+
+theorem inter_vsub_subset : s₁ ∩ s₂ -ᵥ t ⊆ (s₁ -ᵥ t) ∩ (s₂ -ᵥ t) :=
+  image₂_inter_subset_left
+
+theorem vsub_inter_subset : s -ᵥ t₁ ∩ t₂ ⊆ (s -ᵥ t₁) ∩ (s -ᵥ t₂) :=
+  image₂_inter_subset_right
+
+end
+
 /-- If a finset `u` is contained in the pointwise subtraction of two sets `s -ᵥ t`, we can find two
 finsets `s'`, `t'` such that `s' ⊆ s`, `t' ⊆ t` and `u ⊆ s' -ᵥ t'`. -/
-theorem subset_vsub {s t : Set β} {u : Finset α} : ↑u ⊆ s -ᵥ t → ∃ s' t' : Finset β, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' -ᵥ t' :=
+theorem subset_vsub {s t : Set β} : ↑u ⊆ s -ᵥ t → ∃ s' t' : Finset β, ↑s' ⊆ s ∧ ↑t' ⊆ t ∧ u ⊆ s' -ᵥ t' :=
   subset_image₂
 
 end HasVsub
-
-open Pointwise
 
 /-! ### Translation/scaling of finsets -/
 
@@ -755,7 +1006,11 @@ theorem smul_finset_empty (a : α) : a • (∅ : Finset β) = ∅ :=
   image_empty _
 
 @[simp, to_additive]
-theorem smul_finset_nonempty_iff : (a • s).Nonempty ↔ s.Nonempty :=
+theorem smul_finset_eq_empty : a • s = ∅ ↔ s = ∅ :=
+  image_eq_empty
+
+@[simp, to_additive]
+theorem smul_finset_nonempty : (a • s).Nonempty ↔ s.Nonempty :=
   Nonempty.image_iff _
 
 @[to_additive]
@@ -771,6 +1026,14 @@ attribute [mono] add_subset_add
 @[simp, to_additive]
 theorem smul_finset_singleton (b : β) : a • ({b} : Finset β) = {a • b} :=
   image_singleton _ _
+
+@[to_additive]
+theorem smul_finset_union : a • (s₁ ∪ s₂) = a • s₁ ∪ a • s₂ :=
+  image_union _ _
+
+@[to_additive]
+theorem smul_finset_inter_subset : a • (s₁ ∩ s₂) ⊆ a • s₁ ∩ a • s₂ :=
+  image_inter_subset _ _ _
 
 end HasScalar
 

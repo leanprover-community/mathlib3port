@@ -104,6 +104,10 @@ theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
     let ⟨t, ht, (h_ts : CompRel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs
     h_ts <| show (x, z) ∈ CompRel t t from ⟨y, hxy t ht, hyz t ht⟩⟩
 
+theorem Filter.HasBasis.mem_separation_rel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
+    {a : α × α} : a ∈ 𝓢 α ↔ ∀ i, p i → a ∈ s i :=
+  h.forall_mem_mem
+
 /-- A uniform space is separated if its separation relation is trivial (each point
 is related only to itself). -/
 class SeparatedSpace (α : Type u) [UniformSpace α] : Prop where

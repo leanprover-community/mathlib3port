@@ -9,6 +9,7 @@ import Mathbin.Algebra.BigOperators.Ring
 import Mathbin.Algebra.Module.LinearMap
 import Mathbin.Algebra.Module.Pi
 import Mathbin.Algebra.Ring.Equiv
+import Mathbin.Algebra.Star.Module
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Data.Fintype.Card
 
@@ -37,7 +38,7 @@ universe u u' v w
 
 open BigOperators
 
-/-- `matrix m n` is the type of matrices whose rows are indexed by `m`
+/-- `matrix m n R` is the type of matrices with entries in `R`, whose rows are indexed by `m`
 and whose columns are indexed by `n`. -/
 def Matrix (m : Type u) (n : Type u') (α : Type v) : Type max u u' v :=
   m → n → α
@@ -131,7 +132,7 @@ instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Matrix m n α) :=
 instance [Zero α] : Zero (Matrix m n α) :=
   Pi.hasZero
 
-instance [AddZeroClass α] : AddZeroClass (Matrix m n α) :=
+instance [AddZeroClassₓ α] : AddZeroClassₓ (Matrix m n α) :=
   Pi.addZeroClass
 
 instance [AddMonoidₓ α] : AddMonoidₓ (Matrix m n α) :=
@@ -282,7 +283,7 @@ theorem diagonal_transpose [Zero α] (v : n → α) : (diagonalₓ v)ᵀ = diago
     
 
 @[simp]
-theorem diagonal_add [AddZeroClass α] (d₁ d₂ : n → α) : diagonalₓ d₁ + diagonalₓ d₂ = diagonalₓ fun i => d₁ i + d₂ i :=
+theorem diagonal_add [AddZeroClassₓ α] (d₁ d₂ : n → α) : diagonalₓ d₁ + diagonalₓ d₂ = diagonalₓ fun i => d₁ i + d₂ i :=
   by
   ext i j <;> by_cases' h : i = j <;> simp [h]
 
@@ -295,7 +296,7 @@ variable (n α)
 
 /-- `matrix.diagonal` as an `add_monoid_hom`. -/
 @[simps]
-def diagonalAddMonoidHom [AddZeroClass α] : (n → α) →+ Matrix n n α where
+def diagonalAddMonoidHom [AddZeroClassₓ α] : (n → α) →+ Matrix n n α where
   toFun := diagonalₓ
   map_zero' := diagonal_zero
   map_add' := fun x y => (diagonal_add x y).symm
@@ -365,7 +366,7 @@ section Numeral
 theorem bit0_apply [Add α] (M : Matrix m m α) (i : m) (j : m) : (bit0 M) i j = bit0 (M i j) :=
   rfl
 
-variable [AddZeroClass α] [One α]
+variable [AddZeroClassₓ α] [One α]
 
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) : (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) :=
   by
@@ -426,7 +427,7 @@ variable (n α)
 
 /-- `matrix.diag` as an `add_monoid_hom`. -/
 @[simps]
-def diagAddMonoidHom [AddZeroClass α] : Matrix n n α →+ n → α where
+def diagAddMonoidHom [AddZeroClassₓ α] : Matrix n n α →+ n → α where
   toFun := diag
   map_zero' := diag_zero
   map_add' := diag_add
@@ -989,7 +990,7 @@ end Equivₓ
 
 namespace AddMonoidHom
 
-variable [AddZeroClass α] [AddZeroClass β] [AddZeroClass γ]
+variable [AddZeroClassₓ α] [AddZeroClassₓ β] [AddZeroClassₓ γ]
 
 /-- The `add_monoid_hom` between spaces of matrices induced by an `add_monoid_hom` between their
 coefficients. This is `matrix.map` as an `add_monoid_hom`. -/
@@ -1514,8 +1515,78 @@ theorem conj_transpose_sub [AddGroupₓ α] [StarAddMonoid α] (M N : Matrix m n
   Matrix.ext <| by
     simp
 
+/-- Note that `star_module` is quite a strong requirement; as such we also provide the following
+variants which this lemma would not apply to:
+* `matrix.conj_transpose_smul_non_comm`
+* `matrix.conj_transpose_nsmul`
+* `matrix.conj_transpose_zsmul`
+* `matrix.conj_transpose_nat_cast_smul`
+* `matrix.conj_transpose_int_cast_smul`
+* `matrix.conj_transpose_inv_nat_cast_smul`
+* `matrix.conj_transpose_inv_int_cast_smul`
+* `matrix.conj_transpose_rat_smul`
+* `matrix.conj_transpose_rat_cast_smul`
+-/
 @[simp]
-theorem conj_transpose_smul [CommSemigroupₓ α] [StarSemigroup α] (c : α) (M : Matrix m n α) : (c • M)ᴴ = star c • Mᴴ :=
+theorem conj_transpose_smul [HasStar R] [HasStar α] [HasScalar R α] [StarModule R α] (c : R) (M : Matrix m n α) :
+    (c • M)ᴴ = star c • Mᴴ :=
+  Matrix.ext fun i j => star_smul _ _
+
+@[simp]
+theorem conj_transpose_smul_non_comm [HasStar R] [HasStar α] [HasScalar R α] [HasScalar Rᵐᵒᵖ α] (c : R)
+    (M : Matrix m n α) (h : ∀ r : R a : α, star (r • a) = MulOpposite.op (star r) • star a) :
+    (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
+  Matrix.ext <| by
+    simp [h]
+
+@[simp]
+theorem conj_transpose_smul_self [Semigroupₓ α] [StarSemigroup α] (c : α) (M : Matrix m n α) :
+    (c • M)ᴴ = MulOpposite.op (star c) • Mᴴ :=
+  conj_transpose_smul_non_comm c M star_mul
+
+@[simp]
+theorem conj_transpose_nsmul [AddMonoidₓ α] [StarAddMonoid α] (c : ℕ) (M : Matrix m n α) : (c • M)ᴴ = c • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_zsmul [AddGroupₓ α] [StarAddMonoid α] (c : ℤ) (M : Matrix m n α) : (c • M)ᴴ = c • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_nat_cast_smul [Semiringₓ R] [AddCommMonoidₓ α] [StarAddMonoid α] [Module R α] (c : ℕ)
+    (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_int_cast_smul [Ringₓ R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℤ)
+    (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_inv_nat_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℕ)
+    (M : Matrix m n α) : ((c : R)⁻¹ • M)ᴴ = (c : R)⁻¹ • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_inv_int_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℤ)
+    (M : Matrix m n α) : ((c : R)⁻¹ • M)ᴴ = (c : R)⁻¹ • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_rat_cast_smul [DivisionRing R] [AddCommGroupₓ α] [StarAddMonoid α] [Module R α] (c : ℚ)
+    (M : Matrix m n α) : ((c : R) • M)ᴴ = (c : R) • Mᴴ :=
+  Matrix.ext <| by
+    simp
+
+@[simp]
+theorem conj_transpose_rat_smul [AddCommGroupₓ α] [StarAddMonoid α] [Module ℚ α] (c : ℚ) (M : Matrix m n α) :
+    (c • M)ᴴ = c • Mᴴ :=
   Matrix.ext <| by
     simp
 

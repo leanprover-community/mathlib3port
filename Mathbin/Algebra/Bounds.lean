@@ -82,11 +82,11 @@ theorem subset_upper_bounds_mul (s t : Set M) : UpperBounds s * UpperBounds t �
 @[to_additive]
 theorem mul_mem_lower_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ LowerBounds s) (hb : b ∈ LowerBounds t) :
     a * b ∈ LowerBounds (s * t) :=
-  @mul_mem_upper_bounds_mul (OrderDual M) _ _ _ _ _ _ _ _ ha hb
+  @mul_mem_upper_bounds_mul Mᵒᵈ _ _ _ _ _ _ _ _ ha hb
 
 @[to_additive]
 theorem subset_lower_bounds_mul (s t : Set M) : LowerBounds s * LowerBounds t ⊆ LowerBounds (s * t) :=
-  @subset_upper_bounds_mul (OrderDual M) _ _ _ _ _ _
+  @subset_upper_bounds_mul Mᵒᵈ _ _ _ _ _ _
 
 @[to_additive]
 theorem BddAbove.mul {s t : Set M} (hs : BddAbove s) (ht : BddAbove t) : BddAbove (s * t) :=

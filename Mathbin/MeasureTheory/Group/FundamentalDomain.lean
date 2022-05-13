@@ -134,10 +134,10 @@ theorem preimage_of_equiv (h : IsFundamentalDomain G s μ) {f : α → α} (hf :
          }
 
 @[to_additive]
-theorem image_of_equiv (h : IsFundamentalDomain G s μ) (f : MeasurableEquiv α α) (hfμ : MeasurePreserving f μ μ)
-    (e : Equivₓ.Perm G) (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain G (f '' s) μ := by
+theorem image_of_equiv (h : IsFundamentalDomain G s μ) (f : α ≃ᵐ α) (hfμ : MeasurePreserving f μ μ) (e : Equivₓ.Perm G)
+    (hef : ∀ g, Semiconj f ((· • ·) (e g)) ((· • ·) g)) : IsFundamentalDomain G (f '' s) μ := by
   rw [f.image_eq_preimage]
-  refine' h.preimage_of_equiv hfμ.symm.quasi_measure_preserving e.symm.bijective fun g x => _
+  refine' h.preimage_of_equiv (hfμ.symm f).QuasiMeasurePreserving e.symm.bijective fun g x => _
   rcases f.surjective x with ⟨x, rfl⟩
   rw [← hef _ _, f.symm_apply_apply, f.symm_apply_apply, e.apply_symm_apply]
 

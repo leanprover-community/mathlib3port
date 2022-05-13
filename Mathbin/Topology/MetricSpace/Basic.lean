@@ -1117,18 +1117,9 @@ converging. This is often applied for `B N = 2^{-N}`, i.e., with a very fast con
 to do in general for arbitrary Cauchy sequences. -/
 theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (hB : ∀ n, 0 < B n)
     (H : ∀ u : ℕ → α, (∀ N n m : ℕ, N ≤ n → N ≤ m → dist (u n) (u m) < B N) → ∃ x, Tendsto u atTop (𝓝 x)) :
-    CompleteSpace α := by
-  -- this follows from the same criterion in emetric spaces. We just need to translate
-  -- the convergence assumption from `dist` to `edist`
-  apply Emetric.complete_of_convergent_controlled_sequences fun n => Ennreal.ofReal (B n)
-  · simp [hB]
-    
-  · intro u Hu
-    apply H
-    intro N n m hn hm
-    rw [← Ennreal.of_real_lt_of_real_iff (hB N), ← edist_dist]
-    exact Hu N n m hn hm
-    
+    CompleteSpace α :=
+  UniformSpace.complete_of_convergent_controlled_sequences (fun n => { p : α × α | dist p.1 p.2 < B n })
+    (fun n => dist_mem_uniformity <| hB n) H
 
 theorem Metric.complete_of_cauchy_seq_tendsto :
     (∀ u : ℕ → α, CauchySeq u → ∃ a, Tendsto u atTop (𝓝 a)) → CompleteSpace α :=
@@ -1409,21 +1400,21 @@ end MulOpposite
 
 section Nnreal
 
-noncomputable instance : PseudoMetricSpace ℝ≥0 := by
-  unfold Nnreal <;> infer_instance
+noncomputable instance : PseudoMetricSpace ℝ≥0 :=
+  Subtype.pseudoMetricSpace
 
 theorem Nnreal.dist_eq (a b : ℝ≥0 ) : dist a b = abs ((a : ℝ) - b) :=
   rfl
 
 theorem Nnreal.nndist_eq (a b : ℝ≥0 ) : nndist a b = max (a - b) (b - a) := by
-  wlog h : a ≤ b
-  · apply Nnreal.coe_eq.1
-    rw [tsub_eq_zero_iff_le.2 h, max_eq_rightₓ (zero_le <| b - a), ← dist_nndist, Nnreal.dist_eq, Nnreal.coe_sub h,
-      abs_eq_max_neg, neg_sub]
-    apply max_eq_rightₓ
-    linarith [Nnreal.coe_le_coe.2 h]
+  /- WLOG, `b ≤ a`. `wlog h : b ≤ a` works too but it is much slower because Lean tries to prove one
+    case from the other and fails; `tactic.skip` tells Lean not to try. -/
+  wlog (discharger := tactic.skip) h : b ≤ a := le_totalₓ b a using a b, b a
+  · rw [← Nnreal.coe_eq, ← dist_nndist, Nnreal.dist_eq, tsub_eq_zero_iff_le.2 h, max_eq_leftₓ (zero_le <| a - b), ←
+      Nnreal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
     
-  rwa [nndist_comm, max_commₓ]
+  · rwa [nndist_comm, max_commₓ]
+    
 
 @[simp]
 theorem Nnreal.nndist_zero_eq_val (z : ℝ≥0 ) : nndist 0 z = z := by
@@ -1587,21 +1578,13 @@ theorem closed_ball_zero' (x : α) : ClosedBall x 0 = Closure {x} :=
   Subset.antisymm (fun y hy => mem_closure_iff.2 fun ε ε0 => ⟨x, mem_singleton x, (mem_closed_ball.1 hy).trans_lt ε0⟩)
     (closure_minimal (singleton_subset_iff.2 (dist_self x).le) is_closed_ball)
 
-theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀, ∀ r > 0, ∀, (Ball x r ∩ s).Nonempty := by
-  apply forall_congrₓ fun x => _
-  rw [mem_closure_iff]
-  refine' forall_congrₓ fun ε => forall_congrₓ fun h => exists_congr fun y => _
-  rw [mem_inter_iff, mem_ball', exists_prop, and_comm]
+theorem dense_iff {s : Set α} : Dense s ↔ ∀ x, ∀, ∀ r > 0, ∀, (Ball x r ∩ s).Nonempty :=
+  forall_congrₓ fun x => by
+    simp only [mem_closure_iff, Set.Nonempty, exists_prop, mem_inter_eq, mem_ball', and_comm]
 
-theorem dense_range_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀, ∀ r > 0, ∀, ∃ y, dist x (f y) < r := by
-  rw [DenseRange, Metric.dense_iff]
-  refine' forall_congrₓ fun x => forall_congrₓ fun r => forall_congrₓ fun rpos => ⟨_, _⟩
-  · rintro ⟨-, hz, ⟨z, rfl⟩⟩
-    exact ⟨z, Metric.mem_ball'.1 hz⟩
-    
-  · rintro ⟨z, hz⟩
-    exact ⟨f z, Metric.mem_ball'.1 hz, mem_range_self _⟩
-    
+theorem dense_range_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀, ∀ r > 0, ∀, ∃ y, dist x (f y) < r :=
+  forall_congrₓ fun x => by
+    simp only [mem_closure_iff, exists_range_iff]
 
 /-- If a set `s` is separable, then the corresponding subtype is separable in a metric space.
 This is not obvious, as the countable set whose closure covers `s` does not need in general to
@@ -1687,7 +1670,7 @@ noncomputable instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) := 
     
 
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
-  Subtype.eta _ _
+  Nnreal.eq rfl
 
 theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) : ℝ≥0 ) :=
   rfl

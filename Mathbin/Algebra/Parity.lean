@@ -54,15 +54,11 @@ theorem is_square_iff_exists_sq [Monoidₓ α] (m : α) : IsSquare m ↔ ∃ c, 
 
 alias is_square_iff_exists_sq ↔ IsSquare.exists_sq is_square_of_exists_sq
 
-attribute [to_additive Even.exists_two_nsmul] IsSquare.exists_sq
+attribute [to_additive Even.exists_two_nsmul "Alias of the forwards direction of\n`even_iff_exists_two_nsmul`."]
+  IsSquare.exists_sq
 
-/-- Alias of the forwards direction of `even_iff_exists_two_nsmul`. -/
-add_decl_doc Even.exists_two_nsmul
-
-attribute [to_additive even_of_exists_two_nsmul] is_square_of_exists_sq
-
-/-- Alias of the backwards direction of `even_iff_exists_two_nsmul`. -/
-add_decl_doc even_of_exists_two_nsmul
+attribute [to_additive even_of_exists_two_nsmul "Alias of the backwards direction of\n`even_iff_exists_two_nsmul`."]
+  is_square_of_exists_sq
 
 @[simp, to_additive]
 theorem is_square_one [MulOneClassₓ α] : IsSquare (1 : α) :=

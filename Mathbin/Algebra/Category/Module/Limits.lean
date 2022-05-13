@@ -19,8 +19,9 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-universe u v
+universe v w u
 
+-- `u` is determined by the ring, so can come last
 noncomputable section
 
 namespace ModuleCat
@@ -29,19 +30,19 @@ variable {R : Type u} [Ringₓ R]
 
 variable {J : Type v} [SmallCategory J]
 
-instance addCommGroupObj (F : J ⥤ ModuleCat.{v} R) j : AddCommGroupₓ ((F ⋙ forget (ModuleCat R)).obj j) := by
+instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) j : AddCommGroupₓ ((F ⋙ forget (ModuleCat R)).obj j) := by
   change AddCommGroupₓ (F.obj j)
   infer_instance
 
-instance moduleObj (F : J ⥤ ModuleCat.{v} R) j : Module R ((F ⋙ forget (ModuleCat R)).obj j) := by
+instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) j : Module R ((F ⋙ forget (ModuleCat R)).obj j) := by
   change Module R (F.obj j)
   infer_instance
 
 /-- The flat sections of a functor into `Module R` form a submodule of all sections.
 -/
-def sectionsSubmodule (F : J ⥤ ModuleCat R) : Submodule R (∀ j, F.obj j) :=
+def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.obj j) :=
   { AddGroupₓₓ.sectionsAddSubgroup
-      (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{v} ⋙ forget₂ AddCommGroupₓₓ AddGroupₓₓ.{v}) with
+      (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v w} ⋙ forget₂ AddCommGroupₓₓ AddGroupₓₓ.{max v w}) with
     Carrier := (F ⋙ forget (ModuleCat R)).sections,
     smul_mem' := fun r s sh j j' f => by
       simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
@@ -50,21 +51,23 @@ def sectionsSubmodule (F : J ⥤ ModuleCat R) : Submodule R (∀ j, F.obj j) :=
 
 -- Adding the following instance speeds up `limit_module` noticeably,
 -- by preventing a bad unfold of `limit_add_comm_group`.
-instance limitAddCommMonoid (F : J ⥤ ModuleCat R) : AddCommMonoidₓ (Types.limitCone (F ⋙ forget (ModuleCat.{v} R))).x :=
+instance limitAddCommMonoid (F : J ⥤ ModuleCat R) :
+    AddCommMonoidₓ (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show AddCommMonoidₓ (sectionsSubmodule F) by
     infer_instance
 
-instance limitAddCommGroup (F : J ⥤ ModuleCat R) : AddCommGroupₓ (Types.limitCone (F ⋙ forget (ModuleCat.{v} R))).x :=
+instance limitAddCommGroup (F : J ⥤ ModuleCat R) :
+    AddCommGroupₓ (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show AddCommGroupₓ (sectionsSubmodule F) by
     infer_instance
 
-instance limitModule (F : J ⥤ ModuleCat R) : Module R (Types.limitCone (F ⋙ forget (ModuleCat.{v} R))).x :=
+instance limitModule (F : J ⥤ ModuleCat R) : Module R (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x :=
   show Module R (sectionsSubmodule F) by
     infer_instance
 
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) j :
-    (Types.limitCone (F ⋙ forget (ModuleCat.{v} R))).x →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j where
+    (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).x →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j where
   toFun := (Types.limitCone (F ⋙ forget (ModuleCat R))).π.app j
   map_smul' := fun x y => rfl
   map_add' := fun x y => rfl
@@ -77,7 +80,7 @@ namespace HasLimits
 -- The next two definitions are used in the construction of `has_limits (Module R)`.
 -- After that, the limits should be constructed using the generic limits API,
 -- e.g. `limit F`, `limit.cone F`, and `limit.is_limit F`.
-def limitCone (F : J ⥤ ModuleCat.{v} R) : Cone F where
+def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F where
   x := ModuleCat.of R (Types.limitCone (F ⋙ forget _)).x
   π :=
     { app := limitπLinearMap F,
@@ -86,7 +89,7 @@ def limitCone (F : J ⥤ ModuleCat.{v} R) : Cone F where
 /-- Witness that the limit cone in `Module R` is a limit cone.
 (Internal use only; use the limits API.)
 -/
-def limitConeIsLimit (F : J ⥤ ModuleCat R) : IsLimit (limitCone F) := by
+def limitConeIsLimit (F : J ⥤ ModuleCat.{max v w} R) : IsLimit (limitCone F) := by
   refine'
       is_limit.of_faithful (forget (ModuleCat R)) (types.limit_cone_is_limit _) (fun s => ⟨_, _, _⟩) fun s => rfl <;>
     intros <;>
@@ -100,29 +103,39 @@ open HasLimits
 
 -- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
 /-- The category of R-modules has all limits. -/
-irreducible_def has_limits : HasLimits (ModuleCat.{v} R) :=
+irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
   { HasLimitsOfShape := fun J 𝒥 =>
       { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
+instance has_limits : HasLimits (ModuleCat.{w} R) :=
+  ModuleCat.has_limits_of_size.{w, w, u}
+
 /-- An auxiliary declaration to speed up typechecking.
 -/
-def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat R) :
+def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupₓₓ).mapCone (limitCone F)) :=
-  AddCommGroupₓₓ.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ)
+  AddCommGroupₓₓ.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v w})
 
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
 -/
-instance forget₂AddCommGroupPreservesLimits : PreservesLimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{v}) where
+instance forget₂AddCommGroupPreservesLimitsOfSize :
+    PreservesLimitsOfSize.{v, v} (forget₂ (ModuleCat R) AddCommGroupₓₓ.{max v w}) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (forget₂_AddCommGroup_preserves_limits_aux F) }
 
+instance forget₂AddCommGroupPreservesLimits : PreservesLimits (forget₂ (ModuleCat R) AddCommGroupₓₓ.{w}) :=
+  ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize.{w, w}
+
 /-- The forgetful functor from R-modules to types preserves all limits.
 -/
-instance forgetPreservesLimits : PreservesLimits (forget (ModuleCat R)) where
+instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) where
   PreservesLimitsOfShape := fun J 𝒥 =>
     { PreservesLimit := fun F =>
         preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (types.limit_cone_is_limit (F ⋙ forget _)) }
+
+instance forgetPreservesLimits : PreservesLimits (forget (ModuleCat.{w} R)) :=
+  ModuleCat.forgetPreservesLimitsOfSize.{w, w}
 
 section DirectLimit
 

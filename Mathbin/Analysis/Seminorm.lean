@@ -508,7 +508,7 @@ theorem ball_antitone {p q : Seminorm 𝕜 E} (h : q ≤ p) : p.ball x r ⊆ q.b
 theorem ball_add_ball_subset (p : Seminorm 𝕜 E) (r₁ r₂ : ℝ) (x₁ x₂ : E) :
     p.ball (x₁ : E) r₁ + p.ball (x₂ : E) r₂ ⊆ p.ball (x₁ + x₂) (r₁ + r₂) := by
   rintro x ⟨y₁, y₂, hy₁, hy₂, rfl⟩
-  rw [mem_ball, add_sub_comm]
+  rw [mem_ball, add_sub_add_comm]
   exact (p.triangle _ _).trans_lt (add_lt_add hy₁ hy₂)
 
 end HasScalar
@@ -526,6 +526,10 @@ theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ)
 section NormOneClass
 
 variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E)
+
+theorem ball_zero_eq_preimage_ball {r : ℝ} : p.ball 0 r = p ⁻¹' Metric.Ball 0 r := by
+  ext x
+  simp only [mem_ball, sub_zero, mem_preimage, mem_ball_zero_iff, Real.norm_of_nonneg (p.nonneg x)]
 
 @[simp]
 theorem ball_bot {r : ℝ} (x : E) (hr : 0 < r) : Ball (⊥ : Seminorm 𝕜 E) x r = Set.Univ :=

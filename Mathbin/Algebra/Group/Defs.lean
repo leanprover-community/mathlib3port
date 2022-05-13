@@ -37,6 +37,8 @@ actions and register the following instances:
 -/
 
 
+open Function
+
 /-- Type class for the `+ᵥ` notation. -/
 class HasVadd (G : Type _) (P : Type _) where
   vadd : G → P → P
@@ -69,6 +71,8 @@ attribute [to_additive HasScalar.smul] Pow.pow
 
 universe u
 
+variable {G : Type _}
+
 /- Additive "sister" structures.
    Example, add_semigroup mirrors semigroup.
    These structures exist just to help automation.
@@ -94,7 +98,7 @@ mk_simp_attribute field_simps :=
 
 section Mul
 
-variable {G : Type u} [Mul G]
+variable [Mul G]
 
 /-- `left_mul g` denotes left multiplication by `g` -/
 @[to_additive "`left_add g` denotes left addition by `g`"]
@@ -120,7 +124,7 @@ attribute [to_additive] Semigroupₓ
 
 section Semigroupₓ
 
-variable {G : Type u} [Semigroupₓ G]
+variable [Semigroupₓ G]
 
 @[no_rsimp, to_additive]
 theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
@@ -146,7 +150,7 @@ attribute [to_additive] CommSemigroupₓ
 
 section CommSemigroupₓ
 
-variable {G : Type u} [CommSemigroupₓ G]
+variable [CommSemigroupₓ G]
 
 @[no_rsimp, to_additive]
 theorem mul_comm : ∀ a b : G, a * b = b * a :=
@@ -173,7 +177,7 @@ attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 
 section LeftCancelSemigroup
 
-variable {G : Type u} [LeftCancelSemigroup G] {a b c : G}
+variable [LeftCancelSemigroup G] {a b c : G}
 
 @[to_additive]
 theorem mul_left_cancelₓ : a * b = a * c → b = c :=
@@ -211,7 +215,7 @@ attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 
 section RightCancelSemigroup
 
-variable {G : Type u} [RightCancelSemigroup G] {a b c : G}
+variable [RightCancelSemigroup G] {a b c : G}
 
 @[to_additive]
 theorem mul_right_cancelₓ : a * b = c * b → a = c :=
@@ -244,7 +248,7 @@ class MulOneClassₓ (M : Type u) extends One M, Mul M where
 /-- Typeclass for expressing that a type `M` with addition and a zero satisfies
 `0 + a = a` and `a + 0 = a` for all `a : M`. -/
 @[ancestor Zero Add]
-class AddZeroClass (M : Type u) extends Zero M, Add M where
+class AddZeroClassₓ (M : Type u) extends Zero M, Add M where
   zero_add : ∀ a : M, 0 + a = a
   add_zero : ∀ a : M, a + 0 = a
 
@@ -394,8 +398,8 @@ to `0 : ℕ`).
 
 
 /-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
-@[ancestor AddSemigroupₓ AddZeroClass]
-class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClass M where
+@[ancestor AddSemigroupₓ AddZeroClassₓ]
+class AddMonoidₓ (M : Type u) extends AddSemigroupₓ M, AddZeroClassₓ M where
   nsmul : ℕ → M → M := nsmulRec
   nsmul_zero' : ∀ x, nsmul 0 x = 0 := by
     run_tac
@@ -500,11 +504,11 @@ class AddCancelMonoid (M : Type u) extends AddLeftCancelMonoid M, AddRightCancel
 @[protect_proj, ancestor LeftCancelMonoid RightCancelMonoid, to_additive AddCancelMonoid]
 class CancelMonoid (M : Type u) extends LeftCancelMonoid M, RightCancelMonoid M
 
-/-- Commutative version of add_cancel_monoid. -/
+/-- Commutative version of `add_cancel_monoid`. -/
 @[protect_proj, ancestor AddLeftCancelMonoid AddCommMonoidₓ]
 class AddCancelCommMonoid (M : Type u) extends AddLeftCancelMonoid M, AddCommMonoidₓ M
 
-/-- Commutative version of cancel_monoid. -/
+/-- Commutative version of `cancel_monoid`. -/
 @[protect_proj, ancestor LeftCancelMonoid CommMonoidₓ, to_additive AddCancelCommMonoid]
 class CancelCommMonoid (M : Type u) extends LeftCancelMonoid M, CommMonoidₓ M
 
@@ -532,11 +536,67 @@ def zsmulRec {M : Type _} [Zero M] [Add M] [Neg M] : ℤ → M → M
 
 attribute [to_additive] zpowRec
 
+section HasInvolutiveInv
+
+-- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
+-- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
+set_option extends_priority 50
+
+/-- Auxiliary typeclass for types with an involutive `has_neg`. -/
+@[ancestor Neg]
+class HasInvolutiveNeg (A : Type _) extends Neg A where
+  neg_neg : ∀ x : A, - -x = x
+
+/-- Auxiliary typeclass for types with an involutive `has_inv`. -/
+@[ancestor Inv, to_additive]
+class HasInvolutiveInv (G : Type _) extends Inv G where
+  inv_inv : ∀ x : G, x⁻¹⁻¹ = x
+
+variable [HasInvolutiveInv G]
+
+@[simp, to_additive]
+theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
+  HasInvolutiveInv.inv_inv _
+
+end HasInvolutiveInv
+
+/-!
+### Design note on `div_inv_monoid`/`sub_neg_monoid` and `division_monoid`/`subtraction_monoid`
+
+Those two pairs of made-up classes fulfill slightly different roles.
+
+`div_inv_monoid`/`sub_neg_monoid` provides the minimum amount of information to define the
+`ℤ` action (`zpow` or `zsmul`). Further, it provides a `div` field, matching the forgetful
+inheritance pattern. This is useful to shorten extension clauses of stronger structures (`group`,
+`group_with_zero`, `division_ring`, `field`) and for a few structures with a rather weak
+pseudo-inverse (`matrix`).
+
+`division_monoid`/`subtraction_monoid` is targeted at structures with stronger pseudo-inverses. It
+is an ad hoc collection of axioms that are mainly respected by three things:
+* Groups
+* Groups with zero
+* The pointwise monoids `set α`, `finset α`, `filter α`
+
+It acts as a middle ground for structures with an inversion operator that plays well with
+multiplication, except for the fact that it might not be a true inverse (`a / a ≠ 1` in general).
+The axioms are pretty arbitrary (many other combinations are equivalent to it), but they are
+independent:
+* Without `division_monoid.div_eq_mul_inv`, you can define `/` arbitrarily.
+* Without `division_monoid.inv_inv`, you can consider `with_top unit` with `a⁻¹ = ⊤` for all `a`.
+* Without `division_monoid.mul_inv_rev`, you can consider `with_top α` with `a⁻¹ = a` for all `a`
+  where `α` non commutative.
+* Without `division_monoid.inv_eq_of_mul`, you can consider any `comm_monoid` with `a⁻¹ = a` for all
+  `a`.
+
+As a consequence, a few natural structures do not fit in this framework. For example, `ennreal`
+respects everything except for the fact that `(0 * ∞)⁻¹ = 0⁻¹ = ∞` while `∞⁻¹ * 0⁻¹ = 0 * ∞ = 0`.
+-/
+
+
 /-- A `div_inv_monoid` is a `monoid` with operations `/` and `⁻¹` satisfying
 `div_eq_mul_inv : ∀ a b, a / b = a * b⁻¹`.
 
-This is the immediate common ancestor of `group` and `group_with_zero`,
-in order to deduplicate the name `div_eq_mul_inv`.
+This deduplicates the name `div_eq_mul_inv`.
 The default for `div` is such that `a / b = a * b⁻¹` holds by definition.
 
 Adding `div` as a field rather than defining `a / b := a * b⁻¹` allows us to
@@ -612,9 +672,9 @@ instance SubNegMonoidₓ.hasScalarInt {M} [SubNegMonoidₓ M] : HasScalar ℤ M 
 
 attribute [to_additive SubNegMonoidₓ.hasScalarInt] DivInvMonoidₓ.hasPow
 
-section
+section DivInvMonoidₓ
 
-variable {G : Type _} [DivInvMonoidₓ G]
+variable [DivInvMonoidₓ G] {a b : G}
 
 @[simp, to_additive zsmul_eq_smul]
 theorem zpow_eq_pow (n : ℤ) (x : G) : DivInvMonoidₓ.zpow n x = x ^ n :=
@@ -643,41 +703,62 @@ theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ (n + 1))⁻�
   rw [← zpow_coe_nat]
   exact DivInvMonoidₓ.zpow_neg' n a
 
-end
+/-- Dividing by an element is the same as multiplying by its inverse.
+
+This is a duplicate of `div_inv_monoid.div_eq_mul_inv` ensuring that the types unfold better.
+-/
+@[to_additive
+      "Subtracting an element is the same as adding by its negative.\n\nThis is a duplicate of `sub_neg_monoid.sub_eq_mul_neg` ensuring that the types unfold better."]
+theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
+  DivInvMonoidₓ.div_eq_mul_inv _ _
+
+alias div_eq_mul_inv ← division_def
+
+end DivInvMonoidₓ
+
+/-- A `subtraction_monoid` is a `sub_neg_monoid` with involutive negation and such that
+`-(a + b) = -b + -a` and `a + b = 0 → -a = b`. -/
+@[protect_proj, ancestor SubNegMonoidₓ HasInvolutiveNeg]
+class SubtractionMonoid (G : Type u) extends SubNegMonoidₓ G, HasInvolutiveNeg G where
+  neg_add_rev (a b : G) : -(a + b) = -b + -a
+  /- Despite the asymmetry of `neg_eq_of_add`, the symmetric version is true thanks to the
+  involutivity of negation. -/
+  neg_eq_of_add (a b : G) : a + b = 0 → -a = b
+
+/-- A `division_monoid` is a `div_inv_monoid` with involutive inversion and such that
+`(a * b)⁻¹ = b⁻¹ * a⁻¹` and `a * b = 1 → a⁻¹ = b`.
+
+This is the immediate common ancestor of `group` and `group_with_zero`. -/
+@[protect_proj, ancestor DivInvMonoidₓ HasInvolutiveInv, to_additive SubtractionMonoid]
+class DivisionMonoid (G : Type u) extends DivInvMonoidₓ G, HasInvolutiveInv G where
+  mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹
+  /- Despite the asymmetry of `inv_eq_of_mul`, the symmetric version is true thanks to the
+  involutivity of inversion. -/
+  inv_eq_of_mul (a b : G) : a * b = 1 → a⁻¹ = b
+
+section DivisionMonoid
+
+variable [DivisionMonoid G] {a b : G}
+
+@[simp, to_additive neg_add_rev]
+theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
+  DivisionMonoid.mul_inv_rev _ _
 
 @[to_additive]
-theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a * b⁻¹ :=
-  DivInvMonoidₓ.div_eq_mul_inv
+theorem inv_eq_of_mul_eq_one_right : a * b = 1 → a⁻¹ = b :=
+  DivisionMonoid.inv_eq_of_mul _ _
 
-section
+end DivisionMonoid
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
--- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
-set_option extends_priority 50
+/-- Commutative `subtraction_monoid`. -/
+@[protect_proj, ancestor SubtractionMonoid AddCommMonoidₓ]
+class SubtractionCommMonoid (G : Type u) extends SubtractionMonoid G, AddCommMonoidₓ G
 
-/-- Auxiliary typeclass for types with an involutive `has_inv`. -/
-@[ancestor Inv]
-class HasInvolutiveInv (G : Type _) extends Inv G where
-  inv_inv : ∀ x : G, x⁻¹⁻¹ = x
+/-- Commutative `division_monoid`.
 
-/-- Auxiliary typeclass for types with an involutive `has_neg`. -/
-@[ancestor Neg]
-class HasInvolutiveNeg (A : Type _) extends Neg A where
-  neg_neg : ∀ x : A, - -x = x
-
-attribute [to_additive] HasInvolutiveInv
-
-end
-
-section HasInvolutiveInv
-
-variable {G : Type _} [HasInvolutiveInv G]
-
-@[simp, to_additive]
-theorem inv_invₓ (a : G) : a⁻¹⁻¹ = a :=
-  HasInvolutiveInv.inv_inv _
-
-end HasInvolutiveInv
+This is the immediate common ancestor of `comm_group` and `comm_group_with_zero`. -/
+@[protect_proj, ancestor DivisionMonoid CommMonoidₓ, to_additive SubtractionCommMonoid]
+class DivisionCommMonoid (G : Type u) extends DivisionMonoid G, CommMonoidₓ G
 
 /-- A `group` is a `monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
 
@@ -712,7 +793,7 @@ def Groupₓ.toMonoid (G : Type u) [Groupₓ G] : Monoidₓ G :=
 
 section Groupₓ
 
-variable {G : Type u} [Groupₓ G] {a b c : G}
+variable [Groupₓ G] {a b c : G}
 
 @[simp, to_additive]
 theorem mul_left_invₓ : ∀ a : G, a⁻¹ * a = 1 :=
@@ -722,31 +803,41 @@ theorem mul_left_invₓ : ∀ a : G, a⁻¹ * a = 1 :=
 theorem inv_mul_selfₓ (a : G) : a⁻¹ * a = 1 :=
   mul_left_invₓ a
 
-@[simp, to_additive]
-theorem inv_mul_cancel_leftₓ (a b : G) : a⁻¹ * (a * b) = b := by
-  rw [← mul_assoc, mul_left_invₓ, one_mulₓ]
-
-@[simp, to_additive]
-theorem inv_eq_of_mul_eq_oneₓ (h : a * b = 1) : a⁻¹ = b :=
-  left_inv_eq_right_invₓ (inv_mul_selfₓ a) h
-
 @[to_additive]
-instance (priority := 100) Groupₓ.toHasInvolutiveInv : HasInvolutiveInv G where
-  inv := Inv.inv
-  inv_inv := fun a => inv_eq_of_mul_eq_oneₓ (mul_left_invₓ a)
+private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b :=
+  left_inv_eq_right_invₓ (inv_mul_selfₓ a) h
 
 @[simp, to_additive]
 theorem mul_right_invₓ (a : G) : a * a⁻¹ = 1 := by
-  have : a⁻¹⁻¹ * a⁻¹ = 1 := mul_left_invₓ a⁻¹
-  rwa [inv_invₓ] at this
+  rw [← mul_left_invₓ a⁻¹, inv_eq_of_mul (mul_left_invₓ a)]
 
 @[to_additive]
 theorem mul_inv_selfₓ (a : G) : a * a⁻¹ = 1 :=
   mul_right_invₓ a
 
 @[simp, to_additive]
+theorem inv_mul_cancel_leftₓ (a b : G) : a⁻¹ * (a * b) = b := by
+  rw [← mul_assoc, mul_left_invₓ, one_mulₓ]
+
+@[simp, to_additive]
+theorem mul_inv_cancel_left (a b : G) : a * (a⁻¹ * b) = b := by
+  rw [← mul_assoc, mul_right_invₓ, one_mulₓ]
+
+@[simp, to_additive]
 theorem mul_inv_cancel_rightₓ (a b : G) : a * b * b⁻¹ = a := by
   rw [mul_assoc, mul_right_invₓ, mul_oneₓ]
+
+@[simp, to_additive]
+theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by
+  rw [mul_assoc, mul_left_invₓ, mul_oneₓ]
+
+@[to_additive]
+instance (priority := 100) Groupₓ.toDivisionMonoid : DivisionMonoid G :=
+  { ‹Groupₓ G› with inv_inv := fun a => inv_eq_of_mul (mul_left_invₓ a),
+    mul_inv_rev := fun a b =>
+      inv_eq_of_mul <| by
+        rw [mul_assoc, mul_inv_cancel_left, mul_right_invₓ],
+    inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
 
 -- see Note [lower instance priority]
 @[to_additive]
@@ -789,12 +880,17 @@ theorem CommGroupₓ.to_group_injective {G : Type u} : Function.Injective (@Comm
 
 section CommGroupₓ
 
-variable {G : Type u} [CommGroupₓ G]
+variable [CommGroupₓ G]
 
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) CommGroupₓ.toCancelCommMonoid : CancelCommMonoid G :=
   { ‹CommGroupₓ G›, Groupₓ.toCancelMonoid with }
+
+-- see Note [lower instance priority]
+@[to_additive]
+instance (priority := 100) CommGroupₓ.toDivisionCommMonoid : DivisionCommMonoid G :=
+  { ‹CommGroupₓ G›, Groupₓ.toDivisionMonoid with }
 
 end CommGroupₓ
 

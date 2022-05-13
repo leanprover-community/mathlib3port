@@ -185,7 +185,7 @@ open Pointwise
 @[to_additive]
 theorem left_inv_eq_inv : S.left_inv = S⁻¹ :=
   Submonoid.ext fun x =>
-    ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_oneₓ h.some_spec).symm ▸ h.some.Prop), fun h =>
+    ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.some_spec).symm ▸ h.some.Prop), fun h =>
       ⟨⟨_, h⟩, mul_right_invₓ _⟩⟩
 
 @[simp, to_additive]

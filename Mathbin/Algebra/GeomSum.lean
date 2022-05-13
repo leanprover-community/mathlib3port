@@ -337,7 +337,7 @@ theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) 
       (by
         simp )
       fun n h => by
-      rw [pow_succₓ, mul_inv_rev₀, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc, inv_mul_cancel hx0]
+      rw [pow_succₓ, mul_inv_rev, ← mul_assoc, h, mul_assoc, mul_inv_cancel hx0, mul_assoc, inv_mul_cancel hx0]
   rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ← mul_right_inj' h₃, ← mul_assoc, ← mul_assoc, mul_inv_cancel h₃]
   simp [mul_addₓ, add_mulₓ, mul_inv_cancel hx0, mul_assoc, h₄, sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
@@ -455,7 +455,7 @@ theorem geom_sum_pos_of_odd [LinearOrderedRing α] (h : Odd n) : 0 < geomSum x n
     simp only [h, if_false] at this
     exact zero_lt_one.trans this
     
-  · simp only [eq_neg_of_add_eq_zero hx, h, neg_one_geom_sum, if_false, zero_lt_one]
+  · simp only [eq_neg_of_add_eq_zero_left hx, h, neg_one_geom_sum, if_false, zero_lt_one]
     
   rcases lt_trichotomyₓ x 0 with (hx' | rfl | hx')
   · exact (geom_sum_pos_and_lt_one hx' hx k.one_lt_succ_succ).1

@@ -45,16 +45,16 @@ theorem deriv_eq_smul_circle_integral [CompleteSpace F] {R : ℝ} {c : ℂ} {f :
     (hf : DiffContOnCl ℂ f (Ball c R)) : deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z := by
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
-  simp only [cauchy_power_series_apply, one_div, zpow_neg₀, pow_oneₓ, smul_smul, zpow_two, mul_inv₀]
+  simp only [cauchy_power_series_apply, one_div, zpow_neg₀, pow_oneₓ, smul_smul, zpow_two, mul_inv]
 
 theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (Ball c R)) (hC : ∀, ∀ z ∈ Sphere c R, ∀, ∥f z∥ ≤ C) : ∥deriv f c∥ ≤ C / R := by
   have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun hz : abs (z - c) = R => by
-    simpa [norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
+    simpa [-mul_inv_rev, norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
       congr_argₓ norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
       circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this _ = C / R := by
-      rw [mul_div_comm, div_self_mul_self', div_eq_mul_inv]
+      rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
 
 /-- If `f` is complex differentiable on an open disc of radius `R > 0`, is continuous on its
 closure, and its values on the boundary circle of this disc are bounded from above by `C`, then the

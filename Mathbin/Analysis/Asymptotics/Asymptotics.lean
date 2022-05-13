@@ -193,6 +193,11 @@ theorem is_O_iff_eventually : IsO f g' l ↔ ∀ᶠ c in at_top, ∀ᶠ x in l, 
   is_O_iff_eventually_is_O_with.trans <| by
     simp only [is_O_with]
 
+theorem IsO.exists_mem_basis {ι} {p : ι → Prop} {s : ι → Set α} (h : IsO f g' l) (hb : l.HasBasis p s) :
+    ∃ (c : ℝ)(hc : 0 < c)(i : ι)(hi : p i), ∀, ∀ x ∈ s i, ∀, ∥f x∥ ≤ c * ∥g' x∥ :=
+  (flip Exists₂.imp h.exists_pos) fun c hc h => by
+    simpa only [is_O_with_iff, hb.eventually_iff, exists_prop] using h
+
 /-! ### Subsingleton -/
 
 
@@ -338,11 +343,8 @@ theorem IsO.trans_is_o (hfg : IsO f g' l) (hgk : IsOₓ g' k l) : IsOₓ f k l :
   let ⟨c, cpos, hc⟩ := hfg.exists_pos
   hc.trans_is_o hgk cpos
 
-theorem IsOₓ.trans (hfg : IsOₓ f g l) (hgk : IsOₓ g k' l) : IsOₓ f k' l :=
-  hfg.trans_is_O hgk.IsO
-
-theorem IsOₓ.trans' (hfg : IsOₓ f g' l) (hgk : IsOₓ g' k l) : IsOₓ f k l :=
-  hfg.IsO.trans_is_o hgk
+theorem IsOₓ.trans (hfg : IsOₓ f g l) (hgk : IsOₓ g k l) : IsOₓ f k l :=
+  hfg.trans_is_O_with hgk.IsOWith one_pos
 
 section
 
@@ -1050,7 +1052,7 @@ theorem IsOWith.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : IsOWith c f g 
     exact hle.trans (mul_nonpos_of_nonpos_of_nonneg hc <| norm_nonneg _)
     
   · replace hle := inv_le_inv_of_le (norm_pos_iff.2 h₀) hle
-    simpa only [norm_inv, mul_inv₀, ← div_eq_inv_mul, div_le_iff hc] using hle
+    simpa only [norm_inv, mul_inv, ← div_eq_inv_mul, div_le_iff hc] using hle
     
 
 theorem IsO.inv_rev {f : α → 𝕜} {g : α → 𝕜'} (h : IsO f g l) (h₀ : ∀ᶠ x in l, f x ≠ 0) :

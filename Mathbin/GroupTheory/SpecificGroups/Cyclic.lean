@@ -352,7 +352,7 @@ private theorem card_order_of_eq_totient_aux₁ :
           sum_congr hinsert fun _ _ => rfl
         _ = (univ.filter fun a : α => a ^ d.succ = 1).card := sum_card_order_of_eq_card_pow_eq_one (succ_posₓ d)
         _ = ∑ m in (range d.succ.succ).filter (· ∣ d.succ), φ m :=
-          ha ▸ (card_pow_eq_one_eq_order_of_aux hn a).symm ▸ (sum_totient _).symm
+          ha ▸ (card_pow_eq_one_eq_order_of_aux hn a).symm ▸ (sum_totient' _).symm
         _ = _ := by
           rw [h, ← sum_insert hinsert₁] <;> exact Finset.sum_congr hinsert.symm fun _ _ => rfl
         )
@@ -397,7 +397,7 @@ theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
         _ = ∑ m in (range c.succ).filter (· ∣ c), φ m :=
           Finset.sum_congr (Finset.insert_erase (mem_filter.2 ⟨mem_range.2 (lt_succ_of_leₓ (le_of_dvdₓ hc0 hd)), hd⟩))
             fun _ _ => rfl
-        _ = c := sum_totient _
+        _ = c := sum_totient' _
         
 
 theorem is_cyclic_of_card_pow_eq_one_le : IsCyclic α :=

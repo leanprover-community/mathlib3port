@@ -406,7 +406,7 @@ theorem TopologicalGroup.t2_space_iff_one_closed : T2Space G ↔ IsClosed ({1} :
   · apply subset.antisymm
     · intro x x_in
       have := group_separation_rel x 1
-      rw [div_one'] at this
+      rw [div_one] at this
       rw [← this, h] at x_in
       change x = 1 at x_in
       simp [x_in]

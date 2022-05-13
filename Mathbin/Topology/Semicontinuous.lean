@@ -283,11 +283,11 @@ theorem Continuous.comp_lower_semicontinuous {g : γ → δ} {f : α → γ} (hg
 
 theorem ContinuousAt.comp_lower_semicontinuous_within_at_antitone {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : LowerSemicontinuousWithinAt f s x) (gmon : Antitone g) : UpperSemicontinuousWithinAt (g ∘ f) s x :=
-  @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s γ _ _ _ (OrderDual δ) _ _ _ g f hg hf gmon
+  @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
 
 theorem ContinuousAt.comp_lower_semicontinuous_at_antitone {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : LowerSemicontinuousAt f x) (gmon : Antitone g) : UpperSemicontinuousAt (g ∘ f) x :=
-  @ContinuousAt.comp_lower_semicontinuous_at α _ x γ _ _ _ (OrderDual δ) _ _ _ g f hg hf gmon
+  @ContinuousAt.comp_lower_semicontinuous_at α _ x γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
 
 theorem Continuous.comp_lower_semicontinuous_on_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : LowerSemicontinuousOn f s) (gmon : Antitone g) : UpperSemicontinuousOn (g ∘ f) s := fun x hx =>
@@ -591,7 +591,7 @@ variable [Zero β]
 
 theorem IsOpen.upper_semicontinuous_indicator (hs : IsOpen s) (hy : y ≤ 0) :
     UpperSemicontinuous (indicatorₓ s fun x => y) :=
-  @IsOpen.lower_semicontinuous_indicator α _ (OrderDual β) _ s y _ hs hy
+  @IsOpen.lower_semicontinuous_indicator α _ βᵒᵈ _ s y _ hs hy
 
 theorem IsOpen.upper_semicontinuous_on_indicator (hs : IsOpen s) (hy : y ≤ 0) :
     UpperSemicontinuousOn (indicatorₓ s fun x => y) t :=
@@ -607,7 +607,7 @@ theorem IsOpen.upper_semicontinuous_within_at_indicator (hs : IsOpen s) (hy : y 
 
 theorem IsClosed.upper_semicontinuous_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
     UpperSemicontinuous (indicatorₓ s fun x => y) :=
-  @IsClosed.lower_semicontinuous_indicator α _ (OrderDual β) _ s y _ hs hy
+  @IsClosed.lower_semicontinuous_indicator α _ βᵒᵈ _ s y _ hs hy
 
 theorem IsClosed.upper_semicontinuous_on_indicator (hs : IsClosed s) (hy : 0 ≤ y) :
     UpperSemicontinuousOn (indicatorₓ s fun x => y) t :=
@@ -661,13 +661,11 @@ variable {δ : Type _} [LinearOrderₓ δ] [TopologicalSpace δ] [OrderTopology 
 
 theorem ContinuousAt.comp_upper_semicontinuous_within_at {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : UpperSemicontinuousWithinAt f s x) (gmon : Monotone g) : UpperSemicontinuousWithinAt (g ∘ f) s x :=
-  @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s (OrderDual γ) _ _ _ (OrderDual δ) _ _ _ g f hg hf
-    fun x y hxy => gmon hxy
+  @ContinuousAt.comp_lower_semicontinuous_within_at α _ x s γᵒᵈ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon.dual
 
 theorem ContinuousAt.comp_upper_semicontinuous_at {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : UpperSemicontinuousAt f x) (gmon : Monotone g) : UpperSemicontinuousAt (g ∘ f) x :=
-  @ContinuousAt.comp_lower_semicontinuous_at α _ x (OrderDual γ) _ _ _ (OrderDual δ) _ _ _ g f hg hf fun x y hxy =>
-    gmon hxy
+  @ContinuousAt.comp_lower_semicontinuous_at α _ x γᵒᵈ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon.dual
 
 theorem Continuous.comp_upper_semicontinuous_on {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : UpperSemicontinuousOn f s) (gmon : Monotone g) : UpperSemicontinuousOn (g ∘ f) s := fun x hx =>
@@ -679,11 +677,11 @@ theorem Continuous.comp_upper_semicontinuous {g : γ → δ} {f : α → γ} (hg
 
 theorem ContinuousAt.comp_upper_semicontinuous_within_at_antitone {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : UpperSemicontinuousWithinAt f s x) (gmon : Antitone g) : LowerSemicontinuousWithinAt (g ∘ f) s x :=
-  @ContinuousAt.comp_upper_semicontinuous_within_at α _ x s γ _ _ _ (OrderDual δ) _ _ _ g f hg hf gmon
+  @ContinuousAt.comp_upper_semicontinuous_within_at α _ x s γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
 
 theorem ContinuousAt.comp_upper_semicontinuous_at_antitone {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
     (hf : UpperSemicontinuousAt f x) (gmon : Antitone g) : LowerSemicontinuousAt (g ∘ f) x :=
-  @ContinuousAt.comp_upper_semicontinuous_at α _ x γ _ _ _ (OrderDual δ) _ _ _ g f hg hf gmon
+  @ContinuousAt.comp_upper_semicontinuous_at α _ x γ _ _ _ δᵒᵈ _ _ _ g f hg hf gmon
 
 theorem Continuous.comp_upper_semicontinuous_on_antitone {g : γ → δ} {f : α → γ} (hg : Continuous g)
     (hf : UpperSemicontinuousOn f s) (gmon : Antitone g) : LowerSemicontinuousOn (g ∘ f) s := fun x hx =>
@@ -708,7 +706,7 @@ the lemma uses `[has_continuous_add]`. -/
 theorem UpperSemicontinuousWithinAt.add' {f g : α → γ} (hf : UpperSemicontinuousWithinAt f s x)
     (hg : UpperSemicontinuousWithinAt g s x) (hcont : ContinuousAt (fun p : γ × γ => p.1 + p.2) (f x, g x)) :
     UpperSemicontinuousWithinAt (fun z => f z + g z) s x :=
-  @LowerSemicontinuousWithinAt.add' α _ x s (OrderDual γ) _ _ _ _ _ hf hg hcont
+  @LowerSemicontinuousWithinAt.add' α _ x s γᵒᵈ _ _ _ _ _ hf hg hcont
 
 /-- The sum of two upper semicontinuous functions is upper semicontinuous. Formulated with an
 explicit continuity assumption on addition, for application to `ereal`. The unprimed version of
@@ -765,7 +763,7 @@ theorem UpperSemicontinuous.add {f g : α → γ} (hf : UpperSemicontinuous f) (
 theorem upper_semicontinuous_within_at_sum {f : ι → α → γ} {a : Finset ι}
     (ha : ∀, ∀ i ∈ a, ∀, UpperSemicontinuousWithinAt (f i) s x) :
     UpperSemicontinuousWithinAt (fun z => ∑ i in a, f i z) s x :=
-  @lower_semicontinuous_within_at_sum α _ x s ι (OrderDual γ) _ _ _ _ f a ha
+  @lower_semicontinuous_within_at_sum α _ x s ι γᵒᵈ _ _ _ _ f a ha
 
 theorem upper_semicontinuous_at_sum {f : ι → α → γ} {a : Finset ι} (ha : ∀, ∀ i ∈ a, ∀, UpperSemicontinuousAt (f i) x) :
     UpperSemicontinuousAt (fun z => ∑ i in a, f i z) x := by
@@ -790,7 +788,7 @@ variable {ι : Sort _} {δ : Type _} [CompleteLinearOrder δ]
 
 theorem upper_semicontinuous_within_at_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousWithinAt (f i) s x) :
     UpperSemicontinuousWithinAt (fun x' => ⨅ i, f i x') s x :=
-  @lower_semicontinuous_within_at_supr α _ x s ι (OrderDual δ) _ f h
+  @lower_semicontinuous_within_at_supr α _ x s ι δᵒᵈ _ f h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_within_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
@@ -800,7 +798,7 @@ theorem upper_semicontinuous_within_at_binfi {p : ι → Prop} {f : ∀ i h : p 
 
 theorem upper_semicontinuous_at_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousAt (f i) x) :
     UpperSemicontinuousAt (fun x' => ⨅ i, f i x') x :=
-  @lower_semicontinuous_at_supr α _ x ι (OrderDual δ) _ f h
+  @lower_semicontinuous_at_supr α _ x ι δᵒᵈ _ f h
 
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}

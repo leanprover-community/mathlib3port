@@ -64,19 +64,47 @@ structure Language where
   Relations : ℕ → Type v
 
 /-- Used to define `first_order.language₂`. -/
+@[simp]
 def Sequence₂ (a₀ a₁ a₂ : Type u) : ℕ → Type u
   | 0 => a₀
   | 1 => a₁
   | 2 => a₂
   | _ => Pempty
 
-instance {a₀ a₁ a₂ : Type u} [h : Inhabited a₀] : Inhabited (Sequence₂ a₀ a₁ a₂ 0) :=
+namespace Sequence₂
+
+variable (a₀ a₁ a₂ : Type u)
+
+instance inhabited₀ [h : Inhabited a₀] : Inhabited (Sequence₂ a₀ a₁ a₂ 0) :=
   h
+
+instance inhabited₁ [h : Inhabited a₁] : Inhabited (Sequence₂ a₀ a₁ a₂ 1) :=
+  h
+
+instance inhabited₂ [h : Inhabited a₂] : Inhabited (Sequence₂ a₀ a₁ a₂ 2) :=
+  h
+
+instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
+  Pempty.is_empty
+
+@[simp]
+theorem lift_mk {i : ℕ} : Cardinal.lift (# (Sequence₂ a₀ a₁ a₂ i)) = # (Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) :=
+  by
+  rcases i with (_ | _ | _ | i) <;>
+    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_is_empty, Nat.cast_zeroₓ, lift_zero]
+
+@[simp]
+theorem sum_card : (Cardinal.sum fun i => # (Sequence₂ a₀ a₁ a₂ i)) = # a₀ + # a₁ + # a₂ := by
+  rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
+  simp [add_assocₓ]
+
+end Sequence₂
 
 namespace Language
 
 /-- A constructor for languages with only constants, unary and binary functions, and
 unary and binary relations. -/
+@[simps]
 protected def mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : Language :=
   ⟨Sequence₂ c f₁ f₂, Sequence₂ Pempty r₁ r₂⟩
 
@@ -97,6 +125,10 @@ variable (L : Language.{u, v})
 @[nolint has_inhabited_instance]
 protected def Constants :=
   L.Functions 0
+
+@[simp]
+theorem constants_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) : (Language.mk₂ c f₁ f₂ r₁ r₂).Constants = c :=
+  rfl
 
 /-- The type of symbols in a given language. -/
 @[nolint has_inhabited_instance]
@@ -132,8 +164,11 @@ theorem card_functions_le_omega [L.CountableFunctions] : # (Σl, L.Functions l) 
 variable {L} {L' : Language.{u', v'}}
 
 theorem card_eq_card_functions_add_card_relations :
-    L.card = Cardinal.lift.{v} (# (Σl, L.Functions l)) + Cardinal.lift.{u} (# (Σl, L.Relations l)) := by
-  rw [card, symbols, mk_sum]
+    L.card =
+      (Cardinal.sum fun l => Cardinal.lift.{v} (# (L.Functions l))) +
+        Cardinal.sum fun l => Cardinal.lift.{u} (# (L.Relations l)) :=
+  by
+  simp [card, symbols]
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
   IsRelational.empty_functions n
@@ -198,6 +233,31 @@ theorem Encodable.countable_functions [h : Encodable (Σl, L.Functions l)] : L.C
 
 instance (priority := 100) IsRelational.countable_functions [L.IsRelational] : L.CountableFunctions :=
   encodable.countable_functions
+
+@[simp]
+theorem card_functions_sum (i : ℕ) :
+    # ((L.Sum L').Functions i) = (# (L.Functions i)).lift + Cardinal.lift.{u} (# (L'.Functions i)) := by
+  simp [language.sum]
+
+@[simp]
+theorem card_relations_sum (i : ℕ) :
+    # ((L.Sum L').Relations i) = (# (L.Relations i)).lift + Cardinal.lift.{v} (# (L'.Relations i)) := by
+  simp [language.sum]
+
+@[simp]
+theorem card_sum : (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card := by
+  simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum, sum_add_distrib',
+    lift_add, lift_sum, lift_lift]
+  rw [add_assocₓ, ← add_assocₓ (Cardinal.sum fun i => (# (L'.functions i)).lift),
+    add_commₓ (Cardinal.sum fun i => (# (L'.functions i)).lift), add_assocₓ, add_assocₓ]
+
+@[simp]
+theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
+    (Language.mk₂ c f₁ f₂ r₁ r₂).card =
+      Cardinal.lift.{v} (# c) + Cardinal.lift.{v} (# f₁) + Cardinal.lift.{v} (# f₂) + Cardinal.lift.{u} (# r₁) +
+        Cardinal.lift.{u} (# r₂) :=
+  by
+  simp [card_eq_card_functions_add_card_relations, add_assocₓ]
 
 variable (L) (M : Type w)
 

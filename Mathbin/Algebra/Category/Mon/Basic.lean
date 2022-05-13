@@ -142,6 +142,10 @@ theorem coe_of (R : Type u) [CommMonoidₓ R] : (CommMon.of R : Type u) = R :=
 instance hasForgetToMon : HasForget₂ CommMon Mon :=
   BundledHom.forget₂ _ _
 
+@[to_additive]
+instance : Coe CommMon.{u} Mon.{u} where
+  coe := (forget₂ CommMon Mon).obj
+
 end CommMon
 
 -- We verify that the coercions of morphisms to functions work correctly:

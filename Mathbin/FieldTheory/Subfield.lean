@@ -531,7 +531,7 @@ def closure (s : Set K) : Subfield K where
   zero_mem' := ⟨0, Subring.zero_mem _, 1, Subring.one_mem _, div_one _⟩
   one_mem' := ⟨1, Subring.one_mem _, 1, Subring.one_mem _, div_one _⟩
   neg_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨-y, Subring.neg_mem _ hy, z, hz, x_eq ▸ neg_div _ _⟩
-  inv_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨z, hz, y, hy, x_eq ▸ inv_div.symm⟩
+  inv_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨z, hz, y, hy, x_eq ▸ (inv_div _ _).symm⟩
   add_mem' := fun x y x_mem y_mem => by
     obtain ⟨nx, hnx, dx, hdx, rfl⟩ := id x_mem
     obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem
@@ -547,7 +547,7 @@ def closure (s : Set K) : Subfield K where
   mul_mem' := fun x y x_mem y_mem => by
     obtain ⟨nx, hnx, dx, hdx, rfl⟩ := id x_mem
     obtain ⟨ny, hny, dy, hdy, rfl⟩ := id y_mem
-    exact ⟨nx * ny, Subring.mul_mem _ hnx hny, dx * dy, Subring.mul_mem _ hdx hdy, (div_mul_div_comm₀ _ _ _ _).symm⟩
+    exact ⟨nx * ny, Subring.mul_mem _ hnx hny, dx * dy, Subring.mul_mem _ hdx hdy, (div_mul_div_comm _ _ _ _).symm⟩
 
 theorem mem_closure_iff {s : Set K} {x} : x ∈ closure s ↔ ∃ y ∈ Subring.closure s, ∃ z ∈ Subring.closure s, y / z = x :=
   Iff.rfl

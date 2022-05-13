@@ -73,7 +73,7 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrtT
     refine' le_transₓ ((div_le_div_right _).mpr pi_le_four) _
     apply pow_pos
     norm_num
-    rw [pow_succₓ, pow_succₓ, ← mul_assoc, ← div_div_eq_div_mul]
+    rw [pow_succₓ, pow_succₓ, ← mul_assoc, ← div_div]
     convert le_rfl
     all_goals
       repeat'
@@ -91,7 +91,7 @@ theorem pi_lt_sqrt_two_add_series (n : ℕ) : π < 2 ^ (n + 1) * sqrt (2 - sqrtT
     pow_succₓ, pow_succₓ, ← mul_assoc (2 : ℝ),
     show (2 : ℝ) * 2 = 4 by
       norm_num,
-    ← mul_assoc, div_mul_cancel, mul_comm ((2 : ℝ) ^ n), ← div_div_eq_div_mul, div_mul_cancel]
+    ← mul_assoc, div_mul_cancel, mul_comm ((2 : ℝ) ^ n), ← div_div, div_mul_cancel]
   apply pow_ne_zero
   norm_num
   norm_num

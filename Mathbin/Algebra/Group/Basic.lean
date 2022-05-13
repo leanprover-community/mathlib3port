@@ -16,11 +16,15 @@ one-liners from the corresponding axioms. For the definitions of semigroups, mon
 -/
 
 
+open Function
+
 universe u
+
+variable {α G : Type _}
 
 section Associative
 
-variable {α : Type u} (f : α → α → α) [IsAssociative α f] (x y : α)
+variable (f : α → α → α) [IsAssociative α f] (x y : α)
 
 /-- Composing two associative operations of `f : α → α → α` on the left
 is equal to an associative operation on the left.
@@ -39,8 +43,6 @@ theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z 
 end Associative
 
 section Semigroupₓ
-
-variable {α : Type _}
 
 /-- Composing two multiplications on the left by `y` then `x`
 is equal to a multiplication on the left by `x * y`.
@@ -91,7 +93,7 @@ end MulOneClassₓ
 
 section CommSemigroupₓ
 
-variable {G : Type u} [CommSemigroupₓ G]
+variable [CommSemigroupₓ G]
 
 @[no_rsimp, to_additive]
 theorem mul_left_commₓ : ∀ a b c : G, a * (b * c) = b * (a * c) :=
@@ -179,7 +181,7 @@ end RightCancelMonoid
 
 section HasInvolutiveInv
 
-variable {G : Type u} [HasInvolutiveInv G] {a b : G}
+variable [HasInvolutiveInv G] {a b : G}
 
 @[simp, to_additive]
 theorem inv_involutive : Function.Involutive (Inv.inv : G → G) :=
@@ -209,11 +211,25 @@ theorem eq_inv_iff_eq_inv : a = b⁻¹ ↔ b = a⁻¹ :=
 theorem inv_eq_iff_inv_eq : a⁻¹ = b ↔ b⁻¹ = a :=
   eq_comm.trans <| eq_inv_iff_eq_inv.trans eq_comm
 
+variable (G)
+
+@[simp, to_additive]
+theorem inv_comp_inv : Inv.inv ∘ Inv.inv = @id G :=
+  inv_involutive.comp_self
+
+@[to_additive]
+theorem left_inverse_inv : LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
+  inv_invₓ
+
+@[to_additive]
+theorem right_inverse_inv : LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
+  inv_invₓ
+
 end HasInvolutiveInv
 
 section DivInvMonoidₓ
 
-variable {G : Type u} [DivInvMonoidₓ G]
+variable [DivInvMonoidₓ G] {a b c : G}
 
 -- The attributes are out of order on purpose
 @[to_additive, field_simps]
@@ -241,27 +257,87 @@ theorem one_div (a : G) : 1 / a = a⁻¹ :=
 theorem mul_div (a b c : G) : a * (b / c) = a * b / c := by
   simp only [mul_assoc, div_eq_mul_inv]
 
+@[to_additive]
+theorem div_eq_mul_one_div (a b : G) : a / b = a * (1 / b) := by
+  rw [div_eq_mul_inv, one_div]
+
 end DivInvMonoidₓ
 
-section Groupₓ
+section DivisionMonoid
 
-variable {G : Type u} [Groupₓ G] {a b c d : G}
+variable [DivisionMonoid α] {a b c : α}
 
-@[simp, to_additive]
-theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by
-  simp [mul_assoc]
-
-@[simp, to_additive neg_zero]
-theorem one_inv : 1⁻¹ = (1 : G) :=
-  inv_eq_of_mul_eq_oneₓ (one_mulₓ 1)
+attribute [local simp] mul_assoc div_eq_mul_inv
 
 @[to_additive]
-theorem left_inverse_inv G [HasInvolutiveInv G] : Function.LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
-  inv_invₓ
+theorem inv_eq_of_mul_eq_one_left (h : a * b = 1) : b⁻¹ = a := by
+  rw [← inv_eq_of_mul_eq_one_right h, inv_invₓ]
+
+@[to_additive]
+theorem eq_inv_of_mul_eq_one_left (h : a * b = 1) : a = b⁻¹ :=
+  (inv_eq_of_mul_eq_one_left h).symm
+
+@[to_additive]
+theorem eq_inv_of_mul_eq_one_right (h : a * b = 1) : b = a⁻¹ :=
+  (inv_eq_of_mul_eq_one_right h).symm
+
+@[to_additive]
+theorem eq_one_div_of_mul_eq_one_left (h : b * a = 1) : b = 1 / a := by
+  rw [eq_inv_of_mul_eq_one_left h, one_div]
+
+@[to_additive]
+theorem eq_one_div_of_mul_eq_one_right (h : a * b = 1) : b = 1 / a := by
+  rw [eq_inv_of_mul_eq_one_right h, one_div]
+
+@[to_additive]
+theorem eq_of_div_eq_one (h : a / b = 1) : a = b :=
+  inv_injective <|
+    inv_eq_of_mul_eq_one_right <| by
+      rwa [← div_eq_mul_inv]
+
+@[to_additive]
+theorem div_ne_one_of_ne : a ≠ b → a / b ≠ 1 :=
+  mt eq_of_div_eq_one
+
+variable (a b c)
+
+@[to_additive]
+theorem one_div_mul_one_div_rev : 1 / a * (1 / b) = 1 / (b * a) := by
+  simp
+
+@[to_additive]
+theorem inv_div_left : a⁻¹ / b = (b * a)⁻¹ := by
+  simp
+
+@[simp, to_additive]
+theorem inv_div : (a / b)⁻¹ = b / a := by
+  simp
+
+@[simp, to_additive]
+theorem one_div_div : 1 / (a / b) = b / a := by
+  simp
+
+@[simp, to_additive]
+theorem inv_one : (1 : α)⁻¹ = 1 := by
+  simpa only [one_div, inv_invₓ] using (inv_div (1 : α) 1).symm
+
+@[simp, to_additive]
+theorem div_one : a / 1 = a := by
+  simp
+
+@[to_additive]
+theorem one_div_one : (1 : α) / 1 = 1 :=
+  div_one _
+
+@[to_additive]
+theorem one_div_one_div : 1 / (1 / a) = a := by
+  simp
+
+variable {a b c}
 
 @[simp, to_additive]
 theorem inv_eq_one : a⁻¹ = 1 ↔ a = 1 :=
-  inv_injective.eq_iff' one_inv
+  inv_injective.eq_iff' inv_one
 
 @[simp, to_additive]
 theorem one_eq_inv : 1 = a⁻¹ ↔ a = 1 :=
@@ -269,15 +345,132 @@ theorem one_eq_inv : 1 = a⁻¹ ↔ a = 1 :=
 
 @[to_additive]
 theorem inv_ne_one : a⁻¹ ≠ 1 ↔ a ≠ 1 :=
-  not_congr inv_eq_one
+  inv_eq_one.Not
+
+@[to_additive]
+theorem eq_of_one_div_eq_one_div (h : 1 / a = 1 / b) : a = b := by
+  rw [← one_div_one_div a, h, one_div_one_div]
+
+variable (a b c)
+
+-- The attributes are out of order on purpose
+@[to_additive, field_simps]
+theorem div_div_eq_mul_div : a / (b / c) = a * c / b := by
+  simp
+
+@[simp, to_additive]
+theorem div_inv_eq_mul : a / b⁻¹ = a * b := by
+  simp
+
+@[to_additive]
+theorem div_mul_eq_div_div_swap : a / (b * c) = a / c / b := by
+  simp only [mul_assoc, mul_inv_rev, div_eq_mul_inv]
+
+end DivisionMonoid
+
+section DivisionCommMonoid
+
+variable [DivisionCommMonoid α] (a b c d : α)
+
+attribute [local simp] mul_assoc mul_comm mul_left_commₓ div_eq_mul_inv
+
+@[to_additive neg_add]
+theorem mul_inv : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
+  simp
+
+@[to_additive]
+theorem inv_div' : (a / b)⁻¹ = a⁻¹ / b⁻¹ := by
+  simp
+
+@[to_additive]
+theorem div_eq_inv_mul : a / b = b⁻¹ * a := by
+  simp
+
+@[to_additive]
+theorem inv_mul_eq_div : a⁻¹ * b = b / a := by
+  simp
+
+@[to_additive]
+theorem inv_mul' : (a * b)⁻¹ = a⁻¹ / b := by
+  simp
+
+@[simp, to_additive]
+theorem inv_div_inv : a⁻¹ / b⁻¹ = b / a := by
+  simp
+
+@[to_additive]
+theorem inv_inv_div_inv : (a⁻¹ / b⁻¹)⁻¹ = a / b := by
+  simp
+
+@[to_additive]
+theorem one_div_mul_one_div : 1 / a * (1 / b) = 1 / (a * b) := by
+  simp
+
+@[to_additive]
+theorem div_right_comm : a / b / c = a / c / b := by
+  simp
+
+@[to_additive, field_simps]
+theorem div_div : a / b / c = a / (b * c) := by
+  simp
+
+@[to_additive]
+theorem div_mul : a / b * c = a / (b / c) := by
+  simp
+
+@[to_additive]
+theorem mul_div_left_comm : a * (b / c) = b * (a / c) := by
+  simp
+
+@[to_additive]
+theorem mul_div_right_comm : a * b / c = a / c * b := by
+  simp
+
+@[to_additive]
+theorem div_mul_eq_div_div : a / (b * c) = a / b / c := by
+  simp
+
+@[to_additive, field_simps]
+theorem div_mul_eq_mul_div : a / b * c = a * c / b := by
+  simp
+
+@[to_additive]
+theorem mul_comm_div : a / b * c = a * (c / b) := by
+  simp
+
+@[to_additive]
+theorem div_mul_comm : a / b * c = c / b * a := by
+  simp
+
+@[to_additive]
+theorem div_mul_eq_div_mul_one_div : a / (b * c) = a / b * (1 / c) := by
+  simp
+
+@[to_additive]
+theorem div_div_div_eq : a / b / (c / d) = a * d / (b * c) := by
+  simp
+
+@[to_additive]
+theorem div_div_div_comm : a / b / (c / d) = a / c / (b / d) := by
+  simp
+
+@[to_additive]
+theorem div_mul_div_comm : a / b * (c / d) = a * c / (b * d) := by
+  simp
+
+@[to_additive]
+theorem mul_div_mul_comm : a * b / (c * d) = a / c * (b / d) := by
+  simp
+
+end DivisionCommMonoid
+
+section Groupₓ
+
+variable [Groupₓ G] {a b c d : G}
 
 @[simp, to_additive]
 theorem div_eq_inv_self : a / b = b⁻¹ ↔ a = 1 := by
   rw [div_eq_mul_inv, mul_left_eq_self]
-
-@[simp, to_additive]
-theorem mul_inv_cancel_left (a b : G) : a * (a⁻¹ * b) = b := by
-  rw [← mul_assoc, mul_right_invₓ, one_mulₓ]
 
 @[to_additive]
 theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x => ⟨a⁻¹ * x, mul_inv_cancel_left a x⟩
@@ -285,16 +478,6 @@ theorem mul_left_surjective (a : G) : Function.Surjective ((· * ·) a) := fun x
 @[to_additive]
 theorem mul_right_surjective (a : G) : Function.Surjective fun x => x * a := fun x =>
   ⟨x * a⁻¹, inv_mul_cancel_right x a⟩
-
-@[simp, to_additive neg_add_rev]
-theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
-  inv_eq_of_mul_eq_oneₓ <| by
-    simp
-
-@[to_additive]
-theorem eq_inv_of_mul_eq_one (h : a * b = 1) : a = b⁻¹ := by
-  have : a⁻¹ = b := inv_eq_of_mul_eq_oneₓ h
-  simp [this.symm]
 
 @[to_additive]
 theorem eq_mul_inv_of_mul_eq (h : a * c = b) : a = b * c⁻¹ := by
@@ -330,7 +513,7 @@ theorem mul_eq_of_eq_mul_inv (h : a = c * b⁻¹) : a * b = c := by
 
 @[to_additive]
 theorem mul_eq_one_iff_eq_inv : a * b = 1 ↔ a = b⁻¹ :=
-  ⟨eq_inv_of_mul_eq_one, fun h => by
+  ⟨eq_inv_of_mul_eq_one_left, fun h => by
     rw [h, mul_left_invₓ]⟩
 
 @[to_additive]
@@ -385,10 +568,6 @@ theorem div_left_injective : Function.Injective fun a => a / b := by
 theorem div_right_injective : Function.Injective fun a => b / a := by
   simpa only [div_eq_mul_inv] using fun a a' h => inv_injective (mul_right_injective b h)
 
-@[simp, to_additive neg_sub]
-theorem inv_div' (a b : G) : (a / b)⁻¹ = b / a := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, mul_inv_rev, inv_invₓ]
-
 @[simp, to_additive sub_add_cancel]
 theorem div_mul_cancel' (a b : G) : a / b * b = a := by
   rw [div_eq_mul_inv, inv_mul_cancel_right a b]
@@ -400,26 +579,6 @@ theorem div_self' (a : G) : a / a = 1 := by
 @[simp, to_additive add_sub_cancel]
 theorem mul_div_cancel'' (a b : G) : a * b / b = a := by
   rw [div_eq_mul_inv, mul_inv_cancel_rightₓ a b]
-
-@[to_additive eq_of_sub_eq_zero]
-theorem eq_of_div_eq_one' (h : a / b = 1) : a = b :=
-  calc
-    a = a / b * b := (div_mul_cancel' a b).symm
-    _ = b := by
-      rw [h, one_mulₓ]
-    
-
-@[to_additive]
-theorem div_ne_one_of_ne (h : a ≠ b) : a / b ≠ 1 :=
-  mt eq_of_div_eq_one' h
-
-@[simp, to_additive]
-theorem div_inv_eq_mul (a b : G) : a / b⁻¹ = a * b := by
-  rw [div_eq_mul_inv, inv_invₓ]
-
-@[to_additive]
-theorem div_mul_eq_div_div_swap (a b c : G) : a / (b * c) = a / c / b := by
-  simp only [mul_assoc, mul_inv_rev, div_eq_mul_inv]
 
 @[simp, to_additive]
 theorem mul_div_mul_right_eq_div (a b c : G) : a * c / (b * c) = a / b := by
@@ -456,15 +615,11 @@ theorem div_mul_div_cancel' (a b c : G) : a / b * (b / c) = a / c := by
 
 @[simp, to_additive sub_sub_sub_cancel_right]
 theorem div_div_div_cancel_right' (a b c : G) : a / c / (b / c) = a / b := by
-  rw [← inv_div' c b, div_inv_eq_mul, div_mul_div_cancel']
-
-@[to_additive]
-theorem div_div_assoc_swap : a / (b / c) = a * c / b := by
-  simp only [mul_assoc, mul_inv_rev, inv_invₓ, div_eq_mul_inv]
+  rw [← inv_div c b, div_inv_eq_mul, div_mul_div_cancel']
 
 @[to_additive]
 theorem div_eq_one : a / b = 1 ↔ a = b :=
-  ⟨eq_of_div_eq_one', fun h => by
+  ⟨eq_of_div_eq_one, fun h => by
     rw [h, div_self']⟩
 
 alias div_eq_one ↔ _ div_eq_one_of_eq
@@ -478,12 +633,6 @@ theorem div_ne_one : a / b ≠ 1 ↔ a ≠ b :=
 @[simp, to_additive]
 theorem div_eq_self : a / b = a ↔ b = 1 := by
   rw [div_eq_mul_inv, mul_right_eq_self, inv_eq_one]
-
--- The unprimed version is used by `group_with_zero`.  This is the preferred choice.
--- See https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/.60div_one'.60
-@[simp, to_additive sub_zero]
-theorem div_one' (a : G) : a / 1 = a :=
-  div_eq_self.2 rfl
 
 @[to_additive eq_sub_iff_add_eq]
 theorem eq_div_iff_mul_eq' : a = b / c ↔ a * c = b := by
@@ -530,49 +679,13 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable {G : Type u} [CommGroupₓ G] {a b c d : G}
+variable [CommGroupₓ G] {a b c d : G}
 
 attribute [local simp] mul_assoc mul_comm mul_left_commₓ div_eq_mul_inv
-
-@[to_additive neg_add]
-theorem mul_inv (a b : G) : (a * b)⁻¹ = a⁻¹ * b⁻¹ := by
-  rw [mul_inv_rev, mul_comm]
 
 @[to_additive]
 theorem div_eq_of_eq_mul' {a b c : G} (h : a = b * c) : a / b = c := by
   rw [h, div_eq_mul_inv, mul_comm, inv_mul_cancel_leftₓ]
-
-@[to_additive]
-theorem mul_div_left_comm {x y z : G} : x * (y / z) = y * (x / z) := by
-  simp_rw [div_eq_mul_inv, mul_left_commₓ]
-
-@[to_additive]
-theorem div_mul_div_comm (a b c d : G) : a / b * (c / d) = a * c / (b * d) := by
-  simp
-
-@[to_additive]
-theorem div_div_div_comm (a b c d : G) : a / b / (c / d) = a / c / (b / d) := by
-  simp
-
-@[to_additive]
-theorem div_mul_eq_div_div (a b c : G) : a / (b * c) = a / b / c := by
-  simp
-
-@[to_additive]
-theorem inv_mul_eq_div (a b : G) : a⁻¹ * b = b / a := by
-  simp
-
-@[to_additive sub_add_eq_add_sub]
-theorem div_mul_eq_mul_div' (a b c : G) : a / b * c = a * c / b := by
-  simp
-
-@[to_additive]
-theorem div_div (a b c : G) : a / b / c = a / (b * c) := by
-  simp
-
-@[to_additive]
-theorem div_mul (a b c : G) : a / b * c = a / (b / c) := by
-  simp
 
 @[simp, to_additive]
 theorem mul_div_mul_left_eq_div (a b c : G) : c * a / (c * b) = a / b := by
@@ -595,39 +708,17 @@ theorem mul_eq_of_eq_div' (h : b = c / a) : a * b = c := by
 theorem div_div_self' (a b : G) : a / (a / b) = b := by
   simpa using mul_inv_cancel_left a b
 
-@[to_additive add_sub_comm]
-theorem mul_div_comm' (a b c d : G) : a * b / (c * d) = a / c * (b / d) := by
-  simp
-
 @[to_additive]
 theorem div_eq_div_mul_div (a b c : G) : a / b = c / b * (a / c) := by
-  simp
-  rw [mul_left_commₓ c]
-  simp
-
-@[to_additive]
-theorem inv_inv_div_inv (a b : G) : (a⁻¹ / b⁻¹)⁻¹ = a / b := by
-  simp
+  simp [mul_left_commₓ c]
 
 @[simp, to_additive]
 theorem div_div_cancel (a b : G) : a / (a / b) = b :=
   div_div_self' a b
 
-@[to_additive sub_eq_neg_add]
-theorem div_eq_inv_mul' (a b : G) : a / b = b⁻¹ * a := by
-  rw [div_eq_mul_inv, mul_comm _ _]
-
 @[simp, to_additive]
 theorem div_div_cancel_left (a b : G) : a / b / a = b⁻¹ := by
   simp
-
-@[to_additive]
-theorem inv_mul' (a b : G) : (a * b)⁻¹ = a⁻¹ / b := by
-  rw [div_eq_mul_inv, mul_inv a b]
-
-@[simp, to_additive]
-theorem inv_div_inv (a b : G) : a⁻¹ / b⁻¹ = b / a := by
-  simp [div_eq_inv_mul', mul_comm]
 
 @[to_additive eq_sub_iff_add_eq']
 theorem eq_div_iff_mul_eq'' : a = b / c ↔ c * a = b := by
@@ -639,7 +730,7 @@ theorem div_eq_iff_eq_mul' : a / b = c ↔ a = b * c := by
 
 @[simp, to_additive add_sub_cancel']
 theorem mul_div_cancel''' (a b : G) : a * b / a = b := by
-  rw [div_eq_inv_mul', inv_mul_cancel_leftₓ]
+  rw [div_eq_inv_mul, inv_mul_cancel_leftₓ]
 
 @[simp, to_additive]
 theorem mul_div_cancel'_right (a b : G) : a * (b / a) = b := by
@@ -647,7 +738,7 @@ theorem mul_div_cancel'_right (a b : G) : a * (b / a) = b := by
 
 @[simp, to_additive sub_add_cancel']
 theorem div_mul_cancel'' (a b : G) : a / (a * b) = b⁻¹ := by
-  rw [← inv_div', mul_div_cancel''']
+  rw [← inv_div, mul_div_cancel''']
 
 -- This lemma is in the `simp` set under the name `mul_inv_cancel_comm_assoc`,
 -- along with the additive version `add_neg_cancel_comm_assoc`,
@@ -655,12 +746,6 @@ theorem div_mul_cancel'' (a b : G) : a / (a * b) = b⁻¹ := by
 @[to_additive]
 theorem mul_mul_inv_cancel'_right (a b : G) : a * (b * a⁻¹) = b := by
   rw [← div_eq_mul_inv, mul_div_cancel'_right a b]
-
-@[to_additive sub_right_comm]
-theorem div_right_comm' (a b c : G) : a / b / c = a / c / b := by
-  repeat'
-    rw [div_eq_mul_inv]
-  exact mul_right_commₓ _ _ _
 
 @[simp, to_additive]
 theorem mul_mul_div_cancel (a b c : G) : a * c * (b / c) = a * b := by
@@ -680,16 +765,16 @@ theorem mul_div_div_cancel (a b c : G) : a * b / (a / c) = b * c := by
 
 @[simp, to_additive]
 theorem div_div_div_cancel_left (a b c : G) : c / a / (c / b) = b / a := by
-  rw [← inv_div' b c, div_inv_eq_mul, mul_comm, div_mul_div_cancel']
+  rw [← inv_div b c, div_inv_eq_mul, mul_comm, div_mul_div_cancel']
 
 @[to_additive]
 theorem div_eq_div_iff_mul_eq_mul : a / b = c / d ↔ a * d = c * b := by
-  rw [div_eq_iff_eq_mul, div_mul_eq_mul_div', eq_comm, div_eq_iff_eq_mul']
+  rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, eq_comm, div_eq_iff_eq_mul']
   simp only [mul_comm, eq_comm]
 
 @[to_additive]
 theorem div_eq_div_iff_div_eq_div : a / b = c / d ↔ a / c = b / d := by
-  rw [div_eq_iff_eq_mul, div_mul_eq_mul_div', div_eq_iff_eq_mul', mul_div_assoc]
+  rw [div_eq_iff_eq_mul, div_mul_eq_mul_div, div_eq_iff_eq_mul', mul_div_assoc]
 
 end CommGroupₓ
 

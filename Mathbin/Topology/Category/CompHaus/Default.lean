@@ -27,7 +27,7 @@ introduced.
 -/
 
 
-universe u
+universe v u
 
 open CategoryTheory
 
@@ -164,7 +164,7 @@ namespace CompHaus
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
-def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.Cone F where
+def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F where
   x :=
     { toTop := (Top.limitCone (F ⋙ compHausToTop)).x,
       IsCompact := by
@@ -200,7 +200,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.C
         exact (hx f).symm }
 
 /-- The limit cone `CompHaus.limit_cone F` is indeed a limit cone. -/
-def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ CompHaus.{u}) : Limits.IsLimit (limitCone F) where
+def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.IsLimit (limitCone F) where
   lift := fun S => (Top.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
   uniq' := fun S m h => (Top.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 

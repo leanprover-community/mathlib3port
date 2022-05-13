@@ -1375,7 +1375,7 @@ theorem coe_sub_one {n} (a : Finₓ (n + 1)) : ↑(a - 1) = if a = 0 then n else
   rwa [Subtype.ext_iff] at h
 
 /-- By sending `x` to `last n - x`, `fin n` is order-equivalent to its `order_dual`. -/
-def _root_.order_iso.fin_equiv : ∀ {n}, OrderDual (Finₓ n) ≃o Finₓ n
+def _root_.order_iso.fin_equiv : ∀ {n}, (Finₓ n)ᵒᵈ ≃o Finₓ n
   | 0 => ⟨⟨elim0, elim0, elim0, elim0⟩, elim0⟩
   | n + 1 =>
     OrderIso.symm <|

@@ -130,6 +130,12 @@ theorem map₂_ne_bot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot := b
 theorem NeBot.map₂ (hf : f.ne_bot) (hg : g.ne_bot) : (map₂ m f g).ne_bot :=
   map₂_ne_bot_iff.2 ⟨hf, hg⟩
 
+theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
+  (map₂_ne_bot_iff.1 h).1
+
+theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
+  (map₂_ne_bot_iff.1 h).2
+
 theorem map₂_sup_left : map₂ m (f₁⊔f₂) g = map₂ m f₁ g⊔map₂ m f₂ g := by
   ext u
   constructor

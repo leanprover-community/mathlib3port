@@ -954,10 +954,11 @@ def sumEquivSigmaBool (α β : Type u) : Sum α β ≃ Σb : Bool, cond b α β 
     cases s <;> rfl, fun s => by
     rcases s with ⟨_ | _, _⟩ <;> rfl⟩
 
-/-- `sigma_preimage_equiv f` for `f : α → β` is the natural equivalence between
+/-- `sigma_fiber_equiv f` for `f : α → β` is the natural equivalence between
 the type of all fibres of `f` and the total space `α`. -/
+-- See also `equiv.sigma_preimage_equiv`.
 @[simps]
-def sigmaPreimageEquiv {α β : Type _} (f : α → β) : (Σy : β, { x // f x = y }) ≃ α :=
+def sigmaFiberEquiv {α β : Type _} (f : α → β) : (Σy : β, { x // f x = y }) ≃ α :=
   ⟨fun x => ↑x.2, fun x => ⟨f x, x, rfl⟩, fun ⟨y, x, rfl⟩ => rfl, fun x => rfl⟩
 
 end
@@ -1340,6 +1341,16 @@ theorem sigma_equiv_prod_sigma_congr_right :
   ext ⟨a, b⟩ : 1
   simp
 
+/-- A family of equivalences between fibers gives an equivalence between domains. -/
+-- See also `equiv.of_preimage_equiv`.
+@[simps]
+def ofFiberEquiv {α β γ : Type _} {f : α → γ} {g : β → γ} (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) : α ≃ β :=
+  (sigmaFiberEquiv f).symm.trans <| (Equivₓ.sigmaCongrRight e).trans (sigmaFiberEquiv g)
+
+theorem of_fiber_equiv_map {α β γ} {f : α → γ} {g : β → γ} (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) (a : α) :
+    g (ofFiberEquiv e a) = f a :=
+  (_ : { b // g b = _ }).Prop
+
 /-- A variation on `equiv.prod_congr` where the equivalence in the second component can depend
   on the first component. A typical example is a shear mapping, explaining the name of this
   declaration. -/
@@ -1491,6 +1502,16 @@ def sigmaProdDistrib {ι : Type _} (α : ι → Type _) (β : Type _) : (Σi, α
     rfl, fun p => by
     rcases p with ⟨_, ⟨_, _⟩⟩
     rfl⟩
+
+/-- An equivalence that separates out the 0th fiber of `(Σ (n : ℕ), f n)`. -/
+def sigmaNatSucc (f : ℕ → Type u) : (Σn, f n) ≃ Sum (f 0) (Σn, f (n + 1)) :=
+  ⟨fun x =>
+    @Sigma.casesOn ℕ f (fun _ => Sum (f 0) (Σn, f (n + 1))) x fun n =>
+      @Nat.casesOn (fun i => f i → Sum (f 0) (Σn : ℕ, f (n + 1))) n (fun x : f 0 => Sum.inl x) fun x : f n.succ =>
+        Sum.inr ⟨n, x⟩,
+    Sum.elim (Sigma.mk 0) (Sigma.map Nat.succ fun _ => id), by
+    rintro ⟨n | n, x⟩ <;> rfl, by
+    rintro (x | ⟨n, x⟩) <;> rfl⟩
 
 /-- The product `bool × α` is equivalent to `α ⊕ α`. -/
 def boolProdEquivSum (α : Type u) : Bool × α ≃ Sum α α :=
@@ -1708,16 +1729,16 @@ def sigmaSubtypeEquivOfSubset {α : Type u} (p : α → Type v) (q : α → Prop
 
 /-- If a predicate `p : β → Prop` is true on the range of a map `f : α → β`, then
 `Σ y : {y // p y}, {x // f x = y}` is equivalent to `α`. -/
-def sigmaSubtypePreimageEquiv {α : Type u} {β : Type v} (f : α → β) (p : β → Prop) (h : ∀ x, p (f x)) :
+def sigmaSubtypeFiberEquiv {α : Type u} {β : Type v} (f : α → β) (p : β → Prop) (h : ∀ x, p (f x)) :
     (Σy : Subtype p, { x : α // f x = y }) ≃ α :=
   calc
     _ ≃ Σy : β, { x : α // f x = y } := sigmaSubtypeEquivOfSubset _ p fun y ⟨x, h'⟩ => h' ▸ h x
-    _ ≃ α := sigmaPreimageEquiv f
+    _ ≃ α := sigmaFiberEquiv f
     
 
 /-- If for each `x` we have `p x ↔ q (f x)`, then `Σ y : {y // q y}, f ⁻¹' {y}` is equivalent
 to `{x // p x}`. -/
-def sigmaSubtypePreimageEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p : α → Prop} {q : β → Prop}
+def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p : α → Prop} {q : β → Prop}
     (h : ∀ x, p x ↔ q (f x)) : (Σy : Subtype q, { x : α // f x = y }) ≃ Subtype p :=
   calc
     (Σy : Subtype q, { x : α // f x = y }) ≃ Σy : Subtype q, { x : Subtype p // Subtype.mk (f x) ((h x).1 x.2) = y } :=
@@ -1728,7 +1749,7 @@ def sigmaSubtypePreimageEquivSubtype {α : Type u} {β : Type v} (f : α → β)
       refine' (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)
       intro x
       exact ⟨fun ⟨hp, h'⟩ => congr_argₓ Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
-    _ ≃ Subtype p := sigmaPreimageEquiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
+    _ ≃ Subtype p := sigmaFiberEquiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
     
 
 /-- A sigma type over an `option` is equivalent to the sigma set over the original type,

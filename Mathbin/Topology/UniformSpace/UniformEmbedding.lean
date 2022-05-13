@@ -178,11 +178,8 @@ theorem UniformInducing.uniform_continuous_iff {f : α → β} {g : β → γ} (
 
 theorem UniformInducing.inducing {f : α → β} (h : UniformInducing f) : Inducing f := by
   refine' ⟨eq_of_nhds_eq_nhds fun a => _⟩
-  rw [nhds_induced, nhds_eq_uniformity, nhds_eq_uniformity, ← h.comap_uniformity, comap_lift'_eq, comap_lift'_eq2] <;>
-    · first |
-        rfl|
-        exact monotone_preimage
-      
+  rw [nhds_induced, nhds_eq_uniformity, nhds_eq_uniformity, ← h.comap_uniformity, comap_lift'_eq, comap_lift'_eq2]
+  exacts[rfl, monotone_preimage]
 
 theorem UniformInducing.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β'] {e₁ : α → α'} {e₂ : β → β'}
     (h₁ : UniformInducing e₁) (h₂ : UniformInducing e₂) : UniformInducing fun p : α × β => (e₁ p.1, e₂ p.2) :=

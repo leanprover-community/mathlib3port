@@ -399,7 +399,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
           (fun i => Hc) (fun x hx i => Hd x hx) _ _ _
       · exact fun x y => (OrderIso.funUnique (Finₓ 1) ℝ).symm.le_iff_le
         
-      · exact (volume_preserving_fun_unique (Finₓ 1) ℝ).symm
+      · exact (volume_preserving_fun_unique (Finₓ 1) ℝ).symm _
         
       · intro x
         rw [Finₓ.sum_univ_one, hF', e_symm, Pi.single_eq_same, one_smul]
@@ -463,7 +463,7 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
           (fun x hx => _) _ _ Hi
       · exact fun x y => (OrderIso.finTwoArrowIso ℝ).symm.le_iff_le
         
-      · exact (volume_preserving_fin_two_arrow ℝ).symm
+      · exact (volume_preserving_fin_two_arrow ℝ).symm _
         
       · exact Finₓ.forall_fin_two.2 ⟨Hcf, Hcg⟩
         
@@ -481,7 +481,7 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       have : ∀ a b : ℝ¹ f : ℝ¹ → E, (∫ x in Icc a b, f x) = ∫ x in Icc (a 0) (b 0), f fun _ => x := by
         intro a b f
         convert
-          ((volume_preserving_fun_unique (Finₓ 1) ℝ).symm.set_integral_preimage_emb
+          (((volume_preserving_fun_unique (Finₓ 1) ℝ).symm _).set_integral_preimage_emb
               (MeasurableEquiv.measurable_embedding _) _ _).symm
         exact ((OrderIso.funUnique (Finₓ 1) ℝ).symm.preimage_Icc a b).symm
       simp only [Finₓ.sum_univ_two, this]

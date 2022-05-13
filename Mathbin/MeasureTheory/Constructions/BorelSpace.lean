@@ -152,7 +152,7 @@ theorem borel_eq_generate_from_Iio : borel α = generateFrom (Range Iio) := by
     
 
 theorem borel_eq_generate_from_Ioi : borel α = generateFrom (Range Ioi) :=
-  @borel_eq_generate_from_Iio (OrderDual α) _
+  @borel_eq_generate_from_Iio αᵒᵈ _
     (by
       infer_instance : SecondCountableTopology α)
     _ _
@@ -230,11 +230,11 @@ end Interactive
 end Tactic
 
 instance (priority := 100) OrderDual.opens_measurable_space {α : Type _} [TopologicalSpace α] [MeasurableSpace α]
-    [h : OpensMeasurableSpace α] : OpensMeasurableSpace (OrderDual α) where
+    [h : OpensMeasurableSpace α] : OpensMeasurableSpace αᵒᵈ where
   borel_le := h.borel_le
 
 instance (priority := 100) OrderDual.borel_space {α : Type _} [TopologicalSpace α] [MeasurableSpace α]
-    [h : BorelSpace α] : BorelSpace (OrderDual α) where
+    [h : BorelSpace α] : BorelSpace αᵒᵈ where
   measurable_eq := h.measurable_eq
 
 /-- In a `borel_space` all open sets are measurable. -/
@@ -609,7 +609,7 @@ theorem ext_of_Ico_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpa
 theorem ext_of_Ioc_finite {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [SecondCountableTopology α]
     [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] (μ ν : Measureₓ α) [IsFiniteMeasure μ] (hμν : μ Univ = ν Univ)
     (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν := by
-  refine' @ext_of_Ico_finite (OrderDual α) _ _ _ _ _ ‹_› μ ν _ hμν fun a b hab => _
+  refine' @ext_of_Ico_finite αᵒᵈ _ _ _ _ _ ‹_› μ ν _ hμν fun a b hab => _
   erw [dual_Ico]
   exact h hab
 
@@ -645,7 +645,7 @@ open-closed intervals. -/
 theorem ext_of_Ioc' {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [SecondCountableTopology α]
     [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] [NoMinOrder α] (μ ν : Measureₓ α)
     (hμ : ∀ ⦃a b⦄, a < b → μ (Ioc a b) ≠ ∞) (h : ∀ ⦃a b⦄, a < b → μ (Ioc a b) = ν (Ioc a b)) : μ = ν := by
-  refine' @ext_of_Ico' (OrderDual α) _ _ _ _ _ ‹_› _ μ ν _ _ <;> intro a b hab <;> erw [dual_Ico]
+  refine' @ext_of_Ico' αᵒᵈ _ _ _ _ _ ‹_› _ μ ν _ _ <;> intro a b hab <;> erw [dual_Ico]
   exacts[hμ hab, h hab]
 
 /-- Two measures which are finite on closed-open intervals are equal if the agree on all
@@ -685,7 +685,7 @@ intervals. -/
 theorem ext_of_Ici {α : Type _} [TopologicalSpace α] {m : MeasurableSpace α} [SecondCountableTopology α]
     [LinearOrderₓ α] [OrderTopology α] [BorelSpace α] (μ ν : Measureₓ α) [IsFiniteMeasure μ]
     (h : ∀ a, μ (Ici a) = ν (Ici a)) : μ = ν :=
-  @ext_of_Iic (OrderDual α) _ _ _ _ _ ‹_› _ _ _ h
+  @ext_of_Iic αᵒᵈ _ _ _ _ _ ‹_› _ _ _ h
 
 end MeasureTheory.Measure
 
@@ -1063,11 +1063,11 @@ theorem ae_measurable_restrict_of_monotone_on [LinearOrderₓ β] [OrderClosedTo
 
 protected theorem Antitone.measurable [LinearOrderₓ β] [OrderClosedTopology β] {f : β → α} (hf : Antitone f) :
     Measurable f :=
-  @Monotone.measurable (OrderDual α) β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ hf
+  @Monotone.measurable αᵒᵈ β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ hf
 
 theorem ae_measurable_restrict_of_antitone_on [LinearOrderₓ β] [OrderClosedTopology β] {μ : Measureₓ β} {s : Set β}
     (hs : MeasurableSet s) {f : β → α} (hf : AntitoneOn f s) : AeMeasurable f (μ.restrict s) :=
-  @ae_measurable_restrict_of_monotone_on (OrderDual α) β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ _ hs _ hf
+  @ae_measurable_restrict_of_monotone_on αᵒᵈ β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ _ hs _ hf
 
 end LinearOrderₓ
 
@@ -1762,25 +1762,24 @@ theorem measurable_nnnorm : Measurable (nnnorm : α → ℝ≥0 ) :=
   continuous_nnnorm.Measurable
 
 @[measurability]
-theorem Measurable.nnnorm {f : β → α} (hf : Measurable f) : Measurable fun a => nnnorm (f a) :=
+theorem Measurable.nnnorm {f : β → α} (hf : Measurable f) : Measurable fun a => ∥f a∥₊ :=
   measurable_nnnorm.comp hf
 
 @[measurability]
-theorem AeMeasurable.nnnorm {f : β → α} {μ : Measureₓ β} (hf : AeMeasurable f μ) :
-    AeMeasurable (fun a => nnnorm (f a)) μ :=
+theorem AeMeasurable.nnnorm {f : β → α} {μ : Measureₓ β} (hf : AeMeasurable f μ) : AeMeasurable (fun a => ∥f a∥₊) μ :=
   measurable_nnnorm.comp_ae_measurable hf
 
 @[measurability]
-theorem measurable_ennnorm : Measurable fun x : α => (nnnorm x : ℝ≥0∞) :=
+theorem measurable_ennnorm : Measurable fun x : α => (∥x∥₊ : ℝ≥0∞) :=
   measurable_nnnorm.coe_nnreal_ennreal
 
 @[measurability]
-theorem Measurable.ennnorm {f : β → α} (hf : Measurable f) : Measurable fun a => (nnnorm (f a) : ℝ≥0∞) :=
+theorem Measurable.ennnorm {f : β → α} (hf : Measurable f) : Measurable fun a => (∥f a∥₊ : ℝ≥0∞) :=
   hf.nnnorm.coe_nnreal_ennreal
 
 @[measurability]
 theorem AeMeasurable.ennnorm {f : β → α} {μ : Measureₓ β} (hf : AeMeasurable f μ) :
-    AeMeasurable (fun a => (nnnorm (f a) : ℝ≥0∞)) μ :=
+    AeMeasurable (fun a => (∥f a∥₊ : ℝ≥0∞)) μ :=
   measurable_ennnorm.comp_ae_measurable hf
 
 end NormedGroup
