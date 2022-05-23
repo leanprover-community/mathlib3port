@@ -136,7 +136,8 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
         refine' ⟨(ℓ z† / ⟪z, z⟫) • z, _⟩
         ext x
         have h₁ : ℓ z • x - ℓ x • z ∈ Y := by
-          rw [mem_ker, map_sub, map_smul, map_smul, Algebra.id.smul_eq_mul, Algebra.id.smul_eq_mul, mul_comm]
+          rw [mem_ker, map_sub, ContinuousLinearMap.map_smul, ContinuousLinearMap.map_smul, Algebra.id.smul_eq_mul,
+            Algebra.id.smul_eq_mul, mul_comm]
           exact sub_self (ℓ x * ℓ z)
         have h₂ : ℓ z * ⟪z, x⟫ = ℓ x * ⟪z, z⟫ :=
           have h₃ :=

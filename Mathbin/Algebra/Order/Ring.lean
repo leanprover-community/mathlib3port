@@ -241,6 +241,7 @@ protected theorem Decidable.mul_le_mul_of_nonneg_left [@DecidableRel α (· ≤ 
     
   exact (mul_lt_mul_of_pos_left (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := by
   classical <;> exact Decidable.mul_le_mul_of_nonneg_left
 
@@ -255,6 +256,7 @@ protected theorem Decidable.mul_le_mul_of_nonneg_right [@DecidableRel α (· ≤
     
   exact (mul_lt_mul_of_pos_right (h₁.lt_of_not_le ba) (h₂.lt_of_not_le c0)).le
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonneg_right : a ≤ b → 0 ≤ c → a * c ≤ b * c := by
   classical <;> exact Decidable.mul_le_mul_of_nonneg_right
 
@@ -267,6 +269,7 @@ protected theorem Decidable.mul_le_mul [@DecidableRel α (· ≤ ·)] (hac : a �
     _ ≤ c * d := Decidable.mul_le_mul_of_nonneg_left hbd nn_c
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul : a ≤ c → b ≤ d → 0 ≤ b → 0 ≤ c → a * b ≤ c * d := by
   classical <;> exact Decidable.mul_le_mul
 
@@ -275,6 +278,7 @@ protected theorem Decidable.mul_nonneg_le_one_le {α : Type _} [OrderedSemiring 
     (h₁ : 0 ≤ c) (h₂ : a ≤ c) (h₃ : 0 ≤ b) (h₄ : b ≤ 1) : a * b ≤ c := by
   simpa only [mul_oneₓ] using Decidable.mul_le_mul h₂ h₄ h₃ h₁
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg_le_one_le {α : Type _} [OrderedSemiring α] {a b c : α} : 0 ≤ c → a ≤ c → 0 ≤ b → b ≤ 1 → a * b ≤ c :=
   by
   classical <;> exact Decidable.mul_nonneg_le_one_le
@@ -284,6 +288,7 @@ protected theorem Decidable.mul_nonneg [@DecidableRel α (· ≤ ·)] (ha : 0 �
   have h : 0 * b ≤ a * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   classical <;> exact Decidable.mul_nonneg
 
@@ -302,6 +307,7 @@ protected theorem Decidable.mul_nonpos_of_nonneg_of_nonpos [@DecidableRel α (·
   have h : a * b ≤ a * 0 := Decidable.mul_le_mul_of_nonneg_left hb ha
   rwa [mul_zero] at h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonpos_of_nonneg_of_nonpos : 0 ≤ a → b ≤ 0 → a * b ≤ 0 := by
   classical <;> exact Decidable.mul_nonpos_of_nonneg_of_nonpos
 
@@ -311,6 +317,7 @@ protected theorem Decidable.mul_nonpos_of_nonpos_of_nonneg [@DecidableRel α (·
   have h : a * b ≤ 0 * b := Decidable.mul_le_mul_of_nonneg_right ha hb
   rwa [zero_mul] at h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonpos_of_nonpos_of_nonneg : a ≤ 0 → 0 ≤ b → a * b ≤ 0 := by
   classical <;> exact Decidable.mul_nonpos_of_nonpos_of_nonneg
 
@@ -322,6 +329,7 @@ protected theorem Decidable.mul_lt_mul [@DecidableRel α (· ≤ ·)] (hac : a <
     _ ≤ c * d := Decidable.mul_le_mul_of_nonneg_left hbd nn_c
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul : a < c → b ≤ d → 0 < b → 0 ≤ c → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul
 
@@ -333,6 +341,7 @@ protected theorem Decidable.mul_lt_mul' [@DecidableRel α (· ≤ ·)] (h1 : a �
     _ < c * d := mul_lt_mul_of_pos_left h2 h4
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul' : a ≤ c → b < d → 0 ≤ b → 0 < c → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul'
 
@@ -385,6 +394,7 @@ protected theorem Decidable.mul_lt_mul'' [@DecidableRel α (· ≤ ·)] (h1 : a 
   h4.lt_or_eq_dec.elim (fun b0 => Decidable.mul_lt_mul h1 h2.le b0 <| h3.trans h1.le) fun b0 => by
     rw [← b0, mul_zero] <;> exact mul_pos (h3.trans_lt h1) (h4.trans_lt h2)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_mul'' : a < c → b < d → 0 ≤ a → 0 ≤ b → a * b < c * d := by
   classical <;> exact Decidable.mul_lt_mul''
 
@@ -394,6 +404,7 @@ protected theorem Decidable.le_mul_of_one_le_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_le_mul_of_nonneg_left h hb
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_mul_of_one_le_right : 0 ≤ b → 1 ≤ a → b ≤ b * a := by
   classical <;> exact Decidable.le_mul_of_one_le_right
 
@@ -403,6 +414,7 @@ protected theorem Decidable.le_mul_of_one_le_left [@DecidableRel α (· ≤ ·)]
     rwa [one_mulₓ] at this
   Decidable.mul_le_mul_of_nonneg_right h hb
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_mul_of_one_le_left : 0 ≤ b → 1 ≤ a → b ≤ a * b := by
   classical <;> exact Decidable.le_mul_of_one_le_left
 
@@ -412,6 +424,7 @@ protected theorem Decidable.lt_mul_of_one_lt_right [@DecidableRel α (· ≤ ·)
     rwa [mul_oneₓ] at this
   Decidable.mul_lt_mul' le_rfl h zero_le_one hb
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lt_mul_of_one_lt_right : 0 < b → 1 < a → b < b * a := by
   classical <;> exact Decidable.lt_mul_of_one_lt_right
 
@@ -421,6 +434,7 @@ protected theorem Decidable.lt_mul_of_one_lt_left [@DecidableRel α (· ≤ ·)]
     rwa [one_mulₓ] at this
   Decidable.mul_lt_mul h le_rfl hb (zero_le_one.trans h.le)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lt_mul_of_one_lt_left : 0 < b → 1 < a → b < a * b := by
   classical <;> exact Decidable.lt_mul_of_one_lt_left
 
@@ -437,6 +451,7 @@ protected theorem Decidable.add_le_mul_two_add [@DecidableRel α (· ≤ ·)] {a
       rw [mul_addₓ, mul_two, add_assocₓ]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem add_le_mul_two_add {a b : α} : 2 ≤ a → 0 ≤ b → a + (2 + b) ≤ a * (2 + b) := by
   classical <;> exact Decidable.add_le_mul_two_add
 
@@ -445,6 +460,7 @@ protected theorem Decidable.one_le_mul_of_one_le_of_one_le [@DecidableRel α (·
     (b1 : 1 ≤ b) : (1 : α) ≤ a * b :=
   (mul_oneₓ (1 : α)).symm.le.trans (Decidable.mul_le_mul a1 b1 zero_le_one (zero_le_one.trans a1))
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_le_mul_of_one_le_of_one_le {a b : α} : 1 ≤ a → 1 ≤ b → (1 : α) ≤ a * b := by
   classical <;> exact Decidable.one_le_mul_of_one_le_of_one_le
 
@@ -495,19 +511,15 @@ protected theorem Decidable.one_lt_mul [@DecidableRel α (· ≤ ·)] (ha : 1 �
   nontriviality
   exact one_mulₓ (1 : α) ▸ Decidable.mul_lt_mul' ha hb zero_le_one (zero_lt_one.trans_le ha)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul : 1 ≤ a → 1 < b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul
 
 -- See Note [decidable namespace]
 protected theorem Decidable.mul_le_one [@DecidableRel α (· ≤ ·)] (ha : a ≤ 1) (hb' : 0 ≤ b) (hb : b ≤ 1) : a * b ≤ 1 :=
-  by
-  rw [← one_mulₓ (1 : α)]
-  apply Decidable.mul_le_mul <;>
-    · first |
-        assumption|
-        apply zero_le_one
-      
+  one_mulₓ (1 : α) ▸ Decidable.mul_le_mul ha hb hb' zero_le_one
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_one : a ≤ 1 → 0 ≤ b → b ≤ 1 → a * b ≤ 1 := by
   classical <;> exact Decidable.mul_le_one
 
@@ -517,6 +529,7 @@ protected theorem Decidable.one_lt_mul_of_le_of_lt [@DecidableRel α (· ≤ ·)
   calc 1 = 1 * 1 := by
       rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul' ha hb zero_le_one (zero_lt_one.trans_le ha)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul_of_le_of_lt : 1 ≤ a → 1 < b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul_of_le_of_lt
 
@@ -526,6 +539,7 @@ protected theorem Decidable.one_lt_mul_of_lt_of_le [@DecidableRel α (· ≤ ·)
   calc 1 = 1 * 1 := by
       rw [one_mulₓ]_ < a * b := Decidable.mul_lt_mul ha hb zero_lt_one <| zero_le_one.trans ha.le
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_mul_of_lt_of_le : 1 < a → 1 ≤ b → 1 < a * b := by
   classical <;> exact Decidable.one_lt_mul_of_lt_of_le
 
@@ -536,6 +550,7 @@ protected theorem Decidable.mul_le_of_le_one_right [@DecidableRel α (· ≤ ·)
     _ = a := mul_oneₓ a
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_of_le_one_right : 0 ≤ a → b ≤ 1 → a * b ≤ a := by
   classical <;> exact Decidable.mul_le_of_le_one_right
 
@@ -546,6 +561,7 @@ protected theorem Decidable.mul_le_of_le_one_left [@DecidableRel α (· ≤ ·)]
     _ = b := one_mulₓ b
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_of_le_one_left : 0 ≤ b → a ≤ 1 → a * b ≤ b := by
   classical <;> exact Decidable.mul_le_of_le_one_left
 
@@ -557,6 +573,7 @@ protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_left [@DecidableRel �
     _ < 1 := ha
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_one_of_nonneg_of_lt_one_left : 0 ≤ a → a < 1 → b ≤ 1 → a * b < 1 := by
   classical <;> exact Decidable.mul_lt_one_of_nonneg_of_lt_one_left
 
@@ -568,6 +585,7 @@ protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_right [@DecidableRel 
     _ < 1 := hb
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_one_of_nonneg_of_lt_one_right : a ≤ 1 → 0 ≤ b → b < 1 → a * b < 1 := by
   classical <;> exact Decidable.mul_lt_one_of_nonneg_of_lt_one_right
 
@@ -973,6 +991,7 @@ protected theorem Decidable.OrderedRing.mul_nonneg [@DecidableRel α (· ≤ ·)
     
   exact (le_not_le_of_ltₓ (OrderedRing.mul_pos a b (h₁.lt_of_not_le ha) (h₂.lt_of_not_le hb))).1
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_nonneg : 0 ≤ a → 0 ≤ b → 0 ≤ a * b := by
   classical <;> exact Decidable.OrderedRing.mul_nonneg
 
@@ -982,6 +1001,7 @@ protected theorem Decidable.OrderedRing.mul_le_mul_of_nonneg_left [@DecidableRel
   rw [← sub_nonneg, ← mul_sub]
   exact Decidable.OrderedRing.mul_nonneg h₂ (sub_nonneg.2 h₁)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_le_mul_of_nonneg_left : a ≤ b → 0 ≤ c → c * a ≤ c * b := by
   classical <;> exact Decidable.OrderedRing.mul_le_mul_of_nonneg_left
 
@@ -991,6 +1011,7 @@ protected theorem Decidable.OrderedRing.mul_le_mul_of_nonneg_right [@DecidableRe
   rw [← sub_nonneg, ← sub_mul]
   exact Decidable.OrderedRing.mul_nonneg (sub_nonneg.2 h₁) h₂
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrderedRing.mul_le_mul_of_nonneg_right : a ≤ b → 0 ≤ c → a * c ≤ b * c := by
   classical <;> exact Decidable.OrderedRing.mul_le_mul_of_nonneg_right
 
@@ -1018,6 +1039,7 @@ protected theorem Decidable.mul_le_mul_of_nonpos_left [@DecidableRel α (· ≤ 
     rwa [neg_mul, neg_mul] at this
   le_of_neg_le_neg this
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonpos_left {a b c : α} : b ≤ a → c ≤ 0 → c * a ≤ c * b := by
   classical <;> exact Decidable.mul_le_mul_of_nonpos_left
 
@@ -1030,6 +1052,7 @@ protected theorem Decidable.mul_le_mul_of_nonpos_right [@DecidableRel α (· ≤
     rwa [mul_neg, mul_neg] at this
   le_of_neg_le_neg this
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_le_mul_of_nonpos_right {a b c : α} : b ≤ a → c ≤ 0 → a * c ≤ b * c := by
   classical <;> exact Decidable.mul_le_mul_of_nonpos_right
 
@@ -1039,6 +1062,7 @@ protected theorem Decidable.mul_nonneg_of_nonpos_of_nonpos [@DecidableRel α (·
   have : 0 * b ≤ a * b := Decidable.mul_le_mul_of_nonpos_right ha hb
   rwa [zero_mul] at this
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_nonneg_of_nonpos_of_nonpos {a b : α} : a ≤ 0 → b ≤ 0 → 0 ≤ a * b := by
   classical <;> exact Decidable.mul_nonneg_of_nonpos_of_nonpos
 

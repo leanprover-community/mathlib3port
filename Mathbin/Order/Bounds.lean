@@ -1100,6 +1100,7 @@ theorem IsLub.of_image [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : �
     (hx : IsLub (f '' s) (f x)) : IsLub s x :=
   @IsGlb.of_image αᵒᵈ βᵒᵈ _ _ f (fun x y => hf) _ _ hx
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_lub_pi {π : α → Type _} [∀ a, Preorderₓ (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLub s f ↔ ∀ a, IsLub (Function.eval a '' s) (f a) := by
   classical

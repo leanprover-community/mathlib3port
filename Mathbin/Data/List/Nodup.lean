@@ -340,6 +340,7 @@ theorem Nodupₓ.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : �
   · simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Nodupₓ.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)
     (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, a ≠ b → r a b) : l.Pairwise r := by
   classical

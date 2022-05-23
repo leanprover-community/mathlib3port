@@ -65,8 +65,8 @@ def toPoly (P : Cubic R) : R[X] :=
 
 section Coeff
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 private theorem coeffs :
     (∀, ∀ n > 3, ∀, P.toPoly.coeff n = 0) ∧
       P.toPoly.coeff 3 = P.a ∧ P.toPoly.coeff 2 = P.b ∧ P.toPoly.coeff 1 = P.c ∧ P.toPoly.coeff 0 = P.d :=
@@ -287,8 +287,8 @@ theorem eq_prod_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z})
   change C (φ P.a) * ((X - C x) ::ₘ (X - C y) ::ₘ {X - C z}).Prod = _
   rw [prod_cons, prod_cons, prod_singleton, mul_assoc, mul_assoc]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     map φ P = ⟨φ P.a, φ P.a * -(x + y + z), φ P.a * (x * y + x * z + y * z), φ P.a * -(x * y * z)⟩ := by
   apply_fun to_poly

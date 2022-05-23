@@ -199,6 +199,7 @@ end Falling
 
 variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The **Lubell-Yamamoto-Meshalkin inequality**. If `𝒜` is an antichain, then the sum of the
 proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α] (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
@@ -218,6 +219,7 @@ end Lym
 /-! ### Sperner's theorem -/
 
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Sperner's theorem**. The size of an antichain in `finset α` is bounded by the size of the
 maximal layer in `finset α`. This precisely means that `finset α` is a Sperner order. -/
 theorem _root_.is_antichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}

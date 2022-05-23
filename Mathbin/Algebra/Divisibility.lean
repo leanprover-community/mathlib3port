@@ -61,6 +61,9 @@ theorem dvd_trans : a ∣ b → b ∣ c → a ∣ c
 
 alias dvd_trans ← Dvd.Dvd.trans
 
+instance : IsTrans α (· ∣ ·) :=
+  ⟨fun a b c => dvd_trans⟩
+
 @[simp]
 theorem dvd_mul_right (a b : α) : a ∣ a * b :=
   Dvd.intro b rfl
@@ -96,13 +99,16 @@ variable [Monoidₓ α]
 
 @[refl, simp]
 theorem dvd_refl (a : α) : a ∣ a :=
-  Dvd.intro 1 (mul_oneₓ _)
+  Dvd.intro 1 (mul_oneₓ a)
 
-theorem dvd_rfl {a : α} : a ∣ a :=
-  dvd_refl a
+theorem dvd_rfl : ∀ {a : α}, a ∣ a :=
+  dvd_refl
+
+instance : IsRefl α (· ∣ ·) :=
+  ⟨dvd_refl⟩
 
 theorem one_dvd (a : α) : 1 ∣ a :=
-  Dvd.intro a (one_mulₓ _)
+  Dvd.intro a (one_mulₓ a)
 
 end Monoidₓ
 
@@ -171,7 +177,7 @@ section SemigroupWithZeroₓ
 variable [SemigroupWithZeroₓ α] {a : α}
 
 theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
-  Dvd.elim h fun c => fun H' : a = 0 * c => Eq.trans H' (zero_mul c)
+  Dvd.elim h fun c H' => H'.trans (zero_mul c)
 
 /-- Given an element `a` of a commutative semigroup with zero, there exists another element whose
     product with zero equals `a` iff `a` equals zero. -/

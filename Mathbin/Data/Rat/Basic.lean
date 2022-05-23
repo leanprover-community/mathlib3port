@@ -880,7 +880,7 @@ theorem inv_def' {q : ℚ} : q⁻¹ = (q.denom : ℚ) / q.num := by
   cases q
   simp [div_num_denom]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
 @[simp]
 theorem mul_denom_eq_num {q : ℚ} : q * q.denom = q.num := by
   suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1 by

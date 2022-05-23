@@ -3,7 +3,7 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Data.Prod
+import Mathbin.Data.Prod.Basic
 import Mathbin.Data.Subtype
 import Mathbin.Logic.Function.Basic
 import Mathbin.Logic.Unique
@@ -44,6 +44,7 @@ protected theorem Decidable.exists_ne [Nontrivial α] [DecidableEq α] (x : α) 
   · exact ⟨y, Ne.symm hx⟩
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_ne [Nontrivial α] (x : α) : ∃ y, y ≠ x := by
   classical <;> exact Decidable.exists_ne x
 
@@ -158,6 +159,7 @@ namespace Pi
 
 variable {I : Type _} {f : I → Type _}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ i : I, f i) := by
   classical <;> exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial

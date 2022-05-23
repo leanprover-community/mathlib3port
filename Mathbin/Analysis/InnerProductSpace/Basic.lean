@@ -5,8 +5,8 @@ Authors: Zhouhang Zhou, Sébastien Gouëzel, Frédéric Dupuis
 -/
 import Mathbin.Algebra.DirectSum.Module
 import Mathbin.Analysis.Complex.Basic
+import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.NormedSpace.BoundedLinearMaps
-import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.SesquilinearForm
 
@@ -824,12 +824,14 @@ theorem orthonormal_subtype_iff_ite {s : Set E} :
 
 omit dec_E
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι →₀ 𝕜) (i : ι) :
     ⟪v i, Finsupp.total ι E 𝕜 v l⟫ = l i := by
   classical <;> simp [Finsupp.total_apply, Finsupp.inner_sum, orthonormal_iff_ite.mp hv]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_right_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
@@ -848,6 +850,7 @@ theorem Orthonormal.inner_left_finsupp {v : ι → E} (hv : Orthonormal 𝕜 v) 
     ⟪Finsupp.total ι E 𝕜 v l, v i⟫ = conj (l i) := by
   rw [← inner_conj_sym, hv.inner_right_finsupp]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The inner product of a linear combination of a set of orthonormal vectors with one of those
 vectors picks out the coefficient of that vector. -/
 theorem Orthonormal.inner_left_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l : ι → 𝕜) {s : Finset ι} {i : ι} (hi : i ∈ s) :
@@ -880,6 +883,7 @@ theorem Orthonormal.inner_sum {v : ι → E} (hv : Orthonormal 𝕜 v) (l₁ l�
   refine' Finset.sum_congr rfl fun i hi => _
   rw [hv.inner_right_sum l₂ hi]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The double sum of weighted inner products of pairs of vectors from an orthonormal sequence is the
 sum of the weights.
 -/
@@ -896,6 +900,7 @@ theorem Orthonormal.linear_independent {v : ι → E} (hv : Orthonormal 𝕜 v) 
     rw [hl]
   simpa [hv.inner_right_finsupp] using key
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A subfamily of an orthonormal family (i.e., a composition with an injective map) is an
 orthonormal family. -/
 theorem Orthonormal.comp {ι' : Type _} {v : ι → E} (hv : Orthonormal 𝕜 v) (f : ι' → ι) (hf : Function.Injective f) :
@@ -913,6 +918,7 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
   rw [Finsupp.mem_supported'] at hl
   simp [hv.inner_left_finsupp, hl i hi]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given an orthonormal family, a second family of vectors is orthonormal if every vector equals
 the corresponding vector in the original family or its negation. -/
 theorem Orthonormal.orthonormal_of_forall_eq_or_eq_neg {v w : ι → E} (hv : Orthonormal 𝕜 v)
@@ -927,11 +933,13 @@ adapted from the corresponding development of the theory of linearly independent
 `exists_linear_independent` in particular. -/
 variable (𝕜 E)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) := by
   classical <;> simp [orthonormal_subtype_iff_ite]
 
 variable {𝕜 E}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem orthonormal_Union_of_directed {η : Type _} {s : η → Set E} (hs : Directed (· ⊆ ·) s)
     (h : ∀ i, Orthonormal 𝕜 (fun x => x : s i → E)) : Orthonormal 𝕜 (fun x => x : (⋃ i, s i) → E) := by
   classical
@@ -1145,6 +1153,19 @@ theorem inner_eq_sum_norm_sq_div_four (x y : E) :
   push_cast
   simp only [sq, ← mul_div_right_comm, ← add_div]
 
+-- See note [lower instance priority]
+instance (priority := 100) InnerProductSpace.to_uniform_convex_space : UniformConvexSpace F :=
+  ⟨fun ε hε => by
+    refine' ⟨2 - sqrt (4 - ε ^ 2), sub_pos_of_lt <| (sqrt_lt' zero_lt_two).2 _, fun x hx y hy hxy => _⟩
+    · norm_num
+      exact pow_pos hε _
+      
+    rw [sub_sub_cancel]
+    refine' le_sqrt_of_sq_le _
+    rw [sq, eq_sub_iff_add_eq.2 (parallelogram_law_with_norm x y), ← sq ∥x - y∥, hx, hy]
+    norm_num
+    exact pow_le_pow_of_le_left hε.le hxy _⟩
+
 section Complex
 
 variable {V : Type _} [InnerProductSpace ℂ V]
@@ -1231,6 +1252,7 @@ theorem LinearEquiv.coe_isometry_of_inner (f : E ≃ₗ[𝕜] E') h : ⇑(f.isom
 theorem LinearEquiv.isometry_of_inner_to_linear_equiv (f : E ≃ₗ[𝕜] E') h : (f.isometryOfInner h).toLinearEquiv = f :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A linear isometry preserves the property of being orthonormal. -/
 theorem Orthonormal.comp_linear_isometry {v : ι → E} (hv : Orthonormal 𝕜 v) (f : E →ₗᵢ[𝕜] E') : Orthonormal 𝕜 (f ∘ v) :=
   by
@@ -1633,16 +1655,6 @@ Compare `abs_inner_eq_norm_iff`, which takes the weaker hypothesis `abs ⟪x, y�
 theorem inner_eq_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ = ∥x∥ * ∥y∥ ↔ ∥y∥ • x = ∥x∥ • y :=
   inner_eq_norm_mul_iff
 
-/-- An inner product space is strictly convex. We do not register this as an instance for an inner
-space over `𝕜`, `is_R_or_C 𝕜`, because there is no order of the typeclass argument that does not
-lead to a search of `[is_scalar_tower ℝ ?m E]` with unknown `?m`. -/
-instance InnerProductSpace.strict_convex_space : StrictConvexSpace ℝ F := by
-  refine' StrictConvexSpace.of_norm_add fun x y h => _
-  rw [same_ray_iff_norm_smul_eq, eq_comm, ← inner_eq_norm_mul_iff_real,
-    real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two, h, add_mul_self_eq, sub_sub,
-    add_sub_add_right_eq_sub, add_sub_cancel', mul_assoc, mul_div_cancel_left]
-  exact _root_.two_ne_zero
-
 /-- If the inner product of two unit vectors is `1`, then the two vectors are equal. One form of
 the equality case for Cauchy-Schwarz. -/
 theorem inner_eq_norm_mul_iff_of_norm_one {x y : E} (hx : ∥x∥ = 1) (hy : ∥y∥ = 1) : ⟪x, y⟫ = 1 ↔ x = y := by
@@ -1904,6 +1916,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
 
 omit dec_ι dec_V
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : ι) (v : G i) :
     ⟪V i v, ∑ j : ι, V j (l j)⟫ = ⟪v, l i⟫ := by
   classical <;>
@@ -1912,6 +1925,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
         congr_argₓ (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
         simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
     ⟪∑ i in s, V i (l₁ i), ∑ j in s, V j (l₂ j)⟫ = ∑ i in s, ⟪l₁ i, l₂ i⟫ := by
   classical <;>
@@ -1980,6 +1994,7 @@ theorem OrthogonalFamily.norm_sq_diff_sum (f : ∀ i, G i) (s₁ s₂ : Finset �
 
 omit dec_ι
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A family `f` of mutually-orthogonal elements of `E` is summable, if and only if
 `(λ i, ∥f i∥ ^ 2)` is summable. -/
 theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : ∀ i, G i) :
@@ -2032,6 +2047,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
 
 omit hV
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- An orthogonal family forms an independent family of subspaces; that is, any collection of
 elements each from a different subspace in the family is linearly independent. In particular, the
 pairwise intersections of elements of the family are 0. -/

@@ -295,10 +295,10 @@ theorem find_insert_of_eqv [IsStrictWeakOrder α lt] (m : Rbmap α β lt) {k₁ 
 theorem find_insert [IsStrictWeakOrder α lt] (m : Rbmap α β lt) (k : α) (v : β) : (m.insert k v).find k = some v :=
   find_insert_of_eqv m v (refl k)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem find_entry_insert_of_disj [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
     lt k₁ k₂ ∨ lt k₂ k₁ → (m.insert k₁ v).findEntry k₂ = m.findEntry k₂ := by
   intro h

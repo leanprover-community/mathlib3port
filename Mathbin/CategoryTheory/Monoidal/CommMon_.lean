@@ -142,6 +142,10 @@ def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 
+attribute [local tidy] tactic.discrete_cases
+
+attribute [local simp] eq_to_iso_map
+
 /-- Implementation of `CommMon_.equiv_lax_braided_functor_punit`. -/
 @[simps]
 def unitIso : 𝟭 (LaxBraidedFunctor (Discrete PUnit.{u + 1}) C) ≅ laxBraidedToCommMon C ⋙ commMonToLaxBraided C :=
@@ -173,6 +177,8 @@ def counitIso : commMonToLaxBraided C ⋙ laxBraidedToCommMon C ≅ 𝟭 (CommMo
 end EquivLaxBraidedFunctorPunit
 
 open EquivLaxBraidedFunctorPunit
+
+attribute [local simp] eq_to_iso_map
 
 /-- Commutative monoid objects in `C` are "just" braided lax monoidal functors from the trivial
 braided monoidal category to `C`.

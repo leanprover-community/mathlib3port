@@ -1926,7 +1926,7 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 /-- The function `x^(-n)` tends to `0` at `+∞` for any positive natural `n`.
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
 theorem tendsto_pow_neg_at_top {n : ℕ} (hn : 1 ≤ n) : Tendsto (fun x : α => x ^ -(n : ℤ)) atTop (𝓝 0) :=
-  Tendsto.congr (fun x => (zpow_neg₀ x n).symm)
+  Tendsto.congr (fun x => (zpow_neg x n).symm)
     (Filter.Tendsto.inv_tendsto_at_top
       (by
         simpa [zpow_coe_nat] using tendsto_pow_at_top hn))

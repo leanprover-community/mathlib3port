@@ -55,57 +55,36 @@ theorem one : IsIdempotentElem (1 : M₁) :=
   mul_oneₓ _
 
 theorem one_sub {p : R} (h : IsIdempotentElem p) : IsIdempotentElem (1 - p) := by
-  rw [IsIdempotentElem] at h
-  rw [IsIdempotentElem, mul_sub_left_distrib, mul_oneₓ, sub_mul, one_mulₓ, h, sub_self, sub_zero]
+  rw [IsIdempotentElem, mul_sub, mul_oneₓ, sub_mul, one_mulₓ, h.eq, sub_self, sub_zero]
 
 @[simp]
 theorem one_sub_iff {p : R} : IsIdempotentElem (1 - p) ↔ IsIdempotentElem p :=
   ⟨fun h => sub_sub_cancel 1 p ▸ h.one_sub, IsIdempotentElem.one_sub⟩
 
-theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n) := by
-  induction' n with n ih
-  · rw [pow_zeroₓ]
-    apply one
-    
-  · unfold IsIdempotentElem
-    rw [pow_succₓ, ← mul_assoc, ← pow_mul_comm', mul_assoc (p ^ n), h.eq, pow_mul_comm', mul_assoc, ih.eq]
-    
+theorem pow {p : N} (n : ℕ) (h : IsIdempotentElem p) : IsIdempotentElem (p ^ n) :=
+  Nat.recOn n ((pow_zeroₓ p).symm ▸ one) fun n ih =>
+    show p ^ n.succ * p ^ n.succ = p ^ n.succ by
+      nth_rw 2[← h.eq]
+      rw [← sq, ← sq, ← pow_mulₓ, ← pow_mul']
 
-theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p := by
-  induction' n with n ih
-  · rw [Nat.zero_add, pow_oneₓ]
-    
-  · rw [pow_succₓ, ih, h.eq]
-    
+theorem pow_succ_eq {p : N} (n : ℕ) (h : IsIdempotentElem p) : p ^ (n + 1) = p :=
+  Nat.recOn n ((Nat.zero_add 1).symm ▸ pow_oneₓ p) fun n ih => by
+    rw [pow_succₓ, ih, h.eq]
 
 @[simp]
-theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 := by
-  constructor
-  · intro h
-    rw [← mul_left_invₓ p]
-    nth_rw_rhs 1[← h.eq]
-    rw [← mul_assoc, mul_left_invₓ, one_mulₓ]
-    
-  · intro h
-    rw [h]
-    apply one
-    
+theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 :=
+  Iff.intro (fun h => mul_left_cancelₓ ((mul_oneₓ p).symm ▸ h.Eq : p * p = p * 1)) fun h => h.symm ▸ one
 
 @[simp]
 theorem iff_eq_zero_or_one {p : G₀} : IsIdempotentElem p ↔ p = 0 ∨ p = 1 := by
-  refine' ⟨fun h => or_iff_not_imp_left.mpr fun hp => _, _⟩
-  · rw [← mul_inv_cancel hp]
-    nth_rw_rhs 0[← h.eq]
-    rw [mul_assoc, mul_inv_cancel hp, mul_oneₓ]
-    
-  · rintro (h₁ | h₂)
-    · rw [h₁]
-      exact zero
-      
-    · rw [h₂]
-      exact one
-      
-    
+  refine'
+    Iff.intro (fun h => or_iff_not_imp_left.mpr fun hp => _) fun h =>
+      h.elim (fun hp => hp.symm ▸ zero) fun hp => hp.symm ▸ one
+  lift p to G₀ˣ using IsUnit.mk0 _ hp
+  exact_mod_cast
+    iff_eq_one.mp
+      (by
+        exact_mod_cast h.eq)
 
 /-! ### Instances on `subtype is_idempotent_elem` -/
 

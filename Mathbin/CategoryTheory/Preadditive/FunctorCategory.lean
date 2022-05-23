@@ -111,7 +111,7 @@ theorem app_nsmul (X : C) (α : F ⟶ G) (n : ℕ) : (n • α).app X = n • α
 
 @[simp]
 theorem app_zsmul (X : C) (α : F ⟶ G) (n : ℤ) : (n • α).app X = n • α.app X :=
-  (appHom X).map_zsmul α n
+  (appHom X : (F ⟶ G) →+ (F.obj X ⟶ G.obj X)).map_zsmul α n
 
 @[simp]
 theorem app_sum {ι : Type _} (s : Finset ι) (X : C) (α : ι → (F ⟶ G)) : (∑ i in s, α i).app X = ∑ i in s, (α i).app X :=

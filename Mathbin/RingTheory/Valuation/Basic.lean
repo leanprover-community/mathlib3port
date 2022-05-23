@@ -48,6 +48,13 @@ on R / J = `ideal.quotient J` is `on_quot v h`.
 
 `add_valuation R Γ₀` is implemented as `valuation R (multiplicative Γ₀)ᵒᵈ`.
 
+## Notation
+
+In the `discrete_valuation` locale:
+
+ * `ℕₘ₀` is a shorthand for `with_zero (multiplicative ℕ)`
+ * `ℤₘ₀` is a shorthand for `with_zero (multiplicative ℤ)`
+
 ## TODO
 
 If ever someone extends `valuation`, we should fully comply to the `fun_like` by migrating the
@@ -848,4 +855,14 @@ end Supp
 
 -- end of section
 end AddValuation
+
+section ValuationNotation
+
+-- mathport name: «exprℕₘ₀»
+localized [DiscreteValuation] notation "ℕₘ₀" => WithZero (Multiplicative ℕ)
+
+-- mathport name: «exprℤₘ₀»
+localized [DiscreteValuation] notation "ℤₘ₀" => WithZero (Multiplicative ℤ)
+
+end ValuationNotation
 

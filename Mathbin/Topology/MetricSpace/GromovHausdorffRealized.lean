@@ -69,7 +69,7 @@ private def Cb : Type _ :=
 private def max_var : ℝ≥0 :=
   2 * ⟨diam (Univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (Univ : Set Y), diam_nonneg⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by
@@ -103,7 +103,7 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (Univ : Set (Sum X Y)) := dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
@@ -344,14 +344,14 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (Range fun y : Y
   calc (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := cinfi_le (HD_below_aux2 C) default _ ≤ Cf + C :=
       add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem HD_candidates_b_dist_le : hD (candidatesBDist X Y) ≤ diam (Univ : Set X) + 1 + diam (Univ : Set Y) := by

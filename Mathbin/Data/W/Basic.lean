@@ -33,7 +33,7 @@ inductive WType {α : Type _} (β : α → Type _)
   | mk (a : α) (f : β a → WType) : WType
 
 instance : Inhabited (WType fun _ : Unit => Empty) :=
-  ⟨WType.mk Unit.star Empty.elimₓ⟩
+  ⟨WType.mk Unit.star Empty.elim⟩
 
 namespace WType
 

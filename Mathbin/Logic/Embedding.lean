@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Data.FunLike.Embedding
-import Mathbin.Data.Pprod
+import Mathbin.Data.Prod.Pprod
 import Mathbin.Data.Set.Basic
 import Mathbin.Data.Sigma.Basic
 import Mathbin.Logic.Equiv.Basic
@@ -232,10 +232,12 @@ def punit {β : Sort _} (b : β) : PUnit ↪ β :=
     rfl⟩
 
 /-- Fixing an element `b : β` gives an embedding `α ↪ α × β`. -/
+@[simps]
 def sectl (α : Sort _) {β : Sort _} (b : β) : α ↪ α × β :=
   ⟨fun a => (a, b), fun a a' h => congr_argₓ Prod.fst h⟩
 
 /-- Fixing an element `a : α` gives an embedding `β ↪ α × β`. -/
+@[simps]
 def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
   ⟨fun b => (a, b), fun b b' h => congr_argₓ Prod.snd h⟩
 

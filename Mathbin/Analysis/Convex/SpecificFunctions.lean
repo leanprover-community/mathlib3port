@@ -48,7 +48,7 @@ theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.Univ fun x
   · simp only [deriv_pow', Differentiable.mul, differentiable_const, differentiable_pow]
     
   · intro x
-    obtain ⟨k, hk⟩ := (hn.tsub_even <| even_bit0 _).exists_two_nsmul _
+    obtain ⟨k, hk⟩ := (hn.tsub <| even_bit0 _).exists_two_nsmul _
     rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, nsmul_eq_mul, pow_mul']
     exact mul_nonneg (Nat.cast_nonneg _) (pow_two_nonneg _)
     
@@ -138,7 +138,7 @@ theorem convex_on_zpow (m : ℤ) : ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := 
     exact int_prod_range_nonneg _ _ (even_bit0 1)
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m` except `0` and `1`. -/
 theorem strict_convex_on_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) : StrictConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m := by
   have : ∀ n : ℤ, DifferentiableOn ℝ (fun x => x ^ n) (Ioi (0 : ℝ)) := fun n =>

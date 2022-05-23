@@ -42,7 +42,7 @@ function field, ring of integers
 
 noncomputable section
 
-open nonZeroDivisors Polynomial
+open nonZeroDivisors Polynomial DiscreteValuation
 
 variable (Fq F : Type) [Field Fq] [Field F]
 
@@ -145,7 +145,7 @@ variable [DecidableEq (Ratfunc Fq)]
 /-- The valuation at infinity is the nonarchimedean valuation on `Fq(t)` with uniformizer `1/t`.
 Explicitly, if `f/g ∈ Fq(t)` is a nonzero quotient of polynomials, its valuation at infinity is
 `multiplicative.of_add(degree(f) - degree(g))`. -/
-def inftyValuationDef (r : Ratfunc Fq) : WithZero (Multiplicative ℤ) :=
+def inftyValuationDef (r : Ratfunc Fq) : ℤₘ₀ :=
   if r = 0 then 0 else Multiplicative.ofAdd r.intDegree
 
 theorem InftyValuation.map_zero' : inftyValuationDef Fq 0 = 0 :=
@@ -201,7 +201,7 @@ theorem infty_valuation_of_nonzero {x : Ratfunc Fq} (hx : x ≠ 0) :
   rw [infty_valuation_def, if_neg hx]
 
 /-- The valuation at infinity on `Fq(t)`. -/
-def inftyValuation : Valuation (Ratfunc Fq) (WithZero (Multiplicative ℤ)) where
+def inftyValuation : Valuation (Ratfunc Fq) ℤₘ₀ where
   toFun := inftyValuationDef Fq
   map_zero' := InftyValuation.map_zero' Fq
   map_one' := InftyValuation.map_one' Fq
@@ -230,7 +230,7 @@ theorem inftyValuation.polynomial {p : Polynomial Fq} (hp : p ≠ 0) :
   rw [infty_valuation_def, if_neg hp', Ratfunc.int_degree_polynomial]
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/
-def inftyValuedFqt : Valued (Ratfunc Fq) (WithZero (Multiplicative ℤ)) :=
+def inftyValuedFqt : Valued (Ratfunc Fq) ℤₘ₀ :=
   Valued.mk' <| inftyValuation Fq
 
 theorem inftyValuedFqt.def {x : Ratfunc Fq} :
@@ -249,7 +249,7 @@ instance : Inhabited (FqtInfty Fq) :=
   ⟨(0 : FqtInfty Fq)⟩
 
 /-- The valuation at infinity on `k(t)` extends to a valuation on `Fqt_infty`. -/
-instance valuedFqtInfty : Valued (FqtInfty Fq) (WithZero (Multiplicative ℤ)) :=
+instance valuedFqtInfty : Valued (FqtInfty Fq) ℤₘ₀ :=
   @Valued.valuedCompletion _ _ _ _ (inftyValuedFqt Fq)
 
 theorem valuedFqtInfty.def {x : FqtInfty Fq} :

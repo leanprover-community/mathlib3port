@@ -68,7 +68,7 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
 theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0 , 0 < C ∧ AntilipschitzWith C B♯ := by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
   refine' ⟨C⁻¹.toNnreal, real.to_nnreal_pos.mpr (inv_pos.mpr C_pos), _⟩
-  refine' LinearMap.antilipschitz_of_bound B♯ _
+  refine' ContinuousLinearMap.antilipschitz_of_bound B♯ _
   simp_rw [Real.coe_to_nnreal', max_eq_left_of_ltₓ (inv_pos.mpr C_pos), ← inv_mul_le_iff (inv_pos.mpr C_pos)]
   simpa using below_bound
 

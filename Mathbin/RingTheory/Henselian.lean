@@ -168,6 +168,7 @@ instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRin
     rw [h₂]
     exact not_is_unit_zero
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A ring `R` that is `I`-adically complete is Henselian at `I`. -/
 -- see Note [lower instance priority]
 instance (priority := 100) IsAdicComplete.henselian_ring (R : Type _) [CommRingₓ R] (I : Ideal R) [IsAdicComplete I R] :

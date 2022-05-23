@@ -8,6 +8,7 @@ import Mathbin.LinearAlgebra.Matrix.Trace
 import Mathbin.LinearAlgebra.Contraction
 import Mathbin.LinearAlgebra.TensorProductBasis
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathbin.LinearAlgebra.Projection
 
 /-!
 # Trace of a linear map
@@ -123,6 +124,7 @@ variable (N : Type _) [AddCommGroupₓ N] [Module R N]
 
 variable {ι : Type _} [Fintype ι]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism
  `End(M) ≃ M* ⊗ M`-/
 theorem trace_eq_contract_of_basis (b : Basis ι R M) : LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M :=
@@ -145,7 +147,7 @@ theorem trace_eq_contract_of_basis' [DecidableEq ι] (b : Basis ι R M) :
     LinearMap.trace R M = contractLeft R M ∘ₗ (dualTensorHomEquivOfBasis b).symm.toLinearMap := by
   simp [LinearEquiv.eq_comp_to_linear_map_symm, trace_eq_contract_of_basis b]
 
-variable (R M)
+variable (R M N)
 
 variable [Module.Free R M] [Module.Finite R M] [Module.Free R N] [Module.Finite R N] [Nontrivial R]
 
@@ -174,16 +176,71 @@ theorem trace_one : trace R M 1 = (finrank R M : R) := by
   rw [trace_eq_matrix_trace R b, to_matrix_one, Module.Free.finrank_eq_card_choose_basis_index]
   simp
 
-variable (M)
+/-- The trace of the identity endomorphism is the dimension of the free module -/
+@[simp]
+theorem trace_id : trace R M id = (finrank R M : R) := by
+  rw [← one_eq_id, trace_one]
+
+theorem trace_prod_map :
+    trace R (M × N) ∘ₗ prodMapLinear R M N M N R = (coprod id id : R × R →ₗ[R] R) ∘ₗ prodMap (trace R M) (trace R N) :=
+  by
+  let e := (dualTensorHomEquiv R M M).Prod (dualTensorHomEquiv R N N)
+  have h : Function.Surjective e.to_linear_map := e.surjective
+  refine' (cancel_right h).1 _
+  ext
+  · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
+      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inl,
+      Function.comp_app, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
+      coprod_apply, id_coe, id.def, add_zeroₓ, prod_map_linear_apply, dual_tensor_hom_prod_map_zero,
+      trace_eq_contract_apply, contract_left_apply, fst_apply]
+    
+  · simp only [dualTensorHomEquiv, TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe,
+      TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, coe_comp, LinearEquiv.coe_to_linear_map, coe_inr,
+      Function.comp_app, LinearEquiv.prod_apply, dual_tensor_hom_equiv_of_basis_apply, map_zero, prod_map_apply,
+      coprod_apply, id_coe, id.def, zero_addₓ, prod_map_linear_apply, zero_prod_map_dual_tensor_hom,
+      trace_eq_contract_apply, contract_left_apply, snd_apply]
+    
+
+variable {R M N}
+
+theorem trace_prod_map' (f : M →ₗ[R] M) (g : N →ₗ[R] N) : trace R (M × N) (prodMap f g) = trace R M f + trace R N g :=
+  by
+  have h := ext_iff.1 (trace_prod_map R M N) (f, g)
+  simp only [coe_comp, Function.comp_app, prod_map_apply, coprod_apply, id_coe, id.def, prod_map_linear_apply] at h
+  exact h
+
+variable (R M N)
+
+open TensorProduct Function
+
+theorem trace_tensor_product :
+    compr₂ (mapBilinear R M N M N) (trace R (M ⊗ N)) =
+      compl₁₂ (lsmul R R : R →ₗ[R] R →ₗ[R] R) (trace R M) (trace R N) :=
+  by
+  apply
+    (compl₁₂_inj (show surjective (dualTensorHom R M M) from (dualTensorHomEquiv R M M).Surjective)
+        (show surjective (dualTensorHom R N N) from (dualTensorHomEquiv R N N).Surjective)).1
+  ext f m g n
+  simp only [algebra_tensor_module.curry_apply, to_fun_eq_coe, TensorProduct.curry_apply, coe_restrict_scalars_eq_coe,
+    compl₁₂_apply, compr₂_apply, map_bilinear_apply, trace_eq_contract_apply, contract_left_apply, lsmul_apply,
+    Algebra.id.smul_eq_mul, map_dual_tensor_hom, dual_distrib_apply]
 
 theorem trace_comp_comm : compr₂ (llcomp R M N M) (trace R M) = compr₂ (llcomp R N M N).flip (trace R N) := by
-  apply (compl₁₂_inj (dualTensorHomEquiv R N M).Surjective (dualTensorHomEquiv R M N).Surjective).1
+  apply
+    (compl₁₂_inj (show surjective (dualTensorHom R N M) from (dualTensorHomEquiv R N M).Surjective)
+        (show surjective (dualTensorHom R M N) from (dualTensorHomEquiv R M N).Surjective)).1
   ext g m f n
-  simp only [TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe, TensorProduct.curry_apply,
-    coe_restrict_scalars_eq_coe, compl₁₂_apply, compr₂_apply, flip_apply, llcomp_apply', comp_dual_tensor_hom, map_smul,
-    trace_eq_contract_apply, contract_left_apply, smul_eq_mul, mul_comm]
+  simp only [TensorProduct.AlgebraTensorModule.curry_apply, to_fun_eq_coe, LinearEquiv.coe_to_linear_map,
+    TensorProduct.curry_apply, coe_restrict_scalars_eq_coe, compl₁₂_apply, compr₂_apply, flip_apply, llcomp_apply',
+    comp_dual_tensor_hom, map_smul, trace_eq_contract_apply, contract_left_apply, smul_eq_mul, mul_comm]
 
-variable {R M}
+variable {R M N}
+
+theorem trace_tensor_product' (f : M →ₗ[R] M) (g : N →ₗ[R] N) : trace R (M ⊗ N) (map f g) = trace R M f * trace R N g :=
+  by
+  have h := ext_iff.1 (ext_iff.1 (trace_tensor_product R M N) f) g
+  simp only [compr₂_apply, map_bilinear_apply, compl₁₂_apply, lsmul_apply, Algebra.id.smul_eq_mul] at h
+  exact h
 
 theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) : trace R M (g ∘ₗ f) = trace R N (f ∘ₗ g) := by
   have h := ext_iff.1 (ext_iff.1 (trace_comp_comm R M N) g) f
@@ -194,6 +251,10 @@ theorem trace_comp_comm' (f : M →ₗ[R] N) (g : N →ₗ[R] M) : trace R M (g 
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
   rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe, LinearEquiv.self_trans_symm,
     LinearEquiv.refl_to_linear_map, id_comp]
+
+theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p] [Module.Finite R p]
+    [Module.Free R f.ker] [Module.Finite R f.ker] : trace R M f = (finrank R p : R) := by
+  rw [h.eq_conj_prod_map, trace_conj', trace_prod_map', trace_id, map_zero, add_zeroₓ]
 
 end
 

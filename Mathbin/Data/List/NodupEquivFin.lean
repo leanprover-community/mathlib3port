@@ -217,6 +217,7 @@ theorem sublist_iff_exists_fin_order_embedding_nth_le_eq {l l' : List α} :
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- An element `x : α` of `l : list α` is a duplicate iff it can be found
 at two distinct indices `n m : ℕ` inside the list `l`.
 -/

@@ -104,6 +104,7 @@ theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b �
       rw [s.prod_cons i]
       exact hs.2.mul_left i⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem not_unit_iff_exists_factors_eq (a : α) (hn0 : a ≠ 0) :
     ¬IsUnit a ↔ ∃ f : Multiset α, (∀, ∀ b ∈ f, ∀, Irreducible b) ∧ f.Prod = a ∧ f ≠ ∅ :=
   ⟨fun hnu => by
@@ -311,6 +312,7 @@ variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀, ∀ b ∈ f, �
 
 include pf
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
   ⟨by
     classical
@@ -1055,6 +1057,7 @@ theorem FactorSet.unique [Nontrivial α] {p q : FactorSet α} (h : p.Prod = q.Pr
         
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le_prod_iff_le [Nontrivial α] {p q : Multiset (Associates α)} (hp : ∀, ∀ a ∈ p, ∀, Irreducible a)
     (hq : ∀, ∀ a ∈ q, ∀, Irreducible a) : p.Prod ≤ q.Prod ↔ p ≤ q :=
   Iff.intro
@@ -1122,6 +1125,7 @@ noncomputable def factors (a : Associates α) : FactorSet α := by
 theorem factors_0 : (0 : Associates α).factors = ⊤ :=
   dif_pos rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem factors_mk (a : α) (h : a ≠ 0) : (Associates.mk a).factors = factors' a := by
   classical
@@ -1163,6 +1167,7 @@ theorem eq_of_factors_eq_factors {a b : Associates α} (h : a.factors = b.factor
 
 omit dec dec'
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_of_prod_eq_prod [Nontrivial α] {a b : FactorSet α} (h : a.Prod = b.Prod) : a = b := by
   classical
   have : a.prod.factors = b.prod.factors := by
@@ -1229,6 +1234,7 @@ theorem count_le_count_of_le {a b p : Associates α} (hb : b ≠ 0) (hp : Irredu
 
 omit dec dec' dec_irr
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le [Nontrivial α] {a b : FactorSet α} : a.Prod ≤ b.Prod ↔ a ≤ b := by
   classical
   exact
@@ -1565,6 +1571,7 @@ omit dec_irr
 
 omit dec'
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_pow_of_mul_eq_pow [Nontrivial α] {a b c : Associates α} (ha : a ≠ 0) (hb : b ≠ 0)
     (hab : ∀ d, d ∣ a → d ∣ b → ¬Prime d) {k : ℕ} (h : a * b = c ^ k) : ∃ d : Associates α, a = d ^ k := by
   classical
@@ -1583,6 +1590,7 @@ theorem eq_pow_of_mul_eq_pow [Nontrivial α] {a b c : Associates α} (ha : a ≠
     cases mul_eq_zero.mp h <;> contradiction
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The only divisors of prime powers are prime powers. -/
 theorem eq_pow_find_of_dvd_irreducible_pow {a p : Associates α} (hp : Irreducible p) [∀ n : ℕ, Decidable (a ∣ p ^ n)]
     {n : ℕ} (h : a ∣ p ^ n) : a = p ^ Nat.findₓ ⟨n, h⟩ := by

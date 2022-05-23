@@ -29,6 +29,8 @@ noncomputable section
 
 open Classical BigOperators Polynomial
 
+open Finset
+
 universe u v w
 
 variable {R : Type u} {S : Type _}
@@ -171,7 +173,9 @@ theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n 
   exact ⟨n, h, rfl⟩
 
 theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
-    (geomSum (x : R[X]) n).comp (X + 1) = (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i := by
+    (∑ i in range n, (x : R[X]) ^ i).comp (X + 1) =
+      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
+  by
   ext i
   trans (n.choose (i + 1) : R)
   swap
@@ -189,13 +193,13 @@ theorem geom_sum_X_comp_X_add_one_eq_sum (n : ℕ) :
   simp only [geom_sum_succ', ih, add_comp, X_pow_comp, coeff_add, Nat.choose_succ_succ, Nat.cast_addₓ,
     coeff_X_add_one_pow]
 
-theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : ℕ} (hn : n ≠ 0) : (geomSum P n).Monic :=
-  by
+theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : ℕ} (hn : n ≠ 0) :
+    (∑ i in range n, P ^ i).Monic := by
   nontriviality R
   cases n
   · exact (hn rfl).elim
     
-  rw [geom_sum_succ', geom_sum_def]
+  rw [geom_sum_succ']
   refine' (hP.pow _).add_of_left _
   refine' lt_of_le_of_ltₓ (degree_sum_le _ _) _
   rw [Finset.sup_lt_iff]
@@ -207,10 +211,11 @@ theorem Monic.geom_sum {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.natDegree) {n : �
     exact (hP.pow _).ne_zero
     
 
-theorem Monic.geom_sum' {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ} (hn : n ≠ 0) : (geomSum P n).Monic :=
-  hP.geomSum (nat_degree_pos_iff_degree_pos.2 hdeg) hn
+theorem Monic.geom_sum' {P : R[X]} (hP : P.Monic) (hdeg : 0 < P.degree) {n : ℕ} (hn : n ≠ 0) :
+    (∑ i in range n, P ^ i).Monic :=
+  hP.geom_sum (nat_degree_pos_iff_degree_pos.2 hdeg) hn
 
-theorem monic_geom_sum_X {n : ℕ} (hn : n ≠ 0) : (geomSum (x : R[X]) n).Monic := by
+theorem monic_geom_sum_X {n : ℕ} (hn : n ≠ 0) : (∑ i in range n, (x : R[X]) ^ i).Monic := by
   nontriviality R
   apply monic_X.geom_sum _ hn
   simpa only [nat_degree_X] using zero_lt_one
@@ -774,6 +779,7 @@ theorem prime_C_iff : Prime (c r : MvPolynomial σ R) ↔ Prime r :=
 
 variable {σ}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} : Prime (rename (coe : s → σ) p) ↔ Prime p := by
   classical
   symm
@@ -801,6 +807,7 @@ end Prime
 
 namespace Polynomial
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance (priority := 100) {R : Type _} [CommRingₓ R] [IsDomain R] [WfDvdMonoid R] : WfDvdMonoid R[X] where
   well_founded_dvd_not_unit := by
     classical

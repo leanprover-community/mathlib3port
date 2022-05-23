@@ -358,8 +358,8 @@ theorem support_prod_le (l : List (Perm α)) : l.Prod.support ≤ (l.map support
 theorem support_zpow_le (σ : Perm α) (n : ℤ) : (σ ^ n).support ≤ σ.support := fun x h1 =>
   mem_support.mpr fun h2 => mem_support.mp h1 (zpow_apply_eq_self_of_apply_eq_self h2 n)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 @[simp]
 theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} := by
   ext z
@@ -373,7 +373,7 @@ theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} := b
 theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y := by
   refine' ⟨fun h H => _, support_swap⟩
   subst H
-  simp only [swap_self, support_refl, insert_singleton_self_eq] at h
+  simp only [swap_self, support_refl, pair_self_eq] at h
   have : x ∈ ∅ := by
     rw [h]
     exact mem_singleton.mpr rfl

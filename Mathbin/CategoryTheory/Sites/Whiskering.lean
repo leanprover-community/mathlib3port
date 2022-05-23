@@ -43,10 +43,10 @@ namespace GrothendieckTopology.Cover
 
 variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
 composed with `F`. -/

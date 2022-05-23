@@ -215,6 +215,8 @@ variable [HasZeroObject V] {W : Type _} [Category W] [Preadditive W] [HasZeroObj
 
 namespace HomologicalComplex
 
+attribute [local simp] eq_to_hom_map
+
 /-- Turning an object into a complex supported at `j` then applying a functor is
 the same as applying the functor then forming the complex.
 -/

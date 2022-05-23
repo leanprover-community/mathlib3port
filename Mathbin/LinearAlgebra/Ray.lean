@@ -164,7 +164,7 @@ theorem smul {S : Type _} [Monoidₓ S] [DistribMulAction S M] [SmulCommClass R 
     SameRay R (s • x) (s • y) :=
   h.map (s • (LinearMap.id : M →ₗ[R] M))
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- If `x` and `y` are on the same ray as `z`, then so is `x + y`. -/
 theorem add_left (hx : SameRay R x z) (hy : SameRay R y z) : SameRay R (x + y) z := by
   rcases eq_or_ne x 0 with (rfl | hx₀)

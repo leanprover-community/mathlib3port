@@ -17,11 +17,8 @@ import Mathbin.Algebra.Category.Ring.Default
 # Stalks
 
 For a presheaf `F` on a topological space `X`, valued in some category `C`, the *stalk* of `F`
-at the point `x : X` is defined as the colimit of the following functor
-
-(nhds x)ᵒᵖ ⥤ (opens X)ᵒᵖ ⥤ C
-
-where the functor on the left is the inclusion of categories and the functor on the right is `F`.
+at the point `x : X` is defined as the colimit of the composition of the inclusion of categories
+`(nhds x)ᵒᵖ ⥤ (opens X)ᵒᵖ` and the functor `F : (opens X)ᵒᵖ ⥤ C`.
 For an open neighborhood `U` of `x`, we define the map `F.germ x : F.obj (op U) ⟶ F.stalk x` as the
 canonical morphism into this colimit.
 
@@ -263,7 +260,7 @@ def stalkPullbackIso (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) : F.stalk (f x) �
     induction U using Opposite.rec
     cases U
     cases j
-    cases j_right
+    rcases j_right with ⟨⟨⟩⟩
     erw [colimit.map_desc, colimit.map_desc, colimit.ι_desc_assoc, colimit.ι_desc_assoc, colimit.ι_desc,
       category.comp_id]
     simp only [cocone.whisker_ι, colimit.cocone_ι, open_nhds.inclusion_map_iso_inv, cocones.precompose_obj_ι,

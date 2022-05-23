@@ -16,7 +16,7 @@ universe u
 
 deriving instance has_reflect, DecidableEq for Tactic.Transparency
 
--- Rather than import order.lexicographic here, we can get away with defining the order by hand.
+-- Rather than import data.prod.lex here, we can get away with defining the order by hand.
 instance : LT Pos where
   lt := fun x y => x.line < y.line ∨ x.line = y.line ∧ x.column < y.column
 
@@ -1706,11 +1706,23 @@ add_tactic_doc
     tags := ["goal information"] }
 
 /-- Makes the declaration `classical.prop_decidable` available to type class inference.
-This asserts that all propositions are decidable, but does not have computational content. -/
-unsafe def classical : tactic Unit := do
-  let h ← get_unused_name `_inst
-  mk_const `classical.prop_decidable >>= note h none
-  reset_instance_cache
+This asserts that all propositions are decidable, but does not have computational content.
+
+The `aggressive` argument controls whether the instance is added globally, where it has low
+priority, or in the local context, where it has very high priority. -/
+unsafe def classical (aggressive : Bool := false) : tactic Unit :=
+  if aggressive then do
+    let h ← get_unused_name `_inst
+    mk_const `classical.prop_decidable >>= note h none
+    reset_instance_cache
+  else do
+    -- Turn on the `prop_decidable` instance. `9` is what we use in the `classical` locale
+        tactic.set_basic_attribute
+        `instance `classical.prop_decidable ff (some 9)
+    -- Lower the priority of `decidable_eq_of_decidable_le`. `8` is what we use in the `classical`
+        -- locale. We should remove this when we update lean, as it will cease to be a global instance.
+        tactic.set_basic_attribute
+        `instance `decidable_eq_of_decidable_le ff (some 8)
 
 open Expr
 

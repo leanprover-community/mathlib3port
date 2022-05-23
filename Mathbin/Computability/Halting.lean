@@ -215,6 +215,7 @@ theorem rice (C : Set (ℕ →. ℕ)) (h : ComputablePred fun c => eval c ∈ C)
     contradiction
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem rice₂ (C : Set Code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C ↔ cg ∈ C)) :
     (ComputablePred fun c => c ∈ C) ↔ C = ∅ ∨ C = Set.Univ := by
   classical <;>
@@ -259,6 +260,7 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
         cases hy.1 hx.1
         ⟩⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a := by
   classical <;> exact computable_iff_re_compl_re
 

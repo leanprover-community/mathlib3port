@@ -288,7 +288,7 @@ class IsPoly₂ (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R → 
 
 variable {p}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The composition of polynomial functions is polynomial. -/
 theorem IsPoly₂.comp {h f g} (hh : IsPoly₂ p h) (hf : IsPoly p f) (hg : IsPoly p g) :
     IsPoly₂ p fun R _Rcr x y => h (f x) (g y) := by
@@ -317,7 +317,7 @@ theorem IsPoly.comp₂ {g f} (hg : IsPoly p g) (hf : IsPoly₂ p f) : IsPoly₂ 
   intros
   simp only [peval, aeval_bind₁, Function.comp, hg, hf]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The diagonal `λ x, f x x` of a polynomial function `f` is polynomial. -/
 theorem IsPoly₂.diag {f} (hf : IsPoly₂ p f) : IsPoly p fun R _Rcr x => f x x := by
   obtain ⟨φ, hf⟩ := hf
@@ -438,7 +438,7 @@ Users are expected to use the non-instance versions manually.
 -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The additive negation is a polynomial function on Witt vectors. -/
 @[is_poly]
 theorem neg_is_poly : IsPoly p fun R _ => @Neg.neg (𝕎 R) _ :=
@@ -552,7 +552,7 @@ theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) : IsPoly₂ p fu
 
 include hp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     (h : ∀ R : Type u [_Rcr : CommRingₓ R] x y : 𝕎 R n : ℕ, ghost_component n (f x y) = ghost_component n (g x y)) :
     ∀ R [_Rcr : CommRingₓ R] x y : 𝕎 R, f x y = g x y := by
@@ -580,7 +580,7 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     ext ⟨b, _⟩
     fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) : map g (f x y) = f (map g x) (map g y) := by
   -- this could be turned into a tactic “macro” (taking `hf` as parameter)

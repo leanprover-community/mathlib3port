@@ -8,6 +8,7 @@ import Mathbin.Algebra.Module.Submodule.Pointwise
 import Mathbin.Algebra.Module.Submodule.Bilinear
 import Mathbin.Algebra.Module.Opposites
 import Mathbin.Data.Finset.Pointwise
+import Mathbin.Data.Set.Semiring
 
 /-!
 # Multiplication and division of submodules of an algebra.
@@ -333,9 +334,9 @@ theorem pow_subset_pow {n : ℕ} : (↑M : Set A) ^ n ⊆ ↑(M ^ n : Submodule 
     apply mul_subset_mul
     
 
-/-- Dependent version of `submodule.pow_induction_on`. -/
+/-- Dependent version of `submodule.pow_induction_on_left`. -/
 @[elab_as_eliminator]
-protected theorem pow_induction_on' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
+protected theorem pow_induction_on_left' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
     (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
     (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
     (hmul : ∀, ∀ m ∈ M, ∀ i x hx, C i x hx → C i.succ (m * x) (mul_mem_mul H hx)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
@@ -349,13 +350,40 @@ protected theorem pow_induction_on' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
     Submodule.mul_induction_on' (fun m hm x ih => hmul _ hm _ _ _ (n_ih ih))
       (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
 
+/-- Dependent version of `submodule.pow_induction_on_right`. -/
+@[elab_as_eliminator]
+protected theorem pow_induction_on_right' {C : ∀ n : ℕ x, x ∈ M ^ n → Prop}
+    (hr : ∀ r : R, C 0 (algebraMap _ _ r) (algebra_map_mem r))
+    (hadd : ∀ x y i hx hy, C i x hx → C i y hy → C i (x + y) (add_mem ‹_› ‹_›))
+    (hmul : ∀ i x hx, C i x hx → ∀, ∀ m ∈ M, ∀, C i.succ (x * m) ((pow_succ'ₓ M i).symm ▸ mul_mem_mul hx H)) {x : A}
+    {n : ℕ} (hx : x ∈ M ^ n) : C n x hx := by
+  induction' n with n n_ih generalizing x
+  · rw [pow_zeroₓ] at hx
+    obtain ⟨r, rfl⟩ := hx
+    exact hr r
+    
+  revert hx
+  simp_rw [pow_succ'ₓ]
+  intro hx
+  exact
+    Submodule.mul_induction_on' (fun m hm x ih => hmul _ _ hm (n_ih _) _ ih)
+      (fun x hx y hy Cx Cy => hadd _ _ _ _ _ Cx Cy) hx
+
 /-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
 is closed under addition, and holds for `m * x` where `m ∈ M` and it holds for `x` -/
 @[elab_as_eliminator]
-protected theorem pow_induction_on {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
+protected theorem pow_induction_on_left {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
     (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀, ∀ m ∈ M, ∀ x, C x → C (m * x)) {x : A} {n : ℕ} (hx : x ∈ M ^ n) :
     C x :=
-  Submodule.pow_induction_on' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
+  Submodule.pow_induction_on_left' M hr (fun x y i hx hy => hadd x y) (fun m hm i x hx => hmul _ hm _) hx
+
+/-- To show a property on elements of `M ^ n` holds, it suffices to show that it holds for scalars,
+is closed under addition, and holds for `x * m` where `m ∈ M` and it holds for `x` -/
+@[elab_as_eliminator]
+protected theorem pow_induction_on_right {C : A → Prop} (hr : ∀ r : R, C (algebraMap _ _ r))
+    (hadd : ∀ x y, C x → C y → C (x + y)) (hmul : ∀ x, C x → ∀, ∀ m ∈ M, ∀, C (x * m)) {x : A} {n : ℕ}
+    (hx : x ∈ M ^ n) : C x :=
+  Submodule.pow_induction_on_right' M hr (fun x y i hx hy => hadd x y) (fun i x hx => hmul _) hx
 
 /-- `submonoid.map` as a `monoid_with_zero_hom`, when applied to `alg_hom`s. -/
 @[simps]

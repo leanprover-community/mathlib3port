@@ -260,13 +260,31 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable [LinearOrderₓ α] {a b : α}
+variable [LinearOrderₓ α] {a b c : α}
 
 theorem Covby.Ioi_eq (h : a ⋖ b) : Ioi a = Ici b := by
   rw [← Ioo_union_Ici_eq_Ioi h.lt, h.Ioo_eq, empty_union]
 
 theorem Covby.Iio_eq (h : a ⋖ b) : Iio b = Iic a := by
   rw [← Iic_union_Ioo_eq_Iio h.lt, h.Ioo_eq, union_empty]
+
+theorem Wcovby.le_of_lt (hab : a ⩿ b) (hcb : c < b) : c ≤ a :=
+  not_ltₓ.1 fun hac => hab.2 hac hcb
+
+theorem Wcovby.ge_of_gt (hab : a ⩿ b) (hac : a < c) : b ≤ c :=
+  not_ltₓ.1 <| hab.2 hac
+
+theorem Covby.le_of_lt (hab : a ⋖ b) : c < b → c ≤ a :=
+  hab.Wcovby.le_of_lt
+
+theorem Covby.ge_of_gt (hab : a ⋖ b) : a < c → b ≤ c :=
+  hab.Wcovby.ge_of_gt
+
+theorem Covby.unique_left (ha : a ⋖ c) (hb : b ⋖ c) : a = b :=
+  (hb.le_of_lt ha.lt).antisymm <| ha.le_of_lt hb.lt
+
+theorem Covby.unique_right (hb : a ⋖ b) (hc : a ⋖ c) : b = c :=
+  (hb.ge_of_gt hc.lt).antisymm <| hc.ge_of_gt hb.lt
 
 end LinearOrderₓ
 

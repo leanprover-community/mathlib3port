@@ -521,16 +521,16 @@ theorem zpow_eq_one_iff_dvd₀ (h : IsPrimitiveRoot ζ k) (l : ℤ) : ζ ^ l = 1
     lift -l to ℕ using this with l' hl'
     rw [← dvd_neg, ← hl']
     norm_cast
-    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg₀, ← hl', zpow_coe_nat, inv_one]
+    rw [← h.pow_eq_one_iff_dvd, ← inv_inj, ← zpow_neg, ← hl', zpow_coe_nat, inv_one]
     
 
 theorem inv' (h : IsPrimitiveRoot ζ k) : IsPrimitiveRoot ζ⁻¹ k :=
   { pow_eq_one := by
-      simp only [h.pow_eq_one, inv_one, eq_self_iff_true, inv_pow₀],
+      simp only [h.pow_eq_one, inv_one, eq_self_iff_true, inv_pow],
     dvd_of_pow_eq_one := by
       intro l hl
       apply h.dvd_of_pow_eq_one l
-      rw [← inv_inj, ← inv_pow₀, hl, inv_one] }
+      rw [← inv_inj, ← inv_pow, hl, inv_one] }
 
 @[simp]
 theorem inv_iff' : IsPrimitiveRoot ζ⁻¹ k ↔ IsPrimitiveRoot ζ k := by
@@ -549,7 +549,7 @@ theorem zpow_of_gcd_eq_one₀ (h : IsPrimitiveRoot ζ k) (i : ℤ) (hi : i.gcd k
     simp only [not_leₓ, neg_nonneg] at h0⊢
     exact le_of_ltₓ h0
   lift -i to ℕ using this with i' hi'
-  rw [← inv_iff', ← zpow_neg₀, ← hi', zpow_coe_nat]
+  rw [← inv_iff', ← zpow_neg, ← hi', zpow_coe_nat]
   apply h.pow_of_coprime
   rw [Int.gcdₓ, ← Int.nat_abs_neg, ← hi'] at hi
   exact hi
@@ -850,7 +850,7 @@ theorem card_primitive_roots {ζ : R} {k : ℕ} (h : IsPrimitiveRoot ζ k) : (pr
     exact ⟨i, ⟨hin, hi.symm⟩, H⟩
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- The sets `primitive_roots k R` are pairwise disjoint. -/
 theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (primitiveRoots l R) := by
   by_cases' hk : k = 0

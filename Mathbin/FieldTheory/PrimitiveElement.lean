@@ -3499,6 +3499,7 @@ variable [IsSeparable F E]
 
 end SeparableAssumption
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A technical finiteness result. -/
 noncomputable def Fintype.subtypeProd {E : Type _} {X : Set E} (hX : X.Finite) {L : Type _} (F : E → Multiset L) :
     Fintype (∀ x : X, { l : L // l ∈ F x }) := by

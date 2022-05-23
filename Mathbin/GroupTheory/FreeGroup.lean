@@ -688,7 +688,7 @@ theorem sum.map_one : sum (1 : FreeGroup α) = 0 :=
 
 @[simp]
 theorem sum.map_inv : sum x⁻¹ = -sum x :=
-  (@prod (Multiplicative _) _).map_inv _
+  (prod : FreeGroup (Multiplicative α) →* Multiplicative α).map_inv _
 
 end Sum
 

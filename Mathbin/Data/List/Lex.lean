@@ -18,8 +18,9 @@ The lexicographic order on `list α` is defined by `L < M` iff
 Related files are:
 * `data.finset.colex`: Colexicographic order on finite sets.
 * `data.psigma.order`: Lexicographic order on `Σ' i, α i`.
+* `data.pi.lex`: Lexicographic order on `Πₗ i, α i`.
 * `data.sigma.order`: Lexicographic order on `Σ i, α i`.
-* `order.lexicographic`: Lexicographic order on `α × β`.
+* `data.prod.lex`: Lexicographic order on `α × β`.
 -/
 
 
@@ -154,6 +155,7 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
         
       ⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
   classical <;> exact Decidable.List.Lex.ne_iff H
 

@@ -72,7 +72,7 @@ universe u v w
 
 section
 
-variable (R : Type u) [Ringₓ R]
+variable (R : Type u) [Semiringₓ R]
 
 /-- We say that `R` satisfies the strong rank condition if `(fin n → R) →ₗ[R] (fin m → R)` injective
     implies `n ≤ m`. -/
@@ -157,7 +157,7 @@ end
 
 section
 
-variable (R : Type u) [Ringₓ R] [InvariantBasisNumber R]
+variable (R : Type u) [Semiringₓ R] [InvariantBasisNumber R]
 
 theorem eq_of_fin_equiv {n m : ℕ} : ((Finₓ n → R) ≃ₗ[R] Finₓ m → R) → n = m :=
   InvariantBasisNumber.eq_of_fin_equiv

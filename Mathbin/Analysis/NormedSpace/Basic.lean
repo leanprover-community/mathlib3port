@@ -204,6 +204,9 @@ variable {α}
 
 open NormedField
 
+instance : NormedSpace α (ULift E) :=
+  { ULift.normedGroup, ULift.module' with norm_smul_le := fun s x => (NormedSpace.norm_smul_le s x.down : _) }
+
 /-- The product of two normed spaces is a normed space, with the sup norm. -/
 instance Prod.normedSpace : NormedSpace α (E × F) :=
   { Prod.normedGroup, Prod.module with
@@ -436,6 +439,9 @@ instance normedAlgebraRat {𝕜} [NormedDivisionRing 𝕜] [CharZero 𝕜] [Norm
 instance PUnit.normedAlgebra : NormedAlgebra 𝕜 PUnit where
   norm_smul_le := fun q x => by
     simp only [PUnit.norm_eq_zero, mul_zero]
+
+instance : NormedAlgebra 𝕜 (ULift 𝕜') :=
+  { ULift.normedSpace with }
 
 /-- The product of two normed algebras is a normed algebra, with the sup norm. -/
 instance Prod.normedAlgebra {E F : Type _} [SemiNormedRing E] [SemiNormedRing F] [NormedAlgebra 𝕜 E]

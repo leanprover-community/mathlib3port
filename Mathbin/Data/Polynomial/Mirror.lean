@@ -3,6 +3,7 @@ Copyright (c) 2020 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 -/
+import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Data.Polynomial.RingDivision
 
 /-!
@@ -28,9 +29,9 @@ namespace Polynomial
 
 open Polynomial
 
-variable {R : Type _} [Semiringₓ R] (p : R[X])
+section Semiringₓ
 
-section Mirror
+variable {R : Type _} [Semiringₓ R] (p q : R[X])
 
 /-- mirror of a polynomial: reverses the coefficients while preserving `polynomial.nat_degree` -/
 noncomputable def mirror :=
@@ -40,6 +41,7 @@ noncomputable def mirror :=
 theorem mirror_zero : (0 : R[X]).mirror = 0 := by
   simp [mirror]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
   classical
   by_cases' ha : a = 0
@@ -131,20 +133,55 @@ theorem mirror_mirror : p.mirror.mirror = p :=
   Polynomial.ext fun n => by
     rw [coeff_mirror, coeff_mirror, mirror_nat_degree, mirror_nat_trailing_degree, rev_at_invol]
 
+variable {p q}
+
+theorem mirror_involutive : Function.Involutive (mirror : R[X] → R[X]) :=
+  mirror_mirror
+
+theorem mirror_eq_iff : p.mirror = q ↔ p = q.mirror :=
+  mirror_involutive.eq_iff
+
+@[simp]
+theorem mirror_inj : p.mirror = q.mirror ↔ p = q :=
+  mirror_involutive.Injective.eq_iff
+
+@[simp]
 theorem mirror_eq_zero : p.mirror = 0 ↔ p = 0 :=
   ⟨fun h => by
     rw [← p.mirror_mirror, h, mirror_zero], fun h => by
     rw [h, mirror_zero]⟩
 
+variable (p q)
+
+@[simp]
 theorem mirror_trailing_coeff : p.mirror.trailingCoeff = p.leadingCoeff := by
   rw [leading_coeff, trailing_coeff, mirror_nat_trailing_degree, coeff_mirror, rev_at_le (Nat.le_add_leftₓ _ _),
     add_tsub_cancel_right]
 
+@[simp]
 theorem mirror_leading_coeff : p.mirror.leadingCoeff = p.trailingCoeff := by
   rw [← p.mirror_mirror, mirror_trailing_coeff, p.mirror_mirror]
 
-theorem mirror_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (p q : R[X]) : (p * q).mirror = p.mirror * q.mirror :=
-  by
+theorem coeff_mul_mirror : (p * p.mirror).coeff (p.natDegree + p.natTrailingDegree) = p.Sum fun n => (· ^ 2) := by
+  rw [coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
+  refine'
+    (Finset.sum_congr rfl fun n hn => _).trans
+      (p.sum_eq_of_subset (fun n => (· ^ 2)) (fun n => zero_pow zero_lt_two) _ fun n hn =>
+          finset.mem_range_succ_iff.mpr ((le_nat_degree_of_mem_supp n hn).trans (Nat.le_add_rightₓ _ _))).symm
+  rw [coeff_mirror, ← rev_at_le (finset.mem_range_succ_iff.mp hn), rev_at_invol, ← sq]
+
+end Semiringₓ
+
+section Ringₓ
+
+variable {R : Type _} [Ringₓ R] (p q : R[X])
+
+theorem mirror_neg : (-p).mirror = -p.mirror := by
+  rw [mirror, mirror, reverse_neg, nat_trailing_degree_neg, neg_mul_eq_neg_mulₓ]
+
+variable [IsDomain R]
+
+theorem mirror_mul_of_domain : (p * q).mirror = p.mirror * q.mirror := by
   by_cases' hp : p = 0
   · rw [hp, zero_mul, mirror_zero, zero_mul]
     
@@ -157,13 +194,16 @@ theorem mirror_mul_of_domain {R : Type _} [Ringₓ R] [IsDomain R] (p q : R[X]) 
   repeat'
     rw [mul_assoc]
 
-theorem mirror_smul {R : Type _} [Ringₓ R] [IsDomain R] (p : R[X]) (a : R) : (a • p).mirror = a • p.mirror := by
+theorem mirror_smul (a : R) : (a • p).mirror = a • p.mirror := by
   rw [← C_mul', ← C_mul', mirror_mul_of_domain, mirror_C]
 
-theorem mirror_neg {R : Type _} [Ringₓ R] (p : R[X]) : (-p).mirror = -p.mirror := by
-  rw [mirror, mirror, reverse_neg, nat_trailing_degree_neg, neg_mul_eq_neg_mulₓ]
+end Ringₓ
 
-theorem irreducible_of_mirror {R : Type _} [CommRingₓ R] [IsDomain R] {f : R[X]} (h1 : ¬IsUnit f)
+section CommRingₓ
+
+variable {R : Type _} [CommRingₓ R] [IsDomain R] {f : R[X]}
+
+theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     (h2 : ∀ k, f * f.mirror = k * k.mirror → k = f ∨ k = -f ∨ k = f.mirror ∨ k = -f.mirror)
     (h3 : ∀ g, g ∣ f → g ∣ f.mirror → IsUnit g) : Irreducible f := by
   constructor
@@ -212,7 +252,7 @@ theorem irreducible_of_mirror {R : Type _} [CommRingₓ R] [IsDomain R] {f : R[X
       
     
 
-end Mirror
+end CommRingₓ
 
 end Polynomial
 

@@ -1185,24 +1185,6 @@ instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithBot α) :=
   WithTop.addCommMonoid
 
-instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) := by
-  suffices
-  refine' { WithBot.partialOrder, WithBot.addCommMonoid with add_le_add_left := this, .. }
-  · intro a b h c ca h₂
-    cases' c with c
-    · cases h₂
-      
-    cases' a with a <;> cases h₂
-    cases' b with b
-    · cases le_antisymmₓ h bot_le
-      
-    simp at h
-    exact ⟨_, rfl, add_le_add_left h _⟩
-    
-
-instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
-  { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
-
 -- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 @[to_additive]
 theorem coe_one [One α] : ((1 : α) : WithBot α) = 1 :=
@@ -1318,6 +1300,12 @@ protected theorem add_lt_add_of_lt_of_le [CovariantClass α α (· + ·) (· ≤
   @WithTop.add_lt_add_of_lt_of_le αᵒᵈ _ _ _ _ _ _ _ _ hd hab hcd
 
 end Add
+
+instance [OrderedAddCommMonoid α] : OrderedAddCommMonoid (WithBot α) :=
+  { WithBot.partialOrder, WithBot.addCommMonoid with add_le_add_left := fun a b h c => add_le_add_left h c }
+
+instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoid (WithBot α) :=
+  { WithBot.linearOrder, WithBot.orderedAddCommMonoid with }
 
 end WithBot
 

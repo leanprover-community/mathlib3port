@@ -28,6 +28,7 @@ theorem lt_of_mul_lt_mul_neg_right {a b c : α} [LinearOrderedRing α] (h : a * 
       
   lt_of_mul_lt_mul_right h3 nhc
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[mono]
 theorem mul_mono_nonpos {x y z : α} [LinearOrderedRing α] (h' : z ≤ 0) (h : y ≤ x) : x * z ≤ y * z := by
   classical

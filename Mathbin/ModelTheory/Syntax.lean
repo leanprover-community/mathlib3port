@@ -745,6 +745,7 @@ theorem monotone_distinct_constants_theory : Monotone (L.DistinctConstantsTheory
 theorem directed_distinct_constants_theory : Directed (· ⊆ ·) (L.DistinctConstantsTheory : Set α → L[[α]].Theory) :=
   Monotone.directed_le monotone_distinct_constants_theory
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem distinct_constants_theory_eq_Union (s : Set α) :
     L.DistinctConstantsTheory s =
       ⋃ t : Finset s, L.DistinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=

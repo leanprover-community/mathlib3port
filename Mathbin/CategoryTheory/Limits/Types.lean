@@ -7,6 +7,19 @@ import Mathbin.CategoryTheory.Limits.Shapes.Images
 import Mathbin.CategoryTheory.Filtered
 import Mathbin.Tactic.EquivRw
 
+/-!
+# Limits in the category of types.
+
+We show that the category of types has all (co)limits, by providing the usual concrete models.
+
+We also give a characterisation of filtered colimits in `Type`, via
+`colimit.ι F i xi = colimit.ι F j xj ↔ ∃ k (f : i ⟶ k) (g : j ⟶ k), F.map f xi = F.map g xj`.
+
+Finally, we prove the category of types has categorical images,
+and that these agree with the range of a function.
+-/
+
+
 universe v u
 
 open CategoryTheory

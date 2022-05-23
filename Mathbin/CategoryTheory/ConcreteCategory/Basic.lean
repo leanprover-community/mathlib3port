@@ -120,14 +120,6 @@ theorem id_apply {X : C} (x : X) : (𝟙 X : X → X) x = x :=
 theorem comp_apply {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
   congr_funₓ ((forget _).map_comp _ _) x
 
-@[simp]
-theorem coe_hom_inv_id {X Y : C} (f : X ≅ Y) (x : X) : f.inv (f.Hom x) = x :=
-  congr_funₓ ((forget C).mapIso f).hom_inv_id x
-
-@[simp]
-theorem coe_inv_hom_id {X Y : C} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) = y :=
-  congr_funₓ ((forget C).mapIso f).inv_hom_id y
-
 theorem ConcreteCategory.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
   congr_funₓ (congr_argₓ (fun f : X ⟶ Y => (f : X → Y)) h) x
 

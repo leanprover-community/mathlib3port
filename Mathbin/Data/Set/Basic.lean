@@ -1337,6 +1337,7 @@ theorem insert_diff_of_mem s (h : a ∈ t) : insert a s \ t = s \ t := by
   ext
   constructor <;> simp (config := { contextual := true })[or_imp_distrib, h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem insert_diff_of_not_mem s (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
   classical
   ext x
@@ -2009,8 +2010,7 @@ theorem exists_eq_singleton_iff_nonempty_subsingleton : (∃ a : α, s = {a}) �
   · rintro ⟨a, rfl⟩
     exact ⟨singleton_nonempty a, subsingleton_singleton⟩
     
-  · obtain ⟨a, ha⟩ := h.1
-    exact ⟨a, eq_singleton_iff_unique_mem.mpr ⟨ha, fun b hb => h.2 hb ha⟩⟩
+  · exact h.2.eq_empty_or_singleton.resolve_left h.1.ne_empty
     
 
 /-- `s`, coerced to a type, is a subsingleton type if and only if `s`
@@ -2162,6 +2162,12 @@ theorem image_preimage_eq_iff {f : α → β} {s : Set β} : f '' (f ⁻¹' s) =
     rw [← h]
     apply image_subset_range, image_preimage_eq_of_subset⟩
 
+theorem subset_range_iff_exists_image_eq {f : α → β} {s : Set β} : s ⊆ Range f ↔ ∃ t, f '' t = s :=
+  ⟨fun h => ⟨_, image_preimage_eq_iff.2 h⟩, fun ⟨t, ht⟩ => ht ▸ image_subset_range _ _⟩
+
+theorem range_image (f : α → β) : Range (Image f) = 𝒫 Range f :=
+  ext fun s => subset_range_iff_exists_image_eq.symm
+
 theorem preimage_subset_preimage_iff {s t : Set α} {f : β → α} (hs : s ⊆ Range f) : f ⁻¹' s ⊆ f ⁻¹' t ↔ s ⊆ t := by
   constructor
   · intro h x hx
@@ -2266,10 +2272,10 @@ theorem compl_range_inr : Range (Sum.inr : β → Sum α β)ᶜ = Range (Sum.inl
 theorem range_quot_mk (r : α → α → Prop) : Range (Quot.mk r) = univ :=
   (surjective_quot_mk r).range_eq
 
-instance Set.canLift [CanLift α β] : CanLift (Set α) (Set β) where
+instance canLift [CanLift α β] : CanLift (Set α) (Set β) where
   coe := fun s => CanLift.coe '' s
   cond := fun s => ∀, ∀ x ∈ s, ∀, CanLift.Cond β x
-  prf := fun s hs => ⟨CanLift.coe ⁻¹' s, image_preimage_eq_of_subset fun x hx => CanLift.prf _ (hs x hx)⟩
+  prf := fun s hs => subset_range_iff_exists_image_eq.mp fun x hx => CanLift.prf _ (hs x hx)
 
 @[simp]
 theorem quot_mk_range_eq [Setoidₓ α] : (Range fun x : α => ⟦x⟧) = univ :=
@@ -2976,6 +2982,22 @@ theorem image2_image_left_comm {f : α' → β → γ} {g : α → α'} {f' : α
 theorem image_image2_right_comm {f : α → β' → γ} {g : β → β'} {f' : α → β → δ} {g' : δ → γ}
     (h_right_comm : ∀ a b, f a (g b) = g' (f' a b)) : Image2 f s (t.Image g) = (Image2 f' s t).Image g' :=
   (image_image2_distrib_right fun a b => (h_right_comm a b).symm).symm
+
+/-- The other direction does not hold because of the `s`-`s` cross terms on the RHS. -/
+theorem image2_distrib_subset_left {f : α → δ → ε} {g : β → γ → δ} {f₁ : α → β → β'} {f₂ : α → γ → γ'}
+    {g' : β' → γ' → ε} (h_distrib : ∀ a b c, f a (g b c) = g' (f₁ a b) (f₂ a c)) :
+    Image2 f s (Image2 g t u) ⊆ Image2 g' (Image2 f₁ s t) (Image2 f₂ s u) := by
+  rintro _ ⟨a, _, ha, ⟨b, c, hb, hc, rfl⟩, rfl⟩
+  rw [h_distrib]
+  exact mem_image2_of_mem (mem_image2_of_mem ha hb) (mem_image2_of_mem ha hc)
+
+/-- The other direction does not hold because of the `u`-`u` cross terms on the RHS. -/
+theorem image2_distrib_subset_right {f : δ → γ → ε} {g : α → β → δ} {f₁ : α → γ → α'} {f₂ : β → γ → β'}
+    {g' : α' → β' → ε} (h_distrib : ∀ a b c, f (g a b) c = g' (f₁ a c) (f₂ b c)) :
+    Image2 f (Image2 g s t) u ⊆ Image2 g' (Image2 f₁ s u) (Image2 f₂ t u) := by
+  rintro _ ⟨_, c, ⟨a, b, ha, hb, rfl⟩, hc, rfl⟩
+  rw [h_distrib]
+  exact mem_image2_of_mem (mem_image2_of_mem ha hc) (mem_image2_of_mem hb hc)
 
 theorem image_image2_antidistrib {g : γ → δ} {f' : β' → α' → δ} {g₁ : β → β'} {g₂ : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g₁ b) (g₂ a)) :

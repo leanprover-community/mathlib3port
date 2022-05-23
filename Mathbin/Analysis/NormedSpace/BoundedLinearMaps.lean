@@ -212,7 +212,7 @@ theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, Norme
               (mul_le_mul_of_nonneg_right (norm_snd_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))
           ⟩ }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- Given a fixed continuous linear map `g`, associating to a continuous multilinear map `f` the
 continuous multilinear map `f (g m₁, ..., g mₙ)` is a bounded linear operation. -/
 theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L[𝕜] E) :
@@ -314,7 +314,7 @@ variable {𝕜}
 
 variable {f : E × F → G}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem ContinuousLinearMap.is_bounded_bilinear_map (f : E →L[𝕜] F →L[𝕜] G) :
     IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
   { add_left := f.map_add₂, smul_left := f.map_smul₂, add_right := fun x => (f x).map_add,
@@ -407,7 +407,7 @@ theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) 
 theorem ContinuousLinearMap.continuous₂ (f : E →L[𝕜] F →L[𝕜] G) : Continuous (Function.uncurry fun x y => f x y) :=
   f.IsBoundedBilinearMap.Continuous
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
     IsBoundedLinearMap 𝕜 fun x => f (x, y) :=
   { map_add := fun x x' => h.add_left _ _ _, map_smul := fun c x => h.smul_left _ _ _,
@@ -426,7 +426,7 @@ theorem IsBoundedBilinearMap.is_bounded_linear_map_left (h : IsBoundedBilinearMa
           apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_ltₓ C_pos, mul_nonneg]_ = C * (∥y∥ + 1) * ∥x∥ := by
           ring }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem IsBoundedBilinearMap.is_bounded_linear_map_right (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
     IsBoundedLinearMap 𝕜 fun y => f (x, y) :=
   { map_add := fun y y' => h.add_right _ _ _, map_smul := fun c y => h.smul_right _ _ _,
@@ -519,7 +519,7 @@ theorem is_bounded_bilinear_map_smul_right :
       ⟨1, zero_lt_one, fun m f => by
         simp ⟩ }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
 bilinear operation. -/
 theorem is_bounded_bilinear_map_comp_multilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι] [Fintype ι]
@@ -591,7 +591,7 @@ theorem ContinuousLinearMap.lmul_left_right_is_bounded_bilinear (𝕜' : Type _)
 
 variable {𝕜}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- Given a bounded bilinear map `f`, the map associating to a point `p` the derivative of `f` at
 `p` is itself a bounded linear map. -/
 theorem IsBoundedBilinearMap.is_bounded_linear_map_deriv (h : IsBoundedBilinearMap 𝕜 f) :

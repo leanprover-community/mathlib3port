@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
 import Mathbin.LinearAlgebra.Basic
-import Mathbin.LinearAlgebra.Matrix.ToLin
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.Algebra.BigOperators.Order
 import Mathbin.Algebra.BigOperators.Ring
@@ -128,7 +127,7 @@ protected theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) :
   f.map_add' m i x y
 
 @[simp]
-theorem map_smul (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) : f (update m i (c • x)) = c • f (update m i x) :=
+protected theorem map_smul (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i) : f (update m i (c • x)) = c • f (update m i x) :=
   f.map_smul' m i c x
 
 theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
@@ -190,6 +189,7 @@ end HasScalar
 instance : AddCommMonoidₓ (MultilinearMap R M₁ M₂) :=
   coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
     ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by
@@ -962,7 +962,7 @@ instance : Sub (MultilinearMap R M₁ M₂) :=
     ⟨fun m => f m - g m, fun m i x y => by
       simp only [MultilinearMap.map_add, sub_eq_add_neg, neg_add]
       cc, fun m i c x => by
-      simp only [map_smul, smul_sub]⟩⟩
+      simp only [MultilinearMap.map_smul, smul_sub]⟩⟩
 
 @[simp]
 theorem sub_apply (m : ∀ i, M₁ i) : (f - g) m = f m - g m :=
@@ -1077,7 +1077,7 @@ def LinearMap.uncurryLeft (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n 
       revert x
       rw [← succ_pred i h]
       intro x
-      rw [tail_update_succ, tail_update_succ, map_smul]
+      rw [tail_update_succ, tail_update_succ, MultilinearMap.map_smul]
       
 
 @[simp]
@@ -1175,12 +1175,12 @@ def MultilinearMap.uncurryRight (f : MultilinearMap R (fun i : Finₓ n => M i.c
       revert x
       rw [(cast_succ_cast_lt i h).symm]
       intro x
-      rw [init_update_cast_succ, init_update_cast_succ, map_smul, LinearMap.smul_apply]
+      rw [init_update_cast_succ, init_update_cast_succ, MultilinearMap.map_smul, LinearMap.smul_apply]
       
     · revert x
       rw [eq_last_of_not_lt h]
       intro x
-      rw [update_same, update_same, init_update_last, init_update_last, LinearMap.map_smul]
+      rw [update_same, update_same, init_update_last, init_update_last, map_smul]
       
 
 @[simp]
@@ -1286,8 +1286,8 @@ def uncurrySum (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x
         Sum.update_inr_comp_inl, Sum.update_inr_comp_inr]
   map_smul' := fun u i c x => by
     cases i <;>
-      simp only [map_smul, smul_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr, Sum.update_inr_comp_inl,
-        Sum.update_inr_comp_inr]
+      simp only [MultilinearMap.map_smul, smul_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr,
+        Sum.update_inr_comp_inl, Sum.update_inr_comp_inr]
 
 @[simp]
 theorem uncurry_sum_aux_apply (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂))
@@ -1421,32 +1421,6 @@ def range [Nonempty ι] (f : MultilinearMap R M₁ M₂) : SubMulAction R M₂ :
   f.map fun i => ⊤
 
 end Submodule
-
-section FiniteDimensional
-
-variable [Fintype ι] [Field R] [AddCommGroupₓ M₂] [Module R M₂] [FiniteDimensional R M₂]
-
-variable [∀ i, AddCommGroupₓ (M₁ i)] [∀ i, Module R (M₁ i)] [∀ i, FiniteDimensional R (M₁ i)]
-
-instance : FiniteDimensional R (MultilinearMap R M₁ M₂) := by
-  suffices
-    ∀ n N : Finₓ n → Type _ [∀ i, AddCommGroupₓ (N i)],
-      ∀ [∀ i, Module R (N i)], ∀ [∀ i, FiniteDimensional R (N i)], FiniteDimensional R (MultilinearMap R N M₂)
-    by
-    have := this _ (M₁ ∘ (Fintype.equivFin ι).symm)
-    have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
-    exact e.symm.finite_dimensional
-  intros
-  induction' n with n ih
-  · exact (const_linear_equiv_of_is_empty R N M₂ : _).FiniteDimensional
-    
-  · skip
-    suffices FiniteDimensional R (N 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => N i.succ) M₂) by
-      exact (multilinearCurryLeftEquiv R N M₂).FiniteDimensional
-    apply LinearMap.finite_dimensional
-    
-
-end FiniteDimensional
 
 end MultilinearMap
 

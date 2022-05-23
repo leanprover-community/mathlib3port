@@ -1191,7 +1191,7 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(branch p q₁ q₂) => insert Q (stmts₁ q₁ ∪ stmts₁ q₂)
   | Q => {Q}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 
@@ -1515,6 +1515,7 @@ section
 
 parameter {Γ : Type _}[Inhabited Γ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_enc_dec [Fintype Γ] :
     ∃ (n : _)(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ),
       enc default = Vector.repeat false n ∧ ∀ a, dec (enc a) = a :=
@@ -2060,7 +2061,7 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(goto l) => {Q}
   | Q@halt => {Q}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 

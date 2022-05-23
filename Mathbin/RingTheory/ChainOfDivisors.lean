@@ -111,6 +111,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
     simpa only [Finₓ.coe_eq_cast_succ] using Finₓ.lt_succ
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ} {c : Finₓ (n + 1) → Associates M}
     (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i) {m : Finset (Associates M)} (hm : ∀ r, r ∈ m → r ≤ q) : m.card ≤ n + 1 := by
   classical
@@ -123,6 +124,7 @@ theorem card_subset_divisors_le_length_of_chain {q : Associates M} {n : ℕ} {c 
 
 variable [UniqueFactorizationMonoid M]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (hn : n ≠ 0)
     {c : Finₓ (n + 1) → Associates M} (h₁ : StrictMono c) (h₂ : ∀ {r}, r ≤ q ↔ ∃ i, r = c i) (hr : r ∣ q) (hq : q ≠ 0) :
     ∃ i : Finₓ (n + 1), r = c 1 ^ (i : ℕ) := by
@@ -168,6 +170,7 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
   · exact nat.succ_le_succ_iff.mp a.2
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n ≠ 0) {c : Finₓ (n + 1) → Associates M}
     (h₁ : StrictMono c) (h₂ : ∀ {r : Associates M}, r ≤ q ↔ ∃ i, r = c i) (hq : q ≠ 0) : q = c 1 ^ n := by
   classical

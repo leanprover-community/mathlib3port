@@ -98,6 +98,7 @@ instance : CanLift (Set α) (Finset α) where
 theorem finite_mem_finset (s : Finset α) : Finite { a | a ∈ s } :=
   ⟨Fintype.ofFinset s fun _ => Iff.rfl⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Finite.of_fintype [Fintype α] (s : Set α) : Finite s := by
   classical <;> exact ⟨setFintype s⟩
 
@@ -621,6 +622,7 @@ end Finset
 
 namespace Set
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Finite product of finite sets is finite -/
 theorem Finite.pi {δ : Type _} [Fintype δ] {κ : δ → Type _} {t : ∀ d, Set (κ d)} (ht : ∀ d, (t d).Finite) :
     (Pi Univ t).Finite := by
@@ -694,6 +696,7 @@ instance Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
   Fintype.ofFinset (Finset.range n) <| by
     simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `P` is some relation between terms of `γ` and sets in `γ`,
 such that every finite set `t : set γ` has some `c : γ` related to it,
 then there is a recursively defined sequence `u` in `γ`
@@ -774,6 +777,7 @@ theorem card_range_of_injective [Fintype α] {f : α → β} (hf : Injective f) 
     Fintype.card (Range f) = Fintype.card α :=
   Eq.symm <| Fintype.card_congr <| Equivₓ.ofInjective f hf
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Finite.exists_maximal_wrt [PartialOrderₓ β] (f : α → β) (s : Set α) (h : Set.Finite s) :
     s.Nonempty → ∃ a ∈ s, ∀, ∀ a' ∈ s, ∀, f a ≤ f a' → f a = f a' := by
   classical
@@ -904,6 +908,7 @@ namespace Fintype
 
 variable [Fintype α] {p q : α → Prop} [DecidablePred p] [DecidablePred q]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem card_subtype_compl : Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
   classical

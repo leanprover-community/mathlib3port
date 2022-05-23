@@ -51,6 +51,7 @@ end Barycentric
 
 open Set
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a finite-dimensional normed real vector space, the interior of the convex hull of an
 affine basis is the set of points whose barycentric coordinates are strictly positive with respect
 to this basis.
@@ -59,9 +60,8 @@ TODO Restate this result for affine spaces (instead of vector spaces) once the d
 convexity is generalised to this setting. -/
 theorem interior_convex_hull_aff_basis {ι E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E]
     (b : AffineBasis ι ℝ E) : Interior (convexHull ℝ (Range b.points)) = { x | ∀ i, 0 < b.Coord i x } := by
-  cases' subsingleton_or_nontrivial ι with h h
+  cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
-    have := h
     suffices range b.points = univ by
       simp [this]
     refine' AffineSubspace.eq_univ_of_subsingleton_span_eq_top _ b.tot
@@ -91,6 +91,7 @@ include V
 open AffineMap
 
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem exists_subset_affine_independent_span_eq_top_of_open {s u : Set P} (hu : IsOpen u) (hsu : s ⊆ u)

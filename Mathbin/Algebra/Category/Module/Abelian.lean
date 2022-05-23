@@ -74,11 +74,8 @@ def normalEpi (hf : Epi f) : NormalEpi f where
 
 /-- The category of R-modules is abelian. -/
 instance : Abelian (ModuleCat R) where
-  HasFiniteProducts :=
-    ⟨by
-      infer_instance⟩
-  HasKernels := by
-    infer_instance
+  HasFiniteProducts := ⟨fun J _ => Limits.has_limits_of_shape_of_has_limits⟩
+  HasKernels := Limits.has_kernels_of_has_equalizers (ModuleCat R)
   HasCokernels := has_cokernels_Module
   normalMonoOfMono := fun X Y => normalMono
   normalEpiOfEpi := fun X Y => normalEpi

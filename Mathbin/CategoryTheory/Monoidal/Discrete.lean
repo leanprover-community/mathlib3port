@@ -25,22 +25,17 @@ variable (M : Type u) [Monoidₓ M]
 
 namespace CategoryTheory
 
-@[to_additive]
-instance monoidDiscrete : Monoidₓ (Discrete M) := by
-  dsimp' [discrete]
-  infer_instance
-
 @[to_additive Discrete.addMonoidal]
 instance Discrete.monoidal : MonoidalCategory (Discrete M) where
-  tensorUnit := 1
-  tensorObj := fun X Y => X * Y
+  tensorUnit := Discrete.mk 1
+  tensorObj := fun X Y => Discrete.mk (X.as * Y.as)
   tensorHom := fun W X Y Z f g =>
     eqToHom
       (by
         rw [eq_of_hom f, eq_of_hom g])
-  leftUnitor := fun X => eqToIso (one_mulₓ X)
-  rightUnitor := fun X => eqToIso (mul_oneₓ X)
-  associator := fun X Y Z => eqToIso (mul_assoc _ _ _)
+  leftUnitor := fun X => Discrete.eqToIso (one_mulₓ X.as)
+  rightUnitor := fun X => Discrete.eqToIso (mul_oneₓ X.as)
+  associator := fun X Y Z => Discrete.eqToIso (mul_assoc _ _ _)
 
 variable {M} {N : Type u} [Monoidₓ N]
 
@@ -51,10 +46,10 @@ discrete monoidal categories.
       "An additive morphism between add_monoids gives a\n  monoidal functor between the corresponding discrete monoidal categories.",
   simps]
 def Discrete.monoidalFunctor (F : M →* N) : MonoidalFunctor (Discrete M) (Discrete N) where
-  obj := F
-  map := fun X Y f => eqToHom (F.congr_arg (eq_of_hom f))
-  ε := eqToHom F.map_one.symm
-  μ := fun X Y => eqToHom (F.map_mul X Y).symm
+  obj := fun X => Discrete.mk (F X.as)
+  map := fun X Y f => Discrete.eqToHom (F.congr_arg (eq_of_hom f))
+  ε := Discrete.eqToHom F.map_one.symm
+  μ := fun X Y => Discrete.eqToHom (F.map_mul X.as Y.as).symm
 
 variable {K : Type u} [Monoidₓ K]
 

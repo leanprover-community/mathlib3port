@@ -307,6 +307,7 @@ theorem content_mul_aux {p q : R[X]} :
     leading_coeff_mul, RingHom.map_mul, mul_assoc, mul_assoc]
   apply dvd_sub (Dvd.intro _ rfl) (Dvd.intro _ rfl)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem content_mul {p q : R[X]} : (p * q).content = p.content * q.content := by
   classical
@@ -383,6 +384,7 @@ theorem IsPrimitive.dvd_prim_part_iff_dvd {p q : R[X]} (hp : p.IsPrimitive) (hq 
   apply Dvd.intro _
   rw [prim_part_mul hq, hp.prim_part_eq]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_primitive_lcm_of_is_primitive {p q : R[X]} (hp : p.IsPrimitive) (hq : q.IsPrimitive) :
     ∃ r : R[X], r.IsPrimitive ∧ ∀ s : R[X], p ∣ s ∧ q ∣ s ↔ r ∣ s := by
   classical

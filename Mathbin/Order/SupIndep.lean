@@ -118,6 +118,7 @@ theorem sup_indep_univ_fin_two (f : Finₓ 2 → α) : (Finset.univ : Finset (Fi
     simp
   sup_indep_pair this
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.val) := by
   intro t ht i _ hi
   classical
@@ -306,6 +307,7 @@ theorem Independent.disjoint_bsupr {ι : Type _} {α : Type _} [CompleteLattice 
 
 end CompleteLattice
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
   classical
@@ -319,6 +321,7 @@ theorem CompleteLattice.independent_iff_sup_indep [CompleteLattice α] {s : Fins
 
 alias CompleteLattice.independent_iff_sup_indep ↔ CompleteLattice.Independent.sup_indep Finset.SupIndep.independent
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_sup_indep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by

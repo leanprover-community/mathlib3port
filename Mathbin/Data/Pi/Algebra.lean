@@ -3,12 +3,12 @@ Copyright (c) 2020 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 -/
-import Mathbin.Tactic.SplitIfs
-import Mathbin.Tactic.Simpa
-import Mathbin.Tactic.Congr
 import Mathbin.Algebra.Group.ToAdditive
-import Mathbin.Data.Prod
+import Mathbin.Data.Prod.Basic
 import Mathbin.Logic.Unique
+import Mathbin.Tactic.Congr
+import Mathbin.Tactic.Simpa
+import Mathbin.Tactic.SplitIfs
 
 /-!
 # Instances and theorems on pi types

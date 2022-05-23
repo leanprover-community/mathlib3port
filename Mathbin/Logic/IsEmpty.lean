@@ -25,7 +25,7 @@ class IsEmpty (α : Sort _) : Prop where
   False : α → False
 
 instance : IsEmpty Empty :=
-  ⟨Empty.elimₓ⟩
+  ⟨Empty.elim⟩
 
 instance : IsEmpty Pempty :=
   ⟨Pempty.elimₓ⟩

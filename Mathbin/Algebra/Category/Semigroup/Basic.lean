@@ -7,6 +7,7 @@ import Mathbin.Algebra.PemptyInstances
 import Mathbin.Algebra.Hom.Equiv
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Elementwise
 
 /-!
 # Category instances for has_mul, has_add, semigroup and add_semigroup
@@ -184,12 +185,9 @@ namespace CategoryTheory.Iso
 def magmaIsoToMulEquiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := by
-    rw [Function.LeftInverse]
+  left_inv := fun x => by
     simp
-  right_inv := by
-    rw [Function.RightInverse]
-    rw [Function.LeftInverse]
+  right_inv := fun y => by
     simp
   map_mul' := by
     simp
@@ -199,12 +197,9 @@ def magmaIsoToMulEquiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y where
 def semigroupIsoToMulEquiv {X Y : Semigroupₓₓ} (i : X ≅ Y) : X ≃* Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := by
-    rw [Function.LeftInverse]
+  left_inv := fun x => by
     simp
-  right_inv := by
-    rw [Function.RightInverse]
-    rw [Function.LeftInverse]
+  right_inv := fun y => by
     simp
   map_mul' := by
     simp

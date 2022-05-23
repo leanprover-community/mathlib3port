@@ -456,6 +456,7 @@ instance Prop.le_is_total : IsTotal Prop (· ≤ ·) :=
     change (p → q) ∨ (q → p)
     tauto!⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance Prop.linearOrder : LinearOrderₓ Prop := by
   classical <;> exact Lattice.toLinearOrder Prop
 

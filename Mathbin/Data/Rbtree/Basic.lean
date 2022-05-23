@@ -57,6 +57,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] : ∀ {lo hi}, IsSearchabl
     cases lo <;> cases hi <;> simp [lift] at *
     apply trans_of lt h₁ h₂
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     ∀ {lo hi hi'} hc : ¬lt hi' hi ∧ ¬lt hi hi' hs : IsSearchable lt t lo (some hi), IsSearchable lt t lo (some hi') :=
   by
@@ -73,6 +74,7 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
   all_goals
     apply t_ih_rchild hc hs_hs₂
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
     ∀ {lo lo' hi} hc : ¬lt lo' lo ∧ ¬lt lo lo' hs : IsSearchable lt t (some lo) hi, IsSearchable lt t (some lo') hi :=
   by
@@ -138,6 +140,7 @@ theorem is_searchable_none_high_of_is_searchable_some_high {t} :
   all_goals
     apply t_ih_rchild hlt_hs₂
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
     ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi := by
   classical

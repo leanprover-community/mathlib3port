@@ -114,15 +114,22 @@ theorem birthday_eq_zero (x : Pgame) : birthday x = 0 ↔ IsEmpty x.LeftMoves �
 
 @[simp]
 theorem birthday_zero : birthday 0 = 0 := by
-  rw [birthday_eq_zero]
-  constructor <;> infer_instance
+  simp [Pempty.is_empty]
 
 @[simp]
 theorem birthday_one : birthday 1 = 1 := by
-  have : (fun i => (move_left 1 i).birthday) = fun i => 0 :=
-    funext fun x => by
-      simp
-  rw [birthday_def, @lsub_empty (right_moves 1), this, lsub_const, succ_zero, max_zero_right]
+  rw [birthday_def]
+  simp
+
+@[simp]
+theorem birthday_star : birthday star = 1 := by
+  rw [birthday_def]
+  simp
+
+@[simp]
+theorem birthday_half : birthday half = 2 := by
+  rw [birthday_def]
+  simpa using max_eq_rightₓ (lt_succ_self 1).le
 
 @[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
@@ -134,7 +141,7 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
-  convert max_eq_left_iff.2 (Ordinal.zero_le _)
+  convert max_eq_leftₓ (Ordinal.zero_le _)
   · apply lsub_empty
     
   · nth_rw 0[← lsub_typein o]
@@ -153,7 +160,7 @@ theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
 
 theorem neg_birthday_le (x : Pgame) : -x.birthday.toPgame ≤ x := by
   let h := le_birthday (-x)
-  rwa [neg_birthday, le_iff_neg_ge, neg_negₓ] at h
+  rwa [neg_birthday, ← neg_le_iff, neg_negₓ] at h
 
 end Pgame
 

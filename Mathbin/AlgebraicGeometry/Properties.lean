@@ -206,7 +206,7 @@ theorem eq_zero_of_basic_open_empty {X : Scheme} [hX : IsReduced X] {U : Opens X
     replace hs := hs.map (Spec_Γ_identity.app R).inv
     -- what the hell?!
     replace hs := @IsNilpotent.eq_zero _ _ _ _ (show _ from _) hs
-    rw [coe_hom_inv_id] at hs
+    rw [iso.hom_inv_id_apply] at hs
     rw [hs, map_zero]
     exact @is_reduced.component_reduced hX ⊤
     

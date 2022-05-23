@@ -212,6 +212,7 @@ theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V]
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) : Inhabited f.Eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.some_spec⟩⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The eigenspaces of a linear operator form an independent family of subspaces of `V`.  That is,
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/
 theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.eigenspace := by

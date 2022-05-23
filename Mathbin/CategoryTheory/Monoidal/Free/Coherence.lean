@@ -80,22 +80,25 @@ def inclusion : N C ⥤ F C :=
 
 /-- Auxiliary definition for `normalize`. -/
 @[simp]
-def normalizeObj : F C → NormalMonoidalObject C → NormalMonoidalObject C
-  | Unit, n => n
-  | of X, n => NormalMonoidalObject.tensor n X
-  | tensor X Y, n => normalize_obj Y (normalize_obj X n)
+def normalizeObj : F C → NormalMonoidalObject C → N C
+  | Unit, n => ⟨n⟩
+  | of X, n => ⟨NormalMonoidalObject.tensor n X⟩
+  | tensor X Y, n => normalize_obj Y (normalize_obj X n).as
 
 @[simp]
-theorem normalize_obj_unitor (n : N C) : normalizeObj (𝟙_ (F C)) n = n :=
+theorem normalize_obj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
 
 @[simp]
-theorem normalize_obj_tensor (X Y : F C) (n : N C) : normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n) :=
+theorem normalize_obj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
+    normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n).as :=
   rfl
 
 section
 
 open Hom
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- Auxiliary definition for `normalize`. Here we prove that objects that are related by
     associators and unitors map to the same normal form. -/
@@ -103,16 +106,40 @@ open Hom
 def normalizeMapAux :
     ∀ {X Y : F C}, (X ⟶ᵐ Y) → ((Discrete.functor (normalizeObj X) : _ ⥤ N C) ⟶ Discrete.functor (normalizeObj Y))
   | _, _, id _ => 𝟙 _
-  | _, _, α_hom _ _ _ => ⟨fun X => 𝟙 _⟩
-  | _, _, α_inv _ _ _ => ⟨fun X => 𝟙 _⟩
-  | _, _, l_hom _ => ⟨fun X => 𝟙 _⟩
-  | _, _, l_inv _ => ⟨fun X => 𝟙 _⟩
-  | _, _, ρ_hom _ => ⟨fun X => 𝟙 _⟩
-  | _, _, ρ_inv _ => ⟨fun X => 𝟙 _⟩
+  | _, _, α_hom _ _ _ =>
+    ⟨fun X => 𝟙 _, by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
+  | _, _, α_inv _ _ _ =>
+    ⟨fun X => 𝟙 _, by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
+  | _, _, l_hom _ =>
+    ⟨fun X => 𝟙 _, by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
+  | _, _, l_inv _ =>
+    ⟨fun X => 𝟙 _, by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
+  | _, _, ρ_hom _ =>
+    ⟨fun ⟨X⟩ =>
+      ⟨⟨by
+          simp ⟩⟩,
+      by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
+  | _, _, ρ_inv _ =>
+    ⟨fun ⟨X⟩ =>
+      ⟨⟨by
+          simp ⟩⟩,
+      by
+      rintro ⟨X⟩ ⟨Y⟩ f
+      simp ⟩
   | X, Y, @comp _ U V W f g => normalize_map_aux f ≫ normalize_map_aux g
   | X, Y, @hom.tensor _ T U V W f g =>
     ⟨fun X =>
-      (normalize_map_aux g).app (normalizeObj T X) ≫
+      (normalize_map_aux g).app (normalizeObj T X.as) ≫
         (Discrete.functor (normalizeObj W) : _ ⥤ N C).map ((normalize_map_aux f).app X),
       by
       tidy⟩
@@ -143,16 +170,17 @@ def normalize' : F C ⥤ N C ⥤ F C :=
 
 /-- The normalization functor for the free monoidal category over `C`. -/
 def fullNormalize : F C ⥤ N C where
-  obj := fun X => ((normalize C).obj X).obj NormalMonoidalObject.unit
-  map := fun X Y f => ((normalize C).map f).app NormalMonoidalObject.unit
+  obj := fun X => ((normalize C).obj X).obj ⟨NormalMonoidalObject.unit⟩
+  map := fun X Y f => ((normalize C).map f).app ⟨NormalMonoidalObject.unit⟩
 
 /-- Given an object `X` of the free monoidal category and an object `n` in normal form, taking
     the tensor product `n ⊗ X` in the free monoidal category is functorial in both `X` and `n`. -/
 @[simp]
 def tensorFunc : F C ⥤ N C ⥤ F C where
-  obj := fun X => Discrete.functor fun n => inclusion.obj n ⊗ X
+  obj := fun X => Discrete.functor fun n => inclusion.obj ⟨n⟩ ⊗ X
   map := fun X Y f =>
     ⟨fun n => 𝟙 _ ⊗ f, by
+      rintro ⟨X⟩ ⟨Y⟩
       tidy⟩
 
 theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) n : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
@@ -160,6 +188,8 @@ theorem tensor_func_map_app {X Y : F C} (f : X ⟶ Y) n : ((tensorFunc C).map f)
 
 theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by
+  cases n
+  cases n'
   tidy
 
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
@@ -185,7 +215,24 @@ theorem normalize_iso_app_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n =
 def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
   NatIso.ofComponents (normalizeIsoApp C X)
     (by
+      rintro ⟨X⟩ ⟨Y⟩
       tidy)
+
+section
+
+variable {D : Type u} [Category.{u} D] {I : Type u} (f : I → D) (X : Discrete I)
+
+-- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
+@[simp]
+theorem discrete_functor_obj_eq_as : (Discrete.functor f).obj X = f X.as :=
+  rfl
+
+-- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
+@[simp]
+theorem discrete_functor_map_eq_id (g : X ⟶ X) : (Discrete.functor f).map g = 𝟙 _ := by
+  tidy
+
+end
 
 /-- The isomorphism between `n ⊗ X` and `normalize X n` is natural (in both `X` and `n`, but
     naturality in `n` is trivial and was "proved" in `normalize_iso_aux`). This is the real heart
@@ -215,6 +262,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
       · dsimp'
         rw [triangle_assoc_comp_right_assoc]
         simp only [discrete.functor_map_id, category.assoc]
+        cases n
         dsimp'
         simp only [category.comp_id]
         
@@ -223,19 +271,25 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
           discrete.functor_map_id]
         dsimp'
         simp only [category.comp_id]
+        cases n
+        simp
         
       · dsimp'
         rw [← (iso.inv_comp_eq _).2 (right_unitor_tensor _ _), category.assoc, ← right_unitor_naturality]
-        simp only [discrete.functor_map_id, iso.cancel_iso_inv_left, category.assoc]
-        dsimp'
-        simp only [category.comp_id]
+        simp only [iso.cancel_iso_inv_left, category.assoc]
+        congr 1
+        convert (category.comp_id _).symm
+        convert discrete_functor_map_eq_id inclusion_obj _ _
+        ext
+        rfl
         
       · dsimp'
-        simp only [← (iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), right_unitor_conjugation,
-          discrete.functor_map_id, category.assoc, iso.hom_inv_id, iso.hom_inv_id_assoc, iso.inv_hom_id,
-          iso.inv_hom_id_assoc]
-        dsimp'
-        simp only [category.comp_id]
+        simp only [← (iso.eq_comp_inv _).1 (right_unitor_tensor_inv _ _), right_unitor_conjugation, category.assoc,
+          iso.hom_inv_id, iso.hom_inv_id_assoc, iso.inv_hom_id, iso.inv_hom_id_assoc]
+        congr
+        convert (discrete_functor_map_eq_id inclusion_obj _ _).symm
+        ext
+        rfl
         
       · dsimp'  at *
         rw [id_tensor_comp, category.assoc, f_ih_g ⟦f_g⟧, ← category.assoc, f_ih_f ⟦f_f⟧, category.assoc, ←
@@ -261,12 +315,14 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
 
 /-- The isomorphism between an object and its normal form is natural. -/
 def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
-  NatIso.ofComponents (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app NormalMonoidalObject.unit)
+  NatIso.ofComponents (fun X => (λ_ X).symm ≪≫ ((normalizeIso C).app X).app ⟨NormalMonoidalObject.unit⟩)
     (by
       intro X Y f
       dsimp'
       rw [left_unitor_inv_naturality_assoc, category.assoc, iso.cancel_iso_inv_left]
-      exact congr_argₓ (fun f => nat_trans.app f normal_monoidal_object.unit) ((normalizeIso.{u} C).Hom.naturality f))
+      exact
+        congr_argₓ (fun f => nat_trans.app f (discrete.mk normal_monoidal_object.unit))
+          ((normalizeIso.{u} C).Hom.naturality f))
 
 end
 

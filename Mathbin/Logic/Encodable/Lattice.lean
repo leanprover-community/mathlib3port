@@ -56,6 +56,7 @@ end Encodable
 
 namespace Finset
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonempty_encodable {α} (t : Finset α) : Nonempty <| Encodable { i // i ∈ t } := by
   classical
   induction' t using Finset.induction with x t hx ih

@@ -91,7 +91,7 @@ def num (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
 def denom (g : SL(2,ℝ)) (z : ℍ) : ℂ :=
   (↑ₘg 1 0 : ℝ) * z + (↑ₘg 1 1 : ℝ)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem linear_ne_zero (cd : Finₓ 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : ℂ) * z + cd 1 ≠ 0 := by
   contrapose! h
   have : cd 0 = 0 := by

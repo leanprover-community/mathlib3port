@@ -202,6 +202,7 @@ end Basic
 
 section Fintype
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Finite A B := by
   classical
   rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
@@ -301,6 +302,7 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic [DecidableEq B] [IsDom
       hζ.is_root_cyclotomic n.pos
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem adjoin_primitive_root_eq_top [IsDomain B] [h : IsCyclotomicExtension {n} A B] (ζ : B)
     (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
   classical

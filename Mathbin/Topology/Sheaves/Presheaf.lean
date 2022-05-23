@@ -94,7 +94,7 @@ theorem pushforward_eq'_hom_app {X Y : Top.{v}} {f g : X ⟶ Y} (h : f = g) (ℱ
           (by
             rw [h])) :=
   by
-  simpa
+  simpa [eq_to_hom_map]
 
 @[simp]
 theorem pushforward_eq_rfl {X Y : Top.{v}} (f : X ⟶ Y) (ℱ : X.Presheaf C) U :
@@ -222,7 +222,7 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
               simp )))
     fun U V i => by
     ext
-    simp [-eq_to_hom_map, -eq_to_iso_map]
+    simp
     erw [colimit.pre_desc_assoc]
     erw [colimit.ι_desc_assoc]
     erw [colimit.ι_desc_assoc]
@@ -230,8 +230,8 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
     simp only [← ℱ.map_comp]
     congr
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
       colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
@@ -241,7 +241,7 @@ theorem id_inv_app (U : Opens Y) :
               simp ))) :=
   by
   dsimp' [id]
-  simp [-eq_to_hom_map, -eq_to_iso_map]
+  simp
   dsimp' [colimit_of_diagram_terminal]
   delta' Lan.diagram
   refine' Eq.trans _ (category.id_comp _)
@@ -275,7 +275,7 @@ theorem id_pushforward {X : Top.{v}} : pushforward C (𝟙 X) = 𝟭 (X.Presheaf
     ext U
     have h := f.congr
     erw [h (opens.op_map_id_obj U)]
-    simpa
+    simpa [eq_to_hom_map]
     
   · intros
     apply pushforward.id_eq
@@ -308,9 +308,10 @@ theorem to_pushforward_of_iso_app {X Y : Top} (H₁ : X ≅ Y) {ℱ : X.Presheaf
         H₂.app (op ((Opens.map H₁.inv).obj (unop U))) :=
   by
   delta' to_pushforward_of_iso
-  simp only [Equivₓ.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit, eq_to_hom_map,
-    presheaf_equiv_of_iso_unit_iso_hom_app_app, equivalence.to_adjunction, equivalence.equivalence_mk'_counit,
-    presheaf_equiv_of_iso_inverse_map_app, adjunction.mk_of_unit_counit_hom_equiv_apply]
+  simp only [Equivₓ.to_fun_as_coe, nat_trans.comp_app, equivalence.equivalence_mk'_unit, eq_to_hom_map, eq_to_hom_op,
+    eq_to_hom_trans, presheaf_equiv_of_iso_unit_iso_hom_app_app, equivalence.to_adjunction,
+    equivalence.equivalence_mk'_counit, presheaf_equiv_of_iso_inverse_map_app,
+    adjunction.mk_of_unit_counit_hom_equiv_apply]
   congr
 
 /-- If `H : X ≅ Y` is a homeomorphism,

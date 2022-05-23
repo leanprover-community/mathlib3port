@@ -141,20 +141,32 @@ theorem measure_add_measure_compl (h : MeasurableSet s) : μ s + μ (sᶜ) = μ 
   rw [← measure_union' _ h, union_compl_self]
   exact disjoint_compl_right
 
-theorem measure_bUnion {s : Set β} {f : β → Set α} (hs : Countable s) (hd : s.Pairwise (Disjoint on f))
-    (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑' p : s, μ (f p) := by
+theorem measure_bUnion₀ {s : Set β} {f : β → Set α} (hs : Countable s) (hd : s.Pairwise (AeDisjoint μ on f))
+    (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : μ (⋃ b ∈ s, f b) = ∑' p : s, μ (f p) := by
   have := hs.to_encodable
   rw [bUnion_eq_Union]
-  exact measure_Union ((hd.on_injective Subtype.coe_injective) fun x => x.2) fun x => h x x.2
+  exact measure_Union₀ ((hd.on_injective Subtype.coe_injective) fun x => x.2) fun x => h x x.2
+
+theorem measure_bUnion {s : Set β} {f : β → Set α} (hs : Countable s) (hd : s.PairwiseDisjoint f)
+    (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑' p : s, μ (f p) :=
+  measure_bUnion₀ hs hd.AeDisjoint fun b hb => (h b hb).NullMeasurableSet
+
+theorem measure_sUnion₀ {S : Set (Set α)} (hs : Countable S) (hd : S.Pairwise (AeDisjoint μ))
+    (h : ∀, ∀ s ∈ S, ∀, NullMeasurableSet s μ) : μ (⋃₀S) = ∑' s : S, μ s := by
+  rw [sUnion_eq_bUnion, measure_bUnion₀ hs hd h]
 
 theorem measure_sUnion {S : Set (Set α)} (hs : Countable S) (hd : S.Pairwise Disjoint)
     (h : ∀, ∀ s ∈ S, ∀, MeasurableSet s) : μ (⋃₀S) = ∑' s : S, μ s := by
   rw [sUnion_eq_bUnion, measure_bUnion hs hd h]
 
-theorem measure_bUnion_finset {s : Finset ι} {f : ι → Set α} (hd : Set.Pairwise (↑s) (Disjoint on f))
-    (hm : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) := by
+theorem measure_bUnion_finset₀ {s : Finset ι} {f : ι → Set α} (hd : Set.Pairwise (↑s) (AeDisjoint μ on f))
+    (hm : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) := by
   rw [← Finset.sum_attach, Finset.attach_eq_univ, ← tsum_fintype]
-  exact measure_bUnion s.countable_to_set hd hm
+  exact measure_bUnion₀ s.countable_to_set hd hm
+
+theorem measure_bUnion_finset {s : Finset ι} {f : ι → Set α} (hd : PairwiseDisjoint (↑s) f)
+    (hm : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : μ (⋃ b ∈ s, f b) = ∑ p in s, μ (f p) :=
+  measure_bUnion_finset₀ hd.AeDisjoint fun b hb => (hm b hb).NullMeasurableSet
 
 /-- If `s` is a countable set, then the measure of its preimage can be found as the sum of measures
 of the fibers `f ⁻¹' {y}`. -/
@@ -221,11 +233,11 @@ theorem measure_eq_measure_of_between_null_diff {s₁ s₂ s₃ : Set α} (h12 :
   exact ⟨le12.antisymm (le23.trans key), le23.antisymm (key.trans le12)⟩
 
 theorem measure_eq_measure_smaller_of_between_null_diff {s₁ s₂ s₃ : Set α} (h12 : s₁ ⊆ s₂) (h23 : s₂ ⊆ s₃)
-    (h_nulldiff : μ (s₃.diff s₁) = 0) : μ s₁ = μ s₂ :=
+    (h_nulldiff : μ (s₃ \ s₁) = 0) : μ s₁ = μ s₂ :=
   (measure_eq_measure_of_between_null_diff h12 h23 h_nulldiff).1
 
 theorem measure_eq_measure_larger_of_between_null_diff {s₁ s₂ s₃ : Set α} (h12 : s₁ ⊆ s₂) (h23 : s₂ ⊆ s₃)
-    (h_nulldiff : μ (s₃.diff s₁) = 0) : μ s₂ = μ s₃ :=
+    (h_nulldiff : μ (s₃ \ s₁) = 0) : μ s₂ = μ s₃ :=
   (measure_eq_measure_of_between_null_diff h12 h23 h_nulldiff).2
 
 theorem measure_compl (h₁ : MeasurableSet s) (h_fin : μ s ≠ ∞) : μ (sᶜ) = μ Univ - μ s := by
@@ -290,7 +302,7 @@ theorem measure_union_to_measurable : μ (s ∪ ToMeasurable μ t) = μ (s ∪ t
   Eq.symm <| measure_union_congr_of_subset Subset.rfl le_rfl (subset_to_measurable _ _) (measure_to_measurable _).le
 
 theorem sum_measure_le_measure_univ {s : Finset ι} {t : ι → Set α} (h : ∀, ∀ i ∈ s, ∀, MeasurableSet (t i))
-    (H : Set.Pairwise (↑s) (Disjoint on t)) : (∑ i in s, μ (t i)) ≤ μ (Univ : Set α) := by
+    (H : Set.PairwiseDisjoint (↑s) t) : (∑ i in s, μ (t i)) ≤ μ (Univ : Set α) := by
   rw [← measure_bUnion_finset H h]
   exact measure_mono (subset_univ _)
 
@@ -892,7 +904,7 @@ theorem map_congr {f g : α → β} (h : f =ᵐ[μ] g) : Measure.map f μ = Meas
     
 
 @[simp]
-theorem map_smul (c : ℝ≥0∞) (μ : Measure α) (f : α → β) : (c • μ).map f = c • μ.map f := by
+protected theorem map_smul (c : ℝ≥0∞) (μ : Measure α) (f : α → β) : (c • μ).map f = c • μ.map f := by
   rcases eq_or_ne c 0 with (rfl | hc)
   · simp
     
@@ -1146,12 +1158,20 @@ theorem restrict_univ : μ.restrict Univ = μ :=
   ext fun s hs => by
     simp [hs]
 
+theorem restrict_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
+    μ.restrict (s ∩ t) + μ.restrict (s \ t) = μ.restrict s := by
+  ext1 u hu
+  simp only [add_apply, restrict_apply hu, ← inter_assoc, diff_eq]
+  exact measure_inter_add_diff₀ (u ∩ s) ht
+
+theorem restrict_inter_add_diff (s : Set α) (ht : MeasurableSet t) :
+    μ.restrict (s ∩ t) + μ.restrict (s \ t) = μ.restrict s :=
+  restrict_inter_add_diff₀ s ht.NullMeasurableSet
+
 theorem restrict_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) :
     μ.restrict (s ∪ t) + μ.restrict (s ∩ t) = μ.restrict s + μ.restrict t := by
-  ext1 u hu
-  simp only [add_apply, restrict_apply hu, inter_union_distrib_left]
-  convert measure_union_add_inter₀ (u ∩ s) (hu.null_measurable_set.inter ht) using 3
-  rw [Set.inter_left_comm (u ∩ s), Set.inter_assoc, ← Set.inter_assoc u u, Set.inter_self]
+  rw [← restrict_inter_add_diff₀ (s ∪ t) ht, union_inter_cancel_right, union_diff_right, ←
+    restrict_inter_add_diff₀ s ht, add_commₓ, ← add_assocₓ, add_right_commₓ]
 
 theorem restrict_union_add_inter (s : Set α) (ht : MeasurableSet t) :
     μ.restrict (s ∪ t) + μ.restrict (s ∩ t) = μ.restrict s + μ.restrict t :=
@@ -1197,7 +1217,7 @@ theorem restrict_Union_apply_ae [Encodable ι] {s : ι → Set α} (hd : Pairwis
 theorem restrict_Union_apply [Encodable ι] {s : ι → Set α} (hd : Pairwise (Disjoint on s))
     (hm : ∀ i, MeasurableSet (s i)) {t : Set α} (ht : MeasurableSet t) :
     μ.restrict (⋃ i, s i) t = ∑' i, μ.restrict (s i) t :=
-  restrict_Union_apply_ae (hd.mono fun i j h => h.AeDisjoint) (fun i => (hm i).NullMeasurableSet) ht
+  restrict_Union_apply_ae hd.AeDisjoint (fun i => (hm i).NullMeasurableSet) ht
 
 theorem restrict_Union_apply_eq_supr [Encodable ι] {s : ι → Set α} (hd : Directed (· ⊆ ·) s) {t : Set α}
     (ht : MeasurableSet t) : μ.restrict (⋃ i, s i) t = ⨆ i, μ.restrict (s i) t := by
@@ -1524,8 +1544,7 @@ theorem restrict_Union_ae [Encodable ι] {s : ι → Set α} (hd : Pairwise (AeD
 
 theorem restrict_Union [Encodable ι] {s : ι → Set α} (hd : Pairwise (Disjoint on s)) (hm : ∀ i, MeasurableSet (s i)) :
     μ.restrict (⋃ i, s i) = sum fun i => μ.restrict (s i) :=
-  ext fun t ht => by
-    simp only [sum_apply _ ht, restrict_Union_apply hd hm ht]
+  restrict_Union_ae hd.AeDisjoint fun i => (hm i).NullMeasurableSet
 
 theorem restrict_Union_le [Encodable ι] {s : ι → Set α} : μ.restrict (⋃ i, s i) ≤ sum fun i => μ.restrict (s i) := by
   intro t ht

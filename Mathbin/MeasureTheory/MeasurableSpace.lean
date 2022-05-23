@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Algebra.IndicatorFunction
-import Mathbin.Data.Tprod
+import Mathbin.Data.Prod.Tprod
 import Mathbin.GroupTheory.Coset
 import Mathbin.Logic.Equiv.Fin
 import Mathbin.MeasureTheory.MeasurableSpaceDef
@@ -366,7 +366,7 @@ theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePre
     Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat fun x => hN _ N.find_greatest_le
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem measurable_find_greatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀, ∀ k ≤ N, ∀, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N := by
   refine' measurable_find_greatest' fun k hk => _
@@ -629,6 +629,7 @@ theorem Measurable.find {m : MeasurableSpace α} {f : ℕ → α → β} {p : �
   have : Measurable fun p : α × ℕ => f p.2 p.1 := measurable_from_prod_encodable fun n => hf n
   this.comp (Measurable.prod_mk measurable_id (measurable_find h hp))
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given countably many disjoint measurable sets `t n` and countably many measurable
 functions `g n`, one can construct a measurable function that coincides with `g n` on `t n`. -/
 theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Set β) (t_meas : ∀ n, MeasurableSet (t n))
@@ -718,6 +719,7 @@ theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : 
     MeasurableSet (Pi Univ t) :=
   MeasurableSet.pi (countable_encodable _) fun i _ => ht i
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : Countable s) (h : (Pi s t).Nonempty) :
     MeasurableSet (Pi s t) ↔ ∀, ∀ i ∈ s, ∀, MeasurableSet (t i) := by
   classical

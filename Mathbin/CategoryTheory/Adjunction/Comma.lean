@@ -47,7 +47,7 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) : ((⊥_ StructuredA
     let g' : ⊥_ structured_arrow A G ⟶ B' := structured_arrow.hom_mk g rfl
     have : initial.to _ = g' := by
       apply colimit.hom_ext
-      rintro ⟨⟩
+      rintro ⟨⟨⟩⟩
     change comma_morphism.right (initial.to B') = _
     rw [this]
     rfl
@@ -94,7 +94,7 @@ def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
     let g' : B' ⟶ ⊤_ costructured_arrow G A := costructured_arrow.hom_mk g rfl
     have : terminal.from _ = g' := by
       apply limit.hom_ext
-      rintro ⟨⟩
+      rintro ⟨⟨⟩⟩
     change comma_morphism.left (terminal.from B') = _
     rw [this]
     rfl
@@ -123,6 +123,8 @@ end OfTerminals
 section
 
 variable {F : C ⥤ D}
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- Given a left adjoint to `G`, we can construct an initial object in each structured arrow
 category on `G`. -/

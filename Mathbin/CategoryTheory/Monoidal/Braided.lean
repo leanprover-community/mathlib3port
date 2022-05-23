@@ -374,12 +374,8 @@ section CommMonoidₓ
 
 variable (M : Type u) [CommMonoidₓ M]
 
-instance commMonoidDiscrete : CommMonoidₓ (Discrete M) := by
-  dsimp' [discrete]
-  infer_instance
-
 instance : BraidedCategory (Discrete M) where
-  braiding := fun X Y => eqToIso (mul_comm X Y)
+  braiding := fun X Y => Discrete.eqToIso (mul_comm X.as Y.as)
 
 variable {M} {N : Type u} [CommMonoidₓ N]
 

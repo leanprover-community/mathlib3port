@@ -183,6 +183,7 @@ theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset
   ext
   simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     (∑ m in x.Powerset, (-1 : ℤ) ^ m.card) = 0 := by
   classical

@@ -203,6 +203,7 @@ theorem powerset_len_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : 
   have : x ∉ t := fun H => h (ht H)
   simp [card_insert_of_not_mem this, Nat.succ_inj']
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem powerset_len_nonempty {n : ℕ} {s : Finset α} (h : n < s.card) : (powersetLen n s).Nonempty := by
   classical
   induction' s using Finset.induction_on with x s hx IH generalizing n

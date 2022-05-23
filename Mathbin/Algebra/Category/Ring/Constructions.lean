@@ -169,15 +169,15 @@ def prodFan : BinaryFan A B :=
 
 /-- The product in `CommRing` is the cartesian product. -/
 def prodFanIsLimit : IsLimit (prodFan A B) where
-  lift := fun c => RingHom.prod (c.π.app WalkingPair.left) (c.π.app WalkingPair.right)
+  lift := fun c => RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
   fac' := fun c j => by
     ext
-    cases j <;> simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
+    rcases j with ⟨⟨⟩⟩ <;> simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
   uniq' := fun s m h => by
     ext
-    · simpa using congr_hom (h walking_pair.left) x
+    · simpa using congr_hom (h ⟨walking_pair.left⟩) x
       
-    · simpa using congr_hom (h walking_pair.right) x
+    · simpa using congr_hom (h ⟨walking_pair.right⟩) x
       
 
 end Product

@@ -202,7 +202,7 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
   rw [← C_eq_coe_nat]
   simp only [← RingHom.map_pow, ← C_mul]
   rw [C_inj]
-  simp only [inv_of_eq_inv, RingHom.eq_int_cast, inv_pow₀, Int.cast_coe_nat, Nat.cast_mulₓ]
+  simp only [inv_of_eq_inv, RingHom.eq_int_cast, inv_pow, Int.cast_coe_nat, Nat.cast_mulₓ]
   rw [Rat.coe_nat_div _ _ (map_frobenius_poly.key₁ p (n - i) j hj)]
   simp only [Nat.cast_powₓ, pow_addₓ, pow_oneₓ]
   suffices

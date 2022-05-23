@@ -155,11 +155,28 @@ protected theorem IsMax.is_top [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop
   let ⟨c, hac, hbc⟩ := exists_ge_ge a b
   hbc.trans <| h hac
 
+theorem is_top_or_exists_gt [IsDirected α (· ≤ ·)] (a : α) : IsTop a ∨ ∃ b, a < b :=
+  (em (IsMax a)).imp IsMax.is_top not_is_max_iff.mp
+
+theorem is_bot_or_exists_lt [IsDirected α (swap (· ≤ ·))] (a : α) : IsBot a ∨ ∃ b, b < a :=
+  @is_top_or_exists_gt αᵒᵈ _ _ a
+
 theorem is_bot_iff_is_min [IsDirected α (swap (· ≤ ·))] : IsBot a ↔ IsMin a :=
   ⟨IsBot.is_min, IsMin.is_bot⟩
 
 theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
   ⟨IsTop.is_max, IsMax.is_top⟩
+
+variable (β) [PartialOrderₓ β]
+
+theorem exists_lt_of_directed_ge [IsDirected β (swap (· ≤ ·))] [Nontrivial β] : ∃ a b : β, a < b := by
+  rcases exists_pair_ne β with ⟨a, b, hne⟩
+  rcases is_bot_or_exists_lt a with (ha | ⟨c, hc⟩)
+  exacts[⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
+
+theorem exists_lt_of_directed_le [IsDirected β (· ≤ ·)] [Nontrivial β] : ∃ a b : β, a < b :=
+  let ⟨a, b, h⟩ := exists_lt_of_directed_ge βᵒᵈ
+  ⟨b, a, h⟩
 
 end Preorderₓ
 

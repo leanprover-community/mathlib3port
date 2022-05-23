@@ -144,7 +144,7 @@ theorem meas_ge_le_variance_div_sq {X : Ω → ℝ} (hX : Memℒp X 2) {c : ℝ}
       
     simp only [Pi.pow_apply, Pi.sub_apply, Real.rpow_two, Real.rpow_one, Real.norm_eq_abs, pow_bit0_abs,
       Ennreal.of_real_inv_of_pos hc, Ennreal.rpow_two]
-    rw [← Ennreal.of_real_pow (inv_nonneg.2 hc.le), ← Ennreal.of_real_mul (sq_nonneg _), div_eq_inv_mul, inv_pow₀]
+    rw [← Ennreal.of_real_pow (inv_nonneg.2 hc.le), ← Ennreal.of_real_mul (sq_nonneg _), div_eq_inv_mul, inv_pow]
     
 
 /-- The variance of the sum of two independent random variables is the sum of the variances. -/
@@ -177,6 +177,7 @@ theorem IndepFunₓ.variance_add {X Y : Ω → ℝ} (hX : Memℒp X 2) (hY : Mem
       ring
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
 theorem IndepFunₓ.variance_sum {ι : Type _} {X : ι → Ω → ℝ} {s : Finset ι} (hs : ∀, ∀ i ∈ s, ∀, Memℒp (X i) 2)

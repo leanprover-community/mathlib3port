@@ -125,8 +125,7 @@ def toStructuredArrow : F.Elements ⥤ StructuredArrow PUnit F where
         tidy)
 
 @[simp]
-theorem to_structured_arrow_obj X :
-    (toStructuredArrow F).obj X = { left := PUnit.unit, right := X.1, Hom := fun _ => X.2 } :=
+theorem to_structured_arrow_obj X : (toStructuredArrow F).obj X = { left := ⟨⟨⟩⟩, right := X.1, Hom := fun _ => X.2 } :=
   rfl
 
 @[simp]
@@ -237,11 +236,9 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     erw [category.comp_id]
     
   intro X Y f
-  cases X
-  cases Y
+  rcases X with ⟨X_left, ⟨⟨⟩⟩⟩
+  rcases Y with ⟨Y_left, ⟨⟨⟩⟩⟩
   cases f
-  cases X_right
-  cases Y_right
   simp [costructured_arrow.hom_mk]
   delta' costructured_arrow.mk
   congr

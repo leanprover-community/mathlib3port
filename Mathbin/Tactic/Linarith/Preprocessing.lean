@@ -3,10 +3,10 @@ Copyright (c) 2020 Robert Y. Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 -/
+import Mathbin.Data.Prod.Lex
+import Mathbin.Tactic.CancelDenoms
 import Mathbin.Tactic.Linarith.Datatypes
 import Mathbin.Tactic.Zify
-import Mathbin.Tactic.CancelDenoms
-import Mathbin.Order.Lexicographic
 
 /-!
 # Linarith preprocessing

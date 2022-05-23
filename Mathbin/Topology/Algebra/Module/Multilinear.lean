@@ -448,5 +448,24 @@ theorem mk_pi_algebra_fin_apply (m : Finₓ n → A) :
 
 end Algebra
 
+section SmulRight
+
+variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoidₓ M₂] [∀ i, Module R (M₁ i)] [Module R M₂]
+  [TopologicalSpace R] [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [HasContinuousSmul R M₂]
+  (f : ContinuousMultilinearMap R M₁ R) (z : M₂)
+
+/-- Given a continuous `R`-multilinear map `f` taking values in `R`, `f.smul_right z` is the
+continuous multilinear map sending `m` to `f m • z`. -/
+@[simps]
+def smulRight : ContinuousMultilinearMap R M₁ M₂ where
+  toMultilinearMap := f.toMultilinearMap.smul_right z
+  cont := f.cont.smul continuous_const
+
+@[simp]
+theorem smul_right_apply (m : ∀ i, M₁ i) : f.smul_right z m = f m • z :=
+  rfl
+
+end SmulRight
+
 end ContinuousMultilinearMap
 

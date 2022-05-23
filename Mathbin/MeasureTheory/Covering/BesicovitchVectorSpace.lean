@@ -203,6 +203,7 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
 
 variable (E)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
 at most `multiplicity E`. -/
 theorem exists_good_δ :
@@ -313,6 +314,7 @@ theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀, ∀ c ∈ s, ∀, �
     (h's : ∀, ∀ c ∈ s, ∀, ∀ d ∈ s, ∀, c ≠ d → 1 - goodδ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
   (Classical.some_spec (exists_good_δ E)).2.2 s hs h's
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Finₓ n → E) (h : ∀ i, ∥f i∥ ≤ 2)
     (h' : ∀ i j, i ≠ j → 1 - goodδ E ≤ ∥f i - f j∥) : n ≤ multiplicity E := by
   classical

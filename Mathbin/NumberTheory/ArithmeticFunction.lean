@@ -548,6 +548,18 @@ theorem map_mul_of_coprime {f : ArithmeticFunction R} (hf : f.IsMultiplicative) 
 
 end MonoidWithZeroₓ
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem map_prod {ι : Type _} [CommMonoidWithZero R] (g : ι → ℕ) {f : Nat.ArithmeticFunction R}
+    (hf : f.IsMultiplicative) (s : Finset ι) (hs : (s : Set ι).Pairwise (coprime on g)) :
+    f (∏ i in s, g i) = ∏ i in s, f (g i) := by
+  classical
+  induction' s using Finset.induction_on with a s has ih hs
+  · simp [hf]
+    
+  rw [coe_insert, Set.pairwise_insert_of_symmetric (coprime.symmetric.comap g)] at hs
+  rw [prod_insert has, prod_insert has, hf.map_mul_of_coprime, ih hs.1]
+  exact Nat.coprime_prod_right fun i hi => hs.2 _ hi (hi.ne_of_not_mem has).symm
+
 theorem nat_cast {f : ArithmeticFunction ℕ} [Semiringₓ R] (h : f.IsMultiplicative) :
     IsMultiplicative (f : ArithmeticFunction R) :=
   ⟨by

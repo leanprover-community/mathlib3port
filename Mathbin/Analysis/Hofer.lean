@@ -92,7 +92,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- Hence u is Cauchy
   have cauchy_u : CauchySeq u := by
     refine' cauchy_seq_of_le_geometric _ ε one_half_lt_one fun n => _
-    simpa only [one_div, inv_pow₀] using key₁ n
+    simpa only [one_div, inv_pow] using key₁ n
   -- So u converges to some y
   obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
   exact CompleteSpace.complete cauchy_u

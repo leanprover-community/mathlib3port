@@ -152,7 +152,7 @@ theorem tendsto_to_real {a : Ereal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) : Tendsto
   rw [nhds_coe, tendsto_map'_iff]
   exact tendsto_id
 
-theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤} : Set Ereal).Compl := fun a ha =>
+theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤}ᶜ : Set Ereal) := fun a ha =>
   ContinuousAt.continuous_within_at
     (tendsto_to_real
       (by
@@ -163,7 +163,7 @@ theorem continuous_on_to_real : ContinuousOn Ereal.toReal ({⊥, ⊤} : Set Erea
         exact ha.1))
 
 /-- The set of finite `ereal` numbers is homeomorphic to `ℝ`. -/
-def neBotTopHomeomorphReal : ({⊥, ⊤} : Set Ereal).Compl ≃ₜ ℝ :=
+def neBotTopHomeomorphReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ₜ ℝ :=
   { neTopBotEquivReal with continuous_to_fun := continuous_on_iff_continuous_restrict.1 continuous_on_to_real,
     continuous_inv_fun := continuous_subtype_mk _ continuous_coe_real_ereal }
 

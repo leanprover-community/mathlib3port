@@ -284,6 +284,7 @@ theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ 
     Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀, ∀ x ∈ L₁.f a, ∀, f x ∈ L₂.f b :=
   (le_iff (L₁.map f) L₂).trans <| forall_congrₓ fun b => exists_congr fun a => image_subset_iff
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical
   rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]

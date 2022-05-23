@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro
 -/
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+import Mathbin.CategoryTheory.Elementwise
 import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!

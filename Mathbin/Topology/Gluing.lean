@@ -99,7 +99,14 @@ theorem is_open_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i
   simp_rw [← multicoequalizer.ι_sigma_π 𝖣.diagram]
   rw [← (homeo_of_iso (multicoequalizer.iso_coequalizer 𝖣.diagram).symm).is_open_preimage]
   rw [coequalizer_is_open_iff, colimit_is_open_iff.{u}]
-  rfl
+  constructor
+  · intro h j
+    exact h ⟨j⟩
+    
+  · intro h j
+    cases j
+    exact h j
+    
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _)(y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget Top) x

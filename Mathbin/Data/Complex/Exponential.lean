@@ -133,9 +133,7 @@ theorem is_cau_geo_series {β : Type _} [Ringₓ β] [Nontrivial β] {abv : β �
     simpa [h, lt_irreflₓ] using hx1
   is_cau_series_of_abv_cau
     (by
-      simp (config := { eta := false })only [abv_pow abv]
-      have : (fun m : ℕ => ∑ n in range m, abv x ^ n) = fun m => geomSum (abv x) m := rfl
-      simp (config := { eta := false })only [this, geom_sum_eq hx1']
+      simp only [abv_pow abv, geom_sum_eq hx1']
       conv in _ / _ => rw [← neg_div_neg_eq, neg_sub, neg_sub]
       refine' @is_cau_of_mono_bounded _ _ _ _ ((1 : α) / (1 - abv x)) 0 _ _
       · intro n hn
@@ -185,7 +183,7 @@ theorem series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (h
   have r_pos : 0 < r := lt_of_le_of_neₓ hr0 (Ne.symm r_ne_zero)
   replace hk : m = k + n.succ := (tsub_eq_iff_eq_add_of_le hmn).1 hk
   induction' k with k ih generalizing m n
-  · rw [hk, zero_addₓ, mul_right_commₓ, inv_pow₀ _ _, ← div_eq_mul_inv, mul_div_cancel]
+  · rw [hk, zero_addₓ, mul_right_commₓ, inv_pow _ _, ← div_eq_mul_inv, mul_div_cancel]
     exact (ne_of_ltₓ (pow_pos r_pos _)).symm
     
   · have kn : k + n.succ ≥ n.succ := by
@@ -1418,7 +1416,7 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       · exact mul_pos (Nat.cast_pos.2 (Nat.factorial_pos _)) (pow_pos (Nat.cast_pos.2 (Nat.succ_posₓ _)) _)
         
     _ = n !⁻¹ * ∑ m in range (j - n), n.succ⁻¹ ^ m := by
-      simp [mul_inv, mul_sum.symm, sum_mul.symm, -Nat.factorial_succ, mul_comm, inv_pow₀]
+      simp [mul_inv, mul_sum.symm, sum_mul.symm, -Nat.factorial_succ, mul_comm, inv_pow]
     _ = (n.succ - n.succ * n.succ⁻¹ ^ (j - n)) / (n ! * n) := by
       have h₁ : (n.succ : α) ≠ 1 := @Nat.cast_oneₓ α _ _ ▸ mt Nat.cast_inj.1 (mt Nat.succ.injₓ (pos_iff_ne_zero.1 hn))
       have h₂ : (n.succ : α) ≠ 0 := Nat.cast_ne_zero.2 (Nat.succ_ne_zero _)
@@ -1427,8 +1425,8 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
           (Nat.cast_ne_zero.2 (pos_iff_ne_zero.1 hn))
       have h₄ : (n.succ - 1 : α) = n := by
         simp
-      rw [← geom_sum_def, geom_sum_inv h₁ h₂, eq_div_iff_mul_eq h₃, mul_comm _ (n ! * n : α), ← mul_assoc (n !⁻¹ : α), ←
-          mul_inv_rev, h₄, ← mul_assoc (n ! * n : α), mul_comm (n : α) n !, mul_inv_cancel h₃] <;>
+      rw [geom_sum_inv h₁ h₂, eq_div_iff_mul_eq h₃, mul_comm _ (n ! * n : α), ← mul_assoc (n !⁻¹ : α), ← mul_inv_rev,
+          h₄, ← mul_assoc (n ! * n : α), mul_comm (n : α) n !, mul_inv_cancel h₃] <;>
         simp [mul_addₓ, add_mulₓ, mul_assoc, mul_comm]
     _ ≤ n.succ / (n ! * n) := by
       refine' Iff.mpr (div_le_div_right (mul_pos _ _)) _
@@ -1494,7 +1492,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
   · rw [← mul_sum]
     apply mul_le_mul_of_nonneg_left
     · simp_rw [← div_pow]
-      rw [← geom_sum_def, geom_sum_eq, div_le_iff_of_neg]
+      rw [geom_sum_eq, div_le_iff_of_neg]
       · trans (-1 : ℝ)
         · linarith
           

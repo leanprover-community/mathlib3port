@@ -1331,9 +1331,9 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
       
   rw [A, B, C, add_assocₓ]
 
-section MetricSpace
+section PseudoMetricSpace
 
-variable [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+variable [PseudoMetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
 
 variable [MeasurableSpace β] {x : α} {ε : ℝ}
 
@@ -1409,18 +1409,18 @@ theorem tendsto_measure_cthickening_of_is_closed {μ : Measureₓ α} {s : Set �
   convert tendsto_measure_cthickening hs
   exact h's.closure_eq.symm
 
+end PseudoMetricSpace
+
 /-- Given a compact set in a proper space, the measure of its `r`-closed thickenings converges to
 its measure as `r` tends to `0`. -/
-theorem tendsto_measure_cthickening_of_is_compact [ProperSpace α] {μ : Measureₓ α} [IsFiniteMeasureOnCompacts μ]
-    {s : Set α} (hs : IsCompact s) : Tendsto (fun r => μ (Cthickening r s)) (𝓝 0) (𝓝 (μ s)) :=
-  tendsto_measure_cthickening_of_is_closed ⟨1, zero_lt_one, (Bounded.measure_lt_top hs.Bounded.Cthickening).Ne⟩
-    hs.IsClosed
+theorem tendsto_measure_cthickening_of_is_compact [MetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+    [ProperSpace α] {μ : Measureₓ α} [IsFiniteMeasureOnCompacts μ] {s : Set α} (hs : IsCompact s) :
+    Tendsto (fun r => μ (Metric.Cthickening r s)) (𝓝 0) (𝓝 (μ s)) :=
+  tendsto_measure_cthickening_of_is_closed ⟨1, zero_lt_one, hs.Bounded.Cthickening.measure_lt_top.Ne⟩ hs.IsClosed
 
-end MetricSpace
+section PseudoEmetricSpace
 
-section EmetricSpace
-
-variable [EmetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
+variable [PseudoEmetricSpace α] [MeasurableSpace α] [OpensMeasurableSpace α]
 
 variable [MeasurableSpace β] {x : α} {ε : ℝ≥0∞}
 
@@ -1462,7 +1462,7 @@ theorem AeMeasurable.edist {f g : β → α} {μ : Measureₓ β} (hf : AeMeasur
     AeMeasurable (fun a => edist (f a) (g a)) μ :=
   (@continuous_edist α _).ae_measurable2 hf hg
 
-end EmetricSpace
+end PseudoEmetricSpace
 
 namespace Real
 
@@ -1579,6 +1579,17 @@ theorem AeMeasurable.coe_nnreal_ennreal {f : α → ℝ≥0 } {μ : Measureₓ �
 theorem Measurable.ennreal_of_real {f : α → ℝ} (hf : Measurable f) : Measurable fun x => Ennreal.ofReal (f x) :=
   Ennreal.continuous_of_real.Measurable.comp hf
 
+@[simp, norm_cast]
+theorem measurable_coe_nnreal_real_iff {f : α → ℝ≥0 } : Measurable (fun x => f x : α → ℝ) ↔ Measurable f :=
+  ⟨fun h => by
+    simpa only [Real.to_nnreal_coe] using h.real_to_nnreal, Measurable.coe_nnreal_real⟩
+
+@[simp, norm_cast]
+theorem ae_measurable_coe_nnreal_real_iff {f : α → ℝ≥0 } {μ : Measureₓ α} :
+    AeMeasurable (fun x => f x : α → ℝ) μ ↔ AeMeasurable f μ :=
+  ⟨fun h => by
+    simpa only [Real.to_nnreal_coe] using h.real_to_nnreal, AeMeasurable.coe_nnreal_real⟩
+
 /-- The set of finite `ℝ≥0∞` numbers is `measurable_equiv` to `ℝ≥0`. -/
 def MeasurableEquiv.ennrealEquivNnreal : { r : ℝ≥0∞ | r ≠ ∞ } ≃ᵐ ℝ≥0 :=
   Ennreal.neTopHomeomorphNnreal.toMeasurableEquiv
@@ -1650,7 +1661,13 @@ theorem AeMeasurable.ennreal_to_nnreal {f : α → ℝ≥0∞} {μ : Measureₓ 
     AeMeasurable (fun x => (f x).toNnreal) μ :=
   Ennreal.measurable_to_nnreal.comp_ae_measurable hf
 
+@[simp, norm_cast]
 theorem measurable_coe_nnreal_ennreal_iff {f : α → ℝ≥0 } : (Measurable fun x => (f x : ℝ≥0∞)) ↔ Measurable f :=
+  ⟨fun h => h.ennreal_to_nnreal, fun h => h.coe_nnreal_ennreal⟩
+
+@[simp, norm_cast]
+theorem ae_measurable_coe_nnreal_ennreal_iff {f : α → ℝ≥0 } {μ : Measureₓ α} :
+    AeMeasurable (fun x => (f x : ℝ≥0∞)) μ ↔ AeMeasurable f μ :=
   ⟨fun h => h.ennreal_to_nnreal, fun h => h.coe_nnreal_ennreal⟩
 
 @[measurability]
@@ -1786,7 +1803,7 @@ end NormedGroup
 
 section Limits
 
-variable [MeasurableSpace β] [MetricSpace β] [BorelSpace β]
+variable [TopologicalSpace β] [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β]
 
 open Metric
 
@@ -1820,10 +1837,11 @@ theorem measurable_of_tendsto_nnreal {f : ℕ → α → ℝ≥0 } {g : α → �
     (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
   measurable_of_tendsto_nnreal' atTop hf limₓ
 
-/-- A limit (over a general filter) of measurable functions valued in a metric space is measurable.
--/
-theorem measurable_of_tendsto_metric' {ι} {f : ι → α → β} {g : α → β} (u : Filter ι) [NeBot u] [IsCountablyGenerated u]
-    (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) : Measurable g := by
+/-- A limit (over a general filter) of measurable functions valued in a (pseudo) metrizable space is
+measurable. -/
+theorem measurable_of_tendsto_metrizable' {ι} {f : ι → α → β} {g : α → β} (u : Filter ι) [NeBot u]
+    [IsCountablyGenerated u] (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) : Measurable g := by
+  let this : PseudoMetricSpace β := pseudo_metrizable_space_pseudo_metric β
   apply measurable_of_is_closed'
   intro s h1s h2s h3s
   have : Measurable fun x => inf_nndist (g x) s := by
@@ -1838,26 +1856,13 @@ theorem measurable_of_tendsto_metric' {ι} {f : ι → α → β} {g : α → β
   rw [h4s]
   exact this (measurable_set_singleton 0)
 
-/-- A sequential limit of measurable functions valued in a metric space is measurable. -/
-theorem measurable_of_tendsto_metric {f : ℕ → α → β} {g : α → β} (hf : ∀ i, Measurable (f i))
-    (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
-  measurable_of_tendsto_metric' atTop hf limₓ
-
-/-- A limit (over a general filter) of measurable functions valued in a metrizable space is
+/-- A sequential limit of measurable functions valued in a (pseudo) metrizable space is
 measurable. -/
-theorem measurable_of_tendsto_metrizable' {β : Type _} [TopologicalSpace β] [MetrizableSpace β] [MeasurableSpace β]
-    [BorelSpace β] {ι} {f : ι → α → β} {g : α → β} (u : Filter ι) [NeBot u] [IsCountablyGenerated u]
-    (hf : ∀ i, Measurable (f i)) (lim : Tendsto f u (𝓝 g)) : Measurable g := by
-  let this : MetricSpace β := metrizable_space_metric β
-  exact measurable_of_tendsto_metric' u hf limₓ
-
-/-- A sequential limit of measurable functions valued in a metrizable space is measurable. -/
-theorem measurable_of_tendsto_metrizable {β : Type _} [TopologicalSpace β] [MetrizableSpace β] [MeasurableSpace β]
-    [BorelSpace β] {f : ℕ → α → β} {g : α → β} (hf : ∀ i, Measurable (f i)) (lim : Tendsto f atTop (𝓝 g)) :
-    Measurable g :=
+theorem measurable_of_tendsto_metrizable {f : ℕ → α → β} {g : α → β} (hf : ∀ i, Measurable (f i))
+    (lim : Tendsto f atTop (𝓝 g)) : Measurable g :=
   measurable_of_tendsto_metrizable' atTop hf limₓ
 
-theorem ae_measurable_of_tendsto_metric_ae {ι : Type _} {μ : Measureₓ α} {f : ι → α → β} {g : α → β} (u : Filter ι)
+theorem ae_measurable_of_tendsto_metrizable_ae {ι : Type _} {μ : Measureₓ α} {f : ι → α → β} {g : α → β} (u : Filter ι)
     [hu : NeBot u] [IsCountablyGenerated u] (hf : ∀ n, AeMeasurable (f n) μ)
     (h_tendsto : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) u (𝓝 (g x))) : AeMeasurable g μ := by
   rcases u.exists_seq_tendsto with ⟨v, hv⟩
@@ -1867,10 +1872,7 @@ theorem ae_measurable_of_tendsto_metric_ae {ι : Type _} {μ : Measureₓ α} {f
     filter_upwards [h_tendsto] with x hx using hx.comp hv
   set ae_seq_lim := fun x => ite (x ∈ AeSeqSet h'f p) (g x) (⟨f (v 0) x⟩ : Nonempty β).some with hs
   refine'
-    ⟨ae_seq_lim,
-      measurable_of_tendsto_metric' at_top (@aeSeq.measurable α β _ _ _ (fun n x => f (v n) x) μ h'f p)
-        (tendsto_pi_nhds.mpr fun x => _),
-      _⟩
+    ⟨ae_seq_lim, measurable_of_tendsto_metrizable' at_top (aeSeq.measurable h'f p) (tendsto_pi_nhds.mpr fun x => _), _⟩
   · simp_rw [aeSeq, ae_seq_lim]
     split_ifs with hx
     · simp_rw [aeSeq.mk_eq_fun_of_mem_ae_seq_set h'f hx]
@@ -1884,13 +1886,14 @@ theorem ae_measurable_of_tendsto_metric_ae {ι : Type _} {μ : Measureₓ α} {f
           (aeSeq.measure_compl_ae_seq_set_eq_zero h'f hp)).symm
     
 
-theorem ae_measurable_of_tendsto_metric_ae' {μ : Measureₓ α} {f : ℕ → α → β} {g : α → β}
+theorem ae_measurable_of_tendsto_metrizable_ae' {μ : Measureₓ α} {f : ℕ → α → β} {g : α → β}
     (hf : ∀ n, AeMeasurable (f n) μ) (h_ae_tendsto : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
     AeMeasurable g μ :=
-  ae_measurable_of_tendsto_metric_ae atTop hf h_ae_tendsto
+  ae_measurable_of_tendsto_metrizable_ae atTop hf h_ae_tendsto
 
-theorem ae_measurable_of_unif_approx {μ : Measureₓ α} {g : α → β}
-    (hf : ∀, ∀ ε > (0 : ℝ), ∀, ∃ f : α → β, AeMeasurable f μ ∧ ∀ᵐ x ∂μ, dist (f x) (g x) ≤ ε) : AeMeasurable g μ := by
+theorem ae_measurable_of_unif_approx {β} [MeasurableSpace β] [PseudoMetricSpace β] [BorelSpace β] {μ : Measureₓ α}
+    {g : α → β} (hf : ∀, ∀ ε > (0 : ℝ), ∀, ∃ f : α → β, AeMeasurable f μ ∧ ∀ᵐ x ∂μ, dist (f x) (g x) ≤ ε) :
+    AeMeasurable g μ := by
   obtain ⟨u, u_anti, u_pos, u_lim⟩ : ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strict_anti_tendsto (0 : ℝ)
   choose f Hf using fun n : ℕ => hf (u n) (u_pos n)
@@ -1900,13 +1903,13 @@ theorem ae_measurable_of_unif_approx {μ : Measureₓ α} {g : α → β}
     intro x hx
     rw [tendsto_iff_dist_tendsto_zero]
     exact squeeze_zero (fun n => dist_nonneg) hx u_lim
-  exact ae_measurable_of_tendsto_metric_ae' (fun n => (Hf n).1) this
+  exact ae_measurable_of_tendsto_metrizable_ae' (fun n => (Hf n).1) this
 
-theorem measurable_of_tendsto_metric_ae {μ : Measureₓ α} [μ.IsComplete] {f : ℕ → α → β} {g : α → β}
+theorem measurable_of_tendsto_metrizable_ae {μ : Measureₓ α} [μ.IsComplete] {f : ℕ → α → β} {g : α → β}
     (hf : ∀ n, Measurable (f n)) (h_ae_tendsto : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : Measurable g :=
-  ae_measurable_iff_measurable.mp (ae_measurable_of_tendsto_metric_ae' (fun i => (hf i).AeMeasurable) h_ae_tendsto)
+  ae_measurable_iff_measurable.mp (ae_measurable_of_tendsto_metrizable_ae' (fun i => (hf i).AeMeasurable) h_ae_tendsto)
 
-theorem measurable_limit_of_tendsto_metric_ae {ι} [Encodable ι] [Nonempty ι] {μ : Measureₓ α} {f : ι → α → β}
+theorem measurable_limit_of_tendsto_metrizable_ae {ι} [Encodable ι] [Nonempty ι] {μ : Measureₓ α} {f : ι → α → β}
     {L : Filter ι} [L.IsCountablyGenerated] (hf : ∀ n, AeMeasurable (f n) μ)
     (h_ae_tendsto : ∀ᵐ x ∂μ, ∃ l : β, Tendsto (fun n => f n x) L (𝓝 l)) :
     ∃ (f_lim : α → β)(hf_lim_meas : Measurable f_lim), ∀ᵐ x ∂μ, Tendsto (fun n => f n x) L (𝓝 (f_lim x)) := by
@@ -1932,7 +1935,7 @@ theorem measurable_limit_of_tendsto_metric_ae {ι} [Encodable ι] [Nonempty ι] 
   have h_ae_tendsto_f_lim : ∀ᵐ x ∂μ, tendsto (fun n => f n x) L (𝓝 (f_lim x)) :=
     h_ae_eq.mono fun x hx => (hf_lim x).congr hx
   have h_f_lim_meas : Measurable f_lim :=
-    measurable_of_tendsto_metric' L (aeSeq.measurable hf p) (tendsto_pi_nhds.mpr fun x => hf_lim x)
+    measurable_of_tendsto_metrizable' L (aeSeq.measurable hf p) (tendsto_pi_nhds.mpr fun x => hf_lim x)
   exact ⟨f_lim, h_f_lim_meas, h_ae_tendsto_f_lim⟩
 
 end Limits

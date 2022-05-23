@@ -298,7 +298,24 @@ theorem _root_.polynomial.to_laurent_injective : Function.Injective (Polynomial.
 theorem _root_.polynomial.to_laurent_inj (f g : R[X]) : f.toLaurent = g.toLaurent ↔ f = g :=
   ⟨fun h => Polynomial.to_laurent_injective h, congr_argₓ _⟩
 
+instance : Module R[X] R[T;T⁻¹] :=
+  Module.compHom _ Polynomial.toLaurent
+
+instance (R : Type _) [Semiringₓ R] : IsScalarTower R[X] R[X] R[T;T⁻¹] where
+  smul_assoc := fun x y z => by
+    simp only [HasScalar.smul, HasScalar.Comp.smul, map_mul, mul_assoc]
+
 end Semiringₓ
+
+section CommSemiringₓ
+
+instance algebraPolynomial (R : Type _) [CommSemiringₓ R] : Algebra R[X] R[T;T⁻¹] :=
+  { Polynomial.toLaurent with
+    commutes' := fun f l => by
+      simp [mul_comm],
+    smul_def' := fun f l => rfl }
+
+end CommSemiringₓ
 
 end LaurentPolynomial
 

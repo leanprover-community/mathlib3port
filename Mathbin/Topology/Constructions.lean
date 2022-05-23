@@ -125,6 +125,7 @@ def of : α ≃ CofiniteTopology α :=
 instance [Inhabited α] : Inhabited (CofiniteTopology α) where
   default := of default
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance : TopologicalSpace (CofiniteTopology α) where
   IsOpen := fun s => s.Nonempty → Set.Finite (sᶜ)
   is_open_univ := by

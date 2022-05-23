@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys
 -/
 import Mathbin.Algebra.Order.Module
+import Mathbin.Data.Prod.Lex
 import Mathbin.GroupTheory.Perm.Support
-import Mathbin.Order.Lexicographic
 import Mathbin.Order.Monovary
 import Mathbin.Tactic.Abel
 
@@ -45,6 +45,7 @@ section Smul
 variable [LinearOrderedRing α] [LinearOrderedAddCommGroup β] [Module α β] [OrderedSmul α β] {s : Finset ι} {σ : Perm ι}
   {f : ι → α} {g : ι → β}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Rearrangement Inequality**: Pointwise scalar multiplication of `f` and `g` is maximized when
 `f` and `g` vary together. Stated by permuting the entries of `g`.  -/
 theorem MonovaryOn.sum_smul_comp_perm_le_sum_smul (hfg : MonovaryOn f g s) (hσ : { x | σ x ≠ x } ⊆ s) :

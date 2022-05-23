@@ -5,11 +5,11 @@ Authors: Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Data.FunLike.Equiv
 import Mathbin.Data.Option.Basic
-import Mathbin.Data.Prod
+import Mathbin.Data.Prod.Basic
 import Mathbin.Data.Quot
 import Mathbin.Data.Sigma.Basic
-import Mathbin.Data.Sum.Basic
 import Mathbin.Data.Subtype
+import Mathbin.Data.Sum.Basic
 import Mathbin.Logic.Function.Conjugate
 import Mathbin.Logic.Unique
 import Mathbin.Tactic.NormCast
@@ -1609,19 +1609,15 @@ open Subtype
 at corresponding points, then `{a // p a}` is equivalent to `{b // q b}`.
 For the statement where `α = β`, that is, `e : perm α`, see `perm.subtype_perm`. -/
 def subtypeEquiv {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ a, p a ↔ q (e a)) :
-    { a : α // p a } ≃ { b : β // q b } :=
-  ⟨fun x => ⟨e x, (h _).1 x.2⟩, fun y =>
-    ⟨e.symm y,
-      (h _).2
-        (by
-          simp
-          exact y.2)⟩,
-    fun ⟨x, h⟩ =>
-    Subtype.ext_val <| by
-      simp ,
-    fun ⟨y, h⟩ =>
-    Subtype.ext_val <| by
-      simp ⟩
+    { a : α // p a } ≃ { b : β // q b } where
+  toFun := fun a => ⟨e a, (h _).mp a.Prop⟩
+  invFun := fun b => ⟨e.symm b, (h _).mpr ((e.apply_symm_apply b).symm ▸ b.Prop)⟩
+  left_inv := fun a =>
+    Subtype.ext <| by
+      simp
+  right_inv := fun b =>
+    Subtype.ext <| by
+      simp
 
 @[simp]
 theorem subtype_equiv_refl {p : α → Prop} (h : ∀ a, p a ↔ p (Equivₓ.refl _ a) := fun a => Iff.rfl) :

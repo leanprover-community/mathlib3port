@@ -173,7 +173,7 @@ def domRestrict₂ (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Subm
       simp only [map_add, dom_restrict_apply, add_apply]
   map_smul' := fun c m =>
     LinearMap.ext fun _ => by
-      simp only [map_smulₛₗ, dom_restrict_apply, smul_apply]
+      simp only [f.map_smulₛₗ, dom_restrict_apply, smul_apply]
 
 theorem dom_restrict₂_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (q : Submodule S N) (x : M) (y : q) :
     f.domRestrict₂ q x y = f x y :=
@@ -392,7 +392,7 @@ theorem ext_basis {B B' : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (h : �
 theorem sum_repr_mul_repr_mul {B : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} x y :
     ((b₁.repr x).Sum fun i xi => (b₂.repr y).Sum fun j yj => ρ₁₂ xi • σ₁₂ yj • B (b₁ i) (b₂ j)) = B x y := by
   conv_rhs => rw [← b₁.total_repr x, ← b₂.total_repr y]
-  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, map_smulₛₗ₂, map_smulₛₗ]
+  simp_rw [Finsupp.total_apply, Finsupp.sum, map_sum₂, map_sum, LinearMap.map_smulₛₗ₂, LinearMap.map_smulₛₗ]
 
 end CommRingₓ
 

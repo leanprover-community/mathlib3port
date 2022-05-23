@@ -111,6 +111,7 @@ def _root_.fintype.trunc_encodable (α : Type _) [DecidableEq α] [Fintype α] :
   @Quot.recOnSubsingleton _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
     (fun l H => Trunc.mk <| encodableOfList l H) Finset.mem_univ
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
 It is not made into a global instance, since it involves an arbitrary choice.
 This can be locally made into an instance with `local attribute [instance] fintype.to_encodable`. -/

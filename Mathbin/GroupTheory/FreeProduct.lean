@@ -65,6 +65,8 @@ another answer, which is constructively more satisfying, could be obtained by sh
 -/
 
 
+open Set
+
 variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoidₓ (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
@@ -152,6 +154,7 @@ theorem of_left_inverse [DecidableEq ι] (i : ι) :
     Function.LeftInverse (lift <| Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Pi.mul_single_eq_same, MonoidHom.id_apply]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem of_injective (i : ι) : Function.Injective ⇑(of : M i →* _) := by
   classical
   exact (of_left_inverse i).Injective
@@ -718,6 +721,7 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : Neword H i j) (hcard :
 
 include hcard
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : Neword H i j) : lift f w.Prod ≠ 1 := by
   classical
   cases hcard
@@ -759,6 +763,7 @@ theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = wor
   obtain ⟨i, j, w, rfl⟩ := neword.of_word w hnotempty
   exact lift_word_prod_nontrivial_of_not_empty f hcard X hXnonempty hXdisj hpp w h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets
@@ -775,15 +780,13 @@ condition is only needed if `# ι = 2`, and we accept `3 ≤ # ι` as an alterna
 theorem lift_injective_of_ping_pong : Function.Injective (lift f) := by
   classical
   apply (injective_iff_map_eq_one (lift f)).mpr
-  rw [free_product.word.equiv.forall_congr_left']
+  rw [(FreeProduct.Word.equiv : _ ≃ word H).forall_congr_left']
   · intro w Heq
     dsimp' [word.equiv]  at *
     · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
       rfl
       
     
-  infer_instance
-  infer_instance
 
 end PingPongLemma
 
@@ -843,9 +846,9 @@ variable (hYdisj : Pairwise fun i j => Disjoint (Y i) (Y j))
 
 variable (hXYdisj : ∀ i j, Disjoint (X i) (Y j))
 
-variable (hX : ∀ i, a i • Set.Compl (Y i) ⊆ X i)
+variable (hX : ∀ i, a i • Y iᶜ ⊆ X i)
 
-variable (hY : ∀ i, a⁻¹ i • Set.Compl (X i) ⊆ Y i)
+variable (hY : ∀ i, a⁻¹ i • X iᶜ ⊆ Y i)
 
 include hXnonempty hXdisj hYdisj hXYdisj hX hY
 
@@ -919,7 +922,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
     -- Positive and negative powers separately
     cases' (lt_or_gt_of_neₓ hnne0).swap with hlt hgt
     · have h1n : 1 ≤ n := hlt
-      calc a i ^ n • X' j ⊆ a i ^ n • (Y i).Compl :=
+      calc a i ^ n • X' j ⊆ a i ^ n • Y iᶜ :=
           set_smul_subset_set_smul_iff.mpr <|
             set.disjoint_iff_subset_compl_right.mp <| Disjoint.union_left (hXYdisj j i) (hYdisj j i hij.symm)_ ⊆ X i :=
           by
@@ -928,9 +931,9 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
             exact hX i
             
           · intro n hle hi
-            calc a i ^ (n + 1) • (Y i).Compl = (a i ^ n * a i) • (Y i).Compl := by
-                rw [zpow_add, zpow_one]_ = a i ^ n • a i • (Y i).Compl := MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • X i :=
-                set_smul_subset_set_smul_iff.mpr <| hX i _ ⊆ a i ^ n • (Y i).Compl :=
+            calc a i ^ (n + 1) • Y iᶜ = (a i ^ n * a i) • Y iᶜ := by
+                rw [zpow_add, zpow_one]_ = a i ^ n • a i • Y iᶜ := MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • X i :=
+                set_smul_subset_set_smul_iff.mpr <| hX i _ ⊆ a i ^ n • Y iᶜ :=
                 set_smul_subset_set_smul_iff.mpr <| set.disjoint_iff_subset_compl_right.mp (hXYdisj i i)_ ⊆ X i := hi
             _ ⊆ X' i :=
           Set.subset_union_left _ _
@@ -938,7 +941,7 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
     · have h1n : n ≤ -1 := by
         apply Int.le_of_lt_add_oneₓ
         simpa using hgt
-      calc a i ^ n • X' j ⊆ a i ^ n • (X i).Compl :=
+      calc a i ^ n • X' j ⊆ a i ^ n • X iᶜ :=
           set_smul_subset_set_smul_iff.mpr <|
             set.disjoint_iff_subset_compl_right.mp <|
               Disjoint.union_left (hXdisj j i hij.symm) (hXYdisj i j).symm _ ⊆ Y i :=
@@ -948,10 +951,9 @@ theorem _root_.free_group.injective_lift_of_ping_pong : Function.Injective (Free
             exact hY i
             
           · intro n hle hi
-            calc a i ^ (n - 1) • (X i).Compl = (a i ^ n * (a i)⁻¹) • (X i).Compl := by
-                rw [zpow_sub, zpow_one]_ = a i ^ n • (a i)⁻¹ • (X i).Compl :=
-                MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • Y i :=
-                set_smul_subset_set_smul_iff.mpr <| hY i _ ⊆ a i ^ n • (X i).Compl :=
+            calc a i ^ (n - 1) • X iᶜ = (a i ^ n * (a i)⁻¹) • X iᶜ := by
+                rw [zpow_sub, zpow_one]_ = a i ^ n • (a i)⁻¹ • X iᶜ := MulAction.mul_smul _ _ _ _ ⊆ a i ^ n • Y i :=
+                set_smul_subset_set_smul_iff.mpr <| hY i _ ⊆ a i ^ n • X iᶜ :=
                 set_smul_subset_set_smul_iff.mpr <| set.disjoint_iff_subset_compl_right.mp (hXYdisj i i).symm _ ⊆ Y i :=
                 hi
             _ ⊆ X' i :=

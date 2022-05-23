@@ -121,6 +121,7 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
   refine' ⟨(T : Set ι), fun t => s t, fun t => ho _, _, locally_finite_of_fintype _, fun t => ⟨t, subset.rfl⟩⟩
   simpa only [Union_coe_set, ← univ_subset_iff]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
 `p x : ι x → Prop` form a basis of the filter `𝓝 x`. Then there exists a locally finite covering

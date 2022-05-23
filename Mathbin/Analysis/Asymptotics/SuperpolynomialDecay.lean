@@ -207,8 +207,8 @@ theorem superpolynomial_decay_iff_abs_is_bounded_under (hk : Tendsto k l atTop) 
   refine'
     tendsto_of_tendsto_of_tendsto_of_le_of_le' h1 h2 (eventually_of_forall fun x => abs_nonneg _)
       ((eventually_map.1 hm).mp _)
-  refine' (eventually_ne_of_tendsto_at_top hk 0).mono fun x hk0 hx => _
-  refine' le_transₓ (le_of_eqₓ _) (mul_le_mul_of_nonneg_left hx <| abs_nonneg (k x)⁻¹)
+  refine' (hk.eventually_ne_at_top 0).mono fun x hk0 hx => _
+  refine' Eq.trans_le _ (mul_le_mul_of_nonneg_left hx <| abs_nonneg (k x)⁻¹)
   rw [← abs_mul, ← mul_assoc, pow_succₓ, ← mul_assoc, inv_mul_cancel hk0, one_mulₓ]
 
 theorem superpolynomial_decay_iff_zpow_tendsto_zero (hk : Tendsto k l atTop) :
@@ -231,7 +231,7 @@ variable {f}
 theorem SuperpolynomialDecay.param_zpow_mul (hk : Tendsto k l atTop) (hf : SuperpolynomialDecay l k f) (z : ℤ) :
     SuperpolynomialDecay l k fun a => k a ^ z * f a := by
   rw [superpolynomial_decay_iff_zpow_tendsto_zero _ hk] at hf⊢
-  refine' fun z' => (hf <| z' + z).congr' ((eventually_ne_of_tendsto_at_top hk 0).mono fun x hx => _)
+  refine' fun z' => (hf <| z' + z).congr' ((hk.eventually_ne_at_top 0).mono fun x hx => _)
   simp [zpow_add₀ hx, mul_assoc, Pi.mul_apply]
 
 theorem SuperpolynomialDecay.mul_param_zpow (hk : Tendsto k l atTop) (hf : SuperpolynomialDecay l k f) (z : ℤ) :
@@ -252,7 +252,7 @@ theorem superpolynomial_decay_param_mul_iff (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k (k * f) ↔ SuperpolynomialDecay l k f :=
   ⟨fun h =>
     (h.inv_param_mul hk).congr'
-      ((eventually_ne_of_tendsto_at_top hk 0).mono fun x hx => by
+      ((hk.eventually_ne_at_top 0).mono fun x hx => by
         simp [← mul_assoc, inv_mul_cancel hx]),
     fun h => h.param_mul⟩
 
@@ -299,7 +299,7 @@ variable [OrderTopology β]
 theorem superpolynomial_decay_iff_is_O (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, IsO f (fun a : α => k a ^ z) l := by
   refine' (superpolynomial_decay_iff_zpow_tendsto_zero f hk).trans _
-  have hk0 : ∀ᶠ x in l, k x ≠ 0 := eventually_ne_of_tendsto_at_top hk 0
+  have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   refine' ⟨fun h z => _, fun h z => _⟩
   · refine' is_O_of_div_tendsto_nhds (hk0.mono fun x hx hxz => absurd (zpow_eq_zero hxz) hx) 0 _
     have : (fun a : α => k a ^ z)⁻¹ = fun a : α => k a ^ -z :=
@@ -311,14 +311,14 @@ theorem superpolynomial_decay_iff_is_O (hk : Tendsto k l atTop) :
   · suffices : is_O (fun a : α => k a ^ z * f a) (fun a : α => (k a)⁻¹) l
     exact is_O.trans_tendsto this hk.inv_tendsto_at_top
     refine' ((is_O_refl (fun a => k a ^ z) l).mul (h (-(z + 1)))).trans (is_O.of_bound 1 <| hk0.mono fun a ha0 => _)
-    simp only [one_mulₓ, neg_add z 1, zpow_add₀ ha0, ← mul_assoc, zpow_neg₀, mul_inv_cancel (zpow_ne_zero z ha0),
+    simp only [one_mulₓ, neg_add z 1, zpow_add₀ ha0, ← mul_assoc, zpow_neg, mul_inv_cancel (zpow_ne_zero z ha0),
       zpow_one]
     
 
 theorem superpolynomial_decay_iff_is_o (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, IsOₓ f (fun a : α => k a ^ z) l := by
   refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsO⟩
-  have hk0 : ∀ᶠ x in l, k x ≠ 0 := eventually_ne_of_tendsto_at_top hk 0
+  have hk0 : ∀ᶠ x in l, k x ≠ 0 := hk.eventually_ne_at_top 0
   have : is_o (fun x : α => (1 : β)) k l :=
     is_o_of_tendsto' (hk0.mono fun x hkx hkx' => absurd hkx' hkx)
       (by

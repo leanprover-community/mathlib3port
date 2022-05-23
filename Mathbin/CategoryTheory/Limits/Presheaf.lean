@@ -157,6 +157,8 @@ def isInitial (A : C) : IsInitial (Elements.initial A) where
     simp_rw [← m.2]
     dsimp' [elements.initial]
     simp
+  fac' := by
+    rintro s ⟨⟨⟩⟩
 
 /-- `extend_along_yoneda A` is an extension of `A` to the presheaf category along the yoneda embedding.
 `unique_extension_along_yoneda` shows it is unique among functors preserving colimits with this

@@ -286,6 +286,7 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem pairwise_of_forall_mem_list {l : List α} {r : α → α → Prop} (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, r a b) :
     l.Pairwise r := by
   classical
@@ -293,6 +294,7 @@ theorem pairwise_of_forall_mem_list {l : List α} {r : α → α → Prop} (h : 
   have ha := List.one_le_count_iff_mem.1 ha'.le
   exact h a ha a ha
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop} (hr : Reflexive r)
     (h : ∀, ∀ a ∈ l, ∀, ∀ b ∈ l, ∀, a ≠ b → r a b) : l.Pairwise r := by
   classical

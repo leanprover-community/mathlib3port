@@ -19,95 +19,72 @@ namespace Pgame
 -- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
 
+-- mathport name: «expr ⧏ »
+local infixl:50 " ⧏ " => Lf
+
+-- mathport name: «expr ∥ »
+local infixl:50 " ∥ " => Fuzzy
+
 /-- The player who goes first loses -/
 def FirstLoses (G : Pgame) : Prop :=
-  G ≤ 0 ∧ 0 ≤ G
+  G ≈ 0
 
 /-- The player who goes first wins -/
 def FirstWins (G : Pgame) : Prop :=
-  0 < G ∧ G < 0
+  G ∥ 0
 
 /-- The left player can always win -/
 def LeftWins (G : Pgame) : Prop :=
-  0 < G ∧ 0 ≤ G
+  0 < G
 
 /-- The right player can always win -/
 def RightWins (G : Pgame) : Prop :=
-  G ≤ 0 ∧ G < 0
+  G < 0
 
-theorem zero_first_loses : FirstLoses 0 := by
-  tidy
+theorem zero_first_loses : FirstLoses 0 :=
+  equiv_rfl
 
 theorem one_left_wins : LeftWins 1 :=
-  ⟨by
-    rw [lt_def_le]
-    tidy, by
-    rw [le_def] <;> tidy⟩
+  zero_lt_one
 
 theorem star_first_wins : FirstWins star :=
-  ⟨zero_lt_star, star_lt_zero⟩
+  star_fuzzy_zero
 
-theorem winner_cases (G : Pgame) : G.LeftWins ∨ G.RightWins ∨ G.FirstLoses ∨ G.FirstWins := by
-  classical
-  by_cases' hpos : 0 < G <;>
-    by_cases' hneg : G < 0 <;>
-      · try
-          rw [not_ltₓ] at hpos
-        try
-          rw [not_ltₓ] at hneg
-        try
-          left
-          exact ⟨hpos, hneg⟩
-        try
-          right
-          left
-          exact ⟨hpos, hneg⟩
-        try
-          right
-          right
-          left
-          exact ⟨hpos, hneg⟩
-        try
-          right
-          right
-          right
-          exact ⟨hpos, hneg⟩
-        
+theorem winner_cases (G : Pgame) : G.RightWins ∨ G.FirstLoses ∨ G.LeftWins ∨ G.FirstWins :=
+  lt_or_equiv_or_gt_or_fuzzy G 0
 
 theorem first_loses_is_zero {G : Pgame} : G.FirstLoses ↔ (G ≈ 0) := by
   rfl
 
-theorem first_loses_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstLoses → H.FirstLoses := fun hGp =>
-  ⟨le_of_equiv_of_le h.symm hGp.1, le_of_le_of_equiv hGp.2 h⟩
+theorem first_loses_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstLoses → H.FirstLoses :=
+  equiv_trans <| equiv_symm h
 
-theorem first_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstWins → H.FirstWins := fun hGn =>
-  ⟨lt_of_lt_of_equiv hGn.1 h, lt_of_equiv_of_lt h.symm hGn.2⟩
+theorem first_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstWins → H.FirstWins :=
+  (fuzzy_congr_left h).1
 
-theorem left_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.LeftWins → H.LeftWins := fun hGl =>
-  ⟨lt_of_lt_of_equiv hGl.1 h, le_of_le_of_equiv hGl.2 h⟩
+theorem left_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.LeftWins → H.LeftWins :=
+  (lt_congr_right h).1
 
-theorem right_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.RightWins → H.RightWins := fun hGr =>
-  ⟨le_of_equiv_of_le h.symm hGr.1, lt_of_equiv_of_lt h.symm hGr.2⟩
+theorem right_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.RightWins → H.RightWins :=
+  (lt_congr_left h).1
 
 theorem first_loses_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.FirstLoses ↔ H.FirstLoses :=
-  ⟨first_loses_of_equiv h, first_loses_of_equiv h.symm⟩
+  ⟨first_loses_of_equiv h, equiv_trans h⟩
 
-theorem first_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.FirstWins ↔ H.FirstWins :=
-  ⟨first_wins_of_equiv h, first_wins_of_equiv h.symm⟩
+theorem first_wins_of_equiv_iff {G H : Pgame} : (G ≈ H) → (G.FirstWins ↔ H.FirstWins) :=
+  fuzzy_congr_left
 
-theorem left_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.LeftWins ↔ H.LeftWins :=
-  ⟨left_wins_of_equiv h, left_wins_of_equiv h.symm⟩
+theorem left_wins_of_equiv_iff {G H : Pgame} : (G ≈ H) → (G.LeftWins ↔ H.LeftWins) :=
+  lt_congr_right
 
-theorem right_wins_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.RightWins ↔ H.RightWins :=
-  ⟨right_wins_of_equiv h, right_wins_of_equiv h.symm⟩
+theorem right_wins_of_equiv_iff {G H : Pgame} : (G ≈ H) → (G.RightWins ↔ H.RightWins) :=
+  lt_congr_left
 
-theorem not_first_wins_of_first_loses {G : Pgame} : G.FirstLoses → ¬G.FirstWins := by
-  rw [first_loses_is_zero]
-  rintro h ⟨h₀, -⟩
-  exact Pgame.lt_irrefl 0 (lt_of_lt_of_equiv h₀ h)
+theorem not_first_wins_of_first_loses {G : Pgame} : G.FirstLoses → ¬G.FirstWins :=
+  equiv.not_fuzzy
 
 theorem not_first_loses_of_first_wins {G : Pgame} : G.FirstWins → ¬G.FirstLoses :=
-  imp_not_comm.1 <| not_first_wins_of_first_loses
+  fuzzy.not_equiv
 
 end Pgame
 

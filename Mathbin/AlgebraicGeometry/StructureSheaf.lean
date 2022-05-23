@@ -902,8 +902,8 @@ theorem to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpec
   dsimp' [to_stalk]
   simpa
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 @[simp, reassoc, elementwise]
 theorem localization_to_stalk_stalk_specializes {R : Type _} [CommRingₓ R] {x y : PrimeSpectrum R} (h : x ⤳ y) :
     StructureSheaf.localizationToStalk R y ≫ (structureSheaf R).val.stalkSpecializes h =

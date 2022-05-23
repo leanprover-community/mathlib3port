@@ -60,6 +60,8 @@ theorem form_perm_cons_cons (x y : α) (l : List α) : formPerm (x :: y :: l) = 
 theorem form_perm_pair (x y : α) : formPerm [x, y] = swap x y :=
   rfl
 
+variable {l} {x : α}
+
 theorem form_perm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPerm l x = x := by
   cases' l with y l
   · simp
@@ -71,6 +73,9 @@ theorem form_perm_apply_of_not_mem (x : α) (l : List α) (h : x ∉ l) : formPe
     simp only [not_or_distrib, mem_cons_iff] at h
     simp [IH, swap_apply_of_ne_of_ne, h]
     
+
+theorem mem_of_form_perm_apply_ne (x : α) (l : List α) : l.formPerm x ≠ x → x ∈ l :=
+  not_imp_comm.2 <| List.form_perm_apply_of_not_mem _ _
 
 theorem form_perm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPerm l x ∈ l := by
   cases' l with y l
@@ -87,6 +92,30 @@ theorem form_perm_apply_mem_of_mem (x : α) (l : List α) (h : x ∈ l) : formPe
       simp [form_perm_apply_of_not_mem _ _ hx, ← h]
       
     
+
+theorem mem_of_form_perm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l) : x ∈ l := by
+  cases' l with y l
+  · simpa
+    
+  induction' l with z l IH generalizing x y
+  · simpa using h
+    
+  · by_cases' hx : (z :: l).formPerm x ∈ z :: l
+    · rw [List.form_perm_cons_cons, mul_apply, swap_apply_def] at h
+      split_ifs  at h <;> simp [IH _ _ hx]
+      
+    · replace hx := (Function.Injective.eq_iff (Equivₓ.injective _)).mp (List.form_perm_apply_of_not_mem _ _ hx)
+      simp only [List.form_perm_cons_cons, hx, Equivₓ.Perm.coe_mul, Function.comp_app, List.mem_cons_iff,
+        swap_apply_def, ite_eq_left_iff] at h
+      simp only [List.mem_cons_iff]
+      obtain h | h | h := h <;>
+        · split_ifs  at h <;> cc
+          
+      
+    
+
+theorem form_perm_mem_iff_mem : l.formPerm x ∈ l ↔ x ∈ l :=
+  ⟨l.mem_of_form_perm_apply_mem x, l.form_perm_apply_mem_of_mem x⟩
 
 @[simp]
 theorem form_perm_cons_concat_apply_last (x y : α) (xs : List α) : formPerm (x :: (xs ++ [y])) y = x := by
@@ -122,6 +151,8 @@ theorem form_perm_apply_nth_le_zero (l : List α) (h : Nodupₓ l) (hl : 1 < l.l
     
   · simpa using form_perm_apply_head _ _ _ h
     
+
+variable (l)
 
 theorem form_perm_eq_head_iff_eq_last (x y : α) : formPerm (y :: l) x = y ↔ x = last (y :: l) (cons_ne_nil _ _) :=
   Iff.trans

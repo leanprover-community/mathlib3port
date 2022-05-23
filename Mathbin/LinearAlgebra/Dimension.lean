@@ -955,6 +955,7 @@ variable [Field K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ V₁] [Modu
 
 variable [AddCommGroupₓ V'] [Module K V']
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dim_quotient_add_dim (p : Submodule K V) : Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
   classical <;>
     exact

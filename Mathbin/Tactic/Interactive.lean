@@ -176,9 +176,13 @@ add_tactic_doc
   { Name := "replace", category := DocCategory.tactic, declNames := [`tactic.interactive.replace],
     tags := ["context management"] }
 
-/-- Make every proposition in the context decidable. -/
-unsafe def classical :=
-  tactic.classical
+-- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+/-- Make every proposition in the context decidable.
+
+`classical!` does this more aggressively, such that even if a decidable instance is already
+available for a specific proposition, the noncomputable one will be used instead. -/
+unsafe def classical (bang : parse <| «expr ?» (tk "!")) :=
+  tactic.classical bang.isSome
 
 add_tactic_doc
   { Name := "classical", category := DocCategory.tactic, declNames := [`tactic.interactive.classical],

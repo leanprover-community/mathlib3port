@@ -554,6 +554,10 @@ def embedProduct (α : Type _) [Monoidₓ α] : αˣ →* α × αᵐᵒᵖ wher
   map_mul' := fun x y => by
     simp only [mul_inv_rev, op_mul, Units.coe_mul, Prod.mk_mul_mk]
 
+@[to_additive]
+theorem embed_product_injective (α : Type _) [Monoidₓ α] : Function.Injective (embedProduct α) := fun a₁ a₂ h =>
+  Units.ext <| (congr_argₓ Prod.fst h : _)
+
 end Units
 
 /-! ### Multiplication and division as homomorphisms -/

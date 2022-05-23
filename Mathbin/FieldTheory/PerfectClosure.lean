@@ -420,7 +420,7 @@ instance : Inv (PerfectClosure K p) :=
       | _, _, r.intro n x =>
         Quot.sound <| by
           simp only [frobenius_def]
-          rw [← inv_pow₀]
+          rw [← inv_pow]
           apply r.intro⟩
 
 instance : Field (PerfectClosure K p) :=

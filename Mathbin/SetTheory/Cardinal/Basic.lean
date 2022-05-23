@@ -7,6 +7,7 @@ import Mathbin.Data.Nat.Enat
 import Mathbin.Data.Set.Countable
 import Mathbin.Logic.Small
 import Mathbin.Order.ConditionallyCompleteLattice
+import Mathbin.Order.SuccPred.Basic
 import Mathbin.SetTheory.SchroederBernstein
 
 /-!
@@ -646,23 +647,35 @@ instance : ConditionallyCompleteLinearOrderBot Cardinal :=
 instance wo : @IsWellOrder Cardinal.{u} (· < ·) :=
   ⟨Cardinal.wf⟩
 
+/-- The set in the definition of `cardinal.succ` is nonempty. -/
+theorem succ_nonempty (c : Cardinal) : { c' : Cardinal | c < c' }.Nonempty :=
+  ⟨_, cantor c⟩
+
 /-- The successor cardinal - the smallest cardinal greater than
   `c`. This is not the same as `c + 1` except in the case of finite `c`. -/
 def succ (c : Cardinal) : Cardinal :=
   inf { c' | c < c' }
 
-theorem succ_nonempty (c : Cardinal) : { c' : Cardinal | c < c' }.Nonempty :=
-  ⟨_, cantor _⟩
-
-theorem lt_succ_self (c : Cardinal) : c < succ c :=
+theorem lt_succ (c : Cardinal) : c < succ c :=
   Inf_mem (succ_nonempty c)
 
-theorem succ_le {a b : Cardinal} : succ a ≤ b ↔ a < b :=
-  ⟨lt_of_lt_of_leₓ (lt_succ_self _), fun h => cInf_le' h⟩
+theorem succ_le_iff {a b : Cardinal} : succ a ≤ b ↔ a < b :=
+  ⟨(lt_succ a).trans_le, fun h => cInf_le' h⟩
 
-@[simp]
-theorem lt_succ {a b : Cardinal} : a < succ b ↔ a ≤ b := by
-  rw [← not_leₓ, succ_le, not_ltₓ]
+instance : SuccOrder Cardinal :=
+  SuccOrder.ofSuccLeIff succ fun a b => succ_le_iff
+
+theorem le_succ : ∀ a, a ≤ succ a :=
+  Order.le_succ
+
+theorem lt_succ_iff {a b : Cardinal} : a < succ b ↔ a ≤ b :=
+  Order.lt_succ_iff
+
+theorem succ_le_of_lt {a b : Cardinal} : a < b → succ a ≤ b :=
+  Order.succ_le_of_lt
+
+theorem le_of_lt_succ {a b : Cardinal} : a < succ b → a ≤ b :=
+  Order.le_of_lt_succ
 
 theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c := by
   refine' (le_cInf_iff'' (succ_nonempty c)).2 fun b hlt => _
@@ -673,8 +686,8 @@ theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c := by
   rcases this with ⟨b, hb⟩
   calc # γ + 1 = # (Option γ) := mk_option.symm _ ≤ # β := (f.option_elim b hb).cardinal_le
 
-theorem succ_pos (c : Cardinal) : 0 < succ c := by
-  simp
+theorem succ_pos (c : Cardinal) : 0 < succ c :=
+  Order.bot_lt_succ c
 
 theorem succ_ne_zero (c : Cardinal) : succ c ≠ 0 :=
   (succ_pos _).ne'
@@ -873,9 +886,9 @@ theorem lift_succ a : lift (succ a) = succ (lift a) :=
   le_antisymmₓ
     (le_of_not_gtₓ fun h => by
       rcases lt_lift_iff.1 h with ⟨b, e, h⟩
-      rw [lt_succ, ← lift_le, e] at h
-      exact not_lt_of_le h (lt_succ_self _))
-    (succ_le.2 <| lift_lt.2 <| lt_succ_self _)
+      rw [lt_succ_iff, ← lift_le, e] at h
+      exact h.not_lt (lt_succ _))
+    (succ_le_of_lt <| lift_lt.2 <| lt_succ a)
 
 @[simp]
 theorem lift_max {a : Cardinal.{u}} {b : Cardinal.{v}} :
@@ -1038,14 +1051,14 @@ theorem nat_cast_injective : Injective (coe : ℕ → Cardinal) :=
 
 @[simp, norm_cast]
 theorem nat_succ (n : ℕ) : (n.succ : Cardinal) = succ n :=
-  le_antisymmₓ (add_one_le_succ _) (succ_le.2 <| nat_cast_lt.2 <| Nat.lt_succ_selfₓ _)
+  (add_one_le_succ _).antisymm (succ_le_of_lt <| nat_cast_lt.2 <| Nat.lt_succ_selfₓ _)
 
 @[simp]
 theorem succ_zero : succ 0 = 1 := by
   norm_cast
 
 theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : # α ≤ n := by
-  refine' lt_succ.1 (lt_of_not_geₓ fun hn => _)
+  refine' le_of_lt_succ (lt_of_not_geₓ fun hn => _)
   rw [← Cardinal.nat_succ, ← Cardinal.lift_mk_fin n.succ] at hn
   cases' hn with f
   refine' not_lt_of_le (H <| finset.univ.map f) _
@@ -1053,20 +1066,20 @@ theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n)
   exact n.lt_succ_self
 
 theorem cantor' a {b : Cardinal} (hb : 1 < b) : a < (b^a) := by
-  rw [← succ_le,
+  rw [← succ_le_iff,
       (by
         norm_cast : succ 1 = 2)] at
       hb <;>
-    exact lt_of_lt_of_leₓ (cantor _) (power_le_power_right hb)
+    exact (cantor a).trans_le (power_le_power_right hb)
 
 theorem one_le_iff_pos {c : Cardinal} : 1 ≤ c ↔ 0 < c := by
-  rw [← succ_zero, succ_le]
+  rw [← succ_zero, succ_le_iff]
 
 theorem one_le_iff_ne_zero {c : Cardinal} : 1 ≤ c ↔ c ≠ 0 := by
   rw [one_le_iff_pos, pos_iff_ne_zero]
 
 theorem nat_lt_omega (n : ℕ) : (n : Cardinal.{u}) < ω :=
-  succ_le.1 <| by
+  succ_le_iff.1 <| by
     rw [← nat_succ, ← lift_mk_fin, omega, lift_mk_le.{0, 0, u}] <;> exact ⟨⟨coe, fun a b => Finₓ.ext⟩⟩
 
 @[simp]
@@ -1667,7 +1680,7 @@ theorem two_le_iff : (2 : Cardinal) ≤ # α ↔ ∃ x y : α, x ≠ y := by
     
   · rintro ⟨x, y, h⟩
     by_contra h'
-    rw [not_leₓ, ← Nat.cast_two, nat_succ, lt_succ, Nat.cast_oneₓ, le_one_iff_subsingleton] at h'
+    rw [not_leₓ, ← Nat.cast_two, nat_succ, lt_succ_iff, Nat.cast_oneₓ, le_one_iff_subsingleton] at h'
     apply h
     exact Subsingleton.elimₓ _ _
     
@@ -1694,7 +1707,7 @@ theorem three_le {α : Type _} (h : 3 ≤ # α) (x : α) (y : α) : ∃ z : α, 
   have : ((3 : Nat) : Cardinal) ≤ # α
   simpa using h
   have : ((2 : Nat) : Cardinal) < # α
-  rwa [← Cardinal.succ_le, ← Cardinal.nat_succ]
+  rwa [← Cardinal.succ_le_iff, ← Cardinal.nat_succ]
   have := exists_not_mem_of_length_le [x, y] this
   simpa [not_or_distrib] using this
 
@@ -1740,10 +1753,10 @@ theorem powerlt_succ {c₁ c₂ : Cardinal} (h : c₁ ≠ 0) : c₁ ^< c₂.succ
   · rw [powerlt_le]
     intro c₃ h2
     apply power_le_power_left h
-    rwa [← lt_succ]
+    rwa [← lt_succ_iff]
     
   · apply le_powerlt
-    apply lt_succ_self
+    apply lt_succ
     
 
 theorem powerlt_max {c₁ c₂ c₃ : Cardinal} : c₁ ^< max c₂ c₃ = max (c₁ ^< c₂) (c₁ ^< c₃) := by

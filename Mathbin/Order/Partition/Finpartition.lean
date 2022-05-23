@@ -303,6 +303,7 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
   rintro rfl
   exact H _ hc hcd
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
   classical
   have : ∀, ∀ b ∈ Q.parts, ∀, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h

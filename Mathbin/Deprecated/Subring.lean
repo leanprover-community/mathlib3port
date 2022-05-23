@@ -7,6 +7,26 @@ import Mathbin.Deprecated.Subgroup
 import Mathbin.Deprecated.Group
 import Mathbin.RingTheory.Subring.Basic
 
+/-!
+# Unbundled subrings (deprecated)
+
+This file is deprecated, and is no longer imported by anything in mathlib other than other
+deprecated files, and test files. You should not need to import it.
+
+This file defines predicates for unbundled subrings. Instead of using this file, please use
+`subring`, defined in `ring_theory.subring.basic`, for subrings of rings.
+
+## Main definitions
+
+`is_subring (S : set R) : Prop` : the predicate that `S` is the underlying set of a subring
+of the ring `R`. The bundled variant `subring R` should be used in preference to this.
+
+## Tags
+
+is_subring
+-/
+
+
 universe u v
 
 open Groupₓ
@@ -59,6 +79,8 @@ theorem is_subring_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι �
 
 namespace Ringₓ
 
+/-- The smallest subring containing a given subset of a ring, considered as a set. This function
+is deprecated; use `subring.closure`. -/
 def Closure (s : Set R) :=
   AddGroupₓ.Closure (Monoidₓ.Closure s)
 

@@ -240,6 +240,8 @@ noncomputable def lift : s.x ⟶ F.obj c.x :=
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
   simpa [lift, ← functor.map_comp]
 
+attribute [local simp] eq_to_hom_map
+
 theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F)) (f₁ f₂ : s.x ⟶ F.obj c.x)
     (h₁ : ∀ j : J, f₁ ≫ (F.mapCone c).π.app j = s.π.app j) (h₂ : ∀ j : J, f₂ ≫ (F.mapCone c).π.app j = s.π.app j) :
     f₁ = f₂ := by
@@ -341,8 +343,7 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D) [∀ X : D, HasCol
         whiskering_left_obj_map, category.comp_id, Lan_map_app, category.assoc]
       erw [colimit.ι_pre_assoc (Lan.diagram F H X) (costructured_arrow.map j.hom), category.id_comp, category.comp_id,
         colimit.ι_map]
-      cases j
-      cases j_right
+      rcases j with ⟨j_left, ⟨⟨⟩⟩, j_hom⟩
       congr
       rw [costructured_arrow.map_mk, category.id_comp, costructured_arrow.mk])
 

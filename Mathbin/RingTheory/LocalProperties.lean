@@ -219,7 +219,7 @@ section Finite
 theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite := by
   introv R hf
   -- Setting up the `algebra` and `is_scalar_tower` instances needed
-  classical
+  skip
   let this := f.to_algebra
   let this := ((algebraMap S S').comp f).toAlgebra
   let f' : R' →+* S' := IsLocalization.map S' f (Submonoid.le_comap_map M)
@@ -304,7 +304,6 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
 then `t • x ∈ span R s` for some `t : M`.-/
 theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] [IsScalarTower R R' S]
     [IsLocalization M R'] (s : Set S) (x : S) (hx : x ∈ Submodule.span R' s) : ∃ t : M, t • x ∈ Submodule.span R s := by
-  classical
   obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
   suffices ∃ t : M, t • x ∈ Submodule.span R (s' : Set S) by
     obtain ⟨t, ht⟩ := this
@@ -341,7 +340,7 @@ theorem finite_of_localization_span : RingHom.OfLocalizationSpan @RingHom.Finite
   rw [RingHom.of_localization_span_iff_finite]
   introv R hs H
   -- We first setup the instances
-  classical
+  skip
   let this := f.to_algebra
   let this := fun r : s => (Localization.awayMap f r).toAlgebra
   have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S : R →* S)) (Localization.Away (f r)) :=
@@ -392,7 +391,7 @@ section FiniteType
 theorem localization_finite_type : RingHom.LocalizationPreserves @RingHom.FiniteType := by
   introv R hf
   -- mirrors the proof of `localization_map_finite`
-  classical
+  skip
   let this := f.to_algebra
   let this := ((algebraMap S S').comp f).toAlgebra
   let f' : R' →+* S' := IsLocalization.map S' f (Submonoid.le_comap_map M)
@@ -469,7 +468,7 @@ theorem finite_type_of_localization_span : RingHom.OfLocalizationSpan @RingHom.F
   rw [RingHom.of_localization_span_iff_finite]
   introv R hs H
   -- mirrors the proof of `finite_of_localization_span`
-  classical
+  skip
   let this := f.to_algebra
   let this := fun r : s => (Localization.awayMap f r).toAlgebra
   have : ∀ r : s, IsLocalization ((Submonoid.powers (r : R)).map (algebraMap R S : R →* S)) (Localization.Away (f r)) :=

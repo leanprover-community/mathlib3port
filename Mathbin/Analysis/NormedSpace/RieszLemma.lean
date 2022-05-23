@@ -31,6 +31,7 @@ variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 variable {F : Type _} [SemiNormedGroup F] [NormedSpace ℝ F]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Riesz's lemma, which usually states that it is possible to find a
 vector with norm 1 whose distance to a closed proper subspace is
 arbitrarily close to 1. The statement here is in terms of multiples of

@@ -57,22 +57,23 @@ theorem comm_prob_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative (
 
 variable (G : Type _) [Groupₓ G] [Fintype G]
 
-theorem card_comm_eq_card_conj_classes_mul_card :
-    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (ConjClasses G) * card G :=
-  calc
-    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
-      card_congr (Equivₓ.subtypeProdEquivSigmaSubtype fun g h : G => g * h = h * g)
-    _ = ∑ g, card { h // g * h = h * g } := card_sigma _
-    _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
-      sum_equiv ConjAct.toConjAct.toEquiv _ _ fun g =>
-        card_congr' <| congr_argₓ _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
-    _ = card (Quotientₓ (MulAction.orbitRel (ConjAct G) G)) * card G :=
-      MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
-    _ = card (Quotientₓ (IsConj.setoid G)) * card G := by
-      have this : MulAction.orbitRel (ConjAct G) G = IsConj.setoid G :=
-        Setoidₓ.ext fun g h => (Setoidₓ.comm' _).trans is_conj_iff.symm
-      cc
-    
+theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
+    card { p : G × G // p.1 * p.2 = p.2 * p.1 } = @card (ConjClasses G) h * card G := by
+  convert
+    calc
+      card { p : G × G // p.1 * p.2 = p.2 * p.1 } = card (Σg, { h // g * h = h * g }) :=
+        card_congr (Equivₓ.subtypeProdEquivSigmaSubtype fun g h : G => g * h = h * g)
+      _ = ∑ g, card { h // g * h = h * g } := card_sigma _
+      _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
+        sum_equiv conj_act.to_conj_act.to_equiv _ _ fun g =>
+          card_congr' <| congr_argₓ _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
+      _ = card (Quotientₓ (MulAction.orbitRel (ConjAct G) G)) * card G :=
+        MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
+      _ = card (Quotientₓ (IsConj.setoid G)) * card G := by
+        have this : MulAction.orbitRel (ConjAct G) G = IsConj.setoid G :=
+          Setoidₓ.ext fun g h => (Setoidₓ.comm' _).trans is_conj_iff.symm
+        cc
+      
 
 theorem comm_prob_def' : commProb G = card (ConjClasses G) / card G := by
   rw [commProb, card_comm_eq_card_conj_classes_mul_card, Nat.cast_mulₓ, sq]
@@ -100,9 +101,9 @@ theorem Subgroup.comm_prob_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commP
       conjugacy classes as `G ⧸ H`. -/
   rw [comm_prob_def', comm_prob_def', div_le_iff, mul_assoc, ← Nat.cast_mulₓ, mul_comm (card H), ←
     Subgroup.card_eq_card_quotient_mul_card_subgroup, div_mul_cancel, Nat.cast_le]
-  · exact
-      card_le_of_surjective (ConjClasses.map (QuotientGroup.mk' H))
-        (ConjClasses.map_surjective Quotientₓ.surjective_quotient_mk')
+  · apply card_le_of_surjective
+    show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
+    exact ConjClasses.map_surjective Quotientₓ.surjective_quotient_mk'
     
   · exact nat.cast_ne_zero.mpr card_ne_zero
     

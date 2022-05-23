@@ -106,6 +106,52 @@ theorem zsmul_one [One A] (n : ℤ) : n • (1 : A) = n := by
 
 end SubNegMonoidₓ
 
+section DivisionMonoid
+
+variable [DivisionMonoid α]
+
+-- Note that `mul_zsmul` and `zpow_mul` have the primes swapped since their argument order,
+-- and therefore the more "natural" choice of lemma, is reversed.
+@[to_additive mul_zsmul']
+theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
+  | (m : ℕ), (n : ℕ) => by
+    rw [zpow_coe_nat, zpow_coe_nat, ← pow_mulₓ, ← zpow_coe_nat]
+    rfl
+  | (m : ℕ), -[1+ n] => by
+    rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← pow_mulₓ, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_coe_nat]
+    rfl
+  | -[1+ m], (n : ℕ) => by
+    rw [zpow_coe_nat, zpow_neg_succ_of_nat, ← inv_pow, ← pow_mulₓ, neg_succ_mul_coe_nat, zpow_neg, inv_pow, inv_inj, ←
+      zpow_coe_nat]
+    rfl
+  | -[1+ m], -[1+ n] => by
+    rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, neg_succ_mul_neg_succ, inv_pow, inv_invₓ, ← pow_mulₓ, ←
+      zpow_coe_nat]
+    rfl
+
+@[to_additive mul_zsmul]
+theorem zpow_mul' (a : α) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
+  rw [mul_comm, zpow_mul]
+
+@[to_additive bit0_zsmul]
+theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
+  | (n : ℕ) => by
+    simp only [zpow_coe_nat, ← Int.coe_nat_bit0, pow_bit0]
+  | -[1+ n] => by
+    simp [← mul_inv_rev, ← pow_bit0]
+    rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
+    norm_cast
+
+@[to_additive bit0_zsmul']
+theorem zpow_bit0' (a : α) (n : ℤ) : a ^ bit0 n = (a * a) ^ n :=
+  (zpow_bit0 a n).trans ((Commute.refl a).mul_zpow n).symm
+
+@[simp]
+theorem zpow_bit0_neg [HasDistribNeg α] (x : α) (n : ℤ) : -x ^ bit0 n = x ^ bit0 n := by
+  rw [zpow_bit0', zpow_bit0', neg_mul_neg]
+
+end DivisionMonoid
+
 section Groupₓ
 
 variable [Groupₓ G]
@@ -155,28 +201,8 @@ theorem zpow_one_add (a : G) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by
   rw [zpow_add, zpow_one]
 
 @[to_additive]
-theorem zpow_mul_comm (a : G) (i j : ℤ) : a ^ i * a ^ j = a ^ j * a ^ i := by
-  rw [← zpow_add, ← zpow_add, add_commₓ]
-
--- note that `mul_zsmul` and `zpow_mul` have the primes swapped since their argument order
--- and therefore the more "natural" choice of lemma is reversed.
-@[to_additive mul_zsmul']
-theorem zpow_mul (a : G) (m n : ℤ) : a ^ (m * n) = (a ^ m) ^ n :=
-  Int.induction_on n
-    (by
-      simp )
-    (fun n ihn => by
-      simp [mul_addₓ, zpow_add, ihn])
-    fun n ihn => by
-    simp only [mul_sub, zpow_sub, ihn, mul_oneₓ, zpow_one]
-
-@[to_additive mul_zsmul]
-theorem zpow_mul' (a : G) (m n : ℤ) : a ^ (m * n) = (a ^ n) ^ m := by
-  rw [mul_comm, zpow_mul]
-
-@[to_additive bit0_zsmul]
-theorem zpow_bit0 (a : G) (n : ℤ) : a ^ bit0 n = a ^ n * a ^ n :=
-  zpow_add _ _ _
+theorem zpow_mul_comm (a : G) (i j : ℤ) : a ^ i * a ^ j = a ^ j * a ^ i :=
+  (Commute.refl _).zpow_zpow _ _
 
 @[to_additive bit1_zsmul]
 theorem zpow_bit1 (a : G) (n : ℤ) : a ^ bit1 n = a ^ n * a ^ n * a := by
@@ -321,8 +347,8 @@ theorem abs_zsmul (n : ℤ) (a : α) : abs (n • a) = abs n • abs a := by
     exact abs_nsmul m _
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem abs_add_eq_add_abs_le (hle : a ≤ b) : abs (a + b) = abs a + abs b ↔ 0 ≤ a ∧ 0 ≤ b ∨ a ≤ 0 ∧ b ≤ 0 := by
   obtain a0 | a0 := le_or_ltₓ 0 a <;> obtain b0 | b0 := le_or_ltₓ 0 b
   · simp [a0, b0, abs_of_nonneg, add_nonneg a0 b0]

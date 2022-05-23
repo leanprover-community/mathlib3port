@@ -14,7 +14,7 @@ universe u v w
 
 namespace Units
 
-variable {M : Type u} {N : Type v} {P : Type w} [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
+variable {α : Type _} {M : Type u} {N : Type v} {P : Type w} [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
 
 /-- The group homomorphism on units induced by a `monoid_hom`. -/
 @[to_additive "The `add_group` homomorphism on `add_unit`s induced by an `add_monoid_hom`."]
@@ -59,9 +59,19 @@ theorem coe_hom_apply (x : Mˣ) : coeHom M x = ↑x :=
 theorem coe_pow (u : Mˣ) (n : ℕ) : ((u ^ n : Mˣ) : M) = u ^ n :=
   (Units.coeHom M).map_pow u n
 
+section DivisionMonoid
+
+variable [DivisionMonoid α]
+
 @[simp, norm_cast, to_additive]
-theorem coe_zpow {G} [Groupₓ G] (u : Gˣ) (n : ℤ) : ((u ^ n : Gˣ) : G) = u ^ n :=
-  (Units.coeHom G).map_zpow u n
+theorem coe_inv : ∀ u : αˣ, ↑u⁻¹ = (u⁻¹ : α) :=
+  (Units.coeHom α).map_inv
+
+@[simp, norm_cast, to_additive]
+theorem coe_zpow : ∀ u : αˣ n : ℤ, ((u ^ n : αˣ) : α) = u ^ n :=
+  (Units.coeHom α).map_zpow
+
+end DivisionMonoid
 
 /-- If a map `g : M → Nˣ` agrees with a homomorphism `f : M →* N`, then
 this map is a monoid homomorphism too. -/

@@ -60,6 +60,7 @@ variable [CommRingₓ A] [CommRingₓ B] [Algebra A B] [CommRingₓ C] [Algebra 
 
 section Discr
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given an `A`-algebra `B` and `b`, an `ι`-indexed family of elements of `B`, we define
 `discr A ι b` as the determinant of `trace_matrix A ι b`. -/
 noncomputable def discr (A : Type u) {B : Type v} [CommRingₓ A] [CommRingₓ B] [Algebra A B] [Fintype ι] (b : ι → B) :=
@@ -74,11 +75,13 @@ variable {ι' : Type _} [Fintype ι'] [Fintype ι]
 
 section Basic
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.symm) = discr A b := by
   classical
   rw [← Basis.coe_reindex, discr_def, trace_matrix_reindex, det_reindex_self, ← discr_def]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `b` is not linear independent, then `algebra.discr A b = 0`. -/
 theorem discr_zero_of_not_linear_independent [IsDomain A] {b : ι → B} (hli : ¬LinearIndependent A b) : discr A b = 0 :=
   by
@@ -123,16 +126,15 @@ variable [Module.Finite K L] [IsAlgClosed E]
 
 /-- Over a field, if `b` is a basis, then `algebra.discr K b ≠ 0`. -/
 theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b ≠ 0 := by
-  by_cases' h : Nonempty ι
-  · classical
-    have := span_eq_top_of_linear_independent_of_card_eq_finrank b.linear_independent (finrank_eq_card_basis b).symm
+  cases is_empty_or_nonempty ι
+  · simp [discr]
+    
+  · have := span_eq_top_of_linear_independent_of_card_eq_finrank b.linear_independent (finrank_eq_card_basis b).symm
     rw [discr_def, trace_matrix_def]
     simp_rw [← Basis.mk_apply b.linear_independent this]
     rw [← trace_matrix_def, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
     exact trace_form_nondegenerate _ _
     
-  let this := not_nonempty_iff.1 h
-  simp [discr]
 
 /-- Over a field, if `b` is a basis, then `algebra.discr K b` is a unit. -/
 theorem discr_is_unit_of_basis [IsSeparable K L] (b : Basis ι K L) : IsUnit (discr K b) :=
@@ -285,6 +287,7 @@ variable {R : Type z} [CommRingₓ R] [Algebra R K] [Algebra R L] [IsScalarTower
 -- mathport name: «expris_integral»
 local notation "is_integral" => IsIntegral
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
 theorem discr_is_integral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) := by
@@ -292,6 +295,7 @@ theorem discr_is_integral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_i
   rw [discr_def]
   exact IsIntegral.det fun i j => is_integral_trace (is_integral_mul (h i) (h j))
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
 `∀ i j, is_integral ℤ (b.to_matrix b' i j)` and `∀ i j, is_integral ℤ (b'.to_matrix b i j)` then
 `discr ℚ b = discr ℚ b'`. -/

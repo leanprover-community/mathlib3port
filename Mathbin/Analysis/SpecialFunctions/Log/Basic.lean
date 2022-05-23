@@ -270,6 +270,7 @@ theorem continuous_at_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
 
 open BigOperators
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀, ∀ x ∈ s, ∀, f x ≠ 0) :
     log (∏ i in s, f i) = ∑ i in s, log (f i) := by
   classical

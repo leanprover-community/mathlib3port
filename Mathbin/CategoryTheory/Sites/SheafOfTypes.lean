@@ -801,7 +801,7 @@ theorem compatible_iff (x : FirstObj P S) :
     
   · intro t Y Z f g hf
     rw [types.limit_ext_iff'] at t
-    simpa [first_map, second_map] using t ⟨Y, Z, g, f, hf⟩
+    simpa [first_map, second_map] using t ⟨⟨Y, Z, g, f, hf⟩⟩
     
 
 /-- `P` is a sheaf for `S`, iff the fork given by `w` is an equalizer. -/
@@ -875,7 +875,7 @@ theorem compatible_iff (x : FirstObj P R) :
     
   · intro t Y Z f g hf hg
     rw [types.limit_ext_iff'] at t
-    simpa [first_map, second_map] using t ⟨⟨Y, f, hf⟩, Z, g, hg⟩
+    simpa [first_map, second_map] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
     
 
 /-- `P` is a sheaf for `R`, iff the fork given by `w` is an equalizer.

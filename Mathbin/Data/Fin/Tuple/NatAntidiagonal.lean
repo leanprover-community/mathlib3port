@@ -3,11 +3,9 @@ Copyright (c) 2022 Eric Wieser. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 -/
-import Mathbin.Data.Fin.VecNotation
-import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Data.List.NatAntidiagonal
-import Mathbin.Data.Multiset.NatAntidiagonal
+import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Data.Finset.NatAntidiagonal
+import Mathbin.Data.Fin.VecNotation
 import Mathbin.Logic.Equiv.Fin
 
 /-!
@@ -82,11 +80,8 @@ theorem mem_antidiagonal_tuple {n : ℕ} {k : ℕ} {x : Finₓ k → ℕ} : x �
       
     
   · refine' Finₓ.consInduction (fun x₀ x => _) x
-    have : (0 : Finₓ k.succ) ∉ Finset.image Finₓ.succ (Finset.univ : Finset (Finₓ k)) := by
-      simp
-    simp_rw [antidiagonal_tuple, List.mem_bindₓ, List.mem_mapₓ, List.Nat.mem_antidiagonal, Finₓ.univ_succ,
-      Finset.sum_insert this, Finₓ.cons_zero, Finset.sum_image fun x hx y hy h => Finₓ.succ_injective _ h,
-      Finₓ.cons_succ, Finₓ.cons_eq_cons, exists_eq_right_right, ih, Prod.exists]
+    simp_rw [Finₓ.sum_cons, antidiagonal_tuple, List.mem_bindₓ, List.mem_mapₓ, List.Nat.mem_antidiagonal,
+      Finₓ.cons_eq_cons, exists_eq_right_rightₓ, ih, Prod.exists]
     constructor
     · rintro ⟨a, b, rfl, rfl, rfl⟩
       rfl

@@ -26,6 +26,8 @@ namespace CategoryTheory.Limits
 
 variable {C : Type u₁} [Category.{v₁} C]
 
+attribute [local tidy] tactic.discrete_cases
+
 /-- Construct a cone for the empty diagram given an object. -/
 @[simps]
 def asEmptyCone (X : C) : Cone (Functor.empty.{w} C) :=
@@ -214,13 +216,13 @@ def isLimitChangeEmptyCone {c₁ : Cone F₁} (hl : IsLimit c₁) (c₂ : Cone F
         ⟨c.x, by
           tidy⟩ ≫
       hi.Hom
-  fac' := fun _ j => j.elim
+  fac' := fun _ j => j.as.elim
   uniq' := fun c f _ => by
     erw [←
       hl.uniq
         ⟨c.X, by
           tidy⟩
-        (f ≫ hi.inv) fun j => j.elim]
+        (f ≫ hi.inv) fun j => j.as.elim]
     simp
 
 /-- Replacing an empty cone in `is_limit` by another with the same cone point
@@ -254,13 +256,13 @@ def isColimitChangeEmptyCocone {c₁ : Cocone F₁} (hl : IsColimit c₁) (c₂ 
       hl.desc
         ⟨c.x, by
           tidy⟩
-  fac' := fun _ j => j.elim
+  fac' := fun _ j => j.as.elim
   uniq' := fun c f _ => by
     erw [←
       hl.uniq
         ⟨c.X, by
           tidy⟩
-        (hi.hom ≫ f) fun j => j.elim]
+        (hi.hom ≫ f) fun j => j.as.elim]
     simp
 
 /-- Replacing an empty cocone in `is_colimit` by another with the same cocone point
@@ -405,7 +407,7 @@ def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasT
 @[simp, reassoc]
 theorem limit_const_terminal_inv_π {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] {j : J} :
     limitConstTerminal.inv ≫ limit.π ((CategoryTheory.Functor.const J).obj (⊤_ C)) j = terminal.from _ := by
-  ext ⟨⟩
+  ext ⟨⟨⟩⟩
 
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
     HasColimit ((CategoryTheory.Functor.const J).obj (⊥_ C)) :=
@@ -422,7 +424,7 @@ def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [Has
 @[simp, reassoc]
 theorem ι_colimit_const_initial_hom {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] {j : J} :
     colimit.ι ((CategoryTheory.Functor.const J).obj (⊥_ C)) j ≫ colimitConstInitial.Hom = initial.to _ := by
-  ext ⟨⟩
+  ext ⟨⟨⟩⟩
 
 /-- A category is a `initial_mono_class` if the canonical morphism of an initial object is a
 monomorphism.  In practice, this is most useful when given an arbitrary morphism out of the chosen

@@ -829,6 +829,41 @@ protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, 
   rcases exists_nat_gt r with ⟨n, hn⟩
   exact ⟨n, coe_lt_coe_nat.2 hn⟩
 
+@[simp]
+theorem Union_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ := by
+  ext x
+  rw [mem_Union]
+  exact ⟨fun ⟨n, hn⟩ => ne_top_of_lt hn, Ennreal.exists_nat_gt⟩
+
+@[simp]
+theorem Union_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
+  Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top coe_nat_ne_top hx) <|
+    Union_Iio_coe_nat ▸ Union_mono fun n => Iio_subset_Iic_self
+
+@[simp]
+theorem Union_Ioc_coe_nat : (⋃ n : ℕ, Ioc a n) = Ioi a \ {∞} := by
+  simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
+
+@[simp]
+theorem Union_Ioo_coe_nat : (⋃ n : ℕ, Ioo a n) = Ioi a \ {∞} := by
+  simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
+
+@[simp]
+theorem Union_Icc_coe_nat : (⋃ n : ℕ, Icc a n) = Ici a \ {∞} := by
+  simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
+
+@[simp]
+theorem Union_Ico_coe_nat : (⋃ n : ℕ, Ico a n) = Ici a \ {∞} := by
+  simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
+
+@[simp]
+theorem Inter_Ici_coe_nat : (⋂ n : ℕ, Ici (n : ℝ≥0∞)) = {∞} := by
+  simp only [← compl_Iio, ← compl_Union, Union_Iio_coe_nat, compl_compl]
+
+@[simp]
+theorem Inter_Ioi_coe_nat : (⋂ n : ℕ, Ioi (n : ℝ≥0∞)) = {∞} := by
+  simp only [← compl_Iic, ← compl_Union, Union_Iic_coe_nat, compl_compl]
+
 theorem add_lt_add (ac : a < c) (bd : b < d) : a + b < c + d := by
   lift a to ℝ≥0 using ne_top_of_lt ac
   lift b to ℝ≥0 using ne_top_of_lt bd
@@ -1256,7 +1291,7 @@ theorem div_one {a : ℝ≥0∞} : a / 1 = a := by
 
 protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n := by
   by_cases' a = 0 <;> cases a <;> cases n <;> simp_all [none_eq_top, some_eq_coe, zero_pow, top_pow, Nat.zero_lt_succₓ]
-  rw [← coe_inv h, ← coe_pow, ← coe_inv (pow_ne_zero _ h), ← inv_pow₀, coe_pow]
+  rw [← coe_inv h, ← coe_pow, ← coe_inv (pow_ne_zero _ h), ← inv_pow, coe_pow]
 
 instance : HasInvolutiveInv ℝ≥0∞ where
   inv := Inv.inv

@@ -30,7 +30,8 @@ open Set
 
 namespace Emetric
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
 -- See note [lower instance priority]

@@ -3,7 +3,7 @@ Copyright (c) 2014 Robert Lewis. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 -/
-import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.Hom.Ring
 
 /-!
 # Fields and division rings

@@ -63,7 +63,7 @@ theorem continuum_ne_zero : 𝔠 ≠ 0 :=
 
 theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 := by
   rw [← succ_omega]
-  exact succ_le.2 omega_lt_continuum
+  exact succ_le_of_lt omega_lt_continuum
 
 /-!
 ### Addition

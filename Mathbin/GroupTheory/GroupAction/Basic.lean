@@ -508,6 +508,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β} (hφ 
     _ ≃ Σω : Ω, α ⧸ stabilizer α (φ ω) := Equivₓ.sigmaCongrRight fun ω => orbitEquivQuotientStabilizer α (φ ω)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- **Class formula** for a finite group acting on a finite type. See
 `mul_action.card_eq_sum_card_group_div_card_stabilizer` for a specialized version using
 `quotient.out'`. -/
@@ -606,6 +607,7 @@ theorem normal_core_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ke
     exact (MulAction.quotient.smul_mk H g 1).symm.trans (equiv.perm.ext_iff.mp hg (1 : G))
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance fintypeQuotientNormalCore [Fintype (G ⧸ H)] : Fintype (G ⧸ H.normalCore) := by
   rw [H.normal_core_eq_ker]
   classical

@@ -35,6 +35,8 @@ on `set`s.
 -/
 
 
+open Set
+
 variable {α : Type _} {G : Type _} {M : Type _} {R : Type _} {A : Type _}
 
 variable [Monoidₓ M] [AddMonoidₓ A]

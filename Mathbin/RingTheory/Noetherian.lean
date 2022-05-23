@@ -234,6 +234,7 @@ theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : s
     ⟨LinearMap.inl R M P '' tb ∪ LinearMap.inr R M P '' Tc, (htb.1.Image _).union (htc.1.Image _), by
       rw [LinearMap.span_inl_union_inr, htb.2, htc.2]⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fg_pi {ι : Type _} {M : ι → Type _} [Fintype ι] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
     {p : ∀ i, Submodule R (M i)} (hsb : ∀ i, (p i).Fg) : (Submodule.pi Set.Univ p).Fg := by
   classical
@@ -333,6 +334,7 @@ This is defeq to `submodule.fg`, but unfolds more nicely. -/
 def _root_.ideal.fg (I : Ideal R) : Prop :=
   ∃ S : Finset R, Ideal.span ↑S = I
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The image of a finitely generated ideal is finitely generated.
 
 This is the `ideal` version of `submodule.fg.map`. -/
@@ -372,6 +374,7 @@ theorem _root_.ideal.fg_ker_comp {R S A : Type _} [CommRingₓ R] [CommRingₓ S
   let g₁ := (IsScalarTower.toAlgHom R S A).toLinearMap
   exact fg_ker_comp f₁ g₁ hf (fg_restrict_scalars g.ker hg hsur) hsur
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Finitely generated submodules are precisely compact elements in the submodule lattice. -/
 theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactElement s := by
   classical
@@ -763,7 +766,7 @@ theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [Semiringₓ R] : IsNoether
   is_noetherian_ring_iff.trans is_noetherian_def
 
 -- see Note [lower instance priority]
-instance (priority := 80) Ringₓ.is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+instance (priority := 80) is_noetherian_of_fintype R M [Fintype M] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
     IsNoetherian R M := by
   let this := Classical.dec <;>
     exact
@@ -771,9 +774,17 @@ instance (priority := 80) Ringₓ.is_noetherian_of_fintype R M [Fintype M] [Semi
         ⟨to_finset s, by
           rw [Set.coe_to_finset, Submodule.span_eq]⟩⟩
 
-theorem Ringₓ.is_noetherian_of_zero_eq_one {R} [Semiringₓ R] (h01 : (0 : R) = 1) : IsNoetherianRing R := by
-  have := subsingleton_of_zero_eq_one h01 <;>
-    have := Fintype.ofSubsingleton (0 : R) <;> exact is_noetherian_ring_iff.2 (Ringₓ.is_noetherian_of_fintype R R)
+/-- Modules over the trivial ring are Noetherian. -/
+-- see Note [lower instance priority]
+instance (priority := 100) is_noetherian_of_subsingleton R M [Subsingleton R] [Semiringₓ R] [AddCommMonoidₓ M]
+    [Module R M] : IsNoetherian R M :=
+  have := Module.subsingleton R M
+  is_noetherian_of_fintype R M
+
+-- see Note [lower instance priority]
+instance (priority := 100) Ringₓ.is_noetherian_of_subsingleton {R} [Semiringₓ R] [Subsingleton R] :
+    IsNoetherianRing R :=
+  ⟨⟩
 
 theorem is_noetherian_of_submodule_of_noetherian R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (N : Submodule R M)
     (h : IsNoetherian R M) : IsNoetherian R N := by

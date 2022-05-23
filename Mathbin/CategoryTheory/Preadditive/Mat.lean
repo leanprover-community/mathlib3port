@@ -50,7 +50,7 @@ Ideally this would conveniently interact with both `Mat_` and `matrix`.
 
 open CategoryTheory CategoryTheory.Preadditive
 
-open BigOperators
+open BigOperators Classical
 
 noncomputable section
 
@@ -65,10 +65,9 @@ variable (C : Type u₁) [Category.{v₁} C] [Preadditive C]
 structure Mat_ : Type max (v₁ + 1) u₁ where
   ι : Type v₁
   [f : Fintype ι]
-  [d : DecidableEq ι]
   x : ι → C
 
-attribute [instance] Mat_.F Mat_.D
+attribute [instance] Mat_.F
 
 namespace Mat_
 
@@ -157,7 +156,7 @@ even though the construction we give uses a sigma type.
 See however `iso_biproduct_embedding`.
 -/
 instance has_finite_biproducts : HasFiniteBiproducts (Mat_ C) where
-  HasBiproductsOfShape := fun J 𝒟 ℱ =>
+  HasBiproductsOfShape := fun J 𝒟 =>
     { HasBiproduct := fun f =>
         has_biproduct_of_total
           { x := ⟨Σj : J, (f j).ι, fun p => (f p.1).x p.2⟩,
@@ -223,7 +222,7 @@ namespace Functor
 
 variable {C} {D : Type _} [Category.{v₁} D] [Preadditive D]
 
-attribute [local simp] Mat_.id_apply
+attribute [local simp] Mat_.id_apply eq_to_hom_map
 
 /-- A functor induces a functor of matrix categories.
 -/
@@ -437,9 +436,7 @@ def liftUnique (F : C ⥤ D) [Functor.Additive F] (L : Mat_ C ⥤ D) [Functor.Ad
     ext j k ⟨⟩
     dsimp'
     simp
-    convert α.hom.naturality (f j k)
-    erw [biproduct.matrix_π]
-    simp
+    exact α.hom.naturality (f j k)
 
 /-- Two additive functors `Mat_ C ⥤ D` are naturally isomorphic if
 their precompositions with `embedding C` are naturally isomorphic as functors `C ⥤ D`. -/

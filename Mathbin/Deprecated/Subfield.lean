@@ -6,42 +6,31 @@ Authors: Andreas Swerdlow
 import Mathbin.Deprecated.Subring
 import Mathbin.Algebra.GroupWithZero.Power
 
-/-
+/-!
+# Unbundled subfields (deprecated)
 
-# Unbundled subfields
+This file is deprecated, and is no longer imported by anything in mathlib other than other
+deprecated files, and test files. You should not need to import it.
 
-This file introduces the predicate `is_subfield` on `S : set F` where `F` is a field.
-This is *not* the preferred way to do subfields in Lean 3: in general `S : subfield F`
-works more smoothly.
+This file defines predicates for unbundled subfields. Instead of using this file, please use
+`subfield`, defined in `field_theory.subfield`, for subfields of fields.
 
 ## Main definitions
 
-`is_subfield (S : set F)` : the predicate that `S` is the underlying set of a subfield
-of the field `F`. Note that the bundled variant `subfield F` is preferred to this approach.
+`is_subfield (S : set F) : Prop` : the predicate that `S` is the underlying set of a subfield
+of the field `F`. The bundled variant `subfield F` should be used in preference to this.
 
 ## Tags
 
 is_subfield
 -/
-/-
 
-# Unbundled subfields
 
-This file introduces the predicate `is_subfield` on `S : set F` where `F` is a field.
-This is *not* the preferred way to do subfields in Lean 3: in general `S : subfield F`
-works more smoothly.
-
-## Main definitions
-
-`is_subfield (S : set F)` : the predicate that `S` is the underlying set of a subfield
-of the field `F`. Note that the bundled variant `subfield F` is preferred to this approach.
-
-## Tags
-
-is_subfield
--/
 variable {F : Type _} [Field F] (S : Set F)
 
+/-- `is_subfield (S : set F)` is the predicate saying that a given subset of a field is
+the set underlying a subfield. This structure is deprecated; use the bundled variant
+`subfield F` to model subfields of a field. -/
 structure IsSubfield extends IsSubring S : Prop where
   inv_mem : ∀ {x : F}, x ∈ S → x⁻¹ ∈ S
 
@@ -98,6 +87,7 @@ theorem Closure.is_submonoid : IsSubmonoid (Closure S) :=
             IsSubmonoid.mul_mem ring.closure.is_subring.to_is_submonoid hq hs, (div_mul_div_comm _ _ _ _).symm⟩,
     one_mem := ring_closure_subset <| IsSubmonoid.one_mem Ringₓ.Closure.is_subring.to_is_submonoid }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Closure.is_subfield : IsSubfield (Closure S) :=
   have h0 : (0 : F) ∈ Closure S :=
     ring_closure_subset <| Ringₓ.Closure.is_subring.to_is_add_subgroup.to_is_add_submonoid.zero_mem

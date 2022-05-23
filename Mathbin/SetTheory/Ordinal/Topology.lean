@@ -66,6 +66,7 @@ theorem is_open_singleton_iff {o : Ordinal} : IsOpen ({o} : Set Ordinal) ↔ ¬I
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_open_iff (s : Set Ordinal) : IsOpen s ↔ ∀, ∀ o ∈ s, ∀, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩

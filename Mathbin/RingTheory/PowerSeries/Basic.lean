@@ -608,6 +608,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     (x s : MvPowerSeries σ R) ^ n ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 := by
   constructor
@@ -1429,6 +1430,7 @@ section CommSemiringₓ
 
 variable [CommSemiringₓ R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} : (x : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 := by
   convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ
   apply propext

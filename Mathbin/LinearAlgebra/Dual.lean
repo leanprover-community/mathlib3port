@@ -56,8 +56,8 @@ def Dual :=
 instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (Dual S N) :=
   LinearMap.addCommGroup
 
-instance : AddMonoidHomClass (Dual R M) M R :=
-  LinearMap.addMonoidHomClass
+instance : LinearMapClass (Dual R M) R M R :=
+  LinearMap.semilinearMapClass
 
 /-- The canonical pairing of a vector space and its algebraic dual. -/
 def dualPairing R M [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module.Dual R M →ₗ[R] M →ₗ[R] R :=
@@ -270,6 +270,7 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
   simp_rw [LinearMap.ext_iff, dual.eval_apply, zero_apply]  at hm
   exact (Basis.forall_coord_eq_zero_iff _).mp fun i => hm (b.coord i)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_range {ι : Type _} [Fintype ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
   rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
@@ -306,6 +307,7 @@ theorem total_coord [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Fintype ι
   have := Classical.decEq ι
   rw [← coe_dual_basis, total_dual_basis]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO(jmc): generalize to rings, once `module.rank` is generalized
 theorem dual_dim_eq [Field K] [AddCommGroupₓ V] [Module K V] [Fintype ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
@@ -325,6 +327,7 @@ variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 open Module Module.Dual Submodule LinearMap Cardinal Basis FiniteDimensional
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_ker : (eval K V).ker = ⊥ := by
   classical
   exact (Basis.ofVectorSpace K V).eval_ker

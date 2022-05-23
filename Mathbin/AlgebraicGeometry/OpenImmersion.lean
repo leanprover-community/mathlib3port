@@ -109,12 +109,6 @@ variable {X Y : PresheafedSpace C} {f : X ⟶ Y} (H : is_open_immersion f)
 abbrev openFunctor :=
   H.base_open.IsOpenMap.Functor
 
-/-
-We want to keep `eq_to_hom`s in the form of `F.map (eq_to_hom _)` so that the lemmas about
-naturality can be applied.
--/
-attribute [-simp] eq_to_hom_map eq_to_iso_map
-
 /-- An open immersion `f : X ⟶ Y` induces an isomorphism `X ≅ Y|_{f(X)}`. -/
 @[simps]
 noncomputable def isoRestrict : X ≅ Y.restrict H.base_open :=
@@ -417,7 +411,7 @@ theorem pullback_cone_of_left_lift_fst : pullbackConeOfLeftLift f g s ≫ (pullb
     rw [← is_iso.comp_inv_eq] at this
     reassoc! this
     erw [← this, hf.inv_app_app_assoc, s.fst.c.naturality_assoc]
-    simpa
+    simpa [eq_to_hom_map]
     
   · change pullback.lift _ _ _ ≫ pullback.fst = _
     simp
@@ -783,21 +777,23 @@ end OfStalkIso
 
 section Prod
 
-variable [HasLimits C] {ι : Type v} (F : Discrete ι ⥤ SheafedSpace C) [HasColimit F] (i : ι)
+variable [HasLimits C] {ι : Type v} (F : Discrete ι ⥤ SheafedSpace C) [HasColimit F] (i : Discrete ι)
 
 theorem sigma_ι_open_embedding : OpenEmbedding (colimit.ι F i).base := by
   rw [← show _ = (colimit.ι F i).base from ι_preserves_colimits_iso_inv (SheafedSpace.forget C) F i]
-  have : _ = _ ≫ colimit.ι (discrete.functor (F ⋙ SheafedSpace.forget C).obj) i :=
+  have : _ = _ ≫ colimit.ι (discrete.functor ((F ⋙ SheafedSpace.forget C).obj ∘ discrete.mk)) i :=
     has_colimit.iso_of_nat_iso_ι_hom discrete.nat_iso_functor i
   rw [← iso.eq_comp_inv] at this
   rw [this]
-  have : colimit.ι _ _ ≫ _ = _ := Top.sigma_iso_sigma_hom_ι.{v} (F ⋙ SheafedSpace.forget C).obj i
+  have : colimit.ι _ _ ≫ _ = _ := Top.sigma_iso_sigma_hom_ι.{v, v} ((F ⋙ SheafedSpace.forget C).obj ∘ discrete.mk) i.as
   rw [← iso.eq_comp_inv] at this
+  cases i
   rw [this]
   simp_rw [← category.assoc, Top.open_embedding_iff_comp_is_iso, Top.open_embedding_iff_is_iso_comp]
+  dsimp'
   exact open_embedding_sigma_mk
 
-theorem image_preimage_is_empty (j : ι) (h : i ≠ j) (U : Opens (F.obj i)) :
+theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.obj i)) :
     (Opens.map (colimit.ι (F ⋙ SheafedSpace.forget_to_PresheafedSpace) j).base).obj
         ((Opens.map (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv.base).obj
           ((sigma_ι_open_embedding F i).IsOpenMap.Functor.obj U)) =
@@ -814,9 +810,11 @@ theorem image_preimage_is_empty (j : ι) (h : i ≠ j) (U : Opens (F.obj i)) :
   simp_rw [CategoryTheory.Iso.trans_hom, ← Top.comp_app, ← PresheafedSpace.comp_base]  at eq
   rw [ι_preserves_colimits_iso_inv] at eq
   change ((SheafedSpace.forget C).map (colimit.ι F i) ≫ _) y = ((SheafedSpace.forget C).map (colimit.ι F j) ≫ _) x at eq
+  cases i
+  cases j
   rw [ι_preserves_colimits_iso_hom_assoc, ι_preserves_colimits_iso_hom_assoc, has_colimit.iso_of_nat_iso_ι_hom_assoc,
     has_colimit.iso_of_nat_iso_ι_hom_assoc, Top.sigma_iso_sigma_hom_ι.{v}, Top.sigma_iso_sigma_hom_ι.{v}] at eq
-  exact h (congr_argₓ Sigma.fst Eq)
+  exact h (congr_argₓ discrete.mk (congr_argₓ Sigma.fst Eq))
 
 instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpace.IsOpenImmersion (colimit.ι F i) where
   base_open := sigma_ι_open_embedding F i
@@ -1214,10 +1212,10 @@ attribute [local reducible] CommRingₓₓ.of CommRingₓₓ.ofHom
 instance val_base_is_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] : IsIso f.1.base :=
   Scheme.forgetToTop.map_is_iso f
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 instance basic_open_is_open_immersion {R : CommRingₓₓ} (f : R) :
     AlgebraicGeometry.IsOpenImmersion (Scheme.spec.map (CommRingₓₓ.ofHom (algebraMap R (Localization.Away f))).op) := by
   apply SheafedSpace.is_open_immersion.of_stalk_iso with { instances := false }
@@ -1507,7 +1505,7 @@ theorem lift_fac (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) : lift f g H' 
 theorem lift_uniq (H' : Set.Range g.1.base ⊆ Set.Range f.1.base) (l : Y ⟶ X) (hl : l ≫ f = g) : l = lift f g H' :=
   LocallyRingedSpace.IsOpenImmersion.lift_uniq f g H' l hl
 
-/-- Two open immersions with equal range is isomorphic. -/
+/-- Two open immersions with equal range are isomorphic. -/
 @[simps]
 def isoOfRangeEq [IsOpenImmersion g] (e : Set.Range f.1.base = Set.Range g.1.base) : X ≅ Y where
   Hom := lift g f (le_of_eqₓ e)

@@ -238,6 +238,7 @@ namespace LocallyFinite
 
 variable {ι : Type _} {U : ι → Set X} [TopologicalSpace X] [One R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of functions `f` has locally-finite multiplicative support, subordinate to a family
 of open sets, then for any point we can find a neighbourhood on which only finitely-many members of
 `f` are not equal to 1. -/

@@ -260,7 +260,7 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
           { Hom := 𝟙 _,
             w' := by
               rintro ⟨_ | _⟩
-              · ext
+              · ext ⟨j⟩
                 dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                 
@@ -272,7 +272,7 @@ def coneEquivCounitIso (F : Presheaf C X) ⦃ι : Type v⦄ (U : ι → Opens X)
           { Hom := 𝟙 _,
             w' := by
               rintro ⟨_ | _⟩
-              · ext
+              · ext ⟨j⟩
                 dsimp'
                 simp only [category.id_comp, limits.fan.mk_π_app, limits.limit.lift_π]
                 

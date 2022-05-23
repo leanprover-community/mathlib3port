@@ -63,6 +63,7 @@ theorem eq_leaf_of_max_eq_none {t : Rbnode α} : t.max = none → t = leaf := by
       have := t_ih_rchild h
       contradiction
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem min_is_minimal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.min = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt a b := by
   classical
@@ -117,6 +118,7 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
         assumption
         
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem max_is_maximal {a : α} {t : Rbnode α} :
     ∀ {lo hi}, IsSearchable lt t lo hi → t.max = some a → ∀ {b}, Mem lt b t → a ≈[lt]b ∨ lt b a := by
   classical

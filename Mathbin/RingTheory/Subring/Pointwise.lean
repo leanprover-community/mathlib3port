@@ -22,6 +22,8 @@ keep them in sync.
 -/
 
 
+open Set
+
 variable {M R : Type _}
 
 namespace Subring

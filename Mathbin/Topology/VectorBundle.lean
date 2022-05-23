@@ -602,6 +602,7 @@ theorem local_triv_at_apply : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
 theorem mem_local_triv_at_base_set : b ∈ (Z.localTrivAt b).BaseSet :=
   TopologicalFiberBundleCore.mem_local_triv_at_base_set Z b
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance : TopologicalVectorBundle R F Z.Fiber where
   total_space_mk_inducing := fun b =>
     ⟨by

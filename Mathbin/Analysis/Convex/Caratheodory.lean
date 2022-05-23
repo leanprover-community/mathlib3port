@@ -133,6 +133,7 @@ theorem min_card_finset_of_mem_convex_hull_card_le_card {t : Finset E} (ht₁ : 
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
   Function.argmin_on_le _ _ _ ⟨ht₁, ht₂⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem affine_independent_min_card_finset_of_mem_convex_hull :
     AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) := by
   let k := (min_card_finset_of_mem_convex_hull hx).card - 1

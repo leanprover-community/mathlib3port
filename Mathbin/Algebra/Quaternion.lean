@@ -351,7 +351,7 @@ theorem conj_eq_two_re_sub : a.conj = ↑(2 * a.re) - a :=
 
 theorem commute_conj_self : Commute a.conj a := by
   rw [a.conj_eq_two_re_sub]
-  exact (coe_commute (2 * a.re) a).subLeft (Commute.refl a)
+  exact (coe_commute (2 * a.re) a).sub_left (Commute.refl a)
 
 theorem commute_self_conj : Commute a a.conj :=
   a.commute_conj_self.symm
@@ -810,7 +810,7 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 @[simp]
 theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
@@ -822,7 +822,7 @@ theorem norm_sq_eq_zero : normSq a = 0 ↔ a = 0 := by
 theorem norm_sq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
   not_congr norm_sq_eq_zero
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 @[simp]
 theorem norm_sq_nonneg : 0 ≤ normSq a := by
   rw [norm_sq_def']

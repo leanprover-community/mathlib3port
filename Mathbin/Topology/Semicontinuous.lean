@@ -430,6 +430,7 @@ theorem LowerSemicontinuous.add {f g : α → γ} (hf : LowerSemicontinuous f) (
     LowerSemicontinuous fun z => f z + g z :=
   hf.add' hg fun x => continuous_add.ContinuousAt
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lower_semicontinuous_within_at_sum {f : ι → α → γ} {a : Finset ι}
     (ha : ∀, ∀ i ∈ a, ∀, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun z => ∑ i in a, f i z) s x := by

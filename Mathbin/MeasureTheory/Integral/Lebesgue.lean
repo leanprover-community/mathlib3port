@@ -213,38 +213,8 @@ theorem support_indicator [Zero β] {s : Set α} (hs : MeasurableSet s) (f : α 
 
 theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Nonempty) (hs_ne_univ : s ≠ univ)
     (x y : β) : (piecewise s hs (const α x) (const α y)).range = {x, y} := by
-  ext1 z
-  rw [mem_range, Set.mem_range, Finset.mem_insert, Finset.mem_singleton]
-  simp_rw [piecewise_apply]
-  constructor <;> intro h
-  · obtain ⟨a, haz⟩ := h
-    by_cases' has : a ∈ s
-    · left
-      simp only [has, Function.const_applyₓ, if_true, coe_const] at haz
-      exact haz.symm
-      
-    · right
-      simp only [has, Function.const_applyₓ, if_false, coe_const] at haz
-      exact haz.symm
-      
-    
-  · cases h
-    · obtain ⟨a, has⟩ : ∃ a, a ∈ s
-      exact hs_nonempty
-      exact
-        ⟨a, by
-          simpa [has] using h.symm⟩
-      
-    · obtain ⟨a, has⟩ : ∃ a, a ∉ s := by
-        by_contra' h
-        refine' hs_ne_univ _
-        ext1 a
-        simp [h a]
-      exact
-        ⟨a, by
-          simpa [has] using h.symm⟩
-      
-    
+  simp only [← Finset.coe_inj, coe_range, coe_piecewise, range_piecewise, coe_const, Finset.coe_insert,
+    Finset.coe_singleton, hs_nonempty.image_const, (nonempty_compl.2 hs_ne_univ).image_const, singleton_union]
 
 theorem measurable_bind [MeasurableSpace γ] (f : α →ₛ β) (g : β → α → γ) (hg : ∀ b, Measurable (g b)) :
     Measurable fun a => g (f a) a := fun s hs => (f.measurable_set_cut fun a b => g b a ∈ s) fun b => hg b hs
@@ -1157,11 +1127,8 @@ theorem lintegral_mono' {m : MeasurableSpace α} ⦃μ ν : Measure α⦄ (hμν
 theorem lintegral_mono ⦃f g : α → ℝ≥0∞⦄ (hfg : f ≤ g) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ :=
   lintegral_mono' (le_reflₓ μ) hfg
 
-theorem lintegral_mono_nnreal {f g : α → ℝ≥0 } (h : f ≤ g) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ := by
-  refine' lintegral_mono _
-  intro a
-  rw [Ennreal.coe_le_coe]
-  exact h a
+theorem lintegral_mono_nnreal {f g : α → ℝ≥0 } (h : f ≤ g) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ :=
+  lintegral_mono fun a => Ennreal.coe_le_coe.2 (h a)
 
 theorem supr_lintegral_measurable_le_eq_lintegral (f : α → ℝ≥0∞) :
     (⨆ (g : α → ℝ≥0∞) (g_meas : Measurable g) (hg : g ≤ f), ∫⁻ a, g a ∂μ) = ∫⁻ a, f a ∂μ := by
@@ -1229,10 +1196,7 @@ theorem exists_simple_func_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞
   by
   rw [lintegral_eq_nnreal] at h
   have := Ennreal.lt_add_right h hε
-  erw [Ennreal.bsupr_add] at this <;> [skip,
-    exact
-      ⟨0, fun x => by
-        simp ⟩]
+  erw [Ennreal.bsupr_add] at this <;> [skip, exact ⟨0, fun x => zero_le _⟩]
   simp_rw [lt_supr_iff, supr_lt_iff, supr_le_iff]  at this
   rcases this with ⟨φ, hle : ∀ x, ↑(φ x) ≤ f x, b, hbφ, hb⟩
   refine' ⟨φ, hle, fun ψ hψ => _⟩
@@ -2041,29 +2005,64 @@ theorem lintegral_tsum [Encodable β] {f : β → α → ℝ≥0∞} (hf : ∀ i
 
 open Measureₓ
 
+theorem lintegral_Union₀ [Encodable β] {s : β → Set α} (hm : ∀ i, NullMeasurableSet (s i) μ)
+    (hd : Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ := by
+  simp only [measure.restrict_Union_ae hd hm, lintegral_sum_measure]
+
 theorem lintegral_Union [Encodable β] {s : β → Set α} (hm : ∀ i, MeasurableSet (s i)) (hd : Pairwise (Disjoint on s))
-    (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ := by
-  simp only [measure.restrict_Union hd hm, lintegral_sum_measure]
+    (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i, s i, f a ∂μ) = ∑' i, ∫⁻ a in s i, f a ∂μ :=
+  lintegral_Union₀ (fun i => (hm i).NullMeasurableSet) hd.AeDisjoint f
+
+theorem lintegral_bUnion₀ {t : Set β} {s : β → Set α} (ht : Countable t) (hm : ∀, ∀ i ∈ t, ∀, NullMeasurableSet (s i) μ)
+    (hd : t.Pairwise (AeDisjoint μ on s)) (f : α → ℝ≥0∞) :
+    (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ := by
+  have := ht.to_encodable
+  rw [bUnion_eq_Union, lintegral_Union₀ (SetCoe.forall'.1 hm) (hd.subtype _ _)]
+
+theorem lintegral_bUnion {t : Set β} {s : β → Set α} (ht : Countable t) (hm : ∀, ∀ i ∈ t, ∀, MeasurableSet (s i))
+    (hd : t.PairwiseDisjoint s) (f : α → ℝ≥0∞) : (∫⁻ a in ⋃ i ∈ t, s i, f a ∂μ) = ∑' i : t, ∫⁻ a in s i, f a ∂μ :=
+  lintegral_bUnion₀ ht (fun i hi => (hm i hi).NullMeasurableSet) hd.AeDisjoint f
+
+theorem lintegral_bUnion_finset₀ {s : Finset β} {t : β → Set α} (hd : Set.Pairwise (↑s) (AeDisjoint μ on t))
+    (hm : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (t b) μ) (f : α → ℝ≥0∞) :
+    (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ := by
+  simp only [← Finset.mem_coe, lintegral_bUnion₀ s.countable_to_set hm hd, ← s.tsum_subtype']
+
+theorem lintegral_bUnion_finset {s : Finset β} {t : β → Set α} (hd : Set.PairwiseDisjoint (↑s) t)
+    (hm : ∀, ∀ b ∈ s, ∀, MeasurableSet (t b)) (f : α → ℝ≥0∞) :
+    (∫⁻ a in ⋃ b ∈ s, t b, f a ∂μ) = ∑ b in s, ∫⁻ a in t b, f a ∂μ :=
+  lintegral_bUnion_finset₀ hd.AeDisjoint (fun b hb => (hm b hb).NullMeasurableSet) f
 
 theorem lintegral_Union_le [Encodable β] (s : β → Set α) (f : α → ℝ≥0∞) :
     (∫⁻ a in ⋃ i, s i, f a ∂μ) ≤ ∑' i, ∫⁻ a in s i, f a ∂μ := by
   rw [← lintegral_sum_measure]
   exact lintegral_mono' restrict_Union_le le_rfl
 
-theorem lintegral_union {f : α → ℝ≥0∞} {A B : Set α} (hA : MeasurableSet A) (hB : MeasurableSet B)
-    (hAB : Disjoint A B) : (∫⁻ a in A ∪ B, f a ∂μ) = (∫⁻ a in A, f a ∂μ) + ∫⁻ a in B, f a ∂μ := by
-  rw [Set.union_eq_Union, lintegral_Union, tsum_bool, add_commₓ]
-  · simp only [to_bool_false_eq_ff, to_bool_true_eq_tt, cond]
-    
-  · intro i
-    exact MeasurableSet.cond hA hB
-    
-  · rwa [pairwise_disjoint_on_bool]
-    
+theorem lintegral_union {f : α → ℝ≥0∞} {A B : Set α} (hB : MeasurableSet B) (hAB : Disjoint A B) :
+    (∫⁻ a in A ∪ B, f a ∂μ) = (∫⁻ a in A, f a ∂μ) + ∫⁻ a in B, f a ∂μ := by
+  rw [restrict_union hAB hB, lintegral_add_measure]
+
+theorem lintegral_inter_add_diff {B : Set α} (f : α → ℝ≥0∞) (A : Set α) (hB : MeasurableSet B) :
+    ((∫⁻ x in A ∩ B, f x ∂μ) + ∫⁻ x in A \ B, f x ∂μ) = ∫⁻ x in A, f x ∂μ := by
+  rw [← lintegral_add_measure, restrict_inter_add_diff _ hB]
 
 theorem lintegral_add_compl (f : α → ℝ≥0∞) {A : Set α} (hA : MeasurableSet A) :
     ((∫⁻ x in A, f x ∂μ) + ∫⁻ x in Aᶜ, f x ∂μ) = ∫⁻ x, f x ∂μ := by
   rw [← lintegral_add_measure, measure.restrict_add_restrict_compl hA]
+
+theorem lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) :
+    (∫⁻ x, max (f x) (g x) ∂μ) = (∫⁻ x in { x | f x ≤ g x }, g x ∂μ) + ∫⁻ x in { x | g x < f x }, f x ∂μ := by
+  have hm : MeasurableSet { x | f x ≤ g x } := measurable_set_le hf hg
+  rw [← lintegral_add_compl (fun x => max (f x) (g x)) hm]
+  simp only [← compl_set_of, ← not_leₓ]
+  refine' congr_arg2ₓ (· + ·) (set_lintegral_congr_fun hm _) (set_lintegral_congr_fun hm.compl _)
+  exacts[ae_of_all _ fun x => max_eq_rightₓ, ae_of_all _ fun x hx => max_eq_leftₓ (not_leₓ.1 hx).le]
+
+theorem set_lintegral_max {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g) (s : Set α) :
+    (∫⁻ x in s, max (f x) (g x) ∂μ) = (∫⁻ x in s ∩ { x | f x ≤ g x }, g x ∂μ) + ∫⁻ x in s ∩ { x | g x < f x }, f x ∂μ :=
+  by
+  rw [lintegral_max hf hg, restrict_restrict, restrict_restrict, inter_comm s, inter_comm s]
+  exacts[measurable_set_lt hg hf, measurable_set_le hf hg]
 
 theorem lintegral_map {mβ : MeasurableSpace β} {f : β → ℝ≥0∞} {g : α → β} (hf : Measurable f) (hg : Measurable g) :
     (∫⁻ a, f a ∂map g μ) = ∫⁻ a, f (g a) ∂μ := by

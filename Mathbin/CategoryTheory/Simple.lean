@@ -76,6 +76,7 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
         infer_instance
          }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem kernel_zero_of_nonzero_from_simple {X Y : C} [Simple X] {f : X ⟶ Y} [HasKernel f] (w : f ≠ 0) :
     kernel.ι f = 0 := by
   classical
@@ -93,6 +94,7 @@ theorem epi_of_nonzero_to_simple [HasEqualizers C] {X Y : C} [Simple Y] {f : X �
   have : is_iso (image.ι f) := is_iso_of_mono_of_nonzero fun h => w (eq_zero_of_image_eq_zero h)
   apply epi_comp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mono_to_simple_zero_of_not_iso {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w : IsIso f → False) : f = 0 := by
   classical
   by_contra
@@ -133,6 +135,7 @@ section Abelian
 
 variable [Abelian C]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is
     simple. -/
 theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} f : X ⟶ Z [Epi f], IsIso f ↔ f ≠ 0) : Simple X :=
@@ -159,12 +162,14 @@ theorem is_iso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w :
    : mono f := preadditive.mono_of_kernel_zero (mono_to_simple_zero_of_not_iso (kernel_not_iso_of_nonzero w))
   is_iso_of_mono_of_epi f
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem cokernel_zero_of_nonzero_to_simple {X Y : C} [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) : cokernel.π f = 0 := by
   classical
   by_contra h
   have := is_iso_of_epi_of_nonzero h
   exact w (eq_zero_of_mono_cokernel f)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem epi_from_simple_zero_of_not_iso {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : IsIso f → False) : f = 0 := by
   classical
   by_contra
@@ -219,7 +224,7 @@ instance {X : C} [Simple X] : Nontrivial (Subobject X) :=
 
 instance {X : C} [Simple X] : IsSimpleOrder (Subobject X) where
   eq_bot_or_eq_top := by
-    rintro ⟨⟨⟨Y : C, ⟨⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
+    rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : mono f⟩⟩
     skip
     change mk f = ⊥ ∨ mk f = ⊤
     by_cases' h : f = 0

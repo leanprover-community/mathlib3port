@@ -99,6 +99,7 @@ variable (s)
 theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=
   subtype.coe_comp_of_nat_range
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ → α) (he : ∀ n, e n ∈ s ∪ t) :
     ∃ g : ℕ ↪o ℕ, (∀ n, e (g n) ∈ s) ∨ ∀ n, e (g n) ∈ t := by
   classical
@@ -111,6 +112,7 @@ theorem exists_subseq_of_forall_mem_union {α : Type _} {s t : Set α} (e : ℕ 
 
 end Nat
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_increasing_or_nonincreasing_subseq' {α : Type _} (r : α → α → Prop) (f : ℕ → α) :
     ∃ g : ℕ ↪o ℕ, (∀ n : ℕ, r (f (g n)) (f (g (n + 1)))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) := by
   classical

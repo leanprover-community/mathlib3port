@@ -3,9 +3,7 @@ Copyright (c) 2022 Michael Stoll. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
-import Mathbin.Tactic.Basic
-import Mathbin.NumberTheory.LegendreSymbol.Auxiliary
-import Mathbin.Data.Int.Range
+import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
 
 /-!
 # Quadratic characters of finite fields
@@ -222,111 +220,6 @@ end QuadraticChar
 end Charₓ
 
 /-!
-### Quadratic characters mod 4 and 8
-
-We define the primitive quadratic characters `χ₄`on `zmod 4`
-and `χ₈`, `χ₈'` on `zmod 8`.
--/
-
-
-namespace Zmod
-
-section QuadCharModP
-
-/-- Define the nontrivial quadratic character on `zmod 4`, `χ₄`.
-It corresponds to the extension `ℚ(√-1)/ℚ`. -/
-@[simps]
-def χ₄ : Zmod 4 →*₀ ℤ where
-  toFun := (![0, 1, 0, -1] : Zmod 4 → ℤ)
-  map_zero' := rfl
-  map_one' := rfl
-  map_mul' := by
-    decide
-
-/-- An explicit description of `χ₄` on integers / naturals -/
-theorem χ₄_int_eq_if_mod_four (n : ℤ) : χ₄ n = if n % 2 = 0 then 0 else if n % 4 = 1 then 1 else -1 := by
-  have help : ∀ m : ℤ, 0 ≤ m → m < 4 → χ₄ m = if m % 2 = 0 then 0 else if m = 1 then 1 else -1 := by
-    decide
-  rw [←
-    Int.mod_mod_of_dvd n
-      (by
-        norm_num : (2 : ℤ) ∣ 4),
-    ← Zmod.int_cast_mod n 4]
-  exact
-    help (n % 4)
-      (Int.mod_nonneg n
-        (by
-          norm_num))
-      (Int.mod_lt n
-        (by
-          norm_num))
-
-theorem χ₄_nat_eq_if_mod_four (n : ℕ) : χ₄ n = if n % 2 = 0 then 0 else if n % 4 = 1 then 1 else -1 := by
-  exact_mod_cast χ₄_int_eq_if_mod_four n
-
-/-- Alternative description for odd `n : ℕ` in terms of powers of `-1` -/
-theorem χ₄_eq_neg_one_pow {n : ℕ} (hn : n % 2 = 1) : χ₄ n = -1 ^ (n / 2) := by
-  rw [χ₄_nat_eq_if_mod_four]
-  simp only [hn, Nat.one_ne_zero, if_false]
-  have h := (Nat.div_add_modₓ n 4).symm
-  cases' nat.odd_mod_four_iff.mp hn with h4 h4
-  · split_ifs
-    rw [h4] at h
-    rw [h]
-    nth_rw
-      0[(by
-        norm_num : 4 = 2 * 2)]
-    rw [mul_assoc, add_commₓ,
-      Nat.add_mul_div_leftₓ _ _
-        (by
-          norm_num : 0 < 2),
-      pow_addₓ, pow_mulₓ]
-    norm_num
-    
-  · split_ifs
-    · exfalso
-      rw [h4] at h_1
-      norm_num  at h_1
-      
-    · rw [h4] at h
-      rw [h]
-      nth_rw
-        0[(by
-          norm_num : 4 = 2 * 2)]
-      rw [mul_assoc, add_commₓ,
-        Nat.add_mul_div_leftₓ _ _
-          (by
-            norm_num : 0 < 2),
-        pow_addₓ, pow_mulₓ]
-      norm_num
-      
-    
-
-/-- Define the first primitive quadratic character on `zmod 8`, `χ₈`.
-It corresponds to the extension `ℚ(√2)/ℚ`. -/
-@[simps]
-def χ₈ : Zmod 8 →*₀ ℤ where
-  toFun := (![0, 1, 0, -1, 0, -1, 0, 1] : Zmod 8 → ℤ)
-  map_zero' := rfl
-  map_one' := rfl
-  map_mul' := by
-    decide
-
-/-- Define the second primitive quadratic character on `zmod 8`, `χ₈'`.
-It corresponds to the extension `ℚ(√-2)/ℚ`. -/
-@[simps]
-def χ₈' : Zmod 8 →*₀ ℤ where
-  toFun := (![0, 1, 0, 1, 0, -1, 0, -1] : Zmod 8 → ℤ)
-  map_zero' := rfl
-  map_one' := rfl
-  map_mul' := by
-    decide
-
-end QuadCharModP
-
-end Zmod
-
-/-!
 ### Special values of the quadratic character
 
 We express `quadratic_char F (-1)` in terms of `χ₄`.
@@ -356,6 +249,7 @@ theorem quadratic_char_neg_one [DecidableEq F] (hF : ringChar F ≠ 2) : quadrat
     exact fun hf : -1 = 1 => False.ndrec (1 = -1) (FiniteField.neg_one_ne_one_of_char_ne_two hF hf)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The interpretation in terms of whether `-1` is a square in `F` -/
 theorem is_square_neg_one_iff : IsSquare (-1 : F) ↔ Fintype.card F % 4 ≠ 3 := by
   classical

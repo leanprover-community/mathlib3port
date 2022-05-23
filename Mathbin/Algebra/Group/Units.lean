@@ -243,6 +243,7 @@ theorem mul_inv_eq_iff_eq_mul {a c : α} : a * ↑b⁻¹ = c ↔ a = c * b :=
     rw [← h, inv_mul_cancel_right], fun h => by
     rw [h, mul_inv_cancel_rightₓ]⟩
 
+@[to_additive]
 theorem inv_eq_of_mul_eq_one_right {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
   calc
     ↑u⁻¹ = ↑u⁻¹ * 1 := by
@@ -252,6 +253,10 @@ theorem inv_eq_of_mul_eq_one_right {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u
     _ = a := by
       rw [u.inv_mul, one_mulₓ]
     
+
+@[to_additive]
+theorem eq_iff_inv_mul {u : αˣ} {a : α} : ↑u = a ↔ ↑u⁻¹ * a = 1 :=
+  ⟨inv_mul_of_eq, inv_invₓ u ▸ inv_eq_of_mul_eq_one_right⟩
 
 theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
   inv_eq_of_mul_eq_one_right <| by

@@ -193,6 +193,7 @@ theorem sup_induction {p : α → Prop} (hb : p ⊥) (hp : ∀ a₁, p a₁ → 
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s : Set α) (hs : s.Nonempty)
     (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) : (∀, ∀ x ∈ t, ∀, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by
   classical
@@ -222,6 +223,7 @@ theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : 
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.sup p ∈ s :=
   @sup_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem sup_eq_bot_iff (f : β → α) (S : Finset β) : S.sup f = ⊥ ↔ ∀, ∀ s ∈ S, ∀, f s = ⊥ := by
   classical
@@ -243,6 +245,7 @@ theorem sup_id_set_eq_sUnion (s : Finset (Set α)) : s.sup id = ⋃₀↑s :=
 theorem sup_set_eq_bUnion (s : Finset α) (f : α → Set β) : s.sup f = ⋃ x ∈ s, f x :=
   sup_eq_supr _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_eq_Sup_image [CompleteLattice β] (s : Finset α) (f : α → β) : s.sup f = sup (f '' s) := by
   classical
   rw [← Finset.coe_image, ← sup_id_eq_Sup, sup_image, Function.comp.left_id]
@@ -1226,6 +1229,7 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
     rfl
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} : x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
   classical
   apply s.induction_on
@@ -1283,6 +1287,7 @@ section Lattice
 
 variable {ι' : Sort _} [CompleteLattice α]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema
 `⨆ i ∈ t, s i`. This version assumes `ι` is a `Type*`. See `supr_eq_supr_finset'` for a version
 that works for `ι : Sort*`. -/
@@ -1416,6 +1421,7 @@ theorem infi_insert (a : α) (s : Finset α) (t : α → β) : (⨅ x ∈ insert
 theorem supr_finset_image {f : γ → α} {g : α → β} {s : Finset γ} : (⨆ x ∈ s.Image f, g x) = ⨆ y ∈ s, g (f y) := by
   rw [← supr_coe, coe_image, supr_image, supr_coe]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sup_finset_image {β γ : Type _} [SemilatticeSup β] [OrderBot β] (f : γ → α) (g : α → β) (s : Finset γ) :
     (s.Image f).sup g = s.sup (g ∘ f) := by
   classical

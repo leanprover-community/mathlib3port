@@ -3,9 +3,8 @@ Copyright (c) 2015 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 -/
+import Mathbin.Algebra.Hom.Ring
 import Mathbin.Data.Nat.Basic
-import Mathbin.Tactic.Monotonicity.Basic
-import Mathbin.GroupTheory.GroupAction.Defs
 
 /-!
 # Power operations on monoids and groups
@@ -32,7 +31,8 @@ We adopt the convention that `0^0 = 1`.
 
 universe u v w x y z u₁ u₂
 
-variable {M : Type u} {N : Type v} {G : Type w} {H : Type x} {A : Type y} {B : Type z} {R : Type u₁} {S : Type u₂}
+variable {α : Type _} {M : Type u} {N : Type v} {G : Type w} {H : Type x} {A : Type y} {B : Type z} {R : Type u₁}
+  {S : Type u₂}
 
 /-!
 ### Commutativity
@@ -207,50 +207,27 @@ theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = 
 
 end DivInvMonoidₓ
 
-section Groupₓ
+section DivisionMonoid
 
-variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
-
-open Int
-
-section Nat
+variable [DivisionMonoid α] {a b : α}
 
 @[simp, to_additive]
-theorem inv_pow (a : G) (n : ℕ) : a⁻¹ ^ n = (a ^ n)⁻¹ := by
-  induction' n with n ih
-  · rw [pow_zeroₓ, pow_zeroₓ, inv_one]
-    
-  · rw [pow_succ'ₓ, pow_succₓ, ih, mul_inv_rev]
-    
-
--- rename to sub_nsmul?
-@[to_additive]
-theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
-  have h1 : m - n + n = m := tsub_add_cancel_of_le h
-  have h2 : a ^ (m - n) * a ^ n = a ^ m := by
-    rw [← pow_addₓ, h1]
-  eq_mul_inv_of_mul_eq h2
-
-@[to_additive]
-theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
-  (Commute.refl a).inv_left.pow_pow m n
-
-@[to_additive sub_nsmul_neg]
-theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
-  rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_invₓ]
-
-end Nat
+theorem inv_pow (a : α) : ∀ n : ℕ, a⁻¹ ^ n = (a ^ n)⁻¹
+  | 0 => by
+    rw [pow_zeroₓ, pow_zeroₓ, inv_one]
+  | n + 1 => by
+    rw [pow_succ'ₓ, pow_succₓ, inv_pow, mul_inv_rev]
 
 -- the attributes are intentionally out of order. `smul_zero` proves `zsmul_zero`.
 @[to_additive zsmul_zero, simp]
-theorem one_zpow : ∀ n : ℤ, (1 : G) ^ n = 1
+theorem one_zpow : ∀ n : ℤ, (1 : α) ^ n = 1
   | (n : ℕ) => by
     rw [zpow_coe_nat, one_pow]
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, one_pow, inv_one]
 
 @[simp, to_additive neg_zsmul]
-theorem zpow_neg (a : G) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
+theorem zpow_neg (a : α) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
   | (n + 1 : ℕ) => DivInvMonoidₓ.zpow_neg' _ _
   | 0 => by
     change a ^ (0 : ℤ) = (a ^ (0 : ℤ))⁻¹
@@ -260,48 +237,83 @@ theorem zpow_neg (a : G) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
     rfl
 
 @[to_additive neg_one_zsmul_add]
-theorem mul_zpow_neg_one (a b : G) : (a * b) ^ -(1 : ℤ) = b ^ -(1 : ℤ) * a ^ -(1 : ℤ) := by
-  simp only [mul_inv_rev, zpow_one, zpow_neg]
+theorem mul_zpow_neg_one (a b : α) : (a * b) ^ (-1 : ℤ) = b ^ (-1 : ℤ) * a ^ (-1 : ℤ) := by
+  simp_rw [zpow_neg_one, mul_inv_rev]
 
 @[to_additive zsmul_neg]
-theorem inv_zpow (a : G) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
+theorem inv_zpow (a : α) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
   | (n : ℕ) => by
     rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow]
 
+@[simp, to_additive zsmul_neg']
+theorem inv_zpow' (a : α) (n : ℤ) : a⁻¹ ^ n = a ^ -n := by
+  rw [inv_zpow, zpow_neg]
+
+@[to_additive nsmul_zero_sub]
+theorem one_div_pow (a : α) (n : ℕ) : (1 / a) ^ n = 1 / a ^ n := by
+  simp_rw [one_div, inv_pow]
+
+@[to_additive zsmul_zero_sub]
+theorem one_div_zpow (a : α) (n : ℤ) : (1 / a) ^ n = 1 / a ^ n := by
+  simp_rw [one_div, inv_zpow]
+
 @[to_additive AddCommute.zsmul_add]
-theorem Commute.mul_zpow {a b : G} (h : Commute a b) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n
+protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i = a ^ i * b ^ i
   | (n : ℕ) => by
-    simp [zpow_coe_nat, h.mul_pow n]
+    simp [h.mul_pow n]
   | -[1+ n] => by
-    simp [h.mul_pow, (h.pow_pow n.succ n.succ).inv_inv.symm.Eq]
+    simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
 
-end Groupₓ
+end DivisionMonoid
 
-section CommGroupₓ
+section DivisionCommMonoid
 
-variable [CommGroupₓ G] [AddCommGroupₓ A]
+variable [DivisionCommMonoid α]
 
 @[to_additive zsmul_add]
-theorem mul_zpow (a b : G) (n : ℤ) : (a * b) ^ n = a ^ n * b ^ n :=
-  (Commute.all a b).mul_zpow n
+theorem mul_zpow (a b : α) : ∀ n : ℤ, (a * b) ^ n = a ^ n * b ^ n :=
+  (Commute.all a b).mul_zpow
 
-@[to_additive zsmul_sub]
-theorem div_zpow (a b : G) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by
-  rw [div_eq_mul_inv, div_eq_mul_inv, mul_zpow, inv_zpow]
+@[simp, to_additive nsmul_sub]
+theorem div_pow (a b : α) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n := by
+  simp only [div_eq_mul_inv, mul_powₓ, inv_pow]
 
-/-- The `n`th power map (`n` an integer) on a commutative group, considered as a group
+@[simp, to_additive zsmul_sub]
+theorem div_zpow (a b : α) (n : ℤ) : (a / b) ^ n = a ^ n / b ^ n := by
+  simp only [div_eq_mul_inv, mul_zpow, inv_zpow]
+
+/-- The `n`-th power map (for an integer `n`) on a commutative group, considered as a group
 homomorphism. -/
 @[to_additive
       "Multiplication by an integer `n` on a commutative additive group, considered as an\nadditive group homomorphism.",
   simps]
-def zpowGroupHom (n : ℤ) : G →* G where
+def zpowGroupHom (n : ℤ) : α →* α where
   toFun := (· ^ n)
   map_one' := one_zpow n
   map_mul' := fun a b => mul_zpow a b n
 
-end CommGroupₓ
+end DivisionCommMonoid
+
+section Groupₓ
+
+variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
+
+@[to_additive sub_nsmul]
+theorem pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ :=
+  eq_mul_inv_of_mul_eq <| by
+    rw [← pow_addₓ, tsub_add_cancel_of_le h]
+
+@[to_additive]
+theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
+  (Commute.refl a).inv_left.pow_pow _ _
+
+@[to_additive sub_nsmul_neg]
+theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
+  rw [pow_sub a⁻¹ h, inv_pow, inv_pow, inv_invₓ]
+
+end Groupₓ
 
 theorem zero_pow [MonoidWithZeroₓ R] : ∀ {n : ℕ}, 0 < n → (0 : R) ^ n = 0
   | n + 1, _ => by

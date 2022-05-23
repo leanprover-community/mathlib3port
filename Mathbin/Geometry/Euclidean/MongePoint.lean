@@ -273,7 +273,7 @@ theorem monge_plane_comm {n : ℕ} (s : Simplex ℝ P (n + 2)) (i₁ i₂ : Fin�
   simp_rw [monge_plane_def]
   congr 3
   · congr 1
-    exact insert_singleton_comm _ _
+    exact pair_comm _ _
     
   · ext
     simp_rw [Submodule.mem_span_singleton]
@@ -392,7 +392,7 @@ theorem finrank_direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fi
 
 /-- A line through a vertex is the altitude through that vertex if and
 only if it is orthogonal to the opposite face. -/
-theorem affine_span_insert_singleton_eq_altitude_iff {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) (p : P) :
+theorem affine_span_pair_eq_altitude_iff {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Finₓ (n + 2)) (p : P) :
     affineSpan ℝ {p, s.points i} = s.altitude i ↔
       p ≠ s.points i ∧
         p ∈ affineSpan ℝ (Set.Range s.points) ∧
@@ -554,7 +554,7 @@ theorem altitude_replace_orthocenter_eq_affine_span {t₁ t₂ : Triangle ℝ P}
     (h₁ : t₂.points j₁ = t₁.orthocenter) (h₂ : t₂.points j₂ = t₁.points i₂) (h₃ : t₂.points j₃ = t₁.points i₃) :
     t₂.altitude j₂ = affineSpan ℝ {t₁.points i₁, t₁.points i₂} := by
   symm
-  rw [← h₂, t₂.affine_span_insert_singleton_eq_altitude_iff]
+  rw [← h₂, t₂.affine_span_pair_eq_altitude_iff]
   rw [h₂]
   use t₁.independent.injective.ne hi₁₂
   have he : affineSpan ℝ (Set.Range t₂.points) = affineSpan ℝ (Set.Range t₁.points) := by

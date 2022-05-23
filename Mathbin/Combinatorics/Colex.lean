@@ -35,9 +35,10 @@ fixed size. If the size is 3, colex on ℕ starts
 
 Related files are:
 * `data.list.lex`: Lexicographic order on lists.
+* `data.pi.lex`: Lexicographic order on `Πₗ i, α i`.
 * `data.psigma.order`: Lexicographic order on `Σ' i, α i`.
 * `data.sigma.order`: Lexicographic order on `Σ i, α i`.
-* `order.lexicographic`: Lexicographic order on `α × β`.
+* `data.prod.lex`: Lexicographic order on `α × β`.
 
 ## Tags
 colex, colexicographic, binary
@@ -91,14 +92,14 @@ theorem Colex.le_def [LT α] (A B : Finset α) : A.toColex ≤ B.toColex ↔ A.t
 theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A → x < k) : A.Sum (pow 2) < 2 ^ k := by
   apply lt_of_le_of_ltₓ (sum_le_sum_of_subset fun t => mem_range.2 ∘ h₁)
   have z := geom_sum_mul_add 1 k
-  rw [geomSum, mul_oneₓ, one_add_one_eq_two] at z
+  rw [mul_oneₓ, one_add_one_eq_two] at z
   rw [← z]
   apply Nat.lt_succ_selfₓ
 
 namespace Colex
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Strictly monotone functions preserve the colex ordering. -/
 theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorderₓ β] {f : α → β} (h₁ : StrictMono f)
     (A B : Finset α) : (A.Image f).toColex < (B.Image f).toColex ↔ A.toColex < B.toColex := by

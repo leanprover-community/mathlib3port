@@ -238,6 +238,7 @@ theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).car
 theorem card_lt_card (h : s ⊂ t) : s.card < t.card :=
   card_lt_of_lt <| val_lt_iff.2 h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, ∀, ∃ i, ∃ h : i < n, f i h = a)
     (hf' : ∀ i h : i < n, f i h ∈ s) (f_inj : ∀ i j hi : i < n hj : j < n, f i hi = f j hj → i = j) : s.card = n := by
   classical
@@ -254,6 +255,7 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀, ∀ a ∈ s, �
         Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq _ = card (range n) :=
       card_attach _ = n := card_range n
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a ha, f a ha ∈ t)
     (h₂ : ∀ a b ha hb, f a ha = f b hb → a = b) (h₃ : ∀, ∀ b ∈ t, ∀, ∃ a ha, f a ha = b) : s.card = t.card := by
   classical <;>
@@ -270,12 +272,14 @@ theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a
                 ⟨⟨a, ha₁⟩, by
                   simp [ha₂]⟩⟩)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀, ∀ a ∈ s, ∀, f a ∈ t)
     (f_inj : ∀, ∀ a₁ ∈ s, ∀, ∀, ∀ a₂ ∈ s, ∀, f a₁ = f a₂ → a₁ = a₂) : s.card ≤ t.card := by
   classical <;>
     calc s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm _ ≤ t.card :=
         card_le_of_subset <| image_subset_iff.2 hf
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If there are more pigeons than pigeonholes, then there are two pigeons in the same pigeonhole.
 -/
 theorem exists_ne_map_eq_of_card_lt_of_maps_to {t : Finset β} (hc : t.card < s.card) {f : α → β}
@@ -299,6 +303,7 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀, ∀ i < n, ∀, f i 
           simpa only [mem_range] )
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem surj_on_of_inj_on_of_card_le {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (hf : ∀ a ha, f a ha ∈ t)
     (hinj : ∀ a₁ a₂ ha₁ ha₂, f a₁ ha₁ = f a₂ ha₂ → a₁ = a₂) (hst : t.card ≤ s.card) :
     ∀, ∀ b ∈ t, ∀, ∃ a ha, b = f a ha := by
@@ -387,11 +392,13 @@ theorem card_sdiff_add_card : (s \ t).card + t.card = (s ∪ t).card := by
 
 end Lattice
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem filter_card_add_filter_neg_card_eq_card (p : α → Prop) [DecidablePred p] :
     (s.filter p).card + (s.filter (Not ∘ p)).card = s.card := by
   classical
   simp [← card_union_eq, filter_union_filter_neg_eq, disjoint_filter]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a set `A` and a set `B` inside it, we can shrink `A` to any appropriate size, and keep `B`
 inside it. -/
 theorem exists_intermediate_set {A B : Finset α} (i : ℕ) (h₁ : i + card B ≤ card A) (h₂ : B ⊆ A) :
@@ -507,6 +514,7 @@ theorem one_lt_card_iff : 1 < s.card ↔ ∃ a b, a ∈ s ∧ b ∈ s ∧ a ≠ 
   rw [one_lt_card]
   simp only [exists_prop, exists_and_distrib_left]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem two_lt_card_iff : 2 < s.card ↔ ∃ a b c, a ∈ s ∧ b ∈ s ∧ c ∈ s ∧ a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   classical
   refine' ⟨fun h => _, _⟩

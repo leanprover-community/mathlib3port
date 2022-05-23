@@ -341,6 +341,7 @@ theorem mem_range_embedding_iff {j : Finₓ n} {i : Finₓ c.length} :
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The embeddings of different blocks of a composition are disjoint. -/
 theorem disjoint_range {i₁ i₂ : Finₓ c.length} (h : i₁ ≠ i₂) :
     Disjoint (Set.Range (c.Embedding i₁)) (Set.Range (c.Embedding i₂)) := by

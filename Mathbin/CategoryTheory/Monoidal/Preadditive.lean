@@ -16,6 +16,8 @@ is linear in both factors.
 
 noncomputable section
 
+open Classical
+
 namespace CategoryTheory
 
 open CategoryTheory.Limits
@@ -95,7 +97,7 @@ variable {C}
 -- `tensor_left X` is a left adjoint and hence preserves all colimits.
 -- In any case it is true in any preadditive category.
 instance (X : C) : PreservesFiniteBiproducts (tensorLeft X) where
-  preserves := fun J _ _ =>
+  preserves := fun J _ =>
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
@@ -104,7 +106,7 @@ instance (X : C) : PreservesFiniteBiproducts (tensorLeft X) where
                 simp only [← tensor_comp, category.comp_id, ← tensor_sum, ← tensor_id, is_bilimit.total i]) } }
 
 instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
-  preserves := fun J _ _ =>
+  preserves := fun J _ =>
     { preserves := fun f =>
         { preserves := fun b i =>
             is_bilimit_of_total _
@@ -115,24 +117,24 @@ instance (X : C) : PreservesFiniteBiproducts (tensorRight X) where
 variable [HasFiniteBiproducts C]
 
 /-- The isomorphism showing how tensor product on the left distributes over direct sums. -/
-def leftDistributor {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
+def leftDistributor {J : Type _} [Fintype J] (X : C) (f : J → C) : X ⊗ ⨁ f ≅ ⨁ fun j => X ⊗ f j :=
   (tensorLeft X).mapBiproduct f
 
 @[simp]
-theorem left_distributor_hom {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
+theorem left_distributor_hom {J : Type _} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).Hom = ∑ j : J, (𝟙 X ⊗ biproduct.π f j) ≫ biproduct.ι _ j := by
   ext
   dsimp' [tensor_left, left_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
 @[simp]
-theorem left_distributor_inv {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
+theorem left_distributor_inv {J : Type _} [Fintype J] (X : C) (f : J → C) :
     (leftDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (𝟙 X ⊗ biproduct.ι f j) := by
   ext
   dsimp' [tensor_left, left_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
-theorem left_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C) (f : J → C) :
+theorem left_distributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (asIso (𝟙 X) ⊗ leftDistributor Y f) ≪≫ leftDistributor X _ =
       (α_ X Y (⨁ f)).symm ≪≫ leftDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => α_ X Y _ :=
   by
@@ -148,24 +150,24 @@ theorem left_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C
   simp only [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
 
 /-- The isomorphism showing how tensor product on the right distributes over direct sums. -/
-def rightDistributor {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
+def rightDistributor {J : Type _} [Fintype J] (X : C) (f : J → C) : (⨁ f) ⊗ X ≅ ⨁ fun j => f j ⊗ X :=
   (tensorRight X).mapBiproduct f
 
 @[simp]
-theorem right_distributor_hom {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
+theorem right_distributor_hom {J : Type _} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).Hom = ∑ j : J, (biproduct.π f j ⊗ 𝟙 X) ≫ biproduct.ι _ j := by
   ext
   dsimp' [tensor_right, right_distributor]
   simp [preadditive.sum_comp, biproduct.ι_π, comp_dite]
 
 @[simp]
-theorem right_distributor_inv {J : Type _} [DecidableEq J] [Fintype J] (X : C) (f : J → C) :
+theorem right_distributor_inv {J : Type _} [Fintype J] (X : C) (f : J → C) :
     (rightDistributor X f).inv = ∑ j : J, biproduct.π _ j ≫ (biproduct.ι f j ⊗ 𝟙 X) := by
   ext
   dsimp' [tensor_right, right_distributor]
   simp [preadditive.comp_sum, biproduct.ι_π_assoc, dite_comp]
 
-theorem right_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C) (f : J → C) :
+theorem right_distributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (rightDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ (⨁ f) X Y ≪≫ rightDistributor (X ⊗ Y) f ≪≫ biproduct.mapIso fun j => (α_ _ X Y).symm :=
   by
@@ -179,7 +181,7 @@ theorem right_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : 
     if_true, dif_ctx_congr, Finset.mem_univ, Finset.sum_congr, Finset.sum_dite_eq']
   simp only [← tensor_id, associator_inv_naturality, iso.hom_inv_id_assoc]
 
-theorem left_distributor_right_distributor_assoc {J : Type _} [DecidableEq J] [Fintype J] (X Y : C) (f : J → C) :
+theorem left_distributor_right_distributor_assoc {J : Type _} [Fintype J] (X Y : C) (f : J → C) :
     (leftDistributor X f ⊗ asIso (𝟙 Y)) ≪≫ rightDistributor Y _ =
       α_ X (⨁ f) Y ≪≫
         (asIso (𝟙 X) ⊗ rightDistributor Y _) ≪≫ leftDistributor X _ ≪≫ biproduct.mapIso fun j => (α_ _ _ _).symm :=

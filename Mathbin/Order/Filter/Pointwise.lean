@@ -36,6 +36,10 @@ distribute over pointwise operations. For example,
 * `a +ᵥ f` (`filter.has_vadd_filter`): Translation, filter of all `a +ᵥ s` where `s ∈ f`.
 * `a • f` (`filter.has_scalar_filter`): Scaling, filter of all `a • s` where `s ∈ f`.
 
+For `α` a semigroup/monoid, `filter α` is a semigroup/monoid.
+As an unfortunate side effect, this means that `n • f`, where `n : ℕ`, is ambiguous between
+pointwise scaling and repeated pointwise addition. See note [pointwise nat action].
+
 ## Implementation notes
 
 We put all instances in the locale `pointwise`, so that these instances are not available by
@@ -382,6 +386,30 @@ end Div
 
 open Pointwise
 
+/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `filter`. See
+Note [pointwise nat action].-/
+protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Filter α) :=
+  ⟨nsmulRec⟩
+
+/-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
+`filter`. See Note [pointwise nat action]. -/
+@[to_additive]
+protected def hasNpow [One α] [Mul α] : Pow (Filter α) ℕ :=
+  ⟨fun s n => npowRec n s⟩
+
+/-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
+addition/subtraction!) of a `filter`. See Note [pointwise nat action]. -/
+protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Filter α) :=
+  ⟨zsmulRec⟩
+
+/-- Repeated pointwise multiplication/division (not the same as pointwise repeated
+multiplication/division!) of a `filter`. See Note [pointwise nat action]. -/
+@[to_additive]
+protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Filter α) ℤ :=
+  ⟨fun s n => zpowRec n s⟩
+
+localized [Pointwise] attribute [instance] Filter.hasNsmul Filter.hasNpow Filter.hasZsmul Filter.hasZpow
+
 /-- `filter α` is a `semigroup` under pointwise operations if `α` is.-/
 @[to_additive "`filter α` is an `add_semigroup` under pointwise operations if `α` is."]
 protected def semigroup [Semigroupₓ α] : Semigroupₓ (Filter α) where
@@ -454,7 +482,7 @@ variable [Monoidₓ α] {f g : Filter α} {s : Set α} {a : α}
 /-- `filter α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`filter α` is an `add_monoid` under pointwise operations if `α` is."]
 protected def monoid : Monoidₓ (Filter α) :=
-  { Filter.mulOneClass, Filter.semigroup with }
+  { Filter.mulOneClass, Filter.semigroup, Filter.hasNpow with }
 
 localized [Pointwise] attribute [instance] Filter.monoid Filter.addMonoid
 
@@ -504,7 +532,7 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
 /-- `filter α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive SubtractionMonoid "`filter α` is a subtraction monoid under pointwise\noperations if `α` is."]
 protected def divisionMonoid : DivisionMonoid (Filter α) :=
-  { Filter.monoid, Filter.hasInvolutiveInv, Filter.hasDiv with
+  { Filter.monoid, Filter.hasInvolutiveInv, Filter.hasDiv, Filter.hasZpow with
     mul_inv_rev := fun s t => map_map₂_antidistrib mul_inv_rev,
     inv_eq_of_mul := fun s t h => by
       obtain ⟨a, b, rfl, rfl, hab⟩ := Filter.mul_eq_one_iff.1 h
@@ -532,9 +560,32 @@ end DivisionMonoid
 protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Filter α) :=
   { Filter.divisionMonoid, Filter.commSemigroup with }
 
+/-- `filter α` has distributive negation if `α` has. -/
+protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Filter α) :=
+  { Filter.hasInvolutiveNeg with neg_mul := fun _ _ => map₂_map_left_comm neg_mul,
+    mul_neg := fun _ _ => map_map₂_right_comm mul_neg }
+
 localized [Pointwise]
   attribute [instance]
-    Filter.commMonoid Filter.addCommMonoid Filter.divisionMonoid Filter.subtractionMonoid Filter.divisionCommMonoid Filter.subtractionCommMonoid
+    Filter.commMonoid Filter.addCommMonoid Filter.divisionMonoid Filter.subtractionMonoid Filter.divisionCommMonoid Filter.subtractionCommMonoid Filter.hasDistribNeg
+
+section Distribₓ
+
+variable [Distribₓ α] {f g h : Filter α}
+
+/-!
+Note that `filter α` is not a `distrib` because `f * g + f * h` has cross terms that `f * (g + h)`
+lacks.
+-/
+
+
+theorem mul_add_subset : f * (g + h) ≤ f * g + f * h :=
+  map₂_distrib_le_left mul_addₓ
+
+theorem add_mul_subset : (f + g) * h ≤ f * h + g * h :=
+  map₂_distrib_le_right add_mulₓ
+
+end Distribₓ
 
 section Groupₓ
 
@@ -827,11 +878,46 @@ instance is_scalar_tower'' [HasScalar α β] [HasScalar α γ] [HasScalar β γ]
 instance is_central_scalar [HasScalar α β] [HasScalar αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Filter β) :=
   ⟨fun a f => (congr_argₓ fun m => map m f) <| funext fun _ => op_smul_eq_smul _ _⟩
 
-@[to_additive]
-instance [Monoidₓ α] [MulAction α β] : MulAction (Filter α) (Filter β) where
-  one_smul := fun f => by
-    simp only [← pure_one, ← map₂_smul, map₂_pure_left, one_smul, map_id']
+/-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of
+`filter α` on `filter β`. -/
+@[to_additive
+      "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `filter α` on `filter β`"]
+protected def mulAction [Monoidₓ α] [MulAction α β] : MulAction (Filter α) (Filter β) where
+  one_smul := fun f =>
+    map₂_pure_left.trans <| by
+      simp_rw [one_smul, map_id']
   mul_smul := fun f g h => map₂_assoc mul_smul
+
+/-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `filter β`.
+-/
+@[to_additive "An additive action of an additive monoid on a type `β` gives an additive action on\n`filter β`."]
+protected def mulActionFilter [Monoidₓ α] [MulAction α β] : MulAction α (Filter β) where
+  mul_smul := fun a b f => by
+    simp only [← map_smul, map_map, Function.comp, ← mul_smul]
+  one_smul := fun f => by
+    simp only [← map_smul, one_smul, map_id']
+
+localized [Pointwise]
+  attribute [instance] Filter.mulAction Filter.addAction Filter.mulActionFilter Filter.addActionFilter
+
+/-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
+multiplicative action on `filter β`. -/
+protected def distribMulActionFilter [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] :
+    DistribMulAction α (Filter β) where
+  smul_add := fun _ _ _ => map_map₂_distrib <| smul_add _
+  smul_zero := fun _ =>
+    (map_pure _ _).trans <| by
+      rw [smul_zero, pure_zero]
+
+/-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
+protected def mulDistribMulActionFilter [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β] :
+    MulDistribMulAction α (Set β) where
+  smul_mul := fun _ _ _ => image_image2_distrib <| smul_mul' _
+  smul_one := fun _ =>
+    image_singleton.trans <| by
+      rw [smul_one, singleton_one]
+
+localized [Pointwise] attribute [instance] Filter.distribMulActionFilter Filter.mulDistribMulActionFilter
 
 end Filter
 

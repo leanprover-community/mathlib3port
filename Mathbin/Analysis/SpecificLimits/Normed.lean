@@ -52,7 +52,7 @@ theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜
   rw [neg_lt_zero] at hm
   lift m to ℕ using hm.le
   rw [Int.coe_nat_pos] at hm
-  simp only [norm_pow, zpow_neg₀, zpow_coe_nat, ← inv_pow₀]
+  simp only [norm_pow, zpow_neg, zpow_coe_nat, ← inv_pow]
   exact (tendsto_pow_at_top hm).comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
 
 /-- The (scalar) product of a sequence that tends to zero with a bounded one also tends to zero. -/
@@ -266,8 +266,7 @@ theorem has_sum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : HasSum (fun n : ℕ 
     simp [h]
   have A : tendsto (fun n => (ξ ^ n - 1) * (ξ - 1)⁻¹) at_top (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
     ((tendsto_pow_at_top_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds
-  have B : (fun n => ∑ i in range n, ξ ^ i) = fun n => geomSum ξ n := rfl
-  rw [has_sum_iff_tendsto_nat_of_summable_norm, B]
+  rw [has_sum_iff_tendsto_nat_of_summable_norm]
   · simpa [geom_sum_eq, xi_ne_one, neg_inv, div_eq_mul_inv] using A
     
   · simp [norm_pow, summable_geometric_of_lt_1 (norm_nonneg _) h]
@@ -444,7 +443,7 @@ theorem geom_series_mul_neg (x : R) (h : ∥x∥ < 1) : (∑' i : ℕ, x ^ i) * 
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
   convert ← this
   ext n
-  rw [← geom_sum_mul_neg, geom_sum_def, Finset.sum_mul]
+  rw [← geom_sum_mul_neg, Finset.sum_mul]
 
 theorem mul_neg_geom_series (x : R) (h : ∥x∥ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 := by
   have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
@@ -453,7 +452,7 @@ theorem mul_neg_geom_series (x : R) (h : ∥x∥ < 1) : ((1 - x) * ∑' i : ℕ,
     simpa using tendsto_const_nhds.sub (tendsto_pow_at_top_nhds_0_of_norm_lt_1 h)
   convert ← this
   ext n
-  rw [← mul_neg_geom_sum, geom_sum_def, Finset.mul_sum]
+  rw [← mul_neg_geom_sum, Finset.mul_sum]
 
 end NormedRingGeometric
 
@@ -563,7 +562,7 @@ theorem Antitone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded (hfa : Antiton
   simp
 
 theorem norm_sum_neg_one_pow_le (n : ℕ) : ∥∑ i in range n, (-1 : ℝ) ^ i∥ ≤ 1 := by
-  rw [← geom_sum_def, neg_one_geom_sum]
+  rw [neg_one_geom_sum]
   split_ifs <;> norm_num
 
 /-- The **alternating series test** for monotone sequences.

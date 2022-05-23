@@ -48,7 +48,7 @@ instance : Inhabited (Language α) :=
 
 /-- The sum of two languages is their union. -/
 instance : Add (Language α) :=
-  ⟨Set.Union⟩
+  ⟨(· ∪ ·)⟩
 
 /-- The product of two languages `l` and `m` is the language made of the strings `x ++ y` where
 `x ∈ l` and `y ∈ m`. -/

@@ -44,7 +44,7 @@ def hidden {α : Sort _} {a : α} :=
   a
 
 /-- Ex falso, the nondependent eliminator for the `empty` type. -/
-def Empty.elimₓ {C : Sort _} : Empty → C :=
+def Empty.elim {C : Sort _} : Empty → C :=
   fun.
 
 instance : Subsingleton Empty :=
@@ -1344,11 +1344,11 @@ theorem exists_eq_right {a' : α} : (∃ a, p a ∧ a = a') ↔ p a' :=
   (exists_congr fun a => And.comm).trans exists_eq_left
 
 @[simp]
-theorem exists_eq_right_right {a' : α} : (∃ a : α, p a ∧ b ∧ a = a') ↔ p a' ∧ b :=
+theorem exists_eq_right_rightₓ {a' : α} : (∃ a : α, p a ∧ q a ∧ a = a') ↔ p a' ∧ q a' :=
   ⟨fun ⟨_, hp, hq, rfl⟩ => ⟨hp, hq⟩, fun ⟨hp, hq⟩ => ⟨a', hp, hq, rfl⟩⟩
 
 @[simp]
-theorem exists_eq_right_right' {a' : α} : (∃ a : α, p a ∧ b ∧ a' = a) ↔ p a' ∧ b :=
+theorem exists_eq_right_right'ₓ {a' : α} : (∃ a : α, p a ∧ q a ∧ a' = a) ↔ p a' ∧ q a' :=
   ⟨fun ⟨_, hp, hq, rfl⟩ => ⟨hp, hq⟩, fun ⟨hp, hq⟩ => ⟨a', hp, hq, rfl⟩⟩
 
 @[simp]

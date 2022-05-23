@@ -119,6 +119,10 @@ theorem tan_arctan (x : ℝ) : tan (arctan x) = x :=
 theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
 
+@[simp]
+theorem range_arctan : Range arctan = Ioo (-(π / 2)) (π / 2) :=
+  ((EquivLike.surjective _).range_comp _).trans Subtype.range_coe
+
 theorem arctan_tan {x : ℝ} (hx₁ : -(π / 2) < x) (hx₂ : x < π / 2) : arctan (tan x) = x :=
   Subtype.ext_iff.1 <| tanOrderIso.symm_apply_apply ⟨x, hx₁, hx₂⟩
 

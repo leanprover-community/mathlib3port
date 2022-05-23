@@ -102,6 +102,7 @@ theorem restrict_extend_compl_range (f : α → β) (g : α → γ) (g' : β →
     Range fᶜ.restrict (extendₓ f g g') = g' ∘ coe := by
   convert restrict_dite_compl _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem range_extend_subset (f : α → β) (g : α → γ) (g' : β → γ) : Range (extendₓ f g g') ⊆ Range g ∪ g' '' Range fᶜ :=
   by
   classical

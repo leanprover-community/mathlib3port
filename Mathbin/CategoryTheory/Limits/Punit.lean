@@ -25,11 +25,11 @@ variable {J : Type v} [SmallCategory J] {F : J ⥤ Discrete PUnit.{v + 1}}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
 def punitCone : Cone F :=
-  ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
 
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
 def punitCocone : Cocone F :=
-  ⟨PUnit.unit, (Functor.punitExt _ _).Hom⟩
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
 
 /-- Any cone over a functor into `punit` is a limit cone.
 -/

@@ -309,8 +309,8 @@ theorem app_right_eq_ι_comp_snd b : K.π.app (WalkingMulticospan.right b) = K.�
 theorem hom_comp_ι (K₁ K₂ : Multifork I) (f : K₁ ⟶ K₂) (j : I.L) : f.Hom ≫ K₂.ι j = K₁.ι j :=
   f.w (WalkingMulticospan.left j)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Construct a multifork using a collection `ι` of morphisms. -/
 @[simps]
 def ofι (I : MulticospanIndex C) (P : C) (ι : ∀ a, P ⟶ I.left a)
@@ -359,13 +359,15 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ E : Multifor
 
 variable [HasProduct I.left] [HasProduct I.right]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
   simp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Given a multifork, we may obtain a fork over `∏ I.left ⇉ ∏ I.right`. -/
 @[simps x]
 noncomputable def toPiFork (K : Multifork I) : Fork I.fstPiMap I.sndPiMap where
@@ -393,8 +395,8 @@ theorem to_pi_fork_π_app_one : K.toPiFork.π.app WalkingParallelPair.one = Pi.l
 
 variable (I)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Given a fork over `∏ I.left ⇉ ∏ I.right`, we may obtain a multifork. -/
 @[simps x]
 noncomputable def ofPiFork (c : Fork I.fstPiMap I.sndPiMap) : Multifork I where
@@ -437,7 +439,19 @@ attribute [local tidy] tactic.case_bash
 @[simps]
 noncomputable def toPiForkFunctor : Multifork I ⥤ Fork I.fstPiMap I.sndPiMap where
   obj := Multifork.toPiFork
-  map := fun K₁ K₂ f => { Hom := f.Hom }
+  map := fun K₁ K₂ f =>
+    { Hom := f.Hom,
+      w' := by
+        rintro (_ | _)
+        · ext
+          dsimp'
+          simp
+          
+        · ext
+          simp only [multifork.to_pi_fork_π_app_one, multifork.pi_condition, category.assoc]
+          dsimp' [snd_pi_map]
+          simp
+           }
 
 /-- `multifork.of_pi_fork` is functorial. -/
 @[simps]
@@ -470,7 +484,7 @@ noncomputable def multiforkEquivPiFork : Multifork I ≌ Fork I.fstPiMap I.sndPi
       (fun K =>
         Fork.ext (Iso.refl _)
           (by
-            ext
+            ext ⟨j⟩
             dsimp'
             simp ))
       fun K₁ K₂ f => by
@@ -501,8 +515,8 @@ theorem snd_app_right a : K.ι.app (WalkingMultispan.left a) = I.snd a ≫ K.π 
   rw [← K.w (walking_multispan.hom.snd a)]
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Construct a multicofork using a collection `π` of morphisms. -/
 @[simps]
 def ofπ (I : MultispanIndex C) (P : C) (π : ∀ b, I.right b ⟶ P)
@@ -551,13 +565,15 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ E : Mult
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
   simp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Given a multicofork, we may obtain a cofork over `∐ I.left ⇉ ∐ I.right`. -/
 @[simps x]
 noncomputable def toSigmaCofork (K : Multicofork I) : Cofork I.fstSigmaMap I.sndSigmaMap where
@@ -581,8 +597,8 @@ theorem to_sigma_cofork_π : K.toSigmaCofork.π = Sigma.desc K.π :=
 
 variable (I)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- Given a cofork over `∐ I.left ⇉ ∐ I.right`, we may obtain a multicofork. -/
 @[simps x]
 noncomputable def ofSigmaCofork (c : Cofork I.fstSigmaMap I.sndSigmaMap) : Multicofork I where
@@ -661,7 +677,7 @@ noncomputable def multicoforkEquivSigmaCofork : Multicofork I ≌ Cofork I.fstSi
       (fun K =>
         Cofork.ext (Iso.refl _)
           (by
-            ext
+            ext ⟨j⟩
             dsimp'
             simp only [category.comp_id, colimit.ι_desc, cofan.mk_ι_app]
             rfl))

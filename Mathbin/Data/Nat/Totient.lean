@@ -152,7 +152,7 @@ theorem totient_mul {m n : ℕ} (h : m.Coprime n) : φ (m * n) = φ m * φ n :=
 theorem totient_div_of_dvd {n d : ℕ} (hnd : d ∣ n) : φ (n / d) = (filter (fun k : ℕ => n.gcd k = d) (range n)).card :=
   by
   rcases d.eq_zero_or_pos with (rfl | hd0)
-  · simp [zero_dvd_iff.1 hnd]
+  · simp [eq_zero_of_zero_dvd hnd]
     
   rcases hnd with ⟨x, rfl⟩
   rw [Nat.mul_div_cancel_leftₓ x hd0]

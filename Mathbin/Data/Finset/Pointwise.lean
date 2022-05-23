@@ -34,7 +34,7 @@ For finsets `s` and `t`:
 For `α` a semigroup/monoid, `finset α` is a semigroup/monoid.
 As an unfortunate side effect, this means that `n • s`, where `n : ℕ`, is ambiguous between
 pointwise scaling and repeated pointwise addition; the former has `(2 : ℕ) • {1, 2} = {2, 4}`, while
-the latter has `(2 : ℕ) • {1, 2} = {2, 3, 4}`.
+the latter has `(2 : ℕ) • {1, 2} = {2, 3, 4}`. See note [pointwise nat action].
 
 ## Implementation notes
 
@@ -464,23 +464,24 @@ section Instances
 
 variable [DecidableEq α]
 
-/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. -/
+/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. See
+note [pointwise nat action]. -/
 protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Finset α) :=
   ⟨nsmulRec⟩
 
 /-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
-`finset`. -/
+`finset`. See note [pointwise nat action]. -/
 @[to_additive]
 protected def hasNpow [One α] [Mul α] : Pow (Finset α) ℕ :=
   ⟨fun s n => npowRec n s⟩
 
 /-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
-addition/subtraction!) of a `finset`. -/
+addition/subtraction!) of a `finset`. See note [pointwise nat action]. -/
 protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Finset α) :=
   ⟨zsmulRec⟩
 
 /-- Repeated pointwise multiplication/division (not the same as pointwise repeated
-multiplication/division!) of a `finset`. -/
+multiplication/division!) of a `finset`. See note [pointwise nat action]. -/
 @[to_additive]
 protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Finset α) ℤ :=
   ⟨fun s n => zpowRec n s⟩
@@ -603,9 +604,39 @@ end DivisionMonoid
 protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Finset α) :=
   coe_injective.DivisionCommMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
 
+/-- `finset α` has distributive negation if `α` has. -/
+protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Finset α) :=
+  coe_injective.HasDistribNeg _ coe_neg coe_mul
+
 localized [Pointwise]
   attribute [instance]
-    Finset.commMonoid Finset.addCommMonoid Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid
+    Finset.commMonoid Finset.addCommMonoid Finset.divisionMonoid Finset.subtractionMonoid Finset.divisionCommMonoid Finset.subtractionCommMonoid Finset.hasDistribNeg
+
+section Distribₓ
+
+variable [Distribₓ α] (s t u : Finset α)
+
+/-!
+Note that `finset α` is not a `distrib` because `s * t + s * u` has cross terms that `s * (t + u)`
+lacks.
+
+```lean
+-- {10, 16, 18, 20, 8, 9}
+#eval {1, 2} * ({3, 4} + {5, 6} : finset ℕ)
+
+-- {10, 11, 12, 13, 14, 15, 16, 18, 20, 8, 9}
+#eval ({1, 2} : finset ℕ) * {3, 4} + {1, 2} * {5, 6}
+```
+-/
+
+
+theorem mul_add_subset : s * (t + u) ⊆ s * t + s * u :=
+  image₂_distrib_subset_left mul_addₓ
+
+theorem add_mul_subset : (s + t) * u ⊆ s * u + t * u :=
+  image₂_distrib_subset_right add_mulₓ
+
+end Distribₓ
 
 section Groupₓ
 
@@ -681,21 +712,25 @@ theorem image_mul_right' : image (· * b⁻¹) t = preimage t (· * b) ((mul_lef
 
 end DecidableEq
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_left_singleton : preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by
   classical
   rw [← image_mul_left', image_singleton]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_right_singleton : preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by
   classical
   rw [← image_mul_right', image_singleton]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹} := by
   classical
   rw [← image_mul_left', image_one, mul_oneₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, to_additive]
 theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).InjOn _) = {b⁻¹} := by
   classical
@@ -853,7 +888,7 @@ theorem subset_smul {s : Set α} {t : Set β} :
 
 end HasScalar
 
-/-! ### Finset addition/multiplication -/
+/-! ### Scalar subtraction of finsets -/
 
 
 section HasVsub
@@ -990,7 +1025,7 @@ theorem mem_smul_finset {x : β} : x ∈ a • s ↔ ∃ y, y ∈ s ∧ a • y 
   simp only [Finset.smul_finset_def, And.assoc, mem_image, exists_prop, Prod.exists, mem_product]
 
 @[simp, norm_cast, to_additive]
-theorem coe_smul_finset (s : Finset β) : (↑(a • s) : Set β) = a • s :=
+theorem coe_smul_finset (a : α) (s : Finset β) : (↑(a • s) : Set β) = a • s :=
   coe_image
 
 @[to_additive]
@@ -1086,6 +1121,38 @@ instance is_central_scalar [HasScalar α β] [HasScalar αᵐᵒᵖ β] [IsCentr
   ⟨fun a s =>
     coe_injective <| by
       simp only [coe_smul_finset, coe_smul, op_smul_eq_smul]⟩
+
+/-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of
+`finset α` on `finset β`. -/
+@[to_additive
+      "An additive action of an additive monoid `α` on a type `β` gives an additive action\nof `finset α` on `finset β`"]
+protected def mulAction [DecidableEq α] [Monoidₓ α] [MulAction α β] : MulAction (Finset α) (Finset β) where
+  mul_smul := fun _ _ _ => image₂_assoc mul_smul
+  one_smul := fun s =>
+    image₂_singleton_left.trans <| by
+      simp_rw [one_smul, image_id']
+
+/-- A multiplicative action of a monoid on a type `β` gives a multiplicative action on `finset β`.
+-/
+@[to_additive "An additive action of an additive monoid on a type `β` gives an additive action\non `finset β`."]
+protected def mulActionFinset [Monoidₓ α] [MulAction α β] : MulAction α (Finset β) :=
+  coe_injective.MulAction _ coe_smul_finset
+
+localized [Pointwise]
+  attribute [instance] Finset.mulActionFinset Finset.addActionFinset Finset.mulAction Finset.addAction
+
+/-- A distributive multiplicative action of a monoid on an additive monoid `β` gives a distributive
+multiplicative action on `finset β`. -/
+protected def distribMulActionFinset [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] :
+    DistribMulAction α (Finset β) :=
+  Function.Injective.distribMulAction ⟨coe, coe_zero, coe_add⟩ coe_injective coe_smul_finset
+
+/-- A multiplicative action of a monoid on a monoid `β` gives a multiplicative action on `set β`. -/
+protected def mulDistribMulActionFinset [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β] :
+    MulDistribMulAction α (Finset β) :=
+  Function.Injective.mulDistribMulAction ⟨coe, coe_one, coe_mul⟩ coe_injective coe_smul_finset
+
+localized [Pointwise] attribute [instance] Finset.distribMulActionFinset Finset.mulDistribMulActionFinset
 
 end Instances
 

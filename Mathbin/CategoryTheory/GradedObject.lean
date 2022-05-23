@@ -202,14 +202,21 @@ variable (C : Type u) [Category.{v} C]
 
 variable [HasCoproducts C]
 
+section
+
+attribute [local tidy] tactic.discrete_cases
+
 /-- The total object of a graded object is the coproduct of the graded components.
 -/
 noncomputable def total : GradedObject β C ⥤ C where
   obj := fun X => ∐ fun i : ULift.{v} β => X i.down
   map := fun X Y f => Limits.Sigma.map fun i => f i.down
 
+end
+
 variable [HasZeroMorphisms C]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.

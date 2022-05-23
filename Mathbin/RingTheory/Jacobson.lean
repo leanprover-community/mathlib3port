@@ -532,8 +532,8 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
       
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- If `R` is a Jacobson ring, and `P` is a maximal ideal of `polynomial R`,
   then `R → R[X]/P` is an integral map. -/
 theorem quotient_mk_comp_C_is_integral_of_jacobson : ((Quotient.mk P).comp c : R →+* R[X] ⧸ P).IsIntegral := by

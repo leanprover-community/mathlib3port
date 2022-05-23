@@ -119,6 +119,7 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
 theorem supported_strict_mono [Nontrivial R] : StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=
   strict_mono_of_le_iff_le fun _ _ => supported_le_supported_iff.symm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_restrict_to_vars (R : Type _) [CommRingₓ R] {F : MvPolynomial σ ℤ} (hF : ↑F.vars ⊆ s) :
     ∃ f : (s → R) → R, ∀ x : σ → R, f (x ∘ coe : s → R) = aeval x F := by
   classical

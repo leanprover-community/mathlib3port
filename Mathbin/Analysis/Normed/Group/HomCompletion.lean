@@ -117,13 +117,13 @@ theorem NormedGroupHom.completion_comp (f : NormedGroupHom G H) (g : NormedGroup
   rfl
 
 theorem NormedGroupHom.completion_neg (f : NormedGroupHom G H) : (-f).Completion = -f.Completion :=
-  normedGroupHomCompletionHom.map_neg f
+  map_neg (normedGroupHomCompletionHom : NormedGroupHom G H →+ _) f
 
 theorem NormedGroupHom.completion_add (f g : NormedGroupHom G H) : (f + g).Completion = f.Completion + g.Completion :=
   normedGroupHomCompletionHom.map_add f g
 
 theorem NormedGroupHom.completion_sub (f g : NormedGroupHom G H) : (f - g).Completion = f.Completion - g.Completion :=
-  normedGroupHomCompletionHom.map_sub f g
+  map_sub (normedGroupHomCompletionHom : NormedGroupHom G H →+ _) f g
 
 @[simp]
 theorem NormedGroupHom.zero_completion : (0 : NormedGroupHom G H).Completion = 0 :=

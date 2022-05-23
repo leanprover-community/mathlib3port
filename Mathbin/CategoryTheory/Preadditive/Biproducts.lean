@@ -240,8 +240,8 @@ end
 
 variable [Preadditive.{v} C]
 
-theorem Biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
-    [HasBiproduct.{v} S] {T : τ → C} [HasBiproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
+theorem Biproduct.column_nonzero_of_iso' {σ τ : Type v} [Fintype τ] {S : σ → C} [HasBiproduct.{v} S] {T : τ → C}
+    [HasBiproduct.{v} T] (s : σ) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
     (∀ t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t = 0) → 𝟙 (S s) = 0 := by
   intro z
   set x := biproduct.ι S s ≫ f ≫ inv f ≫ biproduct.π S s
@@ -255,14 +255,15 @@ theorem Biproduct.column_nonzero_of_iso' {σ τ : Type v} [DecidableEq σ] [Deci
     simp
   exact h₁.symm.trans h₀
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : ⨁ S ⟶ ⨁ T` is an isomorphism, and `s` is a non-trivial summand of the source,
 then there is some `t` in the target so that the `s, t` matrix entry of `f` is nonzero.
 -/
-def Biproduct.columnNonzeroOfIso {σ τ : Type v} [DecidableEq σ] [DecidableEq τ] [Fintype τ] {S : σ → C}
-    [HasBiproduct.{v} S] {T : τ → C} [HasBiproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) [∀ t, DecidableEq (S s ⟶ T t)]
-    (f : ⨁ S ⟶ ⨁ T) [IsIso f] : Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
+def Biproduct.columnNonzeroOfIso {σ τ : Type v} [Fintype τ] {S : σ → C} [HasBiproduct.{v} S] {T : τ → C}
+    [HasBiproduct.{v} T] (s : σ) (nz : 𝟙 (S s) ≠ 0) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
+    Trunc (Σ't : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
+  classical
   apply truncSigmaOfExists
-  -- Do this before we run `classical`, so we get the right `decidable_eq` instances.
   have t := Biproduct.column_nonzero_of_iso'.{v} s f
   by_contra h
   simp only [not_exists_not] at h

@@ -460,6 +460,7 @@ theorem infi_span_singleton {ι : Type _} [Fintype ι] (I : ι → R) (hI : ∀ 
 theorem mul_le_inf : I * J ≤ I⊓J :=
   mul_le.2 fun r hri s hsj => ⟨I.mul_mem_right s hri, J.mul_mem_left r hsj⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem multiset_prod_le_inf {s : Multiset (Ideal R)} : s.Prod ≤ s.inf := by
   classical
   refine' s.induction_on _ _
@@ -477,6 +478,54 @@ theorem mul_eq_inf_of_coprime (h : I⊔J = ⊤) : I * J = I⊓J :=
   (le_antisymmₓ mul_le_inf) fun r ⟨hri, hrj⟩ =>
     let ⟨s, hsi, t, htj, hst⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
     mul_oneₓ r ▸ hst ▸ (mul_addₓ r s t).symm ▸ Ideal.add_mem (I * J) (mul_mem_mul_rev hsi hrj) (mul_mem_mul hri htj)
+
+theorem sup_mul_eq_of_coprime_left (h : I⊔J = ⊤) : I⊔J * K = I⊔K :=
+  (le_antisymmₓ (sup_le_sup_left mul_le_left _)) fun i hi => by
+    rw [eq_top_iff_one] at h
+    rw [Submodule.mem_sup] at h hi⊢
+    obtain ⟨i1, hi1, j, hj, h⟩ := h
+    obtain ⟨i', hi', k, hk, hi⟩ := hi
+    refine' ⟨_, add_mem hi' (mul_mem_right k _ hi1), _, mul_mem_mul hj hk, _⟩
+    rw [add_assocₓ, ← add_mulₓ, h, one_mulₓ, hi]
+
+theorem sup_mul_eq_of_coprime_right (h : I⊔K = ⊤) : I⊔J * K = I⊔J := by
+  rw [mul_comm]
+  exact sup_mul_eq_of_coprime_left h
+
+theorem mul_sup_eq_of_coprime_left (h : I⊔J = ⊤) : I * K⊔J = K⊔J := by
+  rw [sup_comm] at h
+  rw [sup_comm, sup_mul_eq_of_coprime_left h, sup_comm]
+
+theorem mul_sup_eq_of_coprime_right (h : K⊔J = ⊤) : I * K⊔J = I⊔J := by
+  rw [sup_comm] at h
+  rw [sup_comm, sup_mul_eq_of_coprime_right h, sup_comm]
+
+theorem sup_prod_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → I⊔J i = ⊤) : (I⊔∏ i in s, J i) = ⊤ :=
+  Finset.prod_induction _ (fun J => I⊔J = ⊤) (fun J K hJ hK => (sup_mul_eq_of_coprime_left hJ).trans hK)
+    (by
+      rw [one_eq_top, sup_top_eq])
+    h
+
+theorem sup_infi_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → I⊔J i = ⊤) : (I⊔⨅ i ∈ s, J i) = ⊤ :=
+  eq_top_iff.mpr <|
+    le_of_eq_of_le (sup_prod_eq_top h).symm <| sup_le_sup_left (le_of_le_of_eq prod_le_inf <| Finset.inf_eq_infi _ _) _
+
+theorem prod_sup_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → J i⊔I = ⊤) : (∏ i in s, J i)⊔I = ⊤ :=
+  sup_comm.trans (sup_prod_eq_top fun i hi => sup_comm.trans <| h i hi)
+
+theorem infi_sup_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → J i⊔I = ⊤) : (⨅ i ∈ s, J i)⊔I = ⊤ :=
+  sup_comm.trans (sup_infi_eq_top fun i hi => sup_comm.trans <| h i hi)
+
+theorem sup_pow_eq_top {n : ℕ} (h : I⊔J = ⊤) : I⊔J ^ n = ⊤ := by
+  rw [← Finset.card_range n, ← Finset.prod_const]
+  exact sup_prod_eq_top fun _ _ => h
+
+theorem pow_sup_eq_top {n : ℕ} (h : I⊔J = ⊤) : I ^ n⊔J = ⊤ := by
+  rw [← Finset.card_range n, ← Finset.prod_const]
+  exact prod_sup_eq_top fun _ _ => h
+
+theorem pow_sup_pow_eq_top {m n : ℕ} (h : I⊔J = ⊤) : I ^ m⊔J ^ n = ⊤ :=
+  sup_pow_eq_top (pow_sup_eq_top h)
 
 variable (I)
 
@@ -698,6 +747,7 @@ theorem IsPrime.inf_le {I J P : Ideal R} (hp : IsPrime P) : I⊓J ≤ P ↔ I �
   ⟨fun h => hp.mul_le.1 <| le_transₓ mul_le_inf h, fun h =>
     Or.cases_on h (le_transₓ inf_le_left) (le_transₓ inf_le_right)⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPrime.multiset_prod_le {s : Multiset (Ideal R)} {P : Ideal R} (hp : IsPrime P) (hne : s ≠ 0) :
     s.Prod ≤ P ↔ ∃ I ∈ s, I ≤ P := by
   suffices s.Prod ≤ P → ∃ I ∈ s, I ≤ P from
@@ -744,6 +794,7 @@ theorem subset_union {R : Type u} [CommRingₓ R] {I J K : Ideal R} : (I : Set R
     Or.cases_on h (fun h => Set.Subset.trans h <| Set.subset_union_left J K) fun h =>
       Set.Subset.trans h <| Set.subset_union_right J K⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:491:6: unsupported: specialize @hyp
@@ -867,6 +918,7 @@ theorem subset_union_prime' {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι
     exact hs (Or.inr <| Set.mem_bUnion hjt <| add_sub_cancel' r s ▸ (f j).sub_mem hj <| hr j hjt)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Prime avoidance. Atiyah-Macdonald 1.11, Eisenbud 3.3, Stacks 00DS, Matsumura Ex.1.6. -/
 theorem subset_union_prime {R : Type u} [CommRingₓ R] {s : Finset ι} {f : ι → Ideal R} (a b : ι)
     (hp : ∀, ∀ i ∈ s, ∀, i ≠ a → i ≠ b → IsPrime (f i)) {I : Ideal R} :

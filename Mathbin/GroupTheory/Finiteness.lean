@@ -112,6 +112,7 @@ instance Monoidₓ.fg_of_add_monoid_fg [AddMonoidₓ.Fg N] : Monoidₓ.Fg (Multi
 
 end Monoidₓ
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem Submonoid.Fg.map {M' : Type _} [Monoidₓ M'] {P : Submonoid M} (h : P.Fg) (e : M →* M') : (P.map e).Fg := by
   classical
@@ -136,6 +137,7 @@ theorem Monoidₓ.fg_iff_submonoid_fg (N : Submonoid M) : Monoidₓ.Fg N ↔ N.F
   conv_rhs => rw [← N.range_subtype, MonoidHom.mrange_eq_map]
   exact ⟨fun h => h.out.map N.subtype, fun h => ⟨h.map_injective N.subtype Subtype.coe_injective⟩⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem Monoidₓ.fg_of_surjective {M' : Type _} [Monoidₓ M'] [Monoidₓ.Fg M] (f : M →* M') (hf : Function.Surjective f) :
     Monoidₓ.Fg M' := by

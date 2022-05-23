@@ -200,7 +200,17 @@ instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Ringₓ (RingQuot 
     sub := Sub.sub,
     sub_eq_add_neg := by
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩
-      simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg] }
+      simp [neg_quot, sub_quot, add_quot, sub_eq_add_neg],
+    zsmul := (· • ·),
+    zsmul_zero' := by
+      rintro ⟨⟨⟩⟩
+      simp [smul_quot, ← zero_quot],
+    zsmul_succ' := by
+      rintro n ⟨⟨⟩⟩
+      simp [smul_quot, add_quot, add_mulₓ, add_commₓ],
+    zsmul_neg' := by
+      rintro n ⟨⟨⟩⟩
+      simp [smul_quot, neg_quot, add_mulₓ] }
 
 instance {R : Type u₁} [CommSemiringₓ R] (r : R → R → Prop) : CommSemiringₓ (RingQuot r) :=
   { RingQuot.semiring r with

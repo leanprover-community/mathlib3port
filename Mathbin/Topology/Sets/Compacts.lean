@@ -109,6 +109,7 @@ theorem coe_top [CompactSpace α] : (↑(⊤ : Compacts α) : Set α) = univ :=
 theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} : (↑(s.sup f) : Set α) = s.sup fun i => f i :=
   by

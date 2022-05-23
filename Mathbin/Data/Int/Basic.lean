@@ -845,6 +845,20 @@ theorem sub_mod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n := by
   apply (mod_add_cancel_right b).mp
   rw [sub_add_cancel, ← add_mod_mod, sub_add_cancel, mod_mod]
 
+protected theorem div_mod_unique {a b r q : ℤ} (h : 0 < b) : a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b := by
+  constructor
+  · rintro ⟨rfl, rfl⟩
+    exact ⟨mod_add_div a b, mod_nonneg _ h.ne.symm, mod_lt_of_pos _ h⟩
+    
+  · rintro ⟨rfl, hz, hb⟩
+    constructor
+    · rw [Int.add_mul_div_left r q (ne_of_gtₓ h), div_eq_zero_of_lt hz hb]
+      simp
+      
+    · rw [add_mul_mod_self_left, mod_eq_of_lt hz hb]
+      
+    
+
 /-! ### properties of `/` and `%` -/
 
 

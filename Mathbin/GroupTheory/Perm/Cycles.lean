@@ -115,6 +115,7 @@ theorem IsCycle.exists_zpow_eq {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f
   ⟨b - a, by
     rw [← ha, ← mul_apply, ← zpow_add, sub_add_cancel, hb]⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsCycle.exists_pow_eq [Fintype β] {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f x ≠ x) (hy : f y ≠ y) :
     ∃ i : ℕ, (f ^ i) x = y := by
   let ⟨n, hn⟩ := hf.exists_zpow_eq hx hy
@@ -124,6 +125,7 @@ theorem IsCycle.exists_pow_eq [Fintype β] {f : Perm β} (hf : IsCycle f) {x y :
         have := n.mod_nonneg (int.coe_nat_ne_zero.mpr (ne_of_gtₓ (order_of_pos f)))
         rwa [← zpow_coe_nat, Int.to_nat_of_nonneg this, ← zpow_eq_mod_order_of]⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsCycle.exists_pow_eq_one [Fintype β] {f : Perm β} (hf : IsCycle f) : ∃ (k : ℕ)(hk : 1 < k), f ^ k = 1 := by
   classical
   have : IsOfFinOrder f := exists_pow_eq_one f
@@ -378,6 +380,7 @@ theorem SameCycle.apply_eq_self_iff {f : Perm β} {x y : β} : SameCycle f x y �
 theorem IsCycle.same_cycle {f : Perm β} (hf : IsCycle f) {x y : β} (hx : f x ≠ x) (hy : f y ≠ y) : SameCycle f x y :=
   hf.exists_zpow_eq hx hy
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem SameCycle.nat' [Fintype β] {f : Perm β} {x y : β} (h : SameCycle f x y) :
     ∃ (i : ℕ)(h : i < orderOf f), (f ^ i) x = y := by
   classical
@@ -390,6 +393,7 @@ theorem SameCycle.nat' [Fintype β] {f : Perm β} {x y : β} (h : SameCycle f x 
   rw [← Int.coe_nat_lt, Int.nat_abs_of_nonneg h₁]
   exact Int.mod_lt_of_pos _ h₀
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem SameCycle.nat'' [Fintype β] {f : Perm β} {x y : β} (h : SameCycle f x y) :
     ∃ (i : ℕ)(hpos : 0 < i)(h : i ≤ orderOf f), (f ^ i) x = y := by
   classical
@@ -521,6 +525,7 @@ theorem IsCycle.support_pow_eq_iff [Fintype α] {f : Perm α} (hf : IsCycle f) {
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsCycle.pow_iff [Fintype β] {f : Perm β} (hf : IsCycle f) {n : ℕ} : IsCycle (f ^ n) ↔ n.Coprime (orderOf f) :=
   by
   classical
@@ -550,23 +555,53 @@ theorem IsCycle.pow_iff [Fintype β] {f : Perm β} (hf : IsCycle f) {n : ℕ} : 
     exact support_pow_le _ n hx
     
 
-theorem IsCycle.pow_eq_one_iff [Fintype α] {f : Perm α} (hf : IsCycle f) {n : ℕ} :
-    f ^ n = 1 ↔ ∃ x ∈ f.support, (f ^ n) x = x := by
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem IsCycle.pow_eq_one_iff [Fintype β] {f : Perm β} (hf : IsCycle f) {n : ℕ} :
+    f ^ n = 1 ↔ ∃ x, f x ≠ x ∧ (f ^ n) x = x := by
+  classical
   constructor
   · intro h
     obtain ⟨x, hx, -⟩ := id hf
     exact
-      ⟨x, mem_support.mpr hx, by
+      ⟨x, hx, by
         simp [h]⟩
     
   · rintro ⟨x, hx, hx'⟩
     by_cases' h : support (f ^ n) = support f
-    · rw [← h, mem_support] at hx
+    · rw [← mem_support, ← h, mem_support] at hx
       contradiction
       
     · rw [hf.support_pow_eq_iff, not_not] at h
       obtain ⟨k, rfl⟩ := h
       rw [pow_mulₓ, pow_order_of_eq_one, one_pow]
+      
+    
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem IsCycle.pow_eq_pow_iff [Fintype β] {f : Perm β} (hf : IsCycle f) {a b : ℕ} :
+    f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by
+  classical
+  constructor
+  · intro h
+    obtain ⟨x, hx, -⟩ := id hf
+    exact
+      ⟨x, hx, by
+        simp [h]⟩
+    
+  · rintro ⟨x, hx, hx'⟩
+    wlog hab : a ≤ b
+    suffices f ^ (b - a) = 1 by
+      rw [pow_sub _ hab, mul_inv_eq_one] at this
+      rw [this]
+    rw [hf.pow_eq_one_iff]
+    by_cases' hfa : (f ^ a) x ∈ f.support
+    · refine' ⟨(f ^ a) x, mem_support.mp hfa, _⟩
+      simp only [pow_sub _ hab, Equivₓ.Perm.coe_mul, Function.comp_app, inv_apply_self, ← hx']
+      
+    · have h := @Equivₓ.Perm.zpow_apply_comm _ f 1 a x
+      simp only [zpow_one, zpow_coe_nat] at h
+      rw [not_mem_support, h, Function.Injective.eq_iff (f ^ a).Injective] at hfa
+      contradiction
       
     
 
@@ -576,6 +611,7 @@ theorem IsCycle.mem_support_pos_pow_iff_of_lt_order_of [Fintype α] {f : Perm α
   rw [← hf.support_pow_eq_iff] at this
   rw [this]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsCycle.is_cycle_pow_pos_of_lt_prime_order [Fintype β] {f : Perm β} (hf : IsCycle f) (hf' : (orderOf f).Prime)
     (n : ℕ) (hn : 0 < n) (hn' : n < orderOf f) : IsCycle (f ^ n) := by
   classical
@@ -867,6 +903,7 @@ def cycleFactorsAux [Fintype α] :
                     eq_comm],
             hm₃⟩⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_list_cycles_iff {α : Type _} [Fintype α] {l : List (Perm α)} (h1 : ∀ σ : Perm α, σ ∈ l → σ.IsCycle)
     (h2 : l.Pairwise Disjoint) {σ : Perm α} : σ ∈ l ↔ σ.IsCycle ∧ ∀ a : α h4 : σ a ≠ a, σ a = l.Prod a := by
   suffices σ.is_cycle → (σ ∈ l ↔ ∀ a : α h4 : σ a ≠ a, σ a = l.prod a) by
@@ -894,6 +931,7 @@ theorem mem_list_cycles_iff {α : Type _} [Fintype α] {l : List (Perm α)} (h1 
     exact key a (mem_inter_of_mem ha hτa)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem list_cycles_perm_list_cycles {α : Type _} [Fintype α] {l₁ l₂ : List (Perm α)} (h₀ : l₁.Prod = l₂.Prod)
     (h₁l₁ : ∀ σ : Perm α, σ ∈ l₁ → σ.IsCycle) (h₁l₂ : ∀ σ : Perm α, σ ∈ l₂ → σ.IsCycle) (h₂l₁ : l₁.Pairwise Disjoint)
     (h₂l₂ : l₂.Pairwise Disjoint) : l₁ ~ l₂ := by
@@ -1122,6 +1160,7 @@ theorem cycle_is_cycle_of {f c : Equivₓ.Perm α} {a : α} (ha : a ∈ c.suppor
 
 end CycleFactorsFinset
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[elab_as_eliminator]
 theorem cycle_induction_on [Fintype β] (P : Perm β → Prop) (σ : Perm β) (base_one : P 1)
     (base_cycles : ∀ σ : Perm β, σ.IsCycle → P σ)
@@ -1290,6 +1329,7 @@ variable [Fintype α] [Fintype β]
 
 open Subgroup
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem closure_is_cycle : closure { σ : Perm β | IsCycle σ } = ⊤ := by
   classical
   exact top_le_iff.mp (le_transₓ (ge_of_eq closure_is_swap) (closure_mono fun _ => is_swap.is_cycle))
@@ -1442,6 +1482,7 @@ theorem card_support_conj : (σ * τ * σ⁻¹).support.card = τ.support.card :
 
 end
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Disjoint.is_conj_mul {α : Type _} [Fintype α] {σ τ π ρ : Perm α} (hc1 : IsConj σ π) (hc2 : IsConj τ ρ)
     (hd1 : Disjoint σ τ) (hd2 : Disjoint π ρ) : IsConj (σ * τ) (π * ρ) := by
   classical

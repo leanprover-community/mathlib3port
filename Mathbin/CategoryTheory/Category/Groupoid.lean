@@ -94,34 +94,33 @@ theorem id_to_functor {C : Groupoidₓ.{v, u}} : 𝟭 C = 𝟙 C :=
 
 section Products
 
-/-- The cone for the product of a family of groupoids indexed by J is a limit cone -/
-@[simps]
-def piLimitCone {J : Type u} (F : Discrete J ⥤ Groupoid.{u, u}) : Limits.LimitCone F where
-  Cone := { x := @of (∀ j : J, F.obj j) _, π := { app := fun j : J => CategoryTheory.pi.eval _ j } }
-  IsLimit :=
-    { lift := fun s => Functor.pi' s.π.app,
-      fac' := by
-        intros
-        simp [hom_to_functor],
-      uniq' := by
-        intro s m w
-        apply functor.pi_ext
-        intro j
-        specialize w j
-        simpa }
+attribute [local tidy] tactic.discrete_cases
 
-/-- `pi_limit_cone` reinterpreted as a fan -/
-abbrev piLimitFan {J : Type u} (F : J → Groupoidₓ.{u, u}) : Limits.Fan F :=
-  (piLimitCone (Discrete.functor F)).Cone
+/-- Construct the product over an indexed family of groupoids, as a fan. -/
+def piLimitFan ⦃J : Type u⦄ (F : J → Groupoidₓ.{u, u}) : Limits.Fan F :=
+  Limits.Fan.mk (@of (∀ j : J, F j) _) fun j => CategoryTheory.pi.eval _ j
 
-instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} := fun J =>
-  { HasLimit := fun F => { exists_limit := Nonempty.intro (piLimitCone F) } }
+/-- The product fan over an indexed family of groupoids, is a limit cone. -/
+def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → Groupoidₓ.{u, u}) : Limits.IsLimit (piLimitFan F) :=
+  Limits.mkFanLimit (piLimitFan F) (fun s => Functor.pi' fun j => s.proj j)
+    (by
+      intros
+      dunfold pi_limit_fan
+      simp [hom_to_functor])
+    (by
+      intro s m w
+      apply functor.pi_ext
+      intro j
+      specialize w j
+      simpa)
+
+instance has_pi : Limits.HasProducts Groupoidₓ.{u, u} :=
+  Limits.has_products_of_limit_fans piLimitFan piLimitFanIsLimit
 
 /-- The product of a family of groupoids is isomorphic
 to the product object in the category of Groupoids -/
 noncomputable def piIsoPi (J : Type u) (f : J → Groupoidₓ.{u, u}) : @of (∀ j, f j) _ ≅ ∏ f :=
-  Limits.IsLimit.conePointUniqueUpToIso (piLimitCone (Discrete.functor f)).IsLimit
-    (Limits.limit.isLimit (Discrete.functor f))
+  Limits.IsLimit.conePointUniqueUpToIso (piLimitFanIsLimit f) (Limits.limit.isLimit (Discrete.functor f))
 
 @[simp]
 theorem pi_iso_pi_hom_π (J : Type u) (f : J → Groupoidₓ.{u, u}) (j : J) :

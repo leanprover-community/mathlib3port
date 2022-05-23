@@ -70,6 +70,7 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
     (s.fold op (b₁*b₂) fun x => f x*g x) = s.fold op b₁ f*s.fold op b₂ g := by
   simp only [fold, fold_distrib]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
     Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
   classical
@@ -111,6 +112,7 @@ theorem fold_image_idem [DecidableEq α] {g : γ → α} {s : Finset γ} [hi : I
     rw [fold_cons, cons_eq_insert, image_insert, fold_insert_idem, ih]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A stronger version of `finset.fold_ite`, but relies on
 an explicit proof of idempotency on the seed element, rather
 than relying on typeclass idempotency over the whole type. -/
@@ -143,6 +145,7 @@ theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [Decidab
       op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   fold_ite' (IsIdempotent.idempotent _) _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∧ ∀, ∀ x ∈ s, ∀, r c (f x) := by
   classical
@@ -171,6 +174,7 @@ theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op 
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z) {c : β} :
     r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
   classical

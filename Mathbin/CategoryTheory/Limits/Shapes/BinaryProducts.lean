@@ -98,42 +98,58 @@ theorem WalkingPair.equiv_bool_symm_apply_tt : WalkingPair.equivBool.symm true =
 theorem WalkingPair.equiv_bool_symm_apply_ff : WalkingPair.equivBool.symm false = right :=
   rfl
 
-variable {C : Type u} [Category.{v} C]
+variable {C : Type u}
 
-/-- The diagram on the walking pair, sending the two points to `X` and `Y`. -/
-def pair (X Y : C) : Discrete WalkingPair.{v} ⥤ C :=
-  Discrete.functor fun j => WalkingPair.casesOn j X Y
+/-- The function on the walking pair, sending the two points to `X` and `Y`. -/
+def pairFunction (X Y : C) : WalkingPair → C := fun j => WalkingPair.casesOn j X Y
 
 @[simp]
-theorem pair_obj_left (X Y : C) : (pair X Y).obj left = X :=
+theorem pair_function_left (X Y : C) : pairFunction X Y left = X :=
   rfl
 
 @[simp]
-theorem pair_obj_right (X Y : C) : (pair X Y).obj right = Y :=
+theorem pair_function_right (X Y : C) : pairFunction X Y right = Y :=
+  rfl
+
+variable [Category.{v} C]
+
+/-- The diagram on the walking pair, sending the two points to `X` and `Y`. -/
+def pair (X Y : C) : Discrete WalkingPair.{v} ⥤ C :=
+  Discrete.functor (pairFunction X Y)
+
+@[simp]
+theorem pair_obj_left (X Y : C) : (pair X Y).obj ⟨left⟩ = X :=
+  rfl
+
+@[simp]
+theorem pair_obj_right (X Y : C) : (pair X Y).obj ⟨right⟩ = Y :=
   rfl
 
 section
 
-variable {F G : Discrete WalkingPair.{v} ⥤ C} (f : F.obj left ⟶ G.obj left) (g : F.obj right ⟶ G.obj right)
+variable {F G : Discrete WalkingPair.{v} ⥤ C} (f : F.obj ⟨left⟩ ⟶ G.obj ⟨left⟩) (g : F.obj ⟨right⟩ ⟶ G.obj ⟨right⟩)
 
-/-- The natural transformation between two functors out of the walking pair, specified by its
+attribute [local tidy] tactic.discrete_cases
+
+/-- The natural transformation between two functors out of the
+ walking pair, specified by its
 components. -/
 def mapPair : F ⟶ G where
-  app := fun j => WalkingPair.casesOn j f g
+  app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g
 
 @[simp]
-theorem map_pair_left : (mapPair f g).app left = f :=
+theorem map_pair_left : (mapPair f g).app ⟨left⟩ = f :=
   rfl
 
 @[simp]
-theorem map_pair_right : (mapPair f g).app right = g :=
+theorem map_pair_right : (mapPair f g).app ⟨right⟩ = g :=
   rfl
 
 /-- The natural isomorphism between two functors out of the walking pair, specified by its
 components. -/
 @[simps]
-def mapPairIso (f : F.obj left ≅ G.obj left) (g : F.obj right ≅ G.obj right) : F ≅ G :=
-  NatIso.ofComponents (fun j => WalkingPair.casesOn j f g)
+def mapPairIso (f : F.obj ⟨left⟩ ≅ G.obj ⟨left⟩) (g : F.obj ⟨right⟩ ≅ G.obj ⟨right⟩) : F ≅ G :=
+  NatIso.ofComponents (fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g)
     (by
       tidy)
 
@@ -141,7 +157,7 @@ end
 
 /-- Every functor out of the walking pair is naturally isomorphic (actually, equal) to a `pair` -/
 @[simps]
-def diagramIsoPair (F : Discrete WalkingPair ⥤ C) : F ≅ pair (F.obj WalkingPair.left) (F.obj WalkingPair.right) :=
+def diagramIsoPair (F : Discrete WalkingPair ⥤ C) : F ≅ pair (F.obj ⟨WalkingPair.left⟩) (F.obj ⟨WalkingPair.right⟩) :=
   mapPairIso (Iso.refl _) (Iso.refl _)
 
 section
@@ -160,23 +176,23 @@ abbrev BinaryFan (X Y : C) :=
 
 /-- The first projection of a binary fan. -/
 abbrev BinaryFan.fst {X Y : C} (s : BinaryFan X Y) :=
-  s.π.app WalkingPair.left
+  s.π.app ⟨WalkingPair.left⟩
 
 /-- The second projection of a binary fan. -/
 abbrev BinaryFan.snd {X Y : C} (s : BinaryFan X Y) :=
-  s.π.app WalkingPair.right
+  s.π.app ⟨WalkingPair.right⟩
 
 @[simp]
-theorem BinaryFan.π_app_left {X Y : C} (s : BinaryFan X Y) : s.π.app WalkingPair.left = s.fst :=
+theorem BinaryFan.π_app_left {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨WalkingPair.left⟩ = s.fst :=
   rfl
 
 @[simp]
-theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app WalkingPair.right = s.snd :=
+theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨WalkingPair.right⟩ = s.snd :=
   rfl
 
 theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.x}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
-  h.hom_ext fun j => WalkingPair.casesOn j h₁ h₂
+  h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 
 /-- A binary cofan is just a cocone on a diagram indexing a coproduct. -/
 abbrev BinaryCofan (X Y : C) :=
@@ -184,55 +200,62 @@ abbrev BinaryCofan (X Y : C) :=
 
 /-- The first inclusion of a binary cofan. -/
 abbrev BinaryCofan.inl {X Y : C} (s : BinaryCofan X Y) :=
-  s.ι.app WalkingPair.left
+  s.ι.app ⟨WalkingPair.left⟩
 
 /-- The second inclusion of a binary cofan. -/
 abbrev BinaryCofan.inr {X Y : C} (s : BinaryCofan X Y) :=
-  s.ι.app WalkingPair.right
+  s.ι.app ⟨WalkingPair.right⟩
 
 @[simp]
-theorem BinaryCofan.ι_app_left {X Y : C} (s : BinaryCofan X Y) : s.ι.app WalkingPair.left = s.inl :=
+theorem BinaryCofan.ι_app_left {X Y : C} (s : BinaryCofan X Y) : s.ι.app ⟨WalkingPair.left⟩ = s.inl :=
   rfl
 
 @[simp]
-theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) : s.ι.app WalkingPair.right = s.inr :=
+theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) : s.ι.app ⟨WalkingPair.right⟩ = s.inr :=
   rfl
 
 theorem BinaryCofan.IsColimit.hom_ext {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s) {f g : s.x ⟶ W}
     (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
-  h.hom_ext fun j => WalkingPair.casesOn j h₁ h₂
+  h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 
 variable {X Y : C}
+
+section
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- A binary fan with vertex `P` consists of the two projections `π₁ : P ⟶ X` and `π₂ : P ⟶ Y`. -/
 @[simps x]
 def BinaryFan.mk {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : BinaryFan X Y where
   x := P
-  π := { app := fun j => WalkingPair.casesOn j π₁ π₂ }
+  π := { app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j π₁ π₂ }
 
 /-- A binary cofan with vertex `P` consists of the two inclusions `ι₁ : X ⟶ P` and `ι₂ : Y ⟶ P`. -/
 @[simps x]
 def BinaryCofan.mk {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : BinaryCofan X Y where
   x := P
-  ι := { app := fun j => WalkingPair.casesOn j ι₁ ι₂ }
+  ι := { app := fun j => Discrete.recOn j fun j => WalkingPair.casesOn j ι₁ ι₂ }
+
+end
 
 @[simp]
-theorem BinaryFan.mk_π_app_left {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : (BinaryFan.mk π₁ π₂).π.app WalkingPair.left = π₁ :=
+theorem BinaryFan.mk_π_app_left {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) :
+    (BinaryFan.mk π₁ π₂).π.app ⟨WalkingPair.left⟩ = π₁ :=
   rfl
 
 @[simp]
 theorem BinaryFan.mk_π_app_right {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) :
-    (BinaryFan.mk π₁ π₂).π.app WalkingPair.right = π₂ :=
+    (BinaryFan.mk π₁ π₂).π.app ⟨WalkingPair.right⟩ = π₂ :=
   rfl
 
 @[simp]
 theorem BinaryCofan.mk_ι_app_left {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) :
-    (BinaryCofan.mk ι₁ ι₂).ι.app WalkingPair.left = ι₁ :=
+    (BinaryCofan.mk ι₁ ι₂).ι.app ⟨WalkingPair.left⟩ = ι₁ :=
   rfl
 
 @[simp]
 theorem BinaryCofan.mk_ι_app_right {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) :
-    (BinaryCofan.mk ι₁ ι₂).ι.app WalkingPair.right = ι₂ :=
+    (BinaryCofan.mk ι₁ ι₂).ι.app ⟨WalkingPair.right⟩ = ι₂ :=
   rfl
 
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
@@ -277,19 +300,19 @@ notation:20 X " ⨿ " Y:20 => coprod X Y
 
 /-- The projection map to the first component of the product. -/
 abbrev prod.fst {X Y : C} [HasBinaryProduct X Y] : X ⨯ Y ⟶ X :=
-  limit.π (pair X Y) WalkingPair.left
+  limit.π (pair X Y) ⟨WalkingPair.left⟩
 
 /-- The projecton map to the second component of the product. -/
 abbrev prod.snd {X Y : C} [HasBinaryProduct X Y] : X ⨯ Y ⟶ Y :=
-  limit.π (pair X Y) WalkingPair.right
+  limit.π (pair X Y) ⟨WalkingPair.right⟩
 
 /-- The inclusion map from the first component of the coproduct. -/
 abbrev coprod.inl {X Y : C} [HasBinaryCoproduct X Y] : X ⟶ X ⨿ Y :=
-  colimit.ι (pair X Y) WalkingPair.left
+  colimit.ι (pair X Y) ⟨WalkingPair.left⟩
 
 /-- The inclusion map from the second component of the coproduct. -/
 abbrev coprod.inr {X Y : C} [HasBinaryCoproduct X Y] : Y ⟶ X ⨿ Y :=
-  colimit.ι (pair X Y) WalkingPair.right
+  colimit.ι (pair X Y) ⟨WalkingPair.right⟩
 
 /-- The binary fan constructed from the projection maps is a limit. -/
 def prodIsProd (X Y : C) [HasBinaryProduct X Y] : IsLimit (BinaryFan.mk (prod.fst : X ⨯ Y ⟶ X) prod.snd) :=

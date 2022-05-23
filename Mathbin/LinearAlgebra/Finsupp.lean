@@ -134,6 +134,7 @@ theorem supr_lsingle_range : (⨆ a, (lsingle a : M →ₗ[R] α →₀ M).range
   rw [← sum_single f]
   exact sum_mem fun a ha => Submodule.mem_supr_of_mem a ⟨_, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
     Disjoint (⨆ a ∈ s, (lsingle a : M →ₗ[R] α →₀ M).range) (⨆ a ∈ t, (lsingle a).range) := by
   refine'

@@ -386,8 +386,6 @@ instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
 
 section
 
-open Classical
-
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
@@ -407,10 +405,13 @@ theorem algebra_map_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 �
 theorem algebra_map_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebra_map_left_inverse.Injective
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) := fun x y hoxy =>
   Classical.by_contradiction fun hxy : x ≠ y =>
-    let f : FreeAlgebra R X →ₐ[R] R := lift R fun z => if x = z then (1 : R) else 0
+    let f : FreeAlgebra R X →ₐ[R] R :=
+      lift R fun z => by
+        classical <;> exact if x = z then (1 : R) else 0
     have hfx1 : f (ι R x) = 1 := (lift_ι_apply _ _).trans <| if_pos rfl
     have hfy1 : f (ι R y) = 1 := hoxy ▸ hfx1
     have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy

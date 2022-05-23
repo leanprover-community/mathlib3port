@@ -462,10 +462,10 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
   contrapose! h
   apply one_le_dist_of_ne h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
   rcases x with ⟨i, x⟩
   rcases y with ⟨j, y⟩

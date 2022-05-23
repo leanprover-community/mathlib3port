@@ -1674,6 +1674,7 @@ theorem subset_closure_inter_of_is_preirreducible_of_is_open {S U : Set α} (hS 
     hS _ (Closure (S ∩ U)ᶜ) hU (is_open_compl_iff.mpr is_closed_closure) h (set.inter_compl_nonempty_iff.mpr h')
   exact h₃ (subset_closure ⟨h₁, h₂⟩)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `∅ ≠ U ⊆ S ⊆ Z` such that `U` is open and `Z` is preirreducible, then `S` is irreducible. -/
 theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreducible Z) (hU : U.Nonempty) (hU' : IsOpen U)
     (h₁ : U ⊆ S) (h₂ : S ⊆ Z) : IsIrreducible S := by

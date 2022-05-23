@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 -/
 import Mathbin.Algebra.CharP.Basic
+import Mathbin.Algebra.NeZero
 import Mathbin.RingTheory.Ideal.Operations
 import Mathbin.Tactic.FinCases
 
@@ -87,6 +88,9 @@ namespace Zmod
 instance fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
   | 0, h => False.elim <| Nat.not_lt_zeroₓ 0 h.1
   | n + 1, _ => Finₓ.fintype (n + 1)
+
+instance fintype' (n : ℕ) [hn : NeZero n] : Fintype (Zmod n) :=
+  @Zmod.fintype n ⟨Nat.pos_of_ne_zeroₓ hn.1⟩
 
 instance infinite : Infinite (Zmod 0) :=
   Int.infinite
@@ -738,8 +742,8 @@ def chineseRemainder {m n : ℕ} (h : m.Coprime n) : Zmod (m * n) ≃+* Zmod m �
               simp )⟩
   { toFun, invFun, map_mul' := RingHom.map_mul _, map_add' := RingHom.map_add _, left_inv := inv.1, right_inv := inv.2 }
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 instance subsingleton_units : Subsingleton (Zmod 2)ˣ :=
   ⟨fun x y => by
     ext1
@@ -782,7 +786,7 @@ theorem ne_neg_self (n : ℕ) [hn : Fact ((n : ℕ) % 2 = 1)] {a : Zmod n} (ha :
 theorem neg_one_ne_one {n : ℕ} [Fact (2 < n)] : (-1 : Zmod n) ≠ 1 :=
   CharP.neg_one_ne_one (Zmod n) n
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem neg_eq_self_mod_two (a : Zmod 2) : -a = a := by
   fin_cases a <;> ext <;> simp [Finₓ.coe_neg, Int.natModₓ] <;> norm_num
 

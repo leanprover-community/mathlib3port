@@ -47,7 +47,7 @@ instance : Inhabited (Natβ Natα.succ) :=
 /-- The isomorphism from the naturals to its corresponding `W_type` -/
 @[simp]
 def ofNat : ℕ → WType Natβ
-  | Nat.zero => ⟨Natα.zero, Empty.elimₓ⟩
+  | Nat.zero => ⟨Natα.zero, Empty.elim⟩
   | Nat.succ n => ⟨Natα.succ, fun _ => of_nat n⟩
 
 /-- The isomorphism from the `W_type` of the naturals to the naturals -/

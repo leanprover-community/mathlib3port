@@ -484,6 +484,7 @@ theorem Inter_ite (f g : ι → Set α) :
 
 end
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι, Set (α i)} (hv : (Pi Univ v).Nonempty)
     (i : ι) : ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
   classical
@@ -860,6 +861,14 @@ theorem sUnion_insert (s : Set α) (T : Set (Set α)) : ⋃₀insert s T = s ∪
 @[simp]
 theorem sInter_insert (s : Set α) (T : Set (Set α)) : ⋂₀ insert s T = s ∩ ⋂₀ T :=
   Inf_insert
+
+@[simp]
+theorem sUnion_diff_singleton_empty (s : Set (Set α)) : ⋃₀(s \ {∅}) = ⋃₀s :=
+  Sup_diff_singleton_bot s
+
+@[simp]
+theorem sInter_diff_singleton_univ (s : Set (Set α)) : ⋂₀ (s \ {Univ}) = ⋂₀ s :=
+  Inf_diff_singleton_top s
 
 theorem sUnion_pair (s t : Set α) : ⋃₀{s, t} = s ∪ t :=
   Sup_pair

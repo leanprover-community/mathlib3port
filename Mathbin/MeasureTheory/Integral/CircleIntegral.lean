@@ -143,7 +143,7 @@ theorem circle_map_ne_center {c : ℂ} {R : ℝ} (hR : R ≠ 0) {θ : ℝ} : cir
 
 theorem has_deriv_at_circle_map (c : ℂ) (R : ℝ) (θ : ℝ) : HasDerivAt (circleMap c R) (circleMap 0 R θ * I) θ := by
   simpa only [mul_assoc, one_mulₓ, of_real_clm_apply, circleMap, of_real_one, zero_addₓ] using
-    ((of_real_clm.has_deriv_at.mul_const I).cexp_real.const_mul (R : ℂ)).const_add c
+    ((of_real_clm.has_deriv_at.mul_const I).cexp.const_mul (R : ℂ)).const_add c
 
 /- TODO: prove `cont_diff ℝ (circle_map c R)`. This needs a version of `cont_diff.mul`
 for multiplication in a normed algebra over the base field. -/
@@ -517,10 +517,10 @@ theorem le_radius_cauchy_power_series (f : ℂ → E) (c : ℂ) (R : ℝ≥0 ) :
       mul_nonneg (inv_nonneg.2 real.two_pi_pos.le)
         (intervalIntegral.integral_nonneg real.two_pi_pos.le fun _ _ => norm_nonneg _)
     
-  · rw [inv_pow₀, inv_mul_cancel_right₀ hR]
+  · rw [inv_pow, inv_mul_cancel_right₀ hR]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R` multiplied
 by `2πI` converges to the integral `∮ z in C(c, R), (z - w)⁻¹ • f z` on the open disc
 `metric.ball c R`. -/
@@ -603,7 +603,7 @@ theorem integral_sub_inv_of_mem_ball {c w : ℂ} {R : ℝ} (hw : w ∈ Ball c R)
   refine' this ▸ has_sum_single _ fun n hn => _
   simp only [div_eq_mul_inv, mul_powₓ, integral_const_mul, mul_assoc]
   rw [(integral_congr hR.le fun z hz => _).trans (H n hn), mul_zero]
-  rw [← pow_succ'ₓ, ← zpow_coe_nat, inv_zpow₀, ← zpow_neg₀, Int.coe_nat_succ, neg_add, sub_eq_add_neg _ (1 : ℤ)]
+  rw [← pow_succ'ₓ, ← zpow_coe_nat, inv_zpow, ← zpow_neg, Int.coe_nat_succ, neg_add, sub_eq_add_neg _ (1 : ℤ)]
 
 end circleIntegral
 

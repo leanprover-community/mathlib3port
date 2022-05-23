@@ -514,6 +514,7 @@ protected theorem mul {p a b : α} (hp : Prime p) : multiplicity p (a * b) = mul
     rw [eq_top_iff_not_finite.2 (mt (finite_mul_iff hp).1 h)]
     cases' not_and_distrib.1 h with h h <;> simp [eq_top_iff_not_finite.2 h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Finset.prod {β : Type _} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
     multiplicity p (∏ x in s, f x) = ∑ x in s, multiplicity p (f x) := by
   classical

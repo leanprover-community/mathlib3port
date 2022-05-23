@@ -98,6 +98,7 @@ def pointedToPartialFun : Pointed.{u} ⥤ PartialFun where
       rintro ⟨b, _, rfl : b = _, h⟩
       exact h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The functor which maps undefined values to a new point. This makes the maps total and creates
 pointed types. This the noncomputable part of the equivalence `PartialFun_equiv_Pointed`. It can't
 be computable because `= option.none` is decidable while the domain of a general `part` isn't. -/
@@ -109,6 +110,7 @@ noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
         map_comp' := fun X Y Z f g =>
           Pointed.Hom.ext _ _ <| funext fun o => (Option.recOn o rfl) fun a => Part.bind_to_option _ _ }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The equivalence induced by `PartialFun_to_Pointed` and `Pointed_to_PartialFun`.
 `part.equiv_option` made functorial. -/
 @[simps]
@@ -134,8 +136,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
             dsimp'
             simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
-            convert eq_comm
-            convert rfl)
+            exact eq_comm)
         ((nat_iso.of_components fun X =>
             Pointed.Iso.mk
               { toFun := fun a => a.elim X.point Subtype.val,

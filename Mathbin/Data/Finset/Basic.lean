@@ -738,16 +738,15 @@ theorem insert_eq_of_mem (h : a ∈ s) : insert a s = s :=
   eq_of_veq <| ndinsert_of_mem h
 
 @[simp]
-theorem insert_singleton_self_eq (a : α) : ({a, a} : Finset α) = {a} :=
+theorem pair_self_eq (a : α) : ({a, a} : Finset α) = {a} :=
   insert_eq_of_mem <| mem_singleton_self _
 
 theorem Insert.comm (a b : α) (s : Finset α) : insert a (insert b s) = insert b (insert a s) :=
   ext fun x => by
     simp only [mem_insert, Or.left_comm]
 
-theorem insert_singleton_comm (a b : α) : ({a, b} : Finset α) = {b, a} := by
-  ext
-  simp [Or.comm]
+theorem pair_comm (a b : α) : ({a, b} : Finset α) = {b, a} :=
+  Insert.comm a b ∅
 
 @[simp]
 theorem insert_idem (a : α) (s : Finset α) : insert a (insert a s) = insert a s :=
@@ -1045,6 +1044,7 @@ theorem induction_on_union (P : Finset α → Finset α → Prop) (symm : ∀ {a
   rw [Finset.insert_eq]
   exact union_of singletons (symm hi)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.directed.exists_mem_subset_of_finset_subset_bUnion {α ι : Type _} [hn : Nonempty ι] {f : ι → Set α}
     (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) : ∃ i, (s : Set α) ⊆ f i := by
   classical
@@ -1630,6 +1630,7 @@ theorem piecewise_insert_of_ne [DecidableEq α] {i j : α} [∀ i, Decidable (i 
     (insert j s).piecewise f g i = s.piecewise f g i := by
   simp [piecewise, h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ insert j s)] :
     (insert j s).piecewise f g = update (s.piecewise f g) j (f j) := by
   classical
@@ -1638,6 +1639,7 @@ theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ inse
 theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) : p (s.piecewise f g i) := by
   by_cases' hi : i ∈ s <;> simpa [hi]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g} (hf : f ∈ Set.Pi t t')
     (hg : g ∈ Set.Pi t t') : s.piecewise f g ∈ Set.Pi t t' := by
   classical
@@ -1829,6 +1831,7 @@ theorem coe_filter (s : Finset α) : ↑(s.filter p) = ({ x ∈ ↑s | p x } : S
 theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s) (h₂ : ∀, ∀ x ∈ t, ∀, p x) :
     t ⊆ s.filter p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ := by
   classical
   ext x
@@ -1906,6 +1909,7 @@ theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α
     (s.filter p ∩ s.filter fun a => ¬p a) = ∅ := by
   simp only [filter_not, inter_sdiff_self]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
   classical
@@ -2763,6 +2767,7 @@ theorem mem_to_list {a : α} (s : Finset α) : a ∈ s.toList ↔ a ∈ s := by
 theorem to_list_empty : (∅ : Finset α).toList = [] := by
   simp [to_list]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp, norm_cast]
 theorem coe_to_list (s : Finset α) : (s.toList : Multiset α) = s.val := by
   classical
@@ -2835,6 +2840,7 @@ theorem bUnion_congr (hs : s₁ = s₂) (ht : ∀, ∀ a ∈ s₁, ∀, t₁ a =
 theorem bUnion_subset {s' : Finset β} : s.bUnion t ⊆ s' ↔ ∀, ∀ x ∈ s, ∀, t x ⊆ s' := by
   simp only [subset_iff, mem_bUnion] <;> exact ⟨fun H a ha b hb => H ⟨a, ha, hb⟩, fun H b ⟨a, ha, hb⟩ => H a ha hb⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem singleton_bUnion {a : α} : Finset.bUnion {a} t = t a := by
   classical
@@ -3032,6 +3038,7 @@ theorem sdiff_eq_self_of_disjoint (h : Disjoint s t) : s \ t = s :=
 theorem disjoint_self_iff_empty (s : Finset α) : Disjoint s s ↔ s = ∅ :=
   disjoint_self
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem disjoint_bUnion_left {ι : Type _} (s : Finset ι) (f : ι → Finset α) (t : Finset α) :
     Disjoint (s.bUnion f) t ↔ ∀, ∀ i ∈ s, ∀, Disjoint (f i) t := by
   classical

@@ -918,6 +918,7 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) : (∑' x : s ∪ t
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
     (∑' x : ⋃ i ∈ s, t i, f x) ≤ ∑ i in s, ∑' x : t i, f x := by
   classical
@@ -931,6 +932,7 @@ theorem tsum_bUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t 
       tsum_union_le _ _ _ _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x :=
       add_le_add le_rfl ihs _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tsum_Union_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
     (∑' x : ⋃ i, t i, f x) ≤ ∑ i, ∑' x : t i, f x := by
   classical

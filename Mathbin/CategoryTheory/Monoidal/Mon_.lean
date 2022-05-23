@@ -286,6 +286,10 @@ def monToLaxMonoidal : Mon_ C ⥤ LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C 
         rw [category.id_comp, category.comp_id],
       unit' := f.OneHom, tensor' := fun _ _ => f.MulHom }
 
+attribute [local tidy] tactic.discrete_cases
+
+attribute [local simp] eq_to_iso_map
+
 /-- Implementation of `Mon_.equiv_lax_monoidal_functor_punit`. -/
 @[simps]
 def unitIso : 𝟭 (LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C) ≅ laxMonoidalToMon C ⋙ monToLaxMonoidal C :=
@@ -316,6 +320,8 @@ def counitIso : monToLaxMonoidal C ⋙ laxMonoidalToMon C ≅ 𝟭 (Mon_ C) :=
 end EquivLaxMonoidalFunctorPunit
 
 open EquivLaxMonoidalFunctorPunit
+
+attribute [local simp] eq_to_iso_map
 
 /-- Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
 -/

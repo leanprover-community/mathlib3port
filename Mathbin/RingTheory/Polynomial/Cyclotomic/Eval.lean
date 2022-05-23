@@ -28,8 +28,8 @@ open BigOperators
 @[simp]
 theorem eval_one_cyclotomic_prime {R : Type _} [CommRingₓ R] {p : ℕ} [hn : Fact p.Prime] :
     eval 1 (cyclotomic p R) = p := by
-  simp only [cyclotomic_eq_geom_sum hn.out, geom_sum_def, eval_X, one_pow, sum_const, eval_pow, eval_finset_sum,
-    card_range, smul_one_eq_coe]
+  simp only [cyclotomic_eq_geom_sum hn.out, eval_X, one_pow, sum_const, eval_pow, eval_finset_sum, card_range,
+    smul_one_eq_coe]
 
 @[simp]
 theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} [Fact p.Prime] :
@@ -39,8 +39,8 @@ theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRingₓ R] [Semiringₓ
 @[simp]
 theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRingₓ R] {p : ℕ} (k : ℕ) [hn : Fact p.Prime] :
     eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
-  simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_def, eval_X, one_pow, sum_const, eval_pow,
-    eval_finset_sum, card_range, smul_one_eq_coe]
+  simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, eval_X, one_pow, sum_const, eval_pow, eval_finset_sum, card_range,
+    smul_one_eq_coe]
 
 @[simp]
 theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRingₓ R] [Semiringₓ S] (f : R →+* S) {p : ℕ} (k : ℕ)
@@ -81,7 +81,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
     
   · simpa only [mem_singleton] using hn''.ne'
     
-  rcases lt_trichotomyₓ 0 (geomSum x n) with (h | h | h)
+  rcases lt_trichotomyₓ 0 (∑ i in range n, x ^ i) with (h | h | h)
   · apply pos_of_mul_pos_right
     · rwa [this]
       
@@ -151,8 +151,8 @@ theorem cyclotomic_pos' (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 
 theorem cyclotomic_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 ≤ x) : 0 ≤ eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).2 hx
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [CommRingₓ R] {n : ℕ}
     (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) : eval 1 (cyclotomic n R) = 1 := by
   rcases n.eq_zero_or_pos with (rfl | hn')

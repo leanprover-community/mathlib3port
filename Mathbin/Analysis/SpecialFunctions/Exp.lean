@@ -190,7 +190,7 @@ theorem tendsto_mul_exp_add_div_pow_at_top (b c : ℝ) (n : ℕ) (hb : 0 < b) :
       (((tendsto_exp_div_pow_at_top n).const_mul_at_top hb).at_top_add
         ((tendsto_pow_neg_at_top hn).mul (@tendsto_const_nhds _ _ _ c _)))
   intro x hx
-  simp only [zpow_neg₀ x n]
+  simp only [zpow_neg x n]
   ring
 
 /-- The function `(x ^ n) / (b * exp x + c)` tends to `0` at `+∞`, for any natural number

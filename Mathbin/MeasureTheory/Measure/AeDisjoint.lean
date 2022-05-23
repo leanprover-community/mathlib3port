@@ -58,8 +58,16 @@ protected theorem symmetric : Symmetric (AeDisjoint μ) := fun s t h => h.symm
 protected theorem comm : AeDisjoint μ s t ↔ AeDisjoint μ t s :=
   ⟨fun h => h.symm, fun h => h.symm⟩
 
-theorem _root_.disjoint.ae_disjoint (h : Disjoint s t) : AeDisjoint μ s t := by
+protected theorem _root_.disjoint.ae_disjoint (h : Disjoint s t) : AeDisjoint μ s t := by
   rw [ae_disjoint, disjoint_iff_inter_eq_empty.1 h, measure_empty]
+
+protected theorem _root_.pairwise.ae_disjoint {f : ι → Set α} (hf : Pairwise (Disjoint on f)) :
+    Pairwise (AeDisjoint μ on f) :=
+  hf.mono fun i j h => h.AeDisjoint
+
+protected theorem _root_.set.pairwise_disjoint.ae_disjoint {f : ι → Set α} {s : Set ι} (hf : s.PairwiseDisjoint f) :
+    s.Pairwise (AeDisjoint μ on f) :=
+  hf.mono' fun i j h => h.AeDisjoint
 
 theorem mono_ae (h : AeDisjoint μ s t) (hu : u ≤ᵐ[μ] s) (hv : v ≤ᵐ[μ] t) : AeDisjoint μ u v :=
   measure_mono_null_ae (hu.inter hv) h

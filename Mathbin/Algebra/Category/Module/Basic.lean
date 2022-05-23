@@ -6,6 +6,7 @@ Authors: Robert A. Spencer, Markus Himmel
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 import Mathbin.CategoryTheory.Linear.Default
+import Mathbin.CategoryTheory.Elementwise
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.CategoryTheory.Conj
 
@@ -91,9 +92,8 @@ instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R) where
 instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupₓₓ where
   forget₂ := { obj := fun M => AddCommGroupₓₓ.of M, map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 
--- TODO: instantiate `linear_map_class` once that gets defined
-instance (M N : ModuleCat R) : AddMonoidHomClass (M ⟶ N) M N :=
-  { LinearMap.addMonoidHomClass with coe := fun f => f }
+instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=
+  { LinearMap.semilinearMapClass with coe := fun f => f }
 
 /-- The object in the category of R-modules associated to an R-module -/
 def of (X : Type v) [AddCommGroupₓ X] [Module R X] : ModuleCat R :=

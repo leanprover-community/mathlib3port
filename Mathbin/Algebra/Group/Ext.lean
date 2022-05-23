@@ -116,7 +116,9 @@ theorem Groupₓ.ext {G : Type _} ⦃g₁ g₂ : Groupₓ G⦄ (h_mul : g₁.mul
       (by
         let this := g₁ <;> infer_instance)
       g₂ id fun a b => congr_funₓ (congr_funₓ h_mul a) b
-  exact Groupₓ.to_div_inv_monoid_injective (DivInvMonoidₓ.ext h_mul (funext <| @MonoidHom.map_inv G G g₁ g₂ f))
+  exact
+    Groupₓ.to_div_inv_monoid_injective
+      (DivInvMonoidₓ.ext h_mul (funext <| @MonoidHom.map_inv G G g₁ (@Groupₓ.toDivisionMonoid _ g₂) f))
 
 @[ext, to_additive]
 theorem CommGroupₓ.ext {G : Type _} ⦃g₁ g₂ : CommGroupₓ G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=

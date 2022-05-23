@@ -1039,6 +1039,7 @@ theorem reachable_iff_nonempty_univ {u v : V} : G.Reachable u v ↔ (Set.Univ : 
 protected theorem Reachable.elim {p : Prop} {u v : V} (h : G.Reachable u v) (hp : G.Walk u v → p) : p :=
   Nonempty.elimₓ h hp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 protected theorem Reachable.elim_path {p : Prop} {u v : V} (h : G.Reachable u v) (hp : G.Path u v → p) : p := by
   classical
   exact h.elim fun q => hp q.toPath

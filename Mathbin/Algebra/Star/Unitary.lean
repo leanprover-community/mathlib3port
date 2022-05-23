@@ -175,11 +175,8 @@ instance : Neg (unitary R) where
 theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
   rfl
 
-instance : HasDistribNeg (unitary R) where
-  neg := Neg.neg
-  neg_neg := fun U => Subtype.ext <| neg_negₓ _
-  neg_mul := fun U₁ U₂ => Subtype.ext <| neg_mul _ _
-  mul_neg := fun U₁ U₂ => Subtype.ext <| mul_neg _ _
+instance : HasDistribNeg (unitary R) :=
+  Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).coe_mul
 
 end Ringₓ
 

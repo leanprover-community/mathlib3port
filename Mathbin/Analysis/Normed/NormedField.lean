@@ -131,6 +131,10 @@ instance (priority := 100) NonUnitalSemiNormedRing.toSemiNormedGroup [β : NonUn
     SemiNormedGroup α :=
   { β with }
 
+instance [SemiNormedGroup α] [One α] [NormOneClass α] : NormOneClass (ULift α) :=
+  ⟨by
+    simp [ULift.norm_def]⟩
+
 instance Prod.norm_one_class [SemiNormedGroup α] [One α] [NormOneClass α] [SemiNormedGroup β] [One β] [NormOneClass β] :
     NormOneClass (α × β) :=
   ⟨by
@@ -175,6 +179,9 @@ theorem mul_left_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulLeft x y∥ ≤
 theorem mul_right_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulRight x y∥ ≤ ∥x∥ * ∥y∥ := fun y => by
   rw [mul_comm]
   convert norm_mul_le y x
+
+instance : NonUnitalSemiNormedRing (ULift α) :=
+  { ULift.semiNormedGroup with norm_mul := fun x y => (norm_mul_le x.down y.down : _) }
 
 /-- Non-unital seminormed ring structure on the product of two non-unital seminormed rings,
   using the sup norm. -/
@@ -303,6 +310,9 @@ theorem norm_pow_le [NormOneClass α] (a : α) (n : ℕ) : ∥a ^ n∥ ≤ ∥a�
 theorem eventually_norm_pow_le (a : α) : ∀ᶠ n : ℕ in at_top, ∥a ^ n∥ ≤ ∥a∥ ^ n :=
   eventually_at_top.mpr ⟨1, fun b h => norm_pow_le' a (Nat.succ_le_iff.mp h)⟩
 
+instance : SemiNormedRing (ULift α) :=
+  { ULift.nonUnitalSemiNormedRing, ULift.semiNormedGroup with }
+
 /-- Seminormed ring structure on the product of two seminormed rings,
   using the sup norm. -/
 instance Prod.semiNormedRing [SemiNormedRing β] : SemiNormedRing (α × β) :=
@@ -318,6 +328,9 @@ end SemiNormedRing
 section NonUnitalNormedRing
 
 variable [NonUnitalNormedRing α]
+
+instance : NonUnitalNormedRing (ULift α) :=
+  { ULift.nonUnitalSemiNormedRing, ULift.semiNormedGroup with }
 
 /-- Non-unital normed ring structure on the product of two non-unital normed rings,
 using the sup norm. -/
@@ -342,13 +355,16 @@ theorem Units.norm_pos [Nontrivial α] (x : αˣ) : 0 < ∥(x : α)∥ :=
 theorem Units.nnnorm_pos [Nontrivial α] (x : αˣ) : 0 < ∥(x : α)∥₊ :=
   x.norm_pos
 
+instance : NormedRing (ULift α) :=
+  { ULift.semiNormedRing, ULift.normedGroup with }
+
 /-- Normed ring structure on the product of two normed rings, using the sup norm. -/
 instance Prod.normedRing [NormedRing β] : NormedRing (α × β) :=
-  { Prod.semiNormedGroup with norm_mul := norm_mul_le }
+  { Prod.normedGroup with norm_mul := norm_mul_le }
 
 /-- Normed ring structure on the product of finitely many normed rings, using the sup norm. -/
 instance Pi.normedRing {π : ι → Type _} [Fintype ι] [∀ i, NormedRing (π i)] : NormedRing (∀ i, π i) :=
-  { Pi.semiNormedGroup with norm_mul := norm_mul_le }
+  { Pi.normedGroup with norm_mul := norm_mul_le }
 
 end NormedRing
 

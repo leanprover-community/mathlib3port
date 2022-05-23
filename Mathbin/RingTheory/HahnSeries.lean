@@ -1047,6 +1047,7 @@ section Semiringₓ
 
 variable [Semiringₓ R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The ring `hahn_series ℕ R` is isomorphic to `power_series R`. -/
 @[simps]
 def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R where
@@ -1145,6 +1146,7 @@ theorem of_power_series_X_pow {R} [CommSemiringₓ R] (n : ℕ) :
     
   rw [pow_succₓ, ih, of_power_series_X, mul_comm, single_mul_single, one_mulₓ, Nat.cast_succₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The ring `hahn_series (σ →₀ ℕ) R` is isomorphic to `mv_power_series σ R` for a `fintype` `σ`.
 We take the index set of the hahn series to be `finsupp` rather than `pi`,
 even though we assume `fintype σ` as this is more natural for alignment with `mv_power_series`.

@@ -195,7 +195,7 @@ theorem snd_inv_app_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
   have e := (D.snd_inv_app_t_app' i j k U).some_spec
   reassoc! e
   rw [← e]
-  simp
+  simp [eq_to_hom_map]
 
 variable [HasLimits C]
 

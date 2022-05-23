@@ -579,10 +579,10 @@ theorem dist_smul_vadd_eq_dist {v : V} (p₁ p₂ : P) (hv : v ≠ 0) (r : ℝ) 
 
 open AffineSubspace FiniteDimensional
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- Distances `r₁` `r₂` of `p` from two different points `c₁` `c₂` determine at
 most two points `p₁` `p₂` in a two-dimensional subspace containing those points
 (two circles intersect in at most two points). -/
@@ -1081,7 +1081,7 @@ theorem cospherical_singleton (p : P) : Cospherical ({p} : Set P) := by
 include V
 
 /-- Two points are cospherical. -/
-theorem cospherical_insert_singleton (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
+theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) := by
   use (2⁻¹ : ℝ) • (p₂ -ᵥ p₁) +ᵥ p₁, (2⁻¹ : ℝ) * dist p₂ p₁
   intro p
   rw [Set.mem_insert_iff, Set.mem_singleton_iff]

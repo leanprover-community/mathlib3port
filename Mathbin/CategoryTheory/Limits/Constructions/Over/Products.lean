@@ -38,7 +38,7 @@ in `C`.
 -/
 @[reducible]
 def widePullbackDiagramOfDiagramOver (B : C) {J : Type v} (F : Discrete J ⥤ Over B) : WidePullbackShape J ⥤ C :=
-  WidePullbackShape.wideCospan B (fun j => (F.obj j).left) fun j => (F.obj j).Hom
+  WidePullbackShape.wideCospan B (fun j => (F.obj ⟨j⟩).left) fun j => (F.obj ⟨j⟩).Hom
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
@@ -48,7 +48,7 @@ def conesEquivInverseObj (B : C) {J : Type v} (F : Discrete J ⥤ Over B) (c : C
   π :=
     { app := fun X =>
         Option.casesOn X c.x.Hom fun j : J =>
-          (c.π.app j).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
+          (c.π.app ⟨j⟩).left,-- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
         dsimp'
         cases X <;> cases Y <;> cases f
@@ -71,9 +71,11 @@ def conesEquivInverse (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
         · simp
           
         · dsimp'
-          rw [← f.w j]
+          rw [← f.w ⟨j⟩]
           rfl
            }
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]
@@ -82,7 +84,7 @@ def conesEquivFunctor (B : C) {J : Type v} (F : Discrete J ⥤ Over B) :
   obj := fun c =>
     { x := Over.mk (c.π.app none),
       π :=
-        { app := fun j =>
+        { app := fun ⟨j⟩ =>
             Over.homMk (c.π.app (some j))
               (by
                 apply c.w (wide_pullback_shape.hom.term j)) } }
@@ -148,9 +150,11 @@ theorem over_products_of_wide_pullbacks [HasWidePullbacks C] {B : C} : HasProduc
 
 /-- Given all finite wide pullbacks in `C`, construct finite products in `C/B`. -/
 theorem over_finite_products_of_finite_wide_pullbacks [HasFiniteWidePullbacks C] {B : C} : HasFiniteProducts (Over B) :=
-  ⟨fun J 𝒥₁ 𝒥₂ => over_product_of_wide_pullback⟩
+  ⟨fun J 𝒥 => over_product_of_wide_pullback⟩
 
 end ConstructProducts
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- Construct terminal object in the over category. This isn't an instance as it's not typically the
 way we want to define terminal objects.
@@ -160,9 +164,9 @@ way we want to define terminal objects.
 theorem over_has_terminal (B : C) : HasTerminal (Over B) :=
   { HasLimit := fun F =>
       HasLimit.mk
-        { Cone := { x := Over.mk (𝟙 _), π := { app := fun p => Pempty.elimₓ p } },
+        { Cone := { x := Over.mk (𝟙 _), π := { app := fun p => p.as.elim } },
           IsLimit :=
-            { lift := fun s => Over.homMk _, fac' := fun _ j => j.elim,
+            { lift := fun s => Over.homMk _, fac' := fun _ j => j.as.elim,
               uniq' := fun s m _ => by
                 ext
                 rw [over.hom_mk_left]

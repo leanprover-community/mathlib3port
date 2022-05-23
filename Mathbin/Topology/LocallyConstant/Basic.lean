@@ -256,7 +256,7 @@ def const (X : Type _) {Y : Type _} [TopologicalSpace X] (y : Y) : LocallyConsta
 theorem coe_const (y : Y) : (const X y : X → Y) = Function.const X y :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The locally constant function to `fin 2` associated to a clopen set. -/
 def ofClopen {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x, Decidable (x ∈ U)] (hU : IsClopen U) :
     LocallyConstant X (Finₓ 2) where
@@ -444,6 +444,58 @@ theorem coe_desc {X α β : Type _} [TopologicalSpace X] (f : X → α) (g : α 
   rfl
 
 end Desc
+
+section Indicator
+
+variable {R : Type _} [One R] {U : Set X} (f : LocallyConstant X R)
+
+open Classical
+
+/-- Given a clopen set `U` and a locally constant function `f`, `locally_constant.mul_indicator`
+  returns the locally constant function that is `f` on `U` and `1` otherwise. -/
+@[to_additive
+      " Given a clopen set `U` and a locally constant function `f`,\n  `locally_constant.indicator` returns the locally constant function that is `f` on `U` and `0`\n  otherwise. ",
+  simps]
+noncomputable def mulIndicator (hU : IsClopen U) : LocallyConstant X R where
+  toFun := Set.mulIndicator U f
+  IsLocallyConstant := by
+    rw [IsLocallyConstant.iff_exists_open]
+    rintro x
+    obtain ⟨V, hV, hx, h'⟩ := (IsLocallyConstant.iff_exists_open _).1 f.is_locally_constant x
+    by_cases' x ∈ U
+    · refine' ⟨U ∩ V, IsOpen.inter hU.1 hV, Set.mem_inter h hx, _⟩
+      rintro y hy
+      rw [Set.mem_inter_iff] at hy
+      rw [Set.mul_indicator_of_mem hy.1, Set.mul_indicator_of_mem h]
+      apply h' y hy.2
+      
+    · rw [← Set.mem_compl_iff] at h
+      refine' ⟨Uᶜ, (IsClopen.compl hU).1, h, _⟩
+      rintro y hy
+      rw [Set.mem_compl_iff] at h
+      rw [Set.mem_compl_iff] at hy
+      simp [h, hy]
+      
+
+variable (a : X)
+
+@[to_additive]
+theorem mul_indicator_apply_eq_if (hU : IsClopen U) : mulIndicator f hU a = if a ∈ U then f a else 1 :=
+  Set.mul_indicator_apply U f a
+
+variable {a}
+
+@[to_additive]
+theorem mul_indicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a := by
+  rw [mul_indicator_apply]
+  apply Set.mul_indicator_of_mem h
+
+@[to_additive]
+theorem mul_indicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 := by
+  rw [mul_indicator_apply]
+  apply Set.mul_indicator_of_not_mem h
+
+end Indicator
 
 end LocallyConstant
 

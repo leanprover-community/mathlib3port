@@ -96,6 +96,7 @@ add_decl_doc le_sum_of_subadditive
 
 variable {f g : ι → N} {s t : Finset ι}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an ordered commutative monoid, if each factor `f i` of one finite product is less than or
 equal to the corresponding factor `g i` of another finite product, then
 `∏ i in s, f i ≤ ∏ i in s, g i`. -/
@@ -131,6 +132,7 @@ theorem prod_le_one' (h : ∀, ∀ i ∈ s, ∀, f i ≤ 1) : (∏ i in s, f i) 
     (by
       rw [prod_const_one])
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_le_sum_of_subset_of_nonneg]
 theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀, ∀ i ∈ t, ∀, i ∉ s → 1 ≤ f i) :
     (∏ i in s, f i) ≤ ∏ i in t, f i := by
@@ -150,6 +152,7 @@ theorem prod_mono_set_of_one_le' (hf : ∀ x, 1 ≤ f x) : Monotone fun s => ∏
 theorem prod_le_univ_prod_of_one_le' [Fintype ι] {s : Finset ι} (w : ∀ x, 1 ≤ f x) : (∏ x in s, f x) ≤ ∏ x, f x :=
   prod_le_prod_of_subset_of_one_le' (subset_univ s) fun a _ _ => w a
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_eq_zero_iff_of_nonneg]
 theorem prod_eq_one_iff_of_one_le' : (∀, ∀ i ∈ s, ∀, 1 ≤ f i) → ((∏ i in s, f i) = 1 ↔ ∀, ∀ i ∈ s, ∀, f i = 1) := by
   classical
@@ -342,6 +345,7 @@ theorem prod_le_prod_of_subset' (h : s ⊆ t) : (∏ x in s, f x) ≤ ∏ x in t
 @[to_additive sum_mono_set]
 theorem prod_mono_set' (f : ι → M) : Monotone fun s => ∏ x in s, f x := fun s₁ s₂ hs => prod_le_prod_of_subset' hs
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_le_sum_of_ne_zero]
 theorem prod_le_prod_of_ne_one' (h : ∀, ∀ x ∈ s, ∀, f x ≠ 1 → x ∈ t) : (∏ x in s, f x) ≤ ∏ x in t, f x := by
   classical <;>
@@ -360,6 +364,7 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_lt_sum]
 theorem prod_lt_prod' (Hle : ∀, ∀ i ∈ s, ∀, f i ≤ g i) (Hlt : ∃ i ∈ s, f i < g i) : (∏ i in s, f i) < ∏ i in s, g i :=
   by
@@ -378,6 +383,7 @@ theorem prod_lt_prod_of_nonempty' (hs : s.Nonempty) (Hlt : ∀, ∀ i ∈ s, ∀
   cases' hs with i hi
   exact ⟨i, hi, Hlt i hi⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive sum_lt_sum_of_subset]
 theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i ∉ s) (hlt : 1 < f i)
     (hle : ∀, ∀ j ∈ t, ∀, j ∉ s → 1 ≤ f j) : (∏ j in s, f j) < ∏ j in t, f j := by
@@ -416,6 +422,7 @@ theorem prod_lt_one (h : ∀, ∀ i ∈ s, ∀, f i < 1) (hs : s.Nonempty) : (�
     (by
       rw [prod_const_one])
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_eq_prod_iff_of_le {f g : ι → M} (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) :
     ((∏ i in s, f i) = ∏ i in s, g i) ↔ ∀, ∀ i ∈ s, ∀, f i = g i := by
@@ -519,6 +526,7 @@ section CanonicallyOrderedCommSemiring
 
 variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {i : ι}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_le_prod' (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) : (∏ i in s, f i) ≤ ∏ i in s, g i := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -532,6 +540,7 @@ theorem prod_le_prod' (h : ∀, ∀ i ∈ s, ∀, f i ≤ g i) : (∏ i in s, f 
       
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `g, h ≤ f` and `g i + h i ≤ f i`, then the product of `f` over `s` is at least the
   sum of the products of `g` and `h`. This is the version for `canonically_ordered_comm_semiring`.
 -/
@@ -583,6 +592,7 @@ theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop 
   (sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top) fun i hi =>
     lt_top_iff_ne_top.2 (h i hi)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A sum of numbers is infinite iff one of them is infinite -/
 theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
     (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by

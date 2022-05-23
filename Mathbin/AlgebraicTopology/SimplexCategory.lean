@@ -482,10 +482,10 @@ theorem mono_iff_injective {n m : SimplexCategory} {f : n ⟶ m} : Mono f ↔ Fu
   · exact concrete_category.mono_of_injective f
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- A morphism in `simplex_category` is an epimorphism if and only if it is a surjective function
 -/
 theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} : Epi f ↔ Function.Surjective f.toOrderHom := by

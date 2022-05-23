@@ -25,9 +25,9 @@ open Function Set
 
 namespace Finset
 
-variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [DecidableEq β'] [DecidableEq γ] [DecidableEq δ]
-  [DecidableEq δ'] [DecidableEq ε] [DecidableEq ε'] {f f' : α → β → γ} {g g' : α → β → γ → δ} {s s' : Finset α}
-  {t t' : Finset β} {u u' : Finset γ} {a a' : α} {b b' : β} {c : γ}
+variable {α α' β β' γ γ' δ δ' ε ε' : Type _} [DecidableEq α'] [DecidableEq β'] [DecidableEq γ] [DecidableEq γ']
+  [DecidableEq δ] [DecidableEq δ'] [DecidableEq ε] [DecidableEq ε'] {f f' : α → β → γ} {g g' : α → β → γ → δ}
+  {s s' : Finset α} {t t' : Finset β} {u u' : Finset γ} {a a' : α} {b b' : β} {c : γ}
 
 /-- The image of a binary function `f : α → β → γ` as a function `finset α → finset β → finset γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
@@ -106,7 +106,7 @@ theorem image₂_eq_empty_iff : image₂ f s t = ∅ ↔ s = ∅ ∨ t = ∅ := 
   simp_rw [← not_nonempty_iff_eq_empty, image₂_nonempty_iff, not_and_distrib]
 
 @[simp]
-theorem image₂_singleton_left : image₂ f {a} t = t.Image (f a) :=
+theorem image₂_singleton_left : image₂ f {a} t = t.Image fun b => f a b :=
   ext fun x => by
     simp
 
@@ -259,6 +259,22 @@ theorem image₂_image_left_comm {f : α' → β → γ} {g : α → α'} {f' : 
 theorem image_image₂_right_comm {f : α → β' → γ} {g : β → β'} {f' : α → β → δ} {g' : δ → γ}
     (h_right_comm : ∀ a b, f a (g b) = g' (f' a b)) : image₂ f s (t.Image g) = (image₂ f' s t).Image g' :=
   (image_image₂_distrib_right fun a b => (h_right_comm a b).symm).symm
+
+/-- The other direction does not hold because of the `s`-`s` cross terms on the RHS. -/
+theorem image₂_distrib_subset_left {γ : Type _} {u : Finset γ} {f : α → δ → ε} {g : β → γ → δ} {f₁ : α → β → β'}
+    {f₂ : α → γ → γ'} {g' : β' → γ' → ε} (h_distrib : ∀ a b c, f a (g b c) = g' (f₁ a b) (f₂ a c)) :
+    image₂ f s (image₂ g t u) ⊆ image₂ g' (image₂ f₁ s t) (image₂ f₂ s u) :=
+  coe_subset.1 <| by
+    push_cast
+    exact Set.image2_distrib_subset_left h_distrib
+
+/-- The other direction does not hold because of the `u`-`u` cross terms on the RHS. -/
+theorem image₂_distrib_subset_right {γ : Type _} {u : Finset γ} {f : δ → γ → ε} {g : α → β → δ} {f₁ : α → γ → α'}
+    {f₂ : β → γ → β'} {g' : α' → β' → ε} (h_distrib : ∀ a b c, f (g a b) c = g' (f₁ a c) (f₂ b c)) :
+    image₂ f (image₂ g s t) u ⊆ image₂ g' (image₂ f₁ s u) (image₂ f₂ t u) :=
+  coe_subset.1 <| by
+    push_cast
+    exact Set.image2_distrib_subset_right h_distrib
 
 theorem image_image₂_antidistrib {g : γ → δ} {f' : β' → α' → δ} {g₁ : β → β'} {g₂ : α → α'}
     (h_antidistrib : ∀ a b, g (f a b) = f' (g₁ b) (g₂ a)) :

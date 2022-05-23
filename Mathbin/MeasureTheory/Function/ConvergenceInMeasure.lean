@@ -241,7 +241,7 @@ variable [MeasurableSpace E] [NormedGroup E] [BorelSpace E]
 theorem TendstoInMeasure.ae_measurable {u : Filter ι} [NeBot u] [IsCountablyGenerated u] {f : ι → α → E} {g : α → E}
     (hf : ∀ n, AeMeasurable (f n) μ) (h_tendsto : TendstoInMeasure μ f u g) : AeMeasurable g μ := by
   obtain ⟨ns, hns⟩ := h_tendsto.exists_seq_tendsto_ae'
-  exact ae_measurable_of_tendsto_metric_ae at_top (fun n => hf (ns n)) hns
+  exact ae_measurable_of_tendsto_metrizable_ae at_top (fun n => hf (ns n)) hns
 
 end AeMeasurableOf
 

@@ -68,7 +68,7 @@ theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType �
               rw [hn]
               exact power_nat_le (le_max_rightₓ _ _))
             (pos_iff_ne_zero.1
-              (succ_le.1
+              (succ_le_iff.1
                 (by
                   rw [succ_zero]
                   obtain ⟨a⟩ : Nonempty α

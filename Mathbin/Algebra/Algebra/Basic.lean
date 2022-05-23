@@ -5,6 +5,8 @@ Authors: Kenny Lau, Yury Kudryashov
 -/
 import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Ring.Aut
+import Mathbin.Algebra.Ring.Ulift
+import Mathbin.Algebra.Module.Ulift
 import Mathbin.LinearAlgebra.Span
 import Mathbin.Tactic.Abel
 
@@ -368,6 +370,23 @@ theorem algebra_map_punit (r : R) : algebraMap R PUnit r = PUnit.unit :=
   rfl
 
 end PUnit
+
+section ULift
+
+instance _root_.ulift.algebra : Algebra R (ULift A) :=
+  { ULift.module', (ULift.ringEquiv : ULift A ≃+* A).symm.toRingHom.comp (algebraMap R A) with
+    toFun := fun r => ULift.up (algebraMap R A r),
+    commutes' := fun r x => ULift.down_injective <| Algebra.commutes r x.down,
+    smul_def' := fun r x => ULift.down_injective <| Algebra.smul_def' r x.down }
+
+theorem _root_.ulift.algebra_map_eq (r : R) : algebraMap R (ULift A) r = ULift.up (algebraMap R A r) :=
+  rfl
+
+@[simp]
+theorem _root_.ulift.down_algebra_map (r : R) : (algebraMap R (ULift A) r).down = algebraMap R A r :=
+  rfl
+
+end ULift
 
 section Prod
 

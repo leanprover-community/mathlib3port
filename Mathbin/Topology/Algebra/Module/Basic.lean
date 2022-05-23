@@ -587,10 +587,10 @@ theorem coe_add (f g : M₁ →SL[σ₁₂] M₂) : (↑(f + g) : M₁ →ₛₗ
 theorem coe_add' (f g : M₁ →SL[σ₁₂] M₂) : ⇑(f + g) = f + g :=
   rfl
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 instance : AddCommMonoidₓ (M₁ →SL[σ₁₂] M₂) where
   zero := (0 : M₁ →SL[σ₁₂] M₂)
   add := (· + ·)
@@ -703,6 +703,59 @@ theorem coe_mul (f g : M₁ →L[R₁] M₁) : ⇑(f * g) = f ∘ g :=
 
 theorem mul_apply (f g : M₁ →L[R₁] M₁) (x : M₁) : (f * g) x = f (g x) :=
   rfl
+
+instance : MonoidWithZeroₓ (M₁ →L[R₁] M₁) where
+  mul := (· * ·)
+  one := 1
+  zero := 0
+  mul_zero := fun f => ext fun _ => map_zero f
+  zero_mul := fun _ => ext fun _ => rfl
+  mul_one := fun _ => ext fun _ => rfl
+  one_mul := fun _ => ext fun _ => rfl
+  mul_assoc := fun _ _ _ => ext fun _ => rfl
+
+instance [HasContinuousAdd M₁] : Semiringₓ (M₁ →L[R₁] M₁) :=
+  { ContinuousLinearMap.monoidWithZero, ContinuousLinearMap.addCommMonoid with mul := (· * ·), one := 1,
+    left_distrib := fun f g h => ext fun x => map_add f (g x) (h x),
+    right_distrib := fun _ _ _ => ext fun _ => LinearMap.add_apply _ _ _ }
+
+/-- `continuous_linear_map.to_linear_map` as a `ring_hom`.-/
+@[simps]
+def toLinearMapRingHom [HasContinuousAdd M₁] : (M₁ →L[R₁] M₁) →+* M₁ →ₗ[R₁] M₁ where
+  toFun := toLinearMap
+  map_zero' := rfl
+  map_one' := rfl
+  map_add' := fun _ _ => rfl
+  map_mul' := fun _ _ => rfl
+
+section ApplyAction
+
+variable [HasContinuousAdd M₁]
+
+/-- The tautological action by `M₁ →L[R₁] M₁` on `M`.
+
+This generalizes `function.End.apply_mul_action`. -/
+instance applyModule : Module (M₁ →L[R₁] M₁) M₁ :=
+  Module.compHom _ toLinearMapRingHom
+
+@[simp]
+protected theorem smul_def (f : M₁ →L[R₁] M₁) (a : M₁) : f • a = f a :=
+  rfl
+
+/-- `continuous_linear_map.apply_module` is faithful. -/
+instance apply_has_faithful_scalar : HasFaithfulScalar (M₁ →L[R₁] M₁) M₁ :=
+  ⟨fun _ _ => ContinuousLinearMap.ext⟩
+
+instance apply_smul_comm_class : SmulCommClass R₁ (M₁ →L[R₁] M₁) M₁ where
+  smul_comm := fun r e m => (e.map_smul r m).symm
+
+instance apply_smul_comm_class' : SmulCommClass (M₁ →L[R₁] M₁) R₁ M₁ where
+  smul_comm := ContinuousLinearMap.map_smul
+
+instance : HasContinuousConstSmul (M₁ →L[R₁] M₁) M₁ :=
+  ⟨ContinuousLinearMap.continuous⟩
+
+end ApplyAction
 
 /-- The cartesian product of two bounded linear maps, as a bounded linear map. -/
 protected def prod [Module R₁ M₂] [Module R₁ M₃] (f₁ : M₁ →L[R₁] M₂) (f₂ : M₁ →L[R₁] M₃) : M₁ →L[R₁] M₂ × M₃ :=
@@ -1086,7 +1139,7 @@ theorem coe_neg' (f : M →SL[σ₁₂] M₂) : ⇑(-f) = -f :=
 instance : Sub (M →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f - g, f.2.sub g.2⟩⟩
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 instance : AddCommGroupₓ (M →SL[σ₁₂] M₂) := by
   refine'
       { ContinuousLinearMap.addCommMonoid with zero := 0, add := (· + ·), neg := Neg.neg, sub := Sub.sub,
@@ -1117,10 +1170,7 @@ theorem coe_sub' (f g : M →SL[σ₁₂] M₂) : ⇑(f - g) = f - g :=
 end
 
 instance [TopologicalAddGroup M] : Ringₓ (M →L[R] M) :=
-  { ContinuousLinearMap.addCommGroup with mul := (· * ·), one := 1, mul_one := fun _ => ext fun _ => rfl,
-    one_mul := fun _ => ext fun _ => rfl, mul_assoc := fun _ _ _ => ext fun _ => rfl,
-    left_distrib := fun f g h => ext fun x => map_add f (g x) (h x),
-    right_distrib := fun _ _ _ => ext fun _ => LinearMap.add_apply _ _ _ }
+  { ContinuousLinearMap.semiring, ContinuousLinearMap.addCommGroup with mul := (· * ·), one := 1 }
 
 theorem smul_right_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n : ℕ) :
     smulRight (1 : R →L[R] R) c ^ n = smulRight (1 : R →L[R] R) (c ^ n) := by

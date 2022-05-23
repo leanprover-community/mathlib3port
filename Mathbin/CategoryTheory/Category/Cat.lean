@@ -92,12 +92,18 @@ def objects : Cat.{v, u} ⥤ Type u where
   obj := fun C => C
   map := fun C D F => F.obj
 
+section
+
+attribute [local simp] eq_to_hom_map
+
 /-- Any isomorphism in `Cat` induces an equivalence of the underlying categories. -/
 def equivOfIso {C D : Cat} (γ : C ≅ D) : C ≌ D where
   Functor := γ.Hom
   inverse := γ.inv
   unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
   counitIso := eqToIso γ.inv_hom_id
+
+end
 
 end Cat
 
@@ -108,7 +114,7 @@ This ought to be modelled as a 2-functor!
 @[simps]
 def typeToCat : Type u ⥤ Cat where
   obj := fun X => Cat.of (Discrete X)
-  map := fun X Y f => Discrete.functor f
+  map := fun X Y f => Discrete.functor (discrete.mk ∘ f)
   map_id' := fun X => by
     apply Functor.ext
     tidy
@@ -116,11 +122,11 @@ def typeToCat : Type u ⥤ Cat where
     apply Functor.ext
     tidy
 
-instance : Faithful typeToCat.{u} :=
-  {  }
+instance : Faithful typeToCat.{u} where
+  map_injective' := fun X Y f g h => funext fun x => congr_argₓ Discrete.as (Functor.congr_obj h ⟨x⟩)
 
 instance : Full typeToCat.{u} where
-  Preimage := fun X Y F => F.obj
+  Preimage := fun X Y F => discrete.as ∘ F.obj ∘ discrete.mk
   witness' := by
     intro X Y F
     apply Functor.ext
@@ -128,7 +134,8 @@ instance : Full typeToCat.{u} where
       dsimp'
       ext
       
-    · intro x
+    · rintro ⟨x⟩
+      ext
       rfl
       
 

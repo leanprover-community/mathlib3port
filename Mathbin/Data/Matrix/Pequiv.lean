@@ -99,6 +99,7 @@ theorem to_matrix_trans [Fintype m] [DecidableEq m] [DecidableEq n] [Semiringₓ
 theorem to_matrix_bot [DecidableEq n] [Zero α] [One α] : ((⊥ : Pequiv m n).toMatrix : Matrix m n α) = 0 :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem to_matrix_injective [DecidableEq n] [MonoidWithZeroₓ α] [Nontrivial α] :
     Function.Injective (@toMatrixₓ m n α _ _ _) := by
   classical

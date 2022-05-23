@@ -3,8 +3,8 @@ Copyright (c) 2018 Kenny Lau. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 -/
-import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Group.Opposite
+import Mathbin.Algebra.Hom.Ring
 
 /-!
 # Ring structures on the multiplicative opposite

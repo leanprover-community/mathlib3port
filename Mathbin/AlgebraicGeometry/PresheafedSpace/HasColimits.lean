@@ -60,6 +60,8 @@ namespace AlgebraicGeometry
 
 namespace PresheafedSpace
 
+attribute [local simp] eq_to_hom_map
+
 @[simp]
 theorem map_id_c_app (F : J ⥤ PresheafedSpace C) j U :
     (F.map (𝟙 j)).c.app (op U) =

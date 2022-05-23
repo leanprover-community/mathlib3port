@@ -104,7 +104,7 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
   rw [Int.nat_abs_mul, lt_mul_iff_one_lt_left, Int.nat_abs_pow, Int.nat_abs_of_nat]
   · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
     
-  · exact Nat.pos_of_ne_zeroₓ (Int.nat_abs_ne_zero_of_ne_zero (ne_zero hf))
+  · exact Nat.pos_of_ne_zeroₓ (Int.nat_abs_ne_zero_of_ne_zero (NeZero hf))
     
 
 /-- We can swap `a` and `b` in a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2`. -/
@@ -146,7 +146,7 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0
     tauto
     
   · exfalso
-    exact ne_zero hf.1 rfl
+    exact NeZero hf.1 rfl
     
   · use a0, b0, -c0, neg_of_minimal hf, hc
     exact neg_pos.mpr h1

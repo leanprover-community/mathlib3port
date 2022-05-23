@@ -18,11 +18,19 @@ import Mathbin.GroupTheory.GroupAction.Defs
 * `mul_semiring_action_hom M R S`, the type of equivariant ring homomorphisms
   from `R` to `S`, where `M` is a monoid that acts on the rings `R` and `S`.
 
+The above types have corresponding classes:
+* `smul_hom_class F M X Y` states that `F` is a type of bundled `X → Y` homs
+  preserving scalar multiplication by `M`
+* `distrib_mul_action_hom_class F M A B` states that `F` is a type of bundled `A → B` homs
+  preserving the additive monoid structure and scalar multiplication by `M`
+* `mul_semiring_action_hom_class F M R S` states that `F` is a type of bundled `R → S` homs
+  preserving the ring structure and scalar multiplication by `M`
+
 ## Notations
 
 * `X →[M] Y` is `mul_action_hom M X Y`.
-* `A →+[M] B` is `distrib_mul_action_hom M X Y`.
-* `R →+*[M] S` is `mul_semiring_action_hom M X Y`.
+* `A →+[M] B` is `distrib_mul_action_hom M A B`.
+* `R →+*[M] S` is `mul_semiring_action_hom M R S`.
 
 -/
 
@@ -68,29 +76,46 @@ structure MulActionHom where
 -- mathport name: «expr →[ ] »
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 
+/-- `smul_hom_class F M X Y` states that `F` is a type of morphisms preserving
+scalar multiplication by `M`.
+
+You should extend this class when you extend `mul_action_hom`. -/
+class SmulHomClass (F : Type _) (M X Y : outParam <| Type _) [HasScalar M X] [HasScalar M Y] extends
+  FunLike F X fun _ => Y where
+  map_smul : ∀ f : F c : M x : X, f (c • x) = c • f x
+
+-- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
+attribute [nolint dangerous_instance] SmulHomClass.toFunLike
+
+export SmulHomClass (map_smul)
+
+attribute [simp] map_smul
+
 namespace MulActionHom
 
 instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
   ⟨MulActionHom.toFun⟩
 
+instance : SmulHomClass (X →[M'] Y) M' X Y where
+  coe := MulActionHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_smul := MulActionHom.map_smul'
+
 variable {M M' X Y}
 
-@[simp]
-theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m • f x :=
-  f.map_smul' m x
+protected theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m • f x :=
+  map_smul _ _ _
 
 @[ext]
-theorem ext : ∀ {f g : X →[M'] Y}, (∀ x, f x = g x) → f = g
-  | ⟨f, _⟩, ⟨g, _⟩, H => by
-    congr 1 with x
-    exact H x
+theorem ext : ∀ {f g : X →[M'] Y}, (∀ x, f x = g x) → f = g :=
+  FunLike.ext
 
 theorem ext_iff {f g : X →[M'] Y} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun H x => by
-    rw [H], ext⟩
+  FunLike.ext_iff
 
 protected theorem congr_fun {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
-  h ▸ rfl
+  FunLike.congr_fun h _
 
 variable (M M') {X}
 
@@ -157,6 +182,16 @@ add_decl_doc DistribMulActionHom.toMulActionHom
 -- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
+/-- `distrib_mul_action_hom_class F M A B` states that `F` is a type of morphisms preserving
+the additive monoid structure and scalar multiplication by `M`.
+
+You should extend this class when you extend `distrib_mul_action_hom`. -/
+class DistribMulActionHomClass (F : Type _) (M A B : outParam <| Type _) [Monoidₓ M] [AddMonoidₓ A] [AddMonoidₓ B]
+  [DistribMulAction M A] [DistribMulAction M B] extends SmulHomClass F M A B, AddMonoidHomClass F A B
+
+-- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
+attribute [nolint dangerous_instance] DistribMulActionHomClass.toAddMonoidHomClass
+
 namespace DistribMulActionHom
 
 instance hasCoe : Coe (A →+[M] B) (A →+ B) :=
@@ -167,6 +202,14 @@ instance hasCoe' : Coe (A →+[M] B) (A →[M] B) :=
 
 instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨toFun⟩
+
+instance : DistribMulActionHomClass (A →+[M] B) M A B where
+  coe := DistribMulActionHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_smul := DistribMulActionHom.map_smul'
+  map_zero := DistribMulActionHom.map_zero'
+  map_add := DistribMulActionHom.map_add'
 
 variable {M A B}
 
@@ -183,17 +226,14 @@ theorem coe_fn_coe' (f : A →+[M] B) : ((f : A →[M] B) : A → B) = f :=
   rfl
 
 @[ext]
-theorem ext : ∀ {f g : A →+[M] B}, (∀ x, f x = g x) → f = g
-  | ⟨f, _, _, _⟩, ⟨g, _, _, _⟩, H => by
-    congr 1 with x
-    exact H x
+theorem ext : ∀ {f g : A →+[M] B}, (∀ x, f x = g x) → f = g :=
+  FunLike.ext
 
 theorem ext_iff {f g : A →+[M] B} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun H x => by
-    rw [H], ext⟩
+  FunLike.ext_iff
 
 protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x :=
-  h ▸ rfl
+  FunLike.congr_fun h _
 
 theorem to_mul_action_hom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) : f = g := by
   ext a
@@ -203,25 +243,20 @@ theorem to_add_monoid_hom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g
   ext a
   exact AddMonoidHom.congr_fun h a
 
-@[simp]
-theorem map_zero (f : A →+[M] B) : f 0 = 0 :=
-  f.map_zero'
+protected theorem map_zero (f : A →+[M] B) : f 0 = 0 :=
+  map_zero _
 
-@[simp]
-theorem map_add (f : A →+[M] B) (x y : A) : f (x + y) = f x + f y :=
-  f.map_add' x y
+protected theorem map_add (f : A →+[M] B) (x y : A) : f (x + y) = f x + f y :=
+  map_add _ _ _
 
-@[simp]
-theorem map_neg (f : A' →+[M] B') (x : A') : f (-x) = -f x :=
-  (f : A' →+ B').map_neg x
+protected theorem map_neg (f : A' →+[M] B') (x : A') : f (-x) = -f x :=
+  map_neg _ _
 
-@[simp]
-theorem map_sub (f : A' →+[M] B') (x y : A') : f (x - y) = f x - f y :=
-  (f : A' →+ B').map_sub x y
+protected theorem map_sub (f : A' →+[M] B') (x y : A') : f (x - y) = f x - f y :=
+  map_sub _ _ _
 
-@[simp]
-theorem map_smul (f : A →+[M] B) (m : M) (x : A) : f (m • x) = m • f x :=
-  f.map_smul' m x
+protected theorem map_smul (f : A →+[M] B) (m : M) (x : A) : f (m • x) = m • f x :=
+  map_smul _ _ _
 
 variable (M) {A}
 
@@ -312,6 +347,16 @@ add_decl_doc MulSemiringActionHom.toDistribMulActionHom
 -- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
+/-- `mul_semiring_action_hom_class F M R S` states that `F` is a type of morphisms preserving
+the ring structure and scalar multiplication by `M`.
+
+You should extend this class when you extend `mul_semiring_action_hom`. -/
+class MulSemiringActionHomClass (F : Type _) (M R S : outParam <| Type _) [Monoidₓ M] [Semiringₓ R] [Semiringₓ S]
+  [DistribMulAction M R] [DistribMulAction M S] extends DistribMulActionHomClass F M R S, RingHomClass F R S
+
+-- `M` becomes a metavariable but it's an `out_param` so it's not a problem.
+attribute [nolint dangerous_instance] MulSemiringActionHomClass.toRingHomClass
+
 namespace MulSemiringActionHom
 
 instance hasCoe : Coe (R →+*[M] S) (R →+* S) :=
@@ -322,6 +367,16 @@ instance hasCoe' : Coe (R →+*[M] S) (R →+[M] S) :=
 
 instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.toFun⟩
+
+instance : MulSemiringActionHomClass (R →+*[M] S) M R S where
+  coe := MulSemiringActionHom.toFun
+  coe_injective' := fun f g h => by
+    cases f <;> cases g <;> congr
+  map_smul := MulSemiringActionHom.map_smul'
+  map_zero := MulSemiringActionHom.map_zero'
+  map_add := MulSemiringActionHom.map_add'
+  map_one := MulSemiringActionHom.map_one'
+  map_mul := MulSemiringActionHom.map_mul'
 
 variable {M R S}
 
@@ -334,42 +389,32 @@ theorem coe_fn_coe' (f : R →+*[M] S) : ((f : R →+[M] S) : R → S) = f :=
   rfl
 
 @[ext]
-theorem ext : ∀ {f g : R →+*[M] S}, (∀ x, f x = g x) → f = g
-  | ⟨f, _, _, _, _, _⟩, ⟨g, _, _, _, _, _⟩, H => by
-    congr 1 with x
-    exact H x
+theorem ext : ∀ {f g : R →+*[M] S}, (∀ x, f x = g x) → f = g :=
+  FunLike.ext
 
 theorem ext_iff {f g : R →+*[M] S} : f = g ↔ ∀ x, f x = g x :=
-  ⟨fun H x => by
-    rw [H], ext⟩
+  FunLike.ext_iff
 
-@[simp]
-theorem map_zero (f : R →+*[M] S) : f 0 = 0 :=
-  f.map_zero'
+protected theorem map_zero (f : R →+*[M] S) : f 0 = 0 :=
+  map_zero _
 
-@[simp]
-theorem map_add (f : R →+*[M] S) (x y : R) : f (x + y) = f x + f y :=
-  f.map_add' x y
+protected theorem map_add (f : R →+*[M] S) (x y : R) : f (x + y) = f x + f y :=
+  map_add _ _ _
 
-@[simp]
-theorem map_neg (f : R' →+*[M] S') (x : R') : f (-x) = -f x :=
-  (f : R' →+* S').map_neg x
+protected theorem map_neg (f : R' →+*[M] S') (x : R') : f (-x) = -f x :=
+  map_neg _ _
 
-@[simp]
-theorem map_sub (f : R' →+*[M] S') (x y : R') : f (x - y) = f x - f y :=
-  (f : R' →+* S').map_sub x y
+protected theorem map_sub (f : R' →+*[M] S') (x y : R') : f (x - y) = f x - f y :=
+  map_sub _ _ _
 
-@[simp]
-theorem map_one (f : R →+*[M] S) : f 1 = 1 :=
-  f.map_one'
+protected theorem map_one (f : R →+*[M] S) : f 1 = 1 :=
+  map_one _
 
-@[simp]
-theorem map_mul (f : R →+*[M] S) (x y : R) : f (x * y) = f x * f y :=
-  f.map_mul' x y
+protected theorem map_mul (f : R →+*[M] S) (x y : R) : f (x * y) = f x * f y :=
+  map_mul _ _ _
 
-@[simp]
-theorem map_smul (f : R →+*[M] S) (m : M) (x : R) : f (m • x) = m • f x :=
-  f.map_smul' m x
+protected theorem map_smul (f : R →+*[M] S) (m : M) (x : R) : f (m • x) = m • f x :=
+  map_smul _ _ _
 
 variable (M) {R}
 

@@ -223,7 +223,7 @@ theorem witt_one_pos_eq_zero (n : ℕ) (hn : 0 < n) : wittOne p n = 0 := by
   simp only [AlgHom.map_mul, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_pow, bind₁_X_right, bind₁_C_right]
   rw [sub_mul, one_mulₓ]
   rw [Finset.sum_eq_single 0]
-  · simp only [inv_of_eq_inv, one_mulₓ, inv_pow₀, tsub_zero, RingHom.map_one, pow_zeroₓ]
+  · simp only [inv_of_eq_inv, one_mulₓ, inv_pow, tsub_zero, RingHom.map_one, pow_zeroₓ]
     simp only [one_pow, one_mulₓ, X_in_terms_of_W_zero, sub_self, bind₁_X_right]
     
   · intro i hin hi0
@@ -314,7 +314,7 @@ variable {p R}
 
 omit hp
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 @[simp]
 theorem v2_coeff {p' R'} (x y : WittVector p' R') (i : Finₓ 2) : (![x, y] i).coeff = ![x.coeff, y.coeff] i := by
   fin_cases i <;> simp

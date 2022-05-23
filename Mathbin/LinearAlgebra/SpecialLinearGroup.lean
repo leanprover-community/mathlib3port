@@ -230,14 +230,11 @@ instance : Neg (SpecialLinearGroup n R) :=
       simpa [(Fact.out <| Even <| Fintype.card n).neg_one_pow, g.det_coe] using det_smul (↑ₘg) (-1)⟩⟩
 
 @[simp]
-theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(↑g : Matrix n n R) :=
+theorem coe_neg (g : SpecialLinearGroup n R) : ↑(-g) = -(g : Matrix n n R) :=
   rfl
 
-instance : HasDistribNeg (SpecialLinearGroup n R) where
-  neg := Neg.neg
-  neg_neg := fun x => Subtype.ext <| neg_negₓ _
-  neg_mul := fun x y => Subtype.ext <| neg_mul _ _
-  mul_neg := fun x y => Subtype.ext <| mul_neg _ _
+instance : HasDistribNeg (SpecialLinearGroup n R) :=
+  Function.Injective.hasDistribNeg _ Subtype.coe_injective coe_neg coe_mul
 
 @[simp]
 theorem coe_int_neg (g : SpecialLinearGroup n ℤ) : ↑(-g) = (-↑g : SpecialLinearGroup n R) :=

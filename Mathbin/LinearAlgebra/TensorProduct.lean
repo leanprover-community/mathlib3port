@@ -394,6 +394,7 @@ section
 
 open BigOperators
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -402,6 +403,7 @@ theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) : (∑ a i
   · simp [Finset.sum_insert has, add_tmul, ih]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) : (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
   classical
   induction' s using Finset.induction with a s has ih h
@@ -790,6 +792,14 @@ variable (R M N P Q)
 def mapBilinear : (M →ₗ[R] P) →ₗ[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
   LinearMap.mk₂ R map map_add_left map_smul_left map_add_right map_smul_right
 
+/-- The canonical linear map from `P ⊗[R] (M →ₗ[R] Q)` to `(M →ₗ[R] P ⊗[R] Q)` -/
+def ltensorHomToHomLtensor : P ⊗[R] (M →ₗ[R] Q) →ₗ[R] M →ₗ[R] P ⊗[R] Q :=
+  TensorProduct.lift (llcomp R M Q _ ∘ₗ mk R P Q)
+
+/-- The canonical linear map from `(M →ₗ[R] P) ⊗[R] Q` to `(M →ₗ[R] P ⊗[R] Q)` -/
+def rtensorHomToHomRtensor : (M →ₗ[R] P) ⊗[R] Q →ₗ[R] M →ₗ[R] P ⊗[R] Q :=
+  TensorProduct.lift (llcomp R M P _ ∘ₗ (mk R P Q).flip).flip
+
 /-- The linear map from `(M →ₗ P) ⊗ (N →ₗ Q)` to `(M ⊗ N →ₗ P ⊗ Q)` sending `f ⊗ₜ g` to
 the `tensor_product.map f g`, the tensor product of the two maps. -/
 def homTensorHomMap : (M →ₗ[R] P) ⊗[R] (N →ₗ[R] Q) →ₗ[R] M ⊗[R] N →ₗ[R] P ⊗[R] Q :=
@@ -799,6 +809,16 @@ variable {R M N P Q}
 
 @[simp]
 theorem map_bilinear_apply (f : M →ₗ[R] P) (g : N →ₗ[R] Q) : mapBilinear R M N P Q f g = map f g :=
+  rfl
+
+@[simp]
+theorem ltensor_hom_to_hom_ltensor_apply (p : P) (f : M →ₗ[R] Q) (m : M) :
+    ltensorHomToHomLtensor R M P Q (p ⊗ₜ f) m = p ⊗ₜ f m :=
+  rfl
+
+@[simp]
+theorem rtensor_hom_to_hom_rtensor_apply (f : M →ₗ[R] P) (q : Q) (m : M) :
+    rtensorHomToHomRtensor R M P Q (f ⊗ₜ q) m = f m ⊗ₜ q :=
   rfl
 
 @[simp]

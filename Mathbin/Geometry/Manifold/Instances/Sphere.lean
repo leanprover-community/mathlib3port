@@ -455,7 +455,7 @@ instance : LieGroup (𝓡 1) circle where
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
 theorem cont_mdiff_exp_map_circle : ContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
-  ((cont_diff_exp.restrictScalars ℝ).comp (cont_diff_id.smul cont_diff_const)).ContMdiff.cod_restrict_sphere _
+  (cont_diff_exp.comp (cont_diff_id.smul cont_diff_const)).ContMdiff.cod_restrict_sphere _
 
 end circle
 

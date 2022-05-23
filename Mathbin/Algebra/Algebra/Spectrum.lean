@@ -39,6 +39,8 @@ This theory will serve as the foundation for spectral theory in Banach algebras.
 -/
 
 
+open Set
+
 universe u v
 
 section Defs

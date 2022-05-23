@@ -130,7 +130,7 @@ equalizer diagram).
 theorem is_gluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (supr U))) :
     IsGluing F U ((piOpensIsoSectionsFamily F U).Hom sf) s ↔ res F U s = sf := by
   constructor <;> intro h
-  · ext i
+  · ext ⟨i⟩
     rw [res, types.limit.lift_π_apply', fan.mk_π_app]
     exact h i
     
@@ -153,7 +153,7 @@ theorem is_sheaf_of_is_sheaf_unique_gluing_types (Fsh : F.IsSheafUniqueGluing) :
     convert congr_funₓ s.condition x
   choose m m_spec m_uniq using fun x : s.X => Fsh U ((pi_opens_iso_sections_family F U).Hom (s.ι x)) (h_compatible x)
   refine' ⟨m, _, _⟩
-  · ext i x
+  · ext ⟨i⟩ x
     simp [res]
     exact m_spec x i
     

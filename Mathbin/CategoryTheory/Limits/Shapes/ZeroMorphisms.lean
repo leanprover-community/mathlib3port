@@ -35,6 +35,8 @@ open CategoryTheory
 
 open CategoryTheory.Category
 
+open Classical
+
 namespace CategoryTheory.Limits
 
 variable (C : Type u) [Category.{v} C]
@@ -586,13 +588,13 @@ theorem image.ι_zero' [HasEqualizers C] {X Y : C} {f : X ⟶ Y} (h : f = 0) [Ha
 end Image
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
-instance splitMonoSigmaι {β : Type v} [DecidableEq β] [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)]
-    (b : β) : SplitMono (Sigma.ι f b) where
+instance splitMonoSigmaι {β : Type v} [HasZeroMorphisms C] (f : β → C) [HasColimit (Discrete.functor f)] (b : β) :
+    SplitMono (Sigma.ι f b) where
   retraction := Sigma.desc fun b' => if h : b' = b then eqToHom (congr_argₓ f h) else 0
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
-instance splitEpiPiπ {β : Type v} [DecidableEq β] [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)]
-    (b : β) : SplitEpi (Pi.π f b) where
+instance splitEpiPiπ {β : Type v} [HasZeroMorphisms C] (f : β → C) [HasLimit (Discrete.functor f)] (b : β) :
+    SplitEpi (Pi.π f b) where
   section_ := Pi.lift fun b' => if h : b = b' then eqToHom (congr_argₓ f h) else 0
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/

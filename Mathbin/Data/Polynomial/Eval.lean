@@ -935,8 +935,9 @@ theorem eval_eq_zero_of_dvd_of_eval_eq_zero : p ∣ q → eval x p = 0 → eval 
   eval₂_eq_zero_of_dvd_of_eval₂_eq_zero _ _
 
 @[simp]
-theorem eval_geom_sum {R} [CommSemiringₓ R] {n : ℕ} {x : R} : eval x (geomSum x n) = geomSum x n := by
-  simp [geom_sum_def, eval_finset_sum]
+theorem eval_geom_sum {R} [CommSemiringₓ R] {n : ℕ} {x : R} : eval x (∑ i in range n, X ^ i) = ∑ i in range n, x ^ i :=
+  by
+  simp [eval_finset_sum]
 
 end
 

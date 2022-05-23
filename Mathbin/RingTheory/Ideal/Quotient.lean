@@ -321,6 +321,7 @@ section ChineseRemainder
 
 variable {ι : Type v}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     (hf : ∀, ∀ i ∈ s, ∀, ∀, ∀ j ∈ s, ∀, i ≠ j → f i⊔f j = ⊤) (i : ι) (his : i ∈ s) :
     ∃ r : R, r - 1 ∈ f i ∧ ∀, ∀ j ∈ s, ∀, j ≠ i → r ∈ f j := by

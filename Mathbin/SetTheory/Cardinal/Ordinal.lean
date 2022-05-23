@@ -115,7 +115,7 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
       refine' Ordinal.induction_on o _ this
       intro α r _ h
       let s := sup.{u, u} fun a : α => inv_fun aleph_idx (Ordinal.typein r a)
-      apply not_le_of_gtₓ (lt_succ_self s)
+      apply (lt_succ s).not_le
       have I : injective aleph_idx := aleph_idx.initial_seg.to_embedding.injective
       simpa only [typein_enum, left_inverse_inv_fun I (succ s)] using
         le_sup.{u, u} (fun a => inv_fun aleph_idx (Ordinal.typein r a)) (Ordinal.enum r _ (h (succ s)))
@@ -175,8 +175,8 @@ theorem aleph'_zero : aleph' 0 = 0 := by
 theorem aleph'_succ {o : Ordinal.{u}} : aleph' o.succ = (aleph' o).succ :=
   le_antisymmₓ
     (Cardinal.aleph_idx_le.1 <| by
-      rw [aleph_idx_aleph', Ordinal.succ_le, ← aleph'_lt, aleph'_aleph_idx] <;> apply Cardinal.lt_succ_self)
-    (Cardinal.succ_le.2 <| aleph'_lt.2 <| Ordinal.lt_succ_self _)
+      rw [aleph_idx_aleph', Ordinal.succ_le, ← aleph'_lt, aleph'_aleph_idx] <;> apply Cardinal.lt_succ)
+    (Cardinal.succ_le_of_lt <| aleph'_lt.2 <| Ordinal.lt_succ_self _)
 
 @[simp]
 theorem aleph'_nat : ∀ n : ℕ, aleph' n = n
@@ -276,10 +276,10 @@ theorem succ_omega : succ ω = aleph 1 := by
 
 theorem omega_lt_aleph_one : ω < aleph 1 := by
   rw [← succ_omega]
-  exact lt_succ_self _
+  apply lt_succ
 
 theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : Countable s ↔ # s < aleph 1 := by
-  rw [← succ_omega, lt_succ, mk_set_le_omega]
+  rw [← succ_omega, lt_succ_iff, mk_set_le_omega]
 
 /-- Ordinals that are cardinals are unbounded. -/
 theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b } :=
@@ -890,6 +890,7 @@ theorem mk_compl_eq_mk_compl_infinite {α : Type _} [Infinite α] {s t : Set α}
     # (sᶜ : Set α) = # (tᶜ : Set α) := by
   rw [mk_compl_of_infinite s hs, mk_compl_of_infinite t ht]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Fintype α] {s : Set α} {t : Set β}
     (h1 : lift.{max v w} (# α) = lift.{max u w} (# β)) (h2 : lift.{max v w} (# s) = lift.{max u w} (# t)) :
     lift.{max v w} (# (sᶜ : Set α)) = lift.{max u w} (# (tᶜ : Set β)) := by

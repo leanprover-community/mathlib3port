@@ -28,10 +28,6 @@ theorem RingEquiv.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f :
   f.toRingHom.map_zpow
 
 @[simp]
-theorem zpow_bit0_neg {K : Type _} [DivisionRing K] (x : K) (n : ℤ) : -x ^ bit0 n = x ^ bit0 n := by
-  rw [zpow_bit0', zpow_bit0', neg_mul_neg]
-
-@[simp]
 theorem zpow_bit1_neg {K : Type _} [DivisionRing K] (x : K) (n : ℤ) : -x ^ bit1 n = -(x ^ bit1 n) := by
   rw [zpow_bit1', zpow_bit1', neg_mul_neg, neg_mul_eq_mul_neg]
 
@@ -105,7 +101,7 @@ theorem one_le_zpow_of_nonneg {p : K} (hp : 1 ≤ p) {z : ℤ} (hz : 0 ≤ z) : 
     
 
 theorem zpow_bit0_nonneg (a : K) (n : ℤ) : 0 ≤ a ^ bit0 n := by
-  rw [zpow_bit0₀]
+  rw [zpow_bit0]
   exact mul_self_nonneg _
 
 theorem zpow_two_nonneg (a : K) : 0 ≤ a ^ (2 : ℤ) :=
@@ -211,7 +207,7 @@ theorem zpow_injective {x : K} (h₀ : 0 < x) (h₁ : x ≠ 1) : Function.Inject
   rcases h₁.lt_or_lt with (H | H)
   · apply (zpow_strict_mono (one_lt_inv h₀ H)).Injective
     show x⁻¹ ^ m = x⁻¹ ^ n
-    rw [← zpow_neg_one, ← zpow_mul₀, ← zpow_mul₀, mul_comm _ m, mul_comm _ n, zpow_mul₀, zpow_mul₀, h]
+    rw [← zpow_neg_one, ← zpow_mul, ← zpow_mul, mul_comm _ m, mul_comm _ n, zpow_mul, zpow_mul, h]
     
   · exact (zpow_strict_mono H).Injective h
     

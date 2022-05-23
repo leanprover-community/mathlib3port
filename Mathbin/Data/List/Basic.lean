@@ -90,6 +90,7 @@ theorem _root_.decidable.list.eq_or_ne_mem_of_mem [DecidableEq α] {a b : α} {l
     a = b ∨ a ≠ b ∧ a ∈ l :=
   (Decidable.byCases Or.inl) fun this : a ≠ b => (h.elim Or.inl) fun h => Or.inr ⟨this, h⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eq_or_ne_mem_of_memₓ {a b : α} {l : List α} : a ∈ b :: l → a = b ∨ a ≠ b ∧ a ∈ l := by
   classical <;> exact Decidable.List.eq_or_ne_mem_of_mem
 

@@ -169,6 +169,13 @@ theorem t0_space_def (α : Type u) [TopologicalSpace α] :
 def Indistinguishable {α : Type u} [TopologicalSpace α] (x y : α) : Prop :=
   ∀ U : Set α hU : IsOpen U, x ∈ U ↔ y ∈ U
 
+theorem indistinguishable_iff_nhds_eq {x y : α} : Indistinguishable x y ↔ 𝓝 x = 𝓝 y :=
+  ⟨fun h => by
+    simp (config := { contextual := true })only [nhds_def', h _], fun h U hU => by
+    simp only [← hU.mem_nhds_iff, h]⟩
+
+alias indistinguishable_iff_nhds_eq ↔ Indistinguishable.nhds_eq _
+
 theorem t0_space_iff_distinguishable (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ x y : α, x ≠ y → ¬Indistinguishable x y := by
   delta' Indistinguishable
@@ -176,11 +183,18 @@ theorem t0_space_iff_distinguishable (α : Type u) [TopologicalSpace α] :
   push_neg
   simp_rw [xor_iff_not_iff]
 
-theorem indistinguishable_iff_closed {α : Type u} [TopologicalSpace α] (x y : α) :
-    Indistinguishable x y ↔ ∀ U : Set α hU : IsClosed U, x ∈ U ↔ y ∈ U :=
+@[simp]
+theorem nhds_eq_nhds_iff [T0Space α] {a b : α} : 𝓝 a = 𝓝 b ↔ a = b :=
+  Function.Injective.eq_iff fun x y h =>
+    of_not_not fun hne => (t0_space_iff_distinguishable α).mp ‹_› x y hne (indistinguishable_iff_nhds_eq.mpr h)
+
+theorem Indistinguishable.eq [T0Space α] {x y : α} (h : Indistinguishable x y) : x = y :=
+  nhds_eq_nhds_iff.mp h.nhds_eq
+
+theorem indistinguishable_iff_closed {x y : α} : Indistinguishable x y ↔ ∀ U : Set α hU : IsClosed U, x ∈ U ↔ y ∈ U :=
   ⟨fun h U hU => not_iff_not.mp (h _ hU.1), fun h U hU => not_iff_not.mp (h _ (is_closed_compl_iff.mpr hU))⟩
 
-theorem indistinguishable_iff_closure {α : Type u} [TopologicalSpace α] (x y : α) :
+theorem indistinguishable_iff_closure (x y : α) :
     Indistinguishable x y ↔ x ∈ Closure ({y} : Set α) ∧ y ∈ Closure ({x} : Set α) := by
   rw [indistinguishable_iff_closed]
   exact
@@ -194,9 +208,6 @@ theorem indistinguishable_iff_closure {α : Type u} [TopologicalSpace α] (x y :
 theorem subtype_indistinguishable_iff {α : Type u} [TopologicalSpace α] {U : Set α} (x y : U) :
     Indistinguishable x y ↔ Indistinguishable (x : α) y := by
   simp_rw [indistinguishable_iff_closure, closure_subtype, image_singleton]
-
-theorem Indistinguishable.eq [hα : T0Space α] {x y : α} (h : Indistinguishable x y) : x = y :=
-  not_imp_not.mp ((t0_space_iff_distinguishable _).mp hα x y) h
 
 /-- Given a closed set `S` in a compact T₀ space,
 there is some `x ∈ S` such that `{x}` is closed. -/
@@ -509,10 +520,6 @@ theorem pure_le_nhds_iff [T1Space α] {a b : α} : pure a ≤ 𝓝 b ↔ a = b :
 @[simp]
 theorem nhds_le_nhds_iff [T1Space α] {a b : α} : 𝓝 a ≤ 𝓝 b ↔ a = b :=
   ⟨fun h => pure_le_nhds_iff.mp <| (pure_le_nhds a).trans h, fun h => h ▸ le_rfl⟩
-
-@[simp]
-theorem nhds_eq_nhds_iff [T1Space α] {a b : α} : 𝓝 a = 𝓝 b ↔ a = b :=
-  ⟨fun h => nhds_le_nhds_iff.mp h.le, fun h => h ▸ rfl⟩
 
 @[simp]
 theorem compl_singleton_mem_nhds_set_iff [T1Space α] {x : α} {s : Set α} : {x}ᶜ ∈ 𝓝ˢ s ↔ x ∉ s := by
@@ -1156,6 +1163,7 @@ section
 
 open Finset Function
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- For every finite open cover `Uᵢ` of a compact set, there exists a compact cover `Kᵢ ⊆ Uᵢ`. -/
 theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact s) {ι} (t : Finset ι) (U : ι → Set α)
     (hU : ∀, ∀ i ∈ t, ∀, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :

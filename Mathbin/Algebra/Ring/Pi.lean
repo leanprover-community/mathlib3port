@@ -5,7 +5,7 @@ Authors: Simon Hudon, Patrick Massot
 -/
 import Mathbin.Tactic.PiInstances
 import Mathbin.Algebra.Group.Pi
-import Mathbin.Algebra.Ring.Basic
+import Mathbin.Algebra.Hom.Ring
 
 /-!
 # Pi instances for ring

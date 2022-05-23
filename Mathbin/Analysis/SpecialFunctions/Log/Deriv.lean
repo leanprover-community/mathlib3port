@@ -182,7 +182,7 @@ theorem tendsto_mul_log_one_plus_div_at_top (t : ℝ) : Tendsto (fun x => x * lo
 
 open BigOperators
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
@@ -198,7 +198,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
     have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i := by
       congr with i
       exact mul_div_cancel_left _ (Nat.cast_add_one_pos i).ne'
-    field_simp [F, this, ← geom_sum_def, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
+    field_simp [F, this, geom_sum_eq (ne_of_ltₓ hy.2), sub_ne_zero_of_ne (ne_of_gtₓ hy.2),
       sub_ne_zero_of_ne (ne_of_ltₓ hy.2)]
     ring
   -- second step: show that the derivative of `F` is small
@@ -231,7 +231,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : abs x < 1) (n : ℕ) :
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'ₓ] using C
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- Power series expansion of the logarithm around `1`. -/
 theorem has_sum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : abs x < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by

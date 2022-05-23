@@ -131,7 +131,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
       map := fun X Y f =>
         MonoOver.homMk f
           (by
-            ext1 ⟨⟩) }
+            ext1 ⟨⟨⟩⟩) }
   inverse :=
     { obj := fun X =>
         ⟨X.val.left, fun Z f g => by

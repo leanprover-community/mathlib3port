@@ -104,6 +104,7 @@ section BidualIsometry
 
 variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ∥f x∥ ≤ M * ∥f∥) : ∥x∥ ≤ M := by
@@ -177,8 +178,8 @@ theorem is_closed_polar (s : Set E) : IsClosed (Polar 𝕜 s) := by
 theorem polar_closure (s : Set E) : Polar 𝕜 (Closure s) = Polar 𝕜 s :=
   ((dualPairing 𝕜 E).flip.polar_antitone subset_closure).antisymm <|
     (dualPairing 𝕜 E).flip.polar_gc.l_le <|
-      closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) <|
-        (is_closed_polar _ _).Preimage (inclusionInDoubleDual 𝕜 E).Continuous
+      closure_minimal ((dualPairing 𝕜 E).flip.polar_gc.le_u_l s) <| by
+        simpa [LinearMap.flip_flip] using (is_closed_polar _ _).Preimage (inclusion_in_double_dual 𝕜 E).Continuous
 
 variable {𝕜}
 

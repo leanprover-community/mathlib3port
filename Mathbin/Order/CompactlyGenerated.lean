@@ -71,6 +71,7 @@ above `k` has a finite subset with `Sup` above `k`.  Such an element is also cal
 def IsCompactElement {α : Type _} [CompleteLattice α] (k : α) :=
   ∀ s : Set α, k ≤ sup s → ∃ t : Finset α, ↑t ⊆ s ∧ k ≤ t.sup id
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- An element `k` is compact if and only if any directed set with `Sup` above
 `k` already got above `k` at some point in the set. -/
 theorem is_compact_element_iff_le_of_directed_Sup_le (k : α) :
@@ -132,6 +133,7 @@ theorem IsCompactElement.directed_Sup_lt_of_lt {α : Type _} [CompleteLattice α
   obtain hxk := hbelow x hxs
   exact hxk.ne (hxk.le.antisymm hkx)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
     (h : ∀, ∀ x ∈ s, ∀, IsCompactElement (f x)) : IsCompactElement (s.sup f) := by
   classical
@@ -147,6 +149,7 @@ theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f :
   specialize h d hemp hdir (le_transₓ (Finset.le_sup hps) hsup)
   simpa only [exists_prop]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem WellFounded.is_Sup_finite_compact (h : WellFounded ((· > ·) : α → α → Prop)) : IsSupFiniteCompact α := by
   intro s
   let p : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
@@ -316,6 +319,7 @@ theorem inf_Sup_eq_supr_inf_sup_finset : a⊓sup s = ⨆ (t : Finset α) (H : �
       exact (le_inf hcinf.1 ht2).trans (le_supr₂ t ht1))
     (supr_le fun t => supr_le fun h => inf_le_inf_left _ ((Finset.sup_id_eq_Sup t).symm ▸ Sup_le_Sup h))
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem CompleteLattice.set_independent_iff_finite {s : Set α} :
     CompleteLattice.SetIndependent s ↔ ∀ t : Finset α, ↑t ⊆ s → CompleteLattice.SetIndependent (↑t : Set α) :=
   ⟨fun hs t ht => hs.mono ht, fun h a ha => by

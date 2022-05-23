@@ -5,7 +5,6 @@ Authors: Fox Thomson
 -/
 import Mathbin.SetTheory.Game.Winner
 import Mathbin.Tactic.NthRewrite.Default
-import Mathbin.Tactic.EquivRw
 
 /-!
 # Basic definitions about impartial (pre-)games
@@ -23,6 +22,9 @@ namespace Pgame
 
 -- mathport name: «expr ≈ »
 local infixl:0 " ≈ " => Equiv
+
+-- mathport name: «expr ⧏ »
+local infixl:50 " ⧏ " => Lf
 
 /-- The definition for a impartial game, defined using Conway induction -/
 def ImpartialAux : Pgame → Prop
@@ -79,20 +81,19 @@ instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Im
   | G, H => by
     intro hG hH
     rw [impartial_def]
-    constructor
-    · apply equiv_trans _ (neg_add_relabelling G H).Equiv.symm
-      exact add_congr (neg_equiv_self _) (neg_equiv_self _)
+    refine'
+      ⟨equiv_trans (add_congr (neg_equiv_self _) (neg_equiv_self _)) (neg_add_relabelling _ _).Equiv.symm, fun i => _,
+        fun i => _⟩
+    · rcases left_moves_add_cases i with (⟨j, rfl⟩ | ⟨j, rfl⟩)
+      all_goals
+        simp only [add_move_left_inl, add_move_left_inr]
+        apply impartial_add
       
-    constructor
-    all_goals
-      intro i
-      first |
-        equiv_rw Pgame.leftMovesAdd G H  at i|
-        equiv_rw Pgame.rightMovesAdd G H  at i
-      cases i
-    all_goals
-      simp only [add_move_left_inl, add_move_right_inl, add_move_left_inr, add_move_right_inr]
-      exact impartial_add _ _
+    · rcases right_moves_add_cases i with (⟨j, rfl⟩ | ⟨j, rfl⟩)
+      all_goals
+        simp only [add_move_right_inl, add_move_right_inr]
+        apply impartial_add
+      
 
 instance impartial_neg : ∀ G : Pgame [G.Impartial], (-G).Impartial
   | G => by
@@ -109,25 +110,25 @@ instance impartial_neg : ∀ G : Pgame [G.Impartial], (-G).Impartial
       apply impartial_neg
       
 
+theorem nonpos (G : Pgame) [G.Impartial] : ¬0 < G := fun h => by
+  have h' := neg_lt_iff.2 h
+  rw [Pgame.neg_zero, lt_congr_left (equiv_symm (neg_equiv_self G))] at h'
+  exact (h.trans h').False
+
+theorem nonneg (G : Pgame) [G.Impartial] : ¬G < 0 := fun h => by
+  have h' := neg_lt_iff.2 h
+  rw [Pgame.neg_zero, lt_congr_right (equiv_symm (neg_equiv_self G))] at h'
+  exact (h.trans h').False
+
 theorem winner_cases (G : Pgame) [G.Impartial] : G.FirstLoses ∨ G.FirstWins := by
-  rcases G.winner_cases with (hl | hr | hp | hn)
-  · cases' hl with hpos hnonneg
-    rw [← not_ltₓ] at hnonneg
-    have hneg := lt_of_lt_of_equiv hpos (neg_equiv_self G)
-    rw [lt_iff_neg_gt, neg_negₓ, Pgame.neg_zero] at hneg
-    contradiction
+  rcases G.winner_cases with (h | h | h | h)
+  · exact ((nonneg G) h).elim
     
-  · cases' hr with hnonpos hneg
-    rw [← not_ltₓ] at hnonpos
-    have hpos := lt_of_equiv_of_lt (neg_equiv_self G).symm hneg
-    rw [lt_iff_neg_gt, neg_negₓ, Pgame.neg_zero] at hpos
-    contradiction
+  · exact Or.inl h
     
-  · left
-    assumption
+  · exact ((nonpos G) h).elim
     
-  · right
-    assumption
+  · exact Or.inr h
     
 
 theorem not_first_wins (G : Pgame) [G.Impartial] : ¬G.FirstWins ↔ G.FirstLoses := by
@@ -138,60 +139,49 @@ theorem not_first_loses (G : Pgame) [G.Impartial] : ¬G.FirstLoses ↔ G.FirstWi
   Iff.symm <| iff_not_comm.1 <| Iff.symm <| not_first_wins G
 
 theorem add_self (G : Pgame) [G.Impartial] : (G + G).FirstLoses :=
-  first_loses_is_zero.2 <| equiv_trans (add_congr (neg_equiv_self G) G.equiv_refl) (add_left_neg_equiv G)
+  first_loses_is_zero.2 <| equiv_trans (add_congr_left (neg_equiv_self G)) (add_left_neg_equiv G)
 
 theorem equiv_iff_sum_first_loses (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ (G + H).FirstLoses := by
   constructor
   · intro heq
-    exact first_loses_of_equiv (add_congr (equiv_refl _) HEq) (add_self G)
+    exact first_loses_of_equiv (add_congr_right HEq) (add_self G)
     
   · intro hGHp
     constructor
     · rw [le_iff_sub_nonneg]
-      exact
-        le_transₓ hGHp.2
-          (le_transₓ add_comm_le <| le_of_le_of_equiv (Pgame.le_refl _) <| add_congr (equiv_refl _) (neg_equiv_self G))
+      exact hGHp.2.trans (add_comm_le.trans <| le_of_le_of_equiv le_rfl <| add_congr_right (neg_equiv_self G))
       
     · rw [le_iff_sub_nonneg]
-      exact le_transₓ hGHp.2 (le_of_le_of_equiv (Pgame.le_refl _) <| add_congr (equiv_refl _) (neg_equiv_self H))
+      exact hGHp.2.trans (le_of_le_of_equiv le_rfl <| add_congr_right (neg_equiv_self H))
       
     
 
 theorem le_zero_iff {G : Pgame} [G.Impartial] : G ≤ 0 ↔ 0 ≤ G := by
-  rw [le_zero_iff_zero_le_neg, le_congr (equiv_refl 0) (neg_equiv_self G)]
+  rw [← zero_le_neg_iff, le_congr_right (neg_equiv_self G)]
 
-theorem lt_zero_iff {G : Pgame} [G.Impartial] : G < 0 ↔ 0 < G := by
-  rw [lt_iff_neg_gt, Pgame.neg_zero, lt_congr (equiv_refl 0) (neg_equiv_self G)]
+theorem lf_zero_iff {G : Pgame} [G.Impartial] : G ⧏ 0 ↔ 0 ⧏ G := by
+  rw [← zero_lf_neg_iff, lf_congr_right (neg_equiv_self G)]
 
 theorem first_loses_symm (G : Pgame) [G.Impartial] : G.FirstLoses ↔ G ≤ 0 :=
   ⟨And.left, fun h => ⟨h, le_zero_iff.1 h⟩⟩
 
-theorem first_wins_symm (G : Pgame) [G.Impartial] : G.FirstWins ↔ G < 0 :=
-  ⟨And.right, fun h => ⟨lt_zero_iff.1 h, h⟩⟩
+theorem first_wins_symm (G : Pgame) [G.Impartial] : G.FirstWins ↔ G ⧏ 0 :=
+  ⟨And.left, fun h => ⟨h, lf_zero_iff.1 h⟩⟩
 
 theorem first_loses_symm' (G : Pgame) [G.Impartial] : G.FirstLoses ↔ 0 ≤ G :=
   ⟨And.right, fun h => ⟨le_zero_iff.2 h, h⟩⟩
 
-theorem first_wins_symm' (G : Pgame) [G.Impartial] : G.FirstWins ↔ 0 < G :=
-  ⟨And.left, fun h => ⟨h, lt_zero_iff.2 h⟩⟩
+theorem first_wins_symm' (G : Pgame) [G.Impartial] : G.FirstWins ↔ 0 ⧏ G :=
+  ⟨And.right, fun h => ⟨lf_zero_iff.2 h, h⟩⟩
 
 theorem no_good_left_moves_iff_first_loses (G : Pgame) [G.Impartial] :
     (∀ i : G.LeftMoves, (G.moveLeft i).FirstWins) ↔ G.FirstLoses := by
-  constructor
-  · intro hbad
-    rw [first_loses_symm G, le_def_lt]
-    constructor
-    · intro i
-      specialize hbad i
-      exact hbad.2
-      
-    · intro j
-      exact Pempty.elimₓ j
-      
+  refine' ⟨fun hb => _, fun hp i => _⟩
+  · rw [first_loses_symm G, le_iff_forall_lf]
+    exact ⟨fun i => (hb i).1, isEmptyElim⟩
     
-  · intro hp i
-    rw [first_wins_symm]
-    exact (le_def_lt.1 <| (first_loses_symm G).1 hp).1 i
+  · rw [first_wins_symm]
+    exact (le_iff_forall_lf.1 <| (first_loses_symm G).1 hp).1 i
     
 
 theorem no_good_right_moves_iff_first_loses (G : Pgame) [G.Impartial] :
@@ -207,8 +197,8 @@ theorem no_good_right_moves_iff_first_loses (G : Pgame) [G.Impartial] :
 
 theorem good_left_move_iff_first_wins (G : Pgame) [G.Impartial] :
     (∃ i : G.LeftMoves, (G.moveLeft i).FirstLoses) ↔ G.FirstWins := by
-  refine' ⟨fun ⟨i, hi⟩ => (first_wins_symm' G).2 (lt_def_le.2 <| Or.inl ⟨i, hi.2⟩), fun hn => _⟩
-  rw [first_wins_symm' G, lt_def_le] at hn
+  refine' ⟨fun ⟨i, hi⟩ => (first_wins_symm' G).2 (lf_of_forall_le <| Or.inl ⟨i, hi.2⟩), fun hn => _⟩
+  rw [first_wins_symm' G, lf_iff_forall_le] at hn
   rcases hn with (⟨i, hi⟩ | ⟨j, _⟩)
   · exact ⟨i, (first_loses_symm' _).2 hi⟩
     
@@ -217,8 +207,8 @@ theorem good_left_move_iff_first_wins (G : Pgame) [G.Impartial] :
 
 theorem good_right_move_iff_first_wins (G : Pgame) [G.Impartial] :
     (∃ j : G.RightMoves, (G.moveRight j).FirstLoses) ↔ G.FirstWins := by
-  refine' ⟨fun ⟨j, hj⟩ => (first_wins_symm G).2 (lt_def_le.2 <| Or.inr ⟨j, hj.1⟩), fun hn => _⟩
-  rw [first_wins_symm G, lt_def_le] at hn
+  refine' ⟨fun ⟨j, hj⟩ => (first_wins_symm G).2 (lf_of_forall_le <| Or.inr ⟨j, hj.1⟩), fun hn => _⟩
+  rw [first_wins_symm G, lf_iff_forall_le] at hn
   rcases hn with (⟨i, _⟩ | ⟨j, hj⟩)
   · exact Pempty.elimₓ i
     

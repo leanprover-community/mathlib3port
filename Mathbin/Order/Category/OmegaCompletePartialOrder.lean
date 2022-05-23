@@ -74,12 +74,16 @@ def product {J : Type v} (f : J → ωCPO.{v}) : Fan f :=
 /-- The pi-type is a limit cone for the product. -/
 def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f) where
   lift := fun s =>
-    ⟨⟨fun t j => s.π.app j t, fun x y h j => (s.π.app j).Monotone h⟩, fun x => funext fun j => (s.π.app j).Continuous x⟩
+    ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).Monotone h⟩, fun x =>
+      funext fun j => (s.π.app ⟨j⟩).Continuous x⟩
   uniq' := fun s m w => by
     ext t j
-    change m t j = s.π.app j t
-    rw [← w j]
+    change m t j = s.π.app ⟨j⟩ t
+    rw [← w ⟨j⟩]
     rfl
+  fac' := fun s j => by
+    cases j
+    tidy
 
 instance (J : Type v) (f : J → ωCPO.{v}) : HasProduct f :=
   HasLimit.mk ⟨_, isProduct _ f⟩

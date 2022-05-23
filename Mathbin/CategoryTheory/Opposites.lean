@@ -562,6 +562,24 @@ instance subsingleton_of_unop (A B : Cᵒᵖ) [Subsingleton (unop B ⟶ unop A)]
 instance decidableEqOfUnop (A B : Cᵒᵖ) [DecidableEq (unop B ⟶ unop A)] : DecidableEq (A ⟶ B) :=
   (opEquiv A B).DecidableEq
 
+/-- The equivalence between isomorphisms of the form `A ≅ B` and `B.unop ≅ A.unop`.
+
+Note this is definitionally the same as the other three variants:
+* `(opposite.op A ≅ B) ≃ (B.unop ≅ A)`
+* `(A ≅ opposite.op B) ≃ (B ≅ A.unop)`
+* `(opposite.op A ≅ opposite.op B) ≃ (B ≅ A)`
+-/
+@[simps]
+def isoOpEquiv (A B : Cᵒᵖ) : (A ≅ B) ≃ (B.unop ≅ A.unop) where
+  toFun := fun f => f.unop
+  invFun := fun g => g.op
+  left_inv := fun _ => by
+    ext
+    rfl
+  right_inv := fun _ => by
+    ext
+    rfl
+
 namespace Functor
 
 variable (C)

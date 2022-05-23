@@ -174,6 +174,12 @@ theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] X : (inv α).app X = inv (α.ap
   rw [← nat_trans.comp_app]
   simp
 
+@[simp]
+theorem inv_map_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
+    inv ((F.map e.inv).app Z) = (F.map e.Hom).app Z := by
+  ext
+  simp
+
 /-- Construct a natural isomorphism between functors by giving object level isomorphisms,
 and checking naturality only in the forward direction.
 -/

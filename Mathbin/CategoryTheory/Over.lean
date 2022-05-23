@@ -51,7 +51,7 @@ theorem OverMorphism.ext {X : T} {U V : Over X} {f g : U ⟶ V} (h : f.left = g.
   tidy
 
 @[simp]
-theorem over_right (U : Over X) : U.right = PUnit.unit := by
+theorem over_right (U : Over X) : U.right = ⟨⟨⟩⟩ := by
   tidy
 
 @[simp]
@@ -67,7 +67,7 @@ theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by
   have := f.w <;> tidy
 
 /-- To give an object in the over category, it suffices to give a morphism with codomain `X`. -/
-@[simps]
+@[simps left Hom]
 def mk {X Y : T} (f : Y ⟶ X) : Over X :=
   CostructuredArrow.mk f
 
@@ -313,7 +313,7 @@ theorem UnderMorphism.ext {X : T} {U V : Under X} {f g : U ⟶ V} (h : f.right =
   tidy
 
 @[simp]
-theorem under_left (U : Under X) : U.left = PUnit.unit := by
+theorem under_left (U : Under X) : U.left = ⟨⟨⟩⟩ := by
   tidy
 
 @[simp]
@@ -329,7 +329,7 @@ theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by
   have := f.w <;> tidy
 
 /-- To give an object in the under category, it suffices to give an arrow with domain `X`. -/
-@[simps]
+@[simps right Hom]
 def mk {X Y : T} (f : X ⟶ Y) : Under X :=
   StructuredArrow.mk f
 

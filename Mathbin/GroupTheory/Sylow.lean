@@ -189,6 +189,7 @@ theorem IsPGroup.sylow_mem_fixed_points_iff {P : Subgroup G} (hP : IsPGroup p P)
     Q ∈ FixedPoints P (Sylow p G) ↔ P ≤ Q := by
   rw [P.sylow_mem_fixed_points_iff, ← inf_eq_left, hP.inf_normalizer_sylow, inf_eq_left]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A generalization of **Sylow's second theorem**.
   If the number of Sylow `p`-subgroups is finite, then all Sylow `p`-subgroups are conjugate. -/
 instance [hp : Fact p.Prime] [Fintype (Sylow p G)] : IsPretransitive G (Sylow p G) :=

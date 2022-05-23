@@ -45,6 +45,7 @@ theorem dot_product_std_basis_one [DecidableEq n] (v : n → R) (i : n) :
     dotProduct v (LinearMap.stdBasis R (fun _ => R) i 1) = v i := by
   rw [dot_product_std_basis_eq_mul, mul_oneₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dot_product_eq (v w : n → R) (h : ∀ u, dotProduct v u = dotProduct w u) : v = w := by
   funext x
   classical

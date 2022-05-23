@@ -104,7 +104,7 @@ theorem analytic_set_iff_exists_polish_space_range {s : Set α} :
     · refine'
         ⟨Empty, by
           infer_instance, by
-          infer_instance, Empty.elimₓ, continuous_bot, _⟩
+          infer_instance, Empty.elim, continuous_bot, _⟩
       rw [h]
       exact range_eq_empty _
       

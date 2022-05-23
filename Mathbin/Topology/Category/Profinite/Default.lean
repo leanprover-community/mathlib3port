@@ -269,6 +269,7 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y) where
     ext
     rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor
   · contrapose!

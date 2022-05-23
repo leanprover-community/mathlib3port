@@ -444,7 +444,7 @@ end
 
 @[simp]
 theorem reindex_tprod (e : ι ≃ ι₂) (f : ∀ i, M) : reindex R M e (tprod R f) = tprod R fun i => f (e.symm i) :=
-  lift.tprod f
+  lift_aux_tprod _ f
 
 @[simp]
 theorem reindex_comp_tprod (e : ι ≃ ι₂) :
@@ -530,7 +530,8 @@ def subsingletonEquiv [Subsingleton ι] (i₀ : ι) : (⨂[R] i : ι, M) ≃ₗ[
       rw [Subsingleton.elimₓ i i₀, Function.update_same]
     apply x.induction_on
     · intro r f
-      simp only [LinearMap.map_smul, lift.tprod, of_subsingleton_apply, Function.eval, this f, map_smul, update_eq_self]
+      simp only [LinearMap.map_smul, lift.tprod, of_subsingleton_apply, Function.eval, this f, MultilinearMap.map_smul,
+        update_eq_self]
       
     · intro x y hx hy
       simp only [MultilinearMap.map_add, this 0 (_ + _), LinearMap.map_add, ← this 0 (lift _ _), hx, hy]

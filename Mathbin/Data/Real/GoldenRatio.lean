@@ -197,7 +197,7 @@ theorem geom_gold_conj_is_sol_fib_rec : fibRec.IsSolution (pow ψ) := by
 
 end Fibrec
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- Binet's formula as a function equality. -/
 theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 := by
   rw [fib_rec.sol_eq_of_eq_init]

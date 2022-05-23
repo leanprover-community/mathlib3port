@@ -3,9 +3,9 @@ Copyright (c) 2020 Anne Baanen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp, Anne Baanen
 -/
+import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.LinearAlgebra.Finsupp
 import Mathbin.LinearAlgebra.Prod
-import Mathbin.Logic.Equiv.Fin
 import Mathbin.SetTheory.Cardinal.Basic
 
 /-!
@@ -261,18 +261,12 @@ theorem LinearIndependent.fin_cons' {m : ℕ} (x : M) (v : Finₓ m → M) (hli 
     LinearIndependent R (Finₓ.cons x v : Finₓ m.succ → M) := by
   rw [Fintype.linear_independent_iff] at hli⊢
   rintro g total_eq j
-  have zero_not_mem : (0 : Finₓ m.succ) ∉ finset.univ.image (Finₓ.succ : Finₓ m → Finₓ m.succ) := by
-    rw [Finset.mem_image]
-    rintro ⟨x, hx, succ_eq⟩
-    exact Finₓ.succ_ne_zero _ succ_eq
-  simp only [Submodule.coe_mk, Finₓ.univ_succ, Finset.sum_insert zero_not_mem, Finₓ.cons_zero, Finₓ.cons_succ,
-    forall_true_iff, imp_self, Finₓ.succ_inj, Finset.sum_image] at total_eq
+  simp_rw [Finₓ.sum_univ_succ, Finₓ.cons_zero, Finₓ.cons_succ]  at total_eq
   have : g 0 = 0 := by
     refine' x_ortho (g 0) ⟨∑ i : Finₓ m, g i.succ • v i, _⟩ total_eq
     exact sum_mem fun i _ => smul_mem _ _ (subset_span ⟨i, rfl⟩)
-  refine' Finₓ.cases this (fun j => _) j
-  apply hli fun i => g i.succ
-  simpa only [this, zero_smul, zero_addₓ] using total_eq
+  rw [this, zero_smul, zero_addₓ] at total_eq
+  exact Finₓ.cases this (hli _ total_eq) j
 
 /-- A set of linearly independent vectors in a module `M` over a semiring `K` is also linearly
 independent over a subring `R` of `K`.
@@ -829,6 +823,7 @@ theorem exists_maximal_independent' (s : ι → M) :
       (fun c hc => ⟨⟨⋃ I ∈ c, (I : Set ι), key c hc⟩, fun I => Set.subset_bUnion_of_mem⟩) trans
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι, (LinearIndependent R fun x : I => s x) ∧ ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=

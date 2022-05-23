@@ -929,6 +929,7 @@ theorem Continuous.piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a
     (hf : Continuous f) (hg : Continuous g) : Continuous (piecewise s f g) :=
   hf.if hs hg
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s') (ht : ∀, ∀ x ∈ Frontier t, ∀, x ∈ s ↔ x ∈ s') :
     IsOpen (t.ite s s') := by
   classical

@@ -140,6 +140,7 @@ theorem is_wf_iff_no_descending_seq : IsWf s ↔ ∀ f : ℕᵒᵈ ↪o α, ¬Ra
   rw [is_wf, well_founded_on_iff_no_descending_seq]
   exact ⟨fun h f => h f.ltEmbedding, fun h f => h (OrderEmbedding.ofStrictMono f fun _ _ => f.map_rel_iff.2)⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) := by
   classical
   rw [is_wf_iff_no_descending_seq] at *
@@ -268,6 +269,7 @@ theorem PartiallyWellOrderedOn.exists_monotone_subseq [IsRefl α r] [IsTrans α 
     exact h2 m n hlt hle
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem partially_well_ordered_on_iff_exists_monotone_subseq [IsRefl α r] [IsTrans α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ f : ℕ → α, Range f ⊆ s → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) := by
   classical
@@ -302,6 +304,7 @@ theorem IsPwo.exists_monotone_subseq (h : s.IsPwo) (f : ℕ → α) (hf : Range 
 theorem is_pwo_iff_exists_monotone_subseq : s.IsPwo ↔ ∀ f : ℕ → α, Range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   partially_well_ordered_on_iff_exists_monotone_subseq
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPwo.prod (hs : s.IsPwo) (ht : t.IsPwo) : (s ×ˢ t : Set _).IsPwo := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
@@ -328,6 +331,7 @@ theorem IsPwo.image_of_monotone {β : Type _} [PartialOrderₓ β] (hs : s.IsPwo
     IsPwo (f '' s) :=
   hs.image_of_monotone_on fun _ _ _ _ ab => hf ab
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsPwo.union (hs : IsPwo s) (ht : IsPwo t) : IsPwo (s ∪ t) := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
@@ -524,6 +528,7 @@ theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) : s.Part
 def IsMinBadSeq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α) : Prop :=
   ∀ g : ℕ → α, (∀ m : ℕ, m < n → f m = g m) → rk (g n) < rk (f n) → ¬IsBadSeq r s g
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a bad sequence `f`, this constructs a bad sequence that agrees with `f` on the first `n`
   terms and is minimal at `n`.
 -/
@@ -835,6 +840,7 @@ end Finset
 theorem WellFounded.is_wf [LT α] (h : WellFounded ((· < ·) : α → α → Prop)) (s : Set α) : s.IsWf :=
   (Set.is_wf_univ_iff.2 h).mono (Set.subset_univ s)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A version of **Dickson's lemma** any subset of functions `Π s : σ, α s` is partially well
 ordered, when `σ` is a `fintype` and each `α s` is a linear well order.
 This includes the classical case of Dickson's lemma that `ℕ ^ n` is a well partial order.

@@ -67,6 +67,7 @@ def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
   rintro ⟨i, hi⟩ ⟨j, hj⟩ hh
   simpa only [Subtype.mk_eq_mk] using hinj hh
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
@@ -78,7 +79,6 @@ theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
   convert h (s'.image coe) using 1
   simp only [card_image_of_injective s' Subtype.coe_injective]
   rw [image_bUnion]
-  congr
 
 /-- This is the `hall_matchings_on` sets assembled into a directed system.
 -/
@@ -87,6 +87,7 @@ def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (F
   obj := fun ι' => HallMatchingsOn t ι'.unop
   map := fun ι' ι'' g f => HallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α) (ι' : Finset ι) :
     Fintype (HallMatchingsOn t ι') := by
   classical
@@ -102,6 +103,7 @@ noncomputable instance HallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
   ext a
   exact h a
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α`.  It states that there is a
 set of distinct representatives if and only if every union of `k` of the

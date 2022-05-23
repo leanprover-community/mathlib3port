@@ -1053,7 +1053,7 @@ theorem std_simplex_eq_inter : StdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) �
   ext f
   simp only [StdSimplex, Set.mem_inter_eq, Set.mem_Inter, Set.mem_set_of_eq]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem convex_std_simplex : Convex 𝕜 (StdSimplex 𝕜 ι) := by
   refine' fun f g hf hg a b ha hb hab => ⟨fun x => _, _⟩
   · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]

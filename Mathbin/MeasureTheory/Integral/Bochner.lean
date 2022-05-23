@@ -317,6 +317,7 @@ theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α �
   rw [simple_func.mem_range] at hx
   rw [preimage_eq_empty] <;> simp [Set.disjoint_singleton_left, hx]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) : (const α y).integral μ = (μ univ).toReal • y :=
   by
@@ -325,6 +326,7 @@ theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) : (con
         integral_eq_sum_of_subset <| (filter_subset _ _).trans (range_const_subset _ _)_ = (μ univ).toReal • y := by
         simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem integral_piecewise_zero {m : MeasurableSpace α} (f : α →ₛ F) (μ : Measure α) {s : Set α}
     (hs : MeasurableSet s) : (piecewise s hs f 0).integral μ = f.integral (μ.restrict s) := by
@@ -1249,6 +1251,7 @@ theorem integral_add_measure {f : α → E} (hμ : Integrable f μ) (hν : Integ
 theorem integral_zero_measure {m : MeasurableSpace α} (f : α → E) : (∫ x, f x ∂(0 : Measure α)) = 0 :=
   set_to_fun_measure_zero (dominated_fin_meas_additive_weighted_smul _) rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem integral_finset_sum_measure {ι} {m : MeasurableSpace α} {f : α → E} {μ : ι → Measure α} {s : Finset ι}
     (hf : ∀, ∀ i ∈ s, ∀, Integrable f (μ i)) : (∫ a, f a ∂∑ i in s, μ i) = ∑ i in s, ∫ a, f a ∂μ i := by
   classical

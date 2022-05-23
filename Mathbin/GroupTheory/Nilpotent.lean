@@ -806,6 +806,7 @@ variable {G : Type _} [hG : Groupₓ G] [hf : Fintype G]
 
 include hG hf
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A p-group is nilpotent -/
 theorem IsPGroup.is_nilpotent {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup p G) : IsNilpotent G := by
   classical
@@ -824,6 +825,7 @@ theorem IsPGroup.is_nilpotent {p : ℕ} [hp : Fact (Nat.Prime p)] (h : IsPGroup 
     exact of_quotient_center_nilpotent hnq
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a finite group is the direct product of its Sylow groups, it is nilpotent -/
 theorem is_nilpotent_of_product_of_sylow_group
     (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) : IsNilpotent G := by

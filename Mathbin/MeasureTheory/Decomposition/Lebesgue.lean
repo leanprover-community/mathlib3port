@@ -450,52 +450,13 @@ theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ MeasurableLe μ ν 
   ⟨measurable_zero, fun A hA => by
     simp ⟩
 
-theorem max_measurable_le (f g : α → ℝ≥0∞) (hf : f ∈ MeasurableLe μ ν) (hg : g ∈ MeasurableLe μ ν) (A : Set α)
-    (hA : MeasurableSet A) :
-    (∫⁻ a in A, max (f a) (g a) ∂μ) ≤ (∫⁻ a in A ∩ { a | f a ≤ g a }, g a ∂μ) + ∫⁻ a in A ∩ { a | g a < f a }, f a ∂μ :=
-  by
-  rw [← lintegral_indicator _ hA, ← lintegral_indicator f, ← lintegral_indicator g, ← lintegral_add]
-  · refine' lintegral_mono fun a => _
-    by_cases' haA : a ∈ A
-    · by_cases' f a ≤ g a
-      · simp only
-        rw [indicator_of_mem haA, indicator_of_mem, indicator_of_not_mem, add_zeroₓ]
-        simp only [le_reflₓ, max_le_iff, and_trueₓ, h]
-        · rintro ⟨_, hc⟩
-          exact False.elim ((not_ltₓ.2 h) hc)
-          
-        · exact ⟨haA, h⟩
-          
-        
-      · simp only
-        rw [indicator_of_mem haA, indicator_of_mem _ f, indicator_of_not_mem, zero_addₓ]
-        simp only [true_andₓ, le_reflₓ, max_le_iff, le_of_ltₓ (not_leₓ.1 h)]
-        · rintro ⟨_, hc⟩
-          exact False.elim (h hc)
-          
-        · exact ⟨haA, not_leₓ.1 h⟩
-          
-        
-      
-    · simp [indicator_of_not_mem haA]
-      
-    
-  · exact Measurable.indicator hg.1 (hA.inter (measurable_set_le hf.1 hg.1))
-    
-  · exact Measurable.indicator hf.1 (hA.inter (measurable_set_lt hg.1 hf.1))
-    
-  · exact hA.inter (measurable_set_le hf.1 hg.1)
-    
-  · exact hA.inter (measurable_set_lt hg.1 hf.1)
-    
-
 theorem sup_mem_measurable_le {f g : α → ℝ≥0∞} (hf : f ∈ MeasurableLe μ ν) (hg : g ∈ MeasurableLe μ ν) :
     (fun a => f a⊔g a) ∈ MeasurableLe μ ν := by
   simp_rw [Ennreal.sup_eq_max]
   refine' ⟨Measurable.max hf.1 hg.1, fun A hA => _⟩
   have h₁ := hA.inter (measurable_set_le hf.1 hg.1)
   have h₂ := hA.inter (measurable_set_lt hg.1 hf.1)
-  refine' le_transₓ (max_measurable_le f g hf hg A hA) _
+  rw [set_lintegral_max hf.1 hg.1]
   refine' (add_le_add (hg.2 _ h₁) (hf.2 _ h₂)).trans_eq _
   · simp only [← not_leₓ, ← compl_set_of, ← diff_eq]
     exact measure_inter_add_diff _ (measurable_set_le hf.1 hg.1)
@@ -679,17 +640,12 @@ theorem have_lebesgue_decomposition_of_finite_measure [IsFiniteMeasure μ] [IsFi
       -- integral greater than `ξ`
       have hξε : (ξ + E.indicator fun _ => ε) ∈ measurable_le ν μ := by
         refine' ⟨Measurable.add hξm (Measurable.indicator measurable_const hE₁), fun A hA => _⟩
-        have : (∫⁻ a in A, (ξ + E.indicator fun _ => ε) a ∂ν) = (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A ∩ Eᶜ, ξ a ∂ν :=
+        have : (∫⁻ a in A, (ξ + E.indicator fun _ => ε) a ∂ν) = (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A \ E, ξ a ∂ν :=
           by
-          rw [lintegral_add measurable_const hξm, add_assocₓ, ←
-            lintegral_union (hA.inter hE₁) (hA.inter hE₁.compl)
-              (Disjoint.mono (inter_subset_right _ _) (inter_subset_right _ _) disjoint_compl_right),
-            inter_union_compl]
-          simp_rw [Pi.add_apply]
-          rw [lintegral_add hξm (Measurable.indicator measurable_const hE₁), add_commₓ]
-          refine' congr_funₓ (congr_argₓ Add.add _) _
-          rw [set_lintegral_const, lintegral_indicator _ hE₁, set_lintegral_const, measure.restrict_apply hE₁,
-            inter_comm]
+          simp only [lintegral_add measurable_const hξm, add_assocₓ, Pi.add_apply, inter_comm E,
+            lintegral_inter_add_diff _ _ hE₁, lintegral_add hξm (measurable_const.indicator hE₁),
+            lintegral_indicator _ hE₁, set_lintegral_const, measure.restrict_apply hE₁]
+          exact add_commₓ _ _
         rw [this, ← measure_inter_add_diff A hE₁]
         exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
       have : (∫⁻ a, ξ a + E.indicator (fun _ => ε) a ∂ν) ≤ Sup (measurable_le_eval ν μ) :=

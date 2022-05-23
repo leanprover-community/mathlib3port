@@ -347,7 +347,7 @@ theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.Univ :=
 
 @[simp]
 theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S ⊨ φ ↔ M ⊨ φ := by
-  have h := S.is_elementary (φ.relabel (Empty.elimₓ : Empty → Finₓ 0)) default
+  have h := S.is_elementary (φ.relabel (Empty.elim : Empty → Finₓ 0)) default
   rw [formula.realize_relabel, formula.realize_relabel] at h
   exact (congr (congr rfl (congr rfl (Unique.eq_default _))) (congr rfl (Unique.eq_default _))).mp h.symm
 

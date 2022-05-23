@@ -313,6 +313,8 @@ theorem Coprime.symm {m n : ℕ} : Coprime n m → Coprime m n :=
 theorem coprime_commₓ {m n : ℕ} : Coprime n m ↔ Coprime m n :=
   ⟨Coprime.symm, Coprime.symm⟩
 
+theorem Coprime.symmetric : Symmetric Coprime := fun m n => Coprime.symm
+
 theorem Coprime.dvd_of_dvd_mul_right {m n k : ℕ} (H1 : Coprime k n) (H2 : k ∣ m * n) : k ∣ m := by
   let t := dvd_gcdₓ (dvd_mul_left k m) H2
   rwa [gcd_mul_left, H1.gcd_eq_one, mul_oneₓ] at t

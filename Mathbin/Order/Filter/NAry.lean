@@ -330,6 +330,30 @@ theorem map_map₂_right_comm {m : α → β' → γ} {n : β → β'} {m' : α 
     (h_right_comm : ∀ a b, m a (n b) = n' (m' a b)) : map₂ m f (g.map n) = (map₂ m' f g).map n' :=
   (map_map₂_distrib_right fun a b => (h_right_comm a b).symm).symm
 
+/-- The other direction does not hold because of the `f`-`f` cross terms on the RHS. -/
+theorem map₂_distrib_le_left {m : α → δ → ε} {n : β → γ → δ} {m₁ : α → β → β'} {m₂ : α → γ → γ'} {n' : β' → γ' → ε}
+    (h_distrib : ∀ a b c, m a (n b c) = n' (m₁ a b) (m₂ a c)) :
+    map₂ m f (map₂ n g h) ≤ map₂ n' (map₂ m₁ f g) (map₂ m₂ f h) := by
+  rintro s ⟨t₁, t₂, ⟨u₁, v, hu₁, hv, ht₁⟩, ⟨u₂, w, hu₂, hw, ht₂⟩, hs⟩
+  refine' ⟨u₁ ∩ u₂, _, inter_mem hu₁ hu₂, image2_mem_map₂ hv hw, _⟩
+  refine' (image2_distrib_subset_left h_distrib).trans ((image2_subset _ _).trans hs)
+  · exact (image2_subset_right <| inter_subset_left _ _).trans ht₁
+    
+  · exact (image2_subset_right <| inter_subset_right _ _).trans ht₂
+    
+
+/-- The other direction does not hold because of the `h`-`h` cross terms on the RHS. -/
+theorem map₂_distrib_le_right {m : δ → γ → ε} {n : α → β → δ} {m₁ : α → γ → α'} {m₂ : β → γ → β'} {n' : α' → β' → ε}
+    (h_distrib : ∀ a b c, m (n a b) c = n' (m₁ a c) (m₂ b c)) :
+    map₂ m (map₂ n f g) h ≤ map₂ n' (map₂ m₁ f h) (map₂ m₂ g h) := by
+  rintro s ⟨t₁, t₂, ⟨u, w₁, hu, hw₁, ht₁⟩, ⟨v, w₂, hv, hw₂, ht₂⟩, hs⟩
+  refine' ⟨_, w₁ ∩ w₂, image2_mem_map₂ hu hv, inter_mem hw₁ hw₂, _⟩
+  refine' (image2_distrib_subset_right h_distrib).trans ((image2_subset _ _).trans hs)
+  · exact (image2_subset_left <| inter_subset_left _ _).trans ht₁
+    
+  · exact (image2_subset_left <| inter_subset_right _ _).trans ht₂
+    
+
 theorem map_map₂_antidistrib {n : γ → δ} {m' : β' → α' → δ} {n₁ : β → β'} {n₂ : α → α'}
     (h_antidistrib : ∀ a b, n (m a b) = m' (n₁ b) (n₂ a)) : (map₂ m f g).map n = map₂ m' (g.map n₁) (f.map n₂) := by
   rw [map₂_swap m]

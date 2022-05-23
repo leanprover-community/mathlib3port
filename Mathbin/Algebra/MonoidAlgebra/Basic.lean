@@ -45,7 +45,7 @@ Similarly, I attempted to just define
 
 noncomputable section
 
-open Classical BigOperators
+open BigOperators
 
 open Finset Finsupp
 
@@ -280,14 +280,16 @@ variable [Semiringₓ k]
 
 attribute [local reducible] MonoidAlgebra
 
-theorem mul_apply [Mul G] (f g : MonoidAlgebra k G) (x : G) :
+theorem mul_apply [DecidableEq G] [Mul G] (f g : MonoidAlgebra k G) (x : G) :
     (f * g) x = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => if a₁ * a₂ = x then b₁ * b₂ else 0 := by
   rw [mul_def]
   simp only [Finsupp.sum_apply, single_apply]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
     (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 * p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 :=
-  let F : G × G → k := fun p => if p.1 * p.2 = x then f p.1 * g p.2 else 0
+  let F : G × G → k := fun p => by
+    classical <;> exact if p.1 * p.2 = x then f p.1 * g p.2 else 0
   calc
     (f * g) x = ∑ a₁ in f.Support, ∑ a₂ in g.Support, F (a₁, a₂) := mul_apply f g x
     _ = ∑ p in f.Support.product g.Support, F p := Finset.sum_product.symm
@@ -309,7 +311,7 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
           
     
 
-theorem support_mul [Mul G] (a b : MonoidAlgebra k G) :
+theorem support_mul [Mul G] [DecidableEq G] (a b : MonoidAlgebra k G) :
     (a * b).Support ⊆ a.Support.bUnion fun a₁ => b.Support.bUnion fun a₂ => {a₁ * a₂} :=
   Subset.trans support_sum <|
     bUnion_mono fun a₁ _ => Subset.trans support_sum <| bUnion_mono fun a₂ _ => support_single_subset
@@ -395,24 +397,28 @@ def singleHom [MulOneClassₓ G] : k × G →* MonoidAlgebra k G where
   map_one' := rfl
   map_mul' := fun a b => single_mul_single.symm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G} (H : ∀ a, a * x = z ↔ a = y) :
-    (f * single x r) z = f y * r :=
-  have A : ∀ a₁ b₁, ((single x r).Sum fun a₂ b₂ => ite (a₁ * a₂ = z) (b₁ * b₂) 0) = ite (a₁ * x = z) (b₁ * r) 0 :=
-    fun a₁ b₁ =>
-    sum_single_index <| by
-      simp
-  calc
-    (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
-      simp only [mul_apply, A, H]
-    _ = if y ∈ f.Support then f y * r else 0 := f.Support.sum_ite_eq' _ _
-    _ = f y * r := by
-      split_ifs with h <;> simp at h <;> simp [h]
-    
+    (f * single x r) z = f y * r := by
+  classical <;>
+    exact
+      have A : ∀ a₁ b₁, ((single x r).Sum fun a₂ b₂ => ite (a₁ * a₂ = z) (b₁ * b₂) 0) = ite (a₁ * x = z) (b₁ * r) 0 :=
+        fun a₁ b₁ =>
+        sum_single_index <| by
+          simp
+      calc
+        (f * single x r) z = Sum f fun a b => if a = y then b * r else 0 := by
+          simp only [mul_apply, A, H]
+        _ = if y ∈ f.support then f y * r else 0 := f.support.sum_ite_eq' _ _
+        _ = f y * r := by
+          split_ifs with h <;> simp at h <;> simp [h]
+        
 
 theorem mul_single_one_apply [MulOneClassₓ G] (f : MonoidAlgebra k G) (r : k) (x : G) : (f * single 1 r) x = f x * r :=
   f.mul_single_apply_aux fun a => by
     rw [mul_oneₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r : k) (hr : ∀ y, y * r = 0 ↔ y = 0)
     (x : G) : (f * single x r).Support = f.Support.map (mulRightEmbedding x) := by
   ext y
@@ -423,26 +429,32 @@ theorem support_mul_single [RightCancelSemigroup G] (f : MonoidAlgebra k G) (r :
     simp [hr]
     
   · push_neg  at H
+    classical
     simp [mul_apply, H]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G} (H : ∀ a, x * a = y ↔ a = z) :
-    (single x r * f) y = r * f z :=
-  have : (f.Sum fun a b => ite (x * a = y) (0 * b) 0) = 0 := by
-    simp
-  calc
-    (single x r * f) y = Sum f fun a b => ite (x * a = y) (r * b) 0 := (mul_apply _ _ _).trans <| sum_single_index this
-    _ = f.Sum fun a b => ite (a = z) (r * b) 0 := by
-      simp only [H]
-    _ = if z ∈ f.Support then r * f z else 0 := f.Support.sum_ite_eq' _ _
-    _ = _ := by
-      split_ifs with h <;> simp at h <;> simp [h]
-    
+    (single x r * f) y = r * f z := by
+  classical <;>
+    exact
+      have : (f.sum fun a b => ite (x * a = y) (0 * b) 0) = 0 := by
+        simp
+      calc
+        (single x r * f) y = Sum f fun a b => ite (x * a = y) (r * b) 0 :=
+          (mul_apply _ _ _).trans <| sum_single_index this
+        _ = f.sum fun a b => ite (a = z) (r * b) 0 := by
+          simp only [H]
+        _ = if z ∈ f.support then r * f z else 0 := f.support.sum_ite_eq' _ _
+        _ = _ := by
+          split_ifs with h <;> simp at h <;> simp [h]
+        
 
 theorem single_one_mul_apply [MulOneClassₓ G] (f : MonoidAlgebra k G) (r : k) (x : G) : (single 1 r * f) x = r * f x :=
   f.single_mul_apply_aux fun a => by
     rw [one_mulₓ]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : k) (hr : ∀ y, r * y = 0 ↔ y = 0)
     (x : G) : (single x r * f).Support = f.Support.map (mulLeftEmbedding x) := by
   ext y
@@ -453,6 +465,7 @@ theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : 
     simp [hr]
     
   · push_neg  at H
+    classical
     simp [mul_apply, H]
     
 
@@ -473,9 +486,11 @@ section NonUnitalNonAssocAlgebra
 
 variable (k) [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [Mul G]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance is_scalar_tower_self [IsScalarTower R k k] : IsScalarTower R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     ext m
+    classical
     simp only [mul_apply, Finsupp.smul_sum, smul_ite, smul_mul_assoc, sum_smul_index', zero_mul, if_t_t,
       implies_true_iff, eq_self_iff_true, sum_zero, coe_smul, smul_eq_mul, Pi.smul_apply, smul_zero]⟩
 
@@ -792,8 +807,8 @@ attribute [local reducible] MonoidAlgebra
 
 theorem prod_single [CommSemiringₓ k] [CommMonoidₓ G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∏ i in s, a i) (∏ i in s, b i) :=
-  (Finset.induction_on s rfl) fun a s has ih => by
-    rw [prod_insert has, ih, single_mul_single, prod_insert has, prod_insert has]
+  (Finset.cons_induction_on s rfl) fun a s has ih => by
+    rw [prod_cons has, ih, single_mul_single, prod_cons has, prod_cons has]
 
 end
 
@@ -1125,17 +1140,17 @@ section MiscTheorems
 
 variable [Semiringₓ k]
 
-theorem mul_apply [Add G] (f g : AddMonoidAlgebra k G) (x : G) :
+theorem mul_apply [DecidableEq G] [Add G] (f g : AddMonoidAlgebra k G) (x : G) :
     (f * g) x = f.Sum fun a₁ b₁ => g.Sum fun a₂ b₂ => if a₁ + a₂ = x then b₁ * b₂ else 0 :=
-  @MonoidAlgebra.mul_apply k (Multiplicative G) _ _ _ _ _
+  @MonoidAlgebra.mul_apply k (Multiplicative G) _ _ _ _ _ _
 
 theorem mul_apply_antidiagonal [Add G] (f g : AddMonoidAlgebra k G) (x : G) (s : Finset (G × G))
     (hs : ∀ {p : G × G}, p ∈ s ↔ p.1 + p.2 = x) : (f * g) x = ∑ p in s, f p.1 * g p.2 :=
   @MonoidAlgebra.mul_apply_antidiagonal k (Multiplicative G) _ _ _ _ _ s @hs
 
-theorem support_mul [Add G] (a b : AddMonoidAlgebra k G) :
+theorem support_mul [DecidableEq G] [Add G] (a b : AddMonoidAlgebra k G) :
     (a * b).Support ⊆ a.Support.bUnion fun a₁ => b.Support.bUnion fun a₂ => {a₁ + a₂} :=
-  @MonoidAlgebra.support_mul k (Multiplicative G) _ _ _ _
+  @MonoidAlgebra.support_mul k (Multiplicative G) _ _ _ _ _
 
 theorem single_mul_single [Add G] {a₁ a₂ : G} {b₁ b₂ : k} :
     (single a₁ b₁ * single a₂ b₂ : AddMonoidAlgebra k G) = single (a₁ + a₂) (b₁ * b₂) :=
@@ -1558,8 +1573,8 @@ variable {ι : Type ui}
 
 theorem prod_single [CommSemiringₓ k] [AddCommMonoidₓ G] {s : Finset ι} {a : ι → G} {b : ι → k} :
     (∏ i in s, single (a i) (b i)) = single (∑ i in s, a i) (∏ i in s, b i) :=
-  (Finset.induction_on s rfl) fun a s has ih => by
-    rw [prod_insert has, ih, single_mul_single, sum_insert has, prod_insert has]
+  (Finset.cons_induction_on s rfl) fun a s has ih => by
+    rw [prod_cons has, ih, single_mul_single, sum_cons has, prod_cons has]
 
 end
 

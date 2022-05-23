@@ -76,12 +76,12 @@ theorem map_mul_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
 @[to_additive]
 instance [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
   ⟨fun g => by
-    rw [map_smul, map_mul_left_eq_self]⟩
+    rw [measure.map_smul, map_mul_left_eq_self]⟩
 
 @[to_additive]
 instance [IsMulRightInvariant μ] (c : ℝ≥0∞) : IsMulRightInvariant (c • μ) :=
   ⟨fun g => by
-    rw [map_smul, map_mul_right_eq_self]⟩
+    rw [measure.map_smul, map_mul_right_eq_self]⟩
 
 section HasMeasurableMul
 

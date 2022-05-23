@@ -163,12 +163,12 @@ theorem lift_zero : (↑(0 : LeftInvariantDerivation I G) : Derivation 𝕜 C^�
 instance hasNatScalar : HasScalar ℕ (LeftInvariantDerivation I G) where
   smul := fun r X =>
     ⟨r • X, fun g => by
-      simp only [Derivation.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, LinearMap.map_smul_of_tower, left_invariant']⟩
+      simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
 instance hasIntScalar : HasScalar ℤ (LeftInvariantDerivation I G) where
   smul := fun r X =>
     ⟨r • X, fun g => by
-      simp only [Derivation.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, LinearMap.map_smul_of_tower, left_invariant']⟩
+      simp_rw [LinearMap.map_smul_of_tower, left_invariant']⟩
 
 instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
@@ -176,7 +176,7 @@ instance : AddCommGroupₓ (LeftInvariantDerivation I G) :=
 instance : HasScalar 𝕜 (LeftInvariantDerivation I G) where
   smul := fun r X =>
     ⟨r • X, fun g => by
-      simp only [Derivation.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, LinearMap.map_smul, left_invariant']⟩
+      simp_rw [LinearMap.map_smul, left_invariant']⟩
 
 variable (r X)
 

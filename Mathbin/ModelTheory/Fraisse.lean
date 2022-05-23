@@ -163,6 +163,7 @@ theorem Age.countable_quotient (h : (Univ : Set M).Countable) : (Quotientₓ.mk 
     exact ⟨PM.equiv_range.symm⟩
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
 @[simp]
 theorem age_direct_limit {ι : Type w} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] [Nonempty ι] (G : ι → Type max w w')

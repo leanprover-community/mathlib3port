@@ -66,7 +66,7 @@ theorem degree_list_sum_le (l : List S[X]) : degree l.Sum ≤ (l.map natDegree).
     suffices (l.map nat_degree).maximum = ((l.map nat_degree).foldr max 0 : ℕ) by
       rw [this]
       simpa [this] using nat_degree_list_sum_le l
-    rw [List.maximum_eq_coe_foldr_max_of_ne_nil]
+    rw [← List.foldr_max_of_ne_nil]
     · congr
       
     contrapose! h

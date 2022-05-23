@@ -44,7 +44,7 @@ namespace Biproducts
 /-- The `bicone` used in order to obtain the existence of
 the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. -/
 @[simps]
-def bicone [HasFiniteBiproducts C] {J : Type v} [DecidableEq J] [Fintype J] (F : J → Karoubi C) : Bicone F where
+def bicone [HasFiniteBiproducts C] {J : Type v} [Fintype J] (F : J → Karoubi C) : Bicone F where
   x :=
     { x := biproduct fun j => (F j).x, p := biproduct.map fun j => (F j).p,
       idem := by
@@ -70,10 +70,12 @@ def bicone [HasFiniteBiproducts C] {J : Type v} [DecidableEq J] [Fintype J] (F :
 
 end Biproducts
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem karoubi_has_finite_biproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
-  { HasBiproductsOfShape := fun J hJ₁ hJ₂ =>
+  { HasBiproductsOfShape := fun J hJ =>
       { HasBiproduct := fun F => by
-          let this := hJ₂
+          classical
+          let this := hJ
           apply has_biproduct_of_total (biproducts.bicone F)
           ext1
           ext1

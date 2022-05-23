@@ -399,6 +399,7 @@ theorem inf_arrow_factors_right {B : C} (X Y : Subobject B) : Y.Factors (X⊓Y).
     ⟨ofLe (X⊓Y) Y (inf_le_right X Y), by
       simp ⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
     (s.inf P).Factors f ↔ ∀, ∀ i ∈ s, ∀, (P i).Factors f := by
@@ -410,6 +411,7 @@ theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subo
     simp [ih]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- `i` is explicit here because often we'd like to defer a proof of `m`
 theorem finset_inf_arrow_factors {I : Type _} {B : C} (s : Finset I) (P : I → Subobject B) (i : I) (m : i ∈ s) :
     (P i).Factors (s.inf P).arrow := by
@@ -492,6 +494,7 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : Subobject B} {f : A ⟶ B}
 
 variable [HasInitial C] [InitialMonoClass C]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → Subobject B} {f : A ⟶ B}
     (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
   classical

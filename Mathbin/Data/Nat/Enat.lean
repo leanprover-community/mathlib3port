@@ -306,6 +306,7 @@ theorem coe_ne_top (x : ℕ) : (x : Enat) ≠ ⊤ :=
 theorem ne_top_iff {x : Enat} : x ≠ ⊤ ↔ ∃ n : ℕ, x = n := by
   simpa only [← some_eq_coe] using Part.ne_none_iff
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.Dom := by
   classical <;> exact not_iff_comm.1 part.eq_none_iff'.symm
 

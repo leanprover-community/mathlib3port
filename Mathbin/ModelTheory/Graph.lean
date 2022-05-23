@@ -46,7 +46,7 @@ def adj : Language.graph.Relations 2 :=
 
 /-- Any simple graph can be thought of as a structure in the language of graphs. -/
 def _root_.simple_graph.Structure (G : SimpleGraph V) : Language.graph.Structure V :=
-  Structure.mk₂ Empty.elimₓ Empty.elimₓ Empty.elimₓ Empty.elimₓ fun _ => G.Adj
+  Structure.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => G.Adj
 
 namespace Graph
 

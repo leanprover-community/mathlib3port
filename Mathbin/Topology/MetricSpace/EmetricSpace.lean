@@ -419,6 +419,20 @@ theorem edist_op (x y : α) : edist (op x) (op y) = edist x y :=
 
 end MulOpposite
 
+section ULift
+
+instance : PseudoEmetricSpace (ULift α) :=
+  PseudoEmetricSpace.induced ULift.down ‹_›
+
+theorem ULift.edist_eq (x y : ULift α) : edist x y = edist x.down y.down :=
+  rfl
+
+@[simp]
+theorem ULift.edist_up_up (x y : α) : edist (ULift.up x) (ULift.up y) = edist x y :=
+  rfl
+
+end ULift
+
 /-- The product of two pseudoemetric spaces, with the max distance, is an extended
 pseudometric spaces. We make sure that the uniform structure thus constructed is the one
 corresponding to the product of uniform spaces, to avoid diamond problems. -/
@@ -973,6 +987,9 @@ instance {α : Type _} {p : α → Prop} [EmetricSpace α] : EmetricSpace (Subty
 @[to_additive "Emetric space instance on the additive opposite of an emetric space."]
 instance {α : Type _} [EmetricSpace α] : EmetricSpace αᵐᵒᵖ :=
   EmetricSpace.induced MulOpposite.unop MulOpposite.unop_injective ‹_›
+
+instance {α : Type _} [EmetricSpace α] : EmetricSpace (ULift α) :=
+  EmetricSpace.induced ULift.down ULift.down_injective ‹_›
 
 /-- The product of two emetric spaces, with the max distance, is an extended
 metric spaces. We make sure that the uniform structure thus constructed is the one

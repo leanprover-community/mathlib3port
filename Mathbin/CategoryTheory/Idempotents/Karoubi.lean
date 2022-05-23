@@ -162,8 +162,8 @@ instance : Faithful (toKaroubi C) :=
 
 variable {C}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 @[simps]
 instance [Preadditive C] {P Q : Karoubi C} : AddCommGroupₓ (P ⟶ Q) where
   add := fun f g =>

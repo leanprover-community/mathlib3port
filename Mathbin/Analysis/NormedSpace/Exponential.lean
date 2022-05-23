@@ -399,6 +399,7 @@ theorem Ringₓ.inverse_exp (x : 𝔸) : Ring.inverse (exp 𝕂 x) = exp 𝕂 (-
 
 end
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, if a family of elements `f i` mutually
 commute then `exp 𝕂 (∑ i, f i) = ∏ i, exp 𝕂 (f i)`. -/
 theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸) (h : ∀, ∀ i ∈ s, ∀, ∀ j ∈ s, ∀, Commute (f i) (f j)) :
@@ -494,7 +495,7 @@ theorem exp_zsmul (z : ℤ) (x : 𝔸) : exp 𝕂 (z • x) = exp 𝕂 x ^ z := 
   obtain ⟨n, rfl | rfl⟩ := z.eq_coe_or_neg
   · rw [zpow_coe_nat, coe_nat_zsmul, exp_nsmul]
     
-  · rw [zpow_neg₀, zpow_coe_nat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
+  · rw [zpow_neg, zpow_coe_nat, neg_smul, exp_neg, coe_nat_zsmul, exp_nsmul]
     
 
 theorem exp_conj (y : 𝔸) (x : 𝔸) (hy : y ≠ 0) : exp 𝕂 (y * x * y⁻¹) = y * exp 𝕂 x * y⁻¹ :=

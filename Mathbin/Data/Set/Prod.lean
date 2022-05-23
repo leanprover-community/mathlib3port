@@ -492,6 +492,7 @@ theorem eval_image_pi_subset (hs : i ∈ s) : eval i '' s.pi t ⊆ t i :=
 theorem eval_image_univ_pi_subset : eval i '' Pi Univ t ⊆ t i :=
   eval_image_pi_subset (mem_univ i)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i := by
   refine' (eval_image_pi_subset hs).antisymm _
   classical

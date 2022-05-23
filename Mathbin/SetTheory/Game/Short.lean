@@ -24,6 +24,9 @@ universe u
 
 namespace Pgame
 
+-- mathport name: «expr ⧏ »
+local infixl:50 " ⧏ " => Lf
+
 /-- A short game is a game with a finite set of moves at every turn. -/
 inductive Short : Pgame.{u} → Type (u + 1)
   | mk :
@@ -212,10 +215,10 @@ instance shortBit1 (x : Pgame.{u}) [Short x] : Short (bit1 x) := by
   infer_instance
 
 /-- Auxiliary construction of decidability instances.
-We build `decidable (x ≤ y)` and `decidable (x < y)` in a simultaneous induction.
+We build `decidable (x ≤ y)` and `decidable (x ⧏ y)` in a simultaneous induction.
 Instances for the two projections separately are provided below.
 -/
-def leLtDecidable : ∀ x y : Pgame.{u} [Short x] [Short y], Decidable (x ≤ y) × Decidable (x < y)
+def leLfDecidable : ∀ x y : Pgame.{u} [Short x] [Short y], Decidable (x ≤ y) × Decidable (x ⧏ y)
   | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty => by
     skip
     constructor
@@ -226,39 +229,43 @@ def leLtDecidable : ∀ x y : Pgame.{u} [Short x] [Short y], Decidable (x ≤ y)
             (by
               infer_instance)
         intro i
-        apply (@le_lt_decidable _ _ _ _).2 <;> infer_instance
+        apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
         
       · apply
           @Fintype.decidableForallFintype yr _ _
             (by
               infer_instance)
         intro i
-        apply (@le_lt_decidable _ _ _ _).2 <;> infer_instance
+        apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
         
       
-    · refine' @decidableOfIff' _ _ mk_lt_mk (id _)
+    · refine' @decidableOfIff' _ _ mk_lf_mk (id _)
       apply @Or.decidable _ _ _ _
       · apply
           @Fintype.decidableExistsFintype yl _ _
             (by
               infer_instance)
         intro i
-        apply (@le_lt_decidable _ _ _ _).1 <;> infer_instance
+        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
         
       · apply
           @Fintype.decidableExistsFintype xr _ _
             (by
               infer_instance)
         intro i
-        apply (@le_lt_decidable _ _ _ _).1 <;> infer_instance
+        apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
         
       
 
 instance leDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≤ y) :=
-  (leLtDecidable x y).1
+  (leLfDecidable x y).1
 
-instance ltDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x < y) :=
-  (leLtDecidable x y).2
+instance lfDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ⧏ y) :=
+  (leLfDecidable x y).2
+
+instance ltDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x < y) := by
+  rw [lt_iff_le_and_lf]
+  exact And.decidable
 
 instance equivDecidable (x y : Pgame.{u}) [Short x] [Short y] : Decidable (x ≈ y) :=
   And.decidable

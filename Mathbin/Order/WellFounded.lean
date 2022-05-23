@@ -58,6 +58,7 @@ theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (p : Set α) (h 
   let ⟨_, h'⟩ := Classical.some_spec (H.has_min p h)
   h' _ xp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem well_founded_iff_has_min {r : α → α → Prop} :
     WellFounded r ↔ ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀, ∀ x ∈ p, ∀, ¬r x m := by
   classical

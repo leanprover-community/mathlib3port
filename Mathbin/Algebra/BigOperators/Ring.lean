@@ -270,6 +270,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoidₓ β] {s : Finset α}
     exact ne_insert_of_not_mem _ _ (not_mem_of_mem_powerset_of_not_mem h₁ h)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A product over `powerset s` is equal to the double product over sets of subsets of `s` with
 `card s = k`, for `k = 1, ..., card s`. -/
 @[to_additive

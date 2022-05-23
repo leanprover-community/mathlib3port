@@ -94,6 +94,7 @@ structure SimpleGraph (V : Type u) where
     run_tac
       obviously
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) := by
   classical
   exact Fintype.ofInjective SimpleGraph.Adj SimpleGraph.ext
@@ -571,6 +572,7 @@ theorem neighbor_set_union_compl_neighbor_set_eq (G : SimpleGraph V) (v : V) :
   simp_rw [Set.mem_union, mem_neighbor_set, compl_adj, Set.mem_compl_eq, Set.mem_singleton_iff]
   tauto
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO find out why TC inference has `h` failing a defeq check for `to_finset`
 theorem card_neighbor_set_union_compl_neighbor_set [Fintype V] (G : SimpleGraph V) (v : V)
     [h : Fintype (G.NeighborSet v ∪ Gᶜ.NeighborSet v : Set V)] :
@@ -746,6 +748,7 @@ theorem card_neighbor_set_eq_degree : Fintype.card (G.NeighborSet v) = G.degree 
 theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
   simp only [degree, card_pos, Finset.Nonempty, mem_neighbor_finset]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degree_compl [Fintype (Gᶜ.NeighborSet v)] [Fintype V] : Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
   rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.to_finset_union]
@@ -908,6 +911,7 @@ theorem max_degree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : �
     exact zero_le k
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
   classical
   apply Finset.card_lt_card
@@ -938,6 +942,7 @@ theorem card_common_neighbors_lt_card_verts [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.CommonNeighbors v w) < Fintype.card V :=
   Nat.lt_of_le_of_ltₓ (G.card_common_neighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
 the best we can do in general.
 -/

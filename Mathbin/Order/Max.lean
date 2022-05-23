@@ -261,16 +261,3 @@ protected theorem IsMax.eq_of_ge (ha : IsMax a) (h : a ≤ b) : b = a :=
 
 end PartialOrderₓ
 
-section LinearOrderₓ
-
-variable [LinearOrderₓ α]
-
---TODO: Delete in favor of the directed version
-theorem is_top_or_exists_gt (a : α) : IsTop a ∨ ∃ b, a < b := by
-  simpa only [or_iff_not_imp_left, IsTop, not_forall, not_leₓ] using id
-
-theorem is_bot_or_exists_lt (a : α) : IsBot a ∨ ∃ b, b < a :=
-  @is_top_or_exists_gt αᵒᵈ _ a
-
-end LinearOrderₓ
-

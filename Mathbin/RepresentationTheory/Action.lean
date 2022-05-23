@@ -218,7 +218,7 @@ def functorCategoryEquivalence : Action V G ≌ SingleObj G ⥤ V where
 attribute [simps] functor_category_equivalence
 
 instance [HasFiniteProducts V] : HasFiniteProducts (Action V G) where
-  out := fun J _ _ => adjunction.has_limits_of_shape_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
+  out := fun J _ => adjunction.has_limits_of_shape_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
 
 instance [HasLimits V] : HasLimits (Action V G) :=
   Adjunction.has_limits_of_equivalence (Action.functorCategoryEquivalence _ _).Functor

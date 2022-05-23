@@ -322,7 +322,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0 } (hm :
         abel
         
     have : A '' closed_ball 0 r + closed_ball (f x) (ε * r) = {f x} + r • (A '' closed_ball 0 1 + closed_ball 0 ε) := by
-      rw [smul_add_set, ← add_assocₓ, add_commₓ {f x}, add_assocₓ, smul_closed_ball _ _ εpos.le, smul_zero,
+      rw [smul_add, ← add_assocₓ, add_commₓ {f x}, add_assocₓ, smul_closed_ball _ _ εpos.le, smul_zero,
         singleton_add_closed_ball_zero, ← A.image_smul_set, smul_closed_ball _ _ zero_le_one, smul_zero,
         Real.norm_eq_abs, abs_of_nonneg r0, mul_oneₓ, mul_comm]
     rw [this] at K
@@ -1104,6 +1104,7 @@ theorem map_with_density_abs_det_fderiv_eq_add_haar (hs : MeasurableSet s)
       (fun x hx => (hf' x hx.2).mono (inter_subset_right _ _)) (hf.mono (inter_subset_right _ _)),
     image_preimage_inter]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Change of variable formula for differentiable functions, set version: if a function `f` is
 injective and differentiable on a measurable set `s`, then the pushforward of the measure with
 density `|(f' x).det|` on `s` is the Lebesgue measure on the image set. This version is expressed

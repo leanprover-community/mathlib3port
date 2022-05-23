@@ -349,6 +349,7 @@ theorem support_single_of_ne (h : b ≠ 0) : Function.Support (Pi.single a b) = 
 theorem support_single [DecidableEq B] : Function.Support (Pi.single a b) = if b = 0 then ∅ else {a} := by
   split_ifs with h <;> simp [h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_single_subset : Function.Support (Pi.single a b) ⊆ {a} := by
   classical
   rw [support_single]

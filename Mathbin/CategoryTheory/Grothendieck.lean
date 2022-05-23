@@ -107,6 +107,8 @@ def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z where
           erw [functor.map_comp, functor.comp_obj]) ≫
       (F.map g.base).map f.fiber ≫ g.fiber
 
+attribute [local simp] eq_to_hom_map
+
 instance : Category (Grothendieck F) where
   Hom := fun X Y => Grothendieck.Hom X Y
   id := fun X => Grothendieck.id X
@@ -172,13 +174,13 @@ variable (G : C ⥤ Type w)
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
 def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elements where
-  obj := fun X => ⟨X.1, X.2⟩
+  obj := fun X => ⟨X.1, X.2.as⟩
   map := fun X Y f => ⟨f.1, f.2.1.1⟩
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
 def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Cat) where
-  obj := fun X => ⟨X.1, X.2⟩
+  obj := fun X => ⟨X.1, ⟨X.2⟩⟩
   map := fun X Y f => ⟨f.1, ⟨⟨f.2⟩⟩⟩
 
 /-- The Grothendieck construction applied to a functor to `Type`
@@ -192,10 +194,10 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
   unitIso :=
     NatIso.ofComponents
       (fun X => by
-        cases X
+        rcases X with ⟨_, ⟨⟩⟩
         exact iso.refl _)
       (by
-        rintro ⟨⟩ ⟨⟩ ⟨base, ⟨⟨f⟩⟩⟩
+        rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩
         dsimp'  at *
         subst f
         ext
@@ -212,7 +214,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements wher
         ext
         simp )
   functor_unit_iso_comp' := by
-    rintro ⟨⟩
+    rintro ⟨_, ⟨⟩⟩
     dsimp'
     simp
     rfl

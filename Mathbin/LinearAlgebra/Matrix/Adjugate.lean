@@ -338,8 +338,8 @@ theorem adjugate_fin_zero (A : Matrix (Finₓ 0) (Finₓ 0) α) : adjugate A = 0
 theorem adjugate_fin_one (A : Matrix (Finₓ 1) (Finₓ 1) α) : adjugate A = 1 :=
   adjugate_subsingleton A
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem adjugate_fin_two (A : Matrix (Finₓ 2) (Finₓ 2) α) : adjugate A = ![![A 1 1, -A 0 1], ![-A 1 0, A 0 0]] := by
   ext i j
   rw [adjugate_apply, det_fin_two]

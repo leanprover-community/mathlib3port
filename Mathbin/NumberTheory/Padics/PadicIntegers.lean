@@ -394,7 +394,7 @@ theorem exists_pow_neg_lt {ε : ℝ} (hε : 0 < ε) : ∃ k : ℕ, ↑p ^ -((k :
   obtain ⟨k, hk⟩ := exists_nat_gt ε⁻¹
   use k
   rw [← inv_lt_inv hε (_root_.zpow_pos_of_pos _ _)]
-  · rw [zpow_neg₀, inv_invₓ, zpow_coe_nat]
+  · rw [zpow_neg, inv_invₓ, zpow_coe_nat]
     apply lt_of_lt_of_leₓ hk
     norm_cast
     apply le_of_ltₓ
@@ -579,7 +579,7 @@ section NormLeIff
 theorem norm_le_pow_iff_le_valuation (x : ℤ_[p]) (hx : x ≠ 0) (n : ℕ) : ∥x∥ ≤ p ^ (-n : ℤ) ↔ ↑n ≤ x.Valuation := by
   rw [norm_eq_pow_val hx]
   lift x.valuation to ℕ using x.valuation_nonneg with k hk
-  simp only [Int.coe_nat_le, zpow_neg₀, zpow_coe_nat]
+  simp only [Int.coe_nat_le, zpow_neg, zpow_coe_nat]
   have aux : ∀ n : ℕ, 0 < (p ^ n : ℝ) := by
     apply pow_pos
     exact_mod_cast hp_prime.1.Pos
@@ -612,7 +612,7 @@ theorem norm_le_pow_iff_mem_span_pow (x : ℤ_[p]) (n : ℕ) :
     ∥x∥ ≤ p ^ (-n : ℤ) ↔ x ∈ (Ideal.span {p ^ n} : Ideal ℤ_[p]) := by
   by_cases' hx : x = 0
   · subst hx
-    simp only [norm_zero, zpow_neg₀, zpow_coe_nat, inv_nonneg, iff_trueₓ, Submodule.zero_mem]
+    simp only [norm_zero, zpow_neg, zpow_coe_nat, inv_nonneg, iff_trueₓ, Submodule.zero_mem]
     exact_mod_cast Nat.zero_leₓ _
     
   rw [norm_le_pow_iff_le_valuation x hx, mem_span_pow_iff_le_valuation x hx]

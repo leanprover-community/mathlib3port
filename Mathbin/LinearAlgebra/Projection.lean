@@ -24,6 +24,8 @@ projection, complement subspace
 -/
 
 
+section Ringₓ
+
 variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
   {G : Type _} [AddCommGroupₓ G] [Module R G] (p q : Submodule R E)
 
@@ -342,4 +344,102 @@ theorem coe_is_compl_equiv_proj_symm_apply (f : { f : E →ₗ[R] p // ∀ x : p
   rfl
 
 end Submodule
+
+namespace LinearMap
+
+open Submodule
+
+/-- A linear endomorphism of a module `E` is a projection onto a submodule `p` if it sends every element
+of `E` to `p` and fixes every element of `p`.
+The definition allow more generally any `fun_like` type and not just linear maps, so that it can be
+used for example with `continuous_linear_map` or `matrix`.
+-/
+structure IsProj {F : Type _} [FunLike F E fun _ => E] (f : F) : Prop where
+  map_mem : ∀ x, f x ∈ p
+  map_id : ∀, ∀ x ∈ p, ∀, f x = x
+
+theorem is_proj_iff_idempotent (f : E →ₗ[R] E) : (∃ p : Submodule R E, IsProj p f) ↔ f ∘ₗ f = f := by
+  constructor
+  · intro h
+    obtain ⟨p, hp⟩ := h
+    ext
+    rw [comp_apply]
+    exact hp.map_id (f x) (hp.map_mem x)
+    
+  · intro h
+    use f.range
+    constructor
+    · intro x
+      exact mem_range_self f x
+      
+    · intro x hx
+      obtain ⟨y, hy⟩ := mem_range.1 hx
+      rw [← hy, ← comp_apply, h]
+      
+    
+
+namespace IsProj
+
+variable {p}
+
+/-- Restriction of the codomain of a projection of onto a subspace `p` to `p` instead of the whole
+space.
+-/
+def codRestrict {f : E →ₗ[R] E} (h : IsProj p f) : E →ₗ[R] p :=
+  f.codRestrict p h.map_mem
+
+@[simp]
+theorem cod_restrict_apply {f : E →ₗ[R] E} (h : IsProj p f) (x : E) : ↑(h.codRestrict x) = f x :=
+  f.cod_restrict_apply p x
+
+@[simp]
+theorem cod_restrict_apply_cod {f : E →ₗ[R] E} (h : IsProj p f) (x : p) : h.codRestrict x = x := by
+  ext
+  rw [cod_restrict_apply]
+  exact h.map_id x x.2
+
+theorem cod_restrict_ker {f : E →ₗ[R] E} (h : IsProj p f) : h.codRestrict.ker = f.ker :=
+  f.ker_cod_restrict p _
+
+theorem is_compl {f : E →ₗ[R] E} (h : IsProj p f) : IsCompl p f.ker := by
+  rw [← cod_restrict_ker]
+  exact is_compl_of_proj h.cod_restrict_apply_cod
+
+theorem eq_conj_prod_map' {f : E →ₗ[R] E} (h : IsProj p f) :
+    f =
+      (p.prodEquivOfIsCompl f.ker h.IsCompl).toLinearMap ∘ₗ
+        prodMap id 0 ∘ₗ (p.prodEquivOfIsCompl f.ker h.IsCompl).symm.toLinearMap :=
+  by
+  refine' (LinearMap.cancel_right (p.prod_equiv_of_is_compl f.ker h.is_compl).Surjective).1 _
+  ext
+  · simp only [coe_comp, LinearEquiv.coe_to_linear_map, coe_inl, Function.comp_app, LinearEquiv.of_top_apply,
+      LinearEquiv.of_injective_apply, coprod_apply, Submodule.coe_subtype, coe_zero, add_zeroₓ,
+      prod_equiv_of_is_compl_symm_apply_left, prod_map_apply, id_coe, id.def, zero_apply, coe_prod_equiv_of_is_compl',
+      h.map_id x x.2]
+    
+  · simp only [coe_comp, LinearEquiv.coe_to_linear_map, coe_inr, Function.comp_app, LinearEquiv.of_top_apply,
+      LinearEquiv.of_injective_apply, coprod_apply, Submodule.coe_subtype, coe_zero, zero_addₓ, map_coe_ker,
+      prod_equiv_of_is_compl_symm_apply_right, prod_map_apply, id_coe, id.def, zero_apply, coe_prod_equiv_of_is_compl']
+    
+
+end IsProj
+
+end LinearMap
+
+end Ringₓ
+
+section CommRingₓ
+
+namespace LinearMap
+
+variable {R : Type _} [CommRingₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {p : Submodule R E}
+
+theorem IsProj.eq_conj_prod_map {f : E →ₗ[R] E} (h : IsProj p f) :
+    f = (p.prodEquivOfIsCompl f.ker h.IsCompl).conj (prodMap id 0) := by
+  rw [LinearEquiv.conj_apply]
+  exact h.eq_conj_prod_map'
+
+end LinearMap
+
+end CommRingₓ
 

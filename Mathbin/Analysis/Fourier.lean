@@ -197,7 +197,7 @@ theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (z : circle) :
       exact_mod_cast hn
     field_simp
     ring
-  simp [mul_zpow₀, ← Complex.exp_int_mul, Complex.exp_pi_mul_I, this]
+  simp [mul_zpow, ← Complex.exp_int_mul, Complex.exp_pi_mul_I, this]
 
 /-- The monomials `z ^ n` are an orthonormal set with respect to Haar measure on the circle. -/
 theorem orthonormal_fourier : Orthonormal ℂ (fourierLp 2) := by

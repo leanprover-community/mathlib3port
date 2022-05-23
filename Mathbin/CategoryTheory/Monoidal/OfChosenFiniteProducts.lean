@@ -59,12 +59,12 @@ theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.swap.snd = t.fst :=
 def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.swap where
   lift := fun s => I.lift (BinaryFan.swap s)
   fac' := fun s => by
-    rintro ⟨⟩ <;> simp
+    rintro ⟨⟨⟩⟩ <;> simp
   uniq' := fun s m w => by
     have h := I.uniq (binary_fan.swap s) m
     rw [h]
-    intro j
-    specialize w j.swap
+    rintro ⟨j⟩
+    specialize w ⟨j.swap⟩
     cases j <;> exact w
 
 /-- Construct `has_binary_product Q P` from `has_binary_product P Q`.
@@ -125,23 +125,23 @@ def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bin
     {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.assoc Q) where
   lift := fun t => R.lift (BinaryFan.assocInv P t)
   fac' := fun t => by
-    rintro ⟨⟩ <;> simp
+    rintro ⟨⟨⟩⟩ <;> simp
     apply Q.hom_ext
-    rintro ⟨⟩ <;> simp
+    rintro ⟨⟨⟩⟩ <;> simp
   uniq' := fun t m w => by
     have h := R.uniq (binary_fan.assoc_inv P t) m
     rw [h]
-    rintro ⟨⟩ <;> simp
+    rintro ⟨⟨⟩⟩ <;> simp
     apply P.hom_ext
-    rintro ⟨⟩ <;> simp
-    · exact w walking_pair.left
+    rintro ⟨⟨⟩⟩ <;> simp
+    · exact w ⟨walking_pair.left⟩
       
-    · specialize w walking_pair.right
+    · specialize w ⟨walking_pair.right⟩
       simp at w
       rw [← w]
       simp
       
-    · specialize w walking_pair.right
+    · specialize w ⟨walking_pair.right⟩
       simp at w
       rw [← w]
       simp
@@ -162,18 +162,20 @@ def BinaryFan.associatorOfLimitCone (L : ∀ X Y : C, LimitCone (pair X Y)) (X Y
     (L (L X Y).Cone.x Z).Cone.x ≅ (L X (L Y Z).Cone.x).Cone.x :=
   BinaryFan.associator (L X Y).IsLimit (L Y Z).IsLimit (L (L X Y).Cone.x Z).IsLimit (L X (L Y Z).Cone.x).IsLimit
 
+attribute [local tidy] tactic.discrete_cases
+
 /-- Construct a left unitor from specified limit cones.
 -/
 @[simps]
 def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan s.x X}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.snd
-  inv := Q.lift (BinaryFan.mk (P.lift { x, π := { app := Pempty.rec _ } }) (𝟙 X))
+  inv := Q.lift (BinaryFan.mk (P.lift { x, π := { app := Discrete.rec (Pempty.rec _) } }) (𝟙 X))
   hom_inv_id' := by
     apply Q.hom_ext
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · apply P.hom_ext
-      rintro ⟨⟩
+      rintro ⟨⟨⟩⟩
       
     · simp
       
@@ -184,14 +186,14 @@ def BinaryFan.leftUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s
 def BinaryFan.rightUnitor {X : C} {s : Cone (Functor.empty.{v} C)} (P : IsLimit s) {t : BinaryFan X s.x}
     (Q : IsLimit t) : t.x ≅ X where
   Hom := t.fst
-  inv := Q.lift (BinaryFan.mk (𝟙 X) (P.lift { x, π := { app := Pempty.rec _ } }))
+  inv := Q.lift (BinaryFan.mk (𝟙 X) (P.lift { x, π := { app := Discrete.rec (Pempty.rec _) } }))
   hom_inv_id' := by
     apply Q.hom_ext
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · simp
       
     · apply P.hom_ext
-      rintro ⟨⟩
+      rintro ⟨⟨⟩⟩
       
 
 end
@@ -220,12 +222,12 @@ def tensorObj (X Y : C) : C :=
 /-- Implementation of the tensor product of morphisms for `monoidal_of_chosen_finite_products`. -/
 @[reducible]
 def tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y ⟶ tensorObj ℬ X Z :=
-  (BinaryFan.IsLimit.lift' (ℬ X Z).IsLimit ((ℬ W Y).Cone.π.app WalkingPair.left ≫ f)
-      (((ℬ W Y).Cone.π.app WalkingPair.right : (ℬ W Y).Cone.x ⟶ Y) ≫ g)).val
+  (BinaryFan.IsLimit.lift' (ℬ X Z).IsLimit ((ℬ W Y).Cone.π.app ⟨WalkingPair.left⟩ ≫ f)
+      (((ℬ W Y).Cone.π.app ⟨WalkingPair.right⟩ : (ℬ W Y).Cone.x ⟶ Y) ≫ g)).val
 
 theorem tensor_id (X₁ X₂ : C) : tensorHom ℬ (𝟙 X₁) (𝟙 X₂) = 𝟙 (tensorObj ℬ X₁ X₂) := by
   apply is_limit.hom_ext (ℬ _ _).IsLimit
-  rintro ⟨⟩ <;>
+  rintro ⟨⟨⟩⟩ <;>
     · dsimp' [tensor_hom]
       simp
       
@@ -233,7 +235,7 @@ theorem tensor_id (X₁ X₂ : C) : tensorHom ℬ (𝟙 X₁) (𝟙 X₂) = 𝟙
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂) :
     tensorHom ℬ (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom ℬ f₁ f₂ ≫ tensorHom ℬ g₁ g₂ := by
   apply is_limit.hom_ext (ℬ _ _).IsLimit
-  rintro ⟨⟩ <;>
+  rintro ⟨⟨⟩⟩ <;>
     · dsimp' [tensor_hom]
       simp
       
@@ -247,15 +249,15 @@ theorem pentagon (W X Y Z : C) :
   by
   dsimp' [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit
-  rintro ⟨⟩
+  rintro ⟨⟨⟩⟩
   · simp
     
   · apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · simp
       
     apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · simp
       
     · simp
@@ -269,7 +271,7 @@ theorem triangle (X Y : C) :
   by
   dsimp' [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit
-  rintro ⟨⟩ <;> simp
+  rintro ⟨⟨⟩⟩ <;> simp
 
 theorem left_unitor_naturality {X₁ X₂ : C} (f : X₁ ⟶ X₂) :
     tensorHom ℬ (𝟙 𝒯.Cone.x) f ≫ (BinaryFan.leftUnitor 𝒯.IsLimit (ℬ 𝒯.Cone.x X₂).IsLimit).Hom =
@@ -291,11 +293,11 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ �
   by
   dsimp' [tensor_hom]
   apply is_limit.hom_ext (ℬ _ _).IsLimit
-  rintro ⟨⟩
+  rintro ⟨⟨⟩⟩
   · simp
     
   · apply is_limit.hom_ext (ℬ _ _).IsLimit
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · simp
       
     · simp
@@ -344,7 +346,7 @@ theorem braiding_naturality {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
   by
   dsimp' [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext
-  rintro ⟨⟩ <;>
+  rintro ⟨⟨⟩⟩ <;>
     · dsimp' [limits.is_limit.cone_point_unique_up_to_iso]
       simp
       
@@ -359,12 +361,12 @@ theorem hexagon_forward (X Y Z : C) :
   by
   dsimp' [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext
-  rintro ⟨⟩
+  rintro ⟨⟨⟩⟩
   · dsimp' [limits.is_limit.cone_point_unique_up_to_iso]
     simp
     
   · apply (ℬ _ _).IsLimit.hom_ext
-    rintro ⟨⟩ <;>
+    rintro ⟨⟨⟩⟩ <;>
       · dsimp' [limits.is_limit.cone_point_unique_up_to_iso]
         simp
         
@@ -380,9 +382,9 @@ theorem hexagon_reverse (X Y Z : C) :
   by
   dsimp' [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext
-  rintro ⟨⟩
+  rintro ⟨⟨⟩⟩
   · apply (ℬ _ _).IsLimit.hom_ext
-    rintro ⟨⟩ <;>
+    rintro ⟨⟨⟩⟩ <;>
       · dsimp' [binary_fan.associator_of_limit_cone, binary_fan.associator, limits.is_limit.cone_point_unique_up_to_iso]
         simp
         
@@ -398,7 +400,7 @@ theorem symmetry (X Y : C) :
   by
   dsimp' [tensor_hom, limits.binary_fan.braiding]
   apply (ℬ _ _).IsLimit.hom_ext
-  rintro ⟨⟩ <;>
+  rintro ⟨⟨⟩⟩ <;>
     · dsimp' [limits.is_limit.cone_point_unique_up_to_iso]
       simp
       

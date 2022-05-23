@@ -8,17 +8,18 @@ import Mathbin.GroupTheory.Subgroup.Basic
 import Mathbin.Deprecated.Submonoid
 
 /-!
-# Unbundled subgroups
+# Unbundled subgroups (deprecated)
 
-This file defines unbundled multiplicative and additive subgroups `is_subgroup` and
-`is_add_subgroup`. These are not the preferred way to talk about subgroups and should
-not be used for any new projects. The preferred way in mathlib are the bundled
-versions `subgroup G` and `add_subgroup G`.
+This file is deprecated, and is no longer imported by anything in mathlib other than other
+deprecated files, and test files. You should not need to import it.
+
+This file defines unbundled multiplicative and additive subgroups. Instead of using this file,
+please use `subgroup G` and `add_subgroup A`, defined in `group_theory.subgroup.basic`.
 
 ## Main definitions
 
-`is_add_subgroup (S : set G)` : the predicate that `S` is the underlying subset of an additive
-subgroup of `G`. The bundled variant `add_subgroup G` should be used in preference to this.
+`is_add_subgroup (S : set A)` : the predicate that `S` is the underlying subset of an additive
+subgroup of `A`. The bundled variant `add_subgroup A` should be used in preference to this.
 
 `is_subgroup (S : set G)` : the predicate that `S` is the underlying subset of a subgroup
 of `G`. The bundled variant `subgroup G` should be used in preference to this.

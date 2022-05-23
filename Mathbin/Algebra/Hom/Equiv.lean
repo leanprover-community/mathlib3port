@@ -502,12 +502,12 @@ def piSubsingleton {ι : Type _} (M : ι → Type _) [∀ j, Mul (M j)] [Subsing
 
 /-- A multiplicative equivalence of groups preserves inversion. -/
 @[to_additive "An additive equivalence of additive groups preserves negation."]
-protected theorem map_inv [Groupₓ G] [Groupₓ H] (h : G ≃* H) (x : G) : h x⁻¹ = (h x)⁻¹ :=
+protected theorem map_inv [Groupₓ G] [DivisionMonoid H] (h : G ≃* H) (x : G) : h x⁻¹ = (h x)⁻¹ :=
   map_inv h x
 
 /-- A multiplicative equivalence of groups preserves division. -/
 @[to_additive "An additive equivalence of additive groups preserves subtractions."]
-protected theorem map_div [Groupₓ G] [Groupₓ H] (h : G ≃* H) (x y : G) : h (x / y) = h x / h y :=
+protected theorem map_div [Groupₓ G] [DivisionMonoid H] (h : G ≃* H) (x y : G) : h (x / y) = h x / h y :=
   map_div h x y
 
 end MulEquiv
@@ -544,10 +544,6 @@ protected theorem Groupₓ.is_unit {G} [Groupₓ G] (x : G) : IsUnit x :=
   (toUnits x).IsUnit
 
 namespace Units
-
-@[simp, to_additive]
-theorem coe_inv [Groupₓ G] (u : Gˣ) : ↑u⁻¹ = (u⁻¹ : G) :=
-  toUnits.symm.map_inv u
 
 variable [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
 

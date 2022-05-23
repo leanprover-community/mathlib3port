@@ -57,8 +57,7 @@ is the sum of `f x`, for some `x : fin (n + 1)` plus the remaining product -/
 @[to_additive]
 theorem prod_univ_succ_above [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) (x : Finₓ (n + 1)) :
     (∏ i, f i) = f x * ∏ i : Finₓ n, f (x.succAbove i) := by
-  rw [Fintype.prod_eq_mul_prod_compl x, ← image_succ_above_univ, prod_image]
-  exact fun _ _ _ _ h => x.succ_above.injective h
+  rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_fn_to_embedding]
 
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f 0` plus the remaining product -/
@@ -76,6 +75,11 @@ is the sum of `f (fin.last n)` plus the remaining sum -/
 theorem prod_univ_cast_succ [CommMonoidₓ β] {n : ℕ} (f : Finₓ (n + 1) → β) :
     (∏ i, f i) = (∏ i : Finₓ n, f i.cast_succ) * f (last n) := by
   simpa [mul_comm] using prod_univ_succ_above f (last n)
+
+@[to_additive]
+theorem prod_cons [CommMonoidₓ β] {n : ℕ} (x : β) (f : Finₓ n → β) :
+    (∏ i : Finₓ n.succ, (cons x f : Finₓ n.succ → β) i) = x * ∏ i : Finₓ n, f i := by
+  simp_rw [prod_univ_succ, cons_zero, cons_succ]
 
 @[to_additive sum_univ_one]
 theorem prod_univ_one [CommMonoidₓ β] (f : Finₓ 1 → β) : (∏ i, f i) = f 0 := by

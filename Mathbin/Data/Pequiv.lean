@@ -154,6 +154,7 @@ theorem trans_refl (f : α ≃. β) : f.trans (Pequiv.refl β) = f := by
 protected theorem inj (f : α ≃. β) {a₁ a₂ : α} {b : β} (h₁ : b ∈ f a₁) (h₂ : b ∈ f a₂) : a₁ = a₂ := by
   rw [← mem_iff_mem] at * <;> cases h : f.symm b <;> simp_all
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If the domain of a `pequiv` is `α` except a point, its forward direction is injective. -/
 theorem injective_of_forall_ne_is_some (f : α ≃. β) (a₂ : α) (h : ∀ a₁ : α, a₁ ≠ a₂ → isSome (f a₁)) : Injective f :=
   HasLeftInverse.injective

@@ -99,6 +99,7 @@ theorem card_nth_roots_subgroup_units (f : G →* R) (hf : Injective f) {n : ℕ
     assumption
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
@@ -143,6 +144,7 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Groupₓ H] [DecidableEq H] (f 
       exists_prop_of_true, MonoidHom.map_mul_inv, and_selfₓ, mul_inv_cancel_rightₓ, inv_mul_cancel_right]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) = 0 := by
@@ -202,7 +204,7 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
           ⟨n % orderOf x, mem_range.2 (Nat.mod_ltₓ _ (order_of_pos _)), by
             rw [← pow_eq_mod_order_of, hn]⟩_ = 0 :=
       _
-  rw [← mul_left_inj' hx1, zero_mul, ← geomSum, geom_sum_mul, coe_coe]
+  rw [← mul_left_inj' hx1, zero_mul, geom_sum_mul, coe_coe]
   norm_cast
   simp [pow_order_of_eq_one]
 

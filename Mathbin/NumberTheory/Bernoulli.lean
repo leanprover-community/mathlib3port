@@ -349,8 +349,8 @@ theorem sum_range_pow (n p : ℕ) :
         simp
       rw [← h_const, sub_const_eq_X_mul_shift]
     -- key step: a chain of equalities of power series
-    rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, ← geom_sum_def, geom_sum_mul, h_r, ←
-      bernoulli_power_series_mul_exp_sub_one, bernoulliPowerSeries, mul_right_commₓ]
+    rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, geom_sum_mul, h_r, ← bernoulli_power_series_mul_exp_sub_one,
+      bernoulliPowerSeries, mul_right_commₓ]
     simp [h_cauchy, mul_comm]
   -- massage `hps` into our goal
   rw [hps, sum_mul]

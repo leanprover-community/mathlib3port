@@ -925,13 +925,13 @@ noncomputable def gcdMonoidOfLcm [DecidableEq α] (lcm : α → α → α) (dvd_
   { lcm, gcd := fun a b => if a = 0 then b else if b = 0 then a else Classical.some (exists_gcd a b),
     gcd_mul_lcm := fun a b => by
       split_ifs
-      · rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
+      · rw [h, eq_zero_of_zero_dvd (dvd_lcm_left _ _), mul_zero, zero_mul]
         
-      · rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero]
+      · rw [h_1, eq_zero_of_zero_dvd (dvd_lcm_right _ _), mul_zero]
         
       rw [mul_comm, ← Classical.some_spec (exists_gcd a b)],
-    lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
-    lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
+    lcm_zero_left := fun a => eq_zero_of_zero_dvd (dvd_lcm_left _ _),
+    lcm_zero_right := fun a => eq_zero_of_zero_dvd (dvd_lcm_right _ _),
     gcd_dvd_left := fun a b => by
       split_ifs with h h_1
       · rw [h]
@@ -990,9 +990,9 @@ noncomputable def normalizedGcdMonoidOfLcm [NormalizationMonoid α] [DecidableEq
     gcd := fun a b => if a = 0 then normalize b else if b = 0 then normalize a else Classical.some (exists_gcd a b),
     gcd_mul_lcm := fun a b => by
       split_ifs with h h_1
-      · rw [h, zero_dvd_iff.1 (dvd_lcm_left _ _), mul_zero, zero_mul]
+      · rw [h, eq_zero_of_zero_dvd (dvd_lcm_left _ _), mul_zero, zero_mul]
         
-      · rw [h_1, zero_dvd_iff.1 (dvd_lcm_right _ _), mul_zero, mul_zero]
+      · rw [h_1, eq_zero_of_zero_dvd (dvd_lcm_right _ _), mul_zero, mul_zero]
         
       rw [mul_comm, ← Classical.some_spec (exists_gcd a b)]
       exact normalize_associated (a * b),
@@ -1013,8 +1013,8 @@ noncomputable def normalizedGcdMonoidOfLcm [NormalizationMonoid α] [DecidableEq
       refine' trans _ (Classical.some_spec (exists_gcd a b))
       conv_lhs => congr rw [← normalize_lcm a b]
       erw [← normalize.map_mul, ← Classical.some_spec (exists_gcd a b), normalize_idem],
-    lcm_zero_left := fun a => zero_dvd_iff.1 (dvd_lcm_left _ _),
-    lcm_zero_right := fun a => zero_dvd_iff.1 (dvd_lcm_right _ _),
+    lcm_zero_left := fun a => eq_zero_of_zero_dvd (dvd_lcm_left _ _),
+    lcm_zero_right := fun a => eq_zero_of_zero_dvd (dvd_lcm_right _ _),
     gcd_dvd_left := fun a b => by
       split_ifs
       · rw [h]

@@ -405,7 +405,7 @@ theorem add_NF_below {b} : ∀ {o₁ o₂}, NFBelow o₁ b → NFBelow o₂ b �
 
 instance add_NF o₁ o₂ : ∀ [NF o₁] [NF o₂], NF (o₁ + o₂)
   | ⟨⟨b₁, h₁⟩⟩, ⟨⟨b₂, h₂⟩⟩ =>
-    ⟨(b₁.le_total b₂).elim (fun h => ⟨b₂, add_NF_below (h₁.mono h) h₂⟩) fun h => ⟨b₁, add_NF_below h₁ (h₂.mono h)⟩⟩
+    ⟨(le_totalₓ b₁ b₂).elim (fun h => ⟨b₂, add_NF_below (h₁.mono h) h₂⟩) fun h => ⟨b₁, add_NF_below h₁ (h₂.mono h)⟩⟩
 
 @[simp]
 theorem repr_add : ∀ o₁ o₂ [NF o₁] [NF o₂], repr (o₁ + o₂) = repr o₁ + repr o₂
@@ -1084,7 +1084,7 @@ theorem repr_mul a b : repr (a * b) = repr a * repr b :=
 def opow (x y : Nonote) :=
   mk (x.1.opow y.1)
 
-theorem repr_opow a b : repr (opow a b) = (repr a).opow (repr b) :=
+theorem repr_opow a b : repr (opow a b) = repr a ^ repr b :=
   Onote.repr_opow a.1 b.1
 
 end Nonote

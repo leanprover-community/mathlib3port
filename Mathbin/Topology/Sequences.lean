@@ -236,6 +236,7 @@ open UniformSpace Prod
 
 variable [UniformSpace β] {s : Set β}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 β)] {c : ι → Set β} (hs : IsSeqCompact s)
     (hc₁ : ∀ i, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i, c i) : ∃ V ∈ 𝓤 β, SymmetricRel V ∧ ∀, ∀ x ∈ s, ∀, ∃ i, Ball x V ⊆ c i :=
   by
@@ -279,6 +280,7 @@ theorem lebesgue_number_lemma_seq {ι : Type _} [IsCountablyGenerated (𝓤 β)]
   calc ball (x <| φ N) (V <| φ N) ⊆ ball (x <| φ N) W := preimage_mono hVNW _ ⊆ ball x₀ (V n₀) :=
       ball_subset_of_comp_subset x_φ_N_in hWW _ ⊆ c i₀ := hn₀
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := by
   classical
   apply totally_bounded_of_forall_symm
@@ -308,6 +310,7 @@ theorem IsSeqCompact.totally_bounded (h : IsSeqCompact s) : TotallyBounded s := 
   specialize hu (φ <| N + 1) (φ N) (hφ <| lt_add_one N)
   exact hu hN
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 protected theorem IsSeqCompact.is_compact [is_countably_generated <| 𝓤 β] (hs : IsSeqCompact s) : IsCompact s := by
   classical
   rw [is_compact_iff_finite_subcover]

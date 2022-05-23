@@ -86,8 +86,9 @@ def isoConstant [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j :
 The converse is given in `is_connected.of_any_functor_const_on_obj`.
 -/
 theorem any_functor_const_on_obj [IsPreconnected J] {α : Type u₁} (F : J ⥤ Discrete α) (j j' : J) :
-    F.obj j = F.obj j' :=
-  ((isoConstant F j').Hom.app j).down.1
+    F.obj j = F.obj j' := by
+  ext
+  exact ((iso_constant F j').Hom.app j).down.1
 
 /-- If any functor to a discrete category is constant on objects, J is connected.
 The converse of `any_functor_const_on_obj`.
@@ -104,8 +105,16 @@ This can be thought of as a local-to-global property.
 The converse is shown in `is_connected.of_constant_of_preserves_morphisms`
 -/
 theorem constant_of_preserves_morphisms [IsPreconnected J] {α : Type u₁} (F : J → α)
-    (h : ∀ j₁ j₂ : J f : j₁ ⟶ j₂, F j₁ = F j₂) (j j' : J) : F j = F j' :=
-  any_functor_const_on_obj { obj := F, map := fun _ _ f => eqToHom (h _ _ f) } j j'
+    (h : ∀ j₁ j₂ : J f : j₁ ⟶ j₂, F j₁ = F j₂) (j j' : J) : F j = F j' := by
+  simpa using
+    any_functor_const_on_obj
+      { obj := discrete.mk ∘ F,
+        map := fun _ _ f =>
+          eq_to_hom
+            (by
+              ext
+              exact h _ _ f) }
+      j j'
 
 /-- `J` is connected if: given any function `F : J → α` which is constant for any
 `j₁, j₂` for which there is a morphism `j₁ ⟶ j₂`, then `F` is constant.
@@ -116,7 +125,10 @@ The converse of `constant_of_preserves_morphisms`.
 theorem IsConnected.of_constant_of_preserves_morphisms [Nonempty J]
     (h : ∀ {α : Type u₁} F : J → α, (∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, F j₁ = F j₂) → ∀ j j' : J, F j = F j') :
     IsConnected J :=
-  IsConnected.of_any_functor_const_on_obj fun _ F => h F.obj fun _ _ f => (F.map f).down.1
+  IsConnected.of_any_functor_const_on_obj fun _ F =>
+    h F.obj fun _ _ f => by
+      ext
+      exact discrete.eq_of_hom (F.map f)
 
 /-- An inductive-like property for the objects of a connected category.
 If the set `p` is nonempty, and `p` is closed under morphisms of `J`,
@@ -191,8 +203,11 @@ instance is_preconnected_op [IsPreconnected J] : IsPreconnected Jᵒᵖ where
   iso_constant := fun α F X =>
     ⟨NatIso.ofComponents
         (fun Y =>
-          (Nonempty.some <| IsPreconnected.iso_constant (F.rightOp ⋙ (Discrete.opposite α).Functor) (unop X)).app
-            (unop Y))
+          eqToIso
+            (Discrete.ext _ _
+              (Discrete.eq_of_hom
+                ((Nonempty.some (IsPreconnected.iso_constant (F.rightOp ⋙ (Discrete.opposite α).Functor) (unop X))).app
+                    (unop Y)).Hom)))
         fun Y Z f => Subsingleton.elimₓ _ _⟩
 
 /-- If `J` is connected, then `Jᵒᵖ` is connected as well. -/
@@ -291,7 +306,7 @@ theorem is_connected_of_zigzag [Nonempty J]
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/
 def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] : α ≃ PUnit :=
   Discrete.equivOfEquivalence.{u₁, u₁}
-    { Functor := Functor.star α, inverse := Discrete.functor fun _ => Classical.arbitrary _,
+    { Functor := Functor.star (Discrete α), inverse := Discrete.functor fun _ => Classical.arbitrary _,
       unitIso := iso_constant _ (Classical.arbitrary _), counitIso := Functor.punitExt _ _ }
 
 variable {C : Type u₂} [Category.{u₁} C]

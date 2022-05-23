@@ -316,6 +316,7 @@ theorem interior_inter {s t : Set α} : Interior (s ∩ t) = Interior s ∩ Inte
     (interior_maximal (inter_subset_inter interior_subset interior_subset) <|
       IsOpen.inter is_open_interior is_open_interior)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem Finset.interior_Inter {ι : Type _} (s : Finset ι) (f : ι → Set α) :
     Interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, Interior (f i) := by
@@ -455,6 +456,7 @@ theorem closure_union {s t : Set α} : Closure (s ∪ t) = Closure s ∪ Closure
       IsClosed.union is_closed_closure is_closed_closure)
     ((monotone_closure α).le_map_sup s t)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem Finset.closure_bUnion {ι : Type _} (s : Finset ι) (f : ι → Set α) :
     Closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, Closure (f i) := by
@@ -714,6 +716,9 @@ localized [TopologicalSpace] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio 
 
 theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s := by
   rw [nhds]
+
+theorem nhds_def' (a : α) : 𝓝 a = ⨅ (s : Set α) (hs : IsOpen s) (ha : a ∈ s), 𝓟 s := by
+  simp only [nhds_def, mem_set_of_eq, and_comm (a ∈ _), infi_and]
 
 /-- The open sets containing `a` are a basis for the neighborhood filter. See `nhds_basis_opens'`
 for a variant using open neighborhoods instead. -/

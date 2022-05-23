@@ -46,12 +46,12 @@ theorem balance2_eq₃ (l : Rbnode α) y r v t :
     getColor l ≠ red → getColor r ≠ red → balance2 l y r v t = black_node t v (red_node l y r) := by
   cases l <;> cases r <;> simp [get_color, balance2, false_implies_iff]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 -- We can use the same induction principle for balance1 and balance2
 theorem Balance.cases {p : Rbnode α → α → Rbnode α → Prop} l y r (red_left : ∀ l x r₁ y r₂, p (red_node l x r₁) y r₂)
     (red_right : ∀ l₁ y l₂ x r, getColor l₁ ≠ red → p l₁ y (red_node l₂ x r))
@@ -249,6 +249,7 @@ theorem is_searchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     assumption
     simp [*]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_searchable_mk_insert_result {c t} :
     IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by
   classical
@@ -320,8 +321,8 @@ theorem mem_balance2_node_of_incomp {x v} s t : ¬lt v x ∧ ¬lt x v → s ≠ 
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem ins_ne_leaf [DecidableRel lt] (t : Rbnode α) (x : α) : t.ins lt x ≠ leaf := by
   apply ins.induction lt t x
   any_goals {
@@ -356,8 +357,8 @@ theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h :
     apply mem_balance2_node_of_mem_left
     assumption
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem mem_ins_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} (z : α) :
     ∀ {x} h : x∈t, x∈t.ins lt z := by
   with_cases
@@ -431,8 +432,8 @@ theorem of_mem_balance2_node {x s v t} : (x∈balance2Node s v t) → (x∈s) �
   all_goals
     apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;> simp [*]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem equiv_or_mem_of_mem_ins [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} {x z} :
     ∀ h : x∈t.ins lt z, x ≈[lt]z ∨ (x∈t) := by
   with_cases

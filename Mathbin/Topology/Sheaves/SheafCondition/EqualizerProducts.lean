@@ -6,7 +6,6 @@ Authors: Scott Morrison
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
 import Mathbin.CategoryTheory.Limits.Shapes.Products
-import Mathbin.Tactic.Elementwise
 import Mathbin.Topology.Sheaves.Presheaf
 
 /-!
@@ -73,7 +72,7 @@ def res : F.obj (op (supr U)) ⟶ piOpens F U :=
   Pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
 
 @[simp, elementwise]
-theorem res_π (i : ι) : res F U ≫ limit.π _ i = F.map (Opens.leSupr U i).op := by
+theorem res_π (i : ι) : res F U ≫ limit.π _ ⟨i⟩ = F.map (Opens.leSupr U i).op := by
   rw [res, limit.lift_π, fan.mk_π_app]
 
 @[elementwise]
@@ -253,7 +252,7 @@ def fork.isoOfOpenEmbedding :
                 (by
                   simp only [supr_s, supr_mk, le_def, Subtype.coe_mk, Set.le_eq_subset, Set.image_Union]) })
     
-  · ext
+  · ext ⟨j⟩
     dunfold fork.ι
     -- Ugh, it is unpleasant that we need this.
     simp only [res, diagram.iso_of_open_embedding, discrete.nat_iso_inv_app, functor.map_iso_inv, limit.lift_π,

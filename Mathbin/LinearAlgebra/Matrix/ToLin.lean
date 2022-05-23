@@ -33,6 +33,28 @@ types used for indexing.
  * `alg_equiv_matrix`: given a basis indexed by `n`, the `R`-algebra equivalence between
    `R`-endomorphisms of `M` and `matrix n n R`
 
+## Issues
+
+This file was originally written without attention to non-commutative rings,
+and so mostly only works in the commutative setting. This should be fixed.
+
+In particular, `matrix.mul_vec` gives us a linear equivalence
+`matrix m n R ≃ₗ[R] (n → R) →ₗ[Rᵐᵒᵖ] (m → R)`
+while `matrix.vec_mul` gives us a linear equivalence
+`matrix m n R ≃ₗ[Rᵐᵒᵖ] (m → R) →ₗ[R] (n → R)`.
+At present, the first equivalence is developed in detail but only for commutative rings
+(and we omit the distinction between `Rᵐᵒᵖ` and `R`),
+while the second equivalence is developed only in brief, but for not-necessarily-commutative rings.
+
+Naming is slightly inconsistent between the two developments.
+In the original (commutative) development `linear` is abbreviated to `lin`,
+although this is not consistent with the rest of mathlib.
+In the new (non-commutative) development `linear` is not abbreviated, and declarations use `_right`
+to indicate they use the right action of matrices on vectors (via `matrix.vec_mul`).
+When the two developments are made uniform, the names should be made uniform, too,
+by choosing between `linear` and `lin` consistently,
+and (presumably) adding `_left` where necessary.
+
 ## Tags
 
 linear_map, matrix, linear_equiv, diagonal, det, trace
@@ -49,24 +71,113 @@ open Matrix
 
 universe u v w
 
-section ToMatrix'
-
 instance {n m} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] R [Fintype R] : Fintype (Matrix m n R) := by
   unfold Matrix <;> infer_instance
 
-variable {R : Type _} [CommRingₓ R]
+section ToMatrixRight
+
+variable {R : Type _} [Semiringₓ R]
+
+variable {l m n : Type _}
+
+/-- `matrix.vec_mul M` is a linear map. -/
+@[simps]
+def Matrix.vecMulLinear [Fintype m] (M : Matrix m n R) : (m → R) →ₗ[R] n → R where
+  toFun := fun x => M.vecMul x
+  map_add' := fun v w => funext fun i => add_dot_product _ _ _
+  map_smul' := fun c v => funext fun i => smul_dot_product _ _ _
+
+variable [Fintype m] [DecidableEq m]
+
+@[simp]
+theorem Matrix.vec_mul_std_basis (M : Matrix m n R) i j : M.vecMul (stdBasis R (fun _ => R) i 1) j = M i j := by
+  have : (∑ i', (if i = i' then 1 else 0) * M i' j) = M i j := by
+    simp_rw [boole_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  convert this
+  ext
+  split_ifs with h <;> simp only [std_basis_apply]
+  · rw [h, Function.update_same]
+    
+  · rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
+    
+
+/-- Linear maps `(m → R) →ₗ[R] (n → R)` are linearly equivalent over `Rᵐᵒᵖ` to `matrix m n R`,
+by having matrices act by right multiplication.
+ -/
+def LinearMap.toMatrixRight' : ((m → R) →ₗ[R] n → R) ≃ₗ[Rᵐᵒᵖ] Matrix m n R where
+  toFun := fun f i j => f (stdBasis R (fun _ => R) i 1) j
+  invFun := Matrix.vecMulLinear
+  right_inv := fun M => by
+    ext i j
+    simp only [Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
+  left_inv := fun f => by
+    apply (Pi.basisFun R m).ext
+    intro j
+    ext i
+    simp only [Pi.basis_fun_apply, Matrix.vec_mul_std_basis, Matrix.vec_mul_linear_apply]
+  map_add' := fun f g => by
+    ext i j
+    simp only [Pi.add_apply, LinearMap.add_apply]
+  map_smul' := fun c f => by
+    ext i j
+    simp only [Pi.smul_apply, LinearMap.smul_apply, RingHom.id_apply]
+
+/-- A `matrix m n R` is linearly equivalent over `Rᵐᵒᵖ` to a linear map `(m → R) →ₗ[R] (n → R)`,
+by having matrices act by right multiplication. -/
+abbrev Matrix.toLinearMapRight' : Matrix m n R ≃ₗ[Rᵐᵒᵖ] (m → R) →ₗ[R] n → R :=
+  LinearMap.toMatrixRight'.symm
+
+@[simp]
+theorem Matrix.to_linear_map_right'_apply (M : Matrix m n R) (v : m → R) : Matrix.toLinearMapRight' M v = M.vecMul v :=
+  rfl
+
+@[simp]
+theorem Matrix.to_linear_map_right'_mul [Fintype l] [DecidableEq l] (M : Matrix l m R) (N : Matrix m n R) :
+    Matrix.toLinearMapRight' (M ⬝ N) = (Matrix.toLinearMapRight' N).comp (Matrix.toLinearMapRight' M) := by
+  ext
+  simp
+
+theorem Matrix.to_linear_map_right'_mul_apply [Fintype l] [DecidableEq l] (M : Matrix l m R) (N : Matrix m n R) x :
+    Matrix.toLinearMapRight' (M ⬝ N) x = Matrix.toLinearMapRight' N (Matrix.toLinearMapRight' M x) := by
+  rw [Matrix.to_linear_map_right'_mul, LinearMap.comp_apply]
+
+@[simp]
+theorem Matrix.to_linear_map_right'_one : Matrix.toLinearMapRight' (1 : Matrix m m R) = id := by
+  ext
+  simp [LinearMap.one_apply, std_basis_apply]
+
+/-- If `M` and `M'` are each other's inverse matrices, they provide an equivalence between `n → A`
+and `m → A` corresponding to `M.vec_mul` and `M'.vec_mul`. -/
+@[simps]
+def Matrix.toLinearEquivRight'OfInv [Fintype n] [DecidableEq n] {M : Matrix m n R} {M' : Matrix n m R}
+    (hMM' : M ⬝ M' = 1) (hM'M : M' ⬝ M = 1) : (n → R) ≃ₗ[R] m → R :=
+  { LinearMap.toMatrixRight'.symm M' with toFun := M'.toLinearMapRight', invFun := M.toLinearMapRight',
+    left_inv := fun x => by
+      rw [← Matrix.to_linear_map_right'_mul_apply, hM'M, Matrix.to_linear_map_right'_one, id_apply],
+    right_inv := fun x => by
+      rw [← Matrix.to_linear_map_right'_mul_apply, hMM', Matrix.to_linear_map_right'_one, id_apply] }
+
+end ToMatrixRight
+
+/-!
+From this point on, we only work with commutative rings,
+and fail to distinguish between `Rᵐᵒᵖ` and `R`.
+This should eventually be remedied.
+-/
+
+
+section ToMatrix'
+
+variable {R : Type _} [CommSemiringₓ R]
 
 variable {l m n : Type _}
 
 /-- `matrix.mul_vec M` is a linear map. -/
+@[simps]
 def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → R where
   toFun := M.mulVec
   map_add' := fun v w => funext fun i => dot_product_add _ _ _
   map_smul' := fun c v => funext fun i => dot_product_smul _ _ _
-
-@[simp]
-theorem Matrix.mul_vec_lin_apply [Fintype n] (M : Matrix m n R) (v : n → R) : Matrix.mulVecLin M v = M.mulVec v :=
-  rfl
 
 variable [Fintype n] [DecidableEq n]
 

@@ -300,6 +300,55 @@ theorem mem_bsupr_iff_exists_dfinsupp (p : ι → Prop) [DecidablePred p] (S : �
     (x ∈ ⨆ (i) (h : p i), S i) ↔ ∃ f : Π₀ i, S i, Dfinsupp.lsum ℕ (fun i => (S i).Subtype) (f.filter p) = x :=
   SetLike.ext_iff.mp (bsupr_eq_range_dfinsupp_lsum p S) x
 
+open BigOperators
+
+omit dec_ι
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem mem_supr_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
+    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
+  classical
+  rw [Submodule.mem_supr_iff_exists_dfinsupp']
+  constructor <;> rintro ⟨μ, hμ⟩
+  · use fun i => ⟨μ i, (supr_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
+    rw [← hμ]
+    symm
+    apply Finset.sum_subset
+    · intro x
+      contrapose
+      intro hx
+      rw [mem_support_iff, not_ne_iff]
+      ext
+      rw [coe_zero, ← mem_bot R]
+      convert coe_mem (μ x)
+      symm
+      exact supr_neg hx
+      
+    · intro x _ hx
+      rw [mem_support_iff, not_ne_iff] at hx
+      rw [hx]
+      rfl
+      
+    
+  · refine' ⟨Dfinsupp.mk s _, _⟩
+    · rintro ⟨i, hi⟩
+      refine' ⟨μ i, _⟩
+      rw [supr_pos]
+      · exact coe_mem _
+        
+      · exact hi
+        
+      
+    simp only [Dfinsupp.sum]
+    rw [Finset.sum_subset support_mk_subset, ← hμ]
+    exact Finset.sum_congr rfl fun x hx => congr_argₓ coe <| mk_of_mem hx
+    · intro x _ hx
+      rw [mem_support_iff, not_ne_iff] at hx
+      rw [hx]
+      rfl
+      
+    
+
 end Submodule
 
 namespace CompleteLattice
@@ -416,6 +465,7 @@ theorem independent_iff_dfinsupp_sum_add_hom_injective (p : ι → AddSubgroup N
 
 omit dec_ι
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a family of submodules is `independent`, then a choice of nonzero vector from each submodule
 forms a linearly independent family. -/
 theorem Independent.linear_independent [NoZeroSmulDivisors R N] (p : ι → Submodule R N)

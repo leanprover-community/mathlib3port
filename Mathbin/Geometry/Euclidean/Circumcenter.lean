@@ -344,8 +344,8 @@ theorem circumcenter_eq_point (s : Simplex ℝ P 0) (i : Finₓ 1) : s.circumcen
   rw [h]
   congr
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 /-- The circumcenter of a 1-simplex equals its centroid. -/
 theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset.univ.centroid ℝ s.points := by
   have hr :
@@ -353,7 +353,7 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) : s.circumcenter = Finset
       dist (s.points i) (finset.univ.centroid ℝ s.points) = dist (s.points j) (finset.univ.centroid ℝ s.points) :=
     by
     intro i hi j hj hij
-    rw [Finset.centroid_insert_singleton_fin, dist_eq_norm_vsub V (s.points i), dist_eq_norm_vsub V (s.points j),
+    rw [Finset.centroid_pair_fin, dist_eq_norm_vsub V (s.points i), dist_eq_norm_vsub V (s.points j),
       vsub_vadd_eq_vsub_sub, vsub_vadd_eq_vsub_sub, ← one_smul ℝ (s.points i -ᵥ s.points 0), ←
       one_smul ℝ (s.points j -ᵥ s.points 0)]
     fin_cases i <;> fin_cases j <;> simp [-one_smul, ← sub_smul] <;> norm_num

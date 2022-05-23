@@ -5,6 +5,7 @@ Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 -/
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
+import Mathbin.CategoryTheory.Elementwise
 import Mathbin.Algebra.Ring.Equiv
 
 /-!

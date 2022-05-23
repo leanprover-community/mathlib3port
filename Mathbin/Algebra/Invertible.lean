@@ -190,7 +190,7 @@ theorem one_sub_inv_of_two [Ringₓ α] [Invertible (2 : α)] : 1 - (⅟ 2 : α)
 
 @[simp]
 theorem inv_of_two_add_inv_of_two [NonAssocSemiringₓ α] [Invertible (2 : α)] : (⅟ 2 : α) + (⅟ 2 : α) = 1 := by
-  simp only [← two_mul, mul_inv_of_self]
+  rw [← two_mul, mul_inv_of_self]
 
 /-- `a` is the inverse of `⅟a`. -/
 instance invertibleInvOf [One α] [Mul α] {a : α} [Invertible a] : Invertible (⅟ a) :=

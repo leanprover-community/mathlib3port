@@ -836,9 +836,10 @@ theorem stopped_process_eq_of_ge {u : ι → α → β} {τ : α → ι} {i : ι
 section ProgMeasurable
 
 variable [MeasurableSpace ι] [TopologicalSpace ι] [OrderTopology ι] [SecondCountableTopology ι] [BorelSpace ι]
-  [MetrizableSpace ι] [TopologicalSpace β] {u : ι → α → β} {τ : α → ι} {f : Filtration ι m}
+  [TopologicalSpace β] {u : ι → α → β} {τ : α → ι} {f : Filtration ι m}
 
-theorem prog_measurable_min_stopping_time (hτ : IsStoppingTime f τ) : ProgMeasurable f fun i x => min i (τ x) := by
+theorem prog_measurable_min_stopping_time [MetrizableSpace ι] (hτ : IsStoppingTime f τ) :
+    ProgMeasurable f fun i x => min i (τ x) := by
   intro i
   let m_prod : MeasurableSpace (Set.Iic i × α) := MeasurableSpace.prod _ (f i)
   let m_set : ∀ t : Set (Set.Iic i × α), MeasurableSpace t := fun _ => @Subtype.measurableSpace (Set.Iic i × α) _ m_prod
@@ -876,17 +877,41 @@ theorem prog_measurable_min_stopping_time (hτ : IsStoppingTime f τ) : ProgMeas
     simp only [not_leₓ, Set.mem_compl_eq, Set.mem_set_of_eq]
     
 
-theorem ProgMeasurable.stopped_process (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
+theorem ProgMeasurable.stopped_process [MetrizableSpace ι] (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
     ProgMeasurable f (stoppedProcess u τ) :=
   h.comp (prog_measurable_min_stopping_time hτ) fun i x => min_le_leftₓ _ _
 
-theorem ProgMeasurable.adapted_stopped_process (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
+theorem ProgMeasurable.adapted_stopped_process [MetrizableSpace ι] (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) :
     Adapted f (stoppedProcess u τ) :=
   (h.stoppedProcess hτ).Adapted
 
-theorem ProgMeasurable.strongly_measurable_stopped_process (hu : ProgMeasurable f u) (hτ : IsStoppingTime f τ) (i : ι) :
-    StronglyMeasurable (stoppedProcess u τ i) :=
+theorem ProgMeasurable.strongly_measurable_stopped_process [MetrizableSpace ι] (hu : ProgMeasurable f u)
+    (hτ : IsStoppingTime f τ) (i : ι) : StronglyMeasurable (stoppedProcess u τ i) :=
   (hu.adapted_stopped_process hτ i).mono (f.le _)
+
+theorem strongly_measurable_stopped_value_of_le (h : ProgMeasurable f u) (hτ : IsStoppingTime f τ) {n : ι}
+    (hτ_le : ∀ x, τ x ≤ n) : strongly_measurable[f n] (stoppedValue u τ) := by
+  have : stopped_value u τ = (fun p : Set.Iic n × α => u (↑p.fst) p.snd) ∘ fun x => (⟨τ x, hτ_le x⟩, x) := by
+    ext1 x
+    simp only [stopped_value, Function.comp_app, Subtype.coe_mk]
+  rw [this]
+  refine' strongly_measurable.comp_measurable (h n) _
+  exact (hτ.measurable_of_le hτ_le).subtype_mk.prod_mk measurable_id
+
+theorem measurable_stopped_value [MetrizableSpace β] [MeasurableSpace β] [BorelSpace β] (hf_prog : ProgMeasurable f u)
+    (hτ : IsStoppingTime f τ) : measurable[hτ.MeasurableSpace] (stoppedValue u τ) := by
+  have h_str_meas : ∀ i, strongly_measurable[f i] (stopped_value u fun x => min (τ x) i) := fun i =>
+    strongly_measurable_stopped_value_of_le hf_prog (hτ.min_const i) fun _ => min_le_rightₓ _ _
+  intro t ht i
+  suffices
+    stopped_value u τ ⁻¹' t ∩ { x : α | τ x ≤ i } = (stopped_value u fun x => min (τ x) i) ⁻¹' t ∩ { x : α | τ x ≤ i }
+    by
+    rw [this]
+    exact ((h_str_meas i).Measurable ht).inter (hτ.measurable_set_le i)
+  ext1 x
+  simp only [stopped_value, Set.mem_inter_eq, Set.mem_preimage, Set.mem_set_of_eq, And.congr_left_iff]
+  intro h
+  rw [min_eq_leftₓ h]
 
 end ProgMeasurable
 

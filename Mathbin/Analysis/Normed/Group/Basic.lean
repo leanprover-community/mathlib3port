@@ -3,6 +3,7 @@ Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 -/
+import Mathbin.Algebra.Module.Ulift
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.MetricSpace.Algebra
@@ -213,6 +214,9 @@ theorem norm_add_le (g h : E) : ∥g + h∥ ≤ ∥g∥ + ∥h∥ := by
 
 theorem norm_add_le_of_le {g₁ g₂ : E} {n₁ n₂ : ℝ} (H₁ : ∥g₁∥ ≤ n₁) (H₂ : ∥g₂∥ ≤ n₂) : ∥g₁ + g₂∥ ≤ n₁ + n₂ :=
   le_transₓ (norm_add_le g₁ g₂) (add_le_add H₁ H₂)
+
+theorem norm_add₃_le (x y z : E) : ∥x + y + z∥ ≤ ∥x∥ + ∥y∥ + ∥z∥ :=
+  norm_add_le_of_le (norm_add_le _ _) le_rfl
 
 theorem dist_add_add_le (g₁ g₂ h₁ h₂ : E) : dist (g₁ + g₂) (h₁ + h₂) ≤ dist g₁ h₁ + dist g₂ h₂ := by
   simpa only [dist_add_left, dist_add_right] using dist_triangle (g₁ + g₂) (h₁ + g₂) (h₁ + h₂)
@@ -824,6 +828,23 @@ theorem Submodule.norm_coe {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [Semi
     {s : Submodule 𝕜 E} (x : s) : ∥(x : E)∥ = ∥(x : s)∥ :=
   rfl
 
+instance ULift.semiNormedGroup : SemiNormedGroup (ULift E) :=
+  SemiNormedGroup.induced ⟨ULift.down, rfl, fun _ _ => rfl⟩
+
+theorem ULift.norm_def (x : ULift E) : ∥x∥ = ∥x.down∥ :=
+  rfl
+
+theorem ULift.nnnorm_def (x : ULift E) : ∥x∥₊ = ∥x.down∥₊ :=
+  rfl
+
+@[simp]
+theorem ULift.norm_up (x : E) : ∥ULift.up x∥ = ∥x∥ :=
+  rfl
+
+@[simp]
+theorem ULift.nnnorm_up (x : E) : ∥ULift.up x∥₊ = ∥x∥₊ :=
+  rfl
+
 /-- seminormed group instance on the product of two seminormed groups, using the sup norm. -/
 noncomputable instance Prod.semiNormedGroup : SemiNormedGroup (E × F) where
   norm := fun x => max ∥x.1∥ ∥x.2∥
@@ -1043,11 +1064,8 @@ end
 
 /-- If `∥y∥→∞`, then we can assume `y≠x` for any fixed `x`. -/
 theorem eventually_ne_of_tendsto_norm_at_top {l : Filter α} {f : α → E} (h : Tendsto (fun y => ∥f y∥) l atTop) (x : E) :
-    ∀ᶠ y in l, f y ≠ x := by
-  have : ∀ᶠ y in l, 1 + ∥x∥ ≤ ∥f y∥ := h (mem_at_top (1 + ∥x∥))
-  refine' this.mono fun y hy hxy => _
-  subst x
-  exact not_le_of_lt zero_lt_one (add_le_iff_nonpos_left.1 hy)
+    ∀ᶠ y in l, f y ≠ x :=
+  (h.eventually_ne_at_top _).mono fun x => ne_of_apply_ne norm
 
 -- see Note [lower instance priority]
 instance (priority := 100) SemiNormedGroup.has_lipschitz_add : HasLipschitzAdd E where
@@ -1137,7 +1155,7 @@ def NormedGroup.ofCore (E : Type _) [AddCommGroupₓ E] [HasNorm E] (C : NormedG
       rw [dist_eq_norm] at h
       exact sub_eq_zero.mp ((C.norm_eq_zero_iff _).1 h) }
 
-variable [NormedGroup E] [NormedGroup F]
+variable [NormedGroup E] [NormedGroup F] {x y : E}
 
 @[simp]
 theorem norm_eq_zero {g : E} : ∥g∥ = 0 ↔ g = 0 :=
@@ -1156,6 +1174,10 @@ theorem norm_le_zero_iff {g : E} : ∥g∥ ≤ 0 ↔ g = 0 :=
 
 theorem norm_sub_eq_zero_iff {u v : E} : ∥u - v∥ = 0 ↔ u = v := by
   rw [norm_eq_zero, sub_eq_zero]
+
+theorem norm_sub_pos_iff : 0 < ∥x - y∥ ↔ x ≠ y := by
+  rw [(norm_nonneg _).lt_iff_ne, ne_comm]
+  exact norm_sub_eq_zero_iff.not
 
 theorem eq_of_norm_sub_le_zero {g h : E} (a : ∥g - h∥ ≤ 0) : g = h := by
   rwa [← sub_eq_zero, ← norm_le_zero_iff]
@@ -1188,6 +1210,9 @@ See note [implicit instance arguments]. -/
 instance Submodule.normedGroup {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [NormedGroup E] {_ : Module 𝕜 E}
     (s : Submodule 𝕜 E) : NormedGroup s :=
   { Submodule.semiNormedGroup s with }
+
+instance ULift.normedGroup : NormedGroup (ULift E) :=
+  { ULift.semiNormedGroup with }
 
 /-- normed group instance on the product of two normed groups, using the sup norm. -/
 noncomputable instance Prod.normedGroup : NormedGroup (E × F) :=

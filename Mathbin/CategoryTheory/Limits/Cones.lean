@@ -8,7 +8,30 @@ import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
--- morphism levels before object levels. See note [category_theory universes].
+/-!
+# Cones and cocones
+
+We define `cone F`, a cone over a functor `F`,
+and `F.cones : Cᵒᵖ ⥤ Type`, the functor associating to `X` the cones over `F` with cone point `X`.
+
+A cone `c` is defined by specifying its cone point `c.X` and a natural transformation `c.π`
+from the constant `c.X` valued functor to `F`.
+
+We provide `c.w f : c.π.app j ≫ F.map f = c.π.app j'` for any `f : j ⟶ j'`
+as a wrapper for `c.π.naturality f` avoiding unneeded identity morphisms.
+
+We define `c.extend f`, where `c : cone F` and `f : Y ⟶ c.X` for some other `Y`,
+which replaces the cone point by `Y` and inserts `f` into each of the components of the cone.
+Similarly we have `c.whisker F` producing a `cone (E ⋙ F)`
+
+We define morphisms of cones, and the category of cones.
+
+We define `cone.postcompose α : cone F ⥤ cone G` for `α` a natural transformation `F ⟶ G`.
+
+And, of course, we dualise all this to cocones as well.
+-/
+
+
 -- morphism levels before object levels. See note [category_theory universes].
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
@@ -78,6 +101,10 @@ end
 
 namespace Limits
 
+section
+
+attribute [local tidy] tactic.discrete_cases
+
 /-- A `c : cone F` is:
 * an object `c.X` and
 * a natural transformation `c.π : c.X ⟶ F` from the constant `c.X` functor to `F`.
@@ -89,7 +116,7 @@ structure Cone (F : J ⥤ C) where
   π : (const J).obj X ⟶ F
 
 instance inhabitedCone (F : Discrete PUnit ⥤ C) : Inhabited (Cone F) :=
-  ⟨{ x := F.obj PUnit.unit, π := { app := fun ⟨⟩ => 𝟙 _ } }⟩
+  ⟨{ x := F.obj ⟨⟨⟩⟩, π := { app := fun ⟨⟨⟩⟩ => 𝟙 _ } }⟩
 
 @[simp, reassoc]
 theorem Cone.w {F : J ⥤ C} (c : Cone F) {j j' : J} (f : j ⟶ j') : c.π.app j ≫ F.map f = c.π.app j' := by
@@ -107,12 +134,14 @@ structure Cocone (F : J ⥤ C) where
   ι : F ⟶ (const J).obj X
 
 instance inhabitedCocone (F : Discrete PUnit ⥤ C) : Inhabited (Cocone F) :=
-  ⟨{ x := F.obj PUnit.unit, ι := { app := fun ⟨⟩ => 𝟙 _ } }⟩
+  ⟨{ x := F.obj ⟨⟨⟩⟩, ι := { app := fun ⟨⟨⟩⟩ => 𝟙 _ } }⟩
 
 @[simp, reassoc]
 theorem Cocone.w {F : J ⥤ C} (c : Cocone F) {j j' : J} (f : j ⟶ j') : F.map f ≫ c.ι.app j' = c.ι.app j := by
   rw [c.ι.naturality f]
   apply comp_id
+
+end
 
 variable {F : J ⥤ C}
 

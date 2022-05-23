@@ -892,6 +892,7 @@ theorem mul_prod_erase (f : α →₀ M) (y : α) (g : α → M → N) (hyf : y 
   intro h hx
   rw [Finsupp.erase_ne (ne_of_mem_erase hx)]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Generalization of `finsupp.mul_prod_erase`: if `g` maps a second argument of 0 to 1,
 then its product over `f : α →₀ M` is the same as multiplying the value on any element
 `y : α` by the product over `erase y f`. -/

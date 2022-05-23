@@ -49,11 +49,20 @@ section Continuity
 
 variable [TopologicalSpace X] [TopologicalSpace R]
 
-instance [HasScalar α R] [HasContinuousConstSmul α R] : HasContinuousConstSmul α (Matrix n n R) :=
+instance [HasScalar α R] [HasContinuousConstSmul α R] : HasContinuousConstSmul α (Matrix m n R) :=
   Pi.has_continuous_const_smul
 
-instance [TopologicalSpace α] [HasScalar α R] [HasContinuousSmul α R] : HasContinuousSmul α (Matrix n n R) :=
+instance [TopologicalSpace α] [HasScalar α R] [HasContinuousSmul α R] : HasContinuousSmul α (Matrix m n R) :=
   Pi.has_continuous_smul
+
+instance [Add R] [HasContinuousAdd R] : HasContinuousAdd (Matrix m n R) :=
+  Pi.has_continuous_add
+
+instance [Neg R] [HasContinuousNeg R] : HasContinuousNeg (Matrix m n R) :=
+  Pi.has_continuous_neg
+
+instance [AddGroupₓ R] [TopologicalAddGroup R] : TopologicalAddGroup (Matrix m n R) :=
+  Pi.topological_add_group
 
 /-- To show a function into matrices is continuous it suffices to show the coefficients of the
 resulting matrix are continuous -/
@@ -113,10 +122,10 @@ instance [Fintype n] [Mul R] [AddCommMonoidₓ R] [HasContinuousAdd R] [HasConti
   ⟨continuous_fst.matrix_mul continuous_snd⟩
 
 instance [Fintype n] [NonUnitalNonAssocSemiringₓ R] [TopologicalSemiring R] : TopologicalSemiring (Matrix n n R) :=
-  { Pi.has_continuous_add with }
+  {  }
 
 instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : TopologicalRing (Matrix n n R) :=
-  { Pi.has_continuous_neg, Pi.has_continuous_add with }
+  {  }
 
 @[continuity]
 theorem Continuous.matrix_vec_mul_vec [Mul R] [HasContinuousMul R] {A : X → m → R} {B : X → n → R} (hA : Continuous A)

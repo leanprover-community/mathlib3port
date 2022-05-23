@@ -185,6 +185,7 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
     apply h b (mem_def.1 bs)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd f = (s.filter fun x => f x ≠ 0).gcd f :=
   by
   classical
@@ -203,6 +204,7 @@ theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd 
     
   simp [gcd_zero_left, normalize_gcd]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f := by
   classical
   apply s.induction_on
@@ -212,6 +214,7 @@ theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f
   rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
   apply ((normalize_associated a).mul_right _).gcd_eq_right
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize a := by
   classical
   apply s.induction_on
@@ -231,6 +234,7 @@ section IsDomain
 
 variable [CommRingₓ α] [IsDomain α] [NormalizedGcdMonoid α]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x : β, x ∈ s → a ∣ f x - g x) :
     GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) := by
   classical

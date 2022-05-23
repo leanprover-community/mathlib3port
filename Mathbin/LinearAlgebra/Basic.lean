@@ -85,7 +85,7 @@ theorem sum_smul_index_linear_map' {α : Type _} {R : Type _} {M : Type _} {M₂
     [Module R M] [AddCommMonoidₓ M₂] [Module R M₂] {v : α →₀ M} {c : R} {h : α → M →ₗ[R] M₂} :
     ((c • v).Sum fun a => h a) = c • v.Sum fun a => h a := by
   rw [Finsupp.sum_smul_index', Finsupp.smul_sum]
-  · simp only [LinearMap.map_smul]
+  · simp only [map_smul]
     
   · intro i
     exact (h i).map_zero
@@ -256,7 +256,7 @@ def smulRight (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M where
   map_add' := fun x y => by
     rw [f.map_add, add_smul]
   map_smul' := fun b y => by
-    dsimp' <;> rw [f.map_smul, smul_assoc]
+    dsimp' <;> rw [map_smul, smul_assoc]
 
 @[simp]
 theorem coe_smul_right (f : M₁ →ₗ[R] S) (x : M) : (smulRight f x : M₁ → M) = fun c => f c • x :=
@@ -358,7 +358,7 @@ theorem pi_apply_eq_sum_univ [Fintype ι] (f : (ι → R) →ₗ[R] M) (x : ι �
     f x = ∑ i, x i • f fun j => if i = j then 1 else 0 := by
   conv_lhs => rw [pi_eq_sum_univ x, f.map_sum]
   apply Finset.sum_congr rfl fun l hl => _
-  rw [f.map_smul]
+  rw [map_smul]
 
 end
 
@@ -420,8 +420,8 @@ include R
 to the space of linear maps `M₂ → M₃`. -/
 def compRight (f : M₂ →ₗ[R] M₃) : (M →ₗ[R] M₂) →ₗ[R] M →ₗ[R] M₃ where
   toFun := f.comp
-  map_add' := fun _ _ => LinearMap.ext fun _ => f.map_add _ _
-  map_smul' := fun _ _ => LinearMap.ext fun _ => f.map_smul _ _
+  map_add' := fun _ _ => LinearMap.ext fun _ => map_add f _ _
+  map_smul' := fun _ _ => LinearMap.ext fun _ => map_smul f _ _
 
 @[simp]
 theorem comp_right_apply (f : M₂ →ₗ[R] M₃) (g : M →ₗ[R] M₂) : compRight f g = f.comp g :=
@@ -434,7 +434,7 @@ This is the `linear_map` version of `add_monoid_hom.eval`. -/
 @[simps]
 def applyₗ : M →ₗ[R] (M →ₗ[R] M₂) →ₗ[R] M₂ :=
   { applyₗ' R with toFun := fun v => { applyₗ' R v with toFun := fun f => f v },
-    map_smul' := fun x y => LinearMap.ext fun f => f.map_smul _ _ }
+    map_smul' := fun x y => LinearMap.ext fun f => map_smul f _ _ }
 
 /-- Alternative version of `dom_restrict` as a linear map. -/
 def domRestrict' (p : Submodule R M) : (M →ₗ[R] M₂) →ₗ[R] p →ₗ[R] M₂ where
@@ -624,7 +624,7 @@ def map (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : Submodule R₂ M�
     smul_mem' := by
       rintro c x ⟨y, hy, rfl⟩
       obtain ⟨a, rfl⟩ := σ₁₂.is_surjective c
-      exact ⟨_, p.smul_mem a hy, f.map_smulₛₗ _ _⟩ }
+      exact ⟨_, p.smul_mem a hy, map_smulₛₗ f _ _⟩ }
 
 @[simp]
 theorem map_coe (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : (map f p : Set M₂) = f '' p :=
@@ -931,9 +931,11 @@ theorem map_smul (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) (h : a ≠ 0
       rw [map_le_iff_le_comap, ← comap_smul f _ a h, ← map_le_iff_le_comap]
       exact le_rfl)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem comap_smul' (f : V →ₗ[K] V₂) (p : Submodule K V₂) (a : K) : p.comap (a • f) = ⨅ h : a ≠ 0, p.comap f := by
   classical <;> by_cases' a = 0 <;> simp [h, comap_smul]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem map_smul' (f : V →ₗ[K] V₂) (p : Submodule K V) (a : K) : p.map (a • f) = ⨆ h : a ≠ 0, p.map f := by
   classical <;> by_cases' a = 0 <;> simp [h, map_smul]
 
@@ -2009,7 +2011,7 @@ def arrowCongr {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiringₓ R] [AddCo
     simp only [map_add, add_apply, comp_app, coe_comp, coe_coe]
   map_smul' := fun c f => by
     ext x
-    simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ, coe_coe]
+    simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ e₂, coe_coe]
 
 @[simp]
 theorem arrow_congr_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiringₓ R] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
@@ -2241,6 +2243,7 @@ theorem fun_left_id (g : n → M) : funLeft R M id g = g :=
 theorem fun_left_comp (f₁ : n → p) (f₂ : m → n) : funLeft R M (f₁ ∘ f₂) = (funLeft R M f₂).comp (funLeft R M f₁) :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem fun_left_surjective_of_injective (f : m → n) (hf : Injective f) : Surjective (funLeft R M f) := by
   classical
   intro g

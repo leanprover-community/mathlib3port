@@ -89,7 +89,7 @@ instance pempty : FinEnum Pempty :=
   ofList [] fun x => Pempty.elimₓ x
 
 instance empty : FinEnum Empty :=
-  ofList [] fun x => Empty.elimₓ x
+  ofList [] fun x => Empty.elim x
 
 instance punit : FinEnum PUnit :=
   ofList [PUnit.unit] fun x => by

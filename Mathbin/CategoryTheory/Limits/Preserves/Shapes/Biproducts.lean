@@ -44,7 +44,7 @@ variable (F : C ⥤ D) [PreservesZeroMorphisms F]
 
 section Bicone
 
-variable {J : Type v} [DecidableEq J]
+variable {J : Type v}
 
 /-- The image of a bicone under a functor. -/
 @[simps]
@@ -90,7 +90,7 @@ namespace Limits
 
 section Bicone
 
-variable {J : Type v} [DecidableEq J]
+variable {J : Type v}
 
 /-- A functor `F` preserves biproducts of `f` if `F` maps every bilimit bicone over `f` to a
     bilimit bicone over `F.obj ∘ f`. -/
@@ -117,19 +117,19 @@ end Bicone
 /-- A functor `F` preserves finite biproducts if it preserves biproducts of shape `J` whenever
     `J` is a fintype. -/
 class PreservesFiniteBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
-  preserves : ∀ {J : Type v} [DecidableEq J] [Fintype J], PreservesBiproductsOfShape J F
+  preserves : ∀ {J : Type v} [Fintype J], PreservesBiproductsOfShape J F
 
 attribute [instance] preserves_finite_biproducts.preserves
 
 /-- A functor `F` preserves biproducts if it preserves biproducts of any (small) shape `J`. -/
 class PreservesBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
-  preserves : ∀ {J : Type v} [DecidableEq J], PreservesBiproductsOfShape J F
+  preserves : ∀ {J : Type v}, PreservesBiproductsOfShape J F
 
 attribute [instance] preserves_biproducts.preserves
 
 instance (priority := 100) preservesFiniteBiproductsOfPreservesBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F]
     [PreservesBiproducts F] : PreservesFiniteBiproducts F where
-  preserves := fun J _ _ => inferInstance
+  preserves := fun J _ => inferInstance
 
 /-- A functor `F` preserves binary biproducts of `X` and `Y` if `F` maps every bilimit bicone over
     `X` and `Y` to a bilimit bicone over `F.obj X` and `F.obj Y`. -/
@@ -151,26 +151,26 @@ class PreservesBinaryBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F] where
 
 /-- A functor that preserves biproducts of a pair preserves binary biproducts. -/
 def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMorphisms F] (X Y : C)
-    [PreservesBiproduct (pair X Y).obj F] : PreservesBinaryBiproduct X Y F where
+    [PreservesBiproduct (pairFunction X Y) F] : PreservesBinaryBiproduct X Y F where
   preserves := fun b hb =>
     { IsLimit :=
         IsLimit.ofIsoLimit
             ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
           Cones.ext (Iso.refl _) fun j => by
-            cases j
+            rcases j with ⟨⟨⟩⟩
             tidy,
       IsColimit :=
         IsColimit.ofIsoColimit
             ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) <|
           Cocones.ext (Iso.refl _) fun j => by
-            cases j
+            rcases j with ⟨⟨⟩⟩
             tidy }
 
 /-- A functor that preserves biproducts of a pair preserves binary biproducts. -/
 def preservesBinaryBiproductsOfPreservesBiproducts (F : C ⥤ D) [PreservesZeroMorphisms F]
-    [PreservesBiproductsOfShape (Discrete WalkingPair.{v}) F] : PreservesBinaryBiproducts F where
+    [PreservesBiproductsOfShape WalkingPair.{v} F] : PreservesBinaryBiproducts F where
   preserves := fun X Y => preservesBinaryBiproductOfPreservesBiproduct F X Y
 
 attribute [instance] preserves_binary_biproducts.preserves
@@ -183,8 +183,7 @@ namespace Functor
 
 section Bicone
 
-variable {J : Type v} [DecidableEq J] (F : C ⥤ D) [PreservesZeroMorphisms F] (f : J → C) [HasBiproduct f]
-  [PreservesBiproduct f F]
+variable {J : Type v} (F : C ⥤ D) [PreservesZeroMorphisms F] (f : J → C) [HasBiproduct f] [PreservesBiproduct f F]
 
 instance has_biproduct_of_preserves : HasBiproduct (F.obj ∘ f) :=
   HasBiproduct.mk
@@ -231,7 +230,7 @@ variable (F : C ⥤ D) [PreservesZeroMorphisms F]
 
 section Bicone
 
-variable {J : Type v} [DecidableEq J] (f : J → C) [HasBiproduct f] [PreservesBiproduct f F] {W : C}
+variable {J : Type v} (f : J → C) [HasBiproduct f] [PreservesBiproduct f F] {W : C}
 
 theorem biproduct.map_lift_map_biprod (g : ∀ j, W ⟶ f j) :
     F.map (biproduct.lift g) ≫ (F.mapBiproduct f).Hom = biproduct.lift fun j => F.map (g j) := by
@@ -285,7 +284,9 @@ namespace Limits
 
 section Fintype
 
-variable {J : Type v} [DecidableEq J] [Fintype J]
+variable {J : Type v} [Fintype J]
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) finite biproducts
     preserves finite products. -/
@@ -384,7 +385,7 @@ def preservesBinaryProductOfPreservesBinaryBiproduct {X Y : C} [PreservesBinaryB
         ((IsLimit.postcomposeInvEquiv (diagram_iso_pair _) _).symm
           (isBinaryBilimitOfPreserves F (binaryBiconeIsBilimitOfLimitConeOfIsLimit hc)).IsLimit) <|
       Cones.ext (Iso.refl _) fun j => by
-        cases j
+        rcases j with ⟨⟨⟩⟩
         tidy
 
 section
@@ -409,7 +410,7 @@ def preservesBinaryBiproductOfPreservesBinaryProduct {X Y : C} [PreservesLimit (
           ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) (F.mapCone b.toCone)).symm
             (isLimitOfPreserves F hb.IsLimit)) <|
         Cones.ext (Iso.refl _) fun j => by
-          cases j
+          rcases j with ⟨⟨⟩⟩
           tidy
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary products
@@ -427,7 +428,7 @@ def preservesBinaryCoproductOfPreservesBinaryBiproduct {X Y : C} [PreservesBinar
         ((IsColimit.precomposeHomEquiv (diagram_iso_pair _) _).symm
           (isBinaryBilimitOfPreserves F (binaryBiconeIsBilimitOfColimitCoconeOfIsColimit hc)).IsColimit) <|
       Cocones.ext (Iso.refl _) fun j => by
-        cases j
+        rcases j with ⟨⟨⟩⟩
         tidy
 
 section
@@ -452,7 +453,7 @@ def preservesBinaryBiproductOfPreservesBinaryCoproduct {X Y : C} [PreservesColim
           ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) (F.mapCocone b.toCocone)).symm
             (isColimitOfPreserves F hb.IsColimit)) <|
         Cocones.ext (Iso.refl _) fun j => by
-          cases j
+          rcases j with ⟨⟨⟩⟩
           tidy
 
 /-- A functor between preadditive categories that preserves (zero morphisms and) binary coproducts

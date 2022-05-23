@@ -59,7 +59,7 @@ dedekind domain, dedekind ring, adic valuation
 
 noncomputable section
 
-open Classical
+open Classical DiscreteValuation
 
 open Multiplicative IsDedekindDomain
 
@@ -74,7 +74,7 @@ namespace IsDedekindDomain.HeightOneSpectrum
 /-- The additive `v`-adic valuation of `r ∈ R` is the exponent of `v` in the factorization of the
 ideal `(r)`, if `r` is nonzero, or infinity, if `r = 0`. `int_valuation_def` is the corresponding
 multiplicative valuation. -/
-def intValuationDef (r : R) : WithZero (Multiplicative ℤ) :=
+def intValuationDef (r : R) : ℤₘ₀ :=
   if r = 0 then 0
   else Multiplicative.ofAdd (-(Associates.mk v.asIdeal).count (Associates.mk (Ideal.span {r} : Ideal R)).factors : ℤ)
 
@@ -226,7 +226,7 @@ theorem IntValuation.map_add_le_max' (x y : R) :
     
 
 /-- The `v`-adic valuation on `R`. -/
-def intValuation : Valuation R (WithZero (Multiplicative ℤ)) where
+def intValuation : Valuation R ℤₘ₀ where
   toFun := v.intValuationDef
   map_zero' := IntValuation.map_zero' v
   map_one' := IntValuation.map_one' v
@@ -259,7 +259,7 @@ theorem int_valuation_exists_uniformizer : ∃ π : R, v.intValuationDef π = Mu
 
 /-- The `v`-adic valuation of `x ∈ K` is the valuation of `r` divided by the valuation of `s`,
 where `r` and `s` are chosen so that `x = r/s`. -/
-def valuation (v : HeightOneSpectrum R) : Valuation K (WithZero (Multiplicative ℤ)) :=
+def valuation (v : HeightOneSpectrum R) : Valuation K ℤₘ₀ :=
   v.intValuation.extendToLocalization (fun r hr => Set.mem_compl <| v.int_valuation_ne_zero' ⟨r, hr⟩) K
 
 theorem valuation_def (x : K) :
@@ -314,7 +314,7 @@ ring of integers, denoted `v.adic_completion_integers`. -/
 variable {K}
 
 /-- `K` as a valued field with the `v`-adic valuation. -/
-def adicValued : Valued K (WithZero (Multiplicative ℤ)) :=
+def adicValued : Valued K ℤₘ₀ :=
   Valued.mk' v.Valuation
 
 theorem adic_valued_apply {x : K} : (v.adicValued.V : _) x = v.Valuation x :=
@@ -332,7 +332,7 @@ instance : Field (v.adicCompletion K) :=
 instance : Inhabited (v.adicCompletion K) :=
   ⟨0⟩
 
-instance valuedAdicCompletion : Valued (v.adicCompletion K) (WithZero (Multiplicative ℤ)) :=
+instance valuedAdicCompletion : Valued (v.adicCompletion K) ℤₘ₀ :=
   @Valued.valuedCompletion _ _ _ _ v.adicValued
 
 theorem valued_adic_completion_def {x : v.adicCompletion K} : Valued.v x = @Valued.extension K _ _ _ (adicValued v) x :=

@@ -119,6 +119,7 @@ variable [LinearOrderedRing α] [Archimedean α]
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every x greater than or equal to 1 is between two successive
 natural-number powers of every y greater than one. -/
 theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) : ∃ n : ℕ, y ^ n ≤ x ∧ x < y ^ (n + 1) := by
@@ -163,6 +164,7 @@ section LinearOrderedField
 
 variable [LinearOrderedField α]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
 but with ≤ and < the other way around. -/
@@ -175,7 +177,7 @@ theorem exists_mem_Ico_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
         ⟨-N,
           le_of_ltₓ
             (by
-              rw [zpow_neg₀ y ↑N, zpow_coe_nat]
+              rw [zpow_neg y ↑N, zpow_coe_nat]
               exact (inv_lt hx (lt_transₓ (inv_pos.2 hx) hN)).1 hN)⟩
       let ⟨M, hM⟩ := pow_unbounded_of_one_lt x hy
       have hb : ∃ b : ℤ, ∀ m, y ^ m ≤ x → m ≤ b :=
@@ -196,8 +198,8 @@ theorem exists_mem_Ioc_zpow [Archimedean α] {x : α} {y : α} (hx : 0 < x) (hy 
   let ⟨m, hle, hlt⟩ := exists_mem_Ico_zpow (inv_pos.2 hx) hy
   have hyp : 0 < y := lt_transₓ zero_lt_one hy
   ⟨-(m + 1), by
-    rwa [zpow_neg₀, inv_lt (zpow_pos_of_pos hyp _) hx], by
-    rwa [neg_add, neg_add_cancel_right, zpow_neg₀, le_inv hx (zpow_pos_of_pos hyp _)]⟩
+    rwa [zpow_neg, inv_lt (zpow_pos_of_pos hyp _) hx], by
+    rwa [neg_add, neg_add_cancel_right, zpow_neg, le_inv hx (zpow_pos_of_pos hyp _)]⟩
 
 /-- For any `y < 1` and any positive `x`, there exists `n : ℕ` with `y ^ n < x`. -/
 theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
@@ -210,7 +212,7 @@ theorem exists_pow_lt_of_lt_one [Archimedean α] {x y : α} (hx : 0 < x) (hy : y
   rcases pow_unbounded_of_one_lt x⁻¹ (one_lt_inv y_pos hy) with ⟨q, hq⟩
   exact
     ⟨q, by
-      rwa [inv_pow₀, inv_lt_inv hx (pow_pos y_pos _)] at hq⟩
+      rwa [inv_pow, inv_lt_inv hx (pow_pos y_pos _)] at hq⟩
 
 /-- Given `x` and `y` between `0` and `1`, `x` is between two successive powers of `y`.
 This is the same as `exists_nat_pow_near`, but for elements between `0` and `1` -/
@@ -218,9 +220,9 @@ theorem exists_nat_pow_near_of_lt_one [Archimedean α] {x : α} {y : α} (xpos :
     (hy : y < 1) : ∃ n : ℕ, y ^ (n + 1) < x ∧ x ≤ y ^ n := by
   rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with ⟨n, hn, h'n⟩
   refine' ⟨n, _, _⟩
-  · rwa [inv_pow₀, inv_lt_inv xpos (pow_pos ypos _)] at h'n
+  · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
     
-  · rwa [inv_pow₀, inv_le_inv (pow_pos ypos _) xpos] at hn
+  · rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn
     
 
 variable [FloorRing α]

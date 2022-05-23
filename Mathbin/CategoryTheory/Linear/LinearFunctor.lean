@@ -81,7 +81,7 @@ instance nat_linear : F.Linear ℕ where
   map_smul' := fun X Y f r => F.mapAddHom.map_nsmul f r
 
 instance int_linear : F.Linear ℤ where
-  map_smul' := fun X Y f r => F.mapAddHom.map_zsmul f r
+  map_smul' := fun X Y f r => (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul f r
 
 variable [CategoryTheory.Linear ℚ C] [CategoryTheory.Linear ℚ D]
 

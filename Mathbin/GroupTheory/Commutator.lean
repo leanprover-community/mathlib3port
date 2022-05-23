@@ -180,6 +180,7 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Groupₓ 
     ⁅Subgroup.pi Set.Univ H,Subgroup.pi Set.Univ K⁆ ≤ Subgroup.pi Set.Univ fun i => ⁅H i,K i⁆ :=
   commutator_le.mpr fun p hp q hq i hi => commutator_mem_commutator (hp i hi) (hq i hi)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The commutator of a finite direct product is contained in the direct product of the commutators.
 -/
 theorem commutator_pi_pi_of_fintype {η : Type _} [Fintype η] {Gs : η → Type _} [∀ i, Groupₓ (Gs i)]

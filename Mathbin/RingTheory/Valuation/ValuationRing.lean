@@ -123,6 +123,7 @@ protected theorem le_total (a b : ValueGroup A K) : a ≤ b ∨ b ≤ a := by
     ring
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
   { (inferInstance : LE (ValueGroup A K)), (inferInstance : Mul (ValueGroup A K)),
     (inferInstance : Inv (ValueGroup A K)), (inferInstance : Zero (ValueGroup A K)),

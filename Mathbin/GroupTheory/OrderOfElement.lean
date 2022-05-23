@@ -617,6 +617,7 @@ theorem order_eq_card_zpowers [DecidableEq G] : orderOf x = Fintype.card (Subgro
 
 open QuotientGroup
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO: use cardinal theory, introduce `card : set G → ℕ`, or setup decidability for cosets
 @[to_additive add_order_of_dvd_card_univ]
 theorem order_of_dvd_card_univ : orderOf x ∣ Fintype.card G := by
@@ -737,6 +738,7 @@ def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 
         rw [← one_mulₓ a⁻¹, ← pow_oneₓ a, ← pow_order_of_eq_one a, ← pow_sub a (order_of_pos a)]
         exact pow_mem ha (orderOf a - 1) }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[["!"]]
 /-- If `S` is a nonempty subset of a finite group `G`, then `S ^ |G|` is a subgroup -/
 @[to_additive smulCardAddSubgroup
       "If `S` is a nonempty subset of a finite add group `G`,\n  then `|G| • S` is a subgroup",

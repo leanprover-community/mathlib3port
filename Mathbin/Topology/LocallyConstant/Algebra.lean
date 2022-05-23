@@ -95,6 +95,29 @@ instance [MulZeroClassₓ Y] : MulZeroClassₓ (LocallyConstant X Y) :=
 instance [MulZeroOneClassₓ Y] : MulZeroOneClassₓ (LocallyConstant X Y) :=
   { LocallyConstant.mulZeroClass, LocallyConstant.mulOneClass with }
 
+section CharFn
+
+variable (Y) [MulZeroOneClassₓ Y] {U V : Set X}
+
+/-- Characteristic functions are locally constant functions taking `x : X` to `1` if `x ∈ U`,
+  where `U` is a clopen set, and `0` otherwise. -/
+noncomputable def charFn (hU : IsClopen U) : LocallyConstant X Y :=
+  indicator 1 hU
+
+theorem coe_char_fn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicatorₓ U 1 :=
+  rfl
+
+theorem char_fn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
+  Set.indicator_eq_one_iff_mem _
+
+theorem char_fn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (0 : Y) ↔ x ∉ U :=
+  Set.indicator_eq_zero_iff_not_mem _
+
+theorem char_fn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V) (h : charFn Y hU = charFn Y hV) : U = V :=
+  Set.indicator_one_inj Y <| coe_inj.mpr h
+
+end CharFn
+
 @[to_additive]
 instance [Div Y] : Div (LocallyConstant X Y) where
   div := fun f g => ⟨f / g, f.IsLocallyConstant.div g.IsLocallyConstant⟩

@@ -45,10 +45,10 @@ variable {S S' S'' : D} {Y Y' : C} {T : C ⥤ D}
 
 /-- Construct a structured arrow from a morphism. -/
 def mk (f : S ⟶ T.obj Y) : StructuredArrow S T :=
-  ⟨⟨⟩, Y, f⟩
+  ⟨⟨⟨⟩⟩, Y, f⟩
 
 @[simp]
-theorem mk_left (f : S ⟶ T.obj Y) : (mk f).left = PUnit.unit :=
+theorem mk_left (f : S ⟶ T.obj Y) : (mk f).left = ⟨⟨⟩⟩ :=
   rfl
 
 @[simp]
@@ -101,7 +101,7 @@ def isoMk {f f' : StructuredArrow S T} (g : f.right ≅ f'.right) (w : f.Hom ≫
         ext))
     g
     (by
-      simpa using w.symm)
+      simpa [eq_to_hom_map] using w.symm)
 
 /-- A morphism between source objects `S ⟶ S'`
 contravariantly induces a functor between structured arrows,
@@ -139,6 +139,8 @@ instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
         tidy⟩⟩
 
 open CategoryTheory.Limits
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- The identity structured arrow is initial. -/
 def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y))) where
@@ -189,14 +191,14 @@ variable {T T' T'' : D} {Y Y' : C} {S : C ⥤ D}
 
 /-- Construct a costructured arrow from a morphism. -/
 def mk (f : S.obj Y ⟶ T) : CostructuredArrow S T :=
-  ⟨Y, ⟨⟩, f⟩
+  ⟨Y, ⟨⟨⟩⟩, f⟩
 
 @[simp]
 theorem mk_left (f : S.obj Y ⟶ T) : (mk f).left = Y :=
   rfl
 
 @[simp]
-theorem mk_right (f : S.obj Y ⟶ T) : (mk f).right = PUnit.unit :=
+theorem mk_right (f : S.obj Y ⟶ T) : (mk f).right = ⟨⟨⟩⟩ :=
   rfl
 
 @[simp]
@@ -224,7 +226,7 @@ def homMk {f f' : CostructuredArrow S T} (g : f.left ⟶ f'.left) (w : S.map g �
       (by
         ext)
   w' := by
-    simpa using w
+    simpa [eq_to_hom_map] using w
 
 /-- To construct an isomorphism of costructured arrows,
 we need an isomorphism of the objects underlying the source,
@@ -237,7 +239,7 @@ def isoMk {f f' : CostructuredArrow S T} (g : f.left ≅ f'.left) (w : S.map g.H
       (by
         ext))
     (by
-      simpa using w)
+      simpa [eq_to_hom_map] using w)
 
 /-- A morphism between target objects `T ⟶ T'`
 covariantly induces a functor between costructured arrows,
@@ -275,6 +277,8 @@ instance proj_reflects_iso : ReflectsIsomorphisms (proj S T) where
         tidy⟩⟩
 
 open CategoryTheory.Limits
+
+attribute [local tidy] tactic.discrete_cases
 
 /-- The identity costructured arrow is terminal. -/
 def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y))) where

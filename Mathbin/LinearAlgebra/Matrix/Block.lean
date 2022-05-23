@@ -92,8 +92,8 @@ theorem to_square_block_det'' (M : Matrix m m R) {n : Nat} (b : m → Finₓ n) 
 def BlockTriangularMatrix' {o : Type _} (M : Matrix o o R) {n : ℕ} (b : o → Finₓ n) : Prop :=
   ∀ i j, b j < b i → M i j = 0
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[["using", ident h_1]]
 theorem upper_two_block_triangular' {m n : Type _} (A : Matrix m m R) (B : Matrix m n R) (D : Matrix n n R) :
     BlockTriangularMatrix' (fromBlocks A B 0 D) (Sum.elim (fun i => (0 : Finₓ 2)) fun j => 1) := by
   intro k1 k2 hk12

@@ -82,14 +82,8 @@ variable [LocalRing R]
 
 theorem is_unit_or_is_unit_of_is_unit_add {a b : R} (h : IsUnit (a + b)) : IsUnit a ∨ IsUnit b := by
   rcases h with ⟨u, hu⟩
-  replace hu : ↑u⁻¹ * a + ↑u⁻¹ * b = 1
-  exact by
-    rw [← mul_addₓ, ← hu, Units.inv_mul]
-  cases is_unit_or_is_unit_of_add_one hu <;> [left, right] <;>
-    exact
-      is_unit_of_mul_is_unit_right
-        (by
-          assumption)
+  rw [Units.eq_iff_inv_mul, mul_addₓ] at hu
+  apply Or.imp _ _ (is_unit_or_is_unit_of_add_one hu) <;> exact is_unit_of_mul_is_unit_right
 
 theorem nonunits_add {a b : R} (ha : a ∈ Nonunits R) (hb : b ∈ Nonunits R) : a + b ∈ Nonunits R := fun H =>
   not_orₓ ha hb (is_unit_or_is_unit_of_is_unit_add H)
@@ -232,7 +226,7 @@ open CategoryTheory
 theorem is_local_ring_hom_of_iso {R S : CommRingₓₓ} (f : R ≅ S) : IsLocalRingHom f.hom :=
   { map_nonunit := fun a ha => by
       convert f.inv.is_unit_map ha
-      rw [CategoryTheory.coe_hom_inv_id] }
+      rw [CategoryTheory.Iso.hom_inv_id_apply] }
 
 -- see Note [lower instance priority]
 instance (priority := 100) is_local_ring_hom_of_is_iso {R S : CommRingₓₓ} (f : R ⟶ S) [IsIso f] : IsLocalRingHom f :=
@@ -299,9 +293,7 @@ theorem of_surjective [CommSemiringₓ R] [LocalRing R] [CommSemiringₓ S] [Non
       intro a b hab
       obtain ⟨a, rfl⟩ := hf a
       obtain ⟨b, rfl⟩ := hf b
-      replace hab : IsUnit (f (a + b))
-      exact by
-        simpa only [map_add] using hab
+      rw [← map_add] at hab
       exact (is_unit_or_is_unit_of_is_unit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map f.is_unit_map)
 
 section

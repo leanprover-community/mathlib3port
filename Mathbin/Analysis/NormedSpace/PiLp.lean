@@ -126,19 +126,18 @@ the product one, and then register an instance in which we replace the uniform s
 product one using this pseudoemetric space and `pseudo_emetric_space.replace_uniformity`. -/
 def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β) :=
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
-  { edist := fun f g => (∑ i : ι, edist (f i) (g i) ^ p) ^ (1 / p),
+  { edist := fun f g => (∑ i, edist (f i) (g i) ^ p) ^ (1 / p),
     edist_self := fun f => by
       simp [edist, Ennreal.zero_rpow_of_pos Pos, Ennreal.zero_rpow_of_pos (inv_pos.2 Pos)],
     edist_comm := fun f g => by
       simp [edist, edist_comm],
     edist_triangle := fun f g h =>
       calc
-        (∑ i : ι, edist (f i) (h i) ^ p) ^ (1 / p) ≤ (∑ i : ι, (edist (f i) (g i) + edist (g i) (h i)) ^ p) ^ (1 / p) :=
-          by
+        (∑ i, edist (f i) (h i) ^ p) ^ (1 / p) ≤ (∑ i, (edist (f i) (g i) + edist (g i) (h i)) ^ p) ^ (1 / p) := by
           apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| le_of_ltₓ Pos)
           refine' Finset.sum_le_sum fun i hi => _
           exact Ennreal.rpow_le_rpow (edist_triangle _ _ _) (le_transₓ zero_le_one fact_one_le_p.out)
-        _ ≤ (∑ i : ι, edist (f i) (g i) ^ p) ^ (1 / p) + (∑ i : ι, edist (g i) (h i) ^ p) ^ (1 / p) :=
+        _ ≤ (∑ i, edist (f i) (g i) ^ p) ^ (1 / p) + (∑ i, edist (g i) (h i) ^ p) ^ (1 / p) :=
           Ennreal.Lp_add_le _ _ _ fact_one_le_p.out
          }
 
@@ -153,7 +152,7 @@ def emetricAux : EmetricSpace (PiLp p α) :=
     eq_of_edist_eq_zero := fun f g hfg => by
       have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
       let h := pseudo_emetric_aux p α
-      have h : edist f g = (∑ i : ι, edist (f i) (g i) ^ p) ^ (1 / p) := rfl
+      have h : edist f g = (∑ i, edist (f i) (g i) ^ p) ^ (1 / p) := rfl
       simp [h, Ennreal.rpow_eq_zero_iff, Pos, asymm Pos, Finset.sum_eq_zero_iff_of_nonneg] at hfg
       exact funext hfg }
 
@@ -166,7 +165,7 @@ theorem lipschitz_with_equiv : LipschitzWith 1 (PiLp.equiv p β) := by
   simp only [edist, forall_prop_of_true, one_mulₓ, Finset.mem_univ, Finset.sup_le_iff, Ennreal.coe_one]
   intro i
   calc edist (x i) (y i) = (edist (x i) (y i) ^ p) ^ (1 / p) := by
-      simp [← Ennreal.rpow_mul, cancel, -one_div]_ ≤ (∑ i : ι, edist (x i) (y i) ^ p) ^ (1 / p) := by
+      simp [← Ennreal.rpow_mul, cancel, -one_div]_ ≤ (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ (one_div_nonneg.2 <| le_of_ltₓ Pos)
       exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
 
@@ -176,9 +175,7 @@ theorem antilipschitz_with_equiv : AntilipschitzWith ((Fintype.card ι : ℝ≥0
   have cancel : p * (1 / p) = 1 := mul_div_cancel' 1 (ne_of_gtₓ Pos)
   intro x y
   simp [edist, -one_div]
-  calc
-    (∑ i : ι, edist (x i) (y i) ^ p) ^ (1 / p) ≤ (∑ i : ι, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p) ^ (1 / p) :=
-      by
+  calc (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) ≤ (∑ i, edist (PiLp.equiv p β x) (PiLp.equiv p β y) ^ p) ^ (1 / p) := by
       apply Ennreal.rpow_le_rpow _ nonneg
       apply Finset.sum_le_sum fun i hi => _
       apply Ennreal.rpow_le_rpow _ (le_of_ltₓ Pos)
@@ -223,8 +220,8 @@ instance [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
 
 omit fact_one_le_p
 
-protected theorem edist {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoEmetricSpace (β i)] (x y : PiLp p β) :
-    edist x y = (∑ i : ι, edist (x i) (y i) ^ p) ^ (1 / p) :=
+theorem edist_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoEmetricSpace (β i)] (x y : PiLp p β) :
+    edist x y = (∑ i, edist (x i) (y i) ^ p) ^ (1 / p) :=
   rfl
 
 include fact_one_le_p
@@ -237,13 +234,13 @@ instance [∀ i, PseudoMetricSpace (β i)] : PseudoMetricSpace (PiLp p β) := by
     for the distance -/
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
   refine'
-    PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => (∑ i : ι, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _)
+    PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => (∑ i, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _)
       fun f g => _
-  · simp [PiLp.edist, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
+  · simp [PiLp.edist_eq, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
     
   · have A : ∀ i : ι, i ∈ (Finset.univ : Finset ι) → edist (f i) (g i) ^ p ≠ ⊤ := fun i hi => by
       simp [lt_top_iff_ne_top, edist_ne_top, le_of_ltₓ Pos]
-    simp [dist, -one_div, PiLp.edist, ← Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
+    simp [dist, -one_div, PiLp.edist_eq, ← Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
     
 
 /-- metric space instance on the product of finitely many metric spaces, using the `L^p` distance,
@@ -254,28 +251,34 @@ instance [∀ i, MetricSpace (α i)] : MetricSpace (PiLp p α) := by
     for the distance -/
   have pos : 0 < p := lt_of_lt_of_leₓ zero_lt_one fact_one_le_p.out
   refine'
-    EmetricSpace.toMetricSpaceOfDist (fun f g => (∑ i : ι, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _) fun f g => _
-  · simp [PiLp.edist, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
+    EmetricSpace.toMetricSpaceOfDist (fun f g => (∑ i, dist (f i) (g i) ^ p) ^ (1 / p)) (fun f g => _) fun f g => _
+  · simp [PiLp.edist_eq, Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, edist_ne_top]
     
   · have A : ∀ i : ι, i ∈ (Finset.univ : Finset ι) → edist (f i) (g i) ^ p ≠ ⊤ := fun i hi => by
       simp [edist_ne_top, pos.le]
-    simp [dist, -one_div, PiLp.edist, ← Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
+    simp [dist, -one_div, PiLp.edist_eq, ← Ennreal.to_real_rpow, Ennreal.to_real_sum A, dist_edist]
     
 
 omit fact_one_le_p
 
-protected theorem dist {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp p β) :
+theorem dist_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp p β) :
     dist x y = (∑ i : ι, dist (x i) (y i) ^ p) ^ (1 / p) :=
   rfl
+
+theorem nndist_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, PseudoMetricSpace (β i)] (x y : PiLp p β) :
+    nndist x y = (∑ i : ι, nndist (x i) (y i) ^ p) ^ (1 / p) :=
+  Subtype.ext <| by
+    push_cast
+    exact dist_eq _ _
 
 include fact_one_le_p
 
 /-- seminormed group instance on the product of finitely many normed groups, using the `L^p`
 norm. -/
 instance semiNormedGroup [∀ i, SemiNormedGroup (β i)] : SemiNormedGroup (PiLp p β) :=
-  { Pi.addCommGroup with norm := fun f => (∑ i : ι, norm (f i) ^ p) ^ (1 / p),
+  { Pi.addCommGroup with norm := fun f => (∑ i, ∥f i∥ ^ p) ^ (1 / p),
     dist_eq := fun x y => by
-      simp [PiLp.dist, dist_eq_norm, sub_eq_add_neg] }
+      simp [PiLp.dist_eq, dist_eq_norm, sub_eq_add_neg] }
 
 /-- normed group instance on the product of finitely many normed groups, using the `L^p` norm. -/
 instance normedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
@@ -284,17 +287,27 @@ instance normedGroup [∀ i, NormedGroup (α i)] : NormedGroup (PiLp p α) :=
 omit fact_one_le_p
 
 theorem norm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
-    ∥f∥ = (∑ i : ι, ∥f i∥ ^ p) ^ (1 / p) :=
+    ∥f∥ = (∑ i, ∥f i∥ ^ p) ^ (1 / p) :=
   rfl
 
 theorem nnnorm_eq {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (f : PiLp p β) :
-    ∥f∥₊ = (∑ i : ι, ∥f i∥₊ ^ p) ^ (1 / p) := by
+    ∥f∥₊ = (∑ i, ∥f i∥₊ ^ p) ^ (1 / p) := by
   ext
   simp [Nnreal.coe_sum, norm_eq]
 
 theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (n : ℕ) (h : p = n)
-    (f : PiLp p β) : ∥f∥ = (∑ i : ι, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
+    (f : PiLp p β) : ∥f∥ = (∑ i, ∥f i∥ ^ n) ^ (1 / (n : ℝ)) := by
   simp [norm_eq, h, Real.sqrt_eq_rpow, ← Real.rpow_nat_cast]
+
+theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) : ∥x∥ = sqrt (∑ i : ι, ∥x i∥ ^ 2) :=
+  by
+  rw [norm_eq_of_nat 2] <;> simp [sqrt_eq_rpow]
+
+theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SemiNormedGroup (β i)] (x : PiLp 2 β) :
+    ∥x∥₊ = Nnreal.sqrt (∑ i : ι, ∥x i∥₊ ^ 2) :=
+  Subtype.ext <| by
+    push_cast
+    exact norm_eq_of_L2 x
 
 include fact_one_le_p
 

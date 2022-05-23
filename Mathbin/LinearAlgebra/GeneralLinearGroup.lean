@@ -166,19 +166,20 @@ instance : Neg (gLPos n R) :=
         (Fact.out <| Even <| Fintype.card n).neg_one_pow, one_mulₓ]
       exact g.prop⟩⟩
 
-instance : HasDistribNeg (gLPos n R) where
-  neg := Neg.neg
-  neg_neg := fun x => Subtype.ext <| neg_negₓ _
-  neg_mul := fun x y => Subtype.ext <| neg_mul _ _
-  mul_neg := fun x y => Subtype.ext <| mul_neg _ _
+@[simp]
+theorem gLPos.coe_neg_GL (g : gLPos n R) : ↑(-g) = -(g : GL n R) :=
+  rfl
 
 @[simp]
-theorem gLPos.coe_neg (g : gLPos n R) : ↑(-g) = -(↑g : Matrix n n R) :=
+theorem gLPos.coe_neg (g : gLPos n R) : ↑(-g) = -(g : Matrix n n R) :=
   rfl
 
 @[simp]
 theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) : (↑(-g) : Matrix n n R) i j = -(↑g : Matrix n n R) i j :=
   rfl
+
+instance : HasDistribNeg (gLPos n R) :=
+  Subtype.coe_injective.HasDistribNeg _ gLPos.coe_neg_GL (gLPos n R).coe_mul
 
 end Neg
 

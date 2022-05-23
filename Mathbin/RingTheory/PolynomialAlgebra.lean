@@ -75,6 +75,7 @@ def toFunLinear : A ⊗[R] R[X] →ₗ[R] Polynomial A :=
 theorem to_fun_linear_tmul_apply (a : A) (p : R[X]) : toFunLinear R A (a ⊗ₜ[R] p) = toFunBilinear R A a p :=
   lift.tmul _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- We apparently need to provide the decidable instance here
 -- in order to successfully rewrite by this lemma.
 theorem to_fun_linear_mul_tmul_mul_aux_1 (p : R[X]) (k : ℕ) (h : Decidable ¬p.coeff k = 0) (a : A) :
@@ -91,6 +92,7 @@ theorem to_fun_linear_mul_tmul_mul_aux_2 (k : ℕ) (a₁ a₂ : A) (p₁ p₂ : 
   congr
   simp_rw [Algebra.commutes (coeff p₂ _), coeff_mul, RingHom.map_sum, RingHom.map_mul]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem to_fun_linear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
     (toFunLinear R A) ((a₁ * a₂) ⊗ₜ[R] (p₁ * p₂)) = (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
   by

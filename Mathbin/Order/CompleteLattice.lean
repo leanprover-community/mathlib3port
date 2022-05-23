@@ -373,6 +373,14 @@ theorem Sup_le_Sup_of_subset_insert_bot (h : s ⊆ insert ⊥ t) : sup s ≤ sup
 theorem Inf_le_Inf_of_subset_insert_top (h : s ⊆ insert ⊤ t) : inf t ≤ inf s :=
   le_transₓ (le_of_eqₓ (trans top_inf_eq.symm Inf_insert.symm)) (Inf_le_Inf h)
 
+@[simp]
+theorem Sup_diff_singleton_bot (s : Set α) : sup (s \ {⊥}) = sup s :=
+  (Sup_le_Sup (diff_subset _ _)).antisymm <| Sup_le_Sup_of_subset_insert_bot <| subset_insert_diff_singleton _ _
+
+@[simp]
+theorem Inf_diff_singleton_top (s : Set α) : inf (s \ {⊤}) = inf s :=
+  @Sup_diff_singleton_bot αᵒᵈ _ s
+
 theorem Sup_pair {a b : α} : sup {a, b} = a⊔b :=
   (@is_lub_pair α _ a b).Sup_eq
 

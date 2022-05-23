@@ -78,6 +78,7 @@ instance {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar αᵐᵒ�
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext fun i => op_smul_eq_smul _ _⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.has_faithful_vadd_at]

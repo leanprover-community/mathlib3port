@@ -94,6 +94,7 @@ theorem subtype_perm_of_fintype_one (p : α → Prop) [Fintype { x // p x }] (h 
     @subtypePermOfFintype α 1 p _ h = 1 :=
   Equivₓ.ext fun ⟨_, _⟩ => rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Fintype m] [Fintype n] (σ : Equivₓ.Perm (Sum m n)) :
     Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl) ↔ Set.MapsTo σ (Set.Range Sum.inr) (Set.Range Sum.inr) := by
   constructor <;>
@@ -120,6 +121,7 @@ theorem perm_maps_to_inl_iff_maps_to_inr {m n : Type _} [Fintype m] [Fintype n] 
     exact absurd hy Sum.inr_ne_inl
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_sum_congr_hom_range_of_perm_maps_to_inl {m n : Type _} [Fintype m] [Fintype n] {σ : Perm (Sum m n)}
     (h : Set.MapsTo σ (Set.Range Sum.inl) (Set.Range Sum.inl)) : σ ∈ (sumCongrHom m n).range := by
   classical

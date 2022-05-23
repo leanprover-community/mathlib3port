@@ -29,12 +29,13 @@ def productCone : Fan Z :=
 
 /-- The concrete product cone is limiting. -/
 def productConeIsLimit : IsLimit (productCone Z) where
-  lift := fun s => (LinearMap.pi s.π.app : s.x →ₗ[R] ∀ i : ι, Z i)
-  fac' := by
+  lift := fun s => (LinearMap.pi fun j => s.π.app ⟨j⟩ : s.x →ₗ[R] ∀ i : ι, Z i)
+  fac' := fun s j => by
+    cases j
     tidy
   uniq' := fun s m w => by
     ext x i
-    exact LinearMap.congr_fun (w i) x
+    exact LinearMap.congr_fun (w ⟨i⟩) x
 
 -- While we could use this to construct a `has_products (Module R)` instance,
 -- we already have `has_limits (Module R)` in `algebra.category.Module.limits`.
@@ -54,7 +55,7 @@ theorem pi_iso_pi_inv_kernel_ι (i : ι) : (piIsoPi Z).inv ≫ Pi.π Z i = (Line
 @[simp, elementwise]
 theorem pi_iso_pi_hom_ker_subtype (i : ι) :
     (piIsoPi Z).hom ≫ (LinearMap.proj i : (∀ i : ι, Z i) →ₗ[R] Z i) = Pi.π Z i :=
-  IsLimit.cone_point_unique_up_to_iso_inv_comp _ (limit.isLimit _) _
+  IsLimit.cone_point_unique_up_to_iso_inv_comp _ (limit.isLimit _) (Discrete.mk i)
 
 end ModuleCat
 

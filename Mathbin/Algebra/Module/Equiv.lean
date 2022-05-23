@@ -119,11 +119,11 @@ theorem to_linear_map_injective : Injective (coe : (M ≃ₛₗ[σ] M₂) → M 
 theorem to_linear_map_inj {e₁ e₂ : M ≃ₛₗ[σ] M₂} : (e₁ : M →ₛₗ[σ] M₂) = e₂ ↔ e₁ = e₂ :=
   to_linear_map_injective.eq_iff
 
-instance : AddMonoidHomClass (M ≃ₛₗ[σ] M₂) M M₂ where
+instance : SemilinearMapClass (M ≃ₛₗ[σ] M₂) σ M M₂ where
   coe := LinearEquiv.toFun
   coe_injective' := fun f g h => to_linear_map_injective (FunLike.coe_injective h)
-  map_add := LinearEquiv.map_add'
-  map_zero := fun f => f.toLinearMap.map_zero
+  map_add := map_add'
+  map_smulₛₗ := map_smul'
 
 theorem coe_injective : @Injective (M ≃ₛₗ[σ] M₂) (M → M₂) coeFn :=
   FunLike.coe_injective
@@ -207,7 +207,7 @@ def symm (e : M ≃ₛₗ[σ] M₂) : M₂ ≃ₛₗ[σ'] M :=
   { e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, e.toEquiv.symm with
     toFun := e.toLinearMap.inverse e.invFun e.left_inv e.right_inv, invFun := e.toEquiv.symm.invFun,
     map_smul' := fun r x => by
-      simp }
+      rw [map_smulₛₗ] }
 
 omit module_M module_S_M₂ re₁ re₂
 
@@ -409,14 +409,15 @@ protected theorem map_add (a b : M) : e (a + b) = e a + e b :=
 protected theorem map_zero : e 0 = 0 :=
   map_zero e
 
+-- TODO: `simp` isn't picking up `map_smulₛₗ` for `linear_equiv`s without specifying `map_smulₛₗ f`
 @[simp]
-theorem map_smulₛₗ (c : R) (x : M) : e (c • x) = σ c • e x :=
+protected theorem map_smulₛₗ (c : R) (x : M) : e (c • x) = σ c • e x :=
   e.map_smul' c x
 
 include module_N₁ module_N₂
 
 theorem map_smul (e : N₁ ≃ₗ[R₁] N₂) (c : R₁) (x : N₁) : e (c • x) = c • e x :=
-  map_smulₛₗ _ _ _
+  map_smulₛₗ e c x
 
 omit module_N₁ module_N₂
 

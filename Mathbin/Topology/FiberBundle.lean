@@ -724,6 +724,7 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.B
       exact fun h => H ⟨h, hp'⟩
       
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `h` is a topological fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
 theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]

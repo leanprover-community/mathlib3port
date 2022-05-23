@@ -193,11 +193,17 @@ end HEq
 
 end Functor
 
-@[simp]
+/-- This is not always a good idea as a `@[simp]` lemma,
+as we lose the ability to use results that interact with `F`,
+e.g. the naturality of a natural transformation.
+
+In some files it may be appropriate to use `local attribute [simp] eq_to_hom_map`, however.
+-/
 theorem eq_to_hom_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map (eqToHom p) = eqToHom (congr_argₓ F.obj p) := by
   cases p <;> simp
 
-@[simp]
+/-- See the note on `eq_to_hom_map` regarding using this as a `simp` lemma.
+-/
 theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.mapIso (eqToIso p) = eqToIso (congr_argₓ F.obj p) := by
   ext <;> cases p <;> simp
 
@@ -209,7 +215,7 @@ theorem eq_to_hom_app {F G : C ⥤ D} (h : F = G) (X : C) : (eqToHom h : F ⟶ G
 theorem NatTrans.congr {F G : C ⥤ D} (α : F ⟶ G) {X Y : C} (h : X = Y) :
     α.app X = F.map (eqToHom h) ≫ α.app Y ≫ G.map (eqToHom h.symm) := by
   rw [α.naturality_assoc]
-  simp
+  simp [eq_to_hom_map]
 
 theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eqToHom rfl := by
   simp only [category.id_comp, eq_to_hom_refl, category.comp_id]

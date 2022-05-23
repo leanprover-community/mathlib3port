@@ -198,6 +198,7 @@ theorem eq_div_of_mul_eq_left {a b c : R} (hb : b ≠ 0) (h : a * b = c) : a = c
 theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = c / a := by
   rw [← h, mul_div_cancel_left _ ha]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by
   classical
   by_cases' hz : z = 0
@@ -552,6 +553,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
         rw [← mul_oneₓ a.nat_abs, Int.nat_abs_mul]
         exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_leₓ _) }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- see Note [lower instance priority]
 instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
   { ‹Field K› with add := (· + ·), mul := (· * ·), one := 1, zero := 0, neg := Neg.neg, Quotient := (· / ·),

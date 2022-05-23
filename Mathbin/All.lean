@@ -160,6 +160,7 @@ import Mathbin.Algebra.Hom.GroupAction
 import Mathbin.Algebra.Hom.GroupInstances
 import Mathbin.Algebra.Hom.Iterate
 import Mathbin.Algebra.Hom.NonUnitalAlg
+import Mathbin.Algebra.Hom.Ring
 import Mathbin.Algebra.Hom.Units
 import Mathbin.Algebra.Homology.Module
 import Mathbin.Algebra.Homology.Additive
@@ -175,6 +176,8 @@ import Mathbin.Algebra.Homology.Homotopy
 import Mathbin.Algebra.Homology.HomotopyCategory
 import Mathbin.Algebra.Homology.ImageToKernel
 import Mathbin.Algebra.Homology.QuasiIso
+import Mathbin.Algebra.Homology.ShortExact.Abelian
+import Mathbin.Algebra.Homology.ShortExact.Preadditive
 import Mathbin.Algebra.Homology.Single
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Algebra.Invertible
@@ -418,6 +421,7 @@ import Mathbin.Analysis.Convex.Star
 import Mathbin.Analysis.Convex.Strict
 import Mathbin.Analysis.Convex.StrictConvexSpace
 import Mathbin.Analysis.Convex.Topology
+import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.Fourier
 import Mathbin.Analysis.Hofer
 import Mathbin.Analysis.InnerProductSpace.Adjoint
@@ -455,6 +459,7 @@ import Mathbin.Analysis.Normed.Group.InfiniteSum
 import Mathbin.Analysis.Normed.Group.Pointwise
 import Mathbin.Analysis.Normed.Group.Quotient
 import Mathbin.Analysis.Normed.NormedField
+import Mathbin.Analysis.NormedSpace.MStructure
 import Mathbin.Analysis.NormedSpace.AddTorsor
 import Mathbin.Analysis.NormedSpace.AddTorsorBases
 import Mathbin.Analysis.NormedSpace.AffineIsometry
@@ -530,6 +535,7 @@ import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 import Mathbin.Analysis.SpecificLimits.Basic
+import Mathbin.Analysis.SpecificLimits.FloorPow
 import Mathbin.Analysis.SpecificLimits.Normed
 import Mathbin.Analysis.Subadditive
 import Mathbin.Analysis.VonNeumannAlgebra.Basic
@@ -611,6 +617,7 @@ import Mathbin.CategoryTheory.Core
 import Mathbin.CategoryTheory.DifferentialObject
 import Mathbin.CategoryTheory.DiscreteCategory
 import Mathbin.CategoryTheory.Elements
+import Mathbin.CategoryTheory.Elementwise
 import Mathbin.CategoryTheory.Endofunctor.Algebra
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Enriched.Basic
@@ -1215,8 +1222,10 @@ import Mathbin.Data.Polynomial.Monomial
 import Mathbin.Data.Polynomial.Reverse
 import Mathbin.Data.Polynomial.RingDivision
 import Mathbin.Data.Polynomial.Taylor
-import Mathbin.Data.Pprod
-import Mathbin.Data.Prod
+import Mathbin.Data.Prod.Basic
+import Mathbin.Data.Prod.Lex
+import Mathbin.Data.Prod.Pprod
+import Mathbin.Data.Prod.Tprod
 import Mathbin.Data.Psigma.Order
 import Mathbin.Data.Qpf.Multivariate.Basic
 import Mathbin.Data.Qpf.Multivariate.Constructions.Cofix
@@ -1298,6 +1307,7 @@ import Mathbin.Data.Set.Opposite
 import Mathbin.Data.Set.Pairwise
 import Mathbin.Data.Set.Pointwise
 import Mathbin.Data.Set.Prod
+import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Sigma
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.SetLike.Fintype
@@ -1320,7 +1330,6 @@ import Mathbin.Data.Sum.Order
 import Mathbin.Data.Sym.Basic
 import Mathbin.Data.Sym.Card
 import Mathbin.Data.Sym.Sym2
-import Mathbin.Data.Tprod
 import Mathbin.Data.Tree
 import Mathbin.Data.TwoPointing
 import Mathbin.Data.Typevec
@@ -1546,6 +1555,7 @@ import Mathbin.LinearAlgebra.Matrix.Diagonal
 import Mathbin.LinearAlgebra.Matrix.DotProduct
 import Mathbin.LinearAlgebra.Matrix.Dual
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
+import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Matrix.IsDiag
 import Mathbin.LinearAlgebra.Matrix.MvPolynomial
 import Mathbin.LinearAlgebra.Matrix.Nondegenerate
@@ -1561,6 +1571,7 @@ import Mathbin.LinearAlgebra.Matrix.Transvection
 import Mathbin.LinearAlgebra.Matrix.Zpow
 import Mathbin.LinearAlgebra.Multilinear.Basic
 import Mathbin.LinearAlgebra.Multilinear.Basis
+import Mathbin.LinearAlgebra.Multilinear.FiniteDimensional
 import Mathbin.LinearAlgebra.Multilinear.TensorProduct
 import Mathbin.LinearAlgebra.Orientation
 import Mathbin.LinearAlgebra.Pi
@@ -1607,6 +1618,7 @@ import Mathbin.Logic.Function.Basic
 import Mathbin.Logic.Function.Conjugate
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Logic.IsEmpty
+import Mathbin.Logic.Lemmas
 import Mathbin.Logic.Nonempty
 import Mathbin.Logic.Nontrivial
 import Mathbin.Logic.Relation
@@ -1754,6 +1766,7 @@ import Mathbin.NumberTheory.LegendreSymbol.Auxiliary
 import Mathbin.NumberTheory.LegendreSymbol.GaussEisensteinLemmas
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
+import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
 import Mathbin.NumberTheory.Liouville.Basic
 import Mathbin.NumberTheory.Liouville.LiouvilleConstant
 import Mathbin.NumberTheory.Liouville.LiouvilleWith
@@ -1857,7 +1870,6 @@ import Mathbin.Order.Iterate
 import Mathbin.Order.JordanHolder
 import Mathbin.Order.Lattice
 import Mathbin.Order.LatticeIntervals
-import Mathbin.Order.Lexicographic
 import Mathbin.Order.LiminfLimsup
 import Mathbin.Order.LocallyFinite
 import Mathbin.Order.Max
@@ -1914,6 +1926,7 @@ import Mathbin.RingTheory.Artinian
 import Mathbin.RingTheory.ChainOfDivisors
 import Mathbin.RingTheory.ClassGroup
 import Mathbin.RingTheory.Coprime.Basic
+import Mathbin.RingTheory.Coprime.Ideal
 import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.RingTheory.DedekindDomain.AdicValuation
 import Mathbin.RingTheory.DedekindDomain.Basic

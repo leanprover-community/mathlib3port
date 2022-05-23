@@ -26,7 +26,7 @@ lemmas unconditional on the sum of the weights being `1`.
 
 open Set
 
-open BigOperators Classical
+open BigOperators Classical Pointwise
 
 universe u u'
 
@@ -267,8 +267,8 @@ theorem convex_hull_range_eq_exists_affine_combination (v : ι → E) :
     exact affine_combination_mem_convex_hull hw₀ hw₁
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- Convex hull of `s` is equal to the set of all centers of masses of `finset`s `t`, `z '' t ⊆ s`.
 This version allows finsets in any type in any universe. -/
 theorem convex_hull_eq (s : Set E) :
@@ -301,7 +301,7 @@ theorem convex_hull_eq (s : Set E) :
     exact t.center_mass_mem_convex_hull hw₀ (hw₁.symm ▸ zero_lt_one) hz
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem Finset.convex_hull_eq (s : Finset E) :
     convexHull R ↑s =
       { x : E | ∃ (w : E → R)(hw₀ : ∀, ∀ y ∈ s, ∀, 0 ≤ w y)(hw₁ : (∑ y in s, w y) = 1), s.centerMass w id = x } :=
@@ -359,13 +359,8 @@ theorem convex_hull_eq_union_convex_hull_finite_subsets (s : Set E) :
   · exact Union_subset fun i => Union_subset convex_hull_mono
     
 
-theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t := by
-  refine' Set.Subset.antisymm _ _
-  · exact
-      convex_hull_min (Set.prod_mono (subset_convex_hull _ _) <| subset_convex_hull _ _)
-        ((convex_convex_hull _ _).Prod <| convex_convex_hull _ _)
-    
-  rintro ⟨x, y⟩ ⟨hx, hy⟩
+theorem mk_mem_convex_hull_prod {t : Set F} {x : E} {y : F} (hx : x ∈ convexHull R s) (hy : y ∈ convexHull R t) :
+    (x, y) ∈ convexHull R (s ×ˢ t) := by
   rw [convex_hull_eq] at hx hy⊢
   obtain ⟨ι, a, w, S, hw, hw', hS, hSp⟩ := hx
   obtain ⟨κ, b, v, T, hv, hv', hT, hTp⟩ := hy
@@ -406,6 +401,19 @@ theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = con
     simp_rw [mul_smul]
     rw [← Finset.sum_smul, hw', one_smul]
     
+
+@[simp]
+theorem convex_hull_prod (s : Set E) (t : Set F) : convexHull R (s ×ˢ t) = convexHull R s ×ˢ convexHull R t :=
+  Subset.antisymm
+      (convex_hull_min (prod_mono (subset_convex_hull _ _) <| subset_convex_hull _ _) <|
+        (convex_convex_hull _ _).Prod <| convex_convex_hull _ _) <|
+    prod_subset_iff.2 fun x hx y => mk_mem_convex_hull_prod hx
+
+theorem convex_hull_add (s t : Set E) : convexHull R (s + t) = convexHull R s + convexHull R t := by
+  simp_rw [← image2_add, ← image_prod, is_linear_map.is_linear_map_add.convex_hull_image, convex_hull_prod]
+
+theorem convex_hull_sub (s t : Set E) : convexHull R (s - t) = convexHull R s - convexHull R t := by
+  simp_rw [sub_eq_add_neg, convex_hull_add, convex_hull_neg]
 
 /-! ### `std_simplex` -/
 

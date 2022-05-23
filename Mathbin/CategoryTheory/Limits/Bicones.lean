@@ -24,7 +24,11 @@ This is used in `category_theory.flat_functors.preserves_finite_limits_of_flat`.
 
 universe v₁ u₁
 
+noncomputable section
+
 open CategoryTheory.Limits
+
+open Classical
 
 namespace CategoryTheory
 
@@ -42,13 +46,13 @@ inductive Bicone
 instance : Inhabited (Bicone J) :=
   ⟨Bicone.left⟩
 
-instance finBicone [Fintype J] [DecidableEq J] : Fintype (Bicone J) where
+instance finBicone [Fintype J] : Fintype (Bicone J) where
   elems := [Bicone.left, Bicone.right].toFinset ∪ Finset.image Bicone.diagram (Fintype.elems J)
   complete := fun j => by
     cases j <;> simp
     exact Fintype.complete j
 
-variable [Category.{v₁} J] [∀ j k : J, DecidableEq (j ⟶ k)]
+variable [Category.{v₁} J]
 
 /-- The homs for a walking `bicone J`. -/
 inductive BiconeHom : Bicone J → Bicone J → Type max u₁ v₁
@@ -96,8 +100,7 @@ variable (J : Type v₁) [SmallCategory J]
 /-- Given a diagram `F : J ⥤ C` and two `cone F`s, we can join them into a diagram `bicone J ⥤ C`.
 -/
 @[simps]
-def biconeMk [∀ j k : J, DecidableEq (j ⟶ k)] {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) :
-    Bicone J ⥤ C where
+def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone F) : Bicone J ⥤ C where
   obj := fun X => Bicone.casesOn X c₁.x c₂.x fun j => F.obj j
   map := fun X Y f => by
     cases f
@@ -165,7 +168,7 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) := by
         use f_f
         simpa using Fintype.complete _ }
 
-instance biconeSmallCategory [∀ j k : J, DecidableEq (j ⟶ k)] : SmallCategory (Bicone J) :=
+instance biconeSmallCategory : SmallCategory (Bicone J) :=
   CategoryTheory.biconeCategory J
 
 instance biconeFinCategory [FinCategory J] : FinCategory (Bicone J) :=

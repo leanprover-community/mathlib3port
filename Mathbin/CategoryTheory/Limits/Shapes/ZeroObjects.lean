@@ -144,7 +144,7 @@ class HasZeroObject : Prop where
 
 instance has_zero_object_punit : HasZeroObject (Discrete PUnit) where
   zero :=
-    ⟨PUnit.unit, by
+    ⟨⟨⟨⟩⟩, by
       tidy, by
       tidy⟩
 
@@ -216,6 +216,11 @@ instance {X : C} (f : 0 ⟶ X) : Mono f where
 instance {X : C} (f : X ⟶ 0) : Epi f where
   left_cancellation := fun Z g h w => by
     ext
+
+instance zero_to_zero_is_iso (f : (0 : C) ⟶ 0) : IsIso f := by
+  convert
+    show is_iso (𝟙 (0 : C)) by
+      infer_instance
 
 /-- A zero object is in particular initial. -/
 def zeroIsInitial : IsInitial (0 : C) :=

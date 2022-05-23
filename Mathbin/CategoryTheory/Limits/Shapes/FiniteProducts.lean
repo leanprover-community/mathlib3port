@@ -19,26 +19,28 @@ universe w v u
 
 open CategoryTheory
 
+open Classical
+
 namespace CategoryTheory.Limits
 
 variable (C : Type u) [Category.{v} C]
 
 /-- A category has finite products if there is a chosen limit for every diagram
-with shape `discrete J`, where we have `[decidable_eq J]` and `[fintype J]`.
+with shape `discrete J`, where we have `[fintype J]`.
 -/
 -- We can't simply make this an abbreviation, as we do with other `has_Xs` limits typeclasses,
 -- because of https://github.com/leanprover-community/lean/issues/429
 class HasFiniteProducts : Prop where
-  out (J : Type v) [DecidableEq J] [Fintype J] : HasLimitsOfShape (Discrete J) C
+  out (J : Type v) [Fintype J] : HasLimitsOfShape (Discrete J) C
 
 instance has_limits_of_shape_discrete (J : Type v) [Fintype J] [HasFiniteProducts C] :
     HasLimitsOfShape (Discrete J) C := by
-  have := @has_finite_products.out C _ _ J (Classical.decEq _)
+  have := @has_finite_products.out C _ _ J
   infer_instance
 
 /-- If `C` has finite limits then it has finite products. -/
 instance (priority := 10) has_finite_products_of_has_finite_limits [HasFiniteLimits C] : HasFiniteProducts C :=
-  ⟨fun J 𝒥₁ 𝒥₂ => by
+  ⟨fun J 𝒥 => by
     skip
     infer_instance⟩
 
@@ -60,21 +62,21 @@ theorem has_finite_products_of_has_products [HasProducts C] : HasFiniteProducts 
     infer_instance⟩
 
 /-- A category has finite coproducts if there is a chosen colimit for every diagram
-with shape `discrete J`, where we have `[decidable_eq J]` and `[fintype J]`.
+with shape `discrete J`, where we have `[fintype J]`.
 -/
 class HasFiniteCoproducts : Prop where
-  out (J : Type v) [DecidableEq J] [Fintype J] : HasColimitsOfShape (Discrete J) C
+  out (J : Type v) [Fintype J] : HasColimitsOfShape (Discrete J) C
 
 attribute [class] has_finite_coproducts
 
 instance has_colimits_of_shape_discrete (J : Type v) [Fintype J] [HasFiniteCoproducts C] :
     HasColimitsOfShape (Discrete J) C := by
-  have := @has_finite_coproducts.out C _ _ J (Classical.decEq _)
+  have := @has_finite_coproducts.out C _ _ J
   infer_instance
 
 /-- If `C` has finite colimits then it has finite coproducts. -/
 instance (priority := 10) has_finite_coproducts_of_has_finite_colimits [HasFiniteColimits C] : HasFiniteCoproducts C :=
-  ⟨fun J 𝒥₁ 𝒥₂ => by
+  ⟨fun J 𝒥 => by
     skip
     infer_instance⟩
 

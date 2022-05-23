@@ -24,6 +24,8 @@ keep them in sync.
 -/
 
 
+open Set
+
 variable {α : Type _} {G : Type _} {A : Type _} [Groupₓ G] [AddGroupₓ A]
 
 namespace Subgroup

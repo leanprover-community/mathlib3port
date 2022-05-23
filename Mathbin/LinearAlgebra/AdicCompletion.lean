@@ -270,15 +270,17 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M
 
 open BigOperators
 
+open Finset
+
 theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson := by
   intro x hx
   rw [← Ideal.neg_mem_iff, Ideal.mem_jacobson_bot]
   intro y
   rw [add_commₓ]
-  let f : ℕ → R := geomSum (x * y)
+  let f : ℕ → R := fun n => ∑ i in range n, (x * y) ^ i
   have hf : ∀ m n, m ≤ n → f m ≡ f n [SMOD I ^ m • (⊤ : Submodule R R)] := by
     intro m n h
-    simp only [f, geom_sum_def, Algebra.id.smul_eq_mul, Ideal.mul_top, Smodeq.sub_mem]
+    simp only [f, Algebra.id.smul_eq_mul, Ideal.mul_top, Smodeq.sub_mem]
     rw [← add_tsub_cancel_of_le h, Finset.sum_range_add, ← sub_sub, sub_self, zero_sub, neg_mem_iff]
     apply Submodule.sum_mem
     intro n hn

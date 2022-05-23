@@ -194,7 +194,7 @@ theorem Scheme.Spec_map_presheaf_map_eq_to_hom {X : Scheme} {U V : Opens X.Carri
   cases h
   refine' (Scheme.congr_app this _).trans _
   erw [category.id_comp]
-  simpa
+  simpa [eq_to_hom_map]
 
 theorem IsAffineOpen.Spec_Γ_identity_hom_app_from_Spec {X : Scheme} {U : Opens X.Carrier} (hU : IsAffineOpen U) :
     specΓIdentity.Hom.app (X.Presheaf.obj <| op U) ≫ hU.fromSpec.1.c.app (op U) =

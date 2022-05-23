@@ -262,6 +262,8 @@ def shiftFunctor (n : ℤ) : DifferentialObject C ⥤ DifferentialObject C where
     dsimp'
     rw [functor.map_comp]
 
+attribute [local simp] eq_to_hom_map
+
 attribute [local reducible] Discrete.addMonoidal shift_comm
 
 /-- The shift functor on `differential_object C` is additive. -/

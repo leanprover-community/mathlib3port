@@ -49,7 +49,7 @@ def GenerateMeasurableRec (s : Set (Set α)) : ω₁ → Set (Set α)
     let S := ⋃ j : { j // j < i }, generate_measurable_rec j.1
     s ∪ {∅} ∪ compl '' S ∪ Set.Range fun f : ℕ → S => ⋃ n, (f n).1
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem self_subset_generate_measurable_rec (s : Set (Set α)) (i : ω₁) : s ⊆ GenerateMeasurableRec s i := by
   unfold generate_measurable_rec
   apply_rules [subset_union_of_subset_left]
@@ -84,7 +84,7 @@ theorem generate_measurable_rec_subset (s : Set (Set α)) {i j : ω₁} (h : i �
     exact (Union_const x).symm
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- At each step of the inductive construction, the cardinality bound `≤ (max (#s) 2) ^ ω` holds. -/
 theorem cardinal_generate_measurable_rec_le (s : Set (Set α)) (i : ω₁) :
     # (GenerateMeasurableRec s i) ≤ max (# s) 2 ^ omega.{u} := by

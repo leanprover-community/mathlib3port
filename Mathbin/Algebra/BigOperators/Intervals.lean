@@ -28,6 +28,7 @@ variable {α : Type u} {β : Type v} {γ : Type w} {s₂ s₁ s : Finset α} {a 
 
 variable [CommMonoidₓ β]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] (f : α → β)
     (a b c : α) : (∏ x in ico a b, f (x + c)) = ∏ x in ico (a + c) (b + c), f x := by
@@ -234,7 +235,7 @@ open Finset
 -- The partial sum of `g`, starting from zero
 local notation "G" n:80 => ∑ i in range n, g i
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
 /-- **Summation by parts**, also known as **Abel's lemma** or an **Abel transformation** -/
 theorem sum_Ico_by_parts (hmn : m < n) :
     (∑ i in ico m n, f i • g i) = f (n - 1) • G n - f m • G m - ∑ i in ico m (n - 1), (f (i + 1) - f i) • G(i + 1) := by

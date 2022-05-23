@@ -379,7 +379,7 @@ theorem lt_iff_exists_real_btwn {a b : Ereal} : a < b ↔ ∃ x : ℝ, a < x ∧
     fun ⟨x, ax, xb⟩ => ax.trans xb⟩
 
 /-- The set of numbers in `ereal` that are not equal to `±∞` is equivalent to `ℝ`. -/
-def neTopBotEquivReal : ({⊥, ⊤} : Set Ereal).Compl ≃ ℝ where
+def neTopBotEquivReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ ℝ where
   toFun := fun x => Ereal.toReal x
   invFun := fun x =>
     ⟨x, by

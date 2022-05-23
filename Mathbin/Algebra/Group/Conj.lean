@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2018  Patrick Massot. All rights reserved.
+Copyright (c) 2018 Patrick Massot. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 -/
@@ -36,6 +36,9 @@ theorem IsConj.refl (a : α) : IsConj a a :=
 theorem IsConj.symm {a b : α} : IsConj a b → IsConj b a
   | ⟨c, hc⟩ => ⟨c⁻¹, hc.units_inv_symm_left⟩
 
+theorem is_conj_comm {g h : α} : IsConj g h ↔ IsConj h g :=
+  ⟨IsConj.symm, IsConj.symm⟩
+
 @[trans]
 theorem IsConj.trans {a b c : α} : IsConj a b → IsConj b c → IsConj a c
   | ⟨c₁, hc₁⟩, ⟨c₂, hc₂⟩ => ⟨c₂ * c₁, hc₂.mul_left hc₁⟩
@@ -58,8 +61,9 @@ section CancelMonoid
 
 variable [CancelMonoid α]
 
--- These lemmas hold for either `left_cancel_monoid` or `right_cancel_monoid`,
--- with slightly different proofs; so far these don't seem necessary.
+-- These lemmas hold for `right_cancel_monoid` with the current proofs, but for the sake of
+-- not duplicating code (these lemmas also hold for `left_cancel_monoids`) we leave these
+-- not generalised.
 @[simp]
 theorem is_conj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
   ⟨fun ⟨c, hc⟩ => mul_right_cancelₓ (hc.symm.trans ((mul_oneₓ _).trans (one_mulₓ _).symm)), fun h => by
@@ -190,6 +194,44 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) : Function.
 instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
   Quotientₓ.fintype (IsConj.setoid α)
 
+library_note "slow-failing instance priority"/--
+Certain instances trigger further searches when they are considered as candidate instances;
+these instances should be assigned a priority lower than the default of 1000 (for example, 900).
+
+The conditions for this rule are as follows:
+ * a class `C` has instances `instT : C T` and `instT' : C T'`
+ * types `T` and `T'` are both specializations of another type `S`
+ * the parameters supplied to `S` to produce `T` are not (fully) determined by `instT`,
+   instead they have to be found by instance search
+If those conditions hold, the instance `instT` should be assigned lower priority.
+
+For example, suppose the search for an instance of `decidable_eq (multiset α)` tries the
+candidate instance `con.quotient.decidable_eq (c : con M) : decidable_eq c.quotient`.
+Since `multiset` and `con.quotient` are both quotient types, unification will check
+that the relations `list.perm` and `c.to_setoid.r` unify. However, `c.to_setoid` depends on 
+a `has_mul M` instance, so this unification triggers a search for `has_mul (list α)`;
+this will traverse all subclasses of `has_mul` before failing.
+On the other hand, the search for an instance of `decidable_eq (con.quotient c)` for `c : con M`
+can quickly reject the candidate instance `multiset.has_decidable_eq` because the type of
+`list.perm : list ?m_1 → list ?m_1 → Prop` does not unify with `M → M → Prop`.
+Therefore, we should assign `con.quotient.decidable_eq` a lower priority because it fails slowly.
+(In terms of the rules above, `C := decidable_eq`, `T := con.quotient`,
+`instT := con.quotient.decidable_eq`, `T' := multiset`, `instT' := multiset.has_decidable_eq`,
+and `S := quot`.)
+
+If the type involved is a free variable (rather than an instantiation of some type `S`),
+the instance priority should be even lower, see Note [lower instance priority].
+-/
+
+
+-- see Note [slow-failing instance priority]
+instance (priority := 900) [DecidableRel (IsConj : α → α → Prop)] : DecidableEq (ConjClasses α) :=
+  Quotientₓ.decidableEq
+
+instance [DecidableEq α] [Fintype α] : DecidableRel (IsConj : α → α → Prop) := fun a b => by
+  delta' IsConj SemiconjBy
+  infer_instance
+
 end Monoidₓ
 
 section CommMonoidₓ
@@ -232,6 +274,9 @@ theorem is_conj_iff_conjugates_of_eq {a b : α} : IsConj a b ↔ ConjugatesOf a 
     have ha := mem_conjugates_of_self
     rwa [← h] at ha⟩
 
+instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] {a : α} : Fintype (ConjugatesOf a) :=
+  @Subtype.fintype _ _ (‹DecidableRel IsConj› a) _
+
 end Monoidₓ
 
 namespace ConjClasses
@@ -256,6 +301,15 @@ theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ Carrier b �
 
 theorem carrier_eq_preimage_mk {a : ConjClasses α} : a.Carrier = ConjClasses.mk ⁻¹' {a} :=
   Set.ext fun x => mem_carrier_iff_mk_eq
+
+section Fintype
+
+variable [Fintype α] [DecidableRel (IsConj : α → α → Prop)]
+
+instance {x : ConjClasses α} : Fintype (Carrier x) :=
+  (Quotientₓ.recOnSubsingleton x) fun a => ConjugatesOf.fintype
+
+end Fintype
 
 end ConjClasses
 

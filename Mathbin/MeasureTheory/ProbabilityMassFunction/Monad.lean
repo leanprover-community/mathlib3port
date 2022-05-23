@@ -276,8 +276,8 @@ theorem pure_bind_on_support (a : α) (f : ∀ a' : α ha : a' ∈ (pure a).Supp
 theorem bind_on_support_pure (p : Pmf α) : (p.bindOnSupport fun a _ => pure a) = p := by
   simp only [Pmf.bind_pure, Pmf.bind_on_support_eq_bind]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 @[simp]
 theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀, ∀ a ∈ p.Support, ∀, Pmf β)
     (g : ∀, ∀ b ∈ (p.bindOnSupport f).Support, ∀, Pmf γ) :

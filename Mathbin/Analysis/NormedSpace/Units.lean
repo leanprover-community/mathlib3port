@@ -127,7 +127,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
   simp only [inverse_one_sub t ht, Set.mem_set_of_eq]
   have h : 1 = ((range n).Sum fun i => t ^ i) * Units.oneSub t ht + t ^ n := by
     simp only [Units.coe_one_sub]
-    rw [← geomSum, geom_sum_mul_neg]
+    rw [geom_sum_mul_neg]
     simp
   rw [← one_mulₓ ↑(Units.oneSub t ht)⁻¹, h, add_mulₓ]
   congr
@@ -135,7 +135,7 @@ theorem inverse_one_sub_nth_order (n : ℕ) :
     simp
     
   · simp only [Units.coe_one_sub]
-    rw [← add_mulₓ, ← geomSum, geom_sum_mul_neg]
+    rw [← add_mulₓ, geom_sum_mul_neg]
     simp
     
 

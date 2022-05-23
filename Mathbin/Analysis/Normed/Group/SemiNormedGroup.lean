@@ -6,6 +6,7 @@ Authors: Johan Commelin, Riccardo Brasca
 import Mathbin.Analysis.Normed.Group.Hom
 import Mathbin.CategoryTheory.Limits.Shapes.ZeroMorphisms
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
+import Mathbin.CategoryTheory.Elementwise
 
 /-!
 # The category of seminormed groups
@@ -86,7 +87,7 @@ theorem iso_isometry_of_norm_noninc {V W : SemiNormedGroupₓ} (i : V ≅ W) (h1
   intro v
   apply le_antisymmₓ (h1 v)
   calc ∥v∥ = ∥i.inv (i.hom v)∥ := by
-      rw [coe_hom_inv_id]_ ≤ ∥i.hom v∥ := h2 _
+      rw [iso.hom_inv_id_apply]_ ≤ ∥i.hom v∥ := h2 _
 
 end SemiNormedGroupₓ
 
@@ -201,7 +202,7 @@ theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom :
   intro v
   apply le_antisymmₓ (i.hom.2 v)
   calc ∥v∥ = ∥i.inv (i.hom v)∥ := by
-      rw [coe_hom_inv_id]_ ≤ ∥i.hom v∥ := i.inv.2 _
+      rw [iso.hom_inv_id_apply]_ ≤ ∥i.hom v∥ := i.inv.2 _
 
 end SemiNormedGroup₁
 

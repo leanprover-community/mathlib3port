@@ -1030,13 +1030,23 @@ theorem lim_abs (f : CauSeq ℂ abs) : limₓ (cauSeqAbs f) = abs (limₓ f) :=
     let ⟨i, hi⟩ := equiv_lim f ε ε0
     ⟨i, fun j hj => lt_of_le_of_ltₓ (abs_abs_sub_le_abs_sub _ _) (hi j hj)⟩
 
+variable {α : Type _} (s : Finset α)
+
 @[simp, norm_cast]
-theorem of_real_prod {α : Type _} (s : Finset α) (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
+theorem of_real_prod (f : α → ℝ) : ((∏ i in s, f i : ℝ) : ℂ) = ∏ i in s, (f i : ℂ) :=
   RingHom.map_prod ofReal _ _
 
 @[simp, norm_cast]
-theorem of_real_sum {α : Type _} (s : Finset α) (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
+theorem of_real_sum (f : α → ℝ) : ((∑ i in s, f i : ℝ) : ℂ) = ∑ i in s, (f i : ℂ) :=
   RingHom.map_sum ofReal _ _
+
+@[simp]
+theorem re_sum (f : α → ℂ) : (∑ i in s, f i).re = ∑ i in s, (f i).re :=
+  reAddGroupHom.map_sum f s
+
+@[simp]
+theorem im_sum (f : α → ℂ) : (∑ i in s, f i).im = ∑ i in s, (f i).im :=
+  imAddGroupHom.map_sum f s
 
 end Complex
 

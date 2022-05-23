@@ -792,18 +792,18 @@ theorem empty.nonempty_equiv_iff :
 end
 
 instance emptyStructure : Language.empty.Structure M :=
-  ⟨fun _ => Empty.elimₓ, fun _ => Empty.elimₓ⟩
+  ⟨fun _ => Empty.elim, fun _ => Empty.elim⟩
 
 instance : Unique (Language.empty.Structure M) :=
   ⟨⟨Language.emptyStructure⟩, fun a => by
     ext n f
-    · exact Empty.elimₓ f
+    · exact Empty.elim f
       
     · exact Subsingleton.elimₓ _ _
       ⟩
 
 instance (priority := 100) strongHomClassEmpty {F M N} [FunLike F M fun _ => N] : StrongHomClass Language.empty F M N :=
-  ⟨fun _ _ f => Empty.elimₓ f, fun _ _ r => Empty.elimₓ r⟩
+  ⟨fun _ _ f => Empty.elim f, fun _ _ r => Empty.elim r⟩
 
 /-- Makes a `language.empty.hom` out of any function. -/
 @[simps]

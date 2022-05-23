@@ -103,7 +103,7 @@ theorem Spec.SheafedSpace_map_id {R : CommRingₓₓ} : Spec.sheafedSpaceMap (�
         swap
         · rw [Spec.Top_map_id, TopologicalSpace.Opens.map_id_obj_unop]
           
-        simpa
+        simpa [eq_to_hom_map]
 
 theorem Spec.SheafedSpace_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
     Spec.sheafedSpaceMap (f ≫ g) = Spec.sheafedSpaceMap g ≫ Spec.sheafedSpaceMap f :=
@@ -216,10 +216,10 @@ def Spec.locallyRingedSpaceMap {R S : CommRingₓₓ} (f : R ⟶ S) :
       -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
       rw [← local_ring_hom_comp_stalk_iso_apply] at ha
       replace ha := (stalk_iso S p).Hom.is_unit_map ha
-      rw [coe_inv_hom_id] at ha
+      rw [iso.inv_hom_id_apply] at ha
       replace ha := IsLocalRingHom.map_nonunit _ ha
       convert RingHom.is_unit_map (stalk_iso R (PrimeSpectrum.comap f p)).inv ha
-      rw [coe_hom_inv_id]
+      rw [iso.hom_inv_id_apply]
 
 @[simp]
 theorem Spec.LocallyRingedSpace_map_id (R : CommRingₓₓ) :

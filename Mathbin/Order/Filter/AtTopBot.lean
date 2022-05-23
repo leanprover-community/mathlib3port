@@ -139,10 +139,37 @@ theorem eventually_gt_at_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ∀ᶠ 
   Ioi_mem_at_top a
 
 theorem eventually_ne_at_top [Preorderₓ α] [NoMaxOrder α] (a : α) : ∀ᶠ x in at_top, x ≠ a :=
-  (eventually_gt_at_top a).mono fun x hx => hx.Ne.symm
+  (eventually_gt_at_top a).mono fun x => ne_of_gtₓ
+
+theorem Tendsto.eventually_gt_at_top [Preorderₓ β] [NoMaxOrder β] {f : α → β} {l : Filter α} (hf : Tendsto f l atTop)
+    (c : β) : ∀ᶠ x in l, c < f x :=
+  hf.Eventually (eventually_gt_at_top c)
+
+theorem Tendsto.eventually_ge_at_top [Preorderₓ β] {f : α → β} {l : Filter α} (hf : Tendsto f l atTop) (c : β) :
+    ∀ᶠ x in l, c ≤ f x :=
+  hf.Eventually (eventually_ge_at_top c)
+
+theorem Tendsto.eventually_ne_at_top [Preorderₓ β] [NoMaxOrder β] {f : α → β} {l : Filter α} (hf : Tendsto f l atTop)
+    (c : β) : ∀ᶠ x in l, f x ≠ c :=
+  hf.Eventually (eventually_ne_at_top c)
 
 theorem eventually_lt_at_bot [Preorderₓ α] [NoMinOrder α] (a : α) : ∀ᶠ x in at_bot, x < a :=
   Iio_mem_at_bot a
+
+theorem eventually_ne_at_bot [Preorderₓ α] [NoMinOrder α] (a : α) : ∀ᶠ x in at_bot, x ≠ a :=
+  (eventually_lt_at_bot a).mono fun x => ne_of_ltₓ
+
+theorem Tendsto.eventually_lt_at_bot [Preorderₓ β] [NoMinOrder β] {f : α → β} {l : Filter α} (hf : Tendsto f l atBot)
+    (c : β) : ∀ᶠ x in l, f x < c :=
+  hf.Eventually (eventually_lt_at_bot c)
+
+theorem Tendsto.eventually_le_at_bot [Preorderₓ β] {f : α → β} {l : Filter α} (hf : Tendsto f l atBot) (c : β) :
+    ∀ᶠ x in l, f x ≤ c :=
+  hf.Eventually (eventually_le_at_bot c)
+
+theorem Tendsto.eventually_ne_at_bot [Preorderₓ β] [NoMinOrder β] {f : α → β} {l : Filter α} (hf : Tendsto f l atBot)
+    (c : β) : ∀ᶠ x in l, f x ≠ c :=
+  hf.Eventually (eventually_ne_at_bot c)
 
 theorem at_top_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] : (@atTop α _).HasBasis (fun _ => True) Ioi :=
   (at_top_basis.to_has_basis fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
@@ -591,9 +618,6 @@ theorem tendsto_pow_at_top {n : ℕ} (hn : 1 ≤ n) : Tendsto (fun x : α => x ^
   refine' tendsto_at_top_mono' _ ((eventually_ge_at_top 1).mono fun x hx => _) tendsto_id
   simpa only [pow_oneₓ] using pow_le_pow hx hn
 
-theorem eventually_ne_of_tendsto_at_top [Nontrivial α] (hf : Tendsto f l atTop) (c : α) : ∀ᶠ x in l, f x ≠ c :=
-  (tendsto_at_top.1 hf <| c + 1).mono fun x hx => ne_of_gtₓ (lt_of_lt_of_leₓ (lt_add_one c) hx)
-
 end OrderedSemiring
 
 theorem zero_pow_eventually_eq [MonoidWithZeroₓ α] : (fun n : ℕ => (0 : α) ^ n) =ᶠ[at_top] fun n => 0 :=
@@ -602,9 +626,6 @@ theorem zero_pow_eventually_eq [MonoidWithZeroₓ α] : (fun n : ℕ => (0 : α)
 section OrderedRing
 
 variable [OrderedRing α] {l : Filter β} {f g : β → α}
-
-theorem eventually_ne_of_tendsto_at_bot [Nontrivial α] (hf : Tendsto f l atBot) (c : α) : ∀ᶠ x in l, f x ≠ c :=
-  (tendsto_at_bot.1 hf <| c - 1).mono fun x hx => ne_of_ltₓ (lt_of_le_of_ltₓ hx ((sub_lt_self_iff c).2 zero_lt_one))
 
 theorem Tendsto.at_top_mul_at_bot (hf : Tendsto f l atTop) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atBot := by
@@ -1185,7 +1206,8 @@ theorem tendsto_at_bot_of_monotone_of_subseq [Preorderₓ ι] [Preorderₓ α] {
 condition for comparison of the filter `at_top.map (λ s, ∏ b in s, f b)` with
 `at_top.map (λ s, ∏ b in s, g b)`. This is useful to compare the set of limit points of
 `Π b in s, f b` as `s → at_top` with the similar set for `g`. -/
-@[to_additive]
+@[to_additive
+      "Let `f` and `g` be two maps to the same commutative additive monoid. This lemma gives\na sufficient condition for comparison of the filter `at_top.map (λ s, ∑ b in s, f b)` with\n`at_top.map (λ s, ∑ b in s, g b)`. This is useful to compare the set of limit points of\n`∑ b in s, f b` as `s → at_top` with the similar set for `g`."]
 theorem map_at_top_finset_prod_le_of_prod_eq [CommMonoidₓ α] {f : β → α} {g : γ → α}
     (h_eq : ∀ u : Finset γ, ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∏ x in u', g x) = ∏ b in v', f b) :
     (atTop.map fun s : Finset β => ∏ b in s, f b) ≤ atTop.map fun s : Finset γ => ∏ x in s, g x := by
@@ -1205,12 +1227,38 @@ protected theorem HasAntitoneBasis.tendsto [Preorderₓ ι] {l : Filter α} {s :
     {φ : ι → α} (h : ∀ i : ι, φ i ∈ s i) : Tendsto φ atTop l := fun t ht =>
   mem_map.2 <| (hl.eventually_subset ht).mono fun i hi => hi (h i)
 
+theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorderₓ ι'] {l : Filter α} {s : ι' → Set α}
+    (hs : l.HasAntitoneBasis s) {φ : ι → ι'} (φ_mono : Monotone φ) (hφ : Tendsto φ atTop atTop) :
+    l.HasAntitoneBasis (s ∘ φ) :=
+  ⟨hs.to_has_basis.to_has_basis
+      (fun n hn => (hφ.Eventually (eventually_ge_at_top n)).exists.imp fun m hm => ⟨trivialₓ, hs.Antitone hm⟩)
+      fun n hn => ⟨φ n, trivialₓ, Subset.rfl⟩,
+    hs.Antitone.comp_monotone φ_mono⟩
+
+theorem HasAntitoneBasis.comp_strict_mono {l : Filter α} {s : ℕ → Set α} (hs : l.HasAntitoneBasis s) {φ : ℕ → ℕ}
+    (hφ : StrictMono φ) : l.HasAntitoneBasis (s ∘ φ) :=
+  hs.comp_mono hφ.Monotone hφ.tendsto_at_top
+
+/-- Given an antitone basis `s : ℕ → set α` of a filter, extract an antitone subbasis `s ∘ φ`,
+`φ : ℕ → ℕ`, such that `m < n` implies `r (φ m) (φ n)`. This lemma can be used to extract an
+antitone basis with basis sets decreasing "sufficiently fast". -/
+theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α} (hs : f.HasAntitoneBasis s) {r : ℕ → ℕ → Prop}
+    (hr : ∀ m, ∀ᶠ n in at_top, r m n) :
+    ∃ φ : ℕ → ℕ, StrictMono φ ∧ (∀ ⦃m n⦄, m < n → r (φ m) (φ n)) ∧ f.HasAntitoneBasis (s ∘ φ) := by
+  suffices ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ m n, m < n → r (φ m) (φ n) by
+    rcases this with ⟨φ, hφ, hrφ⟩
+    exact ⟨φ, hφ, hrφ, hs.comp_strict_mono hφ⟩
+  have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in at_top, ∀, ∀ m ∈ t, ∀, m < n ∧ r m n := fun t ht =>
+    (eventually_all_finite ht).2 fun m hm => (eventually_gt_at_top m).And (hr _)
+  rcases seq_of_forall_finite_exists fun t ht => (this t ht).exists with ⟨φ, hφ⟩
+  simp only [ball_image_iff, forall_and_distrib, mem_Iio] at hφ
+  exact ⟨φ, forall_swap.2 hφ.1, forall_swap.2 hφ.2⟩
+
 /-- If `f` is a nontrivial countably generated filter, then there exists a sequence that converges
 to `f`. -/
 theorem exists_seq_tendsto (f : Filter α) [IsCountablyGenerated f] [NeBot f] : ∃ x : ℕ → α, Tendsto x atTop f := by
   obtain ⟨B, h⟩ := f.exists_antitone_basis
-  have := fun n => nonempty_of_mem (h.to_has_basis.mem_of_mem trivialₓ : B n ∈ f)
-  choose x hx
+  choose x hx using fun n => Filter.nonempty_of_mem (h.mem n)
   exact ⟨x, h.tendsto hx⟩
 
 /-- An abstract version of continuity of sequentially continuous functions on metric spaces:

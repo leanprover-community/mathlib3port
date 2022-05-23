@@ -126,7 +126,7 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     by
       congr
       ext i
-      rw [pow_addₓ, ← div_div, div_eq_mul_one_div, ← one_div_pow i]
+      rw [pow_addₓ, ← div_div, div_eq_mul_one_div, one_div_pow]
     -- factor the constant `(1 / m ^ (n + 1)!)` out of the series
         _ =
         (∑' i, (1 / m) ^ i) * (1 / m ^ (n + 1)!) :=
@@ -136,8 +136,8 @@ theorem tsum_one_div_pow_factorial_lt (n : ℕ) {m : ℝ} (m1 : 1 < m) :
         (Or.inl (tsum_geometric_of_abs_lt_1 mi))
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:41:50: missing argument
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:59:31: expecting tactic arg
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
   calc
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 2 * (1 / m ^ (n + 1)!) :=-- the second factors coincide (and are non-negative),

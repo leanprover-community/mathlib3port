@@ -331,7 +331,7 @@ theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
     
 
 /-- Two points are collinear. -/
-theorem collinear_insert_singleton (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := by
+theorem collinear_pair (p₁ p₂ : P) : Collinear k ({p₁, p₂} : Set P) := by
   rw [collinear_iff_exists_forall_eq_smul_vadd]
   use p₁, p₂ -ᵥ p₁
   intro p hp

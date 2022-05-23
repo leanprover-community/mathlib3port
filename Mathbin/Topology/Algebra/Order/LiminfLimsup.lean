@@ -26,9 +26,7 @@ section OrderClosedTopology
 variable [SemilatticeSup α] [TopologicalSpace α] [OrderTopology α]
 
 theorem is_bounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
-  match forall_le_or_exists_lt_sup a with
-  | Or.inl h => ⟨a, eventually_of_forall h⟩
-  | Or.inr ⟨b, hb⟩ => ⟨b, ge_mem_nhds hb⟩
+  (is_top_or_exists_gt a).elim (fun h => ⟨a, eventually_of_forall h⟩) fun ⟨b, hb⟩ => ⟨b, ge_mem_nhds hb⟩
 
 theorem Filter.Tendsto.is_bounded_under_le {f : Filter β} {u : β → α} {a : α} (h : Tendsto u f (𝓝 a)) :
     f.IsBoundedUnder (· ≤ ·) u :=

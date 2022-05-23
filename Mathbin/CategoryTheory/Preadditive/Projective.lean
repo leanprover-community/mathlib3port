@@ -113,10 +113,16 @@ instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] : Proj
     ⟨coprod.desc (factor_thru (coprod.inl ≫ f) e) (factor_thru (coprod.inr ≫ f) e), by
       tidy⟩
 
+section
+
+attribute [local tidy] tactic.discrete_cases
+
 instance {β : Type v} (g : β → C) [HasCoproduct g] [∀ b, Projective (g b)] : Projective (∐ g) where
   Factors := fun E X' f e epi =>
     ⟨sigma.desc fun b => factor_thru (sigma.ι g b ≫ f) e, by
       tidy⟩
+
+end
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Projective P] [Projective Q] :
     Projective (P ⊞ Q) where
@@ -124,8 +130,7 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Projective P] 
     ⟨biprod.desc (factor_thru (biprod.inl ≫ f) e) (factor_thru (biprod.inr ≫ f) e), by
       tidy⟩
 
-instance {β : Type v} [DecidableEq β] (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] :
-    Projective (⨁ g) where
+instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀ b, Projective (g b)] : Projective (⨁ g) where
   Factors := fun E X' f e epi =>
     ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by
       tidy⟩

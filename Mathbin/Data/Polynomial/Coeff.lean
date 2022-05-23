@@ -216,6 +216,7 @@ theorem coeff_X_add_one_pow (R : Type _) [Semiringₓ R] (n k : ℕ) : ((X + 1) 
 theorem coeff_one_add_X_pow (R : Type _) [Semiringₓ R] (n k : ℕ) : ((1 + X) ^ n).coeff k = (n.choose k : R) := by
   rw [add_commₓ _ X, coeff_X_add_one_pow]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : c r ∣ φ ↔ ∀ i, r ∣ φ.coeff i := by
   constructor
   · rintro ⟨φ, rfl⟩ c

@@ -48,7 +48,7 @@ noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
 
 variable {p}
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) := by
   induction' n with n ih generalizing k
   · simp only [Nat.nat_zero_eq_zero, Nat.cast_zeroₓ, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero, Pi.zero_apply]

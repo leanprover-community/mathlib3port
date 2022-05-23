@@ -329,29 +329,55 @@ def equivQuotientSubgroupOfOfEq {A' A B' B : Subgroup G} [hAN : (A'.subgroupOf A
 
 section Zpow
 
-variable {G' H' : Type u} [CommGroupₓ G'] [CommGroupₓ H']
+variable {A B C : Type u} [CommGroupₓ A] [CommGroupₓ B] [CommGroupₓ C]
 
-variable (φ' : G' →* H') (ψ' : H' →* G') (χ : G' ≃* H')
+variable (f : A →* B) (g : B →* A) (e : A ≃* B) (d : B ≃* C) (n : ℤ)
 
 /-- The map of quotients by powers of an integer induced by a group homomorphism. -/
 @[to_additive "The map of quotients by multiples of an integer induced by an additive group\nhomomorphism."]
-def homQuotientZpowOfHom (n : ℤ) : G' ⧸ (zpowGroupHom n : G' →* G').range →* H' ⧸ (zpowGroupHom n : H' →* H').range :=
-  (lift _ ((mk' _).comp φ')) fun g ⟨h, (hg : h ^ n = g)⟩ =>
+def homQuotientZpowOfHom : A ⧸ (zpowGroupHom n : A →* A).range →* B ⧸ (zpowGroupHom n : B →* B).range :=
+  (lift _ ((mk' _).comp f)) fun g ⟨h, (hg : h ^ n = g)⟩ =>
     (eq_one_iff _).mpr
       ⟨_, by
         simpa only [← hg, map_zpow] ⟩
 
 @[to_additive, simp]
-theorem hom_quotient_zpow_of_hom_right_inverse (h : Function.RightInverse ψ' φ') (n : ℤ) :
-    (homQuotientZpowOfHom φ' n).comp (homQuotientZpowOfHom ψ' n) = MonoidHom.id _ :=
-  monoid_hom_ext _ <| MonoidHom.ext fun g => congr_argₓ coe <| h g
+theorem hom_quotient_zpow_of_hom_id : homQuotientZpowOfHom (MonoidHom.id A) n = MonoidHom.id _ :=
+  monoid_hom_ext _ rfl
+
+@[to_additive, simp]
+theorem hom_quotient_zpow_of_hom_comp :
+    homQuotientZpowOfHom (f.comp g) n = (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) :=
+  monoid_hom_ext _ rfl
+
+@[to_additive, simp]
+theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInverse g f) :
+    (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) = MonoidHom.id _ :=
+  monoid_hom_ext _ <| MonoidHom.ext fun x => congr_argₓ coe <| i x
 
 /-- The equivalence of quotients by powers of an integer induced by a group isomorphism. -/
 @[to_additive "The equivalence of quotients by multiples of an integer induced by an additive group\nisomorphism."]
-def equivQuotientZpowOfEquiv (χ : G' ≃* H') (n : ℤ) :
-    G' ⧸ (zpowGroupHom n : G' →* G').range ≃* H' ⧸ (zpowGroupHom n : H' →* H').range :=
-  MonoidHom.toMulEquiv _ _ (hom_quotient_zpow_of_hom_right_inverse χ.symm χ χ.left_inv n)
-    (hom_quotient_zpow_of_hom_right_inverse χ χ.symm χ.right_inv n)
+def equivQuotientZpowOfEquiv : A ⧸ (zpowGroupHom n : A →* A).range ≃* B ⧸ (zpowGroupHom n : B →* B).range :=
+  MonoidHom.toMulEquiv _ _ (hom_quotient_zpow_of_hom_comp_of_right_inverse e.symm e n e.left_inv)
+    (hom_quotient_zpow_of_hom_comp_of_right_inverse e e.symm n e.right_inv)
+
+@[to_additive, simp]
+theorem equiv_quotient_zpow_of_equiv_refl :
+    MulEquiv.refl (A ⧸ (zpowGroupHom n : A →* A).range) = equivQuotientZpowOfEquiv (MulEquiv.refl A) n := by
+  ext x
+  rw [← Quotientₓ.out_eq' x]
+  rfl
+
+@[to_additive, simp]
+theorem equiv_quotient_zpow_of_equiv_symm : (equivQuotientZpowOfEquiv e n).symm = equivQuotientZpowOfEquiv e.symm n :=
+  rfl
+
+@[to_additive, simp]
+theorem equiv_quotient_zpow_of_equiv_trans :
+    (equivQuotientZpowOfEquiv e n).trans (equivQuotientZpowOfEquiv d n) = equivQuotientZpowOfEquiv (e.trans d) n := by
+  ext x
+  rw [← Quotientₓ.out_eq' x]
+  rfl
 
 end Zpow
 

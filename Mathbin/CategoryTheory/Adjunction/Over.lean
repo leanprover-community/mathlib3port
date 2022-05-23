@@ -30,7 +30,7 @@ variable {C : Type u} [Category.{v} C] (X : C)
 
 /-- The functor from `C` to `over X` which sends `Y : C` to `π₁ : X ⨯ Y ⟶ X`, sometimes denoted `X*`.
 -/
-@[simps]
+@[simps obj_left obj_hom mapLeft]
 def star [HasBinaryProducts C] : C ⥤ Over X :=
   cofree _ ⋙ coalgebraToOver X
 

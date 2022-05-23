@@ -321,7 +321,7 @@ theorem eq_zero_of_subset_zero {s : Multiset α} (h : s ⊆ 0) : s = 0 :=
 theorem subset_zero {s : Multiset α} : s ⊆ 0 ↔ s = 0 :=
   ⟨eq_zero_of_subset_zero, fun xeq => xeq.symm ▸ Subset.refl 0⟩
 
-theorem induction_on' {p : Multiset α → Prop} (S : Multiset α) (h₁ : p ∅)
+theorem induction_on' {p : Multiset α → Prop} (S : Multiset α) (h₁ : p 0)
     (h₂ : ∀ {a s}, a ∈ S → s ⊆ S → p s → p (insert a s)) : p S :=
   @Multiset.induction_on α (fun T => T ⊆ S → p T) S (fun _ => h₁)
     (fun a s hps hs =>
@@ -461,6 +461,9 @@ theorem singleton_le {a : α} {s : Multiset α} : {a} ≤ s ↔ a ∈ s :=
     let ⟨t, e⟩ := exists_cons_of_mem h
     e.symm ▸ cons_le_cons _ (zero_le _)⟩
 
+theorem pair_comm (x y : α) : ({x, y} : Multiset α) = {y, x} :=
+  cons_swap x y 0
+
 /-! ### Additive monoid -/
 
 
@@ -478,30 +481,27 @@ instance : Add (Multiset α) :=
 theorem coe_add (s t : List α) : (s + t : Multiset α) = (s ++ t : List α) :=
   rfl
 
-protected theorem add_comm (s t : Multiset α) : s + t = t + s :=
-  (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => Quot.sound perm_append_comm
-
-protected theorem zero_add (s : Multiset α) : 0 + s = s :=
-  (Quot.induction_on s) fun l => rfl
-
 theorem singleton_add (a : α) (s : Multiset α) : {a} + s = a ::ₘ s :=
   rfl
 
-protected theorem add_le_add_left s {t u : Multiset α} : s + t ≤ s + u ↔ t ≤ u :=
+private theorem add_le_add_iff_left' {s t u : Multiset α} : s + t ≤ s + u ↔ t ≤ u :=
   (Quotientₓ.induction_on₃ s t u) fun l₁ l₂ l₃ => subperm_append_left _
 
-protected theorem add_left_cancel s {t u : Multiset α} (h : s + t = s + u) : t = u :=
-  le_antisymmₓ ((Multiset.add_le_add_left _).1 (le_of_eqₓ h)) ((Multiset.add_le_add_left _).1 (le_of_eqₓ h.symm))
+instance : CovariantClass (Multiset α) (Multiset α) (· + ·) (· ≤ ·) :=
+  ⟨fun s t u => add_le_add_iff_left'.2⟩
+
+instance : ContravariantClass (Multiset α) (Multiset α) (· + ·) (· ≤ ·) :=
+  ⟨fun s t u => add_le_add_iff_left'.1⟩
 
 instance : OrderedCancelAddCommMonoid (Multiset α) :=
-  { @Multiset.partialOrder α with zero := 0, add := (· + ·), add_comm := Multiset.add_comm,
+  { @Multiset.partialOrder α with zero := 0, add := (· + ·),
+    add_comm := fun s t => (Quotientₓ.induction_on₂ s t) fun l₁ l₂ => Quot.sound perm_append_comm,
     add_assoc := fun s₁ s₂ s₃ =>
       (Quotientₓ.induction_on₃ s₁ s₂ s₃) fun l₁ l₂ l₃ => congr_argₓ coe <| append_assoc l₁ l₂ l₃,
-    zero_add := Multiset.zero_add,
-    add_zero := fun s => by
-      rw [Multiset.add_comm, Multiset.zero_add],
-    add_left_cancel := Multiset.add_left_cancel, add_le_add_left := fun s₁ s₂ h s₃ => (Multiset.add_le_add_left _).2 h,
-    le_of_add_le_add_left := fun s₁ s₂ s₃ => (Multiset.add_le_add_left _).1 }
+    zero_add := fun s => (Quot.induction_on s) fun l => rfl,
+    add_zero := fun s => (Quotientₓ.induction_on s) fun l => congr_argₓ coe <| append_nil l,
+    add_left_cancel := fun a b c => add_left_cancel'', add_le_add_left := fun s₁ s₂ => add_le_add_left,
+    le_of_add_le_add_left := fun s₁ s₂ s₃ => le_of_add_le_add_left }
 
 theorem le_add_right (s t : Multiset α) : s ≤ s + t := by
   simpa using add_le_add_left (zero_le t) s
@@ -2078,6 +2078,7 @@ end
 
 section Embedding
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem map_le_map_iff {f : α → β} (hf : Function.Injective f) {s t : Multiset α} : s.map f ≤ t.map f ↔ s ≤ t := by
   classical

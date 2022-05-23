@@ -60,6 +60,7 @@ theorem interedges_mono (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) : interedges r
 
 variable (r)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β) :
     (interedges r s t).card + (interedges (fun x y => ¬r x y) s t).card = s.card * t.card := by
   classical

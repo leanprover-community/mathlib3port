@@ -263,7 +263,7 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
 
 variable (k)
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem nth_mul_coeff' (n : ℕ) :
     ∃ f : TruncatedWittVector p (n + 1) k → TruncatedWittVector p (n + 1) k → k,
       ∀ x y : 𝕎 k,

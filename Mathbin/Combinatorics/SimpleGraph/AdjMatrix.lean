@@ -241,7 +241,7 @@ theorem adj_matrix_mul_vec_const_apply_of_regular [Semiringₓ α] {d : ℕ} {a 
   simp [hd v]
 
 -- ././Mathport/Syntax/Translate/Tactic/Mathlib/Misc1.lean:253:2: unsupported tactic unify_equations
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: unify_equations ... #[[ident hqp, ident hrp]]
 theorem adj_matrix_pow_apply_eq_card_walk [DecidableEq V] [Semiringₓ α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
   rw [card_set_walk_length_eq]

@@ -129,9 +129,8 @@ theorem fork_map_comp_first_obj_iso_pi_opens_eq (hR : Sieve.generate R ∈ Opens
     Presheaf.forkMap R F ≫ (firstObjIsoPiOpens F U R).Hom =
       F.map (eqToHom (supr_eq_of_mem_grothendieck U R hR)).op ≫ res F (coveringOfPresieve U R) :=
   by
-  ext f
-  rw [category.assoc, category.assoc]
-  rw [first_obj_iso_pi_opens_π]
+  ext ⟨f⟩
+  rw [category.assoc, category.assoc, first_obj_iso_pi_opens_π]
   dunfold presheaf.fork_map res
   rw [limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app, ← F.map_comp]
   congr
@@ -203,7 +202,7 @@ def postcomposeDiagramForkHom (hR : Sieve.generate R ∈ Opens.grothendieckTopol
 
 instance is_iso_postcompose_diagram_fork_hom_hom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
     IsIso (postcomposeDiagramForkHom F U R hR).Hom := by
-  rw [postcompose_diagram_fork_hom_hom]
+  rw [postcompose_diagram_fork_hom_hom, eq_to_hom_map]
   apply eq_to_hom.is_iso
 
 instance is_iso_postcompose_diagram_fork_hom (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
@@ -311,7 +310,7 @@ hence `s i = s j` (module an `eq_to_hom` arrow).
 -/
 theorem fork_ι_comp_pi_opens_to_first_obj_to_pi_opens_eq (s : Limits.Fork (leftRes F U) (rightRes F U)) :
     s.ι ≫ piOpensToFirstObj F U ≫ firstObjToPiOpens F U = s.ι := by
-  ext j
+  ext ⟨j⟩
   dunfold first_obj_to_pi_opens pi_opens_to_first_obj
   rw [category.assoc, category.assoc, limit.lift_π, fan.mk_π_app, limit.lift_π, fan.mk_π_app]
   -- The issue here is that `index_of_hom U (hom_of_index U j)` need not be equal to `j`.

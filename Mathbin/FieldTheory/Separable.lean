@@ -397,6 +397,7 @@ theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separab
   · exact nodup_roots (separable.map h_sep)
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem exists_finset_of_splits (i : F →+* K) {f : F[X]} (sep : Separable f) (sp : Splits i f) :
     ∃ s : Finset K, f.map i = c (i f.leadingCoeff) * s.Prod fun a : K => (x : K[X]) - c a := by
   classical

@@ -47,7 +47,7 @@ protected def order : Language :=
 namespace Order
 
 instance structure [LE M] : Language.order.Structure M :=
-  Structure.mk₂ Empty.elimₓ Empty.elimₓ Empty.elimₓ Empty.elimₓ fun _ => (· ≤ ·)
+  Structure.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => (· ≤ ·)
 
 instance : IsRelational Language.order :=
   language.is_relational_mk₂
@@ -80,7 +80,7 @@ variable (L)
 /-- The language homomorphism sending the unique symbol `≤` of `language.order` to `≤` in an ordered
  language. -/
 def orderLhom : language.order →ᴸ L :=
-  Lhom.mk₂ Empty.elimₓ Empty.elimₓ Empty.elimₓ Empty.elimₓ fun _ => leSymb
+  Lhom.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => leSymb
 
 end IsOrdered
 

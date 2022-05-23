@@ -460,6 +460,7 @@ theorem mul_indicator_finset_prod (I : Finset ι) (s : Set α) (f : ι → α �
     mulIndicator s (∏ i in I, f i) = ∏ i in I, mulIndicator s (f i) :=
   (mulIndicatorHom M s).map_prod _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem mul_indicator_finset_bUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
     (∀, ∀ i ∈ I, ∀, ∀ j ∈ I, ∀, i ≠ j → Disjoint (s i) (s j)) →
@@ -533,6 +534,22 @@ theorem indicator_prod_one {s : Set α} {t : Set β} {x : α} {y : β} :
   let this := Classical.decPred (· ∈ s)
   let this := Classical.decPred (· ∈ t)
   simp [indicator_apply, ← ite_and]
+
+variable (M) [Nontrivial M]
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem indicator_eq_zero_iff_not_mem {U : Set α} {x : α} : indicatorₓ U 1 x = (0 : M) ↔ x ∉ U := by
+  classical
+  simp [indicator_apply, imp_false]
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem indicator_eq_one_iff_mem {U : Set α} {x : α} : indicatorₓ U 1 x = (1 : M) ↔ x ∈ U := by
+  classical
+  simp [indicator_apply, imp_false]
+
+theorem indicator_one_inj {U V : Set α} (h : indicatorₓ U (1 : α → M) = indicatorₓ V 1) : U = V := by
+  ext
+  simp_rw [← indicator_eq_one_iff_mem M, h]
 
 end MulZeroOneClassₓ
 
@@ -638,6 +655,7 @@ theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀, ∀ a ∈ s, 
 
 end CanonicallyOrderedMonoid
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem indicator_le_indicator_nonneg {β} [LinearOrderₓ β] [Zero β] (s : Set α) (f : α → β) :
     s.indicator f ≤ { x | 0 ≤ f x }.indicator f := by
   intro x

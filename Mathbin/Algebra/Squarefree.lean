@@ -99,6 +99,7 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero R] [WfDvdMonoid R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity.Finite a b := by
   classical
   revert hb
@@ -169,6 +170,7 @@ variable [CancelCommMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid 
 
 variable [NormalizationMonoid R]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x ≠ 0) :
     Squarefree x ↔ Multiset.Nodup (normalizedFactors x) := by
   have drel : DecidableRel (Dvd.Dvd : R → R → Prop) := by
@@ -203,6 +205,7 @@ theorem squarefree_iff_nodup_normalized_factors [DecidableEq R] {x : R} (x0 : x 
     assumption_mod_cast
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dvd_pow_iff_dvd_of_squarefree {x y : R} {n : ℕ} (hsq : Squarefree x) (h0 : n ≠ 0) : x ∣ y ^ n ↔ x ∣ y := by
   classical
   by_cases' hx : x = 0

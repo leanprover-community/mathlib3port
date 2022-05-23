@@ -13,43 +13,39 @@ import Mathbin.CategoryTheory.Opposites
 A category is finite in this sense if it has finitely many objects, and finitely many morphisms.
 
 ## Implementation
-
-We also ask for decidable equality of objects and morphisms, but it may be reasonable to just
-go classical in future.
+Prior to #14046, `fin_category` required a `decidable_eq` instance on the object and morphism types.
+This does not seem to have had any practical payoff (i.e. making some definition constructive)
+so we have removed these requirements to avoid
+having to supply instances or delay with non-defeq conflicts between instances.
 -/
 
 
 universe v u
 
+open Classical
+
+noncomputable section
+
 namespace CategoryTheory
 
-instance discreteFintype {α : Type _} [Fintype α] : Fintype (Discrete α) := by
-  dsimp' [discrete]
-  infer_instance
+instance discreteFintype {α : Type _} [Fintype α] : Fintype (Discrete α) :=
+  Fintype.ofEquiv α discreteEquiv.symm
 
-instance discreteHomFintype {α : Type _} [DecidableEq α] (X Y : Discrete α) : Fintype (X ⟶ Y) := by
+instance discreteHomFintype {α : Type _} (X Y : Discrete α) : Fintype (X ⟶ Y) := by
   apply ULift.fintype
 
 /-- A category with a `fintype` of objects, and a `fintype` for each morphism space. -/
 class FinCategory (J : Type v) [SmallCategory J] where
-  decidableEqObj : DecidableEq J := by
-    run_tac
-      tactic.apply_instance
   fintypeObj : Fintype J := by
-    run_tac
-      tactic.apply_instance
-  decidableEqHom : ∀ j j' : J, DecidableEq (j ⟶ j') := by
     run_tac
       tactic.apply_instance
   fintypeHom : ∀ j j' : J, Fintype (j ⟶ j') := by
     run_tac
       tactic.apply_instance
 
-attribute [instance]
-  fin_category.decidable_eq_obj fin_category.fintype_obj fin_category.decidable_eq_hom fin_category.fintype_hom
+attribute [instance] fin_category.fintype_obj fin_category.fintype_hom
 
--- We need a `decidable_eq` instance here to construct `fintype` on the morphism spaces.
-instance finCategoryDiscreteOfDecidableFintype (J : Type v) [DecidableEq J] [Fintype J] : FinCategory (Discrete J) :=
+instance finCategoryDiscreteOfFintype (J : Type v) [Fintype J] : FinCategory (Discrete J) :=
   {  }
 
 namespace FinCategory
@@ -114,9 +110,7 @@ open Opposite
 /-- The opposite of a finite category is finite.
 -/
 instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : FinCategory Jᵒᵖ where
-  decidableEqObj := Equivₓ.decidableEq equivToOpposite.symm
   fintypeObj := Fintype.ofEquiv _ equivToOpposite
-  decidableEqHom := fun j j' => Equivₓ.decidableEq (opEquiv j j')
   fintypeHom := fun j j' => Fintype.ofEquiv _ (opEquiv j j').symm
 
 end CategoryTheory

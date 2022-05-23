@@ -118,6 +118,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
 
 end Polynomial
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem prod_univ_units_id_eq_neg_one [CommRingₓ K] [IsDomain K] [Fintype Kˣ] : (∏ x : Kˣ, x) = (-1 : Kˣ) := by
   classical
   have : (∏ x in (@univ Kˣ _).erase (-1), x) = 1 :=
@@ -136,6 +137,7 @@ section
 
 variable [GroupWithZeroₓ K] [Fintype K]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 :=
   calc
     a ^ (Fintype.card K - 1) = (Units.mk0 a ha ^ (Fintype.card K - 1) : Kˣ) := by
@@ -192,6 +194,7 @@ theorem cast_card_eq_zero : (q : K) = 0 := by
   conv => congr rw [← pow_oneₓ p]
   exact pow_dvd_pow _ n.2
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣ i := by
   classical
   obtain ⟨x, hx⟩ := IsCyclic.exists_generator Kˣ
@@ -206,6 +209,7 @@ theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣
     rw [← pow_mulₓ, mul_comm, pow_mulₓ, h, one_pow]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The sum of `x ^ i` as `x` ranges over the units of a finite field of cardinality `q`
 is equal to `0` unless `(q - 1) ∣ i`, in which case the sum is `q - 1`. -/
 theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if q - 1 ∣ i then -1 else 0 := by
@@ -234,6 +238,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : (∑ x : Kˣ, (x ^ i : K)) = if 
   rw [Units.ext_iff, Units.coe_pow, Units.coe_one, MonoidHom.one_apply]
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The sum of `x ^ i` as `x` ranges over a finite field of cardinality `q`
 is equal to `0` if `i < q - 1`. -/
 theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) = 0 := by
@@ -289,6 +294,7 @@ end
 
 variable (p : ℕ) [Fact p.Prime] [CharP K p]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
   classical
   have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
@@ -304,6 +310,7 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
       zero_mul, zero_sub]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance : IsSplittingField (Zmod p) K (X ^ q - X) where
   Splits := by
     have h : (X ^ q - X : K[X]).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
@@ -313,7 +320,6 @@ instance : IsSplittingField (Zmod p) K (X ^ q - X) where
     classical
     trans Algebra.adjoin (Zmod p) ((roots (X ^ q - X : K[X])).toFinset : Set K)
     · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
-      convert rfl
       
     · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
       
@@ -347,7 +353,7 @@ namespace Zmod
 
 open FiniteField Polynomial
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : Zmod p) : ∃ a b : Zmod p, a ^ 2 + b ^ 2 = x := by
   cases' hp.1.eq_two_or_odd with hp2 hp_odd
   · subst p

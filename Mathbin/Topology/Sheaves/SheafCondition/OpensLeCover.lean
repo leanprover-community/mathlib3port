@@ -143,15 +143,15 @@ of all opens contained in some `U i`.
 instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     is_connected_of_zigzag fun A B => by
-      rcases A with ⟨⟨⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp'  at *
-      · refine' ⟨[{ left := PUnit.unit, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
+      rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩ <;> dsimp'  at *
+      · refine' ⟨[{ left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf a.le b.le).Hom }, _], _, rfl⟩
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i i' }⟩)
             (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil)
         
       · refine'
-          ⟨[{ left := PUnit.unit, right := pair i' i, Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
-              { left := PUnit.unit, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
+          ⟨[{ left := ⟨⟨⟩⟩, right := pair i' i, Hom := (le_inf (b.le.trans inf_le_left) a.le).Hom },
+              { left := ⟨⟨⟩⟩, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
             _, rfl⟩
         exact
           List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := right i' i }⟩)
@@ -159,8 +159,8 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
               (List.Chain.cons (Or.inr ⟨{ left := 𝟙 _, right := left i' j' }⟩) List.Chain.nil))
         
       · refine'
-          ⟨[{ left := PUnit.unit, right := single i, Hom := (a.le.trans inf_le_left).Hom },
-              { left := PUnit.unit, right := pair i i', Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom }, _],
+          ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
+              { left := ⟨⟨⟩⟩, right := pair i i', Hom := (le_inf (a.le.trans inf_le_left) b.le).Hom }, _],
             _, rfl⟩
         exact
           List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
@@ -168,10 +168,10 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
               (List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := right i i' }⟩) List.Chain.nil))
         
       · refine'
-          ⟨[{ left := PUnit.unit, right := single i, Hom := (a.le.trans inf_le_left).Hom },
-              { left := PUnit.unit, right := pair i i',
+          ⟨[{ left := ⟨⟨⟩⟩, right := single i, Hom := (a.le.trans inf_le_left).Hom },
+              { left := ⟨⟨⟩⟩, right := pair i i',
                 Hom := (le_inf (a.le.trans inf_le_left) (b.le.trans inf_le_left)).Hom },
-              { left := PUnit.unit, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
+              { left := ⟨⟨⟩⟩, right := single i', Hom := (b.le.trans inf_le_left).Hom }, _],
             _, rfl⟩
         exact
           List.Chain.cons (Or.inl ⟨{ left := 𝟙 _, right := left i j }⟩)
@@ -304,10 +304,10 @@ def whiskerIsoMapGenerateCocone :
         congr }
   hom_inv_id' := by
     ext
-    simp
+    simp [eq_to_hom_map]
   inv_hom_id' := by
     ext
-    simp
+    simp [eq_to_hom_map]
 
 /-- Given a presheaf `F` on the topological space `X` and a family of opens `U` of `X`,
     the natural cone associated to `F` and `U` used in the definition of

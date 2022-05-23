@@ -46,7 +46,7 @@ open BigOperators Classical Affine
 
 namespace Finset
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem univ_fin2 : (univ : Finset (Finₓ 2)) = {0, 1} := by
   ext x
   fin_cases x <;> simp
@@ -504,7 +504,7 @@ theorem centroid_singleton (p : ι → P) (i : ι) : ({i} : Finset ι).centroid 
 
 /-- The centroid of two points, expressed directly as adding a vector
 to a point. -/
-theorem centroid_insert_singleton [Invertible (2 : k)] (p : ι → P) (i₁ i₂ : ι) :
+theorem centroid_pair [Invertible (2 : k)] (p : ι → P) (i₁ i₂ : ι) :
     ({i₁, i₂} : Finset ι).centroid k p = (2⁻¹ : k) • (p i₂ -ᵥ p i₁) +ᵥ p i₁ := by
   by_cases' h : i₁ = i₂
   · simp [h]
@@ -521,10 +521,10 @@ theorem centroid_insert_singleton [Invertible (2 : k)] (p : ι → P) (i₁ i₂
 
 /-- The centroid of two points indexed by `fin 2`, expressed directly
 as adding a vector to the first point. -/
-theorem centroid_insert_singleton_fin [Invertible (2 : k)] (p : Finₓ 2 → P) :
-    univ.centroid k p = (2⁻¹ : k) • (p 1 -ᵥ p 0) +ᵥ p 0 := by
+theorem centroid_pair_fin [Invertible (2 : k)] (p : Finₓ 2 → P) : univ.centroid k p = (2⁻¹ : k) • (p 1 -ᵥ p 0) +ᵥ p 0 :=
+  by
   rw [univ_fin2]
-  convert centroid_insert_singleton k p 0 1
+  convert centroid_pair k p 0 1
 
 /-- A centroid, over the image of an embedding, equals a centroid with
 the same points and weights over the original `finset`. -/
@@ -778,6 +778,7 @@ theorem mem_affine_span_iff_eq_affine_combination [Nontrivial k] {p1 : P} {p : �
     exact affine_combination_mem_affine_span hw p
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a family of points together with a chosen base point in that family, membership of the
 affine span of this family corresponds to an identity in terms of `weighted_vsub_of_point`, with
 weights that are not required to sum to 1. -/

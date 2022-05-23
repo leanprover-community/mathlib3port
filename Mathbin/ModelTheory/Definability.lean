@@ -94,6 +94,7 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union_eq, mem_set_of_eq, mem_set_of_eq]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.inf f) := by
   classical
@@ -101,6 +102,7 @@ theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
   rw [Finset.inf_insert]
   exact (hf i).inter h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) :
     A.Definable L (s.sup f) := by
   classical
@@ -168,6 +170,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Finₓ m) �
     exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β) [Fintype β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -181,6 +184,7 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
   refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
   simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Fintype α] [Fintype β] :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by

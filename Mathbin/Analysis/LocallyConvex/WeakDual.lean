@@ -53,7 +53,7 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ
 def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E where
   toFun := fun x => ∥f x∥
   smul' := fun a x => by
-    simp only [map_smulₛₗ, RingHom.id_apply, smul_eq_mul, norm_mul]
+    simp only [map_smul, RingHom.id_apply, smul_eq_mul, norm_mul]
   triangle' := fun x x' => by
     simp only [map_add, add_apply]
     exact norm_add_le _ _

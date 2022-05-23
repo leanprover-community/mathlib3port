@@ -181,7 +181,8 @@ theorem map_linear_map_add_haar_pi_eq_smul_add_haar {ι : Type _} [Fintype ι] {
   /- We have already proved the result for the Lebesgue product measure, using matrices.
     We deduce it for any Haar measure by uniqueness (up to scalar multiplication). -/
   have := add_haar_measure_unique μ (pi_Icc01 ι)
-  rw [this, add_haar_measure_eq_volume_pi, map_smul, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf, smul_comm]
+  rw [this, add_haar_measure_eq_volume_pi, measure.map_smul, Real.map_linear_map_volume_pi_eq_smul_volume_pi hf,
+    smul_comm]
 
 theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) :
@@ -212,8 +213,8 @@ theorem map_linear_map_add_haar_eq_smul_add_haar {E : Type _} [NormedGroup E] [N
   have ecomp : e.symm ∘ e = id := by
     ext x
     simp only [id.def, Function.comp_app, LinearEquiv.symm_apply_apply]
-  rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), map_smul, map_map Cesymm.measurable Ce.measurable,
-    ecomp, measure.map_id]
+  rw [map_linear_map_add_haar_pi_eq_smul_add_haar hf (map e μ), measure.map_smul,
+    map_map Cesymm.measurable Ce.measurable, ecomp, measure.map_id]
 
 /-- The preimage of a set `s` under a linear map `f` with nonzero determinant has measure
 equal to `μ s` times the absolute value of the inverse of the determinant of `f`. -/
@@ -290,7 +291,7 @@ equal to `μ s` times the absolute value of the determinant of `f`. -/
 theorem add_haar_image_continuous_linear_equiv {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ] (f : E ≃L[ℝ] E) (s : Set E) :
     μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
-  add_haar_image_linear_map μ _ s
+  μ.add_haar_image_linear_map (f : E →ₗ[ℝ] E) s
 
 /-!
 ### Basic properties of Haar measures on real vector spaces
@@ -325,7 +326,7 @@ theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
 @[simp]
 theorem add_haar_smul (r : ℝ) (s : Set E) : μ (r • s) = Ennreal.ofReal (abs (r ^ finrank ℝ E)) * μ s := by
   rcases ne_or_eq r 0 with (h | rfl)
-  · rw [← preimage_smul_inv₀ h, add_haar_preimage_smul μ (inv_ne_zero h), inv_pow₀, inv_invₓ]
+  · rw [← preimage_smul_inv₀ h, add_haar_preimage_smul μ (inv_ne_zero h), inv_pow, inv_invₓ]
     
   rcases eq_empty_or_nonempty s with (rfl | hs)
   · simp only [measure_empty, mul_zero, smul_set_empty]
@@ -556,7 +557,7 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E
   have A : tendsto (fun r : ℝ => μ (s ∩ ({x} + r • t')) / μ ({x} + r • u')) (𝓝[>] 0) (𝓝 0) := by
     apply tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 μ s x h t' u'
     · simp only [h'u, (pow_pos Rpos _).ne', abs_nonpos_iff, add_haar_smul, not_false_iff, Ennreal.of_real_eq_zero,
-        inv_eq_zero, inv_pow₀, Ne.def, or_selfₓ, mul_eq_zero]
+        inv_eq_zero, inv_pow, Ne.def, or_selfₓ, mul_eq_zero]
       
     · convert smul_set_mono t_bound
       rw [smul_closed_ball _ _ Rpos.le, smul_zero, Real.norm_of_nonneg (inv_nonneg.2 Rpos.le), inv_mul_cancel Rpos.ne']

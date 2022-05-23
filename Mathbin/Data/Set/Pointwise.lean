@@ -30,10 +30,7 @@ For sets `s` and `t` and scalar `a`:
 For `α` a semigroup/monoid, `set α` is a semigroup/monoid.
 As an unfortunate side effect, this means that `n • s`, where `n : ℕ`, is ambiguous between
 pointwise scaling and repeated pointwise addition; the former has `(2 : ℕ) • {1, 2} = {2, 4}`, while
-the latter has `(2 : ℕ) • {1, 2} = {2, 3, 4}`.
-
-We define `set_semiring α`, an alias of `set α`, which we endow with `∪` as addition and `*` as
-multiplication. If `α` is a (commutative) monoid, `set_semiring α` is a (commutative) semiring.
+the latter has `(2 : ℕ) • {1, 2} = {2, 3, 4}`. See note [pointwise nat action].
 
 Appropriate definitions and results are also transported to the additive theory via `to_additive`.
 
@@ -52,6 +49,19 @@ Appropriate definitions and results are also transported to the additive theory 
 
 set multiplication, set addition, pointwise addition, pointwise multiplication,
 pointwise subtraction
+-/
+
+
+library_note "pointwise nat action"/--
+Pointwise monoids (`set`, `finset`, `filter`) have derived pointwise actions of the form
+`has_scalar α β → has_scalar α (set β)`. When `α` is `ℕ` or `ℤ`, this action conflicts with the
+nat or int action coming from `set β` being a `monoid` or `div_inv_monoid`. For example,
+`2 • {a, b}` can both be `{2 • a, 2 • b}` (pointwise action, pointwise repeated addition,
+`set.has_scalar_set`) and `{a + a, a + b, b + a, b + b}` (nat or int action, repeated pointwise
+addition, `set.has_nsmul`).
+
+Because the pointwise action can easily be spelled out in such cases, we give higher priority to the
+nat and int actions.
 -/
 
 
@@ -567,6 +577,32 @@ theorem div_Inter₂_subset (s : Set α) (t : ∀ i, κ i → Set α) : (s / ⋂
 
 end Div
 
+open Pointwise
+
+/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. See
+note [pointwise nat action].-/
+protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Set α) :=
+  ⟨nsmulRec⟩
+
+/-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
+`set`. See note [pointwise nat action]. -/
+@[to_additive]
+protected def hasNpow [One α] [Mul α] : Pow (Set α) ℕ :=
+  ⟨fun s n => npowRec n s⟩
+
+/-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
+addition/subtraction!) of a `set`. See note [pointwise nat action]. -/
+protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Set α) :=
+  ⟨zsmulRec⟩
+
+/-- Repeated pointwise multiplication/division (not the same as pointwise repeated
+multiplication/division!) of a `set`. See note [pointwise nat action]. -/
+@[to_additive]
+protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Set α) ℤ :=
+  ⟨fun s n => zpowRec n s⟩
+
+localized [Pointwise] attribute [instance] Set.hasNsmul Set.hasNpow Set.hasZsmul Set.hasZpow
+
 /-- `set α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_semigroup` under pointwise operations if `α` is."]
 protected def semigroup [Semigroupₓ α] : Semigroupₓ (Set α) :=
@@ -623,7 +659,7 @@ variable [Monoidₓ α] {s t : Set α} {a : α}
 /-- `set α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`set α` is an `add_monoid` under pointwise operations if `α` is."]
 protected def monoid : Monoidₓ (Set α) :=
-  { Set.semigroup, Set.mulOneClass with }
+  { Set.semigroup, Set.mulOneClass, Set.hasNpow with }
 
 localized [Pointwise] attribute [instance] Set.monoid Set.addMonoid
 
@@ -684,27 +720,6 @@ localized [Pointwise] attribute [instance] Set.commMonoid Set.addCommMonoid
 
 open Pointwise
 
-/-- Repeated pointwise addition (not the same as pointwise repeated addition!) of a `finset`. -/
-protected def hasNsmul [Zero α] [Add α] : HasScalar ℕ (Set α) :=
-  ⟨nsmulRec⟩
-
-/-- Repeated pointwise multiplication (not the same as pointwise repeated multiplication!) of a
-`set`. -/
-@[to_additive]
-protected def hasNpow [One α] [Mul α] : Pow (Set α) ℕ :=
-  ⟨fun s n => npowRec n s⟩
-
-/-- Repeated pointwise addition/subtraction (not the same as pointwise repeated
-addition/subtraction!) of a `set`. -/
-protected def hasZsmul [Zero α] [Add α] [Neg α] : HasScalar ℤ (Set α) :=
-  ⟨zsmulRec⟩
-
-/-- Repeated pointwise multiplication/division (not the same as pointwise repeated
-multiplication/division!) of a `set`. -/
-@[to_additive]
-protected def hasZpow [One α] [Mul α] [Inv α] : Pow (Set α) ℤ :=
-  ⟨fun s n => zpowRec n s⟩
-
 section DivisionMonoid
 
 variable [DivisionMonoid α] {s t : Set α}
@@ -729,7 +744,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
 /-- `set α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive SubtractionMonoid "`set α` is a subtraction monoid under pointwise operations if `α`\nis."]
 protected def divisionMonoid : DivisionMonoid (Set α) :=
-  { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv with
+  { Set.monoid, Set.hasInvolutiveInv, Set.hasDiv, Set.hasZpow with
     mul_inv_rev := fun s t => by
       simp_rw [← image_inv]
       exact image_image2_antidistrib mul_inv_rev,
@@ -761,8 +776,37 @@ end DivisionMonoid
 protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Set α) :=
   { Set.divisionMonoid, Set.commSemigroup with }
 
+/-- `set α` has distributive negation if `α` has. -/
+protected def hasDistribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Set α) :=
+  { Set.hasInvolutiveNeg with
+    neg_mul := fun _ _ => by
+      simp_rw [← image_neg]
+      exact image2_image_left_comm neg_mul,
+    mul_neg := fun _ _ => by
+      simp_rw [← image_neg]
+      exact image_image2_right_comm mul_neg }
+
 localized [Pointwise]
-  attribute [instance] Set.divisionMonoid Set.subtractionMonoid Set.divisionCommMonoid Set.subtractionCommMonoid
+  attribute [instance]
+    Set.divisionMonoid Set.subtractionMonoid Set.divisionCommMonoid Set.subtractionCommMonoid Set.hasDistribNeg
+
+section Distribₓ
+
+variable [Distribₓ α] (s t u : Set α)
+
+/-!
+Note that `set α` is not a `distrib` because `s * t + s * u` has cross terms that `s * (t + u)`
+lacks.
+-/
+
+
+theorem mul_add_subset : s * (t + u) ⊆ s * t + s * u :=
+  image2_distrib_subset_left mul_addₓ
+
+theorem add_mul_subset : (s + t) * u ⊆ s * u + t * u :=
+  image2_distrib_subset_right add_mulₓ
+
+end Distribₓ
 
 section Groupₓ
 
@@ -846,6 +890,7 @@ open BigOperators
 
 variable {ι : Type _} [CommMonoidₓ α]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
@@ -1402,82 +1447,15 @@ theorem smul_set_neg : a • -t = -(a • t) := by
 
 @[simp]
 protected theorem neg_smul : -s • t = -(s • t) := by
-  simp_rw [← image2_smul, ← image_neg, image2_image_left, image_image2, neg_smul]
+  simp_rw [← image_neg]
+  exact image2_image_left_comm neg_smul
 
 @[simp]
 protected theorem smul_neg : s • -t = -(s • t) := by
-  simp_rw [← image2_smul, ← image_neg, image2_image_right, image_image2, smul_neg]
+  simp_rw [← image_neg]
+  exact image_image2_right_comm smul_neg
 
 end Ringₓ
-
-section Monoidₓ
-
-/-! ### `set α` as a `(∪, *)`-semiring -/
-
-
-/-- An alias for `set α`, which has a semiring structure given by `∪` as "addition" and pointwise
-  multiplication `*` as "multiplication". -/
-def SetSemiring (α : Type _) : Type _ :=
-  Set α deriving Inhabited, PartialOrderₓ, OrderBot
-
-/-- The identity function `set α → set_semiring α`. -/
-protected def Up (s : Set α) : SetSemiring α :=
-  s
-
-/-- The identity function `set_semiring α → set α`. -/
-protected def SetSemiring.Down (s : SetSemiring α) : Set α :=
-  s
-
-@[simp]
-protected theorem down_up {s : Set α} : s.up.down = s :=
-  rfl
-
-@[simp]
-protected theorem up_down {s : SetSemiring α} : s.down.up = s :=
-  rfl
-
--- This lemma is not tagged `simp`, since otherwise the linter complains.
-theorem up_le_up {s t : Set α} : s.up ≤ t.up ↔ s ⊆ t :=
-  Iff.rfl
-
--- This lemma is not tagged `simp`, since otherwise the linter complains.
-theorem up_lt_up {s t : Set α} : s.up < t.up ↔ s ⊂ t :=
-  Iff.rfl
-
-@[simp]
-theorem down_subset_down {s t : SetSemiring α} : s.down ⊆ t.down ↔ s ≤ t :=
-  Iff.rfl
-
-@[simp]
-theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :=
-  Iff.rfl
-
-instance SetSemiring.addCommMonoid : AddCommMonoidₓ (SetSemiring α) where
-  add := fun s t => (s ∪ t : Set α)
-  zero := (∅ : Set α)
-  add_assoc := union_assoc
-  zero_add := empty_union
-  add_zero := union_empty
-  add_comm := union_comm
-
-instance SetSemiring.nonUnitalNonAssocSemiring [Mul α] : NonUnitalNonAssocSemiringₓ (SetSemiring α) :=
-  { Set.hasMul, SetSemiring.addCommMonoid with zero_mul := fun s => empty_mul, mul_zero := fun s => mul_empty,
-    left_distrib := fun _ _ _ => mul_union, right_distrib := fun _ _ _ => union_mul }
-
-instance SetSemiring.nonAssocSemiring [MulOneClassₓ α] : NonAssocSemiringₓ (SetSemiring α) :=
-  { SetSemiring.nonUnitalNonAssocSemiring, Set.mulOneClass with }
-
-instance SetSemiring.nonUnitalSemiring [Semigroupₓ α] : NonUnitalSemiringₓ (SetSemiring α) :=
-  { SetSemiring.nonUnitalNonAssocSemiring, Set.semigroup with }
-
-instance SetSemiring.semiring [Monoidₓ α] : Semiringₓ (SetSemiring α) :=
-  { SetSemiring.nonAssocSemiring, SetSemiring.nonUnitalSemiring with }
-
-instance SetSemiring.nonUnitalCommSemiring [CommSemigroupₓ α] : NonUnitalCommSemiring (SetSemiring α) :=
-  { SetSemiring.nonUnitalSemiring, Set.commSemigroup with }
-
-instance SetSemiring.commSemiring [CommMonoidₓ α] : CommSemiringₓ (SetSemiring α) :=
-  { Set.commMonoid, SetSemiring.semiring with }
 
 section MulHom
 
@@ -1492,59 +1470,7 @@ theorem preimage_mul_preimage_subset {s t : Set β} : (m : α → β) ⁻¹' s *
   rintro _ ⟨_, _, _, _, rfl⟩
   exact ⟨_, _, ‹_›, ‹_›, (map_mul m _ _).symm⟩
 
-instance SetSemiring.no_zero_divisors : NoZeroDivisors (SetSemiring α) :=
-  ⟨fun a b ab =>
-    a.eq_empty_or_nonempty.imp_right fun ha =>
-      b.eq_empty_or_nonempty.resolve_right fun hb => Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
-
-/- Since addition on `set_semiring` is commutative (it is set union), there is no need
-to also have the instance `covariant_class (set_semiring α) (set_semiring α) (swap (+)) (≤)`. -/
-instance SetSemiring.covariant_class_add : CovariantClass (SetSemiring α) (SetSemiring α) (· + ·) (· ≤ ·) where
-  elim := fun a b c => union_subset_union_right _
-
-instance SetSemiring.covariant_class_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) where
-  elim := fun a b c => mul_subset_mul_left
-
-instance SetSemiring.covariant_class_mul_right :
-    CovariantClass (SetSemiring α) (SetSemiring α) (swap (· * ·)) (· ≤ ·) where
-  elim := fun a b c => mul_subset_mul_right
-
 end MulHom
-
-/-- The image of a set under a multiplicative homomorphism is a ring homomorphism
-with respect to the pointwise operations on sets. -/
-def imageHom [Monoidₓ α] [Monoidₓ β] (f : α →* β) : SetSemiring α →+* SetSemiring β where
-  toFun := Image f
-  map_zero' := image_empty _
-  map_one' := by
-    simp only [← singleton_one, image_singleton, f.map_one]
-  map_add' := image_union _
-  map_mul' := fun _ _ => image_mul f
-
-end Monoidₓ
-
-section CommMonoidₓ
-
-variable [CommMonoidₓ α]
-
-instance : CanonicallyOrderedCommSemiring (SetSemiring α) :=
-  { (inferInstance : CommSemiringₓ (SetSemiring α)), (inferInstance : PartialOrderₓ (SetSemiring α)),
-    (inferInstance : OrderBot (SetSemiring α)), (inferInstance : NoZeroDivisors (SetSemiring α)) with
-    add_le_add_left := fun a b => add_le_add_left,
-    le_iff_exists_add := fun a b =>
-      ⟨fun ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩, by
-        rintro ⟨c, rfl⟩
-        exact subset_union_left _ _⟩ }
-
-end CommMonoidₓ
-
-end Set
-
-open Set
-
-open Pointwise
-
-section
 
 section SmulWithZero
 
@@ -1587,10 +1513,6 @@ theorem zero_mem_smul_set_iff (ha : a ≠ 0) : (0 : β) ∈ a • t ↔ (0 : β)
   rwa [(eq_zero_or_eq_zero_of_smul_eq_zero h).resolve_left ha] at hb
 
 end SmulWithZero
-
-theorem smul_add_set [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β] (c : α) (s t : Set β) :
-    c • (s + t) = c • s + c • t :=
-  image_add (DistribMulAction.toAddMonoidHom β c).toAddHom
 
 section Groupₓ
 
@@ -1673,7 +1595,14 @@ theorem smul_set_univ₀ (ha : a ≠ 0) : a • (Univ : Set β) = univ :=
 
 end GroupWithZeroₓ
 
-end
+end Set
+
+/-! ### Miscellaneous -/
+
+
+open Set
+
+open Pointwise
 
 /-! Some lemmas about pointwise multiplication and submonoids. Ideally we put these in
   `group_theory.submonoid.basic`, but currently we cannot because that file is imported by this. -/
@@ -1759,6 +1688,7 @@ theorem card_pow_eq_card_pow_card_univ_aux {f : ℕ → ℕ} (h1 : Monotone f) {
 
 variable {G : Type _} [Groupₓ G] [Fintype G] (S : Set G)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[["!"]]
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
     ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) := by

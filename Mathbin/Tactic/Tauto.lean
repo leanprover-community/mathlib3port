@@ -236,7 +236,7 @@ unsafe def tautology (cfg : tauto_cfg := {  }) : tactic Unit :=
             let gs' ← get_goals
             guardₓ (gs ≠ gs'))
     do
-    when cfg classical
+    when cfg (classical tt)
     andthen (andthen (using_new_ref (expr_map.mk _) tauto_core) (repeat (first basic_tauto_tacs))) cfg
     done
 

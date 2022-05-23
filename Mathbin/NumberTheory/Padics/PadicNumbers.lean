@@ -1009,7 +1009,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} hq : ¬p ∣ q.denom, ∥(q : ℚ_[p])�
       norm_cast
       rw [padicNorm.eq_zpow_of_nonzero p hnz', padicValRat, neg_sub, padicValNat.eq_zero_of_not_dvd hq]
       norm_cast
-      rw [zero_sub, zpow_neg₀, zpow_coe_nat]
+      rw [zero_sub, zpow_neg, zpow_coe_nat]
       apply inv_le_one
       · norm_cast
         apply one_le_pow

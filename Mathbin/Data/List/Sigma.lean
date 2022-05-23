@@ -128,6 +128,7 @@ theorem nodupkeys_join {L : List (List (Sigma β))} :
 theorem nodup_enum_map_fst (l : List α) : (l.enum.map Prod.fst).Nodup := by
   simp [List.nodup_range]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.Nodup) (nd₁ : l₁.Nodup) (h : ∀ x, x ∈ l₀ ↔ x ∈ l₁) : l₀ ~ l₁ := by
   induction' l₀ with x xs generalizing l₁ <;> cases' l₁ with y ys
   · constructor

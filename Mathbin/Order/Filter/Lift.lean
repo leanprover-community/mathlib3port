@@ -177,18 +177,37 @@ theorem lift_principal2 {f : Filter α} : f.lift 𝓟 = f :=
       le_infi fun hs => by
         simp only [hs, le_principal_iff])
 
-theorem lift_infi {f : ι → Filter α} {g : Set α → Filter β} [hι : Nonempty ι] (hg : ∀ {s t}, g s⊓g t = g (s ∩ t)) :
-    (infi f).lift g = ⨅ i, (f i).lift g :=
-  le_antisymmₓ (le_infi fun i => lift_mono (infi_le _ _) le_rfl) fun s => by
-    have g_mono : Monotone g := fun s t h =>
-      le_of_inf_eq <| Eq.trans hg <| congr_argₓ g <| inter_eq_self_of_subset_left h
-    have : ∀, ∀ t ∈ infi f, ∀, (⨅ i : ι, Filter.lift (f i) g) ≤ g t := fun t ht =>
-      infi_sets_induct ht
-        (let ⟨i⟩ := hι
-        infi_le_of_le i <| infi_le_of_le Univ <| infi_le _ univ_mem)
-        fun i s₁ s₂ hs₁ hs₂ => @hg s₁ s₂ ▸ le_inf (infi_le_of_le i <| infi_le_of_le s₁ <| infi_le _ hs₁) hs₂
-    simp only [mem_lift_sets g_mono, exists_imp_distrib]
-    exact fun t ht hs => this t ht hs
+theorem lift_infi_le {f : ι → Filter α} {g : Set α → Filter β} : (infi f).lift g ≤ ⨅ i, (f i).lift g :=
+  le_infi fun i => lift_mono (infi_le _ _) le_rfl
+
+theorem lift_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s⊓g t) :
+    (infi f).lift g = ⨅ i, (f i).lift g := by
+  refine' lift_infi_le.antisymm fun s => _
+  have H : ∀, ∀ t ∈ infi f, ∀, (⨅ i, (f i).lift g) ≤ g t := by
+    intro t ht
+    refine' infi_sets_induct ht _ fun i s t hs ht => _
+    · inhabit ι
+      exact infi₂_le_of_le default univ (infi_le _ univ_mem)
+      
+    · rw [hg]
+      exact le_inf (infi₂_le_of_le i s <| infi_le _ hs) ht
+      
+  simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp_distrib]
+  exact fun t ht hs => H t ht hs
+
+theorem lift_infi_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β} (hf : Directed (· ≥ ·) f)
+    (hg : Monotone g) : (infi f).lift g = ⨅ i, (f i).lift g :=
+  lift_infi_le.antisymm fun s => by
+    simp only [mem_lift_sets hg, exists_imp_distrib, mem_infi_of_directed hf]
+    exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
+
+theorem lift_infi_of_map_univ {f : ι → Filter α} {g : Set α → Filter β} (hg : ∀ s t, g (s ∩ t) = g s⊓g t)
+    (hg' : g Univ = ⊤) : (infi f).lift g = ⨅ i, (f i).lift g := by
+  cases is_empty_or_nonempty ι
+  · simp [infi_of_empty, hg']
+    
+  · exact lift_infi hg
+    
 
 end lift
 
@@ -313,19 +332,20 @@ theorem le_lift' {f : Filter α} {h : Set α → Set β} {g : Filter β} (h_le :
     le_infi fun hs => by
       simpa only [h_le, le_principal_iff, Function.comp_app] using h_le s hs
 
-theorem lift_infi' {f : ι → Filter α} {g : Set α → Filter β} [Nonempty ι] (hf : Directed (· ≥ ·) f) (hg : Monotone g) :
-    (infi f).lift g = ⨅ i, (f i).lift g :=
-  le_antisymmₓ (le_infi fun i => lift_mono (infi_le _ _) le_rfl) fun s => by
-    rw [mem_lift_sets hg]
-    simp only [exists_imp_distrib, mem_infi_of_directed hf]
-    exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
-
-theorem lift'_infi {f : ι → Filter α} {g : Set α → Set β} [Nonempty ι] (hg : ∀ {s t}, g s ∩ g t = g (s ∩ t)) :
+theorem lift'_infi [Nonempty ι] {f : ι → Filter α} {g : Set α → Set β} (hg : ∀ s t, g (s ∩ t) = g s ∩ g t) :
     (infi f).lift' g = ⨅ i, (f i).lift' g :=
   lift_infi fun s t => by
-    simp only [principal_eq_iff_eq, inf_principal, (· ∘ ·), hg]
+    rw [inf_principal, (· ∘ ·), ← hg]
 
-theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ {t₁ t₂}, s t₁ ∩ s t₂ = s (t₁ ∩ t₂)) :
+theorem lift'_infi_of_map_univ {f : ι → Filter α} {g : Set α → Set β} (hg : ∀ {s t}, g (s ∩ t) = g s ∩ g t)
+    (hg' : g Univ = univ) : (infi f).lift' g = ⨅ i, (f i).lift' g :=
+  lift_infi_of_map_univ
+    (fun s t => by
+      rw [inf_principal, (· ∘ ·), ← hg])
+    (by
+      rw [Function.comp_app, hg', principal_univ])
+
+theorem lift'_inf (f g : Filter α) {s : Set α → Set β} (hs : ∀ t₁ t₂, s (t₁ ∩ t₂) = s t₁ ∩ s t₂) :
     (f⊓g).lift' s = f.lift' s⊓g.lift' s := by
   have : (⨅ b : Bool, cond b f g).lift' s = ⨅ b : Bool, (cond b f g).lift' s := lift'_infi @hs
   simpa only [infi_bool_eq]

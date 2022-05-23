@@ -722,6 +722,9 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] : (
       exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous,
     continuous_inv_fun := by
       simp_rw [LinearEquiv.inv_fun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
+      change
+        Continuous
+          (linear_map.to_continuous_linear_map.to_linear_map.comp (LinearEquiv.piRing 𝕜 E ι 𝕜).symm.toLinearMap)
       apply LinearMap.continuous_of_bound _ (Fintype.card ι : ℝ) fun g => _
       rw [← nsmul_eq_mul]
       apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _

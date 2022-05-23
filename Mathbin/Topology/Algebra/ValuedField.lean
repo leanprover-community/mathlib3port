@@ -113,6 +113,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 open Valued
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ₀) := by
   rw [continuous_iff_continuous_at]
   intro x

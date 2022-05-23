@@ -115,6 +115,7 @@ theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b.points j) = if i 
   cases eq_or_ne i j <;> simp [h.symm]
   simp [h]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = w i := by
@@ -122,6 +123,7 @@ theorem coord_apply_combination_of_mem {s : Finset ι} {i : ι} (hi : i ∈ s) {
   simp only [coord_apply, hi, Finset.affine_combination_eq_linear_combination, if_true, mul_boole, hw,
     Function.comp_app, smul_eq_mul, s.sum_ite_eq, s.map_affine_combination b.points w hw]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coord_apply_combination_of_not_mem {s : Finset ι} {i : ι} (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
     b.Coord i (s.affineCombination b.points w) = 0 := by
@@ -179,6 +181,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
     simp
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
   classical
   intro x

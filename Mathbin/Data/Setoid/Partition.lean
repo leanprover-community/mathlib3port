@@ -73,11 +73,13 @@ theorem classes_ker_subset_fiber_set {β : Type _} (f : α → β) :
   rw [Set.mem_range]
   exact ⟨f x, rfl⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonempty_fintype_classes_ker {α β : Type _} [Fintype β] (f : α → β) :
     Nonempty (Fintype (Setoidₓ.ker f).Classes) := by
   classical
   exact ⟨Set.fintypeSubset _ (classes_ker_subset_fiber_set f)⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem card_classes_ker_le {α β : Type _} [Fintype β] (f : α → β) [Fintype (Setoidₓ.ker f).Classes] :
     Fintype.card (Setoidₓ.ker f).Classes ≤ Fintype.card β := by
   classical

@@ -69,7 +69,7 @@ theorem card_functions_sum_skolem₁_le : # (Σn, (L.Sum L.skolem₁).Functions 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
 choice. -/
 noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
-  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Finₓ.snoc x a : _ → M), fun _ r => Empty.elimₓ r⟩
+  ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Finₓ.snoc x a : _ → M), fun _ r => Empty.elim r⟩
 
 namespace Substructure
 

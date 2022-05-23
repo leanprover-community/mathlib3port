@@ -135,6 +135,9 @@ instance self : Module.Free R R :=
 instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
+instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N := by
+  let this := Module.subsingleton R N <;> exact Module.Free.of_subsingleton R N
+
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)

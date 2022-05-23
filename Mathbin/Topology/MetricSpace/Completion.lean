@@ -69,7 +69,7 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x := by
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
     
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z := by
   apply induction_on₃ x y z
   · refine' is_closed_le _ (Continuous.add _ _) <;>

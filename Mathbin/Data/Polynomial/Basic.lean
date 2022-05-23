@@ -472,7 +472,6 @@ theorem X_mul : X * p = p * X := by
   simp only [X, ← of_finsupp_single, ← of_finsupp_mul, LinearMap.coe_mk]
   ext
   simp [AddMonoidAlgebra.mul_apply, sum_single_index, add_commₓ]
-  congr <;> ext <;> congr
 
 theorem X_pow_mul {n : ℕ} : X ^ n * p = p * X ^ n := by
   induction' n with n ih
@@ -844,6 +843,7 @@ theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
 theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.Support.erase n := by
   rw [update_zero_eq_erase, support_erase]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem support_update_ne_zero (p : R[X]) (n : ℕ) {a : R} (ha : a ≠ 0) : support (p.update n a) = insert n p.Support :=
   by
   classical <;> rw [support_update, if_neg ha]

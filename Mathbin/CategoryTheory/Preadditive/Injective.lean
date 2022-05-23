@@ -88,6 +88,7 @@ theorem of_iso {P Q : C} (i : P ≅ Q) (hP : Injective P) : Injective Q :=
 theorem iso_iff {P Q : C} (i : P ≅ Q) : Injective P ↔ Injective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The axiom of choice says that every nonempty type is an injective object in `Type`. -/
 instance (X : Type u) [Nonempty X] : Injective X where
   Factors := fun Y Z g f mono =>
@@ -125,7 +126,7 @@ instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] : 
   Factors := fun X Y g f mono => by
     skip
     refine' ⟨pi.lift fun b => factor_thru (g ≫ pi.π c _) f, _⟩
-    ext
+    ext ⟨j⟩
     simp only [category.assoc, limit.lift_π, fan.mk_π_app, comp_factor_thru]
 
 instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [Injective Q] : Injective (P ⊞ Q) where
@@ -138,8 +139,7 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [
     · simp only [category.assoc, biprod.lift_snd, comp_factor_thru]
       
 
-instance {β : Type v} [DecidableEq β] (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
-    Injective (⨁ c) where
+instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] : Injective (⨁ c) where
   Factors := fun X Y g f mono => by
     skip
     refine' ⟨biproduct.lift fun b => factor_thru (g ≫ biproduct.π _ _) f, _⟩

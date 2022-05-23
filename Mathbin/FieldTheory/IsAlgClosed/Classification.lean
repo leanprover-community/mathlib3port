@@ -57,6 +57,7 @@ theorem cardinal_mk_le_sigma_polynomial : # L ≤ # (Σp : R[X], { x : L // x �
     refine' (Subtype.heq_iff_coe_eq _).1 h.2
     simp only [h.1, iff_selfₓ, forall_true_iff]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The cardinality of an algebraic extension is at most the maximum of the cardinality
 of the base ring or `ω` -/
 theorem cardinal_mk_le_max : # L ≤ max (# R) ω :=

@@ -32,7 +32,7 @@ seminorm, locally convex
 -/
 
 
-open NormedField Set Seminorm
+open NormedField Set Seminorm TopologicalSpace
 
 open BigOperators Nnreal Pointwise TopologicalSpace
 
@@ -75,6 +75,7 @@ theorem basis_sets_nonempty [Nonempty ι] : p.basis_sets.Nonempty := by
   refine' set.nonempty_def.mpr ⟨(p i).ball 0 1, _⟩
   exact p.basis_sets_singleton_mem i zero_lt_one
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈ p.basis_sets) :
     ∃ (z : Set E)(H : z ∈ p.basis_sets), z ⊆ U ∩ V := by
   classical
@@ -202,6 +203,7 @@ theorem const_is_bounded (ι : Type _) [Nonempty ι] {p : Seminorm 𝕜 E} {q : 
   use {Classical.arbitrary ι}
   simp only [h, Finset.sup_singleton]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_bounded_sup {p : ι → Seminorm 𝕜 E} {q : ι' → Seminorm 𝕜 F} {f : E →ₗ[𝕜] F} (hf : IsBounded p q f)
     (s' : Finset ι') : ∃ (C : ℝ≥0 )(s : Finset ι), 0 < C ∧ (s'.sup q).comp f ≤ C • s.sup p := by
   classical
@@ -446,4 +448,38 @@ instance NormedSpace.to_locally_convex_space [NormedSpace ℝ E] : LocallyConvex
   NormedSpace.to_locally_convex_space' ℝ
 
 end NormedSpace
+
+section TopologicalConstructions
+
+variable [NormedField 𝕜] [AddCommGroupₓ F] [Module 𝕜 F] [AddCommGroupₓ E] [Module 𝕜 E]
+
+/-- The family of seminorms obtained by composing each seminorm by a linear map. -/
+def SeminormFamily.comp (q : SeminormFamily 𝕜 F ι) (f : E →ₗ[𝕜] F) : SeminormFamily 𝕜 E ι := fun i => (q i).comp f
+
+theorem SeminormFamily.comp_apply (q : SeminormFamily 𝕜 F ι) (i : ι) (f : E →ₗ[𝕜] F) : q.comp f i = (q i).comp f :=
+  rfl
+
+theorem SeminormFamily.finset_sup_comp (q : SeminormFamily 𝕜 F ι) (s : Finset ι) (f : E →ₗ[𝕜] F) :
+    (s.sup q).comp f = s.sup (q.comp f) := by
+  ext x
+  rw [Seminorm.comp_apply, Seminorm.finset_sup_apply, Seminorm.finset_sup_apply]
+  rfl
+
+variable [TopologicalSpace F] [TopologicalAddGroup F]
+
+theorem LinearMap.with_seminorms_induced [hι : Nonempty ι] {q : SeminormFamily 𝕜 F ι} [hq : WithSeminorms q]
+    (f : E →ₗ[𝕜] F) : @WithSeminorms 𝕜 E ι _ _ _ _ (q.comp f) (induced f inferInstance) := by
+  let this : TopologicalSpace E := induced f inferInstance
+  let this : TopologicalAddGroup E := topological_add_group_induced f
+  rw [(q.comp f).with_seminorms_iff_nhds_eq_infi, nhds_induced, map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq,
+    Filter.comap_infi]
+  refine' infi_congr fun i => _
+  exact Filter.comap_comap
+
+theorem Inducing.with_seminorms [hι : Nonempty ι] {q : SeminormFamily 𝕜 F ι} [hq : WithSeminorms q] [TopologicalSpace E]
+    {f : E →ₗ[𝕜] F} (hf : Inducing f) : WithSeminorms (q.comp f) := by
+  rw [hf.induced]
+  exact f.with_seminorms_induced
+
+end TopologicalConstructions
 

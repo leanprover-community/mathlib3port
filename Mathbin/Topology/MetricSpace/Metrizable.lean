@@ -25,44 +25,86 @@ open BoundedContinuousFunction Filter TopologicalSpace
 
 namespace TopologicalSpace
 
-/-- A topological space is metrizable if there exists a metric space structure compatible with the
-topology. To endow such a space with a compatible distance, use
-`letI : metric_space α := metrizable_space_metric α` -/
-class MetrizableSpace (α : Type _) [t : TopologicalSpace α] : Prop where
-  exists_metric : ∃ m : MetricSpace α, m.toUniformSpace.toTopologicalSpace = t
+variable {ι X Y : Type _} {π : ι → Type _} [TopologicalSpace X] [TopologicalSpace Y] [Fintype ι]
+  [∀ i, TopologicalSpace (π i)]
 
-instance (priority := 100) _root_.metric_space.to_metrizable_space {α : Type _} [m : MetricSpace α] :
-    MetrizableSpace α :=
+/-- A topological space is *pseudo metrizable* if there exists a pseudo metric space structure
+compatible with the topology. To endow such a space with a compatible distance, use
+`letI : pseudo_metric_space X := topological_space.pseudo_metrizable_space_pseudo_metric X`. -/
+class PseudoMetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
+  exists_pseudo_metric : ∃ m : PseudoMetricSpace X, m.toUniformSpace.toTopologicalSpace = t
+
+instance (priority := 100) _root_.pseudo_metric_space.to_pseudo_metrizable_space {X : Type _}
+    [m : PseudoMetricSpace X] : PseudoMetrizableSpace X :=
   ⟨⟨m, rfl⟩⟩
 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
-noncomputable def metrizableSpaceMetric (α : Type _) [TopologicalSpace α] [h : MetrizableSpace α] : MetricSpace α :=
+noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X] [h : PseudoMetrizableSpace X] :
+    PseudoMetricSpace X :=
+  h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.some_spec.symm
+
+instance pseudo_metrizable_space_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
+    PseudoMetrizableSpace (X × Y) := by
+  let this : PseudoMetricSpace X := pseudo_metrizable_space_pseudo_metric X
+  let this : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  infer_instance
+
+/-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
+is also pseudo metrizable. -/
+theorem _root_.inducing.pseudo_metrizable_space [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
+    PseudoMetrizableSpace X := by
+  let this : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  exact ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
+
+instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) : PseudoMetrizableSpace s :=
+  inducing_coe.PseudoMetrizableSpace
+
+instance pseudo_metrizable_space_pi [∀ i, PseudoMetrizableSpace (π i)] : PseudoMetrizableSpace (∀ i, π i) := by
+  let this := fun i => pseudo_metrizable_space_pseudo_metric (π i)
+  infer_instance
+
+/-- A topological space is metrizable if there exists a metric space structure compatible with the
+topology. To endow such a space with a compatible distance, use
+`letI : metric_space X := topological_space.metrizable_space_metric X` -/
+class MetrizableSpace (X : Type _) [t : TopologicalSpace X] : Prop where
+  exists_metric : ∃ m : MetricSpace X, m.toUniformSpace.toTopologicalSpace = t
+
+instance (priority := 100) _root_.metric_space.to_metrizable_space {X : Type _} [m : MetricSpace X] :
+    MetrizableSpace X :=
+  ⟨⟨m, rfl⟩⟩
+
+instance (priority := 100) MetrizableSpace.to_pseudo_metrizable_space [h : MetrizableSpace X] :
+    PseudoMetrizableSpace X :=
+  ⟨let ⟨m, hm⟩ := h.1
+    ⟨m.toPseudoMetricSpace, hm⟩⟩
+
+/-- Construct on a metrizable space a metric compatible with the topology. -/
+noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] : MetricSpace X :=
   h.exists_metric.some.replaceTopology h.exists_metric.some_spec.symm
 
-instance (priority := 100) t2_space_of_metrizable_space (α : Type _) [TopologicalSpace α] [MetrizableSpace α] :
-    T2Space α := by
-  let this : MetricSpace α := metrizable_space_metric α
+instance (priority := 100) t2_space_of_metrizable_space [MetrizableSpace X] : T2Space X := by
+  let this : MetricSpace X := metrizable_space_metric X
   infer_instance
 
-instance metrizable_space_prod (α : Type _) [TopologicalSpace α] [MetrizableSpace α] (β : Type _) [TopologicalSpace β]
-    [MetrizableSpace β] : MetrizableSpace (α × β) := by
-  let this : MetricSpace α := metrizable_space_metric α
-  let this : MetricSpace β := metrizable_space_metric β
-  infer_instance
-
-instance MetrizableSpace.subtype {α : Type _} [TopologicalSpace α] [MetrizableSpace α] (s : Set α) :
-    MetrizableSpace s := by
-  let this := metrizable_space_metric α
+instance metrizable_space_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) := by
+  let this : MetricSpace X := metrizable_space_metric X
+  let this : MetricSpace Y := metrizable_space_metric Y
   infer_instance
 
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
 metrizable. -/
-theorem _root_.embedding.metrizable_space {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] [MetrizableSpace β]
-    {f : α → β} (hf : Embedding f) : MetrizableSpace α := by
-  let this : MetricSpace β := metrizable_space_metric β
+theorem _root_.embedding.metrizable_space [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) : MetrizableSpace X := by
+  let this : MetricSpace Y := metrizable_space_metric Y
   exact ⟨⟨hf.comap_metric_space f, rfl⟩⟩
 
-variable (X : Type _) [TopologicalSpace X] [NormalSpace X] [SecondCountableTopology X]
+instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
+  embedding_subtype_coe.MetrizableSpace
+
+instance metrizable_space_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) := by
+  let this := fun i => metrizable_space_metric (π i)
+  infer_instance
+
+variable (X) [NormalSpace X] [SecondCountableTopology X]
 
 /-- A normal topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/

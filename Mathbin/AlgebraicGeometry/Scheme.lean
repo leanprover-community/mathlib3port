@@ -286,7 +286,7 @@ theorem basic_open_eq_of_affine {R : CommRingₓₓ} (f : R) :
 theorem basic_open_eq_of_affine' {R : CommRingₓₓ} (f : (Spec.toSheafedSpace.obj (op R)).Presheaf.obj (op ⊤)) :
     (Scheme.spec.obj <| op R).basicOpen f = PrimeSpectrum.basicOpen ((specΓIdentity.app R).Hom f) := by
   convert basic_open_eq_of_affine ((Spec_Γ_identity.app R).Hom f)
-  exact (coe_hom_inv_id _ _).symm
+  exact (iso.hom_inv_id_apply _ _).symm
 
 end AlgebraicGeometry
 

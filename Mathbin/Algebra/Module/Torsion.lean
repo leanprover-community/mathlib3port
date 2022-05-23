@@ -273,6 +273,7 @@ variable {ι : Type _} {p : ι → R} {S : Finset ι} (hp : Pairwise (IsCoprime 
 
 include hp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem supr_torsion_by_eq_torsion_by_prod : (⨆ i : S, torsionBy R M (p i)) = torsionBy R M (∏ i in S, p i) := by
   cases' S.eq_empty_or_nonempty with h h
   · rw [h, Finset.prod_empty, torsion_by_one]
@@ -302,6 +303,7 @@ theorem supr_torsion_by_eq_torsion_by_prod : (⨆ i : S, torsionBy R M (p i)) = 
     rw [← Finset.sum_smul, this, hf, one_smul]
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem torsion_by_independent : CompleteLattice.Independent fun i : S => torsionBy R M (p i) := fun i => by
   classical
   dsimp'

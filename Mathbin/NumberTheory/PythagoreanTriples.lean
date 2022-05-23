@@ -26,7 +26,7 @@ the bulk of the proof below.
 -/
 
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:29:26: unsupported: too many args
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: fin_cases ... #[[]]
 theorem sq_ne_two_fin_zmod_four (z : Zmod 4) : z * z ≠ 2 := by
   change Finₓ 4 at z
   fin_cases z <;> norm_num [Finₓ.ext_iff, Finₓ.coe_bit0, Finₓ.coe_bit1]

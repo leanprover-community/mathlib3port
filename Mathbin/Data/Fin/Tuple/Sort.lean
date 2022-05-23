@@ -5,7 +5,7 @@ Authors: Kyle Miller
 -/
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Finset.Sort
-import Mathbin.Order.Lexicographic
+import Mathbin.Data.Prod.Lex
 
 /-!
 

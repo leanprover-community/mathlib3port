@@ -282,7 +282,7 @@ theorem prod_map_div₀ : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.
   m.prod_hom₂ (· / ·) (fun _ _ _ _ => (div_mul_div_comm _ _ _ _).symm) (div_one _) _ _
 
 theorem prod_map_zpow₀ {n : ℤ} : prod (m.map fun i => f i ^ n) = (m.map f).Prod ^ n := by
-  convert (m.map f).prod_hom (zpowGroupHom₀ _ : α →* α)
+  convert (m.map f).prod_hom (zpowGroupHom _ : α →* α)
   rw [map_map]
   rfl
 

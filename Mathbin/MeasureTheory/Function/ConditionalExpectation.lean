@@ -951,6 +951,7 @@ theorem condexp_L2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : �
   · exact (Lp.strongly_measurable _).ennnorm
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem lintegral_nnnorm_condexp_L2_indicator_le_real (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (ht : measurable_set[m] t)
     (hμt : μ t ≠ ∞) : (∫⁻ a in t, ∥condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a∥₊ ∂μ) ≤ μ (s ∩ t) := by
   refine' (lintegral_nnnorm_condexp_L2_le ht hμt _).trans (le_of_eqₓ _)

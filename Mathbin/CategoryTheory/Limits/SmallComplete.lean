@@ -35,6 +35,7 @@ universe u
 
 variable {C : Type u} [SmallCategory C] [HasProducts C]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A small category with products is a thin category.
 
 in Lean, a preorder category is one where the morphisms are in Prop, which is weaker than the usual
@@ -63,7 +64,7 @@ instance {X Y : C} : Subsingleton (X ⟶ Y) :=
         simp
         
       · intro f
-        ext
+        ext ⟨j⟩
         simp
         
       

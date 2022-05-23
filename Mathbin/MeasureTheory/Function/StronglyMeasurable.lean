@@ -608,6 +608,7 @@ protected theorem ite {m : MeasurableSpace α} [TopologicalSpace β] {p : α →
     StronglyMeasurable fun x => ite (p x) (f x) (g x) :=
   StronglyMeasurable.piecewise hp hf hg
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.strongly_measurable_of_strongly_measurable_union_cover {m : MeasurableSpace α} [TopologicalSpace β]
     {f : α → β} (s t : Set α) (hs : MeasurableSet s) (ht : MeasurableSet t) (h : univ ⊆ s ∪ t)
     (hc : StronglyMeasurable fun a : s => f a) (hd : StronglyMeasurable fun a : t => f a) : StronglyMeasurable f := by
@@ -715,58 +716,25 @@ protected theorem inner {𝕜 : Type _} {E : Type _} [IsROrC 𝕜] [InnerProduct
     StronglyMeasurable fun t => @inner 𝕜 _ _ (f t) (g t) :=
   Continuous.comp_strongly_measurable continuous_inner (hf.prod_mk hg)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [TopologicalSpace E] [MetrizableSpace E] {f g : α → E}
     (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) : MeasurableSet { x | f x = g x } := by
-  let this := metrizable_space_metric E
-  have : { x | f x = g x } = { x | dist (f x) (g x) = 0 } := by
-    ext x
-    simp
-  rw [this]
-  exact (hf.dist hg).Measurable (measurable_set_singleton (0 : ℝ))
+  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  exact (hf.prod_mk hg).Measurable is_closed_diagonal.measurable_set
 
 -- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
 theorem measurable_set_lt {m : MeasurableSpace α} [TopologicalSpace β] [LinearOrderₓ β] [OrderClosedTopology β]
     [MetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     MeasurableSet { a | f a < g a } := by
-  let this := metrizable_space_metric β
-  let β' : Type _ := (range f ∪ range g : Set β)
-  have : second_countable_topology β' := by
-    suffices separable_space (range f ∪ range g : Set β) by
-      exact UniformSpace.second_countable_of_separable _
-    apply (hf.is_separable_range.union hg.is_separable_range).SeparableSpace
-  let f' : α → β' :=
-    cod_restrict f _
-      (by
-        simp )
-  let g' : α → β' :=
-    cod_restrict g _
-      (by
-        simp )
-  change MeasurableSet { a | f' a < g' a }
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
-  exact measurable_set_lt hf.measurable.subtype_mk hg.measurable.subtype_mk
+  exact (hf.prod_mk hg).Measurable is_open_lt_prod.measurable_set
 
 -- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
-theorem measurable_set_le {m : MeasurableSpace α} [TopologicalSpace β] [LinearOrderₓ β] [OrderClosedTopology β]
+theorem measurable_set_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorderₓ β] [OrderClosedTopology β]
     [MetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     MeasurableSet { a | f a ≤ g a } := by
-  let this := metrizable_space_metric β
-  let β' : Type _ := (range f ∪ range g : Set β)
-  have : second_countable_topology β' := by
-    suffices separable_space (range f ∪ range g : Set β) by
-      exact UniformSpace.second_countable_of_separable _
-    apply (hf.is_separable_range.union hg.is_separable_range).SeparableSpace
-  let f' : α → β' :=
-    cod_restrict f _
-      (by
-        simp )
-  let g' : α → β' :=
-    cod_restrict g _
-      (by
-        simp )
-  change MeasurableSet { a | f' a ≤ g' a }
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
-  exact measurable_set_le hf.measurable.subtype_mk hg.measurable.subtype_mk
+  exact (hf.prod_mk hg).Measurable is_closed_le_prod.measurable_set
 
 end StronglyMeasurable
 
@@ -1239,6 +1207,7 @@ theorem is_separable_ae_range (hf : AeStronglyMeasurable f μ) : ∃ t : Set β,
   filter_upwards [hf.ae_eq_mk] with x hx
   simp [hx]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A function is almost everywhere strongly measurable if and only if it is almost everywhere
 measurable, and up to a zero measure set its range is contained in a separable set. -/
 theorem _root_.ae_strongly_measurable_iff_ae_measurable_separable [MetrizableSpace β] [MeasurableSpace β]
@@ -1300,10 +1269,9 @@ almost everywhere strongly measurable. -/
 theorem _root_.ae_strongly_measurable_of_tendsto_ae {ι : Type _} [MetrizableSpace β] (u : Filter ι) [NeBot u]
     [IsCountablyGenerated u] {f : ι → α → β} {g : α → β} (hf : ∀ i, AeStronglyMeasurable (f i) μ)
     (lim : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) u (𝓝 (g x))) : AeStronglyMeasurable g μ := by
-  let this := metrizable_space_metric β
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
   refine' ae_strongly_measurable_iff_ae_measurable_separable.2 ⟨_, _⟩
-  · exact ae_measurable_of_tendsto_metric_ae _ (fun n => (hf n).AeMeasurable) limₓ
+  · exact ae_measurable_of_tendsto_metrizable_ae _ (fun n => (hf n).AeMeasurable) limₓ
     
   · rcases u.exists_seq_tendsto with ⟨v, hv⟩
     have : ∀ n : ℕ, ∃ t : Set β, IsSeparable t ∧ f (v n) ⁻¹' t ∈ μ.ae := fun n =>
@@ -1325,9 +1293,8 @@ theorem _root_.exists_strongly_measurable_limit_of_tendsto_ae [MetrizableSpace �
     ∃ (f_lim : α → β)(hf_lim_meas : StronglyMeasurable f_lim), ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x)) :=
   by
   "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
-  let this := metrizable_space_metric β
   obtain ⟨g, g_meas, hg⟩ : ∃ (g : α → β)(g_meas : Measurable g), ∀ᵐ x ∂μ, tendsto (fun n => f n x) at_top (𝓝 (g x)) :=
-    measurable_limit_of_tendsto_metric_ae (fun n => (hf n).AeMeasurable) h_ae_tendsto
+    measurable_limit_of_tendsto_metrizable_ae (fun n => (hf n).AeMeasurable) h_ae_tendsto
   have Hg : ae_strongly_measurable g μ := ae_strongly_measurable_of_tendsto_ae _ hf hg
   refine' ⟨Hg.mk g, Hg.strongly_measurable_mk, _⟩
   filter_upwards [hg, Hg.ae_eq_mk] with x hx h'x
@@ -1584,7 +1551,6 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type _} [Topo
     [MeasurableSpace ι] [SecondCountableTopology ι] [OpensMeasurableSpace ι] {mβ : MeasurableSpace β}
     [TopologicalSpace β] [MetrizableSpace β] [BorelSpace β] {m : MeasurableSpace α} {u : ι → α → β}
     (hu_cont : ∀ x, Continuous fun i => u i x) (h : ∀ i, Measurable (u i)) : Measurable (Function.uncurry u) := by
-  let this := metrizable_space_metric β
   obtain ⟨t_sf, ht_sf⟩ : ∃ t : ℕ → simple_func ι ι, ∀ j x, tendsto (fun n => u (t n j) x) at_top (𝓝 <| u j x) := by
     have h_str_meas : strongly_measurable (id : ι → ι) := strongly_measurable_id
     refine' ⟨h_str_meas.approx, fun j x => _⟩
@@ -1593,7 +1559,7 @@ theorem measurable_uncurry_of_continuous_of_measurable {α β ι : Type _} [Topo
   have h_tendsto : tendsto U at_top (𝓝 fun p => u p.fst p.snd) := by
     rw [tendsto_pi_nhds]
     exact fun p => ht_sf p.fst p.snd
-  refine' measurable_of_tendsto_metric (fun n => _) h_tendsto
+  refine' measurable_of_tendsto_metrizable (fun n => _) h_tendsto
   have : Encodable (t_sf n).range := Fintype.toEncodable ↥(t_sf n).range
   have h_meas : Measurable fun p : (t_sf n).range × α => u (↑p.fst) p.snd := by
     have :

@@ -50,6 +50,7 @@ def finiteInterClosureHasFiniteInter : HasFiniteInter (FiniteInterClosure S) whe
 
 variable {S}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) : ↑F ⊆ S → ⋂₀ (↑F : Set (Set α)) ∈ S := by
   classical
   refine' Finset.induction_on F (fun _ => _) _

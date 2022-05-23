@@ -27,7 +27,7 @@ namespace Functor
 /-- The constant functor sending everything to `punit.star`. -/
 @[simps]
 def star : C ⥤ Discrete PUnit :=
-  (Functor.const _).obj PUnit.unit
+  (Functor.const _).obj ⟨⟨⟩⟩
 
 variable {C}
 
@@ -59,16 +59,16 @@ abbrev fromPunit (X : C) : Discrete PUnit.{v + 1} ⥤ C :=
 /-- Functors from `discrete punit` are equivalent to the category itself. -/
 @[simps]
 def equiv : Discrete PUnit ⥤ C ≌ C where
-  Functor := { obj := fun F => F.obj PUnit.unit, map := fun F G θ => θ.app PUnit.unit }
+  Functor := { obj := fun F => F.obj ⟨⟨⟩⟩, map := fun F G θ => θ.app ⟨⟨⟩⟩ }
   inverse := Functor.const _
   unitIso := by
     apply nat_iso.of_components _ _
     intro X
     apply discrete.nat_iso
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     apply iso.refl _
     intros
-    ext ⟨⟩
+    ext ⟨⟨⟩⟩
     simp
   counitIso := by
     refine' nat_iso.of_components iso.refl _
@@ -85,12 +85,12 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
   by
   constructor
   · rintro ⟨h⟩
-    refine' ⟨⟨h.inverse.obj PUnit.unit⟩, fun x y => Nonempty.intro _⟩
+    refine' ⟨⟨h.inverse.obj ⟨⟨⟩⟩⟩, fun x y => Nonempty.intro _⟩
     apply uniqueOfSubsingleton _
     swap
-    · have hx : x ⟶ h.inverse.obj PUnit.unit := by
+    · have hx : x ⟶ h.inverse.obj ⟨⟨⟩⟩ := by
         convert h.unit.app x
-      have hy : h.inverse.obj PUnit.unit ⟶ y := by
+      have hy : h.inverse.obj ⟨⟨⟩⟩ ⟶ y := by
         convert h.unit_inv.app y
       exact hx ≫ hy
       
@@ -107,7 +107,7 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
     have := fun x y => (h x y).some
     refine'
       Nonempty.intro
-        (CategoryTheory.Equivalence.mk ((Functor.Const _).obj PUnit.unit) ((Functor.Const _).obj p) _
+        (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _
           (by
             apply functor.punit_ext))
     exact

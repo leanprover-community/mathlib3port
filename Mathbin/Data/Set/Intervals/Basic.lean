@@ -652,7 +652,8 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s 
     s ∈ ({Iic a, Iio a} : Set (Set α)) :=
   @mem_Ici_Ioi_of_subset_of_subset αᵒᵈ _ a s ho hc
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
   classical

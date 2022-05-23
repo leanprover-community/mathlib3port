@@ -466,6 +466,7 @@ variable [∀ i, Zero (β i)]
 
 omit dec
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem finite_support (f : Π₀ i, β i) : Set.Finite { i | f i ≠ 0 } := by
   classical
   exact
@@ -1283,6 +1284,7 @@ instance distribMulAction₂ [Monoidₓ γ] [∀ i j, AddMonoidₓ (δ i j)] [�
     DistribMulAction γ (Π₀ (i : ι) (j : α i), δ i j) :=
   @Dfinsupp.distribMulAction ι _ (fun i => Π₀ j, δ i j) _ _ _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 /-- The natural map between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.  -/
 noncomputable def sigmaCurry [∀ i j, Zero (δ i j)] (f : Π₀ i : Σi, _, δ i.1 i.2) : Π₀ (i) (j), δ i j := by
@@ -1341,6 +1343,7 @@ theorem sigma_curry_smul [Monoidₓ γ] [∀ i j, AddMonoidₓ (δ i j)] [∀ i 
   rw [@smul_apply _ _ (fun i => Π₀ j, δ i j) _ _ _ _ (sigma_curry _), smul_apply, sigma_curry_apply, sigma_curry_apply,
     smul_apply]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
 /-- The natural map between `Π₀ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
@@ -1684,6 +1687,7 @@ theorem sum_add_hom_apply [∀ i, AddZeroClassₓ (β i)] [∀ i x : β i, Decid
   rfl
   rw [not_not.mp h, AddMonoidHom.map_zero]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem _root_.dfinsupp_sum_add_hom_mem [∀ i, AddZeroClassₓ (β i)] [AddCommMonoidₓ γ] {S : Type _} [SetLike S γ]
     [AddSubmonoidClass S γ] (s : S) (f : Π₀ i, β i) (g : ∀ i, β i →+ γ) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) :
     Dfinsupp.sumAddHom g f ∈ s := by
@@ -1822,6 +1826,7 @@ theorem sum_sub_index [∀ i, AddGroupₓ (β i)] [∀ i x : β i, Decidable (x 
   rw [lift_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply, sum_add_hom_apply] at this
   exact this
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem prod_finset_sum_index {γ : Type w} {α : Type x} [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
     [CommMonoidₓ γ] {s : Finset α} {g : α → Π₀ i, β i} {h : ∀ i, β i → γ} (h_zero : ∀ i, h i 0 = 1)

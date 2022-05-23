@@ -94,14 +94,15 @@ variable [Module R M] [Module R₁ M]
 
 open QuadraticForm
 
-/-- A quadratic form over a module. -/
+/-- A quadratic form over a module.
+
+Note we only need the left lemmas about `quadratic_form.polar` as the right lemmas follow from
+`quadratic_form.polar_comm`. -/
 structure QuadraticForm (R : Type u) (M : Type v) [Ringₓ R] [AddCommGroupₓ M] [Module R M] where
   toFun : M → R
   to_fun_smul : ∀ a : R x : M, to_fun (a • x) = a * a * to_fun x
   polar_add_left' : ∀ x x' y : M, polar to_fun (x + x') y = polar to_fun x y + polar to_fun x' y
   polar_smul_left' : ∀ a : R x y : M, polar to_fun (a • x) y = a • polar to_fun x y
-  polar_add_right' : ∀ x y y' : M, polar to_fun x (y + y') = polar to_fun x y + polar to_fun x y'
-  polar_smul_right' : ∀ a : R x y : M, polar to_fun x (a • y) = a • polar to_fun x y
 
 namespace QuadraticForm
 
@@ -168,12 +169,12 @@ theorem polar_zero_right (y : M) : polar Q y 0 = 0 := by
   simp only [add_zeroₓ, polar, QuadraticForm.map_zero, sub_self]
 
 @[simp]
-theorem polar_add_right (x y y' : M) : polar Q x (y + y') = polar Q x y + polar Q x y' :=
-  Q.polar_add_right' x y y'
+theorem polar_add_right (x y y' : M) : polar Q x (y + y') = polar Q x y + polar Q x y' := by
+  rw [polar_comm Q x, polar_comm Q x, polar_comm Q x, polar_add_left]
 
 @[simp]
-theorem polar_smul_right (a : R) (x y : M) : polar Q x (a • y) = a * polar Q x y :=
-  Q.polar_smul_right' a x y
+theorem polar_smul_right (a : R) (x y : M) : polar Q x (a • y) = a * polar Q x y := by
+  rw [polar_comm Q x, polar_comm Q x, polar_smul_left]
 
 @[simp]
 theorem polar_neg_right (x y : M) : polar Q x (-y) = -polar Q x y := by
@@ -226,8 +227,6 @@ protected def copy (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : Quad
   to_fun_smul := h.symm ▸ Q.to_fun_smul
   polar_add_left' := h.symm ▸ Q.polar_add_left'
   polar_smul_left' := h.symm ▸ Q.polar_smul_left'
-  polar_add_right' := h.symm ▸ Q.polar_add_right'
-  polar_smul_right' := h.symm ▸ Q.polar_smul_right'
 
 section HasScalar
 
@@ -244,11 +243,7 @@ instance : HasScalar S (QuadraticForm R M) :=
       polar_add_left' := fun x x' y => by
         simp only [polar_smul, polar_add_left, smul_add],
       polar_smul_left' := fun b x y => by
-        simp only [polar_smul, polar_smul_left, ← mul_smul_comm, smul_eq_mul],
-      polar_add_right' := fun x y y' => by
-        simp only [polar_smul, polar_add_right, smul_add],
-      polar_smul_right' := fun b x y => by
-        simp only [polar_smul, polar_smul_right, ← mul_smul_comm, smul_eq_mul] }⟩
+        simp only [polar_smul, polar_smul_left, ← mul_smul_comm, smul_eq_mul] }⟩
 
 @[simp]
 theorem coe_fn_smul (a : S) (Q : QuadraticForm R M) : ⇑(a • Q) = a • Q :=
@@ -267,10 +262,6 @@ instance : Zero (QuadraticForm R M) :=
       polar_add_left' := fun x x' y => by
         simp only [add_zeroₓ, polar, sub_self],
       polar_smul_left' := fun a x y => by
-        simp only [polar, smul_zero, sub_self],
-      polar_add_right' := fun x y y' => by
-        simp only [add_zeroₓ, polar, sub_self],
-      polar_smul_right' := fun a x y => by
         simp only [polar, smul_zero, sub_self] }⟩
 
 @[simp]
@@ -292,11 +283,7 @@ instance : Add (QuadraticForm R M) :=
       polar_add_left' := fun x x' y => by
         simp only [polar_add, polar_add_left, add_assocₓ, add_left_commₓ],
       polar_smul_left' := fun a x y => by
-        simp only [polar_add, smul_eq_mul, mul_addₓ, polar_smul_left],
-      polar_add_right' := fun x y y' => by
-        simp only [polar_add, polar_add_right, add_assocₓ, add_left_commₓ],
-      polar_smul_right' := fun a x y => by
-        simp only [polar_add, smul_eq_mul, mul_addₓ, polar_smul_right] }⟩
+        simp only [polar_add, smul_eq_mul, mul_addₓ, polar_smul_left] }⟩
 
 @[simp]
 theorem coe_fn_add (Q Q' : QuadraticForm R M) : ⇑(Q + Q') = Q + Q' :=
@@ -314,11 +301,7 @@ instance : Neg (QuadraticForm R M) :=
       polar_add_left' := fun x x' y => by
         simp only [polar_neg, polar_add_left, neg_add],
       polar_smul_left' := fun a x y => by
-        simp only [polar_neg, polar_smul_left, mul_neg, smul_eq_mul],
-      polar_add_right' := fun x y y' => by
-        simp only [polar_neg, polar_add_right, neg_add],
-      polar_smul_right' := fun a x y => by
-        simp only [polar_neg, polar_smul_right, mul_neg, smul_eq_mul] }⟩
+        simp only [polar_neg, polar_smul_left, mul_neg, smul_eq_mul] }⟩
 
 @[simp]
 theorem coe_fn_neg (Q : QuadraticForm R M) : ⇑(-Q) = -Q :=
@@ -417,10 +400,6 @@ def comp (Q : QuadraticForm R N) (f : M →ₗ[R] N) : QuadraticForm R M where
     convert polar_add_left (f x) (f x') (f y) using 1 <;> simp only [polar, f.map_add]
   polar_smul_left' := fun a x y => by
     convert polar_smul_left a (f x) (f y) using 1 <;> simp only [polar, f.map_smul, f.map_add, smul_eq_mul]
-  polar_add_right' := fun x y y' => by
-    convert polar_add_right (f x) (f y) (f y') using 1 <;> simp only [polar, f.map_add]
-  polar_smul_right' := fun a x y => by
-    convert polar_smul_right a (f x) (f y) using 1 <;> simp only [polar, f.map_smul, f.map_add, smul_eq_mul]
 
 @[simp]
 theorem comp_apply (Q : QuadraticForm R N) (f : M →ₗ[R] N) (x : M) : (Q.comp f) x = Q (f x) :=
@@ -437,35 +416,21 @@ def _root_.linear_map.comp_quadratic_form {S : Type _} [CommRingₓ S] [Algebra 
     simp only [polar_comp, f.map_add, polar_add_left]
   polar_smul_left' := fun b x y => by
     simp only [polar_comp, f.map_smul, polar_smul_left_of_tower]
-  polar_add_right' := fun x y y' => by
-    simp only [polar_comp, f.map_add, polar_add_right]
-  polar_smul_right' := fun b x y => by
-    simp only [polar_comp, f.map_smul, polar_smul_right_of_tower]
 
 end Comp
 
 section CommRingₓ
 
-/-- Create a quadratic form in a commutative ring by proving only one side of the bilinearity. -/
-def mkLeft (f : M → R₁) (to_fun_smul : ∀ a x, f (a • x) = a * a * f x)
-    (polar_add_left : ∀ x x' y, polar f (x + x') y = polar f x y + polar f x' y)
-    (polar_smul_left : ∀ a x y, polar f (a • x) y = a * polar f x y) : QuadraticForm R₁ M :=
-  { toFun := f, to_fun_smul, polar_add_left' := polar_add_left, polar_smul_left' := polar_smul_left,
-    polar_add_right' := fun x y y' => by
-      rw [polar_comm, polar_add_left, polar_comm f y x, polar_comm f y' x],
-    polar_smul_right' := fun a x y => by
-      rw [polar_comm, polar_smul_left, polar_comm f y x, smul_eq_mul] }
-
 /-- The product of linear forms is a quadratic form. -/
-def linMulLin (f g : M →ₗ[R₁] R₁) : QuadraticForm R₁ M :=
-  mkLeft (f * g)
-    (fun a x => by
-      simp only [smul_eq_mul, RingHom.id_apply, Pi.mul_apply, LinearMap.map_smulₛₗ]
-      ring)
-    (fun x x' y => by
-      simp only [polar, Pi.mul_apply, LinearMap.map_add]
-      ring)
-    fun a x y => by
+def linMulLin (f g : M →ₗ[R₁] R₁) : QuadraticForm R₁ M where
+  toFun := f * g
+  to_fun_smul := fun a x => by
+    simp only [smul_eq_mul, RingHom.id_apply, Pi.mul_apply, LinearMap.map_smulₛₗ]
+    ring
+  polar_add_left' := fun x x' y => by
+    simp only [polar, Pi.mul_apply, LinearMap.map_add]
+    ring
+  polar_smul_left' := fun a x y => by
     simp only [polar, Pi.mul_apply, LinearMap.map_add, LinearMap.map_smul, smul_eq_mul]
     ring
 
@@ -528,16 +493,15 @@ theorem polar_to_quadratic_form (x y : M) : polar (fun x => B x x) x y = B x y +
     sub_eq_add_neg _ (B y y), add_commₓ (B y x) _]
 
 /-- A bilinear form gives a quadratic form by applying the argument twice. -/
-def toQuadraticForm (B : BilinForm R M) : QuadraticForm R M :=
-  ⟨fun x => B x x, fun a x => by
-    simp only [mul_assoc, smul_right, smul_left], fun x x' y => by
-    simp only [add_assocₓ, add_right, add_left_injₓ, polar_to_quadratic_form, add_left, add_left_commₓ], fun a x y => by
+def toQuadraticForm (B : BilinForm R M) : QuadraticForm R M where
+  toFun := fun x => B x x
+  to_fun_smul := fun a x => by
+    simp only [mul_assoc, smul_right, smul_left]
+  polar_add_left' := fun x x' y => by
+    simp only [add_assocₓ, add_right, add_left_injₓ, polar_to_quadratic_form, add_left, add_left_commₓ]
+  polar_smul_left' := fun a x y => by
     simp only [smul_add, add_left_injₓ, polar_to_quadratic_form, smul_right, smul_eq_mul, smul_left, smul_right,
-      mul_addₓ],
-    fun x y y' => by
-    simp only [add_assocₓ, add_right, add_left_injₓ, polar_to_quadratic_form, add_left, add_left_commₓ], fun a x y => by
-    simp only [smul_add, add_left_injₓ, polar_to_quadratic_form, smul_right, smul_eq_mul, smul_left, smul_right,
-      mul_addₓ]⟩
+      mul_addₓ]
 
 @[simp]
 theorem to_quadratic_form_apply (B : BilinForm R M) (x : M) : B.toQuadraticForm x = B x x :=

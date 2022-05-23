@@ -392,7 +392,7 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_punit (I : ∀ d, colimit (F ⋙ co
       obtain ⟨j, y, rfl⟩ := Limits.Types.jointly_surjective'.{v, v} this
       exact ⟨structured_arrow.mk y⟩
     apply zigzag_is_connected
-    rintro ⟨⟨⟩, X₁, f₁⟩ ⟨⟨⟩, X₂, f₂⟩
+    rintro ⟨⟨⟨⟩⟩, X₁, f₁⟩ ⟨⟨⟨⟩⟩, X₂, f₂⟩
     dsimp'  at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂

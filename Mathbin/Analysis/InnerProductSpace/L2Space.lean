@@ -179,6 +179,7 @@ protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := b
   · norm_num
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
 subspaces into `E`. -/
 protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E where
@@ -259,6 +260,7 @@ noncomputable def linearIsometryEquiv [∀ i, CompleteSpace (G i)]
   LinearIsometryEquiv.symm <|
     LinearIsometryEquiv.ofSurjective hV.LinearIsometry
       (by
+        rw [← LinearIsometry.coe_to_linear_map]
         refine' linear_map.range_eq_top.mp _
         rw [← hV']
         rw [hV.range_linear_isometry])
@@ -371,6 +373,7 @@ protected theorem has_sum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι,�
 protected theorem has_sum_repr (b : HilbertBasis ι 𝕜 E) (x : E) : HasSum (fun i => b.repr x i • b i) x := by
   simpa using b.has_sum_repr_symm (b.repr x)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) : (span 𝕜 (Set.Range b)).topologicalClosure = ⊤ := by
   classical

@@ -278,13 +278,13 @@ theorem has_products_opposite [HasCoproductsOfShape X C] : HasProductsOfShape X 
   infer_instance
 
 theorem has_finite_coproducts_opposite [HasFiniteProducts C] : HasFiniteCoproducts Cᵒᵖ :=
-  { out := fun J 𝒟 𝒥 => by
+  { out := fun J 𝒟 => by
       skip
       have : has_limits_of_shape (discrete J)ᵒᵖ C := has_limits_of_shape_of_equivalence (discrete.opposite J).symm
       infer_instance }
 
 theorem has_finite_products_opposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ :=
-  { out := fun J 𝒟 𝒥 => by
+  { out := fun J 𝒟 => by
       skip
       have : has_colimits_of_shape (discrete J)ᵒᵖ C := has_colimits_of_shape_of_equivalence (discrete.opposite J).symm
       infer_instance }

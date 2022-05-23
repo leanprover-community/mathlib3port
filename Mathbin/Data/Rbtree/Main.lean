@@ -246,6 +246,7 @@ theorem eq_leaf_of_max_eq_none {t : Rbtree α lt} : t.max = none → t = mkRbtre
   congr
   apply Rbnode.eq_leaf_of_max_eq_none h
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
     t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by
   classical

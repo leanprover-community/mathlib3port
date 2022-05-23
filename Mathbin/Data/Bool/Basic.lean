@@ -347,5 +347,9 @@ theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔
     cases x <;> cases y
     exacts[rfl, (H hxy).elim, (H hxy.symm).elim, rfl]⟩
 
+/-- **Kaminski's Equation** -/
+theorem apply_apply_apply (f : Bool → Bool) (x : Bool) : f (f (f x)) = f x := by
+  cases x <;> cases h₁ : f tt <;> cases h₂ : f ff <;> simp only [h₁, h₂]
+
 end Bool
 

@@ -1473,7 +1473,7 @@ theorem nodup_permutations'_aux_of_not_mem (s : List α) (x : α) (hx : x ∉ s)
   · simp
     
   · simp only [not_or_distrib, mem_cons_iff] at hx
-    simp only [not_and, exists_eq_right_right, mem_map, permutations'_aux, nodup_cons]
+    simp only [not_and, exists_eq_right_rightₓ, mem_map, permutations'_aux, nodup_cons]
     refine' ⟨fun _ => Ne.symm hx.left, _⟩
     rw [nodup_map_iff]
     · exact IH hx.right

@@ -756,6 +756,7 @@ theorem Finset.card_univ_diff [DecidableEq α] [Fintype α] (s : Finset α) :
 theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) : sᶜ.card = Fintype.card α - s.card :=
   Finset.card_univ_diff s
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     Fintype.card ↥(sᶜ) = Fintype.card α - Fintype.card s := by
   classical
@@ -805,19 +806,34 @@ theorem Finₓ.image_cast_succ (n : ℕ) : (univ : Finset (Finₓ n)).Image Fin�
   rw [← Finₓ.succ_above_last, Finₓ.image_succ_above_univ]
 
 /-- Embed `fin n` into `fin (n + 1)` by prepending zero to the `univ` -/
-theorem Finₓ.univ_succ (n : ℕ) : (univ : Finset (Finₓ (n + 1))) = insert 0 (univ.Image Finₓ.succ) := by
-  simp
+/- The following three lemmas use `finset.cons` instead of `insert` and `finset.map` instead of
+`finset.image` to reduce proof obligations downstream. -/
+theorem Finₓ.univ_succ (n : ℕ) :
+    (univ : Finset (Finₓ (n + 1))) =
+      cons 0 (univ.map ⟨Finₓ.succ, Finₓ.succ_injective _⟩)
+        (by
+          simp [map_eq_image]) :=
+  by
+  simp [map_eq_image]
 
 /-- Embed `fin n` into `fin (n + 1)` by appending a new `fin.last n` to the `univ` -/
 theorem Finₓ.univ_cast_succ (n : ℕ) :
-    (univ : Finset (Finₓ (n + 1))) = insert (Finₓ.last n) (univ.Image Finₓ.castSucc) := by
-  simp
+    (univ : Finset (Finₓ (n + 1))) =
+      cons (Finₓ.last n) (univ.map Finₓ.castSucc.toEmbedding)
+        (by
+          simp [map_eq_image]) :=
+  by
+  simp [map_eq_image]
 
 /-- Embed `fin n` into `fin (n + 1)` by inserting
 around a specified pivot `p : fin (n + 1)` into the `univ` -/
 theorem Finₓ.univ_succ_above (n : ℕ) (p : Finₓ (n + 1)) :
-    (univ : Finset (Finₓ (n + 1))) = insert p (univ.Image (Finₓ.succAbove p)) := by
-  simp
+    (univ : Finset (Finₓ (n + 1))) =
+      cons p (univ.map <| (Finₓ.succAbove p).toEmbedding)
+        (by
+          simp ) :=
+  by
+  simp [map_eq_image]
 
 @[instance]
 def Unique.fintype {α : Type _} [Unique α] : Fintype α :=
@@ -1019,6 +1035,7 @@ that `sum.inr` is an injection, but there's no clear inverse if `β` is empty. -
 noncomputable def Fintype.sumRight {α β} [Fintype (Sum α β)] : Fintype β :=
   Fintype.ofInjective (Sum.inr : β → Sum α β) Sum.inr_injective
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem Fintype.card_sum [Fintype α] [Fintype β] : Fintype.card (Sum α β) = Fintype.card α + Fintype.card β := by
   classical
@@ -1150,6 +1167,7 @@ theorem card_le_one_iff : card α ≤ 1 ↔ ∀ a b : α, a = b :=
 theorem card_le_one_iff_subsingleton : card α ≤ 1 ↔ Subsingleton α :=
   card_le_one_iff.trans subsingleton_iff.symm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem one_lt_card_iff_nontrivial : 1 < card α ↔ Nontrivial α := by
   classical
   rw [← not_iff_not]
@@ -1336,6 +1354,7 @@ end
 instance [Monoidₓ α] [Fintype α] [DecidableEq α] : Fintype αˣ :=
   Fintype.ofEquiv _ (unitsEquivProdSubtype α).symm
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Fintype.card_units [GroupWithZeroₓ α] [Fintype α] [Fintype αˣ] : Fintype.card αˣ = Fintype.card α - 1 := by
   classical
   rw [eq_comm, Nat.sub_eq_iff_eq_addₓ (Fintype.card_pos_iff.2 ⟨(0 : α)⟩), Fintype.card_congr (unitsEquivNeZero α)]
@@ -1370,6 +1389,7 @@ def truncOfCardLe [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] (h
   (Fintype.truncEquivFin α).bind fun ea =>
     (Fintype.truncEquivFin β).map fun eb => ea.toEmbedding.trans ((Finₓ.castLe h).toEmbedding.trans eb.symm.toEmbedding)
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ Fintype.card β) : Nonempty (α ↪ β) := by
   classical
   exact (trunc_of_card_le h).Nonempty
@@ -1512,6 +1532,7 @@ theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
   refine' Fintype.card_of_subtype _ _
   simp
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // q x }]
     [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } ≤ Fintype.card { x // p x } + Fintype.card { x // q x } := by
@@ -1519,6 +1540,7 @@ theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fint
   convert Fintype.card_le_of_embedding (subtypeOrLeftEmbedding p q)
   rw [Fintype.card_sum]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) [Fintype { x // p x }]
     [Fintype { x // q x }] [Fintype { x // p x ∨ q x }] :
     Fintype.card { x // p x ∨ q x } = Fintype.card { x // p x } + Fintype.card { x // q x } := by
@@ -1550,6 +1572,7 @@ instance PSigma.fintypePropProp {α : Prop} {β : α → Prop} [Decidable α] [�
       simp ⟩
   else ⟨∅, fun ⟨x, y⟩ => h ⟨x, y⟩⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 instance Set.fintype [Fintype α] : Fintype (Set α) :=
   ⟨(@Finset.univ α _).Powerset.map ⟨coe, coe_injective⟩, fun s => by
     classical
@@ -1860,6 +1883,7 @@ theorem bijective_bij_inv (f_bij : Bijective f) : Bijective (bijInv f_bij) :=
 
 end BijectionInverse
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem well_founded_of_trans_of_irrefl [Fintype α] (r : α → α → Prop) [IsTrans α r] [IsIrrefl α r] : WellFounded r :=
   by
   classical <;>
@@ -1952,6 +1976,7 @@ protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by
 theorem of_injective [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
   ⟨fun I => (Fintype.ofInjective f hf).False⟩
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem of_surjective [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
   ⟨fun I => by
     classical
@@ -2059,6 +2084,7 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
 theorem not_injective_infinite_fintype [Infinite α] [Fintype β] (f : α → β) : ¬Injective f := fun hf =>
   (Fintype.ofInjective f hf).False
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
 infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
 same pigeonhole.
@@ -2083,15 +2109,9 @@ irreducible_def Function.Embedding.is_empty {α β} [Infinite α] [Fintype β] :
     Ne <| f.Injective feq⟩
 
 noncomputable instance (priority := 100) Function.Embedding.fintype' {α β : Type _} [Fintype β] : Fintype (α ↪ β) := by
-  by_cases' h : Infinite α
-  · skip
-    infer_instance
-    
-  · have := fintypeOfNotInfinite h
-    classical
-    infer_instance
-    
+  cases fintypeOrInfinite α <;> infer_instance
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
 finitely many pigeonholes, then there is a pigeonhole with infinitely
@@ -2099,7 +2119,6 @@ many pigeons.
 
 See also: `fintype.exists_ne_map_eq_of_infinite`
 -/
--- the `classical` generates `decidable_eq α/β` instances, and resets instance cache
 theorem Fintype.exists_infinite_fiber [Infinite α] [Fintype β] (f : α → β) : ∃ y : β, Infinite (f ⁻¹' {y}) := by
   classical
   by_contra' hf
@@ -2222,6 +2241,7 @@ noncomputable def seqOfForallFinsetExistsAux {α : Type _} [DecidableEq α] (P :
   | n =>
     Classical.some (h (Finset.image (fun i : Finₓ n => seqOfForallFinsetExistsAux i) (Finset.univ : Finset (Finₓ n))))
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Induction principle to build a sequence, by adding one point at a time satisfying a given
 relation with respect to all the previously chosen points.
 

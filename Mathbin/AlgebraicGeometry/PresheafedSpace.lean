@@ -160,6 +160,8 @@ end
 
 variable {C}
 
+attribute [local simp] eq_to_hom_map
+
 @[simp]
 theorem id_base (X : PresheafedSpace C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : Top.{v}) :=
   rfl

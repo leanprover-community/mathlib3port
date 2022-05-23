@@ -83,15 +83,11 @@ theorem small_sets_comap (l : Filter β) (f : α → β) : (comap f l).smallSets
 theorem comap_small_sets (l : Filter β) (f : α → Set β) : comap f l.smallSets = l.lift' (Preimage f ∘ powerset) :=
   comap_lift'_eq
 
-theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f i).smallSets := by
-  cases is_empty_or_nonempty ι
-  · rw [infi_of_empty f, infi_of_empty, small_sets_top]
-    
-  · exact lift'_infi fun _ _ => (powerset_inter _ _).symm
-    
+theorem small_sets_infi {f : ι → Filter α} : (infi f).smallSets = ⨅ i, (f i).smallSets :=
+  lift'_infi_of_map_univ powerset_inter powerset_univ
 
 theorem small_sets_inf (l₁ l₂ : Filter α) : (l₁⊓l₂).smallSets = l₁.smallSets⊓l₂.smallSets :=
-  (lift'_inf _ _) fun _ _ => (powerset_inter _ _).symm
+  lift'_inf _ _ powerset_inter
 
 instance small_sets_ne_bot (l : Filter α) : NeBot l.smallSets :=
   (lift'_ne_bot_iff monotone_powerset).2 fun _ _ => powerset_nonempty

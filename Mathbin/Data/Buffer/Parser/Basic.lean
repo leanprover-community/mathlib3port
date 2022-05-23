@@ -904,7 +904,7 @@ theorem many'_eq_done {p : Parser α} :
       
     · have hl2 := hl
       simp only [foldr_core_eq_done, or_falseₓ, exists_and_distrib_left, and_falseₓ, false_andₓ,
-        exists_eq_right_right] at hl
+        exists_eq_right_rightₓ] at hl
       obtain ⟨np, hp, h⟩ := hl
       refine' Or.inr ⟨np, _, _, hl2, hp, h⟩
       

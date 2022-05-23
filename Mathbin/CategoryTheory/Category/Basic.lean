@@ -175,6 +175,14 @@ theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} g : Y ⟶ X, g ≫ f 
   convert w (𝟙 X)
   tidy
 
+theorem comp_ite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g g' : Y ⟶ Z) :
+    (f ≫ if P then g else g') = if P then f ≫ g else f ≫ g' := by
+  split_ifs <;> rfl
+
+theorem ite_comp {P : Prop} [Decidable P] {X Y Z : C} (f f' : X ⟶ Y) (g : Y ⟶ Z) :
+    (if P then f else f') ≫ g = if P then f ≫ g else f' ≫ g := by
+  split_ifs <;> rfl
+
 theorem comp_dite {P : Prop} [Decidable P] {X Y Z : C} (f : X ⟶ Y) (g : P → (Y ⟶ Z)) (g' : ¬P → (Y ⟶ Z)) :
     (f ≫ if h : P then g h else g' h) = if h : P then f ≫ g h else f ≫ g' h := by
   split_ifs <;> rfl

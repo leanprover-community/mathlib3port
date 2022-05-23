@@ -270,6 +270,7 @@ theorem noncomm_prod_commute (s : Finset α) (f : α → β) (comm : ∀ x : α,
   rintro ⟨x, ⟨hx, rfl⟩⟩
   exact h x hx
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
 theorem noncomm_prod_eq_prod {β : Type _} [CommMonoidₓ β] (s : Finset α) (f : α → β) :
     (noncommProd s f fun _ _ _ _ => Commute.all _ _) = s.Prod f := by
@@ -314,6 +315,7 @@ theorem noncomm_prod_mul_distrib_aux {s : Finset α} {f : α → β} {g : α →
   · exact comm_gg x hx y hy
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- The non-commutative version of `finset.prod_mul_distrib` -/
 @[to_additive "The non-commutative version of `finset.sum_add_distrib`"]
 theorem noncomm_prod_mul_distrib {s : Finset α} (f : α → β) (g : α → β)

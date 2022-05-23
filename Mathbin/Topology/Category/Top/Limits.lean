@@ -147,11 +147,14 @@ def piFan {ι : Type v} (α : ι → Top.{max v u}) : Fan α :=
 
 /-- The constructed fan is indeed a limit -/
 def piFanIsLimit {ι : Type v} (α : ι → Top.{max v u}) : IsLimit (piFan α) where
-  lift := fun S => { toFun := fun s i => S.π.app i s }
+  lift := fun S => { toFun := fun s i => S.π.app ⟨i⟩ s }
   uniq' := by
     intro S m h
     ext x i
-    simp [← h i]
+    simp [← h ⟨i⟩]
+  fac' := fun s j => by
+    cases j
+    tidy
 
 /-- The product is homeomorphic to the product of the underlying spaces,
 equipped with the product topology.
@@ -187,7 +190,7 @@ def sigmaCofan {ι : Type v} (α : ι → Top.{max v u}) : Cofan α :=
 /-- The constructed cofan is indeed a colimit -/
 def sigmaCofanIsColimit {ι : Type v} (α : ι → Top.{max v u}) : IsColimit (sigmaCofan α) where
   desc := fun S =>
-    { toFun := fun s => S.ι.app s.1 s.2,
+    { toFun := fun s => S.ι.app ⟨s.1⟩ s.2,
       continuous_to_fun := by
         continuity
         dsimp' only
@@ -195,7 +198,10 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → Top.{max v u}) : IsColimit (s
   uniq' := by
     intro S m h
     ext ⟨i, x⟩
-    simp [← h i]
+    simp [← h ⟨i⟩]
+  fac' := fun s j => by
+    cases j
+    tidy
 
 /-- The coproduct is homeomorphic to the disjoint union of the topological spaces.
 -/
@@ -252,11 +258,11 @@ def prodBinaryFanIsLimit (X Y : Top.{u}) : IsLimit (prodBinaryFan X Y) where
   uniq' := by
     intro S m h
     ext x
-    · specialize h walking_pair.left
+    · specialize h ⟨walking_pair.left⟩
       apply_fun fun e => e x  at h
       exact h
       
-    · specialize h walking_pair.right
+    · specialize h ⟨walking_pair.right⟩
       apply_fun fun e => e x  at h
       exact h
       
@@ -315,7 +321,7 @@ theorem range_prod_map {W X Y Z : Top.{u}} (f : W ⟶ Y) (g : X ⟶ Z) :
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
     use (prod_iso_prod W X).inv (x₁, x₂)
     apply concrete.limit_ext
-    rintro ⟨⟩
+    rintro ⟨⟨⟩⟩
     · simp only [← comp_apply, category.assoc]
       erw [limits.prod.map_fst]
       simp [hx₁]
@@ -455,7 +461,7 @@ theorem range_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
   · intro h
     use (pullback_iso_prod_subtype f g).inv ⟨⟨_, _⟩, h⟩
     apply concrete.limit_ext
-    rintro ⟨⟩ <;> simp
+    rintro ⟨⟨⟩⟩ <;> simp
     
 
 theorem inducing_pullback_to_prod {X Y Z : Top} (f : X ⟶ Z) (g : Y ⟶ Z) :
@@ -723,6 +729,7 @@ variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ Top.{max v u
 
 include hC
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
@@ -863,6 +870,7 @@ def PartialSections {J : Type u} [SmallCategory J] (F : J ⥤ Top.{u}) {G : Fins
     (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
   { u | ∀ {f : FiniteDiagramArrow G} hf : f ∈ H, F.map f.2.2.2.2 (u f.1) = u f.2.1 }
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.obj j)] {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : (PartialSections F H).Nonempty := by
   classical
@@ -872,6 +880,7 @@ theorem PartialSections.nonempty [IsCofiltered J] [h : ∀ j : J, Nonempty (F.ob
   dsimp' only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem PartialSections.directed : Directed Superset fun G : FiniteDiagram J => PartialSections F G.2 := by
   classical
   intro A B
@@ -908,6 +917,7 @@ theorem PartialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J} (H 
   apply is_closed_eq
   continuity
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 --/
 theorem nonempty_limit_cone_of_compact_t2_cofiltered_system [IsCofiltered J] [∀ j : J, Nonempty (F.obj j)]

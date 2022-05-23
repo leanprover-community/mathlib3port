@@ -371,6 +371,7 @@ theorem coe_fn_neg (f : lp E p) : ⇑(-f) = -f :=
 theorem coe_fn_add (f g : lp E p) : ⇑(f + g) = f + g :=
   rfl
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
 theorem coe_fn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) : ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
   classical
@@ -447,6 +448,7 @@ theorem norm_zero : ∥(0 : lp E p)∥ = 0 := by
     simpa [Real.zero_rpow hp.ne'] using Real.zero_rpow hp'
     
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem norm_eq_zero_iff ⦃f : lp E p⦄ : ∥f∥ = 0 ↔ f = 0 := by
   classical
   refine'

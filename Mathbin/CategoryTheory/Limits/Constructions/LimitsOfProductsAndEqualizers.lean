@@ -41,8 +41,8 @@ variable {J : Type v} [SmallCategory J]
 namespace HasLimitOfHasProductsOfHasEqualizers
 
 variable {F : J ⥤ C} {c₁ : Fan F.obj} {c₂ : Fan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.x ⟶ c₂.x)
-  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app f = c₁.π.app f.1.1 ≫ F.map f.2)
-  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2) (i : Fork s t)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.1⟩ ≫ F.map f.2)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app ⟨f⟩ = c₁.π.app ⟨f.1.2⟩) (i : Fork s t)
 
 include hs ht
 
@@ -53,13 +53,14 @@ limiting if the given cones are also.
 def buildLimit : Cone F where
   x := i.x
   π :=
-    { app := fun j => i.ι ≫ c₁.π.app _,
+    { app := fun j => i.ι ≫ c₁.π.app ⟨_⟩,
       naturality' := fun j₁ j₂ f => by
         dsimp'
         rw [category.id_comp, category.assoc, ← hs ⟨⟨_, _⟩, f⟩, i.condition_assoc, ht] }
 
 variable {i}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
@@ -70,14 +71,16 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : 
       apply q.π.app j
       
     · apply t₂.hom_ext
+      intro j
+      "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
       simp [hs, ht]
       
   uniq' := fun q m w =>
     hi.hom_ext
       (i.equalizer_ext
-        (t₁.hom_ext
-          (by
-            simpa using w)))
+        (t₁.hom_ext fun j => by
+          cases j
+          simpa using w j))
 
 end HasLimitOfHasProductsOfHasEqualizers
 
@@ -91,7 +94,8 @@ noncomputable def limitConeOfEqualizerAndProduct (F : J ⥤ C) [HasLimit (Discre
     [HasLimit (Discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [HasEqualizers C] : LimitCone F where
   Cone := _
   IsLimit :=
-    buildIsLimit (Pi.lift fun f => limit.π _ _ ≫ F.map f.2) (Pi.lift fun f => limit.π _ f.1.2)
+    buildIsLimit (Pi.lift fun f => limit.π (Discrete.functor F.obj) ⟨_⟩ ≫ F.map f.2)
+      (Pi.lift fun f => limit.π (Discrete.functor F.obj) ⟨f.1.2⟩)
       (by
         simp )
       (by
@@ -144,8 +148,8 @@ def preservesLimitOfPreservesEqualizersAndProduct : PreservesLimitsOfShape J G w
   PreservesLimit := fun K => by
     let P := ∏ K.obj
     let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
-    let s : P ⟶ Q := pi.lift fun f => limit.π _ _ ≫ K.map f.2
-    let t : P ⟶ Q := pi.lift fun f => limit.π _ f.1.2
+    let s : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨_⟩ ≫ K.map f.2
+    let t : P ⟶ Q := pi.lift fun f => limit.π (discrete.functor K.obj) ⟨f.1.2⟩
     let I := equalizer s t
     let i : I ⟶ P := equalizer.ι s t
     apply
@@ -212,8 +216,8 @@ We now dualize the above constructions, resorting to copy-paste.
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
 variable {F : J ⥤ C} {c₁ : Cofan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : Cofan F.obj} (s t : c₁.x ⟶ c₂.x)
-  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ s = F.map f.2 ≫ c₂.ι.app f.1.2)
-  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1) (i : Cofork s t)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ s = F.map f.2 ≫ c₂.ι.app ⟨f.1.2⟩)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app ⟨f⟩ ≫ t = c₂.ι.app ⟨f.1.1⟩) (i : Cofork s t)
 
 include hs ht
 
@@ -224,13 +228,14 @@ build the cocone for `F` which is colimiting if the given cocones are also.
 def buildColimit : Cocone F where
   x := i.x
   ι :=
-    { app := fun j => c₂.ι.app _ ≫ i.π,
+    { app := fun j => c₂.ι.app ⟨_⟩ ≫ i.π,
       naturality' := fun j₁ j₂ f => by
         dsimp'
         rw [category.comp_id, ← reassoc_of (hs ⟨⟨_, _⟩, f⟩), i.condition, ← category.assoc, ht] }
 
 variable {i}
 
+-- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
@@ -242,14 +247,16 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
       apply q.ι.app j
       
     · apply t₁.hom_ext
+      intro j
+      "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
       simp [reassoc_of hs, reassoc_of ht]
       
   uniq' := fun q m w =>
     hi.hom_ext
       (i.coequalizer_ext
-        (t₂.hom_ext
-          (by
-            simpa using w)))
+        (t₂.hom_ext fun j => by
+          cases j
+          simpa using w j))
 
 end HasColimitOfHasCoproductsOfHasCoequalizers
 
@@ -264,8 +271,8 @@ noncomputable def colimitCoconeOfCoequalizerAndCoproduct (F : J ⥤ C) [HasColim
     ColimitCocone F where
   Cocone := _
   IsColimit :=
-    buildIsColimit (Sigma.desc fun f => F.map f.2 ≫ colimit.ι (Discrete.functor F.obj) f.1.2)
-      (Sigma.desc fun f => colimit.ι (Discrete.functor F.obj) f.1.1)
+    buildIsColimit (Sigma.desc fun f => F.map f.2 ≫ colimit.ι (Discrete.functor F.obj) ⟨f.1.2⟩)
+      (Sigma.desc fun f => colimit.ι (Discrete.functor F.obj) ⟨f.1.1⟩)
       (by
         simp )
       (by
@@ -317,8 +324,8 @@ def preservesColimitOfPreservesCoequalizersAndCoproduct : PreservesColimitsOfSha
   PreservesColimit := fun K => by
     let P := ∐ K.obj
     let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
-    let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) _
-    let t : Q ⟶ P := sigma.desc fun f => colimit.ι (discrete.functor K.obj) f.1.1
+    let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) ⟨_⟩
+    let t : Q ⟶ P := sigma.desc fun f => colimit.ι (discrete.functor K.obj) ⟨f.1.1⟩
     let I := coequalizer s t
     let i : P ⟶ I := coequalizer.π s t
     apply

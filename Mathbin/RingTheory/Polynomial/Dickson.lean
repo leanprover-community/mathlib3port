@@ -177,6 +177,7 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p) p = X ^ p := by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
   -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
@@ -201,7 +202,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : Zmod p)
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
   · rintro _ ⟨x, rfl, hx⟩
     simp only [eval_X, eval_pow, Set.mem_set_of_eq, @add_pow_char K _ p,
-      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow₀, Zmod.cast_hom_apply, Zmod.cast_one']
+      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, Zmod.cast_hom_apply, Zmod.cast_one']
     
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.

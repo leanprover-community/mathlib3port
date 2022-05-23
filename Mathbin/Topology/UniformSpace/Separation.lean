@@ -171,6 +171,7 @@ theorem is_closed_separation_rel : IsClosed (𝓢 α) := by
   rintro _ ⟨t, t_in, rfl⟩
   exact is_closed_closure
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
   classical
   constructor <;> intro h

@@ -113,6 +113,7 @@ theorem Coloring.not_adj_of_mem_color_class {c : α} {v w : V} (hv : v ∈ C.Col
 theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.ColorClass c) := fun v hv w hw h =>
   C.not_adj_of_mem_color_class hv hw
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 -- TODO make this computable
 noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by
   classical

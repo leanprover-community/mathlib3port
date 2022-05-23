@@ -1075,6 +1075,20 @@ theorem PseudoMetricSpace.replace_uniformity_eq {α} [U : UniformSpace α] (m : 
   ext
   rfl
 
+/-- Build a new pseudo metric space from an old one where the bundled topological structure is
+provably (but typically non-definitionaly) equal to some given topological structure.
+See Note [forgetful inheritance].
+-/
+@[reducible]
+def PseudoMetricSpace.replaceTopology {γ} [U : TopologicalSpace γ] (m : PseudoMetricSpace γ)
+    (H : U = m.toUniformSpace.toTopologicalSpace) : PseudoMetricSpace γ :=
+  @PseudoMetricSpace.replaceUniformity γ (m.toUniformSpace.replaceTopology H) m rfl
+
+theorem PseudoMetricSpace.replace_topology_eq {γ} [U : TopologicalSpace γ] (m : PseudoMetricSpace γ)
+    (H : U = m.toUniformSpace.toTopologicalSpace) : m.replaceTopology H = m := by
+  ext
+  rfl
+
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the pseudometric space and the pseudoemetric space. In this definition, the
@@ -1358,6 +1372,13 @@ def PseudoMetricSpace.induced {α β} (f : α → β) (m : PseudoMetricSpace β)
       exact ⟨_, dist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
       
 
+/-- Pull back a pseudometric space structure by an inducing map. This is a version of
+`pseudo_metric_space.induced` useful in case if the domain already has a `topological_space`
+structure. -/
+def Inducing.comapPseudoMetricSpace {α β} [TopologicalSpace α] [PseudoMetricSpace β] {f : α → β} (hf : Inducing f) :
+    PseudoMetricSpace α :=
+  (PseudoMetricSpace.induced f ‹_›).replaceTopology hf.induced
+
 /-- Pull back a pseudometric space structure by a uniform inducing map. This is a version of
 `pseudo_metric_space.induced` useful in case if the domain already has a `uniform_space`
 structure. -/
@@ -1433,6 +1454,29 @@ theorem Nnreal.le_add_nndist (a b : ℝ≥0 ) : a ≤ b + nndist a b := by
         rfl : abs (a - b : ℝ) ≤ dist a b)]
 
 end Nnreal
+
+section ULift
+
+variable [PseudoMetricSpace β]
+
+instance : PseudoMetricSpace (ULift β) :=
+  PseudoMetricSpace.induced ULift.down ‹_›
+
+theorem ULift.dist_eq (x y : ULift β) : dist x y = dist x.down y.down :=
+  rfl
+
+theorem ULift.nndist_eq (x y : ULift β) : nndist x y = nndist x.down y.down :=
+  rfl
+
+@[simp]
+theorem ULift.dist_up_up (x y : β) : dist (ULift.up x) (ULift.up y) = dist x y :=
+  rfl
+
+@[simp]
+theorem ULift.nndist_up_up (x y : β) : nndist (ULift.up x) (ULift.up y) = nndist x y :=
+  rfl
+
+end ULift
 
 section Prod
 
@@ -1586,6 +1630,7 @@ theorem dense_range_iff {f : β → α} : DenseRange f ↔ ∀ x, ∀, ∀ r > 0
   forall_congrₓ fun x => by
     simp only [mem_closure_iff, exists_range_iff]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If a set `s` is separable, then the corresponding subtype is separable in a metric space.
 This is not obvious, as the countable set whose closure covers `s` does not need in general to
 be contained in `s`. -/
@@ -2194,7 +2239,7 @@ theorem diam_singleton : diam ({x} : Set α) = 0 :=
 theorem diam_pair : diam ({x, y} : Set α) = dist x y := by
   simp only [diam, Emetric.diam_pair, dist_edist]
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple : Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) := by
   simp only [Metric.diam, Emetric.diam_triple, dist_edist]
@@ -2263,7 +2308,7 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   rw [Ennreal.to_real_le_to_real (bounded.mono h ht).ediam_ne_top ht.ediam_ne_top]
   exact Emetric.diam_mono h
 
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:53:9: parse error
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -2547,11 +2592,8 @@ See Note [forgetful inheritance].
 -/
 @[reducible]
 def MetricSpace.replaceTopology {γ} [U : TopologicalSpace γ] (m : MetricSpace γ)
-    (H : U = m.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace) : MetricSpace γ := by
-  let t := m.to_pseudo_metric_space.to_uniform_space.replace_topology H
-  let this : UniformSpace γ := t
-  have : @uniformity _ t = @uniformity _ m.to_pseudo_metric_space.to_uniform_space := rfl
-  exact m.replace_uniformity this
+    (H : U = m.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace) : MetricSpace γ :=
+  @MetricSpace.replaceUniformity γ (m.toUniformSpace.replaceTopology H) m rfl
 
 theorem MetricSpace.replace_topology_eq {γ} [U : TopologicalSpace γ] (m : MetricSpace γ)
     (H : U = m.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace) : m.replaceTopology H = m := by
@@ -2649,6 +2691,9 @@ noncomputable instance : MetricSpace ℝ≥0 :=
   Subtype.metricSpace
 
 end Nnreal
+
+instance [MetricSpace β] : MetricSpace (ULift β) :=
+  MetricSpace.induced ULift.down ULift.down_injective ‹_›
 
 section Prod
 

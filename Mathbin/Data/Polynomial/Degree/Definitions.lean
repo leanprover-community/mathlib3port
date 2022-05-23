@@ -265,6 +265,11 @@ theorem nat_degree_monomial [DecidableEq R] (i : ℕ) (r : R) : natDegree (monom
   · rw [← C_mul_X_pow_eq_monomial, nat_degree_C_mul_X_pow i r hr]
     
 
+theorem nat_degree_monomial_le (a : R) {m : ℕ} : (monomial m a).natDegree ≤ m := by
+  rw [Polynomial.nat_degree_monomial]
+  split_ifs
+  exacts[Nat.zero_leₓ _, rfl.le]
+
 theorem nat_degree_monomial_eq (i : ℕ) {r : R} (r0 : r ≠ 0) : (monomial i r).natDegree = i :=
   Eq.trans (nat_degree_monomial _ _) (if_neg r0)
 
@@ -1079,6 +1084,11 @@ theorem degree_X_pow (n : ℕ) : degree ((x : R[X]) ^ n) = n := by
 @[simp]
 theorem nat_degree_X_pow (n : ℕ) : natDegree ((x : R[X]) ^ n) = n :=
   nat_degree_eq_of_degree_eq_some (degree_X_pow n)
+
+--  This lemma explicitly does not require the `nontrivial R` assumption.
+theorem nat_degree_X_pow_le {R : Type _} [Semiringₓ R] (n : ℕ) : (X ^ n : R[X]).natDegree ≤ n := by
+  nontriviality R
+  rwa [Polynomial.nat_degree_X_pow]
 
 theorem not_is_unit_X : ¬IsUnit (x : R[X]) := fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
   @zero_ne_one R _ _ <| by

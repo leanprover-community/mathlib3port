@@ -47,12 +47,17 @@ variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
-instance [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+instance linear_map [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) := by
+  cases subsingleton_or_nontrivial R
+  · apply Module.Free.of_subsingleton'
+    
   classical
   exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 
 variable {R M}
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [CommRingₓ R] [AddCommGroupₓ M]
     [Module R M] [Fintype ι] (b : Basis ι R M) : Module.Finite R M := by
@@ -64,7 +69,13 @@ instance _root_.module.finite.matrix {ι₁ : Type _} [Fintype ι₁] {ι₂ : T
     Module.Finite R (Matrix ι₁ ι₂ R) :=
   Module.Finite.of_basis <| Pi.basis fun i => Pi.basisFun R _
 
-instance [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
+variable (M)
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+instance _root_.module.finite.linear_map [Module.Finite R M] [Module.Finite R N] : Module.Finite R (M →ₗ[R] N) := by
+  cases subsingleton_or_nontrivial R
+  · infer_instance
+    
   classical
   have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
   exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
@@ -77,11 +88,12 @@ variable [AddCommGroupₓ M] [Module.Finite ℤ M] [Module.Free ℤ M]
 
 variable [AddCommGroupₓ N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
-instance : Module.Finite ℤ (M →+ N) :=
+instance _root_.module.finite.add_monoid_hom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 
-instance : Module.Free ℤ (M →+ N) :=
-  Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
+instance add_monoid_hom : Module.Free ℤ (M →+ N) := by
+  let this : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linear_map _ _ _
+  exact Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 
 end Integer
 
