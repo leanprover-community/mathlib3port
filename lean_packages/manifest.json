@@ -4,5 +4,5 @@
    "rev": "8b7a86a8c1a98511e706f54beb288ee1974f052f",
    "name": "mathlib"},
   {"url": "https://github.com/leanprover-community/lean3port.git",
-   "rev": "27129cb65a7e551637cc38e1daeeec8940892309",
+   "rev": "d47f5546fb6b55d3830ced999e56eb5ba18eaacd",
    "name": "lean3port"}]}

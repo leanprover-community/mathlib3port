@@ -16,7 +16,7 @@ def download (url : String) (to : FilePath) : BuildM PUnit := Lake.proc
 
 def untar (file : FilePath) : BuildM PUnit := Lake.proc
 { cmd := "tar",
-  args := #["-xzvf", file.fileName.getD "."] -- really should throw an error if `file.fileName = none`
+  args := #["-xzf", file.fileName.getD "."] -- really should throw an error if `file.fileName = none`
   cwd := file.parent }
 
 def getReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM PUnit :=
@@ -38,7 +38,7 @@ def fetchOleans : OpaqueTarget := { info := (), task := fetch } where
 package mathlib3port where
   extraDepTarget := Target.collectOpaqueList [fetchOleans]
 
-require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"27129cb65a7e551637cc38e1daeeec8940892309"
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"d47f5546fb6b55d3830ced999e56eb5ba18eaacd"
 
 @[defaultTarget]
 lean_lib Mathbin where
