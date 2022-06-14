@@ -4,11 +4,9 @@ open Lake DSL System
 -- Usually the `tag` will be of the form `nightly-2021-11-22`.
 -- If you would like to use an artifact from a PR build,
 -- it will be of the form `pr-branchname-sha`.
--- You can find the relevant SHA by inspecting the URL of the artifacts on the release page.
 def tag : String := "nightly-2022-05-22"
 def releaseRepo : String := "leanprover-community/mathport"
 def oleanTarName : String := "mathlib3-binport.tar.gz"
-def leanTarName : String := "mathlib3-synport.tar.gz"
 
 def download (url : String) (to : FilePath) : BuildM PUnit := Lake.proc
 { -- We use `curl -O` to ensure we clobber any existing file.
@@ -28,31 +26,21 @@ def untarReleaseArtifact (repo tag artifact : String) (to : FilePath) : BuildM P
   getReleaseArtifact repo tag artifact to
   untar (to / artifact)
 
-def fetchOleans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
+def fetchOleans : OpaqueTarget := { info := (), task := fetch } where
   fetch := async (m := BuildM) do
     IO.FS.createDirAll libDir
-    let oldTrace := Hash.ofString (← Git.headRevision dir)
+    let oldTrace := Hash.ofString tag
     buildFileUnlessUpToDate (libDir / oleanTarName) oldTrace do
       untarReleaseArtifact releaseRepo tag oleanTarName libDir
 
-  libDir : FilePath := dir / "build" / "lib"
+  libDir : FilePath := __dir__ / "build" / "lib"
 
-def fetchLeans (dir : FilePath) : OpaqueTarget := { info := (), task := fetch } where
-  fetch := async (m := BuildM) do
-    IO.FS.createDirAll srcDir
-    let oldTrace := Hash.ofString (← Git.headRevision dir)
-    buildFileUnlessUpToDate (srcDir / leanTarName) oldTrace do
-      untarReleaseArtifact releaseRepo tag leanTarName srcDir
+package mathlib3port where
+  extraDepTarget := Target.collectOpaqueList [fetchOleans]
 
-  srcDir : FilePath := dir
+require lean3port from git "https://github.com/leanprover-community/lean3port.git"@"686313b544805128ea6536e83a16c781fa6a2353"
 
-package mathlib3port (dir) {
-  libRoots := #[]
-  libGlobs := #[`Mathbin]
-  extraDepTarget := Target.collectOpaqueList [fetchLeans dir, fetchOleans dir]
-  defaultFacet := PackageFacet.oleans
-  dependencies := #[{
-    name := "lean3port",
-    src := Source.git "https://github.com/leanprover-community/lean3port.git" "686313b544805128ea6536e83a16c781fa6a2353"
-  }]
-}
+@[defaultTarget]
+lean_lib Mathbin where
+  roots := #[]
+  globs := #[`Mathbin]

@@ -15,8 +15,9 @@ popd
 
 sed -i '
   /^def tag / s/"\(.*\)"$/"'$tag'"/;
-  /src.*:=.*lean3port/ s/"\([^"]*\)"$/"'$lean3port_rev'"/
+  /^require lean3port / s/@"\([^"]*\)"$/@"'$lean3port_rev'"/
 ' lakefile.lean
+lake update
 
 rm -rf Mathbin
 curl -qsSL https://github.com/leanprover-community/mathport/releases/download/$tag/mathlib3-synport.tar.gz \
