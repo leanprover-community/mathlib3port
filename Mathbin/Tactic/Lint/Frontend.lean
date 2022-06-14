@@ -258,7 +258,7 @@ unsafe def lint_all (slow : Bool := true) (verbose : LintVerbosity := LintVerbos
   let l := e.get_decls
   lint_aux l (some 0) "in all imported files (including this one)" slow verbose checks
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
 /-- Parses an optional `only`, followed by a sequence of zero or more identifiers.
 Prepends `linter.` to each of these identifiers. -/
 unsafe def parse_lint_additions : parser (Bool × List Name) :=

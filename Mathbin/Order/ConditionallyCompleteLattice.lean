@@ -80,7 +80,7 @@ class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ �
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a
   le_cInf : ∀ s a, Set.Nonempty s → a ∈ LowerBounds s → a ≤ Inf s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- A conditionally complete linear order is a linear order in which
 every nonempty subset which is bounded above has a supremum, and
 every nonempty subset which is bounded below has an infimum.
@@ -91,7 +91,7 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure"
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -135,21 +135,18 @@ section
 
 open Classical
 
-/-- A well founded linear order is conditionally complete, with a bottom element. -/
+/-- A well founded linear order with a bottom element is conditionally complete. -/
 @[reducible]
-noncomputable def WellFounded.conditionallyCompleteLinearOrderWithBot {α : Type _} [i : LinearOrderₓ α]
-    (h : WellFounded ((· < ·) : α → α → Prop)) (c : α) (hc : c = h.min Set.Univ ⟨c, mem_univ c⟩) :
-    ConditionallyCompleteLinearOrderBot α :=
-  { i with sup := max, le_sup_left := le_max_leftₓ, le_sup_right := le_max_rightₓ, sup_le := fun a b c => max_leₓ,
-    inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ, le_inf := fun a b c => le_minₓ,
-    inf := fun s => if hs : s.Nonempty then h.min s hs else c,
+noncomputable def WellFounded.conditionallyCompleteLinearOrderWithBot {α : Type _} [i₁ : LinearOrderₓ α]
+    [i₂ : OrderBot α] (h : WellFounded ((· < ·) : α → α → Prop)) : ConditionallyCompleteLinearOrderBot α :=
+  { i₁, i₂, LinearOrderₓ.toLattice with inf := fun s => if hs : s.Nonempty then h.min s hs else ⊥,
     cInf_le := fun s a hs has => by
       have s_ne : s.nonempty := ⟨a, has⟩
       simpa [s_ne] using not_ltₓ.1 (h.not_lt_min s s_ne has),
     le_cInf := fun s a hs has => by
       simp only [hs, dif_pos]
       exact has (h.min_mem s hs),
-    sup := fun s => if hs : (UpperBounds s).Nonempty then h.min _ hs else c,
+    sup := fun s => if hs : (UpperBounds s).Nonempty then h.min _ hs else ⊥,
     le_cSup := fun s a hs has => by
       have h's : (UpperBounds s).Nonempty := hs
       simp only [h's, dif_pos]
@@ -158,13 +155,9 @@ noncomputable def WellFounded.conditionallyCompleteLinearOrderWithBot {α : Type
       have h's : (UpperBounds s).Nonempty := ⟨a, has⟩
       simp only [h's, dif_pos]
       simpa using h.not_lt_min _ h's has,
-    bot := c,
-    bot_le := fun x => by
-      convert not_ltₓ.1 (h.not_lt_min Set.Univ ⟨c, mem_univ c⟩ (mem_univ x)),
     cSup_empty := by
-      have : (Set.Univ : Set α).Nonempty := ⟨c, mem_univ c⟩
-      simp only [this, dif_pos, upper_bounds_empty]
-      exact hc.symm }
+      simp only [univ_nonempty, dif_pos, upper_bounds_empty]
+      exact bot_unique (h.min_le <| mem_univ ⊥) }
 
 end
 
@@ -483,7 +476,7 @@ theorem cinfi_const [hι : Nonempty ι] {a : α} : (⨅ b : ι, a) = a :=
 
 @[simp]
 theorem supr_unique [Unique ι] {s : ι → α} : (⨆ i, s i) = s default := by
-  have : ∀ i, s i = s default := fun i => congr_argₓ s (Unique.eq_default i)
+  have : ∀ i, s i = s default := fun i => congr_arg s (Unique.eq_default i)
   simp only [this, csupr_const]
 
 @[simp]
@@ -589,17 +582,17 @@ theorem Finset.Nonempty.cSup_mem {s : Finset α} (h : s.Nonempty) : sup (s : Set
 theorem Finset.Nonempty.cInf_mem {s : Finset α} (h : s.Nonempty) : inf (s : Set α) ∈ s :=
   @Finset.Nonempty.cSup_mem αᵒᵈ _ _ h
 
-theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : Finite s) : sup s ∈ s := by
+theorem Set.Nonempty.cSup_mem (h : s.Nonempty) (hs : s.Finite) : sup s ∈ s := by
   lift s to Finset α using hs
   exact Finset.Nonempty.cSup_mem h
 
-theorem Set.Nonempty.cInf_mem (h : s.Nonempty) (hs : Finite s) : inf s ∈ s :=
+theorem Set.Nonempty.cInf_mem (h : s.Nonempty) (hs : s.Finite) : inf s ∈ s :=
   @Set.Nonempty.cSup_mem αᵒᵈ _ _ h hs
 
-theorem Set.Finite.cSup_lt_iff (hs : Finite s) (h : s.Nonempty) : sup s < a ↔ ∀, ∀ x ∈ s, ∀, x < a :=
+theorem Set.Finite.cSup_lt_iff (hs : s.Finite) (h : s.Nonempty) : sup s < a ↔ ∀, ∀ x ∈ s, ∀, x < a :=
   ⟨fun h x hx => (le_cSup hs.BddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
 
-theorem Set.Finite.lt_cInf_iff (hs : Finite s) (h : s.Nonempty) : a < inf s ↔ ∀, ∀ x ∈ s, ∀, a < x :=
+theorem Set.Finite.lt_cInf_iff (hs : s.Finite) (h : s.Nonempty) : a < inf s ↔ ∀, ∀ x ∈ s, ∀, a < x :=
   @Set.Finite.cSup_lt_iff αᵒᵈ _ _ _ hs h
 
 /-- When b < Sup s, there is an element a in s with b < a, if s is nonempty and the order is
@@ -643,6 +636,14 @@ theorem le_cInf_iff' (hs : s.Nonempty) : b ≤ inf s ↔ b ∈ LowerBounds s :=
 theorem Inf_mem (hs : s.Nonempty) : inf s ∈ s :=
   (is_least_Inf hs).1
 
+theorem MonotoneOn.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β} (hf : MonotoneOn f s)
+    (hs : s.Nonempty) : f (inf s) = inf (f '' s) :=
+  (hf.map_is_least (is_least_Inf hs)).cInf_eq.symm
+
+theorem Monotone.map_Inf {β : Type _} [ConditionallyCompleteLattice β] {f : α → β} (hf : Monotone f) (hs : s.Nonempty) :
+    f (inf s) = inf (f '' s) :=
+  (hf.map_is_least (is_least_Inf hs)).cInf_eq.symm
+
 end ConditionallyCompleteLinearOrder
 
 /-!
@@ -667,6 +668,10 @@ theorem csupr_of_empty [IsEmpty ι] (f : ι → α) : (⨆ i, f i) = ⊥ := by
 @[simp]
 theorem csupr_false (f : False → α) : (⨆ i, f i) = ⊥ :=
   csupr_of_empty f
+
+@[simp]
+theorem cInf_univ : inf (Univ : Set α) = ⊥ :=
+  is_least_univ.cInf_eq
 
 theorem is_lub_cSup' {s : Set α} (hs : BddAbove s) : IsLub s (sup s) := by
   rcases eq_empty_or_nonempty s with (rfl | hne)

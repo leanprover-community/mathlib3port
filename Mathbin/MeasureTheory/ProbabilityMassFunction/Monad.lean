@@ -165,7 +165,7 @@ theorem to_outer_measure_bind_apply : (p.bind f).toOuterMeasure s = ∑' a : α,
     _ = ∑' a : α, ↑(p a) * ∑' b : β, ↑(if b ∈ s then f a b else 0) := tsum_congr fun a => Ennreal.tsum_mul_left
     _ = ∑' a : α, ↑(p a) * ∑' b : β, if b ∈ s then ↑(f a b) else (0 : ℝ≥0∞) :=
       tsum_congr fun a =>
-        (congr_argₓ fun x => ↑(p a) * x) <|
+        (congr_arg fun x => ↑(p a) * x) <|
           tsum_congr fun b => by
             split_ifs <;> rfl
     _ = ∑' a : α, ↑(p a) * (f a).toOuterMeasure s :=
@@ -180,7 +180,7 @@ theorem to_measure_bind_apply [MeasurableSpace β] (hs : MeasurableSet s) :
     (p.bind f).toMeasure s = ∑' a : α, (p a : ℝ≥0∞) * (f a).toMeasure s :=
   (to_measure_apply_eq_to_outer_measure_apply (p.bind f) s hs).trans
     ((to_outer_measure_bind_apply p f s).trans
-      (tsum_congr fun a => congr_argₓ (fun x => p a * x) (to_measure_apply_eq_to_outer_measure_apply (f a) s hs).symm))
+      (tsum_congr fun a => congr_arg (fun x => p a * x) (to_measure_apply_eq_to_outer_measure_apply (f a) s hs).symm))
 
 end Measureₓ
 
@@ -253,7 +253,7 @@ theorem mem_support_bind_on_support_iff (b : β) :
 theorem bind_on_support_eq_bind (p : Pmf α) (f : α → Pmf β) : (p.bindOnSupport fun a _ => f a) = p.bind f := by
   ext b
   simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, Nnreal.coe_eq, mul_ite, mul_zero]
-  refine' congr_argₓ _ (funext fun a => _)
+  refine' congr_arg _ (funext fun a => _)
   split_ifs with h <;> simp [h]
 
 theorem coe_bind_on_support_apply (b : β) :
@@ -339,21 +339,19 @@ theorem to_outer_measure_bind_on_support_apply :
     _ = ∑' a : α, ↑(p a) * ∑' b : β, ↑(if b ∈ s then g a b else 0) := tsum_congr fun a => Ennreal.tsum_mul_left
     _ = ∑' a : α, ↑(p a) * ∑' b : β, if b ∈ s then ↑(g a b) else (0 : ℝ≥0∞) :=
       tsum_congr fun a =>
-        (congr_argₓ fun x => ↑(p a) * x) <|
+        (congr_arg fun x => ↑(p a) * x) <|
           tsum_congr fun b => by
             split_ifs <;> rfl
     _ = ∑' a : α, ↑(p a) * if h : p a = 0 then 0 else (f a h).toOuterMeasure s :=
       tsum_congr fun a =>
-        congr_argₓ (Mul.mul ↑(p a))
+        congr_arg (Mul.mul ↑(p a))
           (by
             split_ifs with h h
-            · exact
-                ennreal.tsum_eq_zero.mpr fun x =>
-                  (by
-                      simp [g, h] : (0 : ℝ≥0∞) = ↑(g a x)) ▸
-                    if_t_t (x ∈ s) 0
+            · refine' ennreal.tsum_eq_zero.mpr fun x => _
+              simp only [g, h, dif_pos]
+              apply if_t_t
               
-            · simp [to_outer_measure_apply, g, h, Set.indicator_apply]
+            · simp only [to_outer_measure_apply, g, h, Set.indicator_apply, not_false_iff, dif_neg]
               )
     
 
@@ -366,8 +364,8 @@ theorem to_measure_bind_on_support_apply [MeasurableSpace β] (hs : MeasurableSe
   (to_measure_apply_eq_to_outer_measure_apply (p.bindOnSupport f) s hs).trans
     ((to_outer_measure_bind_on_support_apply f s).trans
       (tsum_congr fun a =>
-        congr_argₓ (Mul.mul ↑(p a))
-          (congr_argₓ (dite (p a = 0) fun _ => 0) <|
+        congr_arg (Mul.mul ↑(p a))
+          (congr_arg (dite (p a = 0) fun _ => 0) <|
             funext fun h => symm <| to_measure_apply_eq_to_outer_measure_apply (f a h) s hs)))
 
 end Measureₓ

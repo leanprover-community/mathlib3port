@@ -36,7 +36,7 @@ open Tactic Expr
 private unsafe def illegal_ge_gt : List Name :=
   [`gt, `ge]
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.max_steps
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.max_steps
 set_option eqn_compiler.max_steps 20000
 
 /-- Checks whether `≥` and `>` occurs in an illegal way in the expression.

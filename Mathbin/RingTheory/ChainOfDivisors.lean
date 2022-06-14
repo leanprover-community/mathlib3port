@@ -92,7 +92,7 @@ theorem eq_second_of_chain_of_prime_dvd {p q r : Associates M} {n : ℕ} (hn : n
   · contradiction
     
   obtain ⟨i, rfl⟩ := h₂.1 (dvd_trans hp' hr)
-  refine' congr_argₓ c ((eq_of_ge_of_not_gt _) fun hi => _)
+  refine' congr_arg c ((eq_of_ge_of_not_gt _) fun hi => _)
   · rw [Finₓ.le_iff_coe_le_coe, Finₓ.coe_one, Nat.succ_le_iff, ← Finₓ.coe_zero, ← Finₓ.lt_iff_coe_lt_coe,
       Finₓ.pos_iff_ne_zero]
     rintro rfl
@@ -146,7 +146,7 @@ theorem element_of_chain_eq_pow_second_of_chain {q r : Associates M} {n : ℕ} (
     cases n
     · contradiction
       
-    rw [Finset.card_image_eq_iff_inj_on]
+    rw [Finset.card_image_iff]
     refine' Set.inj_on_of_injective (fun m m' h => Finₓ.ext _) _
     refine'
       pow_injective_of_not_unit
@@ -178,7 +178,7 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
   convert hi'
   refine' (Nat.lt_succ_iffₓ.1 i.prop).antisymm' (Nat.le_of_succ_le_succₓ _)
   calc n + 1 = (Finset.univ : Finset (Finₓ (n + 1))).card := (Finset.card_fin _).symm _ = (finset.univ.image c).card :=
-      (finset.card_image_eq_iff_inj_on.mpr
+      (finset.card_image_iff.mpr
           (h₁.injective.inj_on _)).symm _ ≤ (finset.univ.image fun m : Finₓ (i + 1) => c 1 ^ (m : ℕ)).card :=
       Finset.card_le_of_subset _ _ ≤ (Finset.univ : Finset (Finₓ (i + 1))).card := Finset.card_image_le _ = i + 1 :=
       Finset.card_fin _
@@ -226,7 +226,7 @@ theorem pow_image_of_prime_by_factor_order_iso_dvd {m p : Associates M} {n : Ass
               simp ⟩)
           hs'⟩
   have c₂.def : ∀ t, c₂ t = d ⟨c₁ t, _⟩ := fun t => rfl
-  refine' (congr_argₓ (· ^ s) (c₂.def 1).symm).trans _
+  refine' (congr_arg (· ^ s) (c₂.def 1).symm).trans _
   refine' (eq_pow_second_of_chain_of_has_chain hs (fun t u h => _) (fun r => ⟨fun hr => _, _⟩) _).symm
   · rw [c₂.def, c₂.def, Subtype.coe_lt_coe, d.lt_iff_lt, Subtype.mk_lt_mk, hc₁'.lt_iff_lt]
     exact h

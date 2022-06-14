@@ -177,6 +177,7 @@ theorem max_map (e₁ e₂ : Enorm 𝕜 V) (x : V) : (e₁⊔e₂) x = max (e₁
   rfl
 
 /-- Structure of an `emetric_space` defined by an extended norm. -/
+@[reducible]
 def emetricSpace : EmetricSpace V where
   edist := fun x y => e (x - y)
   edist_self := fun x => by
@@ -203,11 +204,11 @@ def finiteSubspace : Subspace 𝕜 V where
       _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
       
 
-/-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space_of_dist`
+/-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space`
 to ensure that this definition agrees with `e.emetric_space`. -/
 instance : MetricSpace e.finiteSubspace := by
   let this := e.emetric_space
-  refine' EmetricSpace.toMetricSpaceOfDist _ (fun x y => _) fun x y => rfl
+  refine' EmetricSpace.toMetricSpace fun x y => _
   change e (x - y) ≠ ⊤
   exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
 

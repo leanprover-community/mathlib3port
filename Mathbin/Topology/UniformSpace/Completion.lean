@@ -183,7 +183,7 @@ theorem nonempty_Cauchy_iff : Nonempty (Cauchyₓ α) ↔ Nonempty α := by
 
 section
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance : CompleteSpace (Cauchyₓ α) :=
@@ -440,7 +440,7 @@ theorem ext {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α �
 
 theorem ext' {Y : Type _} [TopologicalSpace Y] [T2Space Y] {f g : Completion α → Y} (hf : Continuous f)
     (hg : Continuous g) (h : ∀ a : α, f a = g a) (a : Completion α) : f a = g a :=
-  congr_funₓ (ext hf hg h) a
+  congr_fun (ext hf hg h) a
 
 section Extension
 

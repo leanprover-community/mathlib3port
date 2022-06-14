@@ -23,11 +23,11 @@ namespace IsNoetherian
 variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 /-- A module over a division ring is noetherian if and only if
-its dimension (as a cardinal) is strictly less than the first infinite cardinal `ω`.
+its dimension (as a cardinal) is strictly less than the first infinite cardinal `ℵ₀`.
 -/
-theorem iff_dim_lt_omega : IsNoetherian K V ↔ Module.rank K V < ω := by
+theorem iff_dim_lt_aleph_0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ := by
   let b := Basis.ofVectorSpace K V
-  rw [← b.mk_eq_dim'', lt_omega_iff_finite]
+  rw [← b.mk_eq_dim'', lt_aleph_0_iff_finite]
   constructor
   · intro
     exact finite_of_linear_independent (Basis.OfVectorSpaceIndex.linear_independent K V)
@@ -41,15 +41,15 @@ theorem iff_dim_lt_omega : IsNoetherian K V ↔ Module.rank K V < ω := by
 variable (K V)
 
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
-is strictly less than the first infinite cardinal `ω`. -/
-theorem dim_lt_omega : ∀ [IsNoetherian K V], Module.rank K V < ω :=
-  IsNoetherian.iff_dim_lt_omega.1
+is strictly less than the first infinite cardinal `ℵ₀`. -/
+theorem dim_lt_aleph_0 : ∀ [IsNoetherian K V], Module.rank K V < ℵ₀ :=
+  IsNoetherian.iff_dim_lt_aleph_0.1
 
 variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
 noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
-  b.fintypeIndexOfDimLtOmega (dim_lt_omega K V)
+  b.fintypeIndexOfDimLtAleph0 (dim_lt_aleph_0 K V)
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
@@ -59,7 +59,7 @@ noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K 
 /-- In a noetherian module over a division ring,
 if a basis is indexed by a set, that set is finite. -/
 theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) : s.Finite :=
-  b.finite_index_of_dim_lt_omega (dim_lt_omega K V)
+  b.finite_index_of_dim_lt_aleph_0 (dim_lt_aleph_0 K V)
 
 variable (K V)
 
@@ -103,8 +103,8 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V := by
           simp ⟩⟩
     
   · rintro ⟨s, hs⟩
-    rw [IsNoetherian.iff_dim_lt_omega, ← dim_top, ← hs]
-    exact lt_of_le_of_ltₓ (dim_span_le _) (lt_omega_iff_finite.2 (Set.finite_mem_finset s))
+    rw [IsNoetherian.iff_dim_lt_aleph_0, ← dim_top, ← hs]
+    exact lt_of_le_of_ltₓ (dim_span_le _) (lt_aleph_0_iff_finite.2 (Set.finite_mem_finset s))
     
 
 end IsNoetherian

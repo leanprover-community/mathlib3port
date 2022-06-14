@@ -281,7 +281,7 @@ theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
   rw [← v.len, e₁]
   suffices valid bkts' (u' ++ v2 ++ w').length by
     simpa [Ge, add_commₓ, add_left_commₓ, Nat.le_add_rightₓ, add_tsub_cancel_left]
-  refine' ⟨congr_argₓ _ e₂, fun i a => _, fun i => _⟩
+  refine' ⟨congr_arg _ e₂, fun i a => _, fun i => _⟩
   · by_cases' bidx = i
     · subst i
       rw [bkts', Arrayₓ.read_write, hfl]

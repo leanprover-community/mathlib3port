@@ -28,7 +28,7 @@ section SemiNormedGroup
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option extends_priority
 set_option extends_priority 920
 
 /-- A normed space over a normed field is a vector space endowed with a norm which satisfies the

@@ -126,10 +126,10 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : List.Nodupₓ (antidiagonalTuple 
     
 
 theorem antidiagonal_tuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
-  | 0 => (congr_argₓ fun x => [x]) <| Subsingleton.elimₓ _ _
+  | 0 => (congr_arg fun x => [x]) <| Subsingleton.elimₓ _ _
   | k + 1 => by
     rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k, List.map_singleton]
-    exact congr_argₓ (fun x => [x]) Matrix.cons_zero_zero
+    exact congr_arg (fun x => [x]) Matrix.cons_zero_zero
 
 @[simp]
 theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] := by
@@ -198,14 +198,14 @@ theorem nodup_antidiagonal_tuple (k n : ℕ) : (antidiagonalTuple k n).Nodup :=
   List.Nat.nodup_antidiagonal_tuple _ _
 
 theorem antidiagonal_tuple_zero_right (k : ℕ) : antidiagonalTuple k 0 = {0} :=
-  congr_argₓ _ (List.Nat.antidiagonal_tuple_zero_right k)
+  congr_arg _ (List.Nat.antidiagonal_tuple_zero_right k)
 
 @[simp]
 theorem antidiagonal_tuple_one (n : ℕ) : antidiagonalTuple 1 n = {![n]} :=
-  congr_argₓ _ (List.Nat.antidiagonal_tuple_one n)
+  congr_arg _ (List.Nat.antidiagonal_tuple_one n)
 
 theorem antidiagonal_tuple_two (n : ℕ) : antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] :=
-  congr_argₓ _ (List.Nat.antidiagonal_tuple_two n)
+  congr_arg _ (List.Nat.antidiagonal_tuple_two n)
 
 end Multiset.Nat
 

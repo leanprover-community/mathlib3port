@@ -131,7 +131,7 @@ section
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- Any `1`-separated set in the ball of radius `2` has cardinality at most `5 ^ dim`. This is
 useful to show that the supremum in the definition of `besicovitch.multiplicity E` is
 well behaved. -/
@@ -140,7 +140,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀, ∀ c ∈ s, ∀, ∥c∥
   /- We consider balls of radius `1/2` around the points in `s`. They are disjoint, and all
     contained in the ball of radius `5/2`. A volume argument gives `s.card * (1/2)^dim ≤ (5/2)^dim`,
     i.e., `s.card ≤ 5^dim`. -/
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   let μ : Measureₓ E := measure.add_haar
   let δ : ℝ := (1 : ℝ) / 2
   let ρ : ℝ := (5 : ℝ) / 2

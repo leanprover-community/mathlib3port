@@ -31,14 +31,14 @@ has a limit in `s` (formally, it satisfies `f ≤ 𝓝 x` for some `x ∈ s`). -
 def IsComplete (s : Set α) :=
   ∀ f, Cauchy f → f ≤ 𝓟 s → ∃ x ∈ s, f ≤ 𝓝 x
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
   and_congr Iff.rfl <|
     (f.basis_sets.prod_self.le_basis_iff h).trans <| by
       simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » t)
 theorem cauchy_iff' {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀, ∀ s ∈ 𝓤 α, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
@@ -164,7 +164,7 @@ theorem cauchy_seq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq 
 theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
   cauchy_map_iff'.trans <| by
-    simp only [prod_at_top_at_top_eq, Prod.map_defₓ]
+    simp only [prod_at_top_at_top_eq, Prod.map_def]
 
 theorem CauchySeq.comp_tendsto {γ} [SemilatticeSup β] [SemilatticeSup γ] [Nonempty γ] {f : β → α} (hf : CauchySeq f)
     {g : γ → β} (hg : Tendsto g atTop atTop) : CauchySeq (f ∘ g) :=
@@ -191,7 +191,7 @@ theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀, ∀ V ∈ 𝓤 �
 
 theorem cauchy_seq_iff {u : ℕ → α} : CauchySeq u ↔ ∀, ∀ V ∈ 𝓤 α, ∀, ∃ N, ∀, ∀ k ≥ N, ∀, ∀, ∀ l ≥ N, ∀, (u k, u l) ∈ V :=
   by
-  simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_mapₓ]
+  simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_map]
 
 theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [SemilatticeSup δ] {u : γ → α} {v : δ → β}
     (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq (Prod.map u v) := by
@@ -233,7 +233,7 @@ theorem tendsto_nhds_of_cauchy_seq_of_subseq [SemilatticeSup β] {u : β → α}
     {p : Filter ι} [NeBot p] (hf : Tendsto f p atTop) {a : α} (ha : Tendsto (u ∘ f) p (𝓝 a)) : Tendsto u atTop (𝓝 a) :=
   le_nhds_of_cauchy_adhp hu (map_cluster_pt_of_comp hf ha)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m n «expr ≥ » N)
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
@@ -291,7 +291,7 @@ protected theorem IsComplete.union {s t : Set α} (hs : IsComplete s) (ht : IsCo
     ⟨fun hsl => (hs l hl hsl).imp fun x hx => ⟨Or.inl hx.fst, hx.snd⟩, fun htl =>
       (ht l hl htl).imp fun x hx => ⟨Or.inr hx.fst, hx.snd⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » S)
 theorem is_complete_Union_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i)) {U : Set (α × α)}
     (hU : U ∈ 𝓤 α) (hd : ∀ i j : ι, ∀ x ∈ s i, ∀, ∀ y ∈ s j, ∀, (x, y) ∈ U → i = j) : IsComplete (⋃ i, s i) := by
   set S := ⋃ i, s i
@@ -386,11 +386,11 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 /-- A set `s` is totally bounded if for every entourage `d` there is a finite
   set of points `t` such that every element of `s` is `d`-near to some element of `t`. -/
 def TotallyBounded (s : Set α) : Prop :=
-  ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
+  ∀, ∀ d ∈ 𝓤 α, ∀, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)} (hU : U ∈ 𝓤 α) :
-    ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } := by
+    ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } := by
   rcases comp_symm_of_uniformity hU with ⟨r, hr, rs, rU⟩
   rcases hs r hr with ⟨k, fk, ks⟩
   let u := k ∩ { y | ∃ x ∈ s, (x, y) ∈ r }
@@ -409,19 +409,19 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
     exact ⟨z, rU <| mem_comp_rel.2 ⟨y, xy, rs (hfr z)⟩⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem totally_bounded_iff_subset {s : Set α} :
-    TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
+    TotallyBounded s ↔ ∀, ∀ d ∈ 𝓤 α, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
   ⟨fun H d hd => H.exists_subset hd, fun H d hd =>
     let ⟨t, _, ht⟩ := H d hd
     ⟨t, ht⟩⟩
 
 theorem Filter.HasBasis.totally_bounded_iff {ι} {p : ι → Prop} {U : ι → Set (α × α)} (H : (𝓤 α).HasBasis p U)
-    {s : Set α} : TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
+    {s : Set α} : TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
   H.forall_iff fun U V hUV h => h.imp fun t ht => ⟨ht.1, ht.2.trans <| Union₂_mono fun x hx y hy => hUV hy⟩
 
 theorem totally_bounded_of_forall_symm {s : Set α}
-    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s :=
+    (h : ∀, ∀ V ∈ 𝓤 α, ∀, SymmetricRel V → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y V) : TotallyBounded s :=
   UniformSpace.has_basis_symmetric.totally_bounded_iff.2 fun V hV => by
     simpa only [ball_eq_of_symmetry hV.2] using h V hV.1 hV.2
 

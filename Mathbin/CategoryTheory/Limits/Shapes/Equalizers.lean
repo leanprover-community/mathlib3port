@@ -383,11 +383,11 @@ theorem Cofork.IsColimit.hom_ext {s : Cofork f g} (hs : IsColimit s) {W : C} {k 
   hs.hom_ext <| Cofork.coequalizer_ext _ h
 
 @[simp, reassoc]
-theorem Fork.IsLimit.lift_comp_ι {s t : Fork f g} (hs : IsLimit s) : hs.lift t ≫ s.ι = t.ι :=
+theorem Fork.IsLimit.lift_ι {s t : Fork f g} (hs : IsLimit s) : hs.lift t ≫ s.ι = t.ι :=
   hs.fac _ _
 
 @[simp, reassoc]
-theorem Cofork.IsColimit.π_comp_desc {s t : Cofork f g} (hs : IsColimit s) : s.π ≫ hs.desc t = t.π :=
+theorem Cofork.IsColimit.π_desc {s t : Cofork f g} (hs : IsColimit s) : s.π ≫ hs.desc t = t.π :=
   hs.fac _ _
 
 /-- If `s` is a limit fork over `f` and `g`, then a morphism `k : W ⟶ X` satisfying
@@ -1112,7 +1112,7 @@ def splitMonoOfIdempotentOfIsLimitFork {X : C} {f : X ⟶ X} (hf : f ≫ f = f) 
           simp [hf]))
   id' := by
     let this := mono_of_is_limit_fork i
-    rw [← cancel_mono_id c.ι, category.assoc, fork.is_limit.lift_comp_ι, fork.ι_of_ι, ← c.condition]
+    rw [← cancel_mono_id c.ι, category.assoc, fork.is_limit.lift_ι, fork.ι_of_ι, ← c.condition]
     exact category.comp_id c.ι
 
 /-- The equalizer of an idempotent morphism and the identity is split mono. -/
@@ -1195,7 +1195,7 @@ def splitEpiOfIdempotentOfIsColimitCofork {X : C} {f : X ⟶ X} (hf : f ≫ f = 
           simp [hf]))
   id' := by
     let this := epi_of_is_colimit_cofork i
-    rw [← cancel_epi_id c.π, ← category.assoc, cofork.is_colimit.π_comp_desc, cofork.π_of_π, ← c.condition]
+    rw [← cancel_epi_id c.π, ← category.assoc, cofork.is_colimit.π_desc, cofork.π_of_π, ← c.condition]
     exact category.id_comp _
 
 /-- The coequalizer of an idempotent morphism and the identity is split epi. -/

@@ -31,15 +31,15 @@ namespace AlgebraicGeometry
 variable (X : Scheme)
 
 instance : T0Space X.Carrier := by
-  rw [t0_space_iff_distinguishable]
+  rw [t0_space_iff_not_inseparable]
   intro x y h h'
   obtain ⟨U, R, ⟨e⟩⟩ := X.local_affine x
   have hy := (h' _ U.1.2).mp U.2
-  erw [← subtype_indistinguishable_iff (⟨x, U.2⟩ : U.1.1) (⟨y, hy⟩ : U.1.1)] at h'
+  erw [← subtype_inseparable_iff (⟨x, U.2⟩ : U.1.1) (⟨y, hy⟩ : U.1.1)] at h'
   let e' : U.1 ≃ₜ PrimeSpectrum R :=
     homeo_of_iso ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _).mapIso e)
   have := t0_space_of_injective_of_continuous e'.injective e'.continuous
-  rw [t0_space_iff_distinguishable] at this
+  rw [t0_space_iff_not_inseparable] at this
   exact
     this ⟨x, U.2⟩ ⟨y, hy⟩
       (by
@@ -292,7 +292,7 @@ theorem is_integral_of_is_irreducible_is_reduced [IsReduced X] [H : IrreducibleS
     @nonempty_preirreducible_inter _ H.1 (X.basic_open a).2 (X.basic_open b).2 h.1 h.2
   replace e' := Subtype.eq e'
   subst e'
-  replace e := congr_argₓ (X.presheaf.germ x) e
+  replace e := congr_arg (X.presheaf.germ x) e
   rw [RingHom.map_mul, RingHom.map_zero] at e
   refine' @zero_ne_one (X.presheaf.stalk x.1) _ _ (is_unit_zero_iff.1 _)
   convert hx₁.mul hx₂

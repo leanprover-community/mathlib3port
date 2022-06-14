@@ -86,7 +86,7 @@ def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u
   -- These are not very pretty.
   map_id' := fun α => by
     ext
-    exact congr_funₓ (EquivFunctor.map_refl _) x
+    exact congr_fun (EquivFunctor.map_refl _) x
   map_comp' := fun α β γ f g => by
     ext
     simp only [EquivFunctor.map_equiv_apply, Equivₓ.to_iso_hom, Function.comp_app, core.comp_hom, types_comp]

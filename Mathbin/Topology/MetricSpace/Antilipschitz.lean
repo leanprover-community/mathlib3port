@@ -25,7 +25,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 
 open Nnreal Ennreal uniformity
 
-open Set
+open Set Filter Bornology
 
 /-- We say that `f : α → β` is `antilipschitz_with K` if for any two points `x`, `y` we have
 `K * edist x y ≤ edist (f x) (f y)`. -/
@@ -181,6 +181,10 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
       
+
+theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=
+  compl_surjective.forall.2 fun hs : IsBounded s =>
+    Metric.is_bounded_iff.2 <| hf.bounded_preimage <| Metric.is_bounded_iff.1 hs
 
 /-- The image of a proper space under an expanding onto map is proper. -/
 protected theorem proper_space {α : Type _} [MetricSpace α] {K : ℝ≥0 } {f : α → β} [ProperSpace α]

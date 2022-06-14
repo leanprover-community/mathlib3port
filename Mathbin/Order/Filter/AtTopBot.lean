@@ -924,7 +924,7 @@ theorem prod_at_bot_at_bot_eq {β₁ β₂ : Type _} [SemilatticeInf β₁] [Sem
 
 theorem prod_map_at_top_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] (u₁ : β₁ → α₁)
     (u₂ : β₂ → α₂) : map u₁ atTop ×ᶠ map u₂ atTop = map (Prod.map u₁ u₂) atTop := by
-  rw [prod_map_map_eq, prod_at_top_at_top_eq, Prod.map_defₓ]
+  rw [prod_map_map_eq, prod_at_top_at_top_eq, Prod.map_def]
 
 theorem prod_map_at_bot_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeInf β₁] [SemilatticeInf β₂] (u₁ : β₁ → α₁)
     (u₂ : β₂ → α₂) : map u₁ atBot ×ᶠ map u₂ atBot = map (Prod.map u₁ u₂) atBot :=
@@ -1426,7 +1426,7 @@ theorem tendsto_at_bot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
 
 end OrderIso
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.

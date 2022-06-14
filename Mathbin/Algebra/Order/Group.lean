@@ -906,7 +906,7 @@ theorem le_iff_forall_one_lt_lt_mul : a ≤ b ↔ ∀ ε, 1 < ε → a < b * ε 
 @[to_additive]
 theorem div_le_inv_mul_iff [CovariantClass α α (swap (· * ·)) (· ≤ ·)] : a / b ≤ a⁻¹ * b ↔ a ≤ b := by
   rw [div_eq_mul_inv, mul_inv_le_inv_mul_iff]
-  exact ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul''' k k), fun h => mul_le_mul' h h⟩
+  exact ⟨fun h => not_lt.mp fun k => not_lt.mpr h (mul_lt_mul_of_lt_of_lt k k), fun h => mul_le_mul' h h⟩
 
 --  What is the point of this lemma?  See comment about `div_le_inv_mul_iff` above.
 @[simp, to_additive]
@@ -1136,7 +1136,7 @@ theorem abs_eq_abs {a b : α} : abs a = abs b ↔ a = b ∨ a = -b := by
 
 theorem abs_sub_comm (a b : α) : abs (a - b) = abs (b - a) :=
   calc
-    abs (a - b) = abs (-(b - a)) := congr_argₓ _ (neg_sub b a).symm
+    abs (a - b) = abs (-(b - a)) := congr_arg _ (neg_sub b a).symm
     _ = abs (b - a) := abs_neg (b - a)
     
 
@@ -1176,10 +1176,15 @@ theorem abs_pos_of_neg (h : a < 0) : 0 < abs a :=
 
 theorem neg_abs_le_self (a : α) : -abs a ≤ a := by
   cases' le_totalₓ 0 a with h h
-  · calc -abs a = -a := congr_argₓ Neg.neg (abs_of_nonneg h)_ ≤ 0 := neg_nonpos.mpr h _ ≤ a := h
+  · calc -abs a = -a := congr_arg Neg.neg (abs_of_nonneg h)_ ≤ 0 := neg_nonpos.mpr h _ ≤ a := h
     
-  · calc -abs a = - -a := congr_argₓ Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
+  · calc -abs a = - -a := congr_arg Neg.neg (abs_of_nonpos h)_ ≤ a := (neg_negₓ a).le
     
+
+theorem add_abs_nonneg (a : α) : 0 ≤ a + abs a := by
+  rw [← add_right_negₓ a]
+  apply add_le_add_left
+  exact neg_le_abs_self a
 
 theorem neg_abs_le_neg (a : α) : -abs a ≤ -a := by
   simpa using neg_abs_le_self (-a)
@@ -1495,4 +1500,46 @@ theorem one_le_inv_of_le_one : a ≤ 1 → 1 ≤ a⁻¹ :=
   one_le_inv'.mpr
 
 end NormNumLemmas
+
+section
+
+variable {β : Type _} [Groupₓ α] [Preorderₓ α] [CovariantClass α α (· * ·) (· ≤ ·)]
+  [CovariantClass α α (swap (· * ·)) (· ≤ ·)] [Preorderₓ β] {f : β → α} {s : Set β}
+
+@[to_additive]
+theorem Monotone.inv (hf : Monotone f) : Antitone fun x => (f x)⁻¹ := fun x y hxy => inv_le_inv_iff.2 (hf hxy)
+
+@[to_additive]
+theorem Antitone.inv (hf : Antitone f) : Monotone fun x => (f x)⁻¹ := fun x y hxy => inv_le_inv_iff.2 (hf hxy)
+
+@[to_additive]
+theorem MonotoneOn.inv (hf : MonotoneOn f s) : AntitoneOn (fun x => (f x)⁻¹) s := fun x hx y hy hxy =>
+  inv_le_inv_iff.2 (hf hx hy hxy)
+
+@[to_additive]
+theorem AntitoneOn.inv (hf : AntitoneOn f s) : MonotoneOn (fun x => (f x)⁻¹) s := fun x hx y hy hxy =>
+  inv_le_inv_iff.2 (hf hx hy hxy)
+
+end
+
+section
+
+variable {β : Type _} [Groupₓ α] [Preorderₓ α] [CovariantClass α α (· * ·) (· < ·)]
+  [CovariantClass α α (swap (· * ·)) (· < ·)] [Preorderₓ β] {f : β → α} {s : Set β}
+
+@[to_additive]
+theorem StrictMono.inv (hf : StrictMono f) : StrictAnti fun x => (f x)⁻¹ := fun x y hxy => inv_lt_inv_iff.2 (hf hxy)
+
+@[to_additive]
+theorem StrictAnti.inv (hf : StrictAnti f) : StrictMono fun x => (f x)⁻¹ := fun x y hxy => inv_lt_inv_iff.2 (hf hxy)
+
+@[to_additive]
+theorem StrictMonoOn.inv (hf : StrictMonoOn f s) : StrictAntiOn (fun x => (f x)⁻¹) s := fun x hx y hy hxy =>
+  inv_lt_inv_iff.2 (hf hx hy hxy)
+
+@[to_additive]
+theorem StrictAntiOn.inv (hf : StrictAntiOn f s) : StrictMonoOn (fun x => (f x)⁻¹) s := fun x hx y hy hxy =>
+  inv_lt_inv_iff.2 (hf hx hy hxy)
+
+end
 

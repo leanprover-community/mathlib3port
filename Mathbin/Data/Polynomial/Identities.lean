@@ -89,7 +89,7 @@ def binomExpansion (f : R[X]) (x y : R) :
   · exact finset.sum_mul.symm
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args
 /-- `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
 def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x - y) }
@@ -102,7 +102,7 @@ def powSubPowFactor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z * (x -
   | k + 2 => by
     cases' @pow_sub_pow_factor (k + 1) with z hz
     exists z * x + y ^ (k + 1)
-    linear_combination(config := { normalization_tactic := sorry })hz * x
+    "././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args"
 
 /-- For any polynomial `f`, `f.eval x - f.eval y` can be expressed as `z * (x - y)`
 for some `z` in the ring.

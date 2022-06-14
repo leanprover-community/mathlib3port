@@ -93,7 +93,7 @@ end antisymm
 
 section Wo
 
-parameter {ι : Type u}{β : ι → Type v}
+parameter {ι : Type u}(β : ι → Type v)
 
 @[reducible]
 private def sets :=
@@ -101,8 +101,8 @@ private def sets :=
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
-lattice instance. -/
-theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
+lattice instances. -/
+theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
   let ⟨s, hs, ms⟩ :=
     show ∃ s ∈ sets, ∀, ∀ a ∈ sets, ∀, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
@@ -143,7 +143,7 @@ end Wo
 
 /-- The cardinals are totally ordered. See `cardinal.linear_order` for (one of) the lattice
 instance. -/
-theorem total {α : Type u} {β : Type v} : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
+theorem total (α : Type u) (β : Type v) : Nonempty (α ↪ β) ∨ Nonempty (β ↪ α) :=
   match @min_injective Bool (fun b => cond b (ULift α) (ULift.{max u v, v} β)) ⟨true⟩ with
   | ⟨tt, ⟨h⟩⟩ =>
     let ⟨f, hf⟩ := h false

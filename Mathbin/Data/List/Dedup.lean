@@ -79,5 +79,11 @@ theorem dedup_append (l₁ l₂ : List α) : dedup (l₁ ++ l₂) = l₁ ∪ ded
   by_cases' a ∈ dedup (l₁ ++ l₂) <;> [rw [dedup_cons_of_mem' h, insert_of_mem h],
     rw [dedup_cons_of_not_mem' h, insert_of_not_mem h]]
 
+theorem repeat_dedup {x : α} : ∀ {k}, k ≠ 0 → (repeat x k).dedup = [x]
+  | 0, h => (h rfl).elim
+  | 1, _ => rfl
+  | n + 2, _ => by
+    rw [repeat_succ, dedup_cons_of_mem (mem_repeat.2 ⟨n.succ_ne_zero, rfl⟩), repeat_dedup n.succ_ne_zero]
+
 end List
 

@@ -283,13 +283,13 @@ def comp : LaxMonoidalFunctor.{v₁, v₃} C E :=
     left_unitality' := fun X => by
       dsimp'
       rw [G.left_unitality, comp_tensor_id, category.assoc, category.assoc]
-      apply congr_argₓ
+      apply congr_arg
       rw [F.left_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
         nat_trans.id_app, map_id, ← category.assoc, map_comp],
     right_unitality' := fun X => by
       dsimp'
       rw [G.right_unitality, id_tensor_comp, category.assoc, category.assoc]
-      apply congr_argₓ
+      apply congr_arg
       rw [F.right_unitality, map_comp, ← nat_trans.id_app, ← category.assoc, ← lax_monoidal_functor.μ_natural,
         nat_trans.id_app, map_id, ← category.assoc, map_comp] }
 

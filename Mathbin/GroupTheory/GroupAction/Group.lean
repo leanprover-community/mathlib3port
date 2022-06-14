@@ -21,7 +21,7 @@ section MulAction
 
 /-- `monoid.to_mul_action` is faithful on cancellative monoids. -/
 @[to_additive " `add_monoid.to_add_action` is faithful on additive cancellative monoids. "]
-instance RightCancelMonoid.to_has_faithful_scalar [RightCancelMonoid α] : HasFaithfulScalar α α :=
+instance RightCancelMonoid.to_has_faithful_smul [RightCancelMonoid α] : HasFaithfulSmul α α :=
   ⟨fun x y h => mul_right_cancelₓ (h 1)⟩
 
 section Groupₓ
@@ -46,8 +46,7 @@ add_decl_doc AddAction.toPerm
 
 /-- `mul_action.to_perm` is injective on faithful actions. -/
 @[to_additive]
-theorem MulAction.to_perm_injective [HasFaithfulScalar α β] :
-    Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
+theorem MulAction.to_perm_injective [HasFaithfulSmul α β] : Function.Injective (MulAction.toPerm : α → Equivₓ.Perm β) :=
   (show Function.Injective (Equivₓ.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
 
 variable (α) (β)
@@ -80,7 +79,7 @@ protected theorem Equivₓ.Perm.smul_def {α : Type _} (f : Equivₓ.Perm α) (a
   rfl
 
 /-- `equiv.perm.apply_mul_action` is faithful. -/
-instance Equivₓ.Perm.apply_has_faithful_scalar (α : Type _) : HasFaithfulScalar (Equivₓ.Perm α) α :=
+instance Equivₓ.Perm.apply_has_faithful_smul (α : Type _) : HasFaithfulSmul (Equivₓ.Perm α) α :=
   ⟨fun x y => Equivₓ.ext⟩
 
 variable {α} {β}
@@ -133,7 +132,7 @@ theorem smul_eq_iff_eq_inv_smul (g : α) {x y : β} : g • x = y ↔ x = g⁻¹
 end Groupₓ
 
 /-- `monoid.to_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
-instance CancelMonoidWithZero.to_has_faithful_scalar [CancelMonoidWithZero α] [Nontrivial α] : HasFaithfulScalar α α :=
+instance CancelMonoidWithZero.to_has_faithful_smul [CancelMonoidWithZero α] [Nontrivial α] : HasFaithfulSmul α α :=
   ⟨fun x y h => mul_left_injective₀ one_ne_zero (h 1)⟩
 
 section Gwz

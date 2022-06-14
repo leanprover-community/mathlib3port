@@ -35,6 +35,10 @@ theorem UniformInducing.mk' {f : α → β} (h : ∀ s, s ∈ 𝓤 α ↔ ∃ t 
   ⟨by
     simp [eq_comm, Filter.ext_iff, subset_def, h]⟩
 
+theorem uniform_inducing_id : UniformInducing (@id α) :=
+  ⟨by
+    rw [← Prod.map_def, Prod.map_id, comap_id]⟩
+
 theorem UniformInducing.comp {g : β → γ} (hg : UniformInducing g) {f : α → β} (hf : UniformInducing f) :
     UniformInducing (g ∘ f) :=
   ⟨by
@@ -49,6 +53,12 @@ theorem UniformInducing.comp {g : β → γ} (hg : UniformInducing g) {f : α �
 theorem UniformInducing.basis_uniformity {f : α → β} (hf : UniformInducing f) {ι : Sort _} {p : ι → Prop}
     {s : ι → Set (β × β)} (H : (𝓤 β).HasBasis p s) : (𝓤 α).HasBasis p fun i => Prod.map f f ⁻¹' s i :=
   hf.1 ▸ H.comap _
+
+theorem uniform_inducing_of_compose {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg : UniformContinuous g)
+    (hgf : UniformInducing (g ∘ f)) : UniformInducing f := by
+  refine' ⟨le_antisymmₓ _ hf.le_comap⟩
+  rw [← hgf.1, ← Prod.map_def, ← Prod.map_def, ← Prod.map_comp_mapₓ f f g g, ← @comap_comap _ _ _ _ (Prod.map f f)]
+  exact comap_mono hg.le_comap
 
 /-- A map `f : α → β` between uniform spaces is a *uniform embedding* if it is uniform inducing and
 injective. If `α` is a separated space, then the latter assumption follows from the former. -/

@@ -51,10 +51,10 @@ def mapEquiv : f α ≃ f β where
   toFun := EquivFunctor.map e
   invFun := EquivFunctor.map e.symm
   left_inv := fun x => by
-    convert (congr_funₓ (EquivFunctor.map_trans e e.symm) x).symm
+    convert (congr_fun (EquivFunctor.map_trans e e.symm) x).symm
     simp
   right_inv := fun y => by
-    convert (congr_funₓ (EquivFunctor.map_trans e.symm e) y).symm
+    convert (congr_fun (EquivFunctor.map_trans e.symm e) y).symm
     simp
 
 @[simp]

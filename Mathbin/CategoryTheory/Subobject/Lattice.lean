@@ -590,14 +590,14 @@ instance wide_pullback_ι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullb
 def infₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (widePullbackι s)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem Inf_le {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : infₓ s ≤ f := by
   fapply le_of_comm
   · refine'
       (underlying_iso _).Hom ≫
         limits.limit.π (wide_cospan s) (some ⟨equivShrink _ f, Set.mem_image_of_mem (equivShrink (subobject A)) H⟩) ≫ _
     apply eq_to_hom
-    apply congr_argₓ fun X : subobject A => (X : C)
+    apply congr_arg fun X : subobject A => (X : C)
     exact Equivₓ.symm_apply_apply _ _
     
   · dsimp' [Inf]
@@ -636,7 +636,7 @@ variable [HasImages C]
 def supₓ {A : C} (s : Set (Subobject A)) : Subobject A :=
   Subobject.mk (image.ι (smallCoproductDesc s))
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (f «expr ∈ » s)
 theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s := by
   fapply le_of_comm
   · dsimp' [Sup]
@@ -646,7 +646,7 @@ theorem le_Sup {A : C} (s : Set (Subobject A)) f (_ : f ∈ s) : f ≤ supₓ s 
         sigma.ι _
           ⟨equivShrink _ f, by
             simpa [Set.mem_image] using H⟩
-    exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
+    exact eq_to_hom (congr_arg (fun X : subobject A => (X : C)) (Equivₓ.symm_apply_apply _ _).symm)
     
   · dsimp' [Sup, small_coproduct_desc]
     simp

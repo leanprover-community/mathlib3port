@@ -63,17 +63,39 @@ instance funLike : FunLike (M ↪ₑ[L] N) M fun _ => N where
     ext x
     exact Function.funext_iffₓ.1 h x
 
+instance : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
+  FunLike.hasCoeToFun
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
-theorem map_formula (f : M ↪ₑ[L] N) {α : Type} [Fintype α] (φ : L.Formula α) (x : α → M) :
-    φ.realize (f ∘ x) ↔ φ.realize x := by
-  have g := Fintype.equivFin α
-  have h := f.map_formula' (φ.relabel g) (x ∘ g.symm)
-  rw [formula.realize_relabel, formula.realize_relabel, Function.comp.assoc x g.symm g, g.symm_comp_self,
-    Function.comp.right_id] at h
-  rw [← h, iff_eq_eq]
-  congr
-  ext y
-  simp
+theorem map_bounded_formula (f : M ↪ₑ[L] N) {α : Type} {n : ℕ} (φ : L.BoundedFormula α n) (v : α → M)
+    (xs : Finₓ n → M) : φ.realize (f ∘ v) (f ∘ xs) ↔ φ.realize v xs := by
+  classical
+  rw [← bounded_formula.realize_restrict_free_var Set.Subset.rfl, Set.inclusion_eq_id, iff_eq_eq]
+  swap
+  · infer_instance
+    
+  have h :=
+    f.map_formula' ((φ.restrict_free_var id).toFormula.relabel (Fintype.equivFin _))
+      (Sum.elim (v ∘ coe) xs ∘ (Fintype.equivFin _).symm)
+  simp only [formula.realize_relabel, bounded_formula.realize_to_formula, iff_eq_eq] at h
+  rw [← Function.comp.assoc _ _ (Fintype.equivFin _).symm,
+    Function.comp.assoc _ (Fintype.equivFin _).symm (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id,
+    Function.comp.assoc, Sum.elim_comp_inl, Function.comp.assoc _ _ Sum.inr, Sum.elim_comp_inr, ←
+    Function.comp.assoc] at h
+  refine' h.trans _
+  rw [Function.comp.assoc _ _ (Fintype.equivFin _), Equivₓ.symm_comp_self, Function.comp.right_id, Sum.elim_comp_inl,
+    Sum.elim_comp_inr, ← Set.inclusion_eq_id, bounded_formula.realize_restrict_free_var Set.Subset.rfl]
+
+@[simp]
+theorem map_formula (f : M ↪ₑ[L] N) {α : Type} (φ : L.Formula α) (x : α → M) : φ.realize (f ∘ x) ↔ φ.realize x := by
+  rw [formula.realize, formula.realize, ← f.map_bounded_formula, Unique.eq_default (f ∘ default)]
+
+theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ φ := by
+  rw [sentence.realize, sentence.realize, ← f.map_formula, Unique.eq_default (f ∘ default)]
+
+theorem Theory_model_iff (f : M ↪ₑ[L] N) (T : L.Theory) : M ⊨ T ↔ N ⊨ T := by
+  simp only [Theory.model_iff, f.map_sentence]
 
 @[simp]
 theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
@@ -86,9 +108,6 @@ theorem injective (φ : M ↪ₑ[L] N) : Function.Injective φ := by
 
 instance embeddingLike : EmbeddingLike (M ↪ₑ[L] N) M N where
   injective' := injective
-
-instance hasCoeToFun : CoeFun (M ↪ₑ[L] N) fun _ => M → N :=
-  ⟨fun f => f.toFun⟩
 
 @[simp]
 theorem map_fun (φ : M ↪ₑ[L] N) {n : ℕ} (f : L.Functions n) (x : Finₓ n → M) : φ (funMap f x) = funMap f (φ ∘ x) := by
@@ -346,10 +365,8 @@ theorem coe_top : ((⊤ : L.ElementarySubstructure M) : Set M) = Set.Univ :=
   rfl
 
 @[simp]
-theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S ⊨ φ ↔ M ⊨ φ := by
-  have h := S.is_elementary (φ.relabel (Empty.elim : Empty → Finₓ 0)) default
-  rw [formula.realize_relabel, formula.realize_relabel] at h
-  exact (congr (congr rfl (congr rfl (Unique.eq_default _))) (congr rfl (Unique.eq_default _))).mp h.symm
+theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S ⊨ φ ↔ M ⊨ φ :=
+  S.Subtype.map_sentence φ
 
 @[simp]
 theorem Theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by

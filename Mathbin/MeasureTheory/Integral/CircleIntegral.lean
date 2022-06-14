@@ -115,6 +115,12 @@ theorem circle_map_mem_sphere (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ) : ci
 theorem circle_map_mem_closed_ball (c : ℂ) {R : ℝ} (hR : 0 ≤ R) (θ : ℝ) : circleMap c R θ ∈ ClosedBall c R :=
   sphere_subset_closed_ball (circle_map_mem_sphere c hR θ)
 
+theorem circle_map_not_mem_ball (c : ℂ) (R : ℝ) (θ : ℝ) : circleMap c R θ ∉ Ball c R := by
+  simp [dist_eq, le_abs_self]
+
+theorem circle_map_ne_mem_ball {c : ℂ} {R : ℝ} {w : ℂ} (hw : w ∈ Ball c R) (θ : ℝ) : circleMap c R θ ≠ w :=
+  (ne_of_mem_of_not_mem hw (circle_map_not_mem_ball _ _ _)).symm
+
 /-- The range of `circle_map c R` is the circle with center `c` and radius `|R|`. -/
 @[simp]
 theorem range_circle_map (c : ℂ) (R : ℝ) : Range (circleMap c R) = Sphere c (abs R) :=
@@ -245,7 +251,7 @@ theorem ContinuousOn.circle_integrable {f : ℂ → E} {c : ℂ} {R : ℝ} (hR :
     CircleIntegrable f c R :=
   ContinuousOn.circle_integrable' <| (abs_of_nonneg hR).symm ▸ hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
 /-- The function `λ z, (z - w) ^ n`, `n : ℤ`, is circle integrable on the circle with center `c` and
 radius `|R|` if and only if `R = 0` or `0 ≤ n`, or `w` does not belong to this circle. -/
 @[simp]
@@ -258,7 +264,7 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     simp only [circle_integrable_iff R, deriv_circle_map]
     rw [← image_circle_map_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
-    replace hθ : θ ∈ "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"
+    replace hθ : θ ∈ "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"
     exact Icc_subset_interval (Ioc_subset_Icc_self hθ)
     refine' not_interval_integrable_of_sub_inv_is_O_punctured _ real.two_pi_pos.ne hθ
     set f : ℝ → ℂ := fun θ' => circleMap c R θ' - circleMap c R θ
@@ -270,7 +276,9 @@ theorem circle_integrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
       filter_upwards [self_mem_nhds_within, mem_nhds_within_of_mem_nhds (ball_mem_nhds _ zero_lt_one)]
       simp (config := { contextual := true })[dist_eq, sub_eq_zero]
     refine'
-      (((has_deriv_at_circle_map c R θ).is_O_sub.mono inf_le_left).inv_rev (this.mono fun θ' => And.right)).trans _
+      (((has_deriv_at_circle_map c R θ).is_O_sub.mono inf_le_left).inv_rev
+            (this.mono fun θ' h₁ h₂ => absurd h₂ h₁.2)).trans
+        _
     refine' is_O.of_bound (abs R)⁻¹ (this.mono fun θ' hθ' => _)
     set x := abs (f θ')
     suffices x⁻¹ ≤ x ^ n by

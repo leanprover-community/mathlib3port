@@ -227,11 +227,11 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | some r => h₁ _
     | none => h₂⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔ ∀ r : ℝ≥0 , p r :=
   Option.ball_ne_none
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ≠ » «expr∞»())
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0 , p r :=
   Option.bex_ne_none
 
@@ -391,14 +391,14 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0 where
 theorem cinfi_ne_top [HasInfₓ α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0 , f x :=
   Eq.symm <| (neTopEquivNnreal.symm.Surjective.infi_congr _) fun x => rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem infi_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0 , f x := by
   rw [infi_subtype', cinfi_ne_top]
 
 theorem csupr_ne_top [HasSupₓ α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠ ∞ }, f x) = ⨆ x : ℝ≥0 , f x :=
   @cinfi_ne_top αᵒᵈ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » «expr∞»())
 theorem supr_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) : (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0 , f x :=
   @infi_ne_top αᵒᵈ _ _
 
@@ -1202,7 +1202,7 @@ theorem bit0_inj : bit0 a = bit0 b ↔ a = b :=
       
     · exact absurd h.symm (ne_of_ltₓ (add_lt_add h₃ h₃))
       ,
-    fun h => congr_argₓ _ h⟩
+    fun h => congr_arg _ h⟩
 
 @[simp]
 theorem bit0_eq_zero_iff : bit0 a = 0 ↔ a = 0 := by
@@ -1217,7 +1217,7 @@ theorem bit1_inj : bit1 a = bit1 b ↔ a = b :=
   ⟨fun h => by
     unfold bit1  at h
     rwa [add_left_injₓ, bit0_inj] at h
-    simp [lt_top_iff_ne_top], fun h => congr_argₓ _ h⟩
+    simp [lt_top_iff_ne_top], fun h => congr_arg _ h⟩
 
 @[simp]
 theorem bit1_ne_zero : bit1 a ≠ 0 := by
@@ -1590,6 +1590,17 @@ theorem mul_div_le : a * (b / a) ≤ b := by
     
   rw [mul_div_cancel' h0 hI]
   exact le_reflₓ b
+
+-- TODO: add this lemma for an `is_unit` in any `division_monoid`
+theorem eq_div_iff (ha : a ≠ 0) (ha' : a ≠ ∞) : b = c / a ↔ a * b = c :=
+  ⟨fun h => by
+    rw [h, mul_div_cancel' ha ha'], fun h => by
+    rw [← h, mul_div_assoc, mul_div_cancel' ha ha']⟩
+
+theorem div_eq_div_iff (ha : a ≠ 0) (ha' : a ≠ ∞) (hb : b ≠ 0) (hb' : b ≠ ∞) : c / b = d / a ↔ a * c = b * d := by
+  rw [eq_div_iff ha ha']
+  conv_rhs => rw [eq_comm]
+  rw [← eq_div_iff hb hb', mul_div_assoc, eq_comm]
 
 theorem inv_two_add_inv_two : (2 : ℝ≥0∞)⁻¹ + 2⁻¹ = 1 := by
   rw [← two_mul, ← div_eq_mul_inv, div_self two_ne_zero two_ne_top]
@@ -2142,7 +2153,7 @@ theorem Inf_add {s : Set ℝ≥0∞} : inf s + a = ⨅ b ∈ s, b + a := by
 theorem add_infi {a : ℝ≥0∞} : a + infi f = ⨅ b, a + f b := by
   rw [add_commₓ, infi_add] <;> simp [add_commₓ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a a')
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (a a')
 theorem infi_add_infi (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : infi f + infi g = ⨅ a, f a + g a :=
   suffices (⨅ a, f a + g a) ≤ infi f + infi g from
     le_antisymmₓ (le_infi fun a => add_le_add (infi_le _ _) (infi_le _ _)) this

@@ -386,10 +386,10 @@ theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set �
     f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t := by
   simp only [prod_def]
   rw [lift_assoc]
-  apply congr_argₓ
+  apply congr_arg
   funext x
   rw [lift_comm]
-  apply congr_argₓ
+  apply congr_arg
   funext y
   rw [lift'_lift_assoc]
   exact hg₂
@@ -399,7 +399,7 @@ theorem prod_lift'_lift' {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set
     (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) :
     f₁.lift' g₁ ×ᶠ f₂.lift' g₂ = f₁.lift fun s => f₂.lift' fun t => g₁ s ×ˢ g₂ t := by
   rw [prod_def, lift_lift'_assoc]
-  apply congr_argₓ
+  apply congr_arg
   funext x
   rw [lift'_lift'_assoc]
   exact hg₂

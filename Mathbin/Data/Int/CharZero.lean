@@ -22,7 +22,7 @@ namespace Int
 theorem cast_eq_zero [AddGroupₓ α] [One α] [CharZero α] {n : ℤ} : (n : α) = 0 ↔ n = 0 :=
   ⟨fun h => by
     cases n
-    · exact congr_argₓ coe (Nat.cast_eq_zero.1 h)
+    · exact congr_arg coe (Nat.cast_eq_zero.1 h)
       
     · rw [cast_neg_succ_of_nat, neg_eq_zero, ← cast_succ, Nat.cast_eq_zero] at h
       contradiction
@@ -51,6 +51,6 @@ theorem cast_div_char_zero {k : Type _} [Field k] [CharZero k] {m n : ℤ} (n_dv
 
 end Int
 
-theorem RingHom.injective_int {α : Type _} [Ringₓ α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
+theorem RingHom.injective_int {α : Type _} [NonAssocRing α] (f : ℤ →+* α) [CharZero α] : Function.Injective f :=
   Subsingleton.elimₓ (Int.castRingHom _) f ▸ Int.cast_injective
 

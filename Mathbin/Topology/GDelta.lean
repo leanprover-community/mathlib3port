@@ -131,7 +131,7 @@ theorem Set.Countable.is_Gδ_compl {s : Set α} (hs : Countable s) : IsGδ (sᶜ
   rw [← bUnion_of_singleton s, compl_Union₂]
   exact is_Gδ_bInter hs fun x _ => is_Gδ_compl_singleton x
 
-theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : Finite s) : IsGδ (sᶜ) :=
+theorem Set.Finite.is_Gδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
   hs.Countable.is_Gδ_compl
 
 theorem Set.Subsingleton.is_Gδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
@@ -149,7 +149,7 @@ theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) := by
   rw [← bInter_basis_nhds h_basis.to_has_basis]
   exact is_Gδ_bInter (countable_encodable _) fun n hn => (hU n).2.IsGδ
 
-theorem Set.Finite.is_Gδ {s : Set α} (hs : Finite s) : IsGδ s :=
+theorem Set.Finite.is_Gδ {s : Set α} (hs : s.Finite) : IsGδ s :=
   (Finite.induction_on hs is_Gδ_empty) fun a s _ _ hs => (is_Gδ_singleton a).union hs
 
 end T1Space

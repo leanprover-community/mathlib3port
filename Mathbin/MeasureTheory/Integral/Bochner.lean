@@ -1020,7 +1020,7 @@ theorem of_real_integral_eq_lintegral_of_real {f : α → ℝ} (hfi : Integrable
   apply lintegral_congr_ae
   filter_upwards [f_nn] with x hx
   exact
-    congr_argₓ Ennreal.ofReal
+    congr_arg Ennreal.ofReal
       (by
         rw [Real.norm_eq_abs, abs_eq_self.mpr hx])
 
@@ -1307,7 +1307,7 @@ theorem integral_smul_measure (f : α → E) (c : ℝ≥0∞) : (∫ x, f x ∂c
   rw [← set_to_fun_congr_smul_measure c hc hdfma hdfma_smul f]
   exact set_to_fun_congr_left' _ _ (fun s hs hμs => weighted_smul_smul_measure μ c) f
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α → β} (hφ : Measurable φ) {f : β → E}
     (hfm : StronglyMeasurable f) : (∫ y, f y ∂Measure.map φ μ) = ∫ x, f (φ x) ∂μ := by
   by_cases' hfi : integrable f (measure.map φ μ)
@@ -1315,7 +1315,7 @@ theorem integral_map_of_strongly_measurable {β} [MeasurableSpace β] {φ : α �
   · rw [integral_undef hfi, integral_undef]
     rwa [← integrable_map_measure hfm.ae_strongly_measurable hφ.ae_measurable]
     
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   have : separable_space (range f ∪ {0} : Set E) := hfm.separable_space_range_union_singleton
   refine'
     tendsto_nhds_unique (tendsto_integral_approx_on_of_measurable_of_range_subset hfm.measurable hfi _ subset.rfl) _
@@ -1373,11 +1373,11 @@ theorem set_integral_eq_subtype {α} [MeasureSpace α] {s : Set α} (hs : Measur
   rw [← map_comap_subtype_coe hs]
   exact (MeasurableEmbedding.subtype_coe hs).integral_map _
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 @[simp]
 theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : StronglyMeasurable f) :
     (∫ x, f x ∂Measure.dirac a) = f a := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   calc (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a :=
       integral_congr_ae <| ae_eq_dirac' hfm.measurable _ = f a := by
       simp [measure.dirac_apply_of_mem]
@@ -1426,10 +1426,10 @@ theorem integral_trim_simple_func (hm : m ≤ m0) (f : @SimpleFunc β m F) (hf_i
   congr
   exact (trim_measurable_set_eq hm (@simple_func.measurable_set_fiber β F m f x)).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 theorem integral_trim (hm : m ≤ m0) {f : β → F} (hf : strongly_measurable[m] f) : (∫ x, f x ∂μ) = ∫ x, f x ∂μ.trim hm :=
   by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   by_cases' hf_int : integrable f μ
   swap
   · have hf_int_m : ¬integrable f (μ.trim hm) := fun hf_int_m => hf_int (integrable_of_integrable_trim hm hf_int_m)
@@ -1472,13 +1472,14 @@ theorem ae_eq_trim_iff [TopologicalSpace γ] [MetrizableSpace γ] (hm : m ≤ m0
   ⟨ae_eq_of_ae_eq_trim, ae_eq_trim_of_strongly_measurable hm hf hg⟩
 
 theorem ae_le_trim_of_strongly_measurable [LinearOrderₓ γ] [TopologicalSpace γ] [OrderClosedTopology γ]
-    [MetrizableSpace γ] (hm : m ≤ m0) {f g : β → γ} (hf : strongly_measurable[m] f) (hg : strongly_measurable[m] g)
-    (hfg : f ≤ᵐ[μ] g) : f ≤ᵐ[μ.trim hm] g := by
+    [PseudoMetrizableSpace γ] (hm : m ≤ m0) {f g : β → γ} (hf : strongly_measurable[m] f)
+    (hg : strongly_measurable[m] g) (hfg : f ≤ᵐ[μ] g) : f ≤ᵐ[μ.trim hm] g := by
   rwa [eventually_le, ae_iff, trim_measurable_set_eq hm _]
   exact (hf.measurable_set_le hg).Compl
 
-theorem ae_le_trim_iff [LinearOrderₓ γ] [TopologicalSpace γ] [OrderClosedTopology γ] [MetrizableSpace γ] (hm : m ≤ m0)
-    {f g : β → γ} (hf : strongly_measurable[m] f) (hg : strongly_measurable[m] g) : f ≤ᵐ[μ.trim hm] g ↔ f ≤ᵐ[μ] g :=
+theorem ae_le_trim_iff [LinearOrderₓ γ] [TopologicalSpace γ] [OrderClosedTopology γ] [PseudoMetrizableSpace γ]
+    (hm : m ≤ m0) {f g : β → γ} (hf : strongly_measurable[m] f) (hg : strongly_measurable[m] g) :
+    f ≤ᵐ[μ.trim hm] g ↔ f ≤ᵐ[μ] g :=
   ⟨ae_le_of_ae_le_trim, ae_le_trim_of_strongly_measurable hm hf hg⟩
 
 end IntegralTrim

@@ -182,13 +182,13 @@ theorem nat_degree_le_iff_degree_le {n : ℕ} : natDegree p ≤ n ↔ degree p �
 theorem nat_degree_lt_iff_degree_lt (hp : p ≠ 0) : p.natDegree < n ↔ p.degree < ↑n :=
   WithBot.get_or_else_bot_lt_iff <| degree_eq_bot.Not.mpr hp
 
--- ././Mathport/Syntax/Translate/Basic.lean:1575:43: in alias: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:1574:43: in alias: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error
 theorem nat_degree_le_nat_degree [Semiringₓ S] {q : S[X]} (hpq : p.degree ≤ q.degree) : p.natDegree ≤ q.natDegree :=
   WithBot.giGetOrElseBot.gc.monotone_l hpq
 
 @[simp]
 theorem degree_C (ha : a ≠ 0) : degree (c a) = (0 : WithBot ℕ) := by
-  rw [degree, ← monomial_zero_left, support_monomial 0 _ ha, sup_singleton]
+  rw [degree, ← monomial_zero_left, support_monomial 0 ha, sup_singleton]
   rfl
 
 theorem degree_C_le : degree (c a) ≤ 0 := by
@@ -228,7 +228,7 @@ theorem nat_degree_nat_cast (n : ℕ) : natDegree (n : R[X]) = 0 := by
 
 @[simp]
 theorem degree_monomial (n : ℕ) (ha : a ≠ 0) : degree (monomial n a) = n := by
-  rw [degree, support_monomial _ _ ha] <;> rfl
+  rw [degree, support_monomial n ha] <;> rfl
 
 @[simp]
 theorem degree_C_mul_X_pow (n : ℕ) (ha : a ≠ 0) : degree (c a * X ^ n) = n := by
@@ -380,16 +380,12 @@ theorem degree_X_le : degree (x : R[X]) ≤ 1 :=
 theorem nat_degree_X_le : (x : R[X]).natDegree ≤ 1 :=
   nat_degree_le_of_degree_le degree_X_le
 
-theorem support_C_mul_X_pow (c : R) (n : ℕ) : (c c * X ^ n).Support ⊆ singleton n := by
-  rw [C_mul_X_pow_eq_monomial]
-  exact support_monomial' _ _
-
 theorem mem_support_C_mul_X_pow {n a : ℕ} {c : R} (h : a ∈ (c c * X ^ n).Support) : a = n :=
-  mem_singleton.1 <| support_C_mul_X_pow _ _ h
+  mem_singleton.1 <| support_C_mul_X_pow' n c h
 
 theorem card_support_C_mul_X_pow_le_one {c : R} {n : ℕ} : (c c * X ^ n).Support.card ≤ 1 := by
   rw [← card_singleton n]
-  apply card_le_of_subset (support_C_mul_X_pow c n)
+  apply card_le_of_subset (support_C_mul_X_pow' n c)
 
 theorem card_supp_le_succ_nat_degree (p : R[X]) : p.Support.card ≤ p.natDegree + 1 := by
   rw [← Finset.card_range (p.nat_degree + 1)]
@@ -400,10 +396,6 @@ theorem le_degree_of_mem_supp (a : ℕ) : a ∈ p.Support → ↑a ≤ degree p 
 
 theorem nonempty_support_iff : p.Support.Nonempty ↔ p ≠ 0 := by
   rw [Ne.def, nonempty_iff_ne_empty, Ne.def, ← support_eq_empty]
-
-theorem support_C_mul_X_pow_nonzero {c : R} {n : ℕ} (h : c ≠ 0) : (c c * X ^ n).Support = singleton n := by
-  rw [C_mul_X_pow_eq_monomial]
-  exact support_monomial _ _ h
 
 end Semiringₓ
 

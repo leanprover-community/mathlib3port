@@ -191,7 +191,7 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
 
 variable {ι' : Type _} [DecidableEq ι']
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ y _ : y ∉ t, (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
@@ -202,7 +202,7 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
     _ = ∏ x in s, f x := prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » t)
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
     (h : ∀ y _ : y ∉ t, (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :

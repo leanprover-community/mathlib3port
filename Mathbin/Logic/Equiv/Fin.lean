@@ -26,7 +26,7 @@ def finZeroEquiv' : Finₓ 0 ≃ Pempty.{u} :=
 
 /-- Equivalence between `fin 1` and `unit`. -/
 def finOneEquiv : Finₓ 1 ≃ Unit :=
-  equivPunitOfUnique
+  Equivₓ.equivPunit _
 
 /-- Equivalence between `fin 2` and `bool`. -/
 def finTwoEquiv : Finₓ 2 ≃ Bool :=
@@ -190,7 +190,7 @@ theorem fin_succ_equiv_symm_none {n : ℕ} : (finSuccEquiv n).symm none = 0 :=
 
 @[simp]
 theorem fin_succ_equiv_symm_some {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm (some m) = m.succ :=
-  congr_funₓ Finₓ.succ_above_zero m
+  congr_fun Finₓ.succ_above_zero m
 
 @[simp]
 theorem fin_succ_equiv_symm_coe {n : ℕ} (m : Finₓ n) : (finSuccEquiv n).symm m = m.succ :=
@@ -242,6 +242,11 @@ def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Finₓ (n + 1) → Type u) [∀ i
   toEquiv := Equivₓ.piFinSuccAboveEquiv α i
   map_rel_iff' := fun f g => i.forall_iff_succ_above.symm
 
+/-- Equivalence between `fin (n + 1) → β` and `β × (fin n → β)`. -/
+@[simps (config := { fullyApplied := false })]
+def Equivₓ.piFinSucc (n : ℕ) (β : Type u) : (Finₓ (n + 1) → β) ≃ β × (Finₓ n → β) :=
+  Equivₓ.piFinSuccAboveEquiv (fun _ => β) 0
+
 /-- Equivalence between `fin m ⊕ fin n` and `fin (m + n)` -/
 def finSumFinEquiv : Sum (Finₓ m) (Finₓ n) ≃ Finₓ (m + n) where
   toFun := Sum.elim (Finₓ.castAdd n) (Finₓ.natAdd m)
@@ -266,6 +271,10 @@ theorem fin_sum_fin_equiv_symm_apply_cast_add (x : Finₓ m) : finSumFinEquiv.sy
 @[simp]
 theorem fin_sum_fin_equiv_symm_apply_nat_add (x : Finₓ n) : finSumFinEquiv.symm (Finₓ.natAdd m x) = Sum.inr x :=
   finSumFinEquiv.symm_apply_apply (Sum.inr x)
+
+@[simp]
+theorem fin_sum_fin_equiv_symm_last : finSumFinEquiv.symm (Finₓ.last n) = Sum.inr 0 :=
+  fin_sum_fin_equiv_symm_apply_nat_add 0
 
 /-- The equivalence between `fin (m + n)` and `fin (n + m)` which rotates by `n`. -/
 def finAddFlip : Finₓ (m + n) ≃ Finₓ (n + m) :=

@@ -272,7 +272,7 @@ theorem singular_part_add (μ₁ μ₂ ν : Measure α) [HaveLebesgueDecompositi
   refine'
     (eq_singular_part ((measurable_rn_deriv μ₁ ν).add (measurable_rn_deriv μ₂ ν))
         ((have_lebesgue_decomposition_spec _ _).2.1.add_left (have_lebesgue_decomposition_spec _ _).2.1) _).symm
-  erw [with_density_add (measurable_rn_deriv μ₁ ν) (measurable_rn_deriv μ₂ ν)]
+  erw [with_density_add_left (measurable_rn_deriv μ₁ ν)]
   conv_rhs => rw [add_assocₓ, add_commₓ (μ₂.singular_part ν), ← add_assocₓ, ← add_assocₓ]
   rw [← have_lebesgue_decomposition_add μ₁ ν, add_assocₓ, add_commₓ (ν.with_density (μ₂.rn_deriv ν)), ←
     have_lebesgue_decomposition_add μ₂ ν]
@@ -533,8 +533,8 @@ end LebesgueDecomposition
 
 open LebesgueDecomposition
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (n k)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (n k)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (n k)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (n k)
 /-- Any pair of finite measures `μ` and `ν`, `have_lebesgue_decomposition`. That is to say,
 there exist a measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular
 with respect to `ν` and `μ = ξ + ν.with_density f`.
@@ -621,7 +621,7 @@ theorem have_lebesgue_decomposition_of_finite_measure [IsFiniteMeasure μ] [IsFi
           with_density_apply _ (hA.inter hE₁),
           show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by
             rfl,
-          ← set_lintegral_const, ← lintegral_add measurable_const hξm] at this
+          ← set_lintegral_const, ← lintegral_add_left measurable_const] at this
         · rw [Ne.def, Ennreal.add_eq_top, not_or_distrib]
           exact ⟨ne_of_ltₓ (measure_lt_top _ _), ne_of_ltₓ (measure_lt_top _ _)⟩
           
@@ -642,18 +642,16 @@ theorem have_lebesgue_decomposition_of_finite_measure [IsFiniteMeasure μ] [IsFi
         refine' ⟨Measurable.add hξm (Measurable.indicator measurable_const hE₁), fun A hA => _⟩
         have : (∫⁻ a in A, (ξ + E.indicator fun _ => ε) a ∂ν) = (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A \ E, ξ a ∂ν :=
           by
-          simp only [lintegral_add measurable_const hξm, add_assocₓ, Pi.add_apply, inter_comm E,
-            lintegral_inter_add_diff _ _ hE₁, lintegral_add hξm (measurable_const.indicator hE₁),
-            lintegral_indicator _ hE₁, set_lintegral_const, measure.restrict_apply hE₁]
-          exact add_commₓ _ _
+          simp only [lintegral_add_left measurable_const, lintegral_add_left hξm, set_lintegral_const, add_assocₓ,
+            lintegral_inter_add_diff _ _ hE₁, Pi.add_apply, lintegral_indicator _ hE₁, restrict_apply hE₁]
+          rw [inter_comm, add_commₓ]
         rw [this, ← measure_inter_add_diff A hE₁]
         exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
       have : (∫⁻ a, ξ a + E.indicator (fun _ => ε) a ∂ν) ≤ Sup (measurable_le_eval ν μ) :=
         le_Sup ⟨ξ + E.indicator fun _ => ε, hξε, rfl⟩
       -- but this contradicts the maximality of `∫⁻ x, ξ x ∂ν`
       refine' not_ltₓ.2 this _
-      rw [hξ₁, lintegral_add hξm (Measurable.indicator measurable_const hE₁), lintegral_indicator _ hE₁,
-        set_lintegral_const]
+      rw [hξ₁, lintegral_add_left hξm, lintegral_indicator _ hE₁, set_lintegral_const]
       refine' Ennreal.lt_add_right _ (Ennreal.mul_pos_iff.2 ⟨Ennreal.coe_pos.2 hε₁, hE₂⟩).ne'
       have := measure_ne_top (ν.with_density ξ) univ
       rwa [with_density_apply _ MeasurableSet.univ, measure.restrict_univ] at this

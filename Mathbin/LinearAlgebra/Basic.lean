@@ -119,7 +119,7 @@ theorem linear_equiv_fun_on_fintype_symm_single [DecidableEq α] (x : α) (m : M
     (linearEquivFunOnFintype R M α).symm (Pi.single x m) = single x m := by
   ext a
   change (equiv_fun_on_fintype.symm (Pi.single x m)) a = _
-  convert congr_funₓ (equiv_fun_on_fintype_symm_single x m) a
+  convert congr_fun (equiv_fun_on_fintype_symm_single x m) a
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFunOnFintype R M α).symm f = f := by
@@ -128,17 +128,11 @@ theorem linear_equiv_fun_on_fintype_symm_coe (f : α →₀ M) : (linearEquivFun
 
 end Finsupp
 
-section
-
-open Classical
-
 /-- decomposing `x : ι → R` as a sum along the canonical basis -/
-theorem pi_eq_sum_univ {ι : Type _} [Fintype ι] {R : Type _} [Semiringₓ R] (x : ι → R) :
+theorem pi_eq_sum_univ {ι : Type _} [Fintype ι] [DecidableEq ι] {R : Type _} [Semiringₓ R] (x : ι → R) :
     x = ∑ i, x i • fun j => if i = j then 1 else 0 := by
   ext
   simp
-
-end
 
 /-! ### Properties of linear maps -/
 
@@ -348,19 +342,13 @@ theorem surjective_of_iterate_surjective {n : ℕ} (hn : n ≠ 0) (h : Surjectiv
 
 end
 
-section
-
-open Classical
-
 /-- A linear map `f` applied to `x : ι → R` can be computed using the image under `f` of elements
 of the canonical basis. -/
-theorem pi_apply_eq_sum_univ [Fintype ι] (f : (ι → R) →ₗ[R] M) (x : ι → R) :
+theorem pi_apply_eq_sum_univ [Fintype ι] [DecidableEq ι] (f : (ι → R) →ₗ[R] M) (x : ι → R) :
     f x = ∑ i, x i • f fun j => if i = j then 1 else 0 := by
   conv_lhs => rw [pi_eq_sum_univ x, f.map_sum]
   apply Finset.sum_congr rfl fun l hl => _
   rw [map_smul]
-
-end
 
 end AddCommMonoidₓ
 
@@ -448,14 +436,6 @@ def domRestrict' (p : Submodule R M) : (M →ₗ[R] M₂) →ₗ[R] p →ₗ[R] 
 theorem dom_restrict'_apply (f : M →ₗ[R] M₂) (p : Submodule R M) (x : p) : domRestrict' p f x = f x :=
   rfl
 
-end CommSemiringₓ
-
-section CommRingₓ
-
-variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
-
-variable [Module R M] [Module R M₂] [Module R M₃]
-
 /-- The family of linear maps `M₂ → M` parameterised by `f ∈ M₂ → R`, `x ∈ M`, is linear in `f`, `x`.
 -/
 def smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M where
@@ -479,7 +459,7 @@ theorem smul_rightₗ_apply (f : M₂ →ₗ[R] R) (x : M) (c : M₂) :
     (smulRightₗ : (M₂ →ₗ[R] R) →ₗ[R] M →ₗ[R] M₂ →ₗ[R] M) f x c = f c • x :=
   rfl
 
-end CommRingₓ
+end CommSemiringₓ
 
 end LinearMap
 
@@ -1262,7 +1242,7 @@ theorem ker_to_add_subgroup (f : M →ₛₗ[τ₁₂] M₂) : f.ker.toAddSubgro
 theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y := by
   rw [mem_ker, map_sub, sub_eq_zero]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » p)
 theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x ∈ p _ : y ∈ p, f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x hx y hy h =>
@@ -1275,7 +1255,7 @@ theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x
         (by
           simpa using h₂)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
     ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y := fun x hx y hy => disjoint_ker'.1 hd _ (h hx) _ (h hy)
 
@@ -1740,7 +1720,7 @@ variable (p q : Submodule R M)
 
 /-- Linear equivalence between two equal submodules. -/
 def ofEq (h : p = q) : p ≃ₗ[R] q :=
-  { Equivₓ.Set.ofEq (congr_argₓ _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.Set.ofEq (congr_arg _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 variable {p q}
 

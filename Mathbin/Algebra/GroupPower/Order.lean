@@ -64,7 +64,7 @@ theorem one_lt_pow' {a : M} (ha : 1 < a) {k : ℕ} (hk : k ≠ 0) : 1 < a ^ k :=
   · simpa using ha
     
   · rw [pow_succₓ]
-    exact one_lt_mul' ha IH
+    exact one_lt_mul'' ha IH
     
 
 @[to_additive nsmul_neg]
@@ -360,70 +360,48 @@ theorem sq_abs (x : R) : abs x ^ 2 = x ^ 2 := by
 theorem abs_sq (x : R) : abs (x ^ 2) = x ^ 2 := by
   simpa only [sq] using abs_mul_self x
 
-theorem sq_lt_sq (h : abs x < abs y) : x ^ 2 < y ^ 2 := by
-  simpa only [sq_abs] using pow_lt_pow_of_lt_left h (abs_nonneg x) (1 : ℕ).succ_pos
+theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ abs x < abs y := by
+  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_lt_sq' (h1 : -y < x) (h2 : x < y) : x ^ 2 < y ^ 2 :=
-  sq_lt_sq (lt_of_lt_of_leₓ (abs_lt.2 ⟨h1, h2⟩) (le_abs_self _))
+  sq_lt_sq.2 (lt_of_lt_of_leₓ (abs_lt.2 ⟨h1, h2⟩) (le_abs_self _))
 
-theorem sq_le_sq (h : abs x ≤ abs y) : x ^ 2 ≤ y ^ 2 := by
-  simpa only [sq_abs] using pow_le_pow_of_le_left (abs_nonneg x) h 2
+theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ abs x ≤ abs y := by
+  simpa only [sq_abs] using (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 
 theorem sq_le_sq' (h1 : -y ≤ x) (h2 : x ≤ y) : x ^ 2 ≤ y ^ 2 :=
-  sq_le_sq (le_transₓ (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
-
-theorem abs_lt_abs_of_sq_lt_sq (h : x ^ 2 < y ^ 2) : abs x < abs y :=
-  lt_of_pow_lt_pow 2 (abs_nonneg y) <| by
-    rwa [← sq_abs x, ← sq_abs y] at h
+  sq_le_sq.2 (le_transₓ (abs_le.mpr ⟨h1, h2⟩) (le_abs_self _))
 
 theorem abs_lt_of_sq_lt_sq (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : abs x < y := by
-  rw [← abs_of_nonneg hy]
-  exact abs_lt_abs_of_sq_lt_sq h
+  rwa [← abs_of_nonneg hy, ← sq_lt_sq]
 
 theorem abs_lt_of_sq_lt_sq' (h : x ^ 2 < y ^ 2) (hy : 0 ≤ y) : -y < x ∧ x < y :=
   abs_lt.mp <| abs_lt_of_sq_lt_sq h hy
 
-theorem abs_le_abs_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) : abs x ≤ abs y :=
-  le_of_pow_le_pow 2 (abs_nonneg y) (1 : ℕ).succ_pos <| by
-    rwa [← sq_abs x, ← sq_abs y] at h
-
 theorem abs_le_of_sq_le_sq (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : abs x ≤ y := by
-  rw [← abs_of_nonneg hy]
-  exact abs_le_abs_of_sq_le_sq h
+  rwa [← abs_of_nonneg hy, ← sq_le_sq]
 
 theorem abs_le_of_sq_le_sq' (h : x ^ 2 ≤ y ^ 2) (hy : 0 ≤ y) : -y ≤ x ∧ x ≤ y :=
   abs_le.mp <| abs_le_of_sq_le_sq h hy
 
-theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y :=
-  ⟨fun h => (abs_le_abs_of_sq_le_sq h.le).antisymm (abs_le_abs_of_sq_le_sq h.Ge), fun h => by
-    rw [← sq_abs, h, sq_abs]⟩
-
-@[simp]
-theorem sq_eq_one_iff (x : R) : x ^ 2 = 1 ↔ x = 1 ∨ x = -1 := by
-  rw [← abs_eq_abs, ← sq_eq_sq_iff_abs_eq_abs, one_pow]
-
-theorem sq_ne_one_iff (x : R) : x ^ 2 ≠ 1 ↔ x ≠ 1 ∧ x ≠ -1 :=
-  (not_iff_not.2 (sq_eq_one_iff _)).trans not_or_distrib
+theorem sq_eq_sq_iff_abs_eq_abs (x y : R) : x ^ 2 = y ^ 2 ↔ abs x = abs y := by
+  simp only [le_antisymm_iffₓ, sq_le_sq]
 
 @[simp]
 theorem sq_le_one_iff_abs_le_one (x : R) : x ^ 2 ≤ 1 ↔ abs x ≤ 1 := by
-  have t : x ^ 2 ≤ 1 ^ 2 ↔ abs x ≤ abs 1 := ⟨abs_le_abs_of_sq_le_sq, sq_le_sq⟩
-  simpa using t
+  simpa only [one_pow, abs_one] using @sq_le_sq _ _ x 1
 
 @[simp]
 theorem sq_lt_one_iff_abs_lt_one (x : R) : x ^ 2 < 1 ↔ abs x < 1 := by
-  have t : x ^ 2 < 1 ^ 2 ↔ abs x < abs 1 := ⟨abs_lt_abs_of_sq_lt_sq, sq_lt_sq⟩
-  simpa using t
+  simpa only [one_pow, abs_one] using @sq_lt_sq _ _ x 1
 
 @[simp]
 theorem one_le_sq_iff_one_le_abs (x : R) : 1 ≤ x ^ 2 ↔ 1 ≤ abs x := by
-  have t : 1 ^ 2 ≤ x ^ 2 ↔ abs 1 ≤ abs x := ⟨abs_le_abs_of_sq_le_sq, sq_le_sq⟩
-  simpa using t
+  simpa only [one_pow, abs_one] using @sq_le_sq _ _ 1 x
 
 @[simp]
 theorem one_lt_sq_iff_one_lt_abs (x : R) : 1 < x ^ 2 ↔ 1 < abs x := by
-  have t : 1 ^ 2 < x ^ 2 ↔ abs 1 < abs x := ⟨abs_lt_abs_of_sq_lt_sq, sq_lt_sq⟩
-  simpa using t
+  simpa only [one_pow, abs_one] using @sq_lt_sq _ _ 1 x
 
 theorem pow_four_le_pow_two_of_pow_two_le {x y : R} (h : x ^ 2 ≤ y) : x ^ 4 ≤ y ^ 2 :=
   (pow_mulₓ x 2 2).symm ▸ pow_le_pow_of_le_left (sq_nonneg x) h 2

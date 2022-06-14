@@ -65,34 +65,34 @@ theorem nim_def (O : Ordinal) :
   rw [nim]
   rfl
 
-instance : IsEmpty (LeftMoves (nim 0)) := by
+instance : IsEmpty (nim 0).LeftMoves := by
   rw [nim_def]
-  exact α.is_empty
+  exact Ordinal.is_empty_out_zero
 
-instance : IsEmpty (RightMoves (nim 0)) := by
+instance : IsEmpty (nim 0).RightMoves := by
   rw [nim_def]
-  exact α.is_empty
+  exact Ordinal.is_empty_out_zero
 
-noncomputable instance : Unique (LeftMoves (nim 1)) := by
+noncomputable instance : Unique (nim 1).LeftMoves := by
   rw [nim_def]
-  exact α.unique
+  exact Ordinal.uniqueOutOne
 
-noncomputable instance : Unique (RightMoves (nim 1)) := by
+noncomputable instance : Unique (nim 1).RightMoves := by
   rw [nim_def]
-  exact α.unique
+  exact Ordinal.uniqueOutOne
 
-/-- `0` has exactly the same moves as `nim 0`. -/
-def nimZeroRelabelling : Relabelling 0 (nim 0) :=
-  (Relabelling.isEmpty _).symm
+/-- `nim 0` has exactly the same moves as `0`. -/
+def nimZeroRelabelling : Relabelling (nim 0) 0 :=
+  Relabelling.isEmpty _
 
 @[simp]
-theorem nim_zero_equiv : 0 ≈ nim 0 :=
-  nimZeroRelabelling.Equiv
+theorem nim_zero_equiv : nim 0 ≈ 0 :=
+  Equiv.is_empty _
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:60:31: expecting tactic arg
 /-- `nim 1` has exactly the same moves as `star`. -/
-noncomputable def nimOneRelabelling : Relabelling star (nim 1) := by
+noncomputable def nimOneRelabelling : Relabelling (nim 1) star := by
   rw [nim_def]
   refine' ⟨_, _, fun i => _, fun j => _⟩
   any_goals {
@@ -102,7 +102,7 @@ noncomputable def nimOneRelabelling : Relabelling star (nim 1) := by
     exact nim_zero_relabelling
 
 @[simp]
-theorem nim_one_equiv : star ≈ nim 1 :=
+theorem nim_one_equiv : nim 1 ≈ star :=
   nimOneRelabelling.Equiv
 
 @[simp]
@@ -244,8 +244,9 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
     intro hG
     rw [impartial.equiv_iff_sum_first_loses, ← impartial.no_good_left_moves_iff_first_loses]
     intro i
-    rcases left_moves_add_cases i with (⟨i₁, rfl⟩ | ⟨i₂, rfl⟩)
-    · rw [add_move_left_inl]
+    apply left_moves_add_cases i
+    · intro i₁
+      rw [add_move_left_inl]
       apply first_wins_of_equiv (add_congr_left (equiv_nim_grundy_value (G.move_left i₁)).symm)
       rw [nim.sum_first_wins_iff_neq]
       intro heq
@@ -254,7 +255,8 @@ theorem equiv_nim_grundy_value : ∀ G : Pgame.{u} [G.Impartial], G ≈ nim (gru
       rw [HEq] at h
       exact (h i₁).irrefl
       
-    · rw [add_move_left_inr, ← impartial.good_left_move_iff_first_wins]
+    · intro i₂
+      rw [add_move_left_inr, ← impartial.good_left_move_iff_first_wins]
       revert i₂
       rw [nim.nim_def]
       intro i₂
@@ -279,7 +281,7 @@ theorem grundy_value_eq_iff_equiv_nim (G : Pgame) [G.Impartial] (O : Ordinal) : 
     exact equiv_nim_grundy_value G, by
     intro h
     rw [← nim.equiv_iff_eq]
-    exact equiv_trans (equiv_symm (equiv_nim_grundy_value G)) h⟩
+    exact (equiv_nim_grundy_value G).symm.trans h⟩
 
 theorem Nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
   simp
@@ -288,15 +290,16 @@ theorem Nim.grundy_value (O : Ordinal.{u}) : grundyValue (nim O) = O := by
 theorem grundy_value_eq_iff_equiv (G H : Pgame) [G.Impartial] [H.Impartial] : grundyValue G = grundyValue H ↔ (G ≈ H) :=
   (grundy_value_eq_iff_equiv_nim _ _).trans (equiv_congr_left.1 (equiv_nim_grundy_value H) _).symm
 
+@[simp]
 theorem grundy_value_zero : grundyValue 0 = 0 := by
-  simp
+  simp [nim.nim_zero_equiv.symm]
 
 @[simp]
 theorem grundy_value_iff_equiv_zero (G : Pgame) [G.Impartial] : grundyValue G = 0 ↔ (G ≈ 0) := by
   rw [← grundy_value_eq_iff_equiv, grundy_value_zero]
 
 theorem grundy_value_star : grundyValue star = 1 := by
-  simp
+  simp [nim.nim_one_equiv.symm]
 
 @[simp]
 theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} m) = Nat.lxor n m := by
@@ -312,9 +315,10 @@ theorem grundy_value_nim_add_nim (n m : ℕ) : grundyValue (nim.{u} n + nim.{u} 
     -- different from `n xor m`.
     intro i
     -- The move operates either on the left pile or on the right pile.
-    rcases left_moves_add_cases i with (⟨a, rfl⟩ | ⟨a, rfl⟩)
+    apply left_moves_add_cases i
     all_goals
       -- One of the piles is reduced to `k` stones, with `k < n` or `k < m`.
+      intro a
       obtain ⟨ok, hk, hk'⟩ := nim.exists_ordinal_move_left_eq a
       obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (lt_transₓ hk (Ordinal.nat_lt_omega _))
       replace hk := Ordinal.nat_cast_lt.1 hk
@@ -369,7 +373,7 @@ theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (Nat.lxor n m) := 
 theorem grundy_value_add (G H : Pgame) [G.Impartial] [H.Impartial] {n m : ℕ} (hG : grundyValue G = n)
     (hH : grundyValue H = m) : grundyValue (G + H) = Nat.lxor n m := by
   rw [← nim.grundy_value (Nat.lxor n m), grundy_value_eq_iff_equiv]
-  refine' equiv_trans _ nim_add_nim_equiv
+  refine' Equivₓ.trans _ nim_add_nim_equiv
   convert add_congr (equiv_nim_grundy_value G) (equiv_nim_grundy_value H) <;> simp only [hG, hH]
 
 end Pgame

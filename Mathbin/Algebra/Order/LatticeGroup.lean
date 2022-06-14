@@ -29,7 +29,7 @@ number of equations and inequalities.
 
 - `a⁺ = a ⊔ 0`: The *positive component* of an element `a` of a lattice ordered commutative group
 - `a⁻ = (-a) ⊔ 0`: The *negative component* of an element `a` of a lattice ordered commutative group
-* `|a| = a⊔(-a)`: The *absolute value* of an element `a` of a lattice ordered commutative group
+- `|a| = a⊔(-a)`: The *absolute value* of an element `a` of a lattice ordered commutative group
 
 ## Implementation notes
 
@@ -337,7 +337,7 @@ theorem m_neg_abs [CovariantClass α α (· * ·) (· ≤ ·)] (a : α) : abs a�
     · rw [pos_eq_neg_inv]
       exact ((m_le_iff_pos_le_neg_ge _ _).mp (inv_le_abs a)).right
       
-    · exact And.right (Iff.elim_leftₓ (m_le_iff_pos_le_neg_ge _ _) (le_mabs a))
+    · exact And.right (Iff.elim_left (m_le_iff_pos_le_neg_ge _ _) (le_mabs a))
       
     
   · exact one_le_neg _

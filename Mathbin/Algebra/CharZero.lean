@@ -249,5 +249,8 @@ theorem RingHom.char_zero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : C
       rwa [← @Nat.cast_inj R _ _ hR, ← hϕ.eq_iff, map_nat_cast ϕ, map_nat_cast ϕ]⟩,
     fun hS => ϕ.char_zero⟩
 
+theorem RingHom.injective_nat (f : ℕ →+* R) [CharZero R] : Function.Injective f :=
+  Subsingleton.elimₓ (Nat.castRingHom _) f ▸ Nat.cast_injective
+
 end RingHom
 

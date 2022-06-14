@@ -301,10 +301,10 @@ see the doc-string on `complete_lattice_of_Sup`.
 def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSup α] : CompleteLattice α :=
   completeLatticeOfSup α fun s => is_lub_Sup s
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure"
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure"
 
 namespace OrderDual
 
@@ -474,7 +474,7 @@ theorem Sup_eq_supr' (s : Set α) : sup s = ⨆ a : s, a := by
   rw [supr, Subtype.range_coe]
 
 theorem supr_congr (h : ∀ i, f i = g i) : (⨆ i, f i) = ⨆ i, g i :=
-  congr_argₓ _ <| funext h
+  congr_arg _ <| funext h
 
 theorem Function.Surjective.supr_comp {f : ι → ι'} (hf : Surjective f) (g : ι' → α) : (⨆ x, g (f x)) = ⨆ y, g y := by
   simp only [supr, hf.range_comp]
@@ -510,7 +510,7 @@ theorem Inf_eq_infi' (s : Set α) : inf s = ⨅ a : s, a :=
   @Sup_eq_supr' αᵒᵈ _ _
 
 theorem infi_congr (h : ∀ i, f i = g i) : (⨅ i, f i) = ⨅ i, g i :=
-  congr_argₓ _ <| funext h
+  congr_arg _ <| funext h
 
 theorem Function.Surjective.infi_comp {f : ι → ι'} (hf : Surjective f) (g : ι' → α) : (⨅ x, g (f x)) = ⨅ y, g y :=
   @Function.Surjective.supr_comp αᵒᵈ _ _ _ f hf g
@@ -575,19 +575,19 @@ theorem le_supr_of_le (i : ι) (h : a ≤ f i) : a ≤ supr f :=
 theorem infi_le_of_le (i : ι) (h : f i ≤ a) : infi f ≤ a :=
   (infi_le _ i).trans h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem le_supr₂ {f : ∀ i, κ i → α} (i : ι) (j : κ i) : f i j ≤ ⨆ (i) (j), f i j :=
   le_supr_of_le i <| le_supr (f i) j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi₂_le {f : ∀ i, κ i → α} (i : ι) (j : κ i) : (⨅ (i) (j), f i j) ≤ f i j :=
   infi_le_of_le i <| infi_le (f i) j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem le_supr₂_of_le {f : ∀ i, κ i → α} (i : ι) (j : κ i) (h : a ≤ f i j) : a ≤ ⨆ (i) (j), f i j :=
   h.trans <| le_supr₂ i j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi₂_le_of_le {f : ∀ i, κ i → α} (i : ι) (j : κ i) (h : f i j ≤ a) : (⨅ (i) (j), f i j) ≤ a :=
   (infi₂_le i j).trans h
 
@@ -597,11 +597,11 @@ theorem supr_le (h : ∀ i, f i ≤ a) : supr f ≤ a :=
 theorem le_infi (h : ∀ i, a ≤ f i) : a ≤ infi f :=
   le_Inf fun b ⟨i, Eq⟩ => Eq ▸ h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem supr₂_le {f : ∀ i, κ i → α} (h : ∀ i j, f i j ≤ a) : (⨆ (i) (j), f i j) ≤ a :=
   supr_le fun i => supr_le <| h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem le_infi₂ {f : ∀ i, κ i → α} (h : ∀ i j, a ≤ f i j) : a ≤ ⨅ (i) (j), f i j :=
   le_infi fun i => le_infi <| h i
 
@@ -617,13 +617,13 @@ theorem supr_mono (h : ∀ i, f i ≤ g i) : supr f ≤ supr g :=
 theorem infi_mono (h : ∀ i, f i ≤ g i) : infi f ≤ infi g :=
   le_infi fun i => infi_le_of_le i <| h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem supr₂_mono {f g : ∀ i, κ i → α} (h : ∀ i j, f i j ≤ g i j) : (⨆ (i) (j), f i j) ≤ ⨆ (i) (j), g i j :=
   supr_mono fun i => supr_mono <| h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi₂_mono {f g : ∀ i, κ i → α} (h : ∀ i j, f i j ≤ g i j) : (⨅ (i) (j), f i j) ≤ ⨅ (i) (j), g i j :=
   infi_mono fun i => infi_mono <| h i
 
@@ -633,16 +633,16 @@ theorem supr_mono' {g : ι' → α} (h : ∀ i, ∃ i', f i ≤ g i') : supr f �
 theorem infi_mono' {g : ι' → α} (h : ∀ i', ∃ i, f i ≤ g i') : infi f ≤ infi g :=
   le_infi fun i' => Exists.elim (h i') infi_le_of_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem supr₂_mono' {f : ∀ i, κ i → α} {g : ∀ i', κ' i' → α} (h : ∀ i j, ∃ i' j', f i j ≤ g i' j') :
     (⨆ (i) (j), f i j) ≤ ⨆ (i) (j), g i j :=
   supr₂_le fun i j =>
     let ⟨i', j', h⟩ := h i j
     le_supr₂_of_le i' j' h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi₂_mono' {f : ∀ i, κ i → α} {g : ∀ i', κ' i' → α} (h : ∀ i j, ∃ i' j', f i' j' ≤ g i j) :
     (⨅ (i) (j), f i j) ≤ ⨅ (i) (j), g i j :=
   le_infi₂ fun i j =>
@@ -654,6 +654,9 @@ theorem supr_const_mono (h : ι → ι') : (⨆ i : ι, a) ≤ ⨆ j : ι', a :=
 
 theorem infi_const_mono (h : ι' → ι) : (⨅ i : ι, a) ≤ ⨅ j : ι', a :=
   le_infi <| infi_le _ ∘ h
+
+theorem supr_infi_le_infi_supr (f : ι → ι' → α) : (⨆ i, ⨅ j, f i j) ≤ ⨅ j, ⨆ i, f i j :=
+  supr_le fun i => infi_mono fun j => le_supr _ i
 
 theorem bsupr_mono {p q : ι → Prop} (hpq : ∀ i, p i → q i) : (⨆ (i) (h : p i), f i) ≤ ⨆ (i) (h : q i), f i :=
   supr_mono fun i => supr_const_mono (hpq i)
@@ -669,12 +672,12 @@ theorem supr_le_iff : supr f ≤ a ↔ ∀ i, f i ≤ a :=
 theorem le_infi_iff : a ≤ infi f ↔ ∀ i, a ≤ f i :=
   (le_is_glb_iff is_glb_infi).trans forall_range_iff
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem supr₂_le_iff {f : ∀ i, κ i → α} : (⨆ (i) (j), f i j) ≤ a ↔ ∀ i j, f i j ≤ a := by
   simp_rw [supr_le_iff]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem le_infi₂_iff {f : ∀ i, κ i → α} : (a ≤ ⨅ (i) (j), f i j) ↔ ∀ i j, a ≤ f i j := by
   simp_rw [le_infi_iff]
@@ -694,8 +697,8 @@ theorem Inf_eq_infi {s : Set α} : inf s = ⨅ a ∈ s, a :=
 theorem Monotone.le_map_supr [CompleteLattice β] {f : α → β} (hf : Monotone f) : (⨆ i, f (s i)) ≤ f (supr s) :=
   supr_le fun i => hf <| le_supr _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem Monotone.le_map_supr₂ [CompleteLattice β] {f : α → β} (hf : Monotone f) (s : ∀ i, κ i → α) :
     (⨆ (i) (j), f (s i j)) ≤ f (⨆ (i) (j), s i j) :=
   supr₂_le fun i j => hf <| le_supr₂ _ _
@@ -707,8 +710,8 @@ theorem Monotone.le_map_Sup [CompleteLattice β] {s : Set α} {f : α → β} (h
 theorem Antitone.le_map_infi [CompleteLattice β] {f : α → β} (hf : Antitone f) : (⨆ i, f (s i)) ≤ f (infi s) :=
   hf.dual_left.le_map_supr
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem Antitone.le_map_infi₂ [CompleteLattice β] {f : α → β} (hf : Antitone f) (s : ∀ i, κ i → α) :
     (⨆ (i) (j), f (s i j)) ≤ f (⨅ (i) (j), s i j) :=
   hf.dual_left.le_map_supr₂ _
@@ -735,8 +738,8 @@ theorem Monotone.supr_comp_eq [Preorderₓ β] {f : β → α} (hf : Monotone f)
 theorem Monotone.map_infi_le [CompleteLattice β] {f : α → β} (hf : Monotone f) : f (infi s) ≤ ⨅ i, f (s i) :=
   le_infi fun i => hf <| infi_le _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem Monotone.map_infi₂_le [CompleteLattice β] {f : α → β} (hf : Monotone f) (s : ∀ i, κ i → α) :
     f (⨅ (i) (j), s i j) ≤ ⨅ (i) (j), f (s i j) :=
   hf.dual.le_map_supr₂ _
@@ -748,8 +751,8 @@ theorem Monotone.map_Inf_le [CompleteLattice β] {s : Set α} {f : α → β} (h
 theorem Antitone.map_supr_le [CompleteLattice β] {f : α → β} (hf : Antitone f) : f (supr s) ≤ ⨅ i, f (s i) :=
   hf.dual_left.map_infi_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem Antitone.map_supr₂_le [CompleteLattice β] {f : α → β} (hf : Antitone f) (s : ∀ i, κ i → α) :
     f (⨆ (i) (j), s i j) ≤ ⨅ (i) (j), f (s i j) :=
   hf.dual_left.map_infi₂_le _
@@ -800,12 +803,12 @@ theorem supr_eq_bot : supr s = ⊥ ↔ ∀ i, s i = ⊥ :=
 theorem infi_eq_top : infi s = ⊤ ↔ ∀ i, s i = ⊤ :=
   Inf_eq_top.trans forall_range_iff
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem supr₂_eq_bot {f : ∀ i, κ i → α} : (⨆ (i) (j), f i j) = ⊥ ↔ ∀ i j, f i j = ⊥ := by
   simp_rw [supr_eq_bot]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem infi₂_eq_top {f : ∀ i, κ i → α} : (⨅ (i) (j), f i j) = ⊤ ↔ ∀ i j, f i j = ⊤ := by
   simp_rw [infi_eq_top]
@@ -854,17 +857,29 @@ theorem infi_eq_dif {p : Prop} [Decidable p] (a : p → α) : (⨅ h : p, a h) =
 theorem infi_eq_if {p : Prop} [Decidable p] (a : α) : (⨅ h : p, a) = if p then a else ⊤ :=
   infi_eq_dif fun _ => a
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (j i)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (j i)
 -- TODO: should this be @[simp]?
 theorem supr_comm {f : ι → ι' → α} : (⨆ (i) (j), f i j) = ⨆ (j) (i), f i j :=
   le_antisymmₓ (supr_le fun i => supr_mono fun j => le_supr _ i) (supr_le fun j => supr_mono fun i => le_supr _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (j i)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (j i)
 -- TODO: should this be @[simp]?
 theorem infi_comm {f : ι → ι' → α} : (⨅ (i) (j), f i j) = ⨅ (j) (i), f i j :=
   @supr_comm αᵒᵈ _ _ _ _
+
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i₁ j₁ i₂ j₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i₂ j₂ i₁ j₁)
+theorem supr₂_comm {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : ι₂ → Sort _} (f : ∀ i₁, κ₁ i₁ → ∀ i₂, κ₂ i₂ → α) :
+    (⨆ (i₁) (j₁) (i₂) (j₂), f i₁ j₁ i₂ j₂) = ⨆ (i₂) (j₂) (i₁) (j₁), f i₁ j₁ i₂ j₂ := by
+  simp only [@supr_comm _ (κ₁ _), @supr_comm _ ι₁]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i₁ j₁ i₂ j₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i₂ j₂ i₁ j₁)
+theorem infi₂_comm {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : ι₂ → Sort _} (f : ∀ i₁, κ₁ i₁ → ∀ i₂, κ₂ i₂ → α) :
+    (⨅ (i₁) (j₁) (i₂) (j₂), f i₁ j₁ i₂ j₂) = ⨅ (i₂) (j₂) (i₁) (j₁), f i₁ j₁ i₂ j₂ := by
+  simp only [@infi_comm _ (κ₁ _), @infi_comm _ ι₁]
 
 /- TODO: this is strange. In the proof below, we get exactly the desired
    among the equalities, but close does not get it.
@@ -966,17 +981,17 @@ theorem supr_true {s : True → α} : supr s = s trivialₓ :=
 theorem infi_true {s : True → α} : infi s = s trivialₓ :=
   infi_pos trivialₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i h)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i h)
 @[simp]
 theorem infi_exists {p : ι → Prop} {f : Exists p → α} : (⨅ x, f x) = ⨅ (i) (h), f ⟨i, h⟩ :=
   le_antisymmₓ (le_infi₂ fun i h => infi_le _ _) (le_infi fun ⟨i, h⟩ => infi₂_le _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i h)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i h)
 @[simp]
 theorem supr_exists {p : ι → Prop} {f : Exists p → α} : (⨆ x, f x) = ⨆ (i) (h), f ⟨i, h⟩ :=
   @infi_exists αᵒᵈ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (h₁ h₂)
 theorem infi_and {p q : Prop} {s : p ∧ q → α} : infi s = ⨅ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   le_antisymmₓ (le_infi₂ fun i j => infi_le _ _) (le_infi fun ⟨i, h⟩ => infi₂_le _ _)
 
@@ -985,7 +1000,7 @@ theorem infi_and' {p q : Prop} {s : p → q → α} : (⨅ (h₁ : p) (h₂ : q)
   symm
   exact infi_and
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (h₁ h₂)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (h₁ h₂)
 theorem supr_and {p q : Prop} {s : p ∧ q → α} : supr s = ⨆ (h₁) (h₂), s ⟨h₁, h₂⟩ :=
   @infi_and αᵒᵈ _ _ _ _
 
@@ -1078,10 +1093,10 @@ theorem supr_le_supr_of_subset {f : β → α} {s t : Set β} (h : s ⊆ t) : (�
   @infi_le_infi_of_subset αᵒᵈ _ _ _ _ _ h
 
 theorem infi_insert {f : β → α} {s : Set β} {b : β} : (⨅ x ∈ insert b s, f x) = f b⊓⨅ x ∈ s, f x :=
-  Eq.trans infi_union <| congr_argₓ (fun x => x⊓⨅ x ∈ s, f x) infi_infi_eq_left
+  Eq.trans infi_union <| congr_arg (fun x => x⊓⨅ x ∈ s, f x) infi_infi_eq_left
 
 theorem supr_insert {f : β → α} {s : Set β} {b : β} : (⨆ x ∈ insert b s, f x) = f b⊔⨆ x ∈ s, f x :=
-  Eq.trans supr_union <| congr_argₓ (fun x => x⊔⨆ x ∈ s, f x) supr_supr_eq_left
+  Eq.trans supr_union <| congr_arg (fun x => x⊔⨆ x ∈ s, f x) supr_supr_eq_left
 
 theorem infi_singleton {f : β → α} {b : β} : (⨅ x ∈ (singleton b : Set β), f x) = f b := by
   simp
@@ -1111,13 +1126,13 @@ theorem supr_extend_bot {e : ι → β} (he : Injective e) (f : ι → α) : (�
 
 
 theorem supr_of_empty' {α ι} [HasSupₓ α] [IsEmpty ι] (f : ι → α) : supr f = sup (∅ : Set α) :=
-  congr_argₓ sup (range_eq_empty f)
+  congr_arg sup (range_eq_empty f)
 
 theorem supr_of_empty [IsEmpty ι] (f : ι → α) : supr f = ⊥ :=
   (supr_of_empty' f).trans Sup_empty
 
 theorem infi_of_empty' {α ι} [HasInfₓ α] [IsEmpty ι] (f : ι → α) : infi f = inf (∅ : Set α) :=
-  congr_argₓ inf (range_eq_empty f)
+  congr_arg inf (range_eq_empty f)
 
 theorem infi_of_empty [IsEmpty ι] (f : ι → α) : infi f = ⊤ :=
   @supr_of_empty αᵒᵈ _ _ _ f
@@ -1156,12 +1171,12 @@ theorem infi_sigma {p : β → Type _} {f : Sigma p → α} : (⨅ x, f x) = ⨅
 theorem supr_sigma {p : β → Type _} {f : Sigma p → α} : (⨆ x, f x) = ⨆ (i) (h : p i), f ⟨i, h⟩ :=
   @infi_sigma αᵒᵈ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi_prod {γ : Type _} {f : β × γ → α} : (⨅ x, f x) = ⨅ (i) (j), f (i, j) :=
   eq_of_forall_le_iff fun c => by
     simp only [le_infi_iff, Prod.forall]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem supr_prod {γ : Type _} {f : β × γ → α} : (⨆ x, f x) = ⨆ (i) (j), f (i, j) :=
   @infi_prod αᵒᵈ _ _ _ _
 
@@ -1213,7 +1228,7 @@ theorem infi_ne_top_subtype (f : ι → α) : (⨅ i : { i // f i ≠ ⊤ }, f i
 -/
 
 
-theorem supr_ge_eq_supr_nat_add {u : ℕ → α} (n : ℕ) : (⨆ i ≥ n, u i) = ⨆ i, u (i + n) := by
+theorem supr_ge_eq_supr_nat_add (u : ℕ → α) (n : ℕ) : (⨆ i ≥ n, u i) = ⨆ i, u (i + n) := by
   apply le_antisymmₓ <;> simp only [supr_le_iff]
   · exact fun i hi =>
       le_Sup
@@ -1224,11 +1239,14 @@ theorem supr_ge_eq_supr_nat_add {u : ℕ → α} (n : ℕ) : (⨆ i ≥ n, u i) 
   · exact fun i => le_Sup ⟨i + n, supr_pos (Nat.le_add_leftₓ _ _)⟩
     
 
-theorem infi_ge_eq_infi_nat_add {u : ℕ → α} (n : ℕ) : (⨅ i ≥ n, u i) = ⨅ i, u (i + n) :=
+theorem infi_ge_eq_infi_nat_add (u : ℕ → α) (n : ℕ) : (⨅ i ≥ n, u i) = ⨅ i, u (i + n) :=
   @supr_ge_eq_supr_nat_add αᵒᵈ _ _ _
 
 theorem Monotone.supr_nat_add {f : ℕ → α} (hf : Monotone f) (k : ℕ) : (⨆ n, f (n + k)) = ⨆ n, f n :=
   le_antisymmₓ (supr_le fun i => le_supr _ (i + k)) <| supr_mono fun i => hf <| Nat.le_add_rightₓ i k
+
+theorem Antitone.infi_nat_add {f : ℕ → α} (hf : Antitone f) (k : ℕ) : (⨅ n, f (n + k)) = ⨅ n, f n :=
+  hf.dual_right.supr_nat_add k
 
 @[simp]
 theorem supr_infi_ge_nat_add (f : ℕ → α) (k : ℕ) : (⨆ n, ⨅ i ≥ n, f (i + k)) = ⨆ n, ⨅ i ≥ n, f i := by
@@ -1381,6 +1399,12 @@ theorem supr_inf_le_inf_Sup : (⨆ b ∈ s, a⊓b) ≤ a⊓sup s :=
 /-- This is a weaker version of `Sup_inf_eq` -/
 theorem supr_inf_le_Sup_inf : (⨆ b ∈ s, b⊓a) ≤ sup s⊓a :=
   supr₂_le fun i h => inf_le_inf_right _ (le_Sup h)
+
+theorem le_supr_inf_supr (f g : ι → α) : (⨆ i, f i⊓g i) ≤ (⨆ i, f i)⊓⨆ i, g i :=
+  le_inf (supr_mono fun i => inf_le_left) (supr_mono fun i => inf_le_right)
+
+theorem infi_sup_infi_le (f g : ι → α) : ((⨅ i, f i)⊔⨅ i, g i) ≤ ⨅ i, f i⊔g i :=
+  @le_supr_inf_supr αᵒᵈ ι _ f g
 
 theorem disjoint_Sup_left {a : Set α} {b : α} (d : Disjoint (sup a) b) {i} (hi : i ∈ a) : Disjoint i b :=
   (supr₂_le_iff.1 (supr_inf_le_Sup_inf.trans d) i hi : _)

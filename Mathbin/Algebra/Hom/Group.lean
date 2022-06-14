@@ -709,9 +709,7 @@ add_decl_doc AddMonoidHom.map_add
 
 namespace MonoidHom
 
-variable {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} {mP : MulOneClassₓ P}
-
-variable [Groupₓ G] [CommGroupₓ H] [MonoidHomClass F M N]
+variable {mM : MulOneClassₓ M} {mN : MulOneClassₓ N} [MonoidHomClass F M N]
 
 include mM mN
 
@@ -733,12 +731,26 @@ theorem map_exists_left_inv (f : F) {x : M} (hx : ∃ y, y * x = 1) : ∃ y, y *
 
 end MonoidHom
 
+section DivisionCommMonoid
+
+variable [DivisionCommMonoid α]
+
 /-- Inversion on a commutative group, considered as a monoid homomorphism. -/
-@[to_additive "Inversion on a commutative additive group, considered as an additive\nmonoid homomorphism."]
-def CommGroupₓ.invMonoidHom {G : Type _} [CommGroupₓ G] : G →* G where
+@[to_additive "Negation on a commutative additive group, considered as an additive monoid\nhomomorphism."]
+def invMonoidHom : α →* α where
   toFun := Inv.inv
   map_one' := inv_one
   map_mul' := mul_inv
+
+@[simp]
+theorem coe_inv_monoid_hom : (invMonoidHom : α → α) = Inv.inv :=
+  rfl
+
+@[simp]
+theorem inv_monoid_hom_apply (a : α) : invMonoidHom a = a⁻¹ :=
+  rfl
+
+end DivisionCommMonoid
 
 /-- The identity map from a type with 1 to itself. -/
 @[to_additive, simps]
@@ -1351,7 +1363,7 @@ variable [Mul M] [Mul N] {a x y : M}
 
 @[simp, to_additive]
 protected theorem SemiconjBy.map [MulHomClass F M N] (h : SemiconjBy a x y) (f : F) : SemiconjBy (f a) (f x) (f y) := by
-  simpa only [SemiconjBy, map_mul] using congr_argₓ f h
+  simpa only [SemiconjBy, map_mul] using congr_arg f h
 
 @[simp, to_additive]
 protected theorem Commute.map [MulHomClass F M N] (h : Commute x y) (f : F) : Commute (f x) (f y) :=

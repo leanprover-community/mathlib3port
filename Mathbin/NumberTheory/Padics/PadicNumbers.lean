@@ -726,7 +726,7 @@ section Complete
 
 open PadicSeq Padic
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m n «expr ≥ » N)
 theorem rat_dense' {p : ℕ} [Fact p.Prime] (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   (Quotientₓ.induction_on q) fun q' =>
     have : ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -979,7 +979,7 @@ protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ∥q∥ = ↑((
   (Quotientₓ.induction_on q) fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
-    ⟨n, congr_argₓ coe hn⟩
+    ⟨n, congr_arg coe hn⟩
 
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ∥q∥ = ↑q' :=
   if h : q = 0 then
@@ -1094,7 +1094,7 @@ variable {p : ℕ} [hp_prime : Fact p.Prime]
 
 include hp_prime
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 instance complete : CauSeq.IsComplete ℚ_[p] norm := by

@@ -70,9 +70,9 @@ theorem of_real_def (r : ℝ) : (r : ℂ) = ⟨r, 0⟩ :=
 
 @[simp, norm_cast]
 theorem of_real_inj {z w : ℝ} : (z : ℂ) = w ↔ z = w :=
-  ⟨congr_argₓ re, congr_argₓ _⟩
+  ⟨congr_arg re, congr_arg _⟩
 
-theorem of_real_injective : Function.Injective (coe : ℝ → ℂ) := fun z w => congr_argₓ re
+theorem of_real_injective : Function.Injective (coe : ℝ → ℂ) := fun z w => congr_arg re
 
 instance : CanLift ℂ ℝ where
   cond := fun z => z.im = 0
@@ -248,7 +248,7 @@ theorem I_mul (z : ℂ) : I * z = ⟨-z.im, z.re⟩ :=
     simp
 
 theorem I_ne_zero : (i : ℂ) ≠ 0 :=
-  mt (congr_argₓ im) zero_ne_one.symm
+  mt (congr_arg im) zero_ne_one.symm
 
 theorem mk_eq_add_mul_I (a b : ℝ) : Complex.mk a b = a + b * I :=
   ext_iff.2 <| by
@@ -383,7 +383,7 @@ theorem conj_neg_I : conj (-I) = I :=
     simp
 
 theorem eq_conj_iff_real {z : ℂ} : conj z = z ↔ ∃ r : ℝ, z = r :=
-  ⟨fun h => ⟨z.re, ext rfl <| eq_zero_of_neg_eq (congr_argₓ im h)⟩, fun ⟨h, e⟩ => by
+  ⟨fun h => ⟨z.re, ext rfl <| eq_zero_of_neg_eq (congr_arg im h)⟩, fun ⟨h, e⟩ => by
     rw [e, conj_of_real]⟩
 
 theorem eq_conj_iff_re {z : ℂ} : conj z = z ↔ (z.re : ℂ) = z :=
@@ -392,7 +392,7 @@ theorem eq_conj_iff_re {z : ℂ} : conj z = z ↔ (z.re : ℂ) = z :=
       rintro ⟨r, rfl⟩ <;> simp , fun h => ⟨_, h.symm⟩⟩
 
 theorem eq_conj_iff_im {z : ℂ} : conj z = z ↔ z.im = 0 :=
-  ⟨fun h => add_self_eq_zero.mp (neg_eq_iff_add_eq_zero.mp (congr_argₓ im h)), fun h =>
+  ⟨fun h => add_self_eq_zero.mp (neg_eq_iff_add_eq_zero.mp (congr_arg im h)), fun h =>
     ext rfl (neg_eq_iff_add_eq_zero.mpr (add_self_eq_zero.mpr h))⟩
 
 -- `simp_nf` complains about this being provable by `is_R_or_C.star_def` even
@@ -555,7 +555,7 @@ protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
 
 
 noncomputable instance : Field ℂ :=
-  { Complex.commRing with inv := Inv.inv, exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩,
+  { Complex.commRing with inv := Inv.inv, exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩,
     mul_inv_cancel := @Complex.mul_inv_cancel, inv_zero := Complex.inv_zero }
 
 @[simp]

@@ -51,13 +51,13 @@ theorem pi_mono (h : ∀ i, f₁ i ≤ f₂ i) : pi f₁ ≤ pi f₂ :=
 theorem mem_pi_of_mem (i : ι) {s : Set (α i)} (hs : s ∈ f i) : eval i ⁻¹' s ∈ pi f :=
   mem_infi_of_mem i <| preimage_mem_comap hs
 
-theorem pi_mem_pi {I : Set ι} (hI : Finite I) (h : ∀, ∀ i ∈ I, ∀, s i ∈ f i) : I.pi s ∈ pi f := by
+theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀, ∀ i ∈ I, ∀, s i ∈ f i) : I.pi s ∈ pi f := by
   rw [pi_def, bInter_eq_Inter]
   refine' mem_infi_of_Inter hI (fun i => _) subset.rfl
   exact preimage_mem_comap (h i i.2)
 
 theorem mem_pi {s : Set (∀ i, α i)} :
-    s ∈ pi f ↔ ∃ I : Set ι, Finite I ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s := by
+    s ∈ pi f ↔ ∃ I : Set ι, I.Finite ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s := by
   constructor
   · simp only [pi, mem_infi', mem_comap, pi_def]
     rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
@@ -83,12 +83,12 @@ theorem mem_of_pi_mem_pi [∀ i, NeBot (f i)] {I : Set ι} (h : I.pi s ∈ pi f)
   simpa using hts this i hi
 
 @[simp]
-theorem pi_mem_pi_iff [∀ i, NeBot (f i)] {I : Set ι} (hI : Finite I) : I.pi s ∈ pi f ↔ ∀, ∀ i ∈ I, ∀, s i ∈ f i :=
+theorem pi_mem_pi_iff [∀ i, NeBot (f i)] {I : Set ι} (hI : I.Finite) : I.pi s ∈ pi f ↔ ∀, ∀ i ∈ I, ∀, s i ∈ f i :=
   ⟨fun h i hi => mem_of_pi_mem_pi h hi, pi_mem_pi hI⟩
 
 theorem has_basis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : ∀ i, ι' i → Prop}
     (h : ∀ i, (f i).HasBasis (p i) (s i)) :
-    (pi f).HasBasis (fun If : Set ι × ∀ i, ι' i => Finite If.1 ∧ ∀, ∀ i ∈ If.1, ∀, p i (If.2 i))
+    (pi f).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀, ∀ i ∈ If.1, ∀, p i (If.2 i))
       fun If : Set ι × ∀ i, ι' i => If.1.pi fun i => s i <| If.2 i :=
   by
   have : (pi f).HasBasis _ _ := has_basis_infi fun i => (h i).comap (eval i : (∀ j, α j) → α i)

@@ -88,6 +88,20 @@ private irreducible_def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) :
 private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
   | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ Sub.sub Rel.sub_right Rel.sub_left a b⟩
 
+private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
+  | ⟨a⟩ =>
+    ⟨Quot.lift (fun a => Quot.mk (RingQuot.Rel r) (a ^ n))
+        (fun h : Rel r a b => by
+          -- note we can't define a `rel.pow` as `rel` isn't reflexive so `rel r 1 1` isn't true
+          dsimp' only
+          induction n
+          · rw [pow_zeroₓ, pow_zeroₓ]
+            
+          · rw [pow_succₓ, pow_succₓ]
+            simpa only [mul] using congr_arg2ₓ (fun x y => mul r ⟨x⟩ ⟨y⟩) (Quot.sound h) n_ih
+            )
+        a⟩
+
 private irreducible_def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
   | ⟨a⟩ => ⟨Quot.map (fun a => n • a) (Rel.smul n) a⟩
 
@@ -102,6 +116,9 @@ instance : Add (RingQuot r) :=
 
 instance : Mul (RingQuot r) :=
   ⟨mul r⟩
+
+instance : Pow (RingQuot r) ℕ :=
+  ⟨fun x n => npow r n x⟩
 
 instance {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : Neg (RingQuot r) :=
   ⟨neg r⟩
@@ -129,6 +146,10 @@ theorem mul_quot {a b} : (⟨Quot.mk _ a⟩ * ⟨Quot.mk _ b⟩ : RingQuot r) = 
   show mul r _ _ = _
   rw [mul]
   rfl
+
+theorem pow_quot {a} {n : ℕ} : (⟨Quot.mk _ a⟩ ^ n : RingQuot r) = ⟨Quot.mk _ (a ^ n)⟩ := by
+  show npow r _ _ = _
+  rw [npow]
 
 theorem neg_quot {R : Type u₁} [Ringₓ R] (r : R → R → Prop) {a} : (-⟨Quot.mk _ a⟩ : RingQuot r) = ⟨Quot.mk _ (-a)⟩ := by
   show neg r _ = _
@@ -184,6 +205,13 @@ instance (r : R → R → Prop) : Semiringₓ (RingQuot r) where
   right_distrib := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [mul_quot, add_quot, right_distrib]
+  npow := fun n x => x ^ n
+  npow_zero' := by
+    rintro ⟨⟨⟩⟩
+    simp [pow_quot, ← one_quot]
+  npow_succ' := by
+    rintro n ⟨⟨⟩⟩
+    simp [pow_quot, mul_quot, pow_succₓ]
   nsmul := (· • ·)
   nsmul_zero' := by
     rintro ⟨⟨⟩⟩

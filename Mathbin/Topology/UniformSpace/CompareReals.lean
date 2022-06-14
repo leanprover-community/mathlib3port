@@ -55,7 +55,7 @@ open Set Function Filter CauSeq UniformSpace
 
 /-- The metric space uniform structure on ℚ (which presupposes the existence
 of real numbers) agrees with the one coming directly from (abs : ℚ → ℚ). -/
-theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = MetricSpace.toUniformSpace' := by
+theorem Rat.uniform_space_eq : IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ) = PseudoMetricSpace.toUniformSpace := by
   ext s
   erw [Metric.mem_uniformity_dist, IsAbsoluteValue.mem_uniformity]
   constructor <;> rintro ⟨ε, ε_pos, h⟩

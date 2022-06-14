@@ -93,6 +93,15 @@ theorem thickened_indicator_aux_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂)
     thickenedIndicatorAux δ₁ E ≤ thickenedIndicatorAux δ₂ E := fun _ =>
   tsub_le_tsub (@rfl ℝ≥0∞ 1).le (Ennreal.div_le_div rfl.le (of_real_le_of_real hle))
 
+theorem indicator_le_thickened_indicator_aux (δ : ℝ) (E : Set α) :
+    (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ thickenedIndicatorAux δ E := by
+  intro a
+  by_cases' a ∈ E
+  · simp only [h, indicator_of_mem, thickened_indicator_aux_one δ E h, le_reflₓ]
+    
+  · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
+    
+
 theorem thickened_indicator_aux_subset (δ : ℝ) {E₁ E₂ : Set α} (subset : E₁ ⊆ E₂) :
     thickenedIndicatorAux δ E₁ ≤ thickenedIndicatorAux δ E₂ := fun _ =>
   tsub_le_tsub (@rfl ℝ≥0∞ 1).le (Ennreal.div_le_div (inf_edist_anti subset) rfl.le)
@@ -187,6 +196,15 @@ theorem thickened_indicator_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x : 
     thickenedIndicator δ_pos E x = 0 := by
   rw [thickened_indicator_apply, thickened_indicator_aux_zero δ_pos E x_out, zero_to_nnreal]
 
+theorem indicator_le_thickened_indicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
+    (E.indicator fun _ => (1 : ℝ≥0 )) ≤ thickenedIndicator δ_pos E := by
+  intro a
+  by_cases' a ∈ E
+  · simp only [h, indicator_of_mem, thickened_indicator_one δ_pos E h, le_reflₓ]
+    
+  · simp only [h, indicator_of_not_mem, not_false_iff, zero_le]
+    
+
 theorem thickened_indicator_mono {δ₁ δ₂ : ℝ} (δ₁_pos : 0 < δ₁) (δ₂_pos : 0 < δ₂) (hle : δ₁ ≤ δ₂) (E : Set α) :
     ⇑(thickenedIndicator δ₁_pos E) ≤ thickenedIndicator δ₂_pos E := by
   intro x
@@ -214,7 +232,7 @@ theorem thickened_indicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δs
   intro x
   rw
     [show indicator (Closure E) (fun x => (1 : ℝ≥0 )) x = (indicator (Closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal by
-      refine' (congr_funₓ (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
+      refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
   by_cases' x_mem : x ∈ Closure E <;> simp [x_mem]
 

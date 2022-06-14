@@ -110,6 +110,16 @@ theorem nat_degree_mul (hp : p ≠ 0) (hq : q ≠ 0) : natDegree (p * q) = natDe
   rw [← WithBot.coe_eq_coe, ← degree_eq_nat_degree (mul_ne_zero hp hq), WithBot.coe_add, ← degree_eq_nat_degree hp, ←
     degree_eq_nat_degree hq, degree_mul]
 
+theorem trailing_degree_mul : (p * q).trailingDegree = p.trailingDegree + q.trailingDegree := by
+  by_cases' hp : p = 0
+  · rw [hp, zero_mul, trailing_degree_zero, top_add]
+    
+  by_cases' hq : q = 0
+  · rw [hq, mul_zero, trailing_degree_zero, add_top]
+    
+  rw [trailing_degree_eq_nat_trailing_degree hp, trailing_degree_eq_nat_trailing_degree hq,
+    trailing_degree_eq_nat_trailing_degree (mul_ne_zero hp hq), nat_trailing_degree_mul hp hq, WithTop.coe_add]
+
 @[simp]
 theorem nat_degree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p :=
   if hp0 : p = 0 then
@@ -164,13 +174,6 @@ variable [Ringₓ R] [IsDomain R] {p q : R[X]}
 instance : IsDomain R[X] :=
   { Polynomial.no_zero_divisors, Polynomial.nontrivial with }
 
-theorem nat_trailing_degree_mul (hp : p ≠ 0) (hq : q ≠ 0) :
-    (p * q).natTrailingDegree = p.natTrailingDegree + q.natTrailingDegree := by
-  simp only [← tsub_eq_of_eq_add_rev (nat_degree_eq_reverse_nat_degree_add_nat_trailing_degree _)]
-  rw [reverse_mul_of_domain, nat_degree_mul hp hq, nat_degree_mul (mt reverse_eq_zero.mp hp) (mt reverse_eq_zero.mp hq),
-    reverse_nat_degree, reverse_nat_degree, tsub_add_eq_tsub_tsub, Nat.add_comm, add_tsub_assoc_of_le (Nat.sub_leₓ _ _),
-    add_commₓ, add_tsub_assoc_of_le (Nat.sub_leₓ _ _)]
-
 end Ringₓ
 
 section CommRingₓ
@@ -187,7 +190,7 @@ theorem degree_eq_zero_of_is_unit (h : IsUnit p) : degree p = 0 := by
     simpa [hp0] using hq
   have hq0 : q ≠ 0 := fun hp0 => by
     simpa [hp0] using hq
-  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_argₓ _ hq
+  have : natDegree (1 : R[X]) = natDegree (p * q) := congr_arg _ hq
   rw [nat_degree_one, nat_degree_mul hp0 hq0, eq_comm, _root_.add_eq_zero_iff, ← WithBot.coe_eq_coe, ←
       degree_eq_nat_degree hp0] at this <;>
     exact this.1
@@ -608,7 +611,7 @@ instance rootSetFintype (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Al
   FinsetCoe.fintype _
 
 theorem root_set_finite (p : T[X]) (S : Type _) [CommRingₓ S] [IsDomain S] [Algebra T S] : (p.RootSet S).Finite :=
-  ⟨Polynomial.rootSetFintype p S⟩
+  Set.finite_of_fintype _
 
 theorem mem_root_set_iff' {p : T[X]} {S : Type _} [CommRingₓ S] [IsDomain S] [Algebra T S]
     (hp : p.map (algebraMap T S) ≠ 0) (a : S) : a ∈ p.RootSet S ↔ (p.map (algebraMap T S)).eval a = 0 := by
@@ -750,7 +753,7 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f) (h_irr
     rw [mul_comm] at q
     have bu : IsUnit b.leading_coeff := is_unit_of_mul_eq_one _ _ q
     clear q h_mon
-    have h' := congr_argₓ (map φ) h
+    have h' := congr_arg (map φ) h
     simp only [Polynomial.map_mul] at h'
     cases' h_irr.is_unit_or_is_unit h' with w w
     · left

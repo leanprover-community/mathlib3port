@@ -368,7 +368,7 @@ theorem coe_is_integral_iff {R : Type _} [CommRingₓ R] [Algebra R K] [Algebra 
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
     refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).Injective _ _⟩
-    let this : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
+    let this : IsScalarTower R S L := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
     rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ← IsScalarTower.algebra_map_eq, ←
       eval₂_eq_eval_map]
     

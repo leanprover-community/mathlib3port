@@ -569,16 +569,6 @@ theorem mem_range_self (f : R →+* S) (x : R) : f x ∈ f.range :=
 theorem map_range : f.range.map g = (g.comp f).range := by
   simpa only [range_eq_map] using (⊤ : Subring R).map_map g f
 
-/-- Restrict the codomain of a ring homomorphism to a subring that includes the range. -/
--- TODO -- rename to `cod_restrict` when is_ring_hom is deprecated
-def codRestrict' {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (f : R →+* S) (s : Subring S) (h : ∀ x, f x ∈ s) :
-    R →+* s where
-  toFun := fun x => ⟨f x, h x⟩
-  map_add' := fun x y => Subtype.eq <| f.map_add x y
-  map_zero' := Subtype.eq f.map_zero
-  map_mul' := fun x y => Subtype.eq <| f.map_mul x y
-  map_one' := Subtype.eq f.map_one
-
 /-- The range of a ring homomorphism is a fintype, if the domain is a fintype.
 Note: this instance can form a diamond with `subtype.fintype` in the
   presence of `fintype S`. -/
@@ -990,19 +980,11 @@ variable {s : Subring R}
 
 open Subring
 
-/-- Restriction of a ring homomorphism to a subring of the domain. -/
-def restrict (f : R →+* S) (s : Subring R) : s →+* S :=
-  f.comp s.Subtype
-
-@[simp]
-theorem restrict_apply (f : R →+* S) (x : s) : f.restrict s x = f x :=
-  rfl
-
 /-- Restriction of a ring homomorphism to its range interpreted as a subsemiring.
 
 This is the bundled version of `set.range_factorization`. -/
 def rangeRestrict (f : R →+* S) : R →+* f.range :=
-  (f.codRestrict' f.range) fun x => ⟨x, rfl⟩
+  (f.codRestrict f.range) fun x => ⟨x, rfl⟩
 
 @[simp]
 theorem coe_range_restrict (f : R →+* S) (x : R) : (f.range_restrict x : S) = f x :=
@@ -1056,7 +1038,7 @@ open RingHom
 
 /-- The ring homomorphism associated to an inclusion of subrings. -/
 def inclusion {S T : Subring R} (h : S ≤ T) : S →+* T :=
-  S.Subtype.codRestrict' _ fun x => h x.2
+  S.Subtype.codRestrict _ fun x => h x.2
 
 @[simp]
 theorem range_subtype (s : Subring R) : s.Subtype.range = s :=
@@ -1086,7 +1068,7 @@ variable {s t : Subring R}
 /-- Makes the identity isomorphism from a proof two subrings of a multiplicative
     monoid are equal. -/
 def subringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.range`. -/
@@ -1227,8 +1209,8 @@ instance smul_comm_class_right [HasScalar α β] [HasScalar R β] [SmulCommClass
 instance [HasScalar α β] [HasScalar R α] [HasScalar R β] [IsScalarTower R α β] (S : Subring R) : IsScalarTower S α β :=
   S.toSubsemiring.IsScalarTower
 
-instance [HasScalar R α] [HasFaithfulScalar R α] (S : Subring R) : HasFaithfulScalar S α :=
-  S.toSubsemiring.HasFaithfulScalar
+instance [HasScalar R α] [HasFaithfulSmul R α] (S : Subring R) : HasFaithfulSmul S α :=
+  S.toSubsemiring.HasFaithfulSmul
 
 /-- The action by a subring is the action by the underlying ring. -/
 instance [MulAction R α] (S : Subring R) : MulAction S α :=
@@ -1253,6 +1235,14 @@ instance [Zero α] [MulActionWithZero R α] (S : Subring R) : MulActionWithZero 
 /-- The action by a subring is the action by the underlying ring. -/
 instance [AddCommMonoidₓ α] [Module R α] (S : Subring R) : Module S α :=
   S.toSubsemiring.Module
+
+/-- The center of a semiring acts commutatively on that semiring. -/
+instance center.smul_comm_class_left : SmulCommClass (center R) R R :=
+  Subsemiring.center.smul_comm_class_left
+
+/-- The center of a semiring acts commutatively on that semiring. -/
+instance center.smul_comm_class_right : SmulCommClass R (center R) R :=
+  Subsemiring.center.smul_comm_class_right
 
 end Subring
 

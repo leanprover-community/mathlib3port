@@ -68,19 +68,22 @@ theorem lintegral_nnnorm_eq_lintegral_edist (f : α → β) : (∫⁻ a, ∥f a�
 theorem lintegral_norm_eq_lintegral_edist (f : α → β) : (∫⁻ a, Ennreal.ofReal ∥f a∥ ∂μ) = ∫⁻ a, edist (f a) 0 ∂μ := by
   simp only [of_real_norm_eq_coe_nnnorm, edist_eq_coe_nnnorm]
 
-theorem lintegral_edist_triangle {f g h : α → β} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ)
-    (hh : AeStronglyMeasurable h μ) :
+theorem lintegral_edist_triangle {f g h : α → β} (hf : AeStronglyMeasurable f μ) (hh : AeStronglyMeasurable h μ) :
     (∫⁻ a, edist (f a) (g a) ∂μ) ≤ (∫⁻ a, edist (f a) (h a) ∂μ) + ∫⁻ a, edist (g a) (h a) ∂μ := by
-  rw [← lintegral_add' (hf.edist hh) (hg.edist hh)]
+  rw [← lintegral_add_left' (hf.edist hh)]
   refine' lintegral_mono fun a => _
   apply edist_triangle_right
 
 theorem lintegral_nnnorm_zero : (∫⁻ a : α, ∥(0 : β)∥₊ ∂μ) = 0 := by
   simp
 
-theorem lintegral_nnnorm_add {f : α → β} {g : α → γ} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+theorem lintegral_nnnorm_add_left {f : α → β} (hf : AeStronglyMeasurable f μ) (g : α → γ) :
     (∫⁻ a, ∥f a∥₊ + ∥g a∥₊ ∂μ) = (∫⁻ a, ∥f a∥₊ ∂μ) + ∫⁻ a, ∥g a∥₊ ∂μ :=
-  lintegral_add' hf.ennnorm hg.ennnorm
+  lintegral_add_left' hf.ennnorm _
+
+theorem lintegral_nnnorm_add_right (f : α → β) {g : α → γ} (hg : AeStronglyMeasurable g μ) :
+    (∫⁻ a, ∥f a∥₊ + ∥g a∥₊ ∂μ) = (∫⁻ a, ∥f a∥₊ ∂μ) + ∫⁻ a, ∥g a∥₊ ∂μ :=
+  lintegral_add_right' _ hg.ennnorm
 
 theorem lintegral_nnnorm_neg {f : α → β} : (∫⁻ a, ∥(-f) a∥₊ ∂μ) = ∫⁻ a, ∥f a∥₊ ∂μ := by
   simp only [Pi.neg_apply, nnnorm_neg]
@@ -515,11 +518,9 @@ theorem MeasurePreserving.integrable_comp_emb {f : α → δ} {ν} (h₁ : Measu
 
 theorem lintegral_edist_lt_top {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :
     (∫⁻ a, edist (f a) (g a) ∂μ) < ∞ :=
-  lt_of_le_of_ltₓ
-    (lintegral_edist_triangle hf.AeStronglyMeasurable hg.AeStronglyMeasurable
-      (ae_strongly_measurable_const : AeStronglyMeasurable (fun a => (0 : β)) μ))
+  lt_of_le_of_ltₓ (lintegral_edist_triangle hf.AeStronglyMeasurable ae_strongly_measurable_zero)
     (Ennreal.add_lt_top.2 <| by
-      simp_rw [← has_finite_integral_iff_edist]
+      simp_rw [Pi.zero_apply, ← has_finite_integral_iff_edist]
       exact ⟨hf.has_finite_integral, hg.has_finite_integral⟩)
 
 variable (α β μ)
@@ -535,7 +536,7 @@ theorem Integrable.add' {f g : α → β} (hf : Integrable f μ) (hg : Integrabl
     (∫⁻ a, ∥f a + g a∥₊ ∂μ) ≤ ∫⁻ a, ∥f a∥₊ + ∥g a∥₊ ∂μ :=
       lintegral_mono fun a => by
         exact_mod_cast nnnorm_add_le _ _
-    _ = _ := lintegral_nnnorm_add hf.AeStronglyMeasurable hg.AeStronglyMeasurable
+    _ = _ := lintegral_nnnorm_add_left hf.AeStronglyMeasurable _
     _ < ∞ := add_lt_top.2 ⟨hf.HasFiniteIntegral, hg.HasFiniteIntegral⟩
     
 
@@ -556,18 +557,6 @@ theorem Integrable.neg {f : α → β} (hf : Integrable f μ) : Integrable (-f) 
 @[simp]
 theorem integrable_neg_iff {f : α → β} : Integrable (-f) μ ↔ Integrable f μ :=
   ⟨fun h => neg_negₓ f ▸ h.neg, Integrable.neg⟩
-
-theorem Integrable.sub' {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) : HasFiniteIntegral (f - g) μ :=
-  calc
-    (∫⁻ a, ∥f a - g a∥₊ ∂μ) ≤ ∫⁻ a, ∥f a∥₊ + ∥-g a∥₊ ∂μ :=
-      lintegral_mono fun a => by
-        simp only [sub_eq_add_neg]
-        exact_mod_cast nnnorm_add_le _ _
-    _ = _ := by
-      simp only [nnnorm_neg]
-      exact lintegral_nnnorm_add hf.ae_strongly_measurable hg.ae_strongly_measurable
-    _ < ∞ := add_lt_top.2 ⟨hf.HasFiniteIntegral, hg.HasFiniteIntegral⟩
-    
 
 theorem Integrable.sub {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) : Integrable (f - g) μ := by
   simpa only [sub_eq_add_neg] using hf.add hg.neg

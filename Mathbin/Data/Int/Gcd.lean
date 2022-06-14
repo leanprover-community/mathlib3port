@@ -140,7 +140,7 @@ end
 
 theorem exists_mul_mod_eq_gcd {k n : ℕ} (hk : gcdₓ n k < k) : ∃ m, n * m % k = gcdₓ n k := by
   have hk' := int.coe_nat_ne_zero.mpr (ne_of_gtₓ (lt_of_le_of_ltₓ (zero_le (gcd n k)) hk))
-  have key := congr_argₓ (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
+  have key := congr_arg (fun m => Int.natModₓ m k) (gcd_eq_gcd_ab n k)
   simp_rw [Int.natModₓ]  at key
   rw [Int.add_mul_mod_self_left, ← Int.coe_nat_mod, Int.to_nat_coe_nat, mod_eq_of_lt hk] at key
   refine' ⟨(n.gcd_a k % k).toNat, Eq.trans (Int.coe_nat_inj _) key.symm⟩

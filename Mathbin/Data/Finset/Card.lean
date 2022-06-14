@@ -166,7 +166,7 @@ theorem Multiset.to_finset_card_le : m.toFinset.card ≤ m.card :=
   card_le_of_le <| dedup_le _
 
 theorem Multiset.to_finset_card_of_nodup {m : Multiset α} (h : m.Nodup) : m.toFinset.card = m.card :=
-  congr_argₓ card <| Multiset.dedup_eq_self.mpr h
+  congr_arg card <| Multiset.dedup_eq_self.mpr h
 
 theorem List.card_to_finset : l.toFinset.card = l.dedup.length :=
   rfl
@@ -203,7 +203,7 @@ theorem inj_on_of_card_image_eq [DecidableEq β] (H : (s.Image f).card = s.card)
   rw [Multiset.dedup_eq_self] at this
   exact inj_on_of_nodup_map this
 
-theorem card_image_eq_iff_inj_on [DecidableEq β] : (s.Image f).card = s.card ↔ Set.InjOn f s :=
+theorem card_image_iff [DecidableEq β] : (s.Image f).card = s.card ↔ Set.InjOn f s :=
   ⟨inj_on_of_card_image_eq, card_image_of_inj_on⟩
 
 theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) : (s.Image f).card = s.card :=
@@ -261,7 +261,7 @@ theorem card_congr {t : Finset β} (f : ∀, ∀ a ∈ s, ∀, β) (h₁ : ∀ a
   classical <;>
     calc s.card = s.attach.card := card_attach.symm _ = (s.attach.image fun a : { a // a ∈ s } => f a.1 a.2).card :=
         Eq.symm ((card_image_of_injective _) fun a b h => Subtype.eq <| h₂ _ _ _ _ h)_ = t.card :=
-        congr_argₓ card
+        congr_arg card
           (Finset.ext fun b =>
             ⟨fun h =>
               let ⟨a, ha₁, ha₂⟩ := mem_image.1 h
@@ -452,7 +452,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_card [DecidableEq α] {X Y : Finse
 theorem card_eq_one : s.card = 1 ↔ ∃ a, s = {a} := by
   cases s <;> simp only [Multiset.card_eq_one, Finset.card, ← val_inj, singleton_val]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem exists_eq_insert_iff [DecidableEq α] {s t : Finset α} :
     (∃ (a : _)(_ : a ∉ s), insert a s = t) ↔ s ⊆ t ∧ s.card + 1 = t.card := by
   constructor
@@ -574,7 +574,7 @@ theorem card_eq_three [DecidableEq α] : s.card = 3 ↔ ∃ x y z, x ≠ y ∧ x
 /-! ### Inductions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Suppose that, given objects defined on all strict subsets of any finset `s`, one knows how to
 define an object on `s`. Then one can inductively define an object on all finsets, starting from
 the empty set and iterating. This can be used either to define data, or to prove properties. -/
@@ -584,24 +584,24 @@ def strongInductionₓ {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s
       have : t.card < s.card := card_lt_card h
       strong_induction t
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_eq {p : Finset α → Sort _} (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) (s : Finset α) :
     strongInductionₓ H s = H s fun t h => strongInductionₓ H t := by
   rw [strong_induction]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- Analogue of `strong_induction` with order of arguments swapped. -/
 @[elab_as_eliminator]
 def strongInductionOn {p : Finset α → Sort _} (s : Finset α) : (∀ s, (∀ t _ : t ⊂ s, p t) → p s) → p s := fun H =>
   strongInductionₓ H s
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 theorem strong_induction_on_eq {p : Finset α → Sort _} (s : Finset α) (H : ∀ s, (∀ t _ : t ⊂ s, p t) → p s) :
     s.strong_induction_on H = H s fun t h => t.strong_induction_on H := by
   dunfold strong_induction_on
   rw [strong_induction]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 @[elab_as_eliminator]
 theorem case_strong_induction_on [DecidableEq α] {p : Finset α → Prop} (s : Finset α) (h₀ : p ∅)
     (h₁ : ∀ a s, a ∉ s → (∀ t _ : t ⊆ s, p t) → p (insert a s)) : p s :=

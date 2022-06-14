@@ -73,7 +73,7 @@ theorem to_splitting_field_eval_X_self {s : Finset (MonicIrreducible k)} {f} (hf
 theorem span_eval_ne_top : spanEval k ≠ ⊤ := by
   rw [Ideal.ne_top_iff_one, span_eval, Ideal.span, ← Set.image_univ, Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
-  replace hv := congr_argₓ (to_splitting_field k v.support) hv
+  replace hv := congr_arg (to_splitting_field k v.support) hv
   rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
   · exact zero_ne_one hv
     

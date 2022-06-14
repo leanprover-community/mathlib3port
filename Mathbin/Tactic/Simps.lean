@@ -126,8 +126,8 @@ unsafe def simps_str_attr : user_attribute Unit (List Name × List projection_da
   descr := "An attribute specifying the projection of the given structure."
   parser := failed
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- The `@[notation_class]` attribute specifies that this is a notation class,
   and this notation should be used instead of projections by @[simps].
   * The first argument `tt` for notation classes and `ff` for classes applied to the structure,
@@ -402,7 +402,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name) (trace_if_ex
               {← (raw_univs, projs)}")
       return (raw_univs, projs)
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- Parse a rule for `initialize_simps_projections`. It is either `<name>→<name>` or `-<name>`,
   possibly following by `as_prefix`.-/
 unsafe def simps_parse_rule : parser ProjectionRule :=
@@ -428,9 +428,9 @@ composite of multiple projections).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- This command specifies custom names and custom projections for the simp attribute `simps_attr`.
 * You can specify custom names by writing e.g.
   `initialize_simps_projections equiv (to_fun → apply, inv_fun → symm_apply)`.
@@ -832,8 +832,8 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := {  }) (todo : List Stringₓ
       else return cfg
   simps_add_projections e nm d lhs d [] d tt cfg todo []
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List Stringₓ × SimpsCfg) := do
   -- note: we don't check whether the user has written a nonsense namespace in an argument.

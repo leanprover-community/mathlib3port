@@ -45,8 +45,8 @@ open MonoidalCategory
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Type u₂} [Category.{v₂} D]
   [MonoidalCategory.{v₂} D]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`ε] []
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`μ] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`ε] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`μ] []
 /-- An unbundled description of lax monoidal functors. -/
 -- Perhaps in the future we'll redefine `lax_monoidal_functor` in terms of this,
 -- but that isn't the immediate plan.

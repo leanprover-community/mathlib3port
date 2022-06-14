@@ -50,7 +50,7 @@ theorem Union_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint
   suffices ∀ a, encode a = i → x ∈ f a → ∀ b, encode b = j → x ∉ f b by
     simpa [decode₂_eq_some]
   rintro a rfl ha b rfl hb
-  exact hd a b (mt (congr_argₓ encode) ij) ⟨ha, hb⟩
+  exact hd a b (mt (congr_arg encode) ij) ⟨ha, hb⟩
 
 end Encodable
 

@@ -183,8 +183,8 @@ theorem span_union (s t : Set M) : span R (s ∪ t) = span R s⊔span R t :=
 theorem span_Union {ι} (s : ι → Set M) : span R (⋃ i, s i) = ⨆ i, span R (s i) :=
   (Submodule.gi R M).gc.l_supr
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem span_Union₂ {ι} {κ : ι → Sort _} (s : ∀ i, κ i → Set M) :
     span R (⋃ (i) (j), s i j) = ⨆ (i) (j), span R (s i j) :=
   (Submodule.gi R M).gc.l_supr₂

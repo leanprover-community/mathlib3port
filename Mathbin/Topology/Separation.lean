@@ -6,6 +6,7 @@ Authors: Johannes Hölzl, Mario Carneiro
 import Mathbin.Topology.SubsetProperties
 import Mathbin.Topology.Connected
 import Mathbin.Topology.NhdsSet
+import Mathbin.Topology.Inseparable
 
 /-!
 # Separation properties of topological spaces.
@@ -89,7 +90,7 @@ https://en.wikipedia.org/wiki/Separation_axiom
 -/
 
 
-open Set Filter TopologicalSpace
+open Function Set Filter TopologicalSpace
 
 open TopologicalSpace Filter Classical
 
@@ -159,124 +160,102 @@ end Separated
 class T0Space (α : Type u) [TopologicalSpace α] : Prop where
   t0 : ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U)
 
+theorem exists_is_open_xor_mem [T0Space α] {x y : α} (h : x ≠ y) : ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U) :=
+  T0Space.t0 x y h
+
 theorem t0_space_def (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U) := by
   constructor
   apply @T0Space.t0
   apply T0Space.mk
 
-/-- Two points are topologically indistinguishable if no open set separates them. -/
-def Indistinguishable {α : Type u} [TopologicalSpace α] (x y : α) : Prop :=
-  ∀ U : Set α hU : IsOpen U, x ∈ U ↔ y ∈ U
+theorem t0_space_iff_not_inseparable (α : Type u) [TopologicalSpace α] :
+    T0Space α ↔ ∀ x y : α, x ≠ y → ¬Inseparable x y := by
+  simp only [t0_space_def, xor_iff_not_iff, not_forall, exists_prop, Inseparable]
 
-theorem indistinguishable_iff_nhds_eq {x y : α} : Indistinguishable x y ↔ 𝓝 x = 𝓝 y :=
-  ⟨fun h => by
-    simp (config := { contextual := true })only [nhds_def', h _], fun h U hU => by
-    simp only [← hU.mem_nhds_iff, h]⟩
+theorem t0_space_iff_inseparable (α : Type u) [TopologicalSpace α] : T0Space α ↔ ∀ x y : α, Inseparable x y → x = y :=
+  by
+  simp only [t0_space_iff_not_inseparable, Ne.def, not_imp_not]
 
-alias indistinguishable_iff_nhds_eq ↔ Indistinguishable.nhds_eq _
+theorem Inseparable.eq [T0Space α] {x y : α} (h : Inseparable x y) : x = y :=
+  (t0_space_iff_inseparable α).1 ‹_› x y h
 
-theorem t0_space_iff_distinguishable (α : Type u) [TopologicalSpace α] :
-    T0Space α ↔ ∀ x y : α, x ≠ y → ¬Indistinguishable x y := by
-  delta' Indistinguishable
-  rw [t0_space_def]
-  push_neg
-  simp_rw [xor_iff_not_iff]
+theorem specializes_antisymm [T0Space α] (x y : α) : x ⤳ y → y ⤳ x → x = y := fun h₁ h₂ =>
+  ((inseparable_iff_specializes_and _ _).mpr ⟨h₁, h₂⟩).Eq
+
+/-- Specialization forms a partial order on a t0 topological space. -/
+def specializationOrder (α : Type _) [TopologicalSpace α] [T0Space α] : PartialOrderₓ α :=
+  { specializationPreorder α with le_antisymm := fun _ _ h₁ h₂ => specializes_antisymm _ _ h₂ h₁ }
+
+theorem t0_space_iff_nhds_injective (α : Type u) [TopologicalSpace α] : T0Space α ↔ Injective (𝓝 : α → Filter α) := by
+  simp only [t0_space_iff_inseparable, injective, inseparable_iff_nhds_eq]
+
+theorem nhds_injective [T0Space α] : Injective (𝓝 : α → Filter α) :=
+  (t0_space_iff_nhds_injective α).1 ‹_›
 
 @[simp]
 theorem nhds_eq_nhds_iff [T0Space α] {a b : α} : 𝓝 a = 𝓝 b ↔ a = b :=
-  Function.Injective.eq_iff fun x y h =>
-    of_not_not fun hne => (t0_space_iff_distinguishable α).mp ‹_› x y hne (indistinguishable_iff_nhds_eq.mpr h)
+  nhds_injective.eq_iff
 
-theorem Indistinguishable.eq [T0Space α] {x y : α} (h : Indistinguishable x y) : x = y :=
-  nhds_eq_nhds_iff.mp h.nhds_eq
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsClosed s)
+    (hmin : ∀ t _ : t ⊆ s, t.Nonempty → IsClosed t → t = s) : s.Subsingleton := by
+  refine' fun x hx y hy => of_not_not fun hxy => _
+  rcases exists_is_open_xor_mem hxy with ⟨U, hUo, hU⟩
+  wlog h : x ∈ U ∧ y ∉ U := hU using x y, y x
+  cases' h with hxU hyU
+  have : s \ U = s := hmin (s \ U) (diff_subset _ _) ⟨y, hy, hyU⟩ (hs.sdiff hUo)
+  exact (this.symm.subset hx).2 hxU
 
-theorem indistinguishable_iff_closed {x y : α} : Indistinguishable x y ↔ ∀ U : Set α hU : IsClosed U, x ∈ U ↔ y ∈ U :=
-  ⟨fun h U hU => not_iff_not.mp (h _ hU.1), fun h U hU => not_iff_not.mp (h _ (is_closed_compl_iff.mpr hU))⟩
-
-theorem indistinguishable_iff_closure (x y : α) :
-    Indistinguishable x y ↔ x ∈ Closure ({y} : Set α) ∧ y ∈ Closure ({x} : Set α) := by
-  rw [indistinguishable_iff_closed]
-  exact
-    ⟨fun h =>
-      ⟨(h _ is_closed_closure).mpr (subset_closure <| Set.mem_singleton y),
-        (h _ is_closed_closure).mp (subset_closure <| Set.mem_singleton x)⟩,
-      fun h U hU =>
-      ⟨fun hx => (IsClosed.closure_subset_iff hU).mpr (set.singleton_subset_iff.mpr hx) h.2, fun hy =>
-        (IsClosed.closure_subset_iff hU).mpr (set.singleton_subset_iff.mpr hy) h.1⟩⟩
-
-theorem subtype_indistinguishable_iff {α : Type u} [TopologicalSpace α] {U : Set α} (x y : U) :
-    Indistinguishable x y ↔ Indistinguishable (x : α) y := by
-  simp_rw [indistinguishable_iff_closure, closure_subtype, image_singleton]
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem minimal_nonempty_closed_eq_singleton [T0Space α] {s : Set α} (hs : IsClosed s) (hne : s.Nonempty)
+    (hmin : ∀ t _ : t ⊆ s, t.Nonempty → IsClosed t → t = s) : ∃ x, s = {x} :=
+  exists_eq_singleton_iff_nonempty_subsingleton.2 ⟨hne, minimal_nonempty_closed_subsingleton hs hmin⟩
 
 /-- Given a closed set `S` in a compact T₀ space,
 there is some `x ∈ S` such that `{x}` is closed. -/
 theorem IsClosed.exists_closed_singleton {α : Type _} [TopologicalSpace α] [T0Space α] [CompactSpace α] {S : Set α}
     (hS : IsClosed S) (hne : S.Nonempty) : ∃ x : α, x ∈ S ∧ IsClosed ({x} : Set α) := by
   obtain ⟨V, Vsub, Vne, Vcls, hV⟩ := hS.exists_minimal_nonempty_closed_subset hne
-  by_cases' hnt : ∃ (x y : α)(hx : x ∈ V)(hy : y ∈ V), x ≠ y
-  · exfalso
-    obtain ⟨x, y, hx, hy, hne⟩ := hnt
-    obtain ⟨U, hU, hsep⟩ := T0Space.t0 _ _ hne
-    have : ∀ z w : α hz : z ∈ V hw : w ∈ V hz' : z ∈ U hw' : ¬w ∈ U, False := by
-      intro z w hz hw hz' hw'
-      have uvne : (V ∩ Uᶜ).Nonempty := by
-        use w
-        simp only [hw, hw', Set.mem_inter_eq, not_false_iff, and_selfₓ, Set.mem_compl_eq]
-      specialize hV (V ∩ Uᶜ) (Set.inter_subset_left _ _) uvne (IsClosed.inter Vcls (is_closed_compl_iff.mpr hU))
-      have : V ⊆ Uᶜ := by
-        rw [← hV]
-        exact Set.inter_subset_right _ _
-      exact this hz hz'
-    cases hsep
-    · exact this x y hx hy hsep.1 hsep.2
-      
-    · exact this y x hy hx hsep.1 hsep.2
-      
-    
-  · push_neg  at hnt
-    obtain ⟨z, hz⟩ := Vne
-    refine' ⟨z, Vsub hz, _⟩
-    convert Vcls
-    ext
-    simp only [Set.mem_singleton_iff, Set.mem_compl_eq]
-    constructor
-    · rintro rfl
-      exact hz
-      
-    · exact fun hx => hnt x z hx hz
-      
-    
+  rcases minimal_nonempty_closed_eq_singleton Vcls Vne hV with ⟨x, rfl⟩
+  exact ⟨x, Vsub (mem_singleton x), Vcls⟩
 
-/-- Given an open `finset` `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
-theorem exists_open_singleton_of_open_finset [T0Space α] (s : Finset α) (sne : s.Nonempty) (hso : IsOpen (s : Set α)) :
-    ∃ x ∈ s, IsOpen ({x} : Set α) := by
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpen s)
+    (hmin : ∀ t _ : t ⊆ s, t.Nonempty → IsOpen t → t = s) : s.Subsingleton := by
+  refine' fun x hx y hy => of_not_not fun hxy => _
+  rcases exists_is_open_xor_mem hxy with ⟨U, hUo, hU⟩
+  wlog h : x ∈ U ∧ y ∉ U := hU using x y, y x
+  cases' h with hxU hyU
+  have : s ∩ U = s := hmin (s ∩ U) (inter_subset_left _ _) ⟨x, hx, hxU⟩ (hs.inter hUo)
+  exact hyU (this.symm.subset hy).2
+
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+theorem minimal_nonempty_open_eq_singleton [T0Space α] {s : Set α} (hs : IsOpen s) (hne : s.Nonempty)
+    (hmin : ∀ t _ : t ⊆ s, t.Nonempty → IsOpen t → t = s) : ∃ x, s = {x} :=
+  exists_eq_singleton_iff_nonempty_subsingleton.2 ⟨hne, minimal_nonempty_open_subsingleton hs hmin⟩
+
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
+/-- Given an open finite set `S` in a T₀ space, there is some `x ∈ S` such that `{x}` is open. -/
+theorem exists_open_singleton_of_open_finite [T0Space α] {s : Set α} (hfin : s.Finite) (hne : s.Nonempty)
+    (ho : IsOpen s) : ∃ x ∈ s, IsOpen ({x} : Set α) := by
+  lift s to Finset α using hfin
   induction' s using Finset.strongInductionOn with s ihs
-  by_cases' hs : Set.Subsingleton (s : Set α)
-  · rcases sne with ⟨x, hx⟩
-    refine' ⟨x, hx, _⟩
-    have : (s : Set α) = {x} := hs.eq_singleton_of_mem hx
-    rwa [this] at hso
+  rcases em (∃ (t : _)(_ : t ⊂ s), t.Nonempty ∧ IsOpen (t : Set α)) with (⟨t, hts, htne, hto⟩ | ht)
+  · rcases ihs t hts htne hto with ⟨x, hxt, hxo⟩
+    exact ⟨x, hts.1 hxt, hxo⟩
     
-  · dunfold Set.Subsingleton  at hs
-    push_neg  at hs
-    rcases hs with ⟨x, hx, y, hy, hxy⟩
-    rcases T0Space.t0 x y hxy with ⟨U, hU, hxyU⟩
-    wlog H : x ∈ U ∧ y ∉ U := hxyU using x y, y x
-    obtain ⟨z, hzs, hz⟩ : ∃ z ∈ s.filter fun z => z ∈ U, IsOpen ({z} : Set α) := by
-      refine' ihs _ (Finset.filter_ssubset.2 ⟨y, hy, H.2⟩) ⟨x, Finset.mem_filter.2 ⟨hx, H.1⟩⟩ _
-      rw [Finset.coe_filter]
-      exact IsOpen.inter hso hU
-    exact ⟨z, (Finset.mem_filter.1 hzs).1, hz⟩
+  · rcases minimal_nonempty_open_eq_singleton ho hne _ with ⟨x, hx⟩
+    · exact ⟨x, hx.symm ▸ rfl, hx ▸ ho⟩
+      
+    refine' fun t hts htne hto => of_not_not fun hts' => ht _
+    lift t to Finset α using s.finite_to_set.subset hts
+    exact ⟨t, ssubset_iff_subset_ne.2 ⟨hts, mt Finset.coe_inj.2 hts'⟩, htne, hto⟩
     
 
-theorem exists_open_singleton_of_fintype [T0Space α] [f : Fintype α] [ha : Nonempty α] :
-    ∃ x : α, IsOpen ({x} : Set α) := by
-  refine' ha.elim fun x => _
-  have : IsOpen ((Finset.univ : Finset α) : Set α) := by
-    simp
-  rcases exists_open_singleton_of_open_finset _ ⟨x, Finset.mem_univ x⟩ this with ⟨x, _, hx⟩
-  exact ⟨x, hx⟩
+theorem exists_open_singleton_of_fintype [T0Space α] [Fintype α] [Nonempty α] : ∃ x : α, IsOpen ({x} : Set α) :=
+  let ⟨x, _, h⟩ := exists_open_singleton_of_open_finite (Finite.of_fintype _) univ_nonempty is_open_univ
+  ⟨x, h⟩
 
 theorem t0_space_of_injective_of_continuous [TopologicalSpace β] {f : α → β} (hf : Function.Injective f)
     (hf' : Continuous f) [T0Space β] : T0Space α :=
@@ -292,20 +271,13 @@ instance Subtype.t0_space [T0Space α] {p : α → Prop} : T0Space (Subtype p) :
 
 theorem t0_space_iff_or_not_mem_closure (α : Type u) [TopologicalSpace α] :
     T0Space α ↔ ∀ a b : α, a ≠ b → a ∉ Closure ({b} : Set α) ∨ b ∉ Closure ({a} : Set α) := by
-  simp only [← not_and_distrib, t0_space_def, not_and]
-  refine' forall₃_congrₓ fun a b _ => ⟨_, fun h => _⟩
-  · rintro ⟨s, h₁, ⟨h₂, h₃ : b ∈ sᶜ⟩ | ⟨h₂, h₃ : a ∈ sᶜ⟩⟩ ha hb <;> rw [← is_closed_compl_iff] at h₁
-    · exact (IsClosed.closure_subset_iff h₁).mpr (set.singleton_subset_iff.mpr h₃) ha h₂
-      
-    · exact (IsClosed.closure_subset_iff h₁).mpr (set.singleton_subset_iff.mpr h₃) hb h₂
-      
-    
-  · by_cases' h' : a ∈ Closure ({b} : Set α)
-    · exact ⟨Closure {a}ᶜ, is_closed_closure.1, Or.inr ⟨h h', not_not.mpr (subset_closure (Set.mem_singleton a))⟩⟩
-      
-    · exact ⟨Closure {b}ᶜ, is_closed_closure.1, Or.inl ⟨h', not_not.mpr (subset_closure (Set.mem_singleton b))⟩⟩
-      
-    
+  simp only [t0_space_iff_not_inseparable, inseparable_iff_closure, not_and_distrib]
+
+instance [TopologicalSpace β] [T0Space α] [T0Space β] : T0Space (α × β) :=
+  (t0_space_iff_inseparable _).2 fun x y h => Prod.extₓ (h.map continuous_fst).Eq (h.map continuous_snd).Eq
+
+instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, T0Space (π i)] : T0Space (∀ i, π i) :=
+  (t0_space_iff_inseparable _).2 fun x y h => funext fun i => (h.map (continuous_apply i)).Eq
 
 /-- A T₁ space, also known as a Fréchet space, is a topological space
   where every singleton set is closed. Equivalently, for every pair
@@ -332,6 +304,11 @@ theorem Ne.nhds_within_diff_singleton [T1Space α] {x y : α} (h : x ≠ y) (s :
 protected theorem Set.Finite.is_closed [T1Space α] {s : Set α} (hs : Set.Finite s) : IsClosed s := by
   rw [← bUnion_of_singleton s]
   exact is_closed_bUnion hs fun i hi => is_closed_singleton
+
+theorem TopologicalSpace.IsTopologicalBasis.exists_mem_of_ne [T1Space α] {b : Set (Set α)} (hb : IsTopologicalBasis b)
+    {x y : α} (h : x ≠ y) : ∃ a ∈ b, x ∈ a ∧ y ∉ a := by
+  rcases hb.is_open_iff.1 is_open_ne x h with ⟨a, ab, xa, ha⟩
+  exact ⟨a, ab, xa, fun h => ha h rfl⟩
 
 theorem Filter.coclosed_compact_le_cofinite [T1Space α] : Filter.coclosedCompact α ≤ Filter.cofinite := fun s hs =>
   compl_compl s ▸ hs.IsCompact.compl_mem_coclosed_compact_of_is_closed hs.IsClosed
@@ -471,6 +448,12 @@ protected theorem Embedding.t1_space [TopologicalSpace β] [T1Space β] {f : α 
 instance Subtype.t1_space {α : Type u} [TopologicalSpace α] [T1Space α] {p : α → Prop} : T1Space (Subtype p) :=
   embedding_subtype_coe.T1Space
 
+instance [TopologicalSpace β] [T1Space α] [T1Space β] : T1Space (α × β) :=
+  ⟨fun ⟨a, b⟩ => @singleton_prod_singleton _ _ a b ▸ is_closed_singleton.Prod is_closed_singleton⟩
+
+instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, T1Space (π i)] : T1Space (∀ i, π i) :=
+  ⟨fun f => univ_pi_singleton f ▸ is_closed_set_pi fun i hi => is_closed_singleton⟩
+
 -- see Note [lower instance priority]
 instance (priority := 100) T1Space.t0_space [T1Space α] : T0Space α :=
   ⟨fun x y h => ⟨{ z | z ≠ y }, is_open_ne, Or.inl ⟨h, not_not_intro rfl⟩⟩⟩
@@ -497,11 +480,17 @@ theorem Set.Subsingleton.closure [T1Space α] {s : Set α} (hs : s.Subsingleton)
 theorem subsingleton_closure [T1Space α] {s : Set α} : (Closure s).Subsingleton ↔ s.Subsingleton :=
   ⟨fun h => h.mono subset_closure, fun h => h.closure⟩
 
+theorem Specializes.eq [T1Space α] {x y : α} (h : x ⤳ y) : x = y := by
+  simpa only [Specializes, closure_singleton, mem_singleton_iff, eq_comm] using h
+
+@[simp]
+theorem specializes_iff_eq [T1Space α] {x y : α} : x ⤳ y ↔ x = y :=
+  ⟨Specializes.eq, fun h => h ▸ specializes_refl _⟩
+
 theorem is_closed_map_const {α β} [TopologicalSpace α] [TopologicalSpace β] [T1Space β] {y : β} :
-    IsClosedMap (Function.const α y) := by
-  apply IsClosedMap.of_nonempty
-  intro s hs h2s
-  simp_rw [h2s.image_const, is_closed_singleton]
+    IsClosedMap (Function.const α y) :=
+  IsClosedMap.of_nonempty fun s hs h2s => by
+    simp_rw [h2s.image_const, is_closed_singleton]
 
 theorem bInter_basis_nhds [T1Space α] {ι : Sort _} {p : ι → Prop} {s : ι → Set α} {x : α} (h : (𝓝 x).HasBasis p s) :
     (⋂ (i) (h : p i), s i) = {x} := by
@@ -567,7 +556,7 @@ theorem Dense.diff_finset [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Se
 
 /-- Removing a finite set from a dense set in a space without isolated points, one still
 obtains a dense set. -/
-theorem Dense.diff_finite [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Set α} (hs : Dense s) {t : Set α} (ht : Finite t) :
+theorem Dense.diff_finite [T1Space α] [∀ x : α, NeBot (𝓝[≠] x)] {s : Set α} (hs : Dense s) {t : Set α} (ht : t.Finite) :
     Dense (s \ t) := by
   convert hs.diff_finset ht.to_finset
   exact (finite.coe_to_finset _).symm
@@ -821,7 +810,7 @@ theorem is_closed_diagonal [T2Space α] : IsClosed (Diagonal α) := by
   have : x ∈ t₁ ∩ t₂ := ⟨x_in, y_in⟩
   rwa [h'] at this
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(diagonal α))
 theorem t2_iff_is_closed_diagonal : T2Space α ↔ IsClosed (Diagonal α) := by
   constructor
   · intro h
@@ -1347,8 +1336,8 @@ instance (priority := 100) RegularSpace.t2_5_space [RegularSpace α] : T25Space 
 
 variable {α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
 theorem disjoint_nested_nhds [RegularSpace α] {x y : α} (h : x ≠ y) :

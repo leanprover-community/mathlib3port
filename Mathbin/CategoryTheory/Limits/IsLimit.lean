@@ -117,7 +117,7 @@ def mkConeMorphism {t : Cone F} (lift : ∀ s : Cone F, s ⟶ t) (uniq' : ∀ s 
   uniq' := fun s m w =>
     have : ConeMorphism.mk m w = lift s := by
       apply uniq'
-    congr_argₓ ConeMorphism.hom this
+    congr_arg ConeMorphism.hom this
 
 /-- Limit cones on `F` are unique up to isomorphism. -/
 @[simps]
@@ -404,7 +404,7 @@ def ofFaithful {t : Cone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [F
       apply G.map_injective
       rw [h]
       refine' ht.uniq (G.map_cone s) _ fun j => _
-      convert ← congr_argₓ (fun f => G.map f) (w j)
+      convert ← congr_arg (fun f => G.map f) (w j)
       apply G.map_comp }
 
 /-- If `F` and `G` are naturally isomorphic, then `F.map_cone c` being a limit implies
@@ -421,7 +421,7 @@ there is a unique cone morphism from any other cone.
 def isoUniqueConeMorphism {t : Cone F} : IsLimit t ≅ ∀ s, Unique (s ⟶ t) where
   Hom := fun h s => { default := h.liftConeMorphism s, uniq := fun _ => h.uniq_cone_morphism }
   inv := fun h =>
-    { lift := fun s => (h s).default.Hom, uniq' := fun s f w => congr_argₓ ConeMorphism.hom ((h s).uniq ⟨f, w⟩) }
+    { lift := fun s => (h s).default.Hom, uniq' := fun s f w => congr_arg ConeMorphism.hom ((h s).uniq ⟨f, w⟩) }
 
 namespace OfNatIso
 
@@ -443,12 +443,12 @@ theorem cone_of_hom_of_cone (s : Cone F) : coneOfHom h (homOfCone h s) = s := by
   cases s
   congr
   dsimp'
-  convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) (op s_X)) s_π
+  convert congr_fun (congr_fun (congr_arg nat_trans.app h.inv_hom_id) (op s_X)) s_π
   exact ULift.up_down _
 
 @[simp]
 theorem hom_of_cone_of_hom {Y : C} (f : Y ⟶ X) : homOfCone h (coneOfHom h f) = f :=
-  congr_argₓ ULift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) (op Y)) ⟨f⟩ : _)
+  congr_arg ULift.down (congr_fun (congr_fun (congr_arg NatTrans.app h.hom_inv_id) (op Y)) ⟨f⟩ : _)
 
 /-- If `F.cones` is represented by `X`, the cone corresponding to the identity morphism on `X`
 will be a limit cone. -/
@@ -460,10 +460,10 @@ the limit cone extended by `f`. -/
 theorem cone_of_hom_fac {Y : C} (f : Y ⟶ X) : coneOfHom h f = (limitCone h).extend f := by
   dsimp' [cone_of_hom, limit_cone, cone.extend]
   congr with j
-  have t := congr_funₓ (h.hom.naturality f.op) ⟨𝟙 X⟩
+  have t := congr_fun (h.hom.naturality f.op) ⟨𝟙 X⟩
   dsimp'  at t
   simp only [comp_id] at t
-  rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
+  rw [congr_fun (congr_arg nat_trans.app t) j]
   rfl
 
 /-- If `F.cones` is represented by `X`, any cone is the extension of the limit cone by the
@@ -578,7 +578,7 @@ def mkCoconeMorphism {t : Cocone F} (desc : ∀ s : Cocone F, t ⟶ s) (uniq' : 
   uniq' := fun s m w =>
     have : CoconeMorphism.mk m w = desc s := by
       apply uniq'
-    congr_argₓ CoconeMorphism.hom this
+    congr_arg CoconeMorphism.hom this
 
 /-- Colimit cocones on `F` are unique up to isomorphism. -/
 @[simps]
@@ -874,7 +874,7 @@ def ofFaithful {t : Cocone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) 
       apply G.map_injective
       rw [h]
       refine' ht.uniq (G.map_cocone s) _ fun j => _
-      convert ← congr_argₓ (fun f => G.map f) (w j)
+      convert ← congr_arg (fun f => G.map f) (w j)
       apply G.map_comp }
 
 /-- If `F` and `G` are naturally isomorphic, then `F.map_cone c` being a colimit implies
@@ -891,7 +891,7 @@ there is a unique cocone morphism from any other cocone.
 def isoUniqueCoconeMorphism {t : Cocone F} : IsColimit t ≅ ∀ s, Unique (t ⟶ s) where
   Hom := fun h s => { default := h.descCoconeMorphism s, uniq := fun _ => h.uniq_cocone_morphism }
   inv := fun h =>
-    { desc := fun s => (h s).default.Hom, uniq' := fun s f w => congr_argₓ CoconeMorphism.hom ((h s).uniq ⟨f, w⟩) }
+    { desc := fun s => (h s).default.Hom, uniq' := fun s f w => congr_arg CoconeMorphism.hom ((h s).uniq ⟨f, w⟩) }
 
 namespace OfNatIso
 
@@ -913,12 +913,12 @@ theorem cocone_of_hom_of_cocone (s : Cocone F) : coconeOfHom h (homOfCocone h s)
   cases s
   congr
   dsimp'
-  convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) s_X) s_ι
+  convert congr_fun (congr_fun (congr_arg nat_trans.app h.inv_hom_id) s_X) s_ι
   exact ULift.up_down _
 
 @[simp]
 theorem hom_of_cocone_of_hom {Y : C} (f : X ⟶ Y) : homOfCocone h (coconeOfHom h f) = f :=
-  congr_argₓ ULift.down (congr_funₓ (congr_funₓ (congr_argₓ NatTrans.app h.hom_inv_id) Y) ⟨f⟩ : _)
+  congr_arg ULift.down (congr_fun (congr_fun (congr_arg NatTrans.app h.hom_inv_id) Y) ⟨f⟩ : _)
 
 /-- If `F.cocones` is corepresented by `X`, the cocone corresponding to the identity morphism on `X`
 will be a colimit cocone. -/
@@ -930,10 +930,10 @@ the colimit cocone extended by `f`. -/
 theorem cocone_of_hom_fac {Y : C} (f : X ⟶ Y) : coconeOfHom h f = (colimitCocone h).extend f := by
   dsimp' [cocone_of_hom, colimit_cocone, cocone.extend]
   congr with j
-  have t := congr_funₓ (h.hom.naturality f) ⟨𝟙 X⟩
+  have t := congr_fun (h.hom.naturality f) ⟨𝟙 X⟩
   dsimp'  at t
   simp only [id_comp] at t
-  rw [congr_funₓ (congr_argₓ nat_trans.app t) j]
+  rw [congr_fun (congr_arg nat_trans.app t) j]
   rfl
 
 /-- If `F.cocones` is corepresented by `X`, any cocone is the extension of the colimit cocone by the

@@ -46,6 +46,7 @@ variable [LinearOrderedCancelAddCommMonoid ι]
 
 variable {𝒜 : ι → Submodule R A} [GradedAlgebra 𝒜]
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI : I.IsHomogeneous 𝒜) (I_ne_top : I ≠ ⊤)
     (homogeneous_mem_or_mem : ∀ {x y : A}, IsHomogeneous 𝒜 x → IsHomogeneous 𝒜 y → x * y ∈ I → x ∈ I ∨ y ∈ I) :
     Ideal.IsPrime I :=
@@ -67,8 +68,8 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       This is a contradiction, because both `proj (max₁ + max₂) (x * y) ∈ I` and the sum on the
       right hand side is in `I` however `proj max₁ x * proj max₂ y` is not in `I`.
       -/
+    classical
     let this : ∀ x : A, DecidablePred fun i : ι => proj 𝒜 i x ∉ I := fun x => Classical.decPred _
-    let this : ∀ i x : 𝒜 i, Decidable (x ≠ 0) := fun i x => Classical.dec _
     set set₁ := (support 𝒜 x).filter fun i => proj 𝒜 i x ∉ I with set₁_eq
     set set₂ := (support 𝒜 y).filter fun i => proj 𝒜 i y ∉ I with set₂_eq
     have nonempty : ∀ x : A, x ∉ I → ((support 𝒜 x).filter fun i => proj 𝒜 i x ∉ I).Nonempty := by
@@ -90,14 +91,14 @@ theorem Ideal.IsHomogeneous.is_prime_of_homogeneous_mem_or_mem {I : Ideal A} (hI
       have eq_add_sum :=
         calc
           proj 𝒜 (max₁ + max₂) (x * y) = ∑ ij in antidiag, proj 𝒜 ij.1 x * proj 𝒜 ij.2 y := by
-            simp_rw [ha, proj_apply, map_mul, support, DirectSum.coe_mul_apply_submodule]
+            simp_rw [ha, proj_apply, map_mul, support, DirectSum.coe_mul_apply 𝒜]
           _ = proj 𝒜 max₁ x * proj 𝒜 max₂ y + ∑ ij in antidiag.erase (max₁, max₂), proj 𝒜 ij.1 x * proj 𝒜 ij.2 y :=
             (add_sum_erase _ _ mem_antidiag).symm
           
       rw [eq_sub_of_add_eq eq_add_sum.symm]
       refine' Ideal.sub_mem _ hxy (Ideal.sum_mem _ fun z H => _)
       rcases z with ⟨i, j⟩
-      simp only [mem_erase, Prod.mk.inj_iffₓ, Ne.def, mem_filter, mem_product] at H
+      simp only [mem_erase, Prod.mk.inj_iff, Ne.def, mem_filter, mem_product] at H
       rcases H with ⟨H₁, ⟨H₂, H₃⟩, H₄⟩
       have max_lt : max₁ < i ∨ max₂ < j := by
         rcases lt_trichotomyₓ max₁ i with (h | rfl | h)

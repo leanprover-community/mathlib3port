@@ -316,6 +316,18 @@ theorem measurable_set_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [
   ext
   simp_rw [Set.mem_set_of_eq, Pi.sub_apply, sub_eq_zero]
 
+theorem measurable_set_eq_fun_of_encodable {m : MeasurableSpace α} {E} [MeasurableSpace E] [MeasurableSingletonClass E]
+    [Encodable E] {f g : α → E} (hf : Measurable f) (hg : Measurable g) : MeasurableSet { x | f x = g x } := by
+  have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by
+    ext1 x
+    simp only [Set.mem_set_of_eq, Set.mem_Union, Set.mem_inter_eq, exists_eq_right']
+  rw [this]
+  refine' MeasurableSet.Union fun j => MeasurableSet.inter _ _
+  · exact hf (measurable_set_singleton j)
+    
+  · exact hg (measurable_set_singleton j)
+    
+
 theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [MeasurableSpace E] [AddGroupₓ E]
     [MeasurableSingletonClass E] [HasMeasurableSub₂ E] (hm : m ≤ m0) {f g : α → E} (hf : measurable[m] f)
     (hg : measurable[m] g) (hfg : f =ᵐ[μ] g) : f =ᶠ[@Measure.ae α m (μ.trim hm)] g := by

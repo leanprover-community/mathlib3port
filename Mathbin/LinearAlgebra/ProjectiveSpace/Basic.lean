@@ -168,7 +168,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
         rw [Submodule.span_singleton_eq_range]
         refine' ⟨fun hh => _, _⟩
         · obtain ⟨c, hc⟩ := h ⟨x, hh⟩
-          exact ⟨c, congr_argₓ coe hc⟩
+          exact ⟨c, congr_arg coe hc⟩
           
         · rintro ⟨c, rfl⟩
           refine' Submodule.smul_mem _ _ v.2
@@ -184,7 +184,7 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 @[simp]
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H := by
   suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by
-    exact congr_argₓ coe this
+    exact congr_arg coe this
   dsimp' [mk'']
   simp
 

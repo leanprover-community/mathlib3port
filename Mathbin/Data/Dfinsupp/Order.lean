@@ -212,16 +212,14 @@ instance : HasOrderedSub (Π₀ i, α i) :=
 
 instance : CanonicallyOrderedAddMonoid (Π₀ i, α i) :=
   { Dfinsupp.orderBot α, Dfinsupp.orderedAddCommMonoid α with
-    le_iff_exists_add := fun f g => by
-      refine' ⟨fun h => ⟨g - f, _⟩, _⟩
-      · ext i
+    exists_add_of_le := fun f g h =>
+      ⟨g - f, by
+        ext i
         rw [add_apply, tsub_apply]
-        exact (add_tsub_cancel_of_le <| h i).symm
-        
-      · rintro ⟨g, rfl⟩ i
-        rw [add_apply]
-        exact self_le_add_right (f i) (g i)
-         }
+        exact (add_tsub_cancel_of_le <| h i).symm⟩,
+    le_self_add := fun f g i => by
+      rw [add_apply]
+      exact le_self_add }
 
 variable {α} [DecidableEq ι]
 

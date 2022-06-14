@@ -109,7 +109,7 @@ theorem det_vandermonde {n : ℕ} (v : Finₓ n → R) :
           det fun i j : Finₓ n => ∑ k in Finset.range (j + 1 : ℕ), v i.succ ^ k * v 0 ^ (j - k : ℕ) :=
       det_mul_column (fun i => v (Finₓ.succ i) - v 0)
         _ _ = (∏ i : Finₓ n, v (Finₓ.succ i) - v 0) * det fun i j : Finₓ n => v (Finₓ.succ i) ^ (j : ℕ) :=
-      congr_argₓ ((· * ·) _) _ _ = ∏ i : Finₓ n.succ, ∏ j in finset.univ.filter fun j => i < j, v j - v i := by
+      congr_arg ((· * ·) _) _ _ = ∏ i : Finₓ n.succ, ∏ j in finset.univ.filter fun j => i < j, v j - v i := by
       simp_rw [ih (v ∘ Finₓ.succ), Finₓ.prod_univ_succ, Finₓ.prod_filter_zero_lt, Finₓ.prod_filter_succ_lt]
   · intro i j
     rw [Finₓ.cons_zero]

@@ -357,10 +357,10 @@ theorem discr_mul_is_integral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsInteg
     refine' Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
   intro i
   rw [← H, ← mul_vec_smul] at cramer
-  replace cramer := congr_argₓ (mul_vec (trace_matrix K B.basis)⁻¹) cramer
+  replace cramer := congr_arg (mul_vec (trace_matrix K B.basis)⁻¹) cramer
   rw [mul_vec_mul_vec, nonsing_inv_mul _ hinv, mul_vec_mul_vec, nonsing_inv_mul _ hinv, one_mul_vec, one_mul_vec] at
     cramer
-  rw [← congr_funₓ cramer i, cramer_apply, det_apply]
+  rw [← congr_fun cramer i, cramer_apply, det_apply]
   refine' Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => _) _
   by_cases' hji : j = i
   · simp only [update_column_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]

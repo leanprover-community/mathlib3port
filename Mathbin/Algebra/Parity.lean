@@ -252,7 +252,7 @@ theorem Odd.add_odd : Odd m → Odd n → Even (m + n) := by
 
 @[simp]
 theorem odd_one : Odd (1 : α) :=
-  ⟨0, (zero_addₓ _).symm.trans (congr_argₓ (· + (1 : α)) (mul_zero _).symm)⟩
+  ⟨0, (zero_addₓ _).symm.trans (congr_arg (· + (1 : α)) (mul_zero _).symm)⟩
 
 @[simp]
 theorem odd_two_mul_add_one (m : α) : Odd (2 * m + 1) :=

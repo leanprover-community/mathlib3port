@@ -91,7 +91,7 @@ theorem basis_sets_intersect (U V : Set E) (hU : U ∈ p.basis_sets) (hV : V ∈
 
 theorem basis_sets_zero U (hU : U ∈ p.basis_sets) : (0 : E) ∈ U := by
   rcases p.basis_sets_iff.mp hU with ⟨ι', r, hr, hU⟩
-  rw [hU, mem_ball_zero, (ι'.sup p).zero]
+  rw [hU, mem_ball_zero, map_zero]
   exact hr
 
 theorem basis_sets_add U (hU : U ∈ p.basis_sets) : ∃ (V : Set E)(H : V ∈ p.basis_sets), V + V ⊆ U := by
@@ -144,7 +144,7 @@ theorem basis_sets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
     exact ⟨p.basis_sets_mem s (div_pos hr (norm_pos_iff.mpr h)), subset.rfl⟩
     
   refine' ⟨(s.sup p).ball 0 r, p.basis_sets_mem s hr, _⟩
-  simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, Seminorm.zero, implies_true_iff,
+  simp only [not_ne_iff.mp h, subset_def, mem_ball_zero, hr, mem_univ, map_zero, implies_true_iff,
     preimage_const_of_mem, zero_smul]
 
 /-- The `module_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
@@ -251,7 +251,7 @@ variable [TopologicalSpace E]
 variable (p : SeminormFamily 𝕜 E ι) [WithSeminorms p]
 
 theorem SeminormFamily.has_basis : (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ p.basis_sets) id := by
-  rw [congr_funₓ (congr_argₓ (@nhds E) p.with_seminorms_eq) 0]
+  rw [congr_fun (congr_arg (@nhds E) p.with_seminorms_eq) 0]
   exact AddGroupFilterBasis.nhds_zero_has_basis _
 
 end Topology
@@ -378,9 +378,8 @@ variable [Nonempty ι] [Nonempty ι']
 theorem continuous_from_bounded (p : SeminormFamily 𝕜 E ι) (q : SeminormFamily 𝕜 F ι') [UniformSpace E]
     [UniformAddGroup E] [WithSeminorms p] [UniformSpace F] [UniformAddGroup F] [WithSeminorms q] (f : E →ₗ[𝕜] F)
     (hf : Seminorm.IsBounded p q f) : Continuous f := by
-  refine' UniformContinuous.continuous _
-  refine' AddMonoidHom.uniform_continuous_of_continuous_at_zero f.to_add_monoid_hom _
-  rw [f.to_add_monoid_hom_coe, continuous_at_def, f.map_zero, p.with_seminorms_eq]
+  refine' continuous_of_continuous_at_zero f _
+  rw [continuous_at_def, f.map_zero, p.with_seminorms_eq]
   intro U hU
   rw [q.with_seminorms_eq, AddGroupFilterBasis.nhds_zero_eq, FilterBasis.mem_filter_iff] at hU
   rcases hU with ⟨V, hV : V ∈ q.basis_sets, hU⟩

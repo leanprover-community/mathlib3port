@@ -235,7 +235,7 @@ theorem sqrt_add_eq (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n * n + a) = n
     (le_sqrt.2 <| Nat.le_add_rightₓ _ _)
 
 theorem sqrt_add_eq' (n : ℕ) {a : ℕ} (h : a ≤ n + n) : sqrt (n ^ 2 + a) = n :=
-  (congr_argₓ (fun i => sqrt (i + a)) (sq n)).trans (sqrt_add_eq n h)
+  (congr_arg (fun i => sqrt (i + a)) (sq n)).trans (sqrt_add_eq n h)
 
 theorem sqrt_eq (n : ℕ) : sqrt (n * n) = n :=
   sqrt_add_eq n (zero_le _)

@@ -301,7 +301,7 @@ theorem is_sheaf_iff_is_sheaf_of_type (P : Cᵒᵖ ⥤ Type w) : Presheaf.IsShea
   · intro hP X Y S hS z hz
     refine' ⟨fun x => (hP S hS).amalgamate (fun Z f hf => z f hf x) _, _, _⟩
     · intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ h
-      exact congr_funₓ (hz g₁ g₂ hf₁ hf₂ h) x
+      exact congr_fun (hz g₁ g₂ hf₁ hf₂ h) x
       
     · intro Z f hf
       ext x

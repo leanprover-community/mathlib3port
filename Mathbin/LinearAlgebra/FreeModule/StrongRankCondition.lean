@@ -54,7 +54,7 @@ instance (priority := 100) comm_ring_strong_rank_condition : StrongRankCondition
     have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Finₓ.last n) 1)
     obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
     rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
-    replace heval := congr_funₓ heval (Finₓ.last n)
+    replace heval := congr_fun heval (Finₓ.last n)
     simpa [hnex] using heval
   contradiction
 

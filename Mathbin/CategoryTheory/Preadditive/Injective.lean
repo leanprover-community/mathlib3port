@@ -151,13 +151,13 @@ instance {P : Cᵒᵖ} [Projective P] : Injective P.unop where
     skip
     refine' ⟨(@projective.factor_thru Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _).unop, _⟩
     convert
-      congr_argₓ Quiver.Hom.unop (@projective.factor_thru_comp Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _)
+      congr_arg Quiver.Hom.unop (@projective.factor_thru_comp Cᵒᵖ _ P (Opposite.op X) (Opposite.op Y) _ g.op f.op _)
 
 instance {J : C} [Injective J] : Projective (Opposite.op J) where
   Factors := fun E X f e epi => by
     skip
     refine' ⟨(@factor_thru C _ J _ _ _ f.unop e.unop _).op, _⟩
-    convert congr_argₓ Quiver.Hom.op (@comp_factor_thru C _ J _ _ _ f.unop e.unop _)
+    convert congr_arg Quiver.Hom.op (@comp_factor_thru C _ J _ _ _ f.unop e.unop _)
 
 section EnoughInjectives
 
@@ -223,12 +223,12 @@ Q --- f --> R --- g --> S
 -/
 def Exact.desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R ⟶ S) (hgf : Exact g.op f.op) (w : f ≫ h = 0) :
     S ⟶ J :=
-  (Exact.lift h.op g.op f.op hgf (congr_argₓ Quiver.Hom.op w)).unop
+  (Exact.lift h.op g.op f.op hgf (congr_arg Quiver.Hom.op w)).unop
 
 @[simp]
 theorem Exact.comp_desc {J Q R S : C} [Injective J] (h : R ⟶ J) (f : Q ⟶ R) (g : R ⟶ S) (hgf : Exact g.op f.op)
     (w : f ≫ h = 0) : g ≫ Exact.desc h f g hgf w = h := by
-  convert congr_argₓ Quiver.Hom.unop (exact.lift_comp h.op g.op f.op hgf (congr_argₓ Quiver.Hom.op w))
+  convert congr_arg Quiver.Hom.unop (exact.lift_comp h.op g.op f.op hgf (congr_arg Quiver.Hom.op w))
 
 end
 

@@ -121,11 +121,20 @@ protected theorem IsInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s,
   rw [← h]
   exact (sublist_append_right _ _).trans (sublist_append_left _ _)
 
+protected theorem IsInfix.subset (hl : l₁ <:+: l₂) : l₁ ⊆ l₂ :=
+  hl.Sublist.Subset
+
 protected theorem IsPrefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
   h.IsInfix.Sublist
 
+protected theorem IsPrefix.subset (hl : l₁ <+: l₂) : l₁ ⊆ l₂ :=
+  hl.Sublist.Subset
+
 protected theorem IsSuffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
   h.IsInfix.Sublist
+
+protected theorem IsSuffix.subset (hl : l₁ <:+ l₂) : l₁ ⊆ l₂ :=
+  hl.Sublist.Subset
 
 @[simp]
 theorem reverse_suffix : reverse l₁ <:+ reverse l₂ ↔ l₁ <+: l₂ :=
@@ -653,13 +662,16 @@ theorem eq_or_mem_of_mem_insertₓ (h : a ∈ insert b l) : a = b ∨ a ∈ l :=
 
 @[simp]
 theorem length_insert_of_memₓ (h : a ∈ l) : (insert a l).length = l.length :=
-  congr_argₓ _ <| insert_of_memₓ h
+  congr_arg _ <| insert_of_memₓ h
 
 @[simp]
 theorem length_insert_of_not_memₓ (h : a ∉ l) : (insert a l).length = l.length + 1 :=
-  congr_argₓ _ <| insert_of_not_memₓ h
+  congr_arg _ <| insert_of_not_memₓ h
 
 end Insert
+
+theorem mem_of_mem_suffix (hx : a ∈ l₁) (hl : l₁ <:+ l₂) : a ∈ l₂ :=
+  hl.Subset hx
 
 end List
 

@@ -181,11 +181,11 @@ theorem localization_is_reduced : LocalizationPreserves fun R hR => IsReduced R 
   skip
   constructor
   rintro x ⟨_ | n, e⟩
-  · simpa using congr_argₓ (· * x) e
+  · simpa using congr_arg (· * x) e
     
   obtain ⟨⟨y, m⟩, hx⟩ := IsLocalization.surj M x
   dsimp' only  at hx
-  let hx' := congr_argₓ (· ^ n.succ) hx
+  let hx' := congr_arg (· ^ n.succ) hx
   simp only [mul_powₓ, e, zero_mul, ← RingHom.map_pow] at hx'
   rw [← (algebraMap R S).map_zero] at hx'
   obtain ⟨m', hm'⟩ := (IsLocalization.eq_iff_exists M S).mp hx'
@@ -276,7 +276,7 @@ theorem IsLocalization.smul_mem_finset_integer_multiple_span [Algebra R S] [Alge
   have : algebraMap R S y' • (s : Set S') = y' • s := by
     simp_rw [Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
   rw [← e, this] at hx₁
-  replace hx₁ := congr_argₓ (Submodule.span R) hx₁
+  replace hx₁ := congr_arg (Submodule.span R) hx₁
   rw [Submodule.span_smul_eq] at hx₁
   replace hx : _ ∈ y' • Submodule.span R (s : Set S') := Set.smul_mem_smul_set hx
   rw [hx₁] at hx
@@ -319,7 +319,7 @@ theorem multiple_mem_span_of_mem_localization_span [Algebra R' S] [Algebra R S] 
   simp only [Finset.coe_insert, Finset.image_insert, Finset.coe_image, Subtype.coe_mk, Submodule.mem_span_insert] at hx⊢
   rcases hx with ⟨y, z, hz, rfl⟩
   rcases IsLocalization.surj M y with ⟨⟨y', s'⟩, e⟩
-  replace e : _ * a = _ * a := (congr_argₓ (fun x => algebraMap R' S x * a) e : _)
+  replace e : _ * a = _ * a := (congr_arg (fun x => algebraMap R' S x * a) e : _)
   simp_rw [RingHom.map_mul, ← IsScalarTower.algebra_map_apply, mul_comm (algebraMap R' S y), mul_assoc, ←
     Algebra.smul_def]  at e
   rcases hs _ hz with ⟨t, ht⟩
@@ -443,7 +443,7 @@ theorem IsLocalization.lift_mem_adjoin_finset_integer_multiple [Algebra R S] [Al
   have : algebraMap R S y' • (s : Set S') = y' • s := by
     simp_rw [Algebra.algebra_map_eq_smul_one, smul_assoc, one_smul]
   rw [← e, this] at hx₁
-  replace hx₁ := congr_argₓ (Algebra.adjoin R) hx₁
+  replace hx₁ := congr_arg (Algebra.adjoin R) hx₁
   obtain ⟨n, hn⟩ := Algebra.pow_smul_mem_adjoin_smul _ y' (s : Set S') hx
   specialize hn n (le_of_eqₓ rfl)
   erw [hx₁, ← g.map_smul, ← g.map_adjoin] at hn

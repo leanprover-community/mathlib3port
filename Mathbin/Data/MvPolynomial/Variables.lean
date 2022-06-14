@@ -261,7 +261,7 @@ theorem vars_C : (c r : MvPolynomial σ R).vars = ∅ := by
 
 @[simp]
 theorem vars_X [Nontrivial R] : (x n : MvPolynomial σ R).vars = {n} := by
-  rw [X, vars_monomial (@one_ne_zero R _ _), Finsupp.support_single_ne_zero (one_ne_zero : 1 ≠ 0)]
+  rw [X, vars_monomial (@one_ne_zero R _ _), Finsupp.support_single_ne_zero _ (one_ne_zero : 1 ≠ 0)]
 
 theorem mem_vars (i : σ) : i ∈ p.vars ↔ ∃ (d : σ →₀ ℕ)(H : d ∈ p.support), i ∈ d.support := by
   simp only [vars, Multiset.mem_to_finset, mem_degrees, mem_support_iff, exists_prop]
@@ -411,7 +411,7 @@ theorem vars_map_of_injective (hf : Injective f) : (map f p).vars = p.vars := by
 
 theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r ≠ 0) :
     (monomial (Finsupp.single i e) r).vars = {i} := by
-  rw [vars_monomial hr, Finsupp.support_single_ne_zero he]
+  rw [vars_monomial hr, Finsupp.support_single_ne_zero _ he]
 
 theorem vars_eq_support_bUnion_support : p.vars = p.support.bUnion Finsupp.support := by
   ext i
@@ -756,7 +756,7 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : Injective f)
     (hf : ↑p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
-  ⟨bind₁ (fun i : σ => Option.elim (partialInv f i) 0 x) p, by
+  ⟨bind₁ (fun i : σ => Option.elimₓ 0 x <| partialInv f i) p, by
     show (rename f).toRingHom.comp _ p = RingHom.id _ p
     refine' hom_congr_vars _ _ _
     · ext1

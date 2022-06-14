@@ -586,7 +586,7 @@ theorem polynomial_not_is_field : ¬IsField R[X] := by
     rw [mul_zero] at hp
     exact zero_ne_one hp
   have := degree_lt_degree_mul_X hp0
-  rw [← X_mul, congr_argₓ degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
+  rw [← X_mul, congr_arg degree hp, degree_one, Nat.WithBot.lt_zero_iff, degree_eq_bot] at this
   exact hp0 this
 
 /-- The only constant in a maximal ideal over a field is `0`. -/
@@ -694,7 +694,7 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
     rw [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
     rw [RingHom.mem_ker, coe_map_ring_hom] at hf
-    replace hf := congr_argₓ (fun f : Polynomial _ => f.coeff n) hf
+    replace hf := congr_arg (fun f : Polynomial _ => f.coeff n) hf
     simp only [coeff_map, coeff_zero] at hf
     rwa [Subtype.ext_iff, RingHom.coe_range_restrict] at hf
   obtain ⟨x, hx'⟩ := x
@@ -960,7 +960,7 @@ theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : Is
   intro v hv
   rcases hpq with ⟨p', q', hpq'⟩
   simpa [LinearMap.mem_ker.1 (Submodule.mem_inf.1 hv).1, LinearMap.mem_ker.1 (Submodule.mem_inf.1 hv).2] using
-    congr_argₓ (fun p : R[X] => aeval f p v) hpq'.symm
+    congr_arg (fun p : R[X] => aeval f p v) hpq'.symm
 
 theorem sup_aeval_range_eq_top_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq : IsCoprime p q) :
     (aeval f p).range⊔(aeval f q).range = ⊤ := by
@@ -978,7 +978,7 @@ theorem sup_aeval_range_eq_top_of_coprime (f : M →ₗ[R] M) {p q : R[X]} (hpq 
     LinearMap.mem_range.2
       ⟨aeval f q' v, by
         simp only [LinearMap.mul_apply, aeval_mul]⟩
-  simpa only [mul_comm p p', mul_comm q q', aeval_one, aeval_add] using congr_argₓ (fun p : R[X] => aeval f p v) hpq'
+  simpa only [mul_comm p p', mul_comm q q', aeval_one, aeval_add] using congr_arg (fun p : R[X] => aeval f p v) hpq'
 
 theorem sup_ker_aeval_le_ker_aeval_mul {f : M →ₗ[R] M} {p q : R[X]} :
     (aeval f p).ker⊔(aeval f q).ker ≤ (aeval f (p * q)).ker := by
@@ -1014,7 +1014,7 @@ theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime (f : M →ₗ[R] M) {p q : R[X
   refine'
     ⟨aeval f (q * q') v, LinearMap.mem_ker.1 h_eval₂_pqq', aeval f (p * p') v, LinearMap.mem_ker.1 h_eval₂_qpp', _⟩
   rw [add_commₓ, mul_comm p p', mul_comm q q']
-  simpa using congr_argₓ (fun p : R[X] => aeval f p v) hpq'
+  simpa using congr_arg (fun p : R[X] => aeval f p v) hpq'
 
 end Polynomial
 
@@ -1077,7 +1077,7 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {R : Type u} [CommRingₓ R]
   rw [mul_eq_zero] at this
   cases this <;> [left, right]
   all_goals
-    simpa using congr_argₓ (rename Subtype.val) this
+    simpa using congr_arg (rename Subtype.val) this
 
 /-- The multivariate polynomial ring over an integral domain is an integral domain. -/
 instance {R : Type u} {σ : Type v} [CommRingₓ R] [IsDomain R] : IsDomain (MvPolynomial σ R) :=
@@ -1096,7 +1096,7 @@ instance {R : Type u} {σ : Type v} [CommRingₓ R] [IsDomain R] : IsDomain (MvP
 
 theorem map_mv_polynomial_eq_eval₂ {S : Type _} [CommRingₓ S] [Fintype σ] (ϕ : MvPolynomial σ R →+* S)
     (p : MvPolynomial σ R) : ϕ p = MvPolynomial.eval₂ (ϕ.comp MvPolynomial.c) (fun s => ϕ (MvPolynomial.x s)) p := by
-  refine' trans (congr_argₓ ϕ (MvPolynomial.as_sum p)) _
+  refine' trans (congr_arg ϕ (MvPolynomial.as_sum p)) _
   rw [MvPolynomial.eval₂_eq', ϕ.map_sum]
   congr
   ext

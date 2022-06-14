@@ -266,6 +266,9 @@ theorem HasImage.mk {f : X ⟶ Y} (F : ImageFactorisation f) : HasImage f :=
 theorem HasImage.of_arrow_iso {f g : Arrow C} [h : HasImage f.Hom] (sq : f ⟶ g) [IsIso sq] : HasImage g.Hom :=
   ⟨⟨h.exists_image.some.ofArrowIso sq⟩⟩
 
+instance (priority := 100) mono_has_image (f : X ⟶ Y) [Mono f] : HasImage f :=
+  HasImage.mk ⟨_, IsImage.self f⟩
+
 section
 
 variable [HasImage f]
@@ -363,7 +366,7 @@ end
 
 section
 
-variable (f) [HasImage f]
+variable (f)
 
 /-- The image of a monomorphism is isomorphic to the source. -/
 def imageMonoIsoSource [Mono f] : image f ≅ X :=
@@ -382,7 +385,7 @@ theorem image_mono_iso_source_hom_self [Mono f] : (imageMonoIsoSource f).Hom ≫
 -- from https://en.wikipedia.org/wiki/Image_%28category_theory%29, which is in turn taken from:
 -- Mitchell, Barry (1965), Theory of categories, MR 0202787, p.12, Proposition 10.1
 @[ext]
-theorem image.ext {W : C} {g h : image f ⟶ W} [HasLimit (parallelPair g h)]
+theorem image.ext [HasImage f] {W : C} {g h : image f ⟶ W} [HasLimit (parallelPair g h)]
     (w : factorThruImage f ≫ g = factorThruImage f ≫ h) : g = h := by
   let q := equalizer.ι g h
   let e' := equalizer.lift _ w
@@ -408,7 +411,7 @@ theorem image.ext {W : C} {g h : image f ⟶ W} [HasLimit (parallelPair g h)]
       rw [← category.assoc, t]_ = h := by
       rw [category.id_comp]
 
-instance [∀ {Z : C} g h : image f ⟶ Z, HasLimit (parallelPair g h)] : Epi (factorThruImage f) :=
+instance [HasImage f] [∀ {Z : C} g h : image f ⟶ Z, HasLimit (parallelPair g h)] : Epi (factorThruImage f) :=
   ⟨fun Z g h w => image.ext f w⟩
 
 theorem epi_image_of_epi {X Y : C} (f : X ⟶ Y) [HasImage f] [E : Epi f] : Epi (image.ι f) := by

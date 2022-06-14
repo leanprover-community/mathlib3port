@@ -240,9 +240,9 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
           mk_suggestion p pre post (suggs List.unionₓ []) tt
           pure ()
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- `squeeze_simp`, `squeeze_simpa` and `squeeze_dsimp` perform the same
 task with the difference that `squeeze_simp` relates to `simp` while
 `squeeze_simpa` relates to `simpa` and `squeeze_dsimp` relates to
@@ -309,10 +309,10 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse («expr
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- see `squeeze_simp` -/
 unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse («expr ?» (tk "?")))
     (use_iota_eqn : parse («expr ?» (tk "!"))) (no_dflt : parse only_flag) (hs : parse simp_arg_list)
@@ -332,9 +332,9 @@ unsafe def squeeze_simpa (key : parse cur_pos) (slow_and_accurate : parse («exp
       let tgt' := tgt' ""
       mk_suggestion (key 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- `squeeze_dsimp` behaves like `dsimp` (including all its arguments)
 and prints a `dsimp only` invocation to skip the search through the
 `simp` lemma list. See the doc string of `squeeze_simp` for examples.

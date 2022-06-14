@@ -200,15 +200,15 @@ instance : SemilatticeInf (LinearPmap R E F) where
       fun h => by
       apply fg_eq
       exact h⟩
-  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_argₓ f <| Subtype.eq <| h⟩
-  inf_le_right := fun f g => ⟨fun x hx => hx.snd.fst, fun y h => hx.trans <| congr_argₓ g <| Subtype.eq <| h⟩
+  inf_le_left := fun f g => ⟨fun x hx => hx.fst, fun x y h => congr_arg f <| Subtype.eq <| h⟩
+  inf_le_right := fun f g => ⟨fun x hx => hx.snd.fst, fun y h => hx.trans <| congr_arg g <| Subtype.eq <| h⟩
 
 instance : OrderBot (LinearPmap R E F) where
   bot := ⊥
   bot_le := fun f =>
     ⟨bot_le, fun x y h => by
       have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
-      have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
+      have hy : y = 0 := Subtype.eq (h.symm.trans (congr_arg _ hx))
       rw [hx, hy, map_zero, map_zero]⟩
 
 theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eqLocus g) : f ≤ g :=
@@ -284,7 +284,7 @@ theorem sup_h_of_disjoint (f g : LinearPmap R E F) (h : Disjoint f.domain g.doma
     (hxy : (x : E) = y) : f x = g y := by
   rw [disjoint_def] at h
   have hy : y = 0 := Subtype.eq (h y (hxy ▸ x.2) y.2)
-  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_argₓ _ hy)
+  have hx : x = 0 := Subtype.eq (hxy.trans <| congr_arg _ hy)
   simp [*]
 
 section

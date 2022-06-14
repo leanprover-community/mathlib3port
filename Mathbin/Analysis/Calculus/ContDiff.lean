@@ -173,8 +173,8 @@ open Set Finₓ Filter
 open TopologicalSpace
 
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
-  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {s s₁ t u : Set E} {f f₁ : E → F}
-  {g : F → G} {x : E} {c : F} {b : E × F → G} {m n : WithTop ℕ}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {X : Type _} [NormedGroup X]
+  [NormedSpace 𝕜 X] {s s₁ t u : Set E} {f f₁ : E → F} {g : F → G} {x : E} {c : F} {b : E × F → G} {m n : WithTop ℕ}
 
 /-! ### Functions with a Taylor series on a domain -/
 
@@ -1559,9 +1559,10 @@ theorem IsBoundedBilinearMap.cont_diff (hb : IsBoundedBilinearMap 𝕜 b) : Cont
 series whose `k`-th term is given by `g ∘ (p k)`. -/
 theorem HasFtaylorSeriesUpToOn.continuous_linear_map_comp (g : F →L[𝕜] G) (hf : HasFtaylorSeriesUpToOn n f p s) :
     HasFtaylorSeriesUpToOn n (g ∘ f) (fun x k => g.compContinuousMultilinearMap (p x k)) s := by
-  set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m => ContinuousLinearMap.compContinuousMultilinearMapL g
+  set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m =>
+    ContinuousLinearMap.compContinuousMultilinearMapL 𝕜 (fun _ => E) F G g
   constructor
-  · exact fun x hx => congr_argₓ g (hf.zero_eq x hx)
+  · exact fun x hx => congr_arg g (hf.zero_eq x hx)
     
   · intro m hm x hx
     convert (L m).HasFderivAt.comp_has_fderiv_within_at x (hf.fderiv_within m hm x hx)
@@ -1793,15 +1794,14 @@ private theorem cont_diff_on.comp_same_univ {Eu : Type u} [NormedGroup Eu] [Norm
     · have A : ContDiffOn 𝕜 n (fun y => g' (f y)) w :=
         IH g'_diff ((hf.of_le (WithTop.coe_le_coe.2 (Nat.le_succₓ n))).mono ws) wv
       have B : ContDiffOn 𝕜 n f' w := f'_diff.mono wu
-      have C : ContDiffOn 𝕜 n (fun y => (f' y, g' (f y))) w := ContDiffOn.prod B A
-      have D : ContDiffOn 𝕜 n (fun p : (Eu →L[𝕜] Fu) × (Fu →L[𝕜] Gu) => p.2.comp p.1) univ :=
+      have C : ContDiffOn 𝕜 n (fun y => (g' (f y), f' y)) w := A.prod B
+      have D : ContDiffOn 𝕜 n (fun p : (Fu →L[𝕜] Gu) × (Eu →L[𝕜] Fu) => p.1.comp p.2) univ :=
         is_bounded_bilinear_map_comp.cont_diff.cont_diff_on
       exact IH D C (subset_univ _)
       
     
   · rw [cont_diff_on_top] at hf hg⊢
-    intro n
-    apply Itop n (hg n) (hf n) st
+    exact fun n => Itop n (hg n) (hf n) st
     
 
 /-- The composition of `C^n` functions on domains is `C^n`. -/
@@ -2013,6 +2013,15 @@ theorem ContDiff.comp₃ {g : E₁ × E₂ × E₃ → G} {f₁ : F → E₁} {f
     (hf₁ : ContDiff 𝕜 n f₁) (hf₂ : ContDiff 𝕜 n f₂) (hf₃ : ContDiff 𝕜 n f₃) :
     ContDiff 𝕜 n fun x => g (f₁ x, f₂ x, f₃ x) :=
   hg.comp₂ hf₁ <| hf₂.Prod hf₃
+
+theorem ContDiff.comp_cont_diff_on₂ {g : E₁ × E₂ → G} {f₁ : F → E₁} {f₂ : F → E₂} {s : Set F} (hg : ContDiff 𝕜 n g)
+    (hf₁ : ContDiffOn 𝕜 n f₁ s) (hf₂ : ContDiffOn 𝕜 n f₂ s) : ContDiffOn 𝕜 n (fun x => g (f₁ x, f₂ x)) s :=
+  hg.comp_cont_diff_on <| hf₁.Prod hf₂
+
+theorem ContDiff.comp_cont_diff_on₃ {g : E₁ × E₂ × E₃ → G} {f₁ : F → E₁} {f₂ : F → E₂} {f₃ : F → E₃} {s : Set F}
+    (hg : ContDiff 𝕜 n g) (hf₁ : ContDiffOn 𝕜 n f₁ s) (hf₂ : ContDiffOn 𝕜 n f₂ s) (hf₃ : ContDiffOn 𝕜 n f₃ s) :
+    ContDiffOn 𝕜 n (fun x => g (f₁ x, f₂ x, f₃ x)) s :=
+  hg.comp_cont_diff_on₂ hf₁ <| hf₂.Prod hf₃
 
 end NAry
 
@@ -2321,7 +2330,7 @@ theorem ContDiffOn.smul {s : Set E} {f : E → 𝕜} {g : E → F} (hf : ContDif
 /-! ### Cartesian product of two functions -/
 
 
-section prod_mapₓ
+section prod_map
 
 variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E']
 
@@ -2374,7 +2383,15 @@ theorem cont_diff_prod_mk_left (f₀ : F) : ContDiff 𝕜 n fun e : E => (e, f�
 theorem cont_diff_prod_mk_right (e₀ : E) : ContDiff 𝕜 n fun f : F => (e₀, f) :=
   cont_diff_const.Prod cont_diff_id
 
-end prod_mapₓ
+end prod_map
+
+theorem ContDiff.clm_comp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} (hg : ContDiff 𝕜 n g) (hf : ContDiff 𝕜 n f) :
+    ContDiff 𝕜 n fun x => (g x).comp (f x) :=
+  is_bounded_bilinear_map_comp.ContDiff.comp₂ hg hf
+
+theorem ContDiffOn.clm_comp {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F} {s : Set X} (hg : ContDiffOn 𝕜 n g s)
+    (hf : ContDiffOn 𝕜 n f s) : ContDiffOn 𝕜 n (fun x => (g x).comp (f x)) s :=
+  is_bounded_bilinear_map_comp.ContDiff.comp_cont_diff_on₂ hg hf
 
 /-! ### Inversion in a complete normed algebra -/
 
@@ -2484,8 +2501,8 @@ theorem cont_diff_at_map_inverse [CompleteSpace E] (e : E ≃L[𝕜] F) : ContDi
   rw [this]
   -- `O₁` and `O₂` are `cont_diff`,
   -- so we reduce to proving that `ring.inverse` is `cont_diff`
-  have h₁ : ContDiff 𝕜 n O₁ := is_bounded_bilinear_map_comp.cont_diff.comp (cont_diff_const.prod cont_diff_id)
-  have h₂ : ContDiff 𝕜 n O₂ := is_bounded_bilinear_map_comp.cont_diff.comp (cont_diff_id.prod cont_diff_const)
+  have h₁ : ContDiff 𝕜 n O₁ := cont_diff_id.clm_comp cont_diff_const
+  have h₂ : ContDiff 𝕜 n O₂ := cont_diff_const.clm_comp cont_diff_id
   refine' h₁.cont_diff_at.comp _ (ContDiffAt.comp _ _ h₂.cont_diff_at)
   convert cont_diff_at_ring_inverse 𝕜 (1 : (E →L[𝕜] E)ˣ)
   simp [O₂, one_def]

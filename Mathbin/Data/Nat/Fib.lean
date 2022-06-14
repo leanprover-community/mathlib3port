@@ -205,8 +205,8 @@ theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) := by
   · simp [fast_fib_aux]
     
   · cases b <;>
-      simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_argₓ Prod.fst ih, congr_argₓ Prod.snd ih,
-          Prod.mk.inj_iffₓ] <;>
+      simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih, congr_arg Prod.snd ih,
+          Prod.mk.inj_iff] <;>
         constructor <;> simp [bit, fib_bit0, fib_bit1, fib_bit0_succ, fib_bit1_succ]
     
 

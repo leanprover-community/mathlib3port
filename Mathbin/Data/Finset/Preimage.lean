@@ -104,7 +104,7 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
     s.Preimage f (f.Injective.InjOn _) ⊆ t := fun x hx => (mem_map' f).1 (hs (mem_preimage.1 hx))
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t)
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} : s ⊆ t.map f ↔ ∃ (u : _)(_ : u ⊆ t), s = u.map f := by
   classical
   refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩

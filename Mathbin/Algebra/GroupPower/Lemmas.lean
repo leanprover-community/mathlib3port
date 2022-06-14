@@ -92,7 +92,7 @@ theorem smul_pow' [MulDistribMulAction M N] (x : M) (m : N) (n : ℕ) : x • m 
     exact smul_one x
     
   · rw [pow_succₓ, pow_succₓ]
-    exact (smul_mul' x m (m ^ n)).trans (congr_argₓ _ ih)
+    exact (smul_mul' x m (m ^ n)).trans (congr_arg _ ih)
     
 
 end Monoidₓ
@@ -600,7 +600,7 @@ end LinearOrderedRing
 theorem Nat.cast_le_pow_sub_div_sub {K : Type _} [LinearOrderedField K] {a : K} (H : 1 < a) (n : ℕ) :
     (n : K) ≤ (a ^ n - 1) / (a - 1) :=
   (le_div_iff (sub_pos.2 H)).2 <|
-    le_sub_left_of_add_le <| one_add_mul_sub_le_pow ((neg_le_self <| @zero_le_one K _).trans H.le) _
+    le_sub_left_of_add_le <| one_add_mul_sub_le_pow ((neg_le_self zero_le_one).trans H.le) _
 
 /-- For any `a > 1` and a natural `n` we have `n ≤ a ^ n / (a - 1)`. See also
 `nat.cast_le_pow_sub_div_sub` for a stronger inequality with `a ^ n - 1` in the numerator. -/

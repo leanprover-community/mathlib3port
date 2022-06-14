@@ -134,34 +134,33 @@ theorem is_directed_mono [IsDirected α r] (h : ∀ ⦃a b⦄, r a b → s a b) 
 theorem exists_ge_ge [LE α] [IsDirected α (· ≤ ·)] (a b : α) : ∃ c, a ≤ c ∧ b ≤ c :=
   directed_of (· ≤ ·) a b
 
-theorem exists_le_le [LE α] [IsDirected α (swap (· ≤ ·))] (a b : α) : ∃ c, c ≤ a ∧ c ≤ b :=
-  directed_of (swap (· ≤ ·)) a b
+theorem exists_le_le [LE α] [IsDirected α (· ≥ ·)] (a b : α) : ∃ c, c ≤ a ∧ c ≤ b :=
+  directed_of (· ≥ ·) a b
 
-instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected αᵒᵈ (swap (· ≤ ·)) := by
+instance OrderDual.is_directed_ge [LE α] [IsDirected α (· ≤ ·)] : IsDirected αᵒᵈ (· ≥ ·) := by
   assumption
 
-instance OrderDual.is_directed_le [LE α] [IsDirected α (swap (· ≤ ·))] : IsDirected αᵒᵈ (· ≤ ·) := by
+instance OrderDual.is_directed_le [LE α] [IsDirected α (· ≥ ·)] : IsDirected αᵒᵈ (· ≤ ·) := by
   assumption
 
 section Preorderₓ
 
 variable [Preorderₓ α] {a : α}
 
-protected theorem IsMin.is_bot [IsDirected α (swap (· ≤ ·))] (h : IsMin a) : IsBot a := fun b =>
+protected theorem IsMin.is_bot [IsDirected α (· ≥ ·)] (h : IsMin a) : IsBot a := fun b =>
   let ⟨c, hca, hcb⟩ := exists_le_le a b
   (h hca).trans hcb
 
-protected theorem IsMax.is_top [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop a := fun b =>
-  let ⟨c, hac, hbc⟩ := exists_ge_ge a b
-  hbc.trans <| h hac
+protected theorem IsMax.is_top [IsDirected α (· ≤ ·)] (h : IsMax a) : IsTop a :=
+  h.toDual.IsBot
 
 theorem is_top_or_exists_gt [IsDirected α (· ≤ ·)] (a : α) : IsTop a ∨ ∃ b, a < b :=
   (em (IsMax a)).imp IsMax.is_top not_is_max_iff.mp
 
-theorem is_bot_or_exists_lt [IsDirected α (swap (· ≤ ·))] (a : α) : IsBot a ∨ ∃ b, b < a :=
+theorem is_bot_or_exists_lt [IsDirected α (· ≥ ·)] (a : α) : IsBot a ∨ ∃ b, b < a :=
   @is_top_or_exists_gt αᵒᵈ _ _ a
 
-theorem is_bot_iff_is_min [IsDirected α (swap (· ≤ ·))] : IsBot a ↔ IsMin a :=
+theorem is_bot_iff_is_min [IsDirected α (· ≥ ·)] : IsBot a ↔ IsMin a :=
   ⟨IsBot.is_min, IsMin.is_bot⟩
 
 theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
@@ -169,7 +168,7 @@ theorem is_top_iff_is_max [IsDirected α (· ≤ ·)] : IsTop a ↔ IsMax a :=
 
 variable (β) [PartialOrderₓ β]
 
-theorem exists_lt_of_directed_ge [IsDirected β (swap (· ≤ ·))] [Nontrivial β] : ∃ a b : β, a < b := by
+theorem exists_lt_of_directed_ge [IsDirected β (· ≥ ·)] [Nontrivial β] : ∃ a b : β, a < b := by
   rcases exists_pair_ne β with ⟨a, b, hne⟩
   rcases is_bot_or_exists_lt a with (ha | ⟨c, hc⟩)
   exacts[⟨a, b, (ha b).lt_of_ne hne⟩, ⟨_, _, hc⟩]
@@ -185,7 +184,7 @@ instance (priority := 100) SemilatticeSup.to_is_directed_le [SemilatticeSup α] 
   ⟨fun a b => ⟨a⊔b, le_sup_left, le_sup_right⟩⟩
 
 -- see Note [lower instance priority]
-instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (swap (· ≤ ·)) :=
+instance (priority := 100) SemilatticeInf.to_is_directed_ge [SemilatticeInf α] : IsDirected α (· ≥ ·) :=
   ⟨fun a b => ⟨a⊓b, inf_le_left, inf_le_right⟩⟩
 
 -- see Note [lower instance priority]
@@ -193,6 +192,6 @@ instance (priority := 100) OrderTop.to_is_directed_le [LE α] [OrderTop α] : Is
   ⟨fun a b => ⟨⊤, le_top, le_top⟩⟩
 
 -- see Note [lower instance priority]
-instance (priority := 100) OrderBot.to_is_directed_ge [LE α] [OrderBot α] : IsDirected α (swap (· ≤ ·)) :=
+instance (priority := 100) OrderBot.to_is_directed_ge [LE α] [OrderBot α] : IsDirected α (· ≥ ·) :=
   ⟨fun a b => ⟨⊥, bot_le, bot_le⟩⟩
 

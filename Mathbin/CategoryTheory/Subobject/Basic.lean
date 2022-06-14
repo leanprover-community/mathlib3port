@@ -150,7 +150,7 @@ instance arrow_mono {X : C} (Y : Subobject X) : Mono Y.arrow :=
 
 @[simp]
 theorem arrow_congr {A : C} (X Y : Subobject A) (h : X = Y) :
-    eqToHom (congr_argₓ (fun X : Subobject A => (X : C)) h) ≫ Y.arrow = X.arrow := by
+    eqToHom (congr_arg (fun X : Subobject A => (X : C)) h) ≫ Y.arrow = X.arrow := by
   induction h
   simp
 

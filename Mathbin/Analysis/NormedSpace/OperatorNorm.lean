@@ -525,25 +525,25 @@ variable [RingHomIsometric σ₁₂] (c : 𝕜) (f g : E →SL[σ₁₂] F) (h :
 
 open Asymptotics
 
-theorem is_O_with_id (l : Filter E) : IsOWith ∥f∥ f (fun x => x) l :=
+theorem is_O_with_id (l : Filter E) : IsOWith ∥f∥ l f fun x => x :=
   is_O_with_of_le' _ f.le_op_norm
 
-theorem is_O_id (l : Filter E) : IsO f (fun x => x) l :=
+theorem is_O_id (l : Filter E) : f =O[l] fun x => x :=
   (f.is_O_with_id l).IsO
 
 theorem is_O_with_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F) (l : Filter α) :
-    IsOWith ∥g∥ (fun x' => g (f x')) f l :=
+    IsOWith ∥g∥ l (fun x' => g (f x')) f :=
   (g.is_O_with_id ⊤).comp_tendsto le_top
 
 theorem is_O_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F) (l : Filter α) :
-    IsO (fun x' => g (f x')) f l :=
+    (fun x' => g (f x')) =O[l] f :=
   (g.is_O_with_comp f l).IsO
 
 theorem is_O_with_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
-    IsOWith ∥f∥ (fun x' => f (x' - x)) (fun x' => x' - x) l :=
+    IsOWith ∥f∥ l (fun x' => f (x' - x)) fun x' => x' - x :=
   f.is_O_with_comp _ l
 
-theorem is_O_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) : IsO (fun x' => f (x' - x)) (fun x' => x' - x) l :=
+theorem is_O_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) : (fun x' => f (x' - x)) =O[l] fun x' => x' - x :=
   f.is_O_comp _ l
 
 end IsO
@@ -744,7 +744,7 @@ def compSL : (F →SL[σ₂₃] G) →L[𝕜₃] (E →SL[σ₁₂] F) →SL[σ�
     fun f g => by
     simpa only [one_mulₓ] using op_norm_comp_le f g
 
-variable {𝕜 E F G}
+variable {𝕜 σ₁₂ σ₂₃ E F G}
 
 include σ₁₃
 
@@ -752,9 +752,20 @@ include σ₁₃
 theorem compSL_apply (f : F →SL[σ₂₃] G) (g : E →SL[σ₁₂] F) : compSL E F G σ₁₂ σ₂₃ f g = f.comp g :=
   rfl
 
+theorem _root_.continuous.const_clm_comp {X} [TopologicalSpace X] {f : X → E →SL[σ₁₂] F} (hf : Continuous f)
+    (g : F →SL[σ₂₃] G) : Continuous (fun x => g.comp (f x) : X → E →SL[σ₁₃] G) :=
+  (compSL E F G σ₁₂ σ₂₃ g).Continuous.comp hf
+
+-- Giving the implicit argument speeds up elaboration significantly
+theorem _root_.continuous.clm_comp_const {X} [TopologicalSpace X] {g : X → F →SL[σ₂₃] G} (hg : Continuous g)
+    (f : E →SL[σ₁₂] F) : Continuous (fun x => (g x).comp f : X → E →SL[σ₁₃] G) :=
+  (@ContinuousLinearMap.flip _ _ _ _ _ (E →SL[σ₁₃] G) _ _ _ _ _ _ _ _ _ _ _ _ _ (compSL E F G σ₁₂ σ₂₃)
+          f).Continuous.comp
+    hg
+
 omit σ₁₃
 
-variable (𝕜 E Fₗ Gₗ)
+variable (𝕜 σ₁₂ σ₂₃ E Fₗ Gₗ)
 
 /-- Composition of continuous linear maps as a continuous bilinear map. -/
 def compL : (Fₗ →L[𝕜] Gₗ) →L[𝕜] (E →L[𝕜] Fₗ) →L[𝕜] E →L[𝕜] Gₗ :=
@@ -802,7 +813,7 @@ def prodMapL : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₁ 
       rintro ⟨φ, ψ⟩
       apply ContinuousLinearMap.ext fun x => _
       simp only [add_apply, coe_comp', coe_fst', Function.comp_app, compL_apply, flip_apply, coe_snd', inl_apply,
-        inr_apply, Prod.mk_add_mk, add_zeroₓ, zero_addₓ, coe_prod_map', prod_mapₓ, Prod.mk.inj_iffₓ, eq_self_iff_true,
+        inr_apply, Prod.mk_add_mk, add_zeroₓ, zero_addₓ, coe_prod_map', prod_map, Prod.mk.inj_iff, eq_self_iff_true,
         and_selfₓ]
       rfl)
 
@@ -1076,7 +1087,7 @@ theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι →
       ⟨by
         rintro rfl
         simp , fun H => by
-        simpa using congr_argₓ (fun z => e z) H⟩
+        simpa using congr_arg (fun z => e z) H⟩
     
 
 protected theorem ContinuousLinearEquiv.map_tsum [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃SL[σ] M₂) :
@@ -1099,10 +1110,10 @@ include σ₂₁
 protected theorem lipschitz : LipschitzWith ∥(e : E →SL[σ₁₂] F)∥₊ e :=
   (e : E →SL[σ₁₂] F).lipschitz
 
-theorem is_O_comp {α : Type _} (f : α → E) (l : Filter α) : Asymptotics.IsO (fun x' => e (f x')) f l :=
+theorem is_O_comp {α : Type _} (f : α → E) (l : Filter α) : (fun x' => e (f x')) =O[l] f :=
   (e : E →SL[σ₁₂] F).is_O_comp f l
 
-theorem is_O_sub (l : Filter E) (x : E) : Asymptotics.IsO (fun x' => e (x' - x)) (fun x' => x' - x) l :=
+theorem is_O_sub (l : Filter E) (x : E) : (fun x' => e (x' - x)) =O[l] fun x' => x' - x :=
   (e : E →SL[σ₁₂] F).is_O_sub l x
 
 end
@@ -1127,10 +1138,10 @@ def ofHomothety (f : E ≃ₛₗ[σ₁₂] F) (a : ℝ) (ha : 0 < a) (hf : ∀ x
 
 variable [RingHomIsometric σ₂₁] (e : E ≃SL[σ₁₂] F)
 
-theorem is_O_comp_rev {α : Type _} (f : α → E) (l : Filter α) : Asymptotics.IsO f (fun x' => e (f x')) l :=
+theorem is_O_comp_rev {α : Type _} (f : α → E) (l : Filter α) : f =O[l] fun x' => e (f x') :=
   (e.symm.is_O_comp _ l).congr_left fun _ => e.symm_apply_apply _
 
-theorem is_O_sub_rev (l : Filter E) (x : E) : Asymptotics.IsO (fun x' => x' - x) (fun x' => e (x' - x)) l :=
+theorem is_O_sub_rev (l : Filter E) (x : E) : (fun x' => x' - x) =O[l] fun x' => e (x' - x) :=
   e.is_O_comp_rev _ _
 
 omit σ₂₁
@@ -1205,85 +1216,6 @@ section Normed
 variable [NormedGroup E] [NormedGroup F] [NormedGroup G] [NormedGroup Fₗ]
 
 open Metric ContinuousLinearMap
-
-section NormedField
-
-variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] (f : E →ₗ[𝕜] F)
-
--- ././Mathport/Syntax/Translate/Tactic/Basic.lean:54:9: parse error
-theorem LinearMap.continuous_iff_is_closed_ker {f : E →ₗ[𝕜] 𝕜} : Continuous f ↔ IsClosed (f.ker : Set E) := by
-  -- the continuity of f obviously implies that its kernel is closed
-  refine' ⟨fun h => (T1Space.t1 (0 : 𝕜)).Preimage h, fun h => _⟩
-  -- for the other direction, we assume that the kernel is closed
-  by_cases' hf : ∀ x, x ∈ f.ker
-  · -- if `f = 0`, its continuity is obvious
-    have : (f : E → 𝕜) = fun x => 0 := by
-      ext x
-      simpa using hf x
-    rw [this]
-    exact continuous_const
-    
-  · /- if `f` is not zero, we use an element `x₀ ∉ ker f` such that `∥x₀∥ ≤ 2 ∥x₀ - y∥` for all
-        `y ∈ ker f`, given by Riesz's lemma, and prove that `2 ∥f x₀∥ / ∥x₀∥` gives a bound on the
-        operator norm of `f`. For this, start from an arbitrary `x` and note that
-        `y = x₀ - (f x₀ / f x) x` belongs to the kernel of `f`. Applying the above inequality to `x₀`
-        and `y` readily gives the conclusion. -/
-    push_neg  at hf
-    let r : ℝ := (2 : ℝ)⁻¹
-    have : 0 ≤ r := by
-      norm_num [r]
-    have : r < 1 := by
-      norm_num [r]
-    obtain ⟨x₀, x₀ker, h₀⟩ : ∃ x₀ : E, x₀ ∉ f.ker ∧ ∀, ∀ y ∈ LinearMap.ker f, ∀, r * ∥x₀∥ ≤ ∥x₀ - y∥
-    exact riesz_lemma h hf this
-    have : x₀ ≠ 0 := by
-      intro h
-      have : x₀ ∈ f.ker := by
-        rw [h]
-        exact (LinearMap.ker f).zero_mem
-      exact x₀ker this
-    have rx₀_ne_zero : r * ∥x₀∥ ≠ 0 := by
-      simp [norm_eq_zero, this]
-    have : ∀ x, ∥f x∥ ≤ (r * ∥x₀∥)⁻¹ * ∥f x₀∥ * ∥x∥ := by
-      intro x
-      by_cases' hx : f x = 0
-      · rw [hx, norm_zero]
-        apply_rules [mul_nonneg, norm_nonneg, inv_nonneg.2]
-        
-      · let y := x₀ - (f x₀ * (f x)⁻¹) • x
-        have fy_zero : f y = 0 := by
-          calc f y = f x₀ - f x₀ * (f x)⁻¹ * f x := by
-              simp [y]_ = 0 := by
-              rw [mul_assoc, inv_mul_cancel hx, mul_oneₓ, sub_eq_zero_of_eq]
-              rfl
-        have A : r * ∥x₀∥ ≤ ∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥ :=
-          calc
-            r * ∥x₀∥ ≤ ∥x₀ - y∥ := h₀ _ (LinearMap.mem_ker.2 fy_zero)
-            _ = ∥(f x₀ * (f x)⁻¹) • x∥ := by
-              dsimp' [y]
-              congr
-              abel
-            _ = ∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥ := by
-              rw [norm_smul, norm_mul, norm_inv]
-            
-        calc ∥f x∥ = (r * ∥x₀∥)⁻¹ * (r * ∥x₀∥) * ∥f x∥ := by
-            rwa [inv_mul_cancel, one_mulₓ]_ ≤ (r * ∥x₀∥)⁻¹ * (∥f x₀∥ * ∥f x∥⁻¹ * ∥x∥) * ∥f x∥ := by
-            apply mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left A _) (norm_nonneg _)
-            exact
-              inv_nonneg.2
-                (mul_nonneg
-                  (by
-                    norm_num)
-                  (norm_nonneg _))_ = ∥f x∥⁻¹ * ∥f x∥ * ((r * ∥x₀∥)⁻¹ * ∥f x₀∥) * ∥x∥ :=
-            by
-            ring _ = (r * ∥x₀∥)⁻¹ * ∥f x₀∥ * ∥x∥ := by
-            rw [inv_mul_cancel, one_mulₓ]
-            simp [norm_eq_zero, hx]
-        
-    exact LinearMap.continuous_of_bound f _ this
-    
-
-end NormedField
 
 section
 
@@ -1928,16 +1860,20 @@ include σ₂₁ σ₃₄ σ₁₃ σ₂₄
 
 /-- A pair of continuous (semi)linear equivalences generates an continuous (semi)linear equivalence
 between the spaces of continuous (semi)linear maps. -/
+@[simps apply symmApply]
 def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) : (E →SL[σ₁₄] H) ≃SL[σ₄₃] F →SL[σ₂₃] G :=
-  { e₁₂.arrowCongrEquiv e₄₃ with
+  { -- given explicitly to help `simps`
+        -- given explicitly to help `simps`
+        e₁₂.arrowCongrEquiv
+      e₄₃ with
+    toFun := fun L => (e₄₃ : H →SL[σ₄₃] G).comp (L.comp (e₁₂.symm : F →SL[σ₂₁] E)),
+    invFun := fun L => (e₄₃.symm : G →SL[σ₃₄] H).comp (L.comp (e₁₂ : E →SL[σ₁₂] F)),
     map_add' := fun f g => by
-      simp only [Equivₓ.to_fun_as_coe, add_comp, comp_add, ContinuousLinearEquiv.arrow_congr_equiv_apply],
+      rw [add_comp, comp_add],
     map_smul' := fun t f => by
-      simp only [Equivₓ.to_fun_as_coe, smul_comp, comp_smulₛₗ, ContinuousLinearEquiv.arrow_congr_equiv_apply],
-    continuous_to_fun :=
-      (compSL F H G σ₂₄ σ₄₃ e₄₃).Continuous.comp (ContinuousLinearMap.flip (compSL F E H σ₂₁ σ₁₄) e₁₂.symm).Continuous,
-    continuous_inv_fun :=
-      (compSL E G H σ₁₃ σ₃₄ e₄₃.symm).Continuous.comp (ContinuousLinearMap.flip (compSL E F G σ₁₂ σ₂₃) e₁₂).Continuous }
+      rw [smul_comp, comp_smulₛₗ],
+    continuous_to_fun := (continuous_id.clm_comp_const _).const_clm_comp _,
+    continuous_inv_fun := (continuous_id.clm_comp_const _).const_clm_comp _ }
 
 omit σ₂₁ σ₃₄ σ₁₃ σ₂₄
 

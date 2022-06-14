@@ -1018,7 +1018,7 @@ section Opposite
 -/
 def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
   desc := fun s => (P.lift s.unop).op
-  fac' := fun s j => congr_argₓ Quiver.Hom.op (P.fac s.unop (unop j))
+  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
   uniq' := fun s m w => by
     rw [← P.uniq s.unop m.unop]
     · rfl
@@ -1033,7 +1033,7 @@ def IsLimit.op {t : Cone F} (P : IsLimit t) : IsColimit t.op where
 -/
 def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
   lift := fun s => (P.desc s.unop).op
-  fac' := fun s j => congr_argₓ Quiver.Hom.op (P.fac s.unop (unop j))
+  fac' := fun s j => congr_arg Quiver.Hom.op (P.fac s.unop (unop j))
   uniq' := fun s m w => by
     rw [← P.uniq s.unop m.unop]
     · rfl
@@ -1048,7 +1048,7 @@ def IsColimit.op {t : Cocone F} (P : IsColimit t) : IsLimit t.op where
 -/
 def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
   desc := fun s => (P.lift s.op).unop
-  fac' := fun s j => congr_argₓ Quiver.Hom.unop (P.fac s.op (op j))
+  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
   uniq' := fun s m w => by
     rw [← P.uniq s.op m.op]
     · rfl
@@ -1063,7 +1063,7 @@ def IsLimit.unop {t : Cone F.op} (P : IsLimit t) : IsColimit t.unop where
 -/
 def IsColimit.unop {t : Cocone F.op} (P : IsColimit t) : IsLimit t.unop where
   lift := fun s => (P.desc s.op).unop
-  fac' := fun s j => congr_argₓ Quiver.Hom.unop (P.fac s.op (op j))
+  fac' := fun s j => congr_arg Quiver.Hom.unop (P.fac s.op (op j))
   uniq' := fun s m w => by
     rw [← P.uniq s.op m.op]
     · rfl

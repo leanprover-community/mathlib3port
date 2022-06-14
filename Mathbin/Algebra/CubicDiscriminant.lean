@@ -115,7 +115,7 @@ theorem d_of_eq {Q : Cubic R} (h : P.toPoly = Q.toPoly) : P.d = Q.d := by
 
 @[simp]
 theorem to_poly_injective (P Q : Cubic R) : P.toPoly = Q.toPoly ↔ P = Q :=
-  ⟨fun h => Cubic.ext _ _ (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_argₓ _⟩
+  ⟨fun h => Cubic.ext _ _ (a_of_eq h) (b_of_eq h) (c_of_eq h) (d_of_eq h), congr_arg _⟩
 
 @[simp]
 theorem of_a_eq_zero (ha : P.a = 0) : P.toPoly = c P.b * X ^ 2 + c P.c * X + c P.d := by

@@ -183,7 +183,7 @@ theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
 
-theorem some_injective : Injective (@Part.some α) := fun a b h => congr_funₓ (eq_of_heq (Part.mk.inj h).2) trivialₓ
+theorem some_injective : Injective (@Part.some α) := fun a b h => congr_fun (eq_of_heq (Part.mk.inj h).2) trivialₓ
 
 @[simp]
 theorem some_inj {a b : α} : Part.some a = some b ↔ a = b :=
@@ -275,7 +275,7 @@ def ofOption : Option α → Part α
 @[simp]
 theorem mem_of_option {a : α} : ∀ {o : Option α}, a ∈ ofOption o ↔ a ∈ o
   | Option.none => ⟨fun h => h.fst.elim, fun h => Option.noConfusion h⟩
-  | Option.some b => ⟨fun h => congr_argₓ Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
+  | Option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
 
 @[simp]
 theorem of_option_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome

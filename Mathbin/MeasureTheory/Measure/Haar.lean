@@ -157,7 +157,7 @@ theorem le_index_mul (K₀ : PositiveCompacts G) (K : Compacts G) {V : Set G} (h
   obtain ⟨s, h1s, h2s⟩ := index_elim K.compact K₀.interior_nonempty
   obtain ⟨t, h1t, h2t⟩ := index_elim K₀.compact hV
   rw [← h2s, ← h2t, mul_comm]
-  refine' le_transₓ _ Finset.mul_card_le
+  refine' le_transₓ _ Finset.card_mul_le
   apply Nat.Inf_le
   refine' ⟨_, _, rfl⟩
   rw [mem_set_of_eq]

@@ -291,12 +291,12 @@ def optionEquivRight : MvPolynomial (Option S₁) R ≃ₐ[R] MvPolynomial S₁ 
     (MvPolynomial.aevalTower (Polynomial.aeval (x none)) fun i => x (Option.some i))
     (by
       ext : 2 <;>
-        simp only [MvPolynomial.algebra_map_eq, Option.elim, AlgHom.coe_comp, AlgHom.id_comp,
-          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_X, aeval_X, Option.elim,
+        simp only [MvPolynomial.algebra_map_eq, Option.elimₓ, AlgHom.coe_comp, AlgHom.id_comp,
+          IsScalarTower.coe_to_alg_hom', comp_app, aeval_tower_C, Polynomial.aeval_X, aeval_X, Option.elimₓ,
           aeval_tower_X, AlgHom.coe_id, id.def, eq_self_iff_true, implies_true_iff])
     (by
       ext ⟨i⟩ : 2 <;>
-        simp only [Option.elim, AlgHom.coe_comp, comp_app, aeval_X, aeval_tower_C, Polynomial.aeval_X, AlgHom.coe_id,
+        simp only [Option.elimₓ, AlgHom.coe_comp, comp_app, aeval_X, aeval_tower_C, Polynomial.aeval_X, AlgHom.coe_id,
           id.def, aeval_tower_X])
 
 variable (n : ℕ)

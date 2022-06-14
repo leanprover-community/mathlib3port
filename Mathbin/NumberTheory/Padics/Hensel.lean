@@ -243,7 +243,7 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       rw [← pow_mulₓ, pow_succ'ₓ 2]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 /-- Given `z : ℤ_[p]` satisfying `ih n z`, construct `z' : ℤ_[p]` satisfying `ih (n+1) z'`. We need
@@ -266,7 +266,7 @@ private def ih_n {n : ℕ} {z : ℤ_[p]} (hz : ih n z) : { z' : ℤ_[p] // ih (n
     have hnle : ∥F.eval z'∥ ≤ ∥F.derivative.eval a∥ ^ 2 * T ^ 2 ^ (n + 1) := calc_eval_z'_norm hz HEq h1 rfl
     ⟨hfeq, hnle⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta false
 
 -- why doesn't "noncomputable theory" stick here?

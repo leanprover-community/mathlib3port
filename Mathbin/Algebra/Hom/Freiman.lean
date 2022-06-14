@@ -262,7 +262,7 @@ instance : Inv (A →*[n] G) :=
   ⟨fun f =>
     { toFun := fun x => (f x)⁻¹,
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
-        rw [prod_map_inv', prod_map_inv', map_prod_eq_map_prod f hsA htA hs ht h] }⟩
+        rw [prod_map_inv, prod_map_inv, map_prod_eq_map_prod f hsA htA hs ht h] }⟩
 
 @[simp, to_additive]
 theorem inv_apply (f : A →*[n] G) (x : α) : f⁻¹ x = (f x)⁻¹ :=

@@ -39,8 +39,8 @@ variable [Monoidₓ α] [MulDistribMulAction α G]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (Subgroup G) where
   smul := fun a S => S.map (MulDistribMulAction.toMonoidEnd _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subgroup.pointwiseMulAction
 
@@ -64,7 +64,7 @@ theorem mem_smul_pointwise_iff_exists (m : G) (a : α) (S : Subgroup G) : m ∈ 
   (Set.mem_smul_set : m ∈ a • (S : Set G) ↔ _)
 
 instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ G] [IsCentralScalar α G] : IsCentralScalar α (Subgroup G) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 
@@ -152,8 +152,8 @@ variable [Monoidₓ α] [DistribMulAction α A]
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction α (AddSubgroup A) where
   smul := fun a S => S.map (DistribMulAction.toAddMonoidEnd _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (MonoidHom.map_one _)).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (MonoidHom.map_mul _ _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] AddSubgroup.pointwiseMulAction
 
@@ -174,7 +174,7 @@ theorem mem_smul_pointwise_iff_exists (m : A) (a : α) (S : AddSubgroup A) : m �
   (Set.mem_smul_set : m ∈ a • (S : Set A) ↔ _)
 
 instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] : IsCentralScalar α (AddSubgroup A) :=
-  ⟨fun a S => (congr_argₓ fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
+  ⟨fun a S => (congr_arg fun f => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
 
 end Monoidₓ
 

@@ -147,7 +147,7 @@ theorem Hσ_eq_zero (q : ℕ) : (hσₓ q : K[X] ⟶ K[X]).f 0 = 0 := by
   unfold Hσ
   rw [null_homotopic_map'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
   cases q
-  · erw
+  · rw
       [hσ'_eq
         (show 0 = 0 + 0 by
           rfl)
@@ -158,7 +158,7 @@ theorem Hσ_eq_zero (q : ℕ) : (hσₓ q : K[X] ⟶ K[X]).f 0 = 0 := by
       pow_oneₓ, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
     
-  · erw [hσ'_eq_zero (Nat.succ_posₓ q) (c_mk 1 0 rfl), zero_comp]
+  · rw [hσ'_eq_zero (Nat.succ_posₓ q) (c_mk 1 0 rfl), zero_comp]
     
 
 /-- The maps `hσ' q n m hnm` are natural on the simplicial object -/

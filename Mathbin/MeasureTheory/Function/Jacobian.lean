@@ -855,8 +855,7 @@ theorem add_haar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
         rw [← inter_Union]
         exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
       rw [← this]_ = (∫⁻ x in s, Ennreal.ofReal (abs (f' x).det) ∂μ) + 2 * ε * μ s := by
-      rw [lintegral_add' (ae_measurable_of_real_abs_det_fderiv_within μ hs hf') ae_measurable_const]
-      simp only [lintegral_const, MeasurableSet.univ, measure.restrict_apply, univ_inter]
+      simp only [lintegral_add_right' _ ae_measurable_const, set_lintegral_const]
 
 theorem add_haar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
     (hf' : ∀, ∀ x ∈ s, ∀, HasFderivWithinAt f (f' x) s x) :
@@ -996,10 +995,10 @@ theorem lintegral_abs_det_fderiv_le_add_haar_image_aux1 (hs : MeasurableSet s)
           simp only [Ennreal.of_real_add, abs_nonneg, Nnreal.zero_le_coe,
             Ennreal.of_real_coe_nnreal]_ = ∑' n, Ennreal.ofReal (abs (A n).det) * μ (s ∩ t n) + ε * μ (s ∩ t n) :=
       by
-      simp only [measurable_const, lintegral_const, lintegral_add, MeasurableSet.univ, eq_self_iff_true,
-        measure.restrict_apply, univ_inter]_ ≤ ∑' n, μ (f '' (s ∩ t n)) + ε * μ (s ∩ t n) + ε * μ (s ∩ t n) :=
+      simp only [set_lintegral_const,
+        lintegral_add_right _ measurable_const]_ ≤ ∑' n, μ (f '' (s ∩ t n)) + ε * μ (s ∩ t n) + ε * μ (s ∩ t n) :=
       by
-      refine' Ennreal.tsum_le_tsum fun n => add_le_add _ le_rfl
+      refine' Ennreal.tsum_le_tsum fun n => add_le_add_right _ _
       exact (hδ (A n)).2.2 _ _ (ht n)_ = μ (f '' s) + 2 * ε * μ s := by
       conv_rhs => rw [s_eq]
       rw [image_Union, measure_Union]

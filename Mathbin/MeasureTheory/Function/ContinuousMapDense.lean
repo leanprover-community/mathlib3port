@@ -58,8 +58,8 @@ namespace MeasureTheory.lp
 
 variable [NormedSpace ℝ E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem bounded_continuous_function_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ := by
@@ -187,7 +187,7 @@ theorem to_Lp_dense_range [μ.WeaklyRegular] [IsFiniteMeasure μ] : DenseRange �
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
-    exact congr_argₓ coe this
+    exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 
 end BoundedContinuousFunction
@@ -199,7 +199,7 @@ theorem to_Lp_dense_range [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure 
   have : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
   rw [dense_range_iff_closure_range]
   suffices (to_Lp p μ 𝕜 : _ →L[𝕜] Lp E p μ).range.toAddSubgroup.topologicalClosure = ⊤ by
-    exact congr_argₓ coe this
+    exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.lp.bounded_continuous_function_dense E hp]
 
 end ContinuousMap

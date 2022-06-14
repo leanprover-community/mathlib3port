@@ -169,8 +169,8 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
       rw [this]
       refine'
         (h _
-                ⟨True.intro, by
-                  exact_mod_cast right_mem_Icc.mpr zero_le_one⟩).Tendsto.comp
+                ⟨⟨⟩, by
+                  exact_mod_cast right_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp
           _
       rw [nhds_within_prod_eq, nhds_within_univ]
       rw [nhds_within_Icc_eq_nhds_within_Iic (@zero_lt_one α _ _)]
@@ -179,8 +179,8 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
     · simp only [ContinuousWithinAt, fract_coe, nhds_within_prod_eq, nhds_within_univ, id.def, comp_app, Prod.map_mkₓ]
       refine'
         (h _
-                ⟨True.intro, by
-                  exact_mod_cast left_mem_Icc.mpr zero_le_one⟩).Tendsto.comp
+                ⟨⟨⟩, by
+                  exact_mod_cast left_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp
           _
       rw [nhds_within_prod_eq, nhds_within_univ, nhds_within_Icc_eq_nhds_within_Ici (@zero_lt_one α _ _)]
       exact tendsto_id.prod_map (tendsto_fract_right _)

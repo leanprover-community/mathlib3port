@@ -163,7 +163,7 @@ variable {R L M N}
 def maxTrivHom (f : M →ₗ⁅R,L⁆ N) : maxTrivSubmodule R L M →ₗ⁅R,L⁆ maxTrivSubmodule R L N where
   toFun := fun m =>
     ⟨f m, fun x =>
-      (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_argₓ f (m.property x)).trans (LieModuleHom.map_zero _)⟩
+      (LieModuleHom.map_lie _ _ _).symm.trans <| (congr_arg f (m.property x)).trans (LieModuleHom.map_zero _)⟩
   map_add' := fun m n => by
     simpa
   map_smul' := fun t m => by

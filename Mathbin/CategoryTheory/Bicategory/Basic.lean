@@ -45,57 +45,57 @@ universe w v u
 
 open Category Iso
 
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprρ_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprα_
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ◁ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«exprλ_»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ▷ »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprρ_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprα_
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ◁ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«exprλ_»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ▷ »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `exprρ_
 /-- In a bicategory, we can compose the 1-morphisms `f : a ⟶ b` and `g : b ⟶ c` to obtain
 a 1-morphism `f ≫ g : a ⟶ c`. This composition does not need to be strictly associative,
 but there is a specified associator, `α_ f g h : (f ≫ g) ≫ h ≅ f ≫ (g ≫ h)`.

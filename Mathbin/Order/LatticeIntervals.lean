@@ -101,11 +101,6 @@ instance [Preorderₓ α] [OrderBot α] : OrderBot (Iic a) where
 theorem coe_bot [Preorderₓ α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
   rfl
 
-instance [PartialOrderₓ α] [NoMinOrder α] {a : α} : NoMinOrder (Iic a) :=
-  ⟨fun x =>
-    let ⟨y, hy⟩ := exists_lt x.1
-    ⟨⟨y, le_transₓ hy.le x.2⟩, hy⟩⟩
-
 instance [Preorderₓ α] [OrderBot α] : BoundedOrder (Iic a) :=
   { Iic.orderTop, Iic.orderBot with }
 
@@ -139,11 +134,6 @@ instance [Preorderₓ α] [OrderTop α] : OrderTop (Ici a) where
 @[simp]
 theorem coe_top [Preorderₓ α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
   rfl
-
-instance [PartialOrderₓ α] [NoMaxOrder α] {a : α} : NoMaxOrder (Ici a) :=
-  ⟨fun x =>
-    let ⟨y, hy⟩ := exists_gt x.1
-    ⟨⟨y, le_transₓ x.2 hy.le⟩, hy⟩⟩
 
 instance [Preorderₓ α] [OrderTop α] : BoundedOrder (Ici a) :=
   { Ici.orderTop, Ici.orderBot with }

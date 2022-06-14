@@ -178,7 +178,6 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         apply fun_mono_2
         · rw [coeffs.val_except_eq_val_except update_eq_of_ne (get_set_eq_of_ne _)]
           
-        simp only [m]
         ring
       _ =
           -(m * a_n * sgm v b as n) + (b + a_n * symmod b m) +
@@ -226,7 +225,7 @@ theorem coeffs_reduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : N
         apply fun_mono_2 (h4 _)
         apply coeffs.val_except_eq_val_except <;> intro x h5
         rfl
-        apply congr_argₓ
+        apply congr_arg
         apply fun_mono_2 _ rfl
         rw [Function.funext_iffₓ]
         apply h4

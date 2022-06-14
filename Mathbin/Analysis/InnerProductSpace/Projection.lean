@@ -1034,7 +1034,7 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
     -- factorization into reflections for `φ`.
     refine' ⟨x :: l, Nat.succ_le_succₓ hl, _⟩
     rw [List.map_cons, List.prod_cons]
-    have := congr_argₓ ((· * ·) ρ) hφl
+    have := congr_arg ((· * ·) ρ) hφl
     rwa [← mul_assoc, reflection_mul_reflection, one_mulₓ] at this
     
 
@@ -1064,24 +1064,24 @@ section OrthogonalFamily
 
 variable {ι : Type _}
 
-/-- An orthogonal family of subspaces of `E` satisfies `direct_sum.submodule_is_internal` (that is,
+/-- An orthogonal family of subspaces of `E` satisfies `direct_sum.is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
-theorem OrthogonalFamily.submodule_is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
+theorem OrthogonalFamily.is_internal_iff_of_is_complete [DecidableEq ι] {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (hc : IsComplete (↑(supr V) : Set E)) :
-    DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ := by
+    DirectSum.IsInternal V ↔ (supr V)ᗮ = ⊥ := by
   have : CompleteSpace ↥(supr V) := hc.complete_space_coe
-  simp only [DirectSum.submodule_is_internal_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
+  simp only [DirectSum.is_internal_submodule_iff_independent_and_supr_eq_top, hV.independent, true_andₓ,
     Submodule.orthogonal_eq_bot_iff]
 
-/-- An orthogonal family of subspaces of `E` satisfies `direct_sum.submodule_is_internal` (that is,
+/-- An orthogonal family of subspaces of `E` satisfies `direct_sum.is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
 orthogonal complement. -/
-theorem OrthogonalFamily.submodule_is_internal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E] {V : ι → Submodule 𝕜 E}
+theorem OrthogonalFamily.is_internal_iff [DecidableEq ι] [FiniteDimensional 𝕜 E] {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
-    DirectSum.SubmoduleIsInternal V ↔ (supr V)ᗮ = ⊥ :=
+    DirectSum.IsInternal V ↔ (supr V)ᗮ = ⊥ :=
   have h := FiniteDimensional.proper_is_R_or_C 𝕜 ↥(supr V)
-  hV.submodule_is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
+  hV.is_internal_iff_of_is_complete (complete_space_coe_iff_is_complete.mp inferInstance)
 
 end OrthogonalFamily
 
@@ -1094,7 +1094,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
 theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1171,7 +1171,7 @@ section FiniteDimensional
 
 variable [FiniteDimensional 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
 theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1190,7 +1190,7 @@ theorem maximal_orthonormal_iff_basis_of_finite_dimensional (hv : Orthonormal �
     rw [← h.span_eq, coe_h, hv_coe]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » v)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » v)
 /-- In a finite-dimensional `inner_product_space`, any orthonormal subset can be extended to an
 orthonormal basis. -/
 theorem exists_subset_is_orthonormal_basis (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1244,40 +1244,39 @@ section SubordinateOrthonormalBasis
 open DirectSum
 
 variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [DecidableEq ι] {V : ι → Submodule 𝕜 E}
-  (hV : SubmoduleIsInternal V)
+  (hV : IsInternal V)
 
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
-irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
-  (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
+irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv : (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
   let b := hV.collectedBasis fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
-irreducible_def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
+irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
   (hV.collectedBasis fun i => stdOrthonormalBasis 𝕜 (V i)).reindex (hV.sigmaOrthonormalBasisIndexEquiv hn)
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
 provides the mapping by which it is subordinate. -/
-def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasisIndex (a : Finₓ n) : ι :=
+def DirectSum.IsInternal.subordinateOrthonormalBasisIndex (a : Finₓ n) : ι :=
   ((hV.sigmaOrthonormalBasisIndexEquiv hn).symm a).1
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is orthonormal. -/
-theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_orthonormal
+theorem DirectSum.IsInternal.subordinate_orthonormal_basis_orthonormal
     (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
     Orthonormal 𝕜 (hV.subordinateOrthonormalBasis hn) := by
-  simp only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex]
+  simp only [DirectSum.IsInternal.subordinateOrthonormalBasis, Basis.coe_reindex]
   have : Orthonormal 𝕜 (hV.collected_basis fun i => stdOrthonormalBasis 𝕜 (V i)) :=
     hV.collected_basis_orthonormal hV' fun i => std_orthonormal_basis_orthonormal 𝕜 (V i)
   exact this.comp _ (Equivₓ.injective _)
 
 /-- The basis constructed in `orthogonal_family.subordinate_orthonormal_basis` is subordinate to
 the `orthogonal_family` in question. -/
-theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_subordinate (a : Finₓ n) :
+theorem DirectSum.IsInternal.subordinate_orthonormal_basis_subordinate (a : Finₓ n) :
     hV.subordinateOrthonormalBasis hn a ∈ V (hV.subordinateOrthonormalBasisIndex hn a) := by
-  simpa only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
+  simpa only [DirectSum.IsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
     hV.collected_basis_mem (fun i => stdOrthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
 
 end SubordinateOrthonormalBasis

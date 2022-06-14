@@ -684,7 +684,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (AddMonoidAlgebra R M)] :
 theorem of'_mem_span [Nontrivial R] {m : M} {S : Set M} : of' R M m ∈ span R (of' R M '' S) ↔ m ∈ S := by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of', ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
-    Finsupp.support_single_ne_zero
+    Finsupp.support_single_ne_zero _
       (@one_ne_zero R _
         (by
           infer_instance))] at
@@ -826,7 +826,7 @@ theorem exists_finset_adjoin_eq_top [h : FiniteType R (MonoidAlgebra R M)] :
 theorem of_mem_span_of_iff [Nontrivial R] {m : M} {S : Set M} : of R M m ∈ span R (of R M '' S) ↔ m ∈ S := by
   refine' ⟨fun h => _, fun h => Submodule.subset_span <| Set.mem_image_of_mem (of R M) h⟩
   rw [of, MonoidHom.coe_mk, ← Finsupp.supported_eq_span_single, Finsupp.mem_supported,
-    Finsupp.support_single_ne_zero
+    Finsupp.support_single_ne_zero _
       (@one_ne_zero R _
         (by
           infer_instance))] at

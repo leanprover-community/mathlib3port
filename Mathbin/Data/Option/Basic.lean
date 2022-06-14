@@ -433,14 +433,14 @@ theorem ne_none_iff_exists {o : Option α} : o ≠ none ↔ ∃ x : α, some x =
 theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = some x :=
   ne_none_iff_exists.trans <| exists_congr fun _ => eq_comm
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ =>
     ⟨get <| ne_none_iff_is_some.1 hx, by
       rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » none)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » none)
 theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
     simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
@@ -569,12 +569,8 @@ theorem to_list_some (a : α) : (a : Option α).toList = [a] :=
 theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
 
-/-- Functions from `option` can be combined similarly to `vector.cons`. -/
---TODO: Swap arguments to `option.elim` so that it is exactly `option.cons`
-def cons (a : β) (f : α → β) : Option α → β := fun o => o.elim a f
-
 @[simp]
-theorem cons_none_some (f : Option α → β) : cons (f none) (f ∘ some) = f :=
+theorem elim_none_some (f : Option α → β) : Option.elimₓ (f none) (f ∘ some) = f :=
   funext fun o => by
     cases o <;> rfl
 

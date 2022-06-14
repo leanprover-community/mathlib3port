@@ -152,3 +152,15 @@ theorem IsLeast.minimals_eq (h : IsLeast s a) : Minimals (· ≤ ·) s = {a} :=
 theorem IsGreatest.maximals_eq (h : IsGreatest s a) : Maximals (· ≤ ·) s = {a} :=
   eq_singleton_iff_unique_mem.2 ⟨h.mem_maximals, fun b hb => hb.2 h.1 <| h.2 hb.1⟩
 
+theorem IsAntichain.max_lower_set_of (hs : IsAntichain (· ≤ ·) s) : Maximals (· ≤ ·) { x | ∃ y ∈ s, x ≤ y } = s := by
+  ext x
+  simp only [Maximals, exists_prop, mem_set_of_eq, forall_exists_index, and_imp, sep_set_of]
+  refine'
+    ⟨fun h => Exists.elim h.1 fun y hy => (h.2 _ hy.1 rfl.le hy.2).symm.subst hy.1, fun h =>
+      ⟨⟨x, h, rfl.le⟩, fun b y hy hby hxy => _⟩⟩
+  have : x = y := by_contra fun h_eq => (hs h hy h_eq (hxy.trans hby)).elim
+  exact hxy.antisymm (this.symm.subst hby)
+
+theorem IsAntichain.min_upper_set_of (hs : IsAntichain (· ≤ ·) s) : Minimals (· ≤ ·) { x | ∃ y ∈ s, y ≤ x } = s :=
+  hs.toDual.max_lower_set_of
+

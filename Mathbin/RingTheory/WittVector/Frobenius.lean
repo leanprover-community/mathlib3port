@@ -197,8 +197,8 @@ theorem map_frobenius_poly (n : ℕ) : MvPolynomial.map (Int.castRingHom ℚ) (f
     RingHom.map_pow, map_C, map_X, mul_powₓ]
   rw [mul_comm (C ↑p ^ i), mul_comm _ ((X i ^ p) ^ _), mul_comm (C ↑p ^ (j + 1)), mul_comm (C ↑p)]
   simp only [mul_assoc]
-  apply congr_argₓ
-  apply congr_argₓ
+  apply congr_arg
+  apply congr_arg
   rw [← C_eq_coe_nat]
   simp only [← RingHom.map_pow, ← C_mul]
   rw [C_inj]

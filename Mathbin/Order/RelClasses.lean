@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 -/
 import Mathbin.Order.Basic
+import Mathbin.Logic.IsEmpty
 
 /-!
 # Unbundled relation classes
@@ -266,11 +267,22 @@ noncomputable def IsWellOrder.linearOrder (r : α → α → Prop) [IsWellOrder 
   let this := fun x y => Classical.dec ¬r x y
   exact linearOrderOfSTO' r
 
+/-- Derive a `has_well_founded` instance from a `is_well_order` instance. -/
+def IsWellOrder.toHasWellFounded [LT α] [hwo : IsWellOrder α (· < ·)] : HasWellFounded α where
+  R := (· < ·)
+  wf := hwo.wf
+
 instance EmptyRelation.is_well_order [Subsingleton α] : IsWellOrder α EmptyRelation where
   trichotomous := fun a b => Or.inr <| Or.inl <| Subsingleton.elimₓ _ _
   irrefl := fun a => id
   trans := fun a b c => False.elim
   wf := ⟨fun a => ⟨_, fun y => False.elim⟩⟩
+
+instance (priority := 100) IsEmpty.is_well_order [IsEmpty α] (r : α → α → Prop) : IsWellOrder α r where
+  trichotomous := isEmptyElim
+  irrefl := isEmptyElim
+  trans := isEmptyElim
+  wf := well_founded_of_empty r
 
 instance Prod.Lex.is_well_order [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (α × β) (Prod.Lex r s) where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>

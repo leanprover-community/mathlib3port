@@ -141,7 +141,7 @@ theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       Algebra.left_mul_matrix_mul_vec_repr] at hv
     refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
-    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_funₓ hv i
+    · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
       
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective
@@ -171,10 +171,10 @@ open IntermediateField
 
 variable (K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -197,7 +197,7 @@ variable (K)
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `K
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `L])))))
   (Command.declValSimple
@@ -221,7 +221,7 @@ variable (K)
              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `K
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              `L]))))
         [])
@@ -239,7 +239,7 @@ variable (K)
             [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `K
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              `L]))))
         [])
@@ -319,7 +319,7 @@ variable (K)
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             `L]))))
        [])
@@ -337,7 +337,7 @@ variable (K)
            [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             `L]))))
        [])
@@ -570,7 +570,7 @@ variable (K)
       [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `K
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯")
        `L]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -579,7 +579,7 @@ variable (K)
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `L])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -593,10 +593,10 @@ variable (K)
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   norm_eq_norm_adjoin
   [ FiniteDimensional K L ] [ IsSeparable K L ] ( x : L )
@@ -605,19 +605,19 @@ theorem
         =
         norm K AdjoinSimple.gen K x
           ^
-          finrank K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+          finrank K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
   :=
     by
       let
           this
             :=
             is_separable_tower_top_of_is_separable
-              K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+              K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
         let
           pbL
             :=
             Field.powerBasisOfFiniteOfSeparable
-              K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+              K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
         let pbx := IntermediateField.adjoin.powerBasis IsSeparable.is_integral K x
         rw
           [
@@ -639,8 +639,8 @@ variable {K}
 
 section IntermediateField
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -688,7 +688,7 @@ section IntermediateField
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             "."
             `toSubalgebra)
@@ -758,7 +758,7 @@ section IntermediateField
            (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `K
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            "."
            `toSubalgebra)
@@ -895,7 +895,7 @@ section IntermediateField
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `K
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       "."
       `toSubalgebra)
@@ -909,7 +909,7 @@ section IntermediateField
      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
       `K
       "⟮"
-      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
       "⟯")
      "."
      `toSubalgebra)
@@ -938,7 +938,7 @@ section IntermediateField
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `K
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯")
    "."
    `toSubalgebra)
@@ -946,10 +946,10 @@ section IntermediateField
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   _root_.intermediate_field.adjoin_simple.norm_gen_eq_one
   { x : L } ( hx : ¬ IsIntegral K x ) : norm K AdjoinSimple.gen K x = 1
@@ -960,12 +960,12 @@ theorem
         obtain ⟨ s , ⟨ b ⟩ ⟩ := hx
         refine'
           is_integral_of_mem_of_fg
-            K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ . toSubalgebra _ x _
+            K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ . toSubalgebra _ x _
         · exact Submodule.fg_iff_finite_dimensional _ . mpr of_finset_basis b
         · exact IntermediateField.subset_adjoin K _ Set.mem_singleton x
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -1011,7 +1011,7 @@ theorem
              [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                `K
                "⟮"
-               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+               (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                "⟯")
               `L])
             "."
@@ -1127,7 +1127,7 @@ theorem
             [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `K
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              `L])
            "."
@@ -1598,7 +1598,7 @@ theorem
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `K
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `L])
       "."
@@ -1610,7 +1610,7 @@ theorem
     [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
       `K
       "⟮"
-      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
       "⟯")
      `L])
    "."
@@ -1621,7 +1621,7 @@ theorem
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `L])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -1635,10 +1635,10 @@ theorem
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   _root_.intermediate_field.adjoin_simple.norm_gen_eq_prod_roots
   ( x : L ) ( hf : minpoly K x . Splits algebraMap K F )
@@ -1648,7 +1648,7 @@ theorem
       have
           injKxL
             :=
-            algebraMap K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L . Injective
+            algebraMap K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L . Injective
         by_cases' hx : _root_.is_integral K x
         swap
         · simp [ minpoly.eq_zero hx , IntermediateField.AdjoinSimple.norm_gen_eq_one hx ]
@@ -1687,8 +1687,8 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
     rw [PowerBasis.lift_equiv'_apply_coe, id.def]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -1723,7 +1723,7 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `K
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `L])))))
   (Command.declValSimple
@@ -1836,7 +1836,7 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
      [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `K
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       `L])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1851,7 +1851,7 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
     [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
       `K
       "⟮"
-      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
       "⟯")
      `L]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -1860,7 +1860,7 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `L])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -1874,10 +1874,10 @@ theorem norm_eq_prod_embeddings_gen (pb : PowerBasis K L) (hE : (minpoly K pb.ge
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   norm_eq_prod_roots
   [ IsSeparable K L ] [ FiniteDimensional K L ] { x : L } ( hF : minpoly K x . Splits algebraMap K F )
@@ -1886,7 +1886,7 @@ theorem
         =
         minpoly K x . map algebraMap K F . roots . Prod
           ^
-          finrank K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+          finrank K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
   := by rw [ norm_eq_norm_adjoin K x , map_pow , IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots _ hF ]
 
 variable (F)
@@ -1915,8 +1915,8 @@ theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAl
 
 variable (K)
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment
@@ -2008,7 +2008,7 @@ variable (K)
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `K
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 `L]))))
            [])
@@ -2078,7 +2078,7 @@ variable (K)
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯")
                `L]))))
           [])
@@ -2102,7 +2102,7 @@ variable (K)
           (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
            `K
            "⟮"
-           (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+           (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
            "⟯")
           `L]))))
      [])
@@ -2140,7 +2140,7 @@ variable (K)
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `K
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯")
        `L]))))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
@@ -2150,7 +2150,7 @@ variable (K)
     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `L])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -2164,10 +2164,10 @@ variable (K)
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /--
     For `L/K` a finite separable extension of fields and `E` an algebraically closed extension
     of `K`, the norm (down to `K`) of an element `x` of `L` is equal to the product of the images
@@ -2194,7 +2194,7 @@ variable (K)
             have
                 :=
                   is_separable_tower_bot_of_is_separable
-                    K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+                    K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
               exact IsSeparable.separable K _
 
 theorem is_integral_norm [Algebra S L] [Algebra S K] [IsScalarTower S K L] [IsSeparable K L] [FiniteDimensional K L]

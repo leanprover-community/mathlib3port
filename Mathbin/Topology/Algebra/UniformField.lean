@@ -26,8 +26,8 @@ zero which is an ideal. Hence it's either zero (and the field is separated) or t
 which implies one is sent to zero and the completion ring is trivial.
 
 The main definition is `completable_top_field` which packages the assumptions as a Prop-valued
-type class and the main results are the instances `field_completion` and
-`topological_division_ring_completion`.
+type class and the main results are the instances `uniform_space.completion.field` and
+`uniform_space.completion.topological_division_ring`.
 -/
 
 
@@ -42,9 +42,6 @@ variable (K : Type _) [Field K] [UniformSpace K]
 -- mathport name: «exprhat»
 local notation "hat" => Completion
 
-instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
-  ⟨⟨0, 1, fun h => zero_ne_one <| (uniform_embedding_coe K).inj h⟩⟩
-
 /-- A topological field is completable if it is separated and the image under
 the mapping x ↦ x⁻¹ of every Cauchy filter (with respect to the additive uniform structure)
 which does not have a cluster point at 0 is a Cauchy filter
@@ -53,6 +50,13 @@ a field.
 -/
 class CompletableTopField extends SeparatedSpace K : Prop where
   nice : ∀ F : Filter K, Cauchy F → 𝓝 0⊓F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
+
+namespace UniformSpace
+
+namespace Completion
+
+instance (priority := 100) [SeparatedSpace K] : Nontrivial (hat K) :=
+  ⟨⟨0, 1, fun h => zero_ne_one <| (uniform_embedding_coe K).inj h⟩⟩
 
 variable {K}
 
@@ -79,7 +83,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
   · have eq_bot : 𝓝 (0 : hat K)⊓𝓝 y = ⊥ := by
       by_contra h
       exact y_ne (eq_of_nhds_ne_bot <| ne_bot_iff.mpr h).symm
-    erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← comap_inf, eq_bot]
+    erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
     exact comap_bot
     
 
@@ -87,7 +91,7 @@ theorem continuous_hat_inv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : C
 The value of `hat_inv` at zero is not really specified, although it's probably zero.
 Here we explicitly enforce the `inv_zero` axiom.
 -/
-instance Completion.hasInv : Inv (hat K) :=
+instance : Inv (hat K) :=
   ⟨fun x => if x = 0 then 0 else hatInv x⟩
 
 variable [TopologicalDivisionRing K]
@@ -117,12 +121,12 @@ variable [UniformAddGroup K]
 
 theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
   have : T1Space (hat K) := T2Space.t1_space
-  let f := fun x : hat K => x * hatInv x
+  let f := fun x : hat K => x * hat_inv x
   let c := (coe : K → hat K)
   change f x = 1
   have cont : ContinuousAt f x := by
     let this : TopologicalSpace (hat K × hat K) := Prod.topologicalSpace
-    have : ContinuousAt (fun y : hat K => ((y, hatInv y) : hat K × hat K)) x :=
+    have : ContinuousAt (fun y : hat K => ((y, hat_inv y) : hat K × hat K)) x :=
       continuous_id.continuous_at.prod (continuous_hat_inv x_ne)
     exact (_root_.continuous_mul.continuous_at.comp this : _)
   have clo : x ∈ Closure (c '' {0}ᶜ) := by
@@ -145,7 +149,7 @@ theorem mul_hat_inv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 := by
   replace fxclo := closure_mono this fxclo
   rwa [closure_singleton, mem_singleton_iff] at fxclo
 
-instance fieldCompletion : Field (hat K) :=
+instance : Field (hat K) :=
   { Completion.hasInv,
     (by
       infer_instance : CommRingₓ (hat K)) with
@@ -157,16 +161,20 @@ instance fieldCompletion : Field (hat K) :=
       show ((0 : K) : hat K)⁻¹ = ((0 : K) : hat K) by
         rw [coe_inv, inv_zero] }
 
-instance topological_division_ring_completion : TopologicalDivisionRing (hat K) :=
+instance : TopologicalDivisionRing (hat K) :=
   { Completion.top_ring_compl with
     continuous_at_inv₀ := by
       intro x x_ne
-      have : { y | hatInv y = y⁻¹ } ∈ 𝓝 x :=
-        have : {(0 : hat K)}ᶜ ⊆ { y : hat K | hatInv y = y⁻¹ } := by
+      have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x :=
+        have : {(0 : hat K)}ᶜ ⊆ { y : hat K | hat_inv y = y⁻¹ } := by
           intro y y_ne
           rw [mem_compl_singleton_iff] at y_ne
           dsimp' [Inv.inv]
           rw [if_neg y_ne]
         mem_of_superset (compl_singleton_mem_nhds x_ne) this
       exact ContinuousAt.congr (continuous_hat_inv x_ne) this }
+
+end Completion
+
+end UniformSpace
 

@@ -208,7 +208,7 @@ theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : 
 /-- If `s` is a compact set in a topological space `α` and `f : ι → set α` is a locally finite
 family of sets, then `f i ∩ s` is nonempty only for a finitely many `i`. -/
 theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Set α} (hf : LocallyFinite f) {s : Set α}
-    (hs : IsCompact s) : Finite { i | (f i ∩ s).Nonempty } := by
+    (hs : IsCompact s) : { i | (f i ∩ s).Nonempty }.Finite := by
   choose U hxU hUf using hf
   rcases hs.elim_nhds_subcover U fun x _ => hxU x with ⟨t, -, hsU⟩
   refine' (t.finite_to_set.bUnion fun x _ => hUf x).Subset _
@@ -263,11 +263,11 @@ theorem IsCompact.nonempty_Inter_of_sequence_nonempty_compact_closed (Z : ℕ �
   have hZc : ∀ i, IsCompact (Z i) := fun i => compact_of_is_closed_subset hZ0 (hZcl i) (this i)
   IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed Z hZd hZn hZc hZcl
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ⊆ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b' «expr ⊆ » b)
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀, ∀ i ∈ b, ∀, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
-    ∃ (b' : _)(_ : b' ⊆ b), Finite b' ∧ s ⊆ ⋃ i ∈ b', c i := by
+    ∃ (b' : _)(_ : b' ⊆ b), Set.Finite b' ∧ s ⊆ ⋃ i ∈ b', c i := by
   rcases hs.elim_finite_subcover (fun i => c i : b → Set α) _ _ with ⟨d, hd⟩ <;> [skip, simpa using hc₁,
     simpa using hc₂]
   refine' ⟨↑(d.image coe), _, Finset.finite_to_set _, _⟩
@@ -387,7 +387,7 @@ theorem is_compact_singleton {a : α} : IsCompact ({a} : Set α) := fun f hf hfa
 theorem Set.Subsingleton.is_compact {s : Set α} (hs : s.Subsingleton) : IsCompact s :=
   (Subsingleton.induction_on hs is_compact_empty) fun x => is_compact_singleton
 
-theorem Set.Finite.compact_bUnion {s : Set ι} {f : ι → Set α} (hs : Finite s) (hf : ∀, ∀ i ∈ s, ∀, IsCompact (f i)) :
+theorem Set.Finite.compact_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite) (hf : ∀, ∀ i ∈ s, ∀, IsCompact (f i)) :
     IsCompact (⋃ i ∈ s, f i) :=
   is_compact_of_finite_subcover fun ι U hUo hsU =>
     have : ∀ i : Subtype s, ∃ t : Finset ι, f i ⊆ ⋃ j ∈ t, U j := fun ⟨i, hi⟩ =>
@@ -417,7 +417,7 @@ theorem compact_accumulate {K : ℕ → Set α} (hK : ∀ n, IsCompact (K n)) (n
 theorem compact_Union {f : ι → Set α} [Fintype ι] (h : ∀ i, IsCompact (f i)) : IsCompact (⋃ i, f i) := by
   rw [← bUnion_univ] <;> exact finite_univ.compact_bUnion fun i _ => h i
 
-theorem Set.Finite.is_compact (hs : Finite s) : IsCompact s :=
+theorem Set.Finite.is_compact (hs : s.Finite) : IsCompact s :=
   bUnion_of_singleton s ▸ hs.compact_bUnion fun _ _ => is_compact_singleton
 
 theorem IsCompact.finite_of_discrete [DiscreteTopology α] {s : Set α} (hs : IsCompact s) : s.Finite := by
@@ -680,7 +680,7 @@ theorem compact_space_of_finite_subfamily_closed
 theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsCompact s :=
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] []
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (Univ : Set α)
@@ -719,7 +719,7 @@ instance : NoncompactSpace ℤ :=
 
 /-- A compact discrete space is finite. -/
 noncomputable def fintypeOfCompactOfDiscrete [CompactSpace α] [DiscreteTopology α] : Fintype α :=
-  fintype_of_univ_finite <| compact_univ.finite_of_discrete
+  fintype_of_finite_univ <| compact_univ.finite_of_discrete
 
 theorem finite_cover_nhds_interior [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x ∈ 𝓝 x) :
     ∃ t : Finset α, (⋃ x ∈ t, Interior (U x)) = univ :=
@@ -736,20 +736,20 @@ theorem finite_cover_nhds [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x
 /-- If `α` is a compact space, then a locally finite family of sets of `α` can have only finitely
 many nonempty elements. -/
 theorem LocallyFinite.finite_nonempty_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f) :
-    Finite { i | (f i).Nonempty } := by
+    { i | (f i).Nonempty }.Finite := by
   simpa only [inter_univ] using hf.finite_nonempty_inter_compact compact_univ
 
 /-- If `α` is a compact space, then a locally finite family of nonempty sets of `α` can have only
 finitely many elements, `set.finite` version. -/
 theorem LocallyFinite.finite_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f)
-    (hne : ∀ i, (f i).Nonempty) : Finite (Univ : Set ι) := by
+    (hne : ∀ i, (f i).Nonempty) : (Univ : Set ι).Finite := by
   simpa only [hne] using hf.finite_nonempty_of_compact
 
 /-- If `α` is a compact space, then a locally finite family of nonempty sets of `α` can have only
 finitely many elements, `fintype` version. -/
 noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α] {f : ι → Set α} (hf : LocallyFinite f)
     (hne : ∀ i, (f i).Nonempty) : Fintype ι :=
-  fintypeOfUnivFinite (hf.finite_of_compact hne)
+  fintypeOfFiniteUniv (hf.finite_of_compact hne)
 
 /-- The comap of the cocompact filter on `β` by a continuous function `f : α → β` is less than or
 equal to the cocompact filter on `α`.
@@ -1175,7 +1175,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
     (hne : ∀ i, (f i).Nonempty) : Encodable ι :=
   @Encodable.ofEquiv _ _ (hf.countable_univ hne).toEncodable (Equivₓ.Set.univ _).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
 the neighborhoods `f x`, `x ∈ t`, cover the whole set `s`. -/
@@ -1469,12 +1469,12 @@ theorem is_closed_irreducible_component {x : α} : IsClosed (IrreducibleComponen
   closure_eq_iff_is_closed.1 <|
     eq_irreducible_component is_irreducible_irreducible_component.IsPreirreducible.closure subset_closure
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`is_preirreducible_univ] []
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   is_preirreducible_univ : IsPreirreducible (Univ : Set α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] []
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where

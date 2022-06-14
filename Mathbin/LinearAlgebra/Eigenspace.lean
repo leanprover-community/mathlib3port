@@ -312,7 +312,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
       by_cases' h_cases : μ = μ₀
       · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
         
-      exact congr_argₓ (coe : _ → V) (h_lμ_eq_0 μ h_cases)
+      exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)
       
     
 
@@ -453,7 +453,7 @@ theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp
     (eigenspace (f.restrict hfp) μ).map p.Subtype ≤ f.eigenspace μ := by
   rintro a ⟨x, hx, rfl⟩
   simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx⊢
-  exact congr_argₓ coe hx
+  exact congr_arg coe hx
 
 /-- Generalized eigenrange and generalized eigenspace for exponent `finrank K V` are disjoint. -/
 theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End K V) (μ : K) :

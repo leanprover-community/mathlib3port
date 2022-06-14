@@ -51,7 +51,7 @@ variable {A}
 def centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : StarSubalgebra R A :=
   { Subalgebra.centralizer R s with
     star_mem' := fun x xm y hy => by
-      simpa using congr_argₓ star (xm _ (w _ hy)).symm }
+      simpa using congr_arg star (xm _ (w _ hy)).symm }
 
 @[simp]
 theorem coe_centralizer (s : Set A) (w : ∀ a : A, a ∈ s → star a ∈ s) : (centralizer R s w : Set A) = s.Centralizer :=

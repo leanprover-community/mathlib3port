@@ -62,6 +62,9 @@ instance : One (RegularExpression α) :=
 instance : Zero (RegularExpression α) :=
   ⟨zero⟩
 
+instance : Pow (RegularExpression α) ℕ :=
+  ⟨fun n r => npowRec r n⟩
+
 attribute [matchPattern] Mul.mul
 
 @[simp]
@@ -109,6 +112,11 @@ theorem matches_add (P Q : RegularExpression α) : (P + Q).Matches = P.Matches +
 @[simp]
 theorem matches_mul (P Q : RegularExpression α) : (P * Q).Matches = P.Matches * Q.Matches :=
   rfl
+
+@[simp]
+theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).Matches = P.Matches ^ n
+  | 0 => matches_epsilon
+  | n + 1 => (matches_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succₓ _ _).symm
 
 @[simp]
 theorem matches_star (P : RegularExpression α) : P.star.Matches = P.Matches.star :=
@@ -409,6 +417,11 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
   | R + S => map R + map S
   | R * S => map R * map S
   | star R => star (map R)
+
+@[simp]
+protected theorem map_pow (f : α → β) (P : RegularExpression α) : ∀ n : ℕ, map f (P ^ n) = map f P ^ n
+  | 0 => rfl
+  | n + 1 => (congr_arg ((· * ·) (map f P)) (map_pow n) : _)
 
 @[simp]
 theorem map_id : ∀ P : RegularExpression α, P.map id = P

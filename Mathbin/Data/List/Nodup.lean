@@ -78,10 +78,25 @@ theorem nodup_iff_nth_le_inj {l : List α} : Nodupₓ l ↔ ∀ i j h₁ h₂, n
       ((lt_trichotomyₓ _ _).resolve_left fun h' => H _ _ h₂ h' h).resolve_right fun h' => H _ _ h₁ h' h.symm,
       fun H i j h₁ h₂ h => ne_of_ltₓ h₂ (H _ _ _ _ h)⟩
 
-theorem Nodupₓ.nth_le_inj_iff {α : Type _} {l : List α} (h : Nodupₓ l) {i j : ℕ} (hi : i < l.length)
-    (hj : j < l.length) : l.nthLe i hi = l.nthLe j hj ↔ i = j :=
+theorem Nodupₓ.nth_le_inj_iff {l : List α} (h : Nodupₓ l) {i j : ℕ} (hi : i < l.length) (hj : j < l.length) :
+    l.nthLe i hi = l.nthLe j hj ↔ i = j :=
   ⟨nodup_iff_nth_le_inj.mp h _ _ _ _, by
     simp (config := { contextual := true })⟩
+
+theorem nodup_iff_nth_ne_nth {l : List α} : l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j := by
+  rw [nodup_iff_nth_le_inj]
+  simp only [nth_le_eq_iff, some_nth_le_eq]
+  constructor <;> rintro h i j h₁ h₂
+  · exact mt (h i j (h₁.trans h₂) h₂) (ne_of_ltₓ h₁)
+    
+  · intro h₃
+    by_contra h₄
+    cases' lt_or_gt_of_neₓ h₄ with h₅ h₅
+    · exact h i j h₅ h₂ h₃
+      
+    · exact h j i h₅ h₁ h₃.symm
+      
+    
 
 theorem Nodupₓ.ne_singleton_iff {l : List α} (h : Nodupₓ l) (x : α) : l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x := by
   induction' l with hd tl hl
@@ -154,7 +169,7 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : Nodupₓ (l₁ ++ a :: l�
   simp only [nodup_append, not_or_distrib, And.left_comm, and_assoc, nodup_cons, mem_append, disjoint_cons_right]
 
 theorem Nodupₓ.of_map (f : α → β) {l : List α} : Nodupₓ (map f l) → Nodupₓ l :=
-  (Pairwiseₓ.of_map f) fun a b => mt <| congr_argₓ f
+  (Pairwiseₓ.of_map f) fun a b => mt <| congr_arg f
 
 theorem Nodupₓ.map_on {f : α → β} (H : ∀, ∀ x ∈ l, ∀, ∀, ∀ y ∈ l, ∀, f x = f y → x = y) (d : Nodupₓ l) :
     (map f l).Nodup :=

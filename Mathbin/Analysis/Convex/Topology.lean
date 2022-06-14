@@ -198,14 +198,14 @@ section HasContinuousSmul
 variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
 
 /-- Convex hull of a finite set is compact. -/
-theorem Set.Finite.compact_convex_hull {s : Set E} (hs : Finite s) : IsCompact (convexHull ℝ s) := by
+theorem Set.Finite.compact_convex_hull {s : Set E} (hs : s.Finite) : IsCompact (convexHull ℝ s) := by
   rw [hs.convex_hull_eq_image]
   apply (compact_std_simplex _).Image
   have := hs.fintype
   apply LinearMap.continuous_on_pi
 
 /-- Convex hull of a finite set is closed. -/
-theorem Set.Finite.is_closed_convex_hull [T2Space E] {s : Set E} (hs : Finite s) : IsClosed (convexHull ℝ s) :=
+theorem Set.Finite.is_closed_convex_hull [T2Space E] {s : Set E} (hs : s.Finite) : IsClosed (convexHull ℝ s) :=
   hs.compact_convex_hull.IsClosed
 
 open AffineMap

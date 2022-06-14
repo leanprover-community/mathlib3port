@@ -23,7 +23,7 @@ theorem coe_pnat_nat (p : Nat.Primes) : ((p : ℕ+) : ℕ) = p :=
   rfl
 
 theorem coe_pnat_inj (p q : Nat.Primes) : (p : ℕ+) = (q : ℕ+) → p = q := fun h => by
-  replace h : ((p : ℕ+) : ℕ) = ((q : ℕ+) : ℕ) := congr_argₓ Subtype.val h
+  replace h : ((p : ℕ+) : ℕ) = ((q : ℕ+) : ℕ) := congr_arg Subtype.val h
   rw [coePnatNat, coePnatNat] at h
   exact Subtype.eq h
 

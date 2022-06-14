@@ -103,6 +103,10 @@ protected theorem map_one' (f : α → β) : (1 : Filter α).map f = pure (f 1) 
 theorem le_one_iff : f ≤ 1 ↔ (1 : Set α) ∈ f :=
   le_pure_iff
 
+@[to_additive]
+protected theorem NeBot.le_one_iff (h : f.ne_bot) : f ≤ 1 ↔ f = 1 :=
+  h.le_pure_iff
+
 @[simp, to_additive]
 theorem eventually_one {p : α → Prop} : (∀ᶠ x in 1, p x) ↔ p 1 :=
   eventually_pure
@@ -183,7 +187,7 @@ theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by
 
 /-- Inversion is involutive on `filter α` if it is on `α`. -/
 @[to_additive "Negation is involutive on `filter α` if it is on `α`."]
-def hasInvolutiveInv : HasInvolutiveInv (Filter α) :=
+protected def hasInvolutiveInv : HasInvolutiveInv (Filter α) :=
   { Filter.hasInv with
     inv_inv := fun f =>
       map_map.trans <| by
@@ -212,7 +216,7 @@ theorem map₂_mul : map₂ (· * ·) f g = f * g :=
   rfl
 
 @[to_additive]
-theorem mem_mul_iff : s ∈ f * g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ * t₂ ⊆ s :=
+theorem mem_mul : s ∈ f * g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ * t₂ ⊆ s :=
   Iff.rfl
 
 @[to_additive]
@@ -477,7 +481,7 @@ end MulOneClassₓ
 
 section Monoidₓ
 
-variable [Monoidₓ α] {f g : Filter α} {s : Set α} {a : α}
+variable [Monoidₓ α] {f g : Filter α} {s : Set α} {a : α} {m n : ℕ}
 
 /-- `filter α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`filter α` is an `add_monoid` under pointwise operations if `α` is."]
@@ -494,6 +498,42 @@ theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
   | n + 1 => by
     rw [pow_succₓ]
     exact mul_mem_mul hs (pow_mem_pow _)
+
+@[simp, to_additive nsmul_bot]
+theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
+  rw [← tsub_add_cancel_of_le (Nat.succ_le_of_ltₓ <| Nat.pos_of_ne_zeroₓ hn), pow_succₓ, bot_mul]
+
+@[to_additive]
+theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ := by
+  refine' top_le_iff.1 fun s => _
+  simp only [mem_mul, mem_top, exists_and_distrib_left, exists_eq_left]
+  rintro ⟨t, ht, hs⟩
+  rwa [mul_univ_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
+
+@[to_additive]
+theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ := by
+  refine' top_le_iff.1 fun s => _
+  simp only [mem_mul, mem_top, exists_and_distrib_left, exists_eq_left]
+  rintro ⟨t, ht, hs⟩
+  rwa [univ_mul_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs
+
+@[simp, to_additive]
+theorem top_mul_top : (⊤ : Filter α) * ⊤ = ⊤ :=
+  mul_top_of_one_le le_top
+
+--TODO: `to_additive` trips up on the `1 : ℕ` used in the pattern-matching.
+theorem nsmul_top {α : Type _} [AddMonoidₓ α] : ∀ {n : ℕ}, n ≠ 0 → n • (⊤ : Filter α) = ⊤
+  | 0 => fun h => (h rfl).elim
+  | 1 => fun _ => one_nsmul _
+  | n + 2 => fun _ => by
+    rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
+
+@[to_additive nsmul_top]
+theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
+  | 0 => fun h => (h rfl).elim
+  | 1 => fun _ => pow_oneₓ _
+  | n + 2 => fun _ => by
+    rw [pow_succₓ, top_pow n.succ_ne_zero, top_mul_top]
 
 @[to_additive]
 protected theorem _root_.is_unit.filter : IsUnit a → IsUnit (pure a : Filter α) :=
@@ -587,12 +627,52 @@ theorem add_mul_subset : (f + g) * h ≤ f * h + g * h :=
 
 end Distribₓ
 
+section MulZeroClassₓ
+
+variable [MulZeroClassₓ α] {f g : Filter α}
+
+/-! Note that `filter` is not a `mul_zero_class` because `0 * ⊥ ≠ 0`. -/
+
+
+theorem NeBot.mul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f * 0 :=
+  le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
+    ⟨_, _, ha, h₂, mul_zero _⟩
+
+theorem NeBot.zero_mul_nonneg (hg : g.ne_bot) : 0 ≤ 0 * g :=
+  le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
+    ⟨_, _, h₁, hb, zero_mul _⟩
+
+end MulZeroClassₓ
+
 section Groupₓ
 
-variable [Groupₓ α] [Groupₓ β] [MonoidHomClass F α β] (m : F) {f g f₁ g₁ : Filter α} {f₂ g₂ : Filter β}
+variable [Groupₓ α] [DivisionMonoid β] [MonoidHomClass F α β] (m : F) {f g f₁ g₁ : Filter α} {f₂ g₂ : Filter β}
 
 /-! Note that `filter α` is not a group because `f / f ≠ 1` in general -/
 
+
+@[simp, to_additive]
+protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g := by
+  refine' ⟨fun h hfg => _, _⟩
+  · obtain ⟨s, hs, t, ht, hst⟩ := hfg (mem_bot : ∅ ∈ ⊥)
+    exact Set.one_mem_div_iff.1 (h <| div_mem_div hs ht) (disjoint_iff.2 hst.symm)
+    
+  · rintro h s ⟨t₁, t₂, h₁, h₂, hs⟩
+    exact hs (Set.one_mem_div_iff.2 fun ht => h <| disjoint_of_disjoint_of_mem ht h₁ h₂)
+    
+
+@[to_additive]
+theorem not_one_le_div_iff : ¬1 ≤ f / g ↔ Disjoint f g :=
+  Filter.one_le_div_iff.not_left
+
+@[to_additive]
+theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f := by
+  rintro s ⟨t₁, t₂, h₁, h₂, hs⟩
+  obtain ⟨a, ha₁, ha₂⟩ := Set.not_disjoint_iff.1 (h.not_disjoint h₁ h₂)
+  rw [mem_one, ← div_self' a]
+  exact hs (Set.div_mem_div ha₁ ha₂)
 
 @[to_additive]
 theorem is_unit_pure (a : α) : IsUnit (pure a : Filter α) :=
@@ -621,6 +701,24 @@ theorem Tendsto.div_div : Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendst
   (Filter.map_div m).trans_le <| Filter.div_le_div hf hg
 
 end Groupₓ
+
+open Pointwise
+
+section GroupWithZeroₓ
+
+variable [GroupWithZeroₓ α] {f g : Filter α}
+
+theorem NeBot.div_zero_nonneg (hf : f.ne_bot) : 0 ≤ f / 0 :=
+  Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
+    ⟨_, _, ha, h₂, div_zero _⟩
+
+theorem NeBot.zero_div_nonneg (hg : g.ne_bot) : 0 ≤ 0 / g :=
+  Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
+    ⟨_, _, h₁, hb, zero_div _⟩
+
+end GroupWithZeroₓ
 
 /-! ### Scalar addition/multiplication of filters -/
 
@@ -833,6 +931,10 @@ theorem smul_filter_ne_bot_iff : (a • f).ne_bot ↔ f.ne_bot :=
 theorem NeBot.smul_filter : f.ne_bot → (a • f).ne_bot := fun h => h.map _
 
 @[to_additive]
+theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
+  ne_bot.of_map
+
+@[to_additive]
 theorem smul_filter_le_smul_filter (hf : f₁ ≤ f₂) : a • f₁ ≤ a • f₂ :=
   map_mono hf
 
@@ -876,7 +978,7 @@ instance is_scalar_tower'' [HasScalar α β] [HasScalar α γ] [HasScalar β γ]
   ⟨fun f g h => map₂_assoc smul_assoc⟩
 
 instance is_central_scalar [HasScalar α β] [HasScalar αᵐᵒᵖ β] [IsCentralScalar α β] : IsCentralScalar α (Filter β) :=
-  ⟨fun a f => (congr_argₓ fun m => map m f) <| funext fun _ => op_smul_eq_smul _ _⟩
+  ⟨fun a f => (congr_arg fun m => map m f) <| funext fun _ => op_smul_eq_smul _ _⟩
 
 /-- A multiplicative action of a monoid `α` on a type `β` gives a multiplicative action of
 `filter α` on `filter β`. -/
@@ -918,6 +1020,40 @@ protected def mulDistribMulActionFilter [Monoidₓ α] [Monoidₓ β] [MulDistri
       rw [smul_one, singleton_one]
 
 localized [Pointwise] attribute [instance] Filter.distribMulActionFilter Filter.mulDistribMulActionFilter
+
+section SmulWithZero
+
+variable [Zero α] [Zero β] [SmulWithZero α β] {f : Filter α} {g : Filter β}
+
+/-!
+Note that we have neither `smul_with_zero α (filter β)` nor `smul_with_zero (filter α) (filter β)`
+because `0 * ⊥ ≠ 0`.
+-/
+
+
+theorem NeBot.smul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f • (0 : Filter β) :=
+  le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
+    ⟨_, _, ha, h₂, smul_zero' _ _⟩
+
+theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
+  le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
+    let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
+    ⟨_, _, h₁, hb, zero_smul _ _⟩
+
+theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 := by
+  refine' fun s hs => mem_smul_filter.2 _
+  convert univ_mem
+  refine' eq_univ_iff_forall.2 fun a => _
+  rwa [mem_preimage, zero_smul]
+
+theorem zero_smul_filter (hg : g.ne_bot) : (0 : α) • g = 0 :=
+  zero_smul_filter_nonpos.antisymm <|
+    le_map_iff.2 fun s hs => by
+      simp_rw [Set.image_eta, zero_smul, (hg.nonempty_of_mem hs).image_const]
+      exact zero_mem_zero
+
+end SmulWithZero
 
 end Filter
 

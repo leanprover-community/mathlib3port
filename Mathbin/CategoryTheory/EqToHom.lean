@@ -61,7 +61,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
-    (congr_argₓ (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q := by
+    (congr_arg (fun W : C => W ⟶ Z) p).mpr q = eqToHom p ≫ q := by
   cases p
   simp
 
@@ -74,7 +74,7 @@ rather than relying on this lemma firing.
 -/
 @[simp]
 theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
-    (congr_argₓ (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm := by
+    (congr_arg (fun W : C => X ⟶ W) q).mpr p = p ≫ eqToHom q.symm := by
   cases q
   simp
 
@@ -105,12 +105,12 @@ theorem eq_to_iso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eqToIso p ≪≫ e
   ext <;> simp
 
 @[simp]
-theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_argₓ op h.symm) := by
+theorem eq_to_hom_op {X Y : C} (h : X = Y) : (eqToHom h).op = eqToHom (congr_arg op h.symm) := by
   cases h
   rfl
 
 @[simp]
-theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eqToHom h).unop = eqToHom (congr_argₓ unop h.symm) := by
+theorem eq_to_hom_unop {X Y : Cᵒᵖ} (h : X = Y) : (eqToHom h).unop = eqToHom (congr_arg unop h.symm) := by
   cases h
   rfl
 
@@ -199,12 +199,12 @@ e.g. the naturality of a natural transformation.
 
 In some files it may be appropriate to use `local attribute [simp] eq_to_hom_map`, however.
 -/
-theorem eq_to_hom_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map (eqToHom p) = eqToHom (congr_argₓ F.obj p) := by
+theorem eq_to_hom_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.map (eqToHom p) = eqToHom (congr_arg F.obj p) := by
   cases p <;> simp
 
 /-- See the note on `eq_to_hom_map` regarding using this as a `simp` lemma.
 -/
-theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.mapIso (eqToIso p) = eqToIso (congr_argₓ F.obj p) := by
+theorem eq_to_iso_map (F : C ⥤ D) {X Y : C} (p : X = Y) : F.mapIso (eqToIso p) = eqToIso (congr_arg F.obj p) := by
   ext <;> cases p <;> simp
 
 @[simp]
@@ -221,7 +221,7 @@ theorem eq_conj_eq_to_hom {X Y : C} (f : X ⟶ Y) : f = eqToHom rfl ≫ f ≫ eq
   simp only [category.id_comp, eq_to_hom_refl, category.comp_id]
 
 theorem dcongr_arg {ι : Type _} {F G : ι → C} (α : ∀ i, F i ⟶ G i) {i j : ι} (h : i = j) :
-    α i = eqToHom (congr_argₓ F h) ≫ α j ≫ eqToHom (congr_argₓ G h.symm) := by
+    α i = eqToHom (congr_arg F h) ≫ α j ≫ eqToHom (congr_arg G h.symm) := by
   subst h
   simp
 

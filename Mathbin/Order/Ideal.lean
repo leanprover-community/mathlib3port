@@ -154,10 +154,10 @@ and nonempty. -/
 class IsMaximal (I : Ideal P) extends IsProper I : Prop where
   maximal_proper : ∀ ⦃J : Ideal P⦄, I < J → (J : Set P) = univ
 
-theorem inter_nonempty [IsDirected P (swap (· ≤ ·))] (I J : Ideal P) : (I ∩ J : Set P).Nonempty := by
+theorem inter_nonempty [IsDirected P (· ≥ ·)] (I J : Ideal P) : (I ∩ J : Set P).Nonempty := by
   obtain ⟨a, ha⟩ := I.nonempty
   obtain ⟨b, hb⟩ := J.nonempty
-  obtain ⟨c, hac, hbc⟩ := directed_of (swap (· ≤ ·)) a b
+  obtain ⟨c, hac, hbc⟩ := exists_le_le a b
   exact ⟨c, I.lower hac ha, J.lower hbc hb⟩
 
 end
@@ -182,7 +182,7 @@ theorem coe_top : ((⊤ : Ideal P) : Set P) = univ :=
 theorem is_proper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
 
-theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_argₓ coe h
+theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
 
 theorem _root_.is_coatom.is_proper (hI : IsCoatom I) : IsProper I :=
   is_proper_of_ne_top hI.1
@@ -303,7 +303,7 @@ end SemilatticeSup
 
 section SemilatticeSupDirected
 
-variable [SemilatticeSup P] [IsDirected P (swap (· ≤ ·))] {x : P} {I J K s t : Ideal P}
+variable [SemilatticeSup P] [IsDirected P (· ≥ ·)] {x : P} {I J K s t : Ideal P}
 
 /-- The infimum of two ideals of a co-directed order is their intersection. -/
 instance : HasInf (Ideal P) :=
@@ -336,8 +336,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩,
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∈ » I)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ∈ » J)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∈ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ∈ » J)
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with sup := (·⊔·),
     le_sup_left := fun i _ : i ∈ I => by

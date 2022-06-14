@@ -111,13 +111,13 @@ end Seq
 
 section OfFinset
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0 ) (s : Finset α) (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 variable {f : α → ℝ≥0 } {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ a _ : a ∉ s, f a = 0)
 
 @[simp]

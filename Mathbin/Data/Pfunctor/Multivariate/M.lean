@@ -209,7 +209,7 @@ theorem M.bisim {α : Typevec n} (R : P.M α → P.M α → Prop)
       rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
       cases h'.symm.trans e₁'
       cases h'.symm.trans e₂'
-  · exact (congr_funₓ (congr_funₓ e₃ i) c : _)
+  · exact (congr_fun (congr_fun e₃ i) c : _)
     
   · exact IH _ _ (h'' _)
     
@@ -231,13 +231,13 @@ theorem M.bisim₀ {α : Typevec n} (R : P.M α → P.M α → Prop) (h₀ : Equ
   simp at h₁
   clear h
   have Hdrop : drop_fun fx = drop_fun fy := by
-    replace h₁ := congr_argₓ drop_fun h₁
+    replace h₁ := congr_arg drop_fun h₁
     simpa using h₁
   exists ax, drop_fun fx, last_fun fx, last_fun fy
   rw [split_drop_fun_last_fun, Hdrop, split_drop_fun_last_fun]
   simp
   intro i
-  replace h₁ := congr_funₓ (congr_funₓ h₁ Fin2.fz) i
+  replace h₁ := congr_fun (congr_fun h₁ Fin2.fz) i
   simp [(· ⊚ ·), append_fun, split_fun] at h₁
   replace h₁ := Quot.exact _ h₁
   rw [h₀.eqv_gen_iff] at h₁

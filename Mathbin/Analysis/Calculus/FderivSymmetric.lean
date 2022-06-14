@@ -73,8 +73,9 @@ bilinear estimate for `f (x + hv + hw) - f (x + hv)` in terms of `f' w` and of `
 This is a technical statement used to show that the second derivative is symmetric.
 -/
 theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ Interior s) (hw : x + v + w ∈ Interior s) :
-    IsOₓ (fun h : ℝ => f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w)
-      (fun h => h ^ 2) (𝓝[>] (0 : ℝ)) :=
+    (fun h : ℝ =>
+        f (x + h • v + h • w) - f (x + h • v) - h • f' x w - h ^ 2 • f'' v w - (h ^ 2 / 2) • f'' w w) =o[𝓝[>] 0]
+      fun h => h ^ 2 :=
   by
   -- it suffices to check that the expression is bounded by `ε * ((∥v∥ + ∥w∥) * ∥w∥) * h^2` for
   -- small enough `h`, for any positive `ε`.
@@ -192,11 +193,10 @@ In a setting where `f` is not guaranteed to be continuous at `f`, we can still
 get this if we use a quadrilateral based at `h v + h w`. -/
 theorem Convex.is_o_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ Interior s)
     (h4w : x + (4 : ℝ) • w ∈ Interior s) :
-    IsOₓ
-      (fun h : ℝ =>
+    (fun h : ℝ =>
         f (x + h • (2 • v + 2 • w)) + f (x + h • (v + w)) - f (x + h • (2 • v + w)) - f (x + h • (v + 2 • w)) -
-          h ^ 2 • f'' v w)
-      (fun h => h ^ 2) (𝓝[>] (0 : ℝ)) :=
+          h ^ 2 • f'' v w) =o[𝓝[>] 0]
+      fun h => h ^ 2 :=
   by
   have A : (1 : ℝ) / 2 ∈ Ioc (0 : ℝ) 1 :=
     ⟨by
@@ -260,13 +260,13 @@ removes the assumption that `v` and `w` point inside `s`.
 -/
 theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E} (h4v : x + (4 : ℝ) • v ∈ Interior s)
     (h4w : x + (4 : ℝ) • w ∈ Interior s) : f'' w v = f'' v w := by
-  have A : is_o (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) (fun h => h ^ 2) (𝓝[>] (0 : ℝ)) := by
+  have A : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2 := by
     convert (s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub (s_conv.is_o_alternate_sum_square hf xs hx h4w h4v)
     ext h
     simp only [add_commₓ, smul_add, smul_sub]
     abel
-  have B : is_o (fun h : ℝ => f'' w v - f'' v w) (fun h => (1 : ℝ)) (𝓝[>] (0 : ℝ)) := by
-    have : is_O (fun h : ℝ => 1 / h ^ 2) (fun h => 1 / h ^ 2) (𝓝[>] (0 : ℝ)) := is_O_refl _ _
+  have B : (fun h : ℝ => f'' w v - f'' v w) =o[𝓝[>] 0] fun h => (1 : ℝ) := by
+    have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := is_O_refl _ _
     have C := this.smul_is_o A
     apply C.congr' _ _
     · filter_upwards [self_mem_nhds_within]

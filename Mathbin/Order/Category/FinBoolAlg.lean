@@ -79,7 +79,7 @@ instance hasForgetToFinPartialOrder : HasForget₂ FinBoolAlg FinPartialOrder wh
 
 instance forget_to_FinPartialOrder_faithful : Faithful (forget₂ FinBoolAlg FinPartialOrder) :=
   ⟨fun X Y f g h =>
-    have := congr_argₓ (coeFn : _ → X → Y) h
+    have := congr_arg (coeFn : _ → X → Y) h
     FunLike.coe_injective this⟩
 
 /-- Constructs an equivalence between finite Boolean algebras from an order isomorphism between

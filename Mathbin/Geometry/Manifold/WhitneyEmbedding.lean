@@ -63,7 +63,7 @@ theorem embedding_pi_tangent_coe : ⇑f.embeddingPiTangent = fun x i => (f i x �
 theorem embedding_pi_tangent_inj_on : InjOn f.embeddingPiTangent s := by
   intro x hx y hy h
   simp only [embedding_pi_tangent_coe, funext_iff] at h
-  obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iffₓ.1 (h (f.ind x hx))
+  obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iff.1 (h (f.ind x hx))
   rw [f.apply_ind x hx] at h₂
   rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm

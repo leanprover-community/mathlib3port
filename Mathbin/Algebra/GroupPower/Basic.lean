@@ -113,6 +113,13 @@ theorem pow_mul_pow_sub (a : M) {m n : ℕ} (h : m ≤ n) : a ^ m * a ^ (n - m) 
 theorem pow_sub_mul_pow (a : M) {m n : ℕ} (h : m ≤ n) : a ^ (n - m) * a ^ m = a ^ n := by
   rw [← pow_addₓ, tsub_add_cancel_of_le h]
 
+/-- If `x ^ n = 1`, then `x ^ m` is the same as `x ^ (m % n)` -/
+@[to_additive nsmul_eq_mod_nsmul "If `n • x = 0`, then `m • x` is the same as `(m % n) • x`"]
+theorem pow_eq_pow_mod {M : Type _} [Monoidₓ M] {x : M} (m : ℕ) {n : ℕ} (h : x ^ n = 1) : x ^ m = x ^ (m % n) := by
+  have t := congr_arg (fun a => x ^ a) (Nat.div_add_modₓ m n).symm
+  dsimp'  at t
+  rw [t, pow_addₓ, pow_mulₓ, h, one_pow, one_mulₓ]
+
 @[to_additive bit0_nsmul]
 theorem pow_bit0 (a : M) (n : ℕ) : a ^ bit0 n = a ^ n * a ^ n :=
   pow_addₓ _ _ _
@@ -199,7 +206,7 @@ theorem zpow_two (a : G) : a ^ (2 : ℤ) = a * a := by
 
 @[to_additive neg_one_zsmul]
 theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
-  (zpow_neg_succ_of_nat x 0).trans <| congr_argₓ Inv.inv (pow_oneₓ x)
+  (zpow_neg_succ_of_nat x 0).trans <| congr_arg Inv.inv (pow_oneₓ x)
 
 @[to_additive]
 theorem zpow_neg_coe_of_pos (a : G) : ∀ {n : ℕ}, 0 < n → a ^ -(n : ℤ) = (a ^ n)⁻¹
@@ -338,6 +345,26 @@ protected theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :
 
 end RingHom
 
+section powMonoidWithZeroHom
+
+variable [CommMonoidWithZero M] {n : ℕ} (hn : 0 < n)
+
+include M hn
+
+/-- We define `x ↦ x^n` (for positive `n : ℕ`) as a `monoid_with_zero_hom` -/
+def powMonoidWithZeroHom : M →*₀ M :=
+  { powMonoidHom n with map_zero' := zero_pow hn }
+
+@[simp]
+theorem coe_pow_monoid_with_zero_hom : (powMonoidWithZeroHom hn : M → M) = (· ^ n) :=
+  rfl
+
+@[simp]
+theorem pow_monoid_with_zero_hom_apply (a : M) : powMonoidWithZeroHom hn a = a ^ n :=
+  rfl
+
+end powMonoidWithZeroHom
+
 theorem pow_dvd_pow [Monoidₓ R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ a ^ n :=
   ⟨a ^ (n - m), by
     rw [← pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
@@ -459,7 +486,10 @@ end HasDistribNeg
 
 section Ringₓ
 
-variable [Ringₓ R]
+variable [Ringₓ R] {a b : R}
+
+protected theorem Commute.sq_sub_sq (h : Commute a b) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
+  rw [sq, sq, h.mul_self_sub_mul_self_eq]
 
 @[simp]
 theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0 := by
@@ -469,19 +499,28 @@ theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : -1 ^ n * r = 0 ↔ r = 0
 theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * -1 ^ n = 0 ↔ r = 0 := by
   rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 
+variable [NoZeroDivisors R]
+
+protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
+  rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm]
+
+@[simp]
+theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by
+  rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
+
+theorem sq_ne_one_iff : a ^ 2 ≠ 1 ↔ a ≠ 1 ∧ a ≠ -1 :=
+  sq_eq_one_iff.Not.trans not_or_distrib
+
 end Ringₓ
 
 section CommRingₓ
 
 variable [CommRingₓ R]
 
-theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
-  rw [sq, sq, mul_self_sub_mul_self]
+theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) :=
+  (Commute.all a b).sq_sub_sq
 
 alias sq_sub_sq ← pow_two_sub_pow_two
-
-theorem eq_or_eq_neg_of_sq_eq_sq [NoZeroDivisors R] (a b : R) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
-  rwa [← add_eq_zero_iff_eq_neg, ← sub_eq_zero, or_comm, ← mul_eq_zero, ← sq_sub_sq a b, sub_eq_zero]
 
 theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
   rw [sub_eq_add_neg, add_sq, neg_sq, mul_neg, ← sub_eq_add_neg]
@@ -491,13 +530,22 @@ alias sub_sq ← sub_pow_two
 theorem sub_sq' (a b : R) : (a - b) ^ 2 = a ^ 2 + b ^ 2 - 2 * a * b := by
   rw [sub_eq_add_neg, add_sq', neg_sq, mul_neg, ← sub_eq_add_neg]
 
+variable [NoZeroDivisors R] {a b : R}
+
+theorem sq_eq_sq_iff_eq_or_eq_neg : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b :=
+  (Commute.all a b).sq_eq_sq_iff_eq_or_eq_neg
+
+theorem eq_or_eq_neg_of_sq_eq_sq (a b : R) : a ^ 2 = b ^ 2 → a = b ∨ a = -b :=
+  sq_eq_sq_iff_eq_or_eq_neg.1
+
 -- Copies of the above comm_ring lemmas for `units R`.
 namespace Units
 
-theorem eq_or_eq_neg_of_sq_eq_sq [NoZeroDivisors R] (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b := by
-  refine' (eq_or_eq_neg_of_sq_eq_sq _ _ _).imp (fun h => Units.ext h) fun h => Units.ext h
-  replace h := congr_argₓ (coe : Rˣ → R) h
-  rwa [Units.coe_pow, Units.coe_pow] at h
+protected theorem sq_eq_sq_iff_eq_or_eq_neg {a b : Rˣ} : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
+  simp_rw [ext_iff, coe_pow, sq_eq_sq_iff_eq_or_eq_neg, Units.coe_neg]
+
+protected theorem eq_or_eq_neg_of_sq_eq_sq (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b :=
+  Units.sq_eq_sq_iff_eq_or_eq_neg.1 h
 
 end Units
 

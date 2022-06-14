@@ -255,7 +255,7 @@ theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)
   ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).some_spec⟩
 
 theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Injective (F i)) :
-    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_funₓ h i : _)
+    Injective fun x : ∀ i, f i => fun i => F i (x i) := fun x y h => funext fun i => hF i <| (congr_fun h i : _)
 
 theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) :
     Bijective fun x : ∀ i, f i => fun i => F i (x i) :=

@@ -185,7 +185,7 @@ theorem mul_left_cancelₓ : a * b = a * c → b = c :=
 
 @[to_additive]
 theorem mul_left_cancel_iffₓ : a * b = a * c ↔ b = c :=
-  ⟨mul_left_cancelₓ, congr_argₓ _⟩
+  ⟨mul_left_cancelₓ, congr_arg _⟩
 
 @[to_additive]
 theorem mul_right_injective (a : G) : Function.Injective ((· * ·) a) := fun b c => mul_left_cancelₓ
@@ -223,7 +223,7 @@ theorem mul_right_cancelₓ : a * b = c * b → a = c :=
 
 @[to_additive]
 theorem mul_right_cancel_iffₓ : b * a = c * a ↔ b = c :=
-  ⟨mul_right_cancelₓ, congr_argₓ _⟩
+  ⟨mul_right_cancelₓ, congr_arg _⟩
 
 @[to_additive]
 theorem mul_left_injective (a : G) : Function.Injective fun x => x * a := fun b c => mul_right_cancelₓ
@@ -356,7 +356,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -538,7 +538,7 @@ attribute [to_additive] zpowRec
 
 section HasInvolutiveInv
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option extends_priority
 -- ensure that we don't go via these typeclasses to find `has_inv` on groups and groups with zero
 set_option extends_priority 50
 
@@ -690,7 +690,7 @@ theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _
-      _ = a * a ^ n := congr_argₓ ((· * ·) a) (zpow_coe_nat n)
+      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_coe_nat n)
       _ = a ^ (n + 1) := (pow_succₓ _ _).symm
       
 

@@ -7,7 +7,7 @@ import Mathbin.GroupTheory.QuotientGroup
 import Mathbin.GroupTheory.Solvable
 import Mathbin.GroupTheory.PGroup
 import Mathbin.GroupTheory.Sylow
-import Mathbin.Data.Nat.Factorization
+import Mathbin.Data.Nat.Factorization.Basic
 import Mathbin.Tactic.Tfae
 
 /-!
@@ -156,7 +156,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
     x ∈ upperCentralSeries G (n + 1) ↔ ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ upperCentralSeries G n :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`nilpotent] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`nilpotent] []
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 class Groupₓ.IsNilpotent (G : Type _) [Groupₓ G] : Prop where

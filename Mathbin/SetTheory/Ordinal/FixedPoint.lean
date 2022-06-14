@@ -29,7 +29,7 @@ noncomputable section
 
 universe u v
 
-open Function
+open Function Order
 
 namespace Ordinal
 
@@ -148,7 +148,7 @@ theorem deriv_family_limit (f : ι → Ordinal → Ordinal) {o} :
 
 theorem deriv_family_is_normal (f : ι → Ordinal → Ordinal) : IsNormal (derivFamily f) :=
   ⟨fun o => by
-    rw [deriv_family_succ, ← succ_le] <;> apply le_nfp_family, fun o l a => by
+    rw [deriv_family_succ, ← succ_le_iff] <;> apply le_nfp_family, fun o l a => by
     rw [deriv_family_limit _ l, bsup_le_iff]⟩
 
 theorem deriv_family_fp {i} (H : IsNormal (f i)) (o : Ordinal.{max u v}) : f i (derivFamily f o) = derivFamily f o := by
@@ -178,7 +178,7 @@ theorem le_iff_deriv_family (H : ∀ i, IsNormal (f i)) {a} : (∀ i, f i a ≤ 
         
       refine' ⟨succ o, le_antisymmₓ _ h₁⟩
       rw [deriv_family_succ]
-      exact nfp_family_le_fp (fun i => (H i).Monotone) (succ_le.2 h) ha
+      exact nfp_family_le_fp (fun i => (H i).Monotone) (succ_le_of_lt h) ha
       
     · cases eq_or_lt_of_le h₁
       · exact ⟨_, h.symm⟩
@@ -282,7 +282,7 @@ theorem apply_le_nfp_bfamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a
 theorem nfp_bfamily_eq_self {a} (h : ∀ i hi, f i hi a = a) : nfpBfamily o f a = a :=
   nfp_family_eq_self fun _ => h _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 /-- A generalization of the fixed point lemma for normal functions: any family of normal functions
     has an unbounded set of common fixed points. -/
 theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
@@ -326,7 +326,7 @@ theorem fp_iff_deriv_bfamily (H : ∀ i hi, IsNormal (f i hi)) {a} :
   rw [← (H i hi).le_iff_eq]
   exact h i hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem deriv_bfamily_eq_enum_ord (H : ∀ i hi, IsNormal (f i hi)) :
     derivBfamily o f = enumOrd (⋂ (i) (hi), Function.FixedPoints (f i hi)) := by
   rw [← eq_enum_ord _ (fp_bfamily_unbounded H)]
@@ -443,7 +443,7 @@ theorem deriv_is_normal f : IsNormal (deriv f) :=
 theorem deriv_id_of_nfp_id {f : Ordinal → Ordinal} (h : nfp f = id) : deriv f = id :=
   ((deriv_is_normal _).eq_iff_zero_and_succ IsNormal.refl).2
     (by
-      simp [h, succ_inj])
+      simp [h])
 
 theorem IsNormal.deriv_fp {f} (H : IsNormal f) : ∀ o, f (deriv f o) = deriv f o :=
   @deriv_family_fp Unit (fun _ => f) Unit.star H
@@ -463,7 +463,7 @@ theorem deriv_eq_enum_ord (H : IsNormal f) : deriv f = enumOrd (Function.FixedPo
 theorem deriv_eq_id_of_nfp_eq_id {f : Ordinal → Ordinal} (h : nfp f = id) : deriv f = id :=
   (IsNormal.eq_iff_zero_and_succ (deriv_is_normal _) IsNormal.refl).2
     (by
-      simp [h, succ_inj])
+      simp [h])
 
 end
 
@@ -514,7 +514,7 @@ theorem deriv_add_eq_mul_omega_add (a b : Ordinal.{u}) : deriv ((· + ·) a) b =
     exact nfp_add_zero a
     
   · rw [deriv_succ, h, add_succ]
-    exact nfp_eq_self (add_eq_right_iff_mul_omega_le.2 ((le_add_right _ _).trans (lt_succ_self _).le))
+    exact nfp_eq_self (add_eq_right_iff_mul_omega_le.2 ((le_add_right _ _).trans (le_succ _)))
     
 
 /-! ### Fixed points of multiplication -/
@@ -591,7 +591,7 @@ theorem eq_zero_or_opow_omega_le_of_mul_eq_right {a b : Ordinal} (hab : a * b = 
 
 theorem mul_eq_right_iff_opow_omega_dvd {a b : Ordinal} : a * b = b ↔ (a^omega) ∣ b := by
   cases' eq_zero_or_pos a with ha ha
-  · rw [ha, zero_mul, zero_opow omega_ne_zero, zero_dvd]
+  · rw [ha, zero_mul, zero_opow omega_ne_zero, zero_dvd_iff]
     exact eq_comm
     
   refine' ⟨fun hab => _, fun h => _⟩
@@ -611,7 +611,7 @@ theorem mul_le_right_iff_opow_omega_dvd {a b : Ordinal} (ha : 0 < a) : a * b ≤
   exact (mul_is_normal ha).le_iff_eq
 
 theorem nfp_mul_opow_omega_add {a c : Ordinal} b (ha : 0 < a) (hc : 0 < c) (hca : c ≤ (a^omega)) :
-    nfp ((· * ·) a) ((a^omega) * b + c) = (a^omega.{u}) * b.succ := by
+    nfp ((· * ·) a) ((a^omega) * b + c) = (a^omega.{u}) * succ b := by
   apply le_antisymmₓ
   · apply nfp_le_fp (mul_is_normal ha).Monotone
     · rw [mul_succ]
@@ -627,7 +627,7 @@ theorem nfp_mul_opow_omega_add {a c : Ordinal} b (ha : 0 < a) (hc : 0 < c) (hca 
     rw [hd] at this
     have := (add_lt_add_left hc ((a^omega) * b)).trans_le this
     rw [add_zeroₓ, mul_lt_mul_iff_left (opow_pos omega ha)] at this
-    rwa [succ_le]
+    rwa [succ_le_iff]
     
 
 theorem deriv_mul_eq_opow_omega_mul {a : Ordinal.{u}} (ha : 0 < a) b : deriv ((· * ·) a) b = (a^omega) * b := by

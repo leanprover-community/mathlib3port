@@ -164,7 +164,7 @@ theorem det_of_block_triangular_matrix (M : Matrix m m R) (b : m → ℕ) (h : B
       rfl
     rw [two_block_triangular_det M fun i => ¬b i = n]
     · rw [mul_comm]
-      apply congr (congr_argₓ Mul.mul _)
+      apply congr (congr_arg Mul.mul _)
       · let m' := { a // ¬b a = n }
         let b' := fun i : m' => b ↑i
         have h' : block_triangular_matrix (M.to_square_block_prop fun i : m => ¬b i = n) b' := by

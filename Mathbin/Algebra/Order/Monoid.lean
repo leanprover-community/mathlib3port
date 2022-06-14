@@ -27,7 +27,7 @@ open Function
 
 universe u
 
-variable {α : Type u}
+variable {α : Type u} {β : Type _}
 
 /-- An ordered commutative monoid is a commutative monoid
 with a partial order such that `a ≤ b → c * a ≤ c * b` (multiplication is monotone)
@@ -90,13 +90,13 @@ end OrderedInstances
 /-- An `ordered_comm_monoid` with one-sided 'division' in the sense that
 if `a ≤ b`, there is some `c` for which `a * c = b`. This is a weaker version
 of the condition on canonical orderings defined by `canonically_ordered_monoid`. -/
-class HasExistsMulOfLe (α : Type u) [OrderedCommMonoid α] : Prop where
+class HasExistsMulOfLe (α : Type u) [Mul α] [LE α] : Prop where
   exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c : α, b = a * c
 
 /-- An `ordered_add_comm_monoid` with one-sided 'subtraction' in the sense that
 if `a ≤ b`, then there is some `c` for which `a + c = b`. This is a weaker version
 of the condition on canonical orderings defined by `canonically_ordered_add_monoid`. -/
-class HasExistsAddOfLe (α : Type u) [OrderedAddCommMonoid α] : Prop where
+class HasExistsAddOfLe (α : Type u) [Add α] [LE α] : Prop where
   exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c : α, b = a + c
 
 attribute [to_additive] HasExistsMulOfLe
@@ -113,9 +113,43 @@ class LinearOrderedAddCommMonoid (α : Type _) extends LinearOrderₓ α, Ordere
 @[protect_proj, ancestor LinearOrderₓ OrderedCommMonoid, to_additive]
 class LinearOrderedCommMonoid (α : Type _) extends LinearOrderₓ α, OrderedCommMonoid α
 
+/-- Typeclass for expressing that the `0` of a type is less or equal to its `1`. -/
+class ZeroLeOneClass (α : Type _) [Zero α] [One α] [LE α] where
+  zero_le_one : (0 : α) ≤ 1
+
+@[simp]
+theorem zero_le_one [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
+  ZeroLeOneClass.zero_le_one
+
+-- `zero_le_one` with an explicit type argument.
+theorem zero_le_one' α [Zero α] [One α] [LE α] [ZeroLeOneClass α] : (0 : α) ≤ 1 :=
+  zero_le_one
+
+theorem zero_le_two [Preorderₓ α] [One α] [AddZeroClassₓ α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (0 : α) ≤ 2 :=
+  add_nonneg zero_le_one zero_le_one
+
+theorem one_le_two [LE α] [One α] [AddZeroClassₓ α] [ZeroLeOneClass α] [CovariantClass α α (· + ·) (· ≤ ·)] :
+    (1 : α) ≤ 2 :=
+  calc
+    1 = 1 + 0 := (add_zeroₓ 1).symm
+    _ ≤ 1 + 1 := add_le_add_left zero_le_one _
+    
+
+theorem one_le_two' [LE α] [One α] [AddZeroClassₓ α] [ZeroLeOneClass α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
+    (1 : α) ≤ 2 :=
+  calc
+    1 = 0 + 1 := (zero_addₓ 1).symm
+    _ ≤ 1 + 1 := add_le_add_right zero_le_one _
+    
+
 /-- A linearly ordered commutative monoid with a zero element. -/
 class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMonoid α, CommMonoidWithZero α where
   zero_le_one : (0 : α) ≤ 1
+
+instance (priority := 100) LinearOrderedCommMonoidWithZero.zeroLeOneClass [h : LinearOrderedCommMonoidWithZero α] :
+    ZeroLeOneClass α :=
+  { h with }
 
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
@@ -168,7 +202,7 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
   { hf.OrderedCommMonoid f one mul npow, LinearOrderₓ.lift f hf with }
 
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
-  add_pos h h
+  add_pos' h h
 
 namespace Units
 
@@ -251,7 +285,7 @@ theorem lt_of_mul_lt_mul_left {α : Type u} [Mul α] [PartialOrderₓ α] [Contr
     ∀ a b c : WithZero α, a * b < a * c → b < c := by
   rintro (_ | a) (_ | b) (_ | c) h <;>
     try
-      exact False.elim (lt_irreflₓ none h)
+      exact False.elim (lt_irreflₓ _ h)
   · exact WithZero.zero_lt_coe c
     
   · exact False.elim (not_le_of_lt h (WithZero.zero_le _))
@@ -319,7 +353,8 @@ end WithZero
 @[protect_proj, ancestor OrderedAddCommMonoid HasBot]
 class CanonicallyOrderedAddMonoid (α : Type _) extends OrderedAddCommMonoid α, HasBot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  le_iff_exists_add : ∀ a b : α, a ≤ b ↔ ∃ c, b = a + c
+  exists_add_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a + c
+  le_self_add : ∀ a b : α, a ≤ a + b
 
 -- see Note [lower instance priority]
 instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedAddMonoid α] :
@@ -338,7 +373,8 @@ instance (priority := 100) CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) 
 @[protect_proj, ancestor OrderedCommMonoid HasBot, to_additive]
 class CanonicallyOrderedMonoid (α : Type _) extends OrderedCommMonoid α, HasBot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  le_iff_exists_mul : ∀ a b : α, a ≤ b ↔ ∃ c, b = a * c
+  exists_mul_of_le : ∀ {a b : α}, a ≤ b → ∃ c, b = a * c
+  le_self_mul : ∀ a b : α, a ≤ a * b
 
 -- see Note [lower instance priority]
 @[to_additive]
@@ -346,22 +382,42 @@ instance (priority := 100) CanonicallyOrderedMonoid.toOrderBot (α : Type u) [h 
     OrderBot α :=
   { h with }
 
+-- see Note [lower instance priority]
+@[to_additive]
+instance (priority := 100) CanonicallyOrderedMonoid.has_exists_mul_of_le (α : Type u) [h : CanonicallyOrderedMonoid α] :
+    HasExistsMulOfLe α :=
+  { h with }
+
 section CanonicallyOrderedMonoid
 
 variable [CanonicallyOrderedMonoid α] {a b c d : α}
 
 @[to_additive]
-theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
-  CanonicallyOrderedMonoid.le_iff_exists_mul a b
+theorem le_self_mul : a ≤ a * c :=
+  CanonicallyOrderedMonoid.le_self_mul _ _
+
+@[to_additive]
+theorem le_mul_self : a ≤ b * a := by
+  rw [mul_comm]
+  exact le_self_mul
 
 @[to_additive]
 theorem self_le_mul_right (a b : α) : a ≤ a * b :=
-  le_iff_exists_mul.mpr ⟨b, rfl⟩
+  le_self_mul
 
 @[to_additive]
-theorem self_le_mul_left (a b : α) : a ≤ b * a := by
-  rw [mul_comm]
-  exact self_le_mul_right a b
+theorem self_le_mul_left (a b : α) : a ≤ b * a :=
+  le_mul_self
+
+@[to_additive]
+theorem le_iff_exists_mul : a ≤ b ↔ ∃ c, b = a * c :=
+  ⟨exists_mul_of_le, by
+    rintro ⟨c, rfl⟩
+    exact le_self_mul⟩
+
+@[to_additive]
+theorem le_iff_exists_mul' : a ≤ b ↔ ∃ c, b = c * a := by
+  simpa only [mul_comm _ a] using le_iff_exists_mul
 
 @[simp, to_additive zero_le]
 theorem one_le (a : α) : 1 ≤ a :=
@@ -403,20 +459,12 @@ theorem le_mul_left (h : a ≤ c) : a ≤ b * c :=
     
 
 @[to_additive]
-theorem le_mul_self : a ≤ b * a :=
-  le_mul_left (le_reflₓ a)
-
-@[to_additive]
 theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
   calc
     a = a * 1 := by
       simp
     _ ≤ b * c := mul_le_mul' h (one_le _)
     
-
-@[to_additive]
-theorem le_self_mul : a ≤ a * c :=
-  le_mul_right (le_reflₓ a)
 
 @[to_additive]
 theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔ ∃ c > 1, b = a * c := by
@@ -435,44 +483,32 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
     apply lt_mul_of_one_lt_right'
     
 
+instance WithZero.has_exists_add_of_le {α} [Add α] [Preorderₓ α] [HasExistsAddOfLe α] : HasExistsAddOfLe (WithZero α) :=
+  ⟨fun a b => by
+    apply WithZero.cases_on a
+    · exact fun _ => ⟨b, (zero_addₓ b).symm⟩
+      
+    apply WithZero.cases_on b
+    · exact fun b' h => (WithBot.not_coe_le_bot _ h).elim
+      
+    rintro a' b' h
+    obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
+    exact ⟨c, rfl⟩⟩
+
 /-- Adding a new zero to a canonically ordered additive monoid produces another one. -/
 -- This instance looks absurd: a monoid already has a zero
 instance WithZero.canonicallyOrderedAddMonoid {α : Type u} [CanonicallyOrderedAddMonoid α] :
     CanonicallyOrderedAddMonoid (WithZero α) :=
-  { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le with
-    le_iff_exists_add := fun a b => by
+  { WithZero.orderBot, WithZero.orderedAddCommMonoid zero_le, WithZero.has_exists_add_of_le with
+    le_self_add := fun a b => by
       apply WithZero.cases_on a
-      · exact iff_of_true bot_le ⟨b, (zero_addₓ b).symm⟩
+      · exact bot_le
         
       apply WithZero.cases_on b
-      · intro b'
-        refine'
-          iff_of_false
-            (mt (le_antisymmₓ bot_le)
-              (by
-                simp ))
-            (not_exists.mpr fun c => _)
-        apply WithZero.cases_on c <;> simp [← WithZero.coe_add]
+      · exact fun b' => le_rfl
         
-      · simp only [le_iff_exists_add, WithZero.coe_le_coe]
-        intros
-        constructor <;> rintro ⟨c, h⟩
-        · exact ⟨c, congr_argₓ coe h⟩
-          
-        · induction c using WithZero.cases_on
-          · refine' ⟨0, _⟩
-            simpa using h
-            
-          · refine' ⟨c, _⟩
-            simpa [← WithZero.coe_add] using h
-            
-          
+      · exact fun a' b' => WithZero.coe_le_coe.2 le_self_add
          }
-
-@[to_additive]
-instance (priority := 100) CanonicallyOrderedMonoid.has_exists_mul_of_le (α : Type u) [CanonicallyOrderedMonoid α] :
-    HasExistsMulOfLe α where
-  exists_mul_of_le := fun a b hab => le_iff_exists_mul.mp hab
 
 end CanonicallyOrderedMonoid
 
@@ -835,10 +871,26 @@ namespace Prod
 variable {M N : Type _}
 
 @[to_additive]
+instance [OrderedCommMonoid α] [OrderedCommMonoid β] : OrderedCommMonoid (α × β) :=
+  { Prod.commMonoid, Prod.partialOrder _ _ with
+    mul_le_mul_left := fun a b h c => ⟨mul_le_mul_left' h.1 _, mul_le_mul_left' h.2 _⟩ }
+
+@[to_additive]
 instance [OrderedCancelCommMonoid M] [OrderedCancelCommMonoid N] : OrderedCancelCommMonoid (M × N) :=
-  { Prod.cancelCommMonoid, Prod.partialOrder M N with
-    mul_le_mul_left := fun a b h c => ⟨mul_le_mul_left' h.1 _, mul_le_mul_left' h.2 _⟩,
+  { Prod.cancelCommMonoid, Prod.orderedCommMonoid with
     le_of_mul_le_mul_left := fun a b c h => ⟨le_of_mul_le_mul_left' h.1, le_of_mul_le_mul_left' h.2⟩ }
+
+@[to_additive]
+instance [LE α] [LE β] [Mul α] [Mul β] [HasExistsMulOfLe α] [HasExistsMulOfLe β] : HasExistsMulOfLe (α × β) :=
+  ⟨fun a b h =>
+    let ⟨c, hc⟩ := exists_mul_of_le h.1
+    let ⟨d, hd⟩ := exists_mul_of_le h.2
+    ⟨(c, d), extₓ hc hd⟩⟩
+
+@[to_additive]
+instance [CanonicallyOrderedMonoid α] [CanonicallyOrderedMonoid β] : CanonicallyOrderedMonoid (α × β) :=
+  { Prod.orderedCommMonoid, Prod.orderBot _ _, Prod.has_exists_mul_of_le with
+    le_self_mul := fun a b => ⟨le_self_mul, le_self_mul⟩ }
 
 end Prod
 
@@ -878,6 +930,9 @@ theorem top_ne_one : ⊤ ≠ (1 : WithTop α) :=
 @[simp, to_additive]
 theorem one_ne_top : (1 : WithTop α) ≠ ⊤ :=
   fun.
+
+instance [Zero α] [LE α] [ZeroLeOneClass α] : ZeroLeOneClass (WithTop α) :=
+  ⟨some_le_some.2 zero_le_one⟩
 
 end One
 
@@ -1115,30 +1170,25 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedAddCommMonoidWithTop (Wi
   { WithTop.orderTop, WithTop.linearOrder, WithTop.orderedAddCommMonoid, Option.nontrivial with
     top_add' := WithTop.top_add }
 
+instance [LE α] [Add α] [HasExistsAddOfLe α] : HasExistsAddOfLe (WithTop α) :=
+  ⟨fun a b =>
+    match a, b with
+    | ⊤, ⊤ => by
+      simp
+    | (a : α), ⊤ => fun _ => ⟨⊤, rfl⟩
+    | (a : α), (b : α) => fun h => by
+      obtain ⟨c, rfl⟩ := exists_add_of_le (WithTop.coe_le_coe.1 h)
+      exact ⟨c, rfl⟩
+    | ⊤, (b : α) => fun h => (not_top_le_coe _ h).elim⟩
+
 instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedAddMonoid (WithTop α) :=
-  { WithTop.orderBot, WithTop.orderedAddCommMonoid with
-    le_iff_exists_add := fun a b =>
+  { WithTop.orderBot, WithTop.orderedAddCommMonoid, WithTop.has_exists_add_of_le with
+    le_self_add := fun a b =>
       match a, b with
-      | ⊤, ⊤ => by
-        simp
-      | (a : α), ⊤ => by
-        simp only [true_iffₓ, le_top]
-        refine' ⟨⊤, _⟩
-        rfl
-      | (a : α), (b : α) => by
-        rw [WithTop.coe_le_coe, le_iff_exists_add]
-        constructor
-        · rintro ⟨c, rfl⟩
-          refine' ⟨c, _⟩
-          norm_cast
-          
-        · intro h
-          exact
-            match b, h with
-            | _, ⟨some c, rfl⟩ => ⟨_, rfl⟩
-          
-      | ⊤, (b : α) => by
-        simp }
+      | ⊤, ⊤ => le_rfl
+      | (a : α), ⊤ => le_top
+      | (a : α), (b : α) => WithTop.coe_le_coe.2 le_self_add
+      | ⊤, (b : α) => le_rfl }
 
 instance [CanonicallyLinearOrderedAddMonoid α] : CanonicallyLinearOrderedAddMonoid (WithTop α) :=
   { WithTop.canonicallyOrderedAddMonoid, WithTop.linearOrder with }
@@ -1158,6 +1208,34 @@ theorem zero_lt_top [OrderedAddCommMonoid α] : (0 : WithTop α) < ⊤ :=
 @[simp, norm_cast]
 theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a ↔ 0 < a :=
   coe_lt_coe
+
+/-- A version of `with_top.map` for `one_hom`s. -/
+@[to_additive "A version of `with_top.map` for `zero_hom`s", simps (config := { fullyApplied := false })]
+protected def _root_.one_hom.with_top_map {M N : Type _} [One M] [One N] (f : OneHom M N) :
+    OneHom (WithTop M) (WithTop N) where
+  toFun := WithTop.map f
+  map_one' := by
+    rw [WithTop.map_one, map_one, coe_one]
+
+/-- A version of `with_top.map` for `add_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.add_hom.with_top_map {M N : Type _} [Add M] [Add N] (f : AddHom M N) :
+    AddHom (WithTop M) (WithTop N) where
+  toFun := WithTop.map f
+  map_add' := fun x y =>
+    match x, y with
+    | ⊤, y => by
+      rw [top_add, map_top, top_add]
+    | x, ⊤ => by
+      rw [add_top, map_top, add_top]
+    | (x : M), (y : M) => by
+      simp only [← coe_add, map_coe, map_add]
+
+/-- A version of `with_top.map` for `add_monoid_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.add_monoid_hom.with_top_map {M N : Type _} [AddZeroClassₓ M] [AddZeroClassₓ N] (f : M →+ N) :
+    WithTop M →+ WithTop N :=
+  { f.toZeroHom.with_top_map, f.toAddHom.with_top_map with toFun := WithTop.map f }
 
 end WithTop
 
@@ -1184,6 +1262,9 @@ instance [AddMonoidₓ α] : AddMonoidₓ (WithBot α) :=
 
 instance [AddCommMonoidₓ α] : AddCommMonoidₓ (WithBot α) :=
   WithTop.addCommMonoid
+
+instance [Zero α] [One α] [LE α] [ZeroLeOneClass α] : ZeroLeOneClass (WithBot α) :=
+  ⟨some_le_some.2 zero_le_one⟩
 
 -- `by norm_cast` proves this lemma, so I did not tag it with `norm_cast`
 @[to_additive]
@@ -1314,6 +1395,18 @@ end WithBot
 
 section TypeTags
 
+instance : ∀ [LE α], LE (Multiplicative α) :=
+  id
+
+instance : ∀ [LE α], LE (Additive α) :=
+  id
+
+instance : ∀ [LT α], LT (Multiplicative α) :=
+  id
+
+instance : ∀ [LT α], LT (Additive α) :=
+  id
+
 instance : ∀ [Preorderₓ α], Preorderₓ (Multiplicative α) :=
   id
 
@@ -1330,6 +1423,24 @@ instance : ∀ [LinearOrderₓ α], LinearOrderₓ (Multiplicative α) :=
   id
 
 instance : ∀ [LinearOrderₓ α], LinearOrderₓ (Additive α) :=
+  id
+
+instance [LE α] : ∀ [OrderBot α], OrderBot (Multiplicative α) :=
+  id
+
+instance [LE α] : ∀ [OrderBot α], OrderBot (Additive α) :=
+  id
+
+instance [LE α] : ∀ [OrderTop α], OrderTop (Multiplicative α) :=
+  id
+
+instance [LE α] : ∀ [OrderTop α], OrderTop (Additive α) :=
+  id
+
+instance [LE α] : ∀ [BoundedOrder α], BoundedOrder (Multiplicative α) :=
+  id
+
+instance [LE α] : ∀ [BoundedOrder α], BoundedOrder (Additive α) :=
   id
 
 instance [OrderedAddCommMonoid α] : OrderedCommMonoid (Multiplicative α) :=
@@ -1352,6 +1463,26 @@ instance [LinearOrderedAddCommMonoid α] : LinearOrderedCommMonoid (Multiplicati
 
 instance [LinearOrderedCommMonoid α] : LinearOrderedAddCommMonoid (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommMonoid with }
+
+instance [Add α] [LE α] [HasExistsAddOfLe α] : HasExistsMulOfLe (Multiplicative α) :=
+  ⟨@exists_add_of_le α _ _ _⟩
+
+instance [Mul α] [LE α] [HasExistsMulOfLe α] : HasExistsAddOfLe (Additive α) :=
+  ⟨@exists_mul_of_le α _ _ _⟩
+
+instance [CanonicallyOrderedAddMonoid α] : CanonicallyOrderedMonoid (Multiplicative α) :=
+  { Multiplicative.orderedCommMonoid, Multiplicative.orderBot, Multiplicative.has_exists_mul_of_le with
+    le_self_mul := @le_self_add α _ }
+
+instance [CanonicallyOrderedMonoid α] : CanonicallyOrderedAddMonoid (Additive α) :=
+  { Additive.orderedAddCommMonoid, Additive.orderBot, Additive.has_exists_add_of_le with
+    le_self_add := @le_self_mul α _ }
+
+instance [CanonicallyLinearOrderedAddMonoid α] : CanonicallyLinearOrderedMonoid (Multiplicative α) :=
+  { Multiplicative.canonicallyOrderedMonoid, Multiplicative.linearOrder with }
+
+instance [CanonicallyLinearOrderedMonoid α] : CanonicallyLinearOrderedAddMonoid (Additive α) :=
+  { Additive.canonicallyOrderedAddMonoid, Additive.linearOrder with }
 
 namespace Additive
 

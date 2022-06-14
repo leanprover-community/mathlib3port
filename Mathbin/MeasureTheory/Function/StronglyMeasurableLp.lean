@@ -35,10 +35,10 @@ local infixr:25 " →ₛ " => SimpleFunc
 
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedGroup G] {f : α → G}
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 theorem Memℒp.fin_strongly_measurable_of_strongly_measurable (hf : Memℒp f p μ) (hf_meas : StronglyMeasurable f)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) : FinStronglyMeasurable f μ := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   have : separable_space (Set.Range f ∪ {0} : Set G) := hf_meas.separable_space_range_union_singleton
   let fs :=
     simple_func.approx_on f hf_meas.measurable (Set.Range f ∪ {0}) 0

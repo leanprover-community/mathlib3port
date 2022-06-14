@@ -50,12 +50,12 @@ open Presieve
 theorem is_sheaf_yoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoneda.obj α) := fun β S hs x hx =>
   ⟨fun y => x _ (hs y) PUnit.unit, fun γ f h =>
     funext fun z => by
-      have := congr_funₓ (hx (𝟙 _) (fun _ => z) (hs <| f z) h rfl) PUnit.unit
+      have := congr_fun (hx (𝟙 _) (fun _ => z) (hs <| f z) h rfl) PUnit.unit
       convert this
       exact rfl,
     fun f hf =>
     funext fun y => by
-      convert congr_funₓ (hf _ (hs y)) PUnit.unit⟩
+      convert congr_fun (hf _ (hs y)) PUnit.unit⟩
 
 /-- The yoneda functor that sends a type to a sheaf over the category of types -/
 @[simps]
@@ -82,7 +82,7 @@ noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
     (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.some hg) fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
     (hs.IsSheafFor _ _ (generate_discrete_presieve_mem δ)).IsSeparatedFor.ext fun ε g ⟨x, hx⟩ => by
       have : f₁ (Classical.some hf₁) = f₂ (Classical.some hf₂) :=
-        Classical.some_spec hf₁ (g₁ <| g x) ▸ Classical.some_spec hf₂ (g₂ <| g x) ▸ congr_funₓ h _
+        Classical.some_spec hf₁ (g₁ <| g x) ▸ Classical.some_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
       simp_rw [← functor_to_types.map_comp_apply, this, ← op_comp]
       rfl
 
@@ -99,7 +99,7 @@ theorem types_glue_eval {S hs α} s : typesGlue.{u} S hs α (eval S α s) = s :=
       (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <| by
         rw [← op_comp]
         congr 2
-        exact funext fun x => congr_argₓ f (Classical.some_spec hf x).symm
+        exact funext fun x => congr_arg f (Classical.some_spec hf x).symm
 
 /-- Given a sheaf `S`, construct an equivalence `S(α) ≃ (α → S(*))`. -/
 @[simps]
@@ -135,7 +135,7 @@ noncomputable def equivYoneda' (S : SheafOfTypes typesGrothendieckTopology) : S 
 
 theorem eval_app (S₁ S₂ : SheafOfTypes.{u} typesGrothendieckTopology) (f : S₁ ⟶ S₂) (α : Type u) (s : S₁.1.obj (op α))
     (x : α) : eval S₂.1 α (f.val.app (op α) s) x = f.val.app (op PUnit) (eval S₁.1 α s x) :=
-  (congr_funₓ (f.val.naturality (↾fun _ : PUnit => x).op) s).symm
+  (congr_fun (f.val.naturality (↾fun _ : PUnit => x).op) s).symm
 
 /-- `yoneda'` induces an equivalence of category between `Type u` and
 `Sheaf types_grothendieck_topology`. -/
@@ -169,7 +169,7 @@ theorem types_grothendieck_topology_eq_canonical : types_grothendieck_topology.{
                     (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ => ULift.up false :=
                     (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
                       funext fun y => hsx.elim <| (S.2 hf) fun _ => y
-                  Bool.noConfusion <| ULift.up.inj <| (congr_funₓ this PUnit.unit : _),
+                  Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
                 fun hs β f => (is_sheaf_yoneda' _) fun y => hs _⟩⟩
 
 end CategoryTheory

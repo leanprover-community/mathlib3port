@@ -145,7 +145,7 @@ def nilFun {α : Typevec 0} {β : Typevec 0} : α ⟹ β := fun i => Fin2.elim0 
 
 theorem eq_of_drop_last_eq {α β : Typevec (n + 1)} {f g : α ⟹ β} (h₀ : dropFun f = dropFun g)
     (h₁ : lastFun f = lastFun g) : f = g := by
-  replace h₀ := congr_funₓ h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
+  replace h₀ := congr_fun h₀ <;> ext1 (ieq | ⟨j, ieq⟩) <;> apply_assumption
 
 @[simp]
 theorem drop_fun_split_fun {α α' : Typevec (n + 1)} (f : Drop α ⟹ Drop α') (g : Last α → Last α') :
@@ -154,11 +154,11 @@ theorem drop_fun_split_fun {α α' : Typevec (n + 1)} (f : Drop α ⟹ Drop α')
 
 /-- turn an equality into an arrow -/
 def Arrow.mp {α β : Typevec n} (h : α = β) : α ⟹ β
-  | i => Eq.mp (congr_funₓ h _)
+  | i => Eq.mp (congr_fun h _)
 
 /-- turn an equality into an arrow, with reverse direction -/
 def Arrow.mpr {α β : Typevec n} (h : α = β) : β ⟹ α
-  | i => Eq.mpr (congr_funₓ h _)
+  | i => Eq.mpr (congr_fun h _)
 
 /-- decompose a vector into its prefix appended with its last element -/
 def toAppend1DropLast {α : Typevec (n + 1)} : α ⟹ (Drop α ::: Last α) :=

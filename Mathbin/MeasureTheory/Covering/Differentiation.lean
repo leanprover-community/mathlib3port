@@ -235,11 +235,11 @@ theorem ae_tendsto_lim_ratio : ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v
   intro x hx
   exact tendsto_nhds_lim hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (m n)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (m n)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (m n)
 /-- Given two thresholds `p < q`, the sets `{x | v.lim_ratio ρ x < p}`
 and `{x | q < v.lim_ratio ρ x}` are obviously disjoint. The key to proving that `v.lim_ratio ρ` is
 almost everywhere measurable is to show that these sets have measurable supersets which are also

@@ -262,7 +262,7 @@ theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 
 theorem zpow_bit1 (A : M) (n : ℤ) : A ^ bit1 n = A ^ n * A ^ n * A := by
   rw [bit1, zpow_add_one_of_ne_neg_one, zpow_bit0]
   intro h
-  simpa using congr_argₓ bodd h
+  simpa using congr_arg bodd h
 
 theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ m n : ℤ, A ^ (m * n) = (A ^ m) ^ n
   | (m : ℕ), (n : ℕ) => by

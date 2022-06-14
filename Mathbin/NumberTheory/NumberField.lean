@@ -125,7 +125,7 @@ instance [NumberField K] : CharZero (𝓞 K) :=
 theorem not_is_field [NumberField K] : ¬IsField (𝓞 K) := by
   have h_inj : Function.Injective ⇑(algebraMap ℤ (𝓞 K)) := RingHom.injective_int (algebraMap ℤ (𝓞 K))
   intro hf
-  exact Int.not_is_field ((IsIntegral.is_field_iff_is_field (IsIntegralClosure.is_integral_algebra ℤ K) h_inj).mpr hf)
+  exact Int.not_is_field (((IsIntegralClosure.is_integral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
 
 instance [NumberField K] : IsDedekindDomain (𝓞 K) :=
   IsIntegralClosure.is_dedekind_domain ℤ ℚ K _

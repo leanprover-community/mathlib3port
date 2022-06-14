@@ -153,7 +153,7 @@ theorem mem_skew_adjoint_matrices_lie_subalgebra_unit_smul (u : Rˣ) (J A : Matr
   change A ∈ skewAdjointMatricesSubmodule (u • J) ↔ A ∈ skewAdjointMatricesSubmodule J
   simp only [mem_skew_adjoint_matrices_submodule, Matrix.IsSkewAdjoint, Matrix.IsAdjointPair]
   constructor <;> intro h
-  · simpa using congr_argₓ (fun B => u⁻¹ • B) h
+  · simpa using congr_arg (fun B => u⁻¹ • B) h
     
   · simp [h]
     

@@ -322,17 +322,26 @@ protected theorem refl [Monoidₓ α] (x : α) : x ~ᵤ x :=
   ⟨1, by
     simp ⟩
 
+instance [Monoidₓ α] : IsRefl α Associated :=
+  ⟨Associated.refl⟩
+
 @[symm]
 protected theorem symm [Monoidₓ α] : ∀ {x y : α}, x ~ᵤ y → y ~ᵤ x
   | x, _, ⟨u, rfl⟩ =>
     ⟨u⁻¹, by
       rw [mul_assoc, Units.mul_inv, mul_oneₓ]⟩
 
+instance [Monoidₓ α] : IsSymm α Associated :=
+  ⟨fun a b => Associated.symm⟩
+
 @[trans]
 protected theorem trans [Monoidₓ α] : ∀ {x y z : α}, x ~ᵤ y → y ~ᵤ z → x ~ᵤ z
   | x, _, _, ⟨u, rfl⟩, ⟨v, rfl⟩ =>
     ⟨u * v, by
       rw [Units.coe_mul, mul_assoc]⟩
+
+instance [Monoidₓ α] : IsTrans α Associated :=
+  ⟨fun a b c => Associated.trans⟩
 
 /-- The setoid of the relation `x ~ᵤ y` iff there is a unit `u` such that `x * u = y` -/
 protected def setoid (α : Type _) [Monoidₓ α] : Setoidₓ α where
@@ -783,7 +792,7 @@ instance [Nontrivial α] : Nontrivial (Associates α) :=
       zero_ne_one this⟩⟩
 
 theorem exists_non_zero_rep {a : Associates α} : a ≠ 0 → ∃ a0 : α, a0 ≠ 0 ∧ Associates.mk a0 = a :=
-  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_argₓ Quotientₓ.mk) nz, rfl⟩
+  Quotientₓ.induction_on a fun b nz => ⟨b, mt (congr_arg Quotientₓ.mk) nz, rfl⟩
 
 end MonoidWithZeroₓ
 
@@ -953,7 +962,7 @@ instance : CancelCommMonoidWithZero (Associates α) :=
 
 instance : CanonicallyOrderedMonoid (Associates α) :=
   { Associates.cancelCommMonoidWithZero, Associates.boundedOrder, Associates.orderedCommMonoid with
-    le_iff_exists_mul := fun a b => Iff.rfl }
+    exists_mul_of_le := fun a b => id, le_self_mul := fun a b => ⟨b, rfl⟩ }
 
 theorem dvd_not_unit_iff_lt {a b : Associates α} : DvdNotUnit a b ↔ a < b :=
   dvd_and_not_dvd_iff.symm
@@ -1002,7 +1011,7 @@ theorem Associates.is_atom_iff [CancelCommMonoidWithZero α] {p : Associates α}
   ⟨fun hp =>
     ⟨by
       simpa only [Associates.is_unit_iff_eq_one] using hp.1, fun a b h =>
-      (eq_bot_or_eq_of_le_atom hp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.is_unit_iff_eq_one.mpr ha)) fun ha =>
+      (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.is_unit_iff_eq_one.mpr ha)) fun ha =>
         Or.inr
           (show IsUnit b by
             rw [ha] at h

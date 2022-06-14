@@ -35,5 +35,5 @@ def conformalPregroupoid : Pregroupoid X where
 
 /-- The groupoid of conformal maps. -/
 def conformalGroupoid : StructureGroupoid X :=
-  conformalPregroupoid.Groupoid
+  conformalPregroupoid.groupoid
 

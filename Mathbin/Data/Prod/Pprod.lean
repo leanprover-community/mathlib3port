@@ -38,7 +38,7 @@ end PProd
 
 theorem Function.Injective.pprod_map {f : α → β} {g : γ → δ} (hf : Injective f) (hg : Injective g) :
     Injective (fun x => ⟨f x.1, g x.2⟩ : PProd α γ → PProd β δ) := fun h =>
-  have A := congr_argₓ PProd.fst h
-  have B := congr_argₓ PProd.snd h
+  have A := congr_arg PProd.fst h
+  have B := congr_arg PProd.snd h
   congr_arg2ₓ PProd.mk (hf A) (hg B)
 

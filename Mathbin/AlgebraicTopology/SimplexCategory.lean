@@ -35,7 +35,7 @@ universe v
 
 open CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1200:31: unsupported: @[derive, irreducible] def
+-- ././Mathport/Syntax/Translate/Basic.lean:1199:31: unsupported: @[derive, irreducible] def
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`
 * morphisms from `n` to `m` are monotone functions `fin (n+1) → fin (m+1)`
@@ -617,9 +617,9 @@ def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Finₓ (x.len + 1) ≃
   Equivₓ.toOrderIso
     { toFun := e.Hom.toOrderHom, invFun := e.inv.toOrderHom,
       left_inv := fun i => by
-        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
+        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id',
       right_inv := fun i => by
-        simpa only using congr_argₓ (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
+        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
     e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
 
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := by
@@ -628,13 +628,13 @@ theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x := 
   have eq₂ := Finset.order_emb_of_fin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
   ext1
   ext1
-  convert congr_argₓ (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
+  convert congr_arg (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
   ext1
   ext1 i
   rfl
 
 theorem eq_id_of_is_iso {x : SimplexCategory} {f : x ⟶ x} (hf : IsIso f) : f = 𝟙 _ :=
-  congr_argₓ (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
+  congr_arg (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
 
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ') (i : Finₓ (n + 1))
     (hi : θ.toOrderHom i.cast_succ = θ.toOrderHom i.succ) : ∃ θ' : mk n ⟶ Δ', θ = σ i ≫ θ' := by
@@ -728,7 +728,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
     simp only [hom.to_order_hom_mk, Function.comp_app, OrderHom.comp_coe, hom.comp, small_category_comp]
     by_cases' h' : θ.to_order_hom x ≤ i
     · simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk]
-      erw
+      rw
         [Finₓ.pred_above_below (Finₓ.castPred i) (θ.to_order_hom x)
           (by
             simpa [Finₓ.cast_succ_cast_pred h] using h')]
@@ -769,13 +769,15 @@ theorem eq_comp_δ_of_not_surjective {n : ℕ} {Δ : SimplexCategory} (θ : Δ �
 theorem eq_id_of_mono {x : SimplexCategory} (i : x ⟶ x) [Mono i] : i = 𝟙 _ := by
   apply eq_id_of_is_iso
   apply is_iso_of_bijective
-  erw [Fintype.bijective_iff_injective_and_card i.to_order_hom, ← mono_iff_injective, eq_self_iff_true, and_trueₓ]
+  dsimp'
+  rw [Fintype.bijective_iff_injective_and_card i.to_order_hom, ← mono_iff_injective, eq_self_iff_true, and_trueₓ]
   infer_instance
 
 theorem eq_id_of_epi {x : SimplexCategory} (i : x ⟶ x) [Epi i] : i = 𝟙 _ := by
   apply eq_id_of_is_iso
   apply is_iso_of_bijective
-  erw [Fintype.bijective_iff_surjective_and_card i.to_order_hom, ← epi_iff_surjective, eq_self_iff_true, and_trueₓ]
+  dsimp'
+  rw [Fintype.bijective_iff_surjective_and_card i.to_order_hom, ← epi_iff_surjective, eq_self_iff_true, and_trueₓ]
   infer_instance
 
 theorem eq_σ_of_epi {n : ℕ} (θ : mk (n + 1) ⟶ mk n) [Epi θ] : ∃ i : Finₓ (n + 1), θ = σ i := by
@@ -790,7 +792,7 @@ theorem eq_σ_of_epi {n : ℕ} (θ : mk (n + 1) ⟶ mk n) [Epi θ] : ∃ i : Fin
     rw [← h]
     infer_instance
   have := CategoryTheory.epi_of_epi (σ i) θ'
-  erw [h, eq_id_of_epi θ', category.comp_id]
+  rw [h, eq_id_of_epi θ', category.comp_id]
 
 theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : Finₓ (n + 2), θ = δ i := by
   rcases eq_comp_δ_of_not_surjective θ _ with ⟨i, θ', h⟩
@@ -803,9 +805,18 @@ theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : F
     rw [← h]
     infer_instance
   have := CategoryTheory.mono_of_mono θ' (δ i)
-  erw [h, eq_id_of_mono θ', category.id_comp]
+  rw [h, eq_id_of_mono θ', category.id_comp]
 
 end EpiMono
+
+/-- This functor `simplex_category ⥤ Cat` sends `[n]` (for `n : ℕ`)
+to the category attached to the ordered set `{0, 1, ..., n}` -/
+@[simps obj map]
+def toCat : SimplexCategory ⥤ Cat.{0} :=
+  SimplexCategory.skeletalFunctor ⋙
+    forget₂ NonemptyFinLinOrdₓ LinearOrderₓₓ ⋙
+      forget₂ LinearOrderₓₓ Latticeₓ ⋙
+        forget₂ Latticeₓ PartialOrderₓₓ ⋙ forget₂ PartialOrderₓₓ Preorderₓₓ ⋙ preorderToCat
 
 end SimplexCategory
 

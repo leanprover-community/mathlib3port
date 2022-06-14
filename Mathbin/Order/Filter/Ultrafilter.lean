@@ -145,14 +145,14 @@ theorem eventually_not : (∀ᶠ x in f, ¬p x) ↔ ¬∀ᶠ x in f, p x :=
 theorem eventually_imp : (∀ᶠ x in f, p x → q x) ↔ (∀ᶠ x in f, p x) → ∀ᶠ x in f, q x := by
   simp only [imp_iff_not_or, eventually_or, eventually_not]
 
-theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : Finite s) : ⋃₀s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
+theorem finite_sUnion_mem_iff {s : Set (Set α)} (hs : s.Finite) : ⋃₀s ∈ f ↔ ∃ t ∈ s, t ∈ f :=
   (Finite.induction_on hs
       (by
         simp ))
     fun a s ha hs his => by
     simp [union_mem_iff, his, or_and_distrib_right, exists_or_distrib]
 
-theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : Finite is) :
+theorem finite_bUnion_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
   simp only [← sUnion_image, finite_sUnion_mem_iff (his.image s), bex_image_iff]
 

@@ -34,7 +34,7 @@ def join : Multiset (Multiset α) → Multiset α :=
 
 theorem coe_join : ∀ L : List (List α), join (L.map (@coe _ (Multiset α) _) : Multiset (Multiset α)) = L.join
   | [] => rfl
-  | l :: L => congr_argₓ (fun s : Multiset α => ↑l + s) (coe_join L)
+  | l :: L => congr_arg (fun s : Multiset α => ↑l + s) (coe_join L)
 
 @[simp]
 theorem join_zero : @join α 0 = 0 :=
@@ -213,6 +213,16 @@ theorem count_sum [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a
 theorem count_bind [DecidableEq α] {m : Multiset β} {f : β → Multiset α} {a : α} :
     count a (bind m f) = sum (m.map fun b => count a <| f b) :=
   count_sum
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem le_bind {α β : Type _} {f : α → Multiset β} (S : Multiset α) {x : α} (hx : x ∈ S) : f x ≤ S.bind f := by
+  classical
+  rw [le_iff_count]
+  intro a
+  rw [count_bind]
+  apply le_sum_of_mem
+  rw [mem_map]
+  exact ⟨x, hx, rfl⟩
 
 end Bind
 

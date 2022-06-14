@@ -185,7 +185,7 @@ theorem surjective_quotient_map_of_maximal_of_localization {I : Ideal S} [I.IsPr
     refine' ⟨(Ideal.Quotient.mk J) (r * rn), _⟩
     -- The rest of the proof is essentially just algebraic manipulations to prove the equality
     rw [← RingHom.map_mul] at hn
-    replace hn := congr_argₓ (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
+    replace hn := congr_arg (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
     simp only [RingHom.map_one, Ideal.quotient_map_mk, RingHom.map_mul] at hn
     rw [Ideal.quotient_map_mk, ← sub_eq_zero, ← RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem, ←
       Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]

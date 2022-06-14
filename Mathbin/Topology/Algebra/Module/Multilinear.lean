@@ -66,6 +66,13 @@ variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (M i)] [∀ i, AddCommMonoid�
 instance : CoeFun (ContinuousMultilinearMap R M₁ M₂) fun _ => (∀ i, M₁ i) → M₂ :=
   ⟨fun f => f.toFun⟩
 
+/-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
+  because it is a composition of multiple projections. -/
+def Simps.apply (L₁ : ContinuousMultilinearMap R M₁ M₂) (v : ∀ i, M₁ i) : M₂ :=
+  L₁ v
+
+initialize_simps_projections ContinuousMultilinearMap (-toMultilinearMap, to_multilinear_map_to_fun → apply)
+
 @[continuity]
 theorem coe_continuous : Continuous (f : (∀ i, M₁ i) → M₂) :=
   f.cont
@@ -456,14 +463,10 @@ variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (M₁ i)] [AddCommMonoid�
 
 /-- Given a continuous `R`-multilinear map `f` taking values in `R`, `f.smul_right z` is the
 continuous multilinear map sending `m` to `f m • z`. -/
-@[simps]
+@[simps toMultilinearMap apply]
 def smulRight : ContinuousMultilinearMap R M₁ M₂ where
   toMultilinearMap := f.toMultilinearMap.smul_right z
   cont := f.cont.smul continuous_const
-
-@[simp]
-theorem smul_right_apply (m : ∀ i, M₁ i) : f.smul_right z m = f m • z :=
-  rfl
 
 end SmulRight
 

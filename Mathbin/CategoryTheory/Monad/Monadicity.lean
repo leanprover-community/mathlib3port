@@ -75,7 +75,7 @@ is an equivalence.
 instance main_pair_reflexive (A : adj.toMonad.Algebra) : IsReflexivePair (F.map A.a) (adj.counit.app (F.obj A.a)) := by
   apply is_reflexive_pair.mk' (F.map (adj.Unit.app _)) _ _
   · rw [← F.map_comp, ← F.map_id]
-    exact congr_argₓ (fun _ => F.map _) A.unit
+    exact congr_arg (fun _ => F.map _) A.unit
     
   · rw [adj.left_triangle_components]
     rfl
@@ -145,7 +145,7 @@ theorem comparison_adjunction_unit_f_aux
     [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.a))] (A : adj.toMonad.Algebra) :
     (comparison_adjunction.Unit.app A).f =
       adj.homEquiv A.a _ (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.a))) :=
-  congr_argₓ (adj.homEquiv _ _) (Category.comp_id _)
+  congr_arg (adj.homEquiv _ _) (Category.comp_id _)
 
 /-- This is a cofork which is helpful for establishing monadicity: the morphism from the Beck
 coequalizer to this cofork is the unit for the adjunction on the comparison functor.
@@ -167,7 +167,7 @@ theorem comparison_adjunction_unit_f
     [∀ A : adj.toMonad.Algebra, HasCoequalizer (F.map A.a) (adj.counit.app (F.obj A.a))] (A : adj.toMonad.Algebra) :
     (comparison_adjunction.Unit.app A).f = (beckCoequalizer A).desc (unit_cofork A) := by
   apply limits.cofork.is_colimit.hom_ext (beck_coequalizer A)
-  rw [cofork.is_colimit.π_comp_desc]
+  rw [cofork.is_colimit.π_desc]
   dsimp' only [beck_cofork_π, unit_cofork_π]
   rw [comparison_adjunction_unit_f_aux, ← adj.hom_equiv_naturality_left A.a, coequalizer.condition,
     adj.hom_equiv_naturality_right, adj.hom_equiv_unit, category.assoc]

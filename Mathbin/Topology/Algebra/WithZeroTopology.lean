@@ -236,7 +236,7 @@ instance (priority := 100) regular_space : RegularSpace Γ₀ := by
         simp [subset.refl]⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ≠ » (0 : Γ₀))
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=

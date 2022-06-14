@@ -416,14 +416,14 @@ theorem cons_map_snd_darts {u v : V} (p : G.Walk u v) : u :: p.darts.map Dart.sn
   induction p <;> simp [*]
 
 theorem map_snd_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.snd = p.Support.tail := by
-  simpa using congr_argₓ List.tail (cons_map_snd_darts p)
+  simpa using congr_arg List.tail (cons_map_snd_darts p)
 
 -- ././Mathport/Syntax/Translate/Tactic/Lean3.lean:351:22: warning: unsupported simp config option: iota_eqn
 theorem map_fst_darts_append {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst ++ [v] = p.Support := by
   induction p <;> simp [*]
 
 theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.Support.init := by
-  simpa! using congr_argₓ List.init (map_fst_darts_append p)
+  simpa! using congr_arg List.init (map_fst_darts_append p)
 
 @[simp]
 theorem edges_nil {u : V} : (nil : G.Walk u u).edges = [] :=
@@ -503,24 +503,24 @@ theorem edges_nodup_of_support_nodup {u v : V} {p : G.Walk u v} (h : p.Support.N
 structure IsTrail {u v : V} (p : G.Walk u v) : Prop where
   edges_nodup : p.edges.Nodup
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- A *path* is a walk with no repeating vertices.
 Use `simple_graph.walk.is_path.mk'` for a simpler constructor. -/
 structure IsPath {u v : V} (p : G.Walk u v) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.Nodup
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- A *circuit* at `u : V` is a nonempty trail beginning and ending at `u`. -/
 structure IsCircuit {u : V} (p : G.Walk u u) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure" : Prop where
   ne_nil : p ≠ nil
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- A *cycle* at `u : V` is a circuit at `u` whose only repeating vertex
 is `u` (which appears exactly twice). -/
 structure IsCycle {u : V} (p : G.Walk u u) extends
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" : Prop where
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure" : Prop where
   support_nodup : p.Support.tail.Nodup
 
 theorem is_trail_def {u v : V} (p : G.Walk u v) : p.IsTrail ↔ p.edges.Nodup :=
@@ -736,13 +736,13 @@ theorem edges_drop_until_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.Suppor
 
 theorem length_take_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.takeUntil u h).length ≤ p.length :=
   by
-  have := congr_argₓ walk.length (p.take_spec h)
+  have := congr_arg walk.length (p.take_spec h)
   rw [length_append] at this
   exact Nat.Le.intro this
 
 theorem length_drop_until_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.Support) : (p.dropUntil u h).length ≤ p.length :=
   by
-  have := congr_argₓ walk.length (p.take_spec h)
+  have := congr_arg walk.length (p.take_spec h)
   rw [length_append, add_commₓ] at this
   exact Nat.Le.intro this
 
@@ -801,7 +801,7 @@ protected theorem IsCircuit.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCircuit)
   · exact (hc.ne_nil rfl).elim
     
   · intro hn
-    have hn' := congr_argₓ length hn
+    have hn' := congr_arg length hn
     rw [rotate, length_append, add_commₓ, ← length_append, take_spec] at hn'
     simpa using hn'
     
@@ -963,6 +963,8 @@ theorem darts_map : (p.map f).darts = p.darts.map f.mapDart := by
 theorem edges_map : (p.map f).edges = p.edges.map (Sym2.map f) := by
   induction p <;> simp [*]
 
+variable {p f}
+
 theorem map_is_path_of_injective (hinj : Function.Injective f) (hp : p.IsPath) : (p.map f).IsPath := by
   induction' p with w u v w huv hvw ih
   · simp
@@ -973,6 +975,23 @@ theorem map_is_path_of_injective (hinj : Function.Injective f) (hp : p.IsPath) :
     cases hinj hf
     exact hp.2 hx
     
+
+protected theorem IsPath.of_map {f : G →g G'} (hp : (p.map f).IsPath) : p.IsPath := by
+  induction' p with w u v w huv hvw ih
+  · simp
+    
+  · rw [map_cons, walk.cons_is_path_iff, support_map] at hp
+    rw [walk.cons_is_path_iff]
+    cases' hp with hp1 hp2
+    refine' ⟨ih hp1, _⟩
+    contrapose! hp2
+    exact List.mem_map_of_memₓ f hp2
+    
+
+theorem map_is_path_iff_of_injective (hinj : Function.Injective f) : (p.map f).IsPath ↔ p.IsPath :=
+  ⟨IsPath.of_map, map_is_path_of_injective hinj⟩
+
+variable (p f)
 
 theorem map_injective_of_injective {f : G →g G'} (hinj : Function.Injective f) (u v : V) :
     Function.Injective (Walk.map f : G.Walk u v → G'.Walk (f u) (f v)) := by
@@ -1003,7 +1022,7 @@ variable {G G'}
 /-- Given an injective graph homomorphism, map paths to paths. -/
 @[simps]
 protected def map (f : G →g G') (hinj : Function.Injective f) {u v : V} (p : G.Path u v) : G'.Path (f u) (f v) :=
-  ⟨Walk.map f p, Walk.map_is_path_of_injective f p hinj p.2⟩
+  ⟨Walk.map f p, Walk.map_is_path_of_injective hinj p.2⟩
 
 theorem map_injective {f : G →g G'} (hinj : Function.Injective f) (u v : V) :
     Function.Injective (Path.map f hinj : G.Path u v → G'.Path (f u) (f v)) := by
@@ -1021,6 +1040,50 @@ theorem map_embedding_injective (f : G ↪g G') (u v : V) :
   map_injective f.Injective u v
 
 end Path
+
+/-! ## Deleting edges -/
+
+
+namespace Walk
+
+variable {G}
+
+/-- Given a walk that avoids a set of edges, produce a walk in the graph
+with those edges deleted. -/
+@[simp]
+def toDeleteEdges (s : Set (Sym2 V)) :
+    ∀ {v w : V} p : G.Walk v w hp : ∀ e, e ∈ p.edges → ¬e ∈ s, (G.deleteEdges s).Walk v w
+  | _, _, nil, _ => nil
+  | _, _, cons' u v w huv p, hp =>
+    cons
+      ((G.delete_edges_adj _ _ _).mpr
+        ⟨huv,
+          hp ⟦(u, v)⟧
+            (by
+              simp )⟩)
+      (p.toDeleteEdges fun e he =>
+        hp e
+          (by
+            simp [he]))
+
+/-- Given a walk that avoids an edge, create a walk in the subgraph with that edge deleted.
+This is an abbreviation for `simple_graph.walk.to_delete_edges`. -/
+abbrev toDeleteEdge {v w : V} (e : Sym2 V) (p : G.Walk v w) (hp : e ∉ p.edges) : (G.deleteEdges {e}).Walk v w :=
+  p.toDeleteEdges {e} fun e' => by
+    contrapose!
+    simp (config := { contextual := true })[hp]
+
+@[simp]
+theorem map_to_delete_edges_eq (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} hp :
+    Walk.map (Hom.mapSpanningSubgraphs (G.delete_edges_le s)) (p.toDeleteEdges s hp) = p := by
+  induction p <;> simp [*]
+
+theorem IsPath.to_delete_edges (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (h : p.IsPath) hp :
+    (p.toDeleteEdges s hp).IsPath := by
+  rw [← map_to_delete_edges_eq s hp] at h
+  exact h.of_map
+
+end Walk
 
 /-! ## `reachable` and `connected` -/
 

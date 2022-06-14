@@ -79,7 +79,7 @@ theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdCo
 instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, OrdConnected (s i)] : OrdConnected (⋂ i, s i) :=
   ord_connected_Inter ‹_›
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α}
     (hs : ∀ i hi, OrdConnected (s i hi)) : OrdConnected (⋂ (i) (hi), s i hi) :=
   ord_connected_Inter fun i => ord_connected_Inter <| hs i

@@ -144,7 +144,7 @@ theorem equiv_iff {x y : Σi, G i} {i : ι} (hx : x.1 ≤ i) (hy : y.1 ≤ i) : 
   refine' ⟨fun xy => _, fun xy => ⟨i, hx, hy, xy⟩⟩
   obtain ⟨j, _, _, h⟩ := xy
   obtain ⟨k, ik, jk⟩ := directed_of (· ≤ ·) i j
-  have h := congr_argₓ (f j k jk) h
+  have h := congr_arg (f j k jk) h
   apply (f i k ik).Injective
   rw [DirectedSystem.map_map, DirectedSystem.map_map] at *
   exact h
@@ -280,7 +280,7 @@ def lift : DirectLimit G f ↪[L] P where
       simp only
       obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.1 y.1
       rw [← Hg x.1 i hx, ← Hg y.1 i hy]
-      exact congr_argₓ _ ((equiv_iff _ _ _ _).1 xy)
+      exact congr_arg _ ((equiv_iff _ _ _ _).1 xy)
   inj' := fun x y xy => by
     rw [← Quotientₓ.out_eq x, ← Quotientₓ.out_eq y, Quotientₓ.lift_mk, Quotientₓ.lift_mk] at xy
     obtain ⟨i, hx, hy⟩ := directed_of (· ≤ ·) x.out.1 y.out.1

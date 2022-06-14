@@ -68,8 +68,8 @@ variable {R' : Type _} [Semiringₓ R'] [MulSemiringAction R' A] [SmulCommClass 
 This is available as an instance in the `pointwise` locale. -/
 protected def pointwiseMulAction : MulAction R' (Subalgebra R A) where
   smul := fun a S => S.map (MulSemiringAction.toAlgHom _ _ a)
-  one_smul := fun S => (congr_argₓ (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
-  mul_smul := fun a₁ a₂ S => (congr_argₓ (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
+  one_smul := fun S => (congr_arg (fun f => S.map f) (AlgHom.ext <| one_smul R')).trans S.map_id
+  mul_smul := fun a₁ a₂ S => (congr_arg (fun f => S.map f) (AlgHom.ext <| mul_smul _ _)).trans (S.map_map _ _).symm
 
 localized [Pointwise] attribute [instance] Subalgebra.pointwiseMulAction
 

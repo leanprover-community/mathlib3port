@@ -213,13 +213,13 @@ theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [Topo
   rw [nhds_within_prod_eq]
   exact prod_mem_prod hu hv
 
-theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : Finite I)
+theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) : 𝓝[pi I s] x = ⨅ i, comap (fun x => x i) (𝓝 (x i)⊓⨅ hi : i ∈ I, 𝓟 (s i)) := by
   simp only [nhdsWithin, nhds_pi, Filter.pi, comap_inf, comap_infi, pi_def, comap_principal, ← infi_principal_finite hI,
     ← infi_inf_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » I)
-theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : Finite I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » I)
+theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.Finite)
     (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
     𝓝[pi I s] x = (⨅ i ∈ I, comap (fun x => x i) (𝓝[s i] x i))⊓⨅ (i) (_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) := by
   simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ← infi_principal_finite hI, comap_inf, comap_principal, eval]
@@ -481,7 +481,11 @@ theorem Set.Subsingleton.continuous_on {s : Set α} (hs : s.Subsingleton) (f : �
 
 theorem nhds_within_le_comap {x : α} {s : Set α} {f : α → β} (ctsf : ContinuousWithinAt f s x) :
     𝓝[s] x ≤ comap f (𝓝[f '' s] f x) :=
-  map_le_iff_le_comap.1 ctsf.tendsto_nhds_within_image
+  ctsf.tendsto_nhds_within_image.le_comap
+
+@[simp]
+theorem comap_nhds_within_range {α} (f : α → β) (y : β) : comap f (𝓝[Range f] y) = comap f (𝓝 y) :=
+  comap_inf_principal_range
 
 theorem continuous_within_at_iff_ptendsto_res (f : α → β) {x : α} {s : Set α} :
     ContinuousWithinAt f s x ↔ Ptendsto (Pfun.res f s) (𝓝 x) (𝓝 (f x)) :=
@@ -912,14 +916,15 @@ theorem Continuous.if {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a
     Continuous fun a => if p a then f a else g a :=
   continuous_if hp hf.ContinuousOn hg.ContinuousOn
 
+theorem continuous_if_const (p : Prop) {f g : α → β} [Decidable p] (hf : p → Continuous f) (hg : ¬p → Continuous g) :
+    Continuous fun a => if p then f a else g a := by
+  split_ifs
+  exact hf h
+  exact hg h
+
 theorem Continuous.if_const (p : Prop) {f g : α → β} [Decidable p] (hf : Continuous f) (hg : Continuous g) :
     Continuous fun a => if p then f a else g a :=
-  continuous_if
-    (if h : p then by
-      simp [h]
-    else by
-      simp [h])
-    hf.ContinuousOn hg.ContinuousOn
+  continuous_if_const p (fun _ => hf) fun _ => hg
 
 theorem continuous_piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a ∈ s)] (hs : ∀, ∀ a ∈ Frontier s, ∀, f a = g a)
     (hf : ContinuousOn f (Closure s)) (hg : ContinuousOn g (Closure (sᶜ))) : Continuous (piecewise s f g) :=

@@ -9,19 +9,20 @@ import Mathbin.Tactic.Abel
 /-!
 # Combinatorial games.
 
-In this file we define the quotient of pre-games by the equivalence relation `p ≈ q ↔ p ≤ q ∧ q ≤
-p`, and construct an instance `add_comm_group game`, as well as an instance `partial_order game`.
+In this file we define the quotient of pre-games by the equivalence relation
+`p ≈ q ↔ p ≤ q ∧ q ≤ p` (its `antisymmetrization`), and construct an instance `add_comm_group game`,
+as well as an instance `partial_order game`.
 
 ## Multiplication on pre-games
 
 We define the operations of multiplication and inverse on pre-games, and prove a few basic theorems
-about them. Multiplication is not well-behaved under equivalence of pre-games i.e. `x.equiv y` does
-not imply `(x*z).equiv (y*z)`. Hence, multiplication is not a well-defined operation on games.
-Nevertheless, the abelian group structure on games allows us to simplify many proofs for pre-games.
+about them. Multiplication is not well-behaved under equivalence of pre-games i.e. `x ≈ y` does not
+imply `x * z ≈ y * z`. Hence, multiplication is not a well-defined operation on games. Nevertheless,
+the abelian group structure on games allows us to simplify many proofs for pre-games.
 -/
 
 
-open Function
+open Function Pgame
 
 universe u
 
@@ -29,7 +30,7 @@ universe u
 local infixl:0 " ≈ " => Pgame.Equiv
 
 instance Pgame.setoid : Setoidₓ Pgame :=
-  ⟨fun x y => x ≈ y, fun x => Pgame.equiv_refl _, fun x y => Pgame.equiv_symm, fun x y z => Pgame.equiv_trans⟩
+  ⟨(· ≈ ·), equiv_refl, @Pgame.Equiv.symm, @Pgame.Equiv.trans⟩
 
 /-- The type of combinatorial games. In ZFC, a combinatorial game is constructed from
   two sets of combinatorial games that have been constructed at an earlier
@@ -42,13 +43,11 @@ instance Pgame.setoid : Setoidₓ Pgame :=
 abbrev Game :=
   Quotientₓ Pgame.setoid
 
-open Pgame
-
 namespace Game
 
 instance : AddCommGroupₓ Game where
   zero := ⟦0⟧
-  neg := Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound (@neg_congr x y h)
+  neg := Quot.lift (fun x => ⟦-x⟧) fun x y h => Quot.sound ((@neg_equiv_neg_iff x y).2 h)
   add := Quotientₓ.lift₂ (fun x y : Pgame => ⟦x + y⟧) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
   add_zero := by
     rintro ⟨x⟩
@@ -94,13 +93,13 @@ def Lf : Game → Game → Prop :=
 -- mathport name: «expr ⧏ »
 local infixl:50 " ⧏ " => Lf
 
-/-- On `pgame`, simp-normal inequalities should use as few negations as possible. -/
+/-- On `game`, simp-normal inequalities should use as few negations as possible. -/
 @[simp]
 theorem not_le : ∀ {x y : Game}, ¬x ≤ y ↔ y ⧏ x := by
   rintro ⟨x⟩ ⟨y⟩
   exact Pgame.not_le
 
-/-- On `pgame`, simp-normal inequalities should use as few negations as possible. -/
+/-- On `game`, simp-normal inequalities should use as few negations as possible. -/
 @[simp]
 theorem not_lf : ∀ {x y : Game}, ¬x ⧏ y ↔ y ≤ x := by
   rintro ⟨x⟩ ⟨y⟩
@@ -277,6 +276,26 @@ theorem mul_move_right_inr {x y : Pgame} {i j} :
   cases x
   cases y
   rfl
+
+theorem left_moves_mul_cases {x y : Pgame} k {P : (x * y).LeftMoves → Prop}
+    (hl : ∀ ix iy, P <| toLeftMovesMul (Sum.inl ⟨ix, iy⟩)) (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) :
+    P k := by
+  rw [← to_left_moves_mul.apply_symm_apply k]
+  rcases to_left_moves_mul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
+  · apply hl
+    
+  · apply hr
+    
+
+theorem right_moves_mul_cases {x y : Pgame} k {P : (x * y).RightMoves → Prop}
+    (hl : ∀ ix jy, P <| toRightMovesMul (Sum.inl ⟨ix, jy⟩)) (hr : ∀ jx iy, P <| toRightMovesMul (Sum.inr ⟨jx, iy⟩)) :
+    P k := by
+  rw [← to_right_moves_mul.apply_symm_apply k]
+  rcases to_right_moves_mul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
+  · apply hl
+    
+  · apply hr
+    
 
 theorem quot_mul_comm : ∀ x y : Pgame.{u}, ⟦x * y⟧ = ⟦y * x⟧
   | mk xl xr xL xR, mk yl yr yL yR => by

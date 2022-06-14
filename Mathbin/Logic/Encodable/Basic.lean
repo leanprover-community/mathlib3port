@@ -34,7 +34,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 
 open Option List Nat Function
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`decode] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`decode] []
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -77,7 +77,7 @@ def ofLeftInjection [Encodable α] (f : β → α) (finv : α → Option β) (li
 
 /-- If `α` is encodable and `f : β → α` is invertible, then `β` is encodable as well. -/
 def ofLeftInverse [Encodable α] (f : β → α) (finv : α → β) (linv : ∀ b, finv (f b) = b) : Encodable β :=
-  ofLeftInjection f (some ∘ finv) fun b => congr_argₓ some (linv b)
+  ofLeftInjection f (some ∘ finv) fun b => congr_arg some (linv b)
 
 /-- Encodability is preserved by equivalence. -/
 def ofEquiv α [Encodable α] (e : β ≃ α) : Encodable β :=
@@ -349,7 +349,7 @@ theorem Subtype.encode_eq (a : Subtype P) : encode a = encode a.val := by
 end Subtype
 
 instance _root_.fin.encodable n : Encodable (Finₓ n) :=
-  ofEquiv _ (Equivₓ.finEquivSubtype _)
+  Subtype.encodable
 
 instance _root_.int.encodable : Encodable ℤ :=
   ofEquiv _ Equivₓ.intEquivNat
@@ -557,7 +557,7 @@ theorem Quotientₓ.rep_spec (q : Quotientₓ s) : ⟦q.rep⟧ = q :=
 /-- The quotient of an encodable space by a decidable equivalence relation is encodable. -/
 def encodableQuotient : Encodable (Quotientₓ s) :=
   ⟨fun q => encode q.rep, fun n => Quotientₓ.mk <$> decode α n, by
-    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_argₓ some ⟦l⟧.rep_spec⟩
+    rintro ⟨l⟩ <;> rw [encodek] <;> exact congr_arg some ⟦l⟧.rep_spec⟩
 
 end Quotientₓ
 

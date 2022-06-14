@@ -291,7 +291,7 @@ theorem arg_of_im_pos {z : ℂ} (hz : 0 < z.im) : arg z = Real.arccos (z.re / ab
   arg_of_im_nonneg_of_ne_zero hz.le fun h => hz.ne' <| h.symm ▸ rfl
 
 theorem arg_of_im_neg {z : ℂ} (hz : z.im < 0) : arg z = -Real.arccos (z.re / abs z) := by
-  have h₀ : z ≠ 0 := mt (congr_argₓ im) hz.ne
+  have h₀ : z ≠ 0 := mt (congr_arg im) hz.ne
   rw [← cos_arg h₀, ← Real.cos_neg, Real.arccos_cos, neg_negₓ]
   exacts[neg_nonneg.2 (arg_neg_iff.2 hz).le, neg_le.2 (neg_pi_lt_arg z).le]
 

@@ -33,24 +33,16 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
     OrderedCommMonoid (∀ i, Z i) :=
   { Pi.partialOrder, Pi.commMonoid with mul_le_mul_left := fun f g w h i => mul_le_mul_left' (w i) _ }
 
+@[to_additive]
+instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, HasExistsMulOfLe (α i)] :
+    HasExistsMulOfLe (∀ i, α i) :=
+  ⟨fun a b h => ⟨fun i => (exists_mul_of_le <| h i).some, funext fun i => (exists_mul_of_le <| h i).some_spec⟩⟩
+
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[to_additive
       "The product of a family of canonically ordered additive monoids is\n  a canonically ordered additive monoid."]
 instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] : CanonicallyOrderedMonoid (∀ i, Z i) :=
-  { Pi.orderBot, Pi.orderedCommMonoid with
-    le_iff_exists_mul := fun f g => by
-      fconstructor
-      · intro w
-        fconstructor
-        · exact fun i => (le_iff_exists_mul.mp (w i)).some
-          
-        · ext i
-          exact (le_iff_exists_mul.mp (w i)).some_spec
-          
-        
-      · rintro ⟨h, rfl⟩
-        exact fun i => le_mul_right le_rfl
-         }
+  { Pi.orderBot, Pi.orderedCommMonoid, Pi.has_exists_mul_of_le with le_self_mul := fun f g i => le_self_mul }
 
 @[to_additive]
 instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] : OrderedCancelCommMonoid (∀ i : I, f i) := by

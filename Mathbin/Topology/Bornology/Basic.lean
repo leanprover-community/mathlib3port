@@ -41,8 +41,8 @@ open Set Filter
 
 variable {ι α β : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`cobounded] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] []
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
@@ -51,7 +51,7 @@ class Bornology (α : Type _) where
   cobounded : Filter α
   le_cofinite : cobounded ≤ cofinite
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -72,7 +72,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     rw [compl_compl]
     exact singleton_mem x
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B)
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -186,7 +186,7 @@ theorem is_bounded_of_bounded_iff (B : Set (Set α)) {empty_mem subset_mem union
 
 variable [Bornology α]
 
-theorem is_cobounded_bInter {s : Set ι} {f : ι → Set α} (hs : Finite s) :
+theorem is_cobounded_bInter {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsCobounded (⋂ i ∈ s, f i) ↔ ∀, ∀ i ∈ s, ∀, IsCobounded (f i) :=
   bInter_mem hs
 
@@ -199,10 +199,10 @@ theorem is_cobounded_bInter_finset (s : Finset ι) {f : ι → Set α} :
 theorem is_cobounded_Inter [Fintype ι] {f : ι → Set α} : IsCobounded (⋂ i, f i) ↔ ∀ i, IsCobounded (f i) :=
   Inter_mem
 
-theorem is_cobounded_sInter {S : Set (Set α)} (hs : Finite S) : IsCobounded (⋂₀ S) ↔ ∀, ∀ s ∈ S, ∀, IsCobounded s :=
+theorem is_cobounded_sInter {S : Set (Set α)} (hs : S.Finite) : IsCobounded (⋂₀ S) ↔ ∀, ∀ s ∈ S, ∀, IsCobounded s :=
   sInter_mem hs
 
-theorem is_bounded_bUnion {s : Set ι} {f : ι → Set α} (hs : Finite s) :
+theorem is_bounded_bUnion {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀, ∀ i ∈ s, ∀, IsBounded (f i) := by
   simp only [← is_cobounded_compl_iff, compl_Union, is_cobounded_bInter hs]
 
@@ -210,7 +210,7 @@ theorem is_bounded_bUnion_finset (s : Finset ι) {f : ι → Set α} :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀, ∀ i ∈ s, ∀, IsBounded (f i) :=
   is_bounded_bUnion s.finite_to_set
 
-theorem is_bounded_sUnion {S : Set (Set α)} (hs : Finite S) : IsBounded (⋃₀S) ↔ ∀, ∀ s ∈ S, ∀, IsBounded s := by
+theorem is_bounded_sUnion {S : Set (Set α)} (hs : S.Finite) : IsBounded (⋃₀S) ↔ ∀, ∀ s ∈ S, ∀, IsBounded s := by
   rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
 
 @[simp]

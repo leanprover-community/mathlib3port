@@ -238,7 +238,7 @@ unsafe def unify_cyclic : unification_step := fun equ type _ _ _ lhs_whnf rhs_wh
       let hyp_lhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓlhs_whnf)))
       let hyp_rhs ← to_expr (pquote.1 ((%%ₓsizeof) (%%ₓrhs_whnf)))
       let hyp_type ← to_expr (pquote.1 (@Eq ℕ (%%ₓhyp_lhs) (%%ₓhyp_rhs)))
-      let hyp_proof ← to_expr (pquote.1 (@congr_argₓ (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓsizeof) (%%ₓequ)))
+      let hyp_proof ← to_expr (pquote.1 (@congr_arg (%%ₓtype) ℕ (%%ₓlhs_whnf) (%%ₓrhs_whnf) (%%ₓsizeof) (%%ₓequ)))
       let hyp_name ← mk_fresh_name
       let hyp ← note hyp_name hyp_type hyp_proof
       let falso ← contradict_n_eq_n_plus_m semireducible hyp hyp_lhs hyp_rhs

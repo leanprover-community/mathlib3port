@@ -315,7 +315,7 @@ protected theorem coe_int_mul (m n : ℤ) : (↑(m * n) : ℤ√d) = ↑m * ↑n
   (Int.castRingHom _).map_mul _ _
 
 protected theorem coe_int_inj {m n : ℤ} (h : (↑m : ℤ√d) = ↑n) : m = n := by
-  simpa using congr_argₓ re h
+  simpa using congr_arg re h
 
 theorem coe_int_dvd_iff (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
   constructor
@@ -531,7 +531,7 @@ theorem norm_eq_one_iff {x : ℤ√d} : x.norm.natAbs = 1 ↔ IsUnit x :=
               norm_eq_mul_conj, neg_mul_eq_mul_neg, eq_comm] at h⟩,
     fun h => by
     let ⟨y, hy⟩ := is_unit_iff_dvd_one.1 h
-    have := congr_argₓ (Int.natAbs ∘ norm) hy
+    have := congr_arg (Int.natAbs ∘ norm) hy
     rw [Function.comp_app, Function.comp_app, norm_mul, Int.nat_abs_mul, norm_one, Int.nat_abs_one, eq_comm,
       Nat.mul_eq_one_iff] at this
     exact this.1⟩
@@ -823,7 +823,7 @@ protected theorem mul_nonneg (a b : ℤ√d) : 0 ≤ a → 0 ≤ b → 0 ≤ a *
 theorem not_sq_le_succ c d y (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
   not_le_of_gtₓ <| mul_pos (mul_pos h <| Nat.succ_posₓ _) <| Nat.succ_posₓ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`ns] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`ns] []
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/

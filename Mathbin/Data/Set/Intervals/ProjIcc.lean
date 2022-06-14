@@ -90,25 +90,25 @@ theorem Icc_extend_range (f : Icc a b → β) : Range (iccExtend h f) = Range f 
   simp only [Icc_extend, range_comp f, range_proj_Icc, range_id']
 
 theorem Icc_extend_of_le_left (f : Icc a b → β) (hx : x ≤ a) : iccExtend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
-  congr_argₓ f <| proj_Icc_of_le_left h hx
+  congr_arg f <| proj_Icc_of_le_left h hx
 
 @[simp]
 theorem Icc_extend_left (f : Icc a b → β) : iccExtend h f a = f ⟨a, left_mem_Icc.2 h⟩ :=
   Icc_extend_of_le_left h f le_rfl
 
 theorem Icc_extend_of_right_le (f : Icc a b → β) (hx : b ≤ x) : iccExtend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
-  congr_argₓ f <| proj_Icc_of_right_le h hx
+  congr_arg f <| proj_Icc_of_right_le h hx
 
 @[simp]
 theorem Icc_extend_right (f : Icc a b → β) : iccExtend h f b = f ⟨b, right_mem_Icc.2 h⟩ :=
   Icc_extend_of_right_le h f le_rfl
 
 theorem Icc_extend_of_mem (f : Icc a b → β) (hx : x ∈ Icc a b) : iccExtend h f x = f ⟨x, hx⟩ :=
-  congr_argₓ f <| proj_Icc_of_mem h hx
+  congr_arg f <| proj_Icc_of_mem h hx
 
 @[simp]
 theorem Icc_extend_coe (f : Icc a b → β) (x : Icc a b) : iccExtend h f x = f x :=
-  congr_argₓ f <| proj_Icc_coe h x
+  congr_arg f <| proj_Icc_coe h x
 
 end Set
 

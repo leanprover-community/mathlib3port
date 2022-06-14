@@ -85,7 +85,7 @@ variable {α : Type u} {β : Type v} [Mul β] (f : α → β)
 @[to_additive]
 theorem lift_aux_unique (F : FreeMagma α →ₙ* β) : ⇑F = liftAux (F ∘ of) :=
   funext fun x =>
-    (FreeMagma.recOn x fun x => rfl) fun x y ih1 ih2 => (F.map_mul x y).trans <| congr (congr_argₓ _ ih1) ih2
+    (FreeMagma.recOn x fun x => rfl) fun x y ih1 ih2 => (F.map_mul x y).trans <| congr (congr_arg _ ih1) ih2
 
 /-- The universal property of the free magma expressing its adjointness. -/
 @[to_additive "The universal property of the free additive magma expressing its adjointness."]
@@ -404,7 +404,7 @@ variable {β : Type v} [Mul β] (f : α → β)
 @[to_additive
       "From an additive magma homomorphism `α → β` to an additive semigroup homomorphism\n`add_magma.free_add_semigroup α → add_magma.free_add_semigroup β`."]
 def map (hf : ∀ x y, f (x * y) = f x * f y) : FreeSemigroup α → FreeSemigroup β :=
-  lift (of ∘ f) fun x y => congr_argₓ of <| hf x y
+  lift (of ∘ f) fun x y => congr_arg of <| hf x y
 
 @[simp, to_additive]
 theorem map_of {hf} x : map f hf (of x) = of (f x) :=
@@ -493,7 +493,7 @@ theorem lift_mul x y : lift f (x * y) = lift f x * lift f y :=
 @[to_additive]
 theorem lift_unique (f : FreeSemigroup α → β) (hf : ∀ x y, f (x * y) = f x * f y) : f = lift (f ∘ of) :=
   funext fun ⟨x, L⟩ =>
-    List.recOn L (fun x => rfl) (fun hd tl ih x => (hf (of x) (hd, tl)).trans <| congr_argₓ _ <| ih _) x
+    List.recOn L (fun x => rfl) (fun hd tl ih x => (hf (of x) (hd, tl)).trans <| congr_arg _ <| ih _) x
 
 end lift
 

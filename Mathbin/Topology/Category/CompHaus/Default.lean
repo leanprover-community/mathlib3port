@@ -127,14 +127,14 @@ noncomputable def stoneCechEquivalence (X : Top.{u}) (Y : CompHaus.{u}) :
   left_inv := by
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)
-    refine' congr_funₓ _ x
+    refine' congr_fun _ x
     apply Continuous.ext_on dense_range_stone_cech_unit (continuous_stone_cech_extend _) hf
     rintro _ ⟨y, rfl⟩
-    apply congr_funₓ (stone_cech_extend_extends (hf.comp _)) y
+    apply congr_fun (stone_cech_extend_extends (hf.comp _)) y
   right_inv := by
     rintro ⟨f : (X : Type _) ⟶ Y, hf : Continuous f⟩
     ext
-    exact congr_funₓ (stone_cech_extend_extends hf) _
+    exact congr_fun (stone_cech_extend_extends hf) _
 
 /-- The Stone-Cech compactification functor from topological spaces to compact Hausdorff spaces,
 left adjoint to the inclusion functor.
@@ -161,7 +161,7 @@ instance CompHaus.has_colimits : Limits.HasColimits CompHaus :=
 
 namespace CompHaus
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- An explicit limit cone for a functor `F : J ⥤ CompHaus`, defined in terms of
 `Top.limit_cone`. -/
 def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Limits.Cone F where

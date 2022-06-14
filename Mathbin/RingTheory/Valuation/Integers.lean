@@ -29,7 +29,7 @@ def integer : Subring R where
   Carrier := { x | v x ≤ 1 }
   one_mem' := le_of_eqₓ v.map_one
   mul_mem' := fun x y hx hy => trans_rel_right (· ≤ ·) (v.map_mul x y) (mul_le_one' hx hy)
-  zero_mem' := trans_rel_right (· ≤ ·) v.map_zero zero_le_one'
+  zero_mem' := trans_rel_right (· ≤ ·) v.map_zero zero_le_one
   add_mem' := fun x y hx hy => le_transₓ (v.map_add x y) (max_leₓ hx hy)
   neg_mem' := fun x hx => trans_rel_right (· ≤ ·) (v.map_neg x) hx
 

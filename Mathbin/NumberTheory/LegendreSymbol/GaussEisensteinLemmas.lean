@@ -225,7 +225,7 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
     a / b = (ico 1 (a / b).succ).card := by
       simp
     _ = ((ico 1 c.succ).filter fun x => x * b ≤ a).card :=
-      congr_argₓ _ <|
+      congr_arg _ <|
         Finset.ext fun x => by
           have : x * b ≤ a → x ≤ c := fun h =>
             le_transₓ
@@ -261,7 +261,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                 simp (config := { contextual := true })only [mem_filter, mem_sigma, and_selfₓ, forall_true_iff,
                   mem_product])
               (fun ⟨_, _⟩ ⟨_, _⟩ => by
-                simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, heq_iff_eq,
+                simp (config := { contextual := true })only [Prod.mk.inj_iff, eq_self_iff_true, and_selfₓ, heq_iff_eq,
                   forall_true_iff])
               fun h =>
               ⟨⟨b₁, b₂⟩, by
@@ -283,7 +283,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
         simp (config := { contextual := true })only [mem_filter, and_selfₓ, Prod.swap_prod_mk, forall_true_iff,
           mem_product])
       (fun ⟨_, _⟩ ⟨_, _⟩ => by
-        simp (config := { contextual := true })only [Prod.mk.inj_iffₓ, eq_self_iff_true, and_selfₓ, Prod.swap_prod_mk,
+        simp (config := { contextual := true })only [Prod.mk.inj_iff, eq_self_iff_true, and_selfₓ, Prod.swap_prod_mk,
           forall_true_iff])
       fun h =>
       ⟨⟨x₂, x₁⟩, by
@@ -303,7 +303,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
           (by
             decide))
     have : (x.1 : Zmod p) = 0 := by
-      simpa [hq0] using congr_argₓ (coe : ℕ → Zmod p) (le_antisymmₓ hpq hqp)
+      simpa [hq0] using congr_arg (coe : ℕ → Zmod p) (le_antisymmₓ hpq hqp)
     apply_fun Zmod.val  at this
     rw [val_cast_of_lt hxp, val_zero] at this
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_andₓ, mem_product] using hx

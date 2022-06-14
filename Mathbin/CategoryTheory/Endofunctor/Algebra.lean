@@ -224,7 +224,7 @@ theorem left_inv' : (⟨strInv h ≫ A.str⟩ : A ⟶ A) = 𝟙 A :=
   Limits.IsInitial.hom_ext h _ (𝟙 A)
 
 theorem left_inv : strInv h ≫ A.str = 𝟙 _ :=
-  congr_argₓ Hom.f (left_inv' h)
+  congr_arg Hom.f (left_inv' h)
 
 theorem right_inv : A.str ≫ strInv h = 𝟙 _ := by
   rw [str_inv, ← (h.to ⟨F.obj A.1, F.map A.str⟩).h, ← F.map_id, ← F.map_comp]

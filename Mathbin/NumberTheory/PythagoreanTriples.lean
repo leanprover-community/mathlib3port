@@ -305,7 +305,7 @@ def circleEquivGen (hk : ∀ x : K, 1 + x ^ 2 ≠ 0) : K ≃ { p : K × K // p.1
       convert hk 1
       rw [one_pow 2]
       rfl
-    simp only [Prod.mk.inj_iffₓ, Subtype.mk_eq_mk]
+    simp only [Prod.mk.inj_iff, Subtype.mk_eq_mk]
     constructor
     · field_simp [h3]
       ring
@@ -509,7 +509,7 @@ theorem is_primitive_classified_of_coprime_of_odd_of_pos (hc : Int.gcdₓ x y = 
   have ht4 : v = 2 * q / (1 + q ^ 2) ∧ w = (1 - q ^ 2) / (1 + q ^ 2) := by
     apply Prod.mk.inj
     have := ((circleEquivGen hQ).apply_symm_apply ⟨⟨v, w⟩, hp⟩).symm
-    exact congr_argₓ Subtype.val this
+    exact congr_arg Subtype.val this
   let m := (q.denom : ℤ)
   let n := q.num
   have hm0 : m ≠ 0 := by

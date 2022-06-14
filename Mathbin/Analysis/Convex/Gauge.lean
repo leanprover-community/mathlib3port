@@ -126,7 +126,7 @@ theorem gauge_neg (symmetric : ∀, ∀ x ∈ s, ∀, -x ∈ s) (x : E) : gauge 
 
 theorem gauge_le_of_mem (ha : 0 ≤ a) (hx : x ∈ a • s) : gauge s x ≤ a := by
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [mem_singleton_iff.1 (zero_smul_subset _ hx), gauge_zero]
+  · rw [mem_singleton_iff.1 (zero_smul_set_subset _ hx), gauge_zero]
     
   · exact cInf_le gauge_set_bdd_below ⟨ha', hx⟩
     
@@ -255,7 +255,7 @@ theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (sym
 theorem gauge_smul_left_of_nonneg [MulActionWithZero α E] [SmulCommClass α ℝ ℝ] [IsScalarTower α ℝ ℝ]
     [IsScalarTower α ℝ E] {s : Set E} {a : α} (ha : 0 ≤ a) : gauge (a • s) = a⁻¹ • gauge s := by
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [inv_zero, zero_smul, gauge_of_subset_zero (zero_smul_subset _)]
+  · rw [inv_zero, zero_smul, gauge_of_subset_zero (zero_smul_set_subset _)]
     
   ext
   rw [gauge_def', Pi.smul_apply, gauge_def', ← Real.Inf_smul_of_nonneg (inv_nonneg.2 ha)]
@@ -423,7 +423,7 @@ theorem gauge_unit_ball (x : E) : gauge (Metric.Ball (0 : E) 1) x = ∥x∥ := b
   refine' le_gauge_of_not_mem balanced_ball_zero.star_convex (absorbent_ball_zero zero_lt_one).Absorbs fun h => _
   obtain hx' | hx' := eq_or_ne ∥x∥ 0
   · rw [hx'] at h
-    exact hx (zero_smul_subset _ h)
+    exact hx (zero_smul_set_subset _ h)
     
   · rw [mem_smul_set_iff_inv_smul_mem₀ hx', mem_ball_zero_iff, norm_smul, norm_inv, norm_norm, inv_mul_cancel hx'] at h
     exact lt_irreflₓ _ h

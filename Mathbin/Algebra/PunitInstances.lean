@@ -128,7 +128,7 @@ theorem not_lt : ¬x < y :=
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
       { PUnit.commRing, PUnit.completeBooleanAlgebra with
-        le_iff_exists_add := fun _ _ => iff_of_true _ ⟨star, Subsingleton.elimₓ _ _⟩, .. } <;>
+        exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elimₓ _ _⟩, .. } <;>
     intros <;> trivial
 
 instance : LinearOrderedCancelAddCommMonoid PUnit :=

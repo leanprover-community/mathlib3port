@@ -151,7 +151,7 @@ theorem bernoulli'_power_series_mul_exp_sub_one : bernoulli'PowerSeries A * (exp
     
   rw [bernoulli'PowerSeries, coeff_mul, mul_comm X, sum_antidiagonal_succ']
   suffices (∑ p in antidiagonal n, bernoulli' p.1 / p.1! * ((p.2 + 1) * p.2!)⁻¹) = n !⁻¹ by
-    simpa [RingHom.map_sum] using congr_argₓ (algebraMap ℚ A) this
+    simpa [RingHom.map_sum] using congr_arg (algebraMap ℚ A) this
   apply eq_inv_of_mul_eq_one_left
   rw [sum_mul]
   convert bernoulli'_spec' n using 1
@@ -283,7 +283,7 @@ theorem bernoulli_power_series_mul_exp_sub_one : bernoulliPowerSeries A * (exp A
     exact_mod_cast factorial_ne_zero m
   have hite2 : ite (n.succ = 0) 1 0 = (0 : ℚ) := if_neg n.succ_ne_zero
   rw [← map_zero (algebraMap ℚ A), ← zero_div (n.succ ! : ℚ), ← hite2, ← bernoulli_spec', sum_div]
-  refine' congr_argₓ (algebraMap ℚ A) ((sum_congr rfl) fun x h => eq_div_of_mul_eq (hfact n.succ) _)
+  refine' congr_arg (algebraMap ℚ A) ((sum_congr rfl) fun x h => eq_div_of_mul_eq (hfact n.succ) _)
   rw [mem_antidiagonal] at h
   have hj : (x.2.succ : ℚ) ≠ 0 := by
     exact_mod_cast succ_ne_zero _

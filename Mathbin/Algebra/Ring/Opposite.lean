@@ -91,8 +91,9 @@ end MulOpposite
 namespace AddOpposite
 
 instance [Distribₓ α] : Distribₓ αᵃᵒᵖ :=
-  { AddOpposite.hasAdd α, @AddOpposite.hasMul α _ with left_distrib := fun x y z => unop_injective <| mul_addₓ x _ _,
-    right_distrib := fun x y z => unop_injective <| add_mulₓ _ _ z }
+  { AddOpposite.hasAdd α, @AddOpposite.hasMul α _ with
+    left_distrib := fun x y z => unop_injective <| @mul_addₓ α _ _ _ x z y,
+    right_distrib := fun x y z => unop_injective <| @add_mulₓ α _ _ _ y x z }
 
 instance [MulZeroClassₓ α] : MulZeroClassₓ αᵃᵒᵖ where
   zero := 0

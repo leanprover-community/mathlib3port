@@ -68,20 +68,20 @@ variable {α β : Type _} [NormedGroup β]
 /-- Two functions `u` and `v` are said to be asymptotically equivalent along a filter `l` when
     `u x - v x = o(v x)` as x converges along `l`. -/
 def IsEquivalent (l : Filter α) (u v : α → β) :=
-  IsOₓ (u - v) v l
+  (u - v) =o[l] v
 
 -- mathport name: «expr ~[ ] »
 localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent l u v
 
 variable {u v w : α → β} {l : Filter α}
 
-theorem IsEquivalent.is_o (h : u ~[l] v) : IsOₓ (u - v) v l :=
+theorem IsEquivalent.is_o (h : u ~[l] v) : (u - v) =o[l] v :=
   h
 
-theorem IsEquivalent.is_O (h : u ~[l] v) : IsO u v l :=
+theorem IsEquivalent.is_O (h : u ~[l] v) : u =O[l] v :=
   (IsO.congr_of_sub h.IsO.symm).mp (is_O_refl _ _)
 
-theorem IsEquivalent.is_O_symm (h : u ~[l] v) : IsO v u l := by
+theorem IsEquivalent.is_O_symm (h : u ~[l] v) : v =O[l] u := by
   convert h.is_o.right_is_O_add
   ext
   simp
@@ -100,7 +100,7 @@ theorem IsEquivalent.trans {l : Filter α} {u v w : α → β} (huv : u ~[l] v) 
   (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
 
 theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) : w ~[l] v :=
-  IsOₓ.congr' (huw.sub (EventuallyEq.refl _ _)) (EventuallyEq.refl _ _) huv
+  huv.congr' (huw.sub (EventuallyEq.refl _ _)) (EventuallyEq.refl _ _)
 
 theorem IsEquivalent.congr_right {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (hvw : v =ᶠ[l] w) : u ~[l] w :=
   (huv.symm.congr_left hvw).symm
@@ -109,7 +109,7 @@ theorem is_equivalent_zero_iff_eventually_zero : u ~[l] 0 ↔ u =ᶠ[l] 0 := by
   rw [is_equivalent, sub_zero]
   exact is_o_zero_right_iff
 
-theorem is_equivalent_zero_iff_is_O_zero : u ~[l] 0 ↔ IsO u (0 : α → β) l := by
+theorem is_equivalent_zero_iff_is_O_zero : u ~[l] 0 ↔ u =O[l] (0 : α → β) := by
   refine' ⟨is_equivalent.is_O, fun h => _⟩
   rw [is_equivalent_zero_iff_eventually_zero, eventually_eq_iff_exists_mem]
   exact ⟨{ x : α | u x = 0 }, is_O_zero_right_iff.mp h, fun x hx => hx⟩
@@ -149,13 +149,13 @@ theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (�
 theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) : Tendsto u l (𝓝 c) ↔ Tendsto v l (𝓝 c) :=
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 
-theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : IsOₓ w v l) : w + u ~[l] v := by
+theorem IsEquivalent.add_is_o (huv : u ~[l] v) (hwv : w =o[l] v) : w + u ~[l] v := by
   rw [is_equivalent] at *
   convert hwv.add huv
   ext
   simp [add_sub]
 
-theorem IsOₓ.is_equivalent (huv : IsOₓ (u - v) v l) : u ~[l] v :=
+theorem IsOₓ.is_equivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
   huv
 
 theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x := by
@@ -322,5 +322,5 @@ open Asymptotics
 variable {α β : Type _} [NormedGroup β]
 
 theorem Filter.EventuallyEq.is_equivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
-  IsOₓ.congr' h.sub_eq.symm (EventuallyEq.refl _ _) (is_o_zero v l)
+  IsEquivalent.congr_right (is_o_refl_left _ _) h
 

@@ -39,7 +39,7 @@ universe w v v' u
 
 namespace CategoryTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`forget] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`forget] []
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,
@@ -104,7 +104,7 @@ theorem forget_map_eq_coe {X Y : C} (f : X ⟶ Y) : (forget C).map f = f :=
 when `h : f = g` is an equality between morphisms in a concrete category.
 -/
 theorem congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
-  congr_funₓ (congr_argₓ (fun k : X ⟶ Y => (k : X → Y)) h) x
+  congr_fun (congr_arg (fun k : X ⟶ Y => (k : X → Y)) h) x
 
 theorem coe_id {X : C} : (𝟙 X : X → X) = id :=
   (forget _).map_id X
@@ -114,17 +114,17 @@ theorem coe_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X → Z) =
 
 @[simp]
 theorem id_apply {X : C} (x : X) : (𝟙 X : X → X) x = x :=
-  congr_funₓ ((forget _).map_id X) x
+  congr_fun ((forget _).map_id X) x
 
 @[simp]
 theorem comp_apply {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
-  congr_funₓ ((forget _).map_comp _ _) x
+  congr_fun ((forget _).map_comp _ _) x
 
 theorem ConcreteCategory.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
-  congr_funₓ (congr_argₓ (fun f : X ⟶ Y => (f : X → Y)) h) x
+  congr_fun (congr_arg (fun f : X ⟶ Y => (f : X → Y)) h) x
 
 theorem ConcreteCategory.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x') : f x = f x' :=
-  congr_argₓ (f : X → Y) h
+  congr_arg (f : X → Y) h
 
 /-- In any concrete category, injective morphisms are monomorphisms. -/
 theorem ConcreteCategory.mono_of_injective {X Y : C} (f : X ⟶ Y) (i : Function.Injective f) : Mono f :=

@@ -90,7 +90,7 @@ theorem ideal_prod_equiv_symm_apply (I : Ideal R) (J : Ideal S) : idealProdEquiv
   rfl
 
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' := by
-  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iffₓ]
+  simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
 
 theorem is_prime_of_is_prime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) : I.IsPrime := by
   constructor

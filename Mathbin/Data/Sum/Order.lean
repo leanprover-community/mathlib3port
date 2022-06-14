@@ -95,10 +95,10 @@ instance [IsTotal α r] [IsTotal β s] : IsTotal (Sum α β) (Lex r s) :=
 instance [IsTrichotomous α r] [IsTrichotomous β s] : IsTrichotomous (Sum α β) (Lex r s) :=
   ⟨fun a b =>
     match a, b with
-    | inl a, inl b => (trichotomous_of r a b).imp3 Lex.inl (congr_argₓ _) Lex.inl
+    | inl a, inl b => (trichotomous_of r a b).imp3 Lex.inl (congr_arg _) Lex.inl
     | inl a, inr b => Or.inl (Lex.sep _ _)
     | inr a, inl b => Or.inr (Or.inr <| Lex.sep _ _)
-    | inr a, inr b => (trichotomous_of s a b).imp3 Lex.inr (congr_argₓ _) Lex.inr⟩
+    | inr a, inr b => (trichotomous_of s a b).imp3 Lex.inr (congr_arg _) Lex.inr⟩
 
 instance [IsWellOrder α r] [IsWellOrder β s] : IsWellOrder (Sum α β) (Sum.Lex r s) where
   wf := Sum.lex_wf IsWellOrder.wf IsWellOrder.wf

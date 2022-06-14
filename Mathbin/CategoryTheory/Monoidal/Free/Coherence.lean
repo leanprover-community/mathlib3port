@@ -321,7 +321,7 @@ def fullNormalizeIso : 𝟭 (F C) ≅ fullNormalize C ⋙ inclusion :=
       dsimp'
       rw [left_unitor_inv_naturality_assoc, category.assoc, iso.cancel_iso_inv_left]
       exact
-        congr_argₓ (fun f => nat_trans.app f (discrete.mk normal_monoidal_object.unit))
+        congr_arg (fun f => nat_trans.app f (discrete.mk normal_monoidal_object.unit))
           ((normalizeIso.{u} C).Hom.naturality f))
 
 end

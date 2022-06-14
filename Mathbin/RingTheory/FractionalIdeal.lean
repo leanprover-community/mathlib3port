@@ -786,7 +786,7 @@ variable [Algebra R K] [IsFractionRing R K] [Algebra R K'] [IsFractionRing R K']
 
 variable {I J : FractionalIdeal R⁰ K} (h : K →ₐ[R] K')
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 /-- Nonzero fractional ideals contain a nonzero integer. -/
 theorem exists_ne_zero_mem_is_integer [Nontrivial R] (hI : I ≠ 0) : ∃ (x : _)(_ : x ≠ (0 : R)), algebraMap R K x ∈ I :=
   by
@@ -914,7 +914,7 @@ theorem div_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) : I / J = �
 
 @[simp]
 theorem coe_div {I J : FractionalIdeal R₁⁰ K} (hJ : J ≠ 0) : (↑(I / J) : Submodule R₁ K) = ↑I / (↑J : Submodule R₁ K) :=
-  congr_argₓ _ (dif_neg hJ)
+  congr_arg _ (dif_neg hJ)
 
 theorem mem_div_iff_of_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) {x} : x ∈ I / J ↔ ∀, ∀ y ∈ J, ∀, x * y ∈ I :=
   by
@@ -966,7 +966,7 @@ theorem div_one {I : FractionalIdeal R₁⁰ K} : I / 1 = I := by
 theorem eq_one_div_of_mul_eq_one_right (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = 1 / I := by
   have hI : I ≠ 0 := ne_zero_of_mul_eq_one I J h
   suffices h' : I * (1 / I) = 1
-  · exact congr_argₓ Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
+  · exact congr_arg Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
     
   apply le_antisymmₓ
   · apply mul_le.mpr _
@@ -1120,7 +1120,7 @@ theorem eq_span_singleton_of_principal (I : FractionalIdeal S P) [IsPrincipal (I
 
 theorem is_principal_iff (I : FractionalIdeal S P) : IsPrincipal (I : Submodule R P) ↔ ∃ x, I = spanSingleton S x :=
   ⟨fun h => ⟨@generator _ _ _ _ _ (↑I) h, @eq_span_singleton_of_principal _ _ _ _ _ _ _ I h⟩, fun ⟨x, hx⟩ =>
-    { principal := ⟨x, trans (congr_argₓ _ hx) (coe_span_singleton _ x)⟩ }⟩
+    { principal := ⟨x, trans (congr_arg _ hx) (coe_span_singleton _ x)⟩ }⟩
 
 @[simp]
 theorem span_singleton_zero : spanSingleton S (0 : P) = 0 := by
@@ -1131,7 +1131,7 @@ theorem span_singleton_eq_zero_iff {y : P} : spanSingleton S y = 0 ↔ y = 0 :=
   ⟨fun h =>
     span_eq_bot.mp
       (by
-        simpa using congr_argₓ Subtype.val h : span R {y} = ⊥)
+        simpa using congr_arg Subtype.val h : span R {y} = ⊥)
       y (mem_singleton y),
     fun h => by
     simp [h]⟩
@@ -1305,7 +1305,7 @@ instance is_principal {R} [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] 
   obtain ⟨a, aI, -, ha⟩ := exists_eq_span_singleton_mul I
   use (algebraMap R K a)⁻¹ * algebraMap R K (generator aI)
   suffices I = span_singleton R⁰ ((algebraMap R K a)⁻¹ * algebraMap R K (generator aI)) by
-    exact congr_argₓ Subtype.val this
+    exact congr_arg Subtype.val this
   conv_lhs => rw [ha, ← span_singleton_generator aI]
   rw [Ideal.submodule_span_eq, coe_ideal_span_singleton (generator aI), span_singleton_mul_span_singleton]
 

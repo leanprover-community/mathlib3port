@@ -868,7 +868,7 @@ variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 /-- This class states that a ring homomorphism is isometric. This is a sufficient assumption
 for a continuous semilinear map to be bounded and this is the main use for this typeclass. -/
 class RingHomIsometric [Semiringₓ R₁] [Semiringₓ R₂] [HasNorm R₁] [HasNorm R₂] (σ : R₁ →+* R₂) : Prop where
-  IsIso : ∀ {x : R₁}, ∥σ x∥ = ∥x∥
+  is_iso : ∀ {x : R₁}, ∥σ x∥ = ∥x∥
 
 attribute [simp] RingHomIsometric.is_iso
 

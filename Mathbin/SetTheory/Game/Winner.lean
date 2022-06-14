@@ -57,7 +57,7 @@ theorem first_loses_is_zero {G : Pgame} : G.FirstLoses ↔ (G ≈ 0) := by
   rfl
 
 theorem first_loses_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstLoses → H.FirstLoses :=
-  equiv_trans <| equiv_symm h
+  h.symm.trans
 
 theorem first_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.FirstWins → H.FirstWins :=
   (fuzzy_congr_left h).1
@@ -69,7 +69,7 @@ theorem right_wins_of_equiv {G H : Pgame} (h : G ≈ H) : G.RightWins → H.Righ
   (lt_congr_left h).1
 
 theorem first_loses_of_equiv_iff {G H : Pgame} (h : G ≈ H) : G.FirstLoses ↔ H.FirstLoses :=
-  ⟨first_loses_of_equiv h, equiv_trans h⟩
+  ⟨first_loses_of_equiv h, h.trans⟩
 
 theorem first_wins_of_equiv_iff {G H : Pgame} : (G ≈ H) → (G.FirstWins ↔ H.FirstWins) :=
   fuzzy_congr_left

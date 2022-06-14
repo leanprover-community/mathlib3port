@@ -13,7 +13,7 @@ namespace DArray
 variable {n : ℕ} {α : Finₓ n → Type u}
 
 instance [∀ i, Inhabited (α i)] : Inhabited (DArray n α) :=
-  ⟨⟨fun _ => default⟩⟩
+  ⟨⟨default⟩⟩
 
 end DArray
 
@@ -93,7 +93,7 @@ variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {
 theorem rev_list_foldr_aux :
     ∀ {i} h : i ≤ n, (DArray.iterateAux a (fun _ => (· :: ·)) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
   | 0, h => rfl
-  | j + 1, h => congr_argₓ (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
+  | j + 1, h => congr_arg (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
 
 theorem rev_list_foldr : a.revList.foldr f b = a.foldl b f :=
   rev_list_foldr_aux _
@@ -243,7 +243,7 @@ theorem push_back_rev_list : (a.pushBack v).revList = v :: a.revList := by
   unfold push_back rev_list foldl iterate DArray.iterate
   dsimp' [DArray.iterateAux, read, DArray.read, push_back]
   rw [dif_pos (Eq.refl n)]
-  apply congr_argₓ
+  apply congr_arg
   apply push_back_rev_list_aux
 
 @[simp]

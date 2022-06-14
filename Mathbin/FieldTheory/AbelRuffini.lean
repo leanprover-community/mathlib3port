@@ -90,7 +90,7 @@ theorem gal_X_pow_sub_one_is_solvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).
     
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
   have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
   apply is_solvable_of_comm
   intro σ τ
   ext a ha
@@ -122,9 +122,9 @@ theorem gal_X_pow_sub_C_is_solvable_aux (n : ℕ) (a : F) (h : (X ^ n - 1 : F[X]
     
   have hn' : 0 < n := pos_iff_ne_zero.mpr hn
   have hn'' : X ^ n - C a ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_C hn').symm.trans (congr_arg leading_coeff h))
   have hn''' : (X ^ n - 1 : F[X]) ≠ 0 := fun h =>
-    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_argₓ leading_coeff h))
+    one_ne_zero ((leading_coeff_X_pow_sub_one hn').symm.trans (congr_arg leading_coeff h))
   have mem_range : ∀ {c}, c ^ n = 1 → ∃ d, algebraMap F (X ^ n - C a).SplittingField d = c := fun c hc =>
     ring_hom.mem_range.mp
       (minpoly.mem_range_of_degree_eq_one F c
@@ -182,8 +182,8 @@ theorem splits_X_pow_sub_one_of_X_pow_sub_C {F : Type _} [Field F] {E : Type _} 
     ext1 c
     change (X - C c).comp (C b * X) = C b * (X - C (c / b))
     rw [sub_comp, X_comp, C_comp, mul_sub, ← C_mul, mul_div_cancel' c hb']
-  rw [key1, hs, prod_comp, Multiset.map_map, key2, Multiset.prod_map_mul, Multiset.map_const, Multiset.prod_repeat, hs',
-    ← C_pow, hb, ← mul_assoc, C_mul_C, one_mulₓ]
+  rw [key1, hs, multiset_prod_comp, Multiset.map_map, key2, Multiset.prod_map_mul, Multiset.map_const,
+    Multiset.prod_repeat, hs', ← C_pow, hb, ← mul_assoc, C_mul_C, one_mulₓ]
   all_goals
     exact Field.to_nontrivial F
 
@@ -344,7 +344,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
     · obtain ⟨s, hs⟩ := exists_multiset_of_splits _ (splitting_field.splits p)
       rw [map_comp, Polynomial.map_pow, map_X, hs, mul_comp, C_comp]
       apply gal_mul_is_solvable (gal_C_is_solvable _)
-      rw [prod_comp]
+      rw [multiset_prod_comp]
       apply gal_prod_is_solvable
       intro q hq
       rw [Multiset.mem_map] at hq
@@ -356,11 +356,11 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment "/--" "An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/")]
@@ -384,7 +384,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `F
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯"))]
      []
      ")")
@@ -429,7 +429,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                `F
                "⟮"
-               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+               (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                "⟯")
               " →ₐ["
               `F
@@ -495,7 +495,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                            (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                             `F
                             "⟮"
-                            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                             "⟯"))]]
                         ")")
                        (Term.app `minpoly [`F `γ])])
@@ -529,7 +529,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                      [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                        `F
                        "⟮"
-                       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                        "⟯")
                       (Term.app `solvableByRad [`F `E])])
                     "."
@@ -604,7 +604,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `F
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              " →ₐ["
              `F
@@ -670,7 +670,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                           (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                            `F
                            "⟮"
-                           (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                           (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                            "⟯"))]]
                        ")")
                       (Term.app `minpoly [`F `γ])])
@@ -704,7 +704,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                     [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `F
                       "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                       "⟯")
                      (Term.app `solvableByRad [`F `E])])
                    "."
@@ -861,7 +861,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `F
                       "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                       "⟯"))]]
                   ")")
                  (Term.app `minpoly [`F `γ])])
@@ -895,7 +895,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 (Term.app `solvableByRad [`F `E])])
               "."
@@ -937,7 +937,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                    `F
                    "⟮"
-                   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                    "⟯"))]]
                ")")
               (Term.app `minpoly [`F `γ])])
@@ -971,7 +971,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
             [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `F
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              (Term.app `solvableByRad [`F `E])])
            "."
@@ -1038,7 +1038,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯"))]]
              ")")
             (Term.app `minpoly [`F `γ])])
@@ -1072,7 +1072,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `F
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            (Term.app `solvableByRad [`F `E])])
          "."
@@ -1134,7 +1134,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
      [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       (Term.app `solvableByRad [`F `E])])
     "."
@@ -1146,7 +1146,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
     [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
       `F
       "⟮"
-      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
       "⟯")
      (Term.app `solvableByRad [`F `E])])
    "."
@@ -1157,7 +1157,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     (Term.app `solvableByRad [`F `E])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -1185,15 +1185,15 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
   theorem
     induction2
     { α β γ : solvableByRad F E }
-        ( hγ : γ ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ )
+        ( hγ : γ ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ )
         ( hα : P α )
         ( hβ : P β )
       : P γ
@@ -1209,7 +1209,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
           let
             f
               :
-                F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                   →ₐ[
                   F
                   ]
@@ -1235,7 +1235,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                         aeval
                               (
                                   ⟨ γ , hγ ⟩
-                                    : F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                                    : F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                                   )
                                 minpoly F γ
                             =
@@ -1243,7 +1243,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
                           by rw [ aeval_alg_hom_apply , this , AlgHom.map_zero ]
                       apply
                         algebraMap
-                            F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                            F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                               solvableByRad F E
                           .
                           Injective
@@ -1253,8 +1253,8 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
           rw [ P , key ]
           exact gal_is_solvable_of_splits ⟨ Normal.splits splitting_field.normal _ _ ⟩ gal_mul_is_solvable hα hβ
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment "/--" "An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/")]
@@ -1278,7 +1278,7 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `F
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯"))]
      []
      ")")
@@ -1418,21 +1418,21 @@ theorem induction3 {α : solvableByRad F E} {n : ℕ} (hn : n ≠ 0) (hα : P (�
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `F
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /-- An auxiliary induction lemma, which is generalized by `solvable_by_rad.is_solvable`. -/
   theorem
     induction1
     { α β : solvableByRad F E }
-        ( hβ : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ )
+        ( hβ : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ )
         ( hα : P α )
       : P β
     := induction2 adjoin.mono F _ _ ge_of_eq Set.pair_eq_singleton α hβ hα hα

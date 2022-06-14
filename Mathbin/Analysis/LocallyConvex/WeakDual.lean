@@ -50,13 +50,8 @@ variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] [AddCommGroupₓ
 
 /-- Construct a seminorm from a linear form `f : E →ₗ[𝕜] 𝕜` over a normed field `𝕜` by
 `λ x, ∥f x∥` -/
-def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E where
-  toFun := fun x => ∥f x∥
-  smul' := fun a x => by
-    simp only [map_smul, RingHom.id_apply, smul_eq_mul, norm_mul]
-  triangle' := fun x x' => by
-    simp only [map_add, add_apply]
-    exact norm_add_le _ _
+def toSeminorm (f : E →ₗ[𝕜] 𝕜) : Seminorm 𝕜 E :=
+  (normSeminorm 𝕜 𝕜).comp f
 
 theorem coe_to_seminorm {f : E →ₗ[𝕜] 𝕜} : ⇑f.toSeminorm = fun x => ∥f x∥ :=
   rfl
@@ -105,7 +100,7 @@ theorem LinearMap.has_basis_weak_bilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) 
     simp only [id.def]
     let U' := hU₁.to_finset
     by_cases' hU₃ : U.fst.nonempty
-    · have hU₃' : U'.nonempty := (Set.Finite.toFinset.nonempty hU₁).mpr hU₃
+    · have hU₃' : U'.nonempty := hU₁.nonempty_to_finset.mpr hU₃
       refine'
         ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd,
           p.basis_sets_mem _ <| (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_to_finset.mp hy, fun x hx y hy =>

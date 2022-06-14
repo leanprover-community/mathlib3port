@@ -3,7 +3,7 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.Data.Set.Finite
+import Mathbin.Data.Fintype.Basic
 import Mathbin.GroupTheory.Perm.Sign
 import Mathbin.Logic.Equiv.Basic
 
@@ -89,7 +89,7 @@ is an equivalence between the complement of those subtypes.
 See also `equiv.compl`, for a computable version when a term of type
 `{e' : α ≃ α // ∀ x : {x // p x}, e' x = e x}` is known. -/
 noncomputable def toCompl (e : { x // p x } ≃ { x // q x }) : { x // ¬p x } ≃ { x // ¬q x } :=
-  Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl (Fintype.card_congr e)))
+  Classical.choice (Fintype.card_eq.mp (Fintype.card_compl_eq_card_compl _ _ (Fintype.card_congr e)))
 
 /-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.extend_subtype`
 is a permutation of `α` acting like `e` on the subtypes and doing something arbitrary outside.

@@ -407,7 +407,7 @@ theorem of_with_bot_mono {boxes₁ : Finset (WithBot (Box ι))}
 theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithBot (Box ι)))
     (le_of_mem : ∀, ∀ J ∈ boxes, ∀, (J : WithBot (Box ι)) ≤ I)
     (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (Box ι))) Disjoint) (f : Box ι → M) :
-    (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elim J 0 f :=
+    (∑ J in (ofWithBot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑ J in boxes, Option.elimₓ 0 f J :=
   Finset.sum_erase_none _ _
 
 /-- Restrict a prepartition to a box. -/
@@ -592,7 +592,7 @@ theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
 theorem distortion_le_iff {c : ℝ≥0 } : π.distortion ≤ c ↔ ∀, ∀ J ∈ π, ∀, Box.distortion J ≤ c :=
-  sup_le_iff
+  Finset.sup_le_iff
 
 theorem distortion_bUnion (π : Prepartition I) (πi : ∀ J, Prepartition J) :
     (π.bUnion πi).distortion = π.boxes.sup fun J => (πi J).distortion :=
@@ -639,7 +639,7 @@ theorem Union_eq (h : π.IsPartition) : π.Union = I :=
 theorem Union_subset (h : π.IsPartition) (π₁ : Prepartition I) : π₁.Union ⊆ π.Union :=
   h.Union_eq.symm ▸ π₁.Union_subset
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (J «expr ∈ » π)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (J «expr ∈ » π)
 protected theorem exists_unique (h : π.IsPartition) (hx : x ∈ I) : ∃! (J : _)(_ : J ∈ π), x ∈ J := by
   rcases h x hx with ⟨J, h, hx⟩
   exact ExistsUnique.intro2 J h hx fun J' h' hx' => π.eq_of_mem_of_mem h' h hx' hx

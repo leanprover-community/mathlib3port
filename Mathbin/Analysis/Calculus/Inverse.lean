@@ -353,7 +353,7 @@ theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRi
   refine' ⟨(f'symm.nnnorm⁻¹ - c) * ε, mul_pos (sub_pos.2 hc) ε0, _⟩
   exact (hf.surj_on_closed_ball_of_nonlinear_right_inverse f'symm (le_of_ltₓ ε0) hε).mono hε (subset.refl _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem image_mem_nhds (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse) {x : E} (hs : s ∈ 𝓝 x)
     (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : f '' s ∈ 𝓝 (f x) := by
   obtain ⟨t, hts, ht, xt⟩ : ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := _root_.mem_nhds_iff.1 hs

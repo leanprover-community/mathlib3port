@@ -135,7 +135,7 @@ theorem to_comma_map_right {X Y} (f : X ⟶ Y) : ((toStructuredArrow F).map f).r
 /-- The reverse direction of the equivalence `F.elements ≅ (*, F)`. -/
 def fromStructuredArrow : StructuredArrow PUnit F ⥤ F.Elements where
   obj := fun X => ⟨X.right, X.Hom PUnit.unit⟩
-  map := fun X Y f => ⟨f.right, congr_funₓ f.w'.symm PUnit.unit⟩
+  map := fun X Y f => ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩
 
 @[simp]
 theorem from_structured_arrow_obj X : (fromStructuredArrow F).obj X = ⟨X.right, X.Hom PUnit.unit⟩ :=
@@ -143,7 +143,7 @@ theorem from_structured_arrow_obj X : (fromStructuredArrow F).obj X = ⟨X.right
 
 @[simp]
 theorem from_structured_arrow_map {X Y} (f : X ⟶ Y) :
-    (fromStructuredArrow F).map f = ⟨f.right, congr_funₓ f.w'.symm PUnit.unit⟩ :=
+    (fromStructuredArrow F).map f = ⟨f.right, congr_fun f.w'.symm PUnit.unit⟩ :=
   rfl
 
 /-- The equivalence between the category of elements `F.elements`
@@ -187,7 +187,7 @@ def fromCostructuredArrow (F : Cᵒᵖ ⥤ Type v) : (CostructuredArrow yoneda F
   obj := fun X => ⟨op (unop X).1, yonedaEquiv.1 (unop X).3⟩
   map := fun X Y f =>
     ⟨f.unop.1.op, by
-      convert (congr_funₓ ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
+      convert (congr_fun ((unop X).Hom.naturality f.unop.left.op) (𝟙 _)).symm
       simp only [Equivₓ.to_fun_as_coe, Quiver.Hom.unop_op, yoneda_equiv_apply, types_comp_apply, category.comp_id,
         yoneda_obj_map]
       have : yoneda.map f.unop.left ≫ (unop X).Hom = (unop Y).Hom := by
@@ -231,7 +231,7 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
     simp only [functor.id_obj, functor.right_op_obj, to_costructured_arrow_obj, functor.comp_obj, costructured_arrow.mk]
     congr
     ext x f
-    convert congr_funₓ (X_hom.naturality f.op).symm (𝟙 X_left)
+    convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, yoneda_obj_map]
     erw [category.comp_id]
     
@@ -243,12 +243,12 @@ theorem to_from_costructured_arrow_eq (F : Cᵒᵖ ⥤ Type v) :
   delta' costructured_arrow.mk
   congr
   · ext x f
-    convert congr_funₓ (X_hom.naturality f.op).symm (𝟙 X_left)
+    convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
     
   · ext x f
-    convert congr_funₓ (Y_hom.naturality f.op).symm (𝟙 Y_left)
+    convert congr_fun (Y_hom.naturality f.op).symm (𝟙 Y_left)
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
     
@@ -270,7 +270,7 @@ theorem costructured_arrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ �
     simp only [costructured_arrow.map_mk, to_costructured_arrow_obj, functor.op_obj, functor.comp_obj]
     congr
     ext x f
-    simpa using congr_funₓ (α.naturality f.op).symm (unop X).snd
+    simpa using congr_fun (α.naturality f.op).symm (unop X).snd
     
   · intro X Y f
     ext

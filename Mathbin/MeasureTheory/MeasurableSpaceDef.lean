@@ -115,7 +115,7 @@ theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : Countable s)
       (by
         simpa using h)
 
-theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : Finite s)
+theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
   MeasurableSet.bUnion hs.Countable h
 
@@ -128,7 +128,7 @@ theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀
   rw [sUnion_eq_bUnion]
   exact MeasurableSet.bUnion hs h
 
-theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : Finite s) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
     MeasurableSet (⋃₀s) :=
   MeasurableSet.sUnion hs.Countable h
 
@@ -161,7 +161,7 @@ theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : Countable s)
     rw [compl_Inter₂]
     exact MeasurableSet.bUnion hs fun b hb => (h b hb).Compl
 
-theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : Finite s)
+theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀, ∀ b ∈ s, ∀, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.bInter hs.Countable h
 
@@ -174,7 +174,7 @@ theorem MeasurableSet.sInter {s : Set (Set α)} (hs : Countable s) (h : ∀, ∀
   rw [sInter_eq_bInter]
   exact MeasurableSet.bInter hs h
 
-theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : Finite s) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : s.Finite) (h : ∀, ∀ t ∈ s, ∀, MeasurableSet t) :
     MeasurableSet (⋂₀ s) :=
   MeasurableSet.sInter hs.Countable h
 
@@ -228,16 +228,18 @@ theorem nonempty_measurable_superset (s : Set α) : Nonempty { t // s ⊆ t ∧ 
 
 end
 
+open MeasureTheory
+
 @[ext]
 theorem MeasurableSpace.ext :
-    ∀ {m₁ m₂ : MeasurableSpace α}, (∀ s : Set α, m₁.MeasurableSet' s ↔ m₂.MeasurableSet' s) → m₁ = m₂
+    ∀ {m₁ m₂ : MeasurableSpace α}, (∀ s : Set α, measurable_set[m₁] s ↔ measurable_set[m₂] s) → m₁ = m₂
   | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h => by
     have : s₁ = s₂ := funext fun x => propext <| h x
     subst this
 
 @[ext]
 theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
-    m₁ = m₂ ↔ ∀ s : Set α, m₁.MeasurableSet' s ↔ m₂.MeasurableSet' s :=
+    m₁ = m₂ ↔ ∀ s : Set α, measurable_set[m₁] s ↔ measurable_set[m₂] s :=
   ⟨by
     rintro rfl
     intro s
@@ -272,7 +274,7 @@ theorem measurable_set_insert {a : α} {s : Set α} : MeasurableSet (insert a s)
 theorem Set.Subsingleton.measurable_set {s : Set α} (hs : s.Subsingleton) : MeasurableSet s :=
   hs.induction_on MeasurableSet.empty measurable_set_singleton
 
-theorem Set.Finite.measurable_set {s : Set α} (hs : Finite s) : MeasurableSet s :=
+theorem Set.Finite.measurable_set {s : Set α} (hs : s.Finite) : MeasurableSet s :=
   (Finite.induction_on hs MeasurableSet.empty) fun a s ha hsf hsm => hsm.insert _
 
 protected theorem Finset.measurable_set (s : Finset α) : MeasurableSet (↑s : Set α) :=
@@ -289,15 +291,14 @@ namespace MeasurableSpace
 section CompleteLattice
 
 instance : LE (MeasurableSpace α) where
-  le := fun m₁ m₂ => m₁.MeasurableSet' ≤ m₂.MeasurableSet'
+  le := fun m₁ m₂ => ∀ s, measurable_set[m₁] s → measurable_set[m₂] s
 
 theorem le_def {α} {a b : MeasurableSpace α} : a ≤ b ↔ a.MeasurableSet' ≤ b.MeasurableSet' :=
   Iff.rfl
 
 instance : PartialOrderₓ (MeasurableSpace α) :=
-  { MeasurableSpace.hasLe with le_refl := fun a b => le_rfl,
-    le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
-    le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext fun s => ⟨h₁ s, h₂ s⟩ }
+  { MeasurableSpace.hasLe, PartialOrderₓ.lift (@MeasurableSet α) fun m₁ m₂ h => ext fun s => h ▸ Iff.rfl with
+    lt := fun m₁ m₂ => m₁ ≤ m₂ ∧ ¬m₂ ≤ m₁ }
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive GenerateMeasurable (s : Set (Set α)) : Set α → Prop
@@ -316,13 +317,13 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α where
 theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : @MeasurableSet _ (generateFrom s) t :=
   GenerateMeasurable.basic t ht
 
-theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, m.MeasurableSet' t) :
+theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀, ∀ t ∈ s, ∀, measurable_set[m] t) :
     generateFrom s ≤ m := fun ht : GenerateMeasurable s t =>
   ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
     measurable_set_Union m f hf
 
 theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
-    generateFrom s ≤ m ↔ s ⊆ { t | m.MeasurableSet' t } :=
+    generateFrom s ≤ m ↔ s ⊆ { t | measurable_set[m] t } :=
   Iff.intro (fun h u hu => h _ <| measurable_set_generate_from hu) fun h => generate_from_le h
 
 @[simp]
@@ -331,14 +332,14 @@ theorem generate_from_measurable_set [MeasurableSpace α] : generateFrom { s : S
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/
-protected def mkOfClosure (g : Set (Set α)) (hg : { t | (generateFrom g).MeasurableSet' t } = g) :
+protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generateFrom g] t } = g) :
     MeasurableSpace α where
   MeasurableSet' := fun s => s ∈ g
   measurable_set_empty := hg ▸ measurable_set_empty _
   measurable_set_compl := hg ▸ measurable_set_compl _
   measurable_set_Union := hg ▸ measurable_set_Union _
 
-theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | (generateFrom s).MeasurableSet' t } = s} :
+theorem mk_of_closure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateFrom s] t } = s} :
     MeasurableSpace.mkOfClosure s hs = generateFrom s :=
   MeasurableSpace.ext fun t =>
     show t ∈ s ↔ _ by
@@ -403,16 +404,16 @@ theorem measurable_set_infi {ι} {m : ι → MeasurableSpace α} {s : Set α} :
   rw [infi, measurable_set_Inf, forall_range_iff]
 
 theorem measurable_set_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (m₁⊔m₂) s ↔ GenerateMeasurable (m₁.MeasurableSet' ∪ m₂.MeasurableSet') s :=
+    measurable_set[m₁⊔m₂] s ↔ GenerateMeasurable (measurable_set[m₁] ∪ measurable_set[m₂]) s :=
   Iff.refl _
 
 theorem measurable_set_Sup {ms : Set (MeasurableSpace α)} {s : Set α} :
-    @MeasurableSet _ (sup ms) s ↔ GenerateMeasurable { s : Set α | ∃ m ∈ ms, @MeasurableSet _ m s } s := by
+    measurable_set[sup ms] s ↔ GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s := by
   change @measurable_set' _ (generate_from <| ⋃₀_) _ ↔ _
   simp [generate_from, ← set_of_exists]
 
 theorem measurable_set_supr {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (supr m) s ↔ GenerateMeasurable { s : Set α | ∃ i, @MeasurableSet _ (m i) s } s := by
+    @MeasurableSet _ (supr m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s := by
   simp only [supr, measurable_set_Sup, exists_range_iff]
 
 end CompleteLattice

@@ -234,7 +234,7 @@ instance : CompleteLattice (TopologicalSpace α) :=
 theorem is_open_implies_is_open_iff {a b : TopologicalSpace α} : (∀ s, a.IsOpen s → b.IsOpen s) ↔ b ≤ a :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`eq_bot] []
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
@@ -497,6 +497,10 @@ instance : DiscreteTopology ℤ :=
 instance sierpinskiSpace : TopologicalSpace Prop :=
   generateFrom {{True}}
 
+theorem continuous_empty_function [TopologicalSpace α] [TopologicalSpace β] [IsEmpty β] (f : α → β) : Continuous f := by
+  let this := Function.is_empty f
+  exact continuous_of_discrete_topology
+
 theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀, ∀ s ∈ g, ∀, IsOpen s) :
     t ≤ generateFrom g :=
   le_generate_from_iff_subset_is_open.2 h
@@ -559,7 +563,7 @@ theorem is_open_singleton_nhds_adjoint {α : Type _} {a b : α} (f : Filter α) 
   rw [is_open_singleton_iff_nhds_eq_pure]
   exact nhds_adjoint_nhds_of_ne a f hb
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem le_nhds_adjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a⊔f ∧ ∀ b _ : b ≠ a, @nhds α t b = pure b := by
   rw [le_iff_nhds]

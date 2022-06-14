@@ -188,7 +188,7 @@ instance Closeds.complete_space [CompleteSpace α] : CompleteSpace (Closeds α) 
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
   exact ⟨N, fun n hn => lt_of_le_of_ltₓ (main n) (hN n hn)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (v «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (v «expr ⊆ » s)
 /-- In a compact space, the type of closed subsets is compact. -/
 instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
   ⟨by
@@ -200,7 +200,7 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     rcases exists_between εpos with ⟨δ, δpos, δlt⟩
     rcases Emetric.totally_bounded_iff.1 (compact_iff_totally_bounded_complete.1 (@compact_univ α _ _)).1 δ δpos with
       ⟨s, fs, hs⟩
-    -- s : set α,  fs : finite s,  hs : univ ⊆ ⋃ (y : α) (H : y ∈ s), eball y δ
+    -- s : set α,  fs : s.finite,  hs : univ ⊆ ⋃ (y : α) (H : y ∈ s), eball y δ
     -- we first show that any set is well approximated by a subset of `s`.
     have main : ∀ u : Set α, ∃ (v : _)(_ : v ⊆ s), Hausdorff_edist u v ≤ δ := by
       intro u
@@ -224,13 +224,13 @@ instance Closeds.compact_space [CompactSpace α] : CompactSpace (Closeds α) :=
     let F := { f : closeds α | (f : Set α) ⊆ s }
     refine' ⟨F, _, fun u _ => _⟩
     -- `F` is finite
-    · apply @finite_of_finite_image _ _ F coe
-      · exact set_like.coe_injective.inj_on F
-        
-      · refine' fs.finite_subsets.subset fun b => _
+    · apply @finite.of_finite_image _ _ F coe
+      · apply fs.finite_subsets.subset fun b => _
         simp only [and_imp, Set.mem_image, Set.mem_set_of_eq, exists_imp_distrib]
         intro x hx hx'
         rwa [hx'] at hx
+        
+      · exact set_like.coe_injective.inj_on F
         
       
     -- `F` is ε-dense
@@ -285,7 +285,7 @@ theorem NonemptyCompacts.is_closed_in_closeds [CompleteSpace α] :
         (Ennreal.half_pos εpos.ne') with
       ⟨u, fu, ut⟩
     refine' ⟨u, ⟨fu, fun x hx => _⟩⟩
-    -- u : set α,  fu : finite u,  ut : t ⊆ ⋃ (y : α) (H : y ∈ u), eball y (ε / 2)
+    -- u : set α,  fu : u.finite,  ut : t ⊆ ⋃ (y : α) (H : y ∈ u), eball y (ε / 2)
     -- then s is covered by the union of the balls centered at u of radius ε
     rcases exists_edist_lt_of_Hausdorff_edist_lt hx Dst with ⟨z, hz, Dxz⟩
     rcases mem_Union₂.1 (ut hz) with ⟨y, hy, Dzy⟩
@@ -323,7 +323,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
         approximations in `s` of the centers of these balls give the required finite approximation
         of `t`. -/
     rcases exists_countable_dense α with ⟨s, cs, s_dense⟩
-    let v0 := { t : Set α | finite t ∧ t ⊆ s }
+    let v0 := { t : Set α | t.Finite ∧ t ⊆ s }
     let v : Set (nonempty_compacts α) := { t : nonempty_compacts α | (t : Set α) ∈ v0 }
     refine' ⟨⟨v, _, _⟩⟩
     · have : countable v0 := countable_set_of_finite_subset cs
@@ -343,10 +343,10 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- cover `t` with finitely many balls. Their centers form a set `a`
       have : TotallyBounded (t : Set α) := t.compact.totally_bounded
       rcases totally_bounded_iff.1 this (δ / 2) δpos' with ⟨a, af, ta⟩
-      -- a : set α,  af : finite a,  ta : t ⊆ ⋃ (y : α) (H : y ∈ a), eball y (δ / 2)
+      -- a : set α,  af : a.finite,  ta : t ⊆ ⋃ (y : α) (H : y ∈ a), eball y (δ / 2)
       -- replace each center by a nearby approximation in `s`, giving a new set `b`
       let b := F '' a
-      have : finite b := af.image _
+      have : b.finite := af.image _
       have tb : ∀, ∀ x ∈ t, ∀, ∃ y ∈ b, edist x y < δ := by
         intro x hx
         rcases mem_Union₂.1 (ta hx) with ⟨z, za, Dxz⟩
@@ -355,7 +355,7 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
             Ennreal.add_lt_add Dxz (Fspec z).2_ = δ := Ennreal.add_halves _
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
       let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
-      have : finite c := ‹finite b›.Subset fun x hx => hx.1
+      have : c.finite := ‹b.finite›.Subset fun x hx => hx.1
       -- points in `t` are well approximated by points in `c`
       have tc : ∀, ∀ x ∈ t, ∀, ∃ y ∈ c, edist x y ≤ δ := by
         intro x hx
@@ -378,13 +378,13 @@ instance NonemptyCompacts.second_countable_topology [SecondCountableTopology α]
       -- the set `c` is not empty, as it is well approximated by a nonempty set
       have hc : c.nonempty := nonempty_of_Hausdorff_edist_ne_top t.nonempty (ne_top_of_lt Dtc)
       -- let `d` be the version of `c` in the type `nonempty_compacts α`
-      let d : nonempty_compacts α := ⟨⟨c, ‹finite c›.IsCompact⟩, hc⟩
+      let d : nonempty_compacts α := ⟨⟨c, ‹c.finite›.IsCompact⟩, hc⟩
       have : c ⊆ s := by
         intro x hx
         rcases(mem_image _ _ _).1 hx.1 with ⟨y, ⟨ya, yx⟩⟩
         rw [← yx]
         exact (Fspec y).1
-      have : d ∈ v := ⟨‹finite c›, this⟩
+      have : d ∈ v := ⟨‹c.finite›, this⟩
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
       

@@ -11,7 +11,7 @@ import Mathbin.Data.MvPolynomial.Basic
 
 The main result in this file is `mv_polynomial.cardinal_mk_le_max`, which says that
 the cardinality of `mv_polynomial σ R` is bounded above by the maximum of `#R`, `#σ`
-and `ω`.
+and `ℵ₀`.
 
 -/
 
@@ -84,25 +84,26 @@ private theorem to_mv_polynomial_surjective : Function.Surjective (@toMvPolynomi
         simp [to_mv_polynomial]⟩
     
 
-private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max (max (# R) (# σ)) ω :=
+private theorem cardinal_mv_polynomial_fun_le : # (MvPolynomialFun σ R) ≤ max (max (# R) (# σ)) ℵ₀ :=
   calc
     # (MvPolynomialFun σ R) = # R + # σ + # (ULift Bool) := by
       dsimp' [mv_polynomial_fun] <;> simp only [← add_def, add_assocₓ, Cardinal.mk_ulift]
-    _ ≤ max (max (# R + # σ) (# (ULift Bool))) ω := add_le_max _ _
-    _ ≤ max (max (max (max (# R) (# σ)) ω) (# (ULift Bool))) ω := max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
+    _ ≤ max (max (# R + # σ) (# (ULift Bool))) ℵ₀ := add_le_max _ _
+    _ ≤ max (max (max (max (# R) (# σ)) ℵ₀) (# (ULift Bool))) ℵ₀ :=
+      max_le_max (max_le_max (add_le_max _ _) le_rfl) le_rfl
     _ ≤ _ := by
-      simp only [max_commₓ omega.{u}, max_assocₓ, max_left_commₓ omega.{u}, max_selfₓ,
-        max_eq_leftₓ (lt_omega_of_fintype (ULift.{u} Bool)).le]
+      simp only [max_commₓ ℵ₀, max_assocₓ, max_left_commₓ ℵ₀, max_selfₓ,
+        max_eq_leftₓ (lt_aleph_0_of_fintype (ULift.{u} Bool)).le]
     
 
 namespace MvPolynomial
 
 /-- The cardinality of the multivariate polynomial ring, `mv_polynomial σ R` is at most the maximum
-of `#R`, `#σ` and `ω` -/
-theorem cardinal_mk_le_max {σ R : Type u} [CommSemiringₓ R] : # (MvPolynomial σ R) ≤ max (max (# R) (# σ)) ω :=
+of `#R`, `#σ` and `ℵ₀` -/
+theorem cardinal_mk_le_max {σ R : Type u} [CommSemiringₓ R] : # (MvPolynomial σ R) ≤ max (max (# R) (# σ)) ℵ₀ :=
   calc
     # (MvPolynomial σ R) ≤ # (WType (Arity σ R)) := Cardinal.mk_le_of_surjective to_mv_polynomial_surjective
-    _ ≤ max (# (MvPolynomialFun σ R)) ω := WType.cardinal_mk_le_max_omega_of_fintype
+    _ ≤ max (# (MvPolynomialFun σ R)) ℵ₀ := WType.cardinal_mk_le_max_aleph_0_of_fintype
     _ ≤ _ := max_le_max cardinal_mv_polynomial_fun_le le_rfl
     _ ≤ _ := by
       simp only [max_assocₓ, max_selfₓ]

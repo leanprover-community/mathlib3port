@@ -124,7 +124,7 @@ instance [DivInvMonoidₓ α] : DivInvMonoidₓ αᵐᵒᵖ :=
 instance [DivisionMonoid α] : DivisionMonoid αᵐᵒᵖ :=
   { MulOpposite.divInvMonoid α, MulOpposite.hasInvolutiveInv α with
     mul_inv_rev := fun a b => unop_injective <| mul_inv_rev _ _,
-    inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_argₓ unop h }
+    inv_eq_of_mul := fun a b h => unop_injective <| inv_eq_of_mul_eq_one_left <| congr_arg unop h }
 
 @[to_additive AddOpposite.subtractionCommMonoid]
 instance [DivisionCommMonoid α] : DivisionCommMonoid αᵐᵒᵖ :=
@@ -290,7 +290,7 @@ a monoid homomorphism to `Nᵐᵒᵖ`. -/
 def MonoidHom.toOpposite {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N)
     (hf : ∀ x y, Commute (f x) (f y)) : M →* Nᵐᵒᵖ where
   toFun := MulOpposite.op ∘ f
-  map_one' := congr_argₓ op f.map_one
+  map_one' := congr_arg op f.map_one
   map_mul' := fun x y => by
     simp [(hf x y).Eq]
 
@@ -332,7 +332,7 @@ theorem Units.coe_op_equiv_symm {M} [Monoidₓ M] (u : Mˣᵐᵒᵖ) : (Units.op
   simps]
 def MulHom.op {M N} [Mul M] [Mul N] : (M →ₙ* N) ≃ (Mᵐᵒᵖ →ₙ* Nᵐᵒᵖ) where
   toFun := fun f => { toFun := op ∘ f ∘ unop, map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
-  invFun := fun f => { toFun := unop ∘ f ∘ op, map_mul' := fun x y => congr_argₓ unop (f.map_mul (op y) (op x)) }
+  invFun := fun f => { toFun := unop ∘ f ∘ op, map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv := fun f => by
     ext
     rfl
@@ -351,7 +351,7 @@ morphisms. -/
 @[simps]
 def AddHom.mulOp {M N} [Add M] [Add N] : AddHom M N ≃ AddHom Mᵐᵒᵖ Nᵐᵒᵖ where
   toFun := fun f => { toFun := op ∘ f ∘ unop, map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
-  invFun := fun f => { toFun := unop ∘ f ∘ op, map_add' := fun x y => congr_argₓ unop (f.map_add (op x) (op y)) }
+  invFun := fun f => { toFun := unop ∘ f ∘ op, map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
   left_inv := fun f => by
     ext
     rfl
@@ -372,11 +372,11 @@ def AddHom.mulUnop {α β} [Add α] [Add β] : AddHom αᵐᵒᵖ βᵐᵒᵖ �
   simps]
 def MonoidHom.op {M N} [MulOneClassₓ M] [MulOneClassₓ N] : (M →* N) ≃ (Mᵐᵒᵖ →* Nᵐᵒᵖ) where
   toFun := fun f =>
-    { toFun := op ∘ f ∘ unop, map_one' := congr_argₓ op f.map_one,
+    { toFun := op ∘ f ∘ unop, map_one' := congr_arg op f.map_one,
       map_mul' := fun x y => unop_injective (f.map_mul y.unop x.unop) }
   invFun := fun f =>
-    { toFun := unop ∘ f ∘ op, map_one' := congr_argₓ unop f.map_one,
-      map_mul' := fun x y => congr_argₓ unop (f.map_mul (op y) (op x)) }
+    { toFun := unop ∘ f ∘ op, map_one' := congr_arg unop f.map_one,
+      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv := fun f => by
     ext
     rfl
@@ -398,8 +398,8 @@ def AddMonoidHom.mulOp {M N} [AddZeroClassₓ M] [AddZeroClassₓ N] : (M →+ N
     { toFun := op ∘ f ∘ unop, map_zero' := unop_injective f.map_zero,
       map_add' := fun x y => unop_injective (f.map_add x.unop y.unop) }
   invFun := fun f =>
-    { toFun := unop ∘ f ∘ op, map_zero' := congr_argₓ unop f.map_zero,
-      map_add' := fun x y => congr_argₓ unop (f.map_add (op x) (op y)) }
+    { toFun := unop ∘ f ∘ op, map_zero' := congr_arg unop f.map_zero,
+      map_add' := fun x y => congr_arg unop (f.map_add (op x) (op y)) }
   left_inv := fun f => by
     ext
     rfl
@@ -444,7 +444,7 @@ def MulEquiv.op {α β} [Mul α] [Mul β] : α ≃* β ≃ (αᵐᵒᵖ ≃* β�
         simp ,
       right_inv := fun x => by
         simp ,
-      map_mul' := fun x y => congr_argₓ unop (f.map_mul (op y) (op x)) }
+      map_mul' := fun x y => congr_arg unop (f.map_mul (op y) (op x)) }
   left_inv := fun f => by
     ext
     rfl

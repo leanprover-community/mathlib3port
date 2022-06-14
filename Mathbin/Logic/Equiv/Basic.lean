@@ -445,47 +445,40 @@ theorem perm_congr_trans (p p' : Equivₓ.Perm α') : (e.permCongr p).trans (e.p
 
 end PermCongr
 
+/-- Two empty types are equivalent. -/
+def equivOfIsEmpty (α β : Sort _) [IsEmpty α] [IsEmpty β] : α ≃ β :=
+  ⟨isEmptyElim, isEmptyElim, isEmptyElim, isEmptyElim⟩
+
 /-- If `α` is an empty type, then it is equivalent to the `empty` type. -/
 def equivEmpty (α : Sort u) [IsEmpty α] : α ≃ Empty :=
-  ⟨isEmptyElim, fun e => e.rec _, isEmptyElim, fun e => e.rec _⟩
+  equivOfIsEmpty α _
+
+/-- If `α` is an empty type, then it is equivalent to the `pempty` type in any universe. -/
+def equivPempty (α : Sort v) [IsEmpty α] : α ≃ Pempty.{u} :=
+  equivOfIsEmpty α _
 
 /-- `α` is equivalent to an empty type iff `α` is empty. -/
 def equivEmptyEquiv (α : Sort u) : α ≃ Empty ≃ IsEmpty α :=
   ⟨fun e => Function.is_empty e, @equivEmpty α, fun e => ext fun x => (e x).elim, fun p => rfl⟩
 
-/-- `false` is equivalent to `empty`. -/
-def falseEquivEmpty : False ≃ Empty :=
-  equivEmpty _
+/-- The `Sort` of proofs of a false proposition is equivalent to `pempty`. -/
+def propEquivPempty {p : Prop} (h : ¬p) : p ≃ Pempty :=
+  @equivPempty p <| IsEmpty.prop_iff.2 h
 
-/-- If `α` is an empty type, then it is equivalent to the `pempty` type in any universe. -/
-def equivPempty.{u', v'} (α : Sort v') [IsEmpty α] : α ≃ Pempty.{u'} :=
-  ⟨isEmptyElim, fun e => e.rec _, isEmptyElim, fun e => e.rec _⟩
+/-- If both `α` and `β` have a unique element, then `α ≃ β`. -/
+def equivOfUnique (α β : Sort _) [Unique α] [Unique β] : α ≃ β where
+  toFun := default
+  invFun := default
+  left_inv := fun _ => Subsingleton.elimₓ _ _
+  right_inv := fun _ => Subsingleton.elimₓ _ _
 
-/-- `false` is equivalent to `pempty`. -/
-def falseEquivPempty : False ≃ Pempty :=
-  equivPempty _
-
-/-- `empty` is equivalent to `pempty`. -/
-def emptyEquivPempty : Empty ≃ Pempty :=
-  equivPempty _
-
-/-- `pempty` types from any two universes are equivalent. -/
-def pemptyEquivPempty : Pempty.{v} ≃ Pempty.{w} :=
-  equivPempty _
+/-- If `α` has a unique element, then it is equivalent to any `punit`. -/
+def equivPunit (α : Sort _) [Unique α] : α ≃ PUnit.{v} :=
+  equivOfUnique α _
 
 /-- The `Sort` of proofs of a true proposition is equivalent to `punit`. -/
 def propEquivPunit {p : Prop} (h : p) : p ≃ PUnit :=
-  ⟨fun x => (), fun x => h, fun _ => rfl, fun ⟨⟩ => rfl⟩
-
-/-- The `Sort` of proofs of a false proposition is equivalent to `pempty`. -/
-def propEquivPempty {p : Prop} (h : ¬p) : p ≃ Pempty :=
-  ⟨fun x => absurd x h, fun x => by
-    cases x, fun x => absurd x h, fun x => by
-    cases x⟩
-
-/-- `true` is equivalent to `punit`. -/
-def trueEquivPunit : True ≃ PUnit :=
-  propEquivPunit trivialₓ
+  @equivPunit p <| uniqueProp h
 
 /-- `ulift α` is equivalent to `α`. -/
 @[simps (config := { fullyApplied := false }) apply symmApply]
@@ -652,7 +645,7 @@ i` is equivalent to `β i`. -/
 @[simps]
 def piSubsingleton {α} (β : α → Sort _) [Subsingleton α] (a : α) : (∀ a', β a') ≃ β a where
   toFun := eval a
-  invFun := fun x b => cast (congr_argₓ β <| Subsingleton.elimₓ a b) x
+  invFun := fun x b => cast (congr_arg β <| Subsingleton.elimₓ a b) x
   left_inv := fun f =>
     funext fun b => by
       rw [Subsingleton.elimₓ b a]
@@ -1113,6 +1106,16 @@ def piCongrRight {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β�
     funext <| by
       simp ⟩
 
+/-- Given `φ : α → β → Sort*`, we have an equivalence between `Π a b, φ a b` and `Π b a, φ a b`.
+This is `function.swap` as an `equiv`. -/
+@[simps apply]
+def piComm {α β} (φ : α → β → Sort _) : (∀ a b, φ a b) ≃ ∀ b a, φ a b :=
+  ⟨swap, swap, fun x => rfl, fun y => rfl⟩
+
+@[simp]
+theorem Pi_comm_symm {α β} {φ : α → β → Sort _} : (piComm φ).symm = (Pi_comm <| swap φ) :=
+  rfl
+
 /-- Dependent `curry` equivalence: the type of dependent functions on `Σ i, β i` is equivalent
 to the type of dependent functions of two arguments (i.e., functions to the space of functions).
 
@@ -1137,8 +1140,8 @@ def psigmaEquivSigma {α} (β : α → Type _) : (Σ'i, β i) ≃ Σi, β i :=
 @[simps apply]
 def psigmaCongrRight {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σ'a, β₁ a) ≃ Σ'a, β₂ a :=
   ⟨fun a => ⟨a.1, F a.1 a.2⟩, fun a => ⟨a.1, (F a.1).symm a.2⟩, fun ⟨a, b⟩ =>
-    congr_argₓ (PSigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
-    congr_argₓ (PSigma.mk a) <| apply_symm_apply (F a) b⟩
+    congr_arg (PSigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
+    congr_arg (PSigma.mk a) <| apply_symm_apply (F a) b⟩
 
 @[simp]
 theorem psigma_congr_right_trans {α} {β₁ β₂ β₃ : α → Sort _} (F : ∀ a, β₁ a ≃ β₂ a) (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1166,8 +1169,8 @@ theorem psigma_congr_right_refl {α} {β : α → Sort _} :
 @[simps apply]
 def sigmaCongrRight {α} {β₁ β₂ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) : (Σa, β₁ a) ≃ Σa, β₂ a :=
   ⟨fun a => ⟨a.1, F a.1 a.2⟩, fun a => ⟨a.1, (F a.1).symm a.2⟩, fun ⟨a, b⟩ =>
-    congr_argₓ (Sigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
-    congr_argₓ (Sigma.mk a) <| apply_symm_apply (F a) b⟩
+    congr_arg (Sigma.mk a) <| symm_apply_apply (F a) b, fun ⟨a, b⟩ =>
+    congr_arg (Sigma.mk a) <| apply_symm_apply (F a) b⟩
 
 @[simp]
 theorem sigma_congr_right_trans {α} {β₁ β₂ β₃ : α → Type _} (F : ∀ a, β₁ a ≃ β₂ a) (G : ∀ a, β₂ a ≃ β₃ a) :
@@ -1583,10 +1586,6 @@ def listEquivOfEquiv {α β : Type _} (e : α ≃ β) : List α ≃ List β wher
   right_inv := fun l => by
     rw [List.map_mapₓ, e.self_comp_symm, List.map_id]
 
-/-- `fin n` is equivalent to `{m // m < n}`. -/
-def finEquivSubtype (n : ℕ) : Finₓ n ≃ { m // m < n } :=
-  ⟨fun x => ⟨x.1, x.2⟩, fun x => ⟨x.1, x.2⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
-
 /-- If `α` is equivalent to `β`, then `unique α` is equivalent to `unique β`. -/
 def uniqueCongr (e : α ≃ β) : Unique α ≃ Unique β where
   toFun := fun h => @Equivₓ.unique _ _ h e.symm
@@ -1744,7 +1743,7 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
       symm
       refine' (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)
       intro x
-      exact ⟨fun ⟨hp, h'⟩ => congr_argₓ Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
+      exact ⟨fun ⟨hp, h'⟩ => congr_arg Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
     _ ≃ Subtype p := sigmaFiberEquiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
     
 
@@ -2147,7 +2146,7 @@ theorem Function.Injective.map_swap {α β : Type _} [DecidableEq α] [Decidable
     
   · rw [hf h₂, Equivₓ.swap_apply_right]
     
-  · rw [Equivₓ.swap_apply_of_ne_of_ne (mt (congr_argₓ f) h₁) (mt (congr_argₓ f) h₂)]
+  · rw [Equivₓ.swap_apply_of_ne_of_ne (mt (congr_arg f) h₁) (mt (congr_arg f) h₂)]
     
 
 namespace Equivₓ
@@ -2257,14 +2256,14 @@ def piCongrLeft' : (∀ a, P a) ≃ ∀ b, P (e.symm b) where
   left_inv := fun f =>
     funext fun x =>
       eq_of_heq
-        ((eq_rec_heqₓ _ _).trans
+        ((eq_rec_heq _ _).trans
           (by
             dsimp'
             rw [e.symm_apply_apply]))
   right_inv := fun f =>
     funext fun x =>
       eq_of_heq
-        ((eq_rec_heqₓ _ _).trans
+        ((eq_rec_heq _ _).trans
           (by
             rw [e.apply_symm_apply]))
 
@@ -2357,17 +2356,6 @@ theorem Function.Injective.swap_comp [DecidableEq α] [DecidableEq β] {f : α �
     Equivₓ.swap (f x) (f y) ∘ f = f ∘ Equivₓ.swap x y :=
   funext fun z => hf.swap_apply _ _ _
 
-/-- If both `α` and `β` are singletons, then `α ≃ β`. -/
-def equivOfUniqueOfUnique [Unique α] [Unique β] : α ≃ β where
-  toFun := fun _ => default
-  invFun := fun _ => default
-  left_inv := fun _ => Subsingleton.elimₓ _ _
-  right_inv := fun _ => Subsingleton.elimₓ _ _
-
-/-- If `α` is a singleton, then it is equivalent to any `punit`. -/
-def equivPunitOfUnique [Unique α] : α ≃ PUnit.{v} :=
-  equivOfUniqueOfUnique
-
 /-- If `α` is a subsingleton, then it is equivalent to `α × α`. -/
 def subsingletonProdSelfEquiv {α : Type _} [Subsingleton α] : α × α ≃ α where
   toFun := fun p => p.1
@@ -2459,7 +2447,7 @@ theorem update_comp_equiv {α β α' : Sort _} [DecidableEq α'] [DecidableEq α
 
 theorem update_apply_equiv_apply {α β α' : Sort _} [DecidableEq α'] [DecidableEq α] (f : α → β) (g : α' ≃ α) (a : α)
     (v : β) (a' : α') : update f a v (g a') = update (f ∘ g) (g.symm a) v a' :=
-  congr_funₓ (update_comp_equiv f g a v) a'
+  congr_fun (update_comp_equiv f g a v) a'
 
 theorem Pi_congr_left'_update [DecidableEq α] [DecidableEq β] (P : α → Sort _) (e : α ≃ β) (f : ∀ a, P a) (b : β)
     (x : P (e.symm b)) : e.piCongrLeft' P (update f (e.symm b) x) = update (e.piCongrLeft' P f) b x := by

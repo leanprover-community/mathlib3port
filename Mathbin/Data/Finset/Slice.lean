@@ -58,7 +58,7 @@ theorem sized_Union {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ 
   simp_rw [Set.Sized, Set.mem_Union, forall_exists_index]
   exact forall_swap
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sized_Union₂ {f : ∀ i, κ i → Set (Finset α)} : (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by
   simp_rw [sized_Union]
@@ -131,7 +131,7 @@ theorem eq_of_mem_slice (h₁ : A ∈ 𝒜 # r₁) (h₂ : A ∈ 𝒜 # r₂) : 
 
 /-- Elements in distinct slices must be distinct. -/
 theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r₂) : r₁ ≠ r₂ → A₁ ≠ A₂ :=
-  mt fun h => (sized_slice h₁).symm.trans ((congr_argₓ card h).trans (sized_slice h₂))
+  mt fun h => (sized_slice h₁).symm.trans ((congr_arg card h).trans (sized_slice h₂))
 
 theorem pairwise_disjoint_slice [DecidableEq α] : (Set.Univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
   disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn

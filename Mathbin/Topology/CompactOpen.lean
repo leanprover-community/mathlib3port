@@ -52,7 +52,7 @@ def CompactOpen.Gen (s : Set α) (u : Set β) : Set C(α, β) :=
 
 @[simp]
 theorem gen_empty (u : Set β) : CompactOpen.Gen (∅ : Set α) u = Set.Univ :=
-  Set.ext fun f => iff_true_intro ((congr_argₓ (· ⊆ u) (image_empty f)).mpr u.empty_subset)
+  Set.ext fun f => iff_true_intro ((congr_arg (· ⊆ u) (image_empty f)).mpr u.empty_subset)
 
 @[simp]
 theorem gen_univ (s : Set α) : CompactOpen.Gen s (Set.Univ : Set β) = Set.Univ :=
@@ -64,7 +64,7 @@ theorem gen_inter (s : Set α) (u v : Set β) : CompactOpen.Gen s (u ∩ v) = Co
 
 @[simp]
 theorem gen_union (s t : Set α) (u : Set β) : CompactOpen.Gen (s ∪ t) u = CompactOpen.Gen s u ∩ CompactOpen.Gen t u :=
-  Set.ext fun f => (iff_of_eq (congr_argₓ (· ⊆ u) (image_union f s t))).trans union_subset_iff
+  Set.ext fun f => (iff_of_eq (congr_arg (· ⊆ u) (image_union f s t))).trans union_subset_iff
 
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=

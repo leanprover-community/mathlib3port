@@ -38,7 +38,7 @@ theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1
     ring
   rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_commₓ]
   refine' exists_congr fun x => _
-  refine' (iff_of_eq <| congr_argₓ _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero' I_ne_zero)
+  refine' (iff_of_eq <| congr_arg _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero' I_ne_zero)
   ring
 
 theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (2 * k + 1) * π / 2 := by
@@ -164,7 +164,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ exp (z * I) ^ 2 - 2 * w
   refine' Eq.congr _ rfl
   ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (w «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (w «expr ≠ » 0)
 theorem cos_surjective : Function.Surjective cos := by
   intro x
   obtain ⟨w, w₀, hw⟩ : ∃ (w : _)(_ : w ≠ 0), 1 * w * w + -2 * x * w + 1 = 0 := by

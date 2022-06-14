@@ -108,7 +108,7 @@ omit nN
 @[to_additive QuotientAddGroup.addCommGroup]
 instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (G ⧸ N) :=
   { @QuotientGroup.Quotient.group _ _ N N.normal_of_comm with
-    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_argₓ mk (mul_comm a b) }
+    mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_arg mk (mul_comm a b) }
 
 include nN
 
@@ -353,7 +353,7 @@ theorem hom_quotient_zpow_of_hom_comp :
 @[to_additive, simp]
 theorem hom_quotient_zpow_of_hom_comp_of_right_inverse (i : Function.RightInverse g f) :
     (homQuotientZpowOfHom f n).comp (homQuotientZpowOfHom g n) = MonoidHom.id _ :=
-  monoid_hom_ext _ <| MonoidHom.ext fun x => congr_argₓ coe <| i x
+  monoid_hom_ext _ <| MonoidHom.ext fun x => congr_arg coe <| i x
 
 /-- The equivalence of quotients by powers of an integer induced by a group isomorphism. -/
 @[to_additive "The equivalence of quotients by multiples of an integer induced by an additive group\nisomorphism."]

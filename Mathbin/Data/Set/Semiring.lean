@@ -107,10 +107,7 @@ instance [CommSemigroupₓ α] : NonUnitalCommSemiring (SetSemiring α) :=
 instance [CommMonoidₓ α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
   { SetSemiring.semiring, Set.commMonoid, SetSemiring.partialOrder _, SetSemiring.orderBot _,
     SetSemiring.no_zero_divisors with add_le_add_left := fun a b => add_le_add_left,
-    le_iff_exists_add := fun a b =>
-      ⟨fun ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩, by
-        rintro ⟨c, rfl⟩
-        exact subset_union_left _ _⟩ }
+    exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩, le_self_add := subset_union_left }
 
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/

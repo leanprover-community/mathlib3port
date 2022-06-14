@@ -63,11 +63,11 @@ theorem types_comp_apply {X Y Z : Type u} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : 
 
 @[simp]
 theorem hom_inv_id_apply {X Y : Type u} (f : X ≅ Y) (x : X) : f.inv (f.Hom x) = x :=
-  congr_funₓ f.hom_inv_id x
+  congr_fun f.hom_inv_id x
 
 @[simp]
 theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) = y :=
-  congr_funₓ f.inv_hom_id y
+  congr_fun f.inv_hom_id y
 
 /-- `as_hom f` helps Lean type check a function as a morphism in the category `Type`. -/
 -- Unfortunately without this wrapper we can't use `category_theory` idioms, such as `is_iso f`.
@@ -125,7 +125,7 @@ theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by
   simp [types_id]
 
 theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map f) (σ.app X x) :=
-  congr_funₓ (σ.naturality f) x
+  congr_fun (σ.naturality f) x
 
 @[simp]
 theorem comp (x : F.obj X) : (σ ≫ τ).app X x = τ.app X (σ.app X x) :=
@@ -139,19 +139,19 @@ theorem hcomp (x : (I ⋙ F).obj W) : (ρ ◫ σ).app W x = (G.map (ρ.app W)) (
 
 @[simp]
 theorem map_inv_map_hom_apply (f : X ≅ Y) (x : F.obj X) : F.map f.inv (F.map f.Hom x) = x :=
-  congr_funₓ (F.mapIso f).hom_inv_id x
+  congr_fun (F.mapIso f).hom_inv_id x
 
 @[simp]
 theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.Hom (F.map f.inv y) = y :=
-  congr_funₓ (F.mapIso f).inv_hom_id y
+  congr_fun (F.mapIso f).inv_hom_id y
 
 @[simp]
 theorem hom_inv_id_app_apply (α : F ≅ G) X x : α.inv.app X (α.Hom.app X x) = x :=
-  congr_funₓ (α.hom_inv_id_app X) x
+  congr_fun (α.hom_inv_id_app X) x
 
 @[simp]
 theorem inv_hom_id_app_apply (α : F ≅ G) X x : α.Hom.app X (α.inv.app X x) = x :=
-  congr_funₓ (α.inv_hom_id_app X) x
+  congr_fun (α.inv_hom_id_app X) x
 
 end FunctorToTypes
 
@@ -177,7 +177,7 @@ instance uliftFunctorFull : Full.{u} uliftFunctor where
 
 instance ulift_functor_faithful : Faithful uliftFunctor where
   map_injective' := fun X Y f g p =>
-    funext fun x => congr_argₓ ULift.down (congr_funₓ p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
+    funext fun x => congr_arg ULift.down (congr_fun p (ULift.up x) : ULift.up (f x) = ULift.up (g x))
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
@@ -192,7 +192,7 @@ def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
 def homOfElement {X : Type u} (x : X) : PUnit ⟶ X := fun _ => x
 
 theorem hom_of_element_eq_iff {X : Type u} (x y : X) : homOfElement x = homOfElement y ↔ x = y :=
-  ⟨fun H => congr_funₓ H PUnit.unit, by
+  ⟨fun H => congr_fun H PUnit.unit, by
     cc⟩
 
 /-- A morphism in `Type` is a monomorphism if and only if it is injective.
@@ -294,8 +294,8 @@ variable {X Y : Type u}
 def toEquiv (i : X ≅ Y) : X ≃ Y where
   toFun := i.Hom
   invFun := i.inv
-  left_inv := fun x => congr_funₓ i.hom_inv_id x
-  right_inv := fun y => congr_funₓ i.inv_hom_id y
+  left_inv := fun x => congr_fun i.hom_inv_id x
+  right_inv := fun y => congr_fun i.inv_hom_id y
 
 @[simp]
 theorem to_equiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.Hom :=

@@ -465,7 +465,7 @@ def dartOfNeighborSet (v : V) (w : G.NeighborSet v) : G.Dart :=
 theorem dart_of_neighbor_set_injective (v : V) : Function.Injective (G.dartOfNeighborSet v) := fun e₁ e₂ h =>
   Subtype.ext <| by
     injection h with h'
-    convert congr_argₓ Prod.snd h'
+    convert congr_arg Prod.snd h'
 
 instance Dart.inhabited [Inhabited V] [Inhabited (G.NeighborSet default)] : Inhabited G.Dart :=
   ⟨G.dartOfNeighborSet default default⟩
@@ -534,10 +534,6 @@ theorem edge_set_univ_card [Fintype G.EdgeSet] : (univ : Finset G.EdgeSet).card 
 
 @[simp]
 theorem mem_neighbor_set (v w : V) : w ∈ G.NeighborSet v ↔ G.Adj v w :=
-  Iff.rfl
-
-@[simp]
-theorem mem_neighbor_set' (v w : V) : G.NeighborSet v w ↔ G.Adj v w :=
   Iff.rfl
 
 @[simp]
@@ -822,7 +818,7 @@ theorem neighbor_finset_eq_filter {v : V} [DecidableRel G.Adj] : G.neighborFinse
 
 theorem neighbor_finset_compl [DecidableEq V] [DecidableRel G.Adj] (v : V) :
     Gᶜ.neighborFinset v = G.neighborFinset vᶜ \ {v} := by
-  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_sdiff, Set.to_finset_compl, Set.to_finset_singleton]
+  simp only [neighbor_finset, neighbor_set_compl, Set.to_finset_diff, Set.to_finset_compl, Set.to_finset_singleton]
 
 @[simp]
 theorem complete_graph_degree [DecidableEq V] (v : V) : (⊤ : SimpleGraph V).degree v = Fintype.card V - 1 := by
@@ -961,18 +957,18 @@ theorem Adj.card_common_neighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.
     constructor
     · simpa
       
-    · rw [neighbor_finset, ← Set.subset_iff_to_finset_subset]
+    · rw [neighbor_finset, Set.to_finset_mono]
       exact G.common_neighbors_subset_neighbor_set_left _ _
       
     
 
 theorem card_common_neighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
     Fintype.card ((⊤ : SimpleGraph V).CommonNeighbors v w) = Fintype.card V - 2 := by
-  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_sdiff]
+  simp only [common_neighbors_top_eq, ← Set.to_finset_card, Set.to_finset_diff]
   rw [Finset.card_sdiff]
   · simp [Finset.card_univ, h]
     
-  · simp only [← Set.subset_iff_to_finset_subset, Set.subset_univ]
+  · simp only [Set.to_finset_mono, Set.subset_univ]
     
 
 end Finite
@@ -1047,6 +1043,7 @@ theorem map_dart_apply (d : G.Dart) : f.mapDart d = ⟨d.1.map f f, f.map_adj d.
   rfl
 
 /-- The induced map for spanning subgraphs, which is the identity on vertices. -/
+@[simps]
 def mapSpanningSubgraphs {G G' : SimpleGraph V} (h : G ≤ G') : G →g G' where
   toFun := fun x => x
   map_rel' := h
@@ -1107,7 +1104,7 @@ def mapNeighborSet (v : V) : G.NeighborSet v ↪ G'.NeighborSet (f v) where
     exact f.inj' h
 
 /-- Embeddings of types induce embeddings of complete graphs on those types. -/
-def CompleteGraph.ofEmbedding {α β : Type _} (f : α ↪ β) : completeGraph α ↪g completeGraph β where
+protected def completeGraph {α β : Type _} (f : α ↪ β) : (⊤ : SimpleGraph α) ↪g (⊤ : SimpleGraph β) where
   toFun := f
   inj' := f.inj'
   map_rel_iff' := by
@@ -1163,14 +1160,14 @@ def mapEdgeSet : G.EdgeSet ≃ G'.EdgeSet where
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_funₓ
+    apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.symm_apply_apply _ _
   right_inv := by
     rintro ⟨e, h⟩
     simp only [hom.map_edge_set, Sym2.map_map, RelIso.coe_coe_fn, RelEmbedding.coe_coe_fn, Subtype.mk_eq_mk,
       Subtype.coe_mk, coe_coe]
-    apply congr_funₓ
+    apply congr_fun
     convert Sym2.map_id
     exact funext fun _ => RelIso.apply_symm_apply _ _
 

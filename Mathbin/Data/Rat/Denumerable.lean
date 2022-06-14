@@ -35,13 +35,8 @@ instance : Denumerable ℚ := by
 
 end Rat
 
-namespace Cardinal
-
 open Cardinal
 
-@[simp]
-theorem mk_rat : # ℚ = ω :=
-  mk_denumerable ℚ
-
-end Cardinal
+theorem Cardinal.mk_rat : # ℚ = ℵ₀ := by
+  simp
 

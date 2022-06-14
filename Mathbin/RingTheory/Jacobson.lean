@@ -188,7 +188,7 @@ theorem is_maximal_iff_is_maximal_disjoint [H : IsJacobson R] (J : Ideal S) :
   · refine' fun h => ⟨⟨fun hJ => h.1.ne_top (eq_top_iff.2 _), fun I hI => _⟩⟩
     · rwa [eq_top_iff, ← (IsLocalization.orderEmbedding (powers y) S).le_iff_le] at hJ
       
-    · have := congr_argₓ (map (algebraMap R S)) (h.1.1.2 _ ⟨comap_mono (le_of_ltₓ hI), _⟩)
+    · have := congr_arg (map (algebraMap R S)) (h.1.1.2 _ ⟨comap_mono (le_of_ltₓ hI), _⟩)
       rwa [map_comap (powers y) S I, map_top] at this
       refine' fun hI' => hI.right _
       rw [← map_comap (powers y) S I, ← map_comap (powers y) S J]
@@ -303,7 +303,7 @@ theorem is_integral_is_localization_polynomial_quotient (P : Ideal R[X]) (pX : R
     obtain ⟨q', hq', rfl⟩ := hq
     obtain ⟨q'', hq''⟩ := is_unit_iff_exists_inv'.1 (IsLocalization.map_units Rₘ (⟨q', hq'⟩ : M))
     refine' φ'.is_integral_of_is_integral_mul_unit p (algebraMap _ _ (φ q')) q'' _ (hp.symm ▸ this)
-    convert trans (trans (φ'.map_mul _ _).symm (congr_argₓ φ' hq'')) φ'.map_one using 2
+    convert trans (trans (φ'.map_mul _ _).symm (congr_arg φ' hq'')) φ'.map_one using 2
     rw [← φ'.comp_apply, IsLocalization.map_comp, RingHom.comp_apply, Subtype.coe_mk]
   refine' is_integral_of_mem_closure'' ((algebraMap _ Sₘ).comp (Quotientₓ.mk P) '' insert X { p | p.degree ≤ 0 }) _ _ _
   · rintro x ⟨p, hp, rfl⟩
@@ -414,13 +414,13 @@ theorem is_jacobson_polynomial_of_is_jacobson (hR : IsJacobson R) : IsJacobson R
   have hi : Function.Surjective (i : R → R') := ((Quotientₓ.mk I).comp C).range_restrict_surjective
   have hi' : (Polynomial.mapRingHom i : R[X] →+* R'[X]).ker ≤ I := by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
-    replace hf := congr_argₓ (fun g : Polynomial ((Quotientₓ.mk I).comp C).range => g.Coeff n) hf
+    replace hf := congr_arg (fun g : Polynomial ((Quotientₓ.mk I).comp C).range => g.Coeff n) hf
     change (Polynomial.map ((Quotientₓ.mk I).comp C).range_restrict f).Coeff n = 0 at hf
     rw [coeff_map, Subtype.ext_iff] at hf
     rwa [mem_comap, ← quotient.eq_zero_iff_mem, ← RingHom.comp_apply]
   have := map_is_prime_of_surjective (show Function.Surjective (map_ring_hom i) from map_surjective i hi) hi'
   suffices (I.map (Polynomial.mapRingHom i)).jacobson = I.map (Polynomial.mapRingHom i) by
-    replace this := congr_argₓ (comap (Polynomial.mapRingHom i)) this
+    replace this := congr_arg (comap (Polynomial.mapRingHom i)) this
     rw [← map_jacobson_of_surjective _ hi', comap_map_of_surjective _ _, comap_map_of_surjective _ _] at this
     refine'
       le_antisymmₓ (le_transₓ (le_sup_of_le_left le_rfl) (le_transₓ (le_of_eqₓ this) (sup_le le_rfl hi'))) le_jacobson

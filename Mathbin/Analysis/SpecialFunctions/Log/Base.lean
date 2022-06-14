@@ -5,6 +5,7 @@ Authors: Bolton Bailey, Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle S
 -/
 import Mathbin.Analysis.SpecialFunctions.Log.Basic
 import Mathbin.Analysis.SpecialFunctions.Pow
+import Mathbin.Data.Int.Log
 
 /-!
 # Real logarithm base `b`
@@ -14,7 +15,7 @@ define this as the division of the natural logarithms of the argument and the ba
 a globally defined function with `logb b 0 = 0`, `logb b (-x) = logb b x` `logb 0 x = 0` and
 `logb (-b) x = logb b x`.
 
-We prove some basic properties of this function and it's relation to `rpow`.
+We prove some basic properties of this function and its relation to `rpow`.
 
 ## Tags
 
@@ -309,6 +310,34 @@ theorem tendsto_logb_at_top_of_base_lt_one : Tendsto (logb b) atTop atBot := by
   exact lt_of_lt_of_leₓ zero_lt_one ha
 
 end BPosAndBLtOne
+
+theorem floor_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌊logb b r⌋ = Int.log b r := by
+  obtain rfl | hr := hr.eq_or_lt
+  · rw [logb_zero, Int.log_zero_right, Int.floor_zero]
+    
+  have hb1' : 1 < (b : ℝ) := nat.one_lt_cast.mpr hb
+  apply le_antisymmₓ
+  · rw [← Int.zpow_le_iff_le_log hb hr, ← rpow_int_cast b]
+    refine' le_of_le_of_eq _ (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr)
+    exact rpow_le_rpow_of_exponent_le hb1'.le (Int.floor_le _)
+    
+  · rw [Int.le_floor, le_logb_iff_rpow_le hb1' hr, rpow_int_cast]
+    exact Int.zpow_log_le_self hb hr
+    
+
+theorem ceil_logb_nat_cast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) : ⌈logb b r⌉ = Int.clog b r := by
+  obtain rfl | hr := hr.eq_or_lt
+  · rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
+    
+  have hb1' : 1 < (b : ℝ) := nat.one_lt_cast.mpr hb
+  apply le_antisymmₓ
+  · rw [Int.ceil_le, logb_le_iff_le_rpow hb1' hr, rpow_int_cast]
+    refine' Int.self_le_zpow_clog hb r
+    
+  · rw [← Int.le_zpow_iff_clog_le hb hr, ← rpow_int_cast b]
+    refine' (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr).symm.trans_le _
+    exact rpow_le_rpow_of_exponent_le hb1'.le (Int.le_ceil _)
+    
 
 @[simp]
 theorem logb_eq_zero : logb b x = 0 ↔ b = 0 ∨ b = 1 ∨ b = -1 ∨ x = 0 ∨ x = 1 ∨ x = -1 := by

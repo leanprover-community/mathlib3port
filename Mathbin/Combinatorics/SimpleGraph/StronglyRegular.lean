@@ -122,7 +122,7 @@ theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegular
 
 theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (ha : Gᶜ.Adj v w) :
     Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - μ) - 2 := by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_sdiff,
+  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp_rw [compl_neighbor_finset_sdiff_inter_eq]
   have hne : v ≠ w := ne_of_adj _ ha
@@ -140,7 +140,7 @@ theorem IsSRGWith.card_common_neighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ
 
 theorem IsSRGWith.card_common_neighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V} (hn : v ≠ w)
     (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.CommonNeighbors v w) = n - (2 * k - ℓ) := by
-  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_sdiff,
+  simp only [← Set.to_finset_card, common_neighbors, Set.to_finset_inter, neighbor_set_compl, Set.to_finset_diff,
     Set.to_finset_singleton, Set.to_finset_compl, ← neighbor_finset_def]
   simp only [not_and, not_not, compl_adj] at hna
   have h2' := hna hn

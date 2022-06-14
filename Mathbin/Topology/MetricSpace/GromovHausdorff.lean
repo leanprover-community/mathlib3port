@@ -695,12 +695,12 @@ instance : SecondCountableTopology GHSpace := by
       (by
         norm_num)
       δpos
-  have : ∀ p : GH_space, ∃ s : Set p.rep, finite s ∧ univ ⊆ ⋃ x ∈ s, ball x ε := fun p => by
+  have : ∀ p : GH_space, ∃ s : Set p.rep, s.Finite ∧ univ ⊆ ⋃ x ∈ s, ball x ε := fun p => by
     simpa using finite_cover_balls_of_compact (@compact_univ p.rep _ _) εpos
   -- for each `p`, `s p` is a finite `ε`-dense subset of `p` (or rather the metric space
   -- `p.rep` representing `p`)
   choose s hs using this
-  have : ∀ p : GH_space, ∀ t : Set p.rep, finite t → ∃ n : ℕ, ∃ e : Equivₓ t (Finₓ n), True := by
+  have : ∀ p : GH_space, ∀ t : Set p.rep, t.Finite → ∃ n : ℕ, ∃ e : Equivₓ t (Finₓ n), True := by
     intro p t ht
     let this : Fintype t := finite.fintype ht
     exact ⟨Fintype.card t, Fintype.equivFin t, trivialₓ⟩
@@ -864,7 +864,7 @@ theorem totally_bounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       use ∅, 0, bot_le, choice this
       
     · rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
-      rcases Cardinal.lt_omega.1 (lt_of_le_of_ltₓ scard (Cardinal.nat_lt_omega _)) with ⟨N, hN⟩
+      rcases Cardinal.lt_aleph_0.1 (lt_of_le_of_ltₓ scard (Cardinal.nat_lt_aleph_0 _)) with ⟨N, hN⟩
       rw [hN, Cardinal.nat_cast_le] at scard
       have : Cardinal.mk s = Cardinal.mk (Finₓ N) := by
         rw [hN, Cardinal.mk_fin]

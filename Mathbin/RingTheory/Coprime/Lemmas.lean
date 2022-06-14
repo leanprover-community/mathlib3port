@@ -108,7 +108,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
         sum_pi_single', ← sum_add_distrib] at hμ
       rw [← hμ, sum_congr rfl]
       intro x hx
-      convert add_mulₓ _ _ _ using 2
+      convert @add_mulₓ R _ _ _ _ _ _ using 2
       · by_cases' hx : x = h.some
         · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
           
@@ -158,7 +158,7 @@ theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
   refine' ⟨fun hp i hi => is_coprime.prod_right_iff.mpr fun j hj => _, fun hp => _⟩
   · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
     obtain ⟨hj, ji⟩ := hj
-    exact hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_argₓ coe h).symm
+    exact hp ⟨i, hi⟩ ⟨j, hj⟩ fun h => ji (congr_arg coe h).symm
     
   · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
     apply is_coprime.prod_right_iff.mp (hp i hi)

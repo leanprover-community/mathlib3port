@@ -190,7 +190,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
         ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I : ℂ).normSq :=
-      congr_argₓ _ <| by
+      congr_arg _ <| by
         apply Complex.ext <;> simp
     _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
       have : abs (2⁻¹ : ℝ) = 2⁻¹ :=
@@ -313,7 +313,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (-1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
+                  simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
         lt_irreflₓ (p * x : ℤ[i]).norm.natAbs <|
@@ -327,7 +327,7 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime] (h
                 show (1 : ℤ) ≠ 0 by
                     decide <|
                   by
-                  simpa [hx0] using congr_argₓ Zsqrtd.im hx
+                  simpa [hx0] using congr_arg Zsqrtd.im hx
             
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2

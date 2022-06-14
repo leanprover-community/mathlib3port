@@ -90,7 +90,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p 
   apply Finset.card_erase_of_mem
   rw [nth, Set.Finite.mem_to_finset]
   apply Inf_mem
-  rwa [← Set.Finite.toFinset.nonempty hp'', ← Finset.card_pos, hk]
+  rwa [← hp''.nonempty_to_finset, ← Finset.card_pos, hk]
 
 theorem nth_set_card {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i }.Finite) :
     hp'.toFinset.card = hp.toFinset.card - n := by
@@ -112,7 +112,7 @@ theorem nth_set_card {n : ℕ} (hp : (SetOf p).Finite) (hp' : { i : ℕ | p i �
 theorem nth_set_nonempty_of_lt_card {n : ℕ} (hp : (SetOf p).Finite) (hlt : n < hp.toFinset.card) :
     { i : ℕ | p i ∧ ∀, ∀ k < n, ∀, nth p k < i }.Nonempty := by
   have hp' : { i : ℕ | p i ∧ ∀ k : ℕ, k < n → nth p k < i }.Finite := hp.subset fun x hx => hx.1
-  rw [← hp', ← Finset.card_pos, nth_set_card p hp]
+  rw [← hp'.nonempty_to_finset, ← Finset.card_pos, nth_set_card p hp]
   exact Nat.sub_pos_of_ltₓ hlt
 
 theorem nth_mem_of_lt_card_finite_aux (n : ℕ) (hp : (SetOf p).Finite) (hlt : n < hp.toFinset.card) :

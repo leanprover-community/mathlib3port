@@ -216,10 +216,10 @@ theorem to_finsupp_pow (a : R[X]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ 
 
 theorem _root_.is_smul_regular.polynomial {S : Type _} [Monoidₓ S] [DistribMulAction S R] {a : S}
     (ha : IsSmulRegular R a) : IsSmulRegular R[X] a
-  | ⟨x⟩, ⟨y⟩, h => congr_argₓ _ <| ha.Finsupp (Polynomial.of_finsupp.inj h)
+  | ⟨x⟩, ⟨y⟩, h => congr_arg _ <| ha.Finsupp (Polynomial.of_finsupp.inj h)
 
 theorem to_finsupp_injective : Function.Injective (toFinsupp : R[X] → AddMonoidAlgebra _ _) := fun ⟨x⟩ ⟨y⟩ =>
-  congr_argₓ _
+  congr_arg _
 
 @[simp]
 theorem to_finsupp_inj {a b : R[X]} : a.toFinsupp = b.toFinsupp ↔ a = b :=
@@ -255,8 +255,8 @@ instance : Semiringₓ R[X] :=
 instance {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S R[X] :=
   Function.Injective.distribMulAction ⟨toFinsupp, to_finsupp_zero, to_finsupp_add⟩ to_finsupp_injective to_finsupp_smul
 
-instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasFaithfulScalar S R[X] where
-  eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_argₓ toFinsupp (h ⟨a⟩)
+instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulSmul S R] : HasFaithfulSmul S R[X] where
+  eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul fun a : ℕ →₀ R => congr_arg toFinsupp (h ⟨a⟩)
 
 instance {S} [Semiringₓ S] [Module S R] : Module S R[X] :=
   Function.Injective.module _ ⟨toFinsupp, to_finsupp_zero, to_finsupp_add⟩ to_finsupp_injective to_finsupp_smul
@@ -283,7 +283,7 @@ instance [Subsingleton R] : Unique R[X] :=
   { Polynomial.inhabited with
     uniq := by
       rintro ⟨x⟩
-      refine' congr_argₓ of_finsupp _
+      refine' congr_arg of_finsupp _
       simp }
 
 variable (R)
@@ -605,7 +605,7 @@ theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = c a * X ^ n
 
 @[simp]
 theorem C_inj : c a = c b ↔ a = b :=
-  ⟨fun h => coeff_C_zero.symm.trans (h.symm ▸ coeff_C_zero), congr_argₓ c⟩
+  ⟨fun h => coeff_C_zero.symm.trans (h.symm ▸ coeff_C_zero), congr_arg c⟩
 
 @[simp]
 theorem C_eq_zero : c a = 0 ↔ a = 0 :=
@@ -653,12 +653,39 @@ theorem lhom_ext' {M : Type _} [AddCommMonoidₓ M] [Module R M] {f g : R[X] →
 theorem eq_zero_of_eq_zero (h : (0 : R) = (1 : R)) (p : R[X]) : p = 0 := by
   rw [← one_smul R p, ← h, zero_smul]
 
-theorem support_monomial n (a : R) (H : a ≠ 0) : (monomial n a).Support = singleton n := by
-  rw [← of_finsupp_single, support, Finsupp.support_single_ne_zero H]
+section Fewnomials
+
+theorem support_monomial n {a : R} (H : a ≠ 0) : (monomial n a).Support = singleton n := by
+  rw [← of_finsupp_single, support, Finsupp.support_single_ne_zero _ H]
 
 theorem support_monomial' n (a : R) : (monomial n a).Support ⊆ singleton n := by
   rw [← of_finsupp_single, support]
   exact Finsupp.support_single_subset
+
+theorem support_C_mul_X_pow (n : ℕ) {c : R} (h : c ≠ 0) : (c c * X ^ n).Support = singleton n := by
+  rw [← monomial_eq_C_mul_X, support_monomial n h]
+
+theorem support_C_mul_X_pow' (n : ℕ) (c : R) : (c c * X ^ n).Support ⊆ singleton n := by
+  rw [← monomial_eq_C_mul_X]
+  exact support_monomial' n c
+
+open Finset
+
+theorem support_binomial' (k m : ℕ) (x y : R) : (c x * X ^ k + c y * X ^ m).Support ⊆ {k, m} :=
+  support_add.trans
+    (union_subset ((support_C_mul_X_pow' k x).trans (singleton_subset_iff.mpr (mem_insert_self k {m})))
+      ((support_C_mul_X_pow' m y).trans (singleton_subset_iff.mpr (mem_insert_of_mem (mem_singleton_self m)))))
+
+theorem support_trinomial' (k m n : ℕ) (x y z : R) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support ⊆ {k, m, n} :=
+  support_add.trans
+    (union_subset
+      (support_add.trans
+        (union_subset ((support_C_mul_X_pow' k x).trans (singleton_subset_iff.mpr (mem_insert_self k {m, n})))
+          ((support_C_mul_X_pow' m y).trans (singleton_subset_iff.mpr (mem_insert_of_mem (mem_insert_self m {n}))))))
+      ((support_C_mul_X_pow' n z).trans
+        (singleton_subset_iff.mpr (mem_insert_of_mem (mem_insert_of_mem (mem_singleton_self n))))))
+
+end Fewnomials
 
 theorem X_pow_eq_monomial n : X ^ n = monomial n (1 : R) := by
   induction' n with n hn
@@ -678,7 +705,7 @@ theorem monomial_eq_smul_X {n} : monomial n (a : R) = a • X ^ n :=
     
 
 theorem support_X_pow (H : ¬(1 : R) = 0) (n : ℕ) : (X ^ n : R[X]).Support = singleton n := by
-  convert support_monomial n 1 H
+  convert support_monomial n H
   exact X_pow_eq_monomial n
 
 theorem support_X_empty (H : (1 : R) = 0) : (x : R[X]).Support = ∅ := by
@@ -913,7 +940,7 @@ instance : Nontrivial R[X] := by
   simp [hxy]
 
 theorem X_ne_zero : (x : R[X]) ≠ 0 :=
-  mt (congr_argₓ fun p => coeff p 1)
+  mt (congr_arg fun p => coeff p 1)
     (by
       simp )
 

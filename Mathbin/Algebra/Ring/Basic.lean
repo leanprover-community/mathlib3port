@@ -47,17 +47,36 @@ class Distribₓ (R : Type _) extends Mul R, Add R where
   left_distrib : ∀ a b c : R, a * (b + c) = a * b + a * c
   right_distrib : ∀ a b c : R, (a + b) * c = a * c + b * c
 
-theorem left_distrib [Distribₓ R] (a b c : R) : a * (b + c) = a * b + a * c :=
-  Distribₓ.left_distrib a b c
+/-- A typeclass stating that multiplication is left distributive over addition. -/
+@[protect_proj]
+class LeftDistribClass (R : Type _) [Mul R] [Add R] where
+  left_distrib : ∀ a b c : R, a * (b + c) = a * b + a * c
+
+/-- A typeclass stating that multiplication is right distributive over addition. -/
+@[protect_proj]
+class RightDistribClass (R : Type _) [Mul R] [Add R] where
+  right_distrib : ∀ a b c : R, (a + b) * c = a * c + b * c
+
+-- see Note [lower instance priority]
+instance (priority := 100) Distribₓ.leftDistribClass (R : Type _) [Distribₓ R] : LeftDistribClass R :=
+  ⟨Distribₓ.left_distrib⟩
+
+-- see Note [lower instance priority]
+instance (priority := 100) Distribₓ.rightDistribClass (R : Type _) [Distribₓ R] : RightDistribClass R :=
+  ⟨Distribₓ.right_distrib⟩
+
+theorem left_distrib [Mul R] [Add R] [LeftDistribClass R] (a b c : R) : a * (b + c) = a * b + a * c :=
+  LeftDistribClass.left_distrib a b c
 
 alias left_distrib ← mul_addₓ
 
-theorem right_distrib [Distribₓ R] (a b c : R) : (a + b) * c = a * c + b * c :=
-  Distribₓ.right_distrib a b c
+theorem right_distrib [Mul R] [Add R] [RightDistribClass R] (a b c : R) : (a + b) * c = a * c + b * c :=
+  RightDistribClass.right_distrib a b c
 
 alias right_distrib ← add_mulₓ
 
-theorem distrib_three_right [Distribₓ R] (a b c d : R) : (a + b + c) * d = a * d + b * d + c * d := by
+theorem distrib_three_right [Mul R] [Add R] [RightDistribClass R] (a b c d : R) :
+    (a + b + c) * d = a * d + b * d + c * d := by
   simp [right_distrib]
 
 /-- Pullback a `distrib` instance along an injective function.
@@ -186,54 +205,54 @@ section HasOneHasAdd
 
 variable [One α] [Add α]
 
-theorem one_add_one_eq_two : 1 + 1 = (2 : α) := by
-  unfold bit0
+theorem one_add_one_eq_two : 1 + 1 = (2 : α) :=
+  rfl
 
 end HasOneHasAdd
 
-section NonUnitalSemiringₓ
+section DistribSemigroup
 
-variable [NonUnitalSemiringₓ α]
+variable [Add α] [Semigroupₓ α]
 
-theorem dvd_add {a b c : α} (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b + c :=
+theorem dvd_add [LeftDistribClass α] {a b c : α} (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b + c :=
   Dvd.elim h₁ fun d hd =>
     Dvd.elim h₂ fun e he =>
       Dvd.intro (d + e)
         (by
           simp [left_distrib, hd, he])
 
-end NonUnitalSemiringₓ
+end DistribSemigroup
 
-section NonAssocSemiringₓ
+section DistribMulOneClass
 
-variable [NonAssocSemiringₓ α]
+variable [Add α] [MulOneClassₓ α]
 
-theorem add_one_mul (a b : α) : (a + 1) * b = a * b + b := by
+theorem add_one_mul [RightDistribClass α] (a b : α) : (a + 1) * b = a * b + b := by
   rw [add_mulₓ, one_mulₓ]
 
-theorem mul_add_one (a b : α) : a * (b + 1) = a * b + a := by
+theorem mul_add_one [LeftDistribClass α] (a b : α) : a * (b + 1) = a * b + a := by
   rw [mul_addₓ, mul_oneₓ]
 
-theorem one_add_mul (a b : α) : (1 + a) * b = b + a * b := by
+theorem one_add_mul [RightDistribClass α] (a b : α) : (1 + a) * b = b + a * b := by
   rw [add_mulₓ, one_mulₓ]
 
-theorem mul_one_add (a b : α) : a * (1 + b) = a + a * b := by
+theorem mul_one_add [LeftDistribClass α] (a b : α) : a * (1 + b) = a + a * b := by
   rw [mul_addₓ, mul_oneₓ]
 
-theorem two_mul (n : α) : 2 * n = n + n :=
+theorem two_mul [RightDistribClass α] (n : α) : 2 * n = n + n :=
   Eq.trans (right_distrib 1 1 n)
     (by
       simp )
 
-theorem bit0_eq_two_mul (n : α) : bit0 n = 2 * n :=
+theorem bit0_eq_two_mul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
   (two_mul _).symm
 
-theorem mul_two (n : α) : n * 2 = n + n :=
+theorem mul_two [LeftDistribClass α] (n : α) : n * 2 = n + n :=
   (left_distrib n 1 1).trans
     (by
       simp )
 
-end NonAssocSemiringₓ
+end DistribMulOneClass
 
 section Semiringₓ
 
@@ -1021,14 +1040,24 @@ theorem is_regular_iff_ne_zero' [Nontrivial α] [NonUnitalNonAssocRing α] [NoZe
     rintro rfl
     exact not_not.mpr h.left not_is_left_regular_zero, is_regular_of_ne_zero'⟩
 
-/-- A ring with no zero divisors is a cancel_monoid_with_zero.
+/-- A ring with no zero divisors is a `cancel_monoid_with_zero`.
 
 Note this is not an instance as it forms a typeclass loop. -/
 @[reducible]
 def NoZeroDivisors.toCancelMonoidWithZero [Ringₓ α] [NoZeroDivisors α] : CancelMonoidWithZero α :=
-  { (inferInstance : Semiringₓ α) with
+  { (by
+      infer_instance : MonoidWithZeroₓ α) with
     mul_left_cancel_of_ne_zero := fun a b c ha => @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _,
     mul_right_cancel_of_ne_zero := fun a b c hb => @IsRegular.right _ _ _ (is_regular_of_ne_zero' hb) _ _ }
+
+/-- A commutative ring with no zero divisors is a `cancel_comm_monoid_with_zero`.
+
+Note this is not an instance as it forms a typeclass loop. -/
+@[reducible]
+def NoZeroDivisors.toCancelCommMonoidWithZero [CommRingₓ α] [NoZeroDivisors α] : CancelCommMonoidWithZero α :=
+  { NoZeroDivisors.toCancelMonoidWithZero,
+    (by
+      infer_instance : CommMonoidWithZero α) with }
 
 /-- A domain is a nontrivial ring with no zero divisors, i.e. satisfying
   the condition `a * b = 0 ↔ a = 0 ∨ b = 0`.
@@ -1048,7 +1077,7 @@ variable [CommRingₓ α] [IsDomain α]
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsDomain.toCancelCommMonoidWithZero : CancelCommMonoidWithZero α :=
-  { CommSemiringₓ.toCommMonoidWithZero, IsDomain.toCancelMonoidWithZero with }
+  NoZeroDivisors.toCancelCommMonoidWithZero
 
 end IsDomain
 

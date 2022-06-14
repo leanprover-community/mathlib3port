@@ -69,7 +69,7 @@ variable {α 𝕜 𝕝 R E F M : Type _}
 
 section WeakTopology
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module 𝕜
 /-- The space `E` equipped with the weak topology induced by the bilinear form `B`. -/
 @[nolint has_inhabited_instance unused_arguments]
 def WeakBilin [CommSemiringₓ 𝕜] [AddCommMonoidₓ E] [Module 𝕜 E] [AddCommMonoidₓ F] [Module 𝕜 F]
@@ -125,14 +125,14 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) := by
   refine' ⟨continuous_induced_rng _⟩
   refine'
-    cast (congr_argₓ _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
+    cast (congr_arg _ _) (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.add_apply, map_add, LinearMap.add_apply]
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
 instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) := by
   refine' ⟨continuous_induced_rng _⟩
-  refine' cast (congr_argₓ _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
+  refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_app, Pi.smul_apply, LinearMap.map_smulₛₗ, RingHom.id_apply, LinearMap.smul_apply]
 
@@ -155,7 +155,7 @@ instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B) where
     infer_instance
   continuous_neg := by
     refine' continuous_induced_rng (continuous_pi_iff.mpr fun y => _)
-    refine' cast (congr_argₓ _ _) (eval_continuous B (-y))
+    refine' cast (congr_arg _ _) (eval_continuous B (-y))
     ext
     simp only [map_neg, Function.comp_app, LinearMap.neg_apply]
 
@@ -181,7 +181,7 @@ variable [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E]
 theorem dual_pairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing 𝕜 E v x = v x :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module 𝕜
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
 def WeakDual 𝕜 E [CommSemiringₓ 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
@@ -242,7 +242,7 @@ theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual
 
 end WeakDual
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module 𝕜
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
 @[nolint has_inhabited_instance]

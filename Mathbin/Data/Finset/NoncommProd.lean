@@ -209,7 +209,7 @@ theorem noncomm_prod_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s�
     noncommProd s₁ f comm =
       noncommProd s₂ g fun x hx y hy => h₂ x hx ▸ h₂ y hy ▸ comm x (h₁.symm ▸ hx) y (h₁.symm ▸ hy) :=
   by
-  simp_rw [noncomm_prod, Multiset.map_congr (congr_argₓ _ h₁) h₂]
+  simp_rw [noncomm_prod, Multiset.map_congr (congr_arg _ h₁) h₂]
 
 @[simp, to_additive]
 theorem noncomm_prod_to_finset [DecidableEq α] (l : List α) (f : α → β)

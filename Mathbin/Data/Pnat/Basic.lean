@@ -63,7 +63,7 @@ theorem succ_pnat_coe (n : ℕ) : (succPnat n : ℕ) = succ n :=
   rfl
 
 theorem succ_pnat_inj {n m : ℕ} : succPnat n = succPnat m → n = m := fun h => by
-  let h' := congr_argₓ (coe : ℕ+ → ℕ) h
+  let h' := congr_arg (coe : ℕ+ → ℕ) h
   exact Nat.succ.injₓ h'
 
 /-- Convert a natural number to a pnat. `n+1` is mapped to itself,
@@ -307,7 +307,7 @@ instance : OrderedCancelCommMonoid ℕ+ :=
       intro a b c h
       apply Nat.le_of_mul_le_mul_leftₓ h a.property,
     mul_left_cancel := fun a b c h => by
-      replace h := congr_argₓ (coe : ℕ+ → ℕ) h
+      replace h := congr_arg (coe : ℕ+ → ℕ) h
       exact Eq ((Nat.mul_right_inj a.pos).mp h) }
 
 instance : Distribₓ ℕ+ :=
@@ -519,7 +519,7 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
     by_cases' h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
       
-    · replace h : (mod m k : ℕ) = (k : ℕ) := congr_argₓ _ h
+    · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
       rw [mod_coe, if_neg h'] at h
       exact ((Nat.mod_ltₓ (m : ℕ) k.pos).Ne h).elim
       

@@ -41,14 +41,14 @@ theorem left_adjoint_preserves_epi {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {
     Epi (F.map f) := by
   constructor
   intro Z g h H
-  replace H := congr_argₓ (adj.hom_equiv X Z) H
+  replace H := congr_arg (adj.hom_equiv X Z) H
   rwa [adj.hom_equiv_naturality_left, adj.hom_equiv_naturality_left, cancel_epi, Equivₓ.apply_eq_iff_eq] at H
 
 theorem right_adjoint_preserves_mono {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X Y : D} {f : X ⟶ Y} (hf : Mono f) :
     Mono (G.map f) := by
   constructor
   intro Z g h H
-  replace H := congr_argₓ (adj.hom_equiv Z Y).symm H
+  replace H := congr_arg (adj.hom_equiv Z Y).symm H
   rwa [adj.hom_equiv_naturality_right_symm, adj.hom_equiv_naturality_right_symm, cancel_mono, Equivₓ.apply_eq_iff_eq] at
     H
 

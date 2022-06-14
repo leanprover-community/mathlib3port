@@ -976,30 +976,30 @@ theorem tendsto_exp_mul_div_rpow_at_top (s : ℝ) (b : ℝ) (hb : 0 < b) :
   filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx₀
   simp [div_rpow, (exp_pos x).le, rpow_nonneg_of_nonneg, ← rpow_mul, ← exp_mul, mul_comm x, hb.ne', *]
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error
 /-- The function `x ^ s * exp (-b * x)` tends to `0` at `+∞`, for any real `s` and `b > 0`. -/
 theorem tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) := by
   refine' (tendsto_exp_mul_div_rpow_at_top s b hb).inv_tendsto_at_top.congr' _
-  "././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error"
+  "././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error"
 
 namespace Asymptotics
 
 variable {α : Type _} {r c : ℝ} {l : Filter α} {f g : α → ℝ}
 
-theorem IsOWith.rpow (h : IsOWith c f g l) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) :
-    IsOWith (c ^ r) (fun x => f x ^ r) (fun x => g x ^ r) l := by
+theorem IsOWith.rpow (h : IsOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) :
+    IsOWith (c ^ r) l (fun x => f x ^ r) fun x => g x ^ r := by
   apply is_O_with.of_bound
   filter_upwards [hg, h.bound] with x hgx hx
   calc abs (f x ^ r) ≤ abs (f x) ^ r := abs_rpow_le_abs_rpow _ _ _ ≤ (c * abs (g x)) ^ r :=
       rpow_le_rpow (abs_nonneg _) hx hr _ = c ^ r * abs (g x ^ r) := by
       rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
 
-theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : IsO f g l) : IsO (fun x => f x ^ r) (fun x => g x ^ r) l :=
+theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) : (fun x => f x ^ r) =O[l] fun x => g x ^ r :=
   let ⟨c, hc, h'⟩ := h.exists_nonneg
   (h'.rpow hc hr hg).IsO
 
-theorem IsOₓ.rpow (hr : 0 < r) (hg : 0 ≤ᶠ[l] g) (h : IsOₓ f g l) : IsOₓ (fun x => f x ^ r) (fun x => g x ^ r) l :=
+theorem IsOₓ.rpow (hr : 0 < r) (hg : 0 ≤ᶠ[l] g) (h : f =o[l] g) : (fun x => f x ^ r) =o[l] fun x => g x ^ r :=
   is_o.of_is_O_with fun c hc =>
     ((h.forall_is_O_with (rpow_pos_of_pos hc r⁻¹)).rpow (rpow_nonneg_of_nonneg hc.le _) hr.le hg).congr_const
       (by
@@ -1011,36 +1011,40 @@ open Asymptotics
 
 /-- `x ^ s = o(exp(b * x))` as `x → ∞` for any real `s` and positive `b`. -/
 theorem is_o_rpow_exp_pos_mul_at_top (s : ℝ) {b : ℝ} (hb : 0 < b) :
-    IsOₓ (fun x : ℝ => x ^ s) (fun x => exp (b * x)) atTop :=
+    (fun x : ℝ => x ^ s) =o[at_top] fun x => exp (b * x) :=
   Iff.mpr (is_o_iff_tendsto fun x h => absurd h (exp_pos _).ne') <| by
     simpa only [div_eq_mul_inv, exp_neg, neg_mul] using tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 s b hb
 
 /-- `x ^ k = o(exp(b * x))` as `x → ∞` for any integer `k` and positive `b`. -/
 theorem is_o_zpow_exp_pos_mul_at_top (k : ℤ) {b : ℝ} (hb : 0 < b) :
-    IsOₓ (fun x : ℝ => x ^ k) (fun x => exp (b * x)) atTop := by
+    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) := by
   simpa only [rpow_int_cast] using is_o_rpow_exp_pos_mul_at_top k hb
 
 /-- `x ^ k = o(exp(b * x))` as `x → ∞` for any natural `k` and positive `b`. -/
 theorem is_o_pow_exp_pos_mul_at_top (k : ℕ) {b : ℝ} (hb : 0 < b) :
-    IsOₓ (fun x : ℝ => x ^ k) (fun x => exp (b * x)) atTop :=
+    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) :=
   is_o_zpow_exp_pos_mul_at_top k hb
 
 /-- `x ^ s = o(exp x)` as `x → ∞` for any real `s`. -/
-theorem is_o_rpow_exp_at_top (s : ℝ) : IsOₓ (fun x : ℝ => x ^ s) exp atTop := by
+theorem is_o_rpow_exp_at_top (s : ℝ) : (fun x : ℝ => x ^ s) =o[at_top] exp := by
   simpa only [one_mulₓ] using is_o_rpow_exp_pos_mul_at_top s one_pos
 
-theorem is_o_log_rpow_at_top {r : ℝ} (hr : 0 < r) : IsOₓ log (fun x => x ^ r) atTop := by
-  rw [← is_o_const_mul_left_iff hr.ne']
-  refine' (is_o_log_id_at_top.comp_tendsto (tendsto_rpow_at_top hr)).congr' _ eventually_eq.rfl
-  filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using log_rpow hx _
+theorem is_o_log_rpow_at_top {r : ℝ} (hr : 0 < r) : log =o[at_top] fun x => x ^ r :=
+  calc
+    log =O[at_top] fun x => r * log x := is_O_self_const_mul _ hr.ne' _ _
+    _ =ᶠ[at_top] fun x => log (x ^ r) := (eventually_gt_at_top 0).mono fun x hx => (log_rpow hx _).symm
+    _ =o[at_top] fun x => x ^ r := is_o_log_id_at_top.comp_tendsto (tendsto_rpow_at_top hr)
+    
 
 theorem is_o_log_rpow_rpow_at_top {r s : ℝ} (hr : 0 < r) (hs : 0 < s) :
-    IsOₓ (fun x => log x ^ r) (fun x => x ^ s) atTop := by
-  refine' ((is_o_log_rpow_at_top (div_pos hs hr)).rpow hr _).congr' eventually_eq.rfl _
-  · filter_upwards [eventually_ge_at_top (0 : ℝ)] with x hx
-    rw [← rpow_mul hx, div_mul_cancel _ hr.ne']
-    
-  · exact (tendsto_rpow_at_top (div_pos hs hr)).Eventually (eventually_ge_at_top 0)
+    (fun x => log x ^ r) =o[at_top] fun x => x ^ s :=
+  have H : 0 < s / r := div_pos hs hr
+  calc
+    (fun x => log x ^ r) =o[at_top] fun x => (x ^ (s / r)) ^ r :=
+      (is_o_log_rpow_at_top H).rpow hr <| (tendsto_rpow_at_top H).Eventually <| eventually_ge_at_top 0
+    _ =ᶠ[at_top] fun x => x ^ s :=
+      (eventually_ge_at_top 0).mono fun x hx => by
+        simp only [← rpow_mul hx, div_mul_cancel _ hr.ne']
     
 
 end Limits
@@ -1272,7 +1276,7 @@ theorem rpow_le_self_of_le_one {x : ℝ≥0 } {z : ℝ} (hx : x ≤ 1) (h_one_le
   exact Nnreal.rpow_le_rpow_of_exponent_ge h hx h_one_le
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0 => y ^ x := fun y z hyz => by
-  simpa only [rpow_inv_rpow_self hx] using congr_argₓ (fun y => y ^ (1 / x)) hyz
+  simpa only [rpow_inv_rpow_self hx] using congr_arg (fun y => y ^ (1 / x)) hyz
 
 theorem rpow_eq_rpow_iff {x y : ℝ≥0 } {z : ℝ} (hz : z ≠ 0) : x ^ z = y ^ z ↔ x = y :=
   (rpow_left_injective hz).eq_iff
@@ -1437,7 +1441,13 @@ theorem coe_rpow_def (x : ℝ≥0 ) (y : ℝ) : (x : ℝ≥0∞) ^ y = if x = 0 
 
 @[simp]
 theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x := by
-  cases x <;> dsimp' only [(· ^ ·), rpow] <;> simp [zero_lt_one, not_lt_of_le zero_le_one]
+  cases x
+  · exact dif_pos zero_lt_one
+    
+  · change ite _ _ _ = _
+    simp
+    exact fun _ => zero_le_one.not_lt
+    
 
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 := by

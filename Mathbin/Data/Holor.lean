@@ -53,14 +53,14 @@ def drop : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds
   | ds, is => ⟨List.dropₓ (length ds) is.1, forall₂_drop_append is.1 ds ds₂ is.2⟩
 
 theorem cast_type (is : List ℕ) (eq : ds₁ = ds₂) (h : Forall₂ (· < ·) is ds₁) :
-    (cast (congr_argₓ HolorIndex Eq) ⟨is, h⟩).val = is := by
+    (cast (congr_arg HolorIndex Eq) ⟨is, h⟩).val = is := by
   subst Eq <;> rfl
 
 def assocRight : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) :=
-  cast (congr_argₓ HolorIndex (append_assoc ds₁ ds₂ ds₃))
+  cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃))
 
 def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ ds₂ ++ ds₃) :=
-  cast (congr_argₓ HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
+  cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
   | ⟨is, h⟩ =>
@@ -147,14 +147,14 @@ def mul [s : Mul α] (x : Holor α ds₁) (y : Holor α ds₂) : Holor α (ds₁
 local infixl:70 " ⊗ " => mul
 
 theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :
-    cast (congr_argₓ (Holor α) Eq) a = fun t => a (cast (congr_argₓ HolorIndex Eq.symm) t) := by
+    cast (congr_arg (Holor α) Eq) a = fun t => a (cast (congr_arg HolorIndex Eq.symm) t) := by
   subst Eq <;> rfl
 
 def assocRight : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds₂ ++ ds₃)) :=
-  cast (congr_argₓ (Holor α) (append_assoc ds₁ ds₂ ds₃))
+  cast (congr_arg (Holor α) (append_assoc ds₁ ds₂ ds₃))
 
 def assocLeft : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds₂ ++ ds₃) :=
-  cast (congr_argₓ (Holor α) (append_assoc ds₁ ds₂ ds₃).symm)
+  cast (congr_arg (Holor α) (append_assoc ds₁ ds₂ ds₃).symm)
 
 theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
@@ -220,10 +220,10 @@ theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x 
       have hid : i < d := (forall₂_cons.1 hiisdds).1
       have hisds : Forall₂ (· < ·) is ds := (forall₂_cons.1 hiisdds).2
       calc
-        x ⟨i :: is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_argₓ (fun t => x t) (Subtype.eq rfl)
+        x ⟨i :: is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_arg (fun t => x t) (Subtype.eq rfl)
         _ = slice y i hid ⟨is, hisds⟩ := by
           rw [h]
-        _ = y ⟨i :: is, _⟩ := congr_argₓ (fun t => y t) (Subtype.eq rfl)
+        _ = y ⟨i :: is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
         
 
 theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :

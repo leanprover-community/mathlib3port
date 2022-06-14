@@ -40,7 +40,7 @@ open TensorProduct
 
 section
 
-variable (R : Type u) [CommRingₓ R] {M : Type v} [AddCommGroupₓ M] [Module R M]
+variable (R : Type u) [CommSemiringₓ R] {M : Type v} [AddCommMonoidₓ M] [Module R M]
 
 variable {ι : Type w} [DecidableEq ι] [Fintype ι]
 
@@ -181,6 +181,14 @@ theorem trace_one : trace R M 1 = (finrank R M : R) := by
 theorem trace_id : trace R M id = (finrank R M : R) := by
   rw [← one_eq_id, trace_one]
 
+@[simp]
+theorem trace_transpose : trace R (Module.Dual R M) ∘ₗ Module.Dual.transpose = trace R M := by
+  let e := dualTensorHomEquiv R M M
+  have h : Function.Surjective e.to_linear_map := e.surjective
+  refine' (cancel_right h).1 _
+  ext f m
+  simp [e]
+
 theorem trace_prod_map :
     trace R (M × N) ∘ₗ prodMapLinear R M N M N R = (coprod id id : R × R →ₗ[R] R) ∘ₗ prodMap (trace R M) (trace R N) :=
   by
@@ -235,6 +243,10 @@ theorem trace_comp_comm : compr₂ (llcomp R M N M) (trace R M) = compr₂ (llco
     comp_dual_tensor_hom, map_smul, trace_eq_contract_apply, contract_left_apply, smul_eq_mul, mul_comm]
 
 variable {R M N}
+
+@[simp]
+theorem trace_transpose' (f : M →ₗ[R] M) : trace R _ (Module.Dual.transpose f) = trace R M f := by
+  rw [← comp_apply, trace_transpose]
 
 theorem trace_tensor_product' (f : M →ₗ[R] M) (g : N →ₗ[R] N) : trace R (M ⊗ N) (map f g) = trace R M f * trace R N g :=
   by

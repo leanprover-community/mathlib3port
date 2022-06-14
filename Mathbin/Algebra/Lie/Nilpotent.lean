@@ -5,6 +5,7 @@ Authors: Oliver Nash
 -/
 import Mathbin.Algebra.Lie.Solvable
 import Mathbin.Algebra.Lie.Quotient
+import Mathbin.Algebra.Lie.Centralizer
 import Mathbin.LinearAlgebra.Eigenspace
 import Mathbin.RingTheory.Nilpotent
 
@@ -49,7 +50,7 @@ expression of the fact that the terms of the Lie submodule's lower central serie
 submodules of the enclosing Lie module.
 
 See also `lie_module.lower_central_series_eq_lcs_comap` and
-`lie_module.lower_central_series_map_eq_lcs` below. -/
+`lie_module.lower_central_series_map_eq_lcs` below, as well as `lie_submodule.ucs`. -/
 def lcs : LieSubmodule R L M → LieSubmodule R L M :=
   (fun N => ⁅(⊤ : LieIdeal R L),N⁆)^[k]
 
@@ -187,6 +188,10 @@ steps). -/
 class IsNilpotent : Prop where
   nilpotent : ∃ k, lowerCentralSeries R L M k = ⊥
 
+/-- See also `lie_module.is_nilpotent_iff_exists_ucs_eq_top`. -/
+theorem is_nilpotent_iff : IsNilpotent R L M ↔ ∃ k, lowerCentralSeries R L M k = ⊥ :=
+  ⟨fun h => h.nilpotent, fun h => ⟨h⟩⟩
+
 instance (priority := 100) trivial_is_nilpotent [IsTrivial L M] : IsNilpotent R L M :=
   ⟨by
     use 1
@@ -322,6 +327,92 @@ theorem is_nilpotent_range_to_endomorphism_iff : IsNilpotent R (toEndomorphism R
   constructor <;> rintro ⟨k, hk⟩ <;> use k <;> rw [← LieSubmodule.coe_to_submodule_eq_iff] at hk⊢ <;> simpa using hk
 
 end LieModule
+
+namespace LieSubmodule
+
+variable {N₁ N₂ : LieSubmodule R L M}
+
+/-- The upper (aka ascending) central series.
+
+See also `lie_submodule.lcs`. -/
+def ucs (k : ℕ) : LieSubmodule R L M → LieSubmodule R L M :=
+  centralizer^[k]
+
+@[simp]
+theorem ucs_zero : N.ucs 0 = N :=
+  rfl
+
+@[simp]
+theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).Centralizer :=
+  Function.iterate_succ_apply' centralizer k N
+
+@[mono]
+theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k := by
+  induction' k with k ih
+  · simpa
+    
+  simp only [ucs_succ]
+  mono
+
+theorem ucs_eq_self_of_centralizer_eq_self (h : N₁.Centralizer = N₁) (k : ℕ) : N₁.ucs k = N₁ := by
+  induction' k with k ih
+  · simp
+    
+  · rwa [ucs_succ, ih]
+    
+
+/-- If a Lie module `M` contains a self-centralizing Lie submodule `N`, then all terms of the upper
+central series of `M` are contained in `N`.
+
+An important instance of this situation arises from a Cartan subalgebra `H ⊆ L` with the roles of
+`L`, `M`, `N` played by `H`, `L`, `H`, respectively. -/
+theorem ucs_le_of_centralizer_eq_self (h : N₁.Centralizer = N₁) (k : ℕ) : (⊥ : LieSubmodule R L M).ucs k ≤ N₁ := by
+  rw [← ucs_eq_self_of_centralizer_eq_self h k]
+  mono
+  simp
+
+theorem lcs_add_le_iff (l k : ℕ) : N₁.lcs (l + k) ≤ N₂ ↔ N₁.lcs l ≤ N₂.ucs k := by
+  revert l
+  induction' k with k ih
+  · simp
+    
+  intro l
+  rw
+    [(by
+      abel : l + (k + 1) = l + 1 + k),
+    ih, ucs_succ, lcs_succ, top_lie_le_iff_le_centralizer]
+
+theorem lcs_le_iff (k : ℕ) : N₁.lcs k ≤ N₂ ↔ N₁ ≤ N₂.ucs k := by
+  convert lcs_add_le_iff 0 k
+  rw [zero_addₓ]
+
+theorem gc_lcs_ucs (k : ℕ) :
+    GaloisConnection (fun N : LieSubmodule R L M => N.lcs k) fun N : LieSubmodule R L M => N.ucs k := fun N₁ N₂ =>
+  lcs_le_iff k
+
+theorem ucs_eq_top_iff (k : ℕ) : N.ucs k = ⊤ ↔ LieModule.lowerCentralSeries R L M k ≤ N := by
+  rw [eq_top_iff, ← lcs_le_iff]
+  rfl
+
+theorem _root_.lie_module.is_nilpotent_iff_exists_ucs_eq_top :
+    LieModule.IsNilpotent R L M ↔ ∃ k, (⊥ : LieSubmodule R L M).ucs k = ⊤ := by
+  rw [LieModule.is_nilpotent_iff]
+  exact
+    exists_congr fun k => by
+      simp [ucs_eq_top_iff]
+
+theorem ucs_comap_incl (k : ℕ) : ((⊥ : LieSubmodule R L M).ucs k).comap N.incl = (⊥ : LieSubmodule R L N).ucs k := by
+  induction' k with k ih
+  · exact N.ker_incl
+    
+  · simp [← ih]
+    
+
+theorem is_nilpotent_iff_exists_self_le_ucs : LieModule.IsNilpotent R L N ↔ ∃ k, N ≤ (⊥ : LieSubmodule R L M).ucs k :=
+  by
+  simp_rw [LieModule.is_nilpotent_iff_exists_ucs_eq_top, ← ucs_comap_incl, comap_incl_eq_top]
+
+end LieSubmodule
 
 section Morphisms
 

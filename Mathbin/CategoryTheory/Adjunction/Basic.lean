@@ -149,11 +149,11 @@ theorem right_triangle : whiskerLeft G adj.Unit ≫ whiskerRight adj.counit G = 
 
 @[simp, reassoc]
 theorem left_triangle_components : F.map (adj.Unit.app X) ≫ adj.counit.app (F.obj X) = 𝟙 (F.obj X) :=
-  congr_argₓ (fun t : NatTrans _ (𝟭 C ⋙ F) => t.app X) adj.left_triangle
+  congr_arg (fun t : NatTrans _ (𝟭 C ⋙ F) => t.app X) adj.left_triangle
 
 @[simp, reassoc]
 theorem right_triangle_components {Y : D} : adj.Unit.app (G.obj Y) ≫ G.map (adj.counit.app Y) = 𝟙 (G.obj Y) :=
-  congr_argₓ (fun t : NatTrans _ (G ⋙ 𝟭 C) => t.app Y) adj.right_triangle
+  congr_arg (fun t : NatTrans _ (G ⋙ 𝟭 C) => t.app Y) adj.right_triangle
 
 @[simp, reassoc]
 theorem counit_naturality {X Y : D} (f : X ⟶ Y) : F.map (G.map f) ≫ adj.counit.app Y = adj.counit.app X ≫ f :=
@@ -288,7 +288,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           change F.map (_ ≫ _) ≫ _ = _
           rw [F.map_comp, assoc, ← functor.comp_map, adj.counit.naturality, ← assoc]
           convert id_comp f
-          have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.left_triangle
+          have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.left_triangle
           dsimp'  at t
           simp only [id_comp] at t
           exact t,
@@ -296,7 +296,7 @@ def mkOfUnitCounit (adj : CoreUnitCounit F G) : F ⊣ G :=
           change _ ≫ G.map (_ ≫ _) = _
           rw [G.map_comp, ← assoc, ← functor.comp_map, ← adj.unit.naturality, assoc]
           convert comp_id g
-          have t := congr_argₓ (fun t : nat_trans _ _ => t.app _) adj.right_triangle
+          have t := congr_arg (fun t : nat_trans _ _ => t.app _) adj.right_triangle
           dsimp'  at t
           simp only [id_comp] at t
           exact t } }

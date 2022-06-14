@@ -291,7 +291,7 @@ theorem MeasureTheory.Measure.restrict_map_of_ae_measurable {f : α → δ} (hf 
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map (hf.mk f) := Measure.restrict_map hf.measurable_mk hs
     _ = (μ.restrict <| hf.mk f ⁻¹' s).map f := Measure.map_congr (ae_restrict_of_ae hf.ae_eq_mk.symm)
     _ = (μ.restrict <| f ⁻¹' s).map f := by
-      apply congr_argₓ
+      apply congr_arg
       ext1 t ht
       simp only [ht, measure.restrict_apply]
       apply measure_congr

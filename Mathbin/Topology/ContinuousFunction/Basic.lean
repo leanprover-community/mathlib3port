@@ -116,15 +116,15 @@ protected theorem congr_fun {f g : C(α, β)} (H : f = g) (x : α) : f x = g x :
 protected theorem congr_arg (f : C(α, β)) {x y : α} (h : x = y) : f x = f y :=
   h ▸ rfl
 
-instance [Inhabited β] : Inhabited C(α, β) :=
-  ⟨{ toFun := fun _ => default }⟩
-
 theorem coe_injective : @Function.Injective C(α, β) (α → β) coeFn := fun f g h => by
   cases f <;> cases g <;> congr
 
 @[simp]
 theorem coe_mk (f : α → β) (h : Continuous f) : ⇑(⟨f, h⟩ : C(α, β)) = f :=
   rfl
+
+theorem map_specializes (f : C(α, β)) {x y : α} (h : x ⤳ y) : f x ⤳ f y :=
+  h.map f.2
 
 section
 
@@ -159,6 +159,9 @@ def const (b : β) : C(α, β) :=
 @[simp]
 theorem coe_const (b : β) : ⇑(const α b) = Function.const α b :=
   rfl
+
+instance [Inhabited β] : Inhabited C(α, β) :=
+  ⟨const α default⟩
 
 variable {α}
 
@@ -203,14 +206,14 @@ theorem comp_const (f : C(β, γ)) (b : β) : f.comp (const α b) = const α (f 
   ext fun _ => rfl
 
 theorem cancel_right {f₁ f₂ : C(β, γ)} {g : C(α, β)} (hg : Surjective g) : f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
-  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {f : C(β, γ)} {g₁ g₂ : C(α, β)} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
   ⟨fun h =>
     ext fun a =>
       hf <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
   ⟨let ⟨b₁, b₂, hb⟩ := exists_pair_ne β

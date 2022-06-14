@@ -37,11 +37,11 @@ theorem mem_dedup {a : α} {s : Multiset α} : a ∈ dedup s ↔ a ∈ s :=
 
 @[simp]
 theorem dedup_cons_of_mem {a : α} {s : Multiset α} : a ∈ s → dedup (a ::ₘ s) = dedup s :=
-  (Quot.induction_on s) fun l m => @congr_argₓ _ _ _ _ coe <| dedup_cons_of_mem m
+  (Quot.induction_on s) fun l m => @congr_arg _ _ _ _ coe <| dedup_cons_of_mem m
 
 @[simp]
 theorem dedup_cons_of_not_mem {a : α} {s : Multiset α} : a ∉ s → dedup (a ::ₘ s) = a ::ₘ dedup s :=
-  (Quot.induction_on s) fun l m => congr_argₓ coe <| dedup_cons_of_not_mem m
+  (Quot.induction_on s) fun l m => congr_arg coe <| dedup_cons_of_not_mem m
 
 theorem dedup_le (s : Multiset α) : dedup s ≤ s :=
   (Quot.induction_on s) fun l => (dedup_sublist _).Subperm
@@ -64,7 +64,7 @@ theorem nodup_dedup (s : Multiset α) : Nodup (dedup s) :=
   Quot.induction_on s nodup_dedup
 
 theorem dedup_eq_self {s : Multiset α} : dedup s = s ↔ Nodup s :=
-  ⟨fun e => e ▸ nodup_dedup s, (Quot.induction_on s) fun l h => congr_argₓ coe h.dedup⟩
+  ⟨fun e => e ▸ nodup_dedup s, (Quot.induction_on s) fun l h => congr_arg coe h.dedup⟩
 
 alias dedup_eq_self ↔ _ Multiset.Nodup.dedup
 

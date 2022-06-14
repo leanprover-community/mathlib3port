@@ -95,7 +95,7 @@ theorem to_finset_to_multiset [DecidableEq α] (f : α →₀ ℕ) : f.toMultise
   · rw [to_multiset_zero, Multiset.to_finset_zero, support_zero]
     
   · intro a n f ha hn ih
-    rw [to_multiset_add, Multiset.to_finset_add, ih, to_multiset_single, support_add_eq, support_single_ne_zero hn,
+    rw [to_multiset_add, Multiset.to_finset_add, ih, to_multiset_single, support_add_eq, support_single_ne_zero _ hn,
       Multiset.to_finset_nsmul _ _ hn, Multiset.to_finset_singleton]
     refine' Disjoint.mono_left support_single_subset _
     rwa [Finset.disjoint_singleton_left]

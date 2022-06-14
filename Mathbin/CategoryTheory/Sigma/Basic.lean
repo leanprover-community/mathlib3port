@@ -52,13 +52,13 @@ theorem comp_def (i : I) (X Y Z : C i) (f : X ⟶ Y) (g : Y ⟶ Z) : compₓ (mk
   rfl
 
 theorem assoc : ∀ X Y Z W : Σi, C i f : X ⟶ Y g : Y ⟶ Z h : Z ⟶ W, (f ≫ g) ≫ h = f ≫ g ≫ h
-  | _, _, _, _, mk f, mk g, mk h => congr_argₓ mk (Category.assoc _ _ _)
+  | _, _, _, _, mk f, mk g, mk h => congr_arg mk (Category.assoc _ _ _)
 
 theorem id_comp : ∀ X Y : Σi, C i f : X ⟶ Y, 𝟙 X ≫ f = f
-  | _, _, mk f => congr_argₓ mk (Category.id_comp _)
+  | _, _, mk f => congr_arg mk (Category.id_comp _)
 
 theorem comp_id : ∀ X Y : Σi, C i f : X ⟶ Y, f ≫ 𝟙 Y = f
-  | _, _, mk f => congr_argₓ mk (Category.comp_id _)
+  | _, _, mk f => congr_arg mk (Category.comp_id _)
 
 end SigmaHom
 

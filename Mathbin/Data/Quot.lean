@@ -38,7 +38,7 @@ instance (r : α → α → Prop) [Inhabited α] : Inhabited (Quot r) :=
   ⟨⟦default⟧⟩
 
 instance [Subsingleton α] : Subsingleton (Quot ra) :=
-  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_argₓ _ (Subsingleton.elimₓ _ _)⟩
+  ⟨fun x => Quot.induction_on x fun y => Quot.ind fun b => congr_arg _ (Subsingleton.elimₓ _ _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
 protected def hrecOn₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ ⟦a⟧ ⟦b⟧)

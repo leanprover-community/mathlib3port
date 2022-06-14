@@ -746,9 +746,8 @@ theorem snorm_add_lt_top_of_one_le {f g : α → E} (hf : Memℒp f p μ) (hg : 
     snorm (f + g) p μ < ∞ :=
   lt_of_le_of_ltₓ (snorm_add_le hf.1 hg.1 hq1) (Ennreal.add_lt_top.mpr ⟨hf.2, hg.2⟩)
 
-theorem snorm'_add_lt_top_of_le_one {f g : α → E} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ)
-    (hf_snorm : snorm' f q μ < ∞) (hg_snorm : snorm' g q μ < ∞) (hq_pos : 0 < q) (hq1 : q ≤ 1) :
-    snorm' (f + g) q μ < ∞ :=
+theorem snorm'_add_lt_top_of_le_one {f g : α → E} (hf : AeStronglyMeasurable f μ) (hf_snorm : snorm' f q μ < ∞)
+    (hg_snorm : snorm' g q μ < ∞) (hq_pos : 0 < q) (hq1 : q ≤ 1) : snorm' (f + g) q μ < ∞ :=
   calc
     (∫⁻ a, ↑∥(f + g) a∥₊ ^ q ∂μ) ^ (1 / q) ≤
         (∫⁻ a, ((fun a => (∥f a∥₊ : ℝ≥0∞)) + fun a => (∥g a∥₊ : ℝ≥0∞)) a ^ q ∂μ) ^ (1 / q) :=
@@ -771,11 +770,10 @@ theorem snorm'_add_lt_top_of_le_one {f g : α → E} (hf : AeStronglyMeasurable 
           (by
             simp [hq_pos.le] : 0 ≤ 1 / q)
           _
-      rw [lintegral_add' (hf.ennnorm.pow_const q) (hg.ennnorm.pow_const q), Ennreal.add_ne_top, ← lt_top_iff_ne_top, ←
-        lt_top_iff_ne_top]
+      rw [lintegral_add_left' (hf.ennnorm.pow_const q), Ennreal.add_ne_top]
       exact
-        ⟨lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top hq_pos hf_snorm,
-          lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top hq_pos hg_snorm⟩
+        ⟨(lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top hq_pos hf_snorm).Ne,
+          (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top hq_pos hg_snorm).Ne⟩
     
 
 theorem snorm_add_lt_top {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) : snorm (f + g) p μ < ∞ := by
@@ -794,7 +792,7 @@ theorem snorm_add_lt_top {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g 
     rwa [← Ennreal.one_to_real, @Ennreal.to_real_le_to_real p 1 hp_top Ennreal.coe_ne_top]
   rw [snorm_eq_snorm' h0 hp_top]
   rw [mem_ℒp, snorm_eq_snorm' h0 hp_top] at hf hg
-  exact snorm'_add_lt_top_of_le_one hf.1 hg.1 hf.2 hg.2 hp_pos hp1_real
+  exact snorm'_add_lt_top_of_le_one hf.1 hf.2 hg.2 hp_pos hp1_real
 
 section MapMeasure
 
@@ -1819,10 +1817,10 @@ theorem indicator_const_empty :
   convert indicator_const_Lp_coe_fn
   simp [Set.indicator_empty']
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 theorem mem_ℒp_add_of_disjoint {f g : α → E} (h : Disjoint (Support f) (Support g)) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : Memℒp (f + g) p μ ↔ Memℒp f p μ ∧ Memℒp g p μ := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   refine' ⟨fun hfg => ⟨_, _⟩, fun h => h.1.add h.2⟩
   · rw [← indicator_add_eq_left h]
     exact hfg.indicator (measurable_set_support hf.measurable)

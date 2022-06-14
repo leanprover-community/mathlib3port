@@ -74,8 +74,8 @@ structure TopologicalSpace (α : Type u) where
 
 attribute [class] TopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (A «expr ⊆ » T)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (A B «expr ∈ » T)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (A «expr ⊆ » T)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (A B «expr ∈ » T)
 /-- A constructor for topologies by specifying the closed sets,
 and showing that they satisfy the appropriate conditions. -/
 def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T) (sInter_mem : ∀ A _ : A ⊆ T, ⋂₀ A ∈ T)
@@ -145,13 +145,13 @@ theorem IsOpen.union (h₁ : IsOpen s₁) (h₂ : IsOpen s₂) : IsOpen (s₁ �
 theorem is_open_empty : IsOpen (∅ : Set α) := by
   rw [← sUnion_empty] <;> exact is_open_sUnion fun a => False.elim
 
-theorem is_open_sInter {s : Set (Set α)} (hs : Finite s) : (∀, ∀ t ∈ s, ∀, IsOpen t) → IsOpen (⋂₀ s) :=
+theorem is_open_sInter {s : Set (Set α)} (hs : s.Finite) : (∀, ∀ t ∈ s, ∀, IsOpen t) → IsOpen (⋂₀ s) :=
   (Finite.induction_on hs fun _ => by
       rw [sInter_empty] <;> exact is_open_univ)
     fun a s has hs ih h => by
     rw [sInter_insert] <;> exact IsOpen.inter (h _ <| mem_insert _ _) (ih fun t => h t ∘ mem_insert_of_mem _)
 
-theorem is_open_bInter {s : Set β} {f : β → Set α} (hs : Finite s) :
+theorem is_open_bInter {s : Set β} {f : β → Set α} (hs : s.Finite) :
     (∀, ∀ i ∈ s, ∀, IsOpen (f i)) → IsOpen (⋂ i ∈ s, f i) :=
   Finite.induction_on hs
     (fun _ => by
@@ -227,7 +227,7 @@ theorem IsClosed.inter (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed 
 theorem IsClosed.sdiff {s t : Set α} (h₁ : IsClosed s) (h₂ : IsOpen t) : IsClosed (s \ t) :=
   IsClosed.inter h₁ (is_closed_compl_iff.mpr h₂)
 
-theorem is_closed_bUnion {s : Set β} {f : β → Set α} (hs : Finite s) :
+theorem is_closed_bUnion {s : Set β} {f : β → Set α} (hs : s.Finite) :
     (∀, ∀ i ∈ s, ∀, IsClosed (f i)) → IsClosed (⋃ i ∈ s, f i) :=
   Finite.induction_on hs
     (fun _ => by
@@ -260,7 +260,7 @@ theorem IsClosed.not : IsClosed { a | p a } → IsOpen { a | ¬p a } :=
 def Interior (s : Set α) : Set α :=
   ⋃₀{ t | IsOpen t ∧ t ⊆ s }
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem mem_interior {s : Set α} {x : α} : x ∈ Interior s ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
   simp only [Interior, mem_set_of_eq, exists_prop, and_assoc, And.left_comm]
 
@@ -346,15 +346,15 @@ theorem interior_union_is_closed_of_interior_empty {s t : Set α} (h₁ : IsClos
       this ⟨hx₁, hx₂⟩
   Subset.antisymm (interior_maximal this is_open_interior) (interior_mono <| subset_union_left _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem is_open_iff_forall_mem_open : IsOpen s ↔ ∀, ∀ x ∈ s, ∀, ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t := by
   rw [← subset_interior_iff_open] <;> simp only [subset_def, mem_interior]
 
 theorem interior_Inter_subset (s : ι → Set α) : Interior (⋂ i, s i) ⊆ ⋂ i, Interior (s i) :=
   subset_Inter fun i => interior_mono <| Inter_subset _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem interior_Inter₂_subset (p : ι → Sort _) (s : ∀ i, p i → Set α) :
     Interior (⋂ (i) (j), s i j) ⊆ ⋂ (i) (j), Interior (s i j) :=
   (interior_Inter_subset _).trans <| Inter_mono fun i => interior_Inter_subset _
@@ -744,7 +744,7 @@ the principal filter of some open set `s` containing `a`. -/
 theorem nhds_le_of_le {f a} {s : Set α} (h : a ∈ s) (o : IsOpen s) (sf : 𝓟 s ≤ f) : 𝓝 a ≤ f := by
   rw [nhds_def] <;> exact infi_le_of_le s (infi_le_of_le ⟨h, o⟩ sf)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem mem_nhds_iff {a : α} {s : Set α} : s ∈ 𝓝 a ↔ ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ a ∈ t :=
   (nhds_basis_opens a).mem_iff.trans
     ⟨fun ⟨t, ⟨hat, ht⟩, hts⟩ => ⟨t, hts, ht, hat⟩, fun ⟨t, hts, ht, hat⟩ => ⟨t, ⟨hat, ht⟩, hts⟩⟩
@@ -1178,7 +1178,7 @@ theorem mem_closure_of_tendsto {f : β → α} {b : Filter β} {a : α} {s : Set
     (h : ∀ᶠ x in b, f x ∈ s) : a ∈ Closure s :=
   is_closed_closure.mem_of_tendsto hf <| h.mono (preimage_mono subset_closure)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » s)
 /-- Suppose that `f` sends the complement to `s` to a single point `a`, and `l` is some filter.
 Then `f` tends to `a` along `l` restricted to `s` if and only if it tends to `a` along `l`. -/
 theorem tendsto_inf_principal_nhds_iff_of_forall_eq {f : β → α} {l : Filter β} {s : Set β} {a : α}
@@ -1248,9 +1248,9 @@ section LocallyFinite
 /-- A family of sets in `set α` is locally finite if at every point `x:α`,
   there is a neighborhood of `x` which meets only finitely many sets in the family -/
 def LocallyFinite (f : β → Set α) :=
-  ∀ x : α, ∃ t ∈ 𝓝 x, Finite { i | (f i ∩ t).Nonempty }
+  ∀ x : α, ∃ t ∈ 𝓝 x, { i | (f i ∩ t).Nonempty }.Finite
 
-theorem LocallyFinite.point_finite {f : β → Set α} (hf : LocallyFinite f) (x : α) : Finite { b | x ∈ f b } :=
+theorem LocallyFinite.point_finite {f : β → Set α} (hf : LocallyFinite f) (x : α) : { b | x ∈ f b }.Finite :=
   let ⟨t, hxt, ht⟩ := hf x
   ht.Subset fun b hb => ⟨x, hb, mem_of_mem_nhds hxt⟩
 
@@ -1566,11 +1566,9 @@ def DenseRange.some (hf : DenseRange f) (b : β) : κ :=
 theorem DenseRange.exists_mem_open (hf : DenseRange f) {s : Set β} (ho : IsOpen s) (hs : s.Nonempty) : ∃ a, f a ∈ s :=
   exists_range_iff.1 <| hf.exists_mem_open ho hs
 
-theorem DenseRange.mem_nhds {f : κ → β} (h : DenseRange f) {b : β} {U : Set β} (U_in : U ∈ nhds b) : ∃ a, f a ∈ U := by
-  rcases mem_closure_iff_nhds.mp ((dense_range_iff_closure_range.mp h).symm ▸ mem_univ b : b ∈ Closure (range f)) U
-      U_in with
-    ⟨_, h, a, rfl⟩
-  exact ⟨a, h⟩
+theorem DenseRange.mem_nhds {f : κ → β} (h : DenseRange f) {b : β} {U : Set β} (U_in : U ∈ 𝓝 b) : ∃ a, f a ∈ U :=
+  let ⟨a, ha⟩ := h.exists_mem_open is_open_interior ⟨b, mem_interior_iff_mem_nhds.2 U_in⟩
+  ⟨a, interior_subset ha⟩
 
 end DenseRange
 

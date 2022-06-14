@@ -203,7 +203,7 @@ def stalkIso {X Y : PresheafedSpace C} (α : X ≅ Y) (x : X) : Y.stalk (α.Hom.
 
 @[simp, reassoc, elementwise]
 theorem stalk_specializes_stalk_map {X Y : PresheafedSpace C} (f : X ⟶ Y) {x y : X} (h : x ⤳ y) :
-    Y.Presheaf.stalkSpecializes (f.base.map_specialization h) ≫ stalkMap f x =
+    Y.Presheaf.stalkSpecializes (f.base.map_specializes h) ≫ stalkMap f x =
       stalkMap f y ≫ X.Presheaf.stalkSpecializes h :=
   by
   delta' PresheafedSpace.stalk_map

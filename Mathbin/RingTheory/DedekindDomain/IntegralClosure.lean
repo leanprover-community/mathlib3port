@@ -98,7 +98,7 @@ variable (A) (K)
 
 include K
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ≠ » (0 : A))
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) : ∃ (y : _)(_ : y ≠ (0 : A)), ∀, ∀ x ∈ s, ∀, IsIntegral A (y • x) := by

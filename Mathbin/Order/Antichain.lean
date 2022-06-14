@@ -89,6 +89,70 @@ theorem insert_of_symmetric (hs : IsAntichain r s) (hr : Symmetric r) (h : ∀ �
     IsAntichain r (insert a s) :=
   (is_antichain_insert_of_symmetric hr).2 ⟨hs, h⟩
 
+theorem image_rel_embedding (hs : IsAntichain r s) (φ : r ↪r r') : IsAntichain r' (φ '' s) := by
+  intro b hb b' hb' h₁ h₂
+  rw [Set.mem_image] at hb hb'
+  obtain ⟨⟨a, has, rfl⟩, ⟨a', has', rfl⟩⟩ := hb, hb'
+  exact
+    hs has has'
+      (fun haa' =>
+        h₁
+          (haa'.subst
+            (by
+              rfl)))
+      (φ.map_rel_iff.mp h₂)
+
+theorem preimage_rel_embedding {t : Set β} (ht : IsAntichain r' t) (φ : r ↪r r') : IsAntichain r (φ ⁻¹' t) :=
+  fun a ha a' ha' hne hle => ht ha ha' (fun h => hne (φ.Injective h)) (φ.map_rel_iff.mpr hle)
+
+theorem image_rel_iso (hs : IsAntichain r s) (φ : r ≃r r') : IsAntichain r' (φ '' s) :=
+  hs.image_rel_embedding φ
+
+theorem preimage_rel_iso {t : Set β} (hs : IsAntichain r' t) (φ : r ≃r r') : IsAntichain r (φ ⁻¹' t) :=
+  hs.preimage_rel_embedding φ
+
+theorem image_rel_embedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
+  ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_rel_embedding φ), fun h => h.image_rel_embedding φ⟩
+
+theorem image_rel_iso_iff {φ : r ≃r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
+  @image_rel_embedding_iff _ _ _ _ _ (φ : r ↪r r')
+
+theorem image_embedding [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ↪o β) : IsAntichain (· ≤ ·) (φ '' s) :=
+  image_rel_embedding hs _
+
+theorem preimage_embedding [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ↪o β) :
+    IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
+  preimage_rel_embedding ht _
+
+theorem image_embedding_iff [LE α] [LE β] {φ : α ↪o β} : IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
+  image_rel_embedding_iff
+
+theorem image_iso [LE α] [LE β] (hs : IsAntichain (· ≤ ·) s) (φ : α ≃o β) : IsAntichain (· ≤ ·) (φ '' s) :=
+  image_rel_embedding hs _
+
+theorem image_iso_iff [LE α] [LE β] {φ : α ≃o β} : IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
+  image_rel_embedding_iff
+
+theorem preimage_iso [LE α] [LE β] {t : Set β} (ht : IsAntichain (· ≤ ·) t) (φ : α ≃o β) :
+    IsAntichain (· ≤ ·) (φ ⁻¹' t) :=
+  preimage_rel_embedding ht _
+
+theorem preimage_iso_iff [LE α] [LE β] {t : Set β} {φ : α ≃o β} :
+    IsAntichain (· ≤ ·) (φ ⁻¹' t) ↔ IsAntichain (· ≤ ·) t :=
+  ⟨fun h => (φ.image_preimage t).subst (h.image_iso φ), fun h => h.preimage_iso _⟩
+
+theorem to_dual [LE α] (hs : IsAntichain (· ≤ ·) s) : @IsAntichain αᵒᵈ (· ≤ ·) s := fun a ha b hb hab =>
+  hs hb ha hab.symm
+
+theorem to_dual_iff [LE α] : IsAntichain (· ≤ ·) s ↔ @IsAntichain αᵒᵈ (· ≤ ·) s :=
+  ⟨to_dual, to_dual⟩
+
+theorem image_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) : IsAntichain (· ≤ ·) (compl '' s) :=
+  (hs.image_embedding (OrderIso.compl α).toOrderEmbedding).flip
+
+theorem preimage_compl [BooleanAlgebra α] (hs : IsAntichain (· ≤ ·) s) : IsAntichain (· ≤ ·) (compl ⁻¹' s) :=
+  fun a ha a' ha' hne hle => hs ha' ha (fun h => hne (compl_inj_iff.mp h.symm)) (compl_le_compl hle)
+
 end IsAntichain
 
 theorem is_antichain_singleton (a : α) (r : α → α → Prop) : IsAntichain r {a} :=

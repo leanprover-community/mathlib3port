@@ -335,7 +335,7 @@ structure PointedMap.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabit
   map_pt' : f default = default
 
 instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : Inhabited (PointedMap Γ Γ') :=
-  ⟨⟨fun _ => default, rfl⟩⟩
+  ⟨⟨default, rfl⟩⟩
 
 instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (PointedMap Γ Γ') fun _ => Γ → Γ' :=
   ⟨PointedMap.f⟩
@@ -1058,7 +1058,7 @@ theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
       
 
 theorem map_init (g₁ : PointedMap Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
-  congr (congr_argₓ Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
+  congr (congr_arg Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
 
 theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} (ss : Supports M S)
     (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀, ∀ q ∈ S, ∀, g₂ (g₁ q) = q) :
@@ -1412,10 +1412,10 @@ theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cf
             (IH₁ _ _)
         
     iterate 2 
-      exact trans_gen.single (congr_argₓ some (congr (congr_argₓ TM0.cfg.mk rfl) (tape.write_self T)))
+      exact trans_gen.single (congr_arg some (congr (congr_arg TM0.cfg.mk rfl) (tape.write_self T)))
 
 theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
-  (congr_argₓ _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
+  (congr_arg _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
     (by
       rw [Part.map_eq_map, Part.map_map, TM1.eval]
       congr with ⟨⟩
@@ -1524,7 +1524,7 @@ theorem exists_enc_dec [Fintype Γ] :
   let n := Fintype.card Γ
   obtain ⟨F⟩ := Fintype.truncEquivFin Γ
   let G : Finₓ n ↪ Finₓ n → Bool :=
-    ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_funₓ h b).trans <| to_bool_tt rfl⟩
+    ⟨fun a b => a = b, fun a b h => of_to_bool_true <| (congr_fun h b).trans <| to_bool_tt rfl⟩
   let H := (F.to_embedding.trans G).trans (Equivₓ.vectorEquivFin _ _).symm.toEmbedding
   classical
   let enc := H.set_value default (Vector.repeat ff n)
@@ -2515,7 +2515,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (n «expr ≤ » S.length)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (n «expr ≤ » S.length)
 theorem tr_respects_aux₁ {k} o q v {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) n (_ : n ≤ S.length) :
     Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩

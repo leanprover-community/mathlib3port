@@ -141,7 +141,7 @@ theorem induct_on_objects [IsPreconnected J] (p : Set J) {j₀ : J} (h0 : j₀ �
   injection constant_of_preserves_morphisms (fun k => ULift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i
   rwa [i]
   dsimp'
-  exact congr_argₓ ULift.up (propext (h1 f))
+  exact congr_arg ULift.up (propext (h1 f))
 
 /-- If any maximal connected component containing some element j₀ of J is all of J, then J is connected.
 

@@ -864,7 +864,7 @@ theorem reduce.not {p : Prop} : ∀ {L₁ L₂ L₃ : List (α × Bool)} {x b}, 
     cases r : reduce L1
     · dsimp'
       intro h
-      have := congr_argₓ List.length h
+      have := congr_arg List.length h
       simp [-add_commₓ] at this
       exact
         absurd this

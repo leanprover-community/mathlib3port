@@ -58,7 +58,7 @@ theorem unique_iff_exists_unique (α : Sort u) : Nonempty (Unique α) ↔ ∃! a
   ⟨fun ⟨u⟩ => ⟨u.default, trivialₓ, fun a _ => u.uniq a⟩, fun ⟨a, _, h⟩ => ⟨⟨⟨a⟩, fun _ => h _ trivialₓ⟩⟩⟩
 
 theorem unique_subtype_iff_exists_unique {α} (p : α → Prop) : Nonempty (Unique (Subtype p)) ↔ ∃! a, p a :=
-  ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_argₓ Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
+  ⟨fun ⟨u⟩ => ⟨u.default.1, u.default.2, fun a h => congr_arg Subtype.val (u.uniq ⟨a, h⟩)⟩, fun ⟨a, ha, he⟩ =>
     ⟨⟨⟨⟨a, ha⟩⟩, fun ⟨b, hb⟩ => by
         congr
         exact he b hb⟩⟩⟩
@@ -153,6 +153,14 @@ def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
 
 end Unique
 
+theorem unique_iff_subsingleton_and_nonempty (α : Sort u) : Nonempty (Unique α) ↔ Subsingleton α ∧ Nonempty α :=
+  ⟨fun ⟨u⟩ => by
+    constructor <;> exact inferInstance, fun ⟨hs, hn⟩ =>
+    ⟨by
+      skip
+      inhabit α
+      exact Unique.mk' α⟩⟩
+
 @[simp]
 theorem Pi.default_def {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] :
     @default (∀ a, β a) _ = fun a : α => @default (β a) _ :=
@@ -179,7 +187,7 @@ protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β wher
   default := f default
   uniq := fun b =>
     let ⟨a, ha⟩ := hf b
-    ha ▸ congr_argₓ f (Unique.eq_default _)
+    ha ▸ congr_arg f (Unique.eq_default _)
 
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
@@ -199,7 +207,7 @@ end Function
 
 theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f := by
   rw [Function.bijective_iff_has_inverse]
-  refine' ⟨fun x => default, _, _⟩ <;> intro x <;> simp
+  refine' ⟨default, _, _⟩ <;> intro x <;> simp
 
 namespace Option
 

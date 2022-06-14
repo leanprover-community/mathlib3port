@@ -49,7 +49,7 @@ theorem has_basis_small_sets (l : Filter α) : HasBasis l.smallSets (fun t : Set
 theorem tendsto_small_sets_iff {f : α → Set β} : Tendsto f la lb.smallSets ↔ ∀, ∀ t ∈ lb, ∀, ∀ᶠ x in la, f x ⊆ t :=
   (has_basis_small_sets lb).tendsto_right_iff
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem eventually_small_sets {p : Set α → Prop} : (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ t _ : t ⊆ s, p t :=
   eventually_lift'_iff monotone_powerset
 

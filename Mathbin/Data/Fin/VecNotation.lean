@@ -429,8 +429,8 @@ theorem tail_zero : vecTail (0 : Finₓ n.succ → α) = 0 :=
 @[simp]
 theorem cons_eq_zero_iff {v : Finₓ n → α} {x : α} : vecCons x v = 0 ↔ x = 0 ∧ v = 0 :=
   ⟨fun h =>
-    ⟨congr_funₓ h 0, by
-      convert congr_argₓ vec_tail h
+    ⟨congr_fun h 0, by
+      convert congr_arg vec_tail h
       simp ⟩,
     fun ⟨hx, hv⟩ => by
     simp [hx, hv]⟩

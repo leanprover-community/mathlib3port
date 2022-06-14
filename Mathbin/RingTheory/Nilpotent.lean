@@ -140,9 +140,9 @@ def nilradical (R : Type _) [CommSemiringₓ R] : Ideal R :=
 theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
   Iff.rfl
 
-theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = inf { J : Ideal R | J.IsPrime } := by
-  convert Ideal.radical_eq_Inf 0
-  simp
+theorem nilradical_eq_Inf (R : Type _) [CommSemiringₓ R] : nilradical R = inf { J : Ideal R | J.IsPrime } :=
+  (Ideal.radical_eq_Inf ⊥).trans <| by
+    simp_rw [and_iff_right bot_le]
 
 theorem nilpotent_iff_mem_prime : IsNilpotent x ↔ ∀ J : Ideal R, J.IsPrime → x ∈ J := by
   rw [← mem_nilradical, nilradical_eq_Inf, Submodule.mem_Inf]

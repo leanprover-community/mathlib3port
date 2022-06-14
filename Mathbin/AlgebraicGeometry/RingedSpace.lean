@@ -81,9 +81,9 @@ theorem is_unit_of_is_unit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (h : �
     rw [germ_res_apply, germ_res_apply]
     apply (IsUnit.mul_right_inj (h ⟨z, (iVU x).le hzVx⟩)).mp
     erw [← X.presheaf.germ_res_apply (iVU x) ⟨z, hzVx⟩ f, ← RingHom.map_mul,
-      congr_argₓ (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x), germ_res_apply, ←
+      congr_arg (X.presheaf.germ (⟨z, hzVx⟩ : V x)) (hg x), germ_res_apply, ←
       X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f, ← RingHom.map_mul,
-      congr_argₓ (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
+      congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
     
   apply is_unit_of_mul_eq_one f gl
   apply X.sheaf.eq_of_locally_eq' V U iVU hcover

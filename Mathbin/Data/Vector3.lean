@@ -9,10 +9,10 @@ import Mathbin.Tactic.Localized
 /-!
 # Alternate definition of `vector` in terms of `fin2`
 
-This file provides a locale `vector3` which overrides `[a, b, c]` notation to create `vector3` not
-`list`.
+This file provides a locale `vector3` which overrides the `[a, b, c]` notation to create a `vector3`
+instead of a `list`.
 
-The `::` notation is overloaded by this file to mean `vector3.cons`.
+The `::` notation is also overloaded by this file to mean `vector3.cons`.
 -/
 
 
@@ -156,11 +156,11 @@ theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (
   rfl
   have e' := succ_add n k
   change
-    insert a (b :: (t +-+ v)) (Eq.recOnₓ (congr_argₓ succ e') (fs (add i k))) =
-      Eq.recOnₓ (congr_argₓ succ e') (b :: (t +-+ insert a v i))
+    insert a (b :: (t +-+ v)) (Eq.recOnₓ (congr_arg succ e') (fs (add i k))) =
+      Eq.recOnₓ (congr_arg succ e') (b :: (t +-+ insert a v i))
   rw [←
     (Eq.drecOn e' rfl :
-      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOnₓ (congr_argₓ succ e') (fs (i.add k)))]
+      fs (Eq.recOnₓ e' (i.add k) : Fin2 (succ (n + k))) = Eq.recOnₓ (congr_arg succ e') (fs (i.add k)))]
   simp
   rw [IH]
   exact Eq.drecOn e' rfl

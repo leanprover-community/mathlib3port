@@ -115,7 +115,7 @@ open Set Filter Classical
 
 open Classical TopologicalSpace Filter
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 universe u
@@ -416,7 +416,7 @@ theorem uniformity_eq_symm : 𝓤 α = @Prod.swap α α <$> 𝓤 α :=
 
 @[simp]
 theorem comap_swap_uniformity : comap (@Prod.swap α α) (𝓤 α) = 𝓤 α :=
-  (congr_argₓ _ uniformity_eq_symm).trans <| comap_map Prod.swap_injective
+  (congr_arg _ uniformity_eq_symm).trans <| comap_map Prod.swap_injective
 
 theorem symmetrize_mem_uniformity {V : Set (α × α)} (h : V ∈ 𝓤 α) : SymmetrizeRel V ∈ 𝓤 α := by
   apply (𝓤 α).inter_sets h
@@ -665,7 +665,7 @@ theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
     (by
       rw [nhds_eq_uniformity]
       exact Filter.lift_assoc <| monotone_principal.comp <| monotone_preimage.comp monotone_preimage)
-    (congr_argₓ _ <| funext fun s => Filter.lift_principal hg)
+    (congr_arg _ <| funext fun s => Filter.lift_principal hg)
 
 theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
     (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } :=
@@ -687,7 +687,7 @@ theorem nhds_nhds_eq_uniformity_uniformity_prod {a b : α} :
   rw [prod_def]
   show ((𝓝 a).lift fun s : Set α => (𝓝 b).lift fun t : Set α => 𝓟 (s ×ˢ t)) = _
   rw [lift_nhds_right]
-  apply congr_argₓ
+  apply congr_arg
   funext s
   rw [lift_nhds_left]
   rfl
@@ -704,7 +704,7 @@ theorem nhds_eq_uniformity_prod {a b : α} :
     exact monotone_prod monotone_preimage monotone_const
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » cl_d)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » cl_d)
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α), IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
   let cl_d := { p : α × α | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d }
@@ -966,7 +966,7 @@ theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Pro
   (ha.tendsto_iff hb).trans <| by
     simp only [Prod.forall]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » S)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » S)
 theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
     (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
     UniformContinuousOn f S ↔
@@ -1103,11 +1103,29 @@ theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
   rfl
 
 theorem uniform_space_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id := by
-  ext u <;> dsimp' [UniformSpace.comap] <;> rw [Prod.id_prod, Filter.comap_id]
+  ext u <;> dsimp' [UniformSpace.comap] <;> rw [Prod.id_prodₓ, Filter.comap_id]
 
 theorem UniformSpace.comap_comap {α β γ} [uγ : UniformSpace γ] {f : α → β} {g : β → γ} :
     UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) := by
   ext <;> dsimp' [UniformSpace.comap] <;> rw [Filter.comap_comap]
+
+theorem UniformSpace.comap_inf {α γ} {u₁ u₂ : UniformSpace γ} {f : α → γ} : (u₁⊓u₂).comap f = u₁.comap f⊓u₂.comap f :=
+  by
+  ext : 1
+  change 𝓤 _ = 𝓤 _
+  simp [uniformity_comap rfl, inf_uniformity']
+
+theorem UniformSpace.comap_infi {ι α γ} {u : ι → UniformSpace γ} {f : α → γ} :
+    (⨅ i, u i).comap f = ⨅ i, (u i).comap f := by
+  ext : 1
+  change 𝓤 _ = 𝓤 _
+  simp [uniformity_comap rfl, infi_uniformity']
+
+theorem UniformSpace.comap_mono {α γ} {f : α → γ} : Monotone fun u : UniformSpace γ => u.comap f := by
+  intro u₁ u₂ hu
+  change 𝓤 _ ≤ 𝓤 _
+  rw [uniformity_comap rfl]
+  exact comap_mono hu
 
 theorem uniform_continuous_iff {α β} [uα : UniformSpace α] [uβ : UniformSpace β] {f : α → β} :
     UniformContinuous f ↔ uα ≤ uβ.comap f :=
@@ -1201,6 +1219,10 @@ theorem uniformity_subtype {p : α → Prop} [t : UniformSpace α] :
 theorem uniform_continuous_subtype_val {p : α → Prop} [UniformSpace α] :
     UniformContinuous (Subtype.val : { a : α // p a } → α) :=
   uniform_continuous_comap
+
+theorem uniform_continuous_subtype_coe {p : α → Prop} [UniformSpace α] :
+    UniformContinuous (coe : { a : α // p a } → α) :=
+  uniform_continuous_subtype_val
 
 theorem uniform_continuous_subtype_mk {p : α → Prop} [UniformSpace α] [UniformSpace β] {f : β → α}
     (hf : UniformContinuous f) (h : ∀ x, p (f x)) : UniformContinuous (fun x => ⟨f x, h x⟩ : β → Subtype p) :=

@@ -137,7 +137,7 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
   intro k hk
   obtain ⟨i, hi⟩ := hx₁
   have mem₁ : (GradedAlgebra.decompose 𝒜 r k : A) * x ∈ 𝒜 (k + i) := graded_monoid.mul_mem (Submodule.coe_mem _) hi
-  erw [GradedAlgebra.proj_apply, GradedAlgebra.decompose_of_mem 𝒜 mem₁, coe_of_submodule_apply 𝒜, Submodule.coe_mk]
+  erw [GradedAlgebra.proj_apply, GradedAlgebra.decompose_of_mem 𝒜 mem₁, coe_of_apply, Submodule.coe_mk]
   split_ifs
   · exact I.mul_mem_left _ hx₂
     
@@ -259,12 +259,12 @@ protected theorem infi {κ : Sort _} {f : κ → Ideal A} (h : ∀ i, (f i).IsHo
   simp only [Ideal.mem_infi] at hx⊢
   exact fun j => h _ _ (hx j)
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem supr₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨆ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.supr fun i => is_homogeneous.supr <| h i
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi₂ {κ : Sort _} {κ' : κ → Sort _} {f : ∀ i, κ' i → Ideal A} (h : ∀ i j, (f i j).IsHomogeneous 𝒜) :
     (⨅ (i) (j), f i j).IsHomogeneous 𝒜 :=
   is_homogeneous.infi fun i => is_homogeneous.infi <| h i
@@ -352,15 +352,15 @@ theorem to_ideal_supr {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨆ i,
 theorem to_ideal_infi {κ : Sort _} (s : κ → HomogeneousIdeal 𝒜) : (⨅ i, s i).toIdeal = ⨅ i, (s i).toIdeal := by
   rw [infi, to_ideal_Inf, infi_range]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_supr₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨆ (i) (j), s i j).toIdeal = ⨆ (i) (j), (s i j).toIdeal := by
   simp_rw [to_ideal_supr]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem to_ideal_infi₂ {κ : Sort _} {κ' : κ → Sort _} (s : ∀ i, κ' i → HomogeneousIdeal 𝒜) :
     (⨅ (i) (j), s i j).toIdeal = ⨅ (i) (j), (s i j).toIdeal := by
@@ -406,7 +406,7 @@ theorem Ideal.IsHomogeneous.mul {I J : Ideal A} (HI : I.IsHomogeneous 𝒜) (HJ 
   rw [Ideal.IsHomogeneous.iff_exists] at HI HJ⊢
   obtain ⟨⟨s₁, rfl⟩, ⟨s₂, rfl⟩⟩ := HI, HJ
   rw [Ideal.span_mul_span']
-  exact ⟨s₁ * s₂, congr_argₓ _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
+  exact ⟨s₁ * s₂, congr_arg _ <| (Set.image_mul (homogeneous_submonoid 𝒜).Subtype).symm⟩
 
 variable {𝒜}
 
@@ -524,7 +524,7 @@ variable (I 𝒜)
 theorem Ideal.to_ideal_homogeneous_hull_eq_supr :
     (I.homogeneousHull 𝒜).toIdeal = ⨆ i, Ideal.span (GradedAlgebra.proj 𝒜 i '' I) := by
   rw [← Ideal.span_Union]
-  apply congr_argₓ Ideal.span _
+  apply congr_arg Ideal.span _
   ext1
   simp only [Set.mem_Union, Set.mem_image, mem_set_of_eq, GradedAlgebra.proj_apply, SetLike.exists, exists_prop,
     Subtype.coe_mk, SetLike.mem_coe]

@@ -152,13 +152,13 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
   refine' (hzero.eventually (inverse_one_sub_nth_order n)).mp (eventually_of_forall _)
   simp only [neg_mul, sub_neg_eq_add]
   intro t h1 h2
-  have h := congr_argₓ (fun a : R => a * ↑x⁻¹) h1
+  have h := congr_arg (fun a : R => a * ↑x⁻¹) h1
   dsimp'  at h
   convert h
   rw [add_mulₓ, mul_assoc]
   simp [h2.symm]
 
-theorem inverse_one_sub_norm : IsO (fun t => inverse ((1 : R) - t)) (fun t => (1 : ℝ)) (𝓝 (0 : R)) := by
+theorem inverse_one_sub_norm : (fun t : R => inverse (1 - t)) =O[𝓝 0] (fun t => 1 : R → ℝ) := by
   simp only [is_O, is_O_with, eventually_iff, Metric.mem_nhds_iff]
   refine'
     ⟨∥(1 : R)∥ + 1, (2 : ℝ)⁻¹, by
@@ -185,7 +185,7 @@ theorem inverse_one_sub_norm : IsO (fun t => inverse ((1 : R) - t)) (fun t => (1
   linarith
 
 /-- The function `λ t, inverse (x + t)` is O(1) as `t → 0`. -/
-theorem inverse_add_norm (x : Rˣ) : IsO (fun t => inverse (↑x + t)) (fun t => (1 : ℝ)) (𝓝 (0 : R)) := by
+theorem inverse_add_norm (x : Rˣ) : (fun t : R => inverse (↑x + t)) =O[𝓝 0] fun t => (1 : ℝ) := by
   simp only [is_O_iff, norm_one, mul_oneₓ]
   cases' is_O_iff.mp (@inverse_one_sub_norm R _ _) with C hC
   use C * ∥((x⁻¹ : Rˣ) : R)∥
@@ -203,7 +203,7 @@ theorem inverse_add_norm (x : Rˣ) : IsO (fun t => inverse (↑x + t)) (fun t =>
 `λ t, inverse (x + t) - (∑ i in range n, (- x⁻¹ * t) ^ i) * x⁻¹`
 is `O(t ^ n)` as `t → 0`. -/
 theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
-    IsO (fun t : R => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) (fun t => ∥t∥ ^ n) (𝓝 (0 : R)) := by
+    (fun t : R => inverse (↑x + t) - (∑ i in range n, (-↑x⁻¹ * t) ^ i) * ↑x⁻¹) =O[𝓝 (0 : R)] fun t => ∥t∥ ^ n := by
   by_cases' h : n = 0
   · simpa [h] using inverse_add_norm x
     
@@ -217,7 +217,7 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
     by
     refine' (inverse_add_nth_order x n).mp (eventually_of_forall _)
     intro t ht
-    convert congr_argₓ (fun a => a - (range n).Sum (pow (-↑x⁻¹ * t)) * ↑x⁻¹) ht
+    convert congr_arg (fun a => a - (range n).Sum (pow (-↑x⁻¹ * t)) * ↑x⁻¹) ht
     simp
   refine' h.mp (hC.mp (eventually_of_forall _))
   intro t _ hLHS
@@ -233,15 +233,14 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
   nlinarith [norm_nonneg (inverse (↑x + t))]
 
 /-- The function `λ t, inverse (x + t) - x⁻¹` is `O(t)` as `t → 0`. -/
-theorem inverse_add_norm_diff_first_order (x : Rˣ) :
-    IsO (fun t => inverse (↑x + t) - ↑x⁻¹) (fun t => ∥t∥) (𝓝 (0 : R)) := by
+theorem inverse_add_norm_diff_first_order (x : Rˣ) : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =O[𝓝 0] fun t => ∥t∥ := by
   simpa using inverse_add_norm_diff_nth_order x 1
 
 /-- The function
 `λ t, inverse (x + t) - x⁻¹ + x⁻¹ * t * x⁻¹`
 is `O(t ^ 2)` as `t → 0`. -/
 theorem inverse_add_norm_diff_second_order (x : Rˣ) :
-    IsO (fun t => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) (fun t => ∥t∥ ^ 2) (𝓝 (0 : R)) := by
+    (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) =O[𝓝 0] fun t => ∥t∥ ^ 2 := by
   convert inverse_add_norm_diff_nth_order x 2
   ext t
   simp only [range_succ, range_one, sum_insert, mem_singleton, sum_singleton, not_false_iff, one_ne_zero, pow_zeroₓ,
@@ -249,7 +248,7 @@ theorem inverse_add_norm_diff_second_order (x : Rˣ) :
 
 /-- The function `inverse` is continuous at each unit of `R`. -/
 theorem inverse_continuous_at (x : Rˣ) : ContinuousAt inverse (x : R) := by
-  have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹) (fun _ => 1 : R → ℝ) (𝓝 0) :=
+  have h_is_o : (fun t : R => inverse (↑x + t) - ↑x⁻¹) =o[𝓝 0] (fun _ => 1 : R → ℝ) :=
     (inverse_add_norm_diff_first_order x).trans_is_o (is_o.norm_left <| is_o_id_const one_ne_zero)
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) := by
     refine' tendsto_zero_iff_norm_tendsto_zero.mpr _

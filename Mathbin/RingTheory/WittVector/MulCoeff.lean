@@ -162,7 +162,7 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   -- rearrange so that the first summand on rhs and lhs is `remainder`, and peel off
   conv_rhs => rw [add_commₓ]
   simp only [add_assocₓ]
-  apply congr_argₓ (Add.add _)
+  apply congr_arg (Add.add _)
   conv_rhs => rw [sum_range_succ]
   -- the rest is equal with proper unfolding and `ring`
   simp only [rename_monomial, monomial_eq_C_mul_X, map_mul, rename_C, pow_oneₓ, rename_X, mvpz]

@@ -452,7 +452,7 @@ theorem diam_preimage (s : Set β) : Metric.diam (h ⁻¹' s) = Metric.diam s :=
   rw [← image_symm, diam_image]
 
 theorem diam_univ : Metric.diam (Univ : Set α) = Metric.diam (Univ : Set β) :=
-  congr_argₓ Ennreal.toReal h.ediam_univ
+  congr_arg Ennreal.toReal h.ediam_univ
 
 @[simp]
 theorem preimage_ball (h : α ≃ᵢ β) (x : β) (r : ℝ) : h ⁻¹' Metric.Ball x r = Metric.Ball (h.symm x) r := by

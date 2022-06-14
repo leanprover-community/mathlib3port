@@ -145,6 +145,9 @@ section LinearOrderₓ
 
 variable {β : Type _} [LinearOrderₓ β] (h : WellFounded ((· < ·) : β → β → Prop)) {γ : Type _} [PartialOrderₓ γ]
 
+theorem min_le {x : β} {s : Set β} (hx : x ∈ s) (hne : s.Nonempty := ⟨x, hx⟩) : h.min s hne ≤ x :=
+  not_ltₓ.1 <| h.not_lt_min _ _ hx
+
 private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g)
     (hfg : Set.Range f = Set.Range g) {b : β} (H : ∀, ∀ a < b, ∀, f a = g a) : f b ≤ g b := by
   obtain ⟨c, hc⟩ : g b ∈ Set.Range f := by
@@ -169,7 +172,7 @@ theorem eq_strict_mono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : 
     exact fun b H =>
       le_antisymmₓ (eq_strict_mono_iff_eq_range_aux hf hg hfg H)
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 theorem self_le_of_strict_mono {φ : β → β} (hφ : StrictMono φ) : ∀ n, n ≤ φ n := by
   by_contra' h₁

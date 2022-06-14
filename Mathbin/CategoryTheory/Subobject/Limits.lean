@@ -333,6 +333,11 @@ theorem image_subobject_comp_iso_inv_arrow (f : X ⟶ Y) [HasImage f] {Y' : C} (
 
 end
 
+theorem image_subobject_mono (f : X ⟶ Y) [Mono f] : imageSubobject f = mk f :=
+  eq_of_comm (imageSubobjectIso f ≪≫ imageMonoIsoSource f ≪≫ (underlyingIso f).symm)
+    (by
+      simp )
+
 /-- Precomposing by an isomorphism does not change the image subobject. -/
 theorem image_subobject_iso_comp [HasEqualizers C] {X' : C} (h : X' ⟶ X) [IsIso h] (f : X ⟶ Y) [HasImage f] :
     imageSubobject (h ≫ f) = imageSubobject f :=

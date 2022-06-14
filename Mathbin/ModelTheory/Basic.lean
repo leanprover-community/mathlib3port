@@ -141,10 +141,10 @@ def card : Cardinal :=
 
 /-- A language is countable when it has countably many symbols. -/
 class Countable : Prop where
-  card_le_omega' : L.card ≤ ω
+  card_le_aleph_0' : L.card ≤ ℵ₀
 
-theorem card_le_omega [L.Countable] : L.card ≤ ω :=
-  countable.card_le_omega'
+theorem card_le_aleph_0 [L.Countable] : L.card ≤ ℵ₀ :=
+  countable.card_le_aleph_0'
 
 /-- A language is relational when it has no function symbols. -/
 class IsRelational : Prop where
@@ -156,10 +156,10 @@ class IsAlgebraic : Prop where
 
 /-- A language is countable when it has countably many symbols. -/
 class CountableFunctions : Prop where
-  card_functions_le_omega' : # (Σl, L.Functions l) ≤ ω
+  card_functions_le_aleph_0' : # (Σl, L.Functions l) ≤ ℵ₀
 
-theorem card_functions_le_omega [L.CountableFunctions] : # (Σl, L.Functions l) ≤ ω :=
-  countable_functions.card_functions_le_omega'
+theorem card_functions_le_aleph_0 [L.CountableFunctions] : # (Σl, L.Functions l) ≤ ℵ₀ :=
+  countable_functions.card_functions_le_aleph_0'
 
 variable {L} {L' : Language.{u', v'}}
 
@@ -224,7 +224,7 @@ instance countable_empty : Language.empty.Countable :=
 
 instance (priority := 100) Countable.countable_functions [L.Countable] : L.CountableFunctions :=
   ⟨by
-    refine' lift_le_omega.1 (trans _ L.card_le_omega)
+    refine' lift_le_aleph_0.1 (trans _ L.card_le_aleph_0)
     rw [card, symbols, mk_sum]
     exact le_self_add⟩
 

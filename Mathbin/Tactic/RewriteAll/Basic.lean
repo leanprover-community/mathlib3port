@@ -50,7 +50,7 @@ unsafe def replace_target (rw : tracked_rewrite) : tactic Unit := do
 
 private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : tactic Unit := do
   let new_target ← to_expr new_target true false
-  let prf' ← to_expr (pquote.1 (congr_argₓ (%%ₓlam) (%%ₓprf))) true false
+  let prf' ← to_expr (pquote.1 (congr_arg (%%ₓlam) (%%ₓprf))) true false
   tactic.replace_target new_target prf'
 
 unsafe def replace_target_lhs (rw : tracked_rewrite) : tactic Unit := do

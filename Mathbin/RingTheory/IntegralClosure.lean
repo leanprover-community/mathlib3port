@@ -94,7 +94,7 @@ theorem is_integral_of_submodule_noetherian (S : Subalgebra R A) (H : IsNoetheri
     (hx : x ∈ S) : IsIntegral R x := by
   suffices IsIntegral R (show S from ⟨x, hx⟩) by
     rcases this with ⟨p, hpm, hpx⟩
-    replace hpx := congr_argₓ S.val hpx
+    replace hpx := congr_arg S.val hpx
     refine' ⟨p, hpm, Eq.trans _ hpx⟩
     simp only [aeval_def, eval₂, sum_def]
     rw [S.val.map_sum]
@@ -572,7 +572,7 @@ end
 
 section IsIntegralClosure
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] []
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.
@@ -733,7 +733,7 @@ theorem is_integral_trans_aux (x : B) {p : A[X]} (pmonic : Monic p) (hp : aeval 
       
     
   · convert hp using 1
-    replace hq := congr_argₓ (eval x) hq
+    replace hq := congr_arg (eval x) hq
     convert hq using 1 <;> symm <;> apply eval_map
     
 
@@ -815,7 +815,7 @@ theorem RingHom.is_integral_quotient_of_is_integral {I : Ideal S} (hf : f.IsInte
   rintro ⟨x⟩
   obtain ⟨p, ⟨p_monic, hpx⟩⟩ := hf x
   refine' ⟨p.map (Ideal.Quotient.mk _), ⟨p_monic.map _, _⟩⟩
-  simpa only [hom_eval₂, eval₂_map] using congr_argₓ (Ideal.Quotient.mk I) hpx
+  simpa only [hom_eval₂, eval₂_map] using congr_arg (Ideal.Quotient.mk I) hpx
 
 theorem is_integral_quotient_of_is_integral {I : Ideal A} (hRA : IsIntegral R A) :
     IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=
@@ -877,7 +877,7 @@ theorem is_field_of_is_integral_of_is_field' {R S : Type _} [CommRingₓ R] [Com
       (@lmul_left_injective R A _ _ _ _ ⟨x, subset_adjoin (Set.mem_singleton x)⟩ fun h => hx (subtype.ext_iff.mp h)) 1
   exact ⟨y, subtype.ext_iff.mp hy⟩
 
-theorem IsIntegral.is_field_iff_is_field {R S : Type _} [CommRingₓ R] [Nontrivial R] [CommRingₓ S] [IsDomain S]
+theorem Algebra.IsIntegral.is_field_iff_is_field {R S : Type _} [CommRingₓ R] [Nontrivial R] [CommRingₓ S] [IsDomain S]
     [Algebra R S] (H : Algebra.IsIntegral R S) (hRS : Function.Injective (algebraMap R S)) : IsField R ↔ IsField S :=
   ⟨is_field_of_is_integral_of_is_field' H, is_field_of_is_integral_of_is_field H hRS⟩
 

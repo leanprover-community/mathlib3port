@@ -6,6 +6,7 @@ Authors: Scott Morrison
 import Mathbin.Algebra.Group.Pi
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.Algebra.Category.Module.Limits
+import Mathbin.Algebra.Homology.ShortExact.Abelian
 
 /-!
 # The category of `R`-modules has finite biproducts
@@ -113,7 +114,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f) where
         ext x j
         dsimp' only [has_limit.lift]
         simp only [LinearMap.coe_mk]
-        exact congr_argₓ (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
+        exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 
 end HasLimit
 
@@ -133,4 +134,33 @@ theorem biproduct_iso_pi_inv_comp_π [Fintype J] (f : J → ModuleCat.{v} R) (j 
   IsLimit.cone_point_unique_up_to_iso_inv_comp _ _ (Discrete.mk j)
 
 end ModuleCat
+
+section SplitExact
+
+variable {R : Type u} {A M B : Type v} [Ringₓ R] [AddCommGroupₓ A] [Module R A] [AddCommGroupₓ B] [Module R B]
+  [AddCommGroupₓ M] [Module R M]
+
+variable {j : A →ₗ[R] M} {g : M →ₗ[R] B}
+
+open ModuleCat
+
+/-- The isomorphism `A × B ≃ₗ[R] M` coming from a right split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
+of modules.-/
+noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j) (exac : j.range = g.ker)
+    (h : g.comp f = LinearMap.id) : (A × B) ≃ₗ[R] M :=
+  (({ RightSplit := ⟨asHom f, h⟩, mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj,
+                exact := (exact_iff _ _).mpr exac } :
+                RightSplit _ _).Splitting.Iso.trans <|
+        biprodIsoProd _ _).toLinearEquiv.symm
+
+/-- The isomorphism `A × B ≃ₗ[R] M` coming from a left split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
+of modules.-/
+noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g) (exac : j.range = g.ker)
+    (h : f.comp j = LinearMap.id) : (A × B) ≃ₗ[R] M :=
+  (({ LeftSplit := ⟨asHom f, h⟩, Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg,
+                exact := (exact_iff _ _).mpr exac } :
+                LeftSplit _ _).Splitting.Iso.trans <|
+        biprodIsoProd _ _).toLinearEquiv.symm
+
+end SplitExact
 

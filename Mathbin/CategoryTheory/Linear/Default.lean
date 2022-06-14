@@ -82,13 +82,13 @@ instance preadditiveIntLinear : Linear ℤ C where
 
 section End
 
-variable {R : Type w} [CommRingₓ R] [Linear R C]
+variable {R : Type w}
 
-instance (X : C) : Module R (End X) := by
+instance [Semiringₓ R] [Linear R C] (X : C) : Module R (End X) := by
   dsimp' [End]
   infer_instance
 
-instance (X : C) : Algebra R (End X) :=
+instance [CommSemiringₓ R] [Linear R C] (X : C) : Algebra R (End X) :=
   Algebra.ofModule (fun r f g => comp_smul _ _ _ _ _ _) fun r f g => smul_comp _ _ _ _ _ _
 
 end End
@@ -133,12 +133,12 @@ def rightComp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z wher
 instance {X Y : C} (f : X ⟶ Y) [Epi f] (r : R) [Invertible r] : Epi (r • f) :=
   ⟨fun R g g' H => by
     rw [smul_comp, smul_comp, ← comp_smul, ← comp_smul, cancel_epi] at H
-    simpa [smul_smul] using congr_argₓ (fun f => ⅟ r • f) H⟩
+    simpa [smul_smul] using congr_arg (fun f => ⅟ r • f) H⟩
 
 instance {X Y : C} (f : X ⟶ Y) [Mono f] (r : R) [Invertible r] : Mono (r • f) :=
   ⟨fun R g g' H => by
     rw [comp_smul, comp_smul, ← smul_comp, ← smul_comp, cancel_mono] at H
-    simpa [smul_smul] using congr_argₓ (fun f => ⅟ r • f) H⟩
+    simpa [smul_smul] using congr_arg (fun f => ⅟ r • f) H⟩
 
 end
 

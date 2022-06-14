@@ -69,7 +69,7 @@ theorem impartial_congr : ∀ {G H : Pgame} e : Relabelling G H [G.Impartial], H
   | G, H, e => by
     intro h
     rw [impartial_def]
-    refine' ⟨equiv_trans e.symm.equiv (equiv_trans (neg_equiv_self G) (neg_congr e.equiv)), fun i => _, fun j => _⟩ <;>
+    refine' ⟨e.symm.equiv.trans ((neg_equiv_self G).trans (neg_equiv_neg_iff.2 e.equiv)), fun i => _, fun j => _⟩ <;>
       cases' e with _ _ L R hL hR
     · convert impartial_congr (hL (L.symm i))
       rw [Equivₓ.apply_symm_apply]
@@ -82,15 +82,17 @@ instance impartial_add : ∀ G H : Pgame [G.Impartial] [H.Impartial], (G + H).Im
     intro hG hH
     rw [impartial_def]
     refine'
-      ⟨equiv_trans (add_congr (neg_equiv_self _) (neg_equiv_self _)) (neg_add_relabelling _ _).Equiv.symm, fun i => _,
-        fun i => _⟩
-    · rcases left_moves_add_cases i with (⟨j, rfl⟩ | ⟨j, rfl⟩)
+      ⟨(add_congr (neg_equiv_self _) (neg_equiv_self _)).trans (neg_add_relabelling _ _).Equiv.symm, fun k => _,
+        fun k => _⟩
+    · apply left_moves_add_cases k
       all_goals
+        intro i
         simp only [add_move_left_inl, add_move_left_inr]
         apply impartial_add
       
-    · rcases right_moves_add_cases i with (⟨j, rfl⟩ | ⟨j, rfl⟩)
+    · apply right_moves_add_cases k
       all_goals
+        intro i
         simp only [add_move_right_inl, add_move_right_inr]
         apply impartial_add
       
@@ -111,13 +113,13 @@ instance impartial_neg : ∀ G : Pgame [G.Impartial], (-G).Impartial
       
 
 theorem nonpos (G : Pgame) [G.Impartial] : ¬0 < G := fun h => by
-  have h' := neg_lt_iff.2 h
-  rw [Pgame.neg_zero, lt_congr_left (equiv_symm (neg_equiv_self G))] at h'
+  have h' := neg_lt_neg_iff.2 h
+  rw [Pgame.neg_zero, lt_congr_left (neg_equiv_self G).symm] at h'
   exact (h.trans h').False
 
 theorem nonneg (G : Pgame) [G.Impartial] : ¬G < 0 := fun h => by
-  have h' := neg_lt_iff.2 h
-  rw [Pgame.neg_zero, lt_congr_right (equiv_symm (neg_equiv_self G))] at h'
+  have h' := neg_lt_neg_iff.2 h
+  rw [Pgame.neg_zero, lt_congr_right (neg_equiv_self G).symm] at h'
   exact (h.trans h').False
 
 theorem winner_cases (G : Pgame) [G.Impartial] : G.FirstLoses ∨ G.FirstWins := by
@@ -139,7 +141,7 @@ theorem not_first_loses (G : Pgame) [G.Impartial] : ¬G.FirstLoses ↔ G.FirstWi
   Iff.symm <| iff_not_comm.1 <| Iff.symm <| not_first_wins G
 
 theorem add_self (G : Pgame) [G.Impartial] : (G + G).FirstLoses :=
-  first_loses_is_zero.2 <| equiv_trans (add_congr_left (neg_equiv_self G)) (add_left_neg_equiv G)
+  first_loses_is_zero.2 <| (add_congr_left (neg_equiv_self G)).trans (add_left_neg_equiv G)
 
 theorem equiv_iff_sum_first_loses (G H : Pgame) [G.Impartial] [H.Impartial] : (G ≈ H) ↔ (G + H).FirstLoses := by
   constructor

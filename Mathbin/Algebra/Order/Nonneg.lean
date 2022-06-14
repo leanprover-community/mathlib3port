@@ -204,7 +204,7 @@ instance commMonoidWithZero [OrderedCommSemiring α] : CommMonoidWithZero { x : 
   infer_instance
 
 instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x } :=
-  ⟨⟨0, 1, fun h => zero_ne_one (congr_argₓ Subtype.val h)⟩⟩
+  ⟨⟨0, 1, fun h => zero_ne_one (congr_arg Subtype.val h)⟩⟩
 
 instance linearOrderedSemiring [LinearOrderedSemiring α] : LinearOrderedSemiring { x : α // 0 ≤ x } :=
   Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl) fun _ _ =>
@@ -261,9 +261,8 @@ theorem mk_div_mk [LinearOrderedField α] {x y : α} (hx : 0 ≤ x) (hy : 0 ≤ 
   rfl
 
 instance canonicallyOrderedAddMonoid [OrderedRing α] : CanonicallyOrderedAddMonoid { x : α // 0 ≤ x } :=
-  { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with
-    le_iff_exists_add := fun ⟨a, ha⟩ ⟨b, hb⟩ => by
-      simpa only [mk_add_mk, Subtype.exists, Subtype.mk_eq_mk] using le_iff_exists_nonneg_add a b }
+  { Nonneg.orderedAddCommMonoid, Nonneg.orderBot with le_self_add := fun a b => le_add_of_nonneg_right b.2,
+    exists_add_of_le := fun a b h => ⟨⟨b - a, sub_nonneg_of_le h⟩, Subtype.ext (add_sub_cancel'_right _ _).symm⟩ }
 
 instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α] :
     CanonicallyOrderedCommSemiring { x : α // 0 ≤ x } :=

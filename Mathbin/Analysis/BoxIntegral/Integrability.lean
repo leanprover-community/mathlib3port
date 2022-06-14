@@ -29,8 +29,8 @@ open MeasureTheory Metric Set Finset Filter BoxIntegral
 
 namespace BoxIntegral
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc))
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
 theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = ff) {s : Set (ι → ℝ)}
@@ -89,7 +89,7 @@ theorem has_integral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = 
     simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (box.coe_subset_Icc hxJ)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n}))
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
 theorem has_integral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E} {μ : Measureₓ (ι → ℝ)}
@@ -162,7 +162,7 @@ namespace MeasureTheory
 
 namespace SimpleFunc
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
 theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] (I : Box ι)
     (l : IntegrationParams) (hl : l.bRiemann = ff) :
@@ -170,7 +170,7 @@ theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → �
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g hd hfi hgi
   · simpa [Function.const, measure.restrict_apply hs] using BoxIntegral.has_integral_indicator_const l hl hs I y μ
     
-  · "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  · "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
     have := Fact.mk (I.measure_coe_lt_top μ)
     rw [integral_add]
     exacts[hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _, integrable_iff.2 fun _ _ => measure_lt_top _ _]
@@ -187,13 +187,13 @@ end SimpleFunc
 
 open TopologicalSpace
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- If `f : ℝⁿ → E` is Bochner integrable w.r.t. a locally finite measure `μ` on a rectangular box
 `I`, then it is McShane integrable on `I` with the same integral.  -/
 theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
     [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams) (hl : l.bRiemann = ff) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSmul (∫ x in I, f x ∂μ) := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   -- First we replace an `ae_strongly_measurable` function by a measurable one.
   rcases hf.ae_strongly_measurable with ⟨g, hg, hfg⟩
   have : separable_space (range g ∪ {0} : Set E) := hg.separable_space_range_union_singleton

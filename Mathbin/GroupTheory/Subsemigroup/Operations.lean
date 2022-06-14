@@ -46,8 +46,8 @@ In this file we define various operations on `subsemigroup`s and `mul_hom`s.
 ### Operations on `mul_hom`s
 
 * `mul_hom.srange`: range of a semigroup homomorphism as a subsemigroup of the codomain;
-* `mul_hom.srestrict`: restrict a semigroup homomorphism to a subsemigroup;
-* `mul_hom.cod_srestrict`: restrict the codomain of a semigroup homomorphism to a subsemigroup;
+* `mul_hom.restrict`: restrict a semigroup homomorphism to a subsemigroup;
+* `mul_hom.cod_restrict`: restrict the codomain of a semigroup homomorphism to a subsemigroup;
 * `mul_hom.srange_restrict`: restrict a semigroup homomorphism to its range;
 
 ### Implementation notes
@@ -61,7 +61,7 @@ subsemigroup, range, product, map, comap
 -/
 
 
-variable {M N P : Type _}
+variable {M N P σ : Type _}
 
 /-!
 ### Conversion to/from `additive`/`multiplicative`
@@ -610,23 +610,24 @@ theorem map_mclosure (f : M →ₙ* N) (s : Set M) : (closure s).map f = closure
 
 /-- Restriction of a semigroup hom to a subsemigroup of the domain. -/
 @[to_additive "Restriction of an add_semigroup hom to an `add_subsemigroup` of the domain."]
-def srestrict {N : Type _} [Mul N] (f : M →ₙ* N) (S : Subsemigroup M) : S →ₙ* N :=
+def restrict {N : Type _} [Mul N] [SetLike σ M] [MulMemClass σ M] (f : M →ₙ* N) (S : σ) : S →ₙ* N :=
   f.comp (MulMemClass.subtype S)
 
 @[simp, to_additive]
-theorem srestrict_apply {N : Type _} [Mul N] (f : M →ₙ* N) (x : S) : f.srestrict S x = f x :=
+theorem restrict_apply {N : Type _} [Mul N] [SetLike σ M] [MulMemClass σ M] (f : M →ₙ* N) {S : σ} (x : S) :
+    f.restrict S x = f x :=
   rfl
 
 /-- Restriction of a semigroup hom to a subsemigroup of the codomain. -/
 @[to_additive "Restriction of an `add_semigroup` hom to an `add_subsemigroup` of the\ncodomain.", simps]
-def codSrestrict (f : M →ₙ* N) (S : Subsemigroup N) (h : ∀ x, f x ∈ S) : M →ₙ* S where
+def codRestrict [SetLike σ N] [MulMemClass σ N] (f : M →ₙ* N) (S : σ) (h : ∀ x, f x ∈ S) : M →ₙ* S where
   toFun := fun n => ⟨f n, h n⟩
   map_mul' := fun x y => Subtype.eq (map_mul f x y)
 
 /-- Restriction of a semigroup hom to its range interpreted as a subsemigroup. -/
 @[to_additive "Restriction of an `add_semigroup` hom to its range interpreted as a subsemigroup."]
 def srangeRestrict {N} [Mul N] (f : M →ₙ* N) : M →ₙ* f.srange :=
-  (f.codSrestrict f.srange) fun x => ⟨x, rfl⟩
+  (f.codRestrict f.srange) fun x => ⟨x, rfl⟩
 
 @[simp, to_additive]
 theorem coe_srange_restrict {N} [Mul N] (f : M →ₙ* N) (x : M) : (f.srangeRestrict x : N) = f x :=
@@ -685,7 +686,7 @@ theorem prod_eq_top_iff [Nonempty M] [Nonempty N] {s : Subsemigroup M} {t : Subs
 /-- The semigroup hom associated to an inclusion of subsemigroups. -/
 @[to_additive "The `add_semigroup` hom associated to an inclusion of subsemigroups."]
 def inclusion {S T : Subsemigroup M} (h : S ≤ T) : S →ₙ* T :=
-  (MulMemClass.subtype S).codSrestrict _ fun x => h x.2
+  (MulMemClass.subtype S).codRestrict _ fun x => h x.2
 
 @[simp, to_additive]
 theorem range_subtype (s : Subsemigroup M) : (MulMemClass.subtype s).srange = s :=
@@ -706,7 +707,7 @@ variable [Mul M] [Mul N] {S T : Subsemigroup M}
 @[to_additive
       "Makes the identity additive isomorphism from a proof two\nsubsemigroups of an additive semigroup are equal."]
 def subsemigroupCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
 /-- A semigroup homomorphism `f : M →ₙ* N` with a left-inverse `g : N → M` defines a multiplicative
 equivalence between `M` and `f.srange`.

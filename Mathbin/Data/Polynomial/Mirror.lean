@@ -170,6 +170,20 @@ theorem coeff_mul_mirror : (p * p.mirror).coeff (p.natDegree + p.natTrailingDegr
           finset.mem_range_succ_iff.mpr ((le_nat_degree_of_mem_supp n hn).trans (Nat.le_add_rightₓ _ _))).symm
   rw [coeff_mirror, ← rev_at_le (finset.mem_range_succ_iff.mp hn), rev_at_invol, ← sq]
 
+variable [NoZeroDivisors R]
+
+theorem nat_degree_mul_mirror : (p * p.mirror).natDegree = 2 * p.natDegree := by
+  by_cases' hp : p = 0
+  · rw [hp, zero_mul, nat_degree_zero, mul_zero]
+    
+  rw [nat_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_degree, two_mul]
+
+theorem nat_trailing_degree_mul_mirror : (p * p.mirror).natTrailingDegree = 2 * p.natTrailingDegree := by
+  by_cases' hp : p = 0
+  · rw [hp, zero_mul, nat_trailing_degree_zero, mul_zero]
+    
+  rw [nat_trailing_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_trailing_degree, two_mul]
+
 end Semiringₓ
 
 section Ringₓ
@@ -179,7 +193,7 @@ variable {R : Type _} [Ringₓ R] (p q : R[X])
 theorem mirror_neg : (-p).mirror = -p.mirror := by
   rw [mirror, mirror, reverse_neg, nat_trailing_degree_neg, neg_mul_eq_neg_mulₓ]
 
-variable [IsDomain R]
+variable [NoZeroDivisors R]
 
 theorem mirror_mul_of_domain : (p * q).mirror = p.mirror * q.mirror := by
   by_cases' hp : p = 0
@@ -201,7 +215,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable {R : Type _} [CommRingₓ R] [IsDomain R] {f : R[X]}
+variable {R : Type _} [CommRingₓ R] [NoZeroDivisors R] {f : R[X]}
 
 theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     (h2 : ∀ k, f * f.mirror = k * k.mirror → k = f ∨ k = -f ∨ k = f.mirror ∨ k = -f.mirror)

@@ -475,7 +475,7 @@ theorem tendsto_factorial_div_pow_self_at_top : Tendsto (fun n => n ! / n ^ n : 
       refine' (eventually_gt_at_top 0).mono fun n hn => _
       rcases Nat.exists_eq_succ_of_ne_zero hn.ne.symm with ⟨k, rfl⟩
       rw [← prod_range_add_one_eq_factorial, pow_eq_prod_const, div_eq_mul_inv, ← inv_eq_one_div, prod_nat_cast,
-        Nat.cast_succₓ, ← prod_inv_distrib', ← prod_mul_distrib, Finset.prod_range_succ']
+        Nat.cast_succₓ, ← prod_inv_distrib, ← prod_mul_distrib, Finset.prod_range_succ']
       simp only [prod_range_succ', one_mulₓ, Nat.cast_addₓ, zero_addₓ, Nat.cast_oneₓ]
       refine'
           mul_le_of_le_one_left
@@ -523,7 +523,7 @@ theorem tendsto_nat_floor_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x
     
 
 theorem tendsto_nat_floor_div_at_top : Tendsto (fun x => (⌊x⌋₊ : R) / x) atTop (𝓝 1) := by
-  simpa using tendsto_nat_floor_mul_div_at_top (@zero_le_one R _)
+  simpa using tendsto_nat_floor_mul_div_at_top (zero_le_one' R)
 
 theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x => (⌈a * x⌉₊ : R) / x) atTop (𝓝 a) := by
   have A : tendsto (fun x : R => a + x⁻¹) at_top (𝓝 (a + 0)) := tendsto_const_nhds.add tendsto_inv_at_top_zero
@@ -539,7 +539,7 @@ theorem tendsto_nat_ceil_mul_div_at_top {a : R} (ha : 0 ≤ a) : Tendsto (fun x 
     
 
 theorem tendsto_nat_ceil_div_at_top : Tendsto (fun x => (⌈x⌉₊ : R) / x) atTop (𝓝 1) := by
-  simpa using tendsto_nat_ceil_mul_div_at_top (@zero_le_one R _)
+  simpa using tendsto_nat_ceil_mul_div_at_top (zero_le_one' R)
 
 end
 

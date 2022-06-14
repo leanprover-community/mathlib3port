@@ -29,6 +29,8 @@ section Ringₓ
 variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
   {G : Type _} [AddCommGroupₓ G] [Module R G] (p q : Submodule R E)
 
+variable {S : Type _} [Semiringₓ S] {M : Type _} [AddCommMonoidₓ M] [Module S M] (m : Submodule S M)
+
 noncomputable section
 
 namespace LinearMap
@@ -354,11 +356,11 @@ of `E` to `p` and fixes every element of `p`.
 The definition allow more generally any `fun_like` type and not just linear maps, so that it can be
 used for example with `continuous_linear_map` or `matrix`.
 -/
-structure IsProj {F : Type _} [FunLike F E fun _ => E] (f : F) : Prop where
-  map_mem : ∀ x, f x ∈ p
-  map_id : ∀, ∀ x ∈ p, ∀, f x = x
+structure IsProj {F : Type _} [FunLike F M fun _ => M] (f : F) : Prop where
+  map_mem : ∀ x, f x ∈ m
+  map_id : ∀, ∀ x ∈ m, ∀, f x = x
 
-theorem is_proj_iff_idempotent (f : E →ₗ[R] E) : (∃ p : Submodule R E, IsProj p f) ↔ f ∘ₗ f = f := by
+theorem is_proj_iff_idempotent (f : M →ₗ[S] M) : (∃ p : Submodule S M, IsProj p f) ↔ f ∘ₗ f = f := by
   constructor
   · intro h
     obtain ⟨p, hp⟩ := h
@@ -380,26 +382,26 @@ theorem is_proj_iff_idempotent (f : E →ₗ[R] E) : (∃ p : Submodule R E, IsP
 
 namespace IsProj
 
-variable {p}
+variable {p m}
 
 /-- Restriction of the codomain of a projection of onto a subspace `p` to `p` instead of the whole
 space.
 -/
-def codRestrict {f : E →ₗ[R] E} (h : IsProj p f) : E →ₗ[R] p :=
-  f.codRestrict p h.map_mem
+def codRestrict {f : M →ₗ[S] M} (h : IsProj m f) : M →ₗ[S] m :=
+  f.codRestrict m h.map_mem
 
 @[simp]
-theorem cod_restrict_apply {f : E →ₗ[R] E} (h : IsProj p f) (x : E) : ↑(h.codRestrict x) = f x :=
-  f.cod_restrict_apply p x
+theorem cod_restrict_apply {f : M →ₗ[S] M} (h : IsProj m f) (x : M) : ↑(h.codRestrict x) = f x :=
+  f.cod_restrict_apply m x
 
 @[simp]
-theorem cod_restrict_apply_cod {f : E →ₗ[R] E} (h : IsProj p f) (x : p) : h.codRestrict x = x := by
+theorem cod_restrict_apply_cod {f : M →ₗ[S] M} (h : IsProj m f) (x : m) : h.codRestrict x = x := by
   ext
   rw [cod_restrict_apply]
   exact h.map_id x x.2
 
-theorem cod_restrict_ker {f : E →ₗ[R] E} (h : IsProj p f) : h.codRestrict.ker = f.ker :=
-  f.ker_cod_restrict p _
+theorem cod_restrict_ker {f : M →ₗ[S] M} (h : IsProj m f) : h.codRestrict.ker = f.ker :=
+  f.ker_cod_restrict m _
 
 theorem is_compl {f : E →ₗ[R] E} (h : IsProj p f) : IsCompl p f.ker := by
   rw [← cod_restrict_ker]

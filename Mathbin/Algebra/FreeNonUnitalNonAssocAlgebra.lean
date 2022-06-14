@@ -78,7 +78,7 @@ theorem lift_unique (f : X → A) (F : FreeNonUnitalNonAssocAlgebra R X →ₙ�
 
 @[simp]
 theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
-  congr_funₓ (of_comp_lift _ f) x
+  congr_fun (of_comp_lift _ f) x
 
 @[simp]
 theorem lift_comp_of (F : FreeNonUnitalNonAssocAlgebra R X →ₙₐ[R] A) : lift R (F ∘ of R) = F :=

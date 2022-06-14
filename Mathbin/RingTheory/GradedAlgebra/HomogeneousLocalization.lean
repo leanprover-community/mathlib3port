@@ -296,7 +296,7 @@ instance hasPow : Pow (HomogeneousLocalization 𝒜 x) ℕ where
     (Quotientₓ.map' (· ^ n) fun h : Localization.mk _ _ = Localization.mk _ _ => by
         change Localization.mk _ _ = Localization.mk _ _
         simp only [num_pow, denom_pow]
-        convert congr_argₓ (fun z => z ^ n) h <;> erw [Localization.mk_pow] <;> rfl :
+        convert congr_arg (fun z => z ^ n) h <;> erw [Localization.mk_pow] <;> rfl :
         HomogeneousLocalization 𝒜 x → HomogeneousLocalization 𝒜 x)
       z
 
@@ -311,7 +311,7 @@ instance : HasScalar α (HomogeneousLocalization 𝒜 x) where
     Quotientₓ.map' ((· • ·) m) fun h : Localization.mk _ _ = Localization.mk _ _ => by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_smul, denom_smul]
-      convert congr_argₓ (fun z : at x => m • z) h <;> rw [Localization.smul_mk] <;> rfl
+      convert congr_arg (fun z : at x => m • z) h <;> rw [Localization.smul_mk] <;> rfl
 
 @[simp]
 theorem smul_val (y : HomogeneousLocalization 𝒜 x) (n : α) : (n • y).val = n • y.val := by
@@ -330,7 +330,7 @@ instance : Neg (HomogeneousLocalization 𝒜 x) where
     Quotientₓ.map' Neg.neg fun h : Localization.mk _ _ = Localization.mk _ _ => by
       change Localization.mk _ _ = Localization.mk _ _
       simp only [num_neg, denom_neg, ← Localization.neg_mk]
-      exact congr_argₓ (fun c => -c) h
+      exact congr_arg (fun c => -c) h
 
 instance : Add (HomogeneousLocalization 𝒜 x) where
   add :=

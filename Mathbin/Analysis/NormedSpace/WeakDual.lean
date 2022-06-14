@@ -156,6 +156,9 @@ equivalence `normed_space.dual.to_weak_dual` in the other direction. -/
 def toNormedDual : WeakDual 𝕜 E ≃ₗ[𝕜] Dual 𝕜 E :=
   NormedSpace.Dual.toWeakDual.symm
 
+theorem to_normed_dual_apply (x : WeakDual 𝕜 E) (y : E) : (toNormedDual x) y = x y :=
+  rfl
+
 @[simp]
 theorem coe_to_normed_dual (x' : WeakDual 𝕜 E) : ⇑x'.toNormedDual = x' :=
   rfl

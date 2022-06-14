@@ -100,7 +100,7 @@ theorem eval_from_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.ca
     exact hm
     
   · intro h
-    have hlen' := congr_argₓ List.length h
+    have hlen' := congr_arg List.length h
     simp only [List.length_dropₓ, List.length, List.length_takeₓ] at hlen'
     rw [min_eq_leftₓ, tsub_eq_zero_iff_le] at hlen'
     · apply hneq

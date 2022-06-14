@@ -571,17 +571,17 @@ theorem Pi.lt_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)]
     x < y ↔ x ≤ y ∧ ∃ i, x i < y i := by
   simp (config := { contextual := true })[lt_iff_le_not_leₓ, Pi.le_def]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
     {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i}
     {i : ι} {a b : α i} : Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ j _ : j ≠ i, x j ≤ y j := by
   simp (config := { contextual := true })[update_le_iff]

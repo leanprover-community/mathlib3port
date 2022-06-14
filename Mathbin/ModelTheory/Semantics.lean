@@ -731,6 +731,42 @@ theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} : φ.exs.realize
       
     
 
+@[simp]
+theorem realize_to_formula (φ : L.BoundedFormula α n) (v : Sum α (Finₓ n) → M) :
+    φ.toFormula.realize v ↔ φ.realize (v ∘ Sum.inl) (v ∘ Sum.inr) := by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 a8 a9 a0
+  · rfl
+    
+  · simp [bounded_formula.realize]
+    
+  · simp [bounded_formula.realize]
+    
+  · rw [to_formula, formula.realize, realize_imp, ← formula.realize, ih1, ← formula.realize, ih2, realize_imp]
+    
+  · rw [to_formula, formula.realize, realize_all, realize_all]
+    refine' forall_congrₓ fun a => _
+    have h := ih3 (Sum.elim (v ∘ Sum.inl) (snoc (v ∘ Sum.inr) a))
+    simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h
+    rw [← h, realize_relabel, formula.realize]
+    rcongr
+    · cases x
+      · simp
+        
+      · refine' Finₓ.lastCases _ (fun i => _) x
+        · rw [Sum.elim_inr, snoc_last, Function.comp_app, Sum.elim_inr, Function.comp_app, fin_sum_fin_equiv_symm_last,
+            Sum.map_inr, Sum.elim_inr, Function.comp_app]
+          exact (congr rfl (Subsingleton.elimₓ _ _)).trans (snoc_last _ _)
+          
+        · simp only [cast_succ, Function.comp_app, Sum.elim_inr, fin_sum_fin_equiv_symm_apply_cast_add, Sum.map_inl,
+            Sum.elim_inl]
+          rw [← cast_succ, snoc_cast_succ]
+          
+        
+      
+    · exact Subsingleton.elimₓ _ _
+      
+    
+
 end BoundedFormula
 
 namespace Equivₓ
@@ -830,7 +866,7 @@ theorem Sentence.realize_card_ge n : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ # M 
 
 @[simp]
 theorem model_infinite_theory_iff : M ⊨ L.InfiniteTheory ↔ Infinite M := by
-  simp [infinite_theory, infinite_iff, omega_le]
+  simp [infinite_theory, infinite_iff, aleph_0_le]
 
 instance model_infinite_theory [h : Infinite M] : M ⊨ L.InfiniteTheory :=
   L.model_infinite_theory_iff.2 h

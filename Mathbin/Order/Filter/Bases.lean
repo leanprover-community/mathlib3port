@@ -106,6 +106,10 @@ instance : Inhabited (FilterBasis ℕ) :=
         exact le_of_max_le_left p_in
         exact le_of_max_le_right p_in }⟩
 
+/-- View a filter as a filter basis. -/
+def Filter.asBasis (f : Filter α) : FilterBasis α :=
+  ⟨f.Sets, ⟨Univ, univ_mem⟩, fun x y hx hy => ⟨x ∩ y, inter_mem hx hy, subset_rfl⟩⟩
+
 /-- `is_basis p s` means the image of `s` bounded by `p` is a filter basis. -/
 protected structure Filter.IsBasis (p : ι → Prop) (s : ι → Set α) : Prop where
   Nonempty : ∃ i, p i
@@ -210,7 +214,7 @@ section SameType
 variable {l l' : Filter α} {p : ι → Prop} {s : ι → Set α} {t : Set α} {i : ι} {p' : ι' → Prop} {s' : ι' → Set α}
   {i' : ι'}
 
-theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => Finite t ∧ t ⊆ s) fun t => ⋂₀ t :=
+theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => Set.Finite t ∧ t ⊆ s) fun t => ⋂₀ t :=
   ⟨by
     intro U
     rw [mem_generate_iff]
@@ -219,7 +223,7 @@ theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => 
 
 /-- The smallest filter basis containing a given collection of sets. -/
 def FilterBasis.ofSets (s : Set (Set α)) : FilterBasis α where
-  Sets := sInter '' { t | Finite t ∧ t ⊆ s }
+  Sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
   Nonempty := ⟨Univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩
   inter_sets := by
     rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
@@ -282,7 +286,8 @@ theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filter = l := by
 theorem HasBasis.eq_generate (h : l.HasBasis p s) : l = generate { U | ∃ i, p i ∧ s i = U } := by
   rw [← h.is_basis.filter_eq_generate, h.filter_eq]
 
-theorem generate_eq_generate_inter (s : Set (Set α)) : generate s = generate (sInter '' { t | Finite t ∧ t ⊆ s }) := by
+theorem generate_eq_generate_inter (s : Set (Set α)) : generate s = generate (sInter '' { t | Set.Finite t ∧ t ⊆ s }) :=
+  by
   erw [(filter_basis.of_sets s).generate, ← (has_basis_generate s).filter_eq] <;> rfl
 
 theorem of_sets_filter_eq_generate (s : Set (Set α)) : (FilterBasis.ofSets s).filter = generate s := by
@@ -341,6 +346,9 @@ theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s
 
 theorem basis_sets (l : Filter α) : l.HasBasis (fun s : Set α => s ∈ l) id :=
   ⟨fun t => exists_mem_subset_iff.symm⟩
+
+theorem as_basis_filter (f : Filter α) : f.asBasis.filter = f := by
+  ext t <;> exact exists_mem_subset_iff
 
 theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
     HasBasis l (fun s => s ∈ l ∧ P s) id ↔ ∀, ∀ t ∈ l, ∀, ∃ r ∈ l, P r ∧ r ⊆ t := by
@@ -414,9 +422,9 @@ theorem HasBasis.inf {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p'
     (l⊓l').HasBasis (fun i : ι × ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
   (hl.inf' hl').to_has_basis (fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩) fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩
 
-theorem has_basis_infi {ι : Sort _} {ι' : ι → Type _} {l : ι → Filter α} {p : ∀ i, ι' i → Prop} {s : ∀ i, ι' i → Set α}
+theorem has_basis_infi {ι : Type _} {ι' : ι → Type _} {l : ι → Filter α} {p : ∀ i, ι' i → Prop} {s : ∀ i, ι' i → Set α}
     (hl : ∀ i, (l i).HasBasis (p i) (s i)) :
-    (⨅ i, l i).HasBasis (fun If : Set ι × ∀ i, ι' i => Finite If.1 ∧ ∀, ∀ i ∈ If.1, ∀, p i (If.2 i))
+    (⨅ i, l i).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀, ∀ i ∈ If.1, ∀, p i (If.2 i))
       fun If : Set ι × ∀ i, ι' i => ⋂ i ∈ If.1, s i (If.2 i) :=
   ⟨by
     intro t
@@ -553,7 +561,7 @@ theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s
 /-- If `s : ι → set α` is an indexed family of sets, then finite intersections of `s i` form a basis
 of `⨅ i, 𝓟 (s i)`.  -/
 theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
-    (⨅ i, 𝓟 (s i)).HasBasis (fun t : Set ι => Finite t) fun t => ⋂ i ∈ t, s i := by
+    (⨅ i, 𝓟 (s i)).HasBasis (fun t : Set ι => t.Finite) fun t => ⋂ i ∈ t, s i := by
   refine' ⟨fun U => (mem_infi_finite _).trans _⟩
   simp only [infi_principal_finset, mem_Union, mem_principal, exists_prop, exists_finite_iff_finset,
     Finset.set_bInter_coe]
@@ -716,7 +724,7 @@ namespace Filter
 
 variable {α β γ ι : Type _} {ι' : Sort _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
   out : ∃ s : Set (Set α), Countable s ∧ f = generate s

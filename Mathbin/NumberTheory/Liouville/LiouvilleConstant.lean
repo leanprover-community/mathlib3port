@@ -145,7 +145,7 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
         mul_mono_nonneg
         (one_div_nonneg.mpr (pow_nonneg (zero_le_two.trans hm) _)) (sub_one_div_inv_le_two hm)
     _ = 2 / m ^ (n + 1)! := mul_one_div 2 _
-    _ = 2 / m ^ (n ! * (n + 1)) := congr_argₓ ((· / ·) 2) (congr_argₓ (pow m) (mul_comm _ _))
+    _ = 2 / m ^ (n ! * (n + 1)) := congr_arg ((· / ·) 2) (congr_arg (pow m) (mul_comm _ _))
     _ ≤ 1 / m ^ (n ! * n) := by
       -- [ NB: in this block, I do not follow the brace convention for subgoals -- I wait until
       --   I solve all extraneous goals at once with `exact pow_pos (zero_lt_two.trans_le hm) _`. ]
@@ -158,7 +158,7 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) : (1 - 1 / m)⁻¹ * (1 / m 
       }
       -- `2 ≤ m ^ n!` is a consequence of monotonicity of exponentiation at `2 ≤ m`.
       exact trans (trans hm (pow_oneₓ _).symm.le) (pow_mono (one_le_two.trans hm) n.factorial_pos)
-    _ = 1 / (m ^ n !) ^ n := congr_argₓ ((· / ·) 1) (pow_mulₓ m n ! n)
+    _ = 1 / (m ^ n !) ^ n := congr_arg ((· / ·) 1) (pow_mulₓ m n ! n)
     
 
 /-!  Starting from here, we specialize to the case in which `m` is a natural number. -/

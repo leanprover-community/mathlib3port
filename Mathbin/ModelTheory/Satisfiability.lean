@@ -29,6 +29,9 @@ shows that a theory is satisfiable iff it is finitely satisfiable.
 complete.
 * `first_order.language.Theory.exists_large_model_of_infinite_model` shows that any theory with an
 infinite model has arbitrarily large models.
+* `first_order.language.Theory.exists_elementary_embedding_card_eq`: The Upward Löwenheim–Skolem
+Theorem: If `κ` is a cardinal greater than the cardinalities of `L` and an infinite `L`-structure
+`M`, then `M` has an elementary extension of cardinality `κ`.
 
 ## Implementation Details
 * Satisfiability of an `L.Theory` `T` is defined in the minimal universe containing all the symbols
@@ -39,7 +42,7 @@ of `L`. By Löwenheim-Skolem, this is equivalent to satisfiability in any univer
 
 universe u v w w'
 
-open Cardinal
+open Cardinal CategoryTheory
 
 open Cardinal FirstOrder
 
@@ -126,7 +129,7 @@ theorem is_satisfiable_union_distinct_constants_theory_of_infinite (T : L.Theory
   rw [distinct_constants_theory_eq_Union, Set.union_Union, is_satisfiable_directed_union_iff]
   · exact fun t =>
       is_satisfiable_union_distinct_constants_theory_of_card_le T _ M
-        ((lift_le_omega.2 (le_of_ltₓ (finset_card_lt_omega _))).trans (omega_le_lift.2 (omega_le_mk M)))
+        ((lift_le_aleph_0.2 (finset_card_lt_aleph_0 _).le).trans (aleph_0_le_lift.2 (aleph_0_le_mk M)))
     
   · refine' (monotone_const.union (monotone_distinct_constants_theory.comp _)).directed_le
     simp only [Finset.coe_map, Function.Embedding.coe_subtype]
@@ -144,6 +147,37 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
   rw [← mk_univ]
   refine' (card_le_of_model_distinct_constants_theory L Set.Univ N).trans (lift_le.1 _)
   rw [lift_lift]
+
+/-- The Upward Löwenheim–Skolem Theorem: If `κ` is a cardinal greater than the cardinalities of `L`
+and an infinite `L`-structure `M`, then `M` has an elementary extension of cardinality `κ`. -/
+theorem exists_elementary_embedding_card_eq (M : Type w') [L.Structure M] [iM : Infinite M] (κ : Cardinal.{w})
+    (h1 : Cardinal.lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) (h2 : Cardinal.lift.{w} (# M) ≤ Cardinal.lift.{w'} κ) :
+    ∃ N : Bundled.{max u v w w'} L.Structure, Nonempty (M ↪ₑ[L] N) ∧ # N = Cardinal.lift.{max u v w'} κ := by
+  obtain ⟨N0, hN0⟩ := exists_large_model_of_infinite_model (L.elementary_diagram M) κ M
+  let f0 := elementary_embedding.of_models_elementary_diagram L M N0
+  rw [← lift_le.{max w w', max u v}, lift_lift, lift_lift] at h2
+  obtain ⟨N, hN1, hN2⟩ :=
+    exists_elementary_substructure_card_eq (L[[M]]) (Set.Range f0) (Cardinal.lift.{max u v w'} κ) (trans _ h2)
+      (trans _ (lift_le.2 h2)) _ _
+  · let this := (Lhom_with_constants L M).reduct N
+    refine' ⟨bundled.of N, ⟨_⟩, lift_inj.1 hN2⟩
+    apply elementary_embedding.of_models_elementary_diagram L M N
+    
+  · exact aleph_0_le_lift.2 (aleph_0_le_mk M)
+    
+  · rw [lift_id'.{max w u v w', max max u w' v w}, ← lift_le, lift_lift, lift_lift]
+    exact mk_range_le_lift
+    
+  · simp only [card_with_constants, lift_add, lift_lift]
+    rw [add_commₓ, add_eq_max (aleph_0_le_lift.2 (infinite_iff.1 iM)), max_le_iff]
+    rw [← lift_le.{_, w'}, lift_lift, lift_lift] at h1
+    refine' ⟨trans _ h2, trans _ h1⟩ <;>
+      · rw [← lift_le.{_, max max w u v w'}, lift_lift, lift_lift]
+        
+    
+  · refine' trans _ (lift_le.2 hN0)
+    rw [← lift_le.{_, max max u w' v w}, lift_lift, lift_lift, lift_lift, lift_lift]
+    
 
 variable (T)
 

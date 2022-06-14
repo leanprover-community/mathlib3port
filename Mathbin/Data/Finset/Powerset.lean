@@ -24,7 +24,7 @@ section Powerset
 /-- When `s` is a finset, `s.powerset` is the finset of all subsets of `s` (seen as finsets). -/
 def powerset (s : Finset α) : Finset (Finset α) :=
   ⟨(s.1.Powerset.pmap Finset.mk) fun t h => nodup_of_le (mem_powerset.1 h) s.Nodup,
-    s.Nodup.Powerset.pmap fun a ha b hb => congr_argₓ Finset.val⟩
+    s.Nodup.Powerset.pmap fun a ha b hb => congr_arg Finset.val⟩
 
 @[simp]
 theorem mem_powerset {s t : Finset α} : s ∈ powerset t ↔ s ⊆ t := by
@@ -79,14 +79,14 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
     simp [Finset.erase_eq_of_not_mem h, this]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ t _ : t ⊆ s, Prop} [∀ t h : t ⊆ s, Decidable (p t h)] :
     Decidable (∃ (t : _)(h : t ⊆ s), p t h) :=
   decidableOfIff (∃ (t : _)(hs : t ∈ s.Powerset), p t (mem_powerset.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_powerset.2 hs, hp⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for every subset. -/
 instance decidableForallOfDecidableSubsets {s : Finset α} {p : ∀ t _ : t ⊆ s, Prop} [∀ t h : t ⊆ s, Decidable (p t h)] :
     Decidable (∀ t h : t ⊆ s, p t h) :=
@@ -123,14 +123,14 @@ theorem empty_mem_ssubsets {s : Finset α} (h : s.Nonempty) : ∅ ∈ s.ssubsets
   rw [mem_ssubsets, ssubset_iff_subset_ne]
   exact ⟨empty_subset s, h.ne_empty.symm⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for any ssubset. -/
 instance decidableExistsOfDecidableSsubsets {s : Finset α} {p : ∀ t _ : t ⊂ s, Prop}
     [∀ t h : t ⊂ s, Decidable (p t h)] : Decidable (∃ t h, p t h) :=
   decidableOfIff (∃ (t : _)(hs : t ∈ s.ssubsets), p t (mem_ssubsets.1 hs))
     ⟨fun ⟨t, _, hp⟩ => ⟨t, _, hp⟩, fun ⟨t, hs, hp⟩ => ⟨t, mem_ssubsets.2 hs, hp⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊂ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊂ » s)
 /-- For predicate `p` decidable on ssubsets, it is decidable whether `p` holds for every ssubset. -/
 instance decidableForallOfDecidableSsubsets {s : Finset α} {p : ∀ t _ : t ⊂ s, Prop}
     [∀ t h : t ⊂ s, Decidable (p t h)] : Decidable (∀ t h, p t h) :=
@@ -157,7 +157,7 @@ section PowersetLen
 of cardinality `n`. -/
 def powersetLen (n : ℕ) (s : Finset α) : Finset (Finset α) :=
   ⟨((s.1.powersetLen n).pmap Finset.mk) fun t h => nodup_of_le (mem_powerset_len.1 h).1 s.2,
-    s.2.powersetLen.pmap fun a ha b hb => congr_argₓ Finset.val⟩
+    s.2.powersetLen.pmap fun a ha b hb => congr_arg Finset.val⟩
 
 /-- **Formula for the Number of Combinations** -/
 theorem mem_powerset_len {n} {s t : Finset α} : s ∈ powersetLen n t ↔ s ⊆ t ∧ card s = n := by
@@ -245,7 +245,7 @@ theorem powerset_card_bUnion [DecidableEq (Finset α)] (s : Finset α) :
 theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) : (powersetLen n.succ u).sup id = u :=
   by
   apply le_antisymmₓ
-  · simp_rw [sup_le_iff, mem_powerset_len]
+  · simp_rw [Finset.sup_le_iff, mem_powerset_len]
     rintro x ⟨h, -⟩
     exact h
     

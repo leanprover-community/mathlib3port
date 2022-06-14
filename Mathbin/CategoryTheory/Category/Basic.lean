@@ -161,11 +161,11 @@ theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ 
 
 theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun h : Y ⟶ Z => f ≫ h) = fun h : Y ⟶ Z => g ≫ h) : f = g :=
   eq_of_comp_left_eq fun Z h => by
-    convert congr_funₓ (congr_funₓ w Z) h
+    convert congr_fun (congr_fun w Z) h
 
 theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun h : X ⟶ Y => h ≫ f) = fun h : X ⟶ Y => h ≫ g) : f = g :=
   eq_of_comp_right_eq fun X h => by
-    convert congr_funₓ (congr_funₓ w X) h
+    convert congr_fun (congr_fun w X) h
 
 theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} g : X ⟶ Y, f ≫ g = g) : f = 𝟙 X := by
   convert w (𝟙 X)
@@ -216,10 +216,10 @@ instance (X : C) : Mono (𝟙 X) :=
     simpa using w⟩
 
 theorem cancel_epi (f : X ⟶ Y) [Epi f] {g h : Y ⟶ Z} : f ≫ g = f ≫ h ↔ g = h :=
-  ⟨fun p => Epi.left_cancellation g h p, congr_argₓ _⟩
+  ⟨fun p => Epi.left_cancellation g h p, congr_arg _⟩
 
 theorem cancel_mono (f : X ⟶ Y) [Mono f] {g h : Z ⟶ X} : g ≫ f = h ≫ f ↔ g = h :=
-  ⟨fun p => Mono.right_cancellation g h p, congr_argₓ _⟩
+  ⟨fun p => Mono.right_cancellation g h p, congr_arg _⟩
 
 theorem cancel_epi_id (f : X ⟶ Y) [Epi f] {h : Y ⟶ Y} : f ≫ h = f ↔ h = 𝟙 Y := by
   convert cancel_epi f
@@ -246,7 +246,7 @@ theorem mono_comp {X Y Z : C} (f : X ⟶ Y) [Mono f] (g : Y ⟶ Z) [Mono g] : Mo
 theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : Mono f := by
   constructor
   intro Z a b w
-  replace w := congr_argₓ (fun k => k ≫ g) w
+  replace w := congr_arg (fun k => k ≫ g) w
   dsimp'  at w
   rw [category.assoc, category.assoc] at w
   exact (cancel_mono _).1 w
@@ -258,7 +258,7 @@ theorem mono_of_mono_fac {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} {h : X ⟶ Z} [
 theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi g := by
   constructor
   intro Z a b w
-  replace w := congr_argₓ (fun k => f ≫ k) w
+  replace w := congr_arg (fun k => f ≫ k) w
   dsimp'  at w
   rw [← category.assoc, ← category.assoc] at w
   exact (cancel_epi _).1 w

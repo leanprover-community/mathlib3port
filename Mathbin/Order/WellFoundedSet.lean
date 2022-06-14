@@ -145,15 +145,15 @@ theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) := by
   classical
   rw [is_wf_iff_no_descending_seq] at *
   rintro f fst
-  have h : Infinite (f ⁻¹' s) ∨ Infinite (f ⁻¹' t) := by
-    have h : Infinite (univ : Set ℕ) := infinite_univ
+  have h : (f ⁻¹' s).Infinite ∨ (f ⁻¹' t).Infinite := by
+    have h : (univ : Set ℕ).Infinite := infinite_univ
     have hpre : f ⁻¹' (s ∪ t) = Set.Univ := by
       rw [← image_univ, image_subset_iff, univ_subset_iff] at fst
       exact fst
     rw [preimage_union] at hpre
     rw [← hpre] at h
-    rw [Infinite, Infinite]
-    rw [Infinite] at h
+    rw [Set.Infinite, Set.Infinite]
+    rw [Set.Infinite] at h
     contrapose! h
     exact finite.union h.1 h.2
   rw [← infinite_coe_iff, ← infinite_coe_iff] at h
@@ -223,7 +223,7 @@ theorem _root_.is_antichain.partially_well_ordered_on_iff {s : Set α} {r : α �
     (hs : IsAntichain r s) : s.PartiallyWellOrderedOn r ↔ s.Finite :=
   ⟨hs.finite_of_partially_well_ordered_on, Finite.partially_well_ordered_on⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem partially_well_ordered_on_iff_finite_antichains {s : Set α} {r : α → α → Prop} [IsRefl α r] [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ t _ : t ⊆ s, IsAntichain r t → t.Finite := by
   refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
@@ -336,15 +336,15 @@ theorem IsPwo.union (hs : IsPwo s) (ht : IsPwo t) : IsPwo (s ∪ t) := by
   classical
   rw [is_pwo_iff_exists_monotone_subseq] at *
   rintro f fst
-  have h : Infinite (f ⁻¹' s) ∨ Infinite (f ⁻¹' t) := by
-    have h : Infinite (univ : Set ℕ) := infinite_univ
+  have h : (f ⁻¹' s).Infinite ∨ (f ⁻¹' t).Infinite := by
+    have h : (univ : Set ℕ).Infinite := infinite_univ
     have hpre : f ⁻¹' (s ∪ t) = Set.Univ := by
       rw [← image_univ, image_subset_iff, univ_subset_iff] at fst
       exact fst
     rw [preimage_union] at hpre
     rw [← hpre] at h
-    rw [Infinite, Infinite]
-    rw [Infinite] at h
+    rw [Set.Infinite, Set.Infinite]
+    rw [Set.Infinite] at h
     contrapose! h
     exact finite.union h.1 h.2
   rw [← infinite_coe_iff, ← infinite_coe_iff] at h

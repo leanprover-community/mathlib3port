@@ -61,10 +61,10 @@ is invertible, then `f` is invertible.
 theorem is_iso_left_of_is_iso_biprod_map {W X Y Z : C} (f : W ⟶ Y) (g : X ⟶ Z) [IsIso (biprod.map f g)] : IsIso f :=
   ⟨⟨biprod.inl ≫ inv (biprod.map f g) ≫ biprod.fst,
       ⟨by
-        have t := congr_argₓ (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst) (is_iso.hom_inv_id (biprod.map f g))
+        have t := congr_arg (fun p : W ⊞ X ⟶ W ⊞ X => biprod.inl ≫ p ≫ biprod.fst) (is_iso.hom_inv_id (biprod.map f g))
         simp only [category.id_comp, category.assoc, biprod.inl_map_assoc] at t
         simp [t], by
-        have t := congr_argₓ (fun p : Y ⊞ Z ⟶ Y ⊞ Z => biprod.inl ≫ p ≫ biprod.fst) (is_iso.inv_hom_id (biprod.map f g))
+        have t := congr_arg (fun p : Y ⊞ Z ⟶ Y ⊞ Z => biprod.inl ≫ p ≫ biprod.fst) (is_iso.inv_hom_id (biprod.map f g))
         simp only [category.id_comp, category.assoc, biprod.map_fst] at t
         simp only [category.assoc]
         simp [t]⟩⟩⟩

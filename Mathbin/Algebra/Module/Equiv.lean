@@ -581,7 +581,7 @@ protected theorem smul_def (f : M ≃ₗ[R] M) (a : M) : f • a = f a :=
   rfl
 
 /-- `linear_equiv.apply_distrib_mul_action` is faithful. -/
-instance apply_has_faithful_scalar : HasFaithfulScalar (M ≃ₗ[R] M) M :=
+instance apply_has_faithful_smul : HasFaithfulSmul (M ≃ₗ[R] M) M :=
   ⟨fun _ _ => LinearEquiv.ext⟩
 
 instance apply_smul_comm_class : SmulCommClass R (M ≃ₗ[R] M) M where

@@ -115,9 +115,9 @@ instance [CommSemiringₓ R] : Inhabited (MvPolynomial σ R) :=
 instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] : DistribMulAction R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.distribMulAction
 
-instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [HasFaithfulScalar R S₁] :
-    HasFaithfulScalar R (MvPolynomial σ S₁) :=
-  AddMonoidAlgebra.has_faithful_scalar
+instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [HasFaithfulSmul R S₁] :
+    HasFaithfulSmul R (MvPolynomial σ S₁) :=
+  AddMonoidAlgebra.has_faithful_smul
 
 instance [Semiringₓ R] [CommSemiringₓ S₁] [Module R S₁] : Module R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.module
@@ -192,7 +192,7 @@ theorem C_mul_monomial : c a * monomial s a' = monomial s (a * a') := by
 
 @[simp]
 theorem C_add : (c (a + a') : MvPolynomial σ R) = c a + c a' :=
-  single_add
+  single_add _ _ _
 
 @[simp]
 theorem C_mul : (c (a * a') : MvPolynomial σ R) = c a * c a' :=
@@ -267,7 +267,7 @@ theorem monomial_eq_C_mul_X {s : σ} {a : R} {n : ℕ} : monomial (single s n) a
 
 @[simp]
 theorem monomial_zero {s : σ →₀ ℕ} : monomial s (0 : R) = 0 :=
-  single_zero
+  single_zero _
 
 @[simp]
 theorem monomial_zero' : (monomial (0 : σ →₀ ℕ) : R → MvPolynomial σ R) = C :=
@@ -379,7 +379,7 @@ theorem alg_hom_ext' {A B : Type _} [CommSemiringₓ A] [CommSemiringₓ B] [Alg
     (h₁ :
       f.comp (IsScalarTower.toAlgHom R A (MvPolynomial σ A)) = g.comp (IsScalarTower.toAlgHom R A (MvPolynomial σ A)))
     (h₂ : ∀ i, f (x i) = g (x i)) : f = g :=
-  AlgHom.coe_ring_hom_injective (MvPolynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
+  AlgHom.coe_ring_hom_injective (MvPolynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
 
 @[ext]
 theorem alg_hom_ext {A : Type _} [Semiringₓ A] [Algebra R A] {f g : MvPolynomial σ R →ₐ[R] A}

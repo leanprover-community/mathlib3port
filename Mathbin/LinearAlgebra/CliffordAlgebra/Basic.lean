@@ -6,7 +6,7 @@ Authors: Eric Wieser, Utensil Song
 import Mathbin.Algebra.RingQuot
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
-import Mathbin.LinearAlgebra.QuadraticForm.Basic
+import Mathbin.LinearAlgebra.QuadraticForm.Isometry
 
 /-!
 # Clifford Algebras
@@ -66,7 +66,7 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler algebra R
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=

@@ -98,7 +98,7 @@ def liftedConeIsLimit : IsLimit (liftedCone D c t) where
     ext1
     apply t.hom_ext
     intro j
-    simpa [t.fac ((forget T).mapCone s) j] using congr_argₓ algebra.hom.f (J j)
+    simpa [t.fac ((forget T).mapCone s) j] using congr_arg algebra.hom.f (J j)
 
 end ForgetCreatesLimits
 
@@ -214,7 +214,7 @@ def liftedCoconeIsColimit : IsColimit (liftedCocone c t) where
     ext1
     apply t.hom_ext
     intro j
-    simpa using congr_argₓ algebra.hom.f (J j)
+    simpa using congr_arg algebra.hom.f (J j)
 
 end ForgetCreatesColimits
 

@@ -1221,14 +1221,17 @@ theorem span_eq_top_of_surjective {s : Set P₁} (hf : Function.Surjective f) (h
 
 end AffineMap
 
-theorem AffineEquiv.span_eq_top_iff {s : Set P₁} (e : P₁ ≃ᵃ[k] P₂) : affineSpan k s = ⊤ ↔ affineSpan k (e '' s) = ⊤ :=
-  by
+namespace AffineEquiv
+
+theorem span_eq_top_iff {s : Set P₁} (e : P₁ ≃ᵃ[k] P₂) : affineSpan k s = ⊤ ↔ affineSpan k (e '' s) = ⊤ := by
   refine' ⟨(e : P₁ →ᵃ[k] P₂).span_eq_top_of_surjective e.surjective, _⟩
   intro h
   have : s = e.symm '' (e '' s) := by
     simp [← image_comp]
   rw [this]
   exact (e.symm : P₂ →ᵃ[k] P₁).span_eq_top_of_surjective e.symm.surjective h
+
+end AffineEquiv
 
 end
 

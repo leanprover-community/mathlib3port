@@ -289,7 +289,7 @@ theorem InjOn.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.InjO
 theorem PairwiseDisjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.PairwiseDisjoint f) :
     (Range g).PairwiseDisjoint f := by
   rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-  exact ((ht x.2 y.2) fun h => hxy <| congr_argₓ g <| Subtype.ext h).mono (hg x) (hg y)
+  exact ((ht x.2 y.2) fun h => hxy <| congr_arg g <| Subtype.ext h).mono (hg x) (hg y)
 
 theorem pairwise_disjoint_union :
     (s ∪ t).PairwiseDisjoint f ↔

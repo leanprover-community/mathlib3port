@@ -35,7 +35,7 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
   let ⟨p, hpm, hpx⟩ := hx
   le_of_not_ltₓ fun hvx : 1 < v x => by
     rw [hpm.as_sum, eval₂_add, eval₂_pow, eval₂_X, eval₂_finset_sum, add_eq_zero_iff_eq_neg] at hpx
-    replace hpx := congr_argₓ v hpx
+    replace hpx := congr_arg v hpx
     refine' ne_of_gtₓ _ hpx
     rw [v.map_neg, v.map_pow]
     refine' v.map_sum_lt' (zero_lt_one₀.trans_le (one_le_pow_of_one_le' hvx.le _)) fun i hi => _

@@ -52,14 +52,14 @@ theorem std_basis_apply (i : ι) (b : φ i) : stdBasis R φ i b = update 0 i b :
   rfl
 
 theorem coe_std_basis (i : ι) : ⇑(stdBasis R φ i) = Pi.single i :=
-  funext <| std_basis_apply R φ i
+  rfl
 
 @[simp]
-theorem std_basis_same (i : ι) (b : φ i) : stdBasis R φ i b i = b := by
-  rw [std_basis_apply, update_same]
+theorem std_basis_same (i : ι) (b : φ i) : stdBasis R φ i b i = b :=
+  Pi.single_eq_same i b
 
-theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 0 := by
-  rw [std_basis_apply, update_noteq h] <;> rfl
+theorem std_basis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 0 :=
+  Pi.single_eq_of_ne h b
 
 theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
   ext x j
@@ -67,18 +67,16 @@ theorem std_basis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) := by
   rfl
 
 theorem ker_std_basis (i : ι) : ker (stdBasis R φ i) = ⊥ :=
-  ker_eq_bot_of_injective fun f g hfg => by
-    have : stdBasis R φ i f i = stdBasis R φ i g i := hfg ▸ rfl
-    simpa only [std_basis_same]
+  ker_eq_bot_of_injective <| Pi.single_injective _ _
 
 theorem proj_comp_std_basis (i j : ι) : (proj i).comp (stdBasis R φ j) = diag j i := by
   rw [std_basis_eq_pi_diag, proj_pi]
 
-theorem proj_std_basis_same (i : ι) : (proj i).comp (stdBasis R φ i) = id := by
-  ext b <;> simp
+theorem proj_std_basis_same (i : ι) : (proj i).comp (stdBasis R φ i) = id :=
+  LinearMap.ext <| std_basis_same R φ i
 
-theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R φ j) = 0 := by
-  ext b <;> simp [std_basis_ne R φ _ _ h]
+theorem proj_std_basis_ne (i j : ι) (h : i ≠ j) : (proj i).comp (stdBasis R φ j) = 0 :=
+  LinearMap.ext <| std_basis_ne R φ _ _ h
 
 theorem supr_range_std_basis_le_infi_ker_proj (I J : Set ι) (h : Disjoint I J) :
     (⨆ i ∈ I, range (stdBasis R φ i)) ≤ ⨅ i ∈ J, ker (proj i) := by
@@ -103,7 +101,7 @@ theorem infi_ker_proj_le_supr_range_std_basis {I : Finset ι} {J : Set ι} (hu :
           intro hiI
           rw [std_basis_same]
           exact hb _ ((hu trivialₓ).resolve_left hiI)]
-      exact sum_mem fun i hiI => mem_supr_of_mem i <| mem_supr_of_mem hiI <| (std_basis R φ i).mem_range_self (b i))
+      exact sum_mem_bsupr fun i hi => (std_basis R φ i).mem_range_self (b i))
 
 theorem supr_range_std_basis_eq_infi_ker_proj {I J : Set ι} (hd : Disjoint I J) (hu : Set.Univ ⊆ I ∪ J)
     (hI : Set.Finite I) : (⨆ i ∈ I, range (stdBasis R φ i)) = ⨅ i ∈ J, ker (proj i) := by
@@ -142,15 +140,8 @@ theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     
 
 theorem std_basis_eq_single {a : R} :
-    (fun i : ι => (stdBasis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a := by
-  ext i j
-  rw [std_basis_apply, Finsupp.single_apply]
-  split_ifs
-  · rw [h, Function.update_same]
-    
-  · rw [Function.update_noteq (Ne.symm h)]
-    rfl
-    
+    (fun i : ι => (stdBasis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a :=
+  funext fun i => (Finsupp.single_eq_pi_single i a).symm
 
 end LinearMap
 

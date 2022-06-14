@@ -205,6 +205,15 @@ theorem right_lt_sup : b < a⊔b ↔ ¬a ≤ b :=
 theorem left_or_right_lt_sup (h : a ≠ b) : a < a⊔b ∨ b < a⊔b :=
   h.not_le_or_not_le.symm.imp left_lt_sup.2 right_lt_sup.2
 
+theorem le_iff_exists_sup : a ≤ b ↔ ∃ c, b = a⊔c := by
+  constructor
+  · intro h
+    exact ⟨b, (sup_eq_right.mpr h).symm⟩
+    
+  · rintro ⟨c, rfl : _ = _⊔_⟩
+    exact le_sup_left
+    
+
 theorem sup_le_sup (h₁ : a ≤ b) (h₂ : c ≤ d) : a⊔c ≤ b⊔d :=
   sup_le (le_sup_of_le_left h₁) (le_sup_of_le_right h₂)
 

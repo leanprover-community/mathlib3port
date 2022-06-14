@@ -431,9 +431,78 @@ theorem closed_complemented_range_of_is_compl_of_ker_eq_bot (f : E →L[𝕜] F)
     (hG : IsClosed (G : Set F)) (hker : f.ker = ⊥) : IsClosed (f.range : Set F) := by
   have : CompleteSpace G := hG.complete_space_coe
   let g := coprod_subtypeL_equiv_of_is_compl f h hker
-  rw [congr_argₓ coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
+  rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
   exact is_closed_univ.prod is_closed_singleton
 
 end ContinuousLinearMap
+
+section ClosedGraphThm
+
+variable [CompleteSpace E] (g : E →ₗ[𝕜] F)
+
+/-- The **closed graph theorem** : a linear map between two Banach spaces whose graph is closed
+is continuous. -/
+theorem LinearMap.continuous_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) : Continuous g := by
+  let this : CompleteSpace g.graph := complete_space_coe_iff_is_complete.mpr hg.is_complete
+  let φ₀ : E →ₗ[𝕜] E × F := linear_map.id.prod g
+  have : Function.LeftInverse Prod.fst φ₀ := fun x => rfl
+  let φ : E ≃ₗ[𝕜] g.graph := (LinearEquiv.ofLeftInverse this).trans (LinearEquiv.ofEq _ _ g.graph_eq_range_prod.symm)
+  let ψ : g.graph ≃L[𝕜] E := φ.symm.to_continuous_linear_equiv_of_continuous continuous_subtype_coe.fst
+  exact (continuous_subtype_coe.comp ψ.symm.continuous).snd
+
+/-- A useful form of the **closed graph theorem** : let `f` be a linear map between two Banach
+spaces. To show that `f` is continuous, it suffices to show that for any convergent sequence
+`uₙ ⟶ x`, if `f(uₙ) ⟶ y` then `y = f(x)`. -/
+theorem LinearMap.continuous_of_seq_closed_graph
+    (hg : ∀ u : ℕ → E x y, Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) : Continuous g := by
+  refine' g.continuous_of_is_closed_graph (is_seq_closed_iff_is_closed.mp <| is_seq_closed_of_def _)
+  rintro φ ⟨x, y⟩ hφg hφ
+  refine' hg (Prod.fst ∘ φ) x y ((continuous_fst.tendsto _).comp hφ) _
+  have : g ∘ Prod.fst ∘ φ = Prod.snd ∘ φ := by
+    ext n
+    exact (hφg n).symm
+  rw [this]
+  exact (continuous_snd.tendsto _).comp hφ
+
+variable {g}
+
+namespace ContinuousLinearMap
+
+/-- Upgrade a `linear_map` to a `continuous_linear_map` using the **closed graph theorem**. -/
+def ofIsClosedGraph (hg : IsClosed (g.Graph : Set <| E × F)) : E →L[𝕜] F where
+  toLinearMap := g
+  cont := g.continuous_of_is_closed_graph hg
+
+@[simp]
+theorem coe_fn_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
+    ⇑(ContinuousLinearMap.ofIsClosedGraph hg) = g :=
+  rfl
+
+theorem coe_of_is_closed_graph (hg : IsClosed (g.Graph : Set <| E × F)) :
+    ↑(ContinuousLinearMap.ofIsClosedGraph hg) = g := by
+  ext
+  rfl
+
+/-- Upgrade a `linear_map` to a `continuous_linear_map` using a variation on the
+**closed graph theorem**. -/
+def ofSeqClosedGraph (hg : ∀ u : ℕ → E x y, Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
+    E →L[𝕜] F where
+  toLinearMap := g
+  cont := g.continuous_of_seq_closed_graph hg
+
+@[simp]
+theorem coe_fn_of_seq_closed_graph
+    (hg : ∀ u : ℕ → E x y, Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
+    ⇑(ContinuousLinearMap.ofSeqClosedGraph hg) = g :=
+  rfl
+
+theorem coe_of_seq_closed_graph (hg : ∀ u : ℕ → E x y, Tendsto u atTop (𝓝 x) → Tendsto (g ∘ u) atTop (𝓝 y) → y = g x) :
+    ↑(ContinuousLinearMap.ofSeqClosedGraph hg) = g := by
+  ext
+  rfl
+
+end ContinuousLinearMap
+
+end ClosedGraphThm
 

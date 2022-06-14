@@ -225,7 +225,7 @@ def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Finₓ k ↪
 theorem order_emb_of_card_le_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) a : orderEmbOfCardLe s h a ∈ s := by
   simp only [order_emb_of_card_le, RelEmbedding.coe_trans, Finset.order_emb_of_fin_mem]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem card_le_of_interleaved {s t : Finset α} (h : ∀ x y _ : x ∈ s _ : y ∈ s, x < y → ∃ z ∈ t, x < z ∧ z < y) :
     s.card ≤ t.card + 1 := by
   have h1 : ∀ i : Finₓ (s.card - 1), ↑i + 1 < (s.sort (· ≤ ·)).length := by

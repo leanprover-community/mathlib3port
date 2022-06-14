@@ -146,7 +146,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
       let ⟨M, hM⟩ := h
       ⟨M, ⟨fun J hJ => Or.rec_on (Classical.em (J = ⊤)) (fun h => Or.inr h) fun h => Or.inl ⟨⟨h, hM.1 J hJ⟩⟩, hM.2⟩⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » I)
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
@@ -254,12 +254,12 @@ theorem jacobson_eq_iff_jacobson_quotient_eq_bot : I.jacobson = I ↔ jacobson (
   have hf : Function.Surjective (Quotientₓ.mk I) := Submodule.Quotient.mk_surjective I
   constructor
   · intro h
-    replace h := congr_argₓ (map (Quotientₓ.mk I)) h
+    replace h := congr_arg (map (Quotientₓ.mk I)) h
     rw [map_jacobson_of_surjective hf (le_of_eqₓ mk_ker)] at h
     simpa using h
     
   · intro h
-    replace h := congr_argₓ (comap (Quotientₓ.mk I)) h
+    replace h := congr_arg (comap (Quotientₓ.mk I)) h
     rw [comap_jacobson_of_surjective hf, ← (Quotientₓ.mk I).ker_eq_comap_bot] at h
     simpa using h
     
@@ -271,19 +271,19 @@ theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
   have hf : Function.Surjective (Quotientₓ.mk I) := Submodule.Quotient.mk_surjective I
   constructor
   · intro h
-    have := congr_argₓ (map (Quotientₓ.mk I)) h
+    have := congr_arg (map (Quotientₓ.mk I)) h
     rw [map_radical_of_surjective hf (le_of_eqₓ mk_ker), map_jacobson_of_surjective hf (le_of_eqₓ mk_ker)] at this
     simpa using this
     
   · intro h
-    have := congr_argₓ (comap (Quotientₓ.mk I)) h
+    have := congr_arg (comap (Quotientₓ.mk I)) h
     rw [comap_radical, comap_jacobson_of_surjective hf, ← (Quotientₓ.mk I).ker_eq_comap_bot] at this
     simpa using this
     
 
 theorem jacobson_radical_eq_jacobson : I.radical.jacobson = I.jacobson :=
   le_antisymmₓ
-    (le_transₓ (le_of_eqₓ (congr_argₓ jacobson (radical_eq_Inf I)))
+    (le_transₓ (le_of_eqₓ (congr_arg jacobson (radical_eq_Inf I)))
       (Inf_le_Inf fun J hJ => ⟨Inf_le ⟨hJ.1, hJ.2.IsPrime⟩, hJ.2⟩))
     (jacobson_mono le_radical)
 
@@ -304,12 +304,12 @@ theorem jacobson_bot_polynomial_le_Inf_map_maximal :
   refine' trans (jacobson_mono bot_le) (le_of_eqₓ _ : J.jacobson ≤ J)
   suffices (⊥ : Ideal (Polynomial (R ⧸ j))).jacobson = ⊥ by
     rw [← hj.2, jacobson_eq_iff_jacobson_quotient_eq_bot]
-    replace this := congr_argₓ (map (polynomial_quotient_equiv_quotient_polynomial j).toRingHom) this
+    replace this := congr_arg (map (polynomial_quotient_equiv_quotient_polynomial j).toRingHom) this
     rwa [map_jacobson_of_bijective _, map_bot] at this
     exact RingEquiv.bijective (polynomial_quotient_equiv_quotient_polynomial j)
   refine' eq_bot_iff.2 fun f hf => _
   simpa [(fun hX => by
-      simpa using congr_argₓ (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
+      simpa using congr_arg (fun f => coeff f 1) hX : (X : (R ⧸ j)[X]) ≠ 0)] using
     eq_C_of_degree_eq_zero (degree_eq_zero_of_is_unit ((mem_jacobson_bot.1 hf) X))
 
 theorem jacobson_bot_polynomial_of_jacobson_bot (h : jacobson (⊥ : Ideal R) = ⊥) : jacobson (⊥ : Ideal R[X]) = ⊥ := by

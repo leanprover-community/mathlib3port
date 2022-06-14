@@ -177,7 +177,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
     let W' :=
       @is_cofiltered.eq (structured_arrow W.right F) _ _ (structured_arrow.mk h.right)
         (structured_arrow.mk (h.right ≫ F.map f.right)) (structured_arrow.hom_mk f.right rfl)
-        (structured_arrow.hom_mk g.right (congr_argₓ comma_morphism.right h_cond).symm)
+        (structured_arrow.hom_mk g.right (congr_arg comma_morphism.right h_cond).symm)
     let h' : W' ⟶ _ := is_cofiltered.eq_hom _ _
     let h'_cond : h' ≫ _ = h' ≫ _ := is_cofiltered.eq_condition _ _
     use structured_arrow.mk (W.hom ≫ G.map W'.hom)
@@ -186,7 +186,7 @@ instance RepresentablyFlat.comp (F : C ⥤ D) (G : D ⥤ E) [RepresentablyFlat F
         (by
           simp [← G.map_comp])
     ext
-    exact (congr_argₓ comma_morphism.right h'_cond : _)
+    exact (congr_arg comma_morphism.right h'_cond : _)
     
 
 end RepresentablyFlat
@@ -318,7 +318,7 @@ noncomputable def preservesFiniteLimitsIffFlat [HasFiniteLimits C] (F : C ⥤ D)
     RepresentablyFlat F ≃ PreservesFiniteLimits F where
   toFun := fun _ => preserves_finite_limits_of_flat F
   invFun := fun _ => flat_of_preserves_finite_limits F
-  left_inv := fun _ => proof_irrelₓ _ _
+  left_inv := fun _ => proof_irrel _ _
   right_inv := fun x => by
     cases x
     unfold preserves_finite_limits_of_flat

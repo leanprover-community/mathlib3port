@@ -149,7 +149,7 @@ theorem eq_of_veq : ∀ {s t : Finset α}, s.1 = t.1 → s = t
 
 @[simp]
 theorem val_inj {s t : Finset α} : s.1 = t.1 ↔ s = t :=
-  ⟨eq_of_veq, congr_argₓ _⟩
+  ⟨eq_of_veq, congr_arg _⟩
 
 @[simp]
 theorem dedup_eq_self [DecidableEq α] (s : Finset α) : dedup s.1 = s.1 :=
@@ -573,15 +573,10 @@ theorem singleton_subset_iff {s : Finset α} {a : α} : {a} ⊆ s ↔ a ∈ s :=
 
 @[simp]
 theorem subset_singleton_iff {s : Finset α} {a : α} : s ⊆ {a} ↔ s = ∅ ∨ s = {a} := by
-  refine' ⟨fun hs => s.eq_empty_or_nonempty.imp_right _, _⟩
-  · rintro ⟨t, ht⟩
-    apply subset.antisymm hs
-    rwa [singleton_subset_iff, ← mem_singleton.1 (hs ht)]
-    
-  rintro (rfl | rfl)
-  · exact empty_subset _
-    
-  exact subset.rfl
+  rw [← coe_subset, coe_singleton, Set.subset_singleton_iff_eq, coe_eq_empty, coe_eq_singleton]
+
+protected theorem Nonempty.subset_singleton_iff {s : Finset α} {a : α} (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :=
+  subset_singleton_iff.trans <| or_iff_right h.ne_empty
 
 theorem subset_singleton_iff' {s : Finset α} {a : α} : s ⊆ {a} ↔ ∀, ∀ b ∈ s, ∀, b = a :=
   forall₂_congrₓ fun _ _ => mem_singleton
@@ -738,7 +733,7 @@ theorem insert_eq_of_mem (h : a ∈ s) : insert a s = s :=
   eq_of_veq <| ndinsert_of_mem h
 
 @[simp]
-theorem pair_self_eq (a : α) : ({a, a} : Finset α) = {a} :=
+theorem pair_eq_singleton (a : α) : ({a, a} : Finset α) = {a} :=
   insert_eq_of_mem <| mem_singleton_self _
 
 theorem Insert.comm (a b : α) (s : Finset α) : insert a (insert b s) = insert b (insert a s) :=
@@ -783,20 +778,16 @@ theorem insert_subset_insert (a : α) {s t : Finset α} (h : s ⊆ t) : insert a
   insert_subset.2 ⟨mem_insert_self _ _, Subset.trans h (subset_insert _ _)⟩
 
 theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
-  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert_self _ _) ha, congr_argₓ _⟩
+  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert_self _ _) ha, congr_arg _⟩
 
 theorem insert_inj_on (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ) := fun a h b _ => (insert_inj h).1
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   exact_mod_cast @Set.ssubset_iff_insert α s t
 
 theorem ssubset_insert (h : a ∉ s) : s ⊂ insert a s :=
   ssubset_iff.mpr ⟨a, h, Subset.rfl⟩
-
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
-theorem ssubset_iff_exists_insert_subset {s t : Finset α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
-  simp_rw [ssubset_iff_exists_cons_subset, cons_eq_insert]
 
 @[elab_as_eliminator]
 theorem cons_induction {α : Type _} {p : Finset α → Prop} (h₁ : p ∅)
@@ -870,15 +861,15 @@ def subtypeInsertEquivOption {t : Finset α} {x : α} (h : x ∉ t) : { i // i �
       invFun := fun y => (y.elim ⟨x, mem_insert_self _ _⟩) fun z => ⟨z, mem_insert_of_mem z.2⟩, .. }
   · intro y
     by_cases' h : ↑y = x
-    simp only [Subtype.ext_iff, h, Option.elim, dif_pos, Subtype.coe_mk]
-    simp only [h, Option.elim, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
+    simp only [Subtype.ext_iff, h, Option.elimₓ, dif_pos, Subtype.coe_mk]
+    simp only [h, Option.elimₓ, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
     
   · rintro (_ | y)
-    simp only [Option.elim, dif_pos, Subtype.coe_mk]
+    simp only [Option.elimₓ, dif_pos, Subtype.coe_mk]
     have : ↑y ≠ x := by
       rintro ⟨⟩
       exact h y.2
-    simp only [this, Option.elim, Subtype.eta, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
+    simp only [this, Option.elimₓ, Subtype.eta, dif_neg, not_false_iff, Subtype.coe_eta, Subtype.coe_mk]
     
 
 /-! ### Lattice structure -/
@@ -1344,6 +1335,9 @@ theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a �
   obtain ⟨a, ht, hs⟩ := (not_subset _ _).1 h.2
   exact ⟨a, ht, subset_erase.2 ⟨h.1, hs⟩⟩
 
+theorem erase_ssubset_insert (s : Finset α) (a : α) : s.erase a ⊂ insert a s :=
+  ssubset_iff_exists_subset_erase.2 ⟨a, mem_insert_self _ _, erase_subset_erase _ <| subset_insert _ _⟩
+
 @[simp]
 theorem erase_eq_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : erase s a = s :=
   eq_of_veq <| erase_of_not_mem h
@@ -1353,6 +1347,9 @@ theorem erase_insert_eq_erase (s : Finset α) (a : α) : (insert a s).erase a = 
   by_cases' ha : a ∈ s <;>
     · simp [ha, erase_insert]
       
+
+theorem erase_cons {s : Finset α} {a : α} (h : a ∉ s) : (s.cons a h).erase a = s := by
+  rw [cons_eq_insert, erase_insert_eq_erase, erase_eq_of_not_mem h]
 
 theorem erase_idem {a : α} {s : Finset α} : erase (erase s a) a = erase s a := by
   simp
@@ -1372,13 +1369,22 @@ theorem erase_insert_subset (a : α) (s : Finset α) : erase (insert a s) a ⊆ 
 theorem insert_erase_subset (a : α) (s : Finset α) : s ⊆ insert a (erase s a) :=
   subset_insert_iff.2 <| subset.rfl
 
+theorem subset_insert_iff_of_not_mem (h : a ∉ s) : s ⊆ insert a t ↔ s ⊆ t := by
+  rw [subset_insert_iff, erase_eq_of_not_mem h]
+
+theorem erase_subset_iff_of_mem (h : a ∈ t) : s.erase a ⊆ t ↔ s ⊆ t := by
+  rw [← subset_insert_iff, insert_eq_of_mem h]
+
 theorem erase_inj {x y : α} (s : Finset α) (hx : x ∈ s) : s.erase x = s.erase y ↔ x = y := by
-  refine' ⟨fun h => _, congr_argₓ _⟩
+  refine' ⟨fun h => _, congr_arg _⟩
   rw [eq_of_mem_of_not_mem_erase hx]
   rw [← h]
   simp
 
 theorem erase_inj_on (s : Finset α) : Set.InjOn s.erase s := fun _ _ _ _ => (erase_inj s ‹_›).mp
+
+theorem erase_inj_on' (a : α) : { s : Finset α | a ∈ s }.InjOn fun s => erase s a := fun h : s.erase a = _ => by
+  rw [← insert_erase hs, ← insert_erase ht, h]
 
 /-! ### sdiff -/
 
@@ -1620,7 +1626,7 @@ theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
 theorem piecewise_eq_of_not_mem {i : α} (hi : i ∉ s) : s.piecewise f g i = g i := by
   simp [piecewise, hi]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem piecewise_congr {f f' g g' : ∀ i, δ i} (hf : ∀, ∀ i ∈ s, ∀, f i = f' i) (hg : ∀ i _ : i ∉ s, g i = g' i) :
     s.piecewise f g = s.piecewise f' g' :=
   funext fun i => if_ctx_congr Iff.rfl (hf i) (hg i)
@@ -1692,7 +1698,7 @@ theorem piecewise_le_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)
 theorem le_piecewise_of_le_of_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g h : ∀ i, δ i} (Hf : h ≤ f) (Hg : h ≤ g) :
     h ≤ s.piecewise f g := fun x => piecewise_cases s f g (fun y => h x ≤ y) (Hf x) (Hg x)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem piecewise_le_piecewise' {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {f g f' g' : ∀ i, δ i}
     (Hf : ∀, ∀ x ∈ s, ∀, f x ≤ f' x) (Hg : ∀ x _ : x ∉ s, g x ≤ g' x) : s.piecewise f g ≤ s.piecewise f' g' := fun x =>
   by
@@ -1851,6 +1857,11 @@ theorem filter_union_right (s : Finset α) : s.filter p ∪ s.filter q = s.filte
 theorem filter_mem_eq_inter {s t : Finset α} [∀ i, Decidable (i ∈ t)] : (s.filter fun i => i ∈ t) = s ∩ t :=
   ext fun i => by
     rw [mem_filter, mem_inter]
+
+theorem filter_inter_distrib (s t : Finset α) : (s ∩ t).filter p = s.filter p ∩ t.filter p := by
+  ext
+  simp only [mem_filter, mem_inter]
+  exact and_and_distrib_right _ _ _
 
 theorem filter_inter (s t : Finset α) : filter p s ∩ t = filter p (s ∩ t) := by
   ext
@@ -2395,6 +2406,14 @@ theorem map_insert [DecidableEq α] [DecidableEq β] (f : α ↪ β) (a : α) (s
   simp only [insert_eq, map_union, map_singleton]
 
 @[simp]
+theorem map_cons (f : α ↪ β) (a : α) (s : Finset α) (ha : a ∉ s) :
+    (cons a s ha).map f =
+      cons (f a) (s.map f)
+        (by
+          simpa using ha) :=
+  eq_of_veq <| Multiset.map_cons f a s.val
+
+@[simp]
 theorem map_eq_empty : s.map f = ∅ ↔ s = ∅ :=
   ⟨fun h => eq_empty_of_forall_not_mem fun a m => ne_empty_of_mem (mem_map_of_mem _ m) h, fun e => e.symm ▸ rfl⟩
 
@@ -2566,13 +2585,20 @@ theorem image_union [DecidableEq α] {f : α → β} (s₁ s₂ : Finset α) : (
 theorem image_inter_subset [DecidableEq α] (f : α → β) (s t : Finset α) : (s ∩ t).Image f ⊆ s.Image f ∩ t.Image f :=
   subset_inter (image_subset_image <| inter_subset_left _ _) <| image_subset_image <| inter_subset_right _ _
 
-theorem image_inter [DecidableEq α] (s₁ s₂ : Finset α) (hf : ∀ x y, f x = f y → x = y) :
+theorem image_inter_of_inj_on [DecidableEq α] {f : α → β} (s t : Finset α) (hf : Set.InjOn f (s ∪ t)) :
+    (s ∩ t).Image f = s.Image f ∩ t.Image f :=
+  (image_inter_subset _ _ _).antisymm fun x => by
+    simp only [mem_inter, mem_image]
+    rintro ⟨⟨a, ha, rfl⟩, b, hb, h⟩
+    exact
+      ⟨a,
+        ⟨ha, by
+          rwa [← hf (Or.inr hb) (Or.inl ha) h]⟩,
+        rfl⟩
+
+theorem image_inter [DecidableEq α] (s₁ s₂ : Finset α) (hf : Injective f) :
     (s₁ ∩ s₂).Image f = s₁.Image f ∩ s₂.Image f :=
-  ext <| by
-    simp only [mem_image, exists_prop, mem_inter] <;>
-      exact fun b =>
-        ⟨fun ⟨a, ⟨m₁, m₂⟩, e⟩ => ⟨⟨a, m₁, e⟩, ⟨a, m₂, e⟩⟩, fun ⟨⟨a, m₁, e₁⟩, ⟨a', m₂, e₂⟩⟩ =>
-          ⟨a, ⟨m₁, hf _ _ (e₂.trans e₁.symm) ▸ m₂⟩, e₁⟩⟩
+  image_inter_of_inj_on _ _ <| hf.InjOn _
 
 @[simp]
 theorem image_singleton (f : α → β) (a : α) : image f {a} = {f a} :=
@@ -2584,18 +2610,19 @@ theorem image_insert [DecidableEq α] (f : α → β) (a : α) (s : Finset α) :
     (insert a s).Image f = insert (f a) (s.Image f) := by
   simp only [insert_eq, image_singleton, image_union]
 
+theorem erase_image_subset_image_erase [DecidableEq α] (f : α → β) (s : Finset α) (a : α) :
+    (s.Image f).erase (f a) ⊆ (s.erase a).Image f := by
+  simp only [subset_iff, and_imp, exists_prop, mem_image, exists_imp_distrib, mem_erase]
+  rintro b hb x hx rfl
+  exact ⟨_, ⟨ne_of_apply_ne f hb, hx⟩, rfl⟩
+
 @[simp]
 theorem image_erase [DecidableEq α] {f : α → β} (hf : Injective f) (s : Finset α) (a : α) :
     (s.erase a).Image f = (s.Image f).erase (f a) := by
-  ext b
+  refine' (erase_image_subset_image_erase _ _ _).antisymm' fun b => _
   simp only [mem_image, exists_prop, mem_erase]
-  constructor
-  · rintro ⟨a', ⟨haa', ha'⟩, rfl⟩
-    exact ⟨hf.ne haa', a', ha', rfl⟩
-    
-  · rintro ⟨h, a', ha', rfl⟩
-    exact ⟨a', ⟨ne_of_apply_ne _ h, ha'⟩, rfl⟩
-    
+  rintro ⟨a', ⟨haa', ha'⟩, rfl⟩
+  exact ⟨hf.ne haa', a', ha', rfl⟩
 
 @[simp]
 theorem image_eq_empty : s.Image f = ∅ ↔ s = ∅ :=
@@ -3065,9 +3092,15 @@ theorem disjoint_filter_filter_neg (s : Finset α) (p : α → Prop) [DecidableP
     Disjoint (s.filter p) (s.filter fun a => ¬p a) :=
   (disjoint_filter.2 fun a _ => id).symm
 
-theorem disjoint_iff_disjoint_coe : Disjoint s t ↔ Disjoint (s : Set α) (t : Set α) := by
+@[simp, norm_cast]
+theorem disjoint_coe : Disjoint (s : Set α) t ↔ Disjoint s t := by
   rw [Finset.disjoint_left, Set.disjoint_left]
   rfl
+
+@[simp, norm_cast]
+theorem pairwise_disjoint_coe {ι : Type _} {s : Set ι} {f : ι → Finset α} :
+    s.PairwiseDisjoint (fun i => f i : ι → Set α) ↔ s.PairwiseDisjoint f :=
+  forall₅_congr fun _ _ _ _ _ => disjoint_coe
 
 @[simp]
 theorem _root_.disjoint.of_image_finset (h : Disjoint (s.Image f) (t.Image f)) : Disjoint s t :=
@@ -3077,7 +3110,7 @@ theorem _root_.disjoint.of_image_finset (h : Disjoint (s.Image f) (t.Image f)) :
 @[simp]
 theorem disjoint_image {f : α → β} (hf : Injective f) : Disjoint (s.Image f) (t.Image f) ↔ Disjoint s t := by
   simp only [disjoint_iff_ne, mem_image, exists_prop, exists_imp_distrib, and_imp]
-  refine' ⟨fun h a ha b hb hab => h _ _ ha rfl _ _ hb rfl <| congr_argₓ _ hab, _⟩
+  refine' ⟨fun h a ha b hb hab => h _ _ ha rfl _ _ hb rfl <| congr_arg _ hab, _⟩
   rintro h _ a ha rfl _ b hb rfl
   exact hf.ne (h _ ha _ hb)
 
@@ -3190,7 +3223,7 @@ theorem finset_congr_trans (e : α ≃ β) (e' : β ≃ γ) : e.finsetCongr.tran
 -/
 def sigmaEquivOptionOfInhabited (α : Type u) [Inhabited α] [DecidableEq α] : Σβ : Type u, α ≃ Option β :=
   ⟨{ x : α // x ≠ default },
-    { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩, invFun := fun o => Option.elim o default coe,
+    { toFun := fun x : α => if h : x = default then none else some ⟨x, h⟩, invFun := Option.elimₓ default coe,
       left_inv := fun x => by
         dsimp' only
         split_ifs <;> simp [*],

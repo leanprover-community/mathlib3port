@@ -106,7 +106,7 @@ instance : SubNegMonoidₓ (Completion α) :=
         (is_closed_eq (continuous_map₂ continuous_fst continuous_snd)
           (continuous_map₂ continuous_fst (Completion.continuous_map.comp continuous_snd)))
         fun a b => by
-        exact_mod_cast congr_argₓ coe (sub_eq_add_neg a b) }
+        exact_mod_cast congr_arg coe (sub_eq_add_neg a b) }
 
 instance : AddGroupₓ (Completion α) :=
   { Completion.subNegMonoid with

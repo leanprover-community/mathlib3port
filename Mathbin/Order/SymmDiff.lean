@@ -130,7 +130,7 @@ theorem symm_diff_eq_iff_sdiff_eq {a b c : α} (ha : a ≤ c) : a ∆ b = c ↔ 
   · have hba : Disjoint (a⊓b) c := by
       rw [← h, Disjoint.comm]
       exact disjoint_symm_diff_inf _ _
-    have hca : _ := congr_argₓ (· \ a) h
+    have hca : _ := congr_arg (· \ a) h
     rw [symm_diff_sdiff_left] at hca
     rw [← hca, sdiff_eq_self_iff_disjoint]
     exact hba.of_disjoint_inf_of_le ha
@@ -196,7 +196,7 @@ theorem symm_diff_symm_diff_self' : a ∆ b ∆ a = b := by
 @[simp]
 theorem symm_diff_right_inj : a ∆ b = a ∆ c ↔ b = c := by
   constructor <;> intro h
-  · have H1 := congr_argₓ ((· ∆ ·) a) h
+  · have H1 := congr_arg ((· ∆ ·) a) h
     rwa [symm_diff_symm_diff_self, symm_diff_symm_diff_self] at H1
     
   · rw [h]

@@ -569,7 +569,7 @@ theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 
   · simpa [ha] using hg ha
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 @[to_additive]
 theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a _ : a ∉ s, 1 ≤ g a) : mulIndicator s f ≤ g :=
   fun a => mul_indicator_apply_le' (hfg _) (hg _)
@@ -578,7 +578,7 @@ theorem mul_indicator_le' (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hg : ∀ a
 theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s → y ≤ 1) : y ≤ mulIndicator s g a :=
   @mul_indicator_apply_le' α Mᵒᵈ ‹_› _ _ _ _ _ hfg hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 @[to_additive]
 theorem le_mul_indicator (hfg : ∀, ∀ a ∈ s, ∀, f a ≤ g a) (hf : ∀ a _ : a ∉ s, f a ≤ 1) : f ≤ mulIndicator s g :=
   fun a => le_mul_indicator_apply (hfg _) (hf _)
@@ -615,7 +615,7 @@ theorem mul_indicator_le_mul_indicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 �
   mul_indicator_apply_le' (fun ha => le_mul_indicator_apply (fun _ => le_rfl) fun hat => (hat <| h ha).elim) fun ha =>
     one_le_mul_indicator_apply fun _ => hf _
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_indicator_le_self' (hf : ∀ x _ : x ∉ s, 1 ≤ f x) : mulIndicator s f ≤ f :=
   mul_indicator_le' (fun _ _ => le_rfl) hf
@@ -680,5 +680,5 @@ end Set
 @[to_additive]
 theorem MonoidHom.map_mul_indicator {M N : Type _} [MulOneClassₓ M] [MulOneClassₓ N] (f : M →* N) (s : Set α)
     (g : α → M) (x : α) : f (s.mulIndicator g x) = s.mulIndicator (f ∘ g) x :=
-  congr_funₓ (Set.mul_indicator_comp_of_one f.map_one).symm x
+  congr_fun (Set.mul_indicator_comp_of_one f.map_one).symm x
 

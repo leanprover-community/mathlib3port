@@ -6,6 +6,7 @@ Authors: Bhavik Mehta, Adam Topaz
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.CategoryTheory.FullSubcategory
 import Mathbin.CategoryTheory.Skeletal
+import Mathbin.CategoryTheory.Elementwise
 import Mathbin.Data.Fin.Basic
 import Mathbin.Data.Fintype.Basic
 
@@ -53,7 +54,7 @@ instance : Category Fintypeₓ :=
 def incl : Fintypeₓ ⥤ Type _ :=
   inducedFunctor _ deriving Full, Faithful
 
-instance : ConcreteCategory Fintypeₓ :=
+instance concreteCategoryFintype : ConcreteCategory Fintypeₓ :=
   ⟨incl⟩
 
 @[simp]
@@ -63,6 +64,18 @@ theorem id_apply (X : Fintypeₓ) (x : X) : (𝟙 X : X → X) x = x :=
 @[simp]
 theorem comp_apply {X Y Z : Fintypeₓ} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ g) x = g (f x) :=
   rfl
+
+/-- Equivalences between finite types are the same as isomorphisms in `Fintype`. -/
+-- See `equiv_equiv_iso` in the root namespace for the analogue in `Type`.
+@[simps]
+def equivEquivIso {A B : Fintypeₓ} : A ≃ B ≃ (A ≅ B) where
+  toFun := fun e => { Hom := e, inv := e.symm }
+  invFun := fun i =>
+    { toFun := i.Hom, invFun := i.inv, left_inv := Iso.hom_inv_id_apply i, right_inv := Iso.inv_hom_id_apply i }
+  left_inv := by
+    tidy
+  right_inv := by
+    tidy
 
 universe u
 

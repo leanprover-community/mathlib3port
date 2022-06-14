@@ -8,7 +8,7 @@ import Mathbin.SetTheory.Cardinal.Ordinal
 /-!
 # Cardinality of continuum
 
-In this file we define `cardinal.continuum` (notation: `𝔠`, localized in `cardinal`) to be `2 ^ ω`.
+In this file we define `cardinal.continuum` (notation: `𝔠`, localized in `cardinal`) to be `2 ^ ℵ₀`.
 We also prove some `simp` lemmas about cardinal arithmetic involving `𝔠`.
 
 ## Notation
@@ -25,32 +25,32 @@ open Cardinal
 
 /-- Cardinality of continuum. -/
 def continuum : Cardinal.{u} :=
-  2 ^ omega.{u}
+  2 ^ aleph_0.{u}
 
 -- mathport name: «expr𝔠»
 localized [Cardinal] notation "𝔠" => Cardinal.continuum
 
 @[simp]
-theorem two_power_omega : (2 ^ omega.{u} : Cardinal.{u}) = 𝔠 :=
+theorem two_power_aleph_0 : 2 ^ aleph_0.{u} = continuum.{u} :=
   rfl
 
 @[simp]
-theorem lift_continuum : lift.{v} continuum.{u} = 𝔠 := by
-  rw [← two_power_omega, lift_two_power, lift_omega, two_power_omega]
+theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by
+  rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
 
 /-!
 ### Inequalities
 -/
 
 
-theorem omega_lt_continuum : ω < 𝔠 :=
-  cantor ω
+theorem aleph_0_lt_continuum : ℵ₀ < 𝔠 :=
+  cantor ℵ₀
 
-theorem omega_le_continuum : ω ≤ 𝔠 :=
-  omega_lt_continuum.le
+theorem aleph_0_le_continuum : ℵ₀ ≤ 𝔠 :=
+  aleph_0_lt_continuum.le
 
 theorem nat_lt_continuum (n : ℕ) : ↑n < 𝔠 :=
-  (nat_lt_omega n).trans omega_lt_continuum
+  (nat_lt_aleph_0 n).trans aleph_0_lt_continuum
 
 theorem mk_set_nat : # (Set ℕ) = 𝔠 := by
   simp
@@ -62,8 +62,8 @@ theorem continuum_ne_zero : 𝔠 ≠ 0 :=
   continuum_pos.ne'
 
 theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 := by
-  rw [← succ_omega]
-  exact succ_le_of_lt omega_lt_continuum
+  rw [← succ_aleph_0]
+  exact Order.succ_le_of_lt aleph_0_lt_continuum
 
 /-!
 ### Addition
@@ -71,20 +71,20 @@ theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 := by
 
 
 @[simp]
-theorem omega_add_continuum : ω + 𝔠 = 𝔠 :=
-  add_eq_right omega_le_continuum omega_le_continuum
+theorem aleph_0_add_continuum : ℵ₀ + 𝔠 = 𝔠 :=
+  add_eq_right aleph_0_le_continuum aleph_0_le_continuum
 
 @[simp]
-theorem continuum_add_omega : 𝔠 + ω = 𝔠 :=
-  (add_commₓ _ _).trans omega_add_continuum
+theorem continuum_add_aleph_0 : 𝔠 + ℵ₀ = 𝔠 :=
+  (add_commₓ _ _).trans aleph_0_add_continuum
 
 @[simp]
 theorem continuum_add_self : 𝔠 + 𝔠 = 𝔠 :=
-  add_eq_right omega_le_continuum le_rfl
+  add_eq_right aleph_0_le_continuum le_rfl
 
 @[simp]
 theorem nat_add_continuum (n : ℕ) : ↑n + 𝔠 = 𝔠 :=
-  add_eq_right omega_le_continuum (nat_lt_continuum n).le
+  add_eq_right aleph_0_le_continuum (nat_lt_continuum n).le
 
 @[simp]
 theorem continuum_add_nat (n : ℕ) : 𝔠 + n = 𝔠 :=
@@ -97,19 +97,19 @@ theorem continuum_add_nat (n : ℕ) : 𝔠 + n = 𝔠 :=
 
 @[simp]
 theorem continuum_mul_self : 𝔠 * 𝔠 = 𝔠 :=
-  mul_eq_left omega_le_continuum le_rfl continuum_ne_zero
+  mul_eq_left aleph_0_le_continuum le_rfl continuum_ne_zero
 
 @[simp]
-theorem continuum_mul_omega : 𝔠 * ω = 𝔠 :=
-  mul_eq_left omega_le_continuum omega_le_continuum omega_ne_zero
+theorem continuum_mul_aleph_0 : 𝔠 * ℵ₀ = 𝔠 :=
+  mul_eq_left aleph_0_le_continuum aleph_0_le_continuum aleph_0_ne_zero
 
 @[simp]
-theorem omega_mul_continuum : ω * 𝔠 = 𝔠 :=
-  (mul_comm _ _).trans continuum_mul_omega
+theorem aleph_0_mul_continuum : ℵ₀ * 𝔠 = 𝔠 :=
+  (mul_comm _ _).trans continuum_mul_aleph_0
 
 @[simp]
 theorem nat_mul_continuum {n : ℕ} (hn : n ≠ 0) : ↑n * 𝔠 = 𝔠 :=
-  mul_eq_right omega_le_continuum (nat_lt_continuum n).le (Nat.cast_ne_zero.2 hn)
+  mul_eq_right aleph_0_le_continuum (nat_lt_continuum n).le (Nat.cast_ne_zero.2 hn)
 
 @[simp]
 theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
@@ -121,16 +121,16 @@ theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
 
 
 @[simp]
-theorem omega_power_omega : omega.{u} ^ omega.{u} = 𝔠 :=
+theorem aleph_0_power_aleph_0 : aleph_0.{u} ^ aleph_0.{u} = 𝔠 :=
   power_self_eq le_rfl
 
 @[simp]
-theorem nat_power_omega {n : ℕ} (hn : 2 ≤ n) : (n ^ omega.{u} : Cardinal.{u}) = 𝔠 :=
+theorem nat_power_aleph_0 {n : ℕ} (hn : 2 ≤ n) : (n ^ aleph_0.{u} : Cardinal.{u}) = 𝔠 :=
   nat_power_eq le_rfl hn
 
 @[simp]
-theorem continuum_power_omega : continuum.{u} ^ omega.{u} = 𝔠 := by
-  rw [← two_power_omega, ← power_mul, mul_eq_left le_rfl le_rfl omega_ne_zero]
+theorem continuum_power_aleph_0 : continuum.{u} ^ aleph_0.{u} = 𝔠 := by
+  rw [← two_power_aleph_0, ← power_mul, mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
 
 end Cardinal
 

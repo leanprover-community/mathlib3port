@@ -79,7 +79,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h => by
     obtain ⟨rfl, h⟩ := Sigma.mk.inj (fγ_injective h)
     congr with x
-    exact elim_injective (congr_funₓ (eq_of_heq h) x : _)
+    exact elim_injective (congr_fun (eq_of_heq h) x : _)
 
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
@@ -98,7 +98,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : Nonempty (β a)] [he :
     · cases' m with m
       · simp_all
         
-      · refine' congr_argₓ Nat.succ (ih _)
+      · refine' congr_arg Nat.succ (ih _)
         simp_all [Function.funext_iffₓ]
         
       ⟩

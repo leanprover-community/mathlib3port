@@ -182,13 +182,13 @@ theorem HasLines.point_count_le_line_count [HasLines P L] {p : P} {l : L} (h : p
     
   have := fintypeOfNotInfinite hf
   rw [line_count, point_count, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
-  have : ∀ p' : { p // p ∈ l }, p ≠ p' := fun p' hp' => h ((congr_argₓ (· ∈ l) hp').mpr p'.2)
+  have : ∀ p' : { p // p ∈ l }, p ≠ p' := fun p' hp' => h ((congr_arg (· ∈ l) hp').mpr p'.2)
   exact
     Fintype.card_le_of_injective (fun p' => ⟨mk_line (this p'), (mk_line_ax (this p')).1⟩) fun p₁ p₂ hp =>
       Subtype.ext
         ((eq_or_eq p₁.2 p₂.2 (mk_line_ax (this p₁)).2
-              ((congr_argₓ _ (subtype.ext_iff.mp hp)).mpr (mk_line_ax (this p₂)).2)).resolve_right
-          fun h' => (congr_argₓ _ h').mp h (mk_line_ax (this p₁)).1)
+              ((congr_arg _ (subtype.ext_iff.mp hp)).mpr (mk_line_ax (this p₂)).2)).resolve_right
+          fun h' => (congr_arg _ h').mp h (mk_line_ax (this p₁)).1)
 
 theorem HasPoints.line_count_le_point_count [HasPoints P L] {p : P} {l : L} (h : p ∉ l)
     [hf : Fintype { p : P // p ∈ l }] : lineCount L p ≤ pointCount P l :=
@@ -296,26 +296,26 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L] (h :
     classical
     obtain ⟨f, hf1, hf2⟩ := has_lines.exists_bijective_of_card_eq h
     have : Nontrivial L := ⟨⟨l₁, l₂, hl⟩⟩
-    have := fintype.one_lt_card_iff_nontrivial.mp ((congr_argₓ _ h).mpr Fintype.one_lt_card)
+    have := fintype.one_lt_card_iff_nontrivial.mp ((congr_arg _ h).mpr Fintype.one_lt_card)
     have h₁ : ∀ p : P, 0 < line_count L p := fun p =>
       Exists.elim (exists_ne p) fun q hq =>
-        (congr_argₓ _ Nat.card_eq_fintype_card).mpr (fintype.card_pos_iff.mpr ⟨⟨mk_line hq, (mk_line_ax hq).2⟩⟩)
-    have h₂ : ∀ l : L, 0 < point_count P l := fun l => (congr_argₓ _ (hf2 l)).mpr (h₁ (f l))
-    obtain ⟨p, hl₁⟩ := fintype.card_pos_iff.mp ((congr_argₓ _ Nat.card_eq_fintype_card).mp (h₂ l₁))
+        (congr_arg _ Nat.card_eq_fintype_card).mpr (fintype.card_pos_iff.mpr ⟨⟨mk_line hq, (mk_line_ax hq).2⟩⟩)
+    have h₂ : ∀ l : L, 0 < point_count P l := fun l => (congr_arg _ (hf2 l)).mpr (h₁ (f l))
+    obtain ⟨p, hl₁⟩ := fintype.card_pos_iff.mp ((congr_arg _ Nat.card_eq_fintype_card).mp (h₂ l₁))
     by_cases' hl₂ : p ∈ l₂
     exact ⟨p, hl₁, hl₂⟩
     have key' : Fintype.card { q : P // q ∈ l₂ } = Fintype.card { l : L // p ∈ l } :=
       ((has_lines.line_count_eq_point_count h hl₂).trans Nat.card_eq_fintype_card).symm.trans Nat.card_eq_fintype_card
-    have : ∀ q : { q // q ∈ l₂ }, p ≠ q := fun q hq => hl₂ ((congr_argₓ (· ∈ l₂) hq).mpr q.2)
+    have : ∀ q : { q // q ∈ l₂ }, p ≠ q := fun q hq => hl₂ ((congr_arg (· ∈ l₂) hq).mpr q.2)
     let f : { q : P // q ∈ l₂ } → { l : L // p ∈ l } := fun q => ⟨mk_line (this q), (mk_line_ax (this q)).1⟩
     have hf : Function.Injective f := fun q₁ q₂ hq =>
       Subtype.ext
         ((eq_or_eq q₁.2 q₂.2 (mk_line_ax (this q₁)).2
-              ((congr_argₓ _ (subtype.ext_iff.mp hq)).mpr (mk_line_ax (this q₂)).2)).resolve_right
-          fun h => (congr_argₓ _ h).mp hl₂ (mk_line_ax (this q₁)).1)
+              ((congr_arg _ (subtype.ext_iff.mp hq)).mpr (mk_line_ax (this q₂)).2)).resolve_right
+          fun h => (congr_arg _ h).mp hl₂ (mk_line_ax (this q₁)).1)
     have key' := ((Fintype.bijective_iff_injective_and_card f).mpr ⟨hf, key'⟩).2
     obtain ⟨q, hq⟩ := key' ⟨l₁, hl₁⟩
-    exact ⟨q, (congr_argₓ _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
+    exact ⟨q, (congr_arg _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
   { mkPoint := fun l₁ l₂ hl => Classical.some (this l₁ l₂ hl),
     mk_point_ax := fun l₁ l₂ hl => Classical.some_spec (this l₁ l₂ hl) }
 
@@ -382,7 +382,7 @@ theorem line_count_eq_line_count [ProjectivePlane P L] (p q : P) : lineCount L p
     exact (this p).trans (this q).symm
   refine' fun p => or_not.elim (fun h₂ => _) fun h₂ => (has_lines.line_count_eq_point_count h h₂).trans hl₂
   refine' or_not.elim (fun h₃ => _) fun h₃ => (has_lines.line_count_eq_point_count h h₃).trans hl₃
-  rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h => h₃₃ ((congr_argₓ (HasMem.Mem p₃) h).mp h₃₂)]
+  rwa [(eq_or_eq h₂ h₂₂ h₃ h₂₃).resolve_right fun h => h₃₃ ((congr_arg (HasMem.Mem p₃) h).mp h₃₂)]
 
 variable (P) {L}
 
@@ -398,7 +398,7 @@ theorem line_count_eq_point_count [ProjectivePlane P L] (p : P) (l : L) : lineCo
 variable (P L)
 
 theorem Dual.order [ProjectivePlane P L] : order (Dual L) (Dual P) = order P L :=
-  congr_argₓ (fun n => n - 1) (line_count_eq_point_count _ _)
+  congr_arg (fun n => n - 1) (line_count_eq_point_count _ _)
 
 variable {P} (L)
 
@@ -413,7 +413,7 @@ theorem line_count_eq [ProjectivePlane P L] (p : P) : lineCount L p = order P L 
 variable (P) {L}
 
 theorem point_count_eq [ProjectivePlane P L] (l : L) : pointCount P l = order P L + 1 :=
-  (line_count_eq (Dual P) l).trans (congr_argₓ (fun n => n + 1) (Dual.order P L))
+  (line_count_eq (Dual P) l).trans (congr_arg (fun n => n + 1) (Dual.order P L))
 
 variable (P L)
 
@@ -423,7 +423,7 @@ theorem one_lt_order [ProjectivePlane P L] : 1 < order P L := by
   classical
   rw [← add_lt_add_iff_right, ← point_count_eq, point_count, Nat.card_eq_fintype_card]
   simp_rw [Fintype.two_lt_card_iff, Ne, Subtype.ext_iff]
-  have h := mk_point_ax fun h => h₂₁ ((congr_argₓ _ h).mpr h₂₂)
+  have h := mk_point_ax fun h => h₂₁ ((congr_arg _ h).mpr h₂₂)
   exact
     ⟨⟨mk_point _, h.2⟩, ⟨p₂, h₂₂⟩, ⟨p₃, h₃₂⟩, ne_of_mem_of_not_mem h.1 h₂₁, ne_of_mem_of_not_mem h.1 h₃₁,
       ne_of_mem_of_not_mem h₂₃ h₃₃⟩
@@ -454,11 +454,11 @@ theorem card_points [ProjectivePlane P L] : Fintype.card P = order P L ^ 2 + ord
   classical
   have h1 : Fintype.card { q // q ≠ p } + 1 = Fintype.card P := by
     apply (eq_tsub_iff_add_eq_of_le (Nat.succ_le_of_ltₓ (fintype.card_pos_iff.mpr ⟨p⟩))).mp
-    convert Fintype.card_subtype_compl.trans (congr_argₓ _ (Fintype.card_subtype_eq p))
+    convert (Fintype.card_subtype_compl _).trans (congr_arg _ (Fintype.card_subtype_eq p))
   have h2 : ∀ l : { l : L // p ∈ l }, Fintype.card { q // q ∈ l.1 ∧ q ≠ p } = order P L := by
     intro l
-    rw [← Fintype.card_congr (Equivₓ.subtypeSubtypeEquivSubtypeInter _ _), Fintype.card_subtype_compl, ←
-      Nat.card_eq_fintype_card]
+    rw [← Fintype.card_congr (Equivₓ.subtypeSubtypeEquivSubtypeInter _ _),
+      Fintype.card_subtype_compl fun x : Subtype (· ∈ l.val) => x.val = p, ← Nat.card_eq_fintype_card]
     refine' tsub_eq_of_eq_add ((point_count_eq P l.1).trans _)
     rw [← Fintype.card_subtype_eq (⟨p, l.2⟩ : { q : P // q ∈ l.1 })]
     simp_rw [Subtype.ext_iff_val]
@@ -466,7 +466,7 @@ theorem card_points [ProjectivePlane P L] : Fintype.card P = order P L ^ 2 + ord
   rw [← Nat.card_eq_fintype_card, ← line_count, line_count_eq, smul_eq_mul, Nat.succ_mul, sq]
 
 theorem card_lines [ProjectivePlane P L] : Fintype.card L = order P L ^ 2 + order P L + 1 :=
-  (card_points (Dual L) (Dual P)).trans (congr_argₓ (fun n => n ^ 2 + n + 1) (Dual.order P L))
+  (card_points (Dual L) (Dual P)).trans (congr_arg (fun n => n ^ 2 + n + 1) (Dual.order P L))
 
 end ProjectivePlane
 

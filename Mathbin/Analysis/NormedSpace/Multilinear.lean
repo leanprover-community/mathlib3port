@@ -395,7 +395,7 @@ theorem op_norm_smul_le (c : 𝕜') : ∥c • f∥ ≤ ∥c∥ * ∥f∥ :=
 
 theorem op_norm_neg : ∥-f∥ = ∥f∥ := by
   rw [norm_def]
-  apply congr_argₓ
+  apply congr_arg
   ext
   simp
 
@@ -548,11 +548,10 @@ theorem continuous_eval : Continuous fun p : ContinuousMultilinearMap 𝕜 E G �
       ((∥p∥ + 1) * Fintype.card ι * (∥p∥ + 1) ^ (Fintype.card ι - 1) + ∏ i, ∥p.2 i∥) fun q hq => _
   have : 0 ≤ max ∥q.2∥ ∥p.2∥ := by
     simp
-  have : 0 ≤ ∥p∥ + 1 := by
-    simp [le_transₓ zero_le_one]
-  have A : ∥q∥ ≤ ∥p∥ + 1 := norm_le_of_mem_closed_ball (le_of_ltₓ hq)
+  have : 0 ≤ ∥p∥ + 1 := zero_le_one.trans ((le_add_iff_nonneg_left 1).2 <| norm_nonneg p)
+  have A : ∥q∥ ≤ ∥p∥ + 1 := norm_le_of_mem_closed_ball hq.le
   have : max ∥q.2∥ ∥p.2∥ ≤ ∥p∥ + 1 :=
-    le_transₓ (max_le_max (norm_snd_le q) (norm_snd_le p))
+    (max_le_max (norm_snd_le q) (norm_snd_le p)).trans
       (by
         simp [A, -add_commₓ, zero_le_one])
   have : ∀ i : ι, i ∈ univ → 0 ≤ ∥p.2 i∥ := fun i hi => norm_nonneg _
@@ -826,6 +825,8 @@ theorem norm_comp_continuous_multilinear_map_le (g : G →L[𝕜] G') (f : Conti
       _ = _ := (mul_assoc _ _ _).symm
       
 
+variable (𝕜 E G G')
+
 /-- `continuous_linear_map.comp_continuous_multilinear_map` as a bundled continuous bilinear map. -/
 def compContinuousMultilinearMapL :
     (G →L[𝕜] G') →L[𝕜] ContinuousMultilinearMap 𝕜 E G →L[𝕜] ContinuousMultilinearMap 𝕜 E G' :=
@@ -841,6 +842,8 @@ def compContinuousMultilinearMapL :
     fun f g => by
     rw [one_mulₓ]
     exact f.norm_comp_continuous_multilinear_map_le g
+
+variable {𝕜 E G G'}
 
 /-- Flip arguments in `f : G →L[𝕜] continuous_multilinear_map 𝕜 E G'` to get
 `continuous_multilinear_map 𝕜 E (G →L[𝕜] G')` -/
@@ -1432,11 +1435,11 @@ def domDomCongr (σ : ι ≃ ι') :
             rw [← σ.symm.prod_comp],
       left_inv := fun f =>
         ext fun m =>
-          congr_argₓ f <| by
+          congr_arg f <| by
             simp only [σ.symm_apply_apply],
       right_inv := fun f =>
         ext fun m =>
-          congr_argₓ f <| by
+          congr_arg f <| by
             simp only [σ.apply_symm_apply],
       map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _) fun f =>
@@ -1498,7 +1501,7 @@ def currySumEquiv :
         rfl,
       left_inv := fun f => by
         ext m
-        exact congr_argₓ f (Sum.elim_comp_inl_inr m),
+        exact congr_arg f (Sum.elim_comp_inl_inr m),
       right_inv := fun f => by
         ext m₁ m₂
         change f _ _ = f _ _

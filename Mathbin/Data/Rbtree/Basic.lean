@@ -8,7 +8,7 @@ import Mathbin.Data.Rbtree.Init
 
 universe u
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 
@@ -33,7 +33,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
   | black_s {l r v lo hi} (hs₁ : is_searchable l lo (some v)) (hs₂ : is_searchable r (some v) hi) :
     is_searchable (black_node l v r) lo hi
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 

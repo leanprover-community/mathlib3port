@@ -25,7 +25,7 @@ variable (M : Type u) [Monoidₓ M]
 
 namespace CategoryTheory
 
-@[to_additive Discrete.addMonoidal]
+@[to_additive Discrete.addMonoidal, simps tensor_obj_as tensor_unit_as]
 instance Discrete.monoidal : MonoidalCategory (Discrete M) where
   tensorUnit := Discrete.mk 1
   tensorObj := fun X Y => Discrete.mk (X.as * Y.as)

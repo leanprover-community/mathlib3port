@@ -121,8 +121,7 @@ theorem pi_disjoint_of_disjoint {δ : α → Type _} [∀ a, DecidableEq (δ a)]
     [DecidableEq (∀, ∀ a ∈ s, ∀, δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) :
     Disjoint (s.pi t₁) (s.pi t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
-    disjoint_iff_ne.1 h (f₁ a ha) (mem_pi.mp hf₁ a ha) (f₂ a ha) (mem_pi.mp hf₂ a ha) <|
-      congr_funₓ (congr_funₓ eq₁₂ a) ha
+    disjoint_iff_ne.1 h (f₁ a ha) (mem_pi.mp hf₁ a ha) (f₂ a ha) (mem_pi.mp hf₂ a ha) <| congr_fun (congr_fun eq₁₂ a) ha
 
 end Pi
 

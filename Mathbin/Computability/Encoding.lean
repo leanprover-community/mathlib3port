@@ -113,7 +113,7 @@ theorem decode_encode_pos_num : ∀ n, decodePosNum (encodePosNum n) = n := by
   · rw [hm]
     exact if_neg (encode_pos_num_nonempty m)
     
-  · exact congr_argₓ PosNum.bit0 hm
+  · exact congr_arg PosNum.bit0 hm
     
 
 theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
@@ -128,14 +128,14 @@ theorem decode_encode_num : ∀ n, decodeNum (encodeNum n) = n := by
 theorem decode_encode_nat : ∀ n, decodeNat (encodeNat n) = n := by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
-  exact congr_argₓ coe (decode_encode_num ↑n)
+  exact congr_arg coe (decode_encode_num ↑n)
 
 /-- A binary encoding of ℕ in bool. -/
 def encodingNatBool : Encoding ℕ where
   Γ := Bool
   encode := encodeNat
   decode := fun n => some (decodeNat n)
-  decode_encode := fun n => congr_argₓ _ (decode_encode_nat n)
+  decode_encode := fun n => congr_arg _ (decode_encode_nat n)
 
 /-- A binary fin_encoding of ℕ in bool. -/
 def finEncodingNatBool : FinEncoding ℕ :=
@@ -147,7 +147,7 @@ def encodingNatΓ' : Encoding ℕ where
   encode := fun x => List.map inclusionBoolΓ' (encodeNat x)
   decode := fun x => some (decodeNat (List.map sectionΓ'Bool x))
   decode_encode := fun x =>
-    congr_argₓ _ <| by
+    congr_arg _ <| by
       rw [List.map_mapₓ, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
@@ -164,14 +164,14 @@ def unaryDecodeNat : List Bool → Nat :=
   List.length
 
 theorem unary_decode_encode_nat : ∀ n, unaryDecodeNat (unaryEncodeNat n) = n := fun n =>
-  Nat.rec rfl (fun hm => (congr_argₓ Nat.succ hm.symm).symm) n
+  Nat.rec rfl (fun hm => (congr_arg Nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
 def unaryFinEncodingNat : FinEncoding ℕ where
   Γ := Bool
   encode := unaryEncodeNat
   decode := fun n => some (unaryDecodeNat n)
-  decode_encode := fun n => congr_argₓ _ (unary_decode_encode_nat n)
+  decode_encode := fun n => congr_arg _ (unary_decode_encode_nat n)
   ΓFin := Bool.fintype
 
 /-- An encoding function of bool in bool. -/
@@ -190,7 +190,7 @@ def finEncodingBoolBool : FinEncoding Bool where
   Γ := Bool
   encode := encodeBool
   decode := fun x => some (decodeBool x)
-  decode_encode := fun x => congr_argₓ _ (decode_encode_bool x)
+  decode_encode := fun x => congr_arg _ (decode_encode_bool x)
   ΓFin := Bool.fintype
 
 instance inhabitedFinEncoding : Inhabited (FinEncoding Bool) :=
@@ -203,18 +203,18 @@ theorem Encoding.card_le_card_list {α : Type u} (e : Encoding.{u, v} α) :
     Cardinal.lift.{v} (# α) ≤ Cardinal.lift.{u} (# (List e.Γ)) :=
   Cardinal.lift_mk_le'.2 ⟨⟨e.encode, e.encode_injective⟩⟩
 
-theorem Encoding.card_le_omega {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : # α ≤ ω := by
+theorem Encoding.card_le_aleph_0 {α : Type u} (e : Encoding.{u, v} α) [Encodable e.Γ] : # α ≤ ℵ₀ := by
   refine' Cardinal.lift_le.1 (e.card_le_card_list.trans _)
-  simp only [Cardinal.lift_omega, Cardinal.lift_le_omega]
+  simp only [Cardinal.lift_aleph_0, Cardinal.lift_le_aleph_0]
   cases' is_empty_or_nonempty e.Γ with h h
-  · simp only [Cardinal.mk_le_omega]
+  · simp only [Cardinal.mk_le_aleph_0]
     
-  · rw [Cardinal.mk_list_eq_omega]
+  · rw [Cardinal.mk_list_eq_aleph_0]
     
 
-theorem FinEncoding.card_le_omega {α : Type u} (e : FinEncoding α) : # α ≤ ω :=
+theorem FinEncoding.card_le_aleph_0 {α : Type u} (e : FinEncoding α) : # α ≤ ℵ₀ :=
   have : Encodable e.Γ := Fintype.toEncodable _
-  e.to_encoding.card_le_omega
+  e.to_encoding.card_le_aleph_0
 
 end Computability
 

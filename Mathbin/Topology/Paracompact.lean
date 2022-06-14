@@ -100,13 +100,13 @@ indexed by the same type. -/
 theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s) (u : ι → Set X)
     (uo : ∀ i, IsOpen (u i)) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, (∀ i, IsOpen (v i)) ∧ (s ⊆ ⋃ i, v i) ∧ LocallyFinite v ∧ ∀ i, v i ⊆ u i := by
-  rcases precise_refinement (fun i => Option.elim i (sᶜ) u) (Option.forall.2 ⟨is_open_compl_iff.2 hs, uo⟩) _ with
+  rcases precise_refinement (Option.elimₓ (sᶜ) u) (Option.forall.2 ⟨is_open_compl_iff.2 hs, uo⟩) _ with
     ⟨v, vo, vc, vf, vu⟩
   refine' ⟨v ∘ some, fun i => vo _, _, vf.comp_injective (Option.some_injective _), fun i => vu _⟩
   · simp only [Union_option, ← compl_subset_iff_union] at vc
     exact subset.trans (subset_compl_comm.1 <| vu Option.none) vc
     
-  · simpa only [Union_option, Option.elim, ← compl_subset_iff_union, compl_compl]
+  · simpa only [Union_option, Option.elimₓ, ← compl_subset_iff_union, compl_compl]
     
 
 /-- A compact space is paracompact. -/

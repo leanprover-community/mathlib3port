@@ -3,9 +3,9 @@ Copyright (c) 2021 Yakov Pechersky. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 -/
-import Mathbin.GroupTheory.Perm.List
 import Mathbin.Data.List.Cycle
-import Mathbin.GroupTheory.Perm.CycleType
+import Mathbin.GroupTheory.Perm.Cycle.Type
+import Mathbin.GroupTheory.Perm.List
 
 /-!
 
@@ -220,7 +220,7 @@ theorem length_to_list : length (toList p x) = (cycleOf p x).support.card := by
 
 theorem to_list_ne_singleton (y : α) : toList p x ≠ [y] := by
   intro H
-  simpa [card_support_ne_one] using congr_argₓ length H
+  simpa [card_support_ne_one] using congr_arg length H
 
 theorem two_le_length_to_list_iff_mem_support {p : Perm α} {x : α} : 2 ≤ length (toList p x) ↔ x ∈ p.support := by
   simp

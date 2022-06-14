@@ -198,12 +198,12 @@ theorem pi_comparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem map_lift_pi_comparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C) (g : ∀ j, P ⟶ f j) :
     G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
   simp [← G.map_comp]
 
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
@@ -216,12 +216,12 @@ theorem ι_comp_sigma_comparison [HasCoproduct f] [HasCoproduct fun b => G.obj (
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem sigma_comparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C) (g : ∀ j, f j ⟶ P) :
     sigmaComparison G f ≫ G.map (Sigma.desc g) = Sigma.desc fun j => G.map (g j) := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
   simp [← G.map_comp]
 
 end Comparison
@@ -284,7 +284,7 @@ instance (priority := 100) has_product_unique : HasProduct f :=
 def productUniqueIso : ∏ f ≅ f default :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 /-- The colimit cocone for the coproduct over an index type with exactly one term. -/
 @[simps]
 def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
@@ -294,7 +294,7 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f) where
         { app := fun j =>
             eqToHom
               (by
-                "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+                "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
                 dsimp'
                 congr) } }
   IsColimit :=

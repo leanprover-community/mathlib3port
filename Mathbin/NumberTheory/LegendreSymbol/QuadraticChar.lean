@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
+import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 # Quadratic characters of finite fields
@@ -119,7 +120,7 @@ theorem quadratic_char_mul (a b : F) : quadraticChar F (a * b) = quadraticChar F
     cases' FiniteField.pow_dichotomy hF hb with hb' hb'
     · simp only [hb', mul_oneₓ, eq_self_iff_true, if_true]
       
-    · have h := FiniteField.neg_one_ne_one_of_char_ne_two hF
+    · have h := Ringₓ.neg_one_ne_one_of_char_ne_two hF
       -- `-1 ≠ 1`
       simp only [hb', h, mul_neg, mul_oneₓ, if_false, ite_mul, neg_mul]
       cases' FiniteField.pow_dichotomy hF ha with ha' ha' <;>
@@ -141,7 +142,7 @@ theorem quadratic_char_sq_one {a : F} (ha : a ≠ 0) : quadraticChar F a ^ 2 = 1
 
 /-- The quadratic character is `1` or `-1` on nonzero arguments. -/
 theorem quadratic_char_dichotomy {a : F} (ha : a ≠ 0) : quadraticChar F a = 1 ∨ quadraticChar F a = -1 :=
-  (sq_eq_one_iff (quadraticChar F a)).mp (quadratic_char_sq_one ha)
+  sq_eq_one_iff.1 <| quadratic_char_sq_one ha
 
 /-- A variant -/
 theorem quadratic_char_eq_neg_one_iff_not_one {a : F} (ha : a ≠ 0) : quadraticChar F a = -1 ↔ ¬quadraticChar F a = 1 :=
@@ -187,8 +188,9 @@ theorem quadratic_char_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
         · rintro (h₂ | h₂) <;> rw [h₂]
           simp only [neg_sq]
           
-      simp only [h₁, Finset.card_doubleton (FiniteField.neg_ne_self_of_char_ne_two hF h₀), List.to_finset_cons,
-        List.to_finset_nil, insert_emptyc_eq, Int.coe_nat_succ, Int.coe_nat_zero, zero_addₓ]
+      norm_cast
+      rw [h₁, List.to_finset_cons, List.to_finset_cons, List.to_finset_nil]
+      exact Finset.card_doubleton (Ne.symm (mt (Ringₓ.eq_self_iff_eq_zero_of_char_ne_two hF).mp h₀))
       
     · rw [quadratic_char_neg_one_iff_not_is_square.mpr h]
       simp only [Int.coe_nat_eq_zero, Finset.card_eq_zero, Set.to_finset_card, Fintype.card_of_finset,
@@ -246,7 +248,7 @@ theorem quadratic_char_neg_one [DecidableEq F] (hF : ringChar F ≠ 2) : quadrat
   · simp only [Even.neg_one_pow h₂, eq_self_iff_true, if_true]
     
   · simp only [Odd.neg_one_pow h₂, ite_eq_right_iff]
-    exact fun hf : -1 = 1 => False.ndrec (1 = -1) (FiniteField.neg_one_ne_one_of_char_ne_two hF hf)
+    exact fun hf : -1 = 1 => False.ndrec (1 = -1) (Ringₓ.neg_one_ne_one_of_char_ne_two hF hf)
     
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]

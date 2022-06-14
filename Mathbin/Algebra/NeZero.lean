@@ -56,10 +56,10 @@ instance char_zero [NeZero n] [AddMonoidₓ M] [One M] [CharZero M] : NeZero (n 
 instance (priority := 100) invertible [MulZeroOneClassₓ M] [Nontrivial M] [Invertible x] : NeZero x :=
   ⟨nonzero_of_invertible x⟩
 
-instance coe_trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
+instance coe_trans [Zero M] [Coe R S] [CoeTₓ S M] [h : NeZero (r : M)] : NeZero ((r : S) : M) :=
   ⟨h.out⟩
 
-theorem trans {r : R} [Zero M] [Coe R S] [CoeTₓ S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=
+theorem trans [Zero M] [Coe R S] [CoeTₓ S M] (h : NeZero ((r : S) : M)) : NeZero (r : M) :=
   ⟨h.out⟩
 
 theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : NeZero r :=
@@ -67,7 +67,7 @@ theorem of_map [Zero R] [Zero M] [ZeroHomClass F R M] (f : F) [NeZero (f r)] : N
     ne (f r) <| by
       convert map_zero f⟩
 
-theorem of_injective {r : R} [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
+theorem of_injective [Zero R] [h : NeZero r] [Zero M] [ZeroHomClass F R M] {f : F} (hf : Function.Injective f) :
     NeZero (f r) :=
   ⟨by
     rw [← map_zero f]
@@ -79,6 +79,9 @@ theorem nat_of_injective [NonAssocSemiringₓ M] [NonAssocSemiringₓ R] [h : Ne
     NeZero.ne' n R <|
       hf <| by
         simpa⟩
+
+theorem pos (r : R) [CanonicallyOrderedAddMonoid R] [NeZero r] : 0 < r :=
+  (zero_le r).lt_of_ne <| NeZero.out.symm
 
 variable (R M)
 
@@ -102,4 +105,7 @@ theorem pos_of_ne_zero_coe [Zero R] [One R] [Add R] [NeZero (n : R)] : 0 < n :=
   (NeZero.of_ne_zero_coe R).out.bot_lt
 
 end NeZero
+
+theorem eq_zero_or_ne_zero {α} [Zero α] (a : α) : a = 0 ∨ NeZero a :=
+  (eq_or_ne a 0).imp_right NeZero.mk
 

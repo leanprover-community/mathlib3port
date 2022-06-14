@@ -88,7 +88,7 @@ def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure
   toFun := fun c => ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
   left_inv := fun c => c.to_complex_measure_to_signed_measure
-  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iffₓ.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
+  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
 
 section
 

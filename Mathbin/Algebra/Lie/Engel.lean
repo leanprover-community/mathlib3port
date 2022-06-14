@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 -/
 import Mathbin.Algebra.Lie.Nilpotent
-import Mathbin.Algebra.Lie.CartanSubalgebra
+import Mathbin.Algebra.Lie.Centralizer
 
 /-!
 # Engel's theorem

@@ -5,8 +5,7 @@ Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van
 -/
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.FieldTheory.Finite.Basic
-import Mathbin.FieldTheory.Separable
-import Mathbin.LinearAlgebra.FiniteDimensional
+import Mathbin.FieldTheory.Galois
 
 /-!
 # Galois fields
@@ -150,27 +149,21 @@ def equivZmodP : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
-theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) := by
-  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, map_X, splits_iff_card_roots,
-      FiniteField.roots_X_pow_card_sub_X, ← Finset.card_def, Finset.card_univ,
-      FiniteField.X_pow_card_sub_X_nat_degree_eq] <;>
-    exact Fintype.one_lt_card
+theorem splits_X_pow_card_sub_X : Splits (algebraMap (Zmod p) K) (X ^ Fintype.card K - X) :=
+  (FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)).Splits
 
 theorem is_splitting_field_of_card_eq (h : Fintype.card K = p ^ n) : IsSplittingField (Zmod p) K (X ^ p ^ n - X) :=
-  { Splits := by
-      rw [← h]
-      exact splits_X_pow_card_sub_X p,
-    adjoin_roots := by
-      have hne : n ≠ 0 := by
-        rintro rfl
-        rw [pow_zeroₓ, Fintype.card_eq_one_iff_nonempty_unique] at h
-        cases h
-        skip
-        exact false_of_nontrivial_of_subsingleton K
-      refine' algebra.eq_top_iff.mpr fun x => Algebra.subset_adjoin _
-      rw [Polynomial.map_sub, Polynomial.map_pow, map_X, Finset.mem_coe, Multiset.mem_to_finset, mem_roots, is_root.def,
-        eval_sub, eval_pow, eval_X, ← h, FiniteField.pow_card, sub_self]
-      exact FiniteField.X_pow_card_pow_sub_X_ne_zero K hne (Fact.out _) }
+  h ▸ FiniteField.HasSub.Sub.Polynomial.is_splitting_field K (Zmod p)
+
+instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Fintype K'] [Algebra K K'] : IsGalois K K' := by
+  obtain ⟨p, hp⟩ := CharP.exists K
+  have : CharP K p := hp
+  have : CharP K' p := char_p_of_injective_algebra_map' K K' p
+  exact
+    IsGalois.of_separable_splitting_field
+      (galois_poly_separable p (Fintype.card K')
+        (let ⟨n, hp, hn⟩ := FiniteField.card K' p
+        hn.symm ▸ dvd_pow_self p n.ne_zero))
 
 /-- Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
 def algEquivGaloisField (h : Fintype.card K = p ^ n) : K ≃ₐ[Zmod p] GaloisField p n :=

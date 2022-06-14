@@ -27,8 +27,8 @@ namespace Prod
 
 /-- Product of two distributive types is distributive. -/
 instance [Distribₓ R] [Distribₓ S] : Distribₓ (R × S) :=
-  { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iffₓ.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
-    right_distrib := fun a b c => mk.inj_iffₓ.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
+  { Prod.hasAdd, Prod.hasMul with left_distrib := fun a b c => mk.inj_iff.mpr ⟨left_distrib _ _ _, left_distrib _ _ _⟩,
+    right_distrib := fun a b c => mk.inj_iff.mpr ⟨right_distrib _ _ _, right_distrib _ _ _⟩ }
 
 /-- Product of two `non_unital_non_assoc_semiring`s is a `non_unital_non_assoc_semiring`. -/
 instance [NonUnitalNonAssocSemiringₓ R] [NonUnitalNonAssocSemiringₓ S] : NonUnitalNonAssocSemiringₓ (R × S) :=
@@ -127,7 +127,7 @@ theorem prod_unique (f : R →+* S × T) : ((fst S T).comp f).Prod ((snd S T).co
 
 end Prod
 
-section prod_mapₓ
+section prod_map
 
 variable [NonAssocSemiringₓ R'] [NonAssocSemiringₓ S'] [NonAssocSemiringₓ T]
 
@@ -148,7 +148,7 @@ theorem prod_comp_prod_map (f : T →+* R) (g : T →+* S) (f' : R →+* R') (g'
     (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 
-end prod_mapₓ
+end prod_map
 
 end RingHom
 

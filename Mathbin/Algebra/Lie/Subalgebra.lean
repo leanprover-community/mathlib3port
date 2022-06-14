@@ -427,11 +427,11 @@ instance : HasInf (LieSubalgebra R L) :=
   ⟨fun K K' =>
     { (K⊓K' : Submodule R L) with lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:946:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:945:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 instance : HasInfₓ (LieSubalgebra R L) :=
   ⟨fun S =>
     { inf
-        "././Mathport/Syntax/Translate/Basic.lean:946:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "././Mathport/Syntax/Translate/Basic.lean:945:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy => by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.Inf_coe, mem_set_of_eq, forall_apply_eq_imp_iff₂,
           exists_imp_distrib] at *
@@ -442,12 +442,12 @@ instance : HasInfₓ (LieSubalgebra R L) :=
 theorem inf_coe : (↑(K⊓K') : Set L) = K ∩ K' :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:946:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
+-- ././Mathport/Syntax/Translate/Basic.lean:945:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}
 @[simp]
 theorem Inf_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(inf S) : Submodule R L) =
       inf
-        "././Mathport/Syntax/Translate/Basic.lean:946:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "././Mathport/Syntax/Translate/Basic.lean:945:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 
 @[simp]
@@ -484,6 +484,11 @@ instance : AddCommMonoidₓ (LieSubalgebra R L) where
   zero_add := fun _ => bot_sup_eq
   add_zero := fun _ => sup_bot_eq
   add_comm := fun _ _ => sup_comm
+
+/-- This is not an instance, as it would stop `⊥` being the simp-normal form (via `bot_eq_zero`). -/
+def canonicallyOrderedAddMonoid : CanonicallyOrderedAddMonoid (LieSubalgebra R L) :=
+  { LieSubalgebra.addCommMonoid, LieSubalgebra.completeLattice with add_le_add_left := fun a b => sup_le_sup_left,
+    exists_add_of_le := fun a b h => ⟨b, (sup_eq_right.2 h).symm⟩, le_self_add := fun a b => le_sup_left }
 
 @[simp]
 theorem add_eq_sup : K + K' = K⊔K' :=

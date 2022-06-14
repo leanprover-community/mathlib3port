@@ -20,7 +20,7 @@ open Emetric Set
 
 noncomputable section
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (r «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (r «expr ≠ » 0)
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -86,7 +86,7 @@ theorem union_right {t'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s t
 theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSeparated s t ∧ IsMetricSeparated s t' :=
   comm.trans <| union_left_iff.trans <| and_congr comm comm
 
-theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : Finite I) {s : ι → Set X} {t : Set X} :
+theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀, ∀ i ∈ I, ∀, IsMetricSeparated (s i) t := by
   refine'
     finite.induction_on hI
@@ -97,7 +97,7 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : Finite I) {s : ι
 
 alias finite_Union_left_iff ↔ _ IsMetricSeparated.finite_Union_left
 
-theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : Finite I) {s : Set X} {t : ι → Set X} :
+theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : Set X} {t : ι → Set X} :
     IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀, ∀ i ∈ I, ∀, IsMetricSeparated s (t i) := by
   simpa only [@comm _ _ s] using finite_Union_left_iff hI
 

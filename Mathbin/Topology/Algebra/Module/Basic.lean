@@ -743,7 +743,7 @@ protected theorem smul_def (f : M₁ →L[R₁] M₁) (a : M₁) : f • a = f a
   rfl
 
 /-- `continuous_linear_map.apply_module` is faithful. -/
-instance apply_has_faithful_scalar : HasFaithfulScalar (M₁ →L[R₁] M₁) M₁ :=
+instance apply_has_faithful_smul : HasFaithfulSmul (M₁ →L[R₁] M₁) M₁ :=
   ⟨fun _ _ => ContinuousLinearMap.ext⟩
 
 instance apply_smul_comm_class : SmulCommClass R₁ (M₁ →L[R₁] M₁) M₁ where
@@ -1348,9 +1348,9 @@ end Smul
 
 section SmulRightₗ
 
-variable {R S T M M₂ : Type _} [Ringₓ R] [Ringₓ S] [Ringₓ T] [Module R S] [AddCommGroupₓ M₂] [Module R M₂] [Module S M₂]
-  [IsScalarTower R S M₂] [TopologicalSpace S] [TopologicalSpace M₂] [HasContinuousSmul S M₂] [TopologicalSpace M]
-  [AddCommGroupₓ M] [Module R M] [TopologicalAddGroup M₂] [Module T M₂] [HasContinuousConstSmul T M₂]
+variable {R S T M M₂ : Type _} [Semiringₓ R] [Semiringₓ S] [Semiringₓ T] [Module R S] [AddCommMonoidₓ M₂] [Module R M₂]
+  [Module S M₂] [IsScalarTower R S M₂] [TopologicalSpace S] [TopologicalSpace M₂] [HasContinuousSmul S M₂]
+  [TopologicalSpace M] [AddCommMonoidₓ M] [Module R M] [HasContinuousAdd M₂] [Module T M₂] [HasContinuousConstSmul T M₂]
   [SmulCommClass R T M₂] [SmulCommClass S T M₂]
 
 /-- Given `c : E →L[𝕜] 𝕜`, `c.smul_rightₗ` is the linear map from `F` to `E →L[𝕜] F`
@@ -1506,7 +1506,7 @@ theorem to_linear_equiv_injective : Function.Injective (toLinearEquiv : (M₁ �
 
 @[ext]
 theorem ext {f g : M₁ ≃SL[σ₁₂] M₂} (h : (f : M₁ → M₂) = g) : f = g :=
-  to_linear_equiv_injective <| LinearEquiv.ext <| congr_funₓ h
+  to_linear_equiv_injective <| LinearEquiv.ext <| congr_fun h
 
 theorem coe_injective : Function.Injective (coe : (M₁ ≃SL[σ₁₂] M₂) → M₁ →SL[σ₁₂] M₂) := fun e e' h =>
   ext <| funext <| ContinuousLinearMap.ext_iff.1 h

@@ -160,7 +160,7 @@ noncomputable def IsCycle.zpowersEquivSupport {σ : Perm α} (hσ : IsCycle σ) 
           
         · obtain ⟨i, rfl⟩ := (Classical.some_spec hσ).2 y hy
           rw [Subtype.coe_mk, Subtype.coe_mk, zpow_apply_comm σ m i, zpow_apply_comm σ n i]
-          exact congr_argₓ _ (subtype.ext_iff.mp h)
+          exact congr_arg _ (subtype.ext_iff.mp h)
           
         
       · rintro ⟨y, hy⟩
@@ -1168,7 +1168,7 @@ theorem cycle_induction_on [Fintype β] (P : Perm β → Prop) (σ : Perm β) (b
   suffices ∀ l : List (perm β), (∀ τ : perm β, τ ∈ l → τ.IsCycle) → l.Pairwise Disjoint → P l.Prod by
     classical
     let x := σ.trunc_cycle_factors.out
-    exact (congr_argₓ P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
+    exact (congr_arg P x.2.1).mp (this x.1 x.2.2.1 x.2.2.2)
   intro l
   induction' l with σ l ih
   · exact fun _ _ => base_one
@@ -1399,7 +1399,7 @@ theorem closure_cycle_coprime_swap {n : ℕ} {σ : Perm α} (h0 : Nat.Coprime n 
   have h1' : is_cycle ((σ ^ n) ^ (m : ℤ)) := by
     rwa [← hm] at h1
   replace h1' : is_cycle (σ ^ n) :=
-    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eq (congr_argₓ support hm)))
+    is_cycle_of_is_cycle_pow h1' (le_transₓ (support_pow_le σ n) (ge_of_eq (congr_arg support hm)))
   rw [eq_top_iff, ← closure_cycle_adjacent_swap h1' h2' x, closure_le, Set.insert_subset]
   exact
     ⟨Subgroup.pow_mem (closure _) (subset_closure (Set.mem_insert σ _)) n,
@@ -1491,8 +1491,8 @@ theorem Disjoint.is_conj_mul {α : Type _} [Fintype α] {σ τ π ρ : Perm α} 
   have hd1' := coe_inj.2 hd1.support_mul
   have hd2' := coe_inj.2 hd2.support_mul
   rw [coe_union] at *
-  have hd1'' := disjoint_iff_disjoint_coe.1 (disjoint_iff_disjoint_support.1 hd1)
-  have hd2'' := disjoint_iff_disjoint_coe.1 (disjoint_iff_disjoint_support.1 hd2)
+  have hd1'' := disjoint_coe.2 (disjoint_iff_disjoint_support.1 hd1)
+  have hd2'' := disjoint_coe.2 (disjoint_iff_disjoint_support.1 hd2)
   refine' is_conj_of_support_equiv _ _
   · refine'
         ((Equivₓ.Set.ofEq hd1').trans (Equivₓ.Set.union hd1'')).trans

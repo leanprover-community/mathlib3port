@@ -181,7 +181,7 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Finₓ (Fintype.ca
   trans
   · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
     
-  exact Equivₓ.cast (congr_argₓ _ (length_sorted_univ α))
+  exact Equivₓ.cast (congr_arg _ (length_sorted_univ α))
 
 /-- If `α` and `β` are encodable and `α` is a fintype, then `α → β` is encodable as well. -/
 instance fintypeArrowOfEncodable {α β : Type _} [Encodable α] [Fintype α] [Encodable β] : Encodable (α → β) :=

@@ -27,8 +27,8 @@ mk_simp_attribute transport_simps :=
 attribute [transport_simps]
   eq_rec_constant eq_mp_eq_cast cast_eq Equivₓ.to_fun_as_coe Equivₓ.arrow_congr'_apply Equivₓ.symm_apply_apply Equivₓ.apply_eq_iff_eq_symm_apply
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Given `s : S α` for some structure `S` depending on a type `α`,
 and an equivalence `e : α ≃ β`,
 try to produce an `S β`,

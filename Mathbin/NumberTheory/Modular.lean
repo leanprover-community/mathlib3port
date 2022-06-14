@@ -3,7 +3,7 @@ Copyright (c) 2021 Alex Kontorovich and Heather Macbeth and Marc Masdeu. All rig
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 -/
-import Mathbin.Analysis.Complex.UpperHalfPlane
+import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.Analysis.Matrix
 
@@ -83,43 +83,7 @@ attribute [local instance] Fintype.card_fin_even
 
 namespace ModularGroup
 
-variable (g : SL(2, ℤ)) (z : ℍ)
-
-section UpperHalfPlaneAction
-
-/-- For a subring `R` of `ℝ`, the action of `SL(2, R)` on the upper half-plane, as a restriction of
-the `SL(2, ℝ)`-action defined by `upper_half_plane.mul_action`. -/
-instance {R : Type _} [CommRingₓ R] [Algebra R ℝ] : MulAction SL(2, R) ℍ :=
-  MulAction.compHom ℍ (map (algebraMap R ℝ))
-
-theorem coe_smul : ↑(g • z) = Num g z / denom g z :=
-  rfl
-
-theorem re_smul : (g • z).re = (Num g z / denom g z).re :=
-  rfl
-
-@[simp]
-theorem smul_coe : (g : SL(2, ℝ)) • z = g • z :=
-  rfl
-
-@[simp]
-theorem neg_smul : -g • z = g • z :=
-  show ↑(-g) • _ = _ by
-    simp [neg_smul g z]
-
-theorem im_smul : (g • z).im = (Num g z / denom g z).im :=
-  rfl
-
-theorem im_smul_eq_div_norm_sq : (g • z).im = z.im / Complex.normSq (denom g z) :=
-  im_smul_eq_div_norm_sq g z
-
-@[simp]
-theorem denom_apply : denom g z = ↑ₘg 1 0 * z + ↑ₘg 1 1 := by
-  simp
-
-end UpperHalfPlaneAction
-
-variable {g}
+variable {g : SL(2, ℤ)} (z : ℍ)
 
 section BottomRow
 
@@ -258,7 +222,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
       LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv, general_linear_group.to_linear_apply,
       coe_plane_conformal_matrix, neg_negₓ, mul_vec_lin_apply, cons_val_one, head_cons]
     
-  · convert congr_argₓ (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
+  · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
     simp only [f₁, mul_vec, dot_product, Finₓ.sum_univ_two, Matrix.det_fin_two, Function.comp_app, Subtype.coe_mk,
       lc_row0_extend_apply, cons_val_zero, LinearMap.GeneralLinearGroup.coe_fn_general_linear_equiv,
       general_linear_group.to_linear_apply, coe_plane_conformal_matrix, mul_vec_lin_apply, cons_val_one, head_cons,
@@ -269,9 +233,7 @@ theorem tendsto_lc_row0 {cd : Finₓ 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) 
     
 
 /-- This replaces `(g•z).re = a/c + *` in the standard theory with the following novel identity:
-
   `g • z = (a c + b d) / (c^2 + d^2) + (d z - c) / ((c^2 + d^2) (c z + d))`
-
   which does not need to be decomposed depending on whether `c = 0`. -/
 theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (hg : ↑ₘg 1 = p) :
     ↑(g • z) =
@@ -288,8 +250,8 @@ theorem smul_eq_lc_row0_add {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
     [(by
       simp : (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑(det (↑g : Matrix (Finₓ 2) (Finₓ 2) ℤ)))]
   rw [← hg, det_fin_two]
-  simp only [Int.coe_cast_ring_hom, coe_matrix_coe, coe_fn_eq_coe, Int.cast_mul, of_real_int_cast, map_apply, denom,
-    Int.cast_sub]
+  simp only [Int.coe_cast_ring_hom, coe_matrix_coe, Int.cast_mul, of_real_int_cast, map_apply, denom, Int.cast_sub,
+    _root_.coe_coe, coe_GL_pos_coe_GL_coe_matrix]
   ring
 
 theorem tendsto_abs_re_smul {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
@@ -307,7 +269,7 @@ theorem tendsto_abs_re_smul {p : Finₓ 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) 
     ((g : SL(2, ℤ)) • z).re =
       lc_row0 p ↑(↑g : SL(2, ℝ)) / (p 0 ^ 2 + p 1 ^ 2) +
         (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  exact_mod_cast congr_argₓ Complex.re (smul_eq_lc_row0_add z hp g.2)
+  exact_mod_cast congr_arg Complex.re (smul_eq_lc_row0_add z hp g.2)
 
 end TendstoLemmas
 
@@ -324,7 +286,7 @@ theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im �
   obtain ⟨p, hp_coprime, hp⟩ := Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
   obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
   refine' ⟨g, fun g' => _⟩
-  rw [im_smul_eq_div_norm_sq, im_smul_eq_div_norm_sq, div_le_div_left]
+  rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq, div_le_div_left]
   · simpa [← hg] using hp (↑ₘg' 1) (bottom_row_coprime g')
     
   · exact z.im_pos
@@ -391,7 +353,6 @@ theorem coe_T_zpow (n : ℤ) : ↑ₘ(T ^ n) = ![![1, n], ![0, 1]] := by
 
 variable {z}
 
-@[simp]
 theorem coe_T_zpow_smul_eq {n : ℤ} : (↑(T ^ n • z) : ℂ) = z + n := by
   simp [coe_T_zpow]
 
@@ -417,7 +378,7 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
   · use -↑ₘg 0 1
     suffices g = -(T ^ -↑ₘg 0 1) by
       intro z
-      conv_lhs => rw [this, neg_smul]
+      conv_lhs => rw [this, SL_neg_smul]
     ext i j
     fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
     
@@ -445,7 +406,7 @@ theorem im_lt_im_S_smul (h : normSq z < 1) : z.im < (S • z).im := by
     apply (lt_div_iff z.norm_sq_pos).mpr
     nlinarith
   convert this
-  simp only [im_smul_eq_div_norm_sq]
+  simp only [special_linear_group.im_smul_eq_div_norm_sq]
   field_simp [norm_sq_denom_ne_zero, norm_sq_ne_zero, S]
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
@@ -499,7 +460,8 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
   -- `g` has same max im property as `g₀`
   have hg₀' : ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
     have hg'' : (g • z).im = (g₀ • z).im := by
-      rw [im_smul_eq_div_norm_sq, im_smul_eq_div_norm_sq, denom_apply, denom_apply, hg]
+      rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq, denom_apply,
+        denom_apply, hg]
     simpa only [hg''] using hg₀
   constructor
   · -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
@@ -547,8 +509,7 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : abs (↑�
     replace this : c' ^ 2 ≤ 1 ^ 2
     · linarith
       
-    rw [← abs_one]
-    exact abs_le_abs_of_sq_le_sq this
+    rwa [sq_le_sq, abs_one] at this
   suffices c ≠ 0 → 9 * c ^ 4 < 16 by
     rcases eq_or_ne c 0 with (hc | hc)
     · rw [hc]
@@ -578,7 +539,7 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : abs (↑�
   let nsq := norm_sq (denom g z)
   calc 9 * c ^ 4 < c ^ 4 * z.im ^ 2 * (g • z).im ^ 2 * 16 := by
       linarith _ = c ^ 4 * z.im ^ 4 / nsq ^ 2 * 16 := by
-      rw [im_smul_eq_div_norm_sq, div_pow]
+      rw [special_linear_group.im_smul_eq_div_norm_sq, div_pow]
       ring _ ≤ 16 := by
       rw [← mul_powₓ]
       linarith
@@ -604,7 +565,7 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
     replace hc : ↑ₘ(-g) 1 0 = 1
     · simp [eq_neg_of_eq_neg hc]
       
-    replace hg : -g • z ∈ 𝒟ᵒ := (neg_smul g z).symm ▸ hg
+    replace hg : -g • z ∈ 𝒟ᵒ := (SL_neg_smul g z).symm ▸ hg
     exact hp hg hc
   specialize hp hg
   rcases int.abs_le_one_iff.mp <| abs_c_le_one hz hg with ⟨⟩ <;> tauto
@@ -614,7 +575,7 @@ where `z : ℍ` and `g : SL(2,ℤ)`, then `z = g • z`. -/
 theorem eq_smul_self_of_mem_fdo_mem_fdo (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : z = g • z := by
   obtain ⟨n, hn⟩ := exists_eq_T_zpow_of_c_eq_zero (c_eq_zero hz hg)
   rw [hn] at hg⊢
-  simp [eq_zero_of_mem_fdo_of_T_zpow_mem_fdo hz hg]
+  simp [eq_zero_of_mem_fdo_of_T_zpow_mem_fdo hz hg, one_smul]
 
 end UniqueRepresentative
 

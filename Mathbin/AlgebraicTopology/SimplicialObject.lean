@@ -218,7 +218,8 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augm
       w' := by
         ext
         dsimp'
-        erw [category.comp_id, category.comp_id, ← F.map_comp, ← F.map_comp, ← nat_trans.comp_app, η.w]
+        rw [category.comp_id, category.comp_id, ← F.map_comp, ← F.map_comp, ← nat_trans.comp_app]
+        erw [η.w]
         rfl }
 
 /-- Functor composition induces a functor on augmented simplicial objects. -/
@@ -231,7 +232,7 @@ def whiskering (D : Type u') [Category.{v'} D] : (C ⥤ D) ⥤ Augmented C ⥤ A
           w' := by
             ext n
             dsimp'
-            erw [category.comp_id, category.comp_id, η.naturality] } }
+            rw [category.comp_id, category.comp_id, η.naturality] } }
 
 variable {C}
 
@@ -257,7 +258,7 @@ def augment (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀)
 theorem augment_hom_zero (X : SimplicialObject C) (X₀ : C) (f : X _[0] ⟶ X₀) w :
     (X.augment X₀ f w).Hom.app (op [0]) = f := by
   dsimp'
-  erw [SimplexCategory.hom_zero_zero ([0].const 0), X.map_id, category.id_comp]
+  rw [SimplexCategory.hom_zero_zero ([0].const 0), op_id, X.map_id, category.id_comp]
 
 end SimplicialObject
 
@@ -446,7 +447,8 @@ def whiskeringObj (D : Type _) [Category D] (F : C ⥤ D) : Augmented C ⥤ Augm
       w' := by
         ext
         dsimp'
-        erw [category.id_comp, category.id_comp, ← F.map_comp, ← F.map_comp, ← nat_trans.comp_app, ← η.w]
+        rw [category.id_comp, category.id_comp, ← F.map_comp, ← F.map_comp, ← nat_trans.comp_app]
+        erw [← η.w]
         rfl }
 
 /-- Functor composition induces a functor on augmented cosimplicial objects. -/
@@ -459,7 +461,7 @@ def whiskering (D : Type u') [Category.{v'} D] : (C ⥤ D) ⥤ Augmented C ⥤ A
           w' := by
             ext n
             dsimp'
-            erw [category.id_comp, category.id_comp, η.naturality] } }
+            rw [category.id_comp, category.id_comp, η.naturality] } }
 
 variable {C}
 

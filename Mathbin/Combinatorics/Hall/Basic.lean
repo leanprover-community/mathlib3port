@@ -190,7 +190,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
   have h : ∀ A : Finset α, Fintype.card (Rel.Image r A) = (A.bUnion r').card := by
     intro A
     rw [← Set.to_finset_card]
-    apply congr_argₓ
+    apply congr_arg
     ext b
     simp [Rel.Image]
   have h' : ∀ f : α → β x, r x (f x) ↔ f x ∈ r' x := by

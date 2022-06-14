@@ -1016,7 +1016,7 @@ protected theorem smul_def (f : Module.End R M) (a : M) : f • a = f a :=
   rfl
 
 /-- `linear_map.apply_module` is faithful. -/
-instance apply_has_faithful_scalar : HasFaithfulScalar (Module.End R M) M :=
+instance apply_has_faithful_smul : HasFaithfulSmul (Module.End R M) M :=
   ⟨fun _ _ => LinearMap.ext⟩
 
 instance apply_smul_comm_class : SmulCommClass R (Module.End R M) M where

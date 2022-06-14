@@ -61,7 +61,7 @@ theorem antidiagonal_succ' {n : ℕ} :
 
 theorem antidiagonal_succ_succ' {n : ℕ} :
     antidiagonal (n + 2) = (0, n + 2) ::ₘ (n + 2, 0) ::ₘ (antidiagonal n).map (Prod.map Nat.succ Nat.succ) := by
-  rw [antidiagonal_succ, antidiagonal_succ', map_cons, map_map, prod_mapₓ]
+  rw [antidiagonal_succ, antidiagonal_succ', map_cons, map_map, prod_map]
   rfl
 
 theorem map_swap_antidiagonal {n : ℕ} : (antidiagonal n).map Prod.swap = antidiagonal n := by

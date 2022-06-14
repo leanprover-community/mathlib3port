@@ -158,7 +158,7 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
     
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
-  simpa [inner_conj_sym] using congr_argₓ conj (inner_single_left i a f)
+  simpa [inner_conj_sym] using congr_arg conj (inner_single_left i a f)
 
 end lp
 

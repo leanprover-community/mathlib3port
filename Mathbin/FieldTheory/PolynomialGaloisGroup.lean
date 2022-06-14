@@ -3,9 +3,9 @@ Copyright (c) 2020 Thomas Browning, Patrick Lutz. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 -/
-import Mathbin.GroupTheory.Perm.CycleType
 import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.FieldTheory.Galois
+import Mathbin.GroupTheory.Perm.Cycle.Type
 
 /-!
 # Galois Groups of Polynomials
@@ -246,7 +246,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
     
   intro f g hfg
   dsimp' only [restrict_prod, restrict_dvd]  at hfg
-  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iffₓ] at hfg
+  simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg
   ext x hx
   rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
@@ -258,7 +258,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
           ((roots_equiv_roots p _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
       subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrict_normal_commutes, ← AlgEquiv.restrict_normal_commutes]
-    exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.1 _)
+    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)
     
   · have : Fact (q.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_left q p)⟩
@@ -268,7 +268,7 @@ theorem restrict_prod_injective : Function.Injective (restrictProd p q) := by
           ((roots_equiv_roots q _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
       subtype.ext_iff.mp (Equivₓ.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrict_normal_commutes, ← AlgEquiv.restrict_normal_commutes]
-    exact congr_argₓ _ (alg_equiv.ext_iff.mp hfg.2 _)
+    exact congr_arg _ (alg_equiv.ext_iff.mp hfg.2 _)
     
   · rwa [Ne.def, mul_eq_zero, map_eq_zero, map_eq_zero, ← mul_eq_zero]
     
@@ -354,9 +354,9 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
   have : IsGalois F p.splitting_field := IsGalois.of_separable_splitting_field hp
   IsGalois.card_aut_eq_finrank F p.splitting_field
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -428,7 +428,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
            [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `F
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             `p.splitting_field])])
         [])
@@ -456,7 +456,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
                      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `F
                       "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                       "⟯")
                      `p.splitting_field]))
                   ","
@@ -581,7 +581,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `F
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            `p.splitting_field])])
        [])
@@ -609,7 +609,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `F
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯")
                     `p.splitting_field]))
                  ","
@@ -913,7 +913,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `F
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯")
                `p.splitting_field]))
             ","
@@ -939,7 +939,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
         (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `F
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `p.splitting_field]))
      ","
@@ -969,7 +969,7 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `p.splitting_field])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -983,10 +983,10 @@ theorem card_of_separable (hp : p.Separable) : Fintype.card p.Gal = finrank F p.
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   prime_degree_dvd_card
   [ CharZero F ] ( p_irr : Irreducible p ) ( p_deg : p . natDegree . Prime ) : p . natDegree ∣ Fintype.card p . Gal
@@ -998,7 +998,7 @@ theorem
         have hα : IsIntegral F α := Algebra.is_integral_of_finite _ _ α
         use
           FiniteDimensional.finrank
-            F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ p.splitting_field
+            F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ p.splitting_field
         suffices
           minpoly F α . natDegree = p.nat_degree
             by
@@ -1007,7 +1007,7 @@ theorem
                   ←
                       FiniteDimensional.finrank_mul_finrank
                         F
-                          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                           p.splitting_field
                     ,
                     IntermediateField.adjoin.finrank hα
@@ -1035,7 +1035,7 @@ attribute [local instance] splits_ℚ_ℂ
     the number of roots not fixed by complex conjugation (i.e. with some imaginary component). -/
 theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
     (p.RootSet ℂ).toFinset.card =
-      (p.RootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).support.card :=
+      (p.RootSet ℝ).toFinset.card + (galActionHom p ℂ (restrict p ℂ (Complex.conjAe.restrictScalars ℚ))).Support.card :=
   by
   by_cases' hp : p = 0
   · simp_rw [hp, root_set_zero, set.to_finset_eq_empty_iff.mpr rfl, Finset.card_empty, zero_addₓ]
@@ -1090,7 +1090,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
       exact ⟨⟨z, (mem_root_set hp).mpr hz1⟩, equiv.perm.mem_support.mpr (mt (hc0 _).mp hz2), rfl⟩
       
   rw [← Finset.card_disjoint_union]
-  · apply congr_argₓ Finset.card
+  · apply congr_arg Finset.card
     simp_rw [Finset.ext_iff, Finset.mem_union, ha, hb, hc]
     tauto
     
@@ -1117,7 +1117,7 @@ theorem gal_action_hom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducib
   let conj := restrict p ℂ (complex.conj_ae.restrict_scalars ℚ)
   refine'
     ⟨gal_action_hom_injective p ℂ, fun x =>
-      (congr_argₓ (HasMem.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
+      (congr_arg (HasMem.Mem x) (show (gal_action_hom p ℂ).range = ⊤ from _)).mpr (Subgroup.mem_top x)⟩
   apply Equivₓ.Perm.subgroup_eq_top_of_swap_mem
   · rwa [h1]
     
@@ -1139,7 +1139,7 @@ theorem gal_action_hom_bijective_of_prime_degree' {p : ℚ[X]} (p_irr : Irreduci
     (p_roots2 : Fintype.card (p.RootSet ℂ) ≤ Fintype.card (p.RootSet ℝ) + 3) : Function.Bijective (galActionHom p ℂ) :=
   by
   apply gal_action_hom_bijective_of_prime_degree p_irr p_deg
-  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).support.card
+  let n := (gal_action_hom p ℂ (restrict p ℂ (complex.conj_ae.restrict_scalars ℚ))).Support.card
   have hn : 2 ∣ n :=
     Equivₓ.Perm.two_dvd_card_support
       (by

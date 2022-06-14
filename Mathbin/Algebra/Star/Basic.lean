@@ -251,15 +251,15 @@ def starRingEquiv [NonUnitalSemiringₓ R] [StarRing R] : R ≃+* Rᵐᵒᵖ :=
 
 @[simp, norm_cast]
 theorem star_nat_cast [Semiringₓ R] [StarRing R] (n : ℕ) : star (n : R) = n :=
-  (congr_argₓ unop (map_nat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) n)).trans (unop_nat_cast _)
+  (congr_arg unop (map_nat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) n)).trans (unop_nat_cast _)
 
 @[simp, norm_cast]
 theorem star_int_cast [Ringₓ R] [StarRing R] (z : ℤ) : star (z : R) = z :=
-  (congr_argₓ unop ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_int_cast z)).trans (unop_int_cast _)
+  (congr_arg unop ((starRingEquiv : R ≃+* Rᵐᵒᵖ).toRingHom.map_int_cast z)).trans (unop_int_cast _)
 
 @[simp, norm_cast]
 theorem star_rat_cast [DivisionRing R] [CharZero R] [StarRing R] (r : ℚ) : star (r : R) = r :=
-  (congr_argₓ unop <| map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
+  (congr_arg unop <| map_rat_cast (starRingEquiv : R ≃+* Rᵐᵒᵖ) r).trans (unop_rat_cast _)
 
 /-- `star` as a ring automorphism, for commutative `R`. -/
 @[simps apply]
@@ -398,8 +398,8 @@ variable [Monoidₓ R] [StarSemigroup R]
 instance : StarSemigroup Rˣ where
   star := fun u =>
     { val := star u, inv := star ↑u⁻¹,
-      val_inv := (star_mul _ _).symm.trans <| (congr_argₓ star u.inv_val).trans <| star_one _,
-      inv_val := (star_mul _ _).symm.trans <| (congr_argₓ star u.val_inv).trans <| star_one _ }
+      val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _,
+      inv_val := (star_mul _ _).symm.trans <| (congr_arg star u.val_inv).trans <| star_one _ }
   star_involutive := fun u => Units.ext (star_involutive _)
   star_mul := fun u v => Units.ext (star_mul _ _)
 

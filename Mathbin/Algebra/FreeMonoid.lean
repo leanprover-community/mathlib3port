@@ -98,7 +98,7 @@ theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
 
 @[simp, to_additive]
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
-  congr_funₓ (lift_comp_of f) x
+  congr_fun (lift_comp_of f) x
 
 @[simp, to_additive]
 theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=

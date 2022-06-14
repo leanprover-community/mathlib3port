@@ -245,7 +245,7 @@ def mapGlueData : GlueData C' where
     (PreservesPullback.iso F (D.f i j) (D.f i k)).inv ≫
       F.map (D.t' i j k) ≫ (PreservesPullback.iso F (D.f j k) (D.f j i)).Hom
   t_fac := fun i j k => by
-    simpa [iso.inv_comp_eq] using congr_argₓ (fun f => F.map f) (D.t_fac i j k)
+    simpa [iso.inv_comp_eq] using congr_arg (fun f => F.map f) (D.t_fac i j k)
   cocycle := fun i j k => by
     simp only [category.assoc, iso.hom_inv_id_assoc, ← functor.map_comp_assoc, D.cocycle, iso.inv_hom_id,
       CategoryTheory.Functor.map_id, category.id_comp]
@@ -362,7 +362,7 @@ theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.mul
     ∃ (i : _)(y : F.obj (D.U i)), F.map (D.ι i) y = x := by
   let e := D.glued_iso F
   obtain ⟨i, y, eq⟩ := (D.map_glue_data F).types_ι_jointly_surjective (e.hom x)
-  replace eq := congr_argₓ e.inv Eq
+  replace eq := congr_arg e.inv Eq
   change ((D.map_glue_data F).ι i ≫ e.inv) y = (e.hom ≫ e.inv) x at eq
   rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq
   exact ⟨i, y, Eq⟩

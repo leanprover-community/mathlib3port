@@ -29,7 +29,7 @@ open Classical Set Filter
 
 open Ennreal (ofReal)
 
-open BigOperators Ennreal Nnreal TopologicalSpace
+open BigOperators Ennreal Nnreal TopologicalSpace MeasureTheory
 
 /-! ### Basic properties of Stieltjes functions -/
 
@@ -99,7 +99,7 @@ instance : Inhabited StieltjesFunction :=
 /-! ### The outer measure associated to a Stieltjes function -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (a b)
 /-- Length of an interval. This is the largest monotone function which correctly measures all
 intervals. -/
 def length (s : Set ℝ) : ℝ≥0∞ :=
@@ -241,7 +241,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
       add_le_add (add_le_add le_rfl hε.le) le_rfl _ = (∑' i : ℕ, f.length (s i)) + ε := by
       simp [add_assocₓ, Ennreal.add_halves]
 
-theorem measurable_set_Ioi {c : ℝ} : f.outer.caratheodory.MeasurableSet' (Ioi c) := by
+theorem measurable_set_Ioi {c : ℝ} : measurable_set[f.outer.caratheodory] (Ioi c) := by
   apply outer_measure.of_function_caratheodory fun t => _
   refine' le_infi fun a => le_infi fun b => le_infi fun h => _
   refine'

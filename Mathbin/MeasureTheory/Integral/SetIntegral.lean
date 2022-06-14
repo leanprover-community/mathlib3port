@@ -6,6 +6,7 @@ Authors: Zhouhang Zhou, Yury Kudryashov
 import Mathbin.MeasureTheory.Integral.IntegrableOn
 import Mathbin.MeasureTheory.Integral.Bochner
 import Mathbin.Order.Filter.IndicatorFunction
+import Mathbin.Topology.MetricSpace.ThickenedIndicator
 
 /-!
 # Set integral
@@ -459,7 +460,7 @@ section TendstoMono
 
 variable {μ : Measure α} [NormedGroup E] [CompleteSpace E] [NormedSpace ℝ E] {s : ℕ → Set α} {f : α → E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error
 theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) (h_anti : Antitone s)
     (hfi : IntegrableOn f (s 0) μ) : Tendsto (fun i => ∫ a in s i, f a ∂μ) atTop (𝓝 (∫ a in ⋂ n, s n, f a ∂μ)) := by
   let bound : α → ℝ := indicator (s 0) fun a => ∥f a∥
@@ -479,7 +480,7 @@ theorem _root_.antitone.tendsto_set_integral (hsm : ∀ i, MeasurableSet (s i)) 
     refine' fun n => eventually_of_forall fun x => _
     exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
     
-  · "././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error"
+  · "././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error"
     
 
 end TendstoMono
@@ -491,7 +492,7 @@ We prove that for any set `s`, the function `λ f : α →₁[μ] E, ∫ x in s,
 
 section ContinuousSetIntegral
 
-variable [NormedGroup E] {𝕜 : Type _} [IsROrC 𝕜] [NormedGroup F] [NormedSpace 𝕜 F] {p : ℝ≥0∞} {μ : Measure α}
+variable [NormedGroup E] {𝕜 : Type _} [NormedField 𝕜] [NormedGroup F] [NormedSpace 𝕜 F] {p : ℝ≥0∞} {μ : Measure α}
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
@@ -587,8 +588,8 @@ theorem Filter.Tendsto.integral_sub_linear_is_o_ae [NormedSpace ℝ E] [Complete
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
-    IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • b) m li := by
-  suffices : is_o (fun s => (∫ x in s, f x ∂μ) - (μ s).toReal • b) (fun s => (μ s).toReal) l.small_sets
+    (fun i => (∫ x in s i, f x ∂μ) - m i • b) =o[li] m := by
+  suffices : (fun s => (∫ x in s, f x ∂μ) - (μ s).toReal • b) =o[l.small_sets] fun s => (μ s).toReal
   exact (this.comp_tendsto hs).congr' (hsμ.mono fun a ha => ha ▸ rfl) hsμ
   refine' is_o_iff.2 fun ε ε₀ => _
   have : ∀ᶠ s in l.small_sets, ∀ᶠ x in μ.ae, x ∈ s → f x ∈ closed_ball b ε :=
@@ -616,7 +617,7 @@ theorem ContinuousWithinAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [Op
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
-    IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • f a) m li :=
+    (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   have : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds_within a t) hs m hsμ
 
@@ -636,7 +637,7 @@ theorem ContinuousAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMea
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
-    IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • f a) m li :=
+    (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds a) hs m hsμ
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
@@ -654,7 +655,7 @@ theorem ContinuousOn.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMea
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by
       run_tac
         tactic.interactive.refl) :
-    IsOₓ (fun i => (∫ x in s i, f x ∂μ) - m i • f a) m li :=
+    (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhds_within, hft.AeStronglyMeasurable ht⟩ hs m hsμ
 
 section
@@ -896,4 +897,26 @@ theorem set_integral_with_density_eq_set_integral_smul₀ {f : α → ℝ≥0 } 
   rw [restrict_with_density hs, integral_with_density_eq_integral_smul₀ hf]
 
 end
+
+section thickenedIndicator
+
+variable [PseudoEmetricSpace α]
+
+theorem measure_le_lintegral_thickened_indicator_aux (μ : Measureₓ α) {E : Set α} (E_mble : MeasurableSet E) (δ : ℝ) :
+    μ E ≤ ∫⁻ a, (thickenedIndicatorAux δ E a : ℝ≥0∞) ∂μ := by
+  convert_to lintegral μ (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ lintegral μ (thickenedIndicatorAux δ E)
+  · rw [lintegral_indicator _ E_mble]
+    simp only [lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
+    
+  · apply lintegral_mono
+    apply indicator_le_thickened_indicator_aux
+    
+
+theorem measure_le_lintegral_thickened_indicator (μ : Measureₓ α) {E : Set α} (E_mble : MeasurableSet E) {δ : ℝ}
+    (δ_pos : 0 < δ) : μ E ≤ ∫⁻ a, (thickenedIndicator δ_pos E a : ℝ≥0∞) ∂μ := by
+  convert measure_le_lintegral_thickened_indicator_aux μ E_mble δ
+  dsimp'
+  simp only [thickened_indicator_aux_lt_top.ne, Ennreal.coe_to_nnreal, Ne.def, not_false_iff]
+
+end thickenedIndicator
 

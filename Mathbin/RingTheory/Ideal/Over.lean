@@ -346,7 +346,7 @@ theorem exists_ideal_over_prime_of_is_integral (H : Algebra.IsIntegral R S) (P :
   have := Q'_prime
   refine' ⟨Q'.comap _, le_transₓ (le_of_eqₓ mk_ker.symm) (ker_le_comap _), ⟨comap_is_prime _ Q', _⟩⟩
   rw [comap_comap]
-  refine' trans _ (trans (congr_argₓ (comap (Quotientₓ.mk (comap (algebraMap R S) I))) hQ') _)
+  refine' trans _ (trans (congr_arg (comap (Quotientₓ.mk (comap (algebraMap R S) I))) hQ') _)
   · simpa [comap_comap]
     
   · refine' trans (comap_map_of_surjective _ quotient.mk_surjective _) (sup_eq_left.2 _)

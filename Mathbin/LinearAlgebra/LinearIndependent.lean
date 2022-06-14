@@ -126,7 +126,7 @@ theorem linear_independent_iff' :
       fun hf l hl =>
       Finsupp.ext fun i => Classical.by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem linear_independent_iff'' :
     LinearIndependent R v ↔
       ∀ s : Finset ι g : ι → R hg : ∀ i _ : i ∉ s, g i = 0, (∑ i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
@@ -385,9 +385,9 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   simp only [linear_independent_subtype_disjoint]
   exact Disjoint.mono_left (Finsupp.supported_mono h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem linear_independent_of_finite (s : Set M)
-    (H : ∀ t _ : t ⊆ s, Finite t → LinearIndependent R (fun x => x : t → M)) :
+    (H : ∀ t _ : t ⊆ s, Set.Finite t → LinearIndependent R (fun x => x : t → M)) :
     LinearIndependent R (fun x => x : s → M) :=
   linear_independent_subtype.2 fun l hl =>
     linear_independent_subtype.1 (H _ hl (Finset.finite_to_set _)) l (Subset.refl _)
@@ -537,7 +537,7 @@ theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ringₓ R] [No
         (by
           ext
           simp )
-    have q := congr_argₓ (fun s => (coe : w → M) '' s) p.range_eq
+    have q := congr_arg (fun s => (coe : w → M) '' s) p.range_eq
     dsimp'  at q
     rw [← image_univ, image_image] at q
     simpa using q
@@ -648,7 +648,7 @@ theorem LinearIndependent.union {s t : Set M} (hs : LinearIndependent R (fun x =
 
 theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
     (hl : ∀ i, LinearIndependent R (fun x => x : f i → M))
-    (hd : ∀ i, ∀ t : Set ι, Finite t → i ∉ t → Disjoint (span R (f i)) (⨆ i ∈ t, span R (f i))) :
+    (hd : ∀ i, ∀ t : Set ι, t.Finite → i ∉ t → Disjoint (span R (f i)) (⨆ i ∈ t, span R (f i))) :
     LinearIndependent R (fun x => x : (⋃ i, f i) → M) := by
   rw [Union_eq_Union_finset f]
   apply linear_independent_Union_of_directed
@@ -668,7 +668,7 @@ theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
 
 theorem linear_independent_Union_finite {η : Type _} {ιs : η → Type _} {f : ∀ j : η, ιs j → M}
     (hindep : ∀ j, LinearIndependent R (f j))
-    (hd : ∀ i, ∀ t : Set η, Finite t → i ∉ t → Disjoint (span R (Range (f i))) (⨆ i ∈ t, span R (Range (f i)))) :
+    (hd : ∀ i, ∀ t : Set η, t.Finite → i ∉ t → Disjoint (span R (Range (f i))) (⨆ i ∈ t, span R (Range (f i)))) :
     LinearIndependent R fun ji : Σj, ιs j => f ji.1 ji.2 := by
   nontriviality R
   apply LinearIndependent.of_subtype_range
@@ -824,7 +824,7 @@ theorem exists_maximal_independent' (s : ι → M) :
   exact ⟨I, hli, fun J hsub hli => Set.Subset.antisymm hsub (hmax ⟨J, hli⟩ hsub)⟩
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » I)
 theorem exists_maximal_independent (s : ι → M) :
     ∃ I : Set ι, (LinearIndependent R fun x : I => s x) ∧ ∀ i _ : i ∉ I, ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
   by
@@ -966,7 +966,7 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [C
                           rw [Finset.sum_insert has, Finset.sum_insert has]
                         _ = (∑ i in insert a s, g i * i (x * y)) - ∑ i in insert a s, a x * (g i * i y) :=
                           congr
-                            (congr_argₓ Sub.sub
+                            (congr_arg Sub.sub
                               ((Finset.sum_congr rfl) fun i _ => by
                                 rw [i.map_mul, mul_assoc]))
                             ((Finset.sum_congr rfl) fun _ _ => by
@@ -991,7 +991,7 @@ theorem linear_independent_monoid_hom (G : Type _) [Monoidₓ G] (L : Type _) [C
             -- From these two facts we deduce that `g` actually vanishes on `s`,
             have h3 : ∀, ∀ i ∈ s, ∀, g i = 0 := fun i his =>
               let ⟨y, hy⟩ := h2 i his
-              have h : g i • i y = g i • a y := congr_funₓ (h1 i his) y
+              have h : g i • i y = g i • a y := congr_fun (h1 i his) y
               Or.resolve_right
                 (mul_eq_zero.1 <| by
                   rw [mul_sub, sub_eq_zero] <;> exact h)
@@ -1190,7 +1190,7 @@ theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔
     show Finₓ.tail f default = f 1 by
       rw [← Finₓ.succ_zero_eq_one] <;> rfl]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _)(_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) := by
   rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with ⟨b, ⟨bt, bi⟩, sb, h⟩
@@ -1211,7 +1211,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coe : s �
 
 variable (K t)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ⊆ » t)
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coe : b → V) := by
   obtain ⟨b, hb₁, -, hb₂, hb₃⟩ :=
     exists_linear_independent_extension (linear_independent_empty K V) (Set.empty_subset t)
@@ -1330,13 +1330,13 @@ theorem exists_of_linear_independent_of_finite_span {t : Finset V} (hs : LinearI
       h.2.1, by
       simp only [h.2.2, Eq]⟩
 
-theorem exists_finite_card_le_of_finite_of_linear_independent_of_span (ht : Finite t)
+theorem exists_finite_card_le_of_finite_of_linear_independent_of_span (ht : t.Finite)
     (hs : LinearIndependent K (fun x => x : s → V)) (hst : s ⊆ span K t) :
-    ∃ h : Finite s, h.toFinset.card ≤ ht.toFinset.card :=
+    ∃ h : s.Finite, h.toFinset.card ≤ ht.toFinset.card :=
   have : s ⊆ (span K ↑ht.toFinset : Submodule K V) := by
     simp <;> assumption
   let ⟨u, hust, hsu, Eq⟩ := exists_of_linear_independent_of_finite_span hs this
-  have : Finite s := u.finite_to_set.Subset hsu
+  have : s.Finite := u.finite_to_set.Subset hsu
   ⟨this, by
     rw [← Eq] <;>
       exact

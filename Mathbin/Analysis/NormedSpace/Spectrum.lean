@@ -149,7 +149,7 @@ theorem has_deriv_at_resolvent {a : A} {k : 𝕜} (hk : k ∈ ρ a) : HasDerivAt
 
 /- TODO: Once there is sufficient API for bornology, we should get a nice filter / asymptotics
 version of this, for example: `tendsto (resolvent a) (cobounded 𝕜) (𝓝 0)` or more specifically
-`is_O (resolvent a) (λ z, z⁻¹) (cobounded 𝕜)`. -/
+`(resolvent a) =O[cobounded 𝕜] (λ z, z⁻¹)`. -/
 theorem norm_resolvent_le_forall (a : A) : ∀, ∀ ε > 0, ∀, ∃ R > 0, ∀ z : 𝕜, R ≤ ∥z∥ → ∥resolvent a z∥ ≤ ε := by
   obtain ⟨c, c_pos, hc⟩ := (@NormedRing.inverse_one_sub_norm A _ _).exists_pos
   rw [is_O_with_iff, eventually_iff, Metric.mem_nhds_iff] at hc
@@ -274,7 +274,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectral_radius (a : A) :
   suffices h : (r : ℝ≥0∞) ≤ p.radius
   · convert h
     simp only [p.radius_eq_liminf, ← norm_to_nnreal, norm_mk_pi_field]
-    refine' congr_argₓ _ (funext fun n => congr_argₓ _ _)
+    refine' congr_arg _ (funext fun n => congr_arg _ _)
     rw [norm_to_nnreal, Ennreal.coe_rpow_def ∥a ^ n∥₊ (1 / n : ℝ), if_neg]
     exact fun ha => by
       linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]

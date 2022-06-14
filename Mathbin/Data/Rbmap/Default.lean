@@ -138,7 +138,7 @@ theorem find_eq_find_of_eqv [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbma
     k₁ ≈[lt]k₂ → m.find k₁ = m.find k₂ := by
   intro h
   simp [find]
-  apply congr_argₓ
+  apply congr_arg
   apply find_entry_eq_find_entry_of_eqv
   assumption
 

@@ -223,7 +223,7 @@ theorem is_basis_iff_nbhd {B : Set (Opens α)} : IsBasis B ↔ ∀ {U : Opens α
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (Us «expr ⊆ » B)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (Us «expr ⊆ » B)
 theorem is_basis_iff_cover {B : Set (Opens α)} : IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = sup Us := by
   constructor
   · intro hB U
@@ -273,11 +273,11 @@ protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : Opens γ) : c
 
 theorem comap_injective [T0Space β] : Injective (comap : C(α, β) → FrameHom (Opens β) (Opens α)) := fun f g h =>
   ContinuousMap.ext fun a =>
-    Indistinguishable.eq fun s hs => by
+    Inseparable.eq fun s hs => by
       simp_rw [← mem_preimage]
       congr 2
       have := FunLike.congr_fun h ⟨_, hs⟩
-      exact congr_argₓ (coe : opens α → Set α) this
+      exact congr_arg (coe : opens α → Set α) this
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]

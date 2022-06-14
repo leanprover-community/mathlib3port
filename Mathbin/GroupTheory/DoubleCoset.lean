@@ -70,7 +70,7 @@ def Quotient (H K : Set G) : Type _ :=
   Quotientₓ (setoid H K)
 
 theorem rel_iff {H K : Subgroup G} {x y : G} : (setoid ↑H ↑K).Rel x y ↔ ∃ a ∈ H, ∃ b ∈ K, y = a * x * b :=
-  Iff.trans ⟨fun hxy => (congr_argₓ _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩ mem_doset
+  Iff.trans ⟨fun hxy => (congr_arg _ hxy).mpr (mem_doset_self H K y), fun hxy => (doset_eq_of_mem hxy).symm⟩ mem_doset
 
 theorem bot_rel_eq_left_rel (H : Subgroup G) : (setoid ↑(⊥ : Subgroup G) ↑H).Rel = (QuotientGroup.leftRel H).Rel := by
   ext a b

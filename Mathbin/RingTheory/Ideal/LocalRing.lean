@@ -82,7 +82,7 @@ variable [LocalRing R]
 
 theorem is_unit_or_is_unit_of_is_unit_add {a b : R} (h : IsUnit (a + b)) : IsUnit a ∨ IsUnit b := by
   rcases h with ⟨u, hu⟩
-  rw [Units.eq_iff_inv_mul, mul_addₓ] at hu
+  rw [← Units.inv_mul_eq_one, mul_addₓ] at hu
   apply Or.imp _ _ (is_unit_or_is_unit_of_add_one hu) <;> exact is_unit_of_mul_is_unit_right
 
 theorem nonunits_add {a b : R} (ha : a ∈ Nonunits R) (hb : b ∈ Nonunits R) : a + b ∈ Nonunits R := fun H =>
@@ -201,7 +201,7 @@ theorem is_unit_of_map_unit (f : R →+* S) [IsLocalRingHom f] a (h : IsUnit (f 
 theorem of_irreducible_map (f : R →+* S) [h : IsLocalRingHom f] {x} (hfx : Irreducible (f x)) : Irreducible x :=
   ⟨fun h => hfx.not_unit <| IsUnit.map f h, fun p q hx =>
     let ⟨H⟩ := h
-    Or.imp (H p) (H q) <| hfx.is_unit_or_is_unit <| f.map_mul p q ▸ congr_argₓ f hx⟩
+    Or.imp (H p) (H q) <| hfx.is_unit_or_is_unit <| f.map_mul p q ▸ congr_arg f hx⟩
 
 theorem is_local_ring_hom_of_comp (f : R →+* S) (g : S →+* T) [IsLocalRingHom (g.comp f)] : IsLocalRingHom f :=
   ⟨fun a ha => (is_unit_map_iff (g.comp f) _).mp (g.is_unit_map ha)⟩

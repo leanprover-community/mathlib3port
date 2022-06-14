@@ -42,7 +42,7 @@ theorem _root_.is_unit.inv_smul [Monoidₓ α] {a : α} (h : IsUnit a) : h.Unit�
   h.coe_inv_mul
 
 @[to_additive]
-instance [Monoidₓ M] [HasScalar M α] [HasFaithfulScalar M α] : HasFaithfulScalar Mˣ α where
+instance [Monoidₓ M] [HasScalar M α] [HasFaithfulSmul M α] : HasFaithfulSmul Mˣ α where
   eq_of_smul_eq_smul := fun u₁ u₂ h => Units.ext <| eq_of_smul_eq_smul h
 
 @[to_additive]

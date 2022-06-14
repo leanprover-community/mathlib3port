@@ -172,7 +172,7 @@ theorem AtPrime.comap_maximal_ideal :
 it is the unique maximal ideal given by the local ring structure `at_prime.local_ring` -/
 theorem AtPrime.map_eq_maximal_ideal :
     Ideal.map (algebraMap R (Localization.AtPrime I)) I = LocalRing.maximalIdeal (Localization I.primeCompl) := by
-  convert congr_argₓ (Ideal.map _) at_prime.comap_maximal_ideal.symm
+  convert congr_arg (Ideal.map _) at_prime.comap_maximal_ideal.symm
   rw [map_comap I.prime_compl]
 
 theorem le_comap_prime_compl_iff {J : Ideal P} [hJ : J.IsPrime] {f : R →+* P} :

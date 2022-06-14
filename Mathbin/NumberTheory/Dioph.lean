@@ -53,7 +53,7 @@ Matiyasevic's theorem, Hilbert's tenth problem
 open Fin2 Function Nat Sum
 
 -- mathport name: «expr ::ₒ »
-local infixr:67 " ::ₒ " => Option.cons
+local infixr:67 " ::ₒ " => Option.elimₓ
 
 -- mathport name: «expr ⊗ »
 local infixr:65 " ⊗ " => Sum.elim
@@ -469,10 +469,10 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph { v | ∃ x,
                   ht⟩⟩⟩⟩
 
 theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPfun f) : Dioph f.Dom :=
-  cast (congr_argₓ Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
+  cast (congr_arg Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
 
 theorem dioph_fn_iff_pfun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α f := by
-  refine' congr_argₓ Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
+  refine' congr_arg Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
 
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
   (of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none))) fun v => by
@@ -522,7 +522,7 @@ theorem vec_ex1_dioph n {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph {
     exists_congr fun x => by
       dsimp'
       rw
-        [show Option.cons x v ∘ cons none some = x :: v from
+        [show Option.elimₓ x v ∘ cons none some = x :: v from
           funext fun s => by
             cases' s with a b <;> rfl]
 

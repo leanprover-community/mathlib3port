@@ -72,6 +72,9 @@ theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpt
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
   Subtype.is_empty_of_false fun a => id
 
+instance Sigma.is_empty_left {α} [IsEmpty α] {E : α → Type _} : IsEmpty (Sigma E) :=
+  Function.is_empty Sigma.fst
+
 -- Test that `pi.is_empty` finds this instance.
 example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) := by
   infer_instance
@@ -141,6 +144,9 @@ theorem is_empty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β
 @[simp]
 theorem is_empty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_psum, not_or_distrib]
+
+theorem well_founded_of_empty {α} [IsEmpty α] (r : α → α → Prop) : WellFounded r :=
+  ⟨isEmptyElim⟩
 
 variable (α)
 

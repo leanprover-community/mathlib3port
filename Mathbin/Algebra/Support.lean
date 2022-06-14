@@ -58,7 +58,7 @@ theorem mem_mul_support {f : α → M} {x : α} : x ∈ MulSupport f ↔ f x ≠
 theorem mul_support_subset_iff {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x, f x ≠ 1 → x ∈ s :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » s)
 @[to_additive]
 theorem mul_support_subset_iff' {f : α → M} {s : Set α} : MulSupport f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
   forall_congrₓ fun x => not_imp_comm
@@ -198,40 +198,30 @@ theorem mul_support_pow [Monoidₓ M] (f : α → M) (n : ℕ) : (MulSupport fun
   · simpa only [pow_succₓ] using subset_trans (mul_support_mul f _) (union_subset (subset.refl _) hfn)
     
 
-@[simp, to_additive]
-theorem mul_support_inv [Groupₓ G] (f : α → G) : (MulSupport fun x => (f x)⁻¹) = MulSupport f :=
-  Set.ext fun x => not_congr inv_eq_one
+section DivisionMonoid
+
+variable [DivisionMonoid G] (f g : α → G)
 
 @[simp, to_additive]
-theorem mul_support_inv' [Groupₓ G] (f : α → G) : MulSupport f⁻¹ = MulSupport f :=
+theorem mul_support_inv : (MulSupport fun x => (f x)⁻¹) = MulSupport f :=
+  ext fun _ => inv_ne_one
+
+@[simp, to_additive]
+theorem mul_support_inv' : MulSupport f⁻¹ = MulSupport f :=
   mul_support_inv f
 
-@[simp]
-theorem mul_support_inv₀ [GroupWithZeroₓ G₀] (f : α → G₀) : (MulSupport fun x => (f x)⁻¹) = MulSupport f :=
-  Set.ext fun x => inv_ne_one
-
 @[to_additive]
-theorem mul_support_mul_inv [Groupₓ G] (f g : α → G) :
-    (MulSupport fun x => f x * (g x)⁻¹) ⊆ MulSupport f ∪ MulSupport g :=
+theorem mul_support_mul_inv : (MulSupport fun x => f x * (g x)⁻¹) ⊆ MulSupport f ∪ MulSupport g :=
   mul_support_binop_subset (fun a b => a * b⁻¹)
     (by
       simp )
     f g
 
-@[to_additive support_sub]
-theorem mul_support_group_div [Groupₓ G] (f g : α → G) :
-    (MulSupport fun x => f x / g x) ⊆ MulSupport f ∪ MulSupport g :=
-  mul_support_binop_subset (· / ·)
-    (by
-      simp only [one_div, inv_one])
-    f g
+@[to_additive]
+theorem mul_support_div : (MulSupport fun x => f x / g x) ⊆ MulSupport f ∪ MulSupport g :=
+  mul_support_binop_subset (· / ·) one_div_one f g
 
-theorem mul_support_div [GroupWithZeroₓ G₀] (f g : α → G₀) :
-    (MulSupport fun x => f x / g x) ⊆ MulSupport f ∪ MulSupport g :=
-  mul_support_binop_subset (· / ·)
-    (by
-      simp only [div_one])
-    f g
+end DivisionMonoid
 
 @[simp]
 theorem support_mul [MulZeroClassₓ R] [NoZeroDivisors R] (f g : α → R) :

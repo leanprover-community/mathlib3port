@@ -42,7 +42,7 @@ theorem countable_iff_exists_inj_on {s : Set α} : Countable s ↔ ∃ f : α �
   countable_iff_exists_injective.trans
     ⟨fun ⟨f, hf⟩ =>
       ⟨fun a => if h : a ∈ s then f ⟨a, h⟩ else 0, fun a as b bs h =>
-        congr_argₓ Subtype.val <|
+        congr_arg Subtype.val <|
           hf <| by
             simpa [as, bs] using h⟩,
       fun ⟨f, hf⟩ => ⟨_, inj_on_iff_injective.1 hf⟩⟩
@@ -190,8 +190,12 @@ theorem countable_insert {s : Set α} {a : α} : Countable (insert a s) ↔ Coun
 theorem Countable.insert {s : Set α} (a : α) (h : Countable s) : Countable (insert a s) :=
   countable_insert.2 h
 
-theorem Finite.countable {s : Set α} : Finite s → Countable s
+theorem Finite.countable {s : Set α} : s.Finite → Countable s
   | ⟨h⟩ => Trunc.nonempty (Fintype.truncEncodable s)
+
+@[nontriviality]
+theorem Countable.of_subsingleton [Subsingleton α] (s : Set α) : Countable s :=
+  (Finite.of_subsingleton s).Countable
 
 theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : Countable s :=
   hs.Finite.Countable
@@ -203,7 +207,7 @@ theorem countable_is_bot (α : Type _) [PartialOrderₓ α] : Countable { x : α
   (finite_is_bot α).Countable
 
 /-- The set of finite subsets of a countable set is countable. -/
-theorem countable_set_of_finite_subset {s : Set α} : Countable s → Countable { t | Finite t ∧ t ⊆ s }
+theorem countable_set_of_finite_subset {s : Set α} : Countable s → Countable { t | Set.Finite t ∧ t ⊆ s }
   | ⟨h⟩ => by
     skip
     refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })

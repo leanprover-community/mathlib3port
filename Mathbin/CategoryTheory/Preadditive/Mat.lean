@@ -81,7 +81,7 @@ def Hom (M N : Mat_ C) : Type v₁ :=
 namespace Hom
 
 /-- The identity matrix consists of identity morphisms on the diagonal, and zeros elsewhere. -/
-def id (M : Mat_ C) : Hom M M := fun i j => if h : i = j then eqToHom (congr_argₓ M.x h) else 0
+def id (M : Mat_ C) : Hom M M := fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0
 
 /-- Composition of matrices using matrix multiplication. -/
 def comp {M N K : Mat_ C} (f : Hom M N) (g : Hom N K) : Hom M K := fun i k => ∑ j : N.ι, f i j ≫ g j k
@@ -105,10 +105,10 @@ instance : Category.{v₁} (Mat_ C) where
     simp_rw [hom.comp, sum_comp, comp_sum, category.assoc]
     rw [Finset.sum_comm]
 
-theorem id_def (M : Mat_ C) : (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_argₓ M.x h) else 0 :=
+theorem id_def (M : Mat_ C) : (𝟙 M : Hom M M) = fun i j => if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
   rfl
 
-theorem id_apply (M : Mat_ C) (i j : M.ι) : (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_argₓ M.x h) else 0 :=
+theorem id_apply (M : Mat_ C) (i j : M.ι) : (𝟙 M : Hom M M) i j = if h : i = j then eqToHom (congr_arg M.x h) else 0 :=
   rfl
 
 @[simp]
@@ -289,7 +289,7 @@ def embedding : C ⥤ Mat_ C where
 namespace Embedding
 
 instance : Faithful (embedding C) where
-  map_injective' := fun X Y f g h => congr_funₓ (congr_funₓ h PUnit.unit) PUnit.unit
+  map_injective' := fun X Y f g h => congr_fun (congr_fun h PUnit.unit) PUnit.unit
 
 instance : Full (embedding C) where
   Preimage := fun X Y f => f PUnit.unit PUnit.unit
@@ -310,8 +310,8 @@ variable {C}
 -/
 @[simps]
 def isoBiproductEmbedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj (M.x i) where
-  hom := biproduct.lift fun i j k => if h : j = i then eqToHom (congr_argₓ M.x h) else 0
-  inv := biproduct.desc fun i j k => if h : i = k then eqToHom (congr_argₓ M.x h) else 0
+  hom := biproduct.lift fun i j k => if h : j = i then eqToHom (congr_arg M.x h) else 0
+  inv := biproduct.desc fun i j k => if h : i = k then eqToHom (congr_arg M.x h) else 0
   hom_inv_id' := by
     simp only [biproduct.lift_desc]
     funext i
@@ -548,7 +548,7 @@ instance : Faithful (equivalenceSingleObjInverse R) where
   map_injective' := fun X Y f g w => by
     ext i j
     apply_fun MulOpposite.unop using MulOpposite.unop_injective
-    exact congr_funₓ (congr_funₓ w i) j
+    exact congr_fun (congr_fun w i) j
 
 instance : Full (equivalenceSingleObjInverse R) where
   Preimage := fun X Y f i j => MulOpposite.op (f i j)

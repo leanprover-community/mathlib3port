@@ -44,7 +44,7 @@ def annihilator (N : Submodule R M) : Ideal R :=
 variable {I J : Ideal R} {N P : Submodule R M}
 
 theorem mem_annihilator {r} : r ∈ N.annihilator ↔ ∀, ∀ n ∈ N, ∀, r • n = (0 : M) :=
-  ⟨fun hr n hn => congr_argₓ Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩), fun h =>
+  ⟨fun hr n hn => congr_arg Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩), fun h =>
     LinearMap.mem_ker.2 <| LinearMap.ext fun n => Subtype.eq <| h n.1 n.2⟩
 
 theorem mem_annihilator' {r} : r ∈ N.annihilator ↔ N ≤ comap (r • LinearMap.id) ⊥ :=
@@ -182,7 +182,7 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
 variable (S : Set R) (T : Set M)
 
 theorem span_smul_span : Ideal.span S • span R T = span R (⋃ (s ∈ S) (t ∈ T), {s • t}) :=
-  (map₂_span_span _ _ _ _).trans <| congr_argₓ _ <| Set.image2_eq_Union _ _ _
+  (map₂_span_span _ _ _ _).trans <| congr_arg _ <| Set.image2_eq_Union _ _ _
 
 theorem ideal_span_singleton_smul (r : R) (N : Submodule R M) : (Ideal.span {r} : Ideal R) • N = r • N := by
   have : span R (⋃ (t : M) (x : t ∈ N), {r • t}) = r • N := by
@@ -297,7 +297,7 @@ theorem mem_colon' {r} : r ∈ N.colon P ↔ P ≤ comap (r • LinearMap.id) N 
 theorem colon_mono (hn : N₁ ≤ N₂) (hp : P₁ ≤ P₂) : N₁.colon P₂ ≤ N₂.colon P₁ := fun r hrnp =>
   mem_colon.2 fun p₁ hp₁ => hn <| mem_colon.1 hrnp p₁ <| hp hp₁
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem infi_colon_supr (ι₁ : Sort w) (f : ι₁ → Submodule R M) (ι₂ : Sort x) (g : ι₂ → Submodule R M) :
     (⨅ i, f i).colon (⨆ j, g j) = ⨅ (i) (j), (f i).colon (g j) :=
   le_antisymmₓ (le_infi fun i => le_infi fun j => colon_mono (infi_le _ _) (le_supr _ _)) fun r H =>
@@ -349,6 +349,20 @@ theorem pow_mem_pow {x : R} (hx : x ∈ I) (n : ℕ) : x ^ n ∈ I ^ n := by
   · simp only [pow_zeroₓ, Ideal.one_eq_top]
     
   simpa only [pow_succₓ] using mul_mem_mul hx ih
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem prod_mem_prod {ι : Type _} {s : Finset ι} {I : ι → Ideal R} {x : ι → R} :
+    (∀, ∀ i ∈ s, ∀, x i ∈ I i) → (∏ i in s, x i) ∈ ∏ i in s, I i := by
+  classical
+  apply Finset.induction_on s
+  · intro
+    rw [Finset.prod_empty, Finset.prod_empty, one_eq_top]
+    exact Submodule.mem_top
+    
+  · intro a s ha IH h
+    rw [Finset.prod_insert ha, Finset.prod_insert ha]
+    exact mul_mem_mul (h a <| Finset.mem_insert_self a s) (IH fun i hi => h i <| Finset.mem_insert_of_mem hi)
+    
 
 theorem mul_le : I * J ≤ K ↔ ∀, ∀ r ∈ I, ∀, ∀ s ∈ J, ∀, r * s ∈ K :=
   Submodule.smul_le
@@ -456,6 +470,18 @@ theorem infi_span_singleton {ι : Type _} [Fintype ι] (I : ι → R) (hI : ∀ 
     (⨅ i, Ideal.span ({I i} : Set R)) = Ideal.span {∏ i, I i} := by
   rw [← Finset.inf_univ_eq_infi, finset_inf_span_singleton]
   rwa [Finset.coe_univ, Set.pairwise_univ]
+
+theorem sup_eq_top_iff_is_coprime {R : Type _} [CommSemiringₓ R] (x y : R) :
+    span ({x} : Set R)⊔span {y} = ⊤ ↔ IsCoprime x y := by
+  rw [eq_top_iff_one, Submodule.mem_sup]
+  constructor
+  · rintro ⟨u, hu, v, hv, h1⟩
+    rw [mem_span_singleton'] at hu hv
+    rw [← hu.some_spec, ← hv.some_spec] at h1
+    exact ⟨_, _, h1⟩
+    
+  · exact fun ⟨u, v, h1⟩ => ⟨_, mem_span_singleton'.mpr ⟨_, rfl⟩, _, mem_span_singleton'.mpr ⟨_, rfl⟩, h1⟩
+    
 
 theorem mul_le_inf : I * J ≤ I⊓J :=
   mul_le.2 fun r hri s hsj => ⟨I.mul_mem_right s hri, J.mul_mem_left r hsj⟩
@@ -665,7 +691,7 @@ variable {I J}
 theorem IsPrime.radical_le_iff (hj : IsPrime J) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_transₓ le_radical, fun hij r ⟨n, hrni⟩ => hj.mem_of_pow_mem n <| hij hrni⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » m)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » m)
 theorem radical_eq_Inf (I : Ideal R) : radical I = inf { J : Ideal R | I ≤ J ∧ IsPrime J } :=
   (le_antisymmₓ (le_Inf fun J hJ => hJ.2.radical_le_iff.2 hJ.1)) fun r hr =>
     Classical.by_contradiction fun hri =>
@@ -1327,14 +1353,14 @@ theorem map_eq_top_or_is_maximal_of_surjective {I : Ideal R} (H : IsMaximal I) :
 theorem comap_is_maximal_of_surjective {K : Ideal S} [H : IsMaximal K] : IsMaximal (comap f K) := by
   refine' ⟨⟨comap_ne_top _ H.1.1, fun J hJ => _⟩⟩
   suffices map f J = ⊤ by
-    replace this := congr_argₓ (comap f) this
+    replace this := congr_arg (comap f) this
     rw [comap_top, comap_map_of_surjective _ hf, eq_top_iff] at this
     rw [eq_top_iff]
     exact le_transₓ this (sup_le (le_of_eqₓ rfl) (le_transₓ (comap_mono bot_le) (le_of_ltₓ hJ)))
   refine'
     H.1.2 (map f J)
       (lt_of_le_of_neₓ (le_map_of_comap_le_of_surjective _ hf (le_of_ltₓ hJ)) fun h =>
-        ne_of_ltₓ hJ (trans (congr_argₓ (comap f) h) _))
+        ne_of_ltₓ hJ (trans (congr_arg (comap f) h) _))
   rw [comap_map_of_surjective _ hf, sup_eq_left]
   exact le_transₓ (comap_mono bot_le) (le_of_ltₓ hJ)
 
@@ -1665,7 +1691,7 @@ theorem map_Inf {A : Set (Ideal R)} {f : R →+* S} (hf : Function.Surjective f)
 theorem map_is_prime_of_surjective {f : R →+* S} (hf : Function.Surjective f) {I : Ideal R} [H : IsPrime I]
     (hk : RingHom.ker f ≤ I) : IsPrime (map f I) := by
   refine' ⟨fun h => H.ne_top (eq_top_iff.2 _), fun x y => _⟩
-  · replace h := congr_argₓ (comap f) h
+  · replace h := congr_arg (comap f) h
     rw [comap_map_of_surjective _ hf, comap_top] at h
     exact h ▸ sup_le (le_of_eqₓ rfl) hk
     
@@ -1681,7 +1707,7 @@ theorem map_is_prime_of_surjective {f : R →+* S} (hf : Function.Surjective f) 
 
 theorem map_is_prime_of_equiv (f : R ≃+* S) {I : Ideal R} [IsPrime I] : IsPrime (map (f : R →+* S) I) :=
   map_is_prime_of_surjective f.Surjective <| by
-    simp
+    simp only [RingHom.ker_coe_equiv, bot_le]
 
 end Ringₓ
 
@@ -1933,7 +1959,7 @@ theorem comp_quotient_map_eq_of_comp_eq {R' S' : Type _} [CommRingₓ R'] [CommR
   refine' RingHom.ext fun a => _
   obtain ⟨r, rfl⟩ := quotient.mk_surjective a
   simp only [RingHom.comp_apply, quotient_map_mk]
-  exact congr_argₓ (Quotientₓ.mk I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
+  exact congr_arg (Quotientₓ.mk I) (trans (g'.comp_apply f r).symm (hfg ▸ f'.comp_apply g r))
 
 /-- The algebra hom `A/I →+* B/J` induced by an algebra hom `f : A →ₐ[R₁] B` with `I ≤ f⁻¹(J)`. -/
 def quotientMapₐ {I : Ideal A} (J : Ideal B) (f : A →ₐ[R₁] B) (hIJ : I ≤ J.comap f) : A ⧸ I →ₐ[R₁] B ⧸ J :=

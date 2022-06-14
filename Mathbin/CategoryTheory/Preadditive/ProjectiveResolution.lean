@@ -84,7 +84,7 @@ structure ProjectiveResolution (Z : C) where
 
 attribute [instance] ProjectiveResolution.projective ProjectiveResolution.epi
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- An object admits a projective resolution.
 -/
 class HasProjectiveResolution (Z : C) : Prop where
@@ -206,7 +206,7 @@ variable [HasZeroObject C] [Preadditive C] [HasEqualizers C] [HasImages C]
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroZero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)
     (comm : f ≫ Q.π = 0) : P.complex.x 0 ⟶ Q.complex.x 1 :=
-  Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀ (congr_funₓ (congr_argₓ HomologicalComplex.Hom.f comm) 0)
+  Exact.lift (f.f 0) (Q.complex.d 1 0) (Q.π.f 0) Q.exact₀ (congr_fun (congr_arg HomologicalComplex.Hom.f comm) 0)
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def liftHomotopyZeroOne {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z} (f : P.complex ⟶ Q.complex)

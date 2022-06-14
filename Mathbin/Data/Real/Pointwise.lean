@@ -46,7 +46,7 @@ theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : inf (a • s) = a
     
 
 theorem Real.smul_infi_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_argₓ inf <| (range_comp _ _).symm
+  (Real.Inf_smul_of_nonneg ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
 
 theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a • sup s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
@@ -63,7 +63,7 @@ theorem Real.Sup_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : sup (a • s) = a
     
 
 theorem Real.smul_supr_of_nonneg (ha : 0 ≤ a) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonneg ha _).symm.trans <| congr_argₓ sup <| (range_comp _ _).symm
+  (Real.Sup_smul_of_nonneg ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
 
 end MulActionWithZero
 
@@ -86,7 +86,7 @@ theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : inf (a • s) = a
     
 
 theorem Real.smul_supr_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨆ i, f i) = ⨅ i, a • f i :=
-  (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_argₓ inf <| (range_comp _ _).symm
+  (Real.Inf_smul_of_nonpos ha _).symm.trans <| congr_arg inf <| (range_comp _ _).symm
 
 theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a • inf s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
@@ -103,7 +103,7 @@ theorem Real.Sup_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : sup (a • s) = a
     
 
 theorem Real.smul_infi_of_nonpos (ha : a ≤ 0) (f : ι → ℝ) : (a • ⨅ i, f i) = ⨆ i, a • f i :=
-  (Real.Sup_smul_of_nonpos ha _).symm.trans <| congr_argₓ sup <| (range_comp _ _).symm
+  (Real.Sup_smul_of_nonpos ha _).symm.trans <| congr_arg sup <| (range_comp _ _).symm
 
 end Module
 

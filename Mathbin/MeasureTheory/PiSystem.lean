@@ -52,9 +52,9 @@ import Mathbin.MeasureTheory.MeasurableSpaceDef
 
 open MeasurableSpace Set
 
-open Classical
+open Classical MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (s t «expr ∈ » C)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (s t «expr ∈ » C)
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
@@ -171,7 +171,7 @@ theorem generate_pi_system_measurable_set {α} [M : MeasurableSpace α] {S : Set
     
 
 theorem generate_from_measurable_set_of_generate_pi_system {α} {g : Set (Set α)} (t : Set α)
-    (ht : t ∈ GeneratePiSystem g) : (generateFrom g).MeasurableSet' t :=
+    (ht : t ∈ GeneratePiSystem g) : measurable_set[generateFrom g] t :=
   @generate_pi_system_measurable_set α (generateFrom g) g (fun s h_s_in_g => measurable_set_generate_from h_s_in_g) t ht
 
 theorem generate_from_generate_pi_system_eq {α} {g : Set (Set α)} :
@@ -399,7 +399,7 @@ theorem generate_le {s : Set (Set α)} (h : ∀, ∀ t ∈ s, ∀, d.Has t) : ge
   ht.recOn h d.has_empty (fun a _ h => d.HasCompl h) fun f hd _ hf => d.has_Union hd hf
 
 theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α} (hs : (generate C).Has s) :
-    (generateFrom C).MeasurableSet' s :=
+    measurable_set[generateFrom C] s :=
   generate_le (ofMeasurableSpace (generateFrom C)) (fun t => measurable_set_generate_from) s hs
 
 theorem generate_inter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α} (ht₁ : (generate s).Has t₁)

@@ -36,15 +36,15 @@ variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 /-- The rank of a finite and free module is finite. -/
-theorem rank_lt_omega : Module.rank R M < ω := by
+theorem rank_lt_aleph_0 : Module.rank R M < ℵ₀ := by
   let this := nontrivial_of_invariant_basis_number R
-  rw [← (choose_basis R M).mk_eq_dim'', lt_omega_iff_fintype]
+  rw [← (choose_basis R M).mk_eq_dim'', lt_aleph_0_iff_fintype]
   exact Nonempty.intro inferInstance
 
 /-- If `M` is finite and free, `finrank M = rank M`. -/
 @[simp]
 theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
-  rw [finrank, cast_to_nat_of_lt_omega (rank_lt_omega R M)]
+  rw [finrank, cast_to_nat_of_lt_aleph_0 (rank_lt_aleph_0 R M)]
 
 /-- The finrank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem finrank_eq_card_choose_basis_index :
@@ -75,7 +75,7 @@ theorem finrank_direct_sum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
 @[simp]
 theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
-  simp [finrank, rank_lt_omega R M, rank_lt_omega R N]
+  simp [finrank, rank_lt_aleph_0 R M, rank_lt_aleph_0 R N]
 
 /-- The finrank of a finite product is the sum of the finranks. -/
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.

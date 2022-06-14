@@ -92,8 +92,8 @@ attribute [simp] map_Sup map_Inf
 theorem map_supr [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ι → α) : f (⨆ i, g i) = ⨆ i, f (g i) := by
   rw [supr, supr, map_Sup, Set.range_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨆ (i) (j), g i j) = ⨆ (i) (j), f (g i j) := by
   simp_rw [map_supr]
@@ -101,8 +101,8 @@ theorem map_supr₂ [HasSupₓ α] [HasSupₓ β] [SupHomClassₓ F α β] (f : 
 theorem map_infi [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   rw [infi, infi, map_Inf, Set.range_comp]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem map_infi₂ [HasInfₓ α] [HasInfₓ β] [InfHomClassₓ F α β] (f : F) (g : ∀ i, κ i → α) :
     f (⨅ (i) (j), g i j) = ⨅ (i) (j), f (g i j) := by
   simp_rw [map_infi]
@@ -257,14 +257,14 @@ theorem id_comp (f : SupHomₓ α β) : (SupHomₓ.id β).comp f = f :=
   ext fun a => rfl
 
 theorem cancel_right {g₁ g₂ : SupHomₓ β γ} {f : SupHomₓ α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : SupHomₓ β γ} {f₁ f₂ : SupHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end HasSupₓ
 
@@ -377,14 +377,14 @@ theorem id_comp (f : InfHomₓ α β) : (InfHomₓ.id β).comp f = f :=
   ext fun a => rfl
 
 theorem cancel_right {g₁ g₂ : InfHomₓ β γ} {f : InfHomₓ α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : InfHomₓ β γ} {f₁ f₂ : InfHomₓ α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end HasInfₓ
 
@@ -497,14 +497,14 @@ theorem id_comp (f : FrameHom α β) : (FrameHom.id β).comp f = f :=
   ext fun a => rfl
 
 theorem cancel_right {g₁ g₂ : FrameHom β γ} {f : FrameHom α β} (hf : Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : FrameHom β γ} {f₁ f₂ : FrameHom α β} (hg : Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 instance : PartialOrderₓ (FrameHom α β) :=
   PartialOrderₓ.lift _ FunLike.coe_injective
@@ -597,7 +597,7 @@ theorem id_comp (f : CompleteLatticeHom α β) : (CompleteLatticeHom.id β).comp
 
 theorem cancel_right {g₁ g₂ : CompleteLatticeHom β γ} {f : CompleteLatticeHom α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeHom α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
@@ -605,7 +605,7 @@ theorem cancel_left {g : CompleteLatticeHom β γ} {f₁ f₂ : CompleteLatticeH
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end CompleteLatticeHom
 
@@ -650,8 +650,8 @@ variable [HasInfₓ α] [HasInfₓ β] [HasInfₓ γ]
 /-- Reinterpret an `⨅`-homomorphism as a `⨆`-homomorphism between the dual orders. -/
 @[simps]
 protected def dual : InfHomₓ α β ≃ SupHomₓ αᵒᵈ βᵒᵈ where
-  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_argₓ toDual (map_Inf f _) }
-  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_argₓ ofDual (map_Sup f _) }
+  toFun := fun f => { toFun := to_dual ∘ f ∘ of_dual, map_Sup' := fun _ => congr_arg toDual (map_Inf f _) }
+  invFun := fun f => { toFun := of_dual ∘ f ∘ to_dual, map_Inf' := fun _ => congr_arg ofDual (map_Sup f _) }
   left_inv := fun f => InfHomₓ.ext fun a => rfl
   right_inv := fun f => SupHomₓ.ext fun a => rfl
 

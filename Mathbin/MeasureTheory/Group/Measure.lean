@@ -156,15 +156,15 @@ theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g 
 
 @[to_additive]
 theorem map_mul_left_ae (μ : Measure G) [IsMulLeftInvariant μ] (x : G) : Filter.map (fun h => x * h) μ.ae = μ.ae :=
-  ((MeasurableEquiv.mulLeft x).map_ae μ).trans <| congr_argₓ ae <| map_mul_left_eq_self μ x
+  ((MeasurableEquiv.mulLeft x).map_ae μ).trans <| congr_arg ae <| map_mul_left_eq_self μ x
 
 @[to_additive]
 theorem map_mul_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun h => h * x) μ.ae = μ.ae :=
-  ((MeasurableEquiv.mulRight x).map_ae μ).trans <| congr_argₓ ae <| map_mul_right_eq_self μ x
+  ((MeasurableEquiv.mulRight x).map_ae μ).trans <| congr_arg ae <| map_mul_right_eq_self μ x
 
 @[to_additive]
 theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) : Filter.map (fun t => t / x) μ.ae = μ.ae :=
-  ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_argₓ ae <| map_div_right_eq_self μ x
+  ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_arg ae <| map_div_right_eq_self μ x
 
 end Groupₓ
 
@@ -262,7 +262,7 @@ theorem map_mul_right_inv_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLef
 @[to_additive]
 theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
     Filter.map (fun t => x / t) μ.ae = μ.ae :=
-  ((MeasurableEquiv.divLeft x).map_ae μ).trans <| congr_argₓ ae <| map_div_left_eq_self μ x
+  ((MeasurableEquiv.divLeft x).map_ae μ).trans <| congr_arg ae <| map_div_left_eq_self μ x
 
 end mul_inv
 

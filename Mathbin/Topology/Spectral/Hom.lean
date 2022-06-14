@@ -164,7 +164,7 @@ theorem id_comp (f : SpectralMap α β) : (SpectralMap.id β).comp f = f :=
 
 theorem cancel_right {g₁ g₂ : SpectralMap β γ} {f : SpectralMap α β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : SpectralMap β γ} {f₁ f₂ : SpectralMap α β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
@@ -172,7 +172,7 @@ theorem cancel_left {g : SpectralMap β γ} {f₁ f₂ : SpectralMap α β} (hg 
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end SpectralMap
 

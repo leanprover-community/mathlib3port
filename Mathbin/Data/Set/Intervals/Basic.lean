@@ -256,6 +256,22 @@ instance nonempty_Ioi_subtype [NoMaxOrder α] : Nonempty (Ioi a) :=
 instance nonempty_Iio_subtype [NoMinOrder α] : Nonempty (Iio a) :=
   Nonempty.to_subtype nonempty_Iio
 
+instance [NoMinOrder α] : NoMinOrder (Iio a) :=
+  ⟨fun a =>
+    let ⟨b, hb⟩ := exists_lt (a : α)
+    ⟨⟨b, lt_transₓ hb a.2⟩, hb⟩⟩
+
+instance [NoMinOrder α] : NoMinOrder (Iic a) :=
+  ⟨fun a =>
+    let ⟨b, hb⟩ := exists_lt (a : α)
+    ⟨⟨b, hb.le.trans a.2⟩, hb⟩⟩
+
+instance [NoMaxOrder α] : NoMaxOrder (Ioi a) :=
+  OrderDual.no_max_order (Iio (toDual a))
+
+instance [NoMaxOrder α] : NoMaxOrder (Ici a) :=
+  OrderDual.no_max_order (Iic (toDual a))
+
 @[simp]
 theorem Icc_eq_empty (h : ¬a ≤ b) : Icc a b = ∅ :=
   eq_empty_iff_forall_not_mem.2 fun x ⟨ha, hb⟩ => h (ha.trans hb)

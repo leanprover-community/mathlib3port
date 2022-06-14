@@ -211,7 +211,7 @@ instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) := fun f g
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.Support.finite_to_set
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.Support ⊆ s ↔ ∀ a _ : a ∉ s, f a = 0 := by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congrₓ fun a => not_imp_comm
 
@@ -281,14 +281,14 @@ theorem single_eq_same : (single a b : α →₀ M) a = b :=
 theorem single_eq_of_ne (h : a ≠ a') : (single a b : α →₀ M) a' = 0 :=
   if_neg h
 
-theorem single_eq_update [DecidableEq α] : ⇑(single a b) = Function.update 0 a b := by
+theorem single_eq_update [DecidableEq α] (a : α) (b : M) : ⇑(single a b) = Function.update 0 a b := by
   rw [single_eq_indicator, ← Set.piecewise_eq_indicator, Set.piecewise_singleton]
 
-theorem single_eq_pi_single [DecidableEq α] : ⇑(single a b) = Pi.single a b :=
-  single_eq_update
+theorem single_eq_pi_single [DecidableEq α] (a : α) (b : M) : ⇑(single a b) = Pi.single a b :=
+  single_eq_update a b
 
 @[simp]
-theorem single_zero : (single a 0 : α →₀ M) = 0 :=
+theorem single_zero (a : α) : (single a 0 : α →₀ M) = 0 :=
   coe_fn_injective <| by
     simpa only [single_eq_update, coe_zero] using Function.update_eq_self a (0 : α → M)
 
@@ -301,7 +301,7 @@ theorem single_of_single_apply (a a' : α) (b : M) : single a ((single a' b) a) 
   · rw [zero_apply, single_apply, if_t_t]
     
 
-theorem support_single_ne_zero (hb : b ≠ 0) : (single a b).Support = {a} :=
+theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).Support = {a} :=
   if_neg hb
 
 theorem support_single_subset : (single a b).Support ⊆ {a} :=
@@ -368,11 +368,11 @@ theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
 
 theorem support_single_ne_bot (i : α) (h : b ≠ 0) : (single i b).Support ≠ ⊥ := by
-  simpa only [support_single_ne_zero h] using singleton_ne_empty _
+  simpa only [support_single_ne_zero _ h] using singleton_ne_empty _
 
 theorem support_single_disjoint [DecidableEq α] {b' : M} (hb : b ≠ 0) (hb' : b' ≠ 0) {i j : α} :
     Disjoint (single i b).Support (single j b').Support ↔ i ≠ j := by
-  rw [support_single_ne_zero hb, support_single_ne_zero hb', disjoint_singleton]
+  rw [support_single_ne_zero _ hb, support_single_ne_zero _ hb', disjoint_singleton]
 
 @[simp]
 theorem single_eq_zero : single a b = 0 ↔ b = 0 := by
@@ -403,19 +403,19 @@ theorem unique_single_eq_iff [Unique α] {b' : M} : single a b = single a' b' �
 
 theorem support_eq_singleton {f : α →₀ M} {a : α} : f.Support = {a} ↔ f a ≠ 0 ∧ f = single a (f a) :=
   ⟨fun h => ⟨mem_support_iff.1 <| h.symm ▸ Finset.mem_singleton_self a, eq_single_iff.2 ⟨subset_of_eq h, rfl⟩⟩, fun h =>
-    h.2.symm ▸ support_single_ne_zero h.1⟩
+    h.2.symm ▸ support_single_ne_zero _ h.1⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem support_eq_singleton' {f : α →₀ M} {a : α} : f.Support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
     let h := support_eq_singleton.1 h
     ⟨_, h.1, h.2⟩,
-    fun ⟨b, hb, hf⟩ => hf.symm ▸ support_single_ne_zero hb⟩
+    fun ⟨b, hb, hf⟩ => hf.symm ▸ support_single_ne_zero _ hb⟩
 
 theorem card_support_eq_one {f : α →₀ M} : card f.Support = 1 ↔ ∃ a, f a ≠ 0 ∧ f = single a (f a) := by
   simp only [card_eq_one, support_eq_singleton]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ≠ » 0)
 theorem card_support_eq_one' {f : α →₀ M} : card f.Support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']
 
@@ -562,7 +562,7 @@ bundled:
 -/
 def mapRange (f : M → N) (hf : f 0 = 0) (g : α →₀ M) : α →₀ N :=
   (onFinset g.Support (f ∘ g)) fun a => by
-    rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_argₓ f H).trans hf
+    rw [mem_support_iff, not_imp_not] <;> exact fun H => (congr_arg f H).trans hf
 
 @[simp]
 theorem map_range_apply {f : M → N} {hf : f 0 = 0} {g : α →₀ M} {a : α} : mapRange f hf g a = f (g a) :=
@@ -636,7 +636,7 @@ theorem emb_domain_zero (f : α ↪ β) : (embDomain f 0 : β →₀ M) = 0 :=
 theorem emb_domain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a := by
   change dite _ _ _ = _
   split_ifs <;> rw [Finset.mem_map' f] at h
-  · refine' congr_argₓ (v : α → M) (f.inj' _)
+  · refine' congr_arg (v : α → M) (f.inj' _)
     exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
     
   · exact (not_mem_support_iff.1 h).symm
@@ -672,7 +672,7 @@ theorem emb_domain_map_range (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg
 theorem single_of_emb_domain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
     (h : l.embDomain f = single a b) : ∃ x, l = single x b ∧ f x = a := by
   have h_map_support : Finset.map f l.support = {a} := by
-    rw [← support_emb_domain, h, support_single_ne_zero hb] <;> rfl
+    rw [← support_emb_domain, h, support_single_ne_zero _ hb] <;> rfl
   have ha : a ∈ Finset.map f l.support := by
     simp only [h_map_support, Finset.mem_singleton]
   rcases Finset.mem_map.1 ha with ⟨c, hc₁, hc₂⟩
@@ -813,7 +813,7 @@ variable [Zero M] [Zero M'] [CommMonoidₓ N]
 @[to_additive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.Support ⊆ s) (g : α → M → N)
     (h : ∀, ∀ i ∈ s, ∀, g i 0 = 1) : f.Prod g = ∏ x in s, g x (f x) :=
-  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_argₓ (g x) <| not_mem_support_iff.1 hx
+  (Finset.prod_subset hs) fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
 
 @[to_additive]
 theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) : f.Prod g = ∏ i, g i (f i) :=
@@ -953,7 +953,7 @@ theorem support_add_eq [DecidableEq α] {g₁ g₂ : α →₀ M} (h : Disjoint 
       simp only [mem_support_iff, not_not] at * <;> simpa only [add_apply, this, zero_addₓ]
 
 @[simp]
-theorem single_add {a : α} {b₁ b₂ : M} : single a (b₁ + b₂) = single a b₁ + single a b₂ :=
+theorem single_add (a : α) (b₁ b₂ : M) : single a (b₁ + b₂) = single a b₁ + single a b₂ :=
   ext fun a' => by
     by_cases' h : a = a'
     · rw [h, add_apply, single_eq_same, single_eq_same, single_eq_same]
@@ -970,7 +970,7 @@ See `finsupp.lsingle` for the stronger version as a linear map.
 -/
 @[simps]
 def singleAddHom (a : α) : M →+ α →₀ M :=
-  ⟨single a, single_zero, fun _ _ => single_add⟩
+  ⟨single a, single_zero a, single_add a⟩
 
 /-- Evaluation of a function `f : α →₀ M` at a point as an additive monoid homomorphism.
 
@@ -1217,7 +1217,7 @@ instance [AddCommGroupₓ G] : AddCommGroupₓ (α →₀ G) :=
   FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 theorem single_multiset_sum [AddCommMonoidₓ M] (s : Multiset M) (a : α) : single a s.Sum = (s.map (single a)).Sum :=
-  (Multiset.induction_on s single_zero) fun a s ih => by
+  (Multiset.induction_on s (single_zero _)) fun a s ih => by
     rw [Multiset.sum_cons, single_add, ih, Multiset.map_cons, Multiset.sum_cons]
 
 theorem single_finset_sum [AddCommMonoidₓ M] (s : Finset ι) (f : ι → M) (a : α) :
@@ -1240,7 +1240,7 @@ theorem prod_neg_index [AddGroupₓ G] [CommMonoidₓ M] {g : α →₀ G} {h : 
 theorem support_neg [AddGroupₓ G] (f : α →₀ G) : support (-f) = support f :=
   Finset.Subset.antisymm support_map_range
     (calc
-      support f = support (- -f) := congr_argₓ support (neg_negₓ _).symm
+      support f = support (- -f) := congr_arg support (neg_negₓ _).symm
       _ ⊆ support (-f) := support_map_range
       )
 
@@ -1652,19 +1652,19 @@ theorem map_domain_id : mapDomain id v = v :=
 
 theorem map_domain_comp {f : α → β} {g : β → γ} : mapDomain (g ∘ f) v = mapDomain g (mapDomain f v) := by
   refine' ((sum_sum_index _ _).trans _).symm
-  · intros
-    exact single_zero
+  · intro
+    exact single_zero _
     
-  · intros
-    exact single_add
+  · intro
+    exact single_add _
     
   refine' sum_congr fun _ _ => sum_single_index _
-  · exact single_zero
+  · exact single_zero _
     
 
 @[simp]
 theorem map_domain_single {f : α → β} {a : α} {b : M} : mapDomain f (single a b) = single (f a) b :=
-  sum_single_index single_zero
+  sum_single_index <| single_zero _
 
 @[simp]
 theorem map_domain_zero {f : α → β} : mapDomain f (0 : α →₀ M) = (0 : β →₀ M) :=
@@ -1675,7 +1675,7 @@ theorem map_domain_congr {f g : α → β} (h : ∀, ∀ x ∈ v.Support, ∀, f
     simp only [h _ H]
 
 theorem map_domain_add {f : α → β} : mapDomain f (v₁ + v₂) = mapDomain f v₁ + mapDomain f v₂ :=
-  sum_add_index' (fun _ => single_zero) fun _ _ _ => single_add
+  sum_add_index' (fun _ => single_zero _) fun _ => single_add _
 
 @[simp]
 theorem map_domain_equiv_apply {f : α ≃ β} (x : α →₀ M) (a : β) : mapDomain f x a = x (f.symm a) := by
@@ -1888,8 +1888,8 @@ theorem comap_domain_single (f : α → β) (a : α) (m : M) (hif : Set.InjOn f 
   · simp only [single_zero, comap_domain_zero]
     
   · rw [eq_single_iff, comap_domain_apply, comap_domain_support, ← Finset.coe_subset, coe_preimage,
-      support_single_ne_zero hm, coe_singleton, coe_singleton, single_eq_same]
-    rw [support_single_ne_zero hm, coe_singleton] at hif
+      support_single_ne_zero _ hm, coe_singleton, coe_singleton, single_eq_same]
+    rw [support_single_ne_zero _ hm, coe_singleton] at hif
     exact ⟨fun x hx => hif hx rfl hx, rfl⟩
     
 
@@ -2271,11 +2271,11 @@ theorem subtype_domain_sub : (v - v').subtypeDomain p = v.subtypeDomain p - v'.s
   ext fun _ => rfl
 
 @[simp]
-theorem single_neg {a : α} {b : G} : single a (-b) = -single a b :=
+theorem single_neg (a : α) (b : G) : single a (-b) = -single a b :=
   (singleAddHom a : G →+ _).map_neg b
 
 @[simp]
-theorem single_sub {a : α} {b₁ b₂ : G} : single a (b₁ - b₂) = single a b₁ - single a b₂ :=
+theorem single_sub (a : α) (b₁ b₂ : G) : single a (b₁ - b₂) = single a b₁ - single a b₂ :=
   (singleAddHom a : G →+ _).map_sub b₁ b₂
 
 @[simp]
@@ -2564,12 +2564,12 @@ theorem smul_apply {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] (b 
 theorem _root_.is_smul_regular.finsupp {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {k : R}
     (hk : IsSmulRegular M k) : IsSmulRegular (α →₀ M) k := fun _ _ h => ext fun i => hk (congr_fun h i)
 
-instance [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [HasFaithfulScalar R M] :
-    HasFaithfulScalar R (α →₀ M) where
+instance [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [HasFaithfulSmul R M] :
+    HasFaithfulSmul R (α →₀ M) where
   eq_of_smul_eq_smul := fun r₁ r₂ h =>
     let ⟨a⟩ := ‹Nonempty α›
     eq_of_smul_eq_smul fun m : M => by
-      simpa using congr_funₓ (h (single a m)) a
+      simpa using congr_fun (h (single a m)) a
 
 variable (α M)
 

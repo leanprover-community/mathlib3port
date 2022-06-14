@@ -56,8 +56,8 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
     multiplicity m n = ↑(ico 1 <| (multiplicity m n).get (finite_nat_iff.2 ⟨hm, hn⟩) + 1).card := by
       simp
     _ = ↑((Finset.ico 1 b).filter fun i => m ^ i ∣ n).card :=
-      congr_argₓ coe <|
-        congr_argₓ card <|
+      congr_arg coe <|
+        congr_arg card <|
           Finset.ext fun i => by
             rw [mem_filter, mem_Ico, mem_Ico, lt_succ_iff, ← @Enat.coe_le_coe i, Enat.coe_get, ←
               pow_dvd_iff_le_multiplicity, And.right_comm]
@@ -110,7 +110,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         rw [sum_add_distrib, sum_boole]
         simp
       _ = (∑ i in ico 1 b, (n + 1) / p ^ i : ℕ) :=
-        congr_argₓ coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
+        congr_arg coe <| (Finset.sum_congr rfl) fun _ _ => (succ_div _ _).symm
       
 
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum

@@ -34,7 +34,7 @@ noncomputable section
 
 namespace Complex
 
-open ComplexConjugate
+open ComplexConjugate TopologicalSpace
 
 instance : HasNorm ℂ :=
   ⟨abs⟩
@@ -75,6 +75,10 @@ theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * abs z.im := by
 
 theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * abs z.im := by
   rw [dist_comm, dist_self_conj]
+
+@[simp]
+theorem comap_abs_nhds_zero : Filter.comap abs (𝓝 0) = 𝓝 0 :=
+  comap_norm_nhds_zero
 
 @[simp]
 theorem norm_real (r : ℝ) : ∥(r : ℂ)∥ = ∥r∥ :=
@@ -123,7 +127,7 @@ theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : 
   rw [← nnnorm_pow, h, nnnorm_one, one_pow]
 
 theorem norm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ∥ζ∥ = 1 :=
-  congr_argₓ coe (nnnorm_eq_one_of_pow_eq_one h hn)
+  congr_arg coe (nnnorm_eq_one_of_pow_eq_one h hn)
 
 /-- The `abs` function on `ℂ` is proper. -/
 theorem tendsto_abs_cocompact_at_top : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=

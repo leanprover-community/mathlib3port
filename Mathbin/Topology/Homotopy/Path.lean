@@ -131,7 +131,7 @@ theorem symm_trans (F : Homotopy p₀ p₁) (G : Homotopy p₁ p₂) : (F.trans 
 -/
 @[simps]
 def cast {p₀ p₁ q₀ q₁ : Path x₀ x₁} (F : Homotopy p₀ p₁) (h₀ : p₀ = q₀) (h₁ : p₁ = q₁) : Homotopy q₀ q₁ :=
-  ContinuousMap.HomotopyRel.cast F (congr_argₓ _ h₀) (congr_argₓ _ h₁)
+  ContinuousMap.HomotopyRel.cast F (congr_arg _ h₀) (congr_arg _ h₁)
 
 end
 

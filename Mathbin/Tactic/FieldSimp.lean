@@ -15,7 +15,7 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
 a numeral. -/
 unsafe def field_simp.ne_zero : tactic Unit := do

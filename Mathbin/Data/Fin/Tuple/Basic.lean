@@ -94,9 +94,9 @@ theorem cons_update : cons x (update p i y) = update (cons x p) i.succ y := by
 
 /-- As a binary function, `fin.cons` is injective. -/
 theorem cons_injective2 : Function.Injective2 (@cons n α) := fun x₀ y₀ x y h =>
-  ⟨congr_funₓ h 0,
+  ⟨congr_fun h 0,
     funext fun i => by
-      simpa using congr_funₓ h (Finₓ.succ i)⟩
+      simpa using congr_fun h (Finₓ.succ i)⟩
 
 @[simp]
 theorem cons_eq_cons {x₀ y₀ : α 0} {x y : ∀ i : Finₓ n, α i.succ} : cons x₀ x = cons y₀ y ↔ x₀ = y₀ ∧ x = y :=
@@ -312,7 +312,7 @@ theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
         convert this
         · exact h'.symm
           
-        · exact heq_of_cast_eq (congr_argₓ α (Eq.symm h')) rfl
+        · exact heq_of_cast_eq (congr_arg α (Eq.symm h')) rfl
           
       have C2 : α i.cast_succ = α (cast_succ (cast_lt j h)) := by
         rw [cast_succ_cast_lt, h']
@@ -464,11 +464,11 @@ theorem insert_nth_apply_succ_above (i : Finₓ (n + 1)) (x : α i) (p : ∀ j, 
   simp only [insert_nth, succ_above_cases, dif_neg (succ_above_ne _ _)]
   by_cases' hlt : j.cast_succ < i
   · rw [dif_pos ((succ_above_lt_iff _ _).2 hlt)]
-    apply eq_of_heq ((eq_rec_heqₓ _ _).trans _)
+    apply eq_of_heq ((eq_rec_heq _ _).trans _)
     rw [cast_lt_succ_above hlt]
     
   · rw [dif_neg (mt (succ_above_lt_iff _ _).1 hlt)]
-    apply eq_of_heq ((eq_rec_heqₓ _ _).trans _)
+    apply eq_of_heq ((eq_rec_heq _ _).trans _)
     rw [pred_succ_above (le_of_not_ltₓ hlt)]
     
 
@@ -497,7 +497,7 @@ theorem insert_nth_apply_above {i j : Finₓ (n + 1)} (h : i < j) (x : α i) (p 
   rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 
 theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succAbove 0 j)) :
-    insertNth 0 x p = cons x fun j => cast (congr_argₓ α (congr_funₓ succ_above_zero j)) (p j) := by
+    insertNth 0 x p = cons x fun j => cast (congr_arg α (congr_fun succ_above_zero j)) (p j) := by
   refine'
     insert_nth_eq_iff.2
       ⟨by
@@ -510,14 +510,14 @@ theorem insert_nth_zero' (x : β) (p : Finₓ n → β) : @insertNth _ (fun _ =>
   simp [insert_nth_zero]
 
 theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).succAbove j)) :
-    insertNth (last n) x p = snoc (fun j => cast (congr_argₓ α (succ_above_last_apply j)) (p j)) x := by
+    insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succ_above_last_apply j)) (p j)) x := by
   refine'
     insert_nth_eq_iff.2
       ⟨by
         simp , _⟩
   ext j
   apply eq_of_heq
-  trans snoc (fun j => _root_.cast (congr_argₓ α (succ_above_last_apply j)) (p j)) x j.cast_succ
+  trans snoc (fun j => _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ
   · rw [snoc_cast_succ]
     exact (cast_heq _ _).symm
     

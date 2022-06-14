@@ -120,7 +120,7 @@ theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R
   ⟨fun H =>
     ext fun n => by
       rw [← coeff_expand_mul hp, H, coeff_expand_mul hp],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 theorem expand_eq_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f = 0 ↔ f = 0 := by
   rw [← (expand R p).map_zero, expand_inj hp, AlgHom.map_zero]

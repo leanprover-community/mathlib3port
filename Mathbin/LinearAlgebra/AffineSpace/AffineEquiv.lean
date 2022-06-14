@@ -64,36 +64,7 @@ instance : CoeFun (P₁ ≃ᵃ[k] P₂) fun _ => P₁ → P₂ :=
 instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ ≃ P₂) :=
   ⟨AffineEquiv.toEquiv⟩
 
-variable (k P₁)
-
-omit V₂
-
-/-- Identity map as an `affine_equiv`. -/
-@[refl]
-def refl : P₁ ≃ᵃ[k] P₁ where
-  toEquiv := Equivₓ.refl P₁
-  linear := LinearEquiv.refl k V₁
-  map_vadd' := fun _ _ => rfl
-
-@[simp]
-theorem coe_refl : ⇑(refl k P₁) = id :=
-  rfl
-
-@[simp]
-theorem refl_apply (x : P₁) : refl k P₁ x = x :=
-  rfl
-
-@[simp]
-theorem to_equiv_refl : (refl k P₁).toEquiv = Equivₓ.refl P₁ :=
-  rfl
-
-@[simp]
-theorem linear_refl : (refl k P₁).linear = LinearEquiv.refl k V₁ :=
-  rfl
-
 variable {k P₁}
-
-include V₂
 
 @[simp]
 theorem map_vadd (e : P₁ ≃ᵃ[k] P₂) (p : P₁) (v : V₁) : e (v +ᵥ p) = e.linear v +ᵥ e p :=
@@ -140,7 +111,7 @@ theorem to_affine_map_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toAffineMap = e'.toAf
 theorem ext {e e' : P₁ ≃ᵃ[k] P₂} (h : ∀ x, e x = e' x) : e = e' :=
   to_affine_map_injective <| AffineMap.ext h
 
-theorem coe_fn_injective : @Injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn := fun e e' H => ext <| congr_funₓ H
+theorem coe_fn_injective : @Injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn := fun e e' H => ext <| congr_fun H
 
 @[simp, norm_cast]
 theorem coe_fn_inj {e e' : P₁ ≃ᵃ[k] P₂} : (e : P₁ → P₂) = e' ↔ e = e' :=
@@ -235,11 +206,42 @@ theorem apply_eq_iff_eq_symm_apply (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂} : e p�
 theorem apply_eq_iff_eq (e : P₁ ≃ᵃ[k] P₂) {p₁ p₂ : P₁} : e p₁ = e p₂ ↔ p₁ = p₂ :=
   e.toEquiv.apply_eq_iff_eq
 
+variable (k P₁)
+
 omit V₂
+
+/-- Identity map as an `affine_equiv`. -/
+@[refl]
+def refl : P₁ ≃ᵃ[k] P₁ where
+  toEquiv := Equivₓ.refl P₁
+  linear := LinearEquiv.refl k V₁
+  map_vadd' := fun _ _ => rfl
+
+@[simp]
+theorem coe_refl : ⇑(refl k P₁) = id :=
+  rfl
+
+@[simp]
+theorem coe_refl_to_affine_map : ↑(refl k P₁) = AffineMap.id k P₁ :=
+  rfl
+
+@[simp]
+theorem refl_apply (x : P₁) : refl k P₁ x = x :=
+  rfl
+
+@[simp]
+theorem to_equiv_refl : (refl k P₁).toEquiv = Equivₓ.refl P₁ :=
+  rfl
+
+@[simp]
+theorem linear_refl : (refl k P₁).linear = LinearEquiv.refl k V₁ :=
+  rfl
 
 @[simp]
 theorem symm_refl : (refl k P₁).symm = refl k P₁ :=
   rfl
+
+variable {k P₁}
 
 include V₂ V₃
 
@@ -328,7 +330,7 @@ def linearHom : (P₁ ≃ᵃ[k] P₁) →* V₁ ≃ₗ[k] V₁ where
 This is the affine version of `linear_map.general_linear_group.general_linear_equiv`. -/
 @[simps]
 def equivUnitsAffineMap : (P₁ ≃ᵃ[k] P₁) ≃* (P₁ →ᵃ[k] P₁)ˣ where
-  toFun := fun e => ⟨e, e.symm, congr_argₓ coe e.symm_trans_self, congr_argₓ coe e.self_trans_symm⟩
+  toFun := fun e => ⟨e, e.symm, congr_arg coe e.symm_trans_self, congr_arg coe e.self_trans_symm⟩
   invFun := fun u =>
     { toFun := (u : P₁ →ᵃ[k] P₁), invFun := (↑u⁻¹ : P₁ →ᵃ[k] P₁), left_inv := AffineMap.congr_fun u.inv_mul,
       right_inv := AffineMap.congr_fun u.mul_inv,
@@ -365,12 +367,40 @@ theorem coe_const_vsub_symm (p : P₁) : ⇑(constVsub k p).symm = fun v => -v +
 
 variable (P₁)
 
-/-- The map `p ↦ v +ᵥ p` as an affine automorphism of an affine space. -/
-@[simps]
+/-- The map `p ↦ v +ᵥ p` as an affine automorphism of an affine space.
+
+Note that there is no need for an `affine_map.const_vadd` as it is always an equivalence.
+This is roughly to `distrib_mul_action.to_linear_equiv` as `+ᵥ` is to `•`. -/
+@[simps apply linear]
 def constVadd (v : V₁) : P₁ ≃ᵃ[k] P₁ where
   toEquiv := Equivₓ.constVadd P₁ v
   linear := LinearEquiv.refl _ _
   map_vadd' := fun p w => vadd_comm _ _ _
+
+@[simp]
+theorem const_vadd_zero : constVadd k P₁ 0 = AffineEquiv.refl _ _ :=
+  ext <| zero_vadd _
+
+@[simp]
+theorem const_vadd_add (v w : V₁) : constVadd k P₁ (v + w) = (constVadd k P₁ w).trans (constVadd k P₁ v) :=
+  ext <| add_vadd _ _
+
+@[simp]
+theorem const_vadd_symm (v : V₁) : (constVadd k P₁ v).symm = constVadd k P₁ (-v) :=
+  ext fun _ => rfl
+
+/-- A more bundled version of `affine_equiv.const_vadd`. -/
+@[simps]
+def constVaddHom : Multiplicative V₁ →* P₁ ≃ᵃ[k] P₁ where
+  toFun := fun v => constVadd k P₁ v.toAdd
+  map_one' := const_vadd_zero _ _
+  map_mul' := const_vadd_add _ _
+
+theorem const_vadd_nsmul (n : ℕ) (v : V₁) : constVadd k P₁ (n • v) = constVadd k P₁ v ^ n :=
+  (constVaddHom k P₁).map_pow _ _
+
+theorem const_vadd_zsmul (z : ℤ) (v : V₁) : constVadd k P₁ (z • v) = constVadd k P₁ v ^ z :=
+  (constVaddHom k P₁).map_zpow _ _
 
 section Homothety
 

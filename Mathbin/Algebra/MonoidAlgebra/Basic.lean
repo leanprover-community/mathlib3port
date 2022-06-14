@@ -251,9 +251,9 @@ instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] : DistribMulAction
 instance [Semiringₓ R] [Semiringₓ k] [Module R k] : Module R (MonoidAlgebra k G) :=
   Finsupp.module G k
 
-instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [HasFaithfulScalar R k] [Nonempty G] :
-    HasFaithfulScalar R (MonoidAlgebra k G) :=
-  Finsupp.has_faithful_scalar
+instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [HasFaithfulSmul R k] [Nonempty G] :
+    HasFaithfulSmul R (MonoidAlgebra k G) :=
+  Finsupp.has_faithful_smul
 
 instance [Monoidₓ R] [Monoidₓ S] [Semiringₓ k] [DistribMulAction R k] [DistribMulAction S k] [HasScalar R S]
     [IsScalarTower R S k] : IsScalarTower R S (MonoidAlgebra k G) :=
@@ -1111,9 +1111,9 @@ variable {S : Type _}
 instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] : DistribMulAction R (AddMonoidAlgebra k G) :=
   Finsupp.distribMulAction G k
 
-instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [HasFaithfulScalar R k] [Nonempty G] :
-    HasFaithfulScalar R (AddMonoidAlgebra k G) :=
-  Finsupp.has_faithful_scalar
+instance [Monoidₓ R] [Semiringₓ k] [DistribMulAction R k] [HasFaithfulSmul R k] [Nonempty G] :
+    HasFaithfulSmul R (AddMonoidAlgebra k G) :=
+  Finsupp.has_faithful_smul
 
 instance [Semiringₓ R] [Semiringₓ k] [Module R k] : Module R (AddMonoidAlgebra k G) :=
   Finsupp.module G k

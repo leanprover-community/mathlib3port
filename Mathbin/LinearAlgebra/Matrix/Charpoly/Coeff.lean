@@ -178,7 +178,7 @@ theorem mat_poly_equiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
     Polynomial.eval r M.det = (Polynomial.eval (scalar n r) (matPolyEquiv M)).det := by
   rw [Polynomial.eval, ← coe_eval₂_ring_hom, RingHom.map_det]
-  apply congr_argₓ det
+  apply congr_arg det
   ext
   symm
   convert mat_poly_equiv_eval _ _ _ _

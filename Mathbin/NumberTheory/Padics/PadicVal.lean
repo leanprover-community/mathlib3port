@@ -9,7 +9,7 @@ import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.Basic
 import Mathbin.Tactic.RingExp
 import Mathbin.NumberTheory.Divisors
-import Mathbin.Data.Nat.Factorization
+import Mathbin.Data.Nat.Factorization.Basic
 
 /-!
 # p-adic Valuation
@@ -229,6 +229,9 @@ theorem padic_val_nat_def {p : ℕ} [hp : Fact p.Prime] {n : ℕ} (hn : 0 < n) :
   · exfalso
     apply h ⟨hp.out.ne_one, hn⟩
     
+
+theorem padic_val_nat_def' {n p : ℕ} (hp : p ≠ 1) (hn : 0 < n) : ↑(padicValNat p n) = multiplicity p n := by
+  simp [padicValNat, hp, hn]
 
 @[simp]
 theorem padic_val_nat_self (p : ℕ) [Fact p.Prime] : padicValNat p p = 1 := by
@@ -450,19 +453,14 @@ theorem dvd_of_one_le_padic_val_nat {n p : Nat} (hp : 1 ≤ padicValNat p n) : p
   rw [padicValNat.eq_zero_of_not_dvd h] at hp
   exact lt_irreflₓ 0 (lt_of_lt_of_leₓ zero_lt_one hp)
 
-theorem pow_padic_val_nat_dvd {p n : ℕ} [Fact (Nat.Prime p)] : p ^ padicValNat p n ∣ n := by
-  cases' Nat.eq_zero_or_posₓ n with hn hn
-  · rw [hn]
-    exact dvd_zero (p ^ padicValNat p 0)
+theorem pow_padic_val_nat_dvd {p n : ℕ} : p ^ padicValNat p n ∣ n := by
+  rcases n.eq_zero_or_pos with (rfl | hn)
+  · simp
     
-  · rw [multiplicity.pow_dvd_iff_le_multiplicity]
-    apply le_of_eqₓ
-    rw [padic_val_nat_def hn]
-    · apply Enat.coe_get
-      
-    · infer_instance
-      
+  rcases eq_or_ne p 1 with (rfl | hp)
+  · simp
     
+  rw [multiplicity.pow_dvd_iff_le_multiplicity, padic_val_nat_def'] <;> assumption
 
 theorem pow_succ_padic_val_nat_not_dvd {p n : ℕ} [hp : Fact (Nat.Prime p)] (hn : 0 < n) :
     ¬p ^ (padicValNat p n + 1) ∣ n := by
@@ -551,7 +549,7 @@ theorem prod_pow_prime_padic_val_nat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n 
     simp [padic_val_nat_eq_factorization]
     
 
-theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) [Fact p.Prime] (hn : n ≠ 0) :
+theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) (hn : n ≠ 0) :
     (Finset.range (padicValNat p n + 1)).Image (pow p) ⊆ n.divisors := by
   intro t ht
   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht

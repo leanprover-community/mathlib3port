@@ -144,14 +144,14 @@ instance : IsFractionRing A K where
       simp
       
     · refine' ⟨⟨1, ⟨⟨_, hh⟩, _⟩⟩, mul_inv_cancel h⟩
-      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_argₓ coe c))
+      exact mem_non_zero_divisors_iff_ne_zero.2 fun c => h (inv_eq_zero.mp (congr_arg coe c))
       
   eq_iff_exists := fun a b =>
     ⟨fun h =>
       ⟨1, by
         ext
         simpa using h⟩,
-      fun ⟨c, h⟩ => congr_argₓ coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
+      fun ⟨c, h⟩ => congr_arg coe ((mul_eq_mul_right_iff.1 h).resolve_right (nonZeroDivisors.ne_zero c.2))⟩
 
 /-- The value group of the valuation associated to `A`. -/
 def ValueGroup :=
@@ -457,6 +457,88 @@ theorem valuation_subring_valuation : A.Valuation.ValuationSubring = A := by
   ext
   rw [← A.valuation_le_one_iff]
   rfl
+
+section UnitGroup
+
+/-- The unit group of a valuation subring, as a subgroup of `Kˣ`. -/
+def unitGroup : Subgroup Kˣ :=
+  (A.Valuation.toMonoidWithZeroHom.toMonoidHom.comp (Units.coeHom K)).ker
+
+theorem mem_unit_group_iff (x : Kˣ) : x ∈ A.unitGroup ↔ A.Valuation x = 1 :=
+  Iff.refl _
+
+theorem unit_group_injective : Function.Injective (unitGroup : ValuationSubring K → Subgroup _) := fun A B h => by
+  rw [← A.valuation_subring_valuation, ← B.valuation_subring_valuation, ← Valuation.is_equiv_iff_valuation_subring,
+    Valuation.is_equiv_iff_val_eq_one]
+  rw [SetLike.ext_iff] at h
+  intro x
+  by_cases' hx : x = 0
+  · simp only [hx, Valuation.map_zero, zero_ne_one]
+    
+  exact h (Units.mk0 x hx)
+
+theorem eq_iff_unit_group {A B : ValuationSubring K} : A = B ↔ A.unitGroup = B.unitGroup :=
+  unit_group_injective.eq_iff.symm
+
+/-- For a valuation subring `A`, `A.unit_group` agrees with the units of `A`. -/
+def unitGroupMulEquiv : A.unitGroup ≃* Aˣ where
+  toFun := fun x =>
+    { val := ⟨x, mem_of_valuation_le_one A _ x.Prop.le⟩, inv := ⟨↑x⁻¹, mem_of_valuation_le_one _ _ x⁻¹.Prop.le⟩,
+      val_inv := Subtype.ext (Units.mul_inv x), inv_val := Subtype.ext (Units.inv_mul x) }
+  invFun := fun x => ⟨Units.map A.Subtype.toMonoidHom x, A.valuation_unit x⟩
+  left_inv := fun a => by
+    ext
+    rfl
+  right_inv := fun a => by
+    ext
+    rfl
+  map_mul' := fun a b => by
+    ext
+    rfl
+
+@[simp]
+theorem coe_unit_group_mul_equiv_apply (a : A.unitGroup) : (A.unitGroupMulEquiv a : K) = a :=
+  rfl
+
+@[simp]
+theorem coe_unit_group_mul_equiv_symm_apply (a : Aˣ) : (A.unitGroupMulEquiv.symm a : K) = a :=
+  rfl
+
+theorem unit_group_le_unit_group {A B : ValuationSubring K} : A.unitGroup ≤ B.unitGroup ↔ A ≤ B := by
+  constructor
+  · rintro h x hx
+    rw [← A.valuation_le_one_iff x, le_iff_lt_or_eqₓ] at hx
+    by_cases' h_1 : x = 0
+    · simp only [h_1, zero_mem]
+      
+    by_cases' h_2 : 1 + x = 0
+    · simp only [← add_eq_zero_iff_neg_eq.1 h_2, neg_mem _ _ (one_mem _)]
+      
+    cases hx
+    · have := h (show Units.mk0 _ h_2 ∈ A.unit_group from A.valuation.map_one_add_of_lt hx)
+      simpa using
+        B.add_mem _ _ (show 1 + x ∈ B from SetLike.coe_mem (B.unit_group_mul_equiv ⟨_, this⟩ : B))
+          (B.neg_mem _ B.one_mem)
+      
+    · have := h (show Units.mk0 x h_1 ∈ A.unit_group from hx)
+      refine' SetLike.coe_mem (B.unit_group_mul_equiv ⟨_, this⟩ : B)
+      
+    
+  · rintro h x (hx : A.valuation x = 1)
+    apply_fun A.map_of_le B h  at hx
+    simpa using hx
+    
+
+/-- The map on valuation subrings to their unit groups is an order embedding. -/
+def unitGroupOrderEmbedding : ValuationSubring K ↪o Subgroup Kˣ where
+  toFun := fun A => A.unitGroup
+  inj' := unit_group_injective
+  map_rel_iff' := fun A B => unit_group_le_unit_group
+
+theorem unit_group_strict_mono : StrictMono (unitGroup : ValuationSubring K → Subgroup _) :=
+  unitGroupOrderEmbedding.StrictMono
+
+end UnitGroup
 
 end ValuationSubring
 

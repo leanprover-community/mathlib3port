@@ -123,11 +123,11 @@ example [Monoidₓ α] : Monoidₓ.toMulAction αᵐᵒᵖ = MulOpposite.mulActi
 
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
 @[to_additive]
-instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulScalar αᵐᵒᵖ α :=
+instance LeftCancelMonoid.to_has_faithful_opposite_scalar [LeftCancelMonoid α] : HasFaithfulSmul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancelₓ (h 1)⟩
 
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.to_has_faithful_opposite_scalar [CancelMonoidWithZero α] [Nontrivial α] :
-    HasFaithfulScalar αᵐᵒᵖ α :=
+    HasFaithfulSmul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
 

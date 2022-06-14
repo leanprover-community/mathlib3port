@@ -42,13 +42,21 @@ noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
   Nonempty.some (Classical.some_spec (@Small.equiv_small α _))
 
 instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
-  Small.mk' (Equivₓ.refl _)
+  Small.mk' <| Equivₓ.refl α
+
+theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
+  let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
+  Small.mk' (e.trans f)
+
+theorem small_lift (α : Type u) [hα : Small.{v} α] : Small.{max v w} α :=
+  let ⟨⟨γ, ⟨f⟩⟩⟩ := hα
+  Small.mk' <| f.trans Equivₓ.ulift.symm
 
 instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
-  Small.mk' Equivₓ.ulift.{w}.symm
+  small_lift.{v, w} α
 
-instance small_ulift (α : Type v) : Small.{v} (ULift.{w} α) :=
-  Small.mk' Equivₓ.ulift
+instance small_ulift (α : Type u) [Small.{v} α] : Small.{v} (ULift.{w} α) :=
+  small_map Equivₓ.ulift
 
 theorem small_type : Small.{max (u + 1) v} (Type u) :=
   small_max.{max (u + 1) v} _
@@ -56,10 +64,6 @@ theorem small_type : Small.{max (u + 1) v} (Type u) :=
 section
 
 open Classical
-
-theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
-  let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
-  Small.mk' (e.trans f)
 
 theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α ↔ Small.{w} β :=
   ⟨fun h => @small_map _ _ h e.symm, fun h => @small_map _ _ h e⟩

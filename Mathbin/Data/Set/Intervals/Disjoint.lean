@@ -50,6 +50,54 @@ theorem Ici_disjoint_Iic : Disjoint (Ici a) (Iic b) ↔ ¬a ≤ b := by
 theorem Iic_disjoint_Ici : Disjoint (Iic a) (Ici b) ↔ ¬b ≤ a :=
   Disjoint.comm.trans Ici_disjoint_Iic
 
+@[simp]
+theorem Union_Iic : (⋃ a : α, Iic a) = univ :=
+  Union_eq_univ_iff.2 fun x => ⟨x, right_mem_Iic⟩
+
+@[simp]
+theorem Union_Ici : (⋃ a : α, Ici a) = univ :=
+  Union_eq_univ_iff.2 fun x => ⟨x, left_mem_Ici⟩
+
+@[simp]
+theorem Union_Icc_right (a : α) : (⋃ b, Icc a b) = Ici a := by
+  simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
+
+@[simp]
+theorem Union_Ioc_right (a : α) : (⋃ b, Ioc a b) = Ioi a := by
+  simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
+
+@[simp]
+theorem Union_Icc_left (b : α) : (⋃ a, Icc a b) = Iic b := by
+  simp only [← Ici_inter_Iic, ← Union_inter, Union_Ici, univ_inter]
+
+@[simp]
+theorem Union_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
+  simp only [← Ici_inter_Iio, ← Union_inter, Union_Ici, univ_inter]
+
+@[simp]
+theorem Union_Iio [NoMaxOrder α] : (⋃ a : α, Iio a) = univ :=
+  Union_eq_univ_iff.2 exists_gt
+
+@[simp]
+theorem Union_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
+  Union_eq_univ_iff.2 exists_lt
+
+@[simp]
+theorem Union_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
+  simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
+
+@[simp]
+theorem Union_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
+  simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
+
+@[simp]
+theorem Union_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
+  simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
+
+@[simp]
+theorem Union_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
+  simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
+
 end Preorderₓ
 
 section LinearOrderₓ

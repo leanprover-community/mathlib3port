@@ -77,29 +77,21 @@ theorem tendsto_prod_pi_div_two :
       (𝓝 (π / 2)) :=
   by
   suffices h :
-    tendsto (fun k => 2 / π * ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) at_top
-      (𝓝 1)
-  · have := tendsto.const_mul (π / 2) h
-    have h : π / 2 ≠ 0
-    norm_num [pi_ne_zero]
-    simp only [← mul_assoc, ← inv_div π 2, mul_inv_cancel h, one_mulₓ, mul_oneₓ] at this
-    exact this
+    tendsto (fun k => (π / 2)⁻¹ * ∏ i in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) at_top (𝓝 1)
+  · convert h.const_mul (π / 2)
+    · simp_rw
+        [mul_inv_cancel_left₀
+          (show π / 2 ≠ 0 by
+            norm_num [pi_ne_zero])]
+      
+    · rw [mul_oneₓ]
+      
     
-  have h :
-    (fun k : ℕ => (2 : ℝ) / π * ∏ i : ℕ in range k, (2 * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3))) = fun k =>
-      (2 * ∏ i in range k, (2 * i + 2) / (2 * i + 3)) / (π * ∏ i : ℕ in range k, (2 * i + 1) / (2 * i + 2)) :=
-    by
-    funext
-    have h :
-      (∏ i : ℕ in range k, ((2 : ℝ) * ↑i + 2) / (2 * ↑i + 1)) = 1 / ∏ i : ℕ in range k, (2 * ↑i + 1) / (2 * ↑i + 2) :=
-      by
-      rw [one_div, ← Finset.prod_inv_distrib']
-      refine' prod_congr rfl fun x hx => _
-      field_simp
-    rw [prod_mul_distrib, h]
-    field_simp
-  simp only [h, ← integral_sin_pow_even, ← integral_sin_pow_odd]
-  exact integral_sin_pow_div_tendsto_one
+  convert integral_sin_pow_div_tendsto_one
+  funext
+  rw [integral_sin_pow_even, integral_sin_pow_odd, mul_div_mul_comm, ← prod_div_distrib, inv_div]
+  congr with i
+  rw [div_div_div_comm, div_div_eq_mul_div, mul_div_assoc]
 
 end Real
 

@@ -40,7 +40,7 @@ private unsafe def parse_name_list (e : expr) : List Name :=
 
 attribute [local instance] reflect_name_list
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr *»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr *»
 /-- Defines the user attribute `nolint` for skipping `#lint` -/
 @[user_attribute]
 unsafe def nolint_attr : user_attribute (name_map (List Name)) (List Name) where

@@ -83,38 +83,19 @@ variable (N)
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/
 def actionAsEndoMap : L →ₗ⁅R⁆ Module.End R (M ⧸ N) :=
   { LinearMap.comp (Submodule.mapqLinear (N : Submodule R M) ↑N) lieSubmoduleInvariant with
-    map_lie' := fun x y => by
-      ext m
-      change mk ⁅⁅x,y⁆,m⁆ = mk (⁅x,⁅y,m⁆⁆ - ⁅y,⁅x,m⁆⁆)
-      congr
-      apply lie_lie }
+    map_lie' := fun x y => Submodule.linear_map_qext _ <| LinearMap.ext fun m => congr_arg mk <| lie_lie _ _ _ }
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there is
 a natural bracket action of `L` on the quotient `M/N`. -/
-def actionAsEndoMapBracket : HasBracket L (M ⧸ N) :=
+instance actionAsEndoMapBracket : HasBracket L (M ⧸ N) :=
   ⟨fun x n => actionAsEndoMap N x n⟩
 
-instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) where
-  bracket := fun x n => (actionAsEndoMap N : L →ₗ[R] Module.End R (M ⧸ N)) x n
-  add_lie := fun x y n => by
-    simp only [LinearMap.map_add, LinearMap.add_apply]
-  lie_add := fun x m n => by
-    simp only [LinearMap.map_add, LinearMap.add_apply]
-  leibniz_lie := fun x y m =>
-    show actionAsEndoMap _ _ _ = _ by
-      simp only [LieHom.map_lie, LieRing.of_associative_ring_bracket, sub_add_cancel, LieHom.coe_to_linear_map,
-        LinearMap.mul_apply, LinearMap.sub_apply]
+instance lieQuotientLieRingModule : LieRingModule L (M ⧸ N) :=
+  { LieRingModule.compLieHom _ (actionAsEndoMap N) with bracket := HasBracket.bracket }
 
 /-- The quotient of a Lie module by a Lie submodule, is a Lie module. -/
-instance lieQuotientLieModule : LieModule R L (M ⧸ N) where
-  smul_lie := fun t x m =>
-    show (_ : L →ₗ[R] Module.End R (M ⧸ N)) _ _ = _ by
-      simp only [LinearMap.map_smul]
-      rfl
-  lie_smul := fun x t m =>
-    show (_ : L →ₗ[R] Module.End R (M ⧸ N)) _ _ = _ by
-      simp only [LinearMap.map_smul]
-      rfl
+instance lieQuotientLieModule : LieModule R L (M ⧸ N) :=
+  LieModule.compLieHom _ (actionAsEndoMap N)
 
 instance lieQuotientHasBracket : HasBracket (L ⧸ I) (L ⧸ I) :=
   ⟨by
@@ -146,7 +127,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_argₓ
+    apply congr_arg
     apply add_lie
   lie_add := by
     intro x' y' z'
@@ -157,14 +138,14 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_argₓ
+    apply congr_arg
     apply lie_add
   lie_self := by
     intro x'
     apply Quotientₓ.induction_on' x'
     intro x
     rw [is_quotient_mk, ← mk_bracket]
-    apply congr_argₓ
+    apply congr_arg
     apply lie_self
   leibniz_lie := by
     intro x' y' z'
@@ -175,7 +156,7 @@ instance lieQuotientLieRing : LieRing (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_add]
-    apply congr_argₓ
+    apply congr_arg
     apply leibniz_lie
 
 instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I) where
@@ -188,7 +169,7 @@ instance lieQuotientLieAlgebra : LieAlgebra R (L ⧸ I) where
         rw [is_quotient_mk]|
         rw [← mk_bracket]|
         rw [← Submodule.Quotient.mk_smul]
-    apply congr_argₓ
+    apply congr_arg
     apply lie_smul
 
 /-- `lie_submodule.quotient.mk` as a `lie_module_hom`. -/

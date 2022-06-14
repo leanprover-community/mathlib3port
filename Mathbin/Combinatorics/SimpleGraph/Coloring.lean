@@ -151,14 +151,14 @@ noncomputable def chromaticNumber : ℕ :=
 
 /-- Given an embedding, there is an induced embedding of colorings. -/
 def recolorOfEmbedding {α β : Type _} (f : α ↪ β) : G.Coloring α ↪ G.Coloring β where
-  toFun := fun C => (Embedding.CompleteGraph.ofEmbedding f).toHom.comp C
+  toFun := fun C => (Embedding.completeGraph f).toHom.comp C
   inj' := by
     -- this was strangely painful; seems like missing lemmas about embeddings
     intro C C' h
     dsimp' only  at h
     ext v
-    apply (embedding.complete_graph.of_embedding f).inj'
-    change ((embedding.complete_graph.of_embedding f).toHom.comp C) v = _
+    apply (embedding.complete_graph f).inj'
+    change ((embedding.complete_graph f).toHom.comp C) v = _
     rw [h]
     rfl
 
@@ -216,7 +216,7 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) : G.Colorable n ↔ ∃ 
       hc.to_coloring
         (by
           simp )
-    let f := embedding.complete_graph.of_embedding (Finₓ.coeEmbedding n).toEmbedding
+    let f := embedding.complete_graph (Finₓ.coeEmbedding n).toEmbedding
     use f.to_hom.comp C
     intro v
     cases' C with color valid
@@ -352,7 +352,7 @@ theorem chromatic_number_top_eq_zero_of_infinite (V : Type _) [Infinite V] : (�
   · simp
     
   refine' (colorable_of_chromatic_number_pos hc).chromatic_number_mono_of_embedding _
-  apply embedding.complete_graph.of_embedding
+  apply embedding.complete_graph
   exact (Function.Embedding.subtype _).trans (Infinite.natEmbedding V)
 
 /-- The bicoloring of a complete bipartite graph using whether a vertex

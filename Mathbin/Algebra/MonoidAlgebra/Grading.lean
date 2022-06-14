@@ -93,7 +93,7 @@ instance gradeBy.graded_monoid [AddMonoidₓ M] [AddMonoidₓ ι] [CommSemiring�
       exfalso
       exact h
       
-    · rw [Finsupp.support_single_ne_zero H, Finset.mem_singleton] at h
+    · rw [Finsupp.support_single_ne_zero _ H, Finset.mem_singleton] at h
       rw [h, AddMonoidHom.map_zero]
       
   mul_mem := fun i j a b ha hb c hc => by
@@ -162,11 +162,11 @@ theorem decompose_aux_coe {i : ι} (x : gradeBy R f i) : decomposeAux f ↑x = D
     
   · intro m b y hmy hb ih hmby
     have : Disjoint (Finsupp.single m b).Support y.support := by
-      simpa only [Finsupp.support_single_ne_zero hb, Finset.disjoint_singleton_left]
+      simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
     rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at hmby
     cases' hmby with h1 h2
     have : f m = i := by
-      rwa [Finsupp.support_single_ne_zero hb, Finset.coe_singleton, Set.singleton_subset_iff] at h1
+      rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff] at h1
     subst this
     simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
     let ih' := ih h2
@@ -181,7 +181,7 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
     (by
       ext : 2
       dsimp'
-      rw [decompose_aux_single, DirectSum.submodule_coe_alg_hom_of, Subtype.coe_mk])
+      rw [decompose_aux_single, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     fun i x => by
     convert (decompose_aux_coe f x : _)
 
@@ -206,11 +206,11 @@ theorem grade.decompose_single (i : ι) (r : R) :
   decompose_aux_single _ _ _
 
 /-- `add_monoid_algebra.gradesby` describe an internally graded algebra -/
-theorem gradeBy.is_internal : DirectSum.SubmoduleIsInternal (gradeBy R f) :=
+theorem gradeBy.is_internal : DirectSum.IsInternal (gradeBy R f) :=
   GradedAlgebra.is_internal _
 
 /-- `add_monoid_algebra.grades` describe an internally graded algebra -/
-theorem grade.is_internal : DirectSum.SubmoduleIsInternal (grade R : ι → Submodule R _) :=
+theorem grade.is_internal : DirectSum.IsInternal (grade R : ι → Submodule R _) :=
   GradedAlgebra.is_internal _
 
 end AddMonoidAlgebra

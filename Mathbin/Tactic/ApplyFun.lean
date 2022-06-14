@@ -7,7 +7,7 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
 of the form `a = b` or `a ≤ b`, replacing the type of `hyp` with `f a = f b` or `f a ≤ f b`. If
 `hyp` names an inequality then a new goal `monotone f` is created, unless the name of a proof of
@@ -20,7 +20,7 @@ unsafe def apply_fun_to_hyp (e : pexpr) (mono_lem : Option pexpr) (hyp : expr) :
       | quote.1 ((%%ₓl) = %%ₓr) => do
         let ltp ← infer_type l
         let mv ← mk_mvar
-        to_expr (pquote.1 (congr_argₓ (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
+        to_expr (pquote.1 (congr_arg (%%ₓe : (%%ₓltp) → %%ₓmv) (%%ₓhyp)))
       | quote.1 ((%%ₓl) ≤ %%ₓr) => do
         let Hmono ←
           match mono_lem with

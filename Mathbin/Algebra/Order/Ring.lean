@@ -5,6 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 -/
 import Mathbin.Algebra.Order.Group
 import Mathbin.Algebra.Order.Sub
+import Mathbin.Algebra.Hom.Ring
 import Mathbin.Data.Set.Intervals.Basic
 
 /-!
@@ -151,26 +152,16 @@ theorem add_one_le_two_mul [LE α] [Semiringₓ α] [CovariantClass α α (· + 
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protect_proj]
 class OrderedSemiring (α : Type u) extends Semiringₓ α, OrderedCancelAddCommMonoid α where
-  zero_le_one : 0 ≤ (1 : α)
+  zero_le_one : (0 : α) ≤ 1
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
+
+instance (priority := 100) OrderedSemiring.zeroLeOneClass [h : OrderedSemiring α] : ZeroLeOneClass α :=
+  { h with }
 
 section OrderedSemiring
 
 variable [OrderedSemiring α] {a b c d : α}
-
-@[simp]
-theorem zero_le_one : 0 ≤ (1 : α) :=
-  OrderedSemiring.zero_le_one
-
-theorem zero_le_two : 0 ≤ (2 : α) :=
-  add_nonneg zero_le_one zero_le_one
-
-theorem one_le_two : 1 ≤ (2 : α) :=
-  calc
-    (1 : α) = 0 + 1 := (zero_addₓ _).symm
-    _ ≤ 1 + 1 := add_le_add_right zero_le_one _
-    
 
 section Nontrivial
 
@@ -588,6 +579,36 @@ protected theorem Decidable.mul_lt_one_of_nonneg_of_lt_one_right [@DecidableRel 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem mul_lt_one_of_nonneg_of_lt_one_right : a ≤ 1 → 0 ≤ b → b < 1 → a * b < 1 := by
   classical <;> exact Decidable.mul_lt_one_of_nonneg_of_lt_one_right
+
+section HasExistsAddOfLe
+
+variable [HasExistsAddOfLe α]
+
+/-- Binary **rearrangement inequality**. -/
+theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b * c ≤ a * c + b * d := by
+  obtain ⟨b, rfl⟩ := exists_add_of_le hab
+  obtain ⟨d, rfl⟩ := exists_add_of_le hcd
+  rw [mul_addₓ, add_right_commₓ, mul_addₓ, ← add_assocₓ]
+  exact add_le_add_left (mul_le_mul_of_nonneg_right hab <| (le_add_iff_nonneg_right _).1 hcd) _
+
+/-- Binary **rearrangement inequality**. -/
+theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
+  rw [add_commₓ (a • d), add_commₓ (a • c)]
+  exact mul_add_mul_le_mul_add_mul hba hdc
+
+/-- Binary strict **rearrangement inequality**. -/
+theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c < a * c + b * d := by
+  obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
+  obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
+  rw [mul_addₓ, add_right_commₓ, mul_addₓ, ← add_assocₓ]
+  exact add_lt_add_left (mul_lt_mul_of_pos_right hab <| (lt_add_iff_pos_right _).1 hcd) _
+
+/-- Binary **rearrangement inequality**. -/
+theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d := by
+  rw [add_commₓ (a • d), add_commₓ (a • c)]
+  exact mul_add_mul_lt_mul_add_mul hba hdc
+
+end HasExistsAddOfLe
 
 end OrderedSemiring
 
@@ -1718,6 +1739,30 @@ instance [MulZeroOneClassₓ α] [Nontrivial α] : MulZeroOneClassₓ (WithTop �
         show ↑a * ((1 : α) : WithTop α) = a by
           simp [coe_mul.symm, -WithTop.coe_one] }
 
+/-- A version of `with_top.map` for `monoid_with_zero_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.monoid_with_zero_hom.with_top_map {R S : Type _} [MulZeroOneClassₓ R] [DecidableEq R]
+    [Nontrivial R] [MulZeroOneClassₓ S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S) (hf : Function.Injective f) :
+    WithTop R →*₀ WithTop S :=
+  { f.toZeroHom.with_top_map, f.toMonoidHom.toOneHom.with_top_map with toFun := WithTop.map f,
+    map_mul' := fun x y => by
+      have : ∀ z, map f z = 0 ↔ z = 0 := fun z => (Option.map_injective hf).eq_iff' f.to_zero_hom.with_top_map.map_zero
+      rcases eq_or_ne x 0 with (rfl | hx)
+      · simp
+        
+      rcases eq_or_ne y 0 with (rfl | hy)
+      · simp
+        
+      induction x using WithTop.recTopCoe
+      · simp [hy, this]
+        
+      induction y using WithTop.recTopCoe
+      · have : (f x : WithTop S) ≠ 0 := by
+          simpa [hf.eq_iff' (map_zero f)] using hx
+        simp [hx, this]
+        
+      simp [← coe_mul] }
+
 instance [MulZeroClassₓ α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b => by
     cases a <;> cases b <;> dsimp' [mul_def] <;> split_ifs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
@@ -1766,7 +1811,7 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := b
     repeat'
       first |
         rfl|
-        exact congr_argₓ some (add_mulₓ _ _ _)
+        exact congr_arg some (add_mulₓ _ _ _)
     
 
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class
@@ -1779,6 +1824,13 @@ instance [Nontrivial α] : CommSemiringₓ (WithTop α) :=
 
 instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
   { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with }
+
+/-- A version of `with_top.map` for `ring_hom`s. -/
+@[simps (config := { fullyApplied := false })]
+protected def _root_.ring_hom.with_top_map {R S : Type _} [CanonicallyOrderedCommSemiring R] [DecidableEq R]
+    [Nontrivial R] [CanonicallyOrderedCommSemiring S] [DecidableEq S] [Nontrivial S] (f : R →+* S)
+    (hf : Function.Injective f) : WithTop R →+* WithTop S :=
+  { f.toMonoidWithZeroHom.with_top_map hf, f.toAddMonoidHom.with_top_map with toFun := WithTop.map f }
 
 end WithTop
 

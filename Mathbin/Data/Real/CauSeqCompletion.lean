@@ -104,13 +104,13 @@ theorem mk_sub (f g : CauSeq β abv) : mk f - mk g = mk (f - g) :=
   rfl
 
 theorem of_rat_add (x y : β) : of_rat (x + y) = of_rat x + of_rat y :=
-  congr_argₓ mk (const_add _ _)
+  congr_arg mk (const_add _ _)
 
 theorem of_rat_neg (x : β) : of_rat (-x) = -of_rat x :=
-  congr_argₓ mk (const_neg _)
+  congr_arg mk (const_neg _)
 
 theorem of_rat_mul (x y : β) : of_rat (x * y) = of_rat x * of_rat y :=
-  congr_argₓ mk (const_mul _ _)
+  congr_arg mk (const_mul _ _)
 
 private theorem zero_def : 0 = mk 0 :=
   rfl
@@ -130,7 +130,7 @@ instance : CommRingₓ Cauchy := by
         
 
 theorem of_rat_sub (x y : β) : of_rat (x - y) = of_rat x - of_rat y :=
-  congr_argₓ mk (const_sub _ _)
+  congr_arg mk (const_sub _ _)
 
 end
 
@@ -163,12 +163,12 @@ noncomputable instance : Inv Cauchy :=
 
 @[simp]
 theorem inv_zero : (0 : Cauchy)⁻¹ = 0 :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     rw [dif_pos] <;> [rfl, exact zero_lim_zero]
 
 @[simp]
 theorem inv_mk {f} hf : (@mk α _ β _ abv _ f)⁻¹ = mk (inv f hf) :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     rw [dif_neg]
 
 theorem cau_seq_zero_ne_one : ¬(0 : CauSeq _ abv) ≈ 1 := fun h =>
@@ -197,7 +197,7 @@ noncomputable def field : Field Cauchy :=
 attribute [local instance] Field
 
 theorem of_rat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy) :=
-  congr_argₓ mk <| by
+  congr_arg mk <| by
     split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
 
 theorem of_rat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy) := by

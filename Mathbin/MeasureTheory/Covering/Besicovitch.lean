@@ -130,7 +130,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   hlast : ∀, ∀ i < last N, ∀, r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ * r i
   inter : ∀, ∀ i < last N, ∀, dist (c i) (c (last N)) ≤ r i + r (last N)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`no_satellite_config] []
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -140,7 +140,7 @@ class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where
 
 /-- There is always a satellite configuration with a single point. -/
 instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
-  ⟨{ c := fun i => default, R := fun i => 1, rpos := fun i => zero_lt_one,
+  ⟨{ c := default, R := fun i => 1, rpos := fun i => zero_lt_one,
       h := fun i j hij => (hij (Subsingleton.elimₓ i j)).elim,
       hlast := fun i hi => by
         rw [Subsingleton.elimₓ i (last 0)] at hi
@@ -928,7 +928,7 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
       have : p = r x := by
         by_contra
         have A : (x, p) ≠ (x, r x) := by
-          simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, Ne.def] using h
+          simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true, Ne.def] using h
         have H := v_disj hxp hxrx A
         contrapose H
         rw [not_disjoint_iff_nonempty_inter]
@@ -957,12 +957,12 @@ theorem exists_disjoint_closed_ball_covering_ae (μ : Measureₓ α) [SigmaFinit
     exact μv
     
   · have A : inj_on (fun x : α => (x, r x)) t := by
-      simp (config := { contextual := true })only [inj_on, Prod.mk.inj_iffₓ, implies_true_iff, eq_self_iff_true]
+      simp (config := { contextual := true })only [inj_on, Prod.mk.inj_iff, implies_true_iff, eq_self_iff_true]
     rwa [← im_t, A.pairwise_disjoint_image] at v_disj
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (v «expr ⊇ » s')
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (v «expr ⊇ » s')
 /-- In a space with the Besicovitch property, any set `s` can be covered with balls whose measures
 add up to at most `μ s + ε`, for any positive `ε`. This works even if one restricts the set of
 allowed radii around a point `x` to a set `f x` which accumulates at `0`. -/

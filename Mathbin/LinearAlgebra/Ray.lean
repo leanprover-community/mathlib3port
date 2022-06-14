@@ -288,8 +288,8 @@ variable [SmulCommClass R G M]
 `G = Rˣ` -/
 instance : MulAction G (Module.Ray R M) where
   smul := fun r => Quotientₓ.map ((· • ·) r) fun a b h => h.smul _
-  mul_smul := fun a b => Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| mul_smul a b _
-  one_smul := Quotientₓ.ind fun m => congr_argₓ Quotientₓ.mk <| one_smul _ _
+  mul_smul := fun a b => Quotientₓ.ind fun m => congr_arg Quotientₓ.mk <| mul_smul a b _
+  one_smul := Quotientₓ.ind fun m => congr_arg Quotientₓ.mk <| one_smul _ _
 
 /-- The action via `linear_equiv.apply_distrib_mul_action` corresponds to `module.ray.map`. -/
 @[simp]
@@ -332,7 +332,7 @@ theorem some_vector_ne_zero (x : Module.Ray R M) : x.someVector ≠ 0 :=
 /-- The ray of `some_vector`. -/
 @[simp]
 theorem some_vector_ray (x : Module.Ray R M) : rayOfNeZero R _ x.some_vector_ne_zero = x :=
-  (congr_argₓ _ (Subtype.coe_eta _ _) : _).trans x.out_eq
+  (congr_arg _ (Subtype.coe_eta _ _) : _).trans x.out_eq
 
 end Module.Ray
 
@@ -415,7 +415,7 @@ variable {R}
 /-- Negating a ray twice produces the original ray. -/
 instance : HasInvolutiveNeg (Module.Ray R M) where
   neg := Neg.neg
-  neg_neg := fun x => Quotientₓ.ind (fun a => congr_argₓ Quotientₓ.mk <| neg_negₓ _) x
+  neg_neg := fun x => Quotientₓ.ind (fun a => congr_arg Quotientₓ.mk <| neg_negₓ _) x
 
 variable {R M}
 

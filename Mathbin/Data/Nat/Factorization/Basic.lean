@@ -100,8 +100,20 @@ theorem pos_of_mem_factorization {n p : ℕ} (hp : p ∈ n.factorization.support
 theorem le_of_mem_factorization {n p : ℕ} (h : p ∈ n.factorization.support) : p ≤ n :=
   le_of_mem_factors (factor_iff_mem_factorization.mp h)
 
+@[simp]
 theorem factorization_eq_zero_of_non_prime (n : ℕ) {p : ℕ} (hp : ¬p.Prime) : n.factorization p = 0 :=
   not_mem_support_iff.1 (mt prime_of_mem_factorization hp)
+
+theorem factorization_eq_zero_of_lt {n p : ℕ} (h : n < p) : n.factorization p = 0 :=
+  Finsupp.not_mem_support_iff.mp (mt le_of_mem_factorization (not_le_of_lt h))
+
+@[simp]
+theorem factorization_zero_right (n : ℕ) : n.factorization 0 = 0 :=
+  factorization_eq_zero_of_non_prime _ not_prime_zero
+
+@[simp]
+theorem factorization_one_right (n : ℕ) : n.factorization 1 = 0 :=
+  factorization_eq_zero_of_non_prime _ not_prime_one
 
 theorem dvd_of_factorization_pos {n p : ℕ} (hn : n.factorization p ≠ 0) : p ∣ n :=
   dvd_of_mem_factors (factor_iff_mem_factorization.1 (mem_support_iff.2 hn))
@@ -112,6 +124,14 @@ theorem Prime.factorization_pos_of_dvd {n p : ℕ} (hp : p.Prime) (hn : n ≠ 0)
 /-- The only numbers with empty prime factorization are `0` and `1` -/
 theorem factorization_eq_zero_iff (n : ℕ) : n.factorization = 0 ↔ n = 0 ∨ n = 1 := by
   simp [factorization, AddEquiv.map_eq_zero_iff, Multiset.coe_eq_zero]
+
+theorem factorization_eq_zero_iff' (n p : ℕ) : n.factorization p = 0 ↔ ¬p.Prime ∨ ¬p ∣ n ∨ n = 0 := by
+  rw [← not_mem_support_iff, support_factorization, mem_to_finset]
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    
+  · simp [hn, Nat.mem_factors, not_and_distrib]
+    
 
 /-- For nonzero `a` and `b`, the power of `p` in `a * b` is the sum of the powers in `a` and `b` -/
 @[simp]
@@ -377,6 +397,31 @@ theorem factorization_gcd {a b : ℕ} (ha_pos : a ≠ 0) (hb_pos : b ≠ 0) :
     have heb' := (factorization_le_iff_dvd he_pos hb_pos).mpr heb
     simp [← factorization_le_iff_dvd he_pos hd_pos, h1, hea', heb']
     
+
+theorem div_factorization_pos {q r : ℕ} (hr : Nat.Prime r) (hq : q ≠ 0) : q / r ^ q.factorization r ≠ 0 := by
+  set n := q.factorization r
+  set a := q / r ^ n
+  apply mt (Nat.div_eq_zero_iff (pow_pos (Nat.Prime.pos hr) _)).1
+  exact not_lt.mpr (Nat.le_of_dvdₓ (pos_iff_ne_zero.mpr hq) (Nat.pow_factorization_dvd q r))
+
+theorem ne_dvd_factorization_div {q r : ℕ} (hr : Nat.Prime r) (hq : q ≠ 0) : ¬r ∣ q / r ^ q.factorization r := by
+  set n := q.factorization r
+  set a := q / r ^ n
+  by_contra r_dvd_a
+  have a_fact_r_pos : a.factorization r ≠ 0 :=
+    ne_of_gtₓ (Nat.Prime.factorization_pos_of_dvd hr (div_factorization_pos hr hq) r_dvd_a)
+  have a_fact_r_zero : a.factorization r = 0 :=
+    calc
+      a.factorization r = (q.factorization - (r ^ n).factorization) r := by
+        rw [← Nat.factorization_div (Nat.pow_factorization_dvd q r)]
+      _ = q.factorization r - (r ^ n).factorization r := (Nat.factorization q).tsub_apply (r ^ n).factorization r
+      _ = n - (Finsupp.single r n) r := by
+        rw [Nat.Prime.factorization_pow hr]
+      _ = n - n := by
+        rw [Finsupp.single_eq_same, tsub_self]
+      _ = 0 := tsub_self n
+      
+  exact absurd a_fact_r_zero a_fact_r_pos
 
 /-! ### Factorization and coprimes -/
 

@@ -68,7 +68,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
       _ = (p - c a).roots.toFinset.card :=
-        congr_argₓ card
+        congr_arg card
           (by
             simp [Finset.ext_iff, mem_roots_sub_C hp])
       _ ≤ (p - c a).roots.card := Multiset.to_finset_card_le _
@@ -103,7 +103,7 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
                     rw [hf2] <;>
                       exact by
                         decide))
-                (mt (congr_argₓ (· % 2))
+                (mt (congr_arg (· % 2))
                   (by
                     simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
               (card_image_polynomial_eval
@@ -292,7 +292,7 @@ theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - 
 
 end
 
-variable (p : ℕ) [Fact p.Prime] [CharP K p]
+variable (p : ℕ) [Fact p.Prime] [Algebra (Zmod p) K]
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := by
@@ -311,14 +311,14 @@ theorem roots_X_pow_card_sub_X : roots (X ^ q - X : K[X]) = Finset.univ.val := b
     
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
-instance : IsSplittingField (Zmod p) K (X ^ q - X) where
+instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (X ^ q - X) where
   Splits := by
     have h : (X ^ q - X : K[X]).natDegree = q := X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow, map_X, h,
       roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
   adjoin_roots := by
     classical
-    trans Algebra.adjoin (Zmod p) ((roots (X ^ q - X : K[X])).toFinset : Set K)
+    trans Algebra.adjoin F ((roots (X ^ q - X : K[X])).toFinset : Set K)
     · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
       
     · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
@@ -389,7 +389,7 @@ theorem sq_add_sq (R : Type _) [CommRingₓ R] [IsDomain R] (p : ℕ) [Fact (0 <
   have := char_is_prime_of_pos R p
   obtain ⟨a, b, hab⟩ := Zmod.sq_add_sq p x
   refine' ⟨a.val, b.val, _⟩
-  simpa using congr_argₓ (Zmod.castHom dvd_rfl R) hab
+  simpa using congr_arg (Zmod.castHom dvd_rfl R) hab
 
 end CharP
 
@@ -484,4 +484,122 @@ theorem Int.Modeq.pow_card_sub_one_eq_one {p : ℕ} (hp : Nat.Prime p) {n : ℤ}
       
     exact Zmod.char_p p
   simpa [← Zmod.int_coe_eq_int_coe_iff] using Zmod.pow_card_sub_one_eq_one this
+
+section
+
+namespace FiniteField
+
+variable {F : Type _} [Field F] [Fintype F]
+
+/-- In a finite field of characteristic `2`, all elements are squares. -/
+theorem is_square_of_char_two (hF : ringChar F = 2) (a : F) : IsSquare a :=
+  have hF' : CharP F 2 := ringChar.of_eq hF
+  is_square_of_char_two' a
+
+/-- The finite field `F` has even cardinality iff it has characteristic `2`. -/
+theorem even_card_iff_char_two : ringChar F = 2 ↔ Fintype.card F % 2 = 0 := by
+  rcases FiniteField.card F (ringChar F) with ⟨n, hp, h⟩
+  rw [h, Nat.pow_mod]
+  constructor
+  · intro hF
+    rw [hF]
+    simp only [Nat.bit0_mod_two, zero_pow', Ne.def, Pnat.ne_zero, not_false_iff, Nat.zero_modₓ]
+    
+  · rw [← Nat.even_iff, Nat.even_pow]
+    rintro ⟨hev, hnz⟩
+    rw [Nat.even_iff, Nat.mod_modₓ] at hev
+    exact (Nat.Prime.eq_two_or_odd hp).resolve_right (ne_of_eq_of_ne hev zero_ne_one)
+    
+
+theorem even_card_of_char_two (hF : ringChar F = 2) : Fintype.card F % 2 = 0 :=
+  even_card_iff_char_two.mp hF
+
+theorem odd_card_of_char_ne_two (hF : ringChar F ≠ 2) : Fintype.card F % 2 = 1 :=
+  Nat.mod_two_ne_zero.mp (mt even_card_iff_char_two.mpr hF)
+
+/-- If `F` has odd characteristic, then for nonzero `a : F`, we have that `a ^ (#F / 2) = ±1`. -/
+theorem pow_dichotomy (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) :
+    a ^ (Fintype.card F / 2) = 1 ∨ a ^ (Fintype.card F / 2) = -1 := by
+  have h₁ := FiniteField.pow_card_sub_one_eq_one a ha
+  rw [← Nat.two_mul_odd_div_two (FiniteField.odd_card_of_char_ne_two hF), mul_comm, pow_mulₓ, pow_two] at h₁
+  exact mul_self_eq_one_iff.mp h₁
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+/-- A unit `a` of a finite field `F` of odd characteristic is a square
+if and only if `a ^ (#F / 2) = 1`. -/
+theorem unit_is_square_iff (hF : ringChar F ≠ 2) (a : Fˣ) : IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
+  classical
+  obtain ⟨g, hg⟩ := IsCyclic.exists_generator Fˣ
+  obtain ⟨n, hn⟩ : a ∈ Submonoid.powers g := by
+    rw [mem_powers_iff_mem_zpowers]
+    apply hg
+  have hodd := Nat.two_mul_odd_div_two (FiniteField.odd_card_of_char_ne_two hF)
+  constructor
+  · rintro ⟨y, rfl⟩
+    rw [← pow_two, ← pow_mulₓ, hodd]
+    apply_fun @coe Fˣ F _ using Units.ext
+    · push_cast
+      exact FiniteField.pow_card_sub_one_eq_one (y : F) (Units.ne_zero y)
+      
+    
+  · subst a
+    intro h
+    have key : 2 * (Fintype.card F / 2) ∣ n * (Fintype.card F / 2) := by
+      rw [← pow_mulₓ] at h
+      rw [hodd, ← Fintype.card_units, ← order_of_eq_card_of_forall_mem_zpowers hg]
+      apply order_of_dvd_of_pow_eq_one h
+    have : 0 < Fintype.card F / 2 :=
+      Nat.div_pos Fintype.one_lt_card
+        (by
+          norm_num)
+    obtain ⟨m, rfl⟩ := Nat.dvd_of_mul_dvd_mul_rightₓ this key
+    refine' ⟨g ^ m, _⟩
+    rw [mul_comm, pow_mulₓ, pow_two]
+    
+
+/-- A non-zero `a : F` is a square if and only if `a ^ (#F / 2) = 1`. -/
+theorem is_square_iff (hF : ringChar F ≠ 2) {a : F} (ha : a ≠ 0) : IsSquare a ↔ a ^ (Fintype.card F / 2) = 1 := by
+  apply
+    (iff_congr _
+          (by
+            simp [Units.ext_iff])).mp
+      (FiniteField.unit_is_square_iff hF (Units.mk0 a ha))
+  simp only [IsSquare, Units.ext_iff, Units.coe_mk0, Units.coe_mul]
+  constructor
+  · rintro ⟨y, hy⟩
+    exact ⟨y, hy⟩
+    
+  · rintro ⟨y, rfl⟩
+    have hy : y ≠ 0 := by
+      rintro rfl
+      simpa [zero_pow] using ha
+    refine' ⟨Units.mk0 y hy, _⟩
+    simp
+    
+
+/-- In a finite field of odd characteristic, not every element is a square. -/
+theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a := by
+  -- idea: the squaring map on `F` is not injetive, hence not surjective
+  let sq : F → F := fun x => x ^ 2
+  have h : ¬Function.Injective sq := by
+    simp only [Function.Injective, not_forall, exists_prop]
+    use -1, 1
+    constructor
+    · simp only [sq, one_pow, neg_one_sq]
+      
+    · exact Ringₓ.neg_one_ne_one_of_char_ne_two hF
+      
+  have h₁ := mt fintype.injective_iff_surjective.mpr h
+  -- sq not surjective
+  push_neg  at h₁
+  cases' h₁ with a h₁
+  use a
+  simp only [IsSquare, sq, not_exists, Ne.def] at h₁⊢
+  intro b hb
+  rw [← pow_two] at hb
+  exact h₁ b hb.symm
+
+end FiniteField
+
+end
 

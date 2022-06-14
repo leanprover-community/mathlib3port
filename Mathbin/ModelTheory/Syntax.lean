@@ -57,14 +57,14 @@ variable (L : Language.{u, v}) {L' : Language}
 
 variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structure P]
 
-variable {α : Type u'} {β : Type v'}
+variable {α : Type u'} {β : Type v'} {γ : Type _}
 
 open FirstOrder
 
 open Structure Finₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: var {}
--- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: func {}
+-- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: var {}
+-- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: func {}
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
 inductive Term (α : Type u') : Type max u u'
@@ -97,6 +97,22 @@ def varFinsetLeftₓ [DecidableEq α] : L.Term (Sum α β) → Finset α
 def relabelₓ (g : α → β) : L.Term α → L.Term β
   | var i => var (g i)
   | func f ts => func f fun i => (ts i).relabel
+
+@[simp]
+theorem relabel_id (t : L.Term α) : t.relabel id = t := by
+  induction' t with _ _ _ _ ih
+  · rfl
+    
+  · simp [ih]
+    
+
+@[simp]
+theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.Term α) : (t.relabel f).relabel g = t.relabel (g ∘ f) := by
+  induction' t with _ _ _ _ ih
+  · rfl
+    
+  · simp [ih]
+    
 
 /-- Restricts a term to use only a set of the given variables. -/
 def restrictVarₓ [DecidableEq α] : ∀ t : L.Term α f : t.varFinset → β, L.Term β
@@ -189,7 +205,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.Term α ≃ L'.Term α where
 
 variable (L) (α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1232:30: infer kinds are unsupported in Lean 4: falsum {}
+-- ././Mathport/Syntax/Translate/Basic.lean:1231:30: infer kinds are unsupported in Lean 4: falsum {}
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
 inductive BoundedFormula : ℕ → Type max u v u'
@@ -292,10 +308,11 @@ def freeVarFinsetₓ [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finse
   | n, all f => f.freeVarFinset
 
 /-- Casts `L.bounded_formula α m` as `L.bounded_formula α n`, where `m ≤ n`. -/
+@[simp]
 def castLeₓ : ∀ {m n : ℕ} h : m ≤ n, L.BoundedFormula α m → L.BoundedFormula α n
   | m, n, h, falsum => falsum
-  | m, n, h, equal t₁ t₂ => (t₁.relabel (Sum.map id (Finₓ.castLe h))).bdEqual (t₂.relabel (Sum.map id (Finₓ.castLe h)))
-  | m, n, h, rel R ts => R.BoundedFormula (Term.relabelₓ (Sum.map id (Finₓ.castLe h)) ∘ ts)
+  | m, n, h, equal t₁ t₂ => equal (t₁.relabel (Sum.map id (Finₓ.castLe h))) (t₂.relabel (Sum.map id (Finₓ.castLe h)))
+  | m, n, h, rel R ts => rel R (Term.relabelₓ (Sum.map id (Finₓ.castLe h)) ∘ ts)
   | m, n, h, imp f₁ f₂ => (f₁.cast_le h).imp (f₂.cast_le h)
   | m, n, h, all f => (f.cast_le (add_le_add_right h 1)).all
 
@@ -314,13 +331,37 @@ theorem sum_elim_comp_relabel_aux {m : ℕ} {g : α → Sum β (Finₓ n)} {v : 
   · simp [bounded_formula.relabel_aux]
     
 
+@[simp]
+theorem relabel_aux_sum_inl (k : ℕ) : relabelAux (Sum.inl : α → Sum α (Finₓ n)) k = Sum.map id (natAdd n) := by
+  ext x
+  cases x <;>
+    · simp [relabel_aux]
+      
+
 /-- Relabels a bounded formula's variables along a particular function. -/
+@[simp]
 def relabelₓ (g : α → Sum β (Finₓ n)) : ∀ {k : ℕ}, L.BoundedFormula α k → L.BoundedFormula β (n + k)
   | k, falsum => falsum
-  | k, equal t₁ t₂ => (t₁.relabel (relabelAux g k)).bdEqual (t₂.relabel (relabelAux g k))
-  | k, rel R ts => R.BoundedFormula (Term.relabelₓ (relabelAux g k) ∘ ts)
+  | k, equal t₁ t₂ => equal (t₁.relabel (relabelAux g k)) (t₂.relabel (relabelAux g k))
+  | k, rel R ts => rel R (Term.relabelₓ (relabelAux g k) ∘ ts)
   | k, imp f₁ f₂ => f₁.relabel.imp f₂.relabel
   | k, all f => f.relabel.all
+
+@[simp]
+theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
+    (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.cast_le (ge_of_eq (zero_addₓ n)) := by
+  induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
+  · rfl
+    
+  · simp [Finₓ.nat_add_zero, cast_le_of_eq]
+    
+  · simp [Finₓ.nat_add_zero, cast_le_of_eq]
+    
+  · simp [ih1, ih2]
+    
+  · simp only [ih3, relabel, cast_le]
+    rfl
+    
 
 /-- Restricts a bounded formula to only use a particular set of free variables. -/
 def restrictFreeVarₓ [DecidableEq α] : ∀ {n : ℕ} φ : L.BoundedFormula α n f : φ.freeVarFinset → β, L.BoundedFormula β n
@@ -365,6 +406,15 @@ def substₓ : ∀ {n : ℕ}, L.BoundedFormula α n → (α → L.Term β) → L
   | n, rel R ts, tf => rel R fun i => (ts i).subst (Sum.elim (Term.relabelₓ Sum.inl ∘ tf) (var ∘ Sum.inr))
   | n, imp φ₁ φ₂, tf => (φ₁.subst tf).imp (φ₂.subst tf)
   | n, all φ, tf => (φ.subst tf).all
+
+/-- Turns the extra variables of a bounded formula into free variables. -/
+@[simp]
+def toFormulaₓ : ∀ {n : ℕ}, L.BoundedFormula α n → L.Formula (Sum α (Finₓ n))
+  | n, falsum => falsum
+  | n, equal t₁ t₂ => t₁.equal t₂
+  | n, rel R ts => R.Formula ts
+  | n, imp φ₁ φ₂ => φ₁.toFormula.imp φ₂.toFormula
+  | n, all φ => (φ.toFormula.relabel (Sum.elim (Sum.inl ∘ Sum.inl) (Sum.map Sum.inr id ∘ finSumFinEquiv.symm))).all
 
 variable {l : ℕ} {φ ψ : L.BoundedFormula α l} {θ : L.BoundedFormula α l.succ}
 

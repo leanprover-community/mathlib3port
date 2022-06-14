@@ -29,14 +29,13 @@ theorem prod_insert_none (f : Option α → M) (s : Finset α) :
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[to_additive]
-theorem prod_erase_none (f : α → M) (s : Finset (Option α)) : (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elim x 1 f :=
-  by
+theorem prod_erase_none (f : α → M) (s : Finset (Option α)) :
+    (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elimₓ 1 f x := by
   classical <;>
-    calc (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elim x 1 f :=
-        (prod_mapₓ s.erase_none embedding.some fun x =>
-            Option.elim x 1 f).symm _ = ∏ x in s.erase none, Option.elim x 1 f :=
+    calc (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elimₓ 1 f x :=
+        (prod_map s.erase_none embedding.some <| Option.elimₓ 1 f).symm _ = ∏ x in s.erase none, Option.elimₓ 1 f x :=
         by
-        rw [map_some_erase_none]_ = ∏ x in s, Option.elim x 1 f := prod_erase _ rfl
+        rw [map_some_erase_none]_ = ∏ x in s, Option.elimₓ 1 f x := prod_erase _ rfl
 
 end Finset
 

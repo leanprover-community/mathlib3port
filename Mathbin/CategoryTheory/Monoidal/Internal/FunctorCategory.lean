@@ -88,7 +88,7 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D) where
         ext X
         exact (F.obj X).mul_assoc }
   map := fun F G α =>
-    { Hom := { app := fun X => (α.app X).Hom, naturality' := fun X Y f => congr_argₓ Mon_.Hom.hom (α.naturality f) },
+    { Hom := { app := fun X => (α.app X).Hom, naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) },
       one_hom' := by
         ext x
         dsimp'

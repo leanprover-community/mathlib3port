@@ -138,7 +138,7 @@ is designed to be specialized for `L = 𝓝 x` (in `has_fderiv_at`), giving rise
 of Fréchet derivative, and for `L = 𝓝[s] x` (in `has_fderiv_within_at`), giving rise to
 the notion of Fréchet derivative along the set `s`. -/
 def HasFderivAtFilter (f : E → F) (f' : E →L[𝕜] F) (x : E) (L : Filter E) :=
-  IsOₓ (fun x' => f x' - f x - f' (x' - x)) (fun x' => x' - x) L
+  (fun x' => f x' - f x - f' (x' - x)) =o[L] fun x' => x' - x
 
 /-- A function `f` has the continuous linear map `f'` as derivative at `x` within a set `s` if
 `f x' = f x + f' (x' - x) + o (x' - x)` when `x'` tends to `x` inside `s`. -/
@@ -155,7 +155,7 @@ if `f x - f y - f' (x - y) = o(x - y)` as `x, y → a`. This form of differentia
 e.g., by the inverse function theorem. Any `C^1` function on a vector space over `ℝ` is strictly
 differentiable but this definition works, e.g., for vector spaces over `p`-adic numbers. -/
 def HasStrictFderivAt (f : E → F) (f' : E →L[𝕜] F) (x : E) :=
-  IsOₓ (fun p : E × E => f p.1 - f p.2 - f' (p.1 - p.2)) (fun p : E × E => p.1 - p.2) (𝓝 (x, x))
+  (fun p : E × E => f p.1 - f p.2 - f' (p.1 - p.2)) =o[𝓝 (x, x)] fun p : E × E => p.1 - p.2
 
 variable (𝕜)
 
@@ -231,12 +231,12 @@ theorem HasFderivWithinAt.lim (h : HasFderivWithinAt f f' s x) {α : Type _} (l 
       
     · rwa [tendsto_principal]
       
-  have : is_o (fun y => f y - f x - f' (y - x)) (fun y => y - x) (𝓝[s] x) := h
-  have : is_o (fun n => f (x + d n) - f x - f' (x + d n - x)) (fun n => x + d n - x) l := this.comp_tendsto tendsto_arg
-  have : is_o (fun n => f (x + d n) - f x - f' (d n)) d l := by
+  have : (fun y => f y - f x - f' (y - x)) =o[𝓝[s] x] fun y => y - x := h
+  have : (fun n => f (x + d n) - f x - f' (x + d n - x)) =o[l] fun n => x + d n - x := this.comp_tendsto tendsto_arg
+  have : (fun n => f (x + d n) - f x - f' (d n)) =o[l] d := by
     simpa only [add_sub_cancel']
-  have : is_o (fun n => c n • (f (x + d n) - f x - f' (d n))) (fun n => c n • d n) l := (is_O_refl c l).smul_is_o this
-  have : is_o (fun n => c n • (f (x + d n) - f x - f' (d n))) (fun n => (1 : ℝ)) l :=
+  have : (fun n => c n • (f (x + d n) - f x - f' (d n))) =o[l] fun n => c n • d n := (is_O_refl c l).smul_is_o this
+  have : (fun n => c n • (f (x + d n) - f x - f' (d n))) =o[l] fun n => (1 : ℝ) :=
     this.trans_is_O (is_O_one_of_tendsto ℝ cdlim)
   have L1 : tendsto (fun n => c n • (f (x + d n) - f x - f' (d n))) l (𝓝 0) := (is_o_one_iff ℝ).1 this
   have L2 : tendsto (fun n => f' (c n • d n)) l (𝓝 (f' v)) := tendsto.comp f'.cont.continuous_at cdlim
@@ -286,7 +286,7 @@ theorem has_fderiv_at_iff_tendsto :
   has_fderiv_at_filter_iff_tendsto
 
 theorem has_fderiv_at_iff_is_o_nhds_zero :
-    HasFderivAt f f' x ↔ IsOₓ (fun h => f (x + h) - f x - f' h) (fun h => h) (𝓝 0) := by
+    HasFderivAt f f' x ↔ (fun h : E => f (x + h) - f x - f' h) =o[𝓝 0] fun h => h := by
   rw [HasFderivAt, HasFderivAtFilter, ← map_add_left_nhds_zero x, is_o_map]
   simp [(· ∘ ·)]
 
@@ -334,10 +334,10 @@ theorem has_fderiv_within_at_univ : HasFderivWithinAt f f' Univ x ↔ HasFderivA
   rfl
 
 theorem HasStrictFderivAt.is_O_sub (hf : HasStrictFderivAt f f' x) :
-    IsO (fun p : E × E => f p.1 - f p.2) (fun p : E × E => p.1 - p.2) (𝓝 (x, x)) :=
+    (fun p : E × E => f p.1 - f p.2) =O[𝓝 (x, x)] fun p : E × E => p.1 - p.2 :=
   hf.IsO.congr_of_sub.2 (f'.is_O_comp _ _)
 
-theorem HasFderivAtFilter.is_O_sub (h : HasFderivAtFilter f f' x L) : IsO (fun x' => f x' - f x) (fun x' => x' - x) L :=
+theorem HasFderivAtFilter.is_O_sub (h : HasFderivAtFilter f f' x L) : (fun x' => f x' - f x) =O[L] fun x' => x' - x :=
   h.IsO.congr_of_sub.2 (f'.is_O_sub _ _)
 
 protected theorem HasStrictFderivAt.has_fderiv_at (hf : HasStrictFderivAt f f' x) : HasFderivAt f f' x := by
@@ -387,7 +387,7 @@ theorem has_fderiv_within_at_inter (h : t ∈ 𝓝 x) : HasFderivWithinAt f f' (
 theorem HasFderivWithinAt.union (hs : HasFderivWithinAt f f' s x) (ht : HasFderivWithinAt f f' t x) :
     HasFderivWithinAt f f' (s ∪ t) x := by
   simp only [HasFderivWithinAt, nhds_within_union]
-  exact hs.join ht
+  exact hs.sup ht
 
 theorem HasFderivWithinAt.nhds_within (h : HasFderivWithinAt f f' s x) (ht : s ∈ 𝓝[t] x) : HasFderivWithinAt f f' t x :=
   (has_fderiv_within_at_inter' ht).1 (h.mono (inter_subset_right _ _))
@@ -545,22 +545,15 @@ theorem fderiv_within_eq_fderiv (hs : UniqueDiffWithinAt 𝕜 s x) (h : Differen
   exact fderiv_within_subset (subset_univ _) hs h.differentiable_within_at
 
 theorem fderiv_mem_iff {f : E → F} {s : Set (E →L[𝕜] F)} {x : E} :
-    fderiv 𝕜 f x ∈ s ↔ DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ s ∨ (0 : E →L[𝕜] F) ∈ s ∧ ¬DifferentiableAt 𝕜 f x := by
-  constructor
-  · intro hfx
-    by_cases' hx : DifferentiableAt 𝕜 f x
-    · exact Or.inl ⟨hx, hfx⟩
-      
-    · rw [fderiv_zero_of_not_differentiable_at hx] at hfx
-      exact Or.inr ⟨hfx, hx⟩
-      
-    
-  · rintro (⟨hf, hf'⟩ | ⟨h₀, hx⟩)
-    · exact hf'
-      
-    · rwa [fderiv_zero_of_not_differentiable_at hx]
-      
-    
+    fderiv 𝕜 f x ∈ s ↔ DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ s ∨ ¬DifferentiableAt 𝕜 f x ∧ (0 : E →L[𝕜] F) ∈ s := by
+  by_cases' hx : DifferentiableAt 𝕜 f x <;> simp [fderiv_zero_of_not_differentiable_at, *]
+
+theorem fderiv_within_mem_iff {f : E → F} {t : Set E} {s : Set (E →L[𝕜] F)} {x : E} :
+    fderivWithin 𝕜 f t x ∈ s ↔
+      DifferentiableWithinAt 𝕜 f t x ∧ fderivWithin 𝕜 f t x ∈ s ∨
+        ¬DifferentiableWithinAt 𝕜 f t x ∧ (0 : E →L[𝕜] F) ∈ s :=
+  by
+  by_cases' hx : DifferentiableWithinAt 𝕜 f t x <;> simp [fderiv_within_zero_of_not_differentiable_within_at, *]
 
 end FderivProperties
 
@@ -605,13 +598,13 @@ protected theorem HasStrictFderivAt.continuous_at (hf : HasStrictFderivAt f f' x
   hf.HasFderivAt.ContinuousAt
 
 theorem HasStrictFderivAt.is_O_sub_rev {f' : E ≃L[𝕜] F} (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) x) :
-    IsO (fun p : E × E => p.1 - p.2) (fun p : E × E => f p.1 - f p.2) (𝓝 (x, x)) :=
+    (fun p : E × E => p.1 - p.2) =O[𝓝 (x, x)] fun p : E × E => f p.1 - f p.2 :=
   ((f'.is_O_comp_rev _ _).trans (hf.trans_is_O (f'.is_O_comp_rev _ _)).right_is_O_add).congr (fun _ => rfl) fun _ =>
     sub_add_cancel _ _
 
 theorem HasFderivAtFilter.is_O_sub_rev (hf : HasFderivAtFilter f f' x L) {C} (hf' : AntilipschitzWith C f') :
-    IsO (fun x' => x' - x) (fun x' => f x' - f x) L :=
-  have : IsO (fun x' => x' - x) (fun x' => f' (x' - x)) L :=
+    (fun x' => x' - x) =O[L] fun x' => f x' - f x :=
+  have : (fun x' => x' - x) =O[L] fun x' => f' (x' - x) :=
     is_O_iff.2 ⟨C, eventually_of_forall fun x' => f'.toLinearMap.bound_of_antilipschitz hf' _⟩
   (this.trans (hf.trans_is_O this).right_is_O_add).congr (fun _ => rfl) fun _ => sub_add_cancel _ _
 
@@ -962,15 +955,16 @@ theorem HasFderivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} {L' : Filter 
 example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (L.map f)) (hf : HasFderivAtFilter f f' x L) :
     HasFderivAtFilter (g ∘ f) (g'.comp f') x L := by
   unfold HasFderivAtFilter  at hg
-  have : is_o (fun x' => g (f x') - g (f x) - g' (f x' - f x)) (fun x' => f x' - f x) L := hg.comp_tendsto le_rfl
-  have eq₁ : is_o (fun x' => g (f x') - g (f x) - g' (f x' - f x)) (fun x' => x' - x) L := this.trans_is_O hf.is_O_sub
-  have eq₂ : is_o (fun x' => f x' - f x - f' (x' - x)) (fun x' => x' - x) L := hf
-  have : is_O (fun x' => g' (f x' - f x - f' (x' - x))) (fun x' => f x' - f x - f' (x' - x)) L := g'.is_O_comp _ _
-  have : is_o (fun x' => g' (f x' - f x - f' (x' - x))) (fun x' => x' - x) L := this.trans_is_o eq₂
-  have eq₃ : is_o (fun x' => g' (f x' - f x) - g' (f' (x' - x))) (fun x' => x' - x) L := by
-    refine' this.congr_left _
-    simp
-  exact eq₁.triangle eq₃
+  have :=
+    calc
+      (fun x' => g (f x') - g (f x) - g' (f x' - f x)) =o[L] fun x' => f x' - f x := hg.comp_tendsto le_rfl
+      _ =O[L] fun x' => x' - x := hf.is_O_sub
+      
+  refine' this.triangle _
+  calc (fun x' : E => g' (f x' - f x) - g'.comp f' (x' - x)) =ᶠ[L] fun x' => g' (f x' - f x - f' (x' - x)) :=
+      eventually_of_forall fun x' => by
+        simp _ =O[L] fun x' => f x' - f x - f' (x' - x) :=
+      g'.is_O_comp _ _ _ =o[L] fun x' => x' - x := hf
 
 theorem HasFderivWithinAt.comp {g : F → G} {g' : F →L[𝕜] G} {t : Set F} (hg : HasFderivWithinAt g g' t (f x))
     (hf : HasFderivWithinAt f f' s x) (hst : MapsTo f s t) : HasFderivWithinAt (g ∘ f) (g'.comp f') s x :=
@@ -1286,7 +1280,7 @@ theorem fderivWithin.snd (hs : UniqueDiffWithinAt 𝕜 s x) (h : DifferentiableW
 
 end Snd
 
-section prod_mapₓ
+section prod_map
 
 variable {f₂ : G → G'} {f₂' : G →L[𝕜] G'} {y : G} (p : E × G)
 
@@ -1303,7 +1297,7 @@ protected theorem DifferentiableAt.prod_map (hf : DifferentiableAt 𝕜 f p.1) (
     DifferentiableAt 𝕜 (fun p : E × G => (f p.1, f₂ p.2)) p :=
   (hf.comp p differentiable_at_fst).Prod (hf₂.comp p differentiable_at_snd)
 
-end prod_mapₓ
+end prod_map
 
 end CartesianProduct
 
@@ -1887,7 +1881,7 @@ theorem IsBoundedBilinearMap.has_strict_fderiv_at (h : IsBoundedBilinearMap 𝕜
     HasStrictFderivAt b (h.deriv p) p := by
   rw [HasStrictFderivAt]
   set T := (E × F) × E × F
-  have : is_o (fun q : T => b (q.1 - q.2)) (fun q : T => ∥q.1 - q.2∥ * 1) (𝓝 (p, p)) := by
+  have : (fun q : T => b (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => ∥q.1 - q.2∥ * 1 := by
     refine' (h.is_O'.comp_tendsto le_top).trans_is_o _
     simp only [(· ∘ ·)]
     refine' (is_O_refl (fun q : T => ∥q.1 - q.2∥) _).mul_is_o (is_o.norm_left <| (is_o_one_iff _).2 _)
@@ -1896,13 +1890,13 @@ theorem IsBoundedBilinearMap.has_strict_fderiv_at (h : IsBoundedBilinearMap 𝕜
   simp only [mul_oneₓ, is_o_norm_right] at this
   refine' (is_o.congr_of_sub _).1 this
   clear this
-  convert_to is_o (fun q : T => h.deriv (p - q.2) (q.1 - q.2)) (fun q : T => q.1 - q.2) (𝓝 (p, p))
+  convert_to (fun q : T => h.deriv (p - q.2) (q.1 - q.2)) =o[𝓝 (p, p)] fun q : T => q.1 - q.2
   · ext ⟨⟨x₁, y₁⟩, ⟨x₂, y₂⟩⟩
     rcases p with ⟨x, y⟩
     simp only [is_bounded_bilinear_map_deriv_coe, Prod.mk_sub_mk, h.map_sub_left, h.map_sub_right]
     abel
     
-  have : is_o (fun q : T => p - q.2) (fun q => (1 : ℝ)) (𝓝 (p, p)) :=
+  have : (fun q : T => p - q.2) =o[𝓝 (p, p)] fun q => (1 : ℝ) :=
     (is_o_one_iff _).2 (sub_self p ▸ tendsto_const_nhds.sub continuous_at_snd)
   apply is_bounded_bilinear_map_apply.is_O_comp.trans_is_o
   refine' is_o.trans_is_O _ (is_O_const_mul_self 1 _ _).of_norm_right
@@ -1950,22 +1944,16 @@ variable {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] {c : E → G →L[�
 theorem HasStrictFderivAt.clm_comp (hc : HasStrictFderivAt c c' x) (hd : HasStrictFderivAt d d' x) :
     HasStrictFderivAt (fun y => (c y).comp (d y)) ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c')
       x :=
-  by
-  rw [add_commₓ]
-  exact (is_bounded_bilinear_map_comp.has_strict_fderiv_at (d x, c x)).comp x (hd.prod hc)
+  (is_bounded_bilinear_map_comp.HasStrictFderivAt (c x, d x)).comp x <| hc.Prod hd
 
 theorem HasFderivWithinAt.clm_comp (hc : HasFderivWithinAt c c' s x) (hd : HasFderivWithinAt d d' s x) :
     HasFderivWithinAt (fun y => (c y).comp (d y)) ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c')
       s x :=
-  by
-  rw [add_commₓ]
-  exact (is_bounded_bilinear_map_comp.has_fderiv_at (d x, c x)).comp_has_fderiv_within_at x (hd.prod hc)
+  (is_bounded_bilinear_map_comp.HasFderivAt (c x, d x)).comp_has_fderiv_within_at x <| hc.Prod hd
 
 theorem HasFderivAt.clm_comp (hc : HasFderivAt c c' x) (hd : HasFderivAt d d' x) :
     HasFderivAt (fun y => (c y).comp (d y)) ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c') x :=
-  by
-  rw [add_commₓ]
-  exact (is_bounded_bilinear_map_comp.has_fderiv_at (d x, c x)).comp x (hd.prod hc)
+  (is_bounded_bilinear_map_comp.HasFderivAt (c x, d x)).comp x <| hc.Prod hd
 
 theorem DifferentiableWithinAt.clm_comp (hc : DifferentiableWithinAt 𝕜 c s x) (hd : DifferentiableWithinAt 𝕜 d s x) :
     DifferentiableWithinAt 𝕜 (fun y => (c y).comp (d y)) s x :=
@@ -2287,7 +2275,7 @@ open NormedRing ContinuousLinearMap Ringₓ
 /-- At an invertible element `x` of a normed algebra `R`, the Fréchet derivative of the inversion
 operation is the linear map `λ t, - x⁻¹ * t * x⁻¹`. -/
 theorem has_fderiv_at_ring_inverse (x : Rˣ) : HasFderivAt Ring.inverse (-lmulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹) x := by
-  have h_is_o : is_o (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) (fun t : R => t) (𝓝 0) := by
+  have h_is_o : (fun t : R => inverse (↑x + t) - ↑x⁻¹ + ↑x⁻¹ * t * ↑x⁻¹) =o[𝓝 0] fun t : R => t := by
     refine' (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)
     simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by
@@ -2496,8 +2484,8 @@ theorem HasStrictFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜]
   replace hg := hg.prod_map' hg
   replace hfg := hfg.prod_mk_nhds hfg
   have :
-    is_O (fun p : F × F => g p.1 - g p.2 - f'.symm (p.1 - p.2)) (fun p : F × F => f' (g p.1 - g p.2) - (p.1 - p.2))
-      (𝓝 (a, a)) :=
+    (fun p : F × F => g p.1 - g p.2 - f'.symm (p.1 - p.2)) =O[𝓝 (a, a)] fun p : F × F =>
+      f' (g p.1 - g p.2) - (p.1 - p.2) :=
     by
     refine' ((f'.symm : F →L[𝕜] E).is_O_comp _ _).congr (fun x => _) fun _ => rfl
     simp
@@ -2520,7 +2508,7 @@ an inverse function. -/
 theorem HasFderivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g : F → E} {a : F} (hg : ContinuousAt g a)
     (hf : HasFderivAt f (f' : E →L[𝕜] F) (g a)) (hfg : ∀ᶠ y in 𝓝 a, f (g y) = y) :
     HasFderivAt g (f'.symm : F →L[𝕜] E) a := by
-  have : is_O (fun x : F => g x - g a - f'.symm (x - a)) (fun x : F => f' (g x - g a) - (x - a)) (𝓝 a) := by
+  have : (fun x : F => g x - g a - f'.symm (x - a)) =O[𝓝 a] fun x : F => f' (g x - g a) - (x - a) := by
     refine' ((f'.symm : F →L[𝕜] E).is_O_comp _ _).congr (fun x => _) fun _ => rfl
     simp
   refine' this.trans_is_o _
@@ -2556,7 +2544,7 @@ theorem LocalHomeomorph.has_fderiv_at_symm (f : LocalHomeomorph E F) {f' : E ≃
 theorem HasFderivWithinAt.eventually_ne (h : HasFderivWithinAt f f' s x) (hf' : ∃ C, ∀ z, ∥z∥ ≤ C * ∥f' z∥) :
     ∀ᶠ z in 𝓝[s \ {x}] x, f z ≠ f x := by
   rw [nhdsWithin, diff_eq, ← inf_principal, ← inf_assoc, eventually_inf_principal]
-  have A : is_O (fun z => z - x) (fun z => f' (z - x)) (𝓝[s] x) :=
+  have A : (fun z => z - x) =O[𝓝[s] x] fun z => f' (z - x) :=
     is_O_iff.2 <| hf'.imp fun C hC => eventually_of_forall fun z => hC _
   have : (fun z => f z - f x) ~[𝓝[s] x] fun z => f' (z - x) := h.trans_is_O A
   simpa [not_imp_not, sub_eq_zero] using (A.trans this.is_O_symm).eq_zero_imp

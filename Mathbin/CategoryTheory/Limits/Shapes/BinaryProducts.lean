@@ -501,10 +501,10 @@ instance prod.map_mono {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g 
   ⟨fun A i₁ i₂ h => by
     ext
     · rw [← cancel_mono f]
-      simpa using congr_argₓ (fun f => f ≫ Prod.fst) h
+      simpa using congr_arg (fun f => f ≫ Prod.fst) h
       
     · rw [← cancel_mono g]
-      simpa using congr_argₓ (fun f => f ≫ Prod.snd) h
+      simpa using congr_arg (fun f => f ≫ Prod.snd) h
       ⟩
 
 @[simp, reassoc]
@@ -609,10 +609,10 @@ instance coprod.map_epi {C : Type _} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g
   ⟨fun A i₁ i₂ h => by
     ext
     · rw [← cancel_epi f]
-      simpa using congr_argₓ (fun f => coprod.inl ≫ f) h
+      simpa using congr_arg (fun f => coprod.inl ≫ f) h
       
     · rw [← cancel_epi g]
-      simpa using congr_argₓ (fun f => coprod.inr ≫ f) h
+      simpa using congr_arg (fun f => coprod.inr ≫ f) h
       ⟩
 
 -- The simp linter says simp can prove the reassoc version of this lemma.

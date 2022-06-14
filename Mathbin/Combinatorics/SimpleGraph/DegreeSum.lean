@@ -89,7 +89,7 @@ theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.EdgeSet) : (univ.filter f
   by
   refine' Sym2.ind (fun v w h => _) e h
   let d : G.dart := ⟨(v, w), h⟩
-  convert congr_argₓ card d.edge_fiber
+  convert congr_arg card d.edge_fiber
   rw [card_insert_of_not_mem, card_singleton]
   rw [mem_singleton]
   exact d.symm_ne.symm
@@ -117,7 +117,7 @@ end DegreeSum
 theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
     Even (univ.filter fun v => Odd (G.degree v)).card := by
   classical
-  have h := congr_argₓ (fun n => ↑n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges
+  have h := congr_arg (fun n => ↑n : ℕ → Zmod 2) G.sum_degrees_eq_twice_card_edges
   simp only [Zmod.nat_cast_self, zero_mul, Nat.cast_mulₓ] at h
   rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
   rw [@sum_congr _ _ _ _ (fun v => (G.degree v : Zmod 2)) (fun v => (1 : Zmod 2)) _ rfl] at h

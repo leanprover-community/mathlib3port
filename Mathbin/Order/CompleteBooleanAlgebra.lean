@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 -/
 import Mathbin.Order.CompleteLattice
+import Mathbin.Order.Directed
 
 /-!
 # Frames, completely distributive lattices and Boolean algebras
@@ -80,13 +81,13 @@ theorem supr_inf_eq (f : ι → α) (a : α) : (⨆ i, f i)⊓a = ⨆ i, f i⊓a
 theorem inf_supr_eq (a : α) (f : ι → α) : (a⊓⨆ i, f i) = ⨆ i, a⊓f i := by
   simpa only [inf_comm] using supr_inf_eq f a
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem bsupr_inf_eq {f : ∀ i, κ i → α} (a : α) : (⨆ (i) (j), f i j)⊓a = ⨆ (i) (j), f i j⊓a := by
   simp only [supr_inf_eq]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem inf_bsupr_eq {f : ∀ i, κ i → α} (a : α) : (a⊓⨆ (i) (j), f i j) = ⨆ (i) (j), a⊓f i j := by
   simp only [inf_supr_eq]
 
@@ -112,6 +113,18 @@ theorem Sup_disjoint_iff {s : Set α} : Disjoint (sup s) a ↔ ∀, ∀ b ∈ s,
 
 theorem disjoint_Sup_iff {s : Set α} : Disjoint a (sup s) ↔ ∀, ∀ b ∈ s, ∀, Disjoint a b := by
   simpa only [Disjoint.comm] using Sup_disjoint_iff
+
+theorem supr_inf_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Monotone f)
+    (hg : Monotone g) : (⨆ i, f i⊓g i) = (⨆ i, f i)⊓⨆ i, g i := by
+  refine' (le_supr_inf_supr f g).antisymm _
+  rw [supr_inf_supr]
+  refine' supr_mono' fun i => _
+  rcases directed_of (· ≤ ·) i.1 i.2 with ⟨j, h₁, h₂⟩
+  exact ⟨j, inf_le_inf (hf h₁) (hg h₂)⟩
+
+theorem supr_inf_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Antitone f)
+    (hg : Antitone g) : (⨆ i, f i⊓g i) = (⨆ i, f i)⊓⨆ i, g i :=
+  @supr_inf_of_monotone α _ ιᵒᵈ _ _ f g hf.dual_left hg.dual_left
 
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
@@ -139,13 +152,13 @@ theorem infi_sup_eq (f : ι → α) (a : α) : (⨅ i, f i)⊔a = ⨅ i, f i⊔a
 theorem sup_infi_eq (a : α) (f : ι → α) : (a⊔⨅ i, f i) = ⨅ i, a⊔f i :=
   @inf_supr_eq αᵒᵈ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem binfi_sup_eq {f : ∀ i, κ i → α} (a : α) : (⨅ (i) (j), f i j)⊔a = ⨅ (i) (j), f i j⊔a :=
   @bsupr_inf_eq αᵒᵈ _ _ _ _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem sup_binfi_eq {f : ∀ i, κ i → α} (a : α) : (a⊔⨅ (i) (j), f i j) = ⨅ (i) (j), a⊔f i j :=
   @inf_bsupr_eq αᵒᵈ _ _ _ _ _
 
@@ -158,6 +171,14 @@ theorem binfi_sup_binfi {ι ι' : Type _} {f : ι → α} {g : ι' → α} {s : 
 
 theorem Inf_sup_Inf : inf s⊔inf t = ⨅ p ∈ s ×ˢ t, (p : α × α).1⊔p.2 :=
   @Sup_inf_Sup αᵒᵈ _ _ _
+
+theorem infi_sup_of_monotone {ι : Type _} [Preorderₓ ι] [IsDirected ι (swap (· ≤ ·))] {f g : ι → α} (hf : Monotone f)
+    (hg : Monotone g) : (⨅ i, f i⊔g i) = (⨅ i, f i)⊔⨅ i, g i :=
+  supr_inf_of_antitone hf.dual_right hg.dual_right
+
+theorem infi_sup_of_antitone {ι : Type _} [Preorderₓ ι] [IsDirected ι (· ≤ ·)] {f g : ι → α} (hf : Antitone f)
+    (hg : Antitone g) : (⨅ i, f i⊔g i) = (⨅ i, f i)⊔⨅ i, g i :=
+  supr_inf_of_monotone hf.dual_right hg.dual_right
 
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
   { Pi.completeLattice with inf := inf,

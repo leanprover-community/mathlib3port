@@ -59,11 +59,11 @@ def app {F G : C ⥤ D} (α : F ≅ G) (X : C) : F.obj X ≅ G.obj X where
 
 @[simp, reassoc]
 theorem hom_inv_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.Hom.app X ≫ α.inv.app X = 𝟙 (F.obj X) :=
-  congr_funₓ (congr_argₓ NatTrans.app α.hom_inv_id) X
+  congr_fun (congr_arg NatTrans.app α.hom_inv_id) X
 
 @[simp, reassoc]
 theorem inv_hom_id_app {F G : C ⥤ D} (α : F ≅ G) (X : C) : α.inv.app X ≫ α.Hom.app X = 𝟙 (G.obj X) :=
-  congr_funₓ (congr_argₓ NatTrans.app α.inv_hom_id) X
+  congr_fun (congr_arg NatTrans.app α.inv_hom_id) X
 
 end Iso
 
@@ -165,8 +165,8 @@ theorem naturality_2' (α : F ⟶ G) (f : X ⟶ Y) [IsIso (α.app Y)] : α.app X
 -/
 instance is_iso_app_of_is_iso (α : F ⟶ G) [IsIso α] X : IsIso (α.app X) :=
   ⟨⟨(inv α).app X,
-      ⟨congr_funₓ (congr_argₓ NatTrans.app (IsIso.hom_inv_id α)) X,
-        congr_funₓ (congr_argₓ NatTrans.app (IsIso.inv_hom_id α)) X⟩⟩⟩
+      ⟨congr_fun (congr_arg NatTrans.app (IsIso.hom_inv_id α)) X,
+        congr_fun (congr_arg NatTrans.app (IsIso.inv_hom_id α)) X⟩⟩⟩
 
 @[simp]
 theorem is_iso_inv_app (α : F ⟶ G) [IsIso α] X : (inv α).app X = inv (α.app X) := by
@@ -189,7 +189,7 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
   inv :=
     { app := fun X => (app X).inv,
       naturality' := fun X Y f => by
-        have h := congr_argₓ (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
+        have h := congr_arg (fun f => (app X).inv ≫ f ≫ (app Y).inv) (naturality f).symm
         simp only [iso.inv_hom_id_assoc, iso.hom_inv_id, assoc, comp_id, cancel_mono] at h
         exact h }
 

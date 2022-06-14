@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 -/
 import Mathbin.Data.Polynomial.AlgebraMap
+import Mathbin.RingTheory.Localization.Basic
 
 /-!  # Laurent polynomials
 
@@ -44,11 +45,27 @@ I made a *heavy* use of `simp` lemmas, aiming to bring Laurent polynomials to th
 Any comments or suggestions for improvements is greatly appreciated!
 
 ##  Future work
-Lots is missing!  I would certainly like to show that `R[T;T⁻¹]` is the localization of `R[X]`
-inverting `X`.  This should be mostly in place, given `exists_T_pow` (which is part of PR #13415).
-(Riccardo) add inclusion into Laurent series.
-(Riccardo) giving a morphism (as `R`-alg, so in the commutative case)
-from `R[T,T⁻¹]` to `S` is the same as choosing a unit of `S`.
+Lots is missing!
+-- (Riccardo) add inclusion into Laurent series.
+-- (Riccardo) giving a morphism (as `R`-alg, so in the commutative case)
+  from `R[T,T⁻¹]` to `S` is the same as choosing a unit of `S`.
+-- A "better" definition of `trunc` would be as an `R`-linear map.  This works:
+--  ```
+--  def trunc : R[T;T⁻¹] →[R] R[X] :=
+--  begin
+--    refine (_ : add_monoid_algebra R ℕ →[R] R[X]).comp _,
+--    { exact ⟨(to_finsupp_iso R).symm, by simp⟩ },
+--    { refine ⟨λ r, comap_domain _ r (set.inj_on_of_injective (λ a b ab, int.of_nat.inj ab) _), _⟩,
+--      exact λ r f, comap_domain_smul _ _ _ }
+--  end
+--  ```
+--  but it would make sense to bundle the maps better, for a smoother user experience.
+--  I (DT) did not have the strength to embark on this (possibly short!) journey, after getting to
+--  this stage of the Laurent process!
+--  This would likely involve adding a `comap_domain` analogue of
+--  `add_monoid_algebra.map_domain_alg_hom` and an `R`-linear version of
+--  `polynomial.to_finsupp_iso`.
+-- Add `degree, int_degree, int_trailing_degree, leading_coeff, trailing_coeff,...`.
 -/
 
 
@@ -135,6 +152,9 @@ theorem T_zero : (t 0 : R[T;T⁻¹]) = 1 :=
 theorem T_add (m n : ℤ) : (t (m + n) : R[T;T⁻¹]) = t m * t n := by
   convert single_mul_single.symm
   simp [T]
+
+theorem T_sub (m n : ℤ) : (t (m - n) : R[T;T⁻¹]) = t m * t (-n) := by
+  rw [← T_add, sub_eq_add_neg]
 
 @[simp]
 theorem T_pow (m : ℤ) (n : ℕ) : (t m ^ n : R[T;T⁻¹]) = t (n * m) := by
@@ -296,7 +316,48 @@ theorem _root_.polynomial.to_laurent_injective : Function.Injective (Polynomial.
 
 @[simp]
 theorem _root_.polynomial.to_laurent_inj (f g : R[X]) : f.toLaurent = g.toLaurent ↔ f = g :=
-  ⟨fun h => Polynomial.to_laurent_injective h, congr_argₓ _⟩
+  ⟨fun h => Polynomial.to_laurent_injective h, congr_arg _⟩
+
+theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ)(f' : R[X]), f'.toLaurent = f * t n := by
+  apply f.induction_on' _ fun n a => _ <;> clear f
+  · rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
+    refine' ⟨m + n, fn * X ^ n + gn * X ^ m, _⟩
+    simp only [hf, hg, add_mulₓ, add_commₓ (n : ℤ), map_add, map_mul, Polynomial.to_laurent_X_pow, mul_T_assoc,
+      Int.coe_nat_add]
+    
+  · cases' n with n n
+    · exact
+        ⟨0, Polynomial.c a * X ^ n, by
+          simp ⟩
+      
+    · refine' ⟨n + 1, Polynomial.c a, _⟩
+      simp only [Int.neg_succ_of_nat_eq, Polynomial.to_laurent_C, Int.coe_nat_succ, mul_T_assoc, add_left_negₓ, T_zero,
+        mul_oneₓ]
+      
+    
+
+/-- This is a version of `exists_T_pow` stated as an induction principle. -/
+@[elab_as_eliminator]
+theorem induction_on_mul_T {Q : R[T;T⁻¹] → Prop} (f : R[T;T⁻¹]) (Qf : ∀ {f : R[X]} {n : ℕ}, Q (f.toLaurent * t (-n))) :
+    Q f := by
+  rcases f.exists_T_pow with ⟨n, f', hf⟩
+  rw [← mul_oneₓ f, ← T_zero, ← Nat.cast_zeroₓ, ← Nat.sub_self n, Nat.cast_sub rfl.le, T_sub, ← mul_assoc,
+    Int.nat_cast_eq_coe_nat, ← hf]
+  exact Qf
+
+/-- Suppose that `Q` is a statement about Laurent polynomials such that
+* `Q` is true on *ordinary* polynomials;
+* `Q (f * T)` implies `Q f`;
+it follow that `Q` is true on all Laurent polynomials. -/
+theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Prop} (Qf : ∀ f : R[X], Q f.toLaurent)
+    (QT : ∀ f, Q (f * t 1) → Q f) : Q f := by
+  induction' f using LaurentPolynomial.induction_on_mul_T with f n
+  induction' n with n hn
+  · simpa only [Int.coe_nat_zero, neg_zero', T_zero, mul_oneₓ] using Qf _
+    
+  · convert QT _ _
+    simpa using hn
+    
 
 instance : Module R[X] R[T;T⁻¹] :=
   Module.compHom _ Polynomial.toLaurent
@@ -309,11 +370,45 @@ end Semiringₓ
 
 section CommSemiringₓ
 
+variable [CommSemiringₓ R]
+
 instance algebraPolynomial (R : Type _) [CommSemiringₓ R] : Algebra R[X] R[T;T⁻¹] :=
   { Polynomial.toLaurent with
     commutes' := fun f l => by
       simp [mul_comm],
     smul_def' := fun f l => rfl }
+
+theorem algebra_map_X_pow (n : ℕ) : algebraMap R[X] R[T;T⁻¹] (X ^ n) = t n :=
+  Polynomial.to_laurent_X_pow n
+
+@[simp]
+theorem algebra_map_eq_to_laurent (f : R[X]) : algebraMap R[X] R[T;T⁻¹] f = f.toLaurent :=
+  rfl
+
+theorem is_localization : IsLocalization (Submonoid.closure ({x} : Set R[X])) R[T;T⁻¹] :=
+  { map_units := fun t => by
+      cases' t with t ht
+      rcases submonoid.mem_closure_singleton.mp ht with ⟨n, rfl⟩
+      simp only [is_unit_T n, SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow],
+    surj := fun f => by
+      induction' f using LaurentPolynomial.induction_on_mul_T with f n
+      have := (Submonoid.closure ({X} : Set R[X])).pow_mem Submonoid.mem_closure_singleton_self n
+      refine' ⟨(f, ⟨_, this⟩), _⟩
+      simp only [SetLike.coe_mk, algebra_map_eq_to_laurent, Polynomial.to_laurent_X_pow, mul_T_assoc, add_left_negₓ,
+        T_zero, mul_oneₓ],
+    eq_iff_exists := fun f g => by
+      rw [algebra_map_eq_to_laurent, algebra_map_eq_to_laurent, Polynomial.to_laurent_inj]
+      refine' ⟨_, _⟩
+      · rintro rfl
+        exact ⟨1, rfl⟩
+        
+      · rintro ⟨⟨h, hX⟩, h⟩
+        rcases submonoid.mem_closure_singleton.mp hX with ⟨n, rfl⟩
+        exact
+          mul_X_pow_injective n
+            (by
+              simpa only [X_pow_mul] using h)
+         }
 
 end CommSemiringₓ
 

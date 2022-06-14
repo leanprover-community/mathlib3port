@@ -221,7 +221,7 @@ then the functors `opens Y ⥤ opens X` they induce are isomorphic.
 -- We could make `f g` implicit here, but it's nice to be able to see when
 -- they are the identity (often!)
 def mapIso (f g : X ⟶ Y) (h : f = g) : map f ≅ map g :=
-  NatIso.ofComponents (fun U => eqToIso (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U))
+  NatIso.ofComponents (fun U => eqToIso (congr_fun (congr_arg Functor.obj (congr_arg map h)) U))
     (by
       run_tac
         obviously)
@@ -240,12 +240,12 @@ theorem map_iso_refl (f : X ⟶ Y) h : mapIso f f h = Iso.refl (map _) :=
 
 @[simp]
 theorem map_iso_hom_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
-    (mapIso f g h).Hom.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h)) U) :=
+    (mapIso f g h).Hom.app U = eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h)) U) :=
   rfl
 
 @[simp]
 theorem map_iso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
-    (mapIso f g h).inv.app U = eqToHom (congr_funₓ (congr_argₓ Functor.obj (congr_argₓ map h.symm)) U) :=
+    (mapIso f g h).inv.app U = eqToHom (congr_fun (congr_arg Functor.obj (congr_arg map h.symm)) U) :=
   rfl
 
 /-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/

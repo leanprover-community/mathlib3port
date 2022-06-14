@@ -112,11 +112,11 @@ theorem derivative_succ_aux (n ν : ℕ) :
     simpa [Polynomial.derivative_pow, ← sub_eq_add_neg]
   conv_rhs => rw [mul_sub]
   -- We'll prove the two terms match up separately.
-  refine' congr (congr_argₓ Sub.sub _) _
+  refine' congr (congr_arg Sub.sub _) _
   · simp only [← mul_assoc]
-    refine' congr (congr_argₓ (· * ·) (congr (congr_argₓ (· * ·) _) rfl)) rfl
+    refine' congr (congr_arg (· * ·) (congr (congr_arg (· * ·) _) rfl)) rfl
     -- Now it's just about binomial coefficients
-    exact_mod_cast congr_argₓ (fun m : ℕ => (m : R[X])) (Nat.succ_mul_choose_eq n ν).symm
+    exact_mod_cast congr_arg (fun m : ℕ => (m : R[X])) (Nat.succ_mul_choose_eq n ν).symm
     
   · rw [← tsub_add_eq_tsub_tsub, ← mul_assoc, ← mul_assoc]
     congr 1

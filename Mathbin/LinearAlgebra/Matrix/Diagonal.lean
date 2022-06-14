@@ -33,24 +33,16 @@ section CommRingₓ
 
 variable {n : Type _} [Fintype n] [DecidableEq n] {R : Type v} [CommRingₓ R]
 
-theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (toLin' (diagonalₓ w)) = w i • proj i := by
-  ext j <;> simp [mul_vec_diagonal]
+theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (toLin' (diagonalₓ w)) = w i • proj i :=
+  LinearMap.ext fun j => mul_vec_diagonal _ _ _
 
 theorem diagonal_comp_std_basis (w : n → R) (i : n) :
     (diagonalₓ w).toLin'.comp (LinearMap.stdBasis R (fun _ : n => R) i) =
       w i • LinearMap.stdBasis R (fun _ : n => R) i :=
-  by
-  ext j
-  simp_rw [LinearMap.comp_apply, to_lin'_apply, mul_vec_diagonal, LinearMap.smul_apply, Pi.smul_apply,
-    Algebra.id.smul_eq_mul]
-  by_cases' i = j
-  · subst h
-    
-  · rw [std_basis_ne R (fun _ : n => R) _ _ (Ne.symm h), _root_.mul_zero, _root_.mul_zero]
-    
+  LinearMap.ext fun x => (diagonal_mul_vec_single w _ _).trans (Pi.single_smul' i (w i) _)
 
-theorem diagonal_to_lin' (w : n → R) : (diagonalₓ w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i := by
-  ext v j <;> simp [mul_vec_diagonal]
+theorem diagonal_to_lin' (w : n → R) : (diagonalₓ w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
+  LinearMap.ext fun v => funext fun i => mul_vec_diagonal _ _ _
 
 end CommRingₓ
 

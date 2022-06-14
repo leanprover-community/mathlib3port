@@ -54,7 +54,7 @@ theorem card_le : # L ≤ # R := by
   cases fintypeOrInfinite R
   · exact Cardinal.mk_le_of_surjective (algebra_map_surjective_of_fintype S)
     
-  erw [← Cardinal.mul_eq_self <| Cardinal.omega_le_mk R]
+  erw [← Cardinal.mul_eq_self <| Cardinal.aleph_0_le_mk R]
   set f : R × R → L := fun aa => IsLocalization.mk' _ aa.1 (if h : aa.2 ∈ S then ⟨aa.2, h⟩ else 1)
   refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
   obtain ⟨x, y, h⟩ := IsLocalization.mk'_surjective S a

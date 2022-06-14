@@ -109,7 +109,7 @@ theorem tendsto_real_to_nnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : T
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
   (continuous_real_to_nnreal.Tendsto _).comp h
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ≠ » 0)
 theorem nhds_zero : 𝓝 (0 : ℝ≥0 ) = ⨅ (a) (_ : a ≠ 0), 𝓟 (iio a) :=
   nhds_bot_order.trans <| by
     simp [bot_lt_iff_ne_bot]

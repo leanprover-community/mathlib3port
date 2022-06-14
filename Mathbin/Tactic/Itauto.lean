@@ -752,8 +752,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle (without the `!` option), and the proof search is
 tailored for this use case. (`itauto!` will work as a classical SAT solver, but the algorithm is

@@ -55,8 +55,8 @@ theorem subtypeCongrHom.card_range {α : Type _} (p : α → Prop) [DecidablePre
 
 /-- **Cayley's theorem**: Every group G is isomorphic to a subgroup of the symmetric group acting on
 `G`. Note that we generalize this to an arbitrary "faithful" group action by `G`. Setting `H = G`
-recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_scalar` -/
-noncomputable def subgroupOfMulAction (G H : Type _) [Groupₓ G] [MulAction G H] [HasFaithfulScalar G H] :
+recovers the usual statement of Cayley's theorem via `right_cancel_monoid.to_has_faithful_smul` -/
+noncomputable def subgroupOfMulAction (G H : Type _) [Groupₓ G] [MulAction G H] [HasFaithfulSmul G H] :
     G ≃* (MulAction.toPermHom G H).range :=
   MulEquiv.ofLeftInverse' _ (Classical.some_spec MulAction.to_perm_injective.HasLeftInverse)
 

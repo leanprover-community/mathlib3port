@@ -57,13 +57,13 @@ theorem succ_iterate (a : ℕ) : ∀ n, (succ^[n]) a = a + n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', add_succ]
-    exact congr_argₓ _ n.succ_iterate
+    exact congr_arg _ n.succ_iterate
 
 theorem pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
   | 0 => rfl
   | n + 1 => by
     rw [Function.iterate_succ', sub_succ]
-    exact congr_argₓ _ n.pred_iterate
+    exact congr_arg _ n.pred_iterate
 
 instance : IsSuccArchimedean ℕ :=
   ⟨fun a b h =>

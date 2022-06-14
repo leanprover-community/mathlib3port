@@ -124,15 +124,19 @@ theorem sub_left (x y z : M₁) : B₁ (x - y) z = B₁ x z - B₁ y z := by
 theorem sub_right (x y z : M₁) : B₁ x (y - z) = B₁ x y - B₁ x z := by
   rw [sub_eq_add_neg, sub_eq_add_neg, add_right, neg_right]
 
-variable {D : BilinForm R M}
+variable {D : BilinForm R M} {D₁ : BilinForm R₁ M₁}
 
-@[ext]
-theorem ext (H : ∀ x y : M, B x y = D x y) : B = D := by
+-- TODO: instantiate `fun_like`
+theorem coe_injective : Function.Injective (coeFn : BilinForm R M → M → M → R) := fun B D h => by
   cases B
   cases D
   congr
-  funext
-  exact H _ _
+
+@[ext]
+theorem ext (H : ∀ x y : M, B x y = D x y) : B = D :=
+  coe_injective <| by
+    funext
+    exact H _ _
 
 theorem congr_fun (h : B = D) (x y : M) : B x y = D x y :=
   h ▸ rfl
@@ -140,7 +144,23 @@ theorem congr_fun (h : B = D) (x y : M) : B x y = D x y :=
 theorem ext_iff : B = D ↔ ∀ x y, B x y = D x y :=
   ⟨congr_fun, ext⟩
 
-instance : AddCommMonoidₓ (BilinForm R M) where
+instance : Zero (BilinForm R M) where
+  zero :=
+    { bilin := fun x y => 0, bilin_add_left := fun x y z => (add_zeroₓ 0).symm,
+      bilin_smul_left := fun a x y => (mul_zero a).symm, bilin_add_right := fun x y z => (zero_addₓ 0).symm,
+      bilin_smul_right := fun a x y => (mul_zero a).symm }
+
+@[simp]
+theorem coe_zero : ⇑(0 : BilinForm R M) = 0 :=
+  rfl
+
+@[simp]
+theorem zero_apply (x y : M) : (0 : BilinForm R M) x y = 0 :=
+  rfl
+
+variable (B D B₁ D₁)
+
+instance : Add (BilinForm R M) where
   add := fun B D =>
     { bilin := fun x y => B x y + D x y,
       bilin_add_left := fun x y z => by
@@ -151,115 +171,102 @@ instance : AddCommMonoidₓ (BilinForm R M) where
         rw [add_right, add_right, add_add_add_commₓ],
       bilin_smul_right := fun a x y => by
         rw [smul_right, smul_right, mul_addₓ] }
-  add_assoc := by
-    intros
-    ext
-    unfold bilin coeFn CoeFun.coe bilin
-    rw [add_assocₓ]
-  zero :=
-    { bilin := fun x y => 0, bilin_add_left := fun x y z => (add_zeroₓ 0).symm,
-      bilin_smul_left := fun a x y => (mul_zero a).symm, bilin_add_right := fun x y z => (zero_addₓ 0).symm,
-      bilin_smul_right := fun a x y => (mul_zero a).symm }
-  zero_add := by
-    intros
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [zero_addₓ]
-  add_zero := by
-    intros
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [add_zeroₓ]
-  add_comm := by
-    intros
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [add_commₓ]
 
-instance : AddCommGroupₓ (BilinForm R₁ M₁) :=
-  { BilinForm.addCommMonoid with
-    neg := fun B =>
-      { bilin := fun x y => -B.1 x y,
-        bilin_add_left := fun x y z => by
-          rw [bilin_add_left, neg_add],
-        bilin_smul_left := fun a x y => by
-          rw [bilin_smul_left, mul_neg],
-        bilin_add_right := fun x y z => by
-          rw [bilin_add_right, neg_add],
-        bilin_smul_right := fun a x y => by
-          rw [bilin_smul_right, mul_neg] },
-    add_left_neg := by
-      intros
-      ext
-      unfold coeFn CoeFun.coe bilin
-      rw [neg_add_selfₓ] }
+@[simp]
+theorem coe_add : ⇑(B + D) = B + D :=
+  rfl
 
 @[simp]
 theorem add_apply (x y : M) : (B + D) x y = B x y + D x y :=
   rfl
 
+/-- `bilin_form R M` inherits the scalar action by `α` on `R` if this is compatible with
+multiplication.
+
+When `R` itself is commutative, this provides an `R`-action via `algebra.id`. -/
+instance {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] : HasScalar α (BilinForm R M) where
+  smul := fun c B =>
+    { bilin := fun x y => c • B x y,
+      bilin_add_left := fun x y z => by
+        rw [add_left, smul_add],
+      bilin_smul_left := fun a x y => by
+        rw [smul_left, ← mul_smul_comm],
+      bilin_add_right := fun x y z => by
+        rw [add_right, smul_add],
+      bilin_smul_right := fun a x y => by
+        rw [smul_right, ← mul_smul_comm] }
+
 @[simp]
-theorem zero_apply (x y : M) : (0 : BilinForm R M) x y = 0 :=
+theorem coe_smul {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] (a : α) (B : BilinForm R M) :
+    ⇑(a • B) = a • B :=
+  rfl
+
+@[simp]
+theorem smul_apply {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] (a : α) (B : BilinForm R M) (x y : M) :
+    (a • B) x y = a • B x y :=
+  rfl
+
+instance : AddCommMonoidₓ (BilinForm R M) :=
+  Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add fun n x => coe_smul _ _
+
+instance : Neg (BilinForm R₁ M₁) where
+  neg := fun B =>
+    { bilin := fun x y => -B x y,
+      bilin_add_left := fun x y z => by
+        rw [add_left, neg_add],
+      bilin_smul_left := fun a x y => by
+        rw [smul_left, mul_neg],
+      bilin_add_right := fun x y z => by
+        rw [add_right, neg_add],
+      bilin_smul_right := fun a x y => by
+        rw [smul_right, mul_neg] }
+
+@[simp]
+theorem coe_neg : ⇑(-B₁) = -B₁ :=
   rfl
 
 @[simp]
 theorem neg_apply (x y : M₁) : (-B₁) x y = -B₁ x y :=
   rfl
 
+instance : Sub (BilinForm R₁ M₁) where
+  sub := fun B D =>
+    { bilin := fun x y => B x y - D x y,
+      bilin_add_left := fun x y z => by
+        rw [add_left, add_left, add_sub_add_comm],
+      bilin_smul_left := fun a x y => by
+        rw [smul_left, smul_left, mul_sub],
+      bilin_add_right := fun x y z => by
+        rw [add_right, add_right, add_sub_add_comm],
+      bilin_smul_right := fun a x y => by
+        rw [smul_right, smul_right, mul_sub] }
+
+@[simp]
+theorem coe_sub : ⇑(B₁ - D₁) = B₁ - D₁ :=
+  rfl
+
+@[simp]
+theorem sub_apply (x y : M₁) : (B₁ - D₁) x y = B₁ x y - D₁ x y :=
+  rfl
+
+instance : AddCommGroupₓ (BilinForm R₁ M₁) :=
+  Function.Injective.addCommGroup _ coe_injective coe_zero coe_add coe_neg coe_sub (fun n x => coe_smul _ _) fun n x =>
+    coe_smul _ _
+
 instance : Inhabited (BilinForm R M) :=
   ⟨0⟩
 
-section
+/-- `coe_fn` as an `add_monoid_hom` -/
+def coeFnAddMonoidHom : BilinForm R M →+ M → M → R where
+  toFun := coeFn
+  map_zero' := coe_zero
+  map_add' := coe_add
 
-/-- `bilin_form R M` inherits the scalar action from any commutative subalgebra `R₂` of `R`.
+instance {α} [Monoidₓ α] [DistribMulAction α R] [SmulCommClass α R R] : DistribMulAction α (BilinForm R M) :=
+  Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
-When `R` itself is commutative, this provides an `R`-action via `algebra.id`. -/
-instance [Algebra R₂ R] : Module R₂ (BilinForm R M) where
-  smul := fun c B =>
-    { bilin := fun x y => c • B x y,
-      bilin_add_left := fun x y z => by
-        unfold coeFn CoeFun.coe bilin
-        rw [bilin_add_left, smul_add],
-      bilin_smul_left := fun a x y => by
-        unfold coeFn CoeFun.coe bilin
-        rw [bilin_smul_left, ← Algebra.mul_smul_comm],
-      bilin_add_right := fun x y z => by
-        unfold coeFn CoeFun.coe bilin
-        rw [bilin_add_right, smul_add],
-      bilin_smul_right := fun a x y => by
-        unfold coeFn CoeFun.coe bilin
-        rw [bilin_smul_right, ← Algebra.mul_smul_comm] }
-  smul_add := fun c B D => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [smul_add]
-  add_smul := fun c B D => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [add_smul]
-  mul_smul := fun a c D => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [← smul_assoc]
-    rfl
-  one_smul := fun B => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [one_smul]
-  zero_smul := fun B => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [zero_smul]
-  smul_zero := fun B => by
-    ext
-    unfold coeFn CoeFun.coe bilin
-    rw [smul_zero]
-
-@[simp]
-theorem smul_apply [Algebra R₂ R] (B : BilinForm R M) (a : R₂) (x y : M) : (a • B) x y = a • B x y :=
-  rfl
-
-end
+instance {α} [Semiringₓ α] [Module α R] [SmulCommClass α R R] : Module α (BilinForm R M) :=
+  Function.Injective.module _ coeFnAddMonoidHom coe_injective coe_smul
 
 section flip
 
@@ -454,6 +461,25 @@ theorem BilinForm.to_lin_apply (x : M₂) : ⇑(BilinForm.toLin B₂ x) = B₂ x
   rfl
 
 end EquivLin
+
+namespace LinearMap
+
+variable {R' : Type} [CommSemiringₓ R'] [Algebra R' R] [Module R' M] [IsScalarTower R' R M]
+
+/-- Apply a linear map on the output of a bilinear form. -/
+@[simps]
+def compBilinForm (f : R →ₗ[R'] R') (B : BilinForm R M) : BilinForm R' M where
+  bilin := fun x y => f (B x y)
+  bilin_add_left := fun x y z => by
+    rw [BilinForm.add_left, map_add]
+  bilin_smul_left := fun r x y => by
+    rw [← smul_one_smul R r (_ : M), BilinForm.smul_left, smul_one_mul r (_ : R), map_smul, smul_eq_mul]
+  bilin_add_right := fun x y z => by
+    rw [BilinForm.add_right, map_add]
+  bilin_smul_right := fun r x y => by
+    rw [← smul_one_smul R r (_ : M), BilinForm.smul_right, smul_one_mul r (_ : R), map_smul, smul_eq_mul]
+
+end LinearMap
 
 namespace BilinForm
 
@@ -720,17 +746,17 @@ end
 
 section Basis
 
-variable {B₃ F₃ : BilinForm R₃ M₃}
+variable {F₂ : BilinForm R₂ M₂}
 
-variable {ι : Type _} (b : Basis ι R₃ M₃)
+variable {ι : Type _} (b : Basis ι R₂ M₂)
 
 /-- Two bilinear forms are equal when they are equal on all basis vectors. -/
-theorem ext_basis (h : ∀ i j, B₃ (b i) (b j) = F₃ (b i) (b j)) : B₃ = F₃ :=
+theorem ext_basis (h : ∀ i j, B₂ (b i) (b j) = F₂ (b i) (b j)) : B₂ = F₂ :=
   toLin.Injective <| b.ext fun i => b.ext fun j => h i j
 
 /-- Write out `B x y` as a sum over `B (b i) (b j)` if `b` is a basis. -/
-theorem sum_repr_mul_repr_mul (x y : M₃) :
-    ((b.repr x).Sum fun i xi => (b.repr y).Sum fun j yj => xi • yj • B₃ (b i) (b j)) = B₃ x y := by
+theorem sum_repr_mul_repr_mul (x y : M₂) :
+    ((b.repr x).Sum fun i xi => (b.repr y).Sum fun j yj => xi • yj • B₂ (b i) (b j)) = B₂ x y := by
   conv_rhs => rw [← b.total_repr x, ← b.total_repr y]
   simp_rw [Finsupp.total_apply, Finsupp.sum, sum_left, sum_right, smul_left, smul_right, smul_eq_mul]
 
@@ -890,19 +916,15 @@ theorem mem_is_pair_self_adjoint_submodule (f : Module.End R₂ M₂) :
     f ∈ isPairSelfAdjointSubmodule B₂ F₂ ↔ IsPairSelfAdjoint B₂ F₂ f := by
   rfl
 
-variable {M₃' : Type _} [AddCommGroupₓ M₃'] [Module R₃ M₃']
-
-variable (B₃ F₃ : BilinForm R₃ M₃)
-
-theorem is_pair_self_adjoint_equiv (e : M₃' ≃ₗ[R₃] M₃) (f : Module.End R₃ M₃) :
-    IsPairSelfAdjoint B₃ F₃ f ↔ IsPairSelfAdjoint (B₃.comp ↑e ↑e) (F₃.comp ↑e ↑e) (e.symm.conj f) := by
-  have hₗ : (F₃.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₃.comp_left f).comp ↑e ↑e := by
+theorem is_pair_self_adjoint_equiv (e : M₂' ≃ₗ[R₂] M₂) (f : Module.End R₂ M₂) :
+    IsPairSelfAdjoint B₂ F₂ f ↔ IsPairSelfAdjoint (B₂.comp ↑e ↑e) (F₂.comp ↑e ↑e) (e.symm.conj f) := by
+  have hₗ : (F₂.comp ↑e ↑e).compLeft (e.symm.conj f) = (F₂.comp_left f).comp ↑e ↑e := by
     ext
     simp [LinearEquiv.symm_conj_apply]
-  have hᵣ : (B₃.comp ↑e ↑e).compRight (e.symm.conj f) = (B₃.comp_right f).comp ↑e ↑e := by
+  have hᵣ : (B₂.comp ↑e ↑e).compRight (e.symm.conj f) = (B₂.comp_right f).comp ↑e ↑e := by
     ext
     simp [LinearEquiv.conj_apply]
-  have he : Function.Surjective (⇑(↑e : M₃' →ₗ[R₃] M₃) : M₃' → M₃) := e.surjective
+  have he : Function.Surjective (⇑(↑e : M₂' →ₗ[R₂] M₂) : M₂' → M₂) := e.surjective
   show BilinForm.IsAdjointPair _ _ _ _ ↔ BilinForm.IsAdjointPair _ _ _ _
   rw [is_adjoint_pair_iff_comp_left_eq_comp_right, is_adjoint_pair_iff_comp_left_eq_comp_right, hᵣ, hₗ,
     comp_inj _ _ he he]
@@ -929,6 +951,8 @@ def selfAdjointSubmodule :=
 @[simp]
 theorem mem_self_adjoint_submodule (f : Module.End R₂ M₂) : f ∈ B₂.selfAdjointSubmodule ↔ B₂.IsSelfAdjoint f :=
   Iff.rfl
+
+variable (B₃ : BilinForm R₃ M₃)
 
 /-- The set of skew-adjoint endomorphisms of a module with bilinear form is a submodule. (In fact
 it is a Lie subalgebra.) -/
@@ -1061,7 +1085,7 @@ theorem Nondegenerate.ne_zero [Nontrivial M] {B : BilinForm R M} (h : B.Nondegen
 
 theorem Nondegenerate.congr {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') (h : B.Nondegenerate) :
     (congr e B).Nondegenerate := fun m hm =>
-  e.symm.map_eq_zero_iff.1 <| (h (e.symm m)) fun n => (congr_argₓ _ (e.symm_apply_apply n).symm).trans (hm (e n))
+  e.symm.map_eq_zero_iff.1 <| (h (e.symm m)) fun n => (congr_arg _ (e.symm_apply_apply n).symm).trans (hm (e n))
 
 @[simp]
 theorem nondegenerate_congr_iff {B : BilinForm R₂ M₂} (e : M₂ ≃ₗ[R₂] M₂') :

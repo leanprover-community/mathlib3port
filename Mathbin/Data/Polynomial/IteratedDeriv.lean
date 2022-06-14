@@ -137,7 +137,7 @@ theorem coeff_iterated_deriv_as_prod_Ico :
         exact fun h => (Nat.lt_succ_selfₓ _).not_le h.1
         
       
-    · exact congr_argₓ _ (succ_add m k)
+    · exact congr_arg _ (succ_add m k)
       
     
 

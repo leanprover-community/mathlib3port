@@ -251,7 +251,7 @@ def colimitIsColimit : IsColimit (colimitCocone F) where
     ext
     induction x
     induction x
-    · have w' := congr_funₓ (congr_argₓ (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
+    · have w' := congr_fun (congr_arg (fun f : F.obj x_j ⟶ s.X => (f : F.obj x_j → s.X)) (w x_j)) x_x
       erw [w']
       rfl
       

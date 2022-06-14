@@ -31,7 +31,7 @@ noncomputable section
 
 open Set MeasureTheory
 
-open Ennreal
+open Ennreal MeasureTheory
 
 variable {α : Type _} {mα : MeasurableSpace α} {μ : Measureₓ α} {f g : α → ℝ≥0∞} {X Y : α → ℝ}
 
@@ -41,8 +41,8 @@ namespace ProbabilityTheory
   random variable to `T`, then `E[f * indicator T c 0]=E[f] * E[indicator T c 0]`. It is useful for
   `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space`. -/
 theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : MeasurableSpace α} {μ : Measureₓ α}
-    (hMf : Mf ≤ mα) (c : ℝ≥0∞) {T : Set α} (h_meas_T : MeasurableSet T) (h_ind : IndepSetsₓ Mf.MeasurableSet' {T} μ)
-    (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f) :
+    (hMf : Mf ≤ mα) (c : ℝ≥0∞) {T : Set α} (h_meas_T : MeasurableSet T)
+    (h_ind : IndepSetsₓ { s | measurable_set[Mf] s } {T} μ) (h_meas_f : measurable[Mf] f) :
     (∫⁻ a, f a * T.indicator (fun _ => c) a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, T.indicator (fun _ => c) a ∂μ := by
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a := fun g h_mg =>
@@ -62,8 +62,8 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : M
     have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl
     have h_measM_g : Measurable g := h_meas_g.mono hMf le_rfl
     simp_rw [Pi.add_apply, right_distrib]
-    rw [lintegral_add (h_mul_indicator _ h_measM_f') (h_mul_indicator _ h_measM_g), lintegral_add h_measM_f' h_measM_g,
-      right_distrib, h_ind_f', h_ind_g]
+    rw [lintegral_add_left (h_mul_indicator _ h_measM_f'), lintegral_add_left h_measM_f', right_distrib, h_ind_f',
+      h_ind_g]
     
   · intro f h_meas_f h_mono_f h_ind_f
     have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
@@ -84,8 +84,8 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mα : M
    independence. See `lintegral_mul_eq_lintegral_mul_lintegral_of_independent_fn` for
    a more common variant of the product of independent variables. -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space {Mf Mg mα : MeasurableSpace α}
-    {μ : Measureₓ α} (hMf : Mf ≤ mα) (hMg : Mg ≤ mα) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : @Measurable α ℝ≥0∞ Mf _ f)
-    (h_meas_g : @Measurable α ℝ≥0∞ Mg _ g) : (∫⁻ a, f a * g a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
+    {μ : Measureₓ α} (hMf : Mf ≤ mα) (hMg : Mg ≤ mα) (h_ind : Indepₓ Mf Mg μ) (h_meas_f : measurable[Mf] f)
+    (h_meas_g : measurable[Mg] g) : (∫⁻ a, f a * g a ∂μ) = (∫⁻ a, f a ∂μ) * ∫⁻ a, g a ∂μ := by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
   apply Measurable.ennreal_induction
@@ -98,8 +98,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space
     have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
     have h_measM_g : Measurable g := h_measMg_g.mono hMg le_rfl
     simp_rw [Pi.add_apply, left_distrib]
-    rw [lintegral_add h_measM_f' h_measM_g, lintegral_add (h_measM_f.mul h_measM_f') (h_measM_f.mul h_measM_g),
-      left_distrib, h_ind_f', h_ind_g']
+    rw [lintegral_add_left h_measM_f', lintegral_add_left (h_measM_f.mul h_measM_f'), left_distrib, h_ind_f', h_ind_g']
     
   · intro f' h_meas_f' h_mono_f' h_ind_f'
     have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl

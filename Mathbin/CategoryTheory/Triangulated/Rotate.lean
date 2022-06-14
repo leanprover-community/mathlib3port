@@ -149,8 +149,8 @@ def invRotate (f : TriangleMorphism T₁ T₂) : TriangleMorphism T₁.invRotate
       functor.id_map]
   comm₃' := by
     dsimp'
-    simp only [discrete.functor_map_id, id_comp, opaque_eq_to_iso_inv, μ_inv_naturality, category.assoc,
-      nat_trans.id_app, unit_of_tensor_iso_unit_inv_app]
+    simp only [discrete.functor_map_id, id_comp, μ_inv_naturality, category.assoc, nat_trans.id_app,
+      unit_of_tensor_iso_unit_inv_app]
     erw [ε_naturality_assoc]
     rw [comm₂_assoc]
 
@@ -184,8 +184,8 @@ def toInvRotateRotate (T : Triangle C) : T ⟶ (invRotate C).obj ((rotate C).obj
   hom₃ := 𝟙 T.obj₃
   comm₃' := by
     dsimp'
-    simp only [ε_app_obj, eq_to_iso.hom, discrete.functor_map_id, id_comp, eq_to_iso.inv, opaque_eq_to_iso_inv,
-      category.assoc, obj_μ_inv_app, functor.map_comp, nat_trans.id_app, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
+    simp only [ε_app_obj, eq_to_iso.hom, discrete.functor_map_id, id_comp, eq_to_iso.inv, category.assoc, obj_μ_inv_app,
+      functor.map_comp, nat_trans.id_app, obj_ε_app, unit_of_tensor_iso_unit_inv_app]
     erw [μ_inv_hom_app_assoc]
     rfl
 
@@ -199,8 +199,8 @@ def rotCompInvRotHom : 𝟭 (Triangle C) ⟶ rotate C ⋙ invRotate C where
     introv
     ext
     · dsimp'
-      simp only [nat_iso.cancel_nat_iso_inv_right_assoc, discrete.functor_map_id, id_comp, opaque_eq_to_iso_inv,
-        μ_inv_naturality, assoc, nat_trans.id_app, unit_of_tensor_iso_unit_inv_app]
+      simp only [nat_iso.cancel_nat_iso_inv_right_assoc, discrete.functor_map_id, id_comp, μ_inv_naturality, assoc,
+        nat_trans.id_app, unit_of_tensor_iso_unit_inv_app]
       erw [ε_naturality]
       
     · dsimp'

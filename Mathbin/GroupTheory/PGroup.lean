@@ -6,7 +6,7 @@ Authors: Chris Hughes, Thomas Browning
 import Mathbin.Data.Zmod.Basic
 import Mathbin.GroupTheory.Index
 import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.Perm.CycleType
+import Mathbin.GroupTheory.Perm.Cycle.Type
 import Mathbin.GroupTheory.QuotientGroup
 
 /-!
@@ -55,7 +55,7 @@ theorem iff_card [Fact p.Prime] [Fintype G] : IsPGroup p G ↔ ∃ n : ℕ, card
   intro q hq
   obtain ⟨hq1, hq2⟩ := (Nat.mem_factors hG).mp hq
   have : Fact q.prime := ⟨hq1⟩
-  obtain ⟨g, hg⟩ := Equivₓ.Perm.exists_prime_order_of_dvd_card q hq2
+  obtain ⟨g, hg⟩ := exists_prime_order_of_dvd_card q hq2
   obtain ⟨k, hk⟩ := (iff_order_of.mp h) g
   exact (hq1.pow_eq_iff.mp (hg.symm.trans hk).symm).1.symm
 
@@ -90,7 +90,7 @@ theorem index (H : Subgroup G) [Fintype (G ⧸ H)] : ∃ n : ℕ, H.index = p ^ 
   obtain ⟨n, hn⟩ := iff_card.mp (hG.to_quotient H.normal_core)
   obtain ⟨k, hk1, hk2⟩ :=
     (Nat.dvd_prime_pow hp.out).mp
-      ((congr_argₓ _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
+      ((congr_arg _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
   exact ⟨k, hk2⟩
 
 variable {α : Type _} [MulAction G α]
@@ -212,7 +212,7 @@ theorem comap_of_ker_is_p_group {H : Subgroup G} (hH : IsPGroup p H) {K : Type _
 
 theorem ker_is_p_group_of_injective {K : Type _} [Groupₓ K] {ϕ : K →* G} (hϕ : Function.Injective ϕ) :
     IsPGroup p ϕ.ker :=
-  (congr_argₓ (fun Q : Subgroup K => IsPGroup p Q) (ϕ.ker_eq_bot_iff.mpr hϕ)).mpr IsPGroup.of_bot
+  (congr_arg (fun Q : Subgroup K => IsPGroup p Q) (ϕ.ker_eq_bot_iff.mpr hϕ)).mpr IsPGroup.of_bot
 
 theorem comap_of_injective {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Groupₓ K] (ϕ : K →* G)
     (hϕ : Function.Injective ϕ) : IsPGroup p (H.comap ϕ) :=
@@ -229,21 +229,21 @@ theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPG
 
 theorem to_sup_of_normal_left {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) [H.Normal] :
     IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right hK hH)
+  (congr_arg (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right hK hH)
 
 theorem to_sup_of_normal_right' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : H ≤ K.normalizer) :
     IsPGroup p (H⊔K : Subgroup G) :=
   let hHK' :=
     to_sup_of_normal_right (hH.ofEquiv (Subgroup.comapSubtypeEquivOfLe hHK).symm)
       (hK.ofEquiv (Subgroup.comapSubtypeEquivOfLe Subgroup.le_normalizer).symm)
-  ((congr_argₓ (fun H : Subgroup K.normalizer => IsPGroup p H)
+  ((congr_arg (fun H : Subgroup K.normalizer => IsPGroup p H)
             (Subgroup.sup_subgroup_of_eq hHK Subgroup.le_normalizer)).mp
         hHK').ofEquiv
     (Subgroup.comapSubtypeEquivOfLe (sup_le hHK Subgroup.le_normalizer))
 
 theorem to_sup_of_normal_left' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : K ≤ H.normalizer) :
     IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
+  (congr_arg (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
 
 /-- finite p-groups with different p have coprime orders -/
 theorem coprime_card_of_ne {G₂ : Type _} [Groupₓ G₂] (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact p₂.Prime]

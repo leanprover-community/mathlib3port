@@ -467,9 +467,9 @@ instance nhds_within_Ioi_is_measurably_generated : (𝓝[Ioi b] a).IsMeasurablyG
 instance nhds_within_Iio_is_measurably_generated : (𝓝[Iio b] a).IsMeasurablyGenerated :=
   measurable_set_Iio.nhds_within_is_measurably_generated _
 
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
 instance nhds_within_interval_is_measurably_generated :
-    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"] x) :=
+    IsMeasurablyGenerated (𝓝["././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"] x) :=
   nhds_within_Icc_is_measurably_generated
 
 @[measurability]
@@ -496,11 +496,11 @@ theorem Set.OrdConnected.measurable_set (h : OrdConnected s) : MeasurableSet s :
 theorem IsPreconnected.measurable_set (h : IsPreconnected s) : MeasurableSet s :=
   h.OrdConnected.MeasurableSet
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 theorem generate_from_Ico_mem_le_borel {α : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
     (s t : Set α) : MeasurableSpace.generateFrom { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } ≤ borel α := by
   apply generate_from_le
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   rintro _ ⟨a, -, b, -, -, rfl⟩
   exact measurable_set_Ico
 
@@ -1069,6 +1069,55 @@ theorem ae_measurable_restrict_of_antitone_on [LinearOrderₓ β] [OrderClosedTo
     (hs : MeasurableSet s) {f : β → α} (hf : AntitoneOn f s) : AeMeasurable f (μ.restrict s) :=
   @ae_measurable_restrict_of_monotone_on αᵒᵈ β _ _ ‹_› _ _ _ _ _ ‹_› _ _ _ _ hs _ hf
 
+theorem measurable_set_of_mem_nhds_within_Ioi_aux {s : Set α} (h : ∀, ∀ x ∈ s, ∀, s ∈ 𝓝[>] x)
+    (h' : ∀, ∀ x ∈ s, ∀, ∃ y, x < y) : MeasurableSet s := by
+  choose! M hM using h'
+  suffices H : (s \ Interior s).Countable
+  · have : s = Interior s ∪ s \ Interior s := by
+      rw [union_diff_cancel interior_subset]
+    rw [this]
+    exact is_open_interior.measurable_set.union H.measurable_set
+    
+  have A : ∀, ∀ x ∈ s, ∀, ∃ y ∈ Ioi x, Ioo x y ⊆ s := fun x hx =>
+    (mem_nhds_within_Ioi_iff_exists_Ioo_subset' (hM x hx)).1 (h x hx)
+  choose! y hy h'y using A
+  have B : Set.PairwiseDisjoint (s \ Interior s) fun x => Ioo x (y x) := by
+    intro x hx x' hx' hxx'
+    rcases lt_or_gt_of_neₓ hxx' with (h' | h')
+    · apply disjoint_left.2 fun z hz h'z => _
+      have : x' ∈ Interior s := mem_interior.2 ⟨Ioo x (y x), h'y _ hx.1, is_open_Ioo, ⟨h', h'z.1.trans hz.2⟩⟩
+      exact False.elim (hx'.2 this)
+      
+    · apply disjoint_left.2 fun z hz h'z => _
+      have : x ∈ Interior s := mem_interior.2 ⟨Ioo x' (y x'), h'y _ hx'.1, is_open_Ioo, ⟨h', hz.1.trans h'z.2⟩⟩
+      exact False.elim (hx.2 this)
+      
+  exact B.countable_of_Ioo fun x hx => hy x hx.1
+
+/-- If a set is a right-neighborhood of all of its points, then it is measurable. -/
+theorem measurable_set_of_mem_nhds_within_Ioi {s : Set α} (h : ∀, ∀ x ∈ s, ∀, s ∈ 𝓝[>] x) : MeasurableSet s := by
+  by_cases' H : ∃ x ∈ s, IsTop x
+  · rcases H with ⟨x₀, x₀s, h₀⟩
+    have : s = {x₀} ∪ s \ {x₀} := by
+      rw [union_diff_cancel (singleton_subset_iff.2 x₀s)]
+    rw [this]
+    refine' (measurable_set_singleton _).union _
+    have A : ∀, ∀ x ∈ s \ {x₀}, ∀, x < x₀ := fun x hx =>
+      lt_of_le_of_neₓ (h₀ _)
+        (by
+          simpa using hx.2)
+    refine' measurable_set_of_mem_nhds_within_Ioi_aux (fun x hx => _) fun x hx => ⟨x₀, A x hx⟩
+    obtain ⟨u, hu, us⟩ : ∃ (u : α)(H : u ∈ Ioi x), Ioo x u ⊆ s :=
+      (mem_nhds_within_Ioi_iff_exists_Ioo_subset' (A x hx)).1 (h x hx.1)
+    refine' (mem_nhds_within_Ioi_iff_exists_Ioo_subset' (A x hx)).2 ⟨u, hu, fun y hy => ⟨us hy, _⟩⟩
+    exact ne_of_ltₓ (hy.2.trans_le (h₀ _))
+    
+  · apply measurable_set_of_mem_nhds_within_Ioi_aux h
+    simp only [IsTop] at H
+    push_neg  at H
+    exact H
+    
+
 end LinearOrderₓ
 
 @[measurability]
@@ -1468,17 +1517,17 @@ namespace Real
 
 open MeasurableSpace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (a b)
 theorem borel_eq_generate_from_Ioo_rat : borel ℝ = generateFrom (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
   is_topological_basis_Ioo_rat.borel_eq_generate_from
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (a b)
 theorem is_pi_system_Ioo_rat : @IsPiSystem ℝ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) := by
   convert is_pi_system_Ioo (coe : ℚ → ℝ) (coe : ℚ → ℝ)
   ext x
   simp [eq_comm]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (a b)
 /-- The intervals `(-(n + 1), (n + 1))` form a finite spanning sets in the set of open intervals
 with rational endpoints for a locally finite measure `μ` on `ℝ`. -/
 def finiteSpanningSetsInIooRat (μ : Measureₓ ℝ) [IsLocallyFiniteMeasure μ] :
@@ -1511,7 +1560,7 @@ theorem borel_eq_generate_from_Iio_rat : borel ℝ = generateFrom (⋃ a : ℚ, 
     simp only [mem_Union, mem_singleton_iff]
     rintro ⟨a, b, h, rfl⟩
     rw [(Set.ext fun x => _ : Ioo (a : ℝ) b = (⋃ c > a, Iio cᶜ) ∩ Iio b)]
-    · have hg : ∀ q : ℚ, g.measurable_set' (Iio q) := fun q =>
+    · have hg : ∀ q : ℚ, measurable_set[g] (Iio q) := fun q =>
         generate_measurable.basic (Iio q)
           (by
             simp )

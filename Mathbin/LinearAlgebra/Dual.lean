@@ -48,7 +48,7 @@ variable (R : Type _) (M : Type _)
 
 variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module R
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module R
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
 def Dual :=
   M →ₗ[R] R deriving AddCommMonoidₓ, [anonymous]
@@ -360,7 +360,7 @@ open Module
 
 variable {R M ι : Type _}
 
-variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_inhabited_instance]
@@ -471,7 +471,7 @@ namespace Submodule
 
 universe u v w
 
-variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R : Type u} {M : Type v} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 variable {W : Submodule R M}
 
@@ -487,7 +487,7 @@ theorem dual_restrict_apply (W : Submodule R M) (φ : Module.Dual R M) (x : W) :
 
 /-- The `dual_annihilator` of a submodule `W` is the set of linear maps `φ` such
   that `φ w = 0` for all `w ∈ W`. -/
-def dualAnnihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (W : Submodule R M) :
+def dualAnnihilator {R : Type u} {M : Type v} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] (W : Submodule R M) :
     Submodule R <| Module.Dual R M :=
   W.dualRestrict.ker
 
@@ -632,11 +632,13 @@ end
 
 end Subspace
 
-variable {R : Type _} [CommRingₓ R] {M₁ : Type _} {M₂ : Type _}
-
-variable [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ M₂] [Module R M₂]
-
 open Module
+
+section DualMap
+
+variable {R : Type _} [CommSemiringₓ R] {M₁ : Type _} {M₂ : Type _}
+
+variable [AddCommMonoidₓ M₁] [Module R M₁] [AddCommMonoidₓ M₂] [Module R M₂]
 
 /-- Given a linear map `f : M₁ →ₗ[R] M₂`, `f.dual_map` is the linear map between the dual of
 `M₂` and `M₁` such that it maps the functional `φ` to `φ ∘ f`. -/
@@ -687,7 +689,13 @@ theorem LinearEquiv.dual_map_trans {M₃ : Type _} [AddCommGroupₓ M₃] [Modul
     g.dualMap.trans f.dualMap = (f.trans g).dualMap :=
   rfl
 
+end DualMap
+
 namespace LinearMap
+
+variable {R : Type _} [CommSemiringₓ R] {M₁ : Type _} {M₂ : Type _}
+
+variable [AddCommMonoidₓ M₁] [Module R M₁] [AddCommMonoidₓ M₂] [Module R M₂]
 
 variable (f : M₁ →ₗ[R] M₂)
 
@@ -766,11 +774,7 @@ end LinearMap
 
 namespace TensorProduct
 
-variable (R) (M : Type _) (N : Type _)
-
-variable [AddCommGroupₓ M] [AddCommGroupₓ N]
-
-variable [Module R M] [Module R N]
+variable (R : Type _) (M : Type _) (N : Type _)
 
 variable {ι κ : Type _}
 
@@ -788,7 +792,11 @@ open TensorProduct
 
 open LinearMap
 
-open Module (dual)
+section
+
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ N]
+
+variable [Module R M] [Module R N]
 
 /-- The canonical linear map from `dual M ⊗ dual N` to `dual (M ⊗ N)`,
 sending `f ⊗ g` to the composition of `tensor_product.map f g` with
@@ -799,7 +807,21 @@ def dualDistrib : Dual R M ⊗[R] Dual R N →ₗ[R] Dual R (M ⊗[R] N) :=
 
 variable {R M N}
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+@[simp]
+theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
+    dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
+  simp only [dual_distrib, coe_comp, Function.comp_app, hom_tensor_hom_map_apply, comp_right_apply, LinearEquiv.coe_coe,
+    map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
+
+end
+
+variable {R M N}
+
+variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N]
+
+variable [Module R M] [Module R N]
+
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- An inverse to `dual_tensor_dual_map` given bases.
 -/
 noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
@@ -807,13 +829,7 @@ noncomputable def dualDistribInvOfBasis (b : Basis ι R M) (c : Basis κ R N) :
   ∑ (i) (j),
     (ringLmapEquivSelf R ℕ _).symm (b.dualBasis i ⊗ₜ c.dualBasis j) ∘ₗ applyₗ (c j) ∘ₗ applyₗ (b i) ∘ₗ lcurry R M N R
 
-@[simp]
-theorem dual_distrib_apply (f : Dual R M) (g : Dual R N) (m : M) (n : N) :
-    dualDistrib R M N (f ⊗ₜ g) (m ⊗ₜ n) = f m * g n := by
-  simp only [dual_distrib, coe_comp, Function.comp_app, hom_tensor_hom_map_apply, comp_right_apply, LinearEquiv.coe_coe,
-    map_tmul, lid_tmul, Algebra.id.smul_eq_mul]
-
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem dual_distrib_inv_of_basis_apply (b : Basis ι R M) (c : Basis κ R N) (f : Dual R (M ⊗[R] N)) :
     dualDistribInvOfBasis b c f = ∑ (i) (j), f (b i ⊗ₜ c j) • b.dualBasis i ⊗ₜ c.dualBasis j := by

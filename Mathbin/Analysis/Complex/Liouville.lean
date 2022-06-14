@@ -52,7 +52,7 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
   have : ∀, ∀ z ∈ sphere c R, ∀, ∥(z - c) ^ (-2 : ℤ) • f z∥ ≤ C / (R * R) := fun hz : abs (z - c) = R => by
     simpa [-mul_inv_rev, norm_smul, hz, zpow_two, ← div_eq_inv_mul] using (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc ∥deriv f c∥ = ∥(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z∥ :=
-      congr_argₓ norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
+      congr_arg norm (deriv_eq_smul_circle_integral hR hf)_ ≤ R * (C / (R * R)) :=
       circleIntegral.norm_two_pi_I_inv_smul_integral_le_of_norm_le_const hR.le this _ = C / R := by
       rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
 

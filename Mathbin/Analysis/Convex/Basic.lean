@@ -574,7 +574,7 @@ theorem convex_sInter {S : Set (Set E)} (h : ∀, ∀ s ∈ S, ∀, Convex 𝕜 
 theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i, Convex 𝕜 (s i)) : Convex 𝕜 (⋂ i, s i) :=
   sInter_range s ▸ convex_sInter <| forall_range_iff.2 h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → Set E} (h : ∀ i j, Convex 𝕜 (s i j)) :
     Convex 𝕜 (⋂ (i) (j), s i j) :=
   convex_Inter fun i => convex_Inter <| h i

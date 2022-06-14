@@ -185,7 +185,7 @@ def colimitCocone (F : J ⥤ PresheafedSpace C) : Cocone F where
           cases U
           dsimp'
           simp only [PresheafedSpace.id_c_app, eq_to_hom_op, eq_to_hom_map, assoc, pushforward.comp_inv_app]
-          rw [← congr_argₓ nat_trans.app (limit.w (pushforward_diagram_to_colimit F).leftOp f.op)]
+          rw [← congr_arg nat_trans.app (limit.w (pushforward_diagram_to_colimit F).leftOp f.op)]
           dsimp'
           simp only [eq_to_hom_op, eq_to_hom_map, assoc, id_comp, pushforward.comp_inv_app]
           congr
@@ -216,10 +216,10 @@ def descCApp (F : J ⥤ PresheafedSpace C) (s : Cocone F) (U : (Opens ↥s.x.Car
   · rw [PresheafedSpace.congr_app (s.w f.unop).symm U]
     dsimp'
     have w :=
-      functor.congr_obj (congr_argₓ opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
+      functor.congr_obj (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j)))
         (unop U)
     simp only [opens.map_comp_obj_unop] at w
-    replace w := congr_argₓ op w
+    replace w := congr_arg op w
     have w' := nat_trans.congr (F.map f.unop).c w
     rw [w']
     dsimp'
@@ -239,9 +239,9 @@ theorem desc_c_naturality (F : J ⥤ PresheafedSpace C) (s : Cocone F) {U V : (O
     limit_obj_iso_limit_comp_evaluation_inv_π_app]
   dsimp'
   have w :=
-    functor.congr_hom (congr_argₓ opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j))) i.unop
+    functor.congr_hom (congr_arg opens.map (colimit.ι_desc ((PresheafedSpace.forget C).mapCocone s) (unop j))) i.unop
   simp only [opens.map_comp_map] at w
-  replace w := congr_argₓ Quiver.Hom.op w
+  replace w := congr_arg Quiver.Hom.op w
   rw [w]
   dsimp'
   simp
@@ -291,7 +291,7 @@ def colimitCoconeIsColimit (F : J ⥤ PresheafedSpace C) : IsColimit (colimitCoc
       simp only [limit.lift_π, eq_to_hom_op, eq_to_hom_map, assoc, limit_obj_iso_limit_comp_evaluation_inv_π_app]
       rw [PresheafedSpace.congr_app (w (unop j)).symm U]
       dsimp'
-      have w := congr_argₓ op (functor.congr_obj (congr_argₓ opens.map t) (unop U))
+      have w := congr_arg op (functor.congr_obj (congr_arg opens.map t) (unop U))
       rw [nat_trans.congr (limit.π (pushforward_diagram_to_colimit F).leftOp j) w]
       simp
       

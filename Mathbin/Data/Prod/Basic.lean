@@ -15,7 +15,7 @@ This file defines `prod.swap : α × β → β × α` and proves various simple 
 variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 @[simp]
-theorem prod_mapₓ (f : α → γ) (g : β → δ) (p : α × β) : Prod.map f g p = (f p.1, g p.2) :=
+theorem prod_map (f : α → γ) (g : β → δ) (p : α × β) : Prod.map f g p = (f p.1, g p.2) :=
   rfl
 
 namespace Prod
@@ -31,7 +31,7 @@ theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
 theorem forall' {p : α → β → Prop} : (∀ x : α × β, p x.1 x.2) ↔ ∀ a b, p a b :=
   Prod.forall
 
-theorem exists'ₓ {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
+theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
   Prod.exists
 
 @[simp]
@@ -52,7 +52,7 @@ theorem map_fst (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).1 =
 theorem map_sndₓ (f : α → γ) (g : β → δ) (p : α × β) : (map f g p).2 = g p.2 :=
   rfl
 
-theorem map_fst'ₓ (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
+theorem map_fst' (f : α → γ) (g : β → δ) : Prod.fst ∘ map f g = f ∘ Prod.fst :=
   funext <| map_fst f g
 
 theorem map_snd'ₓ (f : α → γ) (g : β → δ) : Prod.snd ∘ map f g = g ∘ Prod.snd :=
@@ -73,13 +73,13 @@ theorem map_mapₓ {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β →
   rfl
 
 @[simp]
-theorem mk.inj_iffₓ {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
+theorem mk.inj_iff {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) = (a₂, b₂) ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨Prod.mk.inj, by
     cc⟩
 
 theorem mk.inj_left {α β : Type _} (a : α) : Function.Injective (Prod.mk a : β → α × β) := by
   intro b₁ b₂ h
-  simpa only [true_andₓ, Prod.mk.inj_iffₓ, eq_self_iff_true] using h
+  simpa only [true_andₓ, Prod.mk.inj_iff, eq_self_iff_true] using h
 
 theorem mk.inj_right {α β : Type _} (b : β) : Function.Injective (fun a => Prod.mk a b : α → α × β) := by
   intro b₁ b₂ h
@@ -93,11 +93,14 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 := by
 theorem extₓ {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
 
-theorem map_defₓ {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
+theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
   funext fun p => extₓ (map_fst f g p) (map_sndₓ f g p)
 
-theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
+theorem id_prodₓ : (fun p : α × β => (p.1, p.2)) = id :=
   funext fun ⟨a, b⟩ => rfl
+
+theorem map_id : Prod.map (@id α) (@id β) = id :=
+  id_prod
 
 theorem fst_surjectiveₓ [h : Nonempty β] : Function.Surjective (@fst α β) := fun x => h.elim fun y => ⟨⟨x, y⟩, rfl⟩
 

@@ -261,16 +261,16 @@ theorem l_supr {f : ι → α} : l (supr f) = ⨆ i, l (f i) :=
       show IsLub (Range (l ∘ f)) (l (supr f)) by
         rw [range_comp, ← Sup_range] <;> exact gc.is_lub_l_image (is_lub_Sup _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem l_supr₂ {f : ∀ i, κ i → α} : l (⨆ (i) (j), f i j) = ⨆ (i) (j), l (f i j) := by
   simp_rw [gc.l_supr]
 
 theorem u_infi {f : ι → β} : u (infi f) = ⨅ i, u (f i) :=
   gc.dual.l_supr
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 theorem u_infi₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
   gc.dual.l_supr₂
 
@@ -422,11 +422,11 @@ theorem l_supr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion
     l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
     l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supr
-    _ = ⨆ i : ι, f i := congr_argₓ _ <| funext fun i => gi.l_u_eq (f i)
+    _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem l_bsupr_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨆ (i) (hi), u (f i hi)) = ⨆ (i) (hi), f i hi := by
   simp only [supr_subtype', gi.l_supr_u]
@@ -437,7 +437,7 @@ theorem l_Sup_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInse
 
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) : l (u a⊓u b) = a⊓b :=
   calc
-    l (u a⊓u b) = l (u (a⊓b)) := congr_argₓ l gi.gc.u_inf.symm
+    l (u a⊓u b) = l (u (a⊓b)) := congr_arg l gi.gc.u_inf.symm
     _ = a⊓b := by
       simp only [gi.l_u_eq]
     
@@ -445,12 +445,12 @@ theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l 
 theorem l_infi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} (f : ι → β) :
     l (⨅ i, u (f i)) = ⨅ i, f i :=
   calc
-    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_argₓ l gi.gc.u_infi.symm
+    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_arg l gi.gc.u_infi.symm
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem l_binfi_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, β) : l (⨅ (i) (hi), u (f i hi)) = ⨅ (i) (hi), f i hi := by
   simp only [infi_subtype', gi.l_infi_u]
@@ -467,8 +467,8 @@ theorem l_infi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     _ = ⨅ i, l (f i) := gi.l_infi_u _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem l_binfi_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
     l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by
@@ -550,7 +550,7 @@ def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : Comple
     le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1,
     inf := fun s =>
       gi.choice (inf (u '' s)) <|
-        gi.gc.monotone_u.le_is_glb_image (gi.is_glb_of_u_image <| is_glb_Inf _) (is_glb_Inf _),
+        (is_glb_Inf _).2 <| gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| is_glb_Inf _).1,
     Inf_le := fun s => by
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (is_glb_Inf _)).1,
@@ -654,8 +654,8 @@ theorem u_supr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinserti
     u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_infi_u _
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem u_bsupr_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x} {p : ι → Prop}
     (f : ∀ i hi : p i, α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
   gi.dual.l_binfi_u _
@@ -668,8 +668,8 @@ theorem u_supr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : Gal
     (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_infi_of_ul_eq_self _ hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem u_bsupr_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ i hi : p i, β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=

@@ -17,9 +17,6 @@ stated via `[quasi_sober α] [t0_space α]`.
 
 ## Main definition
 
-* `specializes` : `specializes x y` (`x ⤳ y`) means that `x` specializes to `y`, i.e.
-  `y` is in the closure of `x`.
-* `specialization_preorder` : specialization gives a preorder on a topological space.
 * `specialization_order` : specialization gives a partial order on a T0 space.
 * `is_generic_point` : `x` is the generic point of `S` if `S` is the closure of `x`.
 * `quasi_sober` : A space is quasi-sober if every irreducible closed subset has a generic point.
@@ -28,88 +25,6 @@ stated via `[quasi_sober α] [t0_space α]`.
 
 
 variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
-
-section SpecializeOrder
-
-/-- `x` specializes to `y` if `y` is in the closure of `x`. The notation used is `x ⤳ y`. -/
-def Specializes (x y : α) : Prop :=
-  y ∈ Closure ({x} : Set α)
-
--- mathport name: «expr ⤳ »
-infixl:300 " ⤳ " => Specializes
-
-theorem specializes_def (x y : α) : x ⤳ y ↔ y ∈ Closure ({x} : Set α) :=
-  Iff.rfl
-
-theorem specializes_iff_closure_subset {x y : α} : x ⤳ y ↔ Closure ({y} : Set α) ⊆ Closure ({x} : Set α) :=
-  is_closed_closure.mem_iff_closure_subset
-
-theorem specializes_rfl {x : α} : x ⤳ x :=
-  subset_closure (Set.mem_singleton x)
-
-theorem specializes_refl (x : α) : x ⤳ x :=
-  specializes_rfl
-
-theorem Specializes.trans {x y z : α} : x ⤳ y → y ⤳ z → x ⤳ z := by
-  simp_rw [specializes_iff_closure_subset]
-  exact fun a b => b.trans a
-
-theorem specializes_iff_forall_closed {x y : α} : x ⤳ y ↔ ∀ Z : Set α h : IsClosed Z, x ∈ Z → y ∈ Z := by
-  constructor
-  · intro h Z hZ
-    rw [hZ.mem_iff_closure_subset, hZ.mem_iff_closure_subset]
-    exact (specializes_iff_closure_subset.mp h).trans
-    
-  · intro h
-    exact h _ is_closed_closure (subset_closure <| Set.mem_singleton x)
-    
-
-theorem specializes_iff_forall_open {x y : α} : x ⤳ y ↔ ∀ U : Set α h : IsOpen U, y ∈ U → x ∈ U := by
-  rw [specializes_iff_forall_closed]
-  exact
-    ⟨fun h U hU => not_imp_not.mp (h _ (is_closed_compl_iff.mpr hU)), fun h U hU =>
-      not_imp_not.mp (h _ (is_open_compl_iff.mpr hU))⟩
-
-theorem indistinguishable_iff_specializes_and (x y : α) : Indistinguishable x y ↔ x ⤳ y ∧ y ⤳ x :=
-  (indistinguishable_iff_closure x y).trans (and_comm _ _)
-
-theorem specializes_antisymm [T0Space α] (x y : α) : x ⤳ y → y ⤳ x → x = y := fun h₁ h₂ =>
-  ((indistinguishable_iff_specializes_and _ _).mpr ⟨h₁, h₂⟩).Eq
-
-theorem Specializes.map {x y : α} (h : x ⤳ y) {f : α → β} (hf : Continuous f) : f x ⤳ f y := by
-  rw [specializes_def, ← Set.image_singleton]
-  exact image_closure_subset_closure_image hf ⟨_, h, rfl⟩
-
-theorem ContinuousMap.map_specialization {x y : α} (h : x ⤳ y) (f : C(α, β)) : f x ⤳ f y :=
-  h.map f.2
-
-theorem Specializes.eq [T1Space α] {x y : α} (h : x ⤳ y) : x = y :=
-  (Set.mem_singleton_iff.mp ((specializes_iff_forall_closed.mp h) _ (T1Space.t1 _) (Set.mem_singleton _))).symm
-
-@[simp]
-theorem specializes_iff_eq [T1Space α] {x y : α} : x ⤳ y ↔ x = y :=
-  ⟨Specializes.eq, fun h => h ▸ specializes_refl _⟩
-
-variable (α)
-
-/-- Specialization forms a preorder on the topological space. -/
-def specializationPreorder : Preorderₓ α where
-  le := fun x y => y ⤳ x
-  le_refl := fun x => specializes_refl x
-  le_trans := fun _ _ _ h₁ h₂ => Specializes.trans h₂ h₁
-
-attribute [local instance] specializationPreorder
-
-/-- Specialization forms a partial order on a t0 topological space. -/
-def specializationOrder [T0Space α] : PartialOrderₓ α :=
-  { specializationPreorder α with le_antisymm := fun _ _ h₁ h₂ => specializes_antisymm _ _ h₂ h₁ }
-
-variable {α}
-
-theorem specializationOrder.monotone_of_continuous (f : α → β) (hf : Continuous f) : Monotone f := fun x y h =>
-  Specializes.map h hf
-
-end SpecializeOrder
 
 section genericPoint
 

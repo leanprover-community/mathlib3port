@@ -28,7 +28,7 @@ variable (x y : ∀ i, f i) (i : I)
 namespace Pi
 
 theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α <| f i] {k : α} (hk : ∀ i, IsSmulRegular (f i) k) :
-    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_funₓ h i : _)
+    IsSmulRegular (∀ i, f i) k := fun _ _ h => funext fun i => hk i (congr_fun h i : _)
 
 instance smulWithZero α [Zero α] [∀ i, Zero (f i)] [∀ i, SmulWithZero α (f i)] : SmulWithZero α (∀ i, f i) :=
   { Pi.hasScalar with smul_zero := fun _ => funext fun _ => smul_zero' (f _) _,
@@ -81,7 +81,7 @@ instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, A
 
 instance α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ <| f i} [∀ i, Module α <| f i]
     [∀ i, NoZeroSmulDivisors α <| f i] : NoZeroSmulDivisors α (∀ i : I, f i) :=
-  ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_funₓ h i)).resolve_left hc⟩
+  ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
 end Pi
 

@@ -107,7 +107,7 @@ protected theorem smul_def {M} [Monoidₓ M] (f : MulAut M) (a : M) : f • a = 
   rfl
 
 /-- `mul_aut.apply_mul_action` is faithful. -/
-instance apply_has_faithful_scalar {M} [Monoidₓ M] : HasFaithfulScalar (MulAut M) M :=
+instance apply_has_faithful_smul {M} [Monoidₓ M] : HasFaithfulSmul (MulAut M) M :=
   ⟨fun _ _ => MulEquiv.ext⟩
 
 /-- Group conjugation, `mul_aut.conj g h = g * h * g⁻¹`, as a monoid homomorphism
@@ -216,7 +216,7 @@ protected theorem smul_def {A} [AddMonoidₓ A] (f : AddAut A) (a : A) : f • a
   rfl
 
 /-- `add_aut.apply_distrib_mul_action` is faithful. -/
-instance apply_has_faithful_scalar {A} [AddMonoidₓ A] : HasFaithfulScalar (AddAut A) A :=
+instance apply_has_faithful_smul {A} [AddMonoidₓ A] : HasFaithfulSmul (AddAut A) A :=
   ⟨fun _ _ => AddEquiv.ext⟩
 
 /-- Additive group conjugation, `add_aut.conj g h = g + h - g`, as an additive monoid

@@ -484,7 +484,7 @@ variable (G)
 
 @[to_additive]
 theorem nhds_one_symm : comap Inv.inv (𝓝 (1 : G)) = 𝓝 (1 : G) :=
-  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_argₓ nhds inv_one)
+  ((Homeomorph.inv G).comap_nhds_eq _).trans (congr_arg nhds inv_one)
 
 /-- The map `(x, y) ↦ (x, xy)` as a homeomorphism. This is a shear mapping. -/
 @[to_additive "The map `(x, y) ↦ (x, x + y)` as a homeomorphism.\nThis is a shear mapping."]
@@ -621,6 +621,17 @@ theorem map_mul_left_nhds (x y : G) : map ((· * ·) x) (𝓝 y) = 𝓝 (x * y) 
 @[to_additive]
 theorem map_mul_left_nhds_one (x : G) : map ((· * ·) x) (𝓝 1) = 𝓝 x := by
   simp
+
+/-- A monoid homomorphism (a bundled morphism of a type that implements `monoid_hom_class`) from a
+topological group to a topological monoid is continuous provided that it is continuous at one. See
+also `uniform_continuous_of_continuous_at_one`. -/
+@[to_additive
+      "An additive monoid homomorphism (a bundled morphism of a type that implements\n`add_monoid_hom_class`) from an additive topological group to an additive topological monoid is\ncontinuous provided that it is continuous at zero. See also\n`uniform_continuous_of_continuous_at_zero`."]
+theorem continuous_of_continuous_at_one {M hom : Type _} [MulOneClassₓ M] [TopologicalSpace M] [HasContinuousMul M]
+    [MonoidHomClass hom G M] (f : hom) (hf : ContinuousAt f 1) : Continuous f :=
+  continuous_iff_continuous_at.2 fun x => by
+    simpa only [ContinuousAt, ← map_mul_left_nhds_one x, tendsto_map'_iff, (· ∘ ·), map_mul, map_one, mul_oneₓ] using
+      hf.tendsto.const_mul (f x)
 
 @[to_additive]
 theorem TopologicalGroup.ext {G : Type _} [Groupₓ G] {t t' : TopologicalSpace G} (tg : @TopologicalGroup G t _)
@@ -950,7 +961,7 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : Closure s / t = s / t 
 
 end TopologicalGroup
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`z] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`z] []
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
@@ -1434,7 +1445,7 @@ theorem to_topological_space_Inf (s : Set (GroupTopology α)) :
 @[simp, to_additive]
 theorem to_topological_space_infi {ι} (s : ι → GroupTopology α) :
     (⨅ i, s i).toTopologicalSpace = ⨅ i, (s i).toTopologicalSpace :=
-  congr_argₓ inf (range_comp _ _).symm
+  congr_arg inf (range_comp _ _).symm
 
 /-- Group topologies on `γ` form a complete lattice, with `⊥` the discrete topology and `⊤` the
 indiscrete topology.

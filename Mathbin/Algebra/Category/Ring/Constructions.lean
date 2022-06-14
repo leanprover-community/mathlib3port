@@ -142,7 +142,7 @@ instance CommRing_has_strict_terminal_objects : HasStrictTerminalObjects CommRin
   have e : (0 : X) = 1 := by
     rw [← f.map_one, ← f.map_zero]
     congr
-  replace e : 0 * x = 1 * x := congr_argₓ (fun a => a * x) e
+  replace e : 0 * x = 1 * x := congr_arg (fun a => a * x) e
   rw [one_mulₓ, zero_mul, ← f.map_zero] at e
   exact e
 
@@ -197,7 +197,7 @@ def equalizerFork : Fork f g :=
 def equalizerForkIsLimit : IsLimit (equalizerFork f g) := by
   fapply fork.is_limit.mk'
   intro s
-  use s.ι.cod_restrict' _ fun x => (concrete_category.congr_hom s.condition x : _)
+  use s.ι.cod_restrict _ fun x => (concrete_category.congr_hom s.condition x : _)
   constructor
   · ext
     rfl

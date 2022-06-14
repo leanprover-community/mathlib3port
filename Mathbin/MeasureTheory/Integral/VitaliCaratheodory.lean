@@ -84,7 +84,7 @@ local infixr:25 " →ₛ " => SimpleFunc
 /-! ### Lower semicontinuous upper bound for nonnegative functions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -136,9 +136,9 @@ theorem SimpleFunc.exists_le_lower_semicontinuous_lintegral_ge (f : α →ₛ �
     rcases h₂ (Ennreal.half_pos ε0).ne' with ⟨g₂, f₂_le_g₂, g₂cont, g₂int⟩
     refine' ⟨fun x => g₁ x + g₂ x, fun x => add_le_add (f₁_le_g₁ x) (f₂_le_g₂ x), g₁cont.add g₂cont, _⟩
     simp only [simple_func.coe_add, Ennreal.coe_add, Pi.add_apply]
-    rw [lintegral_add f₁.measurable.coe_nnreal_ennreal f₂.measurable.coe_nnreal_ennreal,
-      lintegral_add g₁cont.measurable.coe_nnreal_ennreal g₂cont.measurable.coe_nnreal_ennreal]
+    rw [lintegral_add_left f₁.measurable.coe_nnreal_ennreal, lintegral_add_left g₁cont.measurable.coe_nnreal_ennreal]
     convert add_le_add g₁int g₂int using 1
+    simp only
     conv_lhs => rw [← Ennreal.add_halves ε]
     abel
     
@@ -199,7 +199,7 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge [SigmaFinite μ] (f : α →
     
   · calc (∫⁻ x : α, g x ∂μ) ≤ (∫⁻ x : α, f x + w x ∂μ) + ε / 2 :=
         gint _ = ((∫⁻ x : α, f x ∂μ) + ∫⁻ x : α, w x ∂μ) + ε / 2 := by
-        rw [lintegral_add fmeas.coe_nnreal_ennreal wmeas.coe_nnreal_ennreal]_ ≤ (∫⁻ x : α, f x ∂μ) + ε / 2 + ε / 2 :=
+        rw [lintegral_add_right _ wmeas.coe_nnreal_ennreal]_ ≤ (∫⁻ x : α, f x ∂μ) + ε / 2 + ε / 2 :=
         add_le_add_right (add_le_add_left wint.le _) _ _ = (∫⁻ x : α, f x ∂μ) + ε := by
         rw [add_assocₓ, Ennreal.add_halves]
     
@@ -232,7 +232,7 @@ theorem exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable [SigmaFinit
       
     
   · calc (∫⁻ x, g0 x + g1 x ∂μ) = (∫⁻ x, g0 x ∂μ) + ∫⁻ x, g1 x ∂μ :=
-        lintegral_add g0_cont.measurable g1_cont.measurable _ ≤ (∫⁻ x, f x ∂μ) + ε / 2 + (0 + ε / 2) := by
+        lintegral_add_left g0_cont.measurable _ _ ≤ (∫⁻ x, f x ∂μ) + ε / 2 + (0 + ε / 2) := by
         refine' add_le_add _ _
         · convert g0_int using 2
           exact lintegral_congr_ae (fmeas.ae_eq_mk.fun_comp _)
@@ -308,7 +308,7 @@ theorem exists_lt_lower_semicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (F «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (F «expr ⊆ » s)
 /-- Given a simple function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
 function `g ≤ f` with integral arbitrarily close to that of `f`. Formulation in terms of
 `lintegral`.
@@ -352,14 +352,14 @@ theorem SimpleFunc.exists_upper_semicontinuous_le_lintegral_le (f : α →ₛ �
       
     
   · have A : ((∫⁻ x : α, f₁ x ∂μ) + ∫⁻ x : α, f₂ x ∂μ) ≠ ⊤ := by
-      rwa [← lintegral_add f₁.measurable.coe_nnreal_ennreal f₂.measurable.coe_nnreal_ennreal]
+      rwa [← lintegral_add_left f₁.measurable.coe_nnreal_ennreal]
     rcases h₁ (Ennreal.add_ne_top.1 A).1 (Ennreal.half_pos ε0).ne' with ⟨g₁, f₁_le_g₁, g₁cont, g₁int⟩
     rcases h₂ (Ennreal.add_ne_top.1 A).2 (Ennreal.half_pos ε0).ne' with ⟨g₂, f₂_le_g₂, g₂cont, g₂int⟩
     refine' ⟨fun x => g₁ x + g₂ x, fun x => add_le_add (f₁_le_g₁ x) (f₂_le_g₂ x), g₁cont.add g₂cont, _⟩
     simp only [simple_func.coe_add, Ennreal.coe_add, Pi.add_apply]
-    rw [lintegral_add f₁.measurable.coe_nnreal_ennreal f₂.measurable.coe_nnreal_ennreal,
-      lintegral_add g₁cont.measurable.coe_nnreal_ennreal g₂cont.measurable.coe_nnreal_ennreal]
+    rw [lintegral_add_left f₁.measurable.coe_nnreal_ennreal, lintegral_add_left g₁cont.measurable.coe_nnreal_ennreal]
     convert add_le_add g₁int g₂int using 1
+    simp only
     conv_lhs => rw [← Ennreal.add_halves ε]
     abel
     

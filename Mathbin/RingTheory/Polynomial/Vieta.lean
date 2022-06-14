@@ -22,17 +22,15 @@ valuation from each `X i` to `r i`.
 -/
 
 
-universe u
-
 open BigOperators Polynomial
 
 open Finset Polynomial Fintype
 
 namespace MvPolynomial
 
-variable {R : Type u} [CommSemiringₓ R]
+variable {R : Type _} [CommSemiringₓ R]
 
-variable (σ : Type u) [Fintype σ]
+variable (σ : Type _) [Fintype σ]
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- A sum version of Vieta's formula. Viewing `X i` as variables,

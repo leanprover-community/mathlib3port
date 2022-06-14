@@ -3,7 +3,7 @@ Copyright (c) 2019 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 -/
-import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.NormedSpace.Basic
 import Mathbin.Analysis.SpecificLimits.Basic
 
@@ -178,8 +178,8 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ Closure s
     exact tendsto_pow_at_top_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _} [∀ i, NormedGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i} {i : ι} (hi : ∀ j _ : j ≠ i, x j ∈ Closure (s j)) :
@@ -210,22 +210,22 @@ theorem maps_to_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type 
       
     
 
-/-- If a subset of a real vector space contains a segment, then the direction of this
+/-- If a subset of a real vector space contains an open segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/
-theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment ℝ x y ⊆ s) :
+theorem mem_tangent_cone_of_open_segment_subset {s : Set G} {x y : G} (h : OpenSegment ℝ x y ⊆ s) :
     y - x ∈ TangentConeAt ℝ s x := by
-  let c := fun n : ℕ => (2 : ℝ) ^ n
+  let c := fun n : ℕ => (2 : ℝ) ^ (n + 1)
   let d := fun n : ℕ => (c n)⁻¹ • (y - x)
   refine' ⟨c, d, Filter.univ_mem' fun n => h _, _, _⟩
-  show x + d n ∈ Segment ℝ x y
-  · rw [segment_eq_image]
+  show x + d n ∈ OpenSegment ℝ x y
+  · rw [open_segment_eq_image]
     refine' ⟨(c n)⁻¹, ⟨_, _⟩, _⟩
-    · rw [inv_nonneg]
-      apply pow_nonneg
+    · rw [inv_pos]
+      apply pow_pos
       norm_num
       
-    · apply inv_le_one
-      apply one_le_pow_of_one_le
+    · apply inv_lt_one
+      apply one_lt_pow _ (Nat.succ_ne_zero _)
       norm_num
       
     · simp only [d, sub_smul, smul_sub, one_smul]
@@ -243,9 +243,10 @@ theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment �
             _)
     rw [this]
     exact
-      tendsto_pow_at_top_at_top_of_one_lt
-        (by
-          norm_num)
+      (tendsto_pow_at_top_at_top_of_one_lt
+            (by
+              norm_num)).comp
+        (tendsto_add_at_top_nat 1)
     
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
   · have : (fun n : ℕ => c n • d n) = fun n => y - x := by
@@ -259,6 +260,12 @@ theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment �
     rw [this]
     apply tendsto_const_nhds
     
+
+/-- If a subset of a real vector space contains a segment, then the direction of this
+segment belongs to the tangent cone at its endpoints. -/
+theorem mem_tangent_cone_of_segment_subset {s : Set G} {x y : G} (h : Segment ℝ x y ⊆ s) :
+    y - x ∈ TangentConeAt ℝ s x :=
+  mem_tangent_cone_of_open_segment_subset ((open_segment_subset_segment ℝ x y).trans h)
 
 end TangentCone
 
@@ -367,19 +374,26 @@ theorem UniqueDiffOn.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀
   (UniqueDiffOn.pi _ _ _ _) fun i _ => h i
 
 /-- In a real vector space, a convex set with nonempty interior is a set of unique
-differentiability. -/
-theorem unique_diff_on_convex {s : Set G} (conv : Convex ℝ s) (hs : (Interior s).Nonempty) : UniqueDiffOn ℝ s := by
-  intro x xs
+differentiability at every point of its closure. -/
+theorem unique_diff_within_at_convex {s : Set G} (conv : Convex ℝ s) (hs : (Interior s).Nonempty) {x : G}
+    (hx : x ∈ Closure s) : UniqueDiffWithinAt ℝ s x := by
   rcases hs with ⟨y, hy⟩
   suffices y - x ∈ Interior (TangentConeAt ℝ s x) by
-    refine' ⟨Dense.of_closure _, subset_closure xs⟩
+    refine' ⟨Dense.of_closure _, hx⟩
     simp
       [(Submodule.span ℝ (TangentConeAt ℝ s x)).eq_top_of_nonempty_interior'
         ⟨y - x, interior_mono Submodule.subset_span this⟩]
-  rw [mem_interior_iff_mem_nhds] at hy⊢
+  rw [mem_interior_iff_mem_nhds]
+  replace hy : Interior s ∈ 𝓝 y := IsOpen.mem_nhds is_open_interior hy
   apply mem_of_superset ((is_open_map_sub_right x).image_mem_nhds hy)
   rintro _ ⟨z, zs, rfl⟩
-  exact mem_tangent_cone_of_segment_subset (conv.segment_subset xs zs)
+  refine' mem_tangent_cone_of_open_segment_subset (subset.trans _ interior_subset)
+  exact conv.open_segment_closure_interior_subset_interior hx zs
+
+/-- In a real vector space, a convex set with nonempty interior is a set of unique
+differentiability. -/
+theorem unique_diff_on_convex {s : Set G} (conv : Convex ℝ s) (hs : (Interior s).Nonempty) : UniqueDiffOn ℝ s :=
+  fun x xs => unique_diff_within_at_convex conv hs (subset_closure xs)
 
 theorem unique_diff_on_Ici (a : ℝ) : UniqueDiffOn ℝ (Ici a) :=
   unique_diff_on_convex (convex_Ici a) <| by
@@ -419,6 +433,20 @@ theorem unique_diff_on_Ioo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
 /-- The real interval `[0, 1]` is a set of unique differentiability. -/
 theorem unique_diff_on_Icc_zero_one : UniqueDiffOn ℝ (Icc (0 : ℝ) 1) :=
   unique_diff_on_Icc zero_lt_one
+
+theorem unique_diff_within_at_Ioi (a : ℝ) : UniqueDiffWithinAt ℝ (Ioi a) a :=
+  unique_diff_within_at_convex (convex_Ioi a)
+    (by
+      simp )
+    (by
+      simp )
+
+theorem unique_diff_within_at_Iio (a : ℝ) : UniqueDiffWithinAt ℝ (Iio a) a :=
+  unique_diff_within_at_convex (convex_Iio a)
+    (by
+      simp )
+    (by
+      simp )
 
 end UniqueDiff
 

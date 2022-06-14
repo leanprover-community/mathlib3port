@@ -631,16 +631,16 @@ theorem dropn_think (s : Wseq α) n : drop (think s) n = (drop s n).think := by
 
 theorem dropn_add (s : Wseq α) m : ∀ n, drop s (m + n) = drop (drop s m) n
   | 0 => rfl
-  | n + 1 => congr_argₓ tail (dropn_add n)
+  | n + 1 => congr_arg tail (dropn_add n)
 
 theorem dropn_tail (s : Wseq α) n : drop (tail s) n = drop s (n + 1) := by
   rw [add_commₓ] <;> symm <;> apply dropn_add
 
 theorem nth_add (s : Wseq α) m n : nth s (m + n) = nth (drop s m) n :=
-  congr_argₓ head (dropn_add _ _ _)
+  congr_arg head (dropn_add _ _ _)
 
 theorem nth_tail (s : Wseq α) n : nth (tail s) n = nth s (n + 1) :=
-  congr_argₓ head (dropn_tail _ _)
+  congr_arg head (dropn_tail _ _)
 
 @[simp]
 theorem join_nil : join nil = (nil : Wseq α) :=
@@ -686,7 +686,7 @@ def tail.aux : Option (α × Wseq α) → Computation (Option (α × Wseq α))
 theorem destruct_tail (s : Wseq α) : destruct (tail s) = destruct s >>= tail.aux := by
   simp [tail]
   rw [← bind_pure_comp_eq_map, IsLawfulMonad.bind_assoc]
-  apply congr_argₓ
+  apply congr_arg
   ext1 (_ | ⟨a, s⟩) <;> apply (@pure_bind Computation _ _ _ _ _ _).trans _ <;> simp
 
 @[simp]
@@ -813,7 +813,7 @@ theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} : some (a', s') ∈ destruct s
   apply Computation.memRecOn h _ fun c IH => _ <;>
     intro s <;>
       apply s.cases_on _ (fun x s => _) fun s => _ <;>
-        intro m <;> have := congr_argₓ Computation.destruct m <;> simp at this <;> cases' this with i1 i2
+        intro m <;> have := congr_arg Computation.destruct m <;> simp at this <;> cases' this with i1 i2
   · rw [i1, i2]
     cases' s' with f al
     unfold cons HasMem.Mem Wseq.Mem Seqₓₓ.Mem Seqₓₓ.cons
@@ -1242,8 +1242,8 @@ theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (
 theorem map_comp (f : α → β) (g : β → γ) (s : Wseq α) : map (g ∘ f) s = map g (map f s) := by
   dsimp' [map]
   rw [← Seqₓₓ.map_comp]
-  apply congr_funₓ
-  apply congr_argₓ
+  apply congr_fun
+  apply congr_arg
   ext ⟨⟩ <;> rfl
 
 theorem mem_map (f : α → β) {a : α} {s : Wseq α} : a ∈ s → f a ∈ map f s :=
@@ -1264,7 +1264,7 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
   · refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
       intro ej m <;>
         simp at ej <;>
-          have := congr_argₓ Seqₓₓ.destruct ej <;>
+          have := congr_arg Seqₓₓ.destruct ej <;>
             simp at this <;>
               try
                   cases this <;>
@@ -1283,7 +1283,7 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
   · refine' s.cases_on (S.cases_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
       intro ej m <;>
         simp at ej <;>
-          have := congr_argₓ Seqₓₓ.destruct ej <;>
+          have := congr_arg Seqₓₓ.destruct ej <;>
             simp at this <;>
               try
                   try
@@ -1356,7 +1356,7 @@ theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
         ⟩
 
 theorem map_congr (f : α → β) {s t : Wseq α} (h : s ~ t) : map f s ~ map f t :=
-  lift_rel_map _ _ h fun _ _ => congr_argₓ _
+  lift_rel_map _ _ h fun _ _ => congr_arg _
 
 @[simp]
 def DestructAppend.aux (t : Wseq α) : Option (α × Wseq α) → Computation (Option (α × Wseq α))
@@ -1570,7 +1570,7 @@ theorem join_append (S T : Wseq (Wseq α)) : join (append S T) ~ append (join S)
           c1 = destruct (append s (join (append S T))) ∧ c2 = destruct (append s (append (join S) (join T))))
       _ _ _
       (let ⟨s, S, T, h1, h2⟩ := h
-      ⟨s, S, T, congr_argₓ destruct h1, congr_argₓ destruct h2⟩)
+      ⟨s, S, T, congr_arg destruct h1, congr_arg destruct h2⟩)
   intro c1 c2 h
   exact
     match c1, c2, h with

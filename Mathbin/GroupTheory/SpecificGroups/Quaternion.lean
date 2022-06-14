@@ -94,22 +94,22 @@ instance : Groupₓ (QuaternionGroup n) where
   one := one
   one_mul := by
     rintro (i | i)
-    · exact congr_argₓ a (zero_addₓ i)
+    · exact congr_arg a (zero_addₓ i)
       
-    · exact congr_argₓ xa (sub_zero i)
+    · exact congr_arg xa (sub_zero i)
       
   mul_one := by
     rintro (i | i)
-    · exact congr_argₓ a (add_zeroₓ i)
+    · exact congr_arg a (add_zeroₓ i)
       
-    · exact congr_argₓ xa (add_zeroₓ i)
+    · exact congr_arg xa (add_zeroₓ i)
       
   inv := inv
   mul_left_inv := by
     rintro (i | i)
-    · exact congr_argₓ a (neg_add_selfₓ i)
+    · exact congr_arg a (neg_add_selfₓ i)
       
-    · exact congr_argₓ a (sub_self (n + i))
+    · exact congr_arg a (sub_self (n + i))
       
 
 variable {n}

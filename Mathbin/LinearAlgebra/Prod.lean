@@ -486,7 +486,7 @@ variable (p : Submodule R M) (q : Submodule R M₂)
 @[simp]
 theorem map_inl : p.map (inl R M M₂) = prod p ⊥ := by
   ext ⟨x, y⟩
-  simp only [And.left_comm, eq_comm, mem_map, Prod.mk.inj_iffₓ, inl_apply, mem_bot, exists_eq_left', mem_prod]
+  simp only [And.left_comm, eq_comm, mem_map, Prod.mk.inj_iff, inl_apply, mem_bot, exists_eq_left', mem_prod]
 
 @[simp]
 theorem map_inr : q.map (inr R M M₂) = prod ⊥ q := by
@@ -751,7 +751,7 @@ theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f�
   simp only [SetLike.le_def, prod_apply, mem_range, SetLike.mem_coe, mem_prod, exists_imp_distrib, and_imp, Prod.forall,
     Pi.prod]
   rintro _ _ x rfl y rfl
-  simp only [Prod.mk.inj_iffₓ, ← sub_mem_ker_iff]
+  simp only [Prod.mk.inj_iff, ← sub_mem_ker_iff]
   have : y - x ∈ ker f⊔ker g := by
     simp only [h, mem_top]
   rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩
@@ -886,6 +886,37 @@ theorem tailings_disjoint_tailing (f : M × N →ₗ[R] M) (i : Injective f) (n 
   Disjoint.mono_right (tailing_le_tunnel f i _) (tailings_disjoint_tunnel f i _)
 
 end Tunnel
+
+section Graph
+
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommGroupₓ M₃] [AddCommGroupₓ M₄] [Module R M]
+  [Module R M₂] [Module R M₃] [Module R M₄] (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄)
+
+/-- Graph of a linear map. -/
+def graph : Submodule R (M × M₂) where
+  Carrier := { p | p.2 = f p.1 }
+  add_mem' := fun hb : _ = _ => by
+    change _ + _ = f (_ + _)
+    rw [map_add, ha, hb]
+  zero_mem' := Eq.symm (map_zero f)
+  smul_mem' := fun hx : _ = _ => by
+    change _ • _ = f (_ • _)
+    rw [map_smul, hx]
+
+@[simp]
+theorem mem_graph_iff (x : M × M₂) : x ∈ f.graph ↔ x.2 = f x.1 :=
+  Iff.rfl
+
+theorem graph_eq_ker_coprod : g.graph = ((-g).coprod LinearMap.id).ker := by
+  ext x
+  change _ = _ ↔ -g x.1 + x.2 = _
+  rw [add_commₓ, add_neg_eq_zero]
+
+theorem graph_eq_range_prod : f.graph = (LinearMap.id.Prod f).range := by
+  ext x
+  exact ⟨fun hx => ⟨x.1, Prod.extₓ rfl hx.symm⟩, fun ⟨u, hu⟩ => hu ▸ rfl⟩
+
+end Graph
 
 end LinearMap
 

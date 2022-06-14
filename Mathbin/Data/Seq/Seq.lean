@@ -168,7 +168,7 @@ theorem destruct_nil : destruct (nil : Seqₓₓ α) = none :=
 theorem destruct_cons (a : α) : ∀ s, destruct (cons a s) = some (a, s)
   | ⟨f, al⟩ => by
     unfold cons destruct Functor.map
-    apply congr_argₓ fun s => some (a, s)
+    apply congr_arg fun s => some (a, s)
     apply Subtype.eq
     dsimp' [tail]
     rw [Streamₓ.tail_cons]
@@ -268,7 +268,7 @@ theorem corec_eq (f : β → Option (α × β)) (b : β) : destruct (corec f b) 
     
   cases' s with a b'
   dsimp' [corec.F]
-  apply congr_argₓ fun b' => some (a, b')
+  apply congr_arg fun b' => some (a, b')
   apply Subtype.eq
   dsimp' [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
@@ -623,7 +623,7 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seqₓₓ α, map (g 
   | ⟨s, al⟩ => by
     apply Subtype.eq <;> dsimp' [map]
     rw [Streamₓ.map_map]
-    apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s
+    apply congr_arg fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl
 
 @[simp]
@@ -739,7 +739,7 @@ theorem of_list_append (l l' : List α) : ofList (l ++ l') = append (ofList l) (
   induction l <;> simp [*]
 
 @[simp]
-theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l++ₛs) = append (ofList l) (ofStream s) := by
+theorem of_stream_append (l : List α) (s : Streamₓ α) : ofStream (l ++ₛ s) = append (ofList l) (ofStream s) := by
   induction l <;> simp [*, Streamₓ.nil_append_stream, Streamₓ.cons_append_stream]
 
 /-- Convert a sequence into a list, embedded in a computation to allow for
@@ -755,7 +755,7 @@ def toList' {α} (s : Seqₓₓ α) : Computation (List α) :=
 
 theorem dropn_add (s : Seqₓₓ α) m : ∀ n, drop s (m + n) = drop (drop s m) n
   | 0 => rfl
-  | n + 1 => congr_argₓ tail (dropn_add n)
+  | n + 1 => congr_arg tail (dropn_add n)
 
 theorem dropn_tail (s : Seqₓₓ α) n : drop (tail s) n = drop s (n + 1) := by
   rw [add_commₓ] <;> symm <;> apply dropn_add
@@ -807,7 +807,7 @@ theorem of_mem_append {s₁ s₂ : Seqₓₓ α} {a : α} (h : a ∈ append s₁
   revert s₁
   apply mem_rec_on h _
   intro b s' o s₁
-  apply s₁.cases_on _ fun c t₁ => _ <;> intro m e <;> have := congr_argₓ destruct e
+  apply s₁.cases_on _ fun c t₁ => _ <;> intro m e <;> have := congr_arg destruct e
   · apply Or.inr
     simpa using m
     

@@ -57,7 +57,7 @@ open Set Finset Function Filter Encodable
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical BigOperators Nnreal TopologicalSpace Ennreal
+open Classical BigOperators Nnreal TopologicalSpace Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -120,7 +120,7 @@ protected theorem Union_finset (m : OuterMeasure α) (s : β → Set α) (t : Fi
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
   rel_sup_add m m.Empty (· ≤ ·) m.Union_nat s₁ s₂
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (m : OuterMeasure α) (s : Set α)
@@ -499,7 +499,7 @@ theorem restrict_supr {ι} (s : Set α) (m : ι → OuterMeasure α) : restrict 
 
 theorem map_comap {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) = restrict (range f) m :=
   ext fun s =>
-    congr_argₓ m <| by
+    congr_arg m <| by
       simp only [image_preimage_eq_inter_range, Subtype.range_coe]
 
 theorem map_comap_le {β} (f : α → β) (m : OuterMeasure β) : map f (comap f m) ≤ m := fun s =>
@@ -557,7 +557,7 @@ end Basic
 
 section OfFunction
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option eqn_compiler.zeta
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option eqn_compiler.zeta
 set_option eqn_compiler.zeta true
 
 variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
@@ -635,7 +635,7 @@ theorem is_greatest_of_function :
 theorem of_function_eq_Sup : OuterMeasure.ofFunction m m_empty = sup { μ | ∀ s, μ s ≤ m s } :=
   (@is_greatest_of_function α m m_empty).IsLub.Sup_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » «expr ∪ »(s, t))
 /-- If `m u = ∞` for any set `u` that has nonempty intersection both with `s` and `t`, then
 `μ (s ∪ t) = μ s + μ t`, where `μ = measure_theory.outer_measure.of_function m m_empty`.
 
@@ -686,7 +686,7 @@ theorem comap_of_function {β} (f : β → α) (h : Monotone m ∨ Surjective f)
     rw [Set.image_subset_iff, preimage_Union] at ht
     refine' ⟨ht, Ennreal.tsum_le_tsum fun n => _⟩
     cases h
-    exacts[h (image_preimage_subset _ _), (congr_argₓ m (h.image_preimage (t n))).le]
+    exacts[h (image_preimage_subset _ _), (congr_arg m (h.image_preimage (t n))).le]
     
 
 theorem map_of_function_le {β} (f : α → β) :
@@ -909,13 +909,13 @@ def caratheodoryDynkin : MeasurableSpace.DynkinSystem α where
 protected def caratheodory : MeasurableSpace α :=
   caratheodory_dynkin.toMeasurableSpace fun s₁ s₂ => is_caratheodory_inter
 
-theorem is_caratheodory_iff {s : Set α} : caratheodory.MeasurableSet' s ↔ ∀ t, m t = m (t ∩ s) + m (t \ s) :=
+theorem is_caratheodory_iff {s : Set α} : measurable_set[caratheodory] s ↔ ∀ t, m t = m (t ∩ s) + m (t \ s) :=
   Iff.rfl
 
-theorem is_caratheodory_iff_le {s : Set α} : caratheodory.MeasurableSet' s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
+theorem is_caratheodory_iff_le {s : Set α} : measurable_set[caratheodory] s ↔ ∀ t, m (t ∩ s) + m (t \ s) ≤ m t :=
   is_caratheodory_iff_le'
 
-protected theorem Union_eq_of_caratheodory {s : ℕ → Set α} (h : ∀ i, caratheodory.MeasurableSet' (s i))
+protected theorem Union_eq_of_caratheodory {s : ℕ → Set α} (h : ∀ i, measurable_set[caratheodory] (s i))
     (hd : Pairwise (Disjoint on s)) : m (⋃ i, s i) = ∑' i, m (s i) :=
   f_Union h hd
 
@@ -924,7 +924,7 @@ end CaratheodoryMeasurable
 variable {α : Type _}
 
 theorem of_function_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ : m ∅ = 0} (hs : ∀ t, m (t ∩ s) + m (t \ s) ≤ m t) :
-    (OuterMeasure.ofFunction m h₀).caratheodory.MeasurableSet' s := by
+    measurable_set[(OuterMeasure.ofFunction m h₀).caratheodory] s := by
   apply (is_caratheodory_iff_le _).mpr
   refine' fun t => le_infi fun f => le_infi fun hf => _
   refine'
@@ -941,7 +941,7 @@ theorem of_function_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ 
     
 
 theorem bounded_by_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} (hs : ∀ t, m (t ∩ s) + m (t \ s) ≤ m t) :
-    (boundedBy m).caratheodory.MeasurableSet' s := by
+    measurable_set[(boundedBy m).caratheodory] s := by
   apply of_function_caratheodory
   intro t
   cases' t.eq_empty_or_nonempty with h h
@@ -1108,12 +1108,12 @@ theorem restrict_infi_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, restrict s (m i)) = restrict (range (coe : s → α)) (⨅ i, restrict s (m i)) := by
       rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_infi Subtype.coe_injective _).symm
-    _ = restrict s (⨅ i, m i) := congr_argₓ (map coe) (comap_infi _ _).symm
+    _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_infi _ _).symm
     
 
 theorem restrict_infi {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i, m i) = ⨅ i, restrict s (m i) :=
-  (congr_argₓ (map coe) (comap_infi _ _)).trans (map_infi_comap _)
+  (congr_arg (map coe) (comap_infi _ _)).trans (map_infi_comap _)
 
 theorem restrict_binfi {ι} {I : Set ι} (hI : I.Nonempty) (s : Set α) (m : ι → OuterMeasure α) :
     restrict s (⨅ i ∈ I, m i) = ⨅ i ∈ I, restrict s (m i) := by
@@ -1207,7 +1207,7 @@ include PU msU
 
 theorem extend_Union_le_tsum_nat' (s : ℕ → Set α) : extend m (⋃ i, s i) ≤ ∑' i, extend m (s i) := by
   by_cases' h : ∀ i, P (s i)
-  · rw [extend_eq _ (PU h), congr_argₓ tsum _]
+  · rw [extend_eq _ (PU h), congr_arg tsum _]
     · apply msU h
       
     funext i
@@ -1325,7 +1325,7 @@ theorem induced_outer_measure_exists_set {s : Set α} (hs : inducedOuterMeasure 
   of `s`.
 -/
 theorem induced_outer_measure_caratheodory (s : Set α) :
-    (inducedOuterMeasure m P0 m0).caratheodory.MeasurableSet' s ↔
+    measurable_set[(inducedOuterMeasure m P0 m0).caratheodory] s ↔
       ∀ t : Set α,
         P t →
           inducedOuterMeasure m P0 m0 (t ∩ s) + inducedOuterMeasure m P0 m0 (t \ s) ≤ inducedOuterMeasure m P0 m0 t :=
@@ -1525,8 +1525,8 @@ theorem trim_sup (m₁ m₂ : OuterMeasure α) : (m₁⊔m₂).trim = m₁.trim�
 of the trimmed measures. -/
 theorem trim_supr {ι} [Encodable ι] (μ : ι → OuterMeasure α) : trim (⨆ i, μ i) = ⨆ i, trim (μ i) := by
   ext1 s
-  rcases exists_measurable_superset_forall_eq_trim (fun o => Option.elim o (supr μ) μ) s with ⟨t, hst, ht, hμt⟩
-  simp only [Option.forall, Option.elim] at hμt
+  rcases exists_measurable_superset_forall_eq_trim (Option.elimₓ (supr μ) μ) s with ⟨t, hst, ht, hμt⟩
+  simp only [Option.forall, Option.elimₓ] at hμt
   simp only [supr_apply, ← hμt.1, ← hμt.2]
 
 /-- The trimmed property of a measure μ states that `μ.to_outer_measure.trim = μ.to_outer_measure`.

@@ -60,7 +60,7 @@ def buildLimit : Cone F where
 
 variable {i}
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 /-- (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
 its construction are.
 -/
@@ -72,7 +72,7 @@ def buildIsLimit (t₁ : IsLimit c₁) (t₂ : IsLimit c₂) (hi : IsLimit i) : 
       
     · apply t₂.hom_ext
       intro j
-      "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+      "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
       simp [hs, ht]
       
   uniq' := fun q m w =>
@@ -235,7 +235,7 @@ def buildColimit : Cocone F where
 
 variable {i}
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 /-- (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
 provided the cocones used in its construction are.
 -/
@@ -248,7 +248,7 @@ def buildIsColimit (t₁ : IsColimit c₁) (t₂ : IsColimit c₂) (hi : IsColim
       
     · apply t₁.hom_ext
       intro j
-      "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+      "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
       simp [reassoc_of hs, reassoc_of ht]
       
   uniq' := fun q m w =>

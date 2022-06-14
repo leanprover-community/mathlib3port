@@ -180,6 +180,21 @@ theorem is_kernel_comp_mono_lift {c : KernelFork f} (i : IsLimit c) {Z} (g : Y �
             simp )) :=
   rfl
 
+/-- Every kernel of `f ≫ g` is also a kernel of `f`, as long as `c.ι ≫ f` vanishes. -/
+def isKernelOfComp {W : C} (g : Y ⟶ W) (h : X ⟶ W) {c : KernelFork h} (i : IsLimit c) (hf : c.ι ≫ f = 0)
+    (hfg : f ≫ g = h) : IsLimit (KernelFork.ofι c.ι hf) :=
+  Fork.IsLimit.mk _
+    (fun s =>
+      i.lift
+        (KernelFork.ofι s.ι
+          (by
+            simp [← hfg])))
+    (fun s => by
+      simp only [kernel_fork.ι_of_ι, fork.is_limit.lift_ι])
+    fun s m h => by
+    apply fork.is_limit.hom_ext i
+    simpa using h
+
 end
 
 section
@@ -614,6 +629,21 @@ theorem is_cokernel_epi_comp_desc {c : CokernelCofork f} (i : IsColimit c) {W} (
             rw [← cancel_epi g, ← category.assoc, ← hh]
             simp )) :=
   rfl
+
+/-- Every cokernel of `g ≫ f` is also a cokernel of `f`, as long as `f ≫ c.π` vanishes. -/
+def isCokernelOfComp {W : C} (g : W ⟶ X) (h : W ⟶ Y) {c : CokernelCofork h} (i : IsColimit c) (hf : f ≫ c.π = 0)
+    (hfg : g ≫ f = h) : IsColimit (CokernelCofork.ofπ c.π hf) :=
+  Cofork.IsColimit.mk _
+    (fun s =>
+      i.desc
+        (CokernelCofork.ofπ s.π
+          (by
+            simp [← hfg])))
+    (fun s => by
+      simp only [cokernel_cofork.π_of_π, cofork.is_colimit.π_desc])
+    fun s m h => by
+    apply cofork.is_colimit.hom_ext i
+    simpa using h
 
 end
 

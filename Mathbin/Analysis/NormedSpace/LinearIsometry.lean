@@ -186,7 +186,7 @@ def toContinuousLinearMap : E →SL[σ₁₂] E₂ :=
   ⟨f.toLinearMap, f.Continuous⟩
 
 theorem to_continuous_linear_map_injective : Function.Injective (toContinuousLinearMap : _ → E →SL[σ₁₂] E₂) :=
-  fun x y h => coe_injective (congr_argₓ _ h : ⇑x.toContinuousLinearMap = _)
+  fun x y h => coe_injective (congr_arg _ h : ⇑x.toContinuousLinearMap = _)
 
 @[simp]
 theorem to_continuous_linear_map_inj {f g : E →ₛₗᵢ[σ₁₂] E₂} :
@@ -396,7 +396,7 @@ def toLinearIsometry : E →ₛₗᵢ[σ₁₂] E₂ :=
   ⟨e.1, e.2⟩
 
 theorem to_linear_isometry_injective : Function.Injective (toLinearIsometry : _ → E →ₛₗᵢ[σ₁₂] E₂) := fun x y h =>
-  coe_injective (congr_argₓ _ h : ⇑x.toLinearIsometry = _)
+  coe_injective (congr_arg _ h : ⇑x.toLinearIsometry = _)
 
 @[simp]
 theorem to_linear_isometry_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toLinearIsometry = g.toLinearIsometry ↔ f = g :=
@@ -414,7 +414,7 @@ def toIsometric : E ≃ᵢ E₂ :=
   ⟨e.toLinearEquiv.toEquiv, e.Isometry⟩
 
 theorem to_isometric_injective : Function.Injective (toIsometric : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ᵢ E₂) := fun x y h =>
-  coe_injective (congr_argₓ _ h : ⇑x.toIsometric = _)
+  coe_injective (congr_arg _ h : ⇑x.toIsometric = _)
 
 @[simp]
 theorem to_isometric_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toIsometric = g.toIsometric ↔ f = g :=
@@ -433,7 +433,7 @@ def toHomeomorph : E ≃ₜ E₂ :=
   e.toIsometric.toHomeomorph
 
 theorem to_homeomorph_injective : Function.Injective (toHomeomorph : (E ≃ₛₗᵢ[σ₁₂] E₂) → E ≃ₜ E₂) := fun x y h =>
-  coe_injective (congr_argₓ _ h : ⇑x.toHomeomorph = _)
+  coe_injective (congr_arg _ h : ⇑x.toHomeomorph = _)
 
 @[simp]
 theorem to_homeomorph_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} : f.toHomeomorph = g.toHomeomorph ↔ f = g :=
@@ -460,7 +460,7 @@ def toContinuousLinearEquiv : E ≃SL[σ₁₂] E₂ :=
   { e.toLinearIsometry.toContinuousLinearMap, e.toHomeomorph with }
 
 theorem to_continuous_linear_equiv_injective : Function.Injective (toContinuousLinearEquiv : _ → E ≃SL[σ₁₂] E₂) :=
-  fun x y h => coe_injective (congr_argₓ _ h : ⇑x.toContinuousLinearEquiv = _)
+  fun x y h => coe_injective (congr_arg _ h : ⇑x.toContinuousLinearEquiv = _)
 
 @[simp]
 theorem to_continuous_linear_equiv_inj {f g : E ≃ₛₗᵢ[σ₁₂] E₂} :
@@ -490,7 +490,7 @@ theorem coe_refl : ⇑(refl R E) = id :=
 
 /-- The inverse `linear_isometry_equiv`. -/
 def symm : E₂ ≃ₛₗᵢ[σ₂₁] E :=
-  ⟨e.toLinearEquiv.symm, fun x => (e.norm_map _).symm.trans <| congr_argₓ norm <| e.toLinearEquiv.apply_symm_apply x⟩
+  ⟨e.toLinearEquiv.symm, fun x => (e.norm_map _).symm.trans <| congr_arg norm <| e.toLinearEquiv.apply_symm_apply x⟩
 
 @[simp]
 theorem apply_symm_apply (x : E₂) : e (e.symm x) = x :=

@@ -438,8 +438,8 @@ variable [TopologicalSpace α] [CompactSpace α] [PseudoMetricSpace β]
 
 variable {f g : α →ᵇ β} {x : α} {C : ℝ}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 /- Arzela-Ascoli theorem asserts that, on a compact space, a set of functions sharing
 a common modulus of continuity and taking values in a compact set forms a compact
@@ -497,13 +497,13 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
     
   · exact (hU x').2.2 _ hx' _ (hU x').1 hg
     
-  · have F_f_g : F (f x') = F (g x') := (congr_argₓ (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
+  · have F_f_g : F (f x') = F (g x') := (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
     calc dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
         dist_triangle_right _ _ _ _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by
         rw [F_f_g]_ < ε₂ + ε₂ := add_lt_add (hF (f x')).2 (hF (g x')).2_ = ε₁ / 2 := add_halves _
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
 theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (closed : IsClosed A)
     (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
@@ -528,8 +528,8 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
     exact ⟨g, hf, rfl⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
 theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β))
@@ -554,7 +554,7 @@ theorem arzela_ascoli [T2Space β] (s : Set β) (hs : IsCompact s) (A : Set (α 
           add_lt_add (add_lt_add (dist_fg y) (dist_fg z)) (hU y hy z hz g gA)_ = ε := by
           rw [add_halves, add_halves]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » U)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » U)
 /- To apply the previous theorems, one needs to check the equicontinuity. An important
 instance is when the source space is a metric space, and there is a fixed modulus of continuity
 for all the functions in the set A -/

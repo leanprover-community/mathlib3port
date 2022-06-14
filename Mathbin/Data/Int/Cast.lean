@@ -32,7 +32,7 @@ namespace Int
 theorem nat_cast_eq_coe_nat :
     ∀ n, @coe ℕ ℤ (@coeToLift _ _ Nat.castCoe) n = @coe ℕ ℤ (@coeToLift _ _ (@coeBaseₓ _ _ Int.hasCoe)) n
   | 0 => rfl
-  | n + 1 => congr_argₓ (· + (1 : ℤ)) (nat_cast_eq_coe_nat n)
+  | n + 1 => congr_arg (· + (1 : ℤ)) (nat_cast_eq_coe_nat n)
 
 /-- Coercion `ℕ → ℤ` as a `ring_hom`. -/
 def ofNatHom : ℕ →+* ℤ :=
@@ -107,7 +107,7 @@ theorem cast_add [AddGroupₓ α] [One α] : ∀ m n, ((m + n : ℤ) : α) = m +
   | -[1+ m], -[1+ n] =>
     show -((m + n + 1 + 1 : ℕ) : α) = -(m + 1) + -(n + 1) by
       rw [← neg_add_rev, ← Nat.cast_add_one, ← Nat.cast_add_one, ← Nat.cast_addₓ]
-      apply congr_argₓ fun x : ℕ => -(x : α)
+      apply congr_arg fun x : ℕ => -(x : α)
       ac_rfl
 
 @[simp, norm_cast]
@@ -120,7 +120,7 @@ theorem cast_sub [AddGroupₓ α] [One α] m n : ((m - n : ℤ) : α) = m - n :=
   simp [sub_eq_add_neg]
 
 @[simp, norm_cast]
-theorem cast_mul [Ringₓ α] : ∀ m n, ((m * n : ℤ) : α) = m * n
+theorem cast_mul [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n
   | (m : ℕ), (n : ℕ) => Nat.cast_mulₓ _ _
   | (m : ℕ), -[1+ n] =>
     (cast_neg_of_nat _).trans <|
@@ -142,6 +142,11 @@ theorem cast_div [Field α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) 
     simpa using n_nonzero
   rw [Int.mul_div_cancel_left _ this, Int.cast_mul, mul_div_cancel_left _ n_nonzero]
 
+@[simp, norm_cast]
+theorem cast_ite [Zero α] [One α] [Add α] [Neg α] (P : Prop) [Decidable P] (m n : ℤ) :
+    ((ite P m n : ℤ) : α) = ite P m n :=
+  apply_ite _ _ _ _
+
 /-- `coe : ℤ → α` as an `add_monoid_hom`. -/
 def castAddHom (α : Type _) [AddGroupₓ α] [One α] : ℤ →+ α :=
   ⟨coe, cast_zeroₓ, cast_add⟩
@@ -151,20 +156,20 @@ theorem coe_cast_add_hom [AddGroupₓ α] [One α] : ⇑(castAddHom α) = coe :=
   rfl
 
 /-- `coe : ℤ → α` as a `ring_hom`. -/
-def castRingHom (α : Type _) [Ringₓ α] : ℤ →+* α :=
+def castRingHom (α : Type _) [NonAssocRing α] : ℤ →+* α :=
   ⟨coe, cast_oneₓ, cast_mul, cast_zeroₓ, cast_add⟩
 
 @[simp]
-theorem coe_cast_ring_hom [Ringₓ α] : ⇑(castRingHom α) = coe :=
+theorem coe_cast_ring_hom [NonAssocRing α] : ⇑(castRingHom α) = coe :=
   rfl
 
-theorem cast_commute [Ringₓ α] (m : ℤ) (x : α) : Commute (↑m) x :=
+theorem cast_commute [NonAssocRing α] (m : ℤ) (x : α) : Commute (↑m) x :=
   Int.casesOn m (fun n => n.cast_commute x) fun n => ((n + 1).cast_commute x).neg_left
 
-theorem cast_comm [Ringₓ α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
+theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
   (cast_commute m x).Eq
 
-theorem commute_cast [Ringₓ α] (x : α) (m : ℤ) : Commute x m :=
+theorem commute_cast [NonAssocRing α] (x : α) (m : ℤ) : Commute x m :=
   (m.cast_commute x).symm
 
 @[simp, norm_cast]
@@ -179,20 +184,20 @@ theorem coe_nat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n := by
   simp
 
 @[simp, norm_cast]
-theorem cast_bit0 [Ringₓ α] (n : ℤ) : ((bit0 n : ℤ) : α) = bit0 n :=
+theorem cast_bit0 [NonAssocRing α] (n : ℤ) : ((bit0 n : ℤ) : α) = bit0 n :=
   cast_add _ _
 
 @[simp, norm_cast]
-theorem cast_bit1 [Ringₓ α] (n : ℤ) : ((bit1 n : ℤ) : α) = bit1 n := by
+theorem cast_bit1 [NonAssocRing α] (n : ℤ) : ((bit1 n : ℤ) : α) = bit1 n := by
   rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 
-theorem cast_two [Ringₓ α] : ((2 : ℤ) : α) = 2 := by
+theorem cast_two [NonAssocRing α] : ((2 : ℤ) : α) = 2 := by
   simp
 
-theorem cast_three [Ringₓ α] : ((3 : ℤ) : α) = 3 := by
+theorem cast_three [NonAssocRing α] : ((3 : ℤ) : α) = 3 := by
   simp
 
-theorem cast_four [Ringₓ α] : ((4 : ℤ) : α) = 4 := by
+theorem cast_four [NonAssocRing α] : ((4 : ℤ) : α) = 4 := by
   simp
 
 theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) := by
@@ -382,7 +387,7 @@ end MonoidWithZeroHom
 
 namespace RingHom
 
-variable {α : Type _} {β : Type _} [Ringₓ α] [Ringₓ β]
+variable {α : Type _} {β : Type _} [NonAssocRing α] [NonAssocRing β]
 
 @[simp]
 theorem eq_int_cast (f : ℤ →+* α) (n : ℤ) : f n = n :=
@@ -395,10 +400,10 @@ theorem eq_int_cast' (f : ℤ →+* α) : f = Int.castRingHom α :=
 theorem map_int_cast (f : α →+* β) (n : ℤ) : f n = n :=
   (f.comp (Int.castRingHom α)).eq_int_cast n
 
-theorem ext_int {R : Type _} [Semiringₓ R] (f g : ℤ →+* R) : f = g :=
+theorem ext_int {R : Type _} [NonAssocSemiringₓ R] (f g : ℤ →+* R) : f = g :=
   coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
 
-instance Int.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (ℤ →+* R) :=
+instance Int.subsingleton_ring_hom {R : Type _} [NonAssocSemiringₓ R] : Subsingleton (ℤ →+* R) :=
   ⟨RingHom.ext_int⟩
 
 end RingHom
@@ -434,12 +439,12 @@ variable {α : Type _} [Zero α] [One α] [Add α] [Neg α]
 @[simp, norm_cast]
 theorem op_int_cast : ∀ z : ℤ, op (z : α) = z
   | (n : ℕ) => op_nat_cast n
-  | -[1+ n] => (congr_argₓ fun a : αᵐᵒᵖ => -(a + 1)) <| op_nat_cast n
+  | -[1+ n] => (congr_arg fun a : αᵐᵒᵖ => -(a + 1)) <| op_nat_cast n
 
 @[simp, norm_cast]
 theorem unop_int_cast : ∀ n : ℤ, unop (n : αᵐᵒᵖ) = n
   | (n : ℕ) => unop_nat_cast n
-  | -[1+ n] => (congr_argₓ fun a : α => -(a + 1)) <| unop_nat_cast n
+  | -[1+ n] => (congr_arg fun a : α => -(a + 1)) <| unop_nat_cast n
 
 end MulOpposite
 

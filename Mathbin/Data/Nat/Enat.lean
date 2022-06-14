@@ -296,7 +296,7 @@ theorem top_eq_none : (⊤ : Enat) = none :=
 @[simp]
 theorem coe_lt_top (x : ℕ) : (x : Enat) < ⊤ :=
   Ne.lt_top fun h =>
-    absurd (congr_argₓ Dom h) <| by
+    absurd (congr_arg Dom h) <| by
       simpa only [dom_coe] using true_ne_false
 
 @[simp]
@@ -365,29 +365,14 @@ instance : OrderedAddCommMonoid Enat :=
 
 instance : CanonicallyOrderedAddMonoid Enat :=
   { Enat.semilatticeSup, Enat.orderBot, Enat.orderedAddCommMonoid with
-    le_iff_exists_add := fun a b =>
-      Enat.cases_on b (iff_of_true le_top ⟨⊤, (add_top _).symm⟩) fun b =>
-        Enat.cases_on a
-          (iff_of_false (not_le_of_gtₓ (coe_lt_top _))
-            (not_exists.2 fun x =>
-              ne_of_ltₓ
-                (by
-                  rw [top_add] <;> exact coe_lt_top _)))
-          fun a =>
-          ⟨fun h =>
-            ⟨(b - a : ℕ), by
-              rw [← Nat.cast_addₓ, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
-            fun ⟨c, hc⟩ =>
-            Enat.cases_on c
-              (fun hc =>
-                hc.symm ▸
-                  show (a : Enat) ≤ a + ⊤ by
-                    rw [add_top] <;> exact le_top)
-              (fun hc : (b : Enat) = a + c =>
-                coe_le_coe.2
-                  (by
-                    rw [← Nat.cast_addₓ, coe_inj] at hc <;> rw [hc] <;> exact Nat.le_add_rightₓ _ _))
-              hc⟩ }
+    le_self_add := fun a b =>
+      (Enat.cases_on b (le_top.trans_eq (add_top _).symm)) fun b =>
+        (Enat.cases_on a (top_add _).Ge) fun a => (coe_le_coe.2 le_self_add).trans_eq (Nat.cast_addₓ _ _),
+    exists_add_of_le := fun a b =>
+      (Enat.cases_on b fun _ => ⟨⊤, (add_top _).symm⟩) fun b =>
+        (Enat.cases_on a fun h => ((coe_lt_top _).not_le h).elim) fun a h =>
+          ⟨(b - a : ℕ), by
+            rw [← Nat.cast_addₓ, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩ }
 
 protected theorem add_lt_add_right {x y z : Enat} (h : x < y) (hz : z ≠ ⊤) : x + z < y + z := by
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
@@ -584,11 +569,15 @@ noncomputable def withTopAddEquiv : Enat ≃+ WithTop ℕ :=
 
 end WithTopEquiv
 
-theorem lt_wf : WellFounded ((· < ·) : Enat → Enat → Prop) :=
-  show WellFounded fun a b : Enat => a < b by
-    have := Classical.dec <;>
-      simp (config := { eta := false })only [to_with_top_lt.symm] <;>
-        exact InvImage.wfₓ _ (WithTop.well_founded_lt Nat.lt_wf)
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem lt_wf : @WellFounded Enat (· < ·) := by
+  classical
+  change WellFounded fun a b : Enat => a < b
+  simp_rw [← to_with_top_lt]
+  exact InvImage.wfₓ _ (WithTop.well_founded_lt Nat.lt_wf)
+
+instance : IsWellOrder Enat (· < ·) :=
+  ⟨lt_wf⟩
 
 instance : HasWellFounded Enat :=
   ⟨(· < ·), lt_wf⟩

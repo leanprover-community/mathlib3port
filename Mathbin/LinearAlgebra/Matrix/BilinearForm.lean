@@ -59,7 +59,7 @@ open BilinForm Finset LinearMap Matrix
 
 open Matrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The map from `matrix n n R` to bilinear forms on `n → R`.
 
 This is an auxiliary definition for the equivalence `matrix.to_bilin_form'`. -/
@@ -108,24 +108,24 @@ def BilinForm.toMatrixAux (b : n → M₂) : BilinForm R₂ M₂ →ₗ[R₂] Ma
 
 variable [Fintype n] [Fintype o]
 
-theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₃ : BilinForm R₃ (n → R₃)) :
-    Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₃ (fun _ => R₃) j 1) B₃) = B₃ := by
-  refine' ext_basis (Pi.basisFun R₃ n) fun i j => _
+theorem to_bilin'_aux_to_matrix_aux [DecidableEq n] (B₂ : BilinForm R₂ (n → R₂)) :
+    Matrix.toBilin'Aux (BilinForm.toMatrixAux (fun j => stdBasis R₂ (fun _ => R₂) j 1) B₂) = B₂ := by
+  refine' ext_basis (Pi.basisFun R₂ n) fun i j => _
   rw [BilinForm.toMatrixAux, LinearMap.coe_mk, Pi.basis_fun_apply, Pi.basis_fun_apply, Matrix.to_bilin'_aux_std_basis]
 
 section ToMatrix'
 
 /-! ### `to_matrix'` section
 
-This section deals with the conversion between matrices and bilinear forms on `n → R₃`.
+This section deals with the conversion between matrices and bilinear forms on `n → R₂`.
 -/
 
 
 variable [DecidableEq n] [DecidableEq o]
 
 /-- The linear equivalence between bilinear forms on `n → R` and `n × n` matrices -/
-def BilinForm.toMatrix' : BilinForm R₃ (n → R₃) ≃ₗ[R₃] Matrix n n R₃ :=
-  { BilinForm.toMatrixAux fun j => stdBasis R₃ (fun _ => R₃) j 1 with invFun := Matrix.toBilin'Aux,
+def BilinForm.toMatrix' : BilinForm R₂ (n → R₂) ≃ₗ[R₂] Matrix n n R₂ :=
+  { BilinForm.toMatrixAux fun j => stdBasis R₂ (fun _ => R₂) j 1 with invFun := Matrix.toBilin'Aux,
     left_inv := by
       convert to_bilin'_aux_to_matrix_aux,
     right_inv := fun M => by
@@ -133,24 +133,24 @@ def BilinForm.toMatrix' : BilinForm R₃ (n → R₃) ≃ₗ[R₃] Matrix n n R�
       simp only [BilinForm.toMatrixAux, Matrix.to_bilin'_aux_std_basis] }
 
 @[simp]
-theorem BilinForm.to_matrix_aux_std_basis (B : BilinForm R₃ (n → R₃)) :
-    BilinForm.toMatrixAux (fun j => stdBasis R₃ (fun _ => R₃) j 1) B = BilinForm.toMatrix' B :=
+theorem BilinForm.to_matrix_aux_std_basis (B : BilinForm R₂ (n → R₂)) :
+    BilinForm.toMatrixAux (fun j => stdBasis R₂ (fun _ => R₂) j 1) B = BilinForm.toMatrix' B :=
   rfl
 
 /-- The linear equivalence between `n × n` matrices and bilinear forms on `n → R` -/
-def Matrix.toBilin' : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ (n → R₃) :=
+def Matrix.toBilin' : Matrix n n R₂ ≃ₗ[R₂] BilinForm R₂ (n → R₂) :=
   BilinForm.toMatrix'.symm
 
 @[simp]
-theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₃) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
+theorem Matrix.to_bilin'_aux_eq (M : Matrix n n R₂) : Matrix.toBilin'Aux M = Matrix.toBilin' M :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
-theorem Matrix.to_bilin'_apply (M : Matrix n n R₃) (x y : n → R₃) :
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
+theorem Matrix.to_bilin'_apply (M : Matrix n n R₂) (x y : n → R₂) :
     Matrix.toBilin' M x y = ∑ (i) (j), x i * M i j * y j :=
   rfl
 
-theorem Matrix.to_bilin'_apply' (M : Matrix n n R₃) (v w : n → R₃) :
+theorem Matrix.to_bilin'_apply' (M : Matrix n n R₂) (v w : n → R₂) :
     Matrix.toBilin' M v w = Matrix.dotProduct v (M.mulVec w) := by
   simp_rw [Matrix.to_bilin'_apply, Matrix.dotProduct, Matrix.mulVecₓ, Matrix.dotProduct]
   refine' Finset.sum_congr rfl fun _ _ => _
@@ -159,39 +159,39 @@ theorem Matrix.to_bilin'_apply' (M : Matrix n n R₃) (v w : n → R₃) :
   rw [← mul_assoc]
 
 @[simp]
-theorem Matrix.to_bilin'_std_basis (M : Matrix n n R₃) (i j : n) :
-    Matrix.toBilin' M (stdBasis R₃ (fun _ => R₃) i 1) (stdBasis R₃ (fun _ => R₃) j 1) = M i j :=
+theorem Matrix.to_bilin'_std_basis (M : Matrix n n R₂) (i j : n) :
+    Matrix.toBilin' M (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) = M i j :=
   Matrix.to_bilin'_aux_std_basis M i j
 
 @[simp]
-theorem BilinForm.to_matrix'_symm : (BilinForm.toMatrix'.symm : Matrix n n R₃ ≃ₗ[R₃] _) = Matrix.toBilin' :=
+theorem BilinForm.to_matrix'_symm : (BilinForm.toMatrix'.symm : Matrix n n R₂ ≃ₗ[R₂] _) = Matrix.toBilin' :=
   rfl
 
 @[simp]
-theorem Matrix.to_bilin'_symm : (Matrix.toBilin'.symm : _ ≃ₗ[R₃] Matrix n n R₃) = BilinForm.toMatrix' :=
+theorem Matrix.to_bilin'_symm : (Matrix.toBilin'.symm : _ ≃ₗ[R₂] Matrix n n R₂) = BilinForm.toMatrix' :=
   BilinForm.toMatrix'.symm_symm
 
 @[simp]
-theorem Matrix.to_bilin'_to_matrix' (B : BilinForm R₃ (n → R₃)) : Matrix.toBilin' (BilinForm.toMatrix' B) = B :=
+theorem Matrix.to_bilin'_to_matrix' (B : BilinForm R₂ (n → R₂)) : Matrix.toBilin' (BilinForm.toMatrix' B) = B :=
   Matrix.toBilin'.apply_symm_apply B
 
 @[simp]
-theorem BilinForm.to_matrix'_to_bilin' (M : Matrix n n R₃) : BilinForm.toMatrix' (Matrix.toBilin' M) = M :=
+theorem BilinForm.to_matrix'_to_bilin' (M : Matrix n n R₂) : BilinForm.toMatrix' (Matrix.toBilin' M) = M :=
   BilinForm.toMatrix'.apply_symm_apply M
 
 @[simp]
-theorem BilinForm.to_matrix'_apply (B : BilinForm R₃ (n → R₃)) (i j : n) :
-    BilinForm.toMatrix' B i j = B (stdBasis R₃ (fun _ => R₃) i 1) (stdBasis R₃ (fun _ => R₃) j 1) :=
+theorem BilinForm.to_matrix'_apply (B : BilinForm R₂ (n → R₂)) (i j : n) :
+    BilinForm.toMatrix' B i j = B (stdBasis R₂ (fun _ => R₂) i 1) (stdBasis R₂ (fun _ => R₂) j 1) :=
   rfl
 
 @[simp]
-theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o → R₃) →ₗ[R₃] n → R₃) :
+theorem BilinForm.to_matrix'_comp (B : BilinForm R₂ (n → R₂)) (l r : (o → R₂) →ₗ[R₂] n → R₂) :
     (B.comp l r).toMatrix' = l.toMatrix'ᵀ ⬝ B.toMatrix' ⬝ r.toMatrix' := by
   ext i j
   simp only [BilinForm.to_matrix'_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
     LinearEquiv.coe_mk, sum_mul]
   rw [sum_comm]
-  conv_lhs => rw [← BilinForm.sum_repr_mul_repr_mul (Pi.basisFun R₃ n) (l _) (r _)]
+  conv_lhs => rw [← BilinForm.sum_repr_mul_repr_mul (Pi.basisFun R₂ n) (l _) (r _)]
   rw [Finsupp.sum_fintype]
   · apply sum_congr rfl
     rintro i' -
@@ -208,27 +208,27 @@ theorem BilinForm.to_matrix'_comp (B : BilinForm R₃ (n → R₃)) (l r : (o �
     simp only [zero_smul, Finsupp.sum_zero]
     
 
-theorem BilinForm.to_matrix'_comp_left (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
+theorem BilinForm.to_matrix'_comp_left (B : BilinForm R₂ (n → R₂)) (f : (n → R₂) →ₗ[R₂] n → R₂) :
     (B.compLeft f).toMatrix' = f.toMatrix'ᵀ ⬝ B.toMatrix' := by
   simp only [BilinForm.compLeft, BilinForm.to_matrix'_comp, to_matrix'_id, Matrix.mul_one]
 
-theorem BilinForm.to_matrix'_comp_right (B : BilinForm R₃ (n → R₃)) (f : (n → R₃) →ₗ[R₃] n → R₃) :
+theorem BilinForm.to_matrix'_comp_right (B : BilinForm R₂ (n → R₂)) (f : (n → R₂) →ₗ[R₂] n → R₂) :
     (B.compRight f).toMatrix' = B.toMatrix' ⬝ f.toMatrix' := by
   simp only [BilinForm.compRight, BilinForm.to_matrix'_comp, to_matrix'_id, transpose_one, Matrix.one_mul]
 
-theorem BilinForm.mul_to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix o n R₃) (N : Matrix n o R₃) :
+theorem BilinForm.mul_to_matrix'_mul (B : BilinForm R₂ (n → R₂)) (M : Matrix o n R₂) (N : Matrix n o R₂) :
     M ⬝ B.toMatrix' ⬝ N = (B.comp Mᵀ.toLin' N.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp, transpose_transpose, to_matrix'_to_lin']
 
-theorem BilinForm.mul_to_matrix' (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
+theorem BilinForm.mul_to_matrix' (B : BilinForm R₂ (n → R₂)) (M : Matrix n n R₂) :
     M ⬝ B.toMatrix' = (B.compLeft Mᵀ.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp_left, transpose_transpose, to_matrix'_to_lin']
 
-theorem BilinForm.to_matrix'_mul (B : BilinForm R₃ (n → R₃)) (M : Matrix n n R₃) :
+theorem BilinForm.to_matrix'_mul (B : BilinForm R₂ (n → R₂)) (M : Matrix n n R₂) :
     B.toMatrix' ⬝ M = (B.compRight M.toLin').toMatrix' := by
   simp only [B.to_matrix'_comp_right, to_matrix'_to_lin']
 
-theorem Matrix.to_bilin'_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
+theorem Matrix.to_bilin'_comp (M : Matrix n n R₂) (P Q : Matrix n o R₂) :
     M.toBilin'.comp P.toLin' Q.toLin' = (Pᵀ ⬝ M ⬝ Q).toBilin' :=
   BilinForm.toMatrix'.Injective
     (by
@@ -245,20 +245,20 @@ a module with a fixed basis.
 -/
 
 
-variable [DecidableEq n] (b : Basis n R₃ M₃)
+variable [DecidableEq n] (b : Basis n R₂ M₂)
 
 /-- `bilin_form.to_matrix b` is the equivalence between `R`-bilinear forms on `M` and
 `n`-by-`n` matrices with entries in `R`, if `b` is an `R`-basis for `M`. -/
-noncomputable def BilinForm.toMatrix : BilinForm R₃ M₃ ≃ₗ[R₃] Matrix n n R₃ :=
+noncomputable def BilinForm.toMatrix : BilinForm R₂ M₂ ≃ₗ[R₂] Matrix n n R₂ :=
   (BilinForm.congr b.equivFun).trans BilinForm.toMatrix'
 
 /-- `bilin_form.to_matrix b` is the equivalence between `R`-bilinear forms on `M` and
 `n`-by-`n` matrices with entries in `R`, if `b` is an `R`-basis for `M`. -/
-noncomputable def Matrix.toBilin : Matrix n n R₃ ≃ₗ[R₃] BilinForm R₃ M₃ :=
+noncomputable def Matrix.toBilin : Matrix n n R₂ ≃ₗ[R₂] BilinForm R₂ M₂ :=
   (BilinForm.toMatrix b).symm
 
 @[simp]
-theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equivFun.symm (stdBasis R₃ (fun _ => R₃) i 1) = b i := by
+theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equivFun.symm (stdBasis R₂ (fun _ => R₂) i 1) = b i := by
   rw [b.equiv_fun_symm_apply, Finset.sum_eq_single i]
   · rw [std_basis_same, one_smul]
     
@@ -271,19 +271,19 @@ theorem Basis.equiv_fun_symm_std_basis (i : n) : b.equivFun.symm (stdBasis R₃ 
     
 
 @[simp]
-theorem BilinForm.to_matrix_apply (B : BilinForm R₃ M₃) (i j : n) : BilinForm.toMatrix b B i j = B (b i) (b j) := by
+theorem BilinForm.to_matrix_apply (B : BilinForm R₂ M₂) (i j : n) : BilinForm.toMatrix b B i j = B (b i) (b j) := by
   rw [BilinForm.toMatrix, LinearEquiv.trans_apply, BilinForm.to_matrix'_apply, congr_apply, b.equiv_fun_symm_std_basis,
     b.equiv_fun_symm_std_basis]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
-theorem Matrix.to_bilin_apply (M : Matrix n n R₃) (x y : M₃) :
+theorem Matrix.to_bilin_apply (M : Matrix n n R₂) (x y : M₂) :
     Matrix.toBilin b M x y = ∑ (i) (j), b.repr x i * M i j * b.repr y j := by
   rw [Matrix.toBilin, BilinForm.toMatrix, LinearEquiv.symm_trans_apply, ← Matrix.toBilin']
   simp only [congr_symm, congr_apply, LinearEquiv.symm_symm, Matrix.to_bilin'_apply, Basis.equiv_fun_apply]
 
 -- Not a `simp` lemma since `bilin_form.to_matrix` needs an extra argument
-theorem BilinearForm.to_matrix_aux_eq (B : BilinForm R₃ M₃) : BilinForm.toMatrixAux b B = BilinForm.toMatrix b B :=
+theorem BilinearForm.to_matrix_aux_eq (B : BilinForm R₂ M₂) : BilinForm.toMatrixAux b B = BilinForm.toMatrix b B :=
   ext fun i j => by
     rw [BilinForm.to_matrix_apply, BilinForm.toMatrixAux, LinearMap.coe_mk]
 
@@ -295,30 +295,30 @@ theorem BilinForm.to_matrix_symm : (BilinForm.toMatrix b).symm = Matrix.toBilin 
 theorem Matrix.to_bilin_symm : (Matrix.toBilin b).symm = BilinForm.toMatrix b :=
   (BilinForm.toMatrix b).symm_symm
 
-theorem Matrix.to_bilin_basis_fun : Matrix.toBilin (Pi.basisFun R₃ n) = Matrix.toBilin' := by
+theorem Matrix.to_bilin_basis_fun : Matrix.toBilin (Pi.basisFun R₂ n) = Matrix.toBilin' := by
   ext M
   simp only [Matrix.to_bilin_apply, Matrix.to_bilin'_apply, Pi.basis_fun_repr]
 
-theorem BilinForm.to_matrix_basis_fun : BilinForm.toMatrix (Pi.basisFun R₃ n) = BilinForm.toMatrix' := by
+theorem BilinForm.to_matrix_basis_fun : BilinForm.toMatrix (Pi.basisFun R₂ n) = BilinForm.toMatrix' := by
   ext B
   rw [BilinForm.to_matrix_apply, BilinForm.to_matrix'_apply, Pi.basis_fun_apply, Pi.basis_fun_apply]
 
 @[simp]
-theorem Matrix.to_bilin_to_matrix (B : BilinForm R₃ M₃) : Matrix.toBilin b (BilinForm.toMatrix b B) = B :=
+theorem Matrix.to_bilin_to_matrix (B : BilinForm R₂ M₂) : Matrix.toBilin b (BilinForm.toMatrix b B) = B :=
   (Matrix.toBilin b).apply_symm_apply B
 
 @[simp]
-theorem BilinForm.to_matrix_to_bilin (M : Matrix n n R₃) : BilinForm.toMatrix b (Matrix.toBilin b M) = M :=
+theorem BilinForm.to_matrix_to_bilin (M : Matrix n n R₂) : BilinForm.toMatrix b (Matrix.toBilin b M) = M :=
   (BilinForm.toMatrix b).apply_symm_apply M
 
-variable {M₃' : Type _} [AddCommGroupₓ M₃'] [Module R₃ M₃']
+variable {M₂' : Type _} [AddCommMonoidₓ M₂'] [Module R₂ M₂']
 
-variable (c : Basis o R₃ M₃')
+variable (c : Basis o R₂ M₂')
 
 variable [DecidableEq o]
 
 -- Cannot be a `simp` lemma because `b` must be inferred.
-theorem BilinForm.to_matrix_comp (B : BilinForm R₃ M₃) (l r : M₃' →ₗ[R₃] M₃) :
+theorem BilinForm.to_matrix_comp (B : BilinForm R₂ M₂) (l r : M₂' →ₗ[R₂] M₂) :
     BilinForm.toMatrix c (B.comp l r) = (toMatrix c b l)ᵀ ⬝ BilinForm.toMatrix b B ⬝ toMatrix c b r := by
   ext i j
   simp only [BilinForm.to_matrix_apply, BilinForm.comp_apply, transpose_apply, Matrix.mul_apply, LinearMap.toMatrix',
@@ -341,32 +341,32 @@ theorem BilinForm.to_matrix_comp (B : BilinForm R₃ M₃) (l r : M₃' →ₗ[R
     simp only [zero_smul, Finsupp.sum_zero]
     
 
-theorem BilinForm.to_matrix_comp_left (B : BilinForm R₃ M₃) (f : M₃ →ₗ[R₃] M₃) :
+theorem BilinForm.to_matrix_comp_left (B : BilinForm R₂ M₂) (f : M₂ →ₗ[R₂] M₂) :
     BilinForm.toMatrix b (B.compLeft f) = (toMatrix b b f)ᵀ ⬝ BilinForm.toMatrix b B := by
   simp only [comp_left, BilinForm.to_matrix_comp b b, to_matrix_id, Matrix.mul_one]
 
-theorem BilinForm.to_matrix_comp_right (B : BilinForm R₃ M₃) (f : M₃ →ₗ[R₃] M₃) :
+theorem BilinForm.to_matrix_comp_right (B : BilinForm R₂ M₂) (f : M₂ →ₗ[R₂] M₂) :
     BilinForm.toMatrix b (B.compRight f) = BilinForm.toMatrix b B ⬝ toMatrix b b f := by
   simp only [BilinForm.compRight, BilinForm.to_matrix_comp b b, to_matrix_id, transpose_one, Matrix.one_mul]
 
 @[simp]
-theorem BilinForm.to_matrix_mul_basis_to_matrix (c : Basis o R₃ M₃) (B : BilinForm R₃ M₃) :
+theorem BilinForm.to_matrix_mul_basis_to_matrix (c : Basis o R₂ M₂) (B : BilinForm R₂ M₂) :
     (b.toMatrix c)ᵀ ⬝ BilinForm.toMatrix b B ⬝ b.toMatrix c = BilinForm.toMatrix c B := by
   rw [← LinearMap.to_matrix_id_eq_basis_to_matrix, ← BilinForm.to_matrix_comp, BilinForm.comp_id_id]
 
-theorem BilinForm.mul_to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix o n R₃) (N : Matrix n o R₃) :
+theorem BilinForm.mul_to_matrix_mul (B : BilinForm R₂ M₂) (M : Matrix o n R₂) (N : Matrix n o R₂) :
     M ⬝ BilinForm.toMatrix b B ⬝ N = BilinForm.toMatrix c (B.comp (toLin c b Mᵀ) (toLin c b N)) := by
   simp only [B.to_matrix_comp b c, to_matrix_to_lin, transpose_transpose]
 
-theorem BilinForm.mul_to_matrix (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
+theorem BilinForm.mul_to_matrix (B : BilinForm R₂ M₂) (M : Matrix n n R₂) :
     M ⬝ BilinForm.toMatrix b B = BilinForm.toMatrix b (B.compLeft (toLin b b Mᵀ)) := by
   rw [B.to_matrix_comp_left b, to_matrix_to_lin, transpose_transpose]
 
-theorem BilinForm.to_matrix_mul (B : BilinForm R₃ M₃) (M : Matrix n n R₃) :
+theorem BilinForm.to_matrix_mul (B : BilinForm R₂ M₂) (M : Matrix n n R₂) :
     BilinForm.toMatrix b B ⬝ M = BilinForm.toMatrix b (B.compRight (toLin b b M)) := by
   rw [B.to_matrix_comp_right b, to_matrix_to_lin]
 
-theorem Matrix.to_bilin_comp (M : Matrix n n R₃) (P Q : Matrix n o R₃) :
+theorem Matrix.to_bilin_comp (M : Matrix n n R₂) (P Q : Matrix n o R₂) :
     (Matrix.toBilin b M).comp (toLin c b P) (toLin c b Q) = Matrix.toBilin c (Pᵀ ⬝ M ⬝ Q) :=
   (BilinForm.toMatrix c).Injective
     (by
@@ -513,7 +513,7 @@ variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M₃] (B₃ : Bilin
 
 variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
-theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₃} (b : Basis ι R₃ M₃) :
+theorem _root_.matrix.nondegenerate_to_bilin'_iff_nondegenerate_to_bilin {M : Matrix ι ι R₂} (b : Basis ι R₂ M₂) :
     M.toBilin'.Nondegenerate ↔ (Matrix.toBilin b M).Nondegenerate :=
   (nondegenerate_congr_iff b.equivFun.symm).symm
 

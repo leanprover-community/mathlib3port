@@ -316,7 +316,7 @@ protected theorem RingHom.smul_def [Semiringₓ R] (f : R →+* R) (a : R) : f �
   rfl
 
 /-- `ring_hom.apply_distrib_mul_action` is faithful. -/
-instance RingHom.apply_has_faithful_scalar [Semiringₓ R] : HasFaithfulScalar (R →+* R) R :=
+instance RingHom.apply_has_faithful_smul [Semiringₓ R] : HasFaithfulSmul (R →+* R) R :=
   ⟨RingHom.ext⟩
 
 section AddCommMonoidₓ

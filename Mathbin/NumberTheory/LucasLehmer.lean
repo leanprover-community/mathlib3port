@@ -414,11 +414,11 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
   simp [Zmod.int_coe_zmod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
-  replace h := congr_argₓ (fun n : ℤ => (n : X (q (p' + 2)))) h
+  replace h := congr_arg (fun n : ℤ => (n : X (q (p' + 2)))) h
   -- coercion from ℤ to X q
   dsimp'  at h
   rw [closed_form] at h
-  replace h := congr_argₓ (fun x => ω ^ 2 ^ p' * x) h
+  replace h := congr_arg (fun x => ω ^ 2 ^ p' * x) h
   dsimp'  at h
   have t : 2 ^ p' + 2 ^ p' = 2 ^ (p' + 1) := by
     ring_exp
@@ -469,9 +469,9 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) : orderOf (ωU
     
   · intro o
     have ω_pow := order_of_dvd_iff_pow_eq_one.1 o
-    replace ω_pow := congr_argₓ (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
+    replace ω_pow := congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
     simp at ω_pow
-    have h : (1 : Zmod (q (p' + 2))) = -1 := congr_argₓ Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
+    have h : (1 : Zmod (q (p' + 2))) = -1 := congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
     have : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
     apply Zmod.neg_one_ne_one h.symm
     
@@ -531,10 +531,10 @@ theorem s_mod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b) 
   dsimp' [s_mod, mersenne]
   rw [h1, h2, sq, h3]
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/

@@ -56,6 +56,23 @@ theorem to_lex_apply (x : ∀ i, β i) (i : ι) : toLex x i = x i :=
 theorem of_lex_apply (x : Lex (∀ i, β i)) (i : ι) : ofLex x i = x i :=
   rfl
 
+theorem is_trichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r) :
+    IsTrichotomous (∀ i, β i) (Pi.Lex r @s) :=
+  { trichotomous := fun a b => by
+      cases' eq_or_ne a b with hab hab
+      · exact Or.inr (Or.inl hab)
+        
+      · rw [Function.ne_iff] at hab
+        let i := wf.min _ hab
+        have hri : ∀ j, r j i → a j = b j := by
+          intro j
+          rw [← not_imp_not]
+          exact fun h' => wf.not_lt_min _ _ h'
+        have hne : a i ≠ b i := wf.min_mem _ hab
+        cases' trichotomous_of s (a i) (b i) with hi hi
+        exacts[Or.inl ⟨i, hri, hi⟩, Or.inr <| Or.inr <| ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩]
+         }
+
 instance [LT ι] [∀ a, LT (β a)] : LT (Lex (∀ i, β i)) :=
   ⟨Pi.Lex (· < ·) fun _ => (· < ·)⟩
 
@@ -71,32 +88,36 @@ instance Lex.is_strict_order [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)]
 instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Lex (∀ i, β i)) :=
   partialOrderOfSO (· < ·)
 
-protected theorem Lex.is_strict_total_order' [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop))
-    [∀ a, LinearOrderₓ (β a)] : IsStrictTotalOrder' (Lex (∀ i, β i)) (· < ·) :=
-  { trichotomous := fun a b => by
-      by_cases' h : ∃ i, a i ≠ b i
-      · let i := wf.min _ h
-        have hlt_i : ∀, ∀ j < i, ∀, a j = b j := by
-          intro j
-          rw [← not_imp_not]
-          exact fun h' => wf.not_lt_min _ _ h'
-        have : a i ≠ b i := wf.min_mem _ h
-        exact this.lt_or_lt.imp (fun h => ⟨i, hlt_i, h⟩) fun h => Or.inr ⟨i, fun j hj => (hlt_i j hj).symm, h⟩
-        
-      · push_neg  at h
-        exact Or.inr (Or.inl (funext h))
-         }
+/-- `Πₗ i, α i` is a linear order if the original order is well-founded. -/
+noncomputable instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
+    LinearOrderₓ (Lex (∀ i, β i)) :=
+  @linearOrderOfSTO' (Πₗ i, β i) (· < ·) { to_is_trichotomous := is_trichotomous_lex _ _ IsWellOrder.wf }
+    (Classical.decRel _)
 
-/-- `Πₗ i, α i` is a linear order if the original order is well-founded.
-This cannot be an instance, since it depends on the well-foundedness of `<`. -/
-protected noncomputable def Lex.linearOrder [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop))
-    [∀ a, LinearOrderₓ (β a)] : LinearOrderₓ (Lex (∀ i, β i)) :=
-  @linearOrderOfSTO' (Πₗ i, β i) (· < ·) (Pi.Lex.is_strict_total_order' wf) (Classical.decRel _)
+theorem Lex.le_of_forall_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] {a b : Lex (∀ i, β i)}
+    (h : ∀ i, a i ≤ b i) : a ≤ b :=
+  le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
 
-theorem Lex.le_of_forall_le [LinearOrderₓ ι] (wf : WellFounded ((· < ·) : ι → ι → Prop)) [∀ a, LinearOrderₓ (β a)]
-    {a b : Lex (∀ i, β i)} (h : ∀ i, a i ≤ b i) : a ≤ b := by
-  let this : LinearOrderₓ (Πₗ i, β i) := lex.linear_order wf
-  exact le_of_not_ltₓ fun ⟨i, hi⟩ => (h i).not_lt hi.2
+theorem Lex.le_of_of_lex_le [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] {a b : Lex (∀ i, β i)}
+    (h : ofLex a ≤ ofLex b) : a ≤ b :=
+  Lex.le_of_forall_le h
+
+theorem to_lex_monotone [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] :
+    Monotone (@toLex (∀ i, β i)) := fun _ _ => Lex.le_of_forall_le
+
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, OrderBot (β a)] :
+    OrderBot (Lex (∀ a, β a)) where
+  bot := toLex ⊥
+  bot_le := fun f => Lex.le_of_of_lex_le bot_le
+
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, OrderTop (β a)] :
+    OrderTop (Lex (∀ a, β a)) where
+  top := toLex ⊤
+  le_top := fun f => Lex.le_of_of_lex_le le_top
+
+instance [LinearOrderₓ ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrderₓ (β a)] [∀ a, BoundedOrder (β a)] :
+    BoundedOrder (Lex (∀ a, β a)) :=
+  { Pi.Lex.orderBot, Pi.Lex.orderTop with }
 
 --we might want the analog of `pi.ordered_cancel_comm_monoid` as well in the future
 @[to_additive]

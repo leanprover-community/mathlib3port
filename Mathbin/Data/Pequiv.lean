@@ -83,7 +83,7 @@ theorem ext : ∀ {f g : α ≃. β} h : ∀ x, f x = g x, f = g
     simp [*, funext_iff]
 
 theorem ext_iff {f g : α ≃. β} : f = g ↔ ∀ x, f x = g x :=
-  ⟨congr_funₓ ∘ congr_argₓ _, ext⟩
+  ⟨congr_fun ∘ congr_arg _, ext⟩
 
 /-- The identity map as a partial equivalence. -/
 @[refl]

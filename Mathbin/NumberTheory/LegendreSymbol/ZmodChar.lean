@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 -/
 import Mathbin.Tactic.Basic
-import Mathbin.NumberTheory.LegendreSymbol.Auxiliary
 import Mathbin.Data.Int.Range
+import Mathbin.Data.Zmod.Basic
 
 /-!
 # Quadratic characters on ℤ/nℤ

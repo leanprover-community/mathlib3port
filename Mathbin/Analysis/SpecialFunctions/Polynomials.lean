@@ -95,7 +95,7 @@ theorem abs_is_bounded_under_iff : (IsBoundedUnder (· ≤ ·) atTop fun x => ab
         eventually_map.mpr
           (eventually_of_forall
             (forall_imp (fun _ => le_of_eqₓ) fun x =>
-              congr_argₓ abs <| trans (congr_argₓ (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
+              congr_arg abs <| trans (congr_arg (eval x) (eq_C_of_degree_le_zero h)) eval_C))⟩⟩
   contrapose! h
   exact not_is_bounded_under_of_tendsto_at_top (abs_tendsto_at_top P (Nat.WithBot.one_le_iff_zero_lt.2 h))
 
@@ -233,9 +233,9 @@ theorem abs_div_tendsto_at_top_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q
 
 end PolynomialDivAtTop
 
-theorem is_O_of_degree_le (h : P.degree ≤ Q.degree) : IsO (fun x => eval x P) (fun x => eval x Q) Filter.atTop := by
+theorem is_O_of_degree_le (h : P.degree ≤ Q.degree) : (fun x => eval x P) =O[at_top] fun x => eval x Q := by
   by_cases' hp : P = 0
-  · simpa [hp] using is_O_zero (fun x => eval x Q) Filter.atTop
+  · simpa [hp] using is_O_zero (fun x => eval x Q) at_top
     
   · have hq : Q ≠ 0 := ne_zero_of_degree_ge_degree h hp
     have hPQ : ∀ᶠ x : 𝕜 in at_top, eval x Q = 0 → eval x P = 0 :=

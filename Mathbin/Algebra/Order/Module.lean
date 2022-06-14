@@ -102,6 +102,36 @@ theorem antitone_smul_left (hc : c ≤ 0) : Antitone (HasScalar.smul c : M → M
 theorem strict_anti_smul_left (hc : c < 0) : StrictAnti (HasScalar.smul c : M → M) := fun a b h =>
   smul_lt_smul_of_neg h hc
 
+/-- Binary **rearrangement inequality**. -/
+theorem smul_add_smul_le_smul_add_smul [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M} (hab : a ≤ b)
+    (hcd : c ≤ d) : a • d + b • c ≤ a • c + b • d := by
+  obtain ⟨b, rfl⟩ := exists_add_of_le hab
+  obtain ⟨d, rfl⟩ := exists_add_of_le hcd
+  rw [smul_add, add_right_commₓ, smul_add, ← add_assocₓ, add_smul _ _ d]
+  rw [le_add_iff_nonneg_right] at hab hcd
+  exact add_le_add_left (le_add_of_nonneg_right <| smul_nonneg hab hcd) _
+
+/-- Binary **rearrangement inequality**. -/
+theorem smul_add_smul_le_smul_add_smul' [ContravariantClass M M (· + ·) (· ≤ ·)] {a b : k} {c d : M} (hba : b ≤ a)
+    (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d := by
+  rw [add_commₓ (a • d), add_commₓ (a • c)]
+  exact smul_add_smul_le_smul_add_smul hba hdc
+
+/-- Binary strict **rearrangement inequality**. -/
+theorem smul_add_smul_lt_smul_add_smul [CovariantClass M M (· + ·) (· < ·)] [ContravariantClass M M (· + ·) (· < ·)]
+    {a b : k} {c d : M} (hab : a < b) (hcd : c < d) : a • d + b • c < a • c + b • d := by
+  obtain ⟨b, rfl⟩ := exists_add_of_le hab.le
+  obtain ⟨d, rfl⟩ := exists_add_of_le hcd.le
+  rw [smul_add, add_right_commₓ, smul_add, ← add_assocₓ, add_smul _ _ d]
+  rw [lt_add_iff_pos_right] at hab hcd
+  exact add_lt_add_left (lt_add_of_pos_right _ <| smul_pos hab hcd) _
+
+/-- Binary strict **rearrangement inequality**. -/
+theorem smul_add_smul_lt_smul_add_smul' [CovariantClass M M (· + ·) (· < ·)] [ContravariantClass M M (· + ·) (· < ·)]
+    {a b : k} {c d : M} (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d := by
+  rw [add_commₓ (a • d), add_commₓ (a • c)]
+  exact smul_add_smul_lt_smul_add_smul hba hdc
+
 end Ringₓ
 
 section Field

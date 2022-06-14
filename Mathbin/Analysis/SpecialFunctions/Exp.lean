@@ -149,10 +149,20 @@ theorem tendsto_exp_nhds_0_nhds_1 : Tendsto exp (𝓝 0) (𝓝 1) := by
   simp
 
 theorem tendsto_exp_at_bot : Tendsto exp atBot (𝓝 0) :=
-  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_argₓ exp <| neg_negₓ x
+  (tendsto_exp_neg_at_top_nhds_0.comp tendsto_neg_at_bot_at_top).congr fun x => congr_arg exp <| neg_negₓ x
 
 theorem tendsto_exp_at_bot_nhds_within : Tendsto exp atBot (𝓝[>] 0) :=
   tendsto_inf.2 ⟨tendsto_exp_at_bot, tendsto_principal.2 <| eventually_of_forall exp_pos⟩
+
+@[simp]
+theorem is_bounded_under_ge_exp_comp {α : Type _} (l : Filter α) (f : α → ℝ) :
+    IsBoundedUnder (· ≥ ·) l fun x => exp (f x) :=
+  is_bounded_under_of ⟨0, fun x => (exp_pos _).le⟩
+
+@[simp]
+theorem is_bounded_under_le_exp_comp {α : Type _} {l : Filter α} {f : α → ℝ} :
+    (IsBoundedUnder (· ≤ ·) l fun x => exp (f x)) ↔ IsBoundedUnder (· ≤ ·) l f :=
+  exp_monotone.is_bounded_under_le_comp tendsto_exp_at_top
 
 /-- The function `exp(x)/x^n` tends to `+∞` at `+∞`, for any natural number `n` -/
 theorem tendsto_exp_div_pow_at_top (n : ℕ) : Tendsto (fun x => exp x / x ^ n) atTop atTop := by
@@ -256,6 +266,7 @@ theorem tendsto_comp_exp_at_top {α : Type _} {l : Filter α} {f : ℝ → α} :
 theorem map_exp_at_bot : map exp atBot = 𝓝[>] 0 := by
   rw [← coe_comp_exp_order_iso, ← Filter.map_map, exp_order_iso.map_at_bot, ← map_coe_Ioi_at_bot]
 
+@[simp]
 theorem comap_exp_nhds_within_Ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
   rw [← map_exp_at_bot, comap_map exp_injective]
 
@@ -263,25 +274,68 @@ theorem tendsto_comp_exp_at_bot {α : Type _} {l : Filter α} {f : ℝ → α} :
     Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
   rw [← map_exp_at_bot, tendsto_map'_iff]
 
-theorem is_o_pow_exp_at_top {n : ℕ} : IsOₓ (fun x => x ^ n) Real.exp atTop := by
+@[simp]
+theorem comap_exp_nhds_zero : comap exp (𝓝 0) = at_bot :=
+  (comap_nhds_within_range exp 0).symm.trans <| by
+    simp
+
+theorem is_o_pow_exp_at_top {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := by
   simpa [is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
+
+/-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
+from below under `f`. -/
+@[simp]
+theorem is_O_one_exp_comp {α : Type _} {l : Filter α} {f : α → ℝ} :
+    ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ IsBoundedUnder (· ≥ ·) l f :=
+  calc
+    ((fun x => 1 : α → ℝ) =O[l] fun x => exp (f x)) ↔ ∃ b : ℝ, 0 < b ∧ ∀ᶠ x in l, b ≤ exp (f x) :=
+      Iff.trans (is_O_const_left_iff_pos_le_norm one_ne_zero) <| by
+        simp only [norm_eq_abs, abs_exp]
+    _ ↔ IsBoundedUnder (· ≥ ·) l fun x => expOrderIso (f x) := by
+      simp only [is_bounded_under, is_bounded, eventually_map, SetCoe.exists, ge_iff_le, ← Subtype.coe_le_coe,
+        exists_prop, coe_exp_order_iso_apply, Subtype.coe_mk, Set.mem_Ioi]
+    _ ↔ IsBoundedUnder (· ≥ ·) l f := expOrderIso.Monotone.is_bounded_under_ge_comp expOrderIso.tendsto_at_bot
+    
 
 end Real
 
 namespace Complex
 
+theorem comap_exp_comap_abs_at_top : comap exp (comap abs atTop) = comap re atTop :=
+  calc
+    comap exp (comap abs atTop) = comap re (comap Real.exp atTop) := by
+      simp only [comap_comap, (· ∘ ·), abs_exp]
+    _ = comap re atTop := by
+      rw [Real.comap_exp_at_top]
+    
+
+theorem comap_exp_nhds_zero : comap exp (𝓝 0) = comap re atBot :=
+  calc
+    comap exp (𝓝 0) = comap re (comap Real.exp (𝓝 0)) := by
+      simp only [comap_comap, ← comap_abs_nhds_zero, (· ∘ ·), abs_exp]
+    _ = comap re atBot := by
+      rw [Real.comap_exp_nhds_zero]
+    
+
+theorem comap_exp_nhds_within_zero : comap exp (𝓝[≠] 0) = comap re atBot := by
+  have : exp ⁻¹' {0}ᶜ = univ := eq_univ_of_forall exp_ne_zero
+  simp [nhdsWithin, comap_exp_nhds_zero, this]
+
+theorem tendsto_exp_nhds_zero_iff {α : Type _} {l : Filter α} {f : α → ℂ} :
+    Tendsto (fun x => exp (f x)) l (𝓝 0) ↔ Tendsto (fun x => re (f x)) l atBot := by
+  rw [← tendsto_comap_iff, comap_exp_nhds_zero, tendsto_comap_iff]
+
 /-- `complex.abs (complex.exp z) → ∞` as `complex.re z → ∞`. TODO: use `bornology.cobounded`. -/
-theorem tendsto_exp_comap_re_at_top : Tendsto exp (comap re atTop) (comap abs atTop) := by
-  simpa only [tendsto_comap_iff, (· ∘ ·), abs_exp] using real.tendsto_exp_at_top.comp tendsto_comap
+theorem tendsto_exp_comap_re_at_top : Tendsto exp (comap re atTop) (comap abs atTop) :=
+  comap_exp_comap_abs_at_top ▸ tendsto_comap
 
 /-- `complex.exp z → 0` as `complex.re z → -∞`.-/
 theorem tendsto_exp_comap_re_at_bot : Tendsto exp (comap re atBot) (𝓝 0) :=
-  tendsto_zero_iff_norm_tendsto_zero.2 <| by
-    simpa only [norm_eq_abs, abs_exp] using real.tendsto_exp_at_bot.comp tendsto_comap
+  comap_exp_nhds_zero ▸ tendsto_comap
 
 theorem tendsto_exp_comap_re_at_bot_nhds_within : Tendsto exp (comap re atBot) (𝓝[≠] 0) :=
-  tendsto_inf.2 ⟨tendsto_exp_comap_re_at_bot, tendsto_principal.2 <| eventually_of_forall <| exp_ne_zero⟩
+  comap_exp_nhds_within_zero ▸ tendsto_comap
 
 end Complex
 

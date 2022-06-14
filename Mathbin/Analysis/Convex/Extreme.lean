@@ -51,13 +51,13 @@ section HasScalar
 
 variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [HasScalar 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
 def IsExtreme (A B : Set E) : Prop :=
   B ⊆ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, ∀, ∀ x ∈ B, ∀, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
 def Set.ExtremePoints (A : Set E) : Set E :=
@@ -121,7 +121,7 @@ theorem is_extreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀, ∀ B 
   have h := fun B hB => (hAF B hB).2 x₁ x₂ hx₁A hx₂A x (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 theorem extreme_points_def :
     x ∈ A.ExtremePoints 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
@@ -174,7 +174,7 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSmulDivisors 𝕜 E] {A B : Set E} {x : E}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A)
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment :

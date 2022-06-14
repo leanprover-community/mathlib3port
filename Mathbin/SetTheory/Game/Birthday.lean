@@ -127,11 +127,6 @@ theorem birthday_star : birthday star = 1 := by
   simp
 
 @[simp]
-theorem birthday_half : birthday half = 2 := by
-  rw [birthday_def]
-  simpa using max_eq_rightₓ (lt_succ_self 1).le
-
-@[simp]
 theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
   | ⟨xl, xr, xL, xR⟩ => by
     rw [birthday_def, birthday_def, max_commₓ]
@@ -141,13 +136,10 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 theorem to_pgame_birthday (o : Ordinal) : o.toPgame.birthday = o := by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, Pgame.birthday]
-  convert max_eq_leftₓ (Ordinal.zero_le _)
-  · apply lsub_empty
-    
-  · nth_rw 0[← lsub_typein o]
-    congr
-    exact funext fun x => (IH _ (typein_lt_self x)).symm
-    
+  simp only [lsub_empty, max_zero_right]
+  nth_rw 0[← lsub_typein o]
+  congr with x
+  exact IH _ (typein_lt_self x)
 
 theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
   | ⟨xl, _, xL, _⟩ =>
@@ -160,7 +152,7 @@ theorem le_birthday : ∀ x : Pgame, x ≤ x.birthday.toPgame
 
 theorem neg_birthday_le (x : Pgame) : -x.birthday.toPgame ≤ x := by
   let h := le_birthday (-x)
-  rwa [neg_birthday, ← neg_le_iff, neg_negₓ] at h
+  rwa [neg_birthday, neg_le_iff] at h
 
 end Pgame
 

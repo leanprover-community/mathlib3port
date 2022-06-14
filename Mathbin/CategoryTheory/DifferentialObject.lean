@@ -92,7 +92,7 @@ theorem comp_f {X Y Z : DifferentialObject C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f �
   rfl
 
 @[simp]
-theorem eq_to_hom_f {X Y : DifferentialObject C} (h : X = Y) : Hom.f (eqToHom h) = eqToHom (congr_argₓ _ h) := by
+theorem eq_to_hom_f {X Y : DifferentialObject C} (h : X = Y) : Hom.f (eqToHom h) = eqToHom (congr_arg _ h) := by
   subst h
   rw [eq_to_hom_refl, eq_to_hom_refl]
   rfl
@@ -271,10 +271,11 @@ attribute [local reducible] Discrete.addMonoidal shift_comm
 def shiftFunctorAdd (m n : ℤ) : shiftFunctor C (m + n) ≅ shiftFunctor C m ⋙ shiftFunctor C n := by
   refine' nat_iso.of_components (fun X => mk_iso (shift_add X.x _ _) _) _
   · dsimp'
+    -- This is just `simp, simp [eq_to_hom_map]`.
     simp_rw [category.assoc, obj_μ_inv_app, μ_inv_hom_app_assoc, functor.map_comp, obj_μ_app, category.assoc,
       μ_naturality_assoc, μ_inv_hom_app_assoc, obj_μ_inv_app, category.assoc, μ_naturalityₗ_assoc, μ_inv_hom_app_assoc,
       μ_inv_naturalityᵣ_assoc]
-    simp [opaque_eq_to_iso]
+    simp only [eq_to_hom_map, eq_to_hom_app, eq_to_iso.hom, eq_to_hom_trans_assoc, eq_to_iso.inv]
     
   · intro X Y f
     ext
@@ -304,6 +305,8 @@ def shiftε : 𝟭 (DifferentialObject C) ≅ shiftFunctor C 0 := by
     
 
 end
+
+attribute [local simp] eq_to_hom_map
 
 instance : HasShift (DifferentialObject C) ℤ :=
   hasShiftMk _ _ { f := shiftFunctor C, ε := shiftε C, μ := fun m n => (shiftFunctorAdd C m n).symm }

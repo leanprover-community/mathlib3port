@@ -26,7 +26,7 @@ def dnfCore : Preform → List Clause
   | t ≤* s => [([], [Term.sub (canonize s) (canonize t)])]
   | ¬* _ => []
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : Preform}, p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c := by
   run_tac

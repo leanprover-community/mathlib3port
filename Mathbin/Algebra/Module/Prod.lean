@@ -27,15 +27,15 @@ instance mulActionWithZero [MonoidWithZeroₓ R] [Zero M] [Zero N] [MulActionWit
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
 instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] : Module R (M × N) :=
-  { Prod.distribMulAction with add_smul := fun a p₁ p₂ => mk.inj_iffₓ.mpr ⟨add_smul _ _ _, add_smul _ _ _⟩,
-    zero_smul := fun ⟨b, c⟩ => mk.inj_iffₓ.mpr ⟨zero_smul _ _, zero_smul _ _⟩ }
+  { Prod.distribMulAction with add_smul := fun a p₁ p₂ => mk.inj_iff.mpr ⟨add_smul _ _ _, add_smul _ _ _⟩,
+    zero_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨zero_smul _ _, zero_smul _ _⟩ }
 
 instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] [NoZeroSmulDivisors R M]
     [NoZeroSmulDivisors R N] : NoZeroSmulDivisors R (M × N) :=
   ⟨fun h =>
     or_iff_not_imp_left.mpr fun hc =>
-      mk.inj_iffₓ.mpr
-        ⟨(smul_eq_zero.mp (congr_argₓ fst h)).resolve_left hc, (smul_eq_zero.mp (congr_argₓ snd h)).resolve_left hc⟩⟩
+      mk.inj_iff.mpr
+        ⟨(smul_eq_zero.mp (congr_arg fst h)).resolve_left hc, (smul_eq_zero.mp (congr_arg snd h)).resolve_left hc⟩⟩
 
 end Prod
 

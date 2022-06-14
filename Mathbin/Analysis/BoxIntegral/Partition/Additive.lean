@@ -201,7 +201,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 
       rw [WithTop.coe_le_coe] at hJ
       refine' i.succ_above_cases _ _ j
       · intro x hx
-        simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ← WithBot.some_eq_coe, Option.elim,
+        simp only [box.split_lower_def hx, box.split_upper_def hx, update_same, ← WithBot.some_eq_coe, Option.elimₓ,
           box.face, (· ∘ ·), update_noteq (Finₓ.succ_above_ne _ _)]
         abel
         
@@ -213,7 +213,7 @@ def upperSubLower.{u} {G : Type u} [AddCommGroupₓ G] (I₀ : Box (Finₓ (n + 
           ← (fb _).map_split_add this j x]
         have hx' : x ∈ Ioo ((J.face i).lower j) ((J.face i).upper j) := hx
         simp only [box.split_lower_def hx, box.split_upper_def hx, box.split_lower_def hx', box.split_upper_def hx', ←
-          WithBot.some_eq_coe, Option.elim, box.face_mk, update_noteq (Finₓ.succ_above_ne _ _).symm, sub_add_sub_comm,
+          WithBot.some_eq_coe, Option.elimₓ, box.face_mk, update_noteq (Finₓ.succ_above_ne _ _).symm, sub_add_sub_comm,
           update_comp_eq_of_injective _ i.succ_above.injective j x, ← hf]
         simp only [box.face]
         )

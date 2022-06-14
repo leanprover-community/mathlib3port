@@ -81,7 +81,7 @@ instance is_trichotomous (r : α → α → Prop) [IsTrichotomous α r] : IsTric
       rcases trichotomous_of r a b with (ab | rfl | ab)
       · exact Or.inl (rel ab)
         
-      · exact (_match l₁ l₂).imp cons (Or.imp (congr_argₓ _) cons)
+      · exact (_match l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
         
       · exact Or.inr (Or.inr (rel ab))
         ⟩
@@ -149,7 +149,7 @@ theorem _root_.decidable.list.lex.ne_iff [DecidableEq α] {l₁ l₂ : List α} 
     · by_cases' ab : a = b
       · subst b
         apply cons
-        exact IH (le_of_succ_le_succ H) (mt (congr_argₓ _) h)
+        exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
         
       · exact rel ab
         

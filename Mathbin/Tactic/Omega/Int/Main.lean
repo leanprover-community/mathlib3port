@@ -23,7 +23,7 @@ run_cmd
 attribute [sugar]
   Ne not_leₓ not_ltₓ Int.lt_iff_add_one_leₓ or_falseₓ false_orₓ and_trueₓ true_andₓ Ge Gt mul_addₓ add_mulₓ one_mulₓ mul_oneₓ mul_comm sub_eq_add_neg imp_iff_not_or iff_iff_not_or_and_or_not
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 unsafe def desugar :=
   sorry
 

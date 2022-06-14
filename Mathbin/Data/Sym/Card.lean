@@ -67,11 +67,11 @@ theorem two_mul_card_image_off_diag (s : Finset α) : 2 * (s.offDiag.Image Quoti
   have hxy' : y ≠ x := hxy.symm
   have : (s.off_diag.filter fun z => ⟦z⟧ = ⟦(x, y)⟧) = ({(x, y), (y, x)} : Finset _) := by
     ext ⟨x₁, y₁⟩
-    rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iffₓ, Prod.mk.inj_iffₓ, and_iff_right_iff_imp]
+    rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iff, Prod.mk.inj_iff, and_iff_right_iff_imp]
     rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   -- hxy' is used here
   rw [this, card_insert_of_not_mem, card_singleton]
-  simp only [not_and, Prod.mk.inj_iffₓ, mem_singleton]
+  simp only [not_and, Prod.mk.inj_iff, mem_singleton]
   exact fun _ => hxy'
 
 /-- The `off_diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.off_diag.card / 2`.

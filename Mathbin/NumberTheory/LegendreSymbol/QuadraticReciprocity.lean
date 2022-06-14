@@ -136,7 +136,7 @@ theorem legendre_sym_eq_pow (p : ℕ) (a : ℤ) [hp : Fact p.Prime] : (legendreS
     rw [card p] at h₁
     rw [h₁]
     have h₂ :=
-      FiniteField.neg_one_ne_one_of_char_ne_two
+      Ringₓ.neg_one_ne_one_of_char_ne_two
         (by
           rwa [ring_char_zmod_n p])
     cases' pow_div_two_eq_neg_one_or_one p ha with h h

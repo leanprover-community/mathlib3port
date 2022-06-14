@@ -80,7 +80,7 @@ theorem coe_injective : @Function.Injective (NormedGroupHom V₁ V₂) (V₁ →
   apply coe_inj
 
 theorem coe_inj_iff : f = g ↔ (f : V₁ → V₂) = g :=
-  ⟨congr_argₓ _, coe_inj⟩
+  ⟨congr_arg _, coe_inj⟩
 
 @[ext]
 theorem ext (H : ∀ x, f x = g x) : f = g :=

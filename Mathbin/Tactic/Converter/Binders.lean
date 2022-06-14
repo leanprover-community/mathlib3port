@@ -206,7 +206,7 @@ unsafe def supr_eq_elim : binder_eq_elim where
     guardₓ (r = `eq)
     c
   apply_comm := applyc `` supr_comm
-  apply_congr := congr_argₓ ∘ funext'
+  apply_congr := congr_arg ∘ funext'
   apply_elim_eq := applyc `` supr_supr_eq_left <|> applyc `` supr_supr_eq_right
 
 unsafe def infi_eq_elim : binder_eq_elim where
@@ -218,7 +218,7 @@ unsafe def infi_eq_elim : binder_eq_elim where
     guardₓ (r = `eq)
     c
   apply_comm := applyc `` infi_comm
-  apply_congr := congr_argₓ ∘ funext'
+  apply_congr := congr_arg ∘ funext'
   apply_elim_eq := applyc `` infi_infi_eq_left <|> applyc `` infi_infi_eq_right
 
 universe u v w w₂

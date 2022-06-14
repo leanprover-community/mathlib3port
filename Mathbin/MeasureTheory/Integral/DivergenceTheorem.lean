@@ -412,7 +412,7 @@ theorem integral_eq_of_has_deriv_within_at_off_countable_of_le (f f' : ℝ → E
       have : ∀ c : ℝ, const (Finₓ 0) c = isEmptyElim := fun c => Subsingleton.elimₓ _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Finₓ 0 => volume]
 
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -420,7 +420,7 @@ See also `measure_theory.interval_integral.integral_eq_sub_of_has_deriv_right` f
 only assumes right differentiability of `f`.
 -/
 theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b : ℝ} {s : Set ℝ} (hs : Countable s)
-    (Hc : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)")
+    (Hc : ContinuousOn f "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)")
     (Hd : ∀, ∀ x ∈ ioo (min a b) (max a b) \ s, ∀, HasDerivAt f (f' x) x) (Hi : IntervalIntegrable f' volume a b) :
     (∫ x in a..b, f' x) = f b - f a := by
   cases' le_totalₓ a b with hab hab
@@ -495,12 +495,12 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
       abel
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
 /-- **Divergence theorem** for functions on the plane. It is formulated in terms of two functions
 `f g : ℝ × ℝ → E` and iterated integral `∫ x in a₁..b₁, ∫ y in a₂..b₂, _`, where
 `a₁ a₂ b₁ b₂ : ℝ`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -514,18 +514,18 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
     (f' g' : ℝ × ℝ → ℝ × ℝ →L[ℝ] E) (a₁ a₂ b₁ b₂ : ℝ) (s : Set (ℝ × ℝ)) (hs : Countable s)
     (Hcf :
       ContinuousOn f
-        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"))
     (Hcg :
       ContinuousOn g
-        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)"))
+        ("././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)"))
     (Hdf : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt f (f' x) x)
     (Hdg : ∀, ∀ x ∈ ioo (min a₁ b₁) (max a₁ b₁) ×ˢ ioo (min a₂ b₂) (max a₂ b₂) \ s, ∀, HasFderivAt g (g' x) x)
     (Hi :
       IntegrableOn (fun x => f' x (1, 0) + g' x (0, 1))
-        ("././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)" ×ˢ
-          "././Mathport/Syntax/Translate/Basic.lean:814:47: unsupported (impossible)")) :
+        ("././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" ×ˢ
+          "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)")) :
     (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) - ∫ y in a₂..b₂, f (a₁, y) :=
   by
@@ -552,13 +552,13 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
   · rw [interval_swap b₂ a₂, min_commₓ b₂ a₂, max_commₓ b₂ a₂] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
-    refine' (congr_argₓ Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
     
   · rw [interval_swap b₁ a₁, min_commₓ b₁ a₁, max_commₓ b₁ a₁] at this
     intro Hcf Hcg Hdf Hdg Hi
     simp only [intervalIntegral.integral_symm b₁ a₁]
-    refine' (congr_argₓ Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
     abel
     
 

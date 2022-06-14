@@ -80,7 +80,7 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F) where
     ext
     dsimp'
     simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
-    exact congr_argₓ Mon_.Hom.hom (w j)
+    exact congr_arg Mon_.Hom.hom (w j)
 
 instance has_limits : HasLimits (Mon_ C) where
   HasLimitsOfShape := fun J 𝒥 =>

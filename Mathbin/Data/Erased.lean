@@ -51,7 +51,7 @@ theorem out_mk {α} (a : α) : (mk a).out = a := by
   let h
   show Classical.some h = a
   have := Classical.some_spec h
-  exact cast (congr_funₓ this a).symm rfl
+  exact cast (congr_fun this a).symm rfl
 
 @[simp]
 theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
@@ -60,7 +60,7 @@ theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
 
 @[ext]
 theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b := by
-  simpa using congr_argₓ mk h
+  simpa using congr_arg mk h
 
 /-- Equivalence between `erased α` and `α`. -/
 noncomputable def equiv α : Erased α ≃ α :=

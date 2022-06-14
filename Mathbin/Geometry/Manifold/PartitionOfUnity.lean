@@ -92,7 +92,7 @@ variable (ι M)
 * for each point `x ∈ s` there exists `i` such that `f i =ᶠ[𝓝 x] 1`;
   in other words, `x` belongs to the interior of `{y | f i y = 1}`;
 
-If `M` is a finite dimensional real manifold which is a sigma-compact Hausdorff topological space,
+If `M` is a finite dimensional real manifold which is a `σ`-compact Hausdorff topological space,
 then for every covering `U : M → set M`, `∀ x, U x ∈ 𝓝 x`, there exists a `smooth_bump_covering`
 subordinate to `U`, see `smooth_bump_covering.exists_is_subordinate`.
 
@@ -241,7 +241,7 @@ theorem exists_is_subordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s
     ∃ (ι : Type uM)(f : SmoothBumpCovering ι I M s), f.IsSubordinate U := by
   -- First we deduce some missing instances
   have : LocallyCompactSpace H := I.locally_compact
-  have : LocallyCompactSpace M := ChartedSpace.locally_compact H
+  have : LocallyCompactSpace M := ChartedSpace.locally_compact H M
   have : NormalSpace M := normal_of_paracompact_t2
   -- Next we choose a covering by supports of smooth bump functions
   have hB := fun x hx => SmoothBumpFunction.nhds_basis_support I (hU x hx)
@@ -393,7 +393,7 @@ variable [T2Space M] [SigmaCompactSpace M]
 theorem exists_is_subordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (ho : ∀ i, IsOpen (U i))
     (hU : s ⊆ ⋃ i, U i) : ∃ f : SmoothPartitionOfUnity ι I M s, f.IsSubordinate U := by
   have : LocallyCompactSpace H := I.locally_compact
-  have : LocallyCompactSpace M := ChartedSpace.locally_compact H
+  have : LocallyCompactSpace M := ChartedSpace.locally_compact H M
   have : NormalSpace M := normal_of_paracompact_t2
   rcases BumpCovering.exists_is_subordinate_of_prop (Smooth I 𝓘(ℝ)) _ hs U ho hU with ⟨f, hf, hfU⟩
   · exact ⟨f.to_smooth_partition_of_unity hf, hfU.to_smooth_partition_of_unity hf⟩

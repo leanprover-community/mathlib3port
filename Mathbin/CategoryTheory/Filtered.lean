@@ -469,8 +469,8 @@ instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type 
     IsCofiltered α :=
   {  }
 
-instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorderₓ α]
-    [IsDirected α (swap (· ≤ ·))] : IsCofilteredOrEmpty α where
+instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [Preorderₓ α] [IsDirected α (· ≥ ·)] :
+    IsCofilteredOrEmpty α where
   cocone_objs := fun X Y =>
     let ⟨Z, hX, hY⟩ := exists_le_le X Y
     ⟨Z, homOfLe hX, homOfLe hY, trivialₓ⟩
@@ -478,8 +478,8 @@ instance (priority := 100) is_cofiltered_or_empty_of_directed_ge (α : Type u) [
     ⟨X, 𝟙 _, by
       simp ⟩
 
-instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorderₓ α]
-    [IsDirected α (swap (· ≤ ·))] [Nonempty α] : IsCofiltered α :=
+instance (priority := 100) is_cofiltered_of_directed_ge_nonempty (α : Type u) [Preorderₓ α] [IsDirected α (· ≥ ·)]
+    [Nonempty α] : IsCofiltered α :=
   {  }
 
 -- Sanity checks

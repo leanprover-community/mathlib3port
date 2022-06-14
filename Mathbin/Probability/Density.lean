@@ -392,7 +392,7 @@ theorem integral_eq (hnt : volume s ≠ ⊤) (huX : IsUniform X s ℙ) : (∫ x,
       x * (s.indicator ((volume s)⁻¹ • (1 : ℝ → ℝ≥0∞)) x).toReal =
         x * s.indicator ((volume s)⁻¹.toReal • (1 : ℝ → ℝ)) x :=
     by
-    refine' fun x => congr_argₓ ((· * ·) x) _
+    refine' fun x => congr_arg ((· * ·) x) _
     by_cases' hx : x ∈ s
     · simp [Set.indicator_of_mem hx]
       

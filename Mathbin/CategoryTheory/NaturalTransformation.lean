@@ -57,7 +57,7 @@ restate_axiom nat_trans.naturality'
 attribute [simp, reassoc] nat_trans.naturality
 
 theorem congr_app {F G : C ⥤ D} {α β : NatTrans F G} (h : α = β) (X : C) : α.app X = β.app X :=
-  congr_funₓ (congr_argₓ NatTrans.app h) X
+  congr_fun (congr_arg NatTrans.app h) X
 
 namespace NatTrans
 

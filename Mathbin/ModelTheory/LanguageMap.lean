@@ -331,7 +331,7 @@ theorem constants_on_map_is_expansion_on {f : α → β} {fα : α → M} {fβ :
     @Lhom.IsExpansionOn _ _ (Lhom.constantsOnMap f) M (constantsOn.structure fα) (constantsOn.structure fβ) := by
   let this := constants_on.Structure fα
   let this := constants_on.Structure fβ
-  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_funₓ h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
+  exact ⟨fun n => Nat.casesOn n (fun F x => (congr_fun h F : _)) fun n F => isEmptyElim F, fun _ R => isEmptyElim R⟩
 
 end ConstantsOn
 

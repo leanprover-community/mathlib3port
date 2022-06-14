@@ -92,9 +92,9 @@ variable {R : Type _} [CommSemiringₓ R] (M : Submonoid R) (S : Type _) [CommSe
 
 variable [Algebra R S] {P : Type _} [CommSemiringₓ P]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_units] []
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`surj] []
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`map_units] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`surj] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] []
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
@@ -126,7 +126,7 @@ theorem of_le (N : Submonoid R) (h₁ : M ≤ N) (h₂ : ∀, ∀ r ∈ N, ∀, 
         exact ⟨⟨c, h₁ c.2⟩, hc⟩
         
       · rintro ⟨c, h⟩
-        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using congr_argₓ (algebraMap R S) h
+        simpa only [SetLike.coe_mk, map_mul, (h₂ c c.2).mul_left_inj] using congr_arg (algebraMap R S) h
          }
 
 variable (S)
@@ -373,10 +373,10 @@ theorem mk'_add (x₁ x₂ : R) (y₁ y₂ : M) : mk' S (x₁ * y₂ + x₂ * y�
         ring)
 
 theorem mul_add_inv_left {g : R →+* P} (h : ∀ y : M, IsUnit (g y)) (y : M) (w z₁ z₂ : P) :
-    w * ↑(IsUnit.liftRight (g.toMonoidHom.mrestrict M) h y)⁻¹ + z₁ = z₂ ↔ w + g y * z₁ = g y * z₂ := by
-  rw [mul_comm, ← one_mulₓ z₁, ← Units.inv_mul (IsUnit.liftRight (g.to_monoid_hom.mrestrict M) h y), mul_assoc, ←
+    w * ↑(IsUnit.liftRight (g.toMonoidHom.restrict M) h y)⁻¹ + z₁ = z₂ ↔ w + g y * z₁ = g y * z₂ := by
+  rw [mul_comm, ← one_mulₓ z₁, ← Units.inv_mul (IsUnit.liftRight (g.to_monoid_hom.restrict M) h y), mul_assoc, ←
     mul_addₓ, Units.inv_mul_eq_iff_eq_mul, Units.inv_mul_cancel_left, IsUnit.coe_lift_right]
-  simp only [RingHom.to_monoid_hom_eq_coe, MonoidHom.mrestrict_apply, RingHom.coe_monoid_hom]
+  simp only [RingHom.to_monoid_hom_eq_coe, MonoidHom.restrict_apply, RingHom.coe_monoid_hom]
 
 theorem lift_spec_mul_add {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) z w w' v :
     ((toLocalizationWithZeroMap M S).lift g.toMonoidWithZeroHom hg) z * w + w' = v ↔
@@ -409,7 +409,7 @@ variable {g : R →+* P} (hg : ∀ y : M, IsUnit (g y))
 /-- Given a localization map `f : R →+* S` for a submonoid `M ⊆ R` and a map of `comm_semiring`s
 `g : R →* P` such that `g y` is invertible for all `y : M`, the homomorphism induced from
 `S` to `P` maps `f x * (f y)⁻¹` to `g x * (g y)⁻¹` for all `x : R, y ∈ M`. -/
-theorem lift_mk' x y : lift hg (mk' S x y) = g x * ↑(IsUnit.liftRight (g.toMonoidHom.mrestrict M) hg y)⁻¹ :=
+theorem lift_mk' x y : lift hg (mk' S x y) = g x * ↑(IsUnit.liftRight (g.toMonoidHom.restrict M) hg y)⁻¹ :=
   (toLocalizationMap M S).lift_mk' _ _ _
 
 theorem lift_mk'_spec x v (y : M) : lift hg (mk' S x y) = v ↔ g x = g y * v :=
@@ -540,11 +540,11 @@ noncomputable def ringEquivOfRingEquiv (h : R ≃+* P) (H : M.map h.toMonoidHom 
     left_inv := fun x => by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
       intro x
-      convert congr_argₓ (algebraMap R S) (h.symm_apply_apply x).symm,
+      convert congr_arg (algebraMap R S) (h.symm_apply_apply x).symm,
     right_inv := fun x => by
       rw [map_map, map_unique _ (RingHom.id _), RingHom.id_apply]
       intro x
-      convert congr_argₓ (algebraMap P Q) (h.apply_symm_apply x).symm }
+      convert congr_arg (algebraMap P Q) (h.apply_symm_apply x).symm }
 
 end
 
@@ -628,7 +628,7 @@ theorem is_localization_of_base_ring_equiv [IsLocalization M S] (h : R ≃+* P) 
   · rintro ⟨_, ⟨y, hy, rfl⟩⟩
     convert IsLocalization.map_units S ⟨y, hy⟩
     dsimp' only [RingHom.algebra_map_to_algebra, RingHom.comp_apply]
-    exact congr_argₓ _ (h.symm_apply_apply _)
+    exact congr_arg _ (h.symm_apply_apply _)
     
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M y
@@ -735,7 +735,7 @@ theorem add_mk_self a b c : (mk a b : Localization M) + mk c b = mk (a + c) b :=
   simp only [Submonoid.coe_one, Submonoid.coe_mul]
   ring
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 private unsafe def tac :=
   sorry
 
@@ -993,7 +993,7 @@ theorem map_injective_of_injective (hg : Function.Injective g) [IsLocalization (
   obtain ⟨a, b, rfl⟩ := mk'_surjective M x
   obtain ⟨c, d, rfl⟩ := mk'_surjective M y
   rw [map_mk' _ a b, map_mk' _ c d, mk'_eq_iff_eq] at hxy
-  refine' mk'_eq_iff_eq.2 (congr_argₓ (algebraMap _ _) (hg _))
+  refine' mk'_eq_iff_eq.2 (congr_arg (algebraMap _ _) (hg _))
   convert IsLocalization.injective _ hM hxy <;> simp
 
 variable {S Q M}

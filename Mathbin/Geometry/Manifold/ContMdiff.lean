@@ -1052,8 +1052,8 @@ theorem ContMdiffOn.continuous_on_tangent_map_within_aux {f : H → H'} {s : Set
     · rfl
       
     simp' only with mfld_simps
-    apply congr_funₓ
-    apply congr_argₓ
+    apply congr_fun
+    apply congr_arg
     rw [MdifferentiableWithinAt.mfderiv_within (hf.mdifferentiable_on hn x hx)]
     rfl
     
@@ -1453,12 +1453,12 @@ theorem smooth_const_section (v : E')
     apply this.cont_diff_within_at.congr
     · intro y hy
       simp' only with mfld_simps  at hy
-      simp' only [chart, hy, chart_at, Prod.mk.inj_iffₓ, to_topological_vector_bundle_core] with mfld_simps
+      simp' only [chart, hy, chart_at, Prod.mk.inj_iff, to_topological_vector_bundle_core] with mfld_simps
       apply h
       simp' only [hy, Subtype.val_eq_coe] with mfld_simps
       exact mem_chart_source H ((chart_at H x).symm ((ModelWithCorners.symm I) y))
       
-    · simp' only [chart, chart_at, Prod.mk.inj_iffₓ, to_topological_vector_bundle_core] with mfld_simps
+    · simp' only [chart, chart_at, Prod.mk.inj_iff, to_topological_vector_bundle_core] with mfld_simps
       apply h
       simp' only [Subtype.val_eq_coe] with mfld_simps
       exact mem_chart_source H x
@@ -1535,7 +1535,7 @@ theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
     apply IsOpen.mem_nhds
     apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun
     simp' only with mfld_simps
-  have A : MdifferentiableAt I I.tangent (fun x : M => total_space_mk (TangentSpace I) x 0) x :=
+  have A : MdifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
     tangent_bundle.smooth_zero_section.mdifferentiable_at
   have B : fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.Range ⇑I) (I ((chart_at H x) x)) v = (v, 0) := by
     rw [fderiv_within_eq_fderiv, DifferentiableAt.fderiv_prod]
@@ -1556,7 +1556,7 @@ theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
   rw [← fderiv_within_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _)), ← B]
   congr 2
   apply fderiv_within_congr _ fun y hy => _
-  · simp' only [Prod.mk.inj_iffₓ] with mfld_simps
+  · simp' only [Prod.mk.inj_iff] with mfld_simps
     exact
       ((tangentBundleCore I M).toTopologicalVectorBundleCore.coordChange
           ((tangentBundleCore I M).toTopologicalVectorBundleCore.indexAt
@@ -1567,7 +1567,7 @@ theorem tangent_map_tangent_bundle_pure (p : TangentBundle I M) :
     simp' only with mfld_simps
     
   · simp' only with mfld_simps  at hy
-    simp' only [hy, Prod.mk.inj_iffₓ] with mfld_simps
+    simp' only [hy, Prod.mk.inj_iff] with mfld_simps
     exact
       ((tangentBundleCore I M).toTopologicalVectorBundleCore.coordChange
           ((tangentBundleCore I M).toTopologicalVectorBundleCore.indexAt ((chart_at H x).symm (I.symm y)))
@@ -1721,7 +1721,7 @@ theorem smooth_iff_proj_smooth {f : M → M' × N'} :
 
 end Projections
 
-section prod_mapₓ
+section prod_map
 
 variable {g : N → N'} {r : Set N} {y : N}
 
@@ -1772,7 +1772,7 @@ theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
 theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.Prod J) (I'.Prod J') (Prod.map f g) :=
   hf.prod_map hg
 
-end prod_mapₓ
+end prod_map
 
 section PiSpace
 

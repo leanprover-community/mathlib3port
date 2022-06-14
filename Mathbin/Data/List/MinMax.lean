@@ -403,6 +403,18 @@ theorem max_le_of_forall_le (l : List α) (a : α) (h : ∀, ∀ x ∈ l, ∀, x
   · simpa [h y (mem_cons_self _ _)] using IH fun x hx => h x <| mem_cons_of_mem _ hx
     
 
+theorem le_max_of_le {l : List α} {a x : α} (hx : x ∈ l) (h : a ≤ x) : a ≤ l.foldr max ⊥ := by
+  induction' l with y l IH
+  · exact absurd hx (not_mem_nil _)
+    
+  · obtain rfl | hl := hx
+    simp only [foldr, foldr_cons]
+    · exact le_max_of_le_left h
+      
+    · exact le_max_of_le_right (IH hl)
+      
+    
+
 end OrderBot
 
 section OrderTop
@@ -415,6 +427,9 @@ theorem foldr_min_of_ne_nil (h : l ≠ []) : ↑(l.foldr min ⊤) = l.minimum :=
 
 theorem le_min_of_forall_le (l : List α) (a : α) (h : ∀, ∀ x ∈ l, ∀, a ≤ x) : a ≤ l.foldr min ⊤ :=
   @max_le_of_forall_le αᵒᵈ _ _ _ _ h
+
+theorem min_le_of_le (l : List α) (a : α) {x : α} (hx : x ∈ l) (h : x ≤ a) : l.foldr min ⊤ ≤ a :=
+  @le_max_of_le αᵒᵈ _ _ _ _ _ hx h
 
 end OrderTop
 

@@ -319,16 +319,16 @@ section PartialOrderₓ
 variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
 theorem monotone_iff_forall_lt : Monotone f ↔ ∀ ⦃a b⦄, a < b → f a ≤ f b :=
-  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) hf⟩
 
 theorem antitone_iff_forall_lt : Antitone f ↔ ∀ ⦃a b⦄, a < b → f b ≤ f a :=
-  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) hf⟩
+  forall₂_congrₓ fun a b => ⟨fun hf h => hf h.le, fun hf h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) hf⟩
 
 theorem monotone_on_iff_forall_lt : MonotoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a ≤ f b :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).le) (hf ha hb)⟩
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).le) (hf ha hb)⟩
 
 theorem antitone_on_iff_forall_lt : AntitoneOn f s ↔ ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b ≤ f a :=
-  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_argₓ _ H).Ge) (hf ha hb)⟩
+  ⟨fun hf a ha b hb h => hf ha hb h.le, fun hf a ha b hb h => h.eq_or_lt.elim (fun H => (congr_arg _ H).Ge) (hf ha hb)⟩
 
 -- `preorder α` isn't strong enough: if the preorder on `α` is an equivalence relation,
 -- then `strict_mono f` is vacuously true.
@@ -354,10 +354,10 @@ namespace Subsingleton
 variable [Preorderₓ α] [Preorderₓ β]
 
 protected theorem monotone [Subsingleton α] (f : α → β) : Monotone f := fun a b _ =>
-  (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
+  (congr_arg _ <| Subsingleton.elimₓ _ _).le
 
 protected theorem antitone [Subsingleton α] (f : α → β) : Antitone f := fun a b _ =>
-  (congr_argₓ _ <| Subsingleton.elimₓ _ _).le
+  (congr_arg _ <| Subsingleton.elimₓ _ _).le
 
 theorem monotone' [Subsingleton β] (f : α → β) : Monotone f := fun a b _ => (Subsingleton.elimₓ _ _).le
 
@@ -579,7 +579,7 @@ theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < 
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) :
     ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
   | Ordering.lt => hf.lt_iff_lt ha hb
-  | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_argₓ _⟩
+  | Ordering.eq => ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le), congr_arg _⟩
   | Ordering.gt => hf.lt_iff_lt hb ha
 
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) {o : Ordering} :
@@ -663,6 +663,36 @@ theorem strict_mono_nat_of_lt_succ {f : ℕ → α} (hf : ∀ n, f n < f (n + 1)
 theorem strict_anti_nat_of_succ_lt {f : ℕ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   @strict_mono_nat_of_lt_succ αᵒᵈ _ f hf
 
+namespace Nat
+
+/-- If `α` is a preorder with no maximal elements, then there exists a strictly monotone function
+`ℕ → α` with any prescribed value of `f 0`. -/
+theorem exists_strict_mono' [NoMaxOrder α] (a : α) : ∃ f : ℕ → α, StrictMono f ∧ f 0 = a := by
+  have := fun x : α => exists_gt x
+  choose g hg
+  exact ⟨fun n => Nat.recOn n a fun _ => g, strict_mono_nat_of_lt_succ fun n => hg _, rfl⟩
+
+/-- If `α` is a preorder with no maximal elements, then there exists a strictly antitone function
+`ℕ → α` with any prescribed value of `f 0`. -/
+theorem exists_strict_anti' [NoMinOrder α] (a : α) : ∃ f : ℕ → α, StrictAnti f ∧ f 0 = a :=
+  exists_strict_mono' (OrderDual.toDual a)
+
+variable (α)
+
+/-- If `α` is a nonempty preorder with no maximal elements, then there exists a strictly monotone
+function `ℕ → α`. -/
+theorem exists_strict_mono [Nonempty α] [NoMaxOrder α] : ∃ f : ℕ → α, StrictMono f :=
+  let ⟨a⟩ := ‹Nonempty α›
+  let ⟨f, hf, hfa⟩ := exists_strict_mono' a
+  ⟨f, hf⟩
+
+/-- If `α` is a nonempty preorder with no minimal elements, then there exists a strictly antitone
+function `ℕ → α`. -/
+theorem exists_strict_anti [Nonempty α] [NoMinOrder α] : ∃ f : ℕ → α, StrictAnti f :=
+  exists_strict_mono αᵒᵈ
+
+end Nat
+
 theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r] {f : ℤ → β} (h : ∀ n, r (f n) (f (n + 1)))
     ⦃a b : ℤ⦄ (hab : a < b) : r (f a) (f b) := by
   rcases hab.dest with ⟨n, rfl⟩
@@ -690,6 +720,34 @@ theorem strict_mono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n + 1)
 
 theorem strict_anti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   Int.rel_of_forall_rel_succ_of_lt (· > ·) hf
+
+namespace Int
+
+variable (α) [Nonempty α] [NoMinOrder α] [NoMaxOrder α]
+
+/-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
+monotone function `f : ℤ → α`. -/
+theorem exists_strict_mono : ∃ f : ℤ → α, StrictMono f := by
+  inhabit α
+  rcases Nat.exists_strict_mono' (default : α) with ⟨f, hf, hf₀⟩
+  rcases Nat.exists_strict_anti' (default : α) with ⟨g, hg, hg₀⟩
+  refine' ⟨fun n => Int.casesOn n f fun n => g (n + 1), strict_mono_int_of_lt_succ _⟩
+  rintro (n | _ | n)
+  · exact hf n.lt_succ_self
+    
+  · show g 1 < f 0
+    rw [hf₀, ← hg₀]
+    exact hg Nat.zero_lt_oneₓ
+    
+  · exact hg (Nat.lt_succ_selfₓ _)
+    
+
+/-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
+antitone function `f : ℤ → α`. -/
+theorem exists_strict_anti : ∃ f : ℤ → α, StrictAnti f :=
+  exists_strict_mono αᵒᵈ
+
+end Int
 
 /-- If `f` is a monotone function from `ℕ` to a preorder such that `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/

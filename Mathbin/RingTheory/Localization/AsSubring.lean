@@ -62,8 +62,8 @@ instance is_localization_range_map_to_fraction_ring (B : Type _) [CommRingₓ B]
           refine' ⟨fun a b h => _, Set.surjective_onto_range⟩
           refine' (IsLocalization.lift_injective_iff _).2 (fun a b => _) (Subtype.ext_iff.1 h)
           exact
-            ⟨fun h => congr_argₓ _ (IsLocalization.injective _ hS h), fun h =>
-              congr_argₓ _ (IsFractionRing.injective A K h)⟩)
+            ⟨fun h => congr_arg _ (IsLocalization.injective _ hS h), fun h =>
+              congr_arg _ (IsFractionRing.injective A K h)⟩)
 
 instance is_fraction_ring_range_map_to_fraction_ring (B : Type _) [CommRingₓ B] [Algebra A B] [IsLocalization S B]
     (hS : S ≤ A⁰) : IsFractionRing (mapToFractionRing K S B hS).range K :=

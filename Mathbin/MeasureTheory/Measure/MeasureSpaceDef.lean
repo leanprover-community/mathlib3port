@@ -218,7 +218,7 @@ theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, f
   convert measure_bUnion_finset_le Finset.univ f
   simp
 
-theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : Finite s) (hfin : ∀, ∀ i ∈ s, ∀, μ (f i) ≠ ∞) :
+theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite) (hfin : ∀, ∀ i ∈ s, ∀, μ (f i) ≠ ∞) :
     μ (⋃ i ∈ s, f i) < ∞ := by
   convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext
@@ -273,9 +273,8 @@ theorem measure_union_eq_top_iff : μ (s ∪ t) = ∞ ↔ μ s = ∞ ∨ μ t = 
 
 theorem exists_measure_pos_of_not_measure_Union_null [Encodable β] {s : β → Set α} (hs : μ (⋃ n, s n) ≠ 0) :
     ∃ n, 0 < μ (s n) := by
-  by_contra' h
-  simp_rw [nonpos_iff_eq_zero]  at h
-  exact hs (measure_Union_null h)
+  contrapose! hs
+  exact measure_Union_null fun n => nonpos_iff_eq_zero.1 (hs n)
 
 theorem measure_inter_lt_top_of_left_ne_top (hs_finite : μ s ≠ ∞) : μ (s ∩ t) < ∞ :=
   (measure_mono (Set.inter_subset_left s t)).trans_lt hs_finite.lt_top
@@ -340,9 +339,8 @@ theorem ae_of_all {p : α → Prop} (μ : Measure α) : (∀ a, p a) → ∀ᵐ 
 instance : CountableInterFilter μ.ae :=
   ⟨by
     intro S hSc hS
-    simp only [mem_ae_iff, compl_sInter, sUnion_image, bUnion_eq_Union] at hS⊢
-    have := hSc.to_encodable
-    exact measure_Union_null (Subtype.forall.2 hS)⟩
+    rw [mem_ae_iff, compl_sInter, sUnion_image]
+    exact (measure_bUnion_null_iff hSc).2 hS⟩
 
 theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐ x ∂μ, q → p x) ↔ q → ∀ᵐ x ∂μ, p x :=
   Filter.eventually_imp_distrib_left
@@ -432,8 +430,8 @@ alias measure_congr ← Filter.EventuallyEq.measure_eq
 theorem measure_mono_null_ae (H : s ≤ᵐ[μ] t) (ht : μ t = 0) : μ s = 0 :=
   nonpos_iff_eq_zero.1 <| ht ▸ H.measure_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊇ » s)
 /-- A measurable set `t ⊇ s` such that `μ t = μ s`. It even satisfies `μ (t ∩ u) = μ (s ∩ u)` for
 any measurable set `u` if `μ s ≠ ∞`, see `measure_to_measurable_inter`.
 (This property holds without the assumption `μ s ≠ ∞` when the space is sigma-finite,
@@ -492,7 +490,7 @@ notation3 "∀ᵐ " (...) ", " r:(scoped P =>
 notation3 "∃ᵐ " (...) ", " r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

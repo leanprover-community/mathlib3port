@@ -71,14 +71,14 @@ instance hasMul (I : Ideal R) : Mul (R ⧸ I) :=
 instance commRing (I : Ideal R) : CommRingₓ (R ⧸ I) :=
   { Submodule.Quotient.addCommGroup I with mul := (· * ·), one := 1,
     mul_assoc := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assoc a b c),
-    mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_argₓ Submodule.Quotient.mk (mul_comm a b),
-    one_mul := fun a => (Quotientₓ.induction_on' a) fun a => congr_argₓ Submodule.Quotient.mk (one_mulₓ a),
-    mul_one := fun a => (Quotientₓ.induction_on' a) fun a => congr_argₓ Submodule.Quotient.mk (mul_oneₓ a),
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (mul_assoc a b c),
+    mul_comm := fun a b => (Quotientₓ.induction_on₂' a b) fun a b => congr_arg Submodule.Quotient.mk (mul_comm a b),
+    one_mul := fun a => (Quotientₓ.induction_on' a) fun a => congr_arg Submodule.Quotient.mk (one_mulₓ a),
+    mul_one := fun a => (Quotientₓ.induction_on' a) fun a => congr_arg Submodule.Quotient.mk (mul_oneₓ a),
     left_distrib := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (left_distrib a b c),
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (left_distrib a b c),
     right_distrib := fun a b c =>
-      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_argₓ Submodule.Quotient.mk (right_distrib a b c) }
+      (Quotientₓ.induction_on₃' a b c) fun a b c => congr_arg Submodule.Quotient.mk (right_distrib a b c) }
 
 /-- The ring homomorphism from a ring `R` to a quotient ring `R/I`. -/
 def mk (I : Ideal R) : R →+* R ⧸ I :=
@@ -307,10 +307,12 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
     simp_rw [← hr]
     convert Quotientₓ.out_eq' _
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- If `f : R^n → R^m` is an `R`-linear map and `I ⊆ R` is an ideal, then the image of `I^n` is
     contained in `I^m`. -/
 theorem map_pi {ι} [Fintype ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I) (f : (ι → R) →ₗ[R] ι' → R) (i : ι') :
     f x i ∈ I := by
+  classical
   rw [pi_eq_sum_univ x]
   simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
   exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)

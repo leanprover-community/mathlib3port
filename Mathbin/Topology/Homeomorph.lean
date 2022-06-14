@@ -58,10 +58,6 @@ instance : CoeFun (α ≃ₜ β) fun _ => α → β :=
 theorem homeomorph_mk_coe (a : Equivₓ α β) b c : (Homeomorph.mk a b c : α → β) = a :=
   rfl
 
-@[simp]
-theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.toEquiv = h :=
-  rfl
-
 /-- Inverse of a homeomorphism. -/
 protected def symm (h : α ≃ₜ β) : β ≃ₜ α where
   continuous_to_fun := h.continuous_inv_fun
@@ -78,6 +74,14 @@ def Simps.symmApply (h : α ≃ₜ β) : β → α :=
   h.symm
 
 initialize_simps_projections Homeomorph (to_equiv_to_fun → apply, to_equiv_inv_fun → symmApply, -toEquiv)
+
+@[simp]
+theorem coe_to_equiv (h : α ≃ₜ β) : ⇑h.toEquiv = h :=
+  rfl
+
+@[simp]
+theorem coe_symm_to_equiv (h : α ≃ₜ β) : ⇑h.toEquiv.symm = h.symm :=
+  rfl
 
 theorem to_equiv_injective : Function.Injective (toEquiv : α ≃ₜ β → α ≃ β)
   | ⟨e, h₁, h₂⟩, ⟨e', h₁', h₂'⟩, rfl => rfl

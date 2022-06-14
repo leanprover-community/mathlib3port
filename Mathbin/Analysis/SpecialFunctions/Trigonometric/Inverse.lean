@@ -46,7 +46,7 @@ theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=
 theorem neg_pi_div_two_le_arcsin (x : ℝ) : -(π / 2) ≤ arcsin x :=
   (arcsin_mem_Icc x).1
 
-theorem arcsin_proj_Icc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self <| @zero_le_one ℝ _) x) = arcsin x := by
+theorem arcsin_proj_Icc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_one) x) = arcsin x := by
   rw [arcsin, Function.comp_app, Icc_extend_coe, Function.comp_app, Icc_extend]
 
 theorem sin_arcsin' {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) : sin (arcsin x) = x := by

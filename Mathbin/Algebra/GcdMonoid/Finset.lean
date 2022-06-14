@@ -245,7 +245,7 @@ theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x 
   intro b s bs hi h
   rw [gcd_insert, gcd_insert, gcd_comm (f b), ← gcd_assoc, hi fun x hx => h _ (mem_insert_of_mem hx), gcd_comm a,
     gcd_assoc, gcd_comm a (GcdMonoid.gcd _ _), gcd_comm (g b), gcd_assoc _ _ a, gcd_comm _ a]
-  exact congr_argₓ _ (gcd_eq_of_dvd_sub_right (h _ (mem_insert_self _ _)))
+  exact congr_arg _ (gcd_eq_of_dvd_sub_right (h _ (mem_insert_self _ _)))
 
 end IsDomain
 

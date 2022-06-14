@@ -78,9 +78,9 @@ theorem unique_uniformity_of_compact_t2 [t : TopologicalSpace γ] [CompactSpace 
     rwa [separated_iff_t2, h']
   rw [compact_space_uniformity, compact_space_uniformity, h, h']
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ≠ » x)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₁ V₁ «expr ∈ » expr𝓝() x)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U₂ V₂ «expr ∈ » expr𝓝() y)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ≠ » x)
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ where
   uniformity := ⨆ x, 𝓝 (x, x)

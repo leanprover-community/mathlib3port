@@ -5,6 +5,7 @@ Authors: Apurva Nakade
 -/
 import Mathbin.Algebra.Algebra.Basic
 import Mathbin.RingTheory.Localization.Away
+import Mathbin.SetTheory.Game.Birthday
 import Mathbin.SetTheory.Surreal.Basic
 
 /-!
@@ -32,98 +33,119 @@ local infixl:0 " ≈ " => Pgame.Equiv
 namespace Pgame
 
 /-- For a natural number `n`, the pre-game `pow_half (n + 1)` is recursively defined as
-`{ 0 | pow_half n }`. These are the explicit expressions of powers of `half`. By definition, we have
- `pow_half 0 = 0` and `pow_half 1 = half` and we prove later on that
-`pow_half (n + 1) + pow_half (n + 1) ≈ pow_half n`.-/
+`{0 | pow_half n}`. These are the explicit expressions of powers of `1 / 2`. By definition, we have
+`pow_half 0 = 1` and `pow_half 1 ≈ 1 / 2` and we prove later on that
+`pow_half (n + 1) + pow_half (n + 1) ≈ pow_half n`. -/
 def powHalf : ℕ → Pgame
-  | 0 => mk PUnit Pempty 0 Pempty.elimₓ
-  | n + 1 => mk PUnit PUnit 0 fun _ => pow_half n
+  | 0 => 1
+  | n + 1 => ⟨PUnit, PUnit, 0, fun _ => pow_half n⟩
 
 @[simp]
-theorem pow_half_left_moves {n} : (powHalf n).LeftMoves = PUnit := by
+theorem pow_half_zero : powHalf 0 = 1 :=
+  rfl
+
+theorem pow_half_left_moves n : (powHalf n).LeftMoves = PUnit := by
   cases n <;> rfl
 
-@[simp]
-theorem pow_half_right_moves {n} : (powHalf (n + 1)).RightMoves = PUnit :=
+theorem pow_half_zero_right_moves : (powHalf 0).RightMoves = Pempty :=
+  rfl
+
+theorem pow_half_succ_right_moves n : (powHalf (n + 1)).RightMoves = PUnit :=
   rfl
 
 @[simp]
-theorem pow_half_move_left {n i} : (powHalf n).moveLeft i = 0 := by
+theorem pow_half_move_left n i : (powHalf n).moveLeft i = 0 := by
   cases n <;> cases i <;> rfl
 
 @[simp]
-theorem pow_half_move_right {n i} : (powHalf (n + 1)).moveRight i = powHalf n :=
+theorem pow_half_succ_move_right n i : (powHalf (n + 1)).moveRight i = powHalf n :=
   rfl
 
-theorem pow_half_move_left' n : (powHalf n).moveLeft (Equivₓ.cast pow_half_left_moves.symm PUnit.unit) = 0 := by
-  simp only [eq_self_iff_true, pow_half_move_left]
+instance uniquePowHalfLeftMoves n : Unique (powHalf n).LeftMoves := by
+  cases n <;> exact PUnit.unique
 
-theorem pow_half_move_right' n :
-    (powHalf (n + 1)).moveRight (Equivₓ.cast pow_half_right_moves.symm PUnit.unit) = powHalf n := by
-  simp only [pow_half_move_right, eq_self_iff_true]
+instance is_empty_pow_half_zero_right_moves : IsEmpty (powHalf 0).RightMoves :=
+  Pempty.is_empty
+
+instance uniquePowHalfSuccRightMoves n : Unique (powHalf (n + 1)).RightMoves :=
+  PUnit.unique
+
+@[simp]
+theorem birthday_half : birthday (powHalf 1) = 2 := by
+  rw [birthday_def]
+  dsimp'
+  simpa using Order.le_succ (1 : Ordinal)
 
 /-- For all natural numbers `n`, the pre-games `pow_half n` are numeric. -/
-theorem numeric_pow_half {n} : (powHalf n).Numeric := by
+theorem numeric_pow_half n : (powHalf n).Numeric := by
   induction' n with n hn
   · exact numeric_one
     
   · constructor
-    · rintro ⟨⟩ ⟨⟩
-      dsimp' only [Pi.zero_apply]
-      rw [← pow_half_move_left' n]
-      apply hn.move_left_lt
+    · simpa using hn.move_left_lt default
       
     · exact ⟨fun _ => numeric_zero, fun _ => hn⟩
       
     
 
-theorem pow_half_succ_lt_pow_half {n : ℕ} : powHalf (n + 1) < powHalf n :=
-  Numeric.lt_move_right numeric_pow_half PUnit.unit
+theorem pow_half_succ_lt_pow_half (n : ℕ) : powHalf (n + 1) < powHalf n :=
+  (numeric_pow_half (n + 1)).lt_move_right default
 
-theorem pow_half_succ_le_pow_half {n : ℕ} : powHalf (n + 1) ≤ powHalf n :=
-  pow_half_succ_lt_pow_half.le
+theorem pow_half_succ_le_pow_half (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=
+  (pow_half_succ_lt_pow_half n).le
 
-theorem zero_lt_pow_half {n : ℕ} : 0 < powHalf n := by
-  cases n <;> rw [← lf_iff_lt numeric_zero numeric_pow_half, zero_lf_le] <;> exact ⟨PUnit.unit, le_rfl⟩
-
-theorem zero_le_pow_half {n : ℕ} : 0 ≤ powHalf n :=
-  zero_lt_pow_half.le
-
-theorem add_pow_half_succ_self_eq_pow_half {n} : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n := by
+theorem pow_half_le_one (n : ℕ) : powHalf n ≤ 1 := by
   induction' n with n hn
-  · exact half_add_half_equiv_one
+  · exact le_rfl
     
+  · exact (pow_half_succ_le_pow_half n).trans hn
+    
+
+theorem pow_half_succ_lt_one (n : ℕ) : powHalf (n + 1) < 1 :=
+  (pow_half_succ_lt_pow_half n).trans_le <| pow_half_le_one n
+
+theorem pow_half_pos (n : ℕ) : 0 < powHalf n := by
+  rw [← lf_iff_lt numeric_zero (numeric_pow_half n), zero_lf_le]
+  simp
+
+theorem zero_le_pow_half (n : ℕ) : 0 ≤ powHalf n :=
+  (pow_half_pos n).le
+
+theorem add_pow_half_succ_self_eq_pow_half n : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n := by
+  induction' n using Nat.strong_induction_onₓ with n hn
   · constructor <;> rw [le_iff_forall_lf] <;> constructor
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      · calc 0 + pow_half (n.succ + 1) ≈ pow_half (n.succ + 1) := zero_add_equiv _ _ < pow_half n.succ :=
-            pow_half_succ_lt_pow_half
+      · calc 0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _ _ < pow_half n := pow_half_succ_lt_pow_half n
         
-      · calc pow_half (n.succ + 1) + 0 ≈ pow_half (n.succ + 1) := add_zero_equiv _ _ < pow_half n.succ :=
-            pow_half_succ_lt_pow_half
+      · calc pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _ _ < pow_half n := pow_half_succ_lt_pow_half n
         
       
-    · rintro ⟨⟩
-      rw [lf_iff_forall_le]
-      right
-      use Sum.inl PUnit.unit
+    · cases n
+      · rintro ⟨⟩
+        
+      rintro ⟨⟩
+      refine' lf_of_forall_le (Or.inr ⟨Sum.inl PUnit.unit, _⟩)
       calc pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
-          add_le_add_left pow_half_succ_le_pow_half _ _ ≈ pow_half n := hn
+          add_le_add_left (pow_half_succ_le_pow_half _) _ _ ≈ pow_half n := hn _ (Nat.lt_succ_selfₓ n)
       
-    · rintro ⟨⟩
+    · simp only [pow_half_move_left, forall_const]
       apply lf_of_lt
-      calc 0 ≈ 0 + 0 := (add_zero_equiv _).symm _ ≤ pow_half (n.succ + 1) + 0 :=
-          add_le_add_right zero_le_pow_half _ _ < pow_half (n.succ + 1) + pow_half (n.succ + 1) :=
-          add_lt_add_left zero_lt_pow_half _
+      calc 0 ≈ 0 + 0 := (add_zero_equiv 0).symm _ ≤ pow_half n.succ + 0 :=
+          add_le_add_right (zero_le_pow_half _) _ _ < pow_half n.succ + pow_half n.succ :=
+          add_lt_add_left (pow_half_pos _) _
       
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
-      · calc pow_half n.succ ≈ pow_half n.succ + 0 :=
-            (add_zero_equiv _).symm _ < pow_half n.succ + pow_half (n.succ + 1) := add_lt_add_left zero_lt_pow_half _
+      · calc pow_half n ≈ pow_half n + 0 := (add_zero_equiv _).symm _ < pow_half n + pow_half n.succ :=
+            add_lt_add_left (pow_half_pos _) _
         
-      · calc pow_half n.succ ≈ 0 + pow_half n.succ :=
-            (zero_add_equiv _).symm _ < pow_half (n.succ + 1) + pow_half n.succ := add_lt_add_right zero_lt_pow_half _
+      · calc pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm _ < pow_half n.succ + pow_half n :=
+            add_lt_add_right (pow_half_pos _) _
         
       
     
+
+theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 :=
+  add_pow_half_succ_self_eq_pow_half 0
 
 end Pgame
 
@@ -131,31 +153,20 @@ namespace Surreal
 
 open Pgame
 
-/-- The surreal number `half`. -/
-def half : Surreal :=
-  ⟦⟨Pgame.half, Pgame.numeric_half⟩⟧
-
 /-- Powers of the surreal number `half`. -/
 def powHalf (n : ℕ) : Surreal :=
-  ⟦⟨Pgame.powHalf n, Pgame.numeric_pow_half⟩⟧
+  ⟦⟨Pgame.powHalf n, Pgame.numeric_pow_half n⟩⟧
 
 @[simp]
 theorem pow_half_zero : powHalf 0 = 1 :=
   rfl
 
 @[simp]
-theorem pow_half_one : powHalf 1 = half :=
-  rfl
-
-@[simp]
-theorem add_half_self_eq_one : half + half = 1 :=
-  Quotientₓ.sound Pgame.half_add_half_equiv_one
-
 theorem double_pow_half_succ_eq_pow_half (n : ℕ) : 2 • powHalf n.succ = powHalf n := by
   rw [two_nsmul]
-  apply Quotientₓ.sound
-  exact Pgame.add_pow_half_succ_self_eq_pow_half
+  exact Quotientₓ.sound (Pgame.add_pow_half_succ_self_eq_pow_half n)
 
+@[simp]
 theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • powHalf n = 1 := by
   induction' n with n hn
   · simp only [nsmul_one, pow_half_zero, Nat.cast_oneₓ, pow_zeroₓ]
@@ -163,6 +174,7 @@ theorem nsmul_pow_two_pow_half (n : ℕ) : 2 ^ n • powHalf n = 1 := by
   · rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm, pow_succₓ]
     
 
+@[simp]
 theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHalf k := by
   induction' k with k hk
   · simp only [add_zeroₓ, Surreal.nsmul_pow_two_pow_half, Nat.nat_zero_eq_zero, eq_self_iff_true, Surreal.pow_half_zero]

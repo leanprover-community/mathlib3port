@@ -54,7 +54,7 @@ namespace CompleteLattice
 
 variable (α)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a b «expr ∈ » s)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def IsSupClosedCompact : Prop :=
@@ -265,6 +265,33 @@ alias is_Sup_finite_compact_iff_is_sup_closed_compact ↔ _ IsSupClosedCompact.i
 
 alias is_sup_closed_compact_iff_well_founded ↔ _ WellFounded.is_sup_closed_compact
 
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem WellFounded.finite_of_set_independent (h : WellFounded ((· > ·) : α → α → Prop)) {s : Set α}
+    (hs : SetIndependent s) : s.Finite := by
+  classical
+  refine' set.not_infinite.mp fun contra => _
+  obtain ⟨t, ht₁, ht₂⟩ := well_founded.is_Sup_finite_compact α h s
+  replace contra : ∃ x : α, x ∈ s ∧ x ≠ ⊥ ∧ x ∉ t
+  · have : (s \ (insert ⊥ t : Finset α)).Infinite := contra.diff (Finset.finite_to_set _)
+    obtain ⟨x, hx₁, hx₂⟩ := this.nonempty
+    exact
+      ⟨x, hx₁, by
+        simpa [not_or_distrib] using hx₂⟩
+    
+  obtain ⟨x, hx₀, hx₁, hx₂⟩ := contra
+  replace hs : x⊓Sup s = ⊥
+  · have :=
+      hs.mono
+        (by
+          simp [ht₁, hx₀, -Set.union_singleton] : ↑t ∪ {x} ≤ s)
+        (by
+          simp : x ∈ _)
+    simpa [Disjoint, hx₂, ← t.sup_id_eq_Sup, ← ht₂] using this
+    
+  apply hx₁
+  rw [← hs, eq_comm, inf_eq_left]
+  exact le_Sup hx₀
+
 end CompleteLattice
 
 /-- A complete lattice is said to be compactly generated if any
@@ -452,7 +479,7 @@ theorem is_complemented_of_Sup_atoms_eq_top (h : sup { a : α | IsAtom a } = ⊤
       rw [← h, Sup_le_iff]
       intro a ha
       rw [← inf_eq_left]
-      refine' (eq_bot_or_eq_of_le_atom ha inf_le_left).resolve_left fun con => ha.1 _
+      refine' (ha.le_iff.mp inf_le_left).resolve_left fun con => ha.1 _
       rw [eq_bot_iff, ← con]
       refine' le_inf (le_reflₓ a) ((le_Sup _).trans le_sup_right)
       rw [← disjoint_iff] at *

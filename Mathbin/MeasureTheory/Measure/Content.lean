@@ -54,7 +54,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open Nnreal Ennreal
+open Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -292,7 +292,7 @@ theorem is_mul_left_invariant_outer_measure [Groupₓ G] [TopologicalGroup G]
   convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
 
 theorem outer_measure_caratheodory (A : Set G) :
-    μ.OuterMeasure.caratheodory.MeasurableSet' A ↔
+    measurable_set[μ.OuterMeasure.caratheodory] A ↔
       ∀ U : Opens G, μ.OuterMeasure (U ∩ A) + μ.OuterMeasure (U \ A) ≤ μ.OuterMeasure U :=
   by
   dsimp' [opens]

@@ -109,6 +109,9 @@ theorem average_map_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v 
   rw [mem_invariants] at hv
   simp [average_def, map_sum, hv, Finset.card_univ, nsmul_eq_smul_cast k _ v, smul_smul]
 
+theorem is_proj_average_map : LinearMap.IsProj ρ.invariants ρ.averageMap :=
+  ⟨ρ.average_map_invariant, ρ.average_map_id⟩
+
 end Invariants
 
 namespace LinHom

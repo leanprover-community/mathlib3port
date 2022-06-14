@@ -100,7 +100,7 @@ theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁�
 theorem right_inverse_eq (I J : FractionalIdeal R₁⁰ K) (h : I * J = 1) : J = I⁻¹ := by
   have hI : I ≠ 0 := FractionalIdeal.ne_zero_of_mul_eq_one I J h
   suffices h' : I * (1 / I) = 1
-  · exact congr_argₓ Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
+  · exact congr_arg Units.inv <| @Units.ext _ _ (Units.mkOfMulEqOne _ _ h) (Units.mkOfMulEqOne _ _ h') rfl
     
   apply le_antisymmₓ
   · apply fractional_ideal.mul_le.mpr _
@@ -179,7 +179,7 @@ theorem inv_one : (1⁻¹ : FractionalIdeal R₁⁰ K) = 1 :=
 
 end FractionalIdeal
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) (fraction_ring A)))
 /-- A Dedekind domain is an integral domain such that every fractional ideal has an inverse.
 
 This is equivalent to `is_dedekind_domain`.
@@ -194,7 +194,7 @@ open FractionalIdeal
 
 variable {R A K}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (I «expr ≠ » («expr⊥»() : fractional_ideal «expr ⁰»(A) K))
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
     IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), I * I⁻¹ = 1 := by
   let h := FractionalIdeal.mapEquiv (FractionRing.algEquiv A K)
@@ -208,7 +208,7 @@ theorem FractionalIdeal.adjoin_integral_eq_one_of_is_unit [Algebra A K] [IsFract
   have mul_self : I * I = I := by
     apply FractionalIdeal.coe_to_submodule_injective
     simp
-  convert congr_argₓ (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_oneₓ]
+  convert congr_arg (· * I⁻¹) mul_self <;> simp only [(mul_inv_cancel_iff_is_unit K).mpr hI, mul_assoc, mul_oneₓ]
 
 namespace IsDedekindDomainInv
 
@@ -878,9 +878,17 @@ open Classical
 
 theorem Ideal.count_normalized_factors_eq {p x : Ideal R} (hp0 : p ≠ ⊥) [hp : p.IsPrime] {n : ℕ} (hle : x ≤ p ^ n)
     (hlt : ¬x ≤ p ^ (n + 1)) : (normalizedFactors x).count p = n :=
-  count_normalized_factors_eq ((Ideal.prime_iff_is_prime hp0).mpr hp).Irreducible (normalize_eq _)
-    (Ideal.dvd_iff_le.mpr hle) (mt Ideal.le_of_dvd hlt)
+  count_normalized_factors_eq ((Ideal.prime_iff_is_prime hp0).mpr hp).Irreducible
+    (by
+      have : Unique (Ideal R)ˣ := Ideal.uniqueUnits
+      apply normalize_eq)
+    (by
+      convert ideal.dvd_iff_le.mpr hle)
+    (by
+      convert mt Ideal.le_of_dvd hlt)
 
+/- Warning: even though a pure term-mode proof typechecks (the `by convert` can simply be
+  removed), it's slower to the point of a possible timeout. -/
 end
 
 theorem Ideal.le_mul_of_no_prime_factors {I J K : Ideal R} (coprime : ∀ P, J ≤ P → K ≤ P → ¬IsPrime P) (hJ : I ≤ J)
@@ -916,7 +924,7 @@ theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {
   simp only [← Ideal.dvd_iff_le]
   exact ((Ideal.prime_iff_is_prime hP0).mpr hP).dvd_finset_prod_iff _
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i j «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i j «expr ∈ » s)
 /-- The intersection of distinct prime powers in a Dedekind domain is the product of these
 prime powers. -/
 theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f : ι → Ideal R) (e : ι → ℕ)

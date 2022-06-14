@@ -20,7 +20,7 @@ section SmoothRing
 variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.

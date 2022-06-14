@@ -374,15 +374,14 @@ theorem head'_iff : TransGen r a c ↔ ∃ b, r a b ∧ ReflTransGen r b c := by
 
 end TransGen
 
+theorem _root_.acc.trans_gen {α} {r : α → α → Prop} {a : α} (h : Acc r a) : Acc (TransGen r) a := by
+  induction' h with x _ H
+  refine' Acc.intro x fun y hy => _
+  cases' hy with _ hyx z _ hyz hzx
+  exacts[H y hyx, (H z hzx).inv hyz]
+
 theorem _root_.well_founded.trans_gen {α} {r : α → α → Prop} (h : WellFounded r) : WellFounded (TransGen r) :=
-  ⟨fun a =>
-    h.induction a fun x H =>
-      Acc.intro x fun y hy => by
-        cases' hy with _ hyx z _ hyz hzx
-        · exact H y hyx
-          
-        · exact Acc.invₓ (H z hzx) hyz
-          ⟩
+  ⟨fun a => (h.apply a).TransGen⟩
 
 section TransGen
 

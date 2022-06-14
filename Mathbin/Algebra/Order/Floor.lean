@@ -118,8 +118,15 @@ theorem le_floor (h : (n : α) ≤ a) : n ≤ ⌊a⌋₊ :=
 theorem floor_lt (ha : 0 ≤ a) : ⌊a⌋₊ < n ↔ a < n :=
   lt_iff_lt_of_le_iff_le <| le_floor_iff ha
 
+theorem floor_lt_one (ha : 0 ≤ a) : ⌊a⌋₊ < 1 ↔ a < 1 :=
+  (floor_lt ha).trans <| by
+    rw [Nat.cast_oneₓ]
+
 theorem lt_of_floor_lt (h : ⌊a⌋₊ < n) : a < n :=
   lt_of_not_le fun h' => (le_floor h').not_lt h
+
+theorem lt_one_of_floor_lt_one (h : ⌊a⌋₊ < 1) : a < 1 := by
+  exact_mod_cast lt_of_floor_lt h
 
 theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ a :=
   (le_floor_iff ha).1 le_rfl
@@ -188,6 +195,9 @@ theorem lt_of_lt_floor (h : n < ⌊a⌋₊) : ↑n < a :=
 theorem floor_le_of_le (h : a ≤ n) : ⌊a⌋₊ ≤ n :=
   le_imp_le_iff_lt_imp_lt.2 lt_of_lt_floor h
 
+theorem floor_le_one_of_le_one (h : a ≤ 1) : ⌊a⌋₊ ≤ 1 :=
+  floor_le_of_le <| h.trans_eq <| Nat.cast_oneₓ.symm
+
 @[simp]
 theorem floor_eq_zero : ⌊a⌋₊ = 0 ↔ a < 1 := by
   rw [← lt_one_iff, ← @cast_one α]
@@ -240,6 +250,10 @@ theorem ceil_coe (n : ℕ) : ⌈(n : α)⌉₊ = n :=
 @[simp]
 theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 :=
   ceil_coe 0
+
+@[simp]
+theorem ceil_one : ⌈(1 : α)⌉₊ = 1 := by
+  rw [← Nat.cast_oneₓ, ceil_coe]
 
 @[simp]
 theorem ceil_eq_zero : ⌈a⌉₊ = 0 ↔ a ≤ 0 :=
@@ -610,7 +624,7 @@ theorem floor_eq_on_Ico (n : ℤ) : ∀, ∀ a ∈ Set.Ico (n : α) (n + 1), ∀
   floor_eq_iff.mpr ⟨h₀, h₁⟩
 
 theorem floor_eq_on_Ico' (n : ℤ) : ∀, ∀ a ∈ Set.Ico (n : α) (n + 1), ∀, (⌊a⌋ : α) = n := fun a ha =>
-  congr_argₓ _ <| floor_eq_on_Ico n a ha
+  congr_arg _ <| floor_eq_on_Ico n a ha
 
 @[simp]
 theorem preimage_floor_singleton (m : ℤ) : (floor : α → ℤ) ⁻¹' {m} = Ico m (m + 1) :=
@@ -827,6 +841,10 @@ theorem ceil_pos : 0 < ⌈a⌉ ↔ 0 < a :=
 @[simp]
 theorem ceil_zero : ⌈(0 : α)⌉ = 0 :=
   ceil_coe 0
+
+@[simp]
+theorem ceil_one : ⌈(1 : α)⌉ = 1 := by
+  rw [← Int.cast_oneₓ, ceil_coe]
 
 theorem ceil_nonneg (ha : 0 ≤ a) : 0 ≤ ⌈a⌉ := by
   exact_mod_cast ha.trans (le_ceil a)

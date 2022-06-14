@@ -79,18 +79,18 @@ theorem continuous_at_inv {𝕜 : Type _} [NondiscreteNormedField 𝕜] {x : �
 end NormedField
 
 theorem is_o_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
-    IsOₓ (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) atTop :=
+    (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
   have H : 0 < r₂ := h₁.trans_lt h₂
   (is_o_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
     (tendsto_pow_at_top_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr fun n =>
       div_pow _ _ _
 
 theorem is_O_pow_pow_of_le_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ ≤ r₂) :
-    IsO (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) atTop :=
+    (fun n : ℕ => r₁ ^ n) =O[at_top] fun n => r₂ ^ n :=
   h₂.eq_or_lt.elim (fun h => h ▸ is_O_refl _ _) fun h => (is_o_pow_pow_of_lt_left h₁ h).IsO
 
 theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : abs r₁ < abs r₂) :
-    IsOₓ (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) atTop := by
+    (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n := by
   refine' (is_o.of_norm_left _).of_norm_right
   exact (is_o_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
 
@@ -110,9 +110,8 @@ NB: For backwards compatibility, if you add more items to the list, please appen
 the list. -/
 theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
     Tfae
-      [∃ a ∈ ioo (-R) R, IsOₓ f (pow a) atTop, ∃ a ∈ ioo 0 R, IsOₓ f (pow a) atTop,
-        ∃ a ∈ ioo (-R) R, IsO f (pow a) atTop, ∃ a ∈ ioo 0 R, IsO f (pow a) atTop,
-        ∃ a < R, ∃ (C : _)(h₀ : 0 < C ∨ 0 < R), ∀ n, abs (f n) ≤ C * a ^ n,
+      [∃ a ∈ ioo (-R) R, f =o[at_top] pow a, ∃ a ∈ ioo 0 R, f =o[at_top] pow a, ∃ a ∈ ioo (-R) R, f =O[at_top] pow a,
+        ∃ a ∈ ioo 0 R, f =O[at_top] pow a, ∃ a < R, ∃ (C : _)(h₀ : 0 < C ∨ 0 < R), ∀ n, abs (f n) ≤ C * a ^ n,
         ∃ a ∈ ioo 0 R, ∃ C > 0, ∀ n, abs (f n) ≤ C * a ^ n, ∃ a < R, ∀ᶠ n in at_top, abs (f n) ≤ a ^ n,
         ∃ a ∈ ioo 0 R, ∀ᶠ n in at_top, abs (f n) ≤ a ^ n] :=
   by
@@ -171,12 +170,12 @@ theorem tfae_exists_lt_is_o_pow (f : ℕ → ℝ) (R : ℝ) :
 
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ} (hr : 1 < r) :
-    IsOₓ (fun n => n ^ k : ℕ → R) (fun n => r ^ n) atTop := by
+    (fun n => n ^ k : ℕ → R) =o[at_top] fun n => r ^ n := by
   have : tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
     ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left
   obtain ⟨r' : ℝ, hr' : r' ^ k < r, h1 : 1 < r'⟩ := ((this.eventually (gt_mem_nhds hr)).And self_mem_nhds_within).exists
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
-  suffices : is_O _ (fun n : ℕ => (r' ^ k) ^ n) at_top
+  suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n
   exact this.trans_is_o (is_o_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
   conv in (r' ^ _) ^ _ => rw [← pow_mulₓ, mul_comm, pow_mulₓ]
   suffices : ∀ n : ℕ, ∥(n : R)∥ ≤ (r' - 1)⁻¹ * ∥(1 : R)∥ * ∥r' ^ n∥
@@ -188,20 +187,20 @@ theorem is_o_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ)
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
-    IsOₓ (coe : ℕ → R) (fun n => r ^ n) atTop := by
+    (coe : ℕ → R) =o[at_top] fun n => r ^ n := by
   simpa only [pow_oneₓ] using is_o_pow_const_const_pow_of_one_lt 1 hr
 
 /-- If `∥r₁∥ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
 theorem is_o_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ) {r₁ : R} {r₂ : ℝ}
-    (h : ∥r₁∥ < r₂) : IsOₓ (fun n => n ^ k * r₁ ^ n : ℕ → R) (fun n => r₂ ^ n) atTop := by
+    (h : ∥r₁∥ < r₂) : (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n := by
   by_cases' h0 : r₁ = 0
   · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
     
   rw [← Ne.def, ← norm_pos_iff] at h0
-  have A : is_o (fun n => n ^ k : ℕ → R) (fun n => (r₂ / ∥r₁∥) ^ n) at_top :=
+  have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ∥r₁∥) ^ n :=
     is_o_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
-  suffices is_O (fun n => r₁ ^ n) (fun n => ∥r₁∥ ^ n) at_top by
+  suffices (fun n => r₁ ^ n) =O[at_top] fun n => ∥r₁∥ ^ n by
     simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
   exact
     is_O.of_bound 1

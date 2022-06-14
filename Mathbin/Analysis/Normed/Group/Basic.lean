@@ -875,8 +875,8 @@ noncomputable instance Pi.semiNormedGroup {π : ι → Type _} [Fintype ι] [∀
     SemiNormedGroup (∀ i, π i) where
   norm := fun f => ↑(Finset.univ.sup fun b => ∥f b∥₊)
   dist_eq := fun x y =>
-    congr_argₓ (coe : ℝ≥0 → ℝ) <|
-      congr_argₓ (Finset.sup Finset.univ) <|
+    congr_arg (coe : ℝ≥0 → ℝ) <|
+      congr_arg (Finset.sup Finset.univ) <|
         funext fun a => show nndist (x a) (y a) = ∥x a - y a∥₊ from nndist_eq_nnnorm _ _
 
 theorem Pi.norm_def {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (π i)] (f : ∀ i, π i) :
@@ -945,6 +945,9 @@ theorem tendsto_zero_iff_norm_tendsto_zero {f : α → E} {a : Filter α} :
     Tendsto f a (𝓝 0) ↔ Tendsto (fun e => ∥f e∥) a (𝓝 0) := by
   rw [tendsto_iff_norm_tendsto_zero]
   simp only [sub_zero]
+
+theorem comap_norm_nhds_zero : comap norm (𝓝 0) = 𝓝 (0 : E) := by
+  simpa only [dist_zero_right] using nhds_comap_dist (0 : E)
 
 /-- Special case of the sandwich theorem: if the norm of `f` is eventually bounded by a real
 function `g` which tends to `0`, then `f` tends to `0`.
@@ -1092,15 +1095,15 @@ theorem Nat.norm_cast_le [One E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n * ∥(1 : E)
 theorem SemiNormedGroup.mem_closure_iff {s : Set E} {x : E} : x ∈ Closure s ↔ ∀, ∀ ε > 0, ∀, ∃ y ∈ s, ∥x - y∥ < ε := by
   simp [Metric.mem_closure_iff, dist_eq_norm]
 
-theorem norm_le_zero_iff' [SeparatedSpace E] {g : E} : ∥g∥ ≤ 0 ↔ g = 0 := by
-  let this : NormedGroup E := { ‹SemiNormedGroup E› with toMetricSpace := of_t2_pseudo_metric_space ‹_› }
+theorem norm_le_zero_iff' [T0Space E] {g : E} : ∥g∥ ≤ 0 ↔ g = 0 := by
+  let this : NormedGroup E := { ‹SemiNormedGroup E› with toMetricSpace := Metric.ofT0PseudoMetricSpace E }
   rw [← dist_zero_right]
   exact dist_le_zero
 
-theorem norm_eq_zero_iff' [SeparatedSpace E] {g : E} : ∥g∥ = 0 ↔ g = 0 :=
+theorem norm_eq_zero_iff' [T0Space E] {g : E} : ∥g∥ = 0 ↔ g = 0 :=
   (norm_nonneg g).le_iff_eq.symm.trans norm_le_zero_iff'
 
-theorem norm_pos_iff' [SeparatedSpace E] {g : E} : 0 < ∥g∥ ↔ g ≠ 0 := by
+theorem norm_pos_iff' [T0Space E] {g : E} : 0 < ∥g∥ ↔ g ≠ 0 := by
   rw [← not_leₓ, norm_le_zero_iff']
 
 theorem cauchy_seq_sum_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀, ∀ n ≥ N, ∀, u n = v n)

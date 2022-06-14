@@ -137,6 +137,35 @@ theorem coeff_X_pow (k n : ℕ) : coeff (X ^ k : R[X]) n = if n = k then 1 else 
 theorem coeff_X_pow_self (n : ℕ) : coeff (X ^ n : R[X]) n = 1 := by
   simp [coeff_X_pow]
 
+section Fewnomials
+
+open Finset
+
+theorem support_binomial {k m : ℕ} (hkm : k ≠ m) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) :
+    (c x * X ^ k + c y * X ^ m).Support = {k, m} := by
+  apply subset_antisymm (support_binomial' k m x y)
+  simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul, coeff_X_pow_self, mul_oneₓ,
+    coeff_X_pow, if_neg hkm, if_neg hkm.symm, mul_zero, zero_addₓ, add_zeroₓ, Ne.def, hx, hy, and_selfₓ, not_false_iff]
+
+theorem support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) :
+    (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support = {k, m, n} := by
+  apply subset_antisymm (support_trinomial' k m n x y z)
+  simp_rw [insert_subset, singleton_subset_iff, mem_support_iff, coeff_add, coeff_C_mul, coeff_X_pow_self, mul_oneₓ,
+    coeff_X_pow, if_neg hkm.ne, if_neg hkm.ne', if_neg hmn.ne, if_neg hmn.ne', if_neg (hkm.trans hmn).Ne,
+    if_neg (hkm.trans hmn).ne', mul_zero, add_zeroₓ, zero_addₓ, Ne.def, hx, hy, hz, and_selfₓ, not_false_iff]
+
+theorem card_support_binomial {k m : ℕ} (h : k ≠ m) {x y : R} (hx : x ≠ 0) (hy : y ≠ 0) :
+    (c x * X ^ k + c y * X ^ m).Support.card = 2 := by
+  rw [support_binomial h hx hy, card_insert_of_not_mem (mt mem_singleton.mp h), card_singleton]
+
+theorem card_support_trinomial {k m n : ℕ} (hkm : k < m) (hmn : m < n) {x y z : R} (hx : x ≠ 0) (hy : y ≠ 0)
+    (hz : z ≠ 0) : (c x * X ^ k + c y * X ^ m + c z * X ^ n).Support.card = 3 := by
+  rw [support_trinomial hkm hmn hx hy hz,
+    card_insert_of_not_mem (mt mem_insert.mp (not_orₓ hkm.ne (mt mem_singleton.mp (hkm.trans hmn).Ne))),
+    card_insert_of_not_mem (mt mem_singleton.mp hmn.ne), card_singleton]
+
+end Fewnomials
+
 @[simp]
 theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) : coeff (p * Polynomial.x ^ n) (d + n) = coeff p d := by
   rw [coeff_mul, sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_oneₓ]
@@ -187,16 +216,8 @@ theorem mul_X_pow_injective (n : ℕ) : Function.Injective fun P : R[X] => X ^ n
 theorem mul_X_injective : Function.Injective fun P : R[X] => X * P :=
   pow_oneₓ (x : R[X]) ▸ mul_X_pow_injective 1
 
-theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : c c * X ^ n = monomial n c := by
-  ext1
-  rw [monomial_eq_smul_X, coeff_smul, coeff_C_mul, smul_eq_mul]
-
-theorem support_mul_X_pow (c : R) (n : ℕ) (H : c ≠ 0) : (c c * X ^ n).Support = singleton n := by
-  rw [C_mul_X_pow_eq_monomial, support_monomial n c H]
-
-theorem support_C_mul_X_pow' {c : R} {n : ℕ} : (c c * X ^ n).Support ⊆ singleton n := by
-  rw [C_mul_X_pow_eq_monomial]
-  exact support_monomial' n c
+theorem C_mul_X_pow_eq_monomial (c : R) (n : ℕ) : c c * X ^ n = monomial n c :=
+  monomial_eq_C_mul_X.symm
 
 theorem coeff_X_add_C_pow (r : R) (n k : ℕ) : ((X + c r) ^ n).coeff k = r ^ (n - k) * (n.choose k : R) := by
   rw [(commute_X (C r : R[X])).add_pow, ← lcoeff_apply, LinearMap.map_sum]

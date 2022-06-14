@@ -246,7 +246,7 @@ theorem IsAffineOpen.basic_open_is_affine {X : Scheme} {U : Opens X.Carrier} (hU
     exact Scheme.basic_open_subset _ _
   rw [Subtype.coe_mk, Scheme.comp_val_base, ← this, coe_comp, Set.range_comp]
   congr 1
-  refine' (congr_argₓ coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
+  refine' (congr_arg coe <| Scheme.preimage_basic_open hU.from_Spec f).trans _
   refine' Eq.trans _ (PrimeSpectrum.localization_away_comap_range (Localization.Away f) f).symm
   congr 1
   have : (opens.map hU.from_Spec.val.base).obj U = ⊤ := by
@@ -298,11 +298,11 @@ theorem is_basis_basic_open (X : Scheme) [IsAffine X] :
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, _⟩
-    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
+    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
     
   · rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
     refine' ⟨_, ⟨x, rfl⟩, _⟩
-    exact congr_argₓ Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
+    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
     
 
 /-- The prime ideal of `𝒪ₓ(U)` corresponding to a point `x : U`. -/

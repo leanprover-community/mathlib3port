@@ -206,17 +206,19 @@ instance (p : F[X]) : Normal F p.SplittingField :=
 
 end NormalTower
 
-variable {F} {K} (ϕ ψ : K →ₐ[F] K) (χ ω : K ≃ₐ[F] K)
+variable {F} {K} {K₁ K₂ K₃ : Type _} [Field K₁] [Field K₂] [Field K₃] [Algebra F K₁] [Algebra F K₂] [Algebra F K₃]
+  (ϕ : K₁ →ₐ[F] K₂) (χ : K₁ ≃ₐ[F] K₂) (ψ : K₂ →ₐ[F] K₃) (ω : K₂ ≃ₐ[F] K₃)
 
 section Restrict
 
-variable (E : Type _) [Field E] [Algebra F E] [Algebra E K] [IsScalarTower F E K]
+variable (E : Type _) [Field E] [Algebra F E] [Algebra E K₁] [Algebra E K₂] [Algebra E K₃] [IsScalarTower F E K₁]
+  [IsScalarTower F E K₂] [IsScalarTower F E K₃]
 
 /-- Restrict algebra homomorphism to image of normal subfield -/
-def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K).range →ₐ[F] (toAlgHom F E K).range where
+def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K₁).range →ₐ[F] (toAlgHom F E K₂).range where
   toFun := fun x =>
     ⟨ϕ x, by
-      suffices (to_alg_hom F E K).range.map ϕ ≤ _ by
+      suffices (to_alg_hom F E K₁).range.map ϕ ≤ _ by
         exact this ⟨x, Subtype.mem x, rfl⟩
       rintro x ⟨y, ⟨z, hy⟩, hx⟩
       rw [← hx, ← hy]
@@ -236,103 +238,112 @@ def AlgHom.restrictNormalAux [h : Normal F E] : (toAlgHom F E K).range →ₐ[F]
 
 /-- Restrict algebra homomorphism to normal subfield -/
 def AlgHom.restrictNormal [Normal F E] : E →ₐ[F] E :=
-  ((AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K)).symm.toAlgHom.comp (ϕ.restrictNormalAux E)).comp
-    (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K)).toAlgHom
+  ((AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₂)).symm.toAlgHom.comp (ϕ.restrictNormalAux E)).comp
+    (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₁)).toAlgHom
+
+/-- Restrict algebra homomorphism to normal subfield (`alg_equiv` version) -/
+def AlgHom.restrictNormal' [Normal F E] : E ≃ₐ[F] E :=
+  AlgEquiv.ofBijective (AlgHom.restrictNormal ϕ E) (AlgHom.normal_bijective F E E _)
 
 @[simp]
 theorem AlgHom.restrict_normal_commutes [Normal F E] (x : E) :
-    algebraMap E K (ϕ.restrictNormal E x) = ϕ (algebraMap E K x) :=
+    algebraMap E K₂ (ϕ.restrictNormal E x) = ϕ (algebraMap E K₁ x) :=
   Subtype.ext_iff.mp
-    (AlgEquiv.apply_symm_apply (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K))
-      (ϕ.restrictNormalAux E ⟨IsScalarTower.toAlgHom F E K x, x, rfl⟩))
+    (AlgEquiv.apply_symm_apply (AlgEquiv.ofInjectiveField (IsScalarTower.toAlgHom F E K₂))
+      (ϕ.restrictNormalAux E ⟨IsScalarTower.toAlgHom F E K₁ x, x, rfl⟩))
 
 theorem AlgHom.restrict_normal_comp [Normal F E] :
-    (ϕ.restrictNormal E).comp (ψ.restrictNormal E) = (ϕ.comp ψ).restrictNormal E :=
+    (ψ.restrictNormal E).comp (ϕ.restrictNormal E) = (ψ.comp ϕ).restrictNormal E :=
   AlgHom.ext fun _ =>
-    (algebraMap E K).Injective
+    (algebraMap E K₃).Injective
       (by
         simp only [AlgHom.comp_apply, AlgHom.restrict_normal_commutes])
 
 /-- Restrict algebra isomorphism to a normal subfield -/
 def AlgEquiv.restrictNormal [h : Normal F E] : E ≃ₐ[F] E :=
-  AlgEquiv.ofBijective (χ.toAlgHom.restrictNormal E) (AlgHom.normal_bijective F E E _)
+  AlgHom.restrictNormal' χ.toAlgHom E
 
 @[simp]
 theorem AlgEquiv.restrict_normal_commutes [Normal F E] (x : E) :
-    algebraMap E K (χ.restrictNormal E x) = χ (algebraMap E K x) :=
+    algebraMap E K₂ (χ.restrictNormal E x) = χ (algebraMap E K₁ x) :=
   χ.toAlgHom.restrict_normal_commutes E x
 
 theorem AlgEquiv.restrict_normal_trans [Normal F E] :
     (χ.trans ω).restrictNormal E = (χ.restrictNormal E).trans (ω.restrictNormal E) :=
   AlgEquiv.ext fun _ =>
-    (algebraMap E K).Injective
+    (algebraMap E K₃).Injective
       (by
         simp only [AlgEquiv.trans_apply, AlgEquiv.restrict_normal_commutes])
 
 /-- Restriction to an normal subfield as a group homomorphism -/
-def AlgEquiv.restrictNormalHom [Normal F E] : (K ≃ₐ[F] K) →* E ≃ₐ[F] E :=
+def AlgEquiv.restrictNormalHom [Normal F E] : (K₁ ≃ₐ[F] K₁) →* E ≃ₐ[F] E :=
   MonoidHom.mk' (fun χ => χ.restrictNormal E) fun ω χ => χ.restrict_normal_trans ω E
 
 end Restrict
 
 section lift
 
-variable {F} {K} (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
+variable {F} {K₁ K₂} (E : Type _) [Field E] [Algebra F E] [Algebra K₁ E] [Algebra K₂ E] [IsScalarTower F K₁ E]
+  [IsScalarTower F K₂ E]
 
-/-- If `E/K/F` is a tower of fields with `E/F` normal then we can lift
-  an algebra homomorphism `ϕ : K →ₐ[F] K` to `ϕ.lift_normal E : E →ₐ[F] E`. -/
+/-- If `E/Kᵢ/F` are towers of fields with `E/F` normal then we can lift
+  an algebra homomorphism `ϕ : K₁ →ₐ[F] K₂` to `ϕ.lift_normal E : E →ₐ[F] E`. -/
 noncomputable def AlgHom.liftNormal [h : Normal F E] : E →ₐ[F] E :=
-  @AlgHom.restrictScalars F K E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ _ _ _ <|
+  @AlgHom.restrictScalars F K₁ E E _ _ _ _ _ _ ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ _ _ _ <|
     Nonempty.some <|
       @IntermediateField.alg_hom_mk_adjoin_splits' _ _ _ _ _ _ _
-        ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ (IntermediateField.adjoin_univ _ _) fun x hx =>
+        ((IsScalarTower.toAlgHom F K₂ E).comp ϕ).toRingHom.toAlgebra _ (IntermediateField.adjoin_univ _ _) fun x hx =>
         ⟨is_integral_of_is_scalar_tower x (h.out x).1,
           splits_of_splits_of_dvd _ (map_ne_zero (minpoly.ne_zero (h.out x).1))
             (by
               rw [splits_map_iff, ← IsScalarTower.algebra_map_eq]
               exact (h.out x).2)
-            (minpoly.dvd_map_of_is_scalar_tower F K x)⟩
+            (minpoly.dvd_map_of_is_scalar_tower F K₁ x)⟩
 
 @[simp]
-theorem AlgHom.lift_normal_commutes [Normal F E] (x : K) : ϕ.liftNormal E (algebraMap K E x) = algebraMap K E (ϕ x) :=
-  @AlgHom.commutes K E E _ _ _ _ ((IsScalarTower.toAlgHom F K E).comp ϕ).toRingHom.toAlgebra _ x
+theorem AlgHom.lift_normal_commutes [Normal F E] (x : K₁) :
+    ϕ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (ϕ x) := by
+  apply @AlgHom.commutes K₁ E E _ _ _ _
 
 @[simp]
-theorem AlgHom.restrict_lift_normal [Normal F K] [Normal F E] : (ϕ.liftNormal E).restrictNormal K = ϕ :=
+theorem AlgHom.restrict_lift_normal (ϕ : K₁ →ₐ[F] K₁) [Normal F K₁] [Normal F E] :
+    (ϕ.liftNormal E).restrictNormal K₁ = ϕ :=
   AlgHom.ext fun x =>
-    (algebraMap K E).Injective (Eq.trans (AlgHom.restrict_normal_commutes _ K x) (ϕ.lift_normal_commutes E x))
+    (algebraMap K₁ E).Injective (Eq.trans (AlgHom.restrict_normal_commutes _ K₁ x) (ϕ.lift_normal_commutes E x))
 
-/-- If `E/K/F` is a tower of fields with `E/F` normal then we can lift
-  an algebra isomorphism `ϕ : K ≃ₐ[F] K` to `ϕ.lift_normal E : E ≃ₐ[F] E`. -/
+/-- If `E/Kᵢ/F` are towers of fields with `E/F` normal then we can lift
+  an algebra isomorphism `ϕ : K₁ ≃ₐ[F] K₂` to `ϕ.lift_normal E : E ≃ₐ[F] E`. -/
 noncomputable def AlgEquiv.liftNormal [Normal F E] : E ≃ₐ[F] E :=
   AlgEquiv.ofBijective (χ.toAlgHom.liftNormal E) (AlgHom.normal_bijective F E E _)
 
 @[simp]
-theorem AlgEquiv.lift_normal_commutes [Normal F E] (x : K) : χ.liftNormal E (algebraMap K E x) = algebraMap K E (χ x) :=
+theorem AlgEquiv.lift_normal_commutes [Normal F E] (x : K₁) :
+    χ.liftNormal E (algebraMap K₁ E x) = algebraMap K₂ E (χ x) :=
   χ.toAlgHom.lift_normal_commutes E x
 
 @[simp]
-theorem AlgEquiv.restrict_lift_normal [Normal F K] [Normal F E] : (χ.liftNormal E).restrictNormal K = χ :=
+theorem AlgEquiv.restrict_lift_normal (χ : K₁ ≃ₐ[F] K₁) [Normal F K₁] [Normal F E] :
+    (χ.liftNormal E).restrictNormal K₁ = χ :=
   AlgEquiv.ext fun x =>
-    (algebraMap K E).Injective (Eq.trans (AlgEquiv.restrict_normal_commutes _ K x) (χ.lift_normal_commutes E x))
+    (algebraMap K₁ E).Injective (Eq.trans (AlgEquiv.restrict_normal_commutes _ K₁ x) (χ.lift_normal_commutes E x))
 
-theorem AlgEquiv.restrict_normal_hom_surjective [Normal F K] [Normal F E] :
-    Function.Surjective (AlgEquiv.restrictNormalHom K : (E ≃ₐ[F] E) → K ≃ₐ[F] K) := fun χ =>
+theorem AlgEquiv.restrict_normal_hom_surjective [Normal F K₁] [Normal F E] :
+    Function.Surjective (AlgEquiv.restrictNormalHom K₁ : (E ≃ₐ[F] E) → K₁ ≃ₐ[F] K₁) := fun χ =>
   ⟨χ.liftNormal E, χ.restrict_lift_normal E⟩
 
-variable (F) (K) (E)
+variable (F) (K₁) (E)
 
-theorem is_solvable_of_is_scalar_tower [Normal F K] [h1 : IsSolvable (K ≃ₐ[F] K)] [h2 : IsSolvable (E ≃ₐ[K] E)] :
+theorem is_solvable_of_is_scalar_tower [Normal F K₁] [h1 : IsSolvable (K₁ ≃ₐ[F] K₁)] [h2 : IsSolvable (E ≃ₐ[K₁] E)] :
     IsSolvable (E ≃ₐ[F] E) := by
-  let f : (E ≃ₐ[K] E) →* E ≃ₐ[F] E :=
+  let f : (E ≃ₐ[K₁] E) →* E ≃ₐ[F] E :=
     { toFun := fun ϕ =>
         AlgEquiv.ofAlgHom (ϕ.to_alg_hom.restrict_scalars F) (ϕ.symm.to_alg_hom.restrict_scalars F)
           (AlgHom.ext fun x => ϕ.apply_symm_apply x) (AlgHom.ext fun x => ϕ.symm_apply_apply x),
       map_one' := AlgEquiv.ext fun _ => rfl, map_mul' := fun _ _ => AlgEquiv.ext fun _ => rfl }
   refine'
-    solvable_of_ker_le_range f (AlgEquiv.restrictNormalHom K) fun ϕ hϕ =>
+    solvable_of_ker_le_range f (AlgEquiv.restrictNormalHom K₁) fun ϕ hϕ =>
       ⟨{ ϕ with commutes' := fun x => _ }, AlgEquiv.ext fun _ => rfl⟩
-  exact Eq.trans (ϕ.restrict_normal_commutes K x).symm (congr_argₓ _ (alg_equiv.ext_iff.mp hϕ x))
+  exact Eq.trans (ϕ.restrict_normal_commutes K₁ x).symm (congr_arg _ (alg_equiv.ext_iff.mp hϕ x))
 
 end lift
 

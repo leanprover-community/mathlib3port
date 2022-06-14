@@ -38,7 +38,7 @@ open Filter Set
 
 open Filter
 
-variable {α β ι : Type _}
+variable {α β γ ι : Type _}
 
 namespace Filter
 
@@ -86,6 +86,14 @@ theorem IsBounded.mono (h : f ≤ g) : IsBounded r g → IsBounded r f
 
 theorem IsBoundedUnder.mono {f g : Filter β} {u : β → α} (h : f ≤ g) : g.IsBoundedUnder r u → f.IsBoundedUnder r u :=
   fun hg => hg.mono (map_mono h)
+
+theorem IsBoundedUnder.mono_le [Preorderₓ β] {l : Filter α} {u v : α → β} (hu : IsBoundedUnder (· ≤ ·) l u)
+    (hv : v ≤ᶠ[l] u) : IsBoundedUnder (· ≤ ·) l v :=
+  hu.imp fun b hb => (eventually_map.1 hb).mp <| hv.mono fun x => le_transₓ
+
+theorem IsBoundedUnder.mono_ge [Preorderₓ β] {l : Filter α} {u v : α → β} (hu : IsBoundedUnder (· ≥ ·) l u)
+    (hv : u ≤ᶠ[l] v) : IsBoundedUnder (· ≥ ·) l v :=
+  @IsBoundedUnder.mono_le α βᵒᵈ _ _ _ _ hu hv
 
 theorem IsBounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf : ∀ a₀ a₁, r a₀ a₁ → q (u a₀) (u a₁)) :
     f.IsBounded r → f.IsBoundedUnder q u
@@ -193,19 +201,54 @@ theorem is_bounded_le_of_top [Preorderₓ α] [OrderTop α] {f : Filter α} : f.
 theorem is_bounded_ge_of_bot [Preorderₓ α] [OrderBot α] {f : Filter α} : f.IsBounded (· ≥ ·) :=
   ⟨⊥, eventually_of_forall fun _ => bot_le⟩
 
-theorem is_bounded_under_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
+@[simp]
+theorem _root_.order_iso.is_bounded_under_le_comp [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {l : Filter γ} {u : γ → α} :
+    (IsBoundedUnder (· ≤ ·) l fun x => e (u x)) ↔ IsBoundedUnder (· ≤ ·) l u :=
+  e.Surjective.exists.trans <|
+    exists_congr fun a => by
+      simp only [eventually_map, e.le_iff_le]
+
+@[simp]
+theorem _root_.order_iso.is_bounded_under_ge_comp [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {l : Filter γ} {u : γ → α} :
+    (IsBoundedUnder (· ≥ ·) l fun x => e (u x)) ↔ IsBoundedUnder (· ≥ ·) l u :=
+  e.dual.is_bounded_under_le_comp
+
+@[simp, to_additive]
+theorem is_bounded_under_le_inv [OrderedCommGroup α] {l : Filter β} {u : β → α} :
+    (IsBoundedUnder (· ≤ ·) l fun x => (u x)⁻¹) ↔ IsBoundedUnder (· ≥ ·) l u :=
+  (OrderIso.inv α).is_bounded_under_ge_comp
+
+@[simp, to_additive]
+theorem is_bounded_under_ge_inv [OrderedCommGroup α] {l : Filter β} {u : β → α} :
+    (IsBoundedUnder (· ≥ ·) l fun x => (u x)⁻¹) ↔ IsBoundedUnder (· ≤ ·) l u :=
+  (OrderIso.inv α).is_bounded_under_le_comp
+
+theorem IsBoundedUnder.sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
     f.IsBoundedUnder (· ≤ ·) u → f.IsBoundedUnder (· ≤ ·) v → f.IsBoundedUnder (· ≤ ·) fun a => u a⊔v a
   | ⟨bu, (hu : ∀ᶠ x in f, u x ≤ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≤ bv)⟩ =>
     ⟨bu⊔bv,
       show ∀ᶠ x in f, u x⊔v x ≤ bu⊔bv by
         filter_upwards [hu, hv] with _ using sup_le_sup⟩
 
-theorem is_bounded_under_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
-    f.IsBoundedUnder (· ≥ ·) u → f.IsBoundedUnder (· ≥ ·) v → f.IsBoundedUnder (· ≥ ·) fun a => u a⊓v a
-  | ⟨bu, (hu : ∀ᶠ x in f, u x ≥ bu)⟩, ⟨bv, (hv : ∀ᶠ x in f, v x ≥ bv)⟩ =>
-    ⟨bu⊓bv,
-      show ∀ᶠ x in f, u x⊓v x ≥ bu⊓bv by
-        filter_upwards [hu, hv] with _ using inf_le_inf⟩
+@[simp]
+theorem is_bounded_under_le_sup [SemilatticeSup α] {f : Filter β} {u v : β → α} :
+    (f.IsBoundedUnder (· ≤ ·) fun a => u a⊔v a) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≤ ·) v :=
+  ⟨fun h =>
+    ⟨h.mono_le <| eventually_of_forall fun _ => le_sup_left, h.mono_le <| eventually_of_forall fun _ => le_sup_right⟩,
+    fun h => h.1.sup h.2⟩
+
+theorem IsBoundedUnder.inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
+    f.IsBoundedUnder (· ≥ ·) u → f.IsBoundedUnder (· ≥ ·) v → f.IsBoundedUnder (· ≥ ·) fun a => u a⊓v a :=
+  @IsBoundedUnder.sup αᵒᵈ β _ _ _ _
+
+@[simp]
+theorem is_bounded_under_ge_inf [SemilatticeInf α] {f : Filter β} {u v : β → α} :
+    (f.IsBoundedUnder (· ≥ ·) fun a => u a⊓v a) ↔ f.IsBoundedUnder (· ≥ ·) u ∧ f.IsBoundedUnder (· ≥ ·) v :=
+  @is_bounded_under_le_sup αᵒᵈ _ _ _ _ _
+
+theorem is_bounded_under_le_abs [LinearOrderedAddCommGroup α] {f : Filter β} {u : β → α} :
+    (f.IsBoundedUnder (· ≤ ·) fun a => abs (u a)) ↔ f.IsBoundedUnder (· ≤ ·) u ∧ f.IsBoundedUnder (· ≥ ·) u :=
+  is_bounded_under_le_sup.trans <| and_congr Iff.rfl is_bounded_under_le_neg
 
 /-- Filters are automatically bounded or cobounded in complete lattices. To use the same statements
 in complete and conditionally complete lattices but let automation fill automatically the
@@ -588,8 +631,32 @@ section Order
 
 open Filter
 
-theorem GaloisConnection.l_limsup_le {α β γ} [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ]
-    {f : Filter α} {v : α → β} {l : β → γ} {u : γ → β} (gc : GaloisConnection l u)
+theorem Monotone.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atTop atTop) :
+    IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f := by
+  refine' ⟨_, fun h => h.IsBoundedUnder hg⟩
+  rintro ⟨c, hc⟩
+  rw [eventually_map] at hc
+  obtain ⟨b, hb⟩ : ∃ b, ∀, ∀ a ≥ b, ∀, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
+  exact ⟨b, hc.mono fun x hx => not_ltₓ.1 fun h => (hb _ h.le).not_le hx⟩
+
+theorem Monotone.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atBot atBot) :
+    IsBoundedUnder (· ≥ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≥ ·) l f :=
+  hg.dual.is_bounded_under_le_comp hg'
+
+theorem Antitone.is_bounded_under_le_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMaxOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Antitone g) (hg' : Tendsto g atBot atTop) :
+    IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≥ ·) l f :=
+  hg.dual_right.is_bounded_under_ge_comp hg'
+
+theorem Antitone.is_bounded_under_ge_comp [Nonempty β] [LinearOrderₓ β] [Preorderₓ γ] [NoMinOrder γ] {g : β → γ}
+    {f : α → β} {l : Filter α} (hg : Antitone g) (hg' : Tendsto g atTop atBot) :
+    IsBoundedUnder (· ≥ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f :=
+  hg.dual_right.is_bounded_under_le_comp hg'
+
+theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β] [ConditionallyCompleteLattice γ] {f : Filter α}
+    {v : α → β} {l : β → γ} {u : γ → β} (gc : GaloisConnection l u)
     (hlv : f.IsBoundedUnder (· ≤ ·) fun x => l (v x) := by
       run_tac
         is_bounded_default)

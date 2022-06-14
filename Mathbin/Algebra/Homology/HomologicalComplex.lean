@@ -83,7 +83,7 @@ theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k
     
 
 theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.x = C₂.x)
-    (h_d : ∀ i j : ι, c.Rel i j → C₁.d i j ≫ eqToHom (congr_funₓ h_X j) = eqToHom (congr_funₓ h_X i) ≫ C₂.d i j) :
+    (h_d : ∀ i j : ι, c.Rel i j → C₁.d i j ≫ eqToHom (congr_fun h_X j) = eqToHom (congr_fun h_X i) ≫ C₂.d i j) :
     C₁ = C₂ := by
   cases C₁
   cases C₂
@@ -212,7 +212,7 @@ theorem comp_f {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂) (g 
 
 @[simp]
 theorem eq_to_hom_f {C₁ C₂ : HomologicalComplex V c} (h : C₁ = C₂) (n : ι) :
-    HomologicalComplex.Hom.f (eqToHom h) n = eqToHom (congr_funₓ (congr_argₓ HomologicalComplex.x h) n) := by
+    HomologicalComplex.Hom.f (eqToHom h) n = eqToHom (congr_fun (congr_arg HomologicalComplex.x h) n) := by
   subst h
   rfl
 
@@ -244,7 +244,7 @@ noncomputable instance [HasZeroObject V] : Inhabited (HomologicalComplex V c) :=
   ⟨zero⟩
 
 theorem congr_hom {C D : HomologicalComplex V c} {f g : C ⟶ D} (w : f = g) (i : ι) : f.f i = g.f i :=
-  congr_funₓ (congr_argₓ Hom.f w) i
+  congr_fun (congr_arg Hom.f w) i
 
 section
 
@@ -281,8 +281,8 @@ and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
 theorem d_comp_eq_to_hom {i j j' : ι} (rij : c.Rel i j) (rij' : c.Rel i j') :
-    C.d i j' ≫ eqToHom (congr_argₓ C.x (c.next_eq rij' rij)) = C.d i j := by
-  have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_argₓ C.X h) = C.d i j := by
+    C.d i j' ≫ eqToHom (congr_arg C.x (c.next_eq rij' rij)) = C.d i j := by
+  have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_arg C.X h) = C.d i j := by
     rintro rfl
     simp
   apply P
@@ -292,8 +292,8 @@ and so the differentials only differ by an `eq_to_hom`.
 -/
 @[simp]
 theorem eq_to_hom_comp_d {i i' j : ι} (rij : c.Rel i j) (rij' : c.Rel i' j) :
-    eqToHom (congr_argₓ C.x (c.prev_eq rij rij')) ≫ C.d i' j = C.d i j := by
-  have P : ∀ h : i = i', eq_to_hom (congr_argₓ C.X h) ≫ C.d i' j = C.d i j := by
+    eqToHom (congr_arg C.x (c.prev_eq rij rij')) ≫ C.d i' j = C.d i j := by
+  have P : ∀ h : i = i', eq_to_hom (congr_arg C.X h) ≫ C.d i' j = C.d i j := by
     rintro rfl
     simp
   apply P

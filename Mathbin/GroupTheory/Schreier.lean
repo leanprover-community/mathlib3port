@@ -113,7 +113,7 @@ theorem exists_finset_card_le_mul (hH : H.index ≠ 0) {S : Finset G} (hS : clos
     rwa [Set.mem_to_finset]
   refine' ⟨_, _, closure_mul_image_eq_top' hR hR1 hS⟩
   calc _ ≤ (R * S).card := Finset.card_image_le _ ≤ (R.product S).card := Finset.card_image_le _ = R.card * S.card :=
-      R.card_product S _ = H.index * S.card := congr_argₓ (· * S.card) _
+      R.card_product S _ = H.index * S.card := congr_arg (· * S.card) _
   calc R.card = Fintype.card R := (Fintype.card_coe R).symm _ = _ :=
       (Fintype.card_congr (mem_right_transversals.to_equiv hR)).symm _ = Fintype.card (G ⧸ H) :=
       QuotientGroup.card_quotient_right_rel H _ = H.index := H.index_eq_card.symm
@@ -133,7 +133,7 @@ theorem rank_le_index_mul_rank [hG : Groupₓ.Fg G] {H : Subgroup G} (hH : H.ind
   obtain ⟨S, hS₀, hS⟩ := Groupₓ.rank_spec G
   obtain ⟨T, hT₀, hT⟩ := exists_finset_card_le_mul hH hS
   calc Groupₓ.rank H ≤ T.card := Groupₓ.rank_le H hT _ ≤ H.index * S.card := hT₀ _ = H.index * Groupₓ.rank G :=
-      congr_argₓ ((· * ·) H.index) hS₀
+      congr_arg ((· * ·) H.index) hS₀
 
 end Subgroup
 

@@ -21,23 +21,25 @@ contraction, dual module, tensor product
 -/
 
 
-variable (R M N P Q : Type _) [AddCommGroupₓ M]
-
-variable [AddCommGroupₓ N] [AddCommGroupₓ P] [AddCommGroupₓ Q]
+variable {ι : Type _} (R M N P Q : Type _)
 
 attribute [local ext] TensorProduct.ext
 
 section Contraction
 
-open TensorProduct LinearMap Matrix
+open TensorProduct LinearMap Matrix Module
 
 open TensorProduct BigOperators
 
-section CommRingₓ
+section CommSemiringₓ
 
-variable [CommRingₓ R] [Module R M] [Module R N] [Module R P] [Module R Q]
+variable [CommSemiringₓ R]
 
-variable {ι : Type _} [DecidableEq ι] [Fintype ι] (b : Basis ι R M)
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P] [AddCommMonoidₓ Q]
+
+variable [Module R M] [Module R N] [Module R P] [Module R Q]
+
+variable [DecidableEq ι] [Fintype ι] (b : Basis ι R M)
 
 /-- The natural left-handed pairing between a module and its dual. -/
 def contractLeft : Module.Dual R M ⊗ M →ₗ[R] R :=
@@ -67,6 +69,14 @@ theorem dual_tensor_hom_apply (f : Module.Dual R M) (m : M) (n : N) : dualTensor
   dunfold dualTensorHom
   rw [uncurry_apply]
   rfl
+
+@[simp]
+theorem transpose_dual_tensor_hom (f : Module.Dual R M) (m : M) :
+    Dual.transpose (dualTensorHom R M M (f ⊗ₜ m)) = dualTensorHom R _ _ (Dual.eval R M m ⊗ₜ f) := by
+  ext f' m'
+  simp only [dual.transpose_apply, coe_comp, Function.comp_app, dual_tensor_hom_apply, LinearMap.map_smulₛₗ,
+    RingHom.id_apply, Algebra.id.smul_eq_mul, dual.eval_apply, smul_apply]
+  exact mul_comm _ _
 
 @[simp]
 theorem dual_tensor_hom_prod_map_zero (f : Module.Dual R M) (p : P) :
@@ -109,6 +119,20 @@ theorem to_matrix_dual_tensor_hom {m : Type _} {n : Type _} [Fintype m] [Fintype
   by_cases' hij : i = i' ∧ j = j' <;> simp [LinearMap.to_matrix_apply, Finsupp.single_eq_pi_single, hij]
   rw [and_iff_not_or_not, not_not] at hij
   cases hij <;> simp [hij]
+
+end CommSemiringₓ
+
+section CommRingₓ
+
+variable [CommRingₓ R]
+
+variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P] [AddCommGroupₓ Q]
+
+variable [Module R M] [Module R N] [Module R P] [Module R Q]
+
+variable [DecidableEq ι] [Fintype ι] (b : Basis ι R M)
+
+variable {R M N P Q}
 
 /-- If `M` is free, the natural linear map $M^* ⊗ N → Hom(M, N)$ is an equivalence. This function
 provides this equivalence in return for a basis of `M`. -/
@@ -165,7 +189,11 @@ open Module TensorProduct LinearMap
 
 section CommRingₓ
 
-variable [CommRingₓ R] [Module R M] [Module R N] [Module R P] [Module R Q]
+variable [CommRingₓ R]
+
+variable [AddCommGroupₓ M] [AddCommGroupₓ N] [AddCommGroupₓ P] [AddCommGroupₓ Q]
+
+variable [Module R M] [Module R N] [Module R P] [Module R Q]
 
 variable [Free R M] [Finite R M] [Free R N] [Finite R N] [Nontrivial R]
 

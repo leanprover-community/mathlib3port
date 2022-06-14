@@ -505,7 +505,7 @@ theorem exists_subset_affine_independent_affine_span_eq_top {s : Set P} (h : Aff
 
 variable (k V)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_affine_independent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨p, hp⟩)
@@ -666,7 +666,7 @@ faces are given by the same subset of points. -/
 theorem centroid_eq_iff [CharZero k] {n : ℕ} (s : Simplex k P n) {fs₁ fs₂ : Finset (Finₓ (n + 1))} {m₁ m₂ : ℕ}
     (h₁ : fs₁.card = m₁ + 1) (h₂ : fs₂.card = m₂ + 1) : fs₁.centroid k s.points = fs₂.centroid k s.points ↔ fs₁ = fs₂ :=
   by
-  refine' ⟨fun h => _, congr_argₓ _⟩
+  refine' ⟨fun h => _, congr_arg _⟩
   rw [Finset.centroid_eq_affine_combination_fintype, Finset.centroid_eq_affine_combination_fintype] at h
   have ha :=
     (affine_independent_iff_indicator_eq_of_affine_combination_eq k s.points).1 s.independent _ _ _ _

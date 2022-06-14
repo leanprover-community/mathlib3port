@@ -399,12 +399,12 @@ variable {α : Type _} [Zero α] [One α] [Add α]
 @[simp, norm_cast]
 theorem op_nat_cast : ∀ n : ℕ, op (n : α) = n
   | 0 => rfl
-  | n + 1 => congr_argₓ (· + (1 : αᵐᵒᵖ)) <| op_nat_cast n
+  | n + 1 => congr_arg (· + (1 : αᵐᵒᵖ)) <| op_nat_cast n
 
 @[simp, norm_cast]
 theorem unop_nat_cast : ∀ n : ℕ, unop (n : αᵐᵒᵖ) = n
   | 0 => rfl
-  | n + 1 => congr_argₓ (· + (1 : α)) <| unop_nat_cast n
+  | n + 1 => congr_arg (· + (1 : α)) <| unop_nat_cast n
 
 end MulOpposite
 

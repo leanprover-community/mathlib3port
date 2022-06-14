@@ -171,7 +171,7 @@ theorem extension_comp_coe {X : UniformSpaceₓ} {Y : CpltSepUniformSpace}
     extensionHom (completionHom X ≫ f) = f := by
   apply Subtype.eq
   funext x
-  exact congr_funₓ (completion.extension_comp_coe f.property) x
+  exact congr_fun (completion.extension_comp_coe f.property) x
 
 /-- The completion functor is left adjoint to the forgetful functor. -/
 noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace UniformSpaceₓ :=

@@ -29,7 +29,7 @@ infixr:67 "::ᵥ" => Vector.cons
 attribute [simp] head_cons tail_cons
 
 instance [Inhabited α] : Inhabited (Vector α n) :=
-  ⟨ofFn fun _ => default⟩
+  ⟨ofFn default⟩
 
 theorem to_list_injective : Function.Injective (@toList α n) :=
   Subtype.val_injective

@@ -80,7 +80,7 @@ theorem MvPolynomial.sum_mv_polynomial_eq_zero [DecidableEq σ] (f : MvPolynomia
       rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]
       rfl _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
       rw [Equivₓ.subtype_equiv_codomain_symm_apply_eq]_ = a ^ d i * ∏ j, x₀ j ^ d j :=
-      congr_argₓ _ (Fintype.prod_congr _ _ _)-- see below
+      congr_arg _ (Fintype.prod_congr _ _ _)-- see below
         _ =
         (∏ j, x₀ j ^ d j) * a ^ d i :=
       mul_comm _ _

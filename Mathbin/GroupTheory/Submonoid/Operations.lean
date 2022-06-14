@@ -52,8 +52,8 @@ In this file we define various operations on `submonoid`s and `monoid_hom`s.
 
 * `monoid_hom.mrange`: range of a monoid homomorphism as a submonoid of the codomain;
 * `monoid_hom.mker`: kernel of a monoid homomorphism as a submonoid of the domain;
-* `monoid_hom.mrestrict`: restrict a monoid homomorphism to a submonoid;
-* `monoid_hom.cod_mrestrict`: restrict the codomain of a monoid homomorphism to a submonoid;
+* `monoid_hom.restrict`: restrict a monoid homomorphism to a submonoid;
+* `monoid_hom.cod_restrict`: restrict the codomain of a monoid homomorphism to a submonoid;
 * `monoid_hom.mrange_restrict`: restrict a monoid homomorphism to its range;
 
 ## Tags
@@ -826,16 +826,17 @@ theorem map_mclosure (f : M →* N) (s : Set M) : (closure s).map f = closure (f
 
 /-- Restriction of a monoid hom to a submonoid of the domain. -/
 @[to_additive "Restriction of an add_monoid hom to an `add_submonoid` of the domain."]
-def mrestrict {N : Type _} [MulOneClassₓ N] (f : M →* N) (S : Submonoid M) : S →* N :=
-  f.comp S.Subtype
+def restrict {N S : Type _} [MulOneClassₓ N] [SetLike S M] [SubmonoidClass S M] (f : M →* N) (s : S) : s →* N :=
+  f.comp (SubmonoidClass.subtype _)
 
 @[simp, to_additive]
-theorem mrestrict_apply {N : Type _} [MulOneClassₓ N] (f : M →* N) (x : S) : f.mrestrict S x = f x :=
+theorem restrict_apply {N S : Type _} [MulOneClassₓ N] [SetLike S M] [SubmonoidClass S M] (f : M →* N) (s : S) (x : s) :
+    f.restrict s x = f x :=
   rfl
 
 /-- Restriction of a monoid hom to a submonoid of the codomain. -/
-@[to_additive "Restriction of an `add_monoid` hom to an `add_submonoid` of the codomain.", simps]
-def codMrestrict (f : M →* N) (S : Submonoid N) (h : ∀ x, f x ∈ S) : M →* S where
+@[to_additive "Restriction of an `add_monoid` hom to an `add_submonoid` of the codomain.", simps apply]
+def codRestrict {S} [SetLike S N] [SubmonoidClass S N] (f : M →* N) (s : S) (h : ∀ x, f x ∈ s) : M →* s where
   toFun := fun n => ⟨f n, h n⟩
   map_one' := Subtype.eq f.map_one
   map_mul' := fun x y => Subtype.eq (f.map_mul x y)
@@ -843,7 +844,7 @@ def codMrestrict (f : M →* N) (S : Submonoid N) (h : ∀ x, f x ∈ S) : M →
 /-- Restriction of a monoid hom to its range interpreted as a submonoid. -/
 @[to_additive "Restriction of an `add_monoid` hom to its range interpreted as a submonoid."]
 def mrangeRestrict {N} [MulOneClassₓ N] (f : M →* N) : M →* f.mrange :=
-  (f.codMrestrict f.mrange) fun x => ⟨x, rfl⟩
+  (f.codRestrict f.mrange) fun x => ⟨x, rfl⟩
 
 @[simp, to_additive]
 theorem coe_mrange_restrict {N} [MulOneClassₓ N] (f : M →* N) (x : M) : (f.mrangeRestrict x : N) = f x :=
@@ -977,7 +978,7 @@ theorem mrange_inl_sup_mrange_inr : (inl M N).mrange⊔(inr M N).mrange = ⊤ :=
 /-- The monoid hom associated to an inclusion of submonoids. -/
 @[to_additive "The `add_monoid` hom associated to an inclusion of submonoids."]
 def inclusion {S T : Submonoid M} (h : S ≤ T) : S →* T :=
-  S.Subtype.codMrestrict _ fun x => h x.2
+  S.Subtype.codRestrict _ fun x => h x.2
 
 @[simp, to_additive]
 theorem range_subtype (s : Submonoid M) : s.Subtype.mrange = s :=
@@ -1021,7 +1022,7 @@ variable {S} {T : Submonoid M}
     monoid are equal. -/
 @[to_additive "Makes the identity additive isomorphism from a proof two\nsubmonoids of an additive monoid are equal."]
 def submonoidCongr (h : S = T) : S ≃* T :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl }
 
 /-- A monoid homomorphism `f : M →* N` with a left-inverse `g : N → M` defines a multiplicative
 equivalence between `M` and `f.mrange`.
@@ -1096,7 +1097,7 @@ instance [HasScalar α β] [HasScalar M' α] [HasScalar M' β] [IsScalarTower M'
 theorem smul_def [HasScalar M' α] {S : Submonoid M'} (g : S) (m : α) : g • m = (g : M') • m :=
   rfl
 
-instance [HasScalar M' α] [HasFaithfulScalar M' α] (S : Submonoid M') : HasFaithfulScalar S α :=
+instance [HasScalar M' α] [HasFaithfulSmul M' α] (S : Submonoid M') : HasFaithfulSmul S α :=
   ⟨fun x y h => Subtype.ext <| eq_of_smul_eq_smul h⟩
 
 end MulOneClassₓ

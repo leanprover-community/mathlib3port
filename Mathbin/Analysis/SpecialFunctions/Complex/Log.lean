@@ -158,6 +158,15 @@ theorem tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : 
     Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 
+@[simp]
+theorem map_exp_comap_re_at_bot : map exp (comap re atBot) = 𝓝[≠] 0 := by
+  rw [← comap_exp_nhds_zero, map_comap, range_exp, nhdsWithin]
+
+@[simp]
+theorem map_exp_comap_re_at_top : map exp (comap re atTop) = comap abs atTop := by
+  rw [← comap_exp_comap_abs_at_top, map_comap, range_exp, inf_eq_left, le_principal_iff]
+  exact eventually_ne_of_tendsto_norm_at_top tendsto_comap 0
+
 end Complex
 
 section LogDeriv

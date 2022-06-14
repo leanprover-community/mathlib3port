@@ -243,7 +243,7 @@ def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod 
   naturality' := fun X Y f => by
     cases X
     cases Y
-    simp only [functor.prod_map, Prod.mk.inj_iffₓ, prod_comp]
+    simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
     constructor <;> rw [naturality]
 
 /- Again, it is inadvisable in Lean 3 to setup a notation `α × β`;

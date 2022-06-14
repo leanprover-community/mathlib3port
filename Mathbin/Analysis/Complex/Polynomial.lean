@@ -74,12 +74,11 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, IsRo
               
       have hF₂ : (F.eval z').abs = (f.eval z₀).abs - (g.eval z₀).abs * δ ^ n :=
         calc
-          (F.eval z').abs = (f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs).abs :=
-            congr_argₓ abs hF₁
+          (F.eval z').abs = (f.eval z₀ - f.eval z₀ * (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs).abs := congr_arg abs hF₁
           _ = abs (f.eval z₀) * Complex.abs (1 - (g.eval z₀).abs * δ ^ n / (f.eval z₀).abs : ℝ) := by
             rw [← Complex.abs_mul] <;>
               exact
-                congr_argₓ Complex.abs
+                congr_arg Complex.abs
                   (by
                     simp [mul_addₓ, add_mulₓ, mul_assoc, div_eq_mul_inv, sub_eq_add_neg])
           _ = _ := by

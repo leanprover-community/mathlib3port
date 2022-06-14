@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 -/
 import Mathbin.Topology.MetricSpace.Basic
+import Mathbin.Topology.Algebra.Order.Archimedean
 import Mathbin.Topology.Instances.Int
 import Mathbin.Topology.Instances.Nat
 import Mathbin.Topology.Instances.Real
@@ -38,11 +39,7 @@ theorem uniform_embedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
   uniform_embedding_comap Rat.cast_injective
 
 theorem dense_embedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
-  uniform_embedding_coe_real.DenseEmbedding fun x =>
-    mem_closure_iff_nhds.2 fun t ht =>
-      let ⟨ε, ε0, hε⟩ := Metric.mem_nhds_iff.1 ht
-      let ⟨q, h⟩ := exists_rat_near x ε0
-      ⟨_, hε (mem_ball'.2 h), q, rfl⟩
+  uniform_embedding_coe_real.DenseEmbedding Rat.dense_range_cast
 
 theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
   dense_embedding_coe_real.toEmbedding

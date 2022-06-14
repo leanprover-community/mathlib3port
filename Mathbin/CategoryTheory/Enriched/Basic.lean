@@ -40,13 +40,13 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1264:24: unsupported: (notation) in structure
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:1263:24: unsupported: (notation) in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ⟶[] »
 /-- A `V`-category is a category enriched in a monoidal category `V`.
 
 Note that we do not assume that `V` is a concrete category,
@@ -130,9 +130,9 @@ def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Typ
   Hom := 𝒞.Hom
   id := fun X => eId (Type v) X PUnit.unit
   comp := fun X Y Z f g => eComp (Type v) X Y Z ⟨f, g⟩
-  id_comp' := fun X Y f => congr_funₓ (e_id_comp (Type v) X Y) f
-  comp_id' := fun X Y f => congr_funₓ (e_comp_id (Type v) X Y) f
-  assoc' := fun W X Y Z f g h => (congr_funₓ (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
+  id_comp' := fun X Y f => congr_fun (e_id_comp (Type v) X Y) f
+  comp_id' := fun X Y f => congr_fun (e_comp_id (Type v) X Y) f
+  assoc' := fun W X Y Z f g h => (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
 
 /-- Construct a `Type v`-enriched category from an honest category.
 -/
@@ -417,8 +417,8 @@ is just the same thing as an honest functor.
 def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Type v) C] {D : Type u₂}
     [𝒟 : EnrichedCategory (Type v) D] : EnrichedFunctor (Type v) C D ≃ C ⥤ D where
   toFun := fun F =>
-    { obj := fun X => F.obj X, map := fun X Y f => F.map X Y f, map_id' := fun X => congr_funₓ (F.map_id X) PUnit.unit,
-      map_comp' := fun X Y Z f g => congr_funₓ (F.map_comp X Y Z) ⟨f, g⟩ }
+    { obj := fun X => F.obj X, map := fun X Y f => F.map X Y f, map_id' := fun X => congr_fun (F.map_id X) PUnit.unit,
+      map_comp' := fun X Y Z f g => congr_fun (F.map_comp X Y Z) ⟨f, g⟩ }
   invFun := fun F =>
     { obj := fun X => F.obj X, map := fun X Y f => F.map f,
       map_id' := fun X => by
@@ -444,7 +444,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
   NatIso.ofComponents
     (fun α =>
       { Hom := fun σ x =>
-          { app := fun X => σ.app X x, naturality' := fun X Y f => congr_funₓ (σ.naturality X Y) ⟨x, f⟩ },
+          { app := fun X => σ.app X x, naturality' := fun X Y f => congr_fun (σ.naturality X Y) ⟨x, f⟩ },
         inv := fun σ =>
           { app := fun X x => (σ x).app X,
             naturality := fun X Y => by

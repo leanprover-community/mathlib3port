@@ -240,7 +240,7 @@ section Sigma
 
 variable {α : ι → Type u} {δ : ∀ i, α i → Type w} [∀ i j, AddCommMonoidₓ (δ i j)]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ i j where
   toFun := @Dfinsupp.sigmaCurry _ _ δ _
@@ -251,7 +251,7 @@ noncomputable def sigmaCurry : (⨁ i : Σi, _, δ i.1 i.2) →+ ⨁ (i) (j), δ
 theorem sigma_curry_apply (f : ⨁ i : Σi, _, δ i.1 i.2) (i : ι) (j : α i) : sigmaCurry f i j = f ⟨i, j⟩ :=
   Dfinsupp.sigma_curry_apply f i j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
 noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i.1 i.2 where
@@ -259,12 +259,12 @@ noncomputable def sigmaUncurry : (⨁ (i) (j), δ i j) →+ ⨁ i : Σi, _, δ i
   map_zero' := Dfinsupp.sigma_uncurry_zero
   map_add' := Dfinsupp.sigma_uncurry_add
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_apply (f : ⨁ (i) (j), δ i j) (i : ι) (j : α i) : sigmaUncurry f ⟨i, j⟩ = f i j :=
   Dfinsupp.sigma_uncurry_apply f i j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural map between `⨁ (i : Σ i, α i), δ i.1 i.2` and `⨁ i (j : α i), δ i j`.-/
 noncomputable def sigmaCurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j), δ i j :=
   { sigmaCurry, Dfinsupp.sigmaCurryEquiv with }
@@ -272,63 +272,40 @@ noncomputable def sigmaCurryEquiv : (⨁ i : Σi, _, δ i.1 i.2) ≃+ ⨁ (i) (j
 end Sigma
 
 /-- The canonical embedding from `⨁ i, A i` to `M` where `A` is a collection of `add_submonoid M`
-indexed by `ι`-/
-def addSubmonoidCoe {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : (⨁ i, A i) →+ M :=
-  toAddMonoid fun i => (A i).Subtype
+indexed by `ι`.
+
+When `S = submodule _ M`, this is available as a `linear_map`, `direct_sum.coe_linear_map`. -/
+protected def coeAddMonoidHom {M S : Type _} [DecidableEq ι] [AddCommMonoidₓ M] [SetLike S M] [AddSubmonoidClass S M]
+    (A : ι → S) : (⨁ i, A i) →+ M :=
+  toAddMonoid fun i => AddSubmonoidClass.subtype (A i)
 
 @[simp]
-theorem add_submonoid_coe_of {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) (i : ι)
-    (x : A i) : addSubmonoidCoe A (of (fun i => A i) i x) = x :=
+theorem coe_add_monoid_hom_of {M S : Type _} [DecidableEq ι] [AddCommMonoidₓ M] [SetLike S M] [AddSubmonoidClass S M]
+    (A : ι → S) (i : ι) (x : A i) : DirectSum.coeAddMonoidHom A (of (fun i => A i) i x) = x :=
   to_add_monoid_of _ _ _
 
-theorem coe_of_add_submonoid_apply {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] {A : ι → AddSubmonoid M} (i j : ι)
-    (x : A i) : (of _ i x j : M) = if i = j then x else 0 := by
+theorem coe_of_apply {M S : Type _} [DecidableEq ι] [AddCommMonoidₓ M] [SetLike S M] [AddSubmonoidClass S M] {A : ι → S}
+    (i j : ι) (x : A i) : (of _ i x j : M) = if i = j then x else 0 := by
   obtain rfl | h := Decidable.eq_or_ne i j
   · rw [DirectSum.of_eq_same, if_pos rfl]
     
-  · rw [DirectSum.of_eq_of_ne _ _ _ _ h, if_neg h, AddSubmonoid.coe_zero]
+  · rw [DirectSum.of_eq_of_ne _ _ _ _ h, if_neg h, AddSubmonoidClass.coe_zero]
     
 
-/-- The `direct_sum` formed by a collection of `add_submonoid`s of `M` is said to be internal if the
-canonical map `(⨁ i, A i) →+ M` is bijective.
+/-- The `direct_sum` formed by a collection of additive submonoids (or subgroups, or submodules) of
+`M` is said to be internal if the canonical map `(⨁ i, A i) →+ M` is bijective.
 
-See `direct_sum.add_subgroup_is_internal` for the same statement about `add_subgroup`s. -/
-def AddSubmonoidIsInternal {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M) : Prop :=
-  Function.Bijective (addSubmonoidCoe A)
+For the alternate statement in terms of independence and spanning, see
+`direct_sum.subgroup_is_internal_iff_independent_and_supr_eq_top` and
+`direct_sum.is_internal_submodule_iff_independent_and_supr_eq_top`. -/
+def IsInternal {M S : Type _} [DecidableEq ι] [AddCommMonoidₓ M] [SetLike S M] [AddSubmonoidClass S M] (A : ι → S) :
+    Prop :=
+  Function.Bijective (DirectSum.coeAddMonoidHom A)
 
-theorem AddSubmonoidIsInternal.supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M)
-    (h : AddSubmonoidIsInternal A) : supr A = ⊤ := by
+theorem IsInternal.add_submonoid_supr_eq_top {M : Type _} [DecidableEq ι] [AddCommMonoidₓ M] (A : ι → AddSubmonoid M)
+    (h : IsInternal A) : supr A = ⊤ := by
   rw [AddSubmonoid.supr_eq_mrange_dfinsupp_sum_add_hom, AddMonoidHom.mrange_top_iff_surjective]
   exact Function.Bijective.surjective h
-
-/-- The canonical embedding from `⨁ i, A i` to `M`  where `A` is a collection of `add_subgroup M`
-indexed by `ι`-/
-def addSubgroupCoe {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : (⨁ i, A i) →+ M :=
-  toAddMonoid fun i => (A i).Subtype
-
-@[simp]
-theorem add_subgroup_coe_of {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) (i : ι) (x : A i) :
-    addSubgroupCoe A (of (fun i => A i) i x) = x :=
-  to_add_monoid_of _ _ _
-
-theorem coe_of_add_subgroup_apply {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] {A : ι → AddSubgroup M} (i j : ι)
-    (x : A i) : (of _ i x j : M) = if i = j then x else 0 := by
-  obtain rfl | h := Decidable.eq_or_ne i j
-  · rw [DirectSum.of_eq_same, if_pos rfl]
-    
-  · rw [DirectSum.of_eq_of_ne _ _ _ _ h, if_neg h, AddSubgroup.coe_zero]
-    
-
-/-- The `direct_sum` formed by a collection of `add_subgroup`s of `M` is said to be internal if the
-canonical map `(⨁ i, A i) →+ M` is bijective.
-
-See `direct_sum.submodule_is_internal` for the same statement about `submodules`s. -/
-def AddSubgroupIsInternal {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) : Prop :=
-  Function.Bijective (addSubgroupCoe A)
-
-theorem AddSubgroupIsInternal.to_add_submonoid {M : Type _} [DecidableEq ι] [AddCommGroupₓ M] (A : ι → AddSubgroup M) :
-    AddSubgroupIsInternal A ↔ AddSubmonoidIsInternal fun i => (A i).toAddSubmonoid :=
-  Iff.rfl
 
 end DirectSum
 

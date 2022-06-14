@@ -293,12 +293,12 @@ def whiskerIsoMapGenerateCocone :
     Cone.whisker (generateEquivalenceOpensLe U hY).op.Functor (F.mapCone (opensLeCoverCocone U).op) ≅
       F.mapCone (Sieve.generate (PresieveOfCoveringAux U Y)).Arrows.Cocone.op where
   Hom :=
-    { Hom := F.map (eqToHom (congr_argₓ op hY.symm)),
+    { Hom := F.map (eqToHom (congr_arg op hY.symm)),
       w' := fun j => by
         erw [← F.map_comp]
         congr }
   inv :=
-    { Hom := F.map (eqToHom (congr_argₓ op hY)),
+    { Hom := F.map (eqToHom (congr_arg op hY)),
       w' := fun j => by
         erw [← F.map_comp]
         congr }

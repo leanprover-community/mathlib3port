@@ -117,7 +117,7 @@ theorem QuotientGroup.mk'_eq_mk' {G : Type _} [Groupₓ G] {N : Subgroup G} [hN 
       show x⁻¹ * (x * z) ∈ N
       rwa [← mul_assoc, mul_left_invₓ, one_mulₓ]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » (0 : K))
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
     ClassGroup.mk0 K I = ClassGroup.mk0 K J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), spanSingleton R⁰ x * I = J := by
   simp only [ClassGroup.mk0, MonoidHom.comp_apply, QuotientGroup.mk'_eq_mk']
@@ -125,7 +125,7 @@ theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J
   · rintro ⟨_, ⟨x, rfl⟩, hx⟩
     refine' ⟨x, x.ne_zero, _⟩
     simpa only [mul_comm, coe_mk0, MonoidHom.to_fun_eq_coe, coe_to_principal_ideal, Units.coe_mul] using
-      congr_argₓ (coe : _ → FractionalIdeal R⁰ K) hx
+      congr_arg (coe : _ → FractionalIdeal R⁰ K) hx
     
   · rintro ⟨x, hx, eq_J⟩
     refine' ⟨_, ⟨Units.mk0 x hx, rfl⟩, Units.ext _⟩

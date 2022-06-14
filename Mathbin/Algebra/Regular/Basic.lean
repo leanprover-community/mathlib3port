@@ -109,7 +109,7 @@ element, then `b` is right-regular. -/
 theorem IsRightRegular.of_mul (ab : IsRightRegular (b * a)) : IsRightRegular b := by
   refine' fun x y xy => ab (_ : x * (b * a) = y * (b * a))
   rw [← mul_assoc, ← mul_assoc]
-  exact congr_funₓ (congr_argₓ Mul.mul xy) a
+  exact congr_fun (congr_arg Mul.mul xy) a
 
 /-- An element is right-regular if and only if multiplying it on the right with a right-regular
 element is right-regular. -/

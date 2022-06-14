@@ -105,7 +105,7 @@ theorem is_unit_denom (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : IsUnit (r.deno
 theorem norm_sub_mod_part_aux (r : ℚ) (h : ∥(r : ℚ_[p])∥ ≤ 1) : ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom := by
   rw [← Zmod.int_coe_zmod_eq_zero_iff_dvd]
   simp only [Int.cast_coe_nat, Zmod.nat_cast_mod, Int.cast_mul, Int.cast_sub]
-  have := congr_argₓ (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
+  have := congr_arg (coe : ℤ → Zmod p) (gcd_eq_gcd_ab r.denom p)
   simp only [Int.cast_coe_nat, add_zeroₓ, Int.cast_add, Zmod.nat_cast_self, Int.cast_mul, zero_mul] at this
   push_cast
   rw [mul_right_commₓ, mul_assoc, ← this]

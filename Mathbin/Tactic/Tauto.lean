@@ -123,26 +123,26 @@ unsafe def symm_eq (r : tauto_state) : expr → expr → tactic expr
             | (quote.1 ((%%ₓa₀) ∧ %%ₓa₁), quote.1 ((%%ₓb₀) ∧ %%ₓb₁)) => do
               let p₀ ← symm_eq a₀ b₀
               let p₁ ← symm_eq a₁ b₁
-              let p' ← to_expr (pquote.1 (congr (congr_argₓ And (%%ₓp₀)) (%%ₓp₁)))
+              let p' ← to_expr (pquote.1 (congr (congr_arg And (%%ₓp₀)) (%%ₓp₁)))
               add_edge r a' b' p'
               return p'
             | (quote.1 ((%%ₓa₀) ∨ %%ₓa₁), quote.1 ((%%ₓb₀) ∨ %%ₓb₁)) => do
               let p₀ ← symm_eq a₀ b₀
               let p₁ ← symm_eq a₁ b₁
-              let p' ← to_expr (pquote.1 (congr (congr_argₓ Or (%%ₓp₀)) (%%ₓp₁)))
+              let p' ← to_expr (pquote.1 (congr (congr_arg Or (%%ₓp₀)) (%%ₓp₁)))
               add_edge r a' b' p'
               return p'
             | (quote.1 ((%%ₓa₀) ↔ %%ₓa₁), quote.1 ((%%ₓb₀) ↔ %%ₓb₁)) =>
               (do
                   let p₀ ← symm_eq a₀ b₀
                   let p₁ ← symm_eq a₁ b₁
-                  let p' ← to_expr (pquote.1 (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)))
+                  let p' ← to_expr (pquote.1 (congr (congr_arg Iff (%%ₓp₀)) (%%ₓp₁)))
                   add_edge r a' b' p'
                   return p') <|>
                 do
                 let p₀ ← symm_eq a₀ b₁
                 let p₁ ← symm_eq a₁ b₀
-                let p' ← to_expr (pquote.1 (Eq.trans (congr (congr_argₓ Iff (%%ₓp₀)) (%%ₓp₁)) (Iff.to_eq Iff.comm)))
+                let p' ← to_expr (pquote.1 (Eq.trans (congr (congr_arg Iff (%%ₓp₀)) (%%ₓp₁)) (Iff.to_eq Iff.comm)))
                 add_edge r a' b' p'
                 return p'
             | (quote.1 ((%%ₓa₀) → %%ₓa₁), quote.1 ((%%ₓb₀) → %%ₓb₁)) =>

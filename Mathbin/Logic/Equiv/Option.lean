@@ -29,12 +29,12 @@ section OptionCongr
 def optionCongr (e : α ≃ β) : Option α ≃ Option β where
   toFun := Option.map e
   invFun := Option.map e.symm
-  left_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.symm_comp_self.symm ▸ congr_funₓ Option.map_id x
-  right_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.self_comp_symm.symm ▸ congr_funₓ Option.map_id x
+  left_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.symm_comp_self.symm ▸ congr_fun Option.map_id x
+  right_inv := fun x => (Option.map_mapₓ _ _ _).trans <| e.self_comp_symm.symm ▸ congr_fun Option.map_id x
 
 @[simp]
 theorem option_congr_refl : optionCongr (Equivₓ.refl α) = Equivₓ.refl _ :=
-  ext <| congr_funₓ Option.map_id
+  ext <| congr_fun Option.map_id
 
 @[simp]
 theorem option_congr_symm (e : α ≃ β) : (optionCongr e).symm = optionCongr e.symm :=
@@ -113,16 +113,16 @@ theorem remove_none_none {x : α} (h : e (some x) = none) : some (removeNone e x
 @[simp]
 theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
   ⟨fun h => by
-    simpa using (congr_argₓ e h).symm, fun h => by
-    simpa using (congr_argₓ e.symm h).symm⟩
+    simpa using (congr_arg e h).symm, fun h => by
+    simpa using (congr_arg e.symm h).symm⟩
 
 theorem some_remove_none_iff {x : α} : some (removeNone e x) = e none ↔ e.symm none = some x := by
   cases' h : e (some x) with a
   · rw [remove_none_none _ h]
-    simpa using (congr_argₓ e.symm h).symm
+    simpa using (congr_arg e.symm h).symm
     
   · rw [remove_none_some _ ⟨a, h⟩]
-    have := congr_argₓ e.symm h
+    have := congr_arg e.symm h
     rw [symm_apply_apply] at this
     simp only [false_iffₓ, apply_eq_iff_eq]
     simp [this]

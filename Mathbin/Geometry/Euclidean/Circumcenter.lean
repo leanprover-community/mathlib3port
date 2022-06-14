@@ -379,7 +379,7 @@ theorem orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} (s 
 theorem coe_orthogonal_projection_vadd_smul_vsub_orthogonal_projection {n : ℕ} {r₁ : ℝ} (s : Simplex ℝ P n) {p p₁o : P}
     (hp₁o : p₁o ∈ affineSpan ℝ (Set.Range s.points)) :
     ↑(s.orthogonalProjectionSpan (r₁ • (p -ᵥ ↑(s.orthogonalProjectionSpan p)) +ᵥ p₁o)) = p₁o :=
-  congr_argₓ coe (orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _ hp₁o)
+  congr_arg coe (orthogonal_projection_vadd_smul_vsub_orthogonal_projection _ _ _ hp₁o)
 
 theorem dist_sq_eq_dist_orthogonal_projection_sq_add_dist_orthogonal_projection_sq {n : ℕ} (s : Simplex ℝ P n) {p1 : P}
     (p2 : P) (hp1 : p1 ∈ affineSpan ℝ (Set.Range s.points)) :

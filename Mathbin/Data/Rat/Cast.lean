@@ -95,7 +95,7 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
     rw [d0, zero_mul] at this
     contradiction
   rw [num_denom'] at e
-  have := congr_argₓ (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
+  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gtₓ <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_coe_nat] at this
   symm
   change (a / b : α) = n / d
@@ -186,13 +186,13 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num
     conv in n⁻¹.denom => rw [← @num_denom n, inv_def] <;> apply denom_dvd
   have : (n⁻¹.denom : α) = 0 → (n.num : α) = 0 := fun h => by
     let ⟨k, e⟩ := this
-    have := congr_argₓ (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
+    have := congr_arg (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_coe_nat, h, zero_mul] at this
   rw [division_def, cast_mul_of_ne_zero md (mt this nn), cast_inv_of_ne_zero nn nd, division_def]
 
 @[simp, norm_cast]
 theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => by
-    refine' ⟨fun h => _, congr_argₓ _⟩
+    refine' ⟨fun h => _, congr_arg _⟩
     have d₁0 : d₁ ≠ 0 := ne_of_gtₓ h₁
     have d₂0 : d₂ ≠ 0 := ne_of_gtₓ h₂
     have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0
@@ -362,7 +362,7 @@ See note [partially-applied ext lemmas] for why `comp` is used here. -/
 theorem ext_rat {f g : ℚ →*₀ M}
     (same_on_int : f.comp (Int.castRingHom ℚ).toMonoidWithZeroHom = g.comp (Int.castRingHom ℚ).toMonoidWithZeroHom) :
     f = g := by
-  have same_on_int' : ∀ k : ℤ, f k = g k := congr_funₓ same_on_int
+  have same_on_int' : ∀ k : ℤ, f k = g k := congr_fun same_on_int
   ext x
   rw [← @Rat.num_denom x, Rat.mk_eq_div, f.map_div, g.map_div, same_on_int' x.num, same_on_int' x.denom]
 

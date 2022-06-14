@@ -66,7 +66,7 @@ theorem card_comm_eq_card_conj_classes_mul_card [h : Fintype (ConjClasses G)] :
       _ = ∑ g, card { h // g * h = h * g } := card_sigma _
       _ = ∑ g, card (MulAction.FixedBy (ConjAct G) G g) :=
         sum_equiv conj_act.to_conj_act.to_equiv _ _ fun g =>
-          card_congr' <| congr_argₓ _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
+          card_congr' <| congr_arg _ <| funext fun h => mul_inv_eq_iff_eq_mul.symm.to_eq
       _ = card (Quotientₓ (MulAction.orbitRel (ConjAct G) G)) * card G :=
         MulAction.sum_card_fixed_by_eq_card_orbits_mul_card_group (ConjAct G) G
       _ = card (Quotientₓ (IsConj.setoid G)) * card G := by

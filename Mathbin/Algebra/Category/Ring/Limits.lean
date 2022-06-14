@@ -83,7 +83,7 @@ end HasLimits
 
 open HasLimits
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v} SemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -184,7 +184,7 @@ def limitCone (F : J ⥤ CommSemiRing.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>
@@ -267,7 +267,7 @@ def limitCone (F : J ⥤ Ringₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ Ringₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 /-- The category of rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} Ringₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 => { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing.{max v u}) } }
@@ -370,7 +370,7 @@ def limitCone (F : J ⥤ CommRingₓₓ.{max v u}) : Cone F :=
 def limitConeIsLimit (F : J ⥤ CommRingₓₓ.{max v u}) : IsLimit (limitCone F) :=
   liftedLimitIsLimit _
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 /-- The category of commutative rings has all limits. -/
 irreducible_def has_limits_of_size : HasLimitsOfSize.{v, v} CommRingₓₓ.{max v u} :=
   { HasLimitsOfShape := fun J 𝒥 =>

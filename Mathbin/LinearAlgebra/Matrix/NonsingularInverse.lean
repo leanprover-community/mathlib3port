@@ -191,7 +191,7 @@ theorem det_ne_zero_of_right_inverse [Nontrivial α] (h : A ⬝ B = 1) : A.det �
 
 end Invertible
 
-variable [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [CommRingₓ α]
+variable [Fintype n] [DecidableEq n] [CommRingₓ α]
 
 variable (A : Matrix n n α) (B : Matrix n n α)
 
@@ -257,12 +257,44 @@ theorem nonsing_inv_mul (h : IsUnit A.det) : A⁻¹ ⬝ A = 1 := by
   rw [← inv_of_eq_nonsing_inv, Matrix.inv_of_mul_self]
 
 @[simp]
+theorem mul_nonsing_inv_cancel_right (B : Matrix m n α) (h : IsUnit A.det) : B ⬝ A ⬝ A⁻¹ = B := by
+  simp [Matrix.mul_assoc, mul_nonsing_inv A h]
+
+@[simp]
+theorem mul_nonsing_inv_cancel_left (B : Matrix n m α) (h : IsUnit A.det) : A ⬝ (A⁻¹ ⬝ B) = B := by
+  simp [← Matrix.mul_assoc, mul_nonsing_inv A h]
+
+@[simp]
+theorem nonsing_inv_mul_cancel_right (B : Matrix m n α) (h : IsUnit A.det) : B ⬝ A⁻¹ ⬝ A = B := by
+  simp [Matrix.mul_assoc, nonsing_inv_mul A h]
+
+@[simp]
+theorem nonsing_inv_mul_cancel_left (B : Matrix n m α) (h : IsUnit A.det) : A⁻¹ ⬝ (A ⬝ B) = B := by
+  simp [← Matrix.mul_assoc, nonsing_inv_mul A h]
+
+@[simp]
 theorem mul_inv_of_invertible [Invertible A] : A ⬝ A⁻¹ = 1 :=
   mul_nonsing_inv A (is_unit_det_of_invertible A)
 
 @[simp]
 theorem inv_mul_of_invertible [Invertible A] : A⁻¹ ⬝ A = 1 :=
   nonsing_inv_mul A (is_unit_det_of_invertible A)
+
+@[simp]
+theorem mul_inv_cancel_right_of_invertible (B : Matrix m n α) [Invertible A] : B ⬝ A ⬝ A⁻¹ = B :=
+  mul_nonsing_inv_cancel_right A B (is_unit_det_of_invertible A)
+
+@[simp]
+theorem mul_inv_cancel_left_of_invertible (B : Matrix n m α) [Invertible A] : A ⬝ (A⁻¹ ⬝ B) = B :=
+  mul_nonsing_inv_cancel_left A B (is_unit_det_of_invertible A)
+
+@[simp]
+theorem inv_mul_cancel_right_of_invertible (B : Matrix m n α) [Invertible A] : B ⬝ A⁻¹ ⬝ A = B :=
+  nonsing_inv_mul_cancel_right A B (is_unit_det_of_invertible A)
+
+@[simp]
+theorem inv_mul_cancel_left_of_invertible (B : Matrix n m α) [Invertible A] : A⁻¹ ⬝ (A ⬝ B) = B :=
+  nonsing_inv_mul_cancel_left A B (is_unit_det_of_invertible A)
 
 theorem nonsing_inv_cancel_or_zero : A⁻¹ ⬝ A = 1 ∧ A ⬝ A⁻¹ = 1 ∨ A⁻¹ = 0 := by
   by_cases' h : IsUnit A.det
@@ -482,6 +514,10 @@ theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → 
 /-! ### More results about determinants -/
 
 
+section Det
+
+variable [Fintype m] [DecidableEq m]
+
 /-- A variant of `matrix.det_units_conj`. -/
 theorem det_conj {M : Matrix m m α} (h : IsUnit M) (N : Matrix m m α) : det (M ⬝ N ⬝ M⁻¹) = det N := by
   rw [← h.unit_spec, ← coe_units_inv, det_units_conj]
@@ -547,6 +583,8 @@ theorem det_one_sub_mul_comm (A : Matrix m n α) (B : Matrix n m α) : det (1 - 
 TODO: show this more generally. -/
 theorem det_one_add_col_mul_row (u v : m → α) : det (1 + colₓ u ⬝ rowₓ v) = 1 + v ⬝ᵥ u := by
   rw [det_one_add_mul_comm, det_unique, Pi.add_apply, Pi.add_apply, Matrix.one_apply_eq, Matrix.row_mul_col_apply]
+
+end Det
 
 end Matrix
 

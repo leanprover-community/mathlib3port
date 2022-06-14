@@ -206,7 +206,7 @@ theorem RingHom.is_integral_elem_localization_at_leading_coeff {R S : Type _} [C
     
   · refine' eval₂_mul_eq_zero_of_left _ _ _ _
     erw [eval₂_map, IsLocalization.map_comp, ← hom_eval₂ _ f (algebraMap S Sₘ) x]
-    exact trans (congr_argₓ (algebraMap S Sₘ) hf) (RingHom.map_zero _)
+    exact trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
     
 
 /-- Given a particular witness to an element being algebraic over an algebra `R → S`,
@@ -231,7 +231,7 @@ theorem is_integral_localization (H : Algebra.IsIntegral R S) :
   obtain ⟨v, hv⟩ := hu
   obtain ⟨v', hv'⟩ := is_unit_iff_exists_inv'.1 (map_units Rₘ ⟨v, hv.1⟩)
   refine' @is_integral_of_is_integral_mul_unit Rₘ _ _ _ (localizationAlgebra M S) x (algebraMap S Sₘ u) v' _ _
-  · replace hv' := congr_argₓ (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv'
+  · replace hv' := congr_arg (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv'
     rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv'
     erw [IsLocalization.map_comp] at hv'
     exact hv.2 ▸ hv'
@@ -281,7 +281,7 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L) (inj : ∀ x, alge
       ⟨fun h =>
         ⟨1, by
           simpa using algebra_map_injective C A L h⟩,
-        fun ⟨c, hc⟩ => congr_argₓ (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
+        fun ⟨c, hc⟩ => congr_arg (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
 
 variable (K L)
 

@@ -268,9 +268,9 @@ theorem algebraic_independent_subtype {s : Set A} :
   by
   apply @algebraic_independent_comp_subtype _ _ _ id
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem algebraic_independent_of_finite (s : Set A)
-    (H : ∀ t _ : t ⊆ s, Finite t → AlgebraicIndependent R (fun x => x : t → A)) :
+    (H : ∀ t _ : t ⊆ s, t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
   algebraic_independent_subtype.2 fun p hp =>
     algebraic_independent_subtype.1 (H _ (mem_supported.1 hp) (Finset.finite_to_set _)) _
@@ -404,12 +404,12 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_C (hx 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_none (hx : AlgebraicIndependent R x) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x none) = Polynomial.x := by
-  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim, Polynomial.map_X]
+  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elimₓ, Polynomial.map_X]
 
 @[simp]
 theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some (hx : AlgebraicIndependent R x) i :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x (some i)) = Polynomial.c (hx.aevalEquiv (x i)) := by
-  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim, Polynomial.map_C,
+  rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elimₓ, Polynomial.map_C,
     RingHom.coe_coe]
 
 theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin (hx : AlgebraicIndependent R x)
@@ -428,10 +428,10 @@ theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_ad
       IsScalarTower.algebra_map_apply R (adjoin R (range x)) A]
     
   · rintro (⟨⟩ | ⟨i⟩)
-    · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X, Option.elim]
+    · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X, Option.elimₓ]
       
     · rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_C, hx.algebra_map_aeval_equiv,
-        aeval_X, aeval_X, Option.elim]
+        aeval_X, aeval_X, Option.elimₓ]
       
     
 
@@ -480,7 +480,7 @@ theorem AlgebraicIndependent.is_transcendence_basis_iff {ι : Type w} {R : Type 
         (by
           ext
           simp )
-    have q := congr_argₓ (fun s => (coe : w → A) '' s) p.range_eq
+    have q := congr_arg (fun s => (coe : w → A) '' s) p.range_eq
     dsimp'  at q
     rw [← image_univ, image_image] at q
     simpa using q

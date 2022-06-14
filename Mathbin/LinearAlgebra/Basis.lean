@@ -167,6 +167,11 @@ theorem mem_span_repr_support {ι : Type _} (b : Basis ι R M) (m : M) : m ∈ s
     ⟨b.repr m, by
       simp [Finsupp.mem_supported_support]⟩
 
+theorem repr_support_subset_of_mem_span {ι : Type _} (b : Basis ι R M) (s : Set ι) {m : M} (hm : m ∈ span R (b '' s)) :
+    ↑(b.repr m).Support ⊆ s := by
+  rcases(Finsupp.mem_span_image_iff_total _).1 hm with ⟨l, hl, hlm⟩
+  rwa [← hlm, repr_total, ← Finsupp.mem_supported R l]
+
 end reprₓ
 
 section Coord
@@ -407,7 +412,7 @@ theorem reindex_range_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange
 theorem reindex_range_repr_self (i : ι) : b.reindexRange.repr (b i) = Finsupp.single ⟨b i, mem_range_self i⟩ 1 :=
   calc
     b.reindexRange.repr (b i) = b.reindexRange.repr (b.reindexRange ⟨b i, mem_range_self i⟩) :=
-      congr_argₓ _ (b.reindex_range_self _ _).symm
+      congr_arg _ (b.reindex_range_self _ _).symm
     _ = Finsupp.single ⟨b i, mem_range_self i⟩ 1 := b.reindexRange.repr_self _
     
 
@@ -714,7 +719,7 @@ theorem singleton_apply (ι R : Type _) [Unique ι] [Semiringₓ R] i : Basis.si
 theorem singleton_repr (ι R : Type _) [Unique ι] [Semiringₓ R] x i : (Basis.singleton ι R).repr x i = x := by
   simp [Basis.singleton, Unique.eq_default i]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » 0)
 theorem basis_singleton_iff {R M : Type _} [Ringₓ R] [Nontrivial R] [AddCommGroupₓ M] [Module R M]
     [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
     Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y := by
@@ -756,7 +761,7 @@ protected def empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
 
 instance emptyUnique [Subsingleton M] [IsEmpty ι] : Unique (Basis ι R M) where
   default := Basis.empty M
-  uniq := fun ⟨x⟩ => congr_argₓ of_repr <| Subsingleton.elimₓ _ _
+  uniq := fun ⟨x⟩ => congr_arg of_repr <| Subsingleton.elimₓ _ _
 
 end Empty
 
@@ -871,14 +876,14 @@ def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ Range b') (hg 
           Exists.elim (hf i) fun i' hi' => by
             rw [LinearMap.comp_apply, b.constr_basis, Function.comp_applyₓ, ← hi', b'.constr_basis,
               Function.comp_applyₓ, hi', hgf, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M →ₗ[R] M => h x) this,
+      fun x => congr_arg (fun h : M →ₗ[R] M => h x) this,
     right_inv :=
       have : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
         b'.ext fun i =>
           Exists.elim (hg i) fun i' hi' => by
             rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_applyₓ, ← hi', b.constr_basis,
               Function.comp_applyₓ, hi', hfg, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M' →ₗ[R] M' => h x) this }
+      fun x => congr_arg (fun h : M' →ₗ[R] M' => h x) this }
 
 @[simp]
 theorem equiv'_apply (f : M → M') (g : M' → M) hf hg hgf hfg (i : ι) : b.equiv' b' f g hf hg hgf hfg (b i) = f (b i) :=
@@ -1091,7 +1096,7 @@ noncomputable def mkFinConsOfLe {n : ℕ} {N O : Submodule R M} (y : M) (yO : y 
     (hNO : N ≤ O) (hli : ∀ c : R, ∀ x ∈ N, ∀, c • y + x = 0 → c = 0) (hsp : ∀, ∀ z ∈ O, ∀, ∃ c : R, z + c • y ∈ N) :
     Basis (Finₓ (n + 1)) R O :=
   mkFinCons ⟨y, yO⟩ (b.map (Submodule.comapSubtypeEquivOfLe hNO).symm)
-    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_argₓ coe hx)) fun z => hsp z z.2
+    (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_arg coe hx)) fun z => hsp z z.2
 
 @[simp]
 theorem coe_mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Finₓ n) R N) (hNO : N ≤ O)
@@ -1295,7 +1300,7 @@ theorem LinearMap.exists_extend {p : Submodule K V} (f : p →ₗ[K] V') : ∃ g
 
 open Submodule LinearMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K)))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (f «expr ≠ » (0 : «expr →ₗ[ ] »(V, K, K)))
 /-- If `p < ⊤` is a subspace of a vector space `V`, then there exists a nonzero linear map
 `f : V →ₗ[K] K` such that `p ≤ ker f`. -/
 theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :

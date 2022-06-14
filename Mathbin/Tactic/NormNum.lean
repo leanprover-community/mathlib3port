@@ -1274,6 +1274,16 @@ unsafe def false_intro (p : expr) : tactic (expr × expr) :=
 theorem not_refl_false_intro {α} (a : α) : (a ≠ a) = False :=
   eq_false_intro <| not_not_intro rfl
 
+-- see Note [nolint_ge]
+@[nolint ge_or_gt]
+theorem gt_intro {α} [LT α] (a b : α) c (h : (a < b) = c) : (b > a) = c :=
+  h
+
+-- see Note [nolint_ge]
+@[nolint ge_or_gt]
+theorem ge_intro {α} [LE α] (a b : α) c (h : (a ≤ b) = c) : (b ≥ a) = c :=
+  h
+
 /-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/
 unsafe def eval_ineq : expr → tactic (expr × expr)
   | quote.1 ((%%ₓe₁) < %%ₓe₂) => do
@@ -1310,8 +1320,12 @@ unsafe def eval_ineq : expr → tactic (expr × expr)
       else do
         let (_, p) ← prove_ne c e₁ e₂ n₁ n₂
         false_intro p
-  | quote.1 ((%%ₓe₁) > %%ₓe₂) => mk_app `` LT.lt [e₂, e₁] >>= eval_ineq
-  | quote.1 ((%%ₓe₁) ≥ %%ₓe₂) => mk_app `` LE.le [e₂, e₁] >>= eval_ineq
+  | quote.1 ((%%ₓe₁) > %%ₓe₂) => do
+    let (e, p) ← mk_app `` LT.lt [e₂, e₁] >>= eval_ineq
+    Prod.mk e <$> mk_app `` gt_intro [e₂, e₁, e, p]
+  | quote.1 ((%%ₓe₁) ≥ %%ₓe₂) => do
+    let (e, p) ← mk_app `` LE.le [e₂, e₁] >>= eval_ineq
+    Prod.mk e <$> mk_app `` ge_intro [e₂, e₁, e, p]
   | quote.1 ((%%ₓe₁) ≠ %%ₓe₂) => do
     let n₁ ← e₁.to_rat
     let n₂ ← e₂.to_rat

@@ -87,7 +87,7 @@ instance : HasUniformContinuousConstSmul M (Completion X) :=
   ⟨fun c => uniform_continuous_map⟩
 
 instance [HasScalar Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=
-  ⟨fun c a => (congr_argₓ fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
+  ⟨fun c a => (congr_arg fun f => Completion.map f a) <| funext (op_smul_eq_smul c)⟩
 
 variable {M X} [HasUniformContinuousConstSmul M X]
 

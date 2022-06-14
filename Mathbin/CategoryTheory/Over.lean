@@ -215,7 +215,7 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
         dsimp'
         rw [← over.w k, reassoc_of a])
   suffices l' = hom_mk m by
-    apply congr_argₓ comma_morphism.left this
+    apply congr_arg comma_morphism.left this
   rw [← cancel_mono k]
   ext
   apply a

@@ -123,10 +123,11 @@ protected theorem strongly_measurable (f : α →ₘ[μ] β) : StronglyMeasurabl
 protected theorem ae_strongly_measurable (f : α →ₘ[μ] β) : AeStronglyMeasurable f μ :=
   f.StronglyMeasurable.AeStronglyMeasurable
 
-protected theorem measurable [MetrizableSpace β] [MeasurableSpace β] [BorelSpace β] (f : α →ₘ[μ] β) : Measurable f :=
+protected theorem measurable [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β] (f : α →ₘ[μ] β) :
+    Measurable f :=
   AeStronglyMeasurable.measurable_mk _
 
-protected theorem ae_measurable [MetrizableSpace β] [MeasurableSpace β] [BorelSpace β] (f : α →ₘ[μ] β) :
+protected theorem ae_measurable [PseudoMetrizableSpace β] [MeasurableSpace β] [BorelSpace β] (f : α →ₘ[μ] β) :
     AeMeasurable f μ :=
   f.Measurable.AeMeasurable
 
@@ -197,7 +198,7 @@ theorem coe_fn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
 
 section CompMeasurable
 
-variable [MeasurableSpace β] [MetrizableSpace β] [BorelSpace β] [MeasurableSpace γ] [MetrizableSpace γ]
+variable [MeasurableSpace β] [PseudoMetrizableSpace β] [BorelSpace β] [MeasurableSpace γ] [PseudoMetrizableSpace γ]
   [OpensMeasurableSpace γ] [SecondCountableTopology γ]
 
 /-- Given a measurable function `g : β → γ`, and an almost everywhere equal function `[f] : α →ₘ β`,
@@ -272,8 +273,8 @@ theorem coe_fn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f�
 
 section
 
-variable [MeasurableSpace β] [MetrizableSpace β] [BorelSpace β] [SecondCountableTopology β] [MeasurableSpace γ]
-  [MetrizableSpace γ] [BorelSpace γ] [SecondCountableTopology γ] [MeasurableSpace δ] [MetrizableSpace δ]
+variable [MeasurableSpace β] [PseudoMetrizableSpace β] [BorelSpace β] [SecondCountableTopology β] [MeasurableSpace γ]
+  [PseudoMetrizableSpace γ] [BorelSpace γ] [SecondCountableTopology γ] [MeasurableSpace δ] [PseudoMetrizableSpace δ]
   [OpensMeasurableSpace δ] [SecondCountableTopology δ]
 
 /-- Given a measurable function `g : β → γ → δ`, and almost everywhere equal functions
@@ -329,7 +330,7 @@ theorem comp_to_germ (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) 
   (induction_on f) fun f hf => by
     simp
 
-theorem comp_measurable_to_germ [MeasurableSpace β] [BorelSpace β] [MetrizableSpace β] [MetrizableSpace γ]
+theorem comp_measurable_to_germ [MeasurableSpace β] [BorelSpace β] [PseudoMetrizableSpace β] [PseudoMetrizableSpace γ]
     [SecondCountableTopology γ] [MeasurableSpace γ] [OpensMeasurableSpace γ] (g : β → γ) (hg : Measurable g)
     (f : α →ₘ[μ] β) : (compMeasurable g hg f).toGerm = f.toGerm.map g :=
   (induction_on f) fun f hf => by
@@ -340,9 +341,9 @@ theorem comp₂_to_germ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f�
   (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by
     simp
 
-theorem comp₂_measurable_to_germ [MetrizableSpace β] [SecondCountableTopology β] [MeasurableSpace β] [BorelSpace β]
-    [MetrizableSpace γ] [SecondCountableTopology γ] [MeasurableSpace γ] [BorelSpace γ] [MetrizableSpace δ]
-    [SecondCountableTopology δ] [MeasurableSpace δ] [OpensMeasurableSpace δ] (g : β → γ → δ)
+theorem comp₂_measurable_to_germ [PseudoMetrizableSpace β] [SecondCountableTopology β] [MeasurableSpace β]
+    [BorelSpace β] [PseudoMetrizableSpace γ] [SecondCountableTopology γ] [MeasurableSpace γ] [BorelSpace γ]
+    [PseudoMetrizableSpace δ] [SecondCountableTopology δ] [MeasurableSpace δ] [OpensMeasurableSpace δ] (g : β → γ → δ)
     (hg : Measurable (uncurry g)) (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
     (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
   (induction_on₂ f₁ f₂) fun f₁ hf₁ f₂ hf₂ => by
@@ -386,7 +387,7 @@ section Lattice
 
 section Sup
 
-variable [SemilatticeSup β] [MeasurableSpace β] [SecondCountableTopology β] [MetrizableSpace β] [BorelSpace β]
+variable [SemilatticeSup β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
   [HasMeasurableSup₂ β]
 
 instance : HasSup (α →ₘ[μ] β) where
@@ -417,7 +418,7 @@ end Sup
 
 section Inf
 
-variable [SemilatticeInf β] [MeasurableSpace β] [SecondCountableTopology β] [MetrizableSpace β] [BorelSpace β]
+variable [SemilatticeInf β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
   [HasMeasurableInf₂ β]
 
 instance : HasInf (α →ₘ[μ] β) where
@@ -446,7 +447,7 @@ protected theorem le_inf (f' f g : α →ₘ[μ] β) (hf : f' ≤ f) (hg : f' �
 
 end Inf
 
-instance [Lattice β] [MeasurableSpace β] [SecondCountableTopology β] [MetrizableSpace β] [BorelSpace β]
+instance [Lattice β] [MeasurableSpace β] [SecondCountableTopology β] [PseudoMetrizableSpace β] [BorelSpace β]
     [HasMeasurableSup₂ β] [HasMeasurableInf₂ β] : Lattice (α →ₘ[μ] β) :=
   { AeEqFun.partialOrder with sup := HasSup.sup, le_sup_left := AeEqFun.le_sup_left,
     le_sup_right := AeEqFun.le_sup_right, sup_le := AeEqFun.sup_le, inf := HasInf.inf,
@@ -715,7 +716,7 @@ theorem lintegral_eq_zero_iff {f : α →ₘ[μ] ℝ≥0∞} : lintegral f = 0 �
 
 theorem lintegral_add (f g : α →ₘ[μ] ℝ≥0∞) : lintegral (f + g) = lintegral f + lintegral g :=
   (induction_on₂ f g) fun f hf g hg => by
-    simp [lintegral_add' hf.ae_measurable hg.ae_measurable]
+    simp [lintegral_add_left' hf.ae_measurable]
 
 theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral f ≤ lintegral g :=
   (induction_on₂ f g) fun f hf g hg hfg => lintegral_mono_ae hfg
@@ -749,7 +750,7 @@ open MeasureTheory
 
 variable [TopologicalSpace α] [BorelSpace α] (μ)
 
-variable [TopologicalSpace β] [SecondCountableTopologyEither α β] [MetrizableSpace β]
+variable [TopologicalSpace β] [SecondCountableTopologyEither α β] [PseudoMetrizableSpace β]
 
 /-- The equivalence class of `μ`-almost-everywhere measurable functions associated to a continuous
 map. -/
@@ -772,7 +773,7 @@ def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β where
 
 variable {𝕜 : Type _} [Semiringₓ 𝕜]
 
-variable [TopologicalSpace γ] [MetrizableSpace γ] [AddCommGroupₓ γ] [Module 𝕜 γ] [TopologicalAddGroup γ]
+variable [TopologicalSpace γ] [PseudoMetrizableSpace γ] [AddCommGroupₓ γ] [Module 𝕜 γ] [TopologicalAddGroup γ]
   [HasContinuousConstSmul 𝕜 γ] [SecondCountableTopologyEither α γ]
 
 /-- The linear map from the group of continuous maps from `α` to `β` to the group of equivalence

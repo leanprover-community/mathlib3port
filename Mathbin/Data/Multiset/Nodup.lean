@@ -124,7 +124,7 @@ instance nodupDecidable [DecidableEq α] (s : Multiset α) : Decidable (Nodup s)
   (Quotientₓ.recOnSubsingleton s) fun l => l.nodupDecidable
 
 theorem Nodup.erase_eq_filter [DecidableEq α] (a : α) {s} : Nodup s → s.erase a = filter (· ≠ a) s :=
-  (Quot.induction_on s) fun l d => congr_argₓ coe <| d.erase_eq_filter a
+  (Quot.induction_on s) fun l d => congr_arg coe <| d.erase_eq_filter a
 
 theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.erase a) :=
   nodup_of_le (erase_le _ _)

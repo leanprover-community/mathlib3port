@@ -108,7 +108,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (Univ : Set (Sum X Y)) := dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
     _ = diam (inl '' (Univ : Set X) ∪ inr '' (Univ : Set Y)) := by
-      apply congr_argₓ <;> ext x y z <;> cases x <;> simp [mem_univ, mem_range_self]
+      apply congr_arg <;> ext x y z <;> cases x <;> simp [mem_univ, mem_range_self]
     _ ≤ diam (inl '' (Univ : Set X)) + dist (inl default) (inr default) + diam (inr '' (Univ : Set Y)) :=
       diam_union (mem_image_of_mem _ (mem_univ _)) (mem_image_of_mem _ (mem_univ _))
     _ = diam (Univ : Set X) + (dist default default + 1 + dist default default) + diam (Univ : Set Y) := by
@@ -253,11 +253,11 @@ theorem candidates_b_dist_mem_candidates_b : candidatesBDist X Y ∈ CandidatesB
 private theorem candidates_b_nonempty : (CandidatesB X Y).Nonempty :=
   ⟨_, candidates_b_dist_mem_candidates_b⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y z)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y z)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (x y)
 /-- To apply Arzela-Ascoli, we need to check that the set of candidates is closed and
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (CandidatesB X Y) := by

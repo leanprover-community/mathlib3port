@@ -54,7 +54,7 @@ instance (priority := 75) toNonAssocSemiring : NonAssocSemiringₓ s :=
   Subtype.coe_injective.NonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 
 instance no_zero_divisors [NoZeroDivisors R] : NoZeroDivisors s where
   eq_zero_or_eq_zero_of_mul_eq_zero := fun x y h =>
@@ -287,7 +287,7 @@ theorem coe_mul (x y : s) : ((x * y : s) : R) = (x * y : R) :=
   rfl
 
 instance nontrivial [Nontrivial R] : Nontrivial s :=
-  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_argₓ Subtype.val H)
+  (nontrivial_of_ne 0 1) fun H => zero_ne_one (congr_arg Subtype.val H)
 
 protected theorem pow_mem {R : Type _} [Semiringₓ R] (s : Subsemiring R) {x : R} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
   pow_mem hx n
@@ -829,26 +829,29 @@ namespace RingHom
 
 variable [NonAssocSemiringₓ T] {s : Subsemiring R}
 
+variable {σR σS : Type _}
+
+variable [SetLike σR R] [SetLike σS S] [SubsemiringClass σR R] [SubsemiringClass σS S]
+
 open Subsemiring
 
 /-- Restriction of a ring homomorphism to a subsemiring of the domain. -/
-def srestrict (f : R →+* S) (s : Subsemiring R) : s →+* S :=
-  f.comp s.Subtype
+def restrict (f : R →+* S) (s : σR) : s →+* S :=
+  f.comp <| SubsemiringClass.subtype s
 
 @[simp]
-theorem srestrict_apply (f : R →+* S) (x : s) : f.srestrict s x = f x :=
+theorem restrict_apply (f : R →+* S) {s : σR} (x : s) : f.restrict s x = f x :=
   rfl
 
 /-- Restriction of a ring homomorphism to a subsemiring of the codomain. -/
-def codSrestrict (f : R →+* S) (s : Subsemiring S) (h : ∀ x, f x ∈ s) : R →+* s :=
-  { (f : R →* S).codMrestrict s.toSubmonoid h, (f : R →+ S).codMrestrict s.toAddSubmonoid h with
-    toFun := fun n => ⟨f n, h n⟩ }
+def codRestrict (f : R →+* S) (s : σS) (h : ∀ x, f x ∈ s) : R →+* s :=
+  { (f : R →* S).codRestrict s h, (f : R →+ S).codRestrict s h with toFun := fun n => ⟨f n, h n⟩ }
 
 /-- Restriction of a ring homomorphism to its range interpreted as a subsemiring.
 
 This is the bundled version of `set.range_factorization`. -/
 def srangeRestrict (f : R →+* S) : R →+* f.srange :=
-  f.codSrestrict f.srange f.mem_srange_self
+  f.codRestrict f.srange f.mem_srange_self
 
 @[simp]
 theorem coe_srange_restrict (f : R →+* S) (x : R) : (f.srangeRestrict x : S) = f x :=
@@ -901,7 +904,7 @@ open RingHom
 
 /-- The ring homomorphism associated to an inclusion of subsemirings. -/
 def inclusion {S T : Subsemiring R} (h : S ≤ T) : S →+* T :=
-  S.Subtype.codSrestrict _ fun x => h x.2
+  S.Subtype.codRestrict _ fun x => h x.2
 
 @[simp]
 theorem srange_subtype (s : Subsemiring R) : s.Subtype.srange = s :=
@@ -931,7 +934,7 @@ variable {s t : Subsemiring R}
 /-- Makes the identity isomorphism from a proof two subsemirings of a multiplicative
     monoid are equal. -/
 def subsemiringCongr (h : s = t) : s ≃+* t :=
-  { Equivₓ.setCongr <| congr_argₓ _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
+  { Equivₓ.setCongr <| congr_arg _ h with map_mul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/
@@ -1002,8 +1005,8 @@ instance [HasScalar α β] [HasScalar R' α] [HasScalar R' β] [IsScalarTower R'
     IsScalarTower S α β :=
   S.toSubmonoid.IsScalarTower
 
-instance [HasScalar R' α] [HasFaithfulScalar R' α] (S : Subsemiring R') : HasFaithfulScalar S α :=
-  S.toSubmonoid.HasFaithfulScalar
+instance [HasScalar R' α] [HasFaithfulSmul R' α] (S : Subsemiring R') : HasFaithfulSmul S α :=
+  S.toSubmonoid.HasFaithfulSmul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Zero α] [SmulWithZero R' α] (S : Subsemiring R') : SmulWithZero S α :=
@@ -1032,6 +1035,14 @@ instance [Zero α] [MulActionWithZero R' α] (S : Subsemiring R') : MulActionWit
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [AddCommMonoidₓ α] [Module R' α] (S : Subsemiring R') : Module S α :=
   { Module.compHom _ S.Subtype with smul := (· • ·) }
+
+/-- The center of a semiring acts commutatively on that semiring. -/
+instance center.smul_comm_class_left : SmulCommClass (center R') R' R' :=
+  Submonoid.center.smul_comm_class_left
+
+/-- The center of a semiring acts commutatively on that semiring. -/
+instance center.smul_comm_class_right : SmulCommClass R' (center R') R' :=
+  Submonoid.center.smul_comm_class_right
 
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 def closureCommSemiringOfComm {s : Set R'} (hcomm : ∀, ∀ a ∈ s, ∀, ∀ b ∈ s, ∀, a * b = b * a) :

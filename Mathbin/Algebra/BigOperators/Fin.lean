@@ -30,7 +30,7 @@ namespace Finset
 
 @[to_additive]
 theorem prod_range [CommMonoidₓ β] {n : ℕ} (f : ℕ → β) : (∏ i in Finset.range n, f i) = ∏ i : Finₓ n, f i :=
-  prod_bij' (fun k w => ⟨k, mem_range.mp w⟩) (fun a ha => mem_univ _) (fun a ha => congr_argₓ _ (Finₓ.coe_mk _).symm)
+  prod_bij' (fun k w => ⟨k, mem_range.mp w⟩) (fun a ha => mem_univ _) (fun a ha => congr_arg _ (Finₓ.coe_mk _).symm)
     (fun a m => a) (fun a m => mem_range.mpr a.Prop) (fun a ha => Finₓ.coe_mk _) fun a ha => Finₓ.eta _ _
 
 end Finset
@@ -192,7 +192,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
   | g :: h :: L =>
     calc
       g + -h + L.alternatingSum = g + -h + ∑ i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nthLe i i.2 :=
-        congr_argₓ _ (alternating_sum_eq_finset_sum _)
+        congr_arg _ (alternating_sum_eq_finset_sum _)
       _ = ∑ i : Finₓ (L.length + 2), (-1 : ℤ) ^ (i : ℕ) • List.nthLe (g :: h :: L) i _ := by
         rw [Finₓ.sum_univ_succ, Finₓ.sum_univ_succ, add_assocₓ]
         unfold_coes
@@ -213,7 +213,7 @@ theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
   | g :: h :: L =>
     calc
       g * h⁻¹ * L.alternatingProd = g * h⁻¹ * ∏ i : Finₓ L.length, L.nthLe i i.2 ^ (-1 : ℤ) ^ (i : ℕ) :=
-        congr_argₓ _ (alternating_prod_eq_finset_prod _)
+        congr_arg _ (alternating_prod_eq_finset_prod _)
       _ = ∏ i : Finₓ (L.length + 2), List.nthLe (g :: h :: L) i _ ^ (-1 : ℤ) ^ (i : ℕ) := by
         rw [Finₓ.prod_univ_succ, Finₓ.prod_univ_succ, mul_assoc]
         unfold_coes

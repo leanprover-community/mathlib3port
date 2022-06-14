@@ -237,14 +237,14 @@ theorem id_comp (f : α →+*o β) : (OrderRingHom.id β).comp f = f :=
   ext fun x => rfl
 
 theorem cancel_right {f₁ f₂ : β →+*o γ} {g : α →+*o β} (hg : Surjective g) : f₁.comp g = f₂.comp g ↔ f₁ = f₂ :=
-  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hg.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {f : β →+*o γ} {g₁ g₂ : α →+*o β} (hf : Injective f) : f.comp g₁ = f.comp g₂ ↔ g₁ = g₂ :=
   ⟨fun h =>
     ext fun a =>
       hf <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end Preorderₓ
 
@@ -376,7 +376,7 @@ theorem symm_trans_self (e : α ≃+*o β) : e.symm.trans e = OrderRingIso.refl 
   ext e.right_inv
 
 theorem symm_bijective : Bijective (OrderRingIso.symm : α ≃+*o β → β ≃+*o α) :=
-  ⟨fun f g h => f.symm_symm.symm.trans <| (congr_argₓ OrderRingIso.symm h).trans g.symm_symm, fun f =>
+  ⟨fun f g h => f.symm_symm.symm.trans <| (congr_arg OrderRingIso.symm h).trans g.symm_symm, fun f =>
     ⟨f.symm, f.symm_symm⟩⟩
 
 end LE

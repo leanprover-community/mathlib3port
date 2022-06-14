@@ -330,7 +330,7 @@ theorem Finset.convex_hull_eq (s : Finset E) :
     exact s.center_mass_mem_convex_hull (fun x hx => hw₀ _ hx) (hw₁.symm ▸ zero_lt_one) fun x hx => hx
     
 
-theorem Set.Finite.convex_hull_eq {s : Set E} (hs : Finite s) :
+theorem Set.Finite.convex_hull_eq {s : Set E} (hs : s.Finite) :
     convexHull R s =
       { x : E |
         ∃ (w : E → R)(hw₀ : ∀, ∀ y ∈ s, ∀, 0 ≤ w y)(hw₁ : (∑ y in hs.toFinset, w y) = 1),
@@ -441,13 +441,13 @@ under the linear map sending each function `w` to `∑ x in s, w x • x`.
 Since we have no sums over finite sets, we use sum over `@finset.univ _ hs.fintype`.
 The map is defined in terms of operations on `(s → ℝ) →ₗ[ℝ] ℝ` so that later we will not need
 to prove that this map is linear. -/
-theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : Finite s) :
+theorem Set.Finite.convex_hull_eq_image {s : Set E} (hs : s.Finite) :
     convexHull R s =
       have := hs.fintype
       ⇑(∑ x : s, (@LinearMap.proj R s _ (fun i => R) _ _ x).smul_right x.1) '' StdSimplex R s :=
   by
   rw [← convex_hull_basis_eq_std_simplex, ← LinearMap.convex_hull_image, ← Set.range_comp, (· ∘ ·)]
-  apply congr_argₓ
+  apply congr_arg
   convert subtype.range_coe.symm
   ext x
   simp [LinearMap.sum_apply, ite_smul, Finset.filter_eq]

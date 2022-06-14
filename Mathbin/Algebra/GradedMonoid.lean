@@ -69,7 +69,7 @@ provides the `Prop` typeclasses:
 Strictly this last class is unecessary as it has no fields not present in its parents, but it is
 included for convenience. Note that there is no need for `graded_ring` or similar, as all the
 information it would contain is already supplied by `graded_monoid` when `A` is a collection
-of additively-closed set_like objects such as `submodules`. These constructions are explored in
+of additively-closed set_like objects such as `submodule`s. These constructions are explored in
 `algebra.direct_sum.internal`.
 
 This file also contains the definition of `set_like.homogeneous_submonoid A`, which is, as the name
@@ -130,14 +130,14 @@ variable {A} [AddMonoidₓ ι] [GhasMul A] [GhasOne A]
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
 def gnpowRec : ∀ n : ℕ {i}, A i → A (n • i)
-  | 0, i, a => cast (congr_argₓ A (zero_nsmul i).symm) GhasOne.one
-  | n + 1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
+  | 0, i, a => cast (congr_arg A (zero_nsmul i).symm) GhasOne.one
+  | n + 1, i, a => cast (congr_arg A (succ_nsmul i n).symm) (GhasMul.mul a <| gnpow_rec _ a)
 
 @[simp]
 theorem gnpow_rec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd) = 1 :=
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -148,7 +148,7 @@ theorem gnpow_rec_succ (n : ℕ) (a : GradedMonoid A) :
     (GradedMonoid.mk _ <| gnpowRec n.succ a.snd) = a * ⟨_, gnpowRec n a.snd⟩ :=
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -245,7 +245,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a * mk _ b :=
-  Sigma.ext (zero_addₓ _).symm <| eq_rec_heqₓ _ _
+  Sigma.ext (zero_addₓ _).symm <| eq_rec_heq _ _
 
 @[simp]
 theorem GradeZero.smul_eq_mul (a b : A 0) : a • b = a * b :=
@@ -264,7 +264,7 @@ variable {A}
 
 @[simp]
 theorem mk_zero_pow (a : A 0) (n : ℕ) : mk _ (a ^ n) = mk _ a ^ n :=
-  Sigma.ext (nsmul_zero n).symm <| eq_rec_heqₓ _ _
+  Sigma.ext (nsmul_zero n).symm <| eq_rec_heq _ _
 
 variable (A)
 

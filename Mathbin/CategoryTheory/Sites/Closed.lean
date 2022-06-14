@@ -186,7 +186,7 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
     rw [← J₁.covers_iff_mem_of_closed hM, ← J₁.covers_iff_mem_of_closed hN]
     have q : ∀ ⦃Z : C⦄ g : Z ⟶ X hg : S g, M.pullback g = N.pullback g := by
       intro Z g hg
-      apply congr_argₓ Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
+      apply congr_arg Subtype.val ((hM₂ g hg).trans (hN₂ g hg).symm)
     have MSNS : M⊓S = N⊓S := by
       ext Z g
       rw [sieve.inter_apply, sieve.inter_apply, and_comm (N g), and_comm]
@@ -215,9 +215,9 @@ theorem classifier_is_sheaf : Presieve.IsSheaf J₁ (Functor.closedSieves J₁) 
       apply le_antisymmₓ
       · rintro Z u ⟨W, g, f', hf', hg : (x f' hf').1 _, c⟩
         rw [sieve.pullback_eq_top_iff_mem, ←
-          show (x (u ≫ f) _).1 = (x f hf).1.pullback u from congr_argₓ Subtype.val (hx f u hf)]
+          show (x (u ≫ f) _).1 = (x f hf).1.pullback u from congr_arg Subtype.val (hx f u hf)]
         simp_rw [← c]
-        rw [show (x (g ≫ f') _).1 = _ from congr_argₓ Subtype.val (hx f' g hf')]
+        rw [show (x (g ≫ f') _).1 = _ from congr_arg Subtype.val (hx f' g hf')]
         apply sieve.pullback_eq_top_of_mem _ hg
         
       · apply sieve.le_pullback_bind S fun Y f hf => (x f hf).1

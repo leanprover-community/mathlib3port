@@ -3,7 +3,7 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 -/
-import Mathbin.Analysis.NormedSpace.HahnBanach
+import Mathbin.Analysis.NormedSpace.HahnBanach.Extension
 import Mathbin.Analysis.NormedSpace.IsROrC
 import Mathbin.Analysis.LocallyConvex.Polar
 
@@ -50,7 +50,7 @@ variable (E : Type _) [SemiNormedGroup E] [NormedSpace 𝕜 E]
 
 variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler normed_space 𝕜
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler normed_space 𝕜
 /-- The topological dual of a seminormed space `E`. -/
 def Dual :=
   E →L[𝕜] 𝕜 deriving Inhabited, SemiNormedGroup, [anonymous]
@@ -127,6 +127,7 @@ theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ g : Dual 𝕜 E,
   ⟨fun hx => by
     simp [hx], fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
 
+/-- See also `geometric_hahn_banach_point_point`. -/
 theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : Dual 𝕜 E, g x = g y := by
   rw [← sub_eq_zero, eq_zero_iff_forall_dual_eq_zero 𝕜 (x - y)]
   simp [sub_eq_zero]

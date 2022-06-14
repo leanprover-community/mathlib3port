@@ -109,7 +109,7 @@ theorem pochhammer_succ_eval {S : Type _} [Semiringₓ S] (n : ℕ) (k : S) :
 theorem pochhammer_succ_comp_X_add_one (n : ℕ) :
     (pochhammer S (n + 1)).comp (X + 1) = pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) := by
   suffices (pochhammer ℕ (n + 1)).comp (X + 1) = pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (X + 1) by
-    simpa [map_comp] using congr_argₓ (Polynomial.map (Nat.castRingHom S)) this
+    simpa [map_comp] using congr_arg (Polynomial.map (Nat.castRingHom S)) this
   nth_rw 1[pochhammer_succ_left]
   rw [← add_mulₓ, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp, add_commₓ ↑n, ←
     add_assocₓ]
@@ -190,7 +190,7 @@ theorem pochhammer_nat_eval_succ (r : ℕ) :
 
 theorem pochhammer_eval_succ (r n : ℕ) :
     (n : S) * (pochhammer S r).eval (n + 1 : S) = (n + r) * (pochhammer S r).eval n := by
-  exact_mod_cast congr_argₓ Nat.castₓ (pochhammer_nat_eval_succ r n)
+  exact_mod_cast congr_arg Nat.castₓ (pochhammer_nat_eval_succ r n)
 
 end Factorial
 

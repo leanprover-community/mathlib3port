@@ -196,7 +196,7 @@ protected theorem map_mul {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] 
   calc
     map f.toLinearMap (M * N) = ⨆ i : M, (N.map (lmul R A i)).map f.toLinearMap := map_supr _ _
     _ = map f.toLinearMap M * map f.toLinearMap N := by
-      apply congr_argₓ Sup
+      apply congr_arg Sup
       ext S
       constructor <;> rintro ⟨y, hy⟩
       · use f y, mem_map.mpr ⟨y.1, y.2, rfl⟩
@@ -403,7 +403,7 @@ def equivOpposite : Submodule R Aᵐᵒᵖ ≃+* (Submodule R A)ᵐᵒᵖ where
   right_inv := fun p => unop_injective <| SetLike.coe_injective rfl
   map_add' := fun p q => by
     simp [comap_equiv_eq_map_symm, ← op_add]
-  map_mul' := fun p q => congr_argₓ op <| comap_op_mul _ _
+  map_mul' := fun p q => congr_arg op <| comap_op_mul _ _
 
 protected theorem map_pow {A'} [Semiringₓ A'] [Algebra R A'] (f : A →ₐ[R] A') (n : ℕ) :
     map f.toLinearMap (M ^ n) = map f.toLinearMap M ^ n :=

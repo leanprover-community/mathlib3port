@@ -168,7 +168,7 @@ universe u
 
 variable (σ : Type u) (K : Type u) [Fintype K]
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module K
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module K
 /-- The submodule of multivariate polynomials whose degree of each variable is strictly less
 than the cardinality of K. -/
 def R [CommRingₓ K] : Type u :=
@@ -201,16 +201,16 @@ theorem dim_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
       exact Fintype.card_pos_iff.2 ⟨0⟩
     _ = # (σ → { n // n < Fintype.card K }) :=
       (@Equivₓ.subtypePiEquivPi σ (fun _ => ℕ) fun s n => n < Fintype.card K).cardinal_eq
-    _ = # (σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Equivₓ.finEquivSubtype _).symm).cardinal_eq
+    _ = # (σ → Finₓ (Fintype.card K)) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Equivₓ.refl _)).cardinal_eq
     _ = # (σ → K) := (Equivₓ.arrowCongr (Equivₓ.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
 
 instance [Fintype σ] : FiniteDimensional K (R σ K) :=
   IsNoetherian.iff_fg.1 <|
-    IsNoetherian.iff_dim_lt_omega.mpr
+    IsNoetherian.iff_dim_lt_aleph_0.mpr
       (by
-        simpa only [dim_R] using Cardinal.nat_lt_omega (Fintype.card (σ → K)))
+        simpa only [dim_R] using Cardinal.nat_lt_aleph_0 (Fintype.card (σ → K)))
 
 theorem finrank_R [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
   FiniteDimensional.finrank_eq_of_dim_eq (dim_R σ K)
@@ -228,7 +228,7 @@ theorem eq_zero_of_eval_eq_zero [Fintype σ] (p : MvPolynomial σ K) (h : ∀ v 
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h
   show p'.1 = (0 : R σ K).1 from
-    congr_argₓ _ <| by
+    congr_arg _ <| by
       rwa [ker_evalₗ, mem_bot] at this
 
 end MvPolynomial

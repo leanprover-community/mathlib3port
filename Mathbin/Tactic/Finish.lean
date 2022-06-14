@@ -502,7 +502,7 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- `clarify [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -522,7 +522,7 @@ unsafe def clarify (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using
   let s ← mk_simp_set false [] hs
   auto.clarify s (ps []) cfg
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- `safe [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.
@@ -542,7 +542,7 @@ unsafe def safe (hs : parse simp_arg_list) (ps : parse («expr ?» (tk "using" *
   let s ← mk_simp_set false [] hs
   auto.safe s (ps []) cfg
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- `finish [h1,...,hn] using [e1,...,en]` negates the goal, normalizes hypotheses
 (by splitting conjunctions, eliminating existentials, pushing negations inwards,
 and calling `simp` with the supplied lemmas `h1,...,hn`), and then tries `contradiction`.

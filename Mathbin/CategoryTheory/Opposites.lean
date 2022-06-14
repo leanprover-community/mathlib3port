@@ -34,10 +34,10 @@ section Quiver
 variable [Quiver.{v₁} C]
 
 theorem Quiver.Hom.op_inj {X Y : C} : Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) := fun _ _ H =>
-  congr_argₓ Quiver.Hom.unop H
+  congr_arg Quiver.Hom.unop H
 
 theorem Quiver.Hom.unop_inj {X Y : Cᵒᵖ} : Function.Injective (Quiver.Hom.unop : (X ⟶ Y) → (unop Y ⟶ unop X)) :=
-  fun _ _ H => congr_argₓ Quiver.Hom.op H
+  fun _ _ H => congr_arg Quiver.Hom.op H
 
 @[simp]
 theorem Quiver.Hom.unop_op {X Y : C} (f : X ⟶ Y) : f.op.unop = f :=

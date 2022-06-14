@@ -240,7 +240,7 @@ theorem exists_of_mem_parallel {S : Wseq (Computation α)} {a} (h : a ∈ parall
   intro C aC
   refine' mem_rec_on aC _ fun C' IH => _ <;>
     intro l S e <;>
-      have e' := congr_argₓ destruct e <;>
+      have e' := congr_arg destruct e <;>
         have := lem1 l <;> simp [parallel.aux1] at e' <;> cases' parallel.aux2 l with a' l' <;> injection e' with h'
   · rw [h'] at this
     rcases this with ⟨c, cl, ac⟩
@@ -316,12 +316,12 @@ def parallelRec {S : Wseq (Computation α)} (C : α → Sort v) (H : ∀, ∀ s 
   let T : Wseq (Computation (α × Computation α)) := S.map fun c => c.map fun a => (a, c)
   have : S = T.map (map fun c => c.1) := by
     rw [← Wseq.map_comp]
-    refine' (Wseq.map_id _).symm.trans (congr_argₓ (fun f => Wseq.map f S) _)
+    refine' (Wseq.map_id _).symm.trans (congr_arg (fun f => Wseq.map f S) _)
     funext c
     dsimp' [id, Function.comp]
     rw [← map_comp]
     exact (map_id _).symm
-  have pe := congr_argₓ parallel this
+  have pe := congr_arg parallel this
   rw [← map_parallel] at pe
   have h' := h
   rw [pe] at h'

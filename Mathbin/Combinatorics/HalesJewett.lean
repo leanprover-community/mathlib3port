@@ -278,11 +278,11 @@ private theorem exists_mono_in_high_dimension' :
               Sum.elim s.focus (l'.map some none), _, _⟩,
             _⟩
       -- The vertical line is almost monochromatic.
-      · rw [vertical_apply, ← congr_funₓ (hl' x), line.map_apply]
+      · rw [vertical_apply, ← congr_fun (hl' x), line.map_apply]
         
       · refine' fun p => ⟨p.line.prod (l'.map some), p.Color, fun x => _⟩
         -- The product lines are almost monochromatic.
-        rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_funₓ (hl' x)]
+        rw [line.prod_apply, line.map_apply, ← p.has_color, ← congr_fun (hl' x)]
         
       -- Our `r+1` lines have the same endpoint.
       · simp_rw [Multiset.mem_cons, Multiset.mem_map]

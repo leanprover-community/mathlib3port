@@ -61,7 +61,7 @@ theorem multiplicity_finite_of_degree_pos_of_monic (hp : (0 : WithBot ℕ) < deg
       simp only [leading_coeff_pow' hpn0', leading_coeff_eq_zero, hpn1, one_pow, one_mulₓ, Ne.def, hr0] <;> simp
     have hnp : 0 < natDegree p := by
       rw [← WithBot.coe_lt_coe, ← degree_eq_nat_degree hp0] <;> exact hp
-    have := congr_argₓ nat_degree hr
+    have := congr_arg nat_degree hr
     rw [nat_degree_mul' hpnr0, nat_degree_pow' hpn0', add_mulₓ, add_assocₓ] at this
     exact
       ne_of_ltₓ
@@ -232,7 +232,7 @@ theorem degree_add_div_by_monic (hq : Monic q) (h : degree q ≤ degree p) : deg
       
   calc degree q + degree (p /ₘ q) = degree (q * (p /ₘ q)) :=
       Eq.symm (degree_mul' hlc)_ = degree (p %ₘ q + q * (p /ₘ q)) :=
-      (degree_add_eq_right_of_degree_lt hmod).symm _ = _ := congr_argₓ _ (mod_by_monic_add_div _ hq)
+      (degree_add_eq_right_of_degree_lt hmod).symm _ = _ := congr_arg _ (mod_by_monic_add_div _ hq)
 
 theorem degree_div_by_monic_le (p q : R[X]) : degree (p /ₘ q) ≤ degree p :=
   if hp0 : p = 0 then by

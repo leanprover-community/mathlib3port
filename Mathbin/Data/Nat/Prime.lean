@@ -25,8 +25,8 @@ This file deals with prime numbers: natural numbers `p ≥ 2` whose only divisor
   This also appears as `nat.not_bdd_above_set_of_prime` and `nat.infinite_set_of_prime`.
 - `nat.factors n`: the prime factorization of `n`
 - `nat.factors_unique`: uniqueness of the prime factorisation
-* `nat.prime_iff`: `nat.prime` coincides with the general definition of `prime`
-* `nat.irreducible_iff_prime`: a non-unit natural number is only divisible by `1` iff it is prime
+- `nat.prime_iff`: `nat.prime` coincides with the general definition of `prime`
+- `nat.irreducible_iff_prime`: a non-unit natural number is only divisible by `1` iff it is prime
 
 -/
 
@@ -80,7 +80,7 @@ theorem Prime.eq_one_or_self_of_dvd {p : ℕ} (pp : p.Prime) (m : ℕ) (hm : m �
   rintro rfl
   rw [hn, mul_oneₓ]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m «expr ∣ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m «expr ∣ » p)
 theorem prime_def_lt'' {p : ℕ} : Prime p ↔ 2 ≤ p ∧ ∀ m _ : m ∣ p, m = 1 ∨ m = p := by
   refine' ⟨fun h => ⟨h.two_le, h.eq_one_or_self_of_dvd⟩, fun h => _⟩
   have h1 := one_lt_two.trans_le h.1
@@ -497,7 +497,7 @@ theorem Prime.eq_two_or_odd {p : ℕ} (hp : Prime p) : p = 2 ∨ p % 2 = 1 :=
           decide)).symm
 
 theorem Prime.eq_two_or_odd' {p : ℕ} (hp : Prime p) : p = 2 ∨ Odd p :=
-  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_argₓ _ h)⟩) hp.eq_two_or_odd
+  Or.imp_rightₓ (fun h => ⟨p / 2, (div_add_modₓ p 2).symm.trans (congr_arg _ h)⟩) hp.eq_two_or_odd
 
 /-- A prime `p` satisfies `p % 2 = 1` if and only if `p ≠ 2`. -/
 theorem Prime.mod_two_eq_one_iff_ne_two {p : ℕ} [Fact p.Prime] : p % 2 = 1 ↔ p ≠ 2 := by

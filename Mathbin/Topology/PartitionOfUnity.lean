@@ -174,7 +174,7 @@ instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
 protected theorem locally_finite : LocallyFinite fun i => Support (f i) :=
   f.locally_finite'
 
-protected theorem point_finite (x : X) : Finite { i | f i x ≠ 0 } :=
+protected theorem point_finite (x : X) : { i | f i x ≠ 0 }.Finite :=
   f.LocallyFinite.point_finite x
 
 theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
@@ -306,7 +306,7 @@ theorem support_to_pou_fun_subset (i : ι) : Support (f.toPouFun i) ⊆ Support 
 
 theorem to_pou_fun_eq_mul_prod (i : ι) (x : X) (t : Finset ι) (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPouFun i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x := by
-  refine' congr_argₓ _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
+  refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj
   rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
   exact flip (ht j) hj

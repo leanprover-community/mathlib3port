@@ -538,7 +538,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   add_decl <| declaration.defn n univ t' d' (ReducibilityHints.regular 1 tt) trusted
   applyc n
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry
@@ -1247,7 +1247,7 @@ add_tactic_doc
   { Name := "fsplit", category := DocCategory.tactic, declNames := [`tactic.interactive.fsplit],
     tags := ["logic", "goal management"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `results
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `results
 /-- Calls `injection` on each hypothesis, and then, for each hypothesis on which `injection`
 succeeds, clears the old hypothesis. -/
 unsafe def injections_and_clear : tactic Unit := do
@@ -1262,7 +1262,7 @@ add_tactic_doc
   { Name := "injections_and_clear", category := DocCategory.tactic,
     declNames := [`tactic.interactive.injections_and_clear], tags := ["context management"] }
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `r
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `r
 /-- Calls `cases` on every local hypothesis, succeeding if
 it succeeds on at least one hypothesis. -/
 unsafe def case_bash : tactic Unit := do

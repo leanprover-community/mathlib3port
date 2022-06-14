@@ -48,7 +48,7 @@ namespace MeasureTheory
 
 open Measureₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m «expr ≠ » 0)
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/

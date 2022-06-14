@@ -26,6 +26,8 @@ resembling the notation $R^{\times}$ for the units of a ring, which is common in
 -/
 
 
+open Function
+
 universe u
 
 variable {α : Type u}
@@ -139,7 +141,19 @@ instance : Groupₓ αˣ where
   inv := Inv.inv
   mul_left_inv := fun u => ext u.inv_val
 
-variable (a b : αˣ) {c : αˣ}
+@[to_additive]
+instance {α} [CommMonoidₓ α] : CommGroupₓ αˣ :=
+  { Units.group with mul_comm := fun u₁ u₂ => ext <| mul_comm _ _ }
+
+@[to_additive]
+instance : Inhabited αˣ :=
+  ⟨1⟩
+
+@[to_additive]
+instance [HasRepr α] : HasRepr αˣ :=
+  ⟨reprₓ ∘ val⟩
+
+variable (a b c : αˣ) {u : αˣ}
 
 @[simp, norm_cast, to_additive]
 theorem coe_mul : (↑(a * b) : α) = a * b :=
@@ -174,11 +188,11 @@ theorem mul_inv : (a * ↑a⁻¹ : α) = 1 :=
   val_inv _
 
 @[to_additive]
-theorem inv_mul_of_eq {u : αˣ} {a : α} (h : ↑u = a) : ↑u⁻¹ * a = 1 := by
+theorem inv_mul_of_eq {a : α} (h : ↑u = a) : ↑u⁻¹ * a = 1 := by
   rw [← h, u.inv_mul]
 
 @[to_additive]
-theorem mul_inv_of_eq {u : αˣ} {a : α} (h : ↑u = a) : a * ↑u⁻¹ = 1 := by
+theorem mul_inv_of_eq {a : α} (h : ↑u = a) : a * ↑u⁻¹ = 1 := by
   rw [← h, u.mul_inv]
 
 @[simp, to_additive]
@@ -197,27 +211,15 @@ theorem mul_inv_cancel_right (a : α) (b : αˣ) : a * b * ↑b⁻¹ = a := by
 theorem inv_mul_cancel_right (a : α) (b : αˣ) : a * ↑b⁻¹ * b = a := by
   rw [mul_assoc, inv_mul, mul_oneₓ]
 
-@[to_additive]
-instance : Inhabited αˣ :=
-  ⟨1⟩
-
-@[to_additive]
-instance {α} [CommMonoidₓ α] : CommGroupₓ αˣ :=
-  { Units.group with mul_comm := fun u₁ u₂ => ext <| mul_comm _ _ }
-
-@[to_additive]
-instance [HasRepr α] : HasRepr αˣ :=
-  ⟨reprₓ ∘ val⟩
-
 @[simp, to_additive]
 theorem mul_right_inj (a : αˣ) {b c : α} : (a : α) * b = a * c ↔ b = c :=
   ⟨fun h => by
-    simpa only [inv_mul_cancel_leftₓ] using congr_argₓ ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_argₓ _⟩
+    simpa only [inv_mul_cancel_leftₓ] using congr_arg ((· * ·) ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[simp, to_additive]
 theorem mul_left_inj (a : αˣ) {b c : α} : b * a = c * a ↔ b = c :=
   ⟨fun h => by
-    simpa only [mul_inv_cancel_rightₓ] using congr_argₓ (· * ↑(a⁻¹ : αˣ)) h, congr_argₓ _⟩
+    simpa only [mul_inv_cancel_rightₓ] using congr_arg (· * ↑(a⁻¹ : αˣ)) h, congr_arg _⟩
 
 @[to_additive]
 theorem eq_mul_inv_iff_mul_eq {a b : α} : a = b * ↑c⁻¹ ↔ a * c = b :=
@@ -244,22 +246,49 @@ theorem mul_inv_eq_iff_eq_mul {a c : α} : a * ↑b⁻¹ = c ↔ a = c * b :=
     rw [h, mul_inv_cancel_rightₓ]⟩
 
 @[to_additive]
-theorem inv_eq_of_mul_eq_one_right {u : αˣ} {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
+protected theorem inv_eq_of_mul_eq_one_left {a : α} (h : a * u = 1) : ↑u⁻¹ = a :=
   calc
-    ↑u⁻¹ = ↑u⁻¹ * 1 := by
-      rw [mul_oneₓ]
-    _ = ↑u⁻¹ * ↑u * a := by
-      rw [← h, ← mul_assoc]
+    ↑u⁻¹ = 1 * ↑u⁻¹ := by
+      rw [one_mulₓ]
     _ = a := by
-      rw [u.inv_mul, one_mulₓ]
+      rw [← h, mul_inv_cancel_rightₓ]
     
 
 @[to_additive]
-theorem eq_iff_inv_mul {u : αˣ} {a : α} : ↑u = a ↔ ↑u⁻¹ * a = 1 :=
-  ⟨inv_mul_of_eq, inv_invₓ u ▸ inv_eq_of_mul_eq_one_right⟩
+protected theorem inv_eq_of_mul_eq_one_right {a : α} (h : ↑u * a = 1) : ↑u⁻¹ = a :=
+  calc
+    ↑u⁻¹ = ↑u⁻¹ * 1 := by
+      rw [mul_oneₓ]
+    _ = a := by
+      rw [← h, inv_mul_cancel_leftₓ]
+    
+
+@[to_additive]
+protected theorem eq_inv_of_mul_eq_one_left {a : α} (h : ↑u * a = 1) : a = ↑u⁻¹ :=
+  (Units.inv_eq_of_mul_eq_one_right h).symm
+
+@[to_additive]
+protected theorem eq_inv_of_mul_eq_one_right {a : α} (h : a * u = 1) : a = ↑u⁻¹ :=
+  (Units.inv_eq_of_mul_eq_one_left h).symm
+
+@[simp, to_additive]
+theorem mul_inv_eq_one {a : α} : a * ↑u⁻¹ = 1 ↔ a = u :=
+  ⟨inv_invₓ u ▸ Units.eq_inv_of_mul_eq_one_right, fun h => mul_inv_of_eq h.symm⟩
+
+@[simp, to_additive]
+theorem inv_mul_eq_one {a : α} : ↑u⁻¹ * a = 1 ↔ ↑u = a :=
+  ⟨inv_invₓ u ▸ Units.inv_eq_of_mul_eq_one_right, inv_mul_of_eq⟩
+
+@[to_additive]
+theorem mul_eq_one_iff_eq_inv {a : α} : a * u = 1 ↔ a = ↑u⁻¹ := by
+  rw [← mul_inv_eq_one, inv_invₓ]
+
+@[to_additive]
+theorem mul_eq_one_iff_inv_eq {a : α} : ↑u * a = 1 ↔ ↑u⁻¹ = a := by
+  rw [← inv_mul_eq_one, inv_invₓ]
 
 theorem inv_unique {u₁ u₂ : αˣ} (h : (↑u₁ : α) = ↑u₂) : (↑u₁⁻¹ : α) = ↑u₂⁻¹ :=
-  inv_eq_of_mul_eq_one_right <| by
+  Units.inv_eq_of_mul_eq_one_right <| by
     rw [h, u₂.mul_inv]
 
 end Units
@@ -454,17 +483,10 @@ theorem is_unit_of_mul_is_unit_right [CommMonoidₓ M] {x y : M} (hu : IsUnit (x
 theorem IsUnit.mul_iff [CommMonoidₓ M] {x y : M} : IsUnit (x * y) ↔ IsUnit x ∧ IsUnit y :=
   ⟨fun h => ⟨is_unit_of_mul_is_unit_left h, is_unit_of_mul_is_unit_right h⟩, fun h => IsUnit.mul h.1 h.2⟩
 
-@[to_additive]
-theorem IsUnit.mul_right_inj [Monoidₓ M] {a b c : M} (ha : IsUnit a) : a * b = a * c ↔ b = c := by
-  cases' ha with a ha <;> rw [← ha, Units.mul_right_inj]
-
-@[to_additive]
-theorem IsUnit.mul_left_inj [Monoidₓ M] {a b c : M} (ha : IsUnit a) : b * a = c * a ↔ b = c := by
-  cases' ha with a ha <;> rw [← ha, Units.mul_left_inj]
-
-/-- The element of the group of units, corresponding to an element of a monoid which is a unit. -/
+/-- The element of the group of units, corresponding to an element of a monoid which is a unit. When
+`α` is a `division_monoid`, use `is_unit.unit'` instead. -/
 @[to_additive
-      "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit."]
+      "The element of the additive group of additive units, corresponding to an element of\nan additive monoid which is an additive unit. When `α` is a `subtraction_monoid`, use\n`is_add_unit.add_unit'` instead."]
 noncomputable def IsUnit.unit [Monoidₓ M] {a : M} (h : IsUnit a) : Mˣ :=
   (Classical.some h).copy a (Classical.some_spec h).symm _ rfl
 
@@ -484,6 +506,36 @@ theorem IsUnit.coe_inv_mul [Monoidₓ M] {a : M} (h : IsUnit a) : ↑h.Unit⁻¹
 theorem IsUnit.mul_coe_inv [Monoidₓ M] {a : M} (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by
   convert Units.mul_inv _
   simp [h.unit_spec]
+
+section Monoidₓ
+
+variable [Monoidₓ M] {a b c : M}
+
+@[to_additive]
+theorem IsUnit.mul_left_inj (h : IsUnit a) : b * a = c * a ↔ b = c :=
+  let ⟨u, hu⟩ := h
+  hu ▸ u.mul_left_inj
+
+@[to_additive]
+theorem IsUnit.mul_right_inj (h : IsUnit a) : a * b = a * c ↔ b = c :=
+  let ⟨u, hu⟩ := h
+  hu ▸ u.mul_right_inj
+
+@[to_additive]
+protected theorem IsUnit.mul_left_cancel (h : IsUnit a) : a * b = a * c → b = c :=
+  h.mul_right_inj.1
+
+@[to_additive]
+protected theorem IsUnit.mul_right_cancel (h : IsUnit b) : a * b = c * b → a = c :=
+  h.mul_left_inj.1
+
+@[to_additive]
+protected theorem IsUnit.mul_right_injective (h : IsUnit a) : Injective ((· * ·) a) := fun _ _ => h.mul_left_cancel
+
+@[to_additive]
+protected theorem IsUnit.mul_left_injective (h : IsUnit b) : Injective (· * b) := fun _ _ => h.mul_right_cancel
+
+end Monoidₓ
 
 end IsUnit
 

@@ -9,7 +9,8 @@ import Mathbin.Data.List.Infix
 # Double universal quantification on a list
 
 This file provides an API for `list.forall₂` (definition in `data.list.defs`).
-`forall₂ r l₁ l₂` means that `∀ a ∈ l₁, ∀ b ∈ l₂, r a b`, where `l₁`, `l₂` are lists.
+`forall₂ R l₁ l₂` means that `l₁` and `l₂` have the same length, and whenever `a` is the nth element
+of `l₁`, and `b` is the nth element of `l₂`, then `R a b` is satisfied.
 -/
 
 
@@ -139,7 +140,7 @@ theorem _root_.relator.bi_unique.forall₂ (hr : BiUnique r) : BiUnique (Forall�
 
 theorem forall₂_length_eq {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → length l₁ = length l₂
   | _, _, forall₂.nil => rfl
-  | _, _, forall₂.cons h₁ h₂ => congr_argₓ succ (forall₂_length_eq h₂)
+  | _, _, forall₂.cons h₁ h₂ => congr_arg succ (forall₂_length_eq h₂)
 
 theorem forall₂_zip {R : α → β → Prop} : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a, b) ∈ zipₓ l₁ l₂ → R a b
   | _, _, forall₂.cons h₁ h₂, x, y, Or.inl rfl => h₁

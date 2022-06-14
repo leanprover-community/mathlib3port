@@ -180,6 +180,38 @@ theorem MonovaryOn.dual_right : MonovaryOn f g s → AntivaryOn f (to_dual ∘ g
 theorem AntivaryOn.dual_right : AntivaryOn f g s → MonovaryOn f (to_dual ∘ g) s :=
   swap₂
 
+@[simp]
+theorem monovary_to_dual_left : Monovary (to_dual ∘ f) g ↔ Antivary f g :=
+  Iff.rfl
+
+@[simp]
+theorem monovary_to_dual_right : Monovary f (to_dual ∘ g) ↔ Antivary f g :=
+  forall_swap
+
+@[simp]
+theorem antivary_to_dual_left : Antivary (to_dual ∘ f) g ↔ Monovary f g :=
+  Iff.rfl
+
+@[simp]
+theorem antivary_to_dual_right : Antivary f (to_dual ∘ g) ↔ Monovary f g :=
+  forall_swap
+
+@[simp]
+theorem monovary_on_to_dual_left : MonovaryOn (to_dual ∘ f) g s ↔ AntivaryOn f g s :=
+  Iff.rfl
+
+@[simp]
+theorem monovary_on_to_dual_right : MonovaryOn f (to_dual ∘ g) s ↔ AntivaryOn f g s :=
+  forall₂_swap
+
+@[simp]
+theorem antivary_on_to_dual_left : AntivaryOn (to_dual ∘ f) g s ↔ MonovaryOn f g s :=
+  Iff.rfl
+
+@[simp]
+theorem antivary_on_to_dual_right : AntivaryOn f (to_dual ∘ g) s ↔ MonovaryOn f g s :=
+  forall₂_swap
+
 end OrderDual
 
 section PartialOrderₓ

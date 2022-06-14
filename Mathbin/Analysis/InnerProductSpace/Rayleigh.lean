@@ -157,7 +157,7 @@ theorem eq_smul_self_of_is_local_extr_on_real (hT : IsSelfAdjoint (T : F →ₗ[
   have : ∥x₀∥ ≠ 0 := by
     simp [hx₀]
   field_simp
-  simpa [inner_smul_left, real_inner_self_eq_norm_mul_norm, sq] using congr_argₓ (fun x => ⟪x, x₀⟫_ℝ) hc
+  simpa [inner_smul_left, real_inner_self_eq_norm_mul_norm, sq] using congr_arg (fun x => ⟪x, x₀⟫_ℝ) hc
 
 end Real
 

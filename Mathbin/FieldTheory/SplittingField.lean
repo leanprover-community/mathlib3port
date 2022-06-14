@@ -79,13 +79,13 @@ theorem splits_C (a : K) : Splits i (c a) :=
       absurd hg.1
         (not_not.2
           (is_unit_iff_degree_eq_zero.2 <| by
-            have := congr_argₓ degree hp <;>
+            have := congr_arg degree hp <;>
               simp [degree_C hia, @eq_comm (WithBot ℕ) 0, Nat.WithBot.add_eq_zero_iff] at this <;>
                 clear _fun_match <;> tauto))
 
 theorem splits_of_degree_eq_one {f : K[X]} (hf : degree f = 1) : Splits i f :=
   Or.inr fun g hg ⟨p, hp⟩ => by
-    have := congr_argₓ degree hp <;>
+    have := congr_arg degree hp <;>
       simp [Nat.WithBot.add_eq_one_iff, hf, @eq_comm (WithBot ℕ) 1, mt is_unit_iff_degree_eq_zero.2 hg.1] at this <;>
         clear _fun_match <;> tauto
 
@@ -536,7 +536,7 @@ theorem sum_roots_eq_next_coeff_of_monic_of_split {P : K[X]} (hmo : P.Monic) (hP
     P.nextCoeff = -P.roots.Sum := by
   nth_rw 0[eq_prod_roots_of_monic_of_splits_id hmo hP]
   rw [monic.next_coeff_multiset_prod _ _ fun a ha => _]
-  · simp_rw [next_coeff_X_sub_C, Multiset.sum_map_neg]
+  · simp_rw [next_coeff_X_sub_C, Multiset.sum_map_neg']
     
   · exact monic_X_sub_C a
     
@@ -870,8 +870,8 @@ end SplittingField
 
 variable (K L) [Algebra K L]
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Splits] []
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`Splits] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`adjoin_roots] []
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f

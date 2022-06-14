@@ -644,7 +644,7 @@ theorem Union_singleton {x : Setₓ.{u}} : union {x} = x :=
     simp_rw [mem_Union, exists_prop, mem_singleton, exists_eq_left]
 
 theorem singleton_inj {x y : Setₓ.{u}} (H : ({x} : Setₓ) = {y}) : x = y := by
-  let this := congr_argₓ union H
+  let this := congr_arg union H
   rwa [Union_singleton, Union_singleton] at this
 
 /-- The binary union operation -/
@@ -869,8 +869,8 @@ theorem map_is_func {f : Setₓ → Setₓ} [H : Definable 1 f] {x y : Setₓ} :
 
 end Setₓ
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler has_sep Set
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler has_insert Set
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler has_sep Set
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler has_insert Set
 /-- The collection of all classes. A class is defined as a `set` of ZFC sets. -/
 def Class :=
   Set Setₓ deriving HasSubset, [anonymous], HasEmptyc, Inhabited, [anonymous], HasUnion, HasInter, HasCompl, HasSdiff

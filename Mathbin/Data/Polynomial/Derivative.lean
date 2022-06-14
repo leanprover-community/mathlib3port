@@ -60,7 +60,7 @@ theorem coeff_derivative (p : R[X]) (n : ℕ) : coeff (derivative p) n = coeff p
       rw [Nat.cast_zeroₓ, mul_zero, zero_mul]
       
     · intro _ H
-      rw [Nat.succ_sub_one b, if_neg (mt (congr_argₓ Nat.succ) H.symm), mul_zero]
+      rw [Nat.succ_sub_one b, if_neg (mt (congr_arg Nat.succ) H.symm), mul_zero]
       
     
   · rw [if_pos (add_tsub_cancel_right n 1).symm, mul_oneₓ, Nat.cast_addₓ, Nat.cast_oneₓ, mem_support_iff]
@@ -233,7 +233,7 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       apply Finset.sum_congr rfl
       intro m hm
       trans
-      · apply congr_argₓ
+      · apply congr_arg
         exact monomial_eq_C_mul_X
         
       dsimp'
@@ -255,14 +255,69 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
       simp_rw [← smul_mul_assoc, smul_C, nsmul_eq_mul']
     
 
+theorem derivative_eval (p : R[X]) (x : R) : p.derivative.eval x = p.Sum fun n a => a * n * x ^ (n - 1) := by
+  simp_rw [derivative_apply, eval_sum, eval_mul_X_pow, eval_C]
+
+@[simp]
+theorem derivative_map [Semiringₓ S] (p : R[X]) (f : R →+* S) : (p.map f).derivative = p.derivative.map f := by
+  let n := max p.nat_degree (map f p).natDegree
+  rw [derivative_apply, derivative_apply]
+  rw [sum_over_range' _ _ (n + 1) ((le_max_leftₓ _ _).trans_lt (lt_add_one _))]
+  rw [sum_over_range' _ _ (n + 1) ((le_max_rightₓ _ _).trans_lt (lt_add_one _))]
+  simp only [Polynomial.map_sum, Polynomial.map_mul, Polynomial.map_C, map_mul, coeff_map, map_nat_cast,
+    Polynomial.map_nat_cast, Polynomial.map_pow, map_X]
+  all_goals
+    intro n
+    rw [zero_mul, C_0, zero_mul]
+
+@[simp]
+theorem iterate_derivative_map [Semiringₓ S] (p : R[X]) (f : R →+* S) (k : ℕ) :
+    (Polynomial.derivative^[k]) (p.map f) = ((Polynomial.derivative^[k]) p).map f := by
+  induction' k with k ih generalizing p
+  · simp
+    
+  · simp only [ih, Function.iterate_succ, Polynomial.derivative_map, Function.comp_app]
+    
+
+@[simp]
+theorem iterate_derivative_cast_nat_mul {n k : ℕ} {f : R[X]} : (derivative^[k]) (n * f) = n * (derivative^[k]) f := by
+  induction' k with k ih generalizing f <;> simp [*]
+
+theorem mem_support_derivative [NoZeroSmulDivisors ℕ R] (p : R[X]) (n : ℕ) :
+    n ∈ (derivative p).Support ↔ n + 1 ∈ p.Support := by
+  suffices ¬p.coeff (n + 1) * (n + 1 : ℕ) = 0 ↔ coeff p (n + 1) ≠ 0 by
+    simpa only [mem_support_iff, coeff_derivative, Ne.def]
+  rw [← nsmul_eq_mul', smul_eq_zero]
+  simp only [Nat.succ_ne_zero, false_orₓ]
+
+@[simp]
+theorem degree_derivative_eq [NoZeroSmulDivisors ℕ R] (p : R[X]) (hp : 0 < natDegree p) :
+    degree (derivative p) = (natDegree p - 1 : ℕ) := by
+  have h0 : p ≠ 0 := by
+    contrapose! hp
+    simp [hp]
+  apply le_antisymmₓ
+  · rw [derivative_apply]
+    apply le_transₓ (degree_sum_le _ _) (sup_le fun n hn => _)
+    apply le_transₓ (degree_C_mul_X_pow_le _ _) (WithBot.coe_le_coe.2 (tsub_le_tsub_right _ _))
+    apply le_nat_degree_of_mem_supp _ hn
+    
+  · refine' le_sup _
+    rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
+    · show ¬leading_coeff p = 0
+      rw [leading_coeff_eq_zero]
+      intro h
+      rw [h, nat_degree_zero] at hp
+      exact lt_irreflₓ 0 (lt_of_le_of_ltₓ (zero_le _) hp)
+      
+    exact hp
+    
+
 end Semiringₓ
 
 section CommSemiringₓ
 
 variable [CommSemiringₓ R]
-
-theorem derivative_eval (p : R[X]) (x : R) : p.derivative.eval x = p.Sum fun n a => a * n * x ^ (n - 1) := by
-  simp only [derivative_apply, eval_sum, eval_pow, eval_C, eval_X, eval_nat_cast, eval_mul]
 
 theorem derivative_pow_succ (p : R[X]) (n : ℕ) : (p ^ (n + 1)).derivative = (n + 1) * p ^ n * p.derivative :=
   (Nat.recOn n
@@ -292,28 +347,6 @@ theorem derivative_comp (p q : R[X]) : (p.comp q).derivative = q.derivative * p.
     simp only [mul_assoc]
     
 
-@[simp]
-theorem derivative_map [CommSemiringₓ S] (p : R[X]) (f : R →+* S) : (p.map f).derivative = p.derivative.map f :=
-  Polynomial.induction_on p
-    (fun r => by
-      rw [map_C, derivative_C, derivative_C, Polynomial.map_zero])
-    (fun p q ihp ihq => by
-      rw [Polynomial.map_add, derivative_add, ihp, ihq, derivative_add, Polynomial.map_add])
-    fun n r ih => by
-    rw [Polynomial.map_mul, Polynomial.map_C, Polynomial.map_pow, Polynomial.map_X, derivative_mul, derivative_pow_succ,
-      derivative_C, zero_mul, zero_addₓ, derivative_X, mul_oneₓ, derivative_mul, derivative_pow_succ, derivative_C,
-      zero_mul, zero_addₓ, derivative_X, mul_oneₓ, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_mul,
-      Polynomial.map_pow, Polynomial.map_add, Polynomial.map_nat_cast, Polynomial.map_one, Polynomial.map_X]
-
-@[simp]
-theorem iterate_derivative_map [CommSemiringₓ S] (p : R[X]) (f : R →+* S) (k : ℕ) :
-    (Polynomial.derivative^[k]) (p.map f) = ((Polynomial.derivative^[k]) p).map f := by
-  induction' k with k ih generalizing p
-  · simp
-    
-  · simp [ih]
-    
-
 /-- Chain rule for formal derivative of polynomials. -/
 theorem derivative_eval₂_C (p q : R[X]) : (p.eval₂ c q).derivative = p.derivative.eval₂ c q * q.derivative :=
   Polynomial.induction_on p
@@ -339,17 +372,13 @@ theorem derivative_prod {s : Multiset ι} {f : ι → R[X]} :
   congr
   rw [h, ← AddMonoidHom.coe_mul_left, (AddMonoidHom.mulLeft (f i)).map_multiset_sum _, AddMonoidHom.coe_mul_left]
   simp only [Function.comp_app, Multiset.map_map]
-  refine' congr_argₓ _ (Multiset.map_congr rfl fun j hj => _)
+  refine' congr_arg _ (Multiset.map_congr rfl fun j hj => _)
   rw [← mul_assoc, ← Multiset.prod_cons, ← Multiset.map_cons]
   by_cases' hij : i = j
   · simp [hij, ← Multiset.prod_cons, ← Multiset.map_cons, Multiset.cons_erase hj]
     
   · simp [hij]
     
-
-@[simp]
-theorem iterate_derivative_cast_nat_mul {n k : ℕ} {f : R[X]} : (derivative^[k]) (n * f) = n * (derivative^[k]) f := by
-  induction' k with k ih generalizing f <;> simp [*]
 
 end CommSemiringₓ
 
@@ -398,41 +427,6 @@ theorem eval_multiset_prod_X_sub_C_derivative {S : Multiset R} {r : R} (hr : r �
   simpa using (eval_ring_hom r).map_multiset_prod (Multiset.map (fun a => X - C a) (S.erase r))
 
 end CommRingₓ
-
-section NoZeroDivisors
-
-variable [Ringₓ R] [NoZeroDivisors R]
-
-theorem mem_support_derivative [CharZero R] (p : R[X]) (n : ℕ) : n ∈ (derivative p).Support ↔ n + 1 ∈ p.Support := by
-  suffices ¬(coeff p (n + 1) = 0 ∨ ((n + 1 : ℕ) : R) = 0) ↔ coeff p (n + 1) ≠ 0 by
-    simpa only [mem_support_iff, coeff_derivative, Ne.def, mul_eq_zero]
-  rw [Nat.cast_eq_zero]
-  simp only [Nat.succ_ne_zero, or_falseₓ]
-
-@[simp]
-theorem degree_derivative_eq [CharZero R] (p : R[X]) (hp : 0 < natDegree p) :
-    degree (derivative p) = (natDegree p - 1 : ℕ) := by
-  have h0 : p ≠ 0 := by
-    contrapose! hp
-    simp [hp]
-  apply le_antisymmₓ
-  · rw [derivative_apply]
-    apply le_transₓ (degree_sum_le _ _) (sup_le fun n hn => _)
-    apply le_transₓ (degree_C_mul_X_pow_le _ _) (WithBot.coe_le_coe.2 (tsub_le_tsub_right _ _))
-    apply le_nat_degree_of_mem_supp _ hn
-    
-  · refine' le_sup _
-    rw [mem_support_derivative, tsub_add_cancel_of_le, mem_support_iff]
-    · show ¬leading_coeff p = 0
-      rw [leading_coeff_eq_zero]
-      intro h
-      rw [h, nat_degree_zero] at hp
-      exact lt_irreflₓ 0 (lt_of_le_of_ltₓ (zero_le _) hp)
-      
-    exact hp
-    
-
-end NoZeroDivisors
 
 end Derivative
 

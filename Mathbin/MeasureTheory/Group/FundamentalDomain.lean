@@ -34,7 +34,7 @@ open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
 namespace MeasureTheory
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (g «expr ≠ » (0 : G))
 /-- A measurable set `s` is a *fundamental domain* for an additive action of an additive group `G`
 on a measurable space `α` with respect to a measure `α` if the sets `g +ᵥ s`, `g : G`, are pairwise
 a.e. disjoint and cover the whole space. -/
@@ -48,7 +48,7 @@ structure IsAddFundamentalDomain (G : Type _) {α : Type _} [Zero G] [HasVadd G 
   ae_covers : ∀ᵐ x ∂μ, ∃ g : G, g +ᵥ x ∈ s
   AeDisjoint : ∀ g _ : g ≠ (0 : G), AeDisjoint μ (g +ᵥ s) s
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (g «expr ≠ » (1 : G))
 /-- A measurable set `s` is a *fundamental domain* for an action of a group `G` on a measurable
 space `α` with respect to a measure `α` if the sets `g • s`, `g : G`, are pairwise a.e. disjoint and
 cover the whole space. -/
@@ -249,7 +249,7 @@ protected theorem measure_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundament
   simpa only [set_lintegral_one] using hs.set_lintegral_eq ht (fun _ => 1) fun _ _ => rfl
 
 @[to_additive]
-protected theorem ae_strongly_measurable_on_iff {β : Type _} [TopologicalSpace β] [MetrizableSpace β]
+protected theorem ae_strongly_measurable_on_iff {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β]
     (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ) {f : α → β} (hf : ∀ g : G x, f (g • x) = f x) :
     AeStronglyMeasurable f (μ.restrict s) ↔ AeStronglyMeasurable f (μ.restrict t) :=
   calc

@@ -116,15 +116,15 @@ theorem mk_smul (r : S) (x : M) : (mk (r • x) : M ⧸ p) = r • mk x :=
 
 instance smul_comm_class (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [SmulCommClass S T M] :
     SmulCommClass S T (M ⧸ P) where
-  smul_comm := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_comm _ _ _)
+  smul_comm := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_comm _ _ _)
 
 instance is_scalar_tower (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [HasScalar S T]
     [IsScalarTower S T M] : IsScalarTower S T (M ⧸ P) where
-  smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_argₓ mk (smul_assoc _ _ _)
+  smul_assoc := fun x y => Quotientₓ.ind' fun z => congr_arg mk (smul_assoc _ _ _)
 
 instance is_central_scalar [HasScalar Sᵐᵒᵖ R] [HasScalar Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S (M ⧸ P) where
-  op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_argₓ mk <| op_smul_eq_smul _ _
+  op_smul_eq_smul := fun x => Quotientₓ.ind' fun z => congr_arg mk <| op_smul_eq_smul _ _
 
 end HasScalar
 
@@ -205,6 +205,9 @@ def mkq : M →ₗ[R] M ⧸ p where
 theorem mkq_apply (x : M) : p.mkq x = Quotient.mk x :=
   rfl
 
+theorem mkq_surjective (A : Submodule R M) : Function.Surjective A.mkq := by
+  rintro ⟨x⟩ <;> exact ⟨x, rfl⟩
+
 end
 
 variable {R₂ M₂ : Type _} [Ringₓ R₂] [AddCommGroupₓ M₂] [Module R₂ M₂] {τ₁₂ : R →+* R₂}
@@ -231,6 +234,17 @@ theorem liftq_apply (f : M →ₛₗ[τ₁₂] M₂) {h} (x : M) : p.liftq f h (
 @[simp]
 theorem liftq_mkq (f : M →ₛₗ[τ₁₂] M₂) h : (p.liftq f h).comp p.mkq = f := by
   ext <;> rfl
+
+/-- Special case of `liftq` when `p` is the span of `x`. In this case, the condition on `f` simply
+becomes vanishing at `x`.-/
+def liftqSpanSingleton (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) : (M ⧸ R∙x) →ₛₗ[τ₁₂] M₂ :=
+  (R∙x).liftq f <| by
+    rw [span_singleton_le_iff_mem, LinearMap.mem_ker, h]
+
+@[simp]
+theorem liftq_span_singleton_apply (x : M) (f : M →ₛₗ[τ₁₂] M₂) (h : f x = 0) (y : M) :
+    liftqSpanSingleton x f h (Quotient.mk y) = f y :=
+  rfl
 
 @[simp]
 theorem range_mkq : p.mkq.range = ⊤ :=

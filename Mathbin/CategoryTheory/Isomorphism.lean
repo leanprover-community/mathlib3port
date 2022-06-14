@@ -114,7 +114,7 @@ theorem symm_symm_eq {X Y : C} (α : X ≅ Y) : α.symm.symm = α := by
 
 @[simp]
 theorem symm_eq_iff {X Y : C} {α β : X ≅ Y} : α.symm = β.symm ↔ α = β :=
-  ⟨fun h => symm_symm_eq α ▸ symm_symm_eq β ▸ congr_argₓ symm h, congr_argₓ symm⟩
+  ⟨fun h => symm_symm_eq α ▸ symm_symm_eq β ▸ congr_arg symm h, congr_arg symm⟩
 
 /-- Identity isomorphism. -/
 @[refl, simps]
@@ -205,6 +205,12 @@ theorem hom_comp_eq_id (α : X ≅ Y) {f : Y ⟶ X} : α.Hom ≫ f = 𝟙 X ↔ 
 
 theorem comp_hom_eq_id (α : X ≅ Y) {f : Y ⟶ X} : f ≫ α.Hom = 𝟙 Y ↔ f = α.inv := by
   rw [← eq_comp_inv, id_comp]
+
+theorem inv_comp_eq_id (α : X ≅ Y) {f : X ⟶ Y} : α.inv ≫ f = 𝟙 Y ↔ f = α.Hom :=
+  hom_comp_eq_id α.symm
+
+theorem comp_inv_eq_id (α : X ≅ Y) {f : X ⟶ Y} : f ≫ α.inv = 𝟙 X ↔ f = α.Hom :=
+  comp_hom_eq_id α.symm
 
 theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.Hom = β.inv ↔ β.Hom = α.inv := by
   erw [inv_eq_inv α.symm β, eq_comm]
@@ -377,18 +383,29 @@ theorem hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} : g ≫ f = 𝟙 X 
 theorem comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} : f ≫ g = 𝟙 Y ↔ f = inv g :=
   (asIso g).comp_hom_eq_id
 
+theorem inv_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : X ⟶ Y} : inv g ≫ f = 𝟙 Y ↔ f = g :=
+  (asIso g).inv_comp_eq_id
+
+theorem comp_inv_eq_id (g : X ⟶ Y) [IsIso g] {f : X ⟶ Y} : f ≫ inv g = 𝟙 X ↔ f = g :=
+  (asIso g).comp_inv_eq_id
+
+theorem is_iso_of_hom_comp_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : g ≫ f = 𝟙 X) : IsIso f := by
+  rw [(hom_comp_eq_id _).mp h]
+  infer_instance
+
+theorem is_iso_of_comp_hom_eq_id (g : X ⟶ Y) [IsIso g] {f : Y ⟶ X} (h : f ≫ g = 𝟙 Y) : IsIso f := by
+  rw [(comp_hom_eq_id _).mp h]
+  infer_instance
+
 namespace Iso
 
 @[ext]
-theorem inv_ext {f : X ≅ Y} {g : Y ⟶ X} (hom_inv_id : f.Hom ≫ g = 𝟙 X) : f.inv = g := by
-  apply (cancel_epi f.hom).mp
-  simp [hom_inv_id]
+theorem inv_ext {f : X ≅ Y} {g : Y ⟶ X} (hom_inv_id : f.Hom ≫ g = 𝟙 X) : f.inv = g :=
+  ((hom_comp_eq_id f).1 hom_inv_id).symm
 
 @[ext]
-theorem inv_ext' {f : X ≅ Y} {g : Y ⟶ X} (hom_inv_id : f.Hom ≫ g = 𝟙 X) : g = f.inv := by
-  symm
-  ext
-  assumption
+theorem inv_ext' {f : X ≅ Y} {g : Y ⟶ X} (hom_inv_id : f.Hom ≫ g = 𝟙 X) : g = f.inv :=
+  (hom_comp_eq_id f).1 hom_inv_id
 
 /-!
 All these cancellation lemmas can be solved by `simp [cancel_mono]` (or `simp [cancel_epi]`),

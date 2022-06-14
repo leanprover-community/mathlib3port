@@ -144,7 +144,11 @@ section SetCoe
 
 variable {α : Type u}
 
-theorem Set.set_coe_eq_subtype (s : Set α) : coeSort.{u + 1, u + 2} s = { x // x ∈ s } :=
+theorem Set.coe_eq_subtype (s : Set α) : ↥s = { x // x ∈ s } :=
+  rfl
+
+@[simp]
+theorem Set.coe_set_of (p : α → Prop) : ↥{ x | p x } = { x // p x } :=
   rfl
 
 @[simp]
@@ -162,7 +166,7 @@ theorem SetCoe.forall' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∀ x h : x
   ((@SetCoe.forall _ _) fun x => p x.1 x.2).symm
 
 @[simp]
-theorem set_coe_cast : ∀ {s t : Set α} H' : s = t H : @Eq (Type u) s t x : s, cast H x = ⟨x.1, H' ▸ x.2⟩
+theorem set_coe_cast : ∀ {s t : Set α} H' : s = t H : ↥s = ↥t x : s, cast H x = ⟨x.1, H' ▸ x.2⟩
   | s, _, rfl, _, ⟨x, h⟩ => rfl
 
 theorem SetCoe.ext {s : Set α} {a b : s} : (↑a : α) = ↑b → a = b :=
@@ -486,8 +490,7 @@ theorem eq_empty_of_is_empty [IsEmpty α] (s : Set α) : s = ∅ :=
   eq_empty_of_subset_empty fun x hx => isEmptyElim x
 
 /-- There is exactly one set of a type that is empty. -/
--- TODO[gh-6025]: make this an instance once safe to do so
-def uniqueEmpty [IsEmpty α] : Unique (Set α) where
+instance uniqueEmpty [IsEmpty α] : Unique (Set α) where
   default := ∅
   uniq := eq_empty_of_is_empty
 
@@ -855,7 +858,7 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
   rcases h (subset_insert _ _ hx) with (rfl | hxt)
   exacts[(ha hx).elim, hxt]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a «expr ∉ » s)
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t := by
   simp only [insert_subset, exists_and_distrib_right, ssubset_def, not_subset]
   simp only [exists_prop, and_comm]
@@ -865,6 +868,10 @@ theorem ssubset_insert {s : Set α} {a : α} (h : a ∉ s) : s ⊂ insert a s :=
 
 theorem insert_comm (a b : α) (s : Set α) : insert a (insert b s) = insert b (insert a s) :=
   ext fun x => Or.left_comm
+
+@[simp]
+theorem insert_idem (a : α) (s : Set α) : insert a (insert a s) = insert a s :=
+  insert_eq_of_mem <| mem_insert _ _
 
 theorem insert_union : insert a s ∪ t = insert a (s ∪ t) :=
   ext fun x => Or.assoc
@@ -886,7 +893,7 @@ theorem insert_union_distrib (a : α) (s t : Set α) : insert a (s ∪ t) = inse
   ext fun _ => or_or_distrib_left _ _ _
 
 theorem insert_inj (ha : a ∉ s) : insert a s = insert b s ↔ a = b :=
-  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert a s) ha, congr_argₓ _⟩
+  ⟨fun h => eq_of_not_mem_of_mem_insert (h.subst <| mem_insert a s) ha, congr_arg _⟩
 
 -- useful in proofs by induction
 theorem forall_of_forall_insert {P : α → Prop} {a : α} {s : Set α} (H : ∀ x, x ∈ insert a s → P x) x (h : x ∈ s) :
@@ -1758,15 +1765,12 @@ theorem image_eq_empty {α β} {f : α → β} {s : Set α} : f '' s = ∅ ↔ s
   simp only [eq_empty_iff_forall_not_mem]
   exact ⟨fun H a ha => H _ ⟨_, ha, rfl⟩, fun H b ⟨_, ha, _⟩ => H _ ha⟩
 
--- TODO(Jeremy): there is an issue with - t unfolding to compl t
-theorem mem_compl_image (t : Set α) (S : Set (Set α)) : t ∈ compl '' S ↔ tᶜ ∈ S := by
-  suffices ∀ x, xᶜ = t ↔ tᶜ = x by
-    simp [this]
-  intro x
-  constructor <;>
-    · rintro rfl
-      simp
-      
+theorem preimage_compl_eq_image_compl [BooleanAlgebra α] (S : Set α) : compl ⁻¹' S = compl '' S :=
+  Set.ext fun x =>
+    ⟨fun h => ⟨xᶜ, h, compl_compl x⟩, fun h => Exists.elim h fun y hy => (compl_eq_comm.mp hy.2).symm.subst hy.1⟩
+
+theorem mem_compl_image [BooleanAlgebra α] (t : α) (S : Set α) : t ∈ compl '' S ↔ tᶜ ∈ S := by
+  simp [← preimage_compl_eq_image_compl]
 
 /-- A variant of `image_id` -/
 @[simp]
@@ -1777,8 +1781,9 @@ theorem image_id' (s : Set α) : (fun x => x) '' s = s := by
 theorem image_id (s : Set α) : id '' s = s := by
   simp
 
-theorem compl_compl_image (S : Set (Set α)) : compl '' (compl '' S) = S := by
-  rw [← image_comp, compl_comp_compl, image_id]
+theorem compl_compl_image [BooleanAlgebra α] {S : Set α} : compl '' (compl '' S) = S := by
+  ext
+  simp
 
 theorem image_insert_eq {f : α → β} {a : α} {s : Set α} : f '' insert a s = insert (f a) (f '' s) := by
   ext
@@ -1887,7 +1892,7 @@ theorem compl_image : Image (compl : Set α → Set α) = Preimage compl :=
   image_eq_preimage_of_inverse compl_compl compl_compl
 
 theorem compl_image_set_of {p : Set α → Prop} : compl '' { s | p s } = { s | p (sᶜ) } :=
-  congr_funₓ compl_image p
+  congr_fun compl_image p
 
 theorem inter_preimage_subset (s : Set α) (t : Set β) (f : α → β) : s ∩ f ⁻¹' t ⊆ f ⁻¹' (f '' s ∩ t) := fun x h =>
   ⟨mem_image_of_mem _ h.left, h.right⟩
@@ -1944,7 +1949,7 @@ theorem image_perm {s : Set α} {σ : Equivₓ.Perm α} (hs : { a : α | σ a �
     rwa [σ.injective (hi.trans h.symm)]
     
   · refine' iff_of_true ⟨σ.symm i, hs fun h => hi _, σ.apply_symm_apply _⟩ (hs hi)
-    convert congr_argₓ σ h <;> exact (σ.apply_symm_apply _).symm
+    convert congr_arg σ h <;> exact (σ.apply_symm_apply _).symm
     
 
 end Image
@@ -1959,7 +1964,7 @@ protected def Subsingleton (s : Set α) : Prop :=
 theorem Subsingleton.mono (ht : t.Subsingleton) (hst : s ⊆ t) : s.Subsingleton := fun x hx y hy => ht (hst hx) (hst hy)
 
 theorem Subsingleton.image (hs : s.Subsingleton) (f : α → β) : (f '' s).Subsingleton := fun _ ⟨y, hy, Hy⟩ =>
-  Hx ▸ Hy ▸ congr_argₓ f (hs hx hy)
+  Hx ▸ Hy ▸ congr_arg f (hs hx hy)
 
 theorem Subsingleton.eq_singleton_of_mem (hs : s.Subsingleton) {x : α} (hx : x ∈ s) : s = {x} :=
   ext fun y => ⟨fun hy => hs hx hy ▸ mem_singleton _, fun hy => (eq_of_mem_singleton hy).symm ▸ hx⟩
@@ -2145,6 +2150,28 @@ instance [Nonempty ι] (f : ι → α) : Nonempty (Range f) :=
 @[simp]
 theorem image_union_image_compl_eq_range (f : α → β) : f '' s ∪ f '' sᶜ = Range f := by
   rw [← image_union, ← image_univ, ← union_compl_self]
+
+theorem insert_image_compl_eq_range (f : α → β) (x : α) : insert (f x) (f '' {x}ᶜ) = Range f := by
+  ext y
+  rw [mem_range, mem_insert_iff, mem_image]
+  constructor
+  · rintro (h | ⟨x', hx', h⟩)
+    · exact ⟨x, h.symm⟩
+      
+    · exact ⟨x', h⟩
+      
+    
+  · rintro ⟨x', h⟩
+    by_cases' hx : x' = x
+    · left
+      rw [← h, hx]
+      
+    · right
+      refine' ⟨_, _, h⟩
+      rw [mem_compl_singleton_iff]
+      exact hx
+      
+    
 
 theorem image_preimage_eq_inter_range {f : α → β} {t : Set β} : f '' (f ⁻¹' t) = t ∩ Range f :=
   ext fun x =>
@@ -2513,7 +2540,7 @@ theorem Option.injective_iff {α β} {f : Option α → β} :
   simp only [mem_range, not_exists, (· ∘ ·)]
   refine' ⟨fun hf => ⟨hf.comp (Option.some_injective _), fun x => hf.Ne <| Option.some_ne_none _⟩, _⟩
   rintro ⟨h_some, h_none⟩ (_ | a) (_ | b) hab
-  exacts[rfl, (h_none _ hab.symm).elim, (h_none _ hab).elim, congr_argₓ some (h_some hab)]
+  exacts[rfl, (h_none _ hab.symm).elim, (h_none _ hab).elim, congr_arg some (h_some hab)]
 
 /-! ### Image and preimage on subtypes -/
 
@@ -2563,7 +2590,7 @@ theorem coe_image_univ (s : Set α) : (coe : s → α) '' Set.Univ = s :=
 
 @[simp]
 theorem image_preimage_coe (s t : Set α) : (coe : s → α) '' (coe ⁻¹' t) = t ∩ s :=
-  image_preimage_eq_inter_range.trans <| congr_argₓ _ range_coe
+  image_preimage_eq_inter_range.trans <| congr_arg _ range_coe
 
 theorem image_preimage_val (s t : Set α) : (Subtype.val : s → α) '' (Subtype.val ⁻¹' t) = t ∩ s :=
   image_preimage_coe s t
@@ -2625,6 +2652,9 @@ def inclusion (h : s ⊆ t) : s → t := fun x : s => (⟨x, h x.2⟩ : t)
 theorem inclusion_self (x : s) : inclusion Subset.rfl x = x := by
   cases x
   rfl
+
+theorem inclusion_eq_id (h : s ⊆ s) : inclusion h = id :=
+  funext inclusion_self
 
 @[simp]
 theorem inclusion_mk {h : s ⊆ t} (a : α) (ha : a ∈ s) : inclusion h ⟨a, ha⟩ = ⟨a, h ha⟩ :=

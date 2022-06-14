@@ -459,6 +459,16 @@ def dualIso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →o β) �
   toEquiv := OrderHom.dual.trans OrderDual.toDual
   map_rel_iff' := fun f g => Iff.rfl
 
+/-- Lift an order homomorphism `f : α →o β` to an order homomorphism `with_bot α →o with_bot β`. -/
+@[simps (config := { fullyApplied := false })]
+protected def withBotMap (f : α →o β) : WithBot α →o WithBot β :=
+  ⟨WithBot.map f, f.mono.with_bot_map⟩
+
+/-- Lift an order homomorphism `f : α →o β` to an order homomorphism `with_top α →o with_top β`. -/
+@[simps (config := { fullyApplied := false })]
+protected def withTopMap (f : α →o β) : WithTop α →o WithTop β :=
+  ⟨WithTop.map f, f.mono.with_top_map⟩
+
 end OrderHom
 
 /-- Embeddings of partial orders that preserve `<` also preserve `≤`. -/
@@ -518,6 +528,18 @@ protected theorem is_well_order [IsWellOrder β (· < ·)] : IsWellOrder α (· 
 /-- An order embedding is also an order embedding between dual orders. -/
 protected def dual : αᵒᵈ ↪o βᵒᵈ :=
   ⟨f.toEmbedding, fun a b => f.map_rel_iff⟩
+
+/-- A version of `with_bot.map` for order embeddings. -/
+@[simps (config := { fullyApplied := false })]
+protected def withBotMap (f : α ↪o β) : WithBot α ↪o WithBot β :=
+  { f.toEmbedding.optionMap with toFun := WithBot.map f,
+    map_rel_iff' := fun a b => by
+      cases a <;> cases b <;> simp [WithBot.none_eq_bot, WithBot.some_eq_coe, WithBot.not_coe_le_bot] }
+
+/-- A version of `with_top.map` for order embeddings. -/
+@[simps (config := { fullyApplied := false })]
+protected def withTopMap (f : α ↪o β) : WithTop α ↪o WithTop β :=
+  { f.dual.with_bot_map.dual with toFun := WithTop.map f }
 
 /-- To define an order embedding from a partial order to a preorder it suffices to give a function
 together with a proof that it satisfies `f a ≤ f b ↔ a ≤ b`.
@@ -983,10 +1005,8 @@ variable [PartialOrderₓ α] [PartialOrderₓ β] [PartialOrderₓ γ]
 
 /-- A version of `equiv.option_congr` for `with_top`. -/
 @[simps apply]
-def withTopCongr (e : α ≃o β) : WithTop α ≃o WithTop β where
-  toEquiv := e.toEquiv.optionCongr
-  map_rel_iff' := fun x y => by
-    induction x using WithTop.recTopCoe <;> induction y using WithTop.recTopCoe <;> simp
+def withTopCongr (e : α ≃o β) : WithTop α ≃o WithTop β :=
+  { e.toOrderEmbedding.with_top_map with toEquiv := e.toEquiv.optionCongr }
 
 @[simp]
 theorem with_top_congr_refl : (OrderIso.refl α).withTopCongr = OrderIso.refl _ :=
@@ -1003,10 +1023,8 @@ theorem with_top_congr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
 
 /-- A version of `equiv.option_congr` for `with_bot`. -/
 @[simps apply]
-def withBotCongr (e : α ≃o β) : WithBot α ≃o WithBot β where
-  toEquiv := e.toEquiv.optionCongr
-  map_rel_iff' := fun x y => by
-    induction x using WithBot.recBotCoe <;> induction y using WithBot.recBotCoe <;> simp
+def withBotCongr (e : α ≃o β) : WithBot α ≃o WithBot β :=
+  { e.toOrderEmbedding.with_bot_map with toEquiv := e.toEquiv.optionCongr }
 
 @[simp]
 theorem with_bot_congr_refl : (OrderIso.refl α).withBotCongr = OrderIso.refl _ :=

@@ -60,6 +60,21 @@ instance decidableMemCenter [DecidableEq M] [Fintype M] : DecidablePred (· ∈ 
 instance : CommMonoidₓ (center M) :=
   { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
+/-- The center of a monoid acts commutatively on that monoid. -/
+instance center.smul_comm_class_left : SmulCommClass (center M) M M where
+  smul_comm := fun m x y => (Commute.left_comm (m.Prop x) y).symm
+
+/-- The center of a monoid acts commutatively on that monoid. -/
+instance center.smul_comm_class_right : SmulCommClass M (center M) M :=
+  SmulCommClass.symm _ _ _
+
+/-! Note that `smul_comm_class (center M) (center M) M` is already implied by
+`submonoid.smul_comm_class_right` -/
+
+
+example : SmulCommClass (center M) (center M) M := by
+  infer_instance
+
 end
 
 section

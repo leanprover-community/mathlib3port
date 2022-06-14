@@ -958,8 +958,8 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
         (by
           simpa using h)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (w «expr ⊇ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊇ » w)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (w «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊇ » w)
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coe : s → E)) :
@@ -999,7 +999,7 @@ section Norm
 
 theorem norm_eq_sqrt_inner (x : E) : ∥x∥ = sqrt (re ⟪x, x⟫) := by
   have h₁ : ∥x∥ ^ 2 = re ⟪x, x⟫ := norm_sq_eq_inner x
-  have h₂ := congr_argₓ sqrt h₁
+  have h₂ := congr_arg sqrt h₁
   simpa using h₂
 
 theorem norm_eq_sqrt_real_inner (x : F) : ∥x∥ = sqrt ⟪x, x⟫_ℝ := by
@@ -1512,7 +1512,7 @@ theorem abs_inner_div_norm_mul_norm_eq_one_iff (x y : E) :
       rw [eq_of_div_eq_one h]
     replace h2 : ⟪r • x, r • x⟫ = ⟪t, t⟫ + ⟪t, r • x⟫ + ⟪r • x, t⟫ + ⟪r • x, r • x⟫
     · rw [sq, sq, ← inner_self_eq_norm_mul_norm, ← inner_self_eq_norm_mul_norm] at h2
-      have h2' := congr_argₓ (fun z : ℝ => (z : 𝕜)) h2
+      have h2' := congr_arg (fun z : ℝ => (z : 𝕜)) h2
       simp_rw [inner_self_re_to_K, inner_add_add_self]  at h2'
       exact h2'
       
@@ -1903,8 +1903,7 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
     ⟪V i v, l.Sum fun j => V j⟫ = ⟪v, l i⟫ :=
   calc
     ⟪V i v, l.Sum fun j => V j⟫ = l.Sum fun j => fun w => ⟪V i v, V j w⟫ := Dfinsupp.inner_sum (fun j => V j) l (V i v)
-    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 :=
-      congr_argₓ l.Sum <| funext fun j => funext <| hV.eq_ite v
+    _ = l.Sum fun j => fun w => ite (i = j) ⟪V i v, V j w⟫ 0 := congr_arg l.Sum <| funext fun j => funext <| hV.eq_ite v
     _ = ⟪v, l i⟫ := by
       simp only [Dfinsupp.sum, Submodule.coe_inner, Finset.sum_ite_eq, ite_eq_left_iff, Dfinsupp.mem_support_to_fun]
       split_ifs with h h
@@ -1922,7 +1921,7 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
   classical <;>
     calc ⟪V i v, ∑ j : ι, V j (l j)⟫ = ∑ j : ι, ⟪V i v, V j (l j)⟫ := by
         rw [inner_sum]_ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
-        congr_argₓ (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
+        congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j)_ = ⟪v, l i⟫ := by
         simp
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
@@ -2011,9 +2010,7 @@ theorem OrthogonalFamily.summable_iff_norm_sq_summable [CompleteSpace E] (f : �
     have : ∀ i, 0 ≤ ∥f i∥ ^ 2 := fun i : ι => sq_nonneg _
     simp only [Finset.abs_sum_of_nonneg' this]
     have : ((∑ i in s₁ \ s₂, ∥f i∥ ^ 2) + ∑ i in s₂ \ s₁, ∥f i∥ ^ 2) < sqrt ε ^ 2 := by
-      rw [← hV.norm_sq_diff_sum]
-      apply sq_lt_sq
-      rw [_root_.abs_of_nonneg (sqrt_nonneg _), _root_.abs_of_nonneg (norm_nonneg _)]
+      rw [← hV.norm_sq_diff_sum, sq_lt_sq, _root_.abs_of_nonneg (sqrt_nonneg _), _root_.abs_of_nonneg (norm_nonneg _)]
       exact H s₁ hs₁ s₂ hs₂
     have hη := sq_sqrt (le_of_ltₓ hε)
     linarith
@@ -2068,9 +2065,9 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
 
 include dec_ι
 
-theorem DirectSum.SubmoduleIsInternal.collected_basis_orthonormal {V : ι → Submodule 𝕜 E}
+theorem DirectSum.IsInternal.collected_basis_orthonormal {V : ι → Submodule 𝕜 E}
     (hV : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
-    (hV_sum : DirectSum.SubmoduleIsInternal fun i => V i) {α : ι → Type _} {v_family : ∀ i, Basis (α i) 𝕜 (V i)}
+    (hV_sum : DirectSum.IsInternal fun i => V i) {α : ι → Type _} {v_family : ∀ i, Basis (α i) 𝕜 (V i)}
     (hv_family : ∀ i, Orthonormal 𝕜 (v_family i)) : Orthonormal 𝕜 (hV_sum.collectedBasis v_family) := by
   simpa using hV.orthonormal_sigma_orthonormal hv_family
 

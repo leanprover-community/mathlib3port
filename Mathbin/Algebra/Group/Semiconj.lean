@@ -122,7 +122,7 @@ theorem units_inv_symm_left_iff {a : Mˣ} {x y : M} : SemiconjBy (↑a⁻¹) y x
 
 @[to_additive]
 theorem units_coe {a x y : Mˣ} (h : SemiconjBy a x y) : SemiconjBy (a : M) x y :=
-  congr_argₓ Units.val h
+  congr_arg Units.val h
 
 @[to_additive]
 theorem units_of_coe {a x y : Mˣ} (h : SemiconjBy (a : M) x y) : SemiconjBy a x y :=

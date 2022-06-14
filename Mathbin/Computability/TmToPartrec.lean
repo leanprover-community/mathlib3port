@@ -1180,7 +1180,7 @@ def splitAtPred {α} (p : α → Bool) : List α → List α × Option α × Lis
 theorem split_at_pred_eq {α} (p : α → Bool) :
     ∀ L l₁ o l₂,
       (∀, ∀ x ∈ l₁, ∀, p x = ff) →
-        (Option.elim o (L = l₁ ∧ l₂ = []) fun a => p a = tt ∧ L = l₁ ++ a :: l₂) → splitAtPred p L = (l₁, o, l₂)
+        Option.elimₓ (L = l₁ ∧ l₂ = []) (fun a => p a = tt ∧ L = l₁ ++ a :: l₂) o → splitAtPred p L = (l₁, o, l₂)
   | [], _, none, _, _, ⟨rfl, rfl⟩ => rfl
   | [], l₁, some o, l₂, h₁, ⟨h₂, h₃⟩ => by
     simp at h₃ <;> contradiction
@@ -1262,7 +1262,7 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k
       ⟨some q, none, update (update S k₁ (o.elim id List.cons L₂)) k₂ (L₁ ++ S k₂)⟩ :=
   by
   refine' (move_ok h₁.1 e).trans (trans_gen.head rfl _)
-  cases o <;> simp only [Option.elim, tr, id.def]
+  cases o <;> simp only [Option.elimₓ, tr, id.def]
   · convert move_ok h₁.2.1.symm (split_at_pred_ff _) using 2
     simp only [Function.update_comm h₁.1, Function.update_idem]
     rw

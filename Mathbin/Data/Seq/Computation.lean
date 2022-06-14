@@ -227,7 +227,7 @@ theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (
   · rfl
     
   dsimp' [corec.F, destruct]
-  apply congr_argₓ
+  apply congr_arg
   apply Subtype.eq
   dsimp' [corec, tail]
   rw [Streamₓ.corec'_eq, Streamₓ.tail_cons]
@@ -609,7 +609,7 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (
   | ⟨s, al⟩ => by
     apply Subtype.eq <;> dsimp' [map]
     rw [Streamₓ.map_map]
-    apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s
+    apply congr_arg fun f : _ → Option γ => Streamₓ.map f s
     ext ⟨⟩ <;> rfl
 
 @[simp]
@@ -715,7 +715,7 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
   · simp [thinkN] at e
     refine' ⟨a, _, _, results_ret _, e, rfl⟩
     
-  · have := congr_argₓ head (eq_thinkN e)
+  · have := congr_arg head (eq_thinkN e)
     contradiction
     
   · simp at e
@@ -1040,7 +1040,7 @@ theorem lift_rel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
 
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β} (h1 : s1 ~ s2) :
     map f s1 ~ map f s2 := by
-  rw [← lift_eq_iff_equiv] <;> exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_argₓ _
+  rw [← lift_eq_iff_equiv] <;> exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_arg _
 
 def LiftRelAux (R : α → β → Prop) (C : Computation α → Computation β → Prop) :
     Sum α (Computation α) → Sum β (Computation β) → Prop

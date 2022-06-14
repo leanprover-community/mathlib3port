@@ -37,15 +37,15 @@ def limitCone (F : J ⥤ Type max v u) : Cone F where
   x := F.sections
   π := { app := fun j u => u.val j }
 
-attribute [local elabWithoutExpectedType] congr_funₓ
+attribute [local elabWithoutExpectedType] congr_fun
 
 /-- (internal implementation) the fact that the proposed limit cone is the limit -/
 def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F) where
-  lift := fun s v => ⟨fun j => s.π.app j v, fun j j' f => congr_funₓ (Cone.w s f) _⟩
+  lift := fun s v => ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
   uniq' := by
     intros
     ext x j
-    exact congr_funₓ (w j) x
+    exact congr_fun (w j) x
 
 /-- The category of types has all limits.
 
@@ -141,32 +141,32 @@ theorem limit_ext_iff' (F : J ⥤ Type v) (x y : limit F) : x = y ↔ ∀ j, lim
 @[simp]
 theorem Limit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : limit F} (f : j ⟶ j') :
     F.map f (limit.π F j x) = limit.π F j' x :=
-  congr_funₓ (limit.w F f) x
+  congr_fun (limit.w F f) x
 
 @[simp]
 theorem Limit.lift_π_apply (F : J ⥤ Type max v u) (s : Cone F) (j : J) (x : s.x) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
-  congr_funₓ (limit.lift_π s j) x
+  congr_fun (limit.lift_π s j) x
 
 @[simp]
 theorem Limit.map_π_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
-  congr_funₓ (lim_map_π α j) x
+  congr_fun (lim_map_π α j) x
 
 @[simp]
 theorem Limit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : limit F} (f : j ⟶ j') :
     F.map f (limit.π F j x) = limit.π F j' x :=
-  congr_funₓ (limit.w F f) x
+  congr_fun (limit.w F f) x
 
 @[simp]
 theorem Limit.lift_π_apply' (F : J ⥤ Type v) (s : Cone F) (j : J) (x : s.x) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
-  congr_funₓ (limit.lift_π s j) x
+  congr_fun (limit.lift_π s j) x
 
 @[simp]
 theorem Limit.map_π_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
-  congr_funₓ (lim_map_π α j) x
+  congr_fun (lim_map_π α j) x
 
 /-- The relation defining the quotient type which implements the colimit of a functor `F : J ⥤ Type u`.
 See `category_theory.limits.types.quot`.
@@ -196,7 +196,7 @@ attribute [local elab_with_expected_type] Quot.lift
 def colimitCoconeIsColimit (F : J ⥤ Type max v u) : IsColimit (colimitCocone F) where
   desc := fun s =>
     Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2) fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ => by
-      rw [hf] <;> exact (congr_funₓ (cocone.w s f) x).symm
+      rw [hf] <;> exact (congr_fun (cocone.w s f) x).symm
 
 /-- The category of types has all colimits.
 
@@ -229,32 +229,32 @@ theorem colimit_equiv_quot_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) 
 @[simp]
 theorem Colimit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
-  congr_funₓ (colimit.w F f) x
+  congr_fun (colimit.w F f) x
 
 @[simp]
 theorem Colimit.ι_desc_apply (F : J ⥤ Type max v u) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
-  congr_funₓ (colimit.ι_desc s j) x
+  congr_fun (colimit.ι_desc s j) x
 
 @[simp]
 theorem Colimit.ι_map_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) x :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
-  congr_funₓ (colimit.ι_map α j) x
+  congr_fun (colimit.ι_map α j) x
 
 @[simp]
 theorem Colimit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
-  congr_funₓ (colimit.w F f) x
+  congr_fun (colimit.w F f) x
 
 @[simp]
 theorem Colimit.ι_desc_apply' (F : J ⥤ Type v) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
-  congr_funₓ (colimit.ι_desc s j) x
+  congr_fun (colimit.ι_desc s j) x
 
 @[simp]
 theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) x :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
-  congr_funₓ (colimit.ι_map α j) x
+  congr_fun (colimit.ι_map α j) x
 
 theorem colimit_sound {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (f : j ⟶ j')
     (w : F.map f x = x') : colimit.ι F j x = colimit.ι F j' x' := by
@@ -269,13 +269,13 @@ theorem colimit_sound' {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F
 theorem colimit_eq {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'}
     (w : colimit.ι F j x = colimit.ι F j' x') : EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ := by
   apply Quot.eq.1
-  simpa using congr_argₓ (colimit_equiv_quot F) w
+  simpa using congr_arg (colimit_equiv_quot F) w
 
 theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimit t) (x : t.x) : ∃ j y, t.ι.app j y = x :=
   by
   suffices (fun x : t.X => ULift.up (∃ j y, t.ι.app j y = x)) = fun _ => ULift.up True by
-    have := congr_funₓ this x
-    have H := congr_argₓ ULift.down this
+    have := congr_fun this x
+    have H := congr_arg ULift.down this
     dsimp'  at H
     rwa [eq_trueₓ] at H
   refine' h.hom_ext _
@@ -460,7 +460,7 @@ instance : HasImageMaps (Type u) where
         ⟨st.right x.1,
           ⟨st.left (Classical.some x.2), by
             have p := st.w
-            replace p := congr_funₓ p (Classical.some x.2)
+            replace p := congr_fun p (Classical.some x.2)
             simp only [functor.id_map, types_comp_apply, Subtype.val_eq_coe] at p
             erw [p, Classical.some_spec x.2]⟩⟩)
       rfl

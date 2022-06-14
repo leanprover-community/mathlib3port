@@ -608,14 +608,14 @@ theorem range_sin : Range sin = (Icc (-1) 1 : Set ℝ) :=
 theorem range_cos_infinite : (Range Real.cos).Infinite := by
   rw [Real.range_cos]
   exact
-    Icc.infinite
+    Icc_infinite
       (by
         norm_num)
 
 theorem range_sin_infinite : (Range Real.sin).Infinite := by
   rw [Real.range_sin]
   exact
-    Icc.infinite
+    Icc_infinite
       (by
         norm_num)
 

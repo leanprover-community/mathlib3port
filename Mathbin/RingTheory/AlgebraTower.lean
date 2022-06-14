@@ -239,7 +239,7 @@ open Finset Submodule
 
 open Classical
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (yi yj yk «expr ∈ » y)
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : Submodule B C).Fg) :
     ∃ B₀ : Subalgebra A B, B₀.Fg ∧ (⊤ : Submodule B₀ C).Fg := by
   cases' hAC with x hx

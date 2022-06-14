@@ -175,7 +175,7 @@ variable {M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ↑p.Support ⊆ s :=
   Iff.rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » s)
 theorem mem_supported' {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ ∀ x _ : x ∉ s, p x = 0 := by
   have := Classical.decPred fun x : α => x ∈ s <;> simp [mem_supported, Set.subset_def, not_imp_comm]
 
@@ -404,7 +404,7 @@ theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
           simpa using hl hc)
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem lmap_domain_disjoint_ker (f : α → α') {s : Set α} (H : ∀ a b _ : a ∈ s _ : b ∈ s, f a = f b → a = b) :
     Disjoint (supported M R s) (lmapDomain M R f).ker := by
   rintro l ⟨h₁, h₂⟩

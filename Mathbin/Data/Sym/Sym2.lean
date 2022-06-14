@@ -141,7 +141,7 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 theorem mk_eq_mk_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap := by
   cases p
   cases q
-  simp only [eq_iff, Prod.mk.inj_iffₓ, Prod.swap_prod_mk]
+  simp only [eq_iff, Prod.mk.inj_iff, Prod.swap_prod_mk]
 
 /-- The universal property of `sym2`; symmetric functions of two arguments are equivalent to
 functions from `sym2`. Note that when `β` is `Prop`, it can sometimes be more convenient to use
@@ -151,7 +151,7 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
     Quotientₓ.lift (uncurry ↑f) <| by
       rintro _ _ ⟨⟩
       exacts[rfl, f.prop _ _]
-  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_argₓ F eq_swap⟩
+  invFun := fun F => ⟨curry (F ∘ Quotientₓ.mk), fun a₁ a₂ => congr_arg F eq_swap⟩
   left_inv := fun f => Subtype.ext rfl
   right_inv := fun F => funext <| Sym2.ind fun x y => rfl
 

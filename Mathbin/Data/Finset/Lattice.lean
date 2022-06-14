@@ -79,7 +79,7 @@ theorem sup_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀, ∀ a ∈ s�
   subst hs <;> exact Finset.fold_congr hfg
 
 @[simp]
-theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀, ∀ b ∈ s, ∀, f b ≤ a := by
+protected theorem sup_le_iff {a : α} : s.sup f ≤ a ↔ ∀, ∀ b ∈ s, ∀, f b ≤ a := by
   apply Iff.trans Multiset.sup_le
   simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
   exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
@@ -91,7 +91,7 @@ theorem sup_bUnion [DecidableEq β] (s : Finset γ) (t : γ → Finset β) :
     simp [@forall_swap _ β]
 
 theorem sup_const {s : Finset β} (h : s.Nonempty) (c : α) : (s.sup fun _ => c) = c :=
-  eq_of_forall_ge_iff fun b => sup_le_iff.trans h.forall_const
+  eq_of_forall_ge_iff fun b => Finset.sup_le_iff.trans h.forall_const
 
 @[simp]
 theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) := by
@@ -106,10 +106,10 @@ theorem sup_ite (p : β → Prop) [DecidablePred p] :
   fold_ite _
 
 theorem sup_le {a : α} : (∀, ∀ b ∈ s, ∀, f b ≤ a) → s.sup f ≤ a :=
-  sup_le_iff.2
+  Finset.sup_le_iff.2
 
 theorem le_sup {b : β} (hb : b ∈ s) : f b ≤ s.sup f :=
-  sup_le_iff.1 le_rfl _ hb
+  Finset.sup_le_iff.1 le_rfl _ hb
 
 theorem sup_mono_fun {g : β → α} (h : ∀, ∀ b ∈ s, ∀, f b ≤ g b) : s.sup f ≤ s.sup g :=
   sup_le fun b hb => le_transₓ (h b hb) (le_sup hb)
@@ -120,12 +120,12 @@ theorem sup_mono (h : s₁ ⊆ s₂) : s₁.sup f ≤ s₂.sup f :=
 theorem sup_comm (s : Finset β) (t : Finset γ) (f : β → γ → α) :
     (s.sup fun b => t.sup (f b)) = t.sup fun c => s.sup fun b => f b c := by
   refine' eq_of_forall_ge_iff fun a => _
-  simp_rw [sup_le_iff]
+  simp_rw [Finset.sup_le_iff]
   exact ⟨fun h c hc b hb => h b hb c hc, fun h b hb c hc => h c hc b hb⟩
 
 @[simp]
 theorem sup_attach (s : Finset β) (f : β → α) : (s.attach.sup fun x => f x) = s.sup f :=
-  (s.attach.sup_map (Function.Embedding.subtype _) f).symm.trans <| congr_argₓ _ attach_map_val
+  (s.attach.sup_map (Function.Embedding.subtype _) f).symm.trans <| congr_arg _ attach_map_val
 
 /-- See also `finset.product_bUnion`. -/
 theorem sup_product_left (s : Finset β) (t : Finset γ) (f : β × γ → α) :
@@ -212,11 +212,11 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
     -- z ∈ s is above x and y
     obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
     use z, hzs
-    rw [sup_insert, id.def, _root_.sup_le_iff]
+    rw [sup_insert, id.def, sup_le_iff]
     exact ⟨le_transₓ hay hyz, le_transₓ hsx_sup hxz⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι)
@@ -312,7 +312,7 @@ theorem inf_top (s : Finset β) : (s.inf fun _ => ⊤) = (⊤ : α) :=
   @sup_bot αᵒᵈ _ _ _ _
 
 theorem le_inf_iff {a : α} : a ≤ s.inf f ↔ ∀, ∀ b ∈ s, ∀, a ≤ f b :=
-  @sup_le_iff αᵒᵈ _ _ _ _ _ _
+  @Finset.sup_le_iff αᵒᵈ _ _ _ _ _ _
 
 theorem inf_le {b : β} (hb : b ∈ s) : s.inf f ≤ f b :=
   le_inf_iff.1 le_rfl _ hb
@@ -383,7 +383,7 @@ theorem inf_induction {p : α → Prop} (ht : p ⊤) (hp : ∀ a₁, p a₁ → 
     (hs : ∀, ∀ b ∈ s, ∀, p (f b)) : p (s.inf f) :=
   @sup_induction αᵒᵈ _ _ _ _ _ _ ht hp hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf p ∈ s :=
   @inf_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
@@ -609,7 +609,7 @@ theorem comp_sup'_eq_sup'_comp [SemilatticeSup γ] {s : Finset β} (H : s.Nonemp
     
   · cases f₂
     rfl
-    exact congr_argₓ coe (g_sup f₁ f₂)
+    exact congr_arg coe (g_sup f₁ f₂)
     
 
 theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁⊔a₂)) (hs : ∀, ∀ b ∈ s, ∀, p (f b)) :
@@ -624,7 +624,7 @@ theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
   cases a₂
   exacts[h₁, hp a₁ h₁ a₂ h₂]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem sup'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊔y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
@@ -695,7 +695,7 @@ theorem inf'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p 
     p (s.inf' H f) :=
   @sup'_induction αᵒᵈ _ _ _ H f _ hp hs
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem inf'_mem (s : Set α) (w : ∀ x y _ : x ∈ s _ : y ∈ s, x⊓y ∈ s) {ι : Type _} (t : Finset ι) (H : t.Nonempty)
     (p : ι → α) (h : ∀, ∀ i ∈ t, ∀, p i ∈ s) : t.inf' H p ∈ s :=
   inf'_induction H p w h
@@ -714,7 +714,7 @@ variable [SemilatticeSup α] [OrderBot α]
 theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H f = s.sup f :=
   le_antisymmₓ (sup'_le H f fun b => le_sup) (sup_le fun b => le_sup' f)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊔b ∈ s) : t.sup id ∈ s :=
   sup'_eq_sup htne id ▸ sup'_induction _ _ h h_subset
@@ -732,7 +732,7 @@ variable [SemilatticeInf α] [OrderTop α]
 theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H f = s.inf f :=
   @sup'_eq_sup αᵒᵈ _ _ _ _ H f
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ a b _ : a ∈ s _ : b ∈ s, a⊓b ∈ s) : t.inf id ∈ s :=
   @sup_closed_of_sup_closed αᵒᵈ _ _ _ t htne h_subset h
@@ -1057,19 +1057,19 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
 
 theorem map_of_dual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.Image ofDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
-  exact congr_funₓ Option.map_id _
+  exact congr_fun Option.map_id _
 
 theorem map_of_dual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.Image ofDual).min := by
   rw [min_eq_inf_with_top, inf_image]
-  exact congr_funₓ Option.map_id _
+  exact congr_fun Option.map_id _
 
 theorem map_to_dual_min (s : Finset α) : s.min.map toDual = (s.Image toDual).max := by
   rw [max_eq_sup_with_bot, sup_image]
-  exact congr_funₓ Option.map_id _
+  exact congr_fun Option.map_id _
 
 theorem map_to_dual_max (s : Finset α) : s.max.map toDual = (s.Image toDual).min := by
   rw [min_eq_inf_with_top, inf_image]
-  exact congr_funₓ Option.map_id _
+  exact congr_fun Option.map_id _
 
 theorem of_dual_min' {s : Finset αᵒᵈ} (hs : s.Nonempty) : ofDual (min' s hs) = max' (s.Image ofDual) (hs.Image _) := by
   convert rfl

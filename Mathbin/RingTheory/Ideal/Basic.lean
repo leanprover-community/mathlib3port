@@ -201,8 +201,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » I)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » I)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » I)
 theorem not_is_prime_iff {I : Ideal α} : ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I := by
   simp_rw [Ideal.is_prime_iff, not_and_distrib, Ne.def, not_not, not_forall, not_or_distrib]
   exact
@@ -396,7 +396,7 @@ theorem IsMaximal.is_prime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
       cases' is_maximal_iff.1 H with _ oJ
       specialize oJ J x IJ hx xJ
       rcases submodule.mem_span_insert.mp oJ with ⟨a, b, h, oe⟩
-      obtain F : y * 1 = y * (a • x + b) := congr_argₓ (fun g : α => y * g) oe
+      obtain F : y * 1 = y * (a • x + b) := congr_arg (fun g : α => y * g) oe
       rw [← mul_oneₓ y, F, mul_addₓ, mul_comm, smul_eq_mul, mul_assoc]
       refine' Submodule.add_mem I (I.mul_mem_left a hxy) (Submodule.smul_mem I y _)
       rwa [Submodule.span_eq] at h⟩
@@ -588,7 +588,7 @@ variable {R : Type _} [CommRingₓ R]
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R := fun ⟨⟨x, y, hxy⟩, _, _⟩ =>
   hxy (Subsingleton.elimₓ x y)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » (0 : R))
 theorem exists_not_is_unit_of_not_is_field [Nontrivial R] (hf : ¬IsField R) : ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
   have : ¬_ := fun h => hf ⟨exists_pair_ne R, mul_comm, h⟩

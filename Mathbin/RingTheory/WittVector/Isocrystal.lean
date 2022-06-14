@@ -149,7 +149,7 @@ open Isocrystal
 def FractionRing.module : Module K(p,k) K(p,k) :=
   Semiringₓ.toModule
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler module «exprK( , )»(p, k)
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler module «exprK( , )»(p, k)
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
@@ -174,6 +174,7 @@ theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIs
 
 end PerfectRing
 
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _) [AddCommGroupₓ V]
@@ -212,7 +213,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
     standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1
-  linear_combination hmb * φ(p,k) c
+  "././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args"
 
 end WittVector
 

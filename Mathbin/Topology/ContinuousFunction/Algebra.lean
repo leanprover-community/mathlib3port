@@ -7,6 +7,7 @@ import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.ContinuousFunction.Ordered
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.UniformSpace.CompactConvergence
+import Mathbin.Topology.Algebra.Star
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Tactic.FieldSimp
 
@@ -750,6 +751,61 @@ theorem sup_eq (f g : C(α, β)) : f⊔g = (2⁻¹ : β) • (f + g + abs (f - g
     simpa [mul_addₓ] using @max_eq_half_add_add_abs_sub _ _ (f x) (g x)
 
 end Lattice
+
+/-!
+### Star structure
+
+If `β` has a continuous star operation, we put a star structure on `C(α, β)` by using the
+star operation pointwise.
+
+If `β` is a ⋆-ring, then `C(α, β)` inherits a ⋆-ring structure.
+
+If `β` is a ⋆-ring and a ⋆-module over `R`, then the space of continuous functions from `α` to `β`
+is a ⋆-module over `R`.
+
+-/
+
+
+section StarStructure
+
+variable {R α β : Type _}
+
+variable [TopologicalSpace α] [TopologicalSpace β]
+
+section HasStar
+
+variable [HasStar β] [HasContinuousStar β]
+
+instance : HasStar C(α, β) where
+  star := fun f => starContinuousMap.comp f
+
+@[simp]
+theorem coe_star (f : C(α, β)) : ⇑(star f) = star f :=
+  rfl
+
+@[simp]
+theorem star_apply (f : C(α, β)) (x : α) : star f x = star (f x) :=
+  rfl
+
+end HasStar
+
+instance [HasInvolutiveStar β] [HasContinuousStar β] : HasInvolutiveStar C(α, β) where
+  star_involutive := fun f => ext fun x => star_star _
+
+instance [AddMonoidₓ β] [HasContinuousAdd β] [StarAddMonoid β] [HasContinuousStar β] : StarAddMonoid C(α, β) where
+  star_add := fun f g => ext fun x => star_add _ _
+
+instance [Semigroupₓ β] [HasContinuousMul β] [StarSemigroup β] [HasContinuousStar β] : StarSemigroup C(α, β) where
+  star_mul := fun f g => ext fun x => star_mul _ _
+
+instance [NonUnitalSemiringₓ β] [TopologicalSemiring β] [StarRing β] [HasContinuousStar β] : StarRing C(α, β) :=
+  { ContinuousMap.starAddMonoid with }
+
+instance [HasStar R] [HasStar β] [HasScalar R β] [StarModule R β] [HasContinuousStar β] [HasContinuousConstSmul R β] :
+    StarModule R C(α, β) where
+  star_smul := fun k f => ext fun x => star_smul _ _
+
+end StarStructure
 
 end ContinuousMap
 

@@ -85,7 +85,7 @@ export HasSdiff (sdiff)
 
 /-- A generalized Boolean algebra is a distributive lattice with `⊥` and a relative complement
 operation `\` (called `sdiff`, after "set difference") satisfying `(a ⊓ b) ⊔ (a \ b) = a` and
-`(a ⊓ b) ⊓ (a \ b) = b`, i.e. `a \ b` is the complement of `b` in `a`.
+`(a ⊓ b) ⊓ (a \ b) = ⊥`, i.e. `a \ b` is the complement of `b` in `a`.
 
 This is a generalization of Boolean algebras which applies to `finset α` for arbitrary
 (not-necessarily-`fintype`) `α`. -/
@@ -771,7 +771,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (Compl)
 
--- ././Mathport/Syntax/Translate/Basic.lean:461:9: unsupported: advanced prec syntax «expr + »(max, 1)
+-- ././Mathport/Syntax/Translate/Basic.lean:460:9: unsupported: advanced prec syntax «expr + »(max, 1)
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -831,6 +831,12 @@ theorem compl_eq_iff_is_compl : xᶜ = y ↔ IsCompl x y :=
   ⟨fun h => by
     rw [← h]
     exact is_compl_compl, IsCompl.compl_eq⟩
+
+theorem compl_eq_comm : xᶜ = y ↔ yᶜ = x := by
+  rw [eq_comm, compl_eq_iff_is_compl, eq_compl_iff_is_compl]
+
+theorem eq_compl_comm : x = yᶜ ↔ y = xᶜ := by
+  rw [eq_comm, compl_eq_iff_is_compl, eq_compl_iff_is_compl]
 
 theorem disjoint_compl_right : Disjoint x (xᶜ) :=
   is_compl_compl.Disjoint
@@ -908,6 +914,12 @@ theorem le_compl_iff_le_compl : y ≤ xᶜ ↔ x ≤ yᶜ :=
 
 theorem compl_le_iff_compl_le : xᶜ ≤ y ↔ yᶜ ≤ x :=
   ⟨compl_le_of_compl_le, compl_le_of_compl_le⟩
+
+theorem disjoint_iff_le_compl_right : Disjoint x y ↔ x ≤ yᶜ := by
+  rw [IsCompl.disjoint_left_iff is_compl_compl]
+
+theorem disjoint_iff_le_compl_left : Disjoint x y ↔ y ≤ xᶜ := by
+  rw [Disjoint.comm, disjoint_iff_le_compl_right]
 
 namespace BooleanAlgebra
 
@@ -1031,6 +1043,12 @@ instance Pi.hasCompl {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)]
 
 theorem Pi.compl_def {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) : xᶜ = fun i => x iᶜ :=
   rfl
+
+instance IsIrrefl.compl r [IsIrrefl α r] : IsRefl α (rᶜ) :=
+  ⟨@irrefl α r _⟩
+
+instance IsRefl.compl r [IsRefl α r] : IsIrrefl α (rᶜ) :=
+  ⟨fun a => not_not_intro (refl a)⟩
 
 @[simp]
 theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i)] (x : ∀ i, α i) (i : ι) : (xᶜ) i = x iᶜ :=

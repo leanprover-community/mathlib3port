@@ -115,7 +115,7 @@ theorem IsDiag.minor [Zero α] {A : Matrix n n α} (ha : A.IsDiag) {f : m → n}
 theorem IsDiag.kronecker [MulZeroClassₓ α] {A : Matrix m m α} {B : Matrix n n α} (hA : A.IsDiag) (hB : B.IsDiag) :
     (A ⊗ₖ B).IsDiag := by
   rintro ⟨a, b⟩ ⟨c, d⟩ h
-  simp only [Prod.mk.inj_iffₓ, Ne.def, not_and_distrib] at h
+  simp only [Prod.mk.inj_iff, Ne.def, not_and_distrib] at h
   cases' h with hac hbd
   · simp [hA hac]
     

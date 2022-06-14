@@ -98,7 +98,7 @@ theorem laurent_laurent : laurent r (laurent s f) = laurent (r + s) f := by
   simp_rw [laurent_div, taylor_taylor]
 
 theorem laurent_injective : Function.Injective (laurent r) := fun _ _ h => by
-  simpa [laurent_laurent] using congr_argₓ (laurent (-r)) h
+  simpa [laurent_laurent] using congr_arg (laurent (-r)) h
 
 end Ratfunc
 

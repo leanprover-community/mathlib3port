@@ -183,7 +183,7 @@ variable [Fintype α]
 
 theorem support_pow_coprime {σ : Perm α} {n : ℕ} (h : Nat.Coprime n (orderOf σ)) : (σ ^ n).support = σ.support := by
   obtain ⟨m, hm⟩ := exists_pow_eq_self_of_coprime h
-  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eq (congr_argₓ support hm)) (support_pow_le (σ ^ n) m))
+  exact le_antisymmₓ (support_pow_le σ n) (le_transₓ (ge_of_eq (congr_arg support hm)) (support_pow_le (σ ^ n) m))
 
 end Fintype
 
@@ -560,7 +560,7 @@ theorem sign_aux3_symm_trans_trans [DecidableEq β] [Fintype β] (f : Perm α) (
         let n := equivFin β
         rw [← sign_aux_eq_sign_aux2 _ _ n fun _ _ => h₁ _, ← sign_aux_eq_sign_aux2 _ _ (e.trans n) fun _ _ => h₂ _]
         exact
-          congr_argₓ sign_aux
+          congr_arg sign_aux
             (Equivₓ.ext fun x => by
               simp only [Equivₓ.coe_trans, apply_eq_iff_eq, symm_trans_apply]))
     ht hs

@@ -444,7 +444,7 @@ theorem con_gen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
       "The supremum of additive congruence relations `c, d` equals the\nsmallest additive congruence relation containing the binary relation '`x` is related to `y`\nby `c` or `d`'."]
 theorem sup_eq_con_gen (c d : Con M) : c⊔d = conGen fun x y => c x y ∨ d x y := by
   rw [con_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
@@ -461,7 +461,7 @@ theorem sup_def {c d : Con M} : c⊔d = conGen (c.R⊔d.R) := by
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
 theorem Sup_eq_con_gen (S : Set (Con M)) : sup S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y := by
   rw [con_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   ext
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
 
@@ -589,8 +589,8 @@ variable {M} [MulOneClassₓ M] [MulOneClassₓ N] [MulOneClassₓ P] (c : Con M
 instance mulOneClass : MulOneClassₓ c.Quotient where
   one := ((1 : M) : c.Quotient)
   mul := (· * ·)
-  mul_one := fun x => (Quotientₓ.induction_on' x) fun _ => congr_argₓ coe <| mul_oneₓ _
-  one_mul := fun x => (Quotientₓ.induction_on' x) fun _ => congr_argₓ coe <| one_mulₓ _
+  mul_one := fun x => (Quotientₓ.induction_on' x) fun _ => congr_arg coe <| mul_oneₓ _
+  one_mul := fun x => (Quotientₓ.induction_on' x) fun _ => congr_arg coe <| one_mulₓ _
 
 variable {c}
 

@@ -579,6 +579,10 @@ theorem inv_apply_self (e : r ≃r r) x : e⁻¹ (e x) = x :=
 theorem apply_inv_self (e : r ≃r r) x : e (e⁻¹ x) = x :=
   e.apply_symm_apply x
 
+/-- Two relations on empty types are isomorphic. -/
+def relIsoOfIsEmpty (r : α → α → Prop) (s : β → β → Prop) [IsEmpty α] [IsEmpty β] : r ≃r s :=
+  ⟨Equivₓ.equivOfIsEmpty α β, isEmptyElim⟩
+
 end RelIso
 
 /-- `subrel r p` is the inherited relation on a subset. -/

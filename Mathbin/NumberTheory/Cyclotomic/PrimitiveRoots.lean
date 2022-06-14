@@ -206,7 +206,7 @@ theorem norm_eq_one [IsCyclotomicExtension {n} K L] (hn : n ≠ 2) (hirr : Irred
 theorem norm_eq_one_of_linearly_ordered {K : Type _} [LinearOrderedField K] [Algebra K L] (hodd : Odd (n : ℕ)) :
     norm K ζ = 1 := by
   have := NeZero.of_no_zero_smul_divisors K L n
-  have hz := congr_argₓ (norm K) ((IsPrimitiveRoot.iff_def _ n).1 hζ).1
+  have hz := congr_arg (norm K) ((IsPrimitiveRoot.iff_def _ n).1 hζ).1
   rw [← (algebraMap K L).map_one, Algebra.norm_algebra_map, one_pow, map_pow, ← one_pow ↑n] at hz
   exact StrictMono.injective hodd.strict_mono_pow hz
 
@@ -272,14 +272,14 @@ attribute [local instance] IsCyclotomicExtension.finite_dimensional
 
 attribute [local instance] IsCyclotomicExtension.is_galois
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment
@@ -544,7 +544,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `K
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯"))]
            ":="
            (Term.app `IntermediateField.AdjoinSimple.gen [`K `η]))))
@@ -607,7 +607,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯")]))]
            ":="
            (Term.byTactic
@@ -627,7 +627,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `K
                       "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                       "⟯")
                      "."
                      `toSubalgebra)])
@@ -648,7 +648,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                                `K
                                "⟮"
-                               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                               (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                                "⟯")
                               "."
                               `toSubalgebra)
@@ -657,7 +657,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                                `K
                                "⟮"
-                               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                               (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                                "⟯")
                               "."
                               `toSubalgebra)))]
@@ -939,7 +939,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `K
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 `L]))))
            [])
@@ -958,7 +958,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                 [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `K
                   "⟮"
-                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                   "⟯")
                  `hirr₁]))
               ","
@@ -1236,7 +1236,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯"))]
           ":="
           (Term.app `IntermediateField.AdjoinSimple.gen [`K `η]))))
@@ -1299,7 +1299,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
               (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                `K
                "⟮"
-               (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+               (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                "⟯")]))]
           ":="
           (Term.byTactic
@@ -1319,7 +1319,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `K
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯")
                     "."
                     `toSubalgebra)])
@@ -1340,7 +1340,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                               `K
                               "⟮"
-                              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                               "⟯")
                              "."
                              `toSubalgebra)
@@ -1349,7 +1349,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                               `K
                               "⟮"
-                              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                               "⟯")
                              "."
                              `toSubalgebra)))]
@@ -1631,7 +1631,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯")
                `L]))))
           [])
@@ -1650,7 +1650,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `K
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 `hirr₁]))
              ","
@@ -1811,7 +1811,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
            `K
            "⟮"
-           (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+           (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
            "⟯")
           `L]))))
      [])
@@ -1830,7 +1830,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `K
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            `hirr₁]))
         ","
@@ -2154,7 +2154,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `K
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `hirr₁]))
      ","
@@ -2291,7 +2291,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `K
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `hirr₁])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -2305,10 +2305,10 @@ attribute [local instance] IsCyclotomicExtension.is_galois
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /--
     If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,
     then the norm of `ζ ^ (p ^ s) - 1` is `p ^ (p ^ s)` if `p ^ (k - s + 1) ≠ 2`. See the next lemmas
@@ -2349,7 +2349,7 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           let η := ζ ^ ( p : ℕ ) ^ s - 1
           let
             η₁
-              : K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+              : K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
               :=
               IntermediateField.AdjoinSimple.gen K η
           have
@@ -2363,25 +2363,25 @@ attribute [local instance] IsCyclotomicExtension.is_galois
           have
             :
                 IsCyclotomicExtension
-                  { p ^ k - s + 1 } K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                  { p ^ k - s + 1 } K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
               :=
               by
                 suffices
                     IsCyclotomicExtension
                         { p ^ k - s + 1 }
                           K
-                          K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                          K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                             .
                             toSubalgebra
                       by
                         have
                             H
                               :
-                                K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                                K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                                     .
                                     toSubalgebra
                                   =
-                                  K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                                  K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                                     .
                                     toSubalgebra
                               :=
@@ -2425,13 +2425,13 @@ attribute [local instance] IsCyclotomicExtension.is_galois
               have
                 :=
                   FiniteDimensional.finrank_mul_finrank
-                    K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ L
+                    K K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ L
               rw
                 [
                   IsCyclotomicExtension.finrank L hirr
                     ,
                     IsCyclotomicExtension.finrank
-                      K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ hirr₁
+                      K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ hirr₁
                     ,
                     Pnat.pow_coe
                     ,

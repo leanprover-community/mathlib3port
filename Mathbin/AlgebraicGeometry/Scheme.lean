@@ -29,7 +29,7 @@ open Opposite
 
 namespace AlgebraicGeometry
 
--- ././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure
+-- ././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure
 /-- We define `Scheme` as a `X : LocallyRingedSpace`,
 along with a proof that every point has an open neighbourhood `U`
 so that that the restriction of `X` to `U` is isomorphic,
@@ -37,7 +37,7 @@ as a locally ringed space, to `Spec.to_LocallyRingedSpace.obj (op R)`
 for some `R : CommRing`.
 -/
 structure Scheme extends
-  "././Mathport/Syntax/Translate/Basic.lean:1278:11: unsupported: advanced extends in structure" where
+  "././Mathport/Syntax/Translate/Basic.lean:1277:11: unsupported: advanced extends in structure" where
   local_affine :
     ∀ x : to_LocallyRingedSpace,
       ∃ (U : OpenNhds x)(R : CommRingₓₓ),
@@ -123,7 +123,7 @@ theorem congr_app {X Y : Scheme} {f g : X ⟶ Y} (e : f = g) U :
 theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.Carrier} (e : U = V) :
     f.val.c.app (op U) =
       Y.Presheaf.map (eqToHom e.symm).op ≫
-        f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_argₓ (Opens.map f.val.base).obj e)).op :=
+        f.val.c.app (op V) ≫ X.Presheaf.map (eqToHom (congr_arg (Opens.map f.val.base).obj e)).op :=
   by
   rw [← is_iso.inv_comp_eq, ← functor.map_inv, f.val.c.naturality, presheaf.pushforward_obj_map]
   congr

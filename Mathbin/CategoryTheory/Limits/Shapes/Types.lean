@@ -50,7 +50,7 @@ attribute [local tidy] tactic.discrete_cases
 @[simp]
 theorem pi_lift_π_apply {β : Type u} (f : β → Type u) {P : Type u} (s : ∀ b, P ⟶ f b) (b : β) (x : P) :
     (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
-  congr_funₓ (limit.lift_π (Fan.mk P s) ⟨b⟩) x
+  congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
 
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`. -/
 @[simp]
@@ -106,7 +106,7 @@ theorem binary_product_cone_snd (X Y : Type u) : (binaryProductCone X Y).snd = P
 def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y) where
   lift := fun x => (s.fst x, s.snd x)
   fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' := fun s m w => funext fun x => Prod.extₓ (congr_funₓ (w ⟨left⟩) x) (congr_funₓ (w ⟨right⟩) x)
+  uniq' := fun s m w => funext fun x => Prod.extₓ (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
 
 /-- The category of types has `X × Y`, the usual cartesian product,
 as the binary product of `X` and `Y`.
@@ -171,7 +171,7 @@ def binaryCoproductCocone (X Y : Type u) : Cocone (pair X Y) :=
 def binaryCoproductColimit (X Y : Type u) : IsColimit (binaryCoproductCocone X Y) where
   desc := fun s : BinaryCofan X Y => Sum.elim s.inl s.inr
   fac' := fun s j => Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' := fun s m w => funext fun x => Sum.casesOn x (congr_funₓ (w ⟨left⟩)) (congr_funₓ (w ⟨right⟩))
+  uniq' := fun s m w => funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
 
 /-- The category of types has `X ⊕ Y`,
 as the binary coproduct of `X` and `Y`.
@@ -209,7 +209,7 @@ def productLimitCone {J : Type u} (F : J → Type u) : Limits.LimitCone (Discret
   Cone := { x := ∀ j, F j, π := { app := fun j f => f j.as } }
   IsLimit :=
     { lift := fun s x j => s.π.app ⟨j⟩ x,
-      uniq' := fun s m w => funext fun x => funext fun j => (congr_funₓ (w ⟨j⟩) x : _) }
+      uniq' := fun s m w => funext fun x => funext fun j => (congr_fun (w ⟨j⟩) x : _) }
 
 /-- The categorical product in `Type u` is the type theoretic product `Π j, F j`. -/
 noncomputable def productIso {J : Type u} (F : J → Type u) : ∏ F ≅ ∀ j, F j :=
@@ -232,7 +232,7 @@ def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocon
     { desc := fun s x => s.ι.app ⟨x.1⟩ x.2,
       uniq' := fun s m w => by
         ext ⟨j, x⟩
-        have := congr_funₓ (w ⟨j⟩) x
+        have := congr_fun (w ⟨j⟩) x
         exact this }
 
 /-- The categorical coproduct in `Type u` is the type theoretic coproduct `Σ j, F j`. -/
@@ -261,7 +261,7 @@ noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X
   (Fork.IsLimit.mk' _) fun s => by
     refine' ⟨fun i => _, _, _⟩
     · apply Classical.some (t (s.ι i) _)
-      apply congr_funₓ s.condition i
+      apply congr_fun s.condition i
       
     · ext i
       apply (Classical.some_spec (t (s.ι i) _)).1
@@ -269,20 +269,20 @@ noncomputable def typeEqualizerOfUnique (t : ∀ y : Y, g y = h y → ∃! x : X
     · intro m hm
       ext i
       apply (Classical.some_spec (t (s.ι i) _)).2
-      apply congr_funₓ hm i
+      apply congr_fun hm i
       
 
 /-- The converse of `type_equalizer_of_unique`. -/
 theorem unique_of_type_equalizer (t : IsLimit (Fork.ofι _ w)) (y : Y) (hy : g y = h y) : ∃! x : X, f x = y := by
   let y' : PUnit ⟶ Y := fun _ => y
   have hy' : y' ≫ g = y' ≫ h := funext fun _ => hy
-  refine' ⟨(fork.is_limit.lift' t _ hy').1 ⟨⟩, congr_funₓ (fork.is_limit.lift' t y' _).2 ⟨⟩, _⟩
+  refine' ⟨(fork.is_limit.lift' t _ hy').1 ⟨⟩, congr_fun (fork.is_limit.lift' t y' _).2 ⟨⟩, _⟩
   intro x' hx'
   suffices : (fun _ : PUnit => x') = (fork.is_limit.lift' t y' hy').1
   rw [← this]
   apply fork.is_limit.hom_ext t
   ext ⟨⟩
-  apply hx'.trans (congr_funₓ (fork.is_limit.lift' t _ hy').2 ⟨⟩).symm
+  apply hx'.trans (congr_fun (fork.is_limit.lift' t _ hy').2 ⟨⟩).symm
 
 theorem type_equalizer_iff_unique : Nonempty (IsLimit (Fork.ofι _ w)) ↔ ∀ y : Y, g y = h y → ∃! x : X, f x = y :=
   ⟨fun i => unique_of_type_equalizer _ _ (Classical.choice i), fun k => ⟨typeEqualizerOfUnique f w k⟩⟩
@@ -294,8 +294,8 @@ def equalizerLimit : Limits.LimitCone (parallelPair g h) where
     (Fork.IsLimit.mk' _) fun s =>
       ⟨fun i =>
         ⟨s.ι i, by
-          apply congr_funₓ s.condition i⟩,
-        rfl, fun m hm => funext fun x => Subtype.ext (congr_funₓ hm x)⟩
+          apply congr_fun s.condition i⟩,
+        rfl, fun m hm => funext fun x => Subtype.ext (congr_fun hm x)⟩
 
 variable (g h)
 
@@ -330,8 +330,8 @@ def coequalizerColimit : Limits.ColimitCocone (parallelPair f g) where
     (Cofork.IsColimit.mk' _) fun s =>
       ⟨Quot.lift s.π fun h : CoequalizerRel f g a b => by
           cases h
-          exact congr_funₓ s.condition h_1,
-        rfl, fun m hm => funext fun x => Quot.induction_on x (congr_funₓ hm : _)⟩
+          exact congr_fun s.condition h_1,
+        rfl, fun m hm => funext fun x => Quot.induction_on x (congr_fun hm : _)⟩
 
 /-- If `π : Y ⟶ Z` is an equalizer for `(f, g)`, and `U ⊆ Y` such that `f ⁻¹' U = g ⁻¹' U`,
 then `π ⁻¹' (π '' U) = U`.
@@ -407,14 +407,14 @@ for given `f` and `g`.
 def pullbackLimitCone (f : X ⟶ Z) (g : Y ⟶ Z) : Limits.LimitCone (cospan f g) where
   Cone := pullbackCone f g
   IsLimit :=
-    PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_funₓ s.condition x⟩)
+    PullbackCone.isLimitAux _ (fun s x => ⟨⟨s.fst x, s.snd x⟩, congr_fun s.condition x⟩)
       (by
         tidy)
       (by
         tidy)
       fun s m w =>
       funext fun x =>
-        Subtype.ext <| Prod.extₓ (congr_funₓ (w WalkingCospan.left) x) (congr_funₓ (w WalkingCospan.right) x)
+        Subtype.ext <| Prod.extₓ (congr_fun (w WalkingCospan.left) x) (congr_fun (w WalkingCospan.right) x)
 
 /-- The pullback cone given by the instance `has_pullbacks (Type u)` is isomorphic to the
 explicit pullback cone given by `pullback_limit_cone`.
@@ -431,12 +431,12 @@ noncomputable def pullbackIsoPullback : pullback f g ≅ PullbackObj f g :=
 @[simp]
 theorem pullback_iso_pullback_hom_fst (p : pullback f g) :
     ((pullbackIsoPullback f g).Hom p : X × Y).fst = (pullback.fst : _ ⟶ X) p :=
-  congr_funₓ ((pullbackConeIsoPullback f g).Hom.w left) p
+  congr_fun ((pullbackConeIsoPullback f g).Hom.w left) p
 
 @[simp]
 theorem pullback_iso_pullback_hom_snd (p : pullback f g) :
     ((pullbackIsoPullback f g).Hom p : X × Y).snd = (pullback.snd : _ ⟶ Y) p :=
-  congr_funₓ ((pullbackConeIsoPullback f g).Hom.w right) p
+  congr_fun ((pullbackConeIsoPullback f g).Hom.w right) p
 
 @[simp]
 theorem pullback_iso_pullback_inv_fst : (pullbackIsoPullback f g).inv ≫ pullback.fst = fun p => (p : X × Y).fst :=

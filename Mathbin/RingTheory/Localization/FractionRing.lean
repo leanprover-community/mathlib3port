@@ -230,7 +230,7 @@ theorem is_fraction_ring_iff_of_base_ring_equiv (h : R ≃+* P) :
   · rintro hx z (hz : z * h.symm x = 0)
     rw [← h.map_eq_zero_iff]
     apply hx
-    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_argₓ h hz
+    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_arg h hz
     
   · rintro (hx : h.symm x ∈ _) z hz
     rw [← h.symm.map_eq_zero_iff]

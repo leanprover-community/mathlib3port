@@ -74,7 +74,7 @@ variable {m m₁ m₂ : MeasurableSpace α} {m' : MeasurableSpace β} {f : α �
 /-- The forward image of a measurable space under a function. `map f m` contains the sets
   `s : set β` whose preimage under `f` is measurable. -/
 protected def map (f : α → β) (m : MeasurableSpace α) : MeasurableSpace β where
-  MeasurableSet' := fun s => m.MeasurableSet' <| f ⁻¹' s
+  MeasurableSet' := fun s => measurable_set[m] <| f ⁻¹' s
   measurable_set_empty := m.measurable_set_empty
   measurable_set_compl := fun s hs => m.measurable_set_compl _ hs
   measurable_set_Union := fun f hf => by
@@ -92,7 +92,7 @@ theorem map_comp {f : α → β} {g : β → γ} : (m.map f).map g = m.map (g �
 /-- The reverse image of a measurable space under a function. `comap f m` contains the sets
   `s : set α` such that `s` is the `f`-preimage of a measurable set in `β`. -/
 protected def comap (f : α → β) (m : MeasurableSpace β) : MeasurableSpace α where
-  MeasurableSet' := fun s => ∃ s', m.MeasurableSet' s' ∧ f ⁻¹' s' = s
+  MeasurableSet' := fun s => ∃ s', measurable_set[m] s' ∧ f ⁻¹' s' = s
   measurable_set_empty := ⟨∅, m.measurable_set_empty, rfl⟩
   measurable_set_compl := fun s ⟨s', h₁, h₂⟩ => ⟨s'ᶜ, m.measurable_set_compl _ h₁, h₂ ▸ rfl⟩
   measurable_set_Union := fun s hs =>
@@ -496,7 +496,7 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
     (by
       simpa)
 
-theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : Finite s)
+theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β} (s : Set α) (hs : s.Finite)
     (hf : Measurable (sᶜ.restrict f)) : Measurable f := by
   let this : Fintype s := finite.fintype hs
   exact measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_fintype _) hf
@@ -967,7 +967,7 @@ theorem MeasurableSet.exists_measurable_proj {m : MeasurableSpace α} {s : Set �
     (hne : s.Nonempty) : ∃ f : α → s, Measurable f ∧ ∀ x : s, f x = x :=
   let ⟨f, hfm, hf⟩ :=
     (MeasurableEmbedding.subtype_coe hs).exists_measurable_extend measurable_id fun _ => hne.to_subtype
-  ⟨f, hfm, congr_funₓ hf⟩
+  ⟨f, hfm, congr_fun hf⟩
 
 /-- Equivalences between measurable spaces. Main application is the simplification of measurability
 statements along measurable equivalences. -/
@@ -1128,7 +1128,7 @@ protected theorem measurable_comp_iff {f : β → γ} (e : α ≃ᵐ β) : Measu
 
 /-- Any two types with unique elements are measurably equivalent. -/
 def ofUniqueOfUnique (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] [Unique α] [Unique β] : α ≃ᵐ β where
-  toEquiv := equivOfUniqueOfUnique
+  toEquiv := equivOfUnique α β
   measurable_to_fun := Subsingleton.measurable
   measurable_inv_fun := Subsingleton.measurable
 

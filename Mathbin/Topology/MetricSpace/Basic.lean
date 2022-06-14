@@ -6,7 +6,7 @@ Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébas
 import Mathbin.Data.Int.Interval
 import Mathbin.Topology.Algebra.Order.Compact
 import Mathbin.Topology.MetricSpace.EmetricSpace
-import Mathbin.Topology.Bornology.Basic
+import Mathbin.Topology.Bornology.Constructions
 import Mathbin.Topology.UniformSpace.CompleteSeparated
 
 /-!
@@ -48,7 +48,7 @@ metric, pseudo_metric, dist
 -/
 
 
-open Set Filter TopologicalSpace
+open Set Filter TopologicalSpace Bornology
 
 open uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
@@ -97,7 +97,7 @@ def uniformSpaceOfDist (dist : α → α → ℝ) (dist_self : ∀ x : α, dist 
 /-- This is an internal lemma used to construct a bornology from a metric in `bornology.of_dist`. -/
 private theorem bounded_iff_aux {α : Type _} (dist : α → α → ℝ) (dist_comm : ∀ x y : α, dist x y = dist y x)
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) (s : Set α) (a : α) :
-    (∃ c, ∀ ⦃x y⦄, x ∈ s → y ∈ s → dist x y ≤ c) ↔ ∃ r, ∀ ⦃x⦄, x ∈ s → dist x a ≤ r := by
+    (∃ c, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ c) ↔ ∃ r, ∀ ⦃x⦄, x ∈ s → dist x a ≤ r := by
   constructor <;> rintro ⟨C, hC⟩
   · rcases s.eq_empty_or_nonempty with (rfl | ⟨x, hx⟩)
     · exact
@@ -108,7 +108,7 @@ private theorem bounded_iff_aux {α : Type _} (dist : α → α → ℝ) (dist_c
       
     
   · exact
-      ⟨C + C, fun x y hx hy =>
+      ⟨C + C, fun x hx y hy =>
         (dist_triangle x a y).trans
           (add_le_add (hC hx)
             (by
@@ -120,8 +120,8 @@ private theorem bounded_iff_aux {α : Type _} (dist : α → α → ℝ) (dist_c
 def Bornology.ofDist {α : Type _} (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
     (dist_comm : ∀ x y : α, dist x y = dist y x) (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) :
     Bornology α :=
-  Bornology.ofBounded { s : Set α | ∃ C, ∀ ⦃x y⦄, x ∈ s → y ∈ s → dist x y ≤ C } ⟨0, fun x y hx => hx.elim⟩
-    (fun t h => ⟨c, fun x y hx hy => hc (h hx) (h hy)⟩)
+  Bornology.ofBounded { s : Set α | ∃ C, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C } ⟨0, fun x hx y => hx.elim⟩
+    (fun t h => ⟨c, fun x hx y hy => hc (h hx) (h hy)⟩)
     (fun s hs t ht => by
       rcases s.eq_empty_or_nonempty with (rfl | ⟨z, hz⟩)
       · exact (empty_union t).symm ▸ ht
@@ -133,7 +133,7 @@ def Bornology.ofDist {α : Type _} (dist : α → α → ℝ) (dist_self : ∀ x
             Or.elim hx (fun hx' => (hr₁ hx').trans (le_max_leftₓ _ _)) fun hx' => (hr₂ hx').trans (le_max_rightₓ _ _)⟩
         )
     fun z =>
-    ⟨0, fun x y hx hy => by
+    ⟨0, fun x hx y hy => by
       rw [eq_of_mem_singleton hx, eq_of_mem_singleton hy]
       exact (dist_self z).le⟩
 
@@ -160,7 +160,7 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
       
   nonneg_of_mul_nonneg_left this zero_lt_two
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -187,7 +187,7 @@ class PseudoMetricSpace (α : Type u) extends HasDist α : Type u where
     run_tac
       control_laws_tac
   toBornology : Bornology α := Bornology.ofDist dist dist_self dist_comm dist_triangle
-  cobounded_sets : (Bornology.cobounded α).Sets = { s | ∃ C, ∀ ⦃x y⦄, x ∈ sᶜ → y ∈ sᶜ → dist x y ≤ C } := by
+  cobounded_sets : (Bornology.cobounded α).Sets = { s | ∃ C, ∀ ⦃x⦄, x ∈ sᶜ → ∀ ⦃y⦄, y ∈ sᶜ → dist x y ≤ C } := by
     run_tac
       control_laws_tac
 
@@ -215,9 +215,9 @@ theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α} (h : m
 
 variable [PseudoMetricSpace α]
 
--- see Note [lower instance priority]
-instance (priority := 100) MetricSpace.toUniformSpace' : UniformSpace α :=
-  PseudoMetricSpace.toUniformSpace
+attribute [instance] PseudoMetricSpace.toUniformSpace
+
+attribute [instance] PseudoMetricSpace.toBornology
 
 -- see Note [lower instance priority]
 instance (priority := 200) PseudoMetricSpace.toHasEdist : HasEdist α :=
@@ -460,6 +460,17 @@ theorem ball_eq_empty : Ball x ε = ∅ ↔ ε ≤ 0 := by
 theorem ball_zero : Ball x 0 = ∅ := by
   rw [ball_eq_empty]
 
+/-- If a point belongs to an open ball, then there is a strictly smaller radius whose ball also
+contains it.
+
+See also `exists_lt_subset_ball`. -/
+theorem exists_lt_mem_ball_of_mem_ball (h : x ∈ Ball y ε) : ∃ ε' < ε, x ∈ Ball y ε' := by
+  simp only [mem_ball] at h⊢
+  exact
+    ⟨(ε + dist x y) / 2, by
+      linarith, by
+      linarith⟩
+
 theorem ball_eq_ball (ε : ℝ) (x : α) : UniformSpace.Ball x { p | dist p.2 p.1 < ε } = Metric.Ball x ε :=
   rfl
 
@@ -638,6 +649,22 @@ theorem forall_of_forall_mem_ball (p : α → Prop) (x : α) (H : ∃ᶠ R : ℝ
     frequently_iff.1 H (Ioi_mem_at_top (dist y x))
   exact h _ hR
 
+theorem is_bounded_iff {s : Set α} : IsBounded s ↔ ∃ C : ℝ, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C := by
+  rw [is_bounded_def, ← Filter.mem_sets, (@PseudoMetricSpace.cobounded_sets α _).out, mem_set_of_eq, compl_compl]
+
+theorem is_bounded_iff_eventually {s : Set α} :
+    IsBounded s ↔ ∀ᶠ C in at_top, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C :=
+  is_bounded_iff.trans
+    ⟨fun ⟨C, h⟩ => eventually_at_top.2 ⟨C, fun C' hC' x hx y hy => (h hx hy).trans hC'⟩, Eventually.exists⟩
+
+theorem is_bounded_iff_exists_ge {s : Set α} (c : ℝ) :
+    IsBounded s ↔ ∃ C, c ≤ C ∧ ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C :=
+  ⟨fun h => ((eventually_ge_at_top c).And (is_bounded_iff_eventually.1 h)).exists, fun h =>
+    is_bounded_iff.2 <| h.imp fun _ => And.right⟩
+
+theorem is_bounded_iff_nndist {s : Set α} : IsBounded s ↔ ∃ C : ℝ≥0 , ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
+  simp only [is_bounded_iff_exists_ge 0, Nnreal.exists, ← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mk, exists_prop]
+
 theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } := by
   rw [← pseudo_metric_space.uniformity_dist.symm]
   refine' has_basis_binfi_principal _ nonempty_Ioi
@@ -726,12 +753,12 @@ theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x y _ : x ∈ s _ : y ∈ s, dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔ ∀, ∀ ε > 0, ∀, ∃ δ > 0, ∀ x y _ : x ∈ s _ : y ∈ s, dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
   Metric.uniformity_basis_dist_le.uniform_continuous_on_iff Metric.uniformity_basis_dist_le
@@ -763,7 +790,7 @@ theorem controlled_of_uniform_embedding [PseudoMetricSpace β] {f : α → β} :
   exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 
 theorem totally_bounded_iff {s : Set α} :
-    TotallyBounded s ↔ ∀, ∀ ε > 0, ∀, ∃ t : Set α, Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
+    TotallyBounded s ↔ ∀, ∀ ε > 0, ∀, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, Ball y ε :=
   ⟨fun H ε ε0 => H _ (dist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_dist.1 ru
     let ⟨t, ft, h⟩ := H ε ε0
@@ -790,9 +817,9 @@ theorem totally_bounded_of_finite_discretization {s : Set α}
   simp only [Set.mem_Union, Set.mem_range]
   exact ⟨_, ⟨F ⟨x, xs⟩, rfl⟩, hF _ _ this.symm⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
-    ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε := by
+    ∀, ∀ ε > 0, ∀, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, Ball y ε := by
   intro ε ε_pos
   rw [totally_bounded_iff_subset] at hs
   exact hs _ (dist_mem_uniformity ε_pos)
@@ -829,7 +856,7 @@ theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → �
   rw [← tendsto_uniformly_on_univ, tendsto_uniformly_on_iff]
   simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » t)
 protected theorem cauchy_iff {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀, ∀ ε > 0, ∀, ∃ t ∈ f, ∀ x y _ : x ∈ t _ : y ∈ t, dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
@@ -1055,12 +1082,15 @@ theorem Metric.emetric_closed_ball_nnreal {x : α} {ε : ℝ≥0 } : Emetric.Clo
 theorem Metric.emetric_ball_top (x : α) : Emetric.Ball x ⊤ = univ :=
   eq_univ_of_forall fun y => edist_lt_top _ _
 
+theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := by
+  rw [Emetric.inseparable_iff, edist_nndist, dist_nndist, Ennreal.coe_eq_zero, Nnreal.coe_eq_zero]
+
 /-- Build a new pseudometric space from an old one where the bundled uniform structure is provably
 (but typically non-definitionaly) equal to some given uniform structure.
 See Note [forgetful inheritance].
 -/
 def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace') : PseudoMetricSpace α where
+    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : PseudoMetricSpace α where
   dist := @dist _ m.toHasDist
   dist_self := dist_self
   dist_comm := dist_comm
@@ -1071,7 +1101,7 @@ def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMe
   uniformity_dist := H.trans PseudoMetricSpace.uniformity_dist
 
 theorem PseudoMetricSpace.replace_uniformity_eq {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace') : m.replaceUniformity H = m := by
+    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : m.replaceUniformity H = m := by
   ext
   rfl
 
@@ -1110,7 +1140,7 @@ def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetri
           
         · simp [Ennreal.add_eq_top, edist_ne_top]
           ,
-      edist := fun x y => edist x y,
+      edist := edist,
       edist_dist := fun x y => by
         simp [h, Ennreal.of_real_to_real, edist_ne_top] }
   m.replaceUniformity <| by
@@ -1123,6 +1153,25 @@ uniformity are defeq in the pseudometric space and the emetric space. -/
 def PseudoEmetricSpace.toPseudoMetricSpace {α : Type u} [e : PseudoEmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
     PseudoMetricSpace α :=
   PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y => Ennreal.toReal (edist x y)) h fun x y => rfl
+
+/-- Build a new pseudometric space from an old one where the bundled bornology structure is provably
+(but typically non-definitionaly) equal to some given bornology structure.
+See Note [forgetful inheritance].
+-/
+def PseudoMetricSpace.replaceBornology {α} [B : Bornology α] (m : PseudoMetricSpace α)
+    (H : ∀ s, @IsBounded _ B s ↔ @IsBounded _ PseudoMetricSpace.toBornology s) : PseudoMetricSpace α :=
+  { m with toBornology := B,
+    cobounded_sets :=
+      Set.ext <|
+        compl_surjective.forall.2 fun s =>
+          (H s).trans <| by
+            rw [is_bounded_iff, mem_set_of_eq, compl_compl] }
+
+theorem PseudoMetricSpace.replace_bornology_eq {α} [m : PseudoMetricSpace α] [B : Bornology α]
+    (H : ∀ s, @IsBounded _ B s ↔ @IsBounded _ PseudoMetricSpace.toBornology s) :
+    PseudoMetricSpace.replaceBornology _ H = m := by
+  ext
+  rfl
 
 /-- A very useful criterion to show that a space is complete is to show that all sequences
 which satisfy a bound of the form `dist (u n) (u m) < B N` for all `n m ≥ N` are
@@ -1238,7 +1287,7 @@ theorem Metric.uniformity_eq_comap_nhds_zero : 𝓤 α = comap (fun p : α × α
 
 theorem cauchy_seq_iff_tendsto_dist_at_top_0 [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (fun n : β × β => dist (u n.1) (u n.2)) atTop (𝓝 0) := by
-  rw [cauchy_seq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_defₓ]
+  rw [cauchy_seq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_def]
 
 theorem tendsto_uniformity_iff_dist_tendsto_zero {ι : Type _} {f : ι → α × α} {p : Filter ι} :
     Tendsto f p (𝓤 α) ↔ Tendsto (fun x => dist (f x).1 (f x).2) p (𝓝 0) := by
@@ -1267,7 +1316,7 @@ section CauchySeq
 
 variable [Nonempty β] [SemilatticeSup β]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (m n «expr ≥ » N)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (m n «expr ≥ » N)
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
 -- see Note [nolint_ge]
@@ -1279,6 +1328,36 @@ theorem Metric.cauchy_seq_iff {u : β → α} :
 /-- A variation around the pseudometric characterization of Cauchy sequences -/
 theorem Metric.cauchy_seq_iff' {u : β → α} : CauchySeq u ↔ ∀, ∀ ε > 0, ∀, ∃ N, ∀, ∀ n ≥ N, ∀, dist (u n) (u N) < ε :=
   uniformity_basis_dist.cauchy_seq_iff'
+
+/-- In a pseudometric space, unifom Cauchy sequences are characterized by the fact that, eventually,
+the distance between all its elements is uniformly, arbitrarily small -/
+-- see Note [nolint_ge]
+@[nolint ge_or_gt]
+theorem Metric.uniform_cauchy_seq_on_iff {γ : Type _} {F : β → γ → α} {s : Set γ} :
+    UniformCauchySeqOn F atTop s ↔
+      ∀ ε : ℝ, ε > 0 → ∃ N : β, ∀ m : β, m ≥ N → ∀ n : β, n ≥ N → ∀ x : γ, x ∈ s → dist (F m x) (F n x) < ε :=
+  by
+  constructor
+  · intro h ε hε
+    let u := { a : α × α | dist a.fst a.snd < ε }
+    have hu : u ∈ 𝓤 α :=
+      metric.mem_uniformity_dist.mpr
+        ⟨ε, hε, fun a b => by
+          simp ⟩
+    rw [← @Filter.eventually_at_top_prod_self' _ _ _ fun m => ∀ x : γ, x ∈ s → dist (F m.fst x) (F m.snd x) < ε]
+    specialize h u hu
+    rw [prod_at_top_at_top_eq] at h
+    exact h.mono fun n h x hx => set.mem_set_of_eq.mp (h x hx)
+    
+  · intro h u hu
+    rcases metric.mem_uniformity_dist.mp hu with ⟨ε, hε, hab⟩
+    rcases h ε hε with ⟨N, hN⟩
+    rw [prod_at_top_at_top_eq, eventually_at_top]
+    use (N, N)
+    intro b hb x hx
+    rcases hb with ⟨hbl, hbr⟩
+    exact hab (hN b.fst hbl.ge b.snd hbr.ge x hx)
+    
 
 /-- If the distance between `s n` and `s m`, `n ≤ m` is bounded above by `b n`
 and `b` converges to zero, then `s` is a Cauchy sequence.  -/
@@ -1361,16 +1440,14 @@ def PseudoMetricSpace.induced {α β} (f : α → β) (m : PseudoMetricSpace β)
   toUniformSpace := UniformSpace.comap f m.toUniformSpace
   uniformity_dist := by
     apply @uniformity_dist_of_mem_uniformity _ _ _ _ _ fun x y => dist (f x) (f y)
-    refine' fun s => mem_comap.trans _
-    constructor <;> intro H
-    · rcases H with ⟨r, ru, rs⟩
-      rcases mem_uniformity_dist.1 ru with ⟨ε, ε0, hε⟩
-      refine' ⟨ε, ε0, fun a b h => rs (hε _)⟩
-      exact h
-      
-    · rcases H with ⟨ε, ε0, hε⟩
-      exact ⟨_, dist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩
-      
+    refine' compl_surjective.forall.2 fun s => compl_mem_comap.trans <| mem_uniformity_dist.trans _
+    simp only [mem_compl_iff, @imp_not_comm _ (_ ∈ _), ← Prod.forall', Prod.mk.eta, ball_image_iff]
+  toBornology := Bornology.induced f
+  cobounded_sets :=
+    Set.ext <|
+      compl_surjective.forall.2 fun s => by
+        simp only [compl_mem_comap, Filter.mem_sets, ← is_bounded_def, mem_set_of_eq, compl_compl, is_bounded_iff,
+          ball_image_iff]
 
 /-- Pull back a pseudometric space structure by an inducing map. This is a version of
 `pseudo_metric_space.induced` useful in case if the domain already has a `topological_space`
@@ -1483,10 +1560,14 @@ section Prod
 variable [PseudoMetricSpace β]
 
 noncomputable instance Prod.pseudoMetricSpaceMax : PseudoMetricSpace (α × β) :=
-  (PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y : α × β => max (dist x.1 y.1) (dist x.2 y.2)) fun x y =>
-      (max_ltₓ (edist_lt_top _ _) (edist_lt_top _ _)).Ne)
-    fun x y => by
-    rw [dist_edist, dist_edist, Prod.edist_eq, ← Ennreal.to_real_max (edist_ne_top _ _) (edist_ne_top _ _)]
+  (PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y : α × β => max (dist x.1 y.1) (dist x.2 y.2))
+        (fun x y => (max_ltₓ (edist_lt_top _ _) (edist_lt_top _ _)).Ne) fun x y => by
+        simp only [dist_edist, ← Ennreal.to_real_max (edist_ne_top _ _) (edist_ne_top _ _),
+          Prod.edist_eq]).replaceBornology
+    fun s => by
+    simp only [← is_bounded_image_fst_and_snd, is_bounded_iff_eventually, ball_image_iff, ← eventually_and, ←
+      forall_and_distrib, ← max_le_iff]
+    rfl
 
 theorem Prod.dist_eq {x y : α × β} : dist x y = max (dist x.1 y.1) (dist x.2 y.2) :=
   rfl
@@ -1706,12 +1787,24 @@ noncomputable instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) := 
     the uniformity is the same as the product uniformity, but we register nevertheless a nice formula
     for the distance -/
   refine'
-    PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun f g => ((sup univ fun b => nndist (f b) (g b) : ℝ≥0 ) : ℝ))
-      (fun f g => _) fun f g => _
+    (PseudoEmetricSpace.toPseudoMetricSpaceOfDist
+          (fun f g : ∀ b, π b => ((sup univ fun b => nndist (f b) (g b) : ℝ≥0 ) : ℝ)) (fun f g => _) fun f g =>
+          _).replaceBornology
+      fun s => _
   show edist f g ≠ ⊤
   exact ne_of_ltₓ ((Finset.sup_lt_iff bot_lt_top).2 fun b hb => edist_lt_top _ _)
   show ↑(sup univ fun b => nndist (f b) (g b)) = (sup univ fun b => edist (f b) (g b)).toReal
   · simp only [edist_nndist, ← Ennreal.coe_finset_sup, Ennreal.coe_to_real]
+    
+  show @is_bounded _ Pi.bornology s ↔ @is_bounded _ PseudoMetricSpace.toBornology _
+  · simp only [← is_bounded_def, is_bounded_iff_eventually, ← forall_is_bounded_image_eval_iff, ball_image_iff, ←
+      eventually_all, Function.eval_apply, @dist_nndist (π _)]
+    refine' eventually_congr ((eventually_ge_at_top 0).mono fun C hC => _)
+    lift C to ℝ≥0 using hC
+    refine'
+      ⟨fun H x hx y hy => Nnreal.coe_le_coe.2 <| Finset.sup_le fun b hb => H b x hx y hy, fun H b x hx y hy =>
+        Nnreal.coe_le_coe.2 _⟩
+    simpa only using Finset.sup_le_iff.1 (Nnreal.coe_le_coe.1 <| H hx hy) b (Finset.mem_univ b)
     
 
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
@@ -1722,7 +1815,7 @@ theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (
 
 @[simp]
 theorem dist_pi_const [Nonempty β] (a b : α) : (dist (fun x : β => a) fun _ => b) = dist a b := by
-  simpa only [dist_edist] using congr_argₓ Ennreal.toReal (edist_pi_const a b)
+  simpa only [dist_edist] using congr_arg Ennreal.toReal (edist_pi_const a b)
 
 @[simp]
 theorem nndist_pi_const [Nonempty β] (a b : α) : (nndist (fun x : β => a) fun _ => b) = nndist a b :=
@@ -1795,11 +1888,11 @@ end Pi
 
 section Compact
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Any compact set in a pseudometric space can be covered by finitely many balls of a given
 positive radius -/
 theorem finite_cover_balls_of_compact {α : Type u} [PseudoMetricSpace α] {s : Set α} (hs : IsCompact s) {e : ℝ}
-    (he : 0 < e) : ∃ (t : _)(_ : t ⊆ s), Finite t ∧ s ⊆ ⋃ x ∈ t, Ball x e := by
+    (he : 0 < e) : ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ x ∈ t, Ball x e := by
   apply hs.elim_finite_subcover_image
   · simp [is_open_ball]
     
@@ -1880,7 +1973,7 @@ instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α 
 instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball) fun x ε ε0 => is_compact_closed_ball _ _
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » t)
 /-- A proper space is complete -/
 -- see Note [lower instance priority]
 instance (priority := 100) complete_of_proper [ProperSpace α] : CompleteSpace α :=
@@ -1980,7 +2073,7 @@ theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (
 
 namespace Metric
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » s)
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
@@ -2085,7 +2178,7 @@ theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
     fun h => h.1.union h.2⟩
 
 /-- A finite union of bounded sets is bounded -/
-theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : Finite I) :
+theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : I.Finite) :
     Bounded (⋃ i ∈ I, s i) ↔ ∀, ∀ i ∈ I, ∀, Bounded (s i) :=
   (Finite.induction_on H
       (by
@@ -2119,7 +2212,7 @@ theorem _root_.is_compact.bounded {s : Set α} (h : IsCompact s) : Bounded s :=
       h.TotallyBounded.Bounded
 
 /-- A finite set is bounded -/
-theorem bounded_of_finite {s : Set α} (h : Finite s) : Bounded s :=
+theorem bounded_of_finite {s : Set α} (h : s.Finite) : Bounded s :=
   h.IsCompact.Bounded
 
 alias bounded_of_finite ← Set.Finite.bounded
@@ -2414,7 +2507,7 @@ open Metric
 theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact ℝ) := by
   refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _
   simp only [Filter.tendsto_at_top, eventually_cofinite, not_leₓ, ← mem_ball]
-  change ∀ r : ℝ, finite (coe ⁻¹' ball (0 : ℝ) r)
+  change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
   simp [Real.ball_eq_Ioo, Set.finite_Ioo]
 
 end Int
@@ -2529,26 +2622,17 @@ theorem uniform_embedding_iff' [MetricSpace β] {f : γ → β} :
     
 
 -- see Note [lower instance priority]
-instance (priority := 100) MetricSpace.to_separated : SeparatedSpace γ :=
+instance (priority := 100) _root_.metric_space.to_separated : SeparatedSpace γ :=
   separated_def.2 fun x y h => eq_of_forall_dist_le fun ε ε0 => le_of_ltₓ (h _ (dist_mem_uniformity ε0))
 
-/-- If a `pseudo_metric_space` is separated, then it is a `metric_space`. -/
-def ofT2PseudoMetricSpace {α : Type _} [PseudoMetricSpace α] (h : SeparatedSpace α) : MetricSpace α :=
-  { ‹PseudoMetricSpace α› with
-    eq_of_dist_eq_zero := fun x y hdist => by
-      refine' separated_def.1 h x y fun s hs => _
-      obtain ⟨ε, hε, H⟩ := mem_uniformity_dist.1 hs
-      exact
-        H
-          (show dist x y < ε by
-            rwa [hdist]) }
+/-- If a `pseudo_metric_space` is a T₀ space, then it is a `metric_space`. -/
+def ofT0PseudoMetricSpace (α : Type _) [PseudoMetricSpace α] [T0Space α] : MetricSpace α :=
+  { ‹PseudoMetricSpace α› with eq_of_dist_eq_zero := fun x y hdist => Inseparable.eq <| Metric.inseparable_iff.2 hdist }
 
 /-- A metric space induces an emetric space -/
 -- see Note [lower instance priority]
 instance (priority := 100) MetricSpace.toEmetricSpace : EmetricSpace γ :=
-  { PseudoMetricSpace.toPseudoEmetricSpace with
-    eq_of_edist_eq_zero := fun x y h => by
-      simpa [edist_dist] using h }
+  Emetric.ofT0PseudoEmetricSpace γ
 
 theorem is_closed_of_pairwise_le_dist {s : Set γ} {ε : ℝ} (hε : 0 < ε) (hs : s.Pairwise fun x y => ε ≤ dist x y) :
     IsClosed s :=
@@ -2578,11 +2662,11 @@ end Metric
 See Note [forgetful inheritance].
 -/
 def MetricSpace.replaceUniformity {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : @uniformity _ U = @uniformity _ EmetricSpace.toUniformSpace') : MetricSpace γ :=
+    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : MetricSpace γ :=
   { PseudoMetricSpace.replaceUniformity m.toPseudoMetricSpace H with eq_of_dist_eq_zero := @eq_of_dist_eq_zero _ _ }
 
 theorem MetricSpace.replace_uniformity_eq {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : @uniformity _ U = @uniformity _ EmetricSpace.toUniformSpace') : m.replaceUniformity H = m := by
+    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : m.replaceUniformity H = m := by
   ext
   rfl
 
@@ -2616,6 +2700,20 @@ is everywhere finite, by pushing the edistance to reals. We set it up so that th
 uniformity are defeq in the metric space and the emetric space. -/
 def EmetricSpace.toMetricSpace {α : Type u} [e : EmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) : MetricSpace α :=
   EmetricSpace.toMetricSpaceOfDist (fun x y => Ennreal.toReal (edist x y)) h fun x y => rfl
+
+/-- Build a new metric space from an old one where the bundled bornology structure is provably
+(but typically non-definitionaly) equal to some given bornology structure.
+See Note [forgetful inheritance].
+-/
+def MetricSpace.replaceBornology {α} [B : Bornology α] (m : MetricSpace α)
+    (H : ∀ s, @IsBounded _ B s ↔ @IsBounded _ PseudoMetricSpace.toBornology s) : MetricSpace α :=
+  { PseudoMetricSpace.replaceBornology _ H, m with toBornology := B }
+
+theorem MetricSpace.replace_bornology_eq {α} [m : MetricSpace α] [B : Bornology α]
+    (H : ∀ s, @IsBounded _ B s ↔ @IsBounded _ PseudoMetricSpace.toBornology s) : MetricSpace.replaceBornology _ H = m :=
+  by
+  ext
+  rfl
 
 /-- Metric space structure pulled back by an injective function. Injectivity is necessary to
 ensure that `dist x y = 0` only if `x = y`. -/

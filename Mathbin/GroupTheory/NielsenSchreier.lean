@@ -54,7 +54,7 @@ open Classical
 
 universe v u
 
--- ././Mathport/Syntax/Translate/Basic.lean:1158:11: unsupported: unusual advanced open style
+-- ././Mathport/Syntax/Translate/Basic.lean:1157:11: unsupported: unusual advanced open style
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as
@@ -177,7 +177,7 @@ theorem tree_hom_root : treeHom T (root' T) = 𝟙 _ :=
 def loopOfHom {a b : G} (p : a ⟶ b) : End (root' T) :=
   treeHom T a ≫ p ≫ inv (treeHom T b)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify T a b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (e «expr ∈ » wide_subquiver_symmetrify T a b)
 /-- Turning an edge in the spanning tree into a loop gives the indentity loop. -/
 theorem loop_of_hom_eq_id {a b : Generators G} e (_ : e ∈ WideSubquiverSymmetrify T a b) :
     loopOfHom T (of e) = 𝟙 (root' T) := by
@@ -272,7 +272,7 @@ theorem path_nonempty_of_hom {G} [Groupoid.{u, u} G] [IsFreeGroupoid G] {a b : G
   congr
   ext
   rw [functor.const.obj_map, id_as_one, difference_functor_map, mul_inv_eq_one]
-  apply congr_argₓ FreeGroup.of
+  apply congr_arg FreeGroup.of
   apply (weakly_connected_component.eq _ _).mpr
   exact ⟨hom.to_path (Sum.inr e)⟩
 

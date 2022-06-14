@@ -42,7 +42,9 @@ section BasisToMatrix
 
 variable {ι ι' κ κ' : Type _}
 
-variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
+variable {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
+
+variable {R₂ M₂ : Type _} [CommRingₓ R₂] [AddCommGroupₓ M₂] [Module R₂ M₂]
 
 open Function Matrix
 
@@ -89,7 +91,8 @@ theorem to_matrix_update [DecidableEq ι'] (x : M) :
 
 /-- The basis constructed by `units_smul` has vectors given by a diagonal matrix. -/
 @[simp]
-theorem to_matrix_units_smul [DecidableEq ι] (w : ι → Rˣ) : e.toMatrix (e.units_smul w) = diagonalₓ (coe ∘ w) := by
+theorem to_matrix_units_smul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι → R₂ˣ) :
+    e.toMatrix (e.units_smul w) = diagonalₓ (coe ∘ w) := by
   ext i j
   by_cases' h : i = j
   · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def]
@@ -99,7 +102,7 @@ theorem to_matrix_units_smul [DecidableEq ι] (w : ι → Rˣ) : e.toMatrix (e.u
 
 /-- The basis constructed by `is_unit_smul` has vectors given by a diagonal matrix. -/
 @[simp]
-theorem to_matrix_is_unit_smul [DecidableEq ι] {w : ι → R} (hw : ∀ i, IsUnit (w i)) :
+theorem to_matrix_is_unit_smul [DecidableEq ι] (e : Basis ι R₂ M₂) {w : ι → R₂} (hw : ∀ i, IsUnit (w i)) :
     e.toMatrix (e.isUnitSmul hw) = diagonalₓ w :=
   e.to_matrix_units_smul _
 
@@ -146,7 +149,7 @@ end Basis
 
 section MulLinearMapToMatrix
 
-variable {N : Type _} [AddCommGroupₓ N] [Module R N]
+variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
 
 variable (b : Basis ι R M) (b' : Basis ι' R M) (c : Basis κ R N) (c' : Basis κ' R N)
 
@@ -178,6 +181,24 @@ theorem linear_map_to_matrix_mul_basis_to_matrix [DecidableEq ι] [DecidableEq �
 theorem basis_to_matrix_mul_linear_map_to_matrix_mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] :
     c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f ⬝ b'.toMatrix b = LinearMap.toMatrix b c f := by
   rw [basis_to_matrix_mul_linear_map_to_matrix, linear_map_to_matrix_mul_basis_to_matrix]
+
+theorem basis_to_matrix_mul [DecidableEq κ] (b₁ : Basis ι R M) (b₂ : Basis ι' R M) (b₃ : Basis κ R N)
+    (A : Matrix ι' κ R) : b₁.toMatrix b₂ ⬝ A = LinearMap.toMatrix b₃ b₁ (toLin b₃ b₂ A) := by
+  have := basis_to_matrix_mul_linear_map_to_matrix b₃ b₁ b₂ (Matrix.toLin b₃ b₂ A)
+  rwa [LinearMap.to_matrix_to_lin] at this
+
+theorem mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι R M) (b₂ : Basis ι' R M) (b₃ : Basis κ R N)
+    (A : Matrix κ ι R) : A ⬝ b₁.toMatrix b₂ = LinearMap.toMatrix b₂ b₃ (toLin b₁ b₃ A) := by
+  have := linear_map_to_matrix_mul_basis_to_matrix b₂ b₁ b₃ (Matrix.toLin b₁ b₃ A)
+  rwa [LinearMap.to_matrix_to_lin] at this
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+theorem basis_to_matrix_basis_fun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :
+    b.toMatrix (Pi.basisFun R ι) ⬝ A = fun i j => b.repr (Aᵀ j) i := by
+  classical
+  simp only [basis_to_matrix_mul _ _ (Pi.basisFun R ι), Matrix.to_lin_eq_to_lin']
+  ext i j
+  rw [LinearMap.to_matrix_apply, Matrix.to_lin'_apply, Pi.basis_fun_apply, Matrix.mul_vec_std_basis_apply]
 
 /-- A generalization of `linear_map.to_matrix_id`. -/
 @[simp]

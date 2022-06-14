@@ -225,7 +225,7 @@ theorem stereo_left_inv (hv : ∥v∥ = 1) {x : Sphere (0 : E) 1} (hx : (x : E) 
       
     ring
   -- deduce the result
-  convert congr_arg2ₓ Add.add (congr_argₓ (fun t => t • (y : E)) h₁) (congr_argₓ (fun t => t • v) h₂) using 1
+  convert congr_arg2ₓ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
   · simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul, mul_powₓ,
       Real.norm_eq_abs, sq_abs, norm_smul]
     
@@ -240,7 +240,7 @@ theorem stereo_right_inv (hv : ∥v∥ = 1) (w : (ℝ∙v)ᗮ) : stereoToFun v (
       nlinarith
     field_simp
     ring
-  convert congr_argₓ (fun c => c • w) this
+  convert congr_arg (fun c => c • w) this
   · have h₁ : orthogonalProjection (ℝ∙v)ᗮ v = 0 := orthogonal_projection_orthogonal_complement_singleton_eq_zero v
     have h₂ : orthogonalProjection (ℝ∙v)ᗮ w = w := orthogonal_projection_mem_subspace_eq_self w
     have h₃ : innerSL v w = (0 : ℝ) := inner_right_of_mem_orthogonal_singleton v w.2

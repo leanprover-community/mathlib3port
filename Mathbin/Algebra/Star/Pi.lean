@@ -51,5 +51,17 @@ instance {R : Type w} [∀ i, HasScalar R (f i)] [HasStar R] [∀ i, HasStar (f 
     StarModule R (∀ i, f i) where
   star_smul := fun r x => funext fun i => star_smul r (x i)
 
+theorem single_star [∀ i, AddMonoidₓ (f i)] [∀ i, StarAddMonoid (f i)] [DecidableEq I] (i : I) (a : f i) :
+    Pi.single i (star a) = star (Pi.single i a) :=
+  single_op (fun i => @star (f i) _) (fun i => star_zero _) i a
+
 end Pi
+
+namespace Function
+
+theorem update_star [∀ i, HasStar (f i)] [DecidableEq I] (h : ∀ i : I, f i) (i : I) (a : f i) :
+    Function.update (star h) i (star a) = star (Function.update h i a) :=
+  funext fun j => (apply_update (fun i => star) h i a j).symm
+
+end Function
 

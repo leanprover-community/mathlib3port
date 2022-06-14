@@ -58,7 +58,7 @@ protected def mkₓ : ∀ l : List ι f : ∀ i, α i, Tprod α l
   | i :: is => fun f => (f i, mk is f)
 
 instance [∀ i, Inhabited (α i)] : Inhabited (Tprod α l) :=
-  ⟨Tprod.mkₓ l fun _ => default⟩
+  ⟨Tprod.mkₓ l default⟩
 
 @[simp]
 theorem fst_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (Tprod.mkₓ (i :: l) f).1 = f i :=

@@ -195,10 +195,10 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V =
       Quotientₓ.sound ⟨Finsupp.equivFunOnFintype⟩_ = _ := by
       rw [← Cardinal.lift_inj.1 hs.mk_eq_dim, Cardinal.power_def]
 
-theorem cardinal_lt_omega_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ω := by
+theorem cardinal_lt_aleph_0_of_finite_dimensional [Fintype K] [FiniteDimensional K V] : # V < ℵ₀ := by
   let this : IsNoetherian K V := IsNoetherian.iff_fg.2 inferInstance
   rw [cardinal_mk_eq_cardinal_mk_field_pow_dim K V]
-  exact Cardinal.power_lt_omega (Cardinal.lt_omega_of_fintype K) (IsNoetherian.dim_lt_omega K V)
+  exact Cardinal.power_lt_aleph_0 (Cardinal.lt_aleph_0_of_fintype K) (IsNoetherian.dim_lt_aleph_0 K V)
 
 end Module
 

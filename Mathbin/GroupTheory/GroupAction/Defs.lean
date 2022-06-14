@@ -59,17 +59,17 @@ class HasFaithfulVadd (G : Type _) (P : Type _) [HasVadd G P] : Prop where
   eq_of_vadd_eq_vadd : ∀ {g₁ g₂ : G}, (∀ p : P, g₁ +ᵥ p = g₂ +ᵥ p) → g₁ = g₂
 
 /-- Typeclass for faithful actions. -/
-@[to_additive HasFaithfulVadd]
-class HasFaithfulScalar (M : Type _) (α : Type _) [HasScalar M α] : Prop where
+@[to_additive]
+class HasFaithfulSmul (M : Type _) (α : Type _) [HasScalar M α] : Prop where
   eq_of_smul_eq_smul : ∀ {m₁ m₂ : M}, (∀ a : α, m₁ • a = m₂ • a) → m₁ = m₂
 
-export HasFaithfulScalar (eq_of_smul_eq_smul)
+export HasFaithfulSmul (eq_of_smul_eq_smul)
 
 export HasFaithfulVadd (eq_of_vadd_eq_vadd)
 
 @[to_additive]
-theorem smul_left_injective' [HasScalar M α] [HasFaithfulScalar M α] : Function.Injective ((· • ·) : M → α → α) :=
-  fun m₁ m₂ h => HasFaithfulScalar.eq_of_smul_eq_smul (congr_funₓ h)
+theorem smul_left_injective' [HasScalar M α] [HasFaithfulSmul M α] : Function.Injective ((· • ·) : M → α → α) :=
+  fun m₁ m₂ h => HasFaithfulSmul.eq_of_smul_eq_smul (congr_fun h)
 
 /-- See also `monoid.to_mul_action` and `mul_zero_class.to_smul_with_zero`. -/
 -- see Note [lower instance priority]
@@ -333,7 +333,7 @@ variable [HasScalar M α]
 
 theorem Commute.smul_right [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
     Commute a (r • b) :=
-  (mul_smul_comm _ _ _).trans ((congr_argₓ _ h).trans <| (smul_mul_assoc _ _ _).symm)
+  (mul_smul_comm _ _ _).trans ((congr_arg _ h).trans <| (smul_mul_assoc _ _ _).symm)
 
 theorem Commute.smul_left [Mul α] [SmulCommClass M α α] [IsScalarTower M α α] {a b : α} (h : Commute a b) (r : M) :
     Commute (r • a) b :=
@@ -461,7 +461,7 @@ def toFun : α ↪ M → α :=
   ⟨fun y x => x • y, fun y₁ y₂ H =>
     one_smul M y₁ ▸
       one_smul M y₂ ▸ by
-        convert congr_funₓ H 1⟩
+        convert congr_fun H 1⟩
 
 /-- Embedding of `α` into functions `M → α` induced by an additive action of `M` on `α`. -/
 add_decl_doc AddAction.toFun
@@ -773,7 +773,7 @@ theorem Function.End.smul_def (f : Function.End α) (a : α) : f • a = f a :=
   rfl
 
 /-- `function.End.apply_mul_action` is faithful. -/
-instance Function.End.apply_has_faithful_scalar : HasFaithfulScalar (Function.End α) α :=
+instance Function.End.apply_has_faithful_smul : HasFaithfulSmul (Function.End α) α :=
   ⟨fun x y => funext⟩
 
 /-- The tautological action by `add_monoid.End α` on `α`.
@@ -791,7 +791,7 @@ theorem AddMonoidₓ.End.smul_def [AddMonoidₓ α] (f : AddMonoidₓ.End α) (a
   rfl
 
 /-- `add_monoid.End.apply_distrib_mul_action` is faithful. -/
-instance AddMonoidₓ.End.apply_has_faithful_scalar [AddMonoidₓ α] : HasFaithfulScalar (AddMonoidₓ.End α) α :=
+instance AddMonoidₓ.End.apply_has_faithful_smul [AddMonoidₓ α] : HasFaithfulSmul (AddMonoidₓ.End α) α :=
   ⟨AddMonoidHom.ext⟩
 
 /-- The monoid hom representing a monoid action.

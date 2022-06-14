@@ -10,7 +10,7 @@ import Mathbin.Data.MvPolynomial.Equiv
 # Cardinality of Polynomial Ring
 
 The reuslt in this file is that the cardinality of `polynomial R` is at most the maximum
-of `#R` and `ω`.
+of `#R` and `ℵ₀`.
 -/
 
 
@@ -22,12 +22,12 @@ open Cardinal
 
 namespace Polynomial
 
-theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# R) ω :=
+theorem cardinal_mk_le_max {R : Type u} [CommSemiringₓ R] : # R[X] ≤ max (# R) ℵ₀ :=
   calc
     # R[X] = # (MvPolynomial PUnit.{u + 1} R) := Cardinal.eq.2 ⟨(MvPolynomial.punitAlgEquiv.{u, u} R).toEquiv.symm⟩
     _ ≤ _ := MvPolynomial.cardinal_mk_le_max
     _ ≤ _ := by
-      rw [max_assocₓ, max_eq_rightₓ (lt_omega_of_fintype PUnit).le]
+      rw [max_assocₓ, max_eq_rightₓ (lt_aleph_0_of_fintype PUnit).le]
     
 
 end Polynomial

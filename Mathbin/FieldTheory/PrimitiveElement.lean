@@ -48,9 +48,9 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 /-! ### Primitive element theorem for finite fields -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment "/--" "**Primitive element theorem** assuming E is finite. -/")]
@@ -74,7 +74,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       "="
       (Order.BoundedOrder.«term⊤» "⊤")))))
@@ -117,7 +117,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
              (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
               `F
               "⟮"
-              (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+              (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
               "⟯")
              "."
              `zero_mem))
@@ -212,7 +212,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `F
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             "."
             `zero_mem))
@@ -483,7 +483,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `F
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯")
        "."
        `zero_mem))
@@ -495,7 +495,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     "."
     `zero_mem))
@@ -504,7 +504,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `F
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯")
    "."
    `zero_mem)
@@ -512,14 +512,14 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /-- **Primitive element theorem** assuming E is finite. -/
   theorem
     exists_primitive_element_of_fintype_top
-    [ Fintype E ] : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ = ⊤
+    [ Fintype E ] : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ = ⊤
     :=
       by
         obtain ⟨ α , hα ⟩ := IsCyclic.exists_generator Units E
@@ -527,14 +527,14 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
           apply eq_top_iff.mpr
           rintro x -
           by_cases' hx : x = 0
-          · rw [ hx ] exact F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ . zero_mem
+          · rw [ hx ] exact F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ . zero_mem
           ·
             obtain ⟨ n , hn ⟩ := set.mem_range.mp hα Units.mk0 x hx
               rw [ show x = α ^ n by norm_cast rw [ hn , Units.coe_mk0 ] ]
               exact zpow_mem mem_adjoin_simple_self F ↑ α n
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment "/--" "Primitive element theorem for finite dimensional extension of a finite field. -/")]
@@ -559,7 +559,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       "="
       (Order.BoundedOrder.«term⊤» "⊤")))))
@@ -636,7 +636,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     "="
     (Order.BoundedOrder.«term⊤» "⊤")))
@@ -645,7 +645,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `F
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯")
    "="
    (Order.BoundedOrder.«term⊤» "⊤"))
@@ -656,15 +656,15 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /-- Primitive element theorem for finite dimensional extension of a finite field. -/
   theorem
     exists_primitive_element_of_fintype_bot
     [ Fintype F ] [ FiniteDimensional F E ]
-      : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ = ⊤
+      : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ = ⊤
     := have : Fintype E := fintype_of_fintype F E exists_primitive_element_of_fintype_top F E
 
 end PrimitiveElementFinite
@@ -689,22 +689,22 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
 
 variable (F) [Algebra F E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers [] [] [] [] [] [])
  (Command.theorem
@@ -722,13 +722,13 @@ variable (F) [Algebra F E]
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       "="
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")))))
   (Command.declValSimple
    ":="
@@ -795,7 +795,7 @@ variable (F) [Algebra F E]
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `F
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")))])
         [])
        (group
@@ -821,7 +821,7 @@ variable (F) [Algebra F E]
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `F
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯")))]
                  ":="
                  (Term.byTactic
@@ -848,7 +848,7 @@ variable (F) [Algebra F E]
                          (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                           `F
                           "⟮"
-                          (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                          (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                           "⟯")
                          "."
                          `sub_mem)
@@ -859,7 +859,7 @@ variable (F) [Algebra F E]
                             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                              `F
                              "⟮"
-                             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                              "⟯")
                             "."
                             `toSubalgebra)
@@ -916,7 +916,7 @@ variable (F) [Algebra F E]
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `F
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯")))]
                  ":="
                  (Term.app
@@ -939,7 +939,7 @@ variable (F) [Algebra F E]
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `F
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯")))]
                  ":="
                  (Term.app
@@ -954,7 +954,7 @@ variable (F) [Algebra F E]
                  (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `F
                   "⟮"
-                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                   "⟯")
                  "."
                  `add_mem)
@@ -964,7 +964,7 @@ variable (F) [Algebra F E]
                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")
                    "."
                    `smul_mem)
@@ -993,7 +993,7 @@ variable (F) [Algebra F E]
                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")])])
                "."
                `comp)
@@ -1009,7 +1009,7 @@ variable (F) [Algebra F E]
                  (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `F
                   "⟮"
-                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                   "⟯")])])]))))
         [])
        (group
@@ -1067,7 +1067,7 @@ variable (F) [Algebra F E]
                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 `E])])
             "="
@@ -1092,7 +1092,7 @@ variable (F) [Algebra F E]
                   [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")
                    `E
                    («term_/_» («term-_» "-" (Term.app `p.coeff [(num "0")])) "/" (Term.app `p.coeff [(num "1")]))])))]
@@ -1401,7 +1401,7 @@ variable (F) [Algebra F E]
                 [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `F
                   "⟮"
-                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                   "⟯")
                  `E])])
              "."
@@ -1504,7 +1504,7 @@ variable (F) [Algebra F E]
            (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `F
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")))])
        [])
       (group
@@ -1530,7 +1530,7 @@ variable (F) [Algebra F E]
                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")))]
                 ":="
                 (Term.byTactic
@@ -1557,7 +1557,7 @@ variable (F) [Algebra F E]
                         (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                          `F
                          "⟮"
-                         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                          "⟯")
                         "."
                         `sub_mem)
@@ -1568,7 +1568,7 @@ variable (F) [Algebra F E]
                            (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                             `F
                             "⟮"
-                            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                             "⟯")
                            "."
                            `toSubalgebra)
@@ -1625,7 +1625,7 @@ variable (F) [Algebra F E]
                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")))]
                 ":="
                 (Term.app
@@ -1648,7 +1648,7 @@ variable (F) [Algebra F E]
                    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                     `F
                     "⟮"
-                    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                     "⟯")))]
                 ":="
                 (Term.app
@@ -1663,7 +1663,7 @@ variable (F) [Algebra F E]
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 "."
                 `add_mem)
@@ -1673,7 +1673,7 @@ variable (F) [Algebra F E]
                   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                    `F
                    "⟮"
-                   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                    "⟯")
                   "."
                   `smul_mem)
@@ -1702,7 +1702,7 @@ variable (F) [Algebra F E]
                   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                    `F
                    "⟮"
-                   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                    "⟯")])])
               "."
               `comp)
@@ -1718,7 +1718,7 @@ variable (F) [Algebra F E]
                 (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")])])]))))
        [])
       (group
@@ -1776,7 +1776,7 @@ variable (F) [Algebra F E]
               [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `F
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯")
                `E])])
            "="
@@ -1801,7 +1801,7 @@ variable (F) [Algebra F E]
                  [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                    `F
                    "⟮"
-                   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                    "⟯")
                   `E
                   («term_/_» («term-_» "-" (Term.app `p.coeff [(num "0")])) "/" (Term.app `p.coeff [(num "1")]))])))]
@@ -2110,7 +2110,7 @@ variable (F) [Algebra F E]
                [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                  `F
                  "⟮"
-                 (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                 (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                  "⟯")
                 `E])])
             "."
@@ -2229,7 +2229,7 @@ variable (F) [Algebra F E]
           [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `F
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            `E])])
        "."
@@ -2248,7 +2248,7 @@ variable (F) [Algebra F E]
        [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `F
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         `E])])
     "."
@@ -2263,7 +2263,7 @@ variable (F) [Algebra F E]
       [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `F
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯")
        `E])])
    "."
@@ -2276,7 +2276,7 @@ variable (F) [Algebra F E]
      [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       `E])])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'Lean.Parser.Term.app', expected 'Lean.Parser.Term.namedArgument'
@@ -2287,7 +2287,7 @@ variable (F) [Algebra F E]
    [(IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
      `F
      "⟮"
-     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
      "⟯")
     `E])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'ident', expected 'Lean.Parser.Term.namedArgument'
@@ -2301,10 +2301,10 @@ variable (F) [Algebra F E]
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 theorem
   primitive_element_inf_aux
   [ IsSeparable F E ]
@@ -2312,9 +2312,9 @@ theorem
       ∃
         γ : E
         ,
-        F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+        F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
           =
-          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
   :=
     by
       have hα := IsSeparable.is_integral F α
@@ -2325,7 +2325,7 @@ theorem
         let ιEE' := algebraMap E splitting_field g.map ιFE
         obtain ⟨ c , hc ⟩ := primitive_element_inf_aux_exists_c ιEE'.comp ιFE ιEE' α ιEE' β f g
         let γ := α + c • β
-        suffices β_in_Fγ : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+        suffices β_in_Fγ : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
         ·
           use γ
             apply le_antisymmₓ
@@ -2333,14 +2333,14 @@ theorem
               rw [ adjoin_le_iff ]
                 have
                   α_in_Fγ
-                    : α ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                    : α ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                     :=
                     by
                       rw [ ← add_sub_cancel α c • β ]
                         exact
-                          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ . sub_mem
+                          F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ . sub_mem
                             mem_adjoin_simple_self F γ
-                              F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                              F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                                     .
                                     toSubalgebra
                                   .
@@ -2353,35 +2353,35 @@ theorem
                 rw [ Set.singleton_subset_iff ]
                 have
                   α_in_Fαβ
-                    : α ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                    : α ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                     :=
                     subset_adjoin F { α , β } Set.mem_insert α { β }
                 have
                   β_in_Fαβ
-                    : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                    : β ∈ F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                     :=
                     subset_adjoin F { α , β } Set.mem_insert_of_mem α rfl
                 exact
-                  F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ . add_mem
+                  F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ . add_mem
                     α_in_Fαβ
-                      F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ . smul_mem
+                      F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ . smul_mem
                         β_in_Fαβ
         let
           p
             :=
             EuclideanDomain.gcd
-              f.map algebraMap F F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+              f.map algebraMap F F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                     .
                     comp
                   C adjoin_simple.gen F γ - C ↑ c * X
-                g.map algebraMap F F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                g.map algebraMap F F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
         let h := EuclideanDomain.gcd f.map ιFE . comp C γ - C ιFE c * X g.map ιFE
         have map_g_ne_zero : g.map ιFE ≠ 0 := map_ne_zero minpoly.ne_zero hβ
         have h_ne_zero : h ≠ 0 := mt euclidean_domain.gcd_eq_zero_iff.mp not_and.mpr fun _ => map_g_ne_zero
         suffices
           p_linear
           :
-            p.map algebraMap F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ E
+            p.map algebraMap F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ E
               =
               C h.leading_coeff * X - C β
         ·
@@ -2391,7 +2391,7 @@ theorem
                   β
                     =
                     algebraMap
-                      F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                      F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                         E
                         - p.coeff 0 / p.coeff 1
                 :=
@@ -2459,7 +2459,7 @@ theorem
         ·
           dsimp' only [ p ]
             convert
-              gcd_map algebraMap F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ E
+              gcd_map algebraMap F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ E
                 .
                 symm
         · simpa [ map_comp , Polynomial.map_map , ← IsScalarTower.algebra_map_eq , h ]
@@ -2474,10 +2474,10 @@ section SeparableAssumption
 
 variable [IsSeparable F E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment
@@ -2503,7 +2503,7 @@ variable [IsSeparable F E]
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `F
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯")
       "="
       (Order.BoundedOrder.«term⊤» "⊤")))))
@@ -2565,7 +2565,7 @@ variable [IsSeparable F E]
                   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                    `F
                    "⟮"
-                   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                    "⟯")
                   "="
                   `K)))))))
@@ -2603,7 +2603,7 @@ variable [IsSeparable F E]
                      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                       `K
                       "⟮"
-                      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                       "⟯"))]))))]
               ":="
               (Term.byTactic
@@ -2718,7 +2718,7 @@ variable [IsSeparable F E]
                  (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                   `F
                   "⟮"
-                  (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                  (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                   "⟯")
                  "="
                  `K)))))))
@@ -2756,7 +2756,7 @@ variable [IsSeparable F E]
                     (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                      `K
                      "⟮"
-                     (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                     (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                      "⟯"))]))))]
              ":="
              (Term.byTactic
@@ -2857,7 +2857,7 @@ variable [IsSeparable F E]
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `F
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯")
             "="
             `K)))))))
@@ -2895,7 +2895,7 @@ variable [IsSeparable F E]
                (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
                 `K
                 "⟮"
-                (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+                (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
                 "⟯"))]))))]
         ":="
         (Term.byTactic
@@ -2989,7 +2989,7 @@ variable [IsSeparable F E]
             (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
              `K
              "⟮"
-             (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+             (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
              "⟯"))]))))]
      ":="
      (Term.byTactic
@@ -3180,7 +3180,7 @@ variable [IsSeparable F E]
        (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
         `K
         "⟮"
-        (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+        (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
         "⟯"))])))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.arrow
@@ -3193,7 +3193,7 @@ variable [IsSeparable F E]
       (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
        `K
        "⟮"
-       (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+       (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
        "⟯"))]))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (Term.app
@@ -3203,7 +3203,7 @@ variable [IsSeparable F E]
      (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
       `K
       "⟮"
-      (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+      (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
       "⟯"))])
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.namedArgument'
 [PrettyPrinter.parenthesize.backtrack] unexpected node kind 'coeNotation', expected 'Lean.Parser.Term.ellipsis'
@@ -3213,22 +3213,22 @@ variable [IsSeparable F E]
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `K
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯"))
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `K
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /--
     Primitive element theorem: a finite separable field extension `E` of `F` has a
       primitive element, i.e. there is an `α ∈ E` such that `F⟮α⟯ = (⊤ : subalgebra F E)`.-/
   theorem
     exists_primitive_element
-    : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ = ⊤
+    : ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ = ⊤
     :=
       by
         rcases is_empty_or_nonempty Fintype F with ( F_inf | ⟨ ⟨ F_finite ⟩ ⟩ )
@@ -3238,7 +3238,7 @@ variable [IsSeparable F E]
                   : IntermediateField F E → Prop
                   :=
                   fun
-                    K => ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ = K
+                    K => ∃ α : E , F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ = K
               have base : P ⊥ := ⟨ 0 , adjoin_zero ⟩
               have
                 ih
@@ -3246,7 +3246,7 @@ variable [IsSeparable F E]
                     ∀
                       K : IntermediateField F E x : E
                       ,
-                      P K → P ↑ K ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯
+                      P K → P ↑ K ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯
                   :=
                   by
                     intro K β hK
@@ -3258,8 +3258,8 @@ variable [IsSeparable F E]
               exact induction_on_adjoin P base ih ⊤
           · exact exists_primitive_element_of_fintype_bot F E
 
--- ././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)
-/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+-- ././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)
+/- failed to parenthesize: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 [PrettyPrinter.parenthesize.input] (Command.declaration
  (Command.declModifiers
   [(Command.docComment
@@ -3296,7 +3296,7 @@ variable [IsSeparable F E]
            (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
             `F
             "⟮"
-            (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+            (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
             "⟯")
            "="
            (Order.BoundedOrder.«term⊤» "⊤")))]
@@ -3334,7 +3334,7 @@ variable [IsSeparable F E]
           (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
            `F
            "⟮"
-           (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+           (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
            "⟯")
           "="
           (Order.BoundedOrder.«term⊤» "⊤")))]
@@ -3361,7 +3361,7 @@ variable [IsSeparable F E]
          (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
           `F
           "⟮"
-          (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+          (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
           "⟯")
          "="
          (Order.BoundedOrder.«term⊤» "⊤")))]
@@ -3383,7 +3383,7 @@ variable [IsSeparable F E]
         (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
          `F
          "⟮"
-         (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+         (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
          "⟯")
         "="
         (Order.BoundedOrder.«term⊤» "⊤")))]
@@ -3461,7 +3461,7 @@ variable [IsSeparable F E]
    (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
     `F
     "⟮"
-    (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+    (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
     "⟯")
    "="
    (Order.BoundedOrder.«term⊤» "⊤"))
@@ -3472,10 +3472,10 @@ variable [IsSeparable F E]
   (IntermediateField.FieldTheory.Adjoin.«term_⟮_,⟯»
    `F
    "⟮"
-   (str "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\"")
+   (str "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\"")
    "⟯")
 [PrettyPrinter.parenthesize] parenthesizing (cont := (none, [anonymous]))
-  "\"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)"»'
+  "\"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)\""-/-- failed to format: unknown constant '«"././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)"»'
 /--
       Alternative phrasing of primitive element theorem:
       a finite separable field extension has a basis `1, α, α^2, ..., α^n`.
@@ -3492,7 +3492,7 @@ variable [IsSeparable F E]
           pb := adjoin.powerBasis IsSeparable.is_integral F α
           have
             e
-              : F ⟮ "././Mathport/Syntax/Translate/Basic.lean:812:11: unsupported (impossible)" ⟯ = ⊤
+              : F ⟮ "././Mathport/Syntax/Translate/Basic.lean:811:11: unsupported (impossible)" ⟯ = ⊤
               :=
               exists_primitive_element F E . some_spec
             pb . map IntermediateField.equivOfEq e . trans IntermediateField.topEquiv
@@ -3519,7 +3519,7 @@ noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K) (x : Set.Range (Fini
   ⟨φ x, by
     rw [Polynomial.mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), ←
       Polynomial.alg_hom_eval₂_algebra_map, ← φ.map_zero]
-    exact congr_argₓ φ (minpoly.aeval F (x : E))⟩
+    exact congr_arg φ (minpoly.aeval F (x : E))⟩
 
 theorem aux_inj_roots_of_min_poly : Function.Injective (rootsOfMinPolyPiType F E K) := by
   intro f g h

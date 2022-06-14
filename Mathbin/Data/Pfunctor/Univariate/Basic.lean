@@ -42,7 +42,7 @@ def Obj (α : Type _) :=
 def map {α β : Type _} (f : α → β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, f ∘ g⟩
 
 instance Obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.Obj α) :=
-  ⟨⟨default, fun _ => default⟩⟩
+  ⟨⟨default, default⟩⟩
 
 instance : Functor P.Obj where
   map := @map P
@@ -112,7 +112,7 @@ variable {P}
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
 def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : α :=
-  if h : i.1 = x.1 then x.2 (cast (congr_argₓ _ h) i.2) else default
+  if h : i.1 = x.1 then x.2 (cast (congr_arg _ h) i.2) else default
 
 @[simp]
 theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by

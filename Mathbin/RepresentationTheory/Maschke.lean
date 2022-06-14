@@ -181,8 +181,8 @@ theorem exists_left_inverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf
   simp only [LinearMap.id_coe, id.def, LinearMap.comp_apply]
   apply LinearMap.equivariant_projection_condition
   intro v
-  have := congr_argₓ LinearMap.toFun hφ
-  exact congr_funₓ this v
+  have := congr_arg LinearMap.toFun hφ
+  exact congr_fun this v
 
 namespace Submodule
 

@@ -233,7 +233,7 @@ theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀]
     exact f.to_monoid_hom.map_pow x n
   | -[1+ n] => by
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat]
-    exact (f.map_inv _).trans <| congr_argₓ _ <| f.to_monoid_hom.map_pow x _
+    exact (f.map_inv _).trans <| congr_arg _ <| f.to_monoid_hom.map_pow x _
 
 -- I haven't been able to find a better home for this:
 -- it belongs with other lemmas on `linear_ordered_field`, but

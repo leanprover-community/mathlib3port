@@ -179,6 +179,24 @@ theorem from_blocks_multiply [Fintype l] [Fintype m] [NonUnitalNonAssocSemiring�
     rcases j with ⟨⟩ <;>
       simp only [from_blocks, mul_apply, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Pi.add_apply]
 
+theorem from_blocks_mul_vec [Fintype l] [Fintype m] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α) (B : Matrix n m α)
+    (C : Matrix o l α) (D : Matrix o m α) (x : Sum l m → α) :
+    mulVecₓ (fromBlocks A B C D) x =
+      Sum.elim (mulVecₓ A (x ∘ Sum.inl) + mulVecₓ B (x ∘ Sum.inr))
+        (mulVecₓ C (x ∘ Sum.inl) + mulVecₓ D (x ∘ Sum.inr)) :=
+  by
+  ext i
+  cases i <;> simp [mul_vec, dot_product]
+
+theorem vec_mul_from_blocks [Fintype n] [Fintype o] [NonUnitalNonAssocSemiringₓ α] (A : Matrix n l α) (B : Matrix n m α)
+    (C : Matrix o l α) (D : Matrix o m α) (x : Sum n o → α) :
+    vecMulₓ x (fromBlocks A B C D) =
+      Sum.elim (vecMulₓ (x ∘ Sum.inl) A + vecMulₓ (x ∘ Sum.inr) C)
+        (vecMulₓ (x ∘ Sum.inl) B + vecMulₓ (x ∘ Sum.inr) D) :=
+  by
+  ext i
+  cases i <;> simp [vec_mul, dot_product]
+
 variable [DecidableEq l] [DecidableEq m]
 
 @[simp]
@@ -255,7 +273,7 @@ theorem block_diagonal_zero : blockDiagonalₓ (0 : o → Matrix m n α) = 0 := 
 theorem block_diagonal_diagonal [DecidableEq m] (d : o → m → α) :
     (blockDiagonalₓ fun k => diagonalₓ (d k)) = diagonalₓ fun ik => d ik.2 ik.1 := by
   ext ⟨i, k⟩ ⟨j, k'⟩
-  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iffₓ, ← ite_and]
+  simp only [block_diagonal_apply, diagonal, Prod.mk.inj_iff, ← ite_and]
   congr 1
   rw [and_comm]
 
@@ -427,7 +445,7 @@ and zero elsewhere.
 
 This is the dependently-typed version of `matrix.block_diagonal`. -/
 def blockDiagonal'ₓ (M : ∀ i, Matrix (m' i) (n' i) α) : Matrix (Σi, m' i) (Σi, n' i) α
-  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_argₓ n' h.symm) j) else 0
+  | ⟨k, i⟩, ⟨k', j⟩ => if h : k = k' then M k i (cast (congr_arg n' h.symm) j) else 0
 
 theorem block_diagonal'_eq_block_diagonal (M : o → Matrix m n α) {k k'} i j :
     blockDiagonalₓ M (i, k) (j, k') = blockDiagonal'ₓ M ⟨k, i⟩ ⟨k', j⟩ :=
@@ -438,7 +456,7 @@ theorem block_diagonal'_minor_eq_block_diagonal (M : o → Matrix m n α) :
   Matrix.ext fun ⟨k, i⟩ ⟨k', j⟩ => rfl
 
 theorem block_diagonal'_apply (M : ∀ i, Matrix (m' i) (n' i) α) ik jk :
-    blockDiagonal'ₓ M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_argₓ n' h.symm) jk.2) else 0 := by
+    blockDiagonal'ₓ M ik jk = if h : ik.1 = jk.1 then M ik.1 ik.2 (cast (congr_arg n' h.symm) jk.2) else 0 := by
   cases ik
   cases jk
   rfl

@@ -172,7 +172,7 @@ end Relations
 
 end CartanMatrix
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler lie_algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler lie_algebra R
 /-- The Lie algebra corresponding to a Cartan matrix.
 
 Note that it is defined for any matrix of integers. Its value for non-Cartan matrices should be

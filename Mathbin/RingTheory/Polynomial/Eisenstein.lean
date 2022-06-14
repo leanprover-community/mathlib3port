@@ -367,7 +367,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   -- Both sides are actually norms:
   calc _ = norm K (Q.coeff 0 • B.gen ^ n) :=
       _ _ = norm K (p • (z * B.gen ^ n) - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, p • Q.coeff x • f (x + n)) :=
-      congr_argₓ (norm K) (eq_sub_of_add_eq _)_ = _ := _
+      congr_arg (norm K) (eq_sub_of_add_eq _)_ = _ := _
   · simp only [Algebra.smul_def, algebra_map_apply R K L, Algebra.norm_algebra_map, _root_.map_mul, _root_.map_pow,
       finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly, minpoly.gcd_domain_eq_field_fractions K hBint, coeff_map,
       ← hn]
@@ -518,12 +518,12 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       add_commₓ] at hQ
     -- We multiply this equality by `B.gen ^ (P.nat_degree-(j+2))`, so we can use `hf₁` on the terms
     -- we didn't know were multiples of `p`, and we take the norm on both sides.
-    replace hQ := congr_argₓ (fun x => x * B.gen ^ (P.nat_degree - (j + 2))) hQ
+    replace hQ := congr_arg (fun x => x * B.gen ^ (P.nat_degree - (j + 2))) hQ
     simp_rw [sum_map, add_left_embedding_apply, add_mulₓ, sum_mul, mul_assoc]  at hQ
     rw [← insert_erase (mem_range.2 (tsub_pos_iff_lt.2 <| Nat.lt_of_succ_lt_succₓ <| mem_range.1 hj)),
       sum_insert (not_mem_erase 0 _), add_zeroₓ, sum_congr rfl hf₁, ← mul_sum, ← mul_sum, add_assocₓ, ← mul_addₓ,
       smul_mul_assoc, ← pow_addₓ, Algebra.smul_def] at hQ
-    replace hQ := congr_argₓ (norm K) (eq_sub_of_add_eq hQ)
+    replace hQ := congr_arg (norm K) (eq_sub_of_add_eq hQ)
     -- We obtain an equality of elements of `K`, but everything is integral, so we can move to `R`
     -- and simplify `hQ`.
     have hintsum :

@@ -331,7 +331,7 @@ def powerBasis' (hg : g.Monic) : PowerBasis R (AdjoinRoot g) where
       
     · intro j _ hj
       rw [← monomial_zero_right _]
-      convert congr_argₓ _ (Function.update_noteq hj _ _)
+      convert congr_arg _ (Function.update_noteq hj _ _)
       
     -- Fix `decidable_eq` mismatch
     · intros

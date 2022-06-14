@@ -140,7 +140,7 @@ protected def equiv (f : α ≃ₜ β) : Compacts α ≃ Compacts β where
 
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem equiv_to_fun_val (f : α ≃ₜ β) (K : Compacts α) : (Compacts.equiv f K).1 = f.symm ⁻¹' K.1 :=
-  congr_funₓ (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
+  congr_fun (image_eq_preimage_of_inverse f.left_inv f.right_inv) K.1
 
 end Compacts
 
@@ -234,9 +234,12 @@ theorem compact (s : PositiveCompacts α) : IsCompact (s : Set α) :=
 theorem interior_nonempty (s : PositiveCompacts α) : (Interior (s : Set α)).Nonempty :=
   s.interior_nonempty'
 
+protected theorem nonempty (s : PositiveCompacts α) : (s : Set α).Nonempty :=
+  s.interior_nonempty.mono interior_subset
+
 /-- Reinterpret a positive compact as a nonempty compact. -/
 def toNonemptyCompacts (s : PositiveCompacts α) : NonemptyCompacts α :=
-  ⟨s.toCompacts, s.interior_nonempty.mono interior_subset⟩
+  ⟨s.toCompacts, s.Nonempty⟩
 
 @[ext]
 protected theorem ext {s t : PositiveCompacts α} (h : (s : Set α) = t) : s = t :=
@@ -266,13 +269,18 @@ theorem coe_sup (s t : PositiveCompacts α) : (↑(s⊔t) : Set α) = s ∪ t :=
 theorem coe_top [CompactSpace α] [Nonempty α] : (↑(⊤ : PositiveCompacts α) : Set α) = univ :=
   rfl
 
+theorem _root_.exists_positive_compacts_subset [LocallyCompactSpace α] {U : Set α} (ho : IsOpen U) (hn : U.Nonempty) :
+    ∃ K : PositiveCompacts α, ↑K ⊆ U :=
+  let ⟨x, hx⟩ := hn
+  let ⟨K, hKc, hxK, hKU⟩ := exists_compact_subset ho hx
+  ⟨⟨⟨K, hKc⟩, ⟨x, hxK⟩⟩, hKU⟩
+
 instance [CompactSpace α] [Nonempty α] : Inhabited (PositiveCompacts α) :=
   ⟨⊤⟩
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
-instance [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCompacts α) :=
-  let ⟨s, hs⟩ := exists_compact_subset is_open_univ <| mem_univ (Classical.arbitrary α)
-  ⟨{ Carrier := s, compact' := hs.1, interior_nonempty' := ⟨_, hs.2.1⟩ }⟩
+instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCompacts α) :=
+  nonempty_of_exists <| exists_positive_compacts_subset is_open_univ univ_nonempty
 
 end PositiveCompacts
 

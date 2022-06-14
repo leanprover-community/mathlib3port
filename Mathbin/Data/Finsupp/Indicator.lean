@@ -54,7 +54,7 @@ theorem indicator_injective : Injective fun f : ∀, ∀ i ∈ s, ∀, α => ind
   intro a b h
   ext i hi
   rw [← indicator_of_mem hi a, ← indicator_of_mem hi b]
-  exact congr_funₓ h i
+  exact congr_fun h i
 
 theorem support_indicator_subset : ((indicator s f).Support : Set ι) ⊆ s := by
   intro i hi

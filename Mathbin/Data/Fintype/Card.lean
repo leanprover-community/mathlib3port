@@ -61,7 +61,7 @@ theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏ a, f a) = 1 :=
 theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏ a, f a) = ∏ a, g a :=
   (Finset.prod_congr rfl) fun a ha => h a
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » a)
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x _ : x ≠ a, f x = 1) : (∏ x, f x) = f a :=
   (Finset.prod_eq_single a fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
@@ -182,7 +182,7 @@ theorem Equivₓ.prod_comp [Fintype α] [Fintype β] [CommMonoidₓ γ] (e : α 
 theorem Finₓ.prod_univ_eq_prod_range [CommMonoidₓ α] (f : ℕ → α) (n : ℕ) : (∏ i : Finₓ n, f i) = ∏ i in range n, f i :=
   calc
     (∏ i : Finₓ n, f i) = ∏ i : { x // x ∈ range n }, f i :=
-      ((Equivₓ.finEquivSubtype n).trans (Equivₓ.subtypeEquivRight fun _ => mem_range.symm)).prod_comp (f ∘ coe)
+      (Equivₓ.subtypeEquivRight fun m => (@mem_range n m).symm).prod_comp (f ∘ coe)
     _ = ∏ i in range n, f i := by
       rw [← attach_eq_univ, prod_attach]
     

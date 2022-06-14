@@ -206,16 +206,18 @@ end HasScalar
 
 section SmulWithZero
 
-variable [SmulWithZero 𝕜 E] (p : Seminorm 𝕜 E)
+variable [SmulWithZero 𝕜 E]
 
-@[simp]
-protected theorem zero : p 0 = 0 :=
-  calc
-    p 0 = p ((0 : 𝕜) • 0) := by
-      rw [zero_smul]
-    _ = 0 := by
-      rw [p.smul, norm_zero, zero_mul]
-    
+/-- Note that this provides the global `map_zero`. -/
+instance : ZeroHomClass (Seminorm 𝕜 E) E ℝ :=
+  { Seminorm.funLike with
+    map_zero := fun p =>
+      calc
+        p 0 = p ((0 : 𝕜) • 0) := by
+          rw [zero_smul]
+        _ = 0 := by
+          rw [p.smul, norm_zero, zero_mul]
+         }
 
 end SmulWithZero
 
@@ -232,8 +234,8 @@ variable [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ]
 /-- Composition of a seminorm with a linear map is a seminorm. -/
 def comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : Seminorm 𝕜 E where
   toFun := fun x => p (f x)
-  smul' := fun _ _ => (congr_argₓ p (f.map_smul _ _)).trans (p.smul _ _)
-  triangle' := fun _ _ => Eq.trans_le (congr_argₓ p (f.map_add _ _)) (p.triangle _ _)
+  smul' := fun _ _ => (congr_arg p (f.map_smul _ _)).trans (p.smul _ _)
+  triangle' := fun _ _ => Eq.trans_le (congr_arg p (f.map_add _ _)) (p.triangle _ _)
 
 theorem coe_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) : ⇑(p.comp f) = p ∘ f :=
   rfl
@@ -248,7 +250,7 @@ theorem comp_id (p : Seminorm 𝕜 E) : p.comp LinearMap.id = p :=
 
 @[simp]
 theorem comp_zero (p : Seminorm 𝕜 F) : p.comp (0 : E →ₗ[𝕜] F) = 0 :=
-  ext fun _ => Seminorm.zero _
+  ext fun _ => map_zero p
 
 @[simp]
 theorem zero_comp (f : E →ₗ[𝕜] F) : (0 : Seminorm 𝕜 F).comp f = 0 :=
@@ -274,20 +276,15 @@ theorem comp_mono {p : Seminorm 𝕜 F} {q : Seminorm 𝕜 F} (f : E →ₗ[𝕜
 def pullback (f : E →ₗ[𝕜] F) : AddMonoidHom (Seminorm 𝕜 F) (Seminorm 𝕜 E) :=
   ⟨fun p => p.comp f, zero_comp f, fun p q => add_comp p q f⟩
 
-section NormOneClass
+section
 
-variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E) (x y : E) (r : ℝ)
+variable (p : Seminorm 𝕜 E)
 
 @[simp]
-protected theorem neg : p (-x) = p x :=
-  calc
-    p (-x) = p ((-1 : 𝕜) • x) := by
-      rw [neg_one_smul]
-    _ = p x := by
-      rw [p.smul, norm_neg, norm_one, one_mulₓ]
-    
+protected theorem neg (x : E) : p (-x) = p x := by
+  rw [← neg_one_smul 𝕜, Seminorm.smul, norm_neg, ← Seminorm.smul, one_smul]
 
-protected theorem sub_le : p (x - y) ≤ p x + p y :=
+protected theorem sub_le (x y : E) : p (x - y) ≤ p x + p y :=
   calc
     p (x - y) = p (x + -y) := by
       rw [sub_eq_add_neg]
@@ -296,22 +293,22 @@ protected theorem sub_le : p (x - y) ≤ p x + p y :=
       rw [p.neg]
     
 
-theorem nonneg : 0 ≤ p x :=
+theorem nonneg (x : E) : 0 ≤ p x :=
   have h : 0 ≤ 2 * p x :=
     calc
       0 = p (x + -x) := by
-        rw [add_neg_selfₓ, p.zero]
+        rw [add_neg_selfₓ, map_zero]
       _ ≤ p x + p (-x) := p.triangle _ _
       _ = 2 * p x := by
         rw [p.neg, two_mul]
       
   nonneg_of_mul_nonneg_left h zero_lt_two
 
-theorem sub_rev : p (x - y) = p (y - x) := by
+theorem sub_rev (x y : E) : p (x - y) = p (y - x) := by
   rw [← neg_sub, p.neg]
 
 /-- The direct path from 0 to y is shorter than the path with x "inserted" in between. -/
-theorem le_insert : p y ≤ p x + p (x - y) :=
+theorem le_insert (x y : E) : p y ≤ p x + p (x - y) :=
   calc
     p y = p (x - (x - y)) := by
       rw [sub_sub_cancel]
@@ -319,9 +316,11 @@ theorem le_insert : p y ≤ p x + p (x - y) :=
     
 
 /-- The direct path from 0 to x is shorter than the path with y "inserted" in between. -/
-theorem le_insert' : p x ≤ p y + p (x - y) := by
+theorem le_insert' (x y : E) : p x ≤ p y + p (x - y) := by
   rw [sub_rev]
   exact le_insert _ _ _
+
+end
 
 instance : OrderBot (Seminorm 𝕜 E) :=
   ⟨0, nonneg⟩
@@ -371,8 +370,6 @@ theorem finset_sup_apply_lt {p : ι → Seminorm 𝕜 E} {s : Finset ι} {x : E}
   · exact nnreal.coe_pos.mpr ha
     
 
-end NormOneClass
-
 end Module
 
 end SemiNormedRing
@@ -419,7 +416,7 @@ noncomputable instance : HasInf (Seminorm 𝕜 E) where
           refine'
             cinfi_eq_of_forall_ge_of_forall_gt_exists_lt (fun i => add_nonneg (p.nonneg _) (q.nonneg _)) fun x hx =>
               ⟨0, by
-                rwa [p.zero, q.zero, add_zeroₓ]⟩
+                rwa [map_zero, map_zero, add_zeroₓ]⟩
           
         simp_rw [Real.mul_infi_of_nonneg (norm_nonneg a), mul_addₓ, ← p.smul, ← q.smul, smul_sub]
         refine' Function.Surjective.infi_congr ((· • ·) a⁻¹ : E → E) (fun u => ⟨a • u, inv_smul_smul₀ ha u⟩) fun u => _
@@ -433,10 +430,10 @@ noncomputable instance : Lattice (Seminorm 𝕜 E) :=
   { Seminorm.semilatticeSup with inf := (·⊓·),
     inf_le_left := fun p q x => by
       apply cinfi_le_of_le (bdd_below_range_add _ _ _) x
-      simp only [sub_self, Seminorm.zero, add_zeroₓ],
+      simp only [sub_self, map_zero, add_zeroₓ],
     inf_le_right := fun p q x => by
       apply cinfi_le_of_le (bdd_below_range_add _ _ _) (0 : E)
-      simp only [sub_self, Seminorm.zero, zero_addₓ, sub_zero],
+      simp only [sub_self, map_zero, zero_addₓ, sub_zero],
     le_inf := fun a b c hab hac x => le_cinfi fun u => le_transₓ (a.le_insert' _ _) (add_le_add (hab _) (hac _)) }
 
 theorem smul_inf [HasScalar R ℝ] [HasScalar R ℝ≥0 ] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
@@ -525,9 +522,7 @@ theorem ball_comp (p : Seminorm 𝕜 F) (f : E →ₗ[𝕜] F) (x : E) (r : ℝ)
   ext
   simp_rw [ball, mem_preimage, comp_apply, Set.mem_set_of_eq, map_sub]
 
-section NormOneClass
-
-variable [NormOneClass 𝕜] (p : Seminorm 𝕜 E)
+variable (p : Seminorm 𝕜 E)
 
 theorem ball_zero_eq_preimage_ball {r : ℝ} : p.ball 0 r = p ⁻¹' Metric.Ball 0 r := by
   ext x
@@ -568,8 +563,6 @@ theorem ball_eq_emptyset (p : Seminorm 𝕜 E) {x : E} {r : ℝ} (hr : r ≤ 0) 
   ext
   rw [Seminorm.mem_ball, Set.mem_empty_eq, iff_falseₓ, not_ltₓ]
   exact hr.trans (p.nonneg _)
-
-end NormOneClass
 
 end Module
 
@@ -718,7 +711,7 @@ theorem absorbent_ball (hx : ∥x∥ < r) : Absorbent 𝕜 (Metric.Ball x r) := 
   exact (normSeminorm _ _).absorbent_ball hx
 
 /-- Balls at the origin are balanced. -/
-theorem balanced_ball_zero [NormOneClass 𝕜] : Balanced 𝕜 (Metric.Ball (0 : E) r) := by
+theorem balanced_ball_zero : Balanced 𝕜 (Metric.Ball (0 : E) r) := by
   rw [← ball_norm_seminorm 𝕜]
   exact (normSeminorm _ _).balanced_ball_zero r
 

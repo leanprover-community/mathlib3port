@@ -82,7 +82,7 @@ structure Bicone (F : J → C) where
   x : C
   π : ∀ j, X ⟶ F j
   ι : ∀ j, F j ⟶ X
-  ι_π : ∀ j j', ι j ≫ π j' = if h : j = j' then eqToHom (congr_argₓ F h) else 0 := by
+  ι_π : ∀ j j', ι j ≫ π j' = if h : j = j' then eqToHom (congr_arg F h) else 0 := by
     run_tac
       obviously
 
@@ -131,33 +131,33 @@ theorem to_cocone_ι_app (B : Bicone F) (j : J) : B.toCocone.ι.app ⟨j⟩ = B.
 def ofLimitCone {f : J → C} {t : Cone (Discrete.functor f)} (ht : IsLimit t) : Bicone f where
   x := t.x
   π := fun j => t.π.app ⟨j⟩
-  ι := fun j => ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_argₓ f h) else 0)
+  ι := fun j => ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_arg f h) else 0)
   ι_π := fun j j' => by
     simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 theorem ι_of_is_limit {f : J → C} {t : Bicone f} (ht : IsLimit t.toCone) (j : J) :
-    t.ι j = ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_argₓ f h) else 0) :=
+    t.ι j = ht.lift (Fan.mk _ fun j' => if h : j = j' then eqToHom (congr_arg f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
     simp [t.ι_π]
 
 /-- We can turn any colimit cocone over a discrete collection of objects into a bicone. -/
 @[simps]
 def ofColimitCocone {f : J → C} {t : Cocone (Discrete.functor f)} (ht : IsColimit t) : Bicone f where
   x := t.x
-  π := fun j => ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_argₓ f h) else 0)
+  π := fun j => ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_arg f h) else 0)
   ι := fun j => t.ι.app ⟨j⟩
   ι_π := fun j j' => by
     simp
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 theorem π_of_is_colimit {f : J → C} {t : Bicone f} (ht : IsColimit t.toCocone) (j : J) :
-    t.π j = ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_argₓ f h) else 0) :=
+    t.π j = ht.desc (Cofan.mk _ fun j' => if h : j' = j then eqToHom (congr_arg f h) else 0) :=
   ht.hom_ext fun j' => by
     rw [ht.fac]
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
     simp [t.ι_π]
 
 /-- Structure witnessing that a bicone is both a limit cone and a colimit cocone. -/
@@ -282,7 +282,7 @@ theorem biproduct.bicone_ι (f : J → C) [HasBiproduct f] (b : J) : (Biproduct.
 This means you may not be able to `simp` using this lemma unless you `open_locale classical`. -/
 @[reassoc]
 theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J) :
-    biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_argₓ f h) else 0 := by
+    biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_arg f h) else 0 := by
   convert (biproduct.bicone f).ι_π j j'
 
 @[simp, reassoc]
@@ -405,7 +405,7 @@ theorem biproduct.from_subtype_π [DecidablePred p] (j : J) :
   by_cases' h : p j
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
-    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
+    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
     
   · rw [dif_neg h, dif_neg (show (i : J) ≠ j from fun h₂ => h (h₂ ▸ i.2)), comp_zero]
     
@@ -423,7 +423,7 @@ theorem biproduct.from_subtype_π_subtype (j : Subtype p) :
   ext i
   rw [biproduct.from_subtype, biproduct.ι_desc_assoc, biproduct.ι_π, biproduct.ι_π]
   split_ifs with h₁ h₂ h₂
-  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
+  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
 
 @[simp, reassoc]
 theorem biproduct.to_subtype_π (j : Subtype p) :
@@ -438,7 +438,7 @@ theorem biproduct.ι_to_subtype [DecidablePred p] (j : J) :
   by_cases' h : p j
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
-    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
+    exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
     
   · rw [dif_neg h, dif_neg (show j ≠ i from fun h₂ => h (h₂.symm ▸ i.2)), zero_comp]
     
@@ -456,7 +456,7 @@ theorem biproduct.ι_to_subtype_subtype (j : Subtype p) :
   ext i
   rw [biproduct.to_subtype, category.assoc, biproduct.lift_π, biproduct.ι_π, biproduct.ι_π]
   split_ifs with h₁ h₂ h₂
-  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_argₓ Subtype.val h₂)), rfl]
+  exacts[rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
 
 @[simp, reassoc]
 theorem biproduct.ι_from_subtype (j : Subtype p) :
@@ -582,23 +582,23 @@ end
 
 instance biproduct.ιMono (f : J → C) [HasBiproduct f] (b : J) : SplitMono (biproduct.ι f b) where
   retraction :=
-    biproduct.desc fun b' => if h : b' = b then eqToHom (congr_argₓ f h) else biproduct.ι f b' ≫ biproduct.π f b
+    biproduct.desc fun b' => if h : b' = b then eqToHom (congr_arg f h) else biproduct.ι f b' ≫ biproduct.π f b
 
 instance biproduct.πEpi (f : J → C) [HasBiproduct f] (b : J) : SplitEpi (biproduct.π f b) where
   section_ :=
-    biproduct.lift fun b' => if h : b = b' then eqToHom (congr_argₓ f h) else biproduct.ι f b ≫ biproduct.π f b'
+    biproduct.lift fun b' => if h : b = b' then eqToHom (congr_arg f h) else biproduct.ι f b ≫ biproduct.π f b'
 
 /-- Auxiliary lemma for `biproduct.unique_up_to_iso`. -/
 theorem biproduct.cone_point_unique_up_to_iso_hom (f : J → C) [HasBiproduct f] {b : Bicone f} (hb : b.IsBilimit) :
     (hb.IsLimit.conePointUniqueUpToIso (Biproduct.isLimit _)).Hom = biproduct.lift b.π :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 /-- Auxiliary lemma for `biproduct.unique_up_to_iso`. -/
 theorem biproduct.cone_point_unique_up_to_iso_inv (f : J → C) [HasBiproduct f] {b : Bicone f} (hb : b.IsBilimit) :
     (hb.IsLimit.conePointUniqueUpToIso (Biproduct.isLimit _)).inv = biproduct.desc b.ι := by
   refine' biproduct.hom_ext' _ _ fun j => hb.is_limit.hom_ext fun j' => _
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
   rw [category.assoc, is_limit.cone_point_unique_up_to_iso_inv_comp, bicone.to_cone_π_app, biproduct.bicone_π,
     biproduct.ι_desc, biproduct.ι_π, b.to_cone_π_app, b.ι_π]
 
@@ -1717,7 +1717,7 @@ def binaryBiconeOfSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [SplitMono f] {c :
     let this := epi_of_is_colimit_cofork i
     apply zero_of_epi_comp c.π
     simp only [sub_comp, comp_sub, category.comp_id, category.assoc, split_mono.id, sub_self,
-      cofork.is_colimit.π_comp_desc_assoc, cokernel_cofork.π_of_π, split_mono.id_assoc]
+      cofork.is_colimit.π_desc_assoc, cokernel_cofork.π_of_π, split_mono.id_assoc]
     apply sub_eq_zero_of_eq
     apply category.id_comp
   inr_snd' := by
@@ -1733,8 +1733,8 @@ def isBilimitBinaryBiconeOfSplitMonoOfCokernel {X Y : C} {f : X ⟶ Y} [SplitMon
         binary_bicone_of_split_mono_of_cokernel_snd, split_epi_of_idempotent_of_is_colimit_cofork_section_]
       dsimp' only [binary_bicone_of_split_mono_of_cokernel_X]
       rw [is_colimit_cofork_of_cokernel_cofork_desc, is_cokernel_epi_comp_desc]
-      simp only [binary_bicone_of_split_mono_of_cokernel_inl, cofork.is_colimit.π_comp_desc,
-        cokernel_cofork_of_cofork_π, cofork.π_of_π, add_sub_cancel'_right])
+      simp only [binary_bicone_of_split_mono_of_cokernel_inl, cofork.is_colimit.π_desc, cokernel_cofork_of_cofork_π,
+        cofork.π_of_π, add_sub_cancel'_right])
 
 /-- Every split epi `f` with a kernel induces a binary bicone with `f` as its `snd` and
 the kernel map as its `inl`.
@@ -1770,7 +1770,7 @@ def binaryBiconeOfSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [SplitEpi f] {c : Ker
       dsimp' only [kernel_fork_of_fork_ι]
       let this := mono_of_is_limit_fork i
       apply zero_of_comp_mono c.ι
-      simp only [comp_sub, category.comp_id, category.assoc, sub_self, fork.is_limit.lift_comp_ι, fork.ι_of_ι,
+      simp only [comp_sub, category.comp_id, category.assoc, sub_self, fork.is_limit.lift_ι, fork.ι_of_ι,
         split_epi.id_assoc],
     inr_snd' := by
       simp }
@@ -1786,7 +1786,7 @@ def isBilimitBinaryBiconeOfSplitEpiOfKernel {X Y : C} {f : X ⟶ Y} [SplitEpi f]
         split_mono_of_idempotent_of_is_limit_fork_retraction]
       dsimp' only [binary_bicone_of_split_epi_of_kernel_X]
       rw [is_limit_fork_of_kernel_fork_lift, is_kernel_comp_mono_lift]
-      simp only [fork.is_limit.lift_comp_ι, fork.ι_of_ι, kernel_fork_of_fork_ι, sub_add_cancel])
+      simp only [fork.is_limit.lift_ι, fork.ι_of_ι, kernel_fork_of_fork_ι, sub_add_cancel])
 
 end
 

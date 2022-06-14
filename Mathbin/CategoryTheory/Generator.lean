@@ -326,11 +326,11 @@ theorem IsCodetector.def {G : C} : IsCodetector G → ∀ ⦃X Y : C⦄ f : X �
   (is_codetector_def _).1
 
 theorem is_separator_iff_faithful_coyoneda_obj (G : C) : IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_funₓ hfg)⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
     (is_separator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 
 theorem is_coseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
-  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_funₓ hfg))⟩, fun h =>
+  ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
     (is_coseparator_def _).2 fun X Y f g hfg => Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 
 theorem is_detector_iff_reflects_isomorphisms_coyoneda_obj (G : C) :

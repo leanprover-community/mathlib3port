@@ -95,7 +95,7 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ) {c : Cocone ((c
         { val := fun p => τ.app p.unop.1 p.unop.2,
           property := fun p p' f => by
             simp_rw [← f.unop.2]
-            apply (congr_funₓ (τ.naturality f.unop.1) p'.unop.2).symm },
+            apply (congr_fun (τ.naturality f.unop.1) p'.unop.2).symm },
       left_inv := by
         rintro ⟨k₁, k₂⟩
         ext
@@ -199,7 +199,7 @@ def extendAlongYonedaIsoKanApp X : (extendAlongYoneda A).obj X ≅ ((lan yoneda 
       erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
       trans colimit.pre ((category_of_elements.π X).leftOp ⋙ A) (𝟭 _)
       congr
-      · exact congr_argₓ functor.op (category_of_elements.from_to_costructured_arrow_eq X)
+      · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
         
       · ext
         simp only [colimit.ι_pre]

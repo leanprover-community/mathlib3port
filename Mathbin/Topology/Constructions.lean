@@ -755,6 +755,10 @@ theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusio
 theorem continuous_at_subtype_coe {p : α → Prop} {a : Subtype p} : ContinuousAt (coe : Subtype p → α) a :=
   continuous_iff_continuous_at.mp continuous_subtype_coe _
 
+theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ Closure (coe '' t) := by
+  rw [inducing_coe.dense_iff, SetCoe.forall]
+  rfl
+
 theorem map_nhds_subtype_coe_eq {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
     map (coe : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
   map_nhds_induced_of_mem <| by
@@ -775,7 +779,7 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
     let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
-      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
+      map f (𝓝 x) = map f (map coe (𝓝 x')) := congr_arg (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
       
@@ -939,7 +943,7 @@ theorem Continuous.fin_insert_nth {n} {π : Finₓ (n + 1) → Type _} [∀ i, T
     Continuous fun a => i.insertNth (f a) (g a) :=
   continuous_iff_continuous_at.2 fun a => hf.ContinuousAt.fin_insert_nth i hg.ContinuousAt
 
-theorem is_open_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} (hi : Finite i)
+theorem is_open_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
     (hs : ∀, ∀ a ∈ i, ∀, IsOpen (s a)) : IsOpen (pi i s) := by
   rw [pi_def] <;> exact (is_open_bInter hi) fun a ha => (hs _ ha).Preimage (continuous_apply _)
 
@@ -952,7 +956,7 @@ theorem mem_nhds_of_pi_mem_nhds {ι : Type _} {α : ι → Type _} [∀ i : ι, 
   rw [nhds_pi] at hs
   exact mem_of_pi_mem_pi hs hi
 
-theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : Finite i)
+theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : i.Finite)
     (hs : ∀, ∀ a ∈ i, ∀, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x := by
   rw [pi_def, bInter_mem hi]
   exact fun a ha => (continuous_apply a).ContinuousAt (hs a ha)

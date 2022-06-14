@@ -312,6 +312,15 @@ theorem map_eq_of_sub_lt (h : v (y - x) < v x) : v y = v x := by
   rw [max_eq_rightₓ (le_of_ltₓ h)] at this
   simpa using this
 
+theorem map_one_add_of_lt (h : v x < 1) : v (1 + x) = 1 := by
+  rw [← v.map_one] at h
+  simpa only [v.map_one] using v.map_add_eq_of_lt_left h
+
+theorem map_one_sub_of_lt (h : v x < 1) : v (1 - x) = 1 := by
+  rw [← v.map_one, ← v.map_neg] at h
+  rw [sub_eq_add_neg 1 x]
+  simpa only [v.map_one, v.map_neg] using v.map_add_eq_of_lt_left h
+
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R where
   Carrier := { x | v x < γ }
@@ -482,7 +491,7 @@ def supp : Ideal R where
   smul_mem' := fun c x hx =>
     calc
       v (c * x) = v c * v x := map_mul v c x
-      _ = v c * 0 := congr_argₓ _ hx
+      _ = v c * 0 := congr_arg _ hx
       _ = 0 := mul_zero _
       
 

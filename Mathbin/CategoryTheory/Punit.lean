@@ -96,7 +96,7 @@ theorem equiv_punit_iff_unique : Nonempty (C ≌ Discrete PUnit) ↔ Nonempty C 
       
     have : ∀ z, z = h.unit.app x ≫ (h.functor ⋙ h.inverse).map z ≫ h.unit_inv.app y := by
       intro z
-      simpa using congr_argₓ (· ≫ h.unit_inv.app y) (h.unit.naturality z)
+      simpa using congr_arg (· ≫ h.unit_inv.app y) (h.unit.naturality z)
     apply Subsingleton.intro
     intro a b
     rw [this a, this b]

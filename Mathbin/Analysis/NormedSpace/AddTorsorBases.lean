@@ -90,7 +90,7 @@ include V
 
 open AffineMap
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y «expr ∉ » s)
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/

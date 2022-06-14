@@ -37,7 +37,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     rw [← FiniteField.expand_card]
     unfold charpoly
     rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
-    apply congr_argₓ det
+    apply congr_arg det
     refine' mat_poly_equiv.injective _
     rw [AlgEquiv.map_pow, mat_poly_equiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
     · exact (id (mat_poly_equiv_eq_X_pow_sub_C (p ^ k) M) : _)
@@ -47,7 +47,7 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     
   · -- TODO[gh-6025]: remove this `haveI` once `subsingleton_of_empty_right` is a global instance
     have : Subsingleton (Matrix n n K) := subsingleton_of_empty_right
-    exact congr_argₓ _ (Subsingleton.elimₓ _ _)
+    exact congr_arg _ (Subsingleton.elimₓ _ _)
     
 
 @[simp]

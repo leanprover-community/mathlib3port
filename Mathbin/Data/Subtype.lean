@@ -68,7 +68,7 @@ protected theorem ext : ∀ {a1 a2 : { x // p x }}, (a1 : α) = (a2 : α) → a1
   | ⟨x, h1⟩, ⟨x, h2⟩, rfl => rfl
 
 theorem ext_iff {a1 a2 : { x // p x }} : a1 = a2 ↔ (a1 : α) = (a2 : α) :=
-  ⟨congr_argₓ _, Subtype.ext⟩
+  ⟨congr_arg _, Subtype.ext⟩
 
 theorem heq_iff_coe_eq (h : ∀ x, p x ↔ q x) {a1 : { x // p x }} {a2 : { x // q x }} : HEq a1 a2 ↔ (a1 : α) = (a2 : α) :=
   Eq.ndrec (fun a2' => heq_iff_eq.trans ext_iff) (funext fun x => propext (h x)) a2
@@ -148,7 +148,7 @@ def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α �
 theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
     Injective (coind f h) := fun x y hxy =>
   hf <| by
-    apply congr_argₓ Subtype.val hxy
+    apply congr_arg Subtype.val hxy
 
 theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
     Surjective (coind f h) := fun x =>

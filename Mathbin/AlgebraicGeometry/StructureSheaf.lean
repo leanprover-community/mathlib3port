@@ -593,7 +593,7 @@ theorem to_basic_open_injective (f : R) : Function.Injective (toBasicOpen R f) :
   intro p hfp
   contrapose hfp
   rw [mem_zero_locus, Set.not_subset]
-  have := congr_funₓ (congr_argₓ Subtype.val h_eq) ⟨p, hfp⟩
+  have := congr_fun (congr_arg Subtype.val h_eq) ⟨p, hfp⟩
   rw [const_apply, const_apply, IsLocalization.eq] at this
   cases' this with r hr
   exact ⟨r.1, hr, r.2⟩
@@ -639,7 +639,7 @@ theorem locally_const_basic_open (U : Opens (PrimeSpectrum.top R)) (s : (structu
   apply const_ext
   rw [mul_assoc f c g, hc]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i j «expr ∈ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i j «expr ∈ » t)
 /-
 Auxiliary lemma for surjectivity of `to_basic_open`.
 A local representation of a section `s` as fractions `a i / h i` on finitely many basic opens
@@ -673,8 +673,8 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     simp only [SetLike.coe_mk]
     -- Here, both sides of the equation are equal to a restriction of `s`
     trans
-    convert congr_argₓ ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
-    convert congr_argₓ ((structure_sheaf R).1.map iDi.op) (hs i) using 1
+    convert congr_arg ((structure_sheaf R).1.map iDj.op) (hs j).symm using 1
+    convert congr_arg ((structure_sheaf R).1.map iDi.op) (hs i) using 1
     swap
     all_goals
       rw [res_const]
@@ -714,7 +714,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     simp only [← hk, pow_addₓ, pow_oneₓ]
     -- To accommodate for the difference `k`, we multiply both sides of the equation `n_spec (i, j)`
       -- by `(h i * h j) ^ k`
-      convert congr_argₓ (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
+      convert congr_arg (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
       · simp only [n, mul_powₓ]
         ring
         

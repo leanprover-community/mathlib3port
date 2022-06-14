@@ -51,7 +51,7 @@ def projectivePresentation (X : Profinite.{u}) : ProjectivePresentation X where
   Projective := Profinite.projective_ultrafilter X
   Epi :=
     (ConcreteCategory.epi_of_surjective _) fun x =>
-      ⟨(pure x : Ultrafilter X), congr_funₓ (ultrafilter_extend_extends (𝟙 X)) x⟩
+      ⟨(pure x : Ultrafilter X), congr_fun (ultrafilter_extend_extends (𝟙 X)) x⟩
 
 instance : EnoughProjectives Profinite.{u} where
   presentation := fun X => ⟨projectivePresentation X⟩

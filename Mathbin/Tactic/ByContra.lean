@@ -20,8 +20,8 @@ namespace Interactive
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- If the target of the main goal is a proposition `p`,
 `by_contra'` reduces the goal to proving `false` using the additional hypothesis `h : ¬ p`.
 `by_contra' h` can be used to name the hypothesis `h : ¬ p`.

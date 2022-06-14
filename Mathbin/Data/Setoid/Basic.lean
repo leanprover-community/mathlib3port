@@ -180,7 +180,7 @@ theorem eqv_gen_eq (r : α → α → Prop) : EqvGen.setoid r = inf { s : Setoid
     relation `x is related to y by r or s`. -/
 theorem sup_eq_eqv_gen (r s : Setoidₓ α) : r⊔s = EqvGen.setoid fun x y => r.Rel x y ∨ s.Rel x y := by
   rw [eqv_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [le_def, or_imp_distrib, ← forall_and_distrib]
 
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
@@ -192,7 +192,7 @@ theorem sup_def {r s : Setoidₓ α} : r⊔s = EqvGen.setoid (r.Rel⊔s.Rel) := 
     relation `there exists r ∈ S relating x and y`. -/
 theorem Sup_eq_eqv_gen (S : Set (Setoidₓ α)) : sup S = EqvGen.setoid fun x y => ∃ r : Setoidₓ α, r ∈ S ∧ r.Rel x y := by
   rw [eqv_gen_eq]
-  apply congr_argₓ Inf
+  apply congr_arg Inf
   simp only [UpperBounds, le_def, and_imp, exists_imp_distrib]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩

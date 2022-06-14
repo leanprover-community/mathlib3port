@@ -148,7 +148,7 @@ theorem cond_count_union (hs : s.Finite) (htu : Disjoint t u) : condCount s (t �
     Set.inter_union_distrib_left, measure_union, mul_addₓ]
   exacts[htu.mono inf_le_right inf_le_right, (hs.inter_of_left _).MeasurableSet]
 
-theorem cond_count_compl (hs : s.Finite) (hs' : s.Nonempty) : condCount s t + condCount s (tᶜ) = 1 := by
+theorem cond_count_compl (t : Set α) (hs : s.Finite) (hs' : s.Nonempty) : condCount s t + condCount s (tᶜ) = 1 := by
   rw [← cond_count_union hs disjoint_compl_right, Set.union_compl_self,
     (cond_count_is_probability_measure hs hs').measure_univ]
 
@@ -174,7 +174,7 @@ theorem cond_count_disjoint_union (hs : s.Finite) (ht : t.Finite) (hst : Disjoin
     (measure.count_apply_lt_top.2 ht).Ne, measure.count_ne_zero hs', (measure.count_apply_lt_top.2 hs).Ne]
 
 /-- A version of the law of total probability for counting probabilites. -/
-theorem cond_count_add_compl_eq (hs : s.Finite) :
+theorem cond_count_add_compl_eq (u t : Set α) (hs : s.Finite) :
     condCount (s ∩ u) t * condCount s u + condCount (s ∩ uᶜ) t * condCount s (uᶜ) = condCount s t := by
   conv_rhs =>
     rw

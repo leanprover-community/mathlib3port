@@ -9,63 +9,79 @@ import Mathbin.Data.Set.Finite
 # Infinitude of intervals
 
 Bounded intervals in dense orders are infinite, as are unbounded intervals
-in orders that are unbounded on the appropriate side.
+in orders that are unbounded on the appropriate side. We also prove that an unbounded
+preorder is an infinite type.
 -/
 
 
-namespace Set
-
 variable {α : Type _} [Preorderₓ α]
 
-section Bounded
+/-- A nonempty preorder with no maximal element is infinite. This is not an instance to avoid
+a cycle with `infinite α → nontrivial α → nonempty α`. -/
+theorem NoMaxOrder.infinite [Nonempty α] [NoMaxOrder α] : Infinite α :=
+  let ⟨f, hf⟩ := Nat.exists_strict_mono α
+  Infinite.of_injective f hf.Injective
 
-variable [DenselyOrdered α]
+/-- A nonempty preorder with no minimal element is infinite. This is not an instance to avoid
+a cycle with `infinite α → nontrivial α → nonempty α`. -/
+theorem NoMinOrder.infinite [Nonempty α] [NoMinOrder α] : Infinite α :=
+  @NoMaxOrder.infinite αᵒᵈ _ _ _
 
-theorem Ioo.infinite {a b : α} (h : a < b) : Infinite (Ioo a b) := by
-  rintro (f : finite (Ioo a b))
-  obtain ⟨m, hm₁, hm₂⟩ : ∃ m ∈ Ioo a b, ∀, ∀ x ∈ Ioo a b, ∀, ¬x < m := by
-    simpa [h] using Finset.exists_minimal f.to_finset
-  obtain ⟨z, hz₁, hz₂⟩ : ∃ z, a < z ∧ z < m := exists_between hm₁.1
-  exact hm₂ z ⟨hz₁, lt_transₓ hz₂ hm₁.2⟩ hz₂
+namespace Set
 
-theorem Ico.infinite {a b : α} (h : a < b) : Infinite (Ico a b) :=
-  (Ioo.infinite h).mono Ioo_subset_Ico_self
+section DenselyOrdered
 
-theorem Ioc.infinite {a b : α} (h : a < b) : Infinite (Ioc a b) :=
-  (Ioo.infinite h).mono Ioo_subset_Ioc_self
+variable [DenselyOrdered α] {a b : α} (h : a < b)
 
-theorem Icc.infinite {a b : α} (h : a < b) : Infinite (Icc a b) :=
-  (Ioo.infinite h).mono Ioo_subset_Icc_self
+theorem Ioo.infinite : Infinite (Ioo a b) :=
+  @NoMaxOrder.infinite _ _ (nonempty_Ioo_subtype h) _
 
-end Bounded
+theorem Ioo_infinite : (Ioo a b).Infinite :=
+  infinite_coe_iff.1 <| Ioo.infinite h
 
-section UnboundedBelow
+theorem Ico_infinite : (Ico a b).Infinite :=
+  (Ioo_infinite h).mono Ioo_subset_Ico_self
 
-variable [NoMinOrder α]
+theorem Ico.infinite : Infinite (Ico a b) :=
+  infinite_coe_iff.2 <| Ico_infinite h
 
-theorem Iio.infinite {b : α} : Infinite (Iio b) := by
-  rintro (f : finite (Iio b))
-  obtain ⟨m, hm₁, hm₂⟩ : ∃ m < b, ∀, ∀ x < b, ∀, ¬x < m := by
-    simpa using Finset.exists_minimal f.to_finset
-  obtain ⟨z, hz⟩ : ∃ z, z < m := exists_lt _
-  exact hm₂ z (lt_transₓ hz hm₁) hz
+theorem Ioc_infinite : (Ioc a b).Infinite :=
+  (Ioo_infinite h).mono Ioo_subset_Ioc_self
 
-theorem Iic.infinite {b : α} : Infinite (Iic b) :=
-  Iio.infinite.mono Iio_subset_Iic_self
+theorem Ioc.infinite : Infinite (Ioc a b) :=
+  infinite_coe_iff.2 <| Ioc_infinite h
 
-end UnboundedBelow
+theorem Icc_infinite : (Icc a b).Infinite :=
+  (Ioo_infinite h).mono Ioo_subset_Icc_self
 
-section UnboundedAbove
+theorem Icc.infinite : Infinite (Icc a b) :=
+  infinite_coe_iff.2 <| Icc_infinite h
 
-variable [NoMaxOrder α]
+end DenselyOrdered
 
-theorem Ioi.infinite {a : α} : Infinite (Ioi a) :=
-  @Iio.infinite αᵒᵈ _ _ _
+instance [NoMinOrder α] {a : α} : Infinite (Iio a) :=
+  NoMinOrder.infinite
 
-theorem Ici.infinite {a : α} : Infinite (Ici a) :=
-  Ioi.infinite.mono Ioi_subset_Ici_self
+theorem Iio_infinite [NoMinOrder α] (a : α) : (Iio a).Infinite :=
+  infinite_coe_iff.1 Iio.infinite
 
-end UnboundedAbove
+instance [NoMinOrder α] {a : α} : Infinite (Iic a) :=
+  NoMinOrder.infinite
+
+theorem Iic_infinite [NoMinOrder α] (a : α) : (Iic a).Infinite :=
+  infinite_coe_iff.1 Iic.infinite
+
+instance [NoMaxOrder α] {a : α} : Infinite (Ioi a) :=
+  NoMaxOrder.infinite
+
+theorem Ioi_infinite [NoMinOrder α] (a : α) : (Iio a).Infinite :=
+  infinite_coe_iff.1 Iio.infinite
+
+instance [NoMaxOrder α] {a : α} : Infinite (Ici a) :=
+  NoMaxOrder.infinite
+
+theorem Ici_infinite [NoMaxOrder α] (a : α) : (Ici a).Infinite :=
+  infinite_coe_iff.1 Ici.infinite
 
 end Set
 

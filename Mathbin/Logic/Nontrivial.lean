@@ -105,6 +105,8 @@ theorem not_nontrivial_iff_subsingleton : ¬Nontrivial α ↔ Subsingleton α :=
   push_neg
   rfl
 
+theorem not_nontrivial α [Subsingleton α] : ¬Nontrivial α := fun ⟨⟨x, y, h⟩⟩ => h <| Subsingleton.elimₓ x y
+
 theorem not_subsingleton α [h : Nontrivial α] : ¬Subsingleton α :=
   let ⟨⟨x, y, hxy⟩⟩ := h
   fun ⟨h'⟩ => hxy <| h' x y
@@ -200,7 +202,7 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

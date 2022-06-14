@@ -182,7 +182,7 @@ theorem ker_flip_eq_bot (H : B.IsRefl) (h : B.ker = ⊥) : B.flip.ker = ⊥ := b
 
 theorem ker_eq_bot_iff_ker_flip_eq_bot (H : B.IsRefl) : B.ker = ⊥ ↔ B.flip.ker = ⊥ := by
   refine' ⟨ker_flip_eq_bot H, fun h => _⟩
-  exact (congr_argₓ _ B.flip_flip.symm).trans (ker_flip_eq_bot (flip_is_refl_iff.mpr H) h)
+  exact (congr_arg _ B.flip_flip.symm).trans (ker_flip_eq_bot (flip_is_refl_iff.mpr H) h)
 
 end IsRefl
 

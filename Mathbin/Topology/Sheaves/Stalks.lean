@@ -193,7 +193,7 @@ theorem stalk_pushforward_iso_of_open_embedding {f : X ⟶ Y} (hf : OpenEmbeddin
     · intro U
       refine' F.map_iso (eq_to_iso _)
       dsimp' only [functor.op]
-      exact congr_argₓ op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
+      exact congr_arg op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
       
     · intro U V i
       erw [← F.map_comp, ← F.map_comp]
@@ -317,7 +317,7 @@ theorem stalk_specializes_stalk_functor_map {F G : X.Presheaf C} (f : F ⟶ G) {
 
 @[simp, reassoc, elementwise]
 theorem stalk_specializes_stalk_pushforward (f : X ⟶ Y) (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
-    (f _* F).stalkSpecializes (f.map_specialization h) ≫ F.stalkPushforward _ f x =
+    (f _* F).stalkSpecializes (f.map_specializes h) ≫ F.stalkPushforward _ f x =
       F.stalkPushforward _ f y ≫ F.stalkSpecializes h :=
   by
   ext
@@ -374,7 +374,7 @@ theorem stalk_functor_map_injective_of_app_injective {F G : Presheaf C X} (f : F
   obtain ⟨W, hxW, iWU₁, iWU₂, heq⟩ := G.germ_eq x hxU₁ hxU₂ _ _ hst
   rw [← comp_apply, ← comp_apply, ← f.naturality, ← f.naturality, comp_apply, comp_apply] at heq
   replace heq := h W HEq
-  convert congr_argₓ (F.germ ⟨x, hxW⟩) HEq
+  convert congr_arg (F.germ ⟨x, hxW⟩) HEq
   exacts[(F.germ_res_apply iWU₁ ⟨x, hxW⟩ s).symm, (F.germ_res_apply iWU₂ ⟨x, hxW⟩ t).symm]
 
 variable [HasLimits C] [PreservesLimits (forget C)] [ReflectsIsomorphisms (forget C)]

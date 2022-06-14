@@ -359,7 +359,7 @@ theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
 theorem distortion_le_iff {c : ℝ≥0 } : π.distortion ≤ c ↔ ∀, ∀ J ∈ π, ∀, Box.distortion J ≤ c :=
-  sup_le_iff
+  Finset.sup_le_iff
 
 @[simp]
 theorem _root_.box_integral.prepartition.distortion_bUnion_tagged (π : Prepartition I)

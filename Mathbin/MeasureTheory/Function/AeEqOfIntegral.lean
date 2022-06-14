@@ -174,7 +174,7 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite [SigmaFinite μ] {f g :
       calc
         (∫⁻ x in s, g x ∂μ) + ε * μ s = (∫⁻ x in s, g x ∂μ) + ∫⁻ x in s, ε ∂μ := by
           simp only [lintegral_const, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
-        _ = ∫⁻ x in s, g x + ε ∂μ := (lintegral_add hg measurable_const).symm
+        _ = ∫⁻ x in s, g x + ε ∂μ := (lintegral_add_right _ measurable_const).symm
         _ ≤ ∫⁻ x in s, f x ∂μ := set_lintegral_mono (hg.add measurable_const) hf fun x hx => hx.1.1
         _ ≤ (∫⁻ x in s, g x ∂μ) + 0 := by
           rw [add_zeroₓ]

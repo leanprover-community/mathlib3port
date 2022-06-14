@@ -97,7 +97,7 @@ open Function MeasurableSpace
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical TopologicalSpace BigOperators Filter Ennreal Nnreal Interval
+open Classical TopologicalSpace BigOperators Filter Ennreal Nnreal Interval MeasureTheory
 
 variable {α β γ δ ι R R' : Type _}
 
@@ -201,7 +201,7 @@ theorem le_measure_diff : μ s₁ - μ s₂ ≤ μ (s₁ \ s₂) :=
   tsub_le_iff_left.2 <|
     calc
       μ s₁ ≤ μ (s₂ ∪ s₁) := measure_mono (subset_union_right _ _)
-      _ = μ (s₂ ∪ s₁ \ s₂) := congr_argₓ μ union_diff_self.symm
+      _ = μ (s₂ ∪ s₁ \ s₂) := congr_arg μ union_diff_self.symm
       _ ≤ μ s₂ + μ (s₁ \ s₂) := measure_union_le _ _
       
 
@@ -379,7 +379,7 @@ theorem measure_bUnion_eq_supr {s : ι → Set α} {t : Set ι} (ht : Countable 
   have := ht.to_encodable
   rw [bUnion_eq_Union, measure_Union_eq_supr hd.directed_coe, ← supr_subtype'']
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s k)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s k)
 /-- Continuity from above: the measure of the intersection of a decreasing sequence of measurable
 sets is the infimum of the measures. -/
 theorem measure_Inter_eq_infi [Encodable ι] {s : ι → Set α} (h : ∀ i, MeasurableSet (s i)) (hd : Directed (· ⊇ ·) s)
@@ -761,7 +761,7 @@ section Inf
 variable {m : Set (Measure α)}
 
 theorem Inf_caratheodory (s : Set α) (hs : MeasurableSet s) :
-    (inf (to_outer_measure '' m)).caratheodory.MeasurableSet' s := by
+    measurable_set[(inf (to_outer_measure '' m)).caratheodory] s := by
   rw [outer_measure.Inf_eq_bounded_by_Inf_gen]
   refine' outer_measure.bounded_by_caratheodory fun t => _
   simp only [outer_measure.Inf_gen, le_infi_iff, ball_image_iff, coe_to_outer_measure, measure_eq_infi t]
@@ -1243,7 +1243,7 @@ theorem restrict_eq_self_of_ae_mem {m0 : MeasurableSpace α} ⦃s : Set α⦄ �
     _ = μ := restrict_univ
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem restrict_congr_meas (hs : MeasurableSet s) :
     μ.restrict s = ν.restrict s ↔ ∀ t _ : t ⊆ s, MeasurableSet t → μ t = ν t :=
   ⟨fun H t hts ht => by
@@ -1513,7 +1513,7 @@ theorem sum_add_sum_compl (s : Set ι) (μ : ι → Measure α) : ((sum fun i : 
   exact @tsum_add_tsum_compl ℝ≥0∞ ι _ _ _ (fun i => μ i t) _ s Ennreal.summable Ennreal.summable
 
 theorem sum_congr {μ ν : ℕ → Measure α} (h : ∀ n, μ n = ν n) : sum μ = sum ν :=
-  congr_argₓ sum (funext h)
+  congr_arg sum (funext h)
 
 theorem sum_add_sum (μ ν : ℕ → Measure α) : sum μ + sum ν = sum fun n => μ n + ν n := by
   ext1 s hs
@@ -1583,7 +1583,7 @@ theorem count_apply_finset [MeasurableSingletonClass α] (s : Finset α) : count
       simp
     
 
-theorem count_apply_finite [MeasurableSingletonClass α] (s : Set α) (hs : Finite s) : count s = hs.toFinset.card := by
+theorem count_apply_finite [MeasurableSingletonClass α] (s : Set α) (hs : s.Finite) : count s = hs.toFinset.card := by
   rw [← count_apply_finset, finite.coe_to_finset]
 
 /-- `count` measure evaluates to infinity at infinite sets. -/
@@ -1632,6 +1632,16 @@ theorem count_ne_zero (hs' : s.Nonempty) : count s ≠ 0 := by
 theorem count_singleton (a : α) : count ({a} : Set α) = 1 := by
   rw [count_apply_finite ({a} : Set α) (Set.finite_singleton _), Set.Finite.toFinset]
   simp
+
+theorem count_injective_image [MeasurableSingletonClass β] {f : β → α} (hf : Function.Injective f) (s : Set β) :
+    count (f '' s) = count s := by
+  by_cases' hs : s.finite
+  · lift s to Finset β using hs
+    rw [← Finset.coe_image, count_apply_finset, count_apply_finset, s.card_image_of_injective hf]
+    
+  rw [count_apply_infinite hs]
+  rw [← finite_image_iff <| hf.inj_on _] at hs
+  rw [count_apply_infinite hs]
 
 end Count
 
@@ -1968,6 +1978,18 @@ theorem self_mem_ae_restrict {s} (hs : MeasurableSet s) : s ∈ (μ.restrict s).
   simp only [ae_restrict_eq hs, exists_prop, mem_principal, mem_inf_iff] <;>
     exact ⟨_, univ_mem, s, subset.rfl, (univ_inter s).symm⟩
 
+/-- If two measurable sets are ae_eq then any proposition that is almost everywhere true on one
+is almost everywhere true on the other -/
+theorem ae_restrict_of_ae_eq_of_ae_restrict {s t} (hst : s =ᵐ[μ] t) {p : α → Prop} :
+    (∀ᵐ x ∂μ.restrict s, p x) → ∀ᵐ x ∂μ.restrict t, p x := by
+  simp [measure.restrict_congr_set hst]
+
+/-- If two measurable sets are ae_eq then any proposition that is almost everywhere true on one
+is almost everywhere true on the other -/
+theorem ae_restrict_congr_set {s t} (hst : s =ᵐ[μ] t) {p : α → Prop} :
+    (∀ᵐ x ∂μ.restrict s, p x) ↔ ∀ᵐ x ∂μ.restrict t, p x :=
+  ⟨ae_restrict_of_ae_eq_of_ae_restrict hst, ae_restrict_of_ae_eq_of_ae_restrict hst.symm⟩
+
 /-- A version of the **Borel-Cantelli lemma**: if `pᵢ` is a sequence of predicates such that
 `∑ μ {x | pᵢ x}` is finite, then the measure of `x` such that `pᵢ x` holds frequently as `i → ∞` (or
 equivalently, `pᵢ x` holds for infinitely many `i`) is equal to zero. -/
@@ -2253,6 +2275,8 @@ theorem _root_.finset.measure_zero {α : Type _} {m : MeasurableSpace α} (s : F
 theorem insert_ae_eq_self (a : α) (s : Set α) : (insert a s : Set α) =ᵐ[μ] s :=
   union_ae_eq_right.2 <| measure_mono_null (diff_subset _ _) (measure_singleton _)
 
+section
+
 variable [PartialOrderₓ α] {a b : α}
 
 theorem Iio_ae_eq_Iic : Iio a =ᵐ[μ] Iic a :=
@@ -2278,6 +2302,15 @@ theorem Ico_ae_eq_Icc : Ico a b =ᵐ[μ] Icc a b :=
 
 theorem Ico_ae_eq_Ioc : Ico a b =ᵐ[μ] Ioc a b :=
   Ico_ae_eq_Ioc' (measure_singleton a) (measure_singleton b)
+
+end
+
+open Interval
+
+-- ././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)
+theorem interval_oc_ae_eq_interval [LinearOrderₓ α] {a b : α} :
+    Ι a b =ᵐ[μ] "././Mathport/Syntax/Translate/Basic.lean:813:47: unsupported (impossible)" :=
+  Ioc_ae_eq_Icc
 
 end NoAtoms
 
@@ -2428,7 +2461,7 @@ theorem exists_subset_measure_lt_top [SigmaFinite μ] {r : ℝ≥0∞} (hs : Mea
   refine' ⟨s ∩ spanning_sets μ n, hs.inter (measurable_spanning_sets _ _), inter_subset_left _ _, hn, _⟩
   exact (measure_mono (inter_subset_right _ _)).trans_lt (measure_spanning_sets_lt_top _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t' «expr ⊇ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t' «expr ⊇ » t)
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
 satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
 This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
@@ -2683,6 +2716,22 @@ theorem is_locally_finite_measure_of_is_finite_measure_on_compacts [TopologicalS
     rcases exists_compact_mem_nhds x with ⟨K, K_compact, K_mem⟩
     exact ⟨K, K_mem, K_compact.measure_lt_top⟩⟩
 
+theorem exists_pos_measure_of_cover [Encodable ι] {U : ι → Set α} (hU : (⋃ i, U i) = univ) (hμ : μ ≠ 0) :
+    ∃ i, 0 < μ (U i) := by
+  contrapose! hμ with H
+  rw [← measure_univ_eq_zero, ← hU]
+  exact measure_Union_null fun i => nonpos_iff_eq_zero.1 (H i)
+
+theorem exists_pos_preimage_ball [PseudoMetricSpace δ] (f : α → δ) (x : δ) (hμ : μ ≠ 0) :
+    ∃ n : ℕ, 0 < μ (f ⁻¹' Metric.Ball x n) :=
+  exists_pos_measure_of_cover
+    (by
+      rw [← preimage_Union, Metric.Union_ball_nat, preimage_univ])
+    hμ
+
+theorem exists_pos_ball [PseudoMetricSpace α] (x : α) (hμ : μ ≠ 0) : ∃ n : ℕ, 0 < μ (Metric.Ball x n) :=
+  exists_pos_preimage_ball id x hμ
+
 /-- If a set has zero measure in a neighborhood of each of its points, then it has zero measure
 in a second-countable space. -/
 theorem null_of_locally_null [TopologicalSpace α] [SecondCountableTopology α] (s : Set α)
@@ -2712,7 +2761,7 @@ of measurable sets, then they coincide on all sets in the σ-algebra generated b
 theorem ext_on_measurable_space_of_generate_finite {α} (m₀ : MeasurableSpace α) {μ ν : Measure α} [IsFiniteMeasure μ]
     (C : Set (Set α)) (hμν : ∀, ∀ s ∈ C, ∀, μ s = ν s) {m : MeasurableSpace α} (h : m ≤ m₀)
     (hA : m = MeasurableSpace.generateFrom C) (hC : IsPiSystem C) (h_univ : μ Set.Univ = ν Set.Univ) {s : Set α}
-    (hs : m.MeasurableSet' s) : μ s = ν s := by
+    (hs : measurable_set[m] s) : μ s = ν s := by
   have : is_finite_measure ν := by
     constructor
     rw [← h_univ]
@@ -3027,7 +3076,7 @@ namespace IsCompact
 
 variable [TopologicalSpace α] [MeasurableSpace α] {μ : Measureₓ α} {s : Set α}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is finite at `𝓝 x` for every `x ∈ s`, then `s` admits an open
 superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x ∈ s, ∀, μ.FiniteAtFilter (𝓝 x)) :
@@ -3049,7 +3098,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s) (hμ : ∀, ∀ x
     exact ⟨U, nhds_within_le_nhds (hUo.mem_nhds hx), U, subset.rfl, hUo, hU⟩
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (U «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (U «expr ⊇ » s)
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
 theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measureₓ α) [IsLocallyFiniteMeasure μ] :
@@ -3168,13 +3217,45 @@ theorem indicator_ae_eq_restrict (hs : MeasurableSet s) : indicatorₓ s f =ᵐ[
 theorem indicator_ae_eq_restrict_compl (hs : MeasurableSet s) : indicatorₓ s f =ᵐ[μ.restrict (sᶜ)] 0 :=
   piecewise_ae_eq_restrict_compl hs
 
+theorem indicator_ae_eq_of_restrict_compl_ae_eq_zero (hs : MeasurableSet s) (hf : f =ᵐ[μ.restrict (sᶜ)] 0) :
+    s.indicator f =ᵐ[μ] f := by
+  rw [Filter.EventuallyEq, ae_restrict_iff' hs.compl] at hf
+  filter_upwards [hf] with x hx
+  by_cases' hxs : x ∈ s
+  · simp only [hxs, Set.indicator_of_mem]
+    
+  · simp only [hx hxs, Pi.zero_apply, Set.indicator_apply_eq_zero, eq_self_iff_true, implies_true_iff]
+    
+
+theorem indicator_ae_eq_zero_of_restrict_ae_eq_zero (hs : MeasurableSet s) (hf : f =ᵐ[μ.restrict s] 0) :
+    s.indicator f =ᵐ[μ] 0 := by
+  rw [Filter.EventuallyEq, ae_restrict_iff' hs] at hf
+  filter_upwards [hf] with x hx
+  by_cases' hxs : x ∈ s
+  · simp only [hxs, hx hxs, Set.indicator_of_mem]
+    
+  · simp [hx, hxs]
+    
+
 theorem indicator_ae_eq_of_ae_eq_set (hst : s =ᵐ[μ] t) : s.indicator f =ᵐ[μ] t.indicator f :=
   piecewise_ae_eq_of_ae_eq_set hst
 
 theorem indicator_meas_zero (hs : μ s = 0) : indicatorₓ s f =ᵐ[μ] 0 :=
   indicator_empty' f ▸ indicator_ae_eq_of_ae_eq_set (ae_eq_empty.2 hs)
 
-variable [MeasurableSpace β]
+theorem ae_eq_restrict_iff_indicator_ae_eq {g : α → β} (hs : MeasurableSet s) :
+    f =ᵐ[μ.restrict s] g ↔ s.indicator f =ᵐ[μ] s.indicator g := by
+  rw [Filter.EventuallyEq, ae_restrict_iff' hs]
+  refine' ⟨fun h => _, fun h => _⟩ <;> filter_upwards [h] with x hx
+  · by_cases' hxs : x ∈ s
+    · simp [hxs, hx hxs]
+      
+    · simp [hxs]
+      
+    
+  · intro hxs
+    simpa [hxs] using hx
+    
 
 end IndicatorFunction
 

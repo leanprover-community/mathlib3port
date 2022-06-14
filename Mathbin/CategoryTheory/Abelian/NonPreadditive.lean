@@ -72,7 +72,7 @@ class NonPreadditiveAbelian extends HasZeroMorphisms C, NormalMonoCategory C, No
   [HasFiniteProducts : HasFiniteProducts C]
   [HasFiniteCoproducts : HasFiniteCoproducts C]
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option default_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option default_priority
 set_option default_priority 100
 
 attribute [instance] non_preadditive_abelian.has_zero_object

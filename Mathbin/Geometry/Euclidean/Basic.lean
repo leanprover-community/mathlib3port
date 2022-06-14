@@ -97,7 +97,7 @@ theorem IsConformalMap.preserves_angle {E F : Type _} [InnerProductSpace ℝ E] 
   field_simp
   have : c * c = ∥c∥ * ∥c∥ := by
     simp [Real.norm_eq_abs, abs_mul_abs_self]
-  convert congr_argₓ (fun x => x * ⟪u, v⟫ * ∥u∥ * ∥v∥) this using 1 <;> ring
+  convert congr_arg (fun x => x * ⟪u, v⟫ * ∥u∥ * ∥v∥) this using 1 <;> ring
 
 /-- If a real differentiable map `f` is conformal at a point `x`,
     then it preserves the angles at that point. -/

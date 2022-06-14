@@ -71,7 +71,7 @@ theorem IsSymm.map {A : Matrix n n α} (h : A.IsSymm) (f : α → β) : (A.map f
 
 @[simp]
 theorem IsSymm.transpose {A : Matrix n n α} (h : A.IsSymm) : Aᵀ.IsSymm :=
-  congr_argₓ _ h
+  congr_arg _ h
 
 @[simp]
 theorem IsSymm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : Aᴴ.IsSymm :=
@@ -79,7 +79,7 @@ theorem IsSymm.conj_transpose [HasStar α] {A : Matrix n n α} (h : A.IsSymm) : 
 
 @[simp]
 theorem IsSymm.neg [Neg α] {A : Matrix n n α} (h : A.IsSymm) : (-A).IsSymm :=
-  (transpose_neg _).trans (congr_argₓ _ h)
+  (transpose_neg _).trans (congr_arg _ h)
 
 @[simp]
 theorem IsSymm.add {A B : Matrix n n α} [Add α] (hA : A.IsSymm) (hB : B.IsSymm) : (A + B).IsSymm :=
@@ -91,7 +91,7 @@ theorem IsSymm.sub {A B : Matrix n n α} [Sub α] (hA : A.IsSymm) (hB : B.IsSymm
 
 @[simp]
 theorem IsSymm.smul [HasScalar R α] {A : Matrix n n α} (h : A.IsSymm) (k : R) : (k • A).IsSymm :=
-  (transpose_smul _ _).trans (congr_argₓ _ h)
+  (transpose_smul _ _).trans (congr_arg _ h)
 
 @[simp]
 theorem IsSymm.minor {A : Matrix n n α} (h : A.IsSymm) (f : m → n) : (A.minor f f).IsSymm :=
@@ -116,7 +116,7 @@ theorem IsSymm.from_blocks {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n
 /-- This is the `iff` version of `matrix.is_symm.from_blocks`. -/
 theorem is_symm_from_blocks_iff {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α} {D : Matrix n n α} :
     (A.fromBlocks B C D).IsSymm ↔ A.IsSymm ∧ Bᵀ = C ∧ Cᵀ = B ∧ D.IsSymm :=
-  ⟨fun h => ⟨congr_argₓ toBlocks₁₁ h, congr_argₓ toBlocks₂₁ h, congr_argₓ toBlocks₁₂ h, congr_argₓ toBlocks₂₂ h⟩,
+  ⟨fun h => ⟨congr_arg toBlocks₁₁ h, congr_arg toBlocks₂₁ h, congr_arg toBlocks₁₂ h, congr_arg toBlocks₂₂ h⟩,
     fun ⟨hA, hBC, hCB, hD⟩ => IsSymm.from_blocks hA hBC hD⟩
 
 end Matrix

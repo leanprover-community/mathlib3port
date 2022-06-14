@@ -93,7 +93,7 @@ a better `ext` lemma than `tensor_product.algebra_tensor_module.ext` below.
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem curry_injective : Function.Injective (curry : (M ⊗ N →ₗ[A] P) → M →ₗ[A] N →ₗ[R] P) := fun x y h =>
-  LinearMap.restrict_scalars_injective R <| curry_injective <| (congr_argₓ (LinearMap.restrictScalars R) h : _)
+  LinearMap.restrict_scalars_injective R <| curry_injective <| (congr_arg (LinearMap.restrictScalars R) h : _)
 
 theorem ext {g h : M ⊗[R] N →ₗ[A] P} (H : ∀ x y, g (x ⊗ₜ y) = h (x ⊗ₜ y)) : g = h :=
   curry_injective <| LinearMap.ext₂ H

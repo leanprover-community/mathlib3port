@@ -105,7 +105,7 @@ def HomotopyRel.prod (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel g₀ g₁ S)
       intro t x hx
       have hF := F.prop' t x hx
       have hG := G.prop' t x hx
-      simp only [coe_mk, prod_eval, Prod.mk.inj_iffₓ, homotopy.prod] at hF hG⊢
+      simp only [coe_mk, prod_eval, Prod.mk.inj_iff, homotopy.prod] at hF hG⊢
       exact ⟨⟨hF.1, hG.1⟩, ⟨hF.2, hG.2⟩⟩ }
 
 end Prod

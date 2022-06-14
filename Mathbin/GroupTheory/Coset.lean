@@ -298,13 +298,13 @@ instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s
 def quotientRightRelEquivQuotientLeftRel : Quotientₓ (QuotientGroup.rightRel s) ≃ α ⧸ s where
   toFun :=
     Quotientₓ.map' (fun g => g⁻¹) fun a b h =>
-      (congr_argₓ (· ∈ s)
+      (congr_arg (· ∈ s)
             (by
               group)).mp
         (s.inv_mem h)
   invFun :=
     Quotientₓ.map' (fun g => g⁻¹) fun a b h =>
-      (congr_argₓ (· ∈ s)
+      (congr_arg (· ∈ s)
             (by
               group)).mp
         (s.inv_mem h)
@@ -478,7 +478,7 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α) (hf : Function
     ⟨a.map' id fun b c h => h_le h,
       a.map' (fun g : α => ⟨(f (Quotientₓ.mk' g))⁻¹ * g, Quotientₓ.exact' (hf g)⟩) fun b c h => by
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
-        have key : f b = f c := congr_argₓ f (Quotientₓ.sound' (h_le h))
+        have key : f b = f c := congr_arg f (Quotientₓ.sound' (h_le h))
         rwa [key, mul_inv_rev, inv_invₓ, mul_assoc, mul_inv_cancel_left]⟩
   invFun := fun a =>
     a.2.map' (fun b => f a.1 * b) fun b c h => by

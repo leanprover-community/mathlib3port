@@ -78,7 +78,7 @@ See <https://stacks.math.columbia.edu/tag/001P>.
 -/
 instance yoneda_faithful : Faithful (yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁) where
   map_injective' := fun X Y f g p => by
-    convert congr_funₓ (congr_app p (op X)) (𝟙 X) <;> dsimp' <;> simp
+    convert congr_fun (congr_app p (op X)) (𝟙 X) <;> dsimp' <;> simp
 
 /-- Extensionality via Yoneda. The typical usage would be
 ```
@@ -115,8 +115,8 @@ instance coyonedaFull : Full (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
 
 instance coyoneda_faithful : Faithful (coyoneda : Cᵒᵖ ⥤ C ⥤ Type v₁) where
   map_injective' := fun X Y f g p => by
-    have t := congr_funₓ (congr_app p X.unop) (𝟙 _)
-    simpa using congr_argₓ Quiver.Hom.op t
+    have t := congr_fun (congr_app p X.unop) (𝟙 _)
+    simpa using congr_arg Quiver.Hom.op t
 
 /-- If `coyoneda.map f` is an isomorphism, so was `f`.
 -/

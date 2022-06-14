@@ -5,6 +5,7 @@ Authors: Michael Jendrusch, Scott Morrison
 -/
 import Mathbin.CategoryTheory.Monoidal.OfChosenFiniteProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Types
+import Mathbin.Logic.Equiv.Fin
 
 /-!
 # The category of types is a symmetric monoidal category
@@ -91,6 +92,16 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] : LaxM
       dsimp'
       simp only [category.assoc]
       rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
+
+noncomputable section
+
+/-- If `F` is a monoidal functor out of `Type`, it takes the (n+1)st cartesian power
+of a type to the image of that type, tensored with the image of the nth cartesian power. -/
+-- We don't yet have an API for tensor products indexed by finite ordered types,
+-- but it would be nice to state how monoidal functors preserve these.
+def MonoidalFunctor.mapPi {C : Type _} [Category C] [MonoidalCategory C] (F : MonoidalFunctor (Type _) C) (n : ℕ)
+    (β : Type _) : F.obj (Finₓ (n + 1) → β) ≅ F.obj β ⊗ F.obj (Finₓ n → β) :=
+  Functor.mapIso _ (Equivₓ.piFinSucc n β).toIso ≪≫ (asIso (F.μ β (Finₓ n → β))).symm
 
 end CategoryTheory
 

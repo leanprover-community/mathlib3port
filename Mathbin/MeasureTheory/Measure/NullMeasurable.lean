@@ -205,7 +205,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)] 
     NullMeasurableSet (insert a s) μ :=
   hs.insert a
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊇ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊇ » s)
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
@@ -224,7 +224,7 @@ theorem to_measurable_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ s =�
 theorem compl_to_measurable_compl_ae_eq (h : NullMeasurableSet s μ) : ToMeasurable μ (sᶜ)ᶜ =ᵐ[μ] s := by
   simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨ToMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_to_measurable _ _, (measurable_set_to_measurable _ _).Compl,
@@ -278,7 +278,7 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) : �
           (measure_mono <| diff_subset_diff_left hsub)_ = μ (s' ∩ t ∪ s' \ t) :=
         (measure_union₀_aux (hs'm.inter ht) (hs'm.diff ht) <|
             (@disjoint_inf_sdiff _ s' t _).AeDisjoint).symm _ = μ s' :=
-        congr_argₓ μ (inter_union_diff _ _)_ = μ s := hs'
+        congr_arg μ (inter_union_diff _ _)_ = μ s := hs'
     
   · calc μ s = μ (s ∩ t ∪ s \ t) := by
         rw [inter_union_diff]_ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
@@ -311,7 +311,7 @@ theorem null_measurable_set_insert {a : α} {s : Set α} : NullMeasurableSet (in
 theorem null_measurable_set_eq {a : α} : NullMeasurableSet { x | x = a } μ :=
   null_measurable_set_singleton a
 
-protected theorem _root_.set.finite.null_measurable_set (hs : Finite s) : NullMeasurableSet s μ :=
+protected theorem _root_.set.finite.null_measurable_set (hs : s.Finite) : NullMeasurableSet s μ :=
   Finite.measurable_set hs
 
 protected theorem _root_.finset.null_measurable_set (s : Finset α) : NullMeasurableSet (↑s) μ :=
@@ -319,7 +319,7 @@ protected theorem _root_.finset.null_measurable_set (s : Finset α) : NullMeasur
 
 end MeasurableSingletonClass
 
-theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Set ι} (hs : Finite s)
+theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   Finite.measurable_set_bUnion hs h
 
@@ -327,11 +327,11 @@ theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finset
     (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
   Finset.measurable_set_bUnion s h
 
-theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : Finite s)
+theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : s.Finite)
     (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) : NullMeasurableSet (⋃₀s) μ :=
   Finite.measurable_set_sUnion hs h
 
-theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Set ι} (hs : Finite s)
+theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   Finite.measurable_set_bInter hs h
 
@@ -339,7 +339,7 @@ theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finset
     (h : ∀, ∀ b ∈ s, ∀, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
   s.finite_to_set.null_measurable_set_bInter h
 
-theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : Finite s)
+theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : s.Finite)
     (h : ∀, ∀ t ∈ s, ∀, NullMeasurableSet t μ) : NullMeasurableSet (⋂₀ s) μ :=
   NullMeasurableSet.sInter hs.Countable h
 

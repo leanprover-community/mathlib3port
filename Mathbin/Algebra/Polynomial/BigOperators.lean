@@ -151,7 +151,7 @@ theorem leading_coeff_multiset_prod' (h : (t.map leadingCoeff).Prod ≠ 0) :
   induction' t using Multiset.induction_on with a t ih
   · simp
     
-  simp only [map_cons, Multiset.prod_cons] at h⊢
+  simp only [Multiset.map_cons, Multiset.prod_cons] at h⊢
   rw [Polynomial.leading_coeff_mul'] <;>
     · rwa [ih]
       apply right_ne_zero_of_mul h
@@ -182,7 +182,7 @@ theorem nat_degree_multiset_prod' (h : (t.map fun f => leadingCoeff f).Prod ≠ 
   refine' Multiset.induction_on t _ fun a t ih ht => _
   · simp
     
-  rw [map_cons, Multiset.prod_cons] at ht⊢
+  rw [Multiset.map_cons, Multiset.prod_cons] at ht⊢
   rw [Multiset.sum_cons, Polynomial.nat_degree_mul', ih]
   · apply right_ne_zero_of_mul ht
     
@@ -246,7 +246,7 @@ theorem coeff_zero_multiset_prod : t.Prod.coeff 0 = (t.map fun f => coeff f 0).P
   refine' Multiset.induction_on t _ fun a t ht => _
   · simp
     
-  rw [Multiset.prod_cons, map_cons, Multiset.prod_cons, Polynomial.mul_coeff_zero, ht]
+  rw [Multiset.prod_cons, Multiset.map_cons, Multiset.prod_cons, Polynomial.mul_coeff_zero, ht]
 
 theorem coeff_zero_prod : (∏ i in s, f i).coeff 0 = ∏ i in s, (f i).coeff 0 := by
   simpa using coeff_zero_multiset_prod (s.1.map f)

@@ -214,7 +214,7 @@ a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Finₓ (c.length + 1) ↪o Finₓ (n + 1) :=
   (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_leₓ (c.size_up_to_le i)⟩) <|
-    Finₓ.strict_mono_iff_lt_succ.2 fun i hi => c.size_up_to_strict_mono <| lt_of_add_lt_add_right hi
+    Finₓ.strict_mono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
 
 @[simp]
 theorem boundary_zero : c.boundary 0 = 0 := by

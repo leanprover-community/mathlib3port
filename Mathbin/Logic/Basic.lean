@@ -218,7 +218,7 @@ theorem eq_iff_eq_cancel_right {a b : α} : (∀ {c}, a = c ↔ b = c) ↔ a = b
     rw [h], fun h a => by
     rw [h]⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`out] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`out] []
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 
@@ -1015,13 +1015,13 @@ theorem ball_cond_comm {α} {s : α → Prop} {p : α → α → Prop} :
     (∀ a, s a → ∀ b, s b → p a b) ↔ ∀ a b, s a → s b → p a b :=
   ⟨fun h a b ha hb => h a ha b hb, fun h a ha b hb => h a b ha hb⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (a b «expr ∈ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (a b «expr ∈ » s)
 theorem ball_mem_comm {α β} [HasMem α β] {s : β} {p : α → α → Prop} :
     (∀ a b _ : a ∈ s _ : b ∈ s, p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
 
 theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y := fun w : x = y =>
-  h (congr_argₓ f w)
+  h (congr_arg f w)
 
 theorem eq_equivalence : Equivalenceₓ (@Eq α) :=
   ⟨Eq.refl, @Eq.symm _, @Eq.trans _⟩
@@ -1046,24 +1046,24 @@ theorem cast_cast : ∀ {α β γ : Sort _} ha : α = β hb : β = γ a : α, ca
   | _, _, _, rfl, rfl, a => rfl
 
 @[simp]
-theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_argₓ f h :=
+theorem congr_refl_left {α β : Sort _} (f : α → β) {a b : α} (h : a = b) : congr (Eq.refl f) h = congr_arg f h :=
   rfl
 
 @[simp]
-theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_funₓ h a :=
+theorem congr_refl_right {α β : Sort _} {f g : α → β} (h : f = g) (a : α) : congr h (Eq.refl a) = congr_fun h a :=
   rfl
 
 @[simp]
-theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_argₓ f (Eq.refl a) = Eq.refl (f a) :=
+theorem congr_arg_refl {α β : Sort _} (f : α → β) (a : α) : congr_arg f (Eq.refl a) = Eq.refl (f a) :=
   rfl
 
 @[simp]
-theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_funₓ (Eq.refl f) a = Eq.refl (f a) :=
+theorem congr_fun_rfl {α β : Sort _} (f : α → β) (a : α) : congr_fun (Eq.refl f) a = Eq.refl (f a) :=
   rfl
 
 @[simp]
 theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : α} (p : a = a') (b : β) :
-    congr_funₓ (congr_argₓ f p) b = congr_argₓ (fun a => f a b) p :=
+    congr_fun (congr_arg f p) b = congr_arg (fun a => f a b) p :=
   rfl
 
 theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} e : α = β h₂ : cast e a = a', HEq a a'
@@ -1095,10 +1095,10 @@ theorem congr_arg2ₓ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y 
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _}
 
 theorem congr_fun₂ {f g : ∀ a b, γ a b} (h : f = g) (a : α) (b : β a) : f a b = g a b :=
-  congr_funₓ (congr_funₓ h _) _
+  congr_fun (congr_fun h _) _
 
 theorem congr_fun₃ {f g : ∀ a b c, δ a b c} (h : f = g) (a : α) (b : β a) (c : γ a b) : f a b c = g a b c :=
-  congr_fun₂ (congr_funₓ h _) _ _
+  congr_fun₂ (congr_fun h _) _ _
 
 theorem funext₂ {f g : ∀ a, β a → Prop} (h : ∀ a b, f a b = g a b) : f = g :=
   funext fun _ => funext <| h _
@@ -1118,6 +1118,9 @@ variable {α : Sort _}
 section Dependent
 
 variable {β : α → Sort _} {γ : ∀ a, β a → Sort _} {δ : ∀ a b, γ a b → Sort _} {ε : ∀ a b c, δ a b c → Sort _}
+
+theorem pi_congr {β' : α → Sort _} (h : ∀ a, β a = β' a) : (∀ a, β a) = ∀ a, β' a :=
+  (funext h : β = β') ▸ rfl
 
 theorem forall₂_congrₓ {p q : ∀ a, β a → Prop} (h : ∀ a b, p a b ↔ q a b) : (∀ a b, p a b) ↔ ∀ a b, q a b :=
   forall_congrₓ fun a => forall_congrₓ <| h a
@@ -1311,7 +1314,7 @@ theorem forall_eq {a' : α} : (∀ a, a = a' → p a) ↔ p a' :=
 theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' := by
   simp [@eq_comm _ a']
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ≠ » a)
 theorem and_forall_ne (a : α) : (p a ∧ ∀ b _ : b ≠ a, p b) ↔ ∀ b, p b := by
   simp only [← @forall_eq _ p a, ← forall_and_distrib, ← or_imp_distrib, Classical.em, forall_const]
 
@@ -1417,6 +1420,10 @@ theorem exists_eq_right' {a' : α} : (∃ a, p a ∧ a' = a) ↔ p a' := by
 
 theorem exists_comm {p : α → β → Prop} : (∃ a b, p a b) ↔ ∃ b a, p a b :=
   ⟨fun ⟨a, b, h⟩ => ⟨b, a, h⟩, fun ⟨b, a, h⟩ => ⟨a, b, h⟩⟩
+
+theorem exists₂_comm {ι₁ ι₂ : Sort _} {κ₁ : ι₁ → Sort _} {κ₂ : ι₂ → Sort _} {p : ∀ i₁, κ₁ i₁ → ∀ i₂, κ₂ i₂ → Prop} :
+    (∃ i₁ j₁ i₂ j₂, p i₁ j₁ i₂ j₂) ↔ ∃ i₂ j₂ i₁ j₁, p i₁ j₁ i₂ j₂ := by
+  simp only [@exists_comm (κ₁ _), @exists_comm ι₁]
 
 theorem And.exists {p q : Prop} {f : p ∧ q → Prop} : (∃ h, f h) ↔ ∃ hp hq, f ⟨hp, hq⟩ :=
   ⟨fun ⟨h, H⟩ => ⟨h.1, h.2, H⟩, fun ⟨hp, hq, H⟩ => ⟨⟨hp, hq⟩, H⟩⟩

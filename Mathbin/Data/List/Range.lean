@@ -31,7 +31,7 @@ variable {α : Type u}
 @[simp]
 theorem length_range' : ∀ s n : ℕ, length (range' s n) = n
   | s, 0 => rfl
-  | s, n + 1 => congr_argₓ succ (length_range' _ _)
+  | s, n + 1 => congr_arg succ (length_range' _ _)
 
 @[simp]
 theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by
@@ -49,12 +49,12 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
 
 theorem map_add_range' a : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
-  | s, n + 1 => congr_argₓ (cons _) (map_add_range' (s + 1) n)
+  | s, n + 1 => congr_arg (cons _) (map_add_range' (s + 1) n)
 
 theorem map_sub_range' a : ∀ s n : ℕ h : a ≤ s, map (fun x => x - a) (range' s n) = range' (s - a) n
   | s, 0, _ => rfl
   | s, n + 1, h => by
-    convert congr_argₓ (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_leₓ h))
+    convert congr_arg (cons (s - a)) (map_sub_range' (s + 1) n (Nat.le_succ_of_leₓ h))
     rw [Nat.succ_subₓ h]
     rfl
 
@@ -265,7 +265,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
 @[simp]
 theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enumFrom n l) = range' n l.length
   | n, [] => rfl
-  | n, a :: l => congr_argₓ (cons _) (enum_from_map_fst _ _)
+  | n, a :: l => congr_arg (cons _) (enum_from_map_fst _ _)
 
 @[simp]
 theorem enum_map_fst (l : List α) : map Prod.fst (enum l) = range l.length := by

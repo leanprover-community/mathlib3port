@@ -45,7 +45,7 @@ restate_axiom full.witness'
 
 attribute [simp] full.witness
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`map_injective'] []
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
@@ -65,7 +65,7 @@ theorem map_injective (F : C ⥤ D) [Faithful F] : Function.Injective <| @Functo
   Faithful.map_injective F
 
 theorem map_iso_injective (F : C ⥤ D) [Faithful F] : Function.Injective <| @Functor.mapIso _ _ _ _ F X Y := fun i j h =>
-  Iso.ext (map_injective F (congr_argₓ Iso.hom h : _))
+  Iso.ext (map_injective F (congr_arg Iso.hom h : _))
 
 /-- The specified preimage of a morphism under a full functor. -/
 def preimage (F : C ⥤ D) [Full F] (f : F.obj X ⟶ F.obj Y) : X ⟶ Y :=

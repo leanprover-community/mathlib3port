@@ -32,7 +32,7 @@ def dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : Finset (Π₀ i, α i)
     ⟨fun f => (Dfinsupp.mk s) fun i => f i i.2, by
       refine' (mk_injective _).comp fun f g h => _
       ext i hi
-      convert congr_funₓ h ⟨i, hi⟩⟩
+      convert congr_fun h ⟨i, hi⟩⟩
 
 @[simp]
 theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) : (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
@@ -88,7 +88,7 @@ variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 /-- Pointwise `finset.singleton` bundled as a `dfinsupp`. -/
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i) :=
   ⟦{ toFun := fun i => {f i}, preSupport := f.support.1,
-      zero := fun i => (ne_or_eq (f i) 0).imp mem_support_iff.2 (congr_argₓ _) }⟧
+      zero := fun i => (ne_or_eq (f i) 0).imp mem_support_iff.2 (congr_arg _) }⟧
 
 theorem mem_singleton_apply_iff : a ∈ f.singleton i ↔ a = f i :=
   mem_singleton

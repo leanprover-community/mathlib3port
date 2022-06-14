@@ -151,7 +151,7 @@ Fiber bundle, topological bundle, local trivialization, structure group
 
 variable {ι : Type _} {B : Type _} {F : Type _}
 
-open TopologicalSpace Filter Set
+open TopologicalSpace Filter Set Bundle
 
 open TopologicalSpace Classical
 
@@ -463,18 +463,13 @@ namespace TopologicalFiberBundle.Trivialization
 that sends `p : Z` to `((e p).1, h (e p).2)`. -/
 def transFiberHomeomorph {F' : Type _} [TopologicalSpace F'] (e : Trivialization F proj) (h : F ≃ₜ F') :
     Trivialization F' proj where
-  toLocalHomeomorph := e.toLocalHomeomorph.trans ((Homeomorph.refl _).prodCongr h).toLocalHomeomorph
+  toLocalHomeomorph := e.toLocalHomeomorph.transHomeomorph <| (Homeomorph.refl _).prodCongr h
   BaseSet := e.BaseSet
   open_base_set := e.open_base_set
-  source_eq := by
-    simp [e.source_eq]
+  source_eq := e.source_eq
   target_eq := by
-    ext
-    simp [e.target_eq]
-  proj_to_fun := fun p hp => by
-    have : p ∈ e.Source := by
-      simpa using hp
-    simp [this]
+    simp [e.target_eq, prod_univ, preimage_preimage]
+  proj_to_fun := e.proj_to_fun
 
 @[simp]
 theorem trans_fiber_homeomorph_apply {F' : Type _} [TopologicalSpace F'] (e : Trivialization F proj) (h : F ≃ₜ F')
@@ -780,7 +775,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
   obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.base_set :=
     (mem_nhds_within_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
       (mem_nhds_within_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
-  have had : Ico a d ⊆ ec.base_set := subset.trans Ico_subset_Icc_union_Ico (union_subset hec hd)
+  have had : Ico a d ⊆ ec.base_set := Ico_subset_Icc_union_Ico.trans (union_subset hec hd)
   by_cases' he : Disjoint (Iio d) (Ioi c)
   · /- If `(c, d) = ∅`, then let `ed` be a trivialization of `proj` over a neighborhood of `d`.
         Then the disjoint union of `ec` restricted to `(-∞, d)` and `ed` restricted to `(c, ∞)` is
@@ -799,7 +794,7 @@ theorem _root_.is_topological_fiber_bundle.exists_trivialization_Icc_subset [Con
     rw [disjoint_left] at he
     push_neg  at he
     rcases he with ⟨d', hdd' : d' < d, hd'c⟩
-    exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, subset.trans (Icc_subset_Ico_right hdd') had⟩
+    exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
     
 
 end Piecewise
@@ -815,12 +810,13 @@ namespace Bundle
 
 variable (E : B → Type _)
 
-attribute [mfld_simps] proj total_space_mk coe_fst coe_snd_map_apply coe_snd_map_smul
+attribute [mfld_simps]
+  total_space.proj total_space_mk coe_fst coe_snd coe_snd_map_apply coe_snd_map_smul total_space.mk_cast
 
 instance [I : TopologicalSpace F] : ∀ x : B, TopologicalSpace (Trivial B F x) := fun x => I
 
 instance [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSpace (TotalSpace (Trivial B F)) :=
-  TopologicalSpace.induced (proj (Trivial B F)) t₁⊓TopologicalSpace.induced (Trivial.projSnd B F) t₂
+  induced TotalSpace.proj t₁⊓induced (Trivial.projSnd B F) t₂
 
 end Bundle
 
@@ -890,7 +886,7 @@ def TotalSpace :=
 /-- The projection from the total space of a topological fiber bundle core, on its base. -/
 @[reducible, simp, mfld_simps]
 def proj : Z.TotalSpace → B :=
-  Bundle.proj Z.Fiber
+  Bundle.TotalSpace.proj
 
 /-- Local homeomorphism version of the trivialization change. -/
 def trivChange (i j : ι) : LocalHomeomorph (B × F) (B × F) where
@@ -989,9 +985,9 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
     rfl
     
   · rintro ⟨x, v⟩ hx
-    simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_andₓ, Prod.mk.inj_iffₓ,
+    simp only [triv_change, local_triv_as_local_equiv, LocalEquiv.symm, true_andₓ, Prod.mk.inj_iff,
       prod_mk_mem_set_prod_eq, LocalEquiv.trans_source, mem_inter_eq, and_trueₓ, mem_preimage, proj, mem_univ,
-      LocalEquiv.coe_mk, eq_self_iff_true, LocalEquiv.coe_trans, Bundle.proj] at hx⊢
+      LocalEquiv.coe_mk, eq_self_iff_true, LocalEquiv.coe_trans, total_space.proj] at hx⊢
     simp only [Z.coord_change_comp, hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
     
 
@@ -1139,11 +1135,9 @@ theorem mem_local_triv_at_base_set (b : B) : b ∈ (Z.localTrivAt b).BaseSet := 
   rw [local_triv_at, ← base_set_at]
   exact Z.mem_base_set_at b
 
-open Bundle
-
 /-- The inclusion of a fiber into the total space is a continuous map. -/
 @[continuity]
-theorem continuous_total_space_mk (b : B) : Continuous fun a => totalSpaceMk Z.Fiber b a := by
+theorem continuous_total_space_mk (b : B) : Continuous (totalSpaceMk b : Z.Fiber b → Bundle.TotalSpace Z.Fiber) := by
   rw [continuous_iff_le_induced, TopologicalFiberBundleCore.toTopologicalSpace]
   apply le_induced_generate_from
   simp only [total_space_mk, mem_Union, mem_singleton_iff, local_triv_as_local_equiv_source,
@@ -1152,7 +1146,7 @@ theorem continuous_total_space_mk (b : B) : Continuous fun a => totalSpaceMk Z.F
   rw [← (Z.local_triv i).source_inter_preimage_target_inter t, preimage_inter, ← preimage_comp,
     trivialization.source_eq]
   apply IsOpen.inter
-  · simp only [Bundle.proj, proj, ← preimage_comp]
+  · simp only [total_space.proj, proj, ← preimage_comp]
     by_cases' b ∈ (Z.local_triv i).BaseSet
     · rw [preimage_const_of_mem h]
       exact is_open_univ
@@ -1180,7 +1174,7 @@ variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z �
 
 open TopologicalFiberBundle
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (e e' «expr ∈ » pretrivialization_atlas)
 /-- This structure permits to define a fiber bundle when trivializations are given as local
 equivalences but there is not yet a topology on the total space. The total space is hence given a
 topology in such a way that there is a fiber bundle structure for which the local equivalences
@@ -1239,7 +1233,7 @@ def trivializationOfMemPretrivializationAtlas (he : e ∈ a.PretrivializationAtl
       refine' is_open_supr_iff.mpr fun he' => _
       rw [is_open_coinduced, is_open_induced_iff]
       obtain ⟨u, hu1, hu2⟩ := continuous_on_iff'.mp (a.continuous_triv_change _ he _ he') s hs
-      have hu3 := congr_argₓ (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
+      have hu3 := congr_arg (fun s => (fun x : e'.target => (x : B × F)) ⁻¹' s) hu2
       simp only [Subtype.coe_preimage_self, preimage_inter, univ_inter] at hu3
       refine'
         ⟨u ∩ e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.source, _, by

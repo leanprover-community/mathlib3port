@@ -1136,8 +1136,8 @@ theorem ennreal_to_measure {μ : VectorMeasure α ℝ≥0∞} : (∀ ⦃s : Set 
 
 end AbsolutelyContinuous
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
 /-- Two vector measures `v` and `w` are said to be mutually singular if there exists a measurable
 set `s`, such that for all `t ⊆ s`, `v t = 0` and for all `t ⊆ sᶜ`, `w t = 0`.
 
@@ -1155,8 +1155,8 @@ namespace MutuallySingular
 
 variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » «expr ᶜ»(s))
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ t _ : t ⊆ s, MeasurableSet t → v t = 0)
     (h₂ : ∀ t _ : t ⊆ sᶜ, MeasurableSet t → w t = 0) : v ⊥ᵥ w := by
   refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> by_cases' ht : MeasurableSet t

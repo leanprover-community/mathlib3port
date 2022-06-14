@@ -633,7 +633,7 @@ theorem single_mul_coeff_add [NonUnitalNonAssocSemiringₓ R] {r : R} {x : HahnS
   trans ∑ ij : Γ × Γ in {(b, a)}, (single b r).coeff ij.fst * x.coeff ij.snd
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
-    simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
+    simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
     constructor
     · rintro ⟨h1, rfl, h2⟩
       rw [add_commₓ] at h1
@@ -666,7 +666,7 @@ theorem mul_single_coeff_add [NonUnitalNonAssocSemiringₓ R] {r : R} {x : HahnS
   trans ∑ ij : Γ × Γ in {(a, b)}, x.coeff ij.fst * (single b r).coeff ij.snd
   · apply sum_congr _ fun _ _ => rfl
     ext ⟨a1, a2⟩
-    simp only [Set.mem_singleton_iff, Prod.mk.inj_iffₓ, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
+    simp only [Set.mem_singleton_iff, Prod.mk.inj_iff, mem_add_antidiagonal, mem_singleton, Set.mem_set_of_eq]
     constructor
     · rintro ⟨h1, h2, rfl⟩
       refine' ⟨add_right_cancelₓ h1, rfl⟩
@@ -726,15 +726,15 @@ private theorem mul_assoc' [NonUnitalSemiringₓ R] (x y z : HahnSeries Γ R) : 
     refine' ⟨⟨(add_assocₓ _ _ _).symm, nx, Set.add_mem_add ny nz⟩, ny, nz⟩
     
   · rintro ⟨⟨i1, j1⟩, ⟨k1, l1⟩⟩ ⟨⟨i2, j2⟩, ⟨k2, l2⟩⟩ H1 H2 H3 H4 H5
-    simp only [Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Ne.def, Set.image_prod, mem_sigma,
+    simp only [Set.image2_add, Prod.mk.inj_iff, mem_add_antidiagonal, Ne.def, Set.image_prod, mem_sigma,
       Set.mem_set_of_eq, heq_iff_eq] at H1 H3 H5
     obtain ⟨⟨rfl, H⟩, rfl, rfl⟩ := H5
-    simp only [and_trueₓ, Prod.mk.inj_iffₓ, eq_self_iff_true, heq_iff_eq]
+    simp only [and_trueₓ, Prod.mk.inj_iff, eq_self_iff_true, heq_iff_eq]
     exact add_right_cancelₓ (H1.1.1.trans H3.1.1.symm)
     
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H1 H2
-    simp only [exists_prop, Set.image2_add, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Sigma.exists, Ne.def,
-      Set.image_prod, mem_sigma, Set.mem_set_of_eq, heq_iff_eq, Prod.exists] at H1 H2⊢
+    simp only [exists_prop, Set.image2_add, Prod.mk.inj_iff, mem_add_antidiagonal, Sigma.exists, Ne.def, Set.image_prod,
+      mem_sigma, Set.mem_set_of_eq, heq_iff_eq, Prod.exists] at H1 H2⊢
     obtain ⟨⟨rfl, nx, H⟩, rfl, ny, nz⟩ := H1
     exact
       ⟨i + k, l, i, k, ⟨⟨add_assocₓ _ _ _, Set.add_mem_add nx ny, nz⟩, rfl, nx, ny⟩, fun con =>
@@ -949,7 +949,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       
     apply sum_subset
     · rintro ⟨i, j⟩ hij
-      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Ne.def, Function.Embedding.coe_prod_map,
+      simp only [exists_prop, mem_map, Prod.mk.inj_iff, mem_add_antidiagonal, Ne.def, Function.Embedding.coe_prod_map,
         mem_support, Prod.exists] at hij
       obtain ⟨i, j, ⟨rfl, hx, hy⟩, rfl, rfl⟩ := hij
       simp [hx, hy, hf]
@@ -958,7 +958,7 @@ theorem emb_domain_mul [NonUnitalNonAssocSemiringₓ R] (f : Γ ↪o Γ') (hf : 
       contrapose! h2
       obtain ⟨i, hi, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).1
       obtain ⟨j, hj, rfl⟩ := support_emb_domain_subset (ne_zero_and_ne_zero_of_mul h2).2
-      simp only [exists_prop, mem_map, Prod.mk.inj_iffₓ, mem_add_antidiagonal, Ne.def, Function.Embedding.coe_prod_map,
+      simp only [exists_prop, mem_map, Prod.mk.inj_iff, mem_add_antidiagonal, Ne.def, Function.Embedding.coe_prod_map,
         mem_support, Prod.exists]
       simp only [mem_add_antidiagonal, emb_domain_coeff, Ne.def, mem_support, ← hf] at h1
       exact ⟨i, j, ⟨f.injective h1.1, h1.2⟩, rfl⟩
@@ -1481,7 +1481,7 @@ instance : HasScalar (HahnSeries Γ R) (SummableFamily Γ R α) where
         exact fun a ha => (Set.add_subset_add (Set.Subset.refl _) (Set.subset_Union _ a)) ha,
       finite_co_support' := fun g => by
         refine'
-          ((add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g).finite_to_set.bUnion fun ij hij => _).Subset
+          ((add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g).finite_to_set.bUnion' fun ij hij => _).Subset
             fun a ha => _
         · exact fun ij hij => Function.Support fun a => (s a).coeff ij.2
           

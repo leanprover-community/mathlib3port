@@ -69,13 +69,15 @@ along with some machinery
 -/
 
 
+open Function
+
 open Nat
 
 universe u v
 
 variable {α β γ : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`elems] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`elems] []
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
@@ -86,7 +88,7 @@ class Fintype (α : Type _) where
 
 namespace Finset
 
-variable [Fintype α]
+variable [Fintype α] {s : Finset α}
 
 /-- `univ` is the universal finite set of type `finset α` implied from
   the assumption `fintype α`. -/
@@ -101,12 +103,19 @@ theorem mem_univ (x : α) : x ∈ (univ : Finset α) :=
 theorem mem_univ_val : ∀ x, x ∈ (univ : Finset α).1 :=
   mem_univ
 
-theorem eq_univ_iff_forall {s : Finset α} : s = univ ↔ ∀ x, x ∈ s := by
+theorem eq_univ_iff_forall : s = univ ↔ ∀ x, x ∈ s := by
   simp [ext_iff]
+
+theorem eq_univ_of_forall : (∀ x, x ∈ s) → s = univ :=
+  eq_univ_iff_forall.2
 
 @[simp]
 theorem coe_univ : ↑(univ : Finset α) = (Set.Univ : Set α) := by
   ext <;> simp
+
+@[simp, norm_cast]
+theorem coe_eq_univ : (s : Set α) = Set.Univ ↔ s = univ := by
+  rw [← coe_univ, coe_inj]
 
 theorem univ_nonempty_iff : (univ : Finset α).Nonempty ↔ Nonempty α := by
   rw [← coe_nonempty, coe_univ, Set.nonempty_iff_univ_nonempty]
@@ -134,7 +143,7 @@ instance : OrderTop (Finset α) where
 
 section BooleanAlgebra
 
-variable [DecidableEq α] {s : Finset α} {a : α}
+variable [DecidableEq α] {a : α}
 
 instance : BooleanAlgebra (Finset α) :=
   { Finset.orderTop, Finset.orderBot, Finset.generalizedBooleanAlgebra with Compl := fun s => univ \ s,
@@ -208,6 +217,9 @@ theorem insert_inj_on' (s : Finset α) : Set.InjOn (fun a => insert a s) (sᶜ :
   rw [coe_compl]
   exact s.insert_inj_on
 
+theorem image_univ_of_surjective [Fintype β] {f : β → α} (hf : Surjective f) : univ.Image f = univ :=
+  eq_univ_of_forall <| hf.forall.2 fun _ => mem_image_of_mem _ <| mem_univ _
+
 end BooleanAlgebra
 
 @[simp]
@@ -258,7 +270,7 @@ theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filter p : S
 
 /-- A special case of `finset.sup_eq_supr` that omits the useless `x ∈ univ` binder. -/
 theorem sup_univ_eq_supr [CompleteLattice β] (f : α → β) : Finset.univ.sup f = supr f :=
-  (sup_eq_supr _ f).trans <| congr_argₓ _ <| funext fun a => supr_pos (mem_univ _)
+  (sup_eq_supr _ f).trans <| congr_arg _ <| funext fun a => supr_pos (mem_univ _)
 
 /-- A special case of `finset.inf_eq_infi` that omits the useless `x ∈ univ` binder. -/
 theorem inf_univ_eq_infi [CompleteLattice β] (f : α → β) : Finset.univ.inf f = infi f :=
@@ -423,7 +435,7 @@ instance (α : Type _) : Subsingleton (Fintype α) :=
 /-- Given a predicate that can be represented by a finset, the subtype
 associated to the predicate is a fintype. -/
 protected def subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) : Fintype { x // p x } :=
-  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_argₓ Subtype.val⟩, fun ⟨x, px⟩ =>
+  ⟨⟨s.1.pmap Subtype.mk fun x => (H x).1, s.Nodup.pmap fun a _ b _ => congr_arg Subtype.val⟩, fun ⟨x, px⟩ =>
     Multiset.mem_pmap.2 ⟨x, (H x).2 px, rfl⟩⟩
 
 theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
@@ -683,6 +695,13 @@ theorem mem_to_finset {s : Set α} [Fintype s] {a : α} : a ∈ s.toFinset ↔ a
 theorem mem_to_finset_val {s : Set α} [Fintype s] {a : α} : a ∈ s.toFinset.1 ↔ a ∈ s :=
   mem_to_finset
 
+/-- Membership of a set with a `fintype` instance is decidable.
+
+Using this as an instance leads to potential loops with `subtype.fintype` under certain decidability
+assumptions, so it should only be declared a local instance. -/
+def decidableMemOfFintype [DecidableEq α] (s : Set α) [Fintype s] a : Decidable (a ∈ s) :=
+  decidableOfIff _ mem_to_finset
+
 -- We use an arbitrary `[fintype s]` instance here,
 -- not necessarily coming from a `[fintype α]`.
 @[simp]
@@ -710,11 +729,57 @@ theorem to_finset_strict_mono {s t : Set α} [Fintype s] [Fintype t] : s.toFinse
 @[simp]
 theorem to_finset_disjoint_iff [DecidableEq α] {s t : Set α} [Fintype s] [Fintype t] :
     Disjoint s.toFinset t.toFinset ↔ Disjoint s t := by
-  simp only [disjoint_iff_disjoint_coe, coe_to_finset]
+  simp only [← disjoint_coe, coe_to_finset]
+
+theorem to_finset_inter {α : Type _} [DecidableEq α] (s t : Set α) [Fintype (s ∩ t : Set α)] [Fintype s] [Fintype t] :
+    (s ∩ t).toFinset = s.toFinset ∩ t.toFinset := by
+  ext
+  simp
+
+theorem to_finset_union {α : Type _} [DecidableEq α] (s t : Set α) [Fintype (s ∪ t : Set α)] [Fintype s] [Fintype t] :
+    (s ∪ t).toFinset = s.toFinset ∪ t.toFinset := by
+  ext
+  simp
+
+theorem to_finset_diff {α : Type _} [DecidableEq α] (s t : Set α) [Fintype s] [Fintype t] [Fintype (s \ t : Set α)] :
+    (s \ t).toFinset = s.toFinset \ t.toFinset := by
+  ext
+  simp
+
+theorem to_finset_ne_eq_erase {α : Type _} [DecidableEq α] [Fintype α] (a : α) [Fintype { x : α | x ≠ a }] :
+    { x : α | x ≠ a }.toFinset = Finset.univ.erase a := by
+  ext
+  simp
 
 theorem to_finset_compl [DecidableEq α] [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     sᶜ.toFinset = s.toFinsetᶜ := by
-  ext a
+  ext
+  simp
+
+/- TODO Without the coercion arrow (`↥`) there is an elaboration bug;
+it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` distinct.
+Reported in leanprover-community/lean#672 -/
+@[simp]
+theorem to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ := by
+  ext
+  simp
+
+@[simp]
+theorem to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.Range f)] :
+    (Set.Range f).toFinset = Finset.univ.Image f := by
+  ext
+  simp
+
+-- TODO The `↥` circumvents an elaboration bug. See comment on `set.to_finset_univ`.
+theorem to_finset_singleton (a : α) [Fintype ↥({a} : Set α)] : ({a} : Set α).toFinset = {a} := by
+  ext
+  simp
+
+-- TODO The `↥` circumvents an elaboration bug. See comment on `set.to_finset_univ`.
+@[simp]
+theorem to_finset_insert [DecidableEq α] {a : α} {s : Set α} [Fintype ↥(insert a s : Set α)] [Fintype s] :
+    (insert a s).toFinset = insert a s.toFinset := by
+  ext
   simp
 
 theorem filter_mem_univ_eq_to_finset [Fintype α] (s : Set α) [Fintype s] [DecidablePred (· ∈ s)] :
@@ -1299,26 +1364,13 @@ instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fint
     (by
       simp )
 
-/- TODO Without the coercion arrow (`↥`) there is an elaboration bug;
-it essentially infers `fintype.{v} (set.univ.{u} : set α)` with `v` and `u` distinct.
-Reported in leanprover-community/lean#672 -/
-@[simp]
-theorem Set.to_finset_univ [Fintype ↥(Set.Univ : Set α)] [Fintype α] : (Set.Univ : Set α).toFinset = Finset.univ := by
-  ext
-  simp only [Set.mem_univ, mem_univ, Set.mem_to_finset]
-
 @[simp]
 theorem Set.to_finset_eq_empty_iff {s : Set α} [Fintype s] : s.toFinset = ∅ ↔ s = ∅ := by
-  simp [ext_iff, Set.ext_iff]
+  simp only [ext_iff, Set.ext_iff, Set.mem_to_finset, not_mem_empty, Set.mem_empty_eq]
 
 @[simp]
 theorem Set.to_finset_empty : (∅ : Set α).toFinset = ∅ :=
   Set.to_finset_eq_empty_iff.mpr rfl
-
-@[simp]
-theorem Set.to_finset_range [DecidableEq α] [Fintype β] (f : β → α) [Fintype (Set.Range f)] :
-    (Set.Range f).toFinset = Finset.univ.Image f := by
-  simp [ext_iff]
 
 /-- A set on a fintype, when coerced to a type, is a fintype. -/
 def setFintype [Fintype α] (s : Set α) [DecidablePred (· ∈ s)] : Fintype s :=
@@ -1451,7 +1503,7 @@ theorem pi_finset_subset (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a, t₁ a �
 theorem pi_finset_disjoint_of_disjoint [∀ a, DecidableEq (δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α}
     (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (piFinset t₁) (piFinset t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
-    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_funₓ eq₁₂ a)
+    disjoint_iff_ne.1 h (f₁ a) (mem_pi_finset.1 hf₁ a) (f₂ a) (mem_pi_finset.1 hf₂ a) (congr_fun eq₁₂ a)
 
 end Fintype
 
@@ -1485,7 +1537,7 @@ instance Quotientₓ.fintype [Fintype α] (s : Setoidₓ α) [DecidableRel ((· 
 instance Finset.fintype [Fintype α] : Fintype (Finset α) :=
   ⟨univ.Powerset, fun x => Finset.mem_powerset.2 (Finset.subset_univ _)⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 -- irreducible due to this conversation on Zulip:
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/
 -- topic/.60simp.60.20ignoring.20lemmas.3F/near/241824115
@@ -1547,6 +1599,25 @@ theorem Fintype.card_subtype_or_disjoint (p q : α → Prop) (h : Disjoint p q) 
   classical
   convert Fintype.card_congr (subtypeOrEquiv p q h)
   simp
+
+-- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
+@[simp]
+theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x // p x }] [Fintype { x // ¬p x }] :
+    Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
+  classical
+  rw [Fintype.card_of_subtype (Set.toFinset (pᶜ)), Set.to_finset_compl p, Finset.card_compl,
+      Fintype.card_of_subtype (Set.toFinset p)] <;>
+    intro <;> simp only [Set.mem_to_finset, Set.mem_compl_eq] <;> rfl
+
+theorem card_subtype_mono (p q : α → Prop) (h : p ≤ q) [Fintype { x // p x }] [Fintype { x // q x }] :
+    Fintype.card { x // p x } ≤ Fintype.card { x // q x } :=
+  Fintype.card_le_of_embedding (Subtype.impEmbedding _ _ h)
+
+/-- If two subtypes of a fintype have equal cardinality, so do their complements. -/
+theorem Fintype.card_compl_eq_card_compl [Fintype α] (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // ¬p x }]
+    [Fintype { x // q x }] [Fintype { x // ¬q x }] (h : Fintype.card { x // p x } = Fintype.card { x // q x }) :
+    Fintype.card { x // ¬p x } = Fintype.card { x // ¬q x } := by
+  simp only [Fintype.card_subtype_compl, h]
 
 theorem Fintype.card_quotient_le [Fintype α] (s : Setoidₓ α) [DecidableRel ((· ≈ ·) : α → α → Prop)] :
     Fintype.card (Quotientₓ s) ≤ Fintype.card α :=
@@ -1660,7 +1731,7 @@ def Quotientₓ.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι �
       simp [Quotientₓ.out_eq] at this
       simp [this]
       let g := fun a : Multiset ι => ⟦fun h : i ∈ a => Quotientₓ.out (f i)⟧
-      refine' eq_of_heq ((eq_rec_heqₓ _ _).trans (_ : HEq (g a) (g b)))
+      refine' eq_of_heq ((eq_rec_heq _ _).trans (_ : HEq (g a) (g b)))
       congr 1
       exact Quotientₓ.sound h)
     (fun f => ⟦fun i => f i (Finset.mem_univ _)⟧) fun a b h => Quotientₓ.sound fun i => h _ _
@@ -1784,7 +1855,7 @@ theorem nodup_perms_of_list : ∀ {l : List α} hl : l.Nodup, (permsOfList l).No
 def permsOfFinset (s : Finset α) : Finset (Perm α) :=
   Quotientₓ.hrecOn s.1 (fun l hl => ⟨permsOfList l, nodup_perms_of_list hl⟩)
     (fun a b hab =>
-      hfunext (congr_argₓ _ (Quotientₓ.sound hab)) fun ha hb _ =>
+      hfunext (congr_arg _ (Quotientₓ.sound hab)) fun ha hb _ =>
         heq_of_eq <|
           Finset.ext <| by
             simp [mem_perms_of_list_iff, hab.mem_iff])
@@ -2099,7 +2170,7 @@ theorem Fintype.exists_ne_map_eq_of_infinite [Infinite α] [Fintype β] (f : α 
   contrapose
   apply hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:1199:38: unsupported irreducible non-definition
+-- ././Mathport/Syntax/Translate/Basic.lean:1198:38: unsupported irreducible non-definition
 -- irreducible due to this conversation on Zulip:
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/
 -- topic/.60simp.60.20ignoring.20lemmas.3F/near/241824115

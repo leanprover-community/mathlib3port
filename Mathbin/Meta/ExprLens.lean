@@ -85,7 +85,7 @@ unsafe def mk_congr_arg_using_dsimp (G W : expr) (u : List Name) : tactic expr :
   let s ← simp_lemmas.mk_default
   let t ← infer_type G
   let t' ← s.dsimplify u t { failIfUnchanged := false }
-  to_expr (ppquote.1 (congr_argₓ (show %%ₓt' from %%ₓG) (%%ₓW)))
+  to_expr (ppquote.1 (congr_arg (show %%ₓt' from %%ₓG) (%%ₓW)))
 
 private unsafe def trace_congr_error (f : expr) (x_eq : expr) : tactic Unit := do
   let pp_f ← pp f

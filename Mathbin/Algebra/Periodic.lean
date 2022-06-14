@@ -252,7 +252,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoidₓ α] (hf : Periodic f c) (a
 
 /-- Lift a periodic function to a function from the quotient group. -/
 def Periodic.lift [AddGroupₓ α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
-  (Quotientₓ.liftOn' x f) fun a b ⟨k, hk⟩ => (h.zsmul k _).symm.trans <| congr_argₓ f <| add_eq_of_eq_neg_add hk
+  (Quotientₓ.liftOn' x f) fun a b ⟨k, hk⟩ => (h.zsmul k _).symm.trans <| congr_arg f <| add_eq_of_eq_neg_add hk
 
 @[simp]
 theorem Periodic.lift_coe [AddGroupₓ α] (h : Periodic f c) (a : α) : h.lift (a : α ⧸ AddSubgroup.zmultiples c) = f a :=

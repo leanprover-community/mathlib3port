@@ -248,7 +248,7 @@ theorem affine_independent_of_to_matrix_right_inv [DecidableEq ι'] (p : ι' →
     rw [← finset.univ.affine_combination_eq_linear_combination _ _ hw₁, ←
       finset.univ.affine_combination_eq_linear_combination _ _ hw₂, ← finset.univ.map_affine_combination p w₁ hw₁, ←
       finset.univ.map_affine_combination p w₂ hw₂, hweq]
-  replace hweq' := congr_argₓ (fun w => A.vec_mul w) hweq'
+  replace hweq' := congr_arg (fun w => A.vec_mul w) hweq'
   simpa only [Matrix.vec_mul_vec_mul, ← Matrix.mul_eq_mul, hA, Matrix.vec_mul_one] using hweq'
 
 /-- Given a family of points `p : ι' → P` and an affine basis `b`, if the matrix whose rows are the

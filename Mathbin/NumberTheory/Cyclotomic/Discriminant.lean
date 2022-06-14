@@ -110,14 +110,14 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
             (Even.mul_right (Nat.even_sub_one_of_prime_ne_two hp.out hptwo) _) odd_one)
       
     
-  · have H := congr_argₓ derivative (cyclotomic_prime_pow_mul_X_pow_sub_one K p k)
+  · have H := congr_arg derivative (cyclotomic_prime_pow_mul_X_pow_sub_one K p k)
     rw [derivative_mul, derivative_sub, derivative_one, sub_zero, derivative_pow, derivative_X, mul_oneₓ,
       derivative_sub, derivative_one, sub_zero, derivative_pow, derivative_X, mul_oneₓ, ← Pnat.pow_coe,
       hζ.minpoly_eq_cyclotomic_of_irreducible hirr] at H
-    replace H := congr_argₓ (fun P => aeval ζ P) H
+    replace H := congr_arg (fun P => aeval ζ P) H
     simp only [aeval_add, aeval_mul, minpoly.aeval, zero_mul, add_zeroₓ, aeval_nat_cast, _root_.map_sub, aeval_one,
       aeval_X_pow] at H
-    replace H := congr_argₓ (Algebra.norm K) H
+    replace H := congr_arg (Algebra.norm K) H
     have hnorm : (norm K) (ζ ^ (p : ℕ) ^ k - 1) = p ^ (p : ℕ) ^ k := by
       by_cases' hp : p = 2
       · exact hζ.pow_sub_one_norm_prime_pow_of_one_le hirr rfl.le (hp2 hp)

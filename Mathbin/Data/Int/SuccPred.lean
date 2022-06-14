@@ -43,13 +43,13 @@ theorem succ_iterate (a : ℤ) : ∀ n, (succ^[n]) a = a + n
   | 0 => (add_zeroₓ a).symm
   | n + 1 => by
     rw [Function.iterate_succ', Int.coe_nat_succ, ← add_assocₓ]
-    exact congr_argₓ _ (succ_iterate n)
+    exact congr_arg _ (succ_iterate n)
 
 theorem pred_iterate (a : ℤ) : ∀ n, (pred^[n]) a = a - n
   | 0 => (sub_zero a).symm
   | n + 1 => by
     rw [Function.iterate_succ', Int.coe_nat_succ, ← sub_sub]
-    exact congr_argₓ _ (pred_iterate n)
+    exact congr_arg _ (pred_iterate n)
 
 instance : IsSuccArchimedean ℤ :=
   ⟨fun a b h =>

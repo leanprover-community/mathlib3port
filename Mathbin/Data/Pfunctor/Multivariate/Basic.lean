@@ -40,7 +40,7 @@ def Obj (α : Typevec.{u} n) : Type u :=
 def map {α β : Typevec n} (f : α ⟹ β) : P.Obj α → P.Obj β := fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
 
 instance : Inhabited (Mvpfunctor n) :=
-  ⟨⟨default, fun _ => default⟩⟩
+  ⟨⟨default, default⟩⟩
 
 instance Obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.Obj α) :=
   ⟨⟨default, fun _ _ => default⟩⟩

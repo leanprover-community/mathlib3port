@@ -193,7 +193,7 @@ theorem coe_stream_nth_rat_eq :
           norm_cast
         have coe_of_fr := coe_of_rat_eq this
         simp [int_fract_pair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
-        exact congr_argₓ some coe_of_fr
+        exact congr_arg some coe_of_fr
         
 
 theorem coe_stream_rat_eq :

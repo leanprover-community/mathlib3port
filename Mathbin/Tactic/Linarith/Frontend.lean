@@ -255,7 +255,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
             if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
         let cfg := cfg reduce_semi
-        let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) fun ⟨a, b⟩ => (some a, some b)
+        let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) (Prod.map some some)
         let hyps
           ←-- set up the list of hypotheses, considering the `only_on` and `restrict_type` options
               if only_on then return (new_var [] singleton ++ hyps)

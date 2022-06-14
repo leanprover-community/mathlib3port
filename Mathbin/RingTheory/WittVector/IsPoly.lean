@@ -183,7 +183,7 @@ theorem poly_eq_of_witt_polynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × 
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [← Function.funext_iffₓ] at h
-  replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
+  replace h := congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
     bind₁_X_right] using h
 
@@ -192,7 +192,7 @@ theorem poly_eq_of_witt_polynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   ext1 n
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [← Function.funext_iffₓ] at h
-  replace h := congr_argₓ (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
+  replace h := congr_arg (fun fam => bind₁ (MvPolynomial.map (Int.castRingHom ℚ) ∘ fam) (xInTermsOfW p ℚ n)) h
   simpa only [Function.comp, map_bind₁, map_witt_polynomial, ← bind₁_bind₁, bind₁_witt_polynomial_X_in_terms_of_W,
     bind₁_X_right] using h
 

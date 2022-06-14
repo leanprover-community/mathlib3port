@@ -204,7 +204,7 @@ theorem sup_inf_self (a b : α) : a⊔a⊓b = a := by
 
 theorem inf_sup_self (a b : α) : a⊓(a⊔b) = a := by
   dsimp' only [(·⊔·), (·⊓·)]
-  assoc_rw [mul_addₓ, mul_addₓ, mul_self, mul_self, add_self, add_zeroₓ]
+  rw [mul_addₓ, mul_addₓ, mul_self, ← mul_assoc, mul_self, add_assocₓ, add_self, add_zeroₓ]
 
 theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b * c + a * (b * c) :=
   calc

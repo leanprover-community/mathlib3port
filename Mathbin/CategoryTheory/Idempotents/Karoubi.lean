@@ -136,8 +136,8 @@ theorem coe_p (X : C) : (X : Karoubi C).p = 𝟙 X := by
   rfl
 
 @[simp]
-theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) :
-    Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_argₓ Karoubi.x h) := by
+theorem eq_to_hom_f {P Q : Karoubi C} (h : P = Q) : Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
+  by
   subst h
   simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
 

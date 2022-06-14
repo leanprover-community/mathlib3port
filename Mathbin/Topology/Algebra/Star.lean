@@ -64,6 +64,11 @@ theorem ContinuousOn.star (hf : ContinuousOn f s) : ContinuousOn (fun x => star 
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) : ContinuousWithinAt (fun x => star (f x)) s x :=
   hf.star
 
+/-- The star operation bundled as a continuous map. -/
+@[simps]
+def starContinuousMap : C(R, R) :=
+  ⟨star, continuous_star⟩
+
 end Continuity
 
 section Instances

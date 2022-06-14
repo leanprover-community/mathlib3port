@@ -359,11 +359,11 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x) (fac : ∀ E : Multifor
 
 variable [HasProduct I.left] [HasProduct I.right]
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem pi_condition : Pi.lift K.ι ≫ I.fstPiMap = Pi.lift K.ι ≫ I.sndPiMap := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
   simp
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument
@@ -565,11 +565,11 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x) (fac : ∀ E : Mult
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases
 @[simp, reassoc]
 theorem sigma_condition : I.fstSigmaMap ≫ Sigma.desc K.π = I.sndSigmaMap ≫ Sigma.desc K.π := by
   ext
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `discrete_cases"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `discrete_cases"
   simp
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:42:50: missing argument

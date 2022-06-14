@@ -378,7 +378,7 @@ variable (s : PullbackCone f g)
 /-- (Implementation.) Any cone over `cospan f g` indeed factors through the constructed cone.
 -/
 def pullbackConeOfLeftLift : s.x ⟶ (pullbackConeOfLeft f g).x where
-  base := pullback.lift s.fst.base s.snd.base (congr_argₓ (fun x => PresheafedSpace.Hom.base x) s.condition)
+  base := pullback.lift s.fst.base s.snd.base (congr_arg (fun x => PresheafedSpace.Hom.base x) s.condition)
   c :=
     { app := fun U =>
         s.snd.c.app _ ≫
@@ -814,7 +814,7 @@ theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.ob
   cases j
   rw [ι_preserves_colimits_iso_hom_assoc, ι_preserves_colimits_iso_hom_assoc, has_colimit.iso_of_nat_iso_ι_hom_assoc,
     has_colimit.iso_of_nat_iso_ι_hom_assoc, Top.sigma_iso_sigma_hom_ι.{v}, Top.sigma_iso_sigma_hom_ι.{v}] at eq
-  exact h (congr_argₓ discrete.mk (congr_argₓ Sigma.fst Eq))
+  exact h (congr_arg discrete.mk (congr_arg Sigma.fst Eq))
 
 instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpace.IsOpenImmersion (colimit.ι F i) where
   base_open := sigma_ι_open_embedding F i
@@ -848,8 +848,8 @@ instance sigma_ι_is_open_immersion [HasStrictTerminalObjects C] : SheafedSpace.
     induction j using Opposite.rec
     dsimp'
     convert (F.obj j).Sheaf.isTerminalOfEmpty
-    convert image_preimage_is_empty F i j (fun h => hj (congr_argₓ op h.symm)) U
-    exact (congr_argₓ PresheafedSpace.hom.base e).symm
+    convert image_preimage_is_empty F i j (fun h => hj (congr_arg op h.symm)) U
+    exact (congr_arg PresheafedSpace.hom.base e).symm
 
 end Prod
 
@@ -910,12 +910,12 @@ def pullbackConeOfLeftIsLimit : IsLimit (pullbackConeOfLeft f g) :=
   (PullbackCone.isLimitAux' _) fun s => by
     use
       PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift f.1 g.1
-        (pullback_cone.mk s.fst.1 s.snd.1 (congr_argₓ Subtype.val s.condition))
+        (pullback_cone.mk s.fst.1 s.snd.1 (congr_arg Subtype.val s.condition))
     · intro x
       have :=
         PresheafedSpace.stalk_map.congr_hom _ _
           (PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift_snd f.1 g.1
-            (pullback_cone.mk s.fst.1 s.snd.1 (congr_argₓ Subtype.val s.condition)))
+            (pullback_cone.mk s.fst.1 s.snd.1 (congr_arg Subtype.val s.condition)))
           x
       change _ = _ ≫ PresheafedSpace.stalk_map s.snd.1 x at this
       rw [PresheafedSpace.stalk_map.comp, ← is_iso.eq_inv_comp] at this
@@ -932,7 +932,7 @@ def pullbackConeOfLeftIsLimit : IsLimit (pullbackConeOfLeft f g) :=
       h₂.trans
         (Subtype.eq
           (PresheafedSpace.is_open_immersion.pullback_cone_of_left_lift_snd f.1 g.1
-              (pullback_cone.mk s.fst.1 s.snd.1 (congr_argₓ Subtype.val s.condition))).symm)
+              (pullback_cone.mk s.fst.1 s.snd.1 (congr_arg Subtype.val s.condition))).symm)
 
 instance has_pullback_of_left : HasPullback f g :=
   ⟨⟨⟨_, pullbackConeOfLeftIsLimit f g⟩⟩⟩

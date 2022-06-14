@@ -18,7 +18,7 @@ See the docstring of that typeclass for more information.
 ## Main definitions
 
 * `graded_algebra 𝒜`: the typeclass, which is a combination of `set_like.graded_monoid`, and
-  a constructive version of `direct_sum.submodule_is_internal 𝒜`.
+  a constructive version of `direct_sum.is_internal 𝒜`.
 * `graded_algebra.decompose : A ≃ₐ[R] ⨁ i, 𝒜 i`, which breaks apart an element of the algebra into
   its constituent pieces.
 * `graded_algebra.proj 𝒜 i` is the linear map from `A` to its degree `i : ι` component, such that
@@ -59,10 +59,10 @@ algebra structure `direct_sum.galgebra R (λ i, ↥(𝒜 i))`, which in turn mak
 -/
 class GradedAlgebra extends SetLike.GradedMonoid 𝒜 where
   decompose' : A → ⨁ i, 𝒜 i
-  left_inv : Function.LeftInverse decompose' (DirectSum.submoduleCoe 𝒜)
-  right_inv : Function.RightInverse decompose' (DirectSum.submoduleCoe 𝒜)
+  left_inv : Function.LeftInverse decompose' (DirectSum.coeAddMonoidHom 𝒜)
+  right_inv : Function.RightInverse decompose' (DirectSum.coeAddMonoidHom 𝒜)
 
-theorem GradedAlgebra.is_internal [GradedAlgebra 𝒜] : DirectSum.SubmoduleIsInternal 𝒜 :=
+protected theorem GradedAlgebra.is_internal [GradedAlgebra 𝒜] : DirectSum.IsInternal 𝒜 :=
   ⟨GradedAlgebra.left_inv.Injective, GradedAlgebra.right_inv.Surjective⟩
 
 /-- A helper to construct a `graded_algebra` when the `set_like.graded_monoid` structure is already
@@ -72,15 +72,15 @@ condition in a way that allows custom `@[ext]` lemmas to apply.
 See note [reducible non-instances]. -/
 @[reducible]
 def GradedAlgebra.ofAlgHom [SetLike.GradedMonoid 𝒜] (decompose : A →ₐ[R] ⨁ i, 𝒜 i)
-    (right_inv : (DirectSum.submoduleCoeAlgHom 𝒜).comp decompose = AlgHom.id R A)
+    (right_inv : (DirectSum.coeAlgHom 𝒜).comp decompose = AlgHom.id R A)
     (left_inv : ∀ i x : 𝒜 i, decompose (x : A) = DirectSum.of (fun i => ↥(𝒜 i)) i x) : GradedAlgebra 𝒜 where
   decompose' := decompose
   right_inv := AlgHom.congr_fun right_inv
   left_inv := by
-    suffices : decompose.comp (DirectSum.submoduleCoeAlgHom 𝒜) = AlgHom.id _ _
+    suffices : decompose.comp (DirectSum.coeAlgHom 𝒜) = AlgHom.id _ _
     exact AlgHom.congr_fun this
     ext i x : 2
-    exact (decompose.congr_arg <| DirectSum.submodule_coe_alg_hom_of _ _ _).trans (left_inv i x)
+    exact (decompose.congr_arg <| DirectSum.coe_alg_hom_of _ _ _).trans (left_inv i x)
 
 variable [GradedAlgebra 𝒜]
 
@@ -88,7 +88,7 @@ variable [GradedAlgebra 𝒜]
 an algebra to a direct sum of components. -/
 def GradedAlgebra.decompose : A ≃ₐ[R] ⨁ i, 𝒜 i :=
   AlgEquiv.symm
-    { toFun := DirectSum.submoduleCoeAlgHom 𝒜, invFun := GradedAlgebra.decompose', left_inv := GradedAlgebra.left_inv,
+    { toFun := DirectSum.coeAlgHom 𝒜, invFun := GradedAlgebra.decompose', left_inv := GradedAlgebra.left_inv,
       right_inv := GradedAlgebra.right_inv, map_mul' := AlgHom.map_mul _, map_add' := AlgHom.map_add _,
       commutes' := AlgHom.commutes _ }
 
@@ -98,7 +98,7 @@ theorem GradedAlgebra.decompose'_def : GradedAlgebra.decompose' = GradedAlgebra.
 
 @[simp]
 theorem GradedAlgebra.decompose_symm_of {i : ι} (x : 𝒜 i) : (GradedAlgebra.decompose 𝒜).symm (DirectSum.of _ i x) = x :=
-  DirectSum.submodule_coe_alg_hom_of 𝒜 _ _
+  DirectSum.coe_alg_hom_of 𝒜 _ _
 
 /-- The projection maps of graded algebra-/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
@@ -177,7 +177,7 @@ def GradedAlgebra.projZeroRingHom : A →+* A where
   map_add' := fun _ _ => by
     simp [Subtype.ext_iff_val, map_add, add_apply, Submodule.coe_add]
   map_mul' := fun x y => by
-    have m : ∀ x, x ∈ supr 𝒜 := fun x => (is_internal 𝒜).supr_eq_top.symm ▸ Submodule.mem_top
+    have m : ∀ x, x ∈ supr 𝒜 := fun x => (GradedAlgebra.is_internal 𝒜).submodule_supr_eq_top.symm ▸ Submodule.mem_top
     refine' Submodule.supr_induction 𝒜 (m x) (fun i c hc => _) _ _
     · refine' Submodule.supr_induction 𝒜 (m y) (fun j c' hc' => _) _ _
       · by_cases' h : i + j = 0

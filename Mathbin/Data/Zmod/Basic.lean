@@ -86,11 +86,11 @@ def Zmod : ℕ → Type
 namespace Zmod
 
 instance fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
-  | 0, h => False.elim <| Nat.not_lt_zeroₓ 0 h.1
+  | 0, h => (lt_irreflₓ _ h.1).elim
   | n + 1, _ => Finₓ.fintype (n + 1)
 
-instance fintype' (n : ℕ) [hn : NeZero n] : Fintype (Zmod n) :=
-  @Zmod.fintype n ⟨Nat.pos_of_ne_zeroₓ hn.1⟩
+instance fintype' (n : ℕ) [NeZero n] : Fintype (Zmod n) :=
+  @Zmod.fintype n ⟨NeZero.pos n⟩
 
 instance infinite : Infinite (Zmod 0) :=
   Int.infinite
@@ -98,8 +98,7 @@ instance infinite : Infinite (Zmod 0) :=
 @[simp]
 theorem card (n : ℕ) [Fintype (Zmod n)] : Fintype.card (Zmod n) = n := by
   cases n
-  · exfalso
-    exact not_fintype (Zmod 0)
+  · exact (not_fintype (Zmod 0)).elim
     
   · convert Fintype.card_fin (n + 1)
     
@@ -112,9 +111,37 @@ instance hasRepr : ∀ n : ℕ, HasRepr (Zmod n)
   | 0 => Int.hasRepr
   | n + 1 => Finₓ.hasRepr _
 
-instance commRing : ∀ n : ℕ, CommRingₓ (Zmod n)
-  | 0 => Int.commRing
-  | n + 1 => Finₓ.commRing n
+/- We define each field by cases, to ensure that the eta-expanded `zmod.comm_ring` is defeq to the
+original, this helps avoid diamonds with instances coming from classes extending `comm_ring` such as
+field. -/
+instance commRing (n : ℕ) : CommRingₓ (Zmod n) where
+  add := Nat.casesOn n (@Add.add Int _) fun n => @Add.add (Finₓ n.succ) _
+  add_assoc := Nat.casesOn n (@add_assocₓ Int _) fun n => @add_assocₓ (Finₓ n.succ) _
+  zero := Nat.casesOn n (0 : Int) fun n => (0 : Finₓ n.succ)
+  zero_add := Nat.casesOn n (@zero_addₓ Int _) fun n => @zero_addₓ (Finₓ n.succ) _
+  add_zero := Nat.casesOn n (@add_zeroₓ Int _) fun n => @add_zeroₓ (Finₓ n.succ) _
+  neg := Nat.casesOn n (@Neg.neg Int _) fun n => @Neg.neg (Finₓ n.succ) _
+  sub := Nat.casesOn n (@Sub.sub Int _) fun n => @Sub.sub (Finₓ n.succ) _
+  sub_eq_add_neg := Nat.casesOn n (@sub_eq_add_neg Int _) fun n => @sub_eq_add_neg (Finₓ n.succ) _
+  zsmul := Nat.casesOn n (@CommRingₓ.zsmul Int _) fun n => @CommRingₓ.zsmul (Finₓ n.succ) _
+  zsmul_zero' := Nat.casesOn n (@CommRingₓ.zsmul_zero' Int _) fun n => @CommRingₓ.zsmul_zero' (Finₓ n.succ) _
+  zsmul_succ' := Nat.casesOn n (@CommRingₓ.zsmul_succ' Int _) fun n => @CommRingₓ.zsmul_succ' (Finₓ n.succ) _
+  zsmul_neg' := Nat.casesOn n (@CommRingₓ.zsmul_neg' Int _) fun n => @CommRingₓ.zsmul_neg' (Finₓ n.succ) _
+  nsmul := Nat.casesOn n (@CommRingₓ.nsmul Int _) fun n => @CommRingₓ.nsmul (Finₓ n.succ) _
+  nsmul_zero' := Nat.casesOn n (@CommRingₓ.nsmul_zero' Int _) fun n => @CommRingₓ.nsmul_zero' (Finₓ n.succ) _
+  nsmul_succ' := Nat.casesOn n (@CommRingₓ.nsmul_succ' Int _) fun n => @CommRingₓ.nsmul_succ' (Finₓ n.succ) _
+  add_left_neg := by
+    cases n
+    exacts[@add_left_negₓ Int _, @add_left_negₓ (Finₓ n.succ) _]
+  add_comm := Nat.casesOn n (@add_commₓ Int _) fun n => @add_commₓ (Finₓ n.succ) _
+  mul := Nat.casesOn n (@Mul.mul Int _) fun n => @Mul.mul (Finₓ n.succ) _
+  mul_assoc := Nat.casesOn n (@mul_assoc Int _) fun n => @mul_assoc (Finₓ n.succ) _
+  one := Nat.casesOn n (1 : Int) fun n => (1 : Finₓ n.succ)
+  one_mul := Nat.casesOn n (@one_mulₓ Int _) fun n => @one_mulₓ (Finₓ n.succ) _
+  mul_one := Nat.casesOn n (@mul_oneₓ Int _) fun n => @mul_oneₓ (Finₓ n.succ) _
+  left_distrib := Nat.casesOn n (@left_distrib Int _ _ _) fun n => @left_distrib (Finₓ n.succ) _ _ _
+  right_distrib := Nat.casesOn n (@right_distrib Int _ _ _) fun n => @right_distrib (Finₓ n.succ) _ _ _
+  mul_comm := Nat.casesOn n (@mul_comm Int _) fun n => @mul_comm (Finₓ n.succ) _
 
 instance inhabited (n : ℕ) : Inhabited (Zmod n) :=
   ⟨0⟩
@@ -277,7 +304,7 @@ theorem nat_cast_comp_val [Fact (0 < n)] : (coe : ℕ → R) ∘ (val : Zmod n �
 @[simp]
 theorem int_cast_comp_cast : (coe : ℤ → R) ∘ (coe : Zmod n → ℤ) = coe := by
   cases n
-  · exact congr_argₓ ((· ∘ ·) Int.castₓ) Zmod.cast_id'
+  · exact congr_arg ((· ∘ ·) Int.castₓ) Zmod.cast_id'
     
   · ext
     simp
@@ -287,11 +314,11 @@ variable {R}
 
 @[simp]
 theorem nat_cast_val [Fact (0 < n)] (i : Zmod n) : (i.val : R) = i :=
-  congr_funₓ (nat_cast_comp_val R) i
+  congr_fun (nat_cast_comp_val R) i
 
 @[simp]
 theorem int_cast_cast (i : Zmod n) : ((i : ℤ) : R) = i :=
-  congr_funₓ (int_cast_comp_cast R) i
+  congr_fun (int_cast_comp_cast R) i
 
 theorem coe_add_eq_ite {n : ℕ} (a b : Zmod n) : (↑(a + b) : ℤ) = if (n : ℤ) ≤ a + b then a + b - n else a + b := by
   cases n
@@ -597,7 +624,7 @@ instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
         calc
           0 = (0 : Zmod n).val := by
             rw [val_zero]
-          _ = (1 : Zmod n).val := congr_argₓ Zmod.val h
+          _ = (1 : Zmod n).val := congr_arg Zmod.val h
           _ = 1 := val_one n
           ⟩⟩
 
@@ -630,7 +657,7 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : Zmod n) : a * a⁻¹ = Nat.gcdₓ a.val n 
         rw [nat_cast_self, zero_mul, add_zeroₓ]_ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by
         push_cast
         rw [nat_cast_zmod_val]
-        rfl _ = Nat.gcdₓ a.val k := (congr_argₓ coe (Nat.gcd_eq_gcd_ab a.val k)).symm
+        rfl _ = Nat.gcdₓ a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
     
 
 @[simp]
@@ -673,7 +700,7 @@ theorem val_coe_unit_coprime {n : ℕ} (u : (Zmod n)ˣ) : Nat.Coprime (u : Zmod 
 
 @[simp]
 theorem inv_coe_unit {n : ℕ} (u : (Zmod n)ˣ) : (u : Zmod n)⁻¹ = (u⁻¹ : (Zmod n)ˣ) := by
-  have := congr_argₓ (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
+  have := congr_arg (coe : ℕ → Zmod n) (val_coe_unit_coprime u)
   rw [← mul_inv_eq_gcd, Nat.cast_oneₓ] at this
   let u' : (Zmod n)ˣ :=
     ⟨u, (u : Zmod n)⁻¹, this, by

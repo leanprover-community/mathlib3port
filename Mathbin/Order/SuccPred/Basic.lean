@@ -333,6 +333,15 @@ theorem Icc_succ_right (h : a ≤ succ b) : Icc a (succ b) = insert (succ b) (Ic
 theorem Ioc_succ_right (h : a < succ b) : Ioc a (succ b) = insert (succ b) (Ioc a b) := by
   simp_rw [← Ioi_inter_Iic, Iic_succ, inter_insert_of_mem (mem_Ioi.2 h)]
 
+theorem Iio_succ_eq_insert_of_not_is_max (h : ¬IsMax a) : Iio (succ a) = insert a (Iio a) :=
+  ext fun _ => lt_succ_iff_eq_or_lt_of_not_is_max h
+
+theorem Ico_succ_right_eq_insert_of_not_is_max (h₁ : a ≤ b) (h₂ : ¬IsMax b) : Ico a (succ b) = insert b (Ico a b) := by
+  simp_rw [← Iio_inter_Ici, Iio_succ_eq_insert_of_not_is_max h₂, insert_inter_of_mem (mem_Ici.2 h₁)]
+
+theorem Ioo_succ_right_eq_insert_of_not_is_max (h₁ : a < b) (h₂ : ¬IsMax b) : Ioo a (succ b) = insert b (Ioo a b) := by
+  simp_rw [← Iio_inter_Ioi, Iio_succ_eq_insert_of_not_is_max h₂, insert_inter_of_mem (mem_Ioi.2 h₁)]
+
 section NoMaxOrder
 
 variable [NoMaxOrder α]
@@ -357,13 +366,13 @@ theorem succ_eq_iff_covby : succ a = b ↔ a ⋖ b :=
     exact covby_succ _, Covby.succ_eq⟩
 
 theorem Iio_succ_eq_insert (a : α) : Iio (succ a) = insert a (Iio a) :=
-  ext fun _ => lt_succ_iff_eq_or_lt
+  Iio_succ_eq_insert_of_not_is_max <| not_is_max a
 
-theorem Ico_succ_right_eq_insert (h : a ≤ b) : Ico a (succ b) = insert b (Ico a b) := by
-  simp_rw [← Iio_inter_Ici, Iio_succ_eq_insert, insert_inter_of_mem (mem_Ici.2 h)]
+theorem Ico_succ_right_eq_insert (h : a ≤ b) : Ico a (succ b) = insert b (Ico a b) :=
+  Ico_succ_right_eq_insert_of_not_is_max h <| not_is_max b
 
-theorem Ioo_succ_right_eq_insert (h : a < b) : Ioo a (succ b) = insert b (Ioo a b) := by
-  simp_rw [← Iio_inter_Ioi, Iio_succ_eq_insert, insert_inter_of_mem (mem_Ioi.2 h)]
+theorem Ioo_succ_right_eq_insert (h : a < b) : Ioo a (succ b) = insert b (Ioo a b) :=
+  Ioo_succ_right_eq_insert_of_not_is_max h <| not_is_max b
 
 end NoMaxOrder
 
@@ -581,6 +590,11 @@ theorem pred_lt_iff_eq_or_lt_of_not_is_min (ha : ¬IsMin a) : pred a < b ↔ a =
 
 theorem Ici_pred (a : α) : Ici (pred a) = insert (pred a) (Ici a) :=
   ext fun _ => pred_le_iff_eq_or_le
+
+theorem Ioi_pred_eq_insert_of_not_is_min (ha : ¬IsMin a) : Ioi (pred a) = insert a (Ioi a) := by
+  ext x
+  simp only [insert, Set.Insert, mem_set_of, @eq_comm _ x a]
+  exact pred_lt_iff_eq_or_lt_of_not_is_min ha
 
 theorem Icc_pred_left (h : pred a ≤ b) : Icc (pred a) b = insert (pred a) (Icc a b) := by
   simp_rw [← Ici_inter_Iic, Ici_pred, insert_inter_of_mem (mem_Iic.2 h)]

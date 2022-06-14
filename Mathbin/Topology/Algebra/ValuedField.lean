@@ -210,7 +210,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 noncomputable def extension : hat K → Γ₀ :=
   Completion.dense_inducing_coe.extend (v : K → Γ₀)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x y «expr ∈ » V')
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x y «expr ∈ » V')
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) := by
   refine' completion.dense_inducing_coe.continuous_extend _
   intro x₀

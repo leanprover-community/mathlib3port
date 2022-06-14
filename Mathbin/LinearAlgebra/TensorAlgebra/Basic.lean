@@ -7,6 +7,7 @@ import Mathbin.Algebra.FreeAlgebra
 import Mathbin.Algebra.RingQuot
 import Mathbin.Algebra.TrivSqZeroExt
 import Mathbin.Algebra.Algebra.Operations
+import Mathbin.LinearAlgebra.Multilinear.Basic
 
 /-!
 # Tensor Algebras
@@ -53,7 +54,7 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
 
 end TensorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler algebra R
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
@@ -90,12 +91,12 @@ def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (Tenso
       ⟨FreeAlgebra.lift R ⇑f, fun h : Rel R M x y => by
         induction h <;> simp [Algebra.smul_def]⟩
   invFun := fun F => F.toLinearMap.comp (ι R)
-  left_inv := fun f => by
-    ext
-    simp [ι]
-  right_inv := fun F => by
-    ext
-    simp [ι]
+  left_inv := fun f =>
+    LinearMap.ext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply f x)
+  right_inv := fun F =>
+    RingQuot.ring_quot_ext' _ _ _ <|
+      FreeAlgebra.hom_ext <|
+        funext fun x => (RingQuot.lift_alg_hom_mk_alg_hom_apply _ _ _ _).trans (FreeAlgebra.lift_ι_apply _ _)
 
 variable {R}
 
@@ -226,6 +227,20 @@ theorem ι_range_disjoint_one : Disjoint (ι R).range (1 : Submodule R (TensorAl
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
   rw [ι_eq_algebra_map_iff x] at hx
   rw [hx.2, RingHom.map_zero]
+
+variable (R M)
+
+/-- Construct a product of `n` elements of the module within the tensor algebra.
+
+See also `pi_tensor_product.tprod`. -/
+def tprod (n : ℕ) : MultilinearMap R (fun i : Finₓ n => M) (TensorAlgebra R M) :=
+  (MultilinearMap.mkPiAlgebraFin R n (TensorAlgebra R M)).compLinearMap fun _ => ι R
+
+@[simp]
+theorem tprod_apply {n : ℕ} (x : Finₓ n → M) : tprod R M n x = (List.ofFnₓ fun i => ι R (x i)).Prod :=
+  rfl
+
+variable {R M}
 
 end TensorAlgebra
 

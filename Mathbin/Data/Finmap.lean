@@ -133,7 +133,7 @@ theorem ext : ∀ {s t : Finmap β}, s.entries = t.entries → s = t
 
 @[simp]
 theorem ext_iff {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
-  ⟨ext, congr_argₓ _⟩
+  ⟨ext, congr_arg _⟩
 
 /-! ### mem -/
 

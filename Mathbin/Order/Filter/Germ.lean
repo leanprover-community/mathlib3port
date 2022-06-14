@@ -154,7 +154,7 @@ alias coe_eq ↔ _ Filter.EventuallyEq.germ_eq
 
 /-- Lift a function `β → γ` to a function `germ l β → germ l γ`. -/
 def map (op : β → γ) : Germ l β → Germ l γ :=
-  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_argₓ op H
+  (map' ((· ∘ ·) op)) fun f g H => H.mono fun x H => congr_arg op H
 
 @[simp]
 theorem map_coe (op : β → γ) (f : α → β) : map op (f : Germ l β) = op ∘ f :=
@@ -386,7 +386,7 @@ instance [Groupₓ G] : Groupₓ (Germ l G) :=
   { Germ.divInvMonoid with mul := (· * ·), one := 1,
     mul_left_inv := by
       rintro ⟨f⟩
-      exact congr_argₓ (Quot.mk _) (mul_left_invₓ f) }
+      exact congr_arg (Quot.mk _) (mul_left_invₓ f) }
 
 @[to_additive]
 instance [CommGroupₓ G] : CommGroupₓ (Germ l G) :=

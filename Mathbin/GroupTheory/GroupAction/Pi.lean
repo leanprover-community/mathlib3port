@@ -82,19 +82,19 @@ instance {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, HasScalar αᵐᵒ�
 /-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.has_faithful_vadd_at]
-theorem has_faithful_scalar_at {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)] (i : I)
-    [HasFaithfulScalar α (f i)] : HasFaithfulScalar α (∀ i, f i) :=
+theorem has_faithful_smul_at {α : Type _} [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)] (i : I)
+    [HasFaithfulSmul α (f i)] : HasFaithfulSmul α (∀ i, f i) :=
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
       classical
-      have := congr_funₓ (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
+      have := congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
       simpa using this⟩
 
 @[to_additive Pi.has_faithful_vadd]
-instance has_faithful_scalar {α : Type _} [Nonempty I] [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)]
-    [∀ i, HasFaithfulScalar α (f i)] : HasFaithfulScalar α (∀ i, f i) :=
+instance has_faithful_smul {α : Type _} [Nonempty I] [∀ i, HasScalar α <| f i] [∀ i, Nonempty (f i)]
+    [∀ i, HasFaithfulSmul α (f i)] : HasFaithfulSmul α (∀ i, f i) :=
   let ⟨i⟩ := ‹Nonempty I›
-  has_faithful_scalar_at i
+  has_faithful_smul_at i
 
 @[to_additive]
 instance mulAction α {m : Monoidₓ α} [∀ i, MulAction α <| f i] : @MulAction α (∀ i : I, f i) m where

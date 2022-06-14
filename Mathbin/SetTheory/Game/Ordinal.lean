@@ -12,24 +12,24 @@ import Mathbin.SetTheory.Ordinal.Basic
 We define the canonical map `ordinal → pgame`, where every ordinal is mapped to the game whose left
 set consists of all previous ordinals.
 
+The map to surreals is defined in `ordinal.to_surreal`.
+
 # Main declarations
 
 - `ordinal.to_pgame`: The canonical map between ordinals and pre-games.
 - `ordinal.to_pgame_embedding`: The order embedding version of the previous map.
-
-# Todo
-
-- Extend this map to `game` and `surreal`.
 -/
 
 
+universe u
+
+open Pgame
+
 -- mathport name: «expr ≈ »
-local infixl:0 " ≈ " => Pgame.Equiv
+local infixl:0 " ≈ " => Equivₓ
 
 -- mathport name: «expr ⧏ »
-local infixl:50 " ⧏ " => Pgame.Lf
-
-universe u
+local infixl:50 " ⧏ " => Lf
 
 namespace Ordinal
 
@@ -47,11 +47,11 @@ theorem to_pgame_def (o : Ordinal) : o.toPgame = ⟨o.out.α, Pempty, fun x => (
 
 @[simp]
 theorem to_pgame_left_moves (o : Ordinal) : o.toPgame.LeftMoves = o.out.α := by
-  rw [to_pgame, Pgame.LeftMoves]
+  rw [to_pgame, left_moves]
 
 @[simp]
 theorem to_pgame_right_moves (o : Ordinal) : o.toPgame.RightMoves = Pempty := by
-  rw [to_pgame, Pgame.RightMoves]
+  rw [to_pgame, right_moves]
 
 instance : IsEmpty (toPgame 0).LeftMoves := by
   rw [to_pgame_left_moves]
@@ -83,25 +83,22 @@ theorem to_pgame_move_left {o : Ordinal} i : o.toPgame.moveLeft (toLeftMovesToPg
   simp
 
 theorem to_pgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame := by
-  convert Pgame.move_left_lf (to_left_moves_to_pgame ⟨a, h⟩)
+  convert move_left_lf (to_left_moves_to_pgame ⟨a, h⟩)
   rw [to_pgame_move_left]
 
-theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame :=
-  Pgame.le_def.2
-    ⟨fun i =>
-      Or.inl
-        ⟨toLeftMovesToPgame ⟨(toLeftMovesToPgame.symm i).val, (to_left_moves_to_pgame_symm_lt i).trans_le h⟩, by
-          simp ⟩,
-      isEmptyElim⟩
+theorem to_pgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame := by
+  refine' le_iff_forall_lf.2 ⟨fun i => _, isEmptyElim⟩
+  rw [to_pgame_move_left']
+  exact to_pgame_lf ((to_left_moves_to_pgame_symm_lt i).trans_le h)
 
 theorem to_pgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame :=
-  Pgame.lt_of_le_of_lf (to_pgame_le h.le) (to_pgame_lf h)
+  lt_of_le_of_lf (to_pgame_le h.le) (to_pgame_lf h)
 
 @[simp]
 theorem to_pgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
   ⟨by
     contrapose
-    rw [not_ltₓ, Pgame.not_lf]
+    rw [not_ltₓ, not_lf]
     exact to_pgame_le, to_pgame_lf⟩
 
 @[simp]
@@ -122,13 +119,11 @@ theorem to_pgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
 theorem to_pgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
   rw [Pgame.Equiv, le_antisymm_iffₓ, to_pgame_le_iff, to_pgame_le_iff]
 
-theorem to_pgame_injective : Function.Injective Ordinal.toPgame := fun a b h => by
-  by_contra hne
-  cases' lt_or_gt_of_neₓ hne with hlt hlt <;>
-    · have := to_pgame_lt hlt
-      rw [h] at this
-      exact lt_irreflₓ _ this
-      
+theorem to_pgame_injective : Function.Injective Ordinal.toPgame := fun a b h => to_pgame_equiv_iff.1 <| equiv_of_eq h
+
+@[simp]
+theorem to_pgame_eq_iff {a b : Ordinal} : a.toPgame = b.toPgame ↔ a = b :=
+  to_pgame_injective.eq_iff
 
 /-- The order embedding version of `to_pgame`. -/
 @[simps]

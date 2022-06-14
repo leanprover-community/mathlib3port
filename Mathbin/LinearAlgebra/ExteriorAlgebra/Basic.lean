@@ -64,7 +64,7 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end ExteriorAlgebra
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra R
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler algebra R
 /-- The exterior algebra of an `R`-module `M`.
 -/
 def ExteriorAlgebra :=
@@ -272,7 +272,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) :
     by_cases' h : i = 0
     · rw [h, ι_sq_zero, zero_mul]
       
-    · replace hn := congr_argₓ ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
+    · replace hn := congr_arg ((· * ·) <| ι R <| f 0) (hn (fun i => f <| Finₓ.succ i) (i.pred h))
       simp only at hn
       rw [Finₓ.succ_pred, ← mul_assoc, mul_zero] at hn
       refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn
@@ -284,7 +284,8 @@ variable (R)
 
 /-- The product of `n` terms of the form `ι R m` is an alternating map.
 
-This is a special case of `multilinear_map.mk_pi_algebra_fin` -/
+This is a special case of `multilinear_map.mk_pi_algebra_fin`, and the exterior algebra version of
+`tensor_algebra.tprod`. -/
 def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
   let F := (MultilinearMap.mkPiAlgebraFin R n (ExteriorAlgebra R M)).compLinearMap fun i => ι R
   { -- one of the repeated terms is on the left

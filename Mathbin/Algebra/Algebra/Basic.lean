@@ -105,7 +105,7 @@ open BigOperators
 
 section Prio
 
--- ././Mathport/Syntax/Translate/Basic.lean:210:40: warning: unsupported option extends_priority
+-- ././Mathport/Syntax/Translate/Basic.lean:209:40: warning: unsupported option extends_priority
 -- We set this priority to 0 later in this file
 set_option extends_priority 200
 
@@ -207,7 +207,7 @@ theorem algebra_ext {R : Type _} [CommSemiringₓ R] {A : Type _} [Semiringₓ A
   rcases Q with ⟨⟨Q⟩⟩
   congr
   · funext r a
-    replace w := congr_argₓ (fun s => s * a) (w r)
+    replace w := congr_arg (fun s => s * a) (w r)
     simp only [← smul_def''] at w
     apply w
     
@@ -485,56 +485,6 @@ end Ringₓ
 
 end Algebra
 
-namespace NoZeroSmulDivisors
-
-variable {R A : Type _}
-
-open Algebra
-
-section Ringₓ
-
-variable [CommRingₓ R]
-
-/-- If `algebra_map R A` is injective and `A` has no zero divisors,
-`R`-multiples in `A` are zero only if one of the factors is zero.
-
-Cannot be an instance because there is no `injective (algebra_map R A)` typeclass.
--/
-theorem of_algebra_map_injective [Semiringₓ A] [Algebra R A] [NoZeroDivisors A]
-    (h : Function.Injective (algebraMap R A)) : NoZeroSmulDivisors R A :=
-  ⟨fun c x hcx =>
-    (mul_eq_zero.mp ((smul_def c x).symm.trans hcx)).imp_left ((injective_iff_map_eq_zero (algebraMap R A)).mp h _)⟩
-
-variable (R A)
-
-theorem algebra_map_injective [Ringₓ A] [Nontrivial A] [Algebra R A] [NoZeroSmulDivisors R A] :
-    Function.Injective (algebraMap R A) :=
-  suffices Function.Injective fun c : R => c • (1 : A) by
-    convert this
-    ext
-    rw [Algebra.smul_def, mul_oneₓ]
-  smul_left_injective R one_ne_zero
-
-variable {R A}
-
-theorem iff_algebra_map_injective [Ringₓ A] [IsDomain A] [Algebra R A] :
-    NoZeroSmulDivisors R A ↔ Function.Injective (algebraMap R A) :=
-  ⟨@NoZeroSmulDivisors.algebra_map_injective R A _ _ _ _, NoZeroSmulDivisors.of_algebra_map_injective⟩
-
-end Ringₓ
-
-section Field
-
-variable [Field R] [Semiringₓ A] [Algebra R A]
-
--- see note [lower instance priority]
-instance (priority := 100) Algebra.no_zero_smul_divisors [Nontrivial A] [NoZeroDivisors A] : NoZeroSmulDivisors R A :=
-  NoZeroSmulDivisors.of_algebra_map_injective (algebraMap R A).Injective
-
-end Field
-
-end NoZeroSmulDivisors
-
 namespace MulOpposite
 
 variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
@@ -660,7 +610,7 @@ theorem coe_fn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔
   FunLike.coe_fn_eq
 
 theorem coe_ring_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
-  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_argₓ _ H
+  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
 
 theorem coe_monoid_hom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
   RingHom.coe_monoid_hom_injective.comp coe_ring_hom_injective
@@ -1373,7 +1323,7 @@ instance applyMulSemiringAction : MulSemiringAction (A₁ ≃ₐ[R] A₁) A₁ w
 protected theorem smul_def (f : A₁ ≃ₐ[R] A₁) (a : A₁) : f • a = f a :=
   rfl
 
-instance apply_has_faithful_scalar : HasFaithfulScalar (A₁ ≃ₐ[R] A₁) A₁ :=
+instance apply_has_faithful_smul : HasFaithfulSmul (A₁ ≃ₐ[R] A₁) A₁ :=
   ⟨fun _ _ => AlgEquiv.ext⟩
 
 instance apply_smul_comm_class : SmulCommClass R (A₁ ≃ₐ[R] A₁) A₁ where
@@ -1452,7 +1402,7 @@ This is a stronger version of `mul_semiring_action.to_ring_hom` and
 def toAlgHom (m : M) : A →ₐ[R] A :=
   AlgHom.mk' (MulSemiringAction.toRingHom _ _ m) (smul_comm _)
 
-theorem to_alg_hom_injective [HasFaithfulScalar M A] :
+theorem to_alg_hom_injective [HasFaithfulSmul M A] :
     Function.Injective (MulSemiringAction.toAlgHom R A : M → A →ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgHom.ext_iff.1 h r
 
@@ -1470,7 +1420,7 @@ This is a stronger version of `mul_semiring_action.to_ring_equiv` and
 def toAlgEquiv (g : G) : A ≃ₐ[R] A :=
   { MulSemiringAction.toRingEquiv _ _ g, MulSemiringAction.toAlgHom R A g with }
 
-theorem to_alg_equiv_injective [HasFaithfulScalar G A] :
+theorem to_alg_equiv_injective [HasFaithfulSmul G A] :
     Function.Injective (MulSemiringAction.toAlgEquiv R A : G → A ≃ₐ[R] A) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => AlgEquiv.ext_iff.1 h r
 
@@ -1587,6 +1537,59 @@ instance int_algebra_subsingleton : Subsingleton (Algebra ℤ R) :=
     simp ⟩
 
 end Int
+
+namespace NoZeroSmulDivisors
+
+variable {R A : Type _}
+
+open Algebra
+
+/-- If `algebra_map R A` is injective and `A` has no zero divisors,
+`R`-multiples in `A` are zero only if one of the factors is zero.
+
+Cannot be an instance because there is no `injective (algebra_map R A)` typeclass.
+-/
+theorem of_algebra_map_injective [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [NoZeroDivisors A]
+    (h : Function.Injective (algebraMap R A)) : NoZeroSmulDivisors R A :=
+  ⟨fun c x hcx => (mul_eq_zero.mp ((smul_def c x).symm.trans hcx)).imp_left (map_eq_zero_iff (algebraMap R A) h).mp⟩
+
+variable (R A)
+
+theorem algebra_map_injective [CommRingₓ R] [Ringₓ A] [Nontrivial A] [Algebra R A] [NoZeroSmulDivisors R A] :
+    Function.Injective (algebraMap R A) :=
+  suffices Function.Injective fun c : R => c • (1 : A) by
+    convert this
+    ext
+    rw [Algebra.smul_def, mul_oneₓ]
+  smul_left_injective R one_ne_zero
+
+variable {R A}
+
+theorem iff_algebra_map_injective [CommRingₓ R] [Ringₓ A] [IsDomain A] [Algebra R A] :
+    NoZeroSmulDivisors R A ↔ Function.Injective (algebraMap R A) :=
+  ⟨@NoZeroSmulDivisors.algebra_map_injective R A _ _ _ _, NoZeroSmulDivisors.of_algebra_map_injective⟩
+
+-- see note [lower instance priority]
+instance (priority := 100) CharZero.no_zero_smul_divisors_nat [Semiringₓ R] [NoZeroDivisors R] [CharZero R] :
+    NoZeroSmulDivisors ℕ R :=
+  NoZeroSmulDivisors.of_algebra_map_injective <| (algebraMap ℕ R).injective_nat
+
+-- see note [lower instance priority]
+instance (priority := 100) CharZero.no_zero_smul_divisors_int [Ringₓ R] [NoZeroDivisors R] [CharZero R] :
+    NoZeroSmulDivisors ℤ R :=
+  NoZeroSmulDivisors.of_algebra_map_injective <| (algebraMap ℤ R).injective_int
+
+section Field
+
+variable [Field R] [Semiringₓ A] [Algebra R A]
+
+-- see note [lower instance priority]
+instance (priority := 100) Algebra.no_zero_smul_divisors [Nontrivial A] [NoZeroDivisors A] : NoZeroSmulDivisors R A :=
+  NoZeroSmulDivisors.of_algebra_map_injective (algebraMap R A).Injective
+
+end Field
+
+end NoZeroSmulDivisors
 
 /-!
 The R-algebra structure on `Π i : I, A i` when each `A i` is an R-algebra.

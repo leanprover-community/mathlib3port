@@ -242,7 +242,7 @@ theorem filter_append_perm (p : α → Prop) [DecidablePred p] (l : List α) :
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (l₁' «expr ~ » l₁)
 theorem exists_perm_sublist {l₁ l₂ l₂' : List α} (s : l₁ <+ l₂) (p : l₂ ~ l₂') :
     ∃ (l₁' : _)(_ : l₁' ~ l₁), l₁' <+ l₂' := by
   induction' p with x l₂ l₂' p IH x y l₂ l₂ m₂ r₂ p₁ p₂ IH₁ IH₂ generalizing l₁ s
@@ -349,7 +349,7 @@ end Rel
 
 section Subperm
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (l «expr ~ » l₁)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (l «expr ~ » l₁)
 /-- `subperm l₁ l₂`, denoted `l₁ <+~ l₂`, means that `l₁` is a sublist of
   a permutation of `l₂`. This is an analogue of `l₁ ⊆ l₂` which respects
   multiplicities of elements, and is used for the `≤` relation on multisets. -/
@@ -1068,7 +1068,7 @@ theorem revzip_sublists (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip�
     rw [sublists_concat, reverse_append, zip_append, ← map_reverse, zip_map_right, zip_map_left] at h <;> [skip,
       · simp
         ]
-    simp only [Prod.mk.inj_iffₓ, mem_map, mem_append, Prod.map_mkₓ, Prod.exists] at h
+    simp only [Prod.mk.inj_iff, mem_map, mem_append, Prod.map_mkₓ, Prod.exists] at h
     rcases h with (⟨l₁, l₂', h, rfl, rfl⟩ | ⟨l₁', l₂, h, rfl, rfl⟩)
     · rw [← append_assoc]
       exact (IH _ _ h).append_right _
@@ -1288,13 +1288,13 @@ theorem length_permutations_aux :
 theorem length_permutations (l : List α) : length (permutations l) = (length l)! :=
   length_permutations_aux l []
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (ts' «expr ~ » «expr[ ,]»([]))
 theorem mem_permutations_of_perm_lemma {is l : List α}
     (H : l ~ [] ++ is → (∃ (ts' : _)(_ : ts' ~ []), l = ts' ++ is) ∨ l ∈ permutationsAux is []) :
     l ~ is → l ∈ permutations is := by
   simpa [permutations, perm_nil] using H
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (is' «expr ~ » is)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (is' «expr ~ » is)
 theorem mem_permutations_aux_of_perm :
     ∀ {ts is l : List α}, l ~ is ++ ts → (∃ (is' : _)(_ : is' ~ is), l = is' ++ ts) ∨ l ∈ permutationsAux ts is := by
   refine'
@@ -1457,7 +1457,7 @@ theorem injective_permutations'_aux (x : α) : Function.Injective (permutations'
   intro s t h
   apply insert_nth_injective s.length x
   have hl : s.length = t.length := by
-    simpa using congr_argₓ length h
+    simpa using congr_arg length h
   rw [←
     nth_le_permutations'_aux s x s.length
       (by

@@ -160,7 +160,7 @@ theorem Disjoint.mul_apply_eq_iff {σ τ : Perm α} (hστ : Disjoint σ τ) {a 
   cases' hστ a with hσ hτ
   · exact ⟨hσ, σ.injective (h.trans hσ.symm)⟩
     
-  · exact ⟨(congr_argₓ σ hτ).symm.trans h, hτ⟩
+  · exact ⟨(congr_arg σ hτ).symm.trans h, hτ⟩
     
 
 theorem Disjoint.mul_eq_one_iff {σ τ : Perm α} (hστ : Disjoint σ τ) : σ * τ = 1 ↔ σ = 1 ∧ τ = 1 := by
@@ -334,7 +334,7 @@ theorem Disjoint.support_mul (h : Disjoint f g) : (f * g).support = f.support �
   rw [mem_union, mem_support, mem_support, mem_support, mul_apply, ← not_and_distrib, not_imp_not]
   exact
     (h a).elim (fun hf h => ⟨hf, f.apply_eq_iff_eq.mp (h.trans hf.symm)⟩) fun hg h =>
-      ⟨(congr_argₓ f hg).symm.trans h, hg⟩
+      ⟨(congr_arg f hg).symm.trans h, hg⟩
 
 theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise Disjoint) :
     l.Prod.support = (l.map support).foldr (·⊔·) ⊥ := by
@@ -373,7 +373,7 @@ theorem support_swap {x y : α} (h : x ≠ y) : support (swap x y) = {x, y} := b
 theorem support_swap_iff (x y : α) : support (swap x y) = {x, y} ↔ x ≠ y := by
   refine' ⟨fun h H => _, support_swap⟩
   subst H
-  simp only [swap_self, support_refl, pair_self_eq] at h
+  simp only [swap_self, support_refl, pair_eq_singleton] at h
   have : x ∈ ∅ := by
     rw [h]
     exact mem_singleton.mpr rfl
@@ -544,7 +544,7 @@ theorem card_support_swap {x y : α} (hxy : x ≠ y) : (swap x y).support.card =
         ⟨x ::ₘ y ::ₘ 0, by
           simp [hxy]⟩
     from
-    congr_argₓ card <| by
+    congr_arg card <| by
       simp [support_swap hxy, *, Finset.ext_iff]
 
 @[simp]

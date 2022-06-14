@@ -963,7 +963,29 @@ theorem tendsto_nhds_bot_mono' [TopologicalSpace β] [PartialOrderₓ β] [Order
 
 section LinearOrderₓ
 
-variable [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
+variable [TopologicalSpace α] [LinearOrderₓ α]
+
+section OrderClosedTopology
+
+variable [OrderClosedTopology α] {a b : α}
+
+theorem eventually_le_nhds (hab : a < b) : ∀ᶠ x in 𝓝 a, x ≤ b :=
+  eventually_iff.mpr (mem_nhds_iff.mpr ⟨Iio b, Iio_subset_Iic_self, is_open_Iio, hab⟩)
+
+theorem eventually_lt_nhds (hab : a < b) : ∀ᶠ x in 𝓝 a, x < b :=
+  eventually_iff.mpr (mem_nhds_iff.mpr ⟨Iio b, rfl.Subset, is_open_Iio, hab⟩)
+
+theorem eventually_ge_nhds (hab : b < a) : ∀ᶠ x in 𝓝 a, b ≤ x :=
+  eventually_iff.mpr (mem_nhds_iff.mpr ⟨Ioi b, Ioi_subset_Ici_self, is_open_Ioi, hab⟩)
+
+theorem eventually_gt_nhds (hab : b < a) : ∀ᶠ x in 𝓝 a, b < x :=
+  eventually_iff.mpr (mem_nhds_iff.mpr ⟨Ioi b, rfl.Subset, is_open_Ioi, hab⟩)
+
+end OrderClosedTopology
+
+section OrderTopology
+
+variable [OrderTopology α]
 
 theorem exists_Ioc_subset_of_mem_nhds' {a : α} {s : Set α} (hs : s ∈ 𝓝 a) {l : α} (hl : l < a) :
     ∃ l' ∈ Ico l a, Ioc l' a ⊆ s := by
@@ -1039,6 +1061,19 @@ instance (priority := 100) OrderTopology.to_order_closed_topology : OrderClosedT
         have h : a₂ < a₁ := lt_of_not_geₓ h
         let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h
         ⟨v, u, hv, hu, ha₂, ha₁, fun ⟨b₁, b₂⟩ ⟨h₁, h₂⟩ => not_le_of_gtₓ <| h b₂ h₂ b₁ h₁⟩
+
+theorem dense_of_exists_between [Nontrivial α] {s : Set α} (h : ∀ ⦃a b⦄, a < b → ∃ c ∈ s, a < c ∧ c < b) : Dense s := by
+  apply dense_iff_inter_open.2 fun U U_open U_nonempty => _
+  obtain ⟨a, b, hab, H⟩ : ∃ a b : α, a < b ∧ Ioo a b ⊆ U := U_open.exists_Ioo_subset U_nonempty
+  obtain ⟨x, xs, hx⟩ : ∃ (x : α)(H : x ∈ s), a < x ∧ x < b := h hab
+  exact ⟨x, ⟨H hx, xs⟩⟩
+
+/-- A set in a nontrivial densely linear ordered type is dense in the sense of topology if and only
+if for any `a < b` there exists `c ∈ s`, `a < c < b`. Each implication requires less typeclass
+assumptions. -/
+theorem dense_iff_exists_between [DenselyOrdered α] [Nontrivial α] {s : Set α} :
+    Dense s ↔ ∀ a b, a < b → ∃ c ∈ s, a < c ∧ c < b :=
+  ⟨fun h a b hab => h.exists_between hab, dense_of_exists_between⟩
 
 theorem OrderTopology.t2_space : T2Space α := by
   infer_instance
@@ -1128,6 +1163,96 @@ theorem nhds_basis_Ioo [NoMaxOrder α] [NoMinOrder α] (a : α) :
 theorem Filter.Eventually.exists_Ioo_subset [NoMaxOrder α] [NoMinOrder α] {a : α} {p : α → Prop}
     (hp : ∀ᶠ x in 𝓝 a, p x) : ∃ l u, a ∈ Ioo l u ∧ Ioo l u ⊆ { x | p x } :=
   mem_nhds_iff_exists_Ioo_subset.1 hp
+
+/-- The set of points which are isolated on the right is countable when the space is
+second-countable. -/
+theorem countable_of_isolated_right [SecondCountableTopology α] : Set.Countable { x : α | ∃ y, x < y ∧ Ioo x y = ∅ } :=
+  by
+  nontriviality α
+  let s := { x : α | ∃ y, x < y ∧ Ioo x y = ∅ }
+  have : ∀, ∀ x ∈ s, ∀, ∃ y, x < y ∧ Ioo x y = ∅ := fun x => id
+  choose! y hy h'y using this
+  have Hy : ∀ x z, x ∈ s → z < y x → z ≤ x := by
+    intro x z xs hz
+    have A : Ioo x (y x) = ∅ := h'y _ xs
+    contrapose! A
+    exact ne_empty_iff_nonempty.2 ⟨z, A, hz⟩
+  suffices H : ∀ a : Set α, IsOpen a → Set.Countable { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a }
+  · have : s ⊆ ⋃ a ∈ countable_basis α, { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a } := by
+      intro x hx
+      rcases(is_basis_countable_basis α).exists_mem_of_ne (hy x hx).Ne with ⟨a, ab, xa, ya⟩
+      simp only [mem_set_of_eq, mem_Union]
+      exact ⟨a, ab, hx, xa, ya⟩
+    apply countable.mono this
+    refine' countable.bUnion (countable_countable_basis α) fun a ha => H _ _
+    exact is_open_of_mem_countable_basis ha
+    
+  intro a ha
+  suffices H : Set.Countable { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a ∧ ¬IsBot x }
+  · have : { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a } ⊆ { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a ∧ ¬IsBot x } ∪ { x | IsBot x } := by
+      intro x hx
+      by_cases' h'x : IsBot x
+      · simp only [h'x, mem_set_of_eq, mem_union_eq, not_true, and_falseₓ, false_orₓ]
+        
+      · simpa only [h'x, hx.2.1, hx.2.2, mem_set_of_eq, mem_union_eq, not_false_iff, and_trueₓ, or_falseₓ] using hx.left
+        
+    exact countable.mono this (H.union (subsingleton_is_bot α).Countable)
+    
+  let t := { x | x ∈ s ∧ x ∈ a ∧ y x ∉ a ∧ ¬IsBot x }
+  have : ∀, ∀ x ∈ t, ∀, ∃ z < x, Ioc z x ⊆ a := by
+    intro x hx
+    apply exists_Ioc_subset_of_mem_nhds (ha.mem_nhds hx.2.1)
+    simpa only [IsBot, not_forall, not_leₓ] using hx.right.right.right
+  choose! z hz h'z using this
+  have : pairwise_disjoint t fun x => Ioc (z x) x := by
+    intro x xt x' x't hxx'
+    rcases lt_or_gt_of_neₓ hxx' with (h' | h')
+    · refine' disjoint_left.2 fun u ux ux' => xt.2.2.1 _
+      refine' h'z x' x't ⟨ux'.1.trans_le (ux.2.trans (hy x xt.1).le), _⟩
+      by_contra' H
+      exact False.elim (lt_irreflₓ _ ((Hy _ _ xt.1 H).trans_lt h'))
+      
+    · refine' disjoint_left.2 fun u ux ux' => x't.2.2.1 _
+      refine' h'z x xt ⟨ux.1.trans_le (ux'.2.trans (hy x' x't.1).le), _⟩
+      by_contra' H
+      exact False.elim (lt_irreflₓ _ ((Hy _ _ x't.1 H).trans_lt h'))
+      
+  refine' this.countable_of_is_open (fun x hx => _) fun x hx => ⟨x, hz x hx, le_rfl⟩
+  suffices H : Ioc (z x) x = Ioo (z x) (y x)
+  · rw [H]
+    exact is_open_Ioo
+    
+  exact subset.antisymm (Ioc_subset_Ioo_right (hy x hx.1)) fun u hu => ⟨hu.1, Hy _ _ hx.1 hu.2⟩
+
+/-- The set of points which are isolated on the left is countable when the space is
+second-countable. -/
+theorem countable_of_isolated_left [SecondCountableTopology α] : Set.Countable { x : α | ∃ y, y < x ∧ Ioo y x = ∅ } :=
+  by
+  convert @countable_of_isolated_right αᵒᵈ _ _ _ _
+  have : ∀ x y : α, Ioo x y = { z | z < y ∧ x < z } := by
+    simp_rw [and_comm, Ioo]
+    simp only [eq_self_iff_true, forall_2_true_iff]
+  simp_rw [this]
+  rfl
+
+/-- Consider a disjoint family of intervals `(x, y)` with `x < y` in a second-countable space.
+Then the family is countable.
+This is not a straightforward consequence of second-countability as some of these intervals might be
+empty (but in fact this can happen only for countably many of them). -/
+theorem Set.PairwiseDisjoint.countable_of_Ioo [SecondCountableTopology α] {y : α → α} {s : Set α}
+    (h : PairwiseDisjoint s fun x => Ioo x (y x)) (h' : ∀, ∀ x ∈ s, ∀, x < y x) : Countable s := by
+  let t := { x | x ∈ s ∧ (Ioo x (y x)).Nonempty }
+  have t_count : countable t :=
+    have : t ⊆ s := fun x hx => hx.1
+    (h.subset this).countable_of_is_open (fun x hx => is_open_Ioo) fun x hx => hx.2
+  have : s ⊆ t ∪ { x : α | ∃ x', x < x' ∧ Ioo x x' = ∅ } := by
+    intro x hx
+    by_cases' h'x : (Ioo x (y x)).Nonempty
+    · exact Or.inl ⟨hx, h'x⟩
+      
+    · exact Or.inr ⟨y x, h' x hx, not_nonempty_iff_eq_empty.1 h'x⟩
+      
+  exact countable.mono this (t_count.union countable_of_isolated_right)
 
 section Pi
 
@@ -1517,6 +1642,8 @@ theorem mem_nhds_within_Iic_iff_exists_Icc_subset [NoMinOrder α] [DenselyOrdere
     exact ⟨l, la, subset.trans Ioc_subset_Icc_self as⟩
     
 
+end OrderTopology
+
 end LinearOrderₓ
 
 section LinearOrderedAddCommGroup
@@ -1751,7 +1878,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
   · obtain ⟨i, hi, hit⟩ := h
     refine' ⟨i / abs x₀, div_pos hi (abs_pos.2 hx₀), fun x hx => hit _⟩
     calc abs (x₀ * x - x₀) = abs (x₀ * (x - 1)) :=
-        congr_argₓ abs
+        congr_arg abs
           (by
             ring_nf)_ = abs x₀ * abs (x - 1) :=
         abs_mul x₀ (x - 1)_ < abs x₀ * (i / abs x₀) :=
@@ -1762,7 +1889,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) : 𝓝 x�
     refine' ⟨i * abs x₀, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
     have : abs (x / x₀ - 1) < i
     calc abs (x / x₀ - 1) = abs (x / x₀ - x₀ / x₀) := by
-        rw [div_self hx₀]_ = abs ((x - x₀) / x₀) := congr_argₓ abs (sub_div x x₀ x₀).symm _ = abs (x - x₀) / abs x₀ :=
+        rw [div_self hx₀]_ = abs ((x - x₀) / x₀) := congr_arg abs (sub_div x x₀ x₀).symm _ = abs (x - x₀) / abs x₀ :=
         abs_div (x - x₀) x₀ _ < i * abs x₀ / abs x₀ :=
         div_lt_div hx le_rfl (mul_nonneg (le_of_ltₓ hi) (abs_nonneg x₀)) (abs_pos.2 hx₀)_ = i := by
         rw [← mul_div_assoc', div_self (ne_of_ltₓ <| abs_pos.2 hx₀).symm, mul_oneₓ]
@@ -2540,20 +2667,6 @@ theorem tendsto_Ioi_at_bot {f : β → Ioi a} : Tendsto f l atBot ↔ Tendsto (f
 theorem tendsto_Iio_at_top {f : β → Iio a} : Tendsto f l atTop ↔ Tendsto (fun x => (f x : α)) l (𝓝[<] a) := by
   rw [← comap_coe_Iio_nhds_within_Iio, tendsto_comap_iff]
 
-theorem dense_iff_forall_lt_exists_mem [Nontrivial α] {s : Set α} : Dense s ↔ ∀ a b, a < b → ∃ c ∈ s, a < c ∧ c < b :=
-  by
-  constructor
-  · intro h a b hab
-    obtain ⟨c, ⟨hc, cs⟩⟩ : (Ioo a b ∩ s).Nonempty := dense_iff_inter_open.1 h (Ioo a b) is_open_Ioo (nonempty_Ioo.2 hab)
-    exact ⟨c, cs, hc⟩
-    
-  · intro h
-    apply dense_iff_inter_open.2 fun U U_open U_nonempty => _
-    obtain ⟨a, b, hab, H⟩ : ∃ a b : α, a < b ∧ Ioo a b ⊆ U := U_open.exists_Ioo_subset U_nonempty
-    obtain ⟨x, xs, hx⟩ : ∃ (x : α)(H : x ∈ s), a < x ∧ x < b := h a b hab
-    exact ⟨x, ⟨H hx, xs⟩⟩
-    
-
 instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   apply forall_mem_nonempty_iff_ne_bot.1 fun s hs => _
   obtain ⟨u, u_open, xu, us⟩ : ∃ u : Set α, IsOpen u ∧ x ∈ u ∧ u ∩ {x}ᶜ ⊆ s := mem_nhds_within.1 hs
@@ -2565,7 +2678,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.Ne⟩⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (t «expr ⊆ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (t «expr ⊆ » s)
 /-- Let `s` be a dense set in a nontrivial dense linear order `α`. If `s` is a
 separable space (e.g., if `α` has a second countable topology), then there exists a countable
 dense subset `t ⊆ s` such that `t` does not contain bottom/top elements of `α`. -/

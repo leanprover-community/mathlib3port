@@ -164,7 +164,7 @@ theorem integrable_on_singleton_iff {x : α} [MeasurableSingletonClass α] : Int
   simp
 
 @[simp]
-theorem integrable_on_finite_Union {s : Set β} (hs : Finite s) {t : β → Set α} :
+theorem integrable_on_finite_Union {s : Set β} (hs : s.Finite) {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀, ∀ i ∈ s, ∀, IntegrableOn f (t i) μ := by
   apply hs.induction_on
   · simp
@@ -336,26 +336,26 @@ theorem ContinuousOn.ae_measurable [TopologicalSpace α] [OpensMeasurableSpace �
   rw [piecewise_preimage, Set.Ite, hu]
   exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
-theorem ContinuousOn.ae_strongly_measurable_of_is_separable [TopologicalSpace α] [MetrizableSpace α]
-    [OpensMeasurableSpace α] [TopologicalSpace β] [MetrizableSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α}
+theorem ContinuousOn.ae_strongly_measurable_of_is_separable [TopologicalSpace α] [PseudoMetrizableSpace α]
+    [OpensMeasurableSpace α] [TopologicalSpace β] [PseudoMetrizableSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α}
     (hf : ContinuousOn f s) (hs : MeasurableSet s) (h's : TopologicalSpace.IsSeparable s) :
     AeStronglyMeasurable f (μ.restrict s) := by
-  let this := metrizable_space_metric α
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  let this := pseudo_metrizable_space_pseudo_metric α
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   rw [ae_strongly_measurable_iff_ae_measurable_separable]
   refine' ⟨hf.ae_measurable hs, f '' s, hf.is_separable_image h's, _⟩
   exact mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- A function which is continuous on a set `s` is almost everywhere strongly measurable with
 respect to `μ.restrict s` when either the source space or the target space is second-countable. -/
 theorem ContinuousOn.ae_strongly_measurable [TopologicalSpace α] [TopologicalSpace β]
-    [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [MetrizableSpace β] {f : α → β} {s : Set α}
+    [h : SecondCountableTopologyEither α β] [OpensMeasurableSpace α] [PseudoMetrizableSpace β] {f : α → β} {s : Set α}
     {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) : AeStronglyMeasurable f (μ.restrict s) := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   refine'
     ae_strongly_measurable_iff_ae_measurable_separable.2
       ⟨hf.ae_measurable hs, f '' s, _, mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
@@ -370,7 +370,7 @@ theorem ContinuousOn.ae_strongly_measurable [TopologicalSpace α] [TopologicalSp
   · exact is_separable_of_separable_space _
     
 
-theorem ContinuousOn.integrable_at_nhds_within_of_is_separable [TopologicalSpace α] [MetrizableSpace α]
+theorem ContinuousOn.integrable_at_nhds_within_of_is_separable [TopologicalSpace α] [PseudoMetrizableSpace α]
     [OpensMeasurableSpace α] {μ : Measureₓ α} [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E}
     (hft : ContinuousOn f t) (ht : MeasurableSet t) (h't : TopologicalSpace.IsSeparable t) (ha : a ∈ t) :
     IntegrableAtFilter f (𝓝[t] a) μ :=
@@ -387,8 +387,8 @@ theorem ContinuousOn.integrable_at_nhds_within [TopologicalSpace α] [SecondCoun
 /-- If a function is continuous on an open set `s`, then it is strongly measurable at the filter
 `𝓝 x` for all `x ∈ s` if either the source space or the target space is second-countable. -/
 theorem ContinuousOn.strongly_measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [TopologicalSpace β]
-    [MetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β} {s : Set α} {μ : Measureₓ α} (hs : IsOpen s)
-    (hf : ContinuousOn f s) : ∀, ∀ x ∈ s, ∀, StronglyMeasurableAtFilter f (𝓝 x) μ := fun x hx =>
+    [PseudoMetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β} {s : Set α} {μ : Measureₓ α}
+    (hs : IsOpen s) (hf : ContinuousOn f s) : ∀, ∀ x ∈ s, ∀, StronglyMeasurableAtFilter f (𝓝 x) μ := fun x hx =>
   ⟨s, IsOpen.mem_nhds hs hx, hf.AeStronglyMeasurable hs.MeasurableSet⟩
 
 theorem ContinuousAt.strongly_measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α]
@@ -397,15 +397,15 @@ theorem ContinuousAt.strongly_measurable_at_filter [TopologicalSpace α] [OpensM
   ContinuousOn.strongly_measurable_at_filter hs <| ContinuousAt.continuous_on hf
 
 theorem Continuous.strongly_measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [TopologicalSpace β]
-    [MetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β} (hf : Continuous f) (μ : Measureₓ α)
+    [PseudoMetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β} (hf : Continuous f) (μ : Measureₓ α)
     (l : Filter α) : StronglyMeasurableAtFilter f l μ :=
   hf.StronglyMeasurable.StronglyMeasurableAtFilter
 
 /-- If a function is continuous on a measurable set `s`, then it is measurable at the filter
   `𝓝[s] x` for all `x`. -/
 theorem ContinuousOn.strongly_measurable_at_filter_nhds_within {α β : Type _} [MeasurableSpace α] [TopologicalSpace α]
-    [OpensMeasurableSpace α] [TopologicalSpace β] [MetrizableSpace β] [SecondCountableTopologyEither α β] {f : α → β}
-    {s : Set α} {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) (x : α) :
+    [OpensMeasurableSpace α] [TopologicalSpace β] [PseudoMetrizableSpace β] [SecondCountableTopologyEither α β]
+    {f : α → β} {s : Set α} {μ : Measureₓ α} (hf : ContinuousOn f s) (hs : MeasurableSet s) (x : α) :
     StronglyMeasurableAtFilter f (𝓝[s] x) μ :=
   ⟨s, self_mem_nhds_within, hf.AeStronglyMeasurable hs⟩
 

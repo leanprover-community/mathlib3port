@@ -81,13 +81,13 @@ theorem GradedAlgebra.ι_sq_scalar (m : M) : GradedAlgebra.ι Q m * GradedAlgebr
 
 /-- The clifford algebra is graded by the even and odd parts. -/
 instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
-  GradedAlgebra.ofAlgHom _ (lift _ <| ⟨GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
+  GradedAlgebra.ofAlgHom (evenOdd Q) (lift _ <| ⟨GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
     (-- the proof from here onward is mostly similar to the `tensor_algebra` case, with some extra
     -- handling for the `supr` in `even_odd`.
     by
       ext m
       dsimp' only [LinearMap.comp_apply, AlgHom.to_linear_map_apply, AlgHom.comp_apply, AlgHom.id_apply]
-      rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.submodule_coe_alg_hom_of, Subtype.coe_mk])
+      rw [lift_ι_apply, graded_algebra.ι_apply, DirectSum.coe_alg_hom_of, Subtype.coe_mk])
     fun i' x' => by
     cases' x' with x' hx'
     dsimp' only [Subtype.coe_mk, DirectSum.lof_eq_of]
@@ -104,10 +104,9 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
         
       · obtain ⟨_, rfl⟩ := hm
         rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply, DirectSum.of_mul_of]
-        refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _)
-        dsimp' only [GradedMonoid.mk, Subtype.coe_mk]
-        · rw [Nat.succ_eq_add_one, add_commₓ]
-          rfl
+        refine' DirectSum.of_eq_of_graded_monoid_eq (Sigma.subtype_ext _ _) <;>
+          dsimp' only [GradedMonoid.mk, Subtype.coe_mk]
+        · rw [Nat.succ_eq_add_one, add_commₓ, Nat.cast_addₓ, Nat.cast_oneₓ]
           
         rfl
         
@@ -122,7 +121,7 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
       
 
 theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
-  rw [← (GradedAlgebra.is_internal fun i => even_odd Q i).supr_eq_top, eq_comm]
+  rw [← (GradedAlgebra.is_internal fun i => even_odd Q i).submodule_supr_eq_top, eq_comm]
   dunfold even_odd
   calc
     (⨆ (i : Zmod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
@@ -134,7 +133,7 @@ theorem supr_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ := by
 theorem even_odd_is_compl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
   (GradedAlgebra.is_internal (evenOdd Q)).IsCompl zero_ne_one <| by
     have : (Finset.univ : Finset (Zmod 2)) = {0, 1} := rfl
-    simpa using congr_argₓ (coe : Finset (Zmod 2) → Set (Zmod 2)) this
+    simpa using congr_arg (coe : Finset (Zmod 2) → Set (Zmod 2)) this
 
 /-- To show a property is true on the even or odd part, it suffices to show it is true on the
 scalars or vectors (respectively), closed under addition, and under left-multiplication by a pair

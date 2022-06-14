@@ -89,7 +89,7 @@ instance liftHom₂WhiskerRight {f g : a ⟶ b} (η : f ⟶ g) [LiftHom f] [Lift
     LiftHom₂ (η ▷ h) where
   lift := LiftHom₂.lift η ▷ LiftHom.lift h
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`Hom] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`Hom] []
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
@@ -203,7 +203,7 @@ namespace Tactic
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Coherence tactic for bicategories. -/
 unsafe def bicategorical_coherence : tactic Unit :=
   focus1 <| do
@@ -220,7 +220,7 @@ unsafe def bicategorical_coherence : tactic Unit :=
 
 namespace Bicategory
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Simp lemmas for rewriting a 2-morphism into a normal form. -/
 unsafe def whisker_simps : tactic Unit :=
   sorry

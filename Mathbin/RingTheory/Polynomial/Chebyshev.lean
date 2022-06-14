@@ -249,6 +249,7 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
 
 variable (R)
 
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/
 theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + t R k
   | 0 => by
@@ -284,7 +285,7 @@ theorem mul_T : ∀ m : ℕ, ∀ k, 2 * t R m * t R (m + k) = t R (2 * m + k) + 
     have h₂ := T_add_two R (2 * m + k + 2)
     have h₃ := T_add_two R k
     -- the desired identity is an appropriate linear combination of H₁, H₂, h₁, h₂, h₃
-    linear_combination h₁ * 2 * T R (m + k + 2) + H₁ * 2 * X + H₂ * -1 + h₂ * -1 + h₃ * -1
+    "././Mathport/Syntax/Translate/Basic.lean:534:40: in linear_combination: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: too many args"
 
 /-- The `(m * n)`-th Chebyshev polynomial is the composition of the `m`-th and `n`-th -/
 theorem T_mul : ∀ m : ℕ, ∀ n : ℕ, t R (m * n) = (t R m).comp (t R n)

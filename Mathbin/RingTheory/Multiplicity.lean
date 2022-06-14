@@ -6,7 +6,7 @@ Authors: Robert Y. Lewis, Chris Hughes
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Basic
 import Mathbin.RingTheory.Valuation.Basic
-import Mathbin.Data.Nat.Factorization
+import Mathbin.Data.Nat.Factorization.Basic
 
 /-!
 # Multiplicity of a divisor

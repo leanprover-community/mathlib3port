@@ -5,7 +5,7 @@ Authors: Thomas Browning
 -/
 import Mathbin.Algebra.GcdMonoid.Multiset
 import Mathbin.Combinatorics.Partition
-import Mathbin.GroupTheory.Perm.Cycles
+import Mathbin.GroupTheory.Perm.Cycle.Basic
 import Mathbin.RingTheory.Int.Basic
 import Mathbin.Tactic.Linarith.Default
 
@@ -25,8 +25,8 @@ In this file we define the cycle type of a permutation.
 - `lcm_cycle_type` : The lcm of `σ.cycle_type` equals `order_of σ`
 - `is_conj_iff_cycle_type_eq` : Two permutations are conjugate if and only if they have the same
   cycle type.
-* `exists_prime_order_of_dvd_card`: For every prime `p` dividing the order of a finite group `G`
-  there exists an element of order `p` in `G`. This is known as Cauchy`s theorem.
+- `exists_prime_order_of_dvd_card`: For every prime `p` dividing the order of a finite group `G`
+  there exists an element of order `p` in `G`. This is known as Cauchy's theorem.
 -/
 
 
@@ -91,7 +91,7 @@ theorem one_lt_of_mem_cycle_type {σ : Perm α} {n : ℕ} (h : n ∈ σ.cycleTyp
   two_le_of_mem_cycle_type h
 
 theorem IsCycle.cycle_type {σ : Perm α} (hσ : IsCycle σ) : σ.cycleType = [σ.support.card] :=
-  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_argₓ IsCycle (List.mem_singletonₓ.mp hτ)).mpr hσ)
+  cycle_type_eq [σ] (mul_oneₓ σ) (fun τ hτ => (congr_arg IsCycle (List.mem_singletonₓ.mp hτ)).mpr hσ)
     (pairwise_singleton Disjoint σ)
 
 theorem card_cycle_type_eq_one {σ : Perm α} : σ.cycleType.card = 1 ↔ σ.IsCycle := by
@@ -200,7 +200,7 @@ theorem order_of_cycle_of_dvd_order_of (f : Perm α) (x : α) : orderOf (cycleOf
     
 
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.support.card :=
-  (congr_argₓ (Dvd.Dvd 2) σ.sum_cycle_type).mp
+  (congr_arg (Dvd.Dvd 2) σ.sum_cycle_type).mp
     (Multiset.dvd_sum fun n hn => by
       rw
         [le_antisymmₓ (Nat.le_of_dvdₓ zero_lt_two <| (dvd_of_mem_cycle_type hn).trans <| order_of_dvd_of_pow_eq_one hσ)
@@ -336,9 +336,9 @@ end CycleType
 theorem card_compl_support_modeq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime] {σ : Perm α} (hσ : σ ^ p ^ n = 1) :
     σ.supportᶜ.card ≡ Fintype.card α [MOD p] := by
   rw [Nat.modeq_iff_dvd' σ.supportᶜ.card_le_univ, ← Finset.card_compl, compl_compl]
-  refine' (congr_argₓ _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
+  refine' (congr_arg _ σ.sum_cycle_type).mp (Multiset.dvd_sum fun k hk => _)
   obtain ⟨m, -, hm⟩ := (Nat.dvd_prime_pow hp.out).mp (order_of_dvd_of_pow_eq_one hσ)
-  obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_argₓ _ hm).mp (dvd_of_mem_cycle_type hk))
+  obtain ⟨l, -, rfl⟩ := (Nat.dvd_prime_pow hp.out).mp ((congr_arg _ hm).mp (dvd_of_mem_cycle_type hk))
   exact
     dvd_pow_self _ fun h =>
       (one_lt_of_mem_cycle_type hk).Ne <| by
@@ -352,7 +352,7 @@ theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p �
   simp_rw [← mem_support]  at hα
   exact
     nat.modeq_zero_iff_dvd.mp
-      ((congr_argₓ _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
+      ((congr_arg _ (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
         (card_compl_support_modeq hσ).symm)
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
@@ -378,7 +378,7 @@ theorem is_cycle_of_prime_order' {σ : Perm α} (h1 : (orderOf σ).Prime) (h2 : 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 theorem is_cycle_of_prime_order'' {σ : Perm α} (h1 : (Fintype.card α).Prime) (h2 : orderOf σ = Fintype.card α) :
     σ.IsCycle :=
-  is_cycle_of_prime_order' ((congr_argₓ Nat.Prime h2).mpr h1)
+  is_cycle_of_prime_order' ((congr_arg Nat.Prime h2).mpr h1)
     (by
       classical
       rw [← one_mulₓ (Fintype.card α), ← h2, mul_lt_mul_right (order_of_pos σ)]
@@ -438,7 +438,7 @@ def equivVector : VectorsProdEqOne G n ≃ Vector G (n - 1) :=
       (if hn : n = 0 then
         show VectorsProdEqOne G (n - 1 + 1) ≃ VectorsProdEqOne G n by
           rw [hn]
-          exact equivOfUniqueOfUnique
+          apply equiv_of_unique
       else by
         rw [tsub_add_cancel_of_le (Nat.pos_of_ne_zeroₓ hn).nat_succ_le])).symm
 
@@ -461,11 +461,13 @@ theorem rotate_rotate : rotate (rotate v j) k = rotate v (j + k) :=
   Subtype.ext (Subtype.ext (v.1.1.rotate_rotate j k))
 
 theorem rotate_length : rotate v n = v :=
-  Subtype.ext (Subtype.ext ((congr_argₓ _ v.1.2.symm).trans v.1.1.rotate_length))
+  Subtype.ext (Subtype.ext ((congr_arg _ v.1.2.symm).trans v.1.1.rotate_length))
 
 end VectorsProdEqOne
 
-theorem exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype G] (p : ℕ) [hp : Fact p.Prime]
+/-- For every prime `p` dividing the order of a finite group `G` there exists an element of order
+`p` in `G`. This is known as Cauchy's theorem. -/
+theorem _root_.exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype G] (p : ℕ) [hp : Fact p.Prime]
     (hdvd : p ∣ Fintype.card G) : ∃ x : G, orderOf x = p := by
   have hp' : p - 1 ≠ 0 := mt tsub_eq_zero_iff_le.mp (not_le_of_lt hp.out.one_lt)
   have Scard :=
@@ -484,7 +486,7 @@ theorem exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype G] (p 
       fun s => by
       rw [hf2, tsub_add_cancel_of_le hp.out.one_lt.le, hf3]
   have hσ : ∀ k v, (σ ^ k) v = f k v := fun k v =>
-    Nat.rec (hf1 v).symm (fun k hk => Eq.trans (congr_argₓ σ hk) (hf2 k 1 v)) k
+    Nat.rec (hf1 v).symm (fun k hk => Eq.trans (congr_arg σ hk) (hf2 k 1 v)) k
   replace hσ : σ ^ p ^ 1 = 1 :=
     perm.ext fun v => by
       rw [pow_oneₓ, hσ, hf3, one_apply]
@@ -499,6 +501,14 @@ theorem exists_prime_order_of_dvd_card {G : Type _} [Groupₓ G] [Fintype G] (p 
   · rw [Subtype.ext_iff_val, Subtype.ext_iff_val, hg, hg', v.1.2]
     rfl
     
+
+/-- For every prime `p` dividing the order of a finite additive group `G` there exists an element of
+order `p` in `G`. This is the additive version of Cauchy's theorem. -/
+theorem _root_.exists_prime_add_order_of_dvd_card {G : Type _} [AddGroupₓ G] [Fintype G] (p : ℕ) [hp : Fact p.Prime]
+    (hdvd : p ∣ Fintype.card G) : ∃ x : G, addOrderOf x = p :=
+  @exists_prime_order_of_dvd_card (Multiplicative G) _ _ _ _ hdvd
+
+attribute [to_additive exists_prime_add_order_of_dvd_card] exists_prime_order_of_dvd_card
 
 end Cauchy
 

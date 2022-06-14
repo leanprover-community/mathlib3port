@@ -152,7 +152,7 @@ def sumCongrHom (α β : Type _) : Perm α × Perm β →* Perm (Sum α β) wher
 
 theorem sum_congr_hom_injective {α β : Type _} : Function.Injective (sumCongrHom α β) := by
   rintro ⟨⟩ ⟨⟩ h
-  rw [Prod.mk.inj_iffₓ]
+  rw [Prod.mk.inj_iff]
   constructor <;> ext i
   · simpa using Equivₓ.congr_fun h (Sum.inl i)
     
@@ -210,7 +210,7 @@ def subtypeCongrHom (p : α → Prop) [DecidablePred p] : Perm { a // p a } × P
 
 theorem subtype_congr_hom_injective (p : α → Prop) [DecidablePred p] : Function.Injective (subtypeCongrHom p) := by
   rintro ⟨⟩ ⟨⟩ h
-  rw [Prod.mk.inj_iffₓ]
+  rw [Prod.mk.inj_iff]
   constructor <;> ext i <;> simpa using Equivₓ.congr_fun h i
 
 /-- If `e` is also a permutation, we can write `perm_congr`

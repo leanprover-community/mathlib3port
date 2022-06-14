@@ -116,7 +116,7 @@ theorem trans (C : Type w) [CommRingₓ C] [Algebra A C] [Algebra B C] [IsScalar
   · cases hn
     · obtain ⟨b, hb⟩ := ((is_cyclotomic_extension_iff _ _ _).1 hS).1 hn
       refine' ⟨algebraMap B C b, _⟩
-      replace hb := congr_argₓ (algebraMap B C) hb
+      replace hb := congr_arg (algebraMap B C) hb
       rw [aeval_def, eval₂_eq_eval_map, map_cyclotomic, RingHom.map_zero, ← eval₂_at_apply, eval₂_eq_eval_map,
         map_cyclotomic] at hb
       rwa [aeval_def, eval₂_eq_eval_map, map_cyclotomic]
@@ -405,7 +405,7 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
--- ././Mathport/Syntax/Translate/Basic.lean:979:9: unsupported derive handler algebra K
+-- ././Mathport/Syntax/Translate/Basic.lean:978:9: unsupported derive handler algebra K
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
@@ -533,7 +533,7 @@ instance [NeZero ((n : ℕ) : A)] : IsFractionRing (CyclotomicRing n A K) (Cyclo
       replace := this.surj
       obtain ⟨⟨z, w⟩, hw⟩ := this k
       refine' ⟨⟨algebraMap A _ z, algebraMap A _ w, map_mem_non_zero_divisors _ (algebra_base_injective n A K) w.2⟩, _⟩
-      let this : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_funₓ rfl)
+      let this : IsScalarTower A K (CyclotomicField n K) := IsScalarTower.of_algebra_map_eq (congr_fun rfl)
       rw [SetLike.coe_mk, ← IsScalarTower.algebra_map_apply, ← IsScalarTower.algebra_map_apply,
         @IsScalarTower.algebra_map_apply A K _ _ _ _ _ (_root_.cyclotomic_field.algebra n K) _ _ w, ← RingHom.map_mul,
         hw, ← IsScalarTower.algebra_map_apply]

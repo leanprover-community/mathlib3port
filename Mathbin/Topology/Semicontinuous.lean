@@ -471,7 +471,7 @@ theorem lower_semicontinuous_within_at_supr {f : ι → α → δ} (h : ∀ i, L
   rcases lt_supr_iff.1 hy with ⟨i, hi⟩
   filter_upwards [h i y hi] with _ hx' using lt_supr_iff.2 ⟨i, hx'⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_within_at_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousWithinAt (f i hi) s x) :
     LowerSemicontinuousWithinAt (fun x' => ⨆ (i) (hi), f i hi x') s x :=
@@ -482,7 +482,7 @@ theorem lower_semicontinuous_at_supr {f : ι → α → δ} (h : ∀ i, LowerSem
   simp_rw [← lower_semicontinuous_within_at_univ_iff]  at *
   exact lower_semicontinuous_within_at_supr h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_at_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousAt (f i hi) x) : LowerSemicontinuousAt (fun x' => ⨆ (i) (hi), f i hi x') x :=
   lower_semicontinuous_at_supr fun i => lower_semicontinuous_at_supr fun hi => h i hi
@@ -490,7 +490,7 @@ theorem lower_semicontinuous_at_bsupr {p : ι → Prop} {f : ∀ i h : p i, α �
 theorem lower_semicontinuous_on_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousOn (f i) s) :
     LowerSemicontinuousOn (fun x' => ⨆ i, f i x') s := fun x hx => lower_semicontinuous_within_at_supr fun i => h i x hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_on_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, LowerSemicontinuousOn (f i hi) s) : LowerSemicontinuousOn (fun x' => ⨆ (i) (hi), f i hi x') s :=
   lower_semicontinuous_on_supr fun i => lower_semicontinuous_on_supr fun hi => h i hi
@@ -498,7 +498,7 @@ theorem lower_semicontinuous_on_bsupr {p : ι → Prop} {f : ∀ i h : p i, α �
 theorem lower_semicontinuous_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuous (f i)) :
     LowerSemicontinuous fun x' => ⨆ i, f i x' := fun x => lower_semicontinuous_at_supr fun i => h i x
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem lower_semicontinuous_bsupr {p : ι → Prop} {f : ∀ i h : p i, α → δ} (h : ∀ i hi, LowerSemicontinuous (f i hi)) :
     LowerSemicontinuous fun x' => ⨆ (i) (hi), f i hi x' :=
   lower_semicontinuous_supr fun i => lower_semicontinuous_supr fun hi => h i hi
@@ -791,7 +791,7 @@ theorem upper_semicontinuous_within_at_infi {f : ι → α → δ} (h : ∀ i, U
     UpperSemicontinuousWithinAt (fun x' => ⨅ i, f i x') s x :=
   @lower_semicontinuous_within_at_supr α _ x s ι δᵒᵈ _ f h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_within_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousWithinAt (f i hi) s x) :
     UpperSemicontinuousWithinAt (fun x' => ⨅ (i) (hi), f i hi x') s x :=
@@ -801,7 +801,7 @@ theorem upper_semicontinuous_at_infi {f : ι → α → δ} (h : ∀ i, UpperSem
     UpperSemicontinuousAt (fun x' => ⨅ i, f i x') x :=
   @lower_semicontinuous_at_supr α _ x ι δᵒᵈ _ f h
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousAt (f i hi) x) : UpperSemicontinuousAt (fun x' => ⨅ (i) (hi), f i hi x') x :=
   upper_semicontinuous_at_infi fun i => upper_semicontinuous_at_infi fun hi => h i hi
@@ -809,7 +809,7 @@ theorem upper_semicontinuous_at_binfi {p : ι → Prop} {f : ∀ i h : p i, α �
 theorem upper_semicontinuous_on_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousOn (f i) s) :
     UpperSemicontinuousOn (fun x' => ⨅ i, f i x') s := fun x hx => upper_semicontinuous_within_at_infi fun i => h i x hx
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_on_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ}
     (h : ∀ i hi, UpperSemicontinuousOn (f i hi) s) : UpperSemicontinuousOn (fun x' => ⨅ (i) (hi), f i hi x') s :=
   upper_semicontinuous_on_infi fun i => upper_semicontinuous_on_infi fun hi => h i hi
@@ -817,7 +817,7 @@ theorem upper_semicontinuous_on_binfi {p : ι → Prop} {f : ∀ i h : p i, α �
 theorem upper_semicontinuous_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuous (f i)) :
     UpperSemicontinuous fun x' => ⨅ i, f i x' := fun x => upper_semicontinuous_at_infi fun i => h i x
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i hi)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i hi)
 theorem upper_semicontinuous_binfi {p : ι → Prop} {f : ∀ i h : p i, α → δ} (h : ∀ i hi, UpperSemicontinuous (f i hi)) :
     UpperSemicontinuous fun x' => ⨅ (i) (hi), f i hi x' :=
   upper_semicontinuous_infi fun i => upper_semicontinuous_infi fun hi => h i hi

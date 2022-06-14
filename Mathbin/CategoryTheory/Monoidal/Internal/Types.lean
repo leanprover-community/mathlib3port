@@ -27,18 +27,18 @@ instance monMonoid (A : Mon_ (Type u)) : Monoidₓ A.x where
   one := A.one PUnit.unit
   mul := fun x y => A.mul (x, y)
   one_mul := fun x => by
-    convert congr_funₓ A.one_mul (PUnit.unit, x)
+    convert congr_fun A.one_mul (PUnit.unit, x)
   mul_one := fun x => by
-    convert congr_funₓ A.mul_one (x, PUnit.unit)
+    convert congr_fun A.mul_one (x, PUnit.unit)
   mul_assoc := fun x y z => by
-    convert congr_funₓ A.mul_assoc ((x, y), z)
+    convert congr_fun A.mul_assoc ((x, y), z)
 
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
 def functor : Mon_ (Type u) ⥤ Mon.{u} where
   obj := fun A => ⟨A.x⟩
   map := fun A B f =>
-    { toFun := f.Hom, map_one' := congr_funₓ f.OneHom PUnit.unit, map_mul' := fun x y => congr_funₓ f.MulHom (x, y) }
+    { toFun := f.Hom, map_one' := congr_fun f.OneHom PUnit.unit, map_mul' := fun x y => congr_fun f.MulHom (x, y) }
 
 /-- Converting a bundled monoid to a monoid object in `Type`.
 -/
@@ -96,7 +96,7 @@ namespace commMonTypeEquivalenceCommMon
 instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoidₓ A.x :=
   { MonTypeEquivalenceMon.monMonoid A.toMon_ with
     mul_comm := fun x y => by
-      convert congr_funₓ A.mul_comm (y, x) }
+      convert congr_fun A.mul_comm (y, x) }
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/

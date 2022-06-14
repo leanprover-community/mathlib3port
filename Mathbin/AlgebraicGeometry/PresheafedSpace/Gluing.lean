@@ -263,7 +263,7 @@ theorem opens_image_preimage_map_app_assoc (i j k : D.J) (U : Opens (D.U i).Carr
         (π₂⁻¹j,i,k) (unop _) ≫
           (D.V (j, k)).Presheaf.map (eqToHom (opens_image_preimage_map_app' D i j k U).some) ≫ f' :=
   by
-  simpa only [category.assoc] using congr_argₓ (fun g => g ≫ f') (opens_image_preimage_map_app D i j k U)
+  simpa only [category.assoc] using congr_arg (fun g => g ≫ f') (opens_image_preimage_map_app D i j k U)
 
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
@@ -447,7 +447,7 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
       erw [← D.to_Top_glue_data.preimage_range j i]
       have : s.fst.base ≫ D.to_Top_glue_data.to_glue_data.ι i = s.snd.base ≫ D.to_Top_glue_data.to_glue_data.ι j := by
         rw [← 𝖣.ι_glued_iso_hom (PresheafedSpace.forget _) _, ← 𝖣.ι_glued_iso_hom (PresheafedSpace.forget _) _]
-        have := congr_argₓ PresheafedSpace.hom.base s.condition
+        have := congr_arg PresheafedSpace.hom.base s.condition
         rw [comp_base, comp_base] at this
         reassoc! this
         exact this _

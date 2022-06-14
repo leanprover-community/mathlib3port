@@ -66,7 +66,7 @@ variable [∀ i, Zero (β i)] [∀ i, Zero (β₁ i)] [∀ i, Zero (β₂ i)]
 
 instance funLike : FunLike (Π₀ i, β i) ι β :=
   ⟨fun f => (Quotientₓ.liftOn f Pre.toFun) fun _ _ => funext, fun f g H =>
-    Quotientₓ.induction_on₂ f g (fun _ _ H => Quotientₓ.sound H) (congr_funₓ H)⟩
+    Quotientₓ.induction_on₂ f g (fun _ _ H => Quotientₓ.sound H) (congr_fun H)⟩
 
 /-- Helper instance for when there are too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -565,7 +565,7 @@ theorem single_eq_of_ne {i i' b} (h : i ≠ i') : (single i b : Π₀ i, β i) i
   simp only [single_apply, dif_neg h]
 
 theorem single_injective {i} : Function.Injective (single i : β i → Π₀ i, β i) := fun x y H =>
-  congr_funₓ (mk_injective _ H)
+  congr_fun (mk_injective _ H)
     ⟨i, by
       simp ⟩
 
@@ -578,9 +578,9 @@ theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     · subst hij
       exact Or.inl ⟨rfl, heq_of_eq (Dfinsupp.single_injective h)⟩
       
-    · have h_coe : ⇑(Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_argₓ coeFn h
-      have hci := congr_funₓ h_coe i
-      have hcj := congr_funₓ h_coe j
+    · have h_coe : ⇑(Dfinsupp.single i xi) = Dfinsupp.single j xj := congr_arg coeFn h
+      have hci := congr_fun h_coe i
+      have hcj := congr_fun h_coe j
       rw [Dfinsupp.single_eq_same] at hci hcj
       rw [Dfinsupp.single_eq_of_ne (Ne.symm hij)] at hci
       rw [Dfinsupp.single_eq_of_ne hij] at hcj
@@ -1032,7 +1032,7 @@ theorem support_eq_empty {f : Π₀ i, β i} : f.support = ∅ ↔ f = 0 :=
 instance decidableZero : DecidablePred (Eq (0 : Π₀ i, β i)) := fun f =>
   decidableOfIff _ <| support_eq_empty.trans eq_comm
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ∉ » s)
 theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} : ↑f.support ⊆ s ↔ ∀ i _ : i ∉ s, f i = 0 := by
   simp [Set.subset_def] <;> exact forall_congrₓ fun i => not_imp_comm
 
@@ -1252,7 +1252,7 @@ This is the dfinsupp version of `equiv.Pi_congr_left'`. -/
 def equivCongrLeft [∀ i, Zero (β i)] (h : ι ≃ κ) : (Π₀ i, β i) ≃ Π₀ k, β (h.symm k) where
   toFun := comapDomain' h.symm h.right_inv
   invFun := fun f =>
-    mapRange (fun i => Equivₓ.cast <| congr_argₓ β <| h.symm_apply_apply i)
+    mapRange (fun i => Equivₓ.cast <| congr_arg β <| h.symm_apply_apply i)
       (fun i =>
         (Equivₓ.cast_eq_iff_heq _).mpr <| by
           convert HEq.rfl
@@ -1285,7 +1285,7 @@ instance distribMulAction₂ [Monoidₓ γ] [∀ i j, AddMonoidₓ (δ i j)] [�
   @Dfinsupp.distribMulAction ι _ (fun i => Π₀ j, δ i j) _ _ _
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural map between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.  -/
 noncomputable def sigmaCurry [∀ i j, Zero (δ i j)] (f : Π₀ i : Σi, _, δ i.1 i.2) : Π₀ (i) (j), δ i j := by
   classical
@@ -1344,14 +1344,14 @@ theorem sigma_curry_smul [Monoidₓ γ] [∀ i j, AddMonoidₓ (δ i j)] [∀ i 
     smul_apply]
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural map between `Π₀ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
 `curry`.-/
 noncomputable def sigmaUncurry [∀ i j, Zero (δ i j)] (f : Π₀ (i) (j), δ i j) : Π₀ i : Σi, _, δ i.1 i.2 := by
   classical
   exact mk (f.support.bUnion fun i => (f i).support.Image <| Sigma.mk i) fun ⟨⟨i, j⟩, _⟩ => f i j
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_apply [∀ i j, Zero (δ i j)] (f : Π₀ (i) (j), δ i j) (i : ι) (j : α i) :
     sigmaUncurry f ⟨i, j⟩ = f i j := by
@@ -1378,14 +1378,14 @@ theorem sigma_uncurry_apply [∀ i j, Zero (δ i j)] (f : Π₀ (i) (j), δ i j)
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_zero [∀ i j, Zero (δ i j)] : sigmaUncurry (0 : Π₀ (i) (j), δ i j) = 0 := by
   ext ⟨i, j⟩
   rw [sigma_uncurry_apply]
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_add [∀ i j, AddZeroClassₓ (δ i j)] (f g : Π₀ (i) (j), δ i j) :
     sigmaUncurry (f + g) = sigmaUncurry f + sigmaUncurry g := by
@@ -1393,14 +1393,14 @@ theorem sigma_uncurry_add [∀ i j, AddZeroClassₓ (δ i j)] (f g : Π₀ (i) (
   rw [add_apply, sigma_uncurry_apply, sigma_uncurry_apply, sigma_uncurry_apply, @add_apply _ (fun i => Π₀ j, δ i j) _,
     add_apply]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 @[simp]
 theorem sigma_uncurry_smul [Monoidₓ γ] [∀ i j, AddMonoidₓ (δ i j)] [∀ i j, DistribMulAction γ (δ i j)] (r : γ)
     (f : Π₀ (i) (j), δ i j) : sigmaUncurry (r • f) = r • sigmaUncurry f := by
   ext ⟨i, j⟩
   rw [smul_apply, sigma_uncurry_apply, sigma_uncurry_apply, @smul_apply _ _ (fun i => Π₀ j, δ i j) _ _ _, smul_apply]
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (i j)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (i j)
 /-- The natural bijection between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.
 
 This is the dfinsupp version of `equiv.Pi_curry`. -/
@@ -1562,7 +1562,7 @@ theorem prod_mul [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x 
 @[simp, to_additive]
 theorem prod_inv [∀ i, AddCommMonoidₓ (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommGroupₓ γ] {f : Π₀ i, β i}
     {h : ∀ i, β i → γ} : (f.Prod fun i b => (h i b)⁻¹) = (f.Prod h)⁻¹ :=
-  ((CommGroupₓ.invMonoidHom : γ →* γ).map_prod _ f.support).symm
+  ((invMonoidHom : γ →* γ).map_prod _ f.support).symm
 
 @[to_additive]
 theorem prod_eq_one [∀ i, Zero (β i)] [∀ i x : β i, Decidable (x ≠ 0)] [CommMonoidₓ γ] {f : Π₀ i, β i}
@@ -1668,7 +1668,7 @@ def sumAddHom [∀ i, AddZeroClassₓ (β i)] [AddCommMonoidₓ γ] (φ : ∀ i,
 theorem sum_add_hom_single [∀ i, AddZeroClassₓ (β i)] [AddCommMonoidₓ γ] (φ : ∀ i, β i →+ γ) i (x : β i) :
     sumAddHom φ (single i x) = φ i x :=
   (add_zeroₓ _).trans <|
-    congr_argₓ (φ i) <| show (if H : i ∈ ({i} : Finset _) then x else 0) = x from dif_pos <| Finset.mem_singleton_self i
+    congr_arg (φ i) <| show (if H : i ∈ ({i} : Finset _) then x else 0) = x from dif_pos <| Finset.mem_singleton_self i
 
 @[simp]
 theorem sum_add_hom_comp_single [∀ i, AddZeroClassₓ (β i)] [AddCommMonoidₓ γ] (f : ∀ i, β i →+ γ) (i : ι) :

@@ -10,9 +10,9 @@ import Mathbin.SetTheory.Cardinal.Ordinal
 # Cardinality of W-types
 
 This file proves some theorems about the cardinality of W-types. The main result is
-`cardinal_mk_le_max_omega_of_fintype` which says that if for any `a : α`,
+`cardinal_mk_le_max_aleph_0_of_fintype` which says that if for any `a : α`,
 `β a` is finite, then the cardinality of `W_type β` is at most the maximum of the
-cardinality of `α` and `cardinal.omega`.
+cardinality of `α` and `ℵ₀`.
 This can be used to prove theorems about the cardinality of algebraic constructions such as
 polynomials. There is a surjection from a `W_type` to `mv_polynomial` for example, and
 this surjection can be used to put an upper bound on the cardinality of `mv_polynomial`.
@@ -47,15 +47,15 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
   exact Cardinal.mk_le_of_injective (elim_injective _ hκ.1 hκ.2)
 
 /-- If, for any `a : α`, `β a` is finite, then the cardinality of `W_type β`
-  is at most the maximum of the cardinality of `α` and `ω`  -/
-theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType β) ≤ max (# α) ω :=
+  is at most the maximum of the cardinality of `α` and `ℵ₀`  -/
+theorem cardinal_mk_le_max_aleph_0_of_fintype [∀ a, Fintype (β a)] : # (WType β) ≤ max (# α) ℵ₀ :=
   ((is_empty_or_nonempty α).elim
       (by
         intro h
         rw [Cardinal.mk_eq_zero (WType β)]
         exact zero_le _))
     fun hn =>
-    let m := max (# α) ω
+    let m := max (# α) ℵ₀
     cardinal_mk_le_of_le <|
       calc
         (Cardinal.sum fun a : α => m ^ # (β a)) ≤ # α * Cardinal.sup.{u, u} fun a : α => m ^ Cardinal.mk (β a) :=
@@ -64,11 +64,11 @@ theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType �
         _ = m :=
           mul_eq_left.{u} (le_max_rightₓ _ _)
             (Cardinal.sup_le fun i => by
-              cases' lt_omega.1 (lt_omega_of_fintype (β i)) with n hn
+              cases' lt_aleph_0.1 (lt_aleph_0_of_fintype (β i)) with n hn
               rw [hn]
               exact power_nat_le (le_max_rightₓ _ _))
             (pos_iff_ne_zero.1
-              (succ_le_iff.1
+              (Order.succ_le_iff.1
                 (by
                   rw [succ_zero]
                   obtain ⟨a⟩ : Nonempty α
@@ -76,7 +76,7 @@ theorem cardinal_mk_le_max_omega_of_fintype [∀ a, Fintype (β a)] : # (WType �
                   refine' le_transₓ _ (le_sup _ a)
                   rw [← @power_zero m]
                   exact
-                    power_le_power_left (pos_iff_ne_zero.1 (lt_of_lt_of_leₓ omega_pos (le_max_rightₓ _ _)))
+                    power_le_power_left (pos_iff_ne_zero.1 (lt_of_lt_of_leₓ aleph_0_pos (le_max_rightₓ _ _)))
                       (zero_le _))))
         
 

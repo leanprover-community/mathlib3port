@@ -229,8 +229,8 @@ theorem inverse_compare : pkg.compare pkg' ∘ pkg'.compare pkg = id := by
 def compareEquiv : pkg.Space ≃ pkg'.Space where
   toFun := pkg.compare pkg'
   invFun := pkg'.compare pkg
-  left_inv := congr_funₓ (pkg'.inverse_compare pkg)
-  right_inv := congr_funₓ (pkg.inverse_compare pkg')
+  left_inv := congr_fun (pkg'.inverse_compare pkg)
+  right_inv := congr_fun (pkg.inverse_compare pkg')
 
 theorem uniform_continuous_compare_equiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniform_continuous_compare pkg'

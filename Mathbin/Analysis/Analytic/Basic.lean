@@ -128,7 +128,7 @@ theorem le_radius_of_bound_nnreal (C : ℝ≥0 ) {r : ℝ≥0 } (h : ∀ n : ℕ
     exact_mod_cast h n
 
 /-- If `∥pₙ∥ rⁿ = O(1)`, as `n → ∞`, then the radius of `p` is at least `r`. -/
-theorem le_radius_of_is_O (h : IsO (fun n => ∥p n∥ * r ^ n) (fun n => (1 : ℝ)) atTop) : ↑r ≤ p.radius :=
+theorem le_radius_of_is_O (h : (fun n => ∥p n∥ * r ^ n) =O[at_top] fun n => (1 : ℝ)) : ↑r ≤ p.radius :=
   (Exists.elim (is_O_one_nat_at_top_iff.1 h)) fun C hC => (p.le_radius_of_bound C) fun n => (le_abs_self _).trans (hC n)
 
 theorem le_radius_of_eventually_le C (h : ∀ᶠ n in at_top, ∥p n∥ * r ^ n ≤ C) : ↑r ≤ p.radius :=
@@ -145,7 +145,7 @@ theorem le_radius_of_summable (h : Summable fun n => ∥p n∥ * r ^ n) : ↑r �
     simp only [← coe_nnnorm] at h
     exact_mod_cast h
 
-theorem radius_eq_top_of_forall_nnreal_is_O (h : ∀ r : ℝ≥0 , IsO (fun n => ∥p n∥ * r ^ n) (fun n => (1 : ℝ)) atTop) :
+theorem radius_eq_top_of_forall_nnreal_is_O (h : ∀ r : ℝ≥0 , (fun n => ∥p n∥ * r ^ n) =O[at_top] fun n => (1 : ℝ)) :
     p.radius = ∞ :=
   Ennreal.eq_top_of_forall_nnreal_le fun r => p.le_radius_of_is_O (h r)
 
@@ -161,7 +161,7 @@ theorem radius_eq_top_of_forall_image_add_eq_zero (n : ℕ) (hn : ∀ m, p (m + 
 
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ` tends to zero exponentially:
 for some `0 < a < 1`, `∥p n∥ rⁿ = o(aⁿ)`. -/
-theorem is_o_of_lt_radius (h : ↑r < p.radius) : ∃ a ∈ Ioo (0 : ℝ) 1, IsOₓ (fun n => ∥p n∥ * r ^ n) (pow a) atTop := by
+theorem is_o_of_lt_radius (h : ↑r < p.radius) : ∃ a ∈ Ioo (0 : ℝ) 1, (fun n => ∥p n∥ * r ^ n) =o[at_top] pow a := by
   rw [(tfae_exists_lt_is_o_pow (fun n => ∥p n∥ * r ^ n) 1).out 1 4]
   simp only [radius, lt_supr_iff] at h
   rcases h with ⟨t, C, hC, rt⟩
@@ -174,7 +174,7 @@ theorem is_o_of_lt_radius (h : ↑r < p.radius) : ∃ a ∈ Ioo (0 : ℝ) 1, IsO
       mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
 
 /-- For `r` strictly smaller than the radius of `p`, then `∥pₙ∥ rⁿ = o(1)`. -/
-theorem is_o_one_of_lt_radius (h : ↑r < p.radius) : IsOₓ (fun n => ∥p n∥ * r ^ n) (fun _ => 1 : ℕ → ℝ) atTop :=
+theorem is_o_one_of_lt_radius (h : ↑r < p.radius) : (fun n => ∥p n∥ * r ^ n) =o[at_top] (fun _ => 1 : ℕ → ℝ) :=
   let ⟨a, ha, hp⟩ := p.is_o_of_lt_radius h
   hp.trans <| (is_o_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
 
@@ -187,7 +187,7 @@ theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
 
 /-- If `r ≠ 0` and `∥pₙ∥ rⁿ = O(aⁿ)` for some `-1 < a < 1`, then `r < p.radius`. -/
 theorem lt_radius_of_is_O (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
-    (hp : IsO (fun n => ∥p n∥ * r ^ n) (pow a) atTop) : ↑r < p.radius := by
+    (hp : (fun n => ∥p n∥ * r ^ n) =O[at_top] pow a) : ↑r < p.radius := by
   rcases((tfae_exists_lt_is_o_pow (fun n => ∥p n∥ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with ⟨a, ha, C, hC, hp⟩
   rw [← pos_iff_ne_zero, ← Nnreal.coe_pos] at h₀
   lift a to ℝ≥0 using ha.1.le
@@ -436,7 +436,7 @@ theorem HasFpowerSeriesAt.sub (hf : HasFpowerSeriesAt f pf x) (hg : HasFpowerSer
 theorem AnalyticAt.sub (hf : AnalyticAt 𝕜 f x) (hg : AnalyticAt 𝕜 g x) : AnalyticAt 𝕜 (f - g) x := by
   simpa only [sub_eq_add_neg] using hf.add hg.neg
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (i «expr ≠ » 0)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (i «expr ≠ » 0)
 theorem HasFpowerSeriesOnBall.coeff_zero (hf : HasFpowerSeriesOnBall f pf x r) (v : Finₓ 0 → E) : pf 0 v = f x := by
   have v_eq : v = fun i => 0 := Subsingleton.elimₓ _ _
   have zero_mem : (0 : E) ∈ Emetric.Ball (0 : E) r := by
@@ -526,7 +526,7 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx {r' : ℝ≥0 } (hf : Has
 
 /-- Taylor formula for an analytic function, `is_O` version. -/
 theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x) (n : ℕ) :
-    IsO (fun y : E => f (x + y) - p.partialSum n y) (fun y => ∥y∥ ^ n) (𝓝 0) := by
+    (fun y : E => f (x + y) - p.partialSum n y) =O[𝓝 0] fun y => ∥y∥ ^ n := by
   rcases hf with ⟨r, hf⟩
   rcases Ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos with ⟨r', r'0, h⟩
   obtain ⟨a, ha, C, hC, hp⟩ :
@@ -547,8 +547,8 @@ ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded abov
 `filter.principal` on `E × E`. -/
 theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : HasFpowerSeriesOnBall f p x r)
     (hr : r' < r) :
-    IsO (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) (fun y => ∥y - (x, x)∥ * ∥y.1 - y.2∥)
-      (𝓟 <| Emetric.Ball (x, x) r') :=
+    (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) =O[𝓟 (Emetric.Ball (x, x) r')] fun y =>
+      ∥y - (x, x)∥ * ∥y.1 - y.2∥ :=
   by
   lift r' to ℝ≥0 using ne_top_of_lt hr
   rcases(zero_le r').eq_or_lt with (rfl | hr'0)
@@ -593,14 +593,14 @@ theorem HasFpowerSeriesOnBall.is_O_image_sub_image_sub_deriv_principal (hf : Has
         simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
       convert (has_sum_coe_mul_geometric_of_norm_lt_1 this).add ((has_sum_geometric_of_norm_lt_1 this).mul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
-  suffices is_O L (fun y => ∥y - (x, x)∥ * ∥y.1 - y.2∥) (𝓟 (Emetric.Ball (x, x) r')) by
+  suffices L =O[𝓟 (Emetric.Ball (x, x) r')] fun y => ∥y - (x, x)∥ * ∥y.1 - y.2∥ by
     refine' (is_O.of_bound 1 (eventually_principal.2 fun y hy => _)).trans this
     rw [one_mulₓ]
     exact (hL y hy).trans (le_abs_self _)
   simp_rw [L, mul_right_commₓ _ (_ * _)]
   exact (is_O_refl _ _).const_mul_left _
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (y z «expr ∈ » emetric.ball x r')
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
@@ -616,7 +616,7 @@ theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall
 `f y - f z - p 1 (λ _, y - z) = O(∥(y, z) - (x, x)∥ * ∥y - z∥)` as `(y, z) → (x, x)`.
 In particular, `f` is strictly differentiable at `x`. -/
 theorem HasFpowerSeriesAt.is_O_image_sub_norm_mul_norm_sub (hf : HasFpowerSeriesAt f p x) :
-    IsO (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) (fun y => ∥y - (x, x)∥ * ∥y.1 - y.2∥) (𝓝 (x, x)) := by
+    (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) =O[𝓝 (x, x)] fun y => ∥y - (x, x)∥ * ∥y.1 - y.2∥ := by
   rcases hf with ⟨r, hf⟩
   rcases Ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos with ⟨r', r'0, h⟩
   refine' (hf.is_O_image_sub_image_sub_deriv_principal h).mono _
@@ -736,7 +736,7 @@ section Uniqueness
 open ContinuousMultilinearMap
 
 theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : E[×n]→L[𝕜] F}
-    (h : IsO (fun y => p fun i => y) (fun y => ∥y∥ ^ (n + 1)) (𝓝 0)) (y : E) : (p fun i => y) = 0 := by
+    (h : (fun y => p fun i => y) =O[𝓝 0] fun y => ∥y∥ ^ (n + 1)) (y : E) : (p fun i => y) = 0 := by
   obtain ⟨c, c_pos, hc⟩ := h.exists_pos
   obtain ⟨t, ht, t_open, z_mem⟩ := eventually_nhds_iff.mp (is_O_with_iff.mp hc)
   obtain ⟨δ, δ_pos, δε⟩ := (metric.is_open_iff.mp t_open) 0 z_mem
@@ -774,7 +774,7 @@ theorem Asymptotics.IsO.continuous_multilinear_map_apply_eq_zero {n : ℕ} {p : 
       inv_mul_cancel_right₀ h₀.ne.symm ε ▸ mul_lt_mul_of_pos_right (lt_of_lt_of_leₓ k_norm (min_le_rightₓ _ _)) h₀
     calc ∥p fun i => y∥ = ∥k⁻¹ ^ n.succ∥ * ∥p fun i => k • y∥ := by
         simpa only [inv_smul_smul₀ (norm_pos_iff.mp k_pos), norm_smul, Finset.prod_const, Finset.card_fin] using
-          congr_argₓ norm
+          congr_arg norm
             (p.map_smul_univ (fun i : Finₓ n.succ => k⁻¹) fun i : Finₓ n.succ =>
               k • y)_ ≤ ∥k⁻¹ ^ n.succ∥ * (∥k∥ ^ n.succ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1)))) :=
         mul_le_mul_of_nonneg_left h₂ (norm_nonneg _)_ = ∥(k⁻¹ * k) ^ n.succ∥ * (∥k∥ * (c * ∥y∥ ^ (n.succ + 1))) := by

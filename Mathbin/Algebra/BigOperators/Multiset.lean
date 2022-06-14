@@ -237,15 +237,18 @@ theorem prod_ne_zero (h : (0 : α) ∉ s) : s.Prod ≠ 0 :=
 
 end CommMonoidWithZero
 
-section CommGroupₓ
+section DivisionCommMonoid
 
-variable [CommGroupₓ α] {m : Multiset ι} {f g : ι → α}
+variable [DivisionCommMonoid α] {m : Multiset ι} {f g : ι → α}
+
+@[to_additive]
+theorem prod_map_inv' (m : Multiset α) : (m.map Inv.inv).Prod = m.Prod⁻¹ :=
+  m.prod_hom (invMonoidHom : α →* α)
 
 @[simp, to_additive]
-theorem prod_map_inv' : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ := by
-  convert (m.map f).prod_hom (CommGroupₓ.invMonoidHom : α →* α)
+theorem prod_map_inv : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ := by
+  convert (m.map f).prod_map_inv'
   rw [map_map]
-  rfl
 
 @[simp, to_additive]
 theorem prod_map_div : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map g).Prod :=
@@ -257,36 +260,7 @@ theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod
   rw [map_map]
   rfl
 
-@[simp]
-theorem coe_inv_monoid_hom : (CommGroupₓ.invMonoidHom : α → α) = Inv.inv :=
-  rfl
-
-@[simp, to_additive]
-theorem prod_map_inv (m : Multiset α) : (m.map Inv.inv).Prod = m.Prod⁻¹ :=
-  m.prod_hom (CommGroupₓ.invMonoidHom : α →* α)
-
-end CommGroupₓ
-
-section CommGroupWithZero
-
-variable [CommGroupWithZero α] {m : Multiset ι} {f g : ι → α}
-
-@[simp]
-theorem prod_map_inv₀ : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ := by
-  convert (m.map f).prod_hom (invMonoidWithZeroHom : α →*₀ α)
-  rw [map_map]
-  rfl
-
-@[simp]
-theorem prod_map_div₀ : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map g).Prod :=
-  m.prod_hom₂ (· / ·) (fun _ _ _ _ => (div_mul_div_comm _ _ _ _).symm) (div_one _) _ _
-
-theorem prod_map_zpow₀ {n : ℤ} : prod (m.map fun i => f i ^ n) = (m.map f).Prod ^ n := by
-  convert (m.map f).prod_hom (zpowGroupHom _ : α →* α)
-  rw [map_map]
-  rfl
-
-end CommGroupWithZero
+end DivisionCommMonoid
 
 section NonUnitalNonAssocSemiringₓ
 

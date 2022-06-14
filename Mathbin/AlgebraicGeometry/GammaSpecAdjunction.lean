@@ -137,7 +137,7 @@ theorem to_Γ_Spec_c_app_iff
     exact is_localization.to_basic_open _ r
     exact h
     
-  apply congr_argₓ
+  apply congr_arg
 
 theorem to_Γ_Spec_c_app_spec : toOpen _ (basicOpen r) ≫ X.toΓSpecCApp r = X.toToΓSpecMapBasicOpen r :=
   (X.to_Γ_Spec_c_app_iff r _).2 rfl
@@ -288,7 +288,7 @@ def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.to_LocallyRingedSpace :=
       left_triangle' := by
         ext X
         erw [category.id_comp]
-        exact congr_argₓ Quiver.Hom.op (left_triangle X),
+        exact congr_arg Quiver.Hom.op (left_triangle X),
       right_triangle' := by
         ext1
         ext1 R

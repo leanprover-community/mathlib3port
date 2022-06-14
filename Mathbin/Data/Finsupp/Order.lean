@@ -153,14 +153,8 @@ instance : HasOrderedSub (ι →₀ α) :=
 
 instance : CanonicallyOrderedAddMonoid (ι →₀ α) :=
   { Finsupp.orderBot, Finsupp.orderedAddCommMonoid with
-    le_iff_exists_add := fun f g => by
-      refine' ⟨fun h => ⟨g - f, _⟩, _⟩
-      · ext x
-        exact (add_tsub_cancel_of_le <| h x).symm
-        
-      · rintro ⟨g, rfl⟩ x
-        exact self_le_add_right (f x) (g x)
-         }
+    exists_add_of_le := fun f g h => ⟨g - f, ext fun x => (add_tsub_cancel_of_le <| h x).symm⟩,
+    le_self_add := fun f g x => le_self_add }
 
 @[simp]
 theorem coe_tsub (f g : ι →₀ α) : ⇑(f - g) = f - g :=

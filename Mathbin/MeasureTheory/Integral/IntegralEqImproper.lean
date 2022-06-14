@@ -137,6 +137,95 @@ theorem ae_cover_Iio [NoMaxOrder α] : AeCover μ l fun i => Iio <| b i :=
 
 end LinearOrderα
 
+section FiniteIntervals
+
+variable [LinearOrderₓ α] [TopologicalSpace α] [OrderClosedTopology α] [OpensMeasurableSpace α] {a b : ι → α} {A B : α}
+  (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B))
+
+theorem ae_cover_Ioo_of_Icc : AeCover (μ.restrict <| Ioo A B) l fun i => Icc (a i) (b i) :=
+  { ae_eventually_mem :=
+      (ae_restrict_iff' measurable_set_Ioo).mpr
+        (ae_of_all μ fun x hx =>
+          (ha.Eventually <| eventually_le_nhds hx.left).mp <|
+            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+    Measurable := fun i => measurable_set_Icc }
+
+theorem ae_cover_Ioo_of_Ico : AeCover (μ.restrict <| Ioo A B) l fun i => Ico (a i) (b i) :=
+  { ae_eventually_mem :=
+      (ae_restrict_iff' measurable_set_Ioo).mpr
+        (ae_of_all μ fun x hx =>
+          (ha.Eventually <| eventually_le_nhds hx.left).mp <|
+            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+    Measurable := fun i => measurable_set_Ico }
+
+theorem ae_cover_Ioo_of_Ioc : AeCover (μ.restrict <| Ioo A B) l fun i => Ioc (a i) (b i) :=
+  { ae_eventually_mem :=
+      (ae_restrict_iff' measurable_set_Ioo).mpr
+        (ae_of_all μ fun x hx =>
+          (ha.Eventually <| eventually_lt_nhds hx.left).mp <|
+            (hb.Eventually <| eventually_ge_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+    Measurable := fun i => measurable_set_Ioc }
+
+theorem ae_cover_Ioo_of_Ioo : AeCover (μ.restrict <| Ioo A B) l fun i => Ioo (a i) (b i) :=
+  { ae_eventually_mem :=
+      (ae_restrict_iff' measurable_set_Ioo).mpr
+        (ae_of_all μ fun x hx =>
+          (ha.Eventually <| eventually_lt_nhds hx.left).mp <|
+            (hb.Eventually <| eventually_gt_nhds hx.right).mono fun i hbi hai => ⟨hai, hbi⟩),
+    Measurable := fun i => measurable_set_Ioo }
+
+variable [HasNoAtoms μ]
+
+theorem ae_cover_Ioc_of_Icc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ioc A B) l fun i => Icc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ioc.symm, ae_cover_Ioo_of_Icc ha hb]
+
+theorem ae_cover_Ioc_of_Ico (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ioc A B) l fun i => Ico (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ioc.symm, ae_cover_Ioo_of_Ico ha hb]
+
+theorem ae_cover_Ioc_of_Ioc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ioc A B) l fun i => Ioc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ioc.symm, ae_cover_Ioo_of_Ioc ha hb]
+
+theorem ae_cover_Ioc_of_Ioo (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ioc A B) l fun i => Ioo (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ioc.symm, ae_cover_Ioo_of_Ioo ha hb]
+
+theorem ae_cover_Ico_of_Icc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ico A B) l fun i => Icc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ico.symm, ae_cover_Ioo_of_Icc ha hb]
+
+theorem ae_cover_Ico_of_Ico (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ico A B) l fun i => Ico (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ico.symm, ae_cover_Ioo_of_Ico ha hb]
+
+theorem ae_cover_Ico_of_Ioc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ico A B) l fun i => Ioc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ico.symm, ae_cover_Ioo_of_Ioc ha hb]
+
+theorem ae_cover_Ico_of_Ioo (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Ico A B) l fun i => Ioo (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Ico.symm, ae_cover_Ioo_of_Ioo ha hb]
+
+theorem ae_cover_Icc_of_Icc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Icc A B) l fun i => Icc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Icc.symm, ae_cover_Ioo_of_Icc ha hb]
+
+theorem ae_cover_Icc_of_Ico (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Icc A B) l fun i => Ico (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Icc.symm, ae_cover_Ioo_of_Ico ha hb]
+
+theorem ae_cover_Icc_of_Ioc (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Icc A B) l fun i => Ioc (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Icc.symm, ae_cover_Ioo_of_Ioc ha hb]
+
+theorem ae_cover_Icc_of_Ioo (ha : Tendsto a l (𝓝 A)) (hb : Tendsto b l (𝓝 B)) :
+    AeCover (μ.restrict <| Icc A B) l fun i => Ioo (a i) (b i) := by
+  simp [measure.restrict_congr_set Ioo_ae_eq_Icc.symm, ae_cover_Ioo_of_Ioo ha hb]
+
+end FiniteIntervals
+
 theorem AeCover.restrict {φ : ι → Set α} (hφ : AeCover μ l φ) {s : Set α} : AeCover (μ.restrict s) l φ :=
   { ae_eventually_mem := ae_restrict_of_ae hφ.ae_eventually_mem, Measurable := hφ.Measurable }
 
@@ -164,8 +253,8 @@ theorem AeCover.ae_measurable {β : Type _} [MeasurableSpace β] [l.IsCountablyG
   filter_upwards [hφ.ae_eventually_mem] with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
 
-theorem AeCover.ae_strongly_measurable {β : Type _} [TopologicalSpace β] [MetrizableSpace β] [l.IsCountablyGenerated]
-    [l.ne_bot] {f : α → β} {φ : ι → Set α} (hφ : AeCover μ l φ)
+theorem AeCover.ae_strongly_measurable {β : Type _} [TopologicalSpace β] [PseudoMetrizableSpace β]
+    [l.IsCountablyGenerated] [l.ne_bot] {f : α → β} {φ : ι → Set α} (hφ : AeCover μ l φ)
     (hfm : ∀ i, AeStronglyMeasurable f (μ.restrict <| φ i)) : AeStronglyMeasurable f μ := by
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_strongly_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
@@ -399,6 +488,32 @@ theorem integrable_on_Ioi_of_interval_integral_norm_tendsto (I a : ℝ) (hfi : �
     (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a..b i, ∥f x∥ ∂μ) l (𝓝 <| I)) : IntegrableOn f (Ioi a) μ :=
   let ⟨I', hI'⟩ := h.is_bounded_under_le
   integrable_on_Ioi_of_interval_integral_norm_bounded I' a hfi hb hI'
+
+theorem integrable_on_Ioc_of_interval_integral_norm_bounded {I a₀ b₀ : ℝ} (hfi : ∀ i, IntegrableOn f <| Ioc (a i) (b i))
+    (ha : Tendsto a l <| 𝓝 a₀) (hb : Tendsto b l <| 𝓝 b₀) (h : ∀ᶠ i in l, (∫ x in Ioc (a i) (b i), ∥f x∥) ≤ I) :
+    IntegrableOn f (Ioc a₀ b₀) := by
+  refine'
+    (ae_cover_Ioc_of_Ioc ha hb).integrable_of_integral_norm_bounded I (fun i => (hfi i).restrict measurable_set_Ioc)
+      (eventually.mono h _)
+  intro i hi
+  simp only [measure.restrict_restrict measurable_set_Ioc]
+  refine' le_transₓ (set_integral_mono_set (hfi i).norm _ _) hi
+  · apply ae_of_all
+    simp only [Pi.zero_apply, norm_nonneg, forall_const]
+    
+  · apply ae_of_all
+    intro c hc
+    exact hc.1
+    
+
+theorem integrable_on_Ioc_of_interval_integral_norm_bounded_left {I a₀ b : ℝ} (hfi : ∀ i, IntegrableOn f <| Ioc (a i) b)
+    (ha : Tendsto a l <| 𝓝 a₀) (h : ∀ᶠ i in l, (∫ x in Ioc (a i) b, ∥f x∥) ≤ I) : IntegrableOn f (Ioc a₀ b) :=
+  integrable_on_Ioc_of_interval_integral_norm_bounded hfi ha tendsto_const_nhds h
+
+theorem integrable_on_Ioc_of_interval_integral_norm_bounded_right {I a b₀ : ℝ}
+    (hfi : ∀ i, IntegrableOn f <| Ioc a (b i)) (hb : Tendsto b l <| 𝓝 b₀)
+    (h : ∀ᶠ i in l, (∫ x in Ioc a (b i), ∥f x∥) ≤ I) : IntegrableOn f (Ioc a b₀) :=
+  integrable_on_Ioc_of_interval_integral_norm_bounded hfi tendsto_const_nhds hb h
 
 end IntegrableOfIntervalIntegral
 

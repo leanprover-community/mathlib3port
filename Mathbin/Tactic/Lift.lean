@@ -46,14 +46,14 @@ instance : CanLift ℤ ℕ :=
   ⟨coe, fun n => 0 ≤ n, fun n hn => ⟨n.natAbs, Int.nat_abs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/
-instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Type _) [∀ i : ι, CanLift (α i) (β i)] :
+instance Pi.canLift (ι : Sort _) (α : ∀ i : ι, Sort _) (β : ∀ i : ι, Sort _) [∀ i : ι, CanLift (α i) (β i)] :
     CanLift (∀ i : ι, α i) (∀ i : ι, β i) where
   coe := fun f i => CanLift.coe (f i)
   cond := fun f => ∀ i, CanLift.Cond (β i) (f i)
   prf := fun f hf =>
     ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)), funext fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩
 
-instance PiSubtype.canLift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
+instance PiSubtype.canLift (ι : Sort _) (α : ∀ i : ι, Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
     CanLift (∀ i : Subtype p, α i) (∀ i, α i) where
   coe := fun f i => f i
   cond := fun _ => True
@@ -64,7 +64,7 @@ instance PiSubtype.canLift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, 
     rintro ⟨i, hi⟩
     exact dif_pos hi
 
-instance PiSubtype.canLift' (ι : Type _) (α : Type _) [ne : Nonempty α] (p : ι → Prop) :
+instance PiSubtype.canLift' (ι : Sort _) (α : Sort _) [ne : Nonempty α] (p : ι → Prop) :
     CanLift (Subtype p → α) (ι → α) :=
   PiSubtype.canLift ι (fun _ => α) p
 
@@ -153,7 +153,7 @@ unsafe def lift (p : pexpr) (t : pexpr) (h : Option pexpr) (n : List Name) : tac
 
 setup_tactic_parser
 
--- ././Mathport/Syntax/Translate/Basic.lean:825:4: warning: unsupported notation `«expr ?»
+-- ././Mathport/Syntax/Translate/Basic.lean:824:4: warning: unsupported notation `«expr ?»
 /-- Parses an optional token "using" followed by a trailing `pexpr`. -/
 unsafe def using_texpr :=
   «expr ?» (tk "using" *> texpr)

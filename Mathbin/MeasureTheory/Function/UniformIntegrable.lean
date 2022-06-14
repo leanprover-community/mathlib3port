@@ -293,7 +293,7 @@ theorem Memℒp.snorm_indicator_norm_ge_pos_le (hf : Memℒp f p μ) (hmeas : St
 
 end
 
--- ././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error
+-- ././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error
 theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : ℝ} (hε : 0 < ε) {M : ℝ} (hf : ∀ x, ∥f x∥ < M) :
     ∃ (δ : ℝ)(hδ : 0 < δ),
       ∀ s, MeasurableSet s → μ s ≤ Ennreal.ofReal δ → snorm (s.indicator f) p μ ≤ Ennreal.ofReal ε :=
@@ -315,7 +315,7 @@ theorem snorm_indicator_le_of_bound {f : α → β} (hp_top : p ≠ ∞) {ε : �
     
   rw [snorm_indicator_eq_snorm_restrict hs]
   have haebdd : ∀ᵐ x ∂μ.restrict s, ∥f x∥ ≤ M := by
-    "././Mathport/Syntax/Translate/Basic.lean:535:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:223:22: unsupported: parse error"
+    "././Mathport/Syntax/Translate/Basic.lean:534:40: in filter_upwards: ././Mathport/Syntax/Translate/Basic.lean:222:22: unsupported: parse error"
     exact fun x => (hf x).le
   refine' le_transₓ (snorm_le_of_ae_bound haebdd) _
   rw [measure.restrict_apply MeasurableSet.univ, univ_inter, ←

@@ -19,7 +19,7 @@ universe u v
 
 variable (R : Type u)
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`cast_eq_zero_iff] []
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R.
 
 *Warning*: for a semiring `R`, `char_p R 0` and `char_zero R` need not coincide.
@@ -132,6 +132,10 @@ theorem dvd {x : ℕ} (hx : (x : R) = 0) : ringChar R ∣ x :=
 @[simp]
 theorem eq_zero [CharZero R] : ringChar R = 0 :=
   eq R 0
+
+@[simp]
+theorem Nat.cast_ring_char : (ringChar R : R) = 0 := by
+  rw [ringChar.spec]
 
 end ringChar
 
@@ -336,11 +340,17 @@ theorem frobenius_inj [CommRingₓ R] [IsReduced R] (p : ℕ) [Fact p.Prime] [Ch
   rw [← frobenius_sub] at H
   exact IsReduced.eq_zero _ ⟨_, H⟩
 
+/-- If `ring_char R = 2`, where `R` is a finite reduced commutative ring,
+then every `a : R` is a square. -/
+theorem is_square_of_char_two' {R : Type _} [Fintype R] [CommRingₓ R] [IsReduced R] [CharP R 2] (a : R) : IsSquare a :=
+  (exists_imp_exists fun b h => pow_two b ▸ Eq.symm h) <|
+    ((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).Surjective a
+
 namespace CharP
 
 section
 
-variable [Ringₓ R]
+variable [NonAssocRing R]
 
 theorem char_p_to_char_zero (R : Type _) [AddLeftCancelMonoid R] [One R] [CharP R 0] : CharZero R :=
   char_zero_of_inj_zero fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
@@ -353,9 +363,13 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
       simp [cast_eq_zero]
     
 
+/-- The characteristic of a finite ring cannot be zero. -/
 theorem char_ne_zero_of_fintype (p : ℕ) [hc : CharP R p] [Fintype R] : p ≠ 0 := fun h : p = 0 =>
   have : CharZero R := @char_p_to_char_zero R _ _ (h ▸ hc)
   absurd (@Nat.cast_injective R _ _ this) (not_injective_infinite_fintype coe)
+
+theorem ring_char_ne_zero_of_fintype [Fintype R] : ringChar R ≠ 0 :=
+  char_ne_zero_of_fintype R (ringChar R)
 
 end
 
@@ -374,7 +388,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (d «expr ∣ » p)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (d «expr ∣ » p)
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun hdvd : ∃ e, p = d * e =>
@@ -467,7 +481,34 @@ end CharP
 
 section
 
-variable (R) [CommRingₓ R] [Fintype R] (n : ℕ)
+/-- We have `2 ≠ 0` in a nontrivial ring whose characteristic is not `2`. -/
+-- Note: there is `two_ne_zero` (assuming `[ordered_semiring]`)
+-- and `two_ne_zero'`(assuming `[char_zero]`), which both don't fit the needs here.
+@[protected]
+theorem Ringₓ.two_ne_zero {R : Type _} [NonAssocSemiringₓ R] [Nontrivial R] (hR : ringChar R ≠ 2) : (2 : R) ≠ 0 := by
+  rw [Ne.def,
+    (by
+      norm_cast : (2 : R) = (2 : ℕ)),
+    ringChar.spec, Nat.dvd_prime Nat.prime_two]
+  exact mt (or_iff_left hR).mp CharP.ring_char_ne_one
+
+/-- Characteristic `≠ 2` and nontrivial implies that `-1 ≠ 1`. -/
+-- We have `char_p.neg_one_ne_one`, which assumes `[ring R] (p : ℕ) [char_p R p] [fact (2 < p)]`.
+-- This is a version using `ring_char` instead.
+theorem Ringₓ.neg_one_ne_one_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] (hR : ringChar R ≠ 2) :
+    (-1 : R) ≠ 1 := fun h => Ringₓ.two_ne_zero hR (neg_eq_iff_add_eq_zero.mp h)
+
+/-- Characteristic `≠ 2` in a domain implies that `-a = a` iff `a = 0`. -/
+theorem Ringₓ.eq_self_iff_eq_zero_of_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] [NoZeroDivisors R]
+    (hR : ringChar R ≠ 2) {a : R} : -a = a ↔ a = 0 :=
+  ⟨fun h => (mul_eq_zero.mp <| (two_mul a).trans <| neg_eq_iff_add_eq_zero.mp h).resolve_left (Ringₓ.two_ne_zero hR),
+    fun h => ((congr_arg (fun x => -x) h).trans neg_zero).trans h.symm⟩
+
+end
+
+section
+
+variable (R) [NonAssocRing R] [Fintype R] (n : ℕ)
 
 theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀, ∀ i < n, ∀, (i : R) = 0 → i = 0) : CharP R n :=
   { cast_eq_zero_iff := by
@@ -486,8 +527,8 @@ theorem char_p_of_ne_zero (hn : Fintype.card R = n) (hR : ∀, ∀ i < n, ∀, (
         rw [Nat.cast_mulₓ, H, zero_mul]
          }
 
-theorem char_p_of_prime_pow_injective (p : ℕ) [hp : Fact p.Prime] (n : ℕ) (hn : Fintype.card R = p ^ n)
-    (hR : ∀, ∀ i ≤ n, ∀, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
+theorem char_p_of_prime_pow_injective R [Ringₓ R] [Fintype R] (p : ℕ) [hp : Fact p.Prime] (n : ℕ)
+    (hn : Fintype.card R = p ^ n) (hR : ∀, ∀ i ≤ n, ∀, (p ^ i : R) = 0 → i = n) : CharP R (p ^ n) := by
   obtain ⟨c, hc⟩ := CharP.exists R
   skip
   have hcpn : c ∣ p ^ n := by
@@ -517,4 +558,59 @@ instance Prod.char_p [CharP S p] : CharP (R × S) p := by
   convert Nat.lcmₓ.char_p R S p p <;> simp
 
 end Prod
+
+section
+
+/-- If two integers from `{0, 1, -1}` result in equal elements in a ring `R`
+that is nontrivial and of characteristic not `2`, then they are equal. -/
+theorem Int.cast_inj_on_of_ring_char_ne_two {R : Type _} [NonAssocRing R] [Nontrivial R] (hR : ringChar R ≠ 2) :
+    ({0, 1, -1} : Set ℤ).InjOn (coe : ℤ → R) := by
+  intro a ha b hb h
+  apply eq_of_sub_eq_zero
+  by_contra hf
+  change a = 0 ∨ a = 1 ∨ a = -1 at ha
+  change b = 0 ∨ b = 1 ∨ b = -1 at hb
+  have hh : a - b = 1 ∨ b - a = 1 ∨ a - b = 2 ∨ b - a = 2 := by
+    rcases ha with (ha | ha | ha) <;> rcases hb with (hb | hb | hb)
+    pick_goal 5
+    pick_goal 9
+    -- move goals with `a = b` to the front
+    iterate 3 
+      rw [ha, hb, sub_self] at hf
+      tauto
+    -- 6 goals remain
+    all_goals
+      rw [ha, hb]
+      norm_num
+  have h' : ((a - b : ℤ) : R) = 0 := by
+    exact_mod_cast sub_eq_zero_of_eq h
+  have h'' : ((b - a : ℤ) : R) = 0 := by
+    exact_mod_cast sub_eq_zero_of_eq h.symm
+  rcases hh with (hh | hh | hh | hh)
+  · rw [hh,
+      (by
+        norm_cast : ((1 : ℤ) : R) = 1)] at
+      h'
+    exact one_ne_zero h'
+    
+  · rw [hh,
+      (by
+        norm_cast : ((1 : ℤ) : R) = 1)] at
+      h''
+    exact one_ne_zero h''
+    
+  · rw [hh,
+      (by
+        norm_cast : ((2 : ℤ) : R) = 2)] at
+      h'
+    exact Ringₓ.two_ne_zero hR h'
+    
+  · rw [hh,
+      (by
+        norm_cast : ((2 : ℤ) : R) = 2)] at
+      h''
+    exact Ringₓ.two_ne_zero hR h''
+    
+
+end
 

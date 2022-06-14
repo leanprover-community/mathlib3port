@@ -100,7 +100,7 @@ instance [Inhabited P] : Inhabited (Pfilter P) :=
 theorem ext (h : (s : Set P) = t) : s = t := by
   cases s
   cases t
-  exact congr_argₓ _ (ideal.ext h)
+  exact congr_arg _ (ideal.ext h)
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
 instance : PartialOrderₓ (Pfilter P) :=

@@ -163,7 +163,7 @@ theorem eqv_gen_of_π_eq {x y : ∐ D.U} (h : 𝖣.π x = 𝖣.π y) :
   have :
     (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ =
       (colimit.ι diagram _ ≫ colim.map _ ≫ (colimit.iso_colimit_cocone _).Hom) _ :=
-    (congr_argₓ
+    (congr_arg
       (colim.map (diagram_iso_parallel_pair diagram).Hom ≫
         (colimit.iso_colimit_cocone (types.coequalizer_colimit _ _)).Hom)
       this :
@@ -366,9 +366,9 @@ def mk' (h : MkCore.{u}) : Top.GlueData where
     simp only [iso.inv_hom_id_assoc, category.assoc, category.id_comp]
     rw [← iso.eq_inv_comp, iso.inv_hom_id]
     ext1 ⟨⟨⟨x, hx⟩, ⟨x', hx'⟩⟩, rfl : x = x'⟩
-    simp only [Top.comp_app, ContinuousMap.coe_mk, Prod.mk.inj_iffₓ, Top.id_app, Subtype.mk_eq_mk, Subtype.coe_mk]
+    simp only [Top.comp_app, ContinuousMap.coe_mk, Prod.mk.inj_iff, Top.id_app, Subtype.mk_eq_mk, Subtype.coe_mk]
     rw [← subtype.coe_injective.eq_iff, Subtype.val_eq_coe, Subtype.coe_mk, and_selfₓ]
-    convert congr_argₓ coe (h.t_inv k i ⟨x, hx'⟩) using 3
+    convert congr_arg coe (h.t_inv k i ⟨x, hx'⟩) using 3
     ext
     exact h.cocycle i j k ⟨x, hx⟩ hx'
 

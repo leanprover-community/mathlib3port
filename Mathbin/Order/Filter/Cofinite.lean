@@ -31,19 +31,19 @@ namespace Filter
 
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
 def cofinite : Filter α where
-  Sets := { s | Finite (sᶜ) }
+  Sets := { s | sᶜ.Finite }
   univ_sets := by
     simp only [compl_univ, finite_empty, mem_set_of_eq]
   sets_of_superset := fun st : s ⊆ t => hs.Subset <| compl_subset_compl.2 st
-  inter_sets := fun ht : Finite (tᶜ) => by
+  inter_sets := fun ht : tᶜ.Finite => by
     simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
 
 @[simp]
-theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ Finite (sᶜ) :=
+theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ sᶜ.Finite :=
   Iff.rfl
 
 @[simp]
-theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ Finite { x | ¬p x } :=
+theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ { x | ¬p x }.Finite :=
   Iff.rfl
 
 theorem has_basis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
@@ -113,7 +113,7 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrderₓ 
     (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) : ∃ a₀ ∈ s, ∀, ∀ a ∈ s, ∀, f a₀ ≤ f a := by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
   · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
-    have : finite { y | ¬x ≤ f y } := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
+    have : { y | ¬x ≤ f y }.Finite := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
     simp only [not_leₓ] at this
     obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ := exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
     refine' ⟨a₀, ha₀s, fun a has => (lt_or_leₓ (f a) x).elim _ (le_transₓ ha₀.le)⟩

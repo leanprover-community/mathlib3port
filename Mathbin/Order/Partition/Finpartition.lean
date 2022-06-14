@@ -166,8 +166,7 @@ instance : Unique (Finpartition (⊥ : α)) :=
 def _root_.is_atom.unique_finpartition (ha : IsAtom a) : Unique (Finpartition a) where
   default := indiscrete ha.1
   uniq := fun P => by
-    have h : ∀, ∀ b ∈ P.parts, ∀, b = a := fun b hb =>
-      (eq_bot_or_eq_of_le_atom ha <| P.le hb).resolve_left (P.ne_bot hb)
+    have h : ∀, ∀ b ∈ P.parts, ∀, b = a := fun b hb => (ha.le_iff.mp <| P.le hb).resolve_left (P.ne_bot hb)
     ext b
     refine' Iff.trans ⟨h b, _⟩ mem_singleton.symm
     rintro rfl
@@ -420,7 +419,7 @@ theorem bUnion_parts : P.parts.bUnion id = s :=
   (sup_eq_bUnion _ _).symm.trans P.sup_parts
 
 theorem sum_card_parts : (∑ i in P.parts, i.card) = s.card := by
-  convert congr_argₓ Finset.card P.bUnion_parts
+  convert congr_arg Finset.card P.bUnion_parts
   rw [card_bUnion P.sup_indep.pairwise_disjoint]
   rfl
 
@@ -498,7 +497,7 @@ def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
 
 variable {F : Finset (Finset α)}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (Q «expr ⊆ » F)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (Q «expr ⊆ » F)
 theorem mem_atomise {t : Finset α} :
     t ∈ (atomise s F).parts ↔ t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀, ∀ u ∈ F, ∀, u ∈ Q ↔ i ∈ u) = t :=
   by

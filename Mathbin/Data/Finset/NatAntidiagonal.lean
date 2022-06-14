@@ -43,43 +43,41 @@ theorem card_antidiagonal (n : ℕ) : (antidiagonal n).card = n + 1 := by
 theorem antidiagonal_zero : antidiagonal 0 = {(0, 0)} :=
   rfl
 
-theorem antidiagonal_succ {n : ℕ} :
+theorem antidiagonal_succ (n : ℕ) :
     antidiagonal (n + 1) =
-      insert (0, n + 1)
-        ((antidiagonal n).map
-          (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _))) :=
+      cons (0, n + 1)
+        ((antidiagonal n).map (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ (Function.Embedding.refl _)))
+        (by
+          simp ) :=
   by
   apply eq_of_veq
-  rw [insert_val_of_not_mem, map_val]
+  rw [cons_val, map_val]
   · apply Multiset.Nat.antidiagonal_succ
     
-  · intro con
-    rcases mem_map.1 con with ⟨⟨a, b⟩, ⟨h1, h2⟩⟩
-    simp only [Prod.mk.inj_iffₓ, Function.Embedding.coe_prod_map, Prod.map_mkₓ] at h2
-    apply Nat.succ_ne_zero a h2.1
-    
 
-theorem antidiagonal_succ' {n : ℕ} :
+theorem antidiagonal_succ' (n : ℕ) :
     antidiagonal (n + 1) =
-      insert (n + 1, 0)
-        ((antidiagonal n).map
-          (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩)) :=
+      cons (n + 1, 0)
+        ((antidiagonal n).map (Function.Embedding.prodMap (Function.Embedding.refl _) ⟨Nat.succ, Nat.succ_injective⟩))
+        (by
+          simp ) :=
   by
   apply eq_of_veq
-  rw [insert_val_of_not_mem, map_val]
-  · apply Multiset.Nat.antidiagonal_succ'
-    
-  · simp
-    
+  rw [cons_val, map_val]
+  exact Multiset.Nat.antidiagonal_succ'
 
 theorem antidiagonal_succ_succ' {n : ℕ} :
     antidiagonal (n + 2) =
-      insert (0, n + 2)
-        (insert (n + 2, 0)
-          ((antidiagonal n).map
-            (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩))) :=
+      cons (0, n + 2)
+        (cons (n + 2, 0)
+            ((antidiagonal n).map
+              (Function.Embedding.prodMap ⟨Nat.succ, Nat.succ_injective⟩ ⟨Nat.succ, Nat.succ_injective⟩)) <|
+          by
+          simp )
+        (by
+          simp ) :=
   by
-  rw [antidiagonal_succ, antidiagonal_succ', map_insert, map_map]
+  simp_rw [antidiagonal_succ (n + 1), antidiagonal_succ', Finset.map_cons, map_map]
   rfl
 
 theorem map_swap_antidiagonal {n : ℕ} :
@@ -90,7 +88,7 @@ theorem map_swap_antidiagonal {n : ℕ} :
 /-- A point in the antidiagonal is determined by its first co-ordinate. -/
 theorem antidiagonal_congr {n : ℕ} {p q : ℕ × ℕ} (hp : p ∈ antidiagonal n) (hq : q ∈ antidiagonal n) :
     p = q ↔ p.fst = q.fst := by
-  refine' ⟨congr_argₓ Prod.fst, fun h => Prod.extₓ h ((add_right_injₓ q.fst).mp _)⟩
+  refine' ⟨congr_arg Prod.fst, fun h => Prod.extₓ h ((add_right_injₓ q.fst).mp _)⟩
   rw [mem_antidiagonal] at hp hq
   rw [hq, ← h, hp]
 

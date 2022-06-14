@@ -572,7 +572,7 @@ theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ 
 theorem exp_conj : exp (conj x) = conj (exp x) := by
   dsimp' [exp]
   rw [← lim_conj]
-  refine' congr_argₓ limₓ (CauSeq.ext fun _ => _)
+  refine' congr_arg limₓ (CauSeq.ext fun _ => _)
   dsimp' [exp', Function.comp, cau_seq_conj]
   rw [(starRingEnd _).map_sum]
   refine' sum_congr rfl fun n hn => _
@@ -1193,7 +1193,7 @@ theorem abs_cos_eq_sqrt_one_sub_sin_sq (x : ℝ) : abs (cos x) = sqrt (1 - sin x
   rw [← cos_sq', sqrt_sq_eq_abs]
 
 theorem inv_one_add_tan_sq {x : ℝ} (hx : cos x ≠ 0) : (1 + tan x ^ 2)⁻¹ = cos x ^ 2 :=
-  have : Complex.cos x ≠ 0 := mt (congr_argₓ re) hx
+  have : Complex.cos x ≠ 0 := mt (congr_arg re) hx
   of_real_inj.1 <| by
     simpa using Complex.inv_one_add_tan_sq this
 
@@ -1326,6 +1326,7 @@ theorem exp_pos (x : ℝ) : 0 < exp x :=
 theorem abs_exp (x : ℝ) : abs (exp x) = exp x :=
   abs_of_pos (exp_pos _)
 
+@[mono]
 theorem exp_strict_mono : StrictMono exp := fun x y h => by
   rw [← sub_add_cancel y x, Real.exp_add] <;>
     exact
@@ -1338,7 +1339,7 @@ theorem exp_strict_mono : StrictMono exp := fun x y h => by
               linarith)))
 
 @[mono]
-theorem exp_monotone : ∀ {x y : ℝ}, x ≤ y → exp x ≤ exp y :=
+theorem exp_monotone : Monotone exp :=
   exp_strict_mono.Monotone
 
 @[simp]
@@ -1357,8 +1358,8 @@ theorem exp_eq_exp {x y : ℝ} : exp x = exp y ↔ x = y :=
   exp_injective.eq_iff
 
 @[simp]
-theorem exp_eq_one_iff : exp x = 1 ↔ x = 0 := by
-  rw [← exp_zero, exp_injective.eq_iff]
+theorem exp_eq_one_iff : exp x = 1 ↔ x = 0 :=
+  exp_injective.eq_iff' exp_zero
 
 @[simp]
 theorem one_lt_exp_iff {x : ℝ} : 1 < exp x ↔ 0 < x := by
@@ -1446,7 +1447,7 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
     abs (∑ m in (range j).filter fun k => n ≤ k, (x ^ m / m ! : ℂ)) =
         abs (∑ m in (range j).filter fun k => n ≤ k, (x ^ n * (x ^ (m - n) / m !) : ℂ)) :=
       by
-      refine' congr_argₓ abs (sum_congr rfl fun m hm => _)
+      refine' congr_arg abs (sum_congr rfl fun m hm => _)
       rw [mem_filter, mem_range] at hm
       rw [← mul_div_assoc, ← pow_addₓ,
         add_tsub_cancel_of_le hm.2]_ ≤ ∑ m in Filter (fun k => n ≤ k) (range j), abs (x ^ n * (_ / m !)) :=
@@ -1642,8 +1643,8 @@ theorem cos_bound {x : ℝ} (hx : abs x ≤ 1) : abs (cos x - (1 - x ^ 2 / 2)) �
           (((Complex.exp (x * I) - ∑ m in range 4, (x * I) ^ m / m !) +
               (Complex.exp (-x * I) - ∑ m in range 4, (-x * I) ^ m / m !)) /
             2) :=
-      congr_argₓ abs
-        (congr_argₓ (fun x : ℂ => x / 2)
+      congr_arg abs
+        (congr_arg (fun x : ℂ => x / 2)
           (by
             simp only [sum_range_succ]
             simp [pow_succₓ]
@@ -1696,8 +1697,8 @@ theorem sin_bound {x : ℝ} (hx : abs x ≤ 1) : abs (sin x - (x - x ^ 3 / 6)) �
                 (Complex.exp (x * I) - ∑ m in range 4, (x * I) ^ m / m !)) *
               I /
             2) :=
-      congr_argₓ abs
-        (congr_argₓ (fun x : ℂ => x / 2)
+      congr_arg abs
+        (congr_arg (fun x : ℂ => x / 2)
           (by
             simp only [sum_range_succ]
             simp [pow_succₓ]
@@ -1838,7 +1839,7 @@ theorem cos_one_pos : 0 < cos 1 :=
 
 theorem cos_two_neg : cos 2 < 0 :=
   calc
-    cos 2 = cos (2 * 1) := congr_argₓ cos (mul_oneₓ _).symm
+    cos 2 = cos (2 * 1) := congr_arg cos (mul_oneₓ _).symm
     _ = _ := Real.cos_two_mul 1
     _ ≤ 2 * (2 / 3) ^ 2 - 1 :=
       sub_le_sub_right

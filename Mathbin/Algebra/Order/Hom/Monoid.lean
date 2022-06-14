@@ -285,7 +285,7 @@ theorem id_comp (f : α →*o β) : (OrderMonoidHom.id β).comp f = f :=
 
 @[to_additive]
 theorem cancel_right {g₁ g₂ : β →*o γ} {f : α →*o β} (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 @[to_additive]
 theorem cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
@@ -293,7 +293,7 @@ theorem cancel_left {g : β →*o γ} {f₁ f₂ : α →*o β} (hg : Function.I
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive "`1` is the homomorphism sending all elements to `1`."]
@@ -495,14 +495,14 @@ theorem id_comp (f : α →*₀o β) : (OrderMonoidWithZeroHom.id β).comp f = f
   ext fun a => rfl
 
 theorem cancel_right {g₁ g₂ : β →*₀o γ} {f : α →*₀o β} (hf : Function.Surjective f) : g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
-  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_argₓ _⟩
+  ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 
 theorem cancel_left {g : β →*₀o γ} {f₁ f₂ : α →*₀o β} (hg : Function.Injective g) : g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h =>
     ext fun a =>
       hg <| by
         rw [← comp_apply, h, comp_apply],
-    congr_argₓ _⟩
+    congr_arg _⟩
 
 end Preorderₓ
 

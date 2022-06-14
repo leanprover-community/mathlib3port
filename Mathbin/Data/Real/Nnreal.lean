@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 -/
 import Mathbin.Algebra.BigOperators.Ring
-import Mathbin.Data.Real.Basic
+import Mathbin.Data.Real.Pointwise
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Algebra.Algebra.Basic
+import Mathbin.Algebra.Order.Module
 import Mathbin.Algebra.Order.Nonneg
 
 /-!
@@ -79,7 +80,7 @@ protected theorem eq {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
   Subtype.eq
 
 protected theorem eq_iff {n m : ℝ≥0 } : (n : ℝ) = (m : ℝ) ↔ n = m :=
-  Iff.intro Nnreal.eq (congr_argₓ coe)
+  Iff.intro Nnreal.eq (congr_arg coe)
 
 theorem ne_iff {x y : ℝ≥0 } : (x : ℝ) ≠ (y : ℝ) ↔ x ≠ y :=
   not_iff_not_of_iff <| Nnreal.eq_iff
@@ -429,6 +430,10 @@ theorem coe_supr {ι : Sort _} (s : ι → ℝ≥0 ) : (↑(⨆ i, s i) : ℝ) =
 @[norm_cast]
 theorem coe_Inf (s : Set ℝ≥0 ) : (↑(inf s) : ℝ) = inf ((coe : ℝ≥0 → ℝ) '' s) :=
   Eq.symm <| @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 : ℝ≥0 )⟩ s <| (Real.Inf_nonneg _) fun y ⟨x, _, hy⟩ => hy ▸ x.2
+
+@[simp]
+theorem Inf_empty : inf (∅ : Set ℝ≥0 ) = 0 := by
+  rw [← Nnreal.coe_eq_zero, coe_Inf, Set.image_empty, Real.Inf_empty]
 
 @[norm_cast]
 theorem coe_infi {ι : Sort _} (s : ι → ℝ≥0 ) : (↑(⨅ i, s i) : ℝ) = ⨅ i, s i := by
@@ -861,6 +866,76 @@ end Inv
 @[simp]
 theorem abs_eq (x : ℝ≥0 ) : abs (x : ℝ) = x :=
   abs_of_nonneg x.property
+
+section Csupr
+
+open Set
+
+variable {ι : Sort _} {f : ι → ℝ≥0 }
+
+theorem le_to_nnreal_of_coe_le {x : ℝ≥0 } {y : ℝ} (h : ↑x ≤ y) : x ≤ y.toNnreal :=
+  (le_to_nnreal_iff_coe_le <| x.2.trans h).2 h
+
+theorem Sup_of_not_bdd_above {s : Set ℝ≥0 } (hs : ¬BddAbove s) : HasSupₓ.sup s = 0 := by
+  rw [← bdd_above_coe] at hs
+  rw [← Nnreal.coe_eq, coe_Sup]
+  exact Sup_of_not_bdd_above hs
+
+theorem supr_of_not_bdd_above (hf : ¬BddAbove (Range f)) : (⨆ i, f i) = 0 :=
+  Sup_of_not_bdd_above hf
+
+theorem infi_empty [IsEmpty ι] (f : ι → ℝ≥0 ) : (⨅ i, f i) = 0 := by
+  rw [← Nnreal.coe_eq, coe_infi]
+  exact Real.cinfi_empty _
+
+@[simp]
+theorem infi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ≥0 )) = 0 := by
+  rw [← Nnreal.coe_eq, coe_infi]
+  exact Real.cinfi_const_zero
+
+theorem infi_mul (f : ι → ℝ≥0 ) (a : ℝ≥0 ) : infi f * a = ⨅ i, f i * a := by
+  rw [← Nnreal.coe_eq, Nnreal.coe_mul, coe_infi, coe_infi]
+  exact Real.infi_mul_of_nonneg (Nnreal.coe_nonneg _) _
+
+theorem mul_infi (f : ι → ℝ≥0 ) (a : ℝ≥0 ) : a * infi f = ⨅ i, a * f i := by
+  simpa only [mul_comm] using infi_mul f a
+
+theorem mul_supr (f : ι → ℝ≥0 ) (a : ℝ≥0 ) : (a * ⨆ i, f i) = ⨆ i, a * f i := by
+  rw [← Nnreal.coe_eq, Nnreal.coe_mul, Nnreal.coe_supr, Nnreal.coe_supr]
+  exact Real.mul_supr_of_nonneg (Nnreal.coe_nonneg _) _
+
+theorem supr_mul (f : ι → ℝ≥0 ) (a : ℝ≥0 ) : (⨆ i, f i) * a = ⨆ i, f i * a := by
+  rw [mul_comm, mul_supr]
+  simp_rw [mul_comm]
+
+theorem supr_div (f : ι → ℝ≥0 ) (a : ℝ≥0 ) : (⨆ i, f i) / a = ⨆ i, f i / a := by
+  simp only [div_eq_mul_inv, supr_mul]
+
+variable [Nonempty ι]
+
+theorem le_mul_infi {a : ℝ≥0 } {g : ℝ≥0 } {h : ι → ℝ≥0 } (H : ∀ j, a ≤ g * h j) : a ≤ g * infi h := by
+  rw [mul_infi]
+  exact le_cinfi H
+
+theorem mul_supr_le {a : ℝ≥0 } {g : ℝ≥0 } {h : ι → ℝ≥0 } (H : ∀ j, g * h j ≤ a) : g * supr h ≤ a := by
+  rw [mul_supr]
+  exact csupr_le H
+
+theorem le_infi_mul {a : ℝ≥0 } {g : ι → ℝ≥0 } {h : ℝ≥0 } (H : ∀ i, a ≤ g i * h) : a ≤ infi g * h := by
+  rw [infi_mul]
+  exact le_cinfi H
+
+theorem supr_mul_le {a : ℝ≥0 } {g : ι → ℝ≥0 } {h : ℝ≥0 } (H : ∀ i, g i * h ≤ a) : supr g * h ≤ a := by
+  rw [supr_mul]
+  exact csupr_le H
+
+theorem le_infi_mul_infi {a : ℝ≥0 } {g h : ι → ℝ≥0 } (H : ∀ i j, a ≤ g i * h j) : a ≤ infi g * infi h :=
+  le_infi_mul fun i => le_mul_infi <| H i
+
+theorem supr_mul_supr_le {a : ℝ≥0 } {g h : ι → ℝ≥0 } (H : ∀ i j, g i * h j ≤ a) : supr g * supr h ≤ a :=
+  supr_mul_le fun i => mul_supr_le <| H _
+
+end Csupr
 
 end Nnreal
 

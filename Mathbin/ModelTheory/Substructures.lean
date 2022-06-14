@@ -266,19 +266,20 @@ theorem lift_card_closure_le_card_term : Cardinal.lift.{max u w} (# (closure L s
   exact Cardinal.mk_range_le_lift
 
 theorem lift_card_closure_le :
-    Cardinal.lift.{max u w, w} (# (closure L s)) ≤
-      max ω (Cardinal.lift.{max u w, w} (# s) + Cardinal.lift.{max u w, u} (# (Σi, L.Functions i))) :=
+    Cardinal.lift.{u, w} (# (closure L s)) ≤
+      max ℵ₀ (Cardinal.lift.{u, w} (# s) + Cardinal.lift.{w, u} (# (Σi, L.Functions i))) :=
   by
+  rw [← lift_umax]
   refine' lift_card_closure_le_card_term.trans (term.card_le.trans _)
-  rw [mk_sum, lift_umax', lift_umax]
+  rw [mk_sum, lift_umax]
 
 variable (L)
 
 theorem _root_.set.countable.substructure_closure [L.CountableFunctions] (h : s.Countable) :
     Nonempty (Encodable (closure L s)) := by
   have : Nonempty (Encodable s) := h
-  rw [encodable_iff, ← lift_le_omega]
-  exact lift_card_closure_le_card_term.trans term.card_le_omega
+  rw [encodable_iff, ← lift_le_aleph_0]
+  exact lift_card_closure_le_card_term.trans term.card_le_aleph_0
 
 variable {L} (S)
 

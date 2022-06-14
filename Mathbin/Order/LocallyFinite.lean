@@ -404,16 +404,16 @@ instance fintypeIoo : Fintype (Ioo a b) :=
     rw [Finset.mem_Ioo, mem_Ioo]
 
 theorem finite_Icc : (Icc a b).Finite :=
-  ⟨Set.fintypeIcc a b⟩
+  Set.finite_of_fintype _
 
 theorem finite_Ico : (Ico a b).Finite :=
-  ⟨Set.fintypeIco a b⟩
+  Set.finite_of_fintype _
 
 theorem finite_Ioc : (Ioc a b).Finite :=
-  ⟨Set.fintypeIoc a b⟩
+  Set.finite_of_fintype _
 
 theorem finite_Ioo : (Ioo a b).Finite :=
-  ⟨Set.fintypeIoo a b⟩
+  Set.finite_of_fintype _
 
 end Preorderₓ
 
@@ -430,10 +430,10 @@ instance fintypeIoi : Fintype (Ioi a) :=
     rw [Finset.mem_Ioi, mem_Ioi]
 
 theorem finite_Ici : (Ici a).Finite :=
-  ⟨Set.fintypeIci a⟩
+  Set.finite_of_fintype _
 
 theorem finite_Ioi : (Ioi a).Finite :=
-  ⟨Set.fintypeIoi a⟩
+  Set.finite_of_fintype _
 
 end OrderTop
 
@@ -450,10 +450,10 @@ instance fintypeIio : Fintype (Iio b) :=
     rw [Finset.mem_Iio, mem_Iio]
 
 theorem finite_Iic : (Iic b).Finite :=
-  ⟨Set.fintypeIic b⟩
+  Set.finite_of_fintype _
 
 theorem finite_Iio : (Iio b).Finite :=
-  ⟨Set.fintypeIio b⟩
+  Set.finite_of_fintype _
 
 end OrderBot
 

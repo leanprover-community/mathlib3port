@@ -49,7 +49,7 @@ localized [Omega.Nat] notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
--- ././Mathport/Syntax/Translate/Basic.lean:915:4: warning: unsupported (TODO): `[tacs]
+-- ././Mathport/Syntax/Translate/Basic.lean:914:4: warning: unsupported (TODO): `[tacs]
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -93,7 +93,7 @@ theorem val_constant (v w : Nat → Nat) : ∀ t : Preterm, (∀, ∀ x < t.fres
   | &n, h1 => rfl
   | m ** n, h1 => by
     simp only [val_var]
-    apply congr_argₓ fun y => m * y
+    apply congr_arg fun y => m * y
     apply h1 _ (lt_add_one _)
   | t +* s, h1 => by
     simp only [val_add]

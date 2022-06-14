@@ -45,10 +45,10 @@ def FixedBy.subfield : Subfield F where
   Carrier := FixedBy M F m
   zero_mem' := smul_zero m
   add_mem' := fun x y hx hy => (smul_add m x y).trans <| congr_arg2ₓ _ hx hy
-  neg_mem' := fun x hx => (smul_neg m x).trans <| congr_argₓ _ hx
+  neg_mem' := fun x hx => (smul_neg m x).trans <| congr_arg _ hx
   one_mem' := smul_one m
   mul_mem' := fun x y hx hy => (smul_mul' m x y).trans <| congr_arg2ₓ _ hx hy
-  inv_mem' := fun x hx => (smul_inv'' m x).trans <| congr_argₓ _ hx
+  inv_mem' := fun x hx => (smul_inv'' m x).trans <| congr_arg _ hx
 
 section InvariantSubfields
 
@@ -133,7 +133,7 @@ theorem linear_independent_smul_of_linear_independent {s : Finset F} :
   rcases ha with ⟨l, hl, hla⟩
   rw [Finsupp.total_apply_of_mem_supported F hl] at hla
   suffices ∀, ∀ i ∈ s, ∀, l i ∈ FixedPoints.subfield G F by
-    replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_funₓ hla 1)
+    replace hla := (sum_apply _ _ fun i => l i • to_fun G F i).symm.trans (congr_fun hla 1)
     simp_rw [Pi.smul_apply, to_fun_apply, one_smul]  at hla
     refine' hs.2 (hla ▸ Submodule.sum_mem _ fun c hcs => _)
     change (⟨l c, this c hcs⟩ : FixedPoints.subfield G F) • c ∈ _
@@ -251,7 +251,7 @@ theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card 
 
 instance : FiniteDimensional (FixedPoints.subfield G F) F :=
   IsNoetherian.iff_fg.1 <|
-    IsNoetherian.iff_dim_lt_omega.2 <| lt_of_le_of_ltₓ (dim_le_card G F) (Cardinal.nat_lt_omega _)
+    IsNoetherian.iff_dim_lt_aleph_0.2 <| lt_of_le_of_ltₓ (dim_le_card G F) (Cardinal.nat_lt_aleph_0 _)
 
 theorem finrank_le_card : finrank (FixedPoints.subfield G F) F ≤ Fintype.card G := by
   rw [← Cardinal.nat_cast_le, finrank_eq_dim]
@@ -276,7 +276,7 @@ theorem cardinal_mk_alg_hom (K : Type u) (V : Type v) (W : Type w) [Field K] [Fi
 noncomputable instance AlgHom.fintype (K : Type u) (V : Type v) (W : Type w) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] [Field W] [Algebra K W] [FiniteDimensional K W] : Fintype (V →ₐ[K] W) :=
   Classical.choice <|
-    Cardinal.lt_omega_iff_fintype.1 <| lt_of_le_of_ltₓ (cardinal_mk_alg_hom K V W) (Cardinal.nat_lt_omega _)
+    Cardinal.lt_aleph_0_iff_fintype.1 <| lt_of_le_of_ltₓ (cardinal_mk_alg_hom K V W) (Cardinal.nat_lt_aleph_0 _)
 
 noncomputable instance AlgEquiv.fintype (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] : Fintype (V ≃ₐ[K] V) :=
@@ -289,7 +289,7 @@ theorem finrank_alg_hom (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K
 namespace FixedPoints
 
 theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulScalar G F] : finrank (FixedPoints.subfield G F) F = Fintype.card G :=
+    [HasFaithfulSmul G F] : finrank (FixedPoints.subfield G F) F = Fintype.card G :=
   le_antisymmₓ (FixedPoints.finrank_le_card G F) <|
     calc
       Fintype.card G ≤ Fintype.card (F →ₐ[FixedPoints.subfield G F] F) :=
@@ -300,7 +300,7 @@ theorem finrank_eq_card (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintyp
 
 /-- `mul_semiring_action.to_alg_hom` is bijective. -/
 theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulScalar G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
+    [HasFaithfulSmul G F] : Function.Bijective (MulSemiringAction.toAlgHom _ _ : G → F →ₐ[subfield G F] F) := by
   rw [Fintype.bijective_iff_injective_and_card]
   constructor
   · exact MulSemiringAction.to_alg_hom_injective _ F
@@ -315,7 +315,7 @@ theorem to_alg_hom_bijective (G : Type u) (F : Type v) [Groupₓ G] [Field F] [F
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
 def toAlgHomEquiv (G : Type u) (F : Type v) [Groupₓ G] [Field F] [Fintype G] [MulSemiringAction G F]
-    [HasFaithfulScalar G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
+    [HasFaithfulSmul G F] : G ≃ (F →ₐ[FixedPoints.subfield G F] F) :=
   Equivₓ.ofBijective _ (to_alg_hom_bijective G F)
 
 end FixedPoints

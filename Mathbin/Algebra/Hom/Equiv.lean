@@ -109,7 +109,7 @@ instance (priority := 100) [MulOneClassₓ M] [MulOneClassₓ N] [MulEquivClass 
     map_one := fun e =>
       calc
         e 1 = e 1 * 1 := (mul_oneₓ _).symm
-        _ = e 1 * e (inv e (1 : N) : M) := congr_argₓ _ (right_inv e 1).symm
+        _ = e 1 * e (inv e (1 : N) : M) := congr_arg _ (right_inv e 1).symm
         _ = e (inv e (1 : N)) := by
           rw [← map_mul, one_mulₓ]
         _ = 1 := right_inv e 1
@@ -371,7 +371,7 @@ protected theorem congr_fun {f g : MulEquiv M N} (h : f = g) (x : M) : f x = g x
 /-- The `mul_equiv` between two monoids with a unique element. -/
 @[to_additive "The `add_equiv` between two add_monoids with a unique element."]
 def mulEquivOfUniqueOfUnique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : M ≃* N :=
-  { equivOfUniqueOfUnique with map_mul' := fun _ _ => Subsingleton.elimₓ _ _ }
+  { Equivₓ.equivOfUnique M N with map_mul' := fun _ _ => Subsingleton.elimₓ _ _ }
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[to_additive "There is a unique additive monoid homomorphism between two additive monoids with\na unique element."]
@@ -713,19 +713,14 @@ end GroupWithZeroₓ
 
 end Equivₓ
 
-/-- When the group is commutative, `equiv.inv` is a `mul_equiv`. There is a variant of this
+/-- In a `division_comm_monoid`, `equiv.inv` is a `mul_equiv`. There is a variant of this
 `mul_equiv.inv' G : G ≃* Gᵐᵒᵖ` for the non-commutative case. -/
-@[to_additive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`."]
-def MulEquiv.inv (G : Type _) [CommGroupₓ G] : G ≃* G :=
-  { Equivₓ.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
-
-/-- When the group with zero is commutative, `equiv.inv₀` is a `mul_equiv`. -/
-@[simps apply]
-def MulEquiv.inv₀ (G : Type _) [CommGroupWithZero G] : G ≃* G :=
+@[to_additive "When the `add_group` is commutative, `equiv.neg` is an `add_equiv`.", simps apply]
+def MulEquiv.inv (G : Type _) [DivisionCommMonoid G] : G ≃* G :=
   { Equivₓ.inv G with toFun := Inv.inv, invFun := Inv.inv, map_mul' := mul_inv }
 
 @[simp]
-theorem MulEquiv.inv₀_symm (G : Type _) [CommGroupWithZero G] : (MulEquiv.inv₀ G).symm = MulEquiv.inv₀ G :=
+theorem MulEquiv.inv_symm (G : Type _) [DivisionCommMonoid G] : (MulEquiv.inv G).symm = MulEquiv.inv G :=
   rfl
 
 section TypeTags

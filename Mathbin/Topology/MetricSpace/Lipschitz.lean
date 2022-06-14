@@ -6,8 +6,7 @@ Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudr
 import Mathbin.Logic.Function.Iterate
 import Mathbin.Data.Set.Intervals.ProjIcc
 import Mathbin.Topology.MetricSpace.Basic
-import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.CategoryTheory.Types
+import Mathbin.Topology.Bornology.Hom
 
 /-!
 # Lipschitz continuous functions
@@ -220,23 +219,22 @@ theorem edist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f)
   rw [iterate_succ, mul_comm]
   simpa only [Ennreal.coe_pow] using (hf.iterate n) x (f x)
 
-open CategoryTheory
-
-protected theorem mul {f g : End α} {Kf Kg} (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
-    LipschitzWith (Kf * Kg) (f * g : End α) :=
+protected theorem mul {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
+    LipschitzWith (Kf * Kg) (f * g : Function.End α) :=
   hf.comp hg
 
 /-- The product of a list of Lipschitz continuous endomorphisms is a Lipschitz continuous
 endomorphism. -/
-protected theorem list_prod (f : ι → End α) (K : ι → ℝ≥0 ) (h : ∀ i, LipschitzWith (K i) (f i)) :
+protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0 ) (h : ∀ i, LipschitzWith (K i) (f i)) :
     ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
   | [] => by
-    simp [types_id, LipschitzWith.id]
+    simpa using LipschitzWith.id
   | i :: l => by
     simp only [List.map_cons, List.prod_cons]
     exact (h i).mul (list_prod l)
 
-protected theorem pow {f : End α} {K} (h : LipschitzWith K f) : ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : End α)
+protected theorem pow {f : Function.End α} {K} (h : LipschitzWith K f) :
+    ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : Function.End α)
   | 0 => LipschitzWith.id
   | n + 1 => by
     rw [pow_succₓ, pow_succₓ]
@@ -292,6 +290,20 @@ theorem dist_lt_mul_of_lt (hf : LipschitzWith K f) (hK : K ≠ 0) (hr : dist x y
 
 theorem maps_to_ball (hf : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ) :
     MapsTo f (Metric.Ball x r) (Metric.Ball (f x) (K * r)) := fun y hy => hf.dist_lt_mul_of_lt hK hy
+
+/-- A Lipschitz continuous map is a locally bounded map. -/
+def toLocallyBoundedMap (f : α → β) (hf : LipschitzWith K f) : LocallyBoundedMap α β :=
+  (LocallyBoundedMap.ofMapBounded f) fun s hs =>
+    let ⟨C, hC⟩ := Metric.is_bounded_iff.1 hs
+    Metric.is_bounded_iff.2
+      ⟨K * C, ball_image_iff.2 fun x hx => ball_image_iff.2 fun y hy => hf.dist_le_mul_of_le (hC hx hy)⟩
+
+@[simp]
+theorem coe_to_locally_bounded_map (hf : LipschitzWith K f) : ⇑(hf.toLocallyBoundedMap f) = f :=
+  rfl
+
+theorem comap_cobounded_le (hf : LipschitzWith K f) : comap f (Bornology.cobounded β) ≤ Bornology.cobounded α :=
+  (hf.toLocallyBoundedMap f).2
 
 theorem bounded_image (hf : LipschitzWith K f) {s : Set α} (hs : Metric.Bounded s) : Metric.Bounded (f '' s) :=
   Metric.bounded_iff_ediam_ne_top.2 <|

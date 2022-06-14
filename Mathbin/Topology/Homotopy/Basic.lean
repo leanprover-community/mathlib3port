@@ -150,22 +150,22 @@ def extend (F : Homotopy f₀ f₁) : C(ℝ, C(X, Y)) :=
 
 theorem extend_apply_of_le_zero (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ≤ 0) (x : X) : F.extend t x = f₀ x := by
   rw [← F.apply_zero]
-  exact ContinuousMap.congr_fun (Set.Icc_extend_of_le_left (@zero_le_one ℝ _) F.curry ht) x
+  exact ContinuousMap.congr_fun (Set.Icc_extend_of_le_left (zero_le_one' ℝ) F.curry ht) x
 
 theorem extend_apply_of_one_le (F : Homotopy f₀ f₁) {t : ℝ} (ht : 1 ≤ t) (x : X) : F.extend t x = f₁ x := by
   rw [← F.apply_one]
-  exact ContinuousMap.congr_fun (Set.Icc_extend_of_right_le (@zero_le_one ℝ _) F.curry ht) x
+  exact ContinuousMap.congr_fun (Set.Icc_extend_of_right_le (zero_le_one' ℝ) F.curry ht) x
 
 @[simp]
 theorem extend_apply_coe (F : Homotopy f₀ f₁) (t : I) (x : X) : F.extend t x = F (t, x) :=
-  ContinuousMap.congr_fun (Set.Icc_extend_coe (@zero_le_one ℝ _) F.curry t) x
+  ContinuousMap.congr_fun (Set.Icc_extend_coe (zero_le_one' ℝ) F.curry t) x
 
 @[simp]
 theorem extend_apply_of_mem_I (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ∈ I) (x : X) : F.extend t x = F (⟨t, ht⟩, x) :=
-  ContinuousMap.congr_fun (Set.Icc_extend_of_mem (@zero_le_one ℝ _) F.curry ht) x
+  ContinuousMap.congr_fun (Set.Icc_extend_of_mem (zero_le_one' ℝ) F.curry ht) x
 
 theorem congr_fun {F G : Homotopy f₀ f₁} (h : F = G) (x : I × X) : F x = G x :=
-  ContinuousMap.congr_fun (congr_argₓ _ h) x
+  ContinuousMap.congr_fun (congr_arg _ h) x
 
 theorem congr_arg (F : Homotopy f₀ f₁) {x y : I × X} (h : x = y) : F x = F y :=
   F.toContinuousMap.congr_arg h

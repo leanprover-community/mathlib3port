@@ -87,7 +87,7 @@ theorem QuasiconvexOn.convex [IsDirected β (· ≤ ·)] (hf : QuasiconvexOn �
   let ⟨z, hxz, hyz⟩ := exists_ge_ge (f x) (f y)
   (hf _ ⟨hx, hxz⟩ ⟨hy, hyz⟩ ha hb hab).1
 
-theorem QuasiconcaveOn.convex [IsDirected β (swap (· ≤ ·))] (hf : QuasiconcaveOn 𝕜 s f) : Convex 𝕜 s :=
+theorem QuasiconcaveOn.convex [IsDirected β (· ≥ ·)] (hf : QuasiconcaveOn 𝕜 s f) : Convex 𝕜 s :=
   hf.dual.Convex
 
 end OrderedAddCommMonoid

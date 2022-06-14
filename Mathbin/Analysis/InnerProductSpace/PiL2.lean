@@ -41,7 +41,7 @@ open BigOperators uniformity TopologicalSpace Nnreal Ennreal ComplexConjugate Di
 
 noncomputable section
 
-variable {ι : Type _}
+variable {ι : Type _} {ι' : Type _}
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E]
 
@@ -101,6 +101,18 @@ theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fin
     ∥x∥₊ = Nnreal.sqrt (∑ i, ∥x i∥₊ ^ 2) :=
   PiLp.nnnorm_eq_of_L2 x
 
+theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
+    dist x y = (∑ i, dist (x i) (y i) ^ 2).sqrt :=
+  (PiLp.dist_eq_of_L2 x y : _)
+
+theorem EuclideanSpace.nndist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
+    nndist x y = (∑ i, nndist (x i) (y i) ^ 2).sqrt :=
+  (PiLp.nndist_eq_of_L2 x y : _)
+
+theorem EuclideanSpace.edist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x y : EuclideanSpace 𝕜 n) :
+    edist x y = (∑ i, edist (x i) (y i) ^ 2) ^ (1 / 2 : ℝ) :=
+  (PiLp.edist_eq_of_L2 x y : _)
+
 variable [Fintype ι]
 
 section
@@ -120,13 +132,17 @@ theorem finrank_euclidean_space : FiniteDimensional.finrank 𝕜 (EuclideanSpace
 theorem finrank_euclidean_space_fin {n : ℕ} : FiniteDimensional.finrank 𝕜 (EuclideanSpace 𝕜 (Finₓ n)) = n := by
   simp
 
+theorem EuclideanSpace.inner_eq_star_dot_product (x y : EuclideanSpace 𝕜 ι) :
+    ⟪x, y⟫ = Matrix.dotProduct (star <| PiLp.equiv _ _ x) (PiLp.equiv _ _ y) :=
+  rfl
+
 /-- A finite, mutually orthogonal family of subspaces of `E`, which span `E`, induce an isometry
 from `E` to `pi_Lp 2` of the subspaces equipped with the `L2` inner product. -/
-def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι → Submodule 𝕜 E}
-    (hV : DirectSum.SubmoduleIsInternal V)
-    (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) : E ≃ₗᵢ[𝕜] PiLp 2 fun i => V i := by
+def DirectSum.IsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] {V : ι → Submodule 𝕜 E}
+    (hV : DirectSum.IsInternal V) (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) :
+    E ≃ₗᵢ[𝕜] PiLp 2 fun i => V i := by
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
-  let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective
+  let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV.injective hV.surjective
   refine' (e₂.symm.trans e₁).isometryOfInner _
   suffices ∀ v w, ⟪v, w⟫ = ⟪e₂ (e₁.symm v), e₂ (e₁.symm w)⟫ by
     intro v₀ w₀
@@ -141,29 +157,38 @@ def DirectSum.SubmoduleIsInternal.isometryL2OfOrthogonalFamily [DecidableEq ι] 
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
 @[simp]
-theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι]
-    {V : ι → Submodule 𝕜 E} (hV : DirectSum.SubmoduleIsInternal V)
-    (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ) (w : PiLp 2 fun i => V i) :
-    (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
+theorem DirectSum.IsInternal.isometry_L2_of_orthogonal_family_symm_apply [DecidableEq ι] {V : ι → Submodule 𝕜 E}
+    (hV : DirectSum.IsInternal V) (hV' : @OrthogonalFamily 𝕜 _ _ _ _ (fun i => V i) _ fun i => (V i).subtypeₗᵢ)
+    (w : PiLp 2 fun i => V i) : (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
   classical
   let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
-  let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective
+  let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV.injective hV.surjective
   suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by
     exact this (e₁.symm w)
   intro v
-  simp [e₂, DirectSum.submoduleCoe, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
+  simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sum_add_hom_apply]
 
 end
 
 /-- The vector given in euclidean space by being `1 : 𝕜` at coordinate `i : ι` and `0 : 𝕜` at
 all other coordinates. -/
 def EuclideanSpace.single [DecidableEq ι] (i : ι) (a : 𝕜) : EuclideanSpace 𝕜 ι :=
-  Pi.single i a
+  (PiLp.equiv _ _).symm (Pi.single i a)
+
+@[simp]
+theorem PiLp.equiv_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+    PiLp.equiv _ _ (EuclideanSpace.single i a) = Pi.single i a :=
+  rfl
+
+@[simp]
+theorem PiLp.equiv_symm_single [DecidableEq ι] (i : ι) (a : 𝕜) :
+    (PiLp.equiv _ _).symm (Pi.single i a) = EuclideanSpace.single i a :=
+  rfl
 
 @[simp]
 theorem EuclideanSpace.single_apply [DecidableEq ι] (i : ι) (a : 𝕜) (j : ι) :
     (EuclideanSpace.single i a) j = ite (j = i) a 0 := by
-  rw [EuclideanSpace.single, ← Pi.single_apply i a j]
+  rw [EuclideanSpace.single, PiLp.equiv_symm_apply, ← Pi.single_apply i a j]
 
 theorem EuclideanSpace.inner_single_left [DecidableEq ι] (i : ι) (a : 𝕜) (v : EuclideanSpace 𝕜 ι) :
     ⟪EuclideanSpace.single i (a : 𝕜), v⟫ = conj a * v i := by

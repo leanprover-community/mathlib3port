@@ -442,6 +442,10 @@ theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : Pi {i} t = eval i ⁻¹'
 theorem singleton_pi' (i : ι) (t : ∀ i, Set (α i)) : Pi {i} t = { x | x i ∈ t i } :=
   singleton_pi i t
 
+theorem univ_pi_singleton (f : ∀ i, α i) : (Pi Univ fun i => {f i}) = ({f} : Set (∀ i, α i)) :=
+  ext fun g => by
+    simp [funext_iff]
+
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
     (Pi s fun i => if p i then t₁ i else t₂ i) = Pi { i ∈ s | p i } t₁ ∩ Pi { i ∈ s | ¬p i } t₂ := by
   ext f
@@ -527,7 +531,7 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s) (hf
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem update_preimage_univ_pi [DecidableEq ι] {f : ∀ i, α i} (hf : ∀ j _ : j ≠ i, f j ∈ t j) :
     update f i ⁻¹' Pi Univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j

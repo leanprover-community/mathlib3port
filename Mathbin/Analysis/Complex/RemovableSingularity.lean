@@ -66,7 +66,7 @@ theorem differentiable_on_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s
 is complex differentiable on `s \ {c}`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to be
 equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
 theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c)
-    (hd : DifferentiableOn ℂ f (s \ {c})) (ho : IsOₓ (fun z => f z - f c) (fun z => (z - c)⁻¹) (𝓝[≠] c)) :
+    (hd : DifferentiableOn ℂ f (s \ {c})) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     DifferentiableOn ℂ (update f c (limₓ (𝓝[≠] c) f)) s := by
   set F : ℂ → E := fun z => (z - c) • f z with hF
   suffices DifferentiableOn ℂ F (s \ {c}) ∧ ContinuousAt F c by
@@ -87,7 +87,7 @@ theorem differentiable_on_update_lim_of_is_o {f : ℂ → E} {s : Set ℂ} {c : 
 `f : ℂ → E` is complex differentiable on `s`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to
 be equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `{c} ∪ s`. -/
 theorem differentiable_on_update_lim_insert_of_is_o {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝[≠] c)
-    (hd : DifferentiableOn ℂ f s) (ho : IsOₓ (fun z => f z - f c) (fun z => (z - c)⁻¹) (𝓝[≠] c)) :
+    (hd : DifferentiableOn ℂ f s) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     DifferentiableOn ℂ (update f c (limₓ (𝓝[≠] c) f)) (insert c s) :=
   differentiable_on_update_lim_of_is_o (insert_mem_nhds_iff.2 hc) (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
 
@@ -108,7 +108,7 @@ theorem differentiable_on_update_lim_of_bdd_above {f : ℂ → E} {s : Set ℂ} 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
 theorem tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o {f : ℂ → E} {c : ℂ}
-    (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (ho : IsOₓ (fun z => f z - f c) (fun z => (z - c)⁻¹) (𝓝[≠] c)) :
+    (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (ho : (fun z => f z - f c) =o[𝓝[≠] c] fun z => (z - c)⁻¹) :
     Tendsto f (𝓝[≠] c) (𝓝 <| limₓ (𝓝[≠] c) f) := by
   rw [eventually_nhds_within_iff] at hd
   have : DifferentiableOn ℂ f ({ z | z ≠ c → DifferentiableAt ℂ f z } \ {c}) := fun z hz =>

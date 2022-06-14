@@ -130,7 +130,7 @@ theorem ext {a b : Finₓ n} (h : (a : ℕ) = b) : a = b :=
   eq_of_veq h
 
 theorem ext_iff (a b : Finₓ n) : a = b ↔ (a : ℕ) = b :=
-  Iff.intro (congr_argₓ _) Finₓ.eq_of_veq
+  Iff.intro (congr_arg _) Finₓ.eq_of_veq
 
 theorem coe_injective {n : ℕ} : Injective (coe : Finₓ n → ℕ) :=
   Subtype.coe_injective
@@ -361,33 +361,13 @@ instance orderIsoUnique : Unique (Finₓ n ≃o Finₓ n) :=
 are equal. -/
 theorem strict_mono_unique {f g : Finₓ n → α} (hf : StrictMono f) (hg : StrictMono g) (h : Range f = Range g) : f = g :=
   have : (hf.OrderIso f).trans (OrderIso.setCongr _ _ h) = hg.OrderIso g := Subsingleton.elimₓ _ _
-  congr_argₓ (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
+  congr_arg (Function.comp (coe : Range g → α)) (funext <| RelIso.ext_iff.1 this)
 
 /-- Two order embeddings of `fin n` are equal provided that their ranges are equal. -/
 theorem order_embedding_eq {f g : Finₓ n ↪o α} (h : Range f = Range g) : f = g :=
   RelEmbedding.ext <| funext_iffₓ.1 <| strict_mono_unique f.StrictMono g.StrictMono h
 
 end
-
-/-- A function `f` on `fin n` is strictly monotone if and only if `f i < f (i+1)` for all `i`. -/
-theorem strict_mono_iff_lt_succ {α : Type _} [Preorderₓ α] {f : Finₓ n → α} :
-    StrictMono f ↔ ∀ i h : i + 1 < n, f ⟨i, lt_of_le_of_ltₓ (Nat.le_succₓ i) h⟩ < f ⟨i + 1, h⟩ := by
-  constructor
-  · intro H i hi
-    apply H
-    exact Nat.lt_succ_selfₓ _
-    
-  · intro H
-    have A : ∀ i j h : i < j h' : j < n, f ⟨i, lt_transₓ h h'⟩ < f ⟨j, h'⟩ := by
-      intro i j h h'
-      induction' h with k h IH
-      · exact H _ _
-        
-      · exact lt_transₓ (IH (Nat.lt_of_succ_ltₓ h')) (H _ _)
-        
-    intro i j hij
-    convert A (i : ℕ) (j : ℕ) hij j.2 <;> ext <;> simp only [Subtype.coe_eta]
-    
 
 end Order
 
@@ -423,6 +403,12 @@ theorem mk_one : (⟨1, Nat.succ_lt_succₓ (Nat.succ_posₓ n)⟩ : Finₓ (n +
 instance {n : ℕ} : Nontrivial (Finₓ (n + 2)) :=
   ⟨⟨0, 1, by
       decide⟩⟩
+
+theorem nontrivial_iff_two_le : Nontrivial (Finₓ n) ↔ 2 ≤ n := by
+  rcases n with (_ | _ | n) <;> simp [Finₓ.nontrivial, not_nontrivial, Nat.succ_le_iff]
+
+theorem subsingleton_iff_le_one : Subsingleton (Finₓ n) ↔ n ≤ 1 := by
+  rcases n with (_ | _ | n) <;> simp [IsEmpty.subsingleton, Unique.subsingleton, not_subsingleton]
 
 section Monoidₓ
 
@@ -706,7 +692,7 @@ theorem range_cast_le {n k : ℕ} (h : n ≤ k) : Set.Range (castLe h) = { i | (
 theorem coe_of_injective_cast_le_symm {n k : ℕ} (h : n ≤ k) (i : Finₓ k) hi :
     ((Equivₓ.ofInjective _ (castLe h).Injective).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_le]
-  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
 
 @[simp]
 theorem cast_le_succ {m n : ℕ} (h : m + 1 ≤ n + 1) (i : Finₓ m) :
@@ -796,7 +782,7 @@ theorem cast_lt_cast_add (m : ℕ) (i : Finₓ n) : castLt (castAdd m i) (cast_a
 
 /-- For rewriting in the reverse direction, see `fin.cast_cast_add_left`. -/
 theorem cast_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_argₓ _ h) (castAdd m i) :=
+    castAdd m (Finₓ.cast h i) = Finₓ.cast (congr_arg _ h) (castAdd m i) :=
   ext rfl
 
 theorem cast_cast_add_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -928,7 +914,7 @@ theorem range_cast_succ {n : ℕ} : Set.Range (castSucc : Finₓ n → Finₓ n.
 theorem coe_of_injective_cast_succ_symm {n : ℕ} (i : Finₓ n.succ) hi :
     ((Equivₓ.ofInjective castSucc (cast_succ_injective _)).symm ⟨i, hi⟩ : ℕ) = i := by
   rw [← coe_cast_succ]
-  exact congr_argₓ coe (Equivₓ.apply_of_injective_symm _ _)
+  exact congr_arg coe (Equivₓ.apply_of_injective_symm _ _)
 
 theorem succ_cast_succ {n : ℕ} (i : Finₓ n) : i.cast_succ.succ = i.succ.cast_succ :=
   Finₓ.ext
@@ -963,7 +949,7 @@ theorem cast_add_nat_zero {n n' : ℕ} (i : Finₓ n) (h : n + 0 = n') :
 
 /-- For rewriting in the reverse direction, see `fin.cast_add_nat_left`. -/
 theorem add_nat_cast {n n' m : ℕ} (i : Finₓ n') (h : n' = n) :
-    addNat m (cast h i) = cast (congr_argₓ _ h) (addNat m i) :=
+    addNat m (cast h i) = cast (congr_arg _ h) (addNat m i) :=
   ext rfl
 
 theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
@@ -972,7 +958,7 @@ theorem cast_add_nat_left {n n' m : ℕ} (i : Finₓ n') (h : n' + m = n + m) :
 
 @[simp]
 theorem cast_add_nat_right {n m m' : ℕ} (i : Finₓ n) (h : n + m' = n + m) : cast h (addNat m' i) = addNat m i :=
-  ext <| (congr_argₓ ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
+  ext <| (congr_arg ((· + ·) (i : ℕ)) (add_left_cancelₓ h) : _)
 
 /-- `nat_add n i` adds `n` to `i` "on the left". -/
 def natAdd n {m} : Finₓ m ↪o Finₓ (n + m) :=
@@ -996,7 +982,7 @@ theorem nat_add_zero {n : ℕ} : Finₓ.natAdd 0 = (Finₓ.cast (zero_addₓ n).
 
 /-- For rewriting in the reverse direction, see `fin.cast_nat_add_right`. -/
 theorem nat_add_cast {n n' : ℕ} (m : ℕ) (i : Finₓ n') (h : n' = n) :
-    natAdd m (cast h i) = cast (congr_argₓ _ h) (natAdd m i) :=
+    natAdd m (cast h i) = cast (congr_arg _ h) (natAdd m i) :=
   ext rfl
 
 theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
@@ -1005,7 +991,7 @@ theorem cast_nat_add_right {n n' m : ℕ} (i : Finₓ n') (h : m + n' = m + n) :
 
 @[simp]
 theorem cast_nat_add_left {n m m' : ℕ} (i : Finₓ n) (h : m' + n = m + n) : cast h (natAdd m' i) = natAdd m i :=
-  ext <| (congr_argₓ (· + (i : ℕ)) (add_right_cancelₓ h) : _)
+  ext <| (congr_arg (· + (i : ℕ)) (add_right_cancelₓ h) : _)
 
 @[simp]
 theorem cast_nat_add_zero {n n' : ℕ} (i : Finₓ n) (h : 0 + n = n') :
@@ -1317,11 +1303,49 @@ theorem add_cases_right {m n : ℕ} {C : Finₓ (m + n) → Sort _} (hleft : ∀
     (hright : ∀ i, C (natAdd m i)) (i : Finₓ n) : addCases hleft hright (natAdd m i) = hright i := by
   have : ¬(nat_add m i : ℕ) < m := (le_coe_nat_add _ _).not_lt
   rw [add_cases, dif_neg this]
-  refine' eq_of_heq ((eq_rec_heqₓ _ _).trans _)
+  refine' eq_of_heq ((eq_rec_heq _ _).trans _)
   congr 1
   simp
 
 end Rec
+
+theorem lift_fun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] {f : Finₓ (n + 1) → α} :
+    ((· < ·)⇒r) f f ↔ ∀ i : Finₓ n, r (f i.cast_succ) (f i.succ) := by
+  constructor
+  · intro H i
+    exact H i.cast_succ_lt_succ
+    
+  · refine' fun H i => Finₓ.induction _ _
+    · exact fun h => (h.not_le (zero_le i)).elim
+      
+    · intro j ihj hij
+      rw [← le_cast_succ_iff] at hij
+      rcases hij.eq_or_lt with (rfl | hlt)
+      exacts[H j, trans (ihj hlt) (H j)]
+      
+    
+
+/-- A function `f` on `fin (n + 1)` is strictly monotone if and only if `f i < f (i + 1)`
+for all `i`. -/
+theorem strict_mono_iff_lt_succ {α : Type _} [Preorderₓ α] {f : Finₓ (n + 1) → α} :
+    StrictMono f ↔ ∀ i : Finₓ n, f i.cast_succ < f i.succ :=
+  lift_fun_iff_succ (· < ·)
+
+/-- A function `f` on `fin (n + 1)` is monotone if and only if `f i ≤ f (i + 1)` for all `i`. -/
+theorem monotone_iff_le_succ {α : Type _} [Preorderₓ α] {f : Finₓ (n + 1) → α} :
+    Monotone f ↔ ∀ i : Finₓ n, f i.cast_succ ≤ f i.succ :=
+  monotone_iff_forall_lt.trans <| lift_fun_iff_succ (· ≤ ·)
+
+/-- A function `f` on `fin (n + 1)` is strictly antitone if and only if `f (i + 1) < f i`
+for all `i`. -/
+theorem strict_anti_iff_succ_lt {α : Type _} [Preorderₓ α] {f : Finₓ (n + 1) → α} :
+    StrictAnti f ↔ ∀ i : Finₓ n, f i.succ < f i.cast_succ :=
+  lift_fun_iff_succ (· > ·)
+
+/-- A function `f` on `fin (n + 1)` is antitone if and only if `f (i + 1) ≤ f i` for all `i`. -/
+theorem antitone_iff_succ_le {α : Type _} [Preorderₓ α] {f : Finₓ (n + 1) → α} :
+    Antitone f ↔ ∀ i : Finₓ n, f i.succ ≤ f i.cast_succ :=
+  antitone_iff_forall_lt.trans <| lift_fun_iff_succ (· ≥ ·)
 
 section AddGroupₓ
 
@@ -1560,7 +1584,7 @@ theorem succ_above_right_inj {x : Finₓ (n + 1)} : x.succAbove a = x.succAbove 
 
 /-- `succ_above` is injective at the pivot -/
 theorem succ_above_left_injective : Injective (@succAbove n) := fun _ _ h => by
-  simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
+  simpa [range_succ_above] using congr_arg (fun f : Finₓ n ↪o Finₓ (n + 1) => Set.Range fᶜ) h
 
 /-- `succ_above` is injective at the pivot -/
 @[simp]
@@ -1717,7 +1741,7 @@ theorem succ_above_pred_above {p : Finₓ n} {i : Finₓ (n + 1)} (h : i ≠ p.c
       
     · simp only [Subtype.mk_eq_mk, Ne.def, Finₓ.cast_succ_mk] at h
       simp only [pred, Subtype.mk_lt_mk, not_ltₓ]
-      exact Nat.le_pred_of_ltₓ (Nat.lt_of_le_and_neₓ H (Ne.symm h))
+      exact Nat.le_pred_of_ltₓ (Nat.lt_of_le_and_ne H (Ne.symm h))
       
     
 

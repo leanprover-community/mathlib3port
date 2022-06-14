@@ -214,6 +214,10 @@ theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
     
   rw [zpow_neg_succ_of_nat, log_inv, log_pow, Int.cast_neg_succ_of_nat, Nat.cast_add_one, neg_mul_eq_neg_mulₓ]
 
+theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (sqrt x) = log x / 2 := by
+  rw [eq_div_iff, mul_comm, ← Nat.cast_two, ← log_pow, sq_sqrt hx]
+  exact two_ne_zero
+
 theorem log_le_sub_one_of_pos {x : ℝ} (hx : 0 < x) : log x ≤ x - 1 := by
   rw [le_sub_iff_add_le]
   convert add_one_le_exp (log x)
@@ -287,13 +291,13 @@ theorem tendsto_pow_log_div_mul_add_at_top (a b : ℝ) (n : ℕ) (ha : a ≠ 0) 
       filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using by
         simp [exp_log hx])
 
-theorem is_o_pow_log_id_at_top {n : ℕ} : Asymptotics.IsOₓ (fun x => log x ^ n) id atTop := by
+theorem is_o_pow_log_id_at_top {n : ℕ} : (fun x => log x ^ n) =o[at_top] id := by
   rw [Asymptotics.is_o_iff_tendsto']
   · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
     
   filter_upwards [eventually_ne_at_top (0 : ℝ)] with x h₁ h₂ using(h₁ h₂).elim
 
-theorem is_o_log_id_at_top : Asymptotics.IsOₓ log id atTop :=
+theorem is_o_log_id_at_top : log =o[at_top] id :=
   is_o_pow_log_id_at_top.congr_left fun x => pow_oneₓ _
 
 end Real

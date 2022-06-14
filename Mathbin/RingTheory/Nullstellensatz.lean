@@ -47,7 +47,7 @@ theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : Z
   fun x hx p hp => hx p <| h hp
 
 theorem zero_locus_bot : ZeroLocus (⊥ : Ideal (MvPolynomial σ k)) = ⊤ :=
-  eq_top_iff.2 fun x hx p hp => trans (congr_argₓ (eval x) (mem_bot.1 hp)) (eval x).map_zero
+  eq_top_iff.2 fun x hx p hp => trans (congr_arg (eval x) (mem_bot.1 hp)) (eval x).map_zero
 
 theorem zero_locus_top : ZeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
   eq_bot_iff.2 fun x hx => one_ne_zero ((eval x).map_one ▸ hx 1 Submodule.mem_top : (1 : k) = 0)
@@ -163,7 +163,7 @@ theorem is_maximal_iff_eq_vanishing_ideal_singleton (I : Ideal (MvPolynomial σ 
   intro p hp
   rw [← quotient.eq_zero_iff_mem, map_mv_polynomial_eq_eval₂ (Ideal.Quotient.mk I) p, eval₂_eq']
   rw [mem_vanishing_ideal_singleton_iff, eval_eq'] at hp
-  convert trans (congr_argₓ ϕ hp) ϕ.map_zero
+  convert trans (congr_arg ϕ hp) ϕ.map_zero
   simp only [ϕ.map_sum, ϕ.map_mul, ϕ.map_prod, ϕ.map_pow, hx]
 
 /-- Main statement of the Nullstellensatz -/

@@ -106,11 +106,11 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
-    rw [Prod.mk.inj_iffₓ]
+    rw [Prod.mk.inj_iff]
     refine'
       ⟨by
-        simpa using congr_argₓ Prod.snd h, _⟩
-    have h1 := congr_argₓ Finₓ.castSucc (congr_argₓ Prod.fst h)
+        simpa using congr_arg Prod.snd h, _⟩
+    have h1 := congr_arg Finₓ.castSucc (congr_arg Prod.fst h)
     simpa [Finₓ.cast_succ_cast_lt] using h1
     
   · -- φ : S → Sᶜ is surjective
@@ -123,7 +123,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
     · simpa only [true_andₓ, Finset.mem_univ, Finₓ.coe_cast_succ, Finₓ.coe_pred, Finset.mem_filter] using
         Nat.le_pred_of_ltₓ hij'
       
-    · simp only [Prod.mk.inj_iffₓ, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
+    · simp only [Prod.mk.inj_iff, Finₓ.succ_pred, Finₓ.cast_lt_cast_succ]
       constructor <;> rfl
       
     
@@ -147,7 +147,7 @@ def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
     rw [comp_sum, sum_comp]
     apply Finset.sum_congr rfl fun x h => _
     rw [comp_zsmul, zsmul_comp]
-    apply congr_argₓ
+    apply congr_arg
     erw [f.naturality]
     rfl
 
@@ -210,14 +210,14 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     have null : ∀ j : Finₓ (n + 1), t j.succ = 0 := by
       intro j
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
-      apply congr_argₓ
+      apply congr_arg
       rw [normalized_Moore_complex.obj_X]
       rw [←
         factor_thru_arrow _ _
           (finset_inf_arrow_factors Finset.univ _ j
             (by
               simp only [Finset.mem_univ]))]
-      slice_lhs 2 3 => erw [kernel_subobject_arrow_comp (X.δ j.succ)]
+      slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
       simp only [comp_zero]
     rw [Fintype.sum_eq_zero _ null]
     simp only [add_zeroₓ]

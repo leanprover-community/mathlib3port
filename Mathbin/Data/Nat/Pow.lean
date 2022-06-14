@@ -252,7 +252,7 @@ theorem zero_shiftl n : shiftl 0 n = 0 :=
 theorem shiftr_eq_div_pow m : ∀ n, shiftr m n = m / 2 ^ n
   | 0 => (Nat.div_oneₓ _).symm
   | k + 1 =>
-    (congr_argₓ div2 (shiftr_eq_div_pow k)).trans <| by
+    (congr_arg div2 (shiftr_eq_div_pow k)).trans <| by
       rw [div2_val, Nat.div_div_eq_div_mulₓ, mul_comm] <;> rfl
 
 @[simp]
@@ -301,7 +301,7 @@ theorem size_shiftl' {b m n} (h : shiftl' b m n ≠ 0) : size (shiftl' b m n) = 
   cases b
   · exact absurd rfl h
     
-  have : shiftl' tt m n + 1 = 1 := congr_argₓ (· + 1) s0
+  have : shiftl' tt m n + 1 = 1 := congr_arg (· + 1) s0
   rw [shiftl'_tt_eq_mul_pow] at this
   obtain rfl := succ.inj (eq_one_of_dvd_one ⟨_, this.symm⟩)
   rw [one_mulₓ] at this

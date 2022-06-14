@@ -76,7 +76,7 @@ variable {R}
 theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : A'[X] →ₐ[R] B'}
     (h₁ : f.comp (IsScalarTower.toAlgHom R A' (Polynomial A')) = g.comp (IsScalarTower.toAlgHom R A' (Polynomial A')))
     (h₂ : f x = g x) : f = g :=
-  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
+  AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_arg AlgHom.toRingHom h₁) h₂)
 
 variable (R)
 
@@ -344,7 +344,7 @@ section CommRingₓ
 
 variable [CommRingₓ S] {f : R →+* S}
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases' hi : i ∈ f.support
@@ -360,7 +360,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_ev
     simp [hi]
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j «expr ≠ » i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j «expr ≠ » i)
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ j _ : j ≠ i, p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h

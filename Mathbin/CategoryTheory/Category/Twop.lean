@@ -95,7 +95,7 @@ theorem Twop_swap_comp_forget_to_Bipointed :
 @[simps]
 def pointedToTwopFst : Pointed.{u} ⥤ Twop where
   obj := fun X => ⟨Option X, ⟨X.point, none⟩, some_ne_none _⟩
-  map := fun X Y f => ⟨Option.map f.toFun, congr_argₓ _ f.map_point, rfl⟩
+  map := fun X Y f => ⟨Option.map f.toFun, congr_arg _ f.map_point, rfl⟩
   map_id' := fun X => Bipointed.Hom.ext _ _ Option.map_id
   map_comp' := fun X Y Z f g => Bipointed.Hom.ext _ _ (Option.map_comp_mapₓ _ _).symm
 
@@ -103,7 +103,7 @@ def pointedToTwopFst : Pointed.{u} ⥤ Twop where
 @[simps]
 def pointedToTwopSnd : Pointed.{u} ⥤ Twop where
   obj := fun X => ⟨Option X, ⟨none, X.point⟩, (some_ne_none _).symm⟩
-  map := fun X Y f => ⟨Option.map f.toFun, rfl, congr_argₓ _ f.map_point⟩
+  map := fun X Y f => ⟨Option.map f.toFun, rfl, congr_arg _ f.map_point⟩
   map_id' := fun X => Bipointed.Hom.ext _ _ Option.map_id
   map_comp' := fun X Y Z f g => Bipointed.Hom.ext _ _ (Option.map_comp_mapₓ _ _).symm
 

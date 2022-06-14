@@ -36,6 +36,9 @@ We also define notions where the convergence is locally uniform, called
 `tendsto_locally_uniformly_on F f p s` and `tendsto_locally_uniformly F f p`. The previous theorems
 all have corresponding versions under locally uniform convergence.
 
+Finally, we introduce the notion of a uniform Cauchy sequence, which is to uniform
+convergence what a Cauchy sequence is to the usual notion of convergence.
+
 ## Implementation notes
 
 Most results hold under weaker assumptions of locally uniform approximation. In a first section,
@@ -154,7 +157,7 @@ theorem TendstoUniformly.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' 
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
     TendstoUniformlyOn (fun a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a)) (p.Prod p') s :=
-  (congr_argₓ _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
+  (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
 
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'} {p' : Filter ι'}
     (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
@@ -201,6 +204,42 @@ theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace �
     (h : UniformContinuous₂ f) {x : α} : TendstoUniformly f (f x) (𝓝 x) :=
   UniformContinuousOn.tendsto_uniformly univ_mem <| by
     rwa [univ_prod_univ, uniform_continuous_on_univ]
+
+/-- A sequence is uniformly Cauchy if eventually all of its pairwise differences are
+uniformly bounded -/
+def UniformCauchySeqOn (F : ι → α → β) (p : Filter ι) (s : Set α) : Prop :=
+  ∀ u : Set (β × β), u ∈ 𝓤 β → ∀ᶠ m : ι × ι in p ×ᶠ p, ∀ x : α, x ∈ s → (F m.fst x, F m.snd x) ∈ u
+
+/-- A sequence that converges uniformly is also uniformly Cauchy -/
+theorem TendstoUniformlyOn.uniform_cauchy_seq_on (hF : TendstoUniformlyOn F f p s) : UniformCauchySeqOn F p s := by
+  intro u hu
+  rcases comp_symm_of_uniformity hu with ⟨t, ht, htsymm, htmem⟩
+  apply ((hF t ht).prod_mk (hF t ht)).mono
+  intro n h x hx
+  cases' h with hl hr
+  specialize hl x hx
+  specialize hr x hx
+  exact Set.mem_of_mem_of_subset (prod_mk_mem_comp_rel (htsymm hl) hr) htmem
+
+/-- A uniformly Cauchy sequence converges uniformly to its limit -/
+theorem UniformCauchySeqOn.tendsto_uniformly_on_of_tendsto [NeBot p] (hF : UniformCauchySeqOn F p s)
+    (hF' : ∀ x : α, x ∈ s → Tendsto (fun n => F n x) p (nhds (f x))) : TendstoUniformlyOn F f p s := by
+  -- Proof idea: |f_n(x) - f(x)| ≤ |f_n(x) - f_m(x)| + |f_m(x) - f(x)|. We choose `n`
+  -- so that |f_n(x) - f_m(x)| is uniformly small across `s` whenever `m ≥ n`. Then for
+  -- a fixed `x`, we choose `m` sufficiently large such that |f_m(x) - f(x)| is small.
+  intro u hu
+  rcases comp_symm_of_uniformity hu with ⟨t, ht, htsymm, htmem⟩
+  -- Choose n
+  apply (hF t ht).curry.mono
+  -- Work with a specific x
+  intro n hn x hx
+  refine' Set.mem_of_mem_of_subset (mem_comp_rel.mpr _) htmem
+  -- Choose m
+  specialize hF' x hx
+  rw [Uniform.tendsto_nhds_right] at hF'
+  rcases(hn.and (hF'.eventually (eventually_mem_set.mpr ht))).exists with ⟨m, hm, hm'⟩
+  -- Finish the proof
+  exact ⟨F m x, ⟨hm', htsymm (hm x hx)⟩⟩
 
 section SeqTendsto
 

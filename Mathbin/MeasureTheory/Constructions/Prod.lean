@@ -222,7 +222,7 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
     exact (measurable_measure_prod_mk_left hs).const_mul _
     
   · rintro f g - hf hg h2f h2g
-    simp_rw [Pi.add_apply, lintegral_add (hf.comp m) (hg.comp m)]
+    simp_rw [Pi.add_apply, lintegral_add_left (hf.comp m)]
     exact h2f.add h2g
     
   · intro f hf h2f h3f
@@ -260,13 +260,13 @@ section
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable.
   This version has `f` in curried form. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂ν := by
-  "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `borelize"
+  "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `borelize"
   have : separable_space (range (uncurry f) ∪ {0} : Set E) := hf.separable_space_range_union_singleton
   let s : ℕ → simple_func (α × β) E :=
     simple_func.approx_on _ hf.measurable (range (uncurry f) ∪ {0}) 0
@@ -703,7 +703,7 @@ theorem lintegral_prod_of_measurable :
     simp [lintegral_indicator, m hs, hs, lintegral_const_mul, measurable_measure_prod_mk_left hs, prod_apply]
     
   · rintro f g - hf hg h2f h2g
-    simp [lintegral_add, Measurable.lintegral_prod_right', hf.comp m, hg.comp m, hf, hg, h2f, h2g]
+    simp [lintegral_add_left, Measurable.lintegral_prod_right', hf.comp m, hf, h2f, h2g]
     
   · intro f hf h2f h3f
     have kf : ∀ x n, Measurable fun y => f n (x, y) := fun x n => (hf n).comp m

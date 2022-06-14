@@ -275,14 +275,14 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2 where
     have := congr_app H.inv_hom_id U
     simp only [comp_c_app, id_c_app, eq_to_hom_map, eq_to_hom_trans] at this
     generalize_proofs h  at this
-    simpa using congr_argₓ (fun f => f ≫ eq_to_hom h.symm) this
+    simpa using congr_arg (fun f => f ≫ eq_to_hom h.symm) this
   inv_hom_id' := by
     ext U
     simp only [presheaf.pushforward_to_of_iso_app, nat_trans.comp_app, category.assoc, nat_trans.id_app,
       H.hom.c.naturality]
     have := congr_app H.hom_inv_id ((opens.map H.hom.base).op.obj U)
     generalize_proofs h  at this
-    simpa using congr_argₓ (fun f => f ≫ X.presheaf.map (eq_to_hom h.symm)) this
+    simpa using congr_arg (fun f => f ≫ X.presheaf.map (eq_to_hom h.symm)) this
 
 instance base_is_iso_of_iso (f : X ⟶ Y) [IsIso f] : IsIso f.base :=
   IsIso.of_iso ((forget _).mapIso (asIso f))
@@ -336,13 +336,13 @@ instance of_restrict_mono {U : Top} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf 
       (nat_iso.is_iso_app_of_is_iso (whisker_left hf.is_open_map.functor hf.is_open_map.adjunction.counit) V : _)
     have := PresheafedSpace.congr_app Eq (op (hf.is_open_map.functor.obj V))
     simp only [PresheafedSpace.comp_c_app, PresheafedSpace.of_restrict_c_app, category.assoc, cancel_epi] at this
-    have h : _ ≫ _ = _ ≫ _ ≫ _ := congr_argₓ (fun f => (X.restrict hf).Presheaf.map (eq_to_hom hV).op ≫ f) this
+    have h : _ ≫ _ = _ ≫ _ ≫ _ := congr_arg (fun f => (X.restrict hf).Presheaf.map (eq_to_hom hV).op ≫ f) this
     erw [g₁.c.naturality, g₂.c.naturality_assoc] at h
     simp only [presheaf.pushforward_obj_map, eq_to_hom_op, category.assoc, eq_to_hom_map, eq_to_hom_trans] at h
     rw [← is_iso.comp_inv_eq] at h
     simpa using h
     
-  · have := congr_argₓ PresheafedSpace.hom.base Eq
+  · have := congr_arg PresheafedSpace.hom.base Eq
     simp only [PresheafedSpace.comp_base, PresheafedSpace.of_restrict_base] at this
     rw [cancel_mono] at this
     exact this

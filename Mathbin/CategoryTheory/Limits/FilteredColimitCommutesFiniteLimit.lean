@@ -70,7 +70,7 @@ theorem colimit_limit_to_limit_colimit_injective : Function.Injective (colimitLi
   dsimp'  at x y
   -- Since the images of `x` and `y` are equal in a limit, they are equal componentwise
   -- (indexed by `j : J`),
-  replace h := fun j => congr_argₓ (limit.π (curry.obj F ⋙ colim) j) h
+  replace h := fun j => congr_arg (limit.π (curry.obj F ⋙ colim) j) h
   -- and they are equations in a filtered colimit,
   -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
   simp [colimit_eq_iff.{v, v}] at h

@@ -196,7 +196,7 @@ theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm
   intro
   calc _ = ∏ i in (e'.symm a : Finset σ), (rename e) (X i) :=
       (rename e).map_prod _ _ _ = ∏ i in (a : Finset τ), (rename e) (X (e.symm i)) :=
-      prod_mapₓ (a : Finset τ) _ _ _ = _ := _
+      prod_map (a : Finset τ) _ _ _ = _ := _
   apply Finset.prod_congr rfl
   intros
   simp
@@ -214,11 +214,11 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   simp only [← single_eq_monomial]
   convert Finsupp.support_sum_eq_bUnion (powerset_len n (univ : Finset σ)) _
   intro s t hst d
-  simp only [Finsupp.support_single_ne_zero one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
+  simp only [Finsupp.support_single_ne_zero _ one_ne_zero, and_imp, inf_eq_inter, mem_inter, mem_singleton]
   rintro h rfl
-  have := congr_argₓ Finsupp.support h
+  have := congr_arg Finsupp.support h
   rw [Finsupp.support_sum_eq_bUnion, Finsupp.support_sum_eq_bUnion] at this
-  · simp only [Finsupp.support_single_ne_zero one_ne_zero, bUnion_singleton_eq_self] at this
+  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
     exact absurd this hst.symm
     
   all_goals
@@ -230,7 +230,7 @@ theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   rw [support_esymm'']
   congr
   funext
-  exact Finsupp.support_single_ne_zero one_ne_zero
+  exact Finsupp.support_single_ne_zero _ one_ne_zero
 
 theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support = (powersetLen n (univ : Finset σ)).Image fun t => ∑ i : σ in t, Finsupp.single i 1 := by

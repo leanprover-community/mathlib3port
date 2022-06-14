@@ -86,10 +86,10 @@ def Quiver.Hom.unmop {X Y : Cᴹᵒᵖ} (f : X ⟶ Y) : unmop X ⟶ unmop Y :=
 namespace CategoryTheory
 
 theorem mop_inj {X Y : C} : Function.Injective (Quiver.Hom.mop : (X ⟶ Y) → (mop X ⟶ mop Y)) := fun _ _ H =>
-  congr_argₓ Quiver.Hom.unmop H
+  congr_arg Quiver.Hom.unmop H
 
 theorem unmop_inj {X Y : Cᴹᵒᵖ} : Function.Injective (Quiver.Hom.unmop : (X ⟶ Y) → (unmop X ⟶ unmop Y)) := fun _ _ H =>
-  congr_argₓ Quiver.Hom.mop H
+  congr_arg Quiver.Hom.mop H
 
 @[simp]
 theorem unmop_mop {X Y : C} {f : X ⟶ Y} : f.mop.unmop = f :=
@@ -141,8 +141,8 @@ variable [MonoidalCategory.{v₁} C]
 
 open Opposite MonoidalCategory
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
 instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   tensorObj := fun X Y => op (unop X ⊗ unop Y)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (f.unop ⊗ g.unop).op
@@ -165,11 +165,11 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ where
   triangle' := by
     intros
     apply Quiver.Hom.unop_inj
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
   pentagon' := by
     intros
     apply Quiver.Hom.unop_inj
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
 
 theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
   rfl
@@ -177,8 +177,8 @@ theorem op_tensor_obj (X Y : Cᵒᵖ) : X ⊗ Y = op (unop X ⊗ unop Y) :=
 theorem op_tensor_unit : 𝟙_ Cᵒᵖ = op (𝟙_ C) :=
   rfl
 
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
--- ././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
+-- ././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence
 instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   tensorObj := fun X Y => mop (unmop Y ⊗ unmop X)
   tensorHom := fun X₁ Y₁ X₂ Y₂ f g => (g.unmop ⊗ f.unmop).mop
@@ -201,11 +201,11 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ where
   triangle' := by
     intros
     apply unmop_inj
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
   pentagon' := by
     intros
     apply unmop_inj
-    "././Mathport/Syntax/Translate/Basic.lean:536:16: unsupported tactic `coherence"
+    "././Mathport/Syntax/Translate/Basic.lean:535:16: unsupported tactic `coherence"
 
 theorem mop_tensor_obj (X Y : Cᴹᵒᵖ) : X ⊗ Y = mop (unmop Y ⊗ unmop X) :=
   rfl

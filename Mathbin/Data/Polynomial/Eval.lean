@@ -209,9 +209,9 @@ section
 variable [Semiringₓ S] (f : R →+* S) (x : S)
 
 theorem eval₂_eq_sum_range : p.eval₂ f x = ∑ i in Finset.range (p.natDegree + 1), f (p.coeff i) * x ^ i :=
-  trans (congr_argₓ _ p.as_sum_range)
+  trans (congr_arg _ p.as_sum_range)
     (trans (eval₂_finset_sum f _ _ x)
-      (congr_argₓ _
+      (congr_arg _
         (by
           simp )))
 
@@ -346,6 +346,22 @@ theorem eval_C_mul : (c a * p).eval x = a * p.eval x := by
   · intro n b
     simp only [mul_assoc, C_mul_monomial, eval_monomial]
     
+
+/-- A reformulation of the expansion of (1 + y)^d:
+$$(d + 1) (1 + y)^d - (d + 1)y^d = \sum_{i = 0}^d {d + 1 \choose i} \cdot i \cdot y^{i - 1}.$$
+-/
+theorem eval_monomial_one_add_sub [CommRingₓ S] (d : ℕ) (y : S) :
+    eval (1 + y) (monomial d (d + 1 : S)) - eval y (monomial d (d + 1 : S)) =
+      ∑ x_1 : ℕ in range (d + 1), ↑((d + 1).choose x_1) * (↑x_1 * y ^ (x_1 - 1)) :=
+  by
+  have cast_succ : (d + 1 : S) = ((d.succ : ℕ) : S) := by
+    simp only [Nat.cast_succₓ]
+  rw [cast_succ, eval_monomial, eval_monomial, add_commₓ, add_pow]
+  conv_lhs => congr congr skip apply_congr skip rw [one_pow, mul_oneₓ, mul_comm]
+  rw [sum_range_succ, mul_addₓ, Nat.choose_self, Nat.cast_oneₓ, one_mulₓ, add_sub_cancel, mul_sum, sum_range_succ',
+    Nat.cast_zeroₓ, zero_mul, mul_zero, add_zeroₓ]
+  apply sum_congr rfl fun y hy => _
+  rw [← mul_assoc, ← mul_assoc, ← Nat.cast_mulₓ, Nat.succ_mul_choose_eq, Nat.cast_mulₓ, Nat.add_sub_cancel]
 
 /-- `polynomial.eval` as linear map -/
 @[simps]
@@ -517,10 +533,6 @@ theorem nat_cast_mul_comp {n : ℕ} : ((n : R[X]) * p).comp r = n * p.comp r := 
 @[simp]
 theorem mul_comp {R : Type _} [CommSemiringₓ R] (p q r : R[X]) : (p * q).comp r = p.comp r * q.comp r :=
   eval₂_mul _ _
-
-theorem prod_comp {R : Type _} [CommSemiringₓ R] (s : Multiset R[X]) (p : R[X]) :
-    s.Prod.comp p = (s.map fun q : R[X] => q.comp p).Prod :=
-  (s.prod_hom (MonoidHom.mk (fun q : R[X] => q.comp p) one_comp fun q r => mul_comp q r p)).symm
 
 @[simp]
 theorem pow_comp {R : Type _} [CommSemiringₓ R] (p q : R[X]) (n : ℕ) : (p ^ n).comp q = p.comp q ^ n :=
@@ -697,7 +709,7 @@ theorem map_monic_eq_zero_iff (hp : p.Monic) : p.map f = 0 ↔ ∀ x, f x = 0 :=
     calc
       f x = f x * f p.leadingCoeff := by
         simp only [mul_oneₓ, hp.leading_coeff, f.map_one]
-      _ = f x * (p.map f).coeff p.natDegree := congr_argₓ _ (coeff_map _ _).symm
+      _ = f x * (p.map f).coeff p.natDegree := congr_arg _ (coeff_map _ _).symm
       _ = 0 := by
         simp only [hfp, mul_zero, coeff_zero]
       ,
@@ -711,7 +723,7 @@ theorem map_monic_ne_zero (hp : p.Monic) [Nontrivial S] : p.map f ≠ 0 := fun h
 theorem degree_map_eq_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (leadingCoeff p) ≠ 0) :
     degree (p.map f) = degree p :=
   le_antisymmₓ (degree_map_le f _) <| by
-    have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_argₓ _ hp0) f.map_zero)
+    have hp0 : p ≠ 0 := leading_coeff_ne_zero.mp fun hp0 => hf (trans (congr_arg _ hp0) f.map_zero)
     rw [degree_eq_nat_degree hp0]
     refine' le_degree_of_ne_zero _
     rw [coeff_map]
@@ -895,6 +907,13 @@ theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) := by
 def compRingHom : R[X] → R[X] →+* R[X] :=
   eval₂RingHom c
 
+@[simp]
+theorem coe_comp_ring_hom (q : R[X]) : (compRingHom q : R[X] → R[X]) = fun p => comp p q :=
+  rfl
+
+theorem coe_comp_ring_hom_apply (p q : R[X]) : (compRingHom q : R[X] → R[X]) p = comp p q :=
+  rfl
+
 theorem root_mul_left_of_is_root (p : R[X]) {q : R[X]} : IsRoot q a → IsRoot (p * q) a := fun H => by
   rw [is_root, eval_mul, is_root.def.1 H, mul_zero]
 
@@ -924,6 +943,16 @@ theorem eval_prod {ι : Type _} (s : Finset ι) (p : ι → R[X]) (x : R) :
     eval x (∏ j in s, p j) = ∏ j in s, eval x (p j) :=
   (evalRingHom x).map_prod _ _
 
+theorem list_prod_comp (l : List R[X]) (q : R[X]) : l.Prod.comp q = (l.map fun p : R[X] => p.comp q).Prod :=
+  map_list_prod (compRingHom q) _
+
+theorem multiset_prod_comp (s : Multiset R[X]) (q : R[X]) : s.Prod.comp q = (s.map fun p : R[X] => p.comp q).Prod :=
+  map_multiset_prod (compRingHom q) _
+
+theorem prod_comp {ι : Type _} (s : Finset ι) (p : ι → R[X]) (q : R[X]) :
+    (∏ j in s, p j).comp q = ∏ j in s, (p j).comp q :=
+  map_prod (compRingHom q) _ _
+
 theorem is_root_prod {R} [CommRingₓ R] [IsDomain R] {ι : Type _} (s : Finset ι) (p : ι → R[X]) (x : R) :
     IsRoot (∏ j in s, p j) x ↔ ∃ i ∈ s, IsRoot (p i) x := by
   simp only [is_root, eval_prod, Finset.prod_eq_zero_iff]
@@ -949,11 +978,14 @@ section Map
 theorem map_dvd {R S} [Semiringₓ R] [CommSemiringₓ S] (f : R →+* S) {x y : R[X]} : x ∣ y → x.map f ∣ y.map f :=
   eval₂_dvd _ _
 
-theorem support_map_subset [Semiringₓ R] [CommSemiringₓ S] (f : R →+* S) (p : R[X]) : (map f p).Support ⊆ p.Support :=
-  by
+theorem support_map_subset [Semiringₓ R] [Semiringₓ S] (f : R →+* S) (p : R[X]) : (map f p).Support ⊆ p.Support := by
   intro x
   contrapose!
   simp (config := { contextual := true })
+
+theorem support_map_of_injective [Semiringₓ R] [Semiringₓ S] (p : R[X]) {f : R →+* S} (hf : Function.Injective f) :
+    (map f p).Support = p.Support := by
+  simp_rw [Finset.ext_iff, mem_support_iff, coeff_map, ← map_zero f, hf.ne_iff, iff_selfₓ, forall_const]
 
 variable [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S)
 

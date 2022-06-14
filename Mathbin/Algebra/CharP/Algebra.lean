@@ -38,6 +38,10 @@ theorem char_p_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semi
       refine' Iff.trans _ h.eq_iff
       rw [RingHom.map_zero] }
 
+theorem char_p_of_injective_algebra_map' (R A : Type _) [Field R] [Semiringₓ A] [Algebra R A] [Nontrivial A] (p : ℕ)
+    [CharP R p] : CharP A p :=
+  char_p_of_injective_algebra_map (algebraMap R A).Injective p
+
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
 theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
     (h : Function.Injective (algebraMap R A)) [CharZero R] : CharZero A :=

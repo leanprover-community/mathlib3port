@@ -145,7 +145,7 @@ theorem sublists_aux_cons_append (l₁ l₂ : List α) :
   simp only [sublists, sublists_aux_cons_eq_sublists_aux₁, sublists_aux₁_append, bind_eq_bind, sublists_aux₁_bind]
   congr
   funext x
-  apply congr_argₓ _
+  apply congr_arg _
   rw [← bind_ret_eq_map, sublists_aux₁_bind]
   exact (append_nil _).symm
 
@@ -298,7 +298,7 @@ theorem length_of_sublists_len {α : Type _} : ∀ {n} {l l' : List α}, l' ∈ 
     rcases h with (h | ⟨l', h, rfl⟩)
     · exact length_of_sublists_len h
       
-    · exact congr_argₓ (· + 1) (length_of_sublists_len h)
+    · exact congr_arg (· + 1) (length_of_sublists_len h)
       
 
 theorem mem_sublists_len_self {α : Type _} {l l' : List α} (h : l' <+ l) : l' ∈ sublistsLen (length l') l := by

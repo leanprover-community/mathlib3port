@@ -252,7 +252,7 @@ theorem stone_cech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous
     (h : g₁ ∘ stoneCechUnit = g₂ ∘ stoneCechUnit) : g₁ = g₂ := by
   apply Continuous.ext_on dense_range_stone_cech_unit h₁ h₂
   rintro x ⟨x, rfl⟩
-  apply congr_funₓ h x
+  apply congr_fun h x
 
 end Extension
 

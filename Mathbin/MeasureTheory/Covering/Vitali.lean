@@ -42,7 +42,7 @@ open Nnreal Classical Ennreal TopologicalSpace
 
 namespace Vitali
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -155,8 +155,8 @@ theorem exists_disjoint_subfamily_covering_enlargment (t : Set (Set α)) (δ : S
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u' «expr ⊆ » t')
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u' «expr ⊆ » t')
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
@@ -244,8 +244,8 @@ theorem exists_disjoint_subfamily_covering_enlargment_closed_ball [MetricSpace �
       
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t')
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t')
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 6 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -462,7 +462,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       Ennreal.tsum_le_tsum fun a => (hy a (ut (vu a.1.2))).2_ = C * ∑' a : { a // a ∉ w }, μ a :=
       Ennreal.tsum_mul_left _ ≤ C * (ε / C) := Ennreal.mul_le_mul le_rfl hw.le _ ≤ ε := Ennreal.mul_div_le
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (u «expr ⊆ » t)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (u «expr ⊆ » t)
 /-- Assume that around every point there are arbitrarily small scales at which the measure is
 doubling. Then the set of closed sets `a` with nonempty interior covering a fixed proportion `1/C`
 of the ball `closed_ball x (3 * diam a)` forms a Vitali family. This is essentially a restatement

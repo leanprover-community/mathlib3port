@@ -92,13 +92,13 @@ theorem is_complement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
 
 @[to_additive]
 theorem is_complement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ := by
-  refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_argₓ _ h).mpr is_complement_singleton_top⟩
+  refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_singleton_top⟩
   obtain ⟨⟨⟨z, rfl : z = g⟩, y, _⟩, hy⟩ := h.2 (g * x)
   rwa [← mul_left_cancelₓ hy]
 
 @[to_additive]
 theorem is_complement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ := by
-  refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_argₓ _ h).mpr is_complement_top_singleton⟩
+  refine' ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_top_singleton⟩
   obtain ⟨y, hy⟩ := h.2 (x * g)
   conv_rhs at hy => rw [← show y.2.1 = g from y.2.2]
   rw [← mul_right_cancelₓ hy]
@@ -163,13 +163,13 @@ theorem mem_left_transversals_iff_exists_unique_inv_mul_mem :
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
-      ⟨x.1, (congr_argₓ (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, fun y hy =>
+      ⟨x.1, (congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, fun y hy =>
         (prod.ext_iff.mp (h2 ⟨y, y⁻¹ * g, hy⟩ (mul_inv_cancel_left y g))).1⟩
     
   · obtain ⟨x, h1, h2⟩ := h g
     refine' ⟨⟨x, x⁻¹ * g, h1⟩, mul_inv_cancel_left x g, fun y hy => _⟩
-    have := h2 y.1 ((congr_argₓ (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
-    exact Prod.extₓ this (Subtype.ext (eq_inv_mul_of_mul_eq ((congr_argₓ _ this).mp hy)))
+    have := h2 y.1 ((congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
+    exact Prod.extₓ this (Subtype.ext (eq_inv_mul_of_mul_eq ((congr_arg _ this).mp hy)))
     
 
 @[to_additive]
@@ -179,13 +179,13 @@ theorem mem_right_transversals_iff_exists_unique_mul_inv_mem :
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
-      ⟨x.2, (congr_argₓ (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, fun y hy =>
+      ⟨x.2, (congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, fun y hy =>
         (prod.ext_iff.mp (h2 ⟨⟨g * y⁻¹, hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩
     
   · obtain ⟨x, h1, h2⟩ := h g
     refine' ⟨⟨⟨g * x⁻¹, h1⟩, x⟩, inv_mul_cancel_right g x, fun y hy => _⟩
-    have := h2 y.2 ((congr_argₓ (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
-    exact Prod.extₓ (Subtype.ext (eq_mul_inv_of_mul_eq ((congr_argₓ _ this).mp hy))) this
+    have := h2 y.2 ((congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
+    exact Prod.extₓ (Subtype.ext (eq_mul_inv_of_mul_eq ((congr_arg _ this).mp hy))) this
     
 
 @[to_additive]
@@ -222,7 +222,7 @@ theorem range_mem_left_transversals {f : G ⧸ H → G} (hf : ∀ q, ↑(f q) = 
     Set.Range f ∈ LeftTransversals (H : Set G) :=
   mem_left_transversals_iff_bijective.mpr
     ⟨by
-      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_argₓ _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
+      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
 @[to_additive]
@@ -230,7 +230,7 @@ theorem range_mem_right_transversals {f : Quotientₓ (QuotientGroup.rightRel H)
     (hf : ∀ q, Quotientₓ.mk' (f q) = q) : Set.Range f ∈ RightTransversals (H : Set G) :=
   mem_right_transversals_iff_bijective.mpr
     ⟨by
-      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_argₓ _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
+      rintro ⟨-, q₁, rfl⟩ ⟨-, q₂, rfl⟩ h <;> exact congr_arg _ (((hf q₁).symm.trans h).trans (hf q₂)), fun q =>
       ⟨⟨f q, q, rfl⟩, hf q⟩⟩
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
@@ -241,9 +241,9 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ LeftTransversals (H : Set G)
     ⟨Set.Range (Function.update Quotientₓ.out' (↑g) g), range_mem_left_transversals fun q => _, g,
       Function.update_same g g Quotientₓ.out'⟩
   by_cases' hq : q = g
-  · exact hq.symm ▸ congr_argₓ _ (Function.update_same g g Quotientₓ.out')
+  · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotientₓ.out')
     
-  · exact Eq.trans (congr_argₓ _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
+  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
     
 
 -- ././Mathport/Syntax/Translate/Tactic/Basic.lean:30:4: unsupported: too many args: classical ... #[[]]
@@ -254,9 +254,9 @@ theorem exists_right_transversal (g : G) : ∃ S ∈ RightTransversals (H : Set 
     ⟨Set.Range (Function.update Quotientₓ.out' _ g), range_mem_right_transversals fun q => _, Quotientₓ.mk' g,
       Function.update_same (Quotientₓ.mk' g) g Quotientₓ.out'⟩
   by_cases' hq : q = Quotientₓ.mk' g
-  · exact hq.symm ▸ congr_argₓ _ (Function.update_same (Quotientₓ.mk' g) g Quotientₓ.out')
+  · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotientₓ.mk' g) g Quotientₓ.out')
     
-  · exact Eq.trans (congr_argₓ _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
+  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotientₓ.out')) q.out_eq'
     
 
 namespace MemLeftTransversals
@@ -290,7 +290,7 @@ theorem inv_to_fun_mul_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g
 
 @[to_additive]
 theorem inv_mul_to_fun_mem (hS : S ∈ Subgroup.LeftTransversals (H : Set G)) (g : G) : g⁻¹ * toFun hS g ∈ H :=
-  (congr_argₓ (· ∈ H)
+  (congr_arg (· ∈ H)
         (by
           rw [mul_inv_rev, inv_invₓ])).mp
     (H.inv_mem (inv_to_fun_mul_mem hS g))
@@ -329,7 +329,7 @@ theorem mul_inv_to_fun_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (
 
 @[to_additive]
 theorem to_fun_mul_inv_mem (hS : S ∈ Subgroup.RightTransversals (H : Set G)) (g : G) : (toFun hS g : G) * g⁻¹ ∈ H :=
-  (congr_argₓ (· ∈ H)
+  (congr_arg (· ∈ H)
         (by
           rw [mul_inv_rev, inv_invₓ])).mp
     (H.inv_mem (mul_inv_to_fun_mem hS g))
@@ -351,7 +351,7 @@ instance : MulAction F (LeftTransversals (H : Set G)) where
       refine' mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g => _
       obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (f⁻¹ • g)
       refine' ⟨⟨f • t, Set.smul_mem_smul_set t.2⟩, _, _⟩
-      · exact (congr_argₓ _ (smul_inv_smul f g)).mp (quotient_action.inv_mul_mem f ht1)
+      · exact (congr_arg _ (smul_inv_smul f g)).mp (quotient_action.inv_mul_mem f ht1)
         
       · rintro ⟨-, t', ht', rfl⟩ h
         replace h := quotient_action.inv_mul_mem f⁻¹ h
@@ -421,7 +421,7 @@ theorem is_complement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype
   change ↑(x.2 * y.2⁻¹) = ↑(x.1⁻¹ * y.1) at h
   rw [Prod.ext_iff, ← @inv_mul_eq_one H _ x.1 y.1, ← @mul_inv_eq_one K _ x.2 y.2, Subtype.ext_iff, Subtype.ext_iff,
     coe_one, coe_one, h, and_selfₓ, ← mem_bot, ← h2.eq_bot, mem_inf]
-  exact ⟨Subtype.mem (x.1⁻¹ * y.1), (congr_argₓ (· ∈ K) h).mp (Subtype.mem (x.2 * y.2⁻¹))⟩
+  exact ⟨Subtype.mem (x.1⁻¹ * y.1), (congr_arg (· ∈ K) h).mp (Subtype.mem (x.2 * y.2⁻¹))⟩
 
 theorem is_complement'_iff_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K] :
     IsComplement' H K ↔ Fintype.card H * Fintype.card K = Fintype.card G ∧ Disjoint H K :=

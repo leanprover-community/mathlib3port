@@ -164,12 +164,9 @@ def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [
       show f 0 ≤ f 1 by
         simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
 
-theorem zero_le_one' : (0 : α) ≤ 1 :=
-  LinearOrderedCommMonoidWithZero.zero_le_one
-
 @[simp]
 theorem zero_le' : 0 ≤ a := by
-  simpa only [mul_zero, mul_oneₓ] using mul_le_mul_left' (@zero_le_one' α _) a
+  simpa only [mul_zero, mul_oneₓ] using mul_le_mul_left' zero_le_one a
 
 @[simp]
 theorem not_lt_zero' : ¬a < 0 :=
@@ -196,7 +193,7 @@ end LinearOrderedCommMonoid
 variable [LinearOrderedCommGroupWithZero α]
 
 theorem zero_lt_one₀ : (0 : α) < 1 :=
-  lt_of_le_of_neₓ zero_le_one' zero_ne_one
+  lt_of_le_of_neₓ zero_le_one zero_ne_one
 
 theorem le_of_le_mul_right (h : c ≠ 0) (hab : a * c ≤ b * c) : a ≤ b := by
   simpa only [mul_inv_cancel_right₀ h] using mul_le_mul_right' hab c⁻¹
@@ -287,14 +284,45 @@ theorem lt_of_mul_lt_mul_of_le₀ (h : a * b < c * d) (hc : 0 < c) (hh : c ≤ a
 theorem mul_le_mul_right₀ (hc : c ≠ 0) : a * c ≤ b * c ↔ a ≤ b :=
   ⟨le_of_le_mul_right hc, fun hab => mul_le_mul_right' hab _⟩
 
+theorem mul_le_mul_left₀ (ha : a ≠ 0) : a * b ≤ a * c ↔ b ≤ c := by
+  simp only [mul_comm a]
+  exact mul_le_mul_right₀ ha
+
 theorem div_le_div_right₀ (hc : c ≠ 0) : a / c ≤ b / c ↔ a ≤ b := by
   rw [div_eq_mul_inv, div_eq_mul_inv, mul_le_mul_right₀ (inv_ne_zero hc)]
+
+theorem div_le_div_left₀ (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) : a / b ≤ a / c ↔ c ≤ b := by
+  simp only [div_eq_mul_inv, mul_le_mul_left₀ ha, inv_le_inv₀ hb hc]
 
 theorem le_div_iff₀ (hc : c ≠ 0) : a ≤ b / c ↔ a * c ≤ b := by
   rw [div_eq_mul_inv, le_mul_inv_iff₀ hc]
 
 theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b * c := by
   rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
+
+/-- `equiv.mul_left₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
+
+Note that `order_iso.mul_left₀` refers to the `linear_ordered_field` version. -/
+@[simps (config := { simpRhs := true }) apply toEquiv]
+def OrderIso.mulLeft₀' {a : α} (ha : a ≠ 0) : α ≃o α :=
+  { Equivₓ.mulLeft₀ a ha with map_rel_iff' := fun x y => mul_le_mul_left₀ ha }
+
+theorem OrderIso.mul_left₀'_symm {a : α} (ha : a ≠ 0) :
+    (OrderIso.mulLeft₀' ha).symm = OrderIso.mulLeft₀' (inv_ne_zero ha) := by
+  ext
+  rfl
+
+/-- `equiv.mul_right₀` as an order_iso on a `linear_ordered_comm_group_with_zero.`.
+
+Note that `order_iso.mul_right₀` refers to the `linear_ordered_field` version. -/
+@[simps (config := { simpRhs := true }) apply toEquiv]
+def OrderIso.mulRight₀' {a : α} (ha : a ≠ 0) : α ≃o α :=
+  { Equivₓ.mulRight₀ a ha with map_rel_iff' := fun _ _ => mul_le_mul_right₀ ha }
+
+theorem OrderIso.mul_right₀'_symm {a : α} (ha : a ≠ 0) :
+    (OrderIso.mulRight₀' ha).symm = OrderIso.mulRight₀' (inv_ne_zero ha) := by
+  ext
+  rfl
 
 instance : LinearOrderedAddCommGroupWithTop (Additive αᵒᵈ) :=
   { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with neg_top := inv_zero,
@@ -319,7 +347,7 @@ theorem map_neg (x : R) : f (-x) = f x :=
   calc
     f (-x) = f (-1 * x) := congr_arg _ (neg_one_mul _).symm
     _ = f (-1) * f x := map_mul _ _ _
-    _ = 1 * f x := congr_argₓ (fun g => g * f x) (map_neg_one f)
+    _ = 1 * f x := congr_arg (fun g => g * f x) (map_neg_one f)
     _ = f x := one_mulₓ _
     
 

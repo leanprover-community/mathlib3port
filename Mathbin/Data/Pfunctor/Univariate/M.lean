@@ -185,7 +185,7 @@ theorem M.default_consistent [Inhabited F.A] : ∀ n, Agree (default : CofixA F 
   | succ n => (Agree.intro _ _) fun _ => M.default_consistent n
 
 instance M.inhabited [Inhabited F.A] : Inhabited (M F) :=
-  ⟨{ approx := fun n => default, consistent := M.default_consistent _ }⟩
+  ⟨{ approx := default, consistent := M.default_consistent _ }⟩
 
 instance MIntl.inhabited [Inhabited F.A] : Inhabited (MIntl F) :=
   show Inhabited (M F) by
@@ -223,7 +223,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
   { approx := fun n =>
       children' (x.1 _)
         (cast
-          (congr_argₓ _ <| by
+          (congr_arg _ <| by
             simp only [head, H] <;> rfl)
           i),
     consistent := by
@@ -241,7 +241,7 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
   if H' : i.1 = head x then
     children x
       (cast
-        (congr_argₓ _ <| by
+        (congr_arg _ <| by
           simp only [head, H'] <;> rfl)
         i.2)
   else default
@@ -574,7 +574,7 @@ theorem ext_aux [Inhabited (M F)] [DecidableEq F.A] {n : ℕ} (x y z : M F) (hx 
     · solve_by_elim
       
     introv h
-    specialize hrec (⟨_, i⟩ :: ps) (congr_argₓ _ h)
+    specialize hrec (⟨_, i⟩ :: ps) (congr_arg _ h)
     simp only [iselect_cons] at hrec
     exact hrec
     
@@ -683,8 +683,8 @@ theorem bisim (R : M P → M P → Prop)
   apply eq_of_bisim R _ _ _ h'
   clear h' x y
   constructor <;> introv ih <;> rcases h _ _ ih with ⟨a'', g, g', h₀, h₁, h₂⟩ <;> clear h
-  · replace h₀ := congr_argₓ Sigma.fst h₀
-    replace h₁ := congr_argₓ Sigma.fst h₁
+  · replace h₀ := congr_arg Sigma.fst h₀
+    replace h₁ := congr_arg Sigma.fst h₁
     simp only [dest_mk] at h₀ h₁
     rw [h₀, h₁]
     

@@ -35,7 +35,7 @@ theorem Monic.as_sum (hp : p.Monic) : p = X ^ p.natDegree + ∑ i in range p.nat
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow, sum_range_succ_comm]
   suffices C (p.coeff p.nat_degree) = 1 by
     rw [this, one_mulₓ]
-  exact congr_argₓ C hp
+  exact congr_arg C hp
 
 theorem ne_zero_of_ne_zero_of_monic (hp : p ≠ 0) (hq : Monic q) : q ≠ 0 := by
   rintro rfl
@@ -207,7 +207,7 @@ theorem is_unit_C {x : R} : IsUnit (c x) ↔ IsUnit x := by
   rw [is_unit_iff_dvd_one, is_unit_iff_dvd_one]
   constructor
   · rintro ⟨g, hg⟩
-    replace hg := congr_argₓ (eval 0) hg
+    replace hg := congr_arg (eval 0) hg
     rw [eval_one, eval_mul, eval_C] at hg
     exact ⟨g.eval 0, hg⟩
     
@@ -475,7 +475,7 @@ theorem is_unit_leading_coeff_mul_right_eq_zero_iff (h : IsUnit p.leadingCoeff) 
 theorem is_unit_leading_coeff_mul_left_eq_zero_iff (h : IsUnit p.leadingCoeff) {q : R[X]} : q * p = 0 ↔ q = 0 := by
   constructor
   · intro hp
-    replace hp := congr_argₓ (· * C ↑h.unit⁻¹) hp
+    replace hp := congr_arg (· * C ↑h.unit⁻¹) hp
     simp only [zero_mul] at hp
     rwa [mul_assoc, monic.mul_left_eq_zero_iff] at hp
     refine' monic_mul_C_of_leading_coeff_mul_eq_one _

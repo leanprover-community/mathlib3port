@@ -38,7 +38,7 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
--- ././Mathport/Syntax/Translate/Basic.lean:1250:30: infer kinds are unsupported in Lean 4: #[`congr] []
+-- ././Mathport/Syntax/Translate/Basic.lean:1249:30: infer kinds are unsupported in Lean 4: #[`congr] []
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/
@@ -119,9 +119,9 @@ instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') 
   ContT.uliftable' Equivₓ.ulift.symm
 
 /-- for specific writer monads, this function helps to create a uliftable instance -/
-def WriterT.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') : Uliftable (WriterT w m) (WriterT w' m') where
-  congr := fun α β G => WriterT.equiv <| Uliftable.congr _ _ <| Equivₓ.prodCongr G F
+def WriterTₓ.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') : Uliftable (WriterTₓ w m) (WriterTₓ w' m') where
+  congr := fun α β G => WriterTₓ.equiv <| Uliftable.congr _ _ <| Equivₓ.prodCongr G F
 
-instance {m m'} [Uliftable m m'] : Uliftable (WriterT s m) (WriterT (ULift s) m') :=
-  WriterT.uliftable' Equivₓ.ulift.symm
+instance {m m'} [Uliftable m m'] : Uliftable (WriterTₓ s m) (WriterTₓ (ULift s) m') :=
+  WriterTₓ.uliftable' Equivₓ.ulift.symm
 

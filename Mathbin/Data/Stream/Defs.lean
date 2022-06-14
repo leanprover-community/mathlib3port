@@ -90,7 +90,7 @@ def interleave (s₁ s₂ : Streamₓ α) : Streamₓ α :=
   corecOn (s₁, s₂) (fun ⟨s₁, s₂⟩ => head s₁) fun ⟨s₁, s₂⟩ => (s₂, tail s₁)
 
 -- mathport name: «expr ⋈ »
-infixl:65 "⋈" => interleave
+infixl:65 " ⋈ " => interleave
 
 /-- Elements of a stream with even indices. -/
 def even (s : Streamₓ α) : Streamₓ α :=
@@ -106,7 +106,7 @@ def appendStream : List α → Streamₓ α → Streamₓ α
   | List.cons a l, s => a :: append_stream l s
 
 -- mathport name: «expr ++ₛ »
-infixl:65 "++ₛ" => appendStream
+infixl:65 " ++ₛ " => appendStream
 
 /-- `take n s` returns a list of the `n` first elements of stream `s` -/
 def take : ℕ → Streamₓ α → List α
@@ -149,7 +149,7 @@ def pure (a : α) : Streamₓ α :=
 def apply (f : Streamₓ (α → β)) (s : Streamₓ α) : Streamₓ β := fun n => (nth f n) (nth s n)
 
 -- mathport name: «expr ⊛ »
-infixl:75 "⊛" => apply
+infixl:75 " ⊛ " => apply
 
 /-- The stream of natural numbers: `stream.nth n stream.nats = n`. -/
 -- input as \o*

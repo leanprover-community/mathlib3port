@@ -45,6 +45,11 @@ theorem coe_image₂ (f : α → β → γ) (s : Finset α) (t : Finset β) : (i
 theorem card_image₂_le (f : α → β → γ) (s : Finset α) (t : Finset β) : (image₂ f s t).card ≤ s.card * t.card :=
   card_image_le.trans_eq <| card_product _ _
 
+theorem card_image₂_iff :
+    (image₂ f s t).card = s.card * t.card ↔ ((s : Set α) ×ˢ (t : Set β) : Set (α × β)).InjOn fun x => f x.1 x.2 := by
+  rw [← card_product, ← coe_product]
+  exact card_image_iff
+
 theorem card_image₂ (hf : Injective2 f) (s : Finset α) (t : Finset β) : (image₂ f s t).card = s.card * t.card :=
   (card_image_of_injective _ hf.uncurry).trans <| card_product _ _
 
@@ -114,6 +119,9 @@ theorem image₂_singleton_left : image₂ f {a} t = t.Image fun b => f a b :=
 theorem image₂_singleton_right : image₂ f s {b} = s.Image fun a => f a b :=
   ext fun x => by
     simp
+
+theorem image₂_singleton_left' : image₂ f {a} t = t.Image (f a) :=
+  image₂_singleton_left
 
 theorem image₂_singleton : image₂ f {a} {b} = {f a b} := by
   simp

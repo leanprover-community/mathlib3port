@@ -47,6 +47,9 @@ We use `α>0 = {x : α // 0 < x}` with a strict inequality since in most cases w
 is clear.  This creates a few bumps in the first couple of proofs, where we have to split cases on
 whether an element is `0` or not, but goes smoothly after that.  A further advantage is that we
 only introduce notation for the positive elements and we do not need also the non-negative ones.
+
+Some lemmas for `partial_order` also have a variant for `preorder`, where the `preorder` version has
+stronger hypotheses.  In this case we put the `preorder` lemma in the `preorder` namespace.
 -/
 
 
@@ -97,7 +100,7 @@ end AbbreviationsStrictMono
 
 section AbbreviationsMono
 
-variable (X : Type _) [Mul X] [Zero X] [Preorderₓ X]
+variable (X : Type _) [Mul X] [Zero X] [LT X] [LE X]
 
 /-- `zero_lt.pos_mul_mono α` is an abbreviation for
 `covariant_class α>0 α (λ x y, x * y) (≤)`,
@@ -141,11 +144,11 @@ theorem mul_lt_mul_left' [PosMulStrictMono α] (bc : b < c) (a0 : 0 < a) : a * b
 theorem mul_lt_mul_right' [MulPosStrictMono α] (bc : b < c) (a0 : 0 < a) : b * a < c * a :=
   @CovariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨a, a0⟩ _ _ bc
 
--- proven with `a0 : 0 ≤ a` as `lt_of_mul_lt_mul_left''`
+-- proven with `a0 : 0 ≤ a` as `lt_of_mul_lt_mul_left`
 theorem lt_of_mul_lt_mul_left' [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 0 < a) : b < c :=
   @ContravariantClass.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨a, a0⟩ _ _ bc
 
--- proven with `a0 : 0 ≤ a` as `lt_of_mul_lt_mul_right''`
+-- proven with `a0 : 0 ≤ a` as `lt_of_mul_lt_mul_right`
 theorem lt_of_mul_lt_mul_right' [MulPosReflectLt α] (bc : b * a < c * a) (a0 : 0 < a) : b < c :=
   @ContravariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨a, a0⟩ _ _ bc
 
@@ -159,13 +162,15 @@ theorem mul_lt_mul_iff_right [MulPosStrictMono α] [MulPosReflectLt α] (a0 : 0 
 
 end LT
 
-section Preorderₓ
+section HasLtLe
 
-variable [Preorderₓ α]
+variable [LT α] [LE α]
 
+-- proven with `a0 : 0 ≤ a` as `mul_le_mul_left`
 theorem mul_le_mul_left' [PosMulMono α] (bc : b ≤ c) (a0 : 0 < a) : a * b ≤ a * c :=
   @CovariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨a, a0⟩ _ _ bc
 
+-- proven with `a0 : 0 ≤ a` as `mul_le_mul_right`
 theorem mul_le_mul_right' [MulPosMono α] (bc : b ≤ c) (a0 : 0 < a) : b * a ≤ c * a :=
   @CovariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨a, a0⟩ _ _ bc
 
@@ -183,14 +188,20 @@ theorem mul_le_mul_iff_left [PosMulMono α] [PosMulMonoRev α] (a0 : 0 < a) : a 
 theorem mul_le_mul_iff_right [MulPosMono α] [MulPosMonoRev α] (a0 : 0 < a) : b * a ≤ c * a ↔ b ≤ c :=
   @rel_iff_cov α>0 α (fun x y => y * x) (· ≤ ·) _ _ ⟨a, a0⟩ _ _
 
--- proven with `a0 : 0 ≤ a` `d0 : 0 ≤ d` as `mul_le_mul_of_le_of_le''`
-theorem mul_le_mul_of_le_of_le [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (a0 : 0 < a) (d0 : 0 < d) :
-    a * c ≤ b * d :=
+end HasLtLe
+
+section Preorderₓ
+
+variable [Preorderₓ α]
+
+-- proven with `a0 : 0 ≤ a` `d0 : 0 ≤ d` as `mul_le_mul_of_le_of_le`
+theorem Preorder.mul_le_mul_of_le_of_le [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (a0 : 0 < a)
+    (d0 : 0 < d) : a * c ≤ b * d :=
   (mul_le_mul_left' h₂ a0).trans (mul_le_mul_right' h₁ d0)
 
--- proven with `b0 : 0 ≤ b` `c0 : 0 ≤ c` as `mul_le_mul_of_le_of_le'''`
-theorem mul_le_mul_of_le_of_le' [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (b0 : 0 < b) (c0 : 0 < c) :
-    a * c ≤ b * d :=
+-- proven with `b0 : 0 ≤ b` `c0 : 0 ≤ c` as `mul_le_mul_of_le_of_le'`
+theorem Preorder.mul_le_mul_of_le_of_le' [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (b0 : 0 < b)
+    (c0 : 0 < c) : a * c ≤ b * d :=
   (mul_le_mul_right' h₁ c0).trans (mul_le_mul_left' h₂ b0)
 
 theorem mul_lt_mul_of_le_of_lt [PosMulStrictMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c < d) (a0 : 0 < a) (d0 : 0 < d) :
@@ -217,29 +228,29 @@ theorem mul_lt_mul_of_lt_of_lt' [PosMulStrictMono α] [MulPosStrictMono α] (h�
     (c0 : 0 < c) : a * c < b * d :=
   (mul_lt_mul_right' h₁ c0).trans (mul_lt_mul_left' h₂ b0)
 
--- proven with `a0 : 0 ≤ a` as `mul_le_of_mul_le_left'`
-theorem mul_le_of_mul_le_left [PosMulMono α] (h : a * b ≤ c) (hle : d ≤ b) (a0 : 0 < a) : a * d ≤ c :=
+-- proven with `a0 : 0 ≤ a` as `mul_le_of_mul_le_left`
+theorem Preorder.mul_le_of_mul_le_left [PosMulMono α] (h : a * b ≤ c) (hle : d ≤ b) (a0 : 0 < a) : a * d ≤ c :=
   (mul_le_mul_left' hle a0).trans h
 
 theorem mul_lt_of_mul_lt_left [PosMulMono α] (h : a * b < c) (hle : d ≤ b) (a0 : 0 < a) : a * d < c :=
   (mul_le_mul_left' hle a0).trans_lt h
 
--- proven with `b0 : 0 ≤ b` as `le_mul_of_le_mul_left'`
-theorem le_mul_of_le_mul_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ d) (b0 : 0 < b) : a ≤ b * d :=
+-- proven with `b0 : 0 ≤ b` as `le_mul_of_le_mul_left`
+theorem Preorder.le_mul_of_le_mul_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ d) (b0 : 0 < b) : a ≤ b * d :=
   h.trans (mul_le_mul_left' hle b0)
 
 theorem lt_mul_of_lt_mul_left [PosMulMono α] (h : a < b * c) (hle : c ≤ d) (b0 : 0 < b) : a < b * d :=
   h.trans_le (mul_le_mul_left' hle b0)
 
--- proven with `b0 : 0 ≤ b` as `mul_le_of_mul_le_right'`
-theorem mul_le_of_mul_le_right [MulPosMono α] (h : a * b ≤ c) (hle : d ≤ a) (b0 : 0 < b) : d * b ≤ c :=
+-- proven with `b0 : 0 ≤ b` as `mul_le_of_mul_le_right`
+theorem Preorder.mul_le_of_mul_le_right [MulPosMono α] (h : a * b ≤ c) (hle : d ≤ a) (b0 : 0 < b) : d * b ≤ c :=
   (mul_le_mul_right' hle b0).trans h
 
 theorem mul_lt_of_mul_lt_right [MulPosMono α] (h : a * b < c) (hle : d ≤ a) (b0 : 0 < b) : d * b < c :=
   (mul_le_mul_right' hle b0).trans_lt h
 
--- proven with `c0 : 0 ≤ c` as `le_mul_of_le_mul_right'`
-theorem le_mul_of_le_mul_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ d) (c0 : 0 < c) : a ≤ d * c :=
+-- proven with `c0 : 0 ≤ c` as `le_mul_of_le_mul_right`
+theorem Preorder.le_mul_of_le_mul_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ d) (c0 : 0 < c) : a ≤ d * c :=
   h.trans (mul_le_mul_right' hle c0)
 
 theorem lt_mul_of_lt_mul_right [MulPosMono α] (h : a < b * c) (hle : b ≤ d) (c0 : 0 < c) : a < d * c :=
@@ -321,33 +332,33 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ α]
 
-theorem mul_le_mul_left'' [PosMulMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : a * b ≤ a * c :=
+theorem mul_le_mul_left [PosMulMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : a * b ≤ a * c :=
   a0.lt_or_eq.elim (mul_le_mul_left' bc) fun h => by
     simp only [← h, zero_mul]
 
-theorem mul_le_mul_right'' [MulPosMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : b * a ≤ c * a :=
+theorem mul_le_mul_right [MulPosMono α] (bc : b ≤ c) (a0 : 0 ≤ a) : b * a ≤ c * a :=
   a0.lt_or_eq.elim (mul_le_mul_right' bc) fun h => by
     simp only [← h, mul_zero]
 
 /-- Assumes left covariance. -/
 theorem Left.mul_nonneg [PosMulMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
-  have h : a * 0 ≤ a * b := mul_le_mul_left'' hb ha
+  have h : a * 0 ≤ a * b := mul_le_mul_left hb ha
   rwa [mul_zero] at h
 
 theorem mul_nonpos_of_nonneg_of_nonpos [PosMulMono α] (ha : 0 ≤ a) (hb : b ≤ 0) : a * b ≤ 0 := by
-  have h : a * b ≤ a * 0 := mul_le_mul_left'' hb ha
+  have h : a * b ≤ a * 0 := mul_le_mul_left hb ha
   rwa [mul_zero] at h
 
 /-- Assumes right covariance. -/
 theorem Right.mul_nonneg [MulPosMono α] (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
-  have h : 0 * b ≤ a * b := mul_le_mul_right'' ha hb
+  have h : 0 * b ≤ a * b := mul_le_mul_right ha hb
   rwa [zero_mul] at h
 
 theorem mul_nonpos_of_nonpos_of_nonneg [MulPosMono α] (ha : a ≤ 0) (hb : 0 ≤ b) : a * b ≤ 0 := by
-  have h : a * b ≤ 0 * b := mul_le_mul_right'' ha hb
+  have h : a * b ≤ 0 * b := mul_le_mul_right ha hb
   rwa [zero_mul] at h
 
-theorem lt_of_mul_lt_mul_left'' [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 0 ≤ a) : b < c := by
+theorem lt_of_mul_lt_mul_left [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 0 ≤ a) : b < c := by
   by_cases' a₀ : a = 0
   · exact
       (lt_irreflₓ (0 : α)
@@ -358,9 +369,9 @@ theorem lt_of_mul_lt_mul_left'' [PosMulReflectLt α] (bc : a * b < a * c) (a0 : 
     
 
 theorem pos_of_mul_pos_left [PosMulReflectLt α] (h : 0 < a * b) (ha : 0 ≤ a) : 0 < b :=
-  lt_of_mul_lt_mul_left'' ((mul_zero a).symm ▸ h : a * 0 < a * b) ha
+  lt_of_mul_lt_mul_left ((mul_zero a).symm ▸ h : a * 0 < a * b) ha
 
-theorem lt_of_mul_lt_mul_right'' [MulPosReflectLt α] (bc : b * a < c * a) (a0 : 0 ≤ a) : b < c := by
+theorem lt_of_mul_lt_mul_right [MulPosReflectLt α] (bc : b * a < c * a) (a0 : 0 ≤ a) : b < c := by
   by_cases' a₀ : a = 0
   · exact
       (lt_irreflₓ (0 : α)
@@ -371,10 +382,58 @@ theorem lt_of_mul_lt_mul_right'' [MulPosReflectLt α] (bc : b * a < c * a) (a0 :
     
 
 theorem pos_of_mul_pos_right [MulPosReflectLt α] (h : 0 < a * b) (hb : 0 ≤ b) : 0 < a :=
-  lt_of_mul_lt_mul_right'' ((zero_mul b).symm ▸ h : 0 * b < a * b) hb
+  lt_of_mul_lt_mul_right ((zero_mul b).symm ▸ h : 0 * b < a * b) hb
 
 theorem pos_iff_pos_of_mul_pos [PosMulReflectLt α] [MulPosReflectLt α] (hab : 0 < a * b) : 0 < a ↔ 0 < b :=
   ⟨pos_of_mul_pos_left hab ∘ le_of_ltₓ, pos_of_mul_pos_right hab ∘ le_of_ltₓ⟩
+
+theorem mul_le_mul_of_le_of_le [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (a0 : 0 ≤ a) (d0 : 0 ≤ d) :
+    a * c ≤ b * d :=
+  (mul_le_mul_left h₂ a0).trans <| mul_le_mul_right h₁ d0
+
+theorem mul_le_mul_of_le_of_le' [PosMulMono α] [MulPosMono α] (h₁ : a ≤ b) (h₂ : c ≤ d) (b0 : 0 ≤ b) (c0 : 0 ≤ c) :
+    a * c ≤ b * d :=
+  (mul_le_mul_right h₁ c0).trans <| mul_le_mul_left h₂ b0
+
+theorem mul_le_of_mul_le_left [PosMulMono α] (h : a * b ≤ c) (hle : d ≤ b) (a0 : 0 ≤ a) : a * d ≤ c :=
+  (mul_le_mul_left hle a0).trans h
+
+theorem le_mul_of_le_mul_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ d) (b0 : 0 ≤ b) : a ≤ b * d :=
+  h.trans (mul_le_mul_left hle b0)
+
+theorem mul_le_of_mul_le_right [MulPosMono α] (h : a * b ≤ c) (hle : d ≤ a) (b0 : 0 ≤ b) : d * b ≤ c :=
+  (mul_le_mul_right hle b0).trans h
+
+theorem le_mul_of_le_mul_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ d) (c0 : 0 ≤ c) : a ≤ d * c :=
+  h.trans (mul_le_mul_right hle c0)
+
+theorem mul_left_cancel_iff [PosMulMonoRev α] (a0 : 0 < a) : a * b = a * c ↔ b = c :=
+  ⟨fun h => (le_of_mul_le_mul_left' h.le a0).antisymm (le_of_mul_le_mul_left' h.Ge a0), congr_arg _⟩
+
+theorem mul_right_cancel_iff [MulPosMonoRev α] (b0 : 0 < b) : a * b = c * b ↔ a = c :=
+  ⟨fun h => (le_of_mul_le_mul_right' h.le b0).antisymm (le_of_mul_le_mul_right' h.Ge b0), congr_arg _⟩
+
+theorem mul_eq_mul_iff_eq_and_eq [PosMulStrictMono α] [MulPosStrictMono α] [PosMulMonoRev α] [MulPosMonoRev α]
+    (hac : a ≤ b) (hbd : c ≤ d) (a0 : 0 < a) (d0 : 0 < d) : a * c = b * d ↔ a = b ∧ c = d := by
+  refine' ⟨fun h => _, fun h => congr_arg2ₓ (· * ·) h.1 h.2⟩
+  rcases hac.eq_or_lt with (rfl | hac)
+  · exact ⟨rfl, (mul_left_cancel_iffₓ a0).mp h⟩
+    
+  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  · exact ⟨(mul_right_cancel_iffₓ d0).mp h, rfl⟩
+    
+  exact ((mul_lt_mul_of_lt_of_lt hac hbd a0 d0).Ne h).elim
+
+theorem mul_eq_mul_iff_eq_and_eq' [PosMulStrictMono α] [MulPosStrictMono α] [PosMulMonoRev α] [MulPosMonoRev α]
+    (hac : a ≤ b) (hbd : c ≤ d) (b0 : 0 < b) (c0 : 0 < c) : a * c = b * d ↔ a = b ∧ c = d := by
+  refine' ⟨fun h => _, fun h => congr_arg2ₓ (· * ·) h.1 h.2⟩
+  rcases hac.eq_or_lt with (rfl | hac)
+  · exact ⟨rfl, (mul_left_cancel_iffₓ b0).mp h⟩
+    
+  rcases eq_or_lt_of_le hbd with (rfl | hbd)
+  · exact ⟨(mul_right_cancel_iffₓ c0).mp h, rfl⟩
+    
+  exact ((mul_lt_mul_of_lt_of_lt' hac hbd b0 c0).Ne h).elim
 
 end PartialOrderₓ
 
@@ -428,8 +487,10 @@ section Preorderₓ
 
 variable [Preorderₓ α]
 
--- Lemmas in the form of `a ≤ a * b ↔ 1 ≤ b` and `a * b ≤ a ↔ b ≤ 1`,
--- which assume left covariance.
+/-! Lemmas of the form `a ≤ a * b ↔ 1 ≤ b` and `a * b ≤ a ↔ b ≤ 1`,
+which assume left covariance. -/
+
+
 @[simp]
 theorem le_mul_iff_one_le_right [PosMulMono α] [PosMulMonoRev α] (a0 : 0 < a) : a ≤ a * b ↔ 1 ≤ b :=
   Iff.trans
@@ -458,8 +519,10 @@ theorem mul_lt_iff_lt_one_right [PosMulStrictMono α] [PosMulReflectLt α] (a0 :
       rw [mul_oneₓ])
     (mul_lt_mul_iff_left a0)
 
--- Lemmas in the form of `a ≤ b * a ↔ 1 ≤ b` and `a * b ≤ b ↔ a ≤ 1`,
--- which assume right covariance.
+/-! Lemmas of the form `a ≤ b * a ↔ 1 ≤ b` and `a * b ≤ b ↔ a ≤ 1`,
+which assume right covariance. -/
+
+
 @[simp]
 theorem le_mul_iff_one_le_left [MulPosMono α] [MulPosMonoRev α] (a0 : 0 < a) : a ≤ b * a ↔ 1 ≤ b :=
   Iff.trans
@@ -488,10 +551,12 @@ theorem mul_lt_iff_lt_one_left [MulPosStrictMono α] [MulPosReflectLt α] (b0 : 
       rw [one_mulₓ])
     (mul_lt_mul_iff_right b0)
 
--- Lemmas in the form of `b ≤ c → a ≤ 1 → 0 < b → b * a ≤ c`,
--- which assume left covariance.
--- proven with `b0 : 0 ≤ b` as `mul_le_of_le_of_le_one'`
-theorem mul_le_of_le_of_le_one [PosMulMono α] (bc : b ≤ c) (ha : a ≤ 1) (b0 : 0 < b) : b * a ≤ c :=
+/-! Lemmas of the form `b ≤ c → a ≤ 1 → 0 < b → b * a ≤ c`,
+which assume left covariance. -/
+
+
+-- proven with `b0 : 0 ≤ b` as `mul_le_of_le_of_le_one`
+theorem Preorder.mul_le_of_le_of_le_one [PosMulMono α] (bc : b ≤ c) (ha : a ≤ 1) (b0 : 0 < b) : b * a ≤ c :=
   calc
     b * a ≤ b * 1 := mul_le_mul_left' ha b0
     _ = b := mul_oneₓ b
@@ -520,8 +585,9 @@ theorem mul_lt_of_lt_of_lt_one [PosMulStrictMono α] (bc : b < c) (ha : a < 1) (
     
 
 /-- Assumes left covariance. -/
-theorem Left.mul_le_one_of_le_of_le [PosMulMono α] (ha : a ≤ 1) (hb : b ≤ 1) (a0 : 0 < a) : a * b ≤ 1 :=
-  mul_le_of_le_of_le_one ha hb a0
+-- proven with `a0 : 0 ≤ a` as `left.mul_le_one_of_le_of_le`
+theorem Preorder.Left.mul_le_one_of_le_of_le' [PosMulMono α] (ha : a ≤ 1) (hb : b ≤ 1) (a0 : 0 < a) : a * b ≤ 1 :=
+  Preorder.mul_le_of_le_of_le_one ha hb a0
 
 /-- Assumes left covariance. -/
 theorem Left.mul_lt_one_of_le_of_lt [PosMulStrictMono α] (ha : a ≤ 1) (hb : b < 1) (a0 : 0 < a) : a * b < 1 :=
@@ -535,10 +601,12 @@ theorem Left.mul_lt_one_of_lt_of_le [PosMulMono α] (ha : a < 1) (hb : b ≤ 1) 
 theorem Left.mul_lt_one_of_lt_of_lt [PosMulStrictMono α] (ha : a < 1) (hb : b < 1) (a0 : 0 < a) : a * b < 1 :=
   mul_lt_of_lt_of_lt_one ha hb a0
 
--- Lemmas in the form of `b ≤ c → 1 ≤ a → 0 < c → b ≤ c * a`,
--- which assume left covariance.
--- proven with `c0 : 0 ≤ c` as `le_mul_of_le_of_one_le'`
-theorem le_mul_of_le_of_one_le [PosMulMono α] (bc : b ≤ c) (ha : 1 ≤ a) (c0 : 0 < c) : b ≤ c * a :=
+/-! Lemmas of the form `b ≤ c → 1 ≤ a → 0 < c → b ≤ c * a`,
+which assume left covariance. -/
+
+
+-- proven with `c0 : 0 ≤ c` as `le_mul_of_le_of_one_le`
+theorem Preorder.le_mul_of_le_of_one_le [PosMulMono α] (bc : b ≤ c) (ha : 1 ≤ a) (c0 : 0 < c) : b ≤ c * a :=
   calc
     b ≤ c := bc
     _ = c * 1 := (mul_oneₓ c).symm
@@ -567,8 +635,9 @@ theorem lt_mul_of_lt_of_one_lt [PosMulStrictMono α] (bc : b < c) (ha : 1 < a) (
     
 
 /-- Assumes left covariance. -/
-theorem Left.one_le_mul_of_le_of_le [PosMulMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (a0 : 0 < a) : 1 ≤ a * b :=
-  le_mul_of_le_of_one_le ha hb a0
+-- proven with `a0 : 0 ≤ a` as `left.one_le_mul_of_le_of_le`
+theorem Preorder.Left.one_le_mul_of_le_of_le [PosMulMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (a0 : 0 < a) : 1 ≤ a * b :=
+  Preorder.le_mul_of_le_of_one_le ha hb a0
 
 /-- Assumes left covariance. -/
 theorem Left.one_lt_mul_of_le_of_lt [PosMulStrictMono α] (ha : 1 ≤ a) (hb : 1 < b) (a0 : 0 < a) : 1 < a * b :=
@@ -582,10 +651,12 @@ theorem Left.one_lt_mul_of_lt_of_le [PosMulMono α] (ha : 1 < a) (hb : 1 ≤ b) 
 theorem Left.one_lt_mul_of_lt_of_lt [PosMulStrictMono α] (ha : 1 < a) (hb : 1 < b) (a0 : 0 < a) : 1 < a * b :=
   lt_mul_of_lt_of_one_lt ha hb a0
 
--- Lemmas in the form of `a ≤ 1 → b ≤ c → 0 < b → a * b ≤ c`,
--- which assume right covariance.
--- proven with `b0 : 0 ≤ b` as `mul_le_of_le_one_of_le'`
-theorem mul_le_of_le_one_of_le [MulPosMono α] (ha : a ≤ 1) (bc : b ≤ c) (b0 : 0 < b) : a * b ≤ c :=
+/-! Lemmas of the form `a ≤ 1 → b ≤ c → 0 < b → a * b ≤ c`,
+which assume right covariance. -/
+
+
+-- proven with `b0 : 0 ≤ b` as `mul_le_of_le_one_of_le`
+theorem Preorder.mul_le_of_le_one_of_le [MulPosMono α] (ha : a ≤ 1) (bc : b ≤ c) (b0 : 0 < b) : a * b ≤ c :=
   calc
     a * b ≤ 1 * b := mul_le_mul_right' ha b0
     _ = b := one_mulₓ b
@@ -614,8 +685,9 @@ theorem mul_lt_of_lt_one_of_lt [MulPosStrictMono α] (ha : a < 1) (bc : b < c) (
     
 
 /-- Assumes right covariance. -/
-theorem Right.mul_le_one_of_le_of_le [MulPosMono α] (ha : a ≤ 1) (hb : b ≤ 1) (b0 : 0 < b) : a * b ≤ 1 :=
-  mul_le_of_le_one_of_le ha hb b0
+-- proven with `b0 : 0 ≤ b` as `right.mul_le_one_of_le_of_le`
+theorem Preorder.Right.mul_le_one_of_le_of_le [MulPosMono α] (ha : a ≤ 1) (hb : b ≤ 1) (b0 : 0 < b) : a * b ≤ 1 :=
+  Preorder.mul_le_of_le_one_of_le ha hb b0
 
 /-- Assumes right covariance. -/
 theorem Right.mul_lt_one_of_lt_of_le [MulPosStrictMono α] (ha : a < 1) (hb : b ≤ 1) (b0 : 0 < b) : a * b < 1 :=
@@ -629,10 +701,12 @@ theorem Right.mul_lt_one_of_le_of_lt [MulPosMono α] (ha : a ≤ 1) (hb : b < 1)
 theorem Right.mul_lt_one_of_lt_of_lt [MulPosStrictMono α] (ha : a < 1) (hb : b < 1) (b0 : 0 < b) : a * b < 1 :=
   mul_lt_of_lt_one_of_lt ha hb b0
 
--- Lemmas in the form of `1 ≤ a → b ≤ c → 0 < c → b ≤ a * c`,
--- which assume right covariance.
--- proven with `c0 : 0 ≤ c` as `le_mul_of_one_le_of_le'`
-theorem le_mul_of_one_le_of_le [MulPosMono α] (ha : 1 ≤ a) (bc : b ≤ c) (c0 : 0 < c) : b ≤ a * c :=
+/-! Lemmas of the form `1 ≤ a → b ≤ c → 0 < c → b ≤ a * c`,
+which assume right covariance. -/
+
+
+-- proven with `c0 : 0 ≤ c` as `le_mul_of_one_le_of_le`
+theorem Preorder.le_mul_of_one_le_of_le [MulPosMono α] (ha : 1 ≤ a) (bc : b ≤ c) (c0 : 0 < c) : b ≤ a * c :=
   calc
     b ≤ c := bc
     _ = 1 * c := (one_mulₓ c).symm
@@ -661,8 +735,9 @@ theorem lt_mul_of_one_lt_of_lt [MulPosStrictMono α] (ha : 1 < a) (bc : b < c) (
     
 
 /-- Assumes right covariance. -/
-theorem Right.one_le_mul_of_le_of_le [MulPosMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (b0 : 0 < b) : 1 ≤ a * b :=
-  le_mul_of_one_le_of_le ha hb b0
+-- proven with `b0 : 0 ≤ b` as `right.one_le_mul_of_le_of_le`
+theorem Preorder.Right.one_le_mul_of_le_of_le [MulPosMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (b0 : 0 < b) : 1 ≤ a * b :=
+  Preorder.le_mul_of_one_le_of_le ha hb b0
 
 /-- Assumes right covariance. -/
 theorem Right.one_lt_mul_of_lt_of_le [MulPosStrictMono α] (ha : 1 < a) (hb : 1 ≤ b) (b0 : 0 < b) : 1 < a * b :=
@@ -676,49 +751,49 @@ theorem Right.one_lt_mul_of_le_of_lt [MulPosMono α] (ha : 1 ≤ a) (hb : 1 < b)
 theorem Right.one_lt_mul_of_lt_of_lt [MulPosStrictMono α] (ha : 1 < a) (hb : 1 < b) (b0 : 0 < b) : 1 < a * b :=
   lt_mul_of_one_lt_of_lt ha hb b0
 
--- proven with `a0 : 0 ≤ a` as `mul_le_of_le_one_right'`
-theorem mul_le_of_le_one_right [PosMulMono α] (h : b ≤ 1) (a0 : 0 < a) : a * b ≤ a :=
-  mul_le_of_le_of_le_one le_rfl h a0
+-- proven with `a0 : 0 ≤ a` as `mul_le_of_le_one_right`
+theorem Preorder.mul_le_of_le_one_right [PosMulMono α] (h : b ≤ 1) (a0 : 0 < a) : a * b ≤ a :=
+  Preorder.mul_le_of_le_of_le_one le_rfl h a0
 
--- proven with `a0 : 0 ≤ a` as `le_mul_of_one_le_right'`
-theorem le_mul_of_one_le_right [PosMulMono α] (h : 1 ≤ b) (a0 : 0 < a) : a ≤ a * b :=
-  le_mul_of_le_of_one_le le_rfl h a0
+-- proven with `a0 : 0 ≤ a` as `le_mul_of_one_le_right`
+theorem Preorder.le_mul_of_one_le_right [PosMulMono α] (h : 1 ≤ b) (a0 : 0 < a) : a ≤ a * b :=
+  Preorder.le_mul_of_le_of_one_le le_rfl h a0
 
--- proven with `b0 : 0 ≤ b` as `mul_le_of_le_one_left'`
-theorem mul_le_of_le_one_left [MulPosMono α] (h : a ≤ 1) (b0 : 0 < b) : a * b ≤ b :=
-  mul_le_of_le_one_of_le h le_rfl b0
+-- proven with `b0 : 0 ≤ b` as `mul_le_of_le_one_left`
+theorem Preorder.mul_le_of_le_one_left [MulPosMono α] (h : a ≤ 1) (b0 : 0 < b) : a * b ≤ b :=
+  Preorder.mul_le_of_le_one_of_le h le_rfl b0
 
--- proven with `b0 : 0 ≤ b` as `le_mul_of_one_le_left'`
-theorem le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 < b) : b ≤ a * b :=
-  le_mul_of_one_le_of_le h le_rfl b0
+-- proven with `b0 : 0 ≤ b` as `le_mul_of_one_le_left`
+theorem Preorder.le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 < b) : b ≤ a * b :=
+  Preorder.le_mul_of_one_le_of_le h le_rfl b0
 
--- proven with `a0 : 0 ≤ a` as `le_of_mul_le_of_one_le_left'`
-theorem le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 < a) : a ≤ c :=
-  (le_mul_of_one_le_right hle a0).trans h
+-- proven with `a0 : 0 ≤ a` as `le_of_mul_le_of_one_le_left`
+theorem Preorder.le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 < a) : a ≤ c :=
+  (Preorder.le_mul_of_one_le_right hle a0).trans h
 
 theorem lt_of_mul_lt_of_one_le_left [PosMulMono α] (h : a * b < c) (hle : 1 ≤ b) (a0 : 0 < a) : a < c :=
-  (le_mul_of_one_le_right hle a0).trans_lt h
+  (Preorder.le_mul_of_one_le_right hle a0).trans_lt h
 
--- proven with `b0 : 0 ≤ b` as `le_of_le_mul_of_le_one_left'`
-theorem le_of_le_mul_of_le_one_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 < b) : a ≤ b :=
-  h.trans (mul_le_of_le_one_right hle b0)
+-- proven with `b0 : 0 ≤ b` as `le_of_le_mul_of_le_one_left`
+theorem Preorder.le_of_le_mul_of_le_one_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 < b) : a ≤ b :=
+  h.trans (Preorder.mul_le_of_le_one_right hle b0)
 
 theorem lt_of_lt_mul_of_le_one_left [PosMulMono α] (h : a < b * c) (hle : c ≤ 1) (b0 : 0 < b) : a < b :=
-  h.trans_le (mul_le_of_le_one_right hle b0)
+  h.trans_le (Preorder.mul_le_of_le_one_right hle b0)
 
--- proven with `b0 : 0 ≤ b` as `le_of_mul_le_of_one_le_right'`
-theorem le_of_mul_le_of_one_le_right [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 < b) : b ≤ c :=
-  (le_mul_of_one_le_left hle b0).trans h
+-- proven with `b0 : 0 ≤ b` as `le_of_mul_le_of_one_le_right`
+theorem Preorder.le_of_mul_le_of_one_le_right [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 < b) : b ≤ c :=
+  (Preorder.le_mul_of_one_le_left hle b0).trans h
 
 theorem lt_of_mul_lt_of_one_le_right [MulPosMono α] (h : a * b < c) (hle : 1 ≤ a) (b0 : 0 < b) : b < c :=
-  (le_mul_of_one_le_left hle b0).trans_lt h
+  (Preorder.le_mul_of_one_le_left hle b0).trans_lt h
 
--- proven with `c0 : 0 ≤ b` as `le_of_le_mul_of_le_one_right'`
-theorem le_of_le_mul_of_le_one_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 < c) : a ≤ c :=
-  h.trans (mul_le_of_le_one_left hle c0)
+-- proven with `c0 : 0 ≤ b` as `le_of_le_mul_of_le_one_right`
+theorem le_of_le_mul_of_le_one_right' [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 < c) : a ≤ c :=
+  h.trans (Preorder.mul_le_of_le_one_left hle c0)
 
 theorem lt_of_lt_mul_of_le_one_right [MulPosMono α] (h : a < b * c) (hle : b ≤ 1) (c0 : 0 < c) : a < c :=
-  h.trans_le (mul_le_of_le_one_left hle c0)
+  h.trans_le (Preorder.mul_le_of_le_one_left hle c0)
 
 end Preorderₓ
 
@@ -726,8 +801,8 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
--- proven with `a0 : 0 ≤ a` as `exists_square_le'`
-theorem exists_square_le [PosMulStrictMono α] (a0 : 0 < a) : ∃ b : α, b * b ≤ a := by
+-- proven with `a0 : 0 ≤ a` as `exists_square_le`
+theorem exists_square_le' [PosMulStrictMono α] (a0 : 0 < a) : ∃ b : α, b * b ≤ a := by
   by_cases' h : a < 1
   · use a
     have : a * a < a * 1 := mul_lt_mul_left' h a0
@@ -751,64 +826,64 @@ section PartialOrderₓ
 
 variable [PartialOrderₓ α]
 
-theorem mul_le_of_le_of_le_one' [PosMulMono α] (bc : b ≤ c) (ha : a ≤ 1) (b0 : 0 ≤ b) : b * a ≤ c :=
-  b0.lt_or_eq.elim (mul_le_of_le_of_le_one bc ha) fun h => by
+theorem mul_le_of_le_of_le_one [PosMulMono α] (bc : b ≤ c) (ha : a ≤ 1) (b0 : 0 ≤ b) : b * a ≤ c :=
+  b0.lt_or_eq.elim (Preorder.mul_le_of_le_of_le_one bc ha) fun h => by
     rw [← h, zero_mul] <;> exact b0.trans bc
 
 /-- Assumes left covariance. -/
-theorem Left.mul_le_one_of_le_of_le' [PosMulMono α] (ha : a ≤ 1) (hb : b ≤ 1) (a0 : 0 ≤ a) : a * b ≤ 1 :=
-  mul_le_of_le_of_le_one' ha hb a0
+theorem Left.mul_le_one_of_le_of_le [PosMulMono α] (ha : a ≤ 1) (hb : b ≤ 1) (a0 : 0 ≤ a) : a * b ≤ 1 :=
+  mul_le_of_le_of_le_one ha hb a0
 
-theorem le_mul_of_le_of_one_le' [PosMulMono α] (bc : b ≤ c) (ha : 1 ≤ a) (c0 : 0 ≤ c) : b ≤ c * a :=
-  c0.lt_or_eq.elim (le_mul_of_le_of_one_le bc ha) fun h => by
+theorem le_mul_of_le_of_one_le [PosMulMono α] (bc : b ≤ c) (ha : 1 ≤ a) (c0 : 0 ≤ c) : b ≤ c * a :=
+  c0.lt_or_eq.elim (Preorder.le_mul_of_le_of_one_le bc ha) fun h => by
     rw [← h, zero_mul] at * <;> exact bc
 
 /-- Assumes left covariance. -/
-theorem Left.one_le_mul_of_le_of_le' [PosMulMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (a0 : 0 ≤ a) : 1 ≤ a * b :=
-  le_mul_of_le_of_one_le' ha hb a0
+theorem Left.one_le_mul_of_le_of_le [PosMulMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (a0 : 0 ≤ a) : 1 ≤ a * b :=
+  le_mul_of_le_of_one_le ha hb a0
 
-theorem mul_le_of_le_one_of_le' [MulPosMono α] (ha : a ≤ 1) (bc : b ≤ c) (b0 : 0 ≤ b) : a * b ≤ c :=
-  b0.lt_or_eq.elim (mul_le_of_le_one_of_le ha bc) fun h => by
+theorem mul_le_of_le_one_of_le [MulPosMono α] (ha : a ≤ 1) (bc : b ≤ c) (b0 : 0 ≤ b) : a * b ≤ c :=
+  b0.lt_or_eq.elim (Preorder.mul_le_of_le_one_of_le ha bc) fun h => by
     rw [← h, mul_zero] at * <;> exact bc
 
 /-- Assumes right covariance. -/
-theorem Right.mul_le_one_of_le_of_le' [MulPosMono α] (ha : a ≤ 1) (hb : b ≤ 1) (b0 : 0 < b) : a * b ≤ 1 :=
-  mul_le_of_le_one_of_le ha hb b0
+theorem Right.mul_le_one_of_le_of_le [MulPosMono α] (ha : a ≤ 1) (hb : b ≤ 1) (b0 : 0 < b) : a * b ≤ 1 :=
+  Preorder.mul_le_of_le_one_of_le ha hb b0
 
-theorem le_mul_of_one_le_of_le' [MulPosMono α] (ha : 1 ≤ a) (bc : b ≤ c) (c0 : 0 ≤ c) : b ≤ a * c :=
-  c0.lt_or_eq.elim (le_mul_of_one_le_of_le ha bc) fun h => by
+theorem le_mul_of_one_le_of_le [MulPosMono α] (ha : 1 ≤ a) (bc : b ≤ c) (c0 : 0 ≤ c) : b ≤ a * c :=
+  c0.lt_or_eq.elim (Preorder.le_mul_of_one_le_of_le ha bc) fun h => by
     rw [← h, mul_zero] at * <;> exact bc
 
 /-- Assumes right covariance. -/
-theorem Right.one_le_mul_of_le_of_le' [MulPosMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (b0 : 0 ≤ b) : 1 ≤ a * b :=
-  le_mul_of_one_le_of_le' ha hb b0
+theorem Right.one_le_mul_of_le_of_le [MulPosMono α] (ha : 1 ≤ a) (hb : 1 ≤ b) (b0 : 0 ≤ b) : 1 ≤ a * b :=
+  le_mul_of_one_le_of_le ha hb b0
 
-theorem mul_le_of_le_one_right' [PosMulMono α] (h : b ≤ 1) (a0 : 0 ≤ a) : a * b ≤ a :=
-  mul_le_of_le_of_le_one' le_rfl h a0
+theorem mul_le_of_le_one_right [PosMulMono α] (h : b ≤ 1) (a0 : 0 ≤ a) : a * b ≤ a :=
+  mul_le_of_le_of_le_one le_rfl h a0
 
-theorem le_mul_of_one_le_right' [PosMulMono α] (h : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ a * b :=
-  le_mul_of_le_of_one_le' le_rfl h a0
+theorem le_mul_of_one_le_right [PosMulMono α] (h : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ a * b :=
+  le_mul_of_le_of_one_le le_rfl h a0
 
-theorem mul_le_of_le_one_left' [MulPosMono α] (h : a ≤ 1) (b0 : 0 ≤ b) : a * b ≤ b :=
-  mul_le_of_le_one_of_le' h le_rfl b0
+theorem mul_le_of_le_one_left [MulPosMono α] (h : a ≤ 1) (b0 : 0 ≤ b) : a * b ≤ b :=
+  mul_le_of_le_one_of_le h le_rfl b0
 
-theorem le_mul_of_one_le_left' [MulPosMono α] (h : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ a * b :=
-  le_mul_of_one_le_of_le' h le_rfl b0
+theorem le_mul_of_one_le_left [MulPosMono α] (h : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ a * b :=
+  le_mul_of_one_le_of_le h le_rfl b0
 
-theorem le_of_mul_le_of_one_le_left' [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ c :=
-  a0.lt_or_eq.elim (le_of_mul_le_of_one_le_left h hle) fun ha => by
+theorem le_of_mul_le_of_one_le_left [PosMulMono α] (h : a * b ≤ c) (hle : 1 ≤ b) (a0 : 0 ≤ a) : a ≤ c :=
+  a0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_left h hle) fun ha => by
     simpa only [← ha, zero_mul] using h
 
-theorem le_of_le_mul_of_le_one_left' [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 ≤ b) : a ≤ b :=
-  b0.lt_or_eq.elim (le_of_le_mul_of_le_one_left h hle) fun hb => by
+theorem le_of_le_mul_of_le_one_left [PosMulMono α] (h : a ≤ b * c) (hle : c ≤ 1) (b0 : 0 ≤ b) : a ≤ b :=
+  b0.lt_or_eq.elim (Preorder.le_of_le_mul_of_le_one_left h hle) fun hb => by
     simpa only [← hb, zero_mul] using h
 
-theorem le_of_mul_le_of_one_le_right' [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ c :=
-  b0.lt_or_eq.elim (le_of_mul_le_of_one_le_right h hle) fun ha => by
+theorem le_of_mul_le_of_one_le_right [MulPosMono α] (h : a * b ≤ c) (hle : 1 ≤ a) (b0 : 0 ≤ b) : b ≤ c :=
+  b0.lt_or_eq.elim (Preorder.le_of_mul_le_of_one_le_right h hle) fun ha => by
     simpa only [← ha, mul_zero] using h
 
-theorem le_of_le_mul_of_le_one_right' [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 ≤ c) : a ≤ c :=
-  c0.lt_or_eq.elim (le_of_le_mul_of_le_one_right h hle) fun ha => by
+theorem le_of_le_mul_of_le_one_right [MulPosMono α] (h : a ≤ b * c) (hle : b ≤ 1) (c0 : 0 ≤ c) : a ≤ c :=
+  c0.lt_or_eq.elim (le_of_le_mul_of_le_one_right' h hle) fun ha => by
     simpa only [← ha, mul_zero] using h
 
 end PartialOrderₓ
@@ -817,8 +892,8 @@ section LinearOrderₓ
 
 variable [LinearOrderₓ α]
 
-theorem exists_square_le' [PosMulStrictMono α] (a0 : 0 ≤ a) : ∃ b : α, b * b ≤ a :=
-  a0.lt_or_eq.elim exists_square_le fun h => by
+theorem exists_square_le [PosMulStrictMono α] (a0 : 0 ≤ a) : ∃ b : α, b * b ≤ a :=
+  a0.lt_or_eq.elim exists_square_le' fun h => by
     rw [← h] <;>
       exact
         ⟨0, by

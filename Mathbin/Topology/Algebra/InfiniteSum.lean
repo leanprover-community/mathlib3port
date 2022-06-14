@@ -95,7 +95,7 @@ theorem tsum_eq_zero_of_not_summable (h : ¬Summable f) : (∑' b, f b) = 0 := b
   simp [tsum, h]
 
 theorem summable_congr (hfg : ∀ b, f b = g b) : Summable f ↔ Summable g :=
-  iff_of_eq (congr_argₓ Summable <| funext hfg)
+  iff_of_eq (congr_arg Summable <| funext hfg)
 
 theorem Summable.congr (hf : Summable f) (hfg : ∀ b, f b = g b) : Summable g :=
   (summable_congr hfg).mp hf
@@ -111,12 +111,12 @@ theorem has_sum_iff_has_sum {g : γ → α}
     HasSum f a ↔ HasSum g a :=
   ⟨HasSum.has_sum_of_sum_eq h₂, HasSum.has_sum_of_sum_eq h₁⟩
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 theorem Function.Injective.has_sum_iff {g : γ → β} (hg : Injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
     HasSum (f ∘ g) a ↔ HasSum f a := by
   simp only [HasSum, tendsto, hg.map_at_top_finset_sum_eq hf]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ∉ » set.range g)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ∉ » set.range g)
 theorem Function.Injective.summable_iff {g : γ → β} (hg : Injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
     Summable (f ∘ g) ↔ Summable f :=
   exists_congr fun _ => hg.has_sum_iff hf
@@ -149,16 +149,16 @@ protected theorem Finset.summable (s : Finset β) (f : β → α) : Summable (f 
 protected theorem Set.Finite.summable {s : Set β} (hs : s.Finite) (f : β → α) : Summable (f ∘ coe : s → α) := by
   convert hs.to_finset.summable f <;> simp only [hs.coe_to_finset]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ∉ » s)
 /-- If a function `f` vanishes outside of a finite set `s`, then it `has_sum` `∑ b in s, f b`. -/
 theorem has_sum_sum_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : HasSum f (∑ b in s, f b) :=
   (has_sum_subtype_iff_of_support_subset <| support_subset_iff'.2 hf).1 <| s.HasSum f
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem summable_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : Summable f :=
   (has_sum_sum_of_ne_finset_zero hf).Summable
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ≠ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b' «expr ≠ » b)
 theorem has_sum_single {f : β → α} (b : β) (hf : ∀ b' _ : b' ≠ b, f b' = 0) : HasSum f (f b) :=
   suffices HasSum f (∑ b' in {b}, f b') by
     simpa using this
@@ -414,13 +414,13 @@ theorem tsum_zero : (∑' b : β, (0 : α)) = 0 :=
 theorem tsum_empty [IsEmpty β] : (∑' b, f b) = 0 :=
   has_sum_empty.tsum_eq
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ b _ : b ∉ s, f b = 0) : (∑' b, f b) = ∑ b in s, f b :=
   (has_sum_sum_of_ne_finset_zero hf).tsum_eq
 
 theorem tsum_congr {α β : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] {f g : β → α} (hfg : ∀ b, f b = g b) :
     (∑' b, f b) = ∑' b, g b :=
-  congr_argₓ tsum (funext hfg)
+  congr_arg tsum (funext hfg)
 
 theorem tsum_fintype [Fintype β] (f : β → α) : (∑' b, f b) = ∑ b, f b :=
   (has_sum_fintype f).tsum_eq
@@ -436,7 +436,7 @@ theorem Finset.tsum_subtype (s : Finset β) (f : β → α) : (∑' x : { x // x
 theorem Finset.tsum_subtype' (s : Finset β) (f : β → α) : (∑' x : (s : Set β), f x) = ∑ x in s, f x :=
   s.tsum_subtype f
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ≠ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b' «expr ≠ » b)
 theorem tsum_eq_single {f : β → α} (b : β) (hf : ∀ b' _ : b' ≠ b, f b' = 0) : (∑' b, f b) = f b :=
   (has_sum_single b hf).tsum_eq
 
@@ -499,18 +499,18 @@ theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀, ∀ i ∈ s, 
     (∑' b, ∑ i in s, f i b) = ∑ i in s, ∑' b, f i b :=
   (has_sum_sum fun i hi => (hf i hi).HasSum).tsum_eq
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_sigma' [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
     (h₂ : Summable f) : (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   (h₂.HasSum.Sigma fun b => (h₁ b).HasSum).tsum_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_prod' [RegularSpace α] {f : β × γ → α} (h : Summable f) (h₁ : ∀ b, Summable fun c => f (b, c)) :
     (∑' p, f p) = ∑' (b) (c), f (b, c) :=
   (h.HasSum.prod_fiberwise fun b => (h₁ b).HasSum).tsum_eq.symm
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (c b)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (c b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_comm' [RegularSpace α] {f : β → γ → α} (h : Summable (Function.uncurry f)) (h₁ : ∀ b, Summable (f b))
     (h₂ : ∀ c, Summable fun b => f b c) : (∑' (c) (b), f b c) = ∑' (b) (c), f b c := by
   erw [← tsum_prod' h h₁, ← tsum_prod' h.prod_symm h₂, ← (Equivₓ.prodComm β γ).tsum_eq]
@@ -857,7 +857,7 @@ theorem Summable.tsum_mul_right a (hf : Summable f) : (∑' b, f b * a) = (∑' 
   (hf.HasSum.mul_right _).tsum_eq
 
 theorem Commute.tsum_right a (h : ∀ b, Commute a (f b)) : Commute a (∑' b, f b) :=
-  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_argₓ _ <| funext h).trans (hf.tsum_mul_right a))
+  if hf : Summable f then (hf.tsum_mul_left a).symm.trans ((congr_arg _ <| funext h).trans (hf.tsum_mul_right a))
   else (tsum_eq_zero_of_not_summable hf).symm ▸ Commute.zero_right _
 
 theorem Commute.tsum_left a (h : ∀ b, Commute (f b) a) : Commute (∑' b, f b) a :=
@@ -962,7 +962,7 @@ theorem has_sum_le_of_sum_le (hf : HasSum f a) (h : ∀ s : Finset β, (∑ b in
 theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ ∑ b in s, f b) : a₂ ≤ a :=
   ge_of_tendsto' hf h
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ∉ » set.range i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (c «expr ∉ » set.range i)
 theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ := by
   have : HasSum (fun c => (partialInv i c).casesOn' 0 f) a₁ := by
@@ -992,12 +992,12 @@ theorem has_sum_le_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : 
     exact hs _ h
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (c «expr ∉ » set.range i)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (c «expr ∉ » set.range i)
 theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : Injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
     (h : ∀ b, f b ≤ g (i b)) (hf : Summable f) (hg : Summable g) : tsum f ≤ tsum g :=
   has_sum_le_inj i hi hs h hf.HasSum hg.HasSum
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem sum_le_has_sum (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : HasSum f a) : (∑ b in s, f b) ≤ a :=
   ge_of_tendsto hf
     (eventually_at_top.2 ⟨s, fun t hst => (sum_le_sum_of_subset_of_nonneg hst) fun b hbt hbs => hs b hbs⟩)
@@ -1005,7 +1005,7 @@ theorem sum_le_has_sum (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf :
 theorem is_lub_has_sum (h : ∀ b, 0 ≤ f b) (hf : HasSum f a) : IsLub (Set.Range fun s : Finset β => ∑ b in s, f b) a :=
   is_lub_of_tendsto_at_top (Finset.sum_mono_set_of_nonneg h) hf
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ≠ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b' «expr ≠ » b)
 theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f b') : f b ≤ a :=
   calc
     f b = ∑ b in {b}, f b := Finset.sum_singleton.symm
@@ -1017,12 +1017,12 @@ theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f
         hf
     
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b «expr ∉ » s)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b «expr ∉ » s)
 theorem sum_le_tsum {f : β → α} (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : Summable f) :
     (∑ b in s, f b) ≤ ∑' b, f b :=
   sum_le_has_sum s hs hf.HasSum
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (b' «expr ≠ » b)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (b' «expr ≠ » b)
 theorem le_tsum (hf : Summable f) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f b') : f b ≤ ∑' b, f b :=
   le_has_sum (Summable.has_sum hf) b hb
 
@@ -1256,17 +1256,17 @@ theorem Summable.sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) �
 theorem Summable.prod_factor {f : β × γ → α} (h : Summable f) (b : β) : Summable fun c => f (b, c) :=
   h.comp_injective fun c₁ c₂ h => (Prod.ext_iff.1 h).2
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_sigma [T1Space α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) :
     (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_sigma' (fun b => ha.sigma_factor b) ha
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_prod [T1Space α] {f : β × γ → α} (h : Summable f) : (∑' p, f p) = ∑' (b) (c), f ⟨b, c⟩ :=
   tsum_prod' h h.prod_factor
 
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (c b)
--- ././Mathport/Syntax/Translate/Basic.lean:745:6: warning: expanding binder group (b c)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (c b)
+-- ././Mathport/Syntax/Translate/Basic.lean:744:6: warning: expanding binder group (b c)
 theorem tsum_comm [T1Space α] {f : β → γ → α} (h : Summable (Function.uncurry f)) :
     (∑' (c) (b), f b c) = ∑' (b) (c), f b c :=
   tsum_comm' h h.prod_factor h.prod_symm.prod_factor

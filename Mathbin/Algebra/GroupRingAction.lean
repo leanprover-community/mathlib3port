@@ -54,7 +54,7 @@ instance (priority := 100) MulSemiringAction.toMulDistribMulAction [h : MulSemir
 def MulSemiringAction.toRingHom [MulSemiringAction M R] (x : M) : R →+* R :=
   { MulDistribMulAction.toMonoidHom R x, DistribMulAction.toAddMonoidHom R x with }
 
-theorem to_ring_hom_injective [MulSemiringAction M R] [HasFaithfulScalar M R] :
+theorem to_ring_hom_injective [MulSemiringAction M R] [HasFaithfulSmul M R] :
     Function.Injective (MulSemiringAction.toRingHom M R) := fun m₁ m₂ h =>
   eq_of_smul_eq_smul fun r => RingHom.ext_iff.1 h r
 

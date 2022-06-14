@@ -95,7 +95,7 @@ variable [Semiringₓ S] [AddCommMonoidₓ M]
 def RestrictScalars.moduleOrig [I : Module S M] : Module S (RestrictScalars R S M) :=
   I
 
-variable [CommSemiringₓ R] [Algebra R S] [Module S M]
+variable [CommSemiringₓ R] [Algebra R S]
 
 section
 
@@ -106,22 +106,35 @@ module structure over `R`.
 
 The preferred way of setting this up is `[module R M] [module S M] [is_scalar_tower R S M]`.
 -/
-instance : Module R (RestrictScalars R S M) :=
+instance [Module S M] : Module R (RestrictScalars R S M) :=
   Module.compHom M (algebraMap R S)
 
 /-- This instance is only relevant when `restrict_scalars.module_orig` is available as an instance.
 -/
-instance : IsScalarTower R S (RestrictScalars R S M) :=
+instance [Module S M] : IsScalarTower R S (RestrictScalars R S M) :=
   ⟨fun r S M => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
 
 end
 
+/-- When `M` is a right-module over a ring `S`, and `S` is an algebra over `R`, then `M` inherits a
+right-module structure over `R`.
+The preferred way of setting this up is
+`[module Rᵐᵒᵖ M] [module Sᵐᵒᵖ M] [is_scalar_tower Rᵐᵒᵖ Sᵐᵒᵖ M]`.
+-/
+instance RestrictScalars.opModule [Module Sᵐᵒᵖ M] : Module Rᵐᵒᵖ (RestrictScalars R S M) := by
+  let this : Module Sᵐᵒᵖ (RestrictScalars R S M) := ‹Module Sᵐᵒᵖ M›
+  exact Module.compHom M (algebraMap R S).op
+
+instance RestrictScalars.is_central_scalar [Module S M] [Module Sᵐᵒᵖ M] [IsCentralScalar S M] :
+    IsCentralScalar R (RestrictScalars R S M) where
+  op_smul_eq_smul := fun r x => (op_smul_eq_smul (algebraMap R S r) (_ : M) : _)
+
 /-- The `R`-algebra homomorphism from the original coefficient algebra `S` to endomorphisms
 of `restrict_scalars R S M`.
 -/
-def RestrictScalars.lsmul : S →ₐ[R] Module.End R (RestrictScalars R S M) := by
+def RestrictScalars.lsmul [Module S M] : S →ₐ[R] Module.End R (RestrictScalars R S M) := by
   -- We use `restrict_scalars.module_orig` in the implementation,
   -- but not in the type.
   let this : Module S (RestrictScalars R S M) := RestrictScalars.moduleOrig R S M

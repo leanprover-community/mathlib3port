@@ -88,7 +88,7 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F) where
       infer_instance⟩
   fac' := fun s j => Subtype.eq (colimit.ι_desc _ _)
   uniq' := fun s f h =>
-    Subtype.eq (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_argₓ Subtype.val (h j))
+    Subtype.eq (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j => congr_arg Subtype.val (h j))
 
 instance : HasCoproducts LocallyRingedSpace.{u} := fun ι => ⟨fun F => ⟨⟨⟨_, coproductCofanIsColimit F⟩⟩⟩⟩
 

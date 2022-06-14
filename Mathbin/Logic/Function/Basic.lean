@@ -48,6 +48,14 @@ theorem const_compₓ {f : α → β} {c : γ} : const β c ∘ f = const α c :
 theorem comp_constₓ {f : β → γ} {b : β} : f ∘ const α b = const α (f b) :=
   rfl
 
+theorem const_injective [Nonempty α] : Injective (const α : β → α → β) := fun y₁ y₂ h =>
+  let ⟨x⟩ := ‹Nonempty α›
+  congr_fun h x
+
+@[simp]
+theorem const_inj [Nonempty α] {y₁ y₂ : β} : const α y₁ = const α y₂ ↔ y₁ = y₂ :=
+  ⟨fun h => const_injective h, fun h => h ▸ rfl⟩
+
 theorem id_def : @id α = fun x => x :=
   rfl
 
@@ -78,7 +86,7 @@ protected theorem Bijective.surjective {f : α → β} (hf : Bijective f) : Surj
   hf.2
 
 theorem Injective.eq_iff (I : Injective f) {a b : α} : f a = f b ↔ a = b :=
-  ⟨@I _ _, congr_argₓ f⟩
+  ⟨@I _ _, congr_arg f⟩
 
 theorem Injective.eq_iff' (I : Injective f) {a b : α} {c : β} (h : f b = c) : f a = c ↔ a = b :=
   h ▸ I.eq_iff
@@ -87,7 +95,7 @@ theorem Injective.ne (hf : Injective f) {a₁ a₂ : α} : a₁ ≠ a₂ → f a
   mt fun h => hf h
 
 theorem Injective.ne_iff (hf : Injective f) {x y : α} : f x ≠ f y ↔ x ≠ y :=
-  ⟨mt <| congr_argₓ f, hf.Ne⟩
+  ⟨mt <| congr_arg f, hf.Ne⟩
 
 theorem Injective.ne_iff' (hf : Injective f) {x y : α} {z : β} (h : f y = z) : f x ≠ z ↔ x ≠ y :=
   h ▸ hf.ne_iff
@@ -97,7 +105,7 @@ the domain `α` also has decidable equality. -/
 def Injective.decidableEq [DecidableEq β] (I : Injective f) : DecidableEq α := fun a b => decidableOfIff _ I.eq_iff
 
 theorem Injective.of_comp {g : γ → α} (I : Injective (f ∘ g)) : Injective g := fun x y h =>
-  I <| show f (g x) = f (g y) from congr_argₓ f h
+  I <| show f (g x) = f (g y) from congr_arg f h
 
 theorem Injective.of_comp_iff {f : α → β} (hf : Injective f) (g : γ → α) : Injective (f ∘ g) ↔ Injective g :=
   ⟨Injective.of_comp, hf.comp⟩
@@ -111,7 +119,7 @@ theorem Injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g
 
 /-- Composition by an injective function on the left is itself injective. -/
 theorem Injective.comp_left {g : β → γ} (hg : Function.Injective g) :
-    Function.Injective ((· ∘ ·) g : (α → β) → α → γ) := fun f₁ f₂ hgf => funext fun i => hg <| (congr_funₓ hgf i : _)
+    Function.Injective ((· ∘ ·) g : (α → β) → α → γ) := fun f₁ f₂ hgf => funext fun i => hg <| (congr_fun hgf i : _)
 
 theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : Injective f := fun a b ab => Subsingleton.elimₓ _ _
 
@@ -178,7 +186,7 @@ protected theorem Surjective.exists₃ (hf : Surjective f) {p : β → β → β
   hf.exists.trans <| exists_congr fun x => hf.exists₂
 
 theorem Surjective.injective_comp_right (hf : Surjective f) : Injective fun g : β → γ => g ∘ f := fun g₁ g₂ h =>
-  funext <| hf.forall.2 <| congr_funₓ h
+  funext <| hf.forall.2 <| congr_fun h
 
 protected theorem Surjective.right_cancellable (hf : Surjective f) {g₁ g₂ : β → γ} : g₁ ∘ f = g₂ ∘ f ↔ g₁ = g₂ :=
   hf.injective_comp_right.eq_iff
@@ -188,7 +196,7 @@ theorem surjective_of_right_cancellable_Prop (h : ∀ g₁ g₂ : β → Prop, g
   · simp only [(· ∘ ·), exists_apply_eq_applyₓ]
     
   · intro y
-    have : True = ∃ x, f x = y := congr_funₓ h y
+    have : True = ∃ x, f x = y := congr_fun h y
     rw [← this]
     exact trivialₓ
     
@@ -211,7 +219,7 @@ theorem Bijective.exists_unique_iff {f : α → β} (hf : Bijective f) {p : β �
     fun ⟨x, hpx, hx⟩ =>
     ⟨f x, hpx, fun y hy =>
       let ⟨z, hz⟩ := hf.Surjective y
-      hz ▸ congr_argₓ f <|
+      hz ▸ congr_arg f <|
         hx _ <| by
           rwa [hz]⟩⟩
 
@@ -227,7 +235,7 @@ to `set α`. -/
 theorem cantor_surjective {α} (f : α → Set α) : ¬Function.Surjective f
   | h =>
     let ⟨D, e⟩ := h { a | ¬a ∈ f a }
-    (iff_not_selfₓ (D ∈ f D)).1 <| iff_of_eq (congr_argₓ ((· ∈ ·) D) e)
+    (iff_not_selfₓ (D ∈ f D)).1 <| iff_of_eq (congr_arg ((· ∈ ·) D) e)
 
 /-- **Cantor's diagonal argument** implies that there are no injective functions from `set α`
 to `α`. -/
@@ -273,13 +281,13 @@ theorem LeftInverse.comp_eq_idₓ {f : α → β} {g : β → α} (h : LeftInver
   funext h
 
 theorem left_inverse_iff_comp {f : α → β} {g : β → α} : LeftInverse f g ↔ f ∘ g = id :=
-  ⟨LeftInverse.comp_eq_idₓ, congr_funₓ⟩
+  ⟨LeftInverse.comp_eq_idₓ, congr_fun⟩
 
 theorem RightInverse.comp_eq_idₓ {f : α → β} {g : β → α} (h : RightInverse f g) : g ∘ f = id :=
   funext h
 
 theorem right_inverse_iff_comp {f : α → β} {g : β → α} : RightInverse f g ↔ g ∘ f = id :=
-  ⟨RightInverse.comp_eq_idₓ, congr_funₓ⟩
+  ⟨RightInverse.comp_eq_idₓ, congr_fun⟩
 
 theorem LeftInverse.compₓ {f : α → β} {g : β → α} {h : β → γ} {i : γ → β} (hf : LeftInverse f g)
     (hh : LeftInverse h i) : LeftInverse (h ∘ f) (g ∘ i) := fun a =>
@@ -308,7 +316,7 @@ theorem LeftInverse.right_inverse_of_injective {f : α → β} {g : β → α} (
 theorem LeftInverse.right_inverse_of_surjective {f : α → β} {g : β → α} (h : LeftInverse f g) (hg : Surjective g) :
     RightInverse f g := fun x =>
   let ⟨y, hy⟩ := hg x
-  hy ▸ congr_argₓ g (h y)
+  hy ▸ congr_arg g (h y)
 
 theorem LeftInverse.eq_right_inverse {f : α → β} {g₁ g₂ : β → α} (h₁ : LeftInverse g₁ f) (h₂ : RightInverse g₂ f) :
     g₁ = g₂ :=
@@ -339,7 +347,7 @@ theorem partial_inv_of_injective {α β} {f : α → β} (I : Injective f) : IsP
       fun e =>
       e ▸
         have h : ∃ a', f a' = f a := ⟨_, rfl⟩
-        (dif_pos h).trans (congr_argₓ _ (I <| Classical.some_spec h))⟩
+        (dif_pos h).trans (congr_arg _ (I <| Classical.some_spec h))⟩
 
 theorem partial_inv_left {α β} {f : α → β} (I : Injective f) : ∀ x, partialInv f (f x) = some x :=
   is_partial_inv_left (partial_inv_of_injective I)
@@ -458,30 +466,30 @@ theorem surjective_eval {α : Sort u} {β : α → Sort v} [h : ∀ a, Nonempty 
   ⟨@update _ _ (Classical.decEq α) (fun a => (h a).some) a b, @update_same _ _ (Classical.decEq α) _ _ _⟩
 
 theorem update_injective (f : ∀ a, β a) (a' : α) : Injective (update f a') := fun v v' h => by
-  have := congr_funₓ h a'
+  have := congr_fun h a'
   rwa [update_same, update_same] at this
 
 @[simp]
 theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : update f a' v a = f a :=
   dif_neg h
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ x _ : x ≠ a, p x (f x) := by
   rw [← and_forall_ne a, update_same]
   simp (config := { contextual := true })
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) := by
   rw [← not_forall_not, forall_update_iff f fun a b => ¬p a b]
   simp [not_and_distrib]
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => y = g x
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (x «expr ≠ » a)
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (x «expr ≠ » a)
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
   funext_iffₓ.trans <| forall_update_iff _ fun x y => g x = y
 
@@ -573,7 +581,7 @@ theorem extend_defₓ (f : α → β) (g : α → γ) (e' : β → γ) (b : β) 
 @[simp]
 theorem extend_applyₓ (hf : Injective f) (g : α → γ) (e' : β → γ) (a : α) : extendₓ f g e' (f a) = g a := by
   simp only [extend_def, dif_pos, exists_apply_eq_applyₓ]
-  exact congr_argₓ g (hf <| Classical.some_spec (exists_apply_eq_applyₓ f a))
+  exact congr_arg g (hf <| Classical.some_spec (exists_apply_eq_applyₓ f a))
 
 @[simp]
 theorem extend_apply' (g : α → γ) (e' : β → γ) (b : β) (hb : ¬∃ a, f a = b) : extendₓ f g e' b = e' b := by
@@ -592,7 +600,7 @@ theorem apply_extend {δ} (hf : Injective f) (F : γ → δ) (g : α → γ) (e'
 theorem extend_injective (hf : Injective f) (e' : β → γ) : Injective fun g => extendₓ f g e' := by
   intro g₁ g₂ hg
   refine' funext fun x => _
-  have H := congr_funₓ hg (f x)
+  have H := congr_fun hg (f x)
   simp only [hf, extend_apply] at H
   exact H
 
@@ -738,12 +746,12 @@ protected theorem uncurry {α β γ : Type _} {f : α → β → γ} (hf : Injec
 /-- As a map from the left argument to a unary function, `f` is injective. -/
 theorem left' (hf : Injective2 f) [Nonempty β] : Function.Injective f := fun a₁ a₂ h =>
   let ⟨b⟩ := ‹Nonempty β›
-  hf.left b <| (congr_funₓ h b : _)
+  hf.left b <| (congr_fun h b : _)
 
 /-- As a map from the right argument to a unary function, `f` is injective. -/
 theorem right' (hf : Injective2 f) [Nonempty α] : Function.Injective fun b a => f a b := fun b₁ b₂ h =>
   let ⟨a⟩ := ‹Nonempty α›
-  hf.right a <| (congr_funₓ h a : _)
+  hf.right a <| (congr_fun h a : _)
 
 theorem eq_iff (hf : Injective2 f) {a₁ a₂ b₁ b₂} : f a₁ b₁ = f a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨fun h => hf h, And.ndrec <| congr_arg2ₓ f⟩

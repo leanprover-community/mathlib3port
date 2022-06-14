@@ -268,7 +268,7 @@ theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by
 
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
-  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_argₓ Pos (sub_zero f))
+  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_arg Pos (sub_zero f))
 
 private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
@@ -528,7 +528,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     (let ⟨n, hn⟩ := exists_int_lt x
     ⟨n, le_of_ltₓ hn⟩)
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε)))
 theorem exists_is_lub (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLub S x := by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
   have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } := by
@@ -657,6 +657,9 @@ theorem csupr_const_zero {α : Sort _} : (⨆ i : α, (0 : ℝ)) = 0 := by
 theorem Sup_of_not_bdd_above {s : Set ℝ} (hs : ¬BddAbove s) : sup s = 0 :=
   dif_neg fun h => hs h.2
 
+theorem supr_of_not_bdd_above {α : Sort _} {f : α → ℝ} (hf : ¬BddAbove (Set.Range f)) : (⨆ i, f i) = 0 :=
+  Sup_of_not_bdd_above hf
+
 theorem Sup_univ : sup (@Set.Univ ℝ) = 0 :=
   Real.Sup_of_not_bdd_above fun ⟨x, h⟩ => not_le_of_lt (lt_add_one _) <| h (Set.mem_univ _)
 
@@ -677,6 +680,9 @@ theorem cinfi_const_zero {α : Sort _} : (⨅ i : α, (0 : ℝ)) = 0 := by
 
 theorem Inf_of_not_bdd_below {s : Set ℝ} (hs : ¬BddBelow s) : inf s = 0 :=
   neg_eq_zero.2 <| Sup_of_not_bdd_above <| mt bdd_above_neg.1 hs
+
+theorem infi_of_not_bdd_below {α : Sort _} {f : α → ℝ} (hf : ¬BddBelow (Set.Range f)) : (⨅ i, f i) = 0 :=
+  Inf_of_not_bdd_below hf
 
 /-- As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
 suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.

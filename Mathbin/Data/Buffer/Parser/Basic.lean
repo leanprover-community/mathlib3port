@@ -1349,7 +1349,7 @@ theorem char_buf_iff {cb' : CharBuffer} : Bounded (charBuf cb') ↔ cb' ≠ Buff
     not_iff_not_of_iff
       ⟨fun h => by
         simp [h], fun h => by
-        simpa using congr_argₓ List.toBuffer h⟩
+        simpa using congr_arg List.toBuffer h⟩
   rw [char_buf, decorate_error_iff, this]
   cases cb'.to_list
   · simp [pure, ch]
@@ -2155,7 +2155,7 @@ theorem char_buf_iff {cb' : CharBuffer} : (charBuf cb').Prog ↔ cb' ≠ Buffer.
     not_iff_not_of_iff
       ⟨fun h => by
         simp [h], fun h => by
-        simpa using congr_argₓ List.toBuffer h⟩
+        simpa using congr_arg List.toBuffer h⟩
   rw [char_buf, this, decorate_error_iff]
   cases cb'.to_list
   · simp [pure]

@@ -98,7 +98,7 @@ theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : �
 theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
   funext exp_series_sum_eq
 
--- ././Mathport/Syntax/Translate/Basic.lean:598:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
+-- ././Mathport/Syntax/Translate/Basic.lean:597:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ()))
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 := by
   suffices (fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n) 0 = ∑' n : ℕ, if n = 0 then 1 else 0 by

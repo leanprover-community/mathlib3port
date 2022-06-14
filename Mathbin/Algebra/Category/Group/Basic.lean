@@ -211,7 +211,7 @@ theorem as_hom_apply {G : AddCommGroupₓₓ.{0}} (g : G) (i : ℤ) : (asHom g) 
   rfl
 
 theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@asHom G) := fun h k w => by
-  convert congr_argₓ (fun k : AddCommGroupₓₓ.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
+  convert congr_arg (fun k : AddCommGroupₓₓ.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp
 
 @[ext]
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=

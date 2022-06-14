@@ -74,7 +74,7 @@ theorem app_naturality {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (X : C) {Y Z : D} (f 
 
 theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f : X ⟶ Y) :
     (F.map f).app Z ≫ (T.app Y).app Z = (T.app X).app Z ≫ (G.map f).app Z :=
-  congr_funₓ (congr_argₓ app (T.naturality f)) Z
+  congr_fun (congr_arg app (T.naturality f)) Z
 
 /-- A natural transformation is a monomorphism if each component is. -/
 theorem mono_app_of_mono (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=

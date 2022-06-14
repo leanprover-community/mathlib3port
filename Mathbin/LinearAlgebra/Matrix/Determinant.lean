@@ -274,7 +274,7 @@ the product of the `v`s. -/
 theorem det_mul_row (v : n → R) (A : Matrix n n R) : (det fun i j => v j * A i j) = (∏ i, v i) * det A :=
   calc
     (det fun i j => v j * A i j) = det (A ⬝ diagonalₓ v) :=
-      congr_argₓ det <| by
+      congr_arg det <| by
         ext
         simp [mul_comm]
     _ = (∏ i, v i) * det A := by
@@ -312,7 +312,7 @@ end HomMap
 
 @[simp]
 theorem det_conj_transpose [StarRing R] (M : Matrix m m R) : det Mᴴ = star (det M) :=
-  ((starRingEnd R).map_det _).symm.trans <| congr_argₓ star M.det_transpose
+  ((starRingEnd R).map_det _).symm.trans <| congr_arg star M.det_transpose
 
 section DetZero
 
@@ -381,7 +381,7 @@ Lemmas showing the determinant is invariant under a variety of operations.
 theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : det C = 1) (hA : A = B ⬝ C) :
     det A = det B :=
   calc
-    det A = det (B ⬝ C) := congr_argₓ _ hA
+    det A = det (B ⬝ C) := congr_arg _ hA
     _ = det B * det C := det_mul _ _
     _ = det B := by
       rw [hC, mul_oneₓ]
@@ -390,7 +390,7 @@ theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : d
 theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : det C = 1) (hA : A = C ⬝ B) :
     det A = det B :=
   calc
-    det A = det (C ⬝ B) := congr_argₓ _ hA
+    det A = det (C ⬝ B) := congr_arg _ hA
     _ = det C * det B := det_mul _ _
     _ = det B := by
       rw [hC, one_mulₓ]
@@ -556,7 +556,7 @@ theorem det_block_diagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → M
           prod_congr_left (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
       fun k x => by
       rw [Eq]
-    simp only [prod_congr_left_apply, Prod.mk.inj_iffₓ] at this
+    simp only [prod_congr_left_apply, Prod.mk.inj_iff] at this
     exact (this k x).1
     
   · intro σ hσ
@@ -635,7 +635,7 @@ theorem det_from_blocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Ma
     intro h
     have h2 : ∀ x, perm.sum_congr σ₁.fst σ₁.snd x = perm.sum_congr σ₂.fst σ₂.snd x := by
       intro x
-      exact congr_funₓ (congr_argₓ to_fun h) x
+      exact congr_fun (congr_arg to_fun h) x
     simp only [Sum.map_inr, Sum.map_inl, perm.sum_congr_apply, Sum.forall] at h2
     ext
     · exact h2.left x

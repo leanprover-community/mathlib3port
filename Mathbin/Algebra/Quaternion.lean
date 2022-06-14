@@ -47,7 +47,7 @@ quaternion
 -/
 
 
--- ././Mathport/Syntax/Translate/Basic.lean:1285:32: infer kinds are unsupported in Lean 4: mk {}
+-- ././Mathport/Syntax/Translate/Basic.lean:1284:32: infer kinds are unsupported in Lean 4: mk {}
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext]
@@ -95,7 +95,7 @@ theorem coe_im_j : (x : ℍ[R,c₁,c₂]).imJ = 0 :=
 theorem coe_im_k : (x : ℍ[R,c₁,c₂]).imK = 0 :=
   rfl
 
-theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_argₓ re h
+theorem coe_injective : Function.Injective (coe : R → ℍ[R,c₁,c₂]) := fun x y h => congr_arg re h
 
 @[simp]
 theorem coe_inj {x y : R} : (x : ℍ[R,c₁,c₂]) = y ↔ x = y :=
@@ -833,7 +833,7 @@ theorem norm_sq_le_zero : normSq a ≤ 0 ↔ a = 0 := by
   simpa only [le_antisymm_iffₓ, norm_sq_nonneg, and_trueₓ] using @norm_sq_eq_zero _ _ a
 
 instance : Nontrivial ℍ[R] where
-  exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩
+  exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩
 
 instance : IsDomain ℍ[R] :=
   { Quaternion.nontrivial with
@@ -880,7 +880,7 @@ section QuaternionAlgebra
 variable {R : Type _} (c₁ c₂ : R)
 
 private theorem pow_four [Infinite R] : # R ^ 4 = # R :=
-  power_nat_eq (omega_le_mk R) <| by
+  power_nat_eq (aleph_0_le_mk R) <| by
     simp
 
 /-- The cardinality of a quaternion algebra, as a type. -/
